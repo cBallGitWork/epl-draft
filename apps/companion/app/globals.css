@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+/* ============================================================================
+   Tim Hortons Pro League — token layer
+
+   Two registers, never muddled (PRODUCT.md principle 3):
+   · FOOTBALL chrome — the real Premier League. PL brand palette.
+   · LEAGUE identity — our competition. Tim Hortons palette.
+
+   Surfaces stay neutral and colour appears almost exclusively as STATE, which is
+   the product-register floor. Deep near-black tinted toward PL purple, because a
+   pure gray reads as a dashboard and this is a score centre.
+   ============================================================================ */
+
+@theme {
+  /* --- Surfaces: a four-step ramp, chroma held low and tinted to hue 320 --- */
+  --color-bg: oklch(0.15 0.02 320);
+  --color-surface: oklch(0.19 0.022 320);
+  --color-raised: oklch(0.235 0.024 320);
+  --color-line: oklch(0.31 0.021 320);
+
+  /* --- Ink: every step verified ≥4.5:1 on --color-bg --- */
+  --color-ink: oklch(0.97 0.005 320);
+  --color-muted: oklch(0.74 0.015 320);
+  --color-faint: oklch(0.62 0.015 320);
+
+  /* --- Football register (Premier League) --- */
+  /* Primary action, selection, "your team". PL green. */
+  --color-accent: oklch(0.88 0.22 158);
+  /* Info, links, secondary emphasis. PL cyan. */
+  --color-info: oklch(0.86 0.14 200);
+  /* LIVE only — a match in play. PL pink, reserved so it never means anything
+     else. Magenta-leaning, which keeps it separable from Tim Hortons red. */
+  --color-live: oklch(0.60 0.23 8);
+  --color-pl-purple: oklch(0.21 0.11 328);
+
+  /* --- League register (Tim Hortons) --- */
+  --color-league: oklch(0.53 0.20 24);
+  --color-league-dark: oklch(0.31 0.05 45);
+  --color-cream: oklch(0.94 0.02 75);
+
+  /* --- Data tints: deliberately duller than --accent so a form indicator never
+     competes with a primary action. Hue-paired with icons/labels, never alone. --- */
+  --color-good: oklch(0.76 0.15 155);
+  --color-mid: oklch(0.79 0.14 85);
+  --color-bad: oklch(0.66 0.17 25);
+
+  /* --- Type. One superfamily across two widths: Archivo for UI, Archivo Narrow
+     for scores and numerals. Width is the contrast axis; pairing two unrelated
+     grotesques would read as an accident. --- */
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo-narrow), "Arial Narrow", ui-sans-serif, sans-serif;
+  --font-display--font-feature-settings: "tnum";
+
+  /* --- Fixed rem scale, ratio ~1.15. Product UI, so no fluid clamps. --- */
+  --text-2xs: 0.6875rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.3125rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  /* --- Semantic z-scale. Never arbitrary values. --- */
+  --z-base: 1;
+  --z-sticky: 10;
+  --z-dropdown: 20;
+  --z-nav: 30;
+  --z-backdrop: 40;
+  --z-modal: 50;
+  --z-toast: 60;
+
+  /* --- Motion: 150–250ms, ease-out only. Users are in flow. --- */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  /* Sits above the bottom tab bar on phones with a home indicator. */
+  padding-bottom: env(safe-area-inset-bottom);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Scores, minutes, countdowns. Tabular so digits don't jitter as they tick —
+   the single most important typographic decision in a live view. */
+.numeric {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+/* Panel elevation. An inset top highlight plus a soft drop reads as a raised
+   surface on an OLED phone, where a border alone disappears. */
+.elev {
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / 0.06),
+    0 1px 2px oklch(0 0 0 / 0.5);
+}
+
+/* ---- LIVE indicator -------------------------------------------------------
+   The one place motion carries meaning: a match is in play right now. Paired
+   with the text "LIVE" so it never relies on colour or motion alone. */
+.live-dot {
+  position: relative;
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--color-live);
+}
+.live-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: live-pulse 1.8s var(--ease-out-quart) infinite;
+}
+@keyframes live-pulse {
+  0% { opacity: 0.7; transform: scale(1); }
+  70% { opacity: 0; transform: scale(2.6); }
+  100% { opacity: 0; transform: scale(2.6); }
+}
+
+/* A score that just changed. Flashes the accent then settles — this is how you
+   notice a goal without staring at the screen. */
+.just-changed {
+  animation: score-flash 900ms var(--ease-out-expo);
+}
+@keyframes score-flash {
+  0% { color: var(--color-accent); transform: scale(1.18); }
+  100% { color: inherit; transform: scale(1); }
+}
+
+/* ---- Pitch (FM tactic board, flat and dark so portraits carry the colour) -- */
+.pitch {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: oklch(0.34 0.07 155);
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      oklch(1 0 0 / 0.03) 0 8%,
+      oklch(0 0 0 / 0.04) 8% 16%
+    ),
+    linear-gradient(to bottom, oklch(0.38 0.08 155), oklch(0.28 0.06 155));
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.12);
+}
+/* Halfway line and centre circle, drawn as chalk rather than hard white. */
+.pitch::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  border-top: 1px solid oklch(1 0 0 / 0.14);
+}
+.pitch::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5.5rem;
+  height: 5.5rem;
+  transform: translate(-50%, -50%);
+  border: 1px solid oklch(1 0 0 / 0.14);
+  border-radius: 9999px;
+}
+
+/* ---- Focus: one visible treatment everywhere, never removed ---- */
+:where(a, button, [role="button"], input, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-info);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---- Reduced motion: every animation gets a real alternative --------------
+   The live dot keeps a static presence and the score change still crossfades,
+   so "something changed" survives without movement. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .live-dot::after {
+    display: none;
+  }
+  .just-changed {
+    animation: score-fade 600ms ease-out;
+  }
+  @keyframes score-fade {
+    from { color: var(--color-accent); }
+    to { color: inherit; }
+  }
+}

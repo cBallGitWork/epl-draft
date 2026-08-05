@@ -1,0 +1,109 @@
+# Product
+
+## Register
+
+product
+
+## Users
+
+Sixteen friends in a Fantrax Premier League draft league ("Tim Hortons Pro League"),
+plus a commissioner who additionally administers it. Experienced fantasy managers —
+they know what xG is, they don't need a glossary, and they resent being protected from
+their own data.
+
+The defining context is a phone held in one hand while a match plays on a screen in
+front of them. Sessions are short and frequent: a thirty-second check at half time, a
+longer sit-down on Sunday night, a midweek scan for injury news before the waiver
+deadline. Almost never a desktop, almost never unhurried.
+
+The jobs, in order of how often they happen: *what is my score doing right now*, *am I
+winning my head-to-head*, *should I start this player*, *what happened this week*.
+
+## Product Purpose
+
+Fantrax runs the league — drafting, scoring, transfers, waivers. It is the source of
+truth and we never fight it. This app republishes that league with the things Fantrax
+lacks: a live matchday view worth watching, competitions we define ourselves (H2H
+groups, cups, points leagues) layered on top of Fantrax's points, a rolling newspaper,
+and a per-player intelligence store.
+
+Two data layers, deliberately separate. The **football layer** is the real Premier
+League — clubs, players, fixtures, live stats — sourced from FPL's public API. The
+**league layer** is our fantasy competition, sourced from Fantrax. They join on player
+identity and they are never conflated.
+
+Success is that on a Saturday at 3pm, everyone in the league has this open instead of
+Fantrax.
+
+Longer term this is also a rehearsal. The 2027/28 goal is our own draft platform —
+a draft/EPL/Football Manager hybrid with real tactics, contract and morale narratives,
+and a soft salary cap. The football layer and the whole UI survive that transition
+intact; only the league adapter is replaced. Design decisions here should not assume
+Fantrax is forever.
+
+## Brand Personality
+
+**Urgent, dense, partisan.**
+
+Two registers held at once. The energy of a broadcast score centre — live numbers,
+things visibly moving, the sense that something is happening right now — carrying the
+information density of Football Manager. Not one softened by the other: a score centre
+that respects how much its audience already knows.
+
+Partisan matters. This is sixteen named people who talk to each other. The app should
+know whose team you are and take a side — your players, your rivals, your humiliation.
+Neutrality is for broadcasters, not for a league of mates.
+
+Voice: terse, confident, footballing. Never corporate, never explanatory, never cute
+for its own sake.
+
+## Anti-references
+
+- **Betting apps** (DraftKings, bet365). Aggressive greens, odds-boost banners, permanent
+  upsell energy, manufactured urgency. Our urgency is real — it comes from a match
+  actually being played — and it must never feel sold.
+- **Fantrax's own interface.** Dense enterprise tables and dated chrome. Density is the
+  goal but Fantrax achieves it by giving up on design; being better to look at is a
+  large part of why this exists at all.
+- **Generic SaaS dashboards.** Card grids, sidebar navigation, muted grays, hero-metric
+  tiles, an icon above every heading. The default AI-app look.
+
+## Design Principles
+
+1. **The live number is the interface.** While a match is running, the score and its
+   movement outrank everything on screen. Chrome, navigation and explanation all defer
+   to it. Between matches, the hierarchy is allowed to relax.
+
+2. **Density is a form of respect.** These users want the numbers. Do not hide data
+   behind progressive disclosure they did not ask for, and do not pad the layout to
+   feel calm. Earn density with typographic hierarchy, not with fewer facts.
+
+3. **Two layers, two registers, never muddled.** Premier League colours belong to the
+   real world — fixtures, live scores, the pitch. Tim Hortons belongs to our league —
+   standings, competitions, the masthead. A screen should always be clear about which
+   world it is showing.
+
+4. **Be honest about what we know.** Every figure here is scraped from someone else's
+   system and may be stale, provisional or missing. Say so plainly at the point of
+   use. A confident wrong number is worse than a hedged right one.
+
+5. **Designed for arm's length, one-handed.** The reference viewing condition is a phone
+   at arm's length with a match in peripheral vision. If a number can't be read in a
+   glance from there, it is too small, too thin, or too low-contrast.
+
+## Accessibility & Inclusion
+
+WCAG 2.1 AA. Body text ≥4.5:1, large text and numerals ≥3:1, visible focus states,
+tap targets ≥44px.
+
+Two domain-specific hazards to hold to that standard. Club colours are brand values,
+not chosen for contrast — several (Fulham, Spurs, Leeds white; Hull amber) fail against
+light surfaces, so club colour is never the sole carrier of meaning and never sits
+behind text without a contrast-checked ink. Live/finished/upcoming state and form tints
+must be legible without hue alone; pair every colour signal with a label, shape or
+position.
+
+Full motion by default with a `prefers-reduced-motion` alternative for every animation —
+the live view is the one place motion carries meaning (something changed), so its
+reduced-motion path must still communicate the change, via a crossfade rather than
+nothing.

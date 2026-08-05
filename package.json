@@ -1,0 +1,22 @@
+{
+  "name": "epl-draft",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@epl/companion",
+    "build": "npm run build --workspace=@epl/companion",
+    "start": "npm run start --workspace=@epl/companion",
+    "lint": "npm run lint --workspace=@epl/companion",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p packages/core && npm run typecheck --workspace=@epl/companion"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "vitest": "^3.2.4"
+  }
+}
