@@ -1,0 +1,2348 @@
+[
+  {
+    "fantraxId": "075zi",
+    "fantraxName": "Alfie Cresswell",
+    "clubCode": "LEE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06uzw",
+    "fantraxName": "Alex Cairns",
+    "clubCode": "LEE",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 32
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06yb8",
+    "fantraxName": "Diego Leon",
+    "clubCode": "MUN",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 46
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 42
+      },
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 40
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06zbq",
+    "fantraxName": "Andre Harriman-Annous",
+    "clubCode": "ARS",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06zbn",
+    "fantraxName": "Marli Salmon",
+    "clubCode": "ARS",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06zbo",
+    "fantraxName": "Louie Copley",
+    "clubCode": "ARS",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06r5d",
+    "fantraxName": "Yang Min-Hyeok",
+    "clubCode": "TOT",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 37
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 19
+      },
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 14
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06pry",
+    "fantraxName": "Kaden Braithwaite",
+    "clubCode": "MCI",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06mn1",
+    "fantraxName": "Ibrahim Osman",
+    "clubCode": "BHA",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 556637,
+        "name": "Nehemiah Oriola",
+        "score": 43
+      },
+      {
+        "fplCode": 549074,
+        "name": "Tom Watson",
+        "score": 35
+      },
+      {
+        "fplCode": 597320,
+        "name": "Harry Howell",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "073y1",
+    "fantraxName": "Khari Ranson",
+    "clubCode": "ARS",
+    "positionHint": "G",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06q2h",
+    "fantraxName": "Damola Ajayi",
+    "clubCode": "TOT",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 38
+      },
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 32
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 31
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06r3w",
+    "fantraxName": "Remy Rees-Dottin",
+    "clubCode": "BOU",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "0722t",
+    "fantraxName": "Ryan McAidoo",
+    "clubCode": "MCI",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "073vo",
+    "fantraxName": "Finn Geragusyan",
+    "clubCode": "SUN",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06ews",
+    "fantraxName": "Dermot Mee",
+    "clubCode": "MUN",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 38
+      },
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 32
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 32
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06jb3",
+    "fantraxName": "Ted Curd",
+    "clubCode": "CHE",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 25
+      },
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 24
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0656s",
+    "fantraxName": "Radek Vitek",
+    "clubCode": "MUN",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 37
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 30
+      },
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 23
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06mg4",
+    "fantraxName": "Cameron Humphreys",
+    "clubCode": "IPS",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 172453,
+        "name": "Sam Szmodics",
+        "score": 34
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06on5",
+    "fantraxName": "Leo Shahar",
+    "clubCode": "NEW",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06on6",
+    "fantraxName": "Anthony Munda",
+    "clubCode": "NEW",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06on4",
+    "fantraxName": "Julian Eyestone",
+    "clubCode": "BRF",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 33
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06rrq",
+    "fantraxName": "Reggie Walsh",
+    "clubCode": "CHE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 30
+      },
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06ya6",
+    "fantraxName": "Kota Takai",
+    "clubCode": "TOT",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 26
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 25
+      },
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 17
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06zc6",
+    "fantraxName": "Reiss-Alexander Russell-Denny",
+    "clubCode": "TOT",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 42
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 28
+      },
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 24
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06zc0",
+    "fantraxName": "Park Seung-Soo",
+    "clubCode": "NEW",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "068a1",
+    "fantraxName": "Mykhailo Mudryk",
+    "clubCode": "CHE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 47
+      },
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 27
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0645x",
+    "fantraxName": "Divin Mubama",
+    "clubCode": "MCI",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06qq9",
+    "fantraxName": "Luca Williams-Barnett",
+    "clubCode": "TOT",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 35
+      },
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 34
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 34
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06pms",
+    "fantraxName": "Ismeal Kabia",
+    "clubCode": "ARS",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06mgn",
+    "fantraxName": "Rio Kyerematen",
+    "clubCode": "TOT",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 36
+      },
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 30
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 21
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06nk0",
+    "fantraxName": "Tommy Setford",
+    "clubCode": "ARS",
+    "positionHint": "G",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06mgk",
+    "fantraxName": "Jayden Meghoma",
+    "clubCode": "BRF",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 34
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06mgh",
+    "fantraxName": "Dylan Charlton",
+    "clubCode": "NEW",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06msb",
+    "fantraxName": "Malick Yalcouye",
+    "clubCode": "BHA",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 549074,
+        "name": "Tom Watson",
+        "score": 32
+      },
+      {
+        "fplCode": 597320,
+        "name": "Harry Howell",
+        "score": 30
+      },
+      {
+        "fplCode": 556637,
+        "name": "Nehemiah Oriola",
+        "score": 27
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06nv6",
+    "fantraxName": "Trevan Sanusi",
+    "clubCode": "NEW",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "05ymb",
+    "fantraxName": "Tayo Adaramola",
+    "clubCode": "CRY",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 660392,
+        "name": "Christantus Uche",
+        "score": 20
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "03ysd",
+    "fantraxName": "Sam Byram",
+    "clubCode": "LEE",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 27
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "072zo",
+    "fantraxName": "Luka Bentt",
+    "clubCode": "BRF",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 38
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06muh",
+    "fantraxName": "Ethan Williams",
+    "clubCode": "MUN",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 34
+      },
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 27
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 26
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06ils",
+    "fantraxName": "Yunus Konak",
+    "clubCode": "BRF",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 31
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "033l8",
+    "fantraxName": "Simon Moore",
+    "clubCode": "SUN",
+    "positionHint": "G",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "063c2",
+    "fantraxName": "Gabriel Slonina",
+    "clubCode": "CHE",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 42
+      },
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 33
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06nva",
+    "fantraxName": "Mofe Jemide",
+    "clubCode": "CRY",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 660392,
+        "name": "Christantus Uche",
+        "score": 24
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06qwh",
+    "fantraxName": "Ben Winterburn",
+    "clubCode": "BOU",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06qvv",
+    "fantraxName": "Malachi Hardy",
+    "clubCode": "TOT",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 31
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 30
+      },
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06mnd",
+    "fantraxName": "Eric da Silva Moreira",
+    "clubCode": "NOT",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06s7v",
+    "fantraxName": "Jaydan Kamason",
+    "clubCode": "MUN",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 38
+      },
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 33
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 26
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "072x9",
+    "fantraxName": "Tye Hall",
+    "clubCode": "TOT",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 45
+      },
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 27
+      },
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 27
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "078az",
+    "fantraxName": "Konstantinos Tzolakis",
+    "clubCode": "HUL",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 534392,
+        "name": "Mason Burstow",
+        "score": 35
+      },
+      {
+        "fplCode": 494950,
+        "name": "Harvey Cartwright",
+        "score": 26
+      },
+      {
+        "fplCode": 661800,
+        "name": "Cathal McCarthy",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "072x7",
+    "fantraxName": "Ife Ibrahim",
+    "clubCode": "ARS",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06r5r",
+    "fantraxName": "Matai Akinmboni",
+    "clubCode": "BOU",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "05ubt",
+    "fantraxName": "Harry Clarke",
+    "clubCode": "IPS",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 172453,
+        "name": "Sam Szmodics",
+        "score": 17
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06ygl",
+    "fantraxName": "George King",
+    "clubCode": "CRY",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 660392,
+        "name": "Christantus Uche",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06igq",
+    "fantraxName": "Benjamin Fredrick",
+    "clubCode": "BRF",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 38
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06kwh",
+    "fantraxName": "Benjamin Arthur",
+    "clubCode": "BRF",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 33
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06thf",
+    "fantraxName": "Brayden Clarke",
+    "clubCode": "ARS",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06h1g",
+    "fantraxName": "Aidan Harris",
+    "clubCode": "NEW",
+    "positionHint": "G",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "066r9",
+    "fantraxName": "Ehor Yarmolyuk",
+    "clubCode": "BRF",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 72
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06shp",
+    "fantraxName": "Landon Emenalo",
+    "clubCode": "CHE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 36
+      },
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 35
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "075kd",
+    "fantraxName": "Talla Ndiaye",
+    "clubCode": "LIV",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 500058,
+        "name": "Jayden Danns",
+        "score": 33
+      },
+      {
+        "fplCode": 519440,
+        "name": "Wellity Lucky",
+        "score": 32
+      },
+      {
+        "fplCode": 586268,
+        "name": "Armin Pecsi",
+        "score": 21
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "05xtr",
+    "fantraxName": "Teddy Sharman-Lowe",
+    "clubCode": "CHE",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 42
+      },
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "05afj",
+    "fantraxName": "Largie Ramazani",
+    "clubCode": "LEE",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 36
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "073ac",
+    "fantraxName": "Ceadach ONeill",
+    "clubCode": "ARS",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "073ab",
+    "fantraxName": "Floyd Samba",
+    "clubCode": "MCI",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "05uhr",
+    "fantraxName": "Finley Burns",
+    "clubCode": "MCI",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "073b0",
+    "fantraxName": "Ollie Shield",
+    "clubCode": "BRF",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 37
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "05rbn",
+    "fantraxName": "Thomas McGill",
+    "clubCode": "BHA",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 549074,
+        "name": "Tom Watson",
+        "score": 43
+      },
+      {
+        "fplCode": 556637,
+        "name": "Nehemiah Oriola",
+        "score": 36
+      },
+      {
+        "fplCode": 550090,
+        "name": "Diego Coppola",
+        "score": 31
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06zod",
+    "fantraxName": "Dean Benamar",
+    "clubCode": "CRY",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 660392,
+        "name": "Christantus Uche",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06zrt",
+    "fantraxName": "Will Wright",
+    "clubCode": "LIV",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 519440,
+        "name": "Wellity Lucky",
+        "score": 42
+      },
+      {
+        "fplCode": 586268,
+        "name": "Armin Pecsi",
+        "score": 27
+      },
+      {
+        "fplCode": 500058,
+        "name": "Jayden Danns",
+        "score": 11
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "072b6",
+    "fantraxName": "Ryan Kavuma-McQueen",
+    "clubCode": "CHE",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 41
+      },
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 36
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06lvm",
+    "fantraxName": "Tyrese Hall",
+    "clubCode": "TOT",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 48
+      },
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 40
+      },
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "062cl",
+    "fantraxName": "Issa Kabore",
+    "clubCode": "MCI",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06l4c",
+    "fantraxName": "Ethan Wheatley",
+    "clubCode": "MUN",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 41
+      },
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 40
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 17
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06zqi",
+    "fantraxName": "Joshua Stephenson",
+    "clubCode": "BRF",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 38
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0786a",
+    "fantraxName": "Demiane Agustien",
+    "clubCode": "ARS",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "0786b",
+    "fantraxName": "Theo Julienne",
+    "clubCode": "ARS",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "0785x",
+    "fantraxName": "Matty Henderson-Hall",
+    "clubCode": "MCI",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06phr",
+    "fantraxName": "Gustavo Nunes",
+    "clubCode": "BRF",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0785y",
+    "fantraxName": "Mahamadou Sangare",
+    "clubCode": "MCI",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "0785w",
+    "fantraxName": "Jack Wint",
+    "clubCode": "MCI",
+    "positionHint": "G",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "062p1",
+    "fantraxName": "Luke Chambers",
+    "clubCode": "LIV",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 586268,
+        "name": "Armin Pecsi",
+        "score": 33
+      },
+      {
+        "fplCode": 519440,
+        "name": "Wellity Lucky",
+        "score": 33
+      },
+      {
+        "fplCode": 500058,
+        "name": "Jayden Danns",
+        "score": 32
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0785p",
+    "fantraxName": "Harry Byrne",
+    "clubCode": "TOT",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 42
+      },
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 24
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 11
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0785q",
+    "fantraxName": "Mason Melia",
+    "clubCode": "TOT",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 40
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 33
+      },
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 25
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0785n",
+    "fantraxName": "Dylan Thompson",
+    "clubCode": "TOT",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 30
+      },
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 29
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0785o",
+    "fantraxName": "Tyler Tingey",
+    "clubCode": "TOT",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 32
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 29
+      },
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 23
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0785l",
+    "fantraxName": "Tom Proctor",
+    "clubCode": "SUN",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "067z4",
+    "fantraxName": "David Datro Fofana",
+    "clubCode": "CHE",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 36
+      },
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 30
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0785m",
+    "fantraxName": "Charlie Dinsdale",
+    "clubCode": "SUN",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06rlf",
+    "fantraxName": "Eiran Cashin",
+    "clubCode": "BHA",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 556637,
+        "name": "Nehemiah Oriola",
+        "score": 40
+      },
+      {
+        "fplCode": 549074,
+        "name": "Tom Watson",
+        "score": 33
+      },
+      {
+        "fplCode": 550090,
+        "name": "Diego Coppola",
+        "score": 32
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0785k",
+    "fantraxName": "Archie Lightfoot",
+    "clubCode": "SUN",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "0785h",
+    "fantraxName": "Felix Scott",
+    "clubCode": "SUN",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06dpv",
+    "fantraxName": "Omari Kellyman",
+    "clubCode": "CHE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 41
+      },
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 34
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0785i",
+    "fantraxName": "Ben Kindon",
+    "clubCode": "SUN",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "0785f",
+    "fantraxName": "Matheos Ferreira",
+    "clubCode": "NEW",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "0785e",
+    "fantraxName": "Vakhtang Salia",
+    "clubCode": "NEW",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "0785b",
+    "fantraxName": "Rory Finneran",
+    "clubCode": "NEW",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "0785c",
+    "fantraxName": "Mason Miley",
+    "clubCode": "NEW",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "07869",
+    "fantraxName": "Josh Ogunnaike",
+    "clubCode": "ARS",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "07867",
+    "fantraxName": "Trialist",
+    "clubCode": "MCI",
+    "positionHint": "G",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06rkq",
+    "fantraxName": "Kieran Morrison",
+    "clubCode": "LIV",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 586268,
+        "name": "Armin Pecsi",
+        "score": 31
+      },
+      {
+        "fplCode": 500058,
+        "name": "Jayden Danns",
+        "score": 30
+      },
+      {
+        "fplCode": 519440,
+        "name": "Wellity Lucky",
+        "score": 21
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "07868",
+    "fantraxName": "Xavier Parker",
+    "clubCode": "MCI",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "05s00",
+    "fantraxName": "Daniel Jebbison",
+    "clubCode": "BOU",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "05u40",
+    "fantraxName": "Ellery Balcombe",
+    "clubCode": "BRF",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 508395,
+        "name": "Yehor Yarmoliuk",
+        "score": 33
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0784m",
+    "fantraxName": "Charlie Walker-Smith",
+    "clubCode": "CRY",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 660392,
+        "name": "Christantus Uche",
+        "score": 44
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0784k",
+    "fantraxName": "Aidan Dausch",
+    "clubCode": "COV",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 684268,
+        "name": "George Shepherd",
+        "score": 27
+      },
+      {
+        "fplCode": 549653,
+        "name": "Norman Bassette",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0784l",
+    "fantraxName": "Lucca Benetton",
+    "clubCode": "CRY",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 660392,
+        "name": "Christantus Uche",
+        "score": 33
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0784g",
+    "fantraxName": "Dastan Satpaev",
+    "clubCode": "CHE",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 35
+      },
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 34
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0784h",
+    "fantraxName": "Harvey Broad",
+    "clubCode": "COV",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 684268,
+        "name": "George Shepherd",
+        "score": 30
+      },
+      {
+        "fplCode": 549653,
+        "name": "Norman Bassette",
+        "score": 30
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0784e",
+    "fantraxName": "Reggie Watson",
+    "clubCode": "CHE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 40
+      },
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0784f",
+    "fantraxName": "Mahdi Nicoll-Jazuli",
+    "clubCode": "CHE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 47
+      },
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0784c",
+    "fantraxName": "Olutayo Subuloye",
+    "clubCode": "CHE",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 33
+      },
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 26
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0784d",
+    "fantraxName": "Calvin Diakite",
+    "clubCode": "CHE",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 517052,
+        "name": "Nicolas Jackson",
+        "score": 34
+      },
+      {
+        "fplCode": 567119,
+        "name": "Shumaira Mheuka",
+        "score": 28
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0788e",
+    "fantraxName": "Ollie Pickles",
+    "clubCode": "LEE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 31
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0788c",
+    "fantraxName": "Freddie Lane",
+    "clubCode": "LEE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 32
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0788a",
+    "fantraxName": "Darryl Ombang",
+    "clubCode": "LEE",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 48
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "0788b",
+    "fantraxName": "Callum Mills",
+    "clubCode": "LEE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 30
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "03rxa",
+    "fantraxName": "Idrissa Gueye",
+    "clubCode": "EVE",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06329",
+    "fantraxName": "Manor Solomon",
+    "clubCode": "TOT",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 30
+      },
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 30
+      },
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 15
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "072mq",
+    "fantraxName": "Brian Madjo",
+    "clubCode": "AVL",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 645618,
+        "name": "Bradley Burrowes",
+        "score": 37
+      },
+      {
+        "fplCode": 606798,
+        "name": "Andrés García",
+        "score": 35
+      },
+      {
+        "fplCode": 577285,
+        "name": "George Hemmings",
+        "score": 23
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06xzp",
+    "fantraxName": "Luis Semedo",
+    "clubCode": "SUN",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06xzn",
+    "fantraxName": "Abdoullah Ba",
+    "clubCode": "SUN",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "075sh",
+    "fantraxName": "Jayden Lienou",
+    "clubCode": "LEE",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06xzf",
+    "fantraxName": "Charlie Crew",
+    "clubCode": "LEE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 48
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "062pa",
+    "fantraxName": "Joseph Whitworth",
+    "clubCode": "CRY",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 660392,
+        "name": "Christantus Uche",
+        "score": 31
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "062ow",
+    "fantraxName": "David Ozoh",
+    "clubCode": "CRY",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 660392,
+        "name": "Christantus Uche",
+        "score": 25
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06hzf",
+    "fantraxName": "Mark OMahony",
+    "clubCode": "BHA",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 549074,
+        "name": "Tom Watson",
+        "score": 45
+      },
+      {
+        "fplCode": 597320,
+        "name": "Harry Howell",
+        "score": 42
+      },
+      {
+        "fplCode": 556637,
+        "name": "Nehemiah Oriola",
+        "score": 37
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "070ha",
+    "fantraxName": "Florentino",
+    "clubCode": "IPS",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 172453,
+        "name": "Sam Szmodics",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06v08",
+    "fantraxName": "Daniel Armer",
+    "clubCode": "MUN",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 36
+      },
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 32
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 24
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06v00",
+    "fantraxName": "Sam Chambers",
+    "clubCode": "LEE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 48
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "066rn",
+    "fantraxName": "Daniel Gore",
+    "clubCode": "MUN",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 33
+      },
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 30
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 30
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "066t3",
+    "fantraxName": "Jamie Donley",
+    "clubCode": "TOT",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 499726,
+        "name": "Callum Olusesi",
+        "score": 42
+      },
+      {
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
+        "score": 40
+      },
+      {
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 31
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "051kg",
+    "fantraxName": "Max Aarons",
+    "clubCode": "BOU",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06nbw",
+    "fantraxName": "Jaden Heskey",
+    "clubCode": "MCI",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06nbu",
+    "fantraxName": "Stephen Mfuni",
+    "clubCode": "MCI",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06v0x",
+    "fantraxName": "Tymur Tutierov",
+    "clubCode": "SUN",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06v0w",
+    "fantraxName": "Trey Ogunsuyi",
+    "clubCode": "SUN",
+    "positionHint": "F",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "07858",
+    "fantraxName": "Miodrag Pivas",
+    "clubCode": "NEW",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "070ep",
+    "fantraxName": "Jaydon Jones",
+    "clubCode": "SUN",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "070eq",
+    "fantraxName": "Jack Whittaker",
+    "clubCode": "SUN",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "07856",
+    "fantraxName": "Joseph Gabriel",
+    "clubCode": "MUN",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 28
+      },
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 27
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 26
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "07857",
+    "fantraxName": "Luke Craggs",
+    "clubCode": "NEW",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "070eo",
+    "fantraxName": "Jenson Jones",
+    "clubCode": "SUN",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "07854",
+    "fantraxName": "Jacob Devaney",
+    "clubCode": "MUN",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 40
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 36
+      },
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 26
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "07855",
+    "fantraxName": "Enzo Kana Biyik",
+    "clubCode": "MUN",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 53
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 25
+      },
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 24
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "07852",
+    "fantraxName": "Joshua Sonni-Lambie",
+    "clubCode": "LIV",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 586268,
+        "name": "Armin Pecsi",
+        "score": 40
+      },
+      {
+        "fplCode": 500058,
+        "name": "Jayden Danns",
+        "score": 32
+      },
+      {
+        "fplCode": 519440,
+        "name": "Wellity Lucky",
+        "score": 25
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "07853",
+    "fantraxName": "Juma Bah",
+    "clubCode": "MCI",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "07850",
+    "fantraxName": "Ifeanyi Ndukwe",
+    "clubCode": "LIV",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 500058,
+        "name": "Jayden Danns",
+        "score": 38
+      },
+      {
+        "fplCode": 586268,
+        "name": "Armin Pecsi",
+        "score": 32
+      },
+      {
+        "fplCode": 519440,
+        "name": "Wellity Lucky",
+        "score": 30
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "07851",
+    "fantraxName": "Joshua Abe",
+    "clubCode": "LIV",
+    "positionHint": "F",
+    "candidates": [
+      {
+        "fplCode": 500058,
+        "name": "Jayden Danns",
+        "score": 36
+      },
+      {
+        "fplCode": 586268,
+        "name": "Armin Pecsi",
+        "score": 35
+      },
+      {
+        "fplCode": 519440,
+        "name": "Wellity Lucky",
+        "score": 13
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "05ogg",
+    "fantraxName": "Ajibola Alese",
+    "clubCode": "SUN",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06v0k",
+    "fantraxName": "Alan Browne",
+    "clubCode": "SUN",
+    "positionHint": "M",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "06v0b",
+    "fantraxName": "Jim Thwaites",
+    "clubCode": "MUN",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 576620,
+        "name": "Bendito Mantato",
+        "score": 42
+      },
+      {
+        "fplCode": 547676,
+        "name": "Tyler Fredricson",
+        "score": 29
+      },
+      {
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06yxc",
+    "fantraxName": "Rory Mahady",
+    "clubCode": "LEE",
+    "positionHint": "G",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 42
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06yxd",
+    "fantraxName": "Rhys Chadwick",
+    "clubCode": "LEE",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 221399,
+        "name": "Jack Harrison",
+        "score": 38
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "05wwd",
+    "fantraxName": "Joshua Wilson-Esbrand",
+    "clubCode": "MCI",
+    "positionHint": "D",
+    "candidates": [],
+    "reason": "no-candidates"
+  },
+  {
+    "fantraxId": "07847",
+    "fantraxName": "Modou Cisse",
+    "clubCode": "AVL",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 606798,
+        "name": "Andrés García",
+        "score": 24
+      },
+      {
+        "fplCode": 577285,
+        "name": "George Hemmings",
+        "score": 23
+      },
+      {
+        "fplCode": 645618,
+        "name": "Bradley Burrowes",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "064oo",
+    "fantraxName": "Amario Cozier-Duberry",
+    "clubCode": "BHA",
+    "positionHint": "M",
+    "candidates": [
+      {
+        "fplCode": 597320,
+        "name": "Harry Howell",
+        "score": 30
+      },
+      {
+        "fplCode": 550090,
+        "name": "Diego Coppola",
+        "score": 29
+      },
+      {
+        "fplCode": 556637,
+        "name": "Nehemiah Oriola",
+        "score": 28
+      }
+    ],
+    "reason": "below-threshold"
+  },
+  {
+    "fantraxId": "06do2",
+    "fantraxName": "Callum Scanlon",
+    "clubCode": "LIV",
+    "positionHint": "D",
+    "candidates": [
+      {
+        "fplCode": 586268,
+        "name": "Armin Pecsi",
+        "score": 32
+      },
+      {
+        "fplCode": 519440,
+        "name": "Wellity Lucky",
+        "score": 32
+      },
+      {
+        "fplCode": 500058,
+        "name": "Jayden Danns",
+        "score": 32
+      }
+    ],
+    "reason": "below-threshold"
+  }
+]

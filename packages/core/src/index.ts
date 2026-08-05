@@ -10,4 +10,5 @@
 
 export * from "./config";
 export * from "./football";
+export * from "./identity";
 export * from "./league";

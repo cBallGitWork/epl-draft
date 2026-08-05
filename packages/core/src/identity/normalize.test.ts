@@ -21,7 +21,16 @@ describe("normalizeName", () => {
   it("reduces punctuation and hyphens to spaces", () => {
     expect(normalizeName("Harriman-Annous")).toBe("harriman annous");
     expect(normalizeName("B.Fernandes")).toBe("b fernandes");
-    expect(normalizeName("N'Golo  Kanté")).toBe("n golo kante");
+  });
+
+  it("deletes apostrophes instead of spacing them", () => {
+    // Fantrax writes OBrien, FPL writes O'Brien. Spacing splits the second into
+    // two tokens sharing none with the first, and a completely unambiguous name
+    // lands below the fuzzy threshold. Found against the real pool, not here.
+    expect(normalizeName("O'Brien")).toBe("obrien");
+    expect(normalizeName("OBrien")).toBe("obrien");
+    expect(normalizeName("N'Golo Kanté")).toBe("ngolo kante");
+    expect(normalizeName("O’Riley")).toBe("oriley"); // typographic apostrophe too
   });
 
   it("is idempotent", () => {

@@ -21,10 +21,16 @@ const LETTER_FOLD: Record<string, string> = {
   þ: "th",
 };
 
-/** Casefold, strip diacritics, reduce to letters, digits and single spaces. */
+/** Casefold, strip diacritics, reduce to letters, digits and single spaces.
+ *
+ *  Apostrophes are DELETED rather than spaced. Fantrax writes "OBrien" and FPL
+ *  writes "O'Brien"; spacing splits the second into two tokens that share none
+ *  with the first, and the pair scores below threshold on a name that is not
+ *  remotely ambiguous. Deleting makes both "obrien". Same for "N'Golo". */
 export function normalizeName(name: string): string {
   const folded = name
     .toLowerCase()
+    .replace(/[’'`´]/g, "")
     .replace(/[øđðłıßæœþ]/g, (char) => LETTER_FOLD[char] ?? char);
 
   return folded

@@ -10,6 +10,11 @@ const REPO_ROOT = fileURLToPath(new URL("..", import.meta.url));
 
 export const SNAPSHOT_ROOT = join(REPO_ROOT, "data", "snapshots", "fantrax");
 
+export const MAPPINGS_ROOT = join(REPO_ROOT, "data", "mappings");
+
+/** Where the matcher leaves what it would not decide, for a human to settle. */
+export const REVIEW_ROOT = join(MAPPINGS_ROOT, "review");
+
 export function captureDir(date: string): string {
   return join(SNAPSHOT_ROOT, date);
 }
