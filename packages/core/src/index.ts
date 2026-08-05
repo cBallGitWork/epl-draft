@@ -8,4 +8,5 @@
 // identity, which is what lets the league layer be replaced wholesale in 27/28
 // while the football layer and the entire UI stay put.
 
+export * from "./config";
 export * from "./football";

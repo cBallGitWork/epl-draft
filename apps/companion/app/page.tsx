@@ -1,4 +1,4 @@
-import { getFootballSnapshot, isMatchdayLive } from "@epl/core";
+import { LEAGUE_NAME, getFootballSnapshot, isMatchdayLive } from "@epl/core";
 import MatchList from "./components/MatchList";
 
 // The live viewer. Runs entirely off FPL's public API, so it works from the first
@@ -6,6 +6,10 @@ import MatchList from "./components/MatchList";
 
 // Revalidate often enough to feel live; the fetch layer caches per-endpoint so
 // this does not hammer FPL.
+//
+// This literal deliberately duplicates `REVALIDATE.live` from core config: Next
+// requires a segment's `revalidate` to be statically analysable, so it cannot be
+// imported. Change both together. (PLATFORM_NOTES records the exception.)
 export const revalidate = 30;
 
 export default async function HomePage() {
@@ -16,7 +20,7 @@ export default async function HomePage() {
     <div className="flex flex-col gap-4">
       <header className="flex items-baseline justify-between gap-3 pt-1">
         <div>
-          <h1 className="text-xl font-bold tracking-tight">Tim Hortons Pro League</h1>
+          <h1 className="text-xl font-bold tracking-tight">{LEAGUE_NAME}</h1>
           <p className="text-sm text-muted">Gameweek {snapshot.gameweek}</p>
         </div>
         {live ? (
