@@ -1,0 +1,77 @@
+{
+  "110011#5030": {
+    "teamName": "Aston Villa",
+    "name": "Team Outfielder",
+    "fantraxId": "110011#5030",
+    "teamShortName": "AVL",
+    "position": "TmOF",
+    "shortName": "TOF"
+  },
+  "110090#5030": {
+    "teamName": "Manchester United",
+    "name": "Team Outfielder",
+    "fantraxId": "110090#5030",
+    "teamShortName": "MUN",
+    "position": "TmOF",
+    "shortName": "TOF"
+  },
+  "02m5b": {
+    "rotowireId": 17846,
+    "name": "Wood, Chris",
+    "fantraxId": "02m5b",
+    "team": "NOT",
+    "position": "F"
+  },
+  "06onv": {
+    "rotowireId": 44062,
+    "name": "Armstrong, Harrison",
+    "fantraxId": "06onv",
+    "team": "EVE",
+    "position": "M"
+  },
+  "075zi": {
+    "name": "Cresswell, Alfie",
+    "fantraxId": "075zi",
+    "team": "LEE",
+    "position": "M"
+  },
+  "06yb8": {
+    "name": "Leon, Diego",
+    "fantraxId": "06yb8",
+    "team": "MUN",
+    "position": "D"
+  },
+  "06uzu": {
+    "name": "Mamadou Sarr",
+    "fantraxId": "06uzu",
+    "team": "CHE",
+    "position": "D"
+  },
+  "06uzv": {
+    "name": "Dario Essugo",
+    "fantraxId": "06uzv",
+    "team": "CHE",
+    "position": "M"
+  },
+  "045c8": {
+    "rotowireId": 23283,
+    "name": "Gabriel Jesus",
+    "fantraxId": "045c8",
+    "team": "ARS",
+    "position": "F"
+  },
+  "04rzl": {
+    "rotowireId": 26412,
+    "name": "Awoniyi, Taiwo",
+    "fantraxId": "04rzl",
+    "team": "NOT",
+    "position": "F"
+  },
+  "05a6e": {
+    "rotowireId": 30731,
+    "name": "Williams, Neco",
+    "fantraxId": "05a6e",
+    "team": "NOT",
+    "position": "D"
+  }
+}

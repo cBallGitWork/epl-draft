@@ -1,0 +1,7 @@
+{
+  "error": {
+    "onScreen": false,
+    "code": "NO_LEAGUE",
+    "message": "This league does not exist. It may have been deleted by the commissioner."
+  }
+}

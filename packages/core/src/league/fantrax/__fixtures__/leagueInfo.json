@@ -1,0 +1,78 @@
+{
+  "leagueName": "Tim Hortons Pro League 24/25",
+  "leagueHistoryId": "s4m1dbrjlyr9ytv7",
+  "seasonYear": 2026,
+  "startDate": "2026-08-21",
+  "endDate": "2027-05-30",
+  "draftType": "snake",
+  "poolSettings": {
+    "duplicatePlayerType": "NONE",
+    "playerSourceType": "ALL_TEAMS"
+  },
+  "rosterInfo": {
+    "positionConstraints": {
+      "D": {
+        "maxActive": 5
+      },
+      "F": {
+        "maxActive": 3
+      },
+      "G": {
+        "maxActive": 1
+      },
+      "M": {
+        "maxActive": 5
+      }
+    },
+    "maxTotalPlayers": 14,
+    "maxTotalActivePlayers": 11,
+    "maxTotalReservePlayers": 3
+  },
+  "draftSettings": {
+    "draftType": "snake"
+  },
+  "scoringPeriods": [
+    {
+      "number": 1,
+      "endDate": "2026-08-28T14:59:59.0-0400",
+      "startDate": "2026-08-21T15:00:00.0-0400"
+    },
+    {
+      "number": 2,
+      "endDate": "2026-09-04T14:59:59.0-0400",
+      "startDate": "2026-08-28T15:00:00.0-0400"
+    }
+  ],
+  "rosterPeriods": [
+    {
+      "number": 1,
+      "endDate": "2026-08-28T14:59:58.0-0400",
+      "startDate": "2026-08-21T15:00:00.0-0400"
+    },
+    {
+      "number": 2,
+      "endDate": "2026-09-04T14:59:58.0-0400",
+      "startDate": "2026-08-28T15:00:00.0-0400"
+    }
+  ],
+  "matchups": [],
+  "teamInfo": {},
+  "playerInfo": {
+    "075zi": {
+      "eligiblePos": "M",
+      "status": "WW"
+    },
+    "02m5b": {
+      "eligiblePos": "F",
+      "status": "WW"
+    },
+    "06onv": {
+      "eligiblePos": "M",
+      "status": "WW"
+    },
+    "06r5d": {
+      "eligiblePos": "F,M",
+      "status": "WW"
+    }
+  }
+}

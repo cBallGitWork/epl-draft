@@ -10,3 +10,4 @@
 
 export * from "./config";
 export * from "./football";
+export * from "./league";

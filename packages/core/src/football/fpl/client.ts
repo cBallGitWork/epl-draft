@@ -9,10 +9,14 @@ import type { RawBootstrap, RawFixture, RawLive } from "./raw";
 /** FPL rate-limits aggressively when hammered, and the live page polls. Cache at
  *  the fetch layer and let callers decide freshness via `revalidate`. */
 async function get<T>(path: string, revalidate: number): Promise<T> {
-  const res = await fetch(`${FPL_API_BASE}${path}`, {
+  // `next` is Next's own extension to RequestInit and is inert under a plain
+  // fetch. Typed inline so core does not depend on Next's global augmentation —
+  // see PLATFORM_NOTES on the §5 framework-agnosticism tension this leaves open.
+  const init: RequestInit & { next: { revalidate: number } } = {
     next: { revalidate },
     headers: { "User-Agent": "epl-draft/0.1 (league companion)" },
-  });
+  };
+  const res = await fetch(`${FPL_API_BASE}${path}`, init);
   if (!res.ok) throw new Error(`FPL ${path} → ${res.status}`);
   return (await res.json()) as T;
 }

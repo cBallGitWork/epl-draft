@@ -1,0 +1,7 @@
+{
+  "error": {
+    "onScreen": false,
+    "code": "NO_TEAMS",
+    "message": "There are currently no teams in this league"
+  }
+}
