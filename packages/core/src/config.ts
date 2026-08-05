@@ -32,25 +32,19 @@ export const FANTRAX_SPORT = "EPL";
 /** Our league. Public — it is the id in the league URL, not a credential. */
 export const FANTRAX_LEAGUE_ID = "ayyoh3n2mr326v2o";
 
-/** Cache lifetimes in seconds, per endpoint class. Bootstrap is 1.3 MB and moves
- *  only on price changes and news; live stats are the matchday path.
+/** How stale a rendered page may be, in seconds.
  *
- *  `fantrax` is provisional — league state barely moves before the draft, so it is
- *  set from expectation rather than measurement, and wants revisiting once real
- *  usage exists. */
-export const REVALIDATE = {
-  bootstrap: 600,
-  fixtures: 120,
-  live: 30,
-  fantrax: 300,
-} as const;
+ *  Every route segment must repeat this as a literal, because Next analyses
+ *  `revalidate` statically and will not read an import. The comment at each site
+ *  points back here. */
+export const PAGE_REVALIDATE = 30;
 
 /** How often an open page asks the server for a fresh render, in seconds.
  *
- *  `live` matches the live cache TTL deliberately — polling faster than the cache
- *  can change is work that returns the same bytes. Between matches nothing moves
- *  quickly enough to justify the wake-ups. */
+ *  `live` matches the page's own lifetime deliberately — polling faster than the
+ *  page can change is work that returns the same bytes. Between matches nothing
+ *  moves quickly enough to justify the wake-ups. */
 export const POLL = {
-  live: REVALIDATE.live,
+  live: PAGE_REVALIDATE,
   idle: 300,
 } as const;

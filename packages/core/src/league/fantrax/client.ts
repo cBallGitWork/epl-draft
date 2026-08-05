@@ -1,4 +1,4 @@
-import { FANTRAX_FXEA_BASE, FANTRAX_SPORT, REVALIDATE } from "../../config";
+import { FANTRAX_FXEA_BASE, FANTRAX_SPORT } from "../../config";
 import { FantraxError, errorEnvelope } from "./errors";
 import type {
   RawDraftResults,
@@ -16,10 +16,7 @@ import type {
 
 async function fxeaGet<T>(method: string, params: Record<string, string>): Promise<T> {
   const url = `${FANTRAX_FXEA_BASE}/${method}?${new URLSearchParams(params)}`;
-  const init: RequestInit & { next: { revalidate: number } } = {
-    next: { revalidate: REVALIDATE.fantrax },
-  };
-  const res = await fetch(url, init);
+  const res = await fetch(url);
 
   // A backstop only. Fantrax reports its own refusals with a 200 and an error
   // body, so this fires for transport failures, not for anything it means.

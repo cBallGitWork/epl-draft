@@ -5,6 +5,7 @@ import GameweekView from "../../components/GameweekView";
 // Any round of the season, addressable. Last week's results on Monday morning is
 // the second thing anyone wants after this week's score.
 
+// Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
 export const revalidate = 30;
 
 export default async function GameweekPage({

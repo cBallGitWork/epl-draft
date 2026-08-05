@@ -154,22 +154,22 @@ analysable literal, so it cannot be imported from `packages/core/src/config.ts`.
 The value intentionally duplicates `REVALIDATE.live`. Both must change together;
 a comment at each site says so.
 
-### Next's `next.revalidate` inside `packages/core` (§5, framework-agnostic core) — UNRESOLVED
+### Next's `next.revalidate` inside `packages/core` (§5) — RESOLVED, removed
 
-Both provider clients (`football/fpl/client.ts`, `league/fantrax/client.ts`) pass
-Next's `next: { revalidate }` extension to `fetch`. CODE_RULES §5 says core must
-carry no Next-specific options. This predates the league layer — the FPL client
-shipped with it — and copying it into Fantrax makes it the third occurrence,
-which is the point the rule says to act.
+Both provider clients used to pass Next's `next: { revalidate }` extension to
+`fetch`, which §5 forbids inside core. Resolved by deleting it rather than by
+typing around it: the clients now use plain `fetch` with standard options only,
+and freshness is the route's business via each segment's `revalidate`.
 
-It is typed inline (`RequestInit & { next: … }`) rather than by importing Next's
-global augmentation, so `npm run typecheck` passes and core still has no Next
-dependency. That is a stopgap, not a resolution.
+The cost is real and accepted: per-endpoint TTLs are gone, so a page render
+refetches bootstrap (1.3 MB) rather than reusing a data-cache entry. FPL's API is
+public and unmetered, and a rules-clean core is worth more than the bytes.
 
-The real choice, still to be made: drop fetch-level caching from core and let the
-route segment's `revalidate` bound upstream load (loses per-endpoint granularity —
-bootstrap is 1.3 MB and would be refetched on every page revalidation), or inject
-the cache policy from the edge (threads an init argument through `snapshot.ts`).
+Follow-up worth knowing about: `/gw/[gameweek]` builds as a dynamic route, so it
+re-renders per request instead of being served from the full route cache. That
+was masked before by fetch-level caching. Not worth acting on until the app is
+actually in front of people after the draft — noted so it is a decision rather
+than a surprise.
 
 Also note: `npm run typecheck` had never passed before this — the failure was
 invisible because `CLAUDE.md`'s verify section lists only `npm test` and
@@ -199,7 +199,6 @@ without awaiting, so a rejection crashes the run loudly instead of being softene
       file has uncommitted edits): `getPlayerIds` returns 758 entries of which
       only ~698 are players, not "755 players"; and `sportRadarId` is not on that
       endpoint at all, so it is not the second identity space the file implies.
-- [ ] Resolve the `next.revalidate`-in-core question (see rule exceptions).
 - [ ] Model standings / rosters / draft picks once the draft populates them.
 - [ ] Automate the capture (cron or CI) — manual runs will not survive October.
 - [ ] Design the cookie flow for the fxpa write surface.

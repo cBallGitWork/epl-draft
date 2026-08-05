@@ -1,4 +1,4 @@
-import { FPL_API_BASE, REVALIDATE } from "../../config";
+import { FPL_API_BASE } from "../../config";
 import type { RawBootstrap, RawFixture, RawLive } from "./raw";
 
 // All FPL network I/O lives here and nowhere else, so the mapping stays pure and
@@ -6,35 +6,32 @@ import type { RawBootstrap, RawFixture, RawLive } from "./raw";
 // which is exactly why the football layer can run from day one while the Fantrax
 // league layer is still waiting on a draft.
 
-/** FPL rate-limits aggressively when hammered, and the live page polls. Cache at
- *  the fetch layer and let callers decide freshness via `revalidate`. */
-async function get<T>(path: string, revalidate: number): Promise<T> {
-  // `next` is Next's own extension to RequestInit and is inert under a plain
-  // fetch. Typed inline so core does not depend on Next's global augmentation —
-  // see PLATFORM_NOTES on the §5 framework-agnosticism tension this leaves open.
-  const init: RequestInit & { next: { revalidate: number } } = {
-    next: { revalidate },
+/** Plain fetch, standard options only. Freshness is the route's business: a Next
+ *  segment's `revalidate` bounds how stale a rendered page may be, and expressing
+ *  it a second time here would mean a Next-specific option inside core, which
+ *  §5 forbids and which nothing outside Next would honour anyway. */
+async function get<T>(path: string): Promise<T> {
+  const res = await fetch(`${FPL_API_BASE}${path}`, {
     headers: { "User-Agent": "epl-draft/0.1 (league companion)" },
-  };
-  const res = await fetch(`${FPL_API_BASE}${path}`, init);
+  });
   if (!res.ok) throw new Error(`FPL ${path} → ${res.status}`);
   return (await res.json()) as T;
 }
 
 /** Players, clubs and gameweeks. Large (~1.3 MB) and changes slowly outside of
- *  price changes and news, so it tolerates a long cache. */
+ *  price changes and news. */
 export function fetchBootstrap(): Promise<RawBootstrap> {
-  return get<RawBootstrap>("/bootstrap-static/", REVALIDATE.bootstrap);
+  return get<RawBootstrap>("/bootstrap-static/");
 }
 
 /** Fixtures for one gameweek, or the whole season when `gameweek` is omitted. */
 export function fetchFixtures(gameweek?: number): Promise<RawFixture[]> {
   const q = gameweek == null ? "" : `?event=${gameweek}`;
-  return get<RawFixture[]>(`/fixtures/${q}`, REVALIDATE.fixtures);
+  return get<RawFixture[]>(`/fixtures/${q}`);
 }
 
 /** Live per-player stats for a gameweek. Empty (`{elements: []}`) until the first
- *  match of that gameweek kicks off. Short cache — this is the live path. */
+ *  match of that gameweek kicks off. */
 export function fetchLive(gameweek: number): Promise<RawLive> {
-  return get<RawLive>(`/event/${gameweek}/live/`, REVALIDATE.live);
+  return get<RawLive>(`/event/${gameweek}/live/`);
 }
