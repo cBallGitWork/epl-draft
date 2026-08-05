@@ -1,21 +1,25 @@
 import type { LeaguePlayer } from "../league/types";
 import { type Bridge, type MappedEntry, claimedCodes, settledIds } from "./bridge";
+import {
+  type FplCandidate,
+  candidateName,
+  fantraxForms,
+  isExactHit,
+  scoreAgainst,
+  surnameAgrees,
+} from "./candidates";
 import { toFplClubCode } from "./clubCodes";
-import { fplNameVariants, normalizeName, surname, tokens } from "./normalize";
-import { AMBIGUITY_MARGIN, FUZZY_MIN_SCORE, tokenSetRatio } from "./similarity";
+import { normalizeName } from "./normalize";
+import { AMBIGUITY_MARGIN, FUZZY_MIN_SCORE } from "./similarity";
 
 // Deciding which FPL player a Fantrax player is. The one rule that matters: when
 // it is not sure, it says so. A wrong row here is a player's whole season
 // attributed to someone else, and nothing downstream would ever question it.
+//
+// Whether two names are the same name is `candidates.ts`. This file is only about
+// who ends up claiming whom.
 
-/** The FPL side of the match, reduced to what matching needs. */
-export interface FplCandidate {
-  code: number;
-  firstName: string;
-  secondName: string;
-  webName: string;
-  clubCode: string;
-}
+export type { FplCandidate };
 
 /** A Fantrax player we could not settle, with what we considered, so a human can
  *  decide in one sitting instead of re-deriving the problem. */
@@ -36,46 +40,6 @@ export interface MatchResult {
 }
 
 type Aliases = Record<string, string>;
-
-function candidateName(candidate: FplCandidate): string {
-  return `${candidate.firstName} ${candidate.secondName}`.trim();
-}
-
-/** Does `candidate` plausibly contain `name`, or is it a different player who
- *  merely shares a given name?
- *
- *  token_set_ratio scores containment at 100, so "Gabriel" ties perfectly with
- *  Arsenal's "Gabriel" AND with "Gabriel Jesus". Requiring the surname token to
- *  appear rejects the wrong one while accepting every genuine case — FPL's bare
- *  "Raya" still matches "David Raya Martín".
- *
- *  `name` must be in reading order. Fantrax's raw form is surname-first, where
- *  the last token is the GIVEN name — guarding on that asks whether the
- *  candidate contains "Danny", and rejects Daniel Ballard for not being called
- *  Danny. */
-function surnameAgrees(name: string, candidate: FplCandidate): boolean {
-  const target = surname(name);
-  if (target === "") return false;
-  const candidateTokens = new Set([
-    ...tokens(candidateName(candidate)),
-    ...tokens(candidate.webName),
-  ]);
-  return candidateTokens.has(target);
-}
-
-function scoreAgainst(name: string, candidate: FplCandidate): number {
-  return Math.max(
-    ...fplNameVariants(candidate).map((variant) => tokenSetRatio(name, variant)),
-  );
-}
-
-/** Every spelling of the Fantrax player worth matching on: their name as given,
- *  and — when it is in surname-first form — the reading-order flip. */
-function fantraxForms(player: LeaguePlayer): string[] {
-  return [...new Set([normalizeName(player.rawName), normalizeName(player.displayName)])].filter(
-    (form) => form !== "",
-  );
-}
 
 /**
  * Match Fantrax players to FPL players, club by club.
@@ -129,10 +93,7 @@ export function matchPlayers(
     const alias = aliases[forms[0] ?? ""];
     const wanted = alias === undefined ? forms : [...forms, normalizeName(alias)];
 
-    const hits = poolFor(player).filter((candidate) => {
-      const variants = fplNameVariants(candidate);
-      return wanted.some((form) => variants.includes(form));
-    });
+    const hits = poolFor(player).filter((candidate) => isExactHit(wanted, candidate));
 
     if (hits.length === 1 && hits[0] !== undefined) {
       taken.add(hits[0].code);

@@ -9,6 +9,7 @@ import {
   crestUrl,
   fixturesInOrder,
 } from "@epl/core";
+import { londonTime } from "../londonTime";
 import PlayerPortrait from "./PlayerPortrait";
 
 // The matchday list. Each fixture is a native <details> so the drop-down works
@@ -178,13 +179,8 @@ function Events({ c }: { c: import("@epl/core").MatchContribution }) {
   );
 }
 
-/** Kickoffs render in UK time regardless of where the reader is — the league is
- *  British and "15:00" must mean the same thing to everyone in it. */
+/** TV picks routinely have no time yet, and an undated match must say so rather
+ *  than borrow a neighbour's kickoff. */
 function formatKickoff(iso: string | null): string {
-  if (!iso) return "TBC";
-  return new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "Europe/London",
-  }).format(new Date(iso));
+  return iso === null ? "TBC" : londonTime(iso);
 }

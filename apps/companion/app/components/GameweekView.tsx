@@ -6,6 +6,7 @@ import {
   adjacentGameweeks,
   isMatchdayLive,
 } from "@epl/core";
+import { londonDayAndTime, londonTime } from "../londonTime";
 import AutoRefresh from "./AutoRefresh";
 import MatchList from "./MatchList";
 
@@ -34,7 +35,9 @@ export default function GameweekView({ snapshot }: { snapshot: FootballSnapshot 
           <span className="text-right text-xs text-faint">
             Deadline
             <br />
-            <span className="numeric text-sm text-muted">{formatDeadline(snapshot.deadline)}</span>
+            <span className="numeric text-sm text-muted">
+              {londonDayAndTime(snapshot.deadline)}
+            </span>
           </span>
         ) : null}
       </header>
@@ -48,7 +51,7 @@ export default function GameweekView({ snapshot }: { snapshot: FootballSnapshot 
 
       {/* Honesty about provenance, per PRODUCT.md principle 4. */}
       <p className="pt-1 text-center text-2xs text-faint">
-        Live data from the Premier League. Updated {formatUpdated(snapshot.fetchedAt)}.
+        Live data from the Premier League. Updated {londonTime(snapshot.fetchedAt)}.
       </p>
     </div>
   );
@@ -81,21 +84,3 @@ function GameweekLink({
   );
 }
 
-function formatDeadline(iso: string): string {
-  return new Intl.DateTimeFormat("en-GB", {
-    weekday: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "Europe/London",
-  }).format(new Date(iso));
-}
-
-/** Kickoffs and updates render in UK time regardless of where the reader is —
- *  the league is British and "15:00" must mean the same to everyone in it. */
-function formatUpdated(iso: string): string {
-  return new Intl.DateTimeFormat("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: "Europe/London",
-  }).format(new Date(iso));
-}
