@@ -28,9 +28,6 @@
       ],
       "@epl/core": [
         "../../packages/core/src/index.ts"
-      ],
-      "@epl/core/*": [
-        "../../packages/core/src/*"
       ]
     }
   },
