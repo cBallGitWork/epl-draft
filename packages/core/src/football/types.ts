@@ -91,10 +91,14 @@ export interface FootballSnapshot {
   fixtures: Fixture[];
   /** Per-player match stats for the gameweek in view; empty before kickoff. */
   stats: PlayerMatchStats[];
-  /** The gameweek currently in focus — live if one is running, else the next up. */
+  /** The gameweek this snapshot describes. Defaults to the one in focus — live if
+   *  one is running, else the next up — but is whatever was asked for. */
   gameweek: number;
   /** ISO deadline of that gameweek. */
   deadline: string | null;
+  /** Every gameweek the season has, ascending. Navigation reads its bounds from
+   *  here rather than assuming 38: FPL is the authority on how long a season is. */
+  gameweeks: number[];
   /** When this snapshot was assembled, so the UI can show staleness honestly. */
   fetchedAt: string;
 }

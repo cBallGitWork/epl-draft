@@ -95,11 +95,39 @@ describe("buildSnapshot", () => {
   it("assembles the layers and carries the injected timestamp", () => {
     const snap = buildSnapshot({
       bootstrap: bootstrap(), fixtures: [fixture()], live: { elements: [] },
-      fetchedAt: "2026-08-21T18:00:00Z",
+      gameweek: 2, fetchedAt: "2026-08-21T18:00:00Z",
     });
     expect(snap.clubs).toHaveLength(1);
     expect(snap.players).toHaveLength(1);
     expect(snap.gameweek).toBe(2);
     expect(snap.fetchedAt).toBe("2026-08-21T18:00:00Z");
+  });
+
+  it("labels the snapshot with the round asked for, not the one in play", () => {
+    // Viewing GW1 while GW2 is next used to return GW1's fixtures under GW2's
+    // number and deadline. Invisible until something could request a round other
+    // than the current one, which is exactly what gameweek navigation does.
+    const snap = buildSnapshot({
+      bootstrap: bootstrap(), fixtures: [fixture()], live: { elements: [] },
+      gameweek: 1, fetchedAt: "2026-08-21T18:00:00Z",
+    });
+    expect(snap.gameweek).toBe(1);
+    expect(snap.deadline).toBe("2026-08-21T17:30:00Z");
+  });
+
+  it("carries the season's gameweeks so navigation need not assume 38", () => {
+    const snap = buildSnapshot({
+      bootstrap: bootstrap(), fixtures: [], live: { elements: [] },
+      gameweek: 1, fetchedAt: "2026-08-21T18:00:00Z",
+    });
+    expect(snap.gameweeks).toEqual([1, 2]);
+  });
+
+  it("has no deadline for a round FPL does not list", () => {
+    const snap = buildSnapshot({
+      bootstrap: bootstrap(), fixtures: [], live: { elements: [] },
+      gameweek: 99, fetchedAt: "2026-08-21T18:00:00Z",
+    });
+    expect(snap.deadline).toBeNull();
   });
 });

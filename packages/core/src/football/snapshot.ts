@@ -20,5 +20,11 @@ export async function getFootballSnapshot(gameweek?: number): Promise<FootballSn
     fetchLive(gw).catch(() => ({ elements: [] })),
   ]);
 
-  return buildSnapshot({ bootstrap, fixtures, live, fetchedAt: new Date().toISOString() });
+  return buildSnapshot({
+    bootstrap,
+    fixtures,
+    live,
+    gameweek: gw,
+    fetchedAt: new Date().toISOString(),
+  });
 }

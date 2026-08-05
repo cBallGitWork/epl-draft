@@ -19,9 +19,11 @@ export { initials, portraitUrl } from "./portraits";
 export type { PortraitSize } from "./portraits";
 export { getFootballSnapshot } from "./snapshot";
 export {
+  adjacentGameweeks,
   clubById,
   contributions,
   fixturesInOrder,
+  hasGameweek,
   isMatchdayLive,
   playerById,
 } from "./selectors";

@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { FootballSnapshot, PlayerMatchStats } from "./types";
-import { contributions, fixturesInOrder, isMatchdayLive } from "./selectors";
+import {
+  adjacentGameweeks,
+  contributions,
+  fixturesInOrder,
+  hasGameweek,
+  isMatchdayLive,
+} from "./selectors";
 
 const player = (id: number, name: string, clubId = 1) => ({
   id, code: 1000 + id, name, fullName: name, clubId, position: "MID" as const,
@@ -21,6 +27,7 @@ const snap = (over: Partial<FootballSnapshot> = {}): FootballSnapshot => ({
   stats: [],
   gameweek: 1,
   deadline: null,
+  gameweeks: [1, 2, 3],
   fetchedAt: "2026-08-21T18:00:00Z",
   ...over,
 });
@@ -74,5 +81,34 @@ describe("isMatchdayLive", () => {
     const base = { gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, minutes: 0 };
     expect(isMatchdayLive(snap({ fixtures: [{ ...base, id: 1, status: "finished" }] }))).toBe(false);
     expect(isMatchdayLive(snap({ fixtures: [{ ...base, id: 1, status: "live" }] }))).toBe(true);
+  });
+});
+
+describe("adjacentGameweeks", () => {
+  it("offers both neighbours mid-season", () => {
+    expect(adjacentGameweeks(snap({ gameweek: 2 }))).toEqual({ previous: 1, next: 3 });
+  });
+
+  it("has no previous at the start and no next at the end", () => {
+    expect(adjacentGameweeks(snap({ gameweek: 1 })).previous).toBeNull();
+    expect(adjacentGameweeks(snap({ gameweek: 3 })).next).toBeNull();
+  });
+
+  it("offers neither for a round outside the season", () => {
+    expect(adjacentGameweeks(snap({ gameweek: 99 }))).toEqual({ previous: null, next: null });
+  });
+
+  it("reads the bounds from the data, not a constant 38", () => {
+    // A season that gains or loses a round to postponements should not need a
+    // code change.
+    const short = snap({ gameweek: 5, gameweeks: [4, 5, 6, 7] });
+    expect(adjacentGameweeks(short)).toEqual({ previous: 4, next: 6 });
+  });
+});
+
+describe("hasGameweek", () => {
+  it("accepts a round the season has and rejects one it does not", () => {
+    expect(hasGameweek(snap(), 2)).toBe(true);
+    expect(hasGameweek(snap(), 38)).toBe(false);
   });
 });

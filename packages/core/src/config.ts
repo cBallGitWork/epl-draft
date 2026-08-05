@@ -44,3 +44,13 @@ export const REVALIDATE = {
   live: 30,
   fantrax: 300,
 } as const;
+
+/** How often an open page asks the server for a fresh render, in seconds.
+ *
+ *  `live` matches the live cache TTL deliberately — polling faster than the cache
+ *  can change is work that returns the same bytes. Between matches nothing moves
+ *  quickly enough to justify the wake-ups. */
+export const POLL = {
+  live: REVALIDATE.live,
+  idle: 300,
+} as const;

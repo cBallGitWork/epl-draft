@@ -94,3 +94,26 @@ export function fixturesInOrder(snapshot: FootballSnapshot) {
 export function isMatchdayLive(snapshot: FootballSnapshot): boolean {
   return snapshot.fixtures.some((f) => f.status === "live");
 }
+
+/** The rounds either side of the one in view, or null at each end of the season.
+ *
+ *  Bounds come from the snapshot's own gameweek list rather than a constant 38 —
+ *  FPL decides how long a season is, and a season that gains a round to a
+ *  postponement should not need a code change. */
+export function adjacentGameweeks(snapshot: FootballSnapshot): {
+  previous: number | null;
+  next: number | null;
+} {
+  const at = snapshot.gameweeks.indexOf(snapshot.gameweek);
+  if (at === -1) return { previous: null, next: null };
+  return {
+    previous: snapshot.gameweeks[at - 1] ?? null,
+    next: snapshot.gameweeks[at + 1] ?? null,
+  };
+}
+
+/** Whether a round exists in this season at all — what a route needs before it
+ *  renders a gameweek someone typed into the URL. */
+export function hasGameweek(snapshot: FootballSnapshot, gameweek: number): boolean {
+  return snapshot.gameweeks.includes(gameweek);
+}

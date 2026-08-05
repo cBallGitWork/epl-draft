@@ -139,21 +139,30 @@ function statsFor(
 }
 
 /** Assemble the whole football snapshot. `fetchedAt` is injected rather than read
- *  from the clock so this stays pure and testable. */
+ *  from the clock so this stays pure and testable.
+ *
+ *  `gameweek` is the round these fixtures belong to and must be passed in: taking
+ *  it from `focusGameweek` instead would label a snapshot of GW3 with whatever
+ *  round happens to be current, which is only invisible while nobody can ask for
+ *  a round other than the current one. */
 export function buildSnapshot(input: {
   bootstrap: RawBootstrap;
   fixtures: RawFixture[];
   live: RawLive;
+  gameweek: number;
   fetchedAt: string;
 }): FootballSnapshot {
-  const { gameweek, deadline } = focusGameweek(input.bootstrap);
+  const events = input.bootstrap.events ?? [];
+  const event = events.find((e) => e.id === input.gameweek) ?? null;
+
   return {
     clubs: mapClubs(input.bootstrap),
     players: mapPlayers(input.bootstrap),
     fixtures: mapFixtures(input.fixtures),
     stats: mapLiveStats(input.live),
-    gameweek,
-    deadline,
+    gameweek: input.gameweek,
+    deadline: event?.deadline_time ?? null,
+    gameweeks: events.map((e) => e.id).sort((a, b) => a - b),
     fetchedAt: input.fetchedAt,
   };
 }
