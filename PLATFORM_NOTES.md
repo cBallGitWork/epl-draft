@@ -67,6 +67,16 @@ Also note: `npm run typecheck` had never passed before this — the failure was
 invisible because `CLAUDE.md`'s verify section lists only `npm test` and
 `npm run build`. Both now gate every commit alongside typecheck.
 
+### New dependency: `tsx` (§2, every dependency is a recorded decision)
+
+Dev-only, never shipped. The capture and bridge runners import `@epl/core`, whose
+relative imports are extensionless, which Node's native type-stripping will not
+resolve. `tsx` is the smallest thing that runs them unchanged.
+
+Scripts transpile to CJS (the root package has no `"type": "module"`), so they
+cannot use top-level `await` — each wraps its body in `main()` and calls it
+without awaiting, so a rejection crashes the run loudly instead of being softened.
+
 ## Questions
 
 - What Fantrax data should we replicate vs proxy?

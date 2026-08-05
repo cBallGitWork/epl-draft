@@ -10,6 +10,9 @@ export type {
   RosterLimits,
 } from "./types";
 
+export { captureStaleness } from "./staleness";
+export type { CaptureStaleness } from "./staleness";
+
 export { FantraxError, errorEnvelope } from "./fantrax/errors";
 export { mapLeagueInfo, mapPlayerPool, readingOrder } from "./fantrax/map";
 export {

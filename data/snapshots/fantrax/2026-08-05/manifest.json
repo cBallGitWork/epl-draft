@@ -1,0 +1,32 @@
+{
+  "capturedAt": "2026-08-05T15:33:17.692Z",
+  "leagueId": "ayyoh3n2mr326v2o",
+  "reads": [
+    {
+      "method": "getLeagueInfo",
+      "ok": true,
+      "bytes": 77097
+    },
+    {
+      "method": "getTeamRosters",
+      "ok": false,
+      "code": "NO_TEAMS",
+      "message": "Fantrax getTeamRosters: NO_TEAMS — There are currently no teams in this league"
+    },
+    {
+      "method": "getStandings",
+      "ok": true,
+      "bytes": 3
+    },
+    {
+      "method": "getDraftResults",
+      "ok": true,
+      "bytes": 74
+    },
+    {
+      "method": "getPlayerIds",
+      "ok": true,
+      "bytes": 103815
+    }
+  ]
+}
