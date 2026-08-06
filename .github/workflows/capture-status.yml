@@ -1,0 +1,46 @@
+name: Capture staleness
+
+# The watchdog. Fails loudly when either league has gone too long without a
+# capture, which is the failure this project is actually designed against.
+#
+# **Separate from `capture.yml` on purpose, and on a different schedule.** If the
+# job that captures were also the job that reported on capturing, then the way it
+# most plausibly dies — the workflow stops running at all — is exactly the way it
+# would stop reporting. The sibling project's per-gameweek capture died silently
+# at GW35 and was rescued only because FPL's bootstrap is a public URL the
+# Internet Archive crawls. Nothing crawls our league. Silence is the enemy, so the
+# noticing lives in its own workflow that would still fire if the other never ran
+# again.
+#
+# `npm run capture:status` exits non-zero when overdue, which fails the job, which
+# is what reaches a human. No issue-filing machinery: a red workflow already
+# notifies, and a mechanism with one caller is a mechanism we do not need.
+
+on:
+  schedule:
+    # 14:25 UTC daily — mid-afternoon UK, nine hours after the capture is due, so
+    # a missed run is reported the same day rather than the next.
+    - cron: "25 14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Per league: the two draft nine weeks apart, so the rehearsal league is
+      # already on the daily cadence while the real one is still weekly. One
+      # combined answer would hide whichever of them stopped.
+      - name: Check both leagues
+        run: npm run capture:status

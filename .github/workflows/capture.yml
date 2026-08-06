@@ -1,0 +1,57 @@
+name: Capture Fantrax
+
+# Records both leagues and the player pool, every day, and commits the result.
+#
+# This is the only way our league's history will ever exist. Fantrax serves
+# current state only and nothing crawls a private league id, so a day not written
+# down is a day gone — no backfill, not from them and not from anywhere else.
+#
+# Deliberately does NOT fail when a read fails. `NO_TEAMS` from the real league is
+# the expected answer until 10 Oct, and a partial capture is worth keeping. The
+# manifest records every refusal, and `capture-status.yml` is what notices when
+# captures stop arriving altogether.
+
+on:
+  schedule:
+    # 05:10 UTC daily. After any overnight waiver processing, and off the hour
+    # because everyone schedules on the hour and GitHub queues those runs.
+    - cron: "10 5 * * *"
+  workflow_dispatch:
+
+# Least privilege: this job writes commits and nothing else.
+permissions:
+  contents: write
+
+concurrency:
+  group: capture
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Capture both leagues and the pool
+        run: npm run capture
+
+      - name: Commit the snapshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/snapshots
+          # Nothing to commit is normal: re-running on the same London day
+          # overwrites that day's directory with identical bytes.
+          if git diff --cached --quiet; then
+            echo "No change in today's capture."
+            exit 0
+          fi
+          git commit -m "chore: capture Fantrax $(date -u +%Y-%m-%d)"
+          git push
