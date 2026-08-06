@@ -17,6 +17,10 @@ export type { ClubColours } from "./clubs";
 export { initials, portraitUrl } from "./portraits";
 export type { PortraitSize } from "./portraits";
 export { getFootballSnapshot } from "./snapshot";
+// The whole-season fixture list, which `getFootballSnapshot` does not serve — it
+// is per-gameweek. `npm run periods` needs every kickoff at once.
+export { fetchFixtures } from "./fpl/client";
+export { mapFixtures } from "./fpl/map";
 export {
   adjacentGameweeks,
   clubById,

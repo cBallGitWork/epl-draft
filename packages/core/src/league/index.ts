@@ -19,6 +19,9 @@ export type {
 export { captureStaleness } from "./staleness";
 export type { CaptureStaleness } from "./staleness";
 
+export { periodGameweeks } from "./calendar";
+export type { GameweekKickoff, PeriodGameweeks } from "./calendar";
+
 export { FantraxError, errorEnvelope } from "./fantrax/errors";
 export { mapLeagueInfo, mapPlayerPool, readingOrder } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";

@@ -16,6 +16,7 @@
     "typecheck": "tsc --noEmit -p packages/core && tsc --noEmit -p scripts && npm run typecheck --workspace=@epl/companion",
     "capture": "tsx scripts/capture-fantrax.ts",
     "capture:status": "tsx scripts/capture-status.ts",
+    "periods": "tsx scripts/period-alignment.ts",
     "bridge": "tsx scripts/build-bridge.ts"
   },
   "devDependencies": {
