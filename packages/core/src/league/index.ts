@@ -7,7 +7,11 @@ export type {
   LeaguePeriod,
   LeaguePlayer,
   LeaguePlayerState,
+  PeriodRosters,
   RosterLimits,
+  RosterSlot,
+  StandingsRow,
+  TeamRoster,
 } from "./types";
 
 export { captureStaleness } from "./staleness";
@@ -15,6 +19,8 @@ export type { CaptureStaleness } from "./staleness";
 
 export { FantraxError, errorEnvelope } from "./fantrax/errors";
 export { mapLeagueInfo, mapPlayerPool, readingOrder } from "./fantrax/map";
+export { mapTeamRosters } from "./fantrax/rosters";
+export { mapStandings } from "./fantrax/standings";
 export {
   fetchDraftResults,
   fetchLeagueInfo,

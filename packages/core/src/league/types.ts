@@ -61,6 +61,43 @@ export interface LeaguePeriod {
   end: string;
 }
 
+/** One player in one team's roster for one period. */
+export interface RosterSlot {
+  fantraxId: string;
+  /** The slot Fantrax has them filling. Fantrax's opinion, commissioner-mutable,
+   *  and never a join key. */
+  position: string | null;
+  /** ACTIVE or RESERVE, raw. The distinction is the whole point of a lineup, so
+   *  it is carried verbatim rather than reduced to a boolean we would have to
+   *  reinterpret when Fantrax adds a third value. */
+  status: string;
+}
+
+export interface TeamRoster {
+  teamId: string;
+  teamName: string;
+  slots: RosterSlot[];
+}
+
+/** `getTeamRosters` for one period. */
+export interface PeriodRosters {
+  /** Which period this is, echoed back by Fantrax. Null when it did not say —
+   *  never 0, which would read as a real period. */
+  period: number | null;
+  teams: TeamRoster[];
+}
+
+export interface StandingsRow {
+  teamId: string;
+  teamName: string;
+  rank: number;
+  /** Win-loss-tie exactly as Fantrax formats it ("0-0-0"). Unparsed on purpose:
+   *  every sample we have is all zeroes, so splitting it would infer a format
+   *  from nothing. Parse it when a played gameweek produces a real one. */
+  record: string;
+  pointsFor: number;
+}
+
 /** Everything `getLeagueInfo` tells us about the competition's configuration. */
 export interface LeagueInfo {
   name: string;

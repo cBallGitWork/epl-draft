@@ -1,0 +1,56 @@
+{
+  "period": 1,
+  "rosters": {
+    "8enbgqo5msgb375j": {
+      "teamName": "123",
+      "salaryCap": 200,
+      "rosterItems": [
+        {
+          "id": "05l8q",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "02lz0",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0784x",
+          "position": "F",
+          "status": "RESERVE"
+        },
+        {
+          "id": "06fup",
+          "position": "M",
+          "status": "RESERVE"
+        }
+      ]
+    },
+    "sezrgvl2mshcpazf": {
+      "teamName": "test4",
+      "salaryCap": 200,
+      "rosterItems": [
+        {
+          "id": "06jgi",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "068y0",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "067yv",
+          "position": "F",
+          "status": "RESERVE"
+        },
+        {
+          "position": "F",
+          "status": "RESERVE"
+        }
+      ]
+    }
+  }
+}
