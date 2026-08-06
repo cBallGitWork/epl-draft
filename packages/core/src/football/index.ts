@@ -17,9 +17,10 @@ export type { ClubColours } from "./clubs";
 export { initials, portraitUrl } from "./portraits";
 export type { PortraitSize } from "./portraits";
 export { getFootballSnapshot } from "./snapshot";
-// The whole-season fixture list, which `getFootballSnapshot` does not serve — it
-// is per-gameweek. `npm run periods` needs every kickoff at once.
-export { fetchFixtures } from "./fpl/client";
+// The two reads `getFootballSnapshot` does not serve, both wanted by scripts:
+// the whole-season fixture list (it fetches one gameweek) and the raw bootstrap
+// (it returns a mapped snapshot, and the bridge needs FPL's own field names).
+export { fetchBootstrap, fetchFixtures } from "./fpl/client";
 export { mapFixtures } from "./fpl/map";
 export {
   adjacentGameweeks,

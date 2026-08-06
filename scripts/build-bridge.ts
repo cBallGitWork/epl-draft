@@ -3,6 +3,7 @@ import { join } from "node:path";
 import {
   type Bridge,
   type FplCandidate,
+  fetchBootstrap,
   mapPlayerPool,
   matchPlayers,
   mergeBridge,
@@ -14,17 +15,6 @@ import { newestCapture } from "./snapshots";
 // decide the residue by hand — the script proposes, a person disposes. Nothing
 // downstream ever name-matches at runtime; it reads the file this writes.
 
-const FPL_BOOTSTRAP = "https://fantasy.premierleague.com/api/bootstrap-static/";
-
-interface RawElement {
-  code: number;
-  first_name: string;
-  second_name: string;
-  web_name: string;
-  team: number;
-  element_type: number;
-}
-
 async function newestPoolSnapshot(): Promise<unknown> {
   const newest = await newestCapture(POOL_ROOT);
   if (newest === null) throw new Error("No captures yet — run `npm run capture` first.");
@@ -35,13 +25,14 @@ async function newestPoolSnapshot(): Promise<unknown> {
   return JSON.parse(await readFile(join(POOL_ROOT, newest, "getPlayerIds.json"), "utf8"));
 }
 
+/** FPL's side of the match, in the shape `identity/` asks for.
+ *
+ *  Unlike the Fantrax pool this is fetched live, because FPL adds players
+ *  mid-window and a stale candidate list produces a stale bridge. The wiring
+ *  lives here rather than in either layer: `identity/` declares `FplCandidate`
+ *  precisely so it never has to import the football adapter. */
 async function fplCandidates(): Promise<FplCandidate[]> {
-  const res = await fetch(FPL_BOOTSTRAP);
-  if (!res.ok) throw new Error(`FPL bootstrap → ${res.status}`);
-  const body = (await res.json()) as {
-    elements: RawElement[];
-    teams: { id: number; short_name: string }[];
-  };
+  const body = await fetchBootstrap();
 
   const clubs = new Map(body.teams.map((team) => [team.id, team.short_name]));
   return body.elements
