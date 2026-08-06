@@ -7,7 +7,7 @@ import {
   matchPlayers,
   mergeBridge,
 } from "@epl/core";
-import { MAPPINGS_ROOT, SNAPSHOT_ROOT, REVIEW_ROOT } from "./paths";
+import { MAPPINGS_ROOT, POOL_ROOT, REVIEW_ROOT } from "./paths";
 
 // Builds the Fantrax→FPL player mapping. Run it, then read the review files and
 // decide the residue by hand — the script proposes, a person disposes. Nothing
@@ -25,7 +25,7 @@ interface RawElement {
 }
 
 async function newestPoolSnapshot(): Promise<unknown> {
-  const dates = (await readdir(SNAPSHOT_ROOT, { withFileTypes: true }))
+  const dates = (await readdir(POOL_ROOT, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name)
     .sort();
@@ -35,7 +35,7 @@ async function newestPoolSnapshot(): Promise<unknown> {
   // Deliberately the checked-in snapshot rather than a live fetch: the same
   // inputs must produce the same mapping, and the inputs are in git.
   console.log(`Fantrax pool from snapshot ${newest}`);
-  return JSON.parse(await readFile(join(SNAPSHOT_ROOT, newest, "getPlayerIds.json"), "utf8"));
+  return JSON.parse(await readFile(join(POOL_ROOT, newest, "getPlayerIds.json"), "utf8"));
 }
 
 async function fplCandidates(): Promise<FplCandidate[]> {

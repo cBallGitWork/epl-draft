@@ -1,15 +1,20 @@
 import { readdir } from "node:fs/promises";
-import { DRAFT_DATE, captureStaleness } from "@epl/core";
-import { SNAPSHOT_ROOT, todayInLondon } from "./paths";
+import { FANTRAX_LEAGUES, captureStaleness } from "@epl/core";
+import { leagueCaptureRoot, todayInLondon } from "./paths";
 
 // Makes capture health something a human sees rather than something we assume.
 // Exits non-zero when overdue so it can gate other work later.
+//
+// Per league, because the two draft nine weeks apart: the rehearsal league is
+// already past its draft and so must be captured daily, while the real league is
+// still on the weekly pre-draft cadence. One combined answer would hide whichever
+// of them stopped.
 
 const DATE_DIR = /^\d{4}-\d{2}-\d{2}$/;
 
-async function captureDates(): Promise<string[]> {
+async function captureDates(root: string): Promise<string[]> {
   try {
-    const entries = await readdir(SNAPSHOT_ROOT, { withFileTypes: true });
+    const entries = await readdir(root, { withFileTypes: true });
     return entries
       .filter((entry) => entry.isDirectory() && DATE_DIR.test(entry.name))
       .map((entry) => entry.name);
@@ -22,22 +27,27 @@ async function captureDates(): Promise<string[]> {
 
 async function main(): Promise<void> {
   const today = todayInLondon();
-  const status = captureStaleness(await captureDates(), today, DRAFT_DATE);
 
-  if (status.lastCapture === null) {
-    console.log("No Fantrax captures yet. Run `npm run capture`.");
-  } else {
-    console.log(
-      `Last Fantrax capture ${status.lastCapture} (${status.ageDays}d ago, ` +
-        `limit ${status.maxAgeDays}d as of ${today}).`,
-    );
-  }
+  for (const league of FANTRAX_LEAGUES) {
+    const dates = await captureDates(leagueCaptureRoot(league.key));
+    const status = captureStaleness(dates, today, league.draftDate);
 
-  if (status.overdue) {
-    console.error(
-      "OVERDUE — league state is not being recorded. This history cannot be backfilled.",
-    );
-    process.exitCode = 1;
+    if (status.lastCapture === null) {
+      console.log(`${league.key}: no captures yet. Run \`npm run capture\`.`);
+    } else {
+      console.log(
+        `${league.key}: last capture ${status.lastCapture} (${status.ageDays}d ago, ` +
+          `limit ${status.maxAgeDays}d as of ${today}).`,
+      );
+    }
+
+    if (status.overdue) {
+      console.error(
+        `${league.key}: OVERDUE — league state is not being recorded. ` +
+          "This history cannot be backfilled.",
+      );
+      process.exitCode = 1;
+    }
   }
 }
 

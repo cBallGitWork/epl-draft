@@ -22,11 +22,6 @@
       "method": "getDraftResults",
       "ok": true,
       "bytes": 74
-    },
-    {
-      "method": "getPlayerIds",
-      "ok": true,
-      "bytes": 103815
     }
   ]
 }
