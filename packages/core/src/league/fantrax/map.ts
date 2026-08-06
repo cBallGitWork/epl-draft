@@ -140,7 +140,9 @@ export function mapLeagueInfo(raw: RawLeagueInfo): LeagueInfo {
     seasonYear: raw.seasonYear ?? 0,
     startDate: raw.startDate ?? "",
     endDate: raw.endDate ?? "",
-    draftType: raw.draftType ?? "",
+    // Null, not "": the rehearsal league genuinely omits this key, and an empty
+    // string would claim Fantrax told us the draft type was nothing (§5).
+    draftType: raw.draftType ?? null,
     roster: mapRosterLimits(raw.rosterInfo),
     scoringPeriods: mapPeriods(raw.scoringPeriods),
     players: mapPlayerStates(raw.playerInfo),

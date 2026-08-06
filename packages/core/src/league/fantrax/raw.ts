@@ -2,7 +2,12 @@
 // Transcribed from live recordings on 5–6 Aug 2026; the trimmed copies used by
 // the tests are in __fixtures__/, the full ones in data/snapshots/.
 //
-// Every field is optional or nullable where the provider could plausibly omit it.
+// EVERY field is optional. That is not defensive habit: the two leagues we
+// capture disagree about which keys exist at all. The real league's getLeagueInfo
+// carries `draftType` and `leagueHistoryId`, the rehearsal league's carries
+// neither — same provider, same method, same day. Presence varies by league and
+// by state, so optionality is what the wire actually looks like.
+//
 // This is scraped data from an undocumented surface — CODE_RULES §5 says treat it
 // as untrusted, and the mapper is the only place it meets our own clean types.
 

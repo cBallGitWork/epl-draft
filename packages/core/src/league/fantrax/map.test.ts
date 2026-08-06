@@ -119,6 +119,12 @@ describe("mapLeagueInfo", () => {
 describe("mapLeagueInfo, on a league that has drafted", () => {
   const info = mapLeagueInfo(leagueInfoDrafted as RawLeagueInfo);
 
+  it("models an absent draftType as absent", () => {
+    // The rehearsal league carries no `draftType` key at all while the real one
+    // does. Defaulting to "" would report a draft type Fantrax never gave.
+    expect(info.draftType).toBeNull();
+  });
+
   it("reads the teams, keyed by the id every other payload uses", () => {
     expect(info.teams).toHaveLength(4);
     const team = info.teams.find((t) => t.teamId === "8enbgqo5msgb375j");

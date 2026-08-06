@@ -129,7 +129,9 @@ export interface LeagueInfo {
   /** Season bounds as plain YYYY-MM-DD dates, not instants. */
   startDate: string;
   endDate: string;
-  draftType: string;
+  /** Absent in the rehearsal league and present in the real one — same provider,
+   *  same day. Null means Fantrax did not say. */
+  draftType: string | null;
   roster: RosterLimits;
   scoringPeriods: LeaguePeriod[];
   players: LeaguePlayerState[];
