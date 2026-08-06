@@ -1,14 +1,19 @@
 # Tim Hortons Pro League — companion + platform monorepo
 
 Read `PRODUCT.md` first for who this is for and why. This file is the technical
-contract.
+contract for architecture, conventions, and what the assistant should keep in mind.
 
-A 16-user **Fantrax** Premier League draft league starting **GW6, 10 Oct 2026**.
-Fantrax runs the league and is the source of truth — we never write to it except
-through explicit, user-initiated actions. This repo republishes that league with
-what Fantrax lacks, and doubles as the groundwork for our own platform in 27/28.
+**`CODE_RULES.md` is binding.** Read it before writing any code. Its rules —
+rule of 2/3, no bloat, no hardcoding, small files, purity at the core — are hard
+rules, not preferences. Exceptions are recorded in `PLATFORM_NOTES.md` in the
+same commit.
 
-## The one architectural idea
+A 16-user **Fantrax** Premier League draft league starts **GW6, 10 Oct 2026**.
+Fantrax is the source of truth for the current season. This repo republishes that
+league with what Fantrax lacks and lays the groundwork for our own platform in
+27/28.
+
+## Core idea
 
 **Two data layers, never conflated.**
 
@@ -18,14 +23,43 @@ league layer  (Fantrax, cookie)   →  our fantasy competition
         ↘ join on player identity ↙
 ```
 
-The football layer is permanent — the real world does not change provider. The
-league layer is an adapter, and in 27/28 it is replaced by our own engine while
-the football layer and the whole UI stay put. Nothing in `packages/ui` or the
-football layer may import anything Fantrax-shaped.
+The football layer is permanent. The league layer is an adapter. In future
+seasons the league engine can be replaced without rewriting the football layer
+or the UI.
 
-This is the lesson from the World Cup app (`~/worldcup-fantasy`, now retired): its
-`LeagueSnapshot` contract meant the UI never knew Draft Fantasy existed, which is
-why swapping providers was an adapter change rather than a rewrite.
+**Why they split, precisely: FPL has hard rules; custom rules are Fantrax's
+product.** The football layer models a game whose rules are fixed for everyone, so
+they can be constants. The league layer models a game whose rules are the thing
+being sold — roster limits, the position vocabulary, the scoring system, the
+period calendar, the lineup deadline, team count, the schedule, the draft type.
+All of that is **data we read from `getLeagueInfo`**, never assumed, never
+hardcoded, never inferred from the football layer. The two layers differ in
+epistemics, not just in content.
+
+The corollary bites often: **whenever an FPL concept crosses into league territory
+it arrives wearing football clothes.** `element_type` did, which is why position
+left the football layer. `deadline_time` is the same mistake waiting to happen —
+FPL's deadline is FPL's house rule, and ours is a commissioner setting.
+
+**Where the layers meet.** Player identity, through the bridge, and one other
+place: the calendar. The league layer may be *told* about the football calendar as
+plain data — `league/calendar.ts` declares its own `GameweekKickoff` rather than
+importing `Fixture` — but it may never import the football adapter, and football
+may never import the league. A script does the wiring.
+
+## What the assistant should do first
+
+- Read `CODE_RULES.md` before writing code. It overrides habit and convenience.
+- Read `PRODUCT.md` before making product-level decisions.
+- Keep `PLATFORM_NOTES.md` up to date with architecture decisions, season
+  updates, data assumptions, and implementation notes.
+- Prefer small, testable changes. Add or update tests when you change domain
+  logic or data mapping.
+- Keep UI and data layers separate. Do not let `packages/ui` or `packages/core
+  football` import Fantrax-specific adapter code.
+- Treat Fantrax as a provider adapter, not the source of product truth.
+- When asked for a plan, start from the current season’s needs first, then the
+  long-term platform.
 
 ## Layout
 
@@ -35,6 +69,17 @@ packages/ui     shared components (empty until a second consumer needs them)
 apps/companion  the 26/27 Next.js app — ships 10 Oct
 apps/lab        the 27/28 platform prototype — empty on purpose
 ```
+
+## Platform notes
+
+We keep a living season log in `PLATFORM_NOTES.md`.
+Use it for:
+
+- architecture and data decisions
+- Fantrax/FPL quirks and API gotchas
+- season milestones and blockers
+- feature ideas and follow-up work
+- things we must remember next season
 
 ## Verified API facts (probed live, 3 Aug 2026 — do not re-derive)
 
@@ -47,21 +92,23 @@ apps/lab        the 27/28 platform prototype — empty on purpose
 - `GET /api/fixtures/?event={gw}` — fixtures with `started` / `finished` /
   `finished_provisional` / `minutes` / scores.
 - `GET /api/event/{gw}/live/` — per-player stats. `{"elements": []}` before the
-  first kickoff, which is normal and not an error.
+  first kickoff is normal and not an error.
 - Portraits: `https://resources.premierleague.com/premierleague/photos/players/250x250/p{code}.png`
-  — **PNG only** (webp/jpg 403). Sizes 40x40 ≈16 KB, 110x140 ≈108 KB, 250x250 ≈330 KB.
-  Always source 250x250 and let Next's optimizer resize; eleven raw PNGs is 3.6 MB.
-  The `premierleague25` / `premierleague26` path variants 403/502 — use the
-  unversioned path.
+  — **PNG only** (webp/jpg 403). Use 250x250 and let Next's optimizer resize.
 - Crests: `…/premierleague/badges/t{code}.svg` (also `/50/`, `/70/` PNG).
 
 ### Fantrax — two surfaces
 
 **Public reads, no auth:** `GET https://www.fantrax.com/fxea/general/{method}?leagueId=…`
-— `getLeagueInfo` (45 KB: full scoring system, roster rules, 38 scoring + roster
-periods, per-player waiver status), `getTeamRosters`, `getStandings`,
-`getDraftResults`, `getPlayerIds?sport=EPL` (755 players; sport code is **`EPL`**,
-not `SOCCER`).
+— `getLeagueInfo`, `getTeamRosters` (takes an optional `period` and echoes it
+back), `getStandings`, `getDraftResults`, `getPlayerIds?sport=EPL` (759 entries of
+which ~699 are players — the rest are synthetic per-club entities; sport code is
+**`EPL`**, not `SOCCER`).
+
+**Field presence varies between leagues, not only between states.** On the same
+day the real league's `getLeagueInfo` carries `draftType` and `leagueHistoryId`
+and the rehearsal league's carries neither. Every field in `raw.ts` is optional
+for that reason.
 
 **Internal SPA API:** `POST https://www.fantrax.com/fxpa/req?leagueId=…` with
 `{"msgs":[{"method":…,"data":…}]}`. Cookie auth; returns the caller's `roles`.
@@ -69,60 +116,73 @@ Some reads work unauthenticated (`getStandings`, `getPlayerProfile`); league dat
 returns `WARNING_NOT_LOGGED_IN`.
 
 Methods that matter:
-- `confirmOrExecuteTeamRosterChanges` — **lineup writes**. Takes `rosterLimitPeriod`,
-  `fantasyTeamId`, `applyToFuturePeriods`, and `adminMode` (commissioner editing
-  any team).
+
+- `confirmOrExecuteTeamRosterChanges` — **lineup writes**. Takes
+  `rosterLimitPeriod`, `fantasyTeamId`, `applyToFuturePeriods`, and `adminMode`.
 - `getCommissionerHubInfo` + `executeCommissionerHubAction({actionKey, …})` — the
-  commissioner console. Action keys: `executeAutoSubs`, `processWaivers`,
-  `overrideLeagueChampion`, `copyRostersToPast`, `copyRostersToFuture`,
-  `generateLeagueHistory`, `undoDraft`, `uncompleteDraft`, `deleteLeague`. **The
-  action list is server-driven — render what the hub returns, never hardcode it.**
-- `getMatchups` — the fast-updating live H2H scoring page. **Fantrax computes live
-  points itself, so its numbers are authoritative**; any engine of ours is a
-  fallback proxy, never the primary. (Same lesson as DF's per-GW points.)
-- `getScorerDetails`, `getPlayerProfile` (public), `getPlayerNews`,
-  `setPlayerNews` / `setPlayerNote` / `removePlayerNote` — per-player notes are
-  **writable**, which is the native home for "info we hold on each player".
+  commissioner console. The returned action list is server-driven; do not hardcode.
+- `getMatchups` — Fantrax computes live H2H points itself. Their live scores are
+  authoritative; our engine is a fallback proxy.
+- `getScorerDetails`, `getPlayerProfile`, `getPlayerNews`, `setPlayerNews`,
+  `setPlayerNote`, `removePlayerNote` — per-player notes are writable and are the
+  native home for our player metadata.
 - `executeTrade`, `confirmOrExecutePlayerPickerChanges`, `findPlayers`.
 
 ### Auth constraint — read before designing any login
 
-Fantrax's `login` method is gated by **reCAPTCHA v3 with a v2 image fallback**, plus
-2FA and `ACCOUNT_LOCKED`. Server-side password login is **not viable** — the trick
-the World Cup app used (minting sessions from stored credentials against Supabase)
-does not transfer. Members hand over a **session cookie** from their own browser
-via an extension; we never hold passwords. Store encrypted, per user, revocable.
+Fantrax login uses **reCAPTCHA v3 with a v2 image fallback**, plus 2FA and
+`ACCOUNT_LOCKED`. Server-side password login is not viable. Members must provide
+their own browser session cookie via an extension. We do not hold passwords.
 
 ### Identity
 
-Fantrax exposes `rotowireId` (71% coverage) and `sportRadarId`. The pipeline at
-`~/ai-carling-premiership/src/identity/` mints canonical `person_id`/`root_id` and
-bridges FPL/SofaScore/FotMob/Understat/Transfermarkt — but has **no RotoWire or
-SportRadar ID space**, so those are not a shortcut. The Fantrax bridge must be
-built by matching normalised name + club + position, generated once, **hand-audited**,
-and persisted as `source_mappings.fantrax`. Never name-match at runtime.
+Fantrax exposes `rotowireId` on 544 of the 699 players (78%). **`sportRadarId` is
+not on this endpoint at all** — it is not a second identity space. The existing
+identity pipeline at `~/ai-carling-premiership/src/identity/` produces canonical
+`person_id`/`root_id` and bridges FPL/SofaScore/FotMob/Understat/Transfermarkt.
+It does not include the RotoWire ID space either, so that is not a shortcut. The
+Fantrax bridge is built once by matching normalized name + club + position,
+audited manually, and persisted in `data/mappings/fantrax.json`.
+Never name-match at runtime.
 
 ## Conventions
 
-- All provider I/O stays in its adapter (`packages/core/src/*/[provider]/client.ts`).
-  Shaping goes in `map.ts` and stays **pure** — no clock, no network, so it is
-  testable. `fetchedAt` is injected, never read from `Date.now()` inside a mapper.
-- Treat scraped data as untrusted and optional. Render gracefully when a field is
-  missing; a blank page is a worse failure than a hedged number.
-- Pure logic lives in `packages/core`, never in components. Add a test when you
-  touch it.
-- Phone-first: single column, thumb-reachable, readable at arm's length.
+The full, binding set is in `CODE_RULES.md`. The ones that bite most often here:
+
+- Keep provider I/O in adapters: `packages/core/src/*/[provider]/client.ts`.
+- Keep mapping logic pure: `map.ts` should not access clocks or network.
+- Inject `fetchedAt`; do not call `Date.now()` inside mappers.
+- Treat scraped data as untrusted. Render gracefully on missing fields.
+- Keep pure domain logic in `packages/core`; components should stay presentation-focused.
+- Add tests alongside changes to core logic.
+- Phone-first UI: single column, thumb-reachable, readable at arm's length.
 
 ## Verify
 
+All three green before every commit.
+
 ```bash
 npm test          # vitest across packages/*
+npm run typecheck # core, scripts and the app
 npm run build     # Next production build — runs ESLint and TypeScript
 npm run dev       # http://localhost:3000
 ```
 
+Data and league health, none of which the test suite can tell you:
+
+```bash
+npm run capture         # both leagues + the pool, into data/snapshots/
+npm run capture:status  # per-league staleness; non-zero when overdue
+npm run periods         # re-check period↔gameweek alignment against live FPL
+npm run bridge          # regenerate the Fantrax→FPL player mapping
+```
+
+`FANTRAX_LEAGUE_ID` selects the league the app serves; it defaults to the
+rehearsal league. Setting it to `ayyoh3n2mr326v2o` is the whole 10 Oct swap, and
+running against it now is how the empty states get tested.
+
 ## Next.js 16
 
-Breaking changes vs. older training data: route `params` is a `Promise` (await it),
-`'use cache'` needs the `cacheComponents` flag. Read `node_modules/next/dist/docs/`
-before writing framework code.
+Route `params` may be a `Promise` (await it). `'use cache'` now needs the
+`cacheComponents` flag. Check `node_modules/next/dist/docs/` when writing framework
+code.
