@@ -4,9 +4,11 @@
 
 export type {
   LeagueInfo,
+  LeagueMatchup,
   LeaguePeriod,
   LeaguePlayer,
   LeaguePlayerState,
+  LeagueTeam,
   PeriodRosters,
   RosterLimits,
   RosterSlot,

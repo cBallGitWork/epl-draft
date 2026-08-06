@@ -2,11 +2,16 @@ import { describe, expect, it } from "vitest";
 import { mapLeagueInfo, mapPlayerPool, readingOrder } from "./map";
 import type { RawLeagueInfo, RawPlayerPool } from "./raw";
 import leagueInfo from "./__fixtures__/leagueInfo.json";
+import leagueInfoDrafted from "./__fixtures__/leagueInfoDrafted.json";
 import playerPool from "./__fixtures__/playerPool.json";
 
-// Fixtures are trimmed subsets of live recordings from 5 Aug 2026 — real entries,
-// fewer of them. The pool subset was chosen to carry one of every shape the
-// mapper has to survive.
+// Fixtures are trimmed subsets of live recordings — real entries, fewer of them.
+// The pool subset was chosen to carry one of every shape the mapper has to
+// survive.
+//
+// Two leagueInfo fixtures, because the two leagues genuinely differ: the real
+// league (5 Aug) has `draftType` and no teams, the rehearsal league (6 Aug) has
+// four teams, a full matchup schedule, and no `draftType` at all.
 
 const pool = playerPool as RawPlayerPool;
 
@@ -97,11 +102,48 @@ describe("mapLeagueInfo", () => {
     expect(info.scoringPeriods[0]?.start).toContain("2026-08-21");
   });
 
+  it("has no teams or matchups before anyone joins", () => {
+    expect(info.teams).toEqual([]);
+    expect(info.matchups).toEqual([]);
+  });
+
   it("degrades to empty rather than throwing on a stripped payload", () => {
     // Scraped data is untrusted; a shape change must not blank the page.
     const empty = mapLeagueInfo({});
     expect(empty.players).toEqual([]);
     expect(empty.scoringPeriods).toEqual([]);
     expect(empty.roster.maxActiveByPosition).toEqual({});
+  });
+});
+
+describe("mapLeagueInfo, on a league that has drafted", () => {
+  const info = mapLeagueInfo(leagueInfoDrafted as RawLeagueInfo);
+
+  it("reads the teams, keyed by the id every other payload uses", () => {
+    expect(info.teams).toHaveLength(4);
+    const team = info.teams.find((t) => t.teamId === "8enbgqo5msgb375j");
+    expect(team?.name).toBe("123");
+  });
+
+  it("flattens matchups to one row per pairing per period", () => {
+    // Two periods of two pairings each in the fixture. Flat means selecting a
+    // period is a filter.
+    expect(info.matchups).toHaveLength(4);
+    expect(info.matchups.filter((m) => m.period === 1)).toHaveLength(2);
+  });
+
+  it("carries team ids in matchups, not a second copy of the names", () => {
+    const first = info.matchups.find((m) => m.period === 1);
+    expect(first?.homeTeamId).toMatch(/^\w+$/);
+    expect(first).not.toHaveProperty("homeTeamName");
+    const ids = new Set(info.teams.map((team) => team.teamId));
+    expect(info.matchups.every((m) => ids.has(m.homeTeamId) && ids.has(m.awayTeamId))).toBe(true);
+  });
+
+  it("reads this league's own roster limits, which differ from the other's", () => {
+    // 15/11/5 here against 14/11/3 in the real league. Rendering both correctly
+    // is the whole 10 Oct swap, tested continuously rather than on the day.
+    expect(info.roster.maxTotalPlayers).toBe(15);
+    expect(info.roster.maxReservePlayers).toBe(5);
   });
 });

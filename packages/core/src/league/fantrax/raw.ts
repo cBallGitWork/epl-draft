@@ -1,6 +1,6 @@
 // Fantrax's fxea responses exactly as they arrive, inconsistencies included.
-// Transcribed from live recordings on 5 Aug 2026; the trimmed copies used by the
-// tests are in __fixtures__/, the full ones in data/snapshots/.
+// Transcribed from live recordings on 5–6 Aug 2026; the trimmed copies used by
+// the tests are in __fixtures__/, the full ones in data/snapshots/.
 //
 // Every field is optional or nullable where the provider could plausibly omit it.
 // This is scraped data from an undocumented surface — CODE_RULES §5 says treat it
@@ -58,6 +58,26 @@ export interface RawPlayerInfo {
   status?: string;
 }
 
+/** A fantasy team, as Fantrax embeds it in `teamInfo` and on both sides of a
+ *  matchup. The name is repeated on every payload that mentions the team, which
+ *  is why only the id is carried into our own matchup type. */
+export interface RawTeamInfo {
+  id?: string;
+  name?: string;
+  shortName?: string;
+}
+
+export interface RawMatchup {
+  home?: RawTeamInfo;
+  away?: RawTeamInfo;
+}
+
+/** `matchups` is a list of periods, each holding that period's pairings. */
+export interface RawPeriodMatchups {
+  period?: number;
+  matchupList?: RawMatchup[];
+}
+
 export interface RawLeagueInfo {
   leagueName?: string;
   leagueHistoryId?: string;
@@ -69,11 +89,13 @@ export interface RawLeagueInfo {
   scoringPeriods?: RawPeriod[];
   rosterPeriods?: RawPeriod[];
   playerInfo?: Record<string, RawPlayerInfo>;
-  /** Empty until teams join. Element shape unobserved — see below. */
-  teamInfo?: Record<string, unknown>;
-  matchups?: unknown[];
-  /** The league's full points configuration. We read Fantrax's computed scores
-   *  rather than recomputing them, so this is captured but not modelled. */
+  /** Keyed by team id, which the value repeats. Empty until teams join. */
+  teamInfo?: Record<string, RawTeamInfo>;
+  matchups?: RawPeriodMatchups[];
+  /** The league's full points configuration, and the most custom thing in the
+   *  league. Captured but not modelled this phase: we read Fantrax's computed
+   *  scores rather than recomputing them. The moment a view explains a number it
+   *  reads the rules from here, never from a checked-in copy (§3). */
   scoringSystem?: unknown;
   poolSettings?: unknown;
   draftSettings?: unknown;

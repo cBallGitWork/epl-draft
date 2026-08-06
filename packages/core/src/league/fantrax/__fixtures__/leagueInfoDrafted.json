@@ -1,0 +1,134 @@
+{
+  "leagueName": "test1dsfds",
+  "seasonYear": 2026,
+  "startDate": "2026-08-21",
+  "endDate": "2027-05-30",
+  "rosterInfo": {
+    "positionConstraints": {
+      "D": {
+        "maxActive": 5
+      },
+      "F": {
+        "maxActive": 3
+      },
+      "G": {
+        "maxActive": 1
+      },
+      "M": {
+        "maxActive": 5
+      }
+    },
+    "maxTotalPlayers": 15,
+    "maxTotalActivePlayers": 11,
+    "maxTotalReservePlayers": 5
+  },
+  "scoringPeriods": [
+    {
+      "number": 1,
+      "endDate": "2026-08-28T14:59:59.0-0400",
+      "startDate": "2026-08-21T15:00:00.0-0400"
+    },
+    {
+      "number": 2,
+      "endDate": "2026-09-04T14:59:59.0-0400",
+      "startDate": "2026-08-28T15:00:00.0-0400"
+    },
+    {
+      "number": 3,
+      "endDate": "2026-09-11T05:59:59.0-0400",
+      "startDate": "2026-09-04T15:00:00.0-0400"
+    }
+  ],
+  "teamInfo": {
+    "8enbgqo5msgb375j": {
+      "name": "123",
+      "id": "8enbgqo5msgb375j"
+    },
+    "sezrgvl2mshcpazf": {
+      "name": "test4",
+      "id": "sezrgvl2mshcpazf"
+    },
+    "pbxm9fgimshcpazf": {
+      "name": "test2",
+      "id": "pbxm9fgimshcpazf"
+    },
+    "j9zadacnmshcpazf": {
+      "name": "test3",
+      "id": "j9zadacnmshcpazf"
+    }
+  },
+  "matchups": [
+    {
+      "period": 1,
+      "matchupList": [
+        {
+          "away": {
+            "name": "test4",
+            "id": "sezrgvl2mshcpazf",
+            "shortName": "test4"
+          },
+          "home": {
+            "name": "test2",
+            "id": "pbxm9fgimshcpazf",
+            "shortName": "test2"
+          }
+        },
+        {
+          "away": {
+            "name": "123",
+            "id": "8enbgqo5msgb375j",
+            "shortName": "CB_fantr"
+          },
+          "home": {
+            "name": "test3",
+            "id": "j9zadacnmshcpazf",
+            "shortName": "test3"
+          }
+        }
+      ]
+    },
+    {
+      "period": 2,
+      "matchupList": [
+        {
+          "away": {
+            "name": "test2",
+            "id": "pbxm9fgimshcpazf",
+            "shortName": "test2"
+          },
+          "home": {
+            "name": "123",
+            "id": "8enbgqo5msgb375j",
+            "shortName": "CB_fantr"
+          }
+        },
+        {
+          "away": {
+            "name": "test4",
+            "id": "sezrgvl2mshcpazf",
+            "shortName": "test4"
+          },
+          "home": {
+            "name": "test3",
+            "id": "j9zadacnmshcpazf",
+            "shortName": "test3"
+          }
+        }
+      ]
+    }
+  ],
+  "playerInfo": {
+    "075zi": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
+    "02m5b": {
+      "eligiblePos": "F",
+      "status": "T"
+    },
+    "06onv": {
+      "eligiblePos": "M",
+      "status": "FA"
+    }
+  }
+}

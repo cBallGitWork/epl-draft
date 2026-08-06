@@ -1,16 +1,20 @@
 import type {
   LeagueInfo,
+  LeagueMatchup,
   LeaguePeriod,
   LeaguePlayer,
   LeaguePlayerState,
+  LeagueTeam,
   RosterLimits,
 } from "../types";
 import type {
   RawLeagueInfo,
   RawPeriod,
+  RawPeriodMatchups,
   RawPlayerPool,
   RawPoolEntry,
   RawRosterInfo,
+  RawTeamInfo,
 } from "./raw";
 
 // Pure raw→domain transforms. No clocks, no network, no environment — everything
@@ -103,6 +107,33 @@ function mapPlayerStates(
   }));
 }
 
+function mapTeams(teamInfo: Record<string, RawTeamInfo> | undefined): LeagueTeam[] {
+  if (!teamInfo) return [];
+  const teams: LeagueTeam[] = [];
+  for (const [teamId, team] of Object.entries(teamInfo)) {
+    // The key is the id and the value repeats it. The key wins: it is what every
+    // other payload — rosters, standings, matchups — is keyed by.
+    teams.push({ teamId, name: team.name ?? "" });
+  }
+  return teams;
+}
+
+/** Flattened to one row per pairing per period. Fantrax nests them by period; a
+ *  view wants "this period's matchups", which a flat list answers with a filter
+ *  and a nested one answers with a lookup that can miss. */
+function mapMatchups(matchups: RawPeriodMatchups[] | undefined): LeagueMatchup[] {
+  if (!matchups) return [];
+  const flat: LeagueMatchup[] = [];
+  for (const { period, matchupList } of matchups) {
+    if (period == null || !matchupList) continue;
+    for (const { home, away } of matchupList) {
+      if (!home?.id || !away?.id) continue;
+      flat.push({ period, homeTeamId: home.id, awayTeamId: away.id });
+    }
+  }
+  return flat;
+}
+
 export function mapLeagueInfo(raw: RawLeagueInfo): LeagueInfo {
   return {
     name: raw.leagueName ?? "",
@@ -113,5 +144,7 @@ export function mapLeagueInfo(raw: RawLeagueInfo): LeagueInfo {
     roster: mapRosterLimits(raw.rosterInfo),
     scoringPeriods: mapPeriods(raw.scoringPeriods),
     players: mapPlayerStates(raw.playerInfo),
+    teams: mapTeams(raw.teamInfo),
+    matchups: mapMatchups(raw.matchups),
   };
 }

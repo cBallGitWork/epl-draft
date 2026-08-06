@@ -61,6 +61,24 @@ export interface LeaguePeriod {
   end: string;
 }
 
+/** A fantasy team in our league. */
+export interface LeagueTeam {
+  teamId: string;
+  name: string;
+}
+
+/** One pairing in one period.
+ *
+ *  Ids, not embedded teams: Fantrax sends team names on `teamInfo` and again on
+ *  every matchup, and a second copy is a copy that goes stale when someone renames
+ *  their team. Flattened to one row per pairing per period so selecting a period
+ *  is a filter. */
+export interface LeagueMatchup {
+  period: number;
+  homeTeamId: string;
+  awayTeamId: string;
+}
+
 /** One player in one team's roster for one period. */
 export interface RosterSlot {
   fantraxId: string;
@@ -98,7 +116,13 @@ export interface StandingsRow {
   pointsFor: number;
 }
 
-/** Everything `getLeagueInfo` tells us about the competition's configuration. */
+/** Everything `getLeagueInfo` tells us about the competition's configuration.
+ *
+ *  Nearly all of it is custom. FPL's rules are fixed for everyone and can be
+ *  constants; a Fantrax league's rules are the product being sold, so the shape of
+ *  the competition is data we read — roster limits, the position vocabulary, the
+ *  period calendar, the lineup deadline, the team count, the schedule. Never
+ *  assumed, never inferred from the football layer (§3). */
 export interface LeagueInfo {
   name: string;
   seasonYear: number;
@@ -109,4 +133,7 @@ export interface LeagueInfo {
   roster: RosterLimits;
   scoringPeriods: LeaguePeriod[];
   players: LeaguePlayerState[];
+  /** Empty until managers join. */
+  teams: LeagueTeam[];
+  matchups: LeagueMatchup[];
 }
