@@ -1,4 +1,4 @@
-import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
   type Bridge,
@@ -8,6 +8,7 @@ import {
   mergeBridge,
 } from "@epl/core";
 import { MAPPINGS_ROOT, POOL_ROOT, REVIEW_ROOT } from "./paths";
+import { newestCapture } from "./snapshots";
 
 // Builds the Fantrax→FPL player mapping. Run it, then read the review files and
 // decide the residue by hand — the script proposes, a person disposes. Nothing
@@ -25,12 +26,8 @@ interface RawElement {
 }
 
 async function newestPoolSnapshot(): Promise<unknown> {
-  const dates = (await readdir(POOL_ROOT, { withFileTypes: true }))
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
-  const newest = dates.at(-1);
-  if (newest === undefined) throw new Error("No captures yet — run `npm run capture` first.");
+  const newest = await newestCapture(POOL_ROOT);
+  if (newest === null) throw new Error("No captures yet — run `npm run capture` first.");
 
   // Deliberately the checked-in snapshot rather than a live fetch: the same
   // inputs must produce the same mapping, and the inputs are in git.

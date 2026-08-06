@@ -1,4 +1,4 @@
-import { readFile, readdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
   FANTRAX_LEAGUES,
@@ -9,6 +9,7 @@ import {
   periodGameweeks,
 } from "@epl/core";
 import { leagueCaptureDir, leagueCaptureRoot } from "./paths";
+import { newestCapture } from "./snapshots";
 
 // Does each Fantrax scoring period still contain exactly its own FPL gameweek?
 //
@@ -21,8 +22,6 @@ import { leagueCaptureDir, leagueCaptureRoot } from "./paths";
 // Run it per league, because scoring periods are league state. Both leagues carry
 // byte-identical periods today, but that is default settings rather than a rule.
 
-const DATE_DIR = /^\d{4}-\d{2}-\d{2}$/;
-
 // The raw shape is deliberately not on core's public surface — the whole point of
 // `league/index.ts` is that nothing outside the adapter knows Fantrax's field
 // names. A script reading captured JSON off disk is the one place that has to,
@@ -30,13 +29,8 @@ const DATE_DIR = /^\d{4}-\d{2}-\d{2}$/;
 type RawLeagueInfo = Parameters<typeof mapLeagueInfo>[0];
 
 async function newestLeagueInfo(leagueKey: string): Promise<RawLeagueInfo> {
-  const entries = await readdir(leagueCaptureRoot(leagueKey), { withFileTypes: true });
-  const newest = entries
-    .filter((entry) => entry.isDirectory() && DATE_DIR.test(entry.name))
-    .map((entry) => entry.name)
-    .sort()
-    .at(-1);
-  if (newest === undefined) {
+  const newest = await newestCapture(leagueCaptureRoot(leagueKey));
+  if (newest === null) {
     throw new Error(`No captures for ${leagueKey} — run \`npm run capture\` first.`);
   }
   const path = join(leagueCaptureDir(leagueKey, newest), "getLeagueInfo.json");
