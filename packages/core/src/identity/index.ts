@@ -9,3 +9,6 @@ export { matchPlayers } from "./match";
 export type { FplCandidate, MatchResult, Proposal } from "./match";
 export { fplNameVariants, normalizeName, surname, tokens } from "./normalize";
 export { AMBIGUITY_MARGIN, FUZZY_MIN_SCORE, tokenSetRatio } from "./similarity";
+// The classifier itself stays internal — only `MappedEntry.agreement` leaves the
+// layer, and callers read that rather than recompute it.
+export type { NameAgreement } from "./similarity";

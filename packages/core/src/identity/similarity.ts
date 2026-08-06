@@ -81,3 +81,33 @@ export function tokenSetRatio(a: string, b: string): number {
     ),
   );
 }
+
+/** Whether two names merely differ in length, or actually contradict each other. */
+export type NameAgreement = "identical" | "contained" | "conflicting";
+
+/** Classify how two names agree, which is what `tokenSetRatio` cannot tell you.
+ *
+ *  The ratio saturates at 100 whenever one token set contains the other, so
+ *  "Bruno Fernandes" inside "Bruno Borges Fernandes" — safe, a middle name we do
+ *  not carry — is indistinguishable from "Keith Andrews" against "Kaine
+ *  Andrews", where the given names positively disagree and one of the two feeds
+ *  is wrong about who this is. Both score 100 and both clear the surname guard,
+ *  so neither `confidence` nor `surnameAgrees` can separate them.
+ *
+ *  Compare the two FULL names, never a name against one of FPL's variants: FPL
+ *  publishes a bare surname as a variant, so "Keith Andrews" contains "Andrews"
+ *  and every conflict would read as containment. */
+export function nameAgreement(a: string, b: string): NameAgreement {
+  const left = new Set(tokens(a));
+  const right = new Set(tokens(b));
+
+  // Nothing to compare is not agreement. Saying so keeps an empty name out of
+  // the safe bucket, where it would be waved through unread.
+  if (left.size === 0 || right.size === 0) return "conflicting";
+
+  const leftOnly = [...left].some((token) => !right.has(token));
+  const rightOnly = [...right].some((token) => !left.has(token));
+
+  if (!leftOnly && !rightOnly) return "identical";
+  return leftOnly && rightOnly ? "conflicting" : "contained";
+}

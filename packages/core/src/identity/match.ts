@@ -10,7 +10,7 @@ import {
 } from "./candidates";
 import { toFplClubCode } from "./clubCodes";
 import { normalizeName } from "./normalize";
-import { AMBIGUITY_MARGIN, FUZZY_MIN_SCORE } from "./similarity";
+import { AMBIGUITY_MARGIN, FUZZY_MIN_SCORE, nameAgreement } from "./similarity";
 
 // Deciding which FPL player a Fantrax player is. The one rule that matters: when
 // it is not sure, it says so. A wrong row here is a player's whole season
@@ -154,6 +154,7 @@ export function matchPlayers(
       fplCode: best.candidate.code,
       matchedBy: "fuzzy",
       confidence: best.score,
+      agreement: nameAgreement(player.displayName, candidateName(best.candidate)),
     };
   }
 

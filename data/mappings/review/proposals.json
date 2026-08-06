@@ -6,6 +6,11 @@
     "positionHint": "M",
     "candidates": [
       {
+        "fplCode": 201595,
+        "name": "Lucas Estella Perri",
+        "score": 29
+      },
+      {
         "fplCode": 221399,
         "name": "Jack Harrison",
         "score": 29
@@ -19,6 +24,11 @@
     "clubCode": "LEE",
     "positionHint": "G",
     "candidates": [
+      {
+        "fplCode": 201595,
+        "name": "Lucas Estella Perri",
+        "score": 33
+      },
       {
         "fplCode": 221399,
         "name": "Jack Harrison",
@@ -39,14 +49,14 @@
         "score": 46
       },
       {
-        "fplCode": 596047,
-        "name": "Chido Obi",
+        "fplCode": 232112,
+        "name": "Manuel Ugarte Ribeiro",
         "score": 42
       },
       {
-        "fplCode": 576620,
-        "name": "Bendito Mantato",
-        "score": 40
+        "fplCode": 596047,
+        "name": "Chido Obi",
+        "score": 42
       }
     ],
     "reason": "below-threshold"
@@ -56,24 +66,72 @@
     "fantraxName": "Andre Harriman-Annous",
     "clubCode": "ARS",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 481655,
+        "name": "Martín Zubimendi Ibáñez",
+        "score": 45
+      },
+      {
+        "fplCode": 154561,
+        "name": "David Raya Martín",
+        "score": 42
+      },
+      {
+        "fplCode": 226597,
+        "name": "Gabriel dos Santos Magalhães",
+        "score": 41
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06zbn",
     "fantraxName": "Marli Salmon",
     "clubCode": "ARS",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 195384,
+        "name": "Mikel Merino Zazón",
+        "score": 58
+      },
+      {
+        "fplCode": 444145,
+        "name": "Gabriel Martinelli Silva",
+        "score": 57
+      },
+      {
+        "fplCode": 154561,
+        "name": "David Raya Martín",
+        "score": 52
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06zbo",
     "fantraxName": "Louie Copley",
     "clubCode": "ARS",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 481655,
+        "name": "Martín Zubimendi Ibáñez",
+        "score": 36
+      },
+      {
+        "fplCode": 198869,
+        "name": "Benjamin White",
+        "score": 32
+      },
+      {
+        "fplCode": 226597,
+        "name": "Gabriel dos Santos Magalhães",
+        "score": 31
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06r5d",
@@ -82,19 +140,19 @@
     "positionHint": "F",
     "candidates": [
       {
+        "fplCode": 154566,
+        "name": "Dominic Solanke-Mitchell",
+        "score": 38
+      },
+      {
         "fplCode": 640419,
         "name": "Jun'ai Byfield",
         "score": 37
       },
       {
-        "fplCode": 499726,
-        "name": "Callum Olusesi",
-        "score": 19
-      },
-      {
-        "fplCode": 499716,
-        "name": "James Rowswell",
-        "score": 14
+        "fplCode": 221466,
+        "name": "Marcos Senesi Barón",
+        "score": 36
       }
     ],
     "reason": "below-threshold"
@@ -104,8 +162,24 @@
     "fantraxName": "Kaden Braithwaite",
     "clubCode": "MCI",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 220566,
+        "name": "Rodrigo 'Rodri' Hernandez Cascante",
+        "score": 46
+      },
+      {
+        "fplCode": 171314,
+        "name": "Rúben dos Santos Gato Alves Dias",
+        "score": 33
+      },
+      {
+        "fplCode": 510281,
+        "name": "Sávio Moreira de Oliveira",
+        "score": 33
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06mn1",
@@ -119,14 +193,14 @@
         "score": 43
       },
       {
+        "fplCode": 223434,
+        "name": "Igor Julio dos Santos de Paulo",
+        "score": 37
+      },
+      {
         "fplCode": 549074,
         "name": "Tom Watson",
         "score": 35
-      },
-      {
-        "fplCode": 597320,
-        "name": "Harry Howell",
-        "score": 29
       }
     ],
     "reason": "below-threshold"
@@ -136,8 +210,24 @@
     "fantraxName": "Khari Ranson",
     "clubCode": "ARS",
     "positionHint": "G",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 154561,
+        "name": "David Raya Martín",
+        "score": 52
+      },
+      {
+        "fplCode": 195384,
+        "name": "Mikel Merino Zazón",
+        "score": 50
+      },
+      {
+        "fplCode": 444145,
+        "name": "Gabriel Martinelli Silva",
+        "score": 39
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06q2h",
@@ -151,14 +241,14 @@
         "score": 38
       },
       {
+        "fplCode": 482442,
+        "name": "Pape Matar Sarr",
+        "score": 37
+      },
+      {
         "fplCode": 640419,
         "name": "Jun'ai Byfield",
         "score": 32
-      },
-      {
-        "fplCode": 499726,
-        "name": "Callum Olusesi",
-        "score": 31
       }
     ],
     "reason": "below-threshold"
@@ -168,24 +258,62 @@
     "fantraxName": "Remy Rees-Dottin",
     "clubCode": "BOU",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 457569,
+        "name": "Đorđe Petrović",
+        "score": 40
+      },
+      {
+        "fplCode": 444172,
+        "name": "Will Dennis",
+        "score": 33
+      },
+      {
+        "fplCode": 575901,
+        "name": "Julio Soler Barreto",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "0722t",
     "fantraxName": "Ryan McAidoo",
     "clubCode": "MCI",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 171314,
+        "name": "Rúben dos Santos Gato Alves Dias",
+        "score": 45
+      },
+      {
+        "fplCode": 220566,
+        "name": "Rodrigo 'Rodri' Hernandez Cascante",
+        "score": 40
+      },
+      {
+        "fplCode": 510281,
+        "name": "Sávio Moreira de Oliveira",
+        "score": 32
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "073vo",
     "fantraxName": "Finn Geragusyan",
     "clubCode": "SUN",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 699989,
+        "name": "Djiamgone Jocelin Ta Bi",
+        "score": 26
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06ews",
@@ -194,19 +322,19 @@
     "positionHint": "G",
     "candidates": [
       {
+        "fplCode": 216051,
+        "name": "Diogo Dalot Teixeira",
+        "score": 50
+      },
+      {
+        "fplCode": 232112,
+        "name": "Manuel Ugarte Ribeiro",
+        "score": 42
+      },
+      {
         "fplCode": 547676,
         "name": "Tyler Fredricson",
         "score": 38
-      },
-      {
-        "fplCode": 576620,
-        "name": "Bendito Mantato",
-        "score": 32
-      },
-      {
-        "fplCode": 596047,
-        "name": "Chido Obi",
-        "score": 32
       }
     ],
     "reason": "below-threshold"
@@ -218,14 +346,19 @@
     "positionHint": "G",
     "candidates": [
       {
-        "fplCode": 567119,
-        "name": "Shumaira Mheuka",
-        "score": 25
+        "fplCode": 486672,
+        "name": "Moisés Caicedo Corozo",
+        "score": 40
       },
       {
-        "fplCode": 517052,
-        "name": "Nicolas Jackson",
-        "score": 24
+        "fplCode": 215059,
+        "name": "Robert Lynch Sánchez",
+        "score": 35
+      },
+      {
+        "fplCode": 247632,
+        "name": "Pedro Lomba Neto",
+        "score": 33
       }
     ],
     "reason": "below-threshold"
@@ -237,19 +370,19 @@
     "positionHint": "G",
     "candidates": [
       {
+        "fplCode": 232112,
+        "name": "Manuel Ugarte Ribeiro",
+        "score": 40
+      },
+      {
         "fplCode": 547676,
         "name": "Tyler Fredricson",
         "score": 37
       },
       {
-        "fplCode": 596047,
-        "name": "Chido Obi",
-        "score": 30
-      },
-      {
-        "fplCode": 576620,
-        "name": "Bendito Mantato",
-        "score": 23
+        "fplCode": 216051,
+        "name": "Diogo Dalot Teixeira",
+        "score": 32
       }
     ],
     "reason": "below-threshold"
@@ -264,6 +397,11 @@
         "fplCode": 172453,
         "name": "Sam Szmodics",
         "score": 34
+      },
+      {
+        "fplCode": 557012,
+        "name": "Sindre Walle Egeli",
+        "score": 23
       }
     ],
     "reason": "below-threshold"
@@ -273,16 +411,38 @@
     "fantraxName": "Leo Shahar",
     "clubCode": "NEW",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 441191,
+        "name": "Tino Livramento",
+        "score": 36
+      },
+      {
+        "fplCode": 208706,
+        "name": "Bruno Guimarães Rodriguez Moura",
+        "score": 24
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06on6",
     "fantraxName": "Anthony Munda",
     "clubCode": "NEW",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 441191,
+        "name": "Tino Livramento",
+        "score": 43
+      },
+      {
+        "fplCode": 208706,
+        "name": "Bruno Guimarães Rodriguez Moura",
+        "score": 30
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06on4",
@@ -294,6 +454,11 @@
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
         "score": 33
+      },
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 31
       }
     ],
     "reason": "below-threshold"
@@ -305,14 +470,19 @@
     "positionHint": "M",
     "candidates": [
       {
-        "fplCode": 567119,
-        "name": "Shumaira Mheuka",
-        "score": 30
+        "fplCode": 463936,
+        "name": "Jamie Bynoe-Gittens",
+        "score": 42
       },
       {
-        "fplCode": 517052,
-        "name": "Nicolas Jackson",
-        "score": 22
+        "fplCode": 460028,
+        "name": "Levi Samuels Colwill",
+        "score": 38
+      },
+      {
+        "fplCode": 242880,
+        "name": "Benoît Badiashile Mukinayi",
+        "score": 33
       }
     ],
     "reason": "below-threshold"
@@ -324,19 +494,19 @@
     "positionHint": "D",
     "candidates": [
       {
+        "fplCode": 482442,
+        "name": "Pape Matar Sarr",
+        "score": 40
+      },
+      {
+        "fplCode": 221466,
+        "name": "Marcos Senesi Barón",
+        "score": 28
+      },
+      {
         "fplCode": 640419,
         "name": "Jun'ai Byfield",
         "score": 26
-      },
-      {
-        "fplCode": 499726,
-        "name": "Callum Olusesi",
-        "score": 25
-      },
-      {
-        "fplCode": 499716,
-        "name": "James Rowswell",
-        "score": 17
       }
     ],
     "reason": "below-threshold"
@@ -353,14 +523,14 @@
         "score": 42
       },
       {
-        "fplCode": 499726,
-        "name": "Callum Olusesi",
-        "score": 28
+        "fplCode": 221466,
+        "name": "Marcos Senesi Barón",
+        "score": 38
       },
       {
-        "fplCode": 640419,
-        "name": "Jun'ai Byfield",
-        "score": 24
+        "fplCode": 482442,
+        "name": "Pape Matar Sarr",
+        "score": 36
       }
     ],
     "reason": "below-threshold"
@@ -370,8 +540,19 @@
     "fantraxName": "Park Seung-Soo",
     "clubCode": "NEW",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 208706,
+        "name": "Bruno Guimarães Rodriguez Moura",
+        "score": 38
+      },
+      {
+        "fplCode": 441191,
+        "name": "Tino Livramento",
+        "score": 34
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "068a1",
@@ -385,9 +566,14 @@
         "score": 47
       },
       {
-        "fplCode": 517052,
-        "name": "Nicolas Jackson",
-        "score": 27
+        "fplCode": 242880,
+        "name": "Benoît Badiashile Mukinayi",
+        "score": 35
+      },
+      {
+        "fplCode": 486672,
+        "name": "Moisés Caicedo Corozo",
+        "score": 28
       }
     ],
     "reason": "below-threshold"
@@ -397,8 +583,24 @@
     "fantraxName": "Divin Mubama",
     "clubCode": "MCI",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 510281,
+        "name": "Sávio Moreira de Oliveira",
+        "score": 32
+      },
+      {
+        "fplCode": 220566,
+        "name": "Rodrigo 'Rodri' Hernandez Cascante",
+        "score": 21
+      },
+      {
+        "fplCode": 465694,
+        "name": "Nico González Iglesias",
+        "score": 21
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06qq9",
@@ -407,6 +609,11 @@
     "positionHint": "M",
     "candidates": [
       {
+        "fplCode": 221466,
+        "name": "Marcos Senesi Barón",
+        "score": 40
+      },
+      {
         "fplCode": 640419,
         "name": "Jun'ai Byfield",
         "score": 35
@@ -414,11 +621,6 @@
       {
         "fplCode": 499716,
         "name": "James Rowswell",
-        "score": 34
-      },
-      {
-        "fplCode": 499726,
-        "name": "Callum Olusesi",
         "score": 34
       }
     ],
@@ -429,8 +631,24 @@
     "fantraxName": "Ismeal Kabia",
     "clubCode": "ARS",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 154561,
+        "name": "David Raya Martín",
+        "score": 43
+      },
+      {
+        "fplCode": 444145,
+        "name": "Gabriel Martinelli Silva",
+        "score": 43
+      },
+      {
+        "fplCode": 109745,
+        "name": "Kepa Arrizabalaga Revuelta",
+        "score": 42
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06mgn",
@@ -439,19 +657,19 @@
     "positionHint": "M",
     "candidates": [
       {
-        "fplCode": 499716,
-        "name": "James Rowswell",
+        "fplCode": 482442,
+        "name": "Pape Matar Sarr",
+        "score": 41
+      },
+      {
+        "fplCode": 221466,
+        "name": "Marcos Senesi Barón",
         "score": 36
       },
       {
-        "fplCode": 640419,
-        "name": "Jun'ai Byfield",
-        "score": 30
-      },
-      {
-        "fplCode": 499726,
-        "name": "Callum Olusesi",
-        "score": 21
+        "fplCode": 499716,
+        "name": "James Rowswell",
+        "score": 36
       }
     ],
     "reason": "below-threshold"
@@ -461,8 +679,24 @@
     "fantraxName": "Tommy Setford",
     "clubCode": "ARS",
     "positionHint": "G",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 195384,
+        "name": "Mikel Merino Zazón",
+        "score": 32
+      },
+      {
+        "fplCode": 154561,
+        "name": "David Raya Martín",
+        "score": 31
+      },
+      {
+        "fplCode": 226597,
+        "name": "Gabriel dos Santos Magalhães",
+        "score": 30
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06mgk",
@@ -474,6 +708,11 @@
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
         "score": 34
+      },
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 32
       }
     ],
     "reason": "below-threshold"
@@ -483,8 +722,19 @@
     "fantraxName": "Dylan Charlton",
     "clubCode": "NEW",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 441191,
+        "name": "Tino Livramento",
+        "score": 34
+      },
+      {
+        "fplCode": 208706,
+        "name": "Bruno Guimarães Rodriguez Moura",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06msb",
@@ -503,9 +753,9 @@
         "score": 30
       },
       {
-        "fplCode": 556637,
-        "name": "Nehemiah Oriola",
-        "score": 27
+        "fplCode": 223434,
+        "name": "Igor Julio dos Santos de Paulo",
+        "score": 29
       }
     ],
     "reason": "below-threshold"
@@ -515,8 +765,19 @@
     "fantraxName": "Trevan Sanusi",
     "clubCode": "NEW",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 441191,
+        "name": "Tino Livramento",
+        "score": 36
+      },
+      {
+        "fplCode": 208706,
+        "name": "Bruno Guimarães Rodriguez Moura",
+        "score": 27
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "05ymb",
@@ -524,6 +785,16 @@
     "clubCode": "CRY",
     "positionHint": "D",
     "candidates": [
+      {
+        "fplCode": 247348,
+        "name": "Daniel Muñoz Mejía",
+        "score": 38
+      },
+      {
+        "fplCode": 488024,
+        "name": "Yéremy Pino Santos",
+        "score": 32
+      },
       {
         "fplCode": 660392,
         "name": "Christantus Uche",
@@ -542,6 +813,11 @@
         "fplCode": 221399,
         "name": "Jack Harrison",
         "score": 27
+      },
+      {
+        "fplCode": 201595,
+        "name": "Lucas Estella Perri",
+        "score": 21
       }
     ],
     "reason": "below-threshold"
@@ -556,6 +832,11 @@
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
         "score": 38
+      },
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 30
       }
     ],
     "reason": "below-threshold"
@@ -567,19 +848,19 @@
     "positionHint": "F",
     "candidates": [
       {
-        "fplCode": 576620,
-        "name": "Bendito Mantato",
+        "fplCode": 216051,
+        "name": "Diogo Dalot Teixeira",
+        "score": 36
+      },
+      {
+        "fplCode": 430871,
+        "name": "Matheus Santos Carneiro da Cunha",
+        "score": 35
+      },
+      {
+        "fplCode": 232112,
+        "name": "Manuel Ugarte Ribeiro",
         "score": 34
-      },
-      {
-        "fplCode": 547676,
-        "name": "Tyler Fredricson",
-        "score": 27
-      },
-      {
-        "fplCode": 596047,
-        "name": "Chido Obi",
-        "score": 26
       }
     ],
     "reason": "below-threshold"
@@ -594,6 +875,11 @@
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
         "score": 31
+      },
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 23
       }
     ],
     "reason": "below-threshold"
@@ -603,8 +889,14 @@
     "fantraxName": "Simon Moore",
     "clubCode": "SUN",
     "positionHint": "G",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 699989,
+        "name": "Djiamgone Jocelin Ta Bi",
+        "score": 40
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "063c2",
@@ -618,9 +910,14 @@
         "score": 42
       },
       {
-        "fplCode": 567119,
-        "name": "Shumaira Mheuka",
-        "score": 33
+        "fplCode": 242880,
+        "name": "Benoît Badiashile Mukinayi",
+        "score": 41
+      },
+      {
+        "fplCode": 463936,
+        "name": "Jamie Bynoe-Gittens",
+        "score": 36
       }
     ],
     "reason": "below-threshold"
@@ -631,6 +928,16 @@
     "clubCode": "CRY",
     "positionHint": "D",
     "candidates": [
+      {
+        "fplCode": 247348,
+        "name": "Daniel Muñoz Mejía",
+        "score": 45
+      },
+      {
+        "fplCode": 488024,
+        "name": "Yéremy Pino Santos",
+        "score": 35
+      },
       {
         "fplCode": 660392,
         "name": "Christantus Uche",
@@ -644,8 +951,24 @@
     "fantraxName": "Ben Winterburn",
     "clubCode": "BOU",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 496208,
+        "name": "Ben Gannon-Doak",
+        "score": 41
+      },
+      {
+        "fplCode": 575901,
+        "name": "Julio Soler Barreto",
+        "score": 37
+      },
+      {
+        "fplCode": 560262,
+        "name": "Junior Kroupi",
+        "score": 30
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06qvv",
@@ -654,19 +977,19 @@
     "positionHint": "D",
     "candidates": [
       {
+        "fplCode": 221466,
+        "name": "Marcos Senesi Barón",
+        "score": 44
+      },
+      {
+        "fplCode": 482442,
+        "name": "Pape Matar Sarr",
+        "score": 36
+      },
+      {
         "fplCode": 640419,
         "name": "Jun'ai Byfield",
         "score": 31
-      },
-      {
-        "fplCode": 499726,
-        "name": "Callum Olusesi",
-        "score": 30
-      },
-      {
-        "fplCode": 499716,
-        "name": "James Rowswell",
-        "score": 22
       }
     ],
     "reason": "below-threshold"
@@ -676,8 +999,14 @@
     "fantraxName": "Eric da Silva Moreira",
     "clubCode": "NOT",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 221389,
+        "name": "John Victor Maciel Furtado",
+        "score": 38
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06s7v",
@@ -691,14 +1020,14 @@
         "score": 38
       },
       {
+        "fplCode": 430871,
+        "name": "Matheus Santos Carneiro da Cunha",
+        "score": 37
+      },
+      {
         "fplCode": 547676,
         "name": "Tyler Fredricson",
         "score": 33
-      },
-      {
-        "fplCode": 596047,
-        "name": "Chido Obi",
-        "score": 26
       }
     ],
     "reason": "below-threshold"
@@ -715,13 +1044,13 @@
         "score": 45
       },
       {
-        "fplCode": 640419,
-        "name": "Jun'ai Byfield",
-        "score": 27
+        "fplCode": 221466,
+        "name": "Marcos Senesi Barón",
+        "score": 30
       },
       {
-        "fplCode": 499716,
-        "name": "James Rowswell",
+        "fplCode": 640419,
+        "name": "Jun'ai Byfield",
         "score": 27
       }
     ],
@@ -734,6 +1063,11 @@
     "positionHint": "G",
     "candidates": [
       {
+        "fplCode": 169432,
+        "name": "Oli McBurnie",
+        "score": 36
+      },
+      {
         "fplCode": 534392,
         "name": "Mason Burstow",
         "score": 35
@@ -742,11 +1076,6 @@
         "fplCode": 494950,
         "name": "Harvey Cartwright",
         "score": 26
-      },
-      {
-        "fplCode": 661800,
-        "name": "Cathal McCarthy",
-        "score": 22
       }
     ],
     "reason": "below-threshold"
@@ -756,16 +1085,48 @@
     "fantraxName": "Ife Ibrahim",
     "clubCode": "ARS",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 198869,
+        "name": "Benjamin White",
+        "score": 48
+      },
+      {
+        "fplCode": 481655,
+        "name": "Martín Zubimendi Ibáñez",
+        "score": 48
+      },
+      {
+        "fplCode": 226597,
+        "name": "Gabriel dos Santos Magalhães",
+        "score": 44
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06r5r",
     "fantraxName": "Matai Akinmboni",
     "clubCode": "BOU",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 496208,
+        "name": "Ben Gannon-Doak",
+        "score": 38
+      },
+      {
+        "fplCode": 436893,
+        "name": "Julián Araujo Zúñiga",
+        "score": 36
+      },
+      {
+        "fplCode": 560262,
+        "name": "Junior Kroupi",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "05ubt",
@@ -788,6 +1149,11 @@
     "positionHint": "D",
     "candidates": [
       {
+        "fplCode": 488024,
+        "name": "Yéremy Pino Santos",
+        "score": 35
+      },
+      {
         "fplCode": 660392,
         "name": "Christantus Uche",
         "score": 22
@@ -805,6 +1171,11 @@
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
         "score": 38
+      },
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 30
       }
     ],
     "reason": "below-threshold"
@@ -815,6 +1186,11 @@
     "clubCode": "BRF",
     "positionHint": "D",
     "candidates": [
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 36
+      },
       {
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
@@ -828,16 +1204,38 @@
     "fantraxName": "Brayden Clarke",
     "clubCode": "ARS",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 154561,
+        "name": "David Raya Martín",
+        "score": 44
+      },
+      {
+        "fplCode": 226597,
+        "name": "Gabriel dos Santos Magalhães",
+        "score": 38
+      },
+      {
+        "fplCode": 481655,
+        "name": "Martín Zubimendi Ibáñez",
+        "score": 38
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06h1g",
     "fantraxName": "Aidan Harris",
     "clubCode": "NEW",
     "positionHint": "G",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 441191,
+        "name": "Tino Livramento",
+        "score": 37
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "066r9",
@@ -849,6 +1247,11 @@
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
         "score": 72
+      },
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 32
       }
     ],
     "reason": "below-threshold"
@@ -868,6 +1271,11 @@
         "fplCode": 517052,
         "name": "Nicolas Jackson",
         "score": 35
+      },
+      {
+        "fplCode": 242880,
+        "name": "Benoît Badiashile Mukinayi",
+        "score": 30
       }
     ],
     "reason": "below-threshold"
@@ -879,19 +1287,19 @@
     "positionHint": "D",
     "candidates": [
       {
-        "fplCode": 500058,
-        "name": "Jayden Danns",
+        "fplCode": 591386,
+        "name": "Trey Nyoni",
+        "score": 42
+      },
+      {
+        "fplCode": 535928,
+        "name": "Stefan Bajčetić Maquieira",
         "score": 33
       },
       {
-        "fplCode": 519440,
-        "name": "Wellity Lucky",
-        "score": 32
-      },
-      {
-        "fplCode": 586268,
-        "name": "Armin Pecsi",
-        "score": 21
+        "fplCode": 500058,
+        "name": "Jayden Danns",
+        "score": 33
       }
     ],
     "reason": "below-threshold"
@@ -903,14 +1311,19 @@
     "positionHint": "G",
     "candidates": [
       {
+        "fplCode": 460028,
+        "name": "Levi Samuels Colwill",
+        "score": 42
+      },
+      {
         "fplCode": 567119,
         "name": "Shumaira Mheuka",
         "score": 42
       },
       {
-        "fplCode": 517052,
-        "name": "Nicolas Jackson",
-        "score": 22
+        "fplCode": 463936,
+        "name": "Jamie Bynoe-Gittens",
+        "score": 38
       }
     ],
     "reason": "below-threshold"
@@ -934,24 +1347,57 @@
     "fantraxName": "Ceadach ONeill",
     "clubCode": "ARS",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 444145,
+        "name": "Gabriel Martinelli Silva",
+        "score": 42
+      },
+      {
+        "fplCode": 109745,
+        "name": "Kepa Arrizabalaga Revuelta",
+        "score": 29
+      },
+      {
+        "fplCode": 226597,
+        "name": "Gabriel dos Santos Magalhães",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "073ab",
     "fantraxName": "Floyd Samba",
     "clubCode": "MCI",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 465694,
+        "name": "Nico González Iglesias",
+        "score": 29
+      },
+      {
+        "fplCode": 510281,
+        "name": "Sávio Moreira de Oliveira",
+        "score": 27
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "05uhr",
     "fantraxName": "Finley Burns",
     "clubCode": "MCI",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 465694,
+        "name": "Nico González Iglesias",
+        "score": 34
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "073b0",
@@ -963,6 +1409,11 @@
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
         "score": 37
+      },
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 24
       }
     ],
     "reason": "below-threshold"
@@ -998,6 +1449,11 @@
     "positionHint": "D",
     "candidates": [
       {
+        "fplCode": 488024,
+        "name": "Yéremy Pino Santos",
+        "score": 35
+      },
+      {
         "fplCode": 660392,
         "name": "Christantus Uche",
         "score": 22
@@ -1017,14 +1473,14 @@
         "score": 42
       },
       {
+        "fplCode": 591386,
+        "name": "Trey Nyoni",
+        "score": 33
+      },
+      {
         "fplCode": 586268,
         "name": "Armin Pecsi",
         "score": 27
-      },
-      {
-        "fplCode": 500058,
-        "name": "Jayden Danns",
-        "score": 11
       }
     ],
     "reason": "below-threshold"
@@ -1044,6 +1500,11 @@
         "fplCode": 517052,
         "name": "Nicolas Jackson",
         "score": 36
+      },
+      {
+        "fplCode": 460028,
+        "name": "Levi Samuels Colwill",
+        "score": 26
       }
     ],
     "reason": "below-threshold"
@@ -1065,9 +1526,9 @@
         "score": 40
       },
       {
-        "fplCode": 640419,
-        "name": "Jun'ai Byfield",
-        "score": 22
+        "fplCode": 482442,
+        "name": "Pape Matar Sarr",
+        "score": 38
       }
     ],
     "reason": "below-threshold"
@@ -1077,8 +1538,14 @@
     "fantraxName": "Issa Kabore",
     "clubCode": "MCI",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 465694,
+        "name": "Nico González Iglesias",
+        "score": 30
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06l4c",
@@ -1097,9 +1564,9 @@
         "score": 40
       },
       {
-        "fplCode": 596047,
-        "name": "Chido Obi",
-        "score": 17
+        "fplCode": 232112,
+        "name": "Manuel Ugarte Ribeiro",
+        "score": 40
       }
     ],
     "reason": "below-threshold"
@@ -1114,6 +1581,11 @@
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
         "score": 38
+      },
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 26
       }
     ],
     "reason": "below-threshold"
@@ -1123,24 +1595,62 @@
     "fantraxName": "Demiane Agustien",
     "clubCode": "ARS",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 481655,
+        "name": "Martín Zubimendi Ibáñez",
+        "score": 48
+      },
+      {
+        "fplCode": 154561,
+        "name": "David Raya Martín",
+        "score": 44
+      },
+      {
+        "fplCode": 109745,
+        "name": "Kepa Arrizabalaga Revuelta",
+        "score": 29
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "0786b",
     "fantraxName": "Theo Julienne",
     "clubCode": "ARS",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 481655,
+        "name": "Martín Zubimendi Ibáñez",
+        "score": 36
+      },
+      {
+        "fplCode": 154561,
+        "name": "David Raya Martín",
+        "score": 25
+      },
+      {
+        "fplCode": 109745,
+        "name": "Kepa Arrizabalaga Revuelta",
+        "score": 24
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "0785x",
     "fantraxName": "Matty Henderson-Hall",
     "clubCode": "MCI",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 465694,
+        "name": "Nico González Iglesias",
+        "score": 32
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06phr",
@@ -1148,6 +1658,11 @@
     "clubCode": "BRF",
     "positionHint": "F",
     "candidates": [
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 32
+      },
       {
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
@@ -1161,16 +1676,28 @@
     "fantraxName": "Mahamadou Sangare",
     "clubCode": "MCI",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 465694,
+        "name": "Nico González Iglesias",
+        "score": 30
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "0785w",
     "fantraxName": "Jack Wint",
     "clubCode": "MCI",
     "positionHint": "G",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 465694,
+        "name": "Nico González Iglesias",
+        "score": 32
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "062p1",
@@ -1178,6 +1705,11 @@
     "clubCode": "LIV",
     "positionHint": "D",
     "candidates": [
+      {
+        "fplCode": 514514,
+        "name": "Lewis Koumas",
+        "score": 40
+      },
       {
         "fplCode": 586268,
         "name": "Armin Pecsi",
@@ -1187,11 +1719,6 @@
         "fplCode": 519440,
         "name": "Wellity Lucky",
         "score": 33
-      },
-      {
-        "fplCode": 500058,
-        "name": "Jayden Danns",
-        "score": 32
       }
     ],
     "reason": "below-threshold"
@@ -1297,8 +1824,14 @@
     "fantraxName": "Tom Proctor",
     "clubCode": "SUN",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 699989,
+        "name": "Djiamgone Jocelin Ta Bi",
+        "score": 40
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "067z4",
@@ -1315,6 +1848,11 @@
         "fplCode": 567119,
         "name": "Shumaira Mheuka",
         "score": 30
+      },
+      {
+        "fplCode": 463936,
+        "name": "Jamie Bynoe-Gittens",
+        "score": 27
       }
     ],
     "reason": "below-threshold"
@@ -1324,8 +1862,14 @@
     "fantraxName": "Charlie Dinsdale",
     "clubCode": "SUN",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 699989,
+        "name": "Djiamgone Jocelin Ta Bi",
+        "score": 32
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06rlf",
@@ -1356,16 +1900,28 @@
     "fantraxName": "Archie Lightfoot",
     "clubCode": "SUN",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 699989,
+        "name": "Djiamgone Jocelin Ta Bi",
+        "score": 40
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "0785h",
     "fantraxName": "Felix Scott",
     "clubCode": "SUN",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 699989,
+        "name": "Djiamgone Jocelin Ta Bi",
+        "score": 50
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06dpv",
@@ -1382,6 +1938,11 @@
         "fplCode": 517052,
         "name": "Nicolas Jackson",
         "score": 34
+      },
+      {
+        "fplCode": 463936,
+        "name": "Jamie Bynoe-Gittens",
+        "score": 30
       }
     ],
     "reason": "below-threshold"
@@ -1391,48 +1952,94 @@
     "fantraxName": "Ben Kindon",
     "clubCode": "SUN",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 699989,
+        "name": "Djiamgone Jocelin Ta Bi",
+        "score": 43
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "0785f",
     "fantraxName": "Matheos Ferreira",
     "clubCode": "NEW",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 441191,
+        "name": "Tino Livramento",
+        "score": 46
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "0785e",
     "fantraxName": "Vakhtang Salia",
     "clubCode": "NEW",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 441191,
+        "name": "Tino Livramento",
+        "score": 42
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "0785b",
     "fantraxName": "Rory Finneran",
     "clubCode": "NEW",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 441191,
+        "name": "Tino Livramento",
+        "score": 43
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "0785c",
     "fantraxName": "Mason Miley",
     "clubCode": "NEW",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 441191,
+        "name": "Tino Livramento",
+        "score": 31
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "07869",
     "fantraxName": "Josh Ogunnaike",
     "clubCode": "ARS",
     "positionHint": "D",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 481655,
+        "name": "Martín Zubimendi Ibáñez",
+        "score": 27
+      },
+      {
+        "fplCode": 154561,
+        "name": "David Raya Martín",
+        "score": 22
+      },
+      {
+        "fplCode": 109745,
+        "name": "Kepa Arrizabalaga Revuelta",
+        "score": 22
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "07867",
@@ -1449,19 +2056,19 @@
     "positionHint": "M",
     "candidates": [
       {
+        "fplCode": 514514,
+        "name": "Lewis Koumas",
+        "score": 37
+      },
+      {
         "fplCode": 586268,
         "name": "Armin Pecsi",
         "score": 31
       },
       {
-        "fplCode": 500058,
-        "name": "Jayden Danns",
+        "fplCode": 591386,
+        "name": "Trey Nyoni",
         "score": 30
-      },
-      {
-        "fplCode": 519440,
-        "name": "Wellity Lucky",
-        "score": 21
       }
     ],
     "reason": "below-threshold"
@@ -1479,8 +2086,24 @@
     "fantraxName": "Daniel Jebbison",
     "clubCode": "BOU",
     "positionHint": "F",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 457569,
+        "name": "Đorđe Petrović",
+        "score": 34
+      },
+      {
+        "fplCode": 560262,
+        "name": "Junior Kroupi",
+        "score": 29
+      },
+      {
+        "fplCode": 483067,
+        "name": "António João Pereira de Albuquerque Tavares da Silva",
+        "score": 27
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "05u40",
@@ -1492,6 +2115,11 @@
         "fplCode": 508395,
         "name": "Yehor Yarmoliuk",
         "score": 33
+      },
+      {
+        "fplCode": 244858,
+        "name": "Fábio Freitas Gouveia Carvalho",
+        "score": 31
       }
     ],
     "reason": "below-threshold"
@@ -1506,6 +2134,11 @@
         "fplCode": 660392,
         "name": "Christantus Uche",
         "score": 44
+      },
+      {
+        "fplCode": 488024,
+        "name": "Yéremy Pino Santos",
+        "score": 37
       }
     ],
     "reason": "below-threshold"
@@ -1539,6 +2172,11 @@
         "fplCode": 660392,
         "name": "Christantus Uche",
         "score": 33
+      },
+      {
+        "fplCode": 488024,
+        "name": "Yéremy Pino Santos",
+        "score": 32
       }
     ],
     "reason": "below-threshold"
@@ -1558,6 +2196,11 @@
         "fplCode": 567119,
         "name": "Shumaira Mheuka",
         "score": 34
+      },
+      {
+        "fplCode": 463936,
+        "name": "Jamie Bynoe-Gittens",
+        "score": 30
       }
     ],
     "reason": "below-threshold"
@@ -1588,6 +2231,11 @@
     "positionHint": "M",
     "candidates": [
       {
+        "fplCode": 463936,
+        "name": "Jamie Bynoe-Gittens",
+        "score": 40
+      },
+      {
         "fplCode": 517052,
         "name": "Nicolas Jackson",
         "score": 40
@@ -1615,6 +2263,11 @@
         "fplCode": 567119,
         "name": "Shumaira Mheuka",
         "score": 29
+      },
+      {
+        "fplCode": 463936,
+        "name": "Jamie Bynoe-Gittens",
+        "score": 21
       }
     ],
     "reason": "below-threshold"
@@ -1631,6 +2284,11 @@
         "score": 33
       },
       {
+        "fplCode": 463936,
+        "name": "Jamie Bynoe-Gittens",
+        "score": 29
+      },
+      {
         "fplCode": 517052,
         "name": "Nicolas Jackson",
         "score": 26
@@ -1644,6 +2302,11 @@
     "clubCode": "CHE",
     "positionHint": "D",
     "candidates": [
+      {
+        "fplCode": 463936,
+        "name": "Jamie Bynoe-Gittens",
+        "score": 37
+      },
       {
         "fplCode": 517052,
         "name": "Nicolas Jackson",
@@ -1718,8 +2381,14 @@
     "fantraxName": "Idrissa Gueye",
     "clubCode": "EVE",
     "positionHint": "M",
-    "candidates": [],
-    "reason": "no-candidates"
+    "candidates": [
+      {
+        "fplCode": 502697,
+        "name": "Carlos Alcaraz Durán",
+        "score": 31
+      }
+    ],
+    "reason": "below-threshold"
   },
   {
     "fantraxId": "06329",
@@ -1752,6 +2421,11 @@
     "positionHint": "F",
     "candidates": [
       {
+        "fplCode": 195546,
+        "name": "Emiliano Buendía Stati",
+        "score": 42
+      },
+      {
         "fplCode": 645618,
         "name": "Bradley Burrowes",
         "score": 37
@@ -1760,11 +2434,6 @@
         "fplCode": 606798,
         "name": "Andrés García",
         "score": 35
-      },
-      {
-        "fplCode": 577285,
-        "name": "George Hemmings",
-        "score": 23
       }
     ],
     "reason": "below-threshold"
@@ -1823,6 +2492,11 @@
         "fplCode": 660392,
         "name": "Christantus Uche",
         "score": 31
+      },
+      {
+        "fplCode": 488024,
+        "name": "Yéremy Pino Santos",
+        "score": 30
       }
     ],
     "reason": "below-threshold"
@@ -1833,6 +2507,11 @@
     "clubCode": "CRY",
     "positionHint": "M",
     "candidates": [
+      {
+        "fplCode": 488024,
+        "name": "Yéremy Pino Santos",
+        "score": 29
+      },
       {
         "fplCode": 660392,
         "name": "Christantus Uche",
@@ -2124,6 +2803,11 @@
     "positionHint": "F",
     "candidates": [
       {
+        "fplCode": 514514,
+        "name": "Lewis Koumas",
+        "score": 45
+      },
+      {
         "fplCode": 586268,
         "name": "Armin Pecsi",
         "score": 40
@@ -2132,11 +2816,6 @@
         "fplCode": 500058,
         "name": "Jayden Danns",
         "score": 32
-      },
-      {
-        "fplCode": 519440,
-        "name": "Wellity Lucky",
-        "score": 25
       }
     ],
     "reason": "below-threshold"
@@ -2180,6 +2859,11 @@
     "positionHint": "F",
     "candidates": [
       {
+        "fplCode": 514514,
+        "name": "Lewis Koumas",
+        "score": 38
+      },
+      {
         "fplCode": 500058,
         "name": "Jayden Danns",
         "score": 36
@@ -2188,11 +2872,6 @@
         "fplCode": 586268,
         "name": "Armin Pecsi",
         "score": 35
-      },
-      {
-        "fplCode": 519440,
-        "name": "Wellity Lucky",
-        "score": 13
       }
     ],
     "reason": "below-threshold"
@@ -2280,6 +2959,11 @@
     "positionHint": "M",
     "candidates": [
       {
+        "fplCode": 653481,
+        "name": "Alysson Edward Franco da Rocha dos Santos",
+        "score": 33
+      },
+      {
         "fplCode": 606798,
         "name": "Andrés García",
         "score": 24
@@ -2288,11 +2972,6 @@
         "fplCode": 577285,
         "name": "George Hemmings",
         "score": 23
-      },
-      {
-        "fplCode": 645618,
-        "name": "Bradley Burrowes",
-        "score": 22
       }
     ],
     "reason": "below-threshold"

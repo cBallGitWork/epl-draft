@@ -52,12 +52,14 @@
   "02lz0": {
     "fplCode": 98980,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "02lzt": {
     "fplCode": 629397,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "02m5b": {
     "fplCode": 60689,
@@ -142,7 +144,8 @@
   "03fgo": {
     "fplCode": 154566,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "03frx": {
     "fplCode": 159506,
@@ -207,7 +210,8 @@
   "03r93": {
     "fplCode": 171287,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "03rec": {
     "fplCode": 149484,
@@ -307,7 +311,8 @@
   "0477b": {
     "fplCode": 169432,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "048xg": {
     "fplCode": 183656,
@@ -342,7 +347,8 @@
   "04e1e": {
     "fplCode": 198869,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "04f6h": {
     "fplCode": 85633,
@@ -402,7 +408,8 @@
   "04hk9": {
     "fplCode": 195384,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "04io4": {
     "fplCode": 212319,
@@ -462,7 +469,8 @@
   "04qfz": {
     "fplCode": 216051,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "04qor": {
     "fplCode": 80201,
@@ -532,12 +540,14 @@
   "04tzt": {
     "fplCode": 152551,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "04u40": {
     "fplCode": 109745,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "04u41": {
     "fplCode": 91651,
@@ -567,12 +577,14 @@
   "04ym7": {
     "fplCode": 201595,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "04yme": {
     "fplCode": 215059,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "04yo7": {
     "fplCode": 166989,
@@ -607,7 +619,8 @@
   "051kl": {
     "fplCode": 195546,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "0521z": {
     "fplCode": 220627,
@@ -632,12 +645,14 @@
   "0524k": {
     "fplCode": 220566,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "052ca": {
     "fplCode": 199798,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "052cb": {
     "fplCode": 441302,
@@ -662,7 +677,8 @@
   "052h5": {
     "fplCode": 444145,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "0554g": {
     "fplCode": 232892,
@@ -682,12 +698,14 @@
   "056as": {
     "fplCode": 444172,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "056iy": {
     "fplCode": 247632,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "05748": {
     "fplCode": 232185,
@@ -722,7 +740,8 @@
   "05gcr": {
     "fplCode": 141746,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "05gcs": {
     "fplCode": 207189,
@@ -787,7 +806,8 @@
   "05n3v": {
     "fplCode": 214285,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "05nil": {
     "fplCode": 455084,
@@ -802,7 +822,8 @@
   "05nns": {
     "fplCode": 223827,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "05nt6": {
     "fplCode": 232413,
@@ -812,7 +833,8 @@
   "05nzu": {
     "fplCode": 226597,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "05o2p": {
     "fplCode": 243413,
@@ -872,12 +894,14 @@
   "05ojf": {
     "fplCode": 244858,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "05omu": {
     "fplCode": 171314,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "05opj": {
     "fplCode": 215379,
@@ -932,12 +956,14 @@
   "05rb8": {
     "fplCode": 486672,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "05rey": {
     "fplCode": 465390,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "05rff": {
     "fplCode": 481624,
@@ -962,7 +988,8 @@
   "05s08": {
     "fplCode": 441191,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "05t6x": {
     "fplCode": 538207,
@@ -977,7 +1004,8 @@
   "05tqx": {
     "fplCode": 154561,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "05tqz": {
     "fplCode": 194010,
@@ -1092,7 +1120,8 @@
   "05w7t": {
     "fplCode": 482442,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "05x12": {
     "fplCode": 477547,
@@ -1132,7 +1161,8 @@
   "05ylj": {
     "fplCode": 208706,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "05ylw": {
     "fplCode": 202993,
@@ -1152,7 +1182,8 @@
   "060wh": {
     "fplCode": 493105,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06195": {
     "fplCode": 496661,
@@ -1182,7 +1213,8 @@
   "061vn": {
     "fplCode": 244042,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "061vp": {
     "fplCode": 427637,
@@ -1267,7 +1299,8 @@
   "062p0": {
     "fplCode": 535928,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "062p3": {
     "fplCode": 249231,
@@ -1277,7 +1310,8 @@
   "062p5": {
     "fplCode": 460028,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "062pl": {
     "fplCode": 221820,
@@ -1307,7 +1341,8 @@
   "063e7": {
     "fplCode": 221466,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "063hu": {
     "fplCode": 449871,
@@ -1362,7 +1397,8 @@
   "066nn": {
     "fplCode": 496208,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "066sd": {
     "fplCode": 499169,
@@ -1397,7 +1433,8 @@
   "067yz": {
     "fplCode": 430871,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "067zv": {
     "fplCode": 513418,
@@ -1407,12 +1444,14 @@
   "06804": {
     "fplCode": 242880,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "0687c": {
     "fplCode": 502697,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "0689w": {
     "fplCode": 463067,
@@ -1532,7 +1571,8 @@
   "06do4": {
     "fplCode": 514514,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "06do9": {
     "fplCode": 544877,
@@ -1547,7 +1587,8 @@
   "06eka": {
     "fplCode": 223434,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06ew2": {
     "fplCode": 220362,
@@ -1567,7 +1608,8 @@
   "06exa": {
     "fplCode": 536694,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06exk": {
     "fplCode": 548308,
@@ -1602,7 +1644,8 @@
   "06fuw": {
     "fplCode": 457569,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "06fv8": {
     "fplCode": 460842,
@@ -1647,7 +1690,8 @@
   "06hze": {
     "fplCode": 591386,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "06j20": {
     "fplCode": 543158,
@@ -1657,12 +1701,14 @@
   "06jfe": {
     "fplCode": 507433,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06jgi": {
     "fplCode": 247348,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06jgs": {
     "fplCode": 496221,
@@ -1672,7 +1718,8 @@
   "06jh3": {
     "fplCode": 577725,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "06kqy": {
     "fplCode": 606745,
@@ -1737,7 +1784,8 @@
   "06mn0": {
     "fplCode": 502500,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06mn7": {
     "fplCode": 570526,
@@ -1792,7 +1840,8 @@
   "06mvz": {
     "fplCode": 510281,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06mw0": {
     "fplCode": 227444,
@@ -1817,7 +1866,8 @@
   "06nyw": {
     "fplCode": 246301,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06onv": {
     "fplCode": 609873,
@@ -1837,7 +1887,8 @@
   "06p4l": {
     "fplCode": 436893,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06p6j": {
     "fplCode": 444102,
@@ -1867,7 +1918,8 @@
   "06pib": {
     "fplCode": 232112,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06pig": {
     "fplCode": 485047,
@@ -1882,7 +1934,8 @@
   "06r5b": {
     "fplCode": 514254,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06r5m": {
     "fplCode": 622758,
@@ -1897,7 +1950,8 @@
   "06r7f": {
     "fplCode": 575901,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06r9h": {
     "fplCode": 606921,
@@ -1932,7 +1986,8 @@
   "06rm7": {
     "fplCode": 465694,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06rm8": {
     "fplCode": 511499,
@@ -1967,7 +2022,8 @@
   "06uzv": {
     "fplCode": 491007,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06uzy": {
     "fplCode": 248056,
@@ -2062,7 +2118,8 @@
   "06xza": {
     "fplCode": 560262,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "conflicting"
   },
   "06xzc": {
     "fplCode": 608181,
@@ -2127,7 +2184,8 @@
   "06y9n": {
     "fplCode": 463936,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06y9o": {
     "fplCode": 482973,
@@ -2137,7 +2195,8 @@
   "06y9z": {
     "fplCode": 481655,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "06yb7": {
     "fplCode": 243526,
@@ -2287,7 +2346,8 @@
   "070f9": {
     "fplCode": 488024,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "070fa": {
     "fplCode": 493362,
@@ -2307,7 +2367,8 @@
   "070gt": {
     "fplCode": 221389,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "070h9": {
     "fplCode": 620487,
@@ -2367,7 +2428,8 @@
   "072j3": {
     "fplCode": 653481,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "072mp": {
     "fplCode": 593174,
@@ -2377,7 +2439,8 @@
   "072o9": {
     "fplCode": 699989,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "072pc": {
     "fplCode": 614574,
@@ -2432,7 +2495,8 @@
   "076d1": {
     "fplCode": 577411,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "076d3": {
     "fplCode": 480457,
@@ -2532,7 +2596,8 @@
   "076dx": {
     "fplCode": 557012,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "076kc": {
     "fplCode": 513086,
@@ -2692,7 +2757,8 @@
   "0787y": {
     "fplCode": 483067,
     "matchedBy": "fuzzy",
-    "confidence": 100
+    "confidence": 100,
+    "agreement": "contained"
   },
   "0788g": {
     "fplCode": 470551,

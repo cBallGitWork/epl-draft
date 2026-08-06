@@ -1,3 +1,5 @@
+import type { NameAgreement } from "./similarity";
+
 // The persisted Fantrax→FPL mapping and the rules for re-running the build
 // without destroying what a human decided.
 //
@@ -15,6 +17,10 @@ export interface MappedEntry {
   matchedBy: "exact" | "alias" | "fuzzy" | "manual";
   /** 100 for exact and alias matches; the token-set score for fuzzy ones. */
   confidence: number;
+  /** Fuzzy rows only: whether the two full names merely differ in length or
+   *  contradict each other. `confidence` cannot say — containment scores 100
+   *  either way — so this is what an audit sorts on. */
+  agreement?: NameAgreement;
   /** Set when a human confirmed it. Audited entries are never revised by the
    *  script — a person looked, and the script did not. */
   auditedAt?: string;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AMBIGUITY_MARGIN, FUZZY_MIN_SCORE, tokenSetRatio } from "./similarity";
+import { AMBIGUITY_MARGIN, FUZZY_MIN_SCORE, nameAgreement, tokenSetRatio } from "./similarity";
 
 describe("tokenSetRatio", () => {
   it("ignores word order", () => {
@@ -61,5 +61,31 @@ describe("thresholds", () => {
   it("keeps the margin meaningfully below the threshold", () => {
     expect(AMBIGUITY_MARGIN).toBeGreaterThan(0);
     expect(AMBIGUITY_MARGIN).toBeLessThan(100 - FUZZY_MIN_SCORE + AMBIGUITY_MARGIN);
+  });
+});
+
+describe("nameAgreement", () => {
+  it("separates a longer name from a contradicting one, where the score cannot", () => {
+    // Both score 100 and both clear the surname guard. One is a middle name FPL
+    // carries and Fantrax does not; the other is two feeds disagreeing about who
+    // the player is. Only this tells them apart.
+    expect(tokenSetRatio("Bruno Fernandes", "Bruno Borges Fernandes")).toBe(100);
+    expect(nameAgreement("Bruno Fernandes", "Bruno Borges Fernandes")).toBe("contained");
+    expect(nameAgreement("Keith Andrews", "Kaine Andrews")).toBe("conflicting");
+  });
+
+  it("reads the same name written either way round as identical", () => {
+    expect(nameAgreement("Mudryk, Mykhailo", "Mykhailo Mudryk")).toBe("identical");
+  });
+
+  it("treats an abbreviated given name as a conflict", () => {
+    // "Oli" is not a token-subset of "Oliver", and a human should confirm it
+    // rather than the script assuming. Cheap to wave through, expensive to miss.
+    expect(nameAgreement("McBurnie, Oliver", "Oli McBurnie")).toBe("conflicting");
+  });
+
+  it("calls an empty name a conflict rather than a match", () => {
+    // Never the safe bucket: an unnamed row must not be waved through unread.
+    expect(nameAgreement("", "Bukayo Saka")).toBe("conflicting");
   });
 });
