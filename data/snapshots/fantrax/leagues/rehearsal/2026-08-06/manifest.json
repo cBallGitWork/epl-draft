@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-08-06T17:03:37.625Z",
+  "leagueId": "zbn1z3ukmsgb36sz",
+  "reads": [
+    {
+      "method": "getLeagueInfo",
+      "ok": true,
+      "bytes": 97975
+    },
+    {
+      "method": "getTeamRosters",
+      "ok": true,
+      "bytes": 6627
+    },
+    {
+      "method": "getStandings",
+      "ok": true,
+      "bytes": 697
+    },
+    {
+      "method": "getDraftResults",
+      "ok": true,
+      "bytes": 10160
+    }
+  ]
+}
