@@ -55,11 +55,18 @@ describe("mapFixtures", () => {
 });
 
 describe("mapPlayers", () => {
-  it("maps element_type to a position and keeps the stable portrait code", () => {
+  it("keeps the stable portrait code and joins the full name", () => {
     const [p] = mapPlayers(bootstrap());
-    expect(p.position).toBe("GK");
     expect(p.code).toBe(154561);
     expect(p.fullName).toBe("David Raya Martín");
+  });
+
+  // element_type is FPL's fantasy classification, not a property of the footballer.
+  // Fantrax files the same player differently and allows several positions at once,
+  // so it stays in raw.ts and never reaches a domain type.
+  it("does not carry a position", () => {
+    const [p] = mapPlayers(bootstrap());
+    expect(p).not.toHaveProperty("position");
   });
 });
 

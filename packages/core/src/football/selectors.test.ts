@@ -9,7 +9,7 @@ import {
 } from "./selectors";
 
 const player = (id: number, name: string, clubId = 1) => ({
-  id, code: 1000 + id, name, fullName: name, clubId, position: "MID" as const,
+  id, code: 1000 + id, name, fullName: name, clubId,
   squadNumber: null, status: "a", news: "", chanceOfPlaying: null, optaCode: null,
 });
 

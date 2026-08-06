@@ -16,10 +16,15 @@ export interface Club {
   shortName: string;
 }
 
-export type Position = "GK" | "DEF" | "MID" | "FWD";
-
 /** A real footballer. `code` keys the portrait asset and is stable across seasons;
- *  `id` is FPL's per-season element id and is NOT safe to persist between seasons. */
+ *  `id` is FPL's per-season element id and is NOT safe to persist between seasons.
+ *
+ *  There is deliberately no position here. FPL's `element_type` is FPL's own
+ *  fantasy classification, not a fact about the footballer: Fantrax files the
+ *  same player differently and lets them hold several positions at once.
+ *  Position is a rule of whichever game is being played, so it belongs to the
+ *  league layer (`league/types.ts`, `eligiblePositions`) and is never a join
+ *  key. */
 export interface FootballPlayer {
   id: number;
   code: number;
@@ -27,7 +32,6 @@ export interface FootballPlayer {
   name: string;
   fullName: string;
   clubId: number;
-  position: Position;
   squadNumber: number | null;
   /** Availability: "a" available, "i" injured, "s" suspended, "d" doubtful, "u" unavailable. */
   status: string;

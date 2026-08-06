@@ -10,7 +10,6 @@ export type {
   FootballPlayer,
   FootballSnapshot,
   PlayerMatchStats,
-  Position,
 } from "./types";
 
 export { CLUB_COLOURS, clubColours, crestUrl, inkOn } from "./clubs";

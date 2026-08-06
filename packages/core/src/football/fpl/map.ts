@@ -5,15 +5,12 @@ import type {
   FootballPlayer,
   FootballSnapshot,
   PlayerMatchStats,
-  Position,
 } from "../types";
 import type { RawBootstrap, RawFixture, RawLive, RawLiveElement } from "./raw";
 
 // Pure raw → domain transformation. No I/O, no dates from the clock, no network:
 // everything this needs arrives as an argument, so it is fully unit-testable and
 // the same inputs always give the same snapshot.
-
-const POSITION_BY_TYPE: Record<number, Position> = { 1: "GK", 2: "DEF", 3: "MID", 4: "FWD" };
 
 export function mapClubs(raw: RawBootstrap): Club[] {
   return raw.teams.map((t) => ({
@@ -31,7 +28,6 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
     name: e.web_name,
     fullName: `${e.first_name} ${e.second_name}`.trim(),
     clubId: e.team,
-    position: POSITION_BY_TYPE[e.element_type] ?? "MID",
     squadNumber: e.squad_number ?? null,
     status: e.status ?? "a",
     news: e.news ?? "",
