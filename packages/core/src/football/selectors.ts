@@ -12,6 +12,16 @@ export function playerById(snapshot: FootballSnapshot): Map<number, FootballPlay
   return new Map(snapshot.players.map((p) => [p.id, p]));
 }
 
+/** Keyed by FPL's season-stable `code` rather than its per-season `id`.
+ *
+ *  This is the lookup anything persisted has to use. The identity bridge stores
+ *  `code` because `id` is recycled every summer (CODE_RULES §3), so a mapping
+ *  built last August resolves through here and would resolve to the wrong
+ *  footballer through `playerById`. */
+export function playerByCode(snapshot: FootballSnapshot): Map<number, FootballPlayer> {
+  return new Map(snapshot.players.map((p) => [p.code, p]));
+}
+
 /** One notable thing a player did in a match. The drop-down under a fixture is
  *  built from these, so the ordering here is the reading order on screen. */
 export interface MatchContribution {

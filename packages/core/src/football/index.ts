@@ -29,6 +29,7 @@ export {
   fixturesInOrder,
   hasGameweek,
   isMatchdayLive,
+  playerByCode,
   playerById,
 } from "./selectors";
 export type { MatchContribution } from "./selectors";

@@ -6,6 +6,7 @@ import {
   fixturesInOrder,
   hasGameweek,
   isMatchdayLive,
+  playerByCode,
 } from "./selectors";
 
 const player = (id: number, name: string, clubId = 1) => ({
@@ -30,6 +31,16 @@ const snap = (over: Partial<FootballSnapshot> = {}): FootballSnapshot => ({
   gameweeks: [1, 2, 3],
   fetchedAt: "2026-08-21T18:00:00Z",
   ...over,
+});
+
+describe("playerByCode", () => {
+  it("keys on the season-stable code, not the per-season id", () => {
+    // The ids and codes here overlap on purpose: a mapping persisted last season
+    // holds codes, and looking one up by id would hand back a different player.
+    const s = snap({ players: [player(1, "Saka"), player(2, "Ødegaard")] });
+    expect(playerByCode(s).get(1001)?.name).toBe("Saka");
+    expect(playerByCode(s).get(1)).toBeUndefined();
+  });
 });
 
 describe("contributions", () => {
