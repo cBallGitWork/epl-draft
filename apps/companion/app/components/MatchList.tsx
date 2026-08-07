@@ -89,11 +89,7 @@ function MatchRow({
               const club = clubs.get(c.clubId);
               return (
                 <li key={c.player.id} className="flex items-center gap-2.5">
-                  <PlayerPortrait
-                    player={c.player}
-                    clubColour={clubColours(club?.shortName ?? "").primary}
-                    size="sm"
-                  />
+                  <PlayerPortrait player={c.player} colours={clubColours(club?.shortName ?? "")} />
                   <span className="min-w-0 flex-1 truncate text-sm font-medium">
                     {c.player.name}
                   </span>

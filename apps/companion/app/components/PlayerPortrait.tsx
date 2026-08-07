@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { type FootballPlayer, initials, portraitUrl } from "@epl/core";
+import { type ClubColours, type FootballPlayer, initials, inkOn, portraitUrl } from "@epl/core";
 
 // A player's headshot on their club's colour.
 //
@@ -8,46 +8,37 @@ import { type FootballPlayer, initials, portraitUrl } from "@epl/core";
 // would cost 3.6 MB on a phone. `sizes` is what tells the optimizer how small it
 // may actually go — without it, it ships the full-width asset.
 
-const SIZES = {
-  sm: { px: 32, box: "h-8 w-8", text: "text-2xs" },
-  md: { px: 44, box: "h-11 w-11", text: "text-xs" },
-  lg: { px: 64, box: "h-16 w-16", text: "text-sm" },
-} as const;
-
 export default function PlayerPortrait({
   player,
-  clubColour,
-  size = "md",
-  className = "",
+  colours,
 }: {
   player: Pick<FootballPlayer, "code" | "name">;
-  /** The club's primary colour — the portrait sits on it, so the crop reads as a
-   *  kit rather than a floating cutout. */
-  clubColour: string;
-  size?: keyof typeof SIZES;
-  className?: string;
+  /** The club's colours. The portrait sits on `primary`, so the crop reads as a
+   *  kit rather than a floating cutout, and the fallback initials take whichever
+   *  ink survives it — Fulham, Leeds and Spurs are near-white. */
+  colours: ClubColours;
 }) {
-  const s = SIZES[size];
   return (
     <span
-      className={`relative block shrink-0 overflow-hidden rounded-full ring-1 ring-line ${s.box} ${className}`}
-      style={{ backgroundColor: clubColour }}
+      className="relative block h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-line"
+      style={{ backgroundColor: colours.primary }}
     >
       {/* Initials sit underneath as the fallback: January signings and academy
           call-ups routinely have no headshot for weeks, and a broken image icon
           is a worse answer than their initials. */}
       <span
         aria-hidden
-        className={`absolute inset-0 grid place-items-center font-semibold text-white/85 ${s.text}`}
+        className="absolute inset-0 grid place-items-center text-2xs font-semibold opacity-85"
+        style={{ color: inkOn(colours) }}
       >
         {initials(player.name)}
       </span>
       <Image
         src={portraitUrl(player, "250x250")}
         alt=""
-        width={s.px}
-        height={s.px}
-        sizes={`${s.px}px`}
+        width={32}
+        height={32}
+        sizes="32px"
         className="relative h-full w-full object-cover object-top"
       />
     </span>
