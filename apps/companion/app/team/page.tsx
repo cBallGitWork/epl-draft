@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { LEAGUE_NAME, isResolved } from "@epl/core";
-import LeagueCrest from "../components/LeagueCrest";
+import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, LEAGUE_NAME, isResolved } from "@epl/core";
+import LeagueCrest from "../components/shell/LeagueCrest";
 import { getLeagueSquads } from "./league";
 
 // Every squad in the league. Until the draft this is the empty state, which is
@@ -10,8 +10,39 @@ import { getLeagueSquads } from "./league";
 // Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
 export const revalidate = 30;
 
+/** Draft night for the league we are actually serving — §3 keeps season dates in
+ *  config, and the two leagues draft nine weeks apart. */
+const DRAFT_DATE = new Intl.DateTimeFormat("en-GB", {
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  timeZone: "Europe/London",
+}).format(
+  new Date(
+    `${FANTRAX_LEAGUES.find((l) => l.leagueId === FANTRAX_LEAGUE_ID)?.draftDate ?? ""}T00:00:00Z`,
+  ),
+);
+
 export default async function SquadsPage() {
   const squads = await getLeagueSquads();
+
+  if ("unavailable" in squads) {
+    return (
+      <div className="flex flex-col items-center gap-4 py-10 text-center">
+        <LeagueCrest variant="full" height={104} />
+        <div className="flex flex-col gap-1.5">
+          <h1 className="font-display text-2xl font-bold tracking-tight">Fantrax is not answering</h1>
+          <p className="mx-auto max-w-xs text-sm text-muted">
+            The league is fine. We just cannot read it right now, so rather than guess at your
+            squad this says nothing.
+          </p>
+        </div>
+        <span className="numeric rounded border border-line px-2 py-1 text-2xs tracking-widest text-faint">
+          getTeamRosters → {squads.unavailable}
+        </span>
+      </div>
+    );
+  }
 
   if ("undrafted" in squads) {
     return (
@@ -20,7 +51,7 @@ export default async function SquadsPage() {
         <div className="flex flex-col gap-1.5">
           <h1 className="font-display text-2xl font-bold tracking-tight">Nobody has a squad yet</h1>
           <p className="mx-auto max-w-xs text-sm text-muted">
-            {LEAGUE_NAME} drafts on Saturday 10 October. Until then Fantrax has a competition and no
+            {LEAGUE_NAME} drafts on {DRAFT_DATE}. Until then Fantrax has a competition and no
             teams in it, so there is nothing to line up.
           </p>
         </div>

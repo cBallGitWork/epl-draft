@@ -280,12 +280,33 @@ on all 542 rows.
 Each entry is a deliberate departure from `CODE_RULES.md`, recorded in the commit
 that made it.
 
-### `revalidate` literal in `apps/companion/app/page.tsx` (§3, no hardcoding)
+### `revalidate` literal in every route segment (§3, no hardcoding)
 
 Next requires a route segment's `export const revalidate` to be a statically
 analysable literal, so it cannot be imported from `packages/core/src/config.ts`.
-The value intentionally duplicates `REVALIDATE.live`. Both must change together;
-a comment at each site says so.
+Every route segment therefore repeats `PAGE_REVALIDATE` as a literal, and every
+route added later will too — a standing exception, not a per-file one. The
+`PAGE_REVALIDATE` docblock in core config is the canonical statement; a comment
+at each site points back to it. They all change together.
+
+(This entry used to name one file and one export that no longer exists. An
+explicit list of route files is the thing that rotted, which is why there is no
+longer one here.)
+
+### Branching on a Fantrax error code in `app/team/league.ts` (§3-adjacent)
+
+The adapter deliberately never branches on a specific code — the vocabulary is
+undocumented and inconsistent, so `errors.ts` keys off the envelope's presence
+alone, and that rule stands where it is: in detection, where a code cannot be
+trusted to identify a condition.
+
+`getLeagueSquads` breaks it, once, in presentation. It treats `NO_TEAMS` as "no
+squads exist yet" and every other code as "Fantrax did not answer", because
+collapsing the two tells sixteen managers with drafted squads that nobody has
+drafted, on the strength of a five-minute outage. The allowlist is safe here
+precisely because it fails toward hedging: an unrecognised code says Fantrax is
+not answering, which is a hedged right answer even for a league that genuinely
+has no teams. The reverse — a confident wrong one — is what principle 4 forbids.
 
 ### Next's `next.revalidate` inside `packages/core` (§5) — RESOLVED, removed
 

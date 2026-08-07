@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { clubById } from "@epl/core";
-import LeagueCrest from "../../components/LeagueCrest";
-import Pitch from "../../components/Pitch";
+import LeagueCrest from "../../components/shell/LeagueCrest";
+import Pitch from "../../components/league/Pitch";
 import { getLeagueSquads } from "../league";
 
 // One manager's squad, laid out on a pitch. The screen the league opens on a
@@ -14,7 +14,11 @@ export const revalidate = 30;
 export default async function TeamPage({ params }: { params: Promise<{ teamId: string }> }) {
   const { teamId } = await params;
   const squads = await getLeagueSquads();
+  // No squads exist and no such team: both are genuinely 404. Fantrax being
+  // unreachable is not — that is a state of ours, and it belongs on /team where
+  // it is described rather than behind a status code.
   if ("undrafted" in squads) notFound();
+  if ("unavailable" in squads) redirect("/team");
 
   const team = squads.period.teams.find((t) => t.teamId === teamId);
   if (!team) notFound();

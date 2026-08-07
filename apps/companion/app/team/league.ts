@@ -24,12 +24,19 @@ const bridge = mapping as Bridge;
 
 /** Everything a squad view needs, or the reason there isn't one.
  *
- *  `NO_TEAMS` is what our real league answers until 10 Oct. It is an expected
- *  state, not a fault, so it is modelled and returned rather than thrown — a
- *  route that 500s on the correct answer is worse than no route. */
+ *  Two reasons, and they must never be one. `NO_TEAMS` is what our real league
+ *  answers until draft night: an expected state, not a fault, so it is modelled
+ *  and returned rather than thrown. Everything else `FantraxError` carries is
+ *  Fantrax failing to answer — an HTTP status from the client's transport
+ *  backstop, or a mistyped league id answering INVALID_LEAGUE_ID.
+ *
+ *  Collapsing the two tells sixteen managers with squads that nobody has drafted
+ *  yet, because Fantrax blipped for five minutes. That is a confident wrong
+ *  statement about the league from the one route whose job is to report it. */
 export type LeagueSquads =
   | { period: RosteredPeriod; snapshot: FootballSnapshot }
-  | { undrafted: string };
+  | { undrafted: string }
+  | { unavailable: string };
 
 export async function getLeagueSquads(): Promise<LeagueSquads> {
   const [snapshot, rosters] = await Promise.all([
@@ -40,7 +47,15 @@ export async function getLeagueSquads(): Promise<LeagueSquads> {
     }),
   ]);
 
-  if (rosters instanceof FantraxError) return { undrafted: rosters.code };
+  // Branching on a specific code, which the adapter deliberately never does
+  // (PLATFORM_NOTES). Safe here because it fails toward hedging: an unrecognised
+  // code says "Fantrax is not answering", which is a hedged right answer even
+  // for a league that genuinely has no teams.
+  if (rosters instanceof FantraxError) {
+    return rosters.code === "NO_TEAMS"
+      ? { undrafted: rosters.code }
+      : { unavailable: rosters.code };
+  }
 
   return {
     period: resolveRosters(snapshot, mapTeamRosters(rosters), bridge),
