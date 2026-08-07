@@ -73,18 +73,31 @@ describe("lineup", () => {
     expect(lineup(odd).shape).toBe("1-5");
   });
 
-  it("shows a letter it has never seen rather than filing it in goal", () => {
+  it("shows a letter it has never seen in front of every one it knows", () => {
     // Position is commissioner-mutable league state, so a new letter is a real
     // possibility. It goes to the front, where it looks wrong on purpose.
-    const withWinger = team([slot("G", "ACTIVE", "G1"), slot("W", "ACTIVE", "W1")]);
-    expect(withWinger && lineup(withWinger).lines.map((l) => l.position)).toEqual(["G", "W"]);
+    //
+    // The unknown letter is listed FIRST and a third line sits between the two
+    // known ones: with the unknown slot last, or with only two lines, a sort
+    // that filed it in goal would still produce the expected order out of
+    // insertion order alone, and the test would pass on the bug it is named for.
+    const withWinger = team([
+      slot("W", "ACTIVE", "W1"),
+      slot("G", "ACTIVE", "G1"),
+      slot("D", "ACTIVE", "D1"),
+    ]);
+    expect(lineup(withWinger).lines.map((line) => line.position)).toEqual(["G", "D", "W"]);
   });
 
   it("places a slot Fantrax gave no position rather than dropping the player", () => {
-    const nameless = team([slot("G", "ACTIVE", "G1"), slot(null, "ACTIVE", "?")]);
+    const nameless = team([
+      slot(null, "ACTIVE", "?"),
+      slot("G", "ACTIVE", "G1"),
+      slot("D", "ACTIVE", "D1"),
+    ]);
     const { lines } = lineup(nameless);
-    expect(lines.flatMap((line) => line.players)).toHaveLength(2);
-    expect(lines.map((line) => line.position)).toEqual(["G", ""]);
+    expect(lines.flatMap((line) => line.players)).toHaveLength(3);
+    expect(lines.map((line) => line.position)).toEqual(["G", "D", ""]);
   });
 
   it("degrades to an empty pitch rather than throwing", () => {
