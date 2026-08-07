@@ -9,7 +9,7 @@ import {
   crestUrl,
   fixturesInOrder,
 } from "@epl/core";
-import { londonTime } from "../londonTime";
+import { londonTime } from "../../londonTime";
 import PlayerPortrait from "./PlayerPortrait";
 
 // The matchday list. Each fixture is a native <details> so the drop-down works

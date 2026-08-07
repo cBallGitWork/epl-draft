@@ -34,7 +34,7 @@ export default function Pitch({ team, clubs }: { team: RosteredTeam; clubs: Map<
 
         <div className="flex items-baseline justify-between px-0.5 pb-1 pt-3">
           <h3 className="font-display text-2xs font-bold uppercase tracking-widest text-cream/80">
-            Swaps
+            Reserves
           </h3>
           <span className="numeric text-2xs text-cream/60">{shape}</span>
         </div>

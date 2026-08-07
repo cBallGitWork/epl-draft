@@ -1,5 +1,5 @@
 import { getFootballSnapshot } from "@epl/core";
-import GameweekView from "./components/GameweekView";
+import GameweekView from "./components/football/GameweekView";
 
 // The live viewer. Runs entirely off FPL's public API, so it works from the first
 // match of the season without Fantrax, a draft, or a single credential.

@@ -6,9 +6,9 @@ import {
   adjacentGameweeks,
   isMatchdayLive,
 } from "@epl/core";
-import { londonDayAndTime, londonTime } from "../londonTime";
-import AutoRefresh from "./AutoRefresh";
-import LeagueCrest from "./LeagueCrest";
+import { londonDayAndTime, londonTime } from "../../londonTime";
+import AutoRefresh from "../shell/AutoRefresh";
+import LeagueCrest from "../shell/LeagueCrest";
 import MatchList from "./MatchList";
 
 // One round of football. Shared by the home route (whatever is live or next) and

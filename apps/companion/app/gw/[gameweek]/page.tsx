@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getFootballSnapshot, hasGameweek } from "@epl/core";
-import GameweekView from "../../components/GameweekView";
+import GameweekView from "../../components/football/GameweekView";
 
 // Any round of the season, addressable. Last week's results on Monday morning is
 // the second thing anyone wants after this week's score.

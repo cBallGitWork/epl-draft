@@ -3,21 +3,20 @@ import {
   type Club,
   type PlayerMatchStats,
   type RosteredPlayer,
+  type Unresolved,
   clubColours,
   crestUrl,
   initials,
-  inkOn,
   isResolved,
   portraitUrl,
 } from "@epl/core";
 
-// One player, as a 1994/95 Merlin sticker: white card, black keyline, the head
-// on a flat studio green, and the name in a yellow-to-green banner.
+// One player, drawn as a 1994/95 Merlin sticker: white card, black keyline, the
+// head on a flat studio green, and the name in a yellow-to-green banner.
 //
-// The period treatment is not decoration. A roster is the one screen a manager
-// looks at every single week, and a table of names is what Fantrax already does
-// badly — the sticker makes a player a face you recognise rather than a row you
-// re-read. Density is unaffected: the whole card is 78px wide.
+// A look, not a metaphor. A roster is the one screen a manager opens every week,
+// and a face is quicker to find than a row of text — that is the whole argument
+// for it. Density is unaffected: the card is 78px wide.
 
 /** What the player has actually done this gameweek. Fantrax's own points are NOT
  *  here: `getTeamRosters` does not carry them and we do not recompute their
@@ -36,6 +35,13 @@ function tally(stats: PlayerMatchStats[]) {
   };
 }
 
+/** Why there is no footballer behind the slot, in words a manager can act on. */
+const WHY: Record<Unresolved, string> = {
+  unmapped: "not in FPL",
+  unbridged: "not mapped yet",
+  absent: "dropped by FPL",
+};
+
 function Chip({ label, tone }: { label: string; tone: "goal" | "assist" | "note" | "bad" }) {
   const tones = {
     goal: "bg-accent text-bg",
@@ -53,13 +59,15 @@ export default function PlayerSticker({
   rostered: RosteredPlayer;
   clubs: Map<number, Club>;
 }) {
-  // A slot the bridge could not settle is still a slot the manager holds. It gets
-  // the album's own answer to a sticker nobody has: the printed blank.
+  // A slot the bridge could not settle is still a slot the manager holds, and the
+  // three reasons are three different things to do about it — so it says which.
   if (!isResolved(rostered)) {
     return (
-      <div className="flex aspect-[0.78] w-full flex-col items-center justify-center gap-0.5 rounded-[3px] border border-dashed border-white/40 bg-white/5 px-1 text-center">
-        <span className="numeric text-2xs font-bold uppercase tracking-wide text-white/70">Need</span>
-        <span className="text-[9px] leading-tight text-white/50">not in FPL</span>
+      <div className="flex aspect-[0.78] w-full flex-col items-center justify-center gap-1 rounded-[3px] border border-dashed border-white/35 bg-white/5 px-1 text-center">
+        <span className="numeric text-2xs font-bold text-white/70">
+          {rostered.slot.position ?? "?"}
+        </span>
+        <span className="text-[9px] leading-tight text-white/55">{WHY[rostered.unresolved]}</span>
       </div>
     );
   }
@@ -84,10 +92,12 @@ export default function PlayerSticker({
               "linear-gradient(to bottom, var(--color-sticker-backdrop-from), var(--color-sticker-backdrop-to))",
           }}
         >
+          {/* The ground here is the sticker's constant studio green, never the
+              club's shirt, so the ink is a constant too — `inkOn` would answer
+              for a colour that is not on screen and come out backwards. */}
           <span
             aria-hidden
-            className="absolute inset-0 grid place-items-center font-display text-lg font-bold opacity-60"
-            style={{ color: inkOn(colours) }}
+            className="absolute inset-0 grid place-items-center font-display text-lg font-bold text-sticker-keyline opacity-90"
           >
             {initials(player.name)}
           </span>

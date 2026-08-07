@@ -96,18 +96,13 @@
   --text-2xl: 1.5rem;
   --text-3xl: 1.875rem;
 
-  /* --- Semantic z-scale. Never arbitrary values. --- */
+  /* --- Stacking. One step, because one thing stacks: the stickers sit above
+     the pitch's own markings. The rest of the scale arrives with the thing that
+     needs it. --- */
   --z-base: 1;
-  --z-sticky: 10;
-  --z-dropdown: 20;
-  --z-nav: 30;
-  --z-backdrop: 40;
-  --z-modal: 50;
-  --z-toast: 60;
 
   /* --- Motion: 150–250ms, ease-out only. Users are in flow. --- */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :root {
@@ -164,16 +159,6 @@ body {
   100% { opacity: 0; transform: scale(2.6); }
 }
 
-/* A score that just changed. Flashes the accent then settles — this is how you
-   notice a goal without staring at the screen. */
-.just-changed {
-  animation: score-flash 900ms var(--ease-out-expo);
-}
-@keyframes score-flash {
-  0% { color: var(--color-accent); transform: scale(1.18); }
-  100% { color: inherit; transform: scale(1); }
-}
-
 /* ---- Album page -----------------------------------------------------------
    What the pitch is stuck onto. In the real thing the page is loud and the
    stickers are calm — a printed board-stock ground with the club's crest
@@ -221,7 +206,7 @@ body {
 }
 
 /* Sparse on purpose — FPL draws a hint of a pitch, not a diagram. The keeper's
-   box at the far end, and the halfway line. */
+   box at the far end. */
 .pitch::before {
   content: "";
   position: absolute;
@@ -244,8 +229,8 @@ body {
 }
 
 /* ---- Reduced motion: every animation gets a real alternative --------------
-   The live dot keeps a static presence and the score change still crossfades,
-   so "something changed" survives without movement. */
+   The live dot keeps a static presence, so "a match is on" survives without
+   movement. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -256,12 +241,5 @@ body {
   }
   .live-dot::after {
     display: none;
-  }
-  .just-changed {
-    animation: score-fade 600ms ease-out;
-  }
-  @keyframes score-fade {
-    from { color: var(--color-accent); }
-    to { color: inherit; }
   }
 }
