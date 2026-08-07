@@ -8,6 +8,7 @@ import {
 } from "@epl/core";
 import { londonDayAndTime, londonTime } from "../londonTime";
 import AutoRefresh from "./AutoRefresh";
+import LeagueCrest from "./LeagueCrest";
 import MatchList from "./MatchList";
 
 // One round of football. Shared by the home route (whatever is live or next) and
@@ -22,9 +23,12 @@ export default function GameweekView({ snapshot }: { snapshot: FootballSnapshot 
       <AutoRefresh seconds={live ? POLL.live : POLL.idle} />
 
       <header className="flex items-baseline justify-between gap-3 pt-1">
-        <div>
-          <h1 className="text-xl font-bold tracking-tight">{LEAGUE_NAME}</h1>
-          <p className="text-sm text-muted">Gameweek {snapshot.gameweek}</p>
+        <div className="flex items-center gap-2.5">
+          <LeagueCrest height={26} />
+          <div>
+            <h1 className="text-xl font-bold tracking-tight">{LEAGUE_NAME}</h1>
+            <p className="text-sm text-muted">Gameweek {snapshot.gameweek}</p>
+          </div>
         </div>
         {live ? (
           <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-live">
@@ -48,6 +52,13 @@ export default function GameweekView({ snapshot }: { snapshot: FootballSnapshot 
         <GameweekLink gameweek={previous} label="Previous" />
         <GameweekLink gameweek={next} label="Next" align="end" />
       </nav>
+
+      <Link
+        href="/team"
+        className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
+      >
+        Squads
+      </Link>
 
       {/* Honesty about provenance, per PRODUCT.md principle 4. */}
       <p className="pt-1 text-center text-2xs text-faint">

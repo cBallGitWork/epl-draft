@@ -59,6 +59,20 @@
   --color-league-dark: oklch(0.31 0.05 45);
   --color-cream: oklch(0.94 0.02 75);
 
+  /* --- Sticker register (Merlin's Premier League, 1994/95) -----------------
+     A third register, and deliberately period rather than modern: the album is
+     the charm and it should look printed, not designed this year. Taken from
+     scans of the actual set — a white card, a black keyline, a name banner that
+     runs yellow to green, and a flat studio-green backdrop no photograph of a
+     real match ever had. It appears ONLY inside a sticker; nothing else in the
+     app may borrow it, or the period reads as an accident. --- */
+  --color-sticker-card: oklch(1 0 0);
+  --color-sticker-keyline: oklch(0.18 0.008 265);
+  --color-sticker-banner-from: oklch(0.94 0.16 104);
+  --color-sticker-banner-to: oklch(0.62 0.15 148);
+  --color-sticker-backdrop-from: oklch(0.68 0.09 148);
+  --color-sticker-backdrop-to: oklch(0.52 0.09 148);
+
   /* --- Data tints: deliberately duller than --accent so a form indicator never
      competes with a primary action. Hue-paired with icons/labels, never alone. --- */
   --color-good: oklch(0.76 0.15 155);
@@ -160,11 +174,27 @@ body {
   100% { color: inherit; transform: scale(1); }
 }
 
+/* ---- Album page -----------------------------------------------------------
+   What the pitch is stuck onto. In the real thing the page is loud and the
+   stickers are calm — a printed board-stock ground with the club's crest
+   ghosted into it, and white-bordered stickers sitting on top. The diagonal
+   banding is that, reduced to something a phone can render at any size. */
+.album {
+  background-color: oklch(0.33 0.12 31);
+  background-image: repeating-linear-gradient(
+    115deg,
+    oklch(0.35 0.12 32 / 0.55) 0 26px,
+    oklch(0.31 0.11 30 / 0.55) 26px 52px
+  );
+}
+
 /* ---- Pitch ----------------------------------------------------------------
-   Colours and proportions taken from FPL's own artwork
-   (/assets/pitch-graphic-t77-OTdp.svg, viewBox 0 0 1417 788): base #00A34F, mow
-   bands #009B4C — only 2–3% darker, deliberately subtle — and hairline white
-   markings. Keeper at the top, so the top is the far end.
+   Proportions taken from FPL's own artwork (/assets/pitch-graphic-t77-OTdp.svg,
+   viewBox 0 0 1417 788). Their base is #00A34F with #009B4C mow bands — only
+   2–3% darker, deliberately subtle. Ours holds their hue and their 2–3% band
+   contrast but sits ~12% darker: #00A34F is right on a white-and-purple app and
+   is a wall of green on a near-black one. Keeper at the top, so the top is the
+   far end.
 
    The four bands GROW toward the viewer (63.6 → 63.6 → 85.9 → 132 units in that
    viewBox). That, not a gradient, is what sells the perspective, which is why
@@ -174,18 +204,18 @@ body {
   position: relative;
   border-radius: 12px;
   overflow: hidden;
-  background-color: oklch(0.626 0.168 151);
+  background-color: oklch(0.548 0.140 151);
   background-image: linear-gradient(
     to bottom,
-    oklch(0.603 0.161 151) 9.3%,
-    oklch(0.626 0.168 151) 9.3% 17.4%,
-    oklch(0.603 0.161 151) 17.4% 25.5%,
-    oklch(0.626 0.168 151) 25.5% 33.6%,
-    oklch(0.603 0.161 151) 33.6% 44.5%,
-    oklch(0.626 0.168 151) 44.5% 55.4%,
-    oklch(0.603 0.161 151) 55.4% 65%,
-    oklch(0.626 0.168 151) 65% 81.7%,
-    oklch(0.603 0.161 151) 81.7%
+    oklch(0.524 0.134 151) 9.3%,
+    oklch(0.548 0.140 151) 9.3% 17.4%,
+    oklch(0.524 0.134 151) 17.4% 25.5%,
+    oklch(0.548 0.140 151) 25.5% 33.6%,
+    oklch(0.524 0.134 151) 33.6% 44.5%,
+    oklch(0.548 0.140 151) 44.5% 55.4%,
+    oklch(0.524 0.134 151) 55.4% 65%,
+    oklch(0.548 0.140 151) 65% 81.7%,
+    oklch(0.524 0.134 151) 81.7%
   );
   box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.18);
 }
@@ -203,14 +233,8 @@ body {
   border-top: 0;
   border-radius: 0 0 2px 2px;
 }
-.pitch::after {
-  content: "";
-  position: absolute;
-  left: 4%;
-  right: 4%;
-  top: 62%;
-  border-top: 2px solid oklch(1 0 0 / 0.42);
-}
+/* No halfway line: the rows are however many the manager picked, so any fixed
+   position for it eventually runs through somebody's face. */
 
 /* ---- Focus: one visible treatment everywhere, never removed ---- */
 :where(a, button, [role="button"], input, select, summary, [tabindex]):focus-visible {

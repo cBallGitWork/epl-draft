@@ -1,0 +1,72 @@
+import Link from "next/link";
+import { LEAGUE_NAME, isResolved } from "@epl/core";
+import LeagueCrest from "../components/LeagueCrest";
+import { getLeagueSquads } from "./league";
+
+// Every squad in the league. Until the draft this is the empty state, which is
+// the state our real league is actually in and therefore the one that has to be
+// designed rather than defaulted.
+
+// Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
+export const revalidate = 30;
+
+export default async function SquadsPage() {
+  const squads = await getLeagueSquads();
+
+  if ("undrafted" in squads) {
+    return (
+      <div className="flex flex-col items-center gap-4 py-10 text-center">
+        <LeagueCrest variant="full" height={104} />
+        <div className="flex flex-col gap-1.5">
+          <h1 className="font-display text-2xl font-bold tracking-tight">Nobody has a squad yet</h1>
+          <p className="mx-auto max-w-xs text-sm text-muted">
+            {LEAGUE_NAME} drafts on Saturday 10 October. Until then Fantrax has a competition and no
+            teams in it, so there is nothing to line up.
+          </p>
+        </div>
+        <span className="numeric rounded border border-line px-2 py-1 text-2xs tracking-widest text-faint">
+          getTeamRosters → {squads.undrafted}
+        </span>
+        <Link
+          href="/"
+          className="min-h-11 rounded-lg border border-line px-4 py-2.5 text-sm font-medium hover:bg-raised"
+        >
+          The football, meanwhile
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <header className="flex items-center gap-2.5 pt-1">
+        <LeagueCrest height={26} />
+        <h1 className="text-xl font-bold tracking-tight">Squads</h1>
+      </header>
+
+      <ul className="flex flex-col gap-1.5">
+        {squads.period.teams.map((team) => {
+          const unresolved = team.players.filter((player) => !isResolved(player)).length;
+          return (
+            <li key={team.teamId}>
+              <Link
+                href={`/team/${team.teamId}`}
+                className="elev flex min-h-14 items-center gap-3 rounded-xl border border-line bg-surface px-3 py-2.5 hover:bg-raised"
+              >
+                <span className="min-w-0 flex-1 truncate font-semibold">{team.teamName}</span>
+                <span className="numeric text-sm text-muted">{team.players.length}</span>
+                {/* Never silently short. A squad we cannot fully identify says so
+                    here rather than rendering fourteen of fifteen on the pitch. */}
+                {unresolved > 0 ? (
+                  <span className="numeric rounded bg-raised px-1.5 py-0.5 text-2xs font-bold text-mid">
+                    {unresolved} unmapped
+                  </span>
+                ) : null}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
