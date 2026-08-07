@@ -11,9 +11,11 @@ newspaper, and a per-player intelligence store.
 
 ```bash
 npm install
-npm run dev      # http://localhost:3000
-npm test         # vitest
-npm run build    # production build (runs ESLint + TypeScript)
+npm run dev       # http://localhost:3000
+npm test          # vitest
+npm run typecheck # core, scripts and the app
+npm run lint      # ESLint
+npm run build     # production build
 ```
 
 No credentials needed to run the live viewer — it works off FPL's public API, so

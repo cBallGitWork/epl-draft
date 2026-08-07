@@ -102,10 +102,13 @@ this exists).
 
 ```bash
 npm test          # vitest across packages/*
-npm run build     # Next production build — ESLint + TypeScript
+npm run typecheck # core, scripts and the app
+npm run lint      # ESLint. `next build` stopped running it at Next 16, so it is
+                  # its own gate — without this line the rule was one check short
+npm run build     # Next production build
 ```
 
-Both green. No skipped tests, no `eslint-disable` without a reason on the same
+All four green. No skipped tests, no `eslint-disable` without a reason on the same
 line, no `@ts-expect-error` without a linked note.
 
 ---

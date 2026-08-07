@@ -159,12 +159,13 @@ The full, binding set is in `CODE_RULES.md`. The ones that bite most often here:
 
 ## Verify
 
-All three green before every commit.
+All four green before every commit.
 
 ```bash
 npm test          # vitest across packages/*
 npm run typecheck # core, scripts and the app
-npm run build     # Next production build — runs ESLint and TypeScript
+npm run lint      # ESLint — `next build` stopped running it at Next 16
+npm run build     # Next production build
 npm run dev       # http://localhost:3000
 ```
 
