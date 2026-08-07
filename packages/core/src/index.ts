@@ -9,7 +9,8 @@
 // stay put.
 //
 // They meet in two places, both one-directional and both by argument:
-//   1. player identity, through the bridge in identity/
+//   1. player identity, through the bridge in identity/ — join/roster.ts is that
+//      meeting made concrete, and is deliberately neither layer's file
 //   2. the calendar — league/calendar.ts is TOLD about gameweek kickoffs as plain
 //      data, declaring its own GameweekKickoff rather than importing Fixture
 // A script does the wiring. Football never imports league.
@@ -17,4 +18,5 @@
 export * from "./config";
 export * from "./football";
 export * from "./identity";
+export * from "./join/roster";
 export * from "./league";

@@ -1,0 +1,312 @@
+{
+  "02lz0": {
+    "fplCode": 98980,
+    "matchedBy": "fuzzy",
+    "confidence": 100,
+    "agreement": "contained"
+  },
+  "02m5b": {
+    "fplCode": 60689,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "032f9": {
+    "fplCode": 111234,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "038ze": {
+    "fplCode": 153133,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "03fgo": {
+    "fplCode": 154566,
+    "matchedBy": "fuzzy",
+    "confidence": 100,
+    "agreement": "contained"
+  },
+  "03rxs": {
+    "fplCode": 153682,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "03vlj": {
+    "fplCode": 97032,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "03yww": {
+    "fplCode": 172649,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "04abn": {
+    "fplCode": 201666,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "04qr9": {
+    "fplCode": 222531,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "04tsb": {
+    "fplCode": 224117,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "04y92": {
+    "fplCode": 223340,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "050jq": {
+    "fplCode": 209036,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "051k7": {
+    "fplCode": 225796,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "056iy": {
+    "fplCode": 247632,
+    "matchedBy": "fuzzy",
+    "confidence": 100,
+    "agreement": "contained"
+  },
+  "05748": {
+    "fplCode": 232185,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05g2o": {
+    "fplCode": 475168,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05gcc": {
+    "fplCode": 215413,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05gcr": {
+    "fplCode": 141746,
+    "matchedBy": "fuzzy",
+    "confidence": 100,
+    "agreement": "contained"
+  },
+  "05l8q": {
+    "fplCode": 244851,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05nzu": {
+    "fplCode": 226597,
+    "matchedBy": "fuzzy",
+    "confidence": 100,
+    "agreement": "contained"
+  },
+  "05o4b": {
+    "fplCode": 199796,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05ocl": {
+    "fplCode": 178301,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05r8o": {
+    "fplCode": 231747,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05r94": {
+    "fplCode": 440993,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05r9b": {
+    "fplCode": 184029,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05t6x": {
+    "fplCode": 538207,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05trb": {
+    "fplCode": 446008,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05uht": {
+    "fplCode": 244850,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05ylj": {
+    "fplCode": 208706,
+    "matchedBy": "fuzzy",
+    "confidence": 100,
+    "agreement": "contained"
+  },
+  "061vq": {
+    "fplCode": 223094,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "062ci": {
+    "fplCode": 451340,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "0639x": {
+    "fplCode": 201658,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "0646f": {
+    "fplCode": 219168,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "067yv": {
+    "fplCode": 243298,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "067yz": {
+    "fplCode": 430871,
+    "matchedBy": "fuzzy",
+    "confidence": 100,
+    "agreement": "contained"
+  },
+  "068y0": {
+    "fplCode": 437730,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "068ym": {
+    "fplCode": 448047,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06cmm": {
+    "fplCode": 424876,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06dmj": {
+    "fplCode": 445122,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06ex4": {
+    "fplCode": 477424,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06fup": {
+    "fplCode": 248875,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06fuw": {
+    "fplCode": 457569,
+    "matchedBy": "fuzzy",
+    "confidence": 100,
+    "agreement": "conflicting"
+  },
+  "06fv8": {
+    "fplCode": 460842,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06jgi": {
+    "fplCode": 247348,
+    "matchedBy": "fuzzy",
+    "confidence": 100,
+    "agreement": "contained"
+  },
+  "06mn0": {
+    "fplCode": 502500,
+    "matchedBy": "fuzzy",
+    "confidence": 100,
+    "agreement": "contained"
+  },
+  "06nu7": {
+    "fplCode": 466075,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06uyc": {
+    "fplCode": 494521,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06v07": {
+    "fplCode": 466052,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06v0p": {
+    "fplCode": 484420,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06v21": {
+    "fplCode": 494595,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "0703c": {
+    "fplCode": 200834,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "070g7": {
+    "fplCode": 470313,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "070hc": {
+    "fplCode": 441264,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "072wq": {
+    "fplCode": 499604,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "076d3": {
+    "fplCode": 480457,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "076da": {
+    "fplCode": 176412,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "07848": {
+    "fplCode": 614071,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "0784o": {
+    "fplCode": 242313,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "0784x": {
+    "fplCode": 442967,
+    "matchedBy": "exact",
+    "confidence": 100
+  }
+}
