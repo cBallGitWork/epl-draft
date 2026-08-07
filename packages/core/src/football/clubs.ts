@@ -15,7 +15,7 @@ export interface ClubColours {
   secondary: string;
 }
 
-export const CLUB_COLOURS: Record<string, ClubColours> = {
+const CLUB_COLOURS: Record<string, ClubColours> = {
   ARS: { primary: "#EF0107", secondary: "#FFFFFF" },
   AVL: { primary: "#670E36", secondary: "#95BFE5" },
   BOU: { primary: "#DA291C", secondary: "#000000" },

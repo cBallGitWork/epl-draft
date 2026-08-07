@@ -12,10 +12,9 @@ export type {
   PlayerMatchStats,
 } from "./types";
 
-export { CLUB_COLOURS, clubColours, crestUrl, inkOn } from "./clubs";
+export { clubColours, crestUrl, inkOn } from "./clubs";
 export type { ClubColours } from "./clubs";
 export { initials, portraitUrl } from "./portraits";
-export type { PortraitSize } from "./portraits";
 export { getFootballSnapshot } from "./snapshot";
 // The two reads `getFootballSnapshot` does not serve, both wanted by scripts:
 // the whole-season fixture list (it fetches one gameweek) and the raw bootstrap
@@ -30,6 +29,5 @@ export {
   hasGameweek,
   isMatchdayLive,
   playerByCode,
-  playerById,
 } from "./selectors";
 export type { MatchContribution } from "./selectors";

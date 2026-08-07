@@ -8,7 +8,11 @@ export function clubById(snapshot: FootballSnapshot): Map<number, Club> {
   return new Map(snapshot.clubs.map((c) => [c.id, c]));
 }
 
-export function playerById(snapshot: FootballSnapshot): Map<number, FootballPlayer> {
+/** Keyed by FPL's per-season `id`. Deliberately not exported: `id` is recycled
+ *  every summer, so this is safe only within a single snapshot — which is the
+ *  only place it is used, joining live stats back to the players in the same
+ *  payload. Anything that outlives a snapshot uses `playerByCode`. */
+function playerById(snapshot: FootballSnapshot): Map<number, FootballPlayer> {
   return new Map(snapshot.players.map((p) => [p.id, p]));
 }
 
