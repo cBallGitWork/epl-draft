@@ -24,18 +24,38 @@
   --color-muted: oklch(0.74 0.015 320);
   --color-faint: oklch(0.62 0.015 320);
 
-  /* --- Football register (Premier League) --- */
-  /* Primary action, selection, "your team". PL green. */
-  --color-accent: oklch(0.88 0.22 158);
-  /* Info, links, secondary emphasis. PL cyan. */
-  --color-info: oklch(0.86 0.14 200);
-  /* LIVE only — a match in play. PL pink, reserved so it never means anything
-     else. Magenta-leaning, which keeps it separable from Tim Hortons red. */
-  --color-live: oklch(0.60 0.23 8);
-  --color-pl-purple: oklch(0.21 0.11 328);
+  /* --- Football register (Premier League) ---------------------------------
+     Read out of premierleague.com's live stylesheet and FPL's production bundle
+     on 7 Aug 2026, not from a brand-colours site. Every such site still
+     republishes the 2016 set (#38003c #00ff85 #04f5ff #e90052); the 2023 refresh
+     shipped different values and `#38003c` appears zero times in the current
+     premierleague.com CSS. The pink moved furthest — #e90052 to #ff2882 is a
+     visible jump, and it is what takes LIVE from 4.31:1 to 5.52:1 on --color-bg. */
 
-  /* --- League register (Tim Hortons) --- */
-  --color-league: oklch(0.53 0.20 24);
+  /* Primary action, selection, "your team". PL green #00ff87. */
+  --color-accent: oklch(0.876 0.229 152);
+  /* Info, links, secondary emphasis. PL cyan #05f0ff — their own token calls it
+     `--c-pl-blue`, which is worth remembering when reading their source. */
+  --color-info: oklch(0.870 0.148 203);
+  /* LIVE only — a match in play. PL pink #ff2882, reserved so it never means
+     anything else.
+
+     The Premier League binds its own `--theme-live` to PL Orange #ff6900. We
+     deliberately diverge: orange sits in the same warm band as Tim Hortons red
+     and the two would muddle on a masthead that carries both. Pink is still in
+     their palette (it is `--theme-hyperlink` in their dark theme) and separates
+     cleanly from the league register. */
+  --color-live: oklch(0.657 0.247 3);
+  /* PL purple #37003c. Their surface base, our accent for FPL-owned chrome. */
+  --color-pl-purple: oklch(0.240 0.113 324);
+
+  /* --- League register (Tim Hortons) ---------------------------------------
+     #C8102E, read from timhortons.ca's own markup. Their palette since the 2017
+     rebrand is red and white only — the cream below is not theirs, it is the
+     1964–85 identity's warm register, chosen because this league's album is a
+     period object. 3.35:1 on --color-bg, so the red carries chrome and never
+     carries small text. */
+  --color-league: oklch(0.530 0.207 22);
   --color-league-dark: oklch(0.31 0.05 45);
   --color-cream: oklch(0.94 0.02 75);
 
@@ -140,40 +160,56 @@ body {
   100% { color: inherit; transform: scale(1); }
 }
 
-/* ---- Pitch (FM tactic board, flat and dark so portraits carry the colour) -- */
+/* ---- Pitch ----------------------------------------------------------------
+   Colours and proportions taken from FPL's own artwork
+   (/assets/pitch-graphic-t77-OTdp.svg, viewBox 0 0 1417 788): base #00A34F, mow
+   bands #009B4C — only 2–3% darker, deliberately subtle — and hairline white
+   markings. Keeper at the top, so the top is the far end.
+
+   The four bands GROW toward the viewer (63.6 → 63.6 → 85.9 → 132 units in that
+   viewBox). That, not a gradient, is what sells the perspective, which is why
+   this cannot be a `repeating-linear-gradient`. Band stops below are those
+   figures as percentages of 788. */
 .pitch {
   position: relative;
-  border-radius: 14px;
+  border-radius: 12px;
   overflow: hidden;
-  background-color: oklch(0.34 0.07 155);
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      oklch(1 0 0 / 0.03) 0 8%,
-      oklch(0 0 0 / 0.04) 8% 16%
-    ),
-    linear-gradient(to bottom, oklch(0.38 0.08 155), oklch(0.28 0.06 155));
-  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.12);
+  background-color: oklch(0.626 0.168 151);
+  background-image: linear-gradient(
+    to bottom,
+    oklch(0.603 0.161 151) 9.3%,
+    oklch(0.626 0.168 151) 9.3% 17.4%,
+    oklch(0.603 0.161 151) 17.4% 25.5%,
+    oklch(0.626 0.168 151) 25.5% 33.6%,
+    oklch(0.603 0.161 151) 33.6% 44.5%,
+    oklch(0.626 0.168 151) 44.5% 55.4%,
+    oklch(0.603 0.161 151) 55.4% 65%,
+    oklch(0.626 0.168 151) 65% 81.7%,
+    oklch(0.603 0.161 151) 81.7%
+  );
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.18);
 }
-/* Halfway line and centre circle, drawn as chalk rather than hard white. */
+
+/* Sparse on purpose — FPL draws a hint of a pitch, not a diagram. The keeper's
+   box at the far end, and the halfway line. */
 .pitch::before {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  border-top: 1px solid oklch(1 0 0 / 0.14);
+  left: 30%;
+  right: 30%;
+  top: -1px;
+  height: 13%;
+  border: 2px solid oklch(1 0 0 / 0.5);
+  border-top: 0;
+  border-radius: 0 0 2px 2px;
 }
 .pitch::after {
   content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 5.5rem;
-  height: 5.5rem;
-  transform: translate(-50%, -50%);
-  border: 1px solid oklch(1 0 0 / 0.14);
-  border-radius: 9999px;
+  left: 4%;
+  right: 4%;
+  top: 62%;
+  border-top: 2px solid oklch(1 0 0 / 0.42);
 }
 
 /* ---- Focus: one visible treatment everywhere, never removed ---- */

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Archivo_Narrow } from "next/font/google";
+import { LEAGUE_NAME } from "@epl/core";
 import "./globals.css";
 
 // One superfamily across two widths: Archivo carries the UI, Archivo Narrow the
@@ -20,12 +21,15 @@ const archivoNarrow = Archivo_Narrow({
 });
 
 export const metadata: Metadata = {
-  title: "Tim Hortons Pro League",
-  description: "Live scores, head-to-head and the week's news for the Tim Hortons Pro League.",
+  title: LEAGUE_NAME,
+  description: `Live scores, head-to-head and the week's news for the ${LEAGUE_NAME}.`,
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1a0f1c",
+  // sRGB of `--color-bg` in globals.css. Repeated as a literal because this is
+  // serialised into a <meta> tag at build time and cannot read a CSS variable —
+  // the same constraint as `revalidate`. Change both together.
+  themeColor: "#0f0810",
   // The reference device is a phone held one-handed; lock out the accidental
   // double-tap zoom without disabling deliberate pinch-zoom.
   width: "device-width",
