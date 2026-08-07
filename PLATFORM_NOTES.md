@@ -333,6 +333,81 @@ Scripts transpile to CJS (the root package has no `"type": "module"`), so they
 cannot use top-level `await` — each wraps its body in `main()` and calls it
 without awaiting, so a rejection crashes the run loudly instead of being softened.
 
+## The Premier League palette we were using was four years out of date (7 Aug 2026)
+
+Every football-register token in `globals.css` was the 2016 set. Read out of the
+live sources instead — `premierleague.com/resources/v1.51.2-1/styles/screen.css`
+and FPL's production bundle `assets/index-9PDTUlDh.js`.
+
+| role | was (2016) | is (2023 refresh) |
+|---|---|---|
+| PL Purple | `#38003c` | `#37003c` |
+| PL Green | `#00ff85` | `#00ff87` |
+| PL Blue (the cyan; their token says "blue") | `#04f5ff` | `#05f0ff` |
+| PL Pink | `#e90052` | `#ff2882` |
+
+`#38003c` appears **zero** times in premierleague.com's current 2.4 MB stylesheet.
+Every brand-colours aggregator on the web still publishes the old set, which is
+where ours came from. The palette also grew: lilac `#953bff`, yellow `#ebff00`,
+orange `#ff6900`. None of the three is a token here yet because nothing uses
+them — the lilac is FPL's own gradient partner (`linear-gradient(90deg, #05f0ff,
+#953bff)`) and is the obvious register for the FPL tab when it lands.
+
+Pink is the one that mattered. `#e90052` → `#ff2882` takes `--color-live` from
+4.31:1 to 5.52:1 on `--color-bg`; the old value was failing AA on the one thing
+that has to be read at arm's length.
+
+**We deliberately diverge from them on one binding.** Their `--theme-live` is PL
+Orange `#ff6900`, and `.badge--live` uses it. We keep pink, because orange sits
+in the same warm band as Tim Hortons red `#C8102E` and the two would muddle on a
+masthead carrying both. Pink is still theirs — it is `--theme-hyperlink` in their
+dark theme.
+
+Other facts worth not re-deriving:
+
+- **Their pitch** is `/assets/pitch-graphic-t77-OTdp.svg`, a perspective
+  trapezoid: base `#00A34F`, four mow bands in `#009B4C` (2–3% darker, not more)
+  whose heights *grow* toward the viewer — 63.6, 63.6, 85.9, 132 in a 788-tall
+  viewBox. That growth is what sells the perspective, which is why our `.pitch`
+  cannot be a repeating gradient. Our ramp holds their hue and band contrast but
+  sits ~12% darker: `#00A34F` is right on a white app and a wall of green on a
+  near-black one.
+- **Their pitch tile** is 67×92 on mobile, 112×140 from 700px, and is three
+  stacked parts: shirt, name bar, details bar. The details bar has three states —
+  fixture text, the orange→pink live gradient, then flat `#37003c` with the
+  points. Ours is the same three-part shape with a photograph instead of a shirt.
+- **Their neutrals are never neutral**: the mono ramp holds hue ~321–326
+  throughout. Ours already did, at 320.
+- **Kit sprites**, if we ever want them: `/dist/img/shirts/{standard|special}/
+  shirt_{team_code}{_1 for GK}-{66|110|220}.{webp|png}`. Verified 200.
+- **Tim Hortons** is `#C8102E`, from their own markup. Their palette since the
+  2017 rebrand is red and white only; the cream in our tokens is the 1964–85
+  identity's register, chosen deliberately because the album is a period object.
+
+## Rule exception: the bridge is asserted, not parsed, at the app edge
+
+`apps/companion/app/team/league.ts` does `mapping as Bridge` on the JSON import.
+`resolveJsonModule` widens `matchedBy` to `string` and the compiler cannot see
+that `scripts/build-bridge.ts` only ever writes the four literals. The
+alternatives were worse: loosening `MappedEntry.matchedBy` to `string` gives up
+the type everywhere to serve one import, and hand-parsing 544 rows at request
+time buys nothing, since the file is ours and generated rather than scraped.
+Asserted once, at the single edge, with the reason written at the site.
+
+## The one football fact the league layer cannot supply
+
+`join/lineup.ts` declares `PITCH_ORDER = ["G", "D", "M", "F"]`.
+
+`getLeagueInfo` gives the position vocabulary and the per-position caps —
+`{ G: 1, D: 5, M: 5, F: 3 }` — and CLAUDE.md is right that the vocabulary is
+league data we must never assume. But nothing in that payload says a goalkeeper
+stands *behind* a defender, and no other Fantrax read carries it either. So the
+depth ordering is declared once, in the join, with the caps still read from the
+league. A letter the order has never seen renders at the front rather than in
+goal: a commissioner adding "W" for wingers should look wrong, not wrong in a way
+that reads as correct.
+
+
 ## Questions
 
 - **Does `?period=N` on `getTeamRosters` return a past roster or a projection?**
