@@ -31,6 +31,9 @@ export type { RosterDisplay, SquadReason } from "./visibility";
 export { applyMove, eligibilityOf, eligibleSlots, legalMoves, violations } from "./moves";
 export type { Blocker, Eligibility, Move, SlotOption, Violation } from "./moves";
 
+export { leaguePool } from "./selectors";
+export type { PoolPlayer } from "./selectors";
+
 export {
   FantraxError,
   errorEnvelope,

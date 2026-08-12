@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Archivo_Narrow } from "next/font/google";
 import { LEAGUE_NAME } from "@epl/core";
+import BottomNav from "./components/shell/BottomNav";
 import "./globals.css";
 
 // One superfamily across two widths: Archivo carries the UI, Archivo Narrow the
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main" className="mx-auto w-full max-w-2xl px-3 pb-24 pt-3 sm:px-4">
           {children}
         </main>
+        <BottomNav />
       </body>
     </html>
   );

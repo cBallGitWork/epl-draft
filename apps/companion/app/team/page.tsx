@@ -34,11 +34,7 @@ export default async function SquadsPage() {
     return (
       <Nothing title="Nobody has a squad yet" code={`getTeamRosters → ${squads.undrafted}`}>
         {LEAGUE_NAME} drafts on {DRAFT_DATE}. Until then Fantrax has a competition and no teams in
-        it, so there is nothing to line up.{" "}
-        <Link href="/" className="underline">
-          The football, meanwhile
-        </Link>
-        .
+        it, so there is nothing to line up.
       </Nothing>
     );
   }
