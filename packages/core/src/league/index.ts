@@ -34,6 +34,9 @@ export {
 } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
 
+export { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";
+export type { Blocker, Eligibility, Move, SlotOption } from "./moves";
+
 export {
   FantraxError,
   errorEnvelope,

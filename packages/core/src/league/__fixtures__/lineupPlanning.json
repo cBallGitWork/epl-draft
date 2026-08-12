@@ -1,0 +1,214 @@
+{
+  "teamName": "test3",
+  "teamId": "j9zadacnmshcpazf",
+  "slots": [
+    {
+      "fantraxId": "05r9b",
+      "position": "M",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "070g7",
+      "position": "F",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "070hc",
+      "position": "F",
+      "status": "RESERVE"
+    },
+    {
+      "fantraxId": "05r94",
+      "position": "M",
+      "status": "RESERVE"
+    },
+    {
+      "fantraxId": "04y92",
+      "position": "M",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "03vlj",
+      "position": "D",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "06v21",
+      "position": "M",
+      "status": "RESERVE"
+    },
+    {
+      "fantraxId": "0784o",
+      "position": "D",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "032f9",
+      "position": "G",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "05uht",
+      "position": "M",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "067zv",
+      "position": "M",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "050jq",
+      "position": "D",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "067yz",
+      "position": "F",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "05trb",
+      "position": "F",
+      "status": "ACTIVE"
+    },
+    {
+      "fantraxId": "06v0p",
+      "position": "M",
+      "status": "RESERVE"
+    }
+  ],
+  "eligibility": [
+    {
+      "fantraxId": "05r9b",
+      "eligiblePositions": [
+        "M"
+      ],
+      "name": "Odegaard, Martin"
+    },
+    {
+      "fantraxId": "070g7",
+      "eligiblePositions": [
+        "F"
+      ],
+      "name": "Woltemade, Nick"
+    },
+    {
+      "fantraxId": "070hc",
+      "eligiblePositions": [
+        "F"
+      ],
+      "name": "Brobbey, Brian"
+    },
+    {
+      "fantraxId": "05r94",
+      "eligiblePositions": [
+        "F",
+        "M"
+      ],
+      "name": "Iliman Ndiaye"
+    },
+    {
+      "fantraxId": "04y92",
+      "eligiblePositions": [
+        "F",
+        "M"
+      ],
+      "name": "Saka, Bukayo"
+    },
+    {
+      "fantraxId": "03vlj",
+      "eligiblePositions": [
+        "D"
+      ],
+      "name": "van Dijk, Virgil"
+    },
+    {
+      "fantraxId": "06v21",
+      "eligiblePositions": [
+        "M"
+      ],
+      "name": "Wirtz, Florian"
+    },
+    {
+      "fantraxId": "0784o",
+      "eligiblePositions": [
+        "D"
+      ],
+      "name": "Mingueza, Oscar"
+    },
+    {
+      "fantraxId": "032f9",
+      "eligiblePositions": [
+        "G"
+      ],
+      "name": "Pickford, Jordan"
+    },
+    {
+      "fantraxId": "05uht",
+      "eligiblePositions": [
+        "F",
+        "M"
+      ],
+      "name": "Rogers, Morgan"
+    },
+    {
+      "fantraxId": "067zv",
+      "eligiblePositions": [
+        "F",
+        "M"
+      ],
+      "name": "Schade, Kevin"
+    },
+    {
+      "fantraxId": "050jq",
+      "eligiblePositions": [
+        "D"
+      ],
+      "name": "Guehi, Marc"
+    },
+    {
+      "fantraxId": "067yz",
+      "eligiblePositions": [
+        "F"
+      ],
+      "name": "Matheus Cunha"
+    },
+    {
+      "fantraxId": "05trb",
+      "eligiblePositions": [
+        "F"
+      ],
+      "name": "Mbeumo, Bryan"
+    },
+    {
+      "fantraxId": "06v0p",
+      "eligiblePositions": [
+        "M"
+      ],
+      "name": "Le Fee, Enzo"
+    }
+  ],
+  "rehearsalLimits": {
+    "maxTotalPlayers": 15,
+    "maxActivePlayers": 11,
+    "maxReservePlayers": 5,
+    "maxActiveByPosition": {
+      "D": 5,
+      "F": 3,
+      "G": 1,
+      "M": 5
+    }
+  },
+  "realLimits": {
+    "maxTotalPlayers": 14,
+    "maxActivePlayers": 11,
+    "maxReservePlayers": 3,
+    "maxActiveByPosition": {
+      "D": 5,
+      "F": 3,
+      "G": 1,
+      "M": 5
+    }
+  }
+}
