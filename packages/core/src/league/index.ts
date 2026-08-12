@@ -28,8 +28,13 @@ export type { GameweekKickoff, PeriodGameweeks } from "./calendar";
 export { rosterDisplay } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
 
-export { applyMove, eligibilityOf, eligibleSlots, legalMoves, violations } from "./moves";
-export type { Blocker, Eligibility, Move, SlotOption, Violation } from "./moves";
+export { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";
+export type { Blocker, Eligibility, Move, SlotOption } from "./moves";
+
+export { violations } from "./violations";
+export type { Violation } from "./violations";
+
+export { isActive } from "./rosterStatus";
 
 export { leaguePool } from "./selectors";
 export type { PoolPlayer } from "./selectors";

@@ -1,0 +1,93 @@
+import { describe, expect, it } from "vitest";
+import { eligibilityOf } from "./moves";
+import { ACTIVE } from "./rosterStatus";
+import { violations } from "./violations";
+import type { RosterLimits, RosterSlot } from "./types";
+import planning from "./__fixtures__/lineupPlanning.json";
+
+// The same captured team the move tests use: test3 in the rehearsal league on
+// 12 Aug, a full and legal XI with four reserves. Legal is the interesting
+// starting point here — every case below breaks it in a way no move of ours
+// could, which is precisely how these states arise in the real league.
+
+const slots = planning.slots as RosterSlot[];
+const eligibility = eligibilityOf(planning.eligibility);
+const limits = planning.rehearsalLimits as RosterLimits;
+const realLimits = planning.realLimits as RosterLimits;
+
+describe("violations", () => {
+  it("finds nothing wrong with a lineup Fantrax accepted", () => {
+    expect(violations(slots, eligibility, limits)).toEqual([]);
+  });
+
+  it("reports the bench overflowing under the league that seats fewer", () => {
+    // The same fifteen men, carrying four reserves: legal here, illegal in the
+    // real league, and nothing in the module knows which one it is looking at.
+    expect(violations(slots, eligibility, realLimits)).toContainEqual({
+      kind: "too-many-reserve",
+      count: 4,
+      cap: realLimits.maxReservePlayers,
+    });
+  });
+
+  it("reports both caps a squad breaks, not the first one", () => {
+    // A twelfth man fielded, in a forward line already at three. One remedy per
+    // line, so a manager fixing one can see whether he is finished.
+    const reserve = slots.find((slot) => slot.status !== ACTIVE);
+    const overloaded = slots.map((slot) =>
+      slot.fantraxId === reserve?.fantraxId ? { ...slot, position: "F", status: ACTIVE } : slot,
+    );
+
+    expect(violations(overloaded, eligibility, limits)).toEqual(
+      expect.arrayContaining([
+        {
+          kind: "too-many-active",
+          count: limits.maxActivePlayers + 1,
+          cap: limits.maxActivePlayers,
+        },
+        {
+          kind: "position-over-cap",
+          position: "F",
+          count: limits.maxActiveByPosition.F + 1,
+          cap: limits.maxActiveByPosition.F,
+        },
+      ]),
+    );
+  });
+
+  it("names a player the commissioner has since made ineligible where he stands", () => {
+    // Exactly what happened on 12 Aug: eligibility is a commissioner setting and
+    // it can be narrowed under an XI that was legal when it was set.
+    //
+    // He has to be a dual-eligible player, and that is not incidental: narrowing
+    // a single-position player leaves him with NO eligibility, which this module
+    // reads as data we do not hold rather than as a rule he is breaking. Losing
+    // one of two positions is the case where we still know enough to accuse him.
+    const playing = slots.find(
+      (slot) =>
+        slot.status === ACTIVE && (eligibility.get(slot.fantraxId)?.length ?? 0) > 1,
+    );
+    expect(playing).toBeDefined();
+    const narrowed = eligibilityOf(
+      planning.eligibility.map((player) =>
+        player.fantraxId === playing?.fantraxId
+          ? {
+              ...player,
+              eligiblePositions: player.eligiblePositions.filter((pos) => pos !== playing.position),
+            }
+          : player,
+      ),
+    );
+
+    expect(violations(slots, narrowed, limits)).toEqual([
+      { kind: "not-eligible", fantraxId: playing?.fantraxId, position: playing?.position },
+    ]);
+  });
+
+  it("does not accuse a player whose eligibility we simply do not hold", () => {
+    // Missing data is not a broken rule, and this is the one violation no move
+    // could clear — so the wrong answer here strands a manager rather than just
+    // misinforming him.
+    expect(violations(slots, eligibilityOf([]), limits)).toEqual([]);
+  });
+});

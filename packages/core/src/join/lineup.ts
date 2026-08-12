@@ -1,3 +1,4 @@
+import { isActive } from "../league/rosterStatus";
 import type { RosteredPlayer, RosteredTeam } from "./roster";
 
 // A roster arranged the way a team lines up, rather than the way Fantrax lists
@@ -58,7 +59,7 @@ export function lineup(team: RosteredTeam): Lineup {
 
   for (const player of team.players) {
     const position = player.slot.position ?? UNPLACED;
-    if (player.slot.status === "ACTIVE") {
+    if (isActive(player.slot)) {
       const line = active.get(position);
       if (line) line.push(player);
       else active.set(position, [player]);

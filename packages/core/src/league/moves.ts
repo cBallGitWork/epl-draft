@@ -1,3 +1,4 @@
+import { ACTIVE, RESERVE, activeAt, isActive } from "./rosterStatus";
 import type { RosterLimits, RosterSlot } from "./types";
 
 // What a manager may legally do to their lineup, and what stops them.
@@ -11,12 +12,10 @@ import type { RosterLimits, RosterSlot } from "./types";
 // week's assignment. Football contributes no facts to a legality question — a
 // player's form has no bearing on whether the shape is allowed — so the 27/28
 // engine inherits this file unchanged.
-
-/** Fantrax's own words for the two roster states. Mirrored here rather than
- *  reduced to a boolean: `RosterSlot.status` is carried raw precisely so a third
- *  value would surface instead of being silently folded into one of these. */
-const ACTIVE = "ACTIVE";
-const RESERVE = "RESERVE";
+//
+// What is WRONG with a lineup is a separate question and lives in
+// `violations.ts`: nothing offered here can produce an illegal XI, so the two
+// only ever meet on a roster Fantrax itself served.
 
 /** fantraxId → the positions the commissioner deems them eligible for.
  *
@@ -51,14 +50,6 @@ export interface SlotOption {
   position: string;
   open: boolean;
   blockedBy?: Blocker;
-}
-
-function isActive(slot: RosterSlot): boolean {
-  return slot.status === ACTIVE;
-}
-
-function activeAt(slots: readonly RosterSlot[], position: string): RosterSlot[] {
-  return slots.filter((slot) => isActive(slot) && slot.position === position);
 }
 
 /** Positions this league recognises, taken from its own caps.
@@ -166,71 +157,6 @@ export function legalMoves(
   if (active && benched < limits.maxReservePlayers) moves.push({ kind: "demote", fantraxId });
 
   return moves;
-}
-
-/** A rule this lineup is currently breaking.
- *
- *  Reachable without anybody making an illegal move, which is the reason it
- *  exists: the lineup we are handed is Fantrax's, and a commissioner can narrow a
- *  player's eligibility or lower a cap under an XI that was legal when it was
- *  set. `legalMoves` will not create these states; nothing stops us being given
- *  one, and a planner that silently plans on top of it is lying by omission.
- *
- *  A SHORTFALL is deliberately not here. Fantrax publishes `maxActive` per
- *  position and no minimum, so "only two defenders" breaks no rule anyone set —
- *  ten men in an eleven-man XI is legal and merely wasteful, and saying so is the
- *  UI's job, not this type's. */
-export type Violation =
-  | { kind: "too-many-active"; count: number; cap: number }
-  | { kind: "too-many-reserve"; count: number; cap: number }
-  | { kind: "position-over-cap"; position: string; count: number; cap: number }
-  | { kind: "not-eligible"; fantraxId: string; position: string };
-
-/** Everything wrong with a lineup as it stands, or an empty list.
- *
- *  Reports all of them rather than the first, because they have different
- *  remedies and a manager fixing one at a time cannot see whether he is finished. */
-export function violations(
-  slots: readonly RosterSlot[],
-  eligibility: Eligibility,
-  limits: RosterLimits,
-): Violation[] {
-  const found: Violation[] = [];
-  const active = slots.filter(isActive);
-
-  if (active.length > limits.maxActivePlayers) {
-    found.push({ kind: "too-many-active", count: active.length, cap: limits.maxActivePlayers });
-  }
-
-  // Counted as everyone who is not active, matching `legalMoves`: Fantrax's
-  // status vocabulary is theirs, and a third value would be a reserve here rather
-  // than vanishing from both counts.
-  const reserves = slots.length - active.length;
-  if (reserves > limits.maxReservePlayers) {
-    found.push({ kind: "too-many-reserve", count: reserves, cap: limits.maxReservePlayers });
-  }
-
-  for (const [position, cap] of Object.entries(limits.maxActiveByPosition)) {
-    const count = activeAt(slots, position).length;
-    if (count > cap) found.push({ kind: "position-over-cap", position, count, cap });
-  }
-
-  for (const slot of active) {
-    // A slot with no position at all breaks no published rule — Fantrax accepts
-    // one and `lineup()` gives it a bucket — so there is nothing to report.
-    if (!slot.position) continue;
-    const eligible = eligibility.get(slot.fantraxId);
-    // Eligibility we do not hold is not eligibility he lacks. Accusing a manager
-    // of an illegal XI because our data is missing is the same confident wrong
-    // answer `eligibleSlots` refuses to give, and here it would be worse: there
-    // is no move that clears it.
-    if (eligible === undefined || eligible.length === 0) continue;
-    if (!eligible.includes(slot.position)) {
-      found.push({ kind: "not-eligible", fantraxId: slot.fantraxId, position: slot.position });
-    }
-  }
-
-  return found;
 }
 
 /** Apply a move, returning a new roster. Never mutates its input: the planner
