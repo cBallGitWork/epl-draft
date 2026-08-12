@@ -107,11 +107,23 @@ describe("mapLeagueInfo", () => {
     expect(info.matchups).toEqual([]);
   });
 
+  it("carries the roster calendar separately from the scoring one", () => {
+    // Two calendars, not one rounded to the other. They share every start and
+    // differ by a second on every end, and it is the roster one the lineup gate
+    // reads — a deadline is a commissioner setting, not a scoring artefact.
+    expect(info.rosterPeriods).toHaveLength(info.scoringPeriods.length);
+    expect(info.rosterPeriods[0]?.start).toBe(info.scoringPeriods[0]?.start);
+    expect(info.rosterPeriods[0]?.end).not.toBe(info.scoringPeriods[0]?.end);
+    expect(info.rosterPeriods[0]?.end).toContain("14:59:58");
+    expect(info.scoringPeriods[0]?.end).toContain("14:59:59");
+  });
+
   it("degrades to empty rather than throwing on a stripped payload", () => {
     // Scraped data is untrusted; a shape change must not blank the page.
     const empty = mapLeagueInfo({});
     expect(empty.players).toEqual([]);
     expect(empty.scoringPeriods).toEqual([]);
+    expect(empty.rosterPeriods).toEqual([]);
     expect(empty.roster.maxActiveByPosition).toEqual({});
   });
 });
@@ -123,6 +135,15 @@ describe("mapLeagueInfo, on a league that has drafted", () => {
     // The rehearsal league carries no `draftType` key at all while the real one
     // does. Defaulting to "" would report a draft type Fantrax never gave.
     expect(info.draftType).toBeNull();
+  });
+
+  it("has no roster calendar at all, where the real league has one", () => {
+    // Same provider, same method, same day — and this league's payload simply
+    // omits `rosterPeriods`. The lineup gate has to survive that, which is why
+    // it fails safe to squad-only on an empty calendar rather than falling back
+    // to the scoring periods and quietly gating on the wrong deadline.
+    expect(info.rosterPeriods).toEqual([]);
+    expect(info.scoringPeriods.length).toBeGreaterThan(0);
   });
 
   it("reads the teams, keyed by the id every other payload uses", () => {

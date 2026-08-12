@@ -134,6 +134,15 @@ export interface LeagueInfo {
   draftType: string | null;
   roster: RosterLimits;
   scoringPeriods: LeaguePeriod[];
+  /** The lineup calendar, which is not the scoring calendar.
+   *
+   *  Fantrax ships both and they are nearly — but not quite — the same: across
+   *  all 38 periods the starts are identical and every end differs by one
+   *  second. Near-identical is not identical, and they answer different
+   *  questions: `scoringPeriods` says when points count, `rosterPeriods` says
+   *  when a lineup is locked. The deadline is a commissioner setting, so the
+   *  gate reads this one and never infers a lock from the scoring calendar. */
+  rosterPeriods: LeaguePeriod[];
   players: LeaguePlayerState[];
   /** Empty until managers join. */
   teams: LeagueTeam[];

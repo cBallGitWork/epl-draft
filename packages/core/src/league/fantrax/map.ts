@@ -145,6 +145,7 @@ export function mapLeagueInfo(raw: RawLeagueInfo): LeagueInfo {
     draftType: raw.draftType ?? null,
     roster: mapRosterLimits(raw.rosterInfo),
     scoringPeriods: mapPeriods(raw.scoringPeriods),
+    rosterPeriods: mapPeriods(raw.rosterPeriods),
     players: mapPlayerStates(raw.playerInfo),
     teams: mapTeams(raw.teamInfo),
     matchups: mapMatchups(raw.matchups),
