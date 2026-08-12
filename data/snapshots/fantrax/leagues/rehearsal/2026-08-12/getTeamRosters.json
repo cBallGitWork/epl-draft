@@ -10,6 +10,11 @@
           "status": "RESERVE"
         },
         {
+          "id": "05nzu",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
           "id": "05l8q",
           "position": "M",
           "status": "ACTIVE"
@@ -51,11 +56,6 @@
         },
         {
           "id": "05o4b",
-          "position": "D",
-          "status": "ACTIVE"
-        },
-        {
-          "id": "06uyc",
           "position": "D",
           "status": "ACTIVE"
         },
@@ -177,11 +177,6 @@
           "status": "ACTIVE"
         },
         {
-          "id": "05nzu",
-          "position": "D",
-          "status": "ACTIVE"
-        },
-        {
           "id": "05t6x",
           "position": "F",
           "status": "ACTIVE"
@@ -204,6 +199,11 @@
         {
           "id": "0639x",
           "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06uyc",
+          "position": "D",
           "status": "ACTIVE"
         },
         {
@@ -258,11 +258,6 @@
           "status": "ACTIVE"
         },
         {
-          "id": "04qr9",
-          "position": "M",
-          "status": "ACTIVE"
-        },
-        {
           "id": "070hc",
           "position": "F",
           "status": "RESERVE"
@@ -299,6 +294,11 @@
         },
         {
           "id": "05uht",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "067zv",
           "position": "M",
           "status": "ACTIVE"
         },

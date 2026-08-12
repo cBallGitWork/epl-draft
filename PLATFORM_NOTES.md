@@ -429,13 +429,69 @@ goal: a commissioner adding "W" for wingers should look wrong, not wrong in a wa
 that reads as correct.
 
 
+## Verified Fantrax facts (probed live 12 Aug 2026, against real transactions)
+
+Craig executed a trade (9:13AM EDT) and a free-agent claim with a drop (9:14AM)
+in the rehearsal league. Captures either side of them, plus a probe, settled
+three open questions at once.
+
+### Transactions are a first-class read, and public
+
+`POST /fxpa/req` → **`getTransactionDetailsHistory`** returns typed, timestamped
+transaction records **without a cookie**. This corrects the 7 Aug note that had
+it behind auth. It takes `view`, and `displayedLists.tabs` is the server-driven
+list of legal values — currently `CLAIM_DROP`, `TRADE`, `LINEUP_CHANGE`.
+
+What each row carries: `scorer` (a full player object whose `scorerId` **is our
+fantraxId**, with `posShortNames` for eligibility), `txSetId` grouping both
+halves of a trade or a claim+drop, `resultCode`/`executed`, and `cells` keyed
+`from` / `to` / `team` / `date` / `week`. `TRADE` rows name both sides
+explicitly; `CLAIM_DROP` rows add `transactionCode` (`CLAIM`/`DROP`) and
+`claimType` (`FA`). The trade rows carry **no** `transactionCode` — for trades
+the *view* is the type.
+
+**Bind to `cell.key`, never to the header name.** The `week` column's header
+name arrives as the literal string `"{0} on which this transaction takes
+effect"` — an unsubstituted i18n placeholder shipped to production. Its
+`shortName` is "Gameweek" and its `key` is `week`. Any parser keyed off the
+English name is built on text Fantrax itself cannot render correctly.
+
+**This displaces the capture-diff derivation as the primary source.** Diffing
+consecutive captures does work — it found both events unaided — but it is
+strictly weaker: it cannot name a transaction type, cannot see two moves in one
+day, and cannot tell a trade from a commissioner override. The native feed does
+all three and timestamps them to the minute. Capture-diff stays as
+corroboration, and the three views should themselves be captured daily so we
+own an archive of a feed Fantrax could prune.
+
+`getTransactions` (no "Details") exists, is public, and returned an empty
+`transactions: []` throughout — not the same thing, and not the one we want.
+`getPendingTransactions` answered `noPendingTransactions`.
+
+### What the capture diff saw, for the record
+
+Status alone (`playerInfo[].status`) caught only the claim: Gibbs-White `T→WW`,
+Schade `FA→T`. **The trade is invisible to a status diff** — both players stay
+`T` — and surfaced only by comparing *owners* across teams. Any derivation must
+compare ownership, not status. That is now a recorded fixture rather than a
+prediction.
+
+### `?period=N` is accepted, echoed, and inert
+
+`getTeamRosters?period=1|2|5` all echo the requested period back and return
+**byte-identical rosters** (same payload hash), all reflecting post-trade state.
+So it does not serve history today. This does not yet distinguish "projection"
+from "ignored": no period has *completed*, so there is no past for it to serve.
+Re-ask after period 1 closes on 28 Aug.
+
+Until then the answer that matters is unchanged and now evidenced: **past
+lineups exist only in our capture archive.** The doctrine holds.
+
 ## Questions
 
-- **Does `?period=N` on `getTeamRosters` return a past roster or a projection?**
-  Untestable until a transaction exists to tell the two apart. The answer decides
-  whether roster history is backfillable, and therefore how strong the "capture
-  cannot wait" doctrine really is. Ask again after the first rehearsal waiver
-  move (21 Aug or later).
+- **Does `?period=N` serve history once a period has completed?** Partially
+  answered 12 Aug — accepted and echoed, but inert while every period is still
+  in the future. Re-ask after period 1 ends 28 Aug.
 - Does league scoring start at period 1 or period 6? `getLeagueInfo` numbers all
   38 periods from 21 Aug, but we draft at GW6. The rehearsal league's matchup
   schedule runs from period 1, so this is really a question about the real
@@ -454,9 +510,15 @@ that reads as correct.
 - [ ] Decide how the ~156 never-in-FPL players get recorded. `auditedAt` means a
       person looked, so a score threshold must never write it — a distinct,
       machine-set reason keeps "confirmed" separable from "assumed".
-- [ ] Automate the capture (cron or CI) — manual runs will not survive October.
+- [x] Automate the capture (cron or CI) — manual runs will not survive October.
       Run `capture:status` as a **separate workflow on a different schedule**, so
-      the job that might die is not the job responsible for noticing.
+      the job that might die is not the job responsible for noticing. *Landed
+      6 Aug, but only became live on 12 Aug: workflows fire from the default
+      branch and the branch had not merged, so the cron had never once run.
+      Verified by dispatching it manually rather than waiting for 05:10.*
+- [ ] Capture the three `getTransactionDetailsHistory` views daily, and build the
+      feed from them rather than from capture diffs (see 12 Aug notes). Bind to
+      `cell.key`; the header names include a broken i18n placeholder.
 - [ ] Model `scoringSystem` when a view first explains a number — read from
       `getLeagueInfo`, never from a checked-in copy (§3).
 - [ ] Design the cookie flow for the fxpa write surface.
@@ -469,6 +531,13 @@ payloads; captures filed per league; period alignment settled and scripted; the
 
 ## Season log
 
+- 2026-08-12: Merged to `main` — the capture cron had never fired, because
+  workflows only run from the default branch. Six days of history (7–11 Aug) are
+  gone permanently. Dispatched the workflow by hand to prove it works rather
+  than trusting 05:10. Craig executed the first rehearsal trade and free-agent
+  claim, which settled the transactions design: the native feed wins, capture
+  diffs corroborate. Lineup visibility gate shipped — squads all week, XI only
+  once the period opens.
 - 2026-08-05: Created `PLATFORM_NOTES.md` and improved `CLAUDE.md`.
 - 2026-08-05: Probed Fantrax live and recorded the facts above. Added the
   read-only league layer, the dated snapshot capture, and the identity bridge
