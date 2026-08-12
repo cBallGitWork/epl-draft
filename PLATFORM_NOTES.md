@@ -487,6 +487,45 @@ Re-ask after period 1 closes on 28 Aug.
 Until then the answer that matters is unchanged and now evidenced: **past
 lineups exist only in our capture archive.** The doctrine holds.
 
+## The lineup preview is gated on the league, not on an environment variable
+
+The planner has to be visible during development, and the visibility gate hides
+every lineup until 21 Aug. The obvious lever is an env flag. We did not use one.
+
+An env flag is correct until the day it is set on the deployment, and the harm it
+guards against is asymmetric: publishing sixteen managers' lineups before a
+deadline is the one mistake in this app that cannot be taken back. So the check
+is **which league we serve** — the rehearsal league's four teams belong to
+nobody, so previewing there leaks nothing, and the real league can never preview
+whatever anyone configures. It **fails closed**: if the real league cannot be
+identified in `FANTRAX_LEAGUES` at all, the answer is no, because the other
+direction fails toward publishing.
+
+It is also opt-in per request (`?preview=1`) rather than always-on, so the honest
+gate remains the default on every page load and remains the thing under test. On
+10 Oct the swap turns the planner preview off by itself, which is correct.
+
+`mayPreviewLineups()` lives in `apps/companion/app/team/league.ts` and is not
+unit-tested, because vitest covers `packages/*` only. That is the standing gap
+for app-edge logic; this is the piece of it most worth watching.
+
+## A second client component, on purpose
+
+`AutoRefresh` was the app's only `"use client"` file and its comment said so
+deliberately. `LineupPlanner` is the second, and it earns it: the whole feature
+is an XI you rearrange and look at before committing, so the edited shape has to
+live in browser state.
+
+It reuses `lineup()` and `Pitch` unchanged by rebuilding a `RosteredTeam` from
+the edited slots, rather than growing a second renderer that can drift from the
+real one. The planner never writes: it ends in an outbound link, and
+`FANTRAX_APP_BASE` deliberately stops at the league path — the only URL shape
+confirmed from a real browser session. A deeper guess at their roster route would
+break silently the day they reorganise.
+
+Only the fifteen squad members' eligibility crosses to the browser, not the
+pool's 697.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially
@@ -531,6 +570,11 @@ payloads; captures filed per league; period alignment settled and scripted; the
 
 ## Season log
 
+- 2026-08-12: Refactor pass over the day's work — five visibility exports down to
+  one, the fxpa batch transport and its unused cookie parameter deleted, and
+  SquadList's duplicate copy of the pitch order removed in favour of the one
+  `positionDepth` core already owned. Lineup planner shipped behind a
+  league-gated preview.
 - 2026-08-12: Merged to `main` — the capture cron had never fired, because
   workflows only run from the default branch. Six days of history (7–11 Aug) are
   gone permanently. Dispatched the workflow by hand to prove it works rather
