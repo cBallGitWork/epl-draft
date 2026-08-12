@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";
+import { applyMove, eligibilityOf, eligibleSlots, legalMoves, violations } from "./moves";
 import type { Move } from "./moves";
 import type { RosterLimits, RosterSlot } from "./types";
 import planning from "./__fixtures__/lineupPlanning.json";
@@ -161,6 +161,68 @@ describe("legalMoves", () => {
       fantraxId: DUAL_ACTIVE,
       to: "F",
     });
+  });
+});
+
+describe("violations", () => {
+  it("finds nothing wrong with a lineup Fantrax accepted", () => {
+    expect(violations(slots, eligibility, limits)).toEqual([]);
+  });
+
+  it("reports the bench overflowing under the league that seats fewer", () => {
+    // The same fifteen men, carrying four reserves: legal here, illegal in the
+    // real league, and nothing in the module knows which one it is looking at.
+    expect(violations(slots, eligibility, realLimits)).toContainEqual({
+      kind: "too-many-reserve",
+      count: 4,
+      cap: realLimits.maxReservePlayers,
+    });
+  });
+
+  it("reports both caps a squad breaks, not the first one", () => {
+    // A state no move of ours can produce and a commissioner can: a twelfth man
+    // fielded, in a forward line already at three. One remedy per line, so a
+    // manager fixing one can see whether he is finished.
+    const reserveForward = slots.find((s) => s.status !== "ACTIVE");
+    const overloaded = slots.map((s) =>
+      s.fantraxId === reserveForward?.fantraxId ? { ...s, position: "F", status: "ACTIVE" } : s,
+    );
+
+    expect(violations(overloaded, eligibility, limits)).toEqual(
+      expect.arrayContaining([
+        { kind: "too-many-active", count: limits.maxActivePlayers + 1, cap: limits.maxActivePlayers },
+        {
+          kind: "position-over-cap",
+          position: "F",
+          count: limits.maxActiveByPosition.F + 1,
+          cap: limits.maxActiveByPosition.F,
+        },
+      ]),
+    );
+  });
+
+  it("names a player the commissioner has since made ineligible where he stands", () => {
+    // Exactly what happened on 12 Aug: eligibility is a commissioner setting and
+    // it can be narrowed under an XI that was legal when it was set.
+    const here = at(DUAL_ACTIVE)?.position ?? "";
+    const narrowed = eligibilityOf(
+      planning.eligibility.map((p) =>
+        p.fantraxId === DUAL_ACTIVE
+          ? { ...p, eligiblePositions: p.eligiblePositions.filter((pos) => pos !== here) }
+          : p,
+      ),
+    );
+
+    expect(violations(slots, narrowed, limits)).toEqual([
+      { kind: "not-eligible", fantraxId: DUAL_ACTIVE, position: here },
+    ]);
+  });
+
+  it("does not accuse a player whose eligibility we simply do not hold", () => {
+    // Missing data is not a broken rule, and this is the one violation no move
+    // could clear — so the wrong answer here strands a manager rather than just
+    // misinforming him.
+    expect(violations(slots, eligibilityOf([]), limits)).toEqual([]);
   });
 });
 
