@@ -45,9 +45,11 @@ export {
   pageErrorEnvelope,
   responseErrorEnvelope,
 } from "./fantrax/errors";
+export { mapPlayerProfile } from "./fantrax/profile";
+export type { LabelledValue, PlayerIntel } from "./fantrax/profile";
 export { mapTransactions } from "./fantrax/transactions";
 export type { RawTransactionHistory } from "./fantrax/transactions";
-export { fetchTransactions } from "./fantrax/client";
+export { fetchPlayerProfile, fetchTransactions } from "./fantrax/client";
 export { mapLeagueInfo, mapPlayerPool, readingOrder } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapStandings } from "./fantrax/standings";

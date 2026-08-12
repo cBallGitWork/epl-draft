@@ -1,0 +1,295 @@
+{
+ "rostered": {
+  "displayedSelections": {
+   "seasonId": "925"
+  },
+  "season": {
+   "seasonType": {
+    "code": "REGULAR"
+   },
+   "displayNameShort": "2026-27 Reg",
+   "endDate": 1811735999000,
+   "displayName": "2026-27",
+   "id": "926",
+   "startDate": 1787284800000,
+   "displayYear": "2026-27"
+  },
+  "currentOrRecentSeason": {
+   "seasonType": {
+    "code": "REGULAR"
+   },
+   "displayNameShort": "2025-26 Reg",
+   "endDate": 1779681599000,
+   "displayName": "2025-26",
+   "id": "925",
+   "startDate": 1755230400000,
+   "displayYear": "2025-26"
+  },
+  "miscData": {
+   "name": "Bukayo Saka",
+   "teamShortName": "ARS",
+   "defaultPosition": "M,F",
+   "uniformNumber": "7",
+   "ownerTeamId": "j9zadacnmshcpazf",
+   "percentOwned": {
+    "name": "Rostered",
+    "items": [
+     {
+      "name": "Next Week",
+      "value": "0%"
+     },
+     {
+      "name": "This Week",
+      "value": "100%"
+     },
+     {
+      "name": "Last Week",
+      "value": "100%"
+     }
+    ]
+   },
+   "percentActive": {
+    "name": "Active",
+    "items": [
+     {
+      "name": "Next Week",
+      "value": "0%"
+     },
+     {
+      "name": "This Week",
+      "value": "99%"
+     },
+     {
+      "name": "Last Week",
+      "value": "99%"
+     }
+    ]
+   },
+   "percentDrafted": {
+    "name": "Drafted",
+    "value": "100%"
+   },
+   "averageDraftPosition": {
+    "name": "ADP",
+    "description": "Average draft position among all leagues on Fantrax",
+    "value": "3.64"
+   },
+   "highlightStats": [
+    {
+     "name": "Rank among all Fs / Everyone",
+     "shortName": "Rank F/Ov",
+     "value": "12/46"
+    },
+    {
+     "name": "Fantasy Points (2025-26 - YTD)",
+     "shortName": "FPts",
+     "value": "110"
+    },
+    {
+     "name": "Average Fantasy Points per Game (2025-26 - YTD)",
+     "shortName": "FP/G",
+     "value": "3.5"
+    },
+    {
+     "name": "% of Fantrax leagues that have this player on their roster this week",
+     "shortName": "Ros",
+     "value": "100%"
+    },
+    {
+     "name": "% of leagues that have this player starting, i.e. in an active slot this week",
+     "shortName": "Start",
+     "value": "99%"
+    }
+   ],
+   "personalInfo": [
+    {
+     "name": "Birthplace",
+     "value": "London, England"
+    },
+    {
+     "name": "Birthdate",
+     "value": "September 5, 2001"
+    },
+    {
+     "name": "Age",
+     "value": 24
+    },
+    {
+     "name": "Height",
+     "value": "5'10\""
+    },
+    {
+     "name": "Weight",
+     "value": "143 lbs"
+    },
+    {
+     "name": "Drafted",
+     "value": ""
+    },
+    {
+     "name": "College",
+     "value": ""
+    }
+   ],
+   "leagueData": [
+    {
+     "name": "Status/Team",
+     "description": "Status or name of fantasy team if currently rostered",
+     "value": "test3",
+     "valueDescription": "test3"
+    },
+    {
+     "name": "FPts",
+     "description": "Fantasy Points (2025-26 - YTD)",
+     "value": "110"
+    },
+    {
+     "name": "FP/G",
+     "description": "Average Fantasy Points per Game (2025-26 - YTD)",
+     "value": "3.55"
+    },
+    {
+     "name": "Eligible",
+     "description": "Eligible positions in this league",
+     "value": "M,F"
+    }
+   ]
+  }
+ },
+ "freeAgent": {
+  "displayedSelections": {
+   "seasonId": "925"
+  },
+  "season": {
+   "seasonType": {
+    "code": "REGULAR"
+   },
+   "displayNameShort": "2026-27 Reg",
+   "endDate": 1811735999000,
+   "displayName": "2026-27",
+   "id": "926",
+   "startDate": 1787284800000,
+   "displayYear": "2026-27"
+  },
+  "currentOrRecentSeason": {
+   "seasonType": {
+    "code": "REGULAR"
+   },
+   "displayNameShort": "2025-26 Reg",
+   "endDate": 1779681599000,
+   "displayName": "2025-26",
+   "id": "925",
+   "startDate": 1755230400000,
+   "displayYear": "2025-26"
+  },
+  "miscData": {
+   "name": "Tatsuhiro Sakamoto",
+   "teamShortName": "COV",
+   "defaultPosition": "M",
+   "uniformNumber": "7",
+   "percentOwned": {
+    "name": "Rostered",
+    "items": [
+     {
+      "name": "Next Week",
+      "value": "0%"
+     },
+     {
+      "name": "This Week",
+      "value": "7%"
+     },
+     {
+      "name": "Last Week",
+      "value": "8%"
+     }
+    ]
+   },
+   "percentActive": {
+    "name": "Active",
+    "items": [
+     {
+      "name": "Next Week",
+      "value": "0%"
+     },
+     {
+      "name": "This Week",
+      "value": "2%"
+     },
+     {
+      "name": "Last Week",
+      "value": "2%"
+     }
+    ]
+   },
+   "percentDrafted": {
+    "name": "Drafted",
+    "value": "12.35%"
+   },
+   "averageDraftPosition": {
+    "name": "ADP",
+    "description": "Average draft position among all leagues on Fantrax",
+    "value": "282.1"
+   },
+   "highlightStats": [
+    {
+     "name": "Rank among all Ms / Everyone",
+     "shortName": "Rank M/Ov",
+     "value": "233/620"
+    },
+    {
+     "name": "Fantasy Points (2025-26 - YTD)",
+     "shortName": "FPts",
+     "value": "0"
+    },
+    {
+     "name": "Average Fantasy Points per Game (2025-26 - YTD)",
+     "shortName": "FP/G",
+     "value": "0"
+    },
+    {
+     "name": "% of Fantrax leagues that have this player on their roster this week",
+     "shortName": "Ros",
+     "value": "7%"
+    },
+    {
+     "name": "% of leagues that have this player starting, i.e. in an active slot this week",
+     "shortName": "Start",
+     "value": "2%"
+    }
+   ],
+   "personalInfo": [
+    {
+     "name": "Birthplace",
+     "value": "Japan"
+    },
+    {
+     "name": "Birthdate",
+     "value": "October 22, 1996"
+    }
+   ],
+   "leagueData": [
+    {
+     "name": "Status/Team",
+     "description": "Status or name of fantasy team if currently rostered",
+     "value": "FA",
+     "valueDescription": "Free Agent"
+    },
+    {
+     "name": "FPts",
+     "description": "Fantasy Points (2025-26 - YTD)",
+     "value": "0"
+    },
+    {
+     "name": "FP/G",
+     "description": "Average Fantasy Points per Game (2025-26 - YTD)",
+     "value": "0"
+    },
+    {
+     "name": "Eligible",
+     "description": "Eligible positions in this league",
+     "value": "M"
+    }
+   ]
+  }
+ }
+}

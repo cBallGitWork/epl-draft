@@ -146,29 +146,34 @@ export default async function PlayersPage({
               ? (pool.teamNames.get(entry.ownerTeamId) ?? entry.ownerTeamId)
               : null;
             return (
-              <li
-                key={entry.player.fantraxId}
-                className="flex min-h-11 items-center gap-2.5 rounded-lg border border-line bg-surface px-3 py-2"
-              >
-                {/* The league's eligibility, not the pool's single position:
-                    "F/M" is what the commissioner set and what the planner obeys,
-                    and the global pool's letter is a different league's answer. */}
-                <span className="numeric w-9 text-2xs tracking-widest text-faint">
-                  {entry.eligiblePositions.join("/") || "—"}
-                </span>
-                <span className="min-w-0 flex-1 truncate font-medium">
-                  {entry.player.displayName}
-                </span>
-                <span className="numeric text-2xs tracking-widest text-faint">
-                  {entry.player.clubCode ?? "—"}
-                </span>
-                {owner ? (
-                  <span className="max-w-28 truncate rounded bg-raised px-1.5 py-0.5 text-2xs font-bold text-mid">
-                    {owner}
+              <li key={entry.player.fantraxId}>
+                <Link
+                  href={`/players/${entry.player.fantraxId}`}
+                  className="flex min-h-11 items-center gap-2.5 rounded-lg border border-line bg-surface px-3 py-2 hover:bg-raised"
+                >
+                  {/* The league's eligibility, not the pool's single position:
+                      "F/M" is what the commissioner set and what the planner
+                      obeys, and the global pool's letter is a different league's
+                      answer. */}
+                  <span className="numeric w-9 text-2xs tracking-widest text-faint">
+                    {entry.eligiblePositions.join("/") || "—"}
                   </span>
-                ) : (
-                  <span className="text-2xs text-faint">{STATUS[entry.status] ?? entry.status}</span>
-                )}
+                  <span className="min-w-0 flex-1 truncate font-medium">
+                    {entry.player.displayName}
+                  </span>
+                  <span className="numeric text-2xs tracking-widest text-faint">
+                    {entry.player.clubCode ?? "—"}
+                  </span>
+                  {owner ? (
+                    <span className="max-w-28 truncate rounded bg-raised px-1.5 py-0.5 text-2xs font-bold text-mid">
+                      {owner}
+                    </span>
+                  ) : (
+                    <span className="text-2xs text-faint">
+                      {STATUS[entry.status] ?? entry.status}
+                    </span>
+                  )}
+                </Link>
               </li>
             );
           })}

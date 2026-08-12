@@ -2,6 +2,7 @@ import { FANTRAX_FXEA_BASE, FANTRAX_SPORT } from "../../config";
 import type { TransactionView } from "../types";
 import { FantraxError, errorEnvelope } from "./errors";
 import { fxpaRead } from "./fxpa";
+import type { RawPlayerProfile } from "./profile";
 import type { RawTransactionHistory } from "./transactions";
 import type {
   RawDraftResults,
@@ -57,6 +58,16 @@ export function fetchDraftResults(leagueId: string): Promise<RawDraftResults> {
  *  side of Fantrax that the identity bridge is built against. */
 export function fetchPlayerPool(): Promise<RawPlayerPool> {
   return fxeaGet<RawPlayerPool>("getPlayerIds", { sport: FANTRAX_SPORT });
+}
+
+/** Fantrax's own dossier on one player: his row in this league, his points under
+ *  their scoring, and what the rest of the site thinks he is worth.
+ *
+ *  Public, and asked one player at a time from a tap. The parameter is
+ *  `playerId`: `scorerId` — Fantrax's own name for the identical id on the
+ *  transaction rows — and `fantraxId` both answer `INVALID_REQUEST`. */
+export function fetchPlayerProfile(leagueId: string, playerId: string): Promise<RawPlayerProfile> {
+  return fxpaRead(leagueId, "getPlayerProfile", { playerId }) as Promise<RawPlayerProfile>;
 }
 
 /** One log of transactions — claims and drops, trades, or lineup changes.

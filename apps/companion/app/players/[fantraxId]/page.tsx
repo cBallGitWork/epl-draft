@@ -1,0 +1,117 @@
+import Link from "next/link";
+import { FANTRAX_LEAGUE_ID, FantraxError, fetchPlayerProfile, mapPlayerProfile } from "@epl/core";
+import type { LabelledValue, PlayerIntel } from "@epl/core";
+import Nothing from "../../components/shell/Nothing";
+
+// One player, as Fantrax sees him. Reached by tapping a name in the pool, and
+// that is the whole politeness policy: one profile per tap, never a sweep of the
+// 697.
+
+// Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
+export const revalidate = 30;
+
+async function profile(fantraxId: string): Promise<PlayerIntel | { unavailable: string }> {
+  try {
+    return mapPlayerProfile(await fetchPlayerProfile(FANTRAX_LEAGUE_ID, fantraxId));
+  } catch (error: unknown) {
+    // A player id that is not a player and a Fantrax that is not answering arrive
+    // as the same refusal, so this does not pretend to tell them apart with a 404.
+    // The code goes on screen instead, which is what makes a mistyped URL
+    // diagnosable rather than mysterious.
+    if (error instanceof FantraxError) return { unavailable: error.code };
+    throw error;
+  }
+}
+
+/** One block of name-and-value rows. Renders nothing when the block is empty —
+ *  a heading over no rows is a claim that something is missing. */
+function Facts({ title, note, rows }: { title: string; note?: string; rows: LabelledValue[] }) {
+  if (rows.length === 0) return null;
+  return (
+    <section className="flex flex-col gap-1">
+      <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-faint">
+        {title}
+      </h2>
+      {note ? <p className="text-2xs text-faint">{note}</p> : null}
+      <dl className="flex flex-col gap-1">
+        {rows.map((row) => (
+          <div
+            key={row.label}
+            className="flex min-h-11 items-center gap-2.5 rounded-lg border border-line bg-surface px-3 py-2"
+          >
+            {/* Fantrax's short label, with their own longer wording behind it.
+                The long form is a full sentence on some rows and would wrap to
+                three lines on a phone. */}
+            <dt className="min-w-0 flex-1 truncate text-sm text-muted" title={row.description ?? undefined}>
+              {row.label}
+            </dt>
+            <dd className="numeric font-bold">{row.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}
+
+export default async function PlayerPage({ params }: { params: Promise<{ fantraxId: string }> }) {
+  const { fantraxId } = await params;
+  const intel = await profile(fantraxId);
+
+  if ("unavailable" in intel) {
+    return (
+      <Nothing title="No profile for that player" code={`getPlayerProfile → ${intel.unavailable}`}>
+        Either Fantrax does not know that id or it is not answering. Both come back the same way,
+        so this does not guess which.
+      </Nothing>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <header className="flex flex-col gap-0.5 pt-1">
+        <h1 className="text-xl font-bold tracking-tight">{intel.name || fantraxId}</h1>
+        <p className="numeric text-2xs tracking-widest text-faint">
+          {[intel.clubShortName, intel.defaultPosition, intel.squadNumber && `#${intel.squadNumber}`]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+      </header>
+
+      <Facts title="In this league" rows={intel.league} />
+
+      <Facts
+        title={intel.season ? `Fantrax · ${intel.season}` : "Fantrax"}
+        note={
+          intel.season
+            ? undefined
+            : "Fantrax did not say which season these describe, so read them with care."
+        }
+        rows={intel.highlights}
+      />
+
+      {/* The one block on this page that is not about our competition, said in
+          the heading rather than in a footnote: these percentages are every
+          league on Fantrax, and they sit two rows below ours. */}
+      <Facts title="Across every Fantrax league" rows={intel.market} />
+
+      <Facts title="Player" rows={intel.personal} />
+
+      <div className="flex flex-col gap-1.5">
+        {intel.ownerTeamId ? (
+          <Link
+            href={`/team/${intel.ownerTeamId}`}
+            className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
+          >
+            The squad he is in
+          </Link>
+        ) : null}
+        <Link
+          href="/players"
+          className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
+        >
+          Every player
+        </Link>
+      </div>
+    </div>
+  );
+}
