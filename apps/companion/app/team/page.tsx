@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, LEAGUE_NAME, isResolved } from "@epl/core";
 import LeagueCrest from "../components/shell/LeagueCrest";
+import Nothing from "../components/shell/Nothing";
+import { londonDate } from "../londonTime";
 import { getLeagueSquads } from "./league";
 
 // Every squad in the league. Until the draft this is the empty state, which is
@@ -12,15 +14,8 @@ export const revalidate = 30;
 
 /** Draft night for the league we are actually serving — §3 keeps season dates in
  *  config, and the two leagues draft nine weeks apart. */
-const DRAFT_DATE = new Intl.DateTimeFormat("en-GB", {
-  weekday: "long",
-  day: "numeric",
-  month: "long",
-  timeZone: "Europe/London",
-}).format(
-  new Date(
-    `${FANTRAX_LEAGUES.find((l) => l.leagueId === FANTRAX_LEAGUE_ID)?.draftDate ?? ""}T00:00:00Z`,
-  ),
+const DRAFT_DATE = londonDate(
+  FANTRAX_LEAGUES.find((l) => l.leagueId === FANTRAX_LEAGUE_ID)?.draftDate ?? "",
 );
 
 export default async function SquadsPage() {
@@ -28,43 +23,23 @@ export default async function SquadsPage() {
 
   if ("unavailable" in squads) {
     return (
-      <div className="flex flex-col items-center gap-4 py-10 text-center">
-        <LeagueCrest variant="full" height={104} />
-        <div className="flex flex-col gap-1.5">
-          <h1 className="font-display text-2xl font-bold tracking-tight">Fantrax is not answering</h1>
-          <p className="mx-auto max-w-xs text-sm text-muted">
-            The league is fine. We just cannot read it right now, so rather than guess at your
-            squad this says nothing.
-          </p>
-        </div>
-        <span className="numeric rounded border border-line px-2 py-1 text-2xs tracking-widest text-faint">
-          getTeamRosters → {squads.unavailable}
-        </span>
-      </div>
+      <Nothing title="Fantrax is not answering" code={`getTeamRosters → ${squads.unavailable}`}>
+        The league is fine. We just cannot read it right now, so rather than guess at your squad
+        this says nothing.
+      </Nothing>
     );
   }
 
   if ("undrafted" in squads) {
     return (
-      <div className="flex flex-col items-center gap-4 py-10 text-center">
-        <LeagueCrest variant="full" height={104} />
-        <div className="flex flex-col gap-1.5">
-          <h1 className="font-display text-2xl font-bold tracking-tight">Nobody has a squad yet</h1>
-          <p className="mx-auto max-w-xs text-sm text-muted">
-            {LEAGUE_NAME} drafts on {DRAFT_DATE}. Until then Fantrax has a competition and no
-            teams in it, so there is nothing to line up.
-          </p>
-        </div>
-        <span className="numeric rounded border border-line px-2 py-1 text-2xs tracking-widest text-faint">
-          getTeamRosters → {squads.undrafted}
-        </span>
-        <Link
-          href="/"
-          className="min-h-11 rounded-lg border border-line px-4 py-2.5 text-sm font-medium hover:bg-raised"
-        >
+      <Nothing title="Nobody has a squad yet" code={`getTeamRosters → ${squads.undrafted}`}>
+        {LEAGUE_NAME} drafts on {DRAFT_DATE}. Until then Fantrax has a competition and no teams in
+        it, so there is nothing to line up.{" "}
+        <Link href="/" className="underline">
           The football, meanwhile
         </Link>
-      </div>
+        .
+      </Nothing>
     );
   }
 
