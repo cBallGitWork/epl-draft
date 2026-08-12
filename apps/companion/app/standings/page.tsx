@@ -11,6 +11,8 @@ import type { StandingsRow } from "@epl/core";
 import LeagueCrest from "../components/shell/LeagueCrest";
 import Nothing from "../components/shell/Nothing";
 import { londonDate } from "../londonTime";
+import { orRefusal, tell } from "../refusals";
+import type { Unavailable } from "../refusals";
 
 // The table. Fantrax computes it — the record and the points are theirs, and this
 // page never adds them up itself.
@@ -24,13 +26,9 @@ const DRAFT_DATE = londonDate(
 
 /** An empty table and an unreachable one are different states, and only one of
  *  them is a problem: our real league answers `[]` here every day until 10 Oct. */
-async function table(): Promise<StandingsRow[] | { unavailable: string }> {
-  try {
-    return mapStandings(await fetchStandings(FANTRAX_LEAGUE_ID));
-  } catch (error: unknown) {
-    if (error instanceof FantraxError) return { unavailable: error.code };
-    throw error;
-  }
+async function table(): Promise<StandingsRow[] | Unavailable> {
+  const raw = await orRefusal(fetchStandings(FANTRAX_LEAGUE_ID));
+  return raw instanceof FantraxError ? { unavailable: tell(raw) } : mapStandings(raw);
 }
 
 export default async function StandingsPage() {
@@ -38,7 +36,7 @@ export default async function StandingsPage() {
 
   if ("unavailable" in rows) {
     return (
-      <Nothing title="Fantrax is not answering" code={`getStandings → ${rows.unavailable}`}>
+      <Nothing title="Fantrax is not answering" code={rows.unavailable}>
         The table is theirs to keep, and we cannot read it right now. Nothing here is computed
         from our side, so there is no stale copy to fall back on.
       </Nothing>

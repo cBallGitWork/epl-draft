@@ -15,6 +15,8 @@ import {
   resolveRosters,
   rosterDisplay,
 } from "@epl/core";
+import { orRefusal, tell } from "../refusals";
+import type { Unavailable } from "../refusals";
 import mapping from "../../../../data/mappings/fantrax.json";
 
 // Where the app supplies the bridge. It has to happen here rather than in core:
@@ -50,15 +52,12 @@ export type LeagueSquads =
       info: LeagueInfo | null;
     }
   | { undrafted: string }
-  | { unavailable: string };
+  | Unavailable;
 
 export async function getLeagueSquads(): Promise<LeagueSquads> {
   const [snapshot, rosters, info] = await Promise.all([
     getFootballSnapshot(),
-    fetchTeamRosters(FANTRAX_LEAGUE_ID).catch((error: unknown) => {
-      if (error instanceof FantraxError) return error;
-      throw error;
-    }),
+    orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
     leagueInfo(),
   ]);
 
@@ -67,9 +66,7 @@ export async function getLeagueSquads(): Promise<LeagueSquads> {
   // code says "Fantrax is not answering", which is a hedged right answer even
   // for a league that genuinely has no teams.
   if (rosters instanceof FantraxError) {
-    return rosters.code === "NO_TEAMS"
-      ? { undrafted: rosters.code }
-      : { unavailable: rosters.code };
+    return rosters.code === "NO_TEAMS" ? { undrafted: tell(rosters) } : { unavailable: tell(rosters) };
   }
 
   const period = resolveRosters(snapshot, mapTeamRosters(rosters), bridge);
@@ -96,12 +93,8 @@ export async function getLeagueSquads(): Promise<LeagueSquads> {
  *  failed is the correct trade — the alternative is showing an XI we cannot
  *  prove is allowed to be shown. */
 async function leagueInfo(): Promise<LeagueInfo | null> {
-  try {
-    return mapLeagueInfo(await fetchLeagueInfo(FANTRAX_LEAGUE_ID));
-  } catch (error: unknown) {
-    if (error instanceof FantraxError) return null;
-    throw error;
-  }
+  const raw = await orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID));
+  return raw instanceof FantraxError ? null : mapLeagueInfo(raw);
 }
 
 /** Whether this build may show a lineup the gate would otherwise withhold.

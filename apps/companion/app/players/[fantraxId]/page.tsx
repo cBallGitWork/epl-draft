@@ -2,6 +2,8 @@ import Link from "next/link";
 import { FANTRAX_LEAGUE_ID, FantraxError, fetchPlayerProfile, mapPlayerProfile } from "@epl/core";
 import type { LabelledValue, PlayerIntel } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
+import { orRefusal, tell } from "../../refusals";
+import type { Unavailable } from "../../refusals";
 
 // One player, as Fantrax sees him. Reached by tapping a name in the pool, and
 // that is the whole politeness policy: one profile per tap, never a sweep of the
@@ -10,17 +12,13 @@ import Nothing from "../../components/shell/Nothing";
 // Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
 export const revalidate = 30;
 
-async function profile(fantraxId: string): Promise<PlayerIntel | { unavailable: string }> {
-  try {
-    return mapPlayerProfile(await fetchPlayerProfile(FANTRAX_LEAGUE_ID, fantraxId));
-  } catch (error: unknown) {
-    // A player id that is not a player and a Fantrax that is not answering arrive
-    // as the same refusal, so this does not pretend to tell them apart with a 404.
-    // The code goes on screen instead, which is what makes a mistyped URL
-    // diagnosable rather than mysterious.
-    if (error instanceof FantraxError) return { unavailable: error.code };
-    throw error;
-  }
+/** A player id that is not a player and a Fantrax that is not answering arrive as
+ *  the same refusal, so this does not pretend to tell them apart with a 404. The
+ *  tell goes on screen instead, which is what makes a mistyped URL diagnosable
+ *  rather than mysterious. */
+async function profile(fantraxId: string): Promise<PlayerIntel | Unavailable> {
+  const raw = await orRefusal(fetchPlayerProfile(FANTRAX_LEAGUE_ID, fantraxId));
+  return raw instanceof FantraxError ? { unavailable: tell(raw) } : mapPlayerProfile(raw);
 }
 
 /** One block of name-and-value rows. Renders nothing when the block is empty —
@@ -59,7 +57,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
 
   if ("unavailable" in intel) {
     return (
-      <Nothing title="No profile for that player" code={`getPlayerProfile → ${intel.unavailable}`}>
+      <Nothing title="No profile for that player" code={intel.unavailable}>
         Either Fantrax does not know that id or it is not answering. Both come back the same way,
         so this does not guess which.
       </Nothing>

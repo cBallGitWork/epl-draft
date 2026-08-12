@@ -23,7 +23,7 @@ export default async function SquadsPage() {
 
   if ("unavailable" in squads) {
     return (
-      <Nothing title="Fantrax is not answering" code={`getTeamRosters → ${squads.unavailable}`}>
+      <Nothing title="Fantrax is not answering" code={squads.unavailable}>
         The league is fine. We just cannot read it right now, so rather than guess at your squad
         this says nothing.
       </Nothing>
@@ -32,7 +32,7 @@ export default async function SquadsPage() {
 
   if ("undrafted" in squads) {
     return (
-      <Nothing title="Nobody has a squad yet" code={`getTeamRosters → ${squads.undrafted}`}>
+      <Nothing title="Nobody has a squad yet" code={squads.undrafted}>
         {LEAGUE_NAME} drafts on {DRAFT_DATE}. Until then Fantrax has a competition and no teams in
         it, so there is nothing to line up.
       </Nothing>

@@ -11,6 +11,8 @@ import {
   positionDepth,
 } from "@epl/core";
 import type { PoolPlayer } from "@epl/core";
+import { orRefusal, tell } from "../refusals";
+import type { Unavailable } from "../refusals";
 
 // Three reads meet on this page: Fantrax's global EPL pool, our league's opinion
 // of every player in it, and who currently holds them. The join is core's
@@ -19,9 +21,8 @@ import type { PoolPlayer } from "@epl/core";
 
 /** Everything the pool view needs, or which read stopped it.
  *
- *  `unavailable` carries the method as well as the code, because unlike /team
- *  there is more than one read that can fail and "which one" is the first useful
- *  question. */
+ *  Three reads can fail here rather than one, and "which one" is the first useful
+ *  question — which is why the tell carries the method (see `refusals.ts`). */
 export type LeaguePool =
   | {
       players: PoolPlayer[];
@@ -32,22 +33,17 @@ export type LeaguePool =
        *  rosters we already hold rather than from a second payload. */
       teamNames: Map<string, string>;
     }
-  | { unavailable: string };
-
-function fantrax(error: unknown): FantraxError {
-  if (error instanceof FantraxError) return error;
-  throw error;
-}
+  | Unavailable;
 
 export async function getLeaguePool(): Promise<LeaguePool> {
   const [pool, info, rosters] = await Promise.all([
-    fetchPlayerPool().catch(fantrax),
-    fetchLeagueInfo(FANTRAX_LEAGUE_ID).catch(fantrax),
-    fetchTeamRosters(FANTRAX_LEAGUE_ID).catch(fantrax),
+    orRefusal(fetchPlayerPool()),
+    orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID)),
+    orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
   ]);
 
-  if (pool instanceof FantraxError) return { unavailable: `getPlayerIds → ${pool.code}` };
-  if (info instanceof FantraxError) return { unavailable: `getLeagueInfo → ${info.code}` };
+  if (pool instanceof FantraxError) return { unavailable: tell(pool) };
+  if (info instanceof FantraxError) return { unavailable: tell(info) };
 
   // A league with no teams owns nobody, and saying so is true rather than
   // hedged — it is the state our real league is in until 10 Oct. Any OTHER
@@ -55,7 +51,7 @@ export async function getLeaguePool(): Promise<LeaguePool> {
   // quietly claiming a player is unowned, which is a confident wrong answer
   // about 697 players at once.
   if (rosters instanceof FantraxError && rosters.code !== "NO_TEAMS") {
-    return { unavailable: `getTeamRosters → ${rosters.code}` };
+    return { unavailable: tell(rosters) };
   }
   const held = rosters instanceof FantraxError ? { period: null, teams: [] } : mapTeamRosters(rosters);
 
