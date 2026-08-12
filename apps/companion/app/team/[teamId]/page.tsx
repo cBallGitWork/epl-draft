@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { clubById } from "@epl/core";
 import LeagueCrest from "../../components/shell/LeagueCrest";
 import Pitch from "../../components/league/Pitch";
+import SquadList from "../../components/league/SquadList";
 import { getLeagueSquads } from "../league";
 
 // One manager's squad, laid out on a pitch. The screen the league opens on a
@@ -31,11 +32,23 @@ export default async function TeamPage({ params }: { params: Promise<{ teamId: s
           <h1 className="truncate text-xl font-bold tracking-tight">{team.teamName}</h1>
           <p className="numeric text-2xs text-faint">
             Period {squads.period.period ?? "—"} · Gameweek {squads.snapshot.gameweek}
+            {squads.display.show === "squad" ? " · squad" : null}
           </p>
         </div>
       </header>
 
-      <Pitch team={team} clubs={clubById(squads.snapshot)} />
+      {/* The gate. Before a period opens nobody's XI is visible — not a rival's
+          and not your own — so the pitch, the shape and the active/reserve split
+          are all withheld together. */}
+      {squads.display.show === "lineup" ? (
+        <Pitch team={team} clubs={clubById(squads.snapshot)} />
+      ) : (
+        <SquadList
+          team={team}
+          clubs={clubById(squads.snapshot)}
+          because={squads.display.because}
+        />
+      )}
 
       <Link
         href="/team"

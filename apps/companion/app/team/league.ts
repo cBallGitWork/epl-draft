@@ -3,11 +3,16 @@ import {
   FantraxError,
   type Bridge,
   type FootballSnapshot,
+  type LeaguePeriod,
+  type RosterDisplay,
   type RosteredPeriod,
+  fetchLeagueInfo,
   fetchTeamRosters,
   getFootballSnapshot,
+  mapLeagueInfo,
   mapTeamRosters,
   resolveRosters,
+  rosterDisplay,
 } from "@epl/core";
 import mapping from "../../../../data/mappings/fantrax.json";
 
@@ -34,17 +39,18 @@ const bridge = mapping as Bridge;
  *  yet, because Fantrax blipped for five minutes. That is a confident wrong
  *  statement about the league from the one route whose job is to report it. */
 export type LeagueSquads =
-  | { period: RosteredPeriod; snapshot: FootballSnapshot }
+  | { period: RosteredPeriod; snapshot: FootballSnapshot; display: RosterDisplay }
   | { undrafted: string }
   | { unavailable: string };
 
 export async function getLeagueSquads(): Promise<LeagueSquads> {
-  const [snapshot, rosters] = await Promise.all([
+  const [snapshot, rosters, rosterPeriods] = await Promise.all([
     getFootballSnapshot(),
     fetchTeamRosters(FANTRAX_LEAGUE_ID).catch((error: unknown) => {
       if (error instanceof FantraxError) return error;
       throw error;
     }),
+    leagueRosterPeriods(),
   ]);
 
   // Branching on a specific code, which the adapter deliberately never does
@@ -57,8 +63,30 @@ export async function getLeagueSquads(): Promise<LeagueSquads> {
       : { unavailable: rosters.code };
   }
 
+  const period = resolveRosters(snapshot, mapTeamRosters(rosters), bridge);
+
+  // The clock is read here and passed in, never inside the gate: §5 keeps
+  // `visibility.ts` pure so its boundary is testable, and this is the edge where
+  // an instant is allowed to come from the machine.
   return {
-    period: resolveRosters(snapshot, mapTeamRosters(rosters), bridge),
+    period,
     snapshot,
+    display: rosterDisplay(period.period, rosterPeriods, new Date().toISOString()),
   };
+}
+
+/** The lineup calendar, or none.
+ *
+ *  A separate read from the rosters and deliberately failure-tolerant: if
+ *  Fantrax will not describe the competition we end up with no calendar, and no
+ *  calendar means squad-only. Losing the lineup view because a second request
+ *  failed is the correct trade — the alternative is showing an XI we cannot
+ *  prove is allowed to be shown. */
+async function leagueRosterPeriods(): Promise<LeaguePeriod[]> {
+  try {
+    return mapLeagueInfo(await fetchLeagueInfo(FANTRAX_LEAGUE_ID)).rosterPeriods;
+  } catch (error: unknown) {
+    if (error instanceof FantraxError) return [];
+    throw error;
+  }
 }
