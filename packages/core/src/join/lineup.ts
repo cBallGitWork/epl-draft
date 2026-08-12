@@ -39,7 +39,12 @@ export interface Lineup {
  *  carry it rather than dropping the player, so it needs a bucket of its own. */
 const UNPLACED = "";
 
-function depth(position: string): number {
+/** How far up the pitch a position stands, for ordering.
+ *
+ *  Exported because the squad view orders by it too — and ordering a squad list
+ *  by a second copy of `["G","D","M","F"]` at the render site is exactly what
+ *  the note above forbids. One definition, both consumers. */
+export function positionDepth(position: string): number {
   const at = PITCH_ORDER.indexOf(position);
   // A letter we have never seen goes to the front rather than silently into
   // goal — a commissioner adding "W" for wingers should look wrong, not wrong
@@ -64,9 +69,10 @@ export function lineup(team: RosteredTeam): Lineup {
 
   const lines = [...active.entries()]
     .map(([position, players]) => ({ position, players }))
-    .sort((a, b) => depth(a.position) - depth(b.position));
+    .sort((a, b) => positionDepth(a.position) - positionDepth(b.position));
 
-  bench.sort((a, b) => depth(a.slot.position ?? UNPLACED) - depth(b.slot.position ?? UNPLACED));
+  const benchDepth = (player: RosteredPlayer) => positionDepth(player.slot.position ?? UNPLACED);
+  bench.sort((a, b) => benchDepth(a) - benchDepth(b));
 
   return { lines, bench, shape: lines.map((line) => line.players.length).join("-") };
 }

@@ -25,13 +25,7 @@ export type { CaptureStaleness } from "./staleness";
 export { periodGameweeks } from "./calendar";
 export type { GameweekKickoff, PeriodGameweeks } from "./calendar";
 
-export {
-  latestStartedPeriod,
-  lineupVisible,
-  periodAt,
-  periodStarted,
-  rosterDisplay,
-} from "./visibility";
+export { rosterDisplay } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
 
 export { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";

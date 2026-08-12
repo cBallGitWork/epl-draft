@@ -59,35 +59,31 @@ describe("responseErrorEnvelope", () => {
 });
 
 describe("unwrapFxpa", () => {
-  it("returns one payload per message, in order", () => {
-    const body = { responses: [{ data: { a: 1 } }, { data: { b: 2 } }] };
-    expect(unwrapFxpa("two", body)).toEqual([{ a: 1 }, { b: 2 }]);
+  it("returns the payload", () => {
+    expect(unwrapFxpa("one", { responses: [{ data: { a: 1 } }] })).toEqual({ a: 1 });
   });
 
-  it("throws the batch-level refusal", () => {
+  it("throws the request-level refusal", () => {
     expect(() => unwrapFxpa("getCommissionerHubInfo", pageError)).toThrow(FantraxError);
     expect(() => unwrapFxpa("getCommissionerHubInfo", pageError)).toThrow(/WARNING_NOT_LOGGED_IN/);
   });
 
-  // A batch where the envelope is fine and one message is not. Checking only the
-  // top level would hand back `null` for the refused message and let a caller
-  // treat a refusal as an empty result.
-  it("throws for a message that failed inside an otherwise healthy batch", () => {
-    const body = {
-      responses: [{ data: { fine: true } }, { errors: [{ code: "MISSING_PARAM", msg: "no" }] }],
-    };
-    expect(() => unwrapFxpa("batch", body)).toThrow(/MISSING_PARAM/);
-    // The position is in the message: failing at index 1 and index 0 are
-    // different bugs.
-    expect(() => unwrapFxpa("batch", body)).toThrow(/batch\[1\]/);
+  // The envelope is fine and the message inside it is not. Checking only the top
+  // level would hand back `null` and let a caller read a refusal as an empty
+  // result — which, for a transaction log, is the difference between "no trades
+  // happened" and "we were not allowed to look".
+  it("throws for a message that failed inside an otherwise healthy response", () => {
+    const body = { responses: [{ errors: [{ code: "MISSING_PARAM", msg: "no" }] }] };
+    expect(() => unwrapFxpa("read", body)).toThrow(/MISSING_PARAM/);
   });
 
-  it("refuses a body with no responses array rather than returning nothing", () => {
+  it("refuses a body with no responses rather than returning nothing", () => {
     expect(() => unwrapFxpa("x", {})).toThrow(/NO_RESPONSES/);
     expect(() => unwrapFxpa("x", null)).toThrow(/NO_RESPONSES/);
+    expect(() => unwrapFxpa("x", { responses: [] })).toThrow(/NO_RESPONSES/);
   });
 
   it("maps a response with neither data nor errors to null", () => {
-    expect(unwrapFxpa("x", { responses: [{}] })).toEqual([null]);
+    expect(unwrapFxpa("x", { responses: [{}] })).toBeNull();
   });
 });

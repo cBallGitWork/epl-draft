@@ -1,31 +1,32 @@
 import type { Club, RosteredPlayer, RosteredTeam, SquadReason } from "@epl/core";
-import { isResolved } from "@epl/core";
+import { isResolved, positionDepth } from "@epl/core";
 
 // What a squad looks like before its period opens: fifteen names and nothing
 // about how they will be arranged.
 //
 // The omissions are the feature. No active/reserve split, no formation, no
 // pitch — those are the lineup, and the lineup is what the gate withholds.
-// Grouping by position is safe and is not the same information: position is
-// what Fantrax deems a player eligible to fill, published all week on the
-// player pool, while active/reserve is this week's decision.
+// Grouping by position is safe and is not the same information: position is what
+// Fantrax deems a player eligible to fill, published all week on the player
+// pool, while active/reserve is this week's decision.
 
 /** Why we are showing this instead of the pitch, in the manager's terms rather
  *  than the gate's. Every one of these is an ordinary state. */
 const EXPLANATION: Record<SquadReason, string> = {
   "not-started": "Lineups appear when the gameweek starts. Everyone's, at once.",
-  "unknown-period": "Fantrax did not say which gameweek this squad is for, so the lineup stays hidden.",
+  "unknown-period":
+    "Fantrax did not say which gameweek this squad is for, so the lineup stays hidden.",
   "no-calendar": "We cannot read the league's deadlines right now, so the lineup stays hidden.",
   "period-not-in-calendar":
     "This squad names a gameweek the calendar does not have, so the lineup stays hidden.",
 };
 
-/** Reading order for the position groups. Matches the pitch, so a manager's eye
- *  travels the same way in both views. */
-const POSITION_ORDER = ["G", "D", "M", "F"];
+/** A slot with no position still belongs to somebody. Matches `lineup()`, which
+ *  buckets the same case rather than dropping the player. */
+const UNPLACED = "—";
 
 function positionOf(rostered: RosteredPlayer): string {
-  return rostered.slot.position ?? "—";
+  return rostered.slot.position ?? UNPLACED;
 }
 
 function nameOf(rostered: RosteredPlayer): string {
@@ -55,15 +56,21 @@ export default function SquadList({
   clubs: Map<number, Club>;
   because: SquadReason;
 }) {
-  const groups = POSITION_ORDER.map((position) => ({
-    position,
-    players: team.players.filter((p) => positionOf(p) === position).sort(byName),
-  })).filter((group) => group.players.length > 0);
+  // Grouped from the squad itself and ordered by the pitch order core already
+  // owns, rather than from a list of positions written out here. A letter this
+  // file has never heard of still gets a group, in the same place the pitch
+  // would put it.
+  const groups = new Map<string, RosteredPlayer[]>();
+  for (const player of team.players) {
+    const position = positionOf(player);
+    const group = groups.get(position);
+    if (group) group.push(player);
+    else groups.set(position, [player]);
+  }
 
-  // Anything Fantrax files under a letter we do not know about. Never dropped:
-  // a fifteen-man squad rendering as fourteen is the bug this guards against.
-  const others = team.players.filter((p) => !POSITION_ORDER.includes(positionOf(p)));
-  if (others.length > 0) groups.push({ position: "—", players: [...others].sort(byName) });
+  const ordered = [...groups.entries()]
+    .map(([position, players]) => ({ position, players: [...players].sort(byName) }))
+    .sort((a, b) => positionDepth(a.position) - positionDepth(b.position));
 
   return (
     <div className="flex flex-col gap-3">
@@ -71,7 +78,7 @@ export default function SquadList({
         {EXPLANATION[because]}
       </p>
 
-      {groups.map((group) => (
+      {ordered.map((group) => (
         <section key={group.position} className="flex flex-col gap-1">
           <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-faint">
             {group.position}
@@ -79,9 +86,7 @@ export default function SquadList({
           </h2>
           <ul className="flex flex-col gap-1">
             {group.players.map((rostered) => {
-              const club = isResolved(rostered)
-                ? clubs.get(rostered.player.clubId)
-                : undefined;
+              const club = isResolved(rostered) ? clubs.get(rostered.player.clubId) : undefined;
               return (
                 <li
                   key={rostered.slot.fantraxId}

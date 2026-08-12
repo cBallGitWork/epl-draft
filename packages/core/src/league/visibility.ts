@@ -43,8 +43,8 @@ export type SquadReason =
  *  boundary it exists to guard, and gets it right everywhere else, which is
  *  what makes it survive a casual test.
  *
- *  Returns null rather than NaN so an unparseable date is a state the caller
- *  has to handle, not a comparison that silently answers false (§5). */
+ *  Returns null rather than NaN so an unreadable date is a state the caller has
+ *  to handle, not a comparison that silently answers false (§5). */
 function instant(iso: string): number | null {
   const parsed = Date.parse(iso);
   return Number.isNaN(parsed) ? null : parsed;
@@ -55,69 +55,22 @@ function instant(iso: string): number | null {
  *  Inclusive of the start: at exactly 20:00 the period is running. Fantrax's
  *  own end instant for the previous period is one second earlier, so there is
  *  no overlap to arbitrate. */
-export function periodStarted(period: LeaguePeriod, at: string): boolean | null {
+function periodStarted(period: LeaguePeriod, at: string): boolean | null {
   const start = instant(period.start);
   const now = instant(at);
   if (start === null || now === null) return null;
   return now >= start;
 }
 
-/** The period containing `at`, or null if none does.
- *
- *  Null is a real answer, not a failure: before the season starts and in the
- *  gaps Fantrax leaves between periods, no period contains now. */
-export function periodAt(periods: LeaguePeriod[], at: string): LeaguePeriod | null {
-  const now = instant(at);
-  if (now === null) return null;
-
-  for (const period of periods) {
-    const start = instant(period.start);
-    const end = instant(period.end);
-    if (start === null || end === null) continue;
-    if (now >= start && now <= end) return period;
-  }
-  return null;
-}
-
-/** The highest-numbered period that has already begun, or null before the
- *  season opens.
- *
- *  Selected by number rather than by date so a calendar that arrives out of
- *  order — Fantrax sorts nothing — still answers correctly. */
-export function latestStartedPeriod(
-  periods: LeaguePeriod[],
-  at: string,
-): LeaguePeriod | null {
-  let latest: LeaguePeriod | null = null;
-  for (const period of periods) {
-    if (periodStarted(period, at) !== true) continue;
-    if (latest === null || period.number > latest.number) latest = period;
-  }
-  return latest;
-}
-
-/** May the lineup for `periodNumber` be shown at `at`?
- *
- *  False whenever we cannot prove otherwise — an unknown period, an unreadable
- *  date, an empty calendar. The asymmetry is deliberate: showing a lineup early
- *  cannot be undone, while hiding one that could have been shown costs a
- *  refresh. */
-export function lineupVisible(
-  periods: LeaguePeriod[],
-  periodNumber: number,
-  at: string,
-): boolean {
-  const period = periods.find((p) => p.number === periodNumber);
-  if (!period) return false;
-  return periodStarted(period, at) === true;
-}
-
 /** What to render for a roster Fantrax returned for `fetchedPeriod`.
  *
- *  Fails safe to squad-only, and says which safety it fell back on. The caller
- *  passes the period the roster payload itself declared, never one it inferred
- *  from the clock: the two disagree exactly when Fantrax is serving next
- *  period's roster early, which is the case this gate is for. */
+ *  Fails safe to squad-only, and says which safety it fell back on. Showing a
+ *  lineup early cannot be undone, while hiding one that could have been shown
+ *  costs a refresh.
+ *
+ *  The caller passes the period the roster payload itself declared, never one
+ *  inferred from the clock: the two disagree exactly when Fantrax is serving
+ *  next period's roster early, which is the case this gate is for. */
 export function rosterDisplay(
   fetchedPeriod: number | null,
   periods: LeaguePeriod[],

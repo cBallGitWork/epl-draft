@@ -1,7 +1,7 @@
 import { FANTRAX_FXEA_BASE, FANTRAX_SPORT } from "../../config";
 import type { TransactionView } from "../types";
 import { FantraxError, errorEnvelope } from "./errors";
-import { fxpaGet } from "./fxpa";
+import { fxpaRead } from "./fxpa";
 import type { RawTransactionHistory } from "./transactions";
 import type {
   RawDraftResults,
@@ -72,7 +72,7 @@ export function fetchTransactions(
   view: TransactionView,
   maxResultsPerPage = 100,
 ): Promise<RawTransactionHistory> {
-  return fxpaGet(leagueId, "getTransactionDetailsHistory", {
+  return fxpaRead(leagueId, "getTransactionDetailsHistory", {
     view,
     maxResultsPerPage: String(maxResultsPerPage),
   }) as Promise<RawTransactionHistory>;

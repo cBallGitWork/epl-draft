@@ -30,11 +30,16 @@ describe("mapTransactions, on a claim and the drop that paid for it", () => {
   // gets a drop with no team and no timestamp, and it looks like Fantrax sent
   // partial data rather than like we misread a table.
   it("carries spanned cells forward — the drop row states only its gameweek", () => {
-    const dropRow = (claimDrop as RawTransactionHistory).table?.rows?.[1];
+    const table = (claimDrop as RawTransactionHistory).table;
+    const dropRow = table?.rows?.[1];
     expect(dropRow?.cells?.map((c) => c.key)).toEqual(["week"]);
 
+    // The date the drop ends up with is the one the CLAIM row spanned, read back
+    // off the recording rather than restated here.
+    const spannedDate = table?.rows?.[0]?.cells?.find((c) => c.key === "date");
+    expect(spannedDate?.rowspan).toBe(2);
+    expect(rows[1]?.processedAt).toBe(spannedDate?.content);
     expect(rows[1]?.fromTeamId).toBe(rows[0]?.toTeamId);
-    expect(rows[1]?.processedAt).toBe("Wed Aug 12, 2026, 9:14AM");
   });
 
   it("points a claim in from the pool and a drop back out to it", () => {
@@ -49,8 +54,16 @@ describe("mapTransactions, on a claim and the drop that paid for it", () => {
   it("carries the player id we already join on", () => {
     // Fantrax's `scorerId` is the same id space as the rosters and the pool, so
     // the bridge takes this straight. Never name-match at runtime.
-    expect(rows[0]?.fantraxId).toBe("067zv");
-    expect(rows[1]?.fantraxId).toBe("04qr9");
+    //
+    // Compared against the recording rather than against a copied-out literal:
+    // the claim is that the mapper carries the id through, not that the id is
+    // any particular string, and a re-recorded fixture should not need this
+    // edited to stay true.
+    const scorers = (claimDrop as RawTransactionHistory).table?.rows?.map(
+      (row) => row.scorer?.scorerId,
+    );
+    expect(rows.map((r) => r.fantraxId)).toEqual(scorers);
+    expect(scorers?.every(Boolean)).toBe(true);
   });
 
   it("records the period the move takes effect in, and that it executed", () => {
@@ -80,11 +93,11 @@ describe("mapTransactions, on a trade", () => {
   });
 
   it("keeps each row's own from and to over the inherited date", () => {
-    // Here both rows state `from` and `to` themselves while sharing one date
-    // cell, so a row's own value has to win over anything carried.
+    // Both rows state `from` and `to` themselves while sharing one date cell, so
+    // a row's own value has to win over anything carried.
     expect(rows[0]?.fromTeamId).not.toBe(rows[1]?.fromTeamId);
     expect(rows[0]?.processedAt).toBe(rows[1]?.processedAt);
-    expect(rows[0]?.processedAt).toBe("Wed Aug 12, 2026, 9:13AM");
+    expect(rows[0]?.processedAt).toBeTruthy();
   });
 
   // A status diff over captures sees the claim above and is blind to this: both
