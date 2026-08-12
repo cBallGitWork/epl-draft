@@ -1,9 +1,10 @@
 import {
   FANTRAX_LEAGUE_ID,
+  FANTRAX_LEAGUES,
   FantraxError,
   type Bridge,
   type FootballSnapshot,
-  type LeaguePeriod,
+  type LeagueInfo,
   type RosterDisplay,
   type RosteredPeriod,
   fetchLeagueInfo,
@@ -39,18 +40,26 @@ const bridge = mapping as Bridge;
  *  yet, because Fantrax blipped for five minutes. That is a confident wrong
  *  statement about the league from the one route whose job is to report it. */
 export type LeagueSquads =
-  | { period: RosteredPeriod; snapshot: FootballSnapshot; display: RosterDisplay }
+  | {
+      period: RosteredPeriod;
+      snapshot: FootballSnapshot;
+      display: RosterDisplay;
+      /** Null when Fantrax would not describe the competition. Costs the lineup
+       *  gate its calendar and the planner its rules, both of which then degrade
+       *  rather than guess. */
+      info: LeagueInfo | null;
+    }
   | { undrafted: string }
   | { unavailable: string };
 
 export async function getLeagueSquads(): Promise<LeagueSquads> {
-  const [snapshot, rosters, rosterPeriods] = await Promise.all([
+  const [snapshot, rosters, info] = await Promise.all([
     getFootballSnapshot(),
     fetchTeamRosters(FANTRAX_LEAGUE_ID).catch((error: unknown) => {
       if (error instanceof FantraxError) return error;
       throw error;
     }),
-    leagueRosterPeriods(),
+    leagueInfo(),
   ]);
 
   // Branching on a specific code, which the adapter deliberately never does
@@ -71,22 +80,45 @@ export async function getLeagueSquads(): Promise<LeagueSquads> {
   return {
     period,
     snapshot,
-    display: rosterDisplay(period.period, rosterPeriods, new Date().toISOString()),
+    info,
+    // The clock is read here and passed in, never inside the gate: §5 keeps
+    // `visibility.ts` pure so its boundary is testable, and this is the edge
+    // where an instant is allowed to come from the machine.
+    display: rosterDisplay(period.period, info?.rosterPeriods ?? [], new Date().toISOString()),
   };
 }
 
-/** The lineup calendar, or none.
+/** The competition's own description of itself, or none.
  *
  *  A separate read from the rosters and deliberately failure-tolerant: if
  *  Fantrax will not describe the competition we end up with no calendar, and no
  *  calendar means squad-only. Losing the lineup view because a second request
  *  failed is the correct trade — the alternative is showing an XI we cannot
  *  prove is allowed to be shown. */
-async function leagueRosterPeriods(): Promise<LeaguePeriod[]> {
+async function leagueInfo(): Promise<LeagueInfo | null> {
   try {
-    return mapLeagueInfo(await fetchLeagueInfo(FANTRAX_LEAGUE_ID)).rosterPeriods;
+    return mapLeagueInfo(await fetchLeagueInfo(FANTRAX_LEAGUE_ID));
   } catch (error: unknown) {
-    if (error instanceof FantraxError) return [];
+    if (error instanceof FantraxError) return null;
     throw error;
   }
+}
+
+/** Whether this build may show a lineup the gate would otherwise withhold.
+ *
+ *  Never for the real league, and the check is which league we serve rather than
+ *  an environment variable. An env flag would work until the day someone set it
+ *  on the deployment, and leaking sixteen managers' lineups before a deadline is
+ *  the one mistake in this app that cannot be taken back. The rehearsal league's
+ *  four teams belong to nobody, so there is nothing there to leak.
+ *
+ *  It is opt-in per request (`?preview=1`) rather than always-on, so the honest
+ *  gate stays the default everywhere and remains the thing being tested. */
+export function mayPreviewLineups(): boolean {
+  const real = FANTRAX_LEAGUES.find((league) => league.key === "real");
+  // Fails closed. If the real league cannot be identified — a renamed key, a
+  // reordered list — the answer is no, because the failure mode of the other
+  // direction is publishing sixteen managers' lineups before a deadline.
+  if (!real) return false;
+  return FANTRAX_LEAGUE_ID !== real.leagueId;
 }

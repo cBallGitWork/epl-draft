@@ -36,6 +36,14 @@ export const FANTRAX_FXEA_BASE = "https://www.fantrax.com/fxea/general";
  *  Anything needing a session cookie takes it as an argument. */
 export const FANTRAX_FXPA_BASE = "https://www.fantrax.com/fxpa/req";
 
+/** Fantrax's website, for handing a manager back to it.
+ *
+ *  We plan lineups and do not submit them, so every plan ends in an outbound
+ *  link. Only the league path is used, which is the one shape confirmed from a
+ *  real browser session — a deeper guess at their roster URL would break
+ *  silently the day they reorganise their routes. */
+export const FANTRAX_APP_BASE = "https://www.fantrax.com/fantasy/league";
+
 /** Fantrax's sport code for the Premier League. `SOCCER` is a different sport to
  *  them and returns the wrong player pool. */
 export const FANTRAX_SPORT = "EPL";
