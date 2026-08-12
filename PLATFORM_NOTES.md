@@ -526,6 +526,62 @@ break silently the day they reorganise.
 Only the fifteen squad members' eligibility crosses to the browser, not the
 pool's 697.
 
+## A third client component: the tab bar
+
+`BottomNav` is `"use client"` for one reason — `usePathname`. A tab bar that
+cannot say which section you are in is a row of links, and the answer only exists
+in the browser. Nothing else in it is interactive.
+
+Each tab owns a set of routes rather than the single one it links to, so reading
+a squad (`/team/[teamId]`) or a past gameweek (`/gw/[n]`) keeps its section lit.
+It carries its own `env(safe-area-inset-bottom)` padding: the body's padding does
+nothing for a fixed element, which is positioned against the viewport.
+
+Two in-content links became redundant the moment it landed and one of them went:
+the undrafted state's "The football, meanwhile" is now the Matchday tab. "Every
+squad" on a team page stays — it is an up-link within a section, not navigation
+between them.
+
+## The pool page: status is league state, not a player fact
+
+Our real league marks **all 697 players `WW`** while it has no teams; the
+rehearsal league splits them `FA 630 / T 60 / WW 7`. A players page that defaulted
+to "free agents" would therefore be **empty in the league we ship on 10 Oct** and
+full in the one we develop against — the exact class of bug the two-league
+discipline exists to catch, and it was caught by reading both captures rather
+than by a test. So: no default filter, and the status chips are built from the
+statuses actually present with their counts, labelled where we recognise the code
+and shown raw where we do not.
+
+Ownership is computed from the rosters, never read off the status letter. The two
+answer different questions — `status` is what may be *done* with a player,
+ownership is who *has* him — and in an undrafted league both are true at once:
+everyone is waiver-wire and nobody is owned.
+
+`getTeamRosters` answering `NO_TEAMS` is therefore survivable here and is the only
+failure that is. Any other roster failure fails the whole page, because the
+alternative is 697 rows quietly claiming nobody owns anybody.
+
+Filter state lives in the URL, so the page stays a server component, the pool
+never crosses to the phone as data, and a manager can send someone a link to
+exactly what he is looking at. Nothing is truncated: all 697 rows render, ~84 KB
+gzipped, and the header states the count in view against the total.
+
+## What `violations()` deliberately cannot say
+
+Fantrax publishes `maxActive` per position and **no minimum**. So "only two
+defenders" breaks no rule anyone set: an under-filled XI is legal, and a type
+called `Violation` must not carry it. The planner says it in its own words
+instead — *n* empty places, allowed, and nothing scores from them.
+
+Everything it does report is reachable without a single illegal move, because the
+lineup we are handed is Fantrax's. Craig narrowed eligibility across the league on
+12 Aug; the same edit under a set XI leaves a player standing somewhere he is no
+longer eligible for, and `legalMoves` — which only ever offers legal moves — would
+never mention it. Eligibility we do not hold is never reported as eligibility a
+player lacks: that violation has no move that clears it, so the wrong answer
+strands a manager rather than merely misinforming him.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially
@@ -570,6 +626,11 @@ payloads; captures filed per league; period alignment settled and scripted; the
 
 ## Season log
 
+- 2026-08-12: The app got navigation and two more sections — `/players` (the pool
+  as our league sees it) and `/standings` (Fantrax's table, never recomputed) —
+  behind a four-tab bar. `violations()` landed with the planner as its consumer.
+  Five empty states became one panel, which is what the rule of 2/3 asked for the
+  moment the third appeared.
 - 2026-08-12: Refactor pass over the day's work — five visibility exports down to
   one, the fxpa batch transport and its unused cookie parameter deleted, and
   SquadList's duplicate copy of the pitch order removed in favour of the one
