@@ -526,6 +526,47 @@ break silently the day they reorganise.
 Only the fifteen squad members' eligibility crosses to the browser, not the
 pool's 697.
 
+## `getPlayerProfile`, probed live (12 Aug 2026) — do not re-derive
+
+Public on fxpa, no cookie. Verbatim responses for a rostered player and a free
+agent are in `data/probes/2026-08-12/`.
+
+- **The parameter is `playerId`.** `scorerId` — Fantrax's own name for the
+  identical id on the transaction rows — and `fantraxId` both answer
+  `INVALID_REQUEST`. One id space, three names for it, one that works.
+- **A third fxpa failure shape exists**: the refusal came back as a top-level
+  `pageError` *and* as `responses[0].pageError`, which is neither of the two
+  shapes `errors.ts` documents. `unwrapFxpa` catches it because it checks the top
+  level first. Nothing needs changing; it is recorded so the next reader knows the
+  nesting is not a third detector waiting to be written.
+- **The numbers are last season's.** `displayedSelections.seasonId` was `925`
+  while `season` said 2026-27 is `926`: the profile serves the most recent season
+  actually played. Before GW1 that is 2025-26, so every points figure on the page
+  belongs to a season that has to be named beside it. The season is resolved by
+  matching the id against the seasons the payload itself names, never assumed.
+- **Provenance splits four ways inside one `miscData`**: `leagueData` is our
+  league's row (status/team, FPts, eligibility), `highlightStats` is Fantrax's
+  scoring and rankings, `percentDrafted` + `averageDraftPosition` are
+  whole-of-Fantrax, `personalInfo` is the man. They render as four blocks under
+  four headings. "100% rostered" means every league on the site and sits two rows
+  from our own ownership.
+- `percentOwned` and `percentActive` are **not mapped**, deviating from the plan.
+  They arrive as three items labelled only "This Week", "Last Week", "Next Week",
+  so taking a figure means binding to an English name — the trap `transactions.ts`
+  already names — and both numbers arrive again in `highlightStats` with their
+  meaning spelled out.
+- `ownerTeamId` is null for a free agent and the fantasy team id otherwise,
+  agreeing with the rosters.
+- `miscData.icons[]` carries dated Fantrax news, truncated with an ellipsis. Not
+  read: injury news is a football fact and the football layer already has FPL's,
+  untruncated.
+- `headshotUrl` is the **club crest** when they have no photo
+  (`usesTeamLogoAsHeadshot: true`), so it cannot be rendered as a portrait.
+- `sectionContent` (stats, splits, game logs) is refused rather than forgotten:
+  most of the payload's weight, columns keyed by numeric stat ids, no consumer.
+- ADP is real and public here (`averageDraftPosition`), which is the trade scout's
+  value map when it lands.
+
 ## A third client component: the tab bar
 
 `BottomNav` is `"use client"` for one reason — `usePathname`. A tab bar that
@@ -626,6 +667,11 @@ payloads; captures filed per league; period alignment settled and scripted; the
 
 ## Season log
 
+- 2026-08-12: Player profiles landed — one `getPlayerProfile` per tap from the
+  pool, typed against a live probe. Refactor pass with it: the status strings, the
+  violation check and the planner's move sheet each moved to the file that answers
+  their own question, and the four routes that had each hand-rolled "a Fantrax
+  refusal is a state, not a crash" now share one.
 - 2026-08-12: The app got navigation and two more sections — `/players` (the pool
   as our league sees it) and `/standings` (Fantrax's table, never recomputed) —
   behind a four-tab bar. `violations()` landed with the planner as its consumer.
