@@ -27,6 +27,15 @@ export const FPL_API_BASE = "https://fantasy.premierleague.com/api";
  *  HTTP 200 even when it is refusing you (see league/fantrax/errors.ts). */
 export const FANTRAX_FXEA_BASE = "https://www.fantrax.com/fxea/general";
 
+/** Fantrax's own SPA API, the surface their website talks to.
+ *
+ *  A different protocol from fxea, not a different path on it: one POST carrying
+ *  a batch of `msgs`, and failures reported in a different envelope again (see
+ *  league/fantrax/errors.ts). Several useful reads are public here — the
+ *  transaction history among them — so this is not the authenticated surface.
+ *  Anything needing a session cookie takes it as an argument. */
+export const FANTRAX_FXPA_BASE = "https://www.fantrax.com/fxpa/req";
+
 /** Fantrax's sport code for the Premier League. `SOCCER` is a different sport to
  *  them and returns the wrong player pool. */
 export const FANTRAX_SPORT = "EPL";

@@ -105,6 +105,46 @@ export interface PeriodRosters {
   teams: TeamRoster[];
 }
 
+/** Which transaction log to read. These are Fantrax's own tab ids, and the legal
+ *  set arrives in `displayedLists.tabs` on every response — server-driven, so a
+ *  new tab appears in the data before it appears here (§3). */
+export type TransactionView = "CLAIM_DROP" | "TRADE" | "LINEUP_CHANGE";
+
+/** What happened. `unknown` is retained rather than dropped: a transaction we
+ *  cannot classify still moved a player, and silently discarding it would leave
+ *  a squad changing for no recorded reason. */
+export type TransactionKind = "claim" | "drop" | "trade" | "lineup" | "unknown";
+
+/** One player moving, once.
+ *
+ *  A trade is two of these sharing a `setId`, as is a claim and the drop that
+ *  paid for it. Kept flat rather than nested per transaction because every view
+ *  we render — a team's history, a player's history, the week's activity — wants
+ *  to filter rows, and the grouping is recoverable from `setId` whenever it is
+ *  actually needed. */
+export interface LeagueTransaction {
+  /** Groups the halves of one transaction. Empty when Fantrax omitted it. */
+  setId: string;
+  kind: TransactionKind;
+  fantraxId: string;
+  /** As Fantrax renders it here ("Kevin Schade") — reading order already, unlike
+   *  the pool's "Schade, Kevin". Display only; the id is the join key. */
+  playerName: string;
+  /** Null where there is no team on that side: nobody owns a free agent, and a
+   *  dropped player goes to the pool rather than to another manager. */
+  fromTeamId: string | null;
+  toTeamId: string | null;
+  /** Fantrax's own string, verbatim and unparsed — "Wed Aug 12, 2026, 9:14AM".
+   *  It carries no offset, so making an instant of it would mean assuming a
+   *  timezone on data we do not control. */
+  processedAt: string | null;
+  /** The period the move takes effect in, not when it was made. */
+  period: number | null;
+  /** Fantrax distinguishes executed from pending, and the default filter hides
+   *  the pending ones. Carried so a caller cannot mistake a proposal for a fact. */
+  executed: boolean;
+}
+
 export interface StandingsRow {
   teamId: string;
   teamName: string;

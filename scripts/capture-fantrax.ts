@@ -3,13 +3,20 @@ import { join } from "node:path";
 import {
   FANTRAX_LEAGUES,
   FantraxError,
+  type TransactionView,
   fetchDraftResults,
   fetchLeagueInfo,
   fetchPlayerPool,
   fetchStandings,
   fetchTeamRosters,
+  fetchTransactions,
 } from "@epl/core";
 import { SNAPSHOT_ROOT, leagueCaptureDir, poolCaptureDir, todayInLondon } from "./paths";
+
+/** The transaction logs to record. Fantrax publishes the legal set in each
+ *  response's `displayedLists.tabs`; this list is what we ask for, and a tab
+ *  appearing there that is missing here is the signal to add it. */
+const TRANSACTION_VIEWS: readonly TransactionView[] = ["CLAIM_DROP", "TRADE", "LINEUP_CHANGE"];
 
 // Records what Fantrax says about our leagues today, verbatim, into dated
 // directories. Raw only — no mapping, no derivation. What we can parse later is a
@@ -29,6 +36,15 @@ const LEAGUE_READS = [
   { method: "getTeamRosters", run: fetchTeamRosters },
   { method: "getStandings", run: fetchStandings },
   { method: "getDraftResults", run: fetchDraftResults },
+  // Fantrax's own transaction log, one file per view. Captured even though it is
+  // a live read we could make on demand: this is the one part of the league's
+  // history Fantrax could prune or renumber, and unlike the rosters it cannot be
+  // reconstructed from anything else we hold. `LINEUP_CHANGE` is empty until a
+  // period opens and is captured anyway, so the day it fills we can see when.
+  ...TRANSACTION_VIEWS.map((view) => ({
+    method: `getTransactionDetailsHistory-${view}`,
+    run: (leagueId: string) => fetchTransactions(leagueId, view),
+  })),
 ] as const;
 
 interface ReadOutcome {

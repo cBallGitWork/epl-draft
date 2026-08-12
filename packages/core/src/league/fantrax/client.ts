@@ -1,5 +1,8 @@
 import { FANTRAX_FXEA_BASE, FANTRAX_SPORT } from "../../config";
+import type { TransactionView } from "../types";
 import { FantraxError, errorEnvelope } from "./errors";
+import { fxpaGet } from "./fxpa";
+import type { RawTransactionHistory } from "./transactions";
 import type {
   RawDraftResults,
   RawLeagueInfo,
@@ -54,4 +57,23 @@ export function fetchDraftResults(leagueId: string): Promise<RawDraftResults> {
  *  side of Fantrax that the identity bridge is built against. */
 export function fetchPlayerPool(): Promise<RawPlayerPool> {
   return fxeaGet<RawPlayerPool>("getPlayerIds", { sport: FANTRAX_SPORT });
+}
+
+/** One log of transactions — claims and drops, trades, or lineup changes.
+ *
+ *  On fxpa rather than fxea, because fxea has no transaction method at all. It
+ *  needs no cookie despite being on the SPA surface, which is what let the
+ *  history land before any auth flow exists.
+ *
+ *  `maxResultsPerPage` is sent as a string because that is what their own client
+ *  sends; the response paginates and reports `totalNumPages`. */
+export function fetchTransactions(
+  leagueId: string,
+  view: TransactionView,
+  maxResultsPerPage = 100,
+): Promise<RawTransactionHistory> {
+  return fxpaGet(leagueId, "getTransactionDetailsHistory", {
+    view,
+    maxResultsPerPage: String(maxResultsPerPage),
+  }) as Promise<RawTransactionHistory>;
 }

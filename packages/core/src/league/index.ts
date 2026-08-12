@@ -9,11 +9,14 @@ export type {
   LeaguePlayer,
   LeaguePlayerState,
   LeagueTeam,
+  LeagueTransaction,
   PeriodRosters,
   RosterLimits,
   RosterSlot,
   StandingsRow,
   TeamRoster,
+  TransactionKind,
+  TransactionView,
 } from "./types";
 
 export { captureStaleness } from "./staleness";
@@ -31,7 +34,15 @@ export {
 } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
 
-export { FantraxError, errorEnvelope } from "./fantrax/errors";
+export {
+  FantraxError,
+  errorEnvelope,
+  pageErrorEnvelope,
+  responseErrorEnvelope,
+} from "./fantrax/errors";
+export { mapTransactions } from "./fantrax/transactions";
+export type { RawTransactionHistory } from "./fantrax/transactions";
+export { fetchTransactions } from "./fantrax/client";
 export { mapLeagueInfo, mapPlayerPool, readingOrder } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapStandings } from "./fantrax/standings";

@@ -10,6 +10,9 @@ snapshots/fantrax/
     getTeamRosters.json
     getStandings.json
     getDraftResults.json
+    getTransactionDetailsHistory-CLAIM_DROP.json      fxpa, one file per view
+    getTransactionDetailsHistory-TRADE.json
+    getTransactionDetailsHistory-LINEUP_CHANGE.json
     manifest.json               capturedAt, leagueId, per-read ok/error
   pool/YYYY-MM-DD/              the EPL player pool, once per day
     getPlayerIds.json
@@ -40,8 +43,16 @@ apart (rehearsal 6 Aug, real 10 Oct), so the cadence is per league and so is the
 check: `npm run capture:status` reports the age of each league's last capture and
 exits non-zero when either is overdue.
 
-Known limitation: at daily granularity, a player added and dropped the same day is
-invisible. Worth revisiting once the draft shows how much same-day churn there is.
+That limitation is now bounded rather than open. At daily granularity a player
+added and dropped the same day is invisible **to a roster diff** — but since
+12 Aug we also capture Fantrax's own transaction log, which timestamps every move
+to the minute and survives any number of same-day changes. The diff is
+corroboration; the log is the record.
+
+The log is captured rather than merely queried on demand because it is the one
+part of our history Fantrax could prune, and the only part that cannot be
+reconstructed from anything else we hold. `LINEUP_CHANGE` is empty until a period
+opens and is captured anyway, so the day it starts filling is itself recorded.
 
 ## Rules
 

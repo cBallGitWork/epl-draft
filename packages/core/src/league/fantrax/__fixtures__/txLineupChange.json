@@ -1,0 +1,84 @@
+{
+  "table": {
+    "rows": [],
+    "emptyTableMsg": "No linueup changes executed."
+  },
+  "paginatedResultSet": {
+    "totalNumPages": 0,
+    "pageNumber": 1,
+    "maxResultsPerPage": 20,
+    "totalNumResults": 0
+  },
+  "displayedLists": {
+    "teams": [
+      {
+        "name": "All Teams",
+        "id": "ALL"
+      },
+      {
+        "name": "123",
+        "id": "8enbgqo5msgb375j"
+      },
+      {
+        "name": "test2",
+        "id": "pbxm9fgimshcpazf"
+      },
+      {
+        "name": "test3",
+        "id": "j9zadacnmshcpazf"
+      },
+      {
+        "name": "test4",
+        "id": "sezrgvl2mshcpazf"
+      }
+    ],
+    "tabs": [
+      {
+        "name": "Claim/Drop",
+        "id": "CLAIM_DROP"
+      },
+      {
+        "name": "Trade",
+        "id": "TRADE"
+      },
+      {
+        "name": "Lineup",
+        "id": "LINEUP_CHANGE"
+      }
+    ],
+    "positions": [
+      {
+        "name": "All",
+        "id": "ALL"
+      },
+      {
+        "name": "Outfielders",
+        "id": "SOCCER_NON_GOALIE"
+      },
+      {
+        "name": "Defender",
+        "id": "POS_703"
+      },
+      {
+        "name": "Midfielder",
+        "id": "POS_702"
+      },
+      {
+        "name": "Forward",
+        "id": "POS_701"
+      },
+      {
+        "name": "Goalkeeper",
+        "id": "POS_704"
+      }
+    ]
+  },
+  "displayedSelections": {
+    "positionOrGroup": "ALL",
+    "view": "LINEUP_CHANGE",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  }
+}
