@@ -79,6 +79,22 @@ export interface LeagueMatchup {
   awayTeamId: string;
 }
 
+/** What one squad has scored in one period, according to Fantrax.
+ *
+ *  Theirs, and that is the whole point: they run the competition, their scoring
+ *  system is a commissioner setting, and the real league scores five categories
+ *  FPL does not publish at all. We read this number and never compute one — an
+ *  engine of our own could only have produced a systematically wrong total for
+ *  defenders, midfielders and keepers, and would have had to say so on screen. */
+export interface LiveTeamScore {
+  teamId: string;
+  /** Null when Fantrax did not give a total. Absence is not nought. */
+  points: number | null;
+  /** Active players whose fixture has not finished, or null when unknown. Names
+   *  nobody, so it is publishable even while the lineup gate is closed. */
+  toPlay: number | null;
+}
+
 /** One player in one team's roster for one period. */
 export interface RosterSlot {
   fantraxId: string;

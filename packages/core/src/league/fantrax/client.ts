@@ -9,6 +9,7 @@ import { retryDelay, worthRetrying } from "../../http/backoff";
 import type { TransactionView } from "../types";
 import { FantraxError, errorEnvelope } from "./errors";
 import { fxpaRead } from "./fxpa";
+import type { RawLiveScoring } from "./livescoring";
 import type { RawPlayerProfile } from "./profile";
 import type { RawTransactionHistory } from "./transactions";
 import type {
@@ -123,4 +124,18 @@ export function fetchTransactions(
     view,
     maxResultsPerPage: String(maxResultsPerPage),
   }) as Promise<RawTransactionHistory>;
+}
+
+/** Every team's fantasy points for one period, as Fantrax scores them.
+ *
+ *  Public, despite sitting on the SPA surface beside methods that are not — the
+ *  line runs per method, not per surface. `period` is honoured; `matchupId` is
+ *  not, so one call answers for the whole league and filtering is ours to do.
+ *
+ *  The period is sent as a string, as their own client sends it, and is not
+ *  echoed back: what period this describes is known only because we asked. */
+export function fetchLiveScoring(leagueId: string, period: number): Promise<RawLiveScoring> {
+  return fxpaRead(leagueId, "getLiveScoringStats", {
+    period: String(period),
+  }) as Promise<RawLiveScoring>;
 }

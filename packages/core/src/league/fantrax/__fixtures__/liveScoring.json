@@ -1,0 +1,58 @@
+{
+  "statsPerTeam": {
+    "allTeamsStats": {
+      "8enbgqo5msgb375j": {
+        "ACTIVE": {
+          "totalFpts": 0,
+          "totalFpts2": 0,
+          "remainingEventPercent": {
+            "05g2o": 1,
+            "0646f": 1,
+            "05o4b": 1,
+            "03rxs": 1
+          },
+          "projectedTotalsMap": {},
+          "gameStatusMap": {
+            "05g2o": "BHA~1788094800000|06m5s|1",
+            "0646f": "NOT~1788003000000|06m5w|1"
+          },
+          "playerGameInfo": [
+            0,
+            0,
+            11,
+            0,
+            990
+          ],
+          "statsMap": {},
+          "statsMap2": {}
+        }
+      },
+      "sezrgvl2mshcpazf": {
+        "ACTIVE": {
+          "totalFpts": 0,
+          "totalFpts2": 0,
+          "remainingEventPercent": {
+            "04tsb": 1,
+            "06nu7": 1,
+            "068y0": 1,
+            "04abn": 1
+          },
+          "projectedTotalsMap": {},
+          "gameStatusMap": {
+            "04tsb": "@AVL~1788202800000|06m5q|1",
+            "04abn": "@TOT~1788021000000|06m5z|1"
+          },
+          "playerGameInfo": [
+            0,
+            0,
+            11,
+            0,
+            990
+          ],
+          "statsMap": {},
+          "statsMap2": {}
+        }
+      }
+    }
+  }
+}

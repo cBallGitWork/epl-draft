@@ -1,58 +1,56 @@
 import Link from "next/link";
 import {
+  FANTRAX_LEAGUE_ID,
+  FantraxError,
   type LeagueTeam,
-  type PlayerMatchStats,
-  type RosteredTeam,
-  isActive,
-  isResolved,
+  type LiveTeamScore,
+  fetchLiveScoring,
+  mapLiveScores,
   periodPairings,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import PageHeader from "../../components/shell/PageHeader";
 import SectionNav from "../SectionNav";
 import { getLeagueSquads } from "../../squad/league";
+import { orRefusal } from "../../refusals";
 
-// Who each squad plays this period. The Saturday screen — and deliberately not a
-// scoreboard: getMatchups is behind a login (probed 13 Aug), so Fantrax's live
-// totals are not ours to show, and we never compute their scoring ourselves. A
-// pairing plus each side's countable events is what we genuinely know.
+// Who each squad plays this period, and what they have scored.
+//
+// The score is Fantrax's own. `getLiveScoringStats` answers without a cookie and
+// returns typed totals for every team in one call (PLATFORM_NOTES, 13 Aug), so
+// this page reports the competition's real numbers rather than an estimate of
+// them — and we still compute no scoring, which was always the doctrine.
 
 // Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
 export const revalidate = 30;
 
-/** What one team's eleven has countably done, summed from the same stat rows the
- *  stickers draw. Active players only: a reserve's goal does not play in the
- *  matchup, and this is only ever computed once the gate shows lineups — before
- *  the period opens the split itself is hidden, so there is nothing to sum. */
-function events(team: RosteredTeam): { label: string; count: number }[] {
-  const starters = team.players.filter(isResolved).filter((p) => isActive(p.slot));
-  const sum = (pick: (s: PlayerMatchStats) => number) =>
-    starters.reduce((total, p) => total + p.stats.reduce((n, s) => n + pick(s), 0), 0);
-  return [
-    { label: "G", count: sum((s) => s.goals) },
-    { label: "A", count: sum((s) => s.assists) },
-    { label: "CS", count: starters.filter((p) => p.stats.length > 0 && p.stats.every((s) => s.cleanSheet)).length },
-    { label: "YC", count: sum((s) => s.yellowCards) },
-    { label: "RC", count: sum((s) => s.redCards) },
-  ];
+/** Fantrax's totals for this period, or none.
+ *
+ *  Failure-tolerant on purpose: a scoreboard we cannot read costs the numbers,
+ *  not the page. Who plays whom comes from a different read and is still worth
+ *  showing on its own. */
+async function liveScores(period: number): Promise<Map<string, LiveTeamScore>> {
+  const raw = await orRefusal(fetchLiveScoring(FANTRAX_LEAGUE_ID, period));
+  if (raw instanceof FantraxError) return new Map();
+  return new Map(mapLiveScores(raw).map((score) => [score.teamId, score]));
 }
 
-function Side({
-  team,
-  roster,
-  open,
-}: {
-  team: LeagueTeam;
-  roster: RosteredTeam | undefined;
-  open: boolean;
-}) {
-  const counts = open && roster ? events(roster).filter((e) => e.count > 0) : [];
+function Side({ team, score }: { team: LeagueTeam; score: LiveTeamScore | undefined }) {
   return (
-    <Link href={`/squad/${team.teamId}`} className="flex min-h-11 items-center gap-3 px-3 py-2 hover:bg-raised">
+    <Link
+      href={`/squad/${team.teamId}`}
+      className="flex min-h-11 items-center gap-3 px-3 py-2 hover:bg-raised"
+    >
       <span className="min-w-0 flex-1 truncate font-semibold">{team.name}</span>
-      <span className="numeric text-sm text-muted">
-        {counts.length > 0 ? counts.map((e) => `${e.label} ${e.count}`).join(" · ") : "—"}
-      </span>
+      {/* Per side, not per league: once football is on, one manager has three
+          players left and the other has none, and that difference is most of
+          what a head-to-head screen is for. */}
+      {score?.toPlay ? (
+        <span className="shrink-0 text-2xs text-faint">{score.toPlay} to play</span>
+      ) : null}
+      {/* A team we have no number for gets a dash, never a nought: those are
+          different claims and only one of them is a score. */}
+      <span className="numeric w-10 text-right text-lg font-bold">{score?.points ?? "—"}</span>
     </Link>
   );
 }
@@ -78,7 +76,7 @@ export default async function MatchupPage() {
     );
   }
 
-  const { period, teams } = squads.period;
+  const { period } = squads.period;
   if (squads.info === null || period === null) {
     return (
       <Nothing title="No schedule to read">
@@ -98,8 +96,7 @@ export default async function MatchupPage() {
     );
   }
 
-  const rosters = new Map(teams.map((team) => [team.teamId, team]));
-  const open = squads.display.show === "lineup";
+  const scores = await liveScores(period);
 
   return (
     <div className="flex flex-col gap-3">
@@ -113,21 +110,21 @@ export default async function MatchupPage() {
       />
       <SectionNav current="matchups" />
 
-      {/* Honest label, not small print: these are the events we can count from
-          FPL's public feed. The points belong to Fantrax and appear on Fantrax. */}
-      {open ? (
-        <p className="px-3 text-2xs text-faint">Countable events, not points — the scoring is Fantrax&apos;s.</p>
-      ) : null}
+      {/* Provenance at the point of use, per principle 4. These are Fantrax's
+          points under Fantrax's scoring; we add nothing up. */}
+      <p className="px-3 text-2xs text-faint">
+        Fantrax&apos;s points, under Fantrax&apos;s scoring. We add nothing up.
+      </p>
 
       <ul className="flex flex-col gap-1.5">
         {pairings.map((pairing) => (
           <li key={`${pairing.home.teamId}-${pairing.away.teamId}`}>
             <div className="elev flex flex-col rounded-xl border border-line bg-surface py-1">
-              <Side team={pairing.home} roster={rosters.get(pairing.home.teamId)} open={open} />
+              <Side team={pairing.home} score={scores.get(pairing.home.teamId)} />
               <span className="px-3 text-center text-2xs font-bold uppercase tracking-widest text-faint">
                 vs
               </span>
-              <Side team={pairing.away} roster={rosters.get(pairing.away.teamId)} open={open} />
+              <Side team={pairing.away} score={scores.get(pairing.away.teamId)} />
             </div>
           </li>
         ))}

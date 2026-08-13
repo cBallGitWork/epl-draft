@@ -5,6 +5,7 @@
 export type {
   LeagueInfo,
   LeagueMatchup,
+  LiveTeamScore,
   LeaguePeriod,
   LeaguePlayer,
   LeaguePlayerState,
@@ -45,11 +46,13 @@ export {
   pageErrorEnvelope,
   responseErrorEnvelope,
 } from "./fantrax/errors";
+export { mapLiveScores } from "./fantrax/livescoring";
+export type { RawLiveScoring } from "./fantrax/livescoring";
 export { mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel } from "./fantrax/profile";
 export { mapTransactions } from "./fantrax/transactions";
 export type { RawTransactionHistory } from "./fantrax/transactions";
-export { fetchPlayerProfile, fetchTransactions } from "./fantrax/client";
+export { fetchLiveScoring, fetchPlayerProfile, fetchTransactions } from "./fantrax/client";
 export { mapLeagueInfo, mapPlayerPool, readingOrder } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapStandings } from "./fantrax/standings";
