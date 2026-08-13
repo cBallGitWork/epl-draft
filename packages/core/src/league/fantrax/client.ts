@@ -1,11 +1,5 @@
-import {
-  FANTRAX_FXEA_BASE,
-  FANTRAX_SPORT,
-  HTTP_BACKOFF_BASE_MS,
-  HTTP_RETRIES,
-  HTTP_USER_AGENT,
-} from "../../config";
-import { retryDelay, worthRetrying } from "../../http/backoff";
+import { FANTRAX_FXEA_BASE, FANTRAX_SPORT } from "../../config";
+import { politeFetch } from "../../http/fetch";
 import type { TransactionView } from "../types";
 import { FantraxError, errorEnvelope } from "./errors";
 import { fxpaRead } from "./fxpa";
@@ -26,42 +20,18 @@ import type {
 // cookie-authenticated fxpa surface (lineup writes, waivers) is deliberately not
 // here yet.
 //
-// Reads here are about to fan out — one call per team, and thirty-six pages for
-// the pool — so they go through the same retry policy as FPL, from `http/`, which
-// belongs to neither layer. Sequenced spacing is the caller's business: a loop
-// knows it is a loop and a single fetch does not.
-
-/** One request, with a browser's manners and a provider's own advice honoured. */
-async function politeGet(url: string, method: string): Promise<Response> {
-  for (let attempt = 1; ; attempt++) {
-    const res = await fetch(url, { headers: { "User-Agent": HTTP_USER_AGENT } });
-    if (res.ok) return res;
-
-    // A backstop only. Fantrax reports its own refusals with a 200 and an error
-    // body, so this fires for transport failures, not for anything it means.
-    if (attempt > HTTP_RETRIES || !worthRetrying(res.status)) {
-      throw new FantraxError(method, String(res.status), res.statusText);
-    }
-
-    await sleep(
-      retryDelay(
-        attempt,
-        res.headers.get("Retry-After"),
-        HTTP_BACKOFF_BASE_MS,
-        Math.random(),
-        Date.now(),
-      ),
-    );
-  }
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+// Manners — the browser User-Agent, and backing off when told to — live in
+// `http/fetch.ts`, shared with FPL because neither provider layer may import the
+// other. Spacing a sequence of calls is the caller's business: a loop knows it is
+// a loop and a single fetch does not.
 
 async function fxeaGet<T>(method: string, params: Record<string, string>): Promise<T> {
   const url = `${FANTRAX_FXEA_BASE}/${method}?${new URLSearchParams(params)}`;
-  const res = await politeGet(url, method);
+  const res = await politeFetch(url);
+
+  // A backstop only. Fantrax reports its own refusals with a 200 and an error
+  // body, so this fires for transport failures, not for anything it means.
+  if (!res.ok) throw new FantraxError(method, String(res.status), res.statusText);
 
   const body = (await res.json()) as unknown;
   const error = errorEnvelope(body);
