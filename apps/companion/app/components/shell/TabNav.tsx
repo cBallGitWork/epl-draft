@@ -54,10 +54,12 @@ export default function TabNav({ matchday }: { matchday: boolean }) {
           <LeagueCrest variant="mark" height={26} />
         </Link>
 
+        {/* Columns come from the data rather than a literal restating its
+            length, so a fifth tab does not silently wrap the bar. Inert above
+            `md`, where the list is a flex row. */}
         <ul
-          className={`grid w-full md:flex md:w-auto md:gap-1 ${
-            tabs.length === 4 ? "grid-cols-4" : "grid-cols-3"
-          }`}
+          className="grid w-full md:flex md:w-auto md:gap-1"
+          style={{ gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))` }}
         >
           {tabs.map((tab) => {
             const here = owns(tab.routes, pathname);

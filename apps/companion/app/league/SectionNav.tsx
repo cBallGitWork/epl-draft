@@ -14,7 +14,7 @@ const SECTIONS = [
   { href: "/league/matchups", label: "Matchups", key: "matchups" },
 ] as const;
 
-export type LeagueSection = (typeof SECTIONS)[number]["key"];
+type LeagueSection = (typeof SECTIONS)[number]["key"];
 
 export default function SectionNav({ current }: { current: LeagueSection }) {
   return (

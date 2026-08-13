@@ -98,8 +98,8 @@ export default async function MatchupPage() {
   if ("unavailable" in squads) {
     return (
       <Nothing title="Fantrax is not answering" code={squads.unavailable}>
-        The schedule is part of the league&apos;s own description of itself, and we cannot read it
-        right now.
+        Fantrax would not hand back the teams, so there is nobody to pair up. The schedule
+        itself is fine — it is the squads we cannot read.
       </Nothing>
     );
   }

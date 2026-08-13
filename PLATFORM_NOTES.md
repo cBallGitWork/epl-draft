@@ -293,7 +293,26 @@ at each site points back to it. They all change together.
 explicit list of route files is the thing that rotted, which is why there is no
 longer one here.)
 
-### Branching on a Fantrax error code in `app/team/league.ts` (§3-adjacent)
+### The root layout swallows a failed snapshot read (§2, no defensive try/catch)
+
+`footballIsOn()` in `apps/companion/app/layout.tsx` wraps `getFootballSnapshot()`
+in a `try/catch` that returns `true`. §2 forbids exactly this — swallow and
+default — and the rest of the tree honours it: the FPL client says so in a
+comment as it rethrows, and `refusals.ts` catches only `FantraxError`.
+
+It stands here for two reasons that do not apply anywhere else. A root layout
+that throws takes **every route** down with it, including the pages that would
+otherwise have rendered fine and reported the failure themselves; there is no
+`error.tsx` in the app, so the alternative is a blank screen for a tab bar.
+And the default is chosen, not convenient: **it fails open**, showing the
+Matchday tab rather than hiding it. A tab that should not be there leads to a
+page that says plainly it could not read anything; a section that silently
+vanishes mid-match is the failure nobody can diagnose from a phone.
+
+If an `error.tsx` ever lands, this should be revisited — that is the shape that
+would let the layout throw honestly.
+
+### Branching on a Fantrax error code in `app/squad/league.ts` (§3-adjacent)
 
 The adapter deliberately never branches on a specific code — the vocabulary is
 undocumented and inconsistent, so `errors.ts` keys off the envelope's presence
@@ -407,7 +426,7 @@ Other facts worth not re-deriving:
 
 ## Rule exception: the bridge is asserted, not parsed, at the app edge
 
-`apps/companion/app/team/league.ts` does `mapping as Bridge` on the JSON import.
+`apps/companion/app/squad/league.ts` does `mapping as Bridge` on the JSON import.
 `resolveJsonModule` widens `matchedBy` to `string` and the compiler cannot see
 that `scripts/build-bridge.ts` only ever writes the four literals. The
 alternatives were worse: loosening `MappedEntry.matchedBy` to `string` gives up
@@ -505,7 +524,7 @@ It is also opt-in per request (`?preview=1`) rather than always-on, so the hones
 gate remains the default on every page load and remains the thing under test. On
 10 Oct the swap turns the planner preview off by itself, which is correct.
 
-`mayPreviewLineups()` lives in `apps/companion/app/team/league.ts` and is not
+`mayPreviewLineups()` lives in `apps/companion/app/squad/league.ts` and is not
 unit-tested, because vitest covers `packages/*` only. That is the standing gap
 for app-edge logic; this is the piece of it most worth watching.
 
@@ -827,7 +846,7 @@ know rather than rediscover: production is `main`, so a feature branch's routes
 for whoever revisits them:
 Root Directory `apps/companion` with *include files outside the root directory*
 left on, because `@epl/core` ships raw TypeScript via `transpilePackages` (so
-install must run at the repo root) and `app/team/league.ts` imports the bridge
+install must run at the repo root) and `app/squad/league.ts` imports the bridge
 JSON from `data/mappings/` outside the app directory — if the first build
 breaks, expect it to break there. `FANTRAX_LEAGUE_ID` is set explicitly in the
 dashboard (rehearsal `zbn1z3ukmsgb36sz` until 10 Oct), which makes the swap one

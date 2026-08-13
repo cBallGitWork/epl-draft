@@ -46,12 +46,8 @@ export {
   pageErrorEnvelope,
   responseErrorEnvelope,
 } from "./fantrax/errors";
-export { categoryPoints } from "./scoring";
-export type { CategoryTable, ScoringRules } from "./scoring";
-export { mapScoringRules } from "./fantrax/scoring";
-export type { RawScoringSystem } from "./fantrax/scoring";
+export type { ScoringRules } from "./scoring";
 export { mapLiveScores } from "./fantrax/livescoring";
-export type { RawLiveScoring } from "./fantrax/livescoring";
 export { mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel } from "./fantrax/profile";
 export { mapTransactions } from "./fantrax/transactions";
