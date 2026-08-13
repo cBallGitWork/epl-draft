@@ -52,6 +52,9 @@ export { mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel } from "./fantrax/profile";
 export { mapTransactions } from "./fantrax/transactions";
 export type { RawTransactionHistory } from "./fantrax/transactions";
+// Exported so the app can hold a raw payload across a cache boundary before
+// mapping it — the mapper stays the only place raw meets clean.
+export type { RawTeamRosters } from "./fantrax/raw";
 export { fetchLiveScoring, fetchPlayerProfile, fetchTransactions } from "./fantrax/client";
 export { mapLeagueInfo, mapPlayerPool, readingOrder } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";

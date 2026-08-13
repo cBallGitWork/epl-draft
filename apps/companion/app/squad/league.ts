@@ -1,12 +1,15 @@
+import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
   FANTRAX_LEAGUES,
+  PAGE_REVALIDATE,
   FantraxError,
   type Bridge,
   type FootballSnapshot,
   type LeagueInfo,
   type RosterDisplay,
   type RosteredPeriod,
+  type RawTeamRosters,
   fetchLeagueInfo,
   fetchTeamRosters,
   getFootballSnapshot,
@@ -54,19 +57,56 @@ export type LeagueSquads =
   | { undrafted: string }
   | Unavailable;
 
+/** What the cache can hold.
+ *
+ *  Plain data, on purpose: a cache round trip serialises, so a `FantraxError`
+ *  would come back as a lookalike object and `instanceof` would quietly answer
+ *  false — turning "Fantrax refused" into "Fantrax returned nothing" at the one
+ *  branch that must tell those apart. The refusal is carried as the two fields
+ *  the caller actually reads. */
+interface CachedLeague {
+  snapshot: FootballSnapshot;
+  rosters: RawTeamRosters | null;
+  refusal: { code: string; tell: string } | null;
+  info: LeagueInfo | null;
+}
+
+/** The three provider reads every squad view shares, cached across requests.
+ *
+ *  This is what makes the session cookie affordable. Reading a cookie makes a
+ *  route dynamic, and dynamic used to mean sixteen phones each asking FPL for a
+ *  1.3 MB bootstrap every thirty seconds. Caching the reads rather than the page
+ *  keeps the personalisation and drops the load: the league is shared, so it is
+ *  fetched once and rendered sixteen ways.
+ *
+ *  Nothing about *who is asking* may cross into here — no team id, no cookie —
+ *  or one manager's view would be served to another. */
+const readLeague = unstable_cache(
+  async (): Promise<CachedLeague> => {
+    const [snapshot, rosters, info] = await Promise.all([
+      getFootballSnapshot(),
+      orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
+      leagueInfo(),
+    ]);
+
+    return rosters instanceof FantraxError
+      ? { snapshot, rosters: null, refusal: { code: rosters.code, tell: tell(rosters) }, info }
+      : { snapshot, rosters, refusal: null, info };
+  },
+  ["league-squads", FANTRAX_LEAGUE_ID],
+  { revalidate: PAGE_REVALIDATE },
+);
+
 export async function getLeagueSquads(): Promise<LeagueSquads> {
-  const [snapshot, rosters, info] = await Promise.all([
-    getFootballSnapshot(),
-    orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
-    leagueInfo(),
-  ]);
+  const { snapshot, rosters, refusal, info } = await readLeague();
 
   // Branching on a specific code, which the adapter deliberately never does
   // (PLATFORM_NOTES). Safe here because it fails toward hedging: an unrecognised
   // code says "Fantrax is not answering", which is a hedged right answer even
   // for a league that genuinely has no teams.
-  if (rosters instanceof FantraxError) {
-    return rosters.code === "NO_TEAMS" ? { undrafted: tell(rosters) } : { unavailable: tell(rosters) };
+  if (refusal !== null || rosters === null) {
+    const said = refusal ?? { code: "UNKNOWN", tell: "getTeamRosters → no answer" };
+    return said.code === "NO_TEAMS" ? { undrafted: said.tell } : { unavailable: said.tell };
   }
 
   const period = resolveRosters(snapshot, mapTeamRosters(rosters), bridge);
