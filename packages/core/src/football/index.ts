@@ -25,6 +25,7 @@ export {
   adjacentGameweeks,
   clubById,
   contributions,
+  duringGameweek,
   fixturesInOrder,
   hasGameweek,
   isMatchdayLive,

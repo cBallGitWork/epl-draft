@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { FootballSnapshot, PlayerMatchStats } from "./types";
+import type { Fixture, FootballSnapshot, PlayerMatchStats } from "./types";
 import {
   adjacentGameweeks,
   contributions,
+  duringGameweek,
   fixturesInOrder,
   hasGameweek,
   isMatchdayLive,
@@ -92,6 +93,63 @@ describe("isMatchdayLive", () => {
     const base = { gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, minutes: 0 };
     expect(isMatchdayLive(snap({ fixtures: [{ ...base, id: 1, status: "finished" }] }))).toBe(false);
     expect(isMatchdayLive(snap({ fixtures: [{ ...base, id: 1, status: "live" }] }))).toBe(true);
+  });
+});
+
+describe("duringGameweek", () => {
+  const fixture = (over: Partial<Fixture> & { id: number }): Fixture => ({
+    gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z",
+    homeScore: null, awayScore: null, status: "upcoming", minutes: 0, ...over,
+  });
+
+  it("opens at the first kickoff, not at the deadline before it", () => {
+    const s = snap({ fixtures: [fixture({ id: 1 })] });
+    expect(duringGameweek(s, "2026-08-21T18:00:00Z")).toBe(false);
+    expect(duringGameweek(s, "2026-08-21T19:00:00Z")).toBe(true);
+  });
+
+  it("stays open between matches, when nothing is in play", () => {
+    // The gap `isMatchdayLive` cannot see: Saturday teatime, one match done and
+    // the next not started, which is still matchday to whoever is watching.
+    const s = snap({
+      fixtures: [
+        fixture({ id: 1, kickoff: "2026-08-22T11:30:00Z", status: "finished" }),
+        fixture({ id: 2, kickoff: "2026-08-22T16:30:00Z" }),
+      ],
+    });
+    expect(duringGameweek(s, "2026-08-22T15:00:00Z")).toBe(true);
+    expect(isMatchdayLive(s)).toBe(false);
+  });
+
+  it("closes once every dated match is over, without waiting for bonus", () => {
+    const s = snap({ fixtures: [fixture({ id: 1, status: "finished" })] });
+    expect(duringGameweek(s, "2026-08-21T21:00:00Z")).toBe(false);
+  });
+
+  it("is not opened or closed by an undated fixture", () => {
+    // A TV pick with no time must not open the window early, and a match
+    // postponed out of its slot must not hold it open for a month.
+    const undatedOnly = snap({ fixtures: [fixture({ id: 1, kickoff: null })] });
+    expect(duringGameweek(undatedOnly, "2026-08-22T15:00:00Z")).toBe(false);
+
+    const restFinished = snap({
+      fixtures: [fixture({ id: 1, status: "finished" }), fixture({ id: 2, kickoff: null })],
+    });
+    expect(duringGameweek(restFinished, "2026-08-21T21:00:00Z")).toBe(false);
+  });
+
+  it("compares instants, so an offset kickoff is not read as a later one", () => {
+    // The trap `calendar.ts` documents: "2026-08-21T20:00:00+01:00" sorts after
+    // "2026-08-21T19:30:00Z" as text while being the same moment as 19:00Z.
+    const s = snap({ fixtures: [fixture({ id: 1, kickoff: "2026-08-21T20:00:00+01:00" })] });
+    expect(duringGameweek(s, "2026-08-21T19:30:00Z")).toBe(true);
+  });
+
+  it("says no when it cannot tell", () => {
+    // Fails toward the section not existing: a phantom tab during an outage is
+    // worse than a missing one, and the page behind it would have nothing to say.
+    expect(duringGameweek(snap({ fixtures: [] }), "2026-08-22T15:00:00Z")).toBe(false);
+    expect(duringGameweek(snap({ fixtures: [fixture({ id: 1 })] }), "not a date")).toBe(false);
   });
 });
 

@@ -109,6 +109,44 @@ export function isMatchdayLive(snapshot: FootballSnapshot): boolean {
   return snapshot.fixtures.some((f) => f.status === "live");
 }
 
+/** Whether the round in view is under way: from its first kickoff until its last
+ *  dated match is over.
+ *
+ *  Deliberately wider than `isMatchdayLive`. Saturday lunchtime between two
+ *  kickoffs is still matchday to someone holding a phone, but nothing is in play,
+ *  so the two answer different questions: this one decides whether the Matchday
+ *  section exists at all, while `isMatchdayLive` keeps driving the live treatment
+ *  and the poll rate.
+ *
+ *  The window closes on `finished` rather than on FPL's `data_checked`, which
+ *  settles bonus a day or two later. The section is for watching football, not
+ *  for waiting on bonus points; that a score is still provisional is said on the
+ *  page, where a reader can see it.
+ *
+ *  Undated fixtures are ignored at both ends. A TV pick with no time cannot open
+ *  a window it has no place in, and a match postponed out of its slot must not
+ *  hold one open for a month. A postponement FPL leaves dated does hold it open,
+ *  which is the honest reading: that gameweek genuinely has not finished. */
+export function duringGameweek(snapshot: FootballSnapshot, at: string): boolean {
+  const now = Date.parse(at);
+  if (Number.isNaN(now)) return false;
+
+  let firstKickoff = Infinity;
+  let everythingFinished = true;
+  let anyDated = false;
+
+  for (const fixture of snapshot.fixtures) {
+    if (fixture.kickoff === null) continue;
+    const kickoff = Date.parse(fixture.kickoff);
+    if (Number.isNaN(kickoff)) continue;
+    anyDated = true;
+    if (kickoff < firstKickoff) firstKickoff = kickoff;
+    if (fixture.status !== "finished") everythingFinished = false;
+  }
+
+  return anyDated && now >= firstKickoff && !everythingFinished;
+}
+
 /** The rounds either side of the one in view, or null at each end of the season.
  *
  *  Bounds come from the snapshot's own gameweek list rather than a constant 38 —
