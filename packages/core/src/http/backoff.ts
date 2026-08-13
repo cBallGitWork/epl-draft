@@ -50,10 +50,17 @@ export function retryDelay(
 function statedDelay(retryAfter: string | null, now: number): number | null {
   if (retryAfter === null) return null;
 
-  const seconds = Number(retryAfter.trim());
+  // `Number("")` is 0, and `Headers.get` returns "" for a header that is present
+  // but empty — so without this an empty Retry-After would read as "try again
+  // immediately", turning a rate limit into a tight loop against the provider
+  // that just asked us to stop.
+  const stated = retryAfter.trim();
+  if (stated === "") return null;
+
+  const seconds = Number(stated);
   if (Number.isFinite(seconds) && seconds >= 0) return Math.round(seconds * 1000);
 
-  const at = Date.parse(retryAfter);
+  const at = Date.parse(stated);
   if (Number.isNaN(at)) return null;
   // A date already in the past means "now", never a negative sleep.
   return Math.max(0, at - now);

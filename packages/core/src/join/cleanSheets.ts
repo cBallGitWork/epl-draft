@@ -57,20 +57,24 @@ export function pendingCleanSheets(
 
 /** Whether this player is, right now, on a clean sheet worth previewing.
  *
- *  The hour mark is FPL's rule rather than Fantrax's — Fantrax says only "on
- *  field" and does not publish a threshold — and it is what a manager watching
- *  the match already expects, because it is when FPL's own numbers move.
+ *  FPL's own verdict, not our arithmetic. Asking `goalsConceded === 0` looks
+ *  equivalent and is not: on a double gameweek the per-fixture numbers come from
+ *  FPL's `explain` block, which carries a stat only when it scores something, so
+ *  a defender who conceded exactly one — worth nought — has no goals-conceded
+ *  line at all and reads back as zero. That is a clean sheet we would invent.
+ *  `cleanSheet` is present precisely when FPL has awarded it.
+ *
+ *  The minutes floor is kept beside it because FPL's flag is provisional while a
+ *  match runs, and the hour mark is the rule a manager is watching for — it is
+ *  when FPL's own numbers move, which is the whole point of previewing this.
  *
  *  A double gameweek yields a row per fixture; any one of them in play with a
  *  clean sheet is a clean sheet being kept. */
 function keepingOne(
-  stats: readonly { fixtureId: number; minutes: number; goalsConceded: number }[],
+  stats: readonly { fixtureId: number; minutes: number; cleanSheet: boolean }[],
   inPlay: ReadonlySet<number>,
 ): boolean {
   return stats.some(
-    (stat) =>
-      inPlay.has(stat.fixtureId) &&
-      stat.minutes >= CLEAN_SHEET_MINUTES &&
-      stat.goalsConceded === 0,
+    (stat) => inPlay.has(stat.fixtureId) && stat.cleanSheet && stat.minutes >= CLEAN_SHEET_MINUTES,
   );
 }

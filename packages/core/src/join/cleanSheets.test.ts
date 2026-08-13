@@ -52,7 +52,16 @@ describe("pendingCleanSheets", () => {
   });
 
   it("stops the moment a goal goes in", () => {
-    const squad = team([player("D", [stat({ goalsConceded: 1 })])]);
+    const squad = team([player("D", [stat({ cleanSheet: false, goalsConceded: 1 })])]);
+    expect(pendingCleanSheets(squad, rules, IN_PLAY)).toEqual({ points: 0, players: 0 });
+  });
+
+  it("trusts FPL's verdict over a goals-conceded count of zero", () => {
+    // The double-gameweek trap. Per-fixture stats come from FPL's `explain`,
+    // which carries a stat only when it scores — so a defender who conceded
+    // exactly one, worth nought, has no goals-conceded line and reads back as
+    // zero. Counting that as a clean sheet would invent four points.
+    const squad = team([player("D", [stat({ cleanSheet: false, goalsConceded: 0 })])]);
     expect(pendingCleanSheets(squad, rules, IN_PLAY)).toEqual({ points: 0, players: 0 });
   });
 
@@ -77,7 +86,7 @@ describe("pendingCleanSheets", () => {
 
   it("counts a player whose double gameweek has one match in play", () => {
     const squad = team([
-      player("D", [stat({ fixtureId: 99, minutes: 90, goalsConceded: 2 }), stat({ fixtureId: 100 })]),
+      player("D", [stat({ fixtureId: 99, cleanSheet: false, goalsConceded: 2 }), stat({ fixtureId: 100 })]),
     ]);
     expect(pendingCleanSheets(squad, rules, IN_PLAY).points).toBe(4);
   });

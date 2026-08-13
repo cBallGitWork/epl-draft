@@ -45,10 +45,13 @@ export function mapScoringRules(raw: RawScoringSystem | undefined): ScoringRules
 function table(group: Record<string, Record<string, string | undefined>> | undefined): CategoryTable {
   const out: CategoryTable = {};
   for (const [category, positions] of Object.entries(group ?? {})) {
-    const row: Record<string, number> = {};
+    const row: Record<string, number | null> = {};
     for (const [position, expression] of Object.entries(positions ?? {})) {
-      const points = flatPoints(expression);
-      if (points !== null) row[position] = points;
+      if (typeof expression !== "string") continue;
+      // Every position the wire priced is kept, even the ones we cannot read.
+      // Dropping an unreadable one would let it fall through to `Default` and
+      // report a number from a different rule as if it were this one.
+      row[position] = flatPoints(expression);
     }
     if (Object.keys(row).length > 0) out[category] = row;
   }

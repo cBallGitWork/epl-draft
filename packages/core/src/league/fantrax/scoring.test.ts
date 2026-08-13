@@ -33,6 +33,15 @@ describe("mapScoringRules", () => {
     expect(categoryPoints(rules!, "Min", "D")).toBeNull();
   });
 
+  it("does not let an unreadable price fall through to Default", () => {
+    // Goals against outfielders is banded for defenders ("range1|99|-1|2.0") and
+    // flat zero for everyone else. Dropping the unreadable defender entry would
+    // hand back Default's nought — a number from a different rule, reported as
+    // if it were this one, which is the confident wrong answer principle 4 bans.
+    expect(categoryPoints(rules!, "GAO", "D")).toBeNull();
+    expect(categoryPoints(rules!, "GAO", "M")).toBe(0);
+  });
+
   it("says nothing about a category the league does not score", () => {
     expect(categoryPoints(rules!, "KP", "M")).toBeNull();
   });

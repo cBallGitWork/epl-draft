@@ -42,6 +42,18 @@ describe("retryDelay", () => {
     expect(retryDelay(1, "Fri, 21 Aug 2026 18:59:00 GMT", 500, 0, NOW)).toBe(0);
   });
 
+  it("does not read an empty header as 'try again now'", () => {
+    // `Headers.get` gives "" for a header that is present but empty, and
+    // `Number("")` is 0 — so the obvious coercion turns a rate limit into a
+    // tight loop against the provider that just asked us to stop.
+    expect(retryDelay(1, "", 500, 0, NOW)).toBe(500);
+    expect(retryDelay(2, "   ", 500, 0, NOW)).toBe(1000);
+  });
+
+  it("still honours an explicit zero", () => {
+    expect(retryDelay(1, "0", 500, 0.9, NOW)).toBe(0);
+  });
+
   it("falls back to the schedule when the header makes no sense", () => {
     // An unreadable header is no instruction, not an instruction to wait zero.
     expect(retryDelay(2, "soon", 500, 0, NOW)).toBe(1000);

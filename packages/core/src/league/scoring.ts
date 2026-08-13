@@ -16,10 +16,16 @@ export interface ScoringRules {
   goaliePosition: string | null;
 }
 
-/** Category short name → position letter → points. `Default` is the wire's own
- *  fallback key and is kept verbatim rather than resolved at map time, because
- *  which position falls through to it is a question about a player, not a rule. */
-export type CategoryTable = Record<string, Record<string, number>>;
+/** Category short name → position letter → points, or null where the wire priced
+ *  the position with an expression we decline to read.
+ *
+ *  Null and absent mean different things, and conflating them is how a wrong
+ *  number gets published: a position that is simply not listed falls through to
+ *  `Default`, while one priced by a range we do not parse must not, because
+ *  `Default` is a different rule that happens to be readable. `Default` itself is
+ *  kept verbatim rather than resolved at map time — which position falls through
+ *  to it is a question about a player, not about the rules. */
+export type CategoryTable = Record<string, Record<string, number | null>>;
 
 /** The wire's fallback column, in its own spelling. */
 const DEFAULT_POSITION = "Default";
@@ -40,8 +46,10 @@ export function categoryPoints(
   const row = table[category];
   if (!row) return null;
 
-  const exact = row[position];
-  if (typeof exact === "number") return exact;
+  // Listed-but-unpriced stops here rather than falling through: the wire did
+  // price this position, we simply cannot read what it said, and `Default` is
+  // somebody else's rule.
+  if (position in row) return row[position];
 
   const fallback = row[DEFAULT_POSITION];
   return typeof fallback === "number" ? fallback : null;
