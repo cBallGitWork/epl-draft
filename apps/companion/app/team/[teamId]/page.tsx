@@ -63,7 +63,7 @@ export default async function TeamPage({
         }
       >
         {opponent ? (
-          <Link href="/matchup" className="text-2xs font-medium text-muted hover:underline">
+          <Link href="/league/matchups" className="text-2xs font-medium text-muted hover:underline">
             vs {opponent.name}
           </Link>
         ) : null}

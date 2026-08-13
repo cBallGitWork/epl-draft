@@ -19,7 +19,7 @@ const TABS = [
   { href: "/", label: "Matchday", routes: ["/", "/gw"] },
   { href: "/team", label: "Squads", routes: ["/team"] },
   { href: "/players", label: "Players", routes: ["/players"] },
-  { href: "/standings", label: "League", routes: ["/standings", "/matchup"] },
+  { href: "/league", label: "League", routes: ["/league"] },
 ];
 
 function owns(routes: string[], pathname: string): boolean {

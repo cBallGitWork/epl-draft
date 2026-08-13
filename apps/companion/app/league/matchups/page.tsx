@@ -7,9 +7,9 @@ import {
   isResolved,
   periodPairings,
 } from "@epl/core";
-import Nothing from "../components/shell/Nothing";
-import PageHeader from "../components/shell/PageHeader";
-import { getLeagueSquads } from "../team/league";
+import Nothing from "../../components/shell/Nothing";
+import PageHeader from "../../components/shell/PageHeader";
+import { getLeagueSquads } from "../../team/league";
 
 // Who each squad plays this period. The Saturday screen — and deliberately not a
 // scoreboard: getMatchups is behind a login (probed 13 Aug), so Fantrax's live
