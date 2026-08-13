@@ -674,19 +674,34 @@ in the ship-day runbook as a numbered step. `FANTRAX_COOKIE` is read by nothing
 in the tree and must never reach Vercel. Expect a redeploy per day off the
 capture commit; Ignored Build Step is the lever if that becomes noise.
 
-### A push that deploys nothing (13 Aug, open)
+### A push that deploys nothing — the commit author is a deploy credential
 
 The merge of `feat/fantrax-league-layer` into `main` at 10:53 produced a
-Production deployment that Vercel reports as **`failure — Deployment was
+Production deployment that Vercel reported as **`failure — Deployment was
 blocked`**, so the URL kept serving the 10:49 build and `/matchup` stayed a 404
 on a commit that contains it. Nothing was wrong with the code: `verify.yml` was
 green on the same commit, and the identical build passes locally.
 
-Blocked is not failed — the build never ran, which is why there is no build log
-to read, only the deployment page. The cause is account- or project-level and
-lives in the dashboard: a spend or usage limit, deployment protection, or a
-paused project. The team is `gsi-draft`, which is a team rather than a personal
-account, and a team without billing settled is the readiest explanation.
+**The cause was the commit's author email.** Vercel blocks a deployment whose
+commit author cannot be matched to a GitHub account, and every commit here was
+authored `craigdavidball14@gmail.com`, which is not on the `EH775` account. That
+makes `user.email` a deploy credential in this repo, which is not how anyone
+reads a git config. The tell is free and precise: GitHub's API returns
+`author: null` for a commit it cannot attribute, so
+
+```bash
+gh api repos/EH775/epl-draft/commits/main -q '.author.login // "UNMATCHED"'
+```
+
+answers "will this deploy?" before the push does. Fixed by setting the author to
+the account's own noreply address, **repo-locally** rather than globally —
+`git config --local user.email 51231517+EH775@users.noreply.github.com` — so the
+one repository whose pushes are deployments carries the identity that deploys
+them, and Craig's other work is untouched. A fresh commit is required either
+way: Vercel judges the commit it is given and does not retry an older one.
+
+Blocked is not failed — the build never ran, which is why there was no build log
+to read, only the deployment page.
 
 Worth writing down beyond its own fix, because it is the **third** instance of
 one pattern this month: the capture cron that had never fired, the capture
@@ -697,9 +712,6 @@ must check the deployed URL itself, not the commit that was pushed to it.**
 
 ## Questions
 
-- **Why is Vercel blocking production deployments?** Opened 13 Aug — the
-  dashboard holds the answer and the fix. Until it is settled, `main` and the
-  live URL are two different versions of the app.
 - **Does `?period=N` serve history once a period has completed?** Partially
   answered 12 Aug — accepted and echoed, but inert while every period is still
   in the future. Re-ask after period 1 ends 28 Aug.
@@ -710,7 +722,9 @@ must check the deployed URL itself, not the commit that was pushed to it.**
 - What Fantrax data should we replicate vs proxy?
 - What should `apps/lab` look like for the 27/28 platform prototype?
 
-**Answered:** period↔gameweek alignment — see above. Kickoff, not deadline.
+**Answered:** period↔gameweek alignment — see above. Kickoff, not deadline. And
+why Vercel blocked the first production deployment: an unmatched commit author
+email, not billing — see the hosting section.
 
 ## Work items
 
