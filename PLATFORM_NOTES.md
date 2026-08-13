@@ -759,10 +759,10 @@ Two traps, both load-bearing:
 
 - **The default is `PROJECTION_0_926_SEASON`.** Haaland's "179" is Fantrax's
   projection for a season that has not started, not anything anyone has scored.
-  Real views exist and must be asked for by code — `SEASON_926_YEAR_TO_DATE`,
-  `SEASON_926_BY_PERIOD`, `SEASON_925_YEAR_TO_DATE` — and the season must be read
-  from `displayedSeasonOrProjection`, never assumed. This is the same
-  currentOrRecentSeason trap `getPlayerProfile` set, in a new place.
+  The season must be read from `displayedSeasonOrProjection`, never assumed —
+  the same currentOrRecentSeason trap `getPlayerProfile` set, in a new place.
+  **Corrected 13 Aug (evening):** this note originally said the real views "must
+  be asked for by code". They cannot be asked for here at all — see below.
 - **The default column set is seven wide** — Rk, Status, Opp, FPts, FP/G, Ros,
   +/- — and carries no football stats at all. The stat columns live on
   `getTeamRosterInfo`, or behind `scoringCategoryType` ("5" Tracked, "1"
@@ -771,6 +771,82 @@ Two traps, both load-bearing:
 Every cell is a pre-formatted string, with the usual damage: a literal `<br/>`
 inside `"BOU<br/>Sun 9:00AM"`, a `<small>` tag in a waiver cell, and FP/G with
 zero, one or two decimal places in the same column.
+
+### The stat reads, probed to exhaustion (13 Aug evening) — the Players rehaul's whole scope
+
+Fourteen anonymous probes, filed in `data/probes/2026-08-13/`. Between them they
+deleted a week of planned work and settled how the Players tab is built.
+
+**`getPlayerStats` will not serve a season total. At all.** Every spelling was
+tried — `seasonOrProjection` with a YTD code, plus `timeframeTypeCode`,
+`statisticsTimeframeType`, `timeframeType`, `statsType`, `statisticsViewTypeId`,
+`timeStartType`, explicit `startDate`/`endDate`, a bare `SEASON_925`, an object
+instead of a string, and `view: "FPTS"`. All fourteen answered 200 with a
+projection. The tell is in the echo: ask for `SEASON_925_YEAR_TO_DATE` and it
+answers `SEASON_925_PROJECTED_SEASON` whose name is the untranslated placeholder
+`"2025-26 - ???type.statisticsTimeframeType.projectedSeason.shortName: en_US???"`
+— a server-side fallback constructing a code it has no label for. **So asking is
+not knowing, and the only honest column heading is the one read back off the
+answer.** Whether it flips to real numbers once games exist is unknown and
+resolves itself on 21 Aug; nothing needs rebuilding either way, because the page
+already prints whatever season came back.
+
+**`maxResultsPerPage` is honoured far past their own UI's twenty.** 1000 returns
+all 708 rows in one request (533 KB) with `totalNumPages: 1`. The planned 36-call
+pagination and the 37-call FPL season sweep are both deleted. `POOL_PAGE_SIZE`
+sits comfortably above the pool and the read reports `totalNumResults` back, so a
+pool that ever outgrows it says so rather than showing a prefix.
+
+**`getTeamRosterInfo` is the real find, and it is public.** It *does* honour
+`seasonOrProjection` — `SEASON_926_YEAR_TO_DATE` comes back correctly labelled
+"2026-27 - YTD" — and `teamId` and `period` are honoured too. With `view: "FPTS"`
+each player's total is broken into the league's own scoring categories, and they
+**sum to it exactly**: verified on all sixteen rostered players, e.g. Martinez
+109 = Min 63 + CS 28 − GA 11 + Sv 23 − YC 2 + PKS 5 + A 3. Games played sits on
+the same row and is a count, not points, so it is excluded from the sum exactly
+as their own table excludes it.
+
+Shape notes that the mapper depends on:
+
+- **Two tables, one per scoring group** (`scGroupScorerHeader`: "Goalkeeper",
+  "Outfielder"), with **different columns** — keepers get CS/GA/Sv/PKS, outfield
+  gets GAO. Flattening them would file a keeper's saves under an outfielder's
+  goals-against. The same split `ScoringRules` already carries.
+- **Columns are identified by `scipId`**, not by display label. The fixed columns
+  (`opponent`, `fpts`, `fptsPerGame`) carry a `key` and the categories carry
+  both; matching on "CS" would break the day Fantrax translates a header.
+- **`header.cells[].name` publishes Fantrax's own definition** after a ` -- `.
+  This is where their rules live, and the player card shows it on hover.
+- **Empty roster slots are real rows** with real blank cells and no `scorer`.
+- Cells are formatted strings: `"2,835"` for minutes, a bare `"-"` for a category
+  a player never registered — which is absence, not nought.
+- An undrafted league refuses with `pageError.code: "WARNING"`, "You cannot use
+  this screen until there is at least one team in this league." The real league's
+  state until 10 Oct, and an ordinary one.
+
+**The season code is looked up, never written down.** Only `getPlayerStats`
+publishes the list (`displayedLists.displayedSeasonOrProjections`, 35 entries),
+so one cheap cached call learns it and the team reads use it. It is chosen by
+`startDate`, not by list position and not by parsing the season number out of the
+code — `seasonYear: 2026` maps to `926`, but inferring "subtract 1100" from two
+data points is exactly the kind of invented rule §3 forbids.
+
+### Fantrax's clean-sheet rule is published, and it is 60 minutes
+
+Found in a column tooltip rather than by watching a match, which partly answers
+the 21 Aug question before 21 Aug:
+
+> **Clean Sheets On Field** — Awarded to a player who played at least 60 minutes
+> and whose team gave up 0 goals during the time the player was on the field,
+> even if a goal was scored after the player left the field.
+
+So `CLEAN_SHEET_MINUTES = 60` in `join/cleanSheets.ts` matches their threshold,
+and our preview is priced on the right rule. **One difference remains**, and it
+runs in the safe direction: theirs is *on field*, ours is FPL's team clean sheet.
+A defender substituted at 70' whose team concedes at 85' earns a Fantrax clean
+sheet and no FPL one — so our preview will **undercount** him, never overcount.
+What 21 Aug still has to settle is only *when* they credit it, not what they
+credit.
 
 ### The two answers Craig gave (13 Aug), which close both open questions
 
@@ -940,9 +1016,19 @@ must check the deployed URL itself, not the commit that was pushed to it.**
   schedule runs from period 1, so this is really a question about the real
   league's settings — recheck once its teams have joined.
 - **Does the clean-sheet preview match what Fantrax settles at full time?**
-  Ours previews at the hour, FPL-style; theirs is "Clean Sheets On Field" with no
-  published threshold. First checkable on 21 Aug: watch one defender through a
+  Half-answered: their threshold *is* 60 minutes and they publish it in a column
+  tooltip (see above), so the rule is right. What is left is *when* they credit
+  it, and the one real divergence — theirs is "on field", ours is FPL's team
+  clean sheet, so a defender subbed off before his team concedes is one we
+  undercount. Still first checkable on 21 Aug: watch one defender through a
   final whistle and see whether our +4 becomes their +4.
+- **Does `getPlayerStats` serve real numbers once a game has been played?**
+  Today it answers every year-to-date request with a projection, and there is no
+  way to tell a refusal from an empty season while the season is empty. Nothing
+  waits on the answer — the page prints the label Fantrax returns — but if it is
+  still projecting on 22 Aug, the pool's points column has to come from the
+  sixteen `getTeamRosterInfo` reads instead, which is a data-flow change and not
+  a rewrite.
 - What should `apps/lab` look like for the 27/28 platform prototype?
 
 **Answered:** period↔gameweek alignment — kickoff, not deadline. Whether
@@ -973,8 +1059,16 @@ email, not billing — see the hosting section.
 - [ ] Capture the three `getTransactionDetailsHistory` views daily, and build the
       feed from them rather than from capture diffs (see 12 Aug notes). Bind to
       `cell.key`; the header names include a broken i18n placeholder.
-- [ ] Model `scoringSystem` when a view first explains a number — read from
-      `getLeagueInfo`, never from a checked-in copy (§3).
+- [x] Model `scoringSystem` when a view first explains a number — read from
+      `getLeagueInfo`, never from a checked-in copy (§3). *Landed 13 Aug, and
+      then largely superseded the same day: the view that explains a number is
+      the player card, and it explains it with Fantrax's own category breakdown
+      rather than with our rules. `ScoringRules` survives because the
+      clean-sheet preview prices itself from it.*
+- [ ] **21 Aug, or the first day of real data:** re-read `getPlayerStats` and see
+      whether its year-to-date refusal was a refusal or an empty season. The
+      Players column heading answers this on its own — if it still says "Fantrax
+      projection" once a round has been played, it was a refusal.
 - [ ] Design the cookie flow for the fxpa write surface.
 - [ ] Re-run `npm run bridge` after rehearsal waiver churn; gate on zero
       rostered-but-unmapped.
