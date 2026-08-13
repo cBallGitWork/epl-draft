@@ -11,6 +11,8 @@ import type { StandingsRow } from "@epl/core";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import SectionNav from "./SectionNav";
+import { getLeagueSquads } from "../squad/league";
+import { myTeamId } from "../squad/session";
 import { londonDate } from "../londonTime";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
@@ -32,8 +34,17 @@ async function table(): Promise<StandingsRow[] | Unavailable> {
   return raw instanceof FantraxError ? { unavailable: tell(raw) } : mapStandings(raw);
 }
 
+/** Who is reading, if anyone. The table's own read does not carry team ids we
+ *  can trust for this — `getStandings` names teams but the session is validated
+ *  against the league's own roster — so the squads read supplies them. It is
+ *  cached, so this costs a lookup rather than a request. */
+async function readerTeamId(): Promise<string | null> {
+  const squads = await getLeagueSquads();
+  return "period" in squads ? myTeamId(squads.period.teams) : null;
+}
+
 export default async function StandingsPage() {
-  const rows = await table();
+  const [rows, mine] = await Promise.all([table(), readerTeamId()]);
 
   if ("unavailable" in rows) {
     return (
@@ -73,10 +84,25 @@ export default async function StandingsPage() {
           <li key={row.teamId}>
             <Link
               href={`/squad/${row.teamId}`}
-              className="elev flex min-h-14 items-center gap-3 rounded-xl border border-line bg-surface px-3 py-2.5 hover:bg-raised"
+              className={`elev flex min-h-14 items-center gap-3 rounded-xl border bg-surface px-3 py-2.5 hover:bg-raised ${
+                row.teamId === mine ? "border-line border-l-4 border-l-accent" : "border-line"
+              }`}
             >
               <span className="numeric w-5 text-sm text-faint">{row.rank}</span>
-              <span className="min-w-0 flex-1 truncate font-semibold">{row.teamName}</span>
+              <span
+                className={`min-w-0 flex-1 truncate ${
+                  row.teamId === mine ? "font-bold text-ink" : "font-semibold"
+                }`}
+              >
+                {row.teamName}
+              </span>
+              {/* Labelled, not just accented — the border says nothing to anyone
+                  who cannot see it. */}
+              {row.teamId === mine ? (
+                <span className="rounded bg-raised px-1.5 py-0.5 text-2xs font-bold uppercase tracking-widest text-accent">
+                  You
+                </span>
+              ) : null}
               <span className="numeric w-16 text-right text-sm text-muted">{row.record}</span>
               <span className="numeric w-14 text-right font-bold">{row.pointsFor}</span>
             </Link>

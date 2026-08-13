@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   type LeagueTeam,
   type LiveTeamScore,
+  type PeriodPairing,
   type PendingCleanSheets,
   periodPairings,
 } from "@epl/core";
@@ -9,6 +10,7 @@ import Nothing from "../../components/shell/Nothing";
 import PageHeader from "../../components/shell/PageHeader";
 import SectionNav from "../SectionNav";
 import { getLeagueSquads } from "../../squad/league";
+import { myTeamId } from "../../squad/session";
 import { liveScores, pendingByTeam } from "./scoreboard";
 
 // Who each squad plays this period, and what they have scored.
@@ -21,21 +23,31 @@ import { liveScores, pendingByTeam } from "./scoreboard";
 // Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
 export const revalidate = 30;
 
+/** Whether a manager has a stake in this pairing. Null team id — a reader who
+ *  has not signed in — has a stake in none of them, which is the neutral list. */
+function involves(pairing: PeriodPairing, teamId: string | null): boolean {
+  return teamId !== null && (pairing.home.teamId === teamId || pairing.away.teamId === teamId);
+}
+
 function Side({
   team,
   score,
   pending,
+  mine,
 }: {
   team: LeagueTeam;
   score: LiveTeamScore | undefined;
   pending: PendingCleanSheets | undefined;
+  mine: boolean;
 }) {
   return (
     <Link
       href={`/squad/${team.teamId}`}
       className="flex min-h-11 items-center gap-3 px-3 py-2 hover:bg-raised"
     >
-      <span className="min-w-0 flex-1 truncate font-semibold">{team.name}</span>
+      <span className={`min-w-0 flex-1 truncate ${mine ? "font-bold text-ink" : "font-semibold"}`}>
+        {team.name}
+      </span>
       {/* Per side, not per league: once football is on, one manager has three
           players left and the other has none, and that difference is most of
           what a head-to-head screen is for. */}
@@ -96,9 +108,16 @@ export default async function MatchupPage() {
     );
   }
 
+  const mine = await myTeamId(squads.period.teams);
   const { scores, refused } = await liveScores(period);
   const pending = pendingByTeam(squads.period.teams, squads.info.scoring, squads.snapshot, squads.display);
   const owed = [...pending.values()].reduce((total, team) => total + team.players, 0);
+
+  // Yours first. Sixteen pairings is a scroll, and the one a manager came for is
+  // his own — a neutral list is for broadcasters.
+  const ordered = [...pairings].sort(
+    (a, b) => Number(involves(b, mine)) - Number(involves(a, mine)),
+  );
 
   return (
     <div className="flex flex-col gap-3">
@@ -131,13 +150,18 @@ export default async function MatchupPage() {
       </p>
 
       <ul className="flex flex-col gap-1.5">
-        {pairings.map((pairing) => (
+        {ordered.map((pairing) => (
           <li key={`${pairing.home.teamId}-${pairing.away.teamId}`}>
-            <div className="elev flex flex-col rounded-xl border border-line bg-surface py-1">
+            <div
+              className={`elev flex flex-col rounded-xl border bg-surface py-1 ${
+                involves(pairing, mine) ? "border-line border-l-4 border-l-accent" : "border-line"
+              }`}
+            >
               <Side
                 team={pairing.home}
                 score={scores.get(pairing.home.teamId)}
                 pending={pending.get(pairing.home.teamId)}
+                mine={pairing.home.teamId === mine}
               />
               <span className="px-3 text-center text-2xs font-bold uppercase tracking-widest text-faint">
                 vs
@@ -146,6 +170,7 @@ export default async function MatchupPage() {
                 team={pairing.away}
                 score={scores.get(pairing.away.teamId)}
                 pending={pending.get(pairing.away.teamId)}
+                mine={pairing.away.teamId === mine}
               />
             </div>
           </li>
