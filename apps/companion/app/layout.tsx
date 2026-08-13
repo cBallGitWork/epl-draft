@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Archivo_Narrow } from "next/font/google";
 import { LEAGUE_NAME } from "@epl/core";
-import BottomNav from "./components/shell/BottomNav";
+import TabNav from "./components/shell/TabNav";
 import "./globals.css";
 
 // One superfamily across two widths: Archivo carries the UI, Archivo Narrow the
@@ -47,10 +47,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         >
           Skip to content
         </a>
-        <main id="main" className="mx-auto w-full max-w-2xl px-3 pb-24 pt-3 sm:px-4">
+        {/* Before <main> so the desktop bar can be sticky at the top in normal
+            flow. On a phone it is fixed to the bottom and out of flow, where
+            document order costs nothing. */}
+        <TabNav />
+        {/* `pb-24` clears the phone's fixed bar; above `md` the bar is overhead
+            instead and the room underneath is just room. */}
+        <main id="main" className="mx-auto w-full max-w-2xl px-3 pb-24 pt-3 sm:px-4 md:pb-8">
           {children}
         </main>
-        <BottomNav />
       </body>
     </html>
   );

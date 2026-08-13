@@ -569,14 +569,23 @@ agent are in `data/probes/2026-08-12/`.
 
 ## A third client component: the tab bar
 
-`BottomNav` is `"use client"` for one reason — `usePathname`. A tab bar that
+`TabNav` is `"use client"` for one reason — `usePathname`. A tab bar that
 cannot say which section you are in is a row of links, and the answer only exists
 in the browser. Nothing else in it is interactive.
 
 Each tab owns a set of routes rather than the single one it links to, so reading
-a squad (`/team/[teamId]`) or a past gameweek (`/gw/[n]`) keeps its section lit.
+a squad (`/squad/[teamId]`) or a past gameweek (`/gw/[n]`) keeps its section lit.
 It carries its own `env(safe-area-inset-bottom)` padding: the body's padding does
 nothing for a fixed element, which is positioned against the viewport.
+
+**One component in two shapes** (13 Aug): a fixed bottom bar on a phone, a sticky
+masthead row at the top from `md` up. It was `BottomNav` and is now `TabNav`,
+because the name had stopped being true at half the widths we serve. Two
+components would mean two copies of the route-ownership table, and the copy not
+on the phone is the one that would rot. It renders *before* `<main>` so the
+desktop bar can be sticky in normal flow; on a phone `fixed` takes it out of flow
+and document order costs nothing. The active indicator flips edges with the bar —
+`border-t` under a thumb, `border-b` under a masthead.
 
 Two in-content links became redundant the moment it landed and one of them went:
 the undrafted state's "The football, meanwhile" is now the Matchday tab. "Every
