@@ -2,10 +2,15 @@ import Link from "next/link";
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
+  type FootballSnapshot,
   type LeagueTeam,
   type LiveTeamScore,
+  type PendingCleanSheets,
+  type RosteredTeam,
+  type ScoringRules,
   fetchLiveScoring,
   mapLiveScores,
+  pendingCleanSheets,
   periodPairings,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
@@ -35,7 +40,32 @@ async function liveScores(period: number): Promise<Map<string, LiveTeamScore>> {
   return new Map(mapLiveScores(raw).map((score) => [score.teamId, score]));
 }
 
-function Side({ team, score }: { team: LeagueTeam; score: LiveTeamScore | undefined }) {
+/** The clean sheets Fantrax has not credited yet, per team.
+ *
+ *  Empty when the league did not describe its scoring: a preview we cannot price
+ *  is one we do not show, rather than one we guess at. */
+function pendingByTeam(
+  teams: readonly RosteredTeam[],
+  rules: ScoringRules | null,
+  snapshot: FootballSnapshot,
+): Map<string, PendingCleanSheets> {
+  if (rules === null) return new Map();
+  const inPlay = new Set(
+    snapshot.fixtures.filter((fixture) => fixture.status === "live").map((fixture) => fixture.id),
+  );
+  if (inPlay.size === 0) return new Map();
+  return new Map(teams.map((team) => [team.teamId, pendingCleanSheets(team, rules, inPlay)]));
+}
+
+function Side({
+  team,
+  score,
+  pending,
+}: {
+  team: LeagueTeam;
+  score: LiveTeamScore | undefined;
+  pending: PendingCleanSheets | undefined;
+}) {
   return (
     <Link
       href={`/squad/${team.teamId}`}
@@ -47,6 +77,13 @@ function Side({ team, score }: { team: LeagueTeam; score: LiveTeamScore | undefi
           what a head-to-head screen is for. */}
       {score?.toPlay ? (
         <span className="shrink-0 text-2xs text-faint">{score.toPlay} to play</span>
+      ) : null}
+      {/* Kept beside the score rather than folded into it. Fantrax's number stays
+          Fantrax's; this is the bit they have not credited yet. */}
+      {pending && pending.points > 0 ? (
+        <span className="numeric shrink-0 text-sm font-semibold text-accent">
+          +{pending.points}
+        </span>
       ) : null}
       {/* A team we have no number for gets a dash, never a nought: those are
           different claims and only one of them is a score. */}
@@ -97,6 +134,8 @@ export default async function MatchupPage() {
   }
 
   const scores = await liveScores(period);
+  const pending = pendingByTeam(squads.period.teams, squads.info.scoring, squads.snapshot);
+  const owed = [...pending.values()].reduce((total, team) => total + team.players, 0);
 
   return (
     <div className="flex flex-col gap-3">
@@ -113,18 +152,29 @@ export default async function MatchupPage() {
       {/* Provenance at the point of use, per principle 4. These are Fantrax's
           points under Fantrax's scoring; we add nothing up. */}
       <p className="px-3 text-2xs text-faint">
-        Fantrax&apos;s points, under Fantrax&apos;s scoring. We add nothing up.
+        Fantrax&apos;s points, under Fantrax&apos;s scoring.
+        {owed > 0
+          ? " Green is clean sheets they credit at full time — ours to preview, theirs to settle."
+          : null}
       </p>
 
       <ul className="flex flex-col gap-1.5">
         {pairings.map((pairing) => (
           <li key={`${pairing.home.teamId}-${pairing.away.teamId}`}>
             <div className="elev flex flex-col rounded-xl border border-line bg-surface py-1">
-              <Side team={pairing.home} score={scores.get(pairing.home.teamId)} />
+              <Side
+                team={pairing.home}
+                score={scores.get(pairing.home.teamId)}
+                pending={pending.get(pairing.home.teamId)}
+              />
               <span className="px-3 text-center text-2xs font-bold uppercase tracking-widest text-faint">
                 vs
               </span>
-              <Side team={pairing.away} score={scores.get(pairing.away.teamId)} />
+              <Side
+                team={pairing.away}
+                score={scores.get(pairing.away.teamId)}
+                pending={pending.get(pairing.away.teamId)}
+              />
             </div>
           </li>
         ))}

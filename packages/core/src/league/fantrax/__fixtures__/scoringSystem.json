@@ -1,0 +1,99 @@
+{
+  "scoringCategories": {
+    "NON_GOALIE": {
+      "CS": {
+        "D": "points4",
+        "Default": "points0",
+        "M": "points1"
+      },
+      "A": {
+        "Default": "points3"
+      },
+      "RC": {
+        "Default": "points-3"
+      },
+      "Min": {
+        "Default": "range1|59|1|NULL$60|90|1|NULL"
+      },
+      "PKM": {
+        "Default": "points-2"
+      },
+      "GAO": {
+        "D": "range1|99|-1|2.0",
+        "Default": "points0"
+      },
+      "AF": {
+        "Default": "points3"
+      },
+      "G": {
+        "D": "points6",
+        "F": "points4",
+        "Default": "points0",
+        "M": "points5"
+      },
+      "OG": {
+        "Default": "points-2"
+      },
+      "YC": {
+        "Default": "points-1"
+      }
+    },
+    "GOALIE": {
+      "CS": {
+        "Default": "points4"
+      },
+      "A": {
+        "Default": "points3"
+      },
+      "RC": {
+        "Default": "points-3"
+      },
+      "Min": {
+        "Default": "range1|59|1|NULL$60|90|1|NULL"
+      },
+      "Sv": {
+        "Default": "range1|99|1|3.0"
+      },
+      "PKM": {
+        "Default": "points-2"
+      },
+      "AF": {
+        "Default": "points3"
+      },
+      "G": {
+        "Default": "points6"
+      },
+      "OG": {
+        "Default": "points-2"
+      },
+      "PKS": {
+        "Default": "points5"
+      },
+      "GA": {
+        "Default": "range1|99|-1|2.0"
+      },
+      "YC": {
+        "Default": "points-1"
+      }
+    }
+  },
+  "scoringCategorySettings": [
+    {
+      "group": {
+        "code": "SOCCER_GOALIE",
+        "name": "Goalkeeper",
+        "id": "5020",
+        "shortName": "G"
+      }
+    },
+    {
+      "group": {
+        "code": "SOCCER_NON_GOALIE",
+        "name": "Outfielder",
+        "id": "5010",
+        "shortName": "OF"
+      }
+    }
+  ],
+  "type": "points"
+}

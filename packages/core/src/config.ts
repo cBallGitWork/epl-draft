@@ -66,6 +66,16 @@ export const FANTRAX_APP_BASE = "https://www.fantrax.com/fantasy/league";
  *  them and returns the wrong player pool. */
 export const FANTRAX_SPORT = "EPL";
 
+/** Minutes on the pitch before a clean sheet is worth previewing.
+ *
+ *  FPL's threshold, used deliberately for a Fantrax preview. Fantrax credits
+ *  clean sheets only at full time and publishes no threshold of its own — it
+ *  says "on field" and no more — so this is the moment a manager watching the
+ *  match already expects the points to appear, because it is when FPL's own
+ *  numbers move. Fantrax settles it their way at the whistle and their answer
+ *  replaces ours (see join/cleanSheets.ts). */
+export const CLEAN_SHEET_MINUTES = 60;
+
 /** A Fantrax league we capture.
  *
  *  `key` doubles as a directory segment under `data/snapshots/fantrax/leagues/`,

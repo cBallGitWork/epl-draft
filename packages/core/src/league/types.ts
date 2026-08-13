@@ -1,3 +1,5 @@
+import type { ScoringRules } from "./scoring";
+
 // The LEAGUE layer: our fantasy competition, sourced from Fantrax. Where the
 // football layer is the real Premier League and is permanent, this layer is an
 // adapter over whoever happens to be running our league — Fantrax now, our own
@@ -203,4 +205,9 @@ export interface LeagueInfo {
   /** Empty until managers join. */
   teams: LeagueTeam[];
   matchups: LeagueMatchup[];
+  /** What each category is worth. Null when Fantrax described no scoring.
+   *
+   *  Present so one view can preview the clean sheets their live feed withholds
+   *  until full time; the scores themselves are always theirs. */
+  scoring: ScoringRules | null;
 }

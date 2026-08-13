@@ -753,6 +753,37 @@ Every cell is a pre-formatted string, with the usual damage: a literal `<br/>`
 inside `"BOU<br/>Sun 9:00AM"`, a `<small>` tag in a waiver cell, and FP/G with
 zero, one or two decimal places in the same column.
 
+### The two answers Craig gave (13 Aug), which close both open questions
+
+**Their totals move during a match — with one exception.** Fantrax does not
+credit a **clean sheet until the final whistle**, while FPL credits one the
+moment a player passes the hour with his goal intact. So a defender can keep a
+clean sheet for eighty minutes and Fantrax will still show nothing for it, which
+is the single place their live number is behind what the match has actually
+produced.
+
+That exception is the **only** scoring this app does, and it is a preview rather
+than a score: `join/cleanSheets.ts` prices the clean sheets currently being kept,
+using the league's own CS values read from `getLeagueInfo` (D 4, M 1, keeper 4,
+forwards 0 — identical in both leagues today, and still read rather than
+assumed). It counts **only fixtures in play**: the moment one finishes, Fantrax
+credits it and it lands in their total, so counting a finished match would show
+the same points twice. It is shown beside their number, never folded into it.
+
+This is why `scoringSystem` is finally modelled after months as `unknown` — the
+work item said "model it when a view first explains a number", and this is that
+view. Only the flat `pointsN` values are parsed; the banded expressions
+(`"range1|59|1|NULL$60|90|1|NULL"` for minutes, saves, goals conceded) are left
+alone because nothing reads them.
+
+**Lineups lock on a deadline, not per game** — 15 minutes before the first
+fixture of the period. So the existing gate's shape is right: one lock for the
+whole period, not a per-player one, and the per-player visibility work that a
+gametime lock would have forced is not needed. The 15-minute offset is a
+commissioner setting that `getLeagueInfo` does not publish; `rosterPeriods`
+starts at the period boundary, which is kickoff, so the lock sits *before* the
+data we hold and cannot be derived from it.
+
 ### What this means for the scoring engine
 
 The plan approved on 13 Aug built one, on the stated premise that Fantrax would
@@ -850,17 +881,19 @@ must check the deployed URL itself, not the commit that was pushed to it.**
   38 periods from 21 Aug, but we draft at GW6. The rehearsal league's matchup
   schedule runs from period 1, so this is really a question about the real
   league's settings — recheck once its teams have joined.
-- **Do Fantrax's own points move during a match, or only settle after it?**
-  Opened 13 Aug and unanswerable until 21 Aug: `getLiveScoringStats.totalFpts`
-  and `getTeamRosterInfo`'s FPts columns are all zero because no football has
-  been played. Everything about the matchday view depends on the answer, so it
-  is the first thing to check when GW1 kicks off.
+- **Does the clean-sheet preview match what Fantrax settles at full time?**
+  Ours previews at the hour, FPL-style; theirs is "Clean Sheets On Field" with no
+  published threshold. First checkable on 21 Aug: watch one defender through a
+  final whistle and see whether our +4 becomes their +4.
 - What should `apps/lab` look like for the 27/28 platform prototype?
 
 **Answered:** period↔gameweek alignment — kickoff, not deadline. Whether
 `getMatchups` carries totals — it does not, and it is login-walled, so it is of
 no use to us. What Fantrax data to replicate vs proxy — **replicate: their
-points are public and authoritative, so we read them and compute nothing.** And
+points are public and authoritative, so we read them and compute nothing**, bar
+the clean-sheet preview. Whether their numbers move live — **they do**, except
+clean sheets. Whether lineups lock per game — **no**, one deadline 15 minutes
+before the period's first fixture. And
 why Vercel blocked the first production deployment: an unmatched commit author
 email, not billing — see the hosting section.
 

@@ -1,3 +1,4 @@
+import { mapScoringRules } from "./scoring";
 import type {
   LeagueInfo,
   LeagueMatchup,
@@ -149,5 +150,6 @@ export function mapLeagueInfo(raw: RawLeagueInfo): LeagueInfo {
     players: mapPlayerStates(raw.playerInfo),
     teams: mapTeams(raw.teamInfo),
     matchups: mapMatchups(raw.matchups),
+    scoring: mapScoringRules(raw.scoringSystem),
   };
 }

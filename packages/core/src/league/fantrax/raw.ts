@@ -1,3 +1,5 @@
+import type { RawScoringSystem } from "./scoring";
+
 // Fantrax's fxea responses exactly as they arrive, inconsistencies included.
 // Transcribed from live recordings on 5–6 Aug 2026; the trimmed copies used by
 // the tests are in __fixtures__/, the full ones in data/snapshots/.
@@ -97,11 +99,13 @@ export interface RawLeagueInfo {
   /** Keyed by team id, which the value repeats. Empty until teams join. */
   teamInfo?: Record<string, RawTeamInfo>;
   matchups?: RawPeriodMatchups[];
-  /** The league's full points configuration, and the most custom thing in the
-   *  league. Captured but not modelled this phase: we read Fantrax's computed
-   *  scores rather than recomputing them. The moment a view explains a number it
-   *  reads the rules from here, never from a checked-in copy (§3). */
-  scoringSystem?: unknown;
+  /** The league's full points configuration, and the most custom thing in it.
+   *
+   *  Read, not recomputed: Fantrax scores the matches and we show their numbers.
+   *  Only the flat per-position values are mapped, for the one thing their live
+   *  feed withholds until full time — see `join/cleanSheets.ts`. The banded
+   *  expressions stay unparsed because nothing needs them. */
+  scoringSystem?: RawScoringSystem;
   poolSettings?: unknown;
   draftSettings?: unknown;
 }
