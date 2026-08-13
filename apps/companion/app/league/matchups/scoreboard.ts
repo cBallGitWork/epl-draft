@@ -1,5 +1,7 @@
+import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
+  PAGE_REVALIDATE,
   FantraxError,
   type FootballSnapshot,
   type LiveTeamScore,
@@ -29,15 +31,25 @@ import { orRefusal, tell } from "../../refusals";
  *  alone cannot say "the scoreboard is down", and a page claiming to show
  *  Fantrax's points while showing none of them is the confident wrong answer
  *  principle 4 forbids. */
+const readScores = unstable_cache(
+  async (period: number): Promise<{ scores: [string, LiveTeamScore][]; refused: string | null }> => {
+    const raw = await orRefusal(fetchLiveScoring(FANTRAX_LEAGUE_ID, period));
+    if (raw instanceof FantraxError) return { scores: [], refused: tell(raw) };
+    return { scores: mapLiveScores(raw).map((score) => [score.teamId, score]), refused: null };
+  },
+  ["live-scores", FANTRAX_LEAGUE_ID],
+  { revalidate: PAGE_REVALIDATE },
+);
+
 export async function liveScores(
   period: number,
 ): Promise<{ scores: Map<string, LiveTeamScore>; refused: string | null }> {
-  const raw = await orRefusal(fetchLiveScoring(FANTRAX_LEAGUE_ID, period));
-  if (raw instanceof FantraxError) return { scores: new Map(), refused: tell(raw) };
-  return {
-    scores: new Map(mapLiveScores(raw).map((score) => [score.teamId, score])),
-    refused: null,
-  };
+  // Cached because this is the read sixteen phones poll every thirty seconds on
+  // a Saturday — by some distance the most frequent request the app makes. A Map
+  // does not survive the cache round trip, so entries go in and the Map is built
+  // out here.
+  const { scores, refused } = await readScores(period);
+  return { scores: new Map(scores), refused };
 }
 
 /** The clean sheets Fantrax has not credited yet, per team.

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Archivo_Narrow } from "next/font/google";
-import { LEAGUE_NAME, duringGameweek, getFootballSnapshot } from "@epl/core";
+import { LEAGUE_NAME, duringGameweek } from "@epl/core";
+import { footballNow } from "./football";
 import TabNav from "./components/shell/TabNav";
 import "./globals.css";
 
@@ -46,7 +47,7 @@ export const viewport: Viewport = {
  *  diagnose from a phone. */
 async function footballIsOn(): Promise<boolean> {
   try {
-    return duringGameweek(await getFootballSnapshot(), new Date().toISOString());
+    return duringGameweek(await footballNow(), new Date().toISOString());
   } catch {
     return true;
   }

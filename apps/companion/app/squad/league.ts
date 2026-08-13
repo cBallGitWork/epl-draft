@@ -12,12 +12,12 @@ import {
   type RawTeamRosters,
   fetchLeagueInfo,
   fetchTeamRosters,
-  getFootballSnapshot,
   mapLeagueInfo,
   mapTeamRosters,
   resolveRosters,
   rosterDisplay,
 } from "@epl/core";
+import { footballNow } from "../football";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
 import mapping from "../../../../data/mappings/fantrax.json";
@@ -84,7 +84,7 @@ interface CachedLeague {
 const readLeague = unstable_cache(
   async (): Promise<CachedLeague> => {
     const [snapshot, rosters, info] = await Promise.all([
-      getFootballSnapshot(),
+      footballNow(),
       orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
       leagueInfo(),
     ]);

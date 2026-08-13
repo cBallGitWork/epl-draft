@@ -1,4 +1,5 @@
-import { clubById, clubColours, getFootballSnapshot, playerByCode } from "@epl/core";
+import { clubById, clubColours, playerByCode } from "@epl/core";
+import { footballNow } from "../football";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import PlayerPortrait from "../components/football/PlayerPortrait";
@@ -44,7 +45,7 @@ export default async function FplPage() {
     );
   }
 
-  const snapshot = await getFootballSnapshot();
+  const snapshot = await footballNow();
   const players = playerByCode(snapshot);
   const clubs = clubById(snapshot);
   const { entry, squad } = side;

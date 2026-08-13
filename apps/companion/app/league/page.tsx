@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
   FANTRAX_LEAGUES,
   FantraxError,
   LEAGUE_NAME,
+  PAGE_REVALIDATE,
   fetchStandings,
   mapStandings,
 } from "@epl/core";
@@ -29,10 +31,14 @@ const DRAFT_DATE = londonDate(
 
 /** An empty table and an unreachable one are different states, and only one of
  *  them is a problem: our real league answers `[]` here every day until 10 Oct. */
-async function table(): Promise<StandingsRow[] | Unavailable> {
-  const raw = await orRefusal(fetchStandings(FANTRAX_LEAGUE_ID));
-  return raw instanceof FantraxError ? { unavailable: tell(raw) } : mapStandings(raw);
-}
+const table = unstable_cache(
+  async (): Promise<StandingsRow[] | Unavailable> => {
+    const raw = await orRefusal(fetchStandings(FANTRAX_LEAGUE_ID));
+    return raw instanceof FantraxError ? { unavailable: tell(raw) } : mapStandings(raw);
+  },
+  ["standings", FANTRAX_LEAGUE_ID],
+  { revalidate: PAGE_REVALIDATE },
+);
 
 /** Who is reading, if anyone. The table's own read does not carry team ids we
  *  can trust for this — `getStandings` names teams but the session is validated

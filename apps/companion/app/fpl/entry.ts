@@ -8,10 +8,10 @@ import {
   fetchEntry,
   fetchEntryPoints,
   fetchPicks,
-  getFootballSnapshot,
   mapEntry,
   mapSquad,
 } from "@epl/core";
+import { footballNow } from "../football";
 
 // The other game. A manager's FPL side, read from the id in the URL they already
 // share — not a credential, so no sign-in and no secret.
@@ -73,7 +73,7 @@ const readSide = unstable_cache(
 export async function mySide(): Promise<FplSide | null> {
   const entryId = await myEntryId();
   if (entryId === null) return null;
-  return readSide(entryId, await getFootballSnapshot());
+  return readSide(entryId, await footballNow());
 }
 
 export { ENTRY_COOKIE, SEASON_IN_SECONDS };

@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { type FootballSnapshot, duringGameweek, getFootballSnapshot } from "@epl/core";
+import { type FootballSnapshot, duringGameweek } from "@epl/core";
+import { footballNow } from "../football";
 import GameweekView from "../components/football/GameweekView";
 import YourMatchup from "./YourMatchup";
 import PageHeader from "../components/shell/PageHeader";
@@ -21,7 +22,7 @@ export const revalidate = 30;
  *  than in the component: a render is meant to be reproducible, and fetching is
  *  already where this page touches the world. */
 async function matchday(): Promise<{ snapshot: FootballSnapshot; during: boolean }> {
-  const snapshot = await getFootballSnapshot();
+  const snapshot = await footballNow();
   return { snapshot, during: duringGameweek(snapshot, new Date().toISOString()) };
 }
 

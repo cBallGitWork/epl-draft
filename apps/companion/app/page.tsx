@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { LEAGUE_NAME, type Pick } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, LEAGUE_NAME, type Pick } from "@epl/core";
 import Masthead from "./components/gazette/Masthead";
+import Nothing from "./components/shell/Nothing";
 import Section from "./components/gazette/Section";
 import { edition } from "./edition";
-import { londonDayAndTime } from "./londonTime";
+import { londonDate, londonDayAndTime } from "./londonTime";
 import { getLeagueSquads } from "./squad/league";
 import { myTeamId } from "./squad/session";
 
@@ -19,6 +20,12 @@ import { myTeamId } from "./squad/session";
 
 // Must match `PAGE_REVALIDATE` in core config — see the note on /matchday.
 export const revalidate = 30;
+
+/** Draft night for the league we are actually serving — the two draft nine weeks
+ *  apart, so this is read from config rather than written down. */
+const DRAFT_DATE = londonDate(
+  FANTRAX_LEAGUES.find((league) => league.leagueId === FANTRAX_LEAGUE_ID)?.draftDate ?? "",
+);
 
 /** What got him picked, in the fewest words that are still true. */
 function did(pick: Pick): string {
@@ -36,6 +43,14 @@ export default async function GazettePage() {
   const mine = "period" in squads ? await myTeamId(squads.period.teams) : null;
   const paper = await edition(mine);
   const names = new Map(paper.teams.map((team) => [team.teamId, team.name]));
+  // Nothing to print is a real state, not an empty page: our own league is in it
+  // every day until draft night, and it is the first thing sixteen people will
+  // open the app to.
+  const blank =
+    paper.eleven === null &&
+    paper.deals.length === 0 &&
+    paper.availability.length === 0 &&
+    paper.deadline === null;
   const who = (teamId: string | null) => (teamId === null ? "the wire" : names.get(teamId) ?? "—");
 
   return (
@@ -61,6 +76,13 @@ export default async function GazettePage() {
             Watch
           </span>
         </Link>
+      ) : null}
+
+      {blank ? (
+        <Nothing title="No news yet" code={`${LEAGUE_NAME} drafts ${DRAFT_DATE}`}>
+          There is nothing to report until there are squads to report on. The football is on the
+          other tabs in the meantime, and it needs nobody to have drafted.
+        </Nothing>
       ) : null}
 
       {paper.eleven ? (
