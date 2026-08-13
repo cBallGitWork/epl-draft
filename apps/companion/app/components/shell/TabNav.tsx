@@ -26,8 +26,11 @@ const TABS = [
   { href: "/", label: "Gazetta", routes: ["/"] },
   { href: "/league", label: "League", routes: ["/league"] },
   { href: "/squad", label: "Squads", routes: ["/squad"] },
-  { href: "/matchday", label: "Matchday", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },
+  // "Live" rather than "Matchday": the tab only exists while football is on, so
+  // that is what it means — and it is the one label six columns had no room for.
+  { href: "/matchday", label: "Live", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },
   { href: "/players", label: "Players", routes: ["/players"] },
+  { href: "/fpl", label: "FPL", routes: ["/fpl"] },
 ];
 
 function owns(routes: string[], pathname: string): boolean {
@@ -69,7 +72,7 @@ export default function TabNav({ matchday }: { matchday: boolean }) {
                 <Link
                   href={tab.href}
                   aria-current={here ? "page" : undefined}
-                  className={`flex min-h-14 flex-col items-center justify-center gap-1 border-t-2 text-2xs font-semibold uppercase tracking-widest md:border-b-2 md:border-t-0 md:px-4 ${
+                  className={`flex min-h-14 flex-col items-center justify-center gap-1 border-t-2 text-[0.625rem] font-semibold uppercase tracking-wide md:border-b-2 md:border-t-0 md:px-4 md:text-2xs md:tracking-widest ${
                     here ? "border-accent text-ink" : "border-transparent text-faint hover:text-muted"
                   }`}
                 >
