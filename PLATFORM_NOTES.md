@@ -894,6 +894,16 @@ payloads; captures filed per league; period alignment settled and scripted; the
 
 ## Season log
 
+- 2026-08-13: Craig's cookie went into `.env.local`, every fxpa method was
+  probed twice, and the scoring engine died before it was written. Fantrax
+  serves its own points publicly — typed team totals on `getLiveScoringStats`,
+  per-player points and an exact category breakdown on `getTeamRosterInfo` —
+  while the one login-walled method turned out to hold nothing but the schedule
+  we already read. The head-to-head now shows their real numbers. Also today:
+  the app grew its six-tab shape (League owns a prefix, /team became /squad, the
+  tab bar became one component in two shapes, a Matchday section that exists
+  only when there is football), the season's schedule landed as the first
+  consumer of `periodGameweeks`, and both providers are asked politely now.
 - 2026-08-13: The companion has somewhere to live. Craig ran the Vercel
   import in the evening: `https://epl-draft-companion.vercel.app`, root
   directory `apps/companion`, rehearsal league id set as a production env var.
