@@ -822,6 +822,45 @@ all: **whether these numbers move during a match or only settle afterwards.**
 Nothing can answer that before 21 Aug. Until then we read, we label the season
 we are reading, and we build no engine.
 
+## Sign-in, and where env files actually live (13 Aug 2026)
+
+Sixteen friends, no accounts. Each manager gets one code; the app remembers which
+team is his. Not a dropdown, because that identity is what will authorize
+*editing* a lineup once the write surface exists.
+
+- `npm run team-codes` issues one code per team and prints them once. **Only the
+  HMACs go into the deployment**, as `TEAM_CODES`, so a leaked environment hands
+  nobody a sign-in and a lost code is reissued rather than recovered.
+- `SESSION_SECRET` does double duty: it keys those HMACs and signs the session
+  cookie. Rotating it invalidates every code and every session at once, which is
+  the correct blast radius and worth knowing before rotating it casually.
+- The session cookie is `teamId.HMAC(teamId)`, httpOnly. Verified server-side,
+  then checked against the league we currently serve — so a rehearsal session
+  stops working the moment `FANTRAX_LEAGUE_ID` changes on 10 Oct, with no
+  migration and no stale highlight. Forged signatures, unsigned values and signed
+  ids for teams that do not exist were all tested against the running app.
+- A wrong code fails slowly on purpose. There is no rate limiter in front of a
+  serverless route and sixteen teams is a small haystack, so the defences are an
+  eight-character code and a deliberate pause.
+- **Reading stays open.** The code buys *being* a team — partisan ordering, and
+  later lineup writes — never access. Nobody is locked out because a code went
+  missing on ship day.
+
+### The env file is not where you think
+
+`next dev` runs with its project root at `apps/companion`, so it loads
+**`apps/companion/.env.local`** and completely ignores the `.env.local` at the
+repo root. The root one is still real and still used — the capture and probe
+scripts read it with `node --env-file` — so both exist and they are not the same
+file. This cost a debugging cycle: the codes verified correctly in Node and the
+sign-in kept refusing, because the server had never seen `SESSION_SECRET`. Next
+prints `- Environments: .env.local` on startup when it has loaded one; **absence
+of that line is the tell.**
+
+Ship-day consequence: `TEAM_CODES` and `SESSION_SECRET` join `FANTRAX_LEAGUE_ID`
+as dashboard values that are invisible to git, so all three are numbered steps in
+the runbook.
+
 ## CI, and the hosting decision (13 Aug 2026)
 
 `verify.yml` runs the four green checks — test, typecheck, lint, build, cheapest
@@ -946,6 +985,18 @@ payloads; captures filed per league; period alignment settled and scripted; the
 
 ## Season log
 
+- 2026-08-13 (evening): the app became the app in the vision. Six tabs
+  (Gazetta, League, Squads, Live, Players, FPL), all fifteen on the pitch
+  instead of eleven and a bench strip, and — the piece everything else was
+  waiting on — it now knows whose team you are. Sign-in is one code per manager,
+  HMACs only in the environment, signed httpOnly session, and reading stays open
+  to everyone. Your head-to-head leads the live centre and sorts to the top of
+  the matchups; your row is marked in the table. The Gazetta shipped its first
+  edition off two readers that had sat unused in core for a week — the
+  transaction feed and FPL's injury news — and Team of the Week names whose
+  player it was and which manager benched him. The FPL tab landed small, as
+  planned. Caching moved from pages to the shared provider reads, which is what
+  made a cookie affordable.
 - 2026-08-13: Craig's cookie went into `.env.local`, every fxpa method was
   probed twice, and the scoring engine died before it was written. Fantrax
   serves its own points publicly — typed team totals on `getLiveScoringStats`,

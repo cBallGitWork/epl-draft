@@ -176,7 +176,14 @@ npm run capture         # both leagues + the pool, into data/snapshots/
 npm run capture:status  # per-league staleness; non-zero when overdue
 npm run periods         # re-check period↔gameweek alignment against live FPL
 npm run bridge          # regenerate the Fantrax→FPL player mapping
+npm run team-codes      # issue one sign-in code per team; prints them once
 ```
+
+**Two `.env.local` files, and they are not interchangeable.** `next dev` roots at
+`apps/companion`, so the app reads `apps/companion/.env.local` (`SESSION_SECRET`,
+`TEAM_CODES`) and never sees the repo-root one, which is what the scripts read
+via `node --env-file` (`FANTRAX_COOKIE`). Next prints `- Environments: .env.local`
+at startup when it has loaded one; its absence is the tell.
 
 `FANTRAX_LEAGUE_ID` selects the league the app serves; it defaults to the
 rehearsal league. Setting it to `ayyoh3n2mr326v2o` is the whole 10 Oct swap, and
