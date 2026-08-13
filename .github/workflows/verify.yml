@@ -1,0 +1,38 @@
+name: Verify
+
+# CLAUDE.md's "all four green before every commit", moved from discipline into
+# machinery. Push and pull_request rather than schedule because — as the capture
+# cron taught us — schedule fires only from the default branch, and this must go
+# red on a feature branch before anything merges.
+#
+# One trap to know rather than fix: the daily capture pushes with GITHUB_TOKEN,
+# which by design does not trigger other workflows. Capture commits will arrive
+# on main without a Verify run beside them. They touch only data/snapshots, so
+# that is acceptable, not accidental.
+
+on: [push, pull_request]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Cheapest failure first. `next build` stopped running ESLint at Next 16,
+      # so lint is its own gate and build proves the production render — it
+      # prerenders against live FPL and Fantrax, which is the point: a provider
+      # shape change should redden CI before it reaches a phone.
+      - run: npm test
+
+      - run: npm run typecheck
+
+      - run: npm run lint
+
+      - run: npm run build

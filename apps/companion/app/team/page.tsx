@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, LEAGUE_NAME, isResolved } from "@epl/core";
-import LeagueCrest from "../components/shell/LeagueCrest";
 import Nothing from "../components/shell/Nothing";
+import PageHeader from "../components/shell/PageHeader";
 import { londonDate } from "../londonTime";
 import { getLeagueSquads } from "./league";
 
@@ -41,10 +41,7 @@ export default async function SquadsPage() {
 
   return (
     <div className="flex flex-col gap-3">
-      <header className="flex items-center gap-2.5 pt-1">
-        <LeagueCrest height={26} />
-        <h1 className="text-xl font-bold tracking-tight">Squads</h1>
-      </header>
+      <PageHeader title="Squads" />
 
       <ul className="flex flex-col gap-1.5">
         {squads.period.teams.map((team) => {

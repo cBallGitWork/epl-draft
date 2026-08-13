@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { leaguePool } from "./selectors";
-import type { LeaguePlayer, LeaguePlayerState, PeriodRosters } from "./types";
+import { leaguePool, periodPairings } from "./selectors";
+import type {
+  LeagueMatchup,
+  LeaguePlayer,
+  LeaguePlayerState,
+  LeagueTeam,
+  PeriodRosters,
+} from "./types";
 
 // Small hand-built inputs rather than a trimmed capture: every case below is a
 // disagreement BETWEEN the three payloads, and a fixture that happens to be
@@ -61,6 +67,51 @@ describe("leaguePool", () => {
       "Adams",
       "Bell",
       "Cole",
+    ]);
+  });
+});
+
+const leagueTeams: LeagueTeam[] = [
+  { teamId: "t1", name: "123" },
+  { teamId: "t2", name: "test2" },
+  { teamId: "t3", name: "test3" },
+  { teamId: "t4", name: "test4" },
+];
+
+const schedule: LeagueMatchup[] = [
+  { period: 1, homeTeamId: "t1", awayTeamId: "t2" },
+  { period: 1, homeTeamId: "t3", awayTeamId: "t4" },
+  { period: 2, homeTeamId: "t1", awayTeamId: "t3" },
+];
+
+describe("periodPairings", () => {
+  it("selects one period and resolves both sides to the teams that hold them", () => {
+    expect(periodPairings(schedule, leagueTeams, 1)).toEqual([
+      { home: leagueTeams[0], away: leagueTeams[1] },
+      { home: leagueTeams[2], away: leagueTeams[3] },
+    ]);
+  });
+
+  it("answers empty for a league with no teams", () => {
+    // The real league today: a schedule can exist before anyone has joined it,
+    // and every pairing in it names a team nobody holds.
+    expect(periodPairings(schedule, [], 1)).toEqual([]);
+  });
+
+  it("answers empty for a period the schedule does not cover", () => {
+    // A bye is a real state, not a fault — and whether the real league's
+    // schedule starts at period 1 or period 6 is still an open question.
+    expect(periodPairings(schedule, leagueTeams, 3)).toEqual([]);
+  });
+
+  it("drops a pairing whose team the league does not carry, and keeps the rest", () => {
+    const withStranger: LeagueMatchup[] = [
+      ...schedule,
+      { period: 1, homeTeamId: "t9", awayTeamId: "t2" },
+    ];
+    expect(periodPairings(withStranger, leagueTeams, 1)).toEqual([
+      { home: leagueTeams[0], away: leagueTeams[1] },
+      { home: leagueTeams[2], away: leagueTeams[3] },
     ]);
   });
 });

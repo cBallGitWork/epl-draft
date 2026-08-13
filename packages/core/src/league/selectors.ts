@@ -1,4 +1,10 @@
-import type { LeaguePlayer, LeaguePlayerState, PeriodRosters } from "./types";
+import type {
+  LeagueMatchup,
+  LeaguePlayer,
+  LeaguePlayerState,
+  LeagueTeam,
+  PeriodRosters,
+} from "./types";
 
 // Pure read-side selectors over league state, kept out of the components so they
 // stay unit-testable — the same rule the football layer's selectors follow.
@@ -35,6 +41,42 @@ export interface PoolPlayer {
  *  under the league's transaction rules, the rosters say who has him. A league
  *  with no teams answers "nobody owns anybody" while still calling all 697
  *  waiver-wire, and both statements are true. */
+/** One pairing in one period, both ids resolved to the teams that hold them. */
+export interface PeriodPairing {
+  home: LeagueTeam;
+  away: LeagueTeam;
+}
+
+/** This period's pairings, resolved. The consumer `LeagueMatchup` was flattened
+ *  for: one row per pairing per period makes selecting a period a filter, and
+ *  resolving the ids here rather than in a component keeps the second copy of a
+ *  team name out of the view — the same reason the matchup carries ids at all.
+ *
+ *  Empty is a real answer, not a failure, and it happens two ways we have seen:
+ *  a league with no teams yet (the real league, every day until 10 Oct), and a
+ *  period the schedule does not cover — a bye, or a schedule that starts at
+ *  period 6 while Fantrax serves period 1. Both render as "no pairings", never
+ *  as a crash.
+ *
+ *  A pairing naming a team id `teams` does not carry is dropped whole rather
+ *  than half-rendered: a matchup with one side is not a matchup, and inventing
+ *  a placeholder team would put a name we made up beside fifteen names Fantrax
+ *  gave us. */
+export function periodPairings(
+  matchups: readonly LeagueMatchup[],
+  teams: readonly LeagueTeam[],
+  period: number,
+): PeriodPairing[] {
+  const byId = new Map(teams.map((team) => [team.teamId, team]));
+  return matchups
+    .filter((matchup) => matchup.period === period)
+    .flatMap((matchup) => {
+      const home = byId.get(matchup.homeTeamId);
+      const away = byId.get(matchup.awayTeamId);
+      return home && away ? [{ home, away }] : [];
+    });
+}
+
 export function leaguePool(
   pool: readonly LeaguePlayer[],
   states: readonly LeaguePlayerState[],

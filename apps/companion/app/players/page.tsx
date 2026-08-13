@@ -1,6 +1,6 @@
 import Link from "next/link";
-import LeagueCrest from "../components/shell/LeagueCrest";
 import Nothing from "../components/shell/Nothing";
+import PageHeader from "../components/shell/PageHeader";
 import { getLeaguePool } from "./pool";
 
 // Every player Fantrax knows, and what our league has decided about him: what he
@@ -76,15 +76,14 @@ export default async function PlayersPage({
 
   return (
     <div className="flex flex-col gap-3">
-      <header className="flex items-center gap-2.5 pt-1">
-        <LeagueCrest height={26} />
-        <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-bold tracking-tight">Players</h1>
-          <p className="numeric text-2xs text-faint">
+      <PageHeader
+        title="Players"
+        sub={
+          <>
             {shown.length} of {pool.players.length}
-          </p>
-        </div>
-      </header>
+          </>
+        }
+      />
 
       <form action="/players" className="flex gap-1.5">
         {/* The chips and the box filter the same list, so each has to carry the
