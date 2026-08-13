@@ -10,6 +10,7 @@ import {
 import type { StandingsRow } from "@epl/core";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
+import SectionNav from "./SectionNav";
 import { londonDate } from "../londonTime";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
@@ -55,6 +56,7 @@ export default async function StandingsPage() {
   return (
     <div className="flex flex-col gap-3">
       <PageHeader title="Table" />
+      <SectionNav current="table" />
 
       <div className="flex items-center gap-3 px-3 text-2xs font-bold uppercase tracking-widest text-faint">
         <span className="w-5">#</span>

@@ -9,6 +9,7 @@ import {
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import PageHeader from "../../components/shell/PageHeader";
+import SectionNav from "../SectionNav";
 import { getLeagueSquads } from "../../squad/league";
 
 // Who each squad plays this period. The Saturday screen — and deliberately not a
@@ -110,6 +111,7 @@ export default async function MatchupPage() {
           </>
         }
       />
+      <SectionNav current="matchups" />
 
       {/* Honest label, not small print: these are the events we can count from
           FPL's public feed. The points belong to Fantrax and appear on Fantrax. */}
