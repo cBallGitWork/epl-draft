@@ -655,9 +655,14 @@ Verify run beside them. They touch only `data/snapshots/`, so this is
 acceptable — but it is the same class of trap as the cron that had never fired:
 automation that looks attached and is not.
 
-**Hosting is decided — Vercel — and not yet executed.** The deploy was deferred
-on 13 Aug for a day with eyes on it; it remains a week overdue against `PLAN.md`
-and is the next infrastructure act. What is already settled for whoever clicks:
+**Hosting is live — Vercel, deployed 13 Aug 2026.** Production is
+**`https://epl-draft-companion.vercel.app`**, building from `main`. Verified
+from outside the same day: squads render players, which proves the bridge JSON
+crossed the root-directory boundary — the failure the plan expected first — and
+the optimizer serves PL portraits at ~25 KB from ~330 KB sources. One lag to
+know rather than rediscover: production is `main`, so a feature branch's routes
+404 there until it merges (`/matchup` did, on day one). The settings, recorded
+for whoever revisits them:
 Root Directory `apps/companion` with *include files outside the root directory*
 left on, because `@epl/core` ships raw TypeScript via `transpilePackages` (so
 install must run at the repo root) and `app/team/league.ts` imports the bridge
@@ -713,6 +718,12 @@ payloads; captures filed per league; period alignment settled and scripted; the
 
 ## Season log
 
+- 2026-08-13: The companion has somewhere to live. Craig ran the Vercel
+  import in the evening: `https://epl-draft-companion.vercel.app`, root
+  directory `apps/companion`, rehearsal league id set as a production env var.
+  Verified from outside — the bridge crossed the boundary, portraits come back
+  optimized, and `/matchup` 404s on production because `main` has not taken the
+  branch yet, which is the merge's argument, not a bug.
 - 2026-08-13: Head-to-head landed eight days before the league first needs it —
   `periodPairings` in core, `/matchup` under the League tab, and "vs" on every
   squad page. The probe that shaped it: `getMatchups` is login-walled, so the
