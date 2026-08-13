@@ -1,9 +1,13 @@
-import { FANTRAX_FXPA_BASE, HTTP_USER_AGENT } from "../../config";
+import { FANTRAX_FXPA_BASE } from "../../config";
+import { politeFetch } from "../../http/fetch";
 import { FantraxError, pageErrorEnvelope, responseErrorEnvelope } from "./errors";
 
 // Fantrax's SPA API. A separate file from `client.ts` on purpose: different
 // protocol, different failure envelope. Folding it into the fxea client would
 // leave one module where a reader cannot tell which surface a call is on.
+//
+// This is the surface the live scoreboard polls every thirty seconds on a
+// Saturday, so it backs off when told to, exactly as the fxea reads do.
 //
 // The wire format carries a BATCH — `{"msgs":[…]}` answered by `responses[]` —
 // and this asks exactly one question per request, because one question is all
@@ -50,9 +54,9 @@ export async function fxpaRead(
   method: string,
   data: Record<string, unknown> = {},
 ): Promise<unknown> {
-  const res = await fetch(`${FANTRAX_FXPA_BASE}?leagueId=${encodeURIComponent(leagueId)}`, {
+  const res = await politeFetch(`${FANTRAX_FXPA_BASE}?leagueId=${encodeURIComponent(leagueId)}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "User-Agent": HTTP_USER_AGENT },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ msgs: [{ method, data: { leagueId, ...data } }] }),
   });
 
