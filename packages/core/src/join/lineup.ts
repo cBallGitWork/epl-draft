@@ -53,6 +53,54 @@ export function positionDepth(position: string): number {
   return at === -1 ? PITCH_ORDER.length : at;
 }
 
+/** One row of the pitch with everybody in it, reserves included. */
+export interface SquadLine {
+  position: string;
+  /** Active players first, then reserves — the order they would stand in. */
+  players: RosteredPlayer[];
+}
+
+export interface Squad {
+  lines: SquadLine[];
+  /** The active eleven's shape. Reserves do not change a formation, so this is
+   *  the same string `lineup()` produces for the same team. */
+  shape: string;
+}
+
+/** The whole squad in positional lines, rather than an eleven and a bench.
+ *
+ *  A second arrangement beside `lineup()` rather than an option on it. They
+ *  answer different questions — "how does this team line up" and "who does this
+ *  manager have" — and the pitch view wants the second: a reserve keeper reads as
+ *  a reserve keeper when he is standing behind the goal, and as a name in a strip
+ *  when he is in a strip. The duplication is the rule of two, deliberately. */
+export function squadInLines(team: RosteredTeam): Squad {
+  const byPosition = new Map<string, RosteredPlayer[]>();
+
+  for (const player of team.players) {
+    const position = player.slot.position ?? UNPLACED;
+    const line = byPosition.get(position);
+    if (line) line.push(player);
+    else byPosition.set(position, [player]);
+  }
+
+  const lines = [...byPosition.entries()]
+    .map(([position, players]) => ({
+      position,
+      // Stable within each group: `sort` keeps the roster's own order among
+      // players that tie, so this only lifts the actives.
+      players: [...players].sort((a, b) => Number(isActive(b.slot)) - Number(isActive(a.slot))),
+    }))
+    .sort((a, b) => positionDepth(a.position) - positionDepth(b.position));
+
+  const shape = lines
+    .map((line) => line.players.filter((player) => isActive(player.slot)).length)
+    .filter((count) => count > 0)
+    .join("-");
+
+  return { lines, shape };
+}
+
 export function lineup(team: RosteredTeam): Lineup {
   const active = new Map<string, RosteredPlayer[]>();
   const bench: RosteredPlayer[] = [];

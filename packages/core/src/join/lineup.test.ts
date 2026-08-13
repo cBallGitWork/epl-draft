@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { FootballPlayer } from "../football/types";
 import type { RosteredPlayer, RosteredTeam } from "./roster";
-import { lineup } from "./lineup";
+import { lineup, squadInLines } from "./lineup";
 
 const player = (name: string): FootballPlayer => ({
   id: 1, code: 1, name, fullName: name, clubId: 1,
@@ -103,5 +103,51 @@ describe("lineup", () => {
   it("degrades to an empty pitch rather than throwing", () => {
     // What every team returns before the draft.
     expect(lineup(team([]))).toEqual({ lines: [], bench: [], shape: "" });
+  });
+});
+
+describe("squadInLines", () => {
+  it("puts all fifteen on the pitch, nobody in a strip underneath", () => {
+    const { lines } = squadInLines(drafted);
+    expect(lines.flatMap((line) => line.players)).toHaveLength(15);
+  });
+
+  it("stands the reserves behind the actives in their own position", () => {
+    // A reserve midfielder belongs in the midfield line, after the four playing
+    // there — that is what makes him legible as a reserve midfielder rather than
+    // a name in a list.
+    const midfield = squadInLines(drafted).lines.find((line) => line.position === "M");
+    expect(midfield?.players.map((p) => p.slot.status)).toEqual([
+      "ACTIVE", "ACTIVE", "ACTIVE", "ACTIVE", "RESERVE", "RESERVE", "RESERVE",
+    ]);
+  });
+
+  it("keeps the roster's own order among players of equal standing", () => {
+    const midfield = squadInLines(drafted).lines.find((line) => line.position === "M");
+    // The helper names each slot after the player, so the id is the name here.
+    expect(midfield?.players.filter((p) => p.slot.status === "ACTIVE").map((p) => p.slot.fantraxId))
+      .toEqual(["Palmer", "Bruno G.", "Wilson", "Enzo"]);
+  });
+
+  it("reports the same shape as the lineup, because reserves are not a formation", () => {
+    expect(squadInLines(drafted).shape).toBe(lineup(drafted).shape);
+  });
+
+  it("orders the lines back to front, as the pitch does", () => {
+    expect(squadInLines(drafted).lines.map((line) => line.position)).toEqual(["G", "D", "M", "F"]);
+  });
+
+  it("gives a line to a position nobody is starting in", () => {
+    // Legal: `maxActive` is a ceiling and Fantrax publishes no minimum, so a
+    // squad may hold a reserve keeper and start no keeper at all. He still has
+    // to stand somewhere.
+    const odd = team([slot("G", "RESERVE", "Sels"), slot("D", "ACTIVE", "Cash")]);
+    const { lines, shape } = squadInLines(odd);
+    expect(lines.map((line) => line.position)).toEqual(["G", "D"]);
+    expect(shape).toBe("1");
+  });
+
+  it("survives a squad with nobody in it", () => {
+    expect(squadInLines(team([]))).toEqual({ lines: [], shape: "" });
   });
 });
