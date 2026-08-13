@@ -5,4 +5,5 @@
 export { availability } from "./availability";
 export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
-export type { AvailabilityNote, Deadline, Deal } from "./types";
+export { teamOfTheWeek } from "./teamOfTheWeek";
+export type { AvailabilityNote, Deadline, Deal, Pick, TeamOfTheWeek } from "./types";

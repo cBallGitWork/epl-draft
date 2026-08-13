@@ -7,13 +7,17 @@ import {
   type Deadline,
   type Deal,
   type FootballSnapshot,
+  type LeagueInfo,
+  type RosteredTeam,
   type LeagueTeam,
+  type TeamOfTheWeek,
   availability,
   deals,
   duringGameweek,
   fetchTransactions,
   mapTransactions,
   nextDeadline,
+  teamOfTheWeek,
 } from "@epl/core";
 import { orRefusal } from "./refusals";
 import { getLeagueSquads } from "./squad/league";
@@ -33,6 +37,8 @@ export interface Edition {
   availability: AvailabilityNote[];
   deadline: Deadline | null;
   teams: LeagueTeam[];
+  /** Null until somebody has actually played. */
+  eleven: TeamOfTheWeek | null;
   /** The reader's own team, when they have signed in. Sections order themselves
    *  around it rather than being neutral. */
   mine: string | null;
@@ -66,8 +72,19 @@ export async function edition(mine: string | null): Promise<Edition> {
     availability: drafted ? yoursFirst(availability(drafted.period.teams), mine) : [],
     deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, now) : null,
     teams: drafted?.info?.teams ?? [],
+    eleven: eleven(drafted),
     mine,
   };
+}
+
+/** The week's eleven, once there is a week to pick it from.
+ *
+ *  Null rather than an empty side before a ball is kicked: a team of the week
+ *  with nobody in it is not a shorter section, it is a wrong one. */
+function eleven(drafted: { period: { teams: RosteredTeam[] }; info: LeagueInfo | null } | null) {
+  if (!drafted?.info) return null;
+  const picked = teamOfTheWeek(drafted.period.teams, drafted.info.roster);
+  return picked.picks.length === 0 ? null : picked;
 }
 
 /** Your problems first. A manager scanning injury news on a Friday is looking

@@ -43,3 +43,31 @@ export interface Deadline {
   /** ISO instant, as the league states it. */
   at: string;
 }
+
+/** One player in the week's eleven, with the fact that got him there and the
+ *  manager who owns him — which is most of the point. */
+export interface Pick {
+  playerName: string;
+  /** FPL's season-stable code, for the portrait. */
+  playerCode: number;
+  position: string;
+  ownerTeamId: string;
+  ownerName: string;
+  /** Whether his own manager actually started him. A reserve in the team of the
+   *  week is the best story on the page. */
+  started: boolean;
+  minutes: number;
+  goals: number;
+  assists: number;
+  cleanSheet: boolean;
+  saves: number;
+  /** How the selection was argued, kept so a reader can see the ranking is not
+   *  arbitrary. Not fantasy points and never shown as them. */
+  score: number;
+}
+
+export interface TeamOfTheWeek {
+  picks: Pick[];
+  /** e.g. "1-4-4-2", counted from the selection. */
+  shape: string;
+}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LEAGUE_NAME } from "@epl/core";
+import { LEAGUE_NAME, type Pick } from "@epl/core";
 import Masthead from "./components/gazette/Masthead";
 import Section from "./components/gazette/Section";
 import { edition } from "./edition";
@@ -19,6 +19,17 @@ import { myTeamId } from "./squad/session";
 
 // Must match `PAGE_REVALIDATE` in core config — see the note on /matchday.
 export const revalidate = 30;
+
+/** What got him picked, in the fewest words that are still true. */
+function did(pick: Pick): string {
+  const notes = [
+    pick.goals > 0 ? `${pick.goals}G` : null,
+    pick.assists > 0 ? `${pick.assists}A` : null,
+    pick.cleanSheet ? "CS" : null,
+    pick.saves >= 4 ? `${pick.saves} saves` : null,
+  ].filter((note): note is string => note !== null);
+  return notes.length > 0 ? notes.join(" · ") : `${pick.minutes}'`;
+}
 
 export default async function GazettePage() {
   const squads = await getLeagueSquads();
@@ -50,6 +61,36 @@ export default async function GazettePage() {
             Watch
           </span>
         </Link>
+      ) : null}
+
+      {paper.eleven ? (
+        <Section title="Team of the week" aside={paper.eleven.shape}>
+          <ul className="flex flex-col gap-1.5">
+            {paper.eleven.picks.map((pick) => (
+              <li
+                key={pick.playerCode}
+                className={`elev rounded-xl border bg-surface px-3 py-2.5 ${
+                  pick.ownerTeamId === paper.mine
+                    ? "border-line border-l-4 border-l-accent"
+                    : "border-line"
+                }`}
+              >
+                <p className="flex items-baseline gap-2">
+                  <span className="numeric w-5 shrink-0 text-2xs text-faint">{pick.position}</span>
+                  <span className="min-w-0 flex-1 truncate font-semibold">{pick.playerName}</span>
+                  <span className="numeric shrink-0 text-2xs text-muted">{did(pick)}</span>
+                </p>
+                <p className="pl-7 pt-0.5 text-2xs text-faint">
+                  {pick.ownerName}
+                  {/* The best story on the page: his own manager left him out. */}
+                  {pick.started ? null : (
+                    <span className="font-semibold text-mid"> · left him on the bench</span>
+                  )}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Section>
       ) : null}
 
       {paper.deals.length > 0 ? (
