@@ -674,8 +674,32 @@ in the ship-day runbook as a numbered step. `FANTRAX_COOKIE` is read by nothing
 in the tree and must never reach Vercel. Expect a redeploy per day off the
 capture commit; Ignored Build Step is the lever if that becomes noise.
 
+### A push that deploys nothing (13 Aug, open)
+
+The merge of `feat/fantrax-league-layer` into `main` at 10:53 produced a
+Production deployment that Vercel reports as **`failure — Deployment was
+blocked`**, so the URL kept serving the 10:49 build and `/matchup` stayed a 404
+on a commit that contains it. Nothing was wrong with the code: `verify.yml` was
+green on the same commit, and the identical build passes locally.
+
+Blocked is not failed — the build never ran, which is why there is no build log
+to read, only the deployment page. The cause is account- or project-level and
+lives in the dashboard: a spend or usage limit, deployment protection, or a
+paused project. The team is `gsi-draft`, which is a team rather than a personal
+account, and a team without billing settled is the readiest explanation.
+
+Worth writing down beyond its own fix, because it is the **third** instance of
+one pattern this month: the capture cron that had never fired, the capture
+commits that trigger no workflow, and now a git push that deploys nothing. Every
+one of them looks automated from the inside and is not. Green CI says the code
+is good; it does not say the code shipped. **Before 10 Oct, the ship-day runbook
+must check the deployed URL itself, not the commit that was pushed to it.**
+
 ## Questions
 
+- **Why is Vercel blocking production deployments?** Opened 13 Aug — the
+  dashboard holds the answer and the fix. Until it is settled, `main` and the
+  live URL are two different versions of the app.
 - **Does `?period=N` serve history once a period has completed?** Partially
   answered 12 Aug — accepted and echoed, but inert while every period is still
   in the future. Re-ask after period 1 ends 28 Aug.
