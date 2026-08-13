@@ -1,11 +1,17 @@
 import Link from "next/link";
 import { type FootballSnapshot, duringGameweek, getFootballSnapshot } from "@epl/core";
 import GameweekView from "../components/football/GameweekView";
+import YourMatchup from "./YourMatchup";
 import PageHeader from "../components/shell/PageHeader";
 import { londonDayAndTime } from "../londonTime";
 
-// The live viewer. Runs entirely off FPL's public API, so it works from the first
-// match of the season without Fantrax, a draft, or a single credential.
+// The live centre. Your head-to-head first, the real football under it — the
+// order a manager actually cares about them in.
+//
+// The football half runs entirely off FPL's public API, so it works from the
+// first match of the season without Fantrax, a draft, or a single credential.
+// The head-to-head renders nothing when there is nothing to say, which keeps
+// that true.
 
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
@@ -26,7 +32,16 @@ export default async function MatchdayPage() {
   // someone lands here from a bookmark, or is reading it when the last match
   // ends. A redirect would take the page out from under them; a `Nothing` would
   // claim something failed. Neither is true, so it says where the football went.
-  return during ? <GameweekView snapshot={snapshot} /> : <BetweenGameweeks snapshot={snapshot} />;
+  // The head-to-head leads either way. Between rounds it is the pairing without
+  // a score, which is the honest version of "who am I playing next" — and it is
+  // the same component, so the one that matters on Saturday is the one that has
+  // been on screen all week.
+  return (
+    <div className="flex flex-col gap-4">
+      <YourMatchup />
+      {during ? <GameweekView snapshot={snapshot} /> : <BetweenGameweeks snapshot={snapshot} />}
+    </div>
+  );
 }
 
 function BetweenGameweeks({ snapshot }: { snapshot: FootballSnapshot }) {
