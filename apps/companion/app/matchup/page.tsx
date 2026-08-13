@@ -7,8 +7,8 @@ import {
   isResolved,
   periodPairings,
 } from "@epl/core";
-import LeagueCrest from "../components/shell/LeagueCrest";
 import Nothing from "../components/shell/Nothing";
+import PageHeader from "../components/shell/PageHeader";
 import { getLeagueSquads } from "../team/league";
 
 // Who each squad plays this period. The Saturday screen — and deliberately not a
@@ -102,15 +102,14 @@ export default async function MatchupPage() {
 
   return (
     <div className="flex flex-col gap-3">
-      <header className="flex items-center gap-2.5 pt-1">
-        <LeagueCrest height={26} />
-        <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-bold tracking-tight">Matchups</h1>
-          <p className="numeric text-2xs text-faint">
+      <PageHeader
+        title="Matchups"
+        sub={
+          <>
             Period {period} · Gameweek {squads.snapshot.gameweek}
-          </p>
-        </div>
-      </header>
+          </>
+        }
+      />
 
       {/* Honest label, not small print: these are the events we can count from
           FPL's public feed. The points belong to Fantrax and appear on Fantrax. */}

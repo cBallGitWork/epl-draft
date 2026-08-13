@@ -8,8 +8,8 @@ import {
   mapStandings,
 } from "@epl/core";
 import type { StandingsRow } from "@epl/core";
-import LeagueCrest from "../components/shell/LeagueCrest";
 import Nothing from "../components/shell/Nothing";
+import PageHeader from "../components/shell/PageHeader";
 import { londonDate } from "../londonTime";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
@@ -54,10 +54,7 @@ export default async function StandingsPage() {
 
   return (
     <div className="flex flex-col gap-3">
-      <header className="flex items-center gap-2.5 pt-1">
-        <LeagueCrest height={26} />
-        <h1 className="text-xl font-bold tracking-tight">Table</h1>
-      </header>
+      <PageHeader title="Table" />
 
       <div className="flex items-center gap-3 px-3 text-2xs font-bold uppercase tracking-widest text-faint">
         <span className="w-5">#</span>

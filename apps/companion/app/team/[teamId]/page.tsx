@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, clubById, periodPairings } from "@epl/core";
-import LeagueCrest from "../../components/shell/LeagueCrest";
 import LineupPlanner from "../../components/league/LineupPlanner";
+import PageHeader from "../../components/shell/PageHeader";
 import Pitch from "../../components/league/Pitch";
 import SquadList from "../../components/league/SquadList";
 import { getLeagueSquads, mayPreviewLineups } from "../league";
@@ -53,21 +53,21 @@ export default async function TeamPage({
 
   return (
     <div className="flex flex-col gap-3">
-      <header className="flex items-center gap-2.5 pt-1">
-        <LeagueCrest height={26} />
-        <div className="min-w-0 flex-1">
-          <h1 className="truncate text-xl font-bold tracking-tight">{team.teamName}</h1>
-          <p className="numeric text-2xs text-faint">
+      <PageHeader
+        title={team.teamName}
+        sub={
+          <>
             Period {squads.period.period ?? "—"} · Gameweek {squads.snapshot.gameweek}
             {squads.display.show === "squad" && planning === null ? " · squad" : null}
-          </p>
-          {opponent ? (
-            <Link href="/matchup" className="text-2xs font-medium text-muted hover:underline">
-              vs {opponent.name}
-            </Link>
-          ) : null}
-        </div>
-      </header>
+          </>
+        }
+      >
+        {opponent ? (
+          <Link href="/matchup" className="text-2xs font-medium text-muted hover:underline">
+            vs {opponent.name}
+          </Link>
+        ) : null}
+      </PageHeader>
 
       {planning !== null ? (
         <>
