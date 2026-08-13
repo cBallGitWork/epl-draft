@@ -41,7 +41,13 @@ export default function PlayerTable({
               <th
                 key={column.key}
                 scope="col"
-                aria-sort={current.key === column.key ? "other" : undefined}
+                aria-sort={
+                  current.key === column.key
+                    ? current.descending
+                      ? "descending"
+                      : "ascending"
+                    : undefined
+                }
                 className={`py-1.5 font-bold ${column.key === "name" ? "text-left" : "text-right"} ${
                   column.key === "rank" ? WIDE : ""
                 } ${column.key === "name" ? "" : "w-14"}`}

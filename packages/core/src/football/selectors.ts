@@ -169,3 +169,16 @@ export function adjacentGameweeks(snapshot: FootballSnapshot): {
 export function hasGameweek(snapshot: FootballSnapshot, gameweek: number): boolean {
   return snapshot.gameweeks.includes(gameweek);
 }
+
+/** Whether FPL has said anything that should worry a manager.
+ *
+ *  One rule, in one place, because two readers had two rules: the paper's doubts
+ *  column counted a stated chance of playing and the player card did not, so the
+ *  same footballer could be a doubt on one tab and fit on the next.
+ *
+ *  A hundred percent with nothing written against it is FPL saying "he is fine",
+ *  which is the one combination that is not a doubt despite carrying a number. */
+export function isDoubtful(player: FootballPlayer): boolean {
+  if (player.news === "" && player.chanceOfPlaying === 100) return false;
+  return player.status !== "a" || player.news !== "" || player.chanceOfPlaying !== null;
+}

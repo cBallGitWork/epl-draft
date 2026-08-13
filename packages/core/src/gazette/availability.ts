@@ -1,3 +1,4 @@
+import { isDoubtful } from "../football/selectors";
 import { isResolved } from "../join/roster";
 import type { RosteredTeam } from "../join/roster";
 import type { AvailabilityNote } from "./types";
@@ -23,12 +24,9 @@ export function availability(teams: readonly RosteredTeam[]): AvailabilityNote[]
       if (!isResolved(rostered)) continue;
       const { player } = rostered;
 
-      // `status: "a"` with an empty note is a fit player. Anything else — a flag,
-      // a percentage, or words — is something a manager may have to act on.
-      const flagged = player.status !== "a" || player.news !== "" || player.chanceOfPlaying !== null;
-      if (!flagged) continue;
-      // A hundred percent with no news attached is FPL saying "he is fine".
-      if (player.news === "" && player.chanceOfPlaying === 100) continue;
+      // The rule lives in the football layer: the player card asks the same
+      // question of the same fields, and the two must not answer differently.
+      if (!isDoubtful(player)) continue;
 
       notes.push({
         playerName: player.name,

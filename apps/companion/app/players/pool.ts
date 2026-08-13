@@ -1,6 +1,8 @@
+import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
+  PAGE_REVALIDATE,
   POOL_PAGE_SIZE,
   fetchLeagueInfo,
   fetchPlayerPool,
@@ -22,10 +24,6 @@ import type { Unavailable } from "../refusals";
 // (`leaguePool`); what belongs here is which failures are fatal to the page and
 // which are ordinary states of a league that has not drafted.
 
-/** Everything the pool view needs, or which read stopped it.
- *
- *  Three reads can fail here rather than one, and "which one" is the first useful
- *  question — which is why the tell carries the method (see `refusals.ts`). */
 /** One player as the table shows him: who he is, what our league says about him,
  *  and Fantrax's own number against his name. */
 export interface PoolRow {
@@ -35,26 +33,56 @@ export interface PoolRow {
   stats: PoolStatRow | null;
 }
 
-export type LeaguePool =
-  | {
-      rows: PoolRow[];
-      /** The league's own position vocabulary, in pitch order. Read from its caps
-       *  rather than written out here: the letters are a commissioner setting. */
-      positions: string[];
-      /** Team ids to names, for the one column that names an owner. Built from the
-       *  rosters we already hold rather than from a second payload. */
-      teamNames: Map<string, string>;
-      /** Which numbers the points column holds, as Fantrax labelled them. Null
-       *  when the stats read failed, which costs the column and not the page. */
-      season: StatSeason | null;
-      /** How many players Fantrax has stats for that this read did not carry.
-       *  Nought in the ordinary case; anything else is printed rather than left
-       *  to look like a pool with missing numbers. */
-      missing: number;
-    }
-  | Unavailable;
+/** Everything the pool view needs, minus the one field a cache cannot hold.
+ *
+ *  Four reads can fail here rather than one, and "which one" is the first useful
+ *  question — which is why the tell carries the method (see `refusals.ts`). */
+interface Pool {
+  rows: PoolRow[];
+  /** The league's own position vocabulary, in pitch order. Read from its caps
+   *  rather than written out here: the letters are a commissioner setting. */
+  positions: string[];
+  /** Which numbers the points column holds, as Fantrax labelled them. Null when
+   *  the stats read failed, which costs the column and not the page. */
+  season: StatSeason | null;
+  /** How many players Fantrax has stats for that this read did not carry.
+   *  Nought in the ordinary case; anything else is printed rather than left to
+   *  look like a pool with missing numbers. */
+  missing: number;
+  /** Why there are no numbers, when there are none. Without it a failed stats
+   *  read renders seven hundred rows of dashes with nothing to say why, which
+   *  reads as a pool Fantrax has never scored rather than as a read that did
+   *  not answer. */
+  statsRefused: string | null;
+}
 
+/** Team ids to names, for the one column that names an owner. Built from the
+ *  rosters we already hold rather than from a second payload. */
+export type LeaguePool = (Pool & { teamNames: Map<string, string> }) | Unavailable;
+
+/** What the cache can hold. `unstable_cache` serialises and a Map does not
+ *  survive the round trip — it comes back as `{}` and every owner column
+ *  silently reads "unowned". Entries go in, the Map is built on the way out. */
+type CachedPool = (Pool & { teamNames: [string, string][] }) | Unavailable;
+
+const readPool = unstable_cache(readLeaguePool, ["league-pool", FANTRAX_LEAGUE_ID], {
+  revalidate: PAGE_REVALIDATE,
+});
+
+/** Cached, and that is not an optimisation.
+ *
+ *  Reading the session cookie in the layout makes every route dynamic, so
+ *  without this the whole pool — a 533 KB stats payload among four reads — is
+ *  fetched again for every view by every phone. The league is the same for
+ *  everybody, so it is fetched once and rendered sixteen ways; nothing personal
+ *  is inside the cache. */
 export async function getLeaguePool(): Promise<LeaguePool> {
+  const cached = await readPool();
+  if ("unavailable" in cached) return cached;
+  return { ...cached, teamNames: new Map(cached.teamNames) };
+}
+
+async function readLeaguePool(): Promise<CachedPool> {
   const [pool, info, rosters, stats] = await Promise.all([
     orRefusal(fetchPlayerPool()),
     orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID)),
@@ -89,8 +117,9 @@ export async function getLeaguePool(): Promise<LeaguePool> {
     positions: Object.keys(league.roster.maxActiveByPosition).sort(
       (a, b) => positionDepth(a) - positionDepth(b),
     ),
-    teamNames: new Map(held.teams.map((team) => [team.teamId, team.teamName])),
+    teamNames: held.teams.map((team) => [team.teamId, team.teamName]),
     season: scored?.season ?? null,
     missing: Math.max(0, (scored?.total ?? 0) - (scored?.rows.length ?? 0)),
+    statsRefused: stats instanceof FantraxError ? tell(stats) : null,
   };
 }

@@ -11,7 +11,7 @@ import {
   mapTeamStats,
   playerByCode,
 } from "@epl/core";
-import type { Bridge, FootballPlayer, StatColumn, StatSeason } from "@epl/core";
+import type { Bridge, FootballPlayer, StatColumn, StatSeason, TeamStats } from "@epl/core";
 import { footballNow } from "../../football";
 import mapping from "../../../../../data/mappings/fantrax.json";
 
@@ -56,10 +56,23 @@ const yearToDate = unstable_cache(
   { revalidate: SEASON_CODE_LIFE },
 );
 
+/** One team's table, or nothing.
+ *
+ *  The refusal is swallowed inside the cache rather than thrown across it, and
+ *  that is deliberate: `unstable_cache` serialises, so a `FantraxError` thrown
+ *  through it need not arrive as one, and `instanceof` on the far side would
+ *  quietly answer false. The same trap is recorded against `squad/league.ts`.
+ *  Nothing here needs to tell one refusal from another — an undrafted league
+ *  answering `WARNING` and Fantrax being down both mean this section has no
+ *  numbers to show, and it says so by not appearing. */
 const readTeamStats = unstable_cache(
-  async (teamId: string, season: string | undefined) => {
-    const raw = await fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season);
-    return mapTeamStats(raw);
+  async (teamId: string, season: string | undefined): Promise<TeamStats | null> => {
+    try {
+      return mapTeamStats(await fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season));
+    } catch (error) {
+      if (error instanceof FantraxError) return null;
+      throw error;
+    }
   },
   ["fantrax-team-stats", FANTRAX_LEAGUE_ID],
   { revalidate: PAGE_REVALIDATE },
@@ -71,15 +84,8 @@ export async function playerSeason(
 ): Promise<PlayerSeason | null> {
   if (ownerTeamId === null) return null;
 
-  let stats;
-  try {
-    stats = await readTeamStats(ownerTeamId, await yearToDate());
-  } catch (error) {
-    // A refusal costs this section and nothing else. `WARNING` is what an
-    // undrafted league answers, which is the real league's state until 10 Oct.
-    if (error instanceof FantraxError) return null;
-    throw error;
-  }
+  const stats = await readTeamStats(ownerTeamId, await yearToDate());
+  if (stats === null) return null;
 
   for (const group of stats.groups) {
     const line = group.lines.find((entry) => entry.fantraxId === fantraxId);

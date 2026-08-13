@@ -28,6 +28,7 @@ export {
   duringGameweek,
   fixturesInOrder,
   hasGameweek,
+  isDoubtful,
   isMatchdayLive,
   playerByCode,
 } from "./selectors";

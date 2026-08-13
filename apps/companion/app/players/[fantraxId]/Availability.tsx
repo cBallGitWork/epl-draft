@@ -1,3 +1,4 @@
+import { isDoubtful } from "@epl/core";
 import type { FootballPlayer } from "@epl/core";
 
 // Whether he is fit, from the football layer.
@@ -11,9 +12,7 @@ export default function Availability({ player }: { player: FootballPlayer | null
   // Silent for a fit player and for one the bridge has not settled. Both are
   // ordinary — the pool carries academy names FPL has never listed — and a panel
   // saying "no news" on every card is noise on seven hundred pages.
-  if (player === null) return null;
-  const flagged = player.status !== "a" || player.news !== "";
-  if (!flagged) return null;
+  if (player === null || !isDoubtful(player)) return null;
 
   return (
     <section

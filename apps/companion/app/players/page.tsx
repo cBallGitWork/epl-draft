@@ -130,6 +130,16 @@ export default async function PlayersPage({
         </p>
       ) : null}
 
+      {/* Both say why a number is missing rather than leaving a dash to be read
+          as a nought. The first is a read that did not answer at all; the second
+          is one that answered short. */}
+      {pool.statsRefused ? (
+        <p className="text-2xs text-faint">
+          No points here — Fantrax would not give us its numbers ({pool.statsRefused}). Everything
+          else on this page is current.
+        </p>
+      ) : null}
+
       {pool.missing > 0 ? (
         <p className="text-2xs text-faint">
           Fantrax has numbers for {pool.missing} more than this read carried; those rows show a dash.
