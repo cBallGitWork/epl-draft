@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/standings", destination: "/league", permanent: true },
       { source: "/matchup", destination: "/league/matchups", permanent: true },
+      { source: "/team", destination: "/squad", permanent: true },
+      { source: "/team/:teamId", destination: "/squad/:teamId", permanent: true },
     ];
   },
 

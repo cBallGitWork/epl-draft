@@ -17,7 +17,7 @@ import { usePathname } from "next/navigation";
  *  where you are. */
 const TABS = [
   { href: "/", label: "Matchday", routes: ["/", "/gw"] },
-  { href: "/team", label: "Squads", routes: ["/team"] },
+  { href: "/squad", label: "Squads", routes: ["/squad"] },
   { href: "/players", label: "Players", routes: ["/players"] },
   { href: "/league", label: "League", routes: ["/league"] },
 ];

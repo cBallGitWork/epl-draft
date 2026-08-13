@@ -9,7 +9,7 @@ import {
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import PageHeader from "../../components/shell/PageHeader";
-import { getLeagueSquads } from "../../team/league";
+import { getLeagueSquads } from "../../squad/league";
 
 // Who each squad plays this period. The Saturday screen — and deliberately not a
 // scoreboard: getMatchups is behind a login (probed 13 Aug), so Fantrax's live
@@ -47,7 +47,7 @@ function Side({
 }) {
   const counts = open && roster ? events(roster).filter((e) => e.count > 0) : [];
   return (
-    <Link href={`/team/${team.teamId}`} className="flex min-h-11 items-center gap-3 px-3 py-2 hover:bg-raised">
+    <Link href={`/squad/${team.teamId}`} className="flex min-h-11 items-center gap-3 px-3 py-2 hover:bg-raised">
       <span className="min-w-0 flex-1 truncate font-semibold">{team.name}</span>
       <span className="numeric text-sm text-muted">
         {counts.length > 0 ? counts.map((e) => `${e.label} ${e.count}`).join(" · ") : "—"}

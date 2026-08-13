@@ -2,7 +2,7 @@ import LeagueCrest from "./LeagueCrest";
 
 // A page that cannot show what it exists to show, saying why.
 //
-// Five of these now: two on /team, two on the table, one on the pool. Nearly all
+// Five of these now: two on /squad, two on the table, one on the pool. Nearly all
 // of them are ordinary states rather than faults — a league that has not drafted
 // answers with no teams, no rows and no owners, and that is the state our real
 // league is in until 10 Oct. They are the empty states the app is designed

@@ -97,7 +97,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
       <div className="flex flex-col gap-1.5">
         {intel.ownerTeamId ? (
           <Link
-            href={`/team/${intel.ownerTeamId}`}
+            href={`/squad/${intel.ownerTeamId}`}
             className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
           >
             The squad he is in

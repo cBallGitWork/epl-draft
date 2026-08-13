@@ -26,7 +26,7 @@ export default async function TeamPage({
   // unreachable is not — that is a state of ours, and it belongs on /team where
   // it is described rather than behind a status code.
   if ("undrafted" in squads) notFound();
-  if ("unavailable" in squads) redirect("/team");
+  if ("unavailable" in squads) redirect("/squad");
 
   const team = squads.period.teams.find((t) => t.teamId === teamId);
   if (!team) notFound();
@@ -97,7 +97,7 @@ export default async function TeamPage({
       )}
 
       <Link
-        href="/team"
+        href="/squad"
         className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
       >
         Every squad

@@ -49,7 +49,7 @@ export default async function SquadsPage() {
           return (
             <li key={team.teamId}>
               <Link
-                href={`/team/${team.teamId}`}
+                href={`/squad/${team.teamId}`}
                 className="elev flex min-h-14 items-center gap-3 rounded-xl border border-line bg-surface px-3 py-2.5 hover:bg-raised"
               >
                 <span className="min-w-0 flex-1 truncate font-semibold">{team.teamName}</span>

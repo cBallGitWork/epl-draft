@@ -70,7 +70,7 @@ export default async function StandingsPage() {
         {rows.map((row) => (
           <li key={row.teamId}>
             <Link
-              href={`/team/${row.teamId}`}
+              href={`/squad/${row.teamId}`}
               className="elev flex min-h-14 items-center gap-3 rounded-xl border border-line bg-surface px-3 py-2.5 hover:bg-raised"
             >
               <span className="numeric w-5 text-sm text-faint">{row.rank}</span>

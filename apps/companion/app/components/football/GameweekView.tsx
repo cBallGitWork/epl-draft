@@ -54,7 +54,7 @@ export default function GameweekView({ snapshot }: { snapshot: FootballSnapshot 
       </nav>
 
       <Link
-        href="/team"
+        href="/squad"
         className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
       >
         Squads
