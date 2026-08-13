@@ -1,3 +1,4 @@
+import Section from "../../components/shell/Section";
 import type { PlayerSeason } from "./season";
 
 // The first view in this app that explains a number rather than printing one.
@@ -24,19 +25,17 @@ export default function Breakdown({ season }: { season: PlayerSeason | null }) {
     : season.season.name || "This season";
 
   return (
-    <section className="flex flex-col gap-1.5">
-      <div className="flex items-baseline justify-between gap-3 border-b border-line pb-1">
-        <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-muted">
-          {heading}
-        </h2>
-        <span className="numeric text-sm font-bold">
+    <Section
+      title={heading}
+      aside={
+        <span className="numeric text-sm font-bold text-ink">
           {season.points ?? "—"}
           <span className="ml-1 text-2xs font-normal text-faint">
             FPts{season.perGame === null ? "" : ` · ${season.perGame} a game`}
           </span>
         </span>
-      </div>
-
+      }
+    >
       {season.categories.length === 0 ? (
         <p className="text-sm text-muted">Nothing on his record yet.</p>
       ) : null}
@@ -61,7 +60,7 @@ export default function Breakdown({ season }: { season: PlayerSeason | null }) {
           </li>
         ))}
       </ul>
-    </section>
+    </Section>
   );
 }
 

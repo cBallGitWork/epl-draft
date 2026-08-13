@@ -1,8 +1,12 @@
 import type { ReactNode } from "react";
 
-// A column of the paper. Only ever rendered around something worth reading —
-// the edition drops a section with nothing in it rather than printing an empty
-// box under a heading.
+// A headed block with a rule under it: the shape every tab uses to say "this
+// part is about that". It began as a column of the paper and moved here when
+// the player card and the FPL tab hand-rolled the same six classes.
+//
+// It renders whatever it is given, including nothing. Deciding a section is not
+// worth printing belongs to the page that knows what is in it — the Gazetta
+// drops an empty section rather than printing a box under a heading.
 
 export default function Section({
   title,

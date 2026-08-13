@@ -6,13 +6,6 @@ export type {
   LeagueInfo,
   LeagueMatchup,
   LiveTeamScore,
-  PoolStatRow,
-  PoolStats,
-  StatColumn,
-  StatGroup,
-  StatLine,
-  StatSeason,
-  TeamStats,
   LeaguePeriod,
   LeaguePlayer,
   LeaguePlayerState,
@@ -26,6 +19,16 @@ export type {
   TransactionKind,
   TransactionView,
 } from "./types";
+
+export type {
+  PoolStatRow,
+  PoolStats,
+  StatColumn,
+  StatGroup,
+  StatLine,
+  StatSeason,
+  TeamStats,
+} from "./stats";
 
 export { captureStaleness } from "./staleness";
 export type { CaptureStaleness } from "./staleness";

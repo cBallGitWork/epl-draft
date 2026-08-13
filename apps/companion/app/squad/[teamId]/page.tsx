@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ButtonLink from "../../components/shell/ButtonLink";
 import { notFound, redirect } from "next/navigation";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, clubById, periodPairings } from "@epl/core";
 import LineupPlanner from "../../components/league/LineupPlanner";
@@ -96,12 +97,7 @@ export default async function TeamPage({
         <SquadList team={team} clubs={clubs} because={squads.display.because} />
       )}
 
-      <Link
-        href="/squad"
-        className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
-      >
-        Every squad
-      </Link>
+      <ButtonLink href="/squad">Every squad</ButtonLink>
     </div>
   );
 }

@@ -2,6 +2,9 @@
 
 import { useMemo, useState } from "react";
 import type { Club, LeaguePlayerState, RosterLimits, RosteredTeam, RosterSlot } from "@epl/core";
+// The look without the component: this one link leaves the app, so it stays a
+// plain anchor with `target="_blank"` rather than becoming a router link.
+import { BUTTON } from "../shell/ButtonLink";
 import {
   applyMove,
   eligibilityOf,
@@ -175,7 +178,7 @@ export default function LineupPlanner({
         href={fantraxUrl}
         target="_blank"
         rel="noreferrer"
-        className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
+        className={BUTTON}
       >
         Set this lineup in Fantrax
       </a>

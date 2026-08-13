@@ -81,14 +81,12 @@ describe("mapTeamStats", () => {
     // keeper table here is one keeper and one vacant reserve spot.
     expect(stats.groups[0].lines).toHaveLength(1);
     expect(stats.groups[1].lines).toHaveLength(2);
-    expect(stats.groups[0].lines[0].name).toBe("Emiliano Martinez");
-    expect(stats.groups[0].lines[0].clubCode).toBe("AVL");
+    expect(stats.groups[0].lines[0].fantraxId).toBe("02lz0");
   });
 
   it("carries the season Fantrax answered with, not the one we asked for", () => {
     expect(stats.season.code).toBe("SEASON_925_YEAR_TO_DATE");
     expect(stats.season.projected).toBe(false);
-    expect(stats.teamId).toBe("8enbgqo5msgb375j");
   });
 
   it("survives a payload stripped of everything", () => {

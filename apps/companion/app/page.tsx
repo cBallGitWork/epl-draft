@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, LEAGUE_NAME, type Pick } from "@epl/core";
 import Masthead from "./components/gazette/Masthead";
 import Nothing from "./components/shell/Nothing";
-import Section from "./components/gazette/Section";
+import Section from "./components/shell/Section";
 import { edition } from "./edition";
 import { londonDate, londonDayAndTime } from "./londonTime";
 import { getLeagueSquads } from "./squad/league";

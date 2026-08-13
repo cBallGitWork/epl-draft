@@ -1,6 +1,7 @@
 import { clubById, clubColours, playerByCode } from "@epl/core";
 import { footballNow } from "../football";
 import Nothing from "../components/shell/Nothing";
+import Section from "../components/shell/Section";
 import PageHeader from "../components/shell/PageHeader";
 import PlayerPortrait from "../components/football/PlayerPortrait";
 import EntryForm from "./EntryForm";
@@ -61,15 +62,10 @@ export default async function FplPage() {
       </dl>
 
       {squad ? (
-        <section className="flex flex-col gap-2">
-          <div className="flex items-baseline justify-between gap-3 border-b border-line pb-1">
-            <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-muted">
-              Gameweek {squad.gameweek}
-            </h2>
-            <span className="text-2xs text-faint">
-              {squad.hit ? `${squad.hit} pt hit · ` : null}FPL&apos;s scoring
-            </span>
-          </div>
+        <Section
+          title={`Gameweek ${squad.gameweek}`}
+          aside={<>{squad.hit ? `${squad.hit} pt hit · ` : null}FPL&apos;s scoring</>}
+        >
           <ul className="flex flex-col gap-1">
             {squad.picks.map((pick) => {
               const player = players.get(pick.code);
@@ -99,7 +95,7 @@ export default async function FplPage() {
               );
             })}
           </ul>
-        </section>
+        </Section>
       ) : (
         <p className="text-sm text-muted">
           No squad to show yet — FPL publishes a side once its first gameweek has been played.
@@ -107,10 +103,7 @@ export default async function FplPage() {
       )}
 
       {entry.leagues.length > 0 ? (
-        <section className="flex flex-col gap-2">
-          <h2 className="border-b border-line pb-1 font-display text-2xs font-bold uppercase tracking-widest text-muted">
-            Mini-leagues
-          </h2>
+        <Section title="Mini-leagues">
           <ul className="flex flex-col gap-1">
             {entry.leagues.map((league) => (
               <li key={league.id} className="flex min-h-11 items-center gap-3 px-1 text-sm">
@@ -119,7 +112,7 @@ export default async function FplPage() {
               </li>
             ))}
           </ul>
-        </section>
+        </Section>
       ) : null}
 
       <form action={forgetEntry}>

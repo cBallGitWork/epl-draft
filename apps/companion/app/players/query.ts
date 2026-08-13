@@ -83,41 +83,39 @@ export function shownRows(rows: readonly PoolRow[], query: PlayersQuery): PoolRo
   });
 }
 
+/** This page again with part of the query changed. An undefined value drops the
+ *  key, which is what makes every control below able to undo itself.
+ *
+ *  Every link on the table goes through here so that none of them can lose the
+ *  others' state: a sort that forgot the filter, or a filter that forgot the
+ *  search, would be a control that quietly does two things. */
+function href(query: PlayersQuery, changes: Partial<PlayersQuery>): string {
+  const next = new URLSearchParams();
+  for (const [name, value] of Object.entries({ ...query, ...changes })) {
+    if (value) next.set(name, value);
+  }
+  const search = next.toString();
+  return search ? `/players?${search}` : "/players";
+}
+
 /** The same list, showing every row. */
 export function showAllHref(query: PlayersQuery): string {
-  const next = new URLSearchParams();
-  for (const [name, value] of Object.entries(query)) if (value) next.set(name, value);
-  next.set("all", "1");
-  return `/players?${next}`;
+  return href(query, { all: "1" });
 }
 
 /** The link that sorts by a column, or reverses it if it is already the one.
  *
- *  Every column starts in the direction that answers the question being asked of
- *  it: points highest first, names from A. */
+ *  A column not currently sorted starts in the direction that answers the
+ *  question being asked of it: points highest first, names from A. */
 export function sortHref(query: PlayersQuery, key: ColumnKey): string {
-  const next = new URLSearchParams();
-  for (const [name, value] of Object.entries(query)) {
-    if (value && name !== "sort" && name !== "dir") next.set(name, value);
-  }
-  const first = column(key)?.ascending ?? true;
   const current = activeSort(query);
-  // Tapping the column you are already sorted by turns it round; tapping any
-  // other starts it in the direction that answers the question asked of it —
-  // points highest first, names from A.
-  const descending = current.key === key ? !current.descending : !first;
-  next.set("sort", key);
-  next.set("dir", descending ? "desc" : "asc");
-  return `/players?${next}`;
+  const descending =
+    current.key === key ? !current.descending : !(column(key)?.ascending ?? true);
+  return href(query, { sort: key, dir: descending ? "desc" : "asc" });
 }
 
 /** Tapping the filter you are already on clears it, so every chip is its own way
  *  back and the page needs no "all" button to undo itself. */
-export function filterHref(query: PlayersQuery, key: string, value: string): string {
-  const next = new URLSearchParams();
-  for (const [name, held] of Object.entries(query)) if (held) next.set(name, held);
-  if (next.get(key) === value) next.delete(key);
-  else next.set(key, value);
-  const search = next.toString();
-  return search ? `/players?${search}` : "/players";
+export function filterHref(query: PlayersQuery, key: "status" | "pos", value: string): string {
+  return href(query, { [key]: query[key] === value ? undefined : value });
 }

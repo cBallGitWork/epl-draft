@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { FANTRAX_LEAGUE_ID, FantraxError, fetchPlayerProfile, mapPlayerProfile } from "@epl/core";
 import type { LabelledValue, PlayerIntel } from "@epl/core";
+import ButtonLink from "../../components/shell/ButtonLink";
 import Nothing from "../../components/shell/Nothing";
 import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
@@ -118,19 +118,9 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
 
       <div className="flex flex-col gap-1.5">
         {intel.ownerTeamId ? (
-          <Link
-            href={`/squad/${intel.ownerTeamId}`}
-            className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
-          >
-            The squad he is in
-          </Link>
+          <ButtonLink href={`/squad/${intel.ownerTeamId}`}>The squad he is in</ButtonLink>
         ) : null}
-        <Link
-          href="/players"
-          className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
-        >
-          Every player
-        </Link>
+        <ButtonLink href="/players">Every player</ButtonLink>
       </div>
     </div>
   );

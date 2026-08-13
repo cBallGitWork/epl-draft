@@ -1,4 +1,12 @@
-import type { PoolStatRow, PoolStats, StatColumn, StatGroup, StatLine, StatSeason, TeamStats } from "../types";
+import type {
+  PoolStatRow,
+  PoolStats,
+  StatColumn,
+  StatGroup,
+  StatLine,
+  StatSeason,
+  TeamStats,
+} from "../stats";
 
 // Fantrax's stat tables — one team's squad (`getTeamRosterInfo`) and the whole
 // pool (`getPlayerStats`). Both are public, and both hand back a rendered table
@@ -50,11 +58,11 @@ export interface RawStatRow {
   cells?: RawCell[];
 }
 
+/** The player a row is about. Only the id is read: he is named on the pool read
+ *  every caller already holds, and by his own club there rather than by the
+ *  short form this payload uses. */
 export interface RawScorer {
   scorerId?: string;
-  name?: string;
-  shortName?: string;
-  teamShortName?: string;
 }
 
 export interface RawCell {
@@ -116,7 +124,6 @@ export function season(raw: RawSeason | undefined): StatSeason {
 /** One team's squad with a season's numbers against each player. */
 export function mapTeamStats(raw: RawStatTables): TeamStats {
   return {
-    teamId: raw.displayedSelections?.displayedFantasyTeamId ?? null,
     season: season(raw.displayedSelections?.displayedSeasonOrProjection),
     groups: (raw.tables ?? []).map(mapGroup),
   };
@@ -147,8 +154,6 @@ function mapGroup(table: RawStatTable): StatGroup {
     return [
       {
         fantraxId: scorer.scorerId,
-        name: scorer.name ?? scorer.shortName ?? "",
-        clubCode: scorer.teamShortName ?? null,
         points: pointsAt < 0 ? null : numeric(cells[pointsAt]?.content),
         perGame: perGameAt < 0 ? null : numeric(cells[perGameAt]?.content),
         // Built from the column indices rather than from the row, so a row that

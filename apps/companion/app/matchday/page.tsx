@@ -1,4 +1,4 @@
-import Link from "next/link";
+import ButtonLink from "../components/shell/ButtonLink";
 import { type FootballSnapshot, duringGameweek } from "@epl/core";
 import { footballNow } from "../football";
 import GameweekView from "../components/football/GameweekView";
@@ -87,18 +87,12 @@ function BetweenGameweeks({ snapshot }: { snapshot: FootballSnapshot }) {
       </div>
 
       <div className="flex gap-2">
-        <Link
-          href={`/gw/${snapshot.gameweek}`}
-          className="min-h-11 flex-1 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
-        >
+        <ButtonLink href={`/gw/${snapshot.gameweek}`} fill>
           The fixtures
-        </Link>
-        <Link
-          href="/league/matchups"
-          className="min-h-11 flex-1 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
-        >
+        </ButtonLink>
+        <ButtonLink href="/league/matchups" fill>
           Who plays whom
-        </Link>
+        </ButtonLink>
       </div>
     </div>
   );

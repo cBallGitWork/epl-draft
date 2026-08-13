@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ButtonLink from "../shell/ButtonLink";
 import {
   LEAGUE_NAME,
   POLL,
@@ -53,12 +54,7 @@ export default function GameweekView({ snapshot }: { snapshot: FootballSnapshot 
         <GameweekLink gameweek={next} label="Next" align="end" />
       </nav>
 
-      <Link
-        href="/squad"
-        className="min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
-      >
-        Squads
-      </Link>
+      <ButtonLink href="/squad">Squads</ButtonLink>
 
       {/* Honesty about provenance, per PRODUCT.md principle 4. */}
       <p className="pt-1 text-center text-2xs text-faint">
