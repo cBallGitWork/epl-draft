@@ -23,6 +23,7 @@ import LeagueCrest from "./LeagueCrest";
  *  that goes blank as soon as you tap into a detail page has stopped saying
  *  where you are. */
 const TABS = [
+  { href: "/", label: "Gazetta", routes: ["/"] },
   { href: "/league", label: "League", routes: ["/league"] },
   { href: "/squad", label: "Squads", routes: ["/squad"] },
   { href: "/matchday", label: "Matchday", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },

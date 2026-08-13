@@ -20,5 +20,6 @@ export * from "./football";
 export * from "./identity";
 export * from "./join/lineup";
 export * from "./join/cleanSheets";
+export * from "./gazette";
 export * from "./join/roster";
 export * from "./league";
