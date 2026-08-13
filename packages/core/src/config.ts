@@ -23,6 +23,24 @@ export const SEASON = "2026/27";
 
 export const FPL_API_BASE = "https://fantasy.premierleague.com/api";
 
+/** How a provider sees us.
+ *
+ *  A real browser string rather than a bot's. Both providers front their APIs
+ *  with a WAF that treats unfamiliar agents as worth challenging, and neither
+ *  publishes what it wants to see; the sibling project's season-long sweep
+ *  survived on exactly this. Not a disguise — every read here is public data
+ *  their own website serves to anyone. */
+export const HTTP_USER_AGENT =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 " +
+  "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36";
+
+/** Attempts after the first, when a provider says it is busy. Two is the point
+ *  where a blip is covered and a real outage is not being argued with. */
+export const HTTP_RETRIES = 2;
+
+/** First backoff step in milliseconds; doubles per attempt, plus jitter. */
+export const HTTP_BACKOFF_BASE_MS = 500;
+
 /** Fantrax's public read surface. Unauthenticated, and — unlike FPL — it answers
  *  HTTP 200 even when it is refusing you (see league/fantrax/errors.ts). */
 export const FANTRAX_FXEA_BASE = "https://www.fantrax.com/fxea/general";

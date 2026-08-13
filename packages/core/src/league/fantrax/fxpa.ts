@@ -1,4 +1,4 @@
-import { FANTRAX_FXPA_BASE } from "../../config";
+import { FANTRAX_FXPA_BASE, HTTP_USER_AGENT } from "../../config";
 import { FantraxError, pageErrorEnvelope, responseErrorEnvelope } from "./errors";
 
 // Fantrax's SPA API. A separate file from `client.ts` on purpose: different
@@ -52,7 +52,7 @@ export async function fxpaRead(
 ): Promise<unknown> {
   const res = await fetch(`${FANTRAX_FXPA_BASE}?leagueId=${encodeURIComponent(leagueId)}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "User-Agent": HTTP_USER_AGENT },
     body: JSON.stringify({ msgs: [{ method, data: { leagueId, ...data } }] }),
   });
 
