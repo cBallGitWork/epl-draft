@@ -1,6 +1,6 @@
 import Link from "next/link";
 import {
-  type PeriodPairing,
+  type LeagueTeam,
   type PlayerMatchStats,
   type RosteredTeam,
   isActive,
@@ -36,7 +36,15 @@ function events(team: RosteredTeam): { label: string; count: number }[] {
   ];
 }
 
-function Side({ team, roster, open }: { team: { teamId: string; name: string }; roster: RosteredTeam | undefined; open: boolean }) {
+function Side({
+  team,
+  roster,
+  open,
+}: {
+  team: LeagueTeam;
+  roster: RosteredTeam | undefined;
+  open: boolean;
+}) {
   const counts = open && roster ? events(roster).filter((e) => e.count > 0) : [];
   return (
     <Link href={`/team/${team.teamId}`} className="flex min-h-11 items-center gap-3 px-3 py-2 hover:bg-raised">
@@ -111,7 +119,7 @@ export default async function MatchupPage() {
       ) : null}
 
       <ul className="flex flex-col gap-1.5">
-        {pairings.map((pairing: PeriodPairing) => (
+        {pairings.map((pairing) => (
           <li key={`${pairing.home.teamId}-${pairing.away.teamId}`}>
             <div className="elev flex flex-col rounded-xl border border-line bg-surface py-1">
               <Side team={pairing.home} roster={rosters.get(pairing.home.teamId)} open={open} />

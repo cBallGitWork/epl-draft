@@ -71,9 +71,6 @@ export async function getLeagueSquads(): Promise<LeagueSquads> {
 
   const period = resolveRosters(snapshot, mapTeamRosters(rosters), bridge);
 
-  // The clock is read here and passed in, never inside the gate: §5 keeps
-  // `visibility.ts` pure so its boundary is testable, and this is the edge where
-  // an instant is allowed to come from the machine.
   return {
     period,
     snapshot,
