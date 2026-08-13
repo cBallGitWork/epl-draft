@@ -623,6 +623,52 @@ never mention it. Eligibility we do not hold is never reported as eligibility a
 player lacks: that violation has no move that clears it, so the wrong answer
 strands a manager rather than merely misinforming him.
 
+## `getMatchups` is not public (probed live 13 Aug 2026) — do not re-derive
+
+Both leagues, with and without a `period` parameter, answer
+`WARNING_NOT_LOGGED_IN` — four byte-identical refusals, filed in
+`data/probes/2026-08-13/`. The public/private line on fxpa runs per method, and
+this one sits on the far side with `getScorerDetails`, not with `getStandings`
+and `getPlayerProfile`.
+
+Consequence, designed in rather than worked around: **/matchup shows the pairing
+from `getLeagueInfo.matchups` and countable events, never points.** Fantrax's
+live H2H totals stay authoritative and stay on Fantrax until a cookie flow
+exists. When the visibility gate opens a period, each side of a pairing shows
+the active eleven's summed events (G/A/CS/YC/RC) from FPL's public feed,
+labelled as events; before it opens the page shows pairings only, because a
+two-team screen is the easiest place in the app to leak a lineup. Whether
+`getMatchups` carries totals, a server-driven period list, or only the schedule
+remains unknowable until a cookie is in hand — re-probe then.
+
+## CI, and the hosting decision (13 Aug 2026)
+
+`verify.yml` runs the four green checks — test, typecheck, lint, build, cheapest
+failure first — on `push` and `pull_request`, which unlike `schedule` fire from
+any branch. The build step prerenders against live FPL and Fantrax, so a
+provider shape change reddens CI before it reaches a phone; the cost is that a
+provider blip can too.
+
+**Known trap, accepted:** the daily capture pushes with `GITHUB_TOKEN`, which by
+design triggers no other workflows. Capture commits land on `main` with no
+Verify run beside them. They touch only `data/snapshots/`, so this is
+acceptable — but it is the same class of trap as the cron that had never fired:
+automation that looks attached and is not.
+
+**Hosting is decided — Vercel — and not yet executed.** The deploy was deferred
+on 13 Aug for a day with eyes on it; it remains a week overdue against `PLAN.md`
+and is the next infrastructure act. What is already settled for whoever clicks:
+Root Directory `apps/companion` with *include files outside the root directory*
+left on, because `@epl/core` ships raw TypeScript via `transpilePackages` (so
+install must run at the repo root) and `app/team/league.ts` imports the bridge
+JSON from `data/mappings/` outside the app directory — if the first build
+breaks, expect it to break there. `FANTRAX_LEAGUE_ID` is set explicitly in the
+dashboard (rehearsal `zbn1z3ukmsgb36sz` until 10 Oct), which makes the swap one
+dashboard field — and being a dashboard value it is invisible to git, so it goes
+in the ship-day runbook as a numbered step. `FANTRAX_COOKIE` is read by nothing
+in the tree and must never reach Vercel. Expect a redeploy per day off the
+capture commit; Ignored Build Step is the lever if that becomes noise.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially
@@ -667,6 +713,14 @@ payloads; captures filed per league; period alignment settled and scripted; the
 
 ## Season log
 
+- 2026-08-13: Head-to-head landed eight days before the league first needs it —
+  `periodPairings` in core, `/matchup` under the League tab, and "vs" on every
+  squad page. The probe that shaped it: `getMatchups` is login-walled, so the
+  page shows pairings and countable events and no number it calls points. CI
+  arrived the same day (`verify.yml`, four checks on every push); the Vercel
+  deploy is decided but deliberately not executed — deferred to a day with eyes
+  on it. Verified against both leagues: the rehearsal renders its pairings with
+  the gate closed, the real league answers `NO_TEAMS` as a panel.
 - 2026-08-12: Player profiles landed — one `getPlayerProfile` per tap from the
   pool, typed against a live probe. Refactor pass with it: the status strings, the
   violation check and the planner's move sheet each moved to the file that answers
