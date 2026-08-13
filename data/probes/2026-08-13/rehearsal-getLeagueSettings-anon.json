@@ -1,0 +1,24 @@
+{
+  "data": {
+    "sDate": 1786621499577
+  },
+  "roles": [
+    "03"
+  ],
+  "pageError": {
+    "onScreen": false,
+    "code": "WARNING_NOT_LOGGED_IN",
+    "text": "Sorry, you must be logged in to perform that action. You can click <a href=\"/login\" class=\"defaultLink\">here</a> to login now, or if you're not a member yet, click <a href=\"/register\" class=\"defaultLink\">here</a> to register FREE.",
+    "forceReload": false
+  },
+  "responses": [
+    {
+      "pageError": {
+        "onScreen": false,
+        "code": "WARNING_NOT_LOGGED_IN",
+        "text": "Sorry, you must be logged in to perform that action. You can click <a href=\"/login\" class=\"defaultLink\">here</a> to login now, or if you're not a member yet, click <a href=\"/register\" class=\"defaultLink\">here</a> to register FREE.",
+        "forceReload": false
+      }
+    }
+  ]
+}

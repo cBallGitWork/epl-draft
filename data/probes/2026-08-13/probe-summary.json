@@ -1,0 +1,397 @@
+[
+  {
+    "method": "getMatchups",
+    "args": "-",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 853,
+    "kind": "pageError",
+    "code": "WARNING_NOT_LOGGED_IN",
+    "text": "Sorry, you must be logged in to perform that action. You can click <a href=\"/login\" class=\"defaultLink\">here</a> to logi"
+  },
+  {
+    "method": "getMatchups",
+    "args": "-",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 34015,
+    "kind": "data",
+    "keys": [
+      "regularSeasonEndPeriod",
+      "fantasyTeams",
+      "periods",
+      "commissioner"
+    ]
+  },
+  {
+    "method": "getMatchups",
+    "args": "period",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 853,
+    "kind": "pageError",
+    "code": "WARNING_NOT_LOGGED_IN",
+    "text": "Sorry, you must be logged in to perform that action. You can click <a href=\"/login\" class=\"defaultLink\">here</a> to logi"
+  },
+  {
+    "method": "getMatchups",
+    "args": "period",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 34015,
+    "kind": "data",
+    "keys": [
+      "regularSeasonEndPeriod",
+      "fantasyTeams",
+      "periods",
+      "commissioner"
+    ]
+  },
+  {
+    "method": "getLiveScoringStats",
+    "args": "-",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 11638,
+    "kind": "data",
+    "keys": [
+      "clientId",
+      "teams",
+      "live2",
+      "displayedSelections",
+      "miscData",
+      "displayedLists",
+      "allPlayerStats",
+      "resourceMap",
+      "allEventsFinished",
+      "statsPerTeam"
+    ]
+  },
+  {
+    "method": "getLiveScoringStats",
+    "args": "-",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 15414,
+    "kind": "data",
+    "keys": [
+      "clientId",
+      "teams",
+      "live2",
+      "displayedSelections",
+      "miscData",
+      "displayedLists",
+      "allPlayerStats",
+      "resourceMap",
+      "allEventsFinished",
+      "commissioner",
+      "statsPerTeam"
+    ]
+  },
+  {
+    "method": "getLiveScoring",
+    "args": "-",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 351,
+    "kind": "pageError",
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getLiveScoring'"
+  },
+  {
+    "method": "getLiveScoring",
+    "args": "-",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 351,
+    "kind": "pageError",
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getLiveScoring'"
+  },
+  {
+    "method": "getPlayerStats",
+    "args": "statusOrTeamFilter,pageNumber",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 35484,
+    "kind": "data",
+    "keys": [
+      "displayedStatusOrTeam",
+      "paginatedResultSet",
+      "statsTable",
+      "scoringCategoryTypes",
+      "displayedSchedulePageAdj",
+      "miscDisplayTypes",
+      "tabs",
+      "hideStatsFilter",
+      "displayedView",
+      "displayedTimeStartType",
+      "posOrGroupList",
+      "goBackDays",
+      "playerNewsIconRecencyLegend",
+      "statisticsViewTypeIds",
+      "numPeriods",
+      "displayedPosOrGroup",
+      "displayedLists",
+      "seasonOrProjections",
+      "prevSchedPageAllowed",
+      "periodList",
+      "displayedSortReversed",
+      "statisticsTimeframeTypes",
+      "miscData",
+      "displayedSortType",
+      "tableHeader"
+    ]
+  },
+  {
+    "method": "getPlayerStats",
+    "args": "statusOrTeamFilter,pageNumber",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 36868,
+    "kind": "data",
+    "keys": [
+      "displayedStatusOrTeam",
+      "paginatedResultSet",
+      "statsTable",
+      "scoringCategoryTypes",
+      "displayedSchedulePageAdj",
+      "miscDisplayTypes",
+      "tabs",
+      "hideStatsFilter",
+      "displayedView",
+      "displayedTimeStartType",
+      "posOrGroupList",
+      "goBackDays",
+      "playerNewsIconRecencyLegend",
+      "statisticsViewTypeIds",
+      "numPeriods",
+      "displayedPosOrGroup",
+      "displayedLists",
+      "seasonOrProjections",
+      "prevSchedPageAllowed",
+      "periodList",
+      "commissioner",
+      "displayedSortReversed",
+      "statisticsTimeframeTypes",
+      "miscData",
+      "displayedSortType"
+    ]
+  },
+  {
+    "method": "getPlayers",
+    "args": "pageNumber",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 343,
+    "kind": "pageError",
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getPlayers'"
+  },
+  {
+    "method": "getPlayers",
+    "args": "pageNumber",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 343,
+    "kind": "pageError",
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getPlayers'"
+  },
+  {
+    "method": "getAllPlayers",
+    "args": "-",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 349,
+    "kind": "pageError",
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getAllPlayers'"
+  },
+  {
+    "method": "getAllPlayers",
+    "args": "-",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 349,
+    "kind": "pageError",
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getAllPlayers'"
+  },
+  {
+    "method": "getTeamRosterInfo",
+    "args": "-",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 41600,
+    "kind": "data",
+    "keys": [
+      "settings",
+      "scoringCategoryTypes",
+      "teamHeadingInfo",
+      "periodOppnentTeamIds",
+      "tabs",
+      "miscData",
+      "myTeamIds",
+      "goBackDays",
+      "rosterDisplayMap",
+      "hideRowsLineupChange",
+      "tables",
+      "displayedSelections",
+      "hideGoBackDays",
+      "fantasyTeams",
+      "displayedLists",
+      "availableActiveViewType",
+      "leagueNotices"
+    ]
+  },
+  {
+    "method": "getTeamRosterInfo",
+    "args": "-",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 41610,
+    "kind": "data",
+    "keys": [
+      "settings",
+      "scoringCategoryTypes",
+      "teamHeadingInfo",
+      "periodOppnentTeamIds",
+      "tabs",
+      "miscData",
+      "myTeamIds",
+      "goBackDays",
+      "rosterDisplayMap",
+      "hideRowsLineupChange",
+      "tables",
+      "displayedSelections",
+      "hideGoBackDays",
+      "fantasyTeams",
+      "displayedLists",
+      "availableActiveViewType",
+      "commissioner",
+      "leagueNotices"
+    ]
+  },
+  {
+    "method": "getLeagueSettings",
+    "args": "-",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 853,
+    "kind": "pageError",
+    "code": "WARNING_NOT_LOGGED_IN",
+    "text": "Sorry, you must be logged in to perform that action. You can click <a href=\"/login\" class=\"defaultLink\">here</a> to logi"
+  },
+  {
+    "method": "getLeagueSettings",
+    "args": "-",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 132,
+    "kind": "data",
+    "keys": [
+      "leagueName",
+      "numTeams",
+      "commissioner"
+    ]
+  },
+  {
+    "method": "getCommissionerHubInfo",
+    "args": "-",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 853,
+    "kind": "pageError",
+    "code": "WARNING_NOT_LOGGED_IN",
+    "text": "Sorry, you must be logged in to perform that action. You can click <a href=\"/login\" class=\"defaultLink\">here</a> to logi"
+  },
+  {
+    "method": "getCommissionerHubInfo",
+    "args": "-",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 7670,
+    "kind": "data",
+    "keys": [
+      "showEnableTreasurer",
+      "showRenewalSuggestion",
+      "showPremiumUpgrade",
+      "items",
+      "commissioner"
+    ]
+  },
+  {
+    "method": "getLeagueInfo",
+    "args": "-",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 349,
+    "kind": "pageError",
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getLeagueInfo'"
+  },
+  {
+    "method": "getLeagueInfo",
+    "args": "-",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 349,
+    "kind": "pageError",
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getLeagueInfo'"
+  },
+  {
+    "method": "getStandings",
+    "args": "-",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 6908,
+    "kind": "data",
+    "keys": [
+      "goBackDays",
+      "fantasyTeamInfo",
+      "displayedSelections",
+      "miscData",
+      "tableList",
+      "displayedLists"
+    ]
+  },
+  {
+    "method": "getStandings",
+    "args": "-",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 7132,
+    "kind": "data",
+    "keys": [
+      "goBackDays",
+      "fantasyTeamInfo",
+      "displayedSelections",
+      "miscData",
+      "tableList",
+      "displayedLists",
+      "commissioner"
+    ]
+  },
+  {
+    "method": "getScorerDetails",
+    "args": "-",
+    "auth": "anon",
+    "status": 200,
+    "bytes": 853,
+    "kind": "pageError",
+    "code": "WARNING_NOT_LOGGED_IN",
+    "text": "Sorry, you must be logged in to perform that action. You can click <a href=\"/login\" class=\"defaultLink\">here</a> to logi"
+  },
+  {
+    "method": "getScorerDetails",
+    "args": "-",
+    "auth": "cookie",
+    "status": 200,
+    "bytes": 223,
+    "kind": "responseError",
+    "code": "WARNING",
+    "text": ""
+  }
+]

@@ -1,0 +1,372 @@
+{
+  "data": {
+    "sDate": 1786621502154
+  },
+  "roles": [
+    "02"
+  ],
+  "responses": [
+    {
+      "data": {
+        "showEnableTreasurer": true,
+        "showRenewalSuggestion": false,
+        "showPremiumUpgrade": false,
+        "items": [
+          {
+            "description": "Edit league rules, scoring and settings.",
+            "admin": false,
+            "id": "leagueSetup",
+            "shortName": "League Setup",
+            "url": "/newui/fantasy/createLeague.go?leagueId=zbn1z3ukmsgb36sz",
+            "group": "Setup & Roles"
+          },
+          {
+            "linkKey": "LEAGUE_COMMISH_MESSAGES",
+            "description": "Post messages to your league members.",
+            "admin": false,
+            "id": "commissionerMessages",
+            "shortName": "Commissioner Messages",
+            "group": "Setup & Roles"
+          },
+          {
+            "linkKey": "COMMISH_TEAM_PERMISSIONS",
+            "description": "Control what each team is allowed to do.",
+            "admin": false,
+            "id": "teamPermissions",
+            "shortName": "Team Permissions",
+            "group": "Setup & Roles"
+          },
+          {
+            "linkKey": "COMMISH_TEAM_ADMIN",
+            "description": "Adjust fees, claims, budgets and caps per team.",
+            "admin": false,
+            "id": "teamAdmin",
+            "shortName": "Team Administration",
+            "group": "Setup & Roles"
+          },
+          {
+            "linkKey": "EDIT_COMMISSIONERS",
+            "description": "Enable or disable commissioner privileges for members, or reassign primary.",
+            "admin": false,
+            "id": "editCommissioners",
+            "shortName": "Edit Commissioners",
+            "group": "Setup & Roles"
+          },
+          {
+            "description": "Hand a team over to a different owner.",
+            "admin": false,
+            "id": "replaceOwner",
+            "shortName": "Replace Owner",
+            "url": "/newui/fantasy/replaceOwner.go?leagueId=zbn1z3ukmsgb36sz",
+            "group": "Setup & Roles"
+          },
+          {
+            "description": "Undo all draft picks and re-open the draft.",
+            "admin": false,
+            "action": {
+              "formDialog": "undoDraft",
+              "actionKey": "undoDraft",
+              "destructive": true,
+              "divisions": []
+            },
+            "id": "undoDraft",
+            "shortName": "Undo Draft",
+            "group": "Draft"
+          },
+          {
+            "description": "Clear all rosters and reset the league for a fresh draft.",
+            "admin": false,
+            "action": {
+              "confirmMessage": "All rosters will be cleared and all drafts reset. <b>This action cannot be undone.</b> Continue?",
+              "actionKey": "resetLeagueAndRosters",
+              "confirmLabel": "Reset",
+              "confirmTitle": "Reset League & Rosters",
+              "destructive": true
+            },
+            "id": "resetLeagueAndRosters",
+            "shortName": "Reset League & Rosters",
+            "group": "Draft"
+          },
+          {
+            "description": "Re-run auto-substitution lineup changes for a period.",
+            "admin": false,
+            "action": {
+              "formDialog": "executeAutoSubs",
+              "actionKey": "executeAutoSubs",
+              "periods": [
+                {
+                  "number": 1,
+                  "label": "(Fri Aug 21, 2026 - Thu Aug 27, 2026)"
+                },
+                {
+                  "number": 2,
+                  "label": "(Fri Aug 28, 2026 - Thu Sep 3, 2026)"
+                },
+                {
+                  "number": 3,
+                  "label": "(Fri Sep 4, 2026 - Thu Sep 10, 2026)"
+                },
+                {
+                  "number": 4,
+                  "label": "(Fri Sep 11, 2026 - Thu Sep 17, 2026)"
+                },
+                {
+                  "number": 5,
+                  "label": "(Fri Sep 18, 2026 - Thu Oct 8, 2026)"
+                },
+                {
+                  "number": 6,
+                  "label": "(Fri Oct 9, 2026 - Thu Oct 15, 2026)"
+                },
+                {
+                  "number": 7,
+                  "label": "(Fri Oct 16, 2026 - Thu Oct 22, 2026)"
+                },
+                {
+                  "number": 8,
+                  "label": "(Fri Oct 23, 2026 - Thu Oct 29, 2026)"
+                },
+                {
+                  "number": 9,
+                  "label": "(Fri Oct 30, 2026 - Thu Nov 5, 2026)"
+                },
+                {
+                  "number": 10,
+                  "label": "(Fri Nov 6, 2026 - Thu Nov 19, 2026)"
+                },
+                {
+                  "number": 11,
+                  "label": "(Fri Nov 20, 2026 - Thu Nov 26, 2026)"
+                },
+                {
+                  "number": 12,
+                  "label": "(Fri Nov 27, 2026 - Mon Nov 30, 2026)"
+                },
+                {
+                  "number": 13,
+                  "label": "(Tue Dec 1, 2026 - Thu Dec 3, 2026)"
+                },
+                {
+                  "number": 14,
+                  "label": "(Fri Dec 4, 2026 - Thu Dec 10, 2026)"
+                },
+                {
+                  "number": 15,
+                  "label": "(Fri Dec 11, 2026 - Thu Dec 17, 2026)"
+                },
+                {
+                  "number": 16,
+                  "label": "(Fri Dec 18, 2026 - Thu Dec 24, 2026)"
+                },
+                {
+                  "number": 17,
+                  "label": "(Fri Dec 25, 2026 - Mon Dec 28, 2026)"
+                },
+                {
+                  "number": 18,
+                  "label": "(Tue Dec 29, 2026 - Thu Dec 31, 2026)"
+                },
+                {
+                  "number": 19,
+                  "label": "(Fri Jan 1, 2027 - Mon Jan 4, 2027)"
+                },
+                {
+                  "number": 20,
+                  "label": "(Tue Jan 5, 2027 - Thu Jan 14, 2027)"
+                },
+                {
+                  "number": 21,
+                  "label": "(Fri Jan 15, 2027 - Thu Jan 21, 2027)"
+                },
+                {
+                  "number": 22,
+                  "label": "(Fri Jan 22, 2027 - Thu Jan 28, 2027)"
+                },
+                {
+                  "number": 23,
+                  "label": "(Fri Jan 29, 2027 - Thu Feb 4, 2027)"
+                },
+                {
+                  "number": 24,
+                  "label": "(Fri Feb 5, 2027 - Mon Feb 8, 2027)"
+                },
+                {
+                  "number": 25,
+                  "label": "(Tue Feb 9, 2027 - Thu Feb 18, 2027)"
+                },
+                {
+                  "number": 26,
+                  "label": "(Fri Feb 19, 2027 - Thu Feb 25, 2027)"
+                },
+                {
+                  "number": 27,
+                  "label": "(Fri Feb 26, 2027 - Mon Mar 1, 2027)"
+                },
+                {
+                  "number": 28,
+                  "label": "(Tue Mar 2, 2027 - Thu Mar 11, 2027)"
+                },
+                {
+                  "number": 29,
+                  "label": "(Fri Mar 12, 2027 - Thu Mar 18, 2027)"
+                },
+                {
+                  "number": 30,
+                  "label": "(Fri Mar 19, 2027 - Thu Apr 8, 2027)"
+                },
+                {
+                  "number": 31,
+                  "label": "(Fri Apr 9, 2027 - Thu Apr 15, 2027)"
+                },
+                {
+                  "number": 32,
+                  "label": "(Fri Apr 16, 2027 - Thu Apr 22, 2027)"
+                },
+                {
+                  "number": 33,
+                  "label": "(Fri Apr 23, 2027 - Thu Apr 29, 2027)"
+                },
+                {
+                  "number": 34,
+                  "label": "(Fri Apr 30, 2027 - Thu May 6, 2027)"
+                },
+                {
+                  "number": 35,
+                  "label": "(Fri May 7, 2027 - Thu May 13, 2027)"
+                },
+                {
+                  "number": 36,
+                  "label": "(Fri May 14, 2027 - Thu May 20, 2027)"
+                },
+                {
+                  "number": 37,
+                  "label": "(Fri May 21, 2027 - Thu May 27, 2027)"
+                },
+                {
+                  "number": 38,
+                  "label": "(Fri May 28, 2027 - Sun May 30, 2027)"
+                }
+              ],
+              "destructive": false
+            },
+            "id": "executeAutoSubs",
+            "shortName": "Execute Auto-Subs",
+            "group": "Rosters & Players"
+          },
+          {
+            "description": "Run the waiver wire processing system.",
+            "admin": false,
+            "action": {
+              "formDialog": "processWaivers",
+              "actionKey": "processWaivers",
+              "destructive": false
+            },
+            "id": "processWaivers",
+            "shortName": "Process Waivers",
+            "group": "Rosters & Players"
+          },
+          {
+            "description": "Send all free agents to the waiver wire.",
+            "admin": false,
+            "action": {
+              "confirmMessage": "All free agents will be sent to the waiver wire as of now, and players already on waivers will be re-waived. Continue?",
+              "actionKey": "waiveAllPlayers",
+              "confirmLabel": "Waive All",
+              "confirmTitle": "Waive All Players",
+              "destructive": true
+            },
+            "id": "waiveAllPlayers",
+            "shortName": "Waive All Players",
+            "group": "Rosters & Players"
+          },
+          {
+            "linkKey": "COMMISH_ILLEGAL_ROSTER_OVERRIDE",
+            "description": "Override roster legality per team and period.",
+            "admin": false,
+            "id": "illegalRosterOverride",
+            "shortName": "Illegal Roster Override",
+            "group": "Rosters & Players"
+          },
+          {
+            "linkKey": "MIN_MAX_OVERRIDE",
+            "description": "Override min/max roster constraint legality.",
+            "admin": false,
+            "id": "minMaxOverride",
+            "shortName": "Min/Max Violation Roster Override",
+            "group": "Rosters & Players"
+          },
+          {
+            "linkKey": "PLAYER_OVERRIDES_POSITION",
+            "description": "Customize player position eligibility for the season.",
+            "admin": false,
+            "id": "posEligFullSeason",
+            "shortName": "Position Eligibility Override (Full Season)",
+            "group": "Rosters & Players"
+          },
+          {
+            "linkKey": "PLAYER_OVERRIDES_STATUS",
+            "description": "Change the pool status of specific players.",
+            "admin": false,
+            "id": "playerStatusOverride",
+            "shortName": "Player Status Override",
+            "group": "Rosters & Players"
+          },
+          {
+            "description": "Recalculate player fantasy point season totals.",
+            "admin": false,
+            "action": {
+              "confirmMessage": "Historical and current-season fantasy point totals will be recalculated for every player. Continue?",
+              "actionKey": "recalculateFantasyPoints",
+              "confirmLabel": "Recalculate",
+              "confirmTitle": "Recalculate Fantasy Points",
+              "destructive": false
+            },
+            "id": "recalculateFantasyPoints",
+            "shortName": "Recalculate Fantasy Points",
+            "group": "Stats & Scoring"
+          },
+          {
+            "linkKey": "STAT_OVERRIDES",
+            "description": "Change any stat for any player in any event.",
+            "admin": false,
+            "id": "overrideStats",
+            "shortName": "Override Player Stats",
+            "group": "Stats & Scoring"
+          },
+          {
+            "linkKey": "STANDINGS_ADJUSTMENT",
+            "description": "Apply manual scoring adjustments to the standings.",
+            "admin": false,
+            "id": "standingsAdjustment",
+            "shortName": "Scoring/Standings Adjustment",
+            "group": "Stats & Scoring"
+          },
+          {
+            "description": "Create a new league copied from this one, or renew it for the next season.",
+            "admin": false,
+            "id": "copyLeague",
+            "shortName": "Copy / Renew League",
+            "url": "/newui/fantasy/copyLeague.go?leagueId=zbn1z3ukmsgb36sz",
+            "group": "League Management"
+          },
+          {
+            "alert": true,
+            "description": "Permanently remove this league from the system.",
+            "admin": false,
+            "action": {
+              "treasurerFeesPaid": false,
+              "formDialog": "deleteLeague",
+              "actionKey": "deleteLeague",
+              "isManager": false,
+              "destructive": true
+            },
+            "id": "deleteLeague",
+            "shortName": "Delete This League",
+            "group": "League Management"
+          }
+        ],
+        "commissioner": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "data": {
+    "sDate": 1786621503075
+  },
+  "roles": [
+    "03"
+  ],
+  "pageError": {
+    "onScreen": false,
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getLeagueInfo'",
+    "forceReload": false
+  },
+  "responses": [
+    {
+      "pageError": {
+        "onScreen": false,
+        "code": "ERROR_INVALID_REQUEST",
+        "text": "Unable to find API method 'getLeagueInfo'",
+        "forceReload": false
+      }
+    }
+  ]
+}

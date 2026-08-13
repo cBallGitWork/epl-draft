@@ -1,0 +1,679 @@
+{
+  "data": {
+    "sDate": 1786622746831
+  },
+  "roles": [
+    "02"
+  ],
+  "responses": [
+    {
+      "data": {
+        "clientId": "lzy4xz14msrh1ya7",
+        "teams": [
+          {
+            "description": "Nottingham Forest",
+            "id": "110105",
+            "shortName": "NOT",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Nottingham_Forest.png"
+          },
+          {
+            "description": "Brentford",
+            "id": "110237",
+            "shortName": "BRF",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Brentford.png"
+          },
+          {
+            "description": "Newcastle United",
+            "id": "110101",
+            "shortName": "NEW",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Newcastle_United.png"
+          },
+          {
+            "description": "Aston Villa",
+            "id": "110011",
+            "shortName": "AVL",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Aston_Villa.png"
+          },
+          {
+            "description": "Arsenal",
+            "id": "110000",
+            "shortName": "ARS",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Arsenal.png"
+          },
+          {
+            "description": "Hull City",
+            "id": "110067",
+            "shortName": "HUL",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Hull_City.png"
+          },
+          {
+            "description": "Crystal Palace",
+            "id": "110045",
+            "shortName": "CRY",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Crystal_Palace.png"
+          },
+          {
+            "description": "Coventry City",
+            "id": "110001",
+            "shortName": "COV",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Coventry_City.png"
+          },
+          {
+            "description": "Bournemouth",
+            "id": "110034",
+            "shortName": "BOU",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Bournemouth.png"
+          },
+          {
+            "description": "Manchester United",
+            "id": "110090",
+            "shortName": "MUN",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_United.png"
+          },
+          {
+            "description": "Sunderland",
+            "id": "110141",
+            "shortName": "SUN",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Sunderland.png"
+          },
+          {
+            "description": "Brighton",
+            "id": "110240",
+            "shortName": "BHA",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Brighton_and_Hove_Albion.png"
+          },
+          {
+            "description": "Ipswich",
+            "id": "110271",
+            "shortName": "IPS",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Ipswich_Town.png"
+          },
+          {
+            "description": "Chelsea",
+            "id": "110040",
+            "shortName": "CHE",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Chelsea.png"
+          },
+          {
+            "description": "Fulham",
+            "id": "110063",
+            "shortName": "FUL",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Fulham.png"
+          },
+          {
+            "description": "Leeds United",
+            "id": "110261",
+            "shortName": "LEE",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Leeds_United2.png"
+          },
+          {
+            "description": "Everton",
+            "id": "110050",
+            "shortName": "EVE",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Everton.png"
+          },
+          {
+            "description": "Tottenham Hotspur",
+            "id": "110160",
+            "shortName": "TOT",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Tottenham_Hotspur.png"
+          },
+          {
+            "description": "Manchester City",
+            "id": "110080",
+            "shortName": "MCI",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Manchester_City.png"
+          },
+          {
+            "description": "Liverpool",
+            "id": "110070",
+            "shortName": "LIV",
+            "logoIconUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Liverpool.png"
+          }
+        ],
+        "live2": false,
+        "displayedSelections": {},
+        "miscData": {},
+        "displayedLists": {},
+        "allPlayerStats": true,
+        "resourceMap": {
+          "rank": {
+            "name": "Rank",
+            "shortName": "Rk"
+          }
+        },
+        "allEventsFinished": false,
+        "commissioner": true,
+        "statsPerTeam": {
+          "allTeamsStats": {
+            "8enbgqo5msgb375j": {
+              "BENCH": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "gameStatusMap": {
+                  "076d3": "HUL~1788012000000|06m5t|1",
+                  "06fup": "@CRY~1787943600000|06m5u|1",
+                  "07848": "ARS~1788202800000|06m5q|1",
+                  "0784x": "@MUN~1788103800000|06m5x|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "076d3": 1,
+                  "06fup": 1,
+                  "0784x": 1,
+                  "07848": 1
+                }
+              },
+              "ACTIVE": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "playerGameInfo": [
+                  0,
+                  0,
+                  11,
+                  0,
+                  990
+                ],
+                "gameStatusMap": {
+                  "05g2o": "BHA~1788094800000|06m5s|1",
+                  "0646f": "NOT~1788003000000|06m5w|1",
+                  "05o4b": "ARS~1788202800000|06m5q|1",
+                  "0703c": "FUL~1788094800000|06m5y|1",
+                  "03rxs": "BRF~1788094800000|06m5v|1",
+                  "05nzu": "@AVL~1788202800000|06m5q|1",
+                  "061vq": "@CRY~1787943600000|06m5u|1",
+                  "068ym": "BHA~1788094800000|06m5s|1",
+                  "05ylj": "@AVL~1788202800000|06m5q|1",
+                  "02lz0": "ARS~1788202800000|06m5q|1",
+                  "05l8q": "BHA~1788094800000|06m5s|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "05g2o": 1,
+                  "0646f": 1,
+                  "05o4b": 1,
+                  "03rxs": 1,
+                  "0703c": 1,
+                  "05nzu": 1,
+                  "068ym": 1,
+                  "061vq": 1,
+                  "02lz0": 1,
+                  "05ylj": 1,
+                  "05l8q": 1
+                }
+              }
+            },
+            "sezrgvl2mshcpazf": {
+              "BENCH": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "gameStatusMap": {
+                  "067yv": "NOT~1788003000000|06m5w|1",
+                  "03fgo": "NEW~1788021000000|06m5z|1",
+                  "056iy": "BHA~1788094800000|06m5s|1",
+                  "06fv8": "NEW~1788021000000|06m5z|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "067yv": 1,
+                  "03fgo": 1,
+                  "06fv8": 1,
+                  "056iy": 1
+                }
+              },
+              "ACTIVE": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "playerGameInfo": [
+                  0,
+                  0,
+                  11,
+                  0,
+                  990
+                ],
+                "gameStatusMap": {
+                  "04tsb": "@AVL~1788202800000|06m5q|1",
+                  "04abn": "@TOT~1788021000000|06m5z|1",
+                  "068y0": "@CRY~1787943600000|06m5u|1",
+                  "06nu7": "@AVL~1788202800000|06m5q|1",
+                  "06dmj": "@AVL~1788202800000|06m5q|1",
+                  "06jgi": "MCI~1787943600000|06m5u|1",
+                  "03yww": "MCI~1787943600000|06m5u|1",
+                  "05748": "MCI~1787943600000|06m5u|1",
+                  "072wq": "EVE~1788012000000|06m5r|1",
+                  "038ze": "@SUN~1788094800000|06m5y|1",
+                  "062ci": "@CHE~1788094800000|06m5s|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "04tsb": 1,
+                  "06nu7": 1,
+                  "068y0": 1,
+                  "04abn": 1,
+                  "06dmj": 1,
+                  "06jgi": 1,
+                  "072wq": 1,
+                  "05748": 1,
+                  "03yww": 1,
+                  "038ze": 1,
+                  "062ci": 1
+                }
+              }
+            },
+            "pbxm9fgimshcpazf": {
+              "BENCH": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "gameStatusMap": {
+                  "076da": "HUL~1788012000000|06m5t|1",
+                  "02m5b": "@LIV~1788003000000|06m5w|1",
+                  "06mn0": "@LEE~1788094800000|06m5v|1",
+                  "06v07": "@CRY~1787943600000|06m5u|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "076da": 1,
+                  "02m5b": 1,
+                  "06mn0": 1,
+                  "06v07": 1
+                }
+              },
+              "ACTIVE": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "playerGameInfo": [
+                  0,
+                  0,
+                  11,
+                  0,
+                  990
+                ],
+                "gameStatusMap": {
+                  "0639x": "EVE~1788012000000|06m5r|1",
+                  "06cmm": "NOT~1788003000000|06m5w|1",
+                  "051k7": "BHA~1788094800000|06m5s|1",
+                  "06ex4": "@CRY~1787943600000|06m5u|1",
+                  "06uyc": "EVE~1788012000000|06m5r|1",
+                  "05r8o": "MCI~1787943600000|06m5u|1",
+                  "05gcc": "@BOU~1788012000000|06m5r|1",
+                  "06fuw": "EVE~1788012000000|06m5r|1",
+                  "05ocl": "ARS~1788202800000|06m5q|1",
+                  "05gcr": "IPS~1788103800000|06m5x|1",
+                  "05t6x": "@TOT~1788021000000|06m5z|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "0639x": 1,
+                  "06cmm": 1,
+                  "06ex4": 1,
+                  "051k7": 1,
+                  "06uyc": 1,
+                  "05r8o": 1,
+                  "06fuw": 1,
+                  "05gcc": 1,
+                  "05ocl": 1,
+                  "05t6x": 1,
+                  "05gcr": 1
+                }
+              }
+            },
+            "j9zadacnmshcpazf": {
+              "BENCH": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "gameStatusMap": {
+                  "06v21": "NOT~1788003000000|06m5w|1",
+                  "05r94": "@BOU~1788012000000|06m5r|1",
+                  "070hc": "FUL~1788094800000|06m5y|1",
+                  "06v0p": "FUL~1788094800000|06m5y|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "06v21": 1,
+                  "05r94": 1,
+                  "070hc": 1,
+                  "06v0p": 1
+                }
+              },
+              "ACTIVE": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "playerGameInfo": [
+                  0,
+                  0,
+                  11,
+                  0,
+                  990
+                ],
+                "gameStatusMap": {
+                  "067zv": "@LEE~1788094800000|06m5v|1",
+                  "05trb": "IPS~1788103800000|06m5x|1",
+                  "05uht": "BHA~1788094800000|06m5s|1",
+                  "0784o": "MCI~1787943600000|06m5u|1",
+                  "04y92": "@AVL~1788202800000|06m5q|1",
+                  "070g7": "@TOT~1788021000000|06m5z|1",
+                  "05r9b": "@AVL~1788202800000|06m5q|1",
+                  "03vlj": "NOT~1788003000000|06m5w|1",
+                  "032f9": "@BOU~1788012000000|06m5r|1",
+                  "050jq": "@CRY~1787943600000|06m5u|1",
+                  "067yz": "IPS~1788103800000|06m5x|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "067zv": 1,
+                  "05trb": 1,
+                  "0784o": 1,
+                  "05uht": 1,
+                  "04y92": 1,
+                  "070g7": 1,
+                  "05r9b": 1,
+                  "03vlj": 1,
+                  "032f9": 1,
+                  "067yz": 1,
+                  "050jq": 1
+                }
+              }
+            }
+          },
+          "statsMap": {
+            "8enbgqo5msgb375j": {
+              "BENCH": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "gameStatusMap": {
+                  "076d3": "HUL~1788012000000|06m5t|1",
+                  "06fup": "@CRY~1787943600000|06m5u|1",
+                  "07848": "ARS~1788202800000|06m5q|1",
+                  "0784x": "@MUN~1788103800000|06m5x|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "076d3": 1,
+                  "06fup": 1,
+                  "0784x": 1,
+                  "07848": 1
+                }
+              },
+              "ACTIVE": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "playerGameInfo": [
+                  0,
+                  0,
+                  11,
+                  0,
+                  990
+                ],
+                "gameStatusMap": {
+                  "05g2o": "BHA~1788094800000|06m5s|1",
+                  "0646f": "NOT~1788003000000|06m5w|1",
+                  "05o4b": "ARS~1788202800000|06m5q|1",
+                  "0703c": "FUL~1788094800000|06m5y|1",
+                  "03rxs": "BRF~1788094800000|06m5v|1",
+                  "05nzu": "@AVL~1788202800000|06m5q|1",
+                  "061vq": "@CRY~1787943600000|06m5u|1",
+                  "068ym": "BHA~1788094800000|06m5s|1",
+                  "05ylj": "@AVL~1788202800000|06m5q|1",
+                  "02lz0": "ARS~1788202800000|06m5q|1",
+                  "05l8q": "BHA~1788094800000|06m5s|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "05g2o": 1,
+                  "0646f": 1,
+                  "05o4b": 1,
+                  "03rxs": 1,
+                  "0703c": 1,
+                  "05nzu": 1,
+                  "068ym": 1,
+                  "061vq": 1,
+                  "02lz0": 1,
+                  "05ylj": 1,
+                  "05l8q": 1
+                }
+              }
+            },
+            "sezrgvl2mshcpazf": {
+              "BENCH": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "gameStatusMap": {
+                  "067yv": "NOT~1788003000000|06m5w|1",
+                  "03fgo": "NEW~1788021000000|06m5z|1",
+                  "056iy": "BHA~1788094800000|06m5s|1",
+                  "06fv8": "NEW~1788021000000|06m5z|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "067yv": 1,
+                  "03fgo": 1,
+                  "06fv8": 1,
+                  "056iy": 1
+                }
+              },
+              "ACTIVE": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "playerGameInfo": [
+                  0,
+                  0,
+                  11,
+                  0,
+                  990
+                ],
+                "gameStatusMap": {
+                  "04tsb": "@AVL~1788202800000|06m5q|1",
+                  "04abn": "@TOT~1788021000000|06m5z|1",
+                  "068y0": "@CRY~1787943600000|06m5u|1",
+                  "06nu7": "@AVL~1788202800000|06m5q|1",
+                  "06dmj": "@AVL~1788202800000|06m5q|1",
+                  "06jgi": "MCI~1787943600000|06m5u|1",
+                  "03yww": "MCI~1787943600000|06m5u|1",
+                  "05748": "MCI~1787943600000|06m5u|1",
+                  "072wq": "EVE~1788012000000|06m5r|1",
+                  "038ze": "@SUN~1788094800000|06m5y|1",
+                  "062ci": "@CHE~1788094800000|06m5s|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "04tsb": 1,
+                  "06nu7": 1,
+                  "068y0": 1,
+                  "04abn": 1,
+                  "06dmj": 1,
+                  "06jgi": 1,
+                  "072wq": 1,
+                  "05748": 1,
+                  "03yww": 1,
+                  "038ze": 1,
+                  "062ci": 1
+                }
+              }
+            },
+            "pbxm9fgimshcpazf": {
+              "BENCH": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "gameStatusMap": {
+                  "076da": "HUL~1788012000000|06m5t|1",
+                  "02m5b": "@LIV~1788003000000|06m5w|1",
+                  "06mn0": "@LEE~1788094800000|06m5v|1",
+                  "06v07": "@CRY~1787943600000|06m5u|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "076da": 1,
+                  "02m5b": 1,
+                  "06mn0": 1,
+                  "06v07": 1
+                }
+              },
+              "ACTIVE": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "playerGameInfo": [
+                  0,
+                  0,
+                  11,
+                  0,
+                  990
+                ],
+                "gameStatusMap": {
+                  "0639x": "EVE~1788012000000|06m5r|1",
+                  "06cmm": "NOT~1788003000000|06m5w|1",
+                  "051k7": "BHA~1788094800000|06m5s|1",
+                  "06ex4": "@CRY~1787943600000|06m5u|1",
+                  "06uyc": "EVE~1788012000000|06m5r|1",
+                  "05r8o": "MCI~1787943600000|06m5u|1",
+                  "05gcc": "@BOU~1788012000000|06m5r|1",
+                  "06fuw": "EVE~1788012000000|06m5r|1",
+                  "05ocl": "ARS~1788202800000|06m5q|1",
+                  "05gcr": "IPS~1788103800000|06m5x|1",
+                  "05t6x": "@TOT~1788021000000|06m5z|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "0639x": 1,
+                  "06cmm": 1,
+                  "06ex4": 1,
+                  "051k7": 1,
+                  "06uyc": 1,
+                  "05r8o": 1,
+                  "06fuw": 1,
+                  "05gcc": 1,
+                  "05ocl": 1,
+                  "05t6x": 1,
+                  "05gcr": 1
+                }
+              }
+            },
+            "j9zadacnmshcpazf": {
+              "BENCH": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "gameStatusMap": {
+                  "06v21": "NOT~1788003000000|06m5w|1",
+                  "05r94": "@BOU~1788012000000|06m5r|1",
+                  "070hc": "FUL~1788094800000|06m5y|1",
+                  "06v0p": "FUL~1788094800000|06m5y|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "06v21": 1,
+                  "05r94": 1,
+                  "070hc": 1,
+                  "06v0p": 1
+                }
+              },
+              "ACTIVE": {
+                "projectedTotalsMap2": {},
+                "calculatedProjectedTotalsMap": {},
+                "statsMap": {},
+                "projectedTotalsMap": {},
+                "playerGameInfo": [
+                  0,
+                  0,
+                  11,
+                  0,
+                  990
+                ],
+                "gameStatusMap": {
+                  "067zv": "@LEE~1788094800000|06m5v|1",
+                  "05trb": "IPS~1788103800000|06m5x|1",
+                  "05uht": "BHA~1788094800000|06m5s|1",
+                  "0784o": "MCI~1787943600000|06m5u|1",
+                  "04y92": "@AVL~1788202800000|06m5q|1",
+                  "070g7": "@TOT~1788021000000|06m5z|1",
+                  "05r9b": "@AVL~1788202800000|06m5q|1",
+                  "03vlj": "NOT~1788003000000|06m5w|1",
+                  "032f9": "@BOU~1788012000000|06m5r|1",
+                  "050jq": "@CRY~1787943600000|06m5u|1",
+                  "067yz": "IPS~1788103800000|06m5x|1"
+                },
+                "totalFpts2": 0,
+                "statsMap2": {},
+                "totalFpts": 0,
+                "remainingEventPercent": {
+                  "067zv": 1,
+                  "05trb": 1,
+                  "0784o": 1,
+                  "05uht": 1,
+                  "04y92": 1,
+                  "070g7": 1,
+                  "05r9b": 1,
+                  "03vlj": 1,
+                  "032f9": 1,
+                  "067yz": 1,
+                  "050jq": 1
+                }
+              }
+            }
+          },
+          "scorerPlayByPlayStatusMap": {},
+          "delta": false,
+          "refresh": false
+        }
+      }
+    }
+  ]
+}

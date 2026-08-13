@@ -650,6 +650,128 @@ two-team screen is the easiest place in the app to leak a lineup. Whether
 `getMatchups` carries totals, a server-driven period list, or only the schedule
 remains unknowable until a cookie is in hand — re-probe then.
 
+**Re-probed with a cookie the same evening, and the answer is: only the
+schedule.** No score, no result, no state. See the 13 Aug sweep below — the
+totals we wanted are on `getLiveScoringStats`, which needs no cookie at all.
+
+## The fxpa sweep with a member cookie (13 Aug 2026) — the big one
+
+Craig put his Fantrax session cookie in `.env.local` (gitignored, read from the
+environment, never logged). That let us probe every method the SPA uses, each one
+twice — anonymously and authenticated — and the answers rewrite what this app has
+to build. Verbatim bodies for 41 calls are in `data/probes/2026-08-13/`. The
+headline: **almost everything we wanted is public, and the one thing that was
+login-walled turns out to be worthless.**
+
+### `getMatchups` is a schedule and nothing else — stop wanting it
+
+It is cookie-walled, as recorded on 13 Aug, and now we know what is behind the
+wall: 34 KB containing `periods[].matchups[].{homeTeam,awayTeam}` and no score of
+any kind. A leaf census over the whole tree found exactly three numeric leaves —
+the period number, `regularSeasonEndPeriod: 38`, and a server clock — and the
+substrings `fpts`/`score`/`point`/`win`/`result` appear nowhere. Its 38 × 2
+pairings reproduce the **public** `getLeagueInfo.matchups` exactly, orientation
+included (the order of the two matchups within a period differs in 19 of 38
+periods, which is presentation, not data). `period` is accepted and ignored:
+requesting period 1 returns a byte-identical body but for the clock.
+
+So the open question "does `getMatchups` carry totals — re-probe when a cookie
+exists" is **answered: it does not, and it never will, because the schema has
+nowhere to put a score.** It is not a reason to build a cookie flow.
+
+### `getTeamRosterInfo` is public, parameterised, and carries Fantrax's own points
+
+The roster page. Public, and it accepts `teamId`, `period`, `view`,
+`seasonOrProjection` and `scoringCategoryType`, all echoed back in
+`displayedSelections`. So we can read **every squad, for every one of 38 periods,
+without a session.** It carries:
+
+- the full roster with `posId` (the slot), `statusId` (1 active / 2 reserve) and
+  the player's real fixture — empty slots appear as rows with a `posId` and **no
+  `scorer` key**, so never assume a row has a player;
+- **per-player fantasy points under our own league's scoring** — two tables,
+  keeper and outfield, whose headers key off `fpts`, `fptsPerGame`, and then the
+  stat columns themselves (`GP Min G A AF YC RC PKM OG GAO CS`, plus `Sv GA PKS`
+  for keepers);
+- `view: "FPTS"` re-renders those same columns as *points contributed per
+  category*, and they sum exactly to the total — verified on 30 of 30 rows across
+  two teams. That is a points breakdown we do not have to compute;
+- `periodOppnentTeamIds` (their typo) — **the opponent for the requested period**,
+  matching the cookie-walled `getMatchups` exactly. The pairing is public here.
+
+Anonymous and authenticated responses were fetched for the same team and diffed
+cell by cell: **identical**. The cookie adds `commissioner`, `isMyTeam` and the
+caller's `roles`, and nothing about the football.
+
+### `getLiveScoringStats` is public and typed — the live scoreboard
+
+The live-scoring page, and the first Fantrax payload we have seen that is *data*
+rather than rendering instructions: no cells, no pixel widths, no formatted
+numbers. Per fantasy team, keyed by team id, for all teams at once:
+
+- `statsPerTeam.allTeamsStats[teamId].ACTIVE.totalFpts` — a **typed int**, the
+  team's fantasy points for the period. Zero today because the season has not
+  kicked off, so *that it fills in live is an expectation, not an observation* —
+  re-probe on 21 Aug before anything depends on it;
+- `projectedTotalsMap` / `calculatedProjectedTotalsMap` — **typed floats**,
+  Fantrax's own per-player projection for the period (identical to each other
+  today). Players are **omitted rather than zeroed** when there is no projection;
+- `gameStatusMap` — the one formatted string: `"@FUL~1787598000000|06m5p|1"` is
+  away, opponent, kickoff epoch ms, Fantrax game id, status;
+- `remainingEventPercent` — typed, 1 when the fixture has not started, which is
+  how "three of your eleven still to play" gets answered;
+- `playerGameInfo` — five unlabelled ints, `[0,0,11,0,990]` = eleven players to
+  play, 990 minutes. **Absent on BENCH, not null.**
+
+`period` is honoured. `matchupId` is **not** — passing the one from their own URL
+returns a byte-identical body, so their matchup view filters client-side and the
+payload always carries the whole league. The **`BENCH` block is cookie-only**;
+anonymous callers get `ACTIVE`, which is what scores anyway. Per-player *points*
+(`statsMap`, `statsMap2`) are `{}` in every section, so what they will hold is
+unknown.
+
+### `getPlayerStats` is public — and its default view is a projection
+
+The players page: 708 players, 20 per page, 36 pages. Rows carry `scorerId` (our
+`fantraxId`), the player's news `icons`, and **which of our teams owns him**
+(`cells[1].teamId`) — ownership in our league, public.
+
+Two traps, both load-bearing:
+
+- **The default is `PROJECTION_0_926_SEASON`.** Haaland's "179" is Fantrax's
+  projection for a season that has not started, not anything anyone has scored.
+  Real views exist and must be asked for by code — `SEASON_926_YEAR_TO_DATE`,
+  `SEASON_926_BY_PERIOD`, `SEASON_925_YEAR_TO_DATE` — and the season must be read
+  from `displayedSeasonOrProjection`, never assumed. This is the same
+  currentOrRecentSeason trap `getPlayerProfile` set, in a new place.
+- **The default column set is seven wide** — Rk, Status, Opp, FPts, FP/G, Ros,
+  +/- — and carries no football stats at all. The stat columns live on
+  `getTeamRosterInfo`, or behind `scoringCategoryType` ("5" Tracked, "1"
+  Standard — and Standard is *not* a superset: it drops AF, PKM, OG and GAO).
+
+Every cell is a pre-formatted string, with the usual damage: a literal `<br/>`
+inside `"BOU<br/>Sun 9:00AM"`, a `<small>` tag in a waiver cell, and FP/G with
+zero, one or two decimal places in the same column.
+
+### What this means for the scoring engine
+
+The plan approved on 13 Aug built one, on the stated premise that Fantrax would
+not serve us league points without a cookie. **That premise is false.** Fantrax
+serves its own per-player points, a category breakdown that sums exactly, live
+team totals and its own projections — all publicly, all per period.
+
+So we go back to the doctrine that was already written here: *Fantrax computes
+the points and its numbers are authoritative; we read them.* Reading beats
+computing on every axis that matters — the real league scores five categories FPL
+does not publish (`GKP`, `KP`, `CLRA`, `DFP`, `MP`), so our own engine could only
+ever have produced a systematically wrong number for defenders, midfielders and
+keepers, and would have had to say so on every screen.
+
+What is genuinely still unknown, and decides whether any fallback is needed at
+all: **whether these numbers move during a match or only settle afterwards.**
+Nothing can answer that before 21 Aug. Until then we read, we label the season
+we are reading, and we build no engine.
+
 ## CI, and the hosting decision (13 Aug 2026)
 
 `verify.yml` runs the four green checks — test, typecheck, lint, build, cheapest
@@ -728,10 +850,17 @@ must check the deployed URL itself, not the commit that was pushed to it.**
   38 periods from 21 Aug, but we draft at GW6. The rehearsal league's matchup
   schedule runs from period 1, so this is really a question about the real
   league's settings — recheck once its teams have joined.
-- What Fantrax data should we replicate vs proxy?
+- **Do Fantrax's own points move during a match, or only settle after it?**
+  Opened 13 Aug and unanswerable until 21 Aug: `getLiveScoringStats.totalFpts`
+  and `getTeamRosterInfo`'s FPts columns are all zero because no football has
+  been played. Everything about the matchday view depends on the answer, so it
+  is the first thing to check when GW1 kicks off.
 - What should `apps/lab` look like for the 27/28 platform prototype?
 
-**Answered:** period↔gameweek alignment — see above. Kickoff, not deadline. And
+**Answered:** period↔gameweek alignment — kickoff, not deadline. Whether
+`getMatchups` carries totals — it does not, and it is login-walled, so it is of
+no use to us. What Fantrax data to replicate vs proxy — **replicate: their
+points are public and authoritative, so we read them and compute nothing.** And
 why Vercel blocked the first production deployment: an unmatched commit author
 email, not billing — see the hosting section.
 

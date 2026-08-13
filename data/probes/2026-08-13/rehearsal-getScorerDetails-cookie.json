@@ -1,0 +1,23 @@
+{
+  "data": {
+    "sDate": 1786621507304
+  },
+  "roles": [
+    "02"
+  ],
+  "responses": [
+    {
+      "data": {
+        "commissioner": true
+      },
+      "errors": [
+        {
+          "onScreen": false,
+          "code": "WARNING",
+          "text": "Invalid call - must specify 'scorers' array.",
+          "forceReload": false
+        }
+      ]
+    }
+  ]
+}

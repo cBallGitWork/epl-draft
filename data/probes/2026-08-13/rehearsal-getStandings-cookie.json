@@ -1,0 +1,637 @@
+{
+  "data": {
+    "sDate": 1786621505628
+  },
+  "roles": [
+    "02"
+  ],
+  "responses": [
+    {
+      "data": {
+        "goBackDays": [
+          1,
+          7,
+          14,
+          30,
+          60
+        ],
+        "fantasyTeamInfo": {
+          "8enbgqo5msgb375j": {
+            "name": "123",
+            "logoUrl512": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_256.webp",
+            "shortName": "CB_fantr"
+          },
+          "sezrgvl2mshcpazf": {
+            "name": "test4",
+            "logoUrl512": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/lightblue_yellow_256.webp",
+            "shortName": "test4"
+          },
+          "pbxm9fgimshcpazf": {
+            "name": "test2",
+            "logoUrl512": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/jerseys/blue_red_white_256.webp",
+            "shortName": "test2"
+          },
+          "j9zadacnmshcpazf": {
+            "name": "test3",
+            "logoUrl512": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/jerseys/red_blue_gold_256.webp",
+            "shortName": "test3"
+          }
+        },
+        "displayedSelections": {
+          "projectionsAvailable": true,
+          "period": 1,
+          "timeStartType": "PERIOD_ONLY",
+          "view": "REGULAR_SEASON",
+          "optimal": false,
+          "showTabs": true,
+          "hideGoBackDays": true,
+          "timeframeType": "YEAR_TO_DATE",
+          "proj": false,
+          "displayedStartDate": 1787284800000,
+          "showOptimal": true,
+          "displayedEndDate": 1786593600000
+        },
+        "miscData": {
+          "displayedMinDate": 1787284800000,
+          "showLogos": true,
+          "heading": "2026 test1dsfds",
+          "displayedMaxDate": 1811735999000
+        },
+        "tableList": [
+          {
+            "fixedRows": true,
+            "tableType": "H2hPointsBased1",
+            "fixedHeader": {
+              "cells": [
+                {
+                  "sortDirection": 1,
+                  "name": "Rank",
+                  "shortName": "Rk",
+                  "key": "rank"
+                },
+                {
+                  "align": "LEFT",
+                  "sortDirection": 1,
+                  "name": "Team",
+                  "shortName": "Team",
+                  "key": "team"
+                }
+              ]
+            },
+            "caption": "Standings",
+            "header": {
+              "cells": [
+                {
+                  "sortDirection": 1,
+                  "name": "Win",
+                  "shortName": "W",
+                  "key": "win"
+                },
+                {
+                  "sortDirection": 1,
+                  "name": "Draw",
+                  "shortName": "D",
+                  "key": "draw"
+                },
+                {
+                  "sortDirection": 1,
+                  "name": "Loss",
+                  "shortName": "L",
+                  "key": "loss"
+                },
+                {
+                  "sortDirection": 1,
+                  "name": "Points",
+                  "shortName": "Points",
+                  "key": "points"
+                },
+                {
+                  "sortDirection": 1,
+                  "name": "Win Percentage",
+                  "shortName": "Win%",
+                  "key": "winpc"
+                },
+                {
+                  "sortDirection": 1,
+                  "name": "Waiver Wire Claim Order",
+                  "shortName": "WW",
+                  "key": "wwOrder"
+                },
+                {
+                  "sortDirection": 1,
+                  "name": "Total season fantasy points for",
+                  "shortName": "FPtsF",
+                  "key": "pointsFor"
+                },
+                {
+                  "sortDirection": 1,
+                  "name": "Total season fantasy points against",
+                  "shortName": "FPtsA",
+                  "key": "pointsAgainst"
+                },
+                {
+                  "sortDirection": 1,
+                  "name": "Streak",
+                  "shortName": "Streak",
+                  "key": "streak"
+                }
+              ]
+            },
+            "rows": [
+              {
+                "highlight": true,
+                "cells": [
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "-"
+                  },
+                  {
+                    "content": "3"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": ""
+                  }
+                ],
+                "fixedCells": [
+                  {
+                    "content": "1"
+                  },
+                  {
+                    "content": "test2",
+                    "leagueId": "zbn1z3ukmsgb36sz",
+                    "id": "zbn1z3ukmsgb36sz",
+                    "teamId": "pbxm9fgimshcpazf"
+                  }
+                ]
+              },
+              {
+                "highlight": true,
+                "cells": [
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "-"
+                  },
+                  {
+                    "content": "1"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": ""
+                  }
+                ],
+                "fixedCells": [
+                  {
+                    "content": "2"
+                  },
+                  {
+                    "content": "test4",
+                    "leagueId": "zbn1z3ukmsgb36sz",
+                    "id": "zbn1z3ukmsgb36sz",
+                    "teamId": "sezrgvl2mshcpazf"
+                  }
+                ]
+              },
+              {
+                "highlight": true,
+                "cells": [
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "-"
+                  },
+                  {
+                    "content": "2"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": ""
+                  }
+                ],
+                "fixedCells": [
+                  {
+                    "content": "3"
+                  },
+                  {
+                    "content": "test3",
+                    "leagueId": "zbn1z3ukmsgb36sz",
+                    "id": "zbn1z3ukmsgb36sz",
+                    "teamId": "j9zadacnmshcpazf"
+                  }
+                ]
+              },
+              {
+                "highlight": true,
+                "cells": [
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "-"
+                  },
+                  {
+                    "content": "4"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": "0",
+                    "toolTip": "0"
+                  },
+                  {
+                    "content": ""
+                  }
+                ],
+                "fixedCells": [
+                  {
+                    "content": "4"
+                  },
+                  {
+                    "content": "123",
+                    "leagueId": "zbn1z3ukmsgb36sz",
+                    "id": "zbn1z3ukmsgb36sz",
+                    "teamId": "8enbgqo5msgb375j"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "fixedRows": false,
+            "tableType": "H2hPointsBased2",
+            "caption": "Gameweek 1",
+            "subCaption": "(Fri Aug 21, 2026 - Thu Aug 27, 2026)",
+            "header": {
+              "cells": [
+                {
+                  "align": "LEFT",
+                  "sortDirection": 1,
+                  "name": "Away",
+                  "shortName": "Away",
+                  "key": "away"
+                },
+                {
+                  "sortDirection": 1,
+                  "name": "FPts",
+                  "shortName": "FPts",
+                  "key": "fpts"
+                },
+                {
+                  "align": "LEFT",
+                  "sortDirection": 1,
+                  "name": "Home",
+                  "shortName": "Home",
+                  "key": "home"
+                },
+                {
+                  "sortDirection": 1,
+                  "name": "FPts",
+                  "shortName": "FPts",
+                  "key": "fpts"
+                }
+              ]
+            },
+            "rows": [
+              {
+                "cells": [
+                  {
+                    "content": "test4",
+                    "highlight": true,
+                    "leagueId": "zbn1z3ukmsgb36sz",
+                    "id": "zbn1z3ukmsgb36sz",
+                    "teamId": "sezrgvl2mshcpazf"
+                  },
+                  {
+                    "content": "0",
+                    "highlight": true
+                  },
+                  {
+                    "content": "test2",
+                    "highlight": true,
+                    "leagueId": "zbn1z3ukmsgb36sz",
+                    "id": "zbn1z3ukmsgb36sz",
+                    "teamId": "pbxm9fgimshcpazf"
+                  },
+                  {
+                    "content": "0",
+                    "highlight": true
+                  }
+                ]
+              },
+              {
+                "cells": [
+                  {
+                    "content": "123",
+                    "highlight": true,
+                    "leagueId": "zbn1z3ukmsgb36sz",
+                    "id": "zbn1z3ukmsgb36sz",
+                    "teamId": "8enbgqo5msgb375j"
+                  },
+                  {
+                    "content": "0",
+                    "highlight": true
+                  },
+                  {
+                    "content": "test3",
+                    "highlight": true,
+                    "leagueId": "zbn1z3ukmsgb36sz",
+                    "id": "zbn1z3ukmsgb36sz",
+                    "teamId": "j9zadacnmshcpazf"
+                  },
+                  {
+                    "content": "0",
+                    "highlight": true
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "displayedLists": {
+          "goBackDays": [
+            1,
+            7,
+            14,
+            30,
+            60
+          ],
+          "pagination": {
+            "startPageNum": 0,
+            "numTeamsPerPage": 25,
+            "endPageNum": 0,
+            "pageNum": 1
+          },
+          "tabs": [
+            {
+              "name": "Regular Season",
+              "id": "REGULAR_SEASON"
+            },
+            {
+              "name": "Results",
+              "id": "SCHEDULE"
+            },
+            {
+              "name": "Season Stats",
+              "id": "SEASON_STATS"
+            }
+          ],
+          "periods": [
+            {
+              "object2": "1 (Aug 21 - Aug 27)",
+              "object1": 1
+            },
+            {
+              "object2": "2 (Aug 28 - Sep 3)",
+              "object1": 2
+            },
+            {
+              "object2": "3 (Sep 4 - Sep 10)",
+              "object1": 3
+            },
+            {
+              "object2": "4 (Sep 11 - Sep 17)",
+              "object1": 4
+            },
+            {
+              "object2": "5 (Sep 18 - Oct 8)",
+              "object1": 5
+            },
+            {
+              "object2": "6 (Oct 9 - Oct 15)",
+              "object1": 6
+            },
+            {
+              "object2": "7 (Oct 16 - Oct 22)",
+              "object1": 7
+            },
+            {
+              "object2": "8 (Oct 23 - Oct 29)",
+              "object1": 8
+            },
+            {
+              "object2": "9 (Oct 30 - Nov 5)",
+              "object1": 9
+            },
+            {
+              "object2": "10 (Nov 6 - Nov 19)",
+              "object1": 10
+            },
+            {
+              "object2": "11 (Nov 20 - Nov 26)",
+              "object1": 11
+            },
+            {
+              "object2": "12 (Nov 27 - Nov 30)",
+              "object1": 12
+            },
+            {
+              "object2": "13 (Dec 1 - Dec 3)",
+              "object1": 13
+            },
+            {
+              "object2": "14 (Dec 4 - Dec 10)",
+              "object1": 14
+            },
+            {
+              "object2": "15 (Dec 11 - Dec 17)",
+              "object1": 15
+            },
+            {
+              "object2": "16 (Dec 18 - Dec 24)",
+              "object1": 16
+            },
+            {
+              "object2": "17 (Dec 25 - Dec 28)",
+              "object1": 17
+            },
+            {
+              "object2": "18 (Dec 29 - Dec 31)",
+              "object1": 18
+            },
+            {
+              "object2": "19 (Jan 1 - Jan 4)",
+              "object1": 19
+            },
+            {
+              "object2": "20 (Jan 5 - Jan 14)",
+              "object1": 20
+            },
+            {
+              "object2": "21 (Jan 15 - Jan 21)",
+              "object1": 21
+            },
+            {
+              "object2": "22 (Jan 22 - Jan 28)",
+              "object1": 22
+            },
+            {
+              "object2": "23 (Jan 29 - Feb 4)",
+              "object1": 23
+            },
+            {
+              "object2": "24 (Feb 5 - Feb 8)",
+              "object1": 24
+            },
+            {
+              "object2": "25 (Feb 9 - Feb 18)",
+              "object1": 25
+            },
+            {
+              "object2": "26 (Feb 19 - Feb 25)",
+              "object1": 26
+            },
+            {
+              "object2": "27 (Feb 26 - Mar 1)",
+              "object1": 27
+            },
+            {
+              "object2": "28 (Mar 2 - Mar 11)",
+              "object1": 28
+            },
+            {
+              "object2": "29 (Mar 12 - Mar 18)",
+              "object1": 29
+            },
+            {
+              "object2": "30 (Mar 19 - Apr 8)",
+              "object1": 30
+            },
+            {
+              "object2": "31 (Apr 9 - Apr 15)",
+              "object1": 31
+            },
+            {
+              "object2": "32 (Apr 16 - Apr 22)",
+              "object1": 32
+            },
+            {
+              "object2": "33 (Apr 23 - Apr 29)",
+              "object1": 33
+            },
+            {
+              "object2": "34 (Apr 30 - May 6)",
+              "object1": 34
+            },
+            {
+              "object2": "35 (May 7 - May 13)",
+              "object1": 35
+            },
+            {
+              "object2": "36 (May 14 - May 20)",
+              "object1": 36
+            },
+            {
+              "object2": "37 (May 21 - May 27)",
+              "object1": 37
+            },
+            {
+              "object2": "38 (May 28 - May 30)",
+              "object1": 38
+            }
+          ],
+          "timeframeTypes": [
+            {
+              "name": "YTD",
+              "id": "YEAR_TO_DATE"
+            },
+            {
+              "name": "By Period",
+              "id": "BY_PERIOD"
+            }
+          ],
+          "timeStartTypes": [
+            {
+              "object2": "Period Only",
+              "object1": "PERIOD_ONLY"
+            },
+            {
+              "object2": "From Start Of Season",
+              "object1": "FROM_SEASON_START"
+            }
+          ]
+        },
+        "commissioner": true
+      }
+    }
+  ]
+}

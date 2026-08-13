@@ -1,0 +1,24 @@
+{
+  "data": {
+    "sDate": 1786621490853
+  },
+  "roles": [
+    "03"
+  ],
+  "pageError": {
+    "onScreen": false,
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getLiveScoring'",
+    "forceReload": false
+  },
+  "responses": [
+    {
+      "pageError": {
+        "onScreen": false,
+        "code": "ERROR_INVALID_REQUEST",
+        "text": "Unable to find API method 'getLiveScoring'",
+        "forceReload": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "data": {
+    "sDate": 1786621500429
+  },
+  "roles": [
+    "02"
+  ],
+  "responses": [
+    {
+      "data": {
+        "leagueName": "test1dsfds",
+        "numTeams": 12,
+        "commissioner": true
+      }
+    }
+  ]
+}

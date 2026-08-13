@@ -1,0 +1,24 @@
+{
+  "data": {
+    "sDate": 1786621494287
+  },
+  "roles": [
+    "03"
+  ],
+  "pageError": {
+    "onScreen": false,
+    "code": "ERROR_INVALID_REQUEST",
+    "text": "Unable to find API method 'getPlayers'",
+    "forceReload": false
+  },
+  "responses": [
+    {
+      "pageError": {
+        "onScreen": false,
+        "code": "ERROR_INVALID_REQUEST",
+        "text": "Unable to find API method 'getPlayers'",
+        "forceReload": false
+      }
+    }
+  ]
+}
