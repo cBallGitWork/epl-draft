@@ -130,5 +130,55 @@
       "eligiblePos": "M",
       "status": "FA"
     }
+  },
+  "scoringSystem": {
+    "scoringCategories": {
+      "NON_GOALIE": {
+        "CS": {
+          "D": "points4",
+          "Default": "points0",
+          "M": "points1"
+        },
+        "Min": {
+          "Default": "range1|59|1|NULL$60|90|1|NULL"
+        },
+        "G": {
+          "D": "points6",
+          "F": "points4",
+          "Default": "points0",
+          "M": "points5"
+        }
+      },
+      "GOALIE": {
+        "CS": {
+          "Default": "points4"
+        },
+        "Min": {
+          "Default": "range1|59|1|NULL$60|90|1|NULL"
+        },
+        "G": {
+          "Default": "points6"
+        }
+      }
+    },
+    "scoringCategorySettings": [
+      {
+        "group": {
+          "code": "SOCCER_GOALIE",
+          "name": "Goalkeeper",
+          "id": "5020",
+          "shortName": "G"
+        }
+      },
+      {
+        "group": {
+          "code": "SOCCER_NON_GOALIE",
+          "name": "Outfielder",
+          "id": "5010",
+          "shortName": "OF"
+        }
+      }
+    ],
+    "type": "points"
   }
 }

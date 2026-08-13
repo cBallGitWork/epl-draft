@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { categoryPoints } from "../scoring";
 import { mapLeagueInfo, mapPlayerPool, readingOrder } from "./map";
 import type { RawLeagueInfo, RawPlayerPool } from "./raw";
 import leagueInfo from "./__fixtures__/leagueInfo.json";
@@ -130,6 +131,18 @@ describe("mapLeagueInfo", () => {
 
 describe("mapLeagueInfo, on a league that has drafted", () => {
   const info = mapLeagueInfo(leagueInfoDrafted as RawLeagueInfo);
+
+  it("carries the scoring rules through from getLeagueInfo", () => {
+    // The only production path to `LeagueInfo.scoring`, and the one the clean
+    // sheet preview reads. `scoring.test.ts` proves the table parses; this
+    // proves it is reached from the payload a route actually fetches.
+    expect(info.scoring).not.toBeNull();
+    expect(categoryPoints(info.scoring!, "CS", "D")).toBe(4);
+  });
+
+  it("says nothing about scoring when a league describes none", () => {
+    expect(mapLeagueInfo({}).scoring).toBeNull();
+  });
 
   it("models an absent draftType as absent", () => {
     // The rehearsal league carries no `draftType` key at all while the real one

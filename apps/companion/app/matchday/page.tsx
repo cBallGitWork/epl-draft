@@ -34,9 +34,19 @@ function BetweenGameweeks({ snapshot }: { snapshot: FootballSnapshot }) {
     .filter((fixture) => fixture.kickoff !== null && fixture.status !== "finished")
     .sort((a, b) => String(a.kickoff).localeCompare(String(b.kickoff)))[0];
 
+  // The round in view is the one FPL is pointing at, and after the last whistle
+  // it keeps pointing at it until FPL moves on — hours, sometimes a day. In that
+  // window nothing here is "next": the round is over, its kickoff has been and
+  // gone, and its deadline is in the past. Saying so beats naming a finished
+  // round as the one coming up.
+  const over = next === undefined;
+
   return (
     <div className="flex flex-col gap-3">
-      <PageHeader title="No football today" sub={`Gameweek ${snapshot.gameweek} next`} />
+      <PageHeader
+        title="No football today"
+        sub={over ? `Gameweek ${snapshot.gameweek} is done` : `Gameweek ${snapshot.gameweek} next`}
+      />
 
       <div className="elev flex flex-col gap-3 rounded-xl border border-line bg-surface p-4">
         {next?.kickoff ? (
@@ -46,10 +56,12 @@ function BetweenGameweeks({ snapshot }: { snapshot: FootballSnapshot }) {
           </p>
         ) : (
           <p className="text-sm text-muted">
-            The next round has no confirmed kickoff yet — the fixtures are set, the times are not.
+            Every match in this round has been played. The next one appears here once FPL names
+            its fixtures.
           </p>
         )}
-        {snapshot.deadline ? (
+        {/* Only worth saying while it is still ahead of us. */}
+        {!over && snapshot.deadline ? (
           <p className="text-sm text-muted">
             FPL&apos;s deadline is{" "}
             <span className="numeric text-ink">{londonDayAndTime(snapshot.deadline)}</span>. Ours is

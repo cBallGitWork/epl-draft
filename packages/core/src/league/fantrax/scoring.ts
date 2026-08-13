@@ -60,8 +60,7 @@ function table(group: Record<string, Record<string, string | undefined>> | undef
 
 /** `"points6"` → 6, `"points-1"` → -1. Anything else — a range, a shape we have
  *  not seen — is not a flat number and is left for a reader who needs it. */
-function flatPoints(expression: string | undefined): number | null {
-  if (typeof expression !== "string") return null;
+function flatPoints(expression: string): number | null {
   const match = /^points(-?\d+(?:\.\d+)?)$/.exec(expression.trim());
   if (!match) return null;
   const points = Number(match[1]);

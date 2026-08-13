@@ -1,6 +1,6 @@
 // When to try again, and when to stop. Pure on purpose: the interesting part of
 // a retry policy is the arithmetic, and arithmetic should not need a server to
-// test. The sleeping and the randomness live in each `client.ts`, at the edge.
+// test. The sleeping and the randomness live in `fetch.ts`, at the edge.
 //
 // Outside both layers, because it belongs to neither. Both providers front their
 // APIs with the same kind of WAF and answer 429 the same way, but `league/` may

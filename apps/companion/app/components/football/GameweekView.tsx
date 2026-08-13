@@ -11,7 +11,7 @@ import AutoRefresh from "../shell/AutoRefresh";
 import LeagueCrest from "../shell/LeagueCrest";
 import MatchList from "./MatchList";
 
-// One round of football. Shared by the home route (whatever is live or next) and
+// One round of football. Shared by /matchday, while there is football on, and
 // the /gw/[gameweek] route, so both stay identical rather than drifting.
 
 export default function GameweekView({ snapshot }: { snapshot: FootballSnapshot }) {

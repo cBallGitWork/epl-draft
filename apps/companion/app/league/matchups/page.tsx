@@ -1,23 +1,15 @@
 import Link from "next/link";
 import {
-  FANTRAX_LEAGUE_ID,
-  FantraxError,
-  type FootballSnapshot,
   type LeagueTeam,
   type LiveTeamScore,
   type PendingCleanSheets,
-  type RosteredTeam,
-  type ScoringRules,
-  fetchLiveScoring,
-  mapLiveScores,
-  pendingCleanSheets,
   periodPairings,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import PageHeader from "../../components/shell/PageHeader";
 import SectionNav from "../SectionNav";
 import { getLeagueSquads } from "../../squad/league";
-import { orRefusal } from "../../refusals";
+import { liveScores, pendingByTeam } from "./scoreboard";
 
 // Who each squad plays this period, and what they have scored.
 //
@@ -28,34 +20,6 @@ import { orRefusal } from "../../refusals";
 
 // Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
 export const revalidate = 30;
-
-/** Fantrax's totals for this period, or none.
- *
- *  Failure-tolerant on purpose: a scoreboard we cannot read costs the numbers,
- *  not the page. Who plays whom comes from a different read and is still worth
- *  showing on its own. */
-async function liveScores(period: number): Promise<Map<string, LiveTeamScore>> {
-  const raw = await orRefusal(fetchLiveScoring(FANTRAX_LEAGUE_ID, period));
-  if (raw instanceof FantraxError) return new Map();
-  return new Map(mapLiveScores(raw).map((score) => [score.teamId, score]));
-}
-
-/** The clean sheets Fantrax has not credited yet, per team.
- *
- *  Empty when the league did not describe its scoring: a preview we cannot price
- *  is one we do not show, rather than one we guess at. */
-function pendingByTeam(
-  teams: readonly RosteredTeam[],
-  rules: ScoringRules | null,
-  snapshot: FootballSnapshot,
-): Map<string, PendingCleanSheets> {
-  if (rules === null) return new Map();
-  const inPlay = new Set(
-    snapshot.fixtures.filter((fixture) => fixture.status === "live").map((fixture) => fixture.id),
-  );
-  if (inPlay.size === 0) return new Map();
-  return new Map(teams.map((team) => [team.teamId, pendingCleanSheets(team, rules, inPlay)]));
-}
 
 function Side({
   team,
@@ -98,8 +62,7 @@ export default async function MatchupPage() {
   if ("unavailable" in squads) {
     return (
       <Nothing title="Fantrax is not answering" code={squads.unavailable}>
-        Fantrax would not hand back the teams, so there is nobody to pair up. The schedule
-        itself is fine — it is the squads we cannot read.
+        Fantrax would not hand back the teams, so there is nobody to pair up.
       </Nothing>
     );
   }
@@ -133,8 +96,8 @@ export default async function MatchupPage() {
     );
   }
 
-  const scores = await liveScores(period);
-  const pending = pendingByTeam(squads.period.teams, squads.info.scoring, squads.snapshot);
+  const { scores, refused } = await liveScores(period);
+  const pending = pendingByTeam(squads.period.teams, squads.info.scoring, squads.snapshot, squads.display);
   const owed = [...pending.values()].reduce((total, team) => total + team.players, 0);
 
   return (
@@ -152,10 +115,19 @@ export default async function MatchupPage() {
       {/* Provenance at the point of use, per principle 4. These are Fantrax's
           points under Fantrax's scoring; we add nothing up. */}
       <p className="px-3 text-2xs text-faint">
-        Fantrax&apos;s points, under Fantrax&apos;s scoring.
-        {owed > 0
-          ? " Green is clean sheets they credit at full time — ours to preview, theirs to settle."
-          : null}
+        {refused === null ? (
+          <>
+            Fantrax&apos;s points, under Fantrax&apos;s scoring.
+            {owed > 0
+              ? " Green is clean sheets they credit at full time — ours to preview, theirs to settle."
+              : null}
+          </>
+        ) : (
+          <>
+            Fantrax&apos;s scoreboard is not answering, so there are no points to show. The
+            pairings below are still right. <span className="numeric">{refused}</span>
+          </>
+        )}
       </p>
 
       <ul className="flex flex-col gap-1.5">
