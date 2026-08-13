@@ -1,0 +1,473 @@
+{
+ "tables": [
+  {
+   "scGroupScorerHeader": "Goalkeeper",
+   "header": {
+    "cells": [
+     {
+      "key": "opponent",
+      "shortName": "Opp",
+      "name": "Opponent"
+     },
+     {
+      "key": "fpts",
+      "shortName": "FPts",
+      "name": "Fantasy Points"
+     },
+     {
+      "key": "fptsPerGame",
+      "shortName": "FP/G",
+      "name": "Average Fantasy Points per Game"
+     },
+     {
+      "key": "5020#6060#-1",
+      "scipId": "5020#6060#-1",
+      "shortName": "GP",
+      "name": "Games Played"
+     },
+     {
+      "key": "5020#6120#-1",
+      "scipId": "5020#6120#-1",
+      "shortName": "Min",
+      "name": "Minutes Played"
+     },
+     {
+      "key": "5020#6249#-1",
+      "scipId": "5020#6249#-1",
+      "shortName": "CS",
+      "name": "Clean Sheets On Field -- Awarded to a player who played at least 60 minutes and whose team gave up 0 goals during the time the player was on the field, even if a goal was scored after the player left the field"
+     },
+     {
+      "key": "5020#6112#-1",
+      "scipId": "5020#6112#-1",
+      "shortName": "GA",
+      "name": "Goals Against -- Goals conceded by the team while the goalkeeper was on the field. This only applies to the goalkeeper."
+     },
+     {
+      "key": "5020#6200#-1",
+      "scipId": "5020#6200#-1",
+      "shortName": "Sv",
+      "name": "Saves"
+     },
+     {
+      "key": "5020#6280#-1",
+      "scipId": "5020#6280#-1",
+      "shortName": "YC",
+      "name": "Yellow Cards"
+     },
+     {
+      "key": "5020#6190#-1",
+      "scipId": "5020#6190#-1",
+      "shortName": "RC",
+      "name": "Red Cards -- If a player receives a red card and then has his red card rescinded at a later time, his red card will remain (i.e. he will have credit for both a red card and a red card rescinded)."
+     },
+     {
+      "key": "5020#6170#-1",
+      "scipId": "5020#6170#-1",
+      "shortName": "PKS",
+      "name": "Penalty Kick Saves -- Number of penalty kicks saved by the goalkeeper"
+     },
+     {
+      "key": "5020#6332#-1",
+      "scipId": "5020#6332#-1",
+      "shortName": "PKM",
+      "name": "Penalty Kicks Missed -- Number of penalty kicks where the shooter did not score"
+     },
+     {
+      "key": "5020#6090#-1",
+      "scipId": "5020#6090#-1",
+      "shortName": "G",
+      "name": "Goals"
+     },
+     {
+      "key": "5020#6000#-1",
+      "scipId": "5020#6000#-1",
+      "shortName": "A",
+      "name": "Assists (Official) -- An official assist, as tracked by the official Premier League site. Fantasy assists (e.g. assists from rebounds) do not count."
+     },
+     {
+      "key": "5020#6283#-1",
+      "scipId": "5020#6283#-1",
+      "shortName": "AF",
+      "name": "Assists (Fantasy) -- Fantasy assists. These assists include ones from blocked shots, free kick goals, handballs won, own goal, passes lost, penalty kick goals, rebounds and shots off the post."
+     },
+     {
+      "key": "5020#6105#-1",
+      "scipId": "5020#6105#-1",
+      "shortName": "OG",
+      "name": "Own Goals -- Goals scored on own net"
+     }
+    ]
+   },
+   "rows": [
+    {
+     "scorer": {
+      "scorerId": "02lz0",
+      "name": "Emiliano Martinez",
+      "teamShortName": "AVL"
+     },
+     "cells": [
+      {
+       "content": "@BHA<br/>Sun 9:00AM",
+       "eventId": "06m5m"
+      },
+      {
+       "content": "109"
+      },
+      {
+       "content": "3.41"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "63"
+      },
+      {
+       "content": "28"
+      },
+      {
+       "content": "-11"
+      },
+      {
+       "content": "23"
+      },
+      {
+       "content": "-2"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "5"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "3"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "0"
+      }
+     ]
+    },
+    {
+     "numSpotsAvailableText": "Reserve spot(s) available",
+     "description": "Reserve spot(s) available",
+     "cells": [
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      }
+     ],
+     "statusId": "2",
+     "numSpotsAvailable": 1
+    }
+   ]
+  },
+  {
+   "scGroupScorerHeader": "Outfielder",
+   "header": {
+    "cells": [
+     {
+      "key": "opponent",
+      "shortName": "Opp",
+      "name": "Opponent"
+     },
+     {
+      "key": "fpts",
+      "shortName": "FPts",
+      "name": "Fantasy Points"
+     },
+     {
+      "key": "fptsPerGame",
+      "shortName": "FP/G",
+      "name": "Average Fantasy Points per Game"
+     },
+     {
+      "key": "5010#6060#-1",
+      "scipId": "5010#6060#-1",
+      "shortName": "GP",
+      "name": "Games Played"
+     },
+     {
+      "key": "5010#6120#-1",
+      "scipId": "5010#6120#-1",
+      "shortName": "Min",
+      "name": "Minutes Played"
+     },
+     {
+      "key": "5010#6090#-1",
+      "scipId": "5010#6090#-1",
+      "shortName": "G",
+      "name": "Goals"
+     },
+     {
+      "key": "5010#6000#-1",
+      "scipId": "5010#6000#-1",
+      "shortName": "A",
+      "name": "Assists (Official) -- An official assist, as tracked by the official Premier League site. Fantasy assists (e.g. assists from rebounds) do not count."
+     },
+     {
+      "key": "5010#6283#-1",
+      "scipId": "5010#6283#-1",
+      "shortName": "AF",
+      "name": "Assists (Fantasy) -- Fantasy assists. These assists include ones from blocked shots, free kick goals, handballs won, own goal, passes lost, penalty kick goals, rebounds and shots off the post."
+     },
+     {
+      "key": "5010#6280#-1",
+      "scipId": "5010#6280#-1",
+      "shortName": "YC",
+      "name": "Yellow Cards"
+     },
+     {
+      "key": "5010#6190#-1",
+      "scipId": "5010#6190#-1",
+      "shortName": "RC",
+      "name": "Red Cards -- If a player receives a red card and then has his red card rescinded at a later time, his red card will remain (i.e. he will have credit for both a red card and a red card rescinded)."
+     },
+     {
+      "key": "5010#6332#-1",
+      "scipId": "5010#6332#-1",
+      "shortName": "PKM",
+      "name": "Penalty Kicks Missed -- Number of penalty kicks where the shooter did not score"
+     },
+     {
+      "key": "5010#6105#-1",
+      "scipId": "5010#6105#-1",
+      "shortName": "OG",
+      "name": "Own Goals -- Goals scored on own net"
+     },
+     {
+      "key": "5010#6101#-1",
+      "scipId": "5010#6101#-1",
+      "shortName": "GAO",
+      "name": "Goals Against Outfielders  -- Goals conceded by the team while the player was on the field. Any outfielder will get credit for this stat."
+     },
+     {
+      "key": "5010#6249#-1",
+      "scipId": "5010#6249#-1",
+      "shortName": "CS",
+      "name": "Clean Sheets On Field -- Awarded to a player who played at least 60 minutes and whose team gave up 0 goals during the time the player was on the field, even if a goal was scored after the player left the field"
+     }
+    ]
+   },
+   "rows": [
+    {
+     "scorer": {
+      "scorerId": "05o4b",
+      "name": "Matty Cash",
+      "teamShortName": "AVL"
+     },
+     "cells": [
+      {
+       "content": "@BHA<br/>Sun 9:00AM",
+       "eventId": "06m5m"
+      },
+      {
+       "content": "108"
+      },
+      {
+       "content": "3.09"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "68"
+      },
+      {
+       "content": "18"
+      },
+      {
+       "content": "9"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "-9"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "-10"
+      },
+      {
+       "content": "32"
+      }
+     ]
+    },
+    {
+     "scorer": {
+      "scorerId": "05nzu",
+      "name": "Gabriel Magalhaes",
+      "teamShortName": "ARS"
+     },
+     "cells": [
+      {
+       "content": "COV<br/>Fri 3:00PM",
+       "eventId": "06m5g"
+      },
+      {
+       "content": "157"
+      },
+      {
+       "content": "4.91"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "62"
+      },
+      {
+       "content": "18"
+      },
+      {
+       "content": "12"
+      },
+      {
+       "content": "3"
+      },
+      {
+       "content": "-4"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "0"
+      },
+      {
+       "content": "-6"
+      },
+      {
+       "content": "72"
+      }
+     ]
+    },
+    {
+     "posId": "703",
+     "cells": [
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      },
+      {
+       "content": ""
+      }
+     ],
+     "statusId": "1"
+    }
+   ]
+  }
+ ],
+ "displayedSelections": {
+  "displayedFantasyTeamId": "8enbgqo5msgb375j",
+  "displayedSeasonOrProjection": {
+   "code": "SEASON_925_YEAR_TO_DATE",
+   "endDate": 1779681599000,
+   "name": "2025-26 - YTD",
+   "shortName": "2025-26 Reg - YTD",
+   "timeframeTypeCode": "YEAR_TO_DATE",
+   "startDate": 1755230400000
+  }
+ }
+}

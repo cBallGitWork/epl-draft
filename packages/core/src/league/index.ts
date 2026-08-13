@@ -6,6 +6,13 @@ export type {
   LeagueInfo,
   LeagueMatchup,
   LiveTeamScore,
+  PoolStatRow,
+  PoolStats,
+  StatColumn,
+  StatGroup,
+  StatLine,
+  StatSeason,
+  TeamStats,
   LeaguePeriod,
   LeaguePlayer,
   LeaguePlayerState,
@@ -48,6 +55,7 @@ export {
 } from "./fantrax/errors";
 export type { ScoringRules } from "./scoring";
 export { mapLiveScores } from "./fantrax/livescoring";
+export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel } from "./fantrax/profile";
 export { mapTransactions } from "./fantrax/transactions";
@@ -55,7 +63,13 @@ export type { RawTransactionHistory } from "./fantrax/transactions";
 // Exported so the app can hold a raw payload across a cache boundary before
 // mapping it — the mapper stays the only place raw meets clean.
 export type { RawTeamRosters } from "./fantrax/raw";
-export { fetchLiveScoring, fetchPlayerProfile, fetchTransactions } from "./fantrax/client";
+export {
+  fetchLiveScoring,
+  fetchPlayerProfile,
+  fetchPoolStats,
+  fetchTeamStats,
+  fetchTransactions,
+} from "./fantrax/client";
 export { mapLeagueInfo, mapPlayerPool, readingOrder } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapStandings } from "./fantrax/standings";

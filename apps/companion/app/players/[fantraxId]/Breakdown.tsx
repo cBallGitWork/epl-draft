@@ -1,0 +1,73 @@
+import type { PlayerSeason } from "./season";
+
+// The first view in this app that explains a number rather than printing one.
+//
+// Every value here is Fantrax's, under our league's own scoring, and the parts
+// add up to the whole exactly — which is the reason we read their breakdown
+// instead of computing one. Our engine would have had to approximate five
+// categories FPL does not publish, and then say so under every total.
+
+export default function Breakdown({ season }: { season: PlayerSeason | null }) {
+  // Nothing to say for a free agent: this comes from a team's own table, and a
+  // player on no team has no row. Saying so would be a heading over an absence.
+  //
+  // A player with a row and no categories is a different answer and is kept: in
+  // August that is every footballer in the league, and "0, nothing yet" is the
+  // true state of a season nobody has played. Dropping it would make an empty
+  // card look like a broken one.
+  if (season === null) return null;
+
+  // What the numbers are, from what Fantrax answered rather than what we asked
+  // for — it has been known to hand back a projection either way.
+  const heading = season.season.projected
+    ? "Fantrax projects"
+    : season.season.name || "This season";
+
+  return (
+    <section className="flex flex-col gap-1.5">
+      <div className="flex items-baseline justify-between gap-3 border-b border-line pb-1">
+        <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-muted">
+          {heading}
+        </h2>
+        <span className="numeric text-sm font-bold">
+          {season.points ?? "—"}
+          <span className="ml-1 text-2xs font-normal text-faint">
+            FPts{season.perGame === null ? "" : ` · ${season.perGame} a game`}
+          </span>
+        </span>
+      </div>
+
+      {season.categories.length === 0 ? (
+        <p className="text-sm text-muted">Nothing on his record yet.</p>
+      ) : null}
+
+      <ul className="flex flex-col gap-0.5">
+        {season.categories.map(({ column, value }) => (
+          <li
+            key={column.code}
+            className="flex min-h-9 items-center gap-2.5 rounded-lg bg-surface px-3 py-1.5"
+          >
+            {/* Fantrax's own definition sits behind the label — it is where they
+                publish the rules a manager would otherwise have to guess, like
+                what counts as a clean sheet. Their sentence, not ours. */}
+            <span className="min-w-0 flex-1 truncate text-sm text-muted" title={column.name}>
+              {label(column.name) || column.code}
+            </span>
+            <span
+              className={`numeric text-sm font-bold ${value < 0 ? "text-bad" : "text-ink"}`}
+            >
+              {value > 0 ? `+${value}` : value}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+/** Their long name up to the double dash, which is where their prose definition
+ *  starts. "Clean Sheets On Field -- Awarded to a player who…" is one label and
+ *  one paragraph, and only the label fits on a phone. */
+function label(name: string): string {
+  return name.split(" -- ")[0].trim();
+}

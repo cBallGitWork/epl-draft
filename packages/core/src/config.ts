@@ -103,6 +103,22 @@ export const FANTRAX_LEAGUES: readonly FantraxLeague[] = [
 export const FANTRAX_LEAGUE_ID =
   process.env.FANTRAX_LEAGUE_ID ?? FANTRAX_LEAGUES[1].leagueId;
 
+/** How many players to ask Fantrax's stats read for in one page.
+ *
+ *  Their own site asks for twenty and paginates thirty-six times; the parameter
+ *  is honoured well past that, so the whole pool arrives in one request. Set
+ *  comfortably above the ~708 they carry, and the read reports the total back so
+ *  a page that ever does overflow this says so rather than showing a prefix. */
+export const POOL_PAGE_SIZE = 2000;
+
+/** How long the current season's Fantrax code stays good, in seconds.
+ *
+ *  Six hours rather than thirty, because the answer changes once a year. It is
+ *  looked up rather than written down — a literal season code would need editing
+ *  every August — and looking it up costs a request, so it is worth not
+ *  repeating on every tap of a player's name. */
+export const SEASON_CODE_LIFE = 60 * 60 * 6;
+
 /** How stale a rendered page may be, in seconds.
  *
  *  Every route segment must repeat this as a literal, because Next analyses

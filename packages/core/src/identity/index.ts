@@ -8,8 +8,11 @@
 // invitation to name-match at runtime, which is the one thing this layer exists
 // to prevent.
 
-export { mergeBridge } from "./bridge";
-export type { Bridge, MappedEntry } from "./bridge";
+export { isUnmapped, mergeBridge } from "./bridge";
+// The guard travels with the type: a caller holding a `BridgeEntry` has to be
+// able to ask whether it settled on anybody, and writing that check a second
+// time at the app edge would be the same test in two places disagreeing later.
+export type { Bridge, BridgeEntry, MappedEntry } from "./bridge";
 export { matchPlayers } from "./match";
 export type { FplCandidate } from "./match";
 // The classifier itself stays internal — only `MappedEntry.agreement` leaves the

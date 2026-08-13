@@ -1,27 +1,20 @@
 import Link from "next/link";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
+import PlayerTable, { STATUS } from "./PlayerTable";
 import { getLeaguePool } from "./pool";
+import { PAGE_ROWS, filterHref, showAllHref, shownRows } from "./query";
+import type { PlayersQuery } from "./query";
 
-// Every player Fantrax knows, and what our league has decided about him: what he
-// may be played as, whether anyone can sign him, and whose team he is on.
-//
-// Filtering happens in the URL rather than in browser state. A server component
-// stays a server component, the whole pool never crosses to the phone as data,
-// and a manager can send someone a link to exactly what he is looking at.
+// Every player Fantrax knows, what our league has decided about him, and what
+// Fantrax scores him. The numbers are theirs under our league's scoring, which
+// is why the heading says which season they are and whether they were played or
+// predicted — Fantrax defaults these reads to a projection, and a column headed
+// FPts that silently switches between the two would be the confident wrong
+// answer.
 
 // Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
 export const revalidate = 30;
-
-/** Fantrax's status codes in the manager's words. Theirs is the vocabulary, so
- *  anything we have not seen shows as the raw code rather than as a guess — an
- *  undrafted league marks all 697 "WW", and a fourth letter would appear here
- *  before it appeared in this file. */
-const STATUS: Record<string, string> = {
-  FA: "Free agent",
-  WW: "Waivers",
-  T: "Rostered",
-};
 
 function chip(active: boolean): string {
   return `flex min-h-11 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium ${
@@ -32,7 +25,7 @@ function chip(active: boolean): string {
 export default async function PlayersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; pos?: string; status?: string }>;
+  searchParams: Promise<PlayersQuery>;
 }) {
   const [pool, query] = await Promise.all([getLeaguePool(), searchParams]);
 
@@ -45,33 +38,14 @@ export default async function PlayersPage({
     );
   }
 
-  const q = (query.q ?? "").trim();
-  const needle = q.toLowerCase();
-  const shown = pool.players.filter(
-    (entry) =>
-      (!query.status || entry.status === query.status) &&
-      (!query.pos || entry.eligiblePositions.includes(query.pos)) &&
-      (!needle || entry.player.displayName.toLowerCase().includes(needle)),
-  );
+  const shown = shownRows(pool.rows, query);
+  const capped = query.all ? shown : shown.slice(0, PAGE_ROWS);
 
   const counted = new Map<string, number>();
-  for (const entry of pool.players) {
+  for (const row of pool.rows) {
     // Skipped rather than counted under a blank label: a player our league has
     // said nothing about is still listed, he simply has no status to filter by.
-    if (entry.status) counted.set(entry.status, (counted.get(entry.status) ?? 0) + 1);
-  }
-
-  const current = new URLSearchParams();
-  for (const [key, value] of Object.entries(query)) if (value) current.set(key, value);
-
-  /** Tapping the filter you are already on clears it, so every chip is its own
-   *  way back and the page needs no "all" button to undo itself. */
-  function toggle(key: string, value: string): string {
-    const next = new URLSearchParams(current);
-    if (next.get(key) === value) next.delete(key);
-    else next.set(key, value);
-    const search = next.toString();
-    return search ? `/players?${search}` : "/players";
+    if (row.entry.status) counted.set(row.entry.status, (counted.get(row.entry.status) ?? 0) + 1);
   }
 
   return (
@@ -80,19 +54,26 @@ export default async function PlayersPage({
         title="Players"
         sub={
           <>
-            {shown.length} of {pool.players.length}
+            {shown.length} of {pool.rows.length}
+            {pool.season ? (
+              <>
+                {" · "}
+                {pool.season.projected ? "Fantrax projection" : pool.season.name || "this season"}
+              </>
+            ) : null}
           </>
         }
       />
 
       <form action="/players" className="flex gap-1.5">
-        {/* The chips and the box filter the same list, so each has to carry the
-            other's state — a GET form posts only its own fields. */}
-        {query.status ? <input type="hidden" name="status" value={query.status} /> : null}
-        {query.pos ? <input type="hidden" name="pos" value={query.pos} /> : null}
+        {/* The chips, the sort and the box all filter the same list, so each has
+            to carry the others' state — a GET form posts only its own fields. */}
+        {(["status", "pos", "sort", "dir", "all"] as const).map((key) =>
+          query[key] ? <input key={key} type="hidden" name={key} value={query[key]} /> : null,
+        )}
         <input
           name="q"
-          defaultValue={q}
+          defaultValue={(query.q ?? "").trim()}
           placeholder="Find a player"
           aria-label="Find a player"
           className="min-h-11 min-w-0 flex-1 rounded-lg border border-line bg-surface px-3 text-base"
@@ -111,7 +92,7 @@ export default async function PlayersPage({
           .map(([code, count]) => (
             <Link
               key={code}
-              href={toggle("status", code)}
+              href={filterHref(query, "status", code)}
               aria-current={query.status === code ? "true" : undefined}
               className={chip(query.status === code)}
             >
@@ -119,13 +100,10 @@ export default async function PlayersPage({
               <span className="numeric text-2xs text-faint">{count}</span>
             </Link>
           ))}
-      </div>
-
-      <div className="flex flex-wrap gap-1.5">
         {pool.positions.map((position) => (
           <Link
             key={position}
-            href={toggle("pos", position)}
+            href={filterHref(query, "pos", position)}
             aria-current={query.pos === position ? "true" : undefined}
             className={chip(query.pos === position)}
           >
@@ -139,45 +117,24 @@ export default async function PlayersPage({
           Nobody in the pool matches that. Tap a filter again to clear it.
         </p>
       ) : (
-        <ul className="flex flex-col gap-1">
-          {shown.map((entry) => {
-            const owner = entry.ownerTeamId
-              ? (pool.teamNames.get(entry.ownerTeamId) ?? entry.ownerTeamId)
-              : null;
-            return (
-              <li key={entry.player.fantraxId}>
-                <Link
-                  href={`/players/${entry.player.fantraxId}`}
-                  className="flex min-h-11 items-center gap-2.5 rounded-lg border border-line bg-surface px-3 py-2 hover:bg-raised"
-                >
-                  {/* The league's eligibility, not the pool's single position:
-                      "F/M" is what the commissioner set and what the planner
-                      obeys, and the global pool's letter is a different league's
-                      answer. */}
-                  <span className="numeric w-9 text-2xs tracking-widest text-faint">
-                    {entry.eligiblePositions.join("/") || "—"}
-                  </span>
-                  <span className="min-w-0 flex-1 truncate font-medium">
-                    {entry.player.displayName}
-                  </span>
-                  <span className="numeric text-2xs tracking-widest text-faint">
-                    {entry.player.clubCode ?? "—"}
-                  </span>
-                  {owner ? (
-                    <span className="max-w-28 truncate rounded bg-raised px-1.5 py-0.5 text-2xs font-bold text-mid">
-                      {owner}
-                    </span>
-                  ) : (
-                    <span className="text-2xs text-faint">
-                      {STATUS[entry.status] ?? entry.status}
-                    </span>
-                  )}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <PlayerTable rows={capped} query={query} teamNames={pool.teamNames} />
       )}
+
+      {capped.length < shown.length ? (
+        <p className="text-2xs text-faint">
+          Showing the first {capped.length}. Search or filter to narrow it, or{" "}
+          <Link href={showAllHref(query)} className="font-bold text-accent underline">
+            show all {shown.length}
+          </Link>
+          .
+        </p>
+      ) : null}
+
+      {pool.missing > 0 ? (
+        <p className="text-2xs text-faint">
+          Fantrax has numbers for {pool.missing} more than this read carried; those rows show a dash.
+        </p>
+      ) : null}
     </div>
   );
 }

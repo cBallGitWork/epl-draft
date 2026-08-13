@@ -5,6 +5,7 @@ import { FantraxError, errorEnvelope } from "./errors";
 import { fxpaRead } from "./fxpa";
 import type { RawLiveScoring } from "./livescoring";
 import type { RawPlayerProfile } from "./profile";
+import type { RawPoolStats, RawStatTables } from "./stats";
 import type { RawTransactionHistory } from "./transactions";
 import type {
   RawDraftResults,
@@ -108,4 +109,46 @@ export function fetchLiveScoring(leagueId: string, period: number): Promise<RawL
   return fxpaRead(leagueId, "getLiveScoringStats", {
     period: String(period),
   }) as Promise<RawLiveScoring>;
+}
+
+/** The whole player pool with Fantrax's own points against each name.
+ *
+ *  Public. One call carries all of it: their page asks for twenty at a time and
+ *  paginates, but `maxResultsPerPage` is honoured up to the full pool, which is
+ *  the difference between one request and thirty-six.
+ *
+ *  `season` is sent when we know the code and omitted when we do not, because it
+ *  is where the code comes from — the list of valid season codes is published
+ *  here and nowhere else we read. Whatever it answers with is read back and
+ *  rendered: this endpoint quietly refuses a year-to-date code and hands back a
+ *  projection instead (PLATFORM_NOTES, 13 Aug), so asking is not knowing. */
+export function fetchPoolStats(
+  leagueId: string,
+  perPage: number,
+  season?: string,
+): Promise<RawPoolStats> {
+  return fxpaRead(leagueId, "getPlayerStats", {
+    statusOrTeamFilter: "ALL",
+    pageNumber: "1",
+    maxResultsPerPage: String(perPage),
+    ...(season ? { seasonOrProjection: season } : {}),
+  }) as Promise<RawPoolStats>;
+}
+
+/** One team's squad with a season's numbers against every player on it.
+ *
+ *  Public, and the read that made a scoring engine unnecessary: the FPTS view
+ *  breaks each total into the league's own categories, and they sum to it
+ *  exactly. Refuses with a `WARNING` until a league has at least one team, which
+ *  is the state the real league is in until 10 Oct. */
+export function fetchTeamStats(
+  leagueId: string,
+  teamId: string,
+  season?: string,
+): Promise<RawStatTables> {
+  return fxpaRead(leagueId, "getTeamRosterInfo", {
+    teamId,
+    view: "FPTS",
+    ...(season ? { seasonOrProjection: season } : {}),
+  }) as Promise<RawStatTables>;
 }

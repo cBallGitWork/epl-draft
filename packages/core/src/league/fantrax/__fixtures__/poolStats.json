@@ -1,0 +1,360 @@
+{
+ "tableHeader": {
+  "cells": [
+   {
+    "key": "rankOv",
+    "shortName": "Rk"
+   },
+   {
+    "key": "status",
+    "shortName": "Sta"
+   },
+   {
+    "key": "opponent",
+    "shortName": "Opp"
+   },
+   {
+    "key": "fpts",
+    "shortName": "FPts"
+   },
+   {
+    "key": "fptsPerGame",
+    "shortName": "FP/G"
+   },
+   {
+    "shortName": "Ros"
+   },
+   {
+    "shortName": "+/-"
+   }
+  ]
+ },
+ "statsTable": [
+  {
+   "scorer": {
+    "scorerId": "061vq",
+    "name": "Erling Haaland",
+    "teamShortName": "MCI"
+   },
+   "cells": [
+    {
+     "content": "1"
+    },
+    {
+     "content": "CB_fantr",
+     "toolTip": "123",
+     "teamId": "8enbgqo5msgb375j"
+    },
+    {
+     "content": "BOU<br/>Sun 9:00AM",
+     "eventId": "06m5n"
+    },
+    {
+     "content": "196"
+    },
+    {
+     "content": "5.6"
+    },
+    {
+     "content": "100%"
+    },
+    {
+     "content": "0%"
+    }
+   ]
+  },
+  {
+   "scorer": {
+    "scorerId": "05gcr",
+    "name": "Bruno Fernandes",
+    "teamShortName": "MUN"
+   },
+   "cells": [
+    {
+     "content": "2"
+    },
+    {
+     "content": "test2",
+     "toolTip": "test2",
+     "teamId": "pbxm9fgimshcpazf"
+    },
+    {
+     "content": "@HUL<br/>Sat 7:30AM",
+     "eventId": "06m5j"
+    },
+    {
+     "content": "184"
+    },
+    {
+     "content": "5.26"
+    },
+    {
+     "content": "100%"
+    },
+    {
+     "content": "0%"
+    }
+   ]
+  },
+  {
+   "scorer": {
+    "scorerId": "04qr9",
+    "name": "Morgan Gibbs-White",
+    "teamShortName": "NOT"
+   },
+   "cells": [
+    {
+     "content": "3"
+    },
+    {
+     "content": "W <small>(Fri)</small>",
+     "toolTip": "Waiver Wire - Off Fri Aug 14, 5:00 AM EDT"
+    },
+    {
+     "content": "LEE<br/>Sat 10:00AM",
+     "eventId": "06m5l"
+    },
+    {
+     "content": "168"
+    },
+    {
+     "content": "4.54"
+    },
+    {
+     "content": "100%"
+    },
+    {
+     "content": "0%"
+    }
+   ]
+  }
+ ],
+ "displayedSeasonOrProjection": {
+  "code": "SEASON_925_PROJECTED_SEASON",
+  "endDate": 1779681599000,
+  "name": "2025-26 - ???type.statisticsTimeframeType.projectedSeason.shortName: en_US???",
+  "shortName": "2025-26 Reg - ???type.statisticsTimeframeType.projectedSeason.shortName: en_US???",
+  "timeframeTypeCode": "PROJECTED_SEASON",
+  "startDate": 1755230400000
+ },
+ "displayedLists": {
+  "displayedSeasonOrProjections": [
+   {
+    "code": "PROJECTION_0_926_SEASON",
+    "name": "Projected - Season",
+    "timeframeTypeCode": "PROJECTED_SEASON",
+    "startDate": 1787284800000
+   },
+   {
+    "code": "PROJECTION_0_926_EVENT_PROJECTED_WEEKLY",
+    "name": "Projected - Per Game",
+    "timeframeTypeCode": "PROJECTED_WEEKLY",
+    "startDate": 1787284800000
+   },
+   {
+    "code": "SEASON_926_YEAR_TO_DATE",
+    "name": "2026-27 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1787284800000
+   },
+   {
+    "code": "SEASON_926_BY_PERIOD",
+    "name": "2026-27 - Game Week",
+    "timeframeTypeCode": "BY_PERIOD",
+    "startDate": 1787284800000
+   },
+   {
+    "code": "SEASON_926_BY_DATE",
+    "name": "2026-27 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1787284800000
+   },
+   {
+    "code": "SEASON_925_YEAR_TO_DATE",
+    "name": "2025-26 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1755230400000
+   },
+   {
+    "code": "SEASON_925_BY_DATE",
+    "name": "2025-26 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1755230400000
+   },
+   {
+    "code": "SEASON_924_YEAR_TO_DATE",
+    "name": "2024-25 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1723780800000
+   },
+   {
+    "code": "SEASON_924_BY_DATE",
+    "name": "2024-25 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1723780800000
+   },
+   {
+    "code": "SEASON_923_YEAR_TO_DATE",
+    "name": "2023-24 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1691726400000
+   },
+   {
+    "code": "SEASON_923_BY_DATE",
+    "name": "2023-24 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1691726400000
+   },
+   {
+    "code": "SEASON_922_YEAR_TO_DATE",
+    "name": "2022-23 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1659672000000
+   },
+   {
+    "code": "SEASON_922_BY_DATE",
+    "name": "2022-23 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1659672000000
+   },
+   {
+    "code": "SEASON_921_YEAR_TO_DATE",
+    "name": "2021-22 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1628827200000
+   },
+   {
+    "code": "SEASON_921_BY_DATE",
+    "name": "2021-22 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1628827200000
+   },
+   {
+    "code": "SEASON_920_YEAR_TO_DATE",
+    "name": "2020-21 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1599883200000
+   },
+   {
+    "code": "SEASON_920_BY_DATE",
+    "name": "2020-21 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1599883200000
+   },
+   {
+    "code": "SEASON_919_YEAR_TO_DATE",
+    "name": "2019-20 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1565323200000
+   },
+   {
+    "code": "SEASON_919_BY_DATE",
+    "name": "2019-20 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1565323200000
+   },
+   {
+    "code": "SEASON_918_YEAR_TO_DATE",
+    "name": "2018-19 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1533873600000
+   },
+   {
+    "code": "SEASON_918_BY_DATE",
+    "name": "2018-19 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1533873600000
+   },
+   {
+    "code": "SEASON_917_YEAR_TO_DATE",
+    "name": "2017-18 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1502424000000
+   },
+   {
+    "code": "SEASON_917_BY_DATE",
+    "name": "2017-18 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1502424000000
+   },
+   {
+    "code": "SEASON_916_YEAR_TO_DATE",
+    "name": "2016-17 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1471060800000
+   },
+   {
+    "code": "SEASON_916_BY_DATE",
+    "name": "2016-17 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1471060800000
+   },
+   {
+    "code": "SEASON_915_YEAR_TO_DATE",
+    "name": "2015-16 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1439006400000
+   },
+   {
+    "code": "SEASON_915_BY_DATE",
+    "name": "2015-16 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1439006400000
+   },
+   {
+    "code": "SEASON_914_YEAR_TO_DATE",
+    "name": "2014-15 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1408161600000
+   },
+   {
+    "code": "SEASON_914_BY_DATE",
+    "name": "2014-15 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1408161600000
+   },
+   {
+    "code": "SEASON_913_YEAR_TO_DATE",
+    "name": "2013-14 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1376712000000
+   },
+   {
+    "code": "SEASON_913_BY_DATE",
+    "name": "2013-14 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1376712000000
+   },
+   {
+    "code": "SEASON_912_YEAR_TO_DATE",
+    "name": "2012-13 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1345262400000
+   },
+   {
+    "code": "SEASON_912_BY_DATE",
+    "name": "2012-13 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1345262400000
+   },
+   {
+    "code": "SEASON_911_YEAR_TO_DATE",
+    "name": "2011-12 - YTD",
+    "timeframeTypeCode": "YEAR_TO_DATE",
+    "startDate": 1313208000000
+   },
+   {
+    "code": "SEASON_911_BY_DATE",
+    "name": "2011-12 - Dates",
+    "timeframeTypeCode": "BY_DATE",
+    "startDate": 1313208000000
+   }
+  ]
+ },
+ "paginatedResultSet": {
+  "totalNumPages": 8,
+  "pageNumber": 1,
+  "maxResultsPerPage": 100,
+  "totalNumResults": 708
+ }
+}

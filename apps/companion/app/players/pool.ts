@@ -1,16 +1,19 @@
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
+  POOL_PAGE_SIZE,
   fetchLeagueInfo,
   fetchPlayerPool,
+  fetchPoolStats,
   fetchTeamRosters,
   leaguePool,
   mapLeagueInfo,
   mapPlayerPool,
+  mapPoolStats,
   mapTeamRosters,
   positionDepth,
 } from "@epl/core";
-import type { PoolPlayer } from "@epl/core";
+import type { PoolStatRow, PoolPlayer, StatSeason } from "@epl/core";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
 
@@ -23,23 +26,42 @@ import type { Unavailable } from "../refusals";
  *
  *  Three reads can fail here rather than one, and "which one" is the first useful
  *  question — which is why the tell carries the method (see `refusals.ts`). */
+/** One player as the table shows him: who he is, what our league says about him,
+ *  and Fantrax's own number against his name. */
+export interface PoolRow {
+  entry: PoolPlayer;
+  /** Null for a player Fantrax's stats read did not carry — an ordinary state
+   *  for the academy names in the pool, and a dash on screen. */
+  stats: PoolStatRow | null;
+}
+
 export type LeaguePool =
   | {
-      players: PoolPlayer[];
+      rows: PoolRow[];
       /** The league's own position vocabulary, in pitch order. Read from its caps
        *  rather than written out here: the letters are a commissioner setting. */
       positions: string[];
       /** Team ids to names, for the one column that names an owner. Built from the
        *  rosters we already hold rather than from a second payload. */
       teamNames: Map<string, string>;
+      /** Which numbers the points column holds, as Fantrax labelled them. Null
+       *  when the stats read failed, which costs the column and not the page. */
+      season: StatSeason | null;
+      /** How many players Fantrax has stats for that this read did not carry.
+       *  Nought in the ordinary case; anything else is printed rather than left
+       *  to look like a pool with missing numbers. */
+      missing: number;
     }
   | Unavailable;
 
 export async function getLeaguePool(): Promise<LeaguePool> {
-  const [pool, info, rosters] = await Promise.all([
+  const [pool, info, rosters, stats] = await Promise.all([
     orRefusal(fetchPlayerPool()),
     orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID)),
     orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
+    // Failure-tolerant, unlike the three above: this read adds a column to a
+    // page that was worth showing without it.
+    orRefusal(fetchPoolStats(FANTRAX_LEAGUE_ID, POOL_PAGE_SIZE)),
   ]);
 
   if (pool instanceof FantraxError) return { unavailable: tell(pool) };
@@ -56,11 +78,19 @@ export async function getLeaguePool(): Promise<LeaguePool> {
   const held = rosters instanceof FantraxError ? { period: null, teams: [] } : mapTeamRosters(rosters);
 
   const league = mapLeagueInfo(info);
+  const scored = stats instanceof FantraxError ? null : mapPoolStats(stats);
+  const byId = new Map((scored?.rows ?? []).map((row) => [row.fantraxId, row]));
+
   return {
-    players: leaguePool(mapPlayerPool(pool), league.players, held),
+    rows: leaguePool(mapPlayerPool(pool), league.players, held).map((entry) => ({
+      entry,
+      stats: byId.get(entry.player.fantraxId) ?? null,
+    })),
     positions: Object.keys(league.roster.maxActiveByPosition).sort(
       (a, b) => positionDepth(a) - positionDepth(b),
     ),
     teamNames: new Map(held.teams.map((team) => [team.teamId, team.teamName])),
+    season: scored?.season ?? null,
+    missing: Math.max(0, (scored?.total ?? 0) - (scored?.rows.length ?? 0)),
   };
 }

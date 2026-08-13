@@ -4,6 +4,9 @@ import type { LabelledValue, PlayerIntel } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
+import Availability from "./Availability";
+import Breakdown from "./Breakdown";
+import { footballSelf, playerSeason } from "./season";
 
 // One player, as Fantrax sees him. Reached by tapping a name in the pool, and
 // that is the whole politeness policy: one profile per tap, never a sweep of the
@@ -64,6 +67,13 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
     );
   }
 
+  // Both are extras on a page that already has something to say, so both are
+  // fetched after the profile has succeeded and neither can fail it.
+  const [season, football] = await Promise.all([
+    playerSeason(fantraxId, intel.ownerTeamId),
+    footballSelf(fantraxId),
+  ]);
+
   return (
     <div className="flex flex-col gap-3">
       <header className="flex flex-col gap-0.5 pt-1">
@@ -75,7 +85,19 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
         </p>
       </header>
 
-      <Facts title="In this league" rows={intel.league} />
+      <Availability player={football} />
+
+      <Breakdown season={season} />
+
+      {/* The season is named here for the same reason it is named above it: this
+          block and the one this page opens with both print an FPts, and until
+          the label went on they were 196 and 0 with nothing to say why. These
+          are the profile's numbers, and the profile answers about a projection
+          unless told otherwise. */}
+      <Facts
+        title={intel.season ? `In this league · ${intel.season}` : "In this league"}
+        rows={intel.league}
+      />
 
       <Facts
         title={intel.season ? `Fantrax · ${intel.season}` : "Fantrax"}
