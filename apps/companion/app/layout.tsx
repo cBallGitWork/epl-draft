@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Archivo_Narrow } from "next/font/google";
-import { LEAGUE_NAME } from "@epl/core";
+import { LEAGUE_NAME, duringGameweek, getFootballSnapshot } from "@epl/core";
 import TabNav from "./components/shell/TabNav";
 import "./globals.css";
 
@@ -37,7 +37,24 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+/** Whether there is football on, for the tab bar.
+ *
+ *  Fails **open**: if FPL cannot be reached we show the Matchday tab rather than
+ *  hide it. Navigation must not lie by omission during the one window it matters,
+ *  and the page behind it says honestly that nothing could be read. The reverse
+ *  failure — a section silently missing mid-match — is the one nobody could
+ *  diagnose from a phone. */
+async function footballIsOn(): Promise<boolean> {
+  try {
+    return duringGameweek(await getFootballSnapshot(), new Date().toISOString());
+  } catch {
+    return true;
+  }
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const matchday = await footballIsOn();
+
   return (
     <html lang="en-GB" className={`${archivo.variable} ${archivoNarrow.variable}`}>
       <body className="min-h-dvh antialiased">
@@ -50,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Before <main> so the desktop bar can be sticky at the top in normal
             flow. On a phone it is fixed to the bottom and out of flow, where
             document order costs nothing. */}
-        <TabNav />
+        <TabNav matchday={matchday} />
         {/* `pb-24` clears the phone's fixed bar; above `md` the bar is overhead
             instead and the room underneath is just room. */}
         <main id="main" className="mx-auto w-full max-w-2xl px-3 pb-24 pt-3 sm:px-4 md:pb-8">

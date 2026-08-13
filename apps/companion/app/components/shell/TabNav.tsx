@@ -23,18 +23,22 @@ import LeagueCrest from "./LeagueCrest";
  *  that goes blank as soon as you tap into a detail page has stopped saying
  *  where you are. */
 const TABS = [
-  { href: "/", label: "Matchday", routes: ["/", "/gw"] },
-  { href: "/squad", label: "Squads", routes: ["/squad"] },
-  { href: "/players", label: "Players", routes: ["/players"] },
   { href: "/league", label: "League", routes: ["/league"] },
+  { href: "/squad", label: "Squads", routes: ["/squad"] },
+  { href: "/matchday", label: "Matchday", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },
+  { href: "/players", label: "Players", routes: ["/players"] },
 ];
 
 function owns(routes: string[], pathname: string): boolean {
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 }
 
-export default function TabNav() {
+/** `matchday` says whether there is football on. The tab is a section of the app
+ *  that only exists while a gameweek is running — between rounds it is a live
+ *  view of nothing, and a tab bar that offers it is lying about what is there. */
+export default function TabNav({ matchday }: { matchday: boolean }) {
   const pathname = usePathname();
+  const tabs = TABS.filter((tab) => matchday || !tab.onlyDuringGameweek);
 
   return (
     <nav
@@ -50,8 +54,12 @@ export default function TabNav() {
           <LeagueCrest variant="mark" height={26} />
         </Link>
 
-        <ul className="grid w-full grid-cols-4 md:flex md:w-auto md:gap-1">
-          {TABS.map((tab) => {
+        <ul
+          className={`grid w-full md:flex md:w-auto md:gap-1 ${
+            tabs.length === 4 ? "grid-cols-4" : "grid-cols-3"
+          }`}
+        >
+          {tabs.map((tab) => {
             const here = owns(tab.routes, pathname);
             return (
               <li key={tab.href} className="contents">
