@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, clubById } from "@epl/core";
+import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, clubById, periodPairings } from "@epl/core";
 import LeagueCrest from "../../components/shell/LeagueCrest";
 import LineupPlanner from "../../components/league/LineupPlanner";
 import Pitch from "../../components/league/Pitch";
@@ -31,6 +31,17 @@ export default async function TeamPage({
   const team = squads.period.teams.find((t) => t.teamId === teamId);
   if (!team) notFound();
 
+  // This manager's pairing, so the squad screen says who Saturday is against.
+  // Undefined is ordinary — no schedule for this period, or Fantrax would not
+  // describe the league — and renders as no line rather than a guess.
+  const pairing =
+    squads.info !== null && squads.period.period !== null
+      ? periodPairings(squads.info.matchups, squads.info.teams, squads.period.period).find(
+          (p) => p.home.teamId === teamId || p.away.teamId === teamId,
+        )
+      : undefined;
+  const opponent = pairing === undefined ? undefined : pairing.home.teamId === teamId ? pairing.away : pairing.home;
+
   const clubs = clubById(squads.snapshot);
   // The rules the planner would enforce, or null when it may not open — either
   // because this league never previews, because the request did not ask, or
@@ -50,6 +61,11 @@ export default async function TeamPage({
             Period {squads.period.period ?? "—"} · Gameweek {squads.snapshot.gameweek}
             {squads.display.show === "squad" && planning === null ? " · squad" : null}
           </p>
+          {opponent ? (
+            <Link href="/matchup" className="text-2xs font-medium text-muted hover:underline">
+              vs {opponent.name}
+            </Link>
+          ) : null}
         </div>
       </header>
 

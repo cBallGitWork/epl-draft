@@ -36,8 +36,8 @@ export type { Violation } from "./violations";
 
 export { isActive } from "./rosterStatus";
 
-export { leaguePool } from "./selectors";
-export type { PoolPlayer } from "./selectors";
+export { leaguePool, periodPairings } from "./selectors";
+export type { PeriodPairing, PoolPlayer } from "./selectors";
 
 export {
   FantraxError,
