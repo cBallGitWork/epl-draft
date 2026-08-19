@@ -69,9 +69,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             flow. On a phone it is fixed to the bottom and out of flow, where
             document order costs nothing. */}
         <TabNav matchday={matchday} />
-        {/* `pb-24` clears the phone's fixed bar; above `md` the bar is overhead
+        {/* The bottom padding is the bar's own height plus the phone's safe area,
+            rather than a round number chosen to cover both. It was `pb-24`: right
+            on a notched iPhone, where the bar is 56px plus a 34px inset, and 39px
+            of empty page under everything on any phone without an inset.
+            Above `md` the bar is overhead
             instead and the room underneath is just room. */}
-        <main id="main" className="mx-auto w-full max-w-2xl px-3 pb-24 pt-3 sm:px-4 md:pb-8">
+        <main id="main" className="mx-auto w-full max-w-2xl px-[var(--page-gutter)] pb-[calc(4rem+env(safe-area-inset-bottom))] pt-3 md:pb-8">
           {children}
         </main>
       </body>

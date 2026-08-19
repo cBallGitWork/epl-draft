@@ -24,6 +24,7 @@ nothing.**
 | `/league` | [league-table.md](league-table.md) | The table. Fantrax computes it. |
 | `/league/schedule` | [league-schedule.md](league-schedule.md) | All 38 periods, who plays whom. |
 | `/league/matchups` | [league-matchups.md](league-matchups.md) | This period's head-to-heads, with live points. |
+| `/league/matchups/[teamId]` | [matchup.md](matchup.md) | One head-to-head: two totals, and the eleven behind each. |
 | `/squad` | [squads.md](squads.md) | Yours, then everyone else's. |
 | `/squad/[teamId]` | [squad.md](squad.md) | **One squad. The reference page for the new look.** |
 | `/matchday` | [matchday.md](matchday.md) | Live: your head-to-head, then the real football. |
@@ -38,17 +39,20 @@ redesign must not break.
 ## Where the new visual direction lives
 
 `/squad/[teamId]` was rebuilt most recently and is the reference: full-bleed
-angled pitch with sponsor hoardings, Merlin-style player stickers, FDR-coloured
-fixture chips, a pitch/list toggle, and a tap-to-open player card. Pull the rest
-of the app toward it, not the other way round.
+pitch on a gentle taper with sponsor hoardings, cut-out portraits standing on the
+grass with nothing drawn behind them, a cream name plate and a band under it that
+is his FDR fixture until he kicks off and his score after it, a pitch/list
+toggle, and a tap-to-open player card. Pull the rest of the app toward it, not
+the other way round.
 
 ## Four things that are not style
 
 Break these and the app is wrong, however good it looks.
 
-1. **The lineup gate.** Before a period opens, nobody's XI is visible — not a
-   rival's and not your own. Squads are public all week; the *arrangement* is
-   not. Ordering, grouping, labels and pitch positions must not leak who starts.
+1. **The lineup gate.** Your own XI is yours all week; every *other* team's waits
+   for its period to open. Squads are public throughout; before that moment the
+   *arrangement* is not, and ordering, grouping, labels, pitch positions and
+   anything crossing a `"use client"` boundary must not leak who starts.
 2. **Provenance at the point of use.** Every number says whose it is. Fantrax's
    points are Fantrax's; a projection is labelled as a projection; FPL's scoring
    is labelled as FPL's. A number with no owner is the confident wrong answer.

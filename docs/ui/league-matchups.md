@@ -13,6 +13,9 @@ scoring, which was always the doctrine.
 - One card per pairing, home over away, each side showing points, players still
   to play, and a green `+n` for clean sheets we can see coming but Fantrax has
   not credited yet — **kept beside their number, never folded into it**.
+- Tapping either side opens that pairing's board ([matchup.md](matchup.md)) on
+  the name that was tapped. Both sides of a card lead to the same head-to-head;
+  each squad is one further tap from there.
 - Your own pairing sorts to the top. A neutral list is for broadcasters.
 - `AutoRefresh` at the live poll rate while football is on, idle otherwise.
 
@@ -27,4 +30,5 @@ A team with no number gets a dash, never a nought.
 ## Known gaps
 
 Sixteen near-identical cards. Nothing distinguishes a close match from a
-blowout, or a finished one from one still playing.
+blowout, or a finished one from one still playing — the board behind each card
+now does both, but the list itself still does not.

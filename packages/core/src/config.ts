@@ -125,13 +125,34 @@ export const POOL_PAGE_SIZE = 2000;
  *  sixteen people, which is the failure mode a deadline can least afford. */
 export const LINEUP_LOCK_LEAD_MINUTES = 15;
 
-/** Where the Premier League serves its own artwork — crests and portraits.
+/** Where the Premier League serves its crests.
  *
- *  One base for both, because they are one host under one path and §3 puts a
- *  provider's base URL here rather than inline beside the code that builds a
- *  path onto it. `next.config.ts` names the hostname separately and cannot read
- *  this: Next resolves image domains before any of our code runs. */
+ *  §3 puts a provider's base URL here rather than inline beside the code that
+ *  builds a path onto it. `next.config.ts` names the hostname separately and
+ *  cannot read this: Next resolves image domains before any of our code runs. */
 export const PL_ASSET_BASE = "https://resources.premierleague.com/premierleague";
+
+/** Where the Premier League serves its player portraits, which is NOT where it
+ *  serves its crests any more.
+ *
+ *  `premierleague25` is theirs, verbatim, read out of FPL's own production
+ *  bundle on 19 Aug 2026. It is not a season number and must never be computed
+ *  from one: we are in 26/27 and it says 25, `premierleague26` answers 502, and
+ *  the assets under 25 are current — dated Aug and Sep 2025 against Aug 2024 on
+ *  the old path, with photographs for players the old path had none for.
+ *
+ *  Two constants and not one interpolated base, because the two paths have now
+ *  diverged twice: the prefix differs, and so does the filename (`p{code}.png`
+ *  for a crest-era portrait, `{code}.png` here). */
+export const PL_PHOTO_BASE = "https://resources.premierleague.com/premierleague25";
+
+/** Where FPL serves club kits — its own host, not the Premier League's CDN.
+ *
+ *  Twenty outfield shirts and twenty keeper shirts serve the whole league at
+ *  ~10 KB each, and they are selected by club code rather than by a photograph
+ *  of a man, so a transfer changes the shirt the same day. That is the whole
+ *  reason they are here: a portrait cannot be that current. */
+export const FPL_SHIRT_BASE = "https://fantasy.premierleague.com/dist/img/shirts/standard";
 
 /** The league's clock. Every date a manager reads is in it, whatever their phone
  *  says, because a deadline is the same instant for all sixteen of them and a

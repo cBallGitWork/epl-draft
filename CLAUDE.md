@@ -93,8 +93,19 @@ Use it for:
   `finished_provisional` / `minutes` / scores.
 - `GET /api/event/{gw}/live/` — per-player stats. `{"elements": []}` before the
   first kickoff is normal and not an error.
-- Portraits: `https://resources.premierleague.com/premierleague/photos/players/250x250/p{code}.png`
-  — **PNG only** (webp/jpg 403). Use 250x250 and let Next's optimizer resize.
+- Portraits: `…/premierleague25/photos/players/110x140/{code}.png` — **PNG only**
+  (webp/jpg 403), and note there is no `p` before the code and no 250x250 under
+  this prefix. `premierleague25` is the Premier League's own string, read out of
+  FPL's production bundle on 19 Aug 2026; it does **not** track the season (we
+  are in 26/27) and `premierleague26` answers 502, so it is a recorded fact and
+  never something to compute.
+  The old path `…/premierleague/photos/players/250x250/p{code}.png` still answers
+  **200 with the set as it stood in August 2024** — which is how a season of
+  stale portraits went unnoticed: nothing 404s, the players are simply in their
+  old shirts. It is deliberately **not** read as a fallback: a player with no
+  current photograph gets his club's crest instead, because a wrong photograph is
+  worse than none — only one of the two looks like an answer.
+  `next.config.ts` allow-lists image paths, so both prefixes must be named there.
 - Crests: `…/premierleague/badges/t{code}.svg` (also `/50/`, `/70/` PNG).
 
 ### Fantrax — two surfaces
@@ -132,7 +143,15 @@ Methods that matter:
 
 Fantrax login uses **reCAPTCHA v3 with a v2 image fallback**, plus 2FA and
 `ACCOUNT_LOCKED`. Server-side password login is not viable. Members must provide
-their own browser session cookie via an extension. We do not hold passwords.
+their own browser session cookie. We do not hold passwords.
+
+**And "via a browser extension" is not a plan.** Sixteen friends will not install
+one, and most of them read this on a phone, where Chrome has no extensions at all
+and Safari's are a per-user install nobody is doing. Any write surface has to
+work for a person holding a phone who has never heard of a cookie. The one route
+that does is the commissioner's own session plus `adminMode` — one cookie, kept
+by one person, writing on behalf of members our own team codes have already
+authenticated. Unprobed as of 19 Aug 2026; see PLATFORM_NOTES.
 
 ### Identity
 

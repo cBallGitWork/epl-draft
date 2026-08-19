@@ -663,27 +663,39 @@ Re-ask after period 1 closes on 28 Aug.
 Until then the answer that matters is unchanged and now evidenced: **past
 lineups exist only in our capture archive.** The doctrine holds.
 
-## The lineup preview is gated on the league, not on an environment variable
+## The lineup gate is about rivals, not about you (19 Aug 2026 — supersedes the preview flag)
 
-The planner has to be visible during development, and the visibility gate hides
-every lineup until 21 Aug. The obvious lever is an env flag. We did not use one.
+**Superseded.** The section this replaces described `mayPreviewLineups()` and the
+`?preview=1` escape hatch: the planner had to be visible during development, the
+gate hid every lineup including the reader's own, and so the planner was let
+through only on the rehearsal league, only when asked for by query string, and
+never on the real one. It failed closed and it was the right shape for the rule
+as it then stood.
 
-An env flag is correct until the day it is set on the deployment, and the harm it
-guards against is asymmetric: publishing sixteen managers' lineups before a
-deadline is the one mistake in this app that cannot be taken back. So the check
-is **which league we serve** — the rehearsal league's four teams belong to
-nobody, so previewing there leaks nothing, and the real league can never preview
-whatever anyone configures. It **fails closed**: if the real league cannot be
-identified in `FANTRAX_LEAGUES` at all, the answer is no, because the other
-direction fails toward publishing.
+The rule was wrong. It withheld a manager's own XI from him, and the reasoning —
+"one rule is safer than two" — bought nothing: he is looking at that lineup in
+Fantrax anyway. What it cost was the only useful thing the app could do with a
+lineup, which is let him plan it **before** the deadline. A planner reachable
+only once the period has opened is a view of a decision he can no longer change.
 
-It is also opt-in per request (`?preview=1`) rather than always-on, so the honest
-gate remains the default on every page load and remains the thing under test. On
-10 Oct the swap turns the planner preview off by itself, which is correct.
+`rosterDisplay` now takes `yours`:
 
-`mayPreviewLineups()` lives in `apps/companion/app/squad/league.ts` and is not
-unit-tested, because vitest covers `packages/*` only. That is the standing gap
-for app-edge logic; this is the piece of it most worth watching.
+- **your own team — always `lineup`**, no calendar consulted and no clock read.
+  A roster whose period Fantrax would not name still falls through to squad-only,
+  because `show: "lineup"` has to say which period it is showing.
+- **every other team — unchanged.** Squad all week, XI once its period opens.
+
+Two things keep that safe. `yours` comes from the session team id, which
+`myTeamId` validates against the league's own roster before anything sees it. And
+`getLeagueSquads()` still computes its league-wide `display` with `yours: false`,
+because that value is read by things that report on all sixteen teams at once —
+the pending clean sheets on the matchups board, for one. A reader's own answer
+applied there would show fifteen rivals' XIs through the side door. The single
+team a known reader is looking at gets `teamDisplay(squads, mine)` at the route
+that knows which team that is.
+
+`mayPreviewLineups()` and `?preview=1` are deleted. There is nothing left to
+switch off.
 
 ## A second client component, on purpose
 
@@ -1302,6 +1314,63 @@ asserts neither word appears in the serialised lines. The old `SquadList` was a
 server component and never had the problem: the regression came in with the
 client boundary, which is where this class of bug always comes from.
 
+## The portraits had been two years stale and nothing said so (19 Aug 2026)
+
+Craig looked at a squad and said the shirts were wrong. They were: Isak in
+Newcastle black two clubs later, João Pedro in Brighton stripes at Chelsea.
+
+`resources.premierleague.com/premierleague/photos/players/250x250/p{code}.png`
+answers **200** and serves the set as it stood on **14 Aug 2024**. That is the
+whole reason it went unnoticed — there is no 404 to catch, no error to log, and
+the only symptom is a footballer in last season's kit, which looks like a
+photograph rather than a bug.
+
+The current path was found by reading FPL's own production bundle rather than by
+guessing at prefixes:
+
+    …/premierleague25/photos/players/110x140/{code}.png
+
+Three things changed at once — the prefix, the size, and the loss of the `p`
+before the code — which is why every plausible guess had 403'd. `premierleague25`
+is theirs and is **not a season number**: this is 26/27, `premierleague26`
+answers 502, and the assets under 25 are dated Aug–Sep 2025. It is recorded in
+`config.ts` with the probe date and must never be computed from the season.
+
+Two things this exposed:
+
+- **`next.config.ts` allow-lists image paths, not just hosts.** A pattern naming
+  only `/premierleague/**` fails every portrait at our own optimizer — a 400 from
+  us, which looks like a CDN problem and is not.
+- **The two sets are not nested.** Of 60 players sampled: 43 have a current
+  photograph, 35 an old one, 31 both, 13 neither. The old path was briefly kept
+  as a second choice for the four who are only in it, Bruno Guimarães among them,
+  and that was wrong: it put exactly those four back in the shirts they wore two
+  clubs ago, which is the failure the move was fixing. Craig's rule, and it is
+  the right one — **a player whose photograph is missing and a player whose
+  photograph is out of date get the same answer: his club's crest.** A wrong
+  photograph is worse than none, because only one of the two looks like an
+  answer. `StickerFace` falls current → crest → initials.
+
+  The limit of it: "out of date" is only detectable as "absent from the current
+  set". A photograph taken inside the current set and overtaken by a January
+  transfer looks identical to a good one, and nothing marks it.
+
+The crest badge came off the sticker's corner in the same pass. It was there to
+name the club a stale photograph contradicted, and that job is done. The crest
+that stands in for a missing photograph grew to fill the card it is replacing.
+
+Two pitch corrections the same day, both from Craig looking at it:
+
+- **The touchlines could not stop splaying.** They ran outward in perspective and
+  then went square at 38% of the depth, where the grass did. An eye still
+  following the line reads that stop as the pitch turning back in. One straight
+  taper over the whole depth now, and the earlier "reach full width sooner" was
+  buying width the cards never needed — they are sized against the frame, not the
+  turf.
+- **The pitch has no surround.** Outside the taper is the page, as on FPL's.
+  A second green out there reads as a second surface and turns the pitch into a
+  bordered panel. `--color-pitch-surround` went with it.
+
 Still open: the view reads the snapshot's own gameweek. Browsing a *future* round
 needs a gameweek in the URL, a snapshot fetched for it, and `getTeamRosters` asked
 for the matching period — the fixtures come free, the roster does not.
@@ -1316,6 +1385,308 @@ defaulted, and the phone-first touch targets.
 
 It is documentation of the app as built, not a plan. When a page changes, its
 file changes in the same commit or it starts lying.
+
+## The owner's lineup screen, and the refactor after it (19 Aug 2026)
+
+Your own team gets a planner: the XI on the grass, the bench on a dark strip
+below it, a swap target and an options badge on every player. Two ways in,
+because they answer different questions — tapping the card **picks** a man and
+the pitch dims everyone he cannot legally change places with, while the ⇄ opens
+the full list, which is the only place a move with no second player (off to the
+bench, across to another position) can be offered. Every rule enforced is the
+commissioner's, straight out of `moves.ts`; none of it is new logic.
+
+Two interaction bugs found by using it. The options sheet rendered in the flow
+below the bench, which on a phone is a screen and a half beneath the man you just
+tapped, so tapping him looked like it had done nothing — it is a dialog now. And
+a full XI made the sheet offer eight ways into midfield and then say midfield was
+closed, because `eligibleSlots` reports `squad-full` for a position that
+`legalMoves` is simultaneously offering swaps into.
+
+The refactor pass afterwards:
+
+- **`PitchRows`.** Three screens draw players in lines — a rival's XI, a rival's
+  whole squad, your own lineup — and had drifted into three answers to the same
+  two questions: how wide is a card, and what happens when a line will not fit.
+  One of them still wrapped, with sizes from an earlier design. The cell is what
+  varies, so the cell is what each caller now supplies.
+- **Shrink, never wrap.** The old rule was the opposite and it was wrong: a back
+  five wrapped one defender onto a row of his own, which reads as a formation
+  nobody picked. With seven in a line the outer two also hung off the tapering
+  grass onto the page, so row padding became a share of the width.
+- **`--page-gutter` / `.bleed`.** The page's side margin was written out in three
+  files, twice as its own negative.
+- **The unresolved card was a different shape** from a resolved one — one box at
+  its own proportions — so it left a hole in any row where the bridge had not
+  settled somebody. It is built from the same three bands now.
+
+## The extension plan is dead, and it was dead on arrival (19 Aug 2026)
+
+"Members provide their own Fantrax session cookie via a browser extension" has
+been the recorded answer to the write problem since 5 Aug. Craig killed it in one
+line: **regular users won't do this, and most users are on mobile.**
+
+Both halves are right, and the second is fatal on its own. Chrome on Android has
+no extensions. Safari on iOS has them, but they are a per-user App Store install
+and a permissions dance, for sixteen friends who want to move a midfielder to the
+bench. Nothing about that survives contact with a group chat.
+
+What is left, in order of how much it asks of a member:
+
+1. **The commissioner's session plus `adminMode`.** `confirmOrExecuteTeamRosterChanges`
+   takes `fantasyTeamId` and `adminMode` (CLAUDE.md, probed 3 Aug), so a
+   commissioner session may be able to set *any* team's lineup. That would mean
+   one cookie, held by one person who is already in the habit of refreshing it,
+   and members authenticated by the team codes we already issue. A member needs
+   to know nothing. **Unprobed** — whether `adminMode` actually writes another
+   team's roster is the question the whole path rests on, and it is answerable
+   safely against the rehearsal league, whose four teams belong to nobody.
+2. **A native shell with a webview login.** Open Fantrax's own login in a
+   webview, let the member clear reCAPTCHA and 2FA there, keep the cookie the
+   webview collects. This is how everyone else solves it. It also means we are
+   shipping an app to sixteen phones, which is a different project.
+3. **Deep-link and let Fantrax take it.** What we do now, but pointed at their
+   app rather than their website. Costs nothing, asks nothing, and the value we
+   add stays where it already is: the planning, with the commissioner's rules
+   enforced and the fixtures and difficulty on screen. Submitting was never the
+   hard part of a lineup.
+
+Cookie expiry bites option 1 in a way worth naming: one stale cookie takes the
+write surface down for all sixteen at once, so it needs a visible staleness
+state and a path back to "open Fantrax yourself", not a spinner.
+
+## The live head-to-head, and what a score is allowed to say (19 Aug 2026)
+
+`docs/ui/matchday.md` named the biggest hole in the app: the live view could say
+a manager was on 47 points and could show him Arsenal against Coventry, and
+never once said which of his own players had done it. The score was a number
+with no players behind it.
+
+`/league/matchups/[teamId]` is the answer, and the layout is taken from the
+sister repo's Duel screen (`~/worldcup-fantasy`, `app/components/MatchupBoard.tsx`):
+two tabs carrying the two totals, a momentum bar under them, and the open tab's
+eleven on the grass below. Two tabs rather than two pitches — thirty players on a
+phone is fifteen unreadable ones, and the tab a manager is *not* looking at still
+answers the question he is asking at 4pm.
+
+**No new Fantrax read.** The board is composed entirely of calls the app already
+makes and already caches: `getTeamRosters` for the elevens, `getLiveScoringStats`
+for the totals, FPL's live endpoint for what each player has done.
+
+### Per-player points, and where they actually come from
+
+`getLiveScoringStats` does not carry them — `statsMap` and `statsMap2` are `{}`
+in every capture, so what they hold once football is on is still unknown.
+**`getTeamRosterInfo` does**, it is public, and **it honours `period`**: probed
+live 19 Aug against periods 1 and 3, `displayedPeriod` echoes the request and
+`periodOppnentTeamIds` changes to match. So the board prices the week on screen
+rather than whatever week Fantrax happens to be pointing at, and `fetchTeamStats`
+grew an optional `period` for it.
+
+One read per side, cached. A refusal costs the numbers and nothing else: that
+side's players fall back to their **minutes**, told apart by the apostrophe. One
+table either arrives or it does not, so a side never mixes points and minutes.
+
+The scoreline is Fantrax's, under Fantrax's scoring. What each player *did* —
+goals, assists, clean sheet, minutes — is **FPL's**, joined through the bridge.
+Two providers on one card, and neither is recomputed.
+
+### The gate is per side, not per page
+
+`teamDisplay(squads, yours)` is asked twice, once per side. Your own eleven is
+yours all week; a rival's waits for his period to open. During live football both
+are open by definition — but this is also the screen a manager reads on a Tuesday
+to see who he plays, and then exactly one of the two is. A gated side shows one
+sentence and a link to that team's squad page, which is where the reasons are
+already spelled out; it does not grow a second copy of them.
+
+### `headToHead`, and the third occurrence
+
+`periodPairings` reports Fantrax's home and away because that is what the
+schedule says. Every screen that shows a head-to-head to a *particular* manager
+immediately undoes it — there is no ground, so neither side is at home, and a
+manager reads his own team first. Three screens had written
+`pairing.home.teamId === mine ? … : …` for themselves, which is §1's third
+occurrence. `headToHead(matchups, teams, period, teamId)` answers
+`{ team, opponent }` and all three now read it.
+
+### Accent still means "you"
+
+The leader is deliberately not accent-tinted, which is what the sister repo does.
+Accent means "your team" on five other screens (`mine.ts` says so in as many
+words) and marks your name on the scoreline here, so a second meaning for it
+would break a reading aid rather than add one. Whoever is ahead reads at full
+strength; the side behind is dimmed.
+
+### Three things the design lost on contact with Craig, and one it gained
+
+The first pass had two stacked tab-cards, a momentum bar under them, a count of
+players still to play on each, and a provenance line. All four went:
+
+- **The scoreline is one row.** `123 · 59.1 · v · 63.2 · test3`, read the way a
+  score is said out loud. Two stacked cards made a reader compare two numbers in
+  different places on the screen, which is the one thing a scoreline exists not
+  to make you do.
+- **The momentum bar is gone**, and `momentumShare` with it — §2 does not let an
+  unused export sit in the tree, so the module and its tests were deleted rather
+  than kept warm for a bar nobody wanted.
+- **"n to play" is gone.** Everyone who has not kicked off is drawn back on the
+  pitch instead, which names them rather than counting them, and his strip
+  carries his fixture. The greying already existed (`PlayerImage` had it at
+  `opacity-80`); it moved up to the whole card at `opacity-55` so it reads as a
+  state rather than a rendering artefact.
+- **The provenance line is gone**, which is a real cost against principle 4 and
+  is recorded as one. The line still runs on `/league/matchups`, where sixteen
+  cards of nothing but numbers precede it.
+
+What it gained is a **bench** and a **Pitch/List toggle**. `Pitch` used to stand
+all fifteen on the grass with reserves marked by a word; it now draws the eleven
+and a bench strip, which took `squadInLines()` out of core with it — its only
+consumer had stopped being one.
+
+### What the dummy Saturday caught
+
+The preview harness (`scratchpad/preview/`, a `fetch` shim under `NODE_OPTIONS`,
+no repo code) invented a gameweek an hour into its 3pm kick-offs. Two bugs that
+only exist with live data surfaced within a minute of looking at it:
+
+- **A player's minutes printed as "9".** Three chips and a number do not fit a
+  56px card, and the flexbox chose the number to cut. Chips are ranked now
+  (`Chips.tsx` — RC, goal, assist, clean sheet, saves, booking), capped at two,
+  and the number is `shrink-0`: a clipped chip is untidy, a clipped number is
+  wrong.
+- **A booking rendered as a blank box.** The `note` tone was `bg-white/15
+  text-white`, written when the strip was dark. The strip is cream now and the
+  same chip also renders on a dark list row, so the tone is solid — anything that
+  borrows its ground is legible on exactly one of the two.
+
+`tally()` moved out of the component into `join/contribution.ts` on the way,
+where §5 puts arithmetic over football data, and picked up the tests it never
+had — including the one that matters: `every()` on an empty list is true, which
+would have credited fifteen players with a clean sheet apiece before a ball was
+kicked.
+
+### Where the taps go now
+
+Tapping a team on `/league/matchups` opens the board on that team rather than
+that team's squad: both sides of a card lead to the same head-to-head, and it
+arrives showing whichever name the thumb landed on. `YourMatchup` on the live tab
+does the same. Each squad is one further tap, from there.
+
+## The pitch views, after a fresh-eyes pass (19 Aug 2026)
+
+Craig asked for a UX review of the three screens that draw a pitch — the live
+head-to-head, the gated squad board, and your own lineup planner — and a round of
+fixes. What the review found, and what each fix cost.
+
+### The score was the smallest thing on a live pitch
+
+A player's points sat at eight or nine pixels beside two chips, on the same cream
+plate as his name. On the one screen a manager opens *because* of the number, the
+number was the hardest thing on it to find.
+
+The fix is a band rather than a size: once he has played, the bottom band flips
+to `bg-bg` with cream numerals at `clamp(9px,16cqw,13px)`, and the chips read
+better against it than they ever did against cream. Until he plays, that same
+band is his FDR fixture at full strength. The two never share the space.
+
+Both states are one fixed height (`h-3.5`), and that is load-bearing: a row where
+a played card and a waiting card stand at different heights stops reading as a
+row. `FixtureChip` had to learn to centre its text by grid rather than by line
+height, because the colour is now asked to fill a box it does not define.
+
+**The height is a budget, not a preference.** The board is documented as fitting
+390×844 without scrolling, and it did — at exactly 844. A 16px band took it to
+863. The band is 14px and `PitchFrame`'s row gap went from `gap-5` to `gap-4`,
+which puts it back at 844 with the bigger number. Anything added to a pitch card
+comes out of that same 844.
+
+### Dimming the whole card said the wrong thing
+
+A player still to play was drawn back with `opacity-55` on the card, which took
+the FDR colour and the name with it — the two things a waiting player still
+needs. Only the photograph dims now (`opacity-80 grayscale-[35%]`, on the `<img>`
+inside `PlayerImage`), and the plate and the fixture stay at full contrast. It
+also freed `opacity-30` on the planner to mean one thing: blocked.
+
+`FixtureChip`'s blank case was quietly broken by the same history. It drew light
+grey ink on whatever it was sitting on, which was fine on three dark surfaces and
+invisible once the band under a player turned cream. It brings its own `raised`
+ground now, exactly as a rated fixture brings its FDR colour.
+
+### The live board had no answer to a tap
+
+Eleven faces, a score, and nothing behind either. `TeamSheet` replaced the server
+`Pitch`: same eleven and bench, every card a button, and `LivePlayerCard` over
+the top. The squad page's rival branch draws the same component, so "why is he on
+12" has one answer wherever it is asked.
+
+The breakdown costs **no new read**. `getTeamRosterInfo` with `view: "FPTS"` was
+already being called once per side for the points column, and the same response
+carries each total broken into the league's own scoring categories — they sum to
+it exactly (verified 30/30 rows, 13 Aug). `league/breakdown.ts` pairs each
+group's columns with each line's values, drops null and 0, and sorts largest
+first. Games played falls out by being 0 in that view, which is also why their
+own table leaves it out of the sum.
+
+That file is the rule of three arriving on time: the player profile's season
+table (`players/[fantraxId]/season.ts`) and its label-splitting
+(`Breakdown.tsx`) were doing the same pairing and the same `" -- "` split, and
+the live card would have been the third. `BreakdownLine` carries the label and
+the definition apart, so no view does string surgery on provider data.
+
+**Two player cards, deliberately.** `PlayerCard` answers "who is this and is he
+fit"; `LivePlayerCard` answers "what is he scoring and why". Same dialog
+skeleton, different questions, opened on different days. Folding them into one
+card with a flag would make the midweek card carry an empty table and the
+Saturday card carry a fitness note nobody is asking about at 4pm.
+
+### The `+1` came off the scoreline
+
+Pending clean sheets rode beside each total as a green `+n`. A scoreline is the
+one place a reader expects a single figure, and a second one beside it — ours,
+provisional, and in the colour that means "your team" on this very screen — asked
+him to do arithmetic Fantrax will do for him within the hour. `pendingByTeam`
+stays: the matchups list and `/matchday` still show it, on cards with room to
+label it.
+
+### Fifteen badges to offer a move most taps are not after
+
+Every planner card carried an accent badge opening the full move list, over the
+only thing on the screen worth looking at. Meanwhile the second tap on a picked
+player did nothing but put him back down — which closing the dialog already does.
+One target per card now: tap to pick, tap again for `MoveDialog`.
+
+### The taper, and the number that was written down twice
+
+`FAR_INSET` was 11 — a goal line at 78% of the near width, steeper than FPL's own
+app. Two things were wrong with it and only one was taste. The row padding that
+keeps a line inside the touchlines is a single figure for the whole column, so at
+that angle either the near rows gave up a fifth of their width or the back row
+stood off the pitch and onto the page. It stood off the pitch.
+
+It is 5 now (90% at the goal line), and the padding *is* the inset, so the two
+cannot disagree: `PitchTurf` exports `FAR_INSET`, `PitchFrame` sets it as
+`--pitch-inset`, and the hoardings read the same variable instead of repeating
+`11%` under a comment asking the next person to keep them in step.
+`BOX_STRETCH` and `BOX_FLATTEN` moved toward 1 (1.25 / 0.85) because both were
+paying for foreshortening the gentler taper no longer has.
+
+The centre circle was on the review list for colliding with the midfield plates.
+It was left: at the softened angle the halfway line and the circle pass through
+the photographs and above the plates, which is what they do in FPL's own graphic
+and on a Saturday. `HALFWAY_DEPTH` is where to move it if that reading changes.
+
+### Verified
+
+Four green, and screenshotted at a true 390×844 through CDP — `--window-size` is
+not a viewport on macOS, which has a minimum window width, so a plain
+`--screenshot` silently crops a wider layout and every check reads as an
+overflow. Live board, breakdown card, yet-to-play card, list view, rival squad,
+planner picked, planner tap-again. The breakdown's arithmetic was confirmed on
+screen by seeding the recorded fixture through `squadPoints`, because the
+rehearsal league's own table is all noughts: 68 + 32 + 18 + 9 − 9 − 10 = 108,
+against a total of 108.
 
 ## Questions
 

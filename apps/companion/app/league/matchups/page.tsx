@@ -46,8 +46,12 @@ function Side({
   mine: boolean;
 }) {
   return (
+    // Into the pairing's own board, opened on the side that was tapped — not
+    // into the squad. Both sides of a card lead to the same head-to-head and it
+    // arrives showing whichever name the thumb landed on, which is the whole of
+    // what "tap a team" means here. Each squad is one further tap, from there.
     <Link
-      href={`/squad/${team.teamId}`}
+      href={`/league/matchups/${team.teamId}`}
       className="flex min-h-11 items-center gap-3 px-3 py-2 hover:bg-raised"
     >
       <span className={`min-w-0 flex-1 truncate ${mine ? "font-bold text-ink" : "font-semibold"}`}>

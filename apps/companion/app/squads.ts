@@ -1,7 +1,6 @@
 import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
-  FANTRAX_LEAGUES,
   PAGE_REVALIDATE,
   FantraxError,
   type Bridge,
@@ -47,18 +46,19 @@ export const bridge = mapping as Bridge;
  *  Collapsing the two tells sixteen managers with squads that nobody has drafted
  *  yet, because Fantrax blipped for five minutes. That is a confident wrong
  *  statement about the league from the one route whose job is to report it. */
-export type LeagueSquads =
-  | {
-      period: RosteredPeriod;
-      snapshot: FootballSnapshot;
-      display: RosterDisplay;
-      /** Null when Fantrax would not describe the competition. Costs the lineup
-       *  gate its calendar and the planner its rules, both of which then degrade
-       *  rather than guess. */
-      info: LeagueInfo | null;
-    }
-  | { undrafted: string }
-  | Unavailable;
+export interface ReadableSquads {
+  period: RosteredPeriod;
+  snapshot: FootballSnapshot;
+  /** The league-wide answer: what a reader may see of a team that is not his.
+   *  One team a known reader is looking at gets `teamDisplay` instead. */
+  display: RosterDisplay;
+  /** Null when Fantrax would not describe the competition. Costs the lineup
+   *  gate its calendar and the planner its rules, both of which then degrade
+   *  rather than guess. */
+  info: LeagueInfo | null;
+}
+
+export type LeagueSquads = ReadableSquads | { undrafted: string } | Unavailable;
 
 /** What the cache can hold.
  *
@@ -121,7 +121,14 @@ export async function getLeagueSquads(): Promise<LeagueSquads> {
     // The clock is read here and passed in, never inside the gate: §5 keeps
     // `visibility.ts` pure so its boundary is testable, and this is the edge
     // where an instant is allowed to come from the machine.
-    display: rosterDisplay(period.period, info?.rosterPeriods ?? [], new Date().toISOString()),
+    //
+    // `false` and not the reader's own answer, deliberately. This value is
+    // computed once for the whole league and read by everything that reports on
+    // every team at once — the pending clean sheets on the matchups board, for
+    // one. A reader's own answer applied there would show fifteen rivals' XIs
+    // through the side door. The one team a known reader is looking at gets its
+    // own answer, at the route that knows which team that is.
+    display: rosterDisplay(period.period, info?.rosterPeriods ?? [], new Date().toISOString(), false),
   };
 }
 
@@ -137,21 +144,20 @@ async function leagueInfo(): Promise<LeagueInfo | null> {
   return raw instanceof FantraxError ? null : mapLeagueInfo(raw);
 }
 
-/** Whether this build may show a lineup the gate would otherwise withhold.
+/** What the reader may see of ONE team's roster, which is not what the league
+ *  sees of all of them.
  *
- *  Never for the real league, and the check is which league we serve rather than
- *  an environment variable. An env flag would work until the day someone set it
- *  on the deployment, and leaking sixteen managers' lineups before a deadline is
- *  the one mistake in this app that cannot be taken back. The rehearsal league's
- *  four teams belong to nobody, so there is nothing there to leak.
- *
- *  It is opt-in per request (`?preview=1`) rather than always-on, so the honest
- *  gate stays the default everywhere and remains the thing being tested. */
-export function mayPreviewLineups(): boolean {
-  const real = FANTRAX_LEAGUES.find((league) => league.key === "real");
-  // Fails closed. If the real league cannot be identified — a renamed key, a
-  // reordered list — the answer is no, because the failure mode of the other
-  // direction is publishing sixteen managers' lineups before a deadline.
-  if (!real) return false;
-  return FANTRAX_LEAGUE_ID !== real.leagueId;
+ *  Replaces the `?preview=1` escape hatch and the rehearsal-league check that
+ *  guarded it. Those existed because the gate withheld the reader's own lineup
+ *  along with everybody else's, so the only way to work on the planner was to
+ *  turn the gate off somewhere it could do no harm. The rule is narrower now —
+ *  your own team, always; every other team, only once its period opens — so
+ *  there is nothing left to switch off. */
+export function teamDisplay(squads: ReadableSquads, yours: boolean): RosterDisplay {
+  return rosterDisplay(
+    squads.period.period,
+    squads.info?.rosterPeriods ?? [],
+    new Date().toISOString(),
+    yours,
+  );
 }

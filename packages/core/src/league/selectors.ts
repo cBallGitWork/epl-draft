@@ -102,3 +102,38 @@ export function leaguePool(
     })
     .sort((a, b) => a.player.displayName.localeCompare(b.player.displayName));
 }
+
+/** One team's pairing this period, told from that team's side.
+ *
+ *  `periodPairings` reports Fantrax's home and away because that is what the
+ *  schedule says, and every screen that shows a head-to-head to a particular
+ *  manager immediately undoes it: there is no ground, so neither side is at
+ *  home, and a manager reads his own team first. Three of them had written
+ *  `pairing.home.teamId === mine ? … : …` for themselves — his own matchup on
+ *  the live tab, his squad screen naming Saturday's opponent, and the board —
+ *  which is the third occurrence and the point at which it stops being a
+ *  coincidence.
+ *
+ *  Undefined is ordinary rather than a fault: a bye, a period the schedule does
+ *  not cover, a league that has not drafted, or a team id from another league. */
+export interface HeadToHead {
+  /** The team asked about. */
+  team: LeagueTeam;
+  opponent: LeagueTeam;
+}
+
+export function headToHead(
+  matchups: readonly LeagueMatchup[],
+  teams: readonly LeagueTeam[],
+  period: number,
+  teamId: string,
+): HeadToHead | undefined {
+  const pairing = periodPairings(matchups, teams, period).find(
+    (p) => p.home.teamId === teamId || p.away.teamId === teamId,
+  );
+  if (pairing === undefined) return undefined;
+
+  return pairing.home.teamId === teamId
+    ? { team: pairing.home, opponent: pairing.away }
+    : { team: pairing.away, opponent: pairing.home };
+}

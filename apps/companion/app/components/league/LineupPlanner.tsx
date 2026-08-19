@@ -1,7 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Club, LeaguePlayerState, RosterLimits, RosteredTeam, RosterSlot } from "@epl/core";
+import type {
+  LeaguePlayerState,
+  Move,
+  RosterLimits,
+  RosterSlot,
+  RosteredTeam,
+  SquadPlayerDetail,
+  Violation,
+} from "@epl/core";
 // The look without the component: this one link leaves the app, so it stays a
 // plain anchor with `target="_blank"` rather than becoming a router link.
 import { BUTTON } from "../shell/ButtonLink";
@@ -11,20 +19,26 @@ import {
   eligibleSlots,
   isActive,
   legalMoves,
+  lineup,
   playerName,
   violations,
 } from "@epl/core";
-import type { Move, Violation } from "@epl/core";
-import MoveSheet from "./MoveSheet";
-import Pitch from "./Pitch";
+import LineupPitch from "./LineupPitch";
+import type { PitchRow } from "./PitchRows";
+import MoveDialog from "./MoveDialog";
 
 // Planning a lineup, not submitting one.
 //
-// The second client component in the app, and the first that needed to be. The
-// whole point is an XI you can rearrange and look at before committing to it, so
-// the edited shape lives in browser state; the real roster is untouched and
-// Fantrax remains the only thing that can change it. The button at the bottom
-// hands the manager over rather than pretending we can write.
+// The whole point is an XI you can rearrange and look at before committing to
+// it, so the edited shape lives in browser state; the real roster is untouched
+// and Fantrax remains the only thing that can change it. The button at the
+// bottom hands the manager over rather than pretending we can write.
+//
+// Every rule it enforces is the commissioner's, read from `getLeagueInfo` and
+// applied by `moves.ts`: how many may start, how many may sit, how many at each
+// position, and which positions each player is eligible for. Nothing about the
+// shape is assumed here — a 1-5-2-3 is legal in this league and would be legal
+// on screen.
 
 /** A broken rule, said out loud and with the number that broke it.
  *
@@ -46,13 +60,15 @@ function sentence(violation: Violation, nameOf: (id: string) => string): string 
 
 export default function LineupPlanner({
   team,
-  clubs,
+  details,
   players,
   limits,
   fantraxUrl,
 }: {
   team: RosteredTeam;
-  clubs: Map<number, Club>;
+  /** The squad's football detail, flat and unarranged. Arranging it is this
+   *  component's job and it changes with every move. */
+  details: SquadPlayerDetail[];
   /** Plain array rather than the `Eligibility` map: this crosses the server
    *  boundary, and the map is built here where it is used. */
   players: LeaguePlayerState[];
@@ -60,66 +76,141 @@ export default function LineupPlanner({
   fantraxUrl: string;
 }) {
   const [slots, setSlots] = useState<RosterSlot[]>(() => team.players.map((p) => p.slot));
-  const [selected, setSelected] = useState<string | null>(null);
+  // Two ways in, and they are different questions, reached by the same target on
+  // the first and second tap. `picked` is the quick swap: one tap chooses a man,
+  // and the pitch answers "who can come off for him" by dimming everyone who
+  // cannot. `opened` is the full list for one player, which is the only place a
+  // move with no second player — off to the bench, across to another position —
+  // can be offered.
+  const [picked, setPicked] = useState<string | null>(null);
+  const [opened, setOpened] = useState<string | null>(null);
 
   const eligibility = useMemo(() => eligibilityOf(players), [players]);
+  const detailOf = useMemo(
+    () => new Map(details.map((d) => [d.rostered.slot.fantraxId, d])),
+    [details],
+  );
   const nameOf = useMemo(() => {
-    const names = new Map(team.players.map((p) => [p.slot.fantraxId, playerName(p)]));
+    const names = new Map(details.map((d) => [d.rostered.slot.fantraxId, playerName(d.rostered)]));
     return (id: string) => names.get(id) ?? id;
-  }, [team]);
+  }, [details]);
 
-  // The pitch renders the EDITED slots, so the preview is the thing being
-  // planned. Rebuilt from the real team so `lineup()` and `Pitch` are reused
-  // exactly as they are — the planner changes assignments, not players.
-  const preview = useMemo<RosteredTeam>(() => {
+  // The pitch renders the EDITED slots, so what is on screen is the thing being
+  // planned. Rebuilt from the real team so `lineup()` is reused exactly as it is
+  // — the planner changes assignments, not players.
+  const { rows, bench } = useMemo(() => {
     const bySlot = new Map(slots.map((slot) => [slot.fantraxId, slot]));
-    return {
+    const arranged = lineup({
       ...team,
       players: team.players.map((p) => ({ ...p, slot: bySlot.get(p.slot.fantraxId) ?? p.slot })),
+    });
+    const detail = (id: string) => detailOf.get(id);
+    return {
+      rows: arranged.lines.map<PitchRow<SquadPlayerDetail>>((line) => ({
+        label: line.position,
+        players: line.players.flatMap((p) => detail(p.slot.fantraxId) ?? []),
+      })),
+      bench: arranged.bench.flatMap((p) => detail(p.slot.fantraxId) ?? []),
     };
-  }, [team, slots]);
+  }, [team, slots, detailOf]);
 
   const dirty = useMemo(
-    () => team.players.some((p, i) => p.slot.status !== slots[i]?.status || p.slot.position !== slots[i]?.position),
+    () =>
+      team.players.some(
+        (p, i) => p.slot.status !== slots[i]?.status || p.slot.position !== slots[i]?.position,
+      ),
     [team, slots],
   );
 
-  const moves = selected ? legalMoves(slots, eligibility, limits, selected) : [];
-  const options = selected ? eligibleSlots(slots, eligibility, limits, selected) : [];
-
-  // What is wrong with the XI as it stands. No move offered above can create any
-  // of it, so an empty list here is the ordinary case and anything in it came
-  // from Fantrax — which is exactly why it has to be said rather than assumed
-  // away.
+  // What is wrong with the XI as it stands. No move offered can create any of
+  // it, so an empty list is the ordinary case and anything in it came from
+  // Fantrax — which is exactly why it has to be said rather than assumed away.
   const broken = violations(slots, eligibility, limits);
   const empty = limits.maxActivePlayers - slots.filter(isActive).length;
 
   function play(move: Move) {
     setSlots((current) => applyMove(current, move));
-    setSelected(null);
+    setPicked(null);
+    setOpened(null);
+  }
+
+  // Everything the picked man may do, and the men he may do it with.
+  const pickedMoves = picked === null ? [] : legalMoves(slots, eligibility, limits, picked);
+  const partners = new Set(
+    pickedMoves.flatMap((move) => (move.kind === "swap" ? [move.withId] : [])),
+  );
+
+  /** Swapping with a man who occupies a position the picked player is eligible
+   *  for means taking that position. Where he is not — a full XI lets him come
+   *  in anywhere, so the partner need not be in a position he can fill — the
+   *  first legal destination stands, because any of them is one man in and one
+   *  man out. */
+  function swapWith(partnerId: string) {
+    const candidates = pickedMoves.flatMap((move) =>
+      move.kind === "swap" && move.withId === partnerId ? [move] : [],
+    );
+    const theirPosition = slots.find((slot) => slot.fantraxId === partnerId)?.position;
+    const move = candidates.find((swap) => swap.to === theirPosition) ?? candidates[0];
+    // Only offered for a partner the pitch has lit, and it lit him from this
+    // same list — so an empty one is unreachable rather than unhandled.
+    if (move) play(move);
   }
 
   return (
     <div className="flex flex-col gap-3">
-      <Pitch team={preview} clubs={clubs} />
+      <LineupPitch
+        rows={rows}
+        bench={bench}
+        availabilityOf={(player) => {
+          const id = player.rostered.slot.fantraxId;
+          if (picked === null) return "idle";
+          if (picked === id) return "picked";
+          return partners.has(id) ? "swappable" : "blocked";
+        }}
+        onPick={(player) => {
+          const id = player.rostered.slot.fantraxId;
+          if (picked === null) setPicked(id);
+          // Tapping the picked man again asks for the rest of what he can do.
+          // It used to put him back down, which is what the swap partners and
+          // the dialog's own dismissal already do twice over.
+          else if (picked === id) {
+            setPicked(null);
+            setOpened(id);
+          } else if (partners.has(id)) swapWith(id);
+        }}
+      />
 
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-faint">
-          {dirty ? "Planned — not submitted" : "Tap a player to move him"}
-        </h2>
-        {dirty ? (
+      {opened !== null ? (
+        <MoveDialog
+          key={opened}
+          name={nameOf(opened)}
+          moves={legalMoves(slots, eligibility, limits, opened)}
+          options={eligibleSlots(slots, eligibility, limits, opened)}
+          nameOf={nameOf}
+          onPlay={play}
+          onClose={() => setOpened(null)}
+        />
+      ) : null}
+
+      {/* Nothing at all until something has been moved. A count of eleven from
+          eleven is a line of furniture telling a manager what he can see. */}
+      {dirty ? (
+        <div className="flex items-center justify-between gap-2 px-1">
+          <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-faint">
+            Planned — not submitted
+          </h2>
           <button
             type="button"
             onClick={() => {
               setSlots(team.players.map((p) => p.slot));
-              setSelected(null);
+              setPicked(null);
             }}
-            className="min-h-11 rounded-lg border border-line px-3 text-sm font-medium hover:bg-raised"
+            className="min-h-9 rounded-lg border border-line px-3 text-xs font-medium hover:bg-raised"
           >
             Reset
           </button>
-        ) : null}
-      </div>
+        </div>
+      ) : null}
 
       {broken.length > 0 || empty > 0 ? (
         <ul className="flex flex-col gap-1 rounded-lg border border-line bg-surface px-3 py-2">
@@ -128,9 +219,9 @@ export default function LineupPlanner({
               {sentence(violation, nameOf)}
             </li>
           ))}
-          {/* Not a violation, and deliberately worded so it cannot be read as one:
-              Fantrax publishes no minimum per position, so an under-filled XI
-              breaks no rule the commissioner set. */}
+          {/* Not a violation, and deliberately worded so it cannot be read as
+              one: Fantrax publishes no minimum per position, so an under-filled
+              XI breaks no rule the commissioner set. */}
           {empty > 0 ? (
             <li className="text-2xs text-muted">
               {empty} empty {empty === 1 ? "place" : "places"} in the XI — allowed, and nothing
@@ -140,44 +231,7 @@ export default function LineupPlanner({
         </ul>
       ) : null}
 
-      <ul className="flex flex-col gap-1">
-        {slots.map((slot) => {
-          const isOpen = selected === slot.fantraxId;
-          return (
-            <li key={slot.fantraxId} className="flex flex-col">
-              <button
-                type="button"
-                onClick={() => setSelected(isOpen ? null : slot.fantraxId)}
-                aria-expanded={isOpen}
-                className="elev flex min-h-11 items-center gap-2.5 rounded-lg border border-line bg-surface px-3 py-2 text-left hover:bg-raised"
-              >
-                <span className="numeric w-6 text-2xs tracking-widest text-faint">
-                  {slot.position ?? "—"}
-                </span>
-                <span className="min-w-0 flex-1 truncate font-medium">
-                  {nameOf(slot.fantraxId)}
-                </span>
-                {!isActive(slot) ? (
-                  <span className="numeric rounded bg-raised px-1.5 py-0.5 text-2xs font-bold text-mid">
-                    RES
-                  </span>
-                ) : null}
-              </button>
-
-              {isOpen ? (
-                <MoveSheet moves={moves} options={options} nameOf={nameOf} onPlay={play} />
-              ) : null}
-            </li>
-          );
-        })}
-      </ul>
-
-      <a
-        href={fantraxUrl}
-        target="_blank"
-        rel="noreferrer"
-        className={BUTTON}
-      >
+      <a href={fantraxUrl} target="_blank" rel="noreferrer" className={BUTTON}>
         Set this lineup in Fantrax
       </a>
     </div>

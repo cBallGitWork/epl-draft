@@ -52,9 +52,9 @@
   /* --- League register (Tim Hortons) ---------------------------------------
      #C8102E, read from timhortons.ca's own markup. Their palette since the 2017
      rebrand is red and white only — the cream below is not theirs, it is the
-     1964–85 identity's warm register, chosen because this league's album is a
-     period object. 3.35:1 on --color-bg, so the red carries chrome and never
-     carries small text. */
+     1964–85 identity's warm register. 3.35:1 on --color-bg, so the red carries
+     chrome and never carries small text; it also inks the name plate under a
+     player, where it sits on near-black rather than on the page. */
   --color-league: oklch(0.530 0.207 22);
   --color-league-dark: oklch(0.31 0.05 45);
   --color-cream: oklch(0.94 0.02 75);
@@ -66,12 +66,17 @@
      below the sticker's backdrop range (0.52–0.68) and the cards lift off it. --- */
   --color-pitch-turf: oklch(0.455 0.132 151);
   --color-pitch-mow: oklch(0.425 0.125 151);
-  --color-pitch-surround: oklch(0.26 0.045 151);
   --color-pitch-line: oklch(0.97 0.02 151);
   /* How deep the hoardings are. Read by the boards themselves, by the turf that
      starts under them and by the padding that keeps the far row clear of them —
      three places that must agree, and did not until this was one value. */
   --pitch-boards: 1.75rem;
+
+  /* --- The page's own side margin. `<main>` sets it, and the two things that
+     deliberately break out of it read it back. Three places had it written out
+     as `px-3 sm:px-4` and `-mx-3 sm:-mx-4`, which is a gutter that can drift
+     from the thing it is the negative of. --- */
+  --page-gutter: 0.75rem;
 
   /* --- Fixture difficulty ---------------------------------------------------
      FPL's own five-step scale, in our palette rather than their hex. Theirs is
@@ -87,20 +92,6 @@
   --color-fdr-3: oklch(0.80 0.02 320);
   --color-fdr-4: oklch(0.66 0.20 22);
   --color-fdr-5: oklch(0.50 0.18 18);
-
-  /* --- Sticker register (Merlin's Premier League, 1994/95) -----------------
-     A third register, and deliberately period rather than modern: the album is
-     the charm and it should look printed, not designed this year. Taken from
-     scans of the actual set — a white card, a black keyline, a name banner that
-     runs yellow to green, and a flat studio-green backdrop no photograph of a
-     real match ever had. It appears ONLY inside a sticker; nothing else in the
-     app may borrow it, or the period reads as an accident. --- */
-  --color-sticker-card: oklch(1 0 0);
-  --color-sticker-keyline: oklch(0.18 0.008 265);
-  --color-sticker-banner-from: oklch(0.94 0.16 104);
-  --color-sticker-banner-to: oklch(0.62 0.15 148);
-  --color-sticker-backdrop-from: oklch(0.68 0.09 148);
-  --color-sticker-backdrop-to: oklch(0.52 0.09 148);
 
   /* --- Data tints: deliberately duller than --accent so a form indicator never
      competes with a primary action. Hue-paired with icons/labels, never alone. --- */
@@ -136,6 +127,18 @@
 
 :root {
   color-scheme: dark;
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --page-gutter: 1rem;
+  }
+}
+
+/* Out through the page's own gutters, for the two things wide enough to earn
+   it: the pitch, and the bench strip under it. */
+.bleed {
+  margin-inline: calc(var(--page-gutter) * -1);
 }
 
 body {
@@ -202,8 +205,9 @@ body {
 .pitch {
   position: relative;
   overflow: hidden;
-  /* What is beyond the touchline: the same green, in shadow. */
-  background-color: var(--color-pitch-surround);
+  /* No ground of its own. What lies outside the taper is the page, the way it is
+     on FPL's: a second green out there reads as a second surface, and the pitch
+     stops being a thing sitting on the page and becomes a panel with a border. */
 }
 
 /* The hoardings behind the far goal. A real advertising board in a real ground,
@@ -213,11 +217,12 @@ body {
   position: absolute;
   top: 0;
   /* The width of the FAR touchline, not of the page. Boards stand behind that
-     goal line, so they are as wide as the pitch is at that depth — the same
-     11%/89% the turf polygon opens at. Running them the full width would put
-     advertising on ground the perspective says is off the pitch. */
-  left: 11%;
-  right: 11%;
+     goal line, so they are as wide as the pitch is at that depth — which is the
+     turf polygon's own inset, handed down by `PitchFrame` rather than written
+     out again here. Running them the full width would put advertising on ground
+     the perspective says is off the pitch. */
+  left: var(--pitch-inset);
+  right: var(--pitch-inset);
   display: flex;
   align-items: center;
   /* Flanking the goal, not behind it — the net is centred on the same band. */

@@ -19,6 +19,9 @@ export type {
 
 export type { PoolStatRow, StatColumn, StatSeason, TeamStats } from "./stats";
 
+export { breakdownOf, pointsBreakdown } from "./breakdown";
+export type { BreakdownLine } from "./breakdown";
+
 export { captureStaleness } from "./staleness";
 
 export { periodGameweeks } from "./calendar";
@@ -35,8 +38,8 @@ export type { Violation } from "./violations";
 
 export { isActive } from "./rosterStatus";
 
-export { leaguePool, periodPairings } from "./selectors";
-export type { PeriodPairing, PoolPlayer } from "./selectors";
+export { headToHead, leaguePool, periodPairings } from "./selectors";
+export type { HeadToHead, PeriodPairing, PoolPlayer } from "./selectors";
 
 export { FantraxError } from "./fantrax/errors";
 export type { ScoringRules } from "./scoring";

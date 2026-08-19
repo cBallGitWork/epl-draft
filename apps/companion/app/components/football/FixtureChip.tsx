@@ -47,10 +47,11 @@ export default function FixtureChip({
 }) {
   if (opposition === undefined || opposition.length === 0) {
     return (
-      // `muted` and not `faint`: this sits on the surface in a list, on a raised
-      // panel in the card, and on the sticker's near-black strip, and faint
-      // disappears on the third.
-      <span className="numeric block px-1 text-center text-[0.5rem] font-bold leading-[1.5] text-muted">
+      // It brings its own ground, exactly as a rated fixture does. Left
+      // transparent it borrowed whatever it was sitting on, which is three
+      // different surfaces — and on the pitch's cream band a light grey on
+      // near-white was a blank gameweek nobody could read.
+      <span className="numeric grid flex-1 place-items-center bg-raised px-1 text-[0.5rem] font-bold leading-[1.5] text-muted">
         {blank}
       </span>
     );
@@ -66,8 +67,11 @@ export default function FixtureChip({
         <span
           key={against.fixture.id}
           // Dark ink on every step of the scale, so the pair is legible without
-          // asking which end of it this chip came from.
-          className="numeric flex-1 px-1 text-center text-[0.5rem] font-bold leading-[1.5] text-black/85"
+          // asking which end of it this chip came from. Centred by grid rather
+          // than by line height: the pitch's band is a fixed height and the
+          // colour is asked to fill it, so the text has to be placed inside the
+          // stretch rather than defining it.
+          className="numeric grid flex-1 place-items-center px-1 text-[0.5rem] font-bold leading-[1.5] text-black/85"
           style={{ backgroundColor: ground(against.difficulty) }}
         >
           {against.club.shortName} ({against.home ? "H" : "A"})

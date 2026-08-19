@@ -3,7 +3,7 @@ import type { Opposition } from "../football/opposition";
 import type { Club, FootballPlayer } from "../football/types";
 import type { RosteredPlayer } from "./roster";
 import type { SquadLine } from "./lineup";
-import { squadDetail } from "./squadDetail";
+import { lineupDetail, squadDetail } from "./squadDetail";
 
 const arsenal: Club = { id: 1, code: 3, name: "Arsenal", shortName: "ARS" };
 const newcastle: Club = { id: 2, code: 4, name: "Newcastle", shortName: "NEW" };
@@ -123,3 +123,28 @@ describe("squadDetail, on the arrangement", () => {
 function slot(fantraxId: string, status: string) {
   return { slot: { fantraxId, position: "M", status }, unresolved: "unmapped" as const };
 }
+
+describe("lineupDetail", () => {
+  const team = {
+    teamId: "t1",
+    teamName: "Test",
+    players: [resolved("a", 1), { ...resolved("b", 1), slot: { fantraxId: "b", position: "M", status: "RESERVE" } }],
+  };
+
+  it("splits the XI from the bench before the split is blanked", () => {
+    // `playerDetail` blanks `slot.status` on the way out, so the arrangement can
+    // only be read here. A view handed these lines cannot rebuild it, which is
+    // the point.
+    const { rows, bench } = lineupDetail(team, clubs, opposition, null);
+    expect(rows.flatMap((row) => row.players.map((p) => p.rostered.slot.fantraxId))).toEqual(["a"]);
+    expect(bench.map((p) => p.rostered.slot.fantraxId)).toEqual(["b"]);
+    expect(JSON.stringify({ rows, bench })).not.toContain("RESERVE");
+  });
+
+  it("hangs the same detail off a reserve as off a starter", () => {
+    const { bench } = lineupDetail(team, clubs, opposition, new Map([["b", 7]]));
+    expect(bench[0]?.club).toBe(arsenal);
+    expect(bench[0]?.opposition).toBe(against);
+    expect(bench[0]?.points).toBe(7);
+  });
+});

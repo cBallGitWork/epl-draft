@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clubColours, crestUrl, inkOn } from "./clubs";
+import { clubColours, crestUrl, inkOn , shirtUrl } from "./clubs";
 
 const DARK_INK = "#0b0c10";
 const WHITE_INK = "#ffffff";
@@ -59,5 +59,21 @@ describe("inkOn", () => {
     // threshold or to that hex flips its label from black to white.
     expect(ink("MCI")).toBe(DARK_INK);
     expect(ink("COV")).toBe(DARK_INK);
+  });
+});
+
+describe("shirtUrl", () => {
+  const arsenal = { id: 1, code: 3, name: "Arsenal", shortName: "ARS" };
+
+  it("keys on the stable club code, like the crest does", () => {
+    expect(shirtUrl(arsenal, false)).toBe(
+      "https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_3-110.png",
+    );
+  });
+
+  it("asks for the keeper's own kit, which is a different shirt and not a tint", () => {
+    expect(shirtUrl(arsenal, true)).toBe(
+      "https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_3_1-110.png",
+    );
   });
 });

@@ -15,18 +15,32 @@
 const WIDTH_M = 68;
 const HALF_LENGTH_M = 52.5;
 
-/** How far in from each side the goal line sits, and the depth by which the
- *  touchlines have splayed out to the full width of the frame.
+/** How far in from each side the goal line sits, as a percentage of the frame.
  *
- *  Both are picture decisions, and both were learned by getting them wrong. The
- *  splay is gentle — 78% of the width at the goal line — because a steeper one
- *  reads as a funnel: the far line has nowhere to stand two centre halves and
- *  every marking inside it crowds toward the middle. And it *finishes* at 38% of
- *  the depth rather than running to the bottom, which is what FPL's own graphic
- *  does. A trapezoid that keeps opening all the way down spends its widest, most
- *  useful rows off the edge of the grass. */
-const FAR_INSET = 11;
-const SPLAY_END = 38;
+ *  A picture decision, learned by getting it wrong three times. It was 11 — a
+ *  goal line at 78% of the near width — and that is steeper than FPL's own app,
+ *  which is barely angled at all. Two things went wrong at that angle and only
+ *  one of them was taste: a back five had to stand on a line 22% narrower than
+ *  the one the forwards stand on, and the row padding that keeps a line on the
+ *  grass is a single figure for the whole column, so either the near rows gave
+ *  up width they had or the far row stood off the pitch. It stood off the pitch.
+ *
+ *  At 10% the goal line is 90% of the near width, the far row sits inside the
+ *  touchlines at the padding the near rows already wanted, and the perspective
+ *  still reads as perspective.
+ *
+ *  And it runs the whole depth as ONE straight taper. The version before this
+ *  finished splaying at 38% and ran square from there, on the theory that the
+ *  near rows want the full width. What that actually draws is a touchline
+ *  heading outward in perspective which then stops dead halfway down, and an eye
+ *  still following the line reads the stop as the pitch turning back in. A
+ *  perspective line has to keep going until it leaves the frame.
+ *
+ *  Exported because the hoardings stand behind the far goal line and have to be
+ *  exactly as wide as the pitch is at that depth. `PitchFrame` hands it to the
+ *  stylesheet — the number used to be written out again in the CSS with a
+ *  comment asking the next person to keep the two in step. */
+export const FAR_INSET = 5;
 
 /** Markings at half their true size.
  *
@@ -42,15 +56,34 @@ function depth(metres: number): number {
   return (metres / HALF_LENGTH_M) * 100 * MARKING_SCALE;
 }
 
-/** Half the frame's width at a given depth: 39 at the goal line, 50 once the
- *  touchlines have finished opening. */
+/** Half the frame's width at a given depth: 39 at the goal line, 50 where the
+ *  picture is cut off. */
 function halfWidth(y: number): number {
-  return y >= SPLAY_END ? 50 : 50 - FAR_INSET * (1 - y / SPLAY_END);
+  return 50 - FAR_INSET * (1 - y / 100);
 }
 
-/** The touchlines themselves, at a given depth. */
+/** Where the grass ends at a given depth. */
 const leftEdge = (y: number) => 50 - halfWidth(y);
 const rightEdge = (y: number) => 50 + halfWidth(y);
+
+/** How much grass lies outside the painted line, as a share of the pitch's own
+ *  width at that depth, and how far down the goal line sits.
+ *
+ *  Without them the touchline IS the edge of the picture, which reads as a
+ *  border drawn around a pitch rather than a line painted on one — there is
+ *  always grass beyond a touchline. A share and not a fixed number of frame
+ *  units, because the frame narrows toward the far end: a constant gap is 5% of
+ *  the pitch down here and 6.4% up there, and the lines visibly stop tracking
+ *  the grass they are supposed to run parallel to. */
+const MARGIN = 0.05;
+const GOAL_LINE = 2;
+
+/** The touchlines themselves. */
+const insideLeft = (y: number) => leftEdge(y) + halfWidth(y) * MARGIN;
+const insideRight = (y: number) => rightEdge(y) - halfWidth(y) * MARGIN;
+
+/** A run of points into a path, `M` then `L`s. */
+const trace = (points: string[]) => `M ${points[0]} L ${points.slice(1).join(" L ")}`;
 
 /** The x of a point `metres` either side of the centre line, at depth `y`.
  *  Positive is right of centre. Splayed with the touchlines, so a line that is
@@ -59,28 +92,38 @@ function across(y: number, metres: number): number {
   return 50 + (halfWidth(y) * 2 * (metres / WIDTH_M)) * MARKING_SCALE;
 }
 
-/** A box open along the goal line, which is where the turf's own edge already
- *  is: penalty area and six-yard box are the same shape at two sizes.
+/** The boxes are drawn wider and shallower than their true shape.
  *
- *  `stretch` widens the penalty area by a quarter. At its true share of a
- *  half-scale set it reads as a narrow slot rather than as the box a keeper
- *  comes for crosses in — the one place the drawing knowingly leaves the
- *  arithmetic, so it is a named argument rather than a fudged coordinate. */
-function box(widthM: number, depthM: number, stretch = 1): string {
-  const back = depth(depthM);
-  const half = (widthM / 2) * stretch;
+ *  Correctly proportioned at this marking scale they come out as deep narrow
+ *  slots — right on paper, wrong in a picture whose depth is already
+ *  foreshortened by the splay. Two named factors rather than fudged
+ *  coordinates, so the arithmetic below stays readable as arithmetic.
+ *
+ *  Both moved back toward 1 when the taper softened, because both were paying
+ *  for the taper: a gentler splay foreshortens less, so the correction it needed
+ *  is smaller. Left where they were, the penalty area came out wider than the
+ *  eighteen-yard box has any business being on a goal line that is now nearly
+ *  the full width of the frame. */
+const BOX_STRETCH = 1.25;
+const BOX_FLATTEN = 0.85;
+
+/** A box open along the goal line, which is where the turf's own line already
+ *  is: penalty area and six-yard box are the same shape at two sizes. */
+function box(widthM: number, depthM: number): string {
+  const back = GOAL_LINE + depth(depthM) * BOX_FLATTEN;
+  const half = (widthM / 2) * BOX_STRETCH;
   return [
-    `M ${across(0, -half)},0`,
+    `M ${across(GOAL_LINE, -half)},${GOAL_LINE}`,
     `L ${across(back, -half)},${back}`,
     `L ${across(back, half)},${back}`,
-    `L ${across(0, half)},0`,
+    `L ${across(GOAL_LINE, half)},${GOAL_LINE}`,
   ].join(" ");
 }
 
 /** An arc bulging toward the reader, as a quadratic through its own apex — the
- *  D outside the penalty area and the centre circle at the halfway line. */
+ *  D outside the penalty area. */
 function arc(y: number, radiusM: number, bulge: number): string {
-  const half = across(y, radiusM / 2) - 50;
+  const half = across(y, radiusM * BOX_STRETCH) - 50;
   return `M ${50 - half},${y} Q 50,${y + bulge * 2} ${50 + half},${y}`;
 }
 
@@ -92,27 +135,20 @@ const PENALTY_SPOT_M = 11;
 const ARC_RADIUS_M = 9.15;
 
 /** Where the halfway line is drawn, which is NOT where the arithmetic puts it.
- *  At marking scale the true halfway line lands at 50, straight through the
- *  midfield row. Three quarters down keeps the depth it is there to give without
- *  crowding anybody. */
-const HALFWAY_DEPTH = 75;
+ *  At marking scale the true line lands at 50, straight through the midfield
+ *  row. This keeps the depth it is there to give without crowding anybody. */
+const HALFWAY_DEPTH = 62;
 
 /** A real corner arc is one metre and invisible here. Drawn at the smallest
  *  radius that still reads as a corner. */
 const CORNER_ARC_M = 4.5;
 
-const PENALTY_AREA_BACK = depth(PENALTY_AREA_DEPTH_M);
-const CORNER_INSET = across(0, CORNER_ARC_M) - 50;
-const CORNER_DEPTH = depth(CORNER_ARC_M);
+const PENALTY_AREA_BACK = GOAL_LINE + depth(PENALTY_AREA_DEPTH_M) * BOX_FLATTEN;
+const CORNER_INSET = across(GOAL_LINE, CORNER_ARC_M) - 50;
+const CORNER_DEPTH = GOAL_LINE + depth(CORNER_ARC_M);
 
-/** The playing surface. */
-const TURF = [
-  `M ${leftEdge(0)},0`,
-  `L ${rightEdge(0)},0`,
-  `L ${rightEdge(SPLAY_END)},${SPLAY_END}`,
-  `L ${rightEdge(100)},100 L ${leftEdge(100)},100`,
-  `L ${leftEdge(SPLAY_END)},${SPLAY_END} Z`,
-].join(" ");
+/** The grass, which runs to the edge of the frame — the full-depth band. */
+const TURF = band(0, 100);
 
 /** Where each mow band ends, as a percentage of the frame's depth. FPL's own
  *  four, converted from their 788-unit viewBox: they GROW toward the reader
@@ -123,32 +159,46 @@ const BANDS = [9.3, 17.4, 25.5, 33.6, 44.5, 55.4, 65, 81.7, 100];
  *  Deliberately not a clipped rectangle: a `clipPath` needs a document-unique id
  *  and this component can appear more than once on a page. */
 function band(from: number, to: number): string {
-  return [
-    `M ${leftEdge(from)},${from}`,
-    `L ${rightEdge(from)},${from}`,
-    `L ${rightEdge(to)},${to}`,
-    `L ${leftEdge(to)},${to} Z`,
-  ].join(" ");
+  return `${trace([
+    `${rightEdge(from)},${from}`,
+    `${rightEdge(to)},${to}`,
+    `${leftEdge(to)},${to}`,
+    `${leftEdge(from)},${from}`,
+  ])} Z`;
 }
 
-/** Everything painted inside the touchlines. There is deliberately no outline
- *  around the pitch itself: the turf already has an edge where the grass stops,
- *  and a stroke tracing it read as a border drawn around a picture of a pitch. */
+/** Everything painted on the grass.
+ *
+ *  The touchlines run off the near edge of the frame rather than closing across
+ *  it. That edge is a crop, not the end of a pitch, and a line along it would be
+ *  the border this drawing deliberately does not have. */
 const MARKINGS = [
-  box(PENALTY_AREA_M, PENALTY_AREA_DEPTH_M, 1.25),
+  // Up one touchline, along the goal line, and back down the other. Both sides
+  // run off the near edge of the frame rather than closing across it: that edge
+  // is a crop, not the end of a pitch.
+  trace([
+    `${insideLeft(100)},100`,
+    `${insideLeft(GOAL_LINE)},${GOAL_LINE}`,
+    `${insideRight(GOAL_LINE)},${GOAL_LINE}`,
+    `${insideRight(100)},100`,
+  ]),
+  box(PENALTY_AREA_M, PENALTY_AREA_DEPTH_M),
   box(SIX_YARD_M, SIX_YARD_DEPTH_M),
   // The D, bulging out of the penalty area around the spot. It clears the box by
   // whatever the arc has left after the spot's own distance from the goal line.
-  arc(PENALTY_AREA_BACK, ARC_RADIUS_M, depth(ARC_RADIUS_M - (PENALTY_AREA_DEPTH_M - PENALTY_SPOT_M))),
-  // The halfway line. It does cross a row of stickers, and that is what it does
-  // in FPL's graphic and on a Saturday: at 45% opacity a player standing on the
-  // halfway line reads as a player standing on the halfway line.
-  `M 0,${HALFWAY_DEPTH} L 100,${HALFWAY_DEPTH}`,
+  arc(
+    PENALTY_AREA_BACK,
+    ARC_RADIUS_M,
+    depth(ARC_RADIUS_M - (PENALTY_AREA_DEPTH_M - PENALTY_SPOT_M)) * BOX_FLATTEN,
+  ),
+  // The halfway line, touchline to touchline. It does cross a row of stickers,
+  // and that is what it does in FPL's graphic and on a Saturday: at 45% opacity
+  // a player standing on the halfway line reads as a player standing on it.
+  `M ${insideLeft(HALFWAY_DEPTH)},${HALFWAY_DEPTH} L ${insideRight(HALFWAY_DEPTH)},${HALFWAY_DEPTH}`,
   // Corner arcs, where the goal line meets each touchline. Only two of them: the
-  // near end of this picture is the halfway line, and a halfway line has no
-  // corners.
-  `M ${FAR_INSET + CORNER_INSET},0 A ${CORNER_INSET} ${CORNER_DEPTH} 0 0 1 ${leftEdge(CORNER_DEPTH)},${CORNER_DEPTH}`,
-  `M ${100 - FAR_INSET - CORNER_INSET},0 A ${CORNER_INSET} ${CORNER_DEPTH} 0 0 0 ${rightEdge(CORNER_DEPTH)},${CORNER_DEPTH}`,
+  // near end of this picture is a crop, and a crop has no corners.
+  `M ${insideLeft(GOAL_LINE) + CORNER_INSET},${GOAL_LINE} A ${CORNER_INSET} ${CORNER_DEPTH - GOAL_LINE} 0 0 1 ${insideLeft(CORNER_DEPTH)},${CORNER_DEPTH}`,
+  `M ${insideRight(GOAL_LINE) - CORNER_INSET},${GOAL_LINE} A ${CORNER_INSET} ${CORNER_DEPTH - GOAL_LINE} 0 0 0 ${insideRight(CORNER_DEPTH)},${CORNER_DEPTH}`,
 ];
 
 export default function PitchTurf() {
@@ -189,14 +239,14 @@ export default function PitchTurf() {
           <ellipse
             cx="50"
             cy={HALFWAY_DEPTH}
-            rx={across(HALFWAY_DEPTH, ARC_RADIUS_M) - 50}
+            rx={across(HALFWAY_DEPTH, ARC_RADIUS_M * BOX_STRETCH) - 50}
             ry={depth(ARC_RADIUS_M) / 2}
             vectorEffect="non-scaling-stroke"
           />
           {/* The penalty spot. */}
           <ellipse
             cx="50"
-            cy={depth(PENALTY_SPOT_M)}
+            cy={GOAL_LINE + depth(PENALTY_SPOT_M) * BOX_FLATTEN}
             rx="0.6"
             ry="0.6"
             fill="var(--color-pitch-line)"

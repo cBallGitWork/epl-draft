@@ -15,17 +15,16 @@ const BLOCKED: Record<Blocker, string> = {
   "unknown-eligibility": "eligibility unknown",
 };
 
-function labelFor(move: Move, nameOf: (id: string) => string): string {
-  switch (move.kind) {
-    case "promote":
-      return `Start at ${move.to}`;
-    case "shift":
-      return `Move to ${move.to}`;
-    case "demote":
-      return "Move to reserves";
-    case "swap":
-      return `Start at ${move.to} for ${nameOf(move.withId)}`;
-  }
+function Action({ label, onPlay }: { label: string; onPlay: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onPlay}
+      className="min-h-11 rounded-md border border-line bg-surface px-3 text-left text-sm font-medium hover:bg-raised"
+    >
+      {label}
+    </button>
+  );
 }
 
 export default function MoveSheet({
@@ -39,26 +38,70 @@ export default function MoveSheet({
   nameOf: (id: string) => string;
   onPlay: (move: Move) => void;
 }) {
+  // Swaps are grouped by where he is going, and the rest are listed as they are.
+  //
+  // A full XI is the ordinary state of a team, and every position is then
+  // reachable only by a swap — which is fourteen buttons on this squad, each
+  // repeating "Start at M for" in front of a name. Grouped, the manager picks
+  // the position once and then reads eleven names.
+  const swaps = new Map<string, Extract<Move, { kind: "swap" }>[]>();
+  const direct: Move[] = [];
+
+  for (const move of moves) {
+    if (move.kind !== "swap") {
+      direct.push(move);
+      continue;
+    }
+    const to = swaps.get(move.to);
+    if (to) to.push(move);
+    else swaps.set(move.to, [move]);
+  }
+
   return (
-    <div className="mt-1 flex flex-col gap-1 rounded-lg border border-line bg-raised p-2">
-      {moves.map((move) => (
-        <button
-          key={labelFor(move, nameOf)}
-          type="button"
-          onClick={() => onPlay(move)}
-          className="min-h-11 rounded-md border border-line bg-surface px-3 text-left text-sm font-medium hover:bg-raised"
-        >
-          {labelFor(move, nameOf)}
-        </button>
+    <div className="mt-1 flex flex-col gap-2 rounded-lg border border-line bg-raised p-2">
+      {direct.length > 0 ? (
+        <div className="flex flex-col gap-1">
+          {direct.map((move) => (
+            <Action
+              key={move.kind + ("to" in move ? move.to : "")}
+              label={
+                move.kind === "demote"
+                  ? "Move to reserves"
+                  : `${move.kind === "promote" ? "Start" : "Move"} at ${move.to}`
+              }
+              onPlay={() => onPlay(move)}
+            />
+          ))}
+        </div>
+      ) : null}
+
+      {[...swaps.entries()].map(([position, group]) => (
+        <div key={position} className="flex flex-col gap-1">
+          <h4 className="px-1 font-display text-2xs font-bold uppercase tracking-widest text-faint">
+            Start at {position} — who comes off?
+          </h4>
+          {group.map((move) => (
+            <Action
+              key={move.withId}
+              label={nameOf(move.withId)}
+              onPlay={() => onPlay(move)}
+            />
+          ))}
+        </div>
       ))}
 
       {/* Closed positions are listed WITH their reason. "Why can't he play
           there" is the question, and a list of only the possibilities cannot
-          answer it. */}
+          answer it.
+
+          Except where a move above already reaches the position. A full XI
+          reports every position as `squad-full` and is answered by a swap out of
+          any of them, so the sheet was offering eight ways into midfield and
+          then saying midfield was closed. */}
       {options
-        .filter((option) => !option.open && option.blockedBy)
+        .filter((option) => !option.open && option.blockedBy && !swaps.has(option.position))
         .map((option) => (
-          <p key={option.position} className="px-3 py-1 text-2xs text-faint">
+          <p key={option.position} className="px-3 text-2xs text-faint">
             {option.position} — {option.blockedBy ? BLOCKED[option.blockedBy] : null}
           </p>
         ))}

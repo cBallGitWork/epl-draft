@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { type RosteredPlayer, type SquadPlayerDetail, type Unresolved, isDoubtful, isResolved, playerName } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
-import PlayerSticker from "./PlayerSticker";
+import PitchPlayer from "./PitchPlayer";
 import { londonDayAndTime } from "../../londonTime";
 
 // One player, over the squad rather than instead of it.
@@ -64,7 +64,7 @@ export default function PlayerCard({
       <div className="flex flex-col gap-3 p-4">
         <div className="flex items-center gap-3">
           <span className="w-[5.5rem] shrink-0">
-            <PlayerSticker rostered={rostered} club={club} opposition={opposition} />
+            <PitchPlayer rostered={rostered} club={club} opposition={opposition} />
           </span>
 
           <div className="min-w-0 flex-1">

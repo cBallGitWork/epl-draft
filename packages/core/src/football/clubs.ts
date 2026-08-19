@@ -1,4 +1,4 @@
-import { PL_ASSET_BASE } from "../config";
+import { FPL_SHIRT_BASE, PL_ASSET_BASE } from "../config";
 import type { Club } from "./types";
 
 // Club visual identity. FPL serves crests but publishes no colours, so the palette
@@ -66,4 +66,15 @@ function isLight(hex: string): boolean {
   const b = parseInt(h.slice(4, 6), 16);
   // Rec. 601 luma — good enough for a contrast decision, and dependency-free.
   return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6;
+}
+
+/** The club's kit, keyed on the same stable club code as the crest.
+ *
+ *  110x145 and about 10 KB. Forty of these — one outfield and one keeper per
+ *  club — cover every player in the league, which is why they cache far better
+ *  than a portrait per man and why they are never out of date: the shirt follows
+ *  the club a player is at now, not the club he was at when someone last
+ *  photographed him. */
+export function shirtUrl(club: Club, keeper: boolean): string {
+  return `${FPL_SHIRT_BASE}/shirt_${club.code}${keeper ? "_1" : ""}-110.png`;
 }

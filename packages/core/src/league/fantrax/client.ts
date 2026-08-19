@@ -144,10 +144,17 @@ export function fetchTeamStats(
   leagueId: string,
   teamId: string,
   season?: string,
+  /** Which of the 38 periods to price. Honoured and echoed back as
+   *  `displayedPeriod`, with `periodOppnentTeamIds` (their typo) changing to
+   *  match — probed live 19 Aug against periods 1 and 3. Omitted, Fantrax picks
+   *  the current one, which is right for a season table and wrong for a board
+   *  showing a particular week. */
+  period?: number,
 ): Promise<RawStatTables> {
   return fxpaRead(leagueId, "getTeamRosterInfo", {
     teamId,
     view: "FPTS",
     ...(season ? { seasonOrProjection: season } : {}),
+    ...(period === undefined ? {} : { period: String(period) }),
   }) as Promise<RawStatTables>;
 }

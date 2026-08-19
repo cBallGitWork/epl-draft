@@ -1,7 +1,7 @@
 import type { Opposition } from "../football/opposition";
 import type { Club } from "../football/types";
-import type { SquadLine } from "./lineup";
-import { isResolved, type RosteredPlayer } from "./roster";
+import { lineup, type SquadLine } from "./lineup";
+import { isResolved, type RosteredPlayer, type RosteredTeam } from "./roster";
 
 // A squad with everything a reader needs against each name: who he is, who his
 // club plays this week, and what our league scores him.
@@ -64,11 +64,43 @@ export function squadDetail(
 ): SquadDetailLine[] {
   return lines.map((line) => ({
     position: line.position,
-    players: line.players.map((rostered) => detail(rostered, clubs, opposition, points)),
+    players: line.players.map((rostered) => playerDetail(rostered, clubs, opposition, points)),
   }));
 }
 
-function detail(
+/** The eleven in their lines and the reserves under them, each slot with the
+ *  same detail attached.
+ *
+ *  Beside `squadDetail` rather than inside a view, because it is the same join
+ *  against a different arrangement and both screens that draw an XI want it: the
+ *  head-to-head board and a rival's squad once his period has opened. The
+ *  arrangement is read from `slot.status` HERE, on the server, which is the last
+ *  place it exists — `playerDetail` blanks it on the way out. */
+export interface LineupDetail {
+  rows: SquadDetailLine[];
+  /** RESERVE slots, in position order. Separate because the active/reserve split
+   *  is the statement a lineup makes, not a filter over one. */
+  bench: SquadPlayerDetail[];
+}
+
+export function lineupDetail(
+  team: RosteredTeam,
+  clubs: Map<number, Club>,
+  opposition: Map<number, Opposition[]>,
+  points: Map<string, number | null> | null,
+): LineupDetail {
+  const { lines, bench } = lineup(team);
+  const detail = (rostered: RosteredPlayer) => playerDetail(rostered, clubs, opposition, points);
+  return {
+    rows: lines.map((line) => ({ position: line.position, players: line.players.map(detail) })),
+    bench: bench.map(detail),
+  };
+}
+
+/** One slot's detail. Exported because the lineup planner rearranges the squad
+ *  in the browser and has to re-attach the same facts to whatever shape it ends
+ *  up with — it cannot be handed lines that were grouped on the server. */
+export function playerDetail(
   rostered: RosteredPlayer,
   clubs: Map<number, Club>,
   opposition: Map<number, Opposition[]>,

@@ -32,14 +32,21 @@ describe("initials", () => {
 
 describe("portraitUrl", () => {
   it("keys the asset on the season-stable code, not the per-season id", () => {
-    expect(portraitUrl({ code: 223094 })).toContain("/p223094.png");
+    expect(portraitUrl({ code: 223094 })).toContain("/223094.png");
   });
 
-  it("requests the largest size FPL serves, since the optimizer only downscales", () => {
-    // Asking for a small source can never be undone, and eleven raw portraits at
-    // this size are 3.6 MB of pitch that the optimizer turns into ~165 KB.
+  it("builds the path the Premier League actually serves today", () => {
+    // Asserted whole, because the old path still answers 200 with two-year-old
+    // photographs. A partial match would have passed against it, which is
+    // exactly how a season of stale portraits went unnoticed: nothing 404s, the
+    // players are simply in the wrong shirts.
     expect(portraitUrl({ code: 223094 })).toBe(
-      "https://resources.premierleague.com/premierleague/photos/players/250x250/p223094.png",
+      "https://resources.premierleague.com/premierleague25/photos/players/110x140/223094.png",
     );
   });
+
+  it("does not prefix the file with p, which the crest-era path did", () => {
+    expect(portraitUrl({ code: 223094 })).not.toContain("/p223094");
+  });
 });
+

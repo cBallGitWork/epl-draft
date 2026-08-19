@@ -1,6 +1,15 @@
 import Image from "next/image";
-import { type SquadDetailLine, type SquadPlayerDetail, clubColours, crestUrl, playerName } from "@epl/core";
+import {
+  type SquadDetailLine,
+  type SquadPlayerDetail,
+  clubColours,
+  contribution,
+  crestUrl,
+  isResolved,
+  playerName,
+} from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
+import { chipsFor } from "./Chips";
 
 // The same fifteen as a list. Offered beside the pitch rather than instead of
 // it: the pitch answers "what does this squad look like" and a list answers "who
@@ -42,7 +51,9 @@ export default function SquadRows({
   /** Whether the points are Fantrax's projection rather than a season played.
    *  The heading says which, because the numbers cannot. */
   projected: boolean;
-  onOpen: (player: SquadPlayerDetail) => void;
+  /** Absent on the head-to-head board, which has no player card to open. A row
+   *  that looked like a button and did nothing is worse than a row. */
+  onOpen?: (player: SquadPlayerDetail) => void;
 }) {
   return (
     <div className="flex flex-col gap-3">
@@ -59,7 +70,7 @@ export default function SquadRows({
           <ul className="flex flex-col gap-0.5">
             {line.players.map((player) => (
               <li key={player.rostered.slot.fantraxId}>
-                <Row player={player} onOpen={() => onOpen(player)} />
+                <Row player={player} onOpen={onOpen && (() => onOpen(player))} />
               </li>
             ))}
           </ul>
@@ -69,19 +80,18 @@ export default function SquadRows({
   );
 }
 
-function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen: () => void }) {
+function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => void }) {
   const { club, points } = player;
   const colours = clubColours(club?.shortName ?? "");
+  const done = contribution(isResolved(player.rostered) ? player.rostered.stats : []);
+  // Two is what fits beside the minutes in the fixture column.
+  const chips = chipsFor(done).slice(0, 2);
 
-  return (
-    <button
-      type="button"
-      onClick={onOpen}
-      // One line, not two. Stacking his club under his name doubled the height
-      // of a fifteen-row list to carry two short strings that sit happily beside
-      // each other.
-      className="flex min-h-9 w-full items-center gap-2 rounded-md border border-line bg-surface px-2 py-1 text-left hover:bg-raised"
-    >
+  // One line, not two. Stacking his club under his name doubled the height of a
+  // fifteen-row list to carry two short strings that sit happily beside each
+  // other.
+  const inside = (
+    <>
       <span
         className="grid h-6 w-6 shrink-0 place-items-center rounded p-[2px]"
         style={{ backgroundColor: colours.primary }}
@@ -103,15 +113,41 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen: () => void
         {club?.shortName ?? "unmapped"}
       </span>
 
-      <span className="inline-flex w-[4.25rem] shrink-0 overflow-hidden rounded-[3px]">
-        <FixtureChip opposition={player.opposition} blank="No fixture" />
-      </span>
+      {/* His fixture until he kicks off, and what he has made of it after. The
+          same column either way, so a list mid-round does not comb. */}
+      {done.played ? (
+        <span className="flex w-[4.25rem] shrink-0 items-center justify-end gap-0.5">
+          {chips.map((chip) => (
+            <span
+              key={chip.label}
+              className={`numeric rounded-[2px] px-1 text-[0.625rem] font-bold leading-[1.4] ${chip.className}`}
+            >
+              {chip.label}
+            </span>
+          ))}
+          <span className="numeric text-[0.625rem] font-bold text-muted">{done.minutes}&apos;</span>
+        </span>
+      ) : (
+        <span className="inline-flex w-[4.25rem] shrink-0 overflow-hidden rounded-[3px]">
+          <FixtureChip opposition={player.opposition} blank="No fixture" />
+        </span>
+      )}
 
       {/* Undefined is no table at all and takes the cell with it; null is a table
           that does not name him, which is a dash. */}
       {points === undefined ? null : (
         <span className="numeric w-8 shrink-0 text-right text-sm font-bold">{points ?? "—"}</span>
       )}
+    </>
+  );
+
+  const shell = "flex min-h-9 w-full items-center gap-2 rounded-md border border-line bg-surface px-2 py-1 text-left";
+
+  return onOpen ? (
+    <button type="button" onClick={onOpen} className={`${shell} hover:bg-raised`}>
+      {inside}
     </button>
+  ) : (
+    <div className={shell}>{inside}</div>
   );
 }

@@ -8,8 +8,9 @@ import {
   fetchTeamStats,
   mapPoolStats,
   mapTeamStats,
+  pointsBreakdown,
 } from "@epl/core";
-import type { TeamStats } from "@epl/core";
+import type { BreakdownLine, TeamStats } from "@epl/core";
 import { orRefusal } from "./refusals";
 
 // One team's season table, read once and shared.
@@ -50,9 +51,13 @@ export const yearToDate = unstable_cache(
  *  answering `WARNING` and Fantrax being down both mean there are no numbers to
  *  show, and both say so by not appearing. */
 export const readTeamStats = unstable_cache(
-  async (teamId: string, season: string | undefined): Promise<TeamStats | null> => {
+  async (
+    teamId: string,
+    season: string | undefined,
+    period?: number,
+  ): Promise<TeamStats | null> => {
     try {
-      return mapTeamStats(await fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season));
+      return mapTeamStats(await fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season, period));
     } catch (error) {
       if (error instanceof FantraxError) return null;
       throw error;
@@ -72,8 +77,12 @@ export const readTeamStats = unstable_cache(
  *  category a player has not registered. */
 export async function squadPoints(
   teamId: string,
-): Promise<{ projected: boolean; points: Map<string, number | null> } | null> {
-  const stats = await readTeamStats(teamId, await yearToDate());
+  /** The period to price, when the caller is showing one. The season table on a
+   *  squad page wants whatever Fantrax's current period is; a head-to-head board
+   *  is looking at a named week and must ask for that one. */
+  period?: number,
+): Promise<SquadPoints | null> {
+  const stats = await readTeamStats(teamId, await yearToDate(), period);
   if (stats === null) return null;
 
   return {
@@ -81,5 +90,19 @@ export async function squadPoints(
     points: new Map(
       stats.groups.flatMap((group) => group.lines.map((line) => [line.fantraxId, line.points])),
     ),
+    breakdown: Object.fromEntries(pointsBreakdown(stats)),
   };
+}
+
+export interface SquadPoints {
+  projected: boolean;
+  points: Map<string, number | null>;
+  /** Why each of those numbers is what it is, in the league's own categories —
+   *  the same table read once, since the FPTS view carries the total and the
+   *  parts on one row.
+   *
+   *  A plain object and not the Map the join hands back: this crosses to the
+   *  browser inside a client component's props, and a Map does not survive
+   *  serialisation. */
+  breakdown: Record<string, BreakdownLine[]>;
 }

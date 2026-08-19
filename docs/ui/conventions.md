@@ -44,19 +44,82 @@ inside the sticker, where the card is container-queried.
 | `shell/TabNav` | Bottom bar on phones, top bar above `md`. The Live tab only exists while football is on. |
 | `shell/LeagueCrest` | Our crest. `mark` (no type, legible to ~24px) and `full`. |
 | `shell/AutoRefresh` | Client poller. `POLL.live` during football, `POLL.idle` otherwise. |
-| `league/PitchFrame` | Hoardings + goal + turf + rows. Full-bleed. Shared by both pitches. |
+| `league/PitchFrame` | Hoardings + goal + turf. Full-bleed. |
+| `league/PitchRows` | Players in their lines on a `PitchFrame`. **Owns card width and the shrink-not-wrap policy** — all three pitches go through it. |
 | `league/PitchTurf` | The grass in perspective, as an inline SVG. |
-| `league/PlayerSticker` | One player as a 1994/95 Merlin sticker. |
-| `league/StickerFace` | The head panel. Client-only, and has to be — see below. |
+| `league/LineupPitch` | Your own XI plus the bench, one target per player: tap to pick, tap again for the rest. |
+| `league/MoveDialog` | Everywhere one player can go, over the pitch. |
+| `league/TeamSheet` | A live XI plus bench, or the same squad as rows, every player opening `LivePlayerCard`. Both boards that show a lineup that counts draw it. |
+| `league/PitchPlayer` | One player on the pitch: cut-out, name plate, points band. |
+| `league/PlayerImage` | The cut-out itself, with its fallbacks. Client-only, and has to be — see below. |
 | `football/FixtureChip` | Opponent + (H)/(A), coloured by FPL's difficulty. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
 
-## Two mechanics worth knowing before you touch them
+**Rows shrink, they never wrap.** A back five does not fit five cards at full
+width on a phone, and wrapping put one defender on a row of his own below the
+other four — which reads as a formation nobody picked. `PitchRows` gives each
+cell `flex-1` under a `max-w`, so a crowded line gives up width instead, and the
+name inside is sized in container-query units so it comes with it. Row padding is
+the taper's **own** inset — `FAR_INSET`, exported by `PitchTurf` and set on the
+frame as `--pitch-inset`, which the hoardings read too. One number, three
+readers: it used to be written out twice with a comment asking the next person to
+keep the two in step.
 
-**Portraits are transparent cut-outs.** Anything drawn *behind* one shows
-through the player — a crest across his face. `StickerFace` is a client component
-so the crest fallback appears only after the image has actually failed. Do not
-move it back to a layer underneath.
+**`--page-gutter` and `.bleed`.** `<main>` sets the side margin from the token;
+the two things wide enough to break out of it — the pitch and the bench strip —
+use `.bleed`, which is the negative of the same value. Three files used to write
+`px-3 sm:px-4` and `-mx-3 sm:-mx-4` by hand.
+
+## Four mechanics worth knowing before you touch them
+
+**Portraits are transparent cut-outs, and nothing is drawn behind them.** That is
+now the whole look: no card, no keyline, no studio backdrop — the pitch is the
+background. It replaced a 1994/95 Merlin sticker, which was handsome on its own
+and wrong at fifteen-up, because every border and backdrop sat between the reader
+and the only two things he came for: the face and the fixture.
+
+`PlayerImage` is a client component and has to be. A transparent PNG cannot be
+layered over a fallback and left to cover it, so a fallback can only appear once
+an image has actually failed to load — and only the browser knows that.
+
+Four rungs: **this season's photograph → one of ours → the club's kit →
+initials.**
+
+- About 17 in 60 players have no photograph in the Premier League's current set.
+- **Ours** live in `apps/companion/public/players/{code}.png`, keyed on the FPL
+  season-stable player code, dropped in by hand. A missing one costs a local 404.
+- **The kit** is the floor and a solid one: `shirtUrl(club, keeper)` picks by club
+  code rather than by a photograph of a man, so it is right the day he signs.
+  Keeper kits are the `_1` variant, chosen by `isGoalkeeper(slot.position)` —
+  which reads the same single declaration the pitch order rests on, so a league
+  that files keepers under "GK" needs one edit and not two.
+- The set *before* the current one still answers and is deliberately never used:
+  it would put those players back in the shirts they wore two clubs ago, and a
+  wrong photograph is worse than none because only one of the two looks like an
+  answer.
+
+The case that still slips through is a photograph taken *within* the current set
+and overtaken by a January transfer — undetectable from the asset, and nothing
+marks it. A file in `public/players/` overrides it.
+
+**The points band, and the one rule under it: a card says one thing at a time.**
+The third band of a player on the grass is his fixture until he kicks off and his
+score after it, and the two never share the space. Played, it flips to a dark
+ground with cream numerals so the figure a manager came for is the loudest thing
+on the card; waiting, it is the FDR colour at full strength. Both are the same
+fixed height — a line whose cards stand at different heights stops reading as a
+line — and "he has not played" is said by dimming the **photograph** alone.
+Dimming the whole card said it too, and took the fixture colour and the name with
+it.
+
+**Two player cards, and they are not one card with a flag.** `PlayerCard` answers
+*who is this and is he fit* — read midweek, going through somebody's fifteen: the
+fixture, the kickoff, FPL's fitness note, why a slot is unresolved.
+`LivePlayerCard` answers *what is he scoring and why* — read at ten past four:
+Fantrax's own category breakdown, summing to the total exactly, with FPL's record
+on a line of its own and labelled as FPL's. Same dialog skeleton, different
+questions, opened on different days. A third card is a sign one of these two has
+lost its question.
 
 **The pitch angle is in the ground, never in a transform.** A CSS `perspective`
 on the container would tilt the stickers with it, and a sticker is a flat printed

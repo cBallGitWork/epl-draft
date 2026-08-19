@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { leaguePool, periodPairings } from "./selectors";
+import { headToHead, leaguePool, periodPairings } from "./selectors";
 import type {
   LeagueMatchup,
   LeaguePlayer,
@@ -113,5 +113,41 @@ describe("periodPairings", () => {
       { home: leagueTeams[0], away: leagueTeams[1] },
       { home: leagueTeams[2], away: leagueTeams[3] },
     ]);
+  });
+});
+
+describe("headToHead", () => {
+  it("puts the team asked about first, whichever side of the schedule it is on", () => {
+    // t1 is home in period 1 and the same team is away in nothing — but t2 is
+    // away, and both must read as "you, then them".
+    expect(headToHead(schedule, leagueTeams, 1, "t1")).toEqual({
+      team: leagueTeams[0],
+      opponent: leagueTeams[1],
+    });
+    expect(headToHead(schedule, leagueTeams, 1, "t2")).toEqual({
+      team: leagueTeams[1],
+      opponent: leagueTeams[0],
+    });
+  });
+
+  it("selects the period, not just the team", () => {
+    // t1 plays t2 in period 1 and t3 in period 2. Reading the wrong one names
+    // the wrong opponent on a squad screen, which is the bug this prevents.
+    expect(headToHead(schedule, leagueTeams, 2, "t1")?.opponent).toEqual(leagueTeams[2]);
+  });
+
+  it("has no answer for a team with no pairing this period", () => {
+    // A bye, a period the schedule does not cover, and a team id from another
+    // league all land here — none of them is a fault.
+    expect(headToHead(schedule, leagueTeams, 2, "t2")).toBeUndefined();
+    expect(headToHead(schedule, leagueTeams, 3, "t1")).toBeUndefined();
+    expect(headToHead(schedule, leagueTeams, 1, "t9")).toBeUndefined();
+  });
+
+  it("has no answer when the pairing names a team the league does not carry", () => {
+    // Half a head-to-head is not one. `periodPairings` drops the pairing whole
+    // and this inherits that rather than rendering a side against nobody.
+    const stranger: LeagueMatchup[] = [{ period: 1, homeTeamId: "t1", awayTeamId: "t9" }];
+    expect(headToHead(stranger, leagueTeams, 1, "t1")).toBeUndefined();
   });
 });

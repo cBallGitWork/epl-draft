@@ -1,11 +1,18 @@
 // Whether a lineup may be shown yet.
 //
-// The rule is a league rule, not a technical one: until a period starts, NO
-// team's lineup is visible — not your rivals', not your own. Sixteen managers
-// who can see each other's XI before the deadline are playing a different game
-// from the one they agreed to, and the app is the only place that could leak
-// it. What stays visible all week is the squad: the fifteen names, the pickups,
-// who owns whom. Only the *arrangement* hides.
+// The rule is a league rule, not a technical one: until a period starts, no
+// RIVAL's lineup is visible. Sixteen managers who can see each other's XI before
+// the deadline are playing a different game from the one they agreed to, and the
+// app is the only place that could leak it. What stays visible all week is the
+// squad: the fifteen names, the pickups, who owns whom. Only the *arrangement*
+// hides.
+//
+// Your own is a different question and it took a while to see it. This gate used
+// to withhold every lineup from everybody, the reader's own included, on the
+// grounds that one rule is safer than two. What that actually cost was the only
+// thing the app could usefully do with a lineup — let a manager plan his own
+// before the deadline — to protect information he is already looking at in
+// Fantrax. Nobody is kept from anything by hiding a man's team from himself.
 //
 // Pure, with the instant injected (§5). Nothing here reads a clock, because a
 // gate that consults `Date.now()` internally cannot be tested at its boundary,
@@ -75,7 +82,20 @@ export function rosterDisplay(
   fetchedPeriod: number | null,
   periods: LeaguePeriod[],
   at: string,
+  /** Whether this roster belongs to the reader.
+   *
+   *  Answered from the session's team id, which is validated against the
+   *  league's own roster before it gets here — so the only way to be handed
+   *  `true` is to be that manager. Callers that answer for the whole league at
+   *  once, rather than for one team a known reader is looking at, must pass
+   *  `false`: a shared answer is a rival's answer to fifteen of the sixteen. */
+  yours: boolean,
 ): RosterDisplay {
+  // No calendar needed, and no clock: it is his team, and it is his all week.
+  // A roster whose period Fantrax would not name still falls through, because
+  // `show: "lineup"` has to say which period it is showing.
+  if (yours && fetchedPeriod !== null) return { show: "lineup", period: fetchedPeriod };
+
   if (periods.length === 0) return { show: "squad", because: "no-calendar" };
   if (fetchedPeriod === null) return { show: "squad", because: "unknown-period" };
 

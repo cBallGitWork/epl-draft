@@ -17,11 +17,20 @@ const nextConfig: NextConfig = {
 
   images: {
     // Player portraits and club crests come from the Premier League's CDN. Routing
-    // them through the optimizer is not cosmetic: the source headshots are ~330 KB
-    // PNGs, and eleven of them on a pitch is 3.6 MB on a phone. Optimized they land
-    // around 15 KB each. Never set `unoptimized` on these.
+    // them through the optimizer is not cosmetic: fifteen source headshots on a
+    // pitch is 1.5 MB on a phone, and optimized they land around 15 KB each.
+    // Never set `unoptimized` on these.
+    //
+    // Two paths, because the Premier League moved its portraits and left its
+    // crests where they were. The allow-list is path-scoped, so the day the
+    // portraits moved this file had to move with them — a pattern that only
+    // named `/premierleague/**` fails every portrait at the optimizer, which is
+    // a 400 from our own server and not a CDN problem to go looking for.
     remotePatterns: [
       { protocol: "https", hostname: "resources.premierleague.com", pathname: "/premierleague/**" },
+      { protocol: "https", hostname: "resources.premierleague.com", pathname: "/premierleague25/**" },
+      // Kits are FPL's own host, not the Premier League's CDN.
+      { protocol: "https", hostname: "fantasy.premierleague.com", pathname: "/dist/img/shirts/**" },
     ],
   },
 };

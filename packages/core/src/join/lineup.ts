@@ -40,6 +40,17 @@ export interface Lineup {
  *  carry it rather than dropping the player, so it needs a bucket of its own. */
 const UNPLACED = "";
 
+/** Whether this position is the one that stands in goal.
+ *
+ *  The same single declaration `PITCH_ORDER` rests on, asked a second question:
+ *  the letter at the back is the keeper. Here rather than at a render site for
+ *  the reason given above — a league that files its keepers under "GK" should
+ *  need one edit, not two, and a keeper drawn in an outfield shirt is exactly
+ *  the kind of quiet wrongness that survives review. */
+export function isGoalkeeper(position: string | null): boolean {
+  return position === PITCH_ORDER[0];
+}
+
 /** How far up the pitch a position stands, for ordering.
  *
  *  Exported because the squad view orders by it too — and ordering a squad list
@@ -60,20 +71,6 @@ export interface SquadLine {
   players: RosteredPlayer[];
 }
 
-export interface Squad {
-  lines: SquadLine[];
-  /** The active eleven's shape. Reserves do not change a formation, so this is
-   *  the same string `lineup()` produces for the same team. */
-  shape: string;
-}
-
-/** The whole squad in positional lines, rather than an eleven and a bench.
- *
- *  A second arrangement beside `lineup()` rather than an option on it. They
- *  answer different questions — "how does this team line up" and "who does this
- *  manager have" — and the pitch view wants the second: a reserve keeper reads as
- *  a reserve keeper when he is standing behind the goal, and as a name in a strip
- *  when he is in a strip. The duplication is the rule of two, deliberately. */
 /** The squad grouped into positional lines, ordered back to front, with the
  *  ordering *within* each line left to the caller.
  *
@@ -99,26 +96,12 @@ function linesOf(
     .sort((a, b) => positionDepth(a.position) - positionDepth(b.position));
 }
 
-export function squadInLines(team: RosteredTeam): Squad {
-  // Stable within each group: `sort` keeps the roster's own order among players
-  // that tie, so this only lifts the actives.
-  const lines = linesOf(team, (a, b) => Number(isActive(b.slot)) - Number(isActive(a.slot)));
-
-  const shape = lines
-    .map((line) => line.players.filter((player) => isActive(player.slot)).length)
-    .filter((count) => count > 0)
-    .join("-");
-
-  return { lines, shape };
-}
-
 /** The whole squad in positional lines, with the arrangement stripped out.
  *
  *  What a manager may see of a rival's team before the period opens: fifteen
  *  players, grouped by the position each is filling, and nothing about who
- *  starts. `squadInLines` lifts the actives to the front of every line, which is
- *  the XI restated as an ordering — correct on the pitch once the gate is open,
- *  and a leak before it.
+ *  starts. Ordering it by anything the roster carries would restate the XI as an
+ *  ordering, which is the leak the gate exists to prevent.
  *
  *  Alphabetical within a line, and that is load-bearing rather than tidy.
  *  Fantrax happens to return actives and reserves interleaved, so payload order
