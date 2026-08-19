@@ -252,11 +252,21 @@ every genuine conflict read as containment.
 That splits the 66 fuzzy rows **53 `contained` / 13 `conflicting`**. Eleven of the
 thirteen are plainly one player written two ways (Danny/Daniel Ballard,
 Kostas/Konstantinos Tsimikas, Djordje/Đorđe Petrović — Serbian `Đ` transliterates
-to `Dj` in one feed and folds to `d` in ours). Two cannot be settled from the
-payloads at all, because the feeds agree on club *and* position:
+to `Dj` in one feed and folds to `d` in ours). Two looked unsettleable from the
+payloads alone, because the feeds agree on club *and* position but not on given
+name:
 
 - `Andrews, Keith` → `Kaine Andrews` (COV)
 - `Koumas, Louie` → `Lewis Koumas` (LIV)
+
+**Settled 19 Aug 2026, all 13 `conflicting` rows audited.** Club is a hard filter
+before fuzzy scoring ever runs, so both pools held exactly one candidate of that
+surname — the same uniqueness that makes the other eleven obviously one player
+(Ballard, Tsimikas, Petrović, ...) applies here too. Two different real people
+sharing a surname *and* a specific club, with FPL listing only one of them, is
+the coincidence that would have to be true for these to be wrong; a first-name
+slip in one feed is the far likelier read. Signed off as correct rather than
+overridden to `unmapped`.
 
 Adding the field changed no assignment: regenerating from an empty bridge
 reproduced the same 542 rows with zero `fplCode` reassignments.
@@ -272,8 +282,9 @@ candidate, which is noise. The single real match in that pile is `Ehor Yarmolyuk
 → `Yehor Yarmoliuk` at 72, a Ukrainian transliteration that belongs in the alias
 file.
 
-**Outstanding:** nothing in the bridge is human-audited yet — `auditedAt` is unset
-on all 542 rows.
+**Outstanding:** the 13 `conflicting` rows are now audited (see above); the other
+529 settled rows — 474 exact, 66 fuzzy `contained`, 2 alias — still have
+`auditedAt` unset.
 
 ## Recorded rule exceptions
 
@@ -1043,10 +1054,12 @@ email, not billing — see the hosting section.
 
 ## Work items
 
-- [ ] Settle the two conflicting fuzzy rows (Andrews, Koumas), sign off the other
-      eleven, and add `Ehor Yarmolyuk` to the alias file. Less optional than it
-      looks now: a players tab puts all 699 on screen and the FPL tab reads the
-      bridge backwards, so both make the noise visible.
+- [x] Settle the two conflicting fuzzy rows (Andrews, Koumas) and sign off the
+      other eleven — all 13 `conflicting` rows now carry `auditedAt`. *Landed
+      19 Aug 2026; see the identity bridge section above for the reasoning.*
+- [ ] Add `Ehor Yarmolyuk` to the alias file. Less optional than it looks now: a
+      players tab puts all 699 on screen and the FPL tab reads the bridge
+      backwards, so the noise is visible either way.
 - [ ] Decide how the ~156 never-in-FPL players get recorded. `auditedAt` means a
       person looked, so a score threshold must never write it — a distinct,
       machine-set reason keeps "confirmed" separable from "assumed".
