@@ -13,7 +13,8 @@ import type { PlayersQuery } from "./query";
 // FPts that silently switches between the two would be the confident wrong
 // answer.
 
-// Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
+// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
 function chip(active: boolean): string {

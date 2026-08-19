@@ -34,13 +34,6 @@ export interface PoolPlayer {
   ownerTeamId: string | null;
 }
 
-/** The pool, ordered as a person reads it and answering "whose is he".
- *
- *  Ownership is computed from the rosters rather than taken from `status`, and
- *  the two are not interchangeable: `status` says what may be done with a player
- *  under the league's transaction rules, the rosters say who has him. A league
- *  with no teams answers "nobody owns anybody" while still calling all 697
- *  waiver-wire, and both statements are true. */
 /** One pairing in one period, both ids resolved to the teams that hold them. */
 export interface PeriodPairing {
   home: LeagueTeam;
@@ -77,6 +70,13 @@ export function periodPairings(
     });
 }
 
+/** The pool, ordered as a person reads it and answering "whose is he".
+ *
+ *  Ownership is computed from the rosters rather than taken from `status`, and
+ *  the two are not interchangeable: `status` says what may be done with a player
+ *  under the league's transaction rules, the rosters say who has him. A league
+ *  with no teams answers "nobody owns anybody" while still calling all 697
+ *  waiver-wire, and both statements are true. */
 export function leaguePool(
   pool: readonly LeaguePlayer[],
   states: readonly LeaguePlayerState[],

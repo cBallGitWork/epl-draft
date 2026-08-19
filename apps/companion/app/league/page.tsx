@@ -22,7 +22,8 @@ import type { Unavailable } from "../refusals";
 // The table. Fantrax computes it — the record and the points are theirs, and this
 // page never adds them up itself.
 
-// Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
+// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
 const DRAFT_DATE = londonDate(

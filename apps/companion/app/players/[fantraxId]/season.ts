@@ -11,11 +11,10 @@ import {
   mapTeamStats,
   playerByCode,
 } from "@epl/core";
-import type { Bridge, FootballPlayer, StatColumn, StatSeason, TeamStats } from "@epl/core";
+import type { FootballPlayer, StatColumn, StatSeason, TeamStats } from "@epl/core";
 import { footballNow } from "../../football";
-import mapping from "../../../../../data/mappings/fantrax.json";
-
-const bridge = mapping as Bridge;
+import { orRefusal } from "../../refusals";
+import { bridge } from "../../squad/league";
 
 // What one player's season looks like, from the two places that know: Fantrax
 // for the points, FPL for whether he is fit.
@@ -43,14 +42,15 @@ export interface PlayerSeason {
  *  list comes with any page size — and cached hard: it changes once a year. */
 const yearToDate = unstable_cache(
   async (): Promise<string | undefined> => {
-    try {
-      return mapPoolStats(await fetchPoolStats(FANTRAX_LEAGUE_ID, 1)).yearToDate ?? undefined;
-    } catch {
-      // A code we could not look up is not a reason to compose one. Sending
-      // nothing means Fantrax picks, and whatever it picks is read back and
-      // labelled — which is what the page does with the answer anyway.
-      return undefined;
-    }
+    const raw = await orRefusal(fetchPoolStats(FANTRAX_LEAGUE_ID, 1));
+    // A code we could not look up is not a reason to compose one. Sending
+    // nothing means Fantrax picks, and whatever it picks is read back and
+    // labelled — which is what the page does with the answer anyway.
+    //
+    // Only their refusal is caught. A mapper throwing is our bug, and the bare
+    // `catch` this replaced hid it behind their name.
+    if (raw instanceof FantraxError) return undefined;
+    return mapPoolStats(raw).yearToDate ?? undefined;
   },
   ["fantrax-season-code", FANTRAX_LEAGUE_ID],
   { revalidate: SEASON_CODE_LIFE },

@@ -31,7 +31,10 @@ import mapping from "../../../../data/mappings/fantrax.json";
 // JSON import widens `matchedBy` to `string`, and the compiler cannot see that
 // the writer only ever emits the four literals. Asserted once, here, rather than
 // loosening `MappedEntry` to accept any string for the sake of an import.
-const bridge = mapping as Bridge;
+//
+// Exported so that "once" is true: the player page needs the same bridge, and a
+// second assertion elsewhere would be a second place to get it wrong.
+export const bridge = mapping as Bridge;
 
 /** Everything a squad view needs, or the reason there isn't one.
  *

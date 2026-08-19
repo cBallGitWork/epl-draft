@@ -20,7 +20,8 @@ import { liveScores, pendingByTeam } from "./scoreboard";
 // this page reports the competition's real numbers rather than an estimate of
 // them — and we still compute no scoring, which was always the doctrine.
 
-// Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
+// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
 /** Whether a manager has a stake in this pairing. Null team id — a reader who

@@ -417,6 +417,21 @@ Core's tsconfig still omits node types, so nothing in `packages/core` can reach
 for `fs`. The single global is declared locally in `config.ts` rather than opening
 that door for one string.
 
+### `codeHashes()` swallows a malformed `TEAM_CODES` (§2, no defensive try/catch)
+
+*Recorded 19 Aug 2026, on the doc-truth sweep — the code predates the note.*
+
+`app/squad/session.ts` parses the sign-in map out of an environment variable and
+returns `{}` when the JSON will not parse, which is exactly the swallow §2
+forbids. Kept, for one reason: the alternative failure is worse in both
+directions. Throwing takes down every page including the ones that need no
+identity at all, and salvaging half-parsed JSON to let *somebody* in is a
+security decision made by a parser.
+
+`{}` fails closed and fails visibly — nobody can sign in, sixteen people say so
+within the hour, and every read-only view still works. It is the same shape as
+the root layout's swallow above and kept for the same reason.
+
 ### New dependency: `tsx` (§2, every dependency is a recorded decision)
 
 Dev-only, never shipped. The capture and bridge runners import `@epl/core`, whose

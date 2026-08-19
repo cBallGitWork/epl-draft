@@ -12,7 +12,8 @@ import { footballSelf, playerSeason } from "./season";
 // that is the whole politeness policy: one profile per tap, never a sweep of the
 // 697.
 
-// Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
+// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
 /** A player id that is not a player and a Fantrax that is not answering arrive as

@@ -22,7 +22,8 @@ import type { Unavailable } from "../../refusals";
 // from its own description of the competition — we never generate a fixture list,
 // because who plays whom is a commissioner setting like everything else here.
 
-// Must match `PAGE_REVALIDATE` in core config — see the note on the home route.
+// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
 /** The competition and the football calendar it runs against.

@@ -19,7 +19,8 @@ import { myEntryId, mySide } from "./entry";
 // same footballer is worth different amounts in the two games, and a reader on
 // an adjacent tab has to be told which game they are looking at.
 
-// Must match `PAGE_REVALIDATE` in core config — see the note on /matchday.
+// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
 export default async function FplPage() {
