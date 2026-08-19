@@ -53,7 +53,7 @@ export default async function GazettePage() {
           paper.live
             ? "Football is on. The scores are moving."
             : paper.deadline
-              ? `Lineups lock ${londonDayAndTime(paper.deadline.at)}.`
+              ? `Lineups lock ${londonDayAndTime(paper.deadline.locksAt)}.`
               : `${LEAGUE_NAME}, week by week.`
         }
       />
@@ -204,13 +204,17 @@ export default async function GazettePage() {
 
       {paper.deadline ? (
         <Section title="Next deadline">
+          {/* Terse, per the voice: the lock is the fact a manager needs, the
+              kickoff is context, and neither needs a paragraph explaining where
+              we got it. The masthead states the same instant, so the two can no
+              longer disagree. */}
           <p className="text-sm text-muted">
-            Period {paper.deadline.period} opens{" "}
+            Lineups lock{" "}
             <span className="numeric font-semibold text-ink">
-              {londonDayAndTime(paper.deadline.at)}
+              {londonDayAndTime(paper.deadline.locksAt)}
             </span>
-            . The commissioner locks lineups fifteen minutes before the first fixture, which is
-            not a time Fantrax publishes — so this is the period boundary, not the lock itself.
+            , a quarter of an hour before period {paper.deadline.period} kicks off at{" "}
+            <span className="numeric text-ink">{londonDayAndTime(paper.deadline.at)}</span>.
           </p>
         </Section>
       ) : null}

@@ -468,6 +468,28 @@ security decision made by a parser.
 within the hour, and every read-only view still works. It is the same shape as
 the root layout's swallow above and kept for the same reason.
 
+### Deriving the lineup lock from an unpublished offset (§3, no hardcoding)
+
+*19 Aug 2026, Craig's call, made with the trade-off stated.*
+
+`getLeagueInfo` publishes the period boundary, which is the first fixture's
+kickoff. The commissioner locks lineups fifteen minutes earlier, and Fantrax
+carries that offset nowhere — it exists only in the league's chat. So
+`LINEUP_LOCK_LEAD_MINUTES` in core config is a league rule we have written down
+rather than read, which is exactly what §3 forbids.
+
+Kept because the alternative was worse and was what we shipped: `deadline.ts`
+reported the boundary honestly and the front page announced it as the lock, then
+corrected itself in a footnote underneath — "so this is the period boundary, not
+the lock itself". A manager reads the masthead, not the footnote, and was
+therefore told a lock time fifteen minutes late. On a Friday 20:00 kickoff that
+is the entire margin.
+
+The number is derived in one place, `nextDeadline`, and `Deadline` carries both
+instants so a view can show which is which. **If the commissioner moves the lock,
+this constant is the only thing that knows** — nothing fails, the app simply
+prints the wrong time to sixteen people.
+
 ### New dependency: `tsx` (§2, every dependency is a recorded decision)
 
 Dev-only, never shipped. The capture and bridge runners import `@epl/core`, whose

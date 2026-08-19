@@ -111,6 +111,20 @@ export const FANTRAX_LEAGUE_ID =
  *  a page that ever does overflow this says so rather than showing a prefix. */
 export const POOL_PAGE_SIZE = 2000;
 
+/** How far before a period's first fixture the commissioner locks lineups, in
+ *  minutes.
+ *
+ *  **A commissioner setting Fantrax does not publish, written down here because
+ *  it has to live somewhere (§3).** `getLeagueInfo` gives the period boundary,
+ *  which is kickoff; the fifteen-minute lead is a house rule stated only in the
+ *  league's own chat. Everything else in this file is read from the provider, so
+ *  this one is the exception and PLATFORM_NOTES records it.
+ *
+ *  **If the commissioner moves the lock, this number is the only place that
+ *  knows.** Nothing will fail; the app will simply print the wrong time to
+ *  sixteen people, which is the failure mode a deadline can least afford. */
+export const LINEUP_LOCK_LEAD_MINUTES = 15;
+
 /** Where the Premier League serves its own artwork — crests and portraits.
  *
  *  One base for both, because they are one host under one path and §3 puts a

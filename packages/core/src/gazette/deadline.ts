@@ -1,3 +1,4 @@
+import { LINEUP_LOCK_LEAD_MINUTES } from "../config";
 import type { LeaguePeriod } from "../league/types";
 import type { Deadline } from "./types";
 
@@ -9,10 +10,16 @@ import type { Deadline } from "./types";
 // apart on a normal weekend — printing the wrong one in a newspaper is how a
 // manager misses a deadline believing he had an hour left.
 //
-// The commissioner sets ours fifteen minutes before the period's first fixture,
-// and `getLeagueInfo` does not publish that offset — the period boundary it does
-// publish is kickoff. So this reports the boundary and the app says which it is,
-// rather than subtracting a number nobody sent us.
+// The commissioner sets ours `LINEUP_LOCK_LEAD_MINUTES` before the period's first
+// fixture, and `getLeagueInfo` does not publish that offset — the period boundary
+// it does publish is kickoff. This reports both: the boundary they sent, and the
+// lock we derive from it.
+//
+// Deriving it is a deliberate departure from §3 (PLATFORM_NOTES records it). The
+// alternative was reporting the boundary alone and correcting it in small print,
+// which is what the front page used to do — its masthead announced the boundary
+// as the lock while a footnote underneath explained that it was not. A manager
+// reads the masthead.
 
 export function nextDeadline(periods: readonly LeaguePeriod[], nowIso: string): Deadline | null {
   const now = Date.parse(nowIso);
@@ -24,5 +31,11 @@ export function nextDeadline(periods: readonly LeaguePeriod[], nowIso: string): 
     .filter((period) => Number.isFinite(period.on) && period.on > now)
     .sort((a, b) => a.on - b.on)[0];
 
-  return upcoming ? { period: upcoming.period, at: upcoming.at } : null;
+  if (!upcoming) return null;
+
+  return {
+    period: upcoming.period,
+    at: upcoming.at,
+    locksAt: new Date(upcoming.on - LINEUP_LOCK_LEAD_MINUTES * 60_000).toISOString(),
+  };
 }

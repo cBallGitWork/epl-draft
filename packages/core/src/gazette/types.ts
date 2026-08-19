@@ -40,8 +40,16 @@ export interface AvailabilityNote {
 /** When the lineup locks next. The commissioner's deadline, never FPL's. */
 export interface Deadline {
   period: number;
-  /** ISO instant, as the league states it. */
+  /** When the period opens, ISO, exactly as the league states it. This is the
+   *  first fixture's kickoff, and it is the only one of the two instants here
+   *  that Fantrax actually published. */
   at: string;
+  /** When lineups actually lock: `at` less `LINEUP_LOCK_LEAD_MINUTES`.
+   *
+   *  Derived by us, not read from anywhere, because the commissioner's lead is a
+   *  house rule Fantrax does not carry. Kept beside `at` rather than replacing it
+   *  so a view can show both and say which is which. */
+  locksAt: string;
 }
 
 /** One player in the week's eleven, with the fact that got him there and the
