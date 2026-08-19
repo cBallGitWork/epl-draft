@@ -13,7 +13,7 @@ import {
   mapLiveScores,
   pendingCleanSheets,
 } from "@epl/core";
-import { orRefusal, tell } from "../../refusals";
+import { orRefusal, tell } from "./refusals";
 
 // What the head-to-head board is made of, kept out of the page for the same
 // reason `squad/league.ts` and `players/pool.ts` are: the reads and the joins

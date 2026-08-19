@@ -11,7 +11,7 @@ import PageHeader from "../../components/shell/PageHeader";
 import SectionNav from "../SectionNav";
 import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
-import { liveScores, pendingByTeam } from "./scoreboard";
+import { liveScores, pendingByTeam } from "../../scoreboard";
 import { yoursBorder } from "../../mine";
 import { FANTRAX_SILENT } from "../../config";
 
