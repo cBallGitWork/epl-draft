@@ -1,5 +1,5 @@
-import { isUnmapped, playerByCode } from "@epl/core";
-import type { FootballPlayer, StatColumn, StatSeason } from "@epl/core";
+import { breakdownOf, isUnmapped, playerByCode } from "@epl/core";
+import type { BreakdownLine, FootballPlayer, StatSeason } from "@epl/core";
 import { footballNow } from "../../football";
 import { bridge } from "../../squads";
 import { readTeamStats, yearToDate } from "../../teamStats";
@@ -18,7 +18,7 @@ export interface PlayerSeason {
   /** The categories that earned him points, largest contribution first, with the
    *  ones worth nothing dropped. Fantrax's own breakdown, and it sums to the
    *  total exactly — no scoring of ours is involved. */
-  categories: { column: StatColumn; value: number }[];
+  categories: BreakdownLine[];
   points: number | null;
   perGame: number | null;
 }
@@ -39,13 +39,11 @@ export async function playerSeason(
       season: stats.season,
       points: line.points,
       perGame: line.perGame,
-      categories: line.values
-        .flatMap((value, index) =>
-          value === null || value === 0 ? [] : [{ column: group.columns[index], value }],
-        )
-        // Biggest first, and the costly ones — cards, goals against — sort to the
-        // bottom where they read as the deductions they are.
-        .sort((a, b) => b.value - a.value),
+      // Biggest first, and the costly ones — cards, goals against — sort to the
+      // bottom where they read as the deductions they are. Done in core, where
+      // the live card on the head-to-head board reads the same shape out of the
+      // same table.
+      categories: breakdownOf(group.columns, line),
     };
   }
   return null;

@@ -41,32 +41,30 @@ export default function Breakdown({ season }: { season: PlayerSeason | null }) {
       ) : null}
 
       <ul className="flex flex-col gap-0.5">
-        {season.categories.map(({ column, value }) => (
+        {season.categories.map((category) => (
           <li
-            key={column.code}
+            key={category.code}
             className="flex min-h-9 items-center gap-2.5 rounded-lg bg-surface px-3 py-1.5"
           >
             {/* Fantrax's own definition sits behind the label — it is where they
                 publish the rules a manager would otherwise have to guess, like
                 what counts as a clean sheet. Their sentence, not ours. */}
-            <span className="min-w-0 flex-1 truncate text-sm text-muted" title={column.name}>
-              {label(column.name) || column.code}
+            <span
+              className="min-w-0 flex-1 truncate text-sm text-muted"
+              title={category.definition ?? undefined}
+            >
+              {category.name}
             </span>
             <span
-              className={`numeric text-sm font-bold ${value < 0 ? "text-bad" : "text-ink"}`}
+              className={`numeric text-sm font-bold ${
+                category.points < 0 ? "text-bad" : "text-ink"
+              }`}
             >
-              {value > 0 ? `+${value}` : value}
+              {category.points > 0 ? `+${category.points}` : category.points}
             </span>
           </li>
         ))}
       </ul>
     </Section>
   );
-}
-
-/** Their long name up to the double dash, which is where their prose definition
- *  starts. "Clean Sheets On Field -- Awarded to a player who…" is one label and
- *  one paragraph, and only the label fits on a phone. */
-function label(name: string): string {
-  return name.split(" -- ")[0].trim();
 }
