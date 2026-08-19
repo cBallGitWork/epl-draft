@@ -19,8 +19,10 @@ import type { PeriodRosters, RosterSlot } from "../league/types";
  *  "we don't know who this is" when the honest answer is "FPL has never listed
  *  him", or the reverse. */
 export type Unresolved =
-  /** Audited and permanent: Fantrax carries academy and fringe players FPL has
-   *  never listed. A correct outcome, not a failure. */
+  /** Recorded as having no FPL counterpart: Fantrax carries academy and fringe
+   *  players FPL has never listed. A correct outcome, not a failure. The bridge
+   *  knows whether a person confirmed it or the script assumed it; nothing on
+   *  screen turns on the difference. */
   | "unmapped"
   /** The bridge has never seen this id. Someone joined the pool since the last
    *  `npm run bridge`. */

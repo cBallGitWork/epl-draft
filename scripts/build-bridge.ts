@@ -3,6 +3,9 @@ import { join } from "node:path";
 import {
   type Bridge,
   type FplCandidate,
+  type MappedEntry,
+  type UnmappedSplit,
+  assumeUnmapped,
   fetchBootstrap,
   mapPlayerPool,
   matchPlayers,
@@ -68,31 +71,45 @@ async function main(): Promise<void> {
   const aliases = await readJson<Record<string, string>>(aliasPath, {});
 
   const { matches, proposals } = matchPlayers(fantraxPlayers, candidates, aliases, existing);
+  const { assumed, forReview } = assumeUnmapped(proposals);
 
-  const merged = mergeBridge(existing, matches);
+  const merged = mergeBridge(existing, { ...matches, ...assumed });
   await mkdir(REVIEW_ROOT, { recursive: true });
   await writeFile(bridgePath, `${JSON.stringify(sortKeys(merged), null, 2)}\n`);
   await writeFile(aliasPath, `${JSON.stringify(aliases, null, 2)}\n`);
   await writeFile(
     join(REVIEW_ROOT, "proposals.json"),
-    `${JSON.stringify(proposals, null, 2)}\n`,
+    `${JSON.stringify(forReview, null, 2)}\n`,
   );
 
+  report(matches, { assumed, forReview }, merged);
+}
+
+/** What the run did, counted off the file it wrote rather than off this run's
+ *  work: once the residue is recorded, later runs match almost nobody new, and a
+ *  percentage of "considered" would fall to zero while the bridge stayed whole. */
+function report(
+  matches: Record<string, MappedEntry>,
+  split: UnmappedSplit,
+  merged: Bridge,
+): void {
   const byStage = { exact: 0, alias: 0, fuzzy: 0, manual: 0 };
   for (const entry of Object.values(matches)) byStage[entry.matchedBy] += 1;
 
-  const considered = Object.keys(matches).length + proposals.length;
   console.log(`exact  ${byStage.exact}`);
   console.log(`alias  ${byStage.alias}`);
   console.log(`fuzzy  ${byStage.fuzzy}`);
-  console.log(`review ${proposals.length}`);
+  console.log(`no FPL counterpart ${Object.keys(split.assumed).length}`);
+  console.log(`review ${split.forReview.length}`);
+
+  const rows = Object.values(merged);
+  const unmapped = rows.filter((entry) => "status" in entry).length;
   console.log(
-    `\n${Object.keys(matches).length}/${considered} matched ` +
-      `(${Math.round((Object.keys(matches).length / Math.max(considered, 1)) * 100)}%). ` +
-      `Bridge now holds ${Object.keys(merged).length} settled players.`,
+    `\nBridge holds ${rows.length} players: ${rows.length - unmapped} mapped, ` +
+      `${unmapped} with no FPL counterpart.`,
   );
-  for (const reason of ["no-candidates", "below-threshold", "ambiguous", "identity-taken"]) {
-    const count = proposals.filter((proposal) => proposal.reason === reason).length;
+  for (const reason of ["ambiguous", "identity-taken"]) {
+    const count = split.forReview.filter((proposal) => proposal.reason === reason).length;
     if (count > 0) console.log(`  review: ${reason} ${count}`);
   }
 }

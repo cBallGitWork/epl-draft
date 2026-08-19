@@ -112,6 +112,10 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "033l8": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "0372y": {
     "fplCode": 169359,
     "matchedBy": "exact",
@@ -260,6 +264,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "03ysd": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 27
+  },
   "03yww": {
     "fplCode": 172649,
     "matchedBy": "exact",
@@ -339,6 +348,11 @@
   },
   "04agz": {
     "fplCode": 204480,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "04ai5": {
+    "fplCode": 106921,
     "matchedBy": "exact",
     "confidence": 100
   },
@@ -620,6 +634,10 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "051kg": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "051kl": {
     "fplCode": 195546,
     "matchedBy": "fuzzy",
@@ -726,6 +744,11 @@
     "fplCode": 215136,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "05afj": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 36
   },
   "05akv": {
     "fplCode": 244723,
@@ -888,6 +911,10 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "05ogg": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "05oh0": {
     "fplCode": 469142,
     "matchedBy": "exact",
@@ -966,6 +993,11 @@
     "confidence": 100,
     "agreement": "contained"
   },
+  "05rbn": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 43
+  },
   "05rey": {
     "fplCode": 465390,
     "matchedBy": "fuzzy",
@@ -991,6 +1023,10 @@
     "fplCode": 433590,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "05s00": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
   },
   "05s08": {
     "fplCode": 441191,
@@ -1050,6 +1086,10 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "05u40": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "05ubh": {
     "fplCode": 169593,
     "matchedBy": "exact",
@@ -1082,6 +1122,11 @@
   },
   "05uhj": {
     "fplCode": 492777,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05uhq": {
+    "fplCode": 463210,
     "matchedBy": "exact",
     "confidence": 100
   },
@@ -1131,10 +1176,24 @@
     "confidence": 100,
     "agreement": "contained"
   },
+  "05w9r": {
+    "fplCode": 223723,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "05wwd": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "05x12": {
     "fplCode": 477547,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "05xtr": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 42
   },
   "05y55": {
     "fplCode": 461587,
@@ -1234,6 +1293,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "061xs": {
+    "fplCode": 474120,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
   "061y6": {
     "fplCode": 204968,
     "matchedBy": "exact",
@@ -1304,11 +1368,21 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "062ow": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 25
+  },
   "062p0": {
     "fplCode": 535928,
     "matchedBy": "fuzzy",
     "confidence": 100,
     "agreement": "contained"
+  },
+  "062p1": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 33
   },
   "062p3": {
     "fplCode": 249231,
@@ -1320,6 +1394,11 @@
     "matchedBy": "fuzzy",
     "confidence": 100,
     "agreement": "contained"
+  },
+  "062pa": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 31
   },
   "062pl": {
     "fplCode": 221820,
@@ -1345,6 +1424,11 @@
     "fplCode": 201658,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "063c2": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 33
   },
   "063e7": {
     "fplCode": 221466,
@@ -1387,6 +1471,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "064oo": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 30
+  },
   "065ao": {
     "fplCode": 499175,
     "matchedBy": "exact",
@@ -1408,10 +1497,25 @@
     "confidence": 100,
     "agreement": "contained"
   },
+  "066r9": {
+    "fplCode": 508395,
+    "matchedBy": "alias",
+    "confidence": 100
+  },
+  "066rn": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 33
+  },
   "066sd": {
     "fplCode": 499169,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "066t3": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 42
   },
   "067x6": {
     "fplCode": 494307,
@@ -1444,6 +1548,11 @@
     "confidence": 100,
     "agreement": "contained"
   },
+  "067z4": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 30
+  },
   "067zv": {
     "fplCode": 513418,
     "matchedBy": "exact",
@@ -1468,6 +1577,11 @@
   },
   "068a0": {
     "fplCode": 532605,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "068a1": {
+    "fplCode": 465920,
     "matchedBy": "exact",
     "confidence": 100
   },
@@ -1511,6 +1625,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06avm": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 48
+  },
   "06c6g": {
     "fplCode": 592031,
     "matchedBy": "exact",
@@ -1523,6 +1642,11 @@
   },
   "06clz": {
     "fplCode": 482609,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06cm1": {
+    "fplCode": 517052,
     "matchedBy": "exact",
     "confidence": 100
   },
@@ -1571,6 +1695,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06do2": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 32
+  },
   "06do3": {
     "fplCode": 491501,
     "matchedBy": "exact",
@@ -1588,6 +1717,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06dpv": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 41
+  },
   "06dpw": {
     "fplCode": 570241,
     "matchedBy": "exact",
@@ -1603,6 +1737,21 @@
     "fplCode": 220362,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06ewm": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 35
+  },
+  "06ewn": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 26
+  },
+  "06ews": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 38
   },
   "06ewy": {
     "fplCode": 545477,
@@ -1632,6 +1781,11 @@
   },
   "06f8y": {
     "fplCode": 503139,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06fg0": {
+    "fplCode": 196100,
     "matchedBy": "exact",
     "confidence": 100
   },
@@ -1672,6 +1826,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06fwn": {
+    "fplCode": 428971,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
   "06fwz": {
     "fplCode": 575476,
     "matchedBy": "exact",
@@ -1697,6 +1856,10 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06h1g": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "06hze": {
     "fplCode": 591386,
     "matchedBy": "fuzzy",
@@ -1704,10 +1867,19 @@
     "agreement": "conflicting",
     "auditedAt": "2026-08-19"
   },
+  "06igq": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "06j20": {
     "fplCode": 543158,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06jb3": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 25
   },
   "06jfe": {
     "fplCode": 507433,
@@ -1763,6 +1935,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06l4c": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 41
+  },
   "06l4i": {
     "fplCode": 550615,
     "matchedBy": "exact",
@@ -1772,6 +1949,11 @@
     "fplCode": 499721,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06lvm": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 48
   },
   "06mfy": {
     "fplCode": 220583,
@@ -1783,6 +1965,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06mg4": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 34
+  },
   "06mg6": {
     "fplCode": 149929,
     "matchedBy": "exact",
@@ -1793,11 +1980,29 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06mgh": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "06mgk": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "06mgn": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 36
+  },
   "06mn0": {
     "fplCode": 502500,
     "matchedBy": "fuzzy",
     "confidence": 100,
     "agreement": "contained"
+  },
+  "06mn1": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 43
   },
   "06mn7": {
     "fplCode": 570526,
@@ -1813,6 +2018,10 @@
     "fplCode": 209400,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06mnd": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
   },
   "06mnm": {
     "fplCode": 499309,
@@ -1833,6 +2042,11 @@
     "fplCode": 467779,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06msb": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 32
   },
   "06msc": {
     "fplCode": 449429,
@@ -1865,6 +2079,10 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06nk0": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "06nu7": {
     "fplCode": 466075,
     "matchedBy": "exact",
@@ -1875,11 +2093,24 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06nv6": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "06nva": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 24
+  },
   "06nyw": {
     "fplCode": 246301,
     "matchedBy": "fuzzy",
     "confidence": 100,
     "agreement": "contained"
+  },
+  "06on5": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
   },
   "06onv": {
     "fplCode": 609873,
@@ -1917,6 +2148,10 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06phr": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "06phw": {
     "fplCode": 223541,
     "matchedBy": "exact",
@@ -1938,10 +2173,38 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06prt": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 40
+  },
+  "06q2h": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 38
+  },
+  "06qq9": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 35
+  },
+  "06qvv": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 31
+  },
+  "06qwh": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "06r2g": {
     "fplCode": 611922,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06r3w": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
   },
   "06r5b": {
     "fplCode": 514254,
@@ -1954,6 +2217,10 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06r5r": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "06r6s": {
     "fplCode": 485055,
     "matchedBy": "exact",
@@ -1964,6 +2231,11 @@
     "matchedBy": "fuzzy",
     "confidence": 100,
     "agreement": "contained"
+  },
+  "06r7l": {
+    "fplCode": 645618,
+    "matchedBy": "exact",
+    "confidence": 100
   },
   "06r9h": {
     "fplCode": 606921,
@@ -1989,6 +2261,16 @@
     "fplCode": 607464,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06rkq": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 31
+  },
+  "06rlf": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 40
   },
   "06rlj": {
     "fplCode": 596777,
@@ -2016,6 +2298,21 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06rrq": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 30
+  },
+  "06s7v": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 38
+  },
+  "06shp": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 36
+  },
   "06uyc": {
     "fplCode": 494521,
     "matchedBy": "exact",
@@ -2037,10 +2334,20 @@
     "confidence": 100,
     "agreement": "contained"
   },
+  "06uzw": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 32
+  },
   "06uzy": {
     "fplCode": 248056,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06v00": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 48
   },
   "06v01": {
     "fplCode": 486520,
@@ -2067,10 +2374,20 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06v08": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 36
+  },
   "06v0a": {
     "fplCode": 519913,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06v0b": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 42
   },
   "06v0c": {
     "fplCode": 576628,
@@ -2091,6 +2408,10 @@
     "fplCode": 487676,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06v0k": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
   },
   "06v0l": {
     "fplCode": 554197,
@@ -2159,6 +2480,14 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06xzn": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "06xzp": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "06y26": {
     "fplCode": 204120,
     "matchedBy": "exact",
@@ -2211,10 +2540,20 @@
     "confidence": 100,
     "agreement": "contained"
   },
+  "06ya6": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 26
+  },
   "06yb7": {
     "fplCode": 243526,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06yb8": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 46
   },
   "06yb9": {
     "fplCode": 434399,
@@ -2236,6 +2575,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06ygl": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 22
+  },
   "06ygm": {
     "fplCode": 575458,
     "matchedBy": "exact",
@@ -2245,6 +2589,16 @@
     "fplCode": 72147,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "06yxc": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 42
+  },
+  "06yxd": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 38
   },
   "06yxe": {
     "fplCode": 624773,
@@ -2281,6 +2635,15 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06zc0": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "06zc8": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 41
+  },
   "06zef": {
     "fplCode": 499300,
     "matchedBy": "exact",
@@ -2296,8 +2659,27 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "06zod": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 22
+  },
+  "06zqi": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "06zqq": {
     "fplCode": 551210,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "06zrt": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 42
+  },
+  "06zvn": {
+    "fplCode": 577285,
     "matchedBy": "exact",
     "confidence": 100
   },
@@ -2443,6 +2825,10 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "072iu": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "072j3": {
     "fplCode": 653481,
     "matchedBy": "fuzzy",
@@ -2451,6 +2837,11 @@
   },
   "072mp": {
     "fplCode": 593174,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "072mq": {
+    "fplCode": 690838,
     "matchedBy": "exact",
     "confidence": 100
   },
@@ -2475,6 +2866,15 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "072x9": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 45
+  },
+  "072zo": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "072zp": {
     "fplCode": 515046,
     "matchedBy": "exact",
@@ -2489,6 +2889,25 @@
     "fplCode": 536661,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "073b0": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "075kd": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 33
+  },
+  "075sh": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 29
+  },
+  "075zi": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 29
   },
   "076cw": {
     "fplCode": 484389,
@@ -2652,6 +3071,11 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "07847": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 24
+  },
   "07848": {
     "fplCode": 614071,
     "matchedBy": "exact",
@@ -2672,6 +3096,26 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "0784c": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 33
+  },
+  "0784d": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 28
+  },
+  "0784e": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 29
+  },
+  "0784f": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 29
+  },
   "0784i": {
     "fplCode": 539142,
     "matchedBy": "exact",
@@ -2681,6 +3125,21 @@
     "fplCode": 492498,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "0784k": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 27
+  },
+  "0784l": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 33
+  },
+  "0784m": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 44
   },
   "0784o": {
     "fplCode": 242313,
@@ -2742,6 +3201,39 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "07850": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 38
+  },
+  "07851": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 36
+  },
+  "07852": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 40
+  },
+  "07854": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 40
+  },
+  "07856": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 28
+  },
+  "07857": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "07858": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "07859": {
     "fplCode": 632794,
     "matchedBy": "exact",
@@ -2752,10 +3244,26 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "0785b": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "0785c": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
   "0785d": {
     "fplCode": 611665,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "0785e": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "0785f": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
   },
   "0785g": {
     "fplCode": 204561,
@@ -2767,6 +3275,16 @@
     "matchedBy": "exact",
     "confidence": 100
   },
+  "0785o": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 32
+  },
+  "0785p": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 42
+  },
   "07877": {
     "fplCode": 513545,
     "matchedBy": "exact",
@@ -2777,6 +3295,26 @@
     "matchedBy": "fuzzy",
     "confidence": 100,
     "agreement": "contained"
+  },
+  "0788a": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 48
+  },
+  "0788b": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 30
+  },
+  "0788c": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 32
+  },
+  "0788e": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 31
   },
   "0788g": {
     "fplCode": 470551,
@@ -2797,5 +3335,146 @@
     "fplCode": 473284,
     "matchedBy": "exact",
     "confidence": 100
+  },
+  "078ei": {
+    "fplCode": 494928,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078fx": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 24
+  },
+  "078fy": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 33
+  },
+  "078fz": {
+    "fplCode": 552946,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078g0": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 33
+  },
+  "078g4": {
+    "fplCode": 661888,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078g5": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 50
+  },
+  "078gc": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "078gd": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "078ge": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "078gf": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "078gg": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 35
+  },
+  "078gi": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "078hi": {
+    "fplCode": 608227,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078hj": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "078i7": {
+    "fplCode": 445087,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078j4": {
+    "fplCode": 568420,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078le": {
+    "fplCode": 498444,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078lf": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "078lg": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
+  },
+  "078lh": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 36
+  },
+  "078ml": {
+    "fplCode": 597462,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078mm": {
+    "fplCode": 606930,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078qg": {
+    "fplCode": 570794,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078qh": {
+    "fplCode": 469266,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078qi": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 36
+  },
+  "078qj": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 36
+  },
+  "078t8": {
+    "fplCode": 572584,
+    "matchedBy": "exact",
+    "confidence": 100
+  },
+  "078t9": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match",
+    "bestScore": 42
+  },
+  "078ud": {
+    "status": "unmapped",
+    "unmappedBy": "no-fpl-match"
   }
 }

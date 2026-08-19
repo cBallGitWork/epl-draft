@@ -141,7 +141,7 @@ describe("resolveRosters, when a slot will not resolve", () => {
     // correct answer, and conflating it with "we have not looked yet" would send
     // someone to re-run the bridge for a row it will never fill.
     const audited: Bridge = {
-      "00aaa": { status: "unmapped", reason: "Not in FPL", auditedAt: "2026-08-06" },
+      "00aaa": { status: "unmapped", unmappedBy: "manual", auditedAt: "2026-08-06" },
     };
     const [rostered] = resolveRosters(snap(), oneSlot("00aaa"), audited).teams[0].players;
     expect(rostered).toMatchObject({ unresolved: "unmapped" });

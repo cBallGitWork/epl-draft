@@ -175,7 +175,7 @@ describe("matchPlayers", () => {
       [fantrax("a1", "Saka, Bukayo", "ARS")],
       [fpl(1, "Bukayo", "Saka", "Saka", "ARS")],
       {},
-      { other: { status: "unmapped", reason: "academy", auditedAt: "2026-08-05" } },
+      { other: { status: "unmapped", unmappedBy: "manual", auditedAt: "2026-08-05" } },
     );
     expect(result.matches.a1?.fplCode).toBe(1);
   });

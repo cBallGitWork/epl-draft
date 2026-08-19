@@ -235,10 +235,11 @@ than by the test suite:
    Harry Clarke took his code. Three FPL players ended up with two claimants. The
    matcher is now seeded from the existing bridge.
 
-Re-runs are additive only. Audited entries and confirmed-`unmapped` players are
-never revised by the script — the pool mutates constantly, and a run that quietly
-overwrote a human decision would be untrustworthy exactly where it was most
-carefully made.
+Re-runs revise one thing and one thing only: the script's own assumptions. Every
+match, and every `unmapped` row a person wrote or confirmed, survives untouched —
+the pool mutates constantly, and a run that quietly overwrote a human decision
+would be untrustworthy exactly where it was most carefully made. See the residue
+section below for why the assumptions are the exception.
 
 ### Ranking the audit
 
@@ -276,15 +277,57 @@ reproduced the same 542 rows with zero `fplCode` reassignments.
 78% understates it badly. Roster limits are 14 players across 16 teams, so **224
 of the 699 will ever be rostered**. Against FPL's top 224 by price the bridge
 covers 223 — and the miss, Nicolas Jackson, is absent from Fantrax's pool
-entirely rather than unmatched. The 157 in review are overwhelmingly academy
-players nobody will draft: 156 of them score below 60 against their best
-candidate, which is noise. The single real match in that pile is `Ehor Yarmolyuk`
-→ `Yehor Yarmoliuk` at 72, a Ukrainian transliteration that belongs in the alias
-file.
+entirely rather than unmatched. The 157 then in review were overwhelmingly academy
+players nobody will draft: 156 of them scored below 60 against their best
+candidate, which is noise. The single real match in that pile was `Ehor Yarmolyuk`
+→ `Yehor Yarmoliuk` at 72, a Ukrainian transliteration that belonged in the alias
+file — and the residue section below is how that one row stopped being buried
+under the other 156.
 
 **Outstanding:** the 13 `conflicting` rows are now audited (see above); the other
-529 settled rows — 474 exact, 66 fuzzy `contained`, 2 alias — still have
+555 mapped rows — 499 exact, 53 fuzzy `contained`, 3 alias — still have
 `auditedAt` unset.
+
+### The residue, and why the script may answer for it
+
+*19 Aug 2026.* The review file held 157 rows, of which perhaps two were real
+questions. Nothing separated them, so nobody read it, which is the failure mode
+worth naming: a review file that is never empty enough to read is a review file
+that does not exist.
+
+`UnmappedEntry` now records **who concluded it**, not just that it was concluded.
+`unmappedBy: "no-fpl-match"` is the script's; `"manual"` is a person's, and no
+threshold may ever write it. `auditedAt` stays a separate question — a person may
+confirm what the script concluded, and doing so is what makes the row final.
+
+That split buys the thing `auditedAt` alone could not: **an assumption is
+recorded but not settled.** "Nobody in FPL looks like him" is only ever true of
+the list that run read, and FPL adds players all window. So `settledIds` leaves
+assumed ids out and they go back through the matcher every run, and `mergeBridge`
+keeps an assumption only by being handed it again — the mechanism that promotes an
+academy player FPL lists in January, and the one that stops the file claiming "no
+FPL counterpart" about somebody this run has just sent to review instead. It
+earns its keep immediately: the first run over the 19 Aug pool dropped 32 rows
+recorded against pools the commissioner has since trimmed, and turned 6 more
+into exact matches.
+
+**`ABSENCE_MAX_SCORE = 50`, and it is not `FUZZY_MIN_SCORE`.** 88 asks "is this
+him?"; the ceiling asks "is anyone here close enough that a person should look?",
+and between 51 and 87 the honest answers are no and yes. Set below the hole in the
+first residue's distribution (92 scored rows, 17–72, empty between 55 and 72). The
+tempting ceiling is the empty band just under 88, and it is a trap: the top score
+in the file was `Ehor Yarmolyuk` → `Yehor Yarmoliuk` at 72, the same Brentford
+midfielder. A ceiling above him files a first-team starter as absent and nobody
+ever looks again.
+
+Bridge now, against the 19 Aug pool: **688 rows — 568 mapped (499 exact, 66
+fuzzy, 3 alias), 120 `no-fpl-match`, review 3.** The three are academy players
+scoring 52–55 against unrelated seniors — the residue the ceiling exists to
+surface, and a person's call. Yarmolyuk is the third alias.
+
+The totals track the pool rather than accumulating, which is the point: a bridge
+row for a player Fantrax no longer carries is only worth keeping when somebody
+decided it.
 
 ## Recorded rule exceptions
 
@@ -1057,12 +1100,16 @@ email, not billing — see the hosting section.
 - [x] Settle the two conflicting fuzzy rows (Andrews, Koumas) and sign off the
       other eleven — all 13 `conflicting` rows now carry `auditedAt`. *Landed
       19 Aug 2026; see the identity bridge section above for the reasoning.*
-- [ ] Add `Ehor Yarmolyuk` to the alias file. Less optional than it looks now: a
-      players tab puts all 699 on screen and the FPL tab reads the bridge
-      backwards, so the noise is visible either way.
-- [ ] Decide how the ~156 never-in-FPL players get recorded. `auditedAt` means a
+- [x] Add `Ehor Yarmolyuk` to the alias file. *Landed 19 Aug 2026 — the ceiling
+      put him in review, which is how he got written.*
+- [x] Decide how the ~156 never-in-FPL players get recorded. `auditedAt` means a
       person looked, so a score threshold must never write it — a distinct,
-      machine-set reason keeps "confirmed" separable from "assumed".
+      machine-set reason keeps "confirmed" separable from "assumed". *Landed
+      19 Aug 2026: `unmappedBy`, and a ceiling on what the script may answer for.
+      See the residue section above.*
+- [ ] Read the 3 remaining review rows (`Fred Heath` and `Enzo Kana Biyik`, MUN;
+      `Lucas Pitt`, LIV). All three look like academy players the metric found a
+      stranger for, but only a person may write `unmappedBy: "manual"`.
 - [x] Automate the capture (cron or CI) — manual runs will not survive October.
       Run `capture:status` as a **separate workflow on a different schedule**, so
       the job that might die is not the job responsible for noticing. *Landed

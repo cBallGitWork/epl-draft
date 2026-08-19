@@ -15,6 +15,11 @@ export { isUnmapped, mergeBridge } from "./bridge";
 export type { Bridge, BridgeEntry, MappedEntry } from "./bridge";
 export { matchPlayers } from "./match";
 export type { FplCandidate } from "./match";
+// The residue split travels with the matcher: a caller that runs `matchPlayers`
+// has proposals in hand and no other way to tell the ones it can answer from the
+// ones it cannot.
+export { assumeUnmapped } from "./unmapped";
+export type { UnmappedSplit } from "./unmapped";
 // The classifier itself stays internal — only `MappedEntry.agreement` leaves the
 // layer, and callers read that rather than recompute it.
 export type { NameAgreement } from "./similarity";

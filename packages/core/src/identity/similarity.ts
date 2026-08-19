@@ -14,6 +14,25 @@ export const FUZZY_MIN_SCORE = 88;
  *  review pile. */
 export const AMBIGUITY_MARGIN = 3;
 
+/** At or below this, the best FPL name in the pool is a stranger's, and the
+ *  script may record "no FPL counterpart" without a person reading the row.
+ *
+ *  Not the same question as `FUZZY_MIN_SCORE`, and the gap between them is
+ *  deliberate rather than slack. 88 asks "is this him?"; this asks "is anyone
+ *  here close enough that a person should look?" — and between 51 and 87 the
+ *  honest answer to both is no and yes.
+ *
+ *  Set from the first residue, where the 92 scored rows ran 17–72 with an
+ *  18-point hole between 53 and 72. The tempting ceiling is in the empty band
+ *  just under 88, and it is a trap: the highest score in the file was 72, and it
+ *  was Fantrax's "Ehor Yarmolyuk" against FPL's "Yehor Yarmoliuk" — the same
+ *  Brentford midfielder, a Ukrainian transliteration the metric cannot bridge and
+ *  `surnameAgrees` cannot rescue, since the surname tokens genuinely differ. A
+ *  ceiling above him files a first-team starter as absent and nobody ever looks
+ *  again. 50 sits below the hole with the 49–52 gap to spare, and costs one extra
+ *  row of review. */
+export const ABSENCE_MAX_SCORE = 50;
+
 /** Length of the longest common subsequence. */
 function lcsLength(a: string, b: string): number {
   if (a === "" || b === "") return 0;
