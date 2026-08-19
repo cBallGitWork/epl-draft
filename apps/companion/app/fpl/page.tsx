@@ -98,9 +98,15 @@ export default async function FplPage() {
           </ul>
         </Section>
       ) : (
-        <p className="text-sm text-muted">
-          No squad to show yet — FPL publishes a side once its first gameweek has been played.
-        </p>
+        // Keeps the section rather than dropping to a bare sentence between the
+        // figures and the mini-leagues: the heading is what tells a reader this
+        // is the round's squad and it is empty, and without it the page reads as
+        // one that failed to finish rendering.
+        <Section title={`Gameweek ${snapshot.gameweek}`} aside={<>FPL&apos;s scoring</>}>
+          <p className="text-sm text-muted">
+            No squad to show yet — FPL publishes a side once its first gameweek has been played.
+          </p>
+        </Section>
       )}
 
       {entry.leagues.length > 0 ? (
