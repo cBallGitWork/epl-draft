@@ -5,6 +5,7 @@ import PlayerTable, { STATUS } from "./PlayerTable";
 import { getLeaguePool } from "./pool";
 import { PAGE_ROWS, filterHref, showAllHref, shownRows } from "./query";
 import type { PlayersQuery } from "./query";
+import { FANTRAX_SILENT } from "../config";
 
 // Every player Fantrax knows, what our league has decided about him, and what
 // Fantrax scores him. The numbers are theirs under our league's scoring, which
@@ -32,7 +33,7 @@ export default async function PlayersPage({
 
   if ("unavailable" in pool) {
     return (
-      <Nothing title="Fantrax is not answering" code={pool.unavailable}>
+      <Nothing title={FANTRAX_SILENT} code={pool.unavailable}>
         The player pool is Fantrax&apos;s and we cannot read it right now. Ownership is the part
         that would go stale first, so this shows nothing rather than yesterday&apos;s.
       </Nothing>

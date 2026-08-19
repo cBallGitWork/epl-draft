@@ -1,4 +1,4 @@
-import type { Move, SlotOption } from "@epl/core";
+import type { Blocker, Move, SlotOption } from "@epl/core";
 
 // The sheet under a tapped player: everywhere he can go, and why he cannot go
 // anywhere else.
@@ -8,7 +8,7 @@ import type { Move, SlotOption } from "@epl/core";
 
 /** Why a position is closed, in the manager's words. `unknown-eligibility` is
  *  deliberately blunt: it means our data is missing, not that Fantrax refused. */
-const BLOCKED: Record<string, string> = {
+const BLOCKED: Record<Blocker, string> = {
   "not-eligible": "not eligible",
   "position-full": "position full",
   "squad-full": "XI is full",
@@ -59,7 +59,7 @@ export default function MoveSheet({
         .filter((option) => !option.open && option.blockedBy)
         .map((option) => (
           <p key={option.position} className="px-3 py-1 text-2xs text-faint">
-            {option.position} — {BLOCKED[option.blockedBy ?? ""] ?? option.blockedBy}
+            {option.position} — {option.blockedBy ? BLOCKED[option.blockedBy] : null}
           </p>
         ))}
 

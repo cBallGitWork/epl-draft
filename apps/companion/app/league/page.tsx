@@ -2,7 +2,6 @@ import Link from "next/link";
 import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
-  FANTRAX_LEAGUES,
   FantraxError,
   LEAGUE_NAME,
   PAGE_REVALIDATE,
@@ -18,6 +17,8 @@ import { myTeamId } from "../squad/session";
 import { londonDate } from "../londonTime";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
+import { yoursBorder } from "../mine";
+import { FANTRAX_SILENT, servedLeague } from "../config";
 
 // The table. Fantrax computes it — the record and the points are theirs, and this
 // page never adds them up itself.
@@ -27,7 +28,7 @@ import type { Unavailable } from "../refusals";
 export const revalidate = 30;
 
 const DRAFT_DATE = londonDate(
-  FANTRAX_LEAGUES.find((l) => l.leagueId === FANTRAX_LEAGUE_ID)?.draftDate ?? "",
+  servedLeague()?.draftDate ?? "",
 );
 
 /** An empty table and an unreachable one are different states, and only one of
@@ -55,7 +56,7 @@ export default async function StandingsPage() {
 
   if ("unavailable" in rows) {
     return (
-      <Nothing title="Fantrax is not answering" code={rows.unavailable}>
+      <Nothing title={FANTRAX_SILENT} code={rows.unavailable}>
         The table is theirs to keep, and we cannot read it right now. Nothing here is computed
         from our side, so there is no stale copy to fall back on.
       </Nothing>
@@ -91,9 +92,9 @@ export default async function StandingsPage() {
           <li key={row.teamId}>
             <Link
               href={`/squad/${row.teamId}`}
-              className={`elev flex min-h-14 items-center gap-3 rounded-xl border bg-surface px-3 py-2.5 hover:bg-raised ${
-                row.teamId === mine ? "border-line border-l-4 border-l-accent" : "border-line"
-              }`}
+              className={`elev flex min-h-14 items-center gap-3 rounded-xl border bg-surface px-3 py-2.5 hover:bg-raised ${yoursBorder(
+                row.teamId === mine,
+              )}`}
             >
               <span className="numeric w-5 text-sm text-faint">{row.rank}</span>
               <span

@@ -1,3 +1,5 @@
+import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES } from "@epl/core";
+
 // The app's own constants — the ones that are decisions about this companion
 // rather than about the league or the football.
 //
@@ -32,3 +34,26 @@ export const WRONG_CODE_DELAY_MS = 700;
  *  a reader can see they are looking at a selection. */
 export const DEALS_SHOWN = 6;
 export const DOUBTS_SHOWN = 8;
+
+/** The league this deployment actually serves.
+ *
+ *  `FANTRAX_LEAGUE_ID` is the env var and the whole of the 10 Oct swap; this is
+ *  the rest of what we know about whichever league it names — chiefly the draft
+ *  date three pages tell an empty league to come back for. Undefined if the id
+ *  ever names a league we do not carry, which is a state worth seeing rather
+ *  than defaulting past.
+ */
+export function servedLeague() {
+  return FANTRAX_LEAGUES.find((league) => league.leagueId === FANTRAX_LEAGUE_ID);
+}
+
+/** What a page says when the league's own provider will not answer.
+ *
+ *  One title, five pages, and deliberately not a shared component: the sentence
+ *  under it differs on every one of them — the pool would go stale in ownership
+ *  first, the standings have no local copy to fall back on, the schedule is the
+ *  league describing itself — and that per-page sentence is the whole reason the
+ *  panel is worth having. A wrapper that only filled in this string would be a
+ *  wrapper that forwards its arguments.
+ */
+export const FANTRAX_SILENT = "Fantrax is not answering";

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, LEAGUE_NAME, type RosteredTeam, isResolved } from "@epl/core";
+import { LEAGUE_NAME, type RosteredTeam, isResolved } from "@epl/core";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { londonDate } from "../londonTime";
@@ -7,6 +7,8 @@ import SignIn from "./SignIn";
 import { forgetTeam } from "./actions";
 import { getLeagueSquads } from "./league";
 import { myTeamId } from "./session";
+import { yoursBorder } from "../mine";
+import { FANTRAX_SILENT, servedLeague } from "../config";
 
 // Your squad, and everyone else's. Until the draft this is the empty state,
 // which is the state our real league is actually in and therefore the one that
@@ -24,7 +26,7 @@ export const revalidate = 30;
 /** Draft night for the league we are actually serving — §3 keeps season dates in
  *  config, and the two leagues draft nine weeks apart. */
 const DRAFT_DATE = londonDate(
-  FANTRAX_LEAGUES.find((l) => l.leagueId === FANTRAX_LEAGUE_ID)?.draftDate ?? "",
+  servedLeague()?.draftDate ?? "",
 );
 
 export default async function SquadsPage() {
@@ -32,7 +34,7 @@ export default async function SquadsPage() {
 
   if ("unavailable" in squads) {
     return (
-      <Nothing title="Fantrax is not answering" code={squads.unavailable}>
+      <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
         The league is fine. We just cannot read it right now, so rather than guess at your squad
         this says nothing.
       </Nothing>
@@ -91,9 +93,9 @@ function Squad({ team, lead = false }: { team: RosteredTeam; lead?: boolean }) {
   return (
     <Link
       href={`/squad/${team.teamId}`}
-      className={`elev flex min-h-14 items-center gap-3 rounded-xl border bg-surface px-3 py-2.5 hover:bg-raised ${
-        lead ? "border-l-4 border-line border-l-accent" : "border-line"
-      }`}
+      className={`elev flex min-h-14 items-center gap-3 rounded-xl border bg-surface px-3 py-2.5 hover:bg-raised ${yoursBorder(
+        lead,
+      )}`}
     >
       <span className="min-w-0 flex-1 truncate font-semibold">{team.teamName}</span>
       {/* A label, not just an accent: the border alone carries no meaning to

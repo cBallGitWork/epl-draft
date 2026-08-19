@@ -60,4 +60,6 @@ async function main(): Promise<void> {
   console.log("\nThe codes above are not recoverable from it. Re-run to reissue.\n");
 }
 
-main();
+// Not awaited at the top level: these scripts transpile to CJS, and a rejection
+// here should crash the run loudly rather than be caught and softened.
+void main();

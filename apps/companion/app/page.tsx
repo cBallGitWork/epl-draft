@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, LEAGUE_NAME, NOTABLE_SAVES, type Pick } from "@epl/core";
+import { LEAGUE_NAME, NOTABLE_SAVES, type Pick } from "@epl/core";
 import Masthead from "./components/gazette/Masthead";
-import { DEALS_SHOWN, DOUBTS_SHOWN } from "./config";
+import { DEALS_SHOWN, DOUBTS_SHOWN, servedLeague } from "./config";
+import { yoursBorder } from "./mine";
 import Nothing from "./components/shell/Nothing";
 import Section from "./components/shell/Section";
 import { edition } from "./edition";
@@ -25,9 +26,7 @@ export const revalidate = 30;
 
 /** Draft night for the league we are actually serving — the two draft nine weeks
  *  apart, so this is read from config rather than written down. */
-const DRAFT_DATE = londonDate(
-  FANTRAX_LEAGUES.find((league) => league.leagueId === FANTRAX_LEAGUE_ID)?.draftDate ?? "",
-);
+const DRAFT_DATE = londonDate(servedLeague()?.draftDate ?? "");
 
 /** What got him picked, in the fewest words that are still true. */
 function did(pick: Pick): string {
@@ -93,11 +92,9 @@ export default async function GazettePage() {
             {paper.eleven.picks.map((pick) => (
               <li
                 key={pick.playerCode}
-                className={`elev rounded-xl border bg-surface px-3 py-2.5 ${
-                  pick.ownerTeamId === paper.mine
-                    ? "border-line border-l-4 border-l-accent"
-                    : "border-line"
-                }`}
+                className={`elev rounded-xl border bg-surface px-3 py-2.5 ${yoursBorder(
+                  pick.ownerTeamId === paper.mine,
+                )}`}
               >
                 <p className="flex items-baseline gap-2">
                   <span className="numeric w-5 shrink-0 text-2xs text-faint">{pick.position}</span>
@@ -164,9 +161,9 @@ export default async function GazettePage() {
             {paper.availability.slice(0, DOUBTS_SHOWN).map((note) => (
               <li
                 key={`${note.teamId}-${note.playerName}`}
-                className={`elev rounded-xl border bg-surface px-3 py-2.5 ${
-                  note.teamId === paper.mine ? "border-line border-l-4 border-l-accent" : "border-line"
-                }`}
+                className={`elev rounded-xl border bg-surface px-3 py-2.5 ${yoursBorder(
+                  note.teamId === paper.mine,
+                )}`}
               >
                 <p className="flex items-baseline justify-between gap-3">
                   <span className="truncate font-semibold">{note.playerName}</span>

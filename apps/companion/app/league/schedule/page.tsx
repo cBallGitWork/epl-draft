@@ -17,6 +17,7 @@ import SectionNav from "../SectionNav";
 import { londonDate } from "../../londonTime";
 import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
+import { FANTRAX_SILENT } from "../../config";
 
 // The whole season's head-to-heads, period by period. Fantrax's schedule, read
 // from its own description of the competition — we never generate a fixture list,
@@ -102,7 +103,7 @@ export default async function SchedulePage() {
       <div className="flex flex-col gap-3">
         <PageHeader title="Schedule" />
         <SectionNav current="schedule" />
-        <Nothing title="Fantrax is not answering" code={read.unavailable}>
+        <Nothing title={FANTRAX_SILENT} code={read.unavailable}>
           The schedule is part of the league&apos;s own description of itself, and we cannot read it
           right now.
         </Nothing>

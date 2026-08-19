@@ -12,6 +12,8 @@ import SectionNav from "../SectionNav";
 import { getLeagueSquads } from "../../squad/league";
 import { myTeamId } from "../../squad/session";
 import { liveScores, pendingByTeam } from "./scoreboard";
+import { yoursBorder } from "../../mine";
+import { FANTRAX_SILENT } from "../../config";
 
 // Who each squad plays this period, and what they have scored.
 //
@@ -74,7 +76,7 @@ export default async function MatchupPage() {
 
   if ("unavailable" in squads) {
     return (
-      <Nothing title="Fantrax is not answering" code={squads.unavailable}>
+      <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
         Fantrax would not hand back the teams, so there is nobody to pair up.
       </Nothing>
     );
@@ -154,9 +156,9 @@ export default async function MatchupPage() {
         {ordered.map((pairing) => (
           <li key={`${pairing.home.teamId}-${pairing.away.teamId}`}>
             <div
-              className={`elev flex flex-col rounded-xl border bg-surface py-1 ${
-                involves(pairing, mine) ? "border-line border-l-4 border-l-accent" : "border-line"
-              }`}
+              className={`elev flex flex-col rounded-xl border bg-surface py-1 ${yoursBorder(
+                involves(pairing, mine),
+              )}`}
             >
               <Side
                 team={pairing.home}

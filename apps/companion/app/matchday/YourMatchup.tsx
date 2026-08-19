@@ -3,6 +3,7 @@ import { type LeagueTeam, type LiveTeamScore, type PendingCleanSheets, periodPai
 import { liveScores, pendingByTeam } from "../league/matchups/scoreboard";
 import { getLeagueSquads } from "../squad/league";
 import { myTeamId } from "../squad/session";
+import { yoursBorder } from "../mine";
 
 // Your head-to-head, at the top of the live view.
 //
@@ -35,7 +36,7 @@ export default async function YourMatchup() {
   const them = pairing.home.teamId === mine ? pairing.away : pairing.home;
 
   return (
-    <section className="elev flex flex-col gap-2 rounded-xl border border-line border-l-4 border-l-accent bg-surface p-3">
+    <section className={`elev flex flex-col gap-2 rounded-xl border bg-surface p-3 ${yoursBorder(true)}`}>
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-2xs font-bold uppercase tracking-widest text-faint">
           Your head-to-head
