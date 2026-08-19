@@ -1,0 +1,38 @@
+[
+  {
+    "teamName": "123",
+    "totalPointsFor": 0,
+    "teamId": "8enbgqo5msgb375j",
+    "gamesBack": 0,
+    "rank": 1,
+    "points": "0-0-0",
+    "winPercentage": 0
+  },
+  {
+    "teamName": "test3",
+    "totalPointsFor": 0,
+    "teamId": "j9zadacnmshcpazf",
+    "gamesBack": 0,
+    "rank": 2,
+    "points": "0-0-0",
+    "winPercentage": 0
+  },
+  {
+    "teamName": "test4",
+    "totalPointsFor": 0,
+    "teamId": "sezrgvl2mshcpazf",
+    "gamesBack": 0,
+    "rank": 3,
+    "points": "0-0-0",
+    "winPercentage": 0
+  },
+  {
+    "teamName": "test2",
+    "totalPointsFor": 0,
+    "teamId": "pbxm9fgimshcpazf",
+    "gamesBack": 0,
+    "rank": 4,
+    "points": "0-0-0",
+    "winPercentage": 0
+  }
+]
