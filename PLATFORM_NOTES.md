@@ -1287,6 +1287,21 @@ Refactor pass over all of it the same day, against §1 and §2:
   there is no arrangement that renders a board with nothing on it — and
   `getTeamRosterInfo` is no longer requested on the two paths that never show it.
 
+**Caught in review, before it shipped: the board was handing out the lineup.**
+`SquadBoard` is a client component, so `SquadDetailLine[]` is serialised into the
+page — and `SquadPlayerDetail` carried the whole `RosteredPlayer`, `slot.status`
+included. A rival's squad in `squad` mode shipped **eleven ACTIVE and four
+RESERVE** in its own source while the screen withheld the lineup, which is
+exactly what `visibility.ts` exists to prevent and what it means by "the app is
+the only place that could leak it".
+
+The ordering was already handled — `squadUnarranged` sorts by name for this
+reason — but ordering is what the *screen* shows and the payload is a separate
+question. `squadDetail` now blanks `status` on the way out, with a test that
+asserts neither word appears in the serialised lines. The old `SquadList` was a
+server component and never had the problem: the regression came in with the
+client boundary, which is where this class of bug always comes from.
+
 Still open: the view reads the snapshot's own gameweek. Browsing a *future* round
 needs a gameweek in the URL, a snapshot fetched for it, and `getTeamRosters` asked
 for the matching period — the fixtures come free, the roster does not.

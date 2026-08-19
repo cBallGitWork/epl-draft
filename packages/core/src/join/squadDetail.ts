@@ -20,6 +20,7 @@ import { isResolved, type RosteredPlayer } from "./roster";
 
 /** One roster slot with everything known about it. */
 export interface SquadPlayerDetail {
+  /** The slot, with `slot.status` blanked — see `WITHHELD` below. */
   rostered: RosteredPlayer;
   /** His real club. Undefined for a slot the bridge could not settle — there is
    *  no footballer behind it, so there is no club either. */
@@ -38,6 +39,20 @@ export interface SquadDetailLine {
   position: string;
   players: SquadPlayerDetail[];
 }
+
+/** What `slot.status` becomes on the way out.
+ *
+ *  The arrangement is the XI restated one player at a time, and this join feeds
+ *  a CLIENT component — so every field on it is serialised into the page and
+ *  readable from View Source. Ordering the lines alphabetically hides the
+ *  arrangement from the screen; blanking this is what hides it from the payload,
+ *  which is where it was being handed out.
+ *
+ *  Blanked rather than dropped so the shape stays `RosteredPlayer` for the views
+ *  and their helpers. Nothing downstream reads it — they want the id, the
+ *  position and the footballer — and `isActive` reads a blank as not active,
+ *  which is the safe direction for a value nobody is entitled to. */
+const WITHHELD = "";
 
 export function squadDetail(
   lines: SquadLine[],
@@ -61,7 +76,7 @@ function detail(
 ): SquadPlayerDetail {
   const clubId = isResolved(rostered) ? rostered.player.clubId : null;
   return {
-    rostered,
+    rostered: { ...rostered, slot: { ...rostered.slot, status: WITHHELD } },
     club: clubId === null ? undefined : clubs.get(clubId),
     opposition: clubId === null ? undefined : opposition.get(clubId),
     // `?? null` and not `?? undefined`: a table that does not name him has still

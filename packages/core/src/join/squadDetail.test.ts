@@ -89,3 +89,37 @@ describe("squadDetail", () => {
     expect(detailed[0]?.players.map((p) => p.rostered.slot.fantraxId)).toEqual(["a", "b", "c"]);
   });
 });
+
+describe("squadDetail, on the arrangement", () => {
+  it("hands out no player's ACTIVE or RESERVE", () => {
+    // The board is a client component, so everything here is serialised into the
+    // page and readable from View Source. Before this, a rival's squad shipped
+    // eleven ACTIVE and four RESERVE while the screen withheld the lineup —
+    // which is the whole of what `visibility.ts` exists to prevent.
+    const lines = squadDetail(
+      [{ position: "M", players: [slot("a1", "ACTIVE"), slot("a2", "RESERVE")] }],
+      new Map(),
+      new Map(),
+      null,
+    );
+    const statuses = lines.flatMap((line) => line.players.map((p) => p.rostered.slot.status));
+    expect(statuses).toEqual(["", ""]);
+    expect(JSON.stringify(lines)).not.toContain("ACTIVE");
+    expect(JSON.stringify(lines)).not.toContain("RESERVE");
+  });
+
+  it("keeps everything a view actually reads", () => {
+    const [line] = squadDetail(
+      [{ position: "M", players: [slot("a1", "ACTIVE")] }],
+      new Map(),
+      new Map(),
+      null,
+    );
+    expect(line?.players[0]?.rostered.slot.fantraxId).toBe("a1");
+    expect(line?.players[0]?.rostered.slot.position).toBe("M");
+  });
+});
+
+function slot(fantraxId: string, status: string) {
+  return { slot: { fantraxId, position: "M", status }, unresolved: "unmapped" as const };
+}
