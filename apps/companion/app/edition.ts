@@ -21,7 +21,7 @@ import {
   teamOfTheWeek,
 } from "@epl/core";
 import { orRefusal } from "./refusals";
-import { getLeagueSquads } from "./squad/league";
+import { getLeagueSquads } from "./squads";
 
 // What today's paper is made of.
 //

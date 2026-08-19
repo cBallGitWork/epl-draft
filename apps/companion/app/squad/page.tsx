@@ -5,7 +5,7 @@ import PageHeader from "../components/shell/PageHeader";
 import { londonDate } from "../londonTime";
 import SignIn from "./SignIn";
 import { forgetTeam } from "./actions";
-import { getLeagueSquads } from "./league";
+import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
 import { FANTRAX_SILENT, servedLeague } from "../config";

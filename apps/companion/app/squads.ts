@@ -17,10 +17,10 @@ import {
   resolveRosters,
   rosterDisplay,
 } from "@epl/core";
-import { footballNow } from "../football";
-import { orRefusal, tell } from "../refusals";
-import type { Unavailable } from "../refusals";
-import mapping from "../../../../data/mappings/fantrax.json";
+import { footballNow } from "./football";
+import { orRefusal, tell } from "./refusals";
+import type { Unavailable } from "./refusals";
+import mapping from "../../../data/mappings/fantrax.json";
 
 // Where the app supplies the bridge. It has to happen here rather than in core:
 // `packages/core/tsconfig.json` includes only `src/**/*.ts`, so core physically

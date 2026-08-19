@@ -12,7 +12,7 @@ import type { StandingsRow } from "@epl/core";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import SectionNav from "./SectionNav";
-import { getLeagueSquads } from "../squad/league";
+import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
 import { londonDate } from "../londonTime";
 import { orRefusal, tell } from "../refusals";

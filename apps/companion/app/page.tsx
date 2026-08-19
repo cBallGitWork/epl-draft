@@ -7,7 +7,7 @@ import Nothing from "./components/shell/Nothing";
 import Section from "./components/shell/Section";
 import { edition } from "./edition";
 import { londonDate, londonDayAndTime } from "./londonTime";
-import { getLeagueSquads } from "./squad/league";
+import { getLeagueSquads } from "./squads";
 import { myTeamId } from "./session";
 
 // The Gazetta. What the league did this week, on the front page.

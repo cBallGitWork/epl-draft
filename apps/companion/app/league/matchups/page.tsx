@@ -9,7 +9,7 @@ import {
 import Nothing from "../../components/shell/Nothing";
 import PageHeader from "../../components/shell/PageHeader";
 import SectionNav from "../SectionNav";
-import { getLeagueSquads } from "../../squad/league";
+import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "./scoreboard";
 import { yoursBorder } from "../../mine";

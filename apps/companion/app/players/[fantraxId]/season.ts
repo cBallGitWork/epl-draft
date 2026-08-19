@@ -14,7 +14,7 @@ import {
 import type { FootballPlayer, StatColumn, StatSeason, TeamStats } from "@epl/core";
 import { footballNow } from "../../football";
 import { orRefusal } from "../../refusals";
-import { bridge } from "../../squad/league";
+import { bridge } from "../../squads";
 
 // What one player's season looks like, from the two places that know: Fantrax
 // for the points, FPL for whether he is fit.

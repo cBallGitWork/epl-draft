@@ -6,7 +6,7 @@ import LineupPlanner from "../../components/league/LineupPlanner";
 import PageHeader from "../../components/shell/PageHeader";
 import Pitch from "../../components/league/Pitch";
 import SquadList from "../../components/league/SquadList";
-import { getLeagueSquads, mayPreviewLineups } from "../league";
+import { getLeagueSquads, mayPreviewLineups } from "../../squads";
 
 // One manager's squad, laid out on a pitch. The screen the league opens on a
 // Saturday, and the reason the join exists.

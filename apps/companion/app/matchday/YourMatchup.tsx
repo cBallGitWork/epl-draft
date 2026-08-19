@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { type LeagueTeam, type LiveTeamScore, type PendingCleanSheets, periodPairings } from "@epl/core";
 import { liveScores, pendingByTeam } from "../league/matchups/scoreboard";
-import { getLeagueSquads } from "../squad/league";
+import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
 
