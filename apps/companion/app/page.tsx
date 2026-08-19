@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { LEAGUE_NAME, NOTABLE_SAVES, type Pick } from "@epl/core";
 import Masthead from "./components/gazette/Masthead";
-import { DEALS_SHOWN, DOUBTS_SHOWN, servedLeague } from "./config";
+import { DEALS_SHOWN, DOUBTS_SHOWN, FANTRAX_SILENT, servedLeague } from "./config";
 import { yoursBorder } from "./mine";
 import Nothing from "./components/shell/Nothing";
 import Section from "./components/shell/Section";
@@ -44,14 +44,6 @@ export default async function GazettePage() {
   const mine = "period" in squads ? await myTeamId(squads.period.teams) : null;
   const paper = await edition(mine);
   const names = new Map(paper.teams.map((team) => [team.teamId, team.name]));
-  // Nothing to print is a real state, not an empty page: our own league is in it
-  // every day until draft night, and it is the first thing sixteen people will
-  // open the app to.
-  const blank =
-    paper.eleven === null &&
-    paper.deals.length === 0 &&
-    paper.availability.length === 0 &&
-    paper.deadline === null;
   const who = (teamId: string | null) => (teamId === null ? "the wire" : names.get(teamId) ?? "—");
 
   return (
@@ -79,10 +71,30 @@ export default async function GazettePage() {
         </Link>
       ) : null}
 
-      {blank ? (
+      {/* Nothing to print is a real state, not an empty page — our own league is
+          in it every day until draft night, and this is the first thing sixteen
+          people open. Which nothing it is decides the sentence: only one of the
+          three is about the league not existing yet, and telling a drafted league
+          it has not drafted is the confident wrong statement `squads.ts` keeps
+          these apart to prevent. */}
+      {paper.silence?.kind === "unavailable" ? (
+        <Nothing title={FANTRAX_SILENT} code={paper.silence.code}>
+          The league is there and the football is on the other tabs. We just cannot read Fantrax
+          right now, so rather than guess at the week this says nothing.
+        </Nothing>
+      ) : null}
+
+      {paper.silence?.kind === "undrafted" ? (
         <Nothing title="No news yet" code={`${LEAGUE_NAME} drafts ${DRAFT_DATE}`}>
           There is nothing to report until there are squads to report on. The football is on the
           other tabs in the meantime, and it needs nobody to have drafted.
+        </Nothing>
+      ) : null}
+
+      {paper.silence?.kind === "quiet" ? (
+        <Nothing title="A quiet week" code={`${LEAGUE_NAME}`}>
+          Nobody has signed anybody, nobody is hurt, and no deadline is close enough to worry
+          about. The football is still on the other tabs.
         </Nothing>
       ) : null}
 
