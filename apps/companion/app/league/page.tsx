@@ -10,8 +10,7 @@ import {
 } from "@epl/core";
 import type { StandingsRow } from "@epl/core";
 import Nothing from "../components/shell/Nothing";
-import PageHeader from "../components/shell/PageHeader";
-import SectionNav from "./SectionNav";
+import LeagueShell from "./Shell";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
 import { londonDate } from "../londonTime";
@@ -54,28 +53,34 @@ async function readerTeamId(): Promise<string | null> {
 export default async function StandingsPage() {
   const [rows, mine] = await Promise.all([table(), readerTeamId()]);
 
+  // An empty state keeps the header and the section nav. Without them a reader
+  // who lands here during an outage has no way to reach Schedule or Matchups —
+  // the page is a dead end rather than a section with nothing in it. Schedule
+  // already did this; the table and the matchups board did not.
   if ("unavailable" in rows) {
     return (
-      <Nothing title={FANTRAX_SILENT} code={rows.unavailable}>
-        The table is theirs to keep, and we cannot read it right now. Nothing here is computed
-        from our side, so there is no stale copy to fall back on.
-      </Nothing>
+      <LeagueShell title="Table" current="table">
+        <Nothing title={FANTRAX_SILENT} code={rows.unavailable}>
+          The table is theirs to keep, and we cannot read it right now. Nothing here is computed
+          from our side, so there is no stale copy to fall back on.
+        </Nothing>
+      </LeagueShell>
     );
   }
 
   if (rows.length === 0) {
     return (
-      <Nothing title="No table yet" code="getStandings → 0 rows">
-        {LEAGUE_NAME} drafts on {DRAFT_DATE}. A table needs teams in it, and Fantrax has none to
-        rank.
-      </Nothing>
+      <LeagueShell title="Table" current="table">
+        <Nothing title="No table yet" code="getStandings → 0 rows">
+          {LEAGUE_NAME} drafts on {DRAFT_DATE}. A table needs teams in it, and Fantrax has none to
+          rank.
+        </Nothing>
+      </LeagueShell>
     );
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <PageHeader title="Table" />
-      <SectionNav current="table" />
+    <LeagueShell title="Table" current="table">
 
       <div className="flex items-center gap-3 px-3 text-2xs font-bold uppercase tracking-widest text-faint">
         <span className="w-5">#</span>
@@ -117,6 +122,6 @@ export default async function StandingsPage() {
           </li>
         ))}
       </ul>
-    </div>
+    </LeagueShell>
   );
 }

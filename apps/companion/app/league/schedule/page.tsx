@@ -12,12 +12,11 @@ import {
   periodPairings,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
-import PageHeader from "../../components/shell/PageHeader";
-import SectionNav from "../SectionNav";
 import { londonDate } from "../../londonTime";
 import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
 import { FANTRAX_SILENT } from "../../config";
+import LeagueShell from "../Shell";
 
 // The whole season's head-to-heads, period by period. Fantrax's schedule, read
 // from its own description of the competition — we never generate a fixture list,
@@ -100,14 +99,12 @@ export default async function SchedulePage() {
 
   if ("unavailable" in read) {
     return (
-      <div className="flex flex-col gap-3">
-        <PageHeader title="Schedule" />
-        <SectionNav current="schedule" />
+      <LeagueShell title="Schedule" current="schedule">
         <Nothing title={FANTRAX_SILENT} code={read.unavailable}>
           The schedule is part of the league&apos;s own description of itself, and we cannot read it
           right now.
         </Nothing>
-      </div>
+      </LeagueShell>
     );
   }
 
@@ -121,9 +118,7 @@ export default async function SchedulePage() {
   const played = periods.filter((period) => period.pairings.length > 0);
 
   return (
-    <div className="flex flex-col gap-3">
-      <PageHeader title="Schedule" sub={info.name} />
-      <SectionNav current="schedule" />
+    <LeagueShell title="Schedule" current="schedule" sub={info.name}>
 
       {played.length === 0 ? (
         <Nothing title="No fixtures yet" code={`${periods.length} periods, 0 pairings`}>
@@ -157,6 +152,6 @@ export default async function SchedulePage() {
           ))}
         </ul>
       )}
-    </div>
+    </LeagueShell>
   );
 }

@@ -1,14 +1,16 @@
 import Link from "next/link";
 import {
+  POLL,
   type LeagueTeam,
   type LiveTeamScore,
   type PeriodPairing,
   type PendingCleanSheets,
+  duringGameweek,
   periodPairings,
 } from "@epl/core";
+import AutoRefresh from "../../components/shell/AutoRefresh";
 import Nothing from "../../components/shell/Nothing";
-import PageHeader from "../../components/shell/PageHeader";
-import SectionNav from "../SectionNav";
+import LeagueShell from "../Shell";
 import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "../../scoreboard";
@@ -76,38 +78,46 @@ export default async function MatchupPage() {
 
   if ("unavailable" in squads) {
     return (
-      <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
+      <LeagueShell title="Matchups" current="matchups">
+        <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
         Fantrax would not hand back the teams, so there is nobody to pair up.
-      </Nothing>
+        </Nothing>
+      </LeagueShell>
     );
   }
 
   if ("undrafted" in squads) {
     return (
-      <Nothing title="Nobody plays anybody yet" code={squads.undrafted}>
+      <LeagueShell title="Matchups" current="matchups">
+        <Nothing title="Nobody plays anybody yet" code={squads.undrafted}>
         A schedule needs teams in it. Until the draft, Fantrax has pairings for nobody, so there is
         no matchup to show.
-      </Nothing>
+        </Nothing>
+      </LeagueShell>
     );
   }
 
   const { period } = squads.period;
   if (squads.info === null || period === null) {
     return (
-      <Nothing title="No schedule to read">
+      <LeagueShell title="Matchups" current="matchups">
+        <Nothing title="No schedule to read">
         Fantrax answered the rosters but would not say which period it is or who plays whom, and a
         matchup page that guessed either would be making its fixtures up.
-      </Nothing>
+        </Nothing>
+      </LeagueShell>
     );
   }
 
   const pairings = periodPairings(squads.info.matchups, squads.info.teams, period);
   if (pairings.length === 0) {
     return (
-      <Nothing title="No pairings this period" code={`period ${period}`}>
+      <LeagueShell title="Matchups" current="matchups">
+        <Nothing title="No pairings this period" code={`period ${period}`}>
         The schedule does not cover this period — a bye week, or a season that has not reached its
         first head-to-head yet. Nobody is hiding anything; there is nothing to pair.
-      </Nothing>
+        </Nothing>
+      </LeagueShell>
     );
   }
 
@@ -123,16 +133,22 @@ export default async function MatchupPage() {
   );
 
   return (
-    <div className="flex flex-col gap-3">
-      <PageHeader
-        title="Matchups"
-        sub={
-          <>
-            Period {period} · Gameweek {squads.snapshot.gameweek}
-          </>
-        }
+    <LeagueShell
+      title="Matchups"
+      current="matchups"
+      sub={
+        <>
+          Period {period} · Gameweek {squads.snapshot.gameweek}
+        </>
+      }
+    >
+      {/* The one live board that was not refreshing itself. `revalidate` bounds
+          how stale the cache may get and pushes nothing to a phone already
+          showing the score, so a device open on the sofa held a frozen scoreline
+          for the whole afternoon while /matchday moved. */}
+      <AutoRefresh
+        seconds={duringGameweek(squads.snapshot, new Date().toISOString()) ? POLL.live : POLL.idle}
       />
-      <SectionNav current="matchups" />
 
       {/* Provenance at the point of use, per principle 4. These are Fantrax's
           points under Fantrax's scoring; we add nothing up. */}
@@ -179,6 +195,6 @@ export default async function MatchupPage() {
           </li>
         ))}
       </ul>
-    </div>
+    </LeagueShell>
   );
 }
