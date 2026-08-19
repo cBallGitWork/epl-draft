@@ -541,6 +541,36 @@ own an archive of a feed Fantrax could prune.
 `transactions: []` throughout — not the same thing, and not the one we want.
 `getPendingTransactions` answered `noPendingTransactions`.
 
+### One week, two reads — the feed's ordering problem (19 Aug 2026)
+
+The paper read `CLAIM_DROP` and nothing else, so **the rehearsal league's only
+trade had never appeared on the front page.** Not a rendering bug: for a trade
+the *view* is the type, and a paper that reads one view reports every waiver
+claim in the league and none of its business.
+
+Reading both raises the question one view never did. Each view arrives
+newest-first *on its own*, so concatenating them gives every claim, then every
+trade, which is not a week. `deals()` used to say its ordering came from the feed
+and that sorting by `processedAt` "would mean inventing a date format". That
+stands for an instant and not for an order:
+
+- **A sort key is not a timestamp.** "Wed Aug 12, 2026, 9:14AM" carries no
+  offset — Fantrax puts that in the column heading, as `Date Processed (EDT)` —
+  but every row in one league's feed is in one displayed timezone, so comparing
+  them needs no offset at all. `orderKey` composes an integer, is used for
+  nothing but `sort`, and `Deal.processedAt` stays their string verbatim.
+- **It is all-or-nothing.** A row whose date will not parse — a translated month,
+  a changed format — returns the feed order untouched rather than sorting around
+  the gap. A partial sort would place that row by an accident of the comparator,
+  and the order it displaced was at least each view's own truth.
+
+`LINEUP_CHANGE` stays captured daily and stays out of the paper: benching
+somebody is not business anyone did with anyone, and on sixteen teams it would
+bury the two moves that are.
+
+Verified against the 12 Aug captures rather than fixtures — the claim/drop pair
+and the trade, told as two stories, in the minute order Fantrax processed them.
+
 ### What the capture diff saw, for the record
 
 Status alone (`playerInfo[].status`) caught only the claim: Gibbs-White `T→WW`,
@@ -1116,9 +1146,12 @@ email, not billing — see the hosting section.
       6 Aug, but only became live on 12 Aug: workflows fire from the default
       branch and the branch had not merged, so the cron had never once run.
       Verified by dispatching it manually rather than waiting for 05:10.*
-- [ ] Capture the three `getTransactionDetailsHistory` views daily, and build the
+- [x] Capture the three `getTransactionDetailsHistory` views daily, and build the
       feed from them rather than from capture diffs (see 12 Aug notes). Bind to
-      `cell.key`; the header names include a broken i18n placeholder.
+      `cell.key`; the header names include a broken i18n placeholder. *Landed
+      19 Aug 2026 — the capture and the mapper were already there; the paper was
+      still reading one view of three, so no trade had ever reached it. See the
+      ordering note above.*
 - [x] Model `scoringSystem` when a view first explains a number — read from
       `getLeagueInfo`, never from a checked-in copy (§3). *Landed 13 Aug, and
       then largely superseded the same day: the view that explains a number is

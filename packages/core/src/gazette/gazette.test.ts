@@ -51,13 +51,51 @@ describe("deals", () => {
   });
 
   it("keeps the feed's order, which is newest first", () => {
-    // `processedAt` is Fantrax's own unparsed string, so sorting by it would
-    // mean inventing a date format. The feed already arrives in order.
     const told = deals([
       tx({ setId: "a", fantraxId: "1", playerName: "Newest", toTeamId: "t1" }),
-      tx({ setId: "b", fantraxId: "2", playerName: "Older", toTeamId: "t1" }),
+      tx({ setId: "b", fantraxId: "2", playerName: "Older", toTeamId: "t1",
+        processedAt: "Tue Aug 11, 2026, 9:14AM" }),
     ]);
     expect(told.map((m) => m.inbound[0].playerName)).toEqual(["Newest", "Older"]);
+  });
+
+  it("tells one week from two views rather than every claim then every trade", () => {
+    // Claims and trades are separate reads, each newest-first on its own. The
+    // trade here happened a minute before the claim and belongs below it.
+    const told = deals([
+      tx({ setId: "c", fantraxId: "1", playerName: "Claimed", toTeamId: "t1",
+        processedAt: "Wed Aug 12, 2026, 9:14AM" }),
+      tx({ setId: "t", fantraxId: "2", playerName: "Traded", kind: "trade", toTeamId: "t2",
+        processedAt: "Wed Aug 12, 2026, 9:13AM" }),
+      tx({ setId: "c2", fantraxId: "3", playerName: "Older claim", toTeamId: "t1",
+        processedAt: "Mon Aug 10, 2026, 4:02PM" }),
+    ]);
+    expect(told.map((m) => m.inbound[0].playerName)).toEqual(["Claimed", "Traded", "Older claim"]);
+  });
+
+  it("reads midnight and noon as Fantrax writes them", () => {
+    // 12:30AM is the small hours and 12:30PM is lunchtime. Getting these the
+    // wrong way round puts a whole day's business twelve hours out of place.
+    const told = deals([
+      tx({ setId: "a", fantraxId: "1", playerName: "Small hours", toTeamId: "t1",
+        processedAt: "Wed Aug 12, 2026, 12:30AM" }),
+      tx({ setId: "b", fantraxId: "2", playerName: "Lunchtime", toTeamId: "t1",
+        processedAt: "Wed Aug 12, 2026, 12:30PM" }),
+    ]);
+    expect(told.map((m) => m.inbound[0].playerName)).toEqual(["Lunchtime", "Small hours"]);
+  });
+
+  it("leaves the order alone rather than half-sort a feed it cannot date", () => {
+    // A date we stop understanding — a translated month, a changed format —
+    // should cost the section its interleaving, not its contents. Deciding one
+    // row's place by an accident of the comparator is the worse outcome.
+    const told = deals([
+      tx({ setId: "a", fantraxId: "1", playerName: "First", toTeamId: "t1",
+        processedAt: "mer. 12 août 2026, 9:14" }),
+      tx({ setId: "b", fantraxId: "2", playerName: "Second", toTeamId: "t1",
+        processedAt: "Wed Aug 12, 2026, 9:15AM" }),
+    ]);
+    expect(told.map((m) => m.inbound[0].playerName)).toEqual(["First", "Second"]);
   });
 });
 
