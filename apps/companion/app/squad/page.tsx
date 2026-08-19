@@ -6,7 +6,7 @@ import { londonDate } from "../londonTime";
 import SignIn from "./SignIn";
 import { forgetTeam } from "./actions";
 import { getLeagueSquads } from "./league";
-import { myTeamId } from "./session";
+import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
 import { FANTRAX_SILENT, servedLeague } from "../config";
 

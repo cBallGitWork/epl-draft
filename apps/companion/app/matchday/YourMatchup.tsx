@@ -2,7 +2,7 @@ import Link from "next/link";
 import { type LeagueTeam, type LiveTeamScore, type PendingCleanSheets, periodPairings } from "@epl/core";
 import { liveScores, pendingByTeam } from "../league/matchups/scoreboard";
 import { getLeagueSquads } from "../squad/league";
-import { myTeamId } from "../squad/session";
+import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
 
 // Your head-to-head, at the top of the live view.

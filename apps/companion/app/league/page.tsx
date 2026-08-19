@@ -13,7 +13,7 @@ import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import SectionNav from "./SectionNav";
 import { getLeagueSquads } from "../squad/league";
-import { myTeamId } from "../squad/session";
+import { myTeamId } from "../session";
 import { londonDate } from "../londonTime";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";

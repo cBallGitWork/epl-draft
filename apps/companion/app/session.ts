@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { TEAM_COOKIE } from "../config";
+import { TEAM_COOKIE } from "./config";
 
 // Who is holding the phone.
 //

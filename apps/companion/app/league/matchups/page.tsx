@@ -10,7 +10,7 @@ import Nothing from "../../components/shell/Nothing";
 import PageHeader from "../../components/shell/PageHeader";
 import SectionNav from "../SectionNav";
 import { getLeagueSquads } from "../../squad/league";
-import { myTeamId } from "../../squad/session";
+import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "./scoreboard";
 import { yoursBorder } from "../../mine";
 import { FANTRAX_SILENT } from "../../config";
