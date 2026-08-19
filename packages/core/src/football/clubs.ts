@@ -1,3 +1,4 @@
+import { PL_ASSET_BASE } from "../config";
 import type { Club } from "./types";
 
 // Club visual identity. FPL serves crests but publishes no colours, so the palette
@@ -49,7 +50,7 @@ export function clubColours(shortName: string): ClubColours {
 /** Club crest. `code` is FPL's season-stable club code, so these URLs keep working
  *  across seasons. SVG scales to any size for free — prefer it over the PNGs. */
 export function crestUrl(club: Pick<Club, "code">): string {
-  return `https://resources.premierleague.com/premierleague/badges/t${club.code}.svg`;
+  return `${PL_ASSET_BASE}/badges/t${club.code}.svg`;
 }
 
 /** Some clubs' primary is near-white, so a white label on it vanishes. Pick the

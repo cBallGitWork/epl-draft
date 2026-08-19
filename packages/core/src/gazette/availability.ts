@@ -43,6 +43,12 @@ export function availability(teams: readonly RosteredTeam[]): AvailabilityNote[]
   return notes.sort((a, b) => rank(a.chance) - rank(b.chance));
 }
 
+/** Where "no opinion" sorts. FPL saying nothing is less urgent than a stated
+ *  zero and more urgent than a stated hundred, so it belongs between them rather
+ *  than at either end — and high enough to sit below every stated doubt, since a
+ *  player FPL has flagged at all is the one a manager needs to see first. */
+const NO_OPINION_RANK = 75;
+
 function rank(chance: number | null): number {
-  return chance ?? 75;
+  return chance ?? NO_OPINION_RANK;
 }

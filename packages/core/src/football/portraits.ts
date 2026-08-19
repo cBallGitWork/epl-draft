@@ -1,3 +1,4 @@
+import { PL_ASSET_BASE } from "../config";
 import type { FootballPlayer } from "./types";
 
 // Player portraits. FPL hosts a headshot per player keyed by the player's stable
@@ -8,7 +9,7 @@ import type { FootballPlayer } from "./types";
 // eleven raw 330 KB PNGs is 3.6 MB of pitch on a phone, whereas the optimizer
 // serves ~15 KB WebP apiece. Hence `unoptimized` must never be set on these.
 
-const BASE = "https://resources.premierleague.com/premierleague/photos/players";
+const BASE = `${PL_ASSET_BASE}/photos/players`;
 
 /** The only size worth requesting, for the reason above: the optimizer can
  *  downscale this and cannot undo a small source. */

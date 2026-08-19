@@ -1,3 +1,4 @@
+import { LEAGUE_TIMEZONE } from "@epl/core";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 
@@ -43,7 +44,7 @@ export function poolCaptureDir(date: string): string {
  *  when the machine running it thinks otherwise. */
 export function todayInLondon(): string {
   return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Europe/London",
+    timeZone: LEAGUE_TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",

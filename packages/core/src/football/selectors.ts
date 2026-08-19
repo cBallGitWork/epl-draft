@@ -1,3 +1,4 @@
+import { NOTABLE_SAVES } from "../config";
 import type { Club, FootballPlayer, FootballSnapshot, PlayerMatchStats } from "./types";
 
 // Pure read-side selectors over a snapshot. Kept here rather than in components
@@ -80,7 +81,7 @@ function isNotable(s: PlayerMatchStats): boolean {
     s.redCards > 0 ||
     s.yellowCards > 0 ||
     s.bonus > 0 ||
-    s.saves >= 4
+    s.saves >= NOTABLE_SAVES
   );
 }
 

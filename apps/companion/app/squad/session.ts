@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { TEAM_COOKIE } from "../config";
 
 // Who is holding the phone.
 //
@@ -14,16 +15,6 @@ import { cookies } from "next/headers";
 // Both secrets are read from the environment here rather than from
 // `packages/core/src/config.ts`: that module's own doc says anything genuinely
 // secret is read at the edges, and this is the edge.
-
-/** The signed session. One season is the useful lifetime — the swap on 10 Oct
- *  invalidates it by itself, because a rehearsal team id stops matching any team
- *  in the league we serve and `myTeamId` drops it. */
-const TEAM_COOKIE = "team";
-const SEASON_IN_SECONDS = 60 * 60 * 24 * 300;
-
-/** A wrong code costs this long. There is no rate limiter to put in front of a
- *  serverless route, so the defences are a long code and a slow no. */
-const WRONG_CODE_DELAY_MS = 700;
 
 function secret(): string | null {
   return process.env.SESSION_SECRET ?? null;
@@ -108,4 +99,3 @@ export async function myTeamId(teams: readonly { teamId: string }[]): Promise<st
   return teams.some((team) => team.teamId === teamId) ? teamId : null;
 }
 
-export { TEAM_COOKIE, SEASON_IN_SECONDS, WRONG_CODE_DELAY_MS };

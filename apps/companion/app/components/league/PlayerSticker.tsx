@@ -8,6 +8,7 @@ import {
   crestUrl,
   initials,
   isResolved,
+  NOTABLE_SAVES,
   portraitUrl,
 } from "@epl/core";
 
@@ -143,7 +144,7 @@ export default function PlayerSticker({
             {t.goals > 0 ? <Chip label={t.goals > 1 ? `G×${t.goals}` : "G"} tone="goal" /> : null}
             {t.assists > 0 ? <Chip label={t.assists > 1 ? `A×${t.assists}` : "A"} tone="assist" /> : null}
             {t.cleanSheet ? <Chip label="CS" tone="assist" /> : null}
-            {t.saves >= 3 ? <Chip label={`${t.saves}sv`} tone="note" /> : null}
+            {t.saves >= NOTABLE_SAVES ? <Chip label={`${t.saves}sv`} tone="note" /> : null}
             {t.redCards > 0 ? <Chip label="RC" tone="bad" /> : null}
             {t.redCards === 0 && t.yellowCards > 0 ? <Chip label="YC" tone="note" /> : null}
           </span>

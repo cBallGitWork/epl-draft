@@ -2,7 +2,8 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { SEASON_IN_SECONDS, TEAM_COOKIE, WRONG_CODE_DELAY_MS, sign, teamForCode } from "./session";
+import { SEASON_IN_SECONDS, TEAM_COOKIE, WRONG_CODE_DELAY_MS } from "../config";
+import { sign, teamForCode } from "./session";
 
 // Signing in and out. The only two writes in the app, and neither of them
 // touches Fantrax.

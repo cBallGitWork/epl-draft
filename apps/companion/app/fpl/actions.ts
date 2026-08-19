@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ENTRY_COOKIE, SEASON_IN_SECONDS } from "./entry";
+import { ENTRY_COOKIE, SEASON_IN_SECONDS } from "../config";
 
 /** Remember a manager's FPL entry id.
  *

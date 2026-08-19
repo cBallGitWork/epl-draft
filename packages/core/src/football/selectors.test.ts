@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { NOTABLE_SAVES } from "../config";
 import type { Fixture, FootballSnapshot, PlayerMatchStats } from "./types";
 import {
   adjacentGameweeks,
@@ -66,6 +67,16 @@ describe("contributions", () => {
   it("counts a busy keeper as notable but a quiet one as not", () => {
     const s = snap({ stats: [stat({ playerId: 1, saves: 4 }), stat({ playerId: 2, saves: 2 })] });
     expect(contributions(s, 1)).toHaveLength(1);
+  });
+
+  it("draws the line at the shared threshold rather than one of its own", () => {
+    // Four views judge "worth mentioning" and the player sticker used to say 3
+    // while the other three said 4, so the same keeper was notable on one screen
+    // and not on the next. The constant is the fix; this pins it.
+    const at = snap({ stats: [stat({ playerId: 1, saves: NOTABLE_SAVES })] });
+    const under = snap({ stats: [stat({ playerId: 1, saves: NOTABLE_SAVES - 1 })] });
+    expect(contributions(at, 1)).toHaveLength(1);
+    expect(contributions(under, 1)).toEqual([]);
   });
 
   it("ignores other fixtures and unknown players", () => {

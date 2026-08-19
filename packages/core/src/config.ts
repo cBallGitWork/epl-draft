@@ -111,6 +111,30 @@ export const FANTRAX_LEAGUE_ID =
  *  a page that ever does overflow this says so rather than showing a prefix. */
 export const POOL_PAGE_SIZE = 2000;
 
+/** Where the Premier League serves its own artwork — crests and portraits.
+ *
+ *  One base for both, because they are one host under one path and §3 puts a
+ *  provider's base URL here rather than inline beside the code that builds a
+ *  path onto it. `next.config.ts` names the hostname separately and cannot read
+ *  this: Next resolves image domains before any of our code runs. */
+export const PL_ASSET_BASE = "https://resources.premierleague.com/premierleague";
+
+/** The league's clock. Every date a manager reads is in it, whatever their phone
+ *  says, because a deadline is the same instant for all sixteen of them and a
+ *  capture is filed under the day it happened here.
+ *
+ *  Deliberately not the football calendar's timezone even though they agree
+ *  today: this is our league's, and the two are separate questions. */
+export const LEAGUE_TIMEZONE = "Europe/London";
+
+/** How many saves are worth mentioning.
+ *
+ *  A keeper makes one or two most weeks and it says nothing; a number worth
+ *  printing is one that made a difference. Named here because four views judge
+ *  it — the gazette's team of the week, the match list, the player sticker and
+ *  `contributions` — and until now the sticker disagreed with the other three. */
+export const NOTABLE_SAVES = 4;
+
 /** How many transaction rows to ask for in one page.
  *
  *  Their own client sends 100 and the response reports `totalNumPages` back, so

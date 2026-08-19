@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, LEAGUE_NAME, type Pick } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, LEAGUE_NAME, NOTABLE_SAVES, type Pick } from "@epl/core";
 import Masthead from "./components/gazette/Masthead";
+import { DEALS_SHOWN, DOUBTS_SHOWN } from "./config";
 import Nothing from "./components/shell/Nothing";
 import Section from "./components/shell/Section";
 import { edition } from "./edition";
@@ -33,7 +34,7 @@ function did(pick: Pick): string {
     pick.goals > 0 ? `${pick.goals}G` : null,
     pick.assists > 0 ? `${pick.assists}A` : null,
     pick.cleanSheet ? "CS" : null,
-    pick.saves >= 4 ? `${pick.saves} saves` : null,
+    pick.saves >= NOTABLE_SAVES ? `${pick.saves} saves` : null,
   ].filter((note): note is string => note !== null);
   return notes.length > 0 ? notes.join(" · ") : `${pick.minutes}'`;
 }
@@ -118,7 +119,7 @@ export default async function GazettePage() {
       {paper.deals.length > 0 ? (
         <Section title="The week's business" aside={`${paper.deals.length}`}>
           <ul className="flex flex-col gap-1.5">
-            {paper.deals.slice(0, 6).map((deal) => (
+            {paper.deals.slice(0, DEALS_SHOWN).map((deal) => (
               <li
                 key={deal.setId + deal.inbound.map((p) => p.playerName).join()}
                 className="elev rounded-xl border border-line bg-surface px-3 py-2.5"
@@ -159,7 +160,7 @@ export default async function GazettePage() {
       {paper.availability.length > 0 ? (
         <Section title="Doubts" aside={`${paper.availability.length} across the league`}>
           <ul className="flex flex-col gap-1.5">
-            {paper.availability.slice(0, 8).map((note) => (
+            {paper.availability.slice(0, DOUBTS_SHOWN).map((note) => (
               <li
                 key={`${note.teamId}-${note.playerName}`}
                 className={`elev rounded-xl border bg-surface px-3 py-2.5 ${

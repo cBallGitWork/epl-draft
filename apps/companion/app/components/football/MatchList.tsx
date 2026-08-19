@@ -8,6 +8,7 @@ import {
   contributions,
   crestUrl,
   fixturesInOrder,
+  NOTABLE_SAVES,
 } from "@epl/core";
 import { londonTime } from "../../londonTime";
 import PlayerPortrait from "./PlayerPortrait";
@@ -155,7 +156,7 @@ function Events({ c }: { c: import("@epl/core").MatchContribution }) {
   const chips: { label: string; count: number; className: string }[] = [
     { label: "G", count: c.goals, className: "bg-accent text-bg" },
     { label: "A", count: c.assists, className: "bg-info text-bg" },
-    { label: "S", count: c.saves >= 4 ? c.saves : 0, className: "bg-raised text-muted" },
+    { label: "S", count: c.saves >= NOTABLE_SAVES ? c.saves : 0, className: "bg-raised text-muted" },
     { label: "B", count: c.bonus, className: "bg-raised text-muted" },
     { label: "YC", count: c.yellowCards, className: "bg-mid text-bg" },
     { label: "RC", count: c.redCards, className: "bg-bad text-ink" },

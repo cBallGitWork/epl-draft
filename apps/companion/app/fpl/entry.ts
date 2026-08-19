@@ -11,6 +11,7 @@ import {
   mapEntry,
   mapSquad,
 } from "@epl/core";
+import { ENTRY_COOKIE } from "../config";
 import { footballNow } from "../football";
 
 // The other game. A manager's FPL side, read from the id in the URL they already
@@ -19,9 +20,6 @@ import { footballNow } from "../football";
 // Stored in a plain unsigned cookie, unlike the team session: an entry id is
 // public, claiming somebody else's shows you their team on your own phone and
 // nothing more, and there is nothing here to authorize.
-
-const ENTRY_COOKIE = "fpl";
-const SEASON_IN_SECONDS = 60 * 60 * 24 * 300;
 
 export async function myEntryId(): Promise<number | null> {
   const raw = (await cookies()).get(ENTRY_COOKIE)?.value;
@@ -76,4 +74,3 @@ export async function mySide(): Promise<FplSide | null> {
   return readSide(entryId, await footballNow());
 }
 
-export { ENTRY_COOKIE, SEASON_IN_SECONDS };

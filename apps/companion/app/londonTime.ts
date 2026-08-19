@@ -1,3 +1,5 @@
+import { LEAGUE_TIMEZONE } from "@epl/core";
+
 // Every time this app shows is UK time, wherever the reader is. The league is
 // British and its kickoffs and deadlines are announced in British time — "15:00"
 // has to mean the same thing to a member watching from Toronto as to one in Leeds,
@@ -6,21 +8,21 @@
 const TIME = new Intl.DateTimeFormat("en-GB", {
   hour: "2-digit",
   minute: "2-digit",
-  timeZone: "Europe/London",
+  timeZone: LEAGUE_TIMEZONE,
 });
 
 const DAY_AND_TIME = new Intl.DateTimeFormat("en-GB", {
   weekday: "short",
   hour: "2-digit",
   minute: "2-digit",
-  timeZone: "Europe/London",
+  timeZone: LEAGUE_TIMEZONE,
 });
 
 const DATE = new Intl.DateTimeFormat("en-GB", {
   weekday: "long",
   day: "numeric",
   month: "long",
-  timeZone: "Europe/London",
+  timeZone: LEAGUE_TIMEZONE,
 });
 
 /** "Saturday 10 October" — a day, for something too far off to have a time.
