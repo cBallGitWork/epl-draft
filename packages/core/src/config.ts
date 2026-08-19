@@ -111,6 +111,14 @@ export const FANTRAX_LEAGUE_ID =
  *  a page that ever does overflow this says so rather than showing a prefix. */
 export const POOL_PAGE_SIZE = 2000;
 
+/** How many transaction rows to ask for in one page.
+ *
+ *  Their own client sends 100 and the response reports `totalNumPages` back, so
+ *  a league busy enough to overflow a page says so rather than quietly serving
+ *  the first hundred as if they were all of it. Sixteen teams will not reach it
+ *  in a season. */
+export const TRANSACTION_PAGE_SIZE = 100;
+
 /** How long the current season's Fantrax code stays good, in seconds.
  *
  *  Six hours rather than thirty, because the answer changes once a year. It is

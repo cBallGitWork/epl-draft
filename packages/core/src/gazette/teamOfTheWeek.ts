@@ -26,9 +26,6 @@ import type { Pick, TeamOfTheWeek } from "./types";
 export function teamOfTheWeek(
   teams: readonly RosteredTeam[],
   limits: RosterLimits,
-  /** How many may start in total, which is not the sum of the caps: our league
-   *  allows five defenders and five midfielders but only eleven on the field. */
-  maxActive = limits.maxActivePlayers,
 ): TeamOfTheWeek {
   const candidates: Pick[] = [];
 
@@ -45,7 +42,9 @@ export function teamOfTheWeek(
   const perPosition = new Map<string, number>();
 
   for (const pick of candidates) {
-    if (taken.length >= maxActive) break;
+    // The total is not the sum of the caps: our league allows five defenders and
+    // five midfielders but only eleven on the field.
+    if (taken.length >= limits.maxActivePlayers) break;
     const cap = limits.maxActiveByPosition[pick.position];
     // A position the league sets no cap for cannot be filled from here: we would
     // be inventing a rule about how many of them may play.

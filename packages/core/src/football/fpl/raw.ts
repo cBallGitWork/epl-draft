@@ -2,14 +2,14 @@
 // endpoints. Everything is marked optional-ish in spirit: this is scraped data we
 // do not control, so `map.ts` must render gracefully when a field goes missing.
 
-export interface RawTeam {
+interface RawTeam {
   id: number;
   code: number;
   name: string;
   short_name: string;
 }
 
-export interface RawElement {
+interface RawElement {
   id: number;
   code: number;
   web_name: string;
@@ -24,7 +24,7 @@ export interface RawElement {
   opta_code: string | null;
 }
 
-export interface RawEvent {
+interface RawEvent {
   id: number;
   name: string;
   deadline_time: string;
@@ -57,7 +57,7 @@ export interface RawFixture {
 /** One scoring identifier's value in one fixture, from the live endpoint's
  *  `explain` block. This is the only per-fixture breakdown FPL gives, which is why
  *  we prefer it over the aggregate `stats` on double gameweeks. */
-export interface RawExplainStat {
+interface RawExplainStat {
   identifier: string;
   points: number;
   value: number;

@@ -102,7 +102,7 @@ export default function PlayerSticker({
             {initials(player.name)}
           </span>
           <Image
-            src={portraitUrl(player, "250x250")}
+            src={portraitUrl(player)}
             alt=""
             width={78}
             height={78}

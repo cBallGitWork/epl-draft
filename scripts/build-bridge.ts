@@ -7,6 +7,7 @@ import {
   type UnmappedSplit,
   assumeUnmapped,
   fetchBootstrap,
+  isUnmapped,
   mapPlayerPool,
   matchPlayers,
   mergeBridge,
@@ -103,7 +104,7 @@ function report(
   console.log(`review ${split.forReview.length}`);
 
   const rows = Object.values(merged);
-  const unmapped = rows.filter((entry) => "status" in entry).length;
+  const unmapped = rows.filter(isUnmapped).length;
   console.log(
     `\nBridge holds ${rows.length} players: ${rows.length - unmapped} mapped, ` +
       `${unmapped} with no FPL counterpart.`,

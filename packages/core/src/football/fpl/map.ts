@@ -12,7 +12,7 @@ import type { RawBootstrap, RawFixture, RawLive, RawLiveElement } from "./raw";
 // everything this needs arrives as an argument, so it is fully unit-testable and
 // the same inputs always give the same snapshot.
 
-export function mapClubs(raw: RawBootstrap): Club[] {
+function mapClubs(raw: RawBootstrap): Club[] {
   return raw.teams.map((t) => ({
     id: t.id,
     code: t.code,

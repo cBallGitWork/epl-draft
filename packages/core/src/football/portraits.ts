@@ -10,13 +10,12 @@ import type { FootballPlayer } from "./types";
 
 const BASE = "https://resources.premierleague.com/premierleague/photos/players";
 
-export type PortraitSize = "40x40" | "110x140" | "250x250";
+/** The only size worth requesting, for the reason above: the optimizer can
+ *  downscale this and cannot undo a small source. */
+const SIZE = "250x250";
 
-export function portraitUrl(
-  player: Pick<FootballPlayer, "code">,
-  size: PortraitSize = "250x250",
-): string {
-  return `${BASE}/${size}/p${player.code}.png`;
+export function portraitUrl(player: Pick<FootballPlayer, "code">): string {
+  return `${BASE}/${SIZE}/p${player.code}.png`;
 }
 
 /** Initials for the fallback tile shown while a portrait loads, or when a player

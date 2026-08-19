@@ -23,7 +23,7 @@ export interface RawFantraxError {
   message?: string;
 }
 
-export interface RawErrorBody {
+interface RawErrorBody {
   error: RawFantraxError;
 }
 
@@ -60,7 +60,7 @@ export interface RawRosterInfo {
 
 /** Our league's view of a player: what it currently deems them eligible to play
  *  as, and whether they are rostered. `eligiblePos` is comma-joined ("F,M"). */
-export interface RawPlayerInfo {
+interface RawPlayerInfo {
   eligiblePos?: string;
   status?: string;
 }
@@ -74,7 +74,7 @@ export interface RawTeamInfo {
   shortName?: string;
 }
 
-export interface RawMatchup {
+interface RawMatchup {
   home?: RawTeamInfo;
   away?: RawTeamInfo;
 }
@@ -125,7 +125,7 @@ export interface RawRosterItem {
   status?: string;
 }
 
-export interface RawTeamRoster {
+interface RawTeamRoster {
   teamName?: string;
   /** On the wire and meaningless to us: our leagues have no salary cap. Mirrored
    *  here because raw.ts mirrors the wire; deliberately not mapped. */
@@ -139,7 +139,7 @@ export interface RawTeamRosters {
   rosters?: Record<string, RawTeamRoster>;
 }
 
-export interface RawStandingsRow {
+interface RawStandingsRow {
   teamId?: string;
   teamName?: string;
   rank?: number;

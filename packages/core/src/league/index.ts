@@ -4,7 +4,6 @@
 
 export type {
   LeagueInfo,
-  LeagueMatchup,
   LiveTeamScore,
   LeaguePeriod,
   LeaguePlayer,
@@ -15,26 +14,15 @@ export type {
   RosterLimits,
   RosterSlot,
   StandingsRow,
-  TeamRoster,
-  TransactionKind,
   TransactionView,
 } from "./types";
 
-export type {
-  PoolStatRow,
-  PoolStats,
-  StatColumn,
-  StatGroup,
-  StatLine,
-  StatSeason,
-  TeamStats,
-} from "./stats";
+export type { PoolStatRow, StatColumn, StatSeason, TeamStats } from "./stats";
 
 export { captureStaleness } from "./staleness";
-export type { CaptureStaleness } from "./staleness";
 
 export { periodGameweeks } from "./calendar";
-export type { GameweekKickoff, PeriodGameweeks } from "./calendar";
+export type { GameweekKickoff } from "./calendar";
 
 export { rosterDisplay } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
@@ -50,19 +38,13 @@ export { isActive } from "./rosterStatus";
 export { leaguePool, periodPairings } from "./selectors";
 export type { PeriodPairing, PoolPlayer } from "./selectors";
 
-export {
-  FantraxError,
-  errorEnvelope,
-  pageErrorEnvelope,
-  responseErrorEnvelope,
-} from "./fantrax/errors";
+export { FantraxError } from "./fantrax/errors";
 export type { ScoringRules } from "./scoring";
 export { mapLiveScores } from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel } from "./fantrax/profile";
 export { mapTransactions } from "./fantrax/transactions";
-export type { RawTransactionHistory } from "./fantrax/transactions";
 // Exported so the app can hold a raw payload across a cache boundary before
 // mapping it — the mapper stays the only place raw meets clean.
 export type { RawTeamRosters } from "./fantrax/raw";
@@ -73,7 +55,7 @@ export {
   fetchTeamStats,
   fetchTransactions,
 } from "./fantrax/client";
-export { mapLeagueInfo, mapPlayerPool, readingOrder } from "./fantrax/map";
+export { mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapStandings } from "./fantrax/standings";
 export {

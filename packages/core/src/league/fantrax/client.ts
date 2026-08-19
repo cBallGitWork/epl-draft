@@ -1,4 +1,4 @@
-import { FANTRAX_FXEA_BASE, FANTRAX_SPORT } from "../../config";
+import { FANTRAX_FXEA_BASE, FANTRAX_SPORT, TRANSACTION_PAGE_SIZE } from "../../config";
 import { politeFetch } from "../../http/fetch";
 import type { TransactionView } from "../types";
 import { FantraxError, errorEnvelope } from "./errors";
@@ -89,11 +89,10 @@ export function fetchPlayerProfile(leagueId: string, playerId: string): Promise<
 export function fetchTransactions(
   leagueId: string,
   view: TransactionView,
-  maxResultsPerPage = 100,
 ): Promise<RawTransactionHistory> {
   return fxpaRead(leagueId, "getTransactionDetailsHistory", {
     view,
-    maxResultsPerPage: String(maxResultsPerPage),
+    maxResultsPerPage: String(TRANSACTION_PAGE_SIZE),
   }) as Promise<RawTransactionHistory>;
 }
 

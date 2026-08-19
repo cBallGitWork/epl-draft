@@ -34,7 +34,7 @@ export default function PlayerPortrait({
         {initials(player.name)}
       </span>
       <Image
-        src={portraitUrl(player, "250x250")}
+        src={portraitUrl(player)}
         alt=""
         width={32}
         height={32}

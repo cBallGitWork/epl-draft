@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import type { PortraitSize } from "./portraits";
 import { initials, portraitUrl } from "./portraits";
 
 describe("initials", () => {
@@ -36,16 +35,11 @@ describe("portraitUrl", () => {
     expect(portraitUrl({ code: 223094 })).toContain("/p223094.png");
   });
 
-  it("requests the largest size unless told otherwise", () => {
-    // The optimizer downscales; asking for a small source can never be undone,
-    // so the default must stay the biggest one FPL serves.
+  it("requests the largest size FPL serves, since the optimizer only downscales", () => {
+    // Asking for a small source can never be undone, and eleven raw portraits at
+    // this size are 3.6 MB of pitch that the optimizer turns into ~165 KB.
     expect(portraitUrl({ code: 223094 })).toBe(
       "https://resources.premierleague.com/premierleague/photos/players/250x250/p223094.png",
     );
-  });
-
-  it("honours an explicit size", () => {
-    const size: PortraitSize = "40x40";
-    expect(portraitUrl({ code: 223094 }, size)).toContain("/40x40/");
   });
 });
