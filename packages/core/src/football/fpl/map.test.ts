@@ -110,6 +110,25 @@ describe("buildSnapshot", () => {
     expect(snap.fetchedAt).toBe("2026-08-21T18:00:00Z");
   });
 
+  it("tells an empty live read apart from one that failed", () => {
+    // Both give no stats and on a Saturday they mean opposite things: FPL says
+    // `{elements: []}` before the first kickoff, and a read that fell over says
+    // nothing at all. Rendering every player on nought is only honest for one
+    // of them.
+    const quiet = buildSnapshot({
+      bootstrap: bootstrap(), fixtures: [fixture()], live: { elements: [] },
+      gameweek: 2, fetchedAt: "2026-08-21T18:00:00Z",
+    });
+    const blind = buildSnapshot({
+      bootstrap: bootstrap(), fixtures: [fixture()], live: null,
+      gameweek: 2, fetchedAt: "2026-08-21T18:00:00Z",
+    });
+    expect(quiet.stats).toEqual([]);
+    expect(quiet.statsUnavailable).toBe(false);
+    expect(blind.stats).toEqual([]);
+    expect(blind.statsUnavailable).toBe(true);
+  });
+
   it("labels the snapshot with the round asked for, not the one in play", () => {
     // Viewing GW1 while GW2 is next used to return GW1's fixtures under GW2's
     // number and deadline. Invisible until something could request a round other

@@ -15,9 +15,11 @@ export async function getFootballSnapshot(gameweek?: number): Promise<FootballSn
   // paying two round trips in series on the live path.
   const [fixtures, live] = await Promise.all([
     fetchFixtures(gw),
-    // Before a season starts this is `{elements: []}` rather than an error, but a
-    // provider hiccup should degrade to "no stats yet", never a blank page.
-    fetchLive(gw).catch(() => ({ elements: [] })),
+    // Before a season starts FPL answers `{elements: []}`, which is not an error.
+    // A read that actually fails becomes null rather than that same empty shape:
+    // one gameweek in four hundred people are watching, "nobody has scored" and
+    // "we cannot see" are opposite claims, and the snapshot has to carry which.
+    fetchLive(gw).catch(() => null),
   ]);
 
   return buildSnapshot({

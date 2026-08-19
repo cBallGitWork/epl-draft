@@ -105,4 +105,12 @@ export interface FootballSnapshot {
   gameweeks: number[];
   /** When this snapshot was assembled, so the UI can show staleness honestly. */
   fetchedAt: string;
+  /** True when FPL's live endpoint could not be read, as against having nothing
+   *  to report yet.
+   *
+   *  The two are indistinguishable in `stats` — both are empty — and on a
+   *  Saturday afternoon they mean opposite things. Without this a view renders
+   *  every player on nought and states it as fact, which is the confident wrong
+   *  number the whole layer exists to avoid. */
+  statsUnavailable: boolean;
 }

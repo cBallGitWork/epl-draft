@@ -144,7 +144,9 @@ function statsFor(
 export function buildSnapshot(input: {
   bootstrap: RawBootstrap;
   fixtures: RawFixture[];
-  live: RawLive;
+  /** Null when the live read failed, which is not the same as it returning
+   *  nothing — see `FootballSnapshot.statsUnavailable`. */
+  live: RawLive | null;
   gameweek: number;
   fetchedAt: string;
 }): FootballSnapshot {
@@ -155,10 +157,11 @@ export function buildSnapshot(input: {
     clubs: mapClubs(input.bootstrap),
     players: mapPlayers(input.bootstrap),
     fixtures: mapFixtures(input.fixtures),
-    stats: mapLiveStats(input.live),
+    stats: input.live === null ? [] : mapLiveStats(input.live),
     gameweek: input.gameweek,
     deadline: event?.deadline_time ?? null,
     gameweeks: events.map((e) => e.id).sort((a, b) => a - b),
     fetchedAt: input.fetchedAt,
+    statsUnavailable: input.live === null,
   };
 }

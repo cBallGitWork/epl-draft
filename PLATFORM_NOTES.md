@@ -417,6 +417,19 @@ Core's tsconfig still omits node types, so nothing in `packages/core` can reach
 for `fs`. The single global is declared locally in `config.ts` rather than opening
 that door for one string.
 
+### The root layout's sibling: `getFootballSnapshot` no longer swallows (§2) — RESOLVED
+
+*19 Aug 2026, before GW1.* `football/snapshot.ts` answered a failed live read
+with `{elements: []}` — the exact shape FPL sends before a season starts. The two
+are then indistinguishable, and on a Saturday they are opposite claims: "nobody
+has scored yet" and "we cannot see the pitch". Every view rendered the first and
+stated it as fact.
+
+The failed read is now `null`, `FootballSnapshot.statsUnavailable` carries which
+happened, and the gameweek view says so instead of printing a scoreline with no
+scorers under it. This is principle 4 in the one place it had quietly lapsed, and
+GW1 on 21 Aug is the first time it could have cost anybody anything.
+
 ### `codeHashes()` swallows a malformed `TEAM_CODES` (§2, no defensive try/catch)
 
 *Recorded 19 Aug 2026, on the doc-truth sweep — the code predates the note.*

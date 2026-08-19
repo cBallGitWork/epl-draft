@@ -33,6 +33,7 @@ const snap = (over: Partial<FootballSnapshot> = {}): FootballSnapshot => ({
   deadline: null,
   gameweeks: [1, 2, 3],
   fetchedAt: "2026-08-21T18:00:00Z",
+  statsUnavailable: false,
   ...over,
 });
 

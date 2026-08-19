@@ -56,9 +56,13 @@ export default function GameweekView({ snapshot }: { snapshot: FootballSnapshot 
 
       <ButtonLink href="/squad">Squads</ButtonLink>
 
-      {/* Honesty about provenance, per PRODUCT.md principle 4. */}
+      {/* Honesty about provenance, per PRODUCT.md principle 4. Saying the stats
+          are missing matters more than saying when: a scoreline with no scorers
+          under it reads as nobody having done anything. */}
       <p className="pt-1 text-center text-2xs text-faint">
-        Live data from the Premier League. Updated {londonTime(snapshot.fetchedAt)}.
+        {snapshot.statsUnavailable
+          ? "The Premier League is not serving player stats right now, so the goals and assists below are missing rather than nil."
+          : `Live data from the Premier League. Updated ${londonTime(snapshot.fetchedAt)}.`}
       </p>
     </div>
   );
