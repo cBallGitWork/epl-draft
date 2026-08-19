@@ -17,6 +17,7 @@ import {
   duringGameweek,
   fetchTransactions,
   mapTransactions,
+  transactionDateLabel,
   nextDeadline,
   teamOfTheWeek,
 } from "@epl/core";
@@ -45,6 +46,10 @@ export type Silence =
 export interface Edition {
   /** Null when there is something to print. */
   silence: Silence | null;
+  /** Fantrax's own heading for the transaction date column — "Date (EDT)". Shown
+   *  because their timestamps carry no offset, so without it a British reader
+   *  takes a New York morning for a British one. Null if they stop saying. */
+  dealsAt: string | null;
   /** Football on right now, which changes what the paper leads with. */
   live: boolean;
   snapshot: FootballSnapshot | null;
@@ -82,24 +87,30 @@ const readDeals = unstable_cache(
     const feeds = await Promise.all(
       DEAL_VIEWS.map(async (view) => {
         const raw = await orRefusal(fetchTransactions(FANTRAX_LEAGUE_ID, view));
-        return raw instanceof FantraxError ? [] : mapTransactions(raw, view);
+        if (raw instanceof FantraxError) return { rows: [], at: null };
+        return { rows: mapTransactions(raw, view), at: transactionDateLabel(raw) };
       }),
     );
-    return feeds.flat();
+    return {
+      rows: feeds.flatMap((feed) => feed.rows),
+      // Every view heads the column the same way; the first that answered wins.
+      at: feeds.map((feed) => feed.at).find((label) => label !== null) ?? null,
+    };
   },
   ["gazette-deals", FANTRAX_LEAGUE_ID],
   { revalidate: PAGE_REVALIDATE },
 );
 
 export async function edition(mine: string | null): Promise<Edition> {
-  const [squads, transactions] = await Promise.all([getLeagueSquads(), readDeals()]);
+  const [squads, feed] = await Promise.all([getLeagueSquads(), readDeals()]);
   const drafted = "period" in squads ? squads : null;
   const now = new Date().toISOString();
 
   const paper = {
     live: drafted ? duringGameweek(drafted.snapshot, now) : false,
     snapshot: drafted?.snapshot ?? null,
-    deals: deals(transactions),
+    deals: deals(feed.rows),
+    dealsAt: feed.at,
     availability: drafted ? yoursFirst(availability(drafted.period.teams), mine) : [],
     deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, now) : null,
     teams: drafted?.info?.teams ?? [],

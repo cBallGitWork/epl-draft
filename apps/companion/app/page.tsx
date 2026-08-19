@@ -126,8 +126,15 @@ export default async function GazettePage() {
         </Section>
       ) : null}
 
+      {/* The zone belongs in the heading, where a table would put it: the
+          timestamps below are Fantrax's own strings and carry no offset, so
+          without their label a British reader takes a New York morning for a
+          British one. Their words, not our conversion. */}
       {paper.deals.length > 0 ? (
-        <Section title="The week's business" aside={`${paper.deals.length}`}>
+        <Section
+          title="The week's business"
+          aside={paper.dealsAt ? `${paper.deals.length} · ${paper.dealsAt}` : `${paper.deals.length}`}
+        >
           <ul className="flex flex-col gap-1.5">
             {paper.deals.slice(0, DEALS_SHOWN).map((deal) => (
               <li

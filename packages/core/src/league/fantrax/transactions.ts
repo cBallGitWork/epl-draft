@@ -54,8 +54,29 @@ interface RawTxRow {
 }
 
 export interface RawTransactionHistory {
-  table?: { caption?: string; rows?: RawTxRow[] };
+  table?: {
+    caption?: string;
+    rows?: RawTxRow[];
+    /** Column headings. Read only to find the date column's own label — never to
+     *  identify a column, which is what `cell.key` is for. */
+    header?: { cells?: { key?: string; name?: string; shortName?: string }[] };
+  };
   paginatedResultSet?: { totalNumResults?: number; totalNumPages?: number };
+}
+
+/** Fantrax's own label for the date column, e.g. "Date (EDT)", or null.
+ *
+ *  The timezone is the point. `processedAt` is a bare "Wed Aug 12, 2026, 9:14AM"
+ *  with no offset in it, so a British reader takes it for British time and is
+ *  four hours out. Fantrax states the zone in the heading and nowhere else, so
+ *  this hands their words through verbatim rather than converting — which would
+ *  mean mapping an abbreviation to an offset and asserting a fact about somebody
+ *  else's clock.
+ *
+ *  Found by `key`, as every other read here is; only the label itself is text. */
+export function transactionDateLabel(raw: RawTransactionHistory): string | null {
+  const cell = raw.table?.header?.cells?.find((header) => header.key === "date");
+  return cell?.shortName ?? cell?.name ?? null;
 }
 
 /** Resolve a row's cells, inheriting any a previous row is still spanning.
