@@ -329,6 +329,29 @@ The totals track the pool rather than accumulating, which is the point: a bridge
 row for a player Fantrax no longer carries is only worth keeping when somebody
 decided it.
 
+### The empty-league pass, 19 Aug 2026 — and the league's own name is two seasons stale
+
+Ran every page against `FANTRAX_LEAGUE_ID=ayyoh3n2mr326v2o`, the real league,
+which has no teams until 10 Oct. **All nine routes answer 200 and every one of
+them degrades honestly** — the undrafted sentence on the paper, "No table yet"
+with the section nav intact, "Nobody plays anybody yet", "Nobody has a squad
+yet", each carrying the provider's own tell (`getTeamRosters → NO_TEAMS`,
+`getStandings → 0 rows`, `38 periods, 0 pairings`). The football tabs are
+unaffected, as designed: `/gw/1` lists GW1's fixtures and `/matchday` names the
+first kickoff without the league layer being involved at all.
+
+The player pool works pre-draft too — 670 rows, everyone on Waivers — which
+makes it the one league page worth opening before draft night.
+
+**One finding, and it is not a code fault.** `getLeagueInfo.leagueName` for the
+real league is **"Tim Hortons Pro League 24/25"**. The schedule page prints it as
+its subtitle, correctly and verbatim (§3: server-driven, never our copy), so on
+10 Oct sixteen people will read "24/25" directly beneath a masthead saying 26/27.
+
+**This is a commissioner setting, fixable in Fantrax in a minute, and invisible
+to any test we could write.** It belongs in the ship-day runbook rather than in
+the code.
+
 ## Recorded rule exceptions
 
 Each entry is a deliberate departure from `CODE_RULES.md`, recorded in the commit
@@ -1190,6 +1213,9 @@ email, not billing — see the hosting section.
       whether its year-to-date refusal was a refusal or an empty season. The
       Players column heading answers this on its own — if it still says "Fantrax
       projection" once a round has been played, it was a refusal.
+- [ ] **Rename the real league in Fantrax** — `getLeagueInfo.leagueName` is
+      "Tim Hortons Pro League 24/25" and the schedule page prints it verbatim.
+      Commissioner setting, not a code change. Before 10 Oct.
 - [ ] Design the cookie flow for the fxpa write surface.
 - [ ] Re-run `npm run bridge` after rehearsal waiver churn; gate on zero
       rostered-but-unmapped.
