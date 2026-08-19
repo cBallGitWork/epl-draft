@@ -59,6 +59,14 @@ export interface Fixture {
   status: FixtureStatus;
   /** Minutes played, as FPL reports it — drives the live clock. */
   minutes: number;
+  /** FPL's 1–5 fixture difficulty for each side, null when they published none.
+   *
+   *  Theirs, and deliberately not ours: difficulty is an opinion, and the only
+   *  defensible one to print is the one the whole fantasy world is already
+   *  reading. Null rather than 3, because "no opinion" and "average" are
+   *  different claims and only one of them is FPL's. */
+  homeDifficulty: number | null;
+  awayDifficulty: number | null;
 }
 
 /** One player's contribution in one match. The fields are deliberately the raw

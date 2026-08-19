@@ -1163,6 +1163,145 @@ one of them looks automated from the inside and is not. Green CI says the code
 is good; it does not say the code shipped. **Before 10 Oct, the ship-day runbook
 must check the deployed URL itself, not the commit that was pushed to it.**
 
+## The squad view, for the fourteen squads that are not yours (19 Aug 2026)
+
+`/squad/[teamId]` had two states: the pitch once a period opens, and `SquadList`
+— fifteen names in a column — before it. The second is the state a rival's squad
+is in every time you open it before a deadline, and a column of names is not a
+squad screen.
+
+It is now a board with two arrangements and a card over the top:
+
+- **`squadUnarranged()` in `join/lineup.ts`**, beside `squadInLines()`. All
+  fifteen in positional lines, **no bench and no active/reserve mark**, sorted by
+  name within each line. The sort is load-bearing, not tidy: `squadInLines()`
+  lifts the actives to the front of every line, which is the XI restated as an
+  ordering. Fantrax happens to interleave actives and reserves in the payload, so
+  rendering their order happens not to leak the lineup today — their
+  serialisation detail, not a promise. Sorting by name makes the non-leak a
+  property of the file.
+- **Grouped by `slot.position`, never by eligibility.** Fantrax supports
+  multi-position players ("F,M" is common), so eligibility would put the same
+  footballer in two lines or make the view pick one for him. The manager already
+  picked, and his choice is on the roster.
+- **`oppositionByClub()` / `oppositionLabel()`** in a new `football/opposition.ts`.
+  Who a club plays this round is a football fact — the fixture list is fixed for
+  everyone — so it is answered in the football layer and never inferred from the
+  league. A list per club rather than one fixture, because a blank gameweek gives
+  a club none and a double gives it two, and `oppositionLabel()` returns null for
+  the blank so each caller decides what fits its space.
+- **The sticker's strip prints the fixture** while there is nothing to report,
+  and minutes once he is on. The crest in the corner already says which club he
+  is, so the club code that used to sit there was three characters spent twice.
+- **`StickerFace` is a client component, and had to be.** The Premier League's
+  portraits are cut-outs on a transparent ground, so a fallback drawn *behind*
+  one shows through the player rather than behind him — a crest across his face.
+  It has to appear only once the image has actually failed, and only the browser
+  knows that. It fails often enough to be worth the boundary: January signings
+  and academy call-ups go weeks without a headshot.
+- **The player card is a dialog, not a route.** The question a tap asks is "who
+  is this and is he fit" while reading somebody else's fifteen, and navigating
+  away to answer it loses the squad being read. Native `<dialog>`, so Escape, the
+  focus trap and the inert background are the browser's job. The subject of the
+  card is the same sticker at album size — tapping a sticker to be shown a
+  plainer portrait would look like a different player.
+- **The route now knows whose squad it is serving.** `mine` gates the lineup
+  planner (rearranging a rival's team is not yours to do, preview league or not)
+  and changes what the gate is said *about*: on a rival's team it explains why you
+  cannot see their XI, on your own why you cannot see the one you set yourself.
+
+Second pass the same day, from design review:
+
+- **The pitch is angled.** `PitchTurf` draws the trapezoid, the mow bands growing
+  toward the reader and the markings splayed with them — penalty area, six-yard
+  box, D, spot, and the centre circle at the near edge where it can never run
+  through a row. The angle is in the ground and never in a CSS `perspective`: a
+  transform would tilt the stickers with it, and a sticker is a flat printed
+  object photographed square.
+- **`PitchFrame` is shared with the matchday XI**, hoardings and all, and the
+  hoardings carry the league crest — which is where a sponsor goes the day the
+  league has one. They are the width of the far touchline rather than of the
+  page: boards stand behind that goal line, and running them full width puts
+  advertising on ground the perspective says is off the pitch. The `.album` red banding around both pitches is gone; the
+  surround and the boards are the frame now, and the CSS went with it.
+- **The pitch is full-bleed** and fits a 390x844 phone without scrolling. That
+  cost the gate's explanation paragraph for the ordinary `not-started` case and
+  the standalone provenance line. Neither claim was dropped, only moved: the
+  three abnormal gate reasons still print, and the projection warning became the
+  list's column heading ("Proj" rather than "FPts"), which costs no height.
+- **FPL's fixture difficulty crossed into the football layer.** `Fixture` now
+  carries `homeDifficulty`/`awayDifficulty` from `team_h_difficulty` /
+  `team_a_difficulty` (probed live, 19 Aug), and `Opposition` carries the rating
+  for the club being asked about. It is FPL's opinion and printed as such —
+  unrated is drawn neutral rather than given a middle score we invented.
+- **Tailwind v4 drops a theme variable whose name never appears literally in
+  scanned source.** `var(--color-fdr-${n})` emitted nothing and shipped five
+  colourless chips. `FixtureChip` writes the five names out in a `Record`, with
+  the reason on the constant.
+- **`getTeamRosterInfo` gives a whole squad's points in one public call**, so the
+  list view has a real stat column. `yearToDate` and `readTeamStats` moved out of
+  the player page into `app/teamStats.ts` — two `unstable_cache` calls with the
+  same key are two definitions of one cache.
+
+Two recorded rule exceptions from this work, both §3 and both deliberate:
+
+- **The squad list spells position letters out.** "Never translate Fantrax's
+  vocabulary" is the rule, and `getLeagueInfo` was probed again on 19 Aug to see
+  whether it publishes long names: it does not — `rosterInfo.positionConstraints`
+  and every `playerInfo[].eligiblePos` are bare letters. A readable heading can
+  therefore only come from us. `POSITION_NAME` in `SquadRows` covers the four
+  letters this league uses and **falls back to the raw letter**, so a
+  commissioner who files wingers under W still gets "W".
+- **Two touch targets below `min-h-11`.** The squad board's view toggle and the
+  list row are `min-h-9`, at Craig's direction, to fit the pitch on a phone
+  without scrolling and to get fifteen rows onto one screen. Everything else in
+  the app keeps the 44px target.
+
+Refactor pass over all of it the same day, against §1 and §2:
+
+- **`squadDetail()` in `join/`, and the join moved to the server.** The pitch,
+  the list and the card each ran `isResolved(x) ? map.get(x.player.clubId) : …`
+  against the club map and the fixture map — the third copy is what makes it a
+  rule. Worse than the duplication was where it ran: on the browser, which meant
+  the RSC payload carried all 20 clubs and every fixture in the round so fifteen
+  players could look two of them up. One pure, tested join now happens in the
+  route and the views receive `SquadPlayerDetail`.
+- **`PlayerSticker` takes the club it draws, not the directory to find it in.**
+  Same reason: two callers were doing the lookup and one was doing it twice.
+- **Three bugs the refactor surfaced.** A player missing from Fantrax's points
+  table rendered no cell at all rather than a dash, so one row in fifteen lost
+  its last column; every sticker button on the pitch carried the same
+  `aria-label` ("D — open player card") so a screen reader could not tell five
+  defenders apart; and a slot with no position at all printed an empty heading.
+- **The pitch geometry is derived, not drawn.** `PitchTurf` was fourteen
+  hand-measured path strings, and moving one line meant re-deriving the other
+  four by hand. It now holds two picture decisions (`FAR_INSET`, `SPLAY_END`), a
+  marking scale, and the real dimensions of a pitch in metres; every path is
+  computed. The `clipPath` went with it — it needed a document-unique id and the
+  component can appear twice — so the mow bands are trapezoids by construction.
+- **`--pitch-boards` is one value.** The hoardings' height was written three
+  times: the boards, the turf that starts under them, and the padding that keeps
+  the far row clear. They had already disagreed once.
+- **The board cannot render empty.** It is built exactly when the gate is closed
+  and the route branches on its existence rather than re-testing the display, so
+  there is no arrangement that renders a board with nothing on it — and
+  `getTeamRosterInfo` is no longer requested on the two paths that never show it.
+
+Still open: the view reads the snapshot's own gameweek. Browsing a *future* round
+needs a gameweek in the URL, a snapshot fetched for it, and `getTeamRosters` asked
+for the matching period — the fixtures come free, the roster does not.
+
+## `docs/ui/` — the handover to whoever does the visual pass (19 Aug 2026)
+
+One file per route, plus `conventions.md` for the token registers and the shared
+components. It describes what is on each page, every state it can reach, and
+where it is weak — and it names the four things a redesign may not break: the
+lineup gate, provenance at the point of use, absence modelled rather than
+defaulted, and the phone-first touch targets.
+
+It is documentation of the app as built, not a plan. When a page changes, its
+file changes in the same commit or it starts lying.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially

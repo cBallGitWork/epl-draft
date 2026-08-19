@@ -10,8 +10,8 @@ import {
   eligibilityOf,
   eligibleSlots,
   isActive,
-  isResolved,
   legalMoves,
+  playerName,
   violations,
 } from "@epl/core";
 import type { Move, Violation } from "@epl/core";
@@ -64,9 +64,7 @@ export default function LineupPlanner({
 
   const eligibility = useMemo(() => eligibilityOf(players), [players]);
   const nameOf = useMemo(() => {
-    const names = new Map(
-      team.players.map((p) => [p.slot.fantraxId, isResolved(p) ? p.player.name : p.slot.fantraxId]),
-    );
+    const names = new Map(team.players.map((p) => [p.slot.fantraxId, playerName(p)]));
     return (id: string) => names.get(id) ?? id;
   }, [team]);
 

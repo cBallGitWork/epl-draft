@@ -47,6 +47,8 @@ export function mapFixtures(raw: RawFixture[]): Fixture[] {
     awayScore: f.team_a_score,
     status: fixtureStatus(f),
     minutes: f.minutes ?? 0,
+    homeDifficulty: f.team_h_difficulty ?? null,
+    awayDifficulty: f.team_a_difficulty ?? null,
   }));
 }
 

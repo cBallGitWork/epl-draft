@@ -1,20 +1,8 @@
-import { unstable_cache } from "next/cache";
-import {
-  FANTRAX_LEAGUE_ID,
-  FantraxError,
-  PAGE_REVALIDATE,
-  SEASON_CODE_LIFE,
-  fetchPoolStats,
-  fetchTeamStats,
-  isUnmapped,
-  mapPoolStats,
-  mapTeamStats,
-  playerByCode,
-} from "@epl/core";
-import type { FootballPlayer, StatColumn, StatSeason, TeamStats } from "@epl/core";
+import { isUnmapped, playerByCode } from "@epl/core";
+import type { FootballPlayer, StatColumn, StatSeason } from "@epl/core";
 import { footballNow } from "../../football";
-import { orRefusal } from "../../refusals";
 import { bridge } from "../../squads";
+import { readTeamStats, yearToDate } from "../../teamStats";
 
 // What one player's season looks like, from the two places that know: Fantrax
 // for the points, FPL for whether he is fit.
@@ -34,49 +22,6 @@ export interface PlayerSeason {
   points: number | null;
   perGame: number | null;
 }
-
-/** The season code to ask for.
- *
- *  Fantrax defaults every stat read to a projection, so the code has to be sent,
- *  and it is published by exactly one endpoint. Asked for a single row — the
- *  list comes with any page size — and cached hard: it changes once a year. */
-const yearToDate = unstable_cache(
-  async (): Promise<string | undefined> => {
-    const raw = await orRefusal(fetchPoolStats(FANTRAX_LEAGUE_ID, 1));
-    // A code we could not look up is not a reason to compose one. Sending
-    // nothing means Fantrax picks, and whatever it picks is read back and
-    // labelled — which is what the page does with the answer anyway.
-    //
-    // Only their refusal is caught. A mapper throwing is our bug, and the bare
-    // `catch` this replaced hid it behind their name.
-    if (raw instanceof FantraxError) return undefined;
-    return mapPoolStats(raw).yearToDate ?? undefined;
-  },
-  ["fantrax-season-code", FANTRAX_LEAGUE_ID],
-  { revalidate: SEASON_CODE_LIFE },
-);
-
-/** One team's table, or nothing.
- *
- *  The refusal is swallowed inside the cache rather than thrown across it, and
- *  that is deliberate: `unstable_cache` serialises, so a `FantraxError` thrown
- *  through it need not arrive as one, and `instanceof` on the far side would
- *  quietly answer false. The same trap is recorded against `squad/league.ts`.
- *  Nothing here needs to tell one refusal from another — an undrafted league
- *  answering `WARNING` and Fantrax being down both mean this section has no
- *  numbers to show, and it says so by not appearing. */
-const readTeamStats = unstable_cache(
-  async (teamId: string, season: string | undefined): Promise<TeamStats | null> => {
-    try {
-      return mapTeamStats(await fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season));
-    } catch (error) {
-      if (error instanceof FantraxError) return null;
-      throw error;
-    }
-  },
-  ["fantrax-team-stats", FANTRAX_LEAGUE_ID],
-  { revalidate: PAGE_REVALIDATE },
-);
 
 export async function playerSeason(
   fantraxId: string,

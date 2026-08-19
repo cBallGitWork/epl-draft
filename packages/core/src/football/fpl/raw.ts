@@ -52,6 +52,11 @@ export interface RawFixture {
   team_a: number;
   team_h_score: number | null;
   team_a_score: number | null;
+  /** FPL's own 1–5 fixture difficulty, from each side's point of view. Their
+   *  rating, not a computation of ours — which is the only reason we are willing
+   *  to print it. */
+  team_h_difficulty?: number;
+  team_a_difficulty?: number;
 }
 
 /** One scoring identifier's value in one fixture, from the live endpoint's

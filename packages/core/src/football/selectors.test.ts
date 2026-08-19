@@ -92,9 +92,9 @@ describe("fixturesInOrder", () => {
   it("sorts by kickoff and pushes undated TV picks to the end", () => {
     const s = snap({
       fixtures: [
-        { id: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, status: "upcoming", minutes: 0 },
-        { id: 2, gameweek: 1, homeClubId: 3, awayClubId: 4, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", minutes: 0 },
-        { id: 3, gameweek: 1, homeClubId: 5, awayClubId: 6, kickoff: "2026-08-21T14:00:00Z", homeScore: null, awayScore: null, status: "upcoming", minutes: 0 },
+        { id: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, status: "upcoming", minutes: 0, homeDifficulty: null, awayDifficulty: null },
+        { id: 2, gameweek: 1, homeClubId: 3, awayClubId: 4, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", minutes: 0, homeDifficulty: null, awayDifficulty: null },
+        { id: 3, gameweek: 1, homeClubId: 5, awayClubId: 6, kickoff: "2026-08-21T14:00:00Z", homeScore: null, awayScore: null, status: "upcoming", minutes: 0, homeDifficulty: null, awayDifficulty: null },
       ],
     });
     expect(fixturesInOrder(s).map((f) => f.id)).toEqual([3, 2, 1]);
@@ -103,7 +103,10 @@ describe("fixturesInOrder", () => {
 
 describe("isMatchdayLive", () => {
   it("is true only while a match is actually in play", () => {
-    const base = { gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, minutes: 0 };
+    const base = {
+      gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null,
+      awayScore: null, minutes: 0, homeDifficulty: null, awayDifficulty: null,
+    };
     expect(isMatchdayLive(snap({ fixtures: [{ ...base, id: 1, status: "finished" }] }))).toBe(false);
     expect(isMatchdayLive(snap({ fixtures: [{ ...base, id: 1, status: "live" }] }))).toBe(true);
   });
@@ -112,7 +115,8 @@ describe("isMatchdayLive", () => {
 describe("duringGameweek", () => {
   const fixture = (over: Partial<Fixture> & { id: number }): Fixture => ({
     gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z",
-    homeScore: null, awayScore: null, status: "upcoming", minutes: 0, ...over,
+    homeScore: null, awayScore: null, status: "upcoming", minutes: 0,
+    homeDifficulty: null, awayDifficulty: null, ...over,
   });
 
   it("opens at the first kickoff, not at the deadline before it", () => {

@@ -59,6 +59,35 @@
   --color-league-dark: oklch(0.31 0.05 45);
   --color-cream: oklch(0.94 0.02 75);
 
+  /* --- Pitch ---------------------------------------------------------------
+     Deliberately darker than the sticker's studio green. The two greens used to
+     sit within 0.03 lightness of each other, so a card on the grass had nothing
+     but a 2.5px white edge holding it off the background. The turf now sits well
+     below the sticker's backdrop range (0.52–0.68) and the cards lift off it. --- */
+  --color-pitch-turf: oklch(0.455 0.132 151);
+  --color-pitch-mow: oklch(0.425 0.125 151);
+  --color-pitch-surround: oklch(0.26 0.045 151);
+  --color-pitch-line: oklch(0.97 0.02 151);
+  /* How deep the hoardings are. Read by the boards themselves, by the turf that
+     starts under them and by the padding that keeps the far row clear of them —
+     three places that must agree, and did not until this was one value. */
+  --pitch-boards: 1.75rem;
+
+  /* --- Fixture difficulty ---------------------------------------------------
+     FPL's own five-step scale, in our palette rather than their hex. Theirs is
+     drawn on a white page — a #E7E7E7 middle step and a #01FC7A top step both
+     glare on a near-black one — so the scale is rebuilt at our lightness with
+     their reading intact: green is a kind fixture, grey is neutral, red is hard,
+     and 5 is darker than 4 rather than brighter. Hue-locked to the tokens
+     already in use so a fixture chip never introduces a sixth colour family.
+
+     Every step carries dark ink, so contrast is a property of the pair. --- */
+  --color-fdr-1: oklch(0.84 0.20 152);
+  --color-fdr-2: oklch(0.78 0.16 158);
+  --color-fdr-3: oklch(0.80 0.02 320);
+  --color-fdr-4: oklch(0.66 0.20 22);
+  --color-fdr-5: oklch(0.50 0.18 18);
+
   /* --- Sticker register (Merlin's Premier League, 1994/95) -----------------
      A third register, and deliberately period rather than modern: the album is
      the charm and it should look printed, not designed this year. Taken from
@@ -159,67 +188,67 @@ body {
   100% { opacity: 0; transform: scale(2.6); }
 }
 
-/* ---- Album page -----------------------------------------------------------
-   What the pitch is stuck onto. In the real thing the page is loud and the
-   stickers are calm — a printed board-stock ground with the club's crest
-   ghosted into it, and white-bordered stickers sitting on top. The diagonal
-   banding is that, reduced to something a phone can render at any size. */
-.album {
-  background-color: oklch(0.33 0.12 31);
-  background-image: repeating-linear-gradient(
-    115deg,
-    oklch(0.35 0.12 32 / 0.55) 0 26px,
-    oklch(0.31 0.11 30 / 0.55) 26px 52px
-  );
-}
-
 /* ---- Pitch ----------------------------------------------------------------
-   Proportions taken from FPL's own artwork (/assets/pitch-graphic-t77-OTdp.svg,
-   viewBox 0 0 1417 788). Their base is #00A34F with #009B4C mow bands — only
-   2–3% darker, deliberately subtle. Ours holds their hue and their 2–3% band
-   contrast but sits ~12% darker: #00A34F is right on a white-and-purple app and
-   is a wall of green on a near-black one. Keeper at the top, so the top is the
-   far end.
+   Viewed from behind the far goal, which is the view FPL uses and the reason
+   their pitch reads as a pitch rather than a green rectangle: the touchlines
+   splay outward toward the reader, and the mow bands GROW as they come (63.6 →
+   63.6 → 85.9 → 132 units in their own viewBox 0 0 1417 788). The trapezoid and
+   the bands are drawn in `PitchTurf`, where a polygon can hold them; only the
+   surround, the hoardings and the goal are here.
 
-   The four bands GROW toward the viewer (63.6 → 63.6 → 85.9 → 132 units in that
-   viewBox). That, not a gradient, is what sells the perspective, which is why
-   this cannot be a `repeating-linear-gradient`. Band stops below are those
-   figures as percentages of 788. */
+   The angle is in the ground, never in a transform. A `perspective` on the
+   container would tilt the stickers with it, and a sticker is a flat printed
+   object photographed square — one lying back in space stops being one. */
 .pitch {
   position: relative;
-  border-radius: 12px;
   overflow: hidden;
-  background-color: oklch(0.548 0.140 151);
-  background-image: linear-gradient(
-    to bottom,
-    oklch(0.524 0.134 151) 9.3%,
-    oklch(0.548 0.140 151) 9.3% 17.4%,
-    oklch(0.524 0.134 151) 17.4% 25.5%,
-    oklch(0.548 0.140 151) 25.5% 33.6%,
-    oklch(0.524 0.134 151) 33.6% 44.5%,
-    oklch(0.548 0.140 151) 44.5% 55.4%,
-    oklch(0.524 0.134 151) 55.4% 65%,
-    oklch(0.548 0.140 151) 65% 81.7%,
-    oklch(0.524 0.134 151) 81.7%
-  );
-  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.18);
+  /* What is beyond the touchline: the same green, in shadow. */
+  background-color: var(--color-pitch-surround);
 }
 
-/* Sparse on purpose — FPL draws a hint of a pitch, not a diagram. The keeper's
-   box at the far end. */
-.pitch::before {
-  content: "";
+/* The hoardings behind the far goal. A real advertising board in a real ground,
+   which is why the league's own crest is on it — and why there is somewhere to
+   put a sponsor's the day the league has one. */
+.pitch-boards {
   position: absolute;
-  left: 30%;
-  right: 30%;
-  top: -1px;
-  height: 13%;
-  border: 2px solid oklch(1 0 0 / 0.5);
-  border-top: 0;
-  border-radius: 0 0 2px 2px;
+  top: 0;
+  /* The width of the FAR touchline, not of the page. Boards stand behind that
+     goal line, so they are as wide as the pitch is at that depth — the same
+     11%/89% the turf polygon opens at. Running them the full width would put
+     advertising on ground the perspective says is off the pitch. */
+  left: 11%;
+  right: 11%;
+  display: flex;
+  align-items: center;
+  /* Flanking the goal, not behind it — the net is centred on the same band. */
+  justify-content: space-between;
+  padding: 0 0.35rem;
+  height: var(--pitch-boards);
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-league) 0%,
+    oklch(0.44 0.17 22) 100%
+  );
+  box-shadow: inset 0 -1px 0 oklch(0 0 0 / 0.35);
 }
-/* No halfway line: the rows are however many the manager picked, so any fixed
-   position for it eventually runs through somebody's face. */
+
+/* Standing in front of them, straddling the goal line. Open at the foot because
+   that edge is the goal line itself, which the turf already draws. */
+.pitch-goal {
+  position: absolute;
+  left: 50%;
+  top: 0.4rem;
+  transform: translateX(-50%);
+  width: 5.25rem;
+  height: 1.5rem;
+  border: 2px solid var(--color-pitch-line);
+  border-bottom: 0;
+  border-radius: 2px 2px 0 0;
+  background-color: oklch(1 0 0 / 0.08);
+  background-image:
+    repeating-linear-gradient(90deg, oklch(1 0 0 / 0.28) 0 1px, transparent 1px 6px),
+    repeating-linear-gradient(0deg, oklch(1 0 0 / 0.28) 0 1px, transparent 1px 6px);
+}
 
 /* ---- Focus: one visible treatment everywhere, never removed ---- */
 :where(a, button, [role="button"], input, select, summary, [tabindex]):focus-visible {

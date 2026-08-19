@@ -122,3 +122,16 @@ function statsByPlayer(snapshot: FootballSnapshot): Map<number, PlayerMatchStats
   }
   return byPlayer;
 }
+
+/** What to call a rostered slot on screen.
+ *
+ *  The Fantrax id is the last resort and is deliberately shown rather than
+ *  hidden: a squad slot we cannot name is still a slot the manager holds, and a
+ *  blank there reads as a bug in the squad rather than a gap in our mapping.
+ *
+ *  Here rather than at each render site because four of them wanted it — the
+ *  pitch, the list, the planner and the player card — and the fourth is what
+ *  made it a rule instead of a coincidence. */
+export function playerName(rostered: RosteredPlayer): string {
+  return isResolved(rostered) ? rostered.player.name : rostered.slot.fantraxId;
+}

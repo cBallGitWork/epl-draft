@@ -23,4 +23,5 @@ export * from "./join/cleanSheets";
 export * from "./fpl-entry";
 export * from "./gazette";
 export * from "./join/roster";
+export * from "./join/squadDetail";
 export * from "./league";

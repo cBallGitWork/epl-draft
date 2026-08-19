@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { FootballPlayer } from "../football/types";
 import type { RosteredPlayer, RosteredTeam } from "./roster";
-import { lineup, squadInLines } from "./lineup";
+import { lineup, squadInLines, squadUnarranged } from "./lineup";
 
 const player = (name: string): FootballPlayer => ({
   id: 1, code: 1, name, fullName: name, clubId: 1,
@@ -149,5 +149,37 @@ describe("squadInLines", () => {
 
   it("survives a squad with nobody in it", () => {
     expect(squadInLines(team([]))).toEqual({ lines: [], shape: "" });
+  });
+});
+
+describe("squadUnarranged", () => {
+  it("keeps all fifteen, in the same lines the pitch would use", () => {
+    const lines = squadUnarranged(drafted);
+    expect(lines.map((line) => line.position)).toEqual(["G", "D", "M", "F"]);
+    expect(lines.flatMap((line) => line.players)).toHaveLength(15);
+  });
+
+  it("orders by name, so no reader can recover the XI from the order", () => {
+    // Two reserves and five actives in one line. Alphabetical puts a reserve
+    // first, which is the whole point: the order says nothing about who starts.
+    const midfield = squadUnarranged(drafted).find((line) => line.position === "M");
+    expect(midfield?.players.map((player) => player.slot.fantraxId)).toEqual([
+      "Bruno G.",
+      "Doku",
+      "Enzo",
+      "Manzambi",
+      "Palmer",
+      "Rudoni",
+      "Wilson",
+    ]);
+  });
+
+  it("groups by the position the manager has him filling, not by what he could fill", () => {
+    // Fantrax deems this player F,M eligible; his slot says M. The manager chose,
+    // so he stands in midfield and appears exactly once.
+    const dual = team([slot("M", "ACTIVE", "Semenyo"), slot("F", "ACTIVE", "Isak")]);
+    const lines = squadUnarranged(dual);
+    expect(lines.map((line) => line.position)).toEqual(["M", "F"]);
+    expect(lines.flatMap((line) => line.players)).toHaveLength(2);
   });
 });

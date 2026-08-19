@@ -1,5 +1,5 @@
 import { isActive } from "../league/rosterStatus";
-import type { RosteredPlayer, RosteredTeam } from "./roster";
+import { playerName, type RosteredPlayer, type RosteredTeam } from "./roster";
 
 // A roster arranged the way a team lines up, rather than the way Fantrax lists
 // it. Pure: same team in, same shape out.
@@ -74,7 +74,17 @@ export interface Squad {
  *  manager have" — and the pitch view wants the second: a reserve keeper reads as
  *  a reserve keeper when he is standing behind the goal, and as a name in a strip
  *  when he is in a strip. The duplication is the rule of two, deliberately. */
-export function squadInLines(team: RosteredTeam): Squad {
+/** The squad grouped into positional lines, ordered back to front, with the
+ *  ordering *within* each line left to the caller.
+ *
+ *  Grouped by `slot.position` — the position the manager has him filling — and
+ *  never by what he is eligible for. Fantrax supports multi-position players
+ *  ("F,M" is common), so eligibility would put the same footballer in two lines
+ *  or make this file pick one of them for him. The manager already picked. */
+function linesOf(
+  team: RosteredTeam,
+  within: (a: RosteredPlayer, b: RosteredPlayer) => number,
+): SquadLine[] {
   const byPosition = new Map<string, RosteredPlayer[]>();
 
   for (const player of team.players) {
@@ -84,14 +94,15 @@ export function squadInLines(team: RosteredTeam): Squad {
     else byPosition.set(position, [player]);
   }
 
-  const lines = [...byPosition.entries()]
-    .map(([position, players]) => ({
-      position,
-      // Stable within each group: `sort` keeps the roster's own order among
-      // players that tie, so this only lifts the actives.
-      players: [...players].sort((a, b) => Number(isActive(b.slot)) - Number(isActive(a.slot))),
-    }))
+  return [...byPosition.entries()]
+    .map(([position, players]) => ({ position, players: [...players].sort(within) }))
     .sort((a, b) => positionDepth(a.position) - positionDepth(b.position));
+}
+
+export function squadInLines(team: RosteredTeam): Squad {
+  // Stable within each group: `sort` keeps the roster's own order among players
+  // that tie, so this only lifts the actives.
+  const lines = linesOf(team, (a, b) => Number(isActive(b.slot)) - Number(isActive(a.slot)));
 
   const shape = lines
     .map((line) => line.players.filter((player) => isActive(player.slot)).length)
@@ -99,6 +110,22 @@ export function squadInLines(team: RosteredTeam): Squad {
     .join("-");
 
   return { lines, shape };
+}
+
+/** The whole squad in positional lines, with the arrangement stripped out.
+ *
+ *  What a manager may see of a rival's team before the period opens: fifteen
+ *  players, grouped by the position each is filling, and nothing about who
+ *  starts. `squadInLines` lifts the actives to the front of every line, which is
+ *  the XI restated as an ordering — correct on the pitch once the gate is open,
+ *  and a leak before it.
+ *
+ *  Alphabetical within a line, and that is load-bearing rather than tidy.
+ *  Fantrax happens to return actives and reserves interleaved, so payload order
+ *  happens not to leak the lineup today; that is their serialisation detail, not
+ *  a promise. Sorting by name makes the non-leak a property of this file. */
+export function squadUnarranged(team: RosteredTeam): SquadLine[] {
+  return linesOf(team, (a, b) => playerName(a).localeCompare(playerName(b)));
 }
 
 export function lineup(team: RosteredTeam): Lineup {
