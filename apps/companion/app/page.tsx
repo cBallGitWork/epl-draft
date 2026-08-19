@@ -124,8 +124,19 @@ export default async function GazettePage() {
                 className="elev rounded-xl border border-line bg-surface px-3 py-2.5"
               >
                 <p className="text-sm">
-                  {deal.inbound.map((player) => (
+                  {/* A trade is two players moving in opposite directions, and
+                      without these its two halves read as two unrelated signings
+                      that happen to share a timestamp — the very thing grouping
+                      them by `setId` was for. A claim needs no label: its second
+                      half already says "out". */}
+                  {deal.kind === "trade" ? (
+                    <span className="text-2xs font-bold uppercase tracking-wide text-faint">
+                      Trade{" "}
+                    </span>
+                  ) : null}
+                  {deal.inbound.map((player, index) => (
                     <span key={player.playerName} className="font-semibold">
+                      {index > 0 ? <span className="font-normal text-muted">· </span> : null}
                       {player.playerName}{" "}
                       <span className="font-normal text-muted">to {who(player.teamId)}</span>{" "}
                     </span>
