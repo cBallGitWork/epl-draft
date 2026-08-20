@@ -28,6 +28,7 @@ nothing.**
 | `/squad` | [squads.md](squads.md) | Yours, then everyone else's. |
 | `/squad/[teamId]` | [squad.md](squad.md) | **One squad. The reference page for the new look.** |
 | `/matchday` | [matchday.md](matchday.md) | Live: your head-to-head, then the real football. |
+| `/matchday/desk` | [desk.md](desk.md) | Every score in the league and the round, on one screen. |
 | `/gw/[gameweek]` | [gameweek.md](gameweek.md) | Any round of football, addressable. |
 | `/players` | [players.md](players.md) | The whole pool, sortable, filterable. |
 | `/players/[fantraxId]` | [player.md](player.md) | One player's profile. |

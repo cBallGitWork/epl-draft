@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ButtonLink from "../components/shell/ButtonLink";
 import {
   type Fixture,
@@ -49,6 +50,17 @@ export default async function MatchdayPage() {
   // been on screen all week.
   return (
     <div className="flex flex-col gap-4">
+      {/* The Desk is reached from here and nowhere else — six tabs already
+          brushes the 320px clip `matchdayfit` measures, and a seventh would cost
+          every other tab its label to buy one screen a permanent home. */}
+      <div className="flex justify-end pt-1">
+        <Link
+          href="/matchday/desk"
+          className="text-2xs font-bold uppercase tracking-widest text-faint hover:text-muted"
+        >
+          The desk →
+        </Link>
+      </div>
       <YourMatchup />
       {/* Under the scoreline, because it is the same question asked forwards:
           the card says where you are, this says what is left to change it. */}
