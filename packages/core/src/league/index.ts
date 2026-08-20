@@ -41,6 +41,19 @@ export { isActive } from "./rosterStatus";
 export { headToHead, leaguePool, periodPairings } from "./selectors";
 export type { HeadToHead, PeriodPairing, PoolPlayer } from "./selectors";
 
+export {
+  COMPETITIONS,
+  LEAGUE_COMPETITION,
+  PLACEHOLDER_ROUNDS,
+  groupTies,
+  leagueTies,
+  seededTies,
+} from "./competitions";
+// `Competition`, `CompetitionGroup` and `SeededRound` stay off the surface
+// deliberately: all three are inferred at every call site, and §2 does not keep
+// an export nothing imports.
+export type { CompetitionTie, TieSide } from "./competitions";
+
 export { FantraxError } from "./fantrax/errors";
 export type { ScoringRules } from "./scoring";
 export { mapLiveScores } from "./fantrax/livescoring";
@@ -61,10 +74,16 @@ export {
 export { mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapStandings } from "./fantrax/standings";
+export { mapTeamBadges } from "./fantrax/badges";
+export type { TeamBadge } from "./fantrax/badges";
+export { mapSeasonResults } from "./fantrax/results";
+export type { PeriodResult } from "./fantrax/results";
 export {
   fetchDraftResults,
   fetchLeagueInfo,
   fetchPlayerPool,
+  fetchSeasonResults,
   fetchStandings,
+  fetchTeamBadges,
   fetchTeamRosters,
 } from "./fantrax/client";

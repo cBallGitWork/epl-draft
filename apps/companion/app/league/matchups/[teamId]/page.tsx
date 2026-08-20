@@ -17,7 +17,8 @@ import MatchupBoard, { type MatchupSide } from "../../../components/league/Match
 import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
 import LeagueShell from "../../Shell";
-import { getLeagueSquads, teamDisplay } from "../../../squads";
+import { getLeagueSquads, roundOf, teamDisplay } from "../../../squads";
+import { footballNow } from "../../../football";
 import { liveScores } from "../../../scoreboard";
 import { squadPoints } from "../../../teamStats";
 import { myTeamId } from "../../../session";
@@ -39,11 +40,22 @@ export const revalidate = 30;
 
 export default async function HeadToHeadPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ teamId: string }>;
+  /** Which round. Absent means the one Fantrax is currently pointing at, which
+   *  is every arrival from the live board; the schedule sends a gameweek so a
+   *  round that has been played opens on its own week rather than on this one. */
+  searchParams: Promise<{ gw?: string }>;
 }) {
-  const { teamId } = await params;
-  const squads = await getLeagueSquads();
+  const [{ teamId }, { gw }] = await Promise.all([params, searchParams]);
+
+  // Resolved through the calendar seam rather than assumed equal: the period is
+  // what Fantrax is asked for and the gameweek is what FPL is asked for, and
+  // nothing here may take one for the other.
+  const asked = Number(gw);
+  const round = Number.isInteger(asked) ? await roundOf(asked) : null;
+  const squads = await getLeagueSquads(round);
 
   // A league nobody has drafted genuinely has no such matchup. The other two are
   // states of ours rather than 404s, and the list page already describes both —
@@ -55,16 +67,17 @@ export default async function HeadToHeadPage({
   const { period } = squads.period;
   if (squads.info === null || period === null) redirect("/league/matchups");
 
+  // A round in the past shows the eleven Fantrax returns for that period, and
+  // whether that is the eleven actually played is unverified until a period has
+  // completed (see `fetchTeamRosters`). Said on screen rather than assumed.
+  const settled = round !== null && round.gameweek < (await footballNow()).gameweek;
+
   const rostered = new Map(squads.period.teams.map((team) => [team.teamId, team]));
   const named = rostered.get(teamId);
   if (named === undefined) notFound();
 
   const pairing = headToHead(squads.info.matchups, squads.info.teams, period, teamId);
-  const heading = (
-    <>
-      Period {period} · Gameweek {squads.snapshot.gameweek}
-    </>
-  );
+  const heading = <>Gameweek {squads.snapshot.gameweek}</>;
 
   if (pairing === undefined) {
     return (
@@ -78,19 +91,31 @@ export default async function HeadToHeadPage({
   }
 
   const mine = await myTeamId(squads.period.teams);
-  const { scores } = await liveScores(period);
+  const { scores, refused } = await liveScores(period);
   const clubs = clubById(squads.snapshot);
   const opposition = oppositionByClub(squads.snapshot);
   const live = duringGameweek(squads.snapshot, new Date().toISOString());
+
+  /** Whether a side's eleven is going on screen at all. Asked before the fetch
+   *  below, because the answer decides whether that fetch is worth making. */
+  const shows = (team: LeagueTeam) =>
+    rostered.get(team.teamId) !== undefined &&
+    teamDisplay(squads, team.teamId === mine).show === "lineup";
 
   // What our league scores each player this period, from Fantrax, one read per
   // side. `getTeamRosterInfo` honours `period` — probed 19 Aug — so this is the
   // week on screen rather than whatever week Fantrax is currently pointing at.
   // A refusal costs the numbers and nothing else: the strip falls back to
   // minutes rather than printing noughts nobody earned.
+  //
+  // Only for a side whose eleven is actually being shown. These numbers are read
+  // nowhere else, so a withheld side was fetching a team's whole season to throw
+  // it away — and on this page's own main use, "who am I playing this week" read
+  // on a Tuesday, exactly one side is withheld. A signed-out reader withholds
+  // both, which was two wasted requests per cache window.
   const [yours, theirs] = await Promise.all([
-    squadPoints(pairing.team.teamId, period),
-    squadPoints(pairing.opponent.teamId, period),
+    shows(pairing.team) ? squadPoints(pairing.team.teamId, period) : null,
+    shows(pairing.opponent) ? squadPoints(pairing.opponent.teamId, period) : null,
   ]);
   const scored = new Map([
     [pairing.team.teamId, yours],
@@ -146,6 +171,26 @@ export default async function HeadToHeadPage({
   return (
     <LeagueShell title="Head-to-head" current="matchups" sub={heading}>
       <AutoRefresh seconds={live ? POLL.live : POLL.idle} />
+      {/* Both sibling boards say when the scoreboard is down; this one used to
+          render the outage as two silent dashes. */}
+      {refused === null ? null : (
+        <p className="px-3 text-2xs text-faint">
+          Fantrax&apos;s scoreboard is not answering, so there are no totals to show.{" "}
+          <span className="numeric">{refused}</span>
+        </p>
+      )}
+      {/* Provenance, and the honest kind: the totals are settled and Fantrax's,
+          but whether it hands back the eleven that was actually played or
+          today's roster under a past period's number has never been observed —
+          no period has completed. Re-ask after 28 Aug and delete this line if
+          the answer is history. */}
+      {settled ? (
+        <p className="px-3 text-2xs text-faint">
+          A round already played. The scores are Fantrax&apos;s final ones; the elevens are the
+          rosters it returns for that week, which we have not yet been able to prove are the ones
+          that were fielded.
+        </p>
+      ) : null}
       <MatchupBoard team={side(pairing.team)} opponent={side(pairing.opponent)} live={live} />
     </LeagueShell>
   );

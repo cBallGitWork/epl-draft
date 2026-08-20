@@ -13,10 +13,11 @@ import {
   fetchTeamRosters,
   mapLeagueInfo,
   mapTeamRosters,
+  periodGameweeks,
   resolveRosters,
   rosterDisplay,
 } from "@epl/core";
-import { footballNow } from "./football";
+import { footballNow, gameweekSnapshot, seasonKickoffs } from "./football";
 import { orRefusal, tell } from "./refusals";
 import type { Unavailable } from "./refusals";
 import mapping from "../../../data/mappings/fantrax.json";
@@ -56,6 +57,14 @@ export interface ReadableSquads {
    *  gate its calendar and the planner its rules, both of which then degrade
    *  rather than guess. */
   info: LeagueInfo | null;
+  /** Whether the roster came back labelled as the period we asked for.
+   *
+   *  True whenever nothing particular was asked for, which is every ordinary
+   *  page. False only when a route named a gameweek and Fantrax answered with a
+   *  different period — at which point no lineup on the payload is trusted,
+   *  because a future roster echoed under an open period's number would open the
+   *  gate on an XI nobody may see. */
+  periodAsAsked: boolean;
 }
 
 export type LeagueSquads = ReadableSquads | { undrafted: string } | Unavailable;
@@ -85,10 +94,10 @@ interface CachedLeague {
  *  Nothing about *who is asking* may cross into here — no team id, no cookie —
  *  or one manager's view would be served to another. */
 const readLeague = unstable_cache(
-  async (): Promise<CachedLeague> => {
+  async (round: Round | null): Promise<CachedLeague> => {
     const [snapshot, rosters, info] = await Promise.all([
-      footballNow(),
-      orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
+      round === null ? footballNow() : gameweekSnapshot(round.gameweek),
+      orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID, round?.period)),
       leagueInfo(),
     ]);
 
@@ -100,8 +109,41 @@ const readLeague = unstable_cache(
   { revalidate: PAGE_REVALIDATE },
 );
 
-export async function getLeagueSquads(): Promise<LeagueSquads> {
-  const { snapshot, rosters, refusal, info } = await readLeague();
+/** A round other than the one Fantrax is currently pointing at.
+ *
+ *  Both halves are needed and they belong to different layers: the gameweek asks
+ *  FPL for that round's football, the period asks Fantrax for that week's
+ *  lineups. Resolving one from the other is the calendar seam's job and is done
+ *  before this is called, not inside it. */
+export interface Round {
+  gameweek: number;
+  period: number;
+}
+
+/** Which Fantrax period a gameweek is scored in, or null for one the league's
+ *  calendar does not cover.
+ *
+ *  The calendar seam, cached on its own because it is the cheapest question the
+ *  app asks and the one a route has to answer before it can ask anything else:
+ *  you cannot request a period's rosters until you know which period a gameweek
+ *  is. Read rather than assumed — the two are one-to-one every week this season
+ *  and a postponement is the known way they come apart. */
+const readCalendar = unstable_cache(
+  async () => {
+    const [info, kickoffs] = await Promise.all([leagueInfo(), seasonKickoffs()]);
+    return info === null ? [] : periodGameweeks(info.scoringPeriods, kickoffs);
+  },
+  ["league-calendar", FANTRAX_LEAGUE_ID],
+  { revalidate: PAGE_REVALIDATE },
+);
+
+export async function roundOf(gameweek: number): Promise<Round | null> {
+  const found = (await readCalendar()).find((period) => period.gameweeks.includes(gameweek));
+  return found === undefined ? null : { gameweek, period: found.period };
+}
+
+export async function getLeagueSquads(round: Round | null = null): Promise<LeagueSquads> {
+  const { snapshot, rosters, refusal, info } = await readLeague(round);
 
   // Branching on a specific code, which the adapter deliberately never does
   // (PLATFORM_NOTES). Safe here because it fails toward hedging: an unrecognised
@@ -114,8 +156,16 @@ export async function getLeagueSquads(): Promise<LeagueSquads> {
 
   const period = resolveRosters(snapshot, mapTeamRosters(rosters), bridge);
 
+  // When we asked for a particular period, we already know which one it is, and
+  // the gate must not take Fantrax's word over ours. If the payload comes back
+  // labelled as a different period the whole thing is untrustworthy for this
+  // purpose — a future roster echoed under the current period's number would
+  // open the gate on an XI nobody may see, and that cannot be taken back.
+  const periodAsAsked = round === null || period.period === round.period;
+
   return {
     period,
+    periodAsAsked,
     snapshot,
     info,
     // The clock is read here and passed in, never inside the gate: §5 keeps
@@ -128,7 +178,9 @@ export async function getLeagueSquads(): Promise<LeagueSquads> {
     // one. A reader's own answer applied there would show fifteen rivals' XIs
     // through the side door. The one team a known reader is looking at gets its
     // own answer, at the route that knows which team that is.
-    display: rosterDisplay(period.period, info?.rosterPeriods ?? [], new Date().toISOString(), false),
+    display: periodAsAsked
+      ? rosterDisplay(period.period, info?.rosterPeriods ?? [], new Date().toISOString(), false)
+      : { show: "squad", because: "unknown-period" },
   };
 }
 
@@ -138,11 +190,20 @@ export async function getLeagueSquads(): Promise<LeagueSquads> {
  *  Fantrax will not describe the competition we end up with no calendar, and no
  *  calendar means squad-only. Losing the lineup view because a second request
  *  failed is the correct trade — the alternative is showing an XI we cannot
- *  prove is allowed to be shown. */
-async function leagueInfo(): Promise<LeagueInfo | null> {
-  const raw = await orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID));
-  return raw instanceof FantraxError ? null : mapLeagueInfo(raw);
-}
+ *  prove is allowed to be shown.
+ *
+ *  Cached on its own rather than only inside `readLeague`, because two cached
+ *  readers want it: the head-to-head route resolves a gameweek to a period
+ *  before it can ask for that period's rosters, so an uncached one made two
+ *  `getLeagueInfo` requests per window to answer one page. */
+const leagueInfo = unstable_cache(
+  async (): Promise<LeagueInfo | null> => {
+    const raw = await orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID));
+    return raw instanceof FantraxError ? null : mapLeagueInfo(raw);
+  },
+  ["league-info", FANTRAX_LEAGUE_ID],
+  { revalidate: PAGE_REVALIDATE },
+);
 
 /** What the reader may see of ONE team's roster, which is not what the league
  *  sees of all of them.
@@ -154,6 +215,11 @@ async function leagueInfo(): Promise<LeagueInfo | null> {
  *  your own team, always; every other team, only once its period opens — so
  *  there is nothing left to switch off. */
 export function teamDisplay(squads: ReadableSquads, yours: boolean): RosterDisplay {
+  // The per-team answer has to honour the same doubt the league-wide one does.
+  // Without this, asking for a gameweek and getting a different period back
+  // would still open every lineup one route at a time.
+  if (!squads.periodAsAsked) return { show: "squad", because: "unknown-period" };
+
   return rosterDisplay(
     squads.period.period,
     squads.info?.rosterPeriods ?? [],

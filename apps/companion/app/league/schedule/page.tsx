@@ -1,101 +1,79 @@
-import Link from "next/link";
+import type { ReactNode } from "react";
 import {
-  FANTRAX_LEAGUE_ID,
-  FantraxError,
-  type LeagueInfo,
-  type PeriodPairing,
-  fetchFixtures,
-  fetchLeagueInfo,
-  mapFixtures,
-  mapLeagueInfo,
-  periodGameweeks,
+  COMPETITIONS,
+  LEAGUE_COMPETITION,
+  PLACEHOLDER_ROUNDS,
+  POLL,
+  type CompetitionTie,
+  groupTies,
+  leagueTies,
   periodPairings,
+  seededTies,
 } from "@epl/core";
+import AutoRefresh from "../../components/shell/AutoRefresh";
 import Nothing from "../../components/shell/Nothing";
-import { londonDate } from "../../londonTime";
-import { orRefusal, tell } from "../../refusals";
-import type { Unavailable } from "../../refusals";
-import { FANTRAX_SILENT } from "../../config";
+import Section from "../../components/shell/Section";
 import LeagueShell from "../Shell";
+import Controls from "./Controls";
+import RoundHeader from "./RoundHeader";
+import Season from "./Season";
+import Tie from "./Tie";
+import { getSchedule, getSeasonResults, type ScheduleRound } from "./schedule";
+import { seasonRows } from "./teamSeason";
+import { footballNow } from "../../football";
+import { liveScores } from "../../scoreboard";
+import { myTeamId } from "../../session";
+import { FANTRAX_SILENT } from "../../config";
 
-// The whole season's head-to-heads, period by period. Fantrax's schedule, read
-// from its own description of the competition — we never generate a fixture list,
-// because who plays whom is a commissioner setting like everything else here.
+// The season, one gameweek at a time across every competition being played on
+// it — or one team's thirty-eight, end to end. Fantrax's schedule is the league;
+// the cup and the playoff are ours, declared in `league/competitions.ts`, which
+// is also where the note saying they are a placeholder comes from.
+//
+// It opens on the round a reader came for — the one in play, or the next to kick
+// off — with that round's scores already on it. A gameweek that has been played
+// keeps its scores, so this is the archive too.
+//
+// The page speaks gameweeks and never periods. Both were on screen, they are the
+// same number all season, and printing one number under two names asks a reader
+// to work out whether they are the same thing.
 
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
-/** The competition and the football calendar it runs against.
+/** What the URL may say. All three are optional and all three are checked
+ *  against what the league has: a typed gameweek outside the calendar, or a team
+ *  that is not in this league, opens the default view rather than an empty one. */
+interface Query {
+  gw?: string;
+  comp?: string;
+  team?: string;
+}
+
+/** The round a reader means, resolved once.
  *
- *  Season-wide fixtures rather than the snapshot's single gameweek: this page
- *  labels all 38 periods, and the snapshot only ever holds one. They are supplied
- *  to `periodGameweeks` as plain kickoffs, which is the seam — the league layer is
- *  told about the football calendar and never reaches for it. */
-async function schedule(): Promise<Schedule | Unavailable> {
-  const [raw, fixtures] = await Promise.all([
-    orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID)),
-    fetchFixtures(),
-  ]);
-  if (raw instanceof FantraxError) return { unavailable: tell(raw) };
-
-  const info = mapLeagueInfo(raw);
-  const kickoffs = mapFixtures(fixtures).flatMap((fixture) =>
-    fixture.gameweek === null || fixture.kickoff === null
-      ? []
-      : [{ gameweek: fixture.gameweek, kickoff: fixture.kickoff }],
-  );
-
-  // The clock is read here rather than in the component, which is both the lint
-  // rule and the right shape: a render is meant to be reproducible, and fetching
-  // is already the place where this page touches the world.
-  const now = Date.now();
-
-  return {
-    info,
-    gameweeks: new Map(
-      periodGameweeks(info.scoringPeriods, kickoffs).map((p) => [p.period, p.gameweeks]),
-    ),
-    current:
-      info.scoringPeriods.find(
-        (period) => Date.parse(period.start) <= now && now <= Date.parse(period.end),
-      )?.number ?? null,
-  };
-}
-
-interface Schedule {
-  info: LeagueInfo;
-  gameweeks: Map<number, number[]>;
-  /** The period today falls in, or null before the season starts — in which case
-   *  nothing opens, which is honest rather than a guess at where to look. */
-  current: number | null;
-}
-
-/** "Gameweek 4", "Gameweeks 4 & 5", or nothing at all. A period with no gameweek
- *  in it is a real answer — an international break — and one with two is a double.
- *  Neither is worth inventing a label for. */
-function gameweekLabel(gameweeks: number[] | undefined): string | null {
-  if (!gameweeks || gameweeks.length === 0) return null;
-  if (gameweeks.length === 1) return `Gameweek ${gameweeks[0]}`;
-  return `Gameweeks ${gameweeks.join(" & ")}`;
-}
-
-function Pairing({ pairing }: { pairing: PeriodPairing }) {
+ *  Both views need it and they used to work it out separately, with different
+ *  fallbacks — one ended the season, the other started it. That is two answers
+ *  to one question, which is one more than a page may have. */
+function chooseRound(
+  rounds: readonly ScheduleRound[],
+  asked: string | undefined,
+  now: number,
+): ScheduleRound {
+  const wanted = Number(asked);
   return (
-    <li className="flex items-center gap-2 px-3 py-1.5 text-sm">
-      <Link href={`/squad/${pairing.home.teamId}`} className="min-w-0 flex-1 truncate text-right hover:underline">
-        {pairing.home.name}
-      </Link>
-      <span className="text-2xs font-bold uppercase tracking-widest text-faint">v</span>
-      <Link href={`/squad/${pairing.away.teamId}`} className="min-w-0 flex-1 truncate hover:underline">
-        {pairing.away.name}
-      </Link>
-    </li>
+    rounds.find((round) => round.gameweek === wanted) ??
+    // FPL's own answer to "which gameweek is it" — the one in play, else the
+    // next up — narrowed to a round the league covers, because a season joined
+    // at gameweek 6 has no gameweek 1.
+    rounds.find((round) => round.gameweek >= now) ??
+    rounds[rounds.length - 1]
   );
 }
 
-export default async function SchedulePage() {
-  const read = await schedule();
+export default async function SchedulePage({ searchParams }: { searchParams: Promise<Query> }) {
+  const [read, query, football] = await Promise.all([getSchedule(), searchParams, footballNow()]);
 
   if ("unavailable" in read) {
     return (
@@ -108,50 +86,126 @@ export default async function SchedulePage() {
     );
   }
 
-  const { info, gameweeks, current } = read;
-  const periods = info.scoringPeriods.map((period) => ({
-    number: period.number,
-    start: period.start,
-    pairings: periodPairings(info.matchups, info.teams, period.number),
-    label: gameweekLabel(gameweeks.get(period.number)),
-  }));
-  const played = periods.filter((period) => period.pairings.length > 0);
+  const { info, rounds, table, badges } = read;
+  if (rounds.length === 0) {
+    return (
+      <LeagueShell title="Schedule" current="schedule" sub={info.name}>
+        <Nothing
+          title="No calendar to read"
+          code={`${info.scoringPeriods.length} periods, 0 gameweeks`}
+        >
+          Fantrax describes the league&apos;s periods but none of them holds a gameweek, so there is
+          no round to show its fixtures against.
+        </Nothing>
+      </LeagueShell>
+    );
+  }
 
-  return (
+  const mine = await myTeamId(info.teams);
+  const crests = new Map(badges.map((badge) => [badge.teamId, badge.url]));
+  const round = chooseRound(rounds, query.gw, football.gameweek);
+  const chosenTeam = info.teams.find((entry) => entry.teamId === query.team) ?? null;
+  const chosen = COMPETITIONS.find((competition) => competition.id === query.comp) ?? null;
+
+  /** Every tie in one gameweek: Fantrax's pairings and our declared knockouts. */
+  const tiesIn = (at: ScheduleRound): CompetitionTie[] =>
+    [
+      ...leagueTies(periodPairings(info.matchups, info.teams, at.period)),
+      ...seededTies(PLACEHOLDER_ROUNDS, table, at.gameweek),
+    ].filter((tie) => chosen === null || tie.competition.id === chosen.id);
+
+  const shell = (children: ReactNode) => (
     <LeagueShell title="Schedule" current="schedule" sub={info.name}>
+      <Controls
+        gameweeks={rounds.map((entry) => entry.gameweek)}
+        gameweek={round.gameweek}
+        competition={chosen?.id ?? ""}
+        teams={info.teams}
+        team={chosenTeam?.teamId ?? ""}
+        mine={mine}
+      />
+      {children}
+    </LeagueShell>
+  );
 
-      {played.length === 0 ? (
-        <Nothing title="No fixtures yet" code={`${periods.length} periods, 0 pairings`}>
-          Fantrax describes the calendar but pairs nobody in it. A schedule needs teams, and until
-          the draft there are none to pair.
+  // ---- One team's whole season ------------------------------------------
+  if (chosenTeam !== null) {
+    // One request for the whole season's results, and only on this branch: a
+    // reader looking at one gameweek must not pay for thirty-eight.
+    const rows = seasonRows(rounds, tiesIn, await getSeasonResults(), chosenTeam.teamId);
+
+    return shell(
+      rows.length === 0 ? (
+        <Nothing title="Nothing on this calendar" code={`${rounds.length} gameweeks`}>
+          {chosen === null
+            ? `Fantrax has paired ${chosenTeam.name} with nobody this season, and no knockout round has drawn them either.`
+            : `${chosenTeam.name} is not in the ${chosen.name.toLowerCase()} this season.`}
         </Nothing>
       ) : (
-        <ul className="flex flex-col gap-1.5">
-          {played.map((period) => (
-            <li key={period.number}>
-              {/* Native disclosure: thirty-eight periods is a lot to scroll, and a
-                  list that opens without JavaScript opens on a bad connection. */}
-              <details
-                open={period.number === current}
-                className="elev overflow-hidden rounded-xl border border-line bg-surface"
-              >
-                <summary className="flex min-h-14 cursor-pointer items-center gap-3 px-3 py-2 hover:bg-raised">
-                  <span className="numeric w-8 shrink-0 text-sm font-bold">P{period.number}</span>
-                  <span className="min-w-0 flex-1 truncate text-2xs uppercase tracking-widest text-faint">
-                    {period.label ?? "No gameweek"}
-                  </span>
-                  <span className="shrink-0 text-2xs text-faint">{londonDate(period.start)}</span>
-                </summary>
-                <ul className="border-t border-line py-1">
-                  {period.pairings.map((pairing) => (
-                    <Pairing key={`${pairing.home.teamId}-${pairing.away.teamId}`} pairing={pairing} />
-                  ))}
-                </ul>
-              </details>
-            </li>
+        <Season rows={rows} badges={crests} />
+      ),
+    );
+  }
+
+  // ---- One gameweek ------------------------------------------------------
+  const ties = tiesIn(round);
+
+  // Only once there is football to have scored in. Fantrax answers for any
+  // period asked, so a reader browsing March would otherwise spend a request per
+  // gameweek on totals the board has already decided not to print.
+  const board = round.started ? await liveScores(round.period) : null;
+  const points = new Map([...(board?.scores ?? [])].map(([team, score]) => [team, score.points]));
+
+  return shell(
+    <>
+      {/* Only while the round on screen is the one being played. A reader
+          looking at March in August is not watching anything move. */}
+      {round.status === "live" ? <AutoRefresh seconds={POLL.live} /> : null}
+
+      <RoundHeader round={round} />
+
+      {board?.refused ? (
+        <p className="px-3 text-2xs text-faint">
+          Fantrax&apos;s scoreboard is not answering, so there are no points to show. The fixtures
+          below are still right. <span className="numeric">{board.refused}</span>
+        </p>
+      ) : null}
+
+      {ties.length === 0 ? (
+        <Nothing title="Nothing on" code={`gameweek ${round.gameweek}`}>
+          {chosen === null
+            ? "No competition has a fixture in this gameweek — a bye, or a league nobody has been drawn into yet."
+            : `The ${chosen.name.toLowerCase()} is not played in this gameweek.`}
+        </Nothing>
+      ) : (
+        <div className="flex flex-col gap-4">
+          {groupTies(ties).map((group) => (
+            <Section
+              key={`${group.competition.id}-${group.round ?? ""}`}
+              title={
+                group.round === null
+                  ? group.competition.name
+                  : `${group.competition.name} · ${group.round}`
+              }
+              aside={group.competition.id === LEAGUE_COMPETITION.id ? undefined : "Placeholder draw"}
+            >
+              <ul className="flex flex-col gap-1.5">
+                {group.ties.map((tie, at) => (
+                  <li key={`${tie.home.label}-${tie.away.label}-${at}`}>
+                    <Tie
+                      tie={tie}
+                      points={points}
+                      badges={crests}
+                      round={round}
+                      mine={mine}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </Section>
           ))}
-        </ul>
+        </div>
       )}
-    </LeagueShell>
+    </>,
   );
 }

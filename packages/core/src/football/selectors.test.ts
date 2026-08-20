@@ -6,7 +6,9 @@ import {
   contributions,
   duringGameweek,
   fixturesInOrder,
+  gameweekStatus,
   hasGameweek,
+  gameweekStarted,
   isMatchdayLive,
   isDoubtful,
   playerByCode,
@@ -221,5 +223,90 @@ describe("isDoubtful", () => {
     // "Returned to training, expected to start" is news worth reading even at
     // full confidence.
     expect(isDoubtful({ ...fit, news: "Back in training", chanceOfPlaying: 100 })).toBe(true);
+  });
+});
+
+describe("gameweekStatus", () => {
+  const at = (id: number, gameweek: number, status: Fixture["status"]): Fixture => ({
+    id,
+    gameweek,
+    homeClubId: 1,
+    awayClubId: 2,
+    kickoff: "2026-08-21T19:00:00Z",
+    homeScore: null,
+    awayScore: null,
+    status,
+    minutes: 0,
+    homeDifficulty: null,
+    awayDifficulty: null,
+  });
+
+  const season = [
+    at(1, 1, "finished"),
+    at(2, 1, "finished"),
+    at(3, 2, "finished"),
+    at(4, 2, "live"),
+    at(5, 3, "finished"),
+    at(6, 3, "upcoming"),
+    at(7, 4, "upcoming"),
+  ];
+
+  it("is finished only when every match in the round has ended", () => {
+    expect(gameweekStatus(season, 1)).toBe("finished");
+  });
+
+  it("is live while any match in the round is in play", () => {
+    expect(gameweekStatus(season, 2)).toBe("live");
+  });
+
+  it("is upcoming for a round part-played with nothing on", () => {
+    // Sunday morning after Saturday's results. Nothing is live and the round is
+    // not over, and calling it finished would put a full-time label on it.
+    expect(gameweekStatus(season, 3)).toBe("upcoming");
+    expect(gameweekStatus(season, 4)).toBe("upcoming");
+  });
+
+  it("is upcoming for a round with no fixtures at all", () => {
+    expect(gameweekStatus(season, 38)).toBe("upcoming");
+  });
+});
+
+describe("gameweekStarted", () => {
+  const at = (id: number, gameweek: number, status: Fixture["status"]): Fixture => ({
+    id,
+    gameweek,
+    homeClubId: 1,
+    awayClubId: 2,
+    kickoff: "2026-08-21T19:00:00Z",
+    homeScore: null,
+    awayScore: null,
+    status,
+    minutes: 0,
+    homeDifficulty: null,
+    awayDifficulty: null,
+  });
+
+  it("is true for a round part-played with nothing on", () => {
+    // Six o'clock on a Saturday, nine results in and a Monday night match to
+    // come. `gameweekStatus` calls this "upcoming" — correctly, because it is
+    // not full time — and reading that as "no football has happened" hid every
+    // one of the nine until Monday.
+    const season = [at(1, 7, "finished"), at(2, 7, "finished"), at(3, 7, "upcoming")];
+    expect(gameweekStatus(season, 7)).toBe("upcoming");
+    expect(gameweekStarted(season, 7)).toBe(true);
+  });
+
+  it("is false before the first ball of the round", () => {
+    expect(gameweekStarted([at(1, 7, "upcoming"), at(2, 7, "upcoming")], 7)).toBe(false);
+  });
+
+  it("is true while a match is in play, and after the last one", () => {
+    expect(gameweekStarted([at(1, 7, "live")], 7)).toBe(true);
+    expect(gameweekStarted([at(1, 7, "finished")], 7)).toBe(true);
+  });
+
+  it("ignores other rounds, and a round with no fixtures has not started", () => {
+    expect(gameweekStarted([at(1, 6, "finished")], 7)).toBe(false);
+    expect(gameweekStarted([], 7)).toBe(false);
   });
 });

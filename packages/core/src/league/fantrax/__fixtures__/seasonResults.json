@@ -1,0 +1,56 @@
+{
+  "tableList": [
+    {
+      "tableType": "H2hPointsBased3",
+      "caption": "Gameweek 1",
+      "subCaption": "(Fri Aug 21, 2026 - Thu Aug 27, 2026)",
+      "header": {
+        "cells": [
+          { "align": "LEFT", "name": "Away", "key": "away" },
+          { "name": "FPts", "key": "fpts" },
+          { "align": "LEFT", "name": "Home", "key": "home" },
+          { "name": "FPts", "key": "fpts" }
+        ]
+      },
+      "rows": [
+        {
+          "cells": [
+            { "content": "test4", "teamId": "sezrgvl2mshcpazf" },
+            { "content": "51.5" },
+            { "content": "test2", "teamId": "pbxm9fgimshcpazf" },
+            { "content": "62" }
+          ]
+        },
+        {
+          "cells": [
+            { "content": "123", "teamId": "8enbgqo5msgb375j" },
+            { "content": "" },
+            { "content": "test3", "teamId": "j9zadacnmshcpazf" },
+            { "content": "0" }
+          ]
+        }
+      ]
+    },
+    {
+      "tableType": "H2hPointsBased3",
+      "caption": "Gameweek 2",
+      "rows": [
+        {
+          "cells": [
+            { "content": "test2", "teamId": "pbxm9fgimshcpazf" },
+            { "content": "0" },
+            { "content": "123", "teamId": "8enbgqo5msgb375j" },
+            { "content": "0" }
+          ]
+        }
+      ]
+    },
+    {
+      "tableType": "H2hPointsBased3",
+      "caption": "Bye week",
+      "rows": [
+        { "cells": [{ "content": "test2", "teamId": "pbxm9fgimshcpazf" }, { "content": "9" }] }
+      ]
+    }
+  ]
+}

@@ -3,7 +3,9 @@ import { politeFetch } from "../../http/fetch";
 import type { TransactionView } from "../types";
 import { FantraxError, errorEnvelope } from "./errors";
 import { fxpaRead } from "./fxpa";
+import type { RawStandingsPage } from "./badges";
 import type { RawLiveScoring } from "./livescoring";
+import type { RawSchedulePage } from "./results";
 import type { RawPlayerProfile } from "./profile";
 import type { RawPoolStats, RawStatTables } from "./stats";
 import type { RawTransactionHistory } from "./transactions";
@@ -49,9 +51,23 @@ export function fetchLeagueInfo(leagueId: string): Promise<RawLeagueInfo> {
 }
 
 /** Throws `NO_TEAMS` until managers have joined — an expected state before the
- *  draft, not a fault. */
-export function fetchTeamRosters(leagueId: string): Promise<RawTeamRosters> {
-  return fxeaGet<RawTeamRosters>("getTeamRosters", { leagueId });
+ *  draft, not a fault.
+ *
+ *  `period` is optional and echoed back in the payload, which is why the mapper
+ *  reads which period it got rather than assuming the one it asked for. Omitted,
+ *  Fantrax serves whichever period it currently considers open.
+ *
+ *  **Whether a past period returns the lineup as it was played is unverified.**
+ *  The parameter is honoured and echoed for every period 1–38 (probed 20 Aug),
+ *  but no period has completed in either league, so a historic read cannot yet
+ *  be told apart from today's roster relabelled. Fantrax's product is a lineup
+ *  per period, so it very probably is history — "very probably" is why any view
+ *  of a past lineup says so on screen. Re-ask after 28 Aug. */
+export function fetchTeamRosters(leagueId: string, period?: number): Promise<RawTeamRosters> {
+  return fxeaGet<RawTeamRosters>("getTeamRosters", {
+    leagueId,
+    ...(period === undefined ? {} : { period: String(period) }),
+  });
 }
 
 export function fetchStandings(leagueId: string): Promise<RawStandings> {
@@ -94,6 +110,29 @@ export function fetchTransactions(
     view,
     maxResultsPerPage: String(TRANSACTION_PAGE_SIZE),
   }) as Promise<RawTransactionHistory>;
+}
+
+/** The standings page Fantrax draws for its own site, read for the badges on it.
+ *
+ *  Public, and a different read from `fetchStandings` despite the shared method
+ *  name: that one is fxea and answers the table, this one is fxpa and answers
+ *  the page. The table is not mapped from here — `mapStandings` already owns it,
+ *  and two mappers for one table would be two answers to one question. */
+export function fetchTeamBadges(leagueId: string): Promise<RawStandingsPage> {
+  return fxpaRead(leagueId, "getStandings") as Promise<RawStandingsPage>;
+}
+
+/** The whole season's results, in one request.
+ *
+ *  The same method and the same surface as `fetchTeamBadges`, on the tab their
+ *  own page calls "Results" — `displayedLists.tabs` names it `SCHEDULE`, which
+ *  is where the argument comes from rather than from a guess. Public, and it
+ *  answers 38 tables, one per period, each with both sides and both totals.
+ *
+ *  Not a replacement for `fetchLiveScoring`: this is their settled table, that
+ *  one is the number that moves during a match. */
+export function fetchSeasonResults(leagueId: string): Promise<RawSchedulePage> {
+  return fxpaRead(leagueId, "getStandings", { view: "SCHEDULE" }) as Promise<RawSchedulePage>;
 }
 
 /** Every team's fantasy points for one period, as Fantrax scores them.

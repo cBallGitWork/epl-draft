@@ -27,8 +27,10 @@ export {
   contributions,
   duringGameweek,
   fixturesInOrder,
+  gameweekStatus,
   hasGameweek,
   isDoubtful,
+  gameweekStarted,
   isMatchdayLive,
   playerByCode,
 } from "./selectors";

@@ -1,0 +1,19 @@
+{
+  "goBackDays": 0,
+  "fantasyTeamInfo": {
+    "8enbgqo5msgb375j": {
+      "name": "123",
+      "logoUrl512": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/gloves/blue_green2_256.webp",
+      "shortName": "CB_fantr"
+    },
+    "sezrgvl2mshcpazf": {
+      "name": "test4",
+      "logoUrl512": "https://fantraximg.com/assets/images/icons/fantasyteams/soccer/jerseys/lightblue_yellow_256.webp",
+      "shortName": "test4"
+    },
+    "nobadge0000000000": {
+      "name": "test5",
+      "shortName": "test5"
+    }
+  }
+}

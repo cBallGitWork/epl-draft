@@ -31,6 +31,18 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "resources.premierleague.com", pathname: "/premierleague25/**" },
       // Kits are FPL's own host, not the Premier League's CDN.
       { protocol: "https", hostname: "fantasy.premierleague.com", pathname: "/dist/img/shirts/**" },
+      // The badge each manager picked for his fantasy team, off Fantrax's own
+      // image host. Path-scoped like the rest: this prefix is the fantasy-team
+      // icon set and nothing else on that host is ours to serve.
+      //
+      // Must stay in step with `FANTRAX_BADGE_BASE` in core's config, which the
+      // mapper filters on so that a badge from anywhere else becomes no badge
+      // rather than a 500 from our own optimizer.
+      {
+        protocol: "https",
+        hostname: "fantraximg.com",
+        pathname: "/assets/images/icons/fantasyteams/**",
+      },
     ],
   },
 };

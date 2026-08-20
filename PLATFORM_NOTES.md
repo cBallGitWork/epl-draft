@@ -1688,6 +1688,366 @@ screen by seeding the recorded fixture through `squadPoints`, because the
 rehearsal league's own table is all noughts: 68 + 32 + 18 + 9 − 9 − 10 = 108,
 against a total of 108.
 
+## The schedule became a gameweek, and a competition became data (20 Aug 2026)
+
+The schedule was thirty-eight collapsed periods with the current one open
+somewhere down the scroll, every row labelled `P4 · Gameweek 4`. Craig's note was
+"I'm seeing period 1 and gw1, just use gw1", and it is the right call twice over:
+the two numbers are the same all season (`npm run periods` confirms 38 of 38),
+and printing one number under two names asks a reader to work out whether they
+are the same thing.
+
+**The page now speaks gameweeks and never periods.** Fantrax still scores in
+periods and is still queried in them; the translation happens once, in
+`app/league/schedule/schedule.ts`, through `periodGameweeks` — the same one-way
+seam, unchanged. Nothing in the league layer learned a new word.
+
+It opens on the round a reader came for: FPL's own current-or-next answer, taken
+straight off `footballNow().gameweek` and narrowed to a gameweek the league
+actually covers — a season joined at gameweek 6 has no gameweek 1. That round's
+scores come with it, and because `getLiveScoringStats` honours `period`, a
+gameweek that has been played comes back with the totals it finished on. **The
+archive was free.** Nothing has been played in either league yet, so the
+full-time treatment — a winner marked, "Full time" instead of a live dot — is
+written and unwitnessed until the 21 Aug weekend.
+
+### Custom competitions, un-parked as a placeholder
+
+The roadmap parked custom competitions on 19 Aug. This un-parks the *shape* and
+not the feature: `league/competitions.ts` declares a cup (semi-finals in gameweek
+4, final in 5) and a playoff (final in 38, top two), and the page can hold ties
+from more than one competition in the same gameweek — which is the thing the old
+schedule had no way to express, because Fantrax's own pairings were the only
+fixtures on it.
+
+Fantrax describes exactly one competition and has no vocabulary for a second, so
+the knockouts are ours and are declared as data, resolved purely, and labelled
+**Placeholder draw** on screen. Two decisions inside that are worth keeping:
+
+- **A tie side is a table place or a phrase, never an invented team.** A number
+  is seeded against the standings as they stand — `1` is whoever is top when the
+  round comes round — and a string is printed verbatim. That is what lets the
+  cup final say "Winner, semi-final 1" instead of seeding a team into a final it
+  has not reached, and what lets the real league (no teams until 10 Oct) draw a
+  playoff final between "1st" and "2nd" rather than between two names we made up.
+- **The score beside a cup tie is the gameweek's score.** A cup over fantasy
+  points is scored by the week's points; Fantrax's total for that period is the
+  same number whichever competition is being played on it. The page says so once
+  at the foot rather than sixteen times in the rows.
+
+When the commissioner settles a real cup, `PLACEHOLDER_ROUNDS` is what changes.
+
+### Team badges are public, and the URL Fantrax publishes is broken
+
+`getStandings` **on fxpa** — a different read from the fxea method of the same
+name, which answers the table — carries `fantasyTeamInfo`, keyed by team id, with
+the badge each manager picked. It needs **no cookie**: probed anonymously against
+both leagues on 20 Aug, the rehearsal league answers four badges and the real one
+answers `{}`. That is why a badge can appear beside a name before anyone has
+signed in, and it is the reason we did not have to reach for `getMatchups`, which
+carries `logoUrl128` and needs a cookie.
+
+**Their field lies twice.** The key is `logoUrl512`; the value it holds ends
+`_256.webp`; and 256 is the one size their host does not serve. Probed against
+all four of the rehearsal league's badges: `_128` and `_512` answer 200, `_256`
+answers 404 on every one of them. Their own site must build these paths rather
+than use the field it publishes. `mapTeamBadges` rewrites the size to 128 — the
+badge is drawn at 26px, so 128 covers a retina phone twice over at 4.7 KB against
+24 KB — and passes through any path not shaped like theirs, because a size
+guessed onto a path we have never seen is an invented asset.
+
+`fantraximg.com` is now allow-listed in `next.config.ts`, path-scoped to
+`/assets/images/icons/fantasyteams/**` like every other remote pattern there.
+
+### A dev-server trap that cost half an hour
+
+The running `next dev` served a **week-old `getLeagueInfo`** — periods generated
+19 Aug at 06:18 EDT rather than the real 21 Aug 15:00 boundaries — while a
+direct `curl` to the same URL, and the on-disk `.next/cache/fetch-cache` entry,
+both had the current one. The symptom was three gameweeks quietly missing from
+the dropdown and the period↔gameweek mapping shifted by three, which reads
+exactly like a bug in the calendar seam and is not one. **A long-lived dev server
+can hold a stale fetch response past its `revalidate`.** If a provider payload
+looks wrong, `curl` it before reading any of our own code: restarting the dev
+server fixed it outright.
+
+
+### The scoreline is one row, and a season costs one request (20 Aug 2026)
+
+Second pass on Craig's notes. Four of them were the design saying what it had
+already said and I had missed: **a scoreline is one row** (his call, 19 Aug, and
+recorded in the roadmap — I had stacked the two sides), the date should be the
+**deadline** and not the first kickoff, the "To play" chip under the dropdown
+said nothing a future date did not, and the provenance footer went.
+
+**The footer's removal is a deliberate exception to principle 2** and is recorded
+in `docs/ui/league-schedule.md` rather than quietly dropped. This is now the only
+page whose numbers do not name their owner. The refusal line stays — that is an
+error state, not provenance, and a page claiming to show points while showing
+none of them is the failure that line exists to prevent.
+
+**`getStandings?view=SCHEDULE` is the whole season's results in one anonymous
+request.** Probed 20 Aug: 38 tables, one per period, each captioned by Fantrax as
+"Gameweek N" and carrying one row per pairing with both team ids and both totals.
+The argument is not a guess — `displayedLists.tabs` on the plain standings read
+names the tab `SCHEDULE` and labels it "Results", which is CODE_RULES §3's
+server-driven list doing exactly what it is for.
+
+That is what makes a fixture list affordable: thirty-eight `getLiveScoringStats`
+calls to draw one screen is not a trade worth making, and one call is. It does
+**not** replace the live read on the per-gameweek view — that one carries a total
+that moves during a match and a count of who is still to play. Different
+questions, different screens.
+
+`mapSeasonResults` reads rows position-independently: a cell that names a team is
+followed by that team's total. The column order is theirs to change, and the two
+`fpts` columns share a key, so keys alone cannot disambiguate them. The caption is
+parsed as a **period** number, not a gameweek — Fantrax's word for the period is
+"Gameweek" and the two are one-to-one this season, but they are not the same
+claim and the mapping belongs to `periodGameweeks`.
+
+### The lineup deadline, settled from the commissioner's own settings page
+
+Craig corrected an earlier version of this section, and the correction was right.
+The lock is **fifteen minutes before the round's first kickoff**. Read off
+`createLeague.go?goto=5` with the commissioner cookie, which is the only place
+Fantrax states it — no API we read carries a lock or deadline key at all:
+
+- `lineupLockType` = `TIME_BEFORE_FIRST_GAME` — "Set amount of time before 1st
+  game of period"
+- `lineupLockTimeBeforeGame` = `00:15`
+- `lineupPeriodType` = `GAME_WEEK`, custom periods `ALIGNED`
+
+The other option Fantrax offers is `TIME_BEFORE_FIRST_GAME_OF_SCORER` — a
+per-player rolling lock. This league does not use it, so there is one deadline a
+week and it is a real thing to print.
+
+`LINEUP_LOCK_LEAD_MINUTES = 15` in `config.ts` was already right. What was wrong
+was the instant it was subtracted from.
+
+### The period boundary is not the first kickoff, and `deadline.ts` said it was
+
+The worst thing found this session, and it predates this work. `deadline.ts`
+asserted "the period boundary it does publish is kickoff", and the paper's
+masthead is built on it. Probed across the live calendar on 20 Aug:
+
+| period | roster period opens | that gameweek's first kickoff |
+|---|---|---|
+| 1 | Fri 21 Aug 20:00 | Fri 21 Aug 20:00 |
+| 3 | Fri 4 Sep 20:00 | Fri 4 Sep 20:00 |
+| 4 | **Fri 11 Sep 11:00** | Sat 12 Sep 15:00 |
+| 6 | **Fri 9 Oct 11:00** | Sat 10 Oct 12:30 |
+| 20 | **Tue 5 Jan 11:00** | Wed 6 Jan 20:00 |
+
+A gameweek with a Friday night match opens exactly at that kickoff. One without
+opens at 11:00 BST on the Friday regardless — a day early. The assumption is true
+for the four periods anyone has looked at and false for most of the season.
+
+**The masthead had been announcing the wrong deadline for most of the season**,
+by a day, every week whose gameweek has no Friday night match. `nextDeadline`
+now takes the season's kickoffs and measures back from the first one inside the
+period. It also answers a different question than it used to: the earliest lock
+still in the future, rather than the next period to *open*. Those differ for a
+whole day every time a period opens on the Friday for a Saturday round — at
+Friday lunchtime the next period to open is next week's, while the deadline a
+manager actually has to beat is tomorrow afternoon's.
+
+`gazette/deadline.ts` now declares `GameweekKickoff` through `league/calendar`
+rather than importing a `Fixture`, so the football calendar reaches it the same
+one-way way it reaches the period mapping. `app/football.ts` grew
+`seasonFixtures` / `seasonKickoffs` beside `footballNow`, which also removed the
+schedule's own duplicate fetch of the same 380 fixtures.
+
+**For 10 Oct: the real league's first lineup locks Sat 10 Oct at 12:15 BST**,
+fifteen minutes before Saturday's first kickoff.
+
+### A played head-to-head, and the one thing still unproven
+
+The schedule's rows now route by what the football has done: a live or played
+round opens the head-to-head board, a round still to come opens the squads. That
+needed `/league/matchups/[teamId]` to stop being hard-wired to the current
+period, so it takes `?gw=`, `getLeagueSquads` takes an optional round, and
+`fetchTeamRosters` takes an optional period.
+
+`getTeamRosters?period=N` is honoured and echoed for all 38 periods (probed 20
+Aug), and every one of them currently returns an identical roster — which proves
+nothing either way, because nobody in the rehearsal league has ever made a lineup
+change. So **whether a past period returns the eleven that was actually fielded
+is still unverified**, and the board says so on screen rather than implying it.
+Fantrax's product is a lineup per period, so it very probably is history; "very
+probably" is not something to print without a hedge. This is HANDOVER's 28 Aug
+item, now with a screen depending on the answer.
+
+Also gone, on the same pass: "Period 1 · Gameweek 1" on both matchup screens.
+
+### A third dropdown, and no more phantom goalless draws
+
+Craig's last two notes. **A fixture that has not been played is a fixture, not a
+0–0.** Fantrax answers `totalFpts: 0` for every unplayed period, and the board
+was printing it — a scoreline against a date in March, which is the confident
+wrong number wearing the costume that looks most like an answer. A round still to
+come now reads `test4 v test2`, and a fixture list row reads "To play".
+
+The third dropdown is a **fixture list**: pick a team, get its whole season. It
+replaces the "Your season" option that briefly lived in the gameweek select —
+the reader's own team is simply first in the list and named `(you)`, which
+answers the same question and fifteen more. `seasonRows` already took a team id,
+so the generalisation was a prop; what changed is that its two score fields are
+now `pointsFor`/`pointsAgainst` rather than `yours`/`theirs`, because they are no
+longer necessarily yours.
+
+It sits on its own row. Three selects across a phone leaves each too narrow to
+read the option it is showing, and a control whose value you cannot read is not a
+control.
+
+
+### The refactor pass over all of it (20 Aug 2026)
+
+Craig asked for a rule-of-2/3, debloat and de-hardcode sweep once the feature
+was working. What it actually turned up:
+
+**One latent bug, from duplication.** The schedule worked out "which round does
+the reader mean" in two places — the gameweek branch and the fixture-list branch
+— and the two had drifted to *different fallbacks*: one ended on the season's
+last round, the other on its first. Neither is reachable today, both would be
+reachable the moment the league's calendar starts after FPL's. Now one
+`chooseRound`, called twice. This is the rule of 2/3 earning its keep: the
+duplication was the bug, not a symptom of one.
+
+**One wasted request per view.** The board fetched `getLiveScoringStats` for the
+round on screen whether or not it had been played. Fantrax answers for any period
+asked, so browsing March cost a request per gameweek for totals the board had
+already decided not to print. Gated on `kickedOff` now.
+
+**Three rule-of-3 landings, and two of them were pre-existing:**
+
+- `kickedOff(status)` in `football/selectors.ts`. "Has any football happened in
+  this round yet" is the question that decides whether a score exists at all, and
+  the scoreline, the fixture-list row and the row assembler each asked it their
+  own way.
+- `yoursFirst(items, isYours)` in `app/mine.ts`. The paper's doubts column had
+  its own copy, the matchups board had another, and the schedule's team picker
+  made three. They sort different shapes — a note, a pairing, a team — so the
+  question is the argument. `mine.ts` already owned the other half of the same
+  reading aid (the accent border), so it was the obvious home rather than a new
+  file.
+- `TeamBadge` now takes the team and the badge map rather than a name and a URL,
+  which deleted the same pair of null checks from both call sites.
+
+**Deliberately NOT abstracted**, so nobody re-opens it: the nine-plus
+`unstable_cache` wrappers. This session added five more and the trigger is
+firing harder than ever, but HANDOVER parks `leagueCache()` until after the GW1
+weekend and a refactor mid-feature is the thing CODE_RULES §7 forbids.
+
+**Debloat.** `SeededRound`, `CompetitionGroup` and `Competition` came off
+`league/index.ts` — all three are inferred at every call site and §2 does not
+keep an export nothing imports. `Controls` now builds its own option labels
+instead of the page assembling three `{value, label}` arrays for a component
+that only printed them, which took `page.tsx` from 258 lines to 213 and put the
+labels beside the control that shows them.
+
+**A name that had stopped telling the truth.** `yours.ts` became `teamSeason.ts`
+when the fixture list generalised from the reader's own team to any of the
+sixteen, and its two score fields went from `yours`/`theirs` to
+`pointsFor`/`pointsAgainst`. That is an explicit refactor trigger in CODE_RULES
+and it fired within an hour of the rename becoming wrong.
+
+**Hardcoding found and moved:** the route path in `Controls`, which the form
+posted to and the router pushed to separately. Everything else was already a
+named constant with its reasoning attached — `SIZE` in both badge files,
+`PLACEHOLDER_ROUNDS`, the caption regex. The `view: "SCHEDULE"` and `view:
+"FPTS"` literals stay inline beside the method that sends them, matching what
+was already there.
+
+**Checked and clean:** no Map or Error instance crosses an `unstable_cache`
+boundary; no `any`, no non-null assertions, no unused imports; and the schedule
+serialises no lineup to the client — `Controls` is its only client component and
+it carries gameweek numbers, competition ids and team names, all public all week.
+Grepped the rendered source for `ACTIVE`/`RESERVE` on all three schedule views
+and on the head-to-head board at a past, present and future gameweek: zero hits
+on every one.
+
+
+### The adversarial pass, and the one that would have hit every weekend
+
+An independent review of the whole changed surface. Five real defects, one of
+them the worst kind — correct on every day it was tested and wrong every
+Saturday.
+
+**1. A part-played round reported "upcoming", so the board hid scores it had.**
+`gameweekStatus` is a three-state label: live if any match is, finished once all
+are, upcoming otherwise. At six on a Saturday evening — nine results in, a Monday
+night match to come — nothing is live and it is not finished, so the round is
+"upcoming". That is *right for a caption*; a full-time label on it would be a
+lie. The mistake was reading the same enum as "has any football happened",
+which is a two-state question a three-state label cannot answer.
+
+The consequence: every tie printed `v` instead of its scoreline, every fixture-
+list row said "To play", the rows stopped linking to the head-to-head, and
+`getLiveScoringStats` was never called — then on Monday night the last match
+kicked off, the round flipped to "live", and all nine results appeared at once.
+Scores, then no scores, then scores, inside one gameweek.
+
+Worse, this session had *introduced* the bug while doing the opposite of the
+right thing: `kickedOff(status)` was landed as a rule-of-2/3 abstraction over
+three consumers, which made one wrong answer authoritative in three places at
+once. **An abstraction over the wrong fact is worse than the duplication it
+replaced.** Gone, replaced by `gameweekStarted(fixtures, gameweek)` — asked of
+the fixtures, where the answer actually lives — surfaced as `ScheduleRound.started`
+so the three views read a fact rather than re-deriving one.
+
+**2. The fixture list marked a winner at half-time.** The scoreline guards it
+with `status === "finished"` and says why; the season row only checked that a
+score existed. Live on a Saturday, `?team=X` bolded a 30–25 lead as a win while
+`?gw=7` showed the same fixture unmarked. Two answers to one question.
+
+**3. `mapSeasonResults` could pair a team with another team's score.** The
+comment claimed position-independence; what it actually assumed was
+team-then-score *adjacency*. A reordering to Away/Home/Pts/Pts — which the file's
+own comment concedes is theirs to make — reads the second team's name as the
+first's total. The NaN filter is not a net: **this league contains a team called
+"123"**, which parses cleanly as a hundred and twenty-three. Now a score cell
+must name no team, and there is a test with that exact reordering.
+
+**4. Tapping a cup tie opened a different match.** The head-to-head route
+resolves its pairing from Fantrax's *league* schedule and knows nothing about
+competitions, so a played cup tie A v D landed on A v whoever-A-played-in-the-
+league-that-week, with nothing on screen to say so. Only league ties open a
+board now.
+
+**5. A postponement would have produced duplicate rounds.** `calendar.ts` names
+this divergence exactly: FPL keeps a rearranged fixture under its original
+`event` while Fantrax scores it in the period it was played. So a replayed
+gameweek 20 match inside period 25 puts gameweek 20 in *both* periods — two
+identical entries in the dropdown sharing a React key, the second unreachable,
+and a team's fixture list printing its week twice. `rounds` is deduped by
+gameweek now, lowest period winning, and the fixture-list key is the period.
+
+**Two wasted reads on the head-to-head board**, both pre-existing: `squadPoints`
+was fetched for *both* sides regardless, though it is read only inside the branch
+that has already decided to show a side's eleven — so the page's own main use
+("who am I playing this week", read on a Tuesday) threw away one whole read, and
+a signed-out reader threw away two. And `liveScores`'s refusal was dropped, so a
+scoreboard outage rendered as silent dashes on the one board that did not say so.
+Both fixed.
+
+**Hardening, not a demonstrated bug:** `next/image` throws on a URL outside its
+allow-list, which takes down a page rather than losing an icon — and
+`getTeamRosterInfo` carries `logoUploaded`, so a manager uploading his own crest
+is a state this league can reach. `FANTRAX_BADGE_BASE` is now in config and
+`mapTeamBadges` drops anything not under it, which turns a 500 into an initial on
+a disc. `next.config.ts` names the same prefix and says the two must move
+together.
+
+**The lineup gate held everywhere**, in both directions, on a past, present and
+future gameweek — traced through the code and grepped in the rendered source.
+One soft spot closed anyway: the gate keyed entirely on the period Fantrax
+*echoed*, while the route already knew which period it had *asked for*. Trusting
+the provider for something we already know is free to get wrong, so
+`periodAsAsked` now falls the whole payload back to squad-only when the two
+disagree — and `teamDisplay` honours it too, or the per-team path would have
+re-opened every lineup one route at a time.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially

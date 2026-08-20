@@ -21,6 +21,8 @@ import {
   nextDeadline,
   teamOfTheWeek,
 } from "@epl/core";
+import { seasonKickoffs } from "./football";
+import { yoursFirst } from "./mine";
 import { orRefusal } from "./refusals";
 import { type LeagueSquads, getLeagueSquads } from "./squads";
 
@@ -102,7 +104,11 @@ const readDeals = unstable_cache(
 );
 
 export async function edition(mine: string | null): Promise<Edition> {
-  const [squads, feed] = await Promise.all([getLeagueSquads(), readDeals()]);
+  const [squads, feed, kickoffs] = await Promise.all([
+    getLeagueSquads(),
+    readDeals(),
+    seasonKickoffs(),
+  ]);
   const drafted = "period" in squads ? squads : null;
   const now = new Date().toISOString();
 
@@ -111,8 +117,12 @@ export async function edition(mine: string | null): Promise<Edition> {
     snapshot: drafted?.snapshot ?? null,
     deals: deals(feed.rows),
     dealsAt: feed.at,
-    availability: drafted ? yoursFirst(availability(drafted.period.teams), mine) : [],
-    deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, now) : null,
+    // Your problems first: a manager scanning injury news on a Friday is
+    // looking for his own name before anybody else's.
+    availability: drafted
+      ? yoursFirst(availability(drafted.period.teams), (note) => note.teamId === mine)
+      : [],
+    deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, kickoffs, now) : null,
     teams: drafted?.info?.teams ?? [],
     eleven: eleven(drafted),
     mine,
@@ -155,9 +165,3 @@ function eleven(drafted: { period: { teams: RosteredTeam[] }; info: LeagueInfo |
   return picked.picks.length === 0 ? null : picked;
 }
 
-/** Your problems first. A manager scanning injury news on a Friday is looking
- *  for his own name before anybody else's. */
-function yoursFirst(notes: AvailabilityNote[], mine: string | null): AvailabilityNote[] {
-  if (mine === null) return notes;
-  return [...notes].sort((a, b) => Number(b.teamId === mine) - Number(a.teamId === mine));
-}

@@ -22,7 +22,7 @@ nothing.**
 |---|---|---|
 | `/` | [gazetta.md](gazetta.md) | The week's paper. Lead, deals, doubts, next deadline. |
 | `/league` | [league-table.md](league-table.md) | The table. Fantrax computes it. |
-| `/league/schedule` | [league-schedule.md](league-schedule.md) | All 38 periods, who plays whom. |
+| `/league/schedule` | [league-schedule.md](league-schedule.md) | One gameweek, every competition on it. |
 | `/league/matchups` | [league-matchups.md](league-matchups.md) | This period's head-to-heads, with live points. |
 | `/league/matchups/[teamId]` | [matchup.md](matchup.md) | One head-to-head: two totals, and the eleven behind each. |
 | `/squad` | [squads.md](squads.md) | Yours, then everyone else's. |

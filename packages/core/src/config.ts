@@ -111,14 +111,21 @@ export const FANTRAX_LEAGUE_ID =
  *  a page that ever does overflow this says so rather than showing a prefix. */
 export const POOL_PAGE_SIZE = 2000;
 
-/** How far before a period's first fixture the commissioner locks lineups, in
- *  minutes.
+/** How far before a round's FIRST KICKOFF lineups lock, in minutes.
  *
- *  **A commissioner setting Fantrax does not publish, written down here because
- *  it has to live somewhere (§3).** `getLeagueInfo` gives the period boundary,
- *  which is kickoff; the fifteen-minute lead is a house rule stated only in the
- *  league's own chat. Everything else in this file is read from the provider, so
- *  this one is the exception and PLATFORM_NOTES records it.
+ *  **A commissioner setting Fantrax states on its settings page and through no
+ *  API we can read, written down here because it has to live somewhere (§3).**
+ *  Confirmed on `createLeague.go?goto=5` on 20 Aug 2026: `lineupLockType` is
+ *  `TIME_BEFORE_FIRST_GAME` — "Set amount of time before 1st game of period" —
+ *  and `lineupLockTimeBeforeGame` is `00:15`.
+ *
+ *  Measured back from the first kickoff and **not from the period boundary**,
+ *  which is what an earlier version of this comment said. The two coincide only
+ *  when the gameweek has a Friday night match; see `gazette/deadline.ts`.
+ *
+ *  Fantrax's other option is `TIME_BEFORE_FIRST_GAME_OF_SCORER`, a per-player
+ *  rolling lock. This league does not use it, which is why there is one deadline
+ *  a week and it is a real thing to print.
  *
  *  **If the commissioner moves the lock, this number is the only place that
  *  knows.** Nothing will fail; the app will simply print the wrong time to
@@ -153,6 +160,22 @@ export const PL_PHOTO_BASE = "https://resources.premierleague.com/premierleague2
  *  of a man, so a transfer changes the shirt the same day. That is the whole
  *  reason they are here: a portrait cannot be that current. */
 export const FPL_SHIRT_BASE = "https://fantasy.premierleague.com/dist/img/shirts/standard";
+
+/** Where Fantrax serves the badge a manager picked for his fantasy team.
+ *
+ *  A prefix and not just a host, because it is a gate as well as an address:
+ *  `next.config.ts` allow-lists exactly this path for the image optimizer, and a
+ *  badge URL from anywhere else makes `next/image` throw — which takes down a
+ *  whole page rather than losing one 26px icon. `getTeamRosterInfo` carries
+ *  `logoUploaded`, so a custom upload served from some other path is a state
+ *  this league can reach; `mapTeamBadges` drops any URL that is not under here
+ *  and the team shows its initial instead.
+ *
+ *  As with the Premier League's assets, `next.config.ts` names the same path
+ *  separately and cannot read this: Next resolves image domains before any of
+ *  our code runs. The two must be changed together. */
+export const FANTRAX_BADGE_BASE =
+  "https://fantraximg.com/assets/images/icons/fantasyteams";
 
 /** The league's clock. Every date a manager reads is in it, whatever their phone
  *  says, because a deadline is the same instant for all sixteen of them and a

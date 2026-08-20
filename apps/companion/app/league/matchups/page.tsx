@@ -14,7 +14,7 @@ import LeagueShell from "../Shell";
 import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "../../scoreboard";
-import { yoursBorder } from "../../mine";
+import { yoursBorder, yoursFirst } from "../../mine";
 import { FANTRAX_SILENT } from "../../config";
 
 // Who each squad plays this period, and what they have scored.
@@ -132,19 +132,16 @@ export default async function MatchupPage() {
 
   // Yours first. Sixteen pairings is a scroll, and the one a manager came for is
   // his own — a neutral list is for broadcasters.
-  const ordered = [...pairings].sort(
-    (a, b) => Number(involves(b, mine)) - Number(involves(a, mine)),
-  );
+  const ordered = yoursFirst(pairings, (pairing) => involves(pairing, mine));
 
   return (
     <LeagueShell
       title="Matchups"
       current="matchups"
-      sub={
-        <>
-          Period {period} · Gameweek {squads.snapshot.gameweek}
-        </>
-      }
+      // Gameweek, not "Period 1 · Gameweek 1". They are the same number every
+      // week this season, and printing one number under two names asks a reader
+      // to work out whether they are the same thing.
+      sub={<>Gameweek {squads.snapshot.gameweek}</>}
     >
       {/* The one live board that was not refreshing itself. `revalidate` bounds
           how stale the cache may get and pushes nothing to a phone already

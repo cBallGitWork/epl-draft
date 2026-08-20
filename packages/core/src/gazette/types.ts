@@ -40,15 +40,19 @@ export interface AvailabilityNote {
 /** When the lineup locks next. The commissioner's deadline, never FPL's. */
 export interface Deadline {
   period: number;
-  /** When the period opens, ISO, exactly as the league states it. This is the
-   *  first fixture's kickoff, and it is the only one of the two instants here
-   *  that Fantrax actually published. */
+  /** The period's first kickoff, ISO — the instant the lock is measured back
+   *  from, and a fact about the football rather than about the league.
+   *
+   *  Deliberately NOT the period boundary, which is what this used to say. The
+   *  two coincide only when the gameweek has a Friday night match; see
+   *  `deadline.ts` for the periods where they are a day apart. */
   at: string;
   /** When lineups actually lock: `at` less `LINEUP_LOCK_LEAD_MINUTES`.
    *
    *  Derived by us, not read from anywhere, because the commissioner's lead is a
-   *  house rule Fantrax does not carry. Kept beside `at` rather than replacing it
-   *  so a view can show both and say which is which. */
+   *  house rule Fantrax publishes on its settings page and through no API. Kept
+   *  beside `at` rather than replacing it so a view can show both and say which
+   *  is which. */
   locksAt: string;
 }
 

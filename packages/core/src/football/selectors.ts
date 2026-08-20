@@ -1,5 +1,12 @@
 import { NOTABLE_SAVES } from "../config";
-import type { Club, FootballPlayer, FootballSnapshot, PlayerMatchStats } from "./types";
+import type {
+  Club,
+  Fixture,
+  FixtureStatus,
+  FootballPlayer,
+  FootballSnapshot,
+  PlayerMatchStats,
+} from "./types";
 
 // Pure read-side selectors over a snapshot. Kept here rather than in components
 // so they stay unit-testable — the same rule that let the World Cup app's
@@ -182,4 +189,40 @@ export function hasGameweek(snapshot: FootballSnapshot, gameweek: number): boole
 export function isDoubtful(player: FootballPlayer): boolean {
   if (player.news === "" && player.chanceOfPlaying === 100) return false;
   return player.status !== "a" || player.news !== "" || player.chanceOfPlaying !== null;
+}
+
+/** Whether a ball has been kicked in this round yet.
+ *
+ *  A different question from `gameweekStatus`, and the distinction is the whole
+ *  point: at six on a Saturday evening a round with nine results and a Monday
+ *  night match left has no LIVE fixture and is not FINISHED, so its status is
+ *  "upcoming" — correctly, because a full-time label on it would be a lie. But
+ *  nine of its ten results exist, and a view that reads that status as "no
+ *  football has happened" hides every one of them until Monday.
+ *
+ *  Asked of the fixtures rather than of the status for exactly that reason: a
+ *  three-state label cannot answer a two-state question, and trying to make it
+ *  is how the schedule came to blank its own scoreboard every weekend. */
+export function gameweekStarted(fixtures: readonly Fixture[], gameweek: number): boolean {
+  return fixtures.some(
+    (fixture) => fixture.gameweek === gameweek && fixture.status !== "upcoming",
+  );
+}
+
+/** How a whole round stands: in play while any match is, done once every one of
+ *  them is, and upcoming until the first ball is kicked.
+ *
+ *  Asked of season-wide fixtures rather than of a snapshot, because the caller
+ *  labelling thirty-eight rounds at once holds the season and not one round of
+ *  it. A gameweek with no fixtures answers "upcoming" — "every match has ended"
+ *  is vacuously true of none, and a full-time label on a week that has not been
+ *  scheduled is the confident wrong answer. */
+export function gameweekStatus(
+  fixtures: readonly Fixture[],
+  gameweek: number,
+): FixtureStatus {
+  const round = fixtures.filter((fixture) => fixture.gameweek === gameweek);
+  if (round.length === 0) return "upcoming";
+  if (round.some((fixture) => fixture.status === "live")) return "live";
+  return round.every((fixture) => fixture.status === "finished") ? "finished" : "upcoming";
 }
