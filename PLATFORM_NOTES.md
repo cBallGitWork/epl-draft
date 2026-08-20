@@ -2514,6 +2514,57 @@ Two details that are load-bearing:
   is non-zero, which means deploy. The wrong answer in that direction costs a
   build; the other direction costs a shipped commit that never went live.
 
+## The bridge gate, and why `npm run bridge` was not re-run (20 Aug 2026)
+
+ROADMAP §6's last item, in two halves — and only one of them turned out to be
+worth doing.
+
+**The gate: `npm run bridge:check`.** `npm run bridge` reports totals — 688
+players, 568 mapped, 120 with no FPL counterpart — and has never answered the
+question that actually matters. 78% coverage says nothing about whether any of
+the missing 22% is *on somebody's team*, and each one that is is a hole in a
+squad view. This walks every rostered slot in both leagues against the
+checked-in bridge and fails on a hole.
+
+What fails and what does not is the identity layer's own distinction, reused
+rather than re-derived:
+
+- **Unbridged** — the bridge has never seen the id. Somebody joined the pool
+  since the last run. Always a fault, always fixed by running it.
+- **Assumed unmapped** — the matcher looked and found nobody. Revisable by
+  construction (`isAssumed`), and FPL adds players all window: three of the first
+  residue recorded were in FPL a week later. On a rostered player this fails,
+  because a manager is looking at the hole.
+- **A person's verdict** — `unmappedBy: "manual"`, or any row carrying
+  `auditedAt`. Passes, and is counted so the number stays visible. A person
+  looked and the script did not; this gate has no standing to reopen that.
+
+`isAssumed` left the identity barrel to make that possible, and travels with
+`isUnmapped` for the same reason it does: a caller re-deriving "did a person
+decide this" from `unmappedBy` and `auditedAt` is a caller that will one day get
+it wrong and silently reopen somebody's verdict.
+
+First run, on every push from now on:
+
+```
+~ real: NO_TEAMS — no squads to check
+  rehearsal: 4 squads
+60 rostered slots checked.
+No holes: every player anybody holds resolves to a footballer.
+```
+
+**The re-run: deliberately not done.** The roadmap says to re-run `npm run
+bridge` after the rehearsal league's waiver churn. The gate says the bridge
+already covers everyone rostered, so a regeneration would change nothing that
+matters — and it is not free: it rewrites `data/mappings/fantrax.json` and
+`review/proposals.json` wholesale, deletes rows it did not re-derive, and
+`proposals.json` currently holds three rows waiting on Craig's own call
+(`Fred Heath`, `Enzo Kana Biyik`, `Lucas Pitt`). Churning a file with a person's
+pending decisions in it, to fix nothing, is the wrong trade.
+
+The gate is the better answer to the same worry: it is what will *say* when a
+re-run is needed, on the push that needs it, instead of on a schedule.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially

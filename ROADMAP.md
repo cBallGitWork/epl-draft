@@ -147,8 +147,13 @@ hand-discriminations; splitting `fantrax/stats.ts`, `league/types.ts`,
   runs it against both on every push. It asserts the empty states for a league
   with no teams *and* asserts their absence for one with teams — the half that
   catches the bug `edition.ts` actually shipped.
-- Re-run `npm run bridge` after rehearsal waiver churn; gate on zero
-  rostered-but-unmapped.
+- ~~Re-run `npm run bridge` after rehearsal waiver churn; gate on zero
+  rostered-but-unmapped.~~ **Gate built 20 Aug — `npm run bridge:check`, in CI
+  on every push.** First run: 60 rostered slots, no holes. The re-run itself is
+  deliberately not done — the gate says the bridge already covers everyone
+  rostered, and regenerating would churn a file holding three review rows
+  waiting on Craig, to fix nothing. The gate is what will say when a re-run is
+  actually needed.
 - ~~Pull the **Ignored Build Step** lever~~ **Done 20 Aug** —
   `apps/companion/vercel.json`, `:(top)`-prefixed because Vercel's root is
   `apps/companion`. A commit touching only `data/snapshots` no longer redeploys.

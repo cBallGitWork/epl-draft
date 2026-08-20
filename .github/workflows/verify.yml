@@ -64,3 +64,14 @@ jobs:
           }
           walk ayyoh3n2mr326v2o
           walk zbn1z3ukmsgb36sz
+
+      # ROADMAP §6's last one. `npm run bridge` reports totals — 688 players, 120
+      # with no FPL counterpart — and has never answered the question that
+      # matters: is anybody's actual squad missing a footballer? Each unresolved
+      # rostered player is a hole in a squad view, and 78% coverage says nothing
+      # about whether any of the missing 22% is on a team.
+      #
+      # It does not rewrite the mapping, so it is safe on every push. A person's
+      # confirmed absence passes; only a stale bridge or the matcher's own guess
+      # fails.
+      - run: npm run bridge:check

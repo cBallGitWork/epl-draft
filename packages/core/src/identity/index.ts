@@ -8,7 +8,12 @@
 // invitation to name-match at runtime, which is the one thing this layer exists
 // to prevent.
 
-export { isUnmapped, mergeBridge } from "./bridge";
+// `isAssumed` travels with the two beside it for the same reason they do: the
+// difference between a row the script guessed and a row a person stands behind
+// is the whole design of this file, and a caller that has to re-derive it from
+// `unmappedBy` and `auditedAt` is a caller that will one day get it wrong and
+// silently reopen somebody's verdict.
+export { isAssumed, isUnmapped, mergeBridge } from "./bridge";
 // The guard travels with the type: a caller holding a `BridgeEntry` has to be
 // able to ask whether it settled on anybody, and writing that check a second
 // time at the app edge would be the same test in two places disagreeing later.
