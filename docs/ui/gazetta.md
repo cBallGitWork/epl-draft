@@ -6,8 +6,23 @@ lock.
 
 ## In reading order
 
-1. **Masthead** — the paper's name, with a line under it that changes: "Football
-   is on. The scores are moving." while live, otherwise when lineups lock.
+1. **Masthead** — a masthead, not a page header. Every other section of the app
+   opens with the crest at the left and the title beside it, because those are
+   screens; this is a front page. The name is centred, set as large as a phone
+   allows and **allowed to wrap** — two lines at this size is what a broadsheet
+   does with a long title, and shrinking it to fit would trade the one piece of
+   typography meant to be loud for a tidiness nobody asked for.
+
+   Between rules, in the league's red, with a **dateline** under it: date at the
+   left, season at the right, small capitals and letterspaced. That row is the
+   whole difference between a masthead and an `<h1>`, and no app has one.
+
+   The date is the **edition's** instant, not the reader's clock: two managers
+   opening the same cached edition either side of midnight must not be shown
+   two different days.
+
+   Under it, the line that changes: "Football is on. The scores are moving."
+   while live, otherwise when lineups lock.
 2. **A live bar**, only while football is on — a link straight to `/matchday`,
    with the pulsing live dot.
 3. **Team of the week** — the best XI across the whole league, with its shape.
@@ -24,7 +39,20 @@ lock.
    not something Fantrax publishes.
 
 Your own team is marked throughout with the left-edge accent border
-(`yoursBorder`).
+(`yoursBorder`) — and the same one, on a different ground. The class it returns
+sets a border *colour* plus an explicit left width, so on a ruled row with no
+`border` utility it draws the accent bar and nothing else. One treatment, two
+grounds, and `mine.ts` stays the only place that knows what "yours" looks like.
+
+## The columns
+
+The three columns are `components/gazette/`, under `Column` rather than the
+app's shared `shell/Section`. That difference is the point: a newspaper is ink
+and rules on a page, and a stack of rounded, bordered, elevated boxes is a
+settings screen no matter what is printed in it. Same information, hairlines
+between items, heads in cream on a red rule.
+
+`shell/Section` is unchanged and still right on the four screens that use it.
 
 ## States
 
@@ -46,5 +74,8 @@ instant, never a clock.
 
 ## Known gaps
 
-Visually the plainest page in the app: stacked bordered cards, no hierarchy
-beyond the section rules. It is called a *paper* and does not look like one.
+**Nothing leads.** A paper's front page has a lead story and this one has four
+columns of equal weight — the best story on it is `left him on the bench`, and
+it is printed as a footnote on a row rather than as a headline. Building that
+means deciding what the lead *is*, which is a behaviour change and not a visual
+one, so it is recorded here rather than smuggled into a restyle.

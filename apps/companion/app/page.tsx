@@ -5,8 +5,8 @@ import Live from "./components/gazette/Live";
 import Masthead from "./components/gazette/Masthead";
 import TeamOfTheWeek from "./components/gazette/TeamOfTheWeek";
 import { FANTRAX_SILENT, servedLeague } from "./config";
+import Column from "./components/gazette/Column";
 import Nothing from "./components/shell/Nothing";
-import Section from "./components/shell/Section";
 import { edition } from "./edition";
 import { londonDate, londonDayAndTime } from "./londonTime";
 import { getLeagueSquads } from "./squads";
@@ -40,6 +40,7 @@ export default async function GazettePage() {
   return (
     <div className="flex flex-col gap-5">
       <Masthead
+        at={paper.snapshot?.fetchedAt ?? null}
         line={
           paper.live
             ? "Football is on. The scores are moving."
@@ -89,7 +90,7 @@ export default async function GazettePage() {
       ) : null}
 
       {paper.deadline ? (
-        <Section title="Next deadline">
+        <Column title="Next deadline">
           {/* Terse, per the voice: the lock is the fact a manager needs, the
               kickoff is context, and neither needs a paragraph explaining where
               we got it. The masthead states the same instant, so the two can no
@@ -102,7 +103,7 @@ export default async function GazettePage() {
             , a quarter of an hour before period {paper.deadline.period} kicks off at{" "}
             <span className="numeric text-ink">{londonDayAndTime(paper.deadline.at)}</span>.
           </p>
-        </Section>
+        </Column>
       ) : null}
     </div>
   );

@@ -1,5 +1,5 @@
 import type { AvailabilityNote } from "@epl/core";
-import Section from "../shell/Section";
+import Column from "./Column";
 import { DOUBTS_SHOWN } from "../../config";
 import { yoursBorder } from "../../mine";
 
@@ -16,14 +16,12 @@ export default function Doubts({
   who: (teamId: string | null) => string;
 }) {
   return (
-    <Section title="Doubts" aside={`${notes.length} across the league`}>
-      <ul className="flex flex-col gap-1.5">
+    <Column title="Doubts" aside={`${notes.length} across the league`}>
+      <ul>
         {notes.slice(0, DOUBTS_SHOWN).map((note) => (
           <li
             key={`${note.teamId}-${note.playerName}`}
-            className={`elev rounded-xl border bg-surface px-3 py-2.5 ${yoursBorder(
-              note.teamId === mine,
-            )}`}
+            className={`py-2 pl-2 ${yoursBorder(note.teamId === mine)}`}
           >
             <p className="flex items-baseline justify-between gap-3">
               <span className="truncate font-semibold">{note.playerName}</span>
@@ -40,6 +38,6 @@ export default function Doubts({
           </li>
         ))}
       </ul>
-    </Section>
+    </Column>
   );
 }

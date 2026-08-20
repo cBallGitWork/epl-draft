@@ -1,5 +1,5 @@
 import type { Deal } from "@epl/core";
-import Section from "../shell/Section";
+import Column from "./Column";
 import { DEALS_SHOWN } from "../../config";
 
 // The week's business: trades and claims, grouped so both halves of a trade read
@@ -20,15 +20,12 @@ export default function Deals({
   who: (teamId: string | null) => string;
 }) {
   return (
-    <Section
-      title="The week's business"
-      aside={at ? `${deals.length} · ${at}` : `${deals.length}`}
-    >
-      <ul className="flex flex-col gap-1.5">
+    <Column title="The week's business" aside={at ? `${deals.length} · ${at}` : `${deals.length}`}>
+      <ul>
         {deals.slice(0, DEALS_SHOWN).map((deal) => (
           <li
             key={deal.setId + deal.inbound.map((p) => p.playerName).join()}
-            className="elev rounded-xl border border-line bg-surface px-3 py-2.5"
+            className="py-2"
           >
             <p className="text-sm">
               {/* A trade is two players moving in opposite directions, and
@@ -59,6 +56,6 @@ export default function Deals({
           </li>
         ))}
       </ul>
-    </Section>
+    </Column>
   );
 }

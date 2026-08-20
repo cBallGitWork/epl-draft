@@ -1,11 +1,16 @@
 import { NOTABLE_SAVES, type Pick, type TeamOfTheWeek as Eleven } from "@epl/core";
-import Section from "../shell/Section";
+import Column from "./Column";
 import { yoursBorder } from "../../mine";
 
 // The best eleven anyone owned this week, and who owns them.
 //
 // The joke the league tells is not "Haaland scored twice" — everyone saw that.
 // It is whose Haaland he was, and which manager left him out.
+//
+// The rows carry no card. `yoursBorder` still marks the reader's own, and marks
+// it the same way it does everywhere else — the class it returns sets a border
+// COLOUR plus an explicit left width, so on a row with no `border` utility it
+// draws the accent bar and nothing else. One treatment, two grounds.
 
 /** What got him picked, in the fewest words that are still true. */
 function did(pick: Pick): string {
@@ -20,14 +25,12 @@ function did(pick: Pick): string {
 
 export default function TeamOfTheWeek({ eleven, mine }: { eleven: Eleven; mine: string | null }) {
   return (
-    <Section title="Team of the week" aside={eleven.shape}>
-      <ul className="flex flex-col gap-1.5">
+    <Column title="Team of the week" aside={eleven.shape}>
+      <ul>
         {eleven.picks.map((pick) => (
           <li
             key={pick.playerCode}
-            className={`elev rounded-xl border bg-surface px-3 py-2.5 ${yoursBorder(
-              pick.ownerTeamId === mine,
-            )}`}
+            className={`py-2 pl-2 ${yoursBorder(pick.ownerTeamId === mine)}`}
           >
             <p className="flex items-baseline gap-2">
               <span className="numeric w-5 shrink-0 text-2xs text-faint">{pick.position}</span>
@@ -44,6 +47,6 @@ export default function TeamOfTheWeek({ eleven, mine }: { eleven: Eleven; mine: 
           </li>
         ))}
       </ul>
-    </Section>
+    </Column>
   );
 }
