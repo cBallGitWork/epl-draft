@@ -37,11 +37,12 @@ toward `/squad/[teamId]` (the reference — full-bleed angled pitch, cut-out
 players, FDR chips, tap-to-open card). Order by payoff, doing first the pages
 that don't need live football:
 
-1. **`/players`** — "it is a spreadsheet": 697 rows, no faces, no crests.
-   Reuse `football/PlayerPortrait` (32px headshot) to lead every row, as the
-   squad list already does.
-2. **`/players/[fantraxId]`** — no portrait, no crest, on a page about one
-   footballer. `PlayerImage`'s fallback chain carries it for free.
+1. ~~**`/players`** — "it is a spreadsheet": 697 rows, no faces, no crests.~~
+   *Done 20 Aug (`6055a95`) — every row leads with the 32px mark; the FPL code
+   comes off the bridge, so the page keeps its single provider.*
+2. ~~**`/players/[fantraxId]`** — no portrait, no crest, on a page about one
+   footballer.~~ *Done 20 Aug (`9f544d1`) — the cut-out at 112px on his club's
+   colour, crest and number on it.*
 3. **`/` Gazetta** — "called a paper and does not look like one". The one page
    where the league register (Tim Hortons red + 1964–85 cream) can lead.
 4. **`/league`** — plain table; emphasise rank vs points, mark your row harder.
