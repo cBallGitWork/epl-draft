@@ -15,11 +15,38 @@ is not used for anything: there is no ground.
    side's team below; the open half is raised and carries a foot bar. Your own
    name reads in accent, the standard "this is yours" mark. **One number per
    side and nothing beside it** — see the constraint below.
-2. **Pitch / List**, with a **LIVE** dot opposite while football is on.
+2. **Pitch / List**, with the round's state opposite it — see below.
 3. **The open side's team** (`TeamSheet`) — the eleven on the grass and the
    bench in a strip under it, or the same squad as rows (`SquadRows`, shared
    with the squad board). Every player is a button.
 4. **A live player card** (`LivePlayerCard`) over the top, when one is tapped.
+
+## What the round is doing
+
+One word, in one place, and it is the only thing on the board that makes a
+promise about the numbers beside it.
+
+| `state` | On screen | When |
+|---|---|---|
+| `"live"` | LIVE dot + word | `isMatchdayLive` — a match actually in play |
+| `"bonus-settling"` | "Full time" + faint *bonus settling* | every dated match finished, bonus not yet added |
+| `"provisional"` | "Full time" | bonus added, FPL has not signed the round off |
+| `"final"` | "Final" | FPL's `data_checked` |
+| `null` | nothing | between kickoffs, and any round nobody is playing |
+
+**The dot used to burn all Saturday.** It was driven by `duringGameweek` — the
+window from the first kickoff to the last whistle — which is the right question
+for *how often to poll* and the wrong one for *whether a match is on*. Tea-time
+between the 12:30 and the 15:00 had nothing in play under a pulsing LIVE dot.
+The poll rate still reads `duringGameweek`, because fast between kickoffs is
+right; the word reads `isMatchdayLive` and `roundFinished`.
+
+**"Final" is claimed only at `data_checked`.** A manager watching his total move
+under the word Final would be right to stop believing the screen, so the two
+rungs before it say full time and — while bonus is still landing — say why the
+numbers are shifting. `roundFinished` is in the football layer and tested there;
+`null` covers both "in play" and "not started", which the board tells apart by
+pairing it with `isMatchdayLive` rather than inventing a fourth state.
 
 ## The two providers
 
@@ -120,7 +147,5 @@ counting them, which is the question a manager is actually asking at 4pm.
 
 - The list does not separate the eleven from the bench; it groups by position and
   answers "who has he got". The pitch is where the arrangement lives.
-- Nothing distinguishes a finished head-to-head from one still being played,
-  beyond the LIVE dot.
 - The two elevens can only be compared by switching halves. Whether that is worth
   fixing on a phone is an open question — the alternative is thirty players.

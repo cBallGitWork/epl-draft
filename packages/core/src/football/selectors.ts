@@ -226,3 +226,45 @@ export function gameweekStatus(
   if (round.some((fixture) => fixture.status === "live")) return "live";
   return round.every((fixture) => fixture.status === "finished") ? "finished" : "upcoming";
 }
+
+/** How settled a finished round is. Three rungs, because "over" is three
+ *  different claims on a Saturday night and a screen may only make the one it
+ *  can stand behind. */
+export type FinishedState = "bonus-settling" | "provisional" | "final";
+
+/** Where a round is on the ladder down from the last whistle, or null while it
+ *  is still going — or has not started.
+ *
+ *  The rungs, in the order they actually happen: the referee blows up and
+ *  `finished_provisional` flips, so `status` reads finished while FPL is still
+ *  adding bonus (`bonus-settling`); bonus lands (`provisional`); a day or two
+ *  later FPL signs the round off (`final`).
+ *
+ *  **"Final" is claimed only at `data_checked`.** A Final that later moves is
+ *  the confident wrong answer wearing the costume that looks most like an
+ *  answer, and the whole football layer exists to refuse that trade.
+ *
+ *  Null covers two states a caller must not conflate with each other but may
+ *  render the same way — nothing to say: a round in play, and a round nobody has
+ *  kicked off yet. `isMatchdayLive` is what separates them, and callers pair the
+ *  two rather than this one growing a fourth answer it would have to invent.
+ *
+ *  Undated fixtures are ignored, on the same rule as `duringGameweek`: a TV pick
+ *  with no time cannot hold a round open, and a round of nothing but undated
+ *  matches has not finished — it has not been scheduled. */
+export function roundFinished(snapshot: FootballSnapshot): FinishedState | null {
+  let anyDated = false;
+  let allFinished = true;
+  let allSettled = true;
+
+  for (const fixture of snapshot.fixtures) {
+    if (fixture.kickoff === null) continue;
+    anyDated = true;
+    if (fixture.status !== "finished") allFinished = false;
+    if (!fixture.settled) allSettled = false;
+  }
+
+  if (!anyDated || !allFinished) return null;
+  if (!allSettled) return "bonus-settling";
+  return snapshot.dataChecked ? "final" : "provisional";
+}

@@ -33,7 +33,8 @@ export {
   gameweekStarted,
   isMatchdayLive,
   playerByCode,
+  roundFinished,
 } from "./selectors";
-export type { MatchContribution } from "./selectors";
+export type { FinishedState, MatchContribution } from "./selectors";
 export { oppositionByClub } from "./opposition";
 export type { Opposition } from "./opposition";

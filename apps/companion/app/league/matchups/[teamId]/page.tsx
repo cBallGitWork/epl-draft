@@ -7,8 +7,10 @@ import {
   clubById,
   duringGameweek,
   headToHead,
+  isMatchdayLive,
   lineupDetail,
   oppositionByClub,
+  roundFinished,
   squadDetail,
   squadUnarranged,
 } from "@epl/core";
@@ -94,7 +96,12 @@ export default async function HeadToHeadPage({
   const { scores, refused } = await liveScores(period);
   const clubs = clubById(squads.snapshot);
   const opposition = oppositionByClub(squads.snapshot);
-  const live = duringGameweek(squads.snapshot, new Date().toISOString());
+  // Two questions, and they had been sharing one answer. `duringGameweek` is the
+  // whole window from the first kickoff to the last whistle — right for how often
+  // to ask the server, wrong for whether a match is on, which is why the LIVE dot
+  // burned through Saturday tea-time with nothing in play.
+  const matchday = duringGameweek(squads.snapshot, new Date().toISOString());
+  const state = isMatchdayLive(squads.snapshot) ? "live" : roundFinished(squads.snapshot);
 
   /** Whether a side's eleven is going on screen at all. Asked before the fetch
    *  below, because the answer decides whether that fetch is worth making. */
@@ -170,7 +177,7 @@ export default async function HeadToHeadPage({
 
   return (
     <LeagueShell title="Head-to-head" current="matchups" sub={heading}>
-      <AutoRefresh seconds={live ? POLL.live : POLL.idle} />
+      <AutoRefresh seconds={matchday ? POLL.live : POLL.idle} />
       {/* Both sibling boards say when the scoreboard is down; this one used to
           render the outage as two silent dashes. */}
       {refused === null ? null : (
@@ -191,7 +198,7 @@ export default async function HeadToHeadPage({
           that were fielded.
         </p>
       ) : null}
-      <MatchupBoard team={side(pairing.team)} opponent={side(pairing.opponent)} live={live} />
+      <MatchupBoard team={side(pairing.team)} opponent={side(pairing.opponent)} state={state} />
     </LeagueShell>
   );
 }

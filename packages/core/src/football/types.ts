@@ -57,6 +57,14 @@ export interface Fixture {
   homeScore: number | null;
   awayScore: number | null;
   status: FixtureStatus;
+  /** Whether FPL has added this match's bonus points.
+   *
+   *  `status` collapses `finished_provisional` into "finished", which is right
+   *  for a reader watching a score: the referee has blown up. This is the second
+   *  half of that same fact, kept apart rather than folded in, because a screen
+   *  claiming a round is over and a screen claiming its numbers have stopped
+   *  moving are making different promises. */
+  settled: boolean;
   /** Minutes played, as FPL reports it — drives the live clock. */
   minutes: number;
   /** FPL's 1–5 fixture difficulty for each side, null when they published none.
@@ -113,6 +121,12 @@ export interface FootballSnapshot {
   gameweeks: number[];
   /** When this snapshot was assembled, so the UI can show staleness honestly. */
   fetchedAt: string;
+  /** FPL's own sign-off on this gameweek — bonus added and stats reconciled.
+   *
+   *  The last rung of the ladder a round comes down: provisional whistle, then
+   *  bonus, then this. Nothing may print the word "Final" without it, because a
+   *  Final that later moves is the confident wrong answer. */
+  dataChecked: boolean;
   /** True when FPL's live endpoint could not be read, as against having nothing
    *  to report yet.
    *

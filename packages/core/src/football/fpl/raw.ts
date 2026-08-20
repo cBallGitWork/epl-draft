@@ -29,6 +29,10 @@ interface RawEvent {
   name: string;
   deadline_time: string;
   finished: boolean;
+  /** FPL's own sign-off on the round: bonus added, stats reconciled, nothing
+   *  further expected to move. It lands a day or two after the last whistle and
+   *  is the only thing in the payload entitled to the word "final". */
+  data_checked: boolean;
   is_current: boolean;
   is_next: boolean;
   is_previous: boolean;

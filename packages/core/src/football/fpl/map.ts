@@ -46,6 +46,9 @@ export function mapFixtures(raw: RawFixture[]): Fixture[] {
     homeScore: f.team_h_score,
     awayScore: f.team_a_score,
     status: fixtureStatus(f),
+    // Raw `finished`, on its own: this is the one place the distinction
+    // `fixtureStatus` deliberately throws away is kept.
+    settled: f.finished ?? false,
     minutes: f.minutes ?? 0,
     homeDifficulty: f.team_h_difficulty ?? null,
     awayDifficulty: f.team_a_difficulty ?? null,
@@ -162,6 +165,8 @@ export function buildSnapshot(input: {
     stats: input.live === null ? [] : mapLiveStats(input.live),
     gameweek: input.gameweek,
     deadline: event?.deadline_time ?? null,
+    // Absent means not signed off. A missing field must not read as "final".
+    dataChecked: event?.data_checked ?? false,
     gameweeks: events.map((e) => e.id).sort((a, b) => a - b),
     fetchedAt: input.fetchedAt,
     statsUnavailable: input.live === null,

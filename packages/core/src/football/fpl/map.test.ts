@@ -12,8 +12,8 @@ const bootstrap = (over: Partial<RawBootstrap> = {}): RawBootstrap => ({
     },
   ],
   events: [
-    { id: 1, name: "Gameweek 1", deadline_time: "2026-08-21T17:30:00Z", finished: true, is_current: false, is_next: false, is_previous: true },
-    { id: 2, name: "Gameweek 2", deadline_time: "2026-08-28T17:30:00Z", finished: false, is_current: false, is_next: true, is_previous: false },
+    { id: 1, name: "Gameweek 1", deadline_time: "2026-08-21T17:30:00Z", finished: true, data_checked: true, is_current: false, is_next: false, is_previous: true },
+    { id: 2, name: "Gameweek 2", deadline_time: "2026-08-28T17:30:00Z", finished: false, data_checked: false, is_current: false, is_next: true, is_previous: false },
   ],
   ...over,
 });
@@ -51,6 +51,19 @@ describe("mapFixtures", () => {
   it("distinguishes live from upcoming", () => {
     expect(mapFixtures([fixture({ started: true })])[0].status).toBe("live");
     expect(mapFixtures([fixture()])[0].status).toBe("upcoming");
+  });
+
+  it("keeps bonus apart from the whistle, which `status` throws away", () => {
+    const provisional = mapFixtures([
+      fixture({ started: true, finished: false, finished_provisional: true }),
+    ])[0];
+    expect(provisional.status).toBe("finished");
+    expect(provisional.settled).toBe(false);
+
+    const settled = mapFixtures([
+      fixture({ started: true, finished: true, finished_provisional: true }),
+    ])[0];
+    expect(settled.settled).toBe(true);
   });
 });
 
@@ -147,6 +160,26 @@ describe("buildSnapshot", () => {
       gameweek: 1, fetchedAt: "2026-08-21T18:00:00Z",
     });
     expect(snap.gameweeks).toEqual([1, 2]);
+  });
+
+  it("carries FPL's sign-off on the round it was asked for", () => {
+    const round = (gameweek: number) =>
+      buildSnapshot({
+        bootstrap: bootstrap(), fixtures: [fixture()], live: { elements: [] },
+        gameweek, fetchedAt: "2026-08-24T09:00:00Z",
+      }).dataChecked;
+    expect(round(1)).toBe(true);
+    expect(round(2)).toBe(false);
+  });
+
+  it("does not read a missing sign-off as a signed-off round", () => {
+    // Scraped data: the field going absent must not read as FPL saying yes, or
+    // an unlisted round prints "Final" over football nobody has played.
+    const unsigned = buildSnapshot({
+      bootstrap: bootstrap({ events: [] }), fixtures: [fixture()], live: { elements: [] },
+      gameweek: 1, fetchedAt: "2026-08-24T09:00:00Z",
+    });
+    expect(unsigned.dataChecked).toBe(false);
   });
 
   it("has no deadline for a round FPL does not list", () => {

@@ -6,7 +6,7 @@ const club = (id: number, shortName: string) => ({ id, code: id * 10, name: shor
 
 const fixture = (over: Partial<Fixture> & { id: number }): Fixture => ({
   gameweek: 6, homeClubId: 1, awayClubId: 2, kickoff: "2026-10-10T14:00:00Z",
-  homeScore: null, awayScore: null, status: "upcoming", minutes: 0,
+  homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0,
   homeDifficulty: 2, awayDifficulty: 4, ...over,
 });
 
@@ -19,6 +19,7 @@ const snap = (fixtures: Fixture[]): FootballSnapshot => ({
   deadline: null,
   gameweeks: [6],
   fetchedAt: "2026-10-10T12:00:00Z",
+  dataChecked: false,
   statsUnavailable: false,
 });
 

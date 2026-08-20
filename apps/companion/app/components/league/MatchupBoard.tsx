@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import type { LeagueTeam, LiveTeamScore } from "@epl/core";
+import type { FinishedState, LeagueTeam, LiveTeamScore } from "@epl/core";
 
 // The head-to-head at full size: both totals side by side, and one manager's
 // team underneath them.
@@ -36,15 +36,20 @@ export interface MatchupSide {
   list: ReactNode;
 }
 
+/** Where the round on screen stands. `null` is Saturday tea-time between two
+ *  kickoffs, and a Tuesday in March: nothing to say, which is not the same as
+ *  nothing happening. */
+export type RoundState = "live" | FinishedState | null;
+
 export default function MatchupBoard({
   team,
   opponent,
-  live,
+  state,
 }: {
   /** The side the URL named, and the one the board opens on. */
   team: MatchupSide;
   opponent: MatchupSide;
-  live: boolean;
+  state: RoundState;
 }) {
   const [open, setOpen] = useState<Which>("team");
   const [view, setView] = useState<View>("pitch");
@@ -71,14 +76,7 @@ export default function MatchupBoard({
       </div>
 
       <div className="flex items-center justify-between gap-3 px-0.5">
-        {live ? (
-          <span className="flex items-center gap-1.5 text-2xs font-bold uppercase tracking-widest text-live">
-            <span className="live-dot" />
-            Live
-          </span>
-        ) : (
-          <span />
-        )}
+        <RoundWord state={state} />
         <div
           role="group"
           aria-label="How to show the squad"
@@ -91,6 +89,41 @@ export default function MatchupBoard({
 
       {view === "pitch" ? side.pitch : side.list}
     </div>
+  );
+}
+
+/** What the round is doing, in the one place the board has for it.
+ *
+ *  The dot used to burn through a whole Saturday because it was driven by
+ *  `duringGameweek` — the window from the first kickoff to the last whistle,
+ *  which is the right question for how often to poll and the wrong one for
+ *  whether a match is on. Tea-time between the 12:30 and the 15:00 had nothing
+ *  in play and a pulsing LIVE dot over it.
+ *
+ *  And "Final" is a promise: it is printed only once FPL has signed the round
+ *  off, so a number under it has stopped moving. Between the last whistle and
+ *  the bonus points the board says full time and says why the totals are still
+ *  shifting, because a manager watching his score change under the word "Final"
+ *  would be right to stop believing the screen. */
+function RoundWord({ state }: { state: RoundState }) {
+  if (state === null) return <span />;
+
+  if (state === "live") {
+    return (
+      <span className="flex items-center gap-1.5 text-2xs font-bold uppercase tracking-widest text-live">
+        <span className="live-dot" />
+        Live
+      </span>
+    );
+  }
+
+  return (
+    <span className="flex items-baseline gap-1.5 text-2xs font-bold uppercase tracking-widest text-faint">
+      {state === "final" ? "Final" : "Full time"}
+      {state === "bonus-settling" ? (
+        <span className="font-normal normal-case tracking-normal">bonus settling</span>
+      ) : null}
+    </span>
   );
 }
 
