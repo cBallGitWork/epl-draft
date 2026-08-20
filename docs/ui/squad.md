@@ -40,6 +40,12 @@ it a `SquadPlayerDetail` rather than the maps.
 interchangeable: `undefined` (no table at all — the column disappears), `null`
 (the table answered and does not name him — a dash), or a number.
 
+`AutoRefresh` runs at the live rate while the round is under way and at the
+idle one otherwise — the same cadence as the head-to-head board, which shows the
+same totals. This was the one live-points surface without it: `revalidate`
+bounds how stale the cache may get and pushes nothing to a phone already open on
+the sofa, so the score under fifteen faces sat still through a whole half.
+
 ## SquadBoard, in reading order
 
 1. **View toggle** — Pitch / List, plus a player count. `min-h-9`, the one

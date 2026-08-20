@@ -2,7 +2,9 @@ import { notFound, redirect } from "next/navigation";
 import {
   FANTRAX_APP_BASE,
   FANTRAX_LEAGUE_ID,
+  POLL,
   clubById,
+  duringGameweek,
   headToHead,
   lineupDetail,
   oppositionByClub,
@@ -10,6 +12,7 @@ import {
   squadDetail,
   squadUnarranged,
 } from "@epl/core";
+import AutoRefresh from "../../components/shell/AutoRefresh";
 import LineupPlanner from "../../components/league/LineupPlanner";
 import PageHeader from "../../components/shell/PageHeader";
 import SquadBoard from "../../components/league/SquadBoard";
@@ -84,6 +87,14 @@ export default async function TeamPage({ params }: { params: Promise<{ teamId: s
 
   return (
     <div className="flex flex-col gap-3">
+      {/* The only live-points surface that did not move on a Saturday. Both
+          arrangements below carry Fantrax's totals and FPL's minutes, and
+          `revalidate` bounds staleness without pushing anything to a phone
+          already open on the sofa. Same cadence as the head-to-head board that
+          shows the same numbers. */}
+      <AutoRefresh
+        seconds={duringGameweek(squads.snapshot, new Date().toISOString()) ? POLL.live : POLL.idle}
+      />
       {/* Who he plays belongs on the same line as who he is. It had a line of
           its own under the period, which is where a reader looks last. */}
       <PageHeader
