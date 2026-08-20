@@ -1,4 +1,11 @@
-import { POLL, duringGameweek, periodPairings } from "@epl/core";
+import {
+  POLL,
+  type FinishedState,
+  duringGameweek,
+  isMatchdayLive,
+  periodPairings,
+  roundFinished,
+} from "@epl/core";
 import AutoRefresh from "../../components/shell/AutoRefresh";
 import Nothing from "../../components/shell/Nothing";
 import PairingCard, { involves } from "./PairingCard";
@@ -68,6 +75,12 @@ export default async function MatchupPage() {
     );
   }
 
+  // The same pair of questions the head-to-head board asks, spelled the same
+  // way. Second occurrence, so it is copied rather than extracted (rule of 2/3);
+  // a third caller is what earns a shared `RoundWord`.
+  const inPlay = isMatchdayLive(squads.snapshot);
+  const state = inPlay ? "live" : roundFinished(squads.snapshot);
+
   const mine = await myTeamId(squads.period.teams);
   const { scores, refused } = await liveScores(period);
   const pending = pendingByTeam(squads.period.teams, squads.info.scoring, squads.snapshot, squads.display);
@@ -84,7 +97,12 @@ export default async function MatchupPage() {
       // Gameweek, not "Period 1 · Gameweek 1". They are the same number every
       // week this season, and printing one number under two names asks a reader
       // to work out whether they are the same thing.
-      sub={<>Gameweek {squads.snapshot.gameweek}</>}
+      sub={
+        <>
+          Gameweek {squads.snapshot.gameweek}
+          {state === null ? null : <> · <RoundWord state={state} /></>}
+        </>
+      }
     >
       {/* The one live board that was not refreshing itself. `revalidate` bounds
           how stale the cache may get and pushes nothing to a phone already
@@ -115,10 +133,31 @@ export default async function MatchupPage() {
       <ul className="flex flex-col gap-1.5">
         {ordered.map((pairing) => (
           <li key={`${pairing.home.teamId}-${pairing.away.teamId}`}>
-            <PairingCard pairing={pairing} scores={scores} pending={pending} mine={mine} />
+            <PairingCard
+              pairing={pairing}
+              scores={scores}
+              pending={pending}
+              mine={mine}
+              live={inPlay}
+            />
           </li>
         ))}
       </ul>
     </LeagueShell>
   );
+}
+
+/** Where the round stands, in the page's own sub-heading. `null` never reaches
+ *  here — the caller drops the separator with it, rather than this rendering an
+ *  empty span after a middot. */
+function RoundWord({ state }: { state: "live" | FinishedState }) {
+  if (state === "live") {
+    return (
+      <span className="inline-flex items-center gap-1 text-live">
+        <span className="live-dot" />
+        Live
+      </span>
+    );
+  }
+  return <span>{state === "final" ? "Final" : "Full time"}</span>;
 }
