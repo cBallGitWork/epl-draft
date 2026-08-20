@@ -5,6 +5,7 @@ import type { SquadDetailLine, SquadPlayerDetail, SquadReason } from "@epl/core"
 import PlayerCard from "./PlayerCard";
 import SquadPitch from "./SquadPitch";
 import SquadRows from "./SquadRows";
+import ViewToggle, { type View } from "./ViewToggle";
 
 // A squad with no gameweek to report: the state every squad is in most of the
 // week, and the only state a rival's squad is ever in before a period opens.
@@ -36,8 +37,6 @@ const EXPLANATION: Partial<Record<SquadReason, string>> = {
     "This squad names a gameweek the calendar does not have, so the lineup stays hidden.",
 };
 
-type View = "pitch" | "list";
-
 export default function SquadBoard({
   lines,
   because,
@@ -62,14 +61,7 @@ export default function SquadBoard({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-3">
-        <div
-          role="group"
-          aria-label="How to show the squad"
-          className="flex rounded-lg border border-line bg-surface p-0.5"
-        >
-          <ViewButton current={view} value="pitch" onPick={setView} />
-          <ViewButton current={view} value="list" onPick={setView} />
-        </div>
+        <ViewToggle view={view} onPick={setView} />
         <span className="numeric text-2xs text-faint">{players} players</span>
       </div>
 
@@ -95,29 +87,5 @@ export default function SquadBoard({
         />
       ) : null}
     </div>
-  );
-}
-
-function ViewButton({
-  current,
-  value,
-  onPick,
-}: {
-  current: View;
-  value: View;
-  onPick: (view: View) => void;
-}) {
-  const here = current === value;
-  return (
-    <button
-      type="button"
-      onClick={() => onPick(value)}
-      aria-pressed={here}
-      className={`min-h-9 rounded-md px-3.5 text-xs font-semibold capitalize ${
-        here ? "bg-raised text-ink" : "text-faint hover:text-muted"
-      }`}
-    >
-      {value}
-    </button>
   );
 }

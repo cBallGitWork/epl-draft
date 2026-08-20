@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import type { LeagueTeam, LiveTeamScore } from "@epl/core";
 import RoundWord, { type RoundState } from "./RoundWord";
+import ViewToggle, { type View } from "./ViewToggle";
 
 // The head-to-head at full size: both totals side by side, and one manager's
 // team underneath them.
@@ -22,7 +23,6 @@ import RoundWord, { type RoundState } from "./RoundWord";
 // instead of counting them.
 
 type Which = "team" | "opponent";
-type View = "pitch" | "list";
 
 export interface MatchupSide {
   team: LeagueTeam;
@@ -81,14 +81,7 @@ export default function MatchupBoard({
             <RoundWord state={state} />
           </span>
         )}
-        <div
-          role="group"
-          aria-label="How to show the squad"
-          className="flex gap-0.5 rounded-md bg-surface p-0.5"
-        >
-          <ViewButton current={view} value="pitch" onPick={setView} />
-          <ViewButton current={view} value="list" onPick={setView} />
-        </div>
+        <ViewToggle view={view} onPick={setView} />
       </div>
 
       {view === "pitch" ? side.pitch : side.list}
@@ -148,30 +141,6 @@ function Side({
       {/* The open half owns what is below it, and says so with a foot bar rather
           than colour alone. */}
       {open ? <span aria-hidden className="absolute inset-x-0 bottom-0 h-0.5 bg-cream/70" /> : null}
-    </button>
-  );
-}
-
-function ViewButton({
-  current,
-  value,
-  onPick,
-}: {
-  current: View;
-  value: View;
-  onPick: (view: View) => void;
-}) {
-  const here = current === value;
-  return (
-    <button
-      type="button"
-      onClick={() => onPick(value)}
-      aria-pressed={here}
-      className={`min-h-9 rounded px-3 text-2xs font-bold uppercase tracking-widest ${
-        here ? "bg-raised text-ink" : "text-faint hover:text-muted"
-      }`}
-    >
-      {value}
     </button>
   );
 }
