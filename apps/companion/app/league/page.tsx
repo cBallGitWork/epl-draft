@@ -83,13 +83,13 @@ export default async function StandingsPage() {
     <LeagueShell title="Table" current="table">
 
       <div className="flex items-center gap-3 px-3 text-2xs font-bold uppercase tracking-widest text-faint">
-        <span className="w-5">#</span>
+        <span className="w-6">#</span>
         <span className="flex-1">Team</span>
         {/* Fantrax's own three-part record, and their word for the third part.
             Unparsed here as it is in the mapper: every sample we hold is "0-0-0"
             and splitting it would be inventing a format. */}
         <span className="numeric w-16 text-right">W-L-T</span>
-        <span className="numeric w-14 text-right">Points</span>
+        <span className="numeric w-16 text-right">Points</span>
       </div>
 
       <ul className="flex flex-col gap-1.5">
@@ -97,13 +97,24 @@ export default async function StandingsPage() {
           <li key={row.teamId}>
             <Link
               href={`/squad/${row.teamId}`}
-              className={`elev flex min-h-14 items-center gap-3 rounded-xl border bg-surface px-3 py-2.5 hover:bg-raised ${yoursBorder(
-                row.teamId === mine,
-              )}`}
+              // Your own row takes the raised ground as well as the accent
+              // edge. On sixteen near-identical rows a 4px bar at the margin is
+              // easy to scroll straight past, and this is the one row a manager
+              // opened the page to find.
+              className={`elev flex min-h-14 items-center gap-3 rounded-xl border px-3 py-2.5 hover:bg-raised ${
+                row.teamId === mine ? "bg-raised" : "bg-surface"
+              } ${yoursBorder(row.teamId === mine)}`}
             >
-              <span className="numeric w-5 text-sm text-faint">{row.rank}</span>
+              {/* Rank and points are the two numbers a table is read for, and
+                  both were quieter than the team name: the rank was small and
+                  faint, the points bold at body size. They are the figures now,
+                  set in the tabular face at either end of the row with the
+                  record — which decides neither — kept small between them. */}
+              <span className="numeric w-6 text-lg font-bold leading-none text-muted">
+                {row.rank}
+              </span>
               <span
-                className={`min-w-0 flex-1 truncate ${
+                className={`min-w-0 flex-1 truncate text-sm ${
                   row.teamId === mine ? "font-bold text-ink" : "font-semibold"
                 }`}
               >
@@ -112,12 +123,16 @@ export default async function StandingsPage() {
               {/* Labelled, not just accented — the border says nothing to anyone
                   who cannot see it. */}
               {row.teamId === mine ? (
-                <span className="rounded bg-raised px-1.5 py-0.5 text-2xs font-bold uppercase tracking-widest text-accent">
+                // On `bg-bg` rather than `bg-raised`: the row it sits on is now
+                // raised, and a chip the same colour as its ground is not a chip.
+                <span className="rounded bg-bg px-1.5 py-0.5 text-2xs font-bold uppercase tracking-widest text-accent">
                   You
                 </span>
               ) : null}
-              <span className="numeric w-16 text-right text-sm text-muted">{row.record}</span>
-              <span className="numeric w-14 text-right font-bold">{row.pointsFor}</span>
+              <span className="numeric w-16 text-right text-2xs text-faint">{row.record}</span>
+              <span className="numeric w-16 text-right text-lg font-bold leading-none">
+                {row.pointsFor}
+              </span>
             </Link>
           </li>
         ))}
