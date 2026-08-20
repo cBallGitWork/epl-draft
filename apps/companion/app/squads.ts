@@ -17,6 +17,7 @@ import {
 } from "@epl/core";
 import { leagueCache } from "./leagueCache";
 import { footballNow, gameweekSnapshot, seasonKickoffs } from "./football";
+import { myTeamId } from "./session";
 import { orRefusal, tell } from "./refusals";
 import type { Unavailable } from "./refusals";
 import mapping from "../../../data/mappings/fantrax.json";
@@ -219,4 +220,21 @@ export function teamDisplay(squads: ReadableSquads, yours: boolean): RosterDispl
     new Date().toISOString(),
     yours,
   );
+}
+
+/** The reader's own team, or null — for a page that has not already narrowed the
+ *  league to something it can read.
+ *
+ *  Three screens spelled this out for themselves, and one of them had already
+ *  named it. The narrowing is the part worth sharing: every one of them had to
+ *  remember that a league which is unavailable or undrafted has no teams to
+ *  validate a cookie against, and that a reader with no cookie is null rather
+ *  than an error.
+ *
+ *  The read is cached, so this costs a lookup rather than a request. A page that
+ *  has already narrowed `squads` itself calls `myTeamId` directly — it is one
+ *  line, and wrapping it would be a wrapper that forwards its argument. */
+export async function readerTeamId(): Promise<string | null> {
+  const squads = await getLeagueSquads();
+  return "period" in squads ? myTeamId(squads.period.teams) : null;
 }

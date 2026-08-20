@@ -12,9 +12,8 @@ import { Match, Pairing } from "./Rows";
 import RoundWord from "../../components/league/RoundWord";
 import { footballNow, pollSeconds } from "../../football";
 import { liveScores } from "../../scoreboard";
-import { getLeagueSquads } from "../../squads";
+import { getLeagueSquads, readerTeamId } from "../../squads";
 import { marksFor } from "../../involvement";
-import { myTeamId } from "../../session";
 import { yoursFirst } from "../../mine";
 
 // The desk: every score in the league and every score in the round, on one
@@ -57,7 +56,7 @@ export default async function DeskPage() {
       ? periodPairings(league.info.matchups, league.info.teams, period)
       : [];
 
-  const mine = league === null ? null : await myTeamId(league.period.teams);
+  const mine = await readerTeamId();
   const { scores } = period === null ? { scores: new Map<string, LiveTeamScore>() } : await liveScores(period);
 
   const involved = league === null ? undefined : (await marksFor(league, fixtures)).mine;

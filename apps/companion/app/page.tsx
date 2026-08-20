@@ -9,8 +9,7 @@ import Column from "./components/gazette/Column";
 import Nothing from "./components/shell/Nothing";
 import { edition } from "./edition";
 import { londonDate, londonDayAndTime } from "./londonTime";
-import { getLeagueSquads } from "./squads";
-import { myTeamId } from "./session";
+import { readerTeamId } from "./squads";
 
 // The Gazetta. What the league did this week, on the front page.
 //
@@ -31,8 +30,7 @@ export const revalidate = 30;
 const DRAFT_DATE = londonDate(servedLeague()?.draftDate ?? "");
 
 export default async function GazettePage() {
-  const squads = await getLeagueSquads();
-  const mine = "period" in squads ? await myTeamId(squads.period.teams) : null;
+  const mine = await readerTeamId();
   const paper = await edition(mine);
   const names = new Map(paper.teams.map((team) => [team.teamId, team.name]));
   const who = (teamId: string | null) => (teamId === null ? "the wire" : names.get(teamId) ?? "—");

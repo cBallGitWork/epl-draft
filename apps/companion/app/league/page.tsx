@@ -10,8 +10,7 @@ import type { StandingsRow } from "@epl/core";
 import { leagueCache } from "../leagueCache";
 import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
-import { getLeagueSquads } from "../squads";
-import { myTeamId } from "../session";
+import { readerTeamId } from "../squads";
 import { londonDate } from "../londonTime";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
@@ -37,15 +36,6 @@ const table = leagueCache("standings",
     return raw instanceof FantraxError ? { unavailable: tell(raw) } : mapStandings(raw);
   },
 );
-
-/** Who is reading, if anyone. The table's own read does not carry team ids we
- *  can trust for this — `getStandings` names teams but the session is validated
- *  against the league's own roster — so the squads read supplies them. It is
- *  cached, so this costs a lookup rather than a request. */
-async function readerTeamId(): Promise<string | null> {
-  const squads = await getLeagueSquads();
-  return "period" in squads ? myTeamId(squads.period.teams) : null;
-}
 
 export default async function StandingsPage() {
   const [rows, mine] = await Promise.all([table(), readerTeamId()]);
