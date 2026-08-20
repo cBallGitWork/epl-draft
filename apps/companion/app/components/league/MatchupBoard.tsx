@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import type { LeagueTeam, LiveTeamScore } from "@epl/core";
-import RoundWord, { type RoundState } from "./RoundWord";
+import type { LeagueTeam, LiveTeamScore, RoundState } from "@epl/core";
+import RoundWord from "./RoundWord";
 import ViewToggle, { type View } from "./ViewToggle";
 
 // The head-to-head at full size: both totals side by side, and one manager's

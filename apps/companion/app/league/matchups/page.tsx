@@ -1,4 +1,4 @@
-import { POLL, duringGameweek, isMatchdayLive, periodPairings, roundFinished } from "@epl/core";
+import { POLL, duringGameweek, isMatchdayLive, periodPairings, roundState } from "@epl/core";
 import AutoRefresh from "../../components/shell/AutoRefresh";
 import Nothing from "../../components/shell/Nothing";
 import PairingCard, { involves } from "./PairingCard";
@@ -71,8 +71,11 @@ export default async function MatchupPage() {
 
   // The same pair of questions the head-to-head board asks, spelled the same way
   // and rendered by the same component.
+  const state = roundState(squads.snapshot);
+  // The card wants the narrower question: "all played" is only worth saying
+  // while there is still football on, and `state` cannot answer it once the
+  // round is over — a finished round is not live and never was `null`.
   const inPlay = isMatchdayLive(squads.snapshot);
-  const state = inPlay ? "live" : roundFinished(squads.snapshot);
 
   const mine = await myTeamId(squads.period.teams);
   const { scores, refused } = await liveScores(period);

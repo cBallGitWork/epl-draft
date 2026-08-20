@@ -13,6 +13,7 @@ import {
   isDoubtful,
   playerByCode,
   roundFinished,
+  roundState,
 } from "./selectors";
 
 const player = (id: number, name: string, clubId = 1) => ({
@@ -377,5 +378,33 @@ describe("roundFinished", () => {
     // none, and a full-time label on a week nobody has arranged is a lie.
     expect(roundFinished(snap({ fixtures: [] }))).toBeNull();
     expect(roundFinished(snap({ fixtures: [at({ id: 1, kickoff: null })] }))).toBeNull();
+  });
+});
+
+describe("roundState", () => {
+  const at = (over: Partial<Fixture> & { id: number }): Fixture => ({
+    gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-22T14:00:00Z",
+    homeScore: null, awayScore: null, status: "finished", settled: true, minutes: 90,
+    homeDifficulty: null, awayDifficulty: null, ...over,
+  });
+
+  it("answers live while a match is in play, whatever the rest of the round has done", () => {
+    // The order matters and this is why: nine results in and one match still on
+    // is a round that is both mostly finished and live, and live is what a
+    // screen has to say about it.
+    const s = snap({ fixtures: [at({ id: 1 }), at({ id: 2, status: "live", settled: false })] });
+    expect(roundState(s)).toBe("live");
+  });
+
+  it("falls through to the finished ladder once nothing is in play", () => {
+    expect(roundState(snap({ fixtures: [at({ id: 1 })] }))).toBe("provisional");
+    expect(roundState(snap({ fixtures: [at({ id: 1 })], dataChecked: true }))).toBe("final");
+    expect(roundState(snap({ fixtures: [at({ id: 1 }), at({ id: 2, settled: false })] }))).toBe(
+      "bonus-settling",
+    );
+  });
+
+  it("says nothing about a round nobody has kicked off", () => {
+    expect(roundState(snap({ fixtures: [at({ id: 1, status: "upcoming", settled: false })] }))).toBeNull();
   });
 });

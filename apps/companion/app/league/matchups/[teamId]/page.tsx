@@ -7,10 +7,9 @@ import {
   clubById,
   duringGameweek,
   headToHead,
-  isMatchdayLive,
   lineupDetail,
   oppositionByClub,
-  roundFinished,
+  roundState,
   squadDetail,
   squadUnarranged,
 } from "@epl/core";
@@ -101,7 +100,7 @@ export default async function HeadToHeadPage({
   // to ask the server, wrong for whether a match is on, which is why the LIVE dot
   // burned through Saturday tea-time with nothing in play.
   const matchday = duringGameweek(squads.snapshot, new Date().toISOString());
-  const state = isMatchdayLive(squads.snapshot) ? "live" : roundFinished(squads.snapshot);
+  const state = roundState(squads.snapshot);
 
   /** Whether a side's eleven is going on screen at all. Asked before the fetch
    *  below, because the answer decides whether that fetch is worth making. */

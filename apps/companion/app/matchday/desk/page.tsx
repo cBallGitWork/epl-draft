@@ -10,9 +10,8 @@ import {
   duringGameweek,
   fixtureInvolvement,
   fixturesInOrder,
-  isMatchdayLive,
   periodPairings,
-  roundFinished,
+  roundState,
 } from "@epl/core";
 import AutoRefresh from "../../components/shell/AutoRefresh";
 import RoundWord from "../../components/league/RoundWord";
@@ -51,7 +50,7 @@ export default async function DeskPage() {
   const clubs = clubById(snapshot);
   const fixtures = fixturesInOrder(snapshot);
 
-  const state = isMatchdayLive(snapshot) ? "live" : roundFinished(snapshot);
+  const state = roundState(snapshot);
   const matchday = duringGameweek(snapshot, new Date().toISOString());
 
   // A desk with no league behind it is still a desk: the football half needs no

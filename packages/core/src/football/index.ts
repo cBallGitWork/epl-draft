@@ -34,7 +34,8 @@ export {
   isMatchdayLive,
   playerByCode,
   roundFinished,
+  roundState,
 } from "./selectors";
-export type { FinishedState, MatchContribution } from "./selectors";
+export type { FinishedState, MatchContribution, RoundState } from "./selectors";
 export { oppositionByClub } from "./opposition";
 export type { Opposition } from "./opposition";

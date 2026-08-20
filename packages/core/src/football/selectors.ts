@@ -268,3 +268,21 @@ export function roundFinished(snapshot: FootballSnapshot): FinishedState | null 
   if (!allSettled) return "bonus-settling";
   return snapshot.dataChecked ? "final" : "provisional";
 }
+
+/** Where the round stands, as a screen needs to say it: in play, or somewhere on
+ *  the ladder down from the last whistle, or nothing.
+ *
+ *  Null covers two states a caller may render alike but must not conflate — a
+ *  round nobody has kicked off, and the gap between two Saturday kickoffs. Both
+ *  have nothing to say, which is not the same as nothing happening.
+ *
+ *  This pairing was written out at four call sites before it was a function, and
+ *  the pairing is the whole point: `roundFinished` cannot answer "live" and
+ *  `isMatchdayLive` cannot answer "final", so either one alone is half an
+ *  answer. Asking them in the wrong order is how the board came to burn a LIVE
+ *  dot through a Saturday tea-time. */
+export type RoundState = "live" | FinishedState | null;
+
+export function roundState(snapshot: FootballSnapshot): RoundState {
+  return isMatchdayLive(snapshot) ? "live" : roundFinished(snapshot);
+}

@@ -4,8 +4,7 @@ import {
   type LiveTeamScore,
   type PendingCleanSheets,
   headToHead,
-  isMatchdayLive,
-  roundFinished,
+  roundState,
 } from "@epl/core";
 import RoundWord from "../components/league/RoundWord";
 import { liveScores, pendingByTeam } from "../scoreboard";
@@ -48,7 +47,7 @@ export default async function YourMatchup() {
 
   const yours = scores.get(pairing.team.teamId);
   const theirs = scores.get(pairing.opponent.teamId);
-  const state = isMatchdayLive(squads.snapshot) ? "live" : roundFinished(squads.snapshot);
+  const state = roundState(squads.snapshot);
 
   return (
     <section className={`elev flex flex-col gap-2 rounded-xl border bg-surface p-3 ${yoursBorder(true)}`}>

@@ -1,4 +1,4 @@
-import type { FinishedState } from "@epl/core";
+import type { RoundState } from "@epl/core";
 
 // Where the round on screen stands, in one word.
 //
@@ -11,11 +11,6 @@ import type { FinishedState } from "@epl/core";
 // Deliberately style-neutral apart from the live colour: each caller sets its own
 // size and weight, because the same word is a caption on one screen and part of
 // a sub-heading on another. What must not vary is *which* word.
-
-/** `null` is two states a caller may render alike but must not conflate: a round
- *  in play, and one nobody has kicked off. `isMatchdayLive` is what separates
- *  them, and callers pair the two rather than this inventing a fourth answer. */
-export type RoundState = "live" | FinishedState | null;
 
 export default function RoundWord({ state }: { state: RoundState }) {
   if (state === null) return null;
