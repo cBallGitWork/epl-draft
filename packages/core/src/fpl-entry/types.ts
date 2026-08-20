@@ -42,6 +42,12 @@ export interface FplMiniLeague {
 export interface FplPick {
   /** Season-stable, so it keys the portrait and joins to a snapshot. */
   code: number;
+  /** FPL's slot number, 1–15. **Their ordering, not a football position** —
+   *  1 is the keeper and 12–15 are the bench, in the order they would come on.
+   *  Named `slot` rather than `position`, which is what they call it, because
+   *  `position` in this codebase means the letter a league files a player under
+   *  and this is neither that nor a place on a pitch. */
+  slot: number;
   /** 0 benched, 1 playing, 2 captain, 3 triple captain. */
   multiplier: number;
   isCaptain: boolean;
@@ -60,3 +66,8 @@ export interface FplSquad {
   /** Points docked for transfers. */
   hit: number | null;
 }
+
+/** How many of the fifteen start, under FPL's rules. Their rule, in their layer:
+ *  the football layer knows nothing about how many men a fantasy game fields,
+ *  and our own league fields a different number. */
+export const FPL_STARTERS = 11;

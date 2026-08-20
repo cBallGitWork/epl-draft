@@ -58,6 +58,11 @@ export function mapSquad(
     return [
       {
         code,
+        // Zero for a payload that omits it, which sorts before slot 1 and so
+        // reads as a starter. FPL has never omitted it; if they do, a pick in
+        // the wrong half of the squad is a smaller wrong answer than a pick
+        // dropped from a fifteen that then renders as fourteen.
+        slot: pick.position ?? 0,
         multiplier,
         isCaptain: pick.is_captain ?? false,
         isViceCaptain: pick.is_vice_captain ?? false,

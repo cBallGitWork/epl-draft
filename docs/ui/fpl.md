@@ -9,8 +9,15 @@ and this is not a second attempt at it.
 
 - Three figures: Overall points, Overall rank, this round. A dash when FPL sends
   null, because nought is a different claim.
-- **Gameweek squad** — the fifteen with portraits on club colours, captain and
-  vice marked, benched players dimmed, and a points-hit note when there is one.
+- **Gameweek squad** — the **XI, then the bench under a rule of its own**, with
+  portraits on club colours, captain and vice marked, benched players dimmed,
+  and a points-hit note when there is one. The bench heading totals what was
+  left on it: "did my bench outscore my side" is the question a benched
+  hat-trick provokes, and a flat fifteen made a reader count.
+
+  The split rests on `FplPick.slot` — FPL's own 1–15 ordering, named `slot` and
+  not `position` because `position` in this codebase means the letter a league
+  files a player under, and this is neither that nor a place on a pitch.
 - **Mini-leagues** with your rank in each.
 - "Not your side? Forget it."
 
@@ -26,5 +33,17 @@ from the adjacent tab has to be told which game they are looking at.
 
 ## Known gaps
 
-The squad is a list where every other squad in the app is now a pitch. It is the
-one place `PitchFrame` could be reused for free.
+**The squad is a list where every other squad in the app is a pitch — and
+`PitchFrame` is not free here, which the roadmap had wrong.**
+
+A pitch needs positional lines, and the football layer deliberately does not
+carry a position: `element_type` is FPL's own fantasy classification, not a fact
+about a footballer, which is exactly why it was taken out (CLAUDE.md). So an FPL
+pitch needs FPL's classification carried by **this** layer — `fpl-entry`, which
+is the FPL league layer and the correct home for it — read from the bootstrap
+and mapped onto `FplPick`.
+
+That is a data change rather than a rendering one, and "keep the tab small"
+(Craig, 6 Aug) says it needs a reason beyond symmetry with the other squads.
+Recorded here with the shape it would take, so whoever picks it up does not
+rediscover why the obvious route is closed.

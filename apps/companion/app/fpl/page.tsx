@@ -1,4 +1,5 @@
-import { clubById, clubColours, playerByCode } from "@epl/core";
+import { FPL_STARTERS, clubById, clubColours, playerByCode } from "@epl/core";
+import type { FplPick } from "@epl/core";
 import { footballNow } from "../football";
 import Nothing from "../components/shell/Nothing";
 import Section from "../components/shell/Section";
@@ -67,35 +68,21 @@ export default async function FplPage() {
           title={`Gameweek ${squad.gameweek}`}
           aside={<>{squad.hit ? `${squad.hit} pt hit · ` : null}FPL&apos;s scoring</>}
         >
-          <ul className="flex flex-col gap-1">
-            {squad.picks.map((pick) => {
-              const player = players.get(pick.code);
-              const club = player ? clubs.get(player.clubId) : undefined;
-              return (
-                <li
-                  key={pick.code}
-                  className={`flex min-h-11 items-center gap-2.5 rounded-lg border border-line px-2 py-1.5 ${
-                    pick.multiplier === 0 ? "opacity-60" : "bg-surface"
-                  }`}
-                >
-                  {player && club ? (
-                    <PlayerPortrait player={player} colours={clubColours(club.shortName)} />
-                  ) : null}
-                  <span className="min-w-0 flex-1 truncate text-sm font-semibold">
-                    {player?.name ?? "—"}
-                    {pick.isCaptain ? (
-                      <span className="ml-1.5 rounded bg-raised px-1 text-2xs font-bold text-info">C</span>
-                    ) : null}
-                    {pick.isViceCaptain ? (
-                      <span className="ml-1.5 text-2xs text-faint">V</span>
-                    ) : null}
-                  </span>
-                  <span className="numeric text-2xs text-faint">{club?.shortName ?? ""}</span>
-                  <span className="numeric w-8 text-right font-bold">{pick.points}</span>
-                </li>
-              );
-            })}
-          </ul>
+          {/* The XI, then the bench under a rule of its own. FPL's slot order
+              says which is which — 1–11 start, 12–15 wait, in the order they
+              would come on — and a flat fifteen said neither, so the one thing
+              a manager checks on a Saturday ("did my bench outscore my side")
+              took counting. */}
+          <Picks
+            picks={squad.picks.filter((pick) => pick.slot <= FPL_STARTERS)}
+            players={players}
+            clubs={clubs}
+          />
+          <Bench
+            picks={squad.picks.filter((pick) => pick.slot > FPL_STARTERS)}
+            players={players}
+            clubs={clubs}
+          />
         </Section>
       ) : (
         // Keeps the section rather than dropping to a bare sentence between the
@@ -138,6 +125,68 @@ function Figure({ label, value }: { label: string; value: number | null }) {
     <div className="elev rounded-xl border border-line bg-surface px-3 py-2">
       <dt className="text-2xs font-bold uppercase tracking-widest text-faint">{label}</dt>
       <dd className="numeric text-xl font-bold">{value === null ? "—" : value.toLocaleString("en-GB")}</dd>
+    </div>
+  );
+}
+
+type Players = ReturnType<typeof playerByCode>;
+type Clubs = ReturnType<typeof clubById>;
+
+function Picks({
+  picks,
+  players,
+  clubs,
+}: {
+  picks: FplPick[];
+  players: Players;
+  clubs: Clubs;
+}) {
+  return (
+    <ul className="flex flex-col gap-1">
+      {picks.map((pick) => {
+        const player = players.get(pick.code);
+        const club = player ? clubs.get(player.clubId) : undefined;
+        return (
+          <li
+            key={pick.code}
+            className={`flex min-h-11 items-center gap-2.5 rounded-lg border border-line px-2 py-1.5 ${
+              pick.multiplier === 0 ? "opacity-60" : "bg-surface"
+            }`}
+          >
+            {player && club ? (
+              <PlayerPortrait player={player} colours={clubColours(club.shortName)} />
+            ) : null}
+            <span className="min-w-0 flex-1 truncate text-sm font-semibold">
+              {player?.name ?? "—"}
+              {pick.isCaptain ? (
+                <span className="ml-1.5 rounded bg-raised px-1 text-2xs font-bold text-info">C</span>
+              ) : null}
+              {pick.isViceCaptain ? <span className="ml-1.5 text-2xs text-faint">V</span> : null}
+            </span>
+            <span className="numeric text-2xs text-faint">{club?.shortName ?? ""}</span>
+            <span className="numeric w-8 text-right font-bold">{pick.points}</span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/** The four who did not start, under a heading that totals them. "Did my bench
+ *  outscore my side" is the question a benched hat-trick provokes, and it is the
+ *  one sum on this page worth doing for a reader — it is about picks he made,
+ *  not about what FPL scored him, which stays FPL's. */
+function Bench({ picks, players, clubs }: { picks: FplPick[]; players: Players; clubs: Clubs }) {
+  if (picks.length === 0) return null;
+  const total = picks.reduce((sum, pick) => sum + pick.points, 0);
+
+  return (
+    <div className="flex flex-col gap-1 pt-2">
+      <h3 className="flex items-baseline justify-between gap-3 border-t border-line pt-2 text-2xs font-bold uppercase tracking-widest text-faint">
+        Bench
+        <span className="numeric font-normal">{total} left on it</span>
+      </h3>
+      <Picks picks={picks} players={players} clubs={clubs} />
     </div>
   );
 }

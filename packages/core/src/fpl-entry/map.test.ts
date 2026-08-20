@@ -46,6 +46,26 @@ const code = (element: number) => (element === 404 ? null : 1000 + element);
 const points = (element: number) => (element === 1 ? 12 : 2);
 
 describe("mapSquad", () => {
+  it("carries FPL's slot order, which is what tells a starter from a substitute", () => {
+    // Their `position` is 1–15 and is an ordering, not a football position. The
+    // XI/bench split rests entirely on it, so a payload that stopped sending it
+    // must not silently produce a fifteen-man starting side.
+    const squad = mapSquad(
+      {
+        picks: [
+          { element: 1, position: 1, multiplier: 1 },
+          { element: 2, position: 11, multiplier: 1 },
+          { element: 3, position: 12, multiplier: 0 },
+          { element: 4, multiplier: 0 },
+        ],
+        entry_history: { event: 3, points: 63 },
+      },
+      code,
+      points,
+    );
+    expect(squad?.picks.map((pick) => pick.slot)).toEqual([1, 11, 12, 0]);
+  });
+
   it("multiplies the captain and benches the bench", () => {
     const squad = mapSquad(
       {
