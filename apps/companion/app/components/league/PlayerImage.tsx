@@ -43,6 +43,7 @@ export default function PlayerImage({
   club,
   keeper,
   played,
+  sizes = "88px",
 }: {
   player: Pick<FootballPlayer, "code" | "name">;
   club: Club | undefined;
@@ -53,6 +54,12 @@ export default function PlayerImage({
    *  back — and it is the photograph that is drawn back, never the card: the
    *  name and the fixture under him are what a waiting player is waiting on. */
   played: boolean;
+  /** What the optimizer is allowed to serve. Defaults to the width he is drawn
+   *  at on a pitch, which is where all fifteen of him appear; the profile page
+   *  draws one of him several times that size and would otherwise be handed an
+   *  88px asset to fill it — soft in exactly the place a reader is looking
+   *  hardest. */
+  sizes?: string;
 }) {
   const [rung, setRung] = useState<Rung>("photo");
   const source =
@@ -76,7 +83,7 @@ export default function PlayerImage({
           alt=""
           width={110}
           height={145}
-          sizes="88px"
+          sizes={sizes}
           onError={() => setRung(rung === "initials" ? "initials" : NEXT[rung])}
           className={`h-full w-full object-cover object-top drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
             played ? "" : "opacity-80 grayscale-[35%]"

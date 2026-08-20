@@ -5,7 +5,23 @@ policy toward Fantrax.
 
 ## On the page
 
-1. Name, club, position, shirt number.
+1. **The masthead** — his cut-out at 112px on his club's colour, crest top-left,
+   shirt number bottom-right, with name, club, position and number beside it.
+
+   The cut-out stands on the club's colour rather than on nothing. Everywhere
+   else it stands on grass and needs no ground ([conventions.md](conventions.md)),
+   but there is no pitch here and a transparent cut-out over the page background
+   is a head floating in the dark. It is the same colour his 32px mark sits on in
+   [the pool](players.md), so the two readings of him agree.
+
+   `PlayerImage` gained a `sizes` prop for it: its default is the width he is
+   drawn at on a pitch, and handing an 88px asset to a 112px block would be soft
+   in exactly the place a reader is looking hardest.
+
+   **A man FPL has never listed gets no masthead and nothing standing in for
+   one** — no code means no photograph, no kit and no crest to draw. That is 120
+   of the 688, it is a settled answer rather than a gap, and the heading carries
+   him alone exactly as it did for everyone before this.
 2. **Availability** — FPL's `news`, `status` and `chanceOfPlaying`. Silent for a
    fit player and for one the bridge has not settled; a "no news" panel on seven
    hundred pages is noise. Fantrax has its own injury notes and we ignore them:
@@ -30,6 +46,5 @@ apart with a 404.
 
 ## Known gaps
 
-Long and undifferentiated: five stacked definition lists. There is no portrait
-and no crest on a page entirely about one footballer — and the app now has a
-sticker component that would carry it.
+Still long and undifferentiated below the masthead: four stacked definition
+lists, and nothing decides which of them a reader came for.

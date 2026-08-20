@@ -6,6 +6,7 @@ import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
 import Availability from "./Availability";
 import Breakdown from "./Breakdown";
+import Portrait from "./Portrait";
 import { footballSelf, playerSeason } from "./season";
 
 // One player, as Fantrax sees him. Reached by tapping a name in the pool, and
@@ -77,16 +78,35 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
 
   return (
     <div className="flex flex-col gap-3">
-      <header className="flex flex-col gap-0.5 pt-1">
-        <h1 className="text-xl font-bold tracking-tight">{intel.name || fantraxId}</h1>
-        <p className="numeric text-2xs tracking-widest text-faint">
-          {[intel.clubShortName, intel.defaultPosition, intel.squadNumber && `#${intel.squadNumber}`]
-            .filter(Boolean)
-            .join(" · ")}
-        </p>
+      {/* No portrait for a man FPL has never listed, and nothing standing in for
+          one: he has no code, so there is no photograph, no kit and no crest to
+          draw. That is 120 of the 688 in the pool and it is a settled answer,
+          not a gap — the heading below carries him on its own, exactly as it
+          did for every player before this. */}
+      <header className="flex items-end gap-3 pt-1">
+        {football ? (
+          <Portrait
+            player={football.player}
+            club={football.club}
+            position={intel.defaultPosition}
+            squadNumber={intel.squadNumber}
+          />
+        ) : null}
+        <div className="flex min-w-0 flex-1 flex-col gap-0.5 pb-1">
+          <h1 className="text-xl font-bold tracking-tight">{intel.name || fantraxId}</h1>
+          <p className="numeric text-2xs tracking-widest text-faint">
+            {[
+              intel.clubShortName,
+              intel.defaultPosition,
+              intel.squadNumber && `#${intel.squadNumber}`,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
+        </div>
       </header>
 
-      <Availability player={football} />
+      <Availability player={football?.player ?? null} />
 
       <Breakdown season={season} />
 
