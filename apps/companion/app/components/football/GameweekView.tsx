@@ -3,6 +3,7 @@ import ButtonLink from "../shell/ButtonLink";
 import {
   LEAGUE_NAME,
   POLL,
+  type FootballPlayer,
   type FootballSnapshot,
   adjacentGameweeks,
   isMatchdayLive,
@@ -15,7 +16,16 @@ import MatchList from "./MatchList";
 // One round of football. Shared by /matchday, while there is football on, and
 // the /gw/[gameweek] route, so both stay identical rather than drifting.
 
-export default function GameweekView({ snapshot }: { snapshot: FootballSnapshot }) {
+export default function GameweekView({
+  snapshot,
+  mine,
+}: {
+  snapshot: FootballSnapshot;
+  /** Which of the reader's players are in each fixture. Optional throughout: a
+   *  caller with no league to ask simply does not pass it, and the round renders
+   *  as it always did. */
+  mine?: Map<number, FootballPlayer[]>;
+}) {
   const live = isMatchdayLive(snapshot);
   const { previous, next } = adjacentGameweeks(snapshot);
 
@@ -47,7 +57,7 @@ export default function GameweekView({ snapshot }: { snapshot: FootballSnapshot 
         ) : null}
       </header>
 
-      <MatchList snapshot={snapshot} />
+      <MatchList snapshot={snapshot} mine={mine} />
 
       <nav className="flex items-center justify-between gap-3 text-sm">
         <GameweekLink gameweek={previous} label="Previous" />

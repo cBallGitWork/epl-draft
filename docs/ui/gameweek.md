@@ -15,6 +15,16 @@ Shares `GameweekView` with `/matchday`, so the two never drift.
   who did what: goals, assists, cards, notable saves, bonus, ordered by impact.
   Merely turning out does not qualify — the drop-down answers "what happened",
   not "who played".
+- **Your players marked.** A fixture with one of the reader's men in it carries
+  the standard accent border (`yoursBorder`, the same mark as every other "this
+  is yours" row) and a counted `2 yours` in the summary. Open it and a **Yours ·
+  Saka · Gabriel** line sits above the contributions — a different question from
+  the one below it, because "which of mine is in this match" has to include the
+  man who has done nothing, which on a Saturday is most of them.
+
+  Counted rather than tinted: fifteen players across ten fixtures marks most of
+  the list, and every row marked is no row marked. The number is what ranks one
+  match above another at a glance.
 - Previous / Next round links, bounded by the season FPL actually published, not
   a hardcoded 38. Each end renders an inert placeholder so the other link does
   not slide across the screen.
@@ -24,11 +34,23 @@ Shares `GameweekView` with `/matchday`, so the two never drift.
 
 ## Data
 
-FPL's public API only. This whole page works from the first match of the season
-with no Fantrax, no draft and no credentials.
+FPL's public API for all of the football. The page **degrades to exactly that**:
+signed out, undrafted, or Fantrax silent, the `mine` prop is simply absent and
+the round renders byte-identical to the version that had never heard of a
+fantasy league. It has no Fantrax-shaped empty state because it has no Fantrax-
+shaped claim to make.
+
+`fixtureInvolvement` is a pure join in core, keyed off **squad membership** —
+which is public all week. Nothing here reads a lineup, in either direction.
+
+**Historical rounds are marked from today's squad**, deliberately. "Which of
+these results matter to me" is asked on Monday by the man who owns those players
+*now*; a squad as it stood in week six would need `getTeamRosters?period=`, which
+has never been proven to serve history.
 
 ## Known gaps
 
-The fixture row is dense and the drop-down is plain. Nothing marks a match
-involving one of *your* players, which is the thing a manager is actually
-scanning for.
+- Nothing marks the *opponent's* players. Whether a manager misses it is a
+  question for a real Saturday — recorded as open rather than built, because the
+  second mark competes with the first for the same row.
+- The drop-down is still plain.

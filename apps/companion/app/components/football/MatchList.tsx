@@ -2,6 +2,7 @@ import Image from "next/image";
 import {
   type Club,
   type Fixture,
+  type FootballPlayer,
   type FootballSnapshot,
   clubById,
   clubColours,
@@ -11,13 +12,24 @@ import {
   NOTABLE_SAVES,
 } from "@epl/core";
 import { londonTime } from "../../londonTime";
+import { yoursBorder } from "../../mine";
 import PlayerPortrait from "./PlayerPortrait";
 
 // The matchday list. Each fixture is a native <details> so the drop-down works
 // with no JavaScript, is keyboard operable and screen-reader announced for free —
 // reinventing a disclosure widget here would be the product-register mistake.
 
-export default function MatchList({ snapshot }: { snapshot: FootballSnapshot }) {
+export default function MatchList({
+  snapshot,
+  mine,
+}: {
+  snapshot: FootballSnapshot;
+  /** Which of the reader's players are in each fixture, by squad membership.
+   *  Absent for a reader who is signed out, holds nobody, or whose league
+   *  Fantrax would not describe — and the list then renders exactly as it did
+   *  before any of this existed. */
+  mine?: Map<number, FootballPlayer[]>;
+}) {
   const clubs = clubById(snapshot);
   const fixtures = fixturesInOrder(snapshot);
 
@@ -33,7 +45,7 @@ export default function MatchList({ snapshot }: { snapshot: FootballSnapshot }) 
     <ul className="flex flex-col gap-1.5">
       {fixtures.map((f) => (
         <li key={f.id}>
-          <MatchRow fixture={f} clubs={clubs} snapshot={snapshot} />
+          <MatchRow fixture={f} clubs={clubs} snapshot={snapshot} yours={mine?.get(f.id)} />
         </li>
       ))}
     </ul>
@@ -44,10 +56,13 @@ function MatchRow({
   fixture,
   clubs,
   snapshot,
+  yours,
 }: {
   fixture: Fixture;
   clubs: Map<number, Club>;
   snapshot: FootballSnapshot;
+  /** His players in this match, or undefined when there are none. */
+  yours?: FootballPlayer[];
 }) {
   const home = clubs.get(fixture.homeClubId);
   const away = clubs.get(fixture.awayClubId);
@@ -55,7 +70,11 @@ function MatchRow({
   const live = fixture.status === "live";
 
   return (
-    <details className="group overflow-hidden rounded-xl border border-line bg-surface elev">
+    <details
+      className={`group overflow-hidden rounded-xl border bg-surface elev ${yoursBorder(
+        yours !== undefined,
+      )}`}
+    >
       <summary
         className="flex cursor-pointer list-none items-center gap-3 px-3 py-2.5 transition-colors duration-150 hover:bg-raised [&::-webkit-details-marker]:hidden"
         // Nothing to expand when nothing happened — say so rather than opening
@@ -65,6 +84,14 @@ function MatchRow({
         <ClubSide club={home} align="start" />
         <ScoreBlock fixture={fixture} />
         <ClubSide club={away} align="end" />
+        {/* Counted rather than tinted. A bare accent wash saturates once fifteen
+            players span ten fixtures — every row marked is no row marked — and
+            the number is what ranks one match above another at a glance. */}
+        {yours ? (
+          <span className="numeric shrink-0 text-2xs font-semibold text-accent">
+            {yours.length} yours
+          </span>
+        ) : null}
         <svg
           aria-hidden
           viewBox="0 0 24 24"
@@ -78,6 +105,16 @@ function MatchRow({
       </summary>
 
       <div className="border-t border-line bg-bg/40 px-3 py-2.5">
+        {/* Above the contributions, because it answers a different question.
+            `contributions` lists only the notable; "which of mine is in this
+            match" has to include the man who has done nothing, which on a
+            Saturday is most of them. */}
+        {yours ? (
+          <p className="mb-2 truncate text-xs text-accent">
+            <span className="font-semibold uppercase tracking-wide">Yours</span>
+            {yours.map((p) => ` · ${p.name}`).join("")}
+          </p>
+        ) : null}
         {rows.length === 0 ? (
           <p className="py-1 text-center text-xs text-faint">
             {live || fixture.status === "finished"

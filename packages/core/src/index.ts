@@ -21,6 +21,7 @@ export * from "./identity";
 export * from "./join/lineup";
 export * from "./join/cleanSheets";
 export * from "./join/contribution";
+export * from "./join/involvement";
 export * from "./fpl-entry";
 export * from "./gazette";
 export * from "./join/roster";
