@@ -17,6 +17,7 @@
     "capture": "tsx scripts/capture-fantrax.ts",
     "capture:status": "tsx scripts/capture-status.ts",
     "periods": "tsx scripts/period-alignment.ts",
+    "shape-diff": "tsx scripts/shape-diff.ts",
     "bridge": "tsx scripts/build-bridge.ts",
     "team-codes": "tsx scripts/team-codes.ts"
   },

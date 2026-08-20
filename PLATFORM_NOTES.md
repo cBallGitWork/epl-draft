@@ -2369,6 +2369,83 @@ The real league cannot substitute: it has no teams until 10 Oct, and by the time
 it has fifteen belonging to real people, writing to one to see what happens is
 not a probe, it is an incident.
 
+## The shape-diff script, and what it found on its first run (20 Aug 2026)
+
+ROADMAP §6's shape-diff did not exist and is the 11:00 item on the ship-day
+runbook. `npm run shape-diff` now compares the real league's live payloads
+against the rehearsal league's, read for read.
+
+The rehearsal league is the **reference**, because it is what every mapper here
+was written against. The real league is the **subject**. The dangerous direction
+is a path the reference has and the subject does not — that is a mapper reading
+`undefined` and a screen quietly showing nothing.
+
+`shapeOf`/`diffShapes` are pure and in `league/fantrax/shape.ts` with 16 tests;
+the script does the I/O. Two things the first runs forced into the design, both
+pinned by tests:
+
+- **A dictionary of one.** Live scoring for a league with no teams answers with a
+  single sentinel id, `-3` (the league average, alongside `LG_AVG`). The first
+  heuristic needed two keys to recognise an id-keyed map, so it read `-3` as a
+  field name and reported every path beneath it twice — once missing, once
+  added. 158 lines of noise.
+- **Empty is not absent.** Our real league answers every table with `[]` until
+  draft night, and calling that 142 missing fields is the loudest possible way to
+  say "no teams yet". Paths inside a collection the subject reported empty are
+  counted as `emptied` and never listed. 142 → 22, and the 22 are real.
+
+### What it found, and two of them matter
+
+**1. The real league has a playoff, and Fantrax publishes it.**
+
+```json
+{"lastRegularSeasonPeriod":34,"numPlayoffTeams":4,"firstPlayoffPeriod":35,
+ "mergePlayoffPeriods":false,"used":true}
+```
+
+The rehearsal league answers `{"used":false}`, which is why nobody had seen this.
+
+Regular season is periods 1–34; the playoff is periods 35–38 between the **top
+four**. `league/competitions.ts` currently declares a placeholder final in
+gameweek 38 between the top two, and the roadmap says `PLACEHOLDER_ROUNDS` waits
+on Craig settling a real cup. **The playoff is not waiting on anybody — it is
+already data**, and reading it is the same one-way seam as the rest of
+`getLeagueInfo`. The cup is still ours to invent; the playoff never was.
+
+**2. The two leagues score different games.** Seventeen outfield categories
+against ten:
+
+| | real | rehearsal |
+|---|---|---|
+| assists | `AT` | `A` |
+| keeper saves | `GKP` | `Sv` |
+| minutes | `range0\|0\|0` — **nothing** | scored in two bands |
+| keeper's goal | 10 | 6 |
+| also in real | `CLRA` clearances, `DFP` defensive points, `SBON`/`SBOF` blocks, `KP` key passes, `MP`, `GS`, `GAO` | — |
+
+So the real league is a defensive-stat-heavy system and the rehearsal one is
+close to a default. **Every category code differs enough that anything keyed to a
+rehearsal code would be wrong on 10 Oct** — which is exactly why the stat mappers
+read categories per response and list none of them (`fantrax/stats.ts`). That
+decision is now paid for.
+
+**3. The one piece of scoring the app does survives the swap.** The clean-sheet
+preview looks up the literal `"CS"` (`join/cleanSheets.ts`), and `CS` is present
+in both leagues with the same values — `D: points4`, `Default: points0`, and
+`points4` for a keeper. It is the only hardcoded category code in the tree and it
+is safe. Checked rather than assumed, which is the whole point of running this
+now rather than on ship day.
+
+Also: the real league's `draftType` is `snake`; the rehearsal sends none.
+
+### The 22 that remain, and why they are not alarming
+
+Almost all are `table.header.cells[]` and `table.caption` on the transaction and
+standings reads. Fantrax sends **no header at all** for an empty table — it sends
+`emptyTableMsg` instead. So these resolve at draft night, and the script will say
+so. Worth knowing that they exist now rather than reading them cold at 11:00 on
+10 Oct.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially

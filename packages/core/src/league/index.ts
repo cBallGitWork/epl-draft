@@ -38,6 +38,12 @@ export type { Violation } from "./violations";
 
 export { isActive } from "./rosterStatus";
 
+// The shape differ, for the script that asks whether the real league answers in
+// the shape every mapper here was written against. Its one consumer is
+// `scripts/shape-diff.ts`, which is the 11:00 item on the ship-day runbook.
+export { diffShapes, shapeOf } from "./fantrax/shape";
+export type { ShapeDiff } from "./fantrax/shape";
+
 export { headToHead, leaguePool, pairingInvolves, periodPairings } from "./selectors";
 export type { HeadToHead, PeriodPairing, PoolPlayer } from "./selectors";
 

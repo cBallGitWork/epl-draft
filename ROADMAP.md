@@ -136,9 +136,12 @@ hand-discriminations; splitting `fantrax/stats.ts`, `league/types.ts`,
 
 ## 6. By 3 Sep — prove the swap (week-4 items, confirmed unbuilt)
 
-- **Shape-diff script** (does not exist): real league's live payload keys vs
-  recorded rehearsal fixtures, printing what's new/missing. This runs at 11:00
-  on 10 Oct.
+- ~~**Shape-diff script** (does not exist)~~ **Built 20 Aug — `npm run
+  shape-diff`.** Real league's live payloads against the rehearsal league's, read
+  for read; pure differ in `league/fantrax/shape.ts` with 16 tests. Exits
+  non-zero on the dangerous direction only, so CI can gate on it. Still the
+  11:00 item on the ship-day runbook. **Its first run found the playoff and the
+  scoring divergence below** — see PLATFORM_NOTES, 20 Aug.
 - **CI job against the real league id** (`verify.yml` doesn't do this): every
   view meets `NO_TEAMS`/`[]`/`{}` continuously, not once.
 - Re-run `npm run bridge` after rehearsal waiver churn; gate on zero
