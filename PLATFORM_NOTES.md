@@ -2048,6 +2048,159 @@ the provider for something we already know is free to get wrong, so
 disagree — and `teamDisplay` honours it too, or the per-team path would have
 re-opened every lineup one route at a time.
 
+## The live tranche, built the day before the football (20 Aug 2026)
+
+Eight commits against `we-had-ideas-for-peppy-fog.md`, all four gates green on
+each. The roadmap had deferred the live-state designs until a real Saturday
+could judge them; Craig chose to design the whole tranche the day before GW1
+instead, which means **every state below is written and unwitnessed**. The
+observation list at the foot is the point of that admission.
+
+### The football layer learned the difference between "over" and "settled"
+
+`fixtureStatus` collapses `finished_provisional` into `"finished"` — right for a
+reader watching a score, and useless to anything asking whether the numbers have
+stopped moving. `Fixture.settled` is now raw `finished` on its own, and
+`FootballSnapshot.dataChecked` is FPL's `data_checked` for the round.
+
+`roundFinished(snapshot)` reads the ladder: every dated match finished with bonus
+outstanding → `bonus-settling`; bonus landed → `provisional`; FPL's sign-off →
+`final`. **"Final" is claimed only at the last rung.** A manager watching his
+total shift under that word would be right to stop believing the screen, so the
+two rungs before it say full time and, while bonus is landing, say why.
+
+Null while a round is in play *or* has not started — two states a caller may
+render alike but must not conflate. Callers pair it with `isMatchdayLive` rather
+than the selector inventing a fourth answer from the same evidence.
+
+**It fixed the pink dot for free.** `MatchupBoard`'s `live` boolean was fed
+`duringGameweek` — the window from the first kickoff to the last whistle, which
+is the right question for *how often to poll* and the wrong one for *whether a
+match is on*. Saturday tea-time between the 12:30 and the 15:00 pulsed LIVE with
+nothing in play. The poll rate still reads `duringGameweek`; the word does not.
+
+### The app became partisan about the football
+
+`join/involvement.ts`: `fixtureInvolvement(team, fixtures)` and `owners(teams)`,
+both pure, both keyed off **squad membership** — public all week — and neither
+reading a lineup in either direction. A fixture with none of his players in it is
+**absent from the map** rather than present-and-empty: the question is "is this
+one mine", and an empty array is a yes-shaped answer meaning no.
+
+On `/gw/[gameweek]` and `/matchday`, a fixture the reader has somebody in takes
+the standard accent border and a counted `2 yours`; opened, it leads with
+`Yours · Gabriel · Saka` above the contributions. **Counted, not tinted** —
+fifteen players across ten fixtures marks most of the list, and every row marked
+is no row marked. The Yours line sits *above* the contributions because it
+answers a different question: `contributions` lists only the notable, and "which
+of mine is in this match" has to include the man who has done nothing.
+
+Every contributor now carries the squad holding him. A footballer nobody in the
+league holds is **untagged** rather than tagged "—", which would be a label on
+500 of the 697.
+
+**Historical rounds mark from today's squad**, deliberately: "which of these
+results matter to me" is asked on Monday by the man who owns those players now,
+and a squad as it stood in week six needs a period read nobody has proven serves
+history (still open, below).
+
+### One scoreline grammar, on all three head-to-head surfaces
+
+The matchups list was eight identical two-row cards; `/matchday`'s own card was a
+third design for the same fact. Both are now the board's row — name · score · v ·
+score · name — so the margin between two **adjacent** numbers is the answer and
+no invented "close" threshold decides anything.
+
+Only the *number* dims for trailing. A name that dimmed for losing would give
+accent a second meaning, and accent means "yours" on six screens.
+
+One real bug fell out of it: the old list hid "n to play" on **falsiness**, so a
+side on a literal zero — everybody played, nothing left to come, the most
+interesting state a side can be in — was the one state it never showed. It reads
+`all played` now, and only while football is on: on a Wednesday every side has
+nobody left and sixteen such labels state the obvious.
+
+`RoundWord` was extracted at the third caller, and the two existing copies had
+**already drifted** — the board printed the "bonus settling" caption and the
+matchups list did not, so the same Saturday evening said two different things
+depending on which screen you were on.
+
+### /matchday: the board stays one tap behind (Option A, Craig's call)
+
+Decided on design argument and recorded in `matchday.md` to re-ask with
+Saturday's answer. The board's premise is that it fits a 390×844 phone, which it
+cannot do stacked over a fixture list. So the card speaks the board's grammar and
+the board keeps its size. The instrument for re-asking is the league chat.
+
+New on the page: **your afternoon** — your ACTIVE players still to come, grouped
+by kickoff, a live group showing the clock instead of the time. Two different
+squads on the same page on purpose: the fixture markers key off membership, the
+strip keys off your lineup. Your own lineup is never withheld from you, so this
+withholds nothing from anybody; a reserve is excluded because he does not score.
+
+### The Desk
+
+`/matchday/desk`: eight head-to-heads and ten fixtures as one-line scores, yours
+in accent, nothing else on the page. Reached from the Live tab and nowhere else —
+six tabs already brushes the 320px clip `matchdayfit` measures.
+
+Gillette Soccer Saturday borrowed **in voice and typography, not in colour**: the
+app's tokens stay, because the colour registers are binding and Ceefax's are not
+ours. A side on four or more prints the number in words after the digit —
+`BOU 4 (FOUR)–1 LIV` — which is Sky's threshold and not one we invented, and
+which is applied to **football facts only**: "a lot of fantasy points" has no
+custom behind it, and picking a number for it would be us making the joke rather
+than quoting it. FT/live-minute ticks stand where the kickoff time was. **No HT**:
+FPL publishes a minute and a finished flag, and a clock stopped on 45 is not a
+claim they have made.
+
+**Nothing on the Desk is a link.** Eighteen rows at a 44px touch target would
+cost the screen the one property it exists for, and every row is tappable
+somewhere else. Recorded in `desk.md` so the density argument has to be remade
+from scratch if a row ever becomes a link.
+
+Verified against the real league id on 20 Aug: the head-to-head half says
+"Fantrax has no pairings for this period" and the football half renders all ten
+fixtures, because that half needs no credentials at all.
+
+### Two rule-of-2/3 calls, recorded so nobody reopens them
+
+- The Desk's rows are a **copy** of `PairingCard`'s grammar, not a reuse: second
+  occurrence, rendering at different sizes for different reading distances. A
+  third forces the extraction.
+- `leagueCache()` stays parked. This tranche added no new `unstable_cache`
+  wrapper — `/gw/[gameweek]` moved onto `gameweekSnapshot`, which the schedule
+  work had already added, because the new cookie read makes the route dynamic and
+  without a cached reader every arrival would refetch a round of February.
+
+### The lineup gate held
+
+Grepped the rendered source of `/matchday`, `/matchday/desk`, `/gw/1` and
+`/league/matchups` for `ACTIVE`/`RESERVE`: zero hits on every one. Everything
+this tranche added is either membership (public all week) or the reader's own
+lineup (never withheld from him). No new value crosses a `"use client"` boundary
+— `MatchupBoard` gained a string, and every other component here is a server
+component.
+
+### What only a real Saturday can answer
+
+The whole tranche, honestly. Specifically:
+
+- **The Final ladder's real timing** — `finished_provisional` at the whistle →
+  raw `finished` → `data_checked`; how long "bonus settling" sits on screen; and
+  whether Fantrax's total moves after the last whistle at all, which is the
+  assumption everything above prices in.
+- **Marker density** across ten fixtures from a fifteen-man squad, and whether
+  the "Yours" line is what a half-time scan wants. Opponent highlighting is
+  recorded as an open question, not built.
+- **`remainingEventPercent` hitting literal 0** at each full time, which is what
+  drives "all played".
+- **Whether finished pairings should sort below live ones** on the list.
+- **The Desk's density at arm's length**, and the spelled-out thrashing, which
+  has never rendered.
+- **/matchday's real scroll length** with three panels, and whether managers tap
+  through to the board — which re-asks Option A with data rather than argument.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially

@@ -51,11 +51,16 @@ that don't need live football:
 7. **`/fpl`** — the one squad still a list; `PitchFrame` reuse is free. Keep
    the tab small (Craig, 6 Aug) — better rendering, not more features.
 
-**Defer until live football exists (21 Aug+):** `/matchday` (two unrelated
+~~**Defer until live football exists (21 Aug+):** `/matchday` (two unrelated
 designs stacked), `/league/matchups` (nothing separates a blowout from a close
 match, live from finished), `/gw/[gameweek]` (nothing marks a match with *your*
-players in it), and the matchup board's list mode. These are live-state designs
-and can only be judged against a real Saturday.
+players in it), and the matchup board's list mode.~~ **Built 20 Aug instead**,
+Craig's call — eight commits, `5bfdbab`..`c17f367`. The Final-state ladder,
+your players marked, ownership tags, one scoreline grammar on all three
+head-to-head surfaces, the afternoon strip and the Desk. Everything in it is
+**written and unwitnessed**; PLATFORM_NOTES carries the observation list for
+Saturday, and the board's list-mode XI/bench split is the one item still
+deliberately waiting for it.
 
 **Non-negotiables** (from `docs/ui/README.md` + `conventions.md`): the lineup
 gate, provenance at point of use, absence ≠ zero, phone-first `min-h-11`; the
