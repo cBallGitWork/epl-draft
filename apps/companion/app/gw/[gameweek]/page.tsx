@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { type Fixture, fixtureInvolvement, hasGameweek } from "@epl/core";
+import { type Fixture, fixtureInvolvement, hasGameweek, owners } from "@epl/core";
 import GameweekView from "../../components/football/GameweekView";
 import { gameweekSnapshot } from "../../football";
 import { getLeagueSquads } from "../../squads";
@@ -32,12 +32,17 @@ export default async function GameweekPage({
   const snapshot = await gameweekSnapshot(requested);
   if (!hasGameweek(snapshot, requested)) notFound();
 
-  return <GameweekView snapshot={snapshot} mine={await involvement(snapshot.fixtures)} />;
+  const league = await marks(snapshot.fixtures);
+  return <GameweekView snapshot={snapshot} mine={league.mine} owners={league.owners} />;
 }
 
-/** The reader's own players, per fixture, or undefined when there is no answer
- *  to give — signed out, no league, undrafted, or Fantrax silent. Every one of
- *  those is ordinary, and each returns the same nothing rather than a panel.
+/** What our league has to say about this round of football: which fixtures the
+ *  reader has somebody in, and who holds each footballer who does something.
+ *
+ *  Both undefined when there is no answer to give — no league, undrafted, or
+ *  Fantrax silent — and `mine` alone undefined for a reader who is signed out,
+ *  who still gets the tags. Every one of those is ordinary, and each returns the
+ *  same nothing rather than a panel.
  *
  *  Marked from **today's** squad, including on a round played in October. That
  *  is deliberate and it is the actual Monday question — "which of these results
@@ -47,11 +52,14 @@ export default async function GameweekPage({
  *
  *  Squad membership only. Who a manager holds is public all week; how he has
  *  arranged them is not, and nothing here reads a lineup. */
-async function involvement(fixtures: readonly Fixture[]) {
+async function marks(fixtures: readonly Fixture[]) {
   const squads = await getLeagueSquads();
-  if ("undrafted" in squads || "unavailable" in squads) return undefined;
+  if ("undrafted" in squads || "unavailable" in squads) return {};
 
   const teamId = await myTeamId(squads.period.teams);
   const team = squads.period.teams.find((t) => t.teamId === teamId);
-  return team === undefined ? undefined : fixtureInvolvement(team, fixtures);
+  return {
+    mine: team === undefined ? undefined : fixtureInvolvement(team, fixtures),
+    owners: owners(squads.period.teams),
+  };
 }

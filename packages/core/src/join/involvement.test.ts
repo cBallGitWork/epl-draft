@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Fixture, FootballPlayer } from "../football/types";
 import type { RosteredPlayer, RosteredTeam } from "./roster";
-import { fixtureInvolvement } from "./involvement";
+import { fixtureInvolvement, owners } from "./involvement";
 
 const player = (id: number, name: string, clubId: number): FootballPlayer => ({
   id, code: 900 + id, name, fullName: name, clubId,
@@ -71,5 +71,40 @@ describe("fixtureInvolvement", () => {
   it("has nothing to say about an empty squad or an empty round", () => {
     expect(fixtureInvolvement(team([]), [match(10, 1, 2)]).size).toBe(0);
     expect(fixtureInvolvement(team(holds(saka)), []).size).toBe(0);
+  });
+});
+
+describe("owners", () => {
+  it("names the squad holding each footballer, by his stable code", () => {
+    const owned = owners([
+      { ...team(holds(saka)), teamId: "t1", teamName: "test1" },
+      { ...team(holds(isak)), teamId: "t2", teamName: "test2" },
+    ]);
+    expect(owned.get(saka.code)).toEqual({ teamId: "t1", teamName: "test1" });
+    expect(owned.get(isak.code)).toEqual({ teamId: "t2", teamName: "test2" });
+  });
+
+  it("leaves an unowned footballer out, rather than owned by nobody", () => {
+    // Most of the 697 are on no roster in this league, and a tag reading "—" on
+    // every other scorer is noise where the honest answer is silence.
+    expect(owners([team(holds(saka))]).has(gabriel.code)).toBe(false);
+  });
+
+  it("has nothing to say about a slot the bridge could not resolve", () => {
+    const squad = team([
+      { slot: { fantraxId: "x", position: "M", status: "ACTIVE" }, unresolved: "unbridged" },
+    ]);
+    expect(owners([squad]).size).toBe(0);
+  });
+
+  it("keeps the first team listed when a player somehow appears on two", () => {
+    // Not a state Fantrax's rosters can hold; a half-completed trade could show
+    // it for a moment. One answer either way, and an arbitrary one said out loud
+    // beats a silent last-write-wins.
+    const owned = owners([
+      { teamId: "t1", teamName: "test1", players: holds(saka) },
+      { teamId: "t2", teamName: "test2", players: holds(saka) },
+    ]);
+    expect(owned.get(saka.code)?.teamId).toBe("t1");
   });
 });

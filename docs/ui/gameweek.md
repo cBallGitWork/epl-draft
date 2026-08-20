@@ -25,6 +25,14 @@ Shares `GameweekView` with `/matchday`, so the two never drift.
   Counted rather than tinted: fifteen players across ten fixtures marks most of
   the list, and every row marked is no row marked. The number is what ranks one
   match above another at a glance.
+- **Ownership tags on the events.** Under each contributor's name in the
+  drop-down, the squad that holds him — yours in accent, everyone else's faint,
+  and a footballer nobody in the league holds untagged. Every goal in the round
+  answers "whose player is that", which is the one line of Soccer Saturday the
+  app was missing. Untagged rather than "—": most of the 697 are on no roster.
+
+  Independent of the marks above. A **signed-out** reader gets the tags and no
+  `n yours` — whose player that was is not a question about him.
 - Previous / Next round links, bounded by the season FPL actually published, not
   a hardcoded 38. Each end renders an inert placeholder so the other link does
   not slide across the screen.
@@ -40,8 +48,9 @@ the round renders byte-identical to the version that had never heard of a
 fantasy league. It has no Fantrax-shaped empty state because it has no Fantrax-
 shaped claim to make.
 
-`fixtureInvolvement` is a pure join in core, keyed off **squad membership** —
-which is public all week. Nothing here reads a lineup, in either direction.
+`fixtureInvolvement` and `owners` are pure joins in core, keyed off **squad
+membership** — public all week. Nothing here reads a lineup, in either
+direction. `owners` keys on FPL's season-stable `code`, never the recycled `id`.
 
 **Historical rounds are marked from today's squad**, deliberately. "Which of
 these results matter to me" is asked on Monday by the man who owns those players

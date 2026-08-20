@@ -4,6 +4,7 @@ import {
   type Fixture,
   type FootballPlayer,
   type FootballSnapshot,
+  type PlayerOwner,
   clubById,
   clubColours,
   contributions,
@@ -22,6 +23,7 @@ import PlayerPortrait from "./PlayerPortrait";
 export default function MatchList({
   snapshot,
   mine,
+  owners,
 }: {
   snapshot: FootballSnapshot;
   /** Which of the reader's players are in each fixture, by squad membership.
@@ -29,6 +31,10 @@ export default function MatchList({
    *  Fantrax would not describe — and the list then renders exactly as it did
    *  before any of this existed. */
   mine?: Map<number, FootballPlayer[]>;
+  /** Every rostered footballer in the league, by FPL code, against the squad
+   *  holding him. Independent of `mine`: a signed-out reader still gets "whose
+   *  player is that", which is the half of the question that is not about him. */
+  owners?: Map<number, PlayerOwner>;
 }) {
   const clubs = clubById(snapshot);
   const fixtures = fixturesInOrder(snapshot);
@@ -45,7 +51,13 @@ export default function MatchList({
     <ul className="flex flex-col gap-1.5">
       {fixtures.map((f) => (
         <li key={f.id}>
-          <MatchRow fixture={f} clubs={clubs} snapshot={snapshot} yours={mine?.get(f.id)} />
+          <MatchRow
+            fixture={f}
+            clubs={clubs}
+            snapshot={snapshot}
+            yours={mine?.get(f.id)}
+            owners={owners}
+          />
         </li>
       ))}
     </ul>
@@ -57,12 +69,14 @@ function MatchRow({
   clubs,
   snapshot,
   yours,
+  owners,
 }: {
   fixture: Fixture;
   clubs: Map<number, Club>;
   snapshot: FootballSnapshot;
   /** His players in this match, or undefined when there are none. */
   yours?: FootballPlayer[];
+  owners?: Map<number, PlayerOwner>;
 }) {
   const home = clubs.get(fixture.homeClubId);
   const away = clubs.get(fixture.awayClubId);
@@ -125,11 +139,28 @@ function MatchRow({
           <ul className="flex flex-col gap-1.5">
             {rows.map((c) => {
               const club = clubs.get(c.clubId);
+              const owner = owners?.get(c.player.code);
               return (
                 <li key={c.player.id} className="flex items-center gap-2.5">
                   <PlayerPortrait player={c.player} colours={clubColours(club?.shortName ?? "")} />
-                  <span className="min-w-0 flex-1 truncate text-sm font-medium">
-                    {c.player.name}
+                  <span className="min-w-0 flex-1 truncate">
+                    <span className="text-sm font-medium">{c.player.name}</span>
+                    {/* Whose player that was. The one line of Soccer Saturday
+                        the app was missing: every goal in the round now answers
+                        it, and a footballer nobody in the league holds says
+                        nothing rather than "—", which would be a tag on 500 of
+                        the 697. */}
+                    {owner ? (
+                      <span
+                        className={`block truncate text-2xs ${
+                          yours?.some((p) => p.code === c.player.code)
+                            ? "text-accent"
+                            : "text-faint"
+                        }`}
+                      >
+                        {owner.teamName}
+                      </span>
+                    ) : null}
                   </span>
                   <Events c={c} />
                 </li>

@@ -5,6 +5,7 @@ import {
   POLL,
   type FootballPlayer,
   type FootballSnapshot,
+  type PlayerOwner,
   adjacentGameweeks,
   isMatchdayLive,
 } from "@epl/core";
@@ -19,12 +20,16 @@ import MatchList from "./MatchList";
 export default function GameweekView({
   snapshot,
   mine,
+  owners,
 }: {
   snapshot: FootballSnapshot;
   /** Which of the reader's players are in each fixture. Optional throughout: a
    *  caller with no league to ask simply does not pass it, and the round renders
    *  as it always did. */
   mine?: Map<number, FootballPlayer[]>;
+  /** Who holds each rostered footballer. Passed independently of `mine` — the
+   *  tags are useful to a reader who owns nobody. */
+  owners?: Map<number, PlayerOwner>;
 }) {
   const live = isMatchdayLive(snapshot);
   const { previous, next } = adjacentGameweeks(snapshot);
@@ -57,7 +62,7 @@ export default function GameweekView({
         ) : null}
       </header>
 
-      <MatchList snapshot={snapshot} mine={mine} />
+      <MatchList snapshot={snapshot} mine={mine} owners={owners} />
 
       <nav className="flex items-center justify-between gap-3 text-sm">
         <GameweekLink gameweek={previous} label="Previous" />

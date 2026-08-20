@@ -51,3 +51,39 @@ export function fixtureInvolvement(
   }
   return involved;
 }
+
+/** Who a footballer belongs to in our league. */
+export interface PlayerOwner {
+  teamId: string;
+  teamName: string;
+}
+
+/** Every rostered footballer, keyed by FPL's season-stable `code`, against the
+ *  squad holding him.
+ *
+ *  What it is for: a goal on the fixture list is a fact about the Premier
+ *  League, and in a sixteen-man draft league it is also somebody's afternoon.
+ *  Tagging the scorer is the cheapest thing in the app that makes a round of
+ *  football read as *our* round of football.
+ *
+ *  `code` rather than `id`, because `id` is recycled every summer (CODE_RULES
+ *  §3) and this map is built from the same snapshot the view renders — the rule
+ *  costs nothing to keep here and is the one worth never making an exception to.
+ *
+ *  Squad membership again, not lineups: this says whose player he is, never
+ *  whether that manager started him.
+ *
+ *  A player on two rosters at once cannot be represented and is not modelled —
+ *  the first team listed keeps him. Fantrax's rosters are one-to-one and a
+ *  half-completed trade showing otherwise is their transient, not our fact. */
+export function owners(teams: readonly RosteredTeam[]): Map<number, PlayerOwner> {
+  const owned = new Map<number, PlayerOwner>();
+  for (const team of teams) {
+    for (const rostered of team.players) {
+      if (!isResolved(rostered)) continue;
+      if (owned.has(rostered.player.code)) continue;
+      owned.set(rostered.player.code, { teamId: team.teamId, teamName: team.teamName });
+    }
+  }
+  return owned;
+}
