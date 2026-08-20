@@ -2201,6 +2201,102 @@ The whole tranche, honestly. Specifically:
 - **/matchday's real scroll length** with three panels, and whether managers tap
   through to the board — which re-asks Option A with data rather than argument.
 
+## The sweep, and the UI refactor's first tranche (20 Aug 2026)
+
+Craig's order: refactor first, then the roadmap's §1 pages. Four refactor commits
+and six feature ones, four gates green on each.
+
+### What the sweep actually turned up
+
+**Four writings of one question.** `isMatchdayLive(s) ? "live" : roundFinished(s)`
+sat at four call sites. Neither half answers alone — `roundFinished` cannot say
+"live", `isMatchdayLive` cannot say "final" — so the pairing *and its order* is
+the answer, and asking it the other way round is precisely how the board came to
+burn a LIVE dot through a Saturday tea-time. Now `roundState`, in the football
+layer, tested there.
+
+**A clock read four times.** Each of four pages spelled out
+`duringGameweek(snapshot, new Date().toISOString()) ? POLL.live : POLL.idle`.
+`pollSeconds` in `app/football.ts` — the app edge, which is where a clock
+belongs. The choice of `duringGameweek` over `isMatchdayLive` is now made once:
+between kickoffs is exactly when a score is most likely to have moved since you
+looked, which is right for a poll rate and wrong for a dot.
+
+**The reader discovered on three screens.** Read squads, verify cookie, find
+team, join — three places for the same two mistakes. `app/involvement.ts` holds
+it and the distinction it exists for: `mine`/`owners` key off **squad
+membership**, public all week; `afternoon` keys off the reader's **own lineup**,
+because a reserve does not score. Nothing in that file can say anything about a
+rival's arrangement.
+
+**A predicate written twice under two names.** `involves` was exported from a
+card component and copied into the desk as `isYours`. It is a league-layer
+question about a pairing, so it is `pairingInvolves` in `league/selectors.ts`
+now, with the test neither copy had.
+
+**Fantrax's raw word, compared in two places.** `rosterStatus.ts` exists so
+`"ACTIVE"` appears once and its own comment says so — then the gazette's team of
+the week and the new involvement reader both wrote it out again. A third status
+reads as "not active" through `isActive`, which is the safe answer; a string
+comparison would have read it as neither.
+
+**Two widths written twice each.** `PlayerPortrait` and the profile masthead each
+spelled their pixel size into a class and again into `sizes`, which is what tells
+the optimizer how small an asset it may serve. The tell for that bug is a soft
+photograph, and nobody thinks to blame a class name.
+
+### The pages
+
+`/players` leads every one of 697 rows with the 32px face. The FPL code comes
+**straight off the bridge** rather than through a football snapshot — the code is
+all a portrait needs, and joining the football layer would give a page that is
+entirely Fantrax's a second provider to fail on. `toFplClubCode` left the
+identity barrel for it: without the translation Brentford and Forest take the
+fallback grey on every row, which is a wrong answer that looks exactly like a
+club we have no colours for.
+
+`/players/[fantraxId]` opens with the cut-out at 112px on his club's colour. On
+the colour rather than on nothing: everywhere else it stands on grass, and there
+is no pitch here.
+
+**The Gazetta is the one that mattered.** It was called a paper and looked like a
+settings screen. A masthead now — centred, allowed to wrap, between red rules,
+with a **dateline** under it, which is the whole difference between a masthead
+and an `<h1>`. The date is the *edition's* instant, not the reader's clock: two
+managers opening the same cached edition either side of midnight must not be
+shown two different days. Columns sit on `Column` — heads in cream on a red
+rule, items on hairlines, no cards. `shell/Section` is untouched and still right
+on the four screens using it.
+
+`yoursBorder` survived all of it unchanged, which is worth recording: the class
+it returns sets a border *colour* plus an explicit left width, so on a ruled row
+with no `border` utility it draws the accent bar alone. One treatment, two
+grounds, and `mine.ts` stays the only thing that knows what "yours" looks like.
+
+### Two roadmap claims that were wrong
+
+- **`PitchFrame` is not free on `/fpl`.** A pitch needs positional lines and the
+  football layer deliberately carries no position — `element_type` is FPL's
+  fantasy classification, which is why it was removed. An FPL pitch needs that
+  classification carried by `fpl-entry`, the FPL league layer. A data change, not
+  a rendering one. What landed instead is the XI/bench split, which FPL's own
+  1–15 ordering gives for nothing; carried as `slot`, never `position`, because
+  `position` here means the letter a league files a player under.
+- **`/league` and `/squad` cannot show record or badges as a visual pass.** Both
+  need reads those pages do not make. The squad row's *opponent* was free — the
+  schedule was already in the payload — and that is what landed.
+
+### The bug the preview caught, on its first day
+
+`/squad/[teamId]` shows `SquadBoard` all week, which owns a Pitch/List control,
+then switches to `TeamSheet` with `mode="pitch"` hardcoded the moment a period
+opens — and `TeamSheet` deliberately owns no toggle, because the head-to-head
+board owns one for two sides. Sound where it was written; it never held on a
+route with one side and no control of its own. So the view answering "who
+exactly is in it" vanished exactly when managers start checking, and it was
+invisible because no period has ever opened. The faked-Saturday harness opened
+period 1 and it fell out immediately.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially

@@ -43,14 +43,22 @@ that don't need live football:
 2. ~~**`/players/[fantraxId]`** — no portrait, no crest, on a page about one
    footballer.~~ *Done 20 Aug (`9f544d1`) — the cut-out at 112px on his club's
    colour, crest and number on it.*
-3. **`/` Gazetta** — "called a paper and does not look like one". The one page
-   where the league register (Tim Hortons red + 1964–85 cream) can lead.
-4. **`/league`** — plain table; emphasise rank vs points, mark your row harder.
-5. **`/squad`** — rows are a name and a number; form/record/next-opponent all
-   exist elsewhere in the app and can join the row.
+3. ~~**`/` Gazetta** — "called a paper and does not look like one".~~ *Done
+   20 Aug (`96b39bf`) — a real masthead with a dateline, columns on rules
+   instead of cards, the league register leading.*
+4. ~~**`/league`** — plain table; emphasise rank vs points, mark your row
+   harder.~~ *Done 20 Aug (`a152758`).*
+5. ~~**`/squad`** — rows are a name and a number.~~ *Done 20 Aug (`12101eb`) —
+   who each manager plays this week, free from the payload already fetched.
+   Form and record would need `getStandings`; recorded as a gap.*
 6. ~~**`/league/schedule`** — a jump/anchor to the current period.~~ *Done 20 Aug, and further: gameweek and competition dropdowns, opens on the current-or-next round with its scores, archived results, Fantrax team badges.*
-7. **`/fpl`** — the one squad still a list; `PitchFrame` reuse is free. Keep
-   the tab small (Craig, 6 Aug) — better rendering, not more features.
+7. ~~**`/fpl`** — the one squad still a list; `PitchFrame` reuse is free.~~
+   *Partly done 20 Aug (`5ebd6e4`) — XI and bench split, the bench totalling
+   what was left on it. **The "free" claim was wrong**: a pitch needs positional
+   lines and the football layer deliberately carries no position, so an FPL
+   pitch needs `element_type` carried by the FPL entry layer. Shape recorded in
+   `docs/ui/fpl.md`; "keep the tab small" says it needs a reason beyond
+   symmetry.*
 
 ~~**Defer until live football exists (21 Aug+):** `/matchday` (two unrelated
 designs stacked), `/league/matchups` (nothing separates a blowout from a close
