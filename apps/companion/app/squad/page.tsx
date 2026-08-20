@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LEAGUE_NAME, type RosteredTeam, isResolved } from "@epl/core";
+import { LEAGUE_NAME, type RosteredTeam, headToHead, isResolved } from "@epl/core";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { londonDate } from "../londonTime";
@@ -54,13 +54,25 @@ export default async function SquadsPage() {
   const others = squads.period.teams.filter((team) => team.teamId !== mine);
   const yours = squads.period.teams.find((team) => team.teamId === mine);
 
+  // Who each of them plays this week. Free — the schedule is already in the
+  // payload this page has fetched — and it is the fact that turns a directory of
+  // sixteen names into the week's fixtures. Undefined is ordinary: no schedule
+  // for this period, or Fantrax would not describe the league, and it renders as
+  // no line rather than as a guess.
+  const { period } = squads.period;
+  const opponentOf = (teamId: string) =>
+    squads.info === null || period === null
+      ? null
+      : (headToHead(squads.info.matchups, squads.info.teams, period, teamId)?.opponent.name ??
+        null);
+
   return (
     <div className="flex flex-col gap-3">
       <PageHeader title={yours ? "Your squad" : "Squads"} />
 
       {yours ? (
         <>
-          <Squad team={yours} lead />
+          <Squad team={yours} opponent={opponentOf(yours.teamId)} lead />
           <form action={forgetTeam} className="px-3">
             <button type="submit" className="min-h-11 text-2xs text-faint hover:text-muted">
               Not you? Sign out
@@ -77,7 +89,7 @@ export default async function SquadsPage() {
       <ul className="flex flex-col gap-1.5">
         {others.map((team) => (
           <li key={team.teamId}>
-            <Squad team={team} />
+            <Squad team={team} opponent={opponentOf(team.teamId)} />
           </li>
         ))}
       </ul>
@@ -87,29 +99,50 @@ export default async function SquadsPage() {
 
 /** One squad as a row. `lead` is the partisan treatment: yours sits above the
  *  rest, framed, because this app is meant to know whose team you are. */
-function Squad({ team, lead = false }: { team: RosteredTeam; lead?: boolean }) {
+function Squad({
+  team,
+  opponent,
+  lead = false,
+}: {
+  team: RosteredTeam;
+  /** Who he plays this period, or null when the schedule does not say. */
+  opponent: string | null;
+  lead?: boolean;
+}) {
   const unresolved = team.players.filter((player) => !isResolved(player)).length;
 
   return (
     <Link
       href={`/squad/${team.teamId}`}
-      className={`elev flex min-h-14 items-center gap-3 rounded-xl border bg-surface px-3 py-2.5 hover:bg-raised ${yoursBorder(
-        lead,
-      )}`}
+      className={`elev flex min-h-14 items-center gap-3 rounded-xl border px-3 py-2.5 hover:bg-raised ${
+        lead ? "bg-raised" : "bg-surface"
+      } ${yoursBorder(lead)}`}
     >
-      <span className="min-w-0 flex-1 truncate font-semibold">{team.teamName}</span>
+      <span className="flex min-w-0 flex-1 flex-col">
+        <span className="truncate font-semibold">{team.teamName}</span>
+        {/* The row was a name and a number, sixteen times. Who he plays this
+            week is the thing that makes it a fixture list rather than a
+            directory, and it costs nothing: the schedule is already in the
+            payload this page fetched. */}
+        {opponent ? (
+          <span className="truncate text-2xs text-faint">
+            <span className="uppercase tracking-widest">v</span> {opponent}
+          </span>
+        ) : null}
+      </span>
       {/* A label, not just an accent: the border alone carries no meaning to
-          anyone who cannot see it. */}
+          anyone who cannot see it. On `bg-bg` because the row it sits on is
+          raised, and a chip the colour of its ground is not a chip. */}
       {lead ? (
-        <span className="rounded bg-raised px-1.5 py-0.5 text-2xs font-bold uppercase tracking-widest text-accent">
+        <span className="rounded bg-bg px-1.5 py-0.5 text-2xs font-bold uppercase tracking-widest text-accent">
           You
         </span>
       ) : null}
-      <span className="numeric text-sm text-muted">{team.players.length}</span>
+      <span className="numeric shrink-0 text-sm text-muted">{team.players.length}</span>
       {/* Never silently short. A squad we cannot fully identify says so here
           rather than rendering fourteen of fifteen on the pitch. */}
       {unresolved > 0 ? (
-        <span className="numeric rounded bg-raised px-1.5 py-0.5 text-2xs font-bold text-mid">
+        <span className="numeric shrink-0 rounded bg-bg px-1.5 py-0.5 text-2xs font-bold text-mid">
           {unresolved} unmapped
         </span>
       ) : null}
