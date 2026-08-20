@@ -15,6 +15,14 @@ on: [push, pull_request]
 jobs:
   verify:
     runs-on: ubuntu-latest
+    env:
+      # The one league id that has to be named outside `FANTRAX_LEAGUES`, and
+      # named once. CODE_RULES §3 puts an id in "one config module or
+      # environment", and this is the environment half — the same category as
+      # the Vercel dashboard value the swap actually turns. The rehearsal league
+      # needs no name here at all: it is what the config defaults to, so the
+      # second walk below simply does not set this.
+      REAL_LEAGUE: ayyoh3n2mr326v2o
     steps:
       - uses: actions/checkout@v4
 
@@ -53,17 +61,21 @@ jobs:
       - name: Every view, against both leagues
         run: |
           set -euo pipefail
+          # An empty id means "whatever the config defaults to", which is the
+          # rehearsal league — so the default path is exercised as a default
+          # rather than as a value somebody typed.
           walk() {
-            FANTRAX_LEAGUE_ID="$1" npm run start &
+            if [ -n "$1" ]; then export FANTRAX_LEAGUE_ID="$1"; else unset FANTRAX_LEAGUE_ID; fi
+            npm run start &
             pid=$!
             npm run smoke:wait
-            FANTRAX_LEAGUE_ID="$1" npm run smoke
+            npm run smoke
             kill "$pid" 2>/dev/null || true
             pkill -f "next start" 2>/dev/null || true
             sleep 1
           }
-          walk ayyoh3n2mr326v2o
-          walk zbn1z3ukmsgb36sz
+          walk "$REAL_LEAGUE"
+          walk ""
 
       # ROADMAP §6's last one. `npm run bridge` reports totals — 688 players, 120
       # with no FPL counterpart — and has never answered the question that
