@@ -15,6 +15,12 @@ import PlayerImage from "../../components/league/PlayerImage";
 // a head floating in the dark. The colour is the same one his 32px mark in the
 // pool sits on, so the two readings of him agree.
 
+/** How wide he is drawn here, and what the optimizer may serve for it. One
+ *  number for the same reason it is one number in `PlayerPortrait`: written out
+ *  separately they drift, and a soft photograph is not something anyone thinks
+ *  to blame a class name for. */
+const WIDTH = 112;
+
 export default function Portrait({
   player,
   club,
@@ -35,8 +41,8 @@ export default function Portrait({
 
   return (
     <div
-      className="relative w-28 shrink-0 overflow-hidden rounded-xl"
-      style={{ backgroundColor: colours.primary }}
+      className="relative shrink-0 overflow-hidden rounded-xl"
+      style={{ backgroundColor: colours.primary, width: WIDTH }}
     >
       {/* `played` is true because this page has no round in it. Drawn back means
           "he has not kicked off yet", which is a statement about a Saturday, and
@@ -46,7 +52,7 @@ export default function Portrait({
         club={club}
         keeper={isGoalkeeper(position)}
         played
-        sizes="112px"
+        sizes={`${WIDTH}px`}
       />
 
       {/* His number, where a shirt would carry it. Absent for most of the pool —

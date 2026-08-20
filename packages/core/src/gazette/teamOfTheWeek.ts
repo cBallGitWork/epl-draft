@@ -2,6 +2,7 @@ import { positionDepth } from "../join/lineup";
 import { isResolved } from "../join/roster";
 import type { RosteredPlayer, RosteredTeam } from "../join/roster";
 import type { PlayerMatchStats } from "../football/types";
+import { isActive } from "../league/rosterStatus";
 import type { RosterLimits } from "../league/types";
 import type { Pick, TeamOfTheWeek } from "./types";
 
@@ -84,7 +85,7 @@ function considered(rostered: RosteredPlayer, team: RosteredTeam): Pick | null {
     position: rostered.slot.position,
     ownerTeamId: team.teamId,
     ownerName: team.teamName,
-    started: rostered.slot.status === "ACTIVE",
+    started: isActive(rostered.slot),
     minutes,
     goals,
     assists,

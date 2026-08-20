@@ -1,5 +1,5 @@
 import type { Fixture, FootballPlayer, PlayerOwner } from "@epl/core";
-import { fixtureInvolvement, owners } from "@epl/core";
+import { fixtureInvolvement, isActive, owners } from "@epl/core";
 import { getLeagueSquads } from "./squads";
 import type { ReadableSquads } from "./squads";
 import { myTeamId } from "./session";
@@ -47,7 +47,7 @@ export async function marksFor(
     mine: fixtureInvolvement(team, fixtures),
     owners: owners(squads.period.teams),
     afternoon: fixtureInvolvement(
-      { ...team, players: team.players.filter((p) => p.slot.status === "ACTIVE") },
+      { ...team, players: team.players.filter((p) => isActive(p.slot)) },
       fixtures,
     ),
   };

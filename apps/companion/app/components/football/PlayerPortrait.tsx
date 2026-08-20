@@ -1,6 +1,11 @@
 import Image from "next/image";
 import { type ClubColours, initials, inkOn, portraitUrl } from "@epl/core";
 
+/** How wide he is drawn, and therefore how wide an asset the optimizer may
+ *  serve. One number because the two must agree: written out separately they
+ *  drift, and the tell is a soft photograph nobody thinks to blame the CSS for. */
+const SIZE = 32;
+
 // A player's headshot on their club's colour.
 //
 // Always sourced at 250x250 and resized by Next's optimizer: the raw PNGs are
@@ -29,8 +34,8 @@ export default function PlayerPortrait({
 }) {
   return (
     <span
-      className="relative block h-8 w-8 shrink-0 overflow-hidden rounded-full ring-1 ring-line"
-      style={{ backgroundColor: colours.primary }}
+      className="relative block shrink-0 overflow-hidden rounded-full ring-1 ring-line"
+      style={{ backgroundColor: colours.primary, width: SIZE, height: SIZE }}
     >
       {/* Initials sit underneath as the fallback: January signings and academy
           call-ups routinely have no headshot for weeks, and a broken image icon
@@ -46,9 +51,9 @@ export default function PlayerPortrait({
         <Image
           src={portraitUrl({ code: player.code })}
           alt=""
-          width={32}
-          height={32}
-          sizes="32px"
+          width={SIZE}
+          height={SIZE}
+          sizes={`${SIZE}px`}
           className="relative h-full w-full object-cover object-top"
         />
       )}
