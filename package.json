@@ -18,6 +18,8 @@
     "capture:status": "tsx scripts/capture-status.ts",
     "periods": "tsx scripts/period-alignment.ts",
     "shape-diff": "tsx scripts/shape-diff.ts",
+    "smoke": "tsx scripts/smoke.ts",
+    "smoke:wait": "for i in $(seq 1 60); do curl -sf -o /dev/null \"${SMOKE_BASE:-http://localhost:3000}/\" && exit 0; sleep 1; done; echo 'app never came up'; exit 1",
     "bridge": "tsx scripts/build-bridge.ts",
     "team-codes": "tsx scripts/team-codes.ts"
   },

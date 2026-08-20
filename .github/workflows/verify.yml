@@ -36,3 +36,31 @@ jobs:
       - run: npm run lint
 
       - run: npm run build
+
+      # ROADMAP §6. The four gates above never once ask what the app does when
+      # Fantrax says `NO_TEAMS` — which is what our real league says to almost
+      # everything until 10 Oct, and which those views had been walked by hand
+      # exactly twice. Every route is dynamic, so one build serves either league
+      # and the id is a runtime choice.
+      #
+      # Both halves run, and the second is the one that has caught a real bug: a
+      # drafted league rendering "nobody has drafted" is what `edition.ts` did in
+      # August, and a check that only asserted the empty states would have passed
+      # it happily.
+      #
+      # `kill "$pid"` and not `kill %1`: job control is off in a non-interactive
+      # shell and `%1` would fail the step on a line that is only tidying up.
+      - name: Every view, against both leagues
+        run: |
+          set -euo pipefail
+          walk() {
+            FANTRAX_LEAGUE_ID="$1" npm run start &
+            pid=$!
+            npm run smoke:wait
+            FANTRAX_LEAGUE_ID="$1" npm run smoke
+            kill "$pid" 2>/dev/null || true
+            pkill -f "next start" 2>/dev/null || true
+            sleep 1
+          }
+          walk ayyoh3n2mr326v2o
+          walk zbn1z3ukmsgb36sz

@@ -2446,6 +2446,74 @@ standings reads. Fantrax sends **no header at all** for an empty table — it se
 so. Worth knowing that they exist now rather than reading them cold at 11:00 on
 10 Oct.
 
+## CI walks both leagues, and the build stops redeploying for data (20 Aug 2026)
+
+ROADMAP §6's other two. Both are small; both close gaps that had been noticed and
+left.
+
+### `npm run smoke` — every view, against whichever league it is pointed at
+
+The four gates never once asked what the app does when Fantrax says `NO_TEAMS`.
+That is what our real league says to almost everything until 10 Oct, and those
+views had been walked by hand exactly twice — once on 19 Aug and once this
+session. `verify.yml` now walks them on every push, both leagues, off the one
+build (every route is dynamic, so the league id is a runtime choice).
+
+The script asks Fantrax whether the served league has teams and asserts the
+matching half, so it needs no editing on draft night — it simply starts
+asserting the other half. When there are teams it derives one team id and adds
+`/squad/[teamId]` and `/league/matchups/[teamId]`, which are the two biggest
+screens in the app and would otherwise never be walked.
+
+**The inverse half is the one worth having.** A drafted league that renders
+"nobody has drafted" is a bug this repo has already shipped — `edition.ts`
+collapsed an outage into an undrafted league, and a drafted league having a quiet
+week was told it had not drafted. A check that only asserted the empty states
+would have passed that happily, so the drafted walk asserts that none of those
+five sentences appears.
+
+Three things the first runs taught, all now in the script:
+
+- **Assert absence, not presence, for rendered copy.** `/gw/1` failed on
+  `"Gameweek 1"` because React splits `Gameweek {n}` into separate text nodes —
+  the same thing that made `(FOUR)` un-greppable on the desk. It asserts the
+  *absence* of "No fixtures scheduled for this gameweek yet." instead, which is
+  one fixed string and also the better question.
+- **`kill %1` does not work in CI.** Job control is off in a non-interactive
+  shell, and the step would have failed on a line that is only tidying up. The
+  pid is captured instead.
+- **A connection refusal has to be legible.** A CI reader handed a raw
+  `ECONNREFUSED` stack has to work out that the server never came up, and they
+  will work it out slowly and at a bad moment. It says so in one line now.
+
+Caveat worth stating: the empty-state fragments are copy, and copy moves. That
+is the intended cost — the list is edited in the same commit as the sentence,
+exactly as `docs/ui/` is.
+
+### The Ignored Build Step, pulled at last
+
+`apps/companion/vercel.json`:
+
+```
+git diff --quiet HEAD^ HEAD -- ':(top)' ':(exclude,top)data/snapshots'
+```
+
+Exit 0 skips the build, exit 1 proceeds — so a commit touching nothing but
+`data/snapshots` no longer redeploys production. That is six redeploys in six
+days, which is what this file complained about on 13 Aug and again on 19 Aug.
+
+Two details that are load-bearing:
+
+- **The pathspecs are `:(top)`-prefixed** because Vercel's Root Directory is
+  `apps/companion`, so the command runs from there and a bare `data/snapshots`
+  would resolve to `apps/companion/data/snapshots`, which does not exist — and
+  the ignore would then match nothing and quietly never fire. Verified from
+  `apps/companion` against a real capture commit (skips) and a real code commit
+  (builds).
+- **It fails toward building.** A shallow clone with no `HEAD^` exits 128, which
+  is non-zero, which means deploy. The wrong answer in that direction costs a
+  build; the other direction costs a shipped commit that never went live.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially

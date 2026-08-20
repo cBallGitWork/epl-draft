@@ -1,0 +1,166 @@
+import { FANTRAX_LEAGUE_ID, FantraxError, fetchTeamRosters, mapTeamRosters } from "@epl/core";
+
+// Does every view survive the league it is actually being served?
+//
+// ROADMAP §6: our real league answers `NO_TEAMS`, `[]` and `{}` to almost
+// everything until 10 Oct, and those empty states have been walked by hand
+// exactly twice. This walks them on every push, which is the difference between
+// "it worked in August" and "it works".
+//
+// It asks Fantrax whether the served league has teams and then asserts the
+// matching half, so the same command is useful against both leagues and needs no
+// editing on draft night — it simply starts asserting the other half.
+//
+// **The inverse check is the one worth having.** A drafted league that renders
+// "nobody has drafted" is a bug this repo has already shipped once: `edition.ts`
+// collapsed an outage into an undrafted league, and a drafted league having a
+// quiet week was told it had not drafted. Asserting only the empty states would
+// have passed that happily.
+//
+//   npm run build && npm run start &
+//   npm run smoke
+//
+//   SMOKE_BASE=https://epl-draft-companion.vercel.app npm run smoke
+
+const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
+
+/** Every route the app serves that needs no id. */
+const ROUTES = [
+  "/",
+  "/league",
+  "/league/schedule",
+  "/league/matchups",
+  "/squad",
+  "/players",
+  "/matchday",
+  "/matchday/desk",
+  "/gw/1",
+  "/fpl",
+] as const;
+
+/** What a league-scoped view must say when there is nothing to show.
+ *
+ *  One fragment per route, and they are deliberately the sentences that name
+ *  *which* nothing it is. Three states — Fantrax silent, nobody drafted, a quiet
+ *  week — must never collapse into one, and a check that only asserted "200" is
+ *  a check that would let them.
+ *
+ *  These are copy, and copy moves. That is the intended cost: this list is
+ *  edited in the same commit as the sentence, exactly as `docs/ui/` is. */
+const UNDRAFTED: Record<string, string> = {
+  "/": "No news yet",
+  "/league": "No table yet",
+  "/league/matchups": "Nobody plays anybody yet",
+  "/squad": "Nobody has a squad yet",
+  "/matchday/desk": "nothing to post",
+};
+
+/** Sentences a league WITH teams must never print. The inverse of the above, and
+ *  the half that catches the failure that has actually happened here. */
+const DRAFTED_MUST_NOT = Object.values(UNDRAFTED);
+
+/** What a route must NOT say whatever the league is doing.
+ *
+ *  Stated as an absence rather than a presence, and that is not squeamishness:
+ *  a positive check on rendered copy has to survive React splitting
+ *  `Gameweek {n}` into three text nodes, and an empty state is one fixed string
+ *  that is either there or is not. It also asks the better question — "did the
+ *  football fail to render", rather than "did one particular word appear".
+ *
+ *  `/gw/[gameweek]` is the claim `docs/ui/` makes loudest: it works from the
+ *  first match of the season with no Fantrax, no draft and no credentials. Our
+ *  real league is the only place that claim can actually be tested. */
+const NEVER: Record<string, string> = {
+  "/gw/1": "No fixtures scheduled for this gameweek yet.",
+};
+
+async function drafted(): Promise<boolean> {
+  try {
+    return mapTeamRosters(await fetchTeamRosters(FANTRAX_LEAGUE_ID)).teams.length > 0;
+  } catch (error) {
+    if (error instanceof FantraxError) return false;
+    throw error;
+  }
+}
+
+async function teamId(): Promise<string | null> {
+  try {
+    const [team] = mapTeamRosters(await fetchTeamRosters(FANTRAX_LEAGUE_ID)).teams;
+    return team?.teamId ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function main() {
+  const hasTeams = await drafted();
+  const id = hasTeams ? await teamId() : null;
+  const paths: string[] = [...ROUTES];
+  // The three biggest screens in the app take an id, so a walk that skipped them
+  // would be a walk that missed the squad board and the head-to-head.
+  if (id !== null) paths.push(`/squad/${id}`, `/league/matchups/${id}`);
+
+  console.log(
+    `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${hasTeams ? "drafted" : "no teams"})\n`,
+  );
+
+  const failures: string[] = [];
+
+  for (const path of paths) {
+    let res: Response;
+    let body: string;
+    try {
+      res = await fetch(`${BASE}${path}`, { redirect: "follow" });
+      body = await res.text();
+    } catch {
+      // Not swallowed into a default: this ends the run and says the one thing
+      // that is actually wrong. A CI reader who gets a raw ECONNREFUSED stack
+      // has to work out that the server never came up, and they will work it
+      // out slowly, at the worst possible moment.
+      console.log(`✗ ${path}  could not reach ${BASE}`);
+      console.log(`\nNothing is listening on ${BASE}. Start the app first:`);
+      console.log("    npm run build && npm run start &");
+      process.exitCode = 2;
+      return;
+    }
+
+    if (!res.ok) {
+      failures.push(`${path} → ${res.status}`);
+      console.log(`✗ ${path}  ${res.status}`);
+      continue;
+    }
+
+    const problems: string[] = [];
+
+    const named = UNDRAFTED[path];
+    if (!hasTeams && named !== undefined && !body.includes(named)) {
+      problems.push(`does not say which nothing it is (expected "${named}")`);
+    }
+
+    if (hasTeams) {
+      for (const sentence of DRAFTED_MUST_NOT) {
+        if (body.includes(sentence)) problems.push(`prints "${sentence}" for a drafted league`);
+      }
+    }
+
+    const never = NEVER[path];
+    if (never !== undefined && body.includes(never)) {
+      problems.push(`says "${never}" on a page that needs no Fantrax`);
+    }
+
+    if (problems.length === 0) {
+      console.log(`✓ ${path}`);
+      continue;
+    }
+    for (const problem of problems) failures.push(`${path} — ${problem}`);
+    console.log(`✗ ${path}`);
+    for (const problem of problems) console.log(`    ${problem}`);
+  }
+
+  console.log(`\n${paths.length - failures.length}/${paths.length} routes clean.`);
+  if (failures.length > 0) process.exitCode = 1;
+}
+
+// Not awaited at the top level: these scripts transpile to CJS, and a rejection
+// here should crash the run loudly rather than be caught and softened.
+void main();

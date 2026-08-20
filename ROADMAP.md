@@ -142,12 +142,18 @@ hand-discriminations; splitting `fantrax/stats.ts`, `league/types.ts`,
   non-zero on the dangerous direction only, so CI can gate on it. Still the
   11:00 item on the ship-day runbook. **Its first run found the playoff and the
   scoring divergence below** — see PLATFORM_NOTES, 20 Aug.
-- **CI job against the real league id** (`verify.yml` doesn't do this): every
-  view meets `NO_TEAMS`/`[]`/`{}` continuously, not once.
+- ~~**CI job against the real league id**~~ **Done 20 Aug.** `npm run smoke`
+  walks every view against whichever league it is pointed at, and `verify.yml`
+  runs it against both on every push. It asserts the empty states for a league
+  with no teams *and* asserts their absence for one with teams — the half that
+  catches the bug `edition.ts` actually shipped.
 - Re-run `npm run bridge` after rehearsal waiver churn; gate on zero
   rostered-but-unmapped.
-- Pull the **Ignored Build Step** lever — capture commits have caused six
-  data-only production redeploys in six days.
+- ~~Pull the **Ignored Build Step** lever~~ **Done 20 Aug** —
+  `apps/companion/vercel.json`, `:(top)`-prefixed because Vercel's root is
+  `apps/companion`. A commit touching only `data/snapshots` no longer redeploys.
+  **Needs one check from Craig on the next capture commit**, since only a real
+  Vercel run proves it fires.
 
 ## 7. Player notes store (after tranche 1, no hard date)
 
