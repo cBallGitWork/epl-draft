@@ -1,20 +1,12 @@
-import Link from "next/link";
-import {
-  POLL,
-  type LeagueTeam,
-  type LiveTeamScore,
-  type PeriodPairing,
-  type PendingCleanSheets,
-  duringGameweek,
-  periodPairings,
-} from "@epl/core";
+import { POLL, duringGameweek, periodPairings } from "@epl/core";
 import AutoRefresh from "../../components/shell/AutoRefresh";
 import Nothing from "../../components/shell/Nothing";
+import PairingCard, { involves } from "./PairingCard";
 import LeagueShell from "../Shell";
 import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "../../scoreboard";
-import { yoursBorder, yoursFirst } from "../../mine";
+import { yoursFirst } from "../../mine";
 import { FANTRAX_SILENT } from "../../config";
 
 // Who each squad plays this period, and what they have scored.
@@ -27,55 +19,6 @@ import { FANTRAX_SILENT } from "../../config";
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
-
-/** Whether a manager has a stake in this pairing. Null team id — a reader who
- *  has not signed in — has a stake in none of them, which is the neutral list. */
-function involves(pairing: PeriodPairing, teamId: string | null): boolean {
-  return teamId !== null && (pairing.home.teamId === teamId || pairing.away.teamId === teamId);
-}
-
-function Side({
-  team,
-  score,
-  pending,
-  mine,
-}: {
-  team: LeagueTeam;
-  score: LiveTeamScore | undefined;
-  pending: PendingCleanSheets | undefined;
-  mine: boolean;
-}) {
-  return (
-    // Into the pairing's own board, opened on the side that was tapped — not
-    // into the squad. Both sides of a card lead to the same head-to-head and it
-    // arrives showing whichever name the thumb landed on, which is the whole of
-    // what "tap a team" means here. Each squad is one further tap, from there.
-    <Link
-      href={`/league/matchups/${team.teamId}`}
-      className="flex min-h-11 items-center gap-3 px-3 py-2 hover:bg-raised"
-    >
-      <span className={`min-w-0 flex-1 truncate ${mine ? "font-bold text-ink" : "font-semibold"}`}>
-        {team.name}
-      </span>
-      {/* Per side, not per league: once football is on, one manager has three
-          players left and the other has none, and that difference is most of
-          what a head-to-head screen is for. */}
-      {score?.toPlay ? (
-        <span className="shrink-0 text-2xs text-faint">{score.toPlay} to play</span>
-      ) : null}
-      {/* Kept beside the score rather than folded into it. Fantrax's number stays
-          Fantrax's; this is the bit they have not credited yet. */}
-      {pending && pending.points > 0 ? (
-        <span className="numeric shrink-0 text-sm font-semibold text-accent">
-          +{pending.points}
-        </span>
-      ) : null}
-      {/* A team we have no number for gets a dash, never a nought: those are
-          different claims and only one of them is a score. */}
-      <span className="numeric w-10 text-right text-lg font-bold">{score?.points ?? "—"}</span>
-    </Link>
-  );
-}
 
 export default async function MatchupPage() {
   const squads = await getLeagueSquads();
@@ -172,27 +115,7 @@ export default async function MatchupPage() {
       <ul className="flex flex-col gap-1.5">
         {ordered.map((pairing) => (
           <li key={`${pairing.home.teamId}-${pairing.away.teamId}`}>
-            <div
-              className={`elev flex flex-col rounded-xl border bg-surface py-1 ${yoursBorder(
-                involves(pairing, mine),
-              )}`}
-            >
-              <Side
-                team={pairing.home}
-                score={scores.get(pairing.home.teamId)}
-                pending={pending.get(pairing.home.teamId)}
-                mine={pairing.home.teamId === mine}
-              />
-              <span className="px-3 text-center text-2xs font-bold uppercase tracking-widest text-faint">
-                vs
-              </span>
-              <Side
-                team={pairing.away}
-                score={scores.get(pairing.away.teamId)}
-                pending={pending.get(pairing.away.teamId)}
-                mine={pairing.away.teamId === mine}
-              />
-            </div>
+            <PairingCard pairing={pairing} scores={scores} pending={pending} mine={mine} />
           </li>
         ))}
       </ul>
