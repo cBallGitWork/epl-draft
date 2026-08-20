@@ -16,7 +16,7 @@ import AutoRefresh from "../../components/shell/AutoRefresh";
 import LineupPlanner from "../../components/league/LineupPlanner";
 import PageHeader from "../../components/shell/PageHeader";
 import SquadBoard from "../../components/league/SquadBoard";
-import TeamSheet from "../../components/league/TeamSheet";
+import Sheet from "./Sheet";
 import { getLeagueSquads, teamDisplay } from "../../squads";
 import { squadPoints } from "../../teamStats";
 import { myTeamId } from "../../session";
@@ -145,12 +145,11 @@ export default async function TeamPage({ params }: { params: Promise<{ teamId: s
            public, and building it on the others would be work whose only product
            is a payload nobody may read. The spread is the arrangement itself —
            `rows` and `bench`, which is the whole of what the join returns. */
-        <TeamSheet
+        <Sheet
           {...lineupDetail(team, clubs, opposition, points)}
           lines={squadDetail(squadUnarranged(team), clubs, opposition, points)}
           breakdown={season?.breakdown ?? {}}
           projected={season?.projected ?? false}
-          mode="pitch"
         />
       )}
     </div>

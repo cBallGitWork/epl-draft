@@ -48,8 +48,10 @@ the sofa, so the score under fifteen faces sat still through a whole half.
 
 ## SquadBoard, in reading order
 
-1. **View toggle** — Pitch / List, plus a player count. `min-h-9`, the one
-   deliberate exception to the `min-h-11` touch target.
+1. **View toggle** — `ViewToggle`, Pitch / List, plus a player count. `min-h-9`,
+   the one deliberate exception to the `min-h-11` touch target. The same control
+   in the same place once the period opens, so it does not move down the screen
+   as the week turns.
 2. **An explanation, only when something is off.** Three of the four gate reasons
    are *our* side failing to read something and are stated. The fourth,
    `not-started`, is the ordinary state of every squad most of every week and is
@@ -185,6 +187,10 @@ unresolved when it is, and a way out to the full profile.
 
 ## Known gaps
 
+- **Your own squad has no list view, ever.** It renders `LineupPlanner` all week
+  — your lineup is yours all week — and the planner's subject is the
+  arrangement, which a list cannot express. Deliberate, but it does mean the one
+  squad you look at most is the one you cannot read as rows.
 - **Future gameweeks are not browsable.** The view takes fixtures for whatever
   round the snapshot holds; a `?gw=` selector needs a snapshot fetched for that
   round *and* `getTeamRosters` asked for the matching period.
