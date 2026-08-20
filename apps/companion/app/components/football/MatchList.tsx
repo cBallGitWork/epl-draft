@@ -10,9 +10,9 @@ import {
   contributions,
   crestUrl,
   fixturesInOrder,
-  NOTABLE_SAVES,
 } from "@epl/core";
 import { londonTime } from "../../londonTime";
+import { chipsFor } from "../league/Chips";
 import { yoursBorder } from "../../mine";
 import PlayerPortrait from "./PlayerPortrait";
 
@@ -218,26 +218,21 @@ function ScoreBlock({ fixture }: { fixture: Fixture }) {
   );
 }
 
-/** Compact event chips. Each carries a letter as well as a colour so the meaning
- *  survives without hue — required by our AA commitment. */
+/** What he did, in the app's one vocabulary for it.
+ *
+ *  Size and padding are this caller's; the ranking, the labels and the palette
+ *  are `chipsFor`'s, and were three renderings of the same six events until they
+ *  were not. Each chip still carries a letter as well as a colour, which is the
+ *  AA commitment and is `chipsFor`'s to keep now. */
 function Events({ c }: { c: import("@epl/core").MatchContribution }) {
-  const chips: { label: string; count: number; className: string }[] = [
-    { label: "G", count: c.goals, className: "bg-accent text-bg" },
-    { label: "A", count: c.assists, className: "bg-info text-bg" },
-    { label: "S", count: c.saves >= NOTABLE_SAVES ? c.saves : 0, className: "bg-raised text-muted" },
-    { label: "B", count: c.bonus, className: "bg-raised text-muted" },
-    { label: "YC", count: c.yellowCards, className: "bg-mid text-bg" },
-    { label: "RC", count: c.redCards, className: "bg-bad text-ink" },
-  ].filter((chip) => chip.count > 0);
-
   return (
     <span className="flex shrink-0 items-center gap-1">
-      {chips.map((chip) => (
+      {chipsFor(c).map((chip) => (
         <span
           key={chip.label}
           className={`numeric rounded px-1.5 py-0.5 text-2xs font-bold ${chip.className}`}
         >
-          {chip.count > 1 ? `${chip.count}${chip.label}` : chip.label}
+          {chip.label}
         </span>
       ))}
     </span>
