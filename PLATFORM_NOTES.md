@@ -2297,6 +2297,78 @@ exactly is in it" vanished exactly when managers start checking, and it was
 invisible because no period has ever opened. The faked-Saturday harness opened
 period 1 and it fell out immediately.
 
+## The `adminMode` probe, and why the rehearsal league cannot answer it (20 Aug 2026)
+
+ROADMAP §2 is the question the whole write surface rests on: does the
+commissioner's session let him write **another team's** lineup? The plan was to
+answer it against the rehearsal league, "its four auto-drafted teams belong to
+nobody". **They do not belong to nobody. They belong to the commissioner**, and
+that makes the probe as designed incapable of answering the question.
+
+### What the read-only probe established
+
+Probed 20 Aug with the commissioner cookie, nothing written:
+
+- **The cookie authenticates and carries commissioner rights.**
+  `getFantasyTeams` answers, and `getCommissionerHubInfo` returns
+  `commissioner: true` with a full item list.
+- **`adminMode` is accepted and echoed.** `getTeamRosterInfo` with
+  `adminMode: "true"` comes back with `displayedSelections.adminMode: true` for
+  any team asked about. Encouraging, and on its own it proves nothing — see
+  below.
+- **The commissioner hub is real and server-driven.** Its link keys include
+  **`COMMISH_TEAM_ADMIN`** and `COMMISH_TEAM_PERMISSIONS`, plus
+  `COMMISH_ILLEGAL_ROSTER_OVERRIDE`, `MIN_MAX_OVERRIDE`, `STAT_OVERRIDES`,
+  `STANDINGS_ADJUSTMENT`. Its `actionKey`s are `undoDraft`,
+  `resetLeagueAndRosters`, `executeAutoSubs`, `processWaivers`,
+  `waiveAllPlayers`, `recalculateFantasyPoints`, `deleteLeague`. There is also a
+  `replaceOwner.go` URL.
+
+  `COMMISH_TEAM_ADMIN` is the strongest evidence yet that Fantrax has a
+  first-class "commissioner acts on a team" surface — which is exactly the thing
+  option 1 needs. **A link key is not a probe**, though, and it is not recorded
+  here as an answer.
+
+  Worth noticing while reading that list: `deleteLeague` and
+  `resetLeagueAndRosters` are available to this cookie. Anything that ever sends
+  a commissioner action is one typo from a very bad afternoon.
+
+### The confound, which is the actual finding
+
+`getTeamRosterInfo` returns **`myTeamIds`**, and for this session it is all four:
+
+```
+myTeamIds: ["8enbgqo5msgb375j","sezrgvl2mshcpazf","pbxm9fgimshcpazf","j9zadacnmshcpazf"]
+```
+
+`getFantasyTeams` agrees — every one of the four reports `commissioner=true`.
+
+So a write to any rehearsal team would succeed **because the caller owns it**,
+and would tell us nothing whatsoever about writing a team he does not own. That
+is a false positive, and it is the most expensive kind available here: it would
+green-light the cookie flow, the member sign-in, and the whole write surface on
+a premise that had never been tested.
+
+The probe was therefore stopped before the mutating half. Not out of caution
+about the rehearsal league — its teams genuinely are disposable — but because
+the experiment as designed has no control.
+
+### What would answer it
+
+**A second Fantrax account holding one rehearsal team.** Then the commissioner
+probes `confirmOrExecuteTeamRosterChanges` with `adminMode` against a team that
+is provably not his, and the answer means something. The commissioner hub has
+the machinery: `replaceOwner.go` and `COMMISH_TEAM_PERMISSIONS`.
+
+That is a commissioner action and a second email address, so it is Craig's to
+do. Until then §2 is **blocked, not open** — and the distinction matters,
+because a blocked probe left looking open is how it gets "answered" in a hurry
+on 9 Oct.
+
+The real league cannot substitute: it has no teams until 10 Oct, and by the time
+it has fifteen belonging to real people, writing to one to see what happens is
+not a probe, it is an incident.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially

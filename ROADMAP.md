@@ -86,9 +86,20 @@ commissioner's session write **another team's** lineup. Answerable safely
 against the rehearsal league (`zbn1z3ukmsgb36sz`) — its four auto-drafted teams
 belong to nobody.
 
-- One probe script (scratch, not shipped): commissioner cookie from root
-  `.env.local`, confirm-then-execute a trivial legal swap on a team that isn't
-  the cookie-holder's, then read it back via `getTeamRosters`.
+- ~~One probe script (scratch, not shipped)~~ **Read-only half done 20 Aug;
+  the rest is BLOCKED and the plan above was wrong.** The rehearsal league's
+  four teams do *not* belong to nobody — `myTeamIds` says the commissioner owns
+  all four, so a successful write there proves only that a man can edit his own
+  team. That is a false positive that would green-light the entire write
+  surface. Full findings in PLATFORM_NOTES, 20 Aug.
+- **Unblocking step, and it is Craig's:** a second Fantrax account holding one
+  rehearsal team (`replaceOwner.go` / `COMMISH_TEAM_PERMISSIONS` are in the
+  commissioner hub). Then the probe has a control and its answer means
+  something.
+- Established meanwhile: the cookie authenticates, carries `commissioner: true`,
+  `adminMode` is accepted and echoed by `getTeamRosterInfo`, and the hub
+  publishes a **`COMMISH_TEAM_ADMIN`** link — strong evidence the capability
+  exists, but a link key is not a probe.
 - Record the answer in PLATFORM_NOTES either way.
 - **If yes:** design the cookie flow — one cookie, visible staleness state, a
   path back to "open Fantrax yourself" (one stale cookie downs writes for all
