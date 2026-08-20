@@ -25,17 +25,24 @@ export {
   adjacentGameweeks,
   clubById,
   contributions,
-  duringGameweek,
   fixturesInOrder,
-  gameweekStatus,
   hasGameweek,
   isDoubtful,
-  gameweekStarted,
-  isMatchdayLive,
   playerByCode,
+} from "./selectors";
+export type { MatchContribution } from "./selectors";
+
+// What a round is doing, as against what a snapshot contains — see `round.ts`
+// for why the two are separate questions and why asking one in place of the
+// other has bitten more than once.
+export {
+  duringGameweek,
+  gameweekStarted,
+  gameweekStatus,
+  isMatchdayLive,
   roundFinished,
   roundState,
-} from "./selectors";
-export type { FinishedState, MatchContribution, RoundState } from "./selectors";
+} from "./round";
+export type { FinishedState, RoundState } from "./round";
 export { oppositionByClub } from "./opposition";
 export type { Opposition } from "./opposition";
