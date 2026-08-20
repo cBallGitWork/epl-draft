@@ -1,8 +1,10 @@
 import { unstable_cache } from "next/cache";
 import {
   PAGE_REVALIDATE,
+  POLL,
   type Fixture,
   type FootballSnapshot,
+  duringGameweek,
   fetchFixtures,
   getFootballSnapshot,
   mapFixtures,
@@ -64,4 +66,21 @@ export async function seasonKickoffs() {
       ? []
       : [{ gameweek: fixture.gameweek, kickoff: fixture.kickoff }],
   );
+}
+
+/** How often a page showing this round should ask the server again.
+ *
+ *  `duringGameweek` and not `isMatchdayLive`: the window from the first kickoff
+ *  to the last whistle is the right question for a poll rate, because Saturday
+ *  tea-time between two kickoffs is when a score is most likely to have moved
+ *  since you looked. It is the wrong question for the LIVE dot, which is a
+ *  different call and stays one (`roundState`).
+ *
+ *  The clock is read here rather than passed in, and that is deliberate: four
+ *  pages were each spelling out `new Date().toISOString()` beside the same
+ *  ternary, which is four chances to compare a snapshot against a clock that
+ *  someone later decides to inject. This is the app edge; the edge is where a
+ *  clock belongs. */
+export function pollSeconds(snapshot: FootballSnapshot): number {
+  return duringGameweek(snapshot, new Date().toISOString()) ? POLL.live : POLL.idle;
 }

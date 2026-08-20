@@ -1,13 +1,11 @@
 import Link from "next/link";
 import {
-  POLL,
   type Club,
   type Fixture,
   type FootballPlayer,
   type LiveTeamScore,
   type PeriodPairing,
   clubById,
-  duringGameweek,
   fixtureInvolvement,
   fixturesInOrder,
   periodPairings,
@@ -15,7 +13,7 @@ import {
 } from "@epl/core";
 import AutoRefresh from "../../components/shell/AutoRefresh";
 import RoundWord from "../../components/league/RoundWord";
-import { footballNow } from "../../football";
+import { footballNow, pollSeconds } from "../../football";
 import { londonTime } from "../../londonTime";
 import { liveScores } from "../../scoreboard";
 import { getLeagueSquads } from "../../squads";
@@ -51,7 +49,6 @@ export default async function DeskPage() {
   const fixtures = fixturesInOrder(snapshot);
 
   const state = roundState(snapshot);
-  const matchday = duringGameweek(snapshot, new Date().toISOString());
 
   // A desk with no league behind it is still a desk: the football half needs no
   // Fantrax at all, so an undrafted or silent league costs the top section and
@@ -71,7 +68,7 @@ export default async function DeskPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <AutoRefresh seconds={matchday ? POLL.live : POLL.idle} />
+      <AutoRefresh seconds={pollSeconds(snapshot)} />
 
       <header className="flex items-baseline justify-between gap-3 pt-1">
         <h1 className="text-xl font-bold tracking-tight">The desk</h1>
