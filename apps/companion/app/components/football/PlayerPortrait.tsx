@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { type ClubColours, type FootballPlayer, initials, inkOn, portraitUrl } from "@epl/core";
+import { type ClubColours, initials, inkOn, portraitUrl } from "@epl/core";
 
 // A player's headshot on their club's colour.
 //
@@ -12,7 +12,16 @@ export default function PlayerPortrait({
   player,
   colours,
 }: {
-  player: Pick<FootballPlayer, "code" | "name">;
+  player: {
+    /** FPL's season-stable player code, or **null** for a man FPL has never
+     *  listed — 120 of the 688 in Fantrax's pool are academy names, and the
+     *  bridge records that as a settled outcome rather than a failure. Null
+     *  drops the photograph and keeps everything else: the same circle, in his
+     *  club's colour, with his initials on it. A rung of the fallback chain
+     *  reached before the network rather than after it. */
+    code: number | null;
+    name: string;
+  };
   /** The club's colours. The portrait sits on `primary`, so the crop reads as a
    *  kit rather than a floating cutout, and the fallback initials take whichever
    *  ink survives it — Fulham, Leeds and Spurs are near-white. */
@@ -33,14 +42,16 @@ export default function PlayerPortrait({
       >
         {initials(player.name)}
       </span>
-      <Image
-        src={portraitUrl(player)}
-        alt=""
-        width={32}
-        height={32}
-        sizes="32px"
-        className="relative h-full w-full object-cover object-top"
-      />
+      {player.code === null ? null : (
+        <Image
+          src={portraitUrl({ code: player.code })}
+          alt=""
+          width={32}
+          height={32}
+          sizes="32px"
+          className="relative h-full w-full object-cover object-top"
+        />
+      )}
     </span>
   );
 }

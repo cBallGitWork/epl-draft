@@ -13,11 +13,13 @@ import {
   mapPlayerPool,
   mapPoolStats,
   mapTeamRosters,
+  isUnmapped,
   positionDepth,
 } from "@epl/core";
 import type { PoolStatRow, PoolPlayer, StatSeason } from "@epl/core";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
+import { bridge } from "../squads";
 
 // Three reads meet on this page: Fantrax's global EPL pool, our league's opinion
 // of every player in it, and who currently holds them. The join is core's
@@ -31,6 +33,15 @@ export interface PoolRow {
   /** Null for a player Fantrax's stats read did not carry — an ordinary state
    *  for the academy names in the pool, and a dash on screen. */
   stats: PoolStatRow | null;
+  /** FPL's season-stable player code, for his photograph, or null when the
+   *  bridge has not settled him.
+   *
+   *  Read straight off the bridge rather than through a football snapshot: the
+   *  code is the only thing a portrait needs, and joining the whole football
+   *  layer in here would give a page that is entirely Fantrax's a second
+   *  provider it could fail on. Null is ordinary — 120 of the 688 are academy
+   *  names FPL has never listed — and it costs the photograph, nothing else. */
+  fplCode: number | null;
 }
 
 /** Everything the pool view needs, minus the one field a cache cannot hold.
@@ -110,10 +121,17 @@ async function readLeaguePool(): Promise<CachedPool> {
   const byId = new Map((scored?.rows ?? []).map((row) => [row.fantraxId, row]));
 
   return {
-    rows: leaguePool(mapPlayerPool(pool), league.players, held).map((entry) => ({
-      entry,
-      stats: byId.get(entry.player.fantraxId) ?? null,
-    })),
+    rows: leaguePool(mapPlayerPool(pool), league.players, held).map((entry) => {
+      const mapped = bridge[entry.player.fantraxId];
+      return {
+        entry,
+        stats: byId.get(entry.player.fantraxId) ?? null,
+        // Asked through the bridge's own guard rather than by sniffing for the
+        // field: an unmapped row records that FPL has no such player, which is a
+        // settled answer and not a gap, and the check belongs with the type.
+        fplCode: mapped && !isUnmapped(mapped) ? mapped.fplCode : null,
+      };
+    }),
     positions: Object.keys(league.roster.maxActiveByPosition).sort(
       (a, b) => positionDepth(a) - positionDepth(b),
     ),

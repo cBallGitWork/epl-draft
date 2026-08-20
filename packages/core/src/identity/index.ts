@@ -13,6 +13,12 @@ export { isUnmapped, mergeBridge } from "./bridge";
 // able to ask whether it settled on anybody, and writing that check a second
 // time at the app edge would be the same test in two places disagreeing later.
 export type { Bridge, BridgeEntry, MappedEntry } from "./bridge";
+// The one piece of the matcher's world that a rendering caller legitimately
+// needs: Fantrax and FPL disagree on two club codes out of twenty, so anything
+// keying a club asset or a palette off a Fantrax code has to translate first or
+// silently mis-colour every Brentford and Forest player. A lookup of two, not a
+// name-matcher — the boundary this barrel guards stays where it was.
+export { toFplClubCode } from "./clubCodes";
 export { matchPlayers } from "./match";
 export type { FplCandidate } from "./match";
 // The residue split travels with the matcher: a caller that runs `matchPlayers`

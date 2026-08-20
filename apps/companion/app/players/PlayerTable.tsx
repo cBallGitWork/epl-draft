@@ -1,10 +1,18 @@
 import Link from "next/link";
+import { clubColours, toFplClubCode } from "@epl/core";
+import PlayerPortrait from "../components/football/PlayerPortrait";
 import type { PoolRow } from "./pool";
 import { COLUMNS, activeSort, sortHref } from "./query";
 import type { PlayersQuery } from "./query";
 
 // The pool as a table. Sorting is a link, not a click handler: the server does
 // the ordering, the phone gets HTML, and the sort survives being shared.
+//
+// Every row leads with a face on his club's colour, which is the whole of what
+// turned this from a spreadsheet into a page about footballers. Same 32px mark
+// the fixture list uses, and it carries two things at once: the photograph where
+// there is one, and the club always — the circle behind it is the kit, so a man
+// with no headshot is still placed by his colours and his initials.
 
 /** Fantrax's status codes in the manager's words. Theirs is the vocabulary, so
  *  anything we have not seen shows as the raw code rather than as a guess — an
@@ -67,7 +75,7 @@ export default function PlayerTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map(({ entry, stats }) => {
+          {rows.map(({ entry, stats, fplCode }) => {
             const owner = entry.ownerTeamId
               ? (teamNames.get(entry.ownerTeamId) ?? entry.ownerTeamId)
               : null;
@@ -79,23 +87,36 @@ export default function PlayerTable({
                 <td className="py-1">
                   <Link
                     href={`/players/${entry.player.fantraxId}`}
-                    className="flex min-h-11 flex-col justify-center px-1"
+                    className="flex min-h-11 items-center gap-2.5 px-1"
                   >
-                    <span className="truncate font-medium">{entry.player.displayName}</span>
-                    <span className="flex items-center gap-1.5 text-2xs text-faint">
-                      {/* The league's eligibility, not the pool's single
-                          position: "F/M" is what the commissioner set and what
-                          the planner obeys, and the global pool's letter is a
-                          different league's answer. */}
-                      <span className="numeric tracking-widest">
-                        {entry.eligiblePositions.join("/") || "—"}
+                    {/* Fantrax's club code translated to FPL's spelling before it
+                        reaches the palette. The two agree on eighteen of twenty,
+                        and the other two would take the fallback grey on every
+                        row they appeared in — which is a wrong answer that looks
+                        exactly like a club we have no colours for. */}
+                    <PlayerPortrait
+                      player={{ code: fplCode, name: entry.player.displayName }}
+                      colours={clubColours(toFplClubCode(entry.player.clubCode ?? ""))}
+                    />
+                    <span className="flex min-w-0 flex-1 flex-col">
+                      <span className="truncate font-medium">{entry.player.displayName}</span>
+                      <span className="flex items-center gap-1.5 text-2xs text-faint">
+                        {/* The league's eligibility, not the pool's single
+                            position: "F/M" is what the commissioner set and what
+                            the planner obeys, and the global pool's letter is a
+                            different league's answer. */}
+                        <span className="numeric tracking-widest">
+                          {entry.eligiblePositions.join("/") || "—"}
+                        </span>
+                        <span className="numeric tracking-widest">
+                          {entry.player.clubCode ?? "—"}
+                        </span>
+                        {owner ? (
+                          <span className="truncate font-bold text-mid">{owner}</span>
+                        ) : (
+                          <span>{STATUS[entry.status] ?? entry.status}</span>
+                        )}
                       </span>
-                      <span className="numeric tracking-widest">{entry.player.clubCode ?? "—"}</span>
-                      {owner ? (
-                        <span className="truncate font-bold text-mid">{owner}</span>
-                      ) : (
-                        <span>{STATUS[entry.status] ?? entry.status}</span>
-                      )}
                     </span>
                   </Link>
                 </td>
