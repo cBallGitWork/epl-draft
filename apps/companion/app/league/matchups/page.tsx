@@ -1,14 +1,8 @@
-import {
-  POLL,
-  type FinishedState,
-  duringGameweek,
-  isMatchdayLive,
-  periodPairings,
-  roundFinished,
-} from "@epl/core";
+import { POLL, duringGameweek, isMatchdayLive, periodPairings, roundFinished } from "@epl/core";
 import AutoRefresh from "../../components/shell/AutoRefresh";
 import Nothing from "../../components/shell/Nothing";
 import PairingCard, { involves } from "./PairingCard";
+import RoundWord from "../../components/league/RoundWord";
 import LeagueShell from "../Shell";
 import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
@@ -75,9 +69,8 @@ export default async function MatchupPage() {
     );
   }
 
-  // The same pair of questions the head-to-head board asks, spelled the same
-  // way. Second occurrence, so it is copied rather than extracted (rule of 2/3);
-  // a third caller is what earns a shared `RoundWord`.
+  // The same pair of questions the head-to-head board asks, spelled the same way
+  // and rendered by the same component.
   const inPlay = isMatchdayLive(squads.snapshot);
   const state = inPlay ? "live" : roundFinished(squads.snapshot);
 
@@ -145,19 +138,4 @@ export default async function MatchupPage() {
       </ul>
     </LeagueShell>
   );
-}
-
-/** Where the round stands, in the page's own sub-heading. `null` never reaches
- *  here — the caller drops the separator with it, rather than this rendering an
- *  empty span after a middot. */
-function RoundWord({ state }: { state: "live" | FinishedState }) {
-  if (state === "live") {
-    return (
-      <span className="inline-flex items-center gap-1 text-live">
-        <span className="live-dot" />
-        Live
-      </span>
-    );
-  }
-  return <span>{state === "final" ? "Final" : "Full time"}</span>;
 }
