@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { type LeagueTeam, type LiveTeamScore, type PendingCleanSheets, headToHead } from "@epl/core";
+import {
+  type LeagueTeam,
+  type LiveTeamScore,
+  type PendingCleanSheets,
+  headToHead,
+  isMatchdayLive,
+  roundFinished,
+} from "@epl/core";
+import RoundWord from "../components/league/RoundWord";
 import { liveScores, pendingByTeam } from "../scoreboard";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
@@ -11,6 +19,14 @@ import { yoursBorder } from "../mine";
 // League" — that is below — but "am I winning". It renders nothing at all when
 // there is nothing to say, so a reader who has not signed in, or whose league
 // has not drafted, gets the football and no empty furniture.
+//
+// One scoreline row, the same grammar as the head-to-head board and the
+// matchups list. It was two stacked halves, which is a different design for the
+// same fact one tap away from the board that already reads it correctly — and a
+// scoreline exists so two numbers can be compared without moving your eyes
+// across the screen. The board stays one tap behind: this answers "am I
+// winning", and the board answers "with whom", which is the question the number
+// provokes rather than the question itself.
 
 export default async function YourMatchup() {
   const squads = await getLeagueSquads();
@@ -30,6 +46,10 @@ export default async function YourMatchup() {
     pendingByTeam(squads.period.teams, squads.info.scoring, squads.snapshot, squads.display),
   ];
 
+  const yours = scores.get(pairing.team.teamId);
+  const theirs = scores.get(pairing.opponent.teamId);
+  const state = isMatchdayLive(squads.snapshot) ? "live" : roundFinished(squads.snapshot);
+
   return (
     <section className={`elev flex flex-col gap-2 rounded-xl border bg-surface p-3 ${yoursBorder(true)}`}>
       <div className="flex items-center justify-between gap-3">
@@ -44,56 +64,98 @@ export default async function YourMatchup() {
         </Link>
       </div>
 
-      <div className="flex items-stretch gap-2">
-        <Half
-          team={pairing.team}
-          score={scores.get(pairing.team.teamId)}
-          pending={pending.get(pairing.team.teamId)}
-          mine
-        />
-        <span className="self-center text-2xs font-bold uppercase tracking-widest text-faint">v</span>
-        <Half
-          team={pairing.opponent}
-          score={scores.get(pairing.opponent.teamId)}
-          pending={pending.get(pairing.opponent.teamId)}
-        />
+      <div className="flex items-stretch">
+        <Half team={pairing.team} score={yours} against={theirs} mine />
+        <span className="self-center px-1 text-2xs font-bold uppercase tracking-widest text-faint">
+          v
+        </span>
+        <Half team={pairing.opponent} score={theirs} against={yours} mirrored />
+      </div>
+
+      {/* Everything a scoreline may not carry, wearing its label. The state word
+          sits between the two sides because it belongs to neither. */}
+      <div className="flex items-baseline justify-between gap-2 text-2xs">
+        <Extras score={yours} pending={pending.get(pairing.team.teamId)} />
+        <span className="shrink-0 font-bold uppercase tracking-widest text-faint">
+          <RoundWord state={state} />
+        </span>
+        <Extras score={theirs} pending={pending.get(pairing.opponent.teamId)} align="end" />
       </div>
     </section>
+  );
+}
+
+/** The labelled line under one side of the scoreline. */
+function Extras({
+  score,
+  pending,
+  align = "start",
+}: {
+  score: LiveTeamScore | undefined;
+  pending: PendingCleanSheets | undefined;
+  align?: "start" | "end";
+}) {
+  return (
+    <span
+      className={`flex min-w-0 items-baseline gap-2 ${align === "end" ? "flex-row-reverse" : ""}`}
+    >
+      {score?.toPlay ? (
+        <span className="truncate text-faint">{score.toPlay} to play</span>
+      ) : null}
+      {/* Kept beside the score rather than folded into it. Fantrax's number stays
+          Fantrax's; this is the bit they have not credited yet. */}
+      {pending && pending.points > 0 ? (
+        <span className="numeric shrink-0 font-semibold text-accent">+{pending.points}</span>
+      ) : null}
+    </span>
   );
 }
 
 function Half({
   team,
   score,
-  pending,
+  against,
   mine = false,
+  mirrored = false,
 }: {
   team: LeagueTeam;
   score: LiveTeamScore | undefined;
-  pending: PendingCleanSheets | undefined;
+  against: LiveTeamScore | undefined;
   mine?: boolean;
+  mirrored?: boolean;
 }) {
+  const points = score?.points ?? null;
+  const other = against?.points ?? null;
+  // Nobody is behind while a total is missing: a dash is not a low score.
+  const behind = points !== null && other !== null && points < other;
+
   return (
     // Into the head-to-head board, opened on the side that was tapped. The
     // summary answers "am I winning"; the board is where the players behind the
     // number are, which is the question the number provokes.
     <Link
       href={`/league/matchups/${team.teamId}`}
-      className="flex min-w-0 flex-1 flex-col gap-0.5 rounded-lg px-2 py-1.5 hover:bg-raised"
+      className={`flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-raised ${
+        mirrored ? "flex-row-reverse" : ""
+      }`}
     >
-      <span className={`truncate text-sm ${mine ? "font-bold text-ink" : "font-semibold text-muted"}`}>
+      <span
+        className={`min-w-0 flex-1 truncate text-sm font-semibold ${
+          mirrored ? "text-right" : "text-left"
+        } ${mine ? "text-accent" : "text-ink"}`}
+      >
         {team.name}
       </span>
-      <span className="flex items-baseline gap-1.5">
-        {/* The live number is the interface: biggest thing on the card. */}
-        <span className="numeric text-3xl font-bold leading-none">{score?.points ?? "—"}</span>
-        {pending && pending.points > 0 ? (
-          <span className="numeric text-sm font-semibold text-accent">+{pending.points}</span>
-        ) : null}
+      {/* The live number is the interface: biggest thing on the page. Only the
+          number dims for trailing — a name that dimmed for losing would give
+          accent a second meaning. */}
+      <span
+        className={`numeric shrink-0 text-3xl font-bold leading-none ${
+          behind ? "text-muted" : "text-ink"
+        }`}
+      >
+        {points ?? "—"}
       </span>
-      {score?.toPlay ? (
-        <span className="text-2xs text-faint">{score.toPlay} to play</span>
-      ) : null}
     </Link>
   );
 }

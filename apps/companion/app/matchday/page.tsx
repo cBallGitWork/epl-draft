@@ -1,8 +1,17 @@
 import ButtonLink from "../components/shell/ButtonLink";
-import { type FootballSnapshot, duringGameweek } from "@epl/core";
+import {
+  type Fixture,
+  type FootballSnapshot,
+  duringGameweek,
+  fixtureInvolvement,
+  owners,
+} from "@epl/core";
 import { footballNow } from "../football";
 import GameweekView from "../components/football/GameweekView";
+import Afternoon from "./Afternoon";
 import YourMatchup from "./YourMatchup";
+import { getLeagueSquads } from "../squads";
+import { myTeamId } from "../session";
 import PageHeader from "../components/shell/PageHeader";
 import { londonDayAndTime } from "../londonTime";
 
@@ -28,6 +37,7 @@ async function matchday(): Promise<{ snapshot: FootballSnapshot; during: boolean
 
 export default async function MatchdayPage() {
   const { snapshot, during } = await matchday();
+  const league = await marks(snapshot.fixtures);
 
   // The tab is hidden between gameweeks, but the route still has to answer:
   // someone lands here from a bookmark, or is reading it when the last match
@@ -40,9 +50,49 @@ export default async function MatchdayPage() {
   return (
     <div className="flex flex-col gap-4">
       <YourMatchup />
-      {during ? <GameweekView snapshot={snapshot} /> : <BetweenGameweeks snapshot={snapshot} />}
+      {/* Under the scoreline, because it is the same question asked forwards:
+          the card says where you are, this says what is left to change it. */}
+      <Afternoon snapshot={snapshot} players={league.afternoon} />
+      {during ? (
+        <GameweekView snapshot={snapshot} mine={league.mine} owners={league.owners} />
+      ) : (
+        <BetweenGameweeks snapshot={snapshot} />
+      )}
     </div>
   );
+}
+
+/** What our league has to say about this round: which fixtures the reader has
+ *  somebody in, who holds each footballer, and — separately — the reader's
+ *  ACTIVE men, which is the afternoon still ahead of him.
+ *
+ *  Two different squads on purpose. The fixture markers key off **membership**,
+ *  which is public all week and is the right answer to "is this match mine".
+ *  The afternoon strip keys off his **lineup**, because a reserve does not
+ *  score — and his own lineup is never withheld from him, so nothing here is
+ *  readable about anybody else.
+ *
+ *  All three absent when there is no answer to give: signed out, undrafted, or
+ *  Fantrax silent. The page then renders exactly as it did before, which is what
+ *  keeps "this half works with no Fantrax at all" true. */
+async function marks(fixtures: readonly Fixture[]) {
+  const squads = await getLeagueSquads();
+  if ("undrafted" in squads || "unavailable" in squads) return {};
+
+  const teamId = await myTeamId(squads.period.teams);
+  const team = squads.period.teams.find((t) => t.teamId === teamId);
+
+  return {
+    mine: team === undefined ? undefined : fixtureInvolvement(team, fixtures),
+    owners: owners(squads.period.teams),
+    afternoon:
+      team === undefined
+        ? undefined
+        : fixtureInvolvement(
+            { ...team, players: team.players.filter((p) => p.slot.status === "ACTIVE") },
+            fixtures,
+          ),
+  };
 }
 
 function BetweenGameweeks({ snapshot }: { snapshot: FootballSnapshot }) {
