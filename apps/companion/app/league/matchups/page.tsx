@@ -1,7 +1,7 @@
-import { isMatchdayLive, periodPairings, roundState } from "@epl/core";
+import { isMatchdayLive, pairingInvolves, periodPairings, roundState } from "@epl/core";
 import AutoRefresh from "../../components/shell/AutoRefresh";
 import Nothing from "../../components/shell/Nothing";
-import PairingCard, { involves } from "./PairingCard";
+import PairingCard from "./PairingCard";
 import RoundWord from "../../components/league/RoundWord";
 import LeagueShell from "../Shell";
 import { pollSeconds } from "../../football";
@@ -85,7 +85,7 @@ export default async function MatchupPage() {
 
   // Yours first. Sixteen pairings is a scroll, and the one a manager came for is
   // his own — a neutral list is for broadcasters.
-  const ordered = yoursFirst(pairings, (pairing) => involves(pairing, mine));
+  const ordered = yoursFirst(pairings, (pairing) => pairingInvolves(pairing, mine));
 
   return (
     <LeagueShell

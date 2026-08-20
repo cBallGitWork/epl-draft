@@ -34,6 +34,18 @@ export interface PoolPlayer {
   ownerTeamId: string | null;
 }
 
+/** Whether a manager has a stake in this pairing.
+ *
+ *  A null team id — a reader who has not signed in — has a stake in none of
+ *  them, which is the neutral list rather than a special case to branch on.
+ *
+ *  Here rather than in a component because two screens both order by it and
+ *  mark by it, and two spellings of "is this one mine" is how a list comes to
+ *  put a card first and then not mark it. */
+export function pairingInvolves(pairing: PeriodPairing, teamId: string | null): boolean {
+  return teamId !== null && (pairing.home.teamId === teamId || pairing.away.teamId === teamId);
+}
+
 /** One pairing in one period, both ids resolved to the teams that hold them. */
 export interface PeriodPairing {
   home: LeagueTeam;

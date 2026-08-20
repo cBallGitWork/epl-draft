@@ -38,7 +38,7 @@ export type { Violation } from "./violations";
 
 export { isActive } from "./rosterStatus";
 
-export { headToHead, leaguePool, periodPairings } from "./selectors";
+export { headToHead, leaguePool, pairingInvolves, periodPairings } from "./selectors";
 export type { HeadToHead, PeriodPairing, PoolPlayer } from "./selectors";
 
 export {

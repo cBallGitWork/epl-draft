@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { headToHead, leaguePool, periodPairings } from "./selectors";
+import { headToHead, leaguePool, pairingInvolves, periodPairings } from "./selectors";
 import type {
   LeagueMatchup,
   LeaguePlayer,
@@ -149,5 +149,24 @@ describe("headToHead", () => {
     // and this inherits that rather than rendering a side against nobody.
     const stranger: LeagueMatchup[] = [{ period: 1, homeTeamId: "t1", awayTeamId: "t9" }];
     expect(headToHead(stranger, leagueTeams, 1, "t1")).toBeUndefined();
+  });
+});
+
+describe("pairingInvolves", () => {
+  const pairing = { home: leagueTeams[0], away: leagueTeams[1] };
+
+  it("finds a manager at either end of his own pairing", () => {
+    expect(pairingInvolves(pairing, "t1")).toBe(true);
+    expect(pairingInvolves(pairing, "t2")).toBe(true);
+  });
+
+  it("leaves a manager out of somebody else's", () => {
+    expect(pairingInvolves(pairing, "t3")).toBe(false);
+  });
+
+  it("gives a reader who has not signed in the neutral list", () => {
+    // Null is not a team that happens to match nothing — it is nobody, and the
+    // list it produces is the broadcaster's rather than a manager's.
+    expect(pairingInvolves(pairing, null)).toBe(false);
   });
 });

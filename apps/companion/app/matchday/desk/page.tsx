@@ -6,8 +6,8 @@ import {
   type LiveTeamScore,
   type PeriodPairing,
   clubById,
-  fixtureInvolvement,
   fixturesInOrder,
+  pairingInvolves,
   periodPairings,
   roundState,
 } from "@epl/core";
@@ -17,6 +17,7 @@ import { footballNow, pollSeconds } from "../../football";
 import { londonTime } from "../../londonTime";
 import { liveScores } from "../../scoreboard";
 import { getLeagueSquads } from "../../squads";
+import { marksFor } from "../../involvement";
 import { myTeamId } from "../../session";
 import { yoursFirst } from "../../mine";
 
@@ -63,8 +64,7 @@ export default async function DeskPage() {
   const mine = league === null ? null : await myTeamId(league.period.teams);
   const { scores } = period === null ? { scores: new Map<string, LiveTeamScore>() } : await liveScores(period);
 
-  const team = league?.period.teams.find((t) => t.teamId === mine);
-  const involved = team === undefined ? undefined : fixtureInvolvement(team, fixtures);
+  const involved = league === null ? undefined : (await marksFor(league, fixtures)).mine;
 
   return (
     <div className="flex flex-col gap-4">
@@ -81,7 +81,7 @@ export default async function DeskPage() {
         {pairings.length === 0 ? (
           <Quiet>Fantrax has no pairings for this period, so there is nothing to post.</Quiet>
         ) : (
-          yoursFirst(pairings, (p) => isYours(p, mine)).map((pairing) => (
+          yoursFirst(pairings, (p) => pairingInvolves(p, mine)).map((pairing) => (
             <Pairing
               key={`${pairing.home.teamId}-${pairing.away.teamId}`}
               pairing={pairing}
@@ -116,10 +116,6 @@ export default async function DeskPage() {
       </p>
     </div>
   );
-}
-
-function isYours(pairing: PeriodPairing, teamId: string | null): boolean {
-  return teamId !== null && (pairing.home.teamId === teamId || pairing.away.teamId === teamId);
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {

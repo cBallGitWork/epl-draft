@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
-import { type Fixture, fixtureInvolvement, hasGameweek, owners } from "@epl/core";
+import { hasGameweek } from "@epl/core";
 import GameweekView from "../../components/football/GameweekView";
 import { gameweekSnapshot } from "../../football";
-import { getLeagueSquads } from "../../squads";
-import { myTeamId } from "../../session";
+import { marks } from "../../involvement";
 
 // Any round of the season, addressable. Last week's results on Monday morning is
 // the second thing anyone wants after this week's score.
@@ -32,34 +31,11 @@ export default async function GameweekPage({
   const snapshot = await gameweekSnapshot(requested);
   if (!hasGameweek(snapshot, requested)) notFound();
 
+  // Marked from TODAY's squad, including on a round played in October. That is
+  // deliberate and it is the actual Monday question — "which of these results
+  // matter to me" is asked by the man who owns those players now. A squad as it
+  // stood in week six would need `getTeamRosters?period=`, which has never been
+  // proven to serve history (PLATFORM_NOTES, still open).
   const league = await marks(snapshot.fixtures);
   return <GameweekView snapshot={snapshot} mine={league.mine} owners={league.owners} />;
-}
-
-/** What our league has to say about this round of football: which fixtures the
- *  reader has somebody in, and who holds each footballer who does something.
- *
- *  Both undefined when there is no answer to give — no league, undrafted, or
- *  Fantrax silent — and `mine` alone undefined for a reader who is signed out,
- *  who still gets the tags. Every one of those is ordinary, and each returns the
- *  same nothing rather than a panel.
- *
- *  Marked from **today's** squad, including on a round played in October. That
- *  is deliberate and it is the actual Monday question — "which of these results
- *  matter to me" is asked by the man who owns those players now. A squad as it
- *  stood in week six would need `getTeamRosters?period=`, which has never been
- *  proven to serve history (PLATFORM_NOTES, still open).
- *
- *  Squad membership only. Who a manager holds is public all week; how he has
- *  arranged them is not, and nothing here reads a lineup. */
-async function marks(fixtures: readonly Fixture[]) {
-  const squads = await getLeagueSquads();
-  if ("undrafted" in squads || "unavailable" in squads) return {};
-
-  const teamId = await myTeamId(squads.period.teams);
-  const team = squads.period.teams.find((t) => t.teamId === teamId);
-  return {
-    mine: team === undefined ? undefined : fixtureInvolvement(team, fixtures),
-    owners: owners(squads.period.teams),
-  };
 }

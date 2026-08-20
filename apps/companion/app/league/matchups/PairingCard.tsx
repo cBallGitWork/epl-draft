@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { LeagueTeam, LiveTeamScore, PeriodPairing, PendingCleanSheets } from "@epl/core";
+import { pairingInvolves } from "@epl/core";
 import { yoursBorder } from "../../mine";
 
 // One head-to-head on the list of eight.
@@ -15,16 +16,6 @@ import { yoursBorder } from "../../mine";
 // side has still to play, and the clean sheets Fantrax has not credited yet. A
 // scoreline is one row and takes one number per side (Craig, 19 Aug); anything
 // else has to be beneath it, wearing its label.
-
-/** Whether a manager has a stake in this pairing. Null team id — a reader who
- *  has not signed in — has a stake in none of them, which is the neutral list.
- *
- *  Exported because the page orders by the same question it marks by, and two
- *  spellings of "is this one mine" is how a list comes to put a card first and
- *  then not mark it. */
-export function involves(pairing: PeriodPairing, teamId: string | null): boolean {
-  return teamId !== null && (pairing.home.teamId === teamId || pairing.away.teamId === teamId);
-}
 
 export default function PairingCard({
   pairing,
@@ -49,7 +40,7 @@ export default function PairingCard({
   return (
     <div
       className={`elev flex flex-col rounded-xl border bg-surface ${yoursBorder(
-        involves(pairing, mine),
+        pairingInvolves(pairing, mine),
       )}`}
     >
       <div className="flex items-stretch">
