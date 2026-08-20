@@ -1,8 +1,6 @@
-import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
-  PAGE_REVALIDATE,
   type AvailabilityNote,
   type Deadline,
   type Deal,
@@ -21,6 +19,7 @@ import {
   nextDeadline,
   teamOfTheWeek,
 } from "@epl/core";
+import { leagueCache } from "./leagueCache";
 import { seasonKickoffs } from "./football";
 import { yoursFirst } from "./mine";
 import { orRefusal } from "./refusals";
@@ -84,7 +83,7 @@ const DEAL_VIEWS: readonly TransactionView[] = ["CLAIM_DROP", "TRADE"];
  *  It is its own cache entry rather than part of the squads read because it
  *  changes on a completely different rhythm — a few times a week, against every
  *  thirty seconds on a Saturday. */
-const readDeals = unstable_cache(
+const readDeals = leagueCache("gazette-deals",
   async () => {
     const feeds = await Promise.all(
       DEAL_VIEWS.map(async (view) => {
@@ -99,8 +98,6 @@ const readDeals = unstable_cache(
       at: feeds.map((feed) => feed.at).find((label) => label !== null) ?? null,
     };
   },
-  ["gazette-deals", FANTRAX_LEAGUE_ID],
-  { revalidate: PAGE_REVALIDATE },
 );
 
 export async function edition(mine: string | null): Promise<Edition> {

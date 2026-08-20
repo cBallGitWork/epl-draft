@@ -1,8 +1,6 @@
-import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
-  PAGE_REVALIDATE,
   type FixtureStatus,
   type LeagueInfo,
   type StandingsRow,
@@ -22,6 +20,7 @@ import {
   mapTeamBadges,
   periodGameweeks,
 } from "@epl/core";
+import { leagueCache } from "../../leagueCache";
 import { seasonFixtures } from "../../football";
 import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
@@ -85,7 +84,7 @@ export interface Schedule {
  *  costs the placeholder brackets their seeding and they print places instead; a
  *  badge we cannot read costs a picture. Neither is worth losing the fixtures
  *  over, and neither states anything false in its absence. */
-const readSeason = unstable_cache(
+const readSeason = leagueCache("schedule-season",
   async (): Promise<Schedule | Unavailable> => {
     const [raw, season, standings, badges] = await Promise.all([
       orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID)),
@@ -144,8 +143,6 @@ const readSeason = unstable_cache(
       badges: badges instanceof FantraxError ? [] : mapTeamBadges(badges),
     };
   },
-  ["schedule-season", FANTRAX_LEAGUE_ID],
-  { revalidate: PAGE_REVALIDATE },
 );
 
 export function getSchedule(): Promise<Schedule | Unavailable> {
@@ -163,12 +160,10 @@ export function getSchedule(): Promise<Schedule | Unavailable> {
  *
  *  Failure is empty rather than fatal: a season with no results is every row on
  *  a dash, and the fixtures are still right. */
-export const getSeasonResults = unstable_cache(
+export const getSeasonResults = leagueCache("schedule-results",
   async (): Promise<PeriodResult[]> => {
     const raw = await orRefusal(fetchSeasonResults(FANTRAX_LEAGUE_ID));
     return raw instanceof FantraxError ? [] : mapSeasonResults(raw);
   },
-  ["schedule-results", FANTRAX_LEAGUE_ID],
-  { revalidate: PAGE_REVALIDATE },
 );
 

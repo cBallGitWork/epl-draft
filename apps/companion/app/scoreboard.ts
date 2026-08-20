@@ -1,7 +1,5 @@
-import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
-  PAGE_REVALIDATE,
   FantraxError,
   type FootballSnapshot,
   type LiveTeamScore,
@@ -13,6 +11,7 @@ import {
   mapLiveScores,
   pendingCleanSheets,
 } from "@epl/core";
+import { leagueCache } from "./leagueCache";
 import { orRefusal, tell } from "./refusals";
 
 // What the head-to-head board is made of, kept out of the page for the same
@@ -31,14 +30,12 @@ import { orRefusal, tell } from "./refusals";
  *  alone cannot say "the scoreboard is down", and a page claiming to show
  *  Fantrax's points while showing none of them is the confident wrong answer
  *  principle 4 forbids. */
-const readScores = unstable_cache(
+const readScores = leagueCache("live-scores",
   async (period: number): Promise<{ scores: [string, LiveTeamScore][]; refused: string | null }> => {
     const raw = await orRefusal(fetchLiveScoring(FANTRAX_LEAGUE_ID, period));
     if (raw instanceof FantraxError) return { scores: [], refused: tell(raw) };
     return { scores: mapLiveScores(raw).map((score) => [score.teamId, score]), refused: null };
   },
-  ["live-scores", FANTRAX_LEAGUE_ID],
-  { revalidate: PAGE_REVALIDATE },
 );
 
 export async function liveScores(

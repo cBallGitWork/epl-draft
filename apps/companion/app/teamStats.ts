@@ -1,8 +1,6 @@
-import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
-  PAGE_REVALIDATE,
   SEASON_CODE_LIFE,
   fetchPoolStats,
   fetchTeamStats,
@@ -11,6 +9,7 @@ import {
   pointsBreakdown,
 } from "@epl/core";
 import type { BreakdownLine, TeamStats } from "@epl/core";
+import { leagueCache } from "./leagueCache";
 import { orRefusal } from "./refusals";
 
 // One team's season table, read once and shared.
@@ -26,7 +25,8 @@ import { orRefusal } from "./refusals";
  *  Fantrax defaults every stat read to a projection, so the code has to be sent,
  *  and it is published by exactly one endpoint. Asked for a single row — the
  *  list comes with any page size — and cached hard: it changes once a year. */
-export const yearToDate = unstable_cache(
+export const yearToDate = leagueCache(
+  "fantrax-season-code",
   async (): Promise<string | undefined> => {
     const raw = await orRefusal(fetchPoolStats(FANTRAX_LEAGUE_ID, 1));
     // A code we could not look up is not a reason to compose one. Sending
@@ -37,8 +37,7 @@ export const yearToDate = unstable_cache(
     if (raw instanceof FantraxError) return undefined;
     return mapPoolStats(raw).yearToDate ?? undefined;
   },
-  ["fantrax-season-code", FANTRAX_LEAGUE_ID],
-  { revalidate: SEASON_CODE_LIFE },
+  SEASON_CODE_LIFE,
 );
 
 /** One team's table, or nothing.
@@ -50,7 +49,7 @@ export const yearToDate = unstable_cache(
  *  Nothing here needs to tell one refusal from another — an undrafted league
  *  answering `WARNING` and Fantrax being down both mean there are no numbers to
  *  show, and both say so by not appearing. */
-export const readTeamStats = unstable_cache(
+export const readTeamStats = leagueCache("fantrax-team-stats",
   async (
     teamId: string,
     season: string | undefined,
@@ -63,8 +62,6 @@ export const readTeamStats = unstable_cache(
       throw error;
     }
   },
-  ["fantrax-team-stats", FANTRAX_LEAGUE_ID],
-  { revalidate: PAGE_REVALIDATE },
 );
 
 /** Fantasy points per player for one squad, with the season they belong to.

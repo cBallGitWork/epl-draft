@@ -1,8 +1,6 @@
-import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
-  PAGE_REVALIDATE,
   POOL_PAGE_SIZE,
   fetchLeagueInfo,
   fetchPlayerPool,
@@ -17,6 +15,7 @@ import {
   positionDepth,
 } from "@epl/core";
 import type { PoolStatRow, PoolPlayer, StatSeason } from "@epl/core";
+import { leagueCache } from "../leagueCache";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
 import { bridge } from "../squads";
@@ -76,9 +75,7 @@ export type LeaguePool = (Pool & { teamNames: Map<string, string> }) | Unavailab
  *  silently reads "unowned". Entries go in, the Map is built on the way out. */
 type CachedPool = (Pool & { teamNames: [string, string][] }) | Unavailable;
 
-const readPool = unstable_cache(readLeaguePool, ["league-pool", FANTRAX_LEAGUE_ID], {
-  revalidate: PAGE_REVALIDATE,
-});
+const readPool = leagueCache("league-pool", readLeaguePool);
 
 /** Cached, and that is not an optimisation.
  *

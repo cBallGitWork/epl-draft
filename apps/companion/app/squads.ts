@@ -1,7 +1,5 @@
-import { unstable_cache } from "next/cache";
 import {
   FANTRAX_LEAGUE_ID,
-  PAGE_REVALIDATE,
   FantraxError,
   type Bridge,
   type FootballSnapshot,
@@ -17,6 +15,7 @@ import {
   resolveRosters,
   rosterDisplay,
 } from "@epl/core";
+import { leagueCache } from "./leagueCache";
 import { footballNow, gameweekSnapshot, seasonKickoffs } from "./football";
 import { orRefusal, tell } from "./refusals";
 import type { Unavailable } from "./refusals";
@@ -93,7 +92,7 @@ interface CachedLeague {
  *
  *  Nothing about *who is asking* may cross into here — no team id, no cookie —
  *  or one manager's view would be served to another. */
-const readLeague = unstable_cache(
+const readLeague = leagueCache("league-squads",
   async (round: Round | null): Promise<CachedLeague> => {
     const [snapshot, rosters, info] = await Promise.all([
       round === null ? footballNow() : gameweekSnapshot(round.gameweek),
@@ -105,8 +104,6 @@ const readLeague = unstable_cache(
       ? { snapshot, rosters: null, refusal: { code: rosters.code, tell: tell(rosters) }, info }
       : { snapshot, rosters, refusal: null, info };
   },
-  ["league-squads", FANTRAX_LEAGUE_ID],
-  { revalidate: PAGE_REVALIDATE },
 );
 
 /** A round other than the one Fantrax is currently pointing at.
@@ -128,13 +125,11 @@ export interface Round {
  *  you cannot request a period's rosters until you know which period a gameweek
  *  is. Read rather than assumed — the two are one-to-one every week this season
  *  and a postponement is the known way they come apart. */
-const readCalendar = unstable_cache(
+const readCalendar = leagueCache("league-calendar",
   async () => {
     const [info, kickoffs] = await Promise.all([leagueInfo(), seasonKickoffs()]);
     return info === null ? [] : periodGameweeks(info.scoringPeriods, kickoffs);
   },
-  ["league-calendar", FANTRAX_LEAGUE_ID],
-  { revalidate: PAGE_REVALIDATE },
 );
 
 export async function roundOf(gameweek: number): Promise<Round | null> {
@@ -196,13 +191,11 @@ export async function getLeagueSquads(round: Round | null = null): Promise<Leagu
  *  readers want it: the head-to-head route resolves a gameweek to a period
  *  before it can ask for that period's rosters, so an uncached one made two
  *  `getLeagueInfo` requests per window to answer one page. */
-const leagueInfo = unstable_cache(
+const leagueInfo = leagueCache("league-info",
   async (): Promise<LeagueInfo | null> => {
     const raw = await orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID));
     return raw instanceof FantraxError ? null : mapLeagueInfo(raw);
   },
-  ["league-info", FANTRAX_LEAGUE_ID],
-  { revalidate: PAGE_REVALIDATE },
 );
 
 /** What the reader may see of ONE team's roster, which is not what the league
