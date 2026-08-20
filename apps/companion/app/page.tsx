@@ -1,8 +1,10 @@
-import Link from "next/link";
-import { LEAGUE_NAME, NOTABLE_SAVES, type Pick } from "@epl/core";
+import { LEAGUE_NAME } from "@epl/core";
+import Deals from "./components/gazette/Deals";
+import Doubts from "./components/gazette/Doubts";
+import Live from "./components/gazette/Live";
 import Masthead from "./components/gazette/Masthead";
-import { DEALS_SHOWN, DOUBTS_SHOWN, FANTRAX_SILENT, servedLeague } from "./config";
-import { yoursBorder } from "./mine";
+import TeamOfTheWeek from "./components/gazette/TeamOfTheWeek";
+import { FANTRAX_SILENT, servedLeague } from "./config";
 import Nothing from "./components/shell/Nothing";
 import Section from "./components/shell/Section";
 import { edition } from "./edition";
@@ -28,17 +30,6 @@ export const revalidate = 30;
  *  apart, so this is read from config rather than written down. */
 const DRAFT_DATE = londonDate(servedLeague()?.draftDate ?? "");
 
-/** What got him picked, in the fewest words that are still true. */
-function did(pick: Pick): string {
-  const notes = [
-    pick.goals > 0 ? `${pick.goals}G` : null,
-    pick.assists > 0 ? `${pick.assists}A` : null,
-    pick.cleanSheet ? "CS" : null,
-    pick.saves >= NOTABLE_SAVES ? `${pick.saves} saves` : null,
-  ].filter((note): note is string => note !== null);
-  return notes.length > 0 ? notes.join(" · ") : `${pick.minutes}'`;
-}
-
 export default async function GazettePage() {
   const squads = await getLeagueSquads();
   const mine = "period" in squads ? await myTeamId(squads.period.teams) : null;
@@ -58,18 +49,7 @@ export default async function GazettePage() {
         }
       />
 
-      {paper.live ? (
-        <Link
-          href="/matchday"
-          className="elev flex min-h-14 items-center justify-between gap-3 rounded-xl border border-line border-l-4 border-l-live bg-surface px-3 py-2.5"
-        >
-          <span className="font-semibold">Your head-to-head is live</span>
-          <span className="flex items-center gap-1.5 text-2xs font-bold uppercase tracking-widest text-live">
-            <span className="live-dot" />
-            Watch
-          </span>
-        </Link>
-      ) : null}
+      {paper.live ? <Live /> : null}
 
       {/* Nothing to print is a real state, not an empty page — our own league is
           in it every day until draft night, and this is the first thing sixteen
@@ -98,108 +78,14 @@ export default async function GazettePage() {
         </Nothing>
       ) : null}
 
-      {paper.eleven ? (
-        <Section title="Team of the week" aside={paper.eleven.shape}>
-          <ul className="flex flex-col gap-1.5">
-            {paper.eleven.picks.map((pick) => (
-              <li
-                key={pick.playerCode}
-                className={`elev rounded-xl border bg-surface px-3 py-2.5 ${yoursBorder(
-                  pick.ownerTeamId === paper.mine,
-                )}`}
-              >
-                <p className="flex items-baseline gap-2">
-                  <span className="numeric w-5 shrink-0 text-2xs text-faint">{pick.position}</span>
-                  <span className="min-w-0 flex-1 truncate font-semibold">{pick.playerName}</span>
-                  <span className="numeric shrink-0 text-2xs text-muted">{did(pick)}</span>
-                </p>
-                <p className="pl-7 pt-0.5 text-2xs text-faint">
-                  {pick.ownerName}
-                  {/* The best story on the page: his own manager left him out. */}
-                  {pick.started ? null : (
-                    <span className="font-semibold text-mid"> · left him on the bench</span>
-                  )}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      ) : null}
+      {paper.eleven ? <TeamOfTheWeek eleven={paper.eleven} mine={paper.mine} /> : null}
 
-      {/* The zone belongs in the heading, where a table would put it: the
-          timestamps below are Fantrax's own strings and carry no offset, so
-          without their label a British reader takes a New York morning for a
-          British one. Their words, not our conversion. */}
       {paper.deals.length > 0 ? (
-        <Section
-          title="The week's business"
-          aside={paper.dealsAt ? `${paper.deals.length} · ${paper.dealsAt}` : `${paper.deals.length}`}
-        >
-          <ul className="flex flex-col gap-1.5">
-            {paper.deals.slice(0, DEALS_SHOWN).map((deal) => (
-              <li
-                key={deal.setId + deal.inbound.map((p) => p.playerName).join()}
-                className="elev rounded-xl border border-line bg-surface px-3 py-2.5"
-              >
-                <p className="text-sm">
-                  {/* A trade is two players moving in opposite directions, and
-                      without these its two halves read as two unrelated signings
-                      that happen to share a timestamp — the very thing grouping
-                      them by `setId` was for. A claim needs no label: its second
-                      half already says "out". */}
-                  {deal.kind === "trade" ? (
-                    <span className="text-2xs font-bold uppercase tracking-wide text-faint">
-                      Trade{" "}
-                    </span>
-                  ) : null}
-                  {deal.inbound.map((player, index) => (
-                    <span key={player.playerName} className="font-semibold">
-                      {index > 0 ? <span className="font-normal text-muted">· </span> : null}
-                      {player.playerName}{" "}
-                      <span className="font-normal text-muted">to {who(player.teamId)}</span>{" "}
-                    </span>
-                  ))}
-                  {deal.outbound.length > 0 ? (
-                    <span className="text-muted">
-                      · {deal.outbound.map((player) => player.playerName).join(", ")} out
-                    </span>
-                  ) : null}
-                </p>
-                {deal.processedAt ? (
-                  <p className="pt-0.5 text-2xs text-faint">{deal.processedAt}</p>
-                ) : null}
-              </li>
-            ))}
-          </ul>
-        </Section>
+        <Deals deals={paper.deals} at={paper.dealsAt} who={who} />
       ) : null}
 
       {paper.availability.length > 0 ? (
-        <Section title="Doubts" aside={`${paper.availability.length} across the league`}>
-          <ul className="flex flex-col gap-1.5">
-            {paper.availability.slice(0, DOUBTS_SHOWN).map((note) => (
-              <li
-                key={`${note.teamId}-${note.playerName}`}
-                className={`elev rounded-xl border bg-surface px-3 py-2.5 ${yoursBorder(
-                  note.teamId === paper.mine,
-                )}`}
-              >
-                <p className="flex items-baseline justify-between gap-3">
-                  <span className="truncate font-semibold">{note.playerName}</span>
-                  {/* Null is not zero, and not a blank either — "FPL has not
-                      said" is its own answer to a manager picking a side. */}
-                  <span className="numeric shrink-0 text-2xs text-faint">
-                    {note.chance === null ? "no word" : `${note.chance}%`}
-                  </span>
-                </p>
-                <p className="pt-0.5 text-2xs text-muted">
-                  {note.news ? `${note.news} · ` : null}
-                  {who(note.teamId)}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </Section>
+        <Doubts notes={paper.availability} mine={paper.mine} who={who} />
       ) : null}
 
       {paper.deadline ? (
