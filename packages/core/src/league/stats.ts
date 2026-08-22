@@ -81,6 +81,19 @@ export interface PoolStatRow {
   rank: number | null;
   points: number | null;
   perGame: number | null;
+  /** What share of all Fantrax leagues roster him, 0–100. Their number about
+   *  their whole product, not about ours — which is exactly what makes it worth
+   *  printing: it is the only outside opinion on this page. */
+  rostered: number | null;
+  /** How that share moved since last week, positive or negative. */
+  trend: number | null;
+  /** His fixture, in Fantrax's own words — `"COV 0 @ARS 3 F"` once it has been
+   *  played, `"BOU Sun 9:00AM"` before. Their formatting, with the literal
+   *  `<br/>` they put in the middle turned into a space and nothing else
+   *  interpreted: parsing a scoreline out of it would be inventing a format they
+   *  never documented, and the football layer already models fixtures properly
+   *  for every screen that needs them as data rather than as a line of text. */
+  opponent: string | null;
 }
 
 /** `getPlayerStats` for the whole pool. */

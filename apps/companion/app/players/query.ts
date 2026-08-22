@@ -26,10 +26,13 @@ export const PAGE_ROWS = 100;
 /** The sortable columns, in the order they appear. Keys are short because they
  *  end up in the address bar. */
 export const COLUMNS = [
-  { key: "rank", label: "Rk", title: "Fantrax's own ranking", ascending: true },
+  { key: "rank", label: "Rk", title: "Fantrax's own ranking across the whole pool", ascending: true },
   { key: "name", label: "Player", title: "Name", ascending: true },
-  { key: "fpts", label: "FPts", title: "Fantasy points", ascending: false },
+  { key: "opp", label: "Opp", title: "His fixture, in Fantrax's words", ascending: true },
+  { key: "fpts", label: "FPts", title: "Fantasy points, under this league's scoring", ascending: false },
   { key: "fpg", label: "FP/G", title: "Fantasy points per game", ascending: false },
+  { key: "ros", label: "Ros", title: "Share of all Fantrax leagues rostering him", ascending: false },
+  { key: "trend", label: "+/-", title: "How that share moved since last week", ascending: false },
 ] as const;
 
 export type ColumnKey = (typeof COLUMNS)[number]["key"];
@@ -37,8 +40,11 @@ export type ColumnKey = (typeof COLUMNS)[number]["key"];
 const VALUE: Record<ColumnKey, (row: PoolRow) => number | string | null> = {
   rank: (row) => row.stats?.rank ?? null,
   name: (row) => row.entry.player.displayName,
+  opp: (row) => row.stats?.opponent ?? null,
   fpts: (row) => row.stats?.points ?? null,
   fpg: (row) => row.stats?.perGame ?? null,
+  ros: (row) => row.stats?.rostered ?? null,
+  trend: (row) => row.stats?.trend ?? null,
 };
 
 function column(key: string | undefined) {

@@ -25,10 +25,11 @@ export const STATUS: Record<string, string> = {
   T: "Rostered",
 };
 
-/** Columns the phone does not have room for. Not a smaller font — a row a thumb
- *  can hit and eyes can read at arm's length holds four things, and rank is the
- *  one a manager can infer from the order he is already looking at. */
-const WIDE = "hidden md:table-cell";
+// Nothing is hidden on a phone any more. It used to drop the rank behind a
+// breakpoint on the grounds that a row holds four things — which is true of a
+// row that must fit, and this one no longer has to. The table breaks out of the
+// page gutter and scrolls sideways instead, so every column Fantrax publishes is
+// reachable on the smallest screen rather than absent from it. Craig's call.
 
 export default function PlayerTable({
   rows,
@@ -42,8 +43,15 @@ export default function PlayerTable({
   const current = activeSort(query);
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse text-sm">
+    // Out to the page's edges and then some: the gutter is a variable precisely
+    // so the two things that break out of it cannot drift from it (globals.css).
+    // `overflow-x-auto` on the breakout rather than on the table, so the header
+    // row scrolls with its body.
+    <div
+      className="overflow-x-auto"
+      style={{ marginInline: "calc(var(--page-gutter) * -1)", paddingInline: "var(--page-gutter)" }}
+    >
+      <table className="w-full min-w-[34rem] border-collapse text-sm">
         <thead>
           <tr className="border-b border-line text-2xs uppercase tracking-widest text-faint">
             {COLUMNS.map((column) => (
@@ -57,9 +65,9 @@ export default function PlayerTable({
                       : "ascending"
                     : undefined
                 }
-                className={`py-1.5 font-bold ${column.key === "name" ? "text-left" : "text-right"} ${
-                  column.key === "rank" ? WIDE : ""
-                } ${column.key === "name" ? "" : "w-14"}`}
+                className={`whitespace-nowrap py-1.5 font-bold ${
+                  column.key === "name" || column.key === "opp" ? "text-left" : "text-right"
+                } ${column.key === "name" ? "" : NARROW}`}
               >
                 <Link
                   href={sortHref(query, column.key)}
@@ -82,9 +90,7 @@ export default function PlayerTable({
               : null;
             return (
               <tr key={entry.player.fantraxId} className="border-b border-line/60 hover:bg-raised">
-                <td className={`numeric px-1 text-right text-2xs text-faint ${WIDE}`}>
-                  {stats?.rank ?? "—"}
-                </td>
+                <td className="numeric px-1 text-right text-2xs text-faint">{stats?.rank ?? "—"}</td>
                 <td className="py-1">
                   <Link
                     href={`/players/${entry.player.fantraxId}`}
@@ -121,14 +127,49 @@ export default function PlayerTable({
                     </span>
                   </Link>
                 </td>
+                {/* Fantrax's own words for his fixture, `<br/>` already turned
+                    into a space by the mapper. Not a `FixtureChip`: this page is
+                    entirely Fantrax's on purpose, and joining the football layer
+                    to draw a difficulty colour would give it a second provider
+                    to fail on for one cell. */}
+                <td className="whitespace-nowrap px-1 text-left text-2xs text-faint">
+                  {stats?.opponent ?? "—"}
+                </td>
                 <td className="numeric px-1 text-right font-bold">{stats?.points ?? "—"}</td>
                 <td className="numeric px-1 text-right text-muted">{stats?.perGame ?? "—"}</td>
+                {/* Their number about their whole product, and the only outside
+                    opinion on the page: how much of Fantrax rosters this man. */}
+                <td className="numeric px-1 text-right text-2xs text-muted">
+                  {stats?.rostered === null || stats?.rostered === undefined
+                    ? "—"
+                    : `${stats.rostered}%`}
+                </td>
+                <td className="numeric px-1 text-right text-2xs">
+                  <Trend value={stats?.trend ?? null} />
+                </td>
               </tr>
             );
           })}
         </tbody>
       </table>
     </div>
+  );
+}
+
+/** Every column but the name, which takes whatever is left. */
+const NARROW = "w-14";
+
+/** Which way ownership moved, said in the sign as well as the colour — a green
+ *  number and a red one are the same number to a reader who cannot tell them
+ *  apart. Nought is neither, and is drawn quiet rather than as a flat week. */
+function Trend({ value }: { value: number | null }) {
+  if (value === null) return <span className="text-faint">—</span>;
+  if (value === 0) return <span className="text-faint">0%</span>;
+  return (
+    <span className={value > 0 ? "text-accent" : "text-bad"}>
+      {value > 0 ? "+" : ""}
+      {value}%
+    </span>
   );
 }
 

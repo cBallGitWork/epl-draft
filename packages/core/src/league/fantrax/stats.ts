@@ -174,16 +174,27 @@ export function mapPoolStats(raw: RawPoolStats): PoolStats {
   const rankAt = at("rankOv");
   const pointsAt = at("fpts");
   const perGameAt = at("fptsPerGame");
+  const opponentAt = at("opponent");
+  // The two ownership columns publish no `key` at all — only a `shortName` — so
+  // they are the one pair here matched on their label. Fragile in the way a
+  // label always is, and the failure is the honest one: a column we can no
+  // longer find reads as absent rather than as another column's numbers.
+  const rosteredAt = labelled(header, "Ros");
+  const trendAt = labelled(header, "+/-");
 
   const rows = (raw.statsTable ?? []).flatMap((row): PoolStatRow[] => {
     if (!row.scorer?.scorerId) return [];
     const cells = row.cells ?? [];
+    const cell = (index: number) => (index < 0 ? null : numeric(cells[index]?.content));
     return [
       {
         fantraxId: row.scorer.scorerId,
-        rank: rankAt < 0 ? null : numeric(cells[rankAt]?.content),
-        points: pointsAt < 0 ? null : numeric(cells[pointsAt]?.content),
-        perGame: perGameAt < 0 ? null : numeric(cells[perGameAt]?.content),
+        rank: cell(rankAt),
+        points: cell(pointsAt),
+        perGame: cell(perGameAt),
+        rostered: cell(rosteredAt),
+        trend: cell(trendAt),
+        opponent: opponentAt < 0 ? null : plain(cells[opponentAt]?.content),
       },
     ];
   });
@@ -213,4 +224,22 @@ function yearToDateCode(seasons: readonly RawSeason[]): string | null {
     if (best === null || entry.startDate > (best.startDate ?? -Infinity)) best = entry;
   }
   return best?.code ?? null;
+}
+
+/** A column Fantrax heads but does not key. */
+function labelled(header: readonly { shortName?: string }[], shortName: string): number {
+  return header.findIndex((cell) => cell.shortName === shortName);
+}
+
+/** One of Fantrax's pre-formatted cells as a line of text.
+ *
+ *  They put a literal `<br/>` inside the opponent cell — `"BOU<br/>Sun 9:00AM"`
+ *  — and a `<small>` around the day in a waiver one. Turned into a space and
+ *  otherwise left alone: the tag is theirs and the words are theirs, and
+ *  parsing a scoreline out of it would be inventing a format they never
+ *  documented. */
+function plain(content: string | undefined): string | null {
+  if (content === undefined) return null;
+  const text = content.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+  return text === "" ? null : text;
 }

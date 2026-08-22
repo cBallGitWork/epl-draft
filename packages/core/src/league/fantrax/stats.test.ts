@@ -98,9 +98,32 @@ describe("mapTeamStats", () => {
 describe("mapPoolStats", () => {
   const pool = mapPoolStats(poolStats);
 
-  it("reads rank and points past the columns it does not model", () => {
-    // Status and opponent sit between them and are not numbers at all.
-    expect(pool.rows[0]).toEqual({ fantraxId: "061vq", rank: 1, points: 196, perGame: 5.6 });
+  it("reads every column the pool actually publishes", () => {
+    // Status sits between them and is not a number at all, and the last two are
+    // headed but not keyed, so they are found by label.
+    expect(pool.rows[0]).toEqual({
+      fantraxId: "061vq",
+      rank: 1,
+      points: 196,
+      perGame: 5.6,
+      rostered: 100,
+      trend: 0,
+      opponent: "BOU Sun 9:00AM",
+    });
+  });
+
+  it("turns Fantrax's literal <br/> into a space rather than shipping the tag", () => {
+    // Their opponent cell is pre-formatted markup, and it reaches a page that
+    // renders text. A `<br/>` printed verbatim is the tell that nobody looked.
+    expect(pool.rows[0]?.opponent).not.toContain("<");
+  });
+
+  it("reads a column it cannot find as absent, never as another column's numbers", () => {
+    const headless = mapPoolStats({
+      tableHeader: { cells: [{ key: "fpts", shortName: "FPts" }] },
+      statsTable: [{ scorer: { scorerId: "x" }, cells: [{ content: "7" }] }],
+    });
+    expect(headless.rows[0]).toMatchObject({ points: 7, rostered: null, opponent: null });
   });
 
   it("says these are projected numbers, because they are", () => {
