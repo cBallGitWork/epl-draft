@@ -6,6 +6,7 @@ import { getLeaguePool } from "./pool";
 import { PAGE_ROWS, filterHref, showAllHref, shownRows } from "./query";
 import type { PlayersQuery } from "./query";
 import { FANTRAX_SILENT } from "../config";
+import { positionLabel } from "../positions";
 
 // Every player Fantrax knows, what our league has decided about him, and what
 // Fantrax scores him. The numbers are theirs under our league's scoring, which
@@ -109,7 +110,7 @@ export default async function PlayersPage({
             aria-current={query.pos === position ? "true" : undefined}
             className={chip(query.pos === position)}
           >
-            {position}
+            {positionLabel(position) ?? position}
           </Link>
         ))}
       </div>

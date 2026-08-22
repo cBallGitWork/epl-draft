@@ -11,6 +11,23 @@ import PitchFrame from "./PitchFrame";
 //
 // What varies between them is the cell, and only the cell, so that is the part
 // each caller supplies.
+//
+// **Every card is the same width, on every line.** They used to be `flex-1`
+// under a max, which sizes a card by how many are beside it: a back five got
+// narrow cards and a front two got wide ones, so the same eleven men stood at
+// three sizes down the pitch. The basis is now taken from the FULLEST line in
+// the set and given to all of them, so a line with fewer simply centres in the
+// space — which is what a formation looks like on paper.
+
+/** The gap between two cards, and the widest a card may be drawn.
+ *
+ *  Both are needed as values rather than only as classes, because the card's
+ *  width is computed from them: `flex-basis` has to subtract the gaps the row
+ *  will actually have. Written once each so the class and the arithmetic cannot
+ *  disagree — which is the same trap `PlayerPortrait` records for `sizes`. */
+const GAP = "0.5rem";
+const GAP_CLASS = "gap-x-2";
+const MAX_CARD = "4.35rem";
 
 export interface PitchRow<T> {
   /** The position, or whatever names this line. Also its key. */
@@ -27,6 +44,12 @@ export default function PitchRows<T>({
   keyOf: (player: T) => string;
   children: (player: T) => ReactNode;
 }) {
+  // The widest line decides the card, and one card decides the pitch. Read from
+  // the rows rather than from the league's position caps: a keeper line of one
+  // and a back five are both `rows`, and the caps would answer for a squad this
+  // component may not have all of.
+  const widest = Math.max(1, ...rows.map((row) => row.players.length));
+
   return (
     <PitchFrame>
       {rows.map((row) => (
@@ -37,11 +60,20 @@ export default function PitchRows<T>({
           // defender on a row of his own below the other four, which reads as a
           // formation nobody picked. They give up width instead, and the name
           // inside is sized in container units so it comes with them.
-          className="flex items-start justify-center gap-x-2"
+          className={`flex items-start justify-center ${GAP_CLASS}`}
           aria-label={`${row.label} — ${row.players.length}`}
         >
           {row.players.map((player) => (
-            <li key={keyOf(player)} className="min-w-0 flex-1 max-w-[4.35rem]">
+            <li
+              key={keyOf(player)}
+              className="min-w-0 shrink-0"
+              // Fixed, not flexed: the fullest line's share, given to every card
+              // on every line. `max-w` keeps a two-man front line from drawing
+              // cards wider than a squad screen ever wants.
+              style={{
+                flexBasis: `min(${MAX_CARD}, calc((100% - ${widest - 1} * ${GAP}) / ${widest}))`,
+              }}
+            >
               {children(player)}
             </li>
           ))}

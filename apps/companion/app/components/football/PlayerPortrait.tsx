@@ -37,17 +37,21 @@ export default function PlayerPortrait({
       className="relative block shrink-0 overflow-hidden rounded-full ring-1 ring-line"
       style={{ backgroundColor: colours.primary, width: SIZE, height: SIZE }}
     >
-      {/* Initials sit underneath as the fallback: January signings and academy
-          call-ups routinely have no headshot for weeks, and a broken image icon
-          is a worse answer than their initials. */}
-      <span
-        aria-hidden
-        className="absolute inset-0 grid place-items-center text-2xs font-semibold opacity-85"
-        style={{ color: inkOn(colours) }}
-      >
-        {initials(player.name)}
-      </span>
-      {player.code === null ? null : (
+      {/* Initials INSTEAD of a photograph, never underneath one. They used to
+          sit under it as a fallback, which works for a rectangle and not for
+          these: the Premier League's portraits are cut-outs on transparency, so
+          a man's initials showed through his own shirt on every row of the pool.
+          January signings and academy call-ups still get them — 120 of the pool
+          have no headshot at all — but only when there is nothing on top. */}
+      {player.code === null ? (
+        <span
+          aria-hidden
+          className="absolute inset-0 grid place-items-center text-2xs font-semibold opacity-85"
+          style={{ color: inkOn(colours) }}
+        >
+          {initials(player.name)}
+        </span>
+      ) : (
         <Image
           src={portraitUrl({ code: player.code })}
           alt=""

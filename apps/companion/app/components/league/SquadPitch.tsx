@@ -39,6 +39,7 @@ export default function SquadPitch({
             rostered={player.rostered}
             club={player.club}
             opposition={player.opposition}
+            points={player.points}
           />
         </button>
       )}

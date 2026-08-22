@@ -11,6 +11,7 @@ import {
 import FixtureChip from "../football/FixtureChip";
 import { chipsFor } from "./Chips";
 import PlayerImage from "./PlayerImage";
+import { positionLabel } from "../../positions";
 
 // One player as he stands on the pitch: a cut-out, his name on a dark plate, and
 // under it whatever there is to say — his fixture until he kicks off, his
@@ -22,22 +23,19 @@ import PlayerImage from "./PlayerImage";
 // only two things he came for, the face and the fixture. What replaced it is
 // what the cut-outs were always asking for — nothing behind them at all.
 
-/** How big the name may be, given how long it is.
+/** One size for every name on the pitch.
  *
- *  The plate is 56px wide and some of these men are called João Pedro.
- *  Truncating is the wrong trade on a squad screen — "JOÃO PE…" is two players
- *  on some rosters — so the type steps down instead and the whole name survives.
- *  Sized in container-query units so it tracks the card rather than the viewport.
+ *  It used to step down in three bands by name length so a long name survived
+ *  whole. That kept the words and lost the line: eleven cards in three type
+ *  sizes read as eleven different components, and the two men whose names had
+ *  been shrunk were the ones a manager could no longer scan. Craig's call, 22
+ *  Aug — same size, same font, truncate the long ones.
  *
- *  The plate itself does NOT step down with it. Type set on its own line height
- *  made every plate a different height, so Haaland and João Pedro stood at
- *  different heights in the same row and the line stopped looking like a line.
- *  The plate is a fixed band and the name is centred in it. */
-function nameSize(name: string): string {
-  if (name.length <= 7) return "text-[clamp(8px,17cqw,13px)]";
-  if (name.length <= 10) return "text-[clamp(7px,13cqw,11px)]";
-  return "text-[clamp(5.5px,10cqw,9px)]";
-}
+ *  Sized in container-query units so it tracks the card rather than the
+ *  viewport, and the plate is a fixed band with the name centred in it: type set
+ *  on its own line height made every plate a different height, so Haaland and
+ *  João Pedro stood at different heights in the same row. */
+const NAME_SIZE = "text-[clamp(7px,13cqw,11px)]";
 
 /** Why there is no footballer behind the slot, in words a manager can act on. */
 const WHY: Record<Unresolved, string> = {
@@ -77,7 +75,7 @@ export default function PitchPlayer({
       <div className="@container flex w-full flex-col">
         <div className="grid aspect-[1.32] w-full place-items-center rounded-t-[3px] border border-dashed border-white/35 bg-black/25">
           <span className="numeric text-2xs font-bold text-white/70">
-            {rostered.slot.position ?? "?"}
+            {positionLabel(rostered.slot.position) ?? "?"}
           </span>
         </div>
         <span className="flex h-[1.15rem] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-[0.5rem] font-bold uppercase leading-none text-bg">
@@ -119,11 +117,9 @@ export default function PitchPlayer({
           translucent black that let the grass through it, over a pitch. FPL
           print theirs on white for the same reason. */}
       <span
-        className={`flex h-[1.15rem] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display font-bold uppercase leading-none tracking-[-0.01em] text-bg ${nameSize(
-          player.name,
-        )}`}
+        className={`flex h-[1.15rem] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display font-bold uppercase leading-none tracking-[-0.01em] text-bg ${NAME_SIZE}`}
       >
-        {player.name}
+        <span className="w-full truncate">{player.name}</span>
       </span>
 
       {/* One band, two things it can be saying, and the same height either way

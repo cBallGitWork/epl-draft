@@ -7,6 +7,7 @@ import LivePlayerCard from "./LivePlayerCard";
 import PitchPlayer from "./PitchPlayer";
 import PitchRows from "./PitchRows";
 import SquadRows from "./SquadRows";
+import { positionLabel } from "../../positions";
 
 // A team as it lines up on a day that counts: the eleven on the grass, the
 // reserves in a strip under them, and every one of them a way into what he is
@@ -72,7 +73,7 @@ export default function TeamSheet({
                     className="min-w-0 flex-1 max-w-[3.3rem]"
                   >
                     <p className="pb-0.5 text-center font-display text-[0.5625rem] font-bold uppercase tracking-widest text-faint">
-                      {player.rostered.slot.position ?? "—"}
+                      {positionLabel(player.rostered.slot.position) ?? "—"}
                     </p>
                     <Cell player={player} onOpen={() => setOpen(player)} />
                   </li>

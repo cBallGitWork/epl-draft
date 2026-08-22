@@ -16,7 +16,7 @@ import PageHeader from "../../components/shell/PageHeader";
 import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
 import { pollSeconds } from "../../football";
-import { getLeagueSquads, teamDisplay } from "../../squads";
+import { getLeagueSquads, roundOf, teamDisplay } from "../../squads";
 import { squadPoints } from "../../teamStats";
 import { myTeamId } from "../../session";
 
@@ -27,9 +27,26 @@ import { myTeamId } from "../../session";
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
-export default async function TeamPage({ params }: { params: Promise<{ teamId: string }> }) {
-  const { teamId } = await params;
-  const squads = await getLeagueSquads();
+export default async function TeamPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ teamId: string }>;
+  /** Which round's squad. Absent means the one Fantrax is currently pointing at,
+   *  which is every arrival from the table, the matchup card and the squad list.
+   *  The schedule sends a gameweek, so tapping a side in a March fixture opens
+   *  March's fifteen rather than this week's — which is the only useful thing
+   *  about a fixture in March, and was the one thing that row did not do. */
+  searchParams: Promise<{ gw?: string }>;
+}) {
+  const [{ teamId }, { gw }] = await Promise.all([params, searchParams]);
+
+  // Through the calendar seam, never by taking one number for the other: the
+  // period is what Fantrax is asked for and the gameweek is what FPL is asked
+  // for. Same resolution the head-to-head route makes.
+  const asked = Number(gw);
+  const round = Number.isInteger(asked) ? await roundOf(asked) : null;
+  const squads = await getLeagueSquads(round);
   // No squads exist and no such team: both are genuinely 404. Fantrax being
   // unreachable is not — that is a state of ours, and it belongs on /team where
   // it is described rather than behind a status code.
@@ -114,8 +131,13 @@ export default async function TeamPage({ params }: { params: Promise<{ teamId: s
           team={team}
           // The whole squad's detail, flat: the planner rearranges it in the
           // browser, so it cannot be handed lines grouped on the server.
+          //
+          // Points were `null` here, which made your own squad the one pitch in
+          // the app printing minutes where every other printed what our league
+          // scores him. A man's points are a fact about him and not about the
+          // arrangement, so rearranging cannot disturb them.
           details={team.players.map((rostered) =>
-            playerDetail(rostered, clubs, opposition, null),
+            playerDetail(rostered, clubs, opposition, points),
           )}
           // Fifteen players' eligibility, not the pool's 697. This crosses to
           // the browser, and the other 682 are not this manager's business.

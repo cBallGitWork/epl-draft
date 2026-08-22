@@ -3,6 +3,7 @@ import type { PitchRow } from "./PitchRows";
 import { playerName } from "@epl/core";
 import PitchPlayer from "./PitchPlayer";
 import PitchRows from "./PitchRows";
+import { positionLabel } from "../../positions";
 
 // The XI on the grass and the bench under it, one target per player: tap him to
 // pick him, tap him again for everywhere else he can go.
@@ -62,6 +63,7 @@ function Player({
         rostered={player.rostered}
         club={player.club}
         opposition={player.opposition}
+        points={player.points}
       />
     </button>
   );
@@ -102,7 +104,7 @@ export default function LineupPitch({
           {bench.map((player) => (
             <li key={player.rostered.slot.fantraxId} className="min-w-0 flex-1 max-w-[3.9rem]">
               <p className="pb-0.5 text-center font-display text-[0.5625rem] font-bold uppercase tracking-widest text-faint">
-                {player.rostered.slot.position ?? "—"}
+                {positionLabel(player.rostered.slot.position) ?? "—"}
               </p>
               {cell(player)}
             </li>

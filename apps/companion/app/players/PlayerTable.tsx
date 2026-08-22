@@ -3,6 +3,7 @@ import { clubColours, toFplClubCode } from "@epl/core";
 import PlayerPortrait from "../components/football/PlayerPortrait";
 import type { PoolRow } from "./pool";
 import { COLUMNS, activeSort, sortHref } from "./query";
+import { positionsLabel } from "../positions";
 import type { PlayersQuery } from "./query";
 
 // The pool as a table. Sorting is a link, not a click handler: the server does
@@ -106,7 +107,7 @@ export default function PlayerTable({
                             the planner obeys, and the global pool's letter is a
                             different league's answer. */}
                         <span className="numeric tracking-widest">
-                          {entry.eligiblePositions.join("/") || "—"}
+                          {positionsLabel(entry.eligiblePositions) ?? "—"}
                         </span>
                         <span className="numeric tracking-widest">
                           {entry.player.clubCode ?? "—"}

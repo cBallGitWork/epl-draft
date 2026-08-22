@@ -11,6 +11,7 @@ import {
 } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
 import { chipsFor } from "./Chips";
+import { positionGroup } from "../../positions";
 
 // The same fifteen as a list. Offered beside the pitch rather than instead of
 // it: the pitch answers "what does this squad look like" and a list answers "who
@@ -28,15 +29,6 @@ import { chipsFor } from "./Chips";
 // from us. The rule survives in the fallback: a letter this map has never seen
 // is printed verbatim, so a commissioner who files wingers under W gets "W" in
 // the place the pitch would put it, not a guess.
-
-/** The four letters our league actually uses, spelled out. Not a vocabulary —
- *  a translation of one, and only for the ones we have seen. */
-const POSITION_NAME: Record<string, string> = {
-  G: "Goalkeepers",
-  D: "Defenders",
-  M: "Midfielders",
-  F: "Forwards",
-};
 
 /** Fantrax allows a roster slot with no position at all, and `squadUnarranged`
  *  carries it rather than dropping the player. It arrives here as an empty
@@ -61,7 +53,7 @@ export default function SquadRows({
       {lines.map((line) => (
         <section key={line.position} className="flex flex-col gap-1">
           <h3 className="flex items-baseline gap-1.5 px-0.5 font-display text-2xs font-bold uppercase tracking-widest text-faint">
-            {POSITION_NAME[line.position] ?? (line.position || UNPLACED)}
+            {line.position ? positionGroup(line.position) : UNPLACED}
             <span className="numeric font-normal">{line.players.length}</span>
             {/* Only when there is a column to head. */}
             {line.players.some((player) => player.points !== undefined) ? (

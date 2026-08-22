@@ -6,6 +6,7 @@ import { type RosteredPlayer, type SquadPlayerDetail, type Unresolved, isDoubtfu
 import FixtureChip from "../football/FixtureChip";
 import PitchPlayer from "./PitchPlayer";
 import { londonDayAndTime } from "../../londonTime";
+import { positionLabel } from "../../positions";
 
 // One player, over the squad rather than instead of it.
 //
@@ -72,7 +73,7 @@ export default function PlayerCard({
             <p className="numeric text-2xs tracking-widest text-faint">
               {/* The position is the one his manager has him filling, not the
                   list he is eligible for — a Fantrax player can hold several. */}
-              {[club?.name, rostered.slot.position, squadNumber(rostered)]
+              {[club?.name, positionLabel(rostered.slot.position), squadNumber(rostered)]
                 .filter(Boolean)
                 .join(" · ")}
             </p>

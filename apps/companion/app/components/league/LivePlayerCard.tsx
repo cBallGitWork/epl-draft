@@ -6,14 +6,16 @@ import {
   type BreakdownLine,
   type SquadPlayerDetail,
   contribution,
+  isGoalkeeper,
   isResolved,
   kickedOff,
   playerName,
 } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
-import PitchPlayer from "./PitchPlayer";
+import PlayerImage from "./PlayerImage";
 import { chipsFor } from "./Chips";
 import { londonDayAndTime } from "../../londonTime";
+import { positionLabel } from "../../positions";
 
 // What a player is scoring, and why.
 //
@@ -73,15 +75,27 @@ export default function LivePlayerCard({
     >
       <div className="flex flex-col gap-3 p-4">
         <div className="flex items-center gap-3">
-          <span className="w-[5.5rem] shrink-0">
-            <PitchPlayer rostered={rostered} club={club} opposition={opposition} points={points} />
+          {/* The photograph alone. It was a whole `PitchPlayer`, which carries a
+              name plate and a points band — so the card printed his name twice
+              and his total twice, once on a sticker and once in the breakdown
+              three lines below that exists to explain it. */}
+          <span className="w-[5.5rem] shrink-0 overflow-hidden rounded-lg">
+            {isResolved(rostered) ? (
+              <PlayerImage
+                player={rostered.player}
+                club={club}
+                keeper={isGoalkeeper(rostered.slot.position)}
+                kickedOff={started}
+                sizes="88px"
+              />
+            ) : null}
           </span>
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-lg font-bold tracking-tight">{playerName(rostered)}</h2>
             <p className="numeric text-2xs tracking-widest text-faint">
               {/* The position his manager has him filling, not the list he is
                   eligible for — a Fantrax player can hold several. */}
-              {[club?.name, rostered.slot.position].filter(Boolean).join(" · ")}
+              {[club?.name, positionLabel(rostered.slot.position)].filter(Boolean).join(" · ")}
             </p>
           </div>
         </div>

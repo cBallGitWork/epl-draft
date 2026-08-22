@@ -75,6 +75,7 @@ export default function Tie({
         won={settled && beat(home, away)}
         mine={mine}
         linked={!played}
+        gameweek={round.gameweek}
       />
       {kicked ? (
         <span className="numeric flex shrink-0 items-baseline gap-1.5 px-1 text-lg font-bold">
@@ -96,6 +97,7 @@ export default function Tie({
         won={settled && beat(away, home)}
         mine={mine}
         linked={!played}
+        gameweek={round.gameweek}
       />
     </div>
   );
@@ -135,6 +137,7 @@ function Side({
   won,
   mine,
   linked,
+  gameweek,
 }: {
   side: TieSide;
   /** Badges sit on the outside and names read inward toward the score, so the
@@ -146,6 +149,10 @@ function Side({
   /** Whether this side is its own tap target. False when the whole row already
    *  leads somewhere — a link inside a link is not markup a browser will honour. */
   linked: boolean;
+  /** The round this row is about. Carried into the squad link so a tap on a
+   *  March fixture opens March's squad, not this week's — without it every row
+   *  in the season led to the same fifteen men under today's date. */
+  gameweek: number;
 }) {
   const yours = side.team !== null && side.team.teamId === mine;
   const body = (
@@ -174,7 +181,10 @@ function Side({
   return side.team === null || !linked ? (
     <div className={classes}>{body}</div>
   ) : (
-    <Link href={`/squad/${side.team.teamId}`} className={`${classes} hover:underline`}>
+    <Link
+      href={`/squad/${side.team.teamId}?gw=${gameweek}`}
+      className={`${classes} hover:underline`}
+    >
       {body}
     </Link>
   );
