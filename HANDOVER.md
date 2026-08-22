@@ -1,6 +1,6 @@
 # What's needed — 22 Aug 2026, written during GW1
 
-Replaces the 20 Aug handover. State: `main`, 62 commits ahead of `7944cf8`,
+Replaces the 20 Aug handover. State: `main`, 74 commits ahead of `7944cf8`,
 working tree clean but for `probe3.mjs`. 506 tests · typecheck · lint · build ·
 smoke, green on every commit. **Nothing pushed.**
 
