@@ -2,7 +2,6 @@ import {
   type Club,
   type Opposition,
   type RosteredPlayer,
-  type Unresolved,
   contribution,
   isGoalkeeper,
   isResolved,
@@ -12,6 +11,7 @@ import FixtureChip from "../football/FixtureChip";
 import { chipsFor } from "./Chips";
 import PlayerImage from "./PlayerImage";
 import { positionLabel } from "../../positions";
+import { unresolvedShort } from "../../unresolved";
 
 // One player as he stands on the pitch: a cut-out, his name on a dark plate, and
 // under it whatever there is to say — his fixture until he kicks off, his
@@ -36,13 +36,6 @@ import { positionLabel } from "../../positions";
  *  on its own line height made every plate a different height, so Haaland and
  *  João Pedro stood at different heights in the same row. */
 const NAME_SIZE = "text-[clamp(7px,13cqw,11px)]";
-
-/** Why there is no footballer behind the slot, in words a manager can act on. */
-const WHY: Record<Unresolved, string> = {
-  unmapped: "not in FPL",
-  unbridged: "not mapped yet",
-  absent: "dropped by FPL",
-};
 
 export default function PitchPlayer({
   rostered,
@@ -82,7 +75,7 @@ export default function PitchPlayer({
           <span className="w-full truncate">{rostered.slot.fantraxId}</span>
         </span>
         <span className="flex h-3.5 w-full items-center justify-center overflow-hidden rounded-b-[3px] bg-cream/90 px-0.5 text-center text-[0.5rem] font-bold leading-none text-bg/70">
-          <span className="w-full truncate">{WHY[rostered.unresolved]}</span>
+          <span className="w-full truncate">{unresolvedShort(rostered.unresolved)}</span>
         </span>
       </div>
     );

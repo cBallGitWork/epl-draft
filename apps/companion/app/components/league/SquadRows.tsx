@@ -91,7 +91,17 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
         style={{ backgroundColor: colours.primary }}
       >
         {club ? (
-          <Image src={crestUrl(club)} alt="" width={18} height={18} className="h-full w-full" />
+          /* Sized in both axes. `h-full` resolves to auto against an
+             auto-sized grid row, so only the width bound applied and a 150:112
+             crest rendered 20 x 26.8 inside a 20 x 20 box — overhanging the
+             coloured tile above and below on every row. */
+          <Image
+            src={crestUrl(club)}
+            alt=""
+            width={18}
+            height={18}
+            className="h-5 w-5 object-contain"
+          />
         ) : (
           <span aria-hidden className="numeric text-[0.5rem] font-bold text-white/70">
             ?

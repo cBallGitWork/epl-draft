@@ -13,7 +13,13 @@ import type { Fixture, FixtureStatus, FootballSnapshot } from "./types";
 // `isMatchdayLive` rather than either being used alone.
 
 /** True when any match in the snapshot is in play — the app's single source of
- *  truth for whether to show the live treatment and poll faster. */
+ *  truth for whether to show the live TREATMENT.
+ *
+ *  Not the poll rate, which this docblock used to claim as well and which cost
+ *  the Live tab an afternoon at the idle interval: between two kickoffs nothing
+ *  is in play and a score is at its most likely to have moved since you looked.
+ *  `duringGameweek` is that question, and `pollSeconds` at the app edge is the
+ *  one place it is asked. */
 export function isMatchdayLive(snapshot: FootballSnapshot): boolean {
   return snapshot.fixtures.some((f) => f.status === "live");
 }
@@ -24,8 +30,8 @@ export function isMatchdayLive(snapshot: FootballSnapshot): boolean {
  *  Deliberately wider than `isMatchdayLive`. Saturday lunchtime between two
  *  kickoffs is still matchday to someone holding a phone, but nothing is in play,
  *  so the two answer different questions: this one decides whether the Matchday
- *  section exists at all, while `isMatchdayLive` keeps driving the live treatment
- *  and the poll rate.
+ *  section exists at all AND how often to poll, while `isMatchdayLive` drives the
+ *  live treatment — the dot, the clock, the present tense.
  *
  *  The window closes on `finished` rather than on FPL's `data_checked`, which
  *  settles bonus a day or two later. The section is for watching football, not

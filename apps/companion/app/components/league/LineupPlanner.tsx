@@ -104,13 +104,23 @@ export default function LineupPlanner({
       ...team,
       players: team.players.map((p) => ({ ...p, slot: bySlot.get(p.slot.fantraxId) ?? p.slot })),
     });
-    const detail = (id: string) => detailOf.get(id);
+    // The detail was joined once from the roster as it arrived, so its slot is
+    // the PRE-MOVE one. Everything drawn from `arranged` is post-move, so the
+    // edited slot is spliced back in — otherwise the bench prints a man's old
+    // position under him while standing him in his new place, and the label and
+    // the order contradict each other on screen. The join's other halves — his
+    // club, his fixtures, his points — are facts about the man and do not move
+    // when his manager rearranges the team.
+    const detail = (slot: RosterSlot): SquadPlayerDetail[] => {
+      const joined = detailOf.get(slot.fantraxId);
+      return joined === undefined ? [] : [{ ...joined, rostered: { ...joined.rostered, slot } }];
+    };
     return {
       rows: arranged.lines.map<PitchRow<SquadPlayerDetail>>((line) => ({
         label: line.position,
-        players: line.players.flatMap((p) => detail(p.slot.fantraxId) ?? []),
+        players: line.players.flatMap((p) => detail(p.slot)),
       })),
-      bench: arranged.bench.flatMap((p) => detail(p.slot.fantraxId) ?? []),
+      bench: arranged.bench.flatMap((p) => detail(p.slot)),
     };
   }, [team, slots, detailOf]);
 

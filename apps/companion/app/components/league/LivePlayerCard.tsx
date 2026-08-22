@@ -16,6 +16,7 @@ import PlayerImage from "./PlayerImage";
 import { chipsFor } from "./Chips";
 import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
+import { unresolvedReason } from "../../unresolved";
 
 // What a player is scoring, and why.
 //
@@ -78,7 +79,12 @@ export default function LivePlayerCard({
           {/* The photograph alone. It was a whole `PitchPlayer`, which carries a
               name plate and a points band — so the card printed his name twice
               and his total twice, once on a sticker and once in the breakdown
-              three lines below that exists to explain it. */}
+              three lines below that exists to explain it.
+
+              A slot with no footballer behind it gets the same dashed box the
+              pitch gives him rather than an empty rectangle: every slot on an
+              open XI is tappable, so this card has to have something to say
+              about all fifteen. */}
           <span className="w-[var(--player-card-figure)] shrink-0 overflow-hidden rounded-lg">
             {isResolved(rostered) ? (
               <PlayerImage
@@ -88,7 +94,13 @@ export default function LivePlayerCard({
                 kickedOff={started}
                 sizes="88px"
               />
-            ) : null}
+            ) : (
+              <span className="grid aspect-[1.32] w-full place-items-center rounded-lg border border-dashed border-white/35 bg-black/25">
+                <span className="numeric text-2xs font-bold text-white/70">
+                  {positionLabel(rostered.slot.position) ?? "?"}
+                </span>
+              </span>
+            )}
           </span>
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-lg font-bold tracking-tight">{playerName(rostered)}</h2>
@@ -99,6 +111,15 @@ export default function LivePlayerCard({
             </p>
           </div>
         </div>
+
+        {/* Why there is nobody behind the slot, in the same words `PlayerCard`
+            uses. Above the fixture panel, because it explains the blank the
+            reader is already looking at. */}
+        {isResolved(rostered) ? null : (
+          <p className="rounded-lg border border-line bg-raised px-3 py-2 text-2xs text-mid">
+            {unresolvedReason(rostered.unresolved)}
+          </p>
+        )}
 
         <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-raised px-3 py-2">
           <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden rounded-[3px]">

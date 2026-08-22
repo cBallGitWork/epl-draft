@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { type RosteredPlayer, type SquadPlayerDetail, type Unresolved, isDoubtful, isResolved, playerName } from "@epl/core";
+import { type RosteredPlayer, type SquadPlayerDetail, isDoubtful, isResolved, playerName } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
 import PitchPlayer from "./PitchPlayer";
 import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
+import { unresolvedReason } from "../../unresolved";
 
 // One player, over the squad rather than instead of it.
 //
@@ -22,15 +23,6 @@ import { positionLabel } from "../../positions";
 // sticker to be shown the same sticker larger is the point: it is the object the
 // manager was pointing at, and rendering a second, plainer portrait beside it
 // would make the card look like a different player.
-
-/** Why there is no footballer behind the slot, in words a manager can act on.
- *  A second copy of the sticker's — two is a coincidence (§1), and the two
- *  screens have room for different wording the day either needs it. */
-const WHY: Record<Unresolved, string> = {
-  unmapped: "Not in FPL — Fantrax carries academy and fringe players the Premier League game does not list.",
-  unbridged: "Not mapped yet. He joined the pool since the last bridge run.",
-  absent: "FPL has dropped him since our snapshot, so there is nothing to join to.",
-};
 
 export default function PlayerCard({
   player: { rostered, club, opposition },
@@ -111,7 +103,7 @@ export default function PlayerCard({
 
         {isResolved(rostered) ? null : (
           <p className="rounded-lg border border-line bg-raised px-3 py-2 text-2xs text-mid">
-            {WHY[rostered.unresolved]}
+            {unresolvedReason(rostered.unresolved)}
           </p>
         )}
 
