@@ -159,8 +159,17 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
   return shell(
     <>
       {/* Only while the round on screen is the one being played. A reader
-          looking at March in August is not watching anything move. */}
-      {round.status === "live" ? <AutoRefresh seconds={POLL.live} /> : null}
+          looking at March in August is not watching anything move.
+
+          Under way, not in play. `status === "live"` is true only while a ball
+          is actually being kicked, so between Saturday's kickoffs and right
+          through Sunday the page stopped asking — while the FP column beside
+          every name is Fantrax's live total, still moving. That is the same
+          distinction `pollSeconds` is built on: the wide window is right for a
+          poll rate and wrong for a dot. Asked of this round rather than of the
+          snapshot, because the snapshot is always the current round and this
+          page is the one that shows any of them. */}
+      {round.started && round.status !== "finished" ? <AutoRefresh seconds={POLL.live} /> : null}
 
       <RoundHeader round={round} />
 

@@ -29,10 +29,24 @@ promise about the numbers beside it.
 | `state` | On screen | When |
 |---|---|---|
 | `"live"` | LIVE dot + word | `isMatchdayLive` — a match actually in play |
-| `"bonus-settling"` | "Full time" + faint *bonus settling* | every dated match finished, bonus not yet added |
+| `"bonus-settling"` | "Full time" | every dated match finished, bonus not yet added |
 | `"provisional"` | "Full time" | bonus added, FPL has not signed the round off |
 | `"final"` | "Final" | FPL's `data_checked` |
 | `null` | nothing | between kickoffs, and any round nobody is playing |
+
+**Two rungs, one word, on purpose.** `bonus-settling` used to add a faint
+*bonus settling* under the caption. It named FPL's bonus ladder as the reason the
+number beside it was still shifting — and the number beside it is Fantrax's,
+under scoring that has no bonus category. Checked against both leagues on 22 Aug:
+the rehearsal league scores CS A RC Min PKM GAO AF G OG YC, the real 10 Oct league
+a richer set again, and neither has one. The difference between the first two
+rungs is FPL's, and this board is not showing FPL's numbers.
+
+That leaves an open question rather than a settled one: if Fantrax's ledger
+closes at each whistle — and every played fixture was fully credited by them on
+22 Aug while FPL still had all six `finished: false` — then "Final" on a Fantrax
+scoreline is earned at the last whistle, not at FPL's sign-off a day later. One
+day's observation is not enough to move a promise on.
 
 **The dot used to burn all Saturday.** It was driven by `duringGameweek` — the
 window from the first kickoff to the last whistle — which is the right question

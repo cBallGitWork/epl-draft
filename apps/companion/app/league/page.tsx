@@ -9,6 +9,8 @@ import {
 import type { StandingsRow } from "@epl/core";
 import { PLACEHOLDER_ROUNDS, playoffPlaces } from "@epl/core";
 import { leagueCache } from "../leagueCache";
+import AutoRefresh from "../components/shell/AutoRefresh";
+import { footballNow, pollSeconds } from "../football";
 import TeamBadge from "../components/league/TeamBadge";
 import { teamBadges } from "../badges";
 import Nothing from "../components/shell/Nothing";
@@ -41,7 +43,12 @@ const table = leagueCache("standings",
 );
 
 export default async function StandingsPage() {
-  const [rows, mine, badges] = await Promise.all([table(), readerTeamId(), teamBadges()]);
+  const [rows, mine, badges, football] = await Promise.all([
+    table(),
+    readerTeamId(),
+    teamBadges(),
+    footballNow(),
+  ]);
   // Where the season's cut falls, read off the declared bracket rather than
   // written down here — the day the placeholder becomes Fantrax's published
   // top four, this line moves with it.
@@ -75,6 +82,11 @@ export default async function StandingsPage() {
 
   return (
     <LeagueShell title="Table" current="table">
+      {/* The FP column is Fantrax's live total and moves all weekend. This was
+          the last points surface with no refresh on it at all: `revalidate`
+          bounds how stale the cache may get and pushes nothing to a phone left
+          open on the sofa, so the table sat still through a whole afternoon. */}
+      <AutoRefresh seconds={pollSeconds(football)} />
 
       <div className="flex items-center gap-3 px-3 text-2xs font-bold uppercase tracking-widest text-faint">
         <span className="w-6">#</span>
