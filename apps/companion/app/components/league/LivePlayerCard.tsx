@@ -79,7 +79,7 @@ export default function LivePlayerCard({
               name plate and a points band — so the card printed his name twice
               and his total twice, once on a sticker and once in the breakdown
               three lines below that exists to explain it. */}
-          <span className="w-[5.5rem] shrink-0 overflow-hidden rounded-lg">
+          <span className="w-[var(--player-card-figure)] shrink-0 overflow-hidden rounded-lg">
             {isResolved(rostered) ? (
               <PlayerImage
                 player={rostered.player}
@@ -101,7 +101,7 @@ export default function LivePlayerCard({
         </div>
 
         <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-raised px-3 py-2">
-          <span className="inline-flex w-[5.5rem] overflow-hidden rounded-[3px]">
+          <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden rounded-[3px]">
             <FixtureChip opposition={opposition} blank="No fixture" />
           </span>
           <span className="numeric text-2xs text-faint">

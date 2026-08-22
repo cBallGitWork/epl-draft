@@ -72,6 +72,18 @@
      three places that must agree, and did not until this was one value. */
   --pitch-boards: 1.75rem;
 
+  /* How tall a band under a player on the grass is — his name plate, and the
+     score or fixture below it. Four places, and they must agree: a line whose
+     cards stand at different heights stops reading as a line, which is the whole
+     reason the plate is a fixed band with the name centred in it rather than type
+     on its own line height. Both pitches read it, ours and the FPL tab's. */
+  --pitch-band: 1.15rem;
+
+  /* How wide the sticker and the fixture chip are in a player dialog. Two cards
+     — `PlayerCard` asks who he is, `LivePlayerCard` asks what he is scoring —
+     and in both the chip below has to line up with the photograph above it. */
+  --player-card-figure: 5.5rem;
+
   /* --- The page's own side margin. `<main>` sets it, and the two things that
      deliberately break out of it read it back. Three places had it written out
      as `px-3 sm:px-4` and `-mx-3 sm:-mx-4`, which is a gutter that can drift

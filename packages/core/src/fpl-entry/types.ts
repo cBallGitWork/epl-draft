@@ -96,3 +96,14 @@ export const FPL_LINES: readonly { line: number; name: string }[] = [
   { line: 3, name: "MID" },
   { line: 4, name: "FWD" },
 ];
+
+/** Whether FPL files this man in goal.
+ *
+ *  Asked here rather than by comparing a number at a render site, and NOT by
+ *  translating the line into a Fantrax letter so `isGoalkeeper` can read it —
+ *  that would put our league's vocabulary in the middle of a question about
+ *  FPL's, for the sake of one lookup. The view needs the answer to pick which of
+ *  a club's two kits to draw behind a man with no photograph. */
+export function isFplKeeper(line: number): boolean {
+  return line === FPL_LINES[0]?.line;
+}

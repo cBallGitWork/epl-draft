@@ -40,9 +40,12 @@ export {
   gameweekStarted,
   gameweekStatus,
   isMatchdayLive,
-  roundFinished,
   roundState,
 } from "./round";
+// `roundFinished` is deliberately not here. It is half an answer — it cannot say
+// "live" — and `roundState` is the pairing every caller wants; publishing both
+// is publishing the one that has been asked in the other's place before. It
+// stays exported from its own module, where its tests reach it.
 export type { FinishedState, RoundState } from "./round";
 export { kickedOff, oppositionByClub } from "./opposition";
 export type { Opposition } from "./opposition";

@@ -3,7 +3,7 @@
 
 export { fetchEntry, fetchEntryLines, fetchEntryPoints, fetchPicks } from "./client";
 export { mapEntry, mapSquad } from "./map";
-export { FPL_LINES, FPL_STARTERS } from "./types";
+export { FPL_LINES, FPL_STARTERS, isFplKeeper } from "./types";
 export { fplLineup } from "./lineup";
 export type { FplLine } from "./lineup";
 export type { FplEntry, FplMiniLeague, FplPick, FplSquad } from "./types";

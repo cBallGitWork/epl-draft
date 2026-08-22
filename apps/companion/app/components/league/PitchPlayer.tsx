@@ -78,7 +78,7 @@ export default function PitchPlayer({
             {positionLabel(rostered.slot.position) ?? "?"}
           </span>
         </div>
-        <span className="flex h-[1.15rem] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-[0.5rem] font-bold uppercase leading-none text-bg">
+        <span className="flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-[0.5rem] font-bold uppercase leading-none text-bg">
           <span className="w-full truncate">{rostered.slot.fantraxId}</span>
         </span>
         <span className="flex h-3.5 w-full items-center justify-center overflow-hidden rounded-b-[3px] bg-cream/90 px-0.5 text-center text-[0.5rem] font-bold leading-none text-bg/70">
@@ -117,7 +117,7 @@ export default function PitchPlayer({
           translucent black that let the grass through it, over a pitch. FPL
           print theirs on white for the same reason. */}
       <span
-        className={`flex h-[1.15rem] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display font-bold uppercase leading-none tracking-[-0.01em] text-bg ${NAME_SIZE}`}
+        className={`flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display font-bold uppercase leading-none tracking-[-0.01em] text-bg ${NAME_SIZE}`}
       >
         <span className="w-full truncate">{player.name}</span>
       </span>
