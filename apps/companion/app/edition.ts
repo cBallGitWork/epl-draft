@@ -12,8 +12,8 @@ import {
   type TransactionView,
   availability,
   deals,
-  duringGameweek,
   fetchTransactions,
+  isMatchdayLive,
   mapTransactions,
   transactionDateLabel,
   nextDeadline,
@@ -51,7 +51,15 @@ export interface Edition {
    *  because their timestamps carry no offset, so without it a British reader
    *  takes a New York morning for a British one. Null if they stop saying. */
   dealsAt: string | null;
-  /** Football on right now, which changes what the paper leads with. */
+  /** Football in play *right now*, which changes what the paper leads with.
+   *
+   *  `isMatchdayLive` and deliberately not `duringGameweek`: this drives a
+   *  present-tense claim ("the scores are moving") and a pulsing dot, and
+   *  `duringGameweek` is the wider window that stays open between kickoffs and
+   *  overnight. It was that wider one, which put a live dot on the front page for
+   *  about sixty-one of GW1's seventy-four hours. `round.ts` says which question
+   *  is which, and the rest of the app already asks this one through
+   *  `roundState`. */
   live: boolean;
   snapshot: FootballSnapshot | null;
   deals: Deal[];
@@ -110,7 +118,7 @@ export async function edition(mine: string | null): Promise<Edition> {
   const now = new Date().toISOString();
 
   const paper = {
-    live: drafted ? duringGameweek(drafted.snapshot, now) : false,
+    live: drafted ? isMatchdayLive(drafted.snapshot) : false,
     snapshot: drafted?.snapshot ?? null,
     deals: deals(feed.rows),
     dealsAt: feed.at,
