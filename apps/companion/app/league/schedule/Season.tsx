@@ -30,7 +30,7 @@ export default function Season({
               GW{row.round.gameweek}
             </span>
 
-            <TeamBadge team={row.opponent.team} badges={badges} />
+            <TeamBadge team={row.opponent.team} url={row.opponent.team === null ? undefined : badges.get(row.opponent.team.teamId)} />
 
             <span className="flex min-w-0 flex-1 flex-col">
               <Opponent opponent={row.opponent} />

@@ -17,16 +17,18 @@ const SLOT = { width: SIZE, height: SIZE };
 
 export default function TeamBadge({
   team,
-  badges,
+  url,
 }: {
   /** Null for a side nobody holds yet — a semi-final winner, a place in a table
-   *  nobody occupies. Taken whole rather than as a name and a URL so the two
-   *  call sites stop writing the same pair of null checks. */
+   *  nobody occupies. Taken whole rather than as a name so this owns both null
+   *  checks and no caller repeats them. */
   team: LeagueTeam | null;
-  badges: Map<string, string>;
+  /** His badge, already looked up. A URL rather than the league's map, because
+   *  one of the four callers is a client component and a `Map` does not survive
+   *  the serialisation — and because looking a key up is the caller's business
+   *  in the three that hold one. */
+  url: string | undefined;
 }) {
-  const url = team === null ? undefined : badges.get(team.teamId);
-
   if (team !== null && url !== undefined) {
     // Decorative: the name is right beside it, and a screen reader hearing the
     // team twice learns nothing the second time.

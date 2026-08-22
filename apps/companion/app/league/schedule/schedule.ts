@@ -4,12 +4,10 @@ import {
   type FixtureStatus,
   type LeagueInfo,
   type StandingsRow,
-  type TeamBadge,
   type PeriodResult,
   fetchLeagueInfo,
   fetchSeasonResults,
   fetchStandings,
-  fetchTeamBadges,
   firstKickoff,
   gameweekStarted,
   gameweekStatus,
@@ -17,7 +15,6 @@ import {
   mapLeagueInfo,
   mapSeasonResults,
   mapStandings,
-  mapTeamBadges,
   periodGameweeks,
 } from "@epl/core";
 import { leagueCache } from "../../leagueCache";
@@ -73,24 +70,22 @@ export interface Schedule {
   /** Fantrax's table, which is what the placeholder brackets are seeded from.
    *  Empty is ordinary — nobody has played, or nobody has joined. */
   table: StandingsRow[];
-  badges: TeamBadge[];
 }
 
-/** The four reads, cached together because none of them depends on which
- *  gameweek is being looked at. The scores do, and are fetched per round by
+/** The three reads, cached together because none of them depends on which
+ *  gameweek is being looked at. The badges moved to `app/badges.ts` when the
+ *  table and the matchups board wanted them too. The scores do, and are fetched per round by
  *  `liveScores`, which has its own cache keyed on the period.
  *
  *  Only the league's own description of itself is fatal. A table we cannot read
- *  costs the placeholder brackets their seeding and they print places instead; a
- *  badge we cannot read costs a picture. Neither is worth losing the fixtures
- *  over, and neither states anything false in its absence. */
+ *  costs the placeholder brackets their seeding and they print places instead,
+ *  which is not worth losing the fixtures over and states nothing false. */
 const readSeason = leagueCache("schedule-season",
   async (): Promise<Schedule | Unavailable> => {
-    const [raw, season, standings, badges] = await Promise.all([
+    const [raw, season, standings] = await Promise.all([
       orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID)),
       seasonFixtures(),
       orRefusal(fetchStandings(FANTRAX_LEAGUE_ID)),
-      orRefusal(fetchTeamBadges(FANTRAX_LEAGUE_ID)),
     ]);
     if (raw instanceof FantraxError) return { unavailable: tell(raw) };
 
@@ -140,7 +135,6 @@ const readSeason = leagueCache("schedule-season",
       info,
       rounds,
       table: standings instanceof FantraxError ? [] : mapStandings(standings),
-      badges: badges instanceof FantraxError ? [] : mapTeamBadges(badges),
     };
   },
 );

@@ -19,6 +19,7 @@ import LeagueShell from "../../Shell";
 import { getLeagueSquads, roundOf, teamDisplay } from "../../../squads";
 import { footballNow, pollSeconds } from "../../../football";
 import { liveScores } from "../../../scoreboard";
+import { teamBadges } from "../../../badges";
 import { squadPoints } from "../../../teamStats";
 import { myTeamId } from "../../../session";
 
@@ -89,7 +90,7 @@ export default async function HeadToHeadPage({
     );
   }
 
-  const mine = await myTeamId(squads.period.teams);
+  const [mine, badges] = await Promise.all([myTeamId(squads.period.teams), teamBadges()]);
   const { scores, refused } = await liveScores(period);
   const clubs = clubById(squads.snapshot);
   const opposition = oppositionByClub(squads.snapshot);
@@ -161,6 +162,7 @@ export default async function HeadToHeadPage({
     return {
       team,
       score: scores.get(team.teamId),
+      badge: badges.get(team.teamId),
       mine: mineHere,
       pitch: sheet("pitch"),
       list: sheet("list"),

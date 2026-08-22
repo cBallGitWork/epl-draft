@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { LeagueTeam, LiveTeamScore, PeriodPairing, PendingCleanSheets } from "@epl/core";
 import { pairingInvolves } from "@epl/core";
+import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder } from "../../mine";
 
 // One head-to-head on the list of eight.
@@ -21,12 +22,16 @@ export default function PairingCard({
   pairing,
   scores,
   pending,
+  badges,
   mine,
   live,
 }: {
   pairing: PeriodPairing;
   scores: Map<string, LiveTeamScore>;
   pending: Map<string, PendingCleanSheets>;
+  /** Each manager's own badge, by team id. Empty is ordinary and draws his
+   *  initial instead — see `TeamBadge`. */
+  badges: Map<string, string>;
   /** The reader's own team, or null when nobody is signed in. */
   mine: string | null;
   /** Whether football is actually in play. Only then does a side with nobody
@@ -44,7 +49,13 @@ export default function PairingCard({
       )}`}
     >
       <div className="flex items-stretch">
-        <Side team={pairing.home} score={home} against={away} mine={pairing.home.teamId === mine} />
+        <Side
+          team={pairing.home}
+          score={home}
+          against={away}
+          badges={badges}
+          mine={pairing.home.teamId === mine}
+        />
         <span className="self-center px-1 text-2xs font-bold uppercase tracking-widest text-faint">
           v
         </span>
@@ -52,6 +63,7 @@ export default function PairingCard({
           team={pairing.away}
           score={away}
           against={home}
+          badges={badges}
           mine={pairing.away.teamId === mine}
           mirrored
         />
@@ -80,12 +92,14 @@ function Side({
   team,
   score,
   against,
+  badges,
   mine,
   mirrored = false,
 }: {
   team: LeagueTeam;
   score: LiveTeamScore | undefined;
   against: LiveTeamScore | undefined;
+  badges: Map<string, string>;
   mine: boolean;
   mirrored?: boolean;
 }) {
@@ -105,6 +119,7 @@ function Side({
         mirrored ? "flex-row-reverse" : ""
       }`}
     >
+      <TeamBadge team={team} url={badges.get(team.teamId)} />
       <span
         className={`min-w-0 flex-1 truncate text-sm font-semibold ${
           mirrored ? "text-right" : "text-left"

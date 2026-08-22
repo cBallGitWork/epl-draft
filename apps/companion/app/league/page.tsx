@@ -7,7 +7,10 @@ import {
   mapStandings,
 } from "@epl/core";
 import type { StandingsRow } from "@epl/core";
+import { PLACEHOLDER_ROUNDS, playoffPlaces } from "@epl/core";
 import { leagueCache } from "../leagueCache";
+import TeamBadge from "../components/league/TeamBadge";
+import { teamBadges } from "../badges";
 import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
 import { readerTeamId } from "../squads";
@@ -38,7 +41,11 @@ const table = leagueCache("standings",
 );
 
 export default async function StandingsPage() {
-  const [rows, mine] = await Promise.all([table(), readerTeamId()]);
+  const [rows, mine, badges] = await Promise.all([table(), readerTeamId(), teamBadges()]);
+  // Where the season's cut falls, read off the declared bracket rather than
+  // written down here — the day the placeholder becomes Fantrax's published
+  // top four, this line moves with it.
+  const qualify = playoffPlaces(PLACEHOLDER_ROUNDS);
 
   // An empty state keeps the header and the section nav. Without them a reader
   // who lands here during an outage has no way to reach Schedule or Matchups —
@@ -76,7 +83,11 @@ export default async function StandingsPage() {
             Unparsed here as it is in the mapper: every sample we hold is "0-0-0"
             and splitting it would be inventing a format. */}
         <span className="numeric w-16 text-right">W-L-T</span>
-        <span className="numeric w-16 text-right">Points</span>
+        {/* FP, not "Points". In a league table "points" means the standings —
+            three for a win — and this column is Fantrax points scored, which is
+            a different number the same word would have claimed. Fantrax's own
+            field is `totalPointsFor` and their site heads it FPts. */}
+        <span className="numeric w-16 text-right">FP</span>
       </div>
 
       <ul className="flex flex-col gap-1.5">
@@ -100,6 +111,10 @@ export default async function StandingsPage() {
               <span className="numeric w-6 text-lg font-bold leading-none text-muted">
                 {row.rank}
               </span>
+              <TeamBadge
+                team={{ teamId: row.teamId, name: row.teamName }}
+                url={badges.get(row.teamId)}
+              />
               <span
                 className={`min-w-0 flex-1 truncate text-sm ${
                   row.teamId === mine ? "font-bold text-ink" : "font-semibold"
@@ -121,9 +136,32 @@ export default async function StandingsPage() {
                 {row.pointsFor}
               </span>
             </Link>
+            {cut(row.rank, qualify, rows.length) ? (
+              /* The playoff line. Drawn under the last qualifying place rather
+                 than shaded across the rows above it: a tinted band reads as
+                 "these are yours" on the one row a manager is looking for, and
+                 the accent is already spoken for. Absent entirely for a league
+                 that declares no playoff, and for a table shorter than the cut —
+                 a line under the bottom row states a qualification nobody missed. */
+              <p className="flex items-center gap-2 px-1 pt-1.5 text-2xs font-bold uppercase tracking-widest text-faint">
+                <span className="h-px flex-1 bg-league/50" />
+                Playoffs
+                <span className="h-px flex-1 bg-league/50" />
+              </p>
+            ) : null}
           </li>
         ))}
       </ul>
     </LeagueShell>
   );
+}
+
+/** Whether the playoff line falls under this row.
+ *
+ *  Never under the last one: a line beneath the bottom of the table announces a
+ *  cut nobody missed. A two-team league whose top two qualify is exactly the
+ *  shape that would draw one, and the rehearsal league is four teams away from
+ *  it. */
+function cut(rank: number, qualify: number | null, teams: number): boolean {
+  return qualify !== null && rank === qualify && rank < teams;
 }

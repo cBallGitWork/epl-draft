@@ -157,7 +157,7 @@ function Side({
   const yours = side.team !== null && side.team.teamId === mine;
   const body = (
     <>
-      <TeamBadge team={side.team} badges={badges} />
+      <TeamBadge team={side.team} url={side.team === null ? undefined : badges.get(side.team.teamId)} />
       <span
         className={`min-w-0 flex-1 truncate text-sm ${at === "home" ? "text-right" : ""} ${
           side.team === null

@@ -8,6 +8,7 @@ import { pollSeconds } from "../../football";
 import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "../../scoreboard";
+import { teamBadges } from "../../badges";
 import { yoursFirst } from "../../mine";
 import { FANTRAX_SILENT } from "../../config";
 
@@ -78,7 +79,7 @@ export default async function MatchupPage() {
   // round is over — a finished round is not live and never was `null`.
   const inPlay = isMatchdayLive(squads.snapshot);
 
-  const mine = await myTeamId(squads.period.teams);
+  const [mine, badges] = await Promise.all([myTeamId(squads.period.teams), teamBadges()]);
   const { scores, refused } = await liveScores(period);
   const pending = pendingByTeam(squads.period.teams, squads.info.scoring, squads.snapshot, squads.display);
   const owed = [...pending.values()].reduce((total, team) => total + team.players, 0);
@@ -132,6 +133,7 @@ export default async function MatchupPage() {
               pairing={pairing}
               scores={scores}
               pending={pending}
+              badges={badges}
               mine={mine}
               live={inPlay}
             />

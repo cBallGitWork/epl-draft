@@ -59,6 +59,25 @@ export const PLACEHOLDER_ROUNDS: readonly SeededRound[] = [
   { competition: PLAYOFFS, gameweek: 38, name: "Final", ties: [[1, 2]] },
 ];
 
+/** How many places a season qualifies for the playoffs, read off the declared
+ *  bracket rather than written down twice.
+ *
+ *  The bracket already says it: a final between seeds 1 and 2 is a top two, and
+ *  the day this becomes the real thing — Fantrax publishes
+ *  `numPlayoffTeams: 4, firstPlayoffPeriod: 35` for the 16-team league — the
+ *  table's cut line moves with it because it is the same declaration. A named
+ *  side ("Winner, semi-final 1") seeds nobody and is skipped.
+ *
+ *  Null when nothing declares a playoff, which is a league whose table has no
+ *  line to draw rather than one with the line at zero. */
+export function playoffPlaces(rounds: readonly SeededRound[]): number | null {
+  const seeds = rounds
+    .filter((round) => round.competition.id === PLAYOFFS.id)
+    .flatMap((round) => round.ties.flat())
+    .filter((seed): seed is number => typeof seed === "number");
+  return seeds.length === 0 ? null : Math.max(...seeds);
+}
+
 export interface TieSide {
   /** Null while the draw cannot name a team — an empty table, or a side that is
    *  won rather than seeded. */

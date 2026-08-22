@@ -23,6 +23,7 @@ import { seasonRows } from "./teamSeason";
 import { footballNow } from "../../football";
 import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
+import { teamBadges } from "../../badges";
 import { FANTRAX_SILENT } from "../../config";
 
 // The season, one gameweek at a time across every competition being played on
@@ -86,7 +87,7 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
     );
   }
 
-  const { info, rounds, table, badges } = read;
+  const { info, rounds, table } = read;
   if (rounds.length === 0) {
     return (
       <LeagueShell title="Schedule" current="schedule" sub={info.name}>
@@ -101,8 +102,7 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
     );
   }
 
-  const mine = await myTeamId(info.teams);
-  const crests = new Map(badges.map((badge) => [badge.teamId, badge.url]));
+  const [mine, crests] = await Promise.all([myTeamId(info.teams), teamBadges()]);
   const round = chooseRound(rounds, query.gw, football.gameweek);
   const chosenTeam = info.teams.find((entry) => entry.teamId === query.team) ?? null;
   const chosen = COMPETITIONS.find((competition) => competition.id === query.comp) ?? null;

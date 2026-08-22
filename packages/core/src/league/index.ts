@@ -51,6 +51,7 @@ export {
   COMPETITIONS,
   LEAGUE_COMPETITION,
   PLACEHOLDER_ROUNDS,
+  playoffPlaces,
   groupTies,
   leagueTies,
   seededTies,

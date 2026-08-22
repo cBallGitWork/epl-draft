@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import type { LeagueTeam, LiveTeamScore, RoundState } from "@epl/core";
 import RoundWord from "./RoundWord";
+import TeamBadge from "./TeamBadge";
 import ViewToggle, { type View } from "./ViewToggle";
 
 // The head-to-head at full size: both totals side by side, and one manager's
@@ -28,6 +29,10 @@ export interface MatchupSide {
   team: LeagueTeam;
   /** Fantrax's own total, or undefined when they had none for this team. */
   score: LiveTeamScore | undefined;
+  /** His badge's URL, or undefined for a manager who picked none. A single URL
+   *  and not the league's map: this crosses to the browser, and the other
+   *  fourteen badges are not this board's business. */
+  badge: string | undefined;
   mine: boolean;
   /** Both drawn on the server: his eleven and bench on the grass, and the same
    *  squad as rows. Nodes rather than a roster, so the clubs and fixtures they
@@ -121,6 +126,7 @@ function Side({
         mirrored ? "flex-row-reverse" : ""
       } ${open ? "bg-raised" : ""}`}
     >
+      <TeamBadge team={side.team} url={side.badge} />
       <span
         className={`min-w-0 flex-1 truncate text-xs font-semibold ${
           mirrored ? "text-right" : "text-left"
