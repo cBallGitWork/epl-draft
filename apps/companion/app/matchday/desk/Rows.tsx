@@ -1,5 +1,5 @@
 import type { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing } from "@epl/core";
-import { londonTime } from "../../londonTime";
+import { londonDay, londonTime } from "../../londonTime";
 
 // The desk's two kinds of line, at the density the desk is for.
 //
@@ -109,6 +109,11 @@ export function Match({
           <span className="text-live">{fixture.minutes}′</span>
         ) : fixture.status === "finished" ? (
           <span className="text-faint">FT</span>
+        ) : fixture.kickoff !== null ? (
+          /* The day, in the tick's slot, which is empty until a match starts.
+             Eighteen rows spanning Friday to Monday otherwise print 17:30 above
+             14:00 with nothing to say they are different days. */
+          <span className="text-faint">{londonDay(fixture.kickoff)}</span>
         ) : null}
       </span>
     </div>

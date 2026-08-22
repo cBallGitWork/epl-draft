@@ -9,6 +9,11 @@ Shares `GameweekView` with `/matchday`, so the two never drift.
 
 - Header: league crest, name, gameweek, and either a **LIVE** badge with the
   pulsing dot or FPL's deadline.
+- **The day under the kickoff time** — `Sat`, `Sun`, `Mon`, in the small line
+  that carries `FT` once the match is over and is empty until it starts. Without
+  it the list is sorted by instant and reads as scrambled: 17:30 above 14:00
+  because one is Saturday and the other Sunday. Not folded into the time above
+  it, which is the slot the score lands in.
 - **`MatchList`** — every fixture in kickoff order, undated TV picks last. Each
   fixture is a native `<details>`, so the drop-down works with no JavaScript, is
   keyboard operable and screen-reader announced for free. Open one and you get

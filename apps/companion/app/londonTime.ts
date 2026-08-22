@@ -18,6 +18,11 @@ const DAY_AND_TIME = new Intl.DateTimeFormat("en-GB", {
   timeZone: LEAGUE_TIMEZONE,
 });
 
+const WEEKDAY = new Intl.DateTimeFormat("en-GB", {
+  weekday: "short",
+  timeZone: LEAGUE_TIMEZONE,
+});
+
 const DATE = new Intl.DateTimeFormat("en-GB", {
   weekday: "long",
   day: "numeric",
@@ -43,4 +48,16 @@ export function londonTime(iso: string): string {
 /** "Fri 18:30" — for anything far enough away that the hour alone is ambiguous. */
 export function londonDayAndTime(iso: string): string {
   return DAY_AND_TIME.format(new Date(iso));
+}
+
+/** "Sun" — the day on its own, for a list whose times are already in a column of
+ *  their own.
+ *
+ *  A round runs Friday to Monday, so an hour without a day reads as scrambled:
+ *  the matchday list is sorted by instant and prints 17:30 above 14:00 because
+ *  one is Saturday and the other Sunday. Where there is room for a sentence,
+ *  `londonDayAndTime` is the answer; where the time is a fixed compact slot with
+ *  a score's worth of width, the day goes beside it instead of inside it. */
+export function londonDay(iso: string): string {
+  return WEEKDAY.format(new Date(iso));
 }

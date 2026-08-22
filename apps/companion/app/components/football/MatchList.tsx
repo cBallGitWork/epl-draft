@@ -11,7 +11,7 @@ import {
   crestUrl,
   fixturesInOrder,
 } from "@epl/core";
-import { londonTime } from "../../londonTime";
+import { londonDay, londonDayAndTime, londonTime } from "../../londonTime";
 import { chipsFor } from "../league/Chips";
 import { yoursBorder } from "../../mine";
 import PlayerPortrait from "./PlayerPortrait";
@@ -133,7 +133,7 @@ function MatchRow({
           <p className="py-1 text-center text-xs text-faint">
             {live || fixture.status === "finished"
               ? "Nothing to report yet."
-              : `Kicks off ${formatKickoff(fixture.kickoff)}`}
+              : `Kicks off ${fixture.kickoff === null ? "TBC" : londonDayAndTime(fixture.kickoff)}`}
           </p>
         ) : (
           <ul className="flex flex-col gap-1.5">
@@ -213,6 +213,16 @@ function ScoreBlock({ fixture }: { fixture: Fixture }) {
         </span>
       ) : fixture.status === "finished" ? (
         <span className="text-2xs font-semibold uppercase tracking-wide text-faint">FT</span>
+      ) : fixture.kickoff !== null ? (
+        /* The day, in the line that says FT once the match is over — which is
+           empty for precisely the fixtures that need it. A round runs Friday to
+           Monday, so the list is sorted by instant and reads as scrambled: 17:30
+           sits above 14:00 because one is Saturday and the other Sunday. The day
+           goes here rather than into the time above it, because that slot is the
+           one the score lands in and "Sun 14:00" at score size is not a score. */
+        <span className="text-2xs font-semibold uppercase tracking-wide text-faint">
+          {londonDay(fixture.kickoff)}
+        </span>
       ) : null}
     </span>
   );

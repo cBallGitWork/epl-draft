@@ -31,6 +31,10 @@ colour registers are binding and Ceefax's are not ours. Two conventions:
   **A football fact only.** There is no equivalent for a fantasy total: "a lot
   of points" has no custom behind it, and inventing a threshold would be us
   making the joke rather than quoting it.
+- **The day, in the tick's slot, until the match starts** — `Sat`, `Sun`, `Mon`.
+  A round runs Friday to Monday, so eighteen rows sorted by instant print 17:30
+  above 14:00 and read as scrambled. It goes here rather than beside the time
+  because that column is where the score lands.
 - **A tick where the kickoff time was** — the minute while a match is live, `FT`
   when it is over. **No `HT`**: FPL publishes a minute and a finished flag, and
   a clock stopped on 45 is not a claim they have made — a match genuinely in its
