@@ -98,8 +98,10 @@ Long section there; the headlines, all previously open questions in this repo:
 
 Their live/matchup/standings engine prices a man at the slot his owner has him
 in. `getPlayerStats`, `getTeamRosterInfo` and `getPlayerProfile` price him at his
-`defaultPosId`. Saka is listed F and slotted M: the engine pays him **8**, the
-tables pay him **6**.
+`defaultPosId`. Saka **is a midfielder and a forward** — the league's own
+`eligiblePos` is `"F,M"` — and his manager has chosen M: the engine pays him **8**,
+the tables pay him **6**. There is no single right position for him, which is the
+point; the only answer that means anything is the one his manager made.
 
 **The head-to-head board therefore disagrees with itself on screen** —
 `/league/matchups/j9zadacnmshcpazf` shows a header of **16** over an eleven that

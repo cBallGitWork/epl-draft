@@ -2643,23 +2643,34 @@ The finding with product consequences. Fantrax's scoring is position-dependent
 (`G: {D:6, M:5, F:4}`, `CS: {D:4, M:1, Default:0}`), and the position it applies
 is **the slot his owner has him in**, not his position in the global pool.
 
-> Saka, `04y92`. `getPlayerIds` lists him **F**. His owner rosters him at **M**.
+> Saka, `04y92`, is **a midfielder and a forward** — `getLeagueInfo.playerInfo`
+> gives his `eligiblePos` as `"F,M"`. **His manager has chosen M.**
 > `getLiveScoringStats` scores him 8 — `Min 2 + G 5 + CS 1`, midfield rates.
 > `getPlayerStats` scores him 6 — `Min 2 + G 4 + CS 0`, forward rates.
 
-Seven of sixty rehearsal roster slots are off-canonical, all canonical-F players
-slotted at M. So the pool table's `FPts` is **not** what a player scored for his
-owner, and on this league it will differ for roughly one rostered player in eight.
+**There is no single right position for a dual-eligible player, which is the whole
+point.** An earlier draft of this note said Saka "is listed F", which is the trap
+rather than the fact: `F` is only what `getPlayerIds` prints, and that endpoint
+carries one letter per man because it describes the global pool and not a league.
+The league's own answer is `F,M`, and the answer that decides his points is the
+one a manager made when he filled in his eleven. `/players` already shows `F/M`
+correctly, and its comment already says why — "the league's eligibility, not the
+pool's single position".
+
+Seven of sixty rehearsal roster slots differ from `defaultPosId`, every one of
+them a dual-eligible man his manager has filed deeper. So the pool table's `FPts`
+is **not** what a player scored for his owner, and on this league it differs for
+roughly one rostered player in eight.
 
 **The splitting field is `defaultPosId`**, and it rides in payloads we already
 read. Fantrax's *stat tables* — `getPlayerStats`, `getTeamRosterInfo`,
-`getPlayerProfile` — price a man at his `defaultPosId`. Fantrax's *live, matchup
-and standings engine* prices him at the slot on the roster. `getPlayerIds`'
-position happens to equal `defaultPosId` for all sixty rostered players today, so
-the two cannot be told apart from this league yet; nor, with only one off-slot
-player having played, can "roster slot" be told from "first-listed eligible
-position", which predicts the same answer. Neither ambiguity changes the shape of
-the problem.
+`getPlayerProfile` — price a man at his `defaultPosId`, which for a dual-eligible
+player is one of his two and not a fact about him. Fantrax's *live, matchup and
+standings engine* prices him at the slot on the roster, which is a decision his
+manager made. With only one off-slot man having played, "the slot he is in" cannot
+yet be told apart from "the first of his eligible positions" — both predict M for
+Saka. Semenyo (`068y0`, eligible `M,F`, filed at F) settles it the first time he
+plays, and neither reading changes the shape of the problem.
 
 **Which number decides the match.** `getStandings?view=SCHEDULE` — their settled
 table — reports Gameweek 1 as `123 5 — test3 16`. Sixteen is the slot-priced

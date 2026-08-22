@@ -167,11 +167,13 @@ authenticated. Unprobed as of 19 Aug 2026; see PLATFORM_NOTES.
 ### Fantrax scores the roster slot, not the player
 
 Their scoring is position-dependent (`G: {D:6, M:5, F:4}`, `CS: {D:4, M:1}`) and
-the position applied is **the slot his owner has him in**, not his position in the
-global pool. Saka is listed `F` and rostered at `M`: `getLiveScoringStats` pays
-him 8 at midfield rates, `getPlayerStats` pays him 6 at forward rates. So the
-pool table's `FPts` is not what a player scored for his owner. Per-team reads
-(`getTeamRosterInfo`) are slot-correct; the pool read is not.
+the position applied is **the slot his manager chose**, not any single position
+of his own. 48 of 607 players are eligible at two — `getLeagueInfo.playerInfo`
+carries `eligiblePos` like `"F,M"` — and `getPlayerIds`' one letter per man is the
+global pool's default, never the league's answer. Saka is `F,M`, filed at M:
+`getLiveScoringStats` pays him 8 at midfield rates while `getPlayerStats` pays him
+6 at forward rates. So the pool table's `FPts` is not what a player scored for his
+owner. **Read the roster slot, never a position off the player.**
 
 ### Identity
 
