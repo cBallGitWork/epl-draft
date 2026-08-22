@@ -23,11 +23,17 @@ football under it.
    drafted — so a reader still gets the football with no empty furniture. Both
    halves, and the link in its header, open the full board.
 2. **`Afternoon`** — your **active** players still to come, grouped by kickoff:
-   `15:00 · Gabriel, Saka` / `17:30 · Isak`, with a live group showing the clock
-   instead of the time. The card above says where you are; this says what is
-   left to change it. Reserves are excluded because they do not score, and
-   reading your own lineup withholds nothing from anybody — it is yours all
+   `Sat 15:00 · Gabriel, Saka` / `Sun 14:00 · Isak`, with a live group showing
+   the clock instead of the time. The card above says where you are; this says
+   what is left to change it. Reserves are excluded because they do not score,
+   and reading your own lineup withholds nothing from anybody — it is yours all
    week. Absent for a signed-out reader, and it renders nothing at all.
+
+   **The day is printed, and "afternoon" is the name rather than the scope.**
+   These examples used to be `15:00` and `17:30`, which is what a round looks
+   like if you only ever picture a Saturday. GW1 ran Friday night to Monday
+   night and the strip read `15:00` above `14:00` — right, because one was
+   Saturday and the other Sunday, and unreadable, because it said neither.
 3. **`GameweekView`** — the round's fixtures (see [gameweek.md](gameweek.md)),
    now with **your players marked and every scorer tagged with the squad holding
    him**. The two halves of the page finally share both grammars: the scoreline,

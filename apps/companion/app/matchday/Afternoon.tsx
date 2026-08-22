@@ -3,14 +3,23 @@ import {
   type FootballSnapshot,
   fixturesInOrder,
 } from "@epl/core";
-import { londonTime } from "../londonTime";
+import { londonDayAndTime } from "../londonTime";
 
 // Your afternoon: who of yours is still to come, and when.
 //
 // The question the live view could not answer. A manager on 47 points with two
 // hours of football left wants to know which two hours — and the score above
 // says nothing about it, while the fixture list below says it ten fixtures at a
-// time. This is the same fact read in the order the day happens.
+// time. This is the same fact read in the order the football happens.
+//
+// **The day is printed, not just the hour**, and "afternoon" is the name rather
+// than the scope. A round is not an afternoon: GW1 ran Friday night to Monday
+// night, and the strip listed `15:00` above `14:00` — correct, because one was
+// Saturday and the other Sunday, and unreadable, because it said neither.
+// `londonDayAndTime` exists for exactly this ("anything far enough away that the
+// hour alone is ambiguous"), and it is used unconditionally: every Premier
+// League round spans at least two days, so a conditional day would be a branch
+// that is almost never taken and wrong the week it is.
 //
 // Your ACTIVE players only. Reserves do not score, so a reserve in the 17:30 is
 // not part of your afternoon — and your own lineup is never withheld from you,
@@ -53,14 +62,14 @@ export default function Afternoon({
       <ul className="flex flex-col gap-1">
         {[...groups].map(([kickoff, group]) => (
           <li key={kickoff} className="flex items-baseline gap-2 text-sm">
-            <span className="numeric w-14 shrink-0 font-semibold">
+            <span className="numeric w-20 shrink-0 font-semibold">
               {group.minutes === null ? (
                 // TBC rather than a borrowed time: a TV pick with no slot yet is
                 // still part of the round, and it must not wear a neighbour's.
                 kickoff === "" ? (
                   "TBC"
                 ) : (
-                  londonTime(kickoff)
+                  londonDayAndTime(kickoff)
                 )
               ) : (
                 <span className="inline-flex items-center gap-1 text-live">
