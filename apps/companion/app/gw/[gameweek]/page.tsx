@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { hasGameweek } from "@epl/core";
 import GameweekView from "../../components/football/GameweekView";
-import { gameweekSnapshot } from "../../football";
+import { footballNow, gameweekSnapshot } from "../../football";
 import { marks } from "../../involvement";
 
 // Any round of the season, addressable. Last week's results on Monday morning is
@@ -25,10 +25,23 @@ export default async function GameweekPage({
   if (!Number.isInteger(requested)) notFound();
 
   // Validated against the season FPL actually published, not a hardcoded 38.
-  // Read through the cached wrapper rather than the adapter directly: the cookie
+  // Read through a cached wrapper rather than the adapter directly: the cookie
   // below makes this route dynamic, so without it every arrival would refetch a
   // round of February that is the same bytes for everyone who asks.
-  const snapshot = await gameweekSnapshot(requested);
+  //
+  // **Which wrapper matters, and getting it wrong showed.** `gameweekSnapshot` is
+  // reached from this route and nowhere else, and `unstable_cache` serves a stale
+  // entry while it revalidates — so on a quiet round nothing warms it and the
+  // first reader gets whatever was true last time somebody looked. On 22 Aug that
+  // was 68 minutes: /gw/1 rendered "BRE 2–0 Live 45′" while /matchday, in the same
+  // second, rendered "BRE 3–0 FT". A page may be stale; it may not be stale in the
+  // present tense.
+  //
+  // So the current round comes from `footballNow`, which every other screen keeps
+  // warm, and `gameweekSnapshot` keeps the job its own docblock describes — a
+  // round in February, the same bytes every time anyone asks.
+  const current = await footballNow();
+  const snapshot = requested === current.gameweek ? current : await gameweekSnapshot(requested);
   if (!hasGameweek(snapshot, requested)) notFound();
 
   // Marked from TODAY's squad, including on a round played in October. That is

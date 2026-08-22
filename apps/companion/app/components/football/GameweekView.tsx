@@ -2,7 +2,6 @@ import Link from "next/link";
 import ButtonLink from "../shell/ButtonLink";
 import {
   LEAGUE_NAME,
-  POLL,
   type FootballPlayer,
   type FootballSnapshot,
   type PlayerOwner,
@@ -11,6 +10,7 @@ import {
 } from "@epl/core";
 import { londonDayAndTime, londonTime } from "../../londonTime";
 import AutoRefresh from "../shell/AutoRefresh";
+import { pollSeconds } from "../../football";
 import LeagueCrest from "../shell/LeagueCrest";
 import MatchList from "./MatchList";
 
@@ -44,7 +44,14 @@ export default function GameweekView({
 
   return (
     <div className="flex flex-col gap-4">
-      <AutoRefresh seconds={live ? POLL.live : POLL.idle} />
+      {/* `pollSeconds`, like every other refreshing surface — and unlike the
+          `live ? POLL.live : POLL.idle` that stood here, which is the one
+          question the app's own doctrine says a poll rate must NOT be asked.
+          `isMatchdayLive` goes false in every gap between kickoffs, so this
+          page — the Live tab — dropped to the idle 300s while the desk and all
+          three head-to-head boards stayed on 30s beside it. Between kickoffs is
+          exactly when a score is most likely to have moved since you looked. */}
+      <AutoRefresh seconds={pollSeconds(snapshot)} />
 
       <header className="flex items-baseline justify-between gap-3 pt-1">
         <div className="flex items-center gap-2.5">
