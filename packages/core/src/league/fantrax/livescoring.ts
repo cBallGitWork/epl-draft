@@ -12,6 +12,10 @@ import type { LiveTeamScore } from "../types";
 
 /** The wire, mirrored including the parts we decline to read. */
 export interface RawLiveScoring {
+  /** Fantrax's own "the round is over". Not read: the football layer answers the
+   *  same question from FPL, which is the provider that actually knows, and a
+   *  second opinion we would have to arbitrate is worse than one we would not. */
+  allEventsFinished?: boolean;
   statsPerTeam?: {
     allTeamsStats?: Record<string, RawTeamSections | undefined>;
   };
@@ -33,10 +37,45 @@ export interface RawTeamSection {
    *  projection are omitted rather than zeroed. Not mapped: a projection is a
    *  different claim from a score and nothing shows one yet. */
   projectedTotalsMap?: Record<string, number | undefined>;
-  /** Five unlabelled integers. Deliberately not modelled — reading meaning into
-   *  a position we have only ever seen at rest would be inventing a fact. `toPlay`
-   *  is counted from `remainingEventPercent`, which says what it means. */
+  /** Five integers, decoded 22 Aug 2026 across a whole matchday and left
+   *  unmodelled anyway:
+   *
+   *  `[0]` players who appeared and whose match is over · `[1]` players in a
+   *  match in progress · `[2]` players still to come · `[3]` = `[0] × 90` ·
+   *  `[4]` = `[2] × 90` plus the real minutes left in the matches under way.
+   *
+   *  `[1]` was verified against the count of `gameStatusMap` entries in state 2,
+   *  and `[3]` is nominal — it read 180 for two men who played 67 and 75.
+   *
+   *  Still not read, because `toPlay` comes from `remainingEventPercent`, which
+   *  says what it means without a decoding note. Written down because `[0]+[1]+[2]`
+   *  falls short of eleven by exactly the number of men whose match ended without
+   *  them, which is a fact worth having if anything ever wants it. */
   playerGameInfo?: number[];
+  /** `"{OPP}~{kickoffEpochMs}|{gameId}|{state}"` before kickoff, and
+   *  `"COV 0 @ ARS 3 F|{gameId}|{state}"` once it is under way. State 1 upcoming,
+   *  2 in progress, 3 finished. Not read: this is football wearing league
+   *  clothes, and the football layer already carries fixtures and scores from
+   *  the provider whose job they are. */
+  gameStatusMap?: Record<string, string | undefined>;
+  /** Per player, his fantasy total for the period (`object1`) and the
+   *  per-category rows behind it (`object2`), priced at the ROSTER SLOT.
+   *
+   *  Empty until a man has played. Not read yet, and the reason is worth keeping:
+   *  this is the only slot-priced per-player number Fantrax publishes, so it is
+   *  the fix for the head-to-head board disagreeing with its own total — see
+   *  PLATFORM_NOTES, 22 Aug. That is a change to what four screens show and it is
+   *  Craig's, not a Saturday's. */
+  statsMap?: Record<string, unknown | undefined>;
+  /** Empty on every section seen so far, including a full live matchday. */
+  statsMap2?: Record<string, unknown | undefined>;
+  /** Fantrax's projection updated for what has already happened: for a man whose
+   *  match is done it is his actual score, where `projectedTotalsMap` stays the
+   *  pre-game guess. The two were identical until football existed. Not read —
+   *  nothing shows a projection. */
+  calculatedProjectedTotalsMap?: Record<string, number | undefined>;
+  projectedTotalsMap2?: Record<string, number | undefined>;
+  totalFpts2?: number;
 }
 
 export function mapLiveScores(raw: RawLiveScoring): LiveTeamScore[] {

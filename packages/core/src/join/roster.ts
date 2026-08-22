@@ -34,8 +34,17 @@ export type Unresolved =
 export interface ResolvedPlayer {
   slot: RosterSlot;
   player: FootballPlayer;
-  /** One row per fixture he appeared in this gameweek: two on a double, none
-   *  before kickoff. Empty is the normal state most of the week. */
+  /** One row per fixture his CLUB is scheduled for this gameweek — not per
+   *  fixture he appeared in. Two on a double, and one carrying nothing but
+   *  zeroes for a man whose match is three days off or who was never brought on.
+   *
+   *  Empty only before the round's first whistle, when FPL answers
+   *  `{"elements": []}`. From that whistle every player in the league has a row,
+   *  so `stats.length` says the round has started and nothing whatever about
+   *  him. Reading it as "he played" is the bug fixed on 22 Aug 2026: it made
+   *  every squad screen print a score where a fixture belonged. `minutes > 0` is
+   *  the appearance test, and `kickedOff` — a question about fixtures, in the
+   *  football layer — is the one the views actually want. */
   stats: PlayerMatchStats[];
 }
 

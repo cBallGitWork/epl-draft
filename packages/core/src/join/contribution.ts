@@ -8,10 +8,15 @@ import type { PlayerMatchStats } from "../football/types";
 // readers — the sticker on the pitch and the row in the list — which had begun
 // summing the same fields two different ways.
 //
-// Fantrax's own points are deliberately absent. `getTeamRosters` does not carry
-// them, their live scoreboard publishes no per-player total we can read, and we
-// do not recompute their scoring. So this is the countable events and the
-// minutes, which is what we genuinely know.
+// Fantrax's own points are deliberately absent, and the reason has narrowed.
+// `getTeamRosters` still does not carry them and we still recompute nothing —
+// but "their live scoreboard publishes no per-player total we can read" stopped
+// being true on 22 Aug 2026. `getLiveScoringStats` fills `statsMap[id].object1`
+// with a player's total and `.object2` with its per-category parts, priced at
+// the roster slot, in the payload the scoreboard already fetches. It is not read
+// here because this is the FOOTBALL side of the join — countable events under
+// nobody's rules — and pulling a provider's points into it would be the layer
+// mistake CLAUDE.md is about. PLATFORM_NOTES, 22 Aug, records what it holds.
 
 // There is deliberately no `played` flag here. There was one, defined as "we
 // have a stat line for him", and it was true for every player in the league from
