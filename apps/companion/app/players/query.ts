@@ -5,6 +5,27 @@ import type { PoolRow } from "./pool";
 // pool never crosses to the phone as data, and a manager can send someone a link
 // to exactly what he is looking at.
 
+/** What Next hands a page for `?a=b`, verbatim.
+ *
+ *  A repeated parameter arrives as an ARRAY — `?q=a&q=b` gives `["a","b"]` — and
+ *  this used to be typed as `string` throughout, which is a lie the compiler
+ *  then enforced downstream: `.trim()` on an array threw and the page answered
+ *  500. Nobody types that by hand, but a crawler following two links, a
+ *  double-submitted form or a shared URL somebody edited all produce it.
+ *
+ *  Mirrored as it really is and narrowed in one place, on the same rule `raw.ts`
+ *  follows for a provider: types describe reality, and the narrowing happens
+ *  where the two meet. */
+export interface PlayersSearchParams {
+  q?: string | string[];
+  pos?: string | string[];
+  status?: string | string[];
+  sort?: string | string[];
+  dir?: string | string[];
+  all?: string | string[];
+}
+
+/** The same query, narrowed. */
 export interface PlayersQuery {
   q?: string;
   pos?: string;
@@ -12,6 +33,21 @@ export interface PlayersQuery {
   sort?: string;
   dir?: string;
   all?: string;
+}
+
+/** The last value wins, which is what a browser does with a repeated field and
+ *  what a reader editing a URL by hand means. */
+export function playersQuery(raw: PlayersSearchParams): PlayersQuery {
+  const one = (value: string | string[] | undefined): string | undefined =>
+    Array.isArray(value) ? value[value.length - 1] : value;
+  return {
+    q: one(raw.q),
+    pos: one(raw.pos),
+    status: one(raw.status),
+    sort: one(raw.sort),
+    dir: one(raw.dir),
+    all: one(raw.all),
+  };
 }
 
 /** How many rows a page carries before it says so and offers the rest.

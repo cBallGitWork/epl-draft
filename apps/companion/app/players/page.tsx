@@ -3,8 +3,8 @@ import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import PlayerTable, { STATUS } from "./PlayerTable";
 import { getLeaguePool } from "./pool";
-import { PAGE_ROWS, filterHref, showAllHref, shownRows } from "./query";
-import type { PlayersQuery } from "./query";
+import { PAGE_ROWS, filterHref, playersQuery, showAllHref, shownRows } from "./query";
+import type { PlayersSearchParams } from "./query";
 import { FANTRAX_SILENT } from "../config";
 import { positionLabel } from "../positions";
 
@@ -28,9 +28,10 @@ function chip(active: boolean): string {
 export default async function PlayersPage({
   searchParams,
 }: {
-  searchParams: Promise<PlayersQuery>;
+  searchParams: Promise<PlayersSearchParams>;
 }) {
-  const [pool, query] = await Promise.all([getLeaguePool(), searchParams]);
+  const [pool, asked] = await Promise.all([getLeaguePool(), searchParams]);
+  const query = playersQuery(asked);
 
   if ("unavailable" in pool) {
     return (

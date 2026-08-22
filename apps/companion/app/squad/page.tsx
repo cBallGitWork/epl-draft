@@ -32,21 +32,34 @@ const DRAFT_DATE = londonDate(
 export default async function SquadsPage() {
   const squads = await getLeagueSquads();
 
+  // Both empty states keep the sign-in form under them, and that is not a
+  // decoration. This route is the ONLY place a manager can enter his code, and
+  // the two states below are exactly the ones our real league is in every day
+  // until 10 Oct — so without it nobody could sign in during the whole run-up,
+  // or at any moment Fantrax was unreachable on the day. Signing in needs no
+  // Fantrax at all: the code is checked against `TEAM_CODES` and the cookie is
+  // signed with `SESSION_SECRET`, both ours (see `squad/actions.ts`).
   if ("unavailable" in squads) {
     return (
-      <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
-        The league is fine. We just cannot read it right now, so rather than guess at your squad
-        this says nothing.
-      </Nothing>
+      <div className="flex flex-col gap-3">
+        <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
+          The league is fine. We just cannot read it right now, so rather than guess at your squad
+          this says nothing.
+        </Nothing>
+        <SignIn />
+      </div>
     );
   }
 
   if ("undrafted" in squads) {
     return (
-      <Nothing title="Nobody has a squad yet" code={squads.undrafted}>
-        {LEAGUE_NAME} drafts on {DRAFT_DATE}. Until then Fantrax has a competition and no teams in
-        it, so there is nothing to line up.
-      </Nothing>
+      <div className="flex flex-col gap-3">
+        <Nothing title="Nobody has a squad yet" code={squads.undrafted}>
+          {LEAGUE_NAME} drafts on {DRAFT_DATE}. Until then Fantrax has a competition and no teams
+          in it, so there is nothing to line up.
+        </Nothing>
+        <SignIn />
+      </div>
     );
   }
 
