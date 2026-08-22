@@ -107,18 +107,34 @@ belong to nobody.
 - **If no:** option 3 stands (plan in our app, deep-link to Fantrax to submit)
   and the cookie-flow work item closes.
 
-## 3. 21 Aug — GW1 is live (Lane B, blocked until then)
+## 3. 21 Aug — GW1 is live (Lane B) — worked 22 Aug, one match played
 
-- Re-read `getPlayerStats`: if the Players column still says "Fantrax
-  projection" after a round, it was a refusal, and the pool's points column
-  moves to the sixteen `getTeamRosterInfo` reads (data-flow change, not a
-  rewrite). Files: `packages/core/src/league/stats.ts`,
-  `league/fantrax/stats.ts`, `league/fantrax/client.ts`,
-  `apps/companion/app/players/page.tsx`.
-- Watch one defender through a final whistle: does our clean-sheet preview
-  (+4) become Fantrax's +4? Theirs is "on field", ours is FPL team clean sheet.
-- Confirm Fantrax's numbers move during a match (the recorded expectation).
-- Then do the deferred live-page tranche of the UI refactor against real data.
+- ~~Re-read `getPlayerStats`~~ **Answered 22 Aug: it flipped.** The default is
+  now `SEASON_926_YEAR_TO_DATE` with real numbers, so the pool's points column
+  stays where it is and the sixteen `getTeamRosterInfo` reads are not needed.
+  `/players` reads the season off `displayedSeasonOrProjection` and already
+  prints "2026-27 - YTD" unprompted. **But** that column is priced at the
+  player's *listed* position rather than the slot his owner has him in — a
+  different and smaller problem, sized in PLATFORM_NOTES and left for Craig.
+- ~~Watch one defender through a final whistle~~ **Half answered.** Gabriel, a
+  defender who played 90 in a clean sheet, settled at Fantrax's **+4** — the
+  same number `pendingCleanSheets` would have previewed, and it prices off
+  `slot.position`, which is the right side of the split above. The divergence
+  case is still open: theirs is "on field", so a defender subbed off before his
+  side concedes is the one we would over-count, and that needs a substitution to
+  happen in front of us.
+- ~~Confirm Fantrax's numbers move~~ **They move.** 5.0 / 9.0 / 0.0 / 16.0 off a
+  single fixture, and `getStandings` carries the same totals. What is still
+  unwitnessed is whether they move *during* a match rather than at the whistle —
+  nothing has been in play in any observation window yet.
+- **Three bugs the live tranche could only show once football existed, found and
+  fixed 22 Aug** (see PLATFORM_NOTES): every player read as "played" from the
+  round's first whistle, so no squad screen printed a fixture; the front page
+  burned a live dot for about sixty-one of GW1's seventy-four hours; and the
+  afternoon strip printed hours without days across a Friday-to-Monday round.
+- Still to do against real data: the board's list-mode XI/bench split, and the
+  deferred design judgements (trailing dim at arm's length, whether finished
+  pairings sort below live ones).
 
 ## 4. After the GW1 weekend — the parked refactors unlock
 
