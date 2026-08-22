@@ -24,8 +24,14 @@ export default function MatchList({
   snapshot,
   mine,
   owners,
+  now,
 }: {
   snapshot: FootballSnapshot;
+  /** Whether this snapshot is fresh enough to be spoken about in the present
+   *  tense. A fixture's `status` carries no clock, so a cached snapshot taken
+   *  mid-match keeps reporting a ticking minute long after the whistle; when
+   *  this is false the scores still print and the live treatment does not. */
+  now: boolean;
   /** Which of the reader's players are in each fixture, by squad membership.
    *  Absent for a reader who is signed out, holds nobody, or whose league
    *  Fantrax would not describe — and the list then renders exactly as it did
@@ -57,6 +63,7 @@ export default function MatchList({
             snapshot={snapshot}
             yours={mine?.get(f.id)}
             owners={owners}
+            now={now}
           />
         </li>
       ))}
@@ -70,6 +77,7 @@ function MatchRow({
   snapshot,
   yours,
   owners,
+  now,
 }: {
   fixture: Fixture;
   clubs: Map<number, Club>;
@@ -77,11 +85,15 @@ function MatchRow({
   /** His players in this match, or undefined when there are none. */
   yours?: FootballPlayer[];
   owners?: Map<number, PlayerOwner>;
+  now: boolean;
 }) {
   const home = clubs.get(fixture.homeClubId);
   const away = clubs.get(fixture.awayClubId);
   const rows = contributions(snapshot, fixture.id);
-  const live = fixture.status === "live";
+  // Both halves, here and in `ScoreBlock`: in play, and our copy recent enough
+  // to say so. `status` carries no clock, so a cached snapshot keeps a whistled
+  // match ticking for as long as the cache holds it.
+  const live = now && fixture.status === "live";
 
   return (
     <details
@@ -96,7 +108,7 @@ function MatchRow({
         aria-label={`${home?.name ?? "Home"} versus ${away?.name ?? "Away"}`}
       >
         <ClubSide club={home} align="start" />
-        <ScoreBlock fixture={fixture} />
+        <ScoreBlock fixture={fixture} now={now} />
         <ClubSide club={away} align="end" />
         {/* Counted rather than tinted. A bare accent wash saturates once fifteen
             players span ten fixtures — every row marked is no row marked — and
@@ -201,8 +213,8 @@ function ClubSide({ club, align }: { club: Club | undefined; align: "start" | "e
   );
 }
 
-function ScoreBlock({ fixture }: { fixture: Fixture }) {
-  const live = fixture.status === "live";
+function ScoreBlock({ fixture, now }: { fixture: Fixture; now: boolean }) {
+  const live = now && fixture.status === "live";
   const played = fixture.homeScore != null && fixture.awayScore != null;
 
   return (

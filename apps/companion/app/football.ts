@@ -84,3 +84,31 @@ export async function seasonKickoffs() {
 export function pollSeconds(snapshot: FootballSnapshot): number {
   return duringGameweek(snapshot, new Date().toISOString()) ? POLL.live : POLL.idle;
 }
+
+/** How stale a snapshot may be and still be spoken about in the present tense,
+ *  as a multiple of the live poll window.
+ *
+ *  Three rather than one, so ordinary jitter — a slow FPL round trip, a render
+ *  that lands between revalidations — never trips it. What it is there to catch
+ *  is the order of magnitude beyond that: `unstable_cache` serves a stale entry
+ *  while it revalidates and puts no upper bound on its age at all, and on 22 Aug
+ *  a round was measured being served fifty-three hours old. */
+const PRESENT_TENSE_WINDOW = 3;
+
+/** Whether this snapshot is recent enough to make a claim about *now*.
+ *
+ *  The live treatment — the dot, the ticking minute, the word Live — is the one
+ *  thing on a football screen that is a statement about the present rather than
+ *  about a result, and it is derived purely from `fixture.status`, which has no
+ *  clock in it. So a cached snapshot taken mid-match keeps saying "Live 45'" for
+ *  as long as the cache holds it: /gw/1 rendered "BRE 2–0 Live 45′" while
+ *  /matchday, in the same second, rendered "BRE 3–0 FT".
+ *
+ *  A page may be stale. It may not be stale in the present tense — so when this
+ *  is false the scores still render and the tense does not. The clock is read
+ *  here at the app edge, beside `pollSeconds`, for the reason that one gives. */
+export function speaksForNow(snapshot: FootballSnapshot): boolean {
+  const taken = Date.parse(snapshot.fetchedAt);
+  if (Number.isNaN(taken)) return false;
+  return Date.now() - taken <= POLL.live * PRESENT_TENSE_WINDOW * 1000;
+}

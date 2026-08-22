@@ -10,7 +10,7 @@ import {
 } from "@epl/core";
 import { londonDayAndTime, londonTime } from "../../londonTime";
 import AutoRefresh from "../shell/AutoRefresh";
-import { pollSeconds } from "../../football";
+import { pollSeconds, speaksForNow } from "../../football";
 import LeagueCrest from "../shell/LeagueCrest";
 import MatchList from "./MatchList";
 
@@ -31,7 +31,10 @@ export default function GameweekView({
    *  tags are useful to a reader who owns nobody. */
   owners?: Map<number, PlayerOwner>;
 }) {
-  const live = isMatchdayLive(snapshot);
+  // Both halves: a match is in play AND our copy is fresh enough to say so. A
+  // snapshot served from cache long after it was taken still has a fixture
+  // marked live, because `status` carries no clock.
+  const live = isMatchdayLive(snapshot) && speaksForNow(snapshot);
   const { previous, next } = adjacentGameweeks(snapshot);
   // A deadline is only news while it is ahead of you. The header shows LIVE or
   // the deadline, and between kickoffs mid-round it is neither: `duringGameweek`
@@ -85,7 +88,7 @@ export default function GameweekView({
         ) : null}
       </header>
 
-      <MatchList snapshot={snapshot} mine={mine} owners={owners} />
+      <MatchList snapshot={snapshot} mine={mine} owners={owners} now={speaksForNow(snapshot)} />
 
       <nav className="flex items-center justify-between gap-3 text-sm">
         <GameweekLink gameweek={previous} label="Previous" />
