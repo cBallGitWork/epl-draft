@@ -2565,6 +2565,145 @@ pending decisions in it, to fix nothing, is the wrong trade.
 The gate is the better answer to the same worry: it is what will *say* when a
 re-run is needed, on the push that needs it, instead of on a schedule.
 
+## The first real matchday, witnessed (22 Aug 2026)
+
+GW1 opened Fri 21 Aug 19:00Z with COV 0 @ ARS 3 and the other nine fixtures
+spread across Sat/Sun/Mon. Everything in the live tranche had been written
+against a season that had never kicked a ball; this is the first entry written
+with football in the data. Observed at ~10:45–11:00Z on the Saturday, with one
+match played and nine still to come — which turned out to be the single most
+useful state to be caught in, because it is the one where "played" and "not
+played" are both on screen at once.
+
+### The state nobody had seen: finished, but not finished
+
+Fixture 1 sat at `started=true, finished=FALSE, finished_provisional=true,
+minutes=90` for **more than fourteen hours** after the whistle. That is the
+`bonus-settling` rung, and its real dwell time is now a measured lower bound
+rather than a guess: overnight, not minutes.
+
+### `remainingEventPercent` does hit literal zero
+
+The open question at the top of this file's live-tranche section. Answered: the
+values are exactly `{0.0, 1.0}`, so "all played" is reachable and `countToPlay`
+is counting the right thing.
+
+### Fantrax's totals move
+
+Also an open question — the 13 Aug note said in terms that `totalFpts` filling in
+was "an expectation, not an observation". It is an observation now: 5.0 / 9.0 /
+0.0 / 16.0 across the four rehearsal teams off a single fixture.
+
+### `playerGameInfo` is decoded
+
+Five ints that this file recorded as deliberately unmodelled, because they had
+only ever been seen at rest. With one match played they resolve:
+
+```
+[0] players who APPEARED and whose match is over
+[1] players currently in a match in progress
+[2] players with a match still to come
+[3] = [0] * 90   nominal minutes played
+[4] = [2] * 90   nominal minutes remaining
+```
+
+`[3]` and `[4]` are **nominal, not real**: team `j9zadacn` reads `180` for Saka
+(67') and Ødegaard (75'), whose real total is 142. So they are `count * 90` and
+carry no information the counts do not.
+
+The useful part is what the counts do **not** add up to. `[0]+[1]+[2] < 11`
+exactly when a player's match has ended without him appearing: team `8enbgqo5`
+reads `[1,0,9,…]` though two of its players' match is over, because Bruno
+Guimarães never came on. Three such players existed across four teams in one
+fixture (Bruno Guimarães, Gyökeres, Timber — all ACTIVE in somebody's eleven).
+**`[1]` has still not been witnessed**; nothing was in play at the time.
+
+### `gameStatusMap`, `statsMap` and the projections
+
+- `gameStatusMap` is `"{OPP}~{kickoffEpochMs}|{gameId}|{state}"` before kickoff
+  and `"COV 0 @ ARS 3 F|{gameId}|{state}"` after. State `1` upcoming, `3`
+  finished; `2` is presumed in-play and **not witnessed**.
+- `statsMap` fills in — this file recorded it as `{}` "in every section, so what
+  they will hold is unknown". It holds `object1` (his total) and `object2`, a row
+  per category: `{scipId: "5010#<categoryId>#<positionId>", sv, av, fpts}`. The
+  category ids resolve against `getLeagueInfo.scoringSystem.scoringCategorySettings`:
+  `6000 A · 6090 G · 6101 GAO · 6105 OG · 6112 GA · 6120 Min · 6170 PKS ·
+  6190 RC · 6200 Sv · 6249 CS · 6280 YC · 6283 AF · 6332 PKM`.
+  `statsMap2` is still `{}`.
+- `projectedTotalsMap` and `calculatedProjectedTotalsMap` were "identical to each
+  other today". They diverge the moment football is played: for a player whose
+  match is done, `calculated` is his actual score and `projected` stays the
+  pre-game number. So `calculated` is a live projected-finish.
+- `allEventsFinished` is a top-level boolean on the same payload. Nothing reads it;
+  the football layer already answers the same question from FPL.
+
+### Fantrax scores the SLOT, not the player
+
+The finding with product consequences. Fantrax's scoring is position-dependent
+(`G: {D:6, M:5, F:4}`, `CS: {D:4, M:1, Default:0}`), and the position it applies
+is **the slot his owner has him in**, not his position in the global pool.
+
+> Saka, `04y92`. `getPlayerIds` lists him **F**. His owner rosters him at **M**.
+> `getLiveScoringStats` scores him 8 — `Min 2 + G 5 + CS 1`, midfield rates.
+> `getPlayerStats` scores him 6 — `Min 2 + G 4 + CS 0`, forward rates.
+
+Seven of sixty rehearsal roster slots are off-canonical, all canonical-F players
+slotted at M. So the pool table's `FPts` is **not** what a player scored for his
+owner, and on this league it will differ for roughly one rostered player in eight.
+
+Everything else is safe: the squad pages, the head-to-head board and the player
+profile all read `getTeamRosterInfo`, which is per team and therefore
+slot-correct. `/players` is the only surface reading the pool's number.
+
+### `getPlayerStats` flipped its default
+
+The 13 Aug sweep tried fourteen spellings and got a projection every time, and
+left the question open: "whether it flips to real numbers once games exist is
+unknown and resolves itself on 21 Aug". It resolved. The default is now
+`SEASON_926_YEAR_TO_DATE` with real numbers. The lesson from 13 Aug still stands
+and is now load-bearing for the opposite reason: read the season off
+`displayedSeasonOrProjection` rather than assuming either answer.
+
+### FPL, three things
+
+- **`GET /api/event-status/`** is the authoritative answer to "has bonus been
+  confirmed", one row per match date: `{"bonus_added": false, "date":
+  "2026-08-21", "event": 1, "points": "p"}`. It matters because the live feed
+  carries *provisional* bonus long before that flag turns: Ødegaard 3, White 2,
+  Saka 1 were in `element.stats.bonus` and folded into `total_points` while
+  `bonus_added` was still false. **Agreement with the BPS order is not evidence
+  of finality — provisional bonus is by construction the current BPS order.** The
+  `settled`/`dataChecked` ladder derives the same rungs from reads we already
+  make, so this is recorded as a fact, not as a fourth request to add.
+- **The live endpoint returns a row for every player in the league**, not only
+  those who appeared: 600 elements, 600 with an `explain` block, 569 of them on
+  zero minutes, including players whose fixture is three days away. Before a
+  round's first kickoff it is `{"elements": []}` (verified against event 2).
+  This is what broke `contribution.played` — see below.
+- `influence`, `creativity`, `threat` and `ict_index` are the string `"0.0"` for
+  every player in the live feed even after 90 minutes. We map none of them; do not
+  start. `defensive_contribution` **is** live and is a count — CBI+tackles for
+  defenders, CBI+tackles+recoveries for mid and forwards, 0 for keepers, verified
+  against all 31 players with minutes.
+
+### Pool sizes have drifted and CLAUDE.md is stale on both
+
+FPL bootstrap now carries **600** elements against the 564 recorded on 3 Aug.
+Fantrax `getPlayerIds` now returns **671** entries — 611 players plus 60 synthetic
+club entities (20 each of `Tm`, `TmG`, `TmOF`) — against "759 entries of which
+~699 are players". Both numbers in CLAUDE.md are now wrong.
+
+### The real league answers live scoring with a team that does not exist
+
+`getLiveScoringStats` on `ayyoh3n2mr326v2o` returns one team, id **`-3`**, on
+`totalFpts: 0.0`, while `getTeamRosters` on the same league answers `NO_TEAMS`.
+`mapLiveScores` maps it faithfully to a `LiveTeamScore`. It is inert — every
+consumer looks the map up by a real team id and `-3` matches none of them — but
+it is a negative sentinel id in a `Record<string, …>` keyed by team, and anything
+that ever *iterates* that map instead of indexing it would print a phantom team.
+Recorded rather than filtered: the filter would be a guard for a caller that does
+not exist.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Partially
@@ -2581,14 +2720,26 @@ re-run is needed, on the push that needs it, instead of on a schedule.
   clean sheet, so a defender subbed off before his team concedes is one we
   undercount. Still first checkable on 21 Aug: watch one defender through a
   final whistle and see whether our +4 becomes their +4.
-- **Does `getPlayerStats` serve real numbers once a game has been played?**
-  Today it answers every year-to-date request with a projection, and there is no
-  way to tell a refusal from an empty season while the season is empty. Nothing
-  waits on the answer — the page prints the label Fantrax returns — but if it is
-  still projecting on 22 Aug, the pool's points column has to come from the
-  sixteen `getTeamRosterInfo` reads instead, which is a data-flow change and not
-  a rewrite.
+- **Is Fantrax's middle rung reachable?** If FPL confirms bonus per gameweek
+  rather than per match day, every fixture's `finished` flips at about the same
+  moment as `data_checked` and the `provisional` rung — all settled, not signed
+  off — is a near-zero-width window, leaving one of three rungs effectively dead.
+  Settle it by sampling `/api/event-status/`, `/api/fixtures/?event=1` and
+  bootstrap `data_checked` together from Mon 24 Aug ~21:00Z and recording the
+  flip order.
+- **Does `playerGameInfo[1]` count players in a match in progress?** Inferred
+  from the other four positions, never seen non-zero. First witnessable during
+  any live match.
 - What should `apps/lab` look like for the 27/28 platform prototype?
+
+**Answered 22 Aug, on the first real matchday** (all in the section above):
+`remainingEventPercent` reaches literal zero. Fantrax's `totalFpts` does fill in
+live. `getPlayerStats` **does** serve real numbers once a game has been played —
+its default flipped to `SEASON_926_YEAR_TO_DATE`, so the pool's points column
+stays where it is and the sixteen `getTeamRosterInfo` reads are not needed. But
+that column is scored at the player's **listed** position, not the slot his owner
+has him in, which is a different and smaller problem than the one this question
+was worried about.
 
 **Answered:** period↔gameweek alignment — kickoff, not deadline. Whether
 `getMatchups` carries totals — it does not, and it is login-walled, so it is of

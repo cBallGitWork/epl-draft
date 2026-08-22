@@ -85,14 +85,24 @@ Use it for:
 
 ### FPL — public, no auth
 
-- `GET /api/bootstrap-static/` — 1.3 MB: 564 elements, 20 clubs, 38 events.
+- `GET /api/bootstrap-static/` — 1.3 MB: 20 clubs, 38 events, and an element
+  count that moves with the transfer window (564 on 3 Aug, 600 on 22 Aug — read
+  it, never assume it).
   Player `code` is **season-stable** (portraits key off it); `id` is per-season and
   **must not be persisted across seasons**. Carries `opta_code`, `squad_number`,
   `news`, `chance_of_playing_next_round`.
 - `GET /api/fixtures/?event={gw}` — fixtures with `started` / `finished` /
   `finished_provisional` / `minutes` / scores.
 - `GET /api/event/{gw}/live/` — per-player stats. `{"elements": []}` before the
-  first kickoff is normal and not an error.
+  round's first kickoff is normal and not an error. **After it, there is a row
+  for every player in the league, not only those who played** — 600 elements,
+  600 with an `explain` block, 569 of them on zero minutes. So the presence of a
+  row says the round has started, never that the man appeared.
+- `GET /api/event-status/` — one row per match date, carrying `bonus_added` and
+  `points`. The live feed publishes *provisional* bonus long before that flag
+  turns, and provisional bonus is by construction the current BPS order — so
+  agreement with BPS is not evidence a bonus is final. Nothing reads this; the
+  `settled`/`dataChecked` ladder derives the same rungs from reads we already make.
 - Portraits: `…/premierleague25/photos/players/110x140/{code}.png` — **PNG only**
   (webp/jpg 403), and note there is no `p` before the code and no 250x250 under
   this prefix. `premierleague25` is the Premier League's own string, read out of
@@ -112,8 +122,9 @@ Use it for:
 
 **Public reads, no auth:** `GET https://www.fantrax.com/fxea/general/{method}?leagueId=…`
 — `getLeagueInfo`, `getTeamRosters` (takes an optional `period` and echoes it
-back), `getStandings`, `getDraftResults`, `getPlayerIds?sport=EPL` (759 entries of
-which ~699 are players — the rest are synthetic per-club entities; sport code is
+back), `getStandings`, `getDraftResults`, `getPlayerIds?sport=EPL` (671 entries on 22 Aug —
+611 players plus 60 synthetic per-club entities, 20 each of `Tm`/`TmG`/`TmOF`;
+it was 759/~699 on 3 Aug, so count it rather than quoting it; sport code is
 **`EPL`**, not `SOCCER`).
 
 **Field presence varies between leagues, not only between states.** On the same
@@ -152,6 +163,15 @@ work for a person holding a phone who has never heard of a cookie. The one route
 that does is the commissioner's own session plus `adminMode` — one cookie, kept
 by one person, writing on behalf of members our own team codes have already
 authenticated. Unprobed as of 19 Aug 2026; see PLATFORM_NOTES.
+
+### Fantrax scores the roster slot, not the player
+
+Their scoring is position-dependent (`G: {D:6, M:5, F:4}`, `CS: {D:4, M:1}`) and
+the position applied is **the slot his owner has him in**, not his position in the
+global pool. Saka is listed `F` and rostered at `M`: `getLiveScoringStats` pays
+him 8 at midfield rates, `getPlayerStats` pays him 6 at forward rates. So the
+pool table's `FPts` is not what a player scored for his owner. Per-team reads
+(`getTeamRosterInfo`) are slot-correct; the pool read is not.
 
 ### Identity
 
