@@ -97,6 +97,15 @@ async function main() {
     console.log(`${audited} of them are absences a person confirmed, which stand.`);
   }
 
+  // Nobody checked is not everybody clear. Both leagues answering `NO_TEAMS` is
+  // the real league's state every day until 10 Oct, and on the morning of the
+  // draft this gate would otherwise have reported all-clear having looked at
+  // nobody — in CI, on the one push where somebody might believe it.
+  if (rostered === 0) {
+    console.log("Nothing to check: no league has a rostered player yet.");
+    return;
+  }
+
   if (holes.length === 0) {
     console.log("No holes: every player anybody holds resolves to a footballer.");
     return;

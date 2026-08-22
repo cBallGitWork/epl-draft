@@ -1,10 +1,10 @@
 # What's needed — 22 Aug 2026, written during GW1
 
-Replaces the 20 Aug handover. State: `main`, 51 commits ahead of `7944cf8`,
-working tree clean but for `probe3.mjs`. 488 tests · typecheck · lint · build ·
+Replaces the 20 Aug handover. State: `main`, 62 commits ahead of `7944cf8`,
+working tree clean but for `probe3.mjs`. 506 tests · typecheck · lint · build ·
 smoke, green on every commit. **Nothing pushed.**
 
-Fifteen commits today, all made while football was actually on. The 20 Aug handover
+Thirty-seven commits today, all made while football was actually on. The 20 Aug handover
 said the whole live tranche was "written and unwitnessed"; it has now been
 witnessed, and seven of the things it was hiding were bugs.
 
@@ -254,6 +254,51 @@ it if it had not.
 per lens, and the live-surfaces lens raised seven. The dropped one was real — the
 `toPlay` truthiness bug fixed above, which I caught by reading the two files side
 by side rather than because the harness told me to.
+
+---
+
+## 4b. The ship-day gates, audited — and this is the pile I did not clear
+
+A whole-repo hunt closed the day. Most of what it found in the app is fixed
+above; what it found in `scripts/**` is a coherent body of work of its own and is
+recorded rather than half-done. **These are the checks the 10 Oct runbook rests
+on, so they are worth a session.**
+
+- **`npm run shape-diff` exits 1 today, and the documented chain is `&&`.** So
+  `npm run smoke && npm run shape-diff && npm run bridge:check` never reaches the
+  third. The script's own comment states the intent — "a gate that reddened on
+  [an undrafted league] would be switched off long before it mattered" — and it
+  is reddening on exactly that: 22 paths counted dangerous, all of them
+  downstream of the real league having no teams. `diffShapes` already separates
+  `emptied` from `missing`, but a container that is *absent* rather than empty
+  (`table.header.cells[]`) cannot be attributed and lands in the dangerous count.
+- **`shape-diff` exits 0 when the subject refused every read** — refusals are
+  counted and reported but never redden, so a run that compared nothing passes.
+  The inverse of the above and worse: on ship day it is green having checked
+  nothing.
+- **`capture-status` cannot tell a capture that recorded nothing from a healthy
+  one.** It reads the directory's date, not its contents.
+- **`build-bridge` rebuilds from scratch when the mapping is missing**, which
+  overwrites `review/proposals.json` — the file holding your three pending
+  decisions. The gate that protects it is a person remembering not to run it.
+- **`verify.yml`'s two-league walk and `bridge:check` gates have never executed
+  in CI**, so the thing that would catch all of this has not run.
+- Smaller: `staleness.ts` cannot fire on the first missed capture, contradicting
+  the cadence `capture-status.yml` claims; `smoke`'s desk fragment is printed by
+  all three states it exists to keep apart; `smoke` never checks the server it is
+  walking serves the league it derived its expectations from; `smoke` drops its
+  two id-scoped routes when the second roster read fails and still reports
+  "12/12"; `team-codes` cannot read `SESSION_SECRET` and prints a remedy that
+  does not work; `pkill -f "next start"` cannot match the process it targets.
+
+**Fixed already, because it was one line and it lies in CI:** `bridge:check`
+printed "every player anybody holds resolves to a footballer" after checking
+zero. Both leagues answer `NO_TEAMS` every day until 10 Oct, so on the morning of
+the draft that gate reported all-clear having looked at nobody.
+
+One caveat on the audit itself: it ran while I was fixing, so at least one
+finding was refuted because its evidence had already been repaired underneath it
+— the `?q=a&q=b` 500. Treat a refutation dated later than a fix with suspicion.
 
 ## 5. Unchanged from 20 Aug
 
