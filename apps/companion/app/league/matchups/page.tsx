@@ -1,4 +1,4 @@
-import { isMatchdayLive, pairingInvolves, periodPairings, roundState } from "@epl/core";
+import { pairingInvolves, periodPairings, roundState } from "@epl/core";
 import AutoRefresh from "../../components/shell/AutoRefresh";
 import Nothing from "../../components/shell/Nothing";
 import PairingCard from "./PairingCard";
@@ -9,6 +9,7 @@ import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "../../scoreboard";
 import { teamBadges } from "../../badges";
+import { roundUnderway } from "../../football";
 import { yoursFirst } from "../../mine";
 import { FANTRAX_SILENT } from "../../config";
 
@@ -74,10 +75,11 @@ export default async function MatchupPage() {
   // The same pair of questions the head-to-head board asks, spelled the same way
   // and rendered by the same component.
   const state = roundState(squads.snapshot);
-  // The card wants the narrower question: "all played" is only worth saying
-  // while there is still football on, and `state` cannot answer it once the
-  // round is over — a finished round is not live and never was `null`.
-  const inPlay = isMatchdayLive(squads.snapshot);
+  // The card wants a different question from the state word: "all played" is
+  // worth saying whenever the round is running, not only while a ball is in the
+  // air. It used to ask `isMatchdayLive`, which is false in every gap between
+  // kickoffs — and printed "4 to play" on the other side of the same line anyway.
+  const underway = roundUnderway(squads.snapshot);
 
   const [mine, badges] = await Promise.all([myTeamId(squads.period.teams), teamBadges()]);
   const { scores, refused } = await liveScores(period);
@@ -135,7 +137,7 @@ export default async function MatchupPage() {
               pending={pending}
               badges={badges}
               mine={mine}
-              live={inPlay}
+              underway={underway}
             />
           </li>
         ))}

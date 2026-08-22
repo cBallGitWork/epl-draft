@@ -25,7 +25,7 @@ import { unresolvedReason } from "../../unresolved";
 // would make the card look like a different player.
 
 export default function PlayerCard({
-  player: { rostered, club, opposition },
+  player: { rostered, club, opposition, points },
   onClose,
 }: {
   player: SquadPlayerDetail;
@@ -57,7 +57,7 @@ export default function PlayerCard({
       <div className="flex flex-col gap-3 p-4">
         <div className="flex items-center gap-3">
           <span className="w-[var(--player-card-figure)] shrink-0">
-            <PitchPlayer rostered={rostered} club={club} opposition={opposition} />
+            <PitchPlayer rostered={rostered} club={club} opposition={opposition} points={points} />
           </span>
 
           <div className="min-w-0 flex-1">

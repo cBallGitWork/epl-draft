@@ -24,7 +24,7 @@ export default function PairingCard({
   pending,
   badges,
   mine,
-  live,
+  underway,
 }: {
   pairing: PeriodPairing;
   scores: Map<string, LiveTeamScore>;
@@ -34,10 +34,15 @@ export default function PairingCard({
   badges: Map<string, string>;
   /** The reader's own team, or null when nobody is signed in. */
   mine: string | null;
-  /** Whether football is actually in play. Only then does a side with nobody
-   *  left to play have said anything: on a Wednesday every side has nobody
-   *  left, and "all played" would be sixteen statements of the obvious. */
-  live: boolean;
+  /** Whether the round is under way — not whether a ball is in the air.
+   *
+   *  Only then does a side with nobody left have said anything: on a Wednesday
+   *  every side has nobody left and "all played" would be sixteen statements of
+   *  the obvious. But this was `isMatchdayLive`, which is false in every gap
+   *  between kickoffs — and in those gaps the other half of the same line, "4 to
+   *  play", printed anyway. One side spoke and the other was silent, which reads
+   *  as missing data rather than as the fact it is. */
+  underway: boolean;
 }) {
   const home = scores.get(pairing.home.teamId);
   const away = scores.get(pairing.away.teamId);
@@ -70,11 +75,11 @@ export default function PairingCard({
       </div>
 
       <div className="flex items-baseline justify-between gap-2 px-3 pb-1.5">
-        <Extras score={home} pending={pending.get(pairing.home.teamId)} live={live} />
+        <Extras score={home} pending={pending.get(pairing.home.teamId)} underway={underway} />
         <Extras
           score={away}
           pending={pending.get(pairing.away.teamId)}
-          live={live}
+          underway={underway}
           align="end"
         />
       </div>
@@ -146,12 +151,12 @@ function Side({
 function Extras({
   score,
   pending,
-  live,
+  underway,
   align = "start",
 }: {
   score: LiveTeamScore | undefined;
   pending: PendingCleanSheets | undefined;
-  live: boolean;
+  underway: boolean;
   align?: "start" | "end";
 }) {
   // Per side, not per league: once football is on, one manager has three players
@@ -163,7 +168,7 @@ function Extras({
       ? null
       : score.toPlay > 0
         ? `${score.toPlay} to play`
-        : live
+        : underway
           ? "all played"
           : null;
 

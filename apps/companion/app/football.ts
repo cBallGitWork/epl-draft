@@ -82,7 +82,20 @@ export async function seasonKickoffs() {
  *  someone later decides to inject. This is the app edge; the edge is where a
  *  clock belongs. */
 export function pollSeconds(snapshot: FootballSnapshot): number {
-  return duringGameweek(snapshot, new Date().toISOString()) ? POLL.live : POLL.idle;
+  return roundUnderway(snapshot) ? POLL.live : POLL.idle;
+}
+
+/** Whether the round in view is under way — first kickoff to last whistle,
+ *  including every gap in between.
+ *
+ *  The clock read that `pollSeconds` already made, given a name because a second
+ *  caller wanted the same answer for a different reason: a head-to-head card says
+ *  "all played" for a side with nobody left, and that is worth saying whenever
+ *  the round is running rather than only while a ball is in the air. On a
+ *  Wednesday every side has nobody left and none of them needs telling, which is
+ *  the case this window excludes and `isMatchdayLive` was being used to. */
+export function roundUnderway(snapshot: FootballSnapshot): boolean {
+  return duringGameweek(snapshot, new Date().toISOString());
 }
 
 /** How stale a snapshot may be and still be spoken about in the present tense,

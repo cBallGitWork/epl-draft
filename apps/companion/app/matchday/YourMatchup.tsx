@@ -8,6 +8,7 @@ import {
 } from "@epl/core";
 import RoundWord from "../components/league/RoundWord";
 import { liveScores, pendingByTeam } from "../scoreboard";
+import { roundUnderway } from "../football";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
@@ -48,6 +49,9 @@ export default async function YourMatchup() {
   const yours = scores.get(pairing.team.teamId);
   const theirs = scores.get(pairing.opponent.teamId);
   const state = roundState(squads.snapshot);
+  // Not `state === "live"`. "All played" is worth saying through the gaps
+  // between kickoffs too, and the same line's other half already prints there.
+  const underway = roundUnderway(squads.snapshot);
 
   return (
     <section className={`elev flex flex-col gap-2 rounded-xl border bg-surface p-3 ${yoursBorder(true)}`}>
@@ -74,14 +78,14 @@ export default async function YourMatchup() {
       {/* Everything a scoreline may not carry, wearing its label. The state word
           sits between the two sides because it belongs to neither. */}
       <div className="flex items-baseline justify-between gap-2 text-2xs">
-        <Extras score={yours} pending={pending.get(pairing.team.teamId)} live={state === "live"} />
+        <Extras score={yours} pending={pending.get(pairing.team.teamId)} underway={underway} />
         <span className="shrink-0 font-bold uppercase tracking-widest text-faint">
           <RoundWord state={state} />
         </span>
         <Extras
           score={theirs}
           pending={pending.get(pairing.opponent.teamId)}
-          live={state === "live"}
+          underway={underway}
           align="end"
         />
       </div>
@@ -93,15 +97,15 @@ export default async function YourMatchup() {
 function Extras({
   score,
   pending,
-  live,
+  underway,
   align = "start",
 }: {
   score: LiveTeamScore | undefined;
   pending: PendingCleanSheets | undefined;
-  /** Whether football is actually in play, which is the only time "all played"
-   *  is worth saying: between rounds every side has all played and nobody needs
-   *  telling. */
-  live: boolean;
+  /** Whether the round is under way — not whether a ball is in the air. Between
+   *  rounds every side has all played and nobody needs telling; in the gap
+   *  between two Saturday kickoffs they very much do. */
+  underway: boolean;
   align?: "start" | "end";
 }) {
   // Literal zero is a statement, not an absence, so this reads the number rather
@@ -115,7 +119,7 @@ function Extras({
       ? null
       : score.toPlay > 0
         ? `${score.toPlay} to play`
-        : live
+        : underway
           ? "all played"
           : null;
 
