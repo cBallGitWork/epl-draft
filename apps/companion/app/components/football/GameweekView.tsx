@@ -33,6 +33,14 @@ export default function GameweekView({
 }) {
   const live = isMatchdayLive(snapshot);
   const { previous, next } = adjacentGameweeks(snapshot);
+  // A deadline is only news while it is ahead of you. The header shows LIVE or
+  // the deadline, and between kickoffs mid-round it is neither: `duringGameweek`
+  // keeps this view on screen all weekend while `isMatchdayLive` goes false in
+  // every gap, so the slot fell through to a Friday instant printed as "Fri
+  // 18:30" with a Saturday's football under it. Read off the snapshot's own
+  // instant rather than a clock, so the render stays reproducible.
+  const ahead =
+    snapshot.deadline !== null && Date.parse(snapshot.deadline) > Date.parse(snapshot.fetchedAt);
 
   return (
     <div className="flex flex-col gap-4">
@@ -51,7 +59,7 @@ export default function GameweekView({
             <span className="live-dot" />
             Live
           </span>
-        ) : snapshot.deadline ? (
+        ) : ahead && snapshot.deadline ? (
           /* FPL's, and it says so. This is `deadline_time` off the football
              layer — FPL's house rule, ninety minutes before the first kickoff —
              and ours is the commissioner's, fifteen minutes before it. For GW1

@@ -74,11 +74,16 @@ export default async function YourMatchup() {
       {/* Everything a scoreline may not carry, wearing its label. The state word
           sits between the two sides because it belongs to neither. */}
       <div className="flex items-baseline justify-between gap-2 text-2xs">
-        <Extras score={yours} pending={pending.get(pairing.team.teamId)} />
+        <Extras score={yours} pending={pending.get(pairing.team.teamId)} live={state === "live"} />
         <span className="shrink-0 font-bold uppercase tracking-widest text-faint">
           <RoundWord state={state} />
         </span>
-        <Extras score={theirs} pending={pending.get(pairing.opponent.teamId)} align="end" />
+        <Extras
+          score={theirs}
+          pending={pending.get(pairing.opponent.teamId)}
+          live={state === "live"}
+          align="end"
+        />
       </div>
     </section>
   );
@@ -88,19 +93,37 @@ export default async function YourMatchup() {
 function Extras({
   score,
   pending,
+  live,
   align = "start",
 }: {
   score: LiveTeamScore | undefined;
   pending: PendingCleanSheets | undefined;
+  /** Whether football is actually in play, which is the only time "all played"
+   *  is worth saying: between rounds every side has all played and nobody needs
+   *  telling. */
+  live: boolean;
   align?: "start" | "end";
 }) {
+  // Literal zero is a statement, not an absence, so this reads the number rather
+  // than its truthiness — a side whose eleven are all done said nothing at all
+  // before, on the one tab a manager actually watches. Deliberately a copy of
+  // `PairingCard`'s line and not an extraction: second occurrence (CODE_RULES
+  // §1), and the desk shows no such count. The two must agree, which is the
+  // whole reason this comment names the other one.
+  const left =
+    score?.toPlay == null
+      ? null
+      : score.toPlay > 0
+        ? `${score.toPlay} to play`
+        : live
+          ? "all played"
+          : null;
+
   return (
     <span
       className={`flex min-w-0 items-baseline gap-2 ${align === "end" ? "flex-row-reverse" : ""}`}
     >
-      {score?.toPlay ? (
-        <span className="truncate text-faint">{score.toPlay} to play</span>
-      ) : null}
+      {left === null ? null : <span className="truncate text-faint">{left}</span>}
       {/* Kept beside the score rather than folded into it. Fantrax's number stays
           Fantrax's; this is the bit they have not credited yet. */}
       {pending && pending.points > 0 ? (
