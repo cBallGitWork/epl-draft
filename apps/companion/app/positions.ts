@@ -43,6 +43,14 @@ export function positionLabel(position: string | null | undefined): string | nul
   return SHORT[position] ?? position;
 }
 
+/** The same, for Fantrax's own comma-joined spelling of a man's eligibility —
+ *  `"M,F"` on `getPlayerProfile`, against an array everywhere else. Their two
+ *  shapes for one fact, and this is where the second one stops. */
+export function positionsFromList(positions: string | null | undefined): string | null {
+  if (!positions) return null;
+  return positionsLabel(positions.split(",").map((p) => p.trim()));
+}
+
 /** Several eligible positions as one label: `MID/FWD`.
  *
  *  Fantrax lets a man hold more than one and 48 of 607 in this pool do. Which of

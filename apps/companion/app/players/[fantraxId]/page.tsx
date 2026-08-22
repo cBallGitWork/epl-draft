@@ -8,6 +8,7 @@ import Availability from "./Availability";
 import Breakdown from "./Breakdown";
 import Portrait from "./Portrait";
 import { footballSelf, playerSeason } from "./season";
+import { positionsFromList } from "../../positions";
 
 // One player, as Fantrax sees him. Reached by tapping a name in the pool, and
 // that is the whole politeness policy: one profile per tap, never a sweep of the
@@ -97,7 +98,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
           <p className="numeric text-2xs tracking-widest text-faint">
             {[
               intel.clubShortName,
-              intel.defaultPosition,
+              positionsFromList(intel.defaultPosition),
               intel.squadNumber && `#${intel.squadNumber}`,
             ]
               .filter(Boolean)
