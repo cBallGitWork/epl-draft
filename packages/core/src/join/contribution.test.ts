@@ -25,11 +25,18 @@ const appearance = (fill: Partial<PlayerMatchStats>): PlayerMatchStats => ({
 });
 
 describe("contribution", () => {
-  it("says nothing happened rather than nothing was played", () => {
-    // The state of every squad most of every week. `played` is what the views
-    // branch on, because a man on nought minutes and a man who has not kicked
-    // off are different things and only one of them has a fixture to print.
-    expect(contribution([])).toMatchObject({ played: false, minutes: 0, goals: 0 });
+  it("says nothing happened, for a man with no stat line at all", () => {
+    expect(contribution([])).toMatchObject({ minutes: 0, goals: 0, cleanSheet: false });
+  });
+
+  it("reads a not-yet-kicked-off row as nothing, not as a goalless appearance", () => {
+    // FPL emits a zero row for every player in the league from a round's first
+    // whistle, including men whose fixture is three days away. Summing it is
+    // harmless; treating it as evidence about him is not.
+    expect(contribution([appearance({ minutes: 0 })])).toMatchObject({
+      minutes: 0,
+      cleanSheet: false,
+    });
   });
 
   it("adds a double gameweek up rather than reporting one half of it", () => {
@@ -37,7 +44,7 @@ describe("contribution", () => {
       appearance({ fixtureId: 1, minutes: 90, goals: 1, saves: 2 }),
       appearance({ fixtureId: 2, minutes: 63, goals: 2, saves: 3 }),
     ]);
-    expect(both).toMatchObject({ played: true, minutes: 153, goals: 3, saves: 5 });
+    expect(both).toMatchObject({ minutes: 153, goals: 3, saves: 5 });
   });
 
   it("only calls it a clean sheet when he kept one in every match he played", () => {
@@ -48,6 +55,18 @@ describe("contribution", () => {
         appearance({ fixtureId: 2, cleanSheet: false }),
       ]).cleanSheet,
     ).toBe(false);
+  });
+
+  it("keeps a clean sheet a man earned when his other match has not kicked off", () => {
+    // The double-gameweek trap. His Saturday was a clean sheet; his Tuesday has
+    // not been played, and FPL is already carrying a zero row for it. Counting
+    // that row as a match he failed to keep one in takes Saturday away from him.
+    expect(
+      contribution([
+        appearance({ fixtureId: 1, minutes: 90, cleanSheet: true }),
+        appearance({ fixtureId: 2, minutes: 0, cleanSheet: false }),
+      ]).cleanSheet,
+    ).toBe(true);
   });
 
   it("does not report a clean sheet for a man who has not played", () => {

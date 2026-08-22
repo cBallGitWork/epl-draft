@@ -44,14 +44,14 @@ export default function Portrait({
       className="relative shrink-0 overflow-hidden rounded-xl"
       style={{ backgroundColor: colours.primary, width: WIDTH }}
     >
-      {/* `played` is true because this page has no round in it. Drawn back means
-          "he has not kicked off yet", which is a statement about a Saturday, and
-          on a profile there is no Saturday to make it about. */}
+      {/* `kickedOff` is true because this page has no round in it. Drawn back
+          means "he has not kicked off yet", which is a statement about a
+          Saturday, and on a profile there is no Saturday to make it about. */}
       <PlayerImage
         player={player}
         club={club}
         keeper={isGoalkeeper(position)}
-        played
+        kickedOff
         sizes={`${WIDTH}px`}
       />
 

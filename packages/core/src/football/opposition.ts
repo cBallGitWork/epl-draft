@@ -59,3 +59,24 @@ export function oppositionByClub(snapshot: FootballSnapshot): Map<number, Opposi
   return byClub;
 }
 
+/** Whether any of a club's matches this round has kicked off.
+ *
+ *  The question four views were asking of the stats and getting wrong. FPL's
+ *  live endpoint carries a row for **every** player in the league from the
+ *  round's first whistle — 600 of them on 22 Aug 2026, 569 on zero minutes —
+ *  so the presence of a stat line says the round has started, never that this
+ *  man's match has. A view that read it as the latter drew every player as
+ *  played from the Friday night on, and the fixture it should have been
+ *  printing instead never appeared again until the round closed.
+ *
+ *  Asked of the fixtures because that is where the answer lives, and phrased as
+ *  the round rather than the man on purpose: a named substitute whose match is
+ *  over has kicked off in every sense a screen cares about — his nought is
+ *  final, and offering him a fixture chip would promise football that has
+ *  already been played.
+ *
+ *  Undefined is false: a blank gameweek and an unresolved slot both have no
+ *  match to have started. */
+export function kickedOff(opposition: readonly Opposition[] | undefined): boolean {
+  return opposition?.some((against) => against.fixture.status !== "upcoming") ?? false;
+}

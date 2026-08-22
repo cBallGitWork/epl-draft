@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Fixture, FootballSnapshot } from "./types";
-import { oppositionByClub } from "./opposition";
+import { kickedOff, oppositionByClub } from "./opposition";
 
 const club = (id: number, shortName: string) => ({ id, code: id * 10, name: shortName, shortName });
 
@@ -84,5 +84,44 @@ describe("difficulty", () => {
       snap([fixture({ id: 1, homeClubId: 1, awayClubId: 2, homeDifficulty: null, awayDifficulty: null })]),
     );
     expect(by.get(1)?.[0]?.difficulty).toBeNull();
+  });
+});
+
+describe("kickedOff", () => {
+  const against = (status: Fixture["status"]) =>
+    oppositionByClub(snap([fixture({ id: 1, homeClubId: 1, awayClubId: 2, status })])).get(1);
+
+  it("is false while his match is still to come", () => {
+    expect(kickedOff(against("upcoming"))).toBe(false);
+  });
+
+  it("is true once his match is in play, and stays true once it is over", () => {
+    expect(kickedOff(against("live"))).toBe(true);
+    expect(kickedOff(against("finished"))).toBe(true);
+  });
+
+  it("is true for a substitute who never came on, because his match still went ahead", () => {
+    // The distinction the stat line cannot make: FPL carries a zero row for him
+    // and a zero row for a man whose fixture is on Monday, and only one of those
+    // noughts is final. Offering this one a fixture chip would promise football
+    // that has already been played.
+    expect(kickedOff(against("finished"))).toBe(true);
+  });
+
+  it("is true on a double as soon as either match has started", () => {
+    const both = oppositionByClub(
+      snap([
+        fixture({ id: 1, homeClubId: 1, awayClubId: 2, status: "finished" }),
+        fixture({ id: 2, homeClubId: 3, awayClubId: 1, status: "upcoming" }),
+      ]),
+    ).get(1);
+    expect(both).toHaveLength(2);
+    expect(kickedOff(both)).toBe(true);
+  });
+
+  it("is false for a club with no match, and for a slot with no club", () => {
+    // A blank gameweek and an unresolved roster slot arrive here the same way.
+    expect(kickedOff(oppositionByClub(snap([])).get(1))).toBe(false);
+    expect(kickedOff(undefined)).toBe(false);
   });
 });

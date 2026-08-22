@@ -7,6 +7,7 @@ import {
   type SquadPlayerDetail,
   contribution,
   isResolved,
+  kickedOff,
   playerName,
 } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
@@ -54,6 +55,7 @@ export default function LivePlayerCard({
   }, []);
 
   const done = contribution(isResolved(rostered) ? rostered.stats : []);
+  const started = kickedOff(opposition);
   // Only when there is one match to time. A double gameweek has two kickoffs and
   // naming the first beside two chips reads as the time of both.
   const kickoff = opposition?.length === 1 ? (opposition[0]?.fixture.kickoff ?? null) : null;
@@ -89,7 +91,7 @@ export default function LivePlayerCard({
             <FixtureChip opposition={opposition} blank="No fixture" />
           </span>
           <span className="numeric text-2xs text-faint">
-            {done.played
+            {started
               ? `${done.minutes}' played`
               : kickoff
                 ? `Kicks off ${londonDayAndTime(kickoff)}`
@@ -99,7 +101,7 @@ export default function LivePlayerCard({
 
         {/* Nothing to explain before he has been on. An empty table under a live
             score reads as a score of nought, which is a different claim. */}
-        {done.played ? (
+        {started ? (
           <>
             <Breakdown breakdown={breakdown} points={points} projected={projected} />
             <p className="flex flex-wrap items-center gap-1 px-0.5 text-2xs text-faint">

@@ -6,6 +6,7 @@ import {
   contribution,
   isGoalkeeper,
   isResolved,
+  kickedOff,
 } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
 import { chipsFor } from "./Chips";
@@ -91,6 +92,10 @@ export default function PitchPlayer({
 
   const { player, stats } = rostered;
   const t = contribution(stats);
+  // His fixture until his match starts, his score after it — asked of the
+  // fixture, never of the stat line. FPL carries a stat line for everybody from
+  // the round's first whistle.
+  const started = kickedOff(opposition);
   // Two is what fits beside the number at this width.
   const chips = chipsFor(t).slice(0, 2);
 
@@ -106,7 +111,7 @@ export default function PitchPlayer({
         player={player}
         club={club}
         keeper={isGoalkeeper(rostered.slot.position)}
-        played={t.played}
+        kickedOff={started}
       />
 
       {/* Light plate, dark ink. It was the other way round and the names were the
@@ -124,7 +129,7 @@ export default function PitchPlayer({
       {/* One band, two things it can be saying, and the same height either way
           — a line whose cards stand at different heights stops reading as a
           line. */}
-      {t.played ? (
+      {started ? (
         /* What he is worth, on a ground of its own. It was a number beside two
            chips on the same cream as the name above it, at eight or nine
            pixels: the smallest thing on a live pitch and the one a manager came

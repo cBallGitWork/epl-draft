@@ -6,6 +6,7 @@ import {
   contribution,
   crestUrl,
   isResolved,
+  kickedOff,
   playerName,
 } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
@@ -84,6 +85,7 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
   const { club, points } = player;
   const colours = clubColours(club?.shortName ?? "");
   const done = contribution(isResolved(player.rostered) ? player.rostered.stats : []);
+  const started = kickedOff(player.opposition);
   // Two is what fits beside the minutes in the fixture column.
   const chips = chipsFor(done).slice(0, 2);
 
@@ -115,7 +117,7 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
 
       {/* His fixture until he kicks off, and what he has made of it after. The
           same column either way, so a list mid-round does not comb. */}
-      {done.played ? (
+      {started ? (
         <span className="flex w-[4.25rem] shrink-0 items-center justify-end gap-0.5">
           {chips.map((chip) => (
             <span

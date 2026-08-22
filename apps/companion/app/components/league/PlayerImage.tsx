@@ -42,7 +42,7 @@ export default function PlayerImage({
   player,
   club,
   keeper,
-  played,
+  kickedOff,
   sizes = "88px",
 }: {
   player: Pick<FootballPlayer, "code" | "name">;
@@ -50,10 +50,14 @@ export default function PlayerImage({
   /** Which of the club's two kits. A keeper drawn in an outfield shirt is the
    *  kind of quiet wrongness that survives review. */
   keeper: boolean;
-  /** Whether he has been on a pitch this round. A man still to play is drawn
-   *  back — and it is the photograph that is drawn back, never the card: the
-   *  name and the fixture under him are what a waiting player is waiting on. */
-  played: boolean;
+  /** Whether his match has kicked off. A man still to play is drawn back — and
+   *  it is the photograph that is drawn back, never the card: the name and the
+   *  fixture under him are what a waiting player is waiting on.
+   *
+   *  The fixture's question, not the stat line's: FPL carries a row for every
+   *  player in the league from the round's first whistle, so "he has a stat
+   *  line" stopped meaning "he has been on a pitch" the moment a season began. */
+  kickedOff: boolean;
   /** What the optimizer is allowed to serve. Defaults to the width he is drawn
    *  at on a pitch, which is where all fifteen of him appear; the profile page
    *  draws one of him several times that size and would otherwise be handed an
@@ -86,13 +90,13 @@ export default function PlayerImage({
           sizes={sizes}
           onError={() => setRung(rung === "initials" ? "initials" : NEXT[rung])}
           className={`h-full w-full object-cover object-top drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
-            played ? "" : "opacity-80 grayscale-[35%]"
+            kickedOff ? "" : "opacity-80 grayscale-[35%]"
           }`}
         />
       ) : (
         <span
           className={`grid h-full w-full place-items-center font-display text-sm font-bold text-cream/80 ${
-            played ? "" : "opacity-80"
+            kickedOff ? "" : "opacity-80"
           }`}
         >
           {initials(player.name)}

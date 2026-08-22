@@ -44,5 +44,5 @@ export {
   roundState,
 } from "./round";
 export type { FinishedState, RoundState } from "./round";
-export { oppositionByClub } from "./opposition";
+export { kickedOff, oppositionByClub } from "./opposition";
 export type { Opposition } from "./opposition";

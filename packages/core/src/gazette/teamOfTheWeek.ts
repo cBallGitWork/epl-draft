@@ -74,7 +74,11 @@ function considered(rostered: RosteredPlayer, team: RosteredTeam): Pick | null {
 
   const goals = total(rostered.stats, (stat) => stat.goals);
   const assists = total(rostered.stats, (stat) => stat.assists);
-  const cleanSheet = rostered.stats.length > 0 && rostered.stats.every((stat) => stat.cleanSheet);
+  // Over the matches he was on the pitch for, on the same rule as `contribution`:
+  // FPL carries a zero row for a fixture that has not kicked off, and on a double
+  // that row would take Saturday's clean sheet off him until Tuesday.
+  const appearances = rostered.stats.filter((stat) => stat.minutes > 0);
+  const cleanSheet = appearances.length > 0 && appearances.every((stat) => stat.cleanSheet);
   const saves = total(rostered.stats, (stat) => stat.saves);
   const conceded = total(rostered.stats, (stat) => stat.goalsConceded);
   const redCards = total(rostered.stats, (stat) => stat.redCards);
