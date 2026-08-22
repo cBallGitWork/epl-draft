@@ -1,6 +1,9 @@
 import Link from "next/link";
 import type { LeagueTeam, LiveTeamScore, PeriodPairing, PendingCleanSheets } from "@epl/core";
-import { pairingInvolves } from "@epl/core";
+import {
+  pairingInvolves,
+  trails,
+} from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder } from "../../mine";
 
@@ -110,8 +113,7 @@ function Side({
 }) {
   const points = score?.points ?? null;
   const other = against?.points ?? null;
-  // Nobody is behind while a total is missing: a dash is not a low score.
-  const behind = points !== null && other !== null && points < other;
+  const behind = trails(points, other);
 
   return (
     // Into the pairing's own board, opened on the side that was tapped — not

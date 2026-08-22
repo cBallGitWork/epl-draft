@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import type { LeagueTeam, LiveTeamScore, RoundState } from "@epl/core";
+import { type LeagueTeam, type LiveTeamScore, type RoundState, trails } from "@epl/core";
 import RoundWord from "./RoundWord";
 import TeamBadge from "./TeamBadge";
 import ViewToggle, { type View } from "./ViewToggle";
@@ -113,8 +113,7 @@ function Side({
 }) {
   const points = side.score?.points ?? null;
   const other = against.score?.points ?? null;
-  // Nobody is behind while a total is missing: a dash is not a low score.
-  const behind = points !== null && other !== null && points < other;
+  const behind = trails(points, other);
 
   return (
     <button

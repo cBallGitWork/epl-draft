@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LEAGUE_COMPETITION, type CompetitionTie, type TieSide } from "@epl/core";
+import { LEAGUE_COMPETITION, type CompetitionTie, type TieSide, leads } from "@epl/core";
 import type { ScheduleRound } from "./schedule";
 import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder } from "../../mine";
@@ -72,7 +72,7 @@ export default function Tie({
         side={tie.home}
         at="home"
         badges={badges}
-        won={settled && beat(home, away)}
+        won={settled && leads(home, away)}
         mine={mine}
         linked={!played}
         gameweek={round.gameweek}
@@ -81,9 +81,9 @@ export default function Tie({
         <span className="numeric flex shrink-0 items-baseline gap-1.5 px-1 text-lg font-bold">
           {/* A dash, never a nought: a side we have no number for has not scored
               nothing, we simply do not have it. */}
-          <Points value={home} won={settled && beat(home, away)} />
+          <Points value={home} won={settled && leads(home, away)} />
           <span className="text-2xs font-normal text-faint">–</span>
-          <Points value={away} won={settled && beat(away, home)} />
+          <Points value={away} won={settled && leads(away, home)} />
         </span>
       ) : (
         <span className="shrink-0 px-3 text-2xs font-bold uppercase tracking-widest text-faint">
@@ -94,7 +94,7 @@ export default function Tie({
         side={tie.away}
         at="away"
         badges={badges}
-        won={settled && beat(away, home)}
+        won={settled && leads(away, home)}
         mine={mine}
         linked={!played}
         gameweek={round.gameweek}
@@ -116,12 +116,6 @@ export default function Tie({
 
 function scoreOf(side: TieSide, points: Map<string, number | null>): number | null {
   return side.team === null ? null : points.get(side.team.teamId) ?? null;
-}
-
-/** A win, and only on two real totals. Two dashes are not a draw, and a dash
- *  against a number is not a defeat. */
-function beat(side: number | null, other: number | null): boolean {
-  return side !== null && other !== null && side > other;
 }
 
 function Points({ value, won }: { value: number | null; won: boolean }) {

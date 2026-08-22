@@ -45,6 +45,7 @@ export { diffShapes, shapeOf } from "./fantrax/shape";
 export type { ShapeDiff } from "./fantrax/shape";
 
 export { headToHead, leaguePool, pairingInvolves, periodPairings } from "./selectors";
+export { leads, trails } from "./scoreline";
 export type { HeadToHead, PeriodPairing, PoolPlayer } from "./selectors";
 
 export {

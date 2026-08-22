@@ -1,4 +1,4 @@
-import type { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing } from "@epl/core";
+import { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing , trails } from "@epl/core";
 import { londonDay, londonTime } from "../../londonTime";
 
 // The desk's two kinds of line, at the density the desk is for.
@@ -65,7 +65,7 @@ function Name({
 /** A dash for a total Fantrax did not give, never a nought — and the trailing
  *  side dims, the same reading as every other scoreline in the app. */
 function Points({ points, other }: { points: number | null; other: number | null }) {
-  const behind = points !== null && other !== null && points < other;
+  const behind = trails(points, other);
   return <span className={behind ? "text-muted" : "text-ink"}>{points ?? "—"}</span>;
 }
 

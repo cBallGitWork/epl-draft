@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { NOTABLE_SAVES } from "../config";
-import type { Fixture, FootballSnapshot, PlayerMatchStats } from "./types";
+import type { FootballSnapshot, PlayerMatchStats } from "./types";
 import {
   adjacentGameweeks,
   contributions,

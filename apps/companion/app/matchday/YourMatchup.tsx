@@ -1,10 +1,11 @@
 import Link from "next/link";
 import {
+  headToHead,
+  roundState,
+  trails,
   type LeagueTeam,
   type LiveTeamScore,
   type PendingCleanSheets,
-  headToHead,
-  roundState,
 } from "@epl/core";
 import RoundWord from "../components/league/RoundWord";
 import { liveScores, pendingByTeam } from "../scoreboard";
@@ -152,8 +153,7 @@ function Half({
 }) {
   const points = score?.points ?? null;
   const other = against?.points ?? null;
-  // Nobody is behind while a total is missing: a dash is not a low score.
-  const behind = points !== null && other !== null && points < other;
+  const behind = trails(points, other);
 
   return (
     // Into the head-to-head board, opened on the side that was tapped. The
