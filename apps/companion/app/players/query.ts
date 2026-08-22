@@ -64,7 +64,16 @@ export const PAGE_ROWS = 100;
 export const COLUMNS = [
   { key: "rank", label: "Rk", title: "Fantrax's own ranking across the whole pool", ascending: true },
   { key: "name", label: "Player", title: "Name", ascending: true },
-  { key: "opp", label: "Opp", title: "His fixture, in Fantrax's words", ascending: true },
+  {
+    key: "opp",
+    // The zone is in the heading because Fantrax's kickoff times are in the
+    // league's own — US Eastern — and every other time in this app is London.
+    // "Sun 9:00AM" here is a 14:00 kickoff, and unlabelled that is the one
+    // mistake `londonTime.ts` exists to prevent. Their words, their clock, named.
+    label: "Opp (ET)",
+    title: "His fixture, in Fantrax's words and Fantrax's US Eastern clock",
+    ascending: true,
+  },
   { key: "fpts", label: "FPts", title: "Fantasy points, under this league's scoring", ascending: false },
   { key: "fpg", label: "FP/G", title: "Fantasy points per game", ascending: false },
   { key: "ros", label: "Ros", title: "Share of all Fantrax leagues rostering him", ascending: false },

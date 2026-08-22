@@ -1,4 +1,4 @@
-import { clubColours, isFplKeeper } from "@epl/core";
+import { clubColours, inkOn, isFplKeeper } from "@epl/core";
 import type { Club, FootballPlayer, FplLine, FplPick } from "@epl/core";
 import PitchRows from "../components/league/PitchRows";
 import PlayerImage from "../components/league/PlayerImage";
@@ -81,9 +81,18 @@ function Sticker({
         <span className="w-full truncate">{player?.name ?? "—"}</span>
       </span>
 
+      {/* His club's colour, with the ink that survives it. It was a flat
+          `text-cream`, which is near-white on the three clubs whose primary IS
+          near-white — Fulham, Leeds and Spurs — so the one number the band exists
+          to show vanished. `inkOn` is in the football layer for exactly this and
+          every other surface already asks it. */}
       <span
-        className="numeric flex h-[var(--pitch-band)] w-full items-center justify-center gap-1 rounded-b-[3px] bg-bg/85 px-0.5 text-[0.625rem] font-bold leading-none text-cream"
-        style={{ backgroundColor: club ? clubColours(club.shortName).primary : undefined }}
+        className="numeric flex h-[var(--pitch-band)] w-full items-center justify-center gap-1 rounded-b-[3px] px-0.5 text-[0.625rem] font-bold leading-none"
+        style={
+          club
+            ? { backgroundColor: clubColours(club.shortName).primary, color: inkOn(clubColours(club.shortName)) }
+            : undefined
+        }
       >
         {pick.points}
       </span>
