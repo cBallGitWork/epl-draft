@@ -52,8 +52,16 @@ export default function GameweekView({
             Live
           </span>
         ) : snapshot.deadline ? (
+          /* FPL's, and it says so. This is `deadline_time` off the football
+             layer — FPL's house rule, ninety minutes before the first kickoff —
+             and ours is the commissioner's, fifteen minutes before it. For GW1
+             they are 18:30 and 19:45. Under the bare word "Deadline" this told a
+             manager on the Live tab that he had seventy-five minutes less than
+             he had, while the front page and the League tab said otherwise.
+             Named rather than replaced: this is a football component and the
+             league's lock lives on the other side of the seam. */
           <span className="text-right text-xs text-faint">
-            Deadline
+            FPL deadline
             <br />
             <span className="numeric text-sm text-muted">
               {londonDayAndTime(snapshot.deadline)}
