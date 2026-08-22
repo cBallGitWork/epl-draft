@@ -140,38 +140,49 @@ fixed: never let a capture be the last commit in a push.**
 ## 4. Found by an adversarial audit, evidenced, and not taken
 
 Five parallel finders over the live paths, each finding then re-derived by a
-separate agent trying to refute it. Three claims died that way, including one of
-mine. What survived and is still open, worth most first:
+separate agent whose job was to refute it. **Nine of twenty-two claims died that
+way, including one of mine** — the "bonus settling" rung, which is honest, and
+which I had called a bug on evidence that turned out to mean the opposite. What
+survived, worth most first:
 
-- **`getTeamRosterInfo`'s `period` scopes the fixture column but not the points.**
-  The head-to-head board asks for period N and gets season-to-date. Invisible
-  this week because the season is one gameweek old; visibly wrong from GW2.
-- **"left him on the bench" has no `RosterDisplay` gate.** `teamOfTheWeek` reads
-  `slot.status` straight off `RosteredTeam`, before `squadDetail` blanks it, and
-  the Gazetta prints every team's active/reserve split from it. Not reachable
-  today — period 1 opens at exactly the first kickoff, so any man with minutes
-  has an open period — but `pendingCleanSheets` guards this exact fact and this
-  path does not. If Fantrax ever serves next period's roster early, the gate the
-  whole app is built around is open here.
-- **Double gameweeks lose non-scoring stats.** `statsFor`'s `: 0` branch fires
-  for any identifier FPL left out of `explain` because it scored nothing — a
-  keeper's saves, a defender's goals conceded. `explain` carries only what scored.
-  No double in GW1, so nothing is wrong on screen yet.
+- **`getTeamRosterInfo`'s `period` scopes the fixture column but not the
+  points.** The head-to-head board asks for a named week and gets season-to-date.
+  The verifier went further than the finder: asked for periods 1, 2 and 3, the
+  reply is **byte-identical** — Ødegaard 8, Saka 6, every category line the same,
+  only the opponent cell moving. `SEASON_926_BY_PERIOD` behaves the same way.
+  Invisible this week because the season is one gameweek old; wrong from GW2, and
+  wrong on every archived week the schedule links to.
+- **Double gameweeks lose non-scoring stats.** `statsFor`'s `: 0` branch fires for
+  any identifier FPL left out of `explain` because it scored nothing — a keeper's
+  saves, a defender's goals conceded. `explain` carries only what scored. Confirmed
+  with the severity marked down: there is no double gameweek in GW1, so nothing is
+  wrong on screen yet.
 - **Team of the week ran from one played fixture of ten** and called itself the
-  week's eleven. It reads `1-3-5-2` now that a full round is under way; at
-  11:45 it read `2-3`, which is not a formation. The label also counts the
-  keeper, and no one writes a formation that way.
-- Smaller: doubts cannot tell a doubt about a match still to come from one
-  already played; "a quarter of an hour" hardcodes `LINEUP_LOCK_LEAD_MINUTES` in
-  prose; a drop with no claim renders as an orphan bullet labelled a claim; the
-  Doubts row key collides on two players sharing an FPL `web_name`.
+  week's eleven. At 11:45 it was five men, all from the same match. It reads a
+  full `1-3-5-2` now that a proper round is under way, so the section is right
+  once a Saturday is going — the question is what it should say at Friday
+  midnight, and that is a product call rather than a defect.
+- Smaller and unverified either way: a drop with no claim renders as an orphan
+  bullet labelled a claim; the Doubts row key collides when one manager holds two
+  players sharing an FPL `web_name`; "a quarter of an hour" hardcodes
+  `LINEUP_LOCK_LEAD_MINUTES` in prose.
 
-Refuted, so nobody re-opens them: the "bonus settling" rung is honest;
-`fixturesInOrder`'s string sort is not the house-rule violation it looks like;
-and the `raw.ts` drift claim was mostly right but overstated (the true parts are
-fixed in `6ba4afd`).
+**Refuted, recorded so nobody re-opens them.** The "bonus settling" rung is
+honest and could not even have been on screen today. `fixturesInOrder`'s string
+sort is not the house-rule violation it looks like. The team-of-the-week
+**formation label is a deliberate, tested convention** — `teamOfTheWeek.test.ts`
+asserts `"1-2-3"` for a selection with no midfielders, so the collapsed form was
+looked at squarely and chosen. The Doubts ordering cannot mislead anyone, because
+this league locks a whole period at once and mid-round there is nothing to act
+on. And **"left him on the bench" is not a lineup-gate leak**: it names at most
+eleven men who topped a ranking, all of whom must have played, and period 1 opens
+at exactly the first kickoff — so anyone with minutes has an open period.
 
----
+One thing worth keeping out of that refutation, though. PLATFORM_NOTES' "the
+lineup gate held" audit on 20 Aug grepped the rendered source for the tokens
+`ACTIVE` and `RESERVE`. That cannot by construction catch an English sentence, and
+"left him on the bench" is one. The conclusion stands; the method would not have
+caught it if it had not.
 
 ## 5. Unchanged from 20 Aug
 
