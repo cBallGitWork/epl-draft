@@ -66,6 +66,50 @@ carries `FT` and the live minute and is empty for exactly the fixtures needing i
 
 ---
 
+## 1b. Craig's list, worked through the same evening
+
+**The correction first.** I had written that Saka "is listed F". That is the trap
+rather than the fact: `F` is what `getPlayerIds` prints, and that endpoint gives
+one letter per man because it describes the global pool. The league's own answer
+is `eligiblePos: "F,M"` — he is both — and **the position that decides his points
+is the one his manager chose**. 48 of 607 players are dual-eligible, so this is
+the normal case for the men who matter. Corrected in three files.
+
+| Asked | Done |
+|---|---|
+| FPL tab needs the pitch | `FplPick.line` carries FPL's `element_type`, read in FPL's own layer because the football layer refuses to know a fantasy classification. `fplLineup` arranges it, pure and tested. |
+| Pitch rows all one size, font too, truncate | Cards were `flex-1` under a max, so a back five drew narrower than a front two; the basis now comes from the fullest line. The name stepped down in three bands by length — one size now, truncating. |
+| Schedule → week 2 → tap a team → full squad | Every row led to `/squad/{team}` with no gameweek, so a March fixture opened this week's fifteen. It carries `?gw=` now, resolved through the calendar seam. |
+| Table points should be FP | It was headed "Points", which in a table means the standings. It is Fantrax points scored. |
+| A playoff line | `playoffPlaces` reads the cut off the declared bracket, so the placeholder's final between 1 and 2 draws it under second and a top-four playoff moves it without a second edit. |
+| Team logos on matchups, table, schedule | The schedule had the read privately; `app/badges.ts` owns it now and all four surfaces share one cache entry. |
+| No initials under a thumbnail that has an icon | They sat under the photograph as a fallback, which works for a rectangle and not for a cut-out on transparency — a man's initials showed through his own shirt on every row of the pool. |
+| No name under the player card's thumbnail | It drew a whole `PitchPlayer` beside the heading, so the card printed his name twice and his total twice. |
+| Players tab: scroll across, more stats, more page | The read sends seven columns and the page drew four. It draws all seven now — his fixture, and the two ownership columns that are the only outside opinion in the app — and breaks out of the gutter to scroll rather than hiding the rank on a phone. |
+| GK DEF MID FWD | Seven render sites, one `app/positions.ts`. Unknown letters still print verbatim. |
+
+**Probed rather than assumed:** the recorded note said the pool's football columns
+live "behind `scoringCategoryType`". They do not — Tracked, Standard and Extra all
+answer the same seven, and `statisticsViewTypeId` in three spellings changes
+nothing. Seven is what that endpoint has.
+
+**Three more live-view bugs**, from a second adversarial hunt: the league table
+never refreshed at all while showing a live total; the schedule stopped refreshing
+the moment nothing was in play and never restarted; and "bonus settling" named
+FPL's bonus ladder beside a Fantrax total, in a league with no bonus category —
+checked against both leagues, not assumed. A team of the week picked from four
+fixtures of ten now says "so far", because it was not merely leaving men out but
+admitting the wrong ones.
+
+**Refactor, both passes.** `h-[1.15rem]` in four places and `w-[5.5rem]` in four
+became variables on the `--pitch-boards` precedent; `roundFinished` left the
+barrel because it is half an answer and publishing it beside `roundState` was
+publishing the trap; two type imports left behind by the `round.ts` split are
+gone. Checked clean: no league id or provider URL outside `config.ts`, no file
+over the 300-line ceiling, no unused import anywhere in the tree.
+
+---
+
 ## 2. What was witnessed — PLATFORM_NOTES, 22 Aug
 
 Long section there; the headlines, all previously open questions in this repo:
