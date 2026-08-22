@@ -1,10 +1,11 @@
-import { FPL_STARTERS, clubById, clubColours, playerByCode } from "@epl/core";
+import { clubById, clubColours, fplLineup, playerByCode } from "@epl/core";
 import type { FplPick } from "@epl/core";
 import { footballNow } from "../football";
 import Nothing from "../components/shell/Nothing";
 import Section from "../components/shell/Section";
 import PageHeader from "../components/shell/PageHeader";
 import PlayerPortrait from "../components/football/PlayerPortrait";
+import FplPitch from "./FplPitch";
 import EntryForm from "./EntryForm";
 import { forgetEntry } from "./actions";
 import { myEntryId, mySide } from "./entry";
@@ -52,6 +53,7 @@ export default async function FplPage() {
   const players = playerByCode(snapshot);
   const clubs = clubById(snapshot);
   const { entry, squad } = side;
+  const arrangement = squad === null ? null : fplLineup(squad);
 
   return (
     <div className="flex flex-col gap-4">
@@ -63,26 +65,26 @@ export default async function FplPage() {
         <Figure label="Round" value={squad?.total ?? entry.gameweekPoints} />
       </dl>
 
-      {squad ? (
+      {squad && arrangement ? (
         <Section
           title={`Gameweek ${squad.gameweek}`}
           aside={<>{squad.hit ? `${squad.hit} pt hit · ` : null}FPL&apos;s scoring</>}
         >
-          {/* The XI, then the bench under a rule of its own. FPL's slot order
-              says which is which — 1–11 start, 12–15 wait, in the order they
-              would come on — and a flat fifteen said neither, so the one thing
-              a manager checks on a Saturday ("did my bench outscore my side")
-              took counting. */}
-          <Picks
-            picks={squad.picks.filter((pick) => pick.slot <= FPL_STARTERS)}
-            players={players}
-            clubs={clubs}
-          />
-          <Bench
-            picks={squad.picks.filter((pick) => pick.slot > FPL_STARTERS)}
-            players={players}
-            clubs={clubs}
-          />
+          {/* The XI on the grass, the bench as rows under it — the same shape a
+              rival's team sheet takes, so the two games read alike even though
+              none of their numbers may be compared.
+
+              The pitch waited on this adapter carrying `element_type`: a pitch
+              needs lines, and the football layer refuses to know what line a man
+              is in because Fantrax files several of them differently. FPL's own
+              classification belongs to FPL's own layer, which is where it now
+              lives. The arrangement is `fplLineup`, pure and tested in core.
+
+              The bench stays a list. It is four men in the order they would come
+              on, which is an ordering rather than a shape, and standing them on
+              grass would claim a formation nobody picked. */}
+          <FplPitch rows={arrangement.rows} players={players} clubs={clubs} />
+          <Bench picks={arrangement.bench} players={players} clubs={clubs} />
         </Section>
       ) : (
         // Keeps the section rather than dropping to a bare sentence between the

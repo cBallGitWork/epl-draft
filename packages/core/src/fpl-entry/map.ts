@@ -43,6 +43,7 @@ export function mapSquad(
   raw: RawPicks,
   codeFor: (element: number) => number | null,
   pointsFor: (element: number) => number,
+  lineFor: (element: number) => number,
 ): FplSquad | null {
   const gameweek = raw.entry_history?.event;
   if (gameweek === undefined) return null;
@@ -63,6 +64,7 @@ export function mapSquad(
         // the wrong half of the squad is a smaller wrong answer than a pick
         // dropped from a fifteen that then renders as fourteen.
         slot: pick.position ?? 0,
+        line: lineFor(pick.element),
         multiplier,
         isCaptain: pick.is_captain ?? false,
         isViceCaptain: pick.is_vice_captain ?? false,

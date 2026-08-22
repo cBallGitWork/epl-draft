@@ -54,6 +54,18 @@ export interface FplPick {
   isViceCaptain: boolean;
   /** Already multiplied — what this pick contributed to the manager's score. */
   points: number;
+  /** FPL's own `element_type`: 1 keeper, 2 defender, 3 midfielder, 4 forward.
+   *
+   *  **Here rather than in the football layer, and that is the whole reason this
+   *  adapter exists.** `element_type` is not a fact about a footballer — it is
+   *  how FPL files him for FPL's game, and Fantrax files several of the same men
+   *  differently and lets them hold two positions at once. `football/types.ts`
+   *  refuses to carry it for exactly that reason. This layer models FPL's
+   *  fantasy game, so FPL's classification is at home in it.
+   *
+   *  Zero when FPL did not say, which sorts before the keeper's line and lands
+   *  the pick at the top of the pitch rather than dropping him from a fifteen. */
+  line: number;
 }
 
 export interface FplSquad {
@@ -71,3 +83,16 @@ export interface FplSquad {
  *  the football layer knows nothing about how many men a fantasy game fields,
  *  and our own league fields a different number. */
 export const FPL_STARTERS = 11;
+
+/** FPL's four lines, back to front, and what to call them.
+ *
+ *  Their vocabulary, not our league's: `positions.ts` in the app translates
+ *  Fantrax's letters and this translates FPL's numbers. The four words come out
+ *  the same, which is a coincidence of English rather than a shared rule — the
+ *  day FPL adds a fifth classification only one of the two moves. */
+export const FPL_LINES: readonly { line: number; name: string }[] = [
+  { line: 1, name: "GK" },
+  { line: 2, name: "DEF" },
+  { line: 3, name: "MID" },
+  { line: 4, name: "FWD" },
+];
