@@ -68,6 +68,16 @@ export interface Edition {
   teams: LeagueTeam[];
   /** Null until somebody has actually played. */
   eleven: TeamOfTheWeek | null;
+  /** Whether the round the eleven is picked from is still being played.
+   *
+   *  A team of the week chosen from four of ten fixtures is not the week's
+   *  eleven, it is the week so far — and it does not merely leave men out, it
+   *  admits the wrong ones: every good forward in the league was still to kick
+   *  off on Saturday tea-time, so two of the three forward slots went to men
+   *  with no goal, no assist and no clean sheet while a midfielder level with
+   *  the best defender missed out on a full quota. The section says which it is
+   *  rather than the reader having to know the fixture list. */
+  partial: boolean;
   /** The reader's own team, when they have signed in. Sections order themselves
    *  around it rather than being neutral. */
   mine: string | null;
@@ -130,6 +140,13 @@ export async function edition(mine: string | null): Promise<Edition> {
     deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, kickoffs, now) : null,
     teams: drafted?.info?.teams ?? [],
     eleven: eleven(drafted),
+    // Any dated fixture still to finish. Undated ones are ignored on the same
+    // rule the football layer uses everywhere: a TV pick with no time cannot
+    // hold a round open.
+    partial:
+      drafted?.snapshot.fixtures.some(
+        (fixture) => fixture.kickoff !== null && fixture.status !== "finished",
+      ) ?? false,
     mine,
   };
 

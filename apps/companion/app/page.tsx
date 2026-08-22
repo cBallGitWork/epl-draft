@@ -77,7 +77,9 @@ export default async function GazettePage() {
         </Nothing>
       ) : null}
 
-      {paper.eleven ? <TeamOfTheWeek eleven={paper.eleven} mine={paper.mine} /> : null}
+      {paper.eleven ? (
+        <TeamOfTheWeek eleven={paper.eleven} mine={paper.mine} partial={paper.partial} />
+      ) : null}
 
       {paper.deals.length > 0 ? (
         <Deals deals={paper.deals} at={paper.dealsAt} who={who} />
