@@ -101,6 +101,25 @@ checked against both leagues, not assumed. A team of the week picked from four
 fixtures of ten now says "so far", because it was not merely leaving men out but
 admitting the wrong ones.
 
+**Two more from the same hunt, both mirror images of the morning's bug.** `/gw/1`
+served a 68-minute-old snapshot under a LIVE badge — "BRE 2-0 Live 45'" while
+/matchday said "BRE 3-0 FT" in the same second — because `gameweekSnapshot` is
+reached from that one route, nothing warms it, and `unstable_cache` serves stale
+while it revalidates. The current round comes from `footballNow` now. And
+`GameweekView` was the only `AutoRefresh` in the app not calling `pollSeconds`:
+it derived its interval from `isMatchdayLive`, so the Live tab dropped to 300s in
+every gap between kickoffs while the desk and three boards beside it stayed at 30.
+This morning's bug asked the wide question for a live dot; these asked the narrow
+one for a poll rate.
+
+**Two findings left on the table, deliberately.** `PairingCard` withholds
+"all played" between kickoffs because it gates on `isMatchdayLive` — the doctrine
+says `duringGameweek`, but there is a comment there choosing the narrow question
+on purpose, and the harm is a withheld caption rather than a false one. And the
+pitch prints a Fantrax number without saying whether it is a season or a
+projection, which the list and the player card both label; not wrong today,
+because the pool is answering year-to-date, and it threads through three pitches.
+
 **Refactor, both passes.** `h-[1.15rem]` in four places and `w-[5.5rem]` in four
 became variables on the `--pitch-boards` precedent; `roundFinished` left the
 barrel because it is half an answer and publishing it beside `roundState` was

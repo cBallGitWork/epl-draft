@@ -131,9 +131,14 @@ function MatchRow({
         ) : null}
         {rows.length === 0 ? (
           <p className="py-1 text-center text-xs text-faint">
-            {live || fixture.status === "finished"
-              ? "Nothing to report yet."
-              : `Kicks off ${fixture.kickoff === null ? "TBC" : londonDayAndTime(fixture.kickoff)}`}
+            {/* "Yet" is a promise that more is coming, and a finished goalless
+                match with no cards in it is not waiting on anything. The two
+                shared a sentence because they shared a branch. */}
+            {fixture.status === "finished"
+              ? "Nothing to report."
+              : live
+                ? "Nothing to report yet."
+                : `Kicks off ${fixture.kickoff === null ? "TBC" : londonDayAndTime(fixture.kickoff)}`}
           </p>
         ) : (
           <ul className="flex flex-col gap-1.5">
