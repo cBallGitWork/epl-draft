@@ -67,12 +67,18 @@ pairing it with `isMatchdayLive` rather than inventing a fourth state.
 The scoreline is `getLiveScoringStats` — Fantrax's own totals under Fantrax's own
 scoring, which we never recompute.
 
-Everything under a player is **two sources joined**: his fantasy points for this
-period come from `getTeamRosterInfo`, which is public and **honours `period`**
-(probed live 19 Aug: `displayedPeriod` echoes, and `periodOppnentTeamIds` changes
-with it), so the board prices the week on screen rather than whatever week
-Fantrax is currently pointing at. What he *did* — goals, assists, clean sheet,
-minutes — is **FPL's**, joined through the identity bridge.
+Everything under a player is **two sources joined**: his fantasy points come from
+`getTeamRosterInfo`, and what he *did* — goals, assists, clean sheet, minutes —
+is **FPL's**, joined through the identity bridge.
+
+**`period` does not price the week, and this paragraph used to say it did.** It
+was probed on 19 Aug and `displayedPeriod` does echo, with `periodOppnentTeamIds`
+changing to match — so the opponent column moves. Re-probed on 22 Aug with real
+numbers in the payload: periods 1, 2 and 3 answer **byte-identical** points, every
+category line included, and `SEASON_926_BY_PERIOD` behaves the same way. What the
+board prints under each man is season-to-date under a card headed "This period".
+Invisible while the season is one gameweek old and wrong from GW2. Recorded in
+HANDOVER §4 as the thing to take next.
 
 If Fantrax refuses the points table for a side, that side's players fall back to
 their **minutes**, told apart by the apostrophe on them. One table either arrives

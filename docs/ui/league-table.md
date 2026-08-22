@@ -33,7 +33,18 @@ Those two are deliberately distinct.
 
 ## Known gaps
 
-**No team badges.** Sixteen names and nothing to tell them apart at a glance —
-`TeamBadge` exists and the schedule already draws it, but wiring it here adds a
-provider read to a page that makes one, so it is a data-flow change rather than
-part of a visual pass.
+~~**No team badges.**~~ Drawn since 22 Aug. The read that was the objection now
+lives in `app/badges.ts` and is shared by the schedule, the matchups list and the
+head-to-head board, so it is one cache entry for four surfaces rather than a
+second read for one page.
+
+**The points column is headed `FP`, not `Points`.** In a league table "points"
+means the standings — three for a win — and this column is Fantrax points
+scored, which is a different number the same word was claiming. The `W-L-T`
+beside it is Fantrax's own record string, unparsed.
+
+**A line marks where the playoffs start**, read off the declared bracket by
+`playoffPlaces` rather than written down here: the placeholder's final between 1
+and 2 draws it under second, and the day it becomes Fantrax's published top four
+it moves on its own. Never under the last row — a line beneath the bottom of a
+table announces a cut nobody missed.

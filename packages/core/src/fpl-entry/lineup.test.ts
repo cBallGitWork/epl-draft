@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { fplLineup } from "./lineup";
+import { isFplKeeper } from "./types";
 import type { FplPick, FplSquad } from "./types";
 
 const pick = (fill: Partial<FplPick> & { slot: number; line: number }): FplPick => ({
@@ -67,5 +68,18 @@ describe("fplLineup", () => {
     const { rows } = fplLineup(unlined);
     expect(rows.map((row) => row.label)).toEqual(["0", "DEF"]);
     expect(rows.flatMap((row) => row.players).length).toBe(2);
+  });
+});
+
+describe("isFplKeeper", () => {
+  it("knows FPL's keeper from FPL's own numbering", () => {
+    expect(isFplKeeper(1)).toBe(true);
+    expect([2, 3, 4].map(isFplKeeper)).toEqual([false, false, false]);
+  });
+
+  it("says no for a line FPL did not give", () => {
+    // Zero is what `mapSquad` writes when the payload omits `element_type`.
+    // Drawing him a keeper's shirt on that would be a guess.
+    expect(isFplKeeper(0)).toBe(false);
   });
 });

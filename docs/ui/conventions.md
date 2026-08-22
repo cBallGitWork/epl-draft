@@ -11,7 +11,6 @@ theme *is* the `@theme` block in `globals.css`.
 | **Surfaces** | Near-black, tinted to hue 320. Four steps. | `bg`, `surface`, `raised`, `line` |
 | **Football** | The real Premier League. PL's own 2023 palette, read from their live stylesheet — not from a brand site, all of which still republish the 2016 set. | `accent` (PL green), `info` (PL cyan), `live` (PL pink, **live matches only**), `pl-purple` |
 | **League** | Our competition. Tim Hortons red, plus a 1964–85 cream. | `league`, `league-dark`, `cream` |
-| **Sticker** | Merlin 1994/95. **Only ever inside a sticker.** | `sticker-card`, `sticker-keyline`, `sticker-banner-*`, `sticker-backdrop-*` |
 | **Pitch** | The grass, deliberately darker than the sticker backdrop so cards lift off it. | `pitch-turf`, `pitch-mow`, `pitch-surround`, `pitch-line` |
 | **FDR** | FPL's five-step fixture difficulty, rebuilt at our lightness. | `fdr-1` … `fdr-5` |
 | **Data** | Duller than `accent` on purpose, so a form indicator never competes with a primary action. | `good`, `mid`, `bad` |
@@ -55,11 +54,14 @@ inside the sticker, where the card is container-queried.
 | `football/FixtureChip` | Opponent + (H)/(A), coloured by FPL's difficulty. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
 
-**Rows shrink, they never wrap.** A back five does not fit five cards at full
-width on a phone, and wrapping put one defender on a row of his own below the
-other four — which reads as a formation nobody picked. `PitchRows` gives each
-cell `flex-1` under a `max-w`, so a crowded line gives up width instead, and the
-name inside is sized in container-query units so it comes with it. Row padding is
+**Rows shrink, they never wrap — and every card is the same size.** A back five
+does not fit five cards at full width on a phone, and wrapping put one defender
+on a row of his own below the other four, which reads as a formation nobody
+picked. `PitchRows` used to give each cell `flex-1` under a `max-w`, which shrank
+a crowded line and left an uncrowded one wide — so one XI stood at three sizes
+down the pitch. The basis now comes from the FULLEST line in the set and is given
+to every card, so a shorter line centres in the space instead. The name inside is
+one size in container-query units and truncates. Row padding is
 the taper's **own** inset — `FAR_INSET`, exported by `PitchTurf` and set on the
 frame as `--pitch-inset`, which the hoardings read too. One number, three
 readers: it used to be written out twice with a comment asking the next person to

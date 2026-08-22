@@ -31,17 +31,31 @@ bar.
 same footballer is worth different amounts in the two games, and a reader coming
 from the adjacent tab has to be told which game they are looking at.
 
+## The pitch, and what it cost to get one
+
+Built 22 Aug, exactly as the gap below it described.
+
+A pitch needs positional lines, and the football layer deliberately carries no
+position: `element_type` is FPL's own fantasy classification, not a fact about a
+footballer, which is precisely why it was taken out (CLAUDE.md). So the FPL pitch
+takes FPL's classification from **this** layer — `fpl-entry`, the FPL league
+layer and the correct home for it — as `FplPick.line`, read by `fetchEntryLines`
+on the same reasoning `fetchEntryPoints` already gave for `total_points`.
+
+`fplLineup` arranges the XI back to front, pure and tested — including three at
+the back with no forwards, and a pick FPL gave no line to, who stands in a row of
+his own with the raw number for a label rather than disappearing from a fifteen.
+`PitchRows` is shared with our own league's three pitches, which is what made the
+ground free. `PitchPlayer` is not: it takes a Fantrax roster slot joined to a
+footballer, and a pick is neither, so the sticker is a copy — second occurrence,
+and the two genuinely differ, because only this one has an armband and only the
+other has a fixture chip.
+
+**The bench stays a list.** Four men in the order they would come on is an
+ordering, not a shape, and standing them on grass would claim a formation nobody
+picked.
+
 ## Known gaps
-
-**The squad is a list where every other squad in the app is a pitch — and
-`PitchFrame` is not free here, which the roadmap had wrong.**
-
-A pitch needs positional lines, and the football layer deliberately does not
-carry a position: `element_type` is FPL's own fantasy classification, not a fact
-about a footballer, which is exactly why it was taken out (CLAUDE.md). So an FPL
-pitch needs FPL's classification carried by **this** layer — `fpl-entry`, which
-is the FPL league layer and the correct home for it — read from the bootstrap
-and mapped onto `FplPick`.
 
 That is a data change rather than a rendering one, and "keep the tab small"
 (Craig, 6 Aug) says it needs a reason beyond symmetry with the other squads.

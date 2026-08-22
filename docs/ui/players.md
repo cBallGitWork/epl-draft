@@ -27,8 +27,15 @@ Fantrax scores him.
   seen renders as the raw code rather than as a guess.
 - A sortable table. **Sorting is a link, not a click handler** — the server does
   the ordering, the phone gets HTML, and a sort survives being shared.
-- Columns the phone cannot hold are hidden above `md` rather than shrunk. A row a
-  thumb can hit and eyes can read at arm's length holds four things.
+- **Nothing is hidden on a phone.** The rank used to drop behind a breakpoint on
+  the grounds that a row holds four things — true of a row that must fit, and
+  since 22 Aug this one does not. The table breaks out of the page gutter and
+  scrolls sideways instead, carrying all seven columns `getPlayerStats`
+  publishes: rank, player, his fixture, FPts, FP/G, and the two ownership
+  columns that are the only outside opinion anywhere in the app.
+- **`Opp (ET)` names its clock in the heading.** Fantrax renders that cell in the
+  league's own timezone, which is US Eastern — "Sun 9:00AM" is a 14:00 kickoff —
+  and every other time in this app is London. Their words, their clock, named.
 - Paged at `PAGE_ROWS` with a "show all" escape.
 
 ## Provenance, which is load-bearing here

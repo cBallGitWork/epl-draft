@@ -111,8 +111,14 @@ the sofa, so the score under fifteen faces sat still through a whole half.
   what he is worth — his points where we have a table, his minutes where we do
   not — with his goal/assist chips beside it. See
   [matchup.md](matchup.md#the-points-band).
-- Names step down in size rather than truncating — "JOÃO PEDRO" is two different
-  players on some rosters, so an ellipsis is the wrong trade on a squad screen.
+- **One name size on every card, truncating.** It stepped down in three bands by
+  length so a long name survived whole; that kept the words and lost the line —
+  eleven cards in three type sizes read as eleven components, and the two men
+  whose names had shrunk were the ones you could no longer scan. Craig's call,
+  22 Aug, reversing the earlier one.
+- **Every card is the same width, on every line.** The basis comes from the
+  fullest line in the set, so a back five and a front two draw the same card and
+  a shorter line simply centres in the space.
 - It fits a 390×844 phone with no scrolling. Keep it that way.
 
 ### The list
@@ -191,9 +197,11 @@ unresolved when it is, and a way out to the full profile.
   — your lineup is yours all week — and the planner's subject is the
   arrangement, which a list cannot express. Deliberate, but it does mean the one
   squad you look at most is the one you cannot read as rows.
-- **Future gameweeks are not browsable.** The view takes fixtures for whatever
-  round the snapshot holds; a `?gw=` selector needs a snapshot fetched for that
-  round *and* `getTeamRosters` asked for the matching period.
+- ~~**Future gameweeks are not browsable.**~~ `?gw=` works since 22 Aug, resolved
+  through the calendar seam exactly as the head-to-head route resolves it, and
+  the schedule's rows link into it — so tapping a side in a March fixture opens
+  March's fifteen rather than this week's. The lineup gate still applies: a round
+  whose period has not opened shows the squad and not the arrangement.
 - A line of seven gives up width rather than wrapping (`PitchRows`), which keeps
   the shape honest but leaves those names at the smallest step the plate allows.
   Seven in a line is an autodrafted rehearsal squad rather than anything a

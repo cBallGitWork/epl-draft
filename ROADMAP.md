@@ -53,12 +53,13 @@ that don't need live football:
    Form and record would need `getStandings`; recorded as a gap.*
 6. ~~**`/league/schedule`** — a jump/anchor to the current period.~~ *Done 20 Aug, and further: gameweek and competition dropdowns, opens on the current-or-next round with its scores, archived results, Fantrax team badges.*
 7. ~~**`/fpl`** — the one squad still a list; `PitchFrame` reuse is free.~~
-   *Partly done 20 Aug (`5ebd6e4`) — XI and bench split, the bench totalling
-   what was left on it. **The "free" claim was wrong**: a pitch needs positional
-   lines and the football layer deliberately carries no position, so an FPL
-   pitch needs `element_type` carried by the FPL entry layer. Shape recorded in
-   `docs/ui/fpl.md`; "keep the tab small" says it needs a reason beyond
-   symmetry.*
+   *Done — XI and bench split 20 Aug (`5ebd6e4`), the pitch 22 Aug (`320c6c3`).
+   **The "free" claim was wrong and the shape recorded against it was right**: a
+   pitch needs positional lines, the football layer deliberately carries no
+   position, so `element_type` had to be carried by the FPL entry layer. It is,
+   as `FplPick.line`, and `fplLineup` arranges from it — pure and tested. The
+   bench stays a list, because four men in the order they come on is an ordering
+   and not a shape.*
 
 ~~**Defer until live football exists (21 Aug+):** `/matchday` (two unrelated
 designs stacked), `/league/matchups` (nothing separates a blowout from a close
@@ -138,13 +139,18 @@ belong to nobody.
   deferred design judgements (trailing dim at arm's length, whether finished
   pairings sort below live ones).
 
-## 4. After the GW1 weekend — the parked refactors unlock
+## 4. ~~After the GW1 weekend — the parked refactors unlock~~ **All landed**
 
-From HANDOVER §1, in this order only if their triggers still fire:
-`contribution` shape over the four "what did he do" renderings; `leagueCache()`
-over nine `unstable_cache` wrappers; `readerTeamId()` over six
-hand-discriminations; splitting `fantrax/stats.ts`, `league/types.ts`,
-`app/page.tsx`, and the four over-ceiling test files.
+Every one of them went in on 20 Aug, before the weekend rather than after it, and
+the HANDOVER section this cited no longer exists: `contribution` over the four
+"what did he do" renderings, `leagueCache()` over eleven `unstable_cache`
+wrappers, `readerTeamId()` over six hand-discriminations, and the splits.
+
+The 22 Aug rounds added their own: `app/positions.ts` over seven renderings of a
+Fantrax position letter, `app/unresolved.ts` over three of "why is nobody here",
+`app/badges.ts` over three private badge reads, `leads`/`trails` over five
+hand-written comparisons of two possibly-missing totals, and `--pitch-band` /
+`--player-card-figure` over eight literal dimensions that had to agree.
 
 ## 5. 28 Aug — period 1 ends
 

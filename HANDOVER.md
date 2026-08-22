@@ -230,10 +230,6 @@ Six of the sixteen survivors are fixed above. What is left, worth most first:
   saves, a defender's goals conceded. Confirmed, severity marked down: there is no
   double in GW1, so nothing is wrong on screen yet.
 - **The next deadline can be three weeks away and is printed as a bare weekday.**
-- **Your own squad's pitch never shows Fantrax's points**, only minutes — and the
-  read that would supply them is fetched and thrown away. `LineupPitch` is handed
-  a null points map; `SquadPitch` drops a value it already holds. Only
-  `TeamSheet` forwards it.
 - **The desk swallows the scoreboard refusal** that both sibling boards print, and
   calls an unreadable league "no pairings".
 - Smallest: `"a quarter of an hour"` hardcodes `LINEUP_LOCK_LEAD_MINUTES` in prose;

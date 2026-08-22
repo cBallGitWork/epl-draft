@@ -121,9 +121,10 @@ points is scored by the week's points.
 
 ## Known gaps
 
-The full-time treatment — winner marked, "Full time" rather than a live dot — is
-written and unwitnessed. Nothing has been played in either league yet; check it
-against the 21 Aug weekend.
+~~The full-time treatment is written and unwitnessed.~~ Witnessed 22 Aug: six of
+GW1's ten fixtures finished with the schedule on screen, the winner marked and
+the scoreline printed from `getStandings`. What is still unwitnessed is a
+*completed period* — every dated fixture finished — which arrives Mon 24 Aug.
 
 **A played head-to-head shows rosters we cannot prove were the ones fielded.**
 `getTeamRosters?period=N` is honoured and echoed for every period, but no period

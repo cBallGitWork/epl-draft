@@ -177,8 +177,9 @@ owner. **Read the roster slot, never a position off the player.**
 
 ### Identity
 
-Fantrax exposes `rotowireId` on 544 of the 699 players (78%). **`sportRadarId` is
-not on this endpoint at all** — it is not a second identity space. The existing
+Fantrax exposes `rotowireId` on about four players in five — 544 of 699 on 3 Aug,
+and the denominator has moved since (see the pool counts above), so count it
+rather than quoting it. **`sportRadarId` is not on this endpoint at all** — it is not a second identity space. The existing
 identity pipeline at `~/ai-carling-premiership/src/identity/` produces canonical
 `person_id`/`root_id` and bridges FPL/SofaScore/FotMob/Understat/Transfermarkt.
 It does not include the RotoWire ID space either, so that is not a shortcut. The
