@@ -2651,9 +2651,61 @@ Seven of sixty rehearsal roster slots are off-canonical, all canonical-F players
 slotted at M. So the pool table's `FPts` is **not** what a player scored for his
 owner, and on this league it will differ for roughly one rostered player in eight.
 
-Everything else is safe: the squad pages, the head-to-head board and the player
-profile all read `getTeamRosterInfo`, which is per team and therefore
-slot-correct. `/players` is the only surface reading the pool's number.
+**The splitting field is `defaultPosId`**, and it rides in payloads we already
+read. Fantrax's *stat tables* — `getPlayerStats`, `getTeamRosterInfo`,
+`getPlayerProfile` — price a man at his `defaultPosId`. Fantrax's *live, matchup
+and standings engine* prices him at the slot on the roster. `getPlayerIds`'
+position happens to equal `defaultPosId` for all sixty rostered players today, so
+the two cannot be told apart from this league yet; nor, with only one off-slot
+player having played, can "roster slot" be told from "first-listed eligible
+position", which predicts the same answer. Neither ambiguity changes the shape of
+the problem.
+
+**Which number decides the match.** `getStandings?view=SCHEDULE` — their settled
+table — reports Gameweek 1 as `123 5 — test3 16`. Sixteen is the slot-priced
+figure. So the engine is authoritative and the stat tables are the outlier, which
+is the opposite of the way round you would guess from which one looks like a
+database.
+
+**Four surfaces carry the wrong number, and one contradicts itself on screen.**
+`squadPoints()` reads `getTeamRosterInfo`, so it inherits the same default-position
+pricing and feeds exactly the places that mean "what he scored for his owner":
+
+| Surface | What it shows |
+|---|---|
+| `/players` | Saka 6 at rank 8, sorted below Havertz. At his real 8 he ties Ødegaard at 3. |
+| `/squad/[teamId]` | `Saka G CS 6` — the FPL chips say he kept a clean sheet, the Fantrax number beside them prices that clean sheet at 0. |
+| `/league/matchups/[teamId]` | **Header `test3 16`; the eleven reads Ødegaard 8, Saka 6 and thirteen noughts — the players sum to 14 under a total of 16.** The total comes from `getLiveScoringStats` and the column from `getTeamRosterInfo`. |
+| `/players/[fantraxId]` | `6 FPts · Goals +4 · Minutes Played +2`, with the clean sheet missing entirely — under a comment promising the parts add up to the whole. |
+
+Correct and unaffected: the standings, the schedule, the matchups list and
+`/matchday/desk`, all of which take team totals from the engine; and the team of
+the week, which reads `rostered.slot.position` and prints no fantasy points.
+`join/cleanSheets.ts` already prices its preview off the slot, so the codebase
+does model position-dependent scoring — it simply never knew the stat tables
+disagree.
+
+**It is systematic, not an edge case, and it gets worse with a good manager.**
+48 of 607 players in the pool are multi-eligible: 38 `F,M`, 9 `M,D`, 1 `F,D`.
+Under this league's scoring the deeper slot pays strictly more — goals D 6 / M 5
+/ F 4, clean sheets D 4 / M 1 / F 0, everything else flat — so the optimal lineup
+*always* files a multi-eligible man at his deepest eligible position. That is why
+all seven of today's off-slot cases are the same shape (`F,M` slotted M), and why
+the stat tables will systematically **under**-price precisely the players managers
+have thought hardest about. On sixteen teams and 240 slots from 10 Oct this is
+routine.
+
+**Not fixed, and deliberately.** The fix is available and cheap — the slot-priced
+per-player total and its category breakdown are already in the
+`getLiveScoringStats` payload the board fetches anyway, as `statsMap[id].object1`
+and `.object2`, so the board could stop making two `getTeamRosterInfo` calls and
+become internally consistent at the same time. Three things argue for Craig
+deciding rather than a Saturday commit: it changes what four screens show; players
+who have not played are absent from `statsMap` rather than nought, so they would
+move from `0` to a dash; and `statsMap` has been non-empty for exactly one day, in
+one state. The season table on `/players` and `/players/[fantraxId]` needs a
+different answer again, because `statsMap` is per period and those are season
+totals — and while the season is one gameweek old the two cannot be told apart.
 
 ### `getPlayerStats` flipped its default
 
