@@ -1,12 +1,5 @@
 import { NOTABLE_SAVES } from "../config";
-import type {
-  Club,
-  Fixture,
-  FixtureStatus,
-  FootballPlayer,
-  FootballSnapshot,
-  PlayerMatchStats,
-} from "./types";
+import type { Club, FootballPlayer, FootballSnapshot, PlayerMatchStats } from "./types";
 
 // Pure read-side selectors over a snapshot. Kept here rather than in components
 // so they stay unit-testable — the same rule that let the World Cup app's
