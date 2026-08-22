@@ -116,13 +116,15 @@ belong to nobody.
   prints "2026-27 - YTD" unprompted. **But** that column is priced at the
   player's *listed* position rather than the slot his owner has him in — a
   different and smaller problem, sized in PLATFORM_NOTES and left for Craig.
-- ~~Watch one defender through a final whistle~~ **Half answered.** Gabriel, a
-  defender who played 90 in a clean sheet, settled at Fantrax's **+4** — the
-  same number `pendingCleanSheets` would have previewed, and it prices off
-  `slot.position`, which is the right side of the split above. The divergence
-  case is still open: theirs is "on field", so a defender subbed off before his
-  side concedes is the one we would over-count, and that needs a substitution to
-  happen in front of us.
+- ~~Watch one defender through a final whistle~~ **Answered, with a keeper.**
+  `/matchday` rendered `+4` for test3 while Everton led 2–0 at 68' — the first
+  number `pendingCleanSheets` has ever produced — and it was Pickford, slotted G.
+  At the whistle Fantrax settled him at `CS 1 → 4.0` and the team went 20 → 27.
+  **Our +4 became their +4 exactly.** Also learned: at 90' in added time his row
+  carried `Sv 4 → 1.0` and neither `Min` nor `CS`, so saves are credited in play
+  and minutes are not. The divergence case is still open: theirs is "on field",
+  so a defender subbed off before his side concedes is the one we would
+  over-count, and that needs a substitution in front of us.
 - ~~Confirm Fantrax's numbers move~~ **They move.** 5.0 / 9.0 / 0.0 / 16.0 off a
   single fixture, and `getStandings` carries the same totals. What is still
   unwitnessed is whether they move *during* a match rather than at the whistle —

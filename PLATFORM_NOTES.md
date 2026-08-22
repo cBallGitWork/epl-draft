@@ -2738,6 +2738,29 @@ and is now load-bearing for the opposite reason: read the season off
   defenders, CBI+tackles+recoveries for mid and forwards, 0 for keepers, verified
   against all 31 players with minutes.
 
+### The clean-sheet preview was watched through a whistle, and it was right
+
+The roadmap's Lane B item, closed properly on the 15:00 kickoffs. `/matchday`
+rendered `7 to play +4` for test3 and `9 to play +1` for 123 — the first time
+`pendingCleanSheets` has ever produced a number.
+
+Traced to the men behind it rather than trusting the totals: test3's +4 was
+**Pickford, slotted G**, in a match Everton led 2–0 at 68'; 123's +1 was Wilson,
+slotted M. Both are the right per-position prices (`GOALIE` CS 4, `M` CS 1), and
+both come off `slot.position`, which is the correct side of the slot-vs-default
+split above.
+
+At the whistle Fantrax settled Pickford at `Min 90 → 2.0, CS 1 → 4.0, Sv 4 → 1.0`,
+total 7.0, and the team went 20 → 27. **Our +4 became their +4 exactly.**
+
+Two refinements to what this file already said. Fantrax does not simply withhold
+clean sheets until full time — at 90' with the match still in added time,
+Pickford's row carried `Sv 4 → 1.0` and **neither `Min` nor `CS`**. So saves are
+credited in play and minutes are not, which means the "one exception" note in
+`join/cleanSheets.ts` is two exceptions. And the divergence case is still
+untested: theirs is "on field", ours is FPL's team clean sheet, so a defender
+subbed off before his side concedes remains the one we would over-count.
+
 ### Pool sizes have drifted and CLAUDE.md is stale on both
 
 FPL bootstrap now carries **600** elements against the 564 recorded on 3 Aug.
