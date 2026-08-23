@@ -1,4 +1,5 @@
-import { readdir } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
+import { join } from "node:path";
 
 // Which capture days actually exist on disk. Where captures *go* is `paths.ts`;
 // what was *written* is only knowable by asking the filesystem, and that is this
@@ -41,4 +42,32 @@ export async function captureDates(root: string): Promise<string[]> {
  *  to do about none differs by caller, so it is left to them. */
 export async function newestCapture(root: string): Promise<string | null> {
   return (await captureDates(root)).at(-1) ?? null;
+}
+
+/** What one capture day actually recorded, read back off its own manifest.
+ *
+ *  A dated directory is not evidence of a healthy capture. `capture-fantrax`
+ *  creates it before the first read runs and writes a manifest whatever happens,
+ *  so a day on which Fantrax refused every single request leaves exactly the same
+ *  footprint as a day on which it answered everything — and a watchdog counting
+ *  directories reports it as `0d ago`. This is the difference between the two.
+ *
+ *  A manifest that is absent or unreadable answers `null`, which is a third
+ *  answer again: we cannot say what that day recorded. Callers must not read it
+ *  as healthy. */
+export async function captureReads(dir: string): Promise<{ ok: number; failed: number } | null> {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(await readFile(join(dir, "manifest.json"), "utf8"));
+  } catch {
+    return null;
+  }
+
+  const reads = (parsed as { reads?: { ok?: boolean }[] } | null)?.reads;
+  if (!Array.isArray(reads)) return null;
+
+  return {
+    ok: reads.filter((read) => read.ok === true).length,
+    failed: reads.filter((read) => read.ok !== true).length,
+  };
 }
