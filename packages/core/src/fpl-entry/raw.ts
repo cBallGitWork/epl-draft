@@ -28,6 +28,13 @@ export interface RawPick {
   multiplier?: number;
   is_captain?: boolean;
   is_vice_captain?: boolean;
+  /** Which line FPL files him in: 1 keeper, 2 defender, 3 midfielder, 4 forward.
+   *
+   *  On every pick, and it was not modelled here — which cost a second read of
+   *  the whole 1.6 MB bootstrap to learn what this payload was already saying.
+   *  §5: raw.ts mirrors what the provider actually returns, and the price of it
+   *  not doing so is exactly this. */
+  element_type?: number;
 }
 
 export interface RawPicks {

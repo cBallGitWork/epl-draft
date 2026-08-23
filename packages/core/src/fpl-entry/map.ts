@@ -43,7 +43,6 @@ export function mapSquad(
   raw: RawPicks,
   codeFor: (element: number) => number | null,
   pointsFor: (element: number) => number,
-  lineFor: (element: number) => number,
 ): FplSquad | null {
   const gameweek = raw.entry_history?.event;
   if (gameweek === undefined) return null;
@@ -64,7 +63,11 @@ export function mapSquad(
         // the wrong half of the squad is a smaller wrong answer than a pick
         // dropped from a fifteen that then renders as fourteen.
         slot: pick.position ?? 0,
-        line: lineFor(pick.element),
+        // Off the pick itself. It briefly came from a second read of the whole
+        // bootstrap, because `RawPick` did not model the field FPL was already
+        // sending. Zero for a payload that omits it, which `fplLineup` stands in
+        // a row of its own rather than dropping from a fifteen.
+        line: pick.element_type ?? 0,
         multiplier,
         isCaptain: pick.is_captain ?? false,
         isViceCaptain: pick.is_vice_captain ?? false,

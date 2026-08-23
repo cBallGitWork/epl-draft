@@ -6,7 +6,6 @@ import {
   type FplEntry,
   type FplSquad,
   fetchEntry,
-  fetchEntryLines,
   fetchEntryPoints,
   fetchPicks,
   mapEntry,
@@ -54,10 +53,11 @@ const readSide = unstable_cache(
     // Element ids are per-season, so this lookup lives and dies inside one
     // snapshot and nothing keyed by it is ever persisted (CODE_RULES §3).
     const byId = new Map(snapshot.players.map((player) => [player.id, player]));
-    // Both FPL's own, and both read through this adapter rather than off the
-    // snapshot: `total_points` is FPL's scoring and `element_type` is FPL's
-    // classification, and the football layer carries neither on purpose.
-    const [live, lines] = await Promise.all([fetchEntryPoints(gameweek), fetchEntryLines()]);
+    // FPL's own scoring, read through this adapter rather than off the snapshot:
+    // `total_points` is the rules of the game this tab is about, and the football
+    // layer carries no fantasy points on purpose. His LINE needs no read at all —
+    // FPL puts it on the pick.
+    const live = await fetchEntryPoints(gameweek);
 
     return {
       entry,
@@ -65,7 +65,6 @@ const readSide = unstable_cache(
         picks,
         (element) => byId.get(element)?.code ?? null,
         (element) => live.get(element) ?? 0,
-        (element) => lines.get(element) ?? 0,
       ),
     };
   },

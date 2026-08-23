@@ -20,13 +20,17 @@ export default function TeamBadge({
   url,
 }: {
   /** Null for a side nobody holds yet — a semi-final winner, a place in a table
-   *  nobody occupies. Taken whole rather than as a name so this owns both null
-   *  checks and no caller repeats them. */
+   *  nobody occupies. Taken whole rather than as a name so this owns the letter
+   *  and the dashed placeholder, and no caller draws either. */
   team: LeagueTeam | null;
-  /** His badge, already looked up. A URL rather than the league's map, because
-   *  one of the four callers is a client component and a `Map` does not survive
-   *  the serialisation — and because looking a key up is the caller's business
-   *  in the three that hold one. */
+  /** His badge, already looked up.
+   *
+   *  A URL rather than the league's map, because one of the five callers is a
+   *  client component and a `Map` does not survive the serialisation. The other
+   *  four hold one and index it themselves, and the two of those that can pass a
+   *  null team spell that check out again on the way — which an earlier version
+   *  of this docblock claimed they did not have to. They do: this owns what to
+   *  DRAW when there is no team, not how to look one up. */
   url: string | undefined;
 }) {
   if (team !== null && url !== undefined) {

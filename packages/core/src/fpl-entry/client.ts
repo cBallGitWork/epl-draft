@@ -52,29 +52,3 @@ export async function fetchEntryPoints(gameweek: number): Promise<Map<number, nu
   }
   return points;
 }
-
-/** Which line FPL files each element in, keyed by their per-season element id.
- *
- *  Read here rather than through the football layer for the same reason
- *  `fetchEntryPoints` is: `element_type` is FPL's own classification of a player
- *  for FPL's own game, and `football/types.ts` deliberately carries no position
- *  because Fantrax files several of the same men differently. This is the house
- *  that owns the rule.
- *
- *  It costs a second read of the same 1.3 MB bootstrap the football snapshot
- *  already fetched, which is the price of not putting a fantasy classification on
- *  a footballer. Bounded by the caller's cache rather than paid per render. */
-export async function fetchEntryLines(): Promise<Map<number, number>> {
-  const res = await politeFetch(`${FPL_API_BASE}/bootstrap-static/`);
-  if (!res.ok) throw new Error(`FPL bootstrap → ${res.status}`);
-
-  const body = (await res.json()) as { elements?: { id?: number; element_type?: number }[] };
-  const lines = new Map<number, number>();
-
-  for (const element of body.elements ?? []) {
-    if (element.id !== undefined && typeof element.element_type === "number") {
-      lines.set(element.id, element.element_type);
-    }
-  }
-  return lines;
-}

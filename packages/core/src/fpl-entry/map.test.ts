@@ -44,9 +44,6 @@ describe("mapEntry", () => {
 
 const code = (element: number) => (element === 404 ? null : 1000 + element);
 const points = (element: number) => (element === 1 ? 12 : 2);
-// FPL's `element_type`: keeper, then defenders, then the rest. Enough to prove a
-// line reaches the pick; `lineup.test.ts` is where the arrangement is tested.
-const line = (element: number) => (element === 1 ? 1 : 2);
 
 describe("mapSquad", () => {
   it("carries FPL's slot order, which is what tells a starter from a substitute", () => {
@@ -65,7 +62,6 @@ describe("mapSquad", () => {
       },
       code,
       points,
-      line,
     );
     expect(squad?.picks.map((pick) => pick.slot)).toEqual([1, 11, 12, 0]);
   });
@@ -82,7 +78,6 @@ describe("mapSquad", () => {
       },
       code,
       points,
-      line,
     );
     expect(squad?.picks.map((p) => p.points)).toEqual([24, 2, 0]);
     expect(squad?.picks[0].isCaptain).toBe(true);
@@ -95,7 +90,6 @@ describe("mapSquad", () => {
       { picks: [{ element: 1, multiplier: 1 }], entry_history: { event: 3, points: 63, event_transfers_cost: 4 } },
       code,
       points,
-      line,
     );
     expect(squad?.total).toBe(63);
     expect(squad?.hit).toBe(4);
@@ -106,12 +100,39 @@ describe("mapSquad", () => {
       { picks: [{ element: 404, multiplier: 1 }, { element: 2, multiplier: 1 }], entry_history: { event: 3 } },
       code,
       points,
-      line,
     );
     expect(squad?.picks).toHaveLength(1);
   });
 
   it("says nothing when FPL names no gameweek", () => {
-    expect(mapSquad({ picks: [] }, code, points, line)).toBeNull();
+    expect(mapSquad({ picks: [] }, code, points)).toBeNull();
+  });
+});
+
+describe("mapSquad line", () => {
+  it("takes FPL's line off the pick, which is where FPL puts it", () => {
+    const squad = mapSquad(
+      {
+        entry_history: { event: 1 },
+        picks: [
+          { element: 1, position: 1, multiplier: 1, element_type: 1 },
+          { element: 2, position: 2, multiplier: 1, element_type: 4 },
+        ],
+      },
+      code,
+      points,
+    );
+    expect(squad?.picks.map((p) => p.line)).toEqual([1, 4]);
+  });
+
+  it("reads a pick with no element_type as no line rather than as a keeper", () => {
+    // Zero, not 1. `fplLineup` stands him in a row of his own; guessing him into
+    // goal would put a man in the wrong shirt on the pitch.
+    const squad = mapSquad(
+      { entry_history: { event: 1 }, picks: [{ element: 1, position: 1, multiplier: 1 }] },
+      code,
+      points,
+    );
+    expect(squad?.picks[0]?.line).toBe(0);
   });
 });
