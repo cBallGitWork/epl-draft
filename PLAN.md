@@ -249,8 +249,14 @@ Migrate the existing `2026-08-05/` with `git mv` into `leagues/real/`, move its
 capturing the pool once; its manifest carries `leagueId: null`, which is honest.
 `capture-status.ts` calls the **unchanged** `captureStaleness(dates, today,
 league.draftDate)` per league — that `staleness.ts` needs no edit is the sign the
-abstraction was drawn correctly. Expect it to go red the day after any missed
+abstraction was drawn correctly. Expect it to go red **on** the day of any missed
 run, since the rehearsal draft date is today; that is the watchdog working.
+
+*Corrected 27 Aug 2026: this said "the day after", and the code agreed with it —
+`overdue` was `ageDays > cadence`, so a daily cadence needed an age of two and the
+first missed capture passed green. The nine-hour offset `capture-status.yml` is
+scheduled on existed precisely to report the same day, so the two documents
+disagreed and the wrong one was implemented. See `staleness.ts`.*
 
 Capture the current period's rosters only. Whether `?period=N` returns a past
 roster or a projection is untestable until a transaction exists — an open
