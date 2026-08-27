@@ -31,9 +31,9 @@ import { yoursBorder } from "../mine";
 
 export default async function YourMatchup() {
   const squads = await getLeagueSquads();
-  if (!("period" in squads) || squads.info === null || squads.period.period === null) return null;
+  if (!("period" in squads) || squads.info === null || squads.roundPeriod === null) return null;
 
-  const period = squads.period.period;
+  const period = squads.roundPeriod;
   const mine = await myTeamId(squads.period.teams);
   if (mine === null) return null;
 

@@ -66,8 +66,8 @@ export default async function TeamPage({
   // Undefined is ordinary — no schedule for this period, or Fantrax would not
   // describe the league — and renders as no line rather than a guess.
   const opponent =
-    squads.info !== null && squads.period.period !== null
-      ? headToHead(squads.info.matchups, squads.info.teams, squads.period.period, teamId)?.opponent
+    squads.info !== null && squads.roundPeriod !== null
+      ? headToHead(squads.info.matchups, squads.info.teams, squads.roundPeriod, teamId)?.opponent
       : undefined;
 
   const clubs = clubById(squads.snapshot);
@@ -105,8 +105,8 @@ export default async function TeamPage({
   // above is one: there is then no arrangement of the two that type-checks and
   // still asks the live scoreboard for a period nobody named.
   const priced =
-    display.show === "lineup" && squads.period.period !== null && squads.info !== null
-      ? { period: squads.period.period, categories: squads.info.scoringCategories }
+    display.show === "lineup" && squads.roundPeriod !== null && squads.info !== null
+      ? { period: squads.roundPeriod, categories: squads.info.scoringCategories }
       : null;
   const live = priced === null
     ? null
@@ -141,7 +141,7 @@ export default async function TeamPage({
           .join(" ")}
         sub={
           <>
-            Period {squads.period.period ?? "—"} · Gameweek {squads.snapshot.gameweek}
+            Period {squads.roundPeriod ?? "—"} · Gameweek {squads.snapshot.gameweek}
             {display.show === "squad" ? " · squad" : null}
           </>
         }

@@ -72,7 +72,7 @@ export default async function SquadsPage() {
   // sixteen names into the week's fixtures. Undefined is ordinary: no schedule
   // for this period, or Fantrax would not describe the league, and it renders as
   // no line rather than as a guess.
-  const { period } = squads.period;
+  const period = squads.roundPeriod;
   const opponentOf = (teamId: string) =>
     squads.info === null || period === null
       ? null

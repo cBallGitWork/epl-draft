@@ -48,7 +48,7 @@ export default async function MatchupPage() {
     );
   }
 
-  const { period } = squads.period;
+  const period = squads.roundPeriod;
   if (squads.info === null || period === null) {
     return (
       <LeagueShell title="Matchups" current="matchups">

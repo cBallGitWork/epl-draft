@@ -63,7 +63,7 @@ export default async function HeadToHeadPage({
   if ("undrafted" in squads) notFound();
   if ("unavailable" in squads) redirect("/league/matchups");
 
-  const { period } = squads.period;
+  const period = squads.roundPeriod;
   if (squads.info === null || period === null) redirect("/league/matchups");
 
   const state = roundState(squads.snapshot);

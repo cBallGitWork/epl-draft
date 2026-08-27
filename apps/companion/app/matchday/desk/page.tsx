@@ -50,7 +50,7 @@ export default async function DeskPage() {
   // Fantrax at all, so an undrafted or silent league costs the top section and
   // nothing else.
   const league = "period" in squads ? squads : null;
-  const period = league?.period.period ?? null;
+  const period = league?.roundPeriod ?? null;
   const pairings =
     league?.info != null && period !== null
       ? periodPairings(league.info.matchups, league.info.teams, period)
