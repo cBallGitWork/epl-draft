@@ -40,6 +40,7 @@ export {
   gameweekStarted,
   gameweekStatus,
   isMatchdayLive,
+  nextRound,
   roundState,
 } from "./round";
 // `roundFinished` is deliberately not here. It is half an answer — it cannot say

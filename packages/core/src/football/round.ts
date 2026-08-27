@@ -96,6 +96,50 @@ export function gameweekStatus(
   if (round.some((fixture) => fixture.status === "live")) return "live";
   return round.every((fixture) => fixture.status === "finished") ? "finished" : "upcoming";
 }
+/** The round the next ball will be kicked in, and when.
+ *
+ *  Null once the season's football is all in the past.
+ *
+ *  **Not "the round in view", and the two come apart every week.** FPL keeps
+ *  `is_current` on a finished round until the next deadline, which is right —
+ *  people read Monday night's results on Tuesday — so `focusGameweek` answers
+ *  "which round is it" and this answers "what is coming up". A caller wanting
+ *  the first is asking the wrong one of these. On the last Monday of a round,
+ *  with its final match in play, this already names the round after it.
+ *
+ *  **Ordered by kickoff, never by "the lowest gameweek with an unfinished
+ *  match".** `calendar.ts` records that FPL leaves a rearranged fixture in its
+ *  original `event`, so a GW20 match replayed in February stays `upcoming`
+ *  under gameweek 20 — and the other reading would answer 20 from December
+ *  until it was played. The next ball to be kicked is the question with an
+ *  answer that survives a postponement.
+ *
+ *  Undated fixtures are ignored, on the same rule as `duringGameweek`: a TV pick
+ *  with no time cannot name a round. So is a fixture FPL has not filed under a
+ *  gameweek, because a round with no number is not one a screen can send anybody
+ *  to. */
+export function nextRound(
+  fixtures: readonly Fixture[],
+  at: string,
+): { gameweek: number; kickoff: string } | null {
+  const now = Date.parse(at);
+  if (Number.isNaN(now)) return null;
+
+  let soonest: { gameweek: number; kickoff: string; at: number } | null = null;
+  for (const fixture of fixtures) {
+    if (fixture.kickoff === null || fixture.gameweek === null) continue;
+    const kickoff = Date.parse(fixture.kickoff);
+    // Inclusive: the ball being kicked at this instant is the next one, not one
+    // already gone. `duringGameweek` opens on the same boundary.
+    if (Number.isNaN(kickoff) || kickoff < now) continue;
+    if (soonest === null || kickoff < soonest.at) {
+      soonest = { gameweek: fixture.gameweek, kickoff: fixture.kickoff, at: kickoff };
+    }
+  }
+
+  return soonest === null ? null : { gameweek: soonest.gameweek, kickoff: soonest.kickoff };
+}
+
 /** How settled a finished round is. Three rungs, because "over" is three
  *  different claims on a Saturday night and a screen may only make the one it
  *  can stand behind. */

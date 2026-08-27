@@ -65,10 +65,16 @@ function chooseRound(
   const wanted = Number(asked);
   return (
     rounds.find((round) => round.gameweek === wanted) ??
-    // FPL's own answer to "which gameweek is it" — the one in play, else the
-    // next up — narrowed to a round the league covers, because a season joined
-    // at gameweek 6 has no gameweek 1.
-    rounds.find((round) => round.gameweek >= now) ??
+    // FPL's round while it still has football left in it. `now` is
+    // `focusGameweek`, and FPL keeps that pointer on a finished round until the
+    // next deadline — four days, across a Monday-night round. A `>=` here let
+    // the round just played win all four of them, so a schedule opened on last
+    // week. `status` is the whole round's, and a part-played round reads
+    // "upcoming", which is what this wants.
+    rounds.find((round) => round.gameweek === now && round.status !== "finished") ??
+    // Else the next round the league covers — a season joined at gameweek 6 has
+    // no gameweek 1, and the last round is all that is left of a finished one.
+    rounds.find((round) => round.gameweek > now) ??
     rounds[rounds.length - 1]
   );
 }

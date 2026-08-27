@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ButtonLink from "../components/shell/ButtonLink";
-import { type FootballSnapshot, duringGameweek } from "@epl/core";
-import { footballNow } from "../football";
+import { type FootballSnapshot, duringGameweek, nextRound } from "@epl/core";
+import { footballNow, seasonFixtures } from "../football";
 import GameweekView from "../components/football/GameweekView";
 import Afternoon from "./Afternoon";
 import YourMatchup from "./YourMatchup";
@@ -24,13 +24,21 @@ export const revalidate = 30;
 /** The snapshot and whether there is football on. The clock is read here rather
  *  than in the component: a render is meant to be reproducible, and fetching is
  *  already where this page touches the world. */
-async function matchday(): Promise<{ snapshot: FootballSnapshot; during: boolean }> {
-  const snapshot = await footballNow();
-  return { snapshot, during: duringGameweek(snapshot, new Date().toISOString()) };
+async function matchday(): Promise<{
+  snapshot: FootballSnapshot;
+  during: boolean;
+  up: { gameweek: number; kickoff: string } | null;
+}> {
+  // The season, not the snapshot: `getFootballSnapshot` fetches one round's
+  // fixtures, so nothing on it can name the round after it. `seasonFixtures` is
+  // the read that sees the rest of the calendar, and it is already warm.
+  const [snapshot, season] = await Promise.all([footballNow(), seasonFixtures()]);
+  const at = new Date().toISOString();
+  return { snapshot, during: duringGameweek(snapshot, at), up: nextRound(season, at) };
 }
 
 export default async function MatchdayPage() {
-  const { snapshot, during } = await matchday();
+  const { snapshot, during, up } = await matchday();
   const league = await marks(snapshot.fixtures);
 
   // The tab is hidden between gameweeks, but the route still has to answer:
@@ -61,23 +69,28 @@ export default async function MatchdayPage() {
       {during ? (
         <GameweekView snapshot={snapshot} mine={league.mine} owners={league.owners} />
       ) : (
-        <BetweenGameweeks snapshot={snapshot} />
+        <BetweenGameweeks snapshot={snapshot} up={up} />
       )}
     </div>
   );
 }
 
-function BetweenGameweeks({ snapshot }: { snapshot: FootballSnapshot }) {
-  const next = [...snapshot.fixtures]
-    .filter((fixture) => fixture.kickoff !== null && fixture.status !== "finished")
-    .sort((a, b) => String(a.kickoff).localeCompare(String(b.kickoff)))[0];
-
+function BetweenGameweeks({
+  snapshot,
+  up,
+}: {
+  snapshot: FootballSnapshot;
+  /** The round the next ball will be kicked in, from the whole season's
+   *  fixtures. Null only when the season's football is genuinely all played. */
+  up: { gameweek: number; kickoff: string } | null;
+}) {
   // The round in view is the one FPL is pointing at, and after the last whistle
-  // it keeps pointing at it until FPL moves on — hours, sometimes a day. In that
-  // window nothing here is "next": the round is over, its kickoff has been and
-  // gone, and its deadline is in the past. Saying so beats naming a finished
-  // round as the one coming up.
-  const over = next === undefined;
+  // it keeps pointing at it until the next deadline — hours, and across a
+  // Monday-night round, four days. `up` is the other question, and it is the one
+  // this page used to have no way to ask: it read the next kickoff off the
+  // snapshot, which holds only the focused round, so a finished round looked
+  // like a season with nothing left in it.
+  const over = up === null || up.gameweek !== snapshot.gameweek;
 
   return (
     <div className="flex flex-col gap-3">
@@ -87,18 +100,18 @@ function BetweenGameweeks({ snapshot }: { snapshot: FootballSnapshot }) {
       />
 
       <div className="elev flex flex-col gap-3 rounded-xl border border-line bg-surface p-4">
-        {next?.kickoff ? (
-          <p className="text-sm text-muted">
-            First kickoff{" "}
-            <span className="numeric font-semibold text-ink">{londonDayAndTime(next.kickoff)}</span>.
-          </p>
+        {up === null ? (
+          <p className="text-sm text-muted">Every match of the season has been played.</p>
         ) : (
           <p className="text-sm text-muted">
-            Every match in this round has been played. The next one appears here once FPL names
-            its fixtures.
+            {over ? `Gameweek ${up.gameweek} starts ` : "First kickoff "}
+            <span className="numeric font-semibold text-ink">{londonDayAndTime(up.kickoff)}</span>.
           </p>
         )}
-        {/* Only worth saying while it is still ahead of us. */}
+        {/* FPL's deadline is the focused round's, and the next round's is not on
+            this payload. Only worth printing while the two are the same round —
+            and the lock that actually matters is the commissioner's, which the
+            paper announces on the front page. */}
         {!over && snapshot.deadline ? (
           <p className="text-sm text-muted">
             FPL&apos;s deadline is{" "}
@@ -109,12 +122,21 @@ function BetweenGameweeks({ snapshot }: { snapshot: FootballSnapshot }) {
       </div>
 
       <div className="flex gap-2">
+        {/* The finished round keeps its button. On a Tuesday the thing a reader
+            wants is Monday night's result, and sending them only forwards would
+            take it away to fix a sentence. */}
         <ButtonLink href={`/gw/${snapshot.gameweek}`} fill>
-          The fixtures
+          {over ? `GW${snapshot.gameweek} results` : "The fixtures"}
         </ButtonLink>
-        <ButtonLink href="/league/matchups" fill>
-          Who plays whom
-        </ButtonLink>
+        {over && up !== null ? (
+          <ButtonLink href={`/gw/${up.gameweek}`} fill>
+            {`GW${up.gameweek} fixtures`}
+          </ButtonLink>
+        ) : (
+          <ButtonLink href="/league/matchups" fill>
+            Who plays whom
+          </ButtonLink>
+        )}
       </div>
     </div>
   );
