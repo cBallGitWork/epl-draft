@@ -2993,9 +2993,9 @@ The schedule had the same root: `chooseRound` fell back to `gameweek >= now`, an
 with `now` pinned to a finished gameweek 1 the `>=` let it win for four days. It
 now takes FPL's round only while that round still has football left in it.
 
-### OPEN, and dated: the lineup gate is anchored on the wrong instant
+### FIXED the same evening: the lineup gate was anchored on the wrong instant
 
-**The most serious thing found today, and it is not a gameweek 2 problem.**
+**The most serious thing found today, and it was not a gameweek 2 problem.**
 
 `visibility.ts` gates on `periodStarted` — `now >= period.start`, the **roster
 period boundary**. The rule the same file states at its top is about the
@@ -3033,7 +3033,49 @@ without league→gazette, so first move them from `gazette/deadline.ts` into
 `LeaguePeriod`, and is the declared seam. Three consumers then, so the move is
 earned; per CODE_RULES it lands as its own commit, and the gate change follows.
 
-**Before 11 Sep, and unconditionally before 9 Oct.**
+**Landed 27 Aug**, as two commits: the move, behaviour-neutral with 534 tests
+before and after; then the gate, starting from the failing test (period 4 at
+2026-09-11T10:00:00Z returned `lineup` and must return `squad`).
+
+Three independent skeptics were asked to REFUTE it and all three upheld it. The
+lens that attacked the honest bound above found the opposite of what it looked
+for, from the repo's own captures: rehearsal `getTeamRosters` carries `period: 1`
+through the 24 Aug capture and `period: 2` from the 25th — **three days before
+period 2 begins on 28 Aug 19:00Z.** Fantrax's editable period runs AHEAD of the
+roster-period boundary, so the arrangement served in the Friday-to-Saturday
+window is live and still changeable. The bound closes against the gate.
+
+**Two numbers, and the difference is the point.** 33 of 38 against live FPL
+fixtures; 34 of 38 against `packages/core/src/league/__fixtures__/periodAlignment.json`,
+recorded 6 Aug. Gameweek 8's first kickoff has moved onto a Friday since, which
+flips period 8 from unsafe to safe. **Which weeks are safe is a television
+schedule, not a fact** — so the rule is computed and the test fixture declares its
+own kickoffs rather than reading FPL.
+
+**Why every test passed for a week.** `visibility.test.ts` built its fixture from
+periods 1 and 2, both Friday-night kickoffs, two of the four weeks where boundary
+and lock agree. A fixture drawn only from the exceptional case cannot see the
+rule. It now spans 1, 2, 3, 4 and 6.
+
+**Not monotone.** On those four Friday-night weeks the old gate was fifteen
+minutes conservative, so the fix opens them fifteen minutes EARLIER — correctly,
+since the schedule and the masthead already print that instant as the deadline.
+
+**What it does not close.** `getTeamRosters` echoes the period it is asked for,
+so `periodAsAsked` compares our number against our own and is vacuous by
+construction. If the parameter is inert for the roster BODY, a tap on any past
+round still shows today's arrangement, and the fix has closed the window on the
+round in view rather than the leak entire. The probe below decides it — and note
+the rehearsal league is dormant (`LINEUP_CHANGE` = 0 transactions), which is
+exactly why every period returns byte-identical bodies and why no probe so far
+can separate the two storage models. Breaking the tie needs one XI rearranged
+with the commissioner's cookie, then `?period=1` diffed against `?period=2`.
+
+**And one assumption the whole design rests on.** `lineupLockType` is "set amount
+of time before 1st game of period", read off the settings page on 20 Aug. If the
+commissioner's lock is really the period boundary, this fix is wrong and the old
+code was right. The lead's VALUE is irrelevant — any lead under about eighteen
+hours leaves a window — but its TYPE is not. One look, before 11 Sep.
 
 ### Two observations to make while gameweek 2 is on
 

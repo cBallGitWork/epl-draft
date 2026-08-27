@@ -61,33 +61,62 @@ on `backup/pre-rebase-2026-08-27`.
   `?gw=` (the sibling view was fixed on 22 Aug and this one was missed), and the
   provenance line vanished whenever there was no query string.
 
-## 3. OPEN, dated, and the most serious thing found today
+## 3. FIXED — the lineup gate was anchored on the wrong instant
 
-**The lineup gate is anchored on the roster-period boundary; the rule it enforces
-is about the lock.** `gazette/deadline.ts` already made this correction for the
-*displayed* deadline — "it is not fifteen minutes before the period boundary, and
-this file used to compute it that way" — and `visibility.ts` never got it.
+`visibility.ts` gated on the roster-period boundary; the rule stated at the top
+of that same file is about the deadline. `gazette/deadline.ts` had already made
+exactly this correction for the *displayed* deadline — "It is not fifteen minutes
+before the period boundary, and this file used to compute it that way" — and the
+gate was left on the old anchor. So the app printed 13:45 as the deadline while
+opening the XI at 10:00 the previous morning.
 
-**33 of 38 roster periods open at 10:00Z on the Friday**, for a Saturday lock.
+**33 of 38 roster periods open before their lock** (computed from live fixtures;
+34 against the recorded alignment fixture, which is stale). Period 4: 27h45m
+early. Period 6, the league's first round: 25h15m, ending the day before sixteen
+people arrive.
 
-| | opens | first kickoff | our lock | open early by |
-|---|---|---|---|---|
-| Period 4 | Fri 11 Sep 10:00Z | Sat 12 Sep 14:00Z | 13:45Z | **27 h 45 m** |
-| Period 6 — the league's first | Fri 9 Oct 10:00Z | Sat 10 Oct 11:30Z | 11:15Z | **25 h 15 m** |
+Three independent skeptics were asked to refute it and all three upheld it. The
+one that tried hardest to kill it found the opposite — the captured snapshot
+series settles the honest bound the last handover left open: rehearsal
+`getTeamRosters` carried `period: 1` through the 24 Aug capture and `period: 2`
+from the 25th, three days before period 2 begins. Fantrax's editable period runs
+AHEAD of the boundary, so what is served in that window is a live, still-editable
+XI.
 
-It has not bitten yet **by accident**: periods 1, 2 and 3 are three of the five
-that open at 19:00Z, after the lock. So **gameweek 2 is safe**, period 4 is the
-first that is not, and period 6 is the day before this goes to sixteen people.
+Landed as two commits, per CODE_RULES: `locksAt`/`firstKickoff` moved from
+`gazette/` into `league/calendar.ts` (behaviour-neutral, 534 tests before and
+after, both barrels edited together to avoid the ambiguous star-export), then the
+gate itself, starting from the failing test.
 
-Reached without any assumption about Fantrax's rollover: a tap on a gameweek-4
-row in the schedule asks for period 4, gets it echoed, and opens the gate.
+**Why it survived every test until now.** The fixture held periods 1 and 2 only —
+both Friday-night kickoffs, two of the four weeks where the two readings agree.
+It could not tell the rules apart. The fixture now spans 1, 2, 3, 4 and 6 and
+declares its own kickoffs, because which weeks are safe MOVES: gameweek 8's first
+kickoff has shifted onto a Friday since the alignment fixture was recorded,
+flipping period 8 from unsafe to safe.
 
-**Honest bound:** a leak only if `getTeamRosters` serves the live editable
-arrangement rather than a locked one. §4's first probe settles that.
+### What it does NOT close, and this matters
 
-**Fix, two commits:** move `locksAt`/`firstKickoff` from `gazette/deadline.ts`
-into `league/calendar.ts` (three consumers, so the move is earned), then gate
-`rosterDisplay` on `locksAt(firstKickoff(period, kickoffs))`. Before 11 Sep.
+`getTeamRosters` echoes whatever period it is asked for, so `periodAsAsked`
+compares our number against our own and is **vacuous by construction**. Whether
+the parameter selects a stored arrangement or always returns the live editable
+one is still unverified — the tree says so in two places. If it is inert, a tap
+on a past round still shows today's arrangement under last week's heading.
+
+The fix closes the window on the round in view and the 75 minutes every Saturday
+between FPL's deadline and ours. **It is not the whole leak.** §4's first probe
+decides whether more is needed, and the rehearsal league being dormant is exactly
+why no probe so far can tell the two storage models apart — breaking the tie needs
+one lineup rearranged with the commissioner's cookie, then `?period=1` against
+`?period=2`.
+
+### One assumption to check, and it is one look
+
+`lineupLockType` is "set amount of time before 1st game of period", read off
+`createLeague.go?goto=5` on 20 Aug. **If the commissioner's lock is actually the
+period boundary, this fix is wrong and the old code was right.** The VALUE does
+not matter — any lead under about eighteen hours leaves a window — but the type
+does.
 
 ## 4. Two observations that expire
 
