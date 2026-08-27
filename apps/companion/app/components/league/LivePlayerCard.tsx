@@ -38,7 +38,7 @@ import { unresolvedReason } from "../../unresolved";
 export default function LivePlayerCard({
   player: { rostered, club, opposition, points },
   breakdown,
-  projected,
+  reserve,
   onClose,
 }: {
   player: SquadPlayerDetail;
@@ -46,9 +46,11 @@ export default function LivePlayerCard({
    *  names on nought, and for one it does not name at all — the difference is
    *  in `points`, which is the number the table actually gave. */
   breakdown: BreakdownLine[];
-  /** Whether these are Fantrax's projection rather than points played. The
-   *  heading says which, because the numbers cannot. */
-  projected: boolean;
+  /** Whether he is on the bench this period. The live table names only the
+   *  eleven, so a reserve is absent from it for a reason that has nothing to do
+   *  with whether he played — and saying "nothing has scored for him" over a
+   *  man who played ninety minutes is two contradictions in one card. */
+  reserve: boolean;
   onClose: () => void;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -138,7 +140,12 @@ export default function LivePlayerCard({
             score reads as a score of nought, which is a different claim. */}
         {started ? (
           <>
-            <Breakdown breakdown={breakdown} points={points} projected={projected} />
+            <Breakdown
+              breakdown={breakdown}
+              points={points}
+              reserve={reserve}
+              minutes={done.minutes}
+            />
             <p className="flex flex-wrap items-center gap-1 px-0.5 text-2xs text-faint">
               <span className="font-display font-bold uppercase tracking-widest">FPL records</span>
               <span className="numeric text-muted">{done.minutes}&apos;</span>
@@ -180,11 +187,15 @@ export default function LivePlayerCard({
 function Breakdown({
   breakdown,
   points,
-  projected,
+  reserve,
+  minutes,
 }: {
   breakdown: BreakdownLine[];
   points: number | null | undefined;
-  projected: boolean;
+  reserve: boolean;
+  /** What FPL says he actually played. The one thing that can tell "Fantrax has
+   *  not named him yet" from "he did nothing". */
+  minutes: number;
 }) {
   // Three states and they are three different sentences. No table at all is
   // Fantrax refusing; a table that does not name him is a dash; a table that
@@ -201,20 +212,29 @@ function Breakdown({
   return (
     <div className="overflow-hidden rounded-lg border border-line">
       <div className="flex items-center justify-between gap-2 bg-raised px-3 py-1.5 font-display text-2xs font-bold uppercase tracking-widest text-faint">
-        <span>{projected ? "Fantrax projects" : "This period"}</span>
+        <span>This period</span>
         <span>Pts</span>
       </div>
 
       {breakdown.length === 0 ? (
         <p className="px-3 py-2 text-2xs text-muted">
-          {/* A nought with no categories behind it is a man who has not played.
-              A total with none is a different claim and must not wear the same
-              sentence: Fantrax priced him, and named a category this league's
-              own scoring system does not describe, so the parts are missing
-              rather than absent. Printing the identifier instead would be worse
-              than printing nothing. */}
-          {points ? "Fantrax scored him, but did not say what for."
-            : "Nothing has scored for him yet — his minutes have not registered either."}
+          {/* Four different claims, and they were one sentence.
+              A RESERVE is absent from this table because it names the eleven —
+              nothing to do with whether he played, and the card prints his real
+              minutes eleven lines below, so "nothing has scored for him" was
+              contradicting itself in a single render.
+              A total with no parts means Fantrax priced him and named a category
+              this league's scoring does not describe; printing the raw
+              identifier would be worse than printing nothing.
+              A nought with minutes is a man who played and earned none.
+              A nought with none is a man who did not play. */}
+          {reserve
+            ? "On the bench this period, so our league scores him nothing — whatever he did."
+            : points
+              ? "Fantrax scored him, but did not say what for."
+              : minutes > 0
+                ? "Nothing has scored for him yet."
+                : "Nothing has scored for him yet — his minutes have not registered either."}
         </p>
       ) : (
         <ul>

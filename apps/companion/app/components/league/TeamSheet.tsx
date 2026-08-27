@@ -96,7 +96,10 @@ export default function TeamSheet({
           key={open.rostered.slot.fantraxId}
           player={open}
           breakdown={breakdown[open.rostered.slot.fantraxId] ?? []}
-          projected={false}
+          // The live table names the ACTIVE eleven only, so every reserve looks
+          // like a man with no football behind him. One set, built from the prop
+          // this component already has, covers both the pitch and the list.
+          reserve={bench.some((p) => p.rostered.slot.fantraxId === open.rostered.slot.fantraxId)}
           onClose={() => setOpen(null)}
         />
       ) : null}

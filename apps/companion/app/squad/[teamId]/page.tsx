@@ -111,7 +111,13 @@ export default async function TeamPage({
   const live = priced === null
     ? null
     : await squadLivePoints(priced.period, teamId, priced.categories);
-  const season = priced === null ? await squadPoints(teamId) : null;
+  // Tied to the branch that LABELS it a season total, not to the absence of the
+  // live one. `priced` also needs `squads.info`, so with `getLeagueInfo` refused
+  // — a modelled, separately-cached state — an own-team lineup fell through to
+  // the season table and `Sheet` rendered it under a card headed "This period",
+  // at a man's default position rather than his roster slot. This is the same
+  // condition `board` is built on, so the two cannot disagree.
+  const season = display.show === "squad" ? await squadPoints(teamId) : null;
   const points = (live?.points ?? season?.points) ?? null;
   const board =
     display.show === "squad"

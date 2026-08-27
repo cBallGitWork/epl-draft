@@ -78,8 +78,12 @@ export async function liveScores(
  *
  *  Three answers, kept apart: null when Fantrax refused, so the column vanishes
  *  and the page's own outage line explains it; an empty read for a team it has
- *  priced nobody in, which is every dash; and the numbers otherwise. A man with
- *  no entry is absent rather than nought — he has not played. */
+ *  priced nobody in, which is every dash; and the numbers otherwise.
+ *
+ *  A man with no entry is absent rather than nought, and absence has two causes:
+ *  he is in the eleven and has not played, or he is a reserve and this table
+ *  names only the eleven. The caller holding the roster is the one that can
+ *  tell them apart. */
 export async function squadLivePoints(
   period: number,
   teamId: string,

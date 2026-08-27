@@ -75,7 +75,11 @@ export default async function HeadToHeadPage({
   // Asked of the round on screen, never of whether the URL carried a gameweek:
   // arriving from the live board leaves `round` null, and a finished round is no
   // less finished for having been reached without a query string.
-  const settled = state !== null && state !== "live";
+  // `played`, not `settled`. It is true at all three finished rungs, and only
+  // the top one — `data_checked` — licenses the word "final". `RoundWord` on this
+  // same screen withholds it until then, so a boolean called `settled` printing
+  // "final" beside it was two contradictory promises in one render.
+  const played = state !== null && state !== "live";
 
   const rostered = new Map(squads.period.teams.map((team) => [team.teamId, team]));
   const named = rostered.get(teamId);
@@ -185,16 +189,16 @@ export default async function HeadToHeadPage({
           <span className="numeric">{refused}</span>
         </p>
       )}
-      {/* Provenance, and the honest kind: the totals are settled and Fantrax's,
-          but whether it hands back the eleven that was actually played or
-          today's roster under a past period's number has never been observed —
-          no period has completed. Re-ask after 28 Aug and delete this line if
-          the answer is history. */}
-      {settled ? (
+      {/* Provenance, and the honest kind: the totals are Fantrax's own, and the
+          elevens are whatever its roster read returns — which is the arrangement
+          it currently considers open, not the one that was fielded. The scores
+          are deliberately not called final: `state` is true here at all three
+          finished rungs and only `data_checked` earns that word, which is the
+          distinction `RoundWord` beside this makes. */}
+      {played ? (
         <p className="px-3 text-2xs text-faint">
-          A round already played. The scores are Fantrax&apos;s final ones; the elevens are the
-          rosters it returns for that week, which we have not yet been able to prove are the ones
-          that were fielded.
+          A round already played. The scores are Fantrax&apos;s own; the elevens are the roster it
+          returns now, which we have not been able to prove is the one that was fielded.
         </p>
       ) : null}
       <MatchupBoard team={side(pairing.team)} opponent={side(pairing.opponent)} state={state} />

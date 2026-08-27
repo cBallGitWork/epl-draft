@@ -164,9 +164,13 @@ function categoryOf(scipId: string | undefined): string | null {
  *
  *  ACTIVE only, on the same rule as `mapLiveScores`: `BENCH` arrives for an
  *  authenticated caller and we are never that one, and only active players
- *  score. A man with no entry is left out rather than zeroed — Fantrax adds him
- *  when he plays, so absence here means no football behind him, and a nought
- *  would be a claim about a man who has not kicked a ball.
+ *  score. A man with no entry is left out rather than zeroed, and a nought would
+ *  be a claim about a man who may not have kicked a ball.
+ *
+ *  **Absence has two causes and a caller must not collapse them.** He is in the
+ *  eleven and has not played, or he is a reserve and this table never names him.
+ *  Only the roster knows which, so anything joining this map against all fifteen
+ *  has to say so itself.
  *
  *  Categories that contributed nothing are dropped, as `breakdownOf` drops them
  *  from the season table: a row reading zero is not a reason he is on his total,
