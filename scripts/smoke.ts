@@ -74,6 +74,27 @@ const UNDRAFTED: Record<string, string> = {
  *  problem with a different fix. */
 const SILENT = "Fantrax is not answering";
 
+/** The first words a failing page actually rendered.
+ *
+ *  Crude on purpose — tags out, whitespace collapsed, the shell's own chrome
+ *  skipped — because its whole job is to end an argument. A gate that says an
+ *  assertion failed and cannot say what it saw instead sends somebody to
+ *  reproduce it, and this one could not be reproduced anywhere but in CI.
+ *
+ *  Only ever printed for a league Fantrax says has no teams, so there is no
+ *  lineup in it to leak. */
+function seen(body: string): string {
+  const text = body
+    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z]+;|&#\d+;|&#x[0-9a-f]+;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  // Past the tab bar, which every page repeats and no page is identified by.
+  const after = text.indexOf("FPL");
+  return text.slice(after < 0 ? 0 : after + 3, (after < 0 ? 0 : after + 3) + 200).trim();
+}
+
 /** Sentences a league WITH teams must never print. The inverse of the above, and
  *  the half that catches the failure that has actually happened here. */
 const DRAFTED_MUST_NOT = Object.values(UNDRAFTED);
@@ -200,8 +221,7 @@ async function main() {
         body.includes(SILENT)
           ? `rendered "${SILENT}" — this server could not read Fantrax, so the empty state ` +
             `was never reached. That is an outage here, not a broken empty state.`
-          : `does not say which nothing it is (expected "${named}", and it is not showing ` +
-            `an outage either — so it rendered a league with teams in it)`,
+          : `expected "${named}", and it is not an outage either. It rendered: ${seen(body)}`,
       );
     }
 
