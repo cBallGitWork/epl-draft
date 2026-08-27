@@ -80,6 +80,10 @@ async function main() {
 
   let dangerous = 0;
   let refusals = 0;
+  // Comparisons MADE, not reads attempted — so it is incremented past both
+  // `continue`s below. Without it the exit code cannot tell a clean run from a
+  // run that compared nothing.
+  let compared = 0;
 
   for (const { method, run } of READS) {
     const [reference, subject] = await Promise.all([
@@ -104,6 +108,7 @@ async function main() {
       shapeOf(reference.payload),
       shapeOf(subject.payload),
     );
+    compared += 1;
     // Counted, never listed: a league that has not drafted answers every table
     // with `[]`, and one line per column would bury the two lines that matter.
     const empty = emptied.length > 0 ? `  (${emptied.length} inside empty collections)` : "";
@@ -123,6 +128,24 @@ async function main() {
     `\n${dangerous} path${dangerous === 1 ? "" : "s"} the app reads and the real league does not answer` +
       `${refusals > 0 ? `, ${refusals} read${refusals === 1 ? "" : "s"} not comparable` : ""}.`,
   );
+
+  // **Nothing compared is not nothing wrong.** Every read refusing is what a rate
+  // limit, a blocked runner or a league that stopped existing looks like from
+  // here, and this is the 11:00 item on a runbook whose next step is a redeploy.
+  // It has no standing to give an all-clear it did not earn. Exit 2 rather than
+  // 1 because this file already has that vocabulary: 2 is "this run could not
+  // answer", 1 is "the answer is bad". Both break a `&&` chain.
+  //
+  // A PARTIAL refusal still exits 0, deliberately. Today's run refuses one read
+  // of nine — the real league's `getTeamRosters` says NO_TEAMS — and reddening
+  // on that is exactly the gate that gets switched off long before it matters.
+  // Three answers, not two, which is the shape `captureReads` and `bridge:check`
+  // were both given for the same reason.
+  if (compared === 0) {
+    console.error("Compared NOTHING — every read refused. This run says nothing about the swap.");
+    process.exitCode = 2;
+    return;
+  }
 
   // Non-zero only for the dangerous direction. A league that has not drafted is
   // not a broken league, and a gate that reddened on it would be switched off
