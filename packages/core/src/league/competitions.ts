@@ -47,7 +47,16 @@ export const COMPETITIONS: readonly Competition[] = [LEAGUE_COMPETITION, CUP, PL
 
 /** The invented calendar. Two cup rounds in consecutive gameweeks, and a playoff
  *  final on the last day between the top two — a dummy bracket whose only job is
- *  to prove a gameweek can carry more than one competition. */
+ *  to prove a gameweek can carry more than one competition.
+ *
+ *  It does NOT decide the table's cut any more, and that is the correction worth
+ *  keeping. This file used to derive the season's qualifying places from the
+ *  bracket below, on the reasoning that one declaration is better than two — but
+ *  the declaration was invented, and Fantrax publishes the real one on
+ *  `getLeagueInfo`. Ours is a top four from period 35; the bracket says a final
+ *  between first and second, so the table drew a top two. A placeholder may
+ *  stand in for a fixture nobody has settled. It may not stand in for a setting
+ *  the provider already answered. */
 export const PLACEHOLDER_ROUNDS: readonly SeededRound[] = [
   { competition: CUP, gameweek: 4, name: "Semi-finals", ties: [[1, 4], [2, 3]] },
   {
@@ -59,24 +68,6 @@ export const PLACEHOLDER_ROUNDS: readonly SeededRound[] = [
   { competition: PLAYOFFS, gameweek: 38, name: "Final", ties: [[1, 2]] },
 ];
 
-/** How many places a season qualifies for the playoffs, read off the declared
- *  bracket rather than written down twice.
- *
- *  The bracket already says it: a final between seeds 1 and 2 is a top two, and
- *  the day this becomes the real thing — Fantrax publishes
- *  `numPlayoffTeams: 4, firstPlayoffPeriod: 35` for the 16-team league — the
- *  table's cut line moves with it because it is the same declaration. A named
- *  side ("Winner, semi-final 1") seeds nobody and is skipped.
- *
- *  Null when nothing declares a playoff, which is a league whose table has no
- *  line to draw rather than one with the line at zero. */
-export function playoffPlaces(rounds: readonly SeededRound[]): number | null {
-  const seeds = rounds
-    .filter((round) => round.competition.id === PLAYOFFS.id)
-    .flatMap((round) => round.ties.flat())
-    .filter((seed): seed is number => typeof seed === "number");
-  return seeds.length === 0 ? null : Math.max(...seeds);
-}
 
 export interface TieSide {
   /** Null while the draw cannot name a team — an empty table, or a side that is

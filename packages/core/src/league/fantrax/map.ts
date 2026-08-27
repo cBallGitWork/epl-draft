@@ -4,12 +4,14 @@ import type {
   LeagueMatchup,
   LeaguePeriod,
   LeaguePlayer,
+  LeaguePlayoffs,
   LeaguePlayerState,
   LeagueTeam,
   RosterLimits,
 } from "../types";
 import type {
   RawLeagueInfo,
+  RawPlayoffs,
   RawPeriod,
   RawPeriodMatchups,
   RawPlayerPool,
@@ -152,5 +154,28 @@ export function mapLeagueInfo(raw: RawLeagueInfo): LeagueInfo {
     matchups: mapMatchups(raw.matchups),
     scoring: mapScoringRules(raw.scoringSystem),
     scoringCategories: mapScoringCategories(raw.scoringSystem),
+    playoffs: mapPlayoffs(raw.playoffs),
+  };
+}
+
+/** The league's playoff, or none.
+ *
+ *  Every field has to be there before any of it is read. A cut with no periods
+ *  behind it, or periods with no cut, is half a declaration — and half of this
+ *  would draw a line on the table that nothing else in the app could explain. */
+function mapPlayoffs(raw: RawPlayoffs | undefined): LeaguePlayoffs | null {
+  if (raw?.used !== true) return null;
+  const { numPlayoffTeams, firstPlayoffPeriod, lastRegularSeasonPeriod } = raw;
+  if (
+    typeof numPlayoffTeams !== "number" ||
+    typeof firstPlayoffPeriod !== "number" ||
+    typeof lastRegularSeasonPeriod !== "number"
+  ) {
+    return null;
+  }
+  return {
+    places: numPlayoffTeams,
+    firstPeriod: firstPlayoffPeriod,
+    lastRegularPeriod: lastRegularSeasonPeriod,
   };
 }

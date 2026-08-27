@@ -188,11 +188,12 @@ export async function getLeagueSquads(round: Round | null = null): Promise<Leagu
  *  failed is the correct trade — the alternative is showing an XI we cannot
  *  prove is allowed to be shown.
  *
- *  Cached on its own rather than only inside `readLeague`, because two cached
+ *  Cached on its own rather than only inside `readLeague`, because three cached
  *  readers want it: the head-to-head route resolves a gameweek to a period
  *  before it can ask for that period's rosters, so an uncached one made two
- *  `getLeagueInfo` requests per window to answer one page. */
-const leagueInfo = leagueCache("league-info",
+ *  `getLeagueInfo` requests per window to answer one page — and the table needs
+ *  the league's own playoff settings to know where its cut falls. */
+export const leagueInfo = leagueCache("league-info",
   async (): Promise<LeagueInfo | null> => {
     const raw = await orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID));
     return raw instanceof FantraxError ? null : mapLeagueInfo(raw);

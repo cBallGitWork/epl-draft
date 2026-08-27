@@ -106,8 +106,21 @@ export interface RawLeagueInfo {
    *  feed withholds until full time — see `join/cleanSheets.ts`. The banded
    *  expressions stay unparsed because nothing needs them. */
   scoringSystem?: RawScoringSystem;
+  /** The league's own playoff settings. `used: false` is a real answer — the
+   *  rehearsal league says it — and is not the same as the key being absent. */
+  playoffs?: RawPlayoffs;
   poolSettings?: unknown;
   draftSettings?: unknown;
+}
+
+export interface RawPlayoffs {
+  used?: boolean;
+  numPlayoffTeams?: number;
+  firstPlayoffPeriod?: number;
+  lastRegularSeasonPeriod?: number;
+  /** On the wire and not read: what it changes is how Fantrax scores a
+   *  multi-period playoff round, and we score nothing. */
+  mergePlayoffPeriods?: boolean;
 }
 
 // Both reads below stayed `unknown` until the rehearsal league drafted on 6 Aug

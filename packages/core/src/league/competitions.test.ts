@@ -5,7 +5,6 @@ import {
   PLACEHOLDER_ROUNDS,
   groupTies,
   leagueTies,
-  playoffPlaces,
   seededTies,
 } from "./competitions";
 import type { StandingsRow } from "./types";
@@ -110,29 +109,3 @@ describe("groupTies", () => {
   });
 });
 
-describe("playoffPlaces", () => {
-  it("reads the cut off the declared bracket rather than a number of its own", () => {
-    // The shipped placeholder is a final between the top two.
-    expect(playoffPlaces(PLACEHOLDER_ROUNDS)).toBe(2);
-  });
-
-  it("moves with the bracket, so a top-four playoff needs no second edit", () => {
-    const four = [
-      { competition: { id: "playoffs", name: "Playoffs" }, gameweek: 35, name: "Semi-finals",
-        ties: [[1, 4], [2, 3]] as const },
-    ];
-    expect(playoffPlaces(four)).toBe(4);
-  });
-
-  it("ignores a side that is won rather than seeded", () => {
-    const drawn = [
-      { competition: { id: "playoffs", name: "Playoffs" }, gameweek: 38, name: "Final",
-        ties: [["Winner, semi-final 1", "Winner, semi-final 2"]] as const },
-    ];
-    expect(playoffPlaces(drawn)).toBeNull();
-  });
-
-  it("says null for a league that declares no playoff at all", () => {
-    expect(playoffPlaces([])).toBeNull();
-  });
-});

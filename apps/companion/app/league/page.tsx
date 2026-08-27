@@ -7,7 +7,6 @@ import {
   mapStandings,
 } from "@epl/core";
 import type { StandingsRow } from "@epl/core";
-import { PLACEHOLDER_ROUNDS, playoffPlaces } from "@epl/core";
 import { leagueCache } from "../leagueCache";
 import AutoRefresh from "../components/shell/AutoRefresh";
 import { footballNow, pollSeconds } from "../football";
@@ -15,7 +14,7 @@ import TeamBadge from "../components/league/TeamBadge";
 import { teamBadges } from "../badges";
 import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
-import { readerTeamId } from "../squads";
+import { leagueInfo, readerTeamId } from "../squads";
 import { londonDate } from "../londonTime";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
@@ -43,16 +42,22 @@ const table = leagueCache("standings",
 );
 
 export default async function StandingsPage() {
-  const [rows, mine, badges, football] = await Promise.all([
+  const [rows, mine, badges, football, info] = await Promise.all([
     table(),
     readerTeamId(),
     teamBadges(),
     footballNow(),
+    leagueInfo(),
   ]);
-  // Where the season's cut falls, read off the declared bracket rather than
-  // written down here — the day the placeholder becomes Fantrax's published
-  // top four, this line moves with it.
-  const qualify = playoffPlaces(PLACEHOLDER_ROUNDS);
+  // Where the season's cut falls, and it is the league's answer rather than
+  // ours. Fantrax publishes it — our league is a top four from period 35 — and
+  // for as long as nothing read that field the table drew the placeholder
+  // bracket's invented top TWO instead.
+  //
+  // Null is a real answer and not a missing one: the rehearsal league runs no
+  // playoff at all, and a table with no cut has no line to draw rather than one
+  // at zero.
+  const qualify = info?.playoffs?.places ?? null;
 
   // An empty state keeps the header and the section nav. Without them a reader
   // who lands here during an outage has no way to reach Schedule or Matchups —

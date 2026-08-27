@@ -253,4 +253,20 @@ export interface LeagueInfo {
    *  it — group and category, never the position. Empty when Fantrax described
    *  no scoring, which shows as no breakdown rather than as a row of ids. */
   scoringCategories: Record<string, ScoringCategory>;
+  /** The season's own cut, as the commissioner set it.
+   *
+   *  Null for a league that runs no playoff, which is a table with no line to
+   *  draw rather than one with the line at zero — and the rehearsal league is
+   *  exactly that, so both answers are live today. */
+  playoffs: LeaguePlayoffs | null;
+}
+
+export interface LeaguePlayoffs {
+  /** How many places qualify. */
+  places: number;
+  /** The first period played as a playoff, and the last of the regular season.
+   *  Periods, not gameweeks: this is the league's calendar, and the two are
+   *  mapped rather than assumed to agree. */
+  firstPeriod: number;
+  lastRegularPeriod: number;
 }

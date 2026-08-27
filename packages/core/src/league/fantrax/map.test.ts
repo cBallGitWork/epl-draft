@@ -187,3 +187,38 @@ describe("mapLeagueInfo, on a league that has drafted", () => {
     expect(info.roster.maxReservePlayers).toBe(5);
   });
 });
+
+describe("mapLeagueInfo, the playoff", () => {
+  // Both shapes are live today, which is why neither is invented here: our
+  // league answers `used: true` with a top four from period 35, and the
+  // rehearsal league answers `used: false`.
+  it("reads the league's own cut", () => {
+    const info = mapLeagueInfo({
+      playoffs: {
+        used: true,
+        numPlayoffTeams: 4,
+        firstPlayoffPeriod: 35,
+        lastRegularSeasonPeriod: 34,
+        mergePlayoffPeriods: false,
+      },
+    });
+    expect(info.playoffs).toEqual({ places: 4, firstPeriod: 35, lastRegularPeriod: 34 });
+  });
+
+  it("treats a league that runs no playoff as having none", () => {
+    // `used: false` is an answer, and it is the rehearsal league's. A table with
+    // no cut has no line to draw rather than a line at zero.
+    expect(mapLeagueInfo({ playoffs: { used: false } }).playoffs).toBeNull();
+    expect(mapLeagueInfo({}).playoffs).toBeNull();
+  });
+
+  it("refuses half a declaration", () => {
+    // A cut with no periods behind it would draw a line on the table that
+    // nothing else in the app could explain.
+    expect(mapLeagueInfo({ playoffs: { used: true, numPlayoffTeams: 4 } }).playoffs).toBeNull();
+    expect(
+      mapLeagueInfo({ playoffs: { used: true, firstPlayoffPeriod: 35, lastRegularSeasonPeriod: 34 } })
+        .playoffs,
+    ).toBeNull();
+  });
+});
