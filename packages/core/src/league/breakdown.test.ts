@@ -127,9 +127,9 @@ describe("liveBreakdown", () => {
     expect(
       liveBreakdown(
         [
-          { category: "5010#6120", value: 90, points: 2 },
-          { category: "5010#6280", value: 1, points: -1 },
-          { category: "5010#6090", value: 1, points: 5 },
+          { category: "5010#6120", points: 2 },
+          { category: "5010#6280", points: -1 },
+          { category: "5010#6090", points: 5 },
         ],
         names,
       ),
@@ -144,20 +144,20 @@ describe("liveBreakdown", () => {
     // Fantrax's prose — "Awarded to a player who played at least 60 minutes…" —
     // is on the stat table's header and not on `getLeagueInfo`. A reader still
     // gets it, on the player's own page. Null rather than an invented sentence.
-    const [line] = liveBreakdown([{ category: "5010#6090", value: 1, points: 5 }], names);
+    const [line] = liveBreakdown([{ category: "5010#6090", points: 5 }], names);
     expect(line.definition).toBeNull();
   });
 
   it("drops a category this league never described, rather than printing its id", () => {
     // The two leagues score different things. An identifier on screen is worse
     // than a line missing from a list that never claimed to be complete.
-    expect(liveBreakdown([{ category: "5010#9999", value: 1, points: 4 }], names)).toEqual([]);
-    expect(liveBreakdown([{ category: "5010#6090", value: 1, points: 5 }], {})).toEqual([]);
+    expect(liveBreakdown([{ category: "5010#9999", points: 4 }], names)).toEqual([]);
+    expect(liveBreakdown([{ category: "5010#6090", points: 5 }], {})).toEqual([]);
   });
 
   it("survives a league info cached before it carried any names", () => {
     // Not hypothetical: this threw on the first render after the field was
     // added, off a cache entry written by the deploy before it.
-    expect(liveBreakdown([{ category: "5010#6090", value: 1, points: 5 }], undefined)).toEqual([]);
+    expect(liveBreakdown([{ category: "5010#6090", points: 5 }], undefined)).toEqual([]);
   });
 });

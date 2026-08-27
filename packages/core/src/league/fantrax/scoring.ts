@@ -111,9 +111,14 @@ export function mapScoringCategories(
     for (const config of group.configs ?? []) {
       const category = config.scoringCategory;
       if (typeof category?.id !== "string" || category.id === "") continue;
+      // A category Fantrax did not name is left unnamed rather than labelled with
+      // its own identifier. `5010#6090` on a player card is worse than a missing
+      // row: the row is absent from a list that never claimed to be complete,
+      // while the identifier looks like a category called 6090.
+      if (typeof category.shortName !== "string" || category.shortName === "") continue;
       names[`${groupId}#${category.id}`] = {
-        code: category.shortName ?? category.id,
-        name: category.name ?? category.shortName ?? category.id,
+        code: category.shortName,
+        name: category.name ?? category.shortName,
       };
     }
   }

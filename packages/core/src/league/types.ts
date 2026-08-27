@@ -122,9 +122,6 @@ export interface LivePlayerPoints {
 export interface LivePlayerCategory {
   /** `"{groupId}#{categoryId}"`. */
   category: string;
-  /** The count behind the points — 90 minutes, 1 goal. Null when Fantrax sent
-   *  no number for it. */
-  value: number | null;
   /** Points, theirs. Signed: cards and goals against arrive negative. */
   points: number;
 }
@@ -262,11 +259,10 @@ export interface LeagueInfo {
 }
 
 export interface LeaguePlayoffs {
-  /** How many places qualify. */
+  /** How many places qualify — the table's cut line, and the only thing anything
+   *  reads. `firstPlayoffPeriod` and `lastRegularSeasonPeriod` are on the wire
+   *  and deliberately not carried: nothing draws a playoff calendar yet, and
+   *  requiring them here made two unread numbers able to veto the one number
+   *  that is read. Later can add them. */
   places: number;
-  /** The first period played as a playoff, and the last of the regular season.
-   *  Periods, not gameweeks: this is the league's calendar, and the two are
-   *  mapped rather than assumed to agree. */
-  firstPeriod: number;
-  lastRegularPeriod: number;
 }

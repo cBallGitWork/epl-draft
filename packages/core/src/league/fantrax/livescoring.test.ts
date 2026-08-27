@@ -173,7 +173,7 @@ describe("mapLivePlayerPoints", () => {
         },
       },
     });
-    expect(squad.players[0].categories).toEqual([{ category: "5010#6090", value: 1, points: 5 }]);
+    expect(squad.players[0].categories).toEqual([{ category: "5010#6090", points: 5 }]);
   });
 
   it("drops categories that contributed nothing, and keys it cannot read", () => {
@@ -188,7 +188,7 @@ describe("mapLivePlayerPoints", () => {
         },
       },
     });
-    expect(squad.players[0].categories).toEqual([{ category: "5010#6120", value: 90, points: 2 }]);
+    expect(squad.players[0].categories).toEqual([{ category: "5010#6120", points: 2 }]);
   });
 
   it("says nothing for a team Fantrax priced nobody in", () => {

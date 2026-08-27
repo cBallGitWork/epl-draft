@@ -160,22 +160,11 @@ export function mapLeagueInfo(raw: RawLeagueInfo): LeagueInfo {
 
 /** The league's playoff, or none.
  *
- *  Every field has to be there before any of it is read. A cut with no periods
- *  behind it, or periods with no cut, is half a declaration — and half of this
- *  would draw a line on the table that nothing else in the app could explain. */
+ *  `used: false` is a real answer and maps to null: a league with no playoff has
+ *  no line to draw rather than a line at zero. So does a league that says it has
+ *  one and will not say how many places qualify — that is the one number the
+ *  table needs, and a cut we cannot size is not a cut we can draw. */
 function mapPlayoffs(raw: RawPlayoffs | undefined): LeaguePlayoffs | null {
-  if (raw?.used !== true) return null;
-  const { numPlayoffTeams, firstPlayoffPeriod, lastRegularSeasonPeriod } = raw;
-  if (
-    typeof numPlayoffTeams !== "number" ||
-    typeof firstPlayoffPeriod !== "number" ||
-    typeof lastRegularSeasonPeriod !== "number"
-  ) {
-    return null;
-  }
-  return {
-    places: numPlayoffTeams,
-    firstPeriod: firstPlayoffPeriod,
-    lastRegularPeriod: lastRegularSeasonPeriod,
-  };
+  if (raw?.used !== true || typeof raw.numPlayoffTeams !== "number") return null;
+  return { places: raw.numPlayoffTeams };
 }

@@ -6,7 +6,6 @@ export type {
   LeagueInfo,
   LivePlayerCategory,
   LivePlayerPoints,
-  LiveSquadPoints,
   LiveTeamScore,
   LeaguePeriod,
   LeaguePlayoffs,

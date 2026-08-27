@@ -12,19 +12,23 @@ import type { LivePlayerPoints, LiveSquadPoints, LiveTeamScore } from "../types"
 
 /** The wire, mirrored including the parts we decline to read. */
 export interface RawLiveScoring {
-  /** True when `delta` is set: `allTeamsStats` would then be a partial, and a
-   *  player missing from it would read as one who has not played rather than one
-   *  Fantrax declined to resend. Mirrored and never read, because it has
-   *  answered false on every payload seen — a mapper written against a shape we
-   *  have not observed would be a guess. `refresh` is its companion. */
-  delta?: boolean;
-  refresh?: boolean;
   /** Fantrax's own "the round is over". Not read: the football layer answers the
    *  same question from FPL, which is the provider that actually knows, and a
    *  second opinion we would have to arbitrate is worse than one we would not. */
   allEventsFinished?: boolean;
   statsPerTeam?: {
     allTeamsStats?: Record<string, RawTeamSections | undefined>;
+    /** True when `allTeamsStats` is a PARTIAL: a player missing from it would
+     *  then read as one who has not played rather than one Fantrax declined to
+     *  resend. Mirrored and never read, because it has answered false on every
+     *  payload seen and a mapper written against a shape we have not observed
+     *  would be a guess. `refresh` is its companion.
+     *
+     *  Inside `statsPerTeam` and not at the root, which is where they actually
+     *  are on the wire — checked against the payload rather than assumed, after
+     *  this declaration and the recorded fixture disagreed about it. */
+    delta?: boolean;
+    refresh?: boolean;
   };
 }
 
@@ -196,7 +200,7 @@ export function mapLivePlayerPoints(raw: RawLiveScoring): LiveSquadPoints[] {
         categories: (stats.object2 ?? []).flatMap((row) => {
           const category = categoryOf(row.scipId);
           if (category === null || typeof row.fpts !== "number" || row.fpts === 0) return [];
-          return [{ category, value: typeof row.av === "number" ? row.av : null, points: row.fpts }];
+          return [{ category, points: row.fpts }];
         }),
       });
     }

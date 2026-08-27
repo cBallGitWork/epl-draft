@@ -202,7 +202,7 @@ describe("mapLeagueInfo, the playoff", () => {
         mergePlayoffPeriods: false,
       },
     });
-    expect(info.playoffs).toEqual({ places: 4, firstPeriod: 35, lastRegularPeriod: 34 });
+    expect(info.playoffs).toEqual({ places: 4 });
   });
 
   it("treats a league that runs no playoff as having none", () => {
@@ -212,13 +212,15 @@ describe("mapLeagueInfo, the playoff", () => {
     expect(mapLeagueInfo({}).playoffs).toBeNull();
   });
 
-  it("refuses half a declaration", () => {
-    // A cut with no periods behind it would draw a line on the table that
-    // nothing else in the app could explain.
-    expect(mapLeagueInfo({ playoffs: { used: true, numPlayoffTeams: 4 } }).playoffs).toBeNull();
+  it("needs the one number the table actually draws", () => {
+    // A playoff whose size Fantrax will not state is a cut we cannot size, and a
+    // cut we cannot size is not a line. The periods are on the wire and nothing
+    // reads them, so their absence must not veto a size that IS stated.
     expect(
-      mapLeagueInfo({ playoffs: { used: true, firstPlayoffPeriod: 35, lastRegularSeasonPeriod: 34 } })
-        .playoffs,
+      mapLeagueInfo({ playoffs: { used: true, firstPlayoffPeriod: 35 } }).playoffs,
     ).toBeNull();
+    expect(
+      mapLeagueInfo({ playoffs: { used: true, numPlayoffTeams: 4 } }).playoffs,
+    ).toEqual({ places: 4 });
   });
 });

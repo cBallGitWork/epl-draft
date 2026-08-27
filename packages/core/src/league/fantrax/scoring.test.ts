@@ -113,6 +113,18 @@ describe("mapScoringCategories", () => {
     expect(mapScoringCategories({})).toEqual({});
   });
 
+  it("leaves a category Fantrax did not name unnamed, rather than printing its id", () => {
+    // `5010#6090` on a player card looks like a category called 6090. A missing
+    // row is absent from a list that never claimed to be complete.
+    expect(
+      mapScoringCategories({
+        scoringCategorySettings: [
+          { group: { id: "5010" }, configs: [{ scoringCategory: { id: "6090" } }] },
+        ],
+      }),
+    ).toEqual({});
+  });
+
   it("leaves a category it cannot key out, rather than inventing one", () => {
     const named = mapScoringCategories({
       scoringCategorySettings: [
