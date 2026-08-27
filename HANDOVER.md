@@ -193,14 +193,41 @@ condition: every league route now reads `ƒ` dynamic where six read `○` static
 **Verify is green for the first time since 19 Aug**, and the two-league walk has
 now completed both halves once: real 10/10, rehearsal 12/12.
 
-### Still in that pile, untouched
+### The pile, after 27 Aug
 
-`shape-diff` exits 1 today so the documented `&&` chain never reaches
-`bridge:check`, and exits 0 when the subject refused every read; `smoke`'s desk
-fragment is printed by all three states it exists to keep apart; `smoke` drops
-its two id-scoped routes when the second roster read fails and still reports
-"12/12"; `staleness.ts` cannot fire on the first missed capture; `team-codes`
-cannot read `SESSION_SECRET` and prints a remedy that does not work.
+All eight were put to an agent each with instructions to REFUTE them. All eight
+came back real, two with the record corrected.
+
+**Fixed 27 Aug:**
+
+- The four walk defects above.
+- **`staleness.ts` slept through the first missed day.** `overdue` was
+  `ageDays > cadence`, so a daily cadence needed an age of two and the alarm came
+  thirty-three hours late instead of the nine the schedule was tuned for. It has
+  already happened: the rehearsal captures jump 6 Aug to 12 Aug, all post-draft,
+  and the first day passed green. `npm test` was not evidence — it asserted the
+  defect under the heading "tightens to a day once the draft has happened".
+  `PLAN.md` asserted it too, so two documents disagreed and the wrong one was
+  implemented.
+- **`team-codes` could not read the secret, and its advice would have burned it.**
+  No npm script passed `--env-file`, so the script that issues sixteen sign-in
+  codes has never run. Worse, the remedy it printed reads as "write a new secret"
+  — which against a file that already has one silently invalidates every issued
+  code, with no error, `teamForCode` just returning null for all sixteen. It now
+  loads the verifier's own file. `CLAUDE.md` was the reason an operator would have
+  used the wrong one.
+
+**Still open, and confirmed real:**
+
+- `shape-diff` exits 1 today, so the documented `smoke && shape-diff &&
+  bridge:check` chain never reaches the third. 22 paths counted dangerous; the
+  recorded diagnosis is right about 12 of them and wrong about the rest.
+- `shape-diff` gates its exit on `dangerous` alone and never on `refusals`, so it
+  passes having compared nothing.
+- `smoke`'s desk fragment is printed by all three states it exists to keep apart.
+- `smoke` asks Fantrax the same question twice (`drafted()` and `teamId()` each
+  issue their own read) and drops its two id-scoped routes when the second fails,
+  while still reporting the full count.
 
 Two of the pile were fixed on 23 Aug (`capture-status` counting directories,
 `build-bridge` rebuilding from nothing) and are already in.
