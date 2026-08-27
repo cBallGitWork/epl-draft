@@ -223,9 +223,21 @@ npm run team-codes      # issue one sign-in code per team; prints them once
 
 **Two `.env.local` files, and they are not interchangeable.** `next dev` roots at
 `apps/companion`, so the app reads `apps/companion/.env.local` (`SESSION_SECRET`,
-`TEAM_CODES`) and never sees the repo-root one, which is what the scripts read
-via `node --env-file` (`FANTRAX_COOKIE`). Next prints `- Environments: .env.local`
-at startup when it has loaded one; its absence is the tell.
+`TEAM_CODES`) and never sees the repo-root one. Next prints
+`- Environments: .env.local` at startup when it has loaded one; its absence is
+the tell.
+
+**Scripts load nothing unless their npm script says so**, and only one does:
+`team-codes` passes `--env-file=apps/companion/.env.local`, because the secret it
+mints hashes with must be the one the app verifies with, and reading the
+verifier's own file is what stops the two drifting. Every other script reads
+public endpoints and needs no secret — nothing in the tracked tree reads
+`FANTRAX_COOKIE` at all.
+
+*This paragraph used to say scripts read the repo-root file via `node --env-file`.
+Nothing did: no npm script passed the flag, so `npm run team-codes` failed with
+"SESSION_SECRET is not set" while both files held one, and the remedy it printed
+would have invalidated every code already issued. Corrected 27 Aug 2026.*
 
 `FANTRAX_LEAGUE_ID` selects the league the app serves; it defaults to the
 rehearsal league. Setting it to `ayyoh3n2mr326v2o` is the whole 10 Oct swap, and

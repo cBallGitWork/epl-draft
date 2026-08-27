@@ -30,10 +30,16 @@ function code(): string {
 async function main(): Promise<void> {
   const secret = process.env.SESSION_SECRET;
   if (!secret) {
+    // Names the file, because there are two and only one of them is the one the
+    // app verifies against. The last line is the constraint the code cannot
+    // state, and its absence is what made the old message dangerous: it read as
+    // "generate a secret", which against a file that already has one silently
+    // invalidates every code already issued under it.
     console.error(
-      "SESSION_SECRET is not set. Generate one first:\n" +
+      "SESSION_SECRET is not in apps/companion/.env.local, which is the file the app\n" +
+        "verifies codes against. Add it there, and the same value in the deployment:\n" +
         "  node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\"\n" +
-        "then set it in .env.local and in the deployment, and re-run.",
+        "Changing a value already there invalidates every code issued under it.",
     );
     process.exitCode = 1;
     return;
