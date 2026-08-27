@@ -120,17 +120,68 @@ off before his side concedes.
   only the playoff half is published.
 - `probe3.mjs` is still untracked in the root and still yours to delete.
 
-## 6. Not cleared, and it is still a session's work
+## 6. The ship-day gates, and the bug the first one caught
 
-The **ship-day gates** pile from 22 Aug §4b is untouched: `shape-diff` exits 1
-today so the documented `&&` chain never reaches `bridge:check`, and exits 0 when
-the subject refused every read; `smoke`'s desk fragment is printed by all three
-states it exists to keep apart; `smoke` never checks the server serves the league
-it derived its expectations from; `team-codes` cannot read `SESSION_SECRET`.
-These are the checks the 10 Oct runbook rests on.
+**`verify.yml`'s two-league walk had never run.** It was written on 20 Aug into a
+branch nobody pushed, so its first ever execution was tonight — and it went red.
+Four defects had to be cleared before it could even say why:
 
-Two of that pile were fixed on 23 Aug (`capture-status` counting directories,
+- it could not name WHICH wrong state it found (an outage and a league with teams
+  in it produced the same complaint and want opposite fixes);
+- it never checked the server served the league it was asserting about;
+- `set -e` meant the first walk's failure skipped the second entirely, so the
+  rehearsal half — the one its own comment says has caught a real bug — had still
+  never run;
+- `next start` renames its process to `next-server (v16.2.7)`, so
+  `pkill -f "next start"` matched **nothing**. The server outlived the walk, the
+  next `next start` died with EADDRINUSE, `smoke:wait` was answered by the OLD
+  server, and the second walk reported "10/10 clean" having asked the first
+  walk's app about the second walk's league. Reproduced locally.
+
+**And then the walk earned its keep.** The real-league red was not the empty
+states: six routes were **prerendered static at build time against the default
+league** and served that way whatever the running server was set to.
+`myTeamId` checked `SESSION_SECRET` and returned *before* reading the cookie, and
+that `cookies()` call is what makes the render request-dependent. CI has no
+`.env.local`, so it had no secret, so `/`, `/league`, `/league/matchups`,
+`/squad`, `/matchday` and `/matchday/desk` built static against the rehearsal
+league. `/league/schedule` has no session read and stayed dynamic and correct —
+which is why the schedule printed "Tim Hortons Pro League 24/25" over a table
+reading `test3 1-0-0 45`. Half the app served one league, half the other, every
+page returned 200.
+
+This is precisely what `leagueCache` exists to prevent, through a door it cannot
+watch: a static page never reaches the cache, so putting the league id in every
+key cannot help. **On 10 Oct the swap is one environment variable and a redeploy.
+A build that had lost `SESSION_SECRET` would have shipped the rehearsal league to
+sixteen people, silently.**
+
+Fixed, and `secret()` with it — it used `??`, so `SESSION_SECRET=""` counted as a
+real key and every team code would have verified against an HMAC keyed on
+nothing. Verified by building with `.env.local` removed, which is CI's actual
+condition: every league route now reads `ƒ` dynamic where six read `○` static.
+
+**Verify is green for the first time since 19 Aug**, and the two-league walk has
+now completed both halves once: real 10/10, rehearsal 12/12.
+
+### Still in that pile, untouched
+
+`shape-diff` exits 1 today so the documented `&&` chain never reaches
+`bridge:check`, and exits 0 when the subject refused every read; `smoke`'s desk
+fragment is printed by all three states it exists to keep apart; `smoke` drops
+its two id-scoped routes when the second roster read fails and still reports
+"12/12"; `staleness.ts` cannot fire on the first missed capture; `team-codes`
+cannot read `SESSION_SECRET` and prints a remedy that does not work.
+
+Two of the pile were fixed on 23 Aug (`capture-status` counting directories,
 `build-bridge` rebuilding from nothing) and are already in.
+
+**One lesson worth keeping separate from the bug.** Every hypothesis I could form
+from outside CI was wrong — wrong league, cold-start race, missing session env,
+provider refusal, cache contamination — and none of them reproduced locally. What
+ended it was making the gate print the first words the page actually rendered.
+A gate that says an assertion failed and cannot say what it saw sends somebody to
+reproduce a thing that only happens in CI.
 
 Also unchanged: the bridge was last built 19 Aug against the 19 Aug pool.
 `bridge:check` stays green because it only gates on *rostered* players, which is
