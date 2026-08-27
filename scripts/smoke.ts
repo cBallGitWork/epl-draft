@@ -1,4 +1,11 @@
-import { FANTRAX_LEAGUE_ID, FantraxError, fetchTeamRosters, mapTeamRosters } from "@epl/core";
+import {
+  FANTRAX_LEAGUE_ID,
+  FantraxError,
+  fetchLeagueInfo,
+  fetchTeamRosters,
+  mapLeagueInfo,
+  mapTeamRosters,
+} from "@epl/core";
 
 // Does every view survive the league it is actually being served?
 //
@@ -55,6 +62,18 @@ const UNDRAFTED: Record<string, string> = {
   "/matchday/desk": "nothing to post",
 };
 
+/** The one sentence every outage panel prints, wherever it is — `FANTRAX_SILENT`
+ *  in `apps/companion/app/config.ts`.
+ *
+ *  Not asserted, only used to EXPLAIN a failure. "Does not say which nothing it
+ *  is" was a true report that named the wrong suspect: the three states this
+ *  file exists to keep apart look identical through a `body.includes` check, so
+ *  a walk that found the wrong one could not say which wrong one it found. On
+ *  its first ever run in CI that cost an evening — the empty states were right
+ *  and the server had simply not been able to read Fantrax, which is a different
+ *  problem with a different fix. */
+const SILENT = "Fantrax is not answering";
+
 /** Sentences a league WITH teams must never print. The inverse of the above, and
  *  the half that catches the failure that has actually happened here. */
 const DRAFTED_MUST_NOT = Object.values(UNDRAFTED);
@@ -73,6 +92,20 @@ const DRAFTED_MUST_NOT = Object.values(UNDRAFTED);
 const NEVER: Record<string, string> = {
   "/gw/1": "No fixtures scheduled for this gameweek yet.",
 };
+
+/** The name Fantrax gives the league this walk is deriving its expectations
+ *  from, or null if it will not say.
+ *
+ *  The schedule prints it verbatim as the section's subtitle, which is what
+ *  makes it checkable from out here without the app growing an endpoint. */
+async function expectedName(): Promise<string | null> {
+  try {
+    return mapLeagueInfo(await fetchLeagueInfo(FANTRAX_LEAGUE_ID)).name || null;
+  } catch (error) {
+    if (error instanceof FantraxError) return null;
+    throw error;
+  }
+}
 
 async function drafted(): Promise<boolean> {
   try {
@@ -104,6 +137,35 @@ async function main() {
     `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${hasTeams ? "drafted" : "no teams"})\n`,
   );
 
+  // **Is this server even serving the league these expectations came from?**
+  //
+  // Everything below reads `FANTRAX_LEAGUE_ID` out of THIS process and asserts
+  // against a server that read it out of its own. Nothing made those agree, and
+  // when they disagree every assertion below is answering a question nobody
+  // asked: the walk reports that the empty states are broken when what actually
+  // happened is that it was pointed at the wrong app. On this file's first ever
+  // CI run that cost an evening, and the walk could not say so because it had
+  // never been able to see which league the server had.
+  //
+  // Checked, not assumed, and checked against the one page that prints the
+  // league's own name — which is also the read the 10 Oct swap turns.
+  const name = await expectedName();
+  if (name !== null) {
+    const schedule = await fetch(`${BASE}/league/schedule`, { redirect: "follow" });
+    const body = await schedule.text();
+    if (!body.includes(name)) {
+      console.log(`✗ served league  expected "${name}" (${FANTRAX_LEAGUE_ID})`);
+      console.log(
+        `\n${BASE} is not serving the league this walk derived its expectations from,` +
+          ` or could not read it. Every assertion below would be about the wrong app.`,
+      );
+      console.log(`    check FANTRAX_LEAGUE_ID on the server, not just in this shell.`);
+      process.exitCode = 1;
+      return;
+    }
+    console.log(`✓ served league  ${name}\n`);
+  }
+
   const failures: string[] = [];
 
   for (const path of paths) {
@@ -134,7 +196,13 @@ async function main() {
 
     const named = UNDRAFTED[path];
     if (!hasTeams && named !== undefined && !body.includes(named)) {
-      problems.push(`does not say which nothing it is (expected "${named}")`);
+      problems.push(
+        body.includes(SILENT)
+          ? `rendered "${SILENT}" — this server could not read Fantrax, so the empty state ` +
+            `was never reached. That is an outage here, not a broken empty state.`
+          : `does not say which nothing it is (expected "${named}", and it is not showing ` +
+            `an outage either — so it rendered a league with teams in it)`,
+      );
     }
 
     if (hasTeams) {

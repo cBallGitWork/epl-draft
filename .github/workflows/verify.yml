@@ -58,6 +58,18 @@ jobs:
       #
       # `kill "$pid"` and not `kill %1`: job control is off in a non-interactive
       # shell and `%1` would fail the step on a line that is only tidying up.
+      #
+      # **Both halves run even when the first fails, and that is the whole point
+      # of there being two.** Under `set -e` a failing `npm run smoke` inside the
+      # function aborted the step, so the second walk never happened — the same
+      # shape as the documented `smoke && shape-diff && bridge:check` chain,
+      # where a red first gate hides every gate behind it. On this step's first
+      # ever execution the real-league walk failed and the rehearsal walk — the
+      # half whose comment says it has caught a real bug — did not run at all.
+      #
+      # The status has to be captured explicitly. `walk ... || failed=1` does not
+      # work: `||` suspends `set -e` inside the function, so `walk` runs on to
+      # `sleep 1` and returns ITS status, which is always 0.
       - name: Every view, against both leagues
         run: |
           set -euo pipefail
@@ -69,13 +81,33 @@ jobs:
             npm run start &
             pid=$!
             npm run smoke:wait
-            npm run smoke
+            status=0
+            npm run smoke || status=$?
+            # `next start` renames its process to "next-server (v16.2.7)", so the
+            # `pkill -f "next start"` this line used to be matched NOTHING, and
+            # `kill "$pid"` reaches only the npm wrapper. The server outlived the
+            # walk.
             kill "$pid" 2>/dev/null || true
-            pkill -f "next start" 2>/dev/null || true
-            sleep 1
+            pkill -f "next-server" 2>/dev/null || true
+            # And a server that outlives its walk is worse than one that will not
+            # die: the next `next start` fails with EADDRINUSE, `smoke:wait` is
+            # answered by the OLD server, and the second walk reports "10/10
+            # clean" having asked the first walk's app about the second walk's
+            # league. Reproduced locally — it passes, and it proves nothing.
+            for _ in $(seq 1 20); do
+              curl -sf -o /dev/null http://localhost:3000/ || break
+              sleep 1
+            done
+            if curl -sf -o /dev/null http://localhost:3000/; then
+              echo "::error::a server is still answering on :3000; the next walk would test it"
+              return 1
+            fi
+            return "$status"
           }
-          walk "$REAL_LEAGUE"
-          walk ""
+          failed=0
+          walk "$REAL_LEAGUE" || failed=1
+          walk "" || failed=1
+          exit "$failed"
 
       # ROADMAP §6's last one. `npm run bridge` reports totals — 688 players, 120
       # with no FPL counterpart — and has never answered the question that
