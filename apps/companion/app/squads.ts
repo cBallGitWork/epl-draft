@@ -3,6 +3,7 @@ import {
   FantraxError,
   type Bridge,
   type FootballSnapshot,
+  type GameweekKickoff,
   type LeagueInfo,
   type RosterDisplay,
   type RosteredPeriod,
@@ -48,6 +49,12 @@ export const bridge = mapping as Bridge;
  *  yet, because Fantrax blipped for five minutes. That is a confident wrong
  *  statement about the league from the one route whose job is to report it. */
 export interface ReadableSquads {
+  /** The season's kickoffs, carried for the gate. Lineups lock fifteen minutes
+   *  before a period's first ball, and on 33 of this season's 38 weeks that ball
+   *  is a day after the period opens — so the gate cannot answer from the league
+   *  calendar alone, and `teamDisplay` stays synchronous by being handed this
+   *  rather than fetching it. */
+  kickoffs: GameweekKickoff[];
   period: RosteredPeriod;
   snapshot: FootballSnapshot;
   /** The league-wide answer: what a reader may see of a team that is not his.
@@ -168,7 +175,14 @@ export async function roundOf(gameweek: number): Promise<Round | null> {
 }
 
 export async function getLeagueSquads(round: Round | null = null): Promise<LeagueSquads> {
-  const { snapshot, rosters, refusal, info, asked } = await readLeague(round);
+  // The season's kickoffs come from their OWN cache rather than from inside
+  // `readLeague`: `CachedLeague` crosses the cache boundary, and serialising 380
+  // kickoff rows into every `league-squads` entry would duplicate a payload that
+  // already has a cache with its own lifetime. This is a hit, not a request.
+  const [{ snapshot, rosters, refusal, info, asked }, kickoffs] = await Promise.all([
+    readLeague(round),
+    seasonKickoffs(),
+  ]);
 
   // Branching on a specific code, which the adapter deliberately never does
   // (PLATFORM_NOTES). Safe here because it fails toward hedging: an unrecognised
@@ -203,8 +217,15 @@ export async function getLeagueSquads(round: Round | null = null): Promise<Leagu
     // one. A reader's own answer applied there would show fifteen rivals' XIs
     // through the side door. The one team a known reader is looking at gets its
     // own answer, at the route that knows which team that is.
+    kickoffs,
     display: periodAsAsked
-      ? rosterDisplay(period.period, info?.rosterPeriods ?? [], new Date().toISOString(), false)
+      ? rosterDisplay(
+          period.period,
+          info?.rosterPeriods ?? [],
+          kickoffs,
+          new Date().toISOString(),
+          false,
+        )
       : { show: "squad", because: "unknown-period" },
   };
 }
@@ -236,7 +257,7 @@ export const leagueInfo = leagueCache("league-info",
  *  guarded it. Those existed because the gate withheld the reader's own lineup
  *  along with everybody else's, so the only way to work on the planner was to
  *  turn the gate off somewhere it could do no harm. The rule is narrower now —
- *  your own team, always; every other team, only once its period opens — so
+ *  your own team, always; every other team, only once its lineups lock — so
  *  there is nothing left to switch off. */
 export function teamDisplay(squads: ReadableSquads, yours: boolean): RosterDisplay {
   // The per-team answer has to honour the same doubt the league-wide one does.
@@ -247,6 +268,7 @@ export function teamDisplay(squads: ReadableSquads, yours: boolean): RosterDispl
   return rosterDisplay(
     squads.period.period,
     squads.info?.rosterPeriods ?? [],
+    squads.kickoffs,
     new Date().toISOString(),
     yours,
   );

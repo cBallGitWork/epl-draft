@@ -8,7 +8,7 @@ import SquadRows from "./SquadRows";
 import ViewToggle, { type View } from "./ViewToggle";
 
 // A squad with no gameweek to report: the state every squad is in most of the
-// week, and the only state a rival's squad is ever in before a period opens.
+// week, and the only state a rival's squad is ever in before its lineups lock.
 //
 // Two arrangements of the same fifteen and one card over the top of them. The
 // client boundary is here rather than lower down because all three share one
@@ -20,21 +20,23 @@ import ViewToggle, { type View } from "./ViewToggle";
 // doing it here would mean shipping every club in the league and every fixture
 // in the round to a phone so fifteen players could look two of them up.
 
-/** Why the lineup is being withheld — and only for the three reasons a reader
- *  could not otherwise work out.
+/** Why the lineup is being withheld — and only for the reasons a reader could
+ *  not otherwise work out.
  *
- *  `not-started` is deliberately absent. It is the ordinary state of every squad
+ *  `not-locked` is deliberately absent. It is the ordinary state of every squad
  *  for most of every week, the header already says "squad", and a paragraph
  *  explaining the normal case cost the pitch a screenful of height on a phone.
- *  The other three are our side failing to read something, and a squad that
- *  silently withheld a lineup because our calendar was missing would look like
- *  the rule when it is a fault. */
+ *  The rest are our side failing to read something, and a squad that silently
+ *  withheld a lineup because our calendar was missing would look like the rule
+ *  when it is a fault. */
 const EXPLANATION: Partial<Record<SquadReason, string>> = {
   "unknown-period":
     "Fantrax did not say which gameweek this squad is for, so the lineup stays hidden.",
   "no-calendar": "We cannot read the league's deadlines right now, so the lineup stays hidden.",
   "period-not-in-calendar":
     "This squad names a gameweek the calendar does not have, so the lineup stays hidden.",
+  "unknown-lock":
+    "We cannot work out when this round's lineups lock, so the lineup stays hidden.",
 };
 
 export default function SquadBoard({

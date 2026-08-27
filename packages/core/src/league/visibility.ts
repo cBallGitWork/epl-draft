@@ -1,7 +1,7 @@
 // Whether a lineup may be shown yet.
 //
-// The rule is a league rule, not a technical one: until a period starts, no
-// RIVAL's lineup is visible. Sixteen managers who can see each other's XI before
+// The rule is a league rule, not a technical one: until lineups LOCK, no RIVAL's
+// lineup is visible. Sixteen managers who can see each other's XI before
 // the deadline are playing a different game from the one they agreed to, and the
 // app is the only place that could leak it. What stays visible all week is the
 // squad: the fifteen names, the pickups, who owns whom. Only the *arrangement*
@@ -18,6 +18,8 @@
 // gate that consults `Date.now()` internally cannot be tested at its boundary,
 // and its boundary is the only part that matters.
 
+import { firstKickoff, locksAt } from "./calendar";
+import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 
 /** What a roster view is allowed to render.
@@ -32,8 +34,12 @@ export type RosterDisplay =
 /** Why a lineup is being withheld. Every one of these is a real state we have
  *  seen or will see, and none of them is an error. */
 export type SquadReason =
-  /** The period has not started. The ordinary case, most of every week. */
-  | "not-started"
+  /** Lineups have not locked yet. The ordinary case, most of every week. */
+  | "not-locked"
+  /** We could not work out when this period's lineups lock — a period with no
+   *  football in it, or a round FPL has not dated. Ours failing to read
+   *  something, never the rule. */
+  | "unknown-lock"
   /** Fantrax did not tell us which period the roster belongs to. */
   | "unknown-period"
   /** We hold no calendar to check against. */
@@ -57,16 +63,34 @@ function instant(iso: string): number | null {
   return Number.isNaN(parsed) ? null : parsed;
 }
 
-/** Has this period begun at `at`? Null when either instant is unreadable.
+/** Have this period's lineups locked at `at`? Null when there is no lock to
+ *  measure, which the caller must read as "not yet" and never as "yes".
  *
- *  Inclusive of the start: at exactly 20:00 the period is running. Fantrax's
- *  own end instant for the previous period is one second earlier, so there is
- *  no overlap to arbitrate. */
-function periodStarted(period: LeaguePeriod, at: string): boolean | null {
-  const start = instant(period.start);
+ *  **Not the period boundary, and that was the bug.** Fantrax opens a roster
+ *  period on the Friday MORNING for a round that starts on the Saturday — 33 of
+ *  this season's 38 — while lineups lock fifteen minutes before the first ball.
+ *  Reading the boundary published every rival's arrangement for the day and a bit
+ *  in between. The four weeks where the two agree are the ones with a Friday-night
+ *  match, and which weeks those are moves with the television schedule, so the
+ *  answer has to be computed rather than tuned.
+ *
+ *  Built from `locksAt` and `firstKickoff` rather than from `firstKickoff` less
+ *  fifteen spelled out again, so the instant this gate opens on and the instant
+ *  the masthead and the schedule print cannot drift apart.
+ *
+ *  Inclusive of the lock: at exactly the lock, lineups are locked. */
+function lineupsLocked(
+  period: LeaguePeriod,
+  kickoffs: readonly GameweekKickoff[],
+  at: string,
+): boolean | null {
+  const kickoff = firstKickoff(period, kickoffs);
+  if (kickoff === null) return null;
+
+  const locks = locksAt(kickoff);
   const now = instant(at);
-  if (start === null || now === null) return null;
-  return now >= start;
+  if (locks === null || now === null) return null;
+  return now >= Date.parse(locks);
 }
 
 /** What to render for a roster Fantrax returned for `fetchedPeriod`.
@@ -81,6 +105,10 @@ function periodStarted(period: LeaguePeriod, at: string): boolean | null {
 export function rosterDisplay(
   fetchedPeriod: number | null,
   periods: LeaguePeriod[],
+  /** The season's kickoffs. The gate finds its own lock from these rather than
+   *  being handed one: a caller that passed the wrong period's lock would fail
+   *  OPEN, and on an information boundary that asymmetry decides it. */
+  kickoffs: readonly GameweekKickoff[],
   at: string,
   /** Whether this roster belongs to the reader.
    *
@@ -102,7 +130,9 @@ export function rosterDisplay(
   const period = periods.find((p) => p.number === fetchedPeriod);
   if (!period) return { show: "squad", because: "period-not-in-calendar" };
 
-  return periodStarted(period, at) === true
+  const locked = lineupsLocked(period, kickoffs, at);
+  if (locked === null) return { show: "squad", because: "unknown-lock" };
+  return locked
     ? { show: "lineup", period: fetchedPeriod }
-    : { show: "squad", because: "not-started" };
+    : { show: "squad", because: "not-locked" };
 }

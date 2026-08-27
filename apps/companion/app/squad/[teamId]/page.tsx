@@ -167,7 +167,7 @@ export default async function TeamPage({
           fantraxUrl={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}`}
         />
       ) : board !== null ? (
-        /* The gate. Before his period opens a rival's XI is not visible — the
+        /* The gate. Before his lineups lock a rival's XI is not visible — the
            shape and the active/reserve split are withheld together. The squad
            itself is not: fifteen names, who they play this week, and nothing
            about how they will be arranged.
@@ -177,7 +177,7 @@ export default async function TeamPage({
            that renders a board with nothing on it. */
         <SquadBoard lines={board.lines} because={board.because} projected={board.projected} />
       ) : (
-        /* A rival's XI, once his period has opened. Read-only: it is his — but
+        /* A rival's XI, once his lineups have locked. Read-only: it is his — but
            every man on it opens the same card the head-to-head board opens, so
            "why is he on 12" has one answer wherever it is asked.
 

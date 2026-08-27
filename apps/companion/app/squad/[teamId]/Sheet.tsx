@@ -5,7 +5,7 @@ import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/cor
 import TeamSheet from "../../components/league/TeamSheet";
 import ViewToggle, { type View } from "../../components/league/ViewToggle";
 
-// A rival's eleven once his period has opened — with the Pitch/List control the
+// A rival's eleven once his lineups have locked — with the Pitch/List control the
 // page had been losing at exactly that moment.
 //
 // The gap was invisible before a period had ever opened, which is why it lasted:

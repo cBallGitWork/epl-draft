@@ -6,7 +6,7 @@ import PitchRows from "./PitchRows";
 // All fifteen on the grass, in the lines their manager has them filling.
 //
 // No bench. A bench is a statement about who starts, and this is the view for
-// the days when that is not ours to say — before a period opens, and on a round
+// the days when that is not ours to say — before lineups lock, and on a round
 // nobody has played yet. Fifteen on the pitch is the honest shape of a squad we
 // are allowed to know only the membership of, and nothing here is marked active
 // or reserve.
