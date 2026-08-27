@@ -22,6 +22,11 @@ const LEAGUES_ROOT = join(SNAPSHOT_ROOT, "leagues");
 
 export const MAPPINGS_ROOT = join(REPO_ROOT, "data", "mappings");
 
+/** One file per gameweek, one line per change, recording how a round settles.
+ *  Under `probes/` and not `snapshots/`: a snapshot is league state we would
+ *  otherwise lose, and this is an experiment answering a question. */
+export const ROUND_STATE_ROOT = join(REPO_ROOT, "data", "probes", "round-state");
+
 /** Where the matcher leaves what it would not decide, for a human to settle. */
 export const REVIEW_ROOT = join(MAPPINGS_ROOT, "review");
 

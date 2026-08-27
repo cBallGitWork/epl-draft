@@ -1,0 +1,72 @@
+name: Round state
+
+# How a round settles, sampled while it is settling.
+#
+# PLATFORM_NOTES has asked since 13 Aug whether Fantrax's middle rung is
+# reachable — whether `finished_provisional`, `finished`, `bonus_added` and
+# `data_checked` flip far enough apart for "bonus settling" to be a state a
+# screen can ever be in, or whether it is a near-zero-width window and one of the
+# three rungs `round.ts` climbs is effectively dead.
+#
+# That question can only be answered while the flags are moving. Gameweek 1's
+# window was Monday 24 Aug from about 21:00Z; it was written down as an
+# observation for a person to make, nobody was awake for it, and by the 27th
+# every flag had settled and the ORDER was gone for good. A second miss is what
+# this workflow exists to prevent, and it is why this is a cron rather than
+# another line in a handover.
+#
+# Every 30 minutes, and it costs almost nothing: the script writes only when
+# something has actually changed, so what lands in git is one line per
+# transition. A round that is not being played produces no commits at all.
+#
+# Reads FPL's public API only — no cookie, no Fantrax, nothing to leak.
+
+on:
+  schedule:
+    # Every half hour, off the hour and off the half: everybody schedules on
+    # those and GitHub queues the crowd.
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+# Least privilege: this job writes commits and nothing else.
+permissions:
+  contents: write
+
+# A run that overlaps its predecessor would race the same file and the same
+# push. Queue instead — a sample taken a minute late is still a sample.
+concurrency:
+  group: round-state
+  cancel-in-progress: false
+
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Sample the round
+        run: npm run round-state
+
+      - name: Commit the transition, if there was one
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/probes/round-state
+          # The ordinary outcome. Nothing changed since the last sample, which is
+          # true for most of most weeks and is not worth a commit.
+          if git diff --cached --quiet; then
+            echo "No transition since the last sample."
+            exit 0
+          fi
+          git commit -m "data: round state $(date -u +%Y-%m-%dT%H:%MZ)"
+          # Rebase before pushing: the capture cron pushes to the same branch and
+          # a half-hourly job will eventually land on top of one.
+          git pull --rebase --autostash
+          git push
