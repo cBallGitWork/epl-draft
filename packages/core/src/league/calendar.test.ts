@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { periodGameweeks } from "./calendar";
+import { firstKickoff, periodGameweeks } from "./calendar";
 import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 import alignment from "./__fixtures__/periodAlignment.json";
@@ -67,5 +67,46 @@ describe("periodGameweeks", () => {
     expect(periodGameweeks([], [])).toEqual([]);
     expect(periodGameweeks(periods, [])).toHaveLength(38);
     expect(periodGameweeks(periods, []).every((p) => p.gameweeks.length === 0)).toBe(true);
+  });
+});
+
+// Moved here with `firstKickoff` itself, assertions unchanged. The periods and
+// kickoffs are the real ones, because the rule this guards is invisible against
+// invented data: a period that opens at its own first kickoff behaves identically
+// under either reading, and only a Friday-morning open for a Saturday round —
+// period 4 — tells the two apart.
+
+const period = (number: number, start: string, end: string): LeaguePeriod => ({
+  number,
+  start,
+  end,
+});
+
+/** Periods 3 and 4 as Fantrax states them, and the rounds as FPL dates them. */
+const P3 = period(3, "2026-09-04T15:00:00.0-0400", "2026-09-11T05:59:59.0-0400");
+const P4 = period(4, "2026-09-11T06:00:00.0-0400", "2026-09-18T05:59:59.0-0400");
+
+const KICKOFFS: GameweekKickoff[] = [
+  // Gameweek 3 opens the period: a Friday night match.
+  { gameweek: 3, kickoff: "2026-09-04T19:00:00Z" },
+  { gameweek: 3, kickoff: "2026-09-05T14:00:00Z" },
+  // Gameweek 4 has no Friday match, so its period opens a day before its football.
+  { gameweek: 4, kickoff: "2026-09-12T14:00:00Z" },
+  { gameweek: 4, kickoff: "2026-09-13T15:30:00Z" },
+];
+
+describe("firstKickoff", () => {
+  it("finds the first ball kicked inside the period", () => {
+    expect(firstKickoff(P4, KICKOFFS)).toBe("2026-09-12T14:00:00Z");
+  });
+
+  it("compares instants, not strings", () => {
+    // The league's bounds carry -0400 and FPL's carry Z. Lexically
+    // "2026-09-04T15" sorts before "2026-09-04T19Z" while being four hours later.
+    expect(firstKickoff(P3, KICKOFFS)).toBe("2026-09-04T19:00:00Z");
+  });
+
+  it("says nothing for a period with no football in it", () => {
+    expect(firstKickoff(P3, [])).toBeNull();
   });
 });

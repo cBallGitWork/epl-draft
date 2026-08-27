@@ -28,7 +28,7 @@ export type { BreakdownLine } from "./breakdown";
 
 export { captureStaleness } from "./staleness";
 
-export { periodGameweeks } from "./calendar";
+export { firstKickoff, locksAt, periodGameweeks } from "./calendar";
 export type { GameweekKickoff } from "./calendar";
 
 export { rosterDisplay } from "./visibility";

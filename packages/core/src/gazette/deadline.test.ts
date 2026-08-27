@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { GameweekKickoff } from "../league/calendar";
 import type { LeaguePeriod } from "../league/types";
 import { LINEUP_LOCK_LEAD_MINUTES } from "../config";
-import { firstKickoff, nextDeadline } from "./deadline";
+import { nextDeadline } from "./deadline";
 
 // The periods and kickoffs below are the real ones, because the bug this file
 // now guards against is invisible against invented data: a period that opens at
@@ -27,22 +27,6 @@ const KICKOFFS: GameweekKickoff[] = [
   { gameweek: 4, kickoff: "2026-09-12T14:00:00Z" },
   { gameweek: 4, kickoff: "2026-09-13T15:30:00Z" },
 ];
-
-describe("firstKickoff", () => {
-  it("finds the first ball kicked inside the period", () => {
-    expect(firstKickoff(P4, KICKOFFS)).toBe("2026-09-12T14:00:00Z");
-  });
-
-  it("compares instants, not strings", () => {
-    // The league's bounds carry -0400 and FPL's carry Z. Lexically
-    // "2026-09-04T15" sorts before "2026-09-04T19Z" while being four hours later.
-    expect(firstKickoff(P3, KICKOFFS)).toBe("2026-09-04T19:00:00Z");
-  });
-
-  it("says nothing for a period with no football in it", () => {
-    expect(firstKickoff(P3, [])).toBeNull();
-  });
-});
 
 describe("nextDeadline", () => {
   it("locks a quarter of an hour before the first kickoff", () => {

@@ -3,7 +3,7 @@
 // builders as a place purity is not negotiable.
 
 export { availability } from "./availability";
-export { firstKickoff, locksAt, nextDeadline } from "./deadline";
+export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
 export { teamOfTheWeek } from "./teamOfTheWeek";
 export type { AvailabilityNote, Deadline, Deal, Pick, TeamOfTheWeek } from "./types";
