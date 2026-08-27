@@ -171,7 +171,14 @@ async function main() {
   // Checked, not assumed, and checked against the one page that prints the
   // league's own name — which is also the read the 10 Oct swap turns.
   const name = await expectedName();
-  if (name !== null) {
+  if (name === null) {
+    // Skipped, and SAID so. A check that quietly does not run is the shape of
+    // defect this whole gate exists to catch: the walk below would go green
+    // having never established which app it was walking. Not fatal — Fantrax
+    // refusing is a state, and the routes are still worth walking — but the
+    // report must not imply a check that did not happen.
+    console.log("~ served league  Fantrax would not name it, so this walk cannot verify it\n");
+  } else {
     const schedule = await fetch(`${BASE}/league/schedule`, { redirect: "follow" });
     const body = await schedule.text();
     if (!body.includes(name)) {
