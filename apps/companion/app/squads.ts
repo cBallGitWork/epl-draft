@@ -59,11 +59,16 @@ export interface ReadableSquads {
   info: LeagueInfo | null;
   /** Whether the roster came back labelled as the period we asked for.
    *
-   *  True whenever nothing particular was asked for, which is every ordinary
-   *  page. False only when a route named a gameweek and Fantrax answered with a
-   *  different period — at which point no lineup on the payload is trusted,
-   *  because a future roster echoed under an open period's number would open the
-   *  gate on an XI nobody may see. */
+   *  We now always ask, so this checks every page rather than only the ones that
+   *  named a gameweek — it used to be true by construction on the ordinary read,
+   *  which is the read most people make. False when Fantrax answers with a
+   *  different period, at which point no lineup on the payload is trusted:
+   *  a future roster echoed under an open period's number would open the gate on
+   *  an XI nobody may see, and that cannot be taken back.
+   *
+   *  True when the calendar could not say which period the round belongs to. We
+   *  asked for nothing, so Fantrax's own label is the only answer there is, and
+   *  the gate falls back to reading it. */
   periodAsAsked: boolean;
 }
 
@@ -81,6 +86,10 @@ interface CachedLeague {
   rosters: RawTeamRosters | null;
   refusal: { code: string; tell: string } | null;
   info: LeagueInfo | null;
+  /** The period we asked Fantrax for. Null only when the calendar could not say
+   *  which period the round on screen belongs to, in which case Fantrax chose
+   *  and there is nothing to check its answer against. */
+  asked: number | null;
 }
 
 /** The three provider reads every squad view shares, cached across requests.
@@ -95,15 +104,35 @@ interface CachedLeague {
  *  or one manager's view would be served to another. */
 const readLeague = leagueCache("league-squads",
   async (round: Round | null): Promise<CachedLeague> => {
+    const current = await footballNow();
+
+    // **Always ask Fantrax for a period, even when the caller named no round.**
+    // Omitted, Fantrax serves whichever period it currently considers open, and
+    // that is not the round the rest of the page is about: on 27 Aug it was
+    // already serving period 2 while FPL still pointed at gameweek 1, so the
+    // board showed next week's pairing and 0–0 under a heading reading
+    // "Gameweek 1". The two calendars turn over at different instants — FPL at
+    // its deadline, Fantrax at the first kickoff — so the gap is ninety minutes
+    // some weeks and a day and a half in others, and it is never nothing.
+    //
+    // Deriving it from the round in view makes the whole page one week's.
+    const asked = round?.period ?? (await roundOf(current.gameweek))?.period ?? null;
+
+    // `footballNow` for the round FPL is pointing at, and only the cold cache
+    // for any other. They are the same read of different rounds, but the warm
+    // one is kept hot by every other page — the cold one served a 68-minute-old
+    // snapshot under a LIVE badge the one afternoon it was reached alone.
     const [snapshot, rosters, info] = await Promise.all([
-      round === null ? footballNow() : gameweekSnapshot(round.gameweek),
-      orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID, round?.period)),
+      round === null || round.gameweek === current.gameweek
+        ? current
+        : gameweekSnapshot(round.gameweek),
+      orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID, asked ?? undefined)),
       leagueInfo(),
     ]);
 
     return rosters instanceof FantraxError
-      ? { snapshot, rosters: null, refusal: { code: rosters.code, tell: tell(rosters) }, info }
-      : { snapshot, rosters, refusal: null, info };
+      ? { snapshot, rosters: null, refusal: { code: rosters.code, tell: tell(rosters) }, info, asked }
+      : { snapshot, rosters, refusal: null, info, asked };
   },
 );
 
@@ -139,7 +168,7 @@ export async function roundOf(gameweek: number): Promise<Round | null> {
 }
 
 export async function getLeagueSquads(round: Round | null = null): Promise<LeagueSquads> {
-  const { snapshot, rosters, refusal, info } = await readLeague(round);
+  const { snapshot, rosters, refusal, info, asked } = await readLeague(round);
 
   // Branching on a specific code, which the adapter deliberately never does
   // (PLATFORM_NOTES). Safe here because it fails toward hedging: an unrecognised
@@ -152,12 +181,12 @@ export async function getLeagueSquads(round: Round | null = null): Promise<Leagu
 
   const period = resolveRosters(snapshot, mapTeamRosters(rosters), bridge);
 
-  // When we asked for a particular period, we already know which one it is, and
-  // the gate must not take Fantrax's word over ours. If the payload comes back
-  // labelled as a different period the whole thing is untrustworthy for this
-  // purpose — a future roster echoed under the current period's number would
-  // open the gate on an XI nobody may see, and that cannot be taken back.
-  const periodAsAsked = round === null || period.period === round.period;
+  // We know which period we asked for, and the gate must not take Fantrax's word
+  // over ours. If the payload comes back labelled as a different period the whole
+  // thing is untrustworthy for this purpose — a future roster echoed under the
+  // current period's number would open the gate on an XI nobody may see, and that
+  // cannot be taken back.
+  const periodAsAsked = asked === null || period.period === asked;
 
   return {
     period,
