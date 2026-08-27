@@ -34,14 +34,14 @@ describe("captureStaleness", () => {
   it("tightens to a day once the draft has happened", () => {
     // From draft day on, a missed day is a day of roster history that cannot be
     // recovered from anywhere.
-    expect(captureStaleness(["2026-10-11"], "2026-10-12", DRAFT).maxAgeDays).toBe(1);
+    expect(captureStaleness(["2026-10-11"], "2026-10-12", DRAFT).cadenceDays).toBe(1);
     expect(captureStaleness(["2026-10-11"], "2026-10-11", DRAFT).overdue).toBe(false);
     expect(captureStaleness(["2026-10-11"], "2026-10-12", DRAFT).overdue).toBe(true);
   });
 
   it("switches cadence on draft day itself, not the day after", () => {
-    expect(captureStaleness(["2026-10-05"], "2026-10-09", DRAFT).maxAgeDays).toBe(7);
-    expect(captureStaleness(["2026-10-05"], DRAFT, DRAFT).maxAgeDays).toBe(1);
+    expect(captureStaleness(["2026-10-05"], "2026-10-09", DRAFT).cadenceDays).toBe(7);
+    expect(captureStaleness(["2026-10-05"], DRAFT, DRAFT).cadenceDays).toBe(1);
   });
 
   it("counts age across a month boundary", () => {
@@ -61,7 +61,7 @@ describe("the first missed capture", () => {
   // reopen the gap.
   it("does not tolerate a whole missed cadence, whatever the cadence is", () => {
     const status = captureStaleness(["2026-10-10"], "2026-10-11", DRAFT);
-    expect(status.ageDays).toBe(status.maxAgeDays);
+    expect(status.ageDays).toBe(status.cadenceDays);
     expect(status.overdue).toBe(true);
   });
 });

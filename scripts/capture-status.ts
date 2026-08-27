@@ -22,7 +22,7 @@ async function main(): Promise<void> {
     } else {
       console.log(
         `${league.key}: last capture ${status.lastCapture} (${status.ageDays}d ago, ` +
-          `limit ${status.maxAgeDays}d as of ${today}).`,
+          `cadence ${status.cadenceDays}d as of ${today}).`,
       );
     }
 

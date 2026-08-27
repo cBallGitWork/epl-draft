@@ -29,7 +29,7 @@ export interface CaptureStaleness {
   ageDays: number | null;
   /** How often we capture, given where we are in the season. Reaching it is
    *  already too long: it is the interval a capture was due within. */
-  maxAgeDays: number;
+  cadenceDays: number;
   overdue: boolean;
 }
 
@@ -47,12 +47,12 @@ export function captureStaleness(
   today: string,
   draftDate: string,
 ): CaptureStaleness {
-  const maxAgeDays =
+  const cadenceDays =
     days(draftDate, today) >= 0 ? POST_DRAFT_CADENCE_DAYS : PRE_DRAFT_CADENCE_DAYS;
 
   const lastCapture = captureDates.length === 0 ? null : [...captureDates].sort().at(-1) ?? null;
   if (lastCapture === null) {
-    return { lastCapture: null, ageDays: null, maxAgeDays, overdue: true };
+    return { lastCapture: null, ageDays: null, cadenceDays, overdue: true };
   }
 
   const ageDays = days(lastCapture, today);
@@ -62,5 +62,5 @@ export function captureStaleness(
   // thirty-three hours late instead of nine. It has already happened: the
   // rehearsal captures jump 6 Aug to 12 Aug, all of it post-draft, and the first
   // day of that outage passed green.
-  return { lastCapture, ageDays, maxAgeDays, overdue: ageDays >= maxAgeDays };
+  return { lastCapture, ageDays, cadenceDays, overdue: ageDays >= cadenceDays };
 }
