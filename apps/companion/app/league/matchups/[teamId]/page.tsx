@@ -17,7 +17,7 @@ import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
 import LeagueShell from "../../Shell";
 import { getLeagueSquads, roundOf, teamDisplay } from "../../../squads";
-import { footballNow, pollSeconds } from "../../../football";
+import { pollSeconds } from "../../../football";
 import { liveScores } from "../../../scoreboard";
 import { teamBadges } from "../../../badges";
 import { squadPoints } from "../../../teamStats";
@@ -67,10 +67,16 @@ export default async function HeadToHeadPage({
   const { period } = squads.period;
   if (squads.info === null || period === null) redirect("/league/matchups");
 
+  const state = roundState(squads.snapshot);
+
   // A round in the past shows the eleven Fantrax returns for that period, and
   // whether that is the eleven actually played is unverified until a period has
   // completed (see `fetchTeamRosters`). Said on screen rather than assumed.
-  const settled = round !== null && round.gameweek < (await footballNow()).gameweek;
+  //
+  // Asked of the round on screen, never of whether the URL carried a gameweek:
+  // arriving from the live board leaves `round` null, and a finished round is no
+  // less finished for having been reached without a query string.
+  const settled = state !== null && state !== "live";
 
   const rostered = new Map(squads.period.teams.map((team) => [team.teamId, team]));
   const named = rostered.get(teamId);
@@ -94,8 +100,6 @@ export default async function HeadToHeadPage({
   const { scores, refused } = await liveScores(period);
   const clubs = clubById(squads.snapshot);
   const opposition = oppositionByClub(squads.snapshot);
-  const state = roundState(squads.snapshot);
-
   /** Whether a side's eleven is going on screen at all. Asked before the fetch
    *  below, because the answer decides whether that fetch is worth making. */
   const shows = (team: LeagueTeam) =>

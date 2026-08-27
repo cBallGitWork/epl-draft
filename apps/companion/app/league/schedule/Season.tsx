@@ -33,7 +33,7 @@ export default function Season({
             <TeamBadge team={row.opponent.team} url={row.opponent.team === null ? undefined : badges.get(row.opponent.team.teamId)} />
 
             <span className="flex min-w-0 flex-1 flex-col">
-              <Opponent opponent={row.opponent} />
+              <Opponent opponent={row.opponent} gameweek={row.round.gameweek} />
               <span className="truncate text-2xs text-faint">
                 {row.tie.round === null
                   ? row.round.deadline === null
@@ -80,7 +80,16 @@ function Score({ row }: { row: SeasonRow }) {
   );
 }
 
-function Opponent({ opponent }: { opponent: SeasonRow["opponent"] }) {
+function Opponent({
+  opponent,
+  gameweek,
+}: {
+  opponent: SeasonRow["opponent"];
+  /** The round this row is about. Carried into the squad link so a tap on a
+   *  March fixture opens March's squad, not this week's — the same reason
+   *  `Tie` carries it, and this view was missed when that one was fixed. */
+  gameweek: number;
+}) {
   const name = (
     <>
       <span className="text-2xs font-normal uppercase tracking-widest text-faint">v </span>
@@ -92,7 +101,7 @@ function Opponent({ opponent }: { opponent: SeasonRow["opponent"] }) {
     <span className="truncate text-sm italic text-faint">{name}</span>
   ) : (
     <Link
-      href={`/squad/${opponent.team.teamId}`}
+      href={`/squad/${opponent.team.teamId}?gw=${gameweek}`}
       className="truncate text-sm font-semibold hover:underline"
     >
       {name}
