@@ -173,27 +173,32 @@ export function fetchPoolStats(
   }) as Promise<RawPoolStats>;
 }
 
-/** One team's squad with a season's numbers against every player on it.
+/** One team's squad with a SEASON's numbers against every player on it.
  *
  *  Public, and the read that made a scoring engine unnecessary: the FPTS view
  *  breaks each total into the league's own categories, and they sum to it
  *  exactly. Refuses with a `WARNING` until a league has at least one team, which
- *  is the state the real league is in until 10 Oct. */
+ *  is the state the real league is in until 10 Oct.
+ *
+ *  **It takes no period, and the reason is a correction.** This used to accept
+ *  one, on a docblock claiming Fantrax honoured it — `displayedPeriod` and
+ *  `periodOppnentTeamIds` (their typo) do change to match, which is what that
+ *  probe saw. The POINTS do not: periods 1, 2 and 3 answer byte-identical
+ *  numbers. So the parameter moved the opponent column and nothing else, while
+ *  a card headed "This period" showed a running season total. Correcting the
+ *  comment would have left the parameter there to be used again; the period
+ *  question belongs to `fetchLiveScoring`, which genuinely answers it.
+ *
+ *  And these numbers price a man at his `defaultPosId`, not at the roster slot
+ *  his manager filed him in, which is a second reason no lineup reads them. */
 export function fetchTeamStats(
   leagueId: string,
   teamId: string,
   season?: string,
-  /** Which of the 38 periods to price. Honoured and echoed back as
-   *  `displayedPeriod`, with `periodOppnentTeamIds` (their typo) changing to
-   *  match — probed live 19 Aug against periods 1 and 3. Omitted, Fantrax picks
-   *  the current one, which is right for a season table and wrong for a board
-   *  showing a particular week. */
-  period?: number,
 ): Promise<RawStatTables> {
   return fxpaRead(leagueId, "getTeamRosterInfo", {
     teamId,
     view: "FPTS",
     ...(season ? { seasonOrProjection: season } : {}),
-    ...(period === undefined ? {} : { period: String(period) }),
   }) as Promise<RawStatTables>;
 }

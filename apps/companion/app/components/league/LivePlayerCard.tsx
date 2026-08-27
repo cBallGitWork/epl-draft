@@ -207,7 +207,14 @@ function Breakdown({
 
       {breakdown.length === 0 ? (
         <p className="px-3 py-2 text-2xs text-muted">
-          Nothing has scored for him yet — his minutes have not registered either.
+          {/* A nought with no categories behind it is a man who has not played.
+              A total with none is a different claim and must not wear the same
+              sentence: Fantrax priced him, and named a category this league's
+              own scoring system does not describe, so the parts are missing
+              rather than absent. Printing the identifier instead would be worse
+              than printing nothing. */}
+          {points ? "Fantrax scored him, but did not say what for."
+            : "Nothing has scored for him yet — his minutes have not registered either."}
         </p>
       ) : (
         <ul>

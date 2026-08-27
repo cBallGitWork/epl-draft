@@ -18,9 +18,8 @@ import TeamSheet from "../../../components/league/TeamSheet";
 import LeagueShell from "../../Shell";
 import { getLeagueSquads, roundOf, teamDisplay } from "../../../squads";
 import { pollSeconds } from "../../../football";
-import { liveScores } from "../../../scoreboard";
+import { liveScores, squadLivePoints } from "../../../scoreboard";
 import { teamBadges } from "../../../badges";
-import { squadPoints } from "../../../teamStats";
 import { myTeamId } from "../../../session";
 
 // One head-to-head, at the size it deserves on a Saturday.
@@ -98,6 +97,9 @@ export default async function HeadToHeadPage({
 
   const [mine, badges] = await Promise.all([myTeamId(squads.period.teams), teamBadges()]);
   const { scores, refused } = await liveScores(period);
+  // What this league calls each scoring category. Its own vocabulary, off its
+  // own payload — the two leagues do not share one.
+  const categories = squads.info.scoringCategories;
   const clubs = clubById(squads.snapshot);
   const opposition = oppositionByClub(squads.snapshot);
   /** Whether a side's eleven is going on screen at all. Asked before the fetch
@@ -106,20 +108,20 @@ export default async function HeadToHeadPage({
     rostered.get(team.teamId) !== undefined &&
     teamDisplay(squads, team.teamId === mine).show === "lineup";
 
-  // What our league scores each player this period, from Fantrax, one read per
-  // side. `getTeamRosterInfo` honours `period` — probed 19 Aug — so this is the
-  // week on screen rather than whatever week Fantrax is currently pointing at.
-  // A refusal costs the numbers and nothing else: the strip falls back to
-  // minutes rather than printing noughts nobody earned.
+  // What our league scores each player this period, from the same live payload
+  // the scoreboard above is read from — so the eleven adds up to the header over
+  // it. `getTeamRosterInfo` cannot do that twice over: its `period` is inert for
+  // points, so it answered a season total under a card headed "This period", and
+  // it prices a man at his default position rather than at the slot his manager
+  // filed him in. Both were invisible while the season was one gameweek old.
   //
-  // Only for a side whose eleven is actually being shown. These numbers are read
-  // nowhere else, so a withheld side was fetching a team's whole season to throw
-  // it away — and on this page's own main use, "who am I playing this week" read
-  // on a Tuesday, exactly one side is withheld. A signed-out reader withholds
-  // both, which was two wasted requests per cache window.
+  // Costs no request at all now — one `getLiveScoringStats` already fetched for
+  // the scoreboard, mapped a second time — where this used to be one
+  // `getTeamRosterInfo` per side. Only asked for a side whose eleven is on
+  // screen, because these keys are the eleven.
   const [yours, theirs] = await Promise.all([
-    shows(pairing.team) ? squadPoints(pairing.team.teamId, period) : null,
-    shows(pairing.opponent) ? squadPoints(pairing.opponent.teamId, period) : null,
+    shows(pairing.team) ? squadLivePoints(period, pairing.team.teamId, categories) : null,
+    shows(pairing.opponent) ? squadLivePoints(period, pairing.opponent.teamId, categories) : null,
   ]);
   const scored = new Map([
     [pairing.team.teamId, yours],
@@ -135,7 +137,7 @@ export default async function HeadToHeadPage({
     // one of the two is.
     const display = teamDisplay(squads, mineHere);
     const shown = roster !== undefined && display.show === "lineup";
-    const season = scored.get(team.teamId) ?? null;
+    const priced = scored.get(team.teamId) ?? null;
 
     const withheld = (
       <Withheld team={team} known={roster !== undefined} because={display} period={period} />
@@ -149,15 +151,14 @@ export default async function HeadToHeadPage({
     // the gate has already opened his eleven.
     const sheet = (mode: "pitch" | "list") => {
       if (!shown) return withheld;
-      const points = season?.points ?? null;
+      const points = priced?.points ?? null;
       const { rows, bench } = lineupDetail(roster, clubs, opposition, points);
       return (
         <TeamSheet
           rows={rows}
           bench={bench}
           lines={squadDetail(squadUnarranged(roster), clubs, opposition, points)}
-          breakdown={season?.breakdown ?? {}}
-          projected={season?.projected ?? false}
+          breakdown={priced?.breakdown ?? {}}
           mode={mode}
         />
       );

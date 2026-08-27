@@ -1,0 +1,324 @@
+{
+  "scoringCategorySettings": [
+    {
+      "group": {
+        "code": "SOCCER_GOALIE",
+        "name": "Goalkeeper",
+        "id": "5020",
+        "shortName": "G"
+      },
+      "configs": [
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_ASSISTS",
+            "name": "Assists (Official)",
+            "id": "6000",
+            "shortName": "A"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS",
+            "name": "Goals",
+            "id": "6090",
+            "shortName": "G"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS_ON_OWN_NET",
+            "name": "Own Goals",
+            "id": "6105",
+            "shortName": "OG"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS_AGAINST",
+            "name": "Goals Against",
+            "id": "6112",
+            "shortName": "GA"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_MINUTES_PLAYED",
+            "name": "Minutes Played",
+            "id": "6120",
+            "shortName": "Min"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_PENALTY_KICK_SAVES",
+            "name": "Penalty Kick Saves",
+            "id": "6170",
+            "shortName": "PKS"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_RED_CARDS",
+            "name": "Red Cards",
+            "id": "6190",
+            "shortName": "RC"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_SAVES",
+            "name": "Saves",
+            "id": "6200",
+            "shortName": "Sv"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+            "name": "Clean Sheets On Field",
+            "id": "6249",
+            "shortName": "CS"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_YELLOW_CARDS",
+            "name": "Yellow Cards",
+            "id": "6280",
+            "shortName": "YC"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_ASSISTS_FANTASY",
+            "name": "Assists (Fantasy)",
+            "id": "6283",
+            "shortName": "AF"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
+            "name": "Penalty Kicks Missed",
+            "id": "6332",
+            "shortName": "PKM"
+          }
+        }
+      ]
+    },
+    {
+      "group": {
+        "code": "SOCCER_NON_GOALIE",
+        "name": "Outfielder",
+        "id": "5010",
+        "shortName": "OF"
+      },
+      "configs": [
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_ASSISTS",
+            "name": "Assists (Official)",
+            "id": "6000",
+            "shortName": "A"
+          }
+        },
+        {
+          "position": {
+            "id": "701",
+            "shortName": "F"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS",
+            "name": "Goals",
+            "id": "6090",
+            "shortName": "G"
+          }
+        },
+        {
+          "position": {
+            "id": "702",
+            "shortName": "M"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS",
+            "name": "Goals",
+            "id": "6090",
+            "shortName": "G"
+          }
+        },
+        {
+          "position": {
+            "id": "703",
+            "shortName": "D"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS",
+            "name": "Goals",
+            "id": "6090",
+            "shortName": "G"
+          }
+        },
+        {
+          "position": {
+            "id": "703",
+            "shortName": "D"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS_AGAINST_OUTFIELDERS",
+            "name": "Goals Against Outfielders ",
+            "id": "6101",
+            "shortName": "GAO"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS_ON_OWN_NET",
+            "name": "Own Goals",
+            "id": "6105",
+            "shortName": "OG"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_MINUTES_PLAYED",
+            "name": "Minutes Played",
+            "id": "6120",
+            "shortName": "Min"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_RED_CARDS",
+            "name": "Red Cards",
+            "id": "6190",
+            "shortName": "RC"
+          }
+        },
+        {
+          "position": {
+            "id": "702",
+            "shortName": "M"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+            "name": "Clean Sheets On Field",
+            "id": "6249",
+            "shortName": "CS"
+          }
+        },
+        {
+          "position": {
+            "id": "703",
+            "shortName": "D"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+            "name": "Clean Sheets On Field",
+            "id": "6249",
+            "shortName": "CS"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_YELLOW_CARDS",
+            "name": "Yellow Cards",
+            "id": "6280",
+            "shortName": "YC"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_ASSISTS_FANTASY",
+            "name": "Assists (Fantasy)",
+            "id": "6283",
+            "shortName": "AF"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
+            "name": "Penalty Kicks Missed",
+            "id": "6332",
+            "shortName": "PKM"
+          }
+        }
+      ]
+    }
+  ]
+}

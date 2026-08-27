@@ -25,13 +25,11 @@ export default function Sheet({
   bench,
   lines,
   breakdown,
-  projected,
 }: {
   rows: SquadDetailLine[];
   bench: SquadPlayerDetail[];
   lines: SquadDetailLine[];
   breakdown: Record<string, BreakdownLine[]>;
-  projected: boolean;
 }) {
   const [view, setView] = useState<View>("pitch");
   const players = lines.reduce((total, line) => total + line.players.length, 0);
@@ -50,7 +48,6 @@ export default function Sheet({
         bench={bench}
         lines={lines}
         breakdown={breakdown}
-        projected={projected}
         mode={view}
       />
     </div>

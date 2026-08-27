@@ -1,13 +1,18 @@
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
+  type BreakdownLine,
   type FootballSnapshot,
+  type LivePlayerPoints,
   type LiveTeamScore,
   type PendingCleanSheets,
   type RosterDisplay,
   type RosteredTeam,
+  type ScoringCategory,
   type ScoringRules,
   fetchLiveScoring,
+  liveBreakdown,
+  mapLivePlayerPoints,
   mapLiveScores,
   pendingCleanSheets,
 } from "@epl/core";
@@ -31,10 +36,20 @@ import { orRefusal, tell } from "./refusals";
  *  Fantrax's points while showing none of them is the confident wrong answer
  *  principle 4 forbids. */
 const readScores = leagueCache("live-scores",
-  async (period: number): Promise<{ scores: [string, LiveTeamScore][]; refused: string | null }> => {
+  async (period: number): Promise<{
+    scores: [string, LiveTeamScore][];
+    /** Per team, the men Fantrax has priced this period. From the same payload
+     *  as the totals above, mapped a second time rather than fetched again. */
+    players: [string, LivePlayerPoints[]][];
+    refused: string | null;
+  }> => {
     const raw = await orRefusal(fetchLiveScoring(FANTRAX_LEAGUE_ID, period));
-    if (raw instanceof FantraxError) return { scores: [], refused: tell(raw) };
-    return { scores: mapLiveScores(raw).map((score) => [score.teamId, score]), refused: null };
+    if (raw instanceof FantraxError) return { scores: [], players: [], refused: tell(raw) };
+    return {
+      scores: mapLiveScores(raw).map((score) => [score.teamId, score]),
+      players: mapLivePlayerPoints(raw).map((squad) => [squad.teamId, squad.players]),
+      refused: null,
+    };
   },
 );
 
@@ -47,6 +62,39 @@ export async function liveScores(
   // out here.
   const { scores, refused } = await readScores(period);
   return { scores: new Map(scores), refused };
+}
+
+/** One squad's points this period, priced at the slot each man is filling.
+ *
+ *  **Filtered to one team out here, never inside the cache.** The cached read is
+ *  the whole league's and is keyed only by league and period — nothing about who
+ *  is asking may cross into it, which is the rule `leagueCache` exists to keep.
+ *
+ *  **And it is only ever called for a side whose eleven is already on screen.**
+ *  These keys are the eleven: a man priced here is a man in the lineup, which is
+ *  the exact fact the gate withholds before a deadline. So this is asked behind
+ *  the gate and never in front of it, on the same reasoning as `pendingByTeam`
+ *  below.
+ *
+ *  Three answers, kept apart: null when Fantrax refused, so the column vanishes
+ *  and the page's own outage line explains it; an empty read for a team it has
+ *  priced nobody in, which is every dash; and the numbers otherwise. A man with
+ *  no entry is absent rather than nought — he has not played. */
+export async function squadLivePoints(
+  period: number,
+  teamId: string,
+  categories: Record<string, ScoringCategory>,
+): Promise<{ points: Map<string, number | null>; breakdown: Record<string, BreakdownLine[]> } | null> {
+  const { players, refused } = await readScores(period);
+  if (refused !== null) return null;
+
+  const squad = players.find(([id]) => id === teamId)?.[1] ?? [];
+  return {
+    points: new Map<string, number | null>(squad.map((player) => [player.fantraxId, player.points])),
+    breakdown: Object.fromEntries(
+      squad.map((player) => [player.fantraxId, liveBreakdown(player.categories, categories)]),
+    ),
+  };
 }
 
 /** The clean sheets Fantrax has not credited yet, per team.

@@ -4,6 +4,9 @@
 
 export type {
   LeagueInfo,
+  LivePlayerCategory,
+  LivePlayerPoints,
+  LiveSquadPoints,
   LiveTeamScore,
   LeaguePeriod,
   LeaguePlayer,
@@ -19,7 +22,7 @@ export type {
 
 export type { PoolStatRow, StatColumn, StatSeason, TeamStats } from "./stats";
 
-export { breakdownOf, pointsBreakdown } from "./breakdown";
+export { breakdownOf, liveBreakdown } from "./breakdown";
 export type { BreakdownLine } from "./breakdown";
 
 export { captureStaleness } from "./staleness";
@@ -63,8 +66,8 @@ export {
 export type { CompetitionTie, TieSide } from "./competitions";
 
 export { FantraxError } from "./fantrax/errors";
-export type { ScoringRules } from "./scoring";
-export { mapLiveScores } from "./fantrax/livescoring";
+export type { ScoringCategory, ScoringRules } from "./scoring";
+export { mapLivePlayerPoints, mapLiveScores } from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel } from "./fantrax/profile";

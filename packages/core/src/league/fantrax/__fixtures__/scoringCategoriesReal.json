@@ -1,0 +1,384 @@
+{
+  "scoringCategorySettings": [
+    {
+      "group": {
+        "code": "SOCCER_GOALIE",
+        "name": "Goalkeeper",
+        "id": "5020",
+        "shortName": "G"
+      },
+      "configs": [
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GAMES_STARTED",
+            "name": "Games Started",
+            "id": "6070",
+            "shortName": "GS"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS",
+            "name": "Goals",
+            "id": "6090",
+            "shortName": "G"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS_ON_OWN_NET",
+            "name": "Own Goals",
+            "id": "6105",
+            "shortName": "OG"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS_AGAINST",
+            "name": "Goals Against",
+            "id": "6112",
+            "shortName": "GA"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_PENALTY_KICK_SAVES",
+            "name": "Penalty Kick Saves",
+            "id": "6170",
+            "shortName": "PKS"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_RED_CARDS",
+            "name": "Red Cards",
+            "id": "6190",
+            "shortName": "RC"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+            "name": "Clean Sheets On Field",
+            "id": "6249",
+            "shortName": "CS"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_SUBSTITUTIONS_ON",
+            "name": "Substitutions On",
+            "id": "6253",
+            "shortName": "SBON"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_YELLOW_CARDS",
+            "name": "Yellow Cards",
+            "id": "6280",
+            "shortName": "YC"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
+            "name": "Penalty Kicks Missed",
+            "id": "6332",
+            "shortName": "PKM"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_ASSISTS_TOTAL",
+            "name": "Assists (Total)",
+            "id": "6362",
+            "shortName": "AT"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_KEEPER_POINTS",
+            "name": "Keeper Points",
+            "id": "6689",
+            "shortName": "GKP"
+          }
+        }
+      ]
+    },
+    {
+      "group": {
+        "code": "SOCCER_NON_GOALIE",
+        "name": "Outfielder",
+        "id": "5010",
+        "shortName": "OF"
+      },
+      "configs": [
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_ASSISTS_ON_SHOTS",
+            "name": "Key Passes (Assists on Shots)",
+            "id": "6002",
+            "shortName": "KP"
+          }
+        },
+        {
+          "position": {
+            "id": "703",
+            "shortName": "D"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_CLEARANCES_ATTEMPTED",
+            "name": "Clearances Attempted",
+            "id": "6014",
+            "shortName": "CLRA"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GAMES_STARTED",
+            "name": "Games Started",
+            "id": "6070",
+            "shortName": "GS"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS",
+            "name": "Goals",
+            "id": "6090",
+            "shortName": "G"
+          }
+        },
+        {
+          "position": {
+            "id": "701",
+            "shortName": "F"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS",
+            "name": "Goals",
+            "id": "6090",
+            "shortName": "G"
+          }
+        },
+        {
+          "position": {
+            "id": "702",
+            "shortName": "M"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS",
+            "name": "Goals",
+            "id": "6090",
+            "shortName": "G"
+          }
+        },
+        {
+          "position": {
+            "id": "703",
+            "shortName": "D"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS",
+            "name": "Goals",
+            "id": "6090",
+            "shortName": "G"
+          }
+        },
+        {
+          "position": {
+            "id": "703",
+            "shortName": "D"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS_AGAINST_OUTFIELDERS",
+            "name": "Goals Against Outfielders ",
+            "id": "6101",
+            "shortName": "GAO"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_GOALS_ON_OWN_NET",
+            "name": "Own Goals",
+            "id": "6105",
+            "shortName": "OG"
+          }
+        },
+        {
+          "position": {
+            "id": "702",
+            "shortName": "M"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_MIDFIELDER_POINTS",
+            "name": "Midfielder Points",
+            "id": "6181",
+            "shortName": "MP"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_RED_CARDS",
+            "name": "Red Cards",
+            "id": "6190",
+            "shortName": "RC"
+          }
+        },
+        {
+          "position": {
+            "id": "702",
+            "shortName": "M"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+            "name": "Clean Sheets On Field",
+            "id": "6249",
+            "shortName": "CS"
+          }
+        },
+        {
+          "position": {
+            "id": "703",
+            "shortName": "D"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_SHUTOUTS_ON_FIELD",
+            "name": "Clean Sheets On Field",
+            "id": "6249",
+            "shortName": "CS"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_SUBSTITUTIONS_ON",
+            "name": "Substitutions On",
+            "id": "6253",
+            "shortName": "SBON"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_YELLOW_CARDS",
+            "name": "Yellow Cards",
+            "id": "6280",
+            "shortName": "YC"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_PENALTY_KICKS_MISSED",
+            "name": "Penalty Kicks Missed",
+            "id": "6332",
+            "shortName": "PKM"
+          }
+        },
+        {
+          "position": {
+            "id": "-1",
+            "shortName": "Default"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_ASSISTS_TOTAL",
+            "name": "Assists (Total)",
+            "id": "6362",
+            "shortName": "AT"
+          }
+        },
+        {
+          "position": {
+            "id": "703",
+            "shortName": "D"
+          },
+          "scoringCategory": {
+            "code": "INDIVIDUAL_DEFENSIVE_POINTS",
+            "name": "Defensive Points",
+            "id": "6696",
+            "shortName": "DFP"
+          }
+        }
+      ]
+    }
+  ]
+}

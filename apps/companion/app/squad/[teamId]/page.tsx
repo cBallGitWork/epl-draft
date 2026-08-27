@@ -17,6 +17,7 @@ import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
 import { pollSeconds } from "../../football";
 import { getLeagueSquads, roundOf, teamDisplay } from "../../squads";
+import { squadLivePoints } from "../../scoreboard";
 import { squadPoints } from "../../teamStats";
 import { myTeamId } from "../../session";
 
@@ -84,14 +85,34 @@ export default async function TeamPage({
   const planning = mine && display.show === "lineup" && squads.info !== null ? squads.info : null;
   const squadIds = new Set(team.players.map((p) => p.slot.fantraxId));
 
-  // What our league scores each of them this period. Both views want it now —
-  // the board as a column, the pitch as the number under each face — so it is
-  // one read rather than one per view. A refusal costs the numbers and nothing
-  // else. Joining the squad to its clubs and fixtures happens here too, on the
+  // What our league scores each of them, and the two branches below read it from
+  // different places on purpose.
+  //
+  // With the gate OPEN the numbers come off the live scoreboard, priced at the
+  // slot each man is filling and scoped to this period — the only per-player
+  // figure Fantrax publishes that agrees with the total on their own board.
+  //
+  // With the gate CLOSED they cannot: that payload is keyed by the eleven, so
+  // reading it here would rebuild the arrangement this branch exists to
+  // withhold. The season table names all fifteen and says nothing about how they
+  // are arranged, which is exactly what a withheld squad wants — and it is a
+  // season total, which is why it is still labelled as one.
+  //
+  // Joining the squad to its clubs and fixtures happens here either way, on the
   // server: it is pure and tested in core, and doing it in the browser would
   // mean shipping every club and every fixture in the round for fifteen lookups.
-  const season = await squadPoints(teamId, squads.period.period ?? undefined);
-  const points = season?.points ?? null;
+  // One value rather than a period beside a flag, for the same reason `planning`
+  // above is one: there is then no arrangement of the two that type-checks and
+  // still asks the live scoreboard for a period nobody named.
+  const priced =
+    display.show === "lineup" && squads.period.period !== null && squads.info !== null
+      ? { period: squads.period.period, categories: squads.info.scoringCategories }
+      : null;
+  const live = priced === null
+    ? null
+    : await squadLivePoints(priced.period, teamId, priced.categories);
+  const season = priced === null ? await squadPoints(teamId) : null;
+  const points = (live?.points ?? season?.points) ?? null;
   const board =
     display.show === "squad"
       ? {
@@ -167,8 +188,7 @@ export default async function TeamPage({
         <Sheet
           {...lineupDetail(team, clubs, opposition, points)}
           lines={squadDetail(squadUnarranged(team), clubs, opposition, points)}
-          breakdown={season?.breakdown ?? {}}
-          projected={season?.projected ?? false}
+          breakdown={live?.breakdown ?? {}}
         />
       )}
     </div>

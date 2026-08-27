@@ -1,0 +1,147 @@
+{
+  "allEventsFinished": false,
+  "statsPerTeam": {
+    "allTeamsStats": {
+      "8enbgqo5msgb375j": {
+        "ACTIVE": {
+          "projectedTotalsMap2": {},
+          "calculatedProjectedTotalsMap": {
+            "05g2o": 3.27,
+            "0646f": 3.13,
+            "05o4b": 2.62,
+            "03rxs": 3.01,
+            "05nzu": 4.72,
+            "061vq": 4.27,
+            "05l8q": 3.73
+          },
+          "statsMap": {
+            "_5010": {
+              "object2": [],
+              "object1": 0
+            },
+            "_5020": {
+              "object2": [],
+              "object1": 0
+            }
+          },
+          "projectedTotalsMap": {
+            "05g2o": 3.27,
+            "0646f": 3.13,
+            "05o4b": 2.62,
+            "03rxs": 3.01,
+            "05nzu": 4.72,
+            "061vq": 4.27,
+            "05l8q": 3.73
+          },
+          "playerGameInfo": [
+            0,
+            0,
+            11,
+            0,
+            990
+          ],
+          "gameStatusMap": {
+            "05g2o": "BHA~1788094800000|06m5s|1",
+            "0646f": "NOT~1788003000000|06m5w|1",
+            "05o4b": "ARS~1788202800000|06m5q|1",
+            "0703c": "FUL~1788094800000|06m5y|1",
+            "03rxs": "BRF~1788094800000|06m5v|1",
+            "05nzu": "@AVL~1788202800000|06m5q|1",
+            "061vq": "@CRY~1787943600000|06m5u|1",
+            "068ym": "BHA~1788094800000|06m5s|1",
+            "05ylj": "@AVL~1788202800000|06m5q|1",
+            "02lz0": "ARS~1788202800000|06m5q|1",
+            "05l8q": "BHA~1788094800000|06m5s|1"
+          },
+          "totalFpts2": 0,
+          "statsMap2": {},
+          "totalFpts": 0,
+          "remainingEventPercent": {
+            "05g2o": 1,
+            "0646f": 1,
+            "05o4b": 1,
+            "03rxs": 1,
+            "0703c": 1,
+            "05nzu": 1,
+            "068ym": 1,
+            "061vq": 1,
+            "02lz0": 1,
+            "05ylj": 1,
+            "05l8q": 1
+          }
+        }
+      },
+      "sezrgvl2mshcpazf": {
+        "ACTIVE": {
+          "projectedTotalsMap2": {},
+          "calculatedProjectedTotalsMap": {
+            "06nu7": 4.89,
+            "068y0": 3.35,
+            "04abn": 3.29,
+            "06jgi": 2.74,
+            "072wq": 2.99,
+            "03yww": 2.17,
+            "038ze": 3
+          },
+          "statsMap": {
+            "_5010": {
+              "object2": [],
+              "object1": 0
+            },
+            "_5020": {
+              "object2": [],
+              "object1": 0
+            }
+          },
+          "projectedTotalsMap": {
+            "06nu7": 4.89,
+            "068y0": 3.35,
+            "04abn": 3.29,
+            "06jgi": 2.74,
+            "072wq": 2.99,
+            "03yww": 2.17,
+            "038ze": 3
+          },
+          "playerGameInfo": [
+            0,
+            0,
+            11,
+            0,
+            990
+          ],
+          "gameStatusMap": {
+            "04tsb": "@AVL~1788202800000|06m5q|1",
+            "04abn": "@TOT~1788021000000|06m5z|1",
+            "068y0": "@CRY~1787943600000|06m5u|1",
+            "06nu7": "@AVL~1788202800000|06m5q|1",
+            "06dmj": "@AVL~1788202800000|06m5q|1",
+            "06jgi": "MCI~1787943600000|06m5u|1",
+            "03yww": "MCI~1787943600000|06m5u|1",
+            "05748": "MCI~1787943600000|06m5u|1",
+            "072wq": "EVE~1788012000000|06m5r|1",
+            "038ze": "@SUN~1788094800000|06m5y|1",
+            "062ci": "@CHE~1788094800000|06m5s|1"
+          },
+          "totalFpts2": 0,
+          "statsMap2": {},
+          "totalFpts": 0,
+          "remainingEventPercent": {
+            "04tsb": 1,
+            "06nu7": 1,
+            "068y0": 1,
+            "04abn": 1,
+            "06dmj": 1,
+            "06jgi": 1,
+            "072wq": 1,
+            "05748": 1,
+            "03yww": 1,
+            "038ze": 1,
+            "062ci": 1
+          }
+        }
+      }
+    },
+    "delta": false,
+    "refresh": false
+  }
+}

@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { categoryPoints } from "../scoring";
+import realCategories from "./__fixtures__/scoringCategoriesReal.json";
+import rehearsalCategories from "./__fixtures__/scoringCategoriesRehearsal.json";
 import recorded from "./__fixtures__/scoringSystem.json";
-import { mapScoringRules } from "./scoring";
+import { mapScoringRules, mapScoringCategories} from "./scoring";
 import type { RawScoringSystem } from "./scoring";
 
 const rules = mapScoringRules(recorded as RawScoringSystem);
@@ -63,5 +65,61 @@ describe("mapScoringRules", () => {
   it("returns nothing at all when Fantrax describes no scoring", () => {
     expect(mapScoringRules(undefined)).toBeNull();
     expect(mapScoringRules({})).toBeNull();
+  });
+});
+
+describe("mapScoringCategories", () => {
+  // Both leagues' real `scoringCategorySettings`, recorded 27 Aug 2026. Two
+  // fixtures because they answer different vocabularies, and a mapper written
+  // against one of them proves nothing about the other.
+  const rehearsal = mapScoringCategories(rehearsalCategories);
+  const real = mapScoringCategories(realCategories);
+
+  it("names a category the way getLiveScoringStats keys it", () => {
+    expect(rehearsal["5010#6090"]).toEqual({ code: "G", name: "Goals" });
+    expect(rehearsal["5020#6200"]).toEqual({ code: "Sv", name: "Saves" });
+  });
+
+  it("keys on group and category, never on the position", () => {
+    // The one that matters. `statsMap.object2` always says `#-1`, and this
+    // league lists outfield Goals only under 701/702/703 and outfield Clean
+    // Sheets only under 702/703. Keying on the whole `scipId` would resolve
+    // Minutes and Assists and lose exactly these two — which on screen looks
+    // like a man who did not score rather than like a bug.
+    const outfield = rehearsalCategories.scoringCategorySettings.find((g) => g.group.id === "5010");
+    const positions = (id: string) =>
+      (outfield?.configs ?? []).filter((c) => c.scoringCategory.id === id).map((c) => c.position.id);
+
+    expect(positions("6090")).toEqual(["701", "702", "703"]);
+    expect(positions("6249")).toEqual(["702", "703"]);
+    expect(rehearsal["5010#6090"]?.code).toBe("G");
+    expect(rehearsal["5010#6249"]?.code).toBe("CS");
+  });
+
+  it("reads the real league's own vocabulary, which is not the rehearsal one", () => {
+    expect(real["5010#6181"]).toEqual({ code: "MP", name: "Midfielder Points" });
+    expect(real["5010#6002"]).toEqual({
+      code: "KP",
+      name: "Key Passes (Assists on Shots)",
+    });
+    expect(real["5020#6689"]?.code).toBe("GKP");
+    // Categories the rehearsal league scores and ours does not, and the reverse.
+    expect(real["5010#6120"]).toBeUndefined();
+    expect(rehearsal["5010#6181"]).toBeUndefined();
+  });
+
+  it("names nothing for a league that described no scoring", () => {
+    expect(mapScoringCategories(undefined)).toEqual({});
+    expect(mapScoringCategories({})).toEqual({});
+  });
+
+  it("leaves a category it cannot key out, rather than inventing one", () => {
+    const named = mapScoringCategories({
+      scoringCategorySettings: [
+        { group: { id: "5010" }, configs: [{ scoringCategory: { name: "Nameless" } }] },
+        { group: {}, configs: [{ scoringCategory: { id: "6090", shortName: "G" } }] },
+      ],
+    });
+    expect(named).toEqual({});
   });
 });

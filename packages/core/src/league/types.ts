@@ -1,4 +1,4 @@
-import type { ScoringRules } from "./scoring";
+import type { ScoringCategory, ScoringRules } from "./scoring";
 
 // The LEAGUE layer: our fantasy competition, sourced from Fantrax. Where the
 // football layer is the real Premier League and is permanent, this layer is an
@@ -95,6 +95,45 @@ export interface LiveTeamScore {
   /** Active players whose fixture has not finished, or null when unknown. Names
    *  nobody, so it is publishable even while the lineup gate is closed. */
   toPlay: number | null;
+}
+
+/** What one player scored in one period, priced at the ROSTER SLOT his manager
+ *  chose — the only per-player number that agrees with the team total beside it.
+ *
+ *  Fantrax's stat tables price the same man at his default position instead, and
+ *  48 of the pool's 622 players are eligible at two. Because the deeper slot pays
+ *  strictly more, an optimal lineup always files those men off their default, so
+ *  the disagreement is the normal case for the players who matter rather than an
+ *  edge one. */
+export interface LivePlayerPoints {
+  fantraxId: string;
+  /** His total. Nought is a real nought; a man with no football behind him is
+   *  absent from the list instead. */
+  points: number;
+  categories: LivePlayerCategory[];
+}
+
+/** One category's contribution, in Fantrax's own identifiers.
+ *
+ *  Unnamed on purpose: what these ids are called is a league setting, published
+ *  by `getLeagueInfo`, and the two leagues answer different vocabularies. The
+ *  adapter that reads the scoring system names them; this one only carries them.
+ */
+export interface LivePlayerCategory {
+  /** `"{groupId}#{categoryId}"`. */
+  category: string;
+  /** The count behind the points — 90 minutes, 1 goal. Null when Fantrax sent
+   *  no number for it. */
+  value: number | null;
+  /** Points, theirs. Signed: cards and goals against arrive negative. */
+  points: number;
+}
+
+/** One squad's priced players for one period. Entries and not a Map: this
+ *  crosses a cache boundary, and a Map does not survive serialisation. */
+export interface LiveSquadPoints {
+  teamId: string;
+  players: LivePlayerPoints[];
 }
 
 /** One player in one team's roster for one period. */
@@ -210,4 +249,8 @@ export interface LeagueInfo {
    *  Present so one view can preview the clean sheets their live feed withholds
    *  until full time; the scores themselves are always theirs. */
   scoring: ScoringRules | null;
+  /** What each scoring category is called, keyed as `getLiveScoringStats` keys
+   *  it — group and category, never the position. Empty when Fantrax described
+   *  no scoring, which shows as no breakdown rather than as a row of ids. */
+  scoringCategories: Record<string, ScoringCategory>;
 }

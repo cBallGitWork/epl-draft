@@ -1,4 +1,4 @@
-import type { CategoryTable, ScoringRules } from "../scoring";
+import type { CategoryTable, ScoringCategory, ScoringRules } from "../scoring";
 
 // Fantrax's scoring system as it arrives, and the little of it we read.
 //
@@ -21,7 +21,15 @@ export interface RawScoringSystem {
 }
 
 export interface RawScoringGroup {
-  group?: { code?: string; name?: string; shortName?: string };
+  group?: { code?: string; name?: string; shortName?: string; id?: string };
+  configs?: RawScoringConfig[];
+}
+
+/** One category priced for one position. The same category appears once per
+ *  position the league prices it for, which is why the names table collapses
+ *  them. */
+export interface RawScoringConfig {
+  scoringCategory?: { id?: string; name?: string; shortName?: string };
 }
 
 /** Fantrax's own keys for the two tables. Platform constants, interpreted in the
@@ -75,4 +83,39 @@ function flatPoints(expression: string): number | null {
 function goaliePosition(groups: RawScoringGroup[] | undefined): string | null {
   const goalie = groups?.find((group) => group.group?.code === GOALIE_GROUP_CODE);
   return goalie?.group?.shortName ?? null;
+}
+
+
+/** What each category is called, keyed as `getLiveScoringStats` keys it.
+ *
+ *  **The position segment is deliberately not in the key.** `statsMap.object2`
+ *  always says `#-1`, while this payload lists a category once per position it
+ *  prices it for — and outfield Goals and Clean Sheets have no `-1` row at all
+ *  in the rehearsal league. Keying on the whole `scipId` would resolve Minutes
+ *  and Assists and silently drop exactly the two categories a reader is looking
+ *  for, which reads as "he did not score" rather than as a bug.
+ *
+ *  Collapsed to one entry per category: the four rows Goals arrives on all name
+ *  the same thing. A Record and not a Map because this crosses a cache.
+ *
+ *  Empty rather than null for a league that described nothing. A caller with no
+ *  names shows no breakdown, which is the same thing it does for a category it
+ *  cannot find — and a raw `scipId` is never put on screen. */
+export function mapScoringCategories(
+  raw: RawScoringSystem | undefined,
+): Record<string, ScoringCategory> {
+  const names: Record<string, ScoringCategory> = {};
+  for (const group of raw?.scoringCategorySettings ?? []) {
+    const groupId = group.group?.id;
+    if (typeof groupId !== "string" || groupId === "") continue;
+    for (const config of group.configs ?? []) {
+      const category = config.scoringCategory;
+      if (typeof category?.id !== "string" || category.id === "") continue;
+      names[`${groupId}#${category.id}`] = {
+        code: category.shortName ?? category.id,
+        name: category.name ?? category.shortName ?? category.id,
+      };
+    }
+  }
+  return names;
 }

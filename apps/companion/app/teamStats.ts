@@ -6,9 +6,8 @@ import {
   fetchTeamStats,
   mapPoolStats,
   mapTeamStats,
-  pointsBreakdown,
 } from "@epl/core";
-import type { BreakdownLine, TeamStats } from "@epl/core";
+import type { TeamStats } from "@epl/core";
 import { leagueCache } from "./leagueCache";
 import { orRefusal } from "./refusals";
 
@@ -50,13 +49,9 @@ export const yearToDate = leagueCache(
  *  answering `WARNING` and Fantrax being down both mean there are no numbers to
  *  show, and both say so by not appearing. */
 export const readTeamStats = leagueCache("fantrax-team-stats",
-  async (
-    teamId: string,
-    season: string | undefined,
-    period?: number,
-  ): Promise<TeamStats | null> => {
+  async (teamId: string, season: string | undefined): Promise<TeamStats | null> => {
     try {
-      return mapTeamStats(await fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season, period));
+      return mapTeamStats(await fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season));
     } catch (error) {
       if (error instanceof FantraxError) return null;
       throw error;
@@ -71,15 +66,14 @@ export const readTeamStats = leagueCache("fantrax-team-stats",
  *  honoured — and a column headed with points that silently switches between a
  *  projection and a season total is the confident wrong answer this app exists
  *  to avoid. Null points is null, never nought: Fantrax prints a dash for a
- *  category a player has not registered. */
-export async function squadPoints(
-  teamId: string,
-  /** The period to price, when the caller is showing one. The season table on a
-   *  squad page wants whatever Fantrax's current period is; a head-to-head board
-   *  is looking at a named week and must ask for that one. */
-  period?: number,
-): Promise<SquadPoints | null> {
-  const stats = await readTeamStats(teamId, await yearToDate(), period);
+ *  category a player has not registered.
+ *
+ *  **A season total, and it takes no period, because the endpoint behind it does
+ *  not honour one** — periods 1, 2 and 3 answer byte-identical payloads. It used
+ *  to take one, which is how a card came to be headed "This period" over a
+ *  running season. The caller that needs a period reads the live scoreboard. */
+export async function squadPoints(teamId: string): Promise<SquadPoints | null> {
+  const stats = await readTeamStats(teamId, await yearToDate());
   if (stats === null) return null;
 
   return {
@@ -87,19 +81,10 @@ export async function squadPoints(
     points: new Map(
       stats.groups.flatMap((group) => group.lines.map((line) => [line.fantraxId, line.points])),
     ),
-    breakdown: Object.fromEntries(pointsBreakdown(stats)),
   };
 }
 
 export interface SquadPoints {
   projected: boolean;
   points: Map<string, number | null>;
-  /** Why each of those numbers is what it is, in the league's own categories —
-   *  the same table read once, since the FPTS view carries the total and the
-   *  parts on one row.
-   *
-   *  A plain object and not the Map the join hands back: this crosses to the
-   *  browser inside a client component's props, and a Map does not survive
-   *  serialisation. */
-  breakdown: Record<string, BreakdownLine[]>;
 }

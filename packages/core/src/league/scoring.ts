@@ -6,6 +6,16 @@
 // their numbers are what the app shows. This exists for the one thing their
 // numbers cannot say yet — see `join/cleanSheets.ts`.
 
+/** What a scoring category is called, in the league's own words. Two leagues
+ *  answer different vocabularies — ours scores Key Passes and Midfielder Points,
+ *  the rehearsal league neither — so this is read and never written down. */
+export interface ScoringCategory {
+  /** Their short label: "G", "CS", "MP". */
+  code: string;
+  /** Their name for it: "Goals", "Clean Sheets On Field". */
+  name: string;
+}
+
 /** Keepers score differently enough that Fantrax keeps two tables. */
 export interface ScoringRules {
   goalie: CategoryTable;

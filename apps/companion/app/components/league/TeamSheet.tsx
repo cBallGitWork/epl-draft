@@ -32,7 +32,6 @@ export default function TeamSheet({
   bench,
   lines,
   breakdown,
-  projected,
   mode,
 }: {
   /** The XI in its positional lines, arranged on the server — `slot.status` is
@@ -44,11 +43,15 @@ export default function TeamSheet({
   /** Each player's points broken into the league's own scoring categories,
    *  keyed by Fantrax id. Empty when Fantrax refused the table. */
   breakdown: Record<string, BreakdownLine[]>;
-  projected: boolean;
   mode: "pitch" | "list";
 }) {
   const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
 
+  // `projected` is false wherever this passes it on, and that is a fact about
+  // the source rather than a default: these numbers come off the live
+  // scoreboard, which is what Fantrax has scored this period at the slot each
+  // man is filling, and has no projection mode to be in. `SquadBoard` still
+  // takes the flag because the season table it reads really can be projecting.
   return (
     <div className="flex flex-col">
       {mode === "pitch" ? (
@@ -83,7 +86,7 @@ export default function TeamSheet({
           ) : null}
         </>
       ) : (
-        <SquadRows lines={lines} projected={projected} onOpen={setOpen} />
+        <SquadRows lines={lines} projected={false} onOpen={setOpen} />
       )}
 
       {open ? (
@@ -93,7 +96,7 @@ export default function TeamSheet({
           key={open.rostered.slot.fantraxId}
           player={open}
           breakdown={breakdown[open.rostered.slot.fantraxId] ?? []}
-          projected={projected}
+          projected={false}
           onClose={() => setOpen(null)}
         />
       ) : null}
