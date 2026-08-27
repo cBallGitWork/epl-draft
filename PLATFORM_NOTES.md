@@ -3092,6 +3092,79 @@ hours leaves a window — but its TYPE is not. One look, before 11 Sep.
   `bonus_added: true` with the round `data_checked`. Gameweek 2's window is the
   second and last easy chance this month.
 
+### Reviewing the day's own commits, and the regression it caught (27 Aug 2026)
+
+Forty candidate findings over the day's work, each handed to a separate agent
+told to refute it. **Twenty survived**, collapsing to twelve once three lenses
+that had found the same thing were merged. The refuted half is as useful: it
+included several rule-of-2/3 "abstractions" that CODE_RULES explicitly says to
+leave duplicated at two occurrences.
+
+**The one that mattered was a regression I had shipped four hours earlier.**
+
+The 4a57141 commit made every squad read ask Fantrax for the period the round in
+view is scored in, so a page would be one week's throughout. Right about the
+scores, the pairings and the headings. Wrong about the rosters, because the
+period parameter is **inert for the roster body and live for its label**:
+
+    getTeamRosters             → period 2, rosters 3183 bytes
+    getTeamRosters?period=1    → period 1, rosters 3183 bytes
+    rosters identical: true
+
+So asking for period 1 does not fetch period 1. It returns the arrangement
+sixteen managers are editing for period 2, relabelled — and a label is exactly
+what the lineup gate reads. It found period 1, whose lock passed on 21 August,
+and opened. Every rival's currently-editable eleven, published, on the default
+path with no query string.
+
+I had verified that page by hand the same evening and read the open lineup as
+period 1's history. It was this week's team sheet. **Reading a screen is not
+verification when the thing under test is which week the bytes are from.**
+
+The fix separates the two numbers rather than lying to the gate about one:
+`getTeamRosters` is asked for nothing, so the payload carries Fantrax's own open
+period and the gate judges the arrangement it is actually holding; `roundPeriod`
+carries the round in view to the six reads that genuinely want it.
+`periodAsAsked` is deleted — it compared our number against Fantrax's echo of our
+number, true by construction, protecting nothing.
+
+**The cost, which is not a loss.** A completed round's elevens are withheld once
+Fantrax rolls its period, which the captures show it doing days early — 25 August
+for a period beginning the 28th. Those elevens were never that round's. The app
+had been captioning this week's arrangement with last week's heading; withholding
+is the honest version of the same fact.
+
+#### The rest, worth keeping because they name recurring shapes
+
+- **Absence with two causes.** `statsMap` names the ACTIVE eleven, and the map was
+  joined against all fifteen — so every reserve rendered "Nothing has scored for
+  him yet — his minutes have not registered either" eleven lines above "FPL
+  records 90'". A card contradicting itself in one render, for three or four men
+  per squad per week. The sentence had collapsed four different claims.
+- **A fallback tied to the wrong condition.** `/squad` read the season table when
+  the LIVE read was absent, rather than when the branch that LABELS it a season
+  total was taken — so with `getLeagueInfo` refused, your own lineup showed
+  season totals priced at each man's default position under a card headed "This
+  period".
+- **A boolean spanning three rungs asserting the top one.** `settled` was true at
+  `bonus-settling`, `provisional` and `final`, and the banner said "Fantrax's
+  final ones" beside a `RoundWord` that withholds that word until `data_checked`.
+- **`raw.ts` disagreeing with its own recorded fixture.** `delta`/`refresh` were
+  declared at the root of `RawLiveScoring`; the wire and the fixture both put
+  them inside `statsPerTeam`. Neither noticed, because nothing reads either.
+- **Unread fields vetoing a read one.** `mapPlayoffs` required all three fields,
+  so a league stating `numPlayoffTeams` without the period bounds drew no cut —
+  two numbers nothing reads deciding the one number the table draws.
+- **A ceiling breached by the seventh copy.** `round.test.ts` had seven local
+  constructions of one `Fixture`, three pairs byte-identical, and crossed 300
+  lines adding the last. Split on the seam `round.ts` already draws in its
+  signatures — the season-shaped functions from the snapshot-shaped ones — which
+  landed both halves under the *soft* ceiling, the sign the seam was real.
+- **And the gate that skipped itself in silence.** The served-league check added
+  hours earlier simply did not run when Fantrax would not name the league, and
+  the walk reported every route clean regardless. The defect it was written to
+  catch, in the check itself.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for
