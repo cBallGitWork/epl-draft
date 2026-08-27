@@ -139,6 +139,27 @@ belong to nobody.
   deferred design judgements (trailing dim at arm's length, whether finished
   pairings sort below live ones).
 
+## 3b. 27 Aug — GW1 done, GW2 next: the between-rounds state, first look
+
+Eight commits. The full account is in PLATFORM_NOTES, 27 Aug; the headlines:
+
+- **`main` and `origin/main` had diverged and production was serving 19 Aug
+  code** — 79 unpushed commits against eight CI capture commits. Rebased (never
+  merged: `vercel.json` reads only the tip, so a merge commit would have skipped
+  the build), verified, pushed. `capture:status`' OVERDUE was a false alarm from
+  the same cause.
+- **The two calendars had drifted** and every ordinary squad read crossed them:
+  Fantrax was serving period 2 while FPL pointed at gameweek 1, so the desk read
+  "Gameweek 1" over 0–0. The period now comes from the round in view.
+- **`getLiveScoringStats` honours the period and prices the roster slot**, so the
+  eleven finally sums to its header (45 over 45) and "This period" means it.
+  Costs no request and deletes three `getTeamRosterInfo` POSTs per window.
+- **The playoff is published data** — `numPlayoffTeams: 4` — and the table had
+  been drawing the placeholder's invented top two.
+- **`/matchday` could not name the round coming up**, and the schedule opened on
+  the round just played. Both fixed; `focusGameweek` deliberately untouched.
+- Two links that asked the URL a question about the round.
+
 ## 4. ~~After the GW1 weekend — the parked refactors unlock~~ **All landed**
 
 Every one of them went in on 20 Aug, before the weekend rather than after it, and
@@ -154,9 +175,21 @@ hand-written comparisons of two possibly-missing totals, and `--pitch-band` /
 
 ## 5. 28 Aug — period 1 ends
 
-- Re-ask whether `?period=N` serves history once a period has completed.
+- ~~Re-ask whether `?period=N` serves history once a period has completed.~~
+  **Half answered 27 Aug, a day early and decisively for the part that mattered:**
+  `getTeamRosterInfo`'s period is inert for POINTS (periods 1/2/3, byte-identical
+  — only the opponent column moves), and `getLiveScoringStats` **does** honour it.
+  The app's per-period numbers now come from the latter. What is still genuinely
+  open is whether `getTeamRosters` serves a past period's ARRANGEMENT, and that
+  is only askable once period 1 has closed — 28 Aug 18:59:58Z. It sets the
+  severity of the gate finding below.
 - Check whether league scoring starts at period 1 or period 6 once the real
   league's teams join.
+- **New, and it outranks both: the lineup gate is anchored on the roster-period
+  boundary and the rule it enforces is about the lock.** 33 of 38 roster periods
+  open 10:00Z on the Friday for a Saturday lock. Period 4 (11 Sep) is the first
+  that bites, at 27 h 45 m of a rival's XI visible early; period 6 (9 Oct) is the
+  day before sixteen people arrive. Two commits, shape recorded in PLATFORM_NOTES.
 
 ## 6. By 3 Sep — prove the swap (week-4 items, confirmed unbuilt)
 

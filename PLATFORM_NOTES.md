@@ -2790,11 +2790,275 @@ that ever *iterates* that map instead of indexing it would print a phantom team.
 Recorded rather than filtered: the filter would be a guard for a caller that does
 not exist.
 
+## Between two rounds, and what the first one taught (27 Aug 2026)
+
+Gameweek 1 is over — `finished`, `data_checked`, and still `is_current`, because
+FPL holds its pointer on a finished round until the next deadline. Gameweek 2
+kicks off 28 Aug 19:00Z behind a 17:30Z FPL deadline. So the app spent four days
+in the **between-rounds** state, which it re-enters every week and which nobody
+had ever looked at. Most of what follows came from looking at it.
+
+### `main` and `origin/main` had diverged, and production was five weeks behind
+
+Not a code bug, and it outranked every code bug. Local `main` held 79 unpushed
+commits on top of `3a9c56f` (19 Aug); `origin/main` held the same base plus eight
+daily capture commits from the CI bot (20, 21, 23–27 Aug). Neither contained the
+other.
+
+Consequences, in order:
+
+- **Vercel builds `origin/main`, so production was serving 19 Aug code.** Every
+  fix the first matchday taught was undeployed — `kickedOff()`, the live dot that
+  burned for sixty-one of GW1's seventy-four hours, FPL's deadline printed under
+  the bare word "Deadline". Gameweek 2 would have kicked off on all of it.
+- **`--force` would have destroyed eight days of capture history**, which
+  `capture.yml`'s own header says cannot be recreated from anywhere.
+- **A merge would have been silently worse than a rebase.** `vercel.json`'s
+  ignore command is `git diff --quiet HEAD^ HEAD -- ':(top)' ':(exclude,top)data/snapshots'`,
+  and a merge commit's `HEAD^` is our own tip — so the diff Vercel evaluated
+  would have been the eight captures' files and nothing else, skipping the build
+  and leaving 79 commits undeployed a second time. The 22 Aug handover predicted
+  this shape as "never let a capture be the last commit in a push"; a merge is
+  the same trap wearing a different hat. **Rebase.**
+- **`npm run capture:status` reported `rehearsal: OVERDUE` and exited non-zero,
+  and the cron was innocent.** The captures existed, on origin. The watchdog
+  reads the working tree and cannot tell "captures stopped" from "you have not
+  pulled" — which was the one state it was actually in. Worth knowing before
+  anyone reacts to it by running `npm run capture`, which would have written a
+  second, conflicting `2026-08-27` directory.
+
+The rebase hit exactly one conflict: both sides captured 2026-08-22, the CI at
+05:18Z and a manual run at 11:07Z. Thirteen of the seventeen files were
+byte-identical; the difference was that ~530 players had flipped `FA` → `WW` as
+waivers opened. **Neither version held unique information** — the 23 Aug capture
+records 553 `WW` regardless — so the manual commit was dropped and the CI's
+unbroken ~05:1xZ series kept, which also preserves the only capture in the series
+that catches the flip mid-transition (15 `WW` / 532 `FA`).
+
+### The two calendars had drifted, and every ordinary squad read was crossing them
+
+The biggest on-screen defect of the day, and it was found by rendering the page
+rather than by reading the code.
+
+`getLeagueSquads` with no round asked FPL which gameweek it is and asked Fantrax
+**nothing**, taking whichever period Fantrax considered open. On 27 Aug those
+disagreed: Fantrax was already serving **period 2** while FPL still pointed at
+**gameweek 1**. So the desk read "Gameweek 1 · head-to-head" over `0 – 0` and
+`0 – 0`, because period 2 has had no football; the head-to-head board showed next
+week's opponent; and `/squad` printed "Period 2 · Gameweek 1", reporting its own
+mismatch to anyone who read the line.
+
+**There was no week where this was right.** The two calendars turn over at
+different instants by construction — FPL at its own deadline, Fantrax at the
+period's first kickoff — which is ninety minutes apart on a Friday-night round
+and a day and a half apart on the rest. The period is now derived from the round
+in view, so the whole page is one week's.
+
+A second thing fell out of it: `periodAsAsked` was true by construction whenever
+nothing was asked for, which is the read nearly everyone makes. The check that
+stops a future roster opening the gate under an open period's number was running
+only on the pages that named a gameweek. It now runs on all of them.
+
+### `getLiveScoringStats` honours the period. `getTeamRosterInfo` does not.
+
+The 22 Aug handover called this "the one I would take next", and it is settled.
+
+Probed today against the rehearsal league:
+
+| period | `allEventsFinished` | ACTIVE `totalFpts` | `statsMap` men | still to play |
+|---|---|---|---|---|
+| 1 | `true` | 31 | 8 | 0 |
+| 2 | `false` | 0 | 0 | 11 |
+
+Against `getTeamRosterInfo`, periods 1, 2 and 3 answer **byte-identical points**.
+Only the opponent column moves — `@BOU Sat 10:00AM` against `CRY 0 @EVE 2 F` —
+which is why the 19 Aug probe recorded the parameter as honoured. It is honoured
+for the fixture and inert for the number, and a card headed "This period" was
+showing a running season total for a week.
+
+`statsMap` is the fix and also fixes the other one: it is the **only per-player
+number Fantrax publishes priced at the roster slot**, so the eleven adds up to
+the header over it. Rendered proof against period 1: test3 reads **45** over
+7 + 0 + 8 + 8 + 8 + 7 + 3 + 2 + 2 = **45**, and Saka reads **8** where the season
+table pays him 6.
+
+It costs nothing — the same `getLiveScoringStats` was already fetched for the
+scoreboard — and **deletes three `getTeamRosterInfo` POSTs** per cache window.
+
+Three things about the payload that only reading it could have taught:
+
+- **Not every `statsMap` key is a man.** `_5010` and `_5020` are the outfield and
+  goalie group subtotals — the same group ids `scoringCategorySettings` uses —
+  and the two of them sum to `totalFpts` exactly, as the men do. Mapped as
+  players they are two phantoms, one carrying most of the team's score.
+- **The position segment in `scipId` is a trap.** `object2` always says `#-1`,
+  while `getLeagueInfo` lists a category once per position it prices it for.
+  Outfield Goals and Clean Sheets have **no `-1` row at all** in the rehearsal
+  league (`5010#6090` is 701/702/703; `5010#6249` is 702/703), and the real
+  league has none for `6014`, `6101`, `6181`, `6249`, `6696`. Keying a label
+  table on the whole `scipId` resolves Minutes and Assists and silently drops
+  exactly the categories a reader is looking for — which reads as "he did not
+  score", not as a bug. Key on `{groupId}#{categoryId}`.
+- **The two leagues answer different vocabularies.** Ours scores Key Passes
+  (`6002`), Midfielder Points (`6181`), Keeper Points (`6689`) and Defensive
+  Points (`6696`), and has **no Minutes category at all**; the rehearsal league
+  scores Minutes and Saves and neither of ours. A mapper tested against one
+  proves nothing about the other, so both are recorded as fixtures.
+
+**Still wrong, deliberately:** `/players` and `/players/[fantraxId]` remain
+priced at a man's default position. `statsMap` cannot help them — it is per
+period and those are season totals. `/squad/[teamId]` with the gate **closed**
+also keeps the season table, and that one is a rule rather than a gap: the keys
+of `statsMap` **are the eleven**, so reading it there would rebuild the
+arrangement that branch exists to withhold.
+
+**And one loss worth naming.** `getTeamRosterInfo`'s header carries Fantrax's own
+prose — "Clean Sheets On Field -- Awarded to a player who played at least 60
+minutes…" — and that is where this league's rules are published. `getLeagueInfo`
+carries the label alone. So the live card's tooltip is empty where the season
+table's is not. Accepted rather than keeping a request alive for a tooltip; the
+sentence still reaches a reader on the player's own page.
+
+### The playoff was published data and we were drawing an invented one
+
+`getLeagueInfo` answers, for the real league:
+
+```json
+"playoffs": { "used": true, "numPlayoffTeams": 4, "firstPlayoffPeriod": 35,
+              "lastRegularSeasonPeriod": 34, "mergePlayoffPeriods": false }
+```
+
+`raw.ts` did not mirror the field, so nothing in the code could see it, and the
+table drew its cut from `PLACEHOLDER_ROUNDS` — an invented final between first
+and second, which is a top **two**. Sixteen managers would have read the wrong
+line all season.
+
+The rehearsal league answers `{"used": false}`, so both states are live and both
+are tested. Null is an answer: a league with no playoff has no line to draw
+rather than a line at zero, and the rehearsal table correctly stopped drawing
+one.
+
+Same shape as `0e4dd6b`: a field the provider was already sending, absent from
+`raw.ts`, with a docblock explaining the workaround as though it were a
+constraint. A placeholder may stand in for a fixture nobody has settled. It may
+not stand in for a setting the provider already answered.
+
+### A cached domain object can predate a field on it
+
+Adding `scoringCategories` to `LeagueInfo` threw the page on first render, off a
+`league-info` cache entry written before the field existed. It is a dev artefact
+today and a **deploy artefact** in general: any new field on a cached object can
+be missing from an entry the previous deploy wrote. Handled where it belonged —
+a breakdown is the one thing on that card that may go missing without lying, so
+it degrades to no rows rather than throwing the page away.
+
+Worth remembering the next time a field is added to anything behind `leagueCache`.
+
+### Smaller, and both the same shape: code asking the URL about the round
+
+- **`Season.tsx` dropped the gameweek from its squad links.** `Tie.tsx` carries
+  `?gw=`; `Season.tsx` did not, so every row of a team's whole season opened this
+  week's fifteen. The 22 Aug handover records this as fixed, and it was — on one
+  of the two views. The repro was "Schedule → week 2 → tap a team", which is the
+  gameweek branch rendering `Tie`; `Season` is the team branch behind `?team=`.
+  What hid it: `Tie`'s `Side` already had its round in scope, so there the fix
+  was a query string on an existing href, while `Season`'s `Opponent` needed a
+  prop threaded — enough friction that a grep finds it and a memory of having
+  fixed it does not.
+- **The provenance line vanished without `?gw=`.** `settled` compared the URL's
+  gameweek to FPL's, so it could only be true on a page reached with one.
+  Arriving from the live board on a finished round silently withheld the line the
+  page exists to print. It asks `roundState` now.
+
+### `/matchday` could not name the round coming up
+
+`BetweenGameweeks` looked for the next kickoff on `snapshot.fixtures`, and
+`getFootballSnapshot` fetches **one round's** fixtures. With every fixture in it
+finished, "no kickoff left" read as "no football left", and the front of the app
+printed *"The next one appears here once FPL names its fixtures"* — which FPL had
+done weeks earlier — with both buttons pointing at the round just played.
+
+`nextRound(fixtures, at)` asks the season instead, off `seasonFixtures`, which is
+already cached and already warm on that path. Ordered **by kickoff and never by
+"the lowest gameweek with an unfinished match"**: FPL leaves a rearranged fixture
+in its original `event`, so the other reading answers 20 from December until a
+February replay is played.
+
+`focusGameweek` was deliberately left alone. Making it prefer `is_next` at the
+last whistle would take Monday night's results off the front page on Tuesday and
+push the finished round onto the cold snapshot cache — the one that served a
+68-minute-old "Live 45′" on 22 Aug.
+
+The schedule had the same root: `chooseRound` fell back to `gameweek >= now`, and
+with `now` pinned to a finished gameweek 1 the `>=` let it win for four days. It
+now takes FPL's round only while that round still has football left in it.
+
+### OPEN, and dated: the lineup gate is anchored on the wrong instant
+
+**The most serious thing found today, and it is not a gameweek 2 problem.**
+
+`visibility.ts` gates on `periodStarted` — `now >= period.start`, the **roster
+period boundary**. The rule the same file states at its top is about the
+**deadline**: *"Sixteen managers who can see each other's XI before the deadline
+are playing a different game from the one they agreed to."* `gazette/deadline.ts`
+already corrected exactly this belief for the *displayed* deadline — "it is not
+fifteen minutes before the period boundary, and this file used to compute it that
+way" — and `visibility.ts` never got the correction.
+
+Counted off the real league's own published calendar: **33 of 38 roster periods
+open at 06:00-0400 (10:00Z) on the Friday.** Only five open at 15:00-0400.
+
+| | roster period opens | first kickoff | our lock | gate open early by |
+|---|---|---|---|---|
+| Period 4 | Fri 11 Sep 10:00Z | Sat 12 Sep 14:00Z | 13:45Z | **27 h 45 m** |
+| Period 6 — the real league's first | Fri 9 Oct 10:00Z | Sat 10 Oct 11:30Z | 11:15Z | **25 h 15 m** |
+
+**It has not bitten yet by accident.** Periods 1, 2 and 3 are three of the five
+that open at 19:00Z, where the boundary falls *after* the 18:45Z lock — so
+gameweek 2 is safe, and period 4 on 11 Sep is the first one that is not. Period 6
+is the day before this app goes to sixteen people.
+
+Reached two ways, and the second needs no assumption about Fantrax's rollover:
+any tap on a gameweek-4 row in the schedule → `/squad/{rival}?gw=4` → `roundOf(4)`
+→ `fetchTeamRosters(league, 4)` → echoed 4 → `periodAsAsked` true → gate open.
+
+**Honest bound:** this is a leak only if `getTeamRosters` serves the live,
+editable arrangement rather than a locked one. Today's identical-bytes result
+across periods 1–3 strongly suggests it does, and **the probe below settles it.**
+
+**Shape of the fix, two commits:** gate on `locksAt(firstKickoff(period, kickoffs))`
+instead of `period.start`. Both need to be reachable from `league/visibility.ts`
+without league→gazette, so first move them from `gazette/deadline.ts` into
+`league/calendar.ts` — which already declares `GameweekKickoff`, already imports
+`LeaguePeriod`, and is the declared seam. Three consumers then, so the move is
+earned; per CODE_RULES it lands as its own commit, and the gate change follows.
+
+**Before 11 Sep, and unconditionally before 9 Oct.**
+
+### Two observations to make while gameweek 2 is on
+
+- **`getTeamRosters?period=1` after 28 Aug 18:59:58Z**, when period 1 has actually
+  closed. Does it serve period 1's locked arrangement, or always the live editable
+  one? Half-answered already — identical bytes for periods 1, 2 and 3 *while
+  period 1 is still open*, which is suggestive and not decisive. This is a clean
+  experiment for about one day, and its answer sets the severity of the section
+  above.
+- **The flip-order sample, Mon 31 Aug from ~21:00Z.** Gameweek 1's chance was
+  missed: the question of whether the `bonus-settling` rung is reachable needed
+  `/api/event-status/`, `/api/fixtures/?event=N` and bootstrap `data_checked`
+  sampled together from Mon 24 Aug ~21:00Z, and by today all four GW1 dates read
+  `bonus_added: true` with the round `data_checked`. Gameweek 2's window is the
+  second and last easy chance this month.
+
 ## Questions
 
-- **Does `?period=N` serve history once a period has completed?** Partially
-  answered 12 Aug — accepted and echoed, but inert while every period is still
-  in the future. Re-ask after period 1 ends 28 Aug.
+- **Does `?period=N` serve history once a period has completed?** Answered for
+  `getTeamRosterInfo` on 27 Aug and the answer is **no**: periods 1, 2 and 3
+  return byte-identical POINTS, and only the opponent column moves. Answered the
+  other way for `getLiveScoringStats`, which **does** honour it — that is now the
+  app's per-period source. Still open for `getTeamRosters`' ARRANGEMENT, which is
+  the one that decides how bad the gate finding above is: re-ask after period 1
+  closes 28 Aug 18:59:58Z.
 - Does league scoring start at period 1 or period 6? `getLeagueInfo` numbers all
   38 periods from 21 Aug, but we draft at GW6. The rehearsal league's matchup
   schedule runs from period 1, so this is really a question about the real
@@ -2806,7 +3070,10 @@ not exist.
   clean sheet, so a defender subbed off before his team concedes is one we
   undercount. Still first checkable on 21 Aug: watch one defender through a
   final whistle and see whether our +4 becomes their +4.
-- **Is Fantrax's middle rung reachable?** If FPL confirms bonus per gameweek
+- **Is Fantrax's middle rung reachable?** *Gameweek 1's window was missed — by
+  27 Aug all four GW1 dates read `bonus_added: true` with the round
+  `data_checked`, so the flip order is gone. Next chance is Mon 31 Aug from
+  ~21:00Z.* If FPL confirms bonus per gameweek
   rather than per match day, every fixture's `finished` flips at about the same
   moment as `data_checked` and the `provisional` rung — all settled, not signed
   off — is a near-zero-width window, leaving one of three rungs effectively dead.
@@ -2877,6 +3144,13 @@ email, not billing — see the hosting section.
 - [ ] **Rename the real league in Fantrax** — `getLeagueInfo.leagueName` is
       "Tim Hortons Pro League 24/25" and the schedule page prints it verbatim.
       Commissioner setting, not a code change. Before 10 Oct.
+- [ ] **Anchor the lineup gate on the LOCK, not the roster-period boundary** —
+      two commits, and the dated one. Move `locksAt`/`firstKickoff` from
+      `gazette/deadline.ts` into `league/calendar.ts`, then gate `rosterDisplay`
+      on `locksAt(firstKickoff(period, kickoffs))`. 33 of 38 roster periods open
+      on the Friday morning for a Saturday lock; period 4 (11 Sep) is the first
+      that bites and period 6 (9 Oct) is the day before sixteen people arrive.
+      See the 27 Aug section above.
 - [ ] Design the cookie flow for the fxpa write surface.
 - [ ] Re-run `npm run bridge` after rehearsal waiver churn; gate on zero
       rostered-but-unmapped.
