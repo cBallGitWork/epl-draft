@@ -2,12 +2,12 @@ import Link from "next/link";
 import {
   headToHead,
   roundState,
-  trails,
   type LeagueTeam,
   type LiveTeamScore,
   type PendingCleanSheets,
 } from "@epl/core";
 import RoundWord from "../components/league/RoundWord";
+import ScoreFigure from "../components/league/ScoreFigure";
 import { liveScores, pendingByTeam } from "../scoreboard";
 import { roundUnderway } from "../football";
 import { getLeagueSquads } from "../squads";
@@ -153,7 +153,6 @@ function Half({
 }) {
   const points = score?.points ?? null;
   const other = against?.points ?? null;
-  const behind = trails(points, other);
 
   return (
     // Into the head-to-head board, opened on the side that was tapped. The
@@ -175,13 +174,11 @@ function Half({
       {/* The live number is the interface: biggest thing on the page. Only the
           number dims for trailing — a name that dimmed for losing would give
           accent a second meaning. */}
-      <span
-        className={`numeric shrink-0 text-3xl font-bold leading-none ${
-          behind ? "text-muted" : "text-ink"
-        }`}
-      >
-        {points ?? "—"}
-      </span>
+      <ScoreFigure
+        points={points}
+        other={other}
+        className="numeric shrink-0 text-3xl font-bold leading-none"
+      />
     </Link>
   );
 }

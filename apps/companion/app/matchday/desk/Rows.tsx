@@ -1,4 +1,5 @@
-import { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing , trails } from "@epl/core";
+import { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing } from "@epl/core";
+import ScoreFigure from "../../components/league/ScoreFigure";
 import { londonDay, londonTime } from "../../londonTime";
 
 // The desk's two kinds of line, at the density the desk is for.
@@ -7,17 +8,15 @@ import { londonDay, londonTime } from "../../londonTime";
 // worth moving: the page is orchestration — which reads, which league, which
 // round — and these are the typography.
 //
-// They are a COPY of the scoreline grammar `PairingCard` uses, not a reuse of
-// it. Second occurrence, rendering at a different size for a different reading
-// distance: that card is a tap target with a labelled second line, and these are
-// wall rows with no chrome and nothing to tap. Rule of 2/3 — a third occurrence
-// is what would earn the shared component, and this note is here so whoever
-// writes it knows the two already diverged on purpose.
+// The FIGURE is shared with every other scoreline in the app — `ScoreFigure`
+// holds the dash-not-nought and trailing-dims rule, and this note used to say a
+// third occurrence would earn it. The front page's splash was the third, so it
+// was earned and taken. The row AROUND the figure is still deliberately its own:
+// that card is a tap target with a labelled second line, and these are wall rows
+// with no chrome and nothing to tap.
 
 /** One head-to-head, one line. Denser than `PairingCard` — no card, no padding,
- *  no tap target — so it is a copy of that grammar rather than a reuse of it
- *  (rule of 2/3: two occurrences, and they render at different sizes for
- *  different reading distances). */
+ *  no tap target — so the row is its own even though the figure in it is not. */
 export function Pairing({
   pairing,
   scores,
@@ -34,8 +33,8 @@ export function Pairing({
     <div className="flex items-baseline gap-2 py-1 text-xs">
       <Name name={pairing.home.name} mine={pairing.home.teamId === mine} />
       <span className="numeric shrink-0 font-bold tabular-nums">
-        <Points points={home} other={away} /> <span className="text-faint">–</span>{" "}
-        <Points points={away} other={home} />
+        <ScoreFigure points={home} other={away} /> <span className="text-faint">–</span>{" "}
+        <ScoreFigure points={away} other={home} />
       </span>
       <Name name={pairing.away.name} mine={pairing.away.teamId === mine} align="end" />
     </div>
@@ -60,13 +59,6 @@ function Name({
       {name}
     </span>
   );
-}
-
-/** A dash for a total Fantrax did not give, never a nought — and the trailing
- *  side dims, the same reading as every other scoreline in the app. */
-function Points({ points, other }: { points: number | null; other: number | null }) {
-  const behind = trails(points, other);
-  return <span className={behind ? "text-muted" : "text-ink"}>{points ?? "—"}</span>;
 }
 
 /** One match, one line, with the vidiprinter's two conventions. */

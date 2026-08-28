@@ -1,9 +1,7 @@
 import Link from "next/link";
 import type { LeagueTeam, LiveTeamScore, PeriodPairing, PendingCleanSheets } from "@epl/core";
-import {
-  pairingInvolves,
-  trails,
-} from "@epl/core";
+import { pairingInvolves } from "@epl/core";
+import ScoreFigure from "../../components/league/ScoreFigure";
 import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder } from "../../mine";
 
@@ -113,7 +111,6 @@ function Side({
 }) {
   const points = score?.points ?? null;
   const other = against?.points ?? null;
-  const behind = trails(points, other);
 
   return (
     // Into the pairing's own board, opened on the side that was tapped — not
@@ -137,13 +134,11 @@ function Side({
       {/* Only the number dims, and only when both sides have one. The name keeps
           its own register — accent means "yours" on six screens and would stop
           meaning it if a name could also dim for losing. A dash dims nobody. */}
-      <span
-        className={`numeric shrink-0 text-xl font-bold leading-none ${
-          behind ? "text-muted" : "text-ink"
-        }`}
-      >
-        {points ?? "—"}
-      </span>
+      <ScoreFigure
+        points={points}
+        other={other}
+        className="numeric shrink-0 text-xl font-bold leading-none"
+      />
     </Link>
   );
 }

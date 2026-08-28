@@ -47,10 +47,13 @@ colour registers are binding and Ceefax's are not ours. Two conventions:
   tappable thing. Eighteen rows at a 44px target would cost the screen the one
   property it is for: all of it visible at once. If a row ever becomes tappable,
   the density argument has to be made again from scratch.
-- **The rows are a copy of the scoreline grammar, not a reuse of it.** Second
-  occurrence of `PairingCard`'s shape, rendering at a different size for a
-  different reading distance — rule of 2/3, recorded here so a third occurrence
-  is what forces the extraction.
+- **The figure is shared; the row around it is not.** This note used to say a
+  third occurrence of the scoreline grammar would force the extraction. The front
+  page's splash was the third, so `components/league/ScoreFigure` now holds the
+  part that was genuinely one rule — a dash for a total Fantrax did not give, and
+  the trailing side dims — while size, family and width stay the caller's. The
+  row is still its own: a card is a 44px tap target, and these are wall rows with
+  nothing to tap.
 - Works **signed out** as a neutral desk: no accent anywhere, every score still
   on screen. Works with **no league at all** — an undrafted or silent Fantrax
   costs the top section and nothing else, because the football half needs no
