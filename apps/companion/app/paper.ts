@@ -16,9 +16,10 @@ import published from "../../../data/editions/latest.json";
 // excludes `data/snapshots` and `data/probes` from the build trigger and
 // deliberately not this.
 //
-// `period: 0` is the seed's way of saying there is no column: no Fantrax period
-// is numbered zero, so `editionMatches` answers false for every round and the
-// paper prints its facts and no prose. A missing file would be a broken build;
-// a seed is an honest empty.
+// The seed says "there is no column" twice over: it names no league, so
+// `normalizePublished` answers null before any round is considered, and it
+// carries `period: 0`, which no Fantrax period is numbered, so `editionMatches`
+// would answer false anyway. A missing file would be a broken build; a seed is
+// an honest empty. The first real edition the writer files replaces it.
 
 export const edition: PublishedEdition | null = normalizePublished(published);

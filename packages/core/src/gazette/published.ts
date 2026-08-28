@@ -56,6 +56,15 @@ interface EditionTie {
  *  and the page must render whatever survives rather than throw. */
 export interface PublishedEdition {
   kind: EditionKind;
+  /** The league the column is about.
+   *
+   *  Carried in the edition and not inferred, because the writer and the reader
+   *  are different processes with different environments: CI files the column
+   *  with whatever `FANTRAX_LEAGUE_ID` it inherits, and the app serves whatever
+   *  ITS environment names. Both leagues number their periods from the same
+   *  Friday, so period and kind alone would match a rehearsal column onto the
+   *  real league's front page. */
+  leagueId: string;
   /** The Fantrax period the column is about. The page prints the column only
    *  when this matches the round in view — see `editionMatches`. */
   period: number;
@@ -92,8 +101,17 @@ export function editionMatches(
   edition: PublishedEdition | null,
   period: number | null,
   kind: EditionKind,
+  /** The league the app is actually serving. An edition about any other league
+   *  is not this paper, whatever period it claims. */
+  leagueId: string,
 ): boolean {
-  return edition !== null && period !== null && edition.period === period && edition.kind === kind;
+  return (
+    edition !== null &&
+    period !== null &&
+    edition.leagueId === leagueId &&
+    edition.period === period &&
+    edition.kind === kind
+  );
 }
 
 /** Coerce whatever was on disk into something a page can render.
@@ -111,10 +129,15 @@ export function normalizePublished(parsed: unknown): PublishedEdition | null {
   // print — both are "there is no edition", which is an ordinary state.
   if (raw.kind !== "preview" && raw.kind !== "report") return null;
   if (typeof raw.period !== "number" || typeof raw.gameweek !== "number") return null;
+  // An edition filed before the league was recorded cannot be shown to be about
+  // this league, and "cannot be shown" has to read as "is not" on a check whose
+  // whole job is to keep one league's paper off another league's front page.
+  if (typeof raw.leagueId !== "string" || raw.leagueId === "") return null;
   if (typeof raw.headline !== "string" || raw.headline === "") return null;
 
   return {
     kind: raw.kind,
+    leagueId: raw.leagueId,
     period: raw.period,
     gameweek: raw.gameweek,
     filedAt: typeof raw.filedAt === "string" ? raw.filedAt : "",

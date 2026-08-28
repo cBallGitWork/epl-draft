@@ -115,7 +115,11 @@ async function main(): Promise<void> {
     );
   }
 
-  const archive = join(EDITIONS_ROOT, `gw${snapshot.gameweek}-${kind}.json`);
+  // The league is in the filename, not only in the payload. Without it a
+  // rehearsal edition filed on the Friday BLOCKS the real one — `existsSync`
+  // below would find it and the run would report "already filed" for a paper
+  // that is about a different competition.
+  const archive = join(EDITIONS_ROOT, `${FANTRAX_LEAGUE_ID}-gw${snapshot.gameweek}-${kind}.json`);
   if (existsSync(archive)) return say(`Already filed: ${archive}`);
 
   const brief = await gather(kind, info, snapshot, round.period);
@@ -129,6 +133,7 @@ async function main(): Promise<void> {
   const edition = normalizePublished({
     ...column,
     kind,
+    leagueId: FANTRAX_LEAGUE_ID,
     period: round.period,
     gameweek: snapshot.gameweek,
     filedAt: new Date().toISOString(),

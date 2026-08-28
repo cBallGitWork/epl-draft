@@ -97,11 +97,20 @@ export const FANTRAX_LEAGUES: readonly FantraxLeague[] = [
   { key: "rehearsal", leagueId: "zbn1z3ukmsgb36sz", draftDate: "2026-08-06" },
 ];
 
-/** The league the app serves. Setting this environment variable is the whole of
- *  the 10 Oct swap, which is also why CI can point a build at the real league
- *  today and watch every view meet its empty states. */
+/** The league the app serves, and the league the columnist writes about.
+ *
+ *  **Two environments, not one.** Setting this in Vercel swaps the app; the
+ *  edition workflow has its own environment and inherits nothing from it, so
+ *  `.github/workflows/editions.yml` sets it too. Miss the second and CI goes on
+ *  filing a rehearsal column that the real league's front page would match on
+ *  period and kind alone — which is what `PublishedEdition.leagueId` now stops.
+ *
+ *  `||` and not `??`, deliberately. An unset GitHub Actions variable expands to
+ *  the empty string rather than to nothing, so `??` would accept `""` as a
+ *  league id and every read would fail on a blank leagueId with no clue why.
+ *  The same trap `secret()` was carrying on 27 Aug. */
 export const FANTRAX_LEAGUE_ID =
-  process.env.FANTRAX_LEAGUE_ID ?? FANTRAX_LEAGUES[1].leagueId;
+  process.env.FANTRAX_LEAGUE_ID || FANTRAX_LEAGUES[1].leagueId;
 
 /** How many players to ask Fantrax's stats read for in one page.
  *

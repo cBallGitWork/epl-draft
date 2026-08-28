@@ -235,7 +235,12 @@ export async function edition(mine: string | null): Promise<Edition> {
     // A report once the football stops, a preview between the lock and the
     // first whistle. `partial` is what separates them, and it is the same
     // question that decides whether the desk's own stories may run.
-    written: editionMatches(published, drafted?.roundPeriod ?? null, partial ? "preview" : "report")
+    written: editionMatches(
+      published,
+      drafted?.roundPeriod ?? null,
+      partial ? "preview" : "report",
+      FANTRAX_LEAGUE_ID,
+    )
       ? published
       : null,
     board,

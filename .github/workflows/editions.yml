@@ -62,6 +62,11 @@ jobs:
       - name: File the column, if one is due
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # The league the column is about. This job's environment is not the
+          # app's, so it inherits nothing from Vercel: on 10 Oct this has to move
+          # with it. Unset, it expands to "" and `FANTRAX_LEAGUE_ID` falls back
+          # to the rehearsal league rather than to a blank id.
+          FANTRAX_LEAGUE_ID: ${{ vars.FANTRAX_LEAGUE_ID }}
         run: npm run edition
 
       - name: Commit the edition, if one was written
