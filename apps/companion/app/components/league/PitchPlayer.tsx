@@ -12,6 +12,7 @@ import { chipsFor } from "./Chips";
 import PlayerImage from "./PlayerImage";
 import { positionLabel } from "../../positions";
 import { unresolvedShort } from "../../unresolved";
+import { NAME_SIZE } from "./PitchRows";
 
 // One player as he stands on the pitch: a cut-out, his name on a dark plate, and
 // under it whatever there is to say — his fixture until he kicks off, his
@@ -35,7 +36,6 @@ import { unresolvedShort } from "../../unresolved";
  *  viewport, and the plate is a fixed band with the name centred in it: type set
  *  on its own line height made every plate a different height, so Haaland and
  *  João Pedro stood at different heights in the same row. */
-const NAME_SIZE = "text-[clamp(7px,13cqw,11px)]";
 
 export default function PitchPlayer({
   rostered,

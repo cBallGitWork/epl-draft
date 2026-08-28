@@ -54,6 +54,18 @@ export function cardBasis(widest: number): string {
   return `min(${MAX_CARD}, calc((100% - ${widest - 1} * ${GAP}) / ${widest}))`;
 }
 
+/** The size a player's name is set at on a pitch.
+ *
+ *  `13cqw` — a share of the CARD, not of the page — so a name shrinks with the
+ *  card `cardBasis` chose and a back five stays readable. That is why it lives
+ *  here: the container it measures is the one this file sizes.
+ *
+ *  A token and never a component. The three plates it sets genuinely differ — a
+ *  cream band across the pitch, and the team of the week's dark rounded strip —
+ *  and a shared component reconciling them would be the §1 abstraction that is
+ *  forbidden. Only the size was ever the same. */
+export const NAME_SIZE = "text-[clamp(7px,13cqw,11px)]";
+
 export interface PitchRow<T> {
   /** The position, or whatever names this line. Also its key. */
   label: string;

@@ -6,7 +6,7 @@ import {
   isGoalkeeper,
 } from "@epl/core";
 import Column from "./Column";
-import PitchRows from "../league/PitchRows";
+import PitchRows, { NAME_SIZE } from "../league/PitchRows";
 import PlayerImage from "../league/PlayerImage";
 
 // The best eleven anyone owned this week, standing on grass.
@@ -101,7 +101,7 @@ function Man({
         kickedOff
       />
       <p
-        className={`w-full truncate rounded-sm bg-bg/75 px-1 text-center font-display text-[clamp(7px,13cqw,11px)] font-bold leading-4 ${
+        className={`w-full truncate rounded-sm bg-bg/75 px-1 text-center font-display ${NAME_SIZE} font-bold leading-4 ${
           mine ? "text-accent" : "text-cream"
         }`}
       >

@@ -1,6 +1,6 @@
 import { clubColours, inkOn, isFplKeeper } from "@epl/core";
 import type { Club, FootballPlayer, FplLine, FplPick } from "@epl/core";
-import PitchRows from "../components/league/PitchRows";
+import PitchRows, { NAME_SIZE } from "../components/league/PitchRows";
 import PlayerImage from "../components/league/PlayerImage";
 
 // Your FPL XI on the grass.
@@ -102,4 +102,3 @@ function Sticker({
 
 /** The same size on every card, truncating — the pitch's rule, and this pitch
  *  obeys it too. */
-const NAME_SIZE = "text-[clamp(7px,13cqw,11px)]";
