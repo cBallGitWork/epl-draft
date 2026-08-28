@@ -3165,15 +3165,112 @@ is the honest version of the same fact.
   the walk reported every route clean regardless. The defect it was written to
   catch, in the check itself.
 
+## The paper got a lead, and the roster echo runs ahead of its own calendar (28 Aug 2026)
+
+The Gazetta had four columns of equal weight and no front-page story, which
+`docs/ui/gazetta.md` had recorded as its one known gap: *"the best story on it is
+`left him on the bench`, and it is printed as a footnote on a row rather than as
+a headline."* Craig chose the shape — an editor picks the lead each week rather
+than one story always holding it — and building it turned up a Fantrax fact that
+matters well beyond the front page.
+
+### The lead is a running order, not a score
+
+`gazette/lead.ts` ranks four kinds of story and returns the strongest, or null.
+The order is an argument and is written down where it can be argued with, in the
+same spirit as the ranking `teamOfTheWeek` already keeps for a defender against a
+forward:
+
+1. **A match decided by nothing.** Two of sixteen spent Sunday night on a knife
+   edge, and nothing else on the page is that.
+2. **A manager left the week's best player out.** The story nobody else can
+   tell — Fantrax holds both halves and never puts them together.
+3. **A hammering.**
+4. **A trade.** Rare in a draft league, and the only story an international break
+   can produce.
+
+A cross-kind numeric weight was considered and rejected. There is no currency
+that converts a one-point finish into a benched keeper, so a number claiming to
+would have been arbitrary wearing the costume of an answer — and it would have
+been the kind of arbitrary nobody could argue with, because it would have looked
+computed.
+
+**Both result thresholds are shares of the winning total, never numbers of
+points**, and that is a §3 point rather than a taste one: the points are a
+commissioner setting. This league's weeks come out in the tens; a league paying
+for every touch comes out in the hundreds, and a threshold written in points
+would read every week of one of them as a thriller. A twentieth of the winner's
+total is a squeaker; half of it is a hammering, which is the same sentence read
+the other way — the loser did not reach half.
+
+Nothing manufactures a lead. Most of the week there is not one, and the next
+deadline — which the masthead already states — is deliberately not a story. Nor
+is there one while football is on: the live bar leads then, and a headline is the
+one place on the page a provisional claim cannot go.
+
+First run, against period 1 of the rehearsal league: **"No contest — test2 took
+test4 apart. 41–19. 22 points between them."** The other pairing, 45–31, is an
+ordinary win and correctly leads on nothing.
+
+### The finding: the roster echo runs ahead of Fantrax's own calendar
+
+Probed at 08:29Z on 28 Aug, against Fantrax's own published dates in the same
+payload:
+
+```
+rosterPeriod 1: 2026-08-21T15:00-0400 → 2026-08-28T14:59:58-0400   (18:59:58Z)
+getTeamRosters (no period argument) echoes:  2
+```
+
+**Ten and a half hours inside roster period 1, `getTeamRosters` answers 2.** The
+likely reading is that it labels the arrangement a manager may currently *edit*,
+which is period 2's — period 1's lineups locked on 21 Aug — rather than the one
+the calendar is in. Either way the operational fact is the one that bites: the
+arrangement on hand is not always the arrangement that was played.
+
+`teamOfTheWeek` reads `slot.status` off exactly that arrangement to say `left him
+on the bench`. Joined against the round FPL is showing — gameweek 1 all day
+today — that footnote was a claim about a lineup nobody had fielded: *this*
+week's football with *next* week's team sheet. It never printed a wrong name,
+because the rehearsal league's four teams are auto-drafted and nobody moves them;
+on 10 Oct, with sixteen managers editing on a Wednesday, it would have.
+
+`Edition.fielded` is the check — Fantrax's own label against the period the round
+in view is scored in — and when it is false **every claim about who was STARTED
+is withheld**, from the lead and from the eleven's rows alike. What the players
+did is football and stands either way, which is why the eleven itself still
+prints. Today it is false, so the front page leads on the result and the
+bench footnote is absent, which is the honest answer.
+
+This partially answers the standing question about `getTeamRosters`' ARRANGEMENT
+below. It does not answer the other half — whether `?period=N` *serves* a past
+arrangement — which is still only askable after 18:59:58Z tonight.
+
+### One thing looked at and deliberately left
+
+**The gazette does not consult `rosterDisplay`.** `teamOfTheWeek` reads ACTIVE /
+RESERVE for all sixteen teams directly, so in principle the front page could
+publish who is in a rival's XI before the lock. It cannot in practice, and the
+reason is arithmetic rather than a gate: a pick needs `minutes > 0`, and before a
+round's first kickoff nobody in the league has any. The window between the FPL
+deadline and our own lock — 17:30Z to 18:45Z tonight — is exactly the slice where
+the two could disagree, and it is empty because no football has been played in
+it. Recorded rather than fixed: the fix belongs with the lineup-gate work already
+booked below, which is about the lock rather than the boundary.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for
   `getTeamRosterInfo` on 27 Aug and the answer is **no**: periods 1, 2 and 3
   return byte-identical POINTS, and only the opponent column moves. Answered the
   other way for `getLiveScoringStats`, which **does** honour it — that is now the
-  app's per-period source. Still open for `getTeamRosters`' ARRANGEMENT, which is
-  the one that decides how bad the gate finding above is: re-ask after period 1
-  closes 28 Aug 18:59:58Z.
+  app's per-period source. **Half-answered again on 28 Aug for `getTeamRosters`**,
+  from the other direction: asked for NO period it labels its answer with a
+  period the calendar has not reached — 2, ten and a half hours inside roster
+  period 1 — so the arrangement on hand is not always the one that was played.
+  See the 28 Aug section. What is still open is whether `?period=N` *serves* a
+  past arrangement, which decides how bad the gate finding above is: re-ask after
+  period 1 closes 28 Aug 18:59:58Z.
 - Does league scoring start at period 1 or period 6? `getLeagueInfo` numbers all
   38 periods from 21 Aug, but we draft at GW6. The rehearsal league's matchup
   schedule runs from period 1, so this is really a question about the real
@@ -3276,6 +3373,17 @@ payloads; captures filed per league; period alignment settled and scripted; the
 
 ## Season log
 
+- 2026-08-28: The Gazetta got a front page. `lead()` picks one story a week out
+  of four kinds — a match decided by nothing, a manager who left the week's best
+  player out, a hammering, a trade — and prints nothing when none of them
+  qualifies, because a paper does not manufacture a lead. Both result thresholds
+  are shares of the winning total rather than numbers of points, so a
+  commissioner who rewrites the scoring does not get a paper calling every week a
+  thriller. Building it found that `getTeamRosters` labels its answer with a
+  period the calendar has not reached — 2, ten and a half hours inside roster
+  period 1 — which had `left him on the bench` describing a lineup nobody
+  fielded. `Edition.fielded` now withholds every started-claim when the
+  arrangement is not the round's.
 - 2026-08-13 (evening): the app became the app in the vision. Six tabs
   (Gazetta, League, Squads, Live, Players, FPL), all fifteen on the pitch
   instead of eleven and a bench strip, and — the piece everything else was
