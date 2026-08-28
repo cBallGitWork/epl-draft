@@ -9,6 +9,8 @@ import {
   type LeagueInfo,
   type RosteredTeam,
   type LeagueTeam,
+  type LiveTeamScore,
+  type PeriodPairing,
   type TeamOfTheWeek,
   type TransactionView,
   availability,
@@ -23,7 +25,7 @@ import {
   teamOfTheWeek,
 } from "@epl/core";
 import { leagueCache } from "./leagueCache";
-import { seasonKickoffs } from "./football";
+import { roundUnderway, seasonKickoffs } from "./football";
 import { yoursFirst } from "./mine";
 import { orRefusal } from "./refusals";
 import { liveScores } from "./scoreboard";
@@ -43,6 +45,14 @@ import { type LeagueSquads, type ReadableSquads, getLeagueSquads } from "./squad
  *  some length — "collapsing the two tells sixteen managers with squads that
  *  nobody has drafted yet, because Fantrax blipped for five minutes" — and the
  *  front page is the last place that should throw the distinction away. */
+/** The period's ties with Fantrax's own totals against them. */
+export interface Board {
+  pairings: PeriodPairing[];
+  /** A Map rather than entries: nothing here crosses a cache boundary — the
+   *  reads inside it are cached, the assembled edition is not. */
+  scores: Map<string, LiveTeamScore>;
+}
+
 export type Silence =
   | { kind: "unavailable"; code: string }
   | { kind: "undrafted"; code: string }
@@ -65,6 +75,18 @@ export interface Edition {
    *  is which, and the rest of the app already asks this one through
    *  `roundState`. */
   live: boolean;
+  /** Whether the round in view is running — first kickoff to last whistle,
+   *  including every gap between matches.
+   *
+   *  The third of three round questions on this edition, and they are three
+   *  because `round.ts` records that each has been got wrong by being asked in
+   *  place of another. `live` is "a ball is in the air" and drives the dot and
+   *  the present tense. `partial` is "there is football still to come" and is
+   *  what withholds the lead. This one is "there is a score worth printing",
+   *  which is neither: before the first kickoff every total is a legitimate
+   *  nought, and a splash reading 0–0 across eight ties would be reporting a
+   *  round nobody has played. */
+  underway: boolean;
   snapshot: FootballSnapshot | null;
   deals: Deal[];
   availability: AvailabilityNote[];
@@ -102,6 +124,12 @@ export interface Edition {
   /** The story the edition leads on, or none. A paper does not manufacture a
    *  lead, so most of the week there is not one. */
   lead: Lead | null;
+  /** This period's ties and Fantrax's totals for them, or null when there is no
+   *  round to report. One read, two readers: the splash prints it while football
+   *  is on, and `lead()` decides the week's story from it once the football
+   *  stops. Reading it twice would be two cache lookups and two chances for the
+   *  page to disagree with itself about the score. */
+  board: Board | null;
   /** The reader's own team, when they have signed in. Sections order themselves
    *  around it rather than being neutral. */
   mine: string | null;
@@ -165,13 +193,18 @@ export async function edition(mine: string | null): Promise<Edition> {
     drafted.roundPeriod !== null &&
     drafted.period.period === drafted.roundPeriod;
 
+  // The clock is read here, at the app edge, beside the other two — never inside
+  // a builder. `football.ts` is where that rule lives.
+  const underway = drafted ? roundUnderway(drafted.snapshot) : false;
+
   const told = deals(feed.rows);
   const picked = eleven(drafted);
+  const board = drafted === null ? null : await readBoard(drafted);
   // A headline is the one place on the page a provisional claim cannot go, so
-  // the lead waits for a week that is over. While football is on, the live bar
-  // leads and the paper's job is to get out of the way.
+  // the lead waits for a week that is over. While football is on the splash
+  // reports the score and says nothing about what it means.
   const story =
-    drafted === null || partial ? null : await leadStory(drafted, fielded ? picked : null, told);
+    board === null || partial ? null : lead(board.pairings, board.scores, fielded ? picked : null, told);
 
   const paper = {
     live: drafted ? isMatchdayLive(drafted.snapshot) : false,
@@ -187,8 +220,10 @@ export async function edition(mine: string | null): Promise<Edition> {
     teams: drafted?.info?.teams ?? [],
     eleven: picked,
     partial,
+    underway,
     fielded,
     lead: story,
+    board,
     mine,
   };
 
@@ -219,30 +254,18 @@ function silenceOf(squads: LeagueSquads, paper: Omit<Edition, "silence">): Silen
   return { kind: "quiet" };
 }
 
-/** The lead, and the one read it needs.
- *
- *  Fantrax's own totals for the round in view, out of the cache the head-to-head
- *  board already fills — so on a Saturday this is a hit rather than a request,
- *  and it is asked at all only for a week that has finished.
+/** This period's ties and their totals, from the cache the head-to-head board
+ *  already fills — so on a Saturday this is a hit rather than a request.
  *
  *  `getLiveScoringStats` and not the season results table, for two reasons that
- *  both matter here: it honours the period, and it carries `toPlay`, which is
- *  how the paper knows a match is actually over rather than merely quiet.
- *
- *  The eleven arrives already withheld or not — see `fielded`. Whether the
- *  arrangement can be spoken about is the edition's judgement; which story is
- *  the biggest is core's. */
-async function leadStory(
-  drafted: ReadableSquads,
-  picked: TeamOfTheWeek | null,
-  told: readonly Deal[],
-): Promise<Lead | null> {
+ *  both matter: it honours the period, and it carries `toPlay`, which is how the
+ *  paper knows a match is over rather than merely quiet. */
+async function readBoard(drafted: ReadableSquads): Promise<Board | null> {
   const period = drafted.roundPeriod;
   if (period === null || drafted.info === null) return null;
 
   const { scores } = await liveScores(period);
-  const pairings = periodPairings(drafted.info.matchups, drafted.info.teams, period);
-  return lead(pairings, scores, picked, told);
+  return { pairings: periodPairings(drafted.info.matchups, drafted.info.teams, period), scores };
 }
 
 /** The week's eleven, once there is a week to pick it from.

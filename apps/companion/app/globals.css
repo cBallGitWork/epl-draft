@@ -274,6 +274,21 @@ body {
   border-radius: 4px;
 }
 
+/* ---- A figure that just moved ---------------------------------------------
+   Colour only, and deliberately: a transform or a weight change on a scoreline
+   shifts the digits beside it, and the whole point of `.numeric` being tabular
+   is that they do not move. It settles back to the token the figure already
+   carries, so a trailing number stays dimmed after the flash. */
+.value-changed {
+  animation: value-changed 700ms var(--ease-out-quart);
+}
+
+@keyframes value-changed {
+  from {
+    color: var(--color-accent);
+  }
+}
+
 /* ---- Reduced motion: every animation gets a real alternative --------------
    The live dot keeps a static presence, so "a match is on" survives without
    movement. */
@@ -287,5 +302,20 @@ body {
   }
   .live-dot::after {
     display: none;
+  }
+  /* A crossfade rather than nothing, which PRODUCT.md requires by name: this is
+     the one signal whose whole content is "it changed", so removing the motion
+     removes the information. `!important` twice over, because the blanket rule
+     above is itself `!important` and would otherwise collapse this to nothing —
+     the same carve-out the live dot needs. */
+  .value-changed {
+    animation: value-crossfade 400ms linear !important;
+    animation-duration: 400ms !important;
+  }
+}
+
+@keyframes value-crossfade {
+  from {
+    opacity: 0;
   }
 }

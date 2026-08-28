@@ -22,10 +22,13 @@ business, who is hurt, and when lineups lock.
 
    Under it, the line that changes: "Football is on. The scores are moving."
    while live, otherwise when lineups lock.
-2. **A live bar**, only while football is on — a link straight to `/matchday`,
-   with the pulsing live dot.
+2. **As it stands**, while the round is running — your tie at the size the live
+   number deserves, every other tie under it at the desk's density. See *The
+   live splash* below. It replaces a thin bar that said football was on and made
+   you tap to learn anything at all.
 3. **The lead** — a full-bleed picture band, then a kicker, a headline set larger
-   than anything but the masthead, and a standfirst. See *The lead* below.
+   than anything but the masthead, and a standfirst. Never at the same time as
+   the splash. See *The lead* below.
 4. **Team of the week** — the best XI across the whole league, **on grass**, in
    its shape. Each man is a cut-out with what got him picked under his name
    (`2G · CS`, or minutes if nothing else) and his owner under that. `benched` is
@@ -46,6 +49,35 @@ Your own team is marked throughout with the left-edge accent border
 sets a border *colour* plus an explicit left width, so on a ruled row with no
 `border` utility it draws the accent bar and nothing else. One treatment, two
 grounds, and `mine.ts` stays the only place that knows what "yours" looks like.
+
+## The live splash
+
+**The page refreshes itself.** `/` was the only live-worthy surface in the app
+that never mounted `AutoRefresh`: a phone left open on the sofa showed a frozen
+scoreline under a pulsing dot for a whole half. It now polls on `pollSeconds`
+like every other screen — 30s while the round is under way, 300s otherwise.
+
+**A figure that moved says so.** `Changed` wraps each total and flashes it to the
+accent for 700ms when a refresh brings a different number, settling back to
+whatever token the figure already carried so a trailing side stays dimmed. Under
+`prefers-reduced-motion` it becomes a 400ms crossfade rather than nothing —
+PRODUCT.md requires that by name, because this is the one signal whose entire
+content is "it changed". The carve-out needs `!important` twice: the blanket
+reduced-motion rule is itself `!important` and would otherwise collapse it.
+
+**Three round questions, and they are not interchangeable.** `live` is a ball in
+the air — the dot and the present tense. `partial` is football still to come —
+what withholds the lead. `underway` is first kickoff to last whistle — what the
+splash asks, because before the first kickoff every total is a legitimate nought
+and eight ties reading 0–0 would be reporting a round nobody has played.
+
+**The splash is never the lead.** While the round is being played the paper
+reports the score and says nothing about what it means. That is the same rule as
+before, not a new one — a headline is the one place a provisional claim cannot
+go — and `underway` being true implies `partial`, so the two can never both
+render.
+
+Not signed in is a neutral desk, not an empty one: the same ties, none promoted.
 
 ## The lead
 
@@ -115,6 +147,12 @@ is the check — Fantrax's own label against the period the round in view is sco
 in — and when it is false **every claim about who was STARTED is withheld**, both
 from the lead and from the eleven's rows. What the players did is football and
 stands either way, which is why the eleven itself still prints.
+
+The obvious repair — ask for the period we mean — is real and not yet taken.
+Fantrax does keep a past period's own squad, settled 28 Aug, so the history is
+there for the asking. What is not settled is the instant a period stops tracking
+the live one, and the lineup gate is the wrong place to be approximately right;
+`squads.ts` carries the argument.
 
 ## The eleven is a team, not a table
 

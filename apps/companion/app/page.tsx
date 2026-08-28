@@ -1,14 +1,16 @@
 import { LEAGUE_NAME, clubById } from "@epl/core";
+import AsItStands from "./components/gazette/AsItStands";
+import AutoRefresh from "./components/shell/AutoRefresh";
 import Deals from "./components/gazette/Deals";
 import Doubts from "./components/gazette/Doubts";
 import Lead from "./components/gazette/Lead";
-import Live from "./components/gazette/Live";
 import Masthead from "./components/gazette/Masthead";
 import TeamOfTheWeek from "./components/gazette/TeamOfTheWeek";
 import { FANTRAX_SILENT, servedLeague } from "./config";
 import Column from "./components/gazette/Column";
 import Nothing from "./components/shell/Nothing";
 import { edition } from "./edition";
+import { pollSeconds } from "./football";
 import { londonDate, londonDayAndTime } from "./londonTime";
 import { readerTeamId } from "./squads";
 
@@ -52,7 +54,24 @@ export default async function GazettePage() {
         }
       />
 
-      {paper.live ? <Live /> : null}
+      {/* The page asks the server for a fresh render on the same interval every
+          other live surface uses. Without it a phone left open on the sofa shows
+          a frozen scoreline under a pulsing dot for a whole half — which is what
+          the front page did, alone among the app's screens, until now. */}
+      {paper.snapshot ? <AutoRefresh seconds={pollSeconds(paper.snapshot)} /> : null}
+
+      {/* While the round is being played the score IS the story, and it is the
+          splash. `underway` and not `partial`: before the first kickoff every
+          total is a legitimate nought, and eight ties reading 0–0 would be
+          reporting a round nobody has played. */}
+      {paper.board && paper.underway ? (
+        <AsItStands
+          pairings={paper.board.pairings}
+          scores={paper.board.scores}
+          mine={paper.mine}
+          live={paper.live}
+        />
+      ) : null}
 
       {/* The lead. Absent most of the week and absent while football is on, on
           purpose: a paper does not manufacture a front-page story, and a
