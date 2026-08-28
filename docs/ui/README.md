@@ -51,9 +51,12 @@ the other way round.
 Break these and the app is wrong, however good it looks.
 
 1. **The lineup gate.** Your own XI is yours all week; every *other* team's waits
-   for its period to open. Squads are public throughout; before that moment the
-   *arrangement* is not, and ordering, grouping, labels, pitch positions and
-   anything crossing a `"use client"` boundary must not leak who starts.
+   for its lineups to **lock** — fifteen minutes before the period's first
+   kickoff, and NOT the period boundary, which is a different instant in 33 of
+   this season's 38 weeks and was the bug `visibility.ts` was rewritten to fix.
+   Squads are public throughout; before the lock the *arrangement* is not, and
+   ordering, grouping, labels, pitch positions and anything crossing a
+   `"use client"` boundary must not leak who starts.
 2. **Provenance at the point of use.** Every number says whose it is. Fantrax's
    points are Fantrax's; a projection is labelled as a projection; FPL's scoring
    is labelled as FPL's. A number with no owner is the confident wrong answer.

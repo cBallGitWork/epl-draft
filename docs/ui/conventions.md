@@ -1,8 +1,10 @@
 # Conventions — tokens, components, and what must not move
 
-Everything visual is in `apps/companion/app/globals.css` (tokens) and
+Everything visual is in `apps/companion/app/tokens.css` (the tokens),
+`apps/companion/app/globals.css` (everything else) and
 `apps/companion/app/components/` (markup). Tailwind v4, no config file: the
-theme *is* the `@theme` block in `globals.css`.
+theme *is* the `@theme` block, which lives in `tokens.css` — split out of
+`globals.css` when that file crossed the 300-line ceiling.
 
 ## Three colour registers, never muddled
 

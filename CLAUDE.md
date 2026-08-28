@@ -230,8 +230,12 @@ the tell.
 **Scripts load nothing unless their npm script says so**, and only one does:
 `team-codes` passes `--env-file=apps/companion/.env.local`, because the secret it
 mints hashes with must be the one the app verifies with, and reading the
-verifier's own file is what stops the two drifting. Every other script reads
-public endpoints and needs no secret — nothing in the tracked tree reads
+verifier's own file is what stops the two drifting.
+
+Two scripts read a secret from the ENVIRONMENT rather than from a file, and both
+only ever run in CI: `write-edition` needs `ANTHROPIC_API_KEY` and throws without
+it, and it now needs `FANTRAX_LEAGUE_ID` too. Every other script reads public
+endpoints and needs nothing — and nothing in the tracked tree reads
 `FANTRAX_COOKIE` at all.
 
 *This paragraph used to say scripts read the repo-root file via `node --env-file`.

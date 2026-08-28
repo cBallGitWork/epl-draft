@@ -70,7 +70,7 @@ accent for 700ms when a refresh brings a different number, settling back to
 whatever token the figure already carried so a trailing side stays dimmed. Under
 `prefers-reduced-motion` it becomes a 400ms crossfade rather than nothing —
 PRODUCT.md requires that by name, because this is the one signal whose entire
-content is "it changed". The carve-out needs `!important` twice: the blanket
+content is "it changed". The carve-out needs `!important`: the blanket
 reduced-motion rule is itself `!important` and would otherwise collapse it.
 
 **Three round questions, and they are not interchangeable.** `live` is a ball in
