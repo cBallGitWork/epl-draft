@@ -224,10 +224,10 @@ export async function getLeagueSquads(round: Round | null = null): Promise<Leagu
     // through the side door. The one team a known reader is looking at gets its
     // own answer, at the route that knows which team that is.
     kickoffs,
-    // Judged on the period the PAYLOAD declares, never on one we chose. There is
-    // no longer anything to check it against, because nothing is asked — and the
-    // guard that used to do the checking compared our number with our own echo,
-    // which was true by construction and protected nothing.
+    // Judged on the period the PAYLOAD declares, never on one we chose — which
+    // for a past round is the one `frozenPeriod` asked for, and otherwise is
+    // whichever Fantrax considers open. Checking the echo against our own number
+    // would be true by construction and protect nothing.
     display: rosterDisplay(
       period.period,
       info?.rosterPeriods ?? [],

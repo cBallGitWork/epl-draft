@@ -25,7 +25,7 @@ import PlayerImage from "../league/PlayerImage";
 // score too. Nothing is borrowed to fill the space; a portrait of the winner's
 // best player would be a picture of a story we are not telling.
 //
-// The words are here and the facts are in `gazette/lead.ts`, on the split the
+// The words are here and the facts are in `gazette/stories.ts`, on the split the
 // rest of the paper keeps. Nothing below decides which story is the biggest —
 // it decides how to say the one that is.
 //

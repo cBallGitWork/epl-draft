@@ -252,8 +252,7 @@ instant, never a clock.
 
 ## Known gaps
 
-**Nothing leads.** A paper's front page has a lead story and this one has four
-columns of equal weight — the best story on it is `left him on the bench`, and
-it is printed as a footnote on a row rather than as a headline. Building that
-means deciding what the lead *is*, which is a behaviour change and not a visual
-one, so it is recorded here rather than smuggled into a restyle.
+~~**Nothing leads.**~~ Closed 28 Aug — the lead is documented above, and the
+running order that decides it is in `gazette/stories.ts`. It was recorded here
+rather than smuggled into a restyle precisely because deciding what the lead *is*
+was a behaviour change; it then got one.

@@ -3177,6 +3177,9 @@ matters well beyond the front page.
 ### The lead is a running order, not a score
 
 `gazette/lead.ts` ranks four kinds of story and returns the strongest, or null.
+*(Renamed `gazette/stories.ts` later the same day, and it now returns the whole
+running order rather than the strongest alone — which was the point of the
+change. The ordering argument below is unaffected.)*
 The order is an argument and is written down where it can be argued with, in the
 same spirit as the ranking `teamOfTheWeek` already keeps for a defender against a
 forward:

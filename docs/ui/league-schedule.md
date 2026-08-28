@@ -126,13 +126,13 @@ GW1's ten fixtures finished with the schedule on screen, the winner marked and
 the scoreline printed from `getStandings`. What is still unwitnessed is a
 *completed period* — every dated fixture finished — which arrives Mon 24 Aug.
 
-**A played head-to-head shows today's rosters, not the ones that were fielded.**
-Asked 28 Aug, and the answer is history: `?period=1` served a forward who had
-been dropped that morning while every other read served the man who replaced him,
-so a past period keeps its own squad. We still do not ask for it — `squads.ts`
-explains what remains open about *when* a period freezes, and why the gate is
-safer reading the label Fantrax volunteers. So the line stays on the board, but
-it now describes a choice rather than an unknown.
+**A played head-to-head shows the rosters that were fielded.** Settled 28 Aug in
+two halves: a claim proved Fantrax versions squad MEMBERSHIP per period, and a
+lineup move later the same day proved it versions `status` — the only field the
+lineup gate withholds. `squads.ts` now asks for a past period through
+`frozenPeriod`, which requires both that Fantrax's own label has moved past it
+and that our calendar says its lineups locked. The board says which of the two it
+is holding.
 
 **No provenance line.** Craig removed it on 20 Aug. The points on this page are
 Fantrax's under Fantrax's scoring and the page no longer says so — the only page

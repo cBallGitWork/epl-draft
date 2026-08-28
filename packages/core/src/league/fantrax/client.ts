@@ -73,9 +73,10 @@ export function fetchLeagueInfo(leagueId: string): Promise<RawLeagueInfo> {
  *  **What instant a period freezes at is still open**: its own lineup lock, or
  *  the moment Fantrax's editable period moves past it. Here those were three
  *  days apart and no roster changed between them, so this probe cannot see the
- *  difference. It matters to `squads.ts`, which does not send the parameter for
- *  a reason that turns on exactly this — see the note there. The experiment is
- *  one roster change made AFTER a period's lock, then that period re-read. */
+ *  difference, and it is why `squads.ts` asks for a past period only when
+ *  Fantrax's own label has moved past it AND our calendar says its lineups
+ *  locked: that conjunction is false throughout every window the freeze instant
+ *  could matter in, so the answer is not needed. See `frozenPeriod`. */
 export function fetchTeamRosters(leagueId: string, period?: number): Promise<RawTeamRosters> {
   return fxeaGet<RawTeamRosters>("getTeamRosters", {
     leagueId,

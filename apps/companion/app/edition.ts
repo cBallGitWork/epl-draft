@@ -41,13 +41,6 @@ import { type LeagueSquads, type ReadableSquads, getLeagueSquads } from "./squad
 // transactions this week" is a worse paper than a shorter one, and there is no
 // house style worth defending that requires printing an empty box.
 
-/** Why the paper has nothing to print, when it has nothing.
- *
- *  Three states rather than one flag, because they are three different sentences
- *  and only one of them is about us. `squads.ts` keeps the first two apart at
- *  some length — "collapsing the two tells sixteen managers with squads that
- *  nobody has drafted yet, because Fantrax blipped for five minutes" — and the
- *  front page is the last place that should throw the distinction away. */
 /** The period's ties with Fantrax's own totals against them. */
 export interface Board {
   pairings: PeriodPairing[];
@@ -56,6 +49,13 @@ export interface Board {
   scores: Map<string, LiveTeamScore>;
 }
 
+/** Why the paper has nothing to print, when it has nothing.
+ *
+ *  Three states rather than one flag, because they are three different sentences
+ *  and only one of them is about us. `squads.ts` keeps the first two apart at
+ *  some length — "collapsing the two tells sixteen managers with squads that
+ *  nobody has drafted yet, because Fantrax blipped for five minutes" — and the
+ *  front page is the last place that should throw the distinction away. */
 export type Silence =
   | { kind: "unavailable"; code: string }
   | { kind: "undrafted"; code: string }
@@ -137,9 +137,9 @@ export interface Edition {
   stories: Story[];
   /** This period's ties and Fantrax's totals for them, or null when there is no
    *  round to report. One read, two readers: the splash prints it while football
-   *  is on, and `lead()` decides the week's story from it once the football
-   *  stops. Reading it twice would be two cache lookups and two chances for the
-   *  page to disagree with itself about the score. */
+   *  is on, and `stories()` decides the week's running order from it once the
+   *  football stops. Reading it twice would be two cache lookups and two chances
+   *  for the page to disagree with itself about the score. */
   board: Board | null;
   /** The reader's own team, when they have signed in. Sections order themselves
    *  around it rather than being neutral. */
