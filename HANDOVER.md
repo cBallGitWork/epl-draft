@@ -217,17 +217,28 @@ came back real, two with the record corrected.
   loads the verifier's own file. `CLAUDE.md` was the reason an operator would have
   used the wrong one.
 
-**Still open, and confirmed real:**
+**Fixed 28 Aug:**
 
-- `shape-diff` exits 1 today, so the documented `smoke && shape-diff &&
-  bridge:check` chain never reaches the third. 22 paths counted dangerous; the
-  recorded diagnosis is right about 12 of them and wrong about the rest.
-- `shape-diff` gates its exit on `dangerous` alone and never on `refusals`, so it
-  passes having compared nothing.
+- **`shape-diff` reddened on 22 differences somebody had already judged**, so the
+  documented chain never reached its third gate. One was not a finding at all —
+  emptiness sentinels reported as lost fields. The other 21 need knowledge a
+  payload differ cannot have (whether a mapper reads the path), so that judgement
+  is now `data/shape/baseline.json`: one audited entry per difference, each with
+  a reason, all 21 verified against the tree first. `settled` reports entries
+  that no longer differ so the file gets pruned instead of quietly growing into a
+  blindfold, and an entry with no reason recorded stops the run at exit 2.
+- **`shape-diff` could exit 0 having compared nothing** — it gated on `dangerous`,
+  which only a comparison can raise. Counts comparisons made and exits 2 when
+  that is zero; a partial refusal still passes, deliberately.
+- **`smoke` asked Fantrax the same question twice** and let the answers disagree,
+  dropping two routes while reporting a full count.
+
+**The documented chain now runs end to end for the first time**: 12/12 routes,
+0 residue, 60 rostered slots with no holes.
+
+**Still open:**
+
 - `smoke`'s desk fragment is printed by all three states it exists to keep apart.
-- `smoke` asks Fantrax the same question twice (`drafted()` and `teamId()` each
-  issue their own read) and drops its two id-scoped routes when the second fails,
-  while still reporting the full count.
 
 Two of the pile were fixed on 23 Aug (`capture-status` counting directories,
 `build-bridge` rebuilding from nothing) and are already in.
