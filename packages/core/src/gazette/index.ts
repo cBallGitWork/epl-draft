@@ -3,10 +3,20 @@
 // builders as a place purity is not negotiable.
 
 export { availability } from "./availability";
+export { buildBrief } from "./brief";
+export type { Brief } from "./brief";
 export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
+export { editionMatches, markPreview, normalizePublished } from "./published";
 export { stories } from "./stories";
 export { teamOfTheWeek } from "./teamOfTheWeek";
+export type {
+  EditionKind,
+  EditionSection,
+  EditionTie,
+  Marked,
+  PublishedEdition,
+} from "./published";
 export type {
   AvailabilityNote,
   Deadline,

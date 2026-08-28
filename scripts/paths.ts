@@ -31,6 +31,16 @@ export const ROUND_STATE_ROOT = join(REPO_ROOT, "data", "probes", "round-state")
  *  the same reason: both are a person's judgement, checked in as data. */
 export const SHAPE_BASELINE_PATH = join(REPO_ROOT, "data", "shape", "baseline.json");
 
+/** The written columns, committed as data.
+ *
+ *  Under `data/` and NOT under `data/snapshots` or `data/probes`, and that is
+ *  load-bearing rather than tidy: `apps/companion/vercel.json` excludes exactly
+ *  those two from the build trigger, so a capture does not redeploy the app. An
+ *  edition MUST redeploy it — the app imports the column statically and it is
+ *  baked in at build time, so a commit that does not build is a column nobody
+ *  reads. */
+export const EDITIONS_ROOT = join(REPO_ROOT, "data", "editions");
+
 /** Where the matcher leaves what it would not decide, for a human to settle. */
 export const REVIEW_ROOT = join(MAPPINGS_ROOT, "review");
 
