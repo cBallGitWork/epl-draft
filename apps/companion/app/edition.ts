@@ -5,6 +5,7 @@ import {
   type Deadline,
   type Deal,
   type FootballSnapshot,
+  type PublishedEdition,
   type Story,
   type LeagueInfo,
   type RosteredTeam,
@@ -20,6 +21,7 @@ import {
   mapTransactions,
   transactionDateLabel,
   nextDeadline,
+  editionMatches,
   periodPairings,
   stories,
   teamOfTheWeek,
@@ -28,6 +30,7 @@ import { leagueCache } from "./leagueCache";
 import { roundUnderway, seasonKickoffs } from "./football";
 import { yoursFirst } from "./mine";
 import { orRefusal } from "./refusals";
+import { edition as published } from "./paper";
 import { liveScores } from "./scoreboard";
 import { type LeagueSquads, type ReadableSquads, getLeagueSquads } from "./squads";
 
@@ -121,6 +124,13 @@ export interface Edition {
    *  players did is football and stands either way, which is why the eleven
    *  itself still prints. */
   fielded: boolean;
+  /** The written column, when one has been filed about the round in view.
+   *
+   *  Null is the ordinary state and not a failure: a column is filed twice a
+   *  week, so for most of every week the newest one on disk is about a round
+   *  that is no longer on screen — and the paper then prints its facts and no
+   *  prose rather than last week's opinions under today's dateline. */
+  written: PublishedEdition | null;
   /** Every story the week produced, strongest first: the front page leads on the
    *  first and runs the rest as headlines under it. Empty is ordinary — a paper
    *  does not manufacture a story, so most of the week there is nothing here. */
@@ -226,6 +236,12 @@ export async function edition(mine: string | null): Promise<Edition> {
     underway,
     fielded,
     stories: told,
+    // A report once the football stops, a preview between the lock and the
+    // first whistle. `partial` is what separates them, and it is the same
+    // question that decides whether the desk's own stories may run.
+    written: editionMatches(published, drafted?.roundPeriod ?? null, partial ? "preview" : "report")
+      ? published
+      : null,
     board,
     mine,
   };

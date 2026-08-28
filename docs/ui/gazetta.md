@@ -29,23 +29,26 @@ business, who is hurt, and when lineups lock.
 3. **The lead** — a full-bleed picture band, then a kicker, a headline set larger
    than anything but the masthead, and a standfirst. Never at the same time as
    the splash. See *The lead* below.
-4. **Also this week** — the next two stories as headlines: a kicker and a line,
+4. **The column**, when one has been filed about this round — and then it
+   *leads*, taking the picture the desk chose and dropping the desk's own
+   headline. See *The written column* below.
+5. **Also this week** — the next two stories as headlines: a kicker and a line,
    no picture, no standfirst. The hierarchy *is* the design — a newspaper's
    second story is recognisable as the second story before you have read a word
    of it, and a page that gave every story a photograph would be a page with no
    lead on it.
-5. **Team of the week** — the best XI across the whole league, **on grass**, in
+6. **Team of the week** — the best XI across the whole league, **on grass**, in
    its shape. Each man is a cut-out with what got him picked under his name
    (`2G · CS`, or minutes if nothing else) and his owner under that. `benched` is
    appended to the owner when a manager left his own best player out — **and only
    when the arrangement it was read from is the one that was fielded**; see *What
    may be said about a bench* below.
-6. **The week's business** — trades and claims, grouped so both halves of a trade
+7. **The week's business** — trades and claims, grouped so both halves of a trade
    read as one deal. Fantrax's timestamps, shown verbatim with their zone named
    in the heading, because they carry a US Eastern offset.
-7. **Doubts** — FPL's injury news across every squad, with chance of playing.
+8. **Doubts** — FPL's injury news across every squad, with chance of playing.
    `no word` when FPL has no opinion, which is not the same as 0%.
-8. **Next deadline** — the period boundary, with an explicit note that the
+9. **Next deadline** — the period boundary, with an explicit note that the
    commissioner's real lock is fifteen minutes before the first fixture and is
    not something Fantrax publishes.
 
@@ -164,6 +167,39 @@ Fantrax does keep a past period's own squad, settled 28 Aug, so the history is
 there for the asking. What is not settled is the instant a period stops tracking
 the live one, and the lineup gate is the wrong place to be approximately right;
 `squads.ts` carries the argument.
+
+## The written column
+
+**Facts are live and prose is published, and the split is the whole design.**
+Everything else on this page is computed from data that updates every thirty
+seconds. The column is written twice a week by Claude from a facts-only brief,
+committed to the repo as `data/editions/latest.json`, and baked into the build.
+A column that regenerated every thirty seconds would not be a column, and a
+sentence about a score that has since moved is worse than no sentence.
+
+Two kinds. A **preview** files once lineups lock and before a ball is kicked; it
+calls each tie, and `markPreview` counts those calls against the results so the
+next edition can tell him what he got. A pundit nobody marks is a pundit who
+never has to be right. A **report** files once the football stops.
+
+**It leads when it exists, and the desk's headline is dropped.** Both would be
+about the same match — a fact-headline and a written one, stacked, saying the
+same thing twice. The picture stays, because the story is the same story and the
+desk is what chose the photograph for it.
+
+**When there is no column the paper is facts-only and says nothing about it.** A
+paper does not apologise for the column it has not got. That is the state for
+most of every week, because the newest edition on disk is last week's until the
+next one is filed — `editionMatches` is what stops last week's opinions running
+under today's dateline.
+
+The filing time prints. Every other figure on the page is thirty seconds old and
+this could be three days old and still be the current edition; a reader is
+entitled to know which he is reading.
+
+Team names are joined from ids the writer returns, never from names he types: a
+name typed by a model goes stale the day somebody renames their team, and
+renaming your team is the first thing sixteen people do.
 
 ## The eleven is a team, not a table
 

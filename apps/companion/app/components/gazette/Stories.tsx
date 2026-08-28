@@ -60,8 +60,13 @@ export default function Lead({
 }
 
 /** The picture, full-bleed. One band, three fillings, so the four kinds share a
- *  rhythm rather than each arriving as its own layout. */
-function Figure({
+ *  rhythm rather than each arriving as its own layout.
+ *
+ *  Exported because the picture and the words come apart on the one week they
+ *  disagree about who should say it: when a columnist has filed, HIS headline
+ *  leads and the desk's is dropped, but the story is the same story and it keeps
+ *  its photograph. */
+export function Figure({
   lead,
   who,
   clubs,

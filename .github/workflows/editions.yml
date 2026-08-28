@@ -1,0 +1,84 @@
+name: Editions
+
+# The paper's written columns.
+#
+# **Facts are live and prose is published.** Everything countable on the front
+# page updates on the app's own thirty-second poll; a column cannot, because one
+# rewritten every thirty seconds is not a column and a sentence about a score
+# that has since moved is worse than no sentence. So the writing happens here,
+# off the app entirely, and lands as data.
+#
+# Two a week: a preview once lineups lock and before a ball is kicked, a report
+# once the round finishes. The script decides which is due and refuses to write
+# anything else, so this workflow only has to fire often enough to catch the
+# windows.
+#
+# **It fires far more often than it writes, and that is the design.** GitHub's
+# schedules are routinely late and sometimes skipped, and our lock is fifteen
+# minutes before the first kickoff — a window no cron can be trusted to hit. So
+# it runs on a wide net and the script's guards decide: already filed, not
+# locked, not finished all exit 0 after one snapshot read. The common run costs
+# a `npm ci` and an HTTP request.
+#
+# Cost when it DOES write: one Anthropic call, at most twice a week.
+#
+# Setup, once: ANTHROPIC_API_KEY as a repository secret. The key lives here and
+# never on Vercel — the app reads the committed column and never writes one.
+
+on:
+  schedule:
+    # The lock window. Locks land Friday evening or Saturday lunchtime depending
+    # on the round's first kickoff, so this covers both without knowing which.
+    - cron: "0,30 17-23 * * 5"
+    - cron: "0,30 10-16 * * 6"
+    # The whistle window. A round ends Saturday evening, Sunday evening or Monday
+    # night, and the report waits for the last of them.
+    - cron: "15 20-23 * * 6,0,1"
+    - cron: "15 6-12 * * 0,1,2"
+  workflow_dispatch: {}
+
+# Its own group, deliberately NOT shared with the capture or round-state jobs:
+# GitHub keeps only the latest PENDING run per group, so a shared group would let
+# one workflow silently cancel another's queued run. Rebasing before push is what
+# keeps them out of each other's way, not queueing.
+concurrency:
+  group: editions
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  write:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: File the column, if one is due
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npm run edition
+
+      - name: Commit the edition, if one was written
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/editions
+          # The ordinary outcome: a guard said no column was due, so the run did
+          # its one snapshot read and stopped.
+          if git diff --cached --quiet; then
+            echo "No column due."
+            exit 0
+          fi
+          git commit -m "data: the paper for $(date -u +%Y-%m-%d)"
+          # Rebase, never merge. Vercel's ignoreCommand reads `git diff HEAD^
+          # HEAD`, and a merge commit's first parent is our own tip — so the diff
+          # it evaluated would be the OTHER side's files and the build would be
+          # skipped, leaving a column nobody can read.
+          git pull --rebase --autostash
+          git push

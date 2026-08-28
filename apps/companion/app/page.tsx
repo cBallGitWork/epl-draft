@@ -3,7 +3,8 @@ import AsItStands from "./components/gazette/AsItStands";
 import AutoRefresh from "./components/shell/AutoRefresh";
 import Deals from "./components/gazette/Deals";
 import Doubts from "./components/gazette/Doubts";
-import Lead, { Headline } from "./components/gazette/Stories";
+import Lead, { Figure, Headline } from "./components/gazette/Stories";
+import Written from "./components/gazette/Written";
 import Masthead from "./components/gazette/Masthead";
 import TeamOfTheWeek from "./components/gazette/TeamOfTheWeek";
 import { FANTRAX_SILENT, SECONDARY_STORIES, servedLeague } from "./config";
@@ -73,11 +74,23 @@ export default async function GazettePage() {
         />
       ) : null}
 
-      {/* The lead, then the rest of the page's headlines. Absent most of the
-          week and absent while football is on, on purpose: a paper does not
-          manufacture a front-page story, and a headline is the one place a
-          provisional claim cannot go. */}
-      {paper.stories[0] ? <Lead lead={paper.stories[0]} who={who} clubs={clubs} /> : null}
+      {/* The lead. Absent most of the week and absent while football is on, on
+          purpose: a paper does not manufacture a front-page story, and a
+          headline is the one place a provisional claim cannot go.
+
+          **When a columnist has filed, HIS headline is the lead and the desk's
+          is dropped.** Both would be about the same match — a fact-headline and
+          a written one, stacked, saying the same thing twice — and a paper runs
+          one splash. The picture stays: the story is the same story, and the
+          desk is what chose the photograph for it. */}
+      {paper.written ? (
+        <>
+          {paper.stories[0] ? <Figure lead={paper.stories[0]} who={who} clubs={clubs} /> : null}
+          <Written edition={paper.written} teams={paper.teams} />
+        </>
+      ) : paper.stories[0] ? (
+        <Lead lead={paper.stories[0]} who={who} clubs={clubs} />
+      ) : null}
 
       {paper.stories.length > 1 ? (
         <Column title="Also this week">

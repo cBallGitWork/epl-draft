@@ -54,4 +54,9 @@ jobs:
             exit 0
           fi
           git commit -m "chore: capture Fantrax $(date -u +%Y-%m-%d)"
+          # Rebase before pushing. Two other jobs now write to this branch — the
+          # round-state sampler every half hour and the edition writer around
+          # every lock and whistle — and this is the one whose history cannot be
+          # recreated, so it must not be the one that loses a race.
+          git pull --rebase --autostash
           git push

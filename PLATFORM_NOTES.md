@@ -3356,6 +3356,73 @@ read of `?period=2` settles it — and unlike this morning's it has to be
 deliberate, because the whole value of this league is that nothing else in it
 moves.
 
+## The paper got a voice, and it is not a template (28 Aug 2026)
+
+Craig, on the lead's four templated sentences: *"look at the gazetta in world cup
+fantasy, it has a real voice."* Reading `~/worldcup-fantasy/lib/gazzetta/` settled
+what the difference actually is, and it is not styling or copy: **that paper is
+written by Claude from a facts-only brief.** Ours had four hardcoded sentence
+shapes, and no amount of rewriting them gets past that ceiling — "22 points
+between them" is a template and reads like one.
+
+**The architecture that reconciles a live paper with a written one: facts are
+live, prose is published.** Everything countable on the front page updates on the
+thirty-second poll through the pure builders. The column is written twice a week
+by a GitHub Actions job, committed as `data/editions/latest.json`, and baked into
+the build. A column regenerating every thirty seconds is not a column; a sentence
+about a score that has since moved is worse than no sentence.
+
+Deliberately NOT the sibling's design, which caches per day in Upstash KV behind
+two authenticated routes and an off-Vercel generator. We have no KV and want
+none: the repo already commits data from CI every day, `vercel.json` already
+excludes exactly the two directories that must not trigger a build, and the app
+already static-imports a checked-in JSON file (the identity bridge). So an
+edition is a commit, and the commit that writes it is the commit that deploys it.
+No SDK either — one `fetch`, twenty lines, per CODE_RULES §2.
+
+### The brief is a list of lies it prevents
+
+`gazette/brief.ts` is the facts the writer may use and nothing else, and almost
+every line of it exists because a model would otherwise write a sentence that
+reads perfectly and is false. Handed a scoreline it narrates who scored first and
+in what minute. Handed a squad it invents a centre-back. Handed "L. Díaz" it
+substitutes the famous one. None of that is catchable downstream.
+
+Two decisions worth keeping:
+
+- **The instruction lives with the data, not in the voice.** A rule about
+  `toPlay` written three hundred words above the number it governs is a rule
+  about nothing, so each block carries its own guardrail: a dash is not a nought,
+  beside the dash; IN PLAY is not a result, beside the tie.
+- **Withhold, do not just forbid.** The first draft told the writer not to
+  mention benching when `fielded` was false and still handed him rows marked
+  BENCHED — an instruction against a temptation we put there ourselves. A test
+  caught it. The flag is what has to go.
+
+Its tests assert what it refuses to allow, which for a component whose output is
+English is most of what can be tested at all.
+
+### Marked homework
+
+`markPreview` counts last week's calls against the results. A pundit nobody marks
+is a pundit who never has to be right, and it is pure comparison rather than a
+claim the column makes about itself. Declining to call a tie is not counted as
+wrong: otherwise silence is the cheapest way to look right.
+
+### Two things recorded rather than guessed
+
+- **Bylines are house names, not real people.** Craig named Mark Lawrenson and
+  Garth Crooks as the register he wants, and the register is what shipped — a
+  predictions column that gets marked, and a team-of-the-week written by somebody
+  with opinions about who is unlucky to miss out. The bylines themselves are "The
+  Form Guide" and "The Back Page", because putting a real broadcaster's name on
+  AI-written copy presents fabricated writing as theirs. They are strings in
+  `scripts/edition/voice.ts` and Craig's to change.
+- **`capture.yml` pushed blind.** Only `round-state.yml` rebased before pushing.
+  A third writer to the branch made that a real race, and capture is the one
+  workflow whose history cannot be recreated — so it must not be the one that
+  loses. Fixed in the same tranche.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for
