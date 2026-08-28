@@ -12,8 +12,8 @@ export { availability } from "./availability";
 export { buildBrief } from "./brief";
 export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
-export { editionMatches, markPreview, normalizePublished } from "./published";
-export { decided, stories } from "./stories";
+export { editionMatches, normalizePublished } from "./published";
+export { stories } from "./stories";
 export { teamOfTheWeek } from "./teamOfTheWeek";
 export type { EditionKind, PublishedEdition } from "./published";
 export type {

@@ -85,10 +85,9 @@ export function stories(
  *  nobody has football left (`toPlay` null is "they did not say", which is not
  *  "nobody left"), and somebody won.
  *
- *  Exported because marking last week's predictions needs every result, not the
- *  two the running order picked out: a pundit is marked on all eight calls, and
- *  reading only the thriller and the thrashing would mark him on the two ties he
- *  was least likely to have got wrong. */
+ *  Answers EVERY decided tie, not the two the running order picks out. Marking a
+ *  pundit's calls needs all of them: score him on the thriller and the thrashing
+ *  alone and he is marked on the two ties he was least likely to get wrong. */
 export function decided(
   pairings: readonly PeriodPairing[],
   scores: ReadonlyMap<string, LiveTeamScore>,

@@ -1,6 +1,5 @@
 import { mkdirSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { readFileSync } from "node:fs";
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
@@ -19,12 +18,10 @@ import {
   gameweekStarted,
   getFootballSnapshot,
   locksAt,
-  decided,
   mapDraftPicks,
   mapLeagueInfo,
   mapLiveScores,
   mapProjectedTotals,
-  markPreview,
   mapTeamRosters,
   mapTransactions,
   normalizePublished,
@@ -211,28 +208,10 @@ async function gather(
     pedigree: new Map(
       (draft === null ? [] : mapDraftPicks(draft)).map((taken) => [taken.fantraxId, taken]),
     ),
-    // Marking last week's calls needs last week's edition and this week's
-    // results, which is a second read and a second file. Left out deliberately
-    // rather than half-built: `markPreview` is written and tested, and wiring it
-    // is one small change once a preview has actually been filed and played.
+    // Marking last week's calls needs last week's edition as well as this
+    // week's results — a second read of a second file, and not wired.
     marked: null,
   });
-}
-
-/** How his last column's calls turned out, or nothing.
- *
- *  Reads the preview filed for THIS gameweek — the same archive file that makes
- *  a re-run a no-op — and marks it against the results that came in. Nothing to
- *  mark is the ordinary state: the first report of the season has no preview
- *  behind it, and a preview that called nothing is a preview with no score.
- *
- *  A file we cannot read costs the column one line and never the run. */
-function mark(gameweek: number, results: ReturnType<typeof decided>) {
-  const path = join(EDITIONS_ROOT, `gw${gameweek}-preview.json`);
-  if (!existsSync(path)) return null;
-
-  const preview = normalizePublished(JSON.parse(readFileSync(path, "utf8")) as unknown);
-  return markPreview(preview, results);
 }
 
 /** One call, by fetch. No SDK: CODE_RULES §2 says no dependency a small local

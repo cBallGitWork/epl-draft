@@ -3485,6 +3485,14 @@ whistle now, and a missed preview is simply not written.
 half of the feature that matters. Wiring it needed `decided` exported, because a
 pundit is marked on all eight calls and the running order only surfaces two.
 
+*It was not in fact wired. What landed was `mark()` in `write-edition.ts`, which
+reads the archive and calls `markPreview` — and which nothing calls, twelve lines
+under a comment saying the wiring had been "left out deliberately rather than
+half-built". Both came out on 28 Aug; the feature is still unbuilt and the tree
+now says so. The gates could not have caught it: root `lint` runs eslint only in
+the `apps/companion` workspace, and the tsconfig `scripts/` extends sets no
+`noUnusedLocals`, so dead code in `scripts/` is checked by nothing.*
+
 ### The rest of the pass
 
 - **Eight barrel exports nothing outside core names**, trimmed, with a line in
