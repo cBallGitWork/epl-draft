@@ -5,7 +5,7 @@ import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/cor
 import { playerName } from "@epl/core";
 import LivePlayerCard from "./LivePlayerCard";
 import PitchPlayer from "./PitchPlayer";
-import PitchRows, { cardBasis, widestLine } from "./PitchRows";
+import PitchRows, { GAP_CLASS, cardBasis, widestLine } from "./PitchRows";
 import SquadRows from "./SquadRows";
 import { FAR_INSET } from "./PitchTurf";
 import { positionLabel } from "../../positions";
@@ -86,7 +86,7 @@ export default function TeamSheet({
                   a share of the row it stands in, so the same share is the same
                   pixels only in a row the same width as the pitch column. */}
               <ul
-                className="flex justify-center gap-2"
+                className={`flex justify-center ${GAP_CLASS}`}
                 style={{ paddingInline: `${FAR_INSET}%` }}
               >
                 {bench.map((player) => (

@@ -29,9 +29,15 @@ import PitchFrame from "./PitchFrame";
  *  Both are needed as values rather than only as classes, because the card's
  *  width is computed from them: `flex-basis` has to subtract the gaps the row
  *  will actually have. Written once each so the class and the arithmetic cannot
- *  disagree — which is the same trap `PlayerPortrait` records for `sizes`. */
+ *  disagree — which is the same trap `PlayerPortrait` records for `sizes`.
+ *
+ *  `GAP_CLASS` is exported for the same reason `cardBasis` is: the two bench
+ *  strips size their cards with the arithmetic and would otherwise write the
+ *  class out by hand, so changing `GAP` here would silently misalign a strip
+ *  from the grass above it — which is the defect this file was already twice
+ *  amended to remove. */
 const GAP = "0.5rem";
-const GAP_CLASS = "gap-x-2";
+export const GAP_CLASS = "gap-x-2";
 const MAX_CARD = "4.35rem";
 
 /** The fullest line in a set — the line that decides the card.

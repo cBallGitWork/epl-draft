@@ -2,7 +2,7 @@ import type { SquadPlayerDetail } from "@epl/core";
 import type { PitchRow } from "./PitchRows";
 import { playerName } from "@epl/core";
 import PitchPlayer from "./PitchPlayer";
-import PitchRows, { cardBasis, widestLine } from "./PitchRows";
+import PitchRows, { GAP_CLASS, cardBasis, widestLine } from "./PitchRows";
 import { FAR_INSET } from "./PitchTurf";
 import { positionLabel } from "../../positions";
 
@@ -113,7 +113,7 @@ export default function LineupPitch({
         <section className="bleed border-t border-line bg-surface pb-3 pt-3">
           {/* The pitch's own inset — see `cardBasis`. */}
           <ul
-            className="flex justify-center gap-2"
+            className={`flex justify-center ${GAP_CLASS}`}
             style={{ paddingInline: `${FAR_INSET}%` }}
           >
             {bench.map((player) => (
