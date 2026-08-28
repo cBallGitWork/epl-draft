@@ -128,27 +128,25 @@ async function expectedName(): Promise<string | null> {
   }
 }
 
-async function drafted(): Promise<boolean> {
+/** Whether the league has teams, and the first of them.
+ *
+ *  **One read answering both.** They used to be two functions issuing the same
+ *  request, and the second swallowed its own failure — so a league that answered
+ *  the first call and refused the second was "drafted" with no team id, which
+ *  silently dropped the two id-scoped routes while the walk still reported the
+ *  full count it had shrunk. Asking once means the two answers cannot disagree. */
+async function league(): Promise<{ drafted: boolean; teamId: string | null }> {
   try {
-    return mapTeamRosters(await fetchTeamRosters(FANTRAX_LEAGUE_ID)).teams.length > 0;
+    const [team] = mapTeamRosters(await fetchTeamRosters(FANTRAX_LEAGUE_ID)).teams;
+    return { drafted: team !== undefined, teamId: team?.teamId ?? null };
   } catch (error) {
-    if (error instanceof FantraxError) return false;
+    if (error instanceof FantraxError) return { drafted: false, teamId: null };
     throw error;
   }
 }
 
-async function teamId(): Promise<string | null> {
-  try {
-    const [team] = mapTeamRosters(await fetchTeamRosters(FANTRAX_LEAGUE_ID)).teams;
-    return team?.teamId ?? null;
-  } catch {
-    return null;
-  }
-}
-
 async function main() {
-  const hasTeams = await drafted();
-  const id = hasTeams ? await teamId() : null;
+  const { drafted: hasTeams, teamId: id } = await league();
   const paths: string[] = [...ROUTES];
   // The three biggest screens in the app take an id, so a walk that skipped them
   // would be a walk that missed the squad board and the head-to-head.
