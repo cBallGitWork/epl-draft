@@ -214,9 +214,20 @@ function written(lead: Story, who: (teamId: string | null) => string) {
       return {
         kicker: "Business",
         headline: `${lead.sides.map(who).join(" and ")} have traded`,
-        standfirst: "Two managers did business this week. Nobody else did any.",
+        // Counted off the deal, and it has to be. This used to read "Two
+        // managers did business this week. Nobody else did any." — two claims
+        // the fact does not carry: `sides` is only guaranteed to be two OR MORE,
+        // so a three-way trade ran that line under a headline naming three; and
+        // `traded` takes the newest of however many, so a second trade in the
+        // same week made the second sentence false with the first one printed
+        // right underneath it in the business column.
+        standfirst: `${players(lead.deal.inbound.length)} changed hands.`,
       };
   }
+}
+
+function players(count: number): string {
+  return `${count} player${count === 1 ? "" : "s"}`;
 }
 
 function points(margin: number): string {
