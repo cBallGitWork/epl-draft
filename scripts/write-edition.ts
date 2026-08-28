@@ -199,7 +199,7 @@ async function gather(
     projected,
     stories:
       kind === "report" && eleven !== null
-        ? stories(pairings, scores, fielded ? eleven : null, business)
+        ? stories(pairings, scores, fielded ? eleven : null, business, period)
         : [],
     eleven: eleven !== null && eleven.picks.length > 0 ? eleven : null,
     fielded,

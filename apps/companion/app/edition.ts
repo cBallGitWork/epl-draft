@@ -213,7 +213,13 @@ export async function edition(mine: string | null): Promise<Edition> {
   const told =
     board === null || partial
       ? []
-      : stories(board.pairings, board.scores, fielded ? picked : null, business);
+      : stories(
+          board.pairings,
+          board.scores,
+          fielded ? picked : null,
+          business,
+          drafted?.roundPeriod ?? null,
+        );
 
   const paper = {
     live: drafted ? isMatchdayLive(drafted.snapshot) : false,

@@ -54,6 +54,8 @@ export function stories(
    *  caller's judgement to make and not this file's. */
   eleven: TeamOfTheWeek | null,
   deals: readonly Deal[],
+  /** The period the paper is about. Trades are filtered to it — see `traded`. */
+  period: number | null,
 ): Story[] {
   const results = decided(pairings, scores);
   const told: Story[] = [];
@@ -72,7 +74,7 @@ export function stories(
   const rout = widest(results.filter(isRout));
   if (rout !== null) told.push({ kind: "rout", result: rout });
 
-  const business = traded(deals);
+  const business = traded(deals, period);
   if (business !== null) told.push({ kind: "trade", ...business });
 
   return told;
@@ -148,15 +150,24 @@ function widest(results: readonly StoryResult[]): StoryResult | null {
   );
 }
 
-/** The newest trade that can be written up, and the managers who made it.
+/** The newest trade THIS PERIOD that can be written up, and the managers who
+ *  made it.
  *
  *  A row that does not say who got whom cannot be a headline — "somebody traded"
  *  is worse on a front page than no story at all — so the sides are found here
  *  and carried out, rather than tested for here and worked out again by whatever
- *  prints the sentence. */
-function traded(deals: readonly Deal[]): { deal: Deal; sides: string[] } | null {
+ *  prints the sentence.
+ *
+ *  **The period filter is the difference between a story and a fixture.** The
+ *  caller reads a hundred rows of season history in one request, so without it an
+ *  August trade is still news in April — and it leads the paper in the first week
+ *  with no squeaker, no bench and no rout, which is the quiet week a trade is
+ *  supposed to cover. A deal Fantrax did not date cannot be shown to be this
+ *  week's, and a front page is the last place to guess. */
+function traded(deals: readonly Deal[], period: number | null): { deal: Deal; sides: string[] } | null {
   for (const deal of deals) {
     if (deal.kind !== "trade") continue;
+    if (deal.period === null || deal.period !== period) continue;
     const sides = [...new Set(deal.inbound.flatMap((player) => player.teamId ?? []))];
     if (sides.length >= 2) return { deal, sides };
   }
