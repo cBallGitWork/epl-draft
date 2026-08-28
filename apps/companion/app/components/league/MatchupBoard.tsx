@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { type LeagueTeam, type LiveTeamScore, type RoundState, trails } from "@epl/core";
+import { type LeagueTeam, type LiveTeamScore, type RoundState } from "@epl/core";
+import ScoreFigure from "./ScoreFigure";
 import RoundWord from "./RoundWord";
 import TeamBadge from "./TeamBadge";
 import ViewToggle, { type View } from "./ViewToggle";
@@ -113,7 +114,6 @@ function Side({
 }) {
   const points = side.score?.points ?? null;
   const other = against.score?.points ?? null;
-  const behind = trails(points, other);
 
   return (
     <button
@@ -134,14 +134,11 @@ function Side({
         {side.team.name}
       </span>
 
-      {/* A team Fantrax has no number for gets a dash, never a nought. */}
-      <span
-        className={`numeric shrink-0 text-2xl font-bold leading-none ${
-          behind ? "text-muted" : "text-ink"
-        }`}
-      >
-        {points ?? "—"}
-      </span>
+      <ScoreFigure
+        points={points}
+        other={other}
+        className="numeric shrink-0 text-2xl font-bold leading-none"
+      />
 
       {/* The open half owns what is below it, and says so with a foot bar rather
           than colour alone. */}
