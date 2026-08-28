@@ -85,6 +85,8 @@ export {
 } from "./fantrax/client";
 export { mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";
+export { mapDraftPicks } from "./fantrax/draft";
+export type { DraftPick } from "./fantrax/draft";
 export { mapStandings } from "./fantrax/standings";
 export { mapTeamBadges } from "./fantrax/badges";
 export type { TeamBadge } from "./fantrax/badges";

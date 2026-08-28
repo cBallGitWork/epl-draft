@@ -34,6 +34,7 @@ const SETTLED = board({
 });
 
 const pick = (over: Partial<Pick> = {}): Pick => ({
+  fantraxId: "p1",
   playerName: "Pickford",
   playerCode: 98745,
   clubId: 11,

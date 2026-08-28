@@ -59,6 +59,12 @@ export interface Deadline {
 /** One player in the week's eleven, with the fact that got him there and the
  *  manager who owns him — which is most of the point. */
 export interface Pick {
+  /** His Fantrax id — the league layer's own, which is what draft picks, rosters
+   *  and the transaction log are all keyed by. Carried so pedigree can be looked
+   *  up beside a pick rather than folded into it: where a man was drafted has no
+   *  bearing on whether he belongs in the week's eleven, and putting it on the
+   *  selection would imply otherwise. */
+  fantraxId: string;
   playerName: string;
   /** FPL's season-stable code, for the portrait. */
   playerCode: number;

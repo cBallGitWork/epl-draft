@@ -6,6 +6,7 @@ import {
   type EditionKind,
   type PublishedEdition,
   buildBrief,
+  fetchDraftResults,
   fetchLeagueInfo,
   fetchLiveScoring,
   fetchTeamRosters,
@@ -13,6 +14,7 @@ import {
   firstKickoff,
   getFootballSnapshot,
   locksAt,
+  mapDraftPicks,
   mapLeagueInfo,
   mapLiveScores,
   mapTeamRosters,
@@ -134,11 +136,12 @@ async function gather(
   snapshot: Awaited<ReturnType<typeof getFootballSnapshot>>,
   period: number,
 ): Promise<string> {
-  const [live, rosters, claims, trades] = await Promise.all([
+  const [live, rosters, claims, trades, draft] = await Promise.all([
     fetchLiveScoring(FANTRAX_LEAGUE_ID, period),
     fetchTeamRosters(FANTRAX_LEAGUE_ID).catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "CLAIM_DROP").catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "TRADE").catch(() => null),
+    fetchDraftResults(FANTRAX_LEAGUE_ID).catch(() => null),
   ]);
 
   const scores = new Map(mapLiveScores(live).map((score) => [score.teamId, score]));
@@ -171,6 +174,12 @@ async function gather(
     fielded,
     deals: business,
     doubts: squads === null ? [] : availability(squads.teams),
+    // Where each man was taken. Empty until a draft completes, which is the real
+    // league's state until 10 Oct — and an empty map means the brief says
+    // nothing about pedigree rather than calling every squad undrafted.
+    pedigree: new Map(
+      (draft === null ? [] : mapDraftPicks(draft)).map((taken) => [taken.fantraxId, taken]),
+    ),
     // Marking last week's calls needs last week's edition and this week's
     // results, which is a second read and a second file. Left out deliberately
     // rather than half-built: `markPreview` is written and tested, and wiring it

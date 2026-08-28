@@ -167,12 +167,32 @@ interface RawStandingsRow {
 
 export type RawStandings = RawStandingsRow[];
 
-// Draft results stay unmodelled by decision, not by ignorance: nothing is built
-// on them this season. The capture keeps recording the payload verbatim, which
-// costs nothing and cannot be backfilled later.
+// Draft results were unmodelled by decision until 28 Aug 2026, on the grounds
+// that nothing was built on them. The paper is: a draft league's whole
+// conversation is the gap between what a pick cost and what he did, and that is
+// the one story format no other fantasy game has. The capture had been recording
+// the payload verbatim throughout, which is why there was a season of it to read
+// the moment it was wanted.
 
 export interface RawDraftResults {
-  draftPicks?: unknown[];
+  draftPicks?: RawDraftPick[];
+  /** `"completed"` once it is done. A draft in progress is a partial list, which
+   *  is a real state for nine weeks: the real league drafts on 10 Oct. */
   draftState?: string;
   draftType?: string;
+}
+
+/** One pick, as Fantrax files it.
+ *
+ *  `playerId` is a Fantrax pool id — the same id the rosters and the transaction
+ *  log use — so pedigree joins to a squad directly and needs no bridge. `pick`
+ *  is the overall number and `pickInRound` is the position within the round;
+ *  both are carried because their names are easy to confuse and only one of them
+ *  means "the No.1 overall pick". */
+export interface RawDraftPick {
+  round?: number;
+  pick?: number;
+  pickInRound?: number;
+  teamId?: string;
+  playerId?: string;
 }

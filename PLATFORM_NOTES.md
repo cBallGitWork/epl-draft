@@ -3409,6 +3409,32 @@ is a pundit who never has to be right, and it is pure comparison rather than a
 claim the column makes about itself. Declining to call a tie is not counted as
 wrong: otherwise silence is the cheapest way to look right.
 
+### Pedigree, a little
+
+`getDraftResults` had been captured daily since 6 Aug and never read — `raw.ts`
+said so in a comment about it being unmodelled by decision. The paper is the
+reason to read it: a draft league's whole conversation is the gap between what a
+pick cost and what he did, and no other fantasy format has it.
+
+It needs **no bridge**. `draftPicks[].playerId` is a Fantrax pool id, the same one
+the rosters and the transaction log carry, so pedigree meets a squad entirely
+inside the league layer. First read of the rehearsal draft: Saka went pick 3,
+Gakpo went in round 14, and the eleven's one wire pickup is the claim that shows
+up in the same brief's business block.
+
+Craig's steer was "a little — world cup leaned on it too much at times", so it is
+in the brief and NOT on the page: the pitch cards already carry a name, what he
+did and his owner, and a fourth line is clutter. The brief carries the rule with
+the data — *use it only when it is the story, a paper that mentions every
+player's draft round is a spreadsheet.*
+
+Two absences kept apart, which a test caught: a draft still running returns a
+PARTIAL list, and mapping it would file everyone not yet taken as undrafted — so
+an incomplete draft maps to nothing at all. And an empty pedigree map makes the
+brief say nothing about pedigree rather than calling every man a wire pickup.
+Absence is not a wire pickup, on the same rule that a dash is not a nought. The
+real league is in exactly that state until 10 Oct.
+
 ### Two things recorded rather than guessed
 
 - **Bylines are house names, not real people.** Craig named Mark Lawrenson and

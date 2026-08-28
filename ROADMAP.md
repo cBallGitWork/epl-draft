@@ -258,6 +258,34 @@ home for our per-player metadata (CLAUDE.md).
   whatever the commissioner has renamed it to by then, which is the item three
   lines above this one.
 
+## 9. 28 Aug — the Gazetta became a newspaper
+
+Craig: *"this is a list, we wanted a news site"*, then *"look at the gazetta in
+world cup fantasy, it has a real voice"*. Seven commits. Full account in
+PLATFORM_NOTES, 28 Aug.
+
+- **It stopped being a list.** The eleven moved off eleven hairline rows onto
+  `PitchRows` grass with cut-outs, and the lead got a full-bleed picture band —
+  a photograph for the bench story, the scoreline at 6xl for a result, because
+  only one of the four kinds honestly has a face in it.
+- **It went live.** `/` was the only live-worthy surface in the app that never
+  mounted `AutoRefresh`. It now polls like every other screen, leads on an *As
+  it stands* splash while the round runs, and flashes any figure that moved
+  (with a reduced-motion crossfade, which PRODUCT.md requires by name).
+- **It runs more than one story.** `stories()` returns the whole running order;
+  the page leads on the first and runs two more as headlines.
+- **It got a voice**, and the voice is not a template. A columnist writes a
+  preview when lineups lock and a report when the football stops — one Claude
+  call each, from CI, committed as `data/editions` and baked into the build.
+  Facts stay live; prose is published. `markPreview` counts last week's calls,
+  because a pundit nobody marks never has to be right.
+- **Draft pedigree**, in the brief only. `getDraftResults` had been captured
+  since 6 Aug and never read.
+
+**Craig's items:** set `ANTHROPIC_API_KEY` as a repository secret (it never
+touches Vercel — the app only ever reads a committed column), and sign off the
+bylines in `scripts/edition/voice.ts`.
+
 ## Explicitly parked
 
 `apps/lab` · FPL authenticated endpoints · member-held cookies in any form ·

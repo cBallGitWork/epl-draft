@@ -1,5 +1,6 @@
 import type { PeriodPairing } from "../league/selectors";
 import type { LiveTeamScore } from "../league/types";
+import type { DraftPick } from "../league/fantrax/draft";
 import type { AvailabilityNote, Deal, Pick, Story, TeamOfTheWeek } from "./types";
 
 // The facts a columnist is given, and the only ones he may use.
@@ -38,6 +39,9 @@ export interface Brief {
   doubts: readonly AvailabilityNote[];
   /** How the last preview's calls turned out, for the writer to own or dodge. */
   marked: { right: number; called: number } | null;
+  /** Where each man was drafted, by Fantrax id. Empty before a draft completes,
+   *  which is the real league's state until 10 Oct. */
+  pedigree: Map<string, DraftPick>;
 }
 
 export function buildBrief(brief: Brief): string {
@@ -104,9 +108,12 @@ function points(score: LiveTeamScore | undefined): string {
 function eleven(brief: Brief): string | null {
   if (brief.eleven === null || brief.eleven.picks.length === 0) return null;
 
-  const men = brief.eleven.picks.map((pick) => `- ${line(pick, brief.fielded)}`);
+  const men = brief.eleven.picks.map((pick) => `- ${line(pick, brief.fielded, brief.pedigree)}`);
   return [
     `THE TEAM OF THE WEEK (${brief.eleven.shape}), best first. Write the "eleven" section about it.`,
+    brief.pedigree.size > 0
+      ? "Where a man was drafted is in brackets. USE IT ONLY WHEN IT IS THE STORY — a late pick outscoring the room, or an early one going missing. Most weeks it is not the story, and a paper that mentions every player's draft round is a spreadsheet."
+      : "",
     brief.fielded
       ? 'A man marked BENCHED was left out of his own manager\'s side and scored nothing for him. That is the best story the league tells and it is worth leading on.'
       : "Do NOT say anybody was benched or left out this week: the lineups we hold are next week's, so we cannot tell who was actually picked. Write about what the players did.",
@@ -117,7 +124,7 @@ function eleven(brief: Brief): string | null {
 /** `fielded` is not decoration here. Telling the writer not to mention benching
  *  while still handing him a row marked BENCHED is an instruction against a
  *  temptation we put there ourselves, and the flag is the thing that has to go. */
-function line(pick: Pick, fielded: boolean): string {
+function line(pick: Pick, fielded: boolean, pedigree: Map<string, DraftPick>): string {
   const did = [
     pick.goals > 0 ? `${pick.goals} goals` : null,
     pick.assists > 0 ? `${pick.assists} assists` : null,
@@ -126,7 +133,19 @@ function line(pick: Pick, fielded: boolean): string {
   ].filter((note) => note !== null);
   const done = did.length > 0 ? did.join(", ") : `${pick.minutes} minutes`;
   const benched = !fielded || pick.started ? "" : " — BENCHED";
-  return `${pick.playerName} (${pick.position}), owned by ${pick.ownerName}${benched}: ${done}`;
+  // An entry means he was drafted there. No entry, in a league whose draft we
+  // HAVE, means he came off the waiver wire — its own pedigree and a different
+  // story. No pedigree at all means we know nothing, and saying "off the wire"
+  // then would tell the writer that sixteen squads went undrafted. Absence is
+  // not a wire pickup, on the same rule that a dash is not a nought.
+  const drafted = pedigree.get(pick.fantraxId);
+  const where =
+    pedigree.size === 0
+      ? ""
+      : drafted === undefined
+        ? " [off the wire]"
+        : ` [R${drafted.round}, pick ${drafted.overall}]`;
+  return `${pick.playerName} (${pick.position}), owned by ${pick.ownerName}${benched}${where}: ${done}`;
 }
 
 type Who = (teamId: string | null) => string;

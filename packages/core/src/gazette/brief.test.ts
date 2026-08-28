@@ -23,6 +23,7 @@ const scores = (over: Record<string, [number | null, number | null]>) =>
   );
 
 const pick = (over: Partial<Pick> = {}): Pick => ({
+  fantraxId: "p1",
   playerName: "Pickford",
   playerCode: 1,
   clubId: 1,
@@ -55,6 +56,7 @@ const brief = (over: Partial<Brief> = {}): Brief => ({
   deals: [],
   doubts: [],
   marked: null,
+  pedigree: new Map(),
   ...over,
 });
 
@@ -106,6 +108,54 @@ describe("buildBrief", () => {
     expect(quiet).not.toContain("WHO IS HURT");
     expect(quiet).not.toContain("THE WEEK'S BUSINESS");
     expect(quiet).not.toContain("YOUR LAST COLUMN");
+  });
+
+  it("gives pedigree, and says not to lean on it", () => {
+    // A draft league's best story is the gap between what a pick cost and what
+    // he did. A paper that mentions every player's round is a spreadsheet.
+    const one = pick({ fantraxId: "late" });
+    const eleven: TeamOfTheWeek = {
+      picks: [one],
+      lines: [{ position: "G", picks: [one] }],
+      shape: "1",
+    };
+    const text = buildBrief(
+      brief({
+        eleven,
+        pedigree: new Map([["late", { fantraxId: "late", teamId: "a", round: 14, overall: 212 }]]),
+      }),
+    );
+    expect(text).toContain("[R14, pick 212]");
+    expect(text).toContain("ONLY WHEN IT IS THE STORY");
+  });
+
+  it("calls an undrafted man a wire pickup rather than a missing one", () => {
+    const one = pick({ fantraxId: "claimed" });
+    const eleven: TeamOfTheWeek = {
+      picks: [one],
+      lines: [{ position: "G", picks: [one] }],
+      shape: "1",
+    };
+    const text = buildBrief(
+      brief({
+        eleven,
+        pedigree: new Map([["someone-else", { fantraxId: "x", teamId: "a", round: 1, overall: 1 }]]),
+      }),
+    );
+    expect(text).toContain("[off the wire]");
+  });
+
+  it("says nothing about pedigree before a draft has completed", () => {
+    // The real league is in this state until 10 Oct.
+    const one = pick();
+    const eleven: TeamOfTheWeek = {
+      picks: [one],
+      lines: [{ position: "G", picks: [one] }],
+      shape: "1",
+    };
+    const text = buildBrief(brief({ eleven, pedigree: new Map() }));
+    expect(text).not.toContain("ONLY WHEN IT IS THE STORY");
+    expect(text).not.toContain("off the wire");
   });
 
   it("makes the pundit own last week's score", () => {

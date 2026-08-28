@@ -85,6 +85,7 @@ function considered(rostered: RosteredPlayer, team: RosteredTeam): Pick | null {
   const redCards = total(rostered.stats, (stat) => stat.redCards);
 
   return {
+    fantraxId: rostered.slot.fantraxId,
     playerName: rostered.player.name,
     playerCode: rostered.player.code,
     clubId: rostered.player.clubId,
