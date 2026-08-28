@@ -29,7 +29,14 @@ import type { LeaguePeriod } from "./types";
  *  the caller cannot accidentally read a false as "no data". */
 export type RosterDisplay =
   | { show: "lineup"; period: number }
-  | { show: "squad"; because: SquadReason };
+  /** Withheld because a lock is still ahead — and it carries WHICH period's
+   *  lock, because that is the one reason a reader is owed a number and the one
+   *  the copy used to fetch from somewhere else. The route knows the round it is
+   *  drawing; only the gate knows the period it judged, and between rounds those
+   *  are different numbers. A decision that does not carry its own subject
+   *  invites the caller to supply the nearest one to hand. */
+  | { show: "squad"; because: "not-locked"; period: number }
+  | { show: "squad"; because: Exclude<SquadReason, "not-locked"> };
 
 /** Why a lineup is being withheld. Every one of these is a real state we have
  *  seen or will see, and none of them is an error. */
@@ -134,5 +141,5 @@ export function rosterDisplay(
   if (locked === null) return { show: "squad", because: "unknown-lock" };
   return locked
     ? { show: "lineup", period: fetchedPeriod }
-    : { show: "squad", because: "not-locked" };
+    : { show: "squad", because: "not-locked", period: fetchedPeriod };
 }

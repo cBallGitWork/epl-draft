@@ -3500,6 +3500,70 @@ pundit is marked on all eight calls and the running order only surfaces two.
   `ReturnType<typeof …>` now say so; one `React.ReactNode` on the UMD namespace
   now imports the type like every sibling file.
 
+## The withheld panel named a deadline a week gone (28 Aug 2026)
+
+Craig, between rounds: *"if i go to matchup tabs and see last weeks game —
+'test2's eleven is not public until lineups lock for period 1' — once a matchweek
+1 is done, it should be LOCKED, fantrax shows this."*
+
+He is reading a page about gameweek 1 and being told to wait for a lock that
+passed on 21 August. **Two different period numbers were on that screen and they
+were allowed to disagree.** The gate judged Fantrax's own label — period 2, whose
+lock is tonight — and was right to withhold. The sentence printed `roundPeriod`,
+the round in view, because that was the nearest number in scope.
+
+Reproduced exactly, live:
+
+```
+Fantrax's open period (no-parameter read): 2
+rosterDisplay(fetchedPeriod=1) -> {"show":"lineup","period":1}
+rosterDisplay(fetchedPeriod=2) -> {"show":"squad","because":"not-locked"}
+```
+
+**The structural cause is that the decision did not carry its own subject.**
+`RosterDisplay`'s `squad` arm held a reason and no period, so a caller wanting to
+name one had to find it elsewhere, and the only number to hand was the wrong one.
+`not-locked` now carries the period it judged and the other three reasons still
+carry none, because they fell back before any lock was consulted and there is no
+period they could honestly name. The window where the two numbers disagree opens
+when Fantrax rolls its label — right after a round's last fixture — and closes at
+the next lock: roughly four days in seven, which is exactly the days somebody
+reviews last week's matchup.
+
+### The rule that would have shown him the real eleven is REFUTED
+
+This morning's probe licensed an obvious repair: send `?period=N` whenever
+Fantrax's own open label is strictly greater than N, on the reasoning that you
+can only edit the open period, so anything behind it is frozen — which would make
+the freeze-instant question irrelevant. **It does not survive.** It does not
+remove that unknown; it trades it for a second one, *when does the label roll?*,
+observed exactly once, in a 24-hour bracket, in a week where the safe and unsafe
+explanations are indistinguishable.
+
+Two mechanisms fit the one observation to the minute: the label rolls at a
+period's last kickoff (safe), or it rolls on a fixed lead of about four days
+before the next period opens (unsafe). Run the second over the alignment fixture
+and **seven periods leak** — 12, 13, 17, 18, 19, 24 and 27. Period 13 is the one
+to remember: it runs 1–4 Dec and locks 2 Dec 19:45Z, but the label would roll to
+14 on 30 November, *before period 13 begins*, publishing sixteen rivals' midweek
+XIs for nearly three days. The rule holds only while every period is longer than
+the roll lead, and eight of this season's are three or four days.
+
+Two further gaps, and the first is the sharper. **This morning proved versioning
+of MEMBERSHIP — Osula out, Garcia in — and never of `status`**, the ACTIVE /
+RESERVE field, which is the only thing the gate actually withholds. A per-period
+squad list does not entail a per-period arrangement. And `?period=3` answered a
+full roster for a period that can have no stored state, so "stored where it
+exists, live where it does not" is a behaviour we have observed with nothing in
+the payload to tell the two apart.
+
+So `squads.ts` still does not send the parameter, and the matchup page still
+shows today's squad for a played round and says so. What would unblock it, in
+order: rearrange one XI after a period's lock and re-read that period **diffing
+`status`, not membership**; then, if that holds, gate the history read on the
+conjunction — open label > N **and** our own calendar says period N has locked —
+rather than on the label alone, leaving `visibility.ts` untouched.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for

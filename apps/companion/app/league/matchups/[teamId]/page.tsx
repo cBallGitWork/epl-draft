@@ -147,7 +147,7 @@ export default async function HeadToHeadPage({
     const priced = scored.get(team.teamId) ?? null;
 
     const withheld = (
-      <Withheld team={team} known={roster !== undefined} because={display} period={period} />
+      <Withheld team={team} known={roster !== undefined} because={display} />
     );
 
     // Both arrangements are joined here, on the server: the join is pure and
@@ -221,18 +221,22 @@ function Withheld({
   team,
   known,
   because: display,
-  period,
 }: {
   team: LeagueTeam;
   /** Whether Fantrax gave us a roster for him at all. */
   known: boolean;
   because: RosterDisplay;
-  period: number;
 }) {
+  // The period comes off the DECISION, never off the round in view. Between
+  // rounds those are different numbers — Fantrax rolls its label the moment a
+  // round's last fixture ends, so for four days in seven this page is drawn
+  // about gameweek N while the arrangement it holds is period N+1's. Handed the
+  // round's number, this sentence explained a withholding by naming a deadline
+  // that had already passed, which is the one thing a reason may not do.
   const because = !known
     ? `Fantrax sent no roster for ${team.name}.`
     : display.show === "squad" && display.because === "not-locked"
-      ? `${team.name}'s eleven is not public until lineups lock for period ${period}.`
+      ? `${team.name}'s eleven is not public until period ${display.period}'s lineups lock.`
       : `${team.name}'s eleven is not showing.`;
 
   return (

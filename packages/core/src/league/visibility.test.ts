@@ -43,6 +43,7 @@ describe("rosterDisplay", () => {
     expect(rosterDisplay(1, periods, kickoffs, BEFORE_THE_SEASON, false)).toEqual({
       show: "squad",
       because: "not-locked",
+      period: 1,
     });
   });
 
@@ -85,9 +86,31 @@ describe("rosterDisplay", () => {
     expect(rosterDisplay(2, periods, kickoffs, "2026-08-25T12:00:00.000Z", false)).toEqual({
       show: "squad",
       because: "not-locked",
+      period: 2,
     });
   });
 
+  // The state behind the screenshot Craig sent: gameweek 1's football is
+  // complete, Fantrax has rolled its own label to period 2, and period 2's lock
+  // is still six hours away. The gate is right to withhold — period 2 is the
+  // arrangement it is holding and nobody may see a rival's yet.
+  //
+  // What was wrong was the sentence. The route printed the round the READER was
+  // looking at, so a page about gameweek 1 explained itself with "until lineups
+  // lock for period 1" — a deadline that had passed a week earlier. The one
+  // number a withheld panel prints has to be the one the decision was made
+  // about, and that is knowable only here.
+  it("names the period it judged, not the round the reader is looking at", () => {
+    expect(rosterDisplay(2, periods, kickoffs, "2026-08-28T12:30:00.000Z", false)).toEqual({
+      show: "squad",
+      because: "not-locked",
+      period: 2,
+    });
+  });
+
+  // And only `not-locked` carries a period. These three fell back before any
+  // lock was consulted, so there is none they could honestly name — which these
+  // `toEqual`s prove by exhaustion, having always proved it.
   it("names which safety it fell back on", () => {
     expect(rosterDisplay(null, periods, kickoffs, P1_LOCKS, false)).toEqual({
       show: "squad",
@@ -118,6 +141,7 @@ describe("the lock, and not the period boundary", () => {
     expect(rosterDisplay(4, periods, kickoffs, "2026-09-11T10:00:00.000Z", false)).toEqual({
       show: "squad",
       because: "not-locked",
+      period: 4,
     });
   });
 
