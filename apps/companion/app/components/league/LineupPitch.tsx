@@ -81,6 +81,9 @@ export default function LineupPitch({
   availabilityOf: (player: SquadPlayerDetail) => Availability;
   onPick: (player: SquadPlayerDetail) => void;
 }) {
+  // One number for the grass and the strip — see `TeamSheet`.
+  const widest = widestLine([...rows, { players: bench }]);
+
   const cell = (player: SquadPlayerDetail) => (
     <Player
       player={player}
@@ -91,7 +94,11 @@ export default function LineupPitch({
 
   return (
     <div className="flex flex-col">
-      <PitchRows rows={rows} keyOf={(player) => player.rostered.slot.fantraxId}>
+      <PitchRows
+        rows={rows}
+        keyOf={(player) => player.rostered.slot.fantraxId}
+        widest={widest}
+      >
         {cell}
       </PitchRows>
 
@@ -100,23 +107,30 @@ export default function LineupPitch({
           with nothing but a shade between the two — the players stopped being on
           a pitch and the bench stopped being a bench. Dark, against the app's
           own surfaces, is the separation the strip was asking for. */}
-      <section className="bleed border-t border-line bg-surface pb-3 pt-3">
-        {/* The pitch's own inset — see `cardBasis`. */}
-        <ul className="flex justify-center gap-2" style={{ paddingInline: `${FAR_INSET}%` }}>
-          {bench.map((player) => (
-            <li
-              key={player.rostered.slot.fantraxId}
-              className="min-w-0 shrink-0"
-              style={{ flexBasis: cardBasis(widestLine([...rows, { players: bench }])) }}
-            >
-              <p className="pb-0.5 text-center font-display text-[0.5625rem] font-bold uppercase tracking-widest text-faint">
-                {positionLabel(player.rostered.slot.position) ?? "—"}
-              </p>
-              {cell(player)}
-            </li>
-          ))}
-        </ul>
-      </section>
+      {/* A manager with all fifteen active has no bench, and an empty strip is a
+          bordered full-bleed bar saying nothing. `TeamSheet` already guards it. */}
+      {bench.length === 0 ? null : (
+        <section className="bleed border-t border-line bg-surface pb-3 pt-3">
+          {/* The pitch's own inset — see `cardBasis`. */}
+          <ul
+            className="flex justify-center gap-2"
+            style={{ paddingInline: `${FAR_INSET}%` }}
+          >
+            {bench.map((player) => (
+              <li
+                key={player.rostered.slot.fantraxId}
+                className="min-w-0 shrink-0"
+                style={{ flexBasis: cardBasis(widest) }}
+              >
+                <p className="pb-0.5 text-center font-display text-[0.5625rem] font-bold uppercase tracking-widest text-faint">
+                  {positionLabel(player.rostered.slot.position) ?? "—"}
+                </p>
+                {cell(player)}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

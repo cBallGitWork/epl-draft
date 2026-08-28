@@ -53,6 +53,12 @@ export default function TeamSheet({
 }) {
   const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
 
+  // One number for the grass and for the strip beneath it. A reserve is the same
+  // card as the man he would replace, so the bench counts as a line when the
+  // width is chosen — otherwise a bench of five under a widest line of four is
+  // drawn narrower than the pitch it sits under.
+  const widest = agreed ?? widestLine([...rows, { players: bench }]);
+
   // `projected` is false wherever this passes it on, and that is a fact about
   // the source rather than a default: these numbers come off the live
   // scoreboard, which is what Fantrax has scored this period at the slot each
@@ -65,7 +71,7 @@ export default function TeamSheet({
           <PitchRows
             rows={rows.map((line) => ({ label: line.position, players: line.players }))}
             keyOf={(player) => player.rostered.slot.fantraxId}
-            widest={agreed}
+            widest={widest}
           >
             {(player) => <Cell player={player} onOpen={() => setOpen(player)} />}
           </PitchRows>
@@ -87,11 +93,7 @@ export default function TeamSheet({
                   <li
                     key={player.rostered.slot.fantraxId}
                     className="min-w-0 shrink-0"
-                    // The bench counts as a line of its own, so a strip wider
-                    // than any line on the grass still fits its own row.
-                    style={{
-                      flexBasis: cardBasis(agreed ?? widestLine([...rows, { players: bench }])),
-                    }}
+                    style={{ flexBasis: cardBasis(widest) }}
                   >
                     <p className="pb-0.5 text-center font-display text-[0.5625rem] font-bold uppercase tracking-widest text-faint">
                       {positionLabel(player.rostered.slot.position) ?? "—"}
