@@ -172,12 +172,11 @@ body {
   }
   /* A crossfade rather than nothing, which PRODUCT.md requires by name: this is
      the one signal whose whole content is "it changed", so removing the motion
-     removes the information. `!important` twice over, because the blanket rule
-     above is itself `!important` and would otherwise collapse this to nothing —
-     the same carve-out the live dot needs. */
+     removes the information. `!important` because the blanket rule above is
+     itself `!important` and would otherwise collapse this to nothing — the same
+     carve-out the live dot needs. */
   .value-changed {
     animation: value-crossfade 400ms linear !important;
-    animation-duration: 400ms !important;
   }
 }
 
