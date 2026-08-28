@@ -3564,6 +3564,45 @@ order: rearrange one XI after a period's lock and re-read that period **diffing
 conjunction — open label > N **and** our own calendar says period N has locked —
 rather than on the label alone, leaving `visibility.ts` untouched.
 
+## A portrait we did not have was asking Fantrax about a player who is not one (28 Aug 2026)
+
+`PlayerImage`'s second rung is a portrait of our own, for the roughly one player
+in four the Premier League's current set has no photograph of. It read
+`/players/{code}.png` — and `app/players/[fantraxId]` is a real route on this
+app. There has never been a `public/` directory, so a miss did not 404. It
+matched the route with `fantraxId = "123456.png"`, and that route deliberately
+does not 404 on an unknown id: it asks Fantrax for the profile and renders the
+refusal. Measured:
+
+```
+/players/123456.png               -> 200, 24312 bytes of HTML, "Fantrax WARNING"
+/_next/image?url=/players/...     -> 400 from our own optimizer
+/portraits/123456.png  (after)    -> 404, no Fantrax call
+```
+
+So a pitch of fifteen was making several unsolicited `getPlayerProfile` POSTs per
+render, for ids that are not players, against the provider whose politeness
+policy is written down in the route's own header — "one profile per tap, never a
+sweep of the 697". Nothing surfaced it: every rung failed downward exactly as
+designed, the picture was right, and the only symptom was traffic.
+
+**The general shape, and it is the part worth keeping.** A local asset path that
+shares a prefix with a dynamic route is not a 404 waiting to happen — it is a
+page render waiting to happen, and if that page has a side effect the side effect
+is now on the fallback path of every image that is missing. `next/image` sends
+local sources through the optimizer, so this happens server-side, at our expense,
+invisibly. Any future `public/` path has to be checked against `app/`'s segments
+before it is used. `/portraits/` is clear; `/players/`, `/squad/`, `/league/`,
+`/matchday/`, `/gw/` and `/fpl/` are not.
+
+Also fixed in the same pass: the fourth rung was unreachable for anybody whose
+club we know. The `source` ternary ended `: club && shirtUrl(club, keeper)`,
+which answers the shirt's URL at the `initials` rung as well as at `shirt`, so a
+known club whose kit would not load retried the identical src, `onError` set
+`initials` over `initials`, the `key` did not change, nothing remounted, and the
+card stayed a broken image — an empty box on the grass, for exactly the player
+the floor exists to catch. The file said "four rungs"; it was three and a hole.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for

@@ -25,9 +25,12 @@ import type { FootballPlayer } from "./types";
 //
 // PNG only — webp/jpg variants 403 on both paths.
 //
-// The file is nominally 110x140 and actually 220x280 at ~105 KB, which is
-// plenty: 88px is the pitch card and the default, 112px the profile page, and
-// 176px the front page's lead picture — all inside 220. Let
+// The file is nominally 110x140 and actually 220x280 at ~105 KB. That covers the
+// 88px pitch card and the 112px profile portrait at any pixel density worth
+// having. It does NOT cover the front page's lead picture: 176 CSS px is 352
+// device px on a 2x phone, `Stories.tsx` asks for that, and Next never enlarges
+// — so the app's largest photograph is its softest, and the source is the
+// ceiling rather than the encoding. Let
 // Next's image optimizer resize and re-encode — fifteen raw PNGs is 1.5 MB of
 // pitch on a phone against ~15 KB of WebP apiece — so `unoptimized` must never
 // be set on these.

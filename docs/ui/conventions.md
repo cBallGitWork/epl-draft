@@ -88,8 +88,11 @@ Four rungs: **this season's photograph → one of ours → the club's kit →
 initials.**
 
 - About 17 in 60 players have no photograph in the Premier League's current set.
-- **Ours** live in `apps/companion/public/players/{code}.png`, keyed on the FPL
+- **Ours** live in `apps/companion/public/portraits/{code}.png`, keyed on the FPL
   season-stable player code, dropped in by hand. A missing one costs a local 404.
+  **Not `public/players/`** — that path is the player-profile route, so a miss
+  there resolves to a page rather than a 404 and asks Fantrax about an id that is
+  not a player.
 - **The kit** is the floor and a solid one: `shirtUrl(club, keeper)` picks by club
   code rather than by a photograph of a man, so it is right the day he signs.
   Keeper kits are the `_1` variant, chosen by `isGoalkeeper(slot.position)` —
@@ -102,7 +105,7 @@ initials.**
 
 The case that still slips through is a photograph taken *within* the current set
 and overtaken by a January transfer — undetectable from the asset, and nothing
-marks it. A file in `public/players/` overrides it.
+marks it. A file in `public/portraits/` overrides it.
 
 **The points band, and the one rule under it: a card says one thing at a time.**
 The third band of a player on the grass is his fixture until he kicks off and his
