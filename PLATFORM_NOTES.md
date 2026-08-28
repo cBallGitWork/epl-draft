@@ -3557,12 +3557,8 @@ full roster for a period that can have no stored state, so "stored where it
 exists, live where it does not" is a behaviour we have observed with nothing in
 the payload to tell the two apart.
 
-So `squads.ts` still does not send the parameter, and the matchup page still
-shows today's squad for a played round and says so. What would unblock it, in
-order: rearrange one XI after a period's lock and re-read that period **diffing
-`status`, not membership**; then, if that holds, gate the history read on the
-conjunction — open label > N **and** our own calendar says period N has locked —
-rather than on the label alone, leaving `visibility.ts` untouched.
+*Both were done the same afternoon, and both held — see the section below. The
+history read shipped.*
 
 ## A portrait we did not have was asking Fantrax about a player who is not one (28 Aug 2026)
 
@@ -3602,6 +3598,61 @@ known club whose kit would not load retried the identical src, `onError` set
 `initials` over `initials`, the `key` did not change, nothing remounted, and the
 card stayed a broken image — an empty box on the grass, for exactly the player
 the floor exists to catch. The file said "four rungs"; it was three and a hole.
+
+## The arrangement is versioned too, so a played round shows its own eleven (28 Aug 2026)
+
+The morning's claim proved Fantrax versions squad MEMBERSHIP per period. That was
+never enough to act on: `status` — the ACTIVE/RESERVE split — is the only field
+`visibility.ts` withholds, and a per-period squad list does not entail a
+per-period arrangement. Craig moved test2's lineup in the afternoon, which is the
+first lineup change the league has ever had — `LINEUP_CHANGE` went from 0 rows to
+1 — and it answered:
+
+```
+?period=1   Osula (F), B.Fernandes (M) starting    the men who played gameweek 1
+?period=2   Garcia (F), Cherki (M) starting        both of the day's changes
+123 / test3 / test4                                identical
+```
+
+**Membership and arrangement are both versioned.** Nothing else in that league
+has moved since 12 August, which is precisely why no read before this could tell
+the two hypotheses apart — the same shape as the morning's problem, one level
+down.
+
+### The rule that shipped, and the one that did not
+
+Refuted in the morning: *send `?period=N` whenever Fantrax's open label is past
+N*. The label rolls on Fantrax's schedule, not ours. Recomputed against the real
+league's live calendar rather than the stale alignment fixture, two of the 38
+periods see the label roll as much as **19 hours before their own lock** — in
+that window the label says "past" while sixteen managers can still edit. (The
+morning's skeptic said seven periods and three days; it was reading
+`periodAlignment.json`, which the tree itself marks stale. Fewer and shorter, and
+it changes nothing: one window is enough.)
+
+Shipped: the **conjunction**. `frozenPeriod` asks for a past period only when
+Fantrax's open label is past it **and** our own calendar says its lineups locked.
+The second condition is false throughout every early-roll window by construction,
+so the rule is safe whichever way the roll actually works — which matters, because
+we still do not know, and now do not need to.
+
+`visibility.ts`'s gate is untouched. It still judges whatever period the payload
+declares; what changed is that for a played round the payload now declares the
+round in view. Null from `frozenPeriod` means "read the open period", which is
+what the app did before any of this existed, so the failure direction is the old
+behaviour rather than a new one.
+
+Costs one extra request, sequential, and only on a past round: Fantrax's open
+label is not knowable without asking, so the unparameterised read has to happen
+first.
+
+Verified against the running app in both directions — `?gw=1` renders
+B.Fernandes and Osula with Garcia absent entirely; `?gw=2` renders the withheld
+panel and not one player name anywhere in the payload.
+
+**What is still unknown, and no longer blocks anything:** the instant a period
+freezes — at its own lock, or when the label rolls past it. The conjunction is
+insensitive to the answer.
 
 ## Questions
 
