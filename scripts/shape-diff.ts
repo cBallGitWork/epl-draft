@@ -1,6 +1,9 @@
+import { readFileSync } from "node:fs";
+import { SHAPE_BASELINE_PATH } from "./paths";
 import {
   FANTRAX_LEAGUES,
   FantraxError,
+  type AcknowledgedDifference,
   diffShapes,
   fetchDraftResults,
   fetchLeagueInfo,
@@ -11,6 +14,7 @@ import {
   fetchTeamRosters,
   fetchTransactions,
   shapeOf,
+  unacknowledged,
 } from "@epl/core";
 
 // Does the real league answer in the shape the app was built for?
@@ -78,8 +82,28 @@ async function main() {
 
   console.log(`shape-diff — reference ${REFERENCE.key}, subject ${SUBJECT.key} (${SUBJECT.leagueId})\n`);
 
+  // Read once, up front. **Every entry has to explain itself.** The whole
+  // mechanism is one person's judgement standing in for a check a payload differ
+  // cannot make, so an entry nobody wrote a reason for is a blindfold with a
+  // filename — and a gate that would run on one has already stopped being a gate.
+  // Exit 2: this run could not answer, which is not the same as answering badly.
+  const baseline = JSON.parse(readFileSync(SHAPE_BASELINE_PATH, "utf8")) as AcknowledgedDifference[];
+  const unexplained = baseline.filter(
+    (entry) => !entry.read || !entry.path || (entry.why ?? "").trim().length < 40,
+  );
+  if (unexplained.length > 0) {
+    console.error(
+      `${unexplained.length} baseline entr${unexplained.length === 1 ? "y has" : "ies have"} no reason recorded:`,
+    );
+    for (const entry of unexplained) console.error(`    ${entry.read} ${entry.path}`);
+    console.error("Every acknowledged difference needs a sentence saying why it is acceptable.");
+    process.exitCode = 2;
+    return;
+  }
+
   let dangerous = 0;
   let refusals = 0;
+  let stale = 0;
   // Comparisons MADE, not reads attempted — so it is incremented past both
   // `continue`s below. Without it the exit code cannot tell a clean run from a
   // run that compared nothing.
@@ -113,20 +137,30 @@ async function main() {
     // with `[]`, and one line per column would bury the two lines that matter.
     const empty = emptied.length > 0 ? `  (${emptied.length} inside empty collections)` : "";
 
-    if (missing.length === 0 && added.length === 0) {
-      console.log(`✓ ${method}${empty}`);
+    const { residue, settled } = unacknowledged(method, missing, baseline);
+
+    if (residue.length === 0 && added.length === 0 && settled.length === 0) {
+      console.log(`✓ ${method}${empty}${acknowledged(missing.length)}`);
       continue;
     }
 
-    console.log(`${missing.length > 0 ? "✗" : "+"} ${method}${empty}`);
-    for (const path of missing) console.log(`    MISSING  ${path}`);
+    console.log(`${residue.length > 0 ? "✗" : "+"} ${method}${empty}${acknowledged(missing.length)}`);
+    for (const path of residue) console.log(`    MISSING  ${path}`);
     for (const path of added) console.log(`    added    ${path}`);
-    dangerous += missing.length;
+    // Not a failure — the opposite. A baseline entry that no longer differs is
+    // one a person can delete, and saying so is what stops the file growing into
+    // a blindfold.
+    for (const path of settled) console.log(`    settled  ${path}  (prune from the baseline)`);
+    dangerous += residue.length;
+    stale += settled.length;
   }
 
+  // "nobody has looked at" and not "the app reads": this script diffs payloads,
+  // not mappers, and has no way to check the second claim.
   console.log(
-    `\n${dangerous} path${dangerous === 1 ? "" : "s"} the app reads and the real league does not answer` +
-      `${refusals > 0 ? `, ${refusals} read${refusals === 1 ? "" : "s"} not comparable` : ""}.`,
+    `\n${dangerous} path${dangerous === 1 ? "" : "s"} the real league does not answer and nobody has looked at` +
+      `${refusals > 0 ? `, ${refusals} read${refusals === 1 ? "" : "s"} not comparable` : ""}` +
+      `${stale > 0 ? `, ${stale} baseline entr${stale === 1 ? "y" : "ies"} to prune` : ""}.`,
   );
 
   // **Nothing compared is not nothing wrong.** Every read refusing is what a rate
@@ -151,6 +185,12 @@ async function main() {
   // not a broken league, and a gate that reddened on it would be switched off
   // long before it mattered.
   process.exitCode = dangerous > 0 ? 1 : 0;
+}
+
+/** How many of this read's differences were already judged. Printed beside the
+ *  tick so a green line still says how much of it is somebody's decision. */
+function acknowledged(missing: number): string {
+  return missing > 0 ? `  (${missing} acknowledged)` : "";
 }
 
 // Not awaited at the top level: these scripts transpile to CJS, and a rejection

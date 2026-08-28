@@ -66,6 +66,8 @@ export type { CompetitionTie, TieSide } from "./competitions";
 
 export { FantraxError } from "./fantrax/errors";
 export type { ScoringCategory, ScoringRules } from "./scoring";
+export { unacknowledged } from "./fantrax/baseline";
+export type { AcknowledgedDifference } from "./fantrax/baseline";
 export { mapLivePlayerPoints, mapLiveScores } from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapPlayerProfile } from "./fantrax/profile";

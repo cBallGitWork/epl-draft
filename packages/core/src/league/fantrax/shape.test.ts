@@ -138,3 +138,32 @@ describe("diffShapes", () => {
     expect(diffShapes(reference, subject)).toEqual({ missing: [], emptied: [], added: [] });
   });
 });
+
+describe("emptiness sentinels", () => {
+  it("never reports one as a lost or gained field", () => {
+    // `draftSettings:empty-object` on one side and not the other says the league
+    // acquired draft settings. Reported as MISSING it reads like a setting that
+    // vanished, and it was one of the 22 paths reddening the ship-day gate.
+    const before = shapeOf({ draftSettings: {}, teams: [] });
+    const after = shapeOf({ draftSettings: { rounds: 15 }, teams: [{ id: "a" }] });
+
+    const forward = diffShapes(before, after);
+    expect(forward.missing).toEqual([]);
+    expect(forward.added.some((p) => p.endsWith(":empty") || p.endsWith(":empty-object"))).toBe(
+      false,
+    );
+
+    const back = diffShapes(after, before);
+    expect(back.missing.some((p) => p.endsWith(":empty-object"))).toBe(false);
+  });
+
+  it("still uses them to attribute what is inside an empty collection", () => {
+    // The sentinel is not reported and is still doing its job: a column that is
+    // absent only because the table is empty is `emptied`, never `missing`.
+    const populated = shapeOf({ table: { rows: [{ name: "a" }] } });
+    const empty = shapeOf({ table: { rows: [] } });
+    const diff = diffShapes(populated, empty);
+    expect(diff.missing).toEqual([]);
+    expect(diff.emptied).toEqual(["table.rows[].name:string"]);
+  });
+});

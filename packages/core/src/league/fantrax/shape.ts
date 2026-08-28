@@ -113,18 +113,28 @@ function inside(path: string, stem: string): boolean {
  *  Sorted, because this output is read by a person under time pressure on a
  *  Saturday morning, and a stable order is the difference between scanning it
  *  and re-reading it. */
+/** `…[]:empty` and `…:empty-object` are statements ABOUT a payload, not fields in
+ *  it. They drive attribution below and are never themselves reported: a
+ *  collection that was empty and now has something in it has not lost a field,
+ *  and neither has the reverse. Reported, they arrive as `MISSING
+ *  draftSettings:empty-object` — a line that reads like a vanished setting and
+ *  means "the league now has draft settings". */
+function isSentinel(path: string): boolean {
+  return path.endsWith(":empty") || path.endsWith(":empty-object");
+}
+
 export function diffShapes(reference: Set<string>, subject: Set<string>): ShapeDiff {
   const empties = [...subject]
-    .filter((path) => path.endsWith(":empty") || path.endsWith(":empty-object"))
+    .filter(isSentinel)
     .map((path) => path.slice(0, path.lastIndexOf(":")));
 
-  const absent = [...reference].filter((path) => !subject.has(path));
+  const absent = [...reference].filter((path) => !subject.has(path) && !isSentinel(path));
   const emptied = absent.filter((path) => empties.some((stem) => inside(path, stem)));
   const missing = absent.filter((path) => !emptied.includes(path));
 
   return {
     missing: missing.sort(),
     emptied: emptied.sort(),
-    added: [...subject].filter((path) => !reference.has(path)).sort(),
+    added: [...subject].filter((path) => !reference.has(path) && !isSentinel(path)).sort(),
   };
 }

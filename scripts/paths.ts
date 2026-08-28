@@ -27,6 +27,10 @@ export const MAPPINGS_ROOT = join(REPO_ROOT, "data", "mappings");
  *  otherwise lose, and this is an experiment answering a question. */
 export const ROUND_STATE_ROOT = join(REPO_ROOT, "data", "probes", "round-state");
 
+/** The shape differences somebody has read and accepted. Beside the mappings for
+ *  the same reason: both are a person's judgement, checked in as data. */
+export const SHAPE_BASELINE_PATH = join(REPO_ROOT, "data", "shape", "baseline.json");
+
 /** Where the matcher leaves what it would not decide, for a human to settle. */
 export const REVIEW_ROOT = join(MAPPINGS_ROOT, "review");
 

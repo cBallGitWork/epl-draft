@@ -1,0 +1,107 @@
+[
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.GOALIE.A.Default:string",
+    "why": "The two leagues score different categories. Ours has no Assists (Official) and no Saves; the rehearsal league has both. `mapScoringRules` walks `scoringCategories` with `Object.entries` and names no category, so nothing reads this path \u2014 the difference is the leagues' settings, not a lost field. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.GOALIE.Sv.Default:string",
+    "why": "The two leagues score different categories. Ours has no Assists (Official) and no Saves; the rehearsal league has both. `mapScoringRules` walks `scoringCategories` with `Object.entries` and names no category, so nothing reads this path \u2014 the difference is the leagues' settings, not a lost field. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getLeagueInfo",
+    "path": "scoringSystem.scoringCategories.NON_GOALIE.A.Default:string",
+    "why": "The two leagues score different categories. Ours has no Assists (Official) and no Saves; the rehearsal league has both. `mapScoringRules` walks `scoringCategories` with `Object.entries` and names no category, so nothing reads this path \u2014 the difference is the leagues' settings, not a lost field. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getDraftResults",
+    "path": "draftDate:string",
+    "why": "No draft is scheduled in the real league yet, so Fantrax states no dates and no order. `RawDraftResults` models only `draftPicks`, `draftState` and `draftType`, above a comment saying draft results are deliberately unmodelled. No consumer anywhere. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getDraftResults",
+    "path": "draftOrder[]:string",
+    "why": "No draft is scheduled in the real league yet, so Fantrax states no dates and no order. `RawDraftResults` models only `draftPicks`, `draftState` and `draftType`, above a comment saying draft results are deliberately unmodelled. No consumer anywhere. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getDraftResults",
+    "path": "endDate:string",
+    "why": "No draft is scheduled in the real league yet, so Fantrax states no dates and no order. `RawDraftResults` models only `draftPicks`, `draftState` and `draftType`, above a comment saying draft results are deliberately unmodelled. No consumer anywhere. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getDraftResults",
+    "path": "startDate:string",
+    "why": "No draft is scheduled in the real league yet, so Fantrax states no dates and no order. `RawDraftResults` models only `draftPicks`, `draftState` and `draftType`, above a comment saying draft results are deliberately unmodelled. No consumer anywhere. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-CLAIM_DROP",
+    "path": "table.caption:string",
+    "why": "The real league's table is `{rows: [], emptyTableMsg}` where the rehearsal league's is `{caption, header, rows}` \u2014 a table with nothing in it is served without its header. `transactionDateLabel` already optional-chains `table.header.cells` and returns null when it is absent, which is absence modelled explicitly. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-CLAIM_DROP",
+    "path": "table.header.cells[].align:string",
+    "why": "The real league's table is `{rows: [], emptyTableMsg}` where the rehearsal league's is `{caption, header, rows}` \u2014 a table with nothing in it is served without its header. `transactionDateLabel` already optional-chains `table.header.cells` and returns null when it is absent, which is absence modelled explicitly. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-CLAIM_DROP",
+    "path": "table.header.cells[].key:string",
+    "why": "The real league's table is `{rows: [], emptyTableMsg}` where the rehearsal league's is `{caption, header, rows}` \u2014 a table with nothing in it is served without its header. `transactionDateLabel` already optional-chains `table.header.cells` and returns null when it is absent, which is absence modelled explicitly. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-CLAIM_DROP",
+    "path": "table.header.cells[].name:string",
+    "why": "The real league's table is `{rows: [], emptyTableMsg}` where the rehearsal league's is `{caption, header, rows}` \u2014 a table with nothing in it is served without its header. `transactionDateLabel` already optional-chains `table.header.cells` and returns null when it is absent, which is absence modelled explicitly. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-CLAIM_DROP",
+    "path": "table.header.cells[].shortName:string",
+    "why": "The real league's table is `{rows: [], emptyTableMsg}` where the rehearsal league's is `{caption, header, rows}` \u2014 a table with nothing in it is served without its header. `transactionDateLabel` already optional-chains `table.header.cells` and returns null when it is absent, which is absence modelled explicitly. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-CLAIM_DROP",
+    "path": "table.header.cells[].sortDirection:number",
+    "why": "The real league's table is `{rows: [], emptyTableMsg}` where the rehearsal league's is `{caption, header, rows}` \u2014 a table with nothing in it is served without its header. `transactionDateLabel` already optional-chains `table.header.cells` and returns null when it is absent, which is absence modelled explicitly. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-TRADE",
+    "path": "table.caption:string",
+    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-TRADE",
+    "path": "table.header.cells[].align:string",
+    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-TRADE",
+    "path": "table.header.cells[].key:string",
+    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-TRADE",
+    "path": "table.header.cells[].name:string",
+    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-TRADE",
+    "path": "table.header.cells[].shortName:string",
+    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
+  },
+  {
+    "read": "getTransactionDetailsHistory-TRADE",
+    "path": "table.header.cells[].sortDirection:number",
+    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
+  },
+  {
+    "read": "fxpa getStandings (badges)",
+    "path": "tableList[].header.cells[].align:string",
+    "why": "The rehearsal league answers two tables in `tableList` and the real league answers one, so `shapeOf` \u2014 which merges array elements into a single branch \u2014 reports the second element's fields as lost. `mapTeamBadges` reads only `fantasyTeamInfo` and never touches `tableList`. Audited 28 Aug 2026."
+  },
+  {
+    "read": "fxpa getStandings (badges)",
+    "path": "tableList[].subCaption:string",
+    "why": "The rehearsal league answers two tables in `tableList` and the real league answers one, so `shapeOf` \u2014 which merges array elements into a single branch \u2014 reports the second element's fields as lost. `mapTeamBadges` reads only `fantasyTeamInfo` and never touches `tableList`. Audited 28 Aug 2026."
+  }
+]
