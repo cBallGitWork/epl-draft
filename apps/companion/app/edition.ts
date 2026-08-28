@@ -203,6 +203,8 @@ export async function edition(mine: string | null): Promise<Edition> {
   // The clock is read here, at the app edge, beside the other two — never inside
   // a builder. `football.ts` is where that rule lives.
   const underway = drafted ? roundUnderway(drafted.snapshot) : false;
+  /** The period the paper is about, and the only one anything here may ask for. */
+  const roundPeriod = drafted?.roundPeriod ?? null;
 
   const business = deals(feed.rows);
   const picked = eleven(drafted);
@@ -213,13 +215,7 @@ export async function edition(mine: string | null): Promise<Edition> {
   const told =
     board === null || partial
       ? []
-      : stories(
-          board.pairings,
-          board.scores,
-          fielded ? picked : null,
-          business,
-          drafted?.roundPeriod ?? null,
-        );
+      : stories(board.pairings, board.scores, fielded ? picked : null, business, roundPeriod);
 
   const paper = {
     live: drafted ? isMatchdayLive(drafted.snapshot) : false,
@@ -238,15 +234,11 @@ export async function edition(mine: string | null): Promise<Edition> {
     underway,
     fielded,
     stories: told,
-    // A report once the football stops, a preview between the lock and the
-    // first whistle. `partial` is what separates them, and it is the same
-    // question that decides whether the desk's own stories may run.
-    written: editionMatches(
-      published,
-      drafted?.roundPeriod ?? null,
-      partial ? "preview" : "report",
-      FANTRAX_LEAGUE_ID,
-    )
+    // A report once the round's football has finished, a preview at every other
+    // moment — `partial` is any dated unfinished fixture, so it knows nothing
+    // about the lock and does not claim to. The same question decides whether
+    // the desk's own stories may run.
+    written: editionMatches(published, roundPeriod, partial ? "preview" : "report", FANTRAX_LEAGUE_ID)
       ? published
       : null,
     board,
