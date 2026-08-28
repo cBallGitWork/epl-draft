@@ -62,6 +62,9 @@ export interface Pick {
   playerName: string;
   /** FPL's season-stable code, for the portrait. */
   playerCode: number;
+  /** His club, for the cut-out's kit and crest fallbacks. FPL's own per-season
+   *  id, which is what a snapshot's clubs are keyed by — never persisted. */
+  clubId: number;
   position: string;
   ownerTeamId: string;
   ownerName: string;
@@ -79,9 +82,22 @@ export interface Pick {
 }
 
 export interface TeamOfTheWeek {
+  /** Every pick, strongest first. The order the side was argued into being, and
+   *  the order anything asking "who was the best of them" has to read. */
   picks: Pick[];
-  /** e.g. "1-4-4-2", counted from the selection. */
+  /** The same eleven in its lines, keeper first. The same men in a second order
+   *  rather than a second set: one is how they rank and the other is where they
+   *  stand, and a pitch cannot be drawn from the first. `shape` is counted from
+   *  this, so the formation printed and the formation drawn cannot disagree. */
+  lines: TeamLine[];
+  /** e.g. "1-4-4-2", counted from the lines. */
   shape: string;
+}
+
+export interface TeamLine {
+  /** Fantrax's position letter for the whole line. */
+  position: string;
+  picks: Pick[];
 }
 
 /** One side of a head-to-head, as the front page names it. */

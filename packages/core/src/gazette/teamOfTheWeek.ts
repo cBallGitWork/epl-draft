@@ -4,7 +4,7 @@ import type { RosteredPlayer, RosteredTeam } from "../join/roster";
 import type { PlayerMatchStats } from "../football/types";
 import { isActive } from "../league/rosterStatus";
 import type { RosterLimits } from "../league/types";
-import type { Pick, TeamOfTheWeek } from "./types";
+import type { Pick, TeamLine, TeamOfTheWeek } from "./types";
 
 // The best eleven anyone owned this week, and who owns them.
 //
@@ -57,7 +57,8 @@ export function teamOfTheWeek(
     perPosition.set(pick.position, used + 1);
   }
 
-  return { picks: taken, shape: shapeOf(taken, limits) };
+  const lines = linesOf(taken, limits);
+  return { picks: taken, lines, shape: lines.map((line) => line.picks.length).join("-") };
 }
 
 /** A player worth considering, or null.
@@ -86,6 +87,7 @@ function considered(rostered: RosteredPlayer, team: RosteredTeam): Pick | null {
   return {
     playerName: rostered.player.name,
     playerCode: rostered.player.code,
+    clubId: rostered.player.clubId,
     position: rostered.slot.position,
     ownerTeamId: team.teamId,
     ownerName: team.teamName,
@@ -105,14 +107,17 @@ function total(stats: readonly PlayerMatchStats[], pick: (stat: PlayerMatchStats
   return stats.reduce((sum, stat) => sum + pick(stat), 0);
 }
 
-/** The formation the selection came out as, back to front.
+/** The selection in its lines, back to front.
  *
  *  Ordered by `positionDepth` rather than by the payload's key order, which is
- *  alphabetical — "D-F-G-M" is not a formation anybody has ever said aloud. */
-function shapeOf(picks: readonly Pick[], limits: RosterLimits): string {
+ *  alphabetical — "D-F-G-M" is not a formation anybody has ever said aloud, and
+ *  a pitch drawn in it would put the keeper third.
+ *
+ *  Empty lines are dropped: a league that allows a position nobody was picked at
+ *  has no line there, and a shape reading "1-4-0-5" is not one anybody says. */
+function linesOf(picks: readonly Pick[], limits: RosterLimits): TeamLine[] {
   return Object.keys(limits.maxActiveByPosition)
     .sort((a, b) => positionDepth(a) - positionDepth(b))
-    .map((position) => picks.filter((pick) => pick.position === position).length)
-    .filter((count) => count > 0)
-    .join("-");
+    .map((position) => ({ position, picks: picks.filter((pick) => pick.position === position) }))
+    .filter((line) => line.picks.length > 0);
 }

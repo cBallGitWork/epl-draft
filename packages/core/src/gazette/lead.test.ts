@@ -36,6 +36,7 @@ const SETTLED = board({
 const pick = (over: Partial<Pick> = {}): Pick => ({
   playerName: "Pickford",
   playerCode: 98745,
+  clubId: 11,
   position: "G",
   ownerTeamId: "123",
   ownerName: "123",
@@ -49,7 +50,11 @@ const pick = (over: Partial<Pick> = {}): Pick => ({
   ...over,
 });
 
-const eleven = (...picks: Pick[]): TeamOfTheWeek => ({ picks, shape: "1-4-4-2" });
+const eleven = (...picks: Pick[]): TeamOfTheWeek => ({
+  picks,
+  lines: [{ position: "G", picks }],
+  shape: "1-4-4-2",
+});
 
 const trade = (over: Partial<Deal> = {}): Deal => ({
   setId: "s1",

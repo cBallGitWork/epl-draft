@@ -114,7 +114,23 @@ describe("teamOfTheWeek", () => {
     expect(picked.picks).toEqual([]);
   });
 
+  it("stands the eleven up in lines, keeper first, and counts the shape off them", () => {
+    const picked = teamOfTheWeek(
+      [
+        performer("Keeper", "G", { saves: 6, cleanSheet: true }),
+        performer("Back", "D", { cleanSheet: true }),
+        performer("Runner", "M", { goals: 1 }),
+        performer("Striker", "F", { goals: 2 }),
+      ],
+      limits,
+    );
+    // Not the payload's alphabetical D-F-G-M, which would put the keeper third.
+    expect(picked.lines.map((line) => line.position)).toEqual(["G", "D", "M", "F"]);
+    expect(picked.shape).toBe("1-1-1-1");
+    expect(picked.lines.flatMap((line) => line.picks)).toHaveLength(picked.picks.length);
+  });
+
   it("has nothing to say before a ball is kicked", () => {
-    expect(teamOfTheWeek([], limits)).toEqual({ picks: [], shape: "" });
+    expect(teamOfTheWeek([], limits)).toEqual({ picks: [], lines: [], shape: "" });
   });
 });

@@ -3258,6 +3258,36 @@ the two could disagree, and it is empty because no football has been played in
 it. Recorded rather than fixed: the fix belongs with the lineup-gate work already
 booked below, which is about the lock rather than the boundary.
 
+## The paper stopped being a list (28 Aug 2026)
+
+Craig, on the first proofs of the lead: *"this is a list, we wanted a news site,
+this is boring and shit."* He was right, and the diagnosis was not styling.
+
+**No photograph anywhere.** The app ships a four-rung cut-out system
+(`PlayerImage` — this season's portrait, one of ours, the club kit, his
+initials), club crests, kits and Fantrax team badges, and the front page used
+none of them. A newspaper without a picture is a memo.
+
+**And the biggest block on the page was a table.** Team of the week was eleven
+identical hairline rows, which is what a reader actually saw when they said
+"list". It now stands on `PitchRows` — the component already drawing the three
+other elevens in the app — so the front page costs nothing it was not already
+shipping. `TeamOfTheWeek` gained `lines` beside `picks`: the same men in a second
+order, one being how they rank and the other where they stand, with `shape`
+counted off the lines so the formation printed and the formation drawn cannot
+disagree. `picks` stays score-ordered because the lead reads the first man his
+manager left out, and that claim only means anything on a ranked list. `Pick`
+gained `clubId` for the cut-out's kit and crest fallbacks.
+
+**The lead got a picture band**, and which picture is a question about honesty
+rather than layout. Only the bench story has a photograph in it — a man his own
+manager left out is a man, and we have his face. A result is not a face, so there
+the picture is the scoreline itself at 6xl, which is what a paper does with a
+score. Nothing is borrowed to fill the band: a portrait of the winner's best
+player would be a picture of a story we are not telling. The standfirst stops
+repeating the scoreline once the band carries it — a line that says it again is a
+caption.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for

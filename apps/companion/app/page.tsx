@@ -1,4 +1,4 @@
-import { LEAGUE_NAME } from "@epl/core";
+import { LEAGUE_NAME, clubById } from "@epl/core";
 import Deals from "./components/gazette/Deals";
 import Doubts from "./components/gazette/Doubts";
 import Lead from "./components/gazette/Lead";
@@ -33,6 +33,9 @@ const DRAFT_DATE = londonDate(servedLeague()?.draftDate ?? "");
 export default async function GazettePage() {
   const mine = await readerTeamId();
   const paper = await edition(mine);
+  // One lookup for the whole paper: the lead's cut-out and the eleven's eleven
+  // all want the same clubs, keyed the way a snapshot keys them.
+  const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
   const names = new Map(paper.teams.map((team) => [team.teamId, team.name]));
   const who = (teamId: string | null) => (teamId === null ? "the wire" : names.get(teamId) ?? "—");
 
@@ -54,7 +57,7 @@ export default async function GazettePage() {
       {/* The lead. Absent most of the week and absent while football is on, on
           purpose: a paper does not manufacture a front-page story, and a
           headline is the one place a provisional claim cannot go. */}
-      {paper.lead ? <Lead lead={paper.lead} who={who} /> : null}
+      {paper.lead ? <Lead lead={paper.lead} who={who} clubs={clubs} /> : null}
 
       {/* Nothing to print is a real state, not an empty page — our own league is
           in it every day until draft night, and this is the first thing sixteen
@@ -86,6 +89,7 @@ export default async function GazettePage() {
       {paper.eleven ? (
         <TeamOfTheWeek
           eleven={paper.eleven}
+          clubs={clubs}
           mine={paper.mine}
           partial={paper.partial}
           fielded={paper.fielded}

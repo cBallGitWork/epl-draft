@@ -24,13 +24,14 @@ business, who is hurt, and when lineups lock.
    while live, otherwise when lineups lock.
 2. **A live bar**, only while football is on — a link straight to `/matchday`,
    with the pulsing live dot.
-3. **The lead** — a kicker, a headline set larger than anything but the masthead,
-   and a standfirst under it. See *The lead* below.
-4. **Team of the week** — the best XI across the whole league, with its shape.
-   Each pick shows what got him picked (`2G · CS`, or minutes if nothing else)
-   and who owns him. `left him on the bench` is printed when a manager left his
-   own best player out — **and only when the arrangement it was read from is the
-   one that was fielded**; see *What may be said about a bench* below.
+3. **The lead** — a full-bleed picture band, then a kicker, a headline set larger
+   than anything but the masthead, and a standfirst. See *The lead* below.
+4. **Team of the week** — the best XI across the whole league, **on grass**, in
+   its shape. Each man is a cut-out with what got him picked under his name
+   (`2G · CS`, or minutes if nothing else) and his owner under that. `benched` is
+   appended to the owner when a manager left his own best player out — **and only
+   when the arrangement it was read from is the one that was fielded**; see *What
+   may be said about a bench* below.
 5. **The week's business** — trades and claims, grouped so both halves of a trade
    read as one deal. Fantrax's timestamps, shown verbatim with their zone named
    in the heading, because they carry a US Eastern offset.
@@ -48,6 +49,19 @@ grounds, and `mine.ts` stays the only place that knows what "yours" looks like.
 
 ## The lead
 
+**The lead carries a picture, because a front page without one is a memo.** Which
+picture depends on the story, and only one kind honestly has a photograph in it:
+a man his own manager left out is a man, and we have his face — the cut-out on
+his club's colour with the crest oversized behind him. A result is not a face, so
+there the picture is **the scoreline itself**, set as large as a phone allows,
+which is what a paper does with a score too. A trade gets the two players' names
+at the same size. Nothing is borrowed to fill the band: a portrait of the
+winner's best player would be a picture of a story we are not telling.
+
+One band, three fillings, so the four kinds share a rhythm rather than each
+arriving as its own layout. It is full-bleed on the same rule the pitch is: the
+widest thing on the page is the one that gains from every pixel.
+
 `lead()` in `packages/core/src/gazette/lead.ts` picks it, and the running order
 is an editor's argument rather than a measurement — a one-point finish and a
 manager benching the week's best keeper are not the same kind of thing, and a
@@ -60,10 +74,14 @@ the sentence — the same split the rest of the paper keeps.
 
 | kind | kicker | reads |
 |---|---|---|
-| `squeaker` | Down to the wire | *test2 edged test4* — 41–40. 1 point in it. |
-| `bench` | Left out | *test3 left Pickford out* — he is in the week's eleven. test3 lost 31–45 to 123. |
-| `rout` | No contest | *test2 took test4 apart* — 41–19. 22 points between them. |
-| `trade` | Business | *123 and test3 have traded* — Adrien Truffert to 123 · Gabriel Magalhaes to test3. |
+| `squeaker` | Down to the wire | the scoreline · *test3 edged test2* · Decided by 1 point. |
+| `bench` | Left out | his cut-out · *test4 left Pickford out* · He is in the week's eleven. test4 lost 19–41 to test2. |
+| `rout` | No contest | the scoreline · *test2 took test4 apart* · 22 points between them. |
+| `trade` | Business | the two players · *123 and test3 have traded* · Adrien Truffert to 123 · Gabriel Magalhaes to test3 |
+
+The standfirst does **not** repeat the scoreline on a result: the picture above it
+is the scoreline, and a line that says it again is a caption rather than a
+standfirst.
 
 **Both result thresholds are shares of the winning total, never numbers of
 points.** The points are a commissioner setting: this league's weeks come out in
@@ -97,6 +115,27 @@ is the check — Fantrax's own label against the period the round in view is sco
 in — and when it is false **every claim about who was STARTED is withheld**, both
 from the lead and from the eleven's rows. What the players did is football and
 stands either way, which is why the eleven itself still prints.
+
+## The eleven is a team, not a table
+
+It was eleven rows on hairlines — the same faceless line eleven times, the
+biggest block on the page, and the reason the whole paper read as a list. A team
+of the week is a *team*: it has a shape, and the shape is most of why you print
+it.
+
+It stands on `components/league/PitchRows`, which already drew the three other
+elevens in the app (a rival's XI, a rival's squad, your own lineup), so the
+front page costs nothing it was not already shipping. The cell is its own, not
+`PitchPlayer`: that one takes a `RosteredPlayer` and prints his fixture and his
+Fantrax points, and neither is what this section is about. The round is over, and
+the two things worth knowing are what he did and whose he was.
+
+**The lines come from core, not from a second sort here.** `TeamOfTheWeek.lines`
+is the same men as `picks` in a second order — one is how they rank, the other is
+where they stand — and `shape` is counted off the lines, so the formation printed
+and the formation drawn cannot come apart. `picks` stays in score order because
+the lead reads the first man his manager left out, and that only means anything
+if the list is ranked.
 
 ## The columns
 
