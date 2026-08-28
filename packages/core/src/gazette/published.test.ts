@@ -74,6 +74,25 @@ describe("normalizePublished", () => {
     expect(messy?.ties).toHaveLength(1);
   });
 
+  it("keeps one of a repeated section or tie, because the page keys on both", () => {
+    // The writer is told which keys to use and is a model. Two sections keyed
+    // `verdict` collide on the page; a retry is not a sequel, so the first wins.
+    const twice = normalizePublished({
+      ...edition(),
+      sections: [
+        { key: "verdict", heading: "The verdict", body: "First." },
+        { key: "verdict", heading: "The verdict", body: "Again." },
+      ],
+      ties: [
+        { homeTeamId: "a", awayTeamId: "b", line: "First." },
+        { homeTeamId: "a", awayTeamId: "b", line: "Again." },
+      ],
+    });
+    expect(twice?.sections).toHaveLength(1);
+    expect(twice?.sections[0]?.body).toBe("First.");
+    expect(twice?.ties).toHaveLength(1);
+  });
+
   it("drops a section with a heading and nothing under it", () => {
     const empty = normalizePublished({
       ...edition(),

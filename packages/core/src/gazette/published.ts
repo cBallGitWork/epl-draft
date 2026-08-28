@@ -122,9 +122,24 @@ export function normalizePublished(parsed: unknown): PublishedEdition | null {
     headline: raw.headline,
     deck: typeof raw.deck === "string" ? raw.deck : "",
     intro: typeof raw.intro === "string" ? raw.intro : "",
-    sections: Array.isArray(raw.sections) ? raw.sections.filter(isSection) : [],
-    ties: Array.isArray(raw.ties) ? raw.ties.filter(isTie) : [],
+    // Deduped, not just filtered. The keys are ours and the writer is told to
+    // use them, but he is a model: two sections keyed `verdict` or one tie
+    // written up twice are a React key collision on the page, and the edge that
+    // already refuses a malformed row is where to refuse a repeated one. First
+    // wins — a second attempt at the same section is a retry, not a sequel.
+    sections: once(Array.isArray(raw.sections) ? raw.sections.filter(isSection) : [], (s) => s.key),
+    ties: once(Array.isArray(raw.ties) ? raw.ties.filter(isTie) : [], (t) => `${t.homeTeamId}-${t.awayTeamId}`),
   };
+}
+
+function once<T>(items: T[], keyOf: (item: T) => string): T[] {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    const key = keyOf(item);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
 }
 
 function isSection(value: unknown): value is EditionSection {

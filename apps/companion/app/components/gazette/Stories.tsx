@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties, ReactNode } from "react";
 import {
   type Club,
   type Story,
@@ -163,7 +164,7 @@ function Total({ name, points, won }: { name: string; points: number; won: boole
 
 /** The band every lead picture stands in. Full-bleed on the same rule the pitch
  *  uses: the widest thing on the page is the one that gains from every pixel. */
-function Band({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+function Band({ children, style }: { children: ReactNode; style?: CSSProperties }) {
   return (
     <div
       className="bleed relative flex h-[8.5rem] items-center justify-center overflow-hidden bg-raised"

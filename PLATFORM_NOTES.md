@@ -3449,6 +3449,57 @@ real league is in exactly that state until 10 Oct.
   workflow whose history cannot be recreated — so it must not be the one that
   loses. Fixed in the same tranche.
 
+## Reading the paper back, and what it was actually saying (28 Aug 2026)
+
+A quality pass over the day's own work. The two that mattered were found by
+reading the brief the columnist would receive, not by a test — which is the
+lesson: a prompt is a component whose output nobody can assert on, so the only
+review available is to print it and read it.
+
+**The preview had no projections in it.** The brief said *"these are Fantrax's
+projections"* and passed `totalFpts`, which is what a squad has ACTUALLY scored
+and reads a truthful nought until a ball is kicked. Probed against period 3:
+
+```
+mapLiveScores        →  points 0, toPlay 11   (all four teams)
+projectedTotalsMap   →  41.7 and 40.0
+```
+
+So the first predictions column would have called eight ties off nought against
+nought. `mapProjectedTotals` reads the real thing, summing per-player because
+Fantrax publishes no team projection — ACTIVE only, `_5010`/`_5020` skipped,
+absence null rather than nought. The two stay separate types: a projection is a
+different claim from a score.
+
+`calculatedProjectedTotalsMap` — the guess updated for what has already happened
+— stays deliberately unread. It would quietly improve the column's odds every
+hour the workflow ran late, which is marking your own homework with the answers.
+
+**The preview's window never closed.** `locked` is true from the lock right
+through the round, so a run firing mid-match would have filed a preview saying
+nobody had kicked a ball. The lock-time run being skipped is the ORDINARY case —
+GitHub skips schedules — so this was not a rare path. It closes at the first
+whistle now, and a missed preview is simply not written.
+
+**`markPreview` was dead.** Exported, tested, wired to nothing — and it was the
+half of the feature that matters. Wiring it needed `decided` exported, because a
+pundit is marked on all eight calls and the running order only surfaces two.
+
+### The rest of the pass
+
+- **Eight barrel exports nothing outside core names**, trimmed, with a line in
+  the barrel saying which nested types are deliberately absent so they are not
+  re-added by reflex — the courtesy `football/index.ts` already pays
+  `roundFinished`.
+- **`mapping as never`** in the writer erased the bridge's type on provider data
+  (§5). `as Bridge`, asserted as `squads.ts` asserts it.
+- **The model's output is deduped, not just filtered.** Two sections keyed
+  `verdict`, or one tie written up twice, are a React key collision — and the
+  edge that already refuses a malformed row is where to refuse a repeated one.
+- Two parameters reaching for `LeagueInfo` and `FootballSnapshot` through
+  `ReturnType<typeof …>` now say so; one `React.ReactNode` on the UMD namespace
+  now imports the type like every sibling file.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for
