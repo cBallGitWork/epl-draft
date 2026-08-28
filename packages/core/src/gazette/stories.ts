@@ -83,8 +83,13 @@ export function stories(
  *  Three things have to be true and each of them has bitten a screen on this
  *  project already: both totals exist (a dash is not a nought), Fantrax says
  *  nobody has football left (`toPlay` null is "they did not say", which is not
- *  "nobody left"), and somebody won. */
-function decided(
+ *  "nobody left"), and somebody won.
+ *
+ *  Exported because marking last week's predictions needs every result, not the
+ *  two the running order picked out: a pundit is marked on all eight calls, and
+ *  reading only the thriller and the thrashing would mark him on the two ties he
+ *  was least likely to have got wrong. */
+export function decided(
   pairings: readonly PeriodPairing[],
   scores: ReadonlyMap<string, LiveTeamScore>,
 ): StoryResult[] {

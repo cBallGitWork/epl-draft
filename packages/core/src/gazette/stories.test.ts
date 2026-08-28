@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { PeriodPairing } from "../league/selectors";
 import type { LiveTeamScore } from "../league/types";
-import { stories } from "./stories";
+import { decided, stories } from "./stories";
 import type { Deal, Pick, TeamOfTheWeek } from "./types";
 
 // The numbers are period 1 of the rehearsal league, probed live on 28 Aug 2026:
@@ -227,6 +227,13 @@ describe("stories", () => {
   it("is empty rather than padded when the week produced nothing", () => {
     // Not a lead nobody can stand behind, and not a deadline dressed as news.
     expect(stories(P1, new Map(), null, [])).toEqual([]);
+  });
+
+  it("reports every decided tie, not just the ones the running order picked", () => {
+    // Marking a pundit reads this: he is marked on all his calls, and reading
+    // only the thriller and the thrashing would mark him on the two ties he was
+    // least likely to have got wrong.
+    expect(decided(P1, SETTLED).map((result) => result.winner.name)).toEqual(["test2", "test3"]);
   });
 
   it("has nothing to lead on before anybody has played", () => {
