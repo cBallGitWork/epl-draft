@@ -69,12 +69,12 @@ export default async function HeadToHeadPage({
 
   const state = roundState(squads.snapshot);
 
-  // A round in the past shows TODAY'S squad, not the eleven that played it.
-  // Fantrax does keep the period's own copy — that was settled on 28 Aug — but
-  // `squads.ts` deliberately does not ask for it, and the note there says why.
-  // Said on screen rather than assumed away: a reader knows which of his men he
-  // only signed this morning, and a page that quietly puts him in last week's
-  // eleven teaches him to distrust the weeks it has right.
+  // A round in the past shows the eleven that played it, when Fantrax has
+  // finished with that period and our calendar agrees its lineups locked. When
+  // either is untrue the roster on hand is today's, and the line below says so
+  // rather than assuming it away: a reader knows which of his men he only signed
+  // this morning, and a page that quietly puts him in last week's eleven teaches
+  // him to distrust the weeks it has right.
   //
   // Asked of the round on screen, never of whether the URL carried a gameweek:
   // arriving from the live board leaves `round` null, and a finished round is no
@@ -217,18 +217,21 @@ export default async function HeadToHeadPage({
           <span className="numeric">{refused}</span>
         </p>
       )}
-      {/* Provenance, and the honest kind: the totals are Fantrax's own, and the
-          elevens are whatever its roster read returns — the arrangement it
-          currently considers open, not the one that was fielded. That is now a
-          statement of what we do rather than of what we could not find out. The
-          scores are deliberately not called final: `state` is true here at all
-          three finished rungs and only `data_checked` earns that word, which is
-          the distinction `RoundWord` beside this makes. */}
+      {/* Provenance, and the honest kind. Which sentence is true depends on
+          whether the roster we hold is the round's own: `frozenPeriod` fetches
+          the stored arrangement once Fantrax has finished with a period and its
+          lock has gone, and answers null the rest of the time. Those are two
+          different claims, so they are two sentences and not one hedged one.
+
+          The scores are deliberately not called final either way: `state` is
+          true here at all three finished rungs and only `data_checked` earns
+          that word, which is the distinction `RoundWord` beside this makes. */}
       {played ? (
         <p className="px-3 text-2xs text-faint">
-          A round already played. The scores are Fantrax&apos;s own; the elevens are today&apos;s
-          squads rather than the ones that were fielded. Fantrax keeps the old ones and we are not
-          reading them yet.
+          A round already played. The scores are Fantrax&apos;s own
+          {squads.period.period === period
+            ? ", and so are the elevens — the arrangements it has stored for this period, not today's."
+            : "; the elevens are today's squads rather than the ones that were fielded."}
         </p>
       ) : null}
       <MatchupBoard team={side(pairing.team)} opponent={side(pairing.opponent)} state={state} />

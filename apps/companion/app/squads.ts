@@ -10,6 +10,7 @@ import {
   type RawTeamRosters,
   fetchLeagueInfo,
   fetchTeamRosters,
+  frozenPeriod,
   mapLeagueInfo,
   mapTeamRosters,
   periodGameweeks,
@@ -108,41 +109,40 @@ const readLeague = leagueCache("league-squads",
     // two calendars turn over at different instants and the page must be one
     // week's throughout.
     //
-    // **It is still never sent to `getTeamRosters` — but not for the reason that
-    // used to be written here.** That reason was that the parameter is inert:
-    // asked for period 1 Fantrax returns today's arrangement relabelled 1, so
-    // sending it forges a label rather than fetching history, and the lineup
-    // gate reads labels. The premise is false. Probed 28 Aug against a claim
-    // made that morning, a past period serves its own stored squad and not
-    // today's — `fetchTeamRosters` carries the evidence.
-    //
-    // What survives is a narrower version of the same hazard. We know a past
-    // period's copy stops tracking the live one; we do not know WHEN it stops —
-    // at that period's own lock, or later, when Fantrax's editable period moves
-    // past it. In gameweek 1 those two instants were three days apart. If it is
-    // the later, then for those three days `?period=N` answers with a live,
-    // still-editable arrangement under a label whose lock has passed, and the
-    // gate would publish precisely what it exists to withhold.
-    //
-    // Omitted, Fantrax labels the payload with its own open period and the gate
-    // judges the arrangement it is actually holding, which stays sound whichever
-    // way that lands. The price is that a past round shows today's squad under
-    // last week's heading — a wrong answer, not an unsafe one, and the matchup
-    // page says so on screen. One roster change made after a period has locked,
-    // then that period re-read, is the whole experiment.
+    // It is sent to `getTeamRosters` only for a round Fantrax has finished with
+    // and our own calendar says has locked — `frozenPeriod` holds both halves of
+    // that argument and the evidence for them.
     const roundPeriod = round?.period ?? (await roundOf(current.gameweek))?.period ?? null;
 
     // `footballNow` for the round FPL is pointing at, and only the cold cache
     // for any other. They are the same read of different rounds, but the warm
     // one is kept hot by every other page — the cold one served a 68-minute-old
     // snapshot under a LIVE badge the one afternoon it was reached alone.
-    const [snapshot, rosters, info] = await Promise.all([
+    const [snapshot, open, info, kickoffs] = await Promise.all([
       round === null || round.gameweek === current.gameweek
         ? current
         : gameweekSnapshot(round.gameweek),
       orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
       leagueInfo(),
+      seasonKickoffs(),
     ]);
+
+    // A second read, and only for a past round. Fantrax's own open label is not
+    // knowable without asking, so the unparameterised read has to happen first —
+    // which is why this is sequential and why it costs one extra request on the
+    // rounds nobody is refreshing.
+    const frozen =
+      open instanceof FantraxError
+        ? null
+        : frozenPeriod(
+            roundPeriod,
+            open.period ?? null,
+            info?.rosterPeriods ?? [],
+            kickoffs,
+            new Date().toISOString(),
+          );
+    const rosters =
+      frozen === null ? open : await orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID, frozen));
 
     return rosters instanceof FantraxError
       ? {

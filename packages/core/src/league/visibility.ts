@@ -100,6 +100,53 @@ function lineupsLocked(
   return now >= Date.parse(locks);
 }
 
+/** The past period whose stored arrangement may be fetched and shown, or null to
+ *  read whatever Fantrax currently considers open.
+ *
+ *  Two conditions, and the conjunction is the entire safety argument.
+ *
+ *  **Fantrax's own open label must be past it.** Only the open period takes
+ *  changes, so a period behind it is one nobody can still edit. Proved rather
+ *  than assumed, on 28 Aug: a claim and a lineup move were both made on `test2`
+ *  that day, and `?period=1` went on serving the dropped forward AND the benched
+ *  midfielder while `?period=2` carried both. Membership and `status` are each
+ *  versioned — and `status` is the only field this file withholds, so it is the
+ *  half that had to be proved and the half a squad list cannot show you.
+ *
+ *  **And our own calendar must say that period has locked.** The label alone
+ *  will not do, because it rolls on Fantrax's schedule rather than on ours: on
+ *  the live calendar two of the season's 38 periods see it roll as much as 19
+ *  hours before their own lock. In that window the first condition holds while
+ *  the round has not started, and reading it would publish an arrangement
+ *  sixteen managers are still free to change. The second condition is false
+ *  throughout every such window by construction — which is why this is a
+ *  conjunction and not a preference between two signals.
+ *
+ *  Null is always the safe answer: the caller reads the open period, which is
+ *  what it did before any of this existed. */
+export function frozenPeriod(
+  /** The period the round on screen is scored in. */
+  roundPeriod: number | null,
+  /** The period Fantrax labelled a no-parameter read with — its own idea of
+   *  which period is open, which runs ahead of the calendar and is the only
+   *  place that number can come from. */
+  openPeriod: number | null,
+  periods: LeaguePeriod[],
+  kickoffs: readonly GameweekKickoff[],
+  at: string,
+): number | null {
+  if (roundPeriod === null || openPeriod === null) return null;
+  if (roundPeriod >= openPeriod) return null;
+
+  const period = periods.find((p) => p.number === roundPeriod);
+  if (period === undefined) return null;
+
+  // `=== true` and not a truthiness test: `lineupsLocked` answers null when it
+  // cannot find a lock, and null must read as "not locked" here exactly as it
+  // does in the gate below.
+  return lineupsLocked(period, kickoffs, at) === true ? roundPeriod : null;
+}
+
 /** What to render for a roster Fantrax returned for `fetchedPeriod`.
  *
  *  Fails safe to squad-only, and says which safety it fell back on. Showing a

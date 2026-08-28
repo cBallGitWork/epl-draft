@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { rosterDisplay } from "./visibility";
+import { frozenPeriod, rosterDisplay } from "./visibility";
 import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 
@@ -225,5 +225,42 @@ describe("your own roster", () => {
     });
     expect(rosterDisplay(4, periods, kickoffs, friday, false).show).toBe("squad");
     expect(rosterDisplay(4, periods, [], friday, true)).toEqual({ show: "lineup", period: 4 });
+  });
+});
+
+// Whether a past period's stored arrangement may be fetched at all. The gate
+// above decides what to do with a payload; this decides which payload to ask
+// for, and it is the same safety question one step earlier.
+describe("frozenPeriod", () => {
+  // The round Craig was looking at: gameweek 1 played out, Fantrax's label
+  // already on 2, period 1 locked a week earlier.
+  it("names a past period once the label has moved past it and its lock has gone", () => {
+    expect(frozenPeriod(1, 2, periods, kickoffs, "2026-08-28T12:30:00.000Z")).toBe(1);
+  });
+
+  it("asks for nothing when the round in view is the period Fantrax has open", () => {
+    expect(frozenPeriod(2, 2, periods, kickoffs, "2026-08-28T12:30:00.000Z")).toBeNull();
+  });
+
+  it("asks for nothing about a round that has not happened", () => {
+    expect(frozenPeriod(4, 2, periods, kickoffs, "2026-08-28T12:30:00.000Z")).toBeNull();
+  });
+
+  // THE ONE THAT MATTERS. Fantrax rolls its label on its own schedule, and on
+  // the live calendar it can do so before the period it is leaving has locked.
+  // The label says period 4 is behind it; our calendar says period 4's lineups
+  // are still open. Sixteen managers can still change them, so we do not look.
+  it("refuses a period the label has left but our own calendar has not locked", () => {
+    expect(frozenPeriod(4, 5, periods, kickoffs, "2026-09-11T10:00:00.000Z")).toBeNull();
+    // And takes it the moment the lock actually lands.
+    expect(frozenPeriod(4, 5, periods, kickoffs, P4_LOCKS)).toBe(4);
+  });
+
+  it("asks for nothing without a calendar, or without a label to compare", () => {
+    expect(frozenPeriod(1, 2, [], kickoffs, "2026-08-28T12:30:00.000Z")).toBeNull();
+    expect(frozenPeriod(1, null, periods, kickoffs, "2026-08-28T12:30:00.000Z")).toBeNull();
+    expect(frozenPeriod(null, 2, periods, kickoffs, "2026-08-28T12:30:00.000Z")).toBeNull();
+    // A period the calendar does not carry is one we cannot find a lock for.
+    expect(frozenPeriod(5, 6, periods, kickoffs, "2026-10-10T12:00:00.000Z")).toBeNull();
   });
 });

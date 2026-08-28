@@ -30,7 +30,7 @@ export { captureStaleness } from "./staleness";
 export { firstKickoff, locksAt, periodGameweeks } from "./calendar";
 export type { GameweekKickoff } from "./calendar";
 
-export { rosterDisplay } from "./visibility";
+export { frozenPeriod, rosterDisplay } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
 
 export { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";
