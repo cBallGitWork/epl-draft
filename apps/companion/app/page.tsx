@@ -83,7 +83,14 @@ export default async function GazettePage() {
           a written one, stacked, saying the same thing twice — and a paper runs
           one splash. The picture stays: the story is the same story, and the
           desk is what chose the photograph for it. */}
-      {paper.written ? (
+      {/* `!paper.underway`, and it is the same rule `AsItStands` states: while the
+          round is being played the paper reports the score and says nothing
+          about what it means. A filed column BECOMES the lead — see below — so
+          without this the one place a provisional claim may not go is exactly
+          where the preview went, from the Friday lock to the last whistle. The
+          preview's own prose makes it worse: the writer is told "nobody has
+          kicked a ball", so it said so, under moving scores. */}
+      {paper.written && !paper.underway ? (
         <>
           {paper.stories[0] ? <Figure lead={paper.stories[0]} who={who} clubs={clubs} /> : null}
           <Written edition={paper.written} teams={paper.teams} />

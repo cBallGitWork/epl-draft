@@ -182,10 +182,17 @@ calls each tie, and `markPreview` counts those calls against the results so the
 next edition can tell him what he got. A pundit nobody marks is a pundit who
 never has to be right. A **report** files once the football stops.
 
-**It leads when it exists, and the desk's headline is dropped.** Both would be
-about the same match — a fact-headline and a written one, stacked, saying the
-same thing twice. The picture stays, because the story is the same story and the
-desk is what chose the photograph for it.
+**It leads when it exists AND the football has stopped, and then the desk's
+headline is dropped.** Both would be about the same match — a fact-headline and a
+written one, stacked, saying the same thing twice. The picture stays, because the
+story is the same story and the desk is what chose the photograph for it.
+
+The "and the football has stopped" is not a detail. A preview files at the
+Friday lock and `partial` stays true until the last whistle, so left unqualified
+this rule made the preview the LEAD all Saturday — the one place on the page a
+provisional claim may not go, per the rule three sections above. And the writer
+is told "nobody has kicked a ball", so it said exactly that, under moving
+scores. The page reads `!underway`.
 
 **When there is no column the paper is facts-only and says nothing about it.** A
 paper does not apologise for the column it has not got. That is the state for
