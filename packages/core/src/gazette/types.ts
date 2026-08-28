@@ -100,8 +100,8 @@ export interface TeamLine {
   picks: Pick[];
 }
 
-/** One side of a head-to-head, as the front page names it. */
-export interface LeadSide {
+/** One side of a head-to-head, as the paper names it. */
+export interface StorySide {
   teamId: string;
   name: string;
   points: number;
@@ -112,9 +112,9 @@ export interface LeadSide {
  *  Built only from two totals Fantrax has actually given for a period with no
  *  football left in it. A dash is not a nought and a match still being played is
  *  not a result, so neither ever becomes one of these. */
-export interface LeadResult {
-  winner: LeadSide;
-  loser: LeadSide;
+export interface StoryResult {
+  winner: StorySide;
+  loser: StorySide;
   /** Points between them, always above zero — a draw names no winner and is not
    *  one of these. Rounded to the hundredth: the totals are Fantrax's own
    *  decimals, and the difference of two of them in binary floating point is not
@@ -122,19 +122,22 @@ export interface LeadResult {
   margin: number;
 }
 
-/** The story the edition leads on.
+/** One story the paper can run.
  *
  *  Facts and not sentences, on the same split the rest of this folder keeps:
  *  what is true is core's business and what the paper SAYS is the app's. The
- *  four kinds are an editor's running order, and `lead.ts` carries the argument
- *  for the order they are in. */
-export type Lead =
-  | { kind: "squeaker"; result: LeadResult }
+ *  four kinds are an editor's running order, and `stories.ts` carries the
+ *  argument for the order they are in — the first is the lead and the rest are
+ *  the page's other headlines, which is why this is not called `Lead`.
+ *
+ *  It was, until the paper ran more than one of them. */
+export type Story =
+  | { kind: "squeaker"; result: StoryResult }
   /** `lost` is the owner's own defeat that week, when he had one. Null is
    *  ordinary: he may have won anyway, or drawn, or his match may not be one we
    *  can report. */
-  | { kind: "bench"; pick: Pick; lost: LeadResult | null }
-  | { kind: "rout"; result: LeadResult }
+  | { kind: "bench"; pick: Pick; lost: StoryResult | null }
+  | { kind: "rout"; result: StoryResult }
   /** `sides` are the managers who made it, in the order the deal names them, and
    *  there are always at least two — a trade that cannot name both sides is not
    *  offered as a lead at all. Carried rather than left to be re-derived from

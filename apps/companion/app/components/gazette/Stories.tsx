@@ -1,16 +1,20 @@
 import Image from "next/image";
 import {
   type Club,
-  type LeadResult,
-  type Lead as Story,
+  type Story,
+  type StoryResult,
   clubColours,
   crestUrl,
   isGoalkeeper,
 } from "@epl/core";
 import PlayerImage from "../league/PlayerImage";
 
-// The lead story, and the only thing on the page set to be read from across a
-// room.
+// The paper's stories: the lead, and the headlines that run under it.
+//
+// The lead is the only thing on the page set to be read from across a room. The
+// others are headlines and nothing else — a kicker and a line, no picture, no
+// standfirst — because a front page that gave every story a photograph would be
+// a page with no lead on it.
 //
 // It carries a picture, because a front page without one is a memo. Which
 // picture depends on what the story is, and only one of the four has a
@@ -123,7 +127,7 @@ function Figure({
 /** A result, as the picture. Winner's total in cream and the loser's dimmed —
  *  the same grammar the head-to-head boards use, at the size a front page gives
  *  the one score that mattered. */
-function Scoreline({ result }: { result: LeadResult }) {
+function Scoreline({ result }: { result: StoryResult }) {
   return (
     <Band>
       <div className="flex w-full items-center justify-center gap-4 px-4">
@@ -211,4 +215,34 @@ function written(lead: Story, who: (teamId: string | null) => string) {
 
 function points(margin: number): string {
   return `${margin} point${margin === 1 ? "" : "s"}`;
+}
+
+/** A story that is not the lead: kicker, one line, and a rule under it.
+ *
+ *  Same facts, same words, a tenth of the room. The hierarchy IS the design —
+ *  a newspaper's second story is recognisable as the second story before you
+ *  have read a word of it. */
+export function Headline({
+  story,
+  who,
+}: {
+  story: Story;
+  who: (teamId: string | null) => string;
+}) {
+  const { kicker, headline } = written(story, who);
+
+  return (
+    <li className="border-b border-line py-2.5 last:border-b-0">
+      {/* `faint` and not the league register: `league-dark` is a ground colour
+          and sits at about 2:1 on the page, which is under the 4.5:1 PRODUCT.md
+          sets for text. The red belongs to rules and chrome here, not to type
+          this small. */}
+      <p className="font-display text-2xs font-bold uppercase tracking-widest text-faint">
+        {kicker}
+      </p>
+      <p className="text-balance pt-0.5 font-display text-base font-semibold leading-tight text-cream">
+        {headline}
+      </p>
+    </li>
+  );
 }

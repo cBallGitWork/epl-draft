@@ -1,13 +1,17 @@
 import { leads } from "../league/scoreline";
 import type { PeriodPairing } from "../league/selectors";
 import type { LeagueTeam, LiveTeamScore } from "../league/types";
-import type { Deal, Lead, LeadResult, LeadSide, TeamOfTheWeek } from "./types";
+import type { Deal, Story, StoryResult, StorySide, TeamOfTheWeek } from "./types";
 
-// What the paper leads on.
+// What the paper runs, and in what order.
 //
-// A front page has a lead story. This one had four columns of equal weight, with
-// the best story on it — a manager leaving the week's best player out — printed
-// as a footnote on a row. This is the editor.
+// A front page has a lead story and then the rest of the page. This one had four
+// columns of equal weight, with the best story on it — a manager leaving the
+// week's best player out — printed as a footnote on a row. This is the editor.
+//
+// It returns every story it can tell, strongest first: the front page leads on
+// the first and runs the next as headlines under it, so a week with a thriller,
+// a benched star and a trade in it reads as a page rather than as one sentence.
 //
 // **It is a running order and not a measurement.** A one-point finish and a
 // manager benching the week's best keeper are not the same kind of thing, and no
@@ -24,8 +28,9 @@ import type { Deal, Lead, LeadResult, LeadSide, TeamOfTheWeek } from "./types";
 //  4. A trade. Rare in a draft league, and the only story an international break
 //     can produce.
 //
-// Anything else is not a lead. A paper does not manufacture one, and the next
-// deadline — which the masthead already states — is not a story.
+// A week that produces none of them gets no lead and no headlines. A paper does
+// not manufacture a story, and the next deadline — which the masthead already
+// states two lines up — is not one.
 
 /** A match decided by nothing, as a share of the winning total.
  *
@@ -41,7 +46,7 @@ const NARROW_SHARE = 0.05;
  *  this share the loser did not reach half the winner's total. */
 const ROUT_SHARE = 0.5;
 
-export function lead(
+export function stories(
   pairings: readonly PeriodPairing[],
   scores: ReadonlyMap<string, LiveTeamScore>,
   /** The week's eleven, or null when there is none — and null also when the
@@ -49,27 +54,28 @@ export function lead(
    *  caller's judgement to make and not this file's. */
   eleven: TeamOfTheWeek | null,
   deals: readonly Deal[],
-): Lead | null {
+): Story[] {
   const results = decided(pairings, scores);
+  const told: Story[] = [];
 
   const squeaker = narrowest(results.filter(isSqueaker));
-  if (squeaker !== null) return { kind: "squeaker", result: squeaker };
+  if (squeaker !== null) told.push({ kind: "squeaker", result: squeaker });
 
   // The first pick his own manager left out. `picks` comes back in the order
   // they were argued into the side, so the first is the best of them.
   const benched = eleven?.picks.find((pick) => !pick.started) ?? null;
   if (benched !== null) {
     const lost = results.find((result) => result.loser.teamId === benched.ownerTeamId) ?? null;
-    return { kind: "bench", pick: benched, lost };
+    told.push({ kind: "bench", pick: benched, lost });
   }
 
   const rout = widest(results.filter(isRout));
-  if (rout !== null) return { kind: "rout", result: rout };
+  if (rout !== null) told.push({ kind: "rout", result: rout });
 
   const business = traded(deals);
-  if (business !== null) return { kind: "trade", ...business };
+  if (business !== null) told.push({ kind: "trade", ...business });
 
-  return null;
+  return told;
 }
 
 /** The week's head-to-heads that can be reported as results.
@@ -81,8 +87,8 @@ export function lead(
 function decided(
   pairings: readonly PeriodPairing[],
   scores: ReadonlyMap<string, LiveTeamScore>,
-): LeadResult[] {
-  const results: LeadResult[] = [];
+): StoryResult[] {
+  const results: StoryResult[] = [];
 
   for (const pairing of pairings) {
     const home = scores.get(pairing.home.teamId);
@@ -106,7 +112,7 @@ function decided(
   return results;
 }
 
-function side(team: LeagueTeam, points: number): LeadSide {
+function side(team: LeagueTeam, points: number): StorySide {
   return { teamId: team.teamId, name: team.name, points };
 }
 
@@ -116,23 +122,23 @@ function side(team: LeagueTeam, points: number): LeadSide {
 // every share is zero too, so without this an unplayed week reads as a hammering
 // — `margin >= 0` is true of every result there is.
 
-function isSqueaker(result: LeadResult): boolean {
+function isSqueaker(result: StoryResult): boolean {
   return result.winner.points > 0 && result.margin <= result.winner.points * NARROW_SHARE;
 }
 
-function isRout(result: LeadResult): boolean {
+function isRout(result: StoryResult): boolean {
   return result.winner.points > 0 && result.margin >= result.winner.points * ROUT_SHARE;
 }
 
-function narrowest(results: readonly LeadResult[]): LeadResult | null {
-  return results.reduce<LeadResult | null>(
+function narrowest(results: readonly StoryResult[]): StoryResult | null {
+  return results.reduce<StoryResult | null>(
     (best, result) => (best === null || result.margin < best.margin ? result : best),
     null,
   );
 }
 
-function widest(results: readonly LeadResult[]): LeadResult | null {
-  return results.reduce<LeadResult | null>(
+function widest(results: readonly StoryResult[]): StoryResult | null {
+  return results.reduce<StoryResult | null>(
     (best, result) => (best === null || result.margin > best.margin ? result : best),
     null,
   );

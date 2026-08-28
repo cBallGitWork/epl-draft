@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { PeriodPairing } from "../league/selectors";
 import type { LiveTeamScore } from "../league/types";
-import { lead } from "./lead";
+import { stories } from "./stories";
 import type { Deal, Pick, TeamOfTheWeek } from "./types";
 
 // The numbers are period 1 of the rehearsal league, probed live on 28 Aug 2026:
@@ -50,6 +50,10 @@ const pick = (over: Partial<Pick> = {}): Pick => ({
   ...over,
 });
 
+/** The strongest story, which is what the front page leads on. Most of these
+ *  cases are about the running order, so they read it off the top. */
+const top = (...args: Parameters<typeof stories>) => stories(...args)[0] ?? null;
+
 const eleven = (...picks: Pick[]): TeamOfTheWeek => ({
   picks,
   lines: [{ position: "G", picks }],
@@ -69,9 +73,9 @@ const trade = (over: Partial<Deal> = {}): Deal => ({
   ...over,
 });
 
-describe("lead", () => {
+describe("stories", () => {
   it("leads on the hammering when nothing was close and nobody was left out", () => {
-    const story = lead(P1, SETTLED, null, []);
+    const story = top(P1, SETTLED, null, []);
     expect(story).toEqual({
       kind: "rout",
       result: {
@@ -84,42 +88,42 @@ describe("lead", () => {
 
   it("does not call an ordinary win a story", () => {
     // 45–31 is a comfortable win and no more. On its own it leads on nothing.
-    expect(lead([pairing("test3", "123")], SETTLED, null, [])).toBeNull();
+    expect(top([pairing("test3", "123")], SETTLED, null, [])).toBeNull();
   });
 
   it("puts a match decided by nothing above every other story", () => {
     const scores = board({ test2: [41, 0], test4: [40, 0], test3: [45, 0], "123": [31, 0] });
-    const story = lead(P1, scores, eleven(pick({ started: false })), [trade()]);
+    const story = top(P1, scores, eleven(pick({ started: false })), [trade()]);
     expect(story?.kind).toBe("squeaker");
     expect(story).toMatchObject({ result: { winner: { name: "test2" }, margin: 1 } });
   });
 
   it("takes the narrowest squeaker and the widest rout when there are two", () => {
     const narrow = board({ test2: [41, 0], test4: [40, 0], test3: [45, 0], "123": [44.5, 0] });
-    expect(lead(P1, narrow, null, [])).toMatchObject({
+    expect(top(P1, narrow, null, [])).toMatchObject({
       kind: "squeaker",
       result: { winner: { name: "test3" }, margin: 0.5 },
     });
 
     const wide = board({ test2: [41, 0], test4: [19, 0], test3: [45, 0], "123": [4, 0] });
-    expect(lead(P1, wide, null, [])).toMatchObject({
+    expect(top(P1, wide, null, [])).toMatchObject({
       kind: "rout",
       result: { winner: { name: "test3" }, margin: 41 },
     });
   });
 
   it("leads on the man his own manager left out, above a hammering", () => {
-    const story = lead(P1, SETTLED, eleven(pick({ started: false })), []);
+    const story = top(P1, SETTLED, eleven(pick({ started: false })), []);
     expect(story?.kind).toBe("bench");
   });
 
   it("names the defeat the benched man sat out, and nothing when there was none", () => {
     // 123 lost 31–45, so the story has both halves.
-    const lost = lead(P1, SETTLED, eleven(pick({ started: false })), []);
+    const lost = top(P1, SETTLED, eleven(pick({ started: false })), []);
     expect(lost).toMatchObject({ lost: { winner: { name: "test3" }, loser: { name: "123" } } });
 
     // test2 won its match. He was still left out; there is simply no defeat.
-    const won = lead(
+    const won = top(
       P1,
       SETTLED,
       eleven(pick({ started: false, ownerTeamId: "test2", ownerName: "test2" })),
@@ -129,7 +133,7 @@ describe("lead", () => {
   });
 
   it("takes the best of the men left out, not the first in the payload", () => {
-    const story = lead(
+    const story = top(
       P1,
       SETTLED,
       eleven(
@@ -145,7 +149,7 @@ describe("lead", () => {
   it("leads on a trade when there is no football to lead on", () => {
     // An international break: no pairings, no eleven, and two managers did
     // business anyway.
-    expect(lead([], new Map(), null, [trade()])).toMatchObject({
+    expect(top([], new Map(), null, [trade()])).toMatchObject({
       kind: "trade",
       // Both managers, named here rather than worked out again by whatever
       // prints the headline.
@@ -155,38 +159,38 @@ describe("lead", () => {
 
   it("will not lead on a trade that does not say who got whom", () => {
     const nameless = trade({ inbound: [{ playerName: "Saka", teamId: null }] });
-    expect(lead([], new Map(), null, [nameless])).toBeNull();
+    expect(top([], new Map(), null, [nameless])).toBeNull();
   });
 
   it("ignores a claim off the wire, which is not a trade", () => {
-    expect(lead([], new Map(), null, [trade({ kind: "claim" })])).toBeNull();
+    expect(top([], new Map(), null, [trade({ kind: "claim" })])).toBeNull();
   });
 
   it("reports no result while anybody still has football to come", () => {
     const midweek = board({ test2: [41, 0], test4: [19, 2], test3: [45, 0], "123": [31, 0] });
-    expect(lead([pairing("test2", "test4")], midweek, null, [])).toBeNull();
+    expect(top([pairing("test2", "test4")], midweek, null, [])).toBeNull();
   });
 
   it("treats an unstated toPlay as unknown rather than as nobody left", () => {
     const silent = board({ test2: [41, null], test4: [19, null] });
-    expect(lead([pairing("test2", "test4")], silent, null, [])).toBeNull();
+    expect(top([pairing("test2", "test4")], silent, null, [])).toBeNull();
   });
 
   it("does not read a missing total as a nought", () => {
     // A dash beaten by 41 has beaten nothing, and calling it a rout would be the
     // most confident wrong statement on the page.
     const dashed = board({ test2: [41, 0], test4: [null, 0] });
-    expect(lead([pairing("test2", "test4")], dashed, null, [])).toBeNull();
+    expect(top([pairing("test2", "test4")], dashed, null, [])).toBeNull();
   });
 
   it("names no winner in a dead heat", () => {
     const drawn = board({ test2: [41, 0], test4: [41, 0] });
-    expect(lead([pairing("test2", "test4")], drawn, null, [])).toBeNull();
+    expect(top([pairing("test2", "test4")], drawn, null, [])).toBeNull();
   });
 
   it("finds no story in a week nobody scored in", () => {
     const nothing = board({ test2: [0, 0], test4: [0, 0] });
-    expect(lead([pairing("test2", "test4")], nothing, null, [])).toBeNull();
+    expect(top([pairing("test2", "test4")], nothing, null, [])).toBeNull();
   });
 
   it("scales its thresholds to the league's own scoring rather than to a number of points", () => {
@@ -195,17 +199,36 @@ describe("lead", () => {
     // whole reason the thresholds are shares. A commissioner who pays for every
     // touch must not get a paper that calls every week a thriller.
     const tenfold = board({ test2: [410, 0], test4: [388, 0] });
-    expect(lead([pairing("test2", "test4")], tenfold, null, [])).toBeNull();
+    expect(top([pairing("test2", "test4")], tenfold, null, [])).toBeNull();
   });
 
   it("keeps the margin the number a person would write down", () => {
     const fractional = board({ test2: [41.3, 0], test4: [19.1, 0] });
-    expect(lead([pairing("test2", "test4")], fractional, null, [])).toMatchObject({
+    expect(top([pairing("test2", "test4")], fractional, null, [])).toMatchObject({
       result: { margin: 22.2 },
     });
   });
 
+  it("runs every story it can tell, strongest first", () => {
+    // A week with all four in it: test3 edged 123 by a point, test4 was taken
+    // apart, somebody's best man sat out, and two managers did business. A page,
+    // not a sentence.
+    const scores = board({ test2: [41, 0], test4: [19, 0], test3: [45, 0], "123": [44.5, 0] });
+    const told = stories(
+      P1,
+      scores,
+      eleven(pick({ started: false, ownerTeamId: "test4", ownerName: "test4" })),
+      [trade()],
+    );
+    expect(told.map((story) => story.kind)).toEqual(["squeaker", "bench", "rout", "trade"]);
+  });
+
+  it("is empty rather than padded when the week produced nothing", () => {
+    // Not a lead nobody can stand behind, and not a deadline dressed as news.
+    expect(stories(P1, new Map(), null, [])).toEqual([]);
+  });
+
   it("has nothing to lead on before anybody has played", () => {
-    expect(lead(P1, new Map(), null, [])).toBeNull();
+    expect(top(P1, new Map(), null, [])).toBeNull();
   });
 });

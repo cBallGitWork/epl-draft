@@ -3,10 +3,10 @@ import AsItStands from "./components/gazette/AsItStands";
 import AutoRefresh from "./components/shell/AutoRefresh";
 import Deals from "./components/gazette/Deals";
 import Doubts from "./components/gazette/Doubts";
-import Lead from "./components/gazette/Lead";
+import Lead, { Headline } from "./components/gazette/Stories";
 import Masthead from "./components/gazette/Masthead";
 import TeamOfTheWeek from "./components/gazette/TeamOfTheWeek";
-import { FANTRAX_SILENT, servedLeague } from "./config";
+import { FANTRAX_SILENT, SECONDARY_STORIES, servedLeague } from "./config";
 import Column from "./components/gazette/Column";
 import Nothing from "./components/shell/Nothing";
 import { edition } from "./edition";
@@ -73,10 +73,21 @@ export default async function GazettePage() {
         />
       ) : null}
 
-      {/* The lead. Absent most of the week and absent while football is on, on
-          purpose: a paper does not manufacture a front-page story, and a
-          headline is the one place a provisional claim cannot go. */}
-      {paper.lead ? <Lead lead={paper.lead} who={who} clubs={clubs} /> : null}
+      {/* The lead, then the rest of the page's headlines. Absent most of the
+          week and absent while football is on, on purpose: a paper does not
+          manufacture a front-page story, and a headline is the one place a
+          provisional claim cannot go. */}
+      {paper.stories[0] ? <Lead lead={paper.stories[0]} who={who} clubs={clubs} /> : null}
+
+      {paper.stories.length > 1 ? (
+        <Column title="Also this week">
+          <ul>
+            {paper.stories.slice(1, SECONDARY_STORIES + 1).map((story) => (
+              <Headline key={story.kind} story={story} who={who} />
+            ))}
+          </ul>
+        </Column>
+      ) : null}
 
       {/* Nothing to print is a real state, not an empty page — our own league is
           in it every day until draft night, and this is the first thing sixteen

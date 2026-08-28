@@ -29,18 +29,23 @@ business, who is hurt, and when lineups lock.
 3. **The lead** — a full-bleed picture band, then a kicker, a headline set larger
    than anything but the masthead, and a standfirst. Never at the same time as
    the splash. See *The lead* below.
-4. **Team of the week** — the best XI across the whole league, **on grass**, in
+4. **Also this week** — the next two stories as headlines: a kicker and a line,
+   no picture, no standfirst. The hierarchy *is* the design — a newspaper's
+   second story is recognisable as the second story before you have read a word
+   of it, and a page that gave every story a photograph would be a page with no
+   lead on it.
+5. **Team of the week** — the best XI across the whole league, **on grass**, in
    its shape. Each man is a cut-out with what got him picked under his name
    (`2G · CS`, or minutes if nothing else) and his owner under that. `benched` is
    appended to the owner when a manager left his own best player out — **and only
    when the arrangement it was read from is the one that was fielded**; see *What
    may be said about a bench* below.
-5. **The week's business** — trades and claims, grouped so both halves of a trade
+6. **The week's business** — trades and claims, grouped so both halves of a trade
    read as one deal. Fantrax's timestamps, shown verbatim with their zone named
    in the heading, because they carry a US Eastern offset.
-6. **Doubts** — FPL's injury news across every squad, with chance of playing.
+7. **Doubts** — FPL's injury news across every squad, with chance of playing.
    `no word` when FPL has no opinion, which is not the same as 0%.
-7. **Next deadline** — the period boundary, with an explicit note that the
+8. **Next deadline** — the period boundary, with an explicit note that the
    commissioner's real lock is fifteen minutes before the first fixture and is
    not something Fantrax publishes.
 
@@ -94,15 +99,21 @@ One band, three fillings, so the four kinds share a rhythm rather than each
 arriving as its own layout. It is full-bleed on the same rule the pitch is: the
 widest thing on the page is the one that gains from every pixel.
 
-`lead()` in `packages/core/src/gazette/lead.ts` picks it, and the running order
+`stories()` in `packages/core/src/gazette/stories.ts` ranks them, and the order
 is an editor's argument rather than a measurement — a one-point finish and a
 manager benching the week's best keeper are not the same kind of thing, and a
 number claiming to convert between them would be an arbitrary weight wearing the
 costume of an answer. In order: **a match decided by nothing**, then **a manager
 who left the week's best player out**, then **a hammering**, then **a trade**.
 
-Four kinds, four headlines, one shape. Core returns the fact, `Lead.tsx` writes
-the sentence — the same split the rest of the paper keeps.
+Four kinds, four headlines, one shape. Core returns the facts **and every story
+it can tell, strongest first** — the page leads on the first and runs the next
+two as headlines. Core returns the fact, `Stories.tsx` writes the sentence: the
+same split the rest of the paper keeps, and the same words at both sizes, so the
+lead and a headline can never disagree about what happened.
+
+The type is `Story` and not `Lead`, and it was `Lead` until the paper ran more
+than one of them.
 
 | kind | kicker | reads |
 |---|---|---|

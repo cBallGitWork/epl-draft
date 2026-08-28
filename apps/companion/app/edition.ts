@@ -5,7 +5,7 @@ import {
   type Deadline,
   type Deal,
   type FootballSnapshot,
-  type Lead,
+  type Story,
   type LeagueInfo,
   type RosteredTeam,
   type LeagueTeam,
@@ -17,11 +17,11 @@ import {
   deals,
   fetchTransactions,
   isMatchdayLive,
-  lead,
   mapTransactions,
   transactionDateLabel,
   nextDeadline,
   periodPairings,
+  stories,
   teamOfTheWeek,
 } from "@epl/core";
 import { leagueCache } from "./leagueCache";
@@ -121,9 +121,10 @@ export interface Edition {
    *  players did is football and stands either way, which is why the eleven
    *  itself still prints. */
   fielded: boolean;
-  /** The story the edition leads on, or none. A paper does not manufacture a
-   *  lead, so most of the week there is not one. */
-  lead: Lead | null;
+  /** Every story the week produced, strongest first: the front page leads on the
+   *  first and runs the rest as headlines under it. Empty is ordinary — a paper
+   *  does not manufacture a story, so most of the week there is nothing here. */
+  stories: Story[];
   /** This period's ties and Fantrax's totals for them, or null when there is no
    *  round to report. One read, two readers: the splash prints it while football
    *  is on, and `lead()` decides the week's story from it once the football
@@ -197,19 +198,21 @@ export async function edition(mine: string | null): Promise<Edition> {
   // a builder. `football.ts` is where that rule lives.
   const underway = drafted ? roundUnderway(drafted.snapshot) : false;
 
-  const told = deals(feed.rows);
+  const business = deals(feed.rows);
   const picked = eleven(drafted);
   const board = drafted === null ? null : await readBoard(drafted);
   // A headline is the one place on the page a provisional claim cannot go, so
   // the lead waits for a week that is over. While football is on the splash
   // reports the score and says nothing about what it means.
-  const story =
-    board === null || partial ? null : lead(board.pairings, board.scores, fielded ? picked : null, told);
+  const told =
+    board === null || partial
+      ? []
+      : stories(board.pairings, board.scores, fielded ? picked : null, business);
 
   const paper = {
     live: drafted ? isMatchdayLive(drafted.snapshot) : false,
     snapshot: drafted?.snapshot ?? null,
-    deals: told,
+    deals: business,
     dealsAt: feed.at,
     // Your problems first: a manager scanning injury news on a Friday is
     // looking for his own name before anybody else's.
@@ -222,7 +225,7 @@ export async function edition(mine: string | null): Promise<Edition> {
     partial,
     underway,
     fielded,
-    lead: story,
+    stories: told,
     board,
     mine,
   };

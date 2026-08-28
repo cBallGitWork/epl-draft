@@ -35,6 +35,14 @@ export const WRONG_CODE_DELAY_MS = 700;
 export const DEALS_SHOWN = 6;
 export const DOUBTS_SHOWN = 8;
 
+/** How many stories run as headlines under the lead.
+ *
+ *  Two, because a front page has a lead and a couple of others — a list of every
+ *  story the week produced is a contents page, and the sections below already
+ *  carry the detail. The engine ranks four kinds, so this is what decides that
+ *  the fourth-best story of the week is not news. */
+export const SECONDARY_STORIES = 2;
+
 /** The league this deployment actually serves.
  *
  *  `FANTRAX_LEAGUE_ID` is the env var and the whole of the 10 Oct swap; this is
