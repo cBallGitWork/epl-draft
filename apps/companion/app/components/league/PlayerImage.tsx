@@ -19,9 +19,10 @@ import { type Club, type FootballPlayer, initials, portraitUrl, shirtUrl } from 
 //
 // Roughly a quarter of players have no photograph in the Premier League's
 // current set, and the set before it is two seasons stale — Bruno Guimarães is
-// in that gap. Ours fill it: `public/players/{code}.png`, keyed on the same
+// in that gap. Ours fill it: `public/portraits/{code}.png`, keyed on the same
 // season-stable code everything else keys on, dropped in by hand and served from
-// our own origin. A missing one costs a local 404 and nothing else.
+// our own origin. A missing one costs a local 404 and nothing else — which was
+// the claim, and was not true while the path was `/players/`; see `ourPortrait`.
 //
 // The kit is the floor, and it is a solid one: a shirt is chosen by club code
 // rather than taken of a man, so it is right the day he signs. Initials are only
@@ -35,8 +36,19 @@ const NEXT: Record<Exclude<Rung, "initials">, Rung> = {
   shirt: "initials",
 };
 
-/** One of ours, if somebody has put one there. */
-const ourPortrait = (code: number) => `/players/${code}.png`;
+/** One of ours, if somebody has put one there.
+ *
+ *  **`/portraits/`, and never `/players/`.** That was a real path on this app —
+ *  `app/players/[fantraxId]` — so a miss did not 404: it matched the route with
+ *  `fantraxId = "123456.png"`, which fires a live Fantrax profile POST for an id
+ *  that is not a player, renders 24 KB of refusal HTML, returns it 200, and
+ *  hands that to the image optimizer, which answers 400. Roughly a quarter of
+ *  the pool has no current photograph, so a pitch of fifteen was making several
+ *  of those per render — against the one provider whose politeness policy is
+ *  written down two files away ("one profile per tap, never a sweep of the
+ *  697"). A static path with no route behind it 404s, costs nothing, and is
+ *  read by nobody. */
+const ourPortrait = (code: number) => `/portraits/${code}.png`;
 
 export default function PlayerImage({
   player,
@@ -66,12 +78,21 @@ export default function PlayerImage({
   sizes?: string;
 }) {
   const [rung, setRung] = useState<Rung>("photo");
+  // Four rungs, and the fourth has to be able to serve NOTHING — that is what
+  // makes it the floor. This used to end `: club && shirtUrl(club, keeper)`,
+  // which answers the shirt's own URL at the `initials` rung as well as at
+  // `shirt`. So a club we can name but whose kit will not load retried the
+  // identical src, `onError` set `initials` over `initials`, `key` did not
+  // change, nothing remounted, and the card was left as a broken image: an
+  // empty box on the grass, for the one player the fallback exists for.
   const source =
     rung === "photo"
       ? portraitUrl(player)
       : rung === "ours"
         ? ourPortrait(player.code)
-        : club && shirtUrl(club, keeper);
+        : rung === "shirt"
+          ? club && shirtUrl(club, keeper)
+          : undefined;
 
   return (
     // Wider than it is tall, and the picture is cropped to fill it from the top:
