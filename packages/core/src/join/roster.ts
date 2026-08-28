@@ -79,6 +79,23 @@ export interface RosteredPeriod {
   teams: RosteredTeam[];
 }
 
+/** Whether the arrangement we are holding is the one this round was played with.
+ *
+ *  Two numbers that are easy to mistake for one. `RosteredPeriod.period` is the
+ *  period FANTRAX says these rosters are, and it runs ahead of the calendar —
+ *  the label rolls the moment a round's last fixture ends, so for about four
+ *  days in seven it names next week. `roundPeriod` is the period the round on
+ *  screen is scored in. When they agree, a claim about who STARTED is a claim
+ *  about the eleven that played; when they do not, it is a claim about a side
+ *  nobody has fielded yet, and every such claim has to be withheld.
+ *
+ *  Named here because three readers were each answering it inline — the paper,
+ *  the columnist, and the head-to-head's provenance line — and the one thing a
+ *  two-term equality cannot carry is which two terms it is about. */
+export function wasFielded(rostered: RosteredPeriod, roundPeriod: number | null): boolean {
+  return rostered.period !== null && rostered.period === roundPeriod;
+}
+
 export function resolveRosters(
   snapshot: FootballSnapshot,
   rosters: PeriodRosters,

@@ -34,6 +34,7 @@ import {
   deals,
   stories,
   teamOfTheWeek,
+  wasFielded,
 } from "@epl/core";
 import { EDITIONS_ROOT } from "./paths";
 import { BYLINE, PREVIEW, REPORT } from "./edition/voice";
@@ -176,7 +177,7 @@ async function gather(
   const squads =
     rosters === null ? null : resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge);
   const eleven = squads === null ? null : teamOfTheWeek(squads.teams, info.roster);
-  const fielded = squads !== null && squads.period === period;
+  const fielded = squads !== null && wasFielded(squads, period);
 
   const business = deals([
     ...(claims === null ? [] : mapTransactions(claims, "CLAIM_DROP")),

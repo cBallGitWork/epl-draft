@@ -4,7 +4,7 @@ import type { Bridge } from "../identity/bridge";
 import { mapTeamRosters } from "../league/fantrax/rosters";
 import type { RawTeamRosters } from "../league/fantrax/raw";
 import type { PeriodRosters } from "../league/types";
-import { isResolved, resolveRosters } from "./roster";
+import { isResolved, resolveRosters, wasFielded } from "./roster";
 import bridgeFixture from "./__fixtures__/bridge.json";
 import footballPlayers from "./__fixtures__/footballPlayers.json";
 import rehearsalRosters from "./__fixtures__/rehearsalRosters.json";
@@ -176,5 +176,26 @@ describe("resolveRosters, before the league exists", () => {
       teams: [{ teamId: "t1", teamName: "Test", slots: [] }],
     };
     expect(resolveRosters(snap(), undrafted, bridge).teams[0].players).toEqual([]);
+  });
+});
+
+describe("wasFielded", () => {
+  it("agrees only when the label and the round in view are the same period", () => {
+    expect(wasFielded({ period: 1, teams: [] }, 1)).toBe(true);
+    expect(wasFielded({ period: 2, teams: [] }, 1)).toBe(false);
+  });
+
+  // The ordinary between-rounds state, and the reason this has a name: Fantrax
+  // rolls its label the moment a round's last fixture ends, so for most of the
+  // week the arrangement on hand is next week's plan.
+  it("is false when Fantrax would not say which period it handed us", () => {
+    expect(wasFielded({ period: null, teams: [] }, 1)).toBe(false);
+  });
+
+  // Null on the right is a round the calendar does not cover. Two unknowns are
+  // not a match — the one answer that must never come back true.
+  it("is false when there is no round in view, even with no label either", () => {
+    expect(wasFielded({ period: 3, teams: [] }, null)).toBe(false);
+    expect(wasFielded({ period: null, teams: [] }, null)).toBe(false);
   });
 });

@@ -25,6 +25,7 @@ import {
   periodPairings,
   stories,
   teamOfTheWeek,
+  wasFielded,
 } from "@epl/core";
 import { leagueCache } from "./leagueCache";
 import { roundUnderway, seasonKickoffs } from "./football";
@@ -197,12 +198,7 @@ export async function edition(mine: string | null): Promise<Edition> {
     drafted?.snapshot.fixtures.some(
       (fixture) => fixture.kickoff !== null && fixture.status !== "finished",
     ) ?? false;
-  // Fantrax's own label for the arrangement it handed us, against the period the
-  // round in view is scored in.
-  const fielded =
-    drafted !== null &&
-    drafted.roundPeriod !== null &&
-    drafted.period.period === drafted.roundPeriod;
+  const fielded = drafted !== null && wasFielded(drafted.period, drafted.roundPeriod);
 
   // The clock is read here, at the app edge, beside the other two — never inside
   // a builder. `football.ts` is where that rule lives.

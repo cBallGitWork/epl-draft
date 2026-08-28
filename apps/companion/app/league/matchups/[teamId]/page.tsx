@@ -10,6 +10,7 @@ import {
   roundState,
   squadDetail,
   squadUnarranged,
+  wasFielded,
 } from "@epl/core";
 import AutoRefresh from "../../../components/shell/AutoRefresh";
 import MatchupBoard, { type MatchupSide } from "../../../components/league/MatchupBoard";
@@ -229,7 +230,7 @@ export default async function HeadToHeadPage({
       {played ? (
         <p className="px-3 text-2xs text-faint">
           A round already played. The scores are Fantrax&apos;s own
-          {squads.period.period === period
+          {wasFielded(squads.period, period)
             ? ", and so are the elevens — the arrangements it has stored for this period, not today's."
             : "; the elevens are today's squads rather than the ones that were fielded."}
         </p>
