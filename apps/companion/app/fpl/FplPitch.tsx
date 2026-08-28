@@ -100,5 +100,3 @@ function Sticker({
   );
 }
 
-/** The same size on every card, truncating — the pitch's rule, and this pitch
- *  obeys it too. */

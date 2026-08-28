@@ -24,19 +24,6 @@ import { NAME_SIZE } from "./PitchRows";
 // only two things he came for, the face and the fixture. What replaced it is
 // what the cut-outs were always asking for — nothing behind them at all.
 
-/** One size for every name on the pitch.
- *
- *  It used to step down in three bands by name length so a long name survived
- *  whole. That kept the words and lost the line: eleven cards in three type
- *  sizes read as eleven different components, and the two men whose names had
- *  been shrunk were the ones a manager could no longer scan. Craig's call, 22
- *  Aug — same size, same font, truncate the long ones.
- *
- *  Sized in container-query units so it tracks the card rather than the
- *  viewport, and the plate is a fixed band with the name centred in it: type set
- *  on its own line height made every plate a different height, so Haaland and
- *  João Pedro stood at different heights in the same row. */
-
 export default function PitchPlayer({
   rostered,
   club,

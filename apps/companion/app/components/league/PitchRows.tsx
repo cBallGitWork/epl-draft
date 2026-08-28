@@ -63,7 +63,18 @@ export function cardBasis(widest: number): string {
  *  A token and never a component. The three plates it sets genuinely differ — a
  *  cream band across the pitch, and the team of the week's dark rounded strip —
  *  and a shared component reconciling them would be the §1 abstraction that is
- *  forbidden. Only the size was ever the same. */
+ *  forbidden. Only the size was ever the same.
+ *
+ *  ONE size, and that is a decision rather than a default. It used to step down
+ *  in three bands by name length so a long name survived whole, which kept the
+ *  words and lost the line: eleven cards in three type sizes read as eleven
+ *  different components, and the two men whose names had been shrunk were the
+ *  ones a manager could no longer scan. Craig's call, 22 Aug — same size, same
+ *  font, truncate the long ones.
+ *
+ *  The plate is a fixed band with the name centred in it, for the same reason:
+ *  type set on its own line height made every plate a different height, so
+ *  Haaland and João Pedro stood at different heights in the same row. */
 export const NAME_SIZE = "text-[clamp(7px,13cqw,11px)]";
 
 export interface PitchRow<T> {
