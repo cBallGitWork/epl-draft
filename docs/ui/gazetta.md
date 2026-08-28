@@ -1,8 +1,7 @@
 # `/` — the Gazetta
 
-The front page, and the first thing sixteen people open. A first edition rather
-than the full paper: the lead, the week's business, who is hurt, and when lineups
-lock.
+The front page, and the first thing sixteen people open: the lead, the week's
+business, who is hurt, and when lineups lock.
 
 ## In reading order
 
@@ -25,18 +24,19 @@ lock.
    while live, otherwise when lineups lock.
 2. **A live bar**, only while football is on — a link straight to `/matchday`,
    with the pulsing live dot.
-3. **Team of the week** — the best XI across the whole league, with its shape.
+3. **The lead** — a kicker, a headline set larger than anything but the masthead,
+   and a standfirst under it. See *The lead* below.
+4. **Team of the week** — the best XI across the whole league, with its shape.
    Each pick shows what got him picked (`2G · CS`, or minutes if nothing else)
-   and who owns him. **The best story on the page is `left him on the bench`**,
-   printed when a manager left his own best player out — **and only when the
-   arrangement it was read from is the one that was fielded**; see *What may be
-   said about a bench* below.
-4. **The week's business** — trades and claims, grouped so both halves of a trade
+   and who owns him. `left him on the bench` is printed when a manager left his
+   own best player out — **and only when the arrangement it was read from is the
+   one that was fielded**; see *What may be said about a bench* below.
+5. **The week's business** — trades and claims, grouped so both halves of a trade
    read as one deal. Fantrax's timestamps, shown verbatim with their zone named
    in the heading, because they carry a US Eastern offset.
-5. **Doubts** — FPL's injury news across every squad, with chance of playing.
+6. **Doubts** — FPL's injury news across every squad, with chance of playing.
    `no word` when FPL has no opinion, which is not the same as 0%.
-6. **Next deadline** — the period boundary, with an explicit note that the
+7. **Next deadline** — the period boundary, with an explicit note that the
    commissioner's real lock is fifteen minutes before the first fixture and is
    not something Fantrax publishes.
 
@@ -45,6 +45,44 @@ Your own team is marked throughout with the left-edge accent border
 sets a border *colour* plus an explicit left width, so on a ruled row with no
 `border` utility it draws the accent bar and nothing else. One treatment, two
 grounds, and `mine.ts` stays the only place that knows what "yours" looks like.
+
+## The lead
+
+`lead()` in `packages/core/src/gazette/lead.ts` picks it, and the running order
+is an editor's argument rather than a measurement — a one-point finish and a
+manager benching the week's best keeper are not the same kind of thing, and a
+number claiming to convert between them would be an arbitrary weight wearing the
+costume of an answer. In order: **a match decided by nothing**, then **a manager
+who left the week's best player out**, then **a hammering**, then **a trade**.
+
+Four kinds, four headlines, one shape. Core returns the fact, `Lead.tsx` writes
+the sentence — the same split the rest of the paper keeps.
+
+| kind | kicker | reads |
+|---|---|---|
+| `squeaker` | Down to the wire | *test2 edged test4* — 41–40. 1 point in it. |
+| `bench` | Left out | *test3 left Pickford out* — he is in the week's eleven. test3 lost 31–45 to 123. |
+| `rout` | No contest | *test2 took test4 apart* — 41–19. 22 points between them. |
+| `trade` | Business | *123 and test3 have traded* — Adrien Truffert to 123 · Gabriel Magalhaes to test3. |
+
+**Both result thresholds are shares of the winning total, never numbers of
+points.** The points are a commissioner setting: this league's weeks come out in
+the tens and a league paying for every touch would come out in the hundreds, so a
+threshold written in points would read every week of one of them as a thriller.
+
+**Most of the week there is no lead, and that is the design.** A paper does not
+manufacture a front-page story, so when nothing qualifies nothing prints — and
+the next deadline, which the masthead already states, is not a story. Nor is
+there one while football is on: the live bar leads then, and a headline is the
+one place on the page a provisional claim cannot go.
+
+It is deliberately **not** marked when it is about the reader's own team. The
+accent is a reading aid for scanning a list of sixteen and there is nothing here
+to scan; a manager knows his own name in a headline.
+
+It is deliberately not a `Column` either, though it borrows that head. A column's
+head is a label over a list and the list is the point; here the head is a kicker
+and the headline is the point, so the headline has to be the heading.
 
 ## What may be said about a bench
 
@@ -56,9 +94,9 @@ hours before period 1 closed, it was already answering period 2.
 So between rounds the arrangement on hand can be next week's plan, and `left him
 on the bench` becomes a statement about a side nobody fielded. `Edition.fielded`
 is the check — Fantrax's own label against the period the round in view is scored
-in — and when it is false **every claim about who was STARTED is withheld**. What
-the players did is football and stands either way, which is why the eleven itself
-still prints.
+in — and when it is false **every claim about who was STARTED is withheld**, both
+from the lead and from the eleven's rows. What the players did is football and
+stands either way, which is why the eleven itself still prints.
 
 ## The columns
 

@@ -5,5 +5,15 @@
 export { availability } from "./availability";
 export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
+export { lead } from "./lead";
 export { teamOfTheWeek } from "./teamOfTheWeek";
-export type { AvailabilityNote, Deadline, Deal, Pick, TeamOfTheWeek } from "./types";
+export type {
+  AvailabilityNote,
+  Deadline,
+  Deal,
+  Lead,
+  LeadResult,
+  LeadSide,
+  Pick,
+  TeamOfTheWeek,
+} from "./types";

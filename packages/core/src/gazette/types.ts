@@ -83,3 +83,45 @@ export interface TeamOfTheWeek {
   /** e.g. "1-4-4-2", counted from the selection. */
   shape: string;
 }
+
+/** One side of a head-to-head, as the front page names it. */
+export interface LeadSide {
+  teamId: string;
+  name: string;
+  points: number;
+}
+
+/** A head-to-head the paper can report, winner named first.
+ *
+ *  Built only from two totals Fantrax has actually given for a period with no
+ *  football left in it. A dash is not a nought and a match still being played is
+ *  not a result, so neither ever becomes one of these. */
+export interface LeadResult {
+  winner: LeadSide;
+  loser: LeadSide;
+  /** Points between them, always above zero — a draw names no winner and is not
+   *  one of these. Rounded to the hundredth: the totals are Fantrax's own
+   *  decimals, and the difference of two of them in binary floating point is not
+   *  always the number a person would write down. */
+  margin: number;
+}
+
+/** The story the edition leads on.
+ *
+ *  Facts and not sentences, on the same split the rest of this folder keeps:
+ *  what is true is core's business and what the paper SAYS is the app's. The
+ *  four kinds are an editor's running order, and `lead.ts` carries the argument
+ *  for the order they are in. */
+export type Lead =
+  | { kind: "squeaker"; result: LeadResult }
+  /** `lost` is the owner's own defeat that week, when he had one. Null is
+   *  ordinary: he may have won anyway, or drawn, or his match may not be one we
+   *  can report. */
+  | { kind: "bench"; pick: Pick; lost: LeadResult | null }
+  | { kind: "rout"; result: LeadResult }
+  /** `sides` are the managers who made it, in the order the deal names them, and
+   *  there are always at least two — a trade that cannot name both sides is not
+   *  offered as a lead at all. Carried rather than left to be re-derived from
+   *  `deal.inbound`, because the guarantee and the derivation would then live in
+   *  different packages and only one of them would know about the other. */
+  | { kind: "trade"; deal: Deal; sides: string[] };

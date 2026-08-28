@@ -1,0 +1,206 @@
+import { describe, expect, it } from "vitest";
+import type { PeriodPairing } from "../league/selectors";
+import type { LiveTeamScore } from "../league/types";
+import { lead } from "./lead";
+import type { Deal, Pick, TeamOfTheWeek } from "./types";
+
+// The numbers are period 1 of the rehearsal league, probed live on 28 Aug 2026:
+// test2 41 test4 19, and test3 45 against 123's 31. One of them is a rout under
+// the threshold below and the other is an ordinary win, which is the pair worth
+// testing against — invented data would have made both the same kind of thing.
+
+const pairing = (home: string, away: string): PeriodPairing => ({
+  home: { teamId: home, name: home },
+  away: { teamId: away, name: away },
+});
+
+const P1: PeriodPairing[] = [pairing("test2", "test4"), pairing("test3", "123")];
+
+const board = (
+  totals: Record<string, [number | null, number | null]>,
+): Map<string, LiveTeamScore> =>
+  new Map(
+    Object.entries(totals).map(([teamId, [points, toPlay]]) => [
+      teamId,
+      { teamId, points, toPlay },
+    ]),
+  );
+
+const SETTLED = board({
+  test2: [41, 0],
+  test4: [19, 0],
+  test3: [45, 0],
+  "123": [31, 0],
+});
+
+const pick = (over: Partial<Pick> = {}): Pick => ({
+  playerName: "Pickford",
+  playerCode: 98745,
+  position: "G",
+  ownerTeamId: "123",
+  ownerName: "123",
+  started: true,
+  minutes: 90,
+  goals: 0,
+  assists: 0,
+  cleanSheet: true,
+  saves: 4,
+  score: 50,
+  ...over,
+});
+
+const eleven = (...picks: Pick[]): TeamOfTheWeek => ({ picks, shape: "1-4-4-2" });
+
+const trade = (over: Partial<Deal> = {}): Deal => ({
+  setId: "s1",
+  kind: "trade",
+  inbound: [
+    { playerName: "Saka", teamId: "test2" },
+    { playerName: "Palmer", teamId: "test3" },
+  ],
+  outbound: [],
+  processedAt: "Wed Aug 26, 2026, 9:14AM",
+  period: 1,
+  ...over,
+});
+
+describe("lead", () => {
+  it("leads on the hammering when nothing was close and nobody was left out", () => {
+    const story = lead(P1, SETTLED, null, []);
+    expect(story).toEqual({
+      kind: "rout",
+      result: {
+        winner: { teamId: "test2", name: "test2", points: 41 },
+        loser: { teamId: "test4", name: "test4", points: 19 },
+        margin: 22,
+      },
+    });
+  });
+
+  it("does not call an ordinary win a story", () => {
+    // 45–31 is a comfortable win and no more. On its own it leads on nothing.
+    expect(lead([pairing("test3", "123")], SETTLED, null, [])).toBeNull();
+  });
+
+  it("puts a match decided by nothing above every other story", () => {
+    const scores = board({ test2: [41, 0], test4: [40, 0], test3: [45, 0], "123": [31, 0] });
+    const story = lead(P1, scores, eleven(pick({ started: false })), [trade()]);
+    expect(story?.kind).toBe("squeaker");
+    expect(story).toMatchObject({ result: { winner: { name: "test2" }, margin: 1 } });
+  });
+
+  it("takes the narrowest squeaker and the widest rout when there are two", () => {
+    const narrow = board({ test2: [41, 0], test4: [40, 0], test3: [45, 0], "123": [44.5, 0] });
+    expect(lead(P1, narrow, null, [])).toMatchObject({
+      kind: "squeaker",
+      result: { winner: { name: "test3" }, margin: 0.5 },
+    });
+
+    const wide = board({ test2: [41, 0], test4: [19, 0], test3: [45, 0], "123": [4, 0] });
+    expect(lead(P1, wide, null, [])).toMatchObject({
+      kind: "rout",
+      result: { winner: { name: "test3" }, margin: 41 },
+    });
+  });
+
+  it("leads on the man his own manager left out, above a hammering", () => {
+    const story = lead(P1, SETTLED, eleven(pick({ started: false })), []);
+    expect(story?.kind).toBe("bench");
+  });
+
+  it("names the defeat the benched man sat out, and nothing when there was none", () => {
+    // 123 lost 31–45, so the story has both halves.
+    const lost = lead(P1, SETTLED, eleven(pick({ started: false })), []);
+    expect(lost).toMatchObject({ lost: { winner: { name: "test3" }, loser: { name: "123" } } });
+
+    // test2 won its match. He was still left out; there is simply no defeat.
+    const won = lead(
+      P1,
+      SETTLED,
+      eleven(pick({ started: false, ownerTeamId: "test2", ownerName: "test2" })),
+      [],
+    );
+    expect(won).toMatchObject({ kind: "bench", lost: null });
+  });
+
+  it("takes the best of the men left out, not the first in the payload", () => {
+    const story = lead(
+      P1,
+      SETTLED,
+      eleven(
+        pick({ playerName: "Started", started: true }),
+        pick({ playerName: "Best benched", started: false }),
+        pick({ playerName: "Lesser benched", started: false }),
+      ),
+      [],
+    );
+    expect(story).toMatchObject({ kind: "bench", pick: { playerName: "Best benched" } });
+  });
+
+  it("leads on a trade when there is no football to lead on", () => {
+    // An international break: no pairings, no eleven, and two managers did
+    // business anyway.
+    expect(lead([], new Map(), null, [trade()])).toMatchObject({
+      kind: "trade",
+      // Both managers, named here rather than worked out again by whatever
+      // prints the headline.
+      sides: ["test2", "test3"],
+    });
+  });
+
+  it("will not lead on a trade that does not say who got whom", () => {
+    const nameless = trade({ inbound: [{ playerName: "Saka", teamId: null }] });
+    expect(lead([], new Map(), null, [nameless])).toBeNull();
+  });
+
+  it("ignores a claim off the wire, which is not a trade", () => {
+    expect(lead([], new Map(), null, [trade({ kind: "claim" })])).toBeNull();
+  });
+
+  it("reports no result while anybody still has football to come", () => {
+    const midweek = board({ test2: [41, 0], test4: [19, 2], test3: [45, 0], "123": [31, 0] });
+    expect(lead([pairing("test2", "test4")], midweek, null, [])).toBeNull();
+  });
+
+  it("treats an unstated toPlay as unknown rather than as nobody left", () => {
+    const silent = board({ test2: [41, null], test4: [19, null] });
+    expect(lead([pairing("test2", "test4")], silent, null, [])).toBeNull();
+  });
+
+  it("does not read a missing total as a nought", () => {
+    // A dash beaten by 41 has beaten nothing, and calling it a rout would be the
+    // most confident wrong statement on the page.
+    const dashed = board({ test2: [41, 0], test4: [null, 0] });
+    expect(lead([pairing("test2", "test4")], dashed, null, [])).toBeNull();
+  });
+
+  it("names no winner in a dead heat", () => {
+    const drawn = board({ test2: [41, 0], test4: [41, 0] });
+    expect(lead([pairing("test2", "test4")], drawn, null, [])).toBeNull();
+  });
+
+  it("finds no story in a week nobody scored in", () => {
+    const nothing = board({ test2: [0, 0], test4: [0, 0] });
+    expect(lead([pairing("test2", "test4")], nothing, null, [])).toBeNull();
+  });
+
+  it("scales its thresholds to the league's own scoring rather than to a number of points", () => {
+    // The same match ten times over. A margin of 22 is a hammering at this
+    // league's scale and an ordinary afternoon at ten times it — which is the
+    // whole reason the thresholds are shares. A commissioner who pays for every
+    // touch must not get a paper that calls every week a thriller.
+    const tenfold = board({ test2: [410, 0], test4: [388, 0] });
+    expect(lead([pairing("test2", "test4")], tenfold, null, [])).toBeNull();
+  });
+
+  it("keeps the margin the number a person would write down", () => {
+    const fractional = board({ test2: [41.3, 0], test4: [19.1, 0] });
+    expect(lead([pairing("test2", "test4")], fractional, null, [])).toMatchObject({
+      result: { margin: 22.2 },
+    });
+  });
+
+  it("has nothing to lead on before anybody has played", () => {
+    expect(lead(P1, new Map(), null, [])).toBeNull();
+  });
+});

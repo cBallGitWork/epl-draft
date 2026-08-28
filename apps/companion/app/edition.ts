@@ -5,6 +5,7 @@ import {
   type Deadline,
   type Deal,
   type FootballSnapshot,
+  type Lead,
   type LeagueInfo,
   type RosteredTeam,
   type LeagueTeam,
@@ -14,16 +15,19 @@ import {
   deals,
   fetchTransactions,
   isMatchdayLive,
+  lead,
   mapTransactions,
   transactionDateLabel,
   nextDeadline,
+  periodPairings,
   teamOfTheWeek,
 } from "@epl/core";
 import { leagueCache } from "./leagueCache";
 import { seasonKickoffs } from "./football";
 import { yoursFirst } from "./mine";
 import { orRefusal } from "./refusals";
-import { type LeagueSquads, getLeagueSquads } from "./squads";
+import { liveScores } from "./scoreboard";
+import { type LeagueSquads, type ReadableSquads, getLeagueSquads } from "./squads";
 
 // What today's paper is made of.
 //
@@ -76,7 +80,10 @@ export interface Edition {
    *  off on Saturday tea-time, so two of the three forward slots went to men
    *  with no goal, no assist and no clean sheet while a midfielder level with
    *  the best defender missed out on a full quota. The section says which it is
-   *  rather than the reader having to know the fixture list. */
+   *  rather than the reader having to know the fixture list.
+   *
+   *  Read by the lead as well, for the same reason said the other way round: a
+   *  week still being played has no story anybody can stand behind yet. */
   partial: boolean;
   /** Whether the arrangement the eleven was read from is the one that was
    *  actually fielded in the round it reports on.
@@ -92,6 +99,9 @@ export interface Edition {
    *  players did is football and stands either way, which is why the eleven
    *  itself still prints. */
   fielded: boolean;
+  /** The story the edition leads on, or none. A paper does not manufacture a
+   *  lead, so most of the week there is not one. */
+  lead: Lead | null;
   /** The reader's own team, when they have signed in. Sections order themselves
    *  around it rather than being neutral. */
   mine: string | null;
@@ -141,6 +151,13 @@ export async function edition(mine: string | null): Promise<Edition> {
   const drafted = "period" in squads ? squads : null;
   const now = new Date().toISOString();
 
+  // Any dated fixture still to finish. Undated ones are ignored on the same rule
+  // the football layer uses everywhere: a TV pick with no time cannot hold a
+  // round open.
+  const partial =
+    drafted?.snapshot.fixtures.some(
+      (fixture) => fixture.kickoff !== null && fixture.status !== "finished",
+    ) ?? false;
   // Fantrax's own label for the arrangement it handed us, against the period the
   // round in view is scored in.
   const fielded =
@@ -148,10 +165,18 @@ export async function edition(mine: string | null): Promise<Edition> {
     drafted.roundPeriod !== null &&
     drafted.period.period === drafted.roundPeriod;
 
+  const told = deals(feed.rows);
+  const picked = eleven(drafted);
+  // A headline is the one place on the page a provisional claim cannot go, so
+  // the lead waits for a week that is over. While football is on, the live bar
+  // leads and the paper's job is to get out of the way.
+  const story =
+    drafted === null || partial ? null : await leadStory(drafted, fielded ? picked : null, told);
+
   const paper = {
     live: drafted ? isMatchdayLive(drafted.snapshot) : false,
     snapshot: drafted?.snapshot ?? null,
-    deals: deals(feed.rows),
+    deals: told,
     dealsAt: feed.at,
     // Your problems first: a manager scanning injury news on a Friday is
     // looking for his own name before anybody else's.
@@ -160,15 +185,10 @@ export async function edition(mine: string | null): Promise<Edition> {
       : [],
     deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, kickoffs, now) : null,
     teams: drafted?.info?.teams ?? [],
-    eleven: eleven(drafted),
-    // Any dated fixture still to finish. Undated ones are ignored on the same
-    // rule the football layer uses everywhere: a TV pick with no time cannot
-    // hold a round open.
-    partial:
-      drafted?.snapshot.fixtures.some(
-        (fixture) => fixture.kickoff !== null && fixture.status !== "finished",
-      ) ?? false,
+    eleven: picked,
+    partial,
     fielded,
+    lead: story,
     mine,
   };
 
@@ -197,6 +217,32 @@ function silenceOf(squads: LeagueSquads, paper: Omit<Edition, "silence">): Silen
   if ("unavailable" in squads) return { kind: "unavailable", code: squads.unavailable };
   if ("undrafted" in squads) return { kind: "undrafted", code: squads.undrafted };
   return { kind: "quiet" };
+}
+
+/** The lead, and the one read it needs.
+ *
+ *  Fantrax's own totals for the round in view, out of the cache the head-to-head
+ *  board already fills — so on a Saturday this is a hit rather than a request,
+ *  and it is asked at all only for a week that has finished.
+ *
+ *  `getLiveScoringStats` and not the season results table, for two reasons that
+ *  both matter here: it honours the period, and it carries `toPlay`, which is
+ *  how the paper knows a match is actually over rather than merely quiet.
+ *
+ *  The eleven arrives already withheld or not — see `fielded`. Whether the
+ *  arrangement can be spoken about is the edition's judgement; which story is
+ *  the biggest is core's. */
+async function leadStory(
+  drafted: ReadableSquads,
+  picked: TeamOfTheWeek | null,
+  told: readonly Deal[],
+): Promise<Lead | null> {
+  const period = drafted.roundPeriod;
+  if (period === null || drafted.info === null) return null;
+
+  const { scores } = await liveScores(period);
+  const pairings = periodPairings(drafted.info.matchups, drafted.info.teams, period);
+  return lead(pairings, scores, picked, told);
 }
 
 /** The week's eleven, once there is a week to pick it from.

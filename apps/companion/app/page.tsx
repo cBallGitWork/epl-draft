@@ -1,6 +1,7 @@
 import { LEAGUE_NAME } from "@epl/core";
 import Deals from "./components/gazette/Deals";
 import Doubts from "./components/gazette/Doubts";
+import Lead from "./components/gazette/Lead";
 import Live from "./components/gazette/Live";
 import Masthead from "./components/gazette/Masthead";
 import TeamOfTheWeek from "./components/gazette/TeamOfTheWeek";
@@ -49,6 +50,11 @@ export default async function GazettePage() {
       />
 
       {paper.live ? <Live /> : null}
+
+      {/* The lead. Absent most of the week and absent while football is on, on
+          purpose: a paper does not manufacture a front-page story, and a
+          headline is the one place a provisional claim cannot go. */}
+      {paper.lead ? <Lead lead={paper.lead} who={who} /> : null}
 
       {/* Nothing to print is a real state, not an empty page — our own league is
           in it every day until draft night, and this is the first thing sixteen
