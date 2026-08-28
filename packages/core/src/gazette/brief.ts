@@ -1,5 +1,5 @@
 import type { PeriodPairing } from "../league/selectors";
-import type { LiveTeamScore } from "../league/types";
+import type { LiveTeamScore, TeamProjection } from "../league/types";
 import type { DraftPick } from "../league/fantrax/draft";
 import type { AvailabilityNote, Deal, Pick, Story, TeamOfTheWeek } from "./types";
 
@@ -27,7 +27,13 @@ export interface Brief {
    *  join on ids afterwards. */
   teams: { teamId: string; name: string }[];
   pairings: readonly PeriodPairing[];
+  /** What each squad has actually scored. Read by a REPORT. */
   scores: Map<string, LiveTeamScore>;
+  /** What Fantrax reckons each squad will score. Read by a PREVIEW, and read by
+   *  nothing else: before a ball is kicked `scores` is a truthful nought for
+   *  everybody, so a preview built on it hands its writer nought against nought
+   *  for every tie while telling him they are projections. */
+  projected: Map<string, TeamProjection>;
   /** Ranked, from `stories()`. What the desk already thinks the week's stories
    *  are — the writer may disagree about emphasis, never about facts. */
   stories: readonly Story[];
@@ -81,26 +87,35 @@ function heading(brief: Brief): string {
 function ties(brief: Brief): string | null {
   if (brief.pairings.length === 0) return null;
 
-  const lines = brief.pairings.map((pairing) => {
-    const home = brief.scores.get(pairing.home.teamId);
-    const away = brief.scores.get(pairing.away.teamId);
-    const state =
-      home?.toPlay === 0 && away?.toPlay === 0
-        ? "FINAL"
-        : `IN PLAY (${home?.toPlay ?? "?"} and ${away?.toPlay ?? "?"} still to play)`;
-    return `- [${pairing.home.teamId}] ${pairing.home.name} ${points(home)} v ${points(away)} ${pairing.away.name} [${pairing.away.teamId}] — ${state}`;
-  });
+  const lines = brief.pairings.map((pairing) =>
+    brief.kind === "preview"
+      ? `- [${pairing.home.teamId}] ${pairing.home.name} ${points(brief.projected.get(pairing.home.teamId))} v ${points(brief.projected.get(pairing.away.teamId))} ${pairing.away.name} [${pairing.away.teamId}] — PROJECTED`
+      : played(pairing, brief.scores),
+  );
 
   return [
     brief.kind === "preview"
-      ? "THE TIES (nobody has kicked a ball; these are Fantrax's projections, not scores). Write one line per tie in `ties`, and set `callsTeamId` to the id of whoever you think wins — or null if you will not call it. A tie you decline costs you nothing; a tie you call is marked next week."
+      ? "THE TIES. Nobody has kicked a ball. **Every number below is Fantrax's own projection, not a score**, and you must never write about one as though the football has happened. Write one line per tie in `ties`, and set `callsTeamId` to the id of whoever you think wins — or null if you will not call it. A tie you decline costs you nothing; a tie you call is marked next week."
       : "THE TIES (write one line per tie in `ties`; leave `callsTeamId` unset). A tie marked IN PLAY is NOT a result — do not say anyone won it.",
     "A dash is a total Fantrax did not give. It is NOT nought and you may not treat it as a low score.",
     ...lines,
   ].join("\n");
 }
 
-function points(score: LiveTeamScore | undefined): string {
+function played(pairing: PeriodPairing, scores: Map<string, LiveTeamScore>): string {
+  const home = scores.get(pairing.home.teamId);
+  const away = scores.get(pairing.away.teamId);
+  // `toPlay` is Fantrax's own count of active men whose fixture has not
+  // finished, and it is the whole difference between "he won" and "he is
+  // winning". Null means they did not say, which is not the same as nobody left.
+  const state =
+    home?.toPlay === 0 && away?.toPlay === 0
+      ? "FINAL"
+      : `IN PLAY (${home?.toPlay ?? "?"} and ${away?.toPlay ?? "?"} still to play)`;
+  return `- [${pairing.home.teamId}] ${pairing.home.name} ${points(home)} v ${points(away)} ${pairing.away.name} [${pairing.away.teamId}] — ${state}`;
+}
+
+function points(score: { points: number | null } | undefined): string {
   return score?.points === null || score?.points === undefined ? "—" : String(score.points);
 }
 

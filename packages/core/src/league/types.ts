@@ -97,6 +97,19 @@ export interface LiveTeamScore {
   toPlay: number | null;
 }
 
+/** What Fantrax reckons a squad will score in a period nobody has played.
+ *
+ *  A separate type from `LiveTeamScore` and not a field on it, because a
+ *  projection is a different claim from a score and the app has one rule it
+ *  never breaks about those: their numbers are authoritative and ours are
+ *  labelled. Nothing may print one of these as a total. */
+export interface TeamProjection {
+  teamId: string;
+  /** Null when Fantrax projected nothing for this squad. Not nought: "they have
+   *  not guessed" and "they guess nothing" are different claims. */
+  points: number | null;
+}
+
 /** What one player scored in one period, priced at the ROSTER SLOT his manager
  *  chose — the only per-player number that agrees with the team total beside it.
  *

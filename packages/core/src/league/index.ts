@@ -68,7 +68,7 @@ export { FantraxError } from "./fantrax/errors";
 export type { ScoringCategory, ScoringRules } from "./scoring";
 export { unacknowledged } from "./fantrax/baseline";
 export type { AcknowledgedDifference } from "./fantrax/baseline";
-export { mapLivePlayerPoints, mapLiveScores } from "./fantrax/livescoring";
+export { mapLivePlayerPoints, mapLiveScores, mapProjectedTotals } from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel } from "./fantrax/profile";
@@ -86,7 +86,6 @@ export {
 export { mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapDraftPicks } from "./fantrax/draft";
-export type { DraftPick } from "./fantrax/draft";
 export { mapStandings } from "./fantrax/standings";
 export { mapTeamBadges } from "./fantrax/badges";
 export type { TeamBadge } from "./fantrax/badges";

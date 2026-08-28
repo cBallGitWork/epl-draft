@@ -56,6 +56,7 @@ const brief = (over: Partial<Brief> = {}): Brief => ({
   deals: [],
   doubts: [],
   marked: null,
+  projected: new Map(),
   pedigree: new Map(),
   ...over,
 });
@@ -94,9 +95,35 @@ describe("buildBrief", () => {
     expect(allowed).toContain("— BENCHED");
   });
 
+  it("gives a preview Fantrax's projections, never its untouched scores", () => {
+    // Before a ball is kicked `totalFpts` is a truthful nought for everybody, so
+    // a preview built on scores hands its writer nought against nought for every
+    // tie while calling them projections.
+    const text = buildBrief(
+      brief({
+        kind: "preview",
+        scores: scores({ a: [0, 11], b: [0, 11] }),
+        projected: new Map([
+          ["a", { teamId: "a", points: 41.7 }],
+          ["b", { teamId: "b", points: 40 }],
+        ]),
+      }),
+    );
+    expect(text).toContain("Craig 41.7 v 40 Rivals");
+    expect(text).toContain("PROJECTED");
+    expect(text).not.toContain("IN PLAY");
+  });
+
+  it("shows a dash for a squad Fantrax will not guess at", () => {
+    const text = buildBrief(
+      brief({ kind: "preview", projected: new Map([["a", { teamId: "a", points: null }]]) }),
+    );
+    expect(text).toContain("Craig — v — Rivals");
+  });
+
   it("asks a preview for calls and a report for none", () => {
     expect(buildBrief(brief({ kind: "preview" }))).toContain("callsTeamId");
-    expect(buildBrief(brief({ kind: "preview" }))).toContain("projections, not scores");
+    expect(buildBrief(brief({ kind: "preview" }))).toContain("not a score");
     expect(buildBrief(brief({ kind: "report" }))).toContain("leave `callsTeamId` unset");
   });
 

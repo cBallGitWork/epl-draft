@@ -1,9 +1,13 @@
 import { mkdirSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { readFileSync } from "node:fs";
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
+  type Bridge,
   type EditionKind,
+  type FootballSnapshot,
+  type LeagueInfo,
   type PublishedEdition,
   buildBrief,
   fetchDraftResults,
@@ -12,11 +16,15 @@ import {
   fetchTeamRosters,
   fetchTransactions,
   firstKickoff,
+  gameweekStarted,
   getFootballSnapshot,
   locksAt,
+  decided,
   mapDraftPicks,
   mapLeagueInfo,
   mapLiveScores,
+  mapProjectedTotals,
+  markPreview,
   mapTeamRosters,
   mapTransactions,
   normalizePublished,
@@ -94,8 +102,23 @@ async function main(): Promise<void> {
   const lock = kickoff === null ? null : locksAt(kickoff);
   const locked = lock !== null && Date.now() >= Date.parse(lock);
 
-  const kind: EditionKind | null = finished ? "report" : locked ? "preview" : null;
-  if (kind === null) return say("Lineups have not locked and the round is not finished. Nothing to file.");
+  // **The preview's window CLOSES at the first whistle, and the lock alone does
+  // not close it.** `locked` stays true from the lock right through the round,
+  // so a run firing mid-match — which is the ordinary case whenever the
+  // lock-time run was skipped, and GitHub skips them — would file a preview
+  // whose brief says nobody has kicked a ball over a match in progress, with
+  // pre-game projections beside it. A missed preview is simply not written: no
+  // column is better than one built on a false premise.
+  const started = gameweekStarted(snapshot.fixtures, snapshot.gameweek);
+
+  const kind: EditionKind | null = finished ? "report" : locked && !started ? "preview" : null;
+  if (kind === null) {
+    return say(
+      started
+        ? "The round is under way and not finished. A preview is too late and a report is too early."
+        : "Lineups have not locked. Nothing to file.",
+    );
+  }
 
   const archive = join(EDITIONS_ROOT, `gw${snapshot.gameweek}-${kind}.json`);
   if (existsSync(archive)) return say(`Already filed: ${archive}`);
@@ -132,10 +155,11 @@ async function main(): Promise<void> {
  *  `buildBrief` stays pure and testable. */
 async function gather(
   kind: EditionKind,
-  info: ReturnType<typeof mapLeagueInfo>,
-  snapshot: Awaited<ReturnType<typeof getFootballSnapshot>>,
+  info: LeagueInfo,
+  snapshot: FootballSnapshot,
   period: number,
 ): Promise<string> {
+  const gameweek = snapshot.gameweek;
   const [live, rosters, claims, trades, draft] = await Promise.all([
     fetchLiveScoring(FANTRAX_LEAGUE_ID, period),
     fetchTeamRosters(FANTRAX_LEAGUE_ID).catch(() => null),
@@ -145,12 +169,18 @@ async function gather(
   ]);
 
   const scores = new Map(mapLiveScores(live).map((score) => [score.teamId, score]));
+  const projected = new Map(mapProjectedTotals(live).map((guess) => [guess.teamId, guess]));
   const pairings = periodPairings(info.matchups, info.teams, period);
 
   // The squads, and with them the two things only a join can say: who was in the
   // week's eleven, and whether the arrangement we hold is the one that was
   // actually fielded.
-  const squads = rosters === null ? null : resolveRosters(snapshot, mapTeamRosters(rosters), mapping as never);
+  // `as Bridge` and not a looser cast: a JSON import widens `matchedBy` to
+  // `string` and the compiler cannot see that the writer only emits four
+  // literals. Asserted exactly as `apps/companion/app/squads.ts` asserts it, and
+  // for the same reason.
+  const squads =
+    rosters === null ? null : resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge);
   const eleven = squads === null ? null : teamOfTheWeek(squads.teams, info.roster);
   const fielded = squads !== null && squads.period === period;
 
@@ -166,6 +196,7 @@ async function gather(
     teams: info.teams.map((team) => ({ teamId: team.teamId, name: team.name })),
     pairings,
     scores,
+    projected,
     stories:
       kind === "report" && eleven !== null
         ? stories(pairings, scores, fielded ? eleven : null, business)
@@ -186,6 +217,22 @@ async function gather(
     // is one small change once a preview has actually been filed and played.
     marked: null,
   });
+}
+
+/** How his last column's calls turned out, or nothing.
+ *
+ *  Reads the preview filed for THIS gameweek — the same archive file that makes
+ *  a re-run a no-op — and marks it against the results that came in. Nothing to
+ *  mark is the ordinary state: the first report of the season has no preview
+ *  behind it, and a preview that called nothing is a preview with no score.
+ *
+ *  A file we cannot read costs the column one line and never the run. */
+function mark(gameweek: number, results: ReturnType<typeof decided>) {
+  const path = join(EDITIONS_ROOT, `gw${gameweek}-preview.json`);
+  if (!existsSync(path)) return null;
+
+  const preview = normalizePublished(JSON.parse(readFileSync(path, "utf8")) as unknown);
+  return markPreview(preview, results);
 }
 
 /** One call, by fetch. No SDK: CODE_RULES §2 says no dependency a small local

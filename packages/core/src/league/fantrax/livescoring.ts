@@ -1,4 +1,4 @@
-import type { LivePlayerPoints, LiveSquadPoints, LiveTeamScore } from "../types";
+import type { LivePlayerPoints, LiveSquadPoints, LiveTeamScore, TeamProjection } from "../types";
 
 // Fantrax's live-scoring page, which answers without a cookie and hands back
 // typed numbers rather than the formatted strings the rest of their surface is
@@ -45,8 +45,13 @@ export interface RawTeamSection {
    *  1 before kickoff. */
   remainingEventPercent?: Record<string, number | undefined>;
   /** Fantrax's own per-player projection for the period. Players with no
-   *  projection are omitted rather than zeroed. Not mapped: a projection is a
-   *  different claim from a score and nothing shows one yet. */
+   *  projection are omitted rather than zeroed.
+   *
+   *  Read by `mapProjectedTotals`, and it is the ONLY thing worth reading before
+   *  a round: `totalFpts` is a genuine nought until a ball is kicked, so a
+   *  preview built on it hands its reader nought against nought for every tie
+   *  while calling them projections. Keyed and group-subtotalled exactly as
+   *  `statsMap` is. */
   projectedTotalsMap?: Record<string, number | undefined>;
   /** Five integers, decoded 22 Aug 2026 across a whole matchday and left
    *  unmodelled anyway:
@@ -91,8 +96,12 @@ export interface RawTeamSection {
   statsMap2?: Record<string, unknown | undefined>;
   /** Fantrax's projection updated for what has already happened: for a man whose
    *  match is done it is his actual score, where `projectedTotalsMap` stays the
-   *  pre-game guess. The two were identical until football existed. Not read —
-   *  nothing shows a projection. */
+   *  pre-game guess. The two were identical until football existed.
+   *
+   *  Deliberately still not read. The preview is written before a ball is kicked
+   *  and is judged on what it called from there, so the pre-game guess is the
+   *  honest input; this one would quietly improve the column's odds every hour
+   *  it was late. */
   calculatedProjectedTotalsMap?: Record<string, number | undefined>;
   projectedTotalsMap2?: Record<string, number | undefined>;
   totalFpts2?: number;
@@ -151,6 +160,41 @@ function countToPlay(remaining: Record<string, number | undefined> | undefined):
   const values = Object.values(remaining).filter((value) => typeof value === "number");
   if (values.length === 0) return null;
   return values.filter((value) => value > 0).length;
+}
+
+/** Fantrax's own projected total per team, for a round nobody has played.
+ *
+ *  Summed from the per-player projections rather than read off a team field,
+ *  because there is no team field: `totalFpts` is what a squad has ACTUALLY
+ *  scored and reads a truthful nought all week. A preview built on it says
+ *  nought against nought for every tie.
+ *
+ *  ACTIVE only and group subtotals skipped, on the same two rules
+ *  `mapLivePlayerPoints` follows — `_5010` and `_5020` are the outfield and
+ *  goalie groups, and counting them would roughly double every projection.
+ *
+ *  A team Fantrax projects nothing for is null, never nought: "they have not
+ *  guessed" and "they guess he scores nothing" are different claims, and the
+ *  scoreline rule already refuses to let a dash beat anybody. */
+export function mapProjectedTotals(raw: RawLiveScoring): TeamProjection[] {
+  const teams = raw.statsPerTeam?.allTeamsStats ?? {};
+
+  return Object.entries(teams).flatMap(([teamId, sections]) => {
+    const projected = sections?.ACTIVE?.projectedTotalsMap;
+    if (!projected) return [{ teamId, points: null }];
+
+    let total = 0;
+    let any = false;
+    for (const [fantraxId, points] of Object.entries(projected)) {
+      if (fantraxId.startsWith(GROUP_TOTAL) || typeof points !== "number") continue;
+      total += points;
+      any = true;
+    }
+    // Rounded to the tenth: these are sums of Fantrax's own decimals, and the
+    // binary floating point of eleven of them is not a number anybody would
+    // print.
+    return [{ teamId, points: any ? Math.round(total * 10) / 10 : null }];
+  });
 }
 
 /** What marks a `statsMap` key as a group subtotal rather than a player. */

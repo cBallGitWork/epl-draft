@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import recorded from "./__fixtures__/liveScoring.json";
 import played from "./__fixtures__/liveScoringPlayed.json";
 import unplayed from "./__fixtures__/liveScoringUnplayed.json";
-import { mapLivePlayerPoints, mapLiveScores } from "./livescoring";
+import { mapLivePlayerPoints, mapLiveScores, mapProjectedTotals } from "./livescoring";
 import type { RawLiveScoring } from "./livescoring";
 
 describe("mapLiveScores", () => {
@@ -193,5 +193,35 @@ describe("mapLivePlayerPoints", () => {
 
   it("says nothing for a team Fantrax priced nobody in", () => {
     expect(first({ statsPerTeam: { allTeamsStats: { t: { ACTIVE: {} } } } }).players).toEqual([]);
+  });
+});
+
+describe("mapProjectedTotals", () => {
+  const projected = (map: Record<string, number>) => ({
+    statsPerTeam: { allTeamsStats: { t1: { ACTIVE: { totalFpts: 0, projectedTotalsMap: map } } } },
+  });
+
+  it("sums Fantrax's per-player guesses, because there is no team field to read", () => {
+    // `totalFpts` is what a squad has ACTUALLY scored and reads a truthful nought
+    // all week. A preview built on it says nought against nought for every tie.
+    expect(mapProjectedTotals(projected({ a: 5.5, b: 4.5 }))).toEqual([{ teamId: "t1", points: 10 }]);
+  });
+
+  it("skips the group subtotals, which would roughly double every projection", () => {
+    // `_5010` and `_5020` are the outfield and goalie groups and sum to the team
+    // total on their own — the same two phantoms `mapLivePlayerPoints` drops.
+    expect(mapProjectedTotals(projected({ a: 5.5, b: 4.5, _5010: 5.5, _5020: 4.5 }))).toEqual([
+      { teamId: "t1", points: 10 },
+    ]);
+  });
+
+  it("reads a team Fantrax has not guessed at as null, never nought", () => {
+    const none = { statsPerTeam: { allTeamsStats: { t1: { ACTIVE: { totalFpts: 0 } } } } };
+    expect(mapProjectedTotals(none)).toEqual([{ teamId: "t1", points: null }]);
+    expect(mapProjectedTotals(projected({}))).toEqual([{ teamId: "t1", points: null }]);
+  });
+
+  it("keeps the sum a number a person would write down", () => {
+    expect(mapProjectedTotals(projected({ a: 0.1, b: 0.2 }))).toEqual([{ teamId: "t1", points: 0.3 }]);
   });
 });
