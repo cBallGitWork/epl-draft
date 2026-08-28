@@ -28,6 +28,7 @@ export default function TeamOfTheWeek({
   eleven,
   mine,
   partial,
+  fielded,
 }: {
   eleven: Eleven;
   mine: string | null;
@@ -36,6 +37,13 @@ export default function TeamOfTheWeek({
    *  week's, and on a Saturday tea-time it fills its forward line with men who
    *  have done nothing simply because every good forward is still to kick off. */
   partial: boolean;
+  /** Whether the arrangement these picks were read from is the one that was
+   *  actually fielded in the round they report on. False between rounds, once
+   *  Fantrax has rolled `getTeamRosters` forward to the period managers are now
+   *  editing — at which point who was STARTED is a fact about next week's plan
+   *  and this section may not print it. What the players did is football and
+   *  stands either way, so the eleven itself is unaffected. */
+  fielded: boolean;
 }) {
   return (
     <Column title={partial ? "Team of the week so far" : "Team of the week"} aside={eleven.shape}>
@@ -54,8 +62,9 @@ export default function TeamOfTheWeek({
             </p>
             <p className="pl-9 pt-0.5 text-2xs text-faint">
               {pick.ownerName}
-              {/* The best story on the page: his own manager left him out. */}
-              {pick.started ? null : (
+              {/* The best story on the page: his own manager left him out. Said
+                  only of a lineup we know he was left out of. */}
+              {!fielded || pick.started ? null : (
                 <span className="font-semibold text-mid"> · left him on the bench</span>
               )}
             </p>

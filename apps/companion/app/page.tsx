@@ -78,7 +78,12 @@ export default async function GazettePage() {
       ) : null}
 
       {paper.eleven ? (
-        <TeamOfTheWeek eleven={paper.eleven} mine={paper.mine} partial={paper.partial} />
+        <TeamOfTheWeek
+          eleven={paper.eleven}
+          mine={paper.mine}
+          partial={paper.partial}
+          fielded={paper.fielded}
+        />
       ) : null}
 
       {paper.deals.length > 0 ? (

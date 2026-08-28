@@ -28,7 +28,9 @@ lock.
 3. **Team of the week** — the best XI across the whole league, with its shape.
    Each pick shows what got him picked (`2G · CS`, or minutes if nothing else)
    and who owns him. **The best story on the page is `left him on the bench`**,
-   printed when a manager left his own best player out.
+   printed when a manager left his own best player out — **and only when the
+   arrangement it was read from is the one that was fielded**; see *What may be
+   said about a bench* below.
 4. **The week's business** — trades and claims, grouped so both halves of a trade
    read as one deal. Fantrax's timestamps, shown verbatim with their zone named
    in the heading, because they carry a US Eastern offset.
@@ -43,6 +45,20 @@ Your own team is marked throughout with the left-edge accent border
 sets a border *colour* plus an explicit left width, so on a ruled row with no
 `border` utility it draws the accent bar and nothing else. One treatment, two
 grounds, and `mine.ts` stays the only place that knows what "yours" looks like.
+
+## What may be said about a bench
+
+`getTeamRosters` is asked for no period and labels its answer with the one
+Fantrax considers open — **and Fantrax rolls that label forward well ahead of its
+own published boundary.** At 08:29Z on the Friday of period 1, ten and a half
+hours before period 1 closed, it was already answering period 2.
+
+So between rounds the arrangement on hand can be next week's plan, and `left him
+on the bench` becomes a statement about a side nobody fielded. `Edition.fielded`
+is the check — Fantrax's own label against the period the round in view is scored
+in — and when it is false **every claim about who was STARTED is withheld**. What
+the players did is football and stands either way, which is why the eleven itself
+still prints.
 
 ## The columns
 

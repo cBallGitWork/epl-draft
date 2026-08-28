@@ -78,6 +78,20 @@ export interface Edition {
    *  the best defender missed out on a full quota. The section says which it is
    *  rather than the reader having to know the fixture list. */
   partial: boolean;
+  /** Whether the arrangement the eleven was read from is the one that was
+   *  actually fielded in the round it reports on.
+   *
+   *  `getTeamRosters` is asked for no period and labels its answer with the one
+   *  Fantrax considers open — and Fantrax rolls that label forward well ahead of
+   *  the boundary. At 08:29Z on the Friday of period 1, ten and a half hours
+   *  before period 1 closed, it was already answering period 2. So between
+   *  rounds the lineup on hand can be next week's plan, and "he left him on the
+   *  bench" becomes a statement about a side nobody fielded.
+   *
+   *  Every claim about who was STARTED is withheld when this is false. What the
+   *  players did is football and stands either way, which is why the eleven
+   *  itself still prints. */
+  fielded: boolean;
   /** The reader's own team, when they have signed in. Sections order themselves
    *  around it rather than being neutral. */
   mine: string | null;
@@ -127,6 +141,13 @@ export async function edition(mine: string | null): Promise<Edition> {
   const drafted = "period" in squads ? squads : null;
   const now = new Date().toISOString();
 
+  // Fantrax's own label for the arrangement it handed us, against the period the
+  // round in view is scored in.
+  const fielded =
+    drafted !== null &&
+    drafted.roundPeriod !== null &&
+    drafted.period.period === drafted.roundPeriod;
+
   const paper = {
     live: drafted ? isMatchdayLive(drafted.snapshot) : false,
     snapshot: drafted?.snapshot ?? null,
@@ -147,6 +168,7 @@ export async function edition(mine: string | null): Promise<Edition> {
       drafted?.snapshot.fixtures.some(
         (fixture) => fixture.kickoff !== null && fixture.status !== "finished",
       ) ?? false,
+    fielded,
     mine,
   };
 
