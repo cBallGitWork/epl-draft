@@ -34,6 +34,7 @@ export default function TeamSheet({
   lines,
   breakdown,
   mode,
+  widest: agreed,
 }: {
   /** The XI in its positional lines, arranged on the server — `slot.status` is
    *  blanked on the way here, so this is the last shape that knows the split. */
@@ -45,6 +46,10 @@ export default function TeamSheet({
    *  keyed by Fantrax id. Empty when Fantrax refused the table. */
   breakdown: Record<string, BreakdownLine[]>;
   mode: "pitch" | "list";
+  /** The card width to agree with, when another sheet is on the same screen.
+   *  See `PitchRows`. The bench takes it too, or the strip would go on sizing
+   *  itself while the grass above it held still. */
+  widest?: number;
 }) {
   const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
 
@@ -60,6 +65,7 @@ export default function TeamSheet({
           <PitchRows
             rows={rows.map((line) => ({ label: line.position, players: line.players }))}
             keyOf={(player) => player.rostered.slot.fantraxId}
+            widest={agreed}
           >
             {(player) => <Cell player={player} onOpen={() => setOpen(player)} />}
           </PitchRows>
@@ -83,7 +89,9 @@ export default function TeamSheet({
                     className="min-w-0 shrink-0"
                     // The bench counts as a line of its own, so a strip wider
                     // than any line on the grass still fits its own row.
-                    style={{ flexBasis: cardBasis(widestLine([...rows, { players: bench }])) }}
+                    style={{
+                      flexBasis: cardBasis(agreed ?? widestLine([...rows, { players: bench }])),
+                    }}
                   >
                     <p className="pb-0.5 text-center font-display text-[0.5625rem] font-bold uppercase tracking-widest text-faint">
                       {positionLabel(player.rostered.slot.position) ?? "—"}

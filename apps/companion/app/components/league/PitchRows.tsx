@@ -63,17 +63,27 @@ export interface PitchRow<T> {
 export default function PitchRows<T>({
   rows,
   keyOf,
+  widest: agreed,
   children,
 }: {
   rows: PitchRow<T>[];
   keyOf: (player: T) => string;
+  /** A fullest-line count to size against instead of this pitch's own.
+   *
+   *  For a caller drawing TWO pitches that must agree. The head-to-head is one
+   *  view toggled between two elevens, so each sizing itself redrew every man on
+   *  the page when the reader tapped the other half — a 3-4-3 at 69.6px against
+   *  a 3-5-2 at 64.3px. One number across both sides holds the pitch still.
+   *  Omitted, a pitch answers for itself, which is right for the five screens
+   *  that draw only one. */
+  widest?: number;
   children: (player: T) => ReactNode;
 }) {
   // The widest line decides the card, and one card decides the pitch. Read from
   // the rows rather than from the league's position caps: a keeper line of one
   // and a back five are both `rows`, and the caps would answer for a squad this
   // component may not have all of.
-  const widest = widestLine(rows);
+  const widest = agreed ?? widestLine(rows);
 
   return (
     <PitchFrame>

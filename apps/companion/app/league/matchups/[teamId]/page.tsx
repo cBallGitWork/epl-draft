@@ -15,6 +15,7 @@ import AutoRefresh from "../../../components/shell/AutoRefresh";
 import MatchupBoard, { type MatchupSide } from "../../../components/league/MatchupBoard";
 import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
+import { widestLine } from "../../../components/league/PitchRows";
 import LeagueShell from "../../Shell";
 import { getLeagueSquads, roundOf, teamDisplay } from "../../../squads";
 import { pollSeconds } from "../../../football";
@@ -135,6 +136,29 @@ export default async function HeadToHeadPage({
     [pairing.opponent.teamId, theirs],
   ]);
 
+  // Both elevens are arranged before either is drawn, because they have to agree
+  // about the card. `PitchRows` sizes every man from the fullest line it is
+  // given, and the two sides of a head-to-head are one view toggled in place —
+  // so a 3-4-3 against a 3-5-2 redrew every player on the page at a different
+  // size the moment the reader tapped the other half. Taken across both sides,
+  // and across each bench, the pitch holds still.
+  //
+  // Only sides whose eleven is actually going on screen count: a withheld one
+  // draws no cards, and letting its shape decide the width would be a rival's
+  // formation leaking out through the layout.
+  const arranged = new Map(
+    [pairing.team, pairing.opponent].flatMap((team) => {
+      const roster = rostered.get(team.teamId);
+      if (roster === undefined || !shows(team)) return [];
+      const points = scored.get(team.teamId)?.points ?? null;
+      return [[team.teamId, lineupDetail(roster, clubs, opposition, points)] as const];
+    }),
+  );
+  const widest = Math.max(
+    1,
+    ...[...arranged.values()].map((sheet) => widestLine([...sheet.rows, { players: sheet.bench }])),
+  );
+
   const side = (team: LeagueTeam): MatchupSide => {
     const mineHere = team.teamId === mine;
     const roster = rostered.get(team.teamId);
@@ -157,13 +181,14 @@ export default async function HeadToHeadPage({
     // arrangement is legible in it, which is why this branch only builds it once
     // the gate has already opened his eleven.
     const sheet = (mode: "pitch" | "list") => {
-      if (!shown) return withheld;
+      const detail = arranged.get(team.teamId);
+      if (!shown || roster === undefined || detail === undefined) return withheld;
       const points = priced?.points ?? null;
-      const { rows, bench } = lineupDetail(roster, clubs, opposition, points);
       return (
         <TeamSheet
-          rows={rows}
-          bench={bench}
+          rows={detail.rows}
+          bench={detail.bench}
+          widest={widest}
           lines={squadDetail(squadUnarranged(roster), clubs, opposition, points)}
           breakdown={priced?.breakdown ?? {}}
           mode={mode}
