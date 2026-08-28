@@ -3,6 +3,7 @@ import { join } from "node:path";
 import {
   FANTRAX_LEAGUES,
   type GameweekKickoff,
+  datedKickoffs,
   fetchFixtures,
   mapFixtures,
   mapLeagueInfo,
@@ -40,9 +41,7 @@ async function newestLeagueInfo(leagueKey: string): Promise<RawLeagueInfo> {
 
 async function main(): Promise<void> {
   const fixtures = mapFixtures(await fetchFixtures());
-  const kickoffs: GameweekKickoff[] = fixtures
-    .filter((fixture) => fixture.gameweek != null && fixture.kickoff != null)
-    .map((fixture) => ({ gameweek: fixture.gameweek as number, kickoff: fixture.kickoff as string }));
+  const kickoffs: GameweekKickoff[] = datedKickoffs(fixtures);
 
   console.log(`${fixtures.length} fixtures live from FPL, ${kickoffs.length} dated\n`);
 

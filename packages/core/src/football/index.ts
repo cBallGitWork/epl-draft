@@ -25,6 +25,7 @@ export {
   adjacentGameweeks,
   clubById,
   contributions,
+  datedKickoffs,
   fixturesInOrder,
   hasGameweek,
   isDoubtful,

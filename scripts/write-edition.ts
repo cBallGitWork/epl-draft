@@ -8,6 +8,7 @@ import {
   type FootballSnapshot,
   type LeagueInfo,
   type PublishedEdition,
+  datedKickoffs,
   buildBrief,
   fetchDraftResults,
   fetchLeagueInfo,
@@ -79,11 +80,7 @@ async function main(): Promise<void> {
   const info = mapLeagueInfo(raw);
   if (info.teams.length === 0) return say("No teams yet. A paper needs a league.");
 
-  const kickoffs = snapshot.fixtures.flatMap((fixture) =>
-    fixture.gameweek === null || fixture.kickoff === null
-      ? []
-      : [{ gameweek: fixture.gameweek, kickoff: fixture.kickoff }],
-  );
+  const kickoffs = datedKickoffs(snapshot.fixtures);
   const round = periodGameweeks(info.scoringPeriods, kickoffs).find((period) =>
     period.gameweeks.includes(snapshot.gameweek),
   );

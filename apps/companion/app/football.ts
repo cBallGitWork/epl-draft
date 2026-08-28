@@ -4,6 +4,7 @@ import {
   POLL,
   type Fixture,
   type FootballSnapshot,
+  datedKickoffs,
   duringGameweek,
   fetchFixtures,
   getFootballSnapshot,
@@ -57,15 +58,10 @@ export const seasonFixtures: () => Promise<Fixture[]> = unstable_cache(
 );
 
 /** The season's kickoffs as the league layer wants to be told them: plain data,
- *  one way, never a `Fixture`. Undated matches — TV picks with no time yet — are
- *  dropped rather than carried as a null nobody downstream can use. */
+ *  one way, never a `Fixture`. The rule for which fixtures have one is
+ *  `datedKickoffs`; what this adds is the cache in front of it. */
 export async function seasonKickoffs() {
-  const fixtures = await seasonFixtures();
-  return fixtures.flatMap((fixture) =>
-    fixture.gameweek === null || fixture.kickoff === null
-      ? []
-      : [{ gameweek: fixture.gameweek, kickoff: fixture.kickoff }],
-  );
+  return datedKickoffs(await seasonFixtures());
 }
 
 /** How often a page showing this round should ask the server again.

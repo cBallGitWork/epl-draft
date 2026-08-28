@@ -5,6 +5,7 @@ import {
   type LeagueInfo,
   type StandingsRow,
   type PeriodResult,
+  datedKickoffs,
   fetchLeagueInfo,
   fetchSeasonResults,
   fetchStandings,
@@ -90,11 +91,7 @@ const readSeason = leagueCache("schedule-season",
     if (raw instanceof FantraxError) return { unavailable: tell(raw) };
 
     const info = mapLeagueInfo(raw);
-    const kickoffs = season.flatMap((fixture) =>
-      fixture.gameweek === null || fixture.kickoff === null
-        ? []
-        : [{ gameweek: fixture.gameweek, kickoff: fixture.kickoff }],
-    );
+    const kickoffs = datedKickoffs(season);
 
     // When each round starts and when its lineups lock, from the lineup calendar
     // — `rosterPeriods`, never `scoringPeriods`. The lock is measured back from

@@ -4,6 +4,7 @@ import type { FootballSnapshot, PlayerMatchStats } from "./types";
 import {
   adjacentGameweeks,
   contributions,
+  datedKickoffs,
   fixturesInOrder,
   hasGameweek,
   isDoubtful,
@@ -97,6 +98,28 @@ describe("fixturesInOrder", () => {
       ],
     });
     expect(fixturesInOrder(s).map((f) => f.id)).toEqual([3, 2, 1]);
+  });
+});
+
+describe("datedKickoffs", () => {
+  it("drops the undated and keeps the rest in the order they arrived", () => {
+    expect(
+      datedKickoffs([
+        { id: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
+        { id: 2, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
+        { id: 3, gameweek: 2, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-28T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
+      ]),
+    ).toEqual([
+      { gameweek: 1, kickoff: "2026-08-21T19:00:00Z" },
+      { gameweek: 2, kickoff: "2026-08-28T19:00:00Z" },
+    ]);
+  });
+
+  // A fixture FPL has not assigned to a round is as unusable as an undated one:
+  // the league layer asks this for a gameweek's kickoff, and there is no
+  // gameweek to answer for.
+  it("drops a fixture with no gameweek, dated or not", () => {
+    expect(datedKickoffs([{ id: 4, gameweek: null, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null }])).toEqual([]);
   });
 });
 

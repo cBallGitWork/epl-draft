@@ -1,5 +1,5 @@
 import { NOTABLE_SAVES } from "../config";
-import type { Club, FootballPlayer, FootballSnapshot, PlayerMatchStats } from "./types";
+import type { Club, FootballPlayer, FootballSnapshot, Fixture, PlayerMatchStats } from "./types";
 
 // Pure read-side selectors over a snapshot. Kept here rather than in components
 // so they stay unit-testable — the same rule that let the World Cup app's
@@ -139,4 +139,25 @@ export function hasGameweek(snapshot: FootballSnapshot, gameweek: number): boole
 export function isDoubtful(player: FootballPlayer): boolean {
   if (player.news === "" && player.chanceOfPlaying === 100) return false;
   return player.status !== "a" || player.news !== "" || player.chanceOfPlaying !== null;
+}
+
+/** The season's dated kickoffs, one per fixture that has one.
+ *
+ *  Undated matches — TV picks with no time yet — are dropped rather than carried
+ *  as a null nobody downstream can use, so a caller never has to ask twice.
+ *
+ *  The return type is written out structurally and NOT imported from
+ *  `league/calendar.ts`, whose `GameweekKickoff` is the same shape. That import
+ *  would make the football layer depend on the league layer, which is the one
+ *  direction CLAUDE.md forbids outright: football is permanent and league is an
+ *  adapter. The league layer declares its own copy for exactly this reason, and
+ *  a script does the wiring. */
+export function datedKickoffs(
+  fixtures: readonly Fixture[],
+): { gameweek: number; kickoff: string }[] {
+  return fixtures.flatMap((fixture) =>
+    fixture.gameweek === null || fixture.kickoff === null
+      ? []
+      : [{ gameweek: fixture.gameweek, kickoff: fixture.kickoff }],
+  );
 }
