@@ -150,11 +150,18 @@ describe("mapLeagueInfo, on a league that has drafted", () => {
     expect(info.draftType).toBeNull();
   });
 
-  it("has no roster calendar at all, where the real league has one", () => {
-    // Same provider, same method, same day — and this league's payload simply
-    // omits `rosterPeriods`. The lineup gate has to survive that, which is why
-    // it fails safe to squad-only on an empty calendar rather than falling back
-    // to the scoring periods and quietly gating on the wrong deadline.
+  it("models an absent roster calendar as absent", () => {
+    // A shape the mapper must survive, and NOT a fact about this league. The
+    // comment here used to read "same provider, same method, same day — and this
+    // league's payload simply omits `rosterPeriods`", which is false: the
+    // fixture is the rehearsal league, and the 6 Aug capture of that same league
+    // carries all 38. The fixture is a trimmed subset (see the head of this
+    // file) and the trim took `rosterPeriods` with it.
+    //
+    // The assertion is worth keeping and the reasoning is not. The gate fails
+    // safe to squad-only on an empty calendar rather than falling back to the
+    // scoring periods and quietly gating on the wrong deadline — which is right
+    // because a key CAN be absent, not because this league omits it.
     expect(info.rosterPeriods).toEqual([]);
     expect(info.scoringPeriods.length).toBeGreaterThan(0);
   });

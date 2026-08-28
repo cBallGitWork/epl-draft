@@ -4,9 +4,11 @@ import type { RawRosterItem, RawTeamRosters } from "./raw";
 // `getTeamRosters` → who each manager holds this period, and who is actually
 // playing. Pure, like every mapper here.
 //
-// Whether `?period=N` returns a past roster or a projection is untested and
-// untestable until a transaction exists to tell them apart, so nothing below
-// assumes either. The period is carried through verbatim.
+// `?period=N` returns a past roster and not a projection — settled 28 Aug, when
+// a claim finally gave the two something to disagree about (see `client.ts`).
+// The transaction this was waiting for arrived; the conclusion below does not
+// change, because nothing here ever assumed either. The period is carried
+// through verbatim, which is what let the question stay open safely.
 
 function mapSlots(items: RawRosterItem[] | undefined): RosterSlot[] {
   if (!items) return [];

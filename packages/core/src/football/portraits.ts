@@ -26,7 +26,8 @@ import type { FootballPlayer } from "./types";
 // PNG only — webp/jpg variants 403 on both paths.
 //
 // The file is nominally 110x140 and actually 220x280 at ~105 KB, which is
-// plenty: the widest a portrait is ever drawn is 88px, on the player card. Let
+// plenty: 88px is the pitch card and the default, 112px the profile page, and
+// 176px the front page's lead picture — all inside 220. Let
 // Next's image optimizer resize and re-encode — fifteen raw PNGs is 1.5 MB of
 // pitch on a phone against ~15 KB of WebP apiece — so `unoptimized` must never
 // be set on these.
