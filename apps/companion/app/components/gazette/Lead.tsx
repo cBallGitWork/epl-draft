@@ -101,15 +101,14 @@ function Figure({
         {/* The players are the story a trade tells; the managers are in the
             headline. Set big and stacked, with the rule between them doing the
             work the word "for" would. */}
-        <div className="flex w-full flex-col items-center gap-1 px-4 py-1">
-          {lead.deal.inbound.map((player, at) => (
-            <p key={player.playerName} className="w-full text-center">
+        <div className="flex w-full flex-col items-center divide-y divide-league/30 px-4">
+          {lead.deal.inbound.map((player) => (
+            <p key={player.playerName} className="w-full py-1.5 text-center">
               <span className="block truncate font-display text-xl font-bold leading-tight text-cream">
                 {player.playerName}
               </span>
               <span className="text-2xs uppercase tracking-widest text-cream/55">
-                {at === 0 ? "to " : "to "}
-                {who(player.teamId)}
+                to {who(player.teamId)}
               </span>
             </p>
           ))}
