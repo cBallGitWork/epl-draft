@@ -5,8 +5,9 @@ import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/cor
 import { playerName } from "@epl/core";
 import LivePlayerCard from "./LivePlayerCard";
 import PitchPlayer from "./PitchPlayer";
-import PitchRows from "./PitchRows";
+import PitchRows, { cardBasis, widestLine } from "./PitchRows";
 import SquadRows from "./SquadRows";
+import { FAR_INSET } from "./PitchTurf";
 import { positionLabel } from "../../positions";
 
 // A team as it lines up on a day that counts: the eleven on the grass, the
@@ -68,12 +69,21 @@ export default function TeamSheet({
             // four cut-outs on the same colour they were standing on ten pixels
             // above, with nothing but a shade between the two — the players
             // stopped being on a pitch and the bench stopped being a bench.
-            <section className="bleed border-t border-line bg-surface px-2 pb-2 pt-2">
-              <ul className="flex justify-center gap-2">
+            <section className="bleed border-t border-line bg-surface pb-2 pt-2">
+              {/* The pitch's own inset, not a padding of its own: `cardBasis` is
+                  a share of the row it stands in, so the same share is the same
+                  pixels only in a row the same width as the pitch column. */}
+              <ul
+                className="flex justify-center gap-2"
+                style={{ paddingInline: `${FAR_INSET}%` }}
+              >
                 {bench.map((player) => (
                   <li
                     key={player.rostered.slot.fantraxId}
-                    className="min-w-0 flex-1 max-w-[3.3rem]"
+                    className="min-w-0 shrink-0"
+                    // The bench counts as a line of its own, so a strip wider
+                    // than any line on the grass still fits its own row.
+                    style={{ flexBasis: cardBasis(widestLine([...rows, { players: bench }])) }}
                   >
                     <p className="pb-0.5 text-center font-display text-[0.5625rem] font-bold uppercase tracking-widest text-faint">
                       {positionLabel(player.rostered.slot.position) ?? "—"}

@@ -2,7 +2,8 @@ import type { SquadPlayerDetail } from "@epl/core";
 import type { PitchRow } from "./PitchRows";
 import { playerName } from "@epl/core";
 import PitchPlayer from "./PitchPlayer";
-import PitchRows from "./PitchRows";
+import PitchRows, { cardBasis, widestLine } from "./PitchRows";
+import { FAR_INSET } from "./PitchTurf";
 import { positionLabel } from "../../positions";
 
 // The XI on the grass and the bench under it, one target per player: tap him to
@@ -99,10 +100,15 @@ export default function LineupPitch({
           with nothing but a shade between the two — the players stopped being on
           a pitch and the bench stopped being a bench. Dark, against the app's
           own surfaces, is the separation the strip was asking for. */}
-      <section className="bleed border-t border-line bg-surface px-2 pb-3 pt-3">
-        <ul className="flex justify-center gap-2">
+      <section className="bleed border-t border-line bg-surface pb-3 pt-3">
+        {/* The pitch's own inset — see `cardBasis`. */}
+        <ul className="flex justify-center gap-2" style={{ paddingInline: `${FAR_INSET}%` }}>
           {bench.map((player) => (
-            <li key={player.rostered.slot.fantraxId} className="min-w-0 flex-1 max-w-[3.9rem]">
+            <li
+              key={player.rostered.slot.fantraxId}
+              className="min-w-0 shrink-0"
+              style={{ flexBasis: cardBasis(widestLine([...rows, { players: bench }])) }}
+            >
               <p className="pb-0.5 text-center font-display text-[0.5625rem] font-bold uppercase tracking-widest text-faint">
                 {positionLabel(player.rostered.slot.position) ?? "—"}
               </p>
