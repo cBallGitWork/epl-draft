@@ -3288,6 +3288,74 @@ player would be a picture of a story we are not telling. The standfirst stops
 repeating the scoreline once the band carries it — a line that says it again is a
 caption.
 
+## `?period=N` is history, and it took a claim to prove it (28 Aug 2026)
+
+The question two files called open — does `getTeamRosters?period=N` serve a past
+arrangement, or today's relabelled — is answered, and the answer is history.
+
+**It could not have been answered by looking harder.** Every read of the
+rehearsal league agreed with every other because nothing in that league had moved
+since 12 Aug: the arrangement is identical across all seventeen captures from
+12 to 28 Aug. Two hypotheses that predict the same bytes stay indistinguishable
+however many times you fetch them, and eight days of captures bought nothing on
+this question. What settled it was Craig **changing something** — he dropped a
+forward and claimed another on `test2` this morning, after the 07:48Z capture.
+
+Read at 11:15Z, with the claim about four hours old:
+
+| asked | echoed | test2's forward |
+| --- | --- | --- |
+| `?period=1` | 1 | Osula (`05t6x`) — the man dropped |
+| `?period=2` | 2 | Garcia (`07898`) — the man claimed |
+| `?period=3` | 3 | Garcia |
+| no parameter | 2 | Garcia |
+
+Period 1's answer matches the 07:48Z capture exactly, and every capture back to
+12 Aug. So the parameter **selects**, and it selects squad MEMBERSHIP and not
+merely the arrangement — two reads of one league seconds apart disagree about who
+is rostered at all. That is more than the question asked for: a lineup is
+per-period in every fantasy product, but a squad is usually a fact about now, and
+Fantrax versions that too.
+
+The echo is still not the evidence and never was; `periodAsAsked` compares our
+number against our own and stays vacuous by construction. The divergence is the
+evidence.
+
+**Fantrax's own log corroborates**, which is what the 12 Aug transactions
+decision looks like when it works: `CLAIM_DROP` reads `totalNumResults: 1` in
+both the 27 and 28 Aug captures and 2 live. Native feed and capture diff agree.
+
+### The half that is still open, and it is the half that decides the fix
+
+**When does a period stop tracking the live one?** At its own lineup lock, or
+later, when Fantrax's editable period moves past it. For gameweek 1 those are
+about three days apart — period 1 locked 21 Aug 18:45Z, and the captures put the
+label rolling from 1 to 2 somewhere between 24 Aug 05:25Z and 25 Aug 05:20Z. No
+roster changed inside that window, so this probe cannot see which instant it was.
+
+It matters in exactly one place. `squads.ts` does not send the period, and the
+reason recorded there was that the parameter is inert — now false. What replaces
+it is narrower and still real: if a period freezes at ROLLOVER rather than at
+LOCK, then for those three days `?period=N` answers with a live, still-editable
+arrangement under a label whose lock has passed, and `visibility.ts` would
+publish sixteen managers' unlocked elevens. That compounds with the open
+`lineupLockType` reading, which is the other thing standing between us and
+knowing whether edits are even possible in that window. The gate is the one
+surface where being approximately right costs sixteen people the game they agreed
+to play, so it goes on reading the label Fantrax volunteers about the arrangement
+it is actually holding — sound whichever way the freeze lands.
+
+The price is a wrong answer on `/league/matchups/[teamId]` for any round already
+played: today's squad under last week's heading, which as of this morning means
+Garcia standing in a gameweek 1 eleven he was not signed for. It is a wrong
+answer and not an unsafe one, and the board says so on screen.
+
+**The experiment is one roster change made after a period has locked, then that
+period re-read.** Period 2 locks tonight at 18:45Z. A change made tomorrow and a
+read of `?period=2` settles it — and unlike this morning's it has to be
+deliberate, because the whole value of this league is that nothing else in it
+moves.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for
@@ -3298,9 +3366,12 @@ caption.
   from the other direction: asked for NO period it labels its answer with a
   period the calendar has not reached — 2, ten and a half hours inside roster
   period 1 — so the arrangement on hand is not always the one that was played.
-  See the 28 Aug section. What is still open is whether `?period=N` *serves* a
-  past arrangement, which decides how bad the gate finding above is: re-ask after
-  period 1 closes 28 Aug 18:59:58Z.
+  See the 28 Aug section. **Fully answered later the same day, and the answer is
+  history**: a claim made that morning left `?period=1` serving the dropped man
+  while every other read served his replacement. What remains is not whether a
+  period is stored but *when it freezes* — at its lock, or at rollover three days
+  later — which is the question that decides whether `squads.ts` may send the
+  parameter. One roster change made after period 2 locks tonight settles it.
 - Does league scoring start at period 1 or period 6? `getLeagueInfo` numbers all
   38 periods from 21 Aug, but we draft at GW6. The rehearsal league's matchup
   schedule runs from period 1, so this is really a question about the real

@@ -108,14 +108,28 @@ const readLeague = leagueCache("league-squads",
     // two calendars turn over at different instants and the page must be one
     // week's throughout.
     //
-    // **It is never sent to `getTeamRosters`, and that is the whole point.** The
-    // parameter is inert for the roster BODY: asked for period 1 today Fantrax
-    // returns period 2's arrangement, byte for byte, relabelled 1. Sending it
-    // therefore does not fetch history — it forges a label, and the lineup gate
-    // reads labels. Asked for period 1, the gate finds a lock that passed on
-    // 21 August and publishes sixteen managers' currently-editable elevens.
+    // **It is still never sent to `getTeamRosters` — but not for the reason that
+    // used to be written here.** That reason was that the parameter is inert:
+    // asked for period 1 Fantrax returns today's arrangement relabelled 1, so
+    // sending it forges a label rather than fetching history, and the lineup
+    // gate reads labels. The premise is false. Probed 28 Aug against a claim
+    // made that morning, a past period serves its own stored squad and not
+    // today's — `fetchTeamRosters` carries the evidence.
+    //
+    // What survives is a narrower version of the same hazard. We know a past
+    // period's copy stops tracking the live one; we do not know WHEN it stops —
+    // at that period's own lock, or later, when Fantrax's editable period moves
+    // past it. In gameweek 1 those two instants were three days apart. If it is
+    // the later, then for those three days `?period=N` answers with a live,
+    // still-editable arrangement under a label whose lock has passed, and the
+    // gate would publish precisely what it exists to withhold.
+    //
     // Omitted, Fantrax labels the payload with its own open period and the gate
-    // judges the arrangement it is actually holding.
+    // judges the arrangement it is actually holding, which stays sound whichever
+    // way that lands. The price is that a past round shows today's squad under
+    // last week's heading — a wrong answer, not an unsafe one, and the matchup
+    // page says so on screen. One roster change made after a period has locked,
+    // then that period re-read, is the whole experiment.
     const roundPeriod = round?.period ?? (await roundOf(current.gameweek))?.period ?? null;
 
     // `footballNow` for the round FPL is pointing at, and only the cold cache

@@ -57,12 +57,25 @@ export function fetchLeagueInfo(leagueId: string): Promise<RawLeagueInfo> {
  *  reads which period it got rather than assuming the one it asked for. Omitted,
  *  Fantrax serves whichever period it currently considers open.
  *
- *  **Whether a past period returns the lineup as it was played is unverified.**
- *  The parameter is honoured and echoed for every period 1–38 (probed 20 Aug),
- *  but no period has completed in either league, so a historic read cannot yet
- *  be told apart from today's roster relabelled. Fantrax's product is a lineup
- *  per period, so it very probably is history — "very probably" is why any view
- *  of a past lineup says so on screen. Re-ask after 28 Aug. */
+ *  **A past period returns stored state, not today's roster relabelled**
+ *  (probed 28 Aug, rehearsal league, and it took a change to see it). A forward
+ *  was claimed on `test2` that morning and another dropped: `?period=1` went on
+ *  serving the man who left while `?period=2`, `?period=3` and the no-parameter
+ *  read all carried the man who arrived. Period 1's answer matched every capture
+ *  from 12 Aug to that morning's 07:48Z, which is the state before the claim.
+ *
+ *  So the parameter SELECTS, and it selects squad membership and not merely the
+ *  arrangement — two reads of one league seconds apart disagree about who is
+ *  rostered. The echo was never the evidence and still is not; the divergence
+ *  is. Nothing could show this until somebody changed something, which is why
+ *  eight months of identical reads said nothing either way.
+ *
+ *  **What instant a period freezes at is still open**: its own lineup lock, or
+ *  the moment Fantrax's editable period moves past it. Here those were three
+ *  days apart and no roster changed between them, so this probe cannot see the
+ *  difference. It matters to `squads.ts`, which does not send the parameter for
+ *  a reason that turns on exactly this — see the note there. The experiment is
+ *  one roster change made AFTER a period's lock, then that period re-read. */
 export function fetchTeamRosters(leagueId: string, period?: number): Promise<RawTeamRosters> {
   return fxeaGet<RawTeamRosters>("getTeamRosters", {
     leagueId,

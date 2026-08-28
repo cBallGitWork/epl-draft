@@ -68,9 +68,12 @@ export default async function HeadToHeadPage({
 
   const state = roundState(squads.snapshot);
 
-  // A round in the past shows the eleven Fantrax returns for that period, and
-  // whether that is the eleven actually played is unverified until a period has
-  // completed (see `fetchTeamRosters`). Said on screen rather than assumed.
+  // A round in the past shows TODAY'S squad, not the eleven that played it.
+  // Fantrax does keep the period's own copy — that was settled on 28 Aug — but
+  // `squads.ts` deliberately does not ask for it, and the note there says why.
+  // Said on screen rather than assumed away: a reader knows which of his men he
+  // only signed this morning, and a page that quietly puts him in last week's
+  // eleven teaches him to distrust the weeks it has right.
   //
   // Asked of the round on screen, never of whether the URL carried a gameweek:
   // arriving from the live board leaves `round` null, and a finished round is no
@@ -190,15 +193,17 @@ export default async function HeadToHeadPage({
         </p>
       )}
       {/* Provenance, and the honest kind: the totals are Fantrax's own, and the
-          elevens are whatever its roster read returns — which is the arrangement
-          it currently considers open, not the one that was fielded. The scores
-          are deliberately not called final: `state` is true here at all three
-          finished rungs and only `data_checked` earns that word, which is the
-          distinction `RoundWord` beside this makes. */}
+          elevens are whatever its roster read returns — the arrangement it
+          currently considers open, not the one that was fielded. That is now a
+          statement of what we do rather than of what we could not find out. The
+          scores are deliberately not called final: `state` is true here at all
+          three finished rungs and only `data_checked` earns that word, which is
+          the distinction `RoundWord` beside this makes. */}
       {played ? (
         <p className="px-3 text-2xs text-faint">
-          A round already played. The scores are Fantrax&apos;s own; the elevens are the roster it
-          returns now, which we have not been able to prove is the one that was fielded.
+          A round already played. The scores are Fantrax&apos;s own; the elevens are today&apos;s
+          squads rather than the ones that were fielded. Fantrax keeps the old ones and we are not
+          reading them yet.
         </p>
       ) : null}
       <MatchupBoard team={side(pairing.team)} opponent={side(pairing.opponent)} state={state} />

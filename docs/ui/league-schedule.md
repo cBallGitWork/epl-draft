@@ -126,11 +126,13 @@ GW1's ten fixtures finished with the schedule on screen, the winner marked and
 the scoreline printed from `getStandings`. What is still unwitnessed is a
 *completed period* — every dated fixture finished — which arrives Mon 24 Aug.
 
-**A played head-to-head shows rosters we cannot prove were the ones fielded.**
-`getTeamRosters?period=N` is honoured and echoed for every period, but no period
-has completed in either league, so a historic read cannot yet be told apart from
-today's roster relabelled. The board says so on screen. Re-ask after 28 Aug and
-delete the line if the answer is history.
+**A played head-to-head shows today's rosters, not the ones that were fielded.**
+Asked 28 Aug, and the answer is history: `?period=1` served a forward who had
+been dropped that morning while every other read served the man who replaced him,
+so a past period keeps its own squad. We still do not ask for it — `squads.ts`
+explains what remains open about *when* a period freezes, and why the gate is
+safer reading the label Fantrax volunteers. So the line stays on the board, but
+it now describes a choice rather than an unknown.
 
 **No provenance line.** Craig removed it on 20 Aug. The points on this page are
 Fantrax's under Fantrax's scoring and the page no longer says so — the only page
