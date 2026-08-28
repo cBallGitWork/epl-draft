@@ -24,7 +24,7 @@ export type EditionKind = "preview" | "report";
 
 /** One paragraph-shaped piece of the column, keyed so a section that arrives
  *  empty simply does not print. */
-export interface EditionSection {
+interface EditionSection {
   /** Stable and ours, not the writer's: `verdict`, `ties`, `eleven`. The page
    *  decides where each goes, so a writer inventing a key gets a section nobody
    *  renders rather than a page laid out by the model. */
@@ -36,7 +36,7 @@ export interface EditionSection {
 }
 
 /** One tie, called or reported in a line. */
-export interface EditionTie {
+interface EditionTie {
   /** Both team ids, so the page joins to its own names rather than printing the
    *  writer's copy of them — a name typed by a model is a name that goes stale
    *  the day somebody renames their team. */
@@ -173,7 +173,7 @@ function isTie(value: unknown): value is EditionTie {
  *  Only ties he actually called are counted. Declining to call one is not a
  *  wrong answer, and folding it in as one would make silence the cheapest way to
  *  look right. */
-export interface Marked {
+interface Marked {
   right: number;
   called: number;
 }
