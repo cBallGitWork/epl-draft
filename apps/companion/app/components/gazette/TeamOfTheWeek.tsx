@@ -1,26 +1,23 @@
-import {
-  NOTABLE_SAVES,
-  type Club,
-  type Pick,
-  type TeamOfTheWeek as Eleven,
-  isGoalkeeper,
-} from "@epl/core";
+import { NOTABLE_SAVES, type Pick, type TeamOfTheWeek as Eleven } from "@epl/core";
 import Column from "./Column";
-import PitchRows, { NAME_SIZE } from "../league/PitchRows";
-import PlayerImage from "../league/PlayerImage";
 
-// The best eleven anyone owned this week, standing on grass.
+// The best eleven anyone owned this week, printed as a standing column.
 //
-// It was eleven rows on hairlines, which is a table: same face-less line eleven
-// times, the biggest block on the front page, and the reason the whole paper
-// read as a list. A team of the week is a TEAM — it has a shape, and the shape
-// is the point of printing it. `PitchRows` already draws one for three other
-// screens; this is the fourth, and it costs the page nothing it was not already
-// shipping.
+// It has been both things now. Eleven rows on hairlines read as a table, so it
+// became a pitch — and a pitch is the largest object a page can carry: at a
+// phone's width the grass ran most of a screen on its own, and the front page
+// turned into a picture of a team with a newspaper wrapped round it. The shape
+// was worth having and the size was not.
+//
+// So the lines stay and the grass goes. A reader still sees 1-4-4-2 — it is in
+// the heading, and the men are grouped under it line by line — but as a rail
+// column beside the lead rather than as the widest thing on the sheet. The
+// reference paper does exactly this with its own best-of list, and it is the
+// block a manager scans rather than reads.
 //
 // The lines come from core, not from a second sort here: `shape` is counted off
-// the same lines, so what the heading says and what the pitch draws cannot come
-// apart.
+// the same lines, so what the heading says and what the column groups cannot
+// come apart.
 
 /** What got him picked, in the fewest words that are still true. */
 function did(pick: Pick): string {
@@ -35,15 +32,11 @@ function did(pick: Pick): string {
 
 export default function TeamOfTheWeek({
   eleven,
-  clubs,
   mine,
   partial,
   fielded,
 }: {
   eleven: Eleven;
-  /** The round's clubs, keyed by FPL id — for each cut-out's kit and crest
-   *  fallbacks. Looked up once by the page rather than per player. */
-  clubs: Map<number, Club>;
   mine: string | null;
   /** Whether the round is still being played. Said in the heading rather than
    *  left to the reader: an eleven picked from four fixtures of ten is not the
@@ -60,61 +53,54 @@ export default function TeamOfTheWeek({
 }) {
   return (
     <Column title={partial ? "Team of the week so far" : "Team of the week"} aside={eleven.shape}>
-      <PitchRows
-        rows={eleven.lines.map((line) => ({ label: line.position, players: line.picks }))}
-        keyOf={(pick) => String(pick.playerCode)}
-      >
-        {(pick) => (
-          <Man pick={pick} club={clubs.get(pick.clubId)} mine={pick.ownerTeamId === mine} fielded={fielded} />
-        )}
-      </PitchRows>
+      {eleven.lines.map((line) => (
+        <div key={line.position} className="py-1.5">
+          <p className="font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-faint">
+            {line.position}
+          </p>
+          <ul>
+            {line.picks.map((pick) => (
+              <Man
+                key={pick.playerCode}
+                pick={pick}
+                mine={pick.ownerTeamId === mine}
+                fielded={fielded}
+              />
+            ))}
+          </ul>
+        </div>
+      ))}
     </Column>
   );
 }
 
-/** One of the eleven, as he stands.
+/** One of the eleven, on one line.
  *
- *  Deliberately not `PitchPlayer`, which takes a `RosteredPlayer` and prints his
- *  fixture and his Fantrax points. Neither is what this section is about: the
- *  round is over, and the two things worth knowing are what he did and whose he
- *  was. Same cut-out, same plate, different second line.
+ *  Name and owner left, what he did right — the two things this section is
+ *  about, now that the round is over: what he did, and whose he was. The
+ *  benching is the best story on the page and keeps its place beside the owner
+ *  who did it, said only of a lineup we know he was left out of.
  */
 function Man({
   pick,
-  club,
   mine,
   fielded,
 }: {
   pick: Pick;
-  club: Club | undefined;
   mine: boolean;
   fielded: boolean;
 }) {
   return (
-    <div className="@container flex flex-col items-center">
-      <PlayerImage
-        player={{ code: pick.playerCode, name: pick.playerName }}
-        club={club}
-        keeper={isGoalkeeper(pick.position)}
-        // The round he is picked from has been played by definition — a man with
-        // no minutes is never considered — so nobody here is drawn back.
-        kickedOff
-      />
-      <p
-        className={`w-full truncate rounded-sm bg-bg/75 px-1 text-center font-display ${NAME_SIZE} font-bold leading-4 ${
-          mine ? "text-accent" : "text-cream"
-        }`}
-      >
-        {pick.playerName}
-      </p>
-      <p className="numeric w-full truncate text-center text-2xs leading-3 text-cream/90">
-        {did(pick)}
-      </p>
-      <p className="w-full truncate text-center text-2xs leading-4 text-cream/60">
-        {/* The best story on the page: his own manager left him out. Said only
-            of a lineup we know he was left out of. */}
-        {!fielded || pick.started ? pick.ownerName : `${pick.ownerName} · benched`}
-      </p>
-    </div>
+    <li className="flex items-baseline justify-between gap-2 pt-0.5">
+      <span className="min-w-0 truncate">
+        <span className={mine ? "font-semibold text-accent" : "font-semibold"}>
+          {pick.playerName}
+        </span>{" "}
+        <span className="text-faint">
+          {!fielded || pick.started ? pick.ownerName : `${pick.ownerName} · benched`}
+        </span>
+      </span>
+      <span className="numeric shrink-0 text-2xs text-muted">{did(pick)}</span>
+    </li>
   );
 }
