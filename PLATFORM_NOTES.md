@@ -3781,6 +3781,34 @@ email, not billing — see the hosting section.
 payloads; captures filed per league; period alignment settled and scripted; the
 `CLAUDE.md` pool-count and `sportRadarId` corrections landed.
 
+## A merge commit skipped the deploy, and took nine commits with it (29 Aug 2026)
+
+`vercel.json`'s `ignoreCommand` asks one question — did this commit touch
+anything outside `data/snapshots` and `data/probes`? — and asks it of
+`HEAD^..HEAD`. **On a merge commit that is the wrong diff.** `HEAD^` is the
+first parent, so what it sees is only what the OTHER branch brought in, and
+everything on the branch being merged from is invisible to it.
+
+Pushed 9dbb367 on 29 Aug: nine commits of app work, merged with the cron's
+round-state append. Its first-parent diff was one line of
+`data/probes/round-state/gw2.jsonl`, the command exited 0, and Vercel skipped
+the build. `gh run list` was green, the commit was on `main`, and production
+went on serving the build from before any of it. This is the trap the 22 Aug
+handover named — **verify the deployed URL, not the commit** — arriving through
+a door nobody had checked.
+
+A merge commit now always builds:
+
+```
+if git rev-parse -q --verify HEAD^2 >/dev/null; then exit 1; fi; git diff --quiet HEAD^ HEAD -- …
+```
+
+`HEAD^2` resolves only on a merge, and `exit 1` is Vercel's "build it". The
+data-only skip is unchanged for every ordinary commit, which is the case it was
+written for. Preferring a rebase to a merge on `main` would also have avoided
+it, but a rule nobody can enforce is not a fix — the cron pushes on its own
+schedule and a merge will happen again.
+
 ## The two bugs the first live weekend showed (29 Aug 2026)
 
 Craig read the deployed app mid-gameweek 2 and found two, both of which had been
@@ -3827,6 +3855,10 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-29: A merge commit turned out to skip the Vercel build entirely —
+  `ignoreCommand` reads `HEAD^..HEAD`, which on a merge is the other branch's
+  diff — and nine commits sat on `main` undeployed with every check green. Merge
+  commits now always build. See the section above.
 - 2026-08-29: Squads moved to the round a manager can still change, and the
   table gained the league's own points. Both bugs were only visible with a
   gameweek in flight; see the section above. `mapStandings` moved onto the fxpa
