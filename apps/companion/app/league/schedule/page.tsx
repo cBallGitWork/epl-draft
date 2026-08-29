@@ -3,14 +3,12 @@ import {
   COMPETITIONS,
   LEAGUE_COMPETITION,
   PLACEHOLDER_ROUNDS,
-  POLL,
   type CompetitionTie,
   groupTies,
   leagueTies,
   periodPairings,
   seededTies,
 } from "@epl/core";
-import AutoRefresh from "../../components/shell/AutoRefresh";
 import Nothing from "../../components/shell/Nothing";
 import Section from "../../components/shell/Section";
 import LeagueShell from "../Shell";
@@ -175,7 +173,6 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
           poll rate and wrong for a dot. Asked of this round rather than of the
           snapshot, because the snapshot is always the current round and this
           page is the one that shows any of them. */}
-      {round.started && round.status !== "finished" ? <AutoRefresh seconds={POLL.live} /> : null}
 
       <RoundHeader round={round} />
 

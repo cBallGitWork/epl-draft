@@ -10,12 +10,10 @@ import {
   squadDetail,
   squadUnarranged,
 } from "@epl/core";
-import AutoRefresh from "../../components/shell/AutoRefresh";
 import LineupPlanner from "../../components/league/LineupPlanner";
 import PageHeader from "../../components/shell/PageHeader";
 import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
-import { pollSeconds } from "../../football";
 import { getLeagueSquads, planningRound, roundOf, teamDisplay } from "../../squads";
 import { squadLivePoints } from "../../scoreboard";
 import { squadPoints } from "../../teamStats";
@@ -138,7 +136,6 @@ export default async function TeamPage({
           `revalidate` bounds staleness without pushing anything to a phone
           already open on the sofa. Same cadence as the head-to-head board that
           shows the same numbers. */}
-      <AutoRefresh seconds={pollSeconds(squads.snapshot)} />
       {/* Who he plays belongs on the same line as who he is. It had a line of
           its own under the period, which is where a reader looks last. */}
       <PageHeader

@@ -7,10 +7,9 @@ import {
   periodPairings,
   roundState,
 } from "@epl/core";
-import AutoRefresh from "../../components/shell/AutoRefresh";
 import { Match, Pairing } from "./Rows";
 import RoundWord from "../../components/league/RoundWord";
-import { footballNow, pollSeconds } from "../../football";
+import { footballNow } from "../../football";
 import { liveScores } from "../../scoreboard";
 import { getLeagueSquads, readerTeamId } from "../../squads";
 import { marksFor } from "../../involvement";
@@ -63,7 +62,6 @@ export default async function DeskPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <AutoRefresh seconds={pollSeconds(snapshot)} />
 
       <header className="flex items-baseline justify-between gap-3 pt-1">
         <h1 className="text-xl font-bold tracking-tight">The desk</h1>

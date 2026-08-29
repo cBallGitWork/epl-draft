@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { LEAGUE_NAME } from "@epl/core";
-import AutoRefresh from "../components/shell/AutoRefresh";
-import { footballNow, pollSeconds } from "../football";
 import Columns from "./Columns";
 import TeamBadge from "../components/league/TeamBadge";
 import { leagueTable, teamBadges } from "../standings";
@@ -26,11 +24,10 @@ const DRAFT_DATE = londonDate(
 );
 
 export default async function StandingsPage() {
-  const [rows, mine, badges, football, info] = await Promise.all([
+  const [rows, mine, badges, info] = await Promise.all([
     leagueTable(),
     readerTeamId(),
     teamBadges(),
-    footballNow(),
     leagueInfo(),
   ]);
   // Where the season's cut falls, and it is the league's answer rather than
@@ -75,7 +72,6 @@ export default async function StandingsPage() {
           the last points surface with no refresh on it at all: `revalidate`
           bounds how stale the cache may get and pushes nothing to a phone left
           open on the sofa, so the table sat still through a whole afternoon. */}
-      <AutoRefresh seconds={pollSeconds(football)} />
 
       <Columns />
 

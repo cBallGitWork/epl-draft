@@ -1,7 +1,6 @@
 import type { Viewport } from "next";
 import { LEAGUE_NAME, clubById } from "@epl/core";
 import AsItStands from "./components/gazette/AsItStands";
-import AutoRefresh from "./components/shell/AutoRefresh";
 import Deals from "./components/gazette/Deals";
 import Doubts from "./components/gazette/Doubts";
 import Lead, { Headline } from "./components/gazette/Stories";
@@ -13,7 +12,6 @@ import { FANTRAX_SILENT, SECONDARY_STORIES, servedLeague } from "./config";
 import Column from "./components/gazette/Column";
 import Nothing from "./components/shell/Nothing";
 import { edition } from "./edition";
-import { pollSeconds } from "./football";
 import { fraunces, newsreader } from "./paperFonts";
 import { londonDate, londonDayAndTime } from "./londonTime";
 import { readerTeamId } from "./squads";
@@ -82,14 +80,6 @@ export default async function GazettePage() {
               : `${LEAGUE_NAME}, week by week.`
         }
       />
-
-      {/* The page asks the server for a fresh render on the same interval every
-          other live surface uses. Without it a phone left open on the sofa shows
-          a frozen scoreline under a pulsing dot for a whole half — which is what
-          the front page did, alone among the app's screens, until now. */}
-      {paper.snapshot ? (
-        <AutoRefresh seconds={pollSeconds(paper.snapshot)} />
-      ) : null}
 
       <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">
         {/* The lead column. `--page-gutter: 0` inside it once the rail exists:

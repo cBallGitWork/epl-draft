@@ -1,10 +1,8 @@
 import { pairingInvolves, periodPairings, roundState } from "@epl/core";
-import AutoRefresh from "../../components/shell/AutoRefresh";
 import Nothing from "../../components/shell/Nothing";
 import PairingCard from "./PairingCard";
 import RoundWord from "../../components/league/RoundWord";
 import LeagueShell from "../Shell";
-import { pollSeconds } from "../../football";
 import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "../../scoreboard";
@@ -108,7 +106,6 @@ export default async function MatchupPage() {
           how stale the cache may get and pushes nothing to a phone already
           showing the score, so a device open on the sofa held a frozen scoreline
           for the whole afternoon while /matchday moved. */}
-      <AutoRefresh seconds={pollSeconds(squads.snapshot)} />
 
       {/* Provenance at the point of use, per principle 4. These are Fantrax's
           points under Fantrax's scoring; we add nothing up. */}

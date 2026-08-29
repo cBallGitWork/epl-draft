@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Archivo_Narrow } from "next/font/google";
-import { LEAGUE_NAME, duringGameweek } from "@epl/core";
-import { footballNow } from "./football";
+import { LEAGUE_NAME, POLL, duringGameweek } from "@epl/core";
+import { footballNow, pollSeconds } from "./football";
+import AutoRefresh from "./components/shell/AutoRefresh";
 import TabNav from "./components/shell/TabNav";
 import "./globals.css";
 
@@ -39,23 +40,30 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-/** Whether there is football on, for the tab bar.
+/** The round, for the two things the shell decides from it: whether to offer the
+ *  Matchday tab, and how often to ask the server for a fresh render.
  *
- *  Fails **open**: if FPL cannot be reached we show the Matchday tab rather than
- *  hide it. Navigation must not lie by omission during the one window it matters,
- *  and the page behind it says honestly that nothing could be read. The reverse
- *  failure — a section silently missing mid-match — is the one nobody could
- *  diagnose from a phone. */
-async function footballIsOn(): Promise<boolean> {
+ *  Fails **open** on the tab: if FPL cannot be reached we show it rather than
+ *  hide it. Navigation must not lie by omission during the one window it
+ *  matters, and the page behind it says honestly that nothing could be read. The
+ *  reverse failure — a section silently missing mid-match — is the one nobody
+ *  could diagnose from a phone. The poll falls back to the idle rate, because
+ *  polling hard against a provider that just failed is how a wobble becomes an
+ *  outage. */
+async function round(): Promise<{ matchday: boolean; seconds: number }> {
   try {
-    return duringGameweek(await footballNow(), new Date().toISOString());
+    const snapshot = await footballNow();
+    return {
+      matchday: duringGameweek(snapshot, new Date().toISOString()),
+      seconds: pollSeconds(snapshot),
+    };
   } catch {
-    return true;
+    return { matchday: true, seconds: POLL.idle };
   }
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const matchday = await footballIsOn();
+  const { matchday, seconds } = await round();
 
   return (
     <html lang="en-GB" className={`${archivo.variable} ${archivoNarrow.variable}`}>
@@ -70,6 +78,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             flow. On a phone it is fixed to the bottom and out of flow, where
             document order costs nothing. */}
         <TabNav matchday={matchday} />
+        {/* One poller for the whole app. It was eight, each reading the interval
+            off whatever snapshot its own page happened to hold — so a page with
+            no live read of its own simply froze, and `/league/schedule` polled at
+            the live rate on a condition none of the others used. The shell knows
+            the round; the pages know their subject.
+
+            The rate is `pollSeconds`, which asks whether the ROUND is under way
+            and never whether a ball is in the air. That distinction cost the
+            Live tab a whole afternoon once: `isMatchdayLive` goes false in every
+            gap between kickoffs, so the page dropped to the idle 300s while the
+            boards beside it stayed on 30s — and between kickoffs is exactly when
+            a score is most likely to have moved since you looked. */}
+        <AutoRefresh seconds={seconds} />
         {/* The bottom padding is the bar's own height plus the phone's safe area,
             rather than a round number chosen to cover both. It was `pb-24`: right
             on a notched iPhone, where the bar is 56px plus a 34px inset, and 39px

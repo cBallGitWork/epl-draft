@@ -12,14 +12,12 @@ import {
   squadUnarranged,
   wasFielded,
 } from "@epl/core";
-import AutoRefresh from "../../../components/shell/AutoRefresh";
 import MatchupBoard, { type MatchupSide } from "../../../components/league/MatchupBoard";
 import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
 import { widestLine } from "../../../components/league/PitchRows";
 import LeagueShell from "../../Shell";
 import { getLeagueSquads, roundOf, teamDisplay } from "../../../squads";
-import { pollSeconds } from "../../../football";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
 import { teamBadges } from "../../../standings";
 import { myTeamId } from "../../../session";
@@ -209,7 +207,6 @@ export default async function HeadToHeadPage({
 
   return (
     <LeagueShell title="Head-to-head" current="matchups" sub={heading}>
-      <AutoRefresh seconds={pollSeconds(squads.snapshot)} />
       {/* Both sibling boards say when the scoreboard is down; this one used to
           render the outage as two silent dashes. */}
       {refused === null ? null : (
