@@ -69,7 +69,7 @@ export default async function GazettePage() {
     // two equal columns, which is not a lead and a rail. Asking the container
     // instead means the rail arrives exactly when there is room for it.
     <div
-      className={`paper @container ${fraunces.variable} ${newsreader.variable} -mx-[var(--page-gutter)] -mt-3 flex flex-col gap-5 px-[var(--page-gutter)] pb-8 pt-4`}
+      className={`paper @container ${fraunces.variable} ${newsreader.variable} -mx-[var(--page-gutter)] -mb-[var(--page-foot)] -mt-3 flex flex-col gap-5 px-[var(--page-gutter)] pb-[calc(2rem+var(--page-foot))] pt-4`}
     >
       <Masthead
         at={paper.snapshot?.fetchedAt ?? null}

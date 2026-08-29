@@ -76,7 +76,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             of empty page under everything on any phone without an inset.
             Above `md` the bar is overhead
             instead and the room underneath is just room. */}
-        <main id="main" className="mx-auto w-full max-w-2xl px-[var(--page-gutter)] pb-[calc(4rem+env(safe-area-inset-bottom))] pt-3 md:pb-8">
+        <main id="main" className="mx-auto w-full max-w-2xl px-[var(--page-gutter)] pb-[var(--page-foot)] pt-3">
           {children}
         </main>
       </body>
