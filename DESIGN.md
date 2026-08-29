@@ -154,3 +154,40 @@ Recorded so the next agent does not read the absence as an oversight.
   "this is what is selected" are one statement, and the accent slot already
   carries it correctly in both registers without the rule knowing which page it
   is on.
+
+## 9. Decided at sign-off, 29 Aug 2026
+
+Craig's answers on the wireframe canvas. Where one contradicts §8 above or the
+overhaul plan, this section wins.
+
+**The pitch stays the squad screen's default.** The plan and the boards both
+proposed demoting it to a toggle behind a dense table; that is rejected. So
+`/squad/[teamId]` keeps its pitch, keeps the 390×844 no-scroll budget, and keeps
+its standing as the reference page — `docs/ui/squad.md` and `docs/ui/README.md`
+are not retired.
+
+The consequence is the part worth writing down. §8 defers the 6–7px clamp floors
+on the player cards as "survivable only once the pitch is demoted". **That escape
+hatch is gone, and the type is still too small** — Craig's own verdict on the
+pitch view is that it is terrible. So the brief is now the harder one: make a
+card carry its name, its fixture-or-score band and its state at a readable size
+with all fifteen still on one phone screen. It is a geometry problem, not a
+demotion problem, and it does not get solved by shrinking something else.
+
+**`/players` on a phone keeps sideways scroll, with the name column frozen.**
+The scouting table's sixteen columns do not become mobile view presets. This
+preserves `docs/ui/players.md`'s "nothing is hidden on a phone" record, which
+therefore stands rather than being rewritten. A sticky first column is the cost.
+
+**The live desk splits.** Mobile `/matchday` rows expand in place from data
+already on the page; the `≥lg` wall at `/matchday/desk` keeps the no-tap rule
+`docs/ui/desk.md` makes binding by name, and links out instead. The rule was
+written because the wall is read across a room rather than operated, and that is
+still true of the wall and was never true of a phone.
+
+**The masthead photograph is deferred, not chosen.** The crest-in-a-box ships and
+is not a placeholder — it is what the paper looks like until someone hands it a
+better picture, and the picture it wants is a league one (draft night, a trophy,
+sixteen names on a board) rather than a stock Premier League shot, which would
+make the paper look like it is about the Premier League rather than about the
+sixteen of us.
