@@ -70,13 +70,13 @@ export default function Picture({
         {/* The players are the story a trade tells; the managers are in the
             headline. Set big and stacked, with the rule between them doing the
             work the word "for" would. */}
-        <div className="flex w-full flex-col items-center divide-y divide-league/30 px-4">
+        <div className="flex w-full flex-col items-center divide-y divide-bg/25 px-4">
           {lead.deal.inbound.map((player) => (
             <p key={player.playerName} className="w-full py-1.5 text-center">
-              <span className="block truncate font-display text-xl font-bold leading-tight text-cream">
+              <span className="paper-display block truncate text-xl font-bold leading-tight text-bg">
                 {player.playerName}
               </span>
-              <span className="text-2xs uppercase tracking-widest text-cream/55">
+              <span className="font-sans text-3xs uppercase tracking-[0.15em] text-bg/60">
                 to {who(player.teamId)}
               </span>
             </p>
@@ -89,15 +89,17 @@ export default function Picture({
   return <Scoreline result={lead.result} />;
 }
 
-/** A result, as the picture. Winner's total in cream and the loser's dimmed —
- *  the same grammar the head-to-head boards use, at the size a front page gives
- *  the one score that mattered. */
+/** A result, as the picture. Winner's total in the stock and the loser's dimmed
+ *  to 3.9:1 — the same grammar the head-to-head boards use, at the size a front
+ *  page gives the one score that mattered. Large text, so the 3:1 floor is the
+ *  one that applies to the dimmed half; the names beside them are small and sit
+ *  at 5.9:1. */
 function Scoreline({ result }: { result: StoryResult }) {
   return (
     <Band>
       <div className="flex w-full items-center justify-center gap-4 px-4">
         <Total name={result.winner.name} points={result.winner.points} won />
-        <span className="font-display text-3xl font-bold text-cream/25">–</span>
+        <span className="font-display text-3xl font-bold text-bg/45">–</span>
         <Total name={result.loser.name} points={result.loser.points} won={false} />
       </div>
     </Band>
@@ -109,12 +111,12 @@ function Total({ name, points, won }: { name: string; points: number; won: boole
     <span className="flex min-w-0 flex-1 flex-col items-center gap-0.5">
       <span
         className={`numeric font-display text-6xl font-bold leading-none ${
-          won ? "text-cream" : "text-cream/45"
+          won ? "text-bg" : "text-bg/45"
         }`}
       >
         {points}
       </span>
-      <span className="w-full truncate text-center text-2xs uppercase tracking-widest text-cream/60">
+      <span className="w-full truncate text-center font-sans text-3xs uppercase tracking-[0.15em] text-bg/60">
         {name}
       </span>
     </span>
@@ -125,11 +127,19 @@ function Total({ name, points, won }: { name: string; points: number; won: boole
  *  kinds share a rhythm rather than each arriving as its own layout.
  *
  *  Full-bleed on the same rule the pitch is: the widest thing on the page is the
- *  one that gains from every pixel. */
+ *  one that gains from every pixel.
+ *
+ *  Inked, not raised. It stood on the paper's own light surface, which made the
+ *  loudest picture on the page the palest thing on it. Ink ground and stock
+ *  letters is what a paper does with a reversed block, and it is drawn in the
+ *  two colours the sheet already has — so unlike the pitch and the crest it is
+ *  furniture rather than a colour plate, and nothing inside it wants the desk's
+ *  tokens back. The bench story overrides the ground with the club's own
+ *  colours, which are data and belong to the club. */
 function Band({ children, style }: { children: ReactNode; style?: CSSProperties }) {
   return (
     <div
-      className="bleed relative flex h-[8.5rem] items-center justify-center overflow-hidden bg-raised"
+      className="bleed relative flex h-[8.5rem] items-center justify-center overflow-hidden bg-ink @xl:h-[12rem]"
       style={style}
     >
       {children}

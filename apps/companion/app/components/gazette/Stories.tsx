@@ -34,13 +34,24 @@ export default function Lead({
   return (
     <section className="flex flex-col">
       <Picture lead={lead} who={who} clubs={clubs} />
-      <p className="mt-3 border-b border-league/40 pb-1 font-sans text-xs font-bold uppercase tracking-widest text-cream">
-        {kicker}
+      {/* The kicker is a tag, printed the way a paper prints one: the page's own
+          ink as a ground and the page's own stock as the letters, 14.2:1 either
+          way round. Deliberately not a colour plate — it is drawn in the two
+          colours the sheet already has, so nothing inside it needs the desk's
+          tokens back. */}
+      <p className="mt-3 text-center">
+        <span className="inline-block bg-ink px-2 py-1 font-sans text-2xs font-bold uppercase tracking-[0.15em] text-bg">
+          {kicker}
+        </span>
       </p>
-      <h2 className="paper-display text-balance pt-2.5 text-3xl font-black leading-[1.02] text-cream">
+      <h2 className="paper-display text-balance pt-2.5 text-center text-4xl font-black leading-[1.02] text-ink">
         {headline}
       </h2>
-      <p className="pt-1.5 text-sm leading-snug text-muted">{standfirst}</p>
+      <p className="pt-2 text-center text-lg italic leading-snug text-muted">{standfirst}</p>
+      {/* The ornament: a 24px hairline, centred, closing the display block
+          before the prose or the next column starts. A paper's smallest piece of
+          furniture and the one that says "this heading is finished". */}
+      <span className="mx-auto mt-3 h-px w-6 bg-ink" />
     </section>
   );
 }
@@ -61,14 +72,15 @@ export function Headline({
 
   return (
     <li className="border-b border-line py-2.5 last:border-b-0">
-      {/* `faint` and not the league register: `league-dark` is a ground colour
-          and sits at about 2:1 on the page, which is under the 4.5:1 PRODUCT.md
-          sets for text. The red belongs to rules and chrome here, not to type
-          this small. */}
-      <p className="font-sans text-2xs font-bold uppercase tracking-widest text-faint">
-        {kicker}
+      {/* The same tag as the lead's, a size down. It was `faint` type on no
+          ground, which is the one thing a kicker must not be — a kicker is a
+          label and a label has an edge. */}
+      <p>
+        <span className="inline-block bg-ink px-1.5 py-0.5 font-sans text-3xs font-bold uppercase tracking-[0.15em] text-bg">
+          {kicker}
+        </span>
       </p>
-      <p className="paper-display text-balance pt-0.5 text-base font-bold leading-tight text-cream">
+      <p className="paper-display text-balance pt-2 text-xl font-bold leading-tight text-ink">
         {headline}
       </p>
     </li>

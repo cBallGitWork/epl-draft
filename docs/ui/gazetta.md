@@ -12,9 +12,20 @@ business, who is hurt, and when lineups lock.
    does with a long title, and shrinking it to fit would trade the one piece of
    typography meant to be loud for a tidiness nobody asked for.
 
+   **The name is the paper's, and the league's is the line above it.** It set
+   `LEAGUE_NAME` at masthead size until 29 Aug, which is a screen announcing
+   which app you are in; a masthead names the publication and puts the publisher
+   in small capitals over the top. `PAPER_NAME` in `app/config.ts` is the title.
+
    Between rules, in the league's red, with a **dateline** under it: date at the
    left, season at the right, small capitals and letterspaced. That row is the
    whole difference between a masthead and an `<h1>`, and no app has one.
+
+   Under the dateline, a **plate**: a two-pixel ink rule around the crest on the
+   league's red with the standing line beside it. It is the frame a photograph
+   drops into and it is not a placeholder — DESIGN.md §9 records that the crest
+   in a box is what the paper looks like until somebody hands it a league
+   picture, and that a stock Premier League shot is the wrong answer.
 
    The date is the **edition's** instant, not the reader's clock: two managers
    opening the same cached edition either side of midnight must not be shown
@@ -111,9 +122,11 @@ who left the week's best player out**, then **a hammering**, then **a trade**.
 
 Four kinds, four headlines, one shape. Core returns the facts **and every story
 it can tell, strongest first** — the page leads on the first and runs the next
-two as headlines. Core returns the fact, `Stories.tsx` writes the sentence: the
-same split the rest of the paper keeps, and the same words at both sizes, so the
-lead and a headline can never disagree about what happened.
+two as headlines. Core returns the fact and `sentences.ts` writes the sentence:
+the same split the rest of the paper keeps, and the same words at both sizes, so
+the lead and a headline can never disagree about what happened. `Picture.tsx`
+chooses the photograph and `Stories.tsx` decides how loudly it is set — three
+files, because the file that did all three had reached the ceiling.
 
 The type is `Story` and not `Lead`, and it was `Lead` until the paper ran more
 than one of them.

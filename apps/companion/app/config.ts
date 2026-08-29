@@ -27,6 +27,17 @@ export const SEASON_IN_SECONDS = 60 * 60 * 24 * 300;
  *  slow no. */
 export const WRONG_CODE_DELAY_MS = 700;
 
+/** The paper's own name, and the line it stands on.
+ *
+ *  Not the league's name, which is the publisher and prints above the title in
+ *  the small capitals a masthead puts a publisher in. The two are different
+ *  things and the front page had been setting one where the other belongs:
+ *  a screen announces which app you are in, a masthead names the publication.
+ *  Here rather than in core, because core serves any consumer of this league and
+ *  only this companion prints a paper. */
+export const PAPER_NAME = "The Gazetta";
+export const PAPER_STANDING_LINE = "Sixteen managers, one league, every week";
+
 /** How much of the paper prints on the front page.
  *
  *  A front page is a front page: the rest is a page of its own when there is

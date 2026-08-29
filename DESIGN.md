@@ -109,10 +109,19 @@ Four faces, four roles.
 
 Fraunces and Newsreader load from `app/paperFonts.ts`, imported only by paper
 routes, so the desk pays nothing for them. Georgia is the declared fallback and
-is a real transitional serif on every device that will open this.
+is a real transitional serif on every device that will open this. Both carry
+`opsz` and `font-optical-sizing: auto` spends it, which is why they were chosen
+over a static pair: a masthead and a byline cut from one family should not be
+one drawing at two sizes.
+
+**Archivo has one job on the paper too** — the letterspaced small capitals a
+newspaper sets its standing heads, kickers, datelines and bylines in. A serif at
+nine pixels with 0.16em of tracking is a smudge, and the page needs that size to
+be furniture rather than prose. The body serif never sets a capital.
 
 The scale is fixed rem, ratio ~1.15, product UI, no fluid clamps outside the
-masthead.
+masthead, and it now runs `--text-3xs` (9px) to `--text-6xl` (45px) with every
+step declared. §8 records why 3xs is the last step rather than a floor.
 
 ## 7. Grammar that outranks the look
 
@@ -143,13 +152,14 @@ Recorded so the next agent does not read the absence as an oversight.
 - **`--color-link`.** CM's cyan means "a person". Nothing links a person yet;
   the token arrives with the standings table that does. `--color-info` holds the
   value until then.
-- **`--text-4xl` / `--text-6xl` / `--text-3xs`.** Three sizes are in use and
-  undeclared, so they silently take Tailwind's defaults and break the declared
-  ratio. Declaring them changes type sizes, which is the font phase's business,
-  not the palette's.
-- **The 6–7px clamp floors on the pitch.** Survivable only once the pitch is
-  demoted from the squad screen's default, which is Craig's call to make at
-  wireframe sign-off.
+- **The 6–7px clamp floors on the pitch.** No longer a deferral: §9 took away
+  the demotion this was waiting on, so it is a geometry problem somebody has to
+  solve. It is recorded here because it is also why **`--text-3xs` is a step and
+  not a floor**. The scale's smallest rem is 9px and everything the paper sets
+  in rem is at or above it, but `PitchRows.NAME_SIZE` is a container clamp
+  bottoming at 7px inside the plate and is not on the scale at all. A named
+  floor with a live exception under it is worse than no floor, so the token says
+  what it is — the last step down — and the exception stays visible here.
 - **No `--focus` token.** The ring is `--accent`: "this is where you are" and
   "this is what is selected" are one statement, and the accent slot already
   carries it correctly in both registers without the rule knowing which page it

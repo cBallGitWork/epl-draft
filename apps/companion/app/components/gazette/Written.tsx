@@ -31,32 +31,44 @@ export default function Written({
 
   return (
     <section className="flex flex-col">
-      {/* The column runs under its standing title, the way a column does. The
-          byline IS that title here, so it is printed once — it was on the rule
-          and again in the line beneath, which read as a paper introducing
-          itself twice. */}
-      <p className="border-b border-league/40 pb-1 font-sans text-xs font-bold uppercase tracking-widest text-cream">
-        {edition.byline || (edition.kind === "preview" ? "The form guide" : "The back page")}
+      {/* The column runs under its standing title, the way a column does, and
+          the title is a tag rather than a line on a rule — the same inverted ink
+          chip the lead's kicker wears, because they are the same object. The
+          byline IS that title here, so it is printed once: it was on the rule
+          and again in the line beneath, which read as a paper introducing itself
+          twice. */}
+      <p className="text-center">
+        <span className="inline-block bg-ink px-2 py-1 font-sans text-2xs font-bold uppercase tracking-[0.15em] text-bg">
+          {edition.byline || (edition.kind === "preview" ? "The form guide" : "The back page")}
+        </span>
       </p>
 
-      <h2 className="paper-display text-balance pt-2.5 text-3xl font-black leading-[1.02] text-cream">
+      <h2 className="paper-display text-balance pt-2.5 text-center text-4xl font-black leading-[1.02] text-ink">
         {edition.headline}
       </h2>
       {edition.deck ? (
-        <p className="pt-1.5 text-sm font-semibold leading-snug text-muted">{edition.deck}</p>
+        <p className="pt-2 text-center text-lg italic leading-snug text-muted">{edition.deck}</p>
       ) : null}
+
+      <span className="mx-auto mt-3 h-px w-6 bg-ink" />
 
       {/* When it was filed, and it is not decoration: every other figure on this
           page is thirty seconds old and this could be three days old and still
           be the current edition. A reader is entitled to know which he is
           reading. */}
       {edition.filedAt ? (
-        <p className="pt-2 font-sans text-2xs uppercase tracking-widest text-faint">
+        <p className="pt-2.5 text-center font-sans text-3xs uppercase tracking-[0.16em] text-faint">
           Filed {londonDayAndTime(edition.filedAt)}
         </p>
       ) : null}
 
-      <Paragraphs text={edition.intro} className="pt-3 text-sm leading-relaxed text-ink" />
+      {/* The one block of prose on the page, so it is the one block set the way
+          prose is set: newspaper columns, and a drop cap where they start. */}
+      <Paragraphs
+        text={edition.intro}
+        dropcap
+        className="paper-columns pt-3 text-sm leading-relaxed text-ink"
+      />
 
       {edition.sections.map((section) => (
         <div key={section.key} className="pt-4">
@@ -98,14 +110,25 @@ export default function Written({
 /** Paragraphs, split on blank lines. The writer is told to file them that way
  *  and a model that files one block instead costs the reader nothing but the
  *  breaks — so this splits rather than validates. */
-function Paragraphs({ text, className }: { text: string; className?: string }) {
+function Paragraphs({
+  text,
+  className,
+  /** Whether the first paragraph opens on a drop cap. The column's does and a
+   *  section's does not: a drop cap says "the prose starts here", and a page
+   *  that used it four times would be saying it four times. */
+  dropcap = false,
+}: {
+  text: string;
+  className?: string;
+  dropcap?: boolean;
+}) {
   const paragraphs = text.split(/\n\n+/).filter((paragraph) => paragraph.trim() !== "");
   if (paragraphs.length === 0) return null;
 
   return (
     <div className={className}>
       {paragraphs.map((paragraph, at) => (
-        <p key={at} className={at > 0 ? "pt-2.5" : undefined}>
+        <p key={at} className={at > 0 ? "pt-2.5" : dropcap ? "paper-dropcap" : undefined}>
           {paragraph.trim()}
         </p>
       ))}

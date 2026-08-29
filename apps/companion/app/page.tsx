@@ -51,14 +51,25 @@ export default async function GazettePage() {
   // all want the same clubs, keyed the way a snapshot keys them.
   const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
   const names = new Map(paper.teams.map((team) => [team.teamId, team.name]));
-  const who = (teamId: string | null) => (teamId === null ? "the wire" : names.get(teamId) ?? "—");
+  const who = (teamId: string | null) =>
+    teamId === null ? "the wire" : (names.get(teamId) ?? "—");
 
   return (
     // The two serifs are declared here and nowhere else. A route that is not the
     // paper never mounts them, which is the whole reason `paperFonts.ts` is not
     // in the layout.
+    // The two serifs are declared here and nowhere else. A route that is not the
+    // paper never mounts them, which is the whole reason `paperFonts.ts` is not
+    // in the layout.
+    //
+    // `@container` and not a breakpoint, for everything below: what decides
+    // whether this page can be a broadsheet is the width of the FRAME, and the
+    // frame is `max-w-2xl` on `<main>` at every viewport. A `lg:` rail would
+    // have engaged at a 1024px window and cut a 640px page into 304 and 304 —
+    // two equal columns, which is not a lead and a rail. Asking the container
+    // instead means the rail arrives exactly when there is room for it.
     <div
-      className={`paper ${fraunces.variable} ${newsreader.variable} -mx-[var(--page-gutter)] -mt-3 flex flex-col gap-5 px-[var(--page-gutter)] pb-8 pt-4`}
+      className={`paper @container ${fraunces.variable} ${newsreader.variable} -mx-[var(--page-gutter)] -mt-3 flex flex-col gap-5 px-[var(--page-gutter)] pb-8 pt-4`}
     >
       <Masthead
         at={paper.snapshot?.fetchedAt ?? null}
@@ -75,22 +86,31 @@ export default async function GazettePage() {
           other live surface uses. Without it a phone left open on the sofa shows
           a frozen scoreline under a pulsing dot for a whole half — which is what
           the front page did, alone among the app's screens, until now. */}
-      {paper.snapshot ? <AutoRefresh seconds={pollSeconds(paper.snapshot)} /> : null}
+      {paper.snapshot ? (
+        <AutoRefresh seconds={pollSeconds(paper.snapshot)} />
+      ) : null}
 
-      {/* While the round is being played the score IS the story, and it is the
+      <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">
+        {/* The lead column. `--page-gutter: 0` inside it once the rail exists:
+            the picture band and the pitch break out of the PAGE's gutters, and
+            in a two-column grid the page's gutter is no longer the edge they are
+            breaking out to — left as it was, the widest thing on the lead would
+            have run out under the rail. */}
+        <div className="flex flex-col gap-5 @3xl:[--page-gutter:0px]">
+          {/* While the round is being played the score IS the story, and it is the
           splash. `underway` and not `partial`: before the first kickoff every
           total is a legitimate nought, and eight ties reading 0–0 would be
           reporting a round nobody has played. */}
-      {paper.board && paper.underway ? (
-        <AsItStands
-          pairings={paper.board.pairings}
-          scores={paper.board.scores}
-          mine={paper.mine}
-          live={paper.live}
-        />
-      ) : null}
+          {paper.board && paper.underway ? (
+            <AsItStands
+              pairings={paper.board.pairings}
+              scores={paper.board.scores}
+              mine={paper.mine}
+              live={paper.live}
+            />
+          ) : null}
 
-      {/* The lead. Absent most of the week and absent while football is on, on
+          {/* The lead. Absent most of the week and absent while football is on, on
           purpose: a paper does not manufacture a front-page story, and a
           headline is the one place a provisional claim cannot go.
 
@@ -99,93 +119,114 @@ export default async function GazettePage() {
           a written one, stacked, saying the same thing twice — and a paper runs
           one splash. The picture stays: the story is the same story, and the
           desk is what chose the photograph for it. */}
-      {/* `!paper.underway`, and it is the same rule `AsItStands` states: while the
+          {/* `!paper.underway`, and it is the same rule `AsItStands` states: while the
           round is being played the paper reports the score and says nothing
           about what it means. A filed column BECOMES the lead — see below — so
           without this the one place a provisional claim may not go is exactly
           where the preview went, from the Friday lock to the last whistle. The
           preview's own prose makes it worse: the writer is told "nobody has
           kicked a ball", so it said so, under moving scores. */}
-      {paper.written && !paper.underway ? (
-        <>
-          {paper.stories[0] ? <Picture lead={paper.stories[0]} who={who} clubs={clubs} /> : null}
-          <Written edition={paper.written} teams={paper.teams} />
-        </>
-      ) : paper.stories[0] ? (
-        <Lead lead={paper.stories[0]} who={who} clubs={clubs} />
-      ) : null}
+          {paper.written && !paper.underway ? (
+            <>
+              {paper.stories[0] ? (
+                <Picture lead={paper.stories[0]} who={who} clubs={clubs} />
+              ) : null}
+              <Written edition={paper.written} teams={paper.teams} />
+            </>
+          ) : paper.stories[0] ? (
+            <Lead lead={paper.stories[0]} who={who} clubs={clubs} />
+          ) : null}
 
-      {paper.stories.length > 1 ? (
-        <Column title="Also this week">
-          <ul>
-            {paper.stories.slice(1, SECONDARY_STORIES + 1).map((story) => (
-              <Headline key={story.kind} story={story} who={who} />
-            ))}
-          </ul>
-        </Column>
-      ) : null}
+          {paper.stories.length > 1 ? (
+            <Column title="Also this week">
+              <ul>
+                {paper.stories.slice(1, SECONDARY_STORIES + 1).map((story) => (
+                  <Headline key={story.kind} story={story} who={who} />
+                ))}
+              </ul>
+            </Column>
+          ) : null}
 
-      {/* Nothing to print is a real state, not an empty page — our own league is
+          {/* Nothing to print is a real state, not an empty page — our own league is
           in it every day until draft night, and this is the first thing sixteen
           people open. Which nothing it is decides the sentence: only one of the
           three is about the league not existing yet, and telling a drafted league
           it has not drafted is the confident wrong statement `squads.ts` keeps
           these apart to prevent. */}
-      {paper.silence?.kind === "unavailable" ? (
-        <Nothing title={FANTRAX_SILENT} code={paper.silence.code}>
-          The league is there and the football is on the other tabs. We just cannot read Fantrax
-          right now, so rather than guess at the week this says nothing.
-        </Nothing>
-      ) : null}
+          {paper.silence?.kind === "unavailable" ? (
+            <Nothing title={FANTRAX_SILENT} code={paper.silence.code}>
+              The league is there and the football is on the other tabs. We just
+              cannot read Fantrax right now, so rather than guess at the week
+              this says nothing.
+            </Nothing>
+          ) : null}
 
-      {paper.silence?.kind === "undrafted" ? (
-        <Nothing title="No news yet" code={`${LEAGUE_NAME} drafts ${DRAFT_DATE}`}>
-          There is nothing to report until there are squads to report on. The football is on the
-          other tabs in the meantime, and it needs nobody to have drafted.
-        </Nothing>
-      ) : null}
+          {paper.silence?.kind === "undrafted" ? (
+            <Nothing
+              title="No news yet"
+              code={`${LEAGUE_NAME} drafts ${DRAFT_DATE}`}
+            >
+              There is nothing to report until there are squads to report on.
+              The football is on the other tabs in the meantime, and it needs
+              nobody to have drafted.
+            </Nothing>
+          ) : null}
 
-      {paper.silence?.kind === "quiet" ? (
-        <Nothing title="A quiet week" code={`${LEAGUE_NAME}`}>
-          Nobody has signed anybody, nobody is hurt, and no deadline is close enough to worry
-          about. The football is still on the other tabs.
-        </Nothing>
-      ) : null}
+          {paper.silence?.kind === "quiet" ? (
+            <Nothing title="A quiet week" code={`${LEAGUE_NAME}`}>
+              Nobody has signed anybody, nobody is hurt, and no deadline is
+              close enough to worry about. The football is still on the other
+              tabs.
+            </Nothing>
+          ) : null}
 
-      {paper.eleven ? (
-        <TeamOfTheWeek
-          eleven={paper.eleven}
-          clubs={clubs}
-          mine={paper.mine}
-          partial={paper.partial}
-          fielded={paper.fielded}
-        />
-      ) : null}
+          {paper.eleven ? (
+            <TeamOfTheWeek
+              eleven={paper.eleven}
+              clubs={clubs}
+              mine={paper.mine}
+              partial={paper.partial}
+              fielded={paper.fielded}
+            />
+          ) : null}
+        </div>
 
-      {paper.deals.length > 0 ? (
-        <Deals deals={paper.deals} at={paper.dealsAt} who={who} />
-      ) : null}
+        {/* The rail. Three short columns a manager scans rather than reads —
+            who is hurt, who signed whom, when the lock is — so they are the
+            three that come out of the lead's flow and stand beside it. On a
+            phone the grid is one column and this is simply what follows, which
+            is the order `docs/ui/gazetta.md` sets and does not renegotiate. */}
+        <div className="flex flex-col gap-5 @3xl:border-l @3xl:border-line @3xl:pl-6">
+          {paper.deals.length > 0 ? (
+            <Deals deals={paper.deals} at={paper.dealsAt} who={who} />
+          ) : null}
 
-      {paper.availability.length > 0 ? (
-        <Doubts notes={paper.availability} mine={paper.mine} who={who} />
-      ) : null}
+          {paper.availability.length > 0 ? (
+            <Doubts notes={paper.availability} mine={paper.mine} who={who} />
+          ) : null}
 
-      {paper.deadline ? (
-        <Column title="Next deadline">
-          {/* Terse, per the voice: the lock is the fact a manager needs, the
+          {paper.deadline ? (
+            <Column title="Next deadline">
+              {/* Terse, per the voice: the lock is the fact a manager needs, the
               kickoff is context, and neither needs a paragraph explaining where
               we got it. The masthead states the same instant, so the two can no
               longer disagree. */}
-          <p className="text-sm text-muted">
-            Lineups lock{" "}
-            <span className="numeric font-semibold text-ink">
-              {londonDayAndTime(paper.deadline.locksAt)}
-            </span>
-            , a quarter of an hour before period {paper.deadline.period} kicks off at{" "}
-            <span className="numeric text-ink">{londonDayAndTime(paper.deadline.at)}</span>.
-          </p>
-        </Column>
-      ) : null}
+              <p className="text-sm text-muted">
+                Lineups lock{" "}
+                <span className="numeric font-semibold text-ink">
+                  {londonDayAndTime(paper.deadline.locksAt)}
+                </span>
+                , a quarter of an hour before period {paper.deadline.period}{" "}
+                kicks off at{" "}
+                <span className="numeric text-ink">
+                  {londonDayAndTime(paper.deadline.at)}
+                </span>
+                .
+              </p>
+            </Column>
+          ) : null}
+        </div>
+      </div>
     </div>
   );
 }

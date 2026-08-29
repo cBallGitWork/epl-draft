@@ -9,10 +9,11 @@ import type { ReactNode } from "react";
 // bordered, elevated boxes is a settings screen no matter what is printed in it.
 // Same information, and the only thing between two items is a hairline.
 //
-// The head is a full-strength ink rule with the label in small caps above it —
-// the standing head a paper puts over a column. Everything else on the page is
-// ink at an opacity, so the heads are the darkest thing on it after the
-// masthead, which is the hierarchy doing the work rather than a colour.
+// The head is the league's own red over a red rule, in the small capitals a
+// paper puts over a standing column. Red rather than ink, because on a page
+// where every other mark is ink at an opacity the heads were competing with the
+// masthead for the darkest thing on the sheet; the league's register separates
+// them at 5.0:1 on this stock, which carries small text with room to spare.
 
 export default function Column({
   title,
@@ -25,12 +26,11 @@ export default function Column({
 }) {
   return (
     <section className="flex flex-col">
-      <div
-        className="flex items-baseline justify-between gap-3 border-b pb-1"
-        style={{ borderColor: "currentColor" }}
-      >
-        <h2 className="font-sans text-2xs font-black uppercase tracking-[0.2em]">{title}</h2>
-        {aside ? <span className="font-sans text-2xs opacity-55">{aside}</span> : null}
+      <div className="flex items-baseline justify-between gap-3 border-b-2 border-league pb-1">
+        <h2 className="font-sans text-2xs font-black uppercase tracking-[0.2em] text-league">
+          {title}
+        </h2>
+        {aside ? <span className="font-sans text-2xs text-muted">{aside}</span> : null}
       </div>
       <div className="divide-y" style={{ borderColor: "var(--paper-rule)" }}>
         {children}

@@ -130,7 +130,19 @@
   --font-display: var(--font-archivo-narrow), "Arial Narrow", ui-sans-serif, sans-serif;
   --font-display--font-feature-settings: "tnum";
 
-  /* --- Fixed rem scale, ratio ~1.15. Product UI, so no fluid clamps. --- */
+  /* --- Fixed rem scale, ratio ~1.15, rounded to the sixteenth of a rem the
+     browser can actually draw. Product UI, so no fluid clamps — the masthead is
+     the one exception and it is a clamp on its own in `.paper-masthead`.
+
+     The top two steps and the bottom one were in use and undeclared until the
+     paper's font phase, so they silently took Tailwind's own numbers: a 60px
+     `text-6xl` where the ratio asks for 45, which is why the lead's scoreline
+     was set a third larger than the scale allows. All three consumers are on
+     the front page, so nothing on the desk moved when they were declared.
+
+     There is no `--text-5xl` because nothing sets one. The ratio still holds
+     across the gap: 6xl is two steps above 4xl. --- */
+  --text-3xs: 0.5625rem;
   --text-2xs: 0.6875rem;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -139,6 +151,8 @@
   --text-xl: 1.3125rem;
   --text-2xl: 1.5rem;
   --text-3xl: 1.875rem;
+  --text-4xl: 2.125rem;
+  --text-6xl: 2.8125rem;
 
   /* --- Stacking. One step, because one thing stacks: the stickers sit above
      the pitch's own markings. The rest of the scale arrives with the thing that
@@ -175,8 +189,17 @@
   --color-line: rgb(36 29 23 / 0.16);
   --color-ink: var(--paper-ink);
   --color-cream: var(--paper-ink);
-  --color-muted: rgb(36 29 23 / 0.68);
-  --color-faint: rgb(36 29 23 / 0.48);
+  /* The same three rungs the desk's ink ladder has, measured on this stock
+     rather than assumed from it: 14.2 · 7.9 · 5.4, against the desk's
+     17.1 · 8.7 · 5.3. A component asking for `text-faint` is asking for the
+     quietest step that is still text, and that means the same thing in both
+     registers or the tokens are lying about what they are.
+     `--faint` was 0.48, which is 3.0:1 — under the 4.5:1 DESIGN.md sets as the
+     floor with no exceptions, and it was carrying every timestamp, every
+     percentage and every standing label on the page. Ink on stock has more
+     headroom than ink on glass, so the correction is upward on both. */
+  --color-muted: rgb(36 29 23 / 0.8);
+  --color-faint: rgb(36 29 23 / 0.68);
 
   /* The two slots whose desk value is a colour rather than a lightness, and so
      the two the medium cannot supply by re-pointing ink. "Yours, selected,
@@ -250,4 +273,37 @@
 .paper-display {
   font-family: var(--paper-display);
   letter-spacing: -0.02em;
+}
+
+/* The drop cap on the column's first paragraph. It is the oldest signal in
+   print for "the prose starts here", and this page needs it more than most:
+   everything above the column is computed and everything below it is a list, so
+   without a mark of its own the one part a person wrote begins like a caption.
+
+   Set in the display face at four lines' depth, floated so the text runs round
+   it. Deleted once as dead code — reinstated with the paragraph that wears it. */
+.paper-dropcap::first-letter {
+  float: left;
+  font-family: var(--paper-display);
+  font-weight: 900;
+  font-size: 3.35em;
+  line-height: 0.76;
+  margin: 0.05em 0.1em 0 0;
+}
+
+/* Prose in newspaper columns.
+   `columns` takes a WIDTH rather than a count on purpose: the number of columns
+   is not a decision anybody should be making per breakpoint, it is whatever a
+   readable measure divides the available width into. At a phone's 358px it is
+   one, at the frame's present 640px it is two, and at the 72rem frame the
+   chrome phase is bringing it is three — with no rule here changing. A count
+   would have printed two 150px columns inside a rail grid, which is a measure
+   nobody can read. */
+.paper-columns {
+  columns: 17rem;
+  column-gap: 1.75rem;
+  column-rule: 1px solid var(--paper-rule);
+}
+.paper-columns > p {
+  break-inside: avoid;
 }
