@@ -9,8 +9,10 @@ import type { ReactNode } from "react";
 // bordered, elevated boxes is a settings screen no matter what is printed in it.
 // Same information, and the only thing between two items is a hairline.
 //
-// The head is cream on a red rule because this is the one page where the league
-// register leads. Everywhere else it marks a single row and nothing more.
+// The head is a full-strength ink rule with the label in small caps above it —
+// the standing head a paper puts over a column. Everything else on the page is
+// ink at an opacity, so the heads are the darkest thing on it after the
+// masthead, which is the hierarchy doing the work rather than a colour.
 
 export default function Column({
   title,
@@ -23,13 +25,16 @@ export default function Column({
 }) {
   return (
     <section className="flex flex-col">
-      <div className="flex items-baseline justify-between gap-3 border-b border-league/40 pb-1">
-        <h2 className="font-display text-xs font-bold uppercase tracking-widest text-cream">
-          {title}
-        </h2>
-        {aside ? <span className="text-2xs text-faint">{aside}</span> : null}
+      <div
+        className="flex items-baseline justify-between gap-3 border-b pb-1"
+        style={{ borderColor: "currentColor" }}
+      >
+        <h2 className="text-2xs font-black uppercase tracking-[0.2em]">{title}</h2>
+        {aside ? <span className="text-2xs opacity-55">{aside}</span> : null}
       </div>
-      <div className="divide-y divide-line">{children}</div>
+      <div className="divide-y" style={{ borderColor: "var(--paper-rule)" }}>
+        {children}
+      </div>
     </section>
   );
 }

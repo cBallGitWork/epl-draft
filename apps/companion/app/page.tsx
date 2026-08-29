@@ -43,7 +43,7 @@ export default async function GazettePage() {
   const who = (teamId: string | null) => (teamId === null ? "the wire" : names.get(teamId) ?? "—");
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="paper -mx-[var(--page-gutter)] -mt-[var(--page-gutter)] flex flex-col gap-5 px-[var(--page-gutter)] pb-8 pt-4">
       <Masthead
         at={paper.snapshot?.fetchedAt ?? null}
         line={

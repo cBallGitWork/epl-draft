@@ -134,3 +134,78 @@
   /* --- Motion: 150–250ms, ease-out only. Users are in flow. --- */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
+
+/* ---- The paper --------------------------------------------------------------
+   The Gazetta is printed, and printing is a different medium from the app around
+   it: ink on stock, not light on glass. Everything under `.paper` derives from
+   these two colours — rules, secondary text and tints are `currentColor` at an
+   opacity — which is what stops a newsprint page from having to fight the dark
+   token set the other five tabs are built on.
+
+   Warm off-white rather than Gazzetta's rosa: the pink is that paper's identity
+   and borrowing it would be a costume. The red stays ours. */
+.paper {
+  --paper: #f5ece1;
+  --paper-ink: #241d17;
+  --paper-rule: rgb(36 29 23 / 0.18);
+
+  /* The app's semantic tokens, re-pointed at ink on stock.
+   *
+   * Redefined here rather than edited into thirty components, which is the only
+   * version of this that stays true: a component asking for `text-muted` wants
+   * "quieter than the body", and that is a different colour on paper than it is
+   * on glass. The names keep their meaning and the medium supplies the value. */
+  --color-bg: var(--paper);
+  --color-surface: oklch(0.94 0.012 70);
+  --color-raised: oklch(0.90 0.016 70);
+  --color-line: rgb(36 29 23 / 0.16);
+  --color-ink: var(--paper-ink);
+  --color-cream: var(--paper-ink);
+  --color-muted: rgb(36 29 23 / 0.68);
+  --color-faint: rgb(36 29 23 / 0.48);
+
+  background: var(--paper);
+  color: var(--paper-ink);
+  /* No webfont. A newspaper's body face is a transitional serif and Georgia is
+     one on every device that will open this, at no network cost — which is the
+     same argument the portraits make for the crest fallback. */
+  font-family: Georgia, "Times New Roman", "Liberation Serif", serif;
+}
+
+/* The pitch is a photograph, not prose — a dark medium printed INSIDE the paper,
+   the way a paper prints a colour picture on a cream page. So the tokens the
+   paper re-pointed at ink go back to what they were for anything standing on
+   grass: a name plate is cream on green here and on every other screen, and
+   re-pointing `--color-cream` at ink turned eleven of them invisible. */
+.paper .pitch {
+  --color-ink: oklch(0.97 0.005 320);
+  --color-cream: oklch(0.94 0.02 75);
+  --color-muted: oklch(0.74 0.015 320);
+  --color-faint: oklch(0.62 0.015 320);
+  --color-bg: oklch(0.15 0.02 320);
+  --color-surface: oklch(0.19 0.022 320);
+  --color-line: oklch(0.31 0.021 320);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* The one piece of display type on the page. Condensed, so a long league name
+   holds its line at the size a masthead needs to be. */
+.paper-masthead {
+  font-family: "Archivo Narrow", Georgia, serif;
+  font-size: clamp(2.3rem, 11vw, 4.2rem);
+  font-weight: 800;
+  line-height: 0.86;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+/* The lead's opening paragraph, with the initial a paper always sets. Floated
+   rather than a separate element so the text wraps around it. */
+.paper-dropcap::first-letter {
+  float: left;
+  margin: 0.08em 0.08em 0 0;
+  font-size: 3.4em;
+  line-height: 0.78;
+  font-weight: 700;
+}
