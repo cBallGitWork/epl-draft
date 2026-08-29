@@ -69,7 +69,7 @@ export default function PitchPlayer({
       // proportions, which left a hole in the row wherever the bridge had not
       // settled somebody.
       <div className="@container flex w-full flex-col" style={FIGURE}>
-        <div className="grid aspect-[var(--pitch-figure)] w-full place-items-center rounded-t-[3px] border border-dashed border-white/35 bg-black/25">
+        <div className="pitch-figure grid w-full place-items-center rounded-t-[3px] border border-dashed border-white/35 bg-black/25">
           <span className="numeric text-2xs font-bold text-white/70">
             {positionLabel(rostered.slot.position) ?? "?"}
           </span>

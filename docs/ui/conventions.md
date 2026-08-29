@@ -108,7 +108,19 @@ its elements, so the ellipsis is where the rule ends.
 League's portrait file — past that the card upscales its own photograph. The
 figure is drawn at that file's shape (110×140) rather than the old `1.32`, and
 `PlayerImage` takes it from `--pitch-figure` with the crop as its default, so
-only the card that sets the variable moves. Row padding is
+only the card that sets the variable moves.
+
+**And the tallest it may be comes from the ROW count, not the line.** The two
+bounds pull in opposite directions and that is the whole trap: width is a share
+of the fullest line, so *fewer* per row means a *wider* card, and an upright
+figure makes a wider card a taller one. Left unbounded, the slackest formation in
+the league drew the tallest card and overflowed the phone by 199px while the
+crowded one fitted. `.pitch-figure` caps the height at the room one row has —
+`(100svh - --pitch-page) / --pitch-rows` less the two bands — where
+`--pitch-rows` is set by `PitchRows` and by both bench strips, so a reserve
+matches the man he would replace in height as well as width. `--pitch-page` lives
+beside `--page-foot` in `globals.css` and changes at the same breakpoint, for the
+same reason: above `md` the tab bar moves overhead. Row padding is
 the taper's **own** inset — `FAR_INSET`, exported by `PitchTurf` and set on the
 frame as `--pitch-inset`, which the hoardings read too. One number, three
 readers: it used to be written out twice with a comment asking the next person to

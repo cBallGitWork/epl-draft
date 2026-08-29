@@ -2,7 +2,7 @@ import type { SquadPlayerDetail } from "@epl/core";
 import type { PitchRow } from "./PitchRows";
 import { playerName } from "@epl/core";
 import PitchPlayer from "./PitchPlayer";
-import PitchRows, { GAP_CLASS, cardBasis, widestLine } from "./PitchRows";
+import PitchRows, { GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
 import { FAR_INSET } from "./PitchTurf";
 import { positionLabel } from "../../positions";
 
@@ -114,7 +114,9 @@ export default function LineupPitch({
           {/* The pitch's own inset — see `cardBasis`. */}
           <ul
             className={`flex justify-center ${GAP_CLASS}`}
-            style={{ paddingInline: `${FAR_INSET}%` }}
+            // The grass's own row count, so a reserve stands the same height as the
+            // man he would replace — the strip is one row but it is not sized as one.
+            style={{ paddingInline: `${FAR_INSET}%`, ...rowBudget(rows.length) }}
           >
             {bench.map((player) => (
               <li

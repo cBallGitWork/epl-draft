@@ -134,15 +134,29 @@ the sofa, so the score under fifteen faces sat still through a whole half.
   every screen from about 768px up at 69.6px and a 9px name — so the desktop
   pitch was cap-starved where the phone is width-starved.
 - **The photograph is drawn at the shape of the file it comes from** — 110×140,
-  and FPL's kit fallback is 110×145. The box was `1.32`, wider than it stood,
-  which threw away three fifths of every asset and left a 33px face on a phone
-  while a quarter of the screen under the pitch went unused. It is set on the
-  card and not in the token layer, so the FPL tab's pitch and the paper's team of
-  the week keep the head-only crop until somebody with those pages in hand says
-  otherwise.
-- It fits a 390×844 phone with no scrolling. Keep it that way. Measured 29 Aug on
-  the widest squad the rehearsal league holds (G1 D3 M7 F4): the pitch draws 468
-  of the 625 it is allowed, and the six-wide squads draw 512.
+  and FPL's kit fallback is 110×145 — **up to the height one row has room for**.
+  The box was `1.32`, wider than it stood, which threw away three fifths of every
+  asset and left a 33px face on a phone while a quarter of the screen under the
+  pitch went unused. It is set on the card and not in the token layer, so the FPL
+  tab's pitch and the paper's team of the week keep the head-only crop until
+  somebody with those pages in hand says otherwise.
+- **The card is bounded in both directions, and they come from opposite ends of
+  the squad.** Width is a share of the fullest LINE, so a crowded line makes a
+  narrow card. Height is a share of the screen divided by the number of ROWS,
+  because that is what the pitch has to fit into — `.pitch-figure` in
+  `globals.css`, against `--pitch-page`. Height had no bound at first and the
+  omission bit immediately: card width is `f(widestLine)`, so *fewer* men in a
+  line make a *wider* card, and once the figure carries an upright shape a wider
+  card is a taller one. The 1-3-4-3 XI — four to a line, the slackest squad in
+  the league — drew the tallest card of any of them and pushed this page 199px
+  past the screen, while the seven-across squad that looks like the hard case sat
+  comfortably inside it.
+- It fits a 390×844 phone with no scrolling. Keep it that way, and **measure the
+  XI view as well as the gated one** — they have different furniture (188px
+  against 329px) and the XI view is both the tighter and the more visited.
+  Measured 29 Aug, all four rehearsal squads, signed in: every one draws at
+  exactly 844 with nothing over. The gated seven-across pitch takes 468px, the
+  six-across ones 500px, and the XI with its bench strip 500px.
 
 ### The list
 

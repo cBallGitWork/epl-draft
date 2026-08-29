@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import PitchFrame from "./PitchFrame";
 
 // Players in their lines on a pitch, whatever a line is made of.
@@ -66,6 +66,24 @@ export function widestLine(rows: readonly { players: readonly unknown[] }[]): nu
  *  pitch's own inset rather than a padding of their own. */
 export function cardBasis(widest: number): string {
   return `min(${MAX_CARD}, calc((100% - ${widest - 1} * ${GAP}) / ${widest}))`;
+}
+
+/** How many rows the card's HEIGHT is bounded against — the formation's own
+ *  count, handed to `.pitch-figure` in `globals.css`.
+ *
+ *  The card has two bounds and they come from opposite directions. Width is a
+ *  share of the fullest LINE, so a crowded line makes a narrow card. Height is a
+ *  share of the screen divided by the number of ROWS, because that is what the
+ *  pitch has to fit into. Tying height to width instead — which is what a bare
+ *  `aspect-ratio` does — inverts the hard case: a 1-3-4-3 has a fuller row-count
+ *  budget and a slacker line, so it drew the TALLEST card of any squad in the
+ *  league and put the lineup planner 199px past a phone screen.
+ *
+ *  Exported because the two bench strips stand outside this frame and must land
+ *  on the same number: a reserve is the same card as the man he would replace,
+ *  in height as well as width. */
+export function rowBudget(rows: number): CSSProperties {
+  return { "--pitch-rows": rows } as CSSProperties;
 }
 
 /** The size a player's name is set at on a pitch. One step on the scale, and the
@@ -138,6 +156,10 @@ export default function PitchRows<T>({
       {rows.map((row) => (
         <ul
           key={row.label}
+          // The whole set's row count, not this row's index: every card on the
+          // pitch is bounded by the same share of the screen, or a line would
+          // stand at a different height from the line above it.
+          style={rowBudget(rows.length)}
           // Shrinks rather than wraps. A back five is an ordinary line and does
           // not fit five cards at full width on a phone — wrapping put one
           // defender on a row of his own below the other four, which reads as a

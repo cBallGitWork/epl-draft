@@ -95,16 +95,16 @@ export default function PlayerImage({
           : undefined;
 
   return (
-    // The shape of the box is the CALLER's, because only the caller knows how
-    // much room it has. `--pitch-figure` is what a pitch card sets; everything
-    // else takes the default, which crops the picture from the top — the sponsor
-    // up, and nothing below.
+    // The shape and the height bound are the CALLER's, because only the caller
+    // knows how much room it has: `.pitch-figure` in `globals.css` reads
+    // `--pitch-figure` for the shape and `--pitch-rows` for the ceiling, and a
+    // caller that sets neither gets the old crop and no ceiling at all.
     //
     // Both assets behind this are portraits: the Premier League's photograph is
     // 110×140 and FPL's kit is 110×145. A box wider than it is tall therefore
     // throws away most of both, which is why the default is the thing a caller
     // overrides rather than the thing every caller lives with.
-    <div className="relative aspect-[var(--pitch-figure,1.32)] w-full overflow-hidden">
+    <div className="pitch-figure relative w-full overflow-hidden">
       {source ? (
         <Image
           // Keyed by the rung so a failed src is replaced rather than retried:

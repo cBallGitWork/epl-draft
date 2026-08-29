@@ -33,13 +33,40 @@
    foot of the screen has a seam across the bottom of it. */
 :root {
   --page-foot: calc(4rem + env(safe-area-inset-bottom));
+  --pitch-page: 24rem;
 }
 
 @media (min-width: 48rem) {
   :root {
     --page-foot: 2rem;
+    /* More, not less, and for the same reason `--page-foot` is less: the bar
+       moves overhead, so what it stops costing at the foot it starts costing at
+       the head, and the section nav and the scoreline above a pitch are wider
+       apart up here too. Measured the same way, on the same page. */
+    --pitch-page: 28rem;
   }
 }
+
+/* Everything a pitch's page spends on what is not grass: the header and the
+   toggle above it, `--page-foot` and the bench strip and the planner's way out
+   below it, and the frame's own hoardings and bottom padding. `.pitch-figure`
+   caps a card's height against what is left, so a formation with few men in a
+   line cannot draw a card so tall that the pitch stops fitting.
+
+   Where the cap binds this makes the pitch exactly `100svh - --pitch-page + the
+   frame's own chrome`, whatever the formation — which is the property worth
+   having, because it means a 1-3-4-3 and a 1-3-7-4 cannot disagree about how
+   much screen a pitch is allowed.
+
+   One number for three pages, measured on the tightest of them: the lineup
+   planner, the only one carrying a bench strip AND a footer. The gated squad
+   spends 188px on furniture where the planner spends 329, so the gated pitch is
+   bounded by more than it needs — the safe direction, and the alternative is
+   three budgets that drift apart. It is a measurement rather than a sum of the
+   tokens above, because its two biggest terms — the page header and the bench
+   strip — are content and not settings. Re-measure it if a pitch page grows a
+   band; the failure mode is a short scroll, which is visible, rather than a
+   broken layout. */
 
 /* Out through the page's own gutters, for the two things wide enough to earn
    it: the pitch, and the bench strip under it. */
@@ -114,6 +141,43 @@ body {
   /* No ground of its own. What lies outside the taper is the page, the way it is
      on FPL's: a second green out there reads as a second surface, and the pitch
      stops being a thing sitting on the page and becomes a panel with a border. */
+}
+
+/* The photograph on a player card, and the only thing on it with two bounds.
+
+   Width is the caller's: `PitchRows` gives every card the fullest line's share,
+   capped at the portrait file's own 110px. Height would then follow from the
+   shape — and that is the trap this rule exists to close. Card width is a
+   function of the FULLEST LINE, so a formation with few men in a line draws a
+   WIDER card, and once the figure carries the portrait's own upright shape a
+   wider card is a taller one. A 1-3-4-3 with a bench under it drew an 82px card
+   104px tall and pushed the lineup planner 199px past the screen, while the
+   seven-across squad that looks like the hard case sat comfortably inside it.
+
+   So the height is capped by the room one row actually has: the screen, less
+   what the page spends on everything that is not grass, divided by the number of
+   rows the FORMATION has — never a constant, because the formation is the
+   commissioner's and a 1-5-2-3 is legal here. `--pitch-rows` is set by
+   `PitchRows` and by the bench strips, so a reserve is the same card as the man
+   he would replace in height as well as width.
+
+   Past the cap the picture crops from the top again, which is what
+   `object-top` was always for. Anything drawing a player outside a pitch — the
+   dialogs, the profile, the paper's team of the week — sets no `--pitch-rows`,
+   takes the 1 below, and is bounded by nothing. */
+.pitch-figure {
+  aspect-ratio: var(--pitch-figure, 1.32);
+  /* The floor is two bands, and it is not decoration: a short viewport takes the
+     calc below zero, and a negative `max-height` is clamped to nought — which
+     would not shorten the picture, it would delete it, on every page that sets
+     no row count and is bounded by this only incidentally. */
+  max-height: max(
+    calc(2 * var(--pitch-band)),
+    calc(
+      (100svh - var(--pitch-page) - (var(--pitch-rows, 1) - 1) * 1rem) / var(--pitch-rows, 1) - 2 *
+        var(--pitch-band)
+    )
+  );
 }
 
 /* The hoardings behind the far goal. A real advertising board in a real ground,

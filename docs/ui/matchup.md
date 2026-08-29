@@ -160,8 +160,15 @@ counting them, which is the question a manager is actually asking at 4pm.
   label it.
 - **A dash is not a nought.** A side Fantrax has no total for gets a dash, and
   nobody is "behind" while a total is missing.
-- The whole board — scoreline, controls, eleven and bench — fits a 390×844 phone
-  without scrolling. Keep it that way.
+- ~~The whole board — scoreline, controls, eleven and bench — fits a 390×844
+  phone without scrolling.~~ **It does not, and had stopped before anyone
+  noticed.** Measured 29 Aug: 945px against 844, and ~902 before the player card
+  was rebuilt that day, so the claim was already about 60px stale. The card is
+  not what is over — a squad drawing the identical eleven at `/squad/[teamId]`
+  fits 844 exactly. This board spends 445px on furniture the squad page spends
+  188 on: a page header, the section nav, a scoreline and a Pitch/List control,
+  above the same pitch. The remaining 101px has to come out of those, and until
+  it does this is a board that scrolls.
 
 ## Known gaps
 

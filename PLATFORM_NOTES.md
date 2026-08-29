@@ -3855,6 +3855,37 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-29: **The card needed a bound in the other direction too, and the miss
+  was instructive.** Giving the figure the portrait's upright shape (below) tied
+  its height to the card's width — and card width is `f(widestLine)`, so *fewer*
+  men in a line make a *wider* card and therefore a *taller* one. The inversion
+  bites where nobody looks: the seven-across gated squad, which looks like the
+  hard case, was fine at 468px, while the **1-3-4-3 XI on the owner's own team**
+  — four to a line, the slackest squad in the league, and the most visited screen
+  in the app — drew a 104px figure and overflowed a 390×844 phone by 199px. The
+  old `1.32` crop had hidden it because height barely tracked width there.
+  Fixed by capping the figure at the room one row has:
+  `(100svh - --pitch-page) / --pitch-rows`, less the two bands, in
+  `.pitch-figure`. `--pitch-rows` comes from the formation and is set by
+  `PitchRows` and by both bench strips, so a reserve matches the man he would
+  replace in height as well as width; `--pitch-page` is what a pitch page spends
+  on everything that is not grass, and it sits beside `--page-foot` and changes
+  at the same breakpoint, because above `md` the tab bar moves overhead.
+  Where the cap binds the pitch is `100svh - --pitch-page` plus its own chrome
+  whatever the formation, which is the property worth having: a 1-3-4-3 and a
+  1-3-7-4 cannot disagree about how much screen a pitch is allowed.
+  All four rehearsal squads now draw at exactly 844 with nothing over, gated and
+  ungated, and 1440×900, 1440×1024 and 768×1024 fit too. **The lesson for the next
+  geometry change: measure the SLACKEST formation, not the tightest.** The
+  crowded line is the one that looks dangerous and the loose one is the one that
+  overflows.
+- 2026-08-29: `/league/matchups/[teamId]` does **not** fit 390×844 and had
+  stopped before this week — 945px now, ~902 before the card was rebuilt, against
+  a `docs/ui/matchup.md` claim of no scrolling at all. The card is not the
+  problem: the same eleven fits exactly at `/squad/[teamId]`. That board spends
+  445px on furniture where the squad page spends 188 — header, section nav,
+  scoreline and a Pitch/List control above the same pitch — so the 101px has to
+  come out of the board. Recorded in `matchup.md`, not fixed here.
 - 2026-08-29: The pitch card's type was inverted. It sized the NAME from the card
   (`clamp(7px, 13cqw, 11px)`), so a line of seven took its width out of the type
   and printed a 7px name — the defect DESIGN.md §8 carried as its one live
