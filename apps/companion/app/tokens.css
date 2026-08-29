@@ -172,12 +172,16 @@
   font-family: Georgia, "Times New Roman", "Liberation Serif", serif;
 }
 
-/* The pitch is a photograph, not prose — a dark medium printed INSIDE the paper,
-   the way a paper prints a colour picture on a cream page. So the tokens the
-   paper re-pointed at ink go back to what they were for anything standing on
-   grass: a name plate is cream on green here and on every other screen, and
-   re-pointing `--color-cream` at ink turned eleven of them invisible. */
-.paper .pitch {
+/* A colour plate printed INSIDE the paper — the way a paper prints a colour
+   picture on a cream page. Two things are one: the pitch, which is a photograph
+   rather than prose, and the league's own crest, which is a printed mark whose
+   red and cream are the mark's, not the page's.
+
+   Both need the tokens the paper re-pointed at ink to go back to what they were.
+   A name plate is cream on green here and on every other screen, and re-pointing
+   `--color-cream` at ink turned eleven of them invisible — and the crest's ink
+   with them, which is how a red oval came to be stamped with a red name. */
+.paper :is(.pitch, .crest) {
   --color-ink: oklch(0.97 0.005 320);
   --color-cream: oklch(0.94 0.02 75);
   --color-muted: oklch(0.74 0.015 320);

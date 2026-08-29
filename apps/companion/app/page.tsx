@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import { LEAGUE_NAME, clubById } from "@epl/core";
 import AsItStands from "./components/gazette/AsItStands";
 import AutoRefresh from "./components/shell/AutoRefresh";
@@ -29,6 +30,14 @@ import { readerTeamId } from "./squads";
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
+// The paper is the one surface that is not dark, so it is the one surface whose
+// browser chrome the root layout gets wrong: an iOS address bar in the app's
+// dark chrome above a cream page is a seam across the top of the front page.
+// sRGB of `--paper` in tokens.css, repeated as a literal for the same reason the
+// layout repeats `--color-bg` — this is serialised into a <meta> tag at build
+// time and cannot read a CSS variable. Change both together.
+export const viewport: Viewport = { themeColor: "#f5ece1" };
+
 /** Draft night for the league we are actually serving — the two draft nine weeks
  *  apart, so this is read from config rather than written down. */
 const DRAFT_DATE = londonDate(servedLeague()?.draftDate ?? "");
@@ -43,7 +52,7 @@ export default async function GazettePage() {
   const who = (teamId: string | null) => (teamId === null ? "the wire" : names.get(teamId) ?? "—");
 
   return (
-    <div className="paper -mx-[var(--page-gutter)] -mt-[var(--page-gutter)] flex flex-col gap-5 px-[var(--page-gutter)] pb-8 pt-4">
+    <div className="paper -mx-[var(--page-gutter)] -mt-3 flex flex-col gap-5 px-[var(--page-gutter)] pb-8 pt-4">
       <Masthead
         at={paper.snapshot?.fetchedAt ?? null}
         line={

@@ -44,7 +44,7 @@ export default function LeagueCrest({
         width={(height * 64) / 44}
         role="img"
         aria-label={LEAGUE_NAME}
-        className="shrink-0"
+        className="crest shrink-0"
       >
         <ellipse cx="32" cy="22" rx="31.5" ry="21.5" className="fill-league" />
         <ellipse cx="32" cy="22" rx="28" ry="18" fill="none" strokeWidth="2" className="stroke-cream" />
@@ -62,7 +62,7 @@ export default function LeagueCrest({
       width={(height * 232) / 160}
       role="img"
       aria-label={LEAGUE_NAME}
-      className="shrink-0"
+      className="crest shrink-0"
     >
       <ellipse cx="116" cy="80" rx="115" ry="79" className="fill-league" />
       <ellipse cx="116" cy="80" rx="108.5" ry="72.5" fill="none" strokeWidth="3.5" className="stroke-cream" />
