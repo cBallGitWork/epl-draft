@@ -68,6 +68,14 @@
      player, where it sits on the ground rather than on the page. Cream on it is
      4.9:1, which is what a crest and a hoarding are drawn from. */
   --color-league: oklch(0.530 0.207 22);
+  /* The same red, taken down a step, for the one place it is a GROUND with a
+     scoreline on it rather than chrome. Contrast is a property of the pair and
+     this pair has two members: cream at full strength, and cream dimmed, which
+     is how every scoreline in the app says who is behind. On the brand red the
+     first is 4.94:1 and the second is 2.96:1 — there is no headroom to dim at
+     all. Here they are 6.8:1 and 4.3:1. Not the retired `--color-league-dark`,
+     which was a brown nothing ever read. */
+  --color-league-deep: oklch(0.45 0.17 22);
   --color-cream: oklch(0.94 0.02 75);
 
   /* --- Pitch ---------------------------------------------------------------
@@ -84,11 +92,17 @@
   --pitch-boards: 1.75rem;
 
   /* How tall a band under a player on the grass is — his name plate, and the
-     score or fixture below it. Four places, and they must agree: a line whose
+     score or fixture below it. Both bands, and they must agree: a line whose
      cards stand at different heights stops reading as a line, which is the whole
      reason the plate is a fixed band with the name centred in it rather than type
-     on its own line height. Both pitches read it, ours and the FPL tab's. */
-  --pitch-band: 1.15rem;
+     on its own line height. Both pitches read it, ours and the FPL tab's.
+
+     20px, because the type inside is now on the scale rather than on a container
+     clamp: an 11px name and a 12px figure. It was 1.15rem when the name bottomed
+     out at 7px — and the lower band was not reading this at all, it was a `h-3.5`
+     written out three times, which is exactly the drift the comment above
+     claimed the token prevented. */
+  --pitch-band: 1.25rem;
 
   /* How wide the sticker and the fixture chip are in a player dialog. Two cards
      — `PlayerCard` asks who he is, `LivePlayerCard` asks what he is scoring —

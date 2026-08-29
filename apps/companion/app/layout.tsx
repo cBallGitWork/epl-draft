@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Archivo, Archivo_Narrow } from "next/font/google";
 import { LEAGUE_NAME, POLL, duringGameweek } from "@epl/core";
 import { footballNow, pollSeconds } from "./football";
+import { Suspense } from "react";
 import AutoRefresh from "./components/shell/AutoRefresh";
+import LiveNow from "./components/shell/LiveNow";
 import TabNav from "./components/shell/TabNav";
 import "./globals.css";
 
@@ -91,6 +93,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             boards beside it stayed on 30s — and between kickoffs is exactly when
             a score is most likely to have moved since you looked. */}
         <AutoRefresh seconds={seconds} />
+        {/* Behind a boundary because it is the only thing in the shell that asks
+            Fantrax anything, and the shell renders above every page in the app:
+            un-suspended, a slow league read would hold up the football, the
+            paper and the pool alike. `null` while it waits, because a strip that
+            flickers in as a grey bar and out again is worse than one that
+            arrives a beat late. */}
+        <Suspense fallback={null}>
+          <LiveNow />
+        </Suspense>
         {/* The bottom padding is the bar's own height plus the phone's safe area,
             rather than a round number chosen to cover both. It was `pb-24`: right
             on a notched iPhone, where the bar is 56px plus a 34px inset, and 39px

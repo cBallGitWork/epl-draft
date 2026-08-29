@@ -59,6 +59,7 @@ is more specific than a palette; it is the reason the token names in
 | Red | `--color-bad` | **a loss, a doubt, a negative** | 5.6 |
 | Live red | `--color-live` | **a match in play**, and nothing else | 5.4 |
 | League red | `--color-league` | the league's own mark. Chrome only | 3.2 |
+| Deep league red | `--color-league-deep` | the same red as a **ground with text on it** | — |
 | Cream | `--color-cream` | ink on a colour plate | — |
 
 `--color-faint` on `--color-raised` is 4.6:1. That is the tightest pair in the
@@ -69,6 +70,13 @@ live. The live red is the brand red lifted until it carries text, because
 `#C8102E` is 3.2:1 on this ground.
 
 **Two consequences that have already caught us out.**
+
+*The league's red carries text only one step down.* `--color-league` is 4.94:1
+under cream, which passes and leaves nothing over — and a scoreline needs
+something over, because dimming the trailing side is the grammar every scoreline
+in the app shares, and a dimmed cream on it is 2.96:1. `--color-league-deep` is
+the same hue taken to `oklch(0.45 0.17 22)`, where the pair is 6.8:1 and 4.3:1.
+The live strip is what it is for.
 
 *The league's red never says "active".* It is the mark and the live signal, and
 a surface that fills its selected item with red is answering a question the tab
