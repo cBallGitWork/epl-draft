@@ -14,6 +14,7 @@ import Column from "./components/gazette/Column";
 import Nothing from "./components/shell/Nothing";
 import { edition } from "./edition";
 import { pollSeconds } from "./football";
+import { fraunces, newsreader } from "./paperFonts";
 import { londonDate, londonDayAndTime } from "./londonTime";
 import { readerTeamId } from "./squads";
 
@@ -53,7 +54,12 @@ export default async function GazettePage() {
   const who = (teamId: string | null) => (teamId === null ? "the wire" : names.get(teamId) ?? "—");
 
   return (
-    <div className="paper -mx-[var(--page-gutter)] -mt-3 flex flex-col gap-5 px-[var(--page-gutter)] pb-8 pt-4">
+    // The two serifs are declared here and nowhere else. A route that is not the
+    // paper never mounts them, which is the whole reason `paperFonts.ts` is not
+    // in the layout.
+    <div
+      className={`paper ${fraunces.variable} ${newsreader.variable} -mx-[var(--page-gutter)] -mt-3 flex flex-col gap-5 px-[var(--page-gutter)] pb-8 pt-4`}
+    >
       <Masthead
         at={paper.snapshot?.fetchedAt ?? null}
         line={

@@ -29,8 +29,8 @@ export default function Column({
         className="flex items-baseline justify-between gap-3 border-b pb-1"
         style={{ borderColor: "currentColor" }}
       >
-        <h2 className="text-2xs font-black uppercase tracking-[0.2em]">{title}</h2>
-        {aside ? <span className="text-2xs opacity-55">{aside}</span> : null}
+        <h2 className="font-sans text-2xs font-black uppercase tracking-[0.2em]">{title}</h2>
+        {aside ? <span className="font-sans text-2xs opacity-55">{aside}</span> : null}
       </div>
       <div className="divide-y" style={{ borderColor: "var(--paper-rule)" }}>
         {children}

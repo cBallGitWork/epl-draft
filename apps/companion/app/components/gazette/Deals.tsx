@@ -33,7 +33,7 @@ export default function Deals({
                   signings — the very thing grouping them by `setId` was for. A
                   claim needs no label: its second half already says "out". */}
               {deal.kind === "trade" ? (
-                <span className="text-2xs font-bold uppercase tracking-wide text-faint">
+                <span className="font-sans text-2xs font-bold uppercase tracking-wide text-faint">
                   Trade{" "}
                 </span>
               ) : null}

@@ -35,11 +35,11 @@ export default function Written({
           byline IS that title here, so it is printed once — it was on the rule
           and again in the line beneath, which read as a paper introducing
           itself twice. */}
-      <p className="border-b border-league/40 pb-1 font-display text-xs font-bold uppercase tracking-widest text-cream">
+      <p className="border-b border-league/40 pb-1 font-sans text-xs font-bold uppercase tracking-widest text-cream">
         {edition.byline || (edition.kind === "preview" ? "The form guide" : "The back page")}
       </p>
 
-      <h2 className="text-balance pt-2.5 font-display text-3xl font-bold leading-[1.02] tracking-tight text-cream">
+      <h2 className="paper-display text-balance pt-2.5 text-3xl font-black leading-[1.02] text-cream">
         {edition.headline}
       </h2>
       {edition.deck ? (
@@ -51,7 +51,7 @@ export default function Written({
           be the current edition. A reader is entitled to know which he is
           reading. */}
       {edition.filedAt ? (
-        <p className="pt-2 text-2xs uppercase tracking-widest text-faint">
+        <p className="pt-2 font-sans text-2xs uppercase tracking-widest text-faint">
           Filed {londonDayAndTime(edition.filedAt)}
         </p>
       ) : null}
@@ -60,7 +60,7 @@ export default function Written({
 
       {edition.sections.map((section) => (
         <div key={section.key} className="pt-4">
-          <p className="border-b border-line pb-1 font-display text-2xs font-bold uppercase tracking-widest text-faint">
+          <p className="border-b border-line pb-1 font-sans text-2xs font-bold uppercase tracking-widest text-faint">
             {section.heading}
           </p>
           <Paragraphs text={section.body} className="pt-2 text-sm leading-relaxed text-ink" />
@@ -73,7 +73,7 @@ export default function Written({
             <ul>
               {edition.ties.map((tie) => (
                 <li key={`${tie.homeTeamId}-${tie.awayTeamId}`} className="py-2">
-                  <p className="text-2xs uppercase tracking-widest text-faint">
+                  <p className="font-sans text-2xs uppercase tracking-widest text-faint">
                     {named.get(tie.homeTeamId) ?? "—"} v {named.get(tie.awayTeamId) ?? "—"}
                     {/* A call, marked as one. Only a preview carries these, and
                         an unmade call prints nothing rather than a hedge. */}

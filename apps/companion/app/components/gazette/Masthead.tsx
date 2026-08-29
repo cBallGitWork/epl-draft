@@ -29,7 +29,7 @@ export default function Masthead({
     <header className="flex flex-col">
       {/* The edition line: what day this is and which season, in the small caps
           a paper puts above its own name. */}
-      <div className="flex items-baseline justify-between gap-3 text-2xs font-bold uppercase tracking-[0.18em]">
+      <div className="flex items-baseline justify-between gap-3 font-sans text-2xs font-bold uppercase tracking-[0.18em]">
         <span>{at === null ? LEAGUE_NAME : londonDate(at)}</span>
         <span className="numeric">{SEASON}</span>
       </div>
@@ -46,7 +46,7 @@ export default function Masthead({
       {/* The standing line and the price, ruled top and bottom — the strip every
           paper runs under its title. */}
       <div
-        className="mt-2.5 flex items-baseline justify-between gap-3 border-y py-1 text-2xs font-semibold uppercase tracking-[0.15em]"
+        className="mt-2.5 flex items-baseline justify-between gap-3 border-y py-1 font-sans text-2xs font-semibold uppercase tracking-[0.15em]"
         style={{ borderColor: "currentColor" }}
       >
         <p className="italic opacity-75">Sixteen managers, one league, every week</p>

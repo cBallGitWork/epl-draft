@@ -187,12 +187,24 @@
   --color-accent: var(--color-league);
   --color-live: var(--color-league);
 
+  /* The paper's own two faces, loaded by `app/paperFonts.ts` and by no other
+     route, so the desk pays nothing for them. Georgia stays named in both
+     stacks: it is a real transitional serif on every device that will open
+     this, which is why it carried the page alone before these arrived.
+     `--font-display` is deliberately NOT re-pointed — Archivo Narrow with
+     `tnum` sets every figure in both registers, and that is the one thing a
+     score keeps when it moves from the desk to newsprint. */
+  --paper-text: var(--font-newsreader), Georgia, "Times New Roman", "Liberation Serif", serif;
+  --paper-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+
   background: var(--paper);
   color: var(--paper-ink);
-  /* No webfont. A newspaper's body face is a transitional serif and Georgia is
-     one on every device that will open this, at no network cost — which is the
-     same argument the portraits make for the crest fallback. */
-  font-family: Georgia, "Times New Roman", "Liberation Serif", serif;
+  font-family: var(--paper-text);
+  /* Both faces carry an `opsz` axis, which is the reason they were chosen over a
+     static pair: the masthead and the byline are cut from one family and drawn
+     differently. `auto` spends the axis off the font size, so nothing on the
+     page has to name an optical size by hand. */
+  font-optical-sizing: auto;
 }
 
 /* A colour plate printed INSIDE the paper — the way a paper prints a colour
@@ -216,13 +228,26 @@
   font-family: var(--font-sans);
 }
 
-/* The one piece of display type on the page. Condensed, so a long league name
-   holds its line at the size a masthead needs to be. */
+/* The paper's own name, and the loudest thing it prints.
+   The one clamp in the type system: DESIGN.md fixes the scale in rem and admits
+   fluid type at the masthead alone, because a masthead is sized against the
+   sheet rather than against the paragraph under it.
+
+   No longer set in capitals. Archivo Narrow shouting a league name was a sports
+   app's title bar; a paper sets its title in its display face, mixed case, and
+   lets the letterforms do the work capitals were standing in for. */
 .paper-masthead {
-  font-family: "Archivo Narrow", Georgia, serif;
-  font-size: clamp(2.3rem, 11vw, 4.2rem);
-  font-weight: 800;
+  font-family: var(--paper-display);
+  font-size: clamp(2.5rem, 12.5vw, 4.5rem);
+  font-weight: 900;
   line-height: 0.86;
+  letter-spacing: -0.03em;
+}
+
+/* Everything else the paper sets in its display face: headlines at both sizes,
+   and the standing figures a rail prints large. Weight and size come from the
+   utilities at the point of use — this settles only which face and how tight. */
+.paper-display {
+  font-family: var(--paper-display);
   letter-spacing: -0.02em;
-  text-transform: uppercase;
 }
