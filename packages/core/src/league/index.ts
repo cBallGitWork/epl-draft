@@ -4,9 +4,6 @@
 
 export type {
   LeagueInfo,
-  LivePlayerCategory,
-  LivePlayerPoints,
-  LiveTeamScore,
   LeaguePeriod,
   LeaguePlayoffs,
   LeaguePlayer,
@@ -16,11 +13,19 @@ export type {
   PeriodRosters,
   RosterLimits,
   RosterSlot,
-  PlayerProjection,
-  SquadProjection,
   StandingsRow,
   TransactionView,
 } from "./types";
+
+export type {
+  LivePlayerCategory,
+  LivePlayerPoints,
+  LiveSquadPoints,
+  LiveTeamScore,
+  PlayerProjection,
+  SquadProjection,
+  TeamProjection,
+} from "./points";
 
 export type { PoolStatRow, StatColumn, StatSeason, TeamStats } from "./stats";
 

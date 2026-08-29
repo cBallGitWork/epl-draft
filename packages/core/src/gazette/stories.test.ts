@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PeriodPairing } from "../league/selectors";
-import type { LiveTeamScore } from "../league/types";
+import type { LiveTeamScore } from "../league/points";
 import { decided, stories } from "./stories";
 import type { Deal, Pick, TeamOfTheWeek } from "./types";
 

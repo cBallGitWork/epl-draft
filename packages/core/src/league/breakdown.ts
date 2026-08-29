@@ -1,5 +1,5 @@
 import type { ScoringCategory } from "./scoring";
-import type { LivePlayerCategory } from "./types";
+import type { LivePlayerCategory } from "./points";
 import type { StatColumn, StatLine } from "./stats";
 
 // Why a player is on the number he is on, in our league's own scoring

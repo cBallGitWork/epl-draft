@@ -1,11 +1,4 @@
-import type {
-  LivePlayerPoints,
-  LiveSquadPoints,
-  LiveTeamScore,
-  PlayerProjection,
-  SquadProjection,
-  TeamProjection,
-} from "../types";
+import type { LivePlayerPoints, LiveSquadPoints, LiveTeamScore, PlayerProjection, SquadProjection, TeamProjection } from "../points";
 
 // Fantrax's live-scoring page, which answers without a cookie and hands back
 // typed numbers rather than the formatted strings the rest of their surface is

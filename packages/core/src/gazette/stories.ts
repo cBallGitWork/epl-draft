@@ -1,6 +1,7 @@
 import { leads } from "../league/scoreline";
 import type { PeriodPairing } from "../league/selectors";
-import type { LeagueTeam, LiveTeamScore } from "../league/types";
+import type { LeagueTeam } from "../league/types";
+import type { LiveTeamScore } from "../league/points";
 import type { Deal, Story, StoryResult, StorySide, TeamOfTheWeek } from "./types";
 
 // What the paper runs, and in what order.
