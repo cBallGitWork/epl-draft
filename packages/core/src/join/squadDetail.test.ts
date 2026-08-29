@@ -10,7 +10,7 @@ const newcastle: Club = { id: 2, code: 4, name: "Newcastle", shortName: "NEW" };
 
 const player = (clubId: number): FootballPlayer => ({
   id: 9, code: 900, name: "Saka", fullName: "Bukayo Saka", clubId,
-  squadNumber: 7, status: "a", news: "", chanceOfPlaying: null, optaCode: null,
+  status: "a", news: "", chanceOfPlaying: null, optaCode: null,
 });
 
 const resolved = (fantraxId: string, clubId: number): RosteredPlayer => ({

@@ -17,6 +17,11 @@ interface RawElement {
   second_name: string;
   team: number;
   element_type: number;
+  /** Present on every element and null on every element — 622 of 622, checked
+   *  29 Aug 2026. Mirrored here because `raw.ts` mirrors what FPL actually
+   *  sends; deliberately NOT carried into the domain, because a field that is
+   *  always absent is not a field, and one modelled as `number | null` invites
+   *  a reader to write the branch that handles the number. Two of them did. */
   squad_number: number | null;
   status: string;
   news: string;

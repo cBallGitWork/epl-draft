@@ -28,7 +28,6 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
     name: e.web_name,
     fullName: `${e.first_name} ${e.second_name}`.trim(),
     clubId: e.team,
-    squadNumber: e.squad_number ?? null,
     status: e.status ?? "a",
     news: e.news ?? "",
     chanceOfPlaying: e.chance_of_playing_next_round ?? null,

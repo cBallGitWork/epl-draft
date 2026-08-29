@@ -32,7 +32,6 @@ export interface FootballPlayer {
   name: string;
   fullName: string;
   clubId: number;
-  squadNumber: number | null;
   /** Availability: "a" available, "i" injured, "s" suspended, "d" doubtful, "u" unavailable. */
   status: string;
   /** Free-text injury/availability note from FPL, empty when there's nothing to say. */

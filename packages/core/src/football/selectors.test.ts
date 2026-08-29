@@ -13,7 +13,7 @@ import {
 
 const player = (id: number, name: string, clubId = 1) => ({
   id, code: 1000 + id, name, fullName: name, clubId,
-  squadNumber: null, status: "a", news: "", chanceOfPlaying: null, optaCode: null,
+  status: "a", news: "", chanceOfPlaying: null, optaCode: null,
 });
 
 const stat = (over: Partial<PlayerMatchStats> & { playerId: number }): PlayerMatchStats => ({

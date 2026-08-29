@@ -5,7 +5,7 @@ import { lineup, squadUnarranged } from "./lineup";
 
 const player = (name: string): FootballPlayer => ({
   id: 1, code: 1, name, fullName: name, clubId: 1,
-  squadNumber: null, status: "a", news: "", chanceOfPlaying: null, optaCode: null,
+  status: "a", news: "", chanceOfPlaying: null, optaCode: null,
 });
 
 const slot = (position: string | null, status: string, name = "X"): RosteredPlayer => ({

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { type RosteredPlayer, type SquadPlayerDetail, isDoubtful, isResolved, playerName } from "@epl/core";
+import { type SquadPlayerDetail, isDoubtful, isResolved, playerName } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
 import PitchPlayer from "./PitchPlayer";
 import { londonDayAndTime } from "../../londonTime";
@@ -65,7 +65,7 @@ export default function PlayerCard({
             <p className="numeric text-2xs tracking-widest text-faint">
               {/* The position is the one his manager has him filling, not the
                   list he is eligible for — a Fantrax player can hold several. */}
-              {[club?.name, positionLabel(rostered.slot.position), squadNumber(rostered)]
+              {[club?.name, positionLabel(rostered.slot.position)]
                 .filter(Boolean)
                 .join(" · ")}
             </p>
@@ -127,9 +127,3 @@ export default function PlayerCard({
   );
 }
 
-/** His shirt number, when FPL publishes one. Absent for a slot with no
- *  footballer behind it, and for a January signing FPL has not numbered yet. */
-function squadNumber(rostered: RosteredPlayer): string | null {
-  if (!isResolved(rostered) || rostered.player.squadNumber === null) return null;
-  return `#${rostered.player.squadNumber}`;
-}
