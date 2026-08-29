@@ -94,8 +94,13 @@ Use it for:
   count that moves with the transfer window (564 on 3 Aug, 600 on 22 Aug — read
   it, never assume it).
   Player `code` is **season-stable** (portraits key off it); `id` is per-season and
-  **must not be persisted across seasons**. Carries `opta_code`, `squad_number`,
-  `news`, `chance_of_playing_next_round`.
+  **must not be persisted across seasons**. Carries `opta_code`, `news`,
+  `chance_of_playing_next_round`.
+  `squad_number` is present as a **key and never as a value** — null on all 622
+  elements, checked 29 Aug 2026. This entry used to list it among the fields
+  bootstrap carries, which is how a shirt-number fallback came to be designed on
+  top of it; a field that is always null is not a field. Count it before
+  building on it.
 - `GET /api/fixtures/?event={gw}` — fixtures with `started` / `finished` /
   `finished_provisional` / `minutes` / scores.
 - `GET /api/event/{gw}/live/` — per-player stats. `{"elements": []}` before the
