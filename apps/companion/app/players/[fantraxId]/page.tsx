@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import { FANTRAX_LEAGUE_ID, FantraxError, fetchPlayerProfile, mapPlayerProfile } from "@epl/core";
 import type { LabelledValue, PlayerIntel } from "@epl/core";
 import ButtonLink from "../../components/shell/ButtonLink";
 import Nothing from "../../components/shell/Nothing";
+import Skeleton from "../../components/shell/Skeleton";
 import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
 import Availability from "./Availability";
@@ -70,12 +72,11 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
     );
   }
 
-  // Both are extras on a page that already has something to say, so both are
-  // fetched after the profile has succeeded and neither can fail it.
-  const [season, football] = await Promise.all([
-    playerSeason(fantraxId, intel.ownerTeamId),
-    footballSelf(fantraxId),
-  ]);
+  // An extra on a page that already has something to say, so it is fetched after
+  // the profile has succeeded and cannot fail it. It reads the snapshot every
+  // other screen keeps warm, which is why the heading does not wait behind a
+  // boundary for it — his season does, below.
+  const football = await footballSelf(fantraxId);
 
   return (
     <div className="flex flex-col gap-3">
@@ -109,7 +110,20 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
 
       <Availability player={football?.player ?? null} />
 
-      <Breakdown season={season} />
+      {/* His season streams under the heading. `playerSeason` reads the owning
+          team's whole stats table — a Fantrax request of its own, and the
+          slowest thing on this page — while everything above is already in hand
+          from the profile.
+
+          Only for a player somebody owns, and that is not a guard bolted on: the
+          read answers null for a free agent without asking Fantrax anything, so
+          a boundary there would put a card on screen that could only ever come
+          back empty. */}
+      {intel.ownerTeamId === null ? null : (
+        <Suspense fallback={<SeasonWaiting />}>
+          <Season fantraxId={fantraxId} ownerTeamId={intel.ownerTeamId} />
+        </Suspense>
+      )}
 
       {/* The season is named here for the same reason it is named above it: this
           block and the one this page opens with both print an FPts, and until
@@ -145,5 +159,31 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
         <ButtonLink href="/players">Every player</ButtonLink>
       </div>
     </div>
+  );
+}
+
+/** His season in our league, read behind the boundary above. Nothing but the
+ *  await lives here — the card itself is `Breakdown`, unchanged. */
+async function Season({ fantraxId, ownerTeamId }: { fantraxId: string; ownerTeamId: string }) {
+  return <Breakdown season={await playerSeason(fantraxId, ownerTeamId)} />;
+}
+
+/** The breakdown's own shape while that read is in flight: a ruled head with the
+ *  total on the right, then the categories that earned it. */
+function SeasonWaiting() {
+  return (
+    <section aria-busy className="flex flex-col gap-2">
+      <div className="flex items-baseline justify-between gap-3 border-b border-line pb-1">
+        <Skeleton width="7rem" height="0.75rem" />
+        <Skeleton width="4.5rem" height="0.875rem" />
+      </div>
+      <div className="flex flex-col gap-0.5">
+        {Array.from({ length: 4 }, (_, at) => (
+          <div key={at} className="flex min-h-9 items-center rounded-lg bg-surface px-3">
+            <Skeleton width="40%" height="0.875rem" />
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }

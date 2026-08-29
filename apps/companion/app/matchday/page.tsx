@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import ButtonLink from "../components/shell/ButtonLink";
+import Skeleton from "../components/shell/Skeleton";
 import { type FootballSnapshot, duringGameweek, nextRound } from "@epl/core";
 import { footballNow, seasonFixtures } from "../football";
 import GameweekView from "../components/football/GameweekView";
@@ -62,7 +64,19 @@ export default async function MatchdayPage() {
           The desk →
         </Link>
       </div>
-      <YourMatchup />
+      {/* The head-to-head arrives after the football, and the boundary is what
+          lets it. `YourMatchup` makes the one read on this page nothing else
+          waits for — `getLiveScoringStats`, the busiest request the app makes on
+          a Saturday — while the fixtures and the marks above are already
+          resolved by the time this renders. Without it the whole screen, the ten
+          scorelines included, waits on Fantrax's scoreboard.
+
+          It stays first in the document because it is the question the tab is
+          for: it lands into a card of its own height, so the football under it
+          does not move when it does. */}
+      <Suspense fallback={<MatchupWaiting />}>
+        <YourMatchup />
+      </Suspense>
       {/* Under the scoreline, because it is the same question asked forwards:
           the card says where you are, this says what is left to change it. */}
       <Afternoon snapshot={snapshot} players={league.afternoon} />
@@ -72,6 +86,29 @@ export default async function MatchdayPage() {
         <BetweenGameweeks snapshot={snapshot} up={up} />
       )}
     </div>
+  );
+}
+
+/** The head-to-head card at its own height while the scoreboard is read.
+ *
+ *  Neutral-bordered rather than accented: the accent means "yours" everywhere in
+ *  the app, and this is drawn before anything has established that the reader
+ *  has a team at all.
+ *
+ *  `YourMatchup` renders nothing for a reader with no team or no pairing, so for
+ *  him this card appears and goes. Drawn anyway: every one of the sixteen this
+ *  app is for has both during a round, and holding the space for the number they
+ *  came to read is worth a flicker on the visit that has no number. */
+function MatchupWaiting() {
+  return (
+    <section
+      aria-busy
+      className="elev flex flex-col gap-2 rounded-xl border border-line bg-surface p-3"
+    >
+      <Skeleton width="9rem" height="0.75rem" />
+      <Skeleton width="100%" height="2.75rem" />
+      <Skeleton width="60%" height="0.75rem" />
+    </section>
   );
 }
 

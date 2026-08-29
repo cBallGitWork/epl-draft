@@ -23,6 +23,15 @@ import { FANTRAX_LEAGUE_ID, PAGE_REVALIDATE } from "@epl/core";
 // **Nothing about who is asking may cross into a cached read** — no team id, no
 // cookie — or one manager's view is served to another. That rule lives at every
 // call site because only the call site knows what it closed over.
+//
+// **The tag is the key, and it is derived here for the same reason the key is.**
+// A cache window is a ceiling on staleness, not a promise of freshness: a write
+// that changed what a read answers should not have to wait it out, and a tag is
+// how it says so. It is the two parts the key is made of and nothing else — so
+// `revalidateTag` on the rehearsal league cannot drop the real league's rosters,
+// and no call site is in a position to forget the half that stops it. A `tags`
+// argument here would have been the parameter with no caller that CODE_RULES §1
+// forbids; this is the same guarantee with nothing to pass.
 
 export function leagueCache<A extends unknown[], R>(
   /** What is being read, in the domain's words. Joined with the league id to
@@ -34,5 +43,8 @@ export function leagueCache<A extends unknown[], R>(
    *  because Fantrax's answer to it changes about twice a year. */
   revalidate: number = PAGE_REVALIDATE,
 ): (...args: A) => Promise<R> {
-  return unstable_cache(read, [key, FANTRAX_LEAGUE_ID], { revalidate });
+  return unstable_cache(read, [key, FANTRAX_LEAGUE_ID], {
+    revalidate,
+    tags: [`${key}:${FANTRAX_LEAGUE_ID}`],
+  });
 }
