@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef } from "react";
 import {
   type BreakdownLine,
   type SquadPlayerDetail,
@@ -12,6 +11,7 @@ import {
   playerName,
 } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
+import Modal from "../shell/Modal";
 import PlayerImage from "./PlayerImage";
 import { chipsFor } from "./Chips";
 import { londonDayAndTime } from "../../londonTime";
@@ -53,12 +53,6 @@ export default function LivePlayerCard({
   reserve: boolean;
   onClose: () => void;
 }) {
-  const dialog = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    dialog.current?.showModal();
-  }, []);
-
   const done = contribution(isResolved(rostered) ? rostered.stats : []);
   const started = kickedOff(opposition);
   // Only when there is one match to time. A double gameweek has two kickoffs and
@@ -66,16 +60,7 @@ export default function LivePlayerCard({
   const kickoff = opposition?.length === 1 ? (opposition[0]?.fixture.kickoff ?? null) : null;
 
   return (
-    <dialog
-      ref={dialog}
-      onClose={onClose}
-      // A click on the backdrop lands on the dialog element itself; one on
-      // anything inside lands on a child. That is the whole test.
-      onClick={(event) => {
-        if (event.target === dialog.current) dialog.current?.close();
-      }}
-      className="m-auto w-[min(24rem,92vw)] rounded-2xl border border-line bg-surface p-0 text-ink backdrop:bg-black/70"
-    >
+    <Modal onClose={onClose} width="24rem">
       <div className="flex flex-col gap-3 p-4">
         <div className="flex items-center gap-3">
           {/* The photograph alone. It was a whole `PitchPlayer`, which carries a
@@ -170,14 +155,14 @@ export default function LivePlayerCard({
           </Link>
           <button
             type="button"
-            onClick={() => dialog.current?.close()}
+            onClick={onClose}
             className="min-h-11 flex-1 rounded-lg border border-line px-3 py-2.5 text-sm font-medium hover:bg-raised"
           >
             Close
           </button>
         </div>
       </div>
-    </dialog>
+    </Modal>
   );
 }
 
