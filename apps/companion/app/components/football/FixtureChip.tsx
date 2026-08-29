@@ -14,25 +14,34 @@ import type { Opposition } from "@epl/core";
 // One chip per fixture: a blank gameweek has none and a double has two, and both
 // halves of a double can be rated differently.
 
-/** How hard, in five steps. Names the token rather than the colour so the scale
- *  lives in one place and a fixture chip can never introduce a sixth.
+/** How hard, in five steps, and the ink each step carries.
  *
- *  Written out rather than interpolated from the number. Tailwind keeps a theme
- *  variable only when its name appears literally in the source it scans, so
- *  `var(--color-fdr-${n})` compiles to five variables that are never emitted and
- *  five chips with no colour on them — which is exactly how this shipped once. */
-const GROUND: Record<number, string> = {
-  1: "var(--color-fdr-1)",
-  2: "var(--color-fdr-2)",
-  3: "var(--color-fdr-3)",
-  4: "var(--color-fdr-4)",
-  5: "var(--color-fdr-5)",
+ *  Both halves, because contrast is a property of the pair and only the step
+ *  knows which pair it is. The scale is built so 5 is DARKER than 4 rather than
+ *  brighter — a hard fixture should look heavy — and past about the fourth step
+ *  no dark ink survives it: black at 85% on step 5 is 2.9:1. So the last step
+ *  turns its ink over, at 5.5:1.
+ *
+ *  Names the token rather than the colour so the scale lives in one place and a
+ *  fixture chip can never introduce a sixth. Written out rather than
+ *  interpolated from the number: Tailwind keeps a theme variable only when its
+ *  name appears literally in the source it scans, so `var(--color-fdr-${n})`
+ *  compiles to five variables that are never emitted and five chips with no
+ *  colour on them — which is exactly how this shipped once. */
+const STEPS: Record<number, { ground: string; ink: string }> = {
+  1: { ground: "var(--color-fdr-1)", ink: "text-black/85" },
+  2: { ground: "var(--color-fdr-2)", ink: "text-black/85" },
+  3: { ground: "var(--color-fdr-3)", ink: "text-black/85" },
+  4: { ground: "var(--color-fdr-4)", ink: "text-black/85" },
+  5: { ground: "var(--color-fdr-5)", ink: "text-cream" },
 };
 
 /** An unrated fixture is drawn neutral rather than given a middle score we
  *  invented, and a rating outside their scale is treated the same way. */
-function ground(difficulty: number | null): string {
-  return (difficulty === null ? undefined : GROUND[difficulty]) ?? "var(--color-raised)";
+const UNRATED = { ground: "var(--color-raised)", ink: "text-muted" };
+
+function step(difficulty: number | null) {
+  return (difficulty === null ? undefined : STEPS[difficulty]) ?? UNRATED;
 }
 
 export default function FixtureChip({
@@ -51,7 +60,10 @@ export default function FixtureChip({
       // transparent it borrowed whatever it was sitting on, which is three
       // different surfaces — and on the pitch's cream band a light grey on
       // near-white was a blank gameweek nobody could read.
-      <span className="numeric grid flex-1 place-items-center bg-raised px-1 text-[0.5rem] font-bold leading-[1.5] text-muted">
+      <span
+        className={`numeric grid flex-1 place-items-center px-1 text-[0.5rem] font-bold leading-[1.5] ${UNRATED.ink}`}
+        style={{ backgroundColor: UNRATED.ground }}
+      >
         {blank}
       </span>
     );
@@ -66,13 +78,16 @@ export default function FixtureChip({
       {opposition.map((against) => (
         <span
           key={against.fixture.id}
-          // Dark ink on every step of the scale, so the pair is legible without
-          // asking which end of it this chip came from. Centred by grid rather
-          // than by line height: the pitch's band is a fixed height and the
-          // colour is asked to fill it, so the text has to be placed inside the
-          // stretch rather than defining it.
-          className="numeric grid flex-1 place-items-center px-1 text-[0.5rem] font-bold leading-[1.5] text-black/85"
-          style={{ backgroundColor: ground(against.difficulty) }}
+          // Centred by grid rather than by line height: the pitch's band is a
+          // fixed height and the colour is asked to fill it, so the text has to
+          // be placed inside the stretch rather than defining it.
+          //
+          // `text-cream` on the hardest step is the desk's cream, which is the
+          // one thing here that is not medium-independent: a chip only ever
+          // renders on the desk or on a colour plate, never on the paper's
+          // stock, where `--color-cream` is deliberately ink.
+          className={`numeric grid flex-1 place-items-center px-1 text-[0.5rem] font-bold leading-[1.5] ${step(against.difficulty).ink}`}
+          style={{ backgroundColor: step(against.difficulty).ground }}
         >
           {against.club.shortName} ({against.home ? "H" : "A"})
         </span>

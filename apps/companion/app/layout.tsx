@@ -28,10 +28,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  // sRGB of `--color-bg` in globals.css. Repeated as a literal because this is
+  // sRGB of `--color-bg` in tokens.css. Repeated as a literal because this is
   // serialised into a <meta> tag at build time and cannot read a CSS variable —
-  // the same constraint as `revalidate`. Change both together.
-  themeColor: "#0f0810",
+  // the same constraint as `revalidate`. Change both together. The front page
+  // overrides it, being the one surface that is not the desk.
+  themeColor: "#091227",
   // The reference device is a phone held one-handed; lock out the accidental
   // double-tap zoom without disabling deliberate pinch-zoom.
   width: "device-width",

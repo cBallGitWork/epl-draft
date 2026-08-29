@@ -1,60 +1,71 @@
 /* ============================================================================
    Tim Hortons Pro League — token layer
 
-   Two registers, never muddled (PRODUCT.md principle 3):
-   · FOOTBALL chrome — the real Premier League. PL brand palette.
-   · LEAGUE identity — our competition. Tim Hortons palette.
+   Two registers, never muddled (PRODUCT.md principle 3), and what follows is
+   the first of them:
 
-   Surfaces stay neutral and colour appears almost exclusively as STATE, which is
-   the product-register floor. Deep near-black tinted toward PL purple, because a
-   pure gray reads as a dashboard and this is a score centre.
+   · THE DESK — League, Squads, Live, Players, FPL. This is a management
+     terminal, so it is dressed as one: Championship Manager 99/00's blue-black
+     ground, yellow for what is yours or active, cyan for a person, amber for a
+     figure, red for a loss and green for a gain. CM's own ground was a darkened
+     match photograph; we keep the darkness and the blueness and drop the
+     photograph, which no contrast ratio survives.
+   · THE PAPER — the front page and everything written on it. Ink on stock,
+     further down this file under `.paper`.
+
+   Surfaces carry no colour of their own; colour is STATE almost everywhere,
+   which is the product-register floor.
+
+   The Premier League's palette has left the chrome. Green, cyan and pink were
+   the football register's, and the football register is now one tab of six. It
+   survives only where it is data rather than dress: the fixture-difficulty
+   scale below, and club colours, which belong to the clubs.
    ============================================================================ */
 
 @theme {
-  /* --- Surfaces: a four-step ramp, chroma held low and tinted to hue 320 --- */
-  --color-bg: oklch(0.15 0.02 320);
-  --color-surface: oklch(0.19 0.022 320);
-  --color-raised: oklch(0.235 0.024 320);
-  --color-line: oklch(0.31 0.021 320);
+  /* --- Surfaces: a four-step ramp, chroma held low and tinted to hue 265 --- */
+  --color-bg: oklch(0.185 0.045 265);
+  --color-surface: oklch(0.215 0.046 265);
+  --color-raised: oklch(0.25 0.048 265);
+  --color-line: oklch(0.36 0.045 265);
 
-  /* --- Ink: every step verified ≥4.5:1 on --color-bg --- */
-  --color-ink: oklch(0.97 0.005 320);
-  --color-muted: oklch(0.74 0.015 320);
-  --color-faint: oklch(0.62 0.015 320);
+  /* --- Ink: every step verified ≥4.5:1 on --color-bg — 17.1 · 8.7 · 5.3 — and
+     --faint verified again on --color-raised, which is the tightest pair in the
+     set at 4.6:1 and therefore the one that fixes where --raised can sit. --- */
+  --color-ink: oklch(0.97 0.01 265);
+  --color-muted: oklch(0.76 0.03 265);
+  --color-faint: oklch(0.63 0.03 265);
 
-  /* --- Football register (Premier League) ---------------------------------
-     Read out of premierleague.com's live stylesheet and FPL's production bundle
-     on 7 Aug 2026, not from a brand-colours site. Every such site still
-     republishes the 2016 set (#38003c #00ff85 #04f5ff #e90052); the 2023 refresh
-     shipped different values and `#38003c` appears zero times in the current
-     premierleague.com CSS. The pink moved furthest — #e90052 to #ff2882 is a
-     visible jump, and it is what takes LIVE from 4.31:1 to 5.52:1 on --color-bg. */
+  /* --- The desk's signals -------------------------------------------------
+     CM's grammar is more specific than a palette: each colour is a SLOT with one
+     meaning, which is why every name here survived the change of value. Verified
+     from the game's own screenshots rather than from memory of it.
 
-  /* Primary action, selection, "your team". PL green #00ff87. */
-  --color-accent: oklch(0.876 0.229 152);
-  /* Info, links, secondary emphasis. PL cyan #05f0ff — their own token calls it
-     `--c-pl-blue`, which is worth remembering when reading their source. */
-  --color-info: oklch(0.870 0.148 203);
-  /* LIVE only — a match in play. PL pink #ff2882, reserved so it never means
-     anything else.
+     What these replaced was the Premier League's brand set, which had drifted
+     into doing league-register work — a PL green primary action, a PL pink LIVE.
+     Those are the football's colours and the football is one tab of six. */
 
-     The Premier League binds its own `--theme-live` to PL Orange #ff6900. We
-     deliberately diverge: orange sits in the same warm band as Tim Hortons red
-     and the two would muddle on a masthead that carries both. Pink is still in
-     their palette (it is `--theme-hyperlink` in their dark theme) and separates
-     cleanly from the league register. */
-  --color-live: oklch(0.657 0.247 3);
-  /* PL purple #37003c. Their surface base, our accent for FPL-owned chrome. */
-  --color-pl-purple: oklch(0.240 0.113 324);
+  /* Yours, selected, active, primary. CM yellow. 13.1:1 on --color-bg, and the
+     same pair inverted for a yellow chip with dark ink on it. */
+  --color-accent: oklch(0.88 0.16 95);
+  /* A person, and secondary emphasis. CM's link cyan. 11.2:1. Pulled back from
+     PL's #05f0ff, which is a neon and reads as the Premier League's rather than
+     as a colour in this room. */
+  --color-info: oklch(0.82 0.13 210);
+  /* LIVE only — a match in play — and reserved so it never means anything else.
+     The league's own red at hue 22, lifted until it carries text: #C8102E is
+     3.2:1 on this ground and this is 5.4:1. The brand red and the live red being
+     one hue is the point, since the league IS what is live. */
+  --color-live: oklch(0.66 0.215 22);
 
   /* --- League register (Tim Hortons) ---------------------------------------
      #C8102E, read from timhortons.ca's own markup. Their palette since the 2017
      rebrand is red and white only — the cream below is not theirs, it is the
-     1964–85 identity's warm register. 3.35:1 on --color-bg, so the red carries
+     1964–85 identity's warm register. 3.2:1 on --color-bg, so the red carries
      chrome and never carries small text; it also inks the name plate under a
-     player, where it sits on near-black rather than on the page. */
+     player, where it sits on the ground rather than on the page. Cream on it is
+     4.9:1, which is what a crest and a hoarding are drawn from. */
   --color-league: oklch(0.530 0.207 22);
-  --color-league-dark: oklch(0.31 0.05 45);
   --color-cream: oklch(0.94 0.02 75);
 
   /* --- Pitch ---------------------------------------------------------------
@@ -96,16 +107,19 @@
      and 5 is darker than 4 rather than brighter. Hue-locked to the tokens
      already in use so a fixture chip never introduces a sixth colour family.
 
-     Every step carries dark ink, so contrast is a property of the pair. --- */
+     Contrast is a property of the pair, and the pair is the chip's business:
+     four steps carry dark ink and the fifth is too dark to, so it carries cream.
+     `FixtureChip` holds both halves. --- */
   --color-fdr-1: oklch(0.84 0.20 152);
   --color-fdr-2: oklch(0.78 0.16 158);
-  --color-fdr-3: oklch(0.80 0.02 320);
+  --color-fdr-3: oklch(0.80 0.02 265);
   --color-fdr-4: oklch(0.66 0.20 22);
   --color-fdr-5: oklch(0.50 0.18 18);
 
   /* --- Data tints: deliberately duller than --accent so a form indicator never
-     competes with a primary action. Hue-paired with icons/labels, never alone. --- */
-  --color-good: oklch(0.76 0.15 155);
+     competes with a primary action. Hue-paired with icons/labels, never alone.
+     Both were already where CM puts them — a figure in amber, a loss in red —
+     so the ground moved underneath them and they did not. 9.8:1 and 5.6:1. --- */
   --color-mid: oklch(0.79 0.14 85);
   --color-bad: oklch(0.66 0.17 25);
 
@@ -164,6 +178,15 @@
   --color-muted: rgb(36 29 23 / 0.68);
   --color-faint: rgb(36 29 23 / 0.48);
 
+  /* The two slots whose desk value is a colour rather than a lightness, and so
+     the two the medium cannot supply by re-pointing ink. "Yours, selected,
+     active" and "in play" are both the league speaking, and on stock the league
+     speaks in its own red — 5.0:1 here, where the desk's yellow is 1.3:1 and its
+     live red is 2.6:1. The front page shipped a live scoreline in PL green on
+     cream and a live dot in PL pink for exactly as long as this was missing. */
+  --color-accent: var(--color-league);
+  --color-live: var(--color-league);
+
   background: var(--paper);
   color: var(--paper-ink);
   /* No webfont. A newspaper's body face is a transitional serif and Georgia is
@@ -182,13 +205,13 @@
    `--color-cream` at ink turned eleven of them invisible — and the crest's ink
    with them, which is how a red oval came to be stamped with a red name. */
 .paper :is(.pitch, .crest) {
-  --color-ink: oklch(0.97 0.005 320);
+  --color-ink: oklch(0.97 0.01 265);
   --color-cream: oklch(0.94 0.02 75);
-  --color-muted: oklch(0.74 0.015 320);
-  --color-faint: oklch(0.62 0.015 320);
-  --color-bg: oklch(0.15 0.02 320);
-  --color-surface: oklch(0.19 0.022 320);
-  --color-line: oklch(0.31 0.021 320);
+  --color-muted: oklch(0.76 0.03 265);
+  --color-faint: oklch(0.63 0.03 265);
+  --color-bg: oklch(0.185 0.045 265);
+  --color-surface: oklch(0.215 0.046 265);
+  --color-line: oklch(0.36 0.045 265);
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
@@ -202,14 +225,4 @@
   line-height: 0.86;
   letter-spacing: -0.02em;
   text-transform: uppercase;
-}
-
-/* The lead's opening paragraph, with the initial a paper always sets. Floated
-   rather than a separate element so the text wraps around it. */
-.paper-dropcap::first-letter {
-  float: left;
-  margin: 0.08em 0.08em 0 0;
-  font-size: 3.4em;
-  line-height: 0.78;
-  font-weight: 700;
 }

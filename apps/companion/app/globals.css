@@ -134,9 +134,15 @@ body {
     repeating-linear-gradient(0deg, oklch(1 0 0 / 0.28) 0 1px, transparent 1px 6px);
 }
 
-/* ---- Focus: one visible treatment everywhere, never removed ---- */
+/* ---- Focus: one visible treatment everywhere, never removed ----------------
+   The ring is `--accent` rather than a token of its own, because "this is where
+   you are" is the same statement as "this is what is selected" and the accent
+   slot already carries it in both registers: CM yellow on the desk at 13:1, and
+   the league's red on the paper at 5:1, without this rule knowing which page it
+   is on. It was `--info`, a slot that means "a person" on the desk and nothing
+   at all on the paper. */
 :where(a, button, [role="button"], input, select, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-info);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 4px;
 }
