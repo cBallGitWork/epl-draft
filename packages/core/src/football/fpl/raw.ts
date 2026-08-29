@@ -81,3 +81,49 @@ export interface RawLiveElement {
 export interface RawLive {
   elements: RawLiveElement[];
 }
+
+/** One match in a player's own season history, from `element-summary`.
+ *
+ *  Unlike the live endpoint's `explain` block, these values are genuinely
+ *  per-fixture — bps, expected goals and defensive contribution included. That
+ *  is the whole reason this endpoint is read: `mapLiveStats` can only take those
+ *  four off the gameweek aggregate, so on a double it reports the round twice.
+ *
+ *  FPL writes a row here for a match nobody has played yet, exactly as its live
+ *  endpoint does — on 29 Aug 2026 every player carried a GW2 row with zero
+ *  minutes, two days before kickoff. `team_h_score` is null on those, and it is
+ *  the only field separating them from an unused substitute in a match that
+ *  finished 3-0, whose row is also all zeroes.
+ *
+ *  The expected-goals family arrives as decimal STRINGS ("0.64"), not numbers. */
+export interface RawHistoryEntry {
+  fixture: number;
+  round: number;
+  opponent_team: number;
+  was_home: boolean;
+  kickoff_time: string | null;
+  team_h_score: number | null;
+  team_a_score: number | null;
+  total_points: number;
+  minutes: number;
+  goals_scored: number;
+  assists: number;
+  clean_sheets: number;
+  goals_conceded: number;
+  penalties_saved: number;
+  penalties_missed: number;
+  yellow_cards: number;
+  red_cards: number;
+  saves: number;
+  bonus: number;
+  bps: number;
+  defensive_contribution?: number;
+  expected_goals?: string;
+  expected_assists?: string;
+}
+
+/** `element-summary/{id}/`. Also carries `fixtures` (his run to come) and
+ *  `history_past` (previous seasons); neither is read, so neither is typed. */
+export interface RawElementSummary {
+  history: RawHistoryEntry[];
+}

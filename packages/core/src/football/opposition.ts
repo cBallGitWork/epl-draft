@@ -80,3 +80,55 @@ export function oppositionByClub(snapshot: FootballSnapshot): Map<number, Opposi
 export function kickedOff(opposition: readonly Opposition[] | undefined): boolean {
   return opposition?.some((against) => against.fixture.status !== "upcoming") ?? false;
 }
+
+/** The next `count` matches a club has, soonest first.
+ *
+ *  A single chip answers "who has he got this week", which is the wrong question
+ *  for anyone deciding whether to hold a player through a bad one. A run of five
+ *  is what turns FPL's difficulty rating from a colour into an argument.
+ *
+ *  Over the whole season's fixtures rather than a snapshot's round, because the
+ *  answer is by definition in rounds nobody is looking at. Which matches are
+ *  still to come is read off `status`, which is FPL's own statement, rather than
+ *  off a clock this layer has no business holding.
+ *
+ *  Ordered by kickoff with undated last — a postponement keeps its "upcoming"
+ *  status and loses its date, and a match with no time must not sort ahead of
+ *  Saturday's. */
+export function nextFixtures(
+  fixtures: readonly Fixture[],
+  clubs: Map<number, Club>,
+  clubId: number,
+  count: number,
+): Opposition[] {
+  const mine = fixtures.filter(
+    (f) =>
+      f.status === "upcoming" && (f.homeClubId === clubId || f.awayClubId === clubId),
+  );
+
+  mine.sort((a, b) => {
+    if (a.kickoff === b.kickoff) return a.id - b.id;
+    if (!a.kickoff) return 1;
+    if (!b.kickoff) return -1;
+    return a.kickoff.localeCompare(b.kickoff);
+  });
+
+  const run: Opposition[] = [];
+  for (const fixture of mine) {
+    if (run.length === count) break;
+    const home = fixture.homeClubId === clubId;
+    const opponent = clubs.get(home ? fixture.awayClubId : fixture.homeClubId);
+    // A fixture naming a club we do not have is FPL's inconsistency to explain,
+    // not ours to invent an opponent for — the same rule `oppositionByClub`
+    // applies, and it must not silently shorten the run either, so it does not
+    // count towards it.
+    if (!opponent) continue;
+    run.push({
+      club: opponent,
+      home,
+      difficulty: home ? fixture.homeDifficulty : fixture.awayDifficulty,
+      fixture,
+    });
+  }
+  return run;
+}

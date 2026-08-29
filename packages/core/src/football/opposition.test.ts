@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Fixture, FootballSnapshot } from "./types";
-import { kickedOff, oppositionByClub } from "./opposition";
+import { kickedOff, nextFixtures, oppositionByClub } from "./opposition";
 
 const club = (id: number, shortName: string) => ({ id, code: id * 10, name: shortName, shortName });
 
@@ -123,5 +123,71 @@ describe("kickedOff", () => {
     // A blank gameweek and an unresolved roster slot arrive here the same way.
     expect(kickedOff(oppositionByClub(snap([])).get(1))).toBe(false);
     expect(kickedOff(undefined)).toBe(false);
+  });
+});
+
+const CLUBS = new Map(
+  [club(1, "ARS"), club(2, "NEW"), club(3, "BRE"), club(4, "COV")].map((c) => [c.id, c]),
+);
+
+describe("nextFixtures", () => {
+  const run = (fixtures: Fixture[], clubId = 1, count = 3) =>
+    nextFixtures(fixtures, CLUBS, clubId, count).map(
+      (o) => `${o.club.shortName}${o.home ? "H" : "A"}${o.difficulty}`,
+    );
+
+  it("reads a run rather than a single chip, soonest first", () => {
+    expect(
+      run([
+        fixture({ id: 2, homeClubId: 3, awayClubId: 1, kickoff: "2026-10-24T14:00:00Z" }),
+        fixture({ id: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-10-17T14:00:00Z" }),
+      ]),
+    ).toEqual(["NEWH2", "BREA4"]);
+  });
+
+  it("takes his side of the difficulty, never the opponent's", () => {
+    // Away at Brentford, so his rating is `awayDifficulty` — 4 here against the
+    // 2 the fixture rates Brentford's afternoon at.
+    expect(run([fixture({ id: 1, homeClubId: 3, awayClubId: 1 })])).toEqual(["BREA4"]);
+  });
+
+  it("stops at the count asked for", () => {
+    const many = [1, 2, 3, 4, 5].map((n) =>
+      fixture({ id: n, homeClubId: 1, awayClubId: 2, kickoff: `2026-10-0${n}T14:00:00Z` }),
+    );
+    expect(run(many)).toHaveLength(3);
+    expect(nextFixtures(many, CLUBS, 1, 5)).toHaveLength(5);
+  });
+
+  it("leaves out matches already played, and the club's own absence from one", () => {
+    expect(
+      run([
+        fixture({ id: 1, status: "finished", kickoff: "2026-10-03T14:00:00Z" }),
+        fixture({ id: 2, status: "live", kickoff: "2026-10-10T14:00:00Z" }),
+        fixture({ id: 3, homeClubId: 3, awayClubId: 4, kickoff: "2026-10-17T14:00:00Z" }),
+        fixture({ id: 4, homeClubId: 1, awayClubId: 4, kickoff: "2026-10-24T14:00:00Z" }),
+      ]),
+    ).toEqual(["COVH2"]);
+  });
+
+  it("puts a postponement with no date behind the matches that have one", () => {
+    // A postponed match keeps "upcoming" and loses its kickoff. Sorted naively
+    // it leads the run and claims to be his next match.
+    expect(
+      run([
+        fixture({ id: 1, homeClubId: 1, awayClubId: 3, kickoff: null }),
+        fixture({ id: 2, homeClubId: 1, awayClubId: 2, kickoff: "2026-10-17T14:00:00Z" }),
+      ]),
+    ).toEqual(["NEWH2", "BREH2"]);
+  });
+
+  it("carries an unrated fixture as unrated rather than as a middle score", () => {
+    expect(
+      nextFixtures([fixture({ id: 1, homeDifficulty: null })], CLUBS, 1, 3)[0]?.difficulty,
+    ).toBeNull();
+  });
+
+  it("gives a club with nothing left an empty run, not a short one padded out", () => {
+    expect(run([fixture({ id: 1, status: "finished" })])).toEqual([]);
   });
 });

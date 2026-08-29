@@ -75,6 +75,49 @@ describe("contribution", () => {
     expect(contribution([]).cleanSheet).toBe(false);
   });
 
+  it("has no measurements at all for a man who has not been on a pitch", () => {
+    // FPL opens a zero row for every player in the league at the round's first
+    // whistle. Nought expected goals for a man whose match is on Tuesday is a
+    // measurement nobody took, and it must not read as a poor afternoon.
+    expect(contribution([]).measured).toBeNull();
+    expect(contribution([appearance({ minutes: 0, bps: 0 })]).measured).toBeNull();
+  });
+
+  it("reads the round's measurements rather than adding them up", () => {
+    // `mapLiveStats` copies the gameweek aggregate onto every fixture row a
+    // player has, because FPL's `explain` block carries only point-scoring
+    // identifiers. Summing two rows of a double reports the round twice.
+    const double = contribution([
+      appearance({ fixtureId: 1, bps: 41, expectedGoals: 0.7, defensiveContribution: 9 }),
+      appearance({ fixtureId: 2, bps: 41, expectedGoals: 0.7, defensiveContribution: 9 }),
+    ]);
+    expect(double.measured).toEqual({
+      bps: 41,
+      defensiveContribution: 9,
+      expectedGoals: 0.7,
+      expectedAssists: 0,
+    });
+  });
+
+  it("takes the measurements off a match he played, not off one he has not", () => {
+    // The zero row sorts first here. Reading it would report a round he had a
+    // goal in as nought bps.
+    const mixed = contribution([
+      appearance({ fixtureId: 2, minutes: 0, bps: 0, expectedGoals: 0 }),
+      appearance({ fixtureId: 1, minutes: 90, bps: 33, expectedGoals: 0.45 }),
+    ]);
+    expect(mixed.measured).toMatchObject({ bps: 33, expectedGoals: 0.45 });
+  });
+
+  it("adds a penalty missed in each half of a double up", () => {
+    // Per-fixture in FPL's `explain`, unlike the four above, so these do sum.
+    const pens = contribution([
+      appearance({ fixtureId: 1, penaltiesMissed: 1 }),
+      appearance({ fixtureId: 2, penaltiesMissed: 1, penaltiesSaved: 2 }),
+    ]);
+    expect(pens).toMatchObject({ penaltiesMissed: 2, penaltiesSaved: 2 });
+  });
+
   it("carries a booking in each half of a double as two", () => {
     const booked = contribution([
       appearance({ fixtureId: 1, yellowCards: 1 }),

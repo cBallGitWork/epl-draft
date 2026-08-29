@@ -20,6 +20,12 @@ export { getFootballSnapshot } from "./snapshot";
 // the whole-season fixture list (it fetches one gameweek) and the raw bootstrap
 // (it returns a mapped snapshot, and the bridge needs FPL's own field names).
 export { fetchBootstrap, fetchFixtures } from "./fpl/client";
+// One player's own season, match by match — the only read here keyed by FPL's
+// per-season element id, and the only one with the four measurements a live
+// snapshot cannot give per fixture. `gameLog.ts` says why.
+export { fetchElementSummary } from "./fpl/client";
+export { mapGameLog } from "./gameLog";
+export type { GameLogEntry } from "./gameLog";
 export { mapFixtures } from "./fpl/map";
 export {
   adjacentGameweeks,
@@ -49,5 +55,5 @@ export {
 // is publishing the one that has been asked in the other's place before. It
 // stays exported from its own module, where its tests reach it.
 export type { FinishedState, RoundState } from "./round";
-export { kickedOff, oppositionByClub } from "./opposition";
+export { kickedOff, nextFixtures, oppositionByClub } from "./opposition";
 export type { Opposition } from "./opposition";

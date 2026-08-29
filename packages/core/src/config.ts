@@ -202,6 +202,15 @@ export const LEAGUE_TIMEZONE = "Europe/London";
  *  `contributions` — and until now the sticker disagreed with the other three. */
 export const NOTABLE_SAVES = 4;
 
+/** How many matches ahead a fixture run reads.
+ *
+ *  Five, because that is roughly the horizon anyone holding a player is deciding
+ *  over — long enough that one hard week does not decide it, short enough that
+ *  FPL's difficulty ratings have not been overtaken by a January transfer
+ *  window. Named here rather than at the one call site because it is a judgement
+ *  about the game, not a measurement of the space on screen. */
+export const FIXTURE_RUN = 5;
+
 /** How many transaction rows to ask for in one page.
  *
  *  Their own client sends 100 and the response reports `totalNumPages` back, so

@@ -1,6 +1,6 @@
 import { FPL_API_BASE } from "../../config";
 import { politeFetch } from "../../http/fetch";
-import type { RawBootstrap, RawFixture, RawLive } from "./raw";
+import type { RawBootstrap, RawElementSummary, RawFixture, RawLive } from "./raw";
 
 // All FPL network I/O lives here and nowhere else, so the mapping stays pure and
 // unit-testable. FPL's API is public and unauthenticated — no cookies, no secrets,
@@ -39,4 +39,14 @@ export function fetchFixtures(gameweek?: number): Promise<RawFixture[]> {
  *  match of that gameweek kicks off. */
 export function fetchLive(gameweek: number): Promise<RawLive> {
   return get<RawLive>(`/event/${gameweek}/live/`);
+}
+
+/** One player's match-by-match season, keyed by FPL's per-season element `id`.
+ *
+ *  The id is the reason this read is fenced off from everything persisted: ids
+ *  are recycled every summer (CODE_RULES §3), so a caller resolves one from
+ *  `playerByCode` for the request it is serving and caches the answer under the
+ *  season-stable `code`. Nothing writes an element id to disk. */
+export function fetchElementSummary(elementId: number): Promise<RawElementSummary> {
+  return get<RawElementSummary>(`/element-summary/${elementId}/`);
 }

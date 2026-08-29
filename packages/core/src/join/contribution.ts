@@ -27,6 +27,25 @@ import type { PlayerMatchStats } from "../football/types";
 // "Has his match kicked off" is a question about fixtures, and `kickedOff` in the
 // football layer answers it there.
 
+/** What FPL measured about a round, as against the events anyone watching could
+ *  have counted.
+ *
+ *  Apart from the countable fields above, and not merged into them, because
+ *  these four are **not summed and summing them is wrong**. FPL's live `explain`
+ *  block covers point-scoring identifiers only, so `mapLiveStats` takes bps,
+ *  expected goals, expected assists and defensive contribution off the player's
+ *  gameweek aggregate and writes that same round total onto every fixture row he
+ *  has. Adding two rows up on a double gameweek reports the round twice.
+ *
+ *  Per-match versions of all four exist, but not in this payload:
+ *  `element-summary` publishes them, and `mapGameLog` reads them there. */
+export interface RoundMeasurements {
+  bps: number;
+  defensiveContribution: number;
+  expectedGoals: number;
+  expectedAssists: number;
+}
+
 export interface Contribution {
   minutes: number;
   goals: number;
@@ -37,8 +56,17 @@ export interface Contribution {
    *  row FPL already carries for him must not be counted. */
   cleanSheet: boolean;
   saves: number;
+  penaltiesSaved: number;
+  penaltiesMissed: number;
   yellowCards: number;
   redCards: number;
+  /** Null until he has been on a pitch this round.
+   *
+   *  Nought expected goals for a man whose match is on Tuesday is a measurement
+   *  nobody took, and FPL is already carrying a zero row for him — the same row
+   *  the comment above about `played` flags is about. Absent, so a reader gets a
+   *  dash rather than a number that reads as a poor afternoon. */
+  measured: RoundMeasurements | null;
 }
 
 export function contribution(stats: readonly PlayerMatchStats[]): Contribution {
@@ -47,6 +75,9 @@ export function contribution(stats: readonly PlayerMatchStats[]): Contribution {
   // fixture that has not kicked off, and counting it would let a match nobody has
   // played take a clean sheet off a defender who kept one on Saturday.
   const appearances = stats.filter((s) => s.minutes > 0);
+  // Any row will do: `mapLiveStats` copies the gameweek aggregate onto all of
+  // them, which is exactly why these are read rather than added.
+  const round = appearances[0];
 
   return {
     minutes: sum((s) => s.minutes),
@@ -54,7 +85,18 @@ export function contribution(stats: readonly PlayerMatchStats[]): Contribution {
     assists: sum((s) => s.assists),
     cleanSheet: appearances.length > 0 && appearances.every((s) => s.cleanSheet),
     saves: sum((s) => s.saves),
+    penaltiesSaved: sum((s) => s.penaltiesSaved),
+    penaltiesMissed: sum((s) => s.penaltiesMissed),
     yellowCards: sum((s) => s.yellowCards),
     redCards: sum((s) => s.redCards),
+    measured:
+      round === undefined
+        ? null
+        : {
+            bps: round.bps,
+            defensiveContribution: round.defensiveContribution,
+            expectedGoals: round.expectedGoals,
+            expectedAssists: round.expectedAssists,
+          },
   };
 }
