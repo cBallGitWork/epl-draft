@@ -13,6 +13,12 @@ import type { Opposition } from "@epl/core";
 //
 // One chip per fixture: a blank gameweek has none and a double has two, and both
 // halves of a double can be rated differently.
+//
+// It is set at `--text-3xs`, the scale's last step, wherever it lands — the strip
+// under a player on the grass, and the three dialogs and the list row that draw
+// it at a column's width. It was a hard `0.5rem`, which is 8px, is not on the
+// scale, and did not move with the card above it: the one size on a player's
+// card that a wider card would not have fixed.
 
 /** How hard, in five steps, and the ink each step carries.
  *
@@ -69,7 +75,7 @@ export default function FixtureChip({
       // different surfaces — and on the pitch's cream band a light grey on
       // near-white was a blank gameweek nobody could read.
       <span
-        className={`numeric grid flex-1 place-items-center px-1 text-[0.5rem] font-bold leading-[1.5] ${UNRATED.ink}`}
+        className={`numeric grid flex-1 place-items-center px-1 text-3xs font-bold leading-[1.5] ${UNRATED.ink}`}
         style={{ backgroundColor: UNRATED.ground }}
       >
         {blank}
@@ -94,7 +100,7 @@ export default function FixtureChip({
           // one thing here that is not medium-independent: a chip only ever
           // renders on the desk or on a colour plate, never on the paper's
           // stock, where `--color-cream` is deliberately ink.
-          className={`numeric grid flex-1 place-items-center px-1 text-[0.5rem] font-bold leading-[1.5] ${fdrStep(against.difficulty).ink}`}
+          className={`numeric grid flex-1 place-items-center px-1 text-3xs font-bold leading-[1.5] ${fdrStep(against.difficulty).ink}`}
           style={{ backgroundColor: fdrStep(against.difficulty).ground }}
         >
           {against.club.shortName} ({against.home ? "H" : "A"})

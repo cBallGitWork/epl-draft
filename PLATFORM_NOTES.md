@@ -3855,6 +3855,35 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-29: The pitch card's type was inverted. It sized the NAME from the card
+  (`clamp(7px, 13cqw, 11px)`), so a line of seven took its width out of the type
+  and printed a 7px name — the defect DESIGN.md §8 carried as its one live
+  exception, and Craig's reason for calling the squad view terrible. The card now
+  shrinks and the type does not: name `--text-2xs`, figure `--text-xs`, fixture
+  and chips `--text-3xs`, all declared steps, so §8's exception is closed and
+  `--text-3xs` is a floor on the pitch rather than merely its last step. Two
+  things went with it. `MAX_CARD` 4.35rem → 110px, the width of the Premier
+  League's own portrait file, because the old ceiling pinned every screen above
+  about 768px at 69.6px and a 9px name — the desktop was cap-starved where the
+  phone is width-starved. And the figure's box, which was `1.32` (wider than
+  tall) against two portrait assets — the photograph is 110×140 and FPL's kit
+  fallback 110×145 — so it was cropping three fifths off both and leaving a 33px
+  face on a phone while a quarter of the screen under the pitch went unused. It is
+  now the file's own shape, set on the card through `--pitch-figure` so the FPL
+  tab's pitch and the paper's team of the week keep the head-only crop.
+  **Wrapping was offered and rejected** (Craig, 29 Aug): one row per position
+  block, and the row count keeps coming from `widestLine()` off the real roster —
+  never a constant, because `positionConstraints.maxActive` caps the XI and not
+  the squad, and two of four rehearsal teams hold seven midfielders.
+  Measured at 390×844 on the seven-wide squad: name 7px → 11px, pitch 349px →
+  468px of the 625 it is allowed, still no scroll. At 1440 the card goes 69.6px →
+  110px and the name 9.05px → 11px.
+- 2026-08-29: **FPL's `squad_number` is null for every player.** The key is on all
+  622 elements of `bootstrap-static` and the value never is, so a plate too narrow
+  to hold a name has no number to fall back to and truncates instead. This killed
+  the drawn design's squad-number fallback outright. `CLAUDE.md` listed the field
+  among the ones bootstrap "carries", which is true of the key and false of the
+  value; corrected the same day.
 - 2026-08-29: A merge commit turned out to skip the Vercel build entirely —
   `ignoreCommand` reads `HEAD^..HEAD`, which on a merge is the other branch's
   diff — and nine commits sat on `main` undeployed with every check green. Merge

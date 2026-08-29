@@ -116,10 +116,33 @@ the sofa, so the score under fifteen faces sat still through a whole half.
   eleven cards in three type sizes read as eleven components, and the two men
   whose names had shrunk were the ones you could no longer scan. Craig's call,
   22 Aug, reversing the earlier one.
+- **And the card shrinks, not the type.** That one size is `--text-2xs`, 11px, a
+  declared step — the figure under it is `--text-xs` and the fixture and the
+  chips are `--text-3xs`. It used to be `clamp(7px, 13cqw, 11px)`, a share of the
+  card, which is the inversion that made this screen Craig's least favourite in
+  the app: a line of seven took its width out of the name and printed it at seven
+  pixels. Nothing in the clamp was reachable — an 11px name needed an 84.6px card
+  and `MAX_CARD` was 69.6px — so the "range" only ever expressed its floor. Now a
+  line too crowded to hold a name truncates it instead. There is no smaller thing
+  to fall back to: FPL's `squad_number` is present on all 622 elements and null on
+  every one of them, so the plate cannot print a number and does not pretend to.
 - **Every card is the same width, on every line.** The basis comes from the
   fullest line in the set, so a back five and a front two draw the same card and
-  a shorter line simply centres in the space.
-- It fits a 390×844 phone with no scrolling. Keep it that way.
+  a shorter line simply centres in the space. `MAX_CARD` is 110px, which is the
+  width of the Premier League's own portrait file: the point at which a wider
+  card would upscale the picture it exists to show. It was 4.35rem, which pinned
+  every screen from about 768px up at 69.6px and a 9px name — so the desktop
+  pitch was cap-starved where the phone is width-starved.
+- **The photograph is drawn at the shape of the file it comes from** — 110×140,
+  and FPL's kit fallback is 110×145. The box was `1.32`, wider than it stood,
+  which threw away three fifths of every asset and left a 33px face on a phone
+  while a quarter of the screen under the pitch went unused. It is set on the
+  card and not in the token layer, so the FPL tab's pitch and the paper's team of
+  the week keep the head-only crop until somebody with those pages in hand says
+  otherwise.
+- It fits a 390×844 phone with no scrolling. Keep it that way. Measured 29 Aug on
+  the widest squad the rehearsal league holds (G1 D3 M7 F4): the pitch draws 468
+  of the 625 it is allowed, and the six-wide squads draw 512.
 
 ### The list
 
@@ -202,7 +225,11 @@ unresolved when it is, and a way out to the full profile.
   the schedule's rows link into it — so tapping a side in a March fixture opens
   March's fifteen rather than this week's. The lineup gate still applies: a round
   whose period has not opened shows the squad and not the arrangement.
-- A line of seven gives up width rather than wrapping (`PitchRows`), which keeps
-  the shape honest but leaves those names at the smallest step the plate allows.
-  Seven in a line is an autodrafted rehearsal squad rather than anything a
-  manager would pick, so this is recorded rather than solved.
+- ~~A line of seven leaves those names at the smallest step the plate allows.~~
+  Solved 29 Aug, and not by wrapping — Craig was offered balanced rows and
+  rejected them, so the recorded shrink-not-wrap rule stands. The line still
+  gives up width; the type does not go with it any more. At seven across on a
+  390px phone the card is 43.3px and the name is 11px, truncating; at seven
+  across on a desk it is 110px and most names fit whole. Seven is still an
+  autodrafted squad rather than anything a manager would pick, and it is now
+  legible either way.

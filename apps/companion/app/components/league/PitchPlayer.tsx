@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import {
   type Club,
   type Opposition,
@@ -23,6 +24,21 @@ import { NAME_SIZE } from "./PitchRows";
 // every one of those is a border and a background between the reader and the
 // only two things he came for, the face and the fixture. What replaced it is
 // what the cut-outs were always asking for — nothing behind them at all.
+
+/** The shape of the photograph on the grass: the shape of the file it comes
+ *  from.
+ *
+ *  The Premier League ships its cut-outs at 110×140 and FPL its kits at 110×145,
+ *  and `PitchRows.MAX_CARD` is 110px — so at its widest this card IS the
+ *  photograph at native size, nothing upscaled and nothing cropped. It was
+ *  1.32, wider than it stood, which threw away three fifths of every asset and
+ *  left a 33px-tall face on a phone while a quarter of the screen below the
+ *  pitch went unused. Height was the thing the card was short of, not width.
+ *
+ *  Set here and not in the token layer, so it reaches this card and not the two
+ *  other pitches — the FPL tab's and the paper's team of the week — which carry
+ *  different things under the picture and are somebody else's call. */
+const FIGURE = { "--pitch-figure": "110 / 140" } as CSSProperties;
 
 export default function PitchPlayer({
   rostered,
@@ -52,16 +68,16 @@ export default function PitchPlayer({
       // the same height in the line. It used to be one box of its own
       // proportions, which left a hole in the row wherever the bridge had not
       // settled somebody.
-      <div className="@container flex w-full flex-col">
-        <div className="grid aspect-[1.32] w-full place-items-center rounded-t-[3px] border border-dashed border-white/35 bg-black/25">
+      <div className="@container flex w-full flex-col" style={FIGURE}>
+        <div className="grid aspect-[var(--pitch-figure)] w-full place-items-center rounded-t-[3px] border border-dashed border-white/35 bg-black/25">
           <span className="numeric text-2xs font-bold text-white/70">
             {positionLabel(rostered.slot.position) ?? "?"}
           </span>
         </div>
-        <span className="flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-[0.5rem] font-bold uppercase leading-none text-bg">
+        <span className="flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-3xs font-bold uppercase leading-none text-bg">
           <span className="w-full truncate">{rostered.slot.fantraxId}</span>
         </span>
-        <span className="flex h-3.5 w-full items-center justify-center overflow-hidden rounded-b-[3px] bg-cream/90 px-0.5 text-center text-[0.5rem] font-bold leading-none text-bg/70">
+        <span className="flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden rounded-b-[3px] bg-cream/90 px-0.5 text-center text-3xs font-bold leading-none text-bg/70">
           <span className="w-full truncate">{unresolvedShort(rostered.unresolved)}</span>
         </span>
       </div>
@@ -78,7 +94,7 @@ export default function PitchPlayer({
   const chips = chipsFor(t).slice(0, 2);
 
   return (
-    <div className="@container flex w-full flex-col">
+    <div className="@container flex w-full flex-col" style={FIGURE}>
       {/* Drawn back until he kicks off, and only the photograph is. It replaced
           the count of players still to play that used to sit on the
           head-to-head tabs: the same fact, said where it names the men rather
@@ -95,7 +111,15 @@ export default function PitchPlayer({
       {/* Light plate, dark ink. It was the other way round and the names were the
           hardest thing on the screen to read: white type at nine pixels, on a
           translucent black that let the grass through it, over a pitch. FPL
-          print theirs on white for the same reason. */}
+          print theirs on white for the same reason.
+
+          The type does not move, so a crowded line truncates. That was going to
+          be his SQUAD NUMBER instead — a number a reader can read beats the
+          front of a name he cannot — and the number does not exist: FPL's
+          `squad_number` is a key that is present on all 622 elements and null on
+          every one of them. So the graceful end of the rule is the ellipsis, and
+          "Dewsbury-H…" at eleven pixels is worth more than "Dewsbury-Hall" at
+          seven. */}
       <span
         className={`flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display font-bold uppercase leading-none tracking-[-0.01em] text-bg ${NAME_SIZE}`}
       >
@@ -121,19 +145,17 @@ export default function PitchPlayer({
            the squeeze and the number is what gets cut, which is how 90 minutes
            came to be printed as "9". A clipped chip is untidy; a clipped number
            is wrong. */
-        <span className="flex h-3.5 items-center gap-px overflow-hidden rounded-b-[3px] bg-bg px-0.5">
+        <span className="flex h-[var(--pitch-band)] items-center gap-px overflow-hidden rounded-b-[3px] bg-bg px-0.5">
           <span className="flex min-w-0 gap-px overflow-hidden">
             {chips.map((chip, at) => (
               <span
                 key={chip.label}
-                // Sized in container units, like the name above it and for the
-                // same reason: a line of seven gives up width rather than
-                // wrapping, and type set in pixels does not come with it.
-                // The second one goes when the card is too narrow to hold it —
-                // a line of seven squeezes cells to about 43px, where two chips
-                // and the number overlap. Dropping the lower-ranked chip is a
-                // decision; letting them collide is not.
-                className={`numeric rounded-[2px] px-0.5 text-[clamp(6px,12cqw,9px)] font-bold leading-none ${
+                // The scale's last step, and it stays there. The second chip
+                // goes when the card is too narrow to hold it — a line of seven
+                // squeezes cells to about 43px, where two chips and the number
+                // overlap. Dropping the lower-ranked chip is a decision; setting
+                // both of them at six pixels so they fit is not.
+                className={`numeric rounded-[2px] px-0.5 text-3xs font-bold leading-none ${
                   chip.className
                 } ${at === 1 ? "@max-[3.4rem]:hidden" : ""}`}
               >
@@ -142,11 +164,12 @@ export default function PitchPlayer({
             ))}
           </span>
           <span
-            className={`numeric shrink-0 font-bold leading-none text-cream ${
-              points === undefined
-                ? "text-[clamp(7px,12cqw,9px)]"
-                : "text-[clamp(9px,16cqw,13px)]"
-            } ${chips.length > 0 ? "ml-auto" : "mx-auto"}`}
+            // One figure size for both claims, on the scale. They were two
+            // clamps bottoming at 7px and 9px, which made the number a manager
+            // came for the smallest thing on a live pitch.
+            className={`numeric shrink-0 text-xs font-bold leading-none text-cream ${
+              chips.length > 0 ? "ml-auto" : "mx-auto"
+            }`}
           >
             {points === undefined ? `${t.minutes}'` : (points ?? "—")}
           </span>
@@ -154,7 +177,7 @@ export default function PitchPlayer({
       ) : (
         /* His fixture, at full strength while he waits on it. The FDR colour is
            the whole message and dimming it with him left a grey box. */
-        <span className="flex h-3.5 items-stretch overflow-hidden rounded-b-[3px] bg-cream/90 px-0.5">
+        <span className="flex h-[var(--pitch-band)] items-stretch overflow-hidden rounded-b-[3px] bg-cream/90 px-0.5">
           <FixtureChip opposition={opposition} blank={club?.shortName ?? "—"} />
         </span>
       )}

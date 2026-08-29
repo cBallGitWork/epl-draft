@@ -60,10 +60,9 @@ in `app/paperFonts.ts` and imported **only by paper routes**, so the desk pays
 nothing for them.
 
 Fixed rem scale, ratio ~1.15, `--text-3xs` … `--text-6xl`. `--text-3xs` is 9px
-and is the scale's **last step, not a floor** — the one thing set below it is the
-pitch card's container clamp, which is not on the scale at all and is a known
-problem (DESIGN.md §9). No fluid clamps except inside the sticker and the
-masthead.
+and is now a **real floor on the pitch**: the one thing that used to sit under it
+was the player card's container clamp, and that closed on 29 Aug (DESIGN.md §8).
+No fluid clamps except inside the masthead.
 
 ## Shared components
 
@@ -79,7 +78,7 @@ masthead.
 | `shell/Skeleton` | The loading block. Paints `currentColor` at low alpha, so it self-skins in whichever register it lands in — one primitive, no variants. |
 | `shell/SkeletonRows` | The app's standard card stack at a given height, for a `loading.tsx` that has to draw its route's real frame rather than a spinner. |
 | `league/PitchFrame` | Hoardings + goal + turf. Full-bleed. |
-| `league/PitchRows` | Players in their lines on a `PitchFrame`. **Owns card width and the shrink-not-wrap policy** — all three pitches go through it. |
+| `league/PitchRows` | Players in their lines on a `PitchFrame`. **Owns card width, the name's size, and the shrink-not-wrap policy** — all three pitches go through it. |
 | `league/PitchTurf` | The grass in perspective, as an inline SVG. |
 | `league/LineupPitch` | Your own XI plus the bench, one target per player: tap to pick, tap again for the rest. |
 | `league/MoveDialog` | Everywhere one player can go, over the pitch. |
@@ -95,8 +94,21 @@ on a row of his own below the other four, which reads as a formation nobody
 picked. `PitchRows` used to give each cell `flex-1` under a `max-w`, which shrank
 a crowded line and left an uncrowded one wide — so one XI stood at three sizes
 down the pitch. The basis now comes from the FULLEST line in the set and is given
-to every card, so a shorter line centres in the space instead. The name inside is
-one size in container-query units and truncates. Row padding is
+to every card, so a shorter line centres in the space instead.
+
+**And the card is the only thing that shrinks.** The name inside is one step on
+the type scale — `NAME_SIZE`, `--text-2xs` — and truncates when the card cannot
+hold it. It was one size in container-query *units*, which sounds like the same
+sentence and is the opposite one: it handed the card's crowding straight to the
+type, and a line of seven printed a 7px name. A card too narrow to say a name has
+nothing smaller to say instead, because FPL's `squad_number` is null on all 622 of
+its elements, so the ellipsis is where the rule ends.
+
+**The widest a card may be is 110px**, which is the width of the Premier
+League's portrait file — past that the card upscales its own photograph. The
+figure is drawn at that file's shape (110×140) rather than the old `1.32`, and
+`PlayerImage` takes it from `--pitch-figure` with the crop as its default, so
+only the card that sets the variable moves. Row padding is
 the taper's **own** inset — `FAR_INSET`, exported by `PitchTurf` and set on the
 frame as `--pitch-inset`, which the hoardings read too. One number, three
 readers: it used to be written out twice with a comment asking the next person to

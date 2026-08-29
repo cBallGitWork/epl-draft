@@ -188,14 +188,19 @@ Recorded so the next agent does not read the absence as an oversight.
 - **`--color-link`.** CM's cyan means "a person". Nothing links a person yet;
   the token arrives with the standings table that does. `--color-info` holds the
   value until then.
-- **The 6–7px clamp floors on the pitch.** No longer a deferral: §9 took away
-  the demotion this was waiting on, so it is a geometry problem somebody has to
-  solve. It is recorded here because it is also why **`--text-3xs` is a step and
-  not a floor**. The scale's smallest rem is 9px and everything the paper sets
-  in rem is at or above it, but `PitchRows.NAME_SIZE` is a container clamp
-  bottoming at 7px inside the plate and is not on the scale at all. A named
-  floor with a live exception under it is worse than no floor, so the token says
-  what it is — the last step down — and the exception stays visible here.
+- ~~**The 6–7px clamp floors on the pitch.**~~ **Closed, 29 Aug 2026.** This was
+  the one live exception under the scale: `PitchRows.NAME_SIZE` was a container
+  clamp bottoming at 7px inside the plate, and the points, chips and fixture
+  under it were three more. All five are now declared steps — `--text-2xs` for
+  the name, `--text-xs` for the figure, `--text-3xs` for the fixture and the
+  chips — so **`--text-3xs` is a floor on the pitch and not merely the last step
+  down**. The rule that got there is *the card shrinks, the type never does*: a
+  crowded line gives up card width and truncates the name rather than shrinking
+  it, because there is nothing smaller worth saying — FPL publishes
+  `squad_number` as null on all 622 of its elements. Recorded rather than deleted
+  because the shape of the mistake is worth keeping: a size expressed as a range
+  whose ceiling the geometry could never reach is a floor wearing a range's
+  clothes.
 - **No `--focus` token.** The ring is `--accent`: "this is where you are" and
   "this is what is selected" are one statement, and the accent slot already
   carries it correctly in both registers without the rule knowing which page it
@@ -219,6 +224,10 @@ pitch view is that it is terrible. So the brief is now the harder one: make a
 card carry its name, its fixture-or-score band and its state at a readable size
 with all fifteen still on one phone screen. It is a geometry problem, not a
 demotion problem, and it does not get solved by shrinking something else.
+
+*Done, later the same day, and §8 records how: the card shrinks and the type
+does not. Not by wrapping — balanced rows were offered and rejected, so a
+position block is still one line however many are in it.*
 
 **`/players` on a phone keeps sideways scroll, with the name column frozen.**
 The scouting table's sixteen columns do not become mobile view presets. This

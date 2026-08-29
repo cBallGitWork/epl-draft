@@ -38,7 +38,15 @@ import PitchFrame from "./PitchFrame";
  *  amended to remove. */
 const GAP = "0.5rem";
 export const GAP_CLASS = "gap-x-2";
-const MAX_CARD = "4.35rem";
+/** 110px, which is the width of the Premier League's own portrait file — 110×140
+ *  — and therefore the point at which a wider card would be upscaling the one
+ *  photograph it exists to show.
+ *
+ *  It was 4.35rem, and that pinned the card from about a 768px frame upward: with
+ *  `--page-frame` at 72rem the pitch has 1152px to spend and was spending 69.6 of
+ *  them per man. A desktop printed a nine-pixel name for want of a ceiling rather
+ *  than for want of room. */
+const MAX_CARD = "6.875rem";
 
 /** The fullest line in a set — the line that decides the card.
  *
@@ -60,11 +68,22 @@ export function cardBasis(widest: number): string {
   return `min(${MAX_CARD}, calc((100% - ${widest - 1} * ${GAP}) / ${widest}))`;
 }
 
-/** The size a player's name is set at on a pitch.
+/** The size a player's name is set at on a pitch. One step on the scale, and the
+ *  same step on every line of every squad.
  *
- *  `13cqw` — a share of the CARD, not of the page — so a name shrinks with the
- *  card `cardBasis` chose and a back five stays readable. That is why it lives
- *  here: the container it measures is the one this file sizes.
+ *  **The card shrinks; the type never does.** It used to be
+ *  `clamp(7px, 13cqw, 11px)` — a share of the CARD — so a crowded line took its
+ *  width out of the name, and a line of seven printed it at the clamp's floor of
+ *  seven pixels. That is backwards: the card is the thing a crowded line can
+ *  afford to give up, and the name is what the reader came for. The ceiling was
+ *  unreachable at every width this app is ever drawn at, so the clamp only ever
+ *  expressed its floor — which is the exception DESIGN.md §8 recorded, and this
+ *  closes it.
+ *
+ *  A line so full that the plate cannot hold a name does not shrink it either:
+ *  it truncates. That is the whole graceful end of the rule — there is no
+ *  smaller thing to say instead, because FPL's `squad_number` is null on every
+ *  one of its 622 elements.
  *
  *  A token and never a component. The three plates it sets genuinely differ — a
  *  cream band across the pitch, and the team of the week's dark rounded strip —
@@ -81,7 +100,7 @@ export function cardBasis(widest: number): string {
  *  The plate is a fixed band with the name centred in it, for the same reason:
  *  type set on its own line height made every plate a different height, so
  *  Haaland and João Pedro stood at different heights in the same row. */
-export const NAME_SIZE = "text-[clamp(7px,13cqw,11px)]";
+export const NAME_SIZE = "text-2xs";
 
 export interface PitchRow<T> {
   /** The position, or whatever names this line. Also its key. */
@@ -122,8 +141,9 @@ export default function PitchRows<T>({
           // Shrinks rather than wraps. A back five is an ordinary line and does
           // not fit five cards at full width on a phone — wrapping put one
           // defender on a row of his own below the other four, which reads as a
-          // formation nobody picked. They give up width instead, and the name
-          // inside is sized in container units so it comes with them.
+          // formation nobody picked. They give up width instead — and only they
+          // do: the type inside is on the scale and does not come down with the
+          // card.
           className={`flex items-start justify-center ${GAP_CLASS}`}
           aria-label={`${row.label} — ${row.players.length}`}
         >
