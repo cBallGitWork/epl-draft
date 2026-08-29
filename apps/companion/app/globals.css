@@ -3,6 +3,9 @@
    when this file crossed CODE_RULES' 300-line ceiling; it is one
    responsibility and it is the larger half. */
 @import "./tokens.css";
+/* The paper's own register, which re-points those tokens at ink on stock for
+   the front page. After `tokens.css`, because it answers it. */
+@import "./paper.css";
 
 :root {
   color-scheme: dark;
