@@ -82,8 +82,21 @@ body", and that is a different colour on paper than on glass.
 
 Two slots cannot be supplied by re-pointing ink, because their desk value is a
 *colour* rather than a lightness: `--accent` and `--live`. Both are the league
-speaking, and on stock the league speaks in its own red at 5.0:1 — where the
+speaking, and on stock the league speaks in its own red at **4.89:1** — where the
 desk's yellow is 1.3:1 and its live red 2.6:1.
+
+That figure is measured off what the browser paints, not off `#C8102E`.
+`--color-league` is `oklch(0.530 0.207 22)`, which is outside sRGB at that
+chroma, so it is gamut-mapped to `#CB132E` and lands at 4.89 rather than the
+5.03 the brand hex would give. It is the tightest pair on the paper and it is
+what fixes the floor for the column heads and the masthead's publisher line —
+both are 9–11px, both need 4.5, and there is 0.39 of room. Move the token and
+re-measure the paint, never the hex.
+
+The paper's ink ladder is the same three rungs the desk's is, measured on this
+stock: **14.2 · 7.9 · 5.4** against the desk's 17.1 · 8.7 · 5.3. `--faint` was
+0.48 until 29 Aug, which is 3.0:1 — under the floor this file says has no
+exceptions, while carrying every timestamp and percentage on the front page.
 
 ## 5. Colour plates
 
