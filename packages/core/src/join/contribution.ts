@@ -38,8 +38,11 @@ import type { PlayerMatchStats } from "../football/types";
  *  has. Adding two rows up on a double gameweek reports the round twice.
  *
  *  Per-match versions of all four exist, but not in this payload:
- *  `element-summary` publishes them, and `mapGameLog` reads them there. */
-export interface RoundMeasurements {
+ *  `element-summary` publishes them, and `mapGameLog` reads them there.
+ *
+ *  Not exported. `Contribution` is the only thing that names it, and §2 does not
+ *  keep an export around for a caller who has not turned up yet. */
+interface RoundMeasurements {
   bps: number;
   defensiveContribution: number;
   expectedGoals: number;

@@ -31,8 +31,6 @@ export interface GameLogEntry {
   goals: number;
   assists: number;
   cleanSheet: boolean;
-  penaltiesSaved: number;
-  penaltiesMissed: number;
   yellowCards: number;
   redCards: number;
   saves: number;
@@ -82,8 +80,6 @@ function entry(h: RawHistoryEntry): GameLogEntry {
     // FPL counts clean sheets rather than flagging them, because its aggregate
     // rows add several matches up. One match kept one or it did not.
     cleanSheet: h.clean_sheets > 0,
-    penaltiesSaved: h.penalties_saved,
-    penaltiesMissed: h.penalties_missed,
     yellowCards: h.yellow_cards,
     redCards: h.red_cards,
     saves: h.saves,

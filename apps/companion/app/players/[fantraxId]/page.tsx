@@ -8,8 +8,13 @@ import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
 import Availability from "./Availability";
 import Breakdown from "./Breakdown";
+import FixtureRun from "./FixtureRun";
+import GameLog from "./GameLog";
 import Portrait from "./Portrait";
+import ThisRound from "./ThisRound";
 import { footballSelf, playerSeason } from "./season";
+import { gameLog, scouting } from "./scouting";
+import type { FootballPlayer } from "@epl/core";
 import { positionsFromList } from "../../positions";
 
 // One player, as Fantrax sees him. Reached by tapping a name in the pool, and
@@ -78,6 +83,13 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
   // boundary for it — his season does, below.
   const football = await footballSelf(fantraxId);
 
+  // His round and his run to come. Both read the snapshot and the season
+  // calendar every other screen already holds, so they cost FPL nothing and do
+  // not go behind a boundary — his game log, which is a request of its own,
+  // does. Null for a man the bridge has never settled: there is no footballer to
+  // scout, which is the same permanent state the portrait is absent for.
+  const scout = football === null ? null : await scouting(football.player);
+
   return (
     <div className="flex flex-col gap-3">
       {/* No portrait for a man FPL has never listed, and nothing standing in for
@@ -109,6 +121,22 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
       </header>
 
       <Availability player={football?.player ?? null} />
+
+      {/* The football layer's account of him, which this app has held the data
+          for since it was written and had never shown: what he has done in the
+          round on screen, what is coming, and every match of his season with
+          the four measurements a live snapshot cannot give per fixture. */}
+      {scout === null ? null : (
+        <>
+          <ThisRound round={scout.round} />
+          <FixtureRun run={scout.run} />
+        </>
+      )}
+      {football === null ? null : (
+        <Suspense fallback={<LogWaiting />}>
+          <Log player={football.player} />
+        </Suspense>
+      )}
 
       {/* His season streams under the heading. `playerSeason` reads the owning
           team's whole stats table — a Fantrax request of its own, and the
@@ -166,6 +194,33 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
  *  await lives here — the card itself is `Breakdown`, unchanged. */
 async function Season({ fantraxId, ownerTeamId }: { fantraxId: string; ownerTeamId: string }) {
   return <Breakdown season={await playerSeason(fantraxId, ownerTeamId)} />;
+}
+
+/** His match-by-match season, read behind the boundary above. The only request
+ *  on this page FPL has not already answered for somebody else. */
+async function Log({ player }: { player: FootballPlayer }) {
+  return <GameLog rows={await gameLog(player)} />;
+}
+
+/** The log's own shape while that read is in flight: a ruled head, then rows the
+ *  height the table's are. */
+function LogWaiting() {
+  return (
+    <section aria-busy className="flex flex-col gap-2">
+      <div className="flex items-baseline justify-between gap-3 border-b border-line pb-1">
+        <Skeleton width="6rem" height="0.75rem" />
+        <Skeleton width="4rem" height="0.75rem" />
+      </div>
+      <div className="flex flex-col gap-1">
+        {Array.from({ length: 4 }, (_, at) => (
+          <div key={at} className="flex min-h-7 items-center gap-3">
+            <Skeleton width="2rem" height="0.875rem" />
+            <Skeleton width="100%" height="0.875rem" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
 }
 
 /** The breakdown's own shape while that read is in flight: a ruled head with the

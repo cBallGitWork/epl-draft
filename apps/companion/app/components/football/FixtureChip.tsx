@@ -40,7 +40,15 @@ const STEPS: Record<number, { ground: string; ink: string }> = {
  *  invented, and a rating outside their scale is treated the same way. */
 const UNRATED = { ground: "var(--color-raised)", ink: "text-muted" };
 
-function step(difficulty: number | null) {
+/** The scale, for anything that draws a fixture by how hard it is.
+ *
+ *  Exported rather than copied because a second rendering of these five colours
+ *  is how the scale drifts — the same mistake the chip vocabulary in
+ *  `league/Chips.tsx` was pulled together to undo. The profile's fixture run
+ *  needs the colours at a readable size and this chip is built to fill four
+ *  pixels of headroom under a sticker, so they share the scale and nothing
+ *  else. */
+export function fdrStep(difficulty: number | null): { ground: string; ink: string } {
   return (difficulty === null ? undefined : STEPS[difficulty]) ?? UNRATED;
 }
 
@@ -86,8 +94,8 @@ export default function FixtureChip({
           // one thing here that is not medium-independent: a chip only ever
           // renders on the desk or on a colour plate, never on the paper's
           // stock, where `--color-cream` is deliberately ink.
-          className={`numeric grid flex-1 place-items-center px-1 text-[0.5rem] font-bold leading-[1.5] ${step(against.difficulty).ink}`}
-          style={{ backgroundColor: step(against.difficulty).ground }}
+          className={`numeric grid flex-1 place-items-center px-1 text-[0.5rem] font-bold leading-[1.5] ${fdrStep(against.difficulty).ink}`}
+          style={{ backgroundColor: fdrStep(against.difficulty).ground }}
         >
           {against.club.shortName} ({against.home ? "H" : "A"})
         </span>
