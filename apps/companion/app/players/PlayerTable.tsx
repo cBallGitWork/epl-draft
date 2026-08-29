@@ -166,7 +166,7 @@ function Trend({ value }: { value: number | null }) {
   if (value === null) return <span className="text-faint">—</span>;
   if (value === 0) return <span className="text-faint">0%</span>;
   return (
-    <span className={value > 0 ? "text-accent" : "text-bad"}>
+    <span className={value > 0 ? "text-up" : "text-bad"}>
       {value > 0 ? "+" : ""}
       {value}%
     </span>

@@ -97,12 +97,12 @@ function Figure({ label, value }: { label: string; value: string | null }) {
  *  room for; the run behind it is the whole season and each glyph says which
  *  round it was and what the two totals were.
  *
- *  **Colour is the loudness ladder, not a third palette.** A win is full ink, a
- *  draw is quiet, a loss is the red slot — which DESIGN §3 defines as "a loss, a
- *  doubt, a negative", so it is being used for exactly what it names. No green,
- *  because there is no green: `--color-up` / `--color-down` are still deferred
- *  (§8), and the accent yellow is spoken for twice on this very row by the
- *  YOURS border and the YOURS chip. */
+ *  **Colour is the direction slot, not a third palette.** A win is green, a loss
+ *  is red and a draw is quiet — which is what those two tokens are for and the
+ *  only thing they are for. Not the accent yellow, which is spoken for twice on
+ *  this very row by the YOURS border and the YOURS chip, and not the loudness
+ *  ladder, which would have said a win is merely louder than a draw rather than
+ *  a different kind of thing. */
 function Form({ run }: { run: readonly FormGame[] }) {
   if (run.length === 0) return <Figure label="Form" value={null} />;
 
@@ -126,7 +126,7 @@ function Form({ run }: { run: readonly FormGame[] }) {
 
 const FORM_GAMES = 5;
 
-const TONE = { W: "text-ink", D: "text-faint", L: "text-bad" } as const;
+const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;
 
 /** Fantrax's own rendering of their own fraction: `1.000`, `.500`, `.000`.
  *

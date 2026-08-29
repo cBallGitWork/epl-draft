@@ -150,15 +150,15 @@ function Cell({ value, loud = false, quiet = false }: { value: number; loud?: bo
 
 /** The score his way round, coloured by the result.
  *
- *  A loss takes the palette's negative slot; a win is plain ink and a draw is
- *  quiet. There is deliberately no green — the desk retired the Premier League's
- *  brand set, and `--color-up` is a token DESIGN §8 has not spent yet. */
+ *  The direction slot, both halves: a win is green, a loss is red, a draw is
+ *  quiet. This is one of the four places a result's DIRECTION is the reason for
+ *  printing it at all, which is the whole test for spending these two. */
 function Score({ match }: { match: GameLogRow["match"] }) {
   const result = match.scored > match.conceded ? "won" : match.scored < match.conceded ? "lost" : "drew";
   return (
     <td
       className={`numeric whitespace-nowrap px-1 text-right ${
-        result === "lost" ? "text-bad" : result === "won" ? "font-bold text-ink" : "text-muted"
+        result === "lost" ? "text-bad" : result === "won" ? "font-bold text-up" : "text-muted"
       }`}
     >
       <span className="sr-only">{`${result} `}</span>

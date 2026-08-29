@@ -57,6 +57,7 @@ is more specific than a palette; it is the reason the token names in
 | Cyan | `--color-info` | **a person** — and secondary emphasis | 11.2 |
 | Amber | `--color-mid` | **a figure** | 9.8 |
 | Red | `--color-bad` | **a loss, a doubt, a negative** | 5.6 |
+| Green | `--color-up` | **a gain** — the other half of the direction pair | 9.9 |
 | Live red | `--color-live` | **a match in play**, and nothing else | 5.4 |
 | League red | `--color-league` | the league's own mark. Chrome only | 3.2 |
 | Deep league red | `--color-league-deep` | the same red as a **ground with text on it** | — |
@@ -181,10 +182,21 @@ get broken:
 
 Recorded so the next agent does not read the absence as an oversight.
 
-- **`--color-up` / `--color-down`.** The `good`/`mid`/`bad` names carry two
-  jobs between them — a *direction* (a negative score) and a *caution* (a man
-  with a doubt) — and untangling that is a refactor, not a retoken. It lands
-  with the league screens, which are the first surface that needs both at once.
+- ~~**`--color-up` / `--color-down`.**~~ **Closed, 29 Aug 2026**, and not the
+  way it was written. The league screens arrived and put a *direction* — a form
+  letter — in the same red as a *fault*, which is what this bullet was waiting
+  for. But only half of it was real: `--color-bad` was already the red and
+  already named "a loss, a doubt, a negative", so `--color-down` would have been
+  a second token holding one value. **What was actually missing was the green.**
+  A palette whose defining characteristic is red-and-green figures had no green
+  at all, so a positive was ink in three places and the accent yellow in a
+  fourth — and that fourth was a slot violation, the accent meaning "yours,
+  selected, active" and nothing else.
+
+  `--color-up` is spent only where which WAY a figure went is the reason for
+  printing it: the form run, a result, the ownership trend, a value against a
+  draft pick. Never on a number that merely happens to be positive, which is
+  most of them, and which is why a ledger of scoring categories stays ink.
 - **`--color-link`.** CM's cyan means "a person". Nothing links a person yet;
   the token arrives with the standings table that does. `--color-info` holds the
   value until then.

@@ -64,7 +64,11 @@ function Value({ against }: { against: number | null }) {
       }
       className="flex items-baseline gap-1 text-3xs font-bold uppercase tracking-widest text-faint"
     >
-      <span className={`numeric text-sm ${against < 0 ? "text-bad" : "text-ink"}`}>
+      <span
+        className={`numeric text-sm ${
+          against < 0 ? "text-bad" : against > 0 ? "text-up" : "text-ink"
+        }`}
+      >
         {against > 0 ? "+" : ""}
         {against}
       </span>

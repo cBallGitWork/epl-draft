@@ -134,10 +134,21 @@
 
   /* --- Data tints: deliberately duller than --accent so a form indicator never
      competes with a primary action. Hue-paired with icons/labels, never alone.
-     Both were already where CM puts them — a figure in amber, a loss in red —
-     so the ground moved underneath them and they did not. 9.8:1 and 5.6:1. --- */
+     The amber and the red were already where CM puts them — a figure in amber, a
+     loss in red — so the ground moved underneath them and they did not.
+     9.8:1 · 5.6:1 · 9.9:1.
+
+     The green is the DIRECTION slot's other half, and it is the only green left
+     in the app: the Premier League's went out of the chrome with the rest of
+     their brand set. It is spent only where which WAY a figure went is the point
+     of printing it — a form letter, a result, a trend, a value against a draft
+     pick — and never on a number that merely happens to be positive, which is
+     most of them. Deliberately no `.paper` remap, on the same reasoning as the
+     two below it: 1.6:1 on stock, and nothing on the paper prints a direction.
+     The day something does, it gets one, the way `--accent` did. --- */
   --color-mid: oklch(0.79 0.14 85);
   --color-bad: oklch(0.66 0.17 25);
+  --color-up: oklch(0.78 0.17 148);
 
   /* --- Type. One superfamily across two widths: Archivo for UI, Archivo Narrow
      for scores and numerals. Width is the contrast axis; pairing two unrelated
