@@ -9,13 +9,24 @@ no way to reach the other two and the section becomes a dead end.
 
 ## On the page
 
-Standings rows as Fantrax gives them: rank, team, record, points.
+Standings rows as Fantrax gives them: rank, team, record, games back, the win
+fraction, fantasy points scored, and the league's points.
+
+**The row is two lines, and the arithmetic decided it.** A phone gives the row
+about 342px inside its padding, and those columns come to 286 of it before a
+single letter of a team name — to more than all of it on the one row that also
+carries the `You` chip. So the name keeps the first line and the figures take
+their own. Nothing is dropped at a small width to make it fit: that is the rule
+`/players` set (DESIGN §9), and this league is read on phones.
 
 **Rank and points are the two numbers a table is read for**, and both used to be
 quieter than the team name — the rank small and faint, the points bold at body
-size. They are the figures now, set in the tabular face at either end of the row,
-with the record kept small between them. The record decides neither, and Fantrax
-gives it as one unparsed string.
+size. They are the figures now, set in the tabular face at either end of the line
+the name is on. Everything on the second line decides neither.
+
+**Every figure on that second line carries its own word**, because there are no
+column heads over it to do the job. `Columns` heads the first line only — a head
+over a figure that is not under it is worse than no head at all.
 
 **The reader's own row takes the raised ground as well as the accent edge.** On
 sixteen near-identical rows a 4px bar at the margin is easy to scroll straight
@@ -40,8 +51,28 @@ second read for one page.
 
 **The points column is headed `FP`, not `Points`.** In a league table "points"
 means the standings — three for a win — and this column is Fantrax points
-scored, which is a different number the same word was claiming. The `W-L-T`
-beside it is Fantrax's own record string, unparsed.
+scored, which is a different number the same word was claiming. The `W-D-L`
+beside it is Fantrax's own record, in their own column order.
+
+**`Win%` is not a percentage and is not printed as one.** Fantrax's `winpc` is a
+fraction — literally `1` for a side that has won its only match — set
+baseball-style as `1.000` / `.500` / `.000`, which is how it is printed here.
+A `1%` beside the leader would put the table's best row last.
+
+**`GB` is Fantrax's arithmetic and comes off a second read.** It is the one
+column their standings PAGE does not carry, so `/league` also reads the fxea
+array for it. That read failing costs the column and nothing else: it dashes,
+because a team Fantrax has no number for is not a team level with the leader.
+Half a game per win is a convention rather than a fact, and this league pays
+three for a win in a sport with draws in it, so it is read and never worked out
+here.
+
+**No movement arrows.** A rank a week ago cannot be had: rebuilding last week's
+table needs what a win is worth, `getLeagueInfo` does not publish it, and this
+app inventing three-a-win is exactly what §3 forbids. Fantrax's own
+`goBackDays` was probed on 29 Aug and returned the same table for 1, 3 and 7 —
+it does not answer the question either. The form strip is what carries the trend
+instead.
 
 **A line marks where the playoffs start**, read off the declared bracket by
 `playoffPlaces` rather than written down here: the placeholder's final between 1

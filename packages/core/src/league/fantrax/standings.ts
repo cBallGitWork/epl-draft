@@ -1,13 +1,23 @@
 import type { StandingsRow } from "../types";
+import type { RawStandings } from "./raw";
 import type { RawStandingsPage, RawStandingsTable, RawTableCell } from "./standingsPage";
 
-// The league table, off Fantrax's own standings page. Pure.
+// The league table, out of the two shapes Fantrax answers `getStandings` in.
+// Pure.
 //
-// **It reads the fxpa page and not the fxea array, and that is the whole point
-// of this file.** The array carries a rank, a total and a record squashed into
-// one string; the page carries the columns Fantrax's own table is drawn from —
-// `win`, `draw`, `loss` and `points`. Points is the number a league table is
-// read for, three for a win in this league, and it exists on no other read.
+// **The page leads, and that is the whole point of this file.** The fxea array
+// carries a rank, a total and a record squashed into one string; the page
+// carries the columns Fantrax's own table is drawn from — `win`, `draw`, `loss`,
+// `points` and `winpc`. Points is the number a league table is read for, three
+// for a win in this league, and it exists on no other read.
+//
+// **The array is here for exactly one column.** `gamesBack` is on it and on
+// nothing else — checked against both surfaces on 29 Aug 2026, when it read
+// 0-0-1-1 across the four rehearsal teams and was live rather than the row of
+// noughts that once made it not worth reading. Half a game per win is a
+// convention and not a fact, so it is read rather than worked out here. Its
+// absence is modelled instead of defaulted: a second read is a second thing that
+// can fail, and every other column on the table survives that failure.
 //
 // **And it is READ, never computed.** What a win is worth is a commissioner
 // setting, not a fact about football (§3), so adding up three-a-win ourselves
@@ -23,13 +33,18 @@ import type { RawStandingsPage, RawStandingsTable, RawTableCell } from "./standi
  *  table read positionally would file wins under draws the day that happens. */
 const RANK = "rank";
 const TEAM = "team";
+/** Their key for the win fraction. Named `winpc` and rendered ".000"/"1.000",
+ *  which is a proportion set baseball-style and not a percentage — the value for
+ *  a side that has won every game is one. */
+const WIN_PC = "winpc";
 
-export function mapStandings(raw: RawStandingsPage): StandingsRow[] {
+export function mapStandings(raw: RawStandingsPage, records: RawStandings): StandingsRow[] {
   const table = standingsTable(raw);
   if (table === null) return [];
 
   const fixed = columns(table.fixedHeader?.cells);
   const scrolling = columns(table.header?.cells);
+  const behind = gamesBackByTeam(records);
 
   const rows: StandingsRow[] = [];
   for (const row of table.rows ?? []) {
@@ -49,6 +64,8 @@ export function mapStandings(raw: RawStandingsPage): StandingsRow[] {
       lost: cell("loss"),
       points: cell("points"),
       pointsFor: cell("pointsFor"),
+      gamesBack: behind.get(team.teamId) ?? null,
+      winPercentage: fraction(at(row.cells, scrolling.get(WIN_PC))?.content),
     });
   }
 
@@ -90,4 +107,33 @@ function at(cells: RawTableCell[] | undefined, index: number | undefined): RawTa
 function number(content: string | undefined): number {
   const value = Number(content);
   return Number.isFinite(value) ? value : 0;
+}
+
+/** The same read, but absent rather than nought when there is nothing there.
+ *
+ *  A separate function from `number` above and not a flag on it, because the two
+ *  answer different questions. Nought is a real record and a real points total;
+ *  it is also a real win fraction, which is why a missing column has to be
+ *  something else entirely. A team that has won nothing reads `.000`, and a
+ *  table with no such column reads a dash. */
+function fraction(content: string | undefined): number | null {
+  if (content === undefined || content.trim() === "") return null;
+  const value = Number(content);
+  return Number.isFinite(value) ? value : null;
+}
+
+/** Games back, by team id, off the fxea array.
+ *
+ *  Empty for a league that has not started — the real league answers `[]` here
+ *  every day until 10 Oct — and empty when the read failed, which the caller
+ *  says by passing nothing. Both leave every row on a dash, which is the honest
+ *  answer to "how far back" when nobody has played. */
+function gamesBackByTeam(records: RawStandings): Map<string, number> {
+  return new Map(
+    records.flatMap((row) =>
+      typeof row.teamId === "string" && typeof row.gamesBack === "number"
+        ? ([[row.teamId, row.gamesBack]] as [string, number][])
+        : [],
+    ),
+  );
 }

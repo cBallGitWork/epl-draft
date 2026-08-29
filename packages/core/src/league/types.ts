@@ -234,6 +234,23 @@ export interface StandingsRow {
    *  column the table is ordered by, and the two are one number apart on a
    *  Saturday. */
   pointsFor: number;
+  /** How far off the pace, as Fantrax works it out. **Their arithmetic, not
+   *  ours** — half a game per win the leader is ahead is a convention rather
+   *  than a fact, and this league pays three for a win in a sport with draws in
+   *  it, so a formula of ours would be a guess wearing a number's clothes.
+   *
+   *  Null when their array did not carry the team. That is not a hypothetical:
+   *  it is the whole table whenever the second read fails, because this is the
+   *  one column the standings PAGE does not publish. */
+  gamesBack: number | null;
+  /** Games won as a FRACTION of games played — `1` for a side that has won its
+   *  only match, `0.5` for one that has split two. Not a percentage, and never
+   *  printed as one: Fantrax sets it `1.000` / `.500` / `.000` on their own
+   *  table and a `1%` beside a leader would be exactly backwards.
+   *
+   *  Null when the column is absent, which is a shape change rather than a
+   *  league that has not played — an unplayed league answers `.000`. */
+  winPercentage: number | null;
 }
 
 /** Everything `getLeagueInfo` tells us about the competition's configuration.

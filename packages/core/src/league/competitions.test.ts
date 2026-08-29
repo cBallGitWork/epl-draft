@@ -20,6 +20,8 @@ const row = (rank: number, teamId: string, teamName: string): StandingsRow => ({
   lost: 0,
   points: 0,
   pointsFor: 0,
+  gamesBack: null,
+  winPercentage: null,
 });
 
 const table = [row(1, "t1", "Alpha"), row(2, "t2", "Bravo"), row(3, "t3", "Charlie"), row(4, "t4", "Delta")];

@@ -156,12 +156,21 @@ interface RawStandingsRow {
   teamId?: string;
   teamName?: string;
   rank?: number;
-  /** Win-loss-tie as one string, e.g. "0-0-0". Not split: the only sample we have
-   *  is all zeroes, so a parser would be inferring a format from nothing. */
+  /** The RECORD as one string — "1-0-0" for a side with a win, "0-0-1" for one
+   *  with a defeat, read 29 Aug 2026. Not the league's points, despite the name,
+   *  and not split here: the fxpa page publishes the same three numbers in three
+   *  columns of its own, so parsing a string would be the second reader of a fact
+   *  we already have straight. */
   points?: string;
   totalPointsFor?: number;
-  /** Derivable, and derived by them. Not mapped. */
+  /** How far off the pace. **The one column this array has and the page does
+   *  not**, which is why the table reads both. It was all noughts on every early
+   *  sample and is not any more — 0, 0, 1, 1 across the rehearsal league on
+   *  29 Aug — so the reason for skipping it has expired. */
   gamesBack?: number;
+  /** A FRACTION, 0..1: literally `1` for a 1-0-0 side. Mirrored and not mapped —
+   *  the page's `winpc` column is the same number beside the record it belongs
+   *  with, and one number read twice is one number that can disagree. */
   winPercentage?: number;
 }
 

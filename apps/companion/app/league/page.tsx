@@ -1,13 +1,11 @@
-import Link from "next/link";
 import { LEAGUE_NAME } from "@epl/core";
 import Columns from "./Columns";
-import TeamBadge from "../components/league/TeamBadge";
+import TableRow from "./TableRow";
 import { leagueTable, teamBadges } from "../standings";
 import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
 import { leagueInfo, readerTeamId } from "../squads";
 import { londonDate } from "../londonTime";
-import { yoursBorder } from "../mine";
 import { FANTRAX_SILENT, servedLeague } from "../config";
 
 // The table. Fantrax computes it — the record, the points and the order are
@@ -78,56 +76,7 @@ export default async function StandingsPage() {
       <ul className="flex flex-col gap-1.5">
         {rows.map((row) => (
           <li key={row.teamId}>
-            <Link
-              href={`/squad/${row.teamId}`}
-              // Your own row takes the raised ground as well as the accent
-              // edge. On sixteen near-identical rows a 4px bar at the margin is
-              // easy to scroll straight past, and this is the one row a manager
-              // opened the page to find.
-              className={`elev flex min-h-14 items-center gap-2 rounded-xl border px-3 py-2.5 hover:bg-raised ${
-                row.teamId === mine ? "bg-raised" : "bg-surface"
-              } ${yoursBorder(row.teamId === mine)}`}
-            >
-              {/* Rank and points are the two numbers a table is read for, and
-                  both were quieter than the team name: the rank was small and
-                  faint, the points bold at body size. They are the figures now,
-                  set in the tabular face at either end of the row with the
-                  record and the tiebreak — which decide neither — kept small
-                  between them. */}
-              <span className="numeric w-6 text-lg font-bold leading-none text-muted">
-                {row.rank}
-              </span>
-              <TeamBadge
-                team={{ teamId: row.teamId, name: row.teamName }}
-                url={badges.get(row.teamId)}
-              />
-              <span
-                className={`min-w-0 flex-1 truncate text-sm ${
-                  row.teamId === mine ? "font-bold text-ink" : "font-semibold"
-                }`}
-              >
-                {row.teamName}
-              </span>
-              {/* Labelled, not just accented — the border says nothing to anyone
-                  who cannot see it. */}
-              {row.teamId === mine ? (
-                // On `bg-bg` rather than `bg-raised`: the row it sits on is now
-                // raised, and a chip the same colour as its ground is not a chip.
-                <span className="rounded bg-bg px-1.5 py-0.5 text-2xs font-bold uppercase tracking-widest text-accent">
-                  You
-                </span>
-              ) : null}
-              <span className="numeric w-16 text-right text-2xs text-faint">
-                {row.won}-{row.drawn}-{row.lost}
-              </span>
-              {/* The tiebreak, small and beside the figure it breaks a tie in —
-                  it was the figure, at the end of the row, where a reader takes
-                  the last number as the standing. */}
-              <span className="numeric w-12 text-right text-2xs text-faint">{row.pointsFor}</span>
-              <span className="numeric w-8 text-right text-lg font-bold leading-none">
-                {row.points}
-              </span>
-            </Link>
+            <TableRow row={row} badge={badges.get(row.teamId)} mine={row.teamId === mine} />
             {cut(row.rank, qualify, rows.length) ? (
               /* The playoff line. Drawn under the last qualifying place rather
                  than shaded across the rows above it: a tinted band reads as
@@ -135,9 +84,9 @@ export default async function StandingsPage() {
                  the accent is already spoken for — twice on that very row, by
                  the border and by the chip, which is why this line is dashed in
                  the league's red rather than the solid yellow CM drew it in.
-                 Absent entirely for a league
-                 that declares no playoff, and for a table shorter than the cut —
-                 a line under the bottom row states a qualification nobody missed. */
+                 Absent entirely for a league that declares no playoff, and for a
+                 table shorter than the cut — a line under the bottom row states
+                 a qualification nobody missed. */
               <p className="flex items-center gap-2 px-1 pt-1.5 text-2xs font-bold uppercase tracking-widest text-faint">
                 <span className="flex-1 border-t border-dashed border-league/70" />
                 Playoffs

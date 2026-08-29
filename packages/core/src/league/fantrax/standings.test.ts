@@ -1,14 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { mapStandings } from "./standings";
+import type { RawStandings } from "./raw";
 import type { RawStandingsPage } from "./standingsPage";
 import standingsPage from "./__fixtures__/standingsPage.json";
+import standingsArray from "./__fixtures__/standingsArray.json";
 
 // The rehearsal league mid-gameweek 2, captured 29 Aug 2026 — the first read
 // with anything but zeroes in it, and therefore the first that could tell wins
-// from draws from losses at all.
+// from draws from losses at all. Both shapes of the same day: the page the table
+// is drawn from, and the array carrying the one column it does not.
 
 describe("mapStandings", () => {
-  const rows = mapStandings(standingsPage as RawStandingsPage);
+  const rows = mapStandings(standingsPage as RawStandingsPage, standingsArray as RawStandings);
 
   it("reads every team's row", () => {
     expect(rows).toHaveLength(4);
@@ -50,7 +53,7 @@ describe("mapStandings", () => {
     // if a manager reordered the columns.
     [cells[0], cells[2]] = [cells[2]!, cells[0]!];
     [rowCells[0], rowCells[2]] = [rowCells[2]!, rowCells[0]!];
-    expect(mapStandings(page)[0]).toMatchObject({ won: 1, lost: 0 });
+    expect(mapStandings(page, [])[0]).toMatchObject({ won: 1, lost: 0 });
   });
 
   it("returns nothing for a league nobody has joined", () => {
@@ -59,7 +62,43 @@ describe("mapStandings", () => {
     const empty: RawStandingsPage = {
       tableList: [{ caption: "Standings", fixedHeader: { cells: [{ key: "team" }] }, rows: [] }],
     };
-    expect(mapStandings(empty)).toEqual([]);
-    expect(mapStandings({})).toEqual([]);
+    expect(mapStandings(empty, [])).toEqual([]);
+    expect(mapStandings({}, [])).toEqual([]);
+  });
+
+  // The array's own column, and the reason the table reads two payloads. It is
+  // live: two teams level at the top and two a game behind, which is what makes
+  // it worth a column at all.
+  it("takes games back from the array, which is the only read that has it", () => {
+    expect(rows.map((row) => row.gamesBack)).toEqual([0, 0, 1, 1]);
+  });
+
+  // The failure the null is modelled for. Everything else on the table comes off
+  // the page and is unharmed.
+  it("dashes games back rather than zeroing it when the array is not there", () => {
+    const alone = mapStandings(standingsPage as RawStandingsPage, []);
+    expect(alone.map((row) => row.gamesBack)).toEqual([null, null, null, null]);
+    expect(alone[0]).toMatchObject({ won: 1, points: 3 });
+  });
+
+  // A fraction, not a percentage: the leader is on 1 and not on 100. Printing it
+  // as "1%" would put the best side in the league last.
+  it("reads the win percentage as the fraction Fantrax means", () => {
+    expect(rows.map((row) => row.winPercentage)).toEqual([1, 1, 0, 0]);
+  });
+
+  it("dashes the win fraction when the column is gone, and never zeroes it", () => {
+    const page = structuredClone(standingsPage) as RawStandingsPage;
+    const table = page.tableList?.[0];
+    if (table?.header?.cells) table.header.cells = table.header.cells.filter((c) => c.key !== "winpc");
+    expect(mapStandings(page, [])[0]?.winPercentage).toBeNull();
+  });
+
+  // A row Fantrax's array does not carry is not a team level with the leader.
+  it("dashes games back for a team only one of the two reads knows", () => {
+    const partial: RawStandings = (standingsArray as RawStandings).slice(0, 1);
+    expect(mapStandings(standingsPage as RawStandingsPage, partial).map((r) => r.gamesBack)).toEqual(
+      [0, null, null, null],
+    );
   });
 });

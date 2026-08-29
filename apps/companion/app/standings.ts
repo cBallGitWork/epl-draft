@@ -2,6 +2,7 @@ import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
   type StandingsRow,
+  fetchStandings,
   fetchStandingsPage,
   mapStandings,
   mapTeamBadges,
@@ -13,16 +14,24 @@ import type { Unavailable } from "./refusals";
 // The standings page Fantrax draws for its own site, read once for the two
 // things printed off it: the table and the badges.
 //
-// One read rather than two, and that is the point of the file. The table used to
-// come off the fxea array and the badges off this page, so `/league` asked
-// Fantrax for its standings twice per window to draw one screen — and the array
-// does not carry the column the table is read for. It has no points; three for a
-// win lives here.
+// The page leads, and that is the point of the file. The table used to come off
+// the fxea array and the badges off this page, so `/league` asked Fantrax for its
+// standings twice per window to draw one screen from two payloads that disagreed
+// about which was the source. The array does not carry the column the table is
+// read for: it has no points, and three for a win lives here.
 //
 // Its own module because four surfaces want a piece of it — the table, the
 // schedule's bracket seeding, the matchups board and the schedule page's badges
 // — and a read hidden inside any one of them is one the other three cannot reach
 // (CODE_RULES §1).
+//
+// **The fxea array came back on 29 Aug, for one column and no more.** It carries
+// `gamesBack` and the page does not, so the two are read together and merged in
+// the mapper. It is the smallest payload Fantrax serves — one short object per
+// team — and it rides the same cache entry, so this is one extra GET per window
+// rather than one per reader. Its failure costs that column and nothing else:
+// the table is built from the page, and a refusal here arrives as an empty array
+// the mapper already models.
 
 /** Both halves, and the refusal if there was one. Entries rather than a `Map`:
  *  a cache round trip serialises, and a `Map` does not survive it. */
@@ -32,10 +41,13 @@ const read = leagueCache("standings-page",
     badges: [string, string][];
     refused: string | null;
   }> => {
-    const raw = await orRefusal(fetchStandingsPage(FANTRAX_LEAGUE_ID));
+    const [raw, records] = await Promise.all([
+      orRefusal(fetchStandingsPage(FANTRAX_LEAGUE_ID)),
+      orRefusal(fetchStandings(FANTRAX_LEAGUE_ID)),
+    ]);
     if (raw instanceof FantraxError) return { table: [], badges: [], refused: tell(raw) };
     return {
-      table: mapStandings(raw),
+      table: mapStandings(raw, records instanceof FantraxError ? [] : records),
       badges: mapTeamBadges(raw).map((badge) => [badge.teamId, badge.url]),
       refused: null,
     };
