@@ -17,6 +17,15 @@
   }
 }
 
+/* How wide the page is allowed to get. One value, because two things frame the
+   app and they must agree: `<main>` and the tab bar above it. They were written
+   out separately as `max-w-2xl` and `max-w-6xl`, so the bar was already a
+   broadsheet while the page under it was still a column — the same drift
+   `--page-gutter` exists to prevent, one element apart. */
+:root {
+  --page-frame: 72rem;
+}
+
 /* The room `<main>` leaves under the page: the tab bar's own height plus the
    phone's safe area, and above `md` just room, because the bar is overhead
    there instead. Named for the same reason `--page-gutter` is — the front page

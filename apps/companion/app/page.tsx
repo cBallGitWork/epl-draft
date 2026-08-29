@@ -63,11 +63,12 @@ export default async function GazettePage() {
     // in the layout.
     //
     // `@container` and not a breakpoint, for everything below: what decides
-    // whether this page can be a broadsheet is the width of the FRAME, and the
-    // frame is `max-w-2xl` on `<main>` at every viewport. A `lg:` rail would
-    // have engaged at a 1024px window and cut a 640px page into 304 and 304 —
-    // two equal columns, which is not a lead and a rail. Asking the container
-    // instead means the rail arrives exactly when there is room for it.
+    // whether this page can be a broadsheet is the width of the FRAME, not of
+    // the window. A `lg:` rail engages at a 1024px window whatever the frame is
+    // doing, and while the frame was 42rem that cut a 640px page into 304 and
+    // 304 — two equal columns, which is not a lead and a rail. The frame is
+    // wider now and the rail does arrive, but asking the container is what
+    // makes that a consequence of there being room rather than a coincidence.
     <div
       className={`paper @container ${fraunces.variable} ${newsreader.variable} -mx-[var(--page-gutter)] -mb-[var(--page-foot)] -mt-3 flex flex-col gap-5 px-[var(--page-gutter)] pb-[calc(2rem+var(--page-foot))] pt-4`}
     >

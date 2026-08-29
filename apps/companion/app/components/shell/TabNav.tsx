@@ -53,7 +53,7 @@ export default function TabNav({ matchday }: { matchday: boolean }) {
       // where neither the inset nor the fixed positioning applies.
       className="fixed inset-x-0 bottom-0 z-[50] border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] md:sticky md:inset-x-auto md:bottom-auto md:top-0 md:border-b md:border-t-0 md:pb-0"
     >
-      <div className="mx-auto flex w-full max-w-6xl items-center gap-4 md:px-4">
+      <div className="mx-auto flex w-full max-w-[var(--page-frame)] items-center gap-4 md:px-4">
         <Link href="/" aria-label="Home" className="hidden shrink-0 py-2 md:block">
           <LeagueCrest variant="mark" height={26} />
         </Link>
