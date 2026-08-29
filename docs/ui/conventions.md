@@ -1,23 +1,46 @@
 # Conventions — tokens, components, and what must not move
 
-Everything visual is in `apps/companion/app/tokens.css` (the tokens),
-`apps/companion/app/globals.css` (everything else) and
+**`../../DESIGN.md` is binding for colour and type and this file defers to it.**
+What is here is the mechanics — which file holds what, and the traps.
+
+Everything visual is in `apps/companion/app/tokens.css` (the desk's tokens),
+`apps/companion/app/paper.css` (the paper's register, which re-points them at ink
+on stock), `apps/companion/app/globals.css` (everything else) and
 `apps/companion/app/components/` (markup). Tailwind v4, no config file: the
-theme *is* the `@theme` block, which lives in `tokens.css` — split out of
-`globals.css` when that file crossed the 300-line ceiling.
+theme *is* the `@theme` block in `tokens.css`. Both stylesheets were split out of
+`globals.css` as it crossed the 300-line ceiling, and `paper.css` is imported
+after `tokens.css` because it answers it.
 
-## Three colour registers, never muddled
+## Two registers, never muddled
 
-| Register | What it is | Tokens |
+The desk (League · Squads · Live · Players · FPL) is Championship Manager 99/00;
+the paper (`/`) is ink on stock. **DESIGN.md §1–§5 is the contract**; the short
+version is that every colour is a *slot with one meaning*, and the slot is why
+the token names survived the change of every value.
+
+| Slot | Tokens | Means |
 |---|---|---|
-| **Surfaces** | Near-black, tinted to hue 320. Four steps. | `bg`, `surface`, `raised`, `line` |
-| **Football** | The real Premier League. PL's own 2023 palette, read from their live stylesheet — not from a brand site, all of which still republish the 2016 set. | `accent` (PL green), `info` (PL cyan), `live` (PL pink, **live matches only**), `pl-purple` |
-| **League** | Our competition. Tim Hortons red, plus a 1964–85 cream. | `league`, `league-dark`, `cream` |
-| **Pitch** | The grass, deliberately darker than the sticker backdrop so cards lift off it. | `pitch-turf`, `pitch-mow`, `pitch-surround`, `pitch-line` |
-| **FDR** | FPL's five-step fixture difficulty, rebuilt at our lightness. | `fdr-1` … `fdr-5` |
-| **Data** | Duller than `accent` on purpose, so a form indicator never competes with a primary action. | `good`, `mid`, `bad` |
+| **Surfaces** | `bg`, `surface`, `raised`, `line` | depth, never meaning |
+| **Ink** | `ink`, `muted`, `faint` | how loud |
+| **Accent** | `accent` | yours · selected · active · primary |
+| **Person** | `info` | a person, and secondary emphasis |
+| **Figures** | `mid`, `bad` | a figure; a loss, doubt or negative |
+| **Live** | `live` | a match in play, and nothing else |
+| **League** | `league`, `cream` | the league's own mark. Chrome only, never "active" |
+| **Pitch** | `pitch-turf`, `pitch-mow`, `pitch-line` | the grass, darker than the cut-outs so cards lift off it |
+| **FDR** | `fdr-1` … `fdr-5` | FPL's difficulty, rebuilt at our lightness. Data, not dress |
 
 Colour appears almost exclusively as **state**. Surfaces stay neutral.
+
+Retired with their last reader, and not to be reintroduced without one:
+`pl-purple`, `league-dark`, `good`. The Premier League's green, cyan and pink
+left the chrome with them — the football is one tab of six, and its palette
+survives only where it is data (the FDR scale, club colours).
+
+**A plate is not the page.** `.paper :is(.pitch, .crest)` restores the desk's
+tokens inside anything that is a colour picture printed on the cream page. Get
+this wrong and eleven name plates go invisible, because `--color-cream` is
+deliberately ink under `.paper`.
 
 ### Tailwind v4 trap, already paid for once
 
@@ -28,11 +51,19 @@ a `Record` for exactly this reason — do not "tidy" it back into interpolation.
 
 ## Type
 
-Two widths of one superfamily: Archivo for UI, Archivo Narrow (`.numeric`) for
-scores, minutes and countdowns. `.numeric` is tabular so digits do not jitter as
-they tick — it is the single most important typographic decision in a live view.
-Fixed rem scale, ratio ~1.15, `--text-2xs` … `--text-3xl`. No fluid clamps except
-inside the sticker, where the card is container-queried.
+Four faces, four roles. Archivo carries the desk's UI; **Archivo Narrow
+(`.numeric`) carries every figure in both registers** and is the shared spine —
+tabular, so digits do not jitter as they tick, which is the single most important
+typographic decision in a live view. Fraunces sets the paper's masthead, display
+and drop caps; Newsreader its prose and italic decks. The two serifs are declared
+in `app/paperFonts.ts` and imported **only by paper routes**, so the desk pays
+nothing for them.
+
+Fixed rem scale, ratio ~1.15, `--text-3xs` … `--text-6xl`. `--text-3xs` is 9px
+and is the scale's **last step, not a floor** — the one thing set below it is the
+pitch card's container clamp, which is not on the scale at all and is a known
+problem (DESIGN.md §9). No fluid clamps except inside the sticker and the
+masthead.
 
 ## Shared components
 
@@ -45,6 +76,8 @@ inside the sticker, where the card is container-queried.
 | `shell/TabNav` | Bottom bar on phones, top bar above `md`. The Live tab only exists while football is on. |
 | `shell/LeagueCrest` | Our crest. `mark` (no type, legible to ~24px) and `full`. |
 | `shell/AutoRefresh` | Client poller. `POLL.live` during football, `POLL.idle` otherwise. |
+| `shell/Skeleton` | The loading block. Paints `currentColor` at low alpha, so it self-skins in whichever register it lands in — one primitive, no variants. |
+| `shell/SkeletonRows` | The app's standard card stack at a given height, for a `loading.tsx` that has to draw its route's real frame rather than a spinner. |
 | `league/PitchFrame` | Hoardings + goal + turf. Full-bleed. |
 | `league/PitchRows` | Players in their lines on a `PitchFrame`. **Owns card width and the shrink-not-wrap policy** — all three pitches go through it. |
 | `league/PitchTurf` | The grass in perspective, as an inline SVG. |
@@ -69,10 +102,20 @@ frame as `--pitch-inset`, which the hoardings read too. One number, three
 readers: it used to be written out twice with a comment asking the next person to
 keep the two in step.
 
-**`--page-gutter` and `.bleed`.** `<main>` sets the side margin from the token;
-the two things wide enough to break out of it — the pitch and the bench strip —
-use `.bleed`, which is the negative of the same value. Three files used to write
-`px-3 sm:px-4` and `-mx-3 sm:-mx-4` by hand.
+**The page's own measurements are tokens, and for one reason: two places read
+each of them and a value that can drift from itself is not a measurement.**
+
+- `--page-gutter` — the side margin. `<main>` sets it; the two things wide enough
+  to break out of it, the pitch and the bench strip, use `.bleed`, which is the
+  negative of the same value. Three files used to write `px-3 sm:px-4` and
+  `-mx-3 sm:-mx-4` by hand.
+- `--page-frame` — how wide the page may get. `<main>` and the tab bar above it
+  both read it. They were `max-w-2xl` and `max-w-6xl`, so the bar was a
+  broadsheet while the page under it was a 640px column at every viewport, and
+  the front page's rail could never arrive.
+- `--page-foot` — the room `<main>` leaves under the page for the tab bar and the
+  phone's safe area. The front page runs its stock out through it; without that,
+  a cream page ends in a band of desk navy.
 
 ## Four mechanics worth knowing before you touch them
 
