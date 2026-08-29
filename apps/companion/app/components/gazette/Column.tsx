@@ -9,11 +9,13 @@ import type { ReactNode } from "react";
 // bordered, elevated boxes is a settings screen no matter what is printed in it.
 // Same information, and the only thing between two items is a hairline.
 //
-// The head is the league's own red over a red rule, in the small capitals a
-// paper puts over a standing column. Red rather than ink, because on a page
-// where every other mark is ink at an opacity the heads were competing with the
-// masthead for the darkest thing on the sheet; the league's register separates
-// them at 5.0:1 on this stock, which carries small text with room to spare.
+// The head is ink over an ink rule, in the small capitals a paper puts over a
+// standing column. It was the league's red over a red rule, on the argument
+// that ink heads would compete with the masthead for the darkest mark on the
+// sheet — but a masthead outweighs a 10px label by size and weight, not by
+// hue, and eight red heads down a page is what made the front page read as a
+// themed screen rather than as newsprint. Rank is set in scale here, and the
+// sheet's one red is spent on the things that are actually live.
 
 export default function Column({
   title,
@@ -26,8 +28,11 @@ export default function Column({
 }) {
   return (
     <section className="flex flex-col">
-      <div className="flex items-baseline justify-between gap-3 border-b-2 border-league pb-1">
-        <h2 className="font-sans text-2xs font-black uppercase tracking-[0.2em] text-league">
+      <div
+        className="flex items-baseline justify-between gap-3 border-b pb-1"
+        style={{ borderColor: "currentColor" }}
+      >
+        <h2 className="font-sans text-2xs font-black uppercase tracking-[0.2em]">
           {title}
         </h2>
         {aside ? <span className="font-sans text-2xs text-muted">{aside}</span> : null}

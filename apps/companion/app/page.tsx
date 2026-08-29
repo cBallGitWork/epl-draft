@@ -36,7 +36,7 @@ export const revalidate = 30;
 // sRGB of `--paper` in tokens.css, repeated as a literal for the same reason the
 // layout repeats `--color-bg` — this is serialised into a <meta> tag at build
 // time and cannot read a CSS variable. Change both together.
-export const viewport: Viewport = { themeColor: "#f5ece1" };
+export const viewport: Viewport = { themeColor: "#f6ddd2" };
 
 /** Draft night for the league we are actually serving — the two draft nine weeks
  *  apart, so this is read from config rather than written down. */
@@ -171,23 +171,28 @@ export default async function GazettePage() {
             </Nothing>
           ) : null}
 
+        </div>
+
+        {/* The rail. Four short columns a manager scans rather than reads — the
+            week's best eleven, who is hurt, who signed whom, when the lock is —
+            so they are the four that come out of the lead's flow and stand
+            beside it. On a phone the grid is one column and this is simply what
+            follows, which is the order `docs/ui/gazetta.md` sets.
+
+            The eleven leads the rail because it is the one block here anybody
+            reads for pleasure; the other three are admin. It used to close the
+            lead column as a full-width pitch, which is the size a picture gets
+            and not the size a list of names earns. */}
+        <div className="flex flex-col gap-5 @3xl:border-l @3xl:border-line @3xl:pl-6">
           {paper.eleven ? (
             <TeamOfTheWeek
               eleven={paper.eleven}
-              clubs={clubs}
               mine={paper.mine}
               partial={paper.partial}
               fielded={paper.fielded}
             />
           ) : null}
-        </div>
 
-        {/* The rail. Three short columns a manager scans rather than reads —
-            who is hurt, who signed whom, when the lock is — so they are the
-            three that come out of the lead's flow and stand beside it. On a
-            phone the grid is one column and this is simply what follows, which
-            is the order `docs/ui/gazetta.md` sets and does not renegotiate. */}
-        <div className="flex flex-col gap-5 @3xl:border-l @3xl:border-line @3xl:pl-6">
           {paper.deals.length > 0 ? (
             <Deals deals={paper.deals} at={paper.dealsAt} who={who} />
           ) : null}

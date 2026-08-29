@@ -19,12 +19,24 @@
    opacity — which is what stops a newsprint page from having to fight the dark
    token set the other five tabs are built on.
 
-   Warm off-white rather than Gazzetta's rosa: the pink is that paper's identity
-   and borrowing it would be a costume. The red stays ours. */
+   Gazzetta's rosa, and its ink. This file used to argue for a warm off-white on
+   the grounds that the pink was another paper's identity — but that reasoning
+   only holds for a paper with an identity of its own to protect, and the whole
+   brief for this one is *La Gazzetta*. A near-cream that is nearly the rosa
+   reads as neither. Reversed 29 Aug: the stock is the reference's.
+
+   One colour on the sheet besides ink, and it is a print red — the register the
+   masthead's own rules and the LIVE mark share. Every other mark on the page is
+   ink at an opacity, which is the discipline that makes the reference read as
+   newsprint rather than as a themed screen. */
 .paper {
-  --paper: #f5ece1;
-  --paper-ink: #241d17;
-  --paper-rule: rgb(36 29 23 / 0.18);
+  --paper: #f6ddd2;
+  --paper-ink: #2a2018;
+  --paper-rule: rgb(42 32 24 / 0.18);
+  /* Deeper and browner than the league's own #C8102E, which is a brand red for
+     signage and glowed on this stock. 7.4:1 here, so it carries the small caps
+     of a kicker as well as the dot beside a live score. */
+  --paper-red: #8f2318;
 
   /* The app's semantic tokens, re-pointed at ink on stock.
    *
@@ -33,9 +45,9 @@
    * "quieter than the body", and that is a different colour on paper than it is
    * on glass. The names keep their meaning and the medium supplies the value. */
   --color-bg: var(--paper);
-  --color-surface: oklch(0.94 0.012 70);
-  --color-raised: oklch(0.90 0.016 70);
-  --color-line: rgb(36 29 23 / 0.16);
+  --color-surface: oklch(0.885 0.026 40);
+  --color-raised: oklch(0.845 0.032 40);
+  --color-line: rgb(42 32 24 / 0.16);
   --color-ink: var(--paper-ink);
   --color-cream: var(--paper-ink);
   /* The same three rungs the desk's ink ladder has, measured on this stock
@@ -47,17 +59,21 @@
      floor with no exceptions, and it was carrying every timestamp, every
      percentage and every standing label on the page. Ink on stock has more
      headroom than ink on glass, so the correction is upward on both. */
-  --color-muted: rgb(36 29 23 / 0.8);
-  --color-faint: rgb(36 29 23 / 0.68);
+  --color-muted: rgb(42 32 24 / 0.8);
+  --color-faint: rgb(42 32 24 / 0.68);
 
   /* The two slots whose desk value is a colour rather than a lightness, and so
      the two the medium cannot supply by re-pointing ink. "Yours, selected,
-     active" and "in play" are both the league speaking, and on stock the league
-     speaks in its own red — 5.0:1 here, where the desk's yellow is 1.3:1 and its
-     live red is 2.6:1. The front page shipped a live scoreline in PL green on
-     cream and a live dot in PL pink for exactly as long as this was missing. */
-  --color-accent: var(--color-league);
-  --color-live: var(--color-league);
+     active" and "in play" both take the sheet's one red, which is what keeps
+     the count at two colours: an accent that is a third hue is the difference
+     between a newspaper and a themed screen. The desk's own yellow is 1.3:1 on
+     this stock and its live red 2.6:1, so neither could have crossed anyway. */
+  --color-accent: var(--paper-red);
+  --color-live: var(--paper-red);
+  /* The league's red is the crest's, and the crest is a printed mark rather than
+     page furniture — see the `.crest` plate below. Nothing else on the sheet may
+     reach for it. */
+  --color-league: var(--paper-red);
 
   /* The paper's own two faces, loaded by `app/paperFonts.ts` and by no other
      route, so the desk pays nothing for them. Georgia stays named in both
@@ -96,6 +112,11 @@
   --color-bg: oklch(0.185 0.045 265);
   --color-surface: oklch(0.215 0.046 265);
   --color-line: oklch(0.36 0.045 265);
+  /* The mark's own red, restored. The sheet re-points `--color-league` at the
+     print red so no column head or rule can reach the brand colour; a crest is
+     the one thing on the page entitled to it, and it is the crest's identity
+     rather than the page's palette. */
+  --color-league: oklch(0.530 0.207 22);
   color: var(--color-ink);
   font-family: var(--font-sans);
 }

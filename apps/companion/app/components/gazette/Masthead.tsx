@@ -31,10 +31,12 @@ export default function Masthead({
 }) {
   return (
     <header className="flex flex-col">
-      {/* The rule a paper opens on, in the league's register. */}
-      <div className="h-[3px] bg-league" />
+      {/* The rule a paper opens on. Ink, like every other rule on the sheet:
+          the reference prints its whole front page in two colours, and a
+          coloured band across the top is the first thing that breaks it. */}
+      <div className="h-[3px] bg-current" />
 
-      <p className="pt-2 text-center font-sans text-3xs font-semibold uppercase tracking-[0.22em] text-league">
+      <p className="pt-2 text-center font-sans text-3xs font-semibold uppercase tracking-[0.22em] text-muted">
         {LEAGUE_NAME}
       </p>
 
@@ -58,9 +60,18 @@ export default function Masthead({
           wrong face.
           The crest is a colour plate and knows it: `.crest` restores the tokens
           `.paper` re-pointed at ink, so its cream ring and leaf stay cream on
-          the league's red rather than being stamped red on red. */}
+          the league's red rather than being stamped red on red.
+
+          The plate used to sit the mark on a solid red field a quarter of the
+          box wide, which put the loudest colour on the page directly under the
+          nameplate. The mark keeps its own red; the field it stands on is the
+          stock, divided from the standing line by a rule — which is the frame
+          the reference gives its photograph. */}
       <div className="mt-3 flex items-stretch border-2" style={{ borderColor: "currentColor" }}>
-        <div className="flex w-24 shrink-0 items-center justify-center bg-league py-3">
+        <div
+          className="flex w-24 shrink-0 items-center justify-center border-r-2 py-3"
+          style={{ borderColor: "currentColor" }}
+        >
           <LeagueCrest variant="mark" height={44} />
         </div>
         <div className="flex min-w-0 flex-col justify-center gap-1 px-3 py-2">

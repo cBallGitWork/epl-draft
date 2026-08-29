@@ -17,12 +17,12 @@ business, who is hurt, and when lineups lock.
    which app you are in; a masthead names the publication and puts the publisher
    in small capitals over the top. `PAPER_NAME` in `app/config.ts` is the title.
 
-   Between rules, in the league's red, with a **dateline** under it: date at the
-   left, season at the right, small capitals and letterspaced. That row is the
-   whole difference between a masthead and an `<h1>`, and no app has one.
+   Between rules, in ink, with a **dateline** under it: date at the left, season
+   at the right, small capitals and letterspaced. That row is the whole
+   difference between a masthead and an `<h1>`, and no app has one.
 
-   Under the dateline, a **plate**: a two-pixel ink rule around the crest on the
-   league's red with the standing line beside it. It is the frame a photograph
+   Under the dateline, a **plate**: a two-pixel ink rule around the crest, ruled
+   off from the standing line beside it. It is the frame a photograph
    drops into and it is not a placeholder — DESIGN.md §9 records that the crest
    in a box is what the paper looks like until somebody hands it a league
    picture, and that a stock Premier League shot is the wrong answer.
@@ -48,9 +48,9 @@ business, who is hurt, and when lineups lock.
    second story is recognisable as the second story before you have read a word
    of it, and a page that gave every story a photograph would be a page with no
    lead on it.
-6. **Team of the week** — the best XI across the whole league, **on grass**, in
-   its shape. Each man is a cut-out with what got him picked under his name
-   (`2G · CS`, or minutes if nothing else) and his owner under that. `benched` is
+6. **Team of the week** — the best XI across the whole league, **in the rail**,
+   grouped into its lines. One man per row: his name and owner at the left, what
+   got him picked at the right (`2G · CS`, or minutes if nothing else). `benched` is
    appended to the owner when a manager left his own best player out — **and only
    when the arrangement it was read from is the one that was fielded**; see *What
    may be said about a bench* below.
@@ -223,24 +223,27 @@ Team names are joined from ids the writer returns, never from names he types: a
 name typed by a model goes stale the day somebody renames their team, and
 renaming your team is the first thing sixteen people do.
 
-## The eleven is a team, not a table
+## The eleven has a shape, and the shape is not a picture
 
-It was eleven rows on hairlines — the same faceless line eleven times, the
-biggest block on the page, and the reason the whole paper read as a list. A team
-of the week is a *team*: it has a shape, and the shape is most of why you print
-it.
+It has been both things. Eleven rows on hairlines read as a table — the same
+faceless line eleven times — so on 29 Aug it became a pitch, on the argument
+that a team of the week is a *team* and the shape is most of why you print it.
+The shape was worth having; the size it came in was not. A pitch is the largest
+object a page can carry, and at a phone's width the grass ran most of a screen
+on its own: the front page had become a picture of a team with a newspaper
+wrapped round it. Craig's call, same day.
 
-It stands on `components/league/PitchRows`, which already drew the three other
-elevens in the app (a rival's XI, a rival's squad, your own lineup), so the
-front page costs nothing it was not already shipping. The cell is its own, not
-`PitchPlayer`: that one takes a `RosteredPlayer` and prints his fixture and his
-Fantrax points, and neither is what this section is about. The round is over, and
-the two things worth knowing are what he did and whose he was.
+**The lines stay, the grass goes.** It is a rail column grouped by line, with a
+small-capital position label over each group and `shape` in the head's aside, so
+a reader still sees 1-4-4-2 without the page spending a screen to draw it. That
+also puts it where it belongs in the reading order: the eleven is the one block
+in the rail anybody reads for pleasure, so it leads the rail and the three admin
+columns follow.
 
 **The lines come from core, not from a second sort here.** `TeamOfTheWeek.lines`
 is the same men as `picks` in a second order — one is how they rank, the other is
 where they stand — and `shape` is counted off the lines, so the formation printed
-and the formation drawn cannot come apart. `picks` stays in score order because
+and the formation grouped cannot come apart. `picks` stays in score order because
 the lead reads the first man his manager left out, and that only means anything
 if the list is ranked.
 
@@ -250,7 +253,17 @@ The three columns are `components/gazette/`, under `Column` rather than the
 app's shared `shell/Section`. That difference is the point: a newspaper is ink
 and rules on a page, and a stack of rounded, bordered, elevated boxes is a
 settings screen no matter what is printed in it. Same information, hairlines
-between items, heads in cream on a red rule.
+between items, heads in ink small capitals on an ink rule.
+
+**Two colours, and the second one is spent on what is live.** The heads were the
+league's red over a red rule until 29 Aug, on the argument that ink heads would
+compete with the masthead for the darkest mark on the sheet. A masthead outweighs
+a 10px label by size and weight rather than by hue, and eight red heads down a
+page is what made the front page read as a themed screen. The sheet now prints
+ink at an opacity and one print red — the LIVE mark, "yours", and the crest,
+which is a printed mark rather than page furniture and keeps the brand red the
+rest of the page may not reach for. `paper.css` re-points `--color-league` at the
+print red for exactly that reason, and `.crest` restores it.
 
 `shell/Section` is unchanged and still right on the four screens that use it.
 
