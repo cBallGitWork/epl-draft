@@ -1,6 +1,7 @@
-import { LEAGUE_NAME } from "@epl/core";
+import { LEAGUE_NAME, seasonForm } from "@epl/core";
 import Columns from "./Columns";
 import TableRow from "./TableRow";
+import { getSeasonResults } from "./schedule/schedule";
 import { leagueTable, teamBadges } from "../standings";
 import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
@@ -22,11 +23,17 @@ const DRAFT_DATE = londonDate(
 );
 
 export default async function StandingsPage() {
-  const [rows, mine, badges, info] = await Promise.all([
+  const [rows, mine, badges, info, results] = await Promise.all([
     leagueTable(),
     readerTeamId(),
     teamBadges(),
     leagueInfo(),
+    // The whole season's results in one request, and the only thing on this page
+    // that costs a read the table itself did not already make. It is what turns
+    // a record into a run: `won-drawn-lost` is a total, and a side on 5-2-3 that
+    // won five and then lost three is not the same team as one that lost three
+    // and then won five.
+    getSeasonResults(),
   ]);
   // Where the season's cut falls, and it is the league's answer rather than
   // ours. Fantrax publishes it — our league is a top four from period 35 — and
@@ -37,6 +44,16 @@ export default async function StandingsPage() {
   // playoff at all, and a table with no cut has no line to draw rather than one
   // at zero.
   const qualify = info?.playoffs?.places ?? null;
+
+  // Empty for every row until Fantrax has settled a round, and empty for a row
+  // whose run does not reproduce the record Fantrax published — see
+  // `league/form.ts`. Both are a dash rather than a wrong string.
+  const form = new Map(
+    ("unavailable" in rows ? [] : seasonForm(rows, info?.matchups ?? [], results)).map((team) => [
+      team.teamId,
+      team.run,
+    ]),
+  );
 
   // An empty state keeps the header and the section nav. Without them a reader
   // who lands here during an outage has no way to reach Schedule or Matchups —
@@ -76,7 +93,12 @@ export default async function StandingsPage() {
       <ul className="flex flex-col gap-1.5">
         {rows.map((row) => (
           <li key={row.teamId}>
-            <TableRow row={row} badge={badges.get(row.teamId)} mine={row.teamId === mine} />
+            <TableRow
+              row={row}
+              badge={badges.get(row.teamId)}
+              mine={row.teamId === mine}
+              form={form.get(row.teamId) ?? []}
+            />
             {cut(row.rank, qualify, rows.length) ? (
               /* The playoff line. Drawn under the last qualifying place rather
                  than shaded across the rows above it: a tinted band reads as

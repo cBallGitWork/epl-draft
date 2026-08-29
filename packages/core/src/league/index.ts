@@ -27,6 +27,9 @@ export type { BreakdownLine } from "./breakdown";
 
 export { captureStaleness } from "./staleness";
 
+export { seasonForm } from "./form";
+export type { FormGame, TeamForm } from "./form";
+
 export { firstKickoff, locksAt, periodGameweeks } from "./calendar";
 export type { GameweekKickoff } from "./calendar";
 

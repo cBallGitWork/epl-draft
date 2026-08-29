@@ -28,6 +28,29 @@ the name is on. Everything on the second line decides neither.
 column heads over it to do the job. `Columns` heads the first line only — a head
 over a figure that is not under it is worse than no head at all.
 
+**`Form` is the last five rounds, oldest first**, joined in `league/form.ts` from
+the season results (one request for all 38) and the pairings `getLeagueInfo`
+already carries. The record column is a total: a side on 5-2-3 that won five and
+then lost three is not the same team as one that lost three and then won five,
+and nothing Fantrax publishes says which. Each letter says which gameweek it was
+and what the two totals were.
+
+Two things keep it honest, and both exist because their results table numbers
+rounds nobody has played:
+
+- **How many games count is Fantrax's answer.** The run stops at
+  `won + drawn + lost`, so a round in play falls outside it on its own — an
+  unplayed round reads `0` on that table, not blank, and a run built on "there is
+  a number" would hand every side thirty-six goalless draws in March.
+- **The letters have to reproduce their record, or there are no letters.** A
+  tally that disagrees means the season has been lined up wrongly, and a dash is
+  better than five letters that are nearly right.
+
+Colour is the loudness ladder and not a fourth palette: a win is full ink, a draw
+is quiet, a loss is the red slot — which DESIGN §3 defines as "a loss, a doubt, a
+negative". There is no green because `--color-up` / `--color-down` are still
+deferred (§8), and the accent yellow is already spoken for twice on this row.
+
 **The reader's own row takes the raised ground as well as the accent edge.** On
 sixteen near-identical rows a 4px bar at the margin is easy to scroll straight
 past, and this is the row a manager opened the page to find. The `You` chip sits

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { StandingsRow } from "@epl/core";
+import type { FormGame, StandingsRow } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
 import { yoursBorder } from "../mine";
 
@@ -21,10 +21,13 @@ export default function TableRow({
   row,
   badge,
   mine,
+  form,
 }: {
   row: StandingsRow;
   badge: string | undefined;
   mine: boolean;
+  /** Oldest first, and empty for a side whose run we cannot vouch for. */
+  form: readonly FormGame[];
 }) {
   return (
     <Link
@@ -67,6 +70,7 @@ export default function TableRow({
         <span className="numeric text-2xs text-muted">
           {row.won}-{row.drawn}-{row.lost}
         </span>
+        <Form run={form} />
         <Figure label="GB" value={row.gamesBack === null ? null : String(row.gamesBack)} />
         <Figure label="Win%" value={winFraction(row.winPercentage)} />
         <Figure label="FP" value={String(row.pointsFor)} />
@@ -85,6 +89,44 @@ function Figure({ label, value }: { label: string; value: string | null }) {
     </span>
   );
 }
+
+/** The last few rounds, newest LAST — left to right is the direction the season
+ *  ran, which is how a form guide is read everywhere it appears.
+ *
+ *  Five at most, because that is what a form guide is and what the strip has
+ *  room for; the run behind it is the whole season and each glyph says which
+ *  round it was and what the two totals were.
+ *
+ *  **Colour is the loudness ladder, not a third palette.** A win is full ink, a
+ *  draw is quiet, a loss is the red slot — which DESIGN §3 defines as "a loss, a
+ *  doubt, a negative", so it is being used for exactly what it names. No green,
+ *  because there is no green: `--color-up` / `--color-down` are still deferred
+ *  (§8), and the accent yellow is spoken for twice on this very row by the
+ *  YOURS border and the YOURS chip. */
+function Form({ run }: { run: readonly FormGame[] }) {
+  if (run.length === 0) return <Figure label="Form" value={null} />;
+
+  return (
+    <span className="flex items-baseline gap-1">
+      <span className="font-bold uppercase tracking-widest">Form</span>
+      <span className="numeric flex gap-0.5 text-2xs">
+        {run.slice(-FORM_GAMES).map((game) => (
+          <span
+            key={game.period}
+            title={`Gameweek ${game.period} · ${game.pointsFor}-${game.pointsAgainst}`}
+            className={`font-bold ${TONE[game.result]}`}
+          >
+            {game.result}
+          </span>
+        ))}
+      </span>
+    </span>
+  );
+}
+
+const FORM_GAMES = 5;
+
+const TONE = { W: "text-ink", D: "text-faint", L: "text-bad" } as const;
 
 /** Fantrax's own rendering of their own fraction: `1.000`, `.500`, `.000`.
  *
