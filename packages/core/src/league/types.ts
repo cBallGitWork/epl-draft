@@ -146,6 +146,29 @@ export interface LiveSquadPoints {
   players: LivePlayerPoints[];
 }
 
+/** What Fantrax expects one squad's players to score this period.
+ *
+ *  **Their guess, and it is never a score.** `TeamProjection` is the same guess
+ *  totalled; this is the men it is made of, so a screen can say what Fantrax
+ *  reckons one of them will do rather than only what it reckons of his side.
+ *
+ *  **Everyone here is in the eleven**, on the same rule the live prices follow:
+ *  Fantrax projects the ACTIVE section and nothing else. So a caller printing one
+ *  of these numbers has said the man is fielded, which is exactly the fact the
+ *  lineup gate withholds before a deadline — and the gate is the caller's to
+ *  keep, because only the caller knows who is asking. */
+export interface SquadProjection {
+  teamId: string;
+  players: PlayerProjection[];
+}
+
+export interface PlayerProjection {
+  fantraxId: string;
+  /** Fantrax's number for him. Nought is a real projection of nought; a man they
+   *  have not guessed about is absent from the list instead. */
+  points: number;
+}
+
 /** One player in one team's roster for one period. */
 export interface RosterSlot {
   fantraxId: string;

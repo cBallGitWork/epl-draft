@@ -8,12 +8,14 @@ import {
   type PendingCleanSheets,
   type RosterDisplay,
   type RosteredTeam,
+  type PlayerProjection,
   type ScoringCategory,
   type ScoringRules,
   fetchLiveScoring,
   liveBreakdown,
   mapLivePlayerPoints,
   mapLiveScores,
+  mapProjectedPlayerPoints,
   pendingCleanSheets,
 } from "@epl/core";
 import { leagueCache } from "./leagueCache";
@@ -41,17 +43,53 @@ const readScores = leagueCache("live-scores",
     /** Per team, the men Fantrax has priced this period. From the same payload
      *  as the totals above, mapped a second time rather than fetched again. */
     players: [string, LivePlayerPoints[]][];
+    /** Per team, what Fantrax GUESSES those men will do. A third read of the same
+     *  payload, and a different claim from the one above it: that one is what has
+     *  happened, this one is what they think will. */
+    projected: [string, PlayerProjection[]][];
     refused: string | null;
   }> => {
     const raw = await orRefusal(fetchLiveScoring(FANTRAX_LEAGUE_ID, period));
-    if (raw instanceof FantraxError) return { scores: [], players: [], refused: tell(raw) };
+    if (raw instanceof FantraxError) {
+      return { scores: [], players: [], projected: [], refused: tell(raw) };
+    }
     return {
       scores: mapLiveScores(raw).map((score) => [score.teamId, score]),
       players: mapLivePlayerPoints(raw).map((squad) => [squad.teamId, squad.players]),
+      projected: mapProjectedPlayerPoints(raw).map((squad) => [squad.teamId, squad.players]),
       refused: null,
     };
   },
 );
+
+/** Fantrax's own guess at one man this period, out of the payload the scoreboard
+ *  already holds.
+ *
+ *  **Never a score, and never printed in a column headed `FPts`** — that is
+ *  Fantrax's word for what a player HAS scored, and this is the other one.
+ *
+ *  **Asked behind the lineup gate, exactly as `squadLivePoints` is.** Fantrax
+ *  projects the ACTIVE section and nothing else, so a number here says the man is
+ *  in his manager's eleven — the one fact the gate withholds before a deadline.
+ *  The caller does the gating, because only the caller knows who is asking.
+ *
+ *  Null for a refusal and for a man they have not guessed about; both are a dash,
+ *  and neither is nought.
+ *
+ *  Filtered to one team out here rather than inside the cache, on the rule
+ *  `leagueCache` exists to keep: nothing about who is asking may cross into a
+ *  cached read. */
+export async function playerProjection(
+  period: number,
+  teamId: string,
+  fantraxId: string,
+): Promise<number | null> {
+  const { projected, refused } = await readScores(period);
+  if (refused !== null) return null;
+
+  const squad = projected.find(([id]) => id === teamId)?.[1] ?? [];
+  return squad.find((player) => player.fantraxId === fantraxId)?.points ?? null;
+}
 
 export async function liveScores(
   period: number,

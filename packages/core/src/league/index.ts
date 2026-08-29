@@ -16,6 +16,8 @@ export type {
   PeriodRosters,
   RosterLimits,
   RosterSlot,
+  PlayerProjection,
+  SquadProjection,
   StandingsRow,
   TransactionView,
 } from "./types";
@@ -74,7 +76,12 @@ export { FantraxError } from "./fantrax/errors";
 export type { ScoringCategory, ScoringRules } from "./scoring";
 export { unacknowledged } from "./fantrax/baseline";
 export type { AcknowledgedDifference } from "./fantrax/baseline";
-export { mapLivePlayerPoints, mapLiveScores, mapProjectedTotals } from "./fantrax/livescoring";
+export {
+  mapLivePlayerPoints,
+  mapLiveScores,
+  mapProjectedPlayerPoints,
+  mapProjectedTotals,
+} from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel } from "./fantrax/profile";

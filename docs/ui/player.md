@@ -26,7 +26,19 @@ policy toward Fantrax.
    fit player and for one the bridge has not settled; a "no news" panel on seven
    hundred pages is noise. Fantrax has its own injury notes and we ignore them:
    theirs arrive truncated mid-sentence.
-3. **Draft** — where he was taken, who spent the pick, and how far his scoring
+3. **Fantrax's projection** — what they expect him to score in the round on
+   screen, headed as their guess and never sitting in a column called `FPts`.
+   That is Fantrax's own word for what a player HAS scored, and the two are one
+   column apart on their own site.
+
+   **Silent whenever the lineup gate is shut**, and that is load-bearing rather
+   than tidy. Fantrax projects the fielded eleven and nothing else, so the number
+   appearing at all would state that his manager has picked him — the exact fact
+   [conventions.md](conventions.md) makes a product invariant before a deadline.
+   It asks `teamDisplay`, the same question the squad and head-to-head screens
+   ask: your own team is open to you all week, everybody else's waits for its
+   lineups to lock. Silent for a free agent too, because nobody has fielded him.
+4. **Draft** — where he was taken, who spent the pick, and how far his scoring
    now sits from it. The one fact a draft league has that no other fantasy format
    does: every man has a price somebody paid in draft position, and a
    fourteenth-rounder outscoring the first pick is a story.
@@ -47,14 +59,14 @@ policy toward Fantrax.
    It streams behind a boundary, because the ranking behind it is the pool table
    — the largest read in the app — and the fallback is nothing, since a league
    with no draft prints nothing here.
-4. **Breakdown** — the categories that earned him points, biggest first, with
+5. **Breakdown** — the categories that earned him points, biggest first, with
    costly ones (cards, goals against) sorting to the bottom where they read as
    the deductions they are. Fantrax's own numbers; they sum to the total exactly
    and no scoring of ours is involved.
-5. **In this league** / **Fantrax** / **Across every Fantrax league** / **Player**
+6. **In this league** / **Fantrax** / **Across every Fantrax league** / **Player**
    — four fact blocks. The third is deliberately headed that way: those
    percentages are every league on Fantrax and they sit two rows below ours.
-6. Links to the squad he is in, and back to the pool.
+7. Links to the squad he is in, and back to the pool.
 
 Each block renders nothing when empty — a heading over no rows is a claim that
 something is missing.

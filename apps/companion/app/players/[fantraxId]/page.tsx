@@ -9,12 +9,13 @@ import type { Unavailable } from "../../refusals";
 import Availability from "./Availability";
 import Breakdown from "./Breakdown";
 import Pedigree from "./Pedigree";
+import Projection from "./Projection";
 import FixtureRun from "./FixtureRun";
 import GameLog from "./GameLog";
 import Portrait from "./Portrait";
 import ThisRound from "./ThisRound";
 import { footballSelf, playerSeason } from "./season";
-import { playerPedigree } from "./draft";
+import { fantraxProjection, playerPedigree } from "./draft";
 import { gameLog, scouting } from "./scouting";
 import type { FootballPlayer } from "@epl/core";
 import { positionsFromList } from "../../positions";
@@ -134,6 +135,15 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
           <FixtureRun run={scout.run} />
         </>
       )}
+      {/* Fantrax's own guess at his round, which is a different claim from every
+          FPL measurement above it and says so in its own heading. Streamed
+          because it reads the league's rosters and the live payload, and gated
+          inside that read: their projection covers the fielded eleven only, so
+          the number appearing at all would state a lineup. */}
+      <Suspense fallback={null}>
+        <Projected fantraxId={fantraxId} ownerTeamId={intel.ownerTeamId} />
+      </Suspense>
+
       {football === null ? null : (
         <Suspense fallback={<LogWaiting />}>
           <Log player={football.player} />
@@ -206,6 +216,17 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
  *  await lives here — the card itself is `Breakdown`, unchanged. */
 async function Season({ fantraxId, ownerTeamId }: { fantraxId: string; ownerTeamId: string }) {
   return <Breakdown season={await playerSeason(fantraxId, ownerTeamId)} />;
+}
+
+/** Fantrax's guess at his round, read behind the boundary above. */
+async function Projected({
+  fantraxId,
+  ownerTeamId,
+}: {
+  fantraxId: string;
+  ownerTeamId: string | null;
+}) {
+  return <Projection projection={await fantraxProjection(fantraxId, ownerTeamId)} />;
 }
 
 /** Where he was taken and what he has repaid, read behind the boundary above. */

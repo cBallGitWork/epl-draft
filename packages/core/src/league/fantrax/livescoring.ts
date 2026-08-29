@@ -1,4 +1,11 @@
-import type { LivePlayerPoints, LiveSquadPoints, LiveTeamScore, TeamProjection } from "../types";
+import type {
+  LivePlayerPoints,
+  LiveSquadPoints,
+  LiveTeamScore,
+  PlayerProjection,
+  SquadProjection,
+  TeamProjection,
+} from "../types";
 
 // Fantrax's live-scoring page, which answers without a cookie and hands back
 // typed numbers rather than the formatted strings the rest of their surface is
@@ -194,6 +201,38 @@ export function mapProjectedTotals(raw: RawLiveScoring): TeamProjection[] {
     // binary floating point of eleven of them is not a number anybody would
     // print.
     return [{ teamId, points: any ? Math.round(total * 10) / 10 : null }];
+  });
+}
+
+/** Fantrax's own guess at each player, out of the map the totals above are
+ *  summed from.
+ *
+ *  The same payload read a second time rather than a second request, and the
+ *  same two rules: ACTIVE only, and `_5010` / `_5020` skipped because they are
+ *  the outfield and goalie group subtotals rather than men.
+ *
+ *  **It is never a score and must never be printed as one.** `FPts` is Fantrax's
+ *  word for what a player HAS scored; this is what they think he will, and the
+ *  two sit one column apart on their own site. Anything showing this says whose
+ *  guess it is (conventions.md).
+ *
+ *  A man they have no guess for is left out rather than zeroed. And everyone in
+ *  the list is in his manager's eleven, because that is the only section Fantrax
+ *  projects — so printing one of these is stating a lineup, and the gate that
+ *  governs that belongs to the caller who knows who is asking. */
+export function mapProjectedPlayerPoints(raw: RawLiveScoring): SquadProjection[] {
+  const teams = raw.statsPerTeam?.allTeamsStats ?? {};
+
+  return Object.entries(teams).flatMap(([teamId, sections]) => {
+    const projected = sections?.ACTIVE?.projectedTotalsMap;
+    if (!projected) return [];
+
+    const players: PlayerProjection[] = [];
+    for (const [fantraxId, points] of Object.entries(projected)) {
+      if (fantraxId.startsWith(GROUP_TOTAL) || typeof points !== "number") continue;
+      players.push({ fantraxId, points });
+    }
+    return [{ teamId, players }];
   });
 }
 
