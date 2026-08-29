@@ -33,7 +33,8 @@ scoring, which was always the doctrine.
   the name that was tapped. Both sides of a card lead to the same head-to-head;
   each squad is one further tap from there.
 - Your own pairing sorts to the top. A neutral list is for broadcasters.
-- `AutoRefresh` at the live poll rate while football is on, idle otherwise.
+- Refreshes at the live poll rate while football is on, idle otherwise — from
+  the shell's single `AutoRefresh`, not one of its own.
 
 ## States
 

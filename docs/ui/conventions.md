@@ -74,7 +74,8 @@ No fluid clamps except inside the masthead.
 | `shell/ButtonLink` | The one way out of a page. `BUTTON` exports the classes for the single external anchor that cannot be a router link. |
 | `shell/TabNav` | Bottom bar on phones, top bar above `md`. The Live tab only exists while football is on. |
 | `shell/LeagueCrest` | Our crest. `mark` (no type, legible to ~24px) and `full`. |
-| `shell/AutoRefresh` | Client poller. `POLL.live` during football, `POLL.idle` otherwise. |
+| `shell/AutoRefresh` | The app's **single** client poller, mounted by the layout. `POLL.live` during football, `POLL.idle` otherwise. Eight pages each mounted their own until 29 Aug, sized from whatever snapshot each happened to hold — so a page with no football read of its own simply froze. |
+| `shell/LiveNow` · `shell/LiveStrip` | Your tie in the chrome while a ball is in the air. Stands down on `/` and `/matchday`, which print the same tie larger. |
 | `shell/Skeleton` | The loading block. Paints `currentColor` at low alpha, so it self-skins in whichever register it lands in — one primitive, no variants. |
 | `shell/SkeletonRows` | The app's standard card stack at a given height, for a `loading.tsx` that has to draw its route's real frame rather than a spinner. |
 | `league/PitchFrame` | Hoardings + goal + turf. Full-bleed. |

@@ -71,10 +71,12 @@ grounds, and `mine.ts` stays the only place that knows what "yours" looks like.
 
 ## The live splash
 
-**The page refreshes itself.** `/` was the only live-worthy surface in the app
-that never mounted `AutoRefresh`: a phone left open on the sofa showed a frozen
-scoreline under a pulsing dot for a whole half. It now polls on `pollSeconds`
-like every other screen — 30s while the round is under way, 300s otherwise.
+**The page refreshes itself**, from the shell rather than from here. `/` was
+once the only live-worthy surface in the app that never mounted a poller at all:
+a phone left open on the sofa showed a frozen scoreline under a pulsing dot for
+a whole half. Then it mounted its own, as seven other screens did — and now the
+layout mounts the one, on `pollSeconds`: 30s while the round is under way, 300s
+otherwise, everywhere at once.
 
 **A figure that moved says so.** `Changed` wraps each total and flashes it to the
 accent for 700ms when a refresh brings a different number, settling back to

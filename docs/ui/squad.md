@@ -40,9 +40,10 @@ it a `SquadPlayerDetail` rather than the maps.
 interchangeable: `undefined` (no table at all — the column disappears), `null`
 (the table answered and does not name him — a dash), or a number.
 
-`AutoRefresh` runs at the live rate while the round is under way and at the
-idle one otherwise — the same cadence as the head-to-head board, which shows the
-same totals. This was the one live-points surface without it: `revalidate`
+The page refreshes at the live rate while the round is under way and at the idle
+one otherwise — the same cadence as every other screen, because **the shell owns
+the app's only poller** and the round is a fact about the shell. This page used
+to mount its own, and so did seven others; `revalidate`
 bounds how stale the cache may get and pushes nothing to a phone already open on
 the sofa, so the score under fifteen faces sat still through a whole half.
 
