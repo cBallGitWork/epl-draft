@@ -136,13 +136,16 @@ export default async function StandingsPage() {
               /* The playoff line. Drawn under the last qualifying place rather
                  than shaded across the rows above it: a tinted band reads as
                  "these are yours" on the one row a manager is looking for, and
-                 the accent is already spoken for. Absent entirely for a league
+                 the accent is already spoken for — twice on that very row, by
+                 the border and by the chip, which is why this line is dashed in
+                 the league's red rather than the solid yellow CM drew it in.
+                 Absent entirely for a league
                  that declares no playoff, and for a table shorter than the cut —
                  a line under the bottom row states a qualification nobody missed. */
               <p className="flex items-center gap-2 px-1 pt-1.5 text-2xs font-bold uppercase tracking-widest text-faint">
-                <span className="h-px flex-1 bg-league/50" />
+                <span className="flex-1 border-t border-dashed border-league/70" />
                 Playoffs
-                <span className="h-px flex-1 bg-league/50" />
+                <span className="flex-1 border-t border-dashed border-league/70" />
               </p>
             ) : null}
           </li>

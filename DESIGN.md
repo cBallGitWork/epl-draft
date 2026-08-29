@@ -68,6 +68,21 @@ The live red and the league red are one hue on purpose — the league is what is
 live. The live red is the brand red lifted until it carries text, because
 `#C8102E` is 3.2:1 on this ground.
 
+**Two consequences that have already caught us out.**
+
+*The league's red never says "active".* It is the mark and the live signal, and
+a surface that fills its selected item with red is answering a question the tab
+bar and the pool's filter chips have already answered with the accent slot. The
+section nav under `/league` did exactly that, which is three expressions of one
+concept and two of them agreeing.
+
+*The playoff cut line stays red, and the plan's "yellow dashed" is wrong here.*
+CM draws its cut line in yellow, and CM is right in CM — but on our standings
+table yellow is already spoken for twice on the row a reader is looking for: the
+"yours" border and the YOURS chip. A yellow rule across that same table would
+be the accent making a second, unrelated claim in the one place it must not.
+Dashing it is free and carries the distinction without colour; the colour stays.
+
 **Retired, and why:** the Premier League's brand set (green primary, pink LIVE,
 neon cyan) was the football register doing league-register work, and the
 football is now one tab of six. It survives only where it is *data* rather than

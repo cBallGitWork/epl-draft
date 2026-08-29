@@ -26,8 +26,17 @@ export default function SectionNav({ current }: { current: LeagueSection }) {
             key={section.key}
             href={section.href}
             aria-current={here ? "page" : undefined}
-            className={`flex min-h-11 items-center rounded-lg px-3 text-2xs font-bold uppercase tracking-widest ${
-              here ? "bg-league text-cream" : "text-faint hover:bg-raised hover:text-muted"
+            // The same shape "active" takes everywhere else in the app: the
+            // accent slot on the border, full-strength ink on the label. It was
+            // a filled panel in the league's red, which is a third answer to a
+            // question the tab bar and the pool's filter chips had already
+            // agreed on — and red is the brand and the live signal, never a
+            // statement about where you are. The border is always drawn so the
+            // strip does not shift by two pixels as you move along it.
+            className={`flex min-h-11 items-center rounded-lg border px-3 text-2xs font-bold uppercase tracking-widest ${
+              here
+                ? "border-accent text-ink"
+                : "border-transparent text-faint hover:bg-raised hover:text-muted"
             }`}
           >
             {section.label}
