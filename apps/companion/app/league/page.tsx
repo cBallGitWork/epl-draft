@@ -5,7 +5,8 @@ import { getSeasonResults } from "./schedule/schedule";
 import { leagueTable, teamBadges } from "../standings";
 import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
-import { leagueInfo, readerTeamId } from "../squads";
+import { readerTeamId } from "../squads";
+import { leagueInfo } from "../round";
 import { londonDate } from "../londonTime";
 import { FANTRAX_SILENT, servedLeague } from "../config";
 
