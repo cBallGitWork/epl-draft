@@ -100,8 +100,46 @@ function lineupsLocked(
   return now >= Date.parse(locks);
 }
 
-/** The past period whose stored arrangement may be fetched and shown, or null to
- *  read whatever Fantrax currently considers open.
+/** The first period whose lineups have NOT locked — the week a manager can still
+ *  change, and therefore the week the squad screens are about.
+ *
+ *  Mid-round the two are not the same week. Fantrax goes on serving the live
+ *  period to a no-parameter read all weekend, so a squad screen that takes what
+ *  it is given shows an arrangement nobody can alter, under a running score that
+ *  belongs to the matchday board. What a manager opens Squads FOR is the eleven
+ *  he can still pick.
+ *
+ *  `=== false` and not a truthiness test, for the reason the gate below has:
+ *  `lineupsLocked` answers null for a period it cannot find a lock in — a week
+ *  with no football, or one FPL has not dated — and unknown is not "still open".
+ *  Such a period is stepped over, and a season of them answers null, which the
+ *  caller reads as "take whatever Fantrax considers open".
+ *
+ *  Periods are read in their own order rather than the list's: the answer is the
+ *  EARLIEST unlocked week, and a payload that arrived out of order would
+ *  otherwise hand back whichever one came first. */
+export function planningPeriod(
+  periods: LeaguePeriod[],
+  kickoffs: readonly GameweekKickoff[],
+  at: string,
+): number | null {
+  const ordered = [...periods].sort((a, b) => a.number - b.number);
+  for (const period of ordered) {
+    if (lineupsLocked(period, kickoffs, at) === false) return period.number;
+  }
+  return null;
+}
+
+/** The period to ask `getTeamRosters` for, or null to read whatever Fantrax
+ *  currently considers open.
+ *
+ *  **A period AHEAD of Fantrax's label is asked for outright.** It is the week
+ *  the squad screens are about (`planningPeriod`), Fantrax honours the parameter
+ *  for it, and nothing is leaked by reading it: an unlocked period fails the
+ *  gate below for every team but the reader's own, so a rival's next arrangement
+ *  is withheld exactly as this week's was before it locked. The safety argument
+ *  that follows is about the other direction, where reading early WOULD publish
+ *  something.
  *
  *  Two conditions, and the conjunction is the entire safety argument.
  *
@@ -124,7 +162,7 @@ function lineupsLocked(
  *
  *  Null is always the safe answer: the caller reads the open period, which is
  *  what it did before any of this existed. */
-export function frozenPeriod(
+export function periodToRead(
   /** The period the round on screen is scored in. */
   roundPeriod: number | null,
   /** The period Fantrax labelled a no-parameter read with — its own idea of
@@ -136,7 +174,8 @@ export function frozenPeriod(
   at: string,
 ): number | null {
   if (roundPeriod === null || openPeriod === null) return null;
-  if (roundPeriod >= openPeriod) return null;
+  if (roundPeriod === openPeriod) return null;
+  if (roundPeriod > openPeriod) return roundPeriod;
 
   const period = periods.find((p) => p.number === roundPeriod);
   if (period === undefined) return null;

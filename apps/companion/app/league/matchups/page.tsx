@@ -8,7 +8,7 @@ import { pollSeconds } from "../../football";
 import { getLeagueSquads } from "../../squads";
 import { myTeamId } from "../../session";
 import { liveScores, pendingByTeam } from "../../scoreboard";
-import { teamBadges } from "../../badges";
+import { teamBadges } from "../../standings";
 import { roundUnderway } from "../../football";
 import { yoursFirst } from "../../mine";
 import { FANTRAX_SILENT } from "../../config";

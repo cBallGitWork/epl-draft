@@ -15,5 +15,363 @@
       "name": "test5",
       "shortName": "test5"
     }
-  }
+  },
+  "tableList": [
+    {
+      "fixedRows": true,
+      "tableType": "H2hPointsBased1",
+      "fixedHeader": {
+        "cells": [
+          {
+            "sortDirection": 1,
+            "name": "Rank",
+            "shortName": "Rk",
+            "key": "rank"
+          },
+          {
+            "align": "LEFT",
+            "sortDirection": 1,
+            "name": "Team",
+            "shortName": "Team",
+            "key": "team"
+          }
+        ]
+      },
+      "caption": "Standings",
+      "header": {
+        "cells": [
+          {
+            "sortDirection": 1,
+            "name": "Win",
+            "shortName": "W",
+            "key": "win"
+          },
+          {
+            "sortDirection": 1,
+            "name": "Draw",
+            "shortName": "D",
+            "key": "draw"
+          },
+          {
+            "sortDirection": 1,
+            "name": "Loss",
+            "shortName": "L",
+            "key": "loss"
+          },
+          {
+            "sortDirection": 1,
+            "name": "Points",
+            "shortName": "Points",
+            "key": "points"
+          },
+          {
+            "sortDirection": 1,
+            "name": "Win Percentage",
+            "shortName": "Win%",
+            "key": "winpc"
+          },
+          {
+            "sortDirection": 1,
+            "name": "Waiver Wire Claim Order",
+            "shortName": "WW",
+            "key": "wwOrder"
+          },
+          {
+            "sortDirection": 1,
+            "name": "Total season fantasy points for",
+            "shortName": "FPtsF",
+            "key": "pointsFor"
+          },
+          {
+            "sortDirection": 1,
+            "name": "Total season fantasy points against",
+            "shortName": "FPtsA",
+            "key": "pointsAgainst"
+          },
+          {
+            "sortDirection": 1,
+            "name": "Streak",
+            "shortName": "Streak",
+            "key": "streak"
+          }
+        ]
+      },
+      "rows": [
+        {
+          "cells": [
+            {
+              "content": "1",
+              "toolTip": "1"
+            },
+            {
+              "content": "0",
+              "toolTip": "0"
+            },
+            {
+              "content": "0",
+              "toolTip": "0"
+            },
+            {
+              "content": "3",
+              "toolTip": "3"
+            },
+            {
+              "content": "1.000"
+            },
+            {
+              "content": "3"
+            },
+            {
+              "content": "59",
+              "toolTip": "59"
+            },
+            {
+              "content": "35",
+              "toolTip": "35"
+            },
+            {
+              "content": "1 (W)"
+            }
+          ],
+          "fixedCells": [
+            {
+              "content": "1"
+            },
+            {
+              "content": "test2",
+              "leagueId": "zbn1z3ukmsgb36sz",
+              "id": "zbn1z3ukmsgb36sz",
+              "teamId": "pbxm9fgimshcpazf"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "content": "1",
+              "toolTip": "1"
+            },
+            {
+              "content": "0",
+              "toolTip": "0"
+            },
+            {
+              "content": "0",
+              "toolTip": "0"
+            },
+            {
+              "content": "3",
+              "toolTip": "3"
+            },
+            {
+              "content": "1.000"
+            },
+            {
+              "content": "2"
+            },
+            {
+              "content": "49",
+              "toolTip": "49"
+            },
+            {
+              "content": "37",
+              "toolTip": "37"
+            },
+            {
+              "content": "1 (W)"
+            }
+          ],
+          "fixedCells": [
+            {
+              "content": "2"
+            },
+            {
+              "content": "test3",
+              "leagueId": "zbn1z3ukmsgb36sz",
+              "id": "zbn1z3ukmsgb36sz",
+              "teamId": "j9zadacnmshcpazf"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "content": "0",
+              "toolTip": "0"
+            },
+            {
+              "content": "0",
+              "toolTip": "0"
+            },
+            {
+              "content": "1",
+              "toolTip": "1"
+            },
+            {
+              "content": "0",
+              "toolTip": "0"
+            },
+            {
+              "content": ".000"
+            },
+            {
+              "content": "4"
+            },
+            {
+              "content": "47",
+              "toolTip": "47"
+            },
+            {
+              "content": "63",
+              "toolTip": "63"
+            },
+            {
+              "content": "1 (L)"
+            }
+          ],
+          "fixedCells": [
+            {
+              "content": "3"
+            },
+            {
+              "content": "123",
+              "leagueId": "zbn1z3ukmsgb36sz",
+              "id": "zbn1z3ukmsgb36sz",
+              "teamId": "8enbgqo5msgb375j"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "content": "0",
+              "toolTip": "0"
+            },
+            {
+              "content": "0",
+              "toolTip": "0"
+            },
+            {
+              "content": "1",
+              "toolTip": "1"
+            },
+            {
+              "content": "0",
+              "toolTip": "0"
+            },
+            {
+              "content": ".000"
+            },
+            {
+              "content": "1"
+            },
+            {
+              "content": "25",
+              "toolTip": "25"
+            },
+            {
+              "content": "45",
+              "toolTip": "45"
+            },
+            {
+              "content": "1 (L)"
+            }
+          ],
+          "fixedCells": [
+            {
+              "content": "4"
+            },
+            {
+              "content": "test4",
+              "leagueId": "zbn1z3ukmsgb36sz",
+              "id": "zbn1z3ukmsgb36sz",
+              "teamId": "sezrgvl2mshcpazf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "fixedRows": false,
+      "tableType": "H2hPointsBased2",
+      "caption": "Gameweek 2",
+      "subCaption": "(Fri Aug 28, 2026 - Thu Sep 3, 2026)",
+      "header": {
+        "cells": [
+          {
+            "align": "LEFT",
+            "sortDirection": 1,
+            "name": "Away",
+            "shortName": "Away",
+            "key": "away"
+          },
+          {
+            "sortDirection": 1,
+            "name": "FPts",
+            "shortName": "FPts",
+            "key": "fpts"
+          },
+          {
+            "align": "LEFT",
+            "sortDirection": 1,
+            "name": "Home",
+            "shortName": "Home",
+            "key": "home"
+          },
+          {
+            "sortDirection": 1,
+            "name": "FPts",
+            "shortName": "FPts",
+            "key": "fpts"
+          }
+        ]
+      },
+      "rows": [
+        {
+          "cells": [
+            {
+              "content": "test2",
+              "leagueId": "zbn1z3ukmsgb36sz",
+              "id": "zbn1z3ukmsgb36sz",
+              "teamId": "pbxm9fgimshcpazf"
+            },
+            {
+              "content": "18"
+            },
+            {
+              "content": "123",
+              "leagueId": "zbn1z3ukmsgb36sz",
+              "id": "zbn1z3ukmsgb36sz",
+              "teamId": "8enbgqo5msgb375j"
+            },
+            {
+              "content": "16"
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "content": "test4",
+              "leagueId": "zbn1z3ukmsgb36sz",
+              "id": "zbn1z3ukmsgb36sz",
+              "teamId": "sezrgvl2mshcpazf"
+            },
+            {
+              "content": "6"
+            },
+            {
+              "content": "test3",
+              "leagueId": "zbn1z3ukmsgb36sz",
+              "id": "zbn1z3ukmsgb36sz",
+              "teamId": "j9zadacnmshcpazf"
+            },
+            {
+              "content": "4"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

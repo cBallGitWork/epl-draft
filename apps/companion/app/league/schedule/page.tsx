@@ -23,7 +23,7 @@ import { seasonRows } from "./teamSeason";
 import { footballNow } from "../../football";
 import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
-import { teamBadges } from "../../badges";
+import { teamBadges } from "../../standings";
 import { FANTRAX_SILENT } from "../../config";
 
 // The season, one gameweek at a time across every competition being played on

@@ -3,7 +3,7 @@ import { politeFetch } from "../../http/fetch";
 import type { TransactionView } from "../types";
 import { FantraxError, errorEnvelope } from "./errors";
 import { fxpaRead } from "./fxpa";
-import type { RawStandingsPage } from "./badges";
+import type { RawStandingsPage } from "./standingsPage";
 import type { RawLiveScoring } from "./livescoring";
 import type { RawSchedulePage } from "./results";
 import type { RawPlayerProfile } from "./profile";
@@ -76,7 +76,7 @@ export function fetchLeagueInfo(leagueId: string): Promise<RawLeagueInfo> {
  *  difference, and it is why `squads.ts` asks for a past period only when
  *  Fantrax's own label has moved past it AND our calendar says its lineups
  *  locked: that conjunction is false throughout every window the freeze instant
- *  could matter in, so the answer is not needed. See `frozenPeriod`. */
+ *  could matter in, so the answer is not needed. See `periodToRead`. */
 export function fetchTeamRosters(leagueId: string, period?: number): Promise<RawTeamRosters> {
   return fxeaGet<RawTeamRosters>("getTeamRosters", {
     leagueId,
@@ -84,6 +84,9 @@ export function fetchTeamRosters(leagueId: string, period?: number): Promise<Raw
   });
 }
 
+/** The fxea table. Kept for the snapshots and the shape diff, and read by no
+ *  screen: it carries no points column and squashes the record into one string,
+ *  which is what moved the table onto `fetchStandingsPage`. */
 export function fetchStandings(leagueId: string): Promise<RawStandings> {
   return fxeaGet<RawStandings>("getStandings", { leagueId });
 }
@@ -126,13 +129,15 @@ export function fetchTransactions(
   }) as Promise<RawTransactionHistory>;
 }
 
-/** The standings page Fantrax draws for its own site, read for the badges on it.
+/** The standings page Fantrax draws for its own site: the table and the badges,
+ *  in one request.
  *
  *  Public, and a different read from `fetchStandings` despite the shared method
- *  name: that one is fxea and answers the table, this one is fxpa and answers
- *  the page. The table is not mapped from here — `mapStandings` already owns it,
- *  and two mappers for one table would be two answers to one question. */
-export function fetchTeamBadges(leagueId: string): Promise<RawStandingsPage> {
+ *  name: that one is fxea and answers an array of rows, this one is fxpa and
+ *  answers the page. The page is the one that carries the league's POINTS —
+ *  three for a win here — and its record split into wins, draws and losses, so
+ *  the table is mapped from here and the fxea read is left to the snapshots. */
+export function fetchStandingsPage(leagueId: string): Promise<RawStandingsPage> {
   return fxpaRead(leagueId, "getStandings") as Promise<RawStandingsPage>;
 }
 

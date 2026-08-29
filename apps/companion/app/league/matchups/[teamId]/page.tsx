@@ -21,7 +21,7 @@ import LeagueShell from "../../Shell";
 import { getLeagueSquads, roundOf, teamDisplay } from "../../../squads";
 import { pollSeconds } from "../../../football";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
-import { teamBadges } from "../../../badges";
+import { teamBadges } from "../../../standings";
 import { myTeamId } from "../../../session";
 
 // One head-to-head, at the size it deserves on a Saturday.

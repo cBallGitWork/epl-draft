@@ -8,17 +8,16 @@ import {
   datedKickoffs,
   fetchLeagueInfo,
   fetchSeasonResults,
-  fetchStandings,
   firstKickoff,
   gameweekStarted,
   gameweekStatus,
   locksAt,
   mapLeagueInfo,
   mapSeasonResults,
-  mapStandings,
   periodGameweeks,
 } from "@epl/core";
 import { leagueCache } from "../../leagueCache";
+import { leagueTable } from "../../standings";
 import { seasonFixtures } from "../../football";
 import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
@@ -86,7 +85,7 @@ const readSeason = leagueCache("schedule-season",
     const [raw, season, standings] = await Promise.all([
       orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID)),
       seasonFixtures(),
-      orRefusal(fetchStandings(FANTRAX_LEAGUE_ID)),
+      leagueTable(),
     ]);
     if (raw instanceof FantraxError) return { unavailable: tell(raw) };
 
@@ -131,7 +130,7 @@ const readSeason = leagueCache("schedule-season",
     return {
       info,
       rounds,
-      table: standings instanceof FantraxError ? [] : mapStandings(standings),
+      table: "unavailable" in standings ? [] : standings,
     };
   },
 );

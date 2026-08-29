@@ -10,7 +10,7 @@ import {
   fetchLiveScoring,
   fetchSeasonResults,
   fetchStandings,
-  fetchTeamBadges,
+  fetchStandingsPage,
   fetchTeamRosters,
   fetchTransactions,
   shapeOf,
@@ -56,7 +56,7 @@ const READS: { method: string; run: (leagueId: string) => Promise<unknown> }[] =
   { method: "getTransactionDetailsHistory-CLAIM_DROP", run: (id) => fetchTransactions(id, "CLAIM_DROP") },
   { method: "getTransactionDetailsHistory-TRADE", run: (id) => fetchTransactions(id, "TRADE") },
   // The three fxpa reads the app cannot render a live Saturday without.
-  { method: "fxpa getStandings (badges)", run: fetchTeamBadges },
+  { method: "fxpa getStandings (page)", run: fetchStandingsPage },
   { method: "fxpa getStandings?view=SCHEDULE", run: fetchSeasonResults },
   { method: "getLiveScoringStats", run: (id) => fetchLiveScoring(id, PERIOD) },
 ];

@@ -1,28 +1,21 @@
 import Link from "next/link";
-import {
-  FANTRAX_LEAGUE_ID,
-  FantraxError,
-  LEAGUE_NAME,
-  fetchStandings,
-  mapStandings,
-} from "@epl/core";
-import type { StandingsRow } from "@epl/core";
-import { leagueCache } from "../leagueCache";
+import { LEAGUE_NAME } from "@epl/core";
 import AutoRefresh from "../components/shell/AutoRefresh";
 import { footballNow, pollSeconds } from "../football";
+import Columns from "./Columns";
 import TeamBadge from "../components/league/TeamBadge";
-import { teamBadges } from "../badges";
+import { leagueTable, teamBadges } from "../standings";
 import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
 import { leagueInfo, readerTeamId } from "../squads";
 import { londonDate } from "../londonTime";
-import { orRefusal, tell } from "../refusals";
-import type { Unavailable } from "../refusals";
 import { yoursBorder } from "../mine";
 import { FANTRAX_SILENT, servedLeague } from "../config";
 
-// The table. Fantrax computes it — the record and the points are theirs, and this
-// page never adds them up itself.
+// The table. Fantrax computes it — the record, the points and the order are
+// theirs, and this page never adds them up itself. Three for a win is a
+// commissioner setting, so a table that worked it out here would be right until
+// somebody's league paid two.
 
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
@@ -32,18 +25,9 @@ const DRAFT_DATE = londonDate(
   servedLeague()?.draftDate ?? "",
 );
 
-/** An empty table and an unreachable one are different states, and only one of
- *  them is a problem: our real league answers `[]` here every day until 10 Oct. */
-const table = leagueCache("standings",
-  async (): Promise<StandingsRow[] | Unavailable> => {
-    const raw = await orRefusal(fetchStandings(FANTRAX_LEAGUE_ID));
-    return raw instanceof FantraxError ? { unavailable: tell(raw) } : mapStandings(raw);
-  },
-);
-
 export default async function StandingsPage() {
   const [rows, mine, badges, football, info] = await Promise.all([
-    table(),
+    leagueTable(),
     readerTeamId(),
     teamBadges(),
     footballNow(),
@@ -93,19 +77,7 @@ export default async function StandingsPage() {
           open on the sofa, so the table sat still through a whole afternoon. */}
       <AutoRefresh seconds={pollSeconds(football)} />
 
-      <div className="flex items-center gap-3 px-3 text-2xs font-bold uppercase tracking-widest text-faint">
-        <span className="w-6">#</span>
-        <span className="flex-1">Team</span>
-        {/* Fantrax's own three-part record, and their word for the third part.
-            Unparsed here as it is in the mapper: every sample we hold is "0-0-0"
-            and splitting it would be inventing a format. */}
-        <span className="numeric w-16 text-right">W-L-T</span>
-        {/* FP, not "Points". In a league table "points" means the standings —
-            three for a win — and this column is Fantrax points scored, which is
-            a different number the same word would have claimed. Fantrax's own
-            field is `totalPointsFor` and their site heads it FPts. */}
-        <span className="numeric w-16 text-right">FP</span>
-      </div>
+      <Columns />
 
       <ul className="flex flex-col gap-1.5">
         {rows.map((row) => (
@@ -116,7 +88,7 @@ export default async function StandingsPage() {
               // edge. On sixteen near-identical rows a 4px bar at the margin is
               // easy to scroll straight past, and this is the one row a manager
               // opened the page to find.
-              className={`elev flex min-h-14 items-center gap-3 rounded-xl border px-3 py-2.5 hover:bg-raised ${
+              className={`elev flex min-h-14 items-center gap-2 rounded-xl border px-3 py-2.5 hover:bg-raised ${
                 row.teamId === mine ? "bg-raised" : "bg-surface"
               } ${yoursBorder(row.teamId === mine)}`}
             >
@@ -124,7 +96,8 @@ export default async function StandingsPage() {
                   both were quieter than the team name: the rank was small and
                   faint, the points bold at body size. They are the figures now,
                   set in the tabular face at either end of the row with the
-                  record — which decides neither — kept small between them. */}
+                  record and the tiebreak — which decide neither — kept small
+                  between them. */}
               <span className="numeric w-6 text-lg font-bold leading-none text-muted">
                 {row.rank}
               </span>
@@ -148,9 +121,15 @@ export default async function StandingsPage() {
                   You
                 </span>
               ) : null}
-              <span className="numeric w-16 text-right text-2xs text-faint">{row.record}</span>
-              <span className="numeric w-16 text-right text-lg font-bold leading-none">
-                {row.pointsFor}
+              <span className="numeric w-16 text-right text-2xs text-faint">
+                {row.won}-{row.drawn}-{row.lost}
+              </span>
+              {/* The tiebreak, small and beside the figure it breaks a tie in —
+                  it was the figure, at the end of the row, where a reader takes
+                  the last number as the standing. */}
+              <span className="numeric w-12 text-right text-2xs text-faint">{row.pointsFor}</span>
+              <span className="numeric w-8 text-right text-lg font-bold leading-none">
+                {row.points}
               </span>
             </Link>
             {cut(row.rank, qualify, rows.length) ? (

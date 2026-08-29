@@ -3781,8 +3781,59 @@ email, not billing — see the hosting section.
 payloads; captures filed per league; period alignment settled and scripted; the
 `CLAUDE.md` pool-count and `sportRadarId` corrections landed.
 
+## The two bugs the first live weekend showed (29 Aug 2026)
+
+Craig read the deployed app mid-gameweek 2 and found two, both of which had been
+invisible until a round was actually being played.
+
+**Squads was drawing a week nobody could change.** `getTeamRosters` with no
+`period` answers whatever Fantrax currently has open, and that stays the LIVE
+period all weekend — so from Friday teatime the squad screens showed a locked
+eleven under a running score, when the eleven a manager opens Squads for is next
+week's. `planningPeriod` (core, pure) now answers the first period whose lineups
+have not locked, `planningRound` resolves it to a gameweek through the calendar
+seam, and the two `/squad` routes ask for that instead of taking what they are
+given. Every other caller of `getLeagueSquads()` — the matchday board, the
+matchups board, the paper — still wants the round being PLAYED and still gets it
+unasked, which is why this is a second question rather than a new default.
+
+`frozenPeriod` became `periodToRead`, because it now answers both directions:
+ahead of Fantrax's own label it asks outright, behind it the old conjunction
+still holds. Reading a future period leaks nothing — an unlocked period fails
+`rosterDisplay` for every team but the reader's own, exactly as this week's did
+before it locked — and the live scores disappear from the squad screen on their
+own, because `getLiveScoringStats` has no per-player rows for a round that has
+not kicked off.
+
+**The table had no points column, and its record was mislabelled.** fxea's
+`getStandings` carries `points` as a three-part STRING and no league points at
+all; the app printed that string under a heading reading `W-L-T`. Every sample
+we had held was `0-0-0`, which is the one table where W-L-T and W-D-L cannot be
+told apart. The 29 Aug read settled it: a beaten side shows `0-0-1`, so the order
+is **W-D-L** and always was.
+
+The points themselves are on the fxpa standings page and nowhere else, under
+their own header keys — `win`, `draw`, `loss`, `points`, `winpc`, `wwOrder`,
+`pointsFor`, `pointsAgainst`, `streak` — with `tableType: "H2hPointsBased1"` and
+three for a win. Anonymous, both leagues, same as the badge read. So `mapStandings`
+now reads THAT page, by header key and never by column position, and the fxea
+array is left to the snapshots. Three for a win is a commissioner setting (§3):
+we print Fantrax's number rather than counting it, and the order stays their
+`rank` — a league that pays two for a win gets two.
+
+That also collapsed a duplicate request. `/league` was asking Fantrax for its
+standings twice per window — the array for the table, the page for the badges —
+and `app/standings.ts` now reads the page once and hands out both.
+
 ## Season log
 
+- 2026-08-29: Squads moved to the round a manager can still change, and the
+  table gained the league's own points. Both bugs were only visible with a
+  gameweek in flight; see the section above. `mapStandings` moved onto the fxpa
+  standings page, `frozenPeriod` became `periodToRead`, `app/badges.ts` became
+  `app/standings.ts` with one read behind both the table and the badges, and the
+  table's column heads moved into `league/Columns.tsx` — the skeleton had its own
+  copy, and only one of the two would have been corrected.
 - 2026-08-28: The Gazetta got a front page. `lead()` picks one story a week out
   of four kinds — a match decided by nothing, a manager who left the week's best
   player out, a hammering, a trade — and prints nothing when none of them

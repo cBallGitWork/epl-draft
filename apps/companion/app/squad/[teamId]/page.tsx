@@ -16,7 +16,7 @@ import PageHeader from "../../components/shell/PageHeader";
 import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
 import { pollSeconds } from "../../football";
-import { getLeagueSquads, roundOf, teamDisplay } from "../../squads";
+import { getLeagueSquads, planningRound, roundOf, teamDisplay } from "../../squads";
 import { squadLivePoints } from "../../scoreboard";
 import { squadPoints } from "../../teamStats";
 import { myTeamId } from "../../session";
@@ -33,8 +33,11 @@ export default async function TeamPage({
   searchParams,
 }: {
   params: Promise<{ teamId: string }>;
-  /** Which round's squad. Absent means the one Fantrax is currently pointing at,
-   *  which is every arrival from the table, the matchup card and the squad list.
+  /** Which round's squad. Absent means the round a manager can still change —
+   *  next week's, once this week's lineups have locked — which is every arrival
+   *  from the table, the matchup card and the squad list. It used to mean the
+   *  round Fantrax points at unasked, so mid-Saturday this screen drew a locked
+   *  eleven under a running score; the score is Live's job.
    *  The schedule sends a gameweek, so tapping a side in a March fixture opens
    *  March's fifteen rather than this week's — which is the only useful thing
    *  about a fixture in March, and was the one thing that row did not do. */
@@ -46,7 +49,7 @@ export default async function TeamPage({
   // period is what Fantrax is asked for and the gameweek is what FPL is asked
   // for. Same resolution the head-to-head route makes.
   const asked = Number(gw);
-  const round = Number.isInteger(asked) ? await roundOf(asked) : null;
+  const round = Number.isInteger(asked) ? await roundOf(asked) : await planningRound();
   const squads = await getLeagueSquads(round);
   // No squads exist and no such team: both are genuinely 404. Fantrax being
   // unreachable is not — that is a state of ours, and it belongs on /team where

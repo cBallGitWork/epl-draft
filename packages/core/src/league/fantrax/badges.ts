@@ -1,32 +1,10 @@
 import { FANTRAX_BADGE_BASE } from "../../config";
+import type { RawStandingsPage } from "./standingsPage";
 
-// `getStandings` on the fxpa surface, read for the one thing the fxea standings
-// do not carry: the badge each manager picked for his team.
+// The badge each manager picked for his team, off Fantrax's own standings page.
 //
-// Two methods share that name and they are not the same read. fxea's answers a
-// plain array of table rows; this one answers the page Fantrax draws for its own
-// site, and `fantasyTeamInfo` is where the badge lives. It needs no cookie —
-// probed anonymously against both leagues on 20 Aug 2026 — which is why a badge
-// can appear beside a name before anybody has signed in.
-//
-// The table itself is deliberately not mapped from here. `mapStandings` already
-// reads it off fxea and two mappers for one table is two answers to one
-// question.
-
-/** Fantrax's own block, mirrored including the field that lies twice: the key
- *  says 512, the value it holds ends `_256.webp`, and 256 is the one size their
- *  image host does not serve. */
-export interface RawFantasyTeamInfo {
-  name?: string;
-  logoUrl512?: string;
-  shortName?: string;
-}
-
-export interface RawStandingsPage {
-  /** Keyed by team id. `{}` for a league nobody has joined, which is what our
-   *  real league answers every day until 10 Oct. */
-  fantasyTeamInfo?: Record<string, RawFantasyTeamInfo | undefined>;
-}
+// One of two mappers over that payload — `mapStandings` reads the table on the
+// same page — which is why its shape lives in `standingsPage.ts` and not here.
 
 /** A fantasy team's badge, as its manager chose it on Fantrax. Ours is the
  *  league crest; this is one of the sixteen inside it. */

@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { mapTeamBadges } from "./badges";
-import type { RawStandingsPage } from "./badges";
+import type { RawStandingsPage } from "./standingsPage";
 import standingsPage from "./__fixtures__/standingsPage.json";
 
-// Trimmed from a live anonymous read of the rehearsal league on 20 Aug 2026,
-// plus a third team with no badge — the shape a manager who never picked one
-// leaves behind.
+// The badge half of a live anonymous read of the rehearsal league — 20 Aug 2026
+// for these entries, plus a third team with no badge, which is the shape a
+// manager who never picked one leaves behind. The table on the same fixture came
+// off the 29 Aug read and belongs to `standings.test.ts`.
 
 describe("mapTeamBadges", () => {
   const badges = mapTeamBadges(standingsPage as RawStandingsPage);

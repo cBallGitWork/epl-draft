@@ -215,11 +215,24 @@ export interface LeagueTransaction {
 export interface StandingsRow {
   teamId: string;
   teamName: string;
+  /** Fantrax's own placing, never a sort of ours. Where a points tie is broken
+   *  is a rule of their competition, not an arithmetic we may repeat. */
   rank: number;
-  /** Win-loss-tie exactly as Fantrax formats it ("0-0-0"). Unparsed on purpose:
-   *  every sample we have is all zeroes, so splitting it would infer a format
-   *  from nothing. Parse it when a played gameweek produces a real one. */
-  record: string;
+  /** The record, in three columns rather than the one string the fxea read
+   *  squashes it into — and in Fantrax's own order, which their header names
+   *  Win, Draw, Loss. Football's order, not the win-loss-tie an American
+   *  product's table is usually read in; the app called it W-L-T for as long as
+   *  every sample was "0-0-0" and nothing could tell the two apart. */
+  won: number;
+  drawn: number;
+  lost: number;
+  /** The league's points — three for a win here. Read off Fantrax's table and
+   *  never computed from the record: what a win is worth is a commissioner
+   *  setting (§3), and a league that pays two would get three from us. */
+  points: number;
+  /** Fantasy points scored — Fantrax's FPtsF. The first tiebreak, not the
+   *  column the table is ordered by, and the two are one number apart on a
+   *  Saturday. */
   pointsFor: number;
 }
 

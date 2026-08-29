@@ -15,7 +15,10 @@ const row = (rank: number, teamId: string, teamName: string): StandingsRow => ({
   teamId,
   teamName,
   rank,
-  record: "0-0-0",
+  won: 0,
+  drawn: 0,
+  lost: 0,
+  points: 0,
   pointsFor: 0,
 });
 

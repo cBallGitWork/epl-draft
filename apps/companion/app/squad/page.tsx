@@ -5,7 +5,7 @@ import PageHeader from "../components/shell/PageHeader";
 import { londonDate } from "../londonTime";
 import SignIn from "./SignIn";
 import { forgetTeam } from "./actions";
-import { getLeagueSquads } from "../squads";
+import { getLeagueSquads, planningRound } from "../squads";
 import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
 import { FANTRAX_SILENT, servedLeague } from "../config";
@@ -30,7 +30,11 @@ const DRAFT_DATE = londonDate(
 );
 
 export default async function SquadsPage() {
-  const squads = await getLeagueSquads();
+  // The week a manager can still change, which from Friday teatime is next week
+  // and not the one being played. Fantrax hands over the live period to a read
+  // that does not ask, so this page spent every weekend showing an arrangement
+  // nobody could alter; the running score belongs to Live.
+  const squads = await getLeagueSquads(await planningRound());
 
   // Both empty states keep the sign-in form under them, and that is not a
   // decoration. This route is the ONLY place a manager can enter his code, and

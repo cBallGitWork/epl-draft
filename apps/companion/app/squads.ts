@@ -10,10 +10,11 @@ import {
   type RawTeamRosters,
   fetchLeagueInfo,
   fetchTeamRosters,
-  frozenPeriod,
   mapLeagueInfo,
   mapTeamRosters,
   periodGameweeks,
+  periodToRead,
+  planningPeriod,
   resolveRosters,
   rosterDisplay,
 } from "@epl/core";
@@ -86,7 +87,8 @@ interface CachedLeague {
   refusal: { code: string; tell: string } | null;
   info: LeagueInfo | null;
   /** The period the round in view is scored in, or null when the calendar could
-   *  not say. Never sent to `getTeamRosters` — see the read below. */
+   *  not say. Sent to `getTeamRosters` only through `periodToRead`, which is
+   *  what decides whether it may be asked for — see the read below. */
   roundPeriod: number | null;
 }
 
@@ -109,9 +111,10 @@ const readLeague = leagueCache("league-squads",
     // two calendars turn over at different instants and the page must be one
     // week's throughout.
     //
-    // It is sent to `getTeamRosters` only for a round Fantrax has finished with
-    // and our own calendar says has locked — `frozenPeriod` holds both halves of
-    // that argument and the evidence for them.
+    // It is sent to `getTeamRosters` for a round ahead of Fantrax's own label —
+    // the week the squad screens are about — and, behind it, only for one
+    // Fantrax has finished with that our own calendar says has locked.
+    // `periodToRead` holds both halves of that argument and the evidence.
     const roundPeriod = round?.period ?? (await roundOf(current.gameweek))?.period ?? null;
 
     // `footballNow` for the round FPL is pointing at, and only the cold cache
@@ -127,14 +130,14 @@ const readLeague = leagueCache("league-squads",
       seasonKickoffs(),
     ]);
 
-    // A second read, and only for a past round. Fantrax's own open label is not
-    // knowable without asking, so the unparameterised read has to happen first —
-    // which is why this is sequential and why it costs one extra request on the
-    // rounds nobody is refreshing.
-    const frozen =
+    // A second read, for any round that is not the one Fantrax hands over
+    // unasked. Its own open label is not knowable without asking, so the
+    // unparameterised read has to happen first — which is why this is sequential
+    // and why it costs one extra request on every round but the live one.
+    const asked =
       open instanceof FantraxError
         ? null
-        : frozenPeriod(
+        : periodToRead(
             roundPeriod,
             open.period ?? null,
             info?.rosterPeriods ?? [],
@@ -142,7 +145,7 @@ const readLeague = leagueCache("league-squads",
             new Date().toISOString(),
           );
     const rosters =
-      frozen === null ? open : await orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID, frozen));
+      asked === null ? open : await orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID, asked));
 
     return rosters instanceof FantraxError
       ? {
@@ -181,6 +184,40 @@ const readCalendar = leagueCache("league-calendar",
     return info === null ? [] : periodGameweeks(info.scoringPeriods, kickoffs);
   },
 );
+
+/** The round the squad screens are about: the first whose lineups have not
+ *  locked, which mid-weekend is next week and not this one.
+ *
+ *  Not the default for every caller, and that is the point of it being a
+ *  separate question. The matchday board, the matchups board and the paper all
+ *  want the round being PLAYED, which is what `getLeagueSquads()` unasked still
+ *  gives them. Squads wants the round a manager can still change — the eleven he
+ *  opened the app to pick — and taking Fantrax's unasked answer there is what
+ *  drew a locked arrangement under a running score all Saturday.
+ *
+ *  Null when the league would not describe itself or the calendar cannot place
+ *  the period, and null means "whatever Fantrax considers open" — the behaviour
+ *  every one of these screens had before. */
+export async function planningRound(): Promise<Round | null> {
+  const [info, kickoffs, calendar] = await Promise.all([
+    leagueInfo(),
+    seasonKickoffs(),
+    readCalendar(),
+  ]);
+  if (info === null) return null;
+
+  // `rosterPeriods` and not `scoringPeriods`, as everything measuring a lock
+  // does: the lineup calendar is the one that says when a week stops taking
+  // changes.
+  const period = planningPeriod(info.rosterPeriods, kickoffs, new Date().toISOString());
+  if (period === null) return null;
+
+  // The first gameweek in it. A double is two gameweeks in one period and the
+  // earlier one is the week that opens; a blank period has none, and
+  // `planningPeriod` has already stepped over those.
+  const gameweek = calendar.find((entry) => entry.period === period)?.gameweeks[0];
+  return gameweek === undefined ? null : { gameweek, period };
+}
 
 export async function roundOf(gameweek: number): Promise<Round | null> {
   const found = (await readCalendar()).find((period) => period.gameweeks.includes(gameweek));
@@ -225,7 +262,7 @@ export async function getLeagueSquads(round: Round | null = null): Promise<Leagu
     // own answer, at the route that knows which team that is.
     kickoffs,
     // Judged on the period the PAYLOAD declares, never on one we chose — which
-    // for a past round is the one `frozenPeriod` asked for, and otherwise is
+    // for any round but the live one is the one `periodToRead` asked for, and otherwise is
     // whichever Fantrax considers open. Checking the echo against our own number
     // would be true by construction and protect nothing.
     display: rosterDisplay(

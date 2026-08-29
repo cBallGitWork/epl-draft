@@ -30,7 +30,7 @@ export { captureStaleness } from "./staleness";
 export { firstKickoff, locksAt, periodGameweeks } from "./calendar";
 export type { GameweekKickoff } from "./calendar";
 
-export { frozenPeriod, rosterDisplay } from "./visibility";
+export { periodToRead, planningPeriod, rosterDisplay } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
 
 export { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";
@@ -97,6 +97,6 @@ export {
   fetchPlayerPool,
   fetchSeasonResults,
   fetchStandings,
-  fetchTeamBadges,
+  fetchStandingsPage,
   fetchTeamRosters,
 } from "./fantrax/client";
