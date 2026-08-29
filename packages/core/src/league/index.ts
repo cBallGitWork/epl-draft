@@ -30,6 +30,9 @@ export { captureStaleness } from "./staleness";
 export { seasonForm } from "./form";
 export type { FormGame, TeamForm } from "./form";
 
+export { pedigreeOf } from "./pedigree";
+export type { Pedigree } from "./pedigree";
+
 export { firstKickoff, locksAt, periodGameweeks } from "./calendar";
 export type { GameweekKickoff } from "./calendar";
 

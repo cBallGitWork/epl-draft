@@ -8,11 +8,13 @@ import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
 import Availability from "./Availability";
 import Breakdown from "./Breakdown";
+import Pedigree from "./Pedigree";
 import FixtureRun from "./FixtureRun";
 import GameLog from "./GameLog";
 import Portrait from "./Portrait";
 import ThisRound from "./ThisRound";
 import { footballSelf, playerSeason } from "./season";
+import { playerPedigree } from "./draft";
 import { gameLog, scouting } from "./scouting";
 import type { FootballPlayer } from "@epl/core";
 import { positionsFromList } from "../../positions";
@@ -138,6 +140,16 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
         </Suspense>
       )}
 
+      {/* What the draft paid for him, streamed for the same reason his season is:
+          the ranking behind "four picks better than he cost" is every drafted
+          man's, which is the pool table — the largest read in the app. The
+          fallback is nothing at all, because a league whose draft has not run
+          prints nothing here and a shape reserved for it would be a promise the
+          page cannot keep. */}
+      <Suspense fallback={null}>
+        <Draft fantraxId={fantraxId} />
+      </Suspense>
+
       {/* His season streams under the heading. `playerSeason` reads the owning
           team's whole stats table — a Fantrax request of its own, and the
           slowest thing on this page — while everything above is already in hand
@@ -194,6 +206,12 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
  *  await lives here — the card itself is `Breakdown`, unchanged. */
 async function Season({ fantraxId, ownerTeamId }: { fantraxId: string; ownerTeamId: string }) {
   return <Breakdown season={await playerSeason(fantraxId, ownerTeamId)} />;
+}
+
+/** Where he was taken and what he has repaid, read behind the boundary above. */
+async function Draft({ fantraxId }: { fantraxId: string }) {
+  const { pedigree, drafterName } = await playerPedigree(fantraxId);
+  return <Pedigree pedigree={pedigree} drafterName={drafterName} />;
 }
 
 /** His match-by-match season, read behind the boundary above. The only request

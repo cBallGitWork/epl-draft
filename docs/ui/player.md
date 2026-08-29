@@ -26,14 +26,35 @@ policy toward Fantrax.
    fit player and for one the bridge has not settled; a "no news" panel on seven
    hundred pages is noise. Fantrax has its own injury notes and we ignore them:
    theirs arrive truncated mid-sentence.
-3. **Breakdown** — the categories that earned him points, biggest first, with
+3. **Draft** — where he was taken, who spent the pick, and how far his scoring
+   now sits from it. The one fact a draft league has that no other fantasy format
+   does: every man has a price somebody paid in draft position, and a
+   fourteenth-rounder outscoring the first pick is a story.
+
+   **Three answers and they are not degrees of one.** He was drafted; or the
+   draft is over and nobody took him, so he came off the wire, which is its own
+   pedigree; or there is no draft to read — which is the state our real league is
+   in until 10 Oct, and the block prints nothing at all rather than filing 671
+   men as waiver pickups.
+
+   The value figure is ranked among the men this draft took, not across the pool:
+   a player 300th of 671 has no comparable pick number. A drafted man Fantrax
+   cannot score drops out of the ranking rather than sorting last, so the figure
+   is a comparison and never a claim about him alone — which is what the tooltip
+   on it says. A dash when there is no ranking for him; nought is a real answer
+   and means exactly what he cost.
+
+   It streams behind a boundary, because the ranking behind it is the pool table
+   — the largest read in the app — and the fallback is nothing, since a league
+   with no draft prints nothing here.
+4. **Breakdown** — the categories that earned him points, biggest first, with
    costly ones (cards, goals against) sorting to the bottom where they read as
    the deductions they are. Fantrax's own numbers; they sum to the total exactly
    and no scoring of ours is involved.
-4. **In this league** / **Fantrax** / **Across every Fantrax league** / **Player**
+5. **In this league** / **Fantrax** / **Across every Fantrax league** / **Player**
    — four fact blocks. The third is deliberately headed that way: those
    percentages are every league on Fantrax and they sit two rows below ours.
-5. Links to the squad he is in, and back to the pool.
+6. Links to the squad he is in, and back to the pool.
 
 Each block renders nothing when empty — a heading over no rows is a claim that
 something is missing.
