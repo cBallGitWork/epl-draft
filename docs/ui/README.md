@@ -39,6 +39,10 @@ redesign must not break.
 
 ## Where the new visual direction lives
 
+**`../../DESIGN.md` is binding and supersedes this section.** It holds the two
+registers, the palette and the retirements; what follows describes the app as it
+stood before the overhaul began and is kept for the geometry, which survives.
+
 `/squad/[teamId]` was rebuilt most recently and is the reference: full-bleed
 pitch on a gentle taper with sponsor hoardings, cut-out portraits standing on the
 grass with nothing drawn behind them, a cream name plate and a band under it that

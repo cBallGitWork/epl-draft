@@ -8,6 +8,11 @@ rule of 2/3, no bloat, no hardcoding, small files, purity at the core — are ha
 rules, not preferences. Exceptions are recorded in `PLATFORM_NOTES.md` in the
 same commit.
 
+**`DESIGN.md` is binding for anything visible.** Two registers — a printed paper
+at `/` and a Championship Manager 99/00 desk on the other five tabs — one shared
+skeleton, and a palette in which every colour is a slot with one meaning. It also
+records what is deliberately deferred, so an absence is not read as an oversight.
+
 A 16-user **Fantrax** Premier League draft league starts **GW6, 10 Oct 2026**.
 Fantrax is the source of truth for the current season. This repo republishes that
 league with what Fantrax lacks and lays the groundwork for our own platform in
