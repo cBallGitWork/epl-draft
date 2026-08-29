@@ -151,12 +151,20 @@ the sofa, so the score under fifteen faces sat still through a whole half.
   the league — drew the tallest card of any of them and pushed this page 199px
   past the screen, while the seven-across squad that looks like the hard case sat
   comfortably inside it.
+- **Two budgets, because this route is two pages.** The gated view spends 232px
+  on furniture; the same route showing the owner's XI spends 382, because it
+  carries a bench strip and a way out to Fantrax. Held to one number the
+  fifteen-man pitch — the one this card was rebuilt for — gave up a third of its
+  photograph to pay for a page it is not on, so `TeamSheet` and `LineupPitch`
+  carry `.pitch-with-bench` and the gated pitch keeps the base.
 - It fits a 390×844 phone with no scrolling. Keep it that way, and **measure the
-  XI view as well as the gated one** — they have different furniture (188px
-  against 329px) and the XI view is both the tighter and the more visited.
-  Measured 29 Aug, all four rehearsal squads, signed in: every one draws at
-  exactly 844 with nothing over. The gated seven-across pitch takes 468px, the
-  six-across ones 500px, and the XI with its bench strip 500px.
+  XI view as well as the gated one** — it is both the tighter page and the more
+  visited, and it is the one a change breaks first. Measured 29 Aug, all four
+  rehearsal squads, signed in: every one draws inside 844. The gated
+  seven-across pitch takes 468px and the six-across ones 512px, with 144px and
+  100px of the screen still in hand; the XI takes 428px with 53px in hand.
+  That headroom is the margin against the next band somebody adds above the
+  pitch — one appeared mid-change and cost 44px of it.
 
 ### The list
 

@@ -33,7 +33,7 @@
    foot of the screen has a seam across the bottom of it. */
 :root {
   --page-foot: calc(4rem + env(safe-area-inset-bottom));
-  --pitch-page: 24rem;
+  --pitch-page: 18rem;
 }
 
 @media (min-width: 48rem) {
@@ -41,9 +41,30 @@
     --page-foot: 2rem;
     /* More, not less, and for the same reason `--page-foot` is less: the bar
        moves overhead, so what it stops costing at the foot it starts costing at
-       the head, and the section nav and the scoreline above a pitch are wider
-       apart up here too. Measured the same way, on the same page. */
-    --pitch-page: 28rem;
+       the head, and the bands above a pitch stand further apart up here.
+       Measured the same way, on the same pages. */
+    --pitch-page: 20rem;
+  }
+}
+
+/* A pitch with a bench under it is a different budget, and one number for both
+   made the quiet page pay for the busy one. `/squad/[teamId]` gated spends 232px
+   on furniture; the same route showing the owner's XI spends 382, because it
+   carries a bench strip and a way out to Fantrax that the gated view does not.
+   Held to the tighter figure, the fifteen-man pitch this whole card was rebuilt
+   for gave up a third of its photograph to pay for a page it is not on.
+
+   A class rather than an inline style, because the value has to move at `md`
+   with everything else here and a `style` attribute cannot. Set by the two
+   components that draw a bench — `TeamSheet` and `LineupPitch` — which are the
+   two that know there is one. */
+.pitch-with-bench {
+  --pitch-page: 28.5rem;
+}
+
+@media (min-width: 48rem) {
+  .pitch-with-bench {
+    --pitch-page: 32rem;
   }
 }
 

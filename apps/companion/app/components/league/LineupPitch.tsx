@@ -93,7 +93,9 @@ export default function LineupPitch({
   );
 
   return (
-    <div className="flex flex-col">
+    // `pitch-with-bench`: the strip below the grass is this page's, so the
+    // card's height budget has to know about it. See `globals.css`.
+    <div className="pitch-with-bench flex flex-col">
       <PitchRows
         rows={rows}
         keyOf={(player) => player.rostered.slot.fantraxId}

@@ -120,7 +120,10 @@ crowded one fitted. `.pitch-figure` caps the height at the room one row has —
 `--pitch-rows` is set by `PitchRows` and by both bench strips, so a reserve
 matches the man he would replace in height as well as width. `--pitch-page` lives
 beside `--page-foot` in `globals.css` and changes at the same breakpoint, for the
-same reason: above `md` the tab bar moves overhead. Row padding is
+same reason: above `md` the tab bar moves overhead. **A pitch with a bench under
+it is a different budget** — `.pitch-with-bench`, set by `TeamSheet` and
+`LineupPitch`, the two that know there is one — because one number for both made
+the quiet page pay for the busy one. Row padding is
 the taper's **own** inset — `FAR_INSET`, exported by `PitchTurf` and set on the
 frame as `--pitch-inset`, which the hoardings read too. One number, three
 readers: it used to be written out twice with a comment asking the next person to

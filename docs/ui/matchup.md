@@ -162,13 +162,14 @@ counting them, which is the question a manager is actually asking at 4pm.
   nobody is "behind" while a total is missing.
 - ~~The whole board — scoreline, controls, eleven and bench — fits a 390×844
   phone without scrolling.~~ **It does not, and had stopped before anyone
-  noticed.** Measured 29 Aug: 945px against 844, and ~902 before the player card
-  was rebuilt that day, so the claim was already about 60px stale. The card is
-  not what is over — a squad drawing the identical eleven at `/squad/[teamId]`
-  fits 844 exactly. This board spends 445px on furniture the squad page spends
-  188 on: a page header, the section nav, a scoreline and a Pitch/List control,
-  above the same pitch. The remaining 101px has to come out of those, and until
-  it does this is a board that scrolls.
+  noticed.** Measured 29 Aug: 899px against 844, and ~902 before the player card
+  was rebuilt that day, so the claim was already stale by about the same amount
+  and the rebuild is not what broke it. The card is not what is over — a squad
+  drawing the identical eleven at `/squad/[teamId]` fits with 53px to spare.
+  This board spends 471px on furniture the gated squad page spends 232 on: a page
+  header, the section nav, a scoreline and a Pitch/List control, above the same
+  pitch. The remaining 55px has to come out of those, and until it does this is a
+  board that scrolls.
 
 ## Known gaps
 
