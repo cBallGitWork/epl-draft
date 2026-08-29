@@ -4,7 +4,8 @@ import AsItStands from "./components/gazette/AsItStands";
 import AutoRefresh from "./components/shell/AutoRefresh";
 import Deals from "./components/gazette/Deals";
 import Doubts from "./components/gazette/Doubts";
-import Lead, { Figure, Headline } from "./components/gazette/Stories";
+import Lead, { Headline } from "./components/gazette/Stories";
+import Picture from "./components/gazette/Picture";
 import Written from "./components/gazette/Written";
 import Masthead from "./components/gazette/Masthead";
 import TeamOfTheWeek from "./components/gazette/TeamOfTheWeek";
@@ -101,7 +102,7 @@ export default async function GazettePage() {
           kicked a ball", so it said so, under moving scores. */}
       {paper.written && !paper.underway ? (
         <>
-          {paper.stories[0] ? <Figure lead={paper.stories[0]} who={who} clubs={clubs} /> : null}
+          {paper.stories[0] ? <Picture lead={paper.stories[0]} who={who} clubs={clubs} /> : null}
           <Written edition={paper.written} teams={paper.teams} />
         </>
       ) : paper.stories[0] ? (
