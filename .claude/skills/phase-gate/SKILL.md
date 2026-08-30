@@ -33,7 +33,9 @@ under `.paper`, a component that turned out to be shared — and both times the
 phase that broke it reported green.
 
 Also render both leagues where the phase touched league data. The canary is the
-shape: 15/11/5 against 14/11/3. One league rendering is not two.
+roster limits, and the direction matters: the REAL league is **14/11/3** and the
+rehearsal is **15/11/5** — read off both `getLeagueInfo` payloads on 30 Aug 2026.
+One league rendering is not two.
 
 ## 4. Docs drift
 

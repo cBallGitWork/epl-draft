@@ -93,5 +93,5 @@ capture     <n> reads recorded, <n> refused
 bridge      <n> mapped / <n> pool · unmapped <n> <names if few>
 deploy      <url> <status>
 smoke       <url> <ok|fail>
-front page  prose printed <yes|no> · league shape <15/11/5 real | 14/11/3 rehearsal>
+front page  prose printed <yes|no> · roster limits <14/11/3 real | 15/11/5 rehearsal>
 ```
