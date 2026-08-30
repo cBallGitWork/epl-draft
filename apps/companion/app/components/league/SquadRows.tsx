@@ -92,7 +92,7 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
   const inside = (
     <>
       <span
-        className="grid h-6 w-6 shrink-0 place-items-center rounded p-[2px]"
+        className="grid h-6 w-6 shrink-0 place-items-center p-[2px]"
         style={{ backgroundColor: colours.primary }}
       >
         {club ? (
@@ -154,7 +154,7 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
     </>
   );
 
-  const shell = "flex min-h-9 w-full items-center gap-2 rounded-md border border-line bg-surface px-2 py-1 text-left";
+  const shell = "flex min-h-9 w-full items-center gap-2 border border-line bg-surface px-2 py-1 text-left";
 
   return onOpen ? (
     <button type="button" onClick={onOpen} className={`${shell} hover:bg-raised`}>

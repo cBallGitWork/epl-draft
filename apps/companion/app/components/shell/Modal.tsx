@@ -51,7 +51,7 @@ export default function Modal({
         if (event.target === dialog.current) onClose();
       }}
       style={{ "--modal-width": width } as CSSProperties}
-      className="m-auto w-[min(var(--modal-width),92vw)] rounded-2xl border border-line bg-surface p-0 text-ink backdrop:bg-black/70"
+      className="m-auto w-[min(var(--modal-width),92vw)] border border-line bg-surface p-0 text-ink backdrop:bg-black/70"
     >
       {children}
     </dialog>

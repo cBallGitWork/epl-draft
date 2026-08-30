@@ -267,7 +267,7 @@ function Withheld({
       : `${team.name}'s eleven is not showing.`;
 
   return (
-    <div className="flex flex-col items-center gap-3 rounded-xl border border-line bg-surface px-4 py-10 text-center">
+    <div className="flex flex-col items-center gap-3 border border-line bg-surface px-4 py-10 text-center">
       <p className="max-w-xs text-sm text-muted">{because}</p>
       <Link
         href={`/squad/${team.teamId}`}

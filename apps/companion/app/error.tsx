@@ -48,7 +48,7 @@ export default function SectionError({
       <button
         type="button"
         onClick={reset}
-        className="min-h-11 rounded-lg border border-line px-4 text-sm font-medium hover:bg-raised"
+        className="min-h-11 border border-line px-4 text-sm font-medium hover:bg-raised"
       >
         Try again
       </button>

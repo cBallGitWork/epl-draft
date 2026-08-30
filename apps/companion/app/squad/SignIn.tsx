@@ -32,12 +32,12 @@ export default function SignIn() {
           placeholder="ABCD2345"
           // `text-base` deliberately: anything smaller and iOS zooms the page in
           // when the field takes focus.
-          className="numeric min-h-11 min-w-0 flex-1 rounded-lg border border-line bg-raised px-3 text-base uppercase tracking-widest text-ink placeholder:text-faint"
+          className="numeric min-h-11 min-w-0 flex-1 border border-line bg-raised px-3 text-base uppercase tracking-widest text-ink placeholder:text-faint"
         />
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 rounded-lg bg-league px-4 text-sm font-bold text-cream disabled:opacity-50"
+          className="min-h-11 bg-league px-4 text-sm font-bold text-cream disabled:opacity-50"
         >
           {pending ? "…" : "Sign in"}
         </button>

@@ -33,9 +33,9 @@ export default function FixtureRun({ run }: { run: Opposition[] }) {
               {against.fixture.gameweek === null ? "—" : `GW${against.fixture.gameweek}`}
             </span>
             <span
-              className={`numeric flex min-h-11 flex-col items-center justify-center rounded px-1 text-xs font-bold leading-tight ${
-                fdrStep(against.difficulty).ink
-              }`}
+              className={`numeric flex min-h-11 flex-col items-center justify-center px-1 text-xs font-bold leading-tight ${
+ fdrStep(against.difficulty).ink
+}`}
               style={{ backgroundColor: fdrStep(against.difficulty).ground }}
             >
               <span className="truncate">{against.club.shortName}</span>

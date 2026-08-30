@@ -32,7 +32,7 @@ export default function ViewToggle({
     <div
       role="group"
       aria-label="How to show the squad"
-      className="flex rounded-lg border border-line bg-surface p-0.5"
+      className="flex border border-line bg-surface p-0.5"
     >
       <ViewButton current={view} value="pitch" onPick={onPick} />
       <ViewButton current={view} value="list" onPick={onPick} />
@@ -55,9 +55,9 @@ function ViewButton({
       type="button"
       onClick={() => onPick(value)}
       aria-pressed={here}
-      className={`min-h-9 rounded-md px-3.5 text-xs font-semibold capitalize ${
-        here ? "bg-raised text-ink" : "text-faint hover:text-muted"
-      }`}
+      className={`min-h-9 px-3.5 text-xs font-semibold capitalize ${
+ here ?"bg-raised text-ink":"text-faint hover:text-muted"
+}`}
     >
       {value}
     </button>

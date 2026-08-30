@@ -72,7 +72,7 @@ export default function LivePlayerCard({
               pitch gives him rather than an empty rectangle: every slot on an
               open XI is tappable, so this card has to have something to say
               about all fifteen. */}
-          <span className="w-[var(--player-card-figure)] shrink-0 overflow-hidden rounded-lg">
+          <span className="w-[var(--player-card-figure)] shrink-0 overflow-hidden ">
             {isResolved(rostered) ? (
               <PlayerImage
                 player={rostered.player}
@@ -82,7 +82,7 @@ export default function LivePlayerCard({
                 sizes="88px"
               />
             ) : (
-              <span className="grid aspect-[1.32] w-full place-items-center rounded-lg border border-dashed border-white/35 bg-black/25">
+              <span className="grid aspect-[1.32] w-full place-items-center border border-dashed border-white/35 bg-black/25">
                 <span className="numeric text-2xs font-bold text-white/70">
                   {positionLabel(rostered.slot.position) ?? "?"}
                 </span>
@@ -103,12 +103,12 @@ export default function LivePlayerCard({
             uses. Above the fixture panel, because it explains the blank the
             reader is already looking at. */}
         {isResolved(rostered) ? null : (
-          <p className="rounded-lg border border-line bg-raised px-3 py-2 text-2xs text-mid">
+          <p className=" border border-line bg-raised px-3 py-2 text-2xs text-mid">
             {unresolvedReason(rostered.unresolved)}
           </p>
         )}
 
-        <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-raised px-3 py-2">
+        <div className="flex items-center justify-between gap-3 border border-line bg-raised px-3 py-2">
           <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden">
             <FixtureChip opposition={opposition} blank="No fixture" />
           </span>
@@ -149,14 +149,14 @@ export default function LivePlayerCard({
         <div className="flex gap-2">
           <Link
             href={`/players/${rostered.slot.fantraxId}`}
-            className="min-h-11 flex-1 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
+            className="min-h-11 flex-1 border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
           >
             Full profile
           </Link>
           <button
             type="button"
             onClick={onClose}
-            className="min-h-11 flex-1 rounded-lg border border-line px-3 py-2.5 text-sm font-medium hover:bg-raised"
+            className="min-h-11 flex-1 border border-line px-3 py-2.5 text-sm font-medium hover:bg-raised"
           >
             Close
           </button>
@@ -187,7 +187,7 @@ function Breakdown({
   // gives him a number with no categories behind it is a real nought.
   if (points === undefined) {
     return (
-      <p className="rounded-lg border border-line bg-raised px-3 py-2 text-2xs text-mid">
+      <p className=" border border-line bg-raised px-3 py-2 text-2xs text-mid">
         Fantrax would not give us this team&apos;s points, so there is nothing to break down. What
         he did is below, from FPL.
       </p>
@@ -195,7 +195,7 @@ function Breakdown({
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-line">
+    <div className="overflow-hidden border border-line">
       <div className="flex items-center justify-between gap-2 bg-raised px-3 py-1.5 font-display text-2xs font-bold uppercase tracking-widest text-faint">
         <span>This period</span>
         <span>Pts</span>

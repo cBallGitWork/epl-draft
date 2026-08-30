@@ -215,7 +215,7 @@ export default function LineupPlanner({
               setSlots(team.players.map((p) => p.slot));
               setPicked(null);
             }}
-            className="min-h-9 rounded-lg border border-line px-3 text-xs font-medium hover:bg-raised"
+            className="min-h-9 border border-line px-3 text-xs font-medium hover:bg-raised"
           >
             Reset
           </button>
@@ -223,7 +223,7 @@ export default function LineupPlanner({
       ) : null}
 
       {broken.length > 0 || empty > 0 ? (
-        <ul className="flex flex-col gap-1 rounded-lg border border-line bg-surface px-3 py-2">
+        <ul className="flex flex-col gap-1 border border-line bg-surface px-3 py-2">
           {broken.map((violation) => (
             <li key={sentence(violation, nameOf)} className="text-2xs text-bad">
               {sentence(violation, nameOf)}

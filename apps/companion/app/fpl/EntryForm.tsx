@@ -29,12 +29,12 @@ export default function EntryForm() {
           inputMode="numeric"
           required
           placeholder="1234567"
-          className="numeric min-h-11 min-w-0 flex-1 rounded-lg border border-line bg-raised px-3 text-base text-ink placeholder:text-faint"
+          className="numeric min-h-11 min-w-0 flex-1 border border-line bg-raised px-3 text-base text-ink placeholder:text-faint"
         />
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 rounded-lg bg-raised px-4 text-sm font-bold text-ink disabled:opacity-50"
+          className="min-h-11 bg-raised px-4 text-sm font-bold text-ink disabled:opacity-50"
         >
           {pending ? "…" : "Save"}
         </button>

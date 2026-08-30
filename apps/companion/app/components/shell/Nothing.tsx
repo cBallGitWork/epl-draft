@@ -30,7 +30,7 @@ export default function Nothing({
         <p className="mx-auto max-w-xs text-sm text-muted">{children}</p>
       </div>
       {code ? (
-        <span className="numeric rounded border border-line px-2 py-1 text-2xs tracking-widest text-faint">
+        <span className="numeric border border-line px-2 py-1 text-2xs tracking-widest text-faint">
           {code}
         </span>
       ) : null}

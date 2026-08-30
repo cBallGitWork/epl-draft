@@ -18,11 +18,11 @@ export default function Loading() {
           name="q"
           placeholder="Find a player"
           aria-label="Find a player"
-          className="min-h-11 min-w-0 flex-1 rounded-lg border border-line bg-surface px-3 text-base"
+          className="min-h-11 min-w-0 flex-1 border border-line bg-surface px-3 text-base"
         />
         <button
           type="submit"
-          className="min-h-11 rounded-lg border border-line px-3 text-sm font-medium hover:bg-raised"
+          className="min-h-11 border border-line px-3 text-sm font-medium hover:bg-raised"
         >
           Find
         </button>

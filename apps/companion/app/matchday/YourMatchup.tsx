@@ -160,9 +160,9 @@ function Half({
     // number are, which is the question the number provokes.
     <Link
       href={`/league/matchups/${team.teamId}`}
-      className={`flex min-h-11 min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-raised ${
-        mirrored ? "flex-row-reverse" : ""
-      }`}
+      className={`flex min-h-11 min-w-0 flex-1 items-center gap-2 px-2 py-1.5 hover:bg-raised ${
+ mirrored ?"flex-row-reverse":""
+}`}
     >
       <span
         className={`min-w-0 flex-1 truncate text-sm font-semibold ${

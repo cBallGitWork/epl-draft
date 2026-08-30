@@ -57,7 +57,7 @@ export default function PlayerCard({
           </div>
         </div>
 
-        <div className="flex items-baseline justify-between gap-3 rounded-lg border border-line bg-raised px-3 py-2">
+        <div className="flex items-baseline justify-between gap-3 border border-line bg-raised px-3 py-2">
           <span className="text-2xs uppercase tracking-widest text-faint">This gameweek</span>
           <span className="flex items-baseline gap-2">
             <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden">
@@ -73,9 +73,9 @@ export default function PlayerCard({
             fifteen of them. */}
         {footballer && isDoubtful(footballer) ? (
           <div
-            className={`flex flex-col gap-0.5 rounded-lg border px-3 py-2 ${
-              footballer.chanceOfPlaying === 0 ? "border-bad" : "border-mid"
-            }`}
+            className={`flex flex-col gap-0.5 border px-3 py-2 ${
+ footballer.chanceOfPlaying === 0 ?"border-bad":"border-mid"
+}`}
           >
             <span className="font-display text-2xs font-bold uppercase tracking-widest text-muted">
               {footballer.chanceOfPlaying === null
@@ -87,7 +87,7 @@ export default function PlayerCard({
         ) : null}
 
         {isResolved(rostered) ? null : (
-          <p className="rounded-lg border border-line bg-raised px-3 py-2 text-2xs text-mid">
+          <p className=" border border-line bg-raised px-3 py-2 text-2xs text-mid">
             {unresolvedReason(rostered.unresolved)}
           </p>
         )}
@@ -95,14 +95,14 @@ export default function PlayerCard({
         <div className="flex gap-2">
           <Link
             href={`/players/${rostered.slot.fantraxId}`}
-            className="min-h-11 flex-1 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
+            className="min-h-11 flex-1 border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
           >
             Full profile
           </Link>
           <button
             type="button"
             onClick={onClose}
-            className="min-h-11 flex-1 rounded-lg border border-line px-3 py-2.5 text-sm font-medium hover:bg-raised"
+            className="min-h-11 flex-1 border border-line px-3 py-2.5 text-sm font-medium hover:bg-raised"
           >
             Close
           </button>

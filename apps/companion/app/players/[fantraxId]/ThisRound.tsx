@@ -17,7 +17,7 @@ import type { RoundSoFar } from "./scouting";
  *  (DESIGN §7). */
 function Figure({ label, value, title }: { label: string; value: string | null; title?: string }) {
   return (
-    <div className="flex flex-col items-center gap-0.5 rounded bg-surface px-1 py-1.5">
+    <div className="flex flex-col items-center gap-0.5 bg-surface px-1 py-1.5">
       <span
         className="text-2xs uppercase tracking-widest text-faint"
         title={title}
@@ -91,9 +91,9 @@ export default function ThisRound({ round }: { round: RoundSoFar | null }) {
 function Event({ label, bad = false }: { label: string; bad?: boolean }) {
   return (
     <span
-      className={`rounded bg-surface px-2 py-1 text-2xs font-semibold ${
-        bad ? "text-bad" : "text-muted"
-      }`}
+      className={` bg-surface px-2 py-1 text-2xs font-semibold ${
+ bad ?"text-bad":"text-muted"
+}`}
     >
       {label}
     </span>

@@ -24,7 +24,7 @@ export default function Loading() {
           {Array.from({ length: 3 }, (_, row) => (
             <div
               key={row}
-              className="flex min-h-11 items-center rounded-lg border border-line bg-surface px-3"
+              className="flex min-h-11 items-center border border-line bg-surface px-3"
             >
               <Skeleton width="45%" height="0.875rem" />
             </div>

@@ -16,9 +16,9 @@ export default function Availability({ player }: { player: FootballPlayer | null
 
   return (
     <section
-      className={`flex flex-col gap-0.5 rounded-lg border px-3 py-2 ${
-        player.chanceOfPlaying === 0 ? "border-bad" : "border-mid"
-      }`}
+      className={`flex flex-col gap-0.5 border px-3 py-2 ${
+ player.chanceOfPlaying === 0 ?"border-bad":"border-mid"
+}`}
     >
       <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-muted">
         {player.chanceOfPlaying === null

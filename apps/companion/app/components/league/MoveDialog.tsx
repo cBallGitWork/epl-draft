@@ -44,7 +44,7 @@ export default function MoveDialog({
         <button
           type="button"
           onClick={onClose}
-          className="min-h-11 rounded-lg border border-line px-3 text-sm font-medium hover:bg-raised"
+          className="min-h-11 border border-line px-3 text-sm font-medium hover:bg-raised"
         >
           Close
         </button>

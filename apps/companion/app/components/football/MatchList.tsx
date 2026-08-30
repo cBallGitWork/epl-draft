@@ -47,7 +47,7 @@ export default function MatchList({
 
   if (fixtures.length === 0) {
     return (
-      <p className="rounded-xl border border-line bg-surface px-4 py-6 text-center text-sm text-muted">
+      <p className=" border border-line bg-surface px-4 py-6 text-center text-sm text-muted">
         No fixtures scheduled for this gameweek yet.
       </p>
     );
@@ -255,7 +255,7 @@ function Events({ c }: { c: import("@epl/core").MatchContribution }) {
       {chipsFor(c).map((chip) => (
         <span
           key={chip.label}
-          className={`numeric rounded px-1.5 py-0.5 text-2xs font-bold ${chip.className}`}
+          className={`numeric px-1.5 py-0.5 text-2xs font-bold ${chip.className}`}
         >
           {chip.label}
         </span>

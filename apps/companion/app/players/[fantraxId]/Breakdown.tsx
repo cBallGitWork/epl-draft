@@ -44,7 +44,7 @@ export default function Breakdown({ season }: { season: PlayerSeason | null }) {
         {season.categories.map((category) => (
           <li
             key={category.code}
-            className="flex min-h-9 items-center gap-2.5 rounded-lg bg-surface px-3 py-1.5"
+            className="flex min-h-9 items-center gap-2.5 bg-surface px-3 py-1.5"
           >
             {/* Fantrax's own definition sits behind the label — it is where they
                 publish the rules a manager would otherwise have to guess, like

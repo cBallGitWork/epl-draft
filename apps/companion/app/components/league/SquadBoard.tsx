@@ -68,7 +68,7 @@ export default function SquadBoard({
       </div>
 
       {explanation ? (
-        <p className="rounded-lg border border-line bg-surface px-3 py-2 text-2xs text-muted">
+        <p className=" border border-line bg-surface px-3 py-2 text-2xs text-muted">
           {explanation}
         </p>
       ) : null}

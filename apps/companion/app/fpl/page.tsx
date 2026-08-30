@@ -151,9 +151,9 @@ function Picks({
         return (
           <li
             key={pick.code}
-            className={`flex min-h-11 items-center gap-2.5 rounded-lg border border-line px-2 py-1.5 ${
-              pick.multiplier === 0 ? "opacity-60" : "bg-surface"
-            }`}
+            className={`flex min-h-11 items-center gap-2.5 border border-line px-2 py-1.5 ${
+ pick.multiplier === 0 ?"opacity-60":"bg-surface"
+}`}
           >
             {player && club ? (
               <PlayerPortrait player={player} colours={clubColours(club.shortName)} />
@@ -161,7 +161,7 @@ function Picks({
             <span className="min-w-0 flex-1 truncate text-sm font-semibold">
               {player?.name ?? "—"}
               {pick.isCaptain ? (
-                <span className="ml-1.5 rounded bg-raised px-1 text-2xs font-bold text-info">C</span>
+                <span className="ml-1.5 bg-raised px-1 text-2xs font-bold text-info">C</span>
               ) : null}
               {pick.isViceCaptain ? <span className="ml-1.5 text-2xs text-faint">V</span> : null}
             </span>

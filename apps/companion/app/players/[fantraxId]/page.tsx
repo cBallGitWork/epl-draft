@@ -51,7 +51,7 @@ function Facts({ title, note, rows }: { title: string; note?: string; rows: Labe
         {rows.map((row) => (
           <div
             key={row.label}
-            className="flex min-h-11 items-center gap-2.5 rounded-lg border border-line bg-surface px-3 py-2"
+            className="flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2"
           >
             {/* Fantrax's short label, with their own longer wording behind it.
                 The long form is a full sentence on some rows and would wrap to
@@ -273,7 +273,7 @@ function SeasonWaiting() {
       </div>
       <div className="flex flex-col gap-0.5">
         {Array.from({ length: 4 }, (_, at) => (
-          <div key={at} className="flex min-h-9 items-center rounded-lg bg-surface px-3">
+          <div key={at} className="flex min-h-9 items-center bg-surface px-3">
             <Skeleton width="40%" height="0.875rem" />
           </div>
         ))}

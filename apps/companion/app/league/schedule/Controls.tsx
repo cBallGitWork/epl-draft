@@ -113,7 +113,7 @@ export default function Controls({
       <noscript>
         <button
           type="submit"
-          className="min-h-11 rounded-lg border border-line px-3 text-sm font-medium"
+          className="min-h-11 border border-line px-3 text-sm font-medium"
         >
           Show
         </button>
@@ -146,7 +146,7 @@ function Select({
       aria-label={label}
       value={value}
       onChange={onPick}
-      className="min-h-11 min-w-0 flex-1 rounded-lg border border-line bg-surface px-2.5 text-sm font-semibold text-ink"
+      className="min-h-11 min-w-0 flex-1 border border-line bg-surface px-2.5 text-sm font-semibold text-ink"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>

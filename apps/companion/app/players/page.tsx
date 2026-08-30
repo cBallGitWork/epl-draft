@@ -20,7 +20,7 @@ import { positionLabel } from "../positions";
 export const revalidate = 30;
 
 function chip(active: boolean): string {
-  return `flex min-h-11 items-center gap-1.5 rounded-lg border px-3 text-sm font-medium ${
+  return `flex min-h-11 items-center gap-1.5 border px-3 text-sm font-medium ${
     active ? "border-accent text-ink" : "border-line text-muted hover:bg-raised"
   }`;
 }
@@ -80,11 +80,11 @@ export default async function PlayersPage({
           defaultValue={(query.q ?? "").trim()}
           placeholder="Find a player"
           aria-label="Find a player"
-          className="min-h-11 min-w-0 flex-1 rounded-lg border border-line bg-surface px-3 text-base"
+          className="min-h-11 min-w-0 flex-1 border border-line bg-surface px-3 text-base"
         />
         <button
           type="submit"
-          className="min-h-11 rounded-lg border border-line px-3 text-sm font-medium hover:bg-raised"
+          className="min-h-11 border border-line px-3 text-sm font-medium hover:bg-raised"
         >
           Find
         </button>
@@ -117,7 +117,7 @@ export default async function PlayersPage({
       </div>
 
       {shown.length === 0 ? (
-        <p className="rounded-lg border border-line bg-surface px-3 py-2.5 text-sm text-muted">
+        <p className=" border border-line bg-surface px-3 py-2.5 text-sm text-muted">
           Nobody in the pool matches that. Tap a filter again to clear it.
         </p>
       ) : (

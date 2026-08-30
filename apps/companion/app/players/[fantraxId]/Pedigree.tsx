@@ -24,7 +24,7 @@ export default function Pedigree({
   return (
     <section className="flex flex-col gap-1">
       <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-faint">Draft</h2>
-      <div className="flex min-h-11 items-center gap-2.5 rounded-lg border border-line bg-surface px-3 py-2">
+      <div className="flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2">
         {pedigree.origin === "waiver" ? (
           <p className="text-sm text-muted">
             Undrafted. He came off the waiver wire, which cost a claim rather than a pick.

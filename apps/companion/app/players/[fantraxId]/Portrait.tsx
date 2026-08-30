@@ -41,7 +41,7 @@ export default function Portrait({
 
   return (
     <div
-      className="relative shrink-0 overflow-hidden rounded-xl"
+      className="relative shrink-0 overflow-hidden "
       style={{ backgroundColor: colours.primary, width: WIDTH }}
     >
       {/* `kickedOff` is true because this page has no round in it. Drawn back
@@ -59,7 +59,7 @@ export default function Portrait({
           Fantrax and FPL both leave it null more often than not — and absent is
           simply no chip rather than a chip with a dash in it. */}
       {squadNumber === null ? null : (
-        <span className="numeric absolute bottom-1 right-1 rounded bg-bg/70 px-1.5 text-2xs font-bold text-cream">
+        <span className="numeric absolute bottom-1 right-1 bg-bg/70 px-1.5 text-2xs font-bold text-cream">
           {squadNumber}
         </span>
       )}

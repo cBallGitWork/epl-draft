@@ -20,7 +20,7 @@ function Action({ label, onPlay }: { label: string; onPlay: () => void }) {
     <button
       type="button"
       onClick={onPlay}
-      className="min-h-11 rounded-md border border-line bg-surface px-3 text-left text-sm font-medium hover:bg-raised"
+      className="min-h-11 border border-line bg-surface px-3 text-left text-sm font-medium hover:bg-raised"
     >
       {label}
     </button>
@@ -58,7 +58,7 @@ export default function MoveSheet({
   }
 
   return (
-    <div className="mt-1 flex flex-col gap-2 rounded-lg border border-line bg-raised p-2">
+    <div className="mt-1 flex flex-col gap-2 border border-line bg-raised p-2">
       {direct.length > 0 ? (
         <div className="flex flex-col gap-1">
           {direct.map((move) => (

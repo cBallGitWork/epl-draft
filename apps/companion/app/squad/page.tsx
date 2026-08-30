@@ -152,7 +152,7 @@ function Squad({
           anyone who cannot see it. On `bg-bg` because the row it sits on is
           raised, and a chip the colour of its ground is not a chip. */}
       {lead ? (
-        <span className="rounded bg-bg px-1.5 py-0.5 text-2xs font-bold uppercase tracking-widest text-accent">
+        <span className=" bg-bg px-1.5 py-0.5 text-2xs font-bold uppercase tracking-widest text-accent">
           You
         </span>
       ) : null}
@@ -160,7 +160,7 @@ function Squad({
       {/* Never silently short. A squad we cannot fully identify says so here
           rather than rendering fourteen of fifteen on the pitch. */}
       {unresolved > 0 ? (
-        <span className="numeric shrink-0 rounded bg-bg px-1.5 py-0.5 text-2xs font-bold text-mid">
+        <span className="numeric shrink-0 bg-bg px-1.5 py-0.5 text-2xs font-bold text-mid">
           {unresolved} unmapped
         </span>
       ) : null}

@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 /** The look, on its own, for the one link that cannot be a `ButtonLink`: the
  *  planner's way out to Fantrax is a plain external anchor and must stay one. */
 export const BUTTON =
-  "min-h-11 rounded-lg border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised";
+  "min-h-11 border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised";
 
 export default function ButtonLink({
   href,
