@@ -87,3 +87,43 @@
   color: var(--color-ink);
   box-shadow: inset -1px 0 0 var(--color-bg);
 }
+
+/* CM's state box — the red `Inj` beside a name.
+
+   Red for all of them, because `--color-bad` is already "a loss, a doubt, a
+   negative" in this app's grammar (DESIGN §3) and a doubt is named in it. CM's
+   own second box is yellow, and we do not import it: on a table where yellow
+   already means "yours", a yellow state box is the accent making a second,
+   unrelated claim. The playoff cut line lost the same argument for the same
+   reason.
+
+   Certain and uncertain are said in FILL versus OUTLINE rather than in a second
+   hue, so the distinction survives a reader who cannot tell two reds apart —
+   PRODUCT.md requires every colour signal to be paired with a label, shape or
+   position, and this box carries all three. Dark ink on the fill is 5.55:1 and
+   the outline's red on the ground is the same 5.55:1; on a raised row the red is
+   4.77:1. Measured 30 Aug 2026. */
+.cm-state {
+  background: var(--color-bad);
+  color: var(--color-bg);
+}
+
+.cm-state-doubt {
+  background: none;
+  color: var(--color-bad);
+  box-shadow: inset 0 0 0 1px var(--color-bad);
+}
+
+/* A man who cannot be picked. CM greyed him almost out — measured 2.54:1 in the
+   game's own screenshots, which is under any modern floor — so this greys to
+   `--color-faint` instead: 5.30:1 on the ground and 4.56:1 on a raised row, the
+   tightest pair in the set and the reason `--raised` sits where it does.
+
+   NOT an opacity. `opacity` composites the whole subtree toward the ground and
+   takes the figures with it, so an amber figure on a greyed row would land near
+   3:1 — under the floor, on the one row whose entire point is that something is
+   wrong with it. */
+.cm-out,
+.cm-out * {
+  color: var(--color-faint);
+}

@@ -10,6 +10,7 @@ import {
   playerName,
 } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
+import StateBox from "../football/StateBox";
 import { chipsFor } from "./Chips";
 import { positionGroup } from "../../positions";
 
@@ -76,7 +77,11 @@ export default function SquadRows({
 function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => void }) {
   const { club, points } = player;
   const colours = clubColours(club?.shortName ?? "");
-  const done = contribution(isResolved(player.rostered) ? player.rostered.stats : []);
+  const resolved = isResolved(player.rostered) ? player.rostered : null;
+  const done = contribution(resolved ? resolved.stats : []);
+  // Null for a slot the bridge has not settled, which is ordinary — the pool
+  // carries academy names FPL has never listed — and reads as silence.
+  const footballer = resolved?.player ?? null;
   const started = kickedOff(player.opposition);
   // Two is what fits beside the minutes in the fixture column.
   const chips = chipsFor(done).slice(0, 2);
@@ -112,6 +117,10 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
       <span className="min-w-0 flex-1 truncate text-sm font-medium">
         {playerName(player.rostered)}
       </span>
+
+      {/* Why he is not playing, in the place CM put it: beside the name, before
+          anything numeric. Silent for a fit man. */}
+      <StateBox player={footballer} />
 
       <span className="numeric shrink-0 text-[0.5rem] tracking-widest text-faint">
         {club?.shortName ?? "unmapped"}
