@@ -1,0 +1,60 @@
+name: Warm
+
+# Keeps the two matchday pages rendered while football is on.
+#
+# The pages revalidate every 30 seconds (`PAGE_REVALIDATE`), and the request that
+# arrives after a window expires is the one that pays for the re-render — a
+# Fantrax read, an FPL read, and the whole page. On a Saturday at three o'clock
+# that request is a manager's phone, and sixteen of them arrive at once, which is
+# the worst possible moment for the slowest render in the app.
+#
+# So this fires first. It is a curl, not a browser: the point is to leave a warm
+# entry in the server's cache, and a plain GET does that as well as a page view.
+#
+# Deliberately narrow. Only `/` and `/matchday`, because they are the two pages a
+# phone actually lands on during a round, and warming the rest would spend
+# Fantrax reads on pages nobody is looking at.
+
+on:
+  schedule:
+    # Every five minutes across the kickoff windows, Friday through Monday. It
+    # cannot know when the football is on — that lives in FPL's fixture list, and
+    # asking would cost the request this job exists to save — so it covers the
+    # windows the Premier League actually uses and accepts the cost of firing
+    # into an empty afternoon. A curl at a cached page is cheaper than the miss
+    # it prevents.
+    - cron: "*/5 11-22 * * 6,0"
+    - cron: "*/5 17-22 * * 1,5"
+  workflow_dispatch:
+
+# It reads. Nothing here writes anything, so it is granted nothing.
+permissions: {}
+
+# Warming is only useful now. A run queued behind another has already missed the
+# window it was for, so the newer one replaces it.
+concurrency:
+  group: warm
+  cancel-in-progress: true
+
+jobs:
+  warm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Warm the pages a phone lands on
+        env:
+          BASE: ${{ vars.WARM_BASE_URL }}
+        run: |
+          # Unset means the deployment url was never configured. Say so and stop:
+          # curling nothing would report success every five minutes forever.
+          if [ -z "$BASE" ]; then
+            echo "WARM_BASE_URL repository variable is not set — nothing to warm."
+            exit 1
+          fi
+          for path in / /matchday; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 25 "${BASE}${path}")
+            echo "${path} ${code}"
+            # A warm that 500s is worth knowing about: it means the page sixteen
+            # phones are about to ask for is broken, and the job that noticed is
+            # the one running while the round is on.
+            case "$code" in 2*|3*) ;; *) exit 1 ;; esac
+          done
