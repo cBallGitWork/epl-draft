@@ -50,7 +50,7 @@ export default function PairingCard({
 
   return (
     <div
-      className={`elev flex flex-col rounded-xl border bg-surface ${yoursBorder(
+      className={`flex flex-col ${yoursBorder(
         pairingInvolves(pairing, mine),
       )}`}
     >

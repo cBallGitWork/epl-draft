@@ -127,3 +127,31 @@
 .cm-out * {
   color: var(--color-faint);
 }
+
+/* A CM screen is not one page with headings down it; it is several bevelled
+   PANELS, each opening with its own title bar. That is the structural half of
+   this conversion and the half a recolour cannot reach.
+
+   The grey is only the FRAME. The fill stays `--color-surface`, which is the
+   ground the ink ladder was measured on, so everything printed inside a panel
+   keeps the ratio it was checked at. */
+.cm-panel {
+  --cm-face: var(--color-face);
+  --cm-light: color-mix(in oklch, var(--cm-face), white 55%);
+  --cm-dark: color-mix(in oklch, var(--cm-face), black 55%);
+  background: var(--color-surface);
+  color: inherit;
+  border: 2px solid;
+  /* Sunken: dark where a raised control is light. A panel is a well cut into
+     the chrome and a button sits proud of it, and drawing both the same way is
+     how a screen stops having a front and a back. */
+  border-color: var(--cm-dark) var(--cm-light) var(--cm-light) var(--cm-dark);
+}
+
+/* A list of readings, not a stack of objects. The rule between rows is what a
+   table has instead of a gap: `gap-1.5` between sixteen bordered boxes is
+   sixteen separate things, and what a list of one squad's players says is that
+   these are fifteen readings of one squad. */
+.cm-rows > * {
+  border-bottom: 1px solid var(--color-line);
+}

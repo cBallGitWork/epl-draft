@@ -103,7 +103,7 @@ function MatchupWaiting() {
   return (
     <section
       aria-busy
-      className="elev flex flex-col gap-2 rounded-xl border border-line bg-surface p-3"
+      className="cm-panel flex flex-col gap-2 p-3"
     >
       <Skeleton width="9rem" height="0.75rem" />
       <Skeleton width="100%" height="2.75rem" />
@@ -136,7 +136,7 @@ function BetweenGameweeks({
         sub={over ? `Gameweek ${snapshot.gameweek} is done` : `Gameweek ${snapshot.gameweek} next`}
       />
 
-      <div className="elev flex flex-col gap-3 rounded-xl border border-line bg-surface p-4">
+      <div className="cm-panel flex flex-col gap-3 p-4">
         {up === null ? (
           <p className="text-sm text-muted">Every match of the season has been played.</p>
         ) : (

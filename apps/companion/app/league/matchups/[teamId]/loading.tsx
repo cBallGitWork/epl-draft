@@ -11,7 +11,7 @@ export default function Loading() {
   return (
     <LeagueShell title="Head-to-head" current="matchups">
       <div aria-busy className="flex flex-col gap-2">
-        <div className="elev flex items-center gap-3 rounded-xl border border-line bg-surface px-3">
+        <div className="cm-panel flex items-center gap-3 px-3">
           <Skeleton width="45%" height="3.5rem" />
           <Skeleton width="45%" height="3.5rem" />
         </div>

@@ -57,7 +57,7 @@ export default function Afternoon({
   if (groups.size === 0) return null;
 
   return (
-    <section className="elev flex flex-col gap-1.5 rounded-xl border border-line bg-surface p-3">
+    <section className="cm-panel flex flex-col gap-1.5 p-3">
       <h2 className="text-2xs font-bold uppercase tracking-widest text-faint">Your afternoon</h2>
       <ul className="flex flex-col gap-1">
         {[...groups].map(([kickoff, group]) => (

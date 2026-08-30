@@ -63,7 +63,7 @@ export default function MatchupBoard({
           score, against, their score, their name. Two stacked cards made a
           reader compare two numbers in different places on the screen, which is
           the one thing a scoreline exists not to make you do. */}
-      <div className="elev flex items-stretch overflow-hidden rounded-xl border border-line bg-surface">
+      <div className="cm-panel flex items-stretch overflow-hidden">
         <Side side={team} against={opponent} open={open === "team"} onOpen={() => setOpen("team")} />
         <span className="self-center px-1 text-2xs font-bold uppercase tracking-widest text-faint">
           v

@@ -64,9 +64,7 @@ export default function Tie({
 
   const row = (
     <div
-      className={`elev flex min-h-14 items-center gap-1 rounded-xl border bg-surface px-2.5 py-2 ${yoursBorder(
-        yours,
-      )}`}
+      className={`flex min-h-14 items-center gap-1 px-2.5 py-2 ${yoursBorder(yours)}`}
     >
       <Side
         side={tie.home}

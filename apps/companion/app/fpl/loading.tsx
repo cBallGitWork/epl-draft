@@ -20,7 +20,7 @@ export default function Loading() {
 
       <dl className="grid grid-cols-3 gap-1.5">
         {FIGURES.map((label) => (
-          <div key={label} className="elev rounded-xl border border-line bg-surface px-3 py-2">
+          <div key={label} className="cm-panel px-3 py-2">
             <dt className="text-2xs font-bold uppercase tracking-widest text-faint">{label}</dt>
             <dd>
               <Skeleton width="3.5rem" height="1.75rem" />

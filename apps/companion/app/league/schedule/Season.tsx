@@ -18,11 +18,11 @@ export default function Season({
   badges: Map<string, string>;
 }) {
   return (
-    <ul className="flex flex-col gap-1.5">
+    <ul className="cm-rows flex flex-col">
       {rows.map((row) => (
         <li key={`${row.round.period}-${row.tie.competition.id}-${row.tie.round ?? ""}`}>
           <div
-            className={`elev flex min-h-14 items-center gap-2.5 rounded-xl border border-line bg-surface px-3 py-2 ${
+            className={`flex min-h-14 items-center gap-2.5 px-3 py-2 ${
               row.round.started ? "" : "text-muted"
             }`}
           >

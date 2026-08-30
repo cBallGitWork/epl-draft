@@ -104,7 +104,7 @@ export default async function SquadsPage() {
         <SignIn />
       )}
 
-      <ul className="flex flex-col gap-1.5">
+      <ul className="cm-rows flex flex-col">
         {others.map((team) => (
           <li key={team.teamId}>
             <Squad team={team} opponent={opponentOf(team.teamId)} />
@@ -132,7 +132,7 @@ function Squad({
   return (
     <Link
       href={`/squad/${team.teamId}`}
-      className={`elev flex min-h-14 items-center gap-3 rounded-xl border px-3 py-2.5 hover:bg-raised ${
+      className={`flex min-h-14 items-center gap-3 px-3 py-2.5 hover:bg-raised ${
         lead ? "bg-raised" : "bg-surface"
       } ${yoursBorder(lead)}`}
     >

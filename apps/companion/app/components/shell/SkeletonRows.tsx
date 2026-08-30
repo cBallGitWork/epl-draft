@@ -15,11 +15,11 @@ import Skeleton from "./Skeleton";
 
 export default function SkeletonRows({ count, height }: { count: number; height: string }) {
   return (
-    <ul className="flex flex-col gap-1.5">
+    <ul className="cm-rows flex flex-col">
       {Array.from({ length: count }, (_, at) => (
         <li
           key={at}
-          className="elev flex items-center rounded-xl border border-line bg-surface px-3"
+          className="flex items-center px-3"
           style={{ height }}
         >
           <Skeleton width="45%" height="0.875rem" />

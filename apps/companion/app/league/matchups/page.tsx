@@ -125,7 +125,7 @@ export default async function MatchupPage() {
         )}
       </p>
 
-      <ul className="flex flex-col gap-1.5">
+      <ul className="cm-rows flex flex-col">
         {ordered.map((pairing) => (
           <li key={`${pairing.home.teamId}-${pairing.away.teamId}`}>
             <PairingCard

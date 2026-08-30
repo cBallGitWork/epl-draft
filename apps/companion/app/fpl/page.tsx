@@ -124,7 +124,7 @@ export default async function FplPage() {
  *  and nought would be a different claim. */
 function Figure({ label, value }: { label: string; value: number | null }) {
   return (
-    <div className="elev rounded-xl border border-line bg-surface px-3 py-2">
+    <div className="cm-panel px-3 py-2">
       <dt className="text-2xs font-bold uppercase tracking-widest text-faint">{label}</dt>
       <dd className="numeric text-xl font-bold">{value === null ? "—" : value.toLocaleString("en-GB")}</dd>
     </div>

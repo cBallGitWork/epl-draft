@@ -55,7 +55,7 @@ export default async function YourMatchup() {
   const underway = roundUnderway(squads.snapshot);
 
   return (
-    <section className={`elev flex flex-col gap-2 rounded-xl border bg-surface p-3 ${yoursBorder(true)}`}>
+    <section className={`cm-panel flex flex-col gap-2 p-3 ${yoursBorder(true)}`}>
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-2xs font-bold uppercase tracking-widest text-faint">
           Your head-to-head

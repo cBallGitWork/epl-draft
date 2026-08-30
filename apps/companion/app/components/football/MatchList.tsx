@@ -54,7 +54,7 @@ export default function MatchList({
   }
 
   return (
-    <ul className="flex flex-col gap-1.5">
+    <ul className="cm-rows flex flex-col">
       {fixtures.map((f) => (
         <li key={f.id}>
           <MatchRow
@@ -97,9 +97,7 @@ function MatchRow({
 
   return (
     <details
-      className={`group overflow-hidden rounded-xl border bg-surface elev ${yoursBorder(
-        yours !== undefined,
-      )}`}
+      className={`group overflow-hidden ${yoursBorder(yours !== undefined)}`}
     >
       <summary
         className="flex cursor-pointer list-none items-center gap-3 px-3 py-2.5 transition-colors duration-150 hover:bg-raised [&::-webkit-details-marker]:hidden"
@@ -153,7 +151,7 @@ function MatchRow({
                 : `Kicks off ${fixture.kickoff === null ? "TBC" : londonDayAndTime(fixture.kickoff)}`}
           </p>
         ) : (
-          <ul className="flex flex-col gap-1.5">
+          <ul className="cm-rows flex flex-col">
             {rows.map((c) => {
               const club = clubs.get(c.clubId);
               const owner = owners?.get(c.player.code);

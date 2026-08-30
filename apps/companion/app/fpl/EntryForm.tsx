@@ -11,7 +11,7 @@ export default function EntryForm() {
   const [message, submit, pending] = useActionState(rememberEntry, null);
 
   return (
-    <form action={submit} className="elev flex flex-col gap-3 rounded-xl border border-line bg-surface p-4">
+    <form action={submit} className="cm-panel flex flex-col gap-3 p-4">
       <div className="flex flex-col gap-1">
         <label htmlFor="entry" className="text-2xs font-bold uppercase tracking-widest text-faint">
           Your FPL team id

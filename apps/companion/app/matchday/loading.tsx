@@ -30,7 +30,7 @@ export default function Loading() {
         </Link>
       </div>
 
-      <section className="elev flex flex-col gap-2 rounded-xl border border-line bg-surface p-3">
+      <section className="cm-panel flex flex-col gap-2 p-3">
         <Skeleton width="9rem" height="0.75rem" />
         <Skeleton width="100%" height="2.75rem" />
         <Skeleton width="60%" height="0.75rem" />

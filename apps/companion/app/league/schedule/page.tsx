@@ -201,7 +201,7 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
               }
               aside={group.competition.id === LEAGUE_COMPETITION.id ? undefined : "Placeholder draw"}
             >
-              <ul className="flex flex-col gap-1.5">
+              <ul className="cm-rows flex flex-col">
                 {group.ties.map((tie, at) => (
                   <li key={`${tie.home.label}-${tie.away.label}-${at}`}>
                     <Tie

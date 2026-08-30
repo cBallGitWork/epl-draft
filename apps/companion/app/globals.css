@@ -70,14 +70,6 @@ body {
   letter-spacing: -0.01em;
 }
 
-/* Panel elevation. An inset top highlight plus a soft drop reads as a raised
-   surface on an OLED phone, where a border alone disappears. */
-.elev {
-  box-shadow:
-    inset 0 1px 0 oklch(1 0 0 / 0.06),
-    0 1px 2px oklch(0 0 0 / 0.5);
-}
-
 /* ---- LIVE indicator -------------------------------------------------------
    The one place motion carries meaning: a match is in play right now. Paired
    with the text "LIVE" so it never relies on colour or motion alone. */
