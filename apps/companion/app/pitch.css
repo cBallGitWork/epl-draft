@@ -1,0 +1,174 @@
+/* The pitch, and the budget the page gives it.
+   Split out of `globals.css`, which was 309 lines against CODE_RULES' 300-line
+   hard ceiling. This is one responsibility — how a pitch is drawn and how much
+   screen it is allowed — and it was the larger half.
+
+   Imported after `tokens.css`, which it depends on: `.pitch-goal` draws its
+   markings in `--color-pitch-line`, and `.pitch-boards` its hoardings in
+   `--color-league`.
+
+   `--page-foot` stays in `globals.css`. It shares its `:root` blocks with
+   `--pitch-page` and moves at the same breakpoint for a related reason, but it
+   is the tab bar's room and every page pays it — only the pitch half comes here. */
+
+/* How much of the screen a pitch's page spends on everything that is not grass.
+   `.pitch-figure` caps a card's height against what is left of `100svh` after
+   it, so the budget and the cap are one number rather than two that drift.
+
+   It moved here with the pitch; `--page-foot` stayed in `globals.css`. They
+   share a `:root` block and both move at `md` — the tab bar goes overhead, so
+   what it stops costing at the foot it starts costing at the head, and the
+   bands above a pitch stand further apart up there — but only this half is the
+   pitch's. */
+:root {
+  --pitch-page: 18rem;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --pitch-page: 20rem;
+  }
+}
+
+/* A pitch with a bench under it is a different budget, and one number for both
+   made the quiet page pay for the busy one. `/squad/[teamId]` gated spends 232px
+   on furniture; the same route showing the owner's XI spends 382, because it
+   carries a bench strip and a way out to Fantrax that the gated view does not.
+   Held to the tighter figure, the fifteen-man pitch this whole card was rebuilt
+   for gave up a third of its photograph to pay for a page it is not on.
+
+   A class rather than an inline style, because the value has to move at `md`
+   with everything else here and a `style` attribute cannot. Set by the two
+   components that draw a bench — `TeamSheet` and `LineupPitch` — which are the
+   two that know there is one. */
+.pitch-with-bench {
+  --pitch-page: 28.5rem;
+}
+
+@media (min-width: 48rem) {
+  .pitch-with-bench {
+    --pitch-page: 32rem;
+  }
+}
+
+/* Everything a pitch's page spends on what is not grass: the header and the
+   toggle above it, `--page-foot` and the bench strip and the planner's way out
+   below it, and the frame's own hoardings and bottom padding. `.pitch-figure`
+   caps a card's height against what is left, so a formation with few men in a
+   line cannot draw a card so tall that the pitch stops fitting.
+
+   Where the cap binds this makes the pitch exactly `100svh - --pitch-page + the
+   frame's own chrome`, whatever the formation — which is the property worth
+   having, because it means a 1-3-4-3 and a 1-3-7-4 cannot disagree about how
+   much screen a pitch is allowed.
+
+   One number for three pages, measured on the tightest of them: the lineup
+   planner, the only one carrying a bench strip AND a footer. The gated squad
+   spends 188px on furniture where the planner spends 329, so the gated pitch is
+   bounded by more than it needs — the safe direction, and the alternative is
+   three budgets that drift apart. It is a measurement rather than a sum of the
+   tokens above, because its two biggest terms — the page header and the bench
+   strip — are content and not settings. Re-measure it if a pitch page grows a
+   band; the failure mode is a short scroll, which is visible, rather than a
+   broken layout. */
+
+/* ---- Pitch ----------------------------------------------------------------
+   Viewed from behind the far goal, which is the view FPL uses and the reason
+   their pitch reads as a pitch rather than a green rectangle: the touchlines
+   splay outward toward the reader, and the mow bands GROW as they come (63.6 →
+   63.6 → 85.9 → 132 units in their own viewBox 0 0 1417 788). The trapezoid and
+   the bands are drawn in `PitchTurf`, where a polygon can hold them; only the
+   surround, the hoardings and the goal are here.
+
+   The angle is in the ground, never in a transform. A `perspective` on the
+   container would tilt the stickers with it, and a sticker is a flat printed
+   object photographed square — one lying back in space stops being one. */
+.pitch {
+  position: relative;
+  overflow: hidden;
+  /* No ground of its own. What lies outside the taper is the page, the way it is
+     on FPL's: a second green out there reads as a second surface, and the pitch
+     stops being a thing sitting on the page and becomes a panel with a border. */
+}
+
+/* The photograph on a player card, and the only thing on it with two bounds.
+
+   Width is the caller's: `PitchRows` gives every card the fullest line's share,
+   capped at the portrait file's own 110px. Height would then follow from the
+   shape — and that is the trap this rule exists to close. Card width is a
+   function of the FULLEST LINE, so a formation with few men in a line draws a
+   WIDER card, and once the figure carries the portrait's own upright shape a
+   wider card is a taller one. A 1-3-4-3 with a bench under it drew an 82px card
+   104px tall and pushed the lineup planner 199px past the screen, while the
+   seven-across squad that looks like the hard case sat comfortably inside it.
+
+   So the height is capped by the room one row actually has: the screen, less
+   what the page spends on everything that is not grass, divided by the number of
+   rows the FORMATION has — never a constant, because the formation is the
+   commissioner's and a 1-5-2-3 is legal here. `--pitch-rows` is set by
+   `PitchRows` and by the bench strips, so a reserve is the same card as the man
+   he would replace in height as well as width.
+
+   Past the cap the picture crops from the top again, which is what
+   `object-top` was always for. Anything drawing a player outside a pitch — the
+   dialogs, the profile, the paper's team of the week — sets no `--pitch-rows`,
+   takes the 1 below, and is bounded by nothing. */
+.pitch-figure {
+  aspect-ratio: var(--pitch-figure, 1.32);
+  /* The floor is two bands, and it is not decoration: a short viewport takes the
+     calc below zero, and a negative `max-height` is clamped to nought — which
+     would not shorten the picture, it would delete it, on every page that sets
+     no row count and is bounded by this only incidentally. */
+  max-height: max(
+    calc(2 * var(--pitch-band)),
+    calc(
+      (100svh - var(--pitch-page) - (var(--pitch-rows, 1) - 1) * 1rem) / var(--pitch-rows, 1) - 2 *
+        var(--pitch-band)
+    )
+  );
+}
+
+/* The hoardings behind the far goal. A real advertising board in a real ground,
+   which is why the league's own crest is on it — and why there is somewhere to
+   put a sponsor's the day the league has one. */
+.pitch-boards {
+  position: absolute;
+  top: 0;
+  /* The width of the FAR touchline, not of the page. Boards stand behind that
+     goal line, so they are as wide as the pitch is at that depth — which is the
+     turf polygon's own inset, handed down by `PitchFrame` rather than written
+     out again here. Running them the full width would put advertising on ground
+     the perspective says is off the pitch. */
+  left: var(--pitch-inset);
+  right: var(--pitch-inset);
+  display: flex;
+  align-items: center;
+  /* Flanking the goal, not behind it — the net is centred on the same band. */
+  justify-content: space-between;
+  padding: 0 0.35rem;
+  height: var(--pitch-boards);
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-league) 0%,
+    oklch(0.44 0.17 22) 100%
+  );
+  box-shadow: inset 0 -1px 0 oklch(0 0 0 / 0.35);
+}
+
+/* Standing in front of them, straddling the goal line. Open at the foot because
+   that edge is the goal line itself, which the turf already draws. */
+.pitch-goal {
+  position: absolute;
+  left: 50%;
+  top: 0.4rem;
+  transform: translateX(-50%);
+  width: 5.25rem;
+  height: 1.5rem;
+  border: 2px solid var(--color-pitch-line);
+  border-bottom: 0;
+  border-radius: 2px 2px 0 0;
+  background-color: oklch(1 0 0 / 0.08);
+  background-image:
+    repeating-linear-gradient(90deg, oklch(1 0 0 / 0.28) 0 1px, transparent 1px 6px),
+    repeating-linear-gradient(0deg, oklch(1 0 0 / 0.28) 0 1px, transparent 1px 6px);
+}
