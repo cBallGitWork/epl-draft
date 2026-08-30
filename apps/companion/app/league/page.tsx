@@ -1,6 +1,7 @@
 import { Fragment } from "react";
-import { LEAGUE_NAME, seasonForm } from "@epl/core";
+import { LEAGUE_NAME, defaultDescending, isSortKey, seasonForm, sortRows } from "@epl/core";
 import Columns, { COLUMNS } from "./Columns";
+
 import TableRow from "./TableRow";
 import { getSeasonResults } from "./schedule/schedule";
 import { leagueTable, teamBadges } from "../standings";
@@ -24,7 +25,17 @@ const DRAFT_DATE = londonDate(
   servedLeague()?.draftDate ?? "",
 );
 
-export default async function StandingsPage() {
+/** Next 16 hands these as a Promise, so it is awaited like `params`. */
+type Search = Promise<{ sort?: string; dir?: string }>;
+
+export default async function StandingsPage({ searchParams }: { searchParams: Search }) {
+  const query = await searchParams;
+  // An unknown column falls back to Fantrax's own order rather than throwing:
+  // the sort arrives in a URL, and a shared link with a stale column name should
+  // still show the table.
+  const sort = isSortKey(query.sort) ? query.sort : "rank";
+  const descending = query.dir === undefined ? defaultDescending(sort) : query.dir === "desc";
+
   const [rows, mine, badges, info, results] = await Promise.all([
     leagueTable(),
     readerTeamId(),
@@ -101,9 +112,9 @@ export default async function StandingsPage() {
         style={{ marginInline: "calc(var(--page-gutter) * -1)", paddingInline: "var(--page-gutter)" }}
       >
         <table className="w-full border-collapse text-sm">
-          <Columns />
+          <Columns sort={sort} descending={descending} />
           <tbody>
-            {rows.map((row) => (
+            {sortRows(rows, sort, descending).map((row) => (
               <Fragment key={row.teamId}>
                 <TableRow
                   row={row}
@@ -111,7 +122,7 @@ export default async function StandingsPage() {
                   mine={row.teamId === mine}
                   form={form.get(row.teamId) ?? []}
                 />
-                {cut(row.rank, qualify, rows.length) ? (
+                {sort === "rank" && !descending && cut(row.rank, qualify, rows.length) ? (
                   /* The playoff line, drawn across the table under the last
                      qualifying place rather than shaded over the rows above it:
                      a tinted band reads as "these are yours" on the one row a

@@ -26,7 +26,7 @@ export default function Loading() {
     <LeagueShell title="Table" current="table">
       <div aria-busy>
         <table className="w-full border-collapse text-sm">
-          <Columns />
+          <Columns sort="rank" descending={false} />
           <tbody>
             {Array.from({ length: ROWS }, (_, at) => (
               <tr key={at} className="border-b border-line/60">

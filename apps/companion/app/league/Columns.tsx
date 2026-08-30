@@ -1,19 +1,27 @@
+import Link from "next/link";
+import type { SortKey } from "@epl/core";
+import { sortHref } from "./sort";
+
 // The table's column heads, in one place because two files print them: the page
 // and the skeleton it waits behind. They were written out twice, and on 29 Aug
 // only one of the two copies stopped saying W-L-T — so a reader saw the old
 // heading over the new numbers for as long as Fantrax took to answer.
 //
-// **Bevelled, which is the thing CM tables are remembered for.** The heads were
-// flat until Craig looked at the first attempt and said it looked nothing like
-// the game; the bevel is not decoration on a CM table, it is what a CM table IS.
+// **Bevelled buttons, which is the thing CM tables are remembered for.** They
+// were flat until Craig looked at the first attempt and said it looked nothing
+// like the game, and he was right: the bevel is not decoration on a CM table, it
+// is what a CM table IS. It is drawn as a button because it behaves as one — the
+// sorted column is drawn pressed, so the affordance and the state are one object.
 //
-// The bevel goes on a block INSIDE the cell, with `p-0` on the `<th>`. A table
-// this app draws is `border-collapse: collapse`, which merges adjacent borders
-// and lets one of the pair win — so a bevel painted straight onto a `<th>` loses
-// its inner light and dark edges and stops being a bevel at all.
+// The Team head keeps the bevel and is not a link. The bevelled strip is one
+// object in CM — a header row with a gap cut in it stops reading as a strip —
+// and this cell is a part of it rather than a button pretending to be one: it
+// has no hover, no arrow and no href, which is the difference between a surface
+// and a control. Sorting by name is not offered because a league table is not
+// read alphabetically.
 
 type Column = {
-  key: string;
+  key: SortKey | "team" | "form";
   label: string;
   title: string | undefined;
   align: "left" | "right";
@@ -34,22 +42,59 @@ export const COLUMNS: readonly Column[] = [
   { key: "pts", label: "Pts", title: "League points — the commissioner's own, never counted here", align: "right", width: "w-11 lg:w-20" },
 ];
 
-export default function Columns() {
+/** A column the reader can order by. `form` is a run of letters and `team` a
+ *  name, and neither is a quantity. */
+function sortable(key: Column["key"]): key is SortKey {
+  return key !== "team" && key !== "form";
+}
+
+export default function Columns({
+  sort,
+  descending,
+}: {
+  sort: SortKey;
+  descending: boolean;
+}) {
   return (
     <thead>
-      <tr className="text-3xs uppercase">
-        {COLUMNS.map((column) => (
-          <th key={column.key} scope="col" title={column.title} className={`p-0 font-bold ${column.width}`}>
-            <span
-              className={`cm-bevel flex h-7 items-center whitespace-nowrap px-1.5 ${
-                column.align === "left" ? "justify-start" : "justify-end"
-              }`}
+      <tr className="text-3xs uppercase tracking-wide">
+        {COLUMNS.map((column) => {
+          const here = sortable(column.key) && column.key === sort;
+          return (
+            <th
+              key={column.key}
+              scope="col"
+              title={column.title}
+              aria-sort={here ? (descending ? "descending" : "ascending") : undefined}
+              className={`p-0 font-bold ${column.width}`}
             >
-              {column.label}
-            </span>
-          </th>
-        ))}
+              {sortable(column.key) ? (
+                <Link
+                  href={sortHref(column.key, sort, descending)}
+                  className={`flex h-7 items-center justify-end gap-0.5 whitespace-nowrap px-1.5 ${
+                    here ? "cm-bevel-pressed text-accent" : "cm-bevel text-muted hover:text-ink"
+                  }`}
+                >
+                  {column.label}
+                  {here ? <Arrow down={descending} /> : null}
+                </Link>
+              ) : (
+                <span className="cm-bevel flex h-7 items-center whitespace-nowrap px-1.5 text-muted">
+                  {column.label}
+                </span>
+              )}
+            </th>
+          );
+        })}
       </tr>
     </thead>
+  );
+}
+
+function Arrow({ down }: { down: boolean }) {
+  return (
+    <span aria-hidden className="text-[0.5rem] leading-none">
+      {down ? "▼" : "▲"}
+    </span>
   );
 }
