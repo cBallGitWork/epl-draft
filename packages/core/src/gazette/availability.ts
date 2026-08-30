@@ -1,4 +1,4 @@
-import { isDoubtful } from "../football/selectors";
+import { isDoubtful } from "../football/playerState";
 import { isResolved } from "../join/roster";
 import type { RosteredTeam } from "../join/roster";
 import type { AvailabilityNote } from "./types";

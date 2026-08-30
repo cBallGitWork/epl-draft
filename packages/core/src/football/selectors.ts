@@ -128,19 +128,6 @@ export function hasGameweek(snapshot: FootballSnapshot, gameweek: number): boole
   return snapshot.gameweeks.includes(gameweek);
 }
 
-/** Whether FPL has said anything that should worry a manager.
- *
- *  One rule, in one place, because two readers had two rules: the paper's doubts
- *  column counted a stated chance of playing and the player card did not, so the
- *  same footballer could be a doubt on one tab and fit on the next.
- *
- *  A hundred percent with nothing written against it is FPL saying "he is fine",
- *  which is the one combination that is not a doubt despite carrying a number. */
-export function isDoubtful(player: FootballPlayer): boolean {
-  if (player.news === "" && player.chanceOfPlaying === 100) return false;
-  return player.status !== "a" || player.news !== "" || player.chanceOfPlaying !== null;
-}
-
 /** The season's dated kickoffs, one per fixture that has one.
  *
  *  Undated matches — TV picks with no time yet — are dropped rather than carried

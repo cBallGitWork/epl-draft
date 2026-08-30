@@ -7,7 +7,6 @@ import {
   datedKickoffs,
   fixturesInOrder,
   hasGameweek,
-  isDoubtful,
   playerByCode,
 } from "./selectors";
 
@@ -152,27 +151,3 @@ describe("hasGameweek", () => {
   });
 });
 
-describe("isDoubtful", () => {
-  const fit = player(1, "Fit");
-
-  it("says nothing about a fit player", () => {
-    expect(isDoubtful(fit)).toBe(false);
-    // FPL states a hundred percent with no note for plenty of fit players, and
-    // that combination is the one number that is not a doubt.
-    expect(isDoubtful({ ...fit, chanceOfPlaying: 100 })).toBe(false);
-  });
-
-  it("catches every way FPL raises one", () => {
-    expect(isDoubtful({ ...fit, status: "d" })).toBe(true);
-    expect(isDoubtful({ ...fit, news: "Knock - 75% chance of playing" })).toBe(true);
-    // The case the two readers used to disagree on: a stated chance, no words.
-    expect(isDoubtful({ ...fit, chanceOfPlaying: 75 })).toBe(true);
-    expect(isDoubtful({ ...fit, chanceOfPlaying: 0 })).toBe(true);
-  });
-
-  it("still counts a hundred percent when there is news with it", () => {
-    // "Returned to training, expected to start" is news worth reading even at
-    // full confidence.
-    expect(isDoubtful({ ...fit, news: "Back in training", chanceOfPlaying: 100 })).toBe(true);
-  });
-});
