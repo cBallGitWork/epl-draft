@@ -81,7 +81,7 @@ export default function TableRow({
       </td>
 
       <td className="numeric px-1.5 text-right text-2xs font-bold text-mid">
-        {row.gamesBack === null ? DASH : row.gamesBack}
+        {gamesBack(row.gamesBack)}
       </td>
 
       <td className="numeric px-1.5 text-right text-2xs font-bold text-mid">
@@ -98,6 +98,18 @@ export default function TableRow({
 /** Absence, never a nought — a nought is a claim about a team that has played
  *  nobody (DESIGN §7). */
 const DASH = "—";
+
+/** Games back, at the precision a league table is read at.
+ *
+ *  Fantrax sends a raw number and this column printed it unchanged, which was
+ *  invisible while the rehearsal league had four teams all on whole numbers and
+ *  became `0.6666666666666666` the first time a ten-team table was rendered. A
+ *  half-game back is a real and ordinary value, so it rounds to one place and
+ *  drops a trailing nought rather than to an integer. */
+function gamesBack(value: number | null): string {
+  if (value === null) return DASH;
+  return value.toFixed(1).replace(/\.0$/, "");
+}
 
 /** The last few rounds, newest LAST — left to right is the direction the season
  *  ran, which is how a form guide is read everywhere it appears.
