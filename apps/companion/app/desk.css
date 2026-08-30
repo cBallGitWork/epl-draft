@@ -1,54 +1,89 @@
-/* Championship Manager 99/00's own furniture: the bevel, the title bar and the
-   index cell. Split out rather than added to `globals.css`, which is already at
-   the 300-line ceiling, and this is one responsibility (CODE_RULES §4).
+/* Championship Manager's furniture: the bevel, and the plates cut from it.
 
-   **The bevel is the thing CM is remembered for**, and it is a statement about
-   which way a surface faces — never about what the surface contains. So every
-   colour here is a DEPTH token (`--bg` `--surface` `--raised` `--line`) plus the
-   one chrome blue, and none of them is a meaning token. The moment a bevel
-   reaches for `--accent` it starts competing with "yours", which is a reading
-   aid five other screens depend on.
+   **The bevel is what CM is remembered for**, and it is a statement about which
+   way a surface faces — never about what the surface contains. Its colour is
+   `--color-face` or `--color-chrome`, both of which are chrome slots. The moment
+   a bevel reaches for `--accent` it competes with "yours", which is a reading aid
+   five other screens depend on.
 
-   CM drew its bevels the way Windows 95 did: a two-pixel outset, light on the
-   top and left where the light falls, dark on the bottom and right. Pressed
-   inverts it. That inversion is why the sorted column head is drawn pressed —
-   the affordance and the state are the same object, which is how the game said
-   it. */
+   One mechanism, three plates. The plate colour is `--cm-face` and both edges are
+   mixed from it, so a plate is one declaration and its edges cannot drift from
+   it. `--cm-face` is a plain custom property rather than a theme token: nothing
+   composes its name and no component wants a `bg-face` utility, so it stays out
+   of `@theme` and out of the way of Tailwind v4's drop of unreferenced tokens.
 
-.cm-bevel {
-  background: var(--color-raised);
-  border-top: 2px solid var(--color-line);
-  border-left: 2px solid var(--color-line);
-  border-bottom: 2px solid var(--color-bg);
-  border-right: 2px solid var(--color-bg);
-}
+   **Three rules this file cannot enforce and a reviewer must.**
 
-/* The pressed face sits a step darker as well as inverting, because a button
-   that only swaps its edges reads as a rendering glitch rather than as down. */
-.cm-bevel-pressed {
-  background: var(--color-surface);
-  border-top: 2px solid var(--color-bg);
-  border-left: 2px solid var(--color-bg);
-  border-bottom: 2px solid var(--color-line);
-  border-right: 2px solid var(--color-line);
-}
+   1. A bevel is for a PANEL and a CONTROL, never for a repeating row. Sixteen
+      bevelled rows on a dark field is sixteen objects, which is the whole thing
+      this conversion is undoing.
+   2. A bevel never goes on a `<th>` or a `<td>`. These tables are
+      `border-collapse: collapse`; adjacent borders merge and one of the pair
+      wins, so a strip of bevelled cells loses its inner edges. Put the bevel on
+      a block INSIDE the cell, with `p-0` on the cell.
+   3. **A plate owns its ink.** No call site sets `text-*` on one. Dark ink on the
+      grey plate is 7.52:1 and `--color-ink` on it is 2.27:1, so a component that
+      brought its own colour would silently land under the floor. */
 
-/* The royal-blue bar with the bold white title on it, which is how every CM
-   screen opens. Its ground is the one colour in the app that exists to be
-   chrome and nothing else — see `--color-chrome` in tokens.css. */
+/* Two pixels, light where the light falls and dark where it does not — how
+   Windows 95 drew it and how CM inherited it.
+
+   `white 55% / black 55%` rather than a smaller mix, and the reason is measured:
+   a highlight on an already-light plate is a small step, so at `white 30%` the
+   light edge is 1.34:1 against its face and simply is not there. What draws a
+   bevel is the corner-to-corner difference, and this recipe puts the light edge
+   8.48:1 from the dark one on grey and 8.18:1 on chrome. A bevel edge is not
+   text and carries none, so 4.5:1 is not the bar it has to clear; what identifies
+   the control is the plate, at 7.52:1 off the page. */
+.cm-bevel,
+.cm-bevel-pressed,
+.cm-tab,
 .cm-titlebar {
-  background: var(--color-chrome);
-  border-top: 2px solid color-mix(in oklch, var(--color-chrome), white 22%);
-  border-left: 2px solid color-mix(in oklch, var(--color-chrome), white 22%);
-  border-bottom: 2px solid var(--color-bg);
-  border-right: 2px solid var(--color-bg);
+  --cm-face: var(--color-face);
+  --cm-light: color-mix(in oklch, var(--cm-face), white 55%);
+  --cm-dark: color-mix(in oklch, var(--cm-face), black 55%);
+  background: var(--cm-face);
+  color: var(--color-bg);
+  border: 2px solid;
+  border-color: var(--cm-light) var(--cm-dark) var(--cm-dark) var(--cm-light);
 }
 
-/* CM's small leading index cell: a filled block down the left of a table, one
-   step off the ground, carrying the row's number. It is what stops a dense
-   table reading as a wall — the eye counts down the blocks rather than the
-   rows. Deliberately not a zebra: the stripe is on the INDEX, not the row. */
+/* Down: the light and the dark swap corners. On a plate this far off the ground
+   the swap is unmistakable, which is why the sorted column head is drawn pressed
+   rather than given a second mark — the affordance and the state are one object,
+   the way the game said it. */
+.cm-bevel-pressed {
+  border-color: var(--cm-dark) var(--cm-light) var(--cm-light) var(--cm-dark);
+}
+
+/* The royal-blue plate: the title bar every CM screen opens with, and the tab
+   strip under it. Ink on it is 7.0:1. The plate is only 2.44:1 off the page,
+   which is why its light edge matters — that edge is what draws the bar. */
+.cm-tab,
+.cm-titlebar {
+  --cm-face: var(--color-chrome);
+  color: var(--color-ink);
+}
+
+/* The tab you are on. CM marked it in yellow text on a pressed tab, and this is
+   one of two places the accent is allowed inside chrome. 5.32:1 on the plate.
+   The plate does not change colour, so the strip cannot shift as you move along
+   it. */
+.cm-tab[aria-current="page"] {
+  color: var(--color-accent);
+  border-color: var(--cm-dark) var(--cm-light) var(--cm-light) var(--cm-dark);
+}
+
+/* CM's small leading index cell: a filled blue block down the left of a table
+   carrying the row's number, so the eye counts down the blocks rather than the
+   rows. It is what stops a dense table reading as a wall, and it is deliberately
+   NOT a zebra — the stripe is on the index, not on the row.
+
+   `--color-chrome`, not a depth step. `--color-surface` is 1.06:1 off the ground
+   and would be an index cell nobody can see; this is 2.44:1 with its number at
+   7.0:1 on it. The accent edge rides here, so "yours" and the index are one mark. */
 .cm-index {
-  background: var(--color-surface);
+  background: var(--color-chrome);
+  color: var(--color-ink);
   box-shadow: inset -1px 0 0 var(--color-bg);
 }

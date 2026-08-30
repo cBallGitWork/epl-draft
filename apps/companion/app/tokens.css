@@ -71,6 +71,26 @@
      7.0:1 and cream 6.41:1, measured in the browser on 30 Aug 2026. */
   --color-chrome: oklch(0.45 0.13 264);
 
+  /* CM's grey button plate: a column head, a tab, a bevelled control. The second
+     colour that exists to be chrome and nothing else.
+
+     It is NOT a rung on the `bg → surface → raised → line` ladder and could not
+     be. That ladder is one hue at chroma 0.045 running L 0.185 to 0.36, and the
+     WHOLE of it sits inside 1.71:1 — `--color-line` on `--color-raised` is
+     1.47:1, and `--color-raised` on `--color-bg` is 1.16:1. A bevel cut from the
+     depth ramp has no edges and no face, which is precisely what the first
+     attempt at this screen drew, and why it read as a tidy dark list rather than
+     as the game. That was an arithmetic problem, not a taste one.
+
+     0.72 was chosen by matching CM's own, not by eye: its button plate measures
+     7.34:1 off its screen ground, and this is 7.52:1 off ours. Because the plate
+     is measured against `--color-bg` in both directions, the same 7.52:1 is what
+     dark ink on it scores — so a bevelled thing is exactly as legible as it is
+     distinct. `--color-ink` on it is 2.27:1 and `--color-accent` 1.73:1, which
+     is why a grey plate carries DARK ink and never a signal colour, and is also
+     how the game drew it. Measured 30 Aug 2026. */
+  --color-face: oklch(0.72 0.02 265);
+
   /* --- Radius: none ---------------------------------------------------------
      Everything in Championship Manager is square, and a rounded corner is the
      single loudest tell that a screen was drawn this decade rather than in 1999.

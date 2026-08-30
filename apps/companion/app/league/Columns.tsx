@@ -72,14 +72,18 @@ export default function Columns({
                 <Link
                   href={sortHref(column.key, sort, descending)}
                   className={`flex h-7 items-center justify-end gap-0.5 whitespace-nowrap px-1.5 ${
-                    here ? "cm-bevel-pressed text-accent" : "cm-bevel text-muted hover:text-ink"
+                    here ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110"
                   }`}
                 >
                   {column.label}
                   {here ? <Arrow down={descending} /> : null}
                 </Link>
               ) : (
-                <span className="cm-bevel flex h-7 items-center whitespace-nowrap px-1.5 text-muted">
+                <span
+                  className={`cm-bevel flex h-7 items-center whitespace-nowrap px-1.5 ${
+                    column.align === "left" ? "justify-start" : "justify-end"
+                  }`}
+                >
                   {column.label}
                 </span>
               )}
