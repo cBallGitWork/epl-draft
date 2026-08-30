@@ -54,7 +54,7 @@ export default async function MatchdayPage() {
   return (
     <div className="flex flex-col gap-4">
       {/* The Desk is reached from here and nowhere else — six tabs already
-          brushes the 320px clip `matchdayfit` measures, and a seventh would cost
+          brushes the 320px clip `tools/ui/navfit.mjs` measures, and a seventh would cost
           every other tab its label to buy one screen a permanent home. */}
       <div className="flex justify-end pt-1">
         <Link

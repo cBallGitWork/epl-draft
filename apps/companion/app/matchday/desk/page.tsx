@@ -30,8 +30,8 @@ import { yoursFirst } from "../../mine";
 // the fixture list. Making 18 rows into 44px targets would cost the screen the
 // one property it is for: all of it visible at once.
 //
-// No seventh tab. Six already brushes the 320px clip `matchdayfit` measures, so
-// this is reached from the Live tab and nowhere else.
+// No seventh tab. Six already brushes the 320px clip `tools/ui/navfit.mjs`
+// measures, so this is reached from the Live tab and nowhere else.
 
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
