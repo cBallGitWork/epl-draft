@@ -105,8 +105,14 @@ const matchups = realInfo.scoringPeriods.slice(0, 38).map((_, p) => ({
 
 const leagueInfo = { ...realInfo, leagueName: "Tim Hortons Pro League (demo)", teamInfo, matchups };
 
+// The period the demo sits in. It must match a gameweek FPL has stats for, or
+// every stat column reads a truthful and useless nought — the join is by
+// gameweek, so a demo parked on an unplayed round shows a squad that did
+// nothing. Read off /api/bootstrap-static/: gameweek 2 is current.
+const PERIOD = 2;
+
 const rosters = {
-  period: 3,
+  period: PERIOD,
   rosters: Object.fromEntries(
     squads.map((squad, i) => [
       teamId(i),

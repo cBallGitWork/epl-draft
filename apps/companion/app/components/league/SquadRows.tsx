@@ -11,6 +11,7 @@ import {
 } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
 import StateBox from "../football/StateBox";
+import type { Contribution } from "@epl/core";
 import { chipsFor } from "./Chips";
 import { positionGroup } from "../../positions";
 
@@ -36,6 +37,36 @@ import { positionGroup } from "../../positions";
  *  string, which would print as a heading that is not there. */
 const UNPLACED = "No position";
 
+/** The stat columns, in one place because the head strip and the rows both print
+ *  them — the fault this file already carries a comment about, where the heads
+ *  said W-L-T after the cells had stopped.
+ *
+ *  Every value is on `contribution()`, which the row already computes. None of
+ *  this costs a request: it is the same `PlayerMatchStats[]` the pitch reads to
+ *  draw a chip, and the list was throwing it away after two chips.
+ *
+ *  `measured` is null before FPL publishes the round's advanced stats, and those
+ *  four columns read a dash rather than a nought — a nought is a claim that he
+ *  did nothing, and absence is not that. */
+const STATS: readonly { key: string; head: string; title: string; of: (done: Contribution) => number | null }[] = [
+  { key: "min", head: "Min", title: "Minutes played", of: (d) => d.minutes },
+  { key: "g", head: "G", title: "Goals", of: (d) => d.goals },
+  { key: "a", head: "A", title: "Assists", of: (d) => d.assists },
+  { key: "cs", head: "CS", title: "Clean sheet", of: (d) => (d.cleanSheet ? 1 : 0) },
+  { key: "sv", head: "Sv", title: "Saves", of: (d) => d.saves },
+  { key: "bps", head: "BPS", title: "FPL's bonus points system score", of: (d) => d.measured?.bps ?? null },
+  { key: "xg", head: "xG", title: "Expected goals — FPL's", of: (d) => d.measured?.expectedGoals ?? null },
+  { key: "xa", head: "xA", title: "Expected assists — FPL's", of: (d) => d.measured?.expectedAssists ?? null },
+];
+
+/** Two decimals for the expected pair and whole numbers for the rest: xG is a
+ *  fraction of a goal and printing it as one is the only way it means anything,
+ *  while a rounded 0 would say he had no chances. */
+function figure(key: string, value: number | null): string {
+  if (value === null) return "—";
+  return key === "xg" || key === "xa" ? value.toFixed(2) : String(value);
+}
+
 export default function SquadRows({
   lines,
   projected,
@@ -58,8 +89,13 @@ export default function SquadRows({
           headings and no columns. The group bars below separate; this names. */}
       <div className="cm-bevel flex min-h-7 items-center gap-2 px-2 text-3xs font-bold uppercase">
         <span className="w-6 shrink-0" />
-        <span className="min-w-0 flex-1">Player</span>
+        <span className="min-w-0 flex-1 lg:max-w-[18rem]">Player</span>
         <span className="w-[4.25rem] shrink-0 text-right">Fixture</span>
+        {STATS.map((stat) => (
+          <span key={stat.key} title={stat.title} className="hidden w-14 shrink-0 text-right lg:block">
+            {stat.head}
+          </span>
+        ))}
         {scored ? <span className="w-8 shrink-0 text-right">{projected ? "Proj" : "FPts"}</span> : null}
       </div>
 
@@ -124,7 +160,7 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
         )}
       </span>
 
-      <span className="min-w-0 flex-1 truncate text-sm font-medium">
+      <span className="min-w-0 flex-1 truncate text-sm font-medium lg:max-w-[18rem]">
         {playerName(player.rostered)}
       </span>
 
@@ -155,6 +191,23 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
           <FixtureChip opposition={player.opposition} blank="No fixture" />
         </span>
       )}
+
+      {/* The stat columns, at desk width only. On a phone the rows are the
+          subject and the fixture and the total are what a manager is scanning
+          for; here there is room for what he actually did. */}
+      {STATS.map((stat) => (
+        <span
+          key={stat.key}
+          className="numeric hidden w-14 shrink-0 text-right text-2xs font-bold text-mid lg:block"
+        >
+          {/* A man who has not kicked off has not scored nought — he has not
+              played, and DESIGN §7 puts a dash there. `contribution([])` answers
+              zeros for every field, which is right for the sum it is doing and
+              wrong for a column: fourteen rows of noughts before a ball is
+              kicked reads as a squad that did nothing. */}
+          {started ? figure(stat.key, stat.of(done)) : "—"}
+        </span>
+      ))}
 
       {/* Undefined is no table at all and takes the cell with it; null is a table
           that does not name him, which is a dash. */}
