@@ -268,3 +268,31 @@ Running against the real league now is how the empty states get tested.
 Route `params` may be a `Promise` (await it). `'use cache'` now needs the
 `cacheComponents` flag. Check `node_modules/next/dist/docs/` when writing framework
 code.
+
+## The crew — `.claude/`
+
+Committed and project-level, so every session gets it.
+
+**Hooks fire before you do.** `git add -A`, `git add .`, `git merge` and
+`git push --force*` are **denied** — stage named paths, and rebase. You are
+**asked** before `npm run capture` (pull first: `capture:status` counts
+directories, so it cannot tell "the cron stopped" from "this tree never
+pulled") and before a second build or server. A denial is the hook, not a
+judgement about you; do the thing it names instead.
+
+**`tools/ui/` is the instrument drawer** — `.mjs` browser instruments, outside
+the tsc and vitest globs on purpose. `shot` `probe` `sweep` `navfit` `dialog`
+over one shared `cdp.mjs`. They talk to an already-running headless Chrome on
+`CDP_PORT` (9261) and never launch one; auth is `--team-cookie <file>` or
+`TEAM_COOKIE`, never a positional.
+
+**Skills are the named rituals** — `/verify` `/shoot` `/audit-ui` `/probe`, and
+four runbooks Craig starts: `/phase-gate` `/handover` `/swap-day`
+`/rehearsal-saturday`.
+
+**Agents are read-only** and see what a diff review cannot: `ui-verifier` opens
+the screenshots, `probe-runner` counts the payload, `register-warden` judges
+DESIGN.md, `docs-drift-auditor` checks the docs against the tree.
+
+`.mcp.json` adds Playwright for interactive exploration. Deterministic audits
+stay in `tools/ui/` — a repeatable number is what a claim needs.
