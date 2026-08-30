@@ -4,7 +4,7 @@ Every score in the league and every score in the round, on one screen, with
 nothing else on it. Jeff's wall of monitors.
 
 Reached from the **Live** tab and nowhere else — six tabs already brushes the
-320px clip `matchdayfit` measures, and a seventh would cost every other tab its
+320px clip `tools/ui/navfit.mjs` measures, and a seventh would cost every other tab its
 label to buy one screen a permanent home.
 
 ## On the page

@@ -2142,7 +2142,7 @@ withholds nothing from anybody; a reserve is excluded because he does not score.
 
 `/matchday/desk`: eight head-to-heads and ten fixtures as one-line scores, yours
 in accent, nothing else on the page. Reached from the Live tab and nowhere else —
-six tabs already brushes the 320px clip `matchdayfit` measures.
+six tabs already brushes the 320px clip `tools/ui/navfit.mjs` measures.
 
 Gillette Soccer Saturday borrowed **in voice and typography, not in colour**: the
 app's tokens stay, because the colour registers are binding and Ceefax's are not

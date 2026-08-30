@@ -1,265 +1,170 @@
-# What's needed — 27 Aug 2026, between gameweek 1 and gameweek 2
+# What's needed — 29 Aug 2026, the redesign day
 
-Replaces the 22 Aug handover. State: `main`, **pushed**, working tree clean but
-for `probe3.mjs`. 534 tests · typecheck · lint · build, green on every commit.
+Replaces the 27 Aug handover. State: `main`, **24 commits ahead of `origin/main`,
+NOT pushed**, rebased clean onto origin (nothing behind). Working tree clean but
+for `probe3.mjs` and `scripts/_probe-deals.ts`, both untracked. 669 tests ·
+typecheck · lint · build were green immediately **before** the rebase; they have
+not been re-run since it. Run them before pushing.
 
-Gameweek 1 is done. Gameweek 2 kicks off **28 Aug 19:00Z** behind a 17:30Z FPL
-deadline; our lock is **18:45Z**. Fantrax period 2 opens at the first kickoff.
-
-Eight commits today, six of them fixes to things that were only visible in the
-**between-rounds** state — the four days the app sits in every week, which nobody
-had ever looked at. Full account in PLATFORM_NOTES, 27 Aug.
+Today was a UI overhaul, run by two sessions in one tree. Thirty-four commits.
+The paper became a newspaper, the desk did not become Championship Manager, and
+the second of those is the whole of what is left.
 
 ---
 
-## 1. The thing that was not a code bug and outranked every code bug
+## 1. Push first. Nothing has left the machine.
 
-**`main` and `origin/main` had diverged, and production was serving 19 Aug code.**
-Local held 79 unpushed commits on `3a9c56f`; origin held the same base plus eight
-daily capture commits from the CI bot. Vercel builds origin, so every fix the
-first matchday taught was undeployed and gameweek 2 would have kicked off on it.
+Twenty-four commits sit unpushed, which is the same shape as the fault the 27 Aug
+handover opens on — production serving old code while a day's work looks done.
+`origin/main` has none of today.
 
-Three things worth carrying forward:
+**Rebase, never merge**, still, and for the reason that file records: `vercel.json`
+reads `git diff HEAD^ HEAD`. The rebase onto `origin/main` is already done and was
+clean — the two incoming commits were cron round-state appends touching only
+`data/probes/round-state/gw2.jsonl`, with zero overlap. So the push is unblocked;
+it just has not happened.
 
-- **Rebase, never merge.** `vercel.json` reads `git diff HEAD^ HEAD`, and a merge
-  commit's first parent is our own tip — so the diff Vercel evaluates would have
-  been the eight captures and nothing else, skipping the build and leaving 79
-  commits undeployed a second time. Same trap the 22 Aug handover recorded as
-  "never let a capture be the last commit in a push", wearing a different hat.
-- **`--force` would have destroyed eight days of history** that `capture.yml`
-  says cannot be recreated.
-- **`capture:status` said OVERDUE and the cron was innocent.** It reads the
-  working tree and cannot tell "captures stopped" from "you have not pulled".
-  Do not react to it by running `npm run capture` before pulling.
+## 2. The direction, and it is locked
 
-One conflict: both sides captured 22 Aug. Thirteen of seventeen files identical;
-the manual 11:07Z run was dropped for the CI's 05:18Z one, because the 23 Aug
-capture records the waiver flip anyway and the CI series is unbroken. It survives
-on `backup/pre-rebase-2026-08-27`.
+Recorded in full at `~/.claude/plans/i-need-a-complete-parallel-cocke.md`. The
+short form, all of it Craig's own calls today:
 
-## 2. What is fixed and deployed
+- **Two registers, one product.** `/` and the written journalism are **the
+  Gazetta** — a live newspaper. The other five tabs are **the Desk** — a
+  Championship Manager 99/00 management terminal. Shared skeleton: one spacing
+  scale, Archivo Narrow tabular figures for every number, the same nav bones.
+- **The site is an info product** — the go-to place for sixteen managers to read
+  Fantrax, FPL and the Premier League in one place, on phone and desktop, fast.
+- **One exception to info-only: team editing survives**, scoped to **formation
+  changes and starter↔bench swaps only**. No waivers, no claims, no drops, no
+  trades — ever. It must be **one tap, like an FPL pick page**, and it must
+  actually write to Fantrax.
+- **Players becomes a scouting desk** — heavy data, all four sources approved,
+  plus heatmaps and shots from `~/ai-carling-premiership`.
+- **The paper gets a banter section set** — Lawro-voice predictions, Crooks-voice
+  Team of the Week captions, The Bin, The Points Dodgers, waiver roundups, AI
+  press conferences. Parody personas, obviously parody.
 
-- **The two calendars had drifted and every ordinary squad read crossed them.**
-  Fantrax was serving period 2 while FPL pointed at gameweek 1, so the desk read
-  "Gameweek 1 · head-to-head" over `0 – 0`, and `/squad` printed "Period 2 ·
-  Gameweek 1" — the page reporting its own mismatch to anyone who read the line.
-  The period now comes from the round in view. `periodAsAsked` also stopped being
-  true-by-construction on the read nearly everyone makes.
-- **The eleven adds up to the header, and "This period" means it.**
-  `getTeamRosterInfo`'s period is inert for points; `getLiveScoringStats` honours
-  it and is the only per-player number priced at the ROSTER SLOT. test3 now reads
-  45 over an eleven of 45, and Saka reads 8 where the season table pays him 6.
-  Costs no request and deletes three `getTeamRosterInfo` POSTs per window.
-- **The playoff line is the league's own.** `numPlayoffTeams: 4` was on the wire
-  all along and `raw.ts` did not mirror it, so the table drew the placeholder's
-  invented top two.
-- **`/matchday` can name the round coming up.** It was printing "The next one
-  appears here once FPL names its fixtures" for four days, with both buttons
-  pointing at the round just played. The schedule had the same root and opened on
-  last week.
-- Two links that asked the URL a question about the round: `Season.tsx` dropped
-  `?gw=` (the sibling view was fixed on 22 Aug and this one was missed), and the
-  provenance line vanished whenever there was no query string.
+## 3. What the CM reference actually is
 
-## 3. FIXED — the lineup gate was anchored on the wrong instant
+Studied from real screenshots today (myabandonware, game page
+`championship-manager-season-99-00-bjo`, full-size at
+`/media/screenshots/c/championship-manager-season-99-00-iu6/…_{1,3,5,9,12,15,21,24}.jpg`
+— note `.jpg` for full size, `.png` only for thumbs, and a `Referer` header is
+required). Worth committing two or three under `docs/ui/reference/cm9900/`.
 
-`visibility.ts` gated on the roster-period boundary; the rule stated at the top
-of that same file is about the deadline. `gazette/deadline.ts` had already made
-exactly this correction for the *displayed* deadline — "It is not fifteen minutes
-before the period boundary, and this file used to compute it that way" — and the
-gate was left on the old anchor. So the app printed 13:45 as the deadline while
-opening the XI at 10:00 the previous morning.
+What the game is, as opposed to what it is remembered as:
 
-**33 of 38 roster periods open before their lock** (computed from live fixtures;
-34 against the recorded alignment fixture, which is stale). Period 4: 27h45m
-early. Period 6, the league's first round: 25h15m, ending the day before sixteen
-people arrive.
+- Royal-blue title bars, bold white titles; a royal-blue sidebar with yellow,
+  white and cyan links; grey **bevelled** buttons.
+- Tabs in indigo fills; the active one is **yellow text with a yellow border**.
+- Tables are the icon: grey bevel **column-header buttons** that sort, bold white
+  rows **directly on the dark ground with no card and no zebra**, greyed-out
+  unavailable players, red `Inj` and yellow `Fut` state boxes, small blue leading
+  index cells, **orange stat figures**, **cyan person links**, and the cut line
+  drawn as a **yellow dashed rule across the table**.
+- Match header: home on a blue panel, away on red, white score boxes, minute in
+  yellow.
 
-Three independent skeptics were asked to refute it and all three upheld it. The
-one that tried hardest to kill it found the opposite — the captured snapshot
-series settles the honest bound the last handover left open: rehearsal
-`getTeamRosters` carried `period: 1` through the 24 Aug capture and `period: 2`
-from the 25th, three days before period 2 begins. Fantrax's editable period runs
-AHEAD of the boundary, so what is served in that window is a live, still-editable
-XI.
+Semantics: yellow = active/yours · cyan = person links · orange = figures · red =
+negative and the away side · green = positive · royal blue = chrome.
 
-Landed as two commits, per CODE_RULES: `locksAt`/`firstKickoff` moved from
-`gazette/` into `league/calendar.ts` (behaviour-neutral, 534 tests before and
-after, both barrels edited together to avoid the ambiguous star-export), then the
-gate itself, starting from the failing test.
+## 4. What got built today
 
-**Why it survived every test until now.** The fixture held periods 1 and 2 only —
-both Friday-night kickoffs, two of the four weeks where the two readings agree.
-It could not tell the rules apart. The fixture now spans 1, 2, 3, 4 and 6 and
-declares its own kickoffs, because which weeks are safe MOVES: gameweek 8's first
-kickoff has shifted onto a Friday since the alignment fixture was recorded,
-flipping period 8 from unsafe to safe.
+Genuinely done, and it is the boring half that is easy to get wrong:
 
-### What it does NOT close, and this matters
+- **The paper is a newspaper.** Rosa stock `#f6ddd2` on `#2a2018` ink, Fraunces
+  nameplate, Newsreader prose, ink rules, dateline, ruled crest plate, drop cap,
+  CSS multi-columns, and a real lead-and-rail broadsheet at `@3xl`.
+- **The token system is the plan's**, and it is correct: navy ramp
+  `oklch(0.185 0.045 265)`, CM yellow accent `oklch(0.88 0.16 95)`, live red,
+  league red, AA-verified ink ladder. `paper.css` splits the registers cleanly.
+- **`DESIGN.md`** exists at the repo root and is binding.
+- **All thirteen `loading.tsx`**, a `Skeleton` primitive that self-skins per
+  register, `LiveStrip`, `LiveNow`, one poller in the shell.
+- **A lot of new data reached the screens** — form strings, games back, win
+  percentage, per-squad prices, records, ownership trend, four scout numbers the
+  live feed does not carry per match.
 
-`getTeamRosters` echoes whatever period it is asked for, so `periodAsAsked`
-compares our number against our own and is **vacuous by construction**. Whether
-the parameter selects a stored arrangement or always returns the live editable
-one is still unverified — the tree says so in two places. If it is inert, a tap
-on a past round still shows today's arrangement under last week's heading.
+## 5. What did NOT get built, and it is the thing Craig is looking at
 
-The fix closes the window on the round in view and the 75 minutes every Saturday
-between FPL's deadline and ours. **It is not the whole leak.** §4's first probe
-decides whether more is needed, and the rehearsal league being dormant is exactly
-why no probe so far can tell the two storage models apart — breaking the tie needs
-one lineup rearranged with the commissioner's cookie, then `?period=1` against
-`?period=2`.
+**The Desk is a recolour, not a redesign.** Commit `5a2c485` 14:58, "the other
+five tabs are a management terminal", touched four files — `tokens.css`,
+`globals.css`, `layout.tsx`, `FixtureChip.tsx`. Palette only. No screen
+component, no table, no structure. It was then never revisited: the session ran
+plan phases 1–4 and jumped to phase 8, skipping **5 (league screens), 6 (squads,
+table-first), 7 (matchday)** — which are exactly the three phases that convert
+the five tabs to CM. So the data those tables were meant to display arrived, and
+the tables did not.
 
-### One assumption to check, and it is one look
+Measured against §3, still missing everywhere but `/players`:
 
-`lineupLockType` is "set amount of time before 1st game of period", read off
-`createLeague.go?goto=5` on 20 Aug. **If the commissioner's lock is actually the
-period boundary, this fix is wrong and the old code was right.** The VALUE does
-not matter — any lead under about eighteen hours leaves a window — but the type
-does.
+- 26 files still wrap rows in rounded bordered cards. League, Squads and FPL are
+  card stacks on a navy ground.
+- No bevelled column-header buttons anywhere in the CSS.
+- No orange figures, no cyan person links, no `Inj`/`Fut` state boxes.
+- The playoff cut line is solid league red, not a yellow dashed rule.
 
-## 4. Two observations that expire
+`/players` is the exception and the proof it works — a genuine dense sortable
+table.
 
-- **`getTeamRosters?period=1` after 28 Aug 18:59:58Z**, once period 1 has closed.
-  Does it serve the locked arrangement or always the live one? Half-answered —
-  periods 1/2/3 are byte-identical *while period 1 is still open*, which is
-  suggestive, not decisive. A clean experiment for about a day, and it sets the
-  severity of §3.
-- **The flip-order sample, Mon 31 Aug ~21:00Z.** Whether the `bonus-settling`
-  rung is reachable needed `/api/event-status/`, `/api/fixtures/?event=N` and
-  bootstrap `data_checked` sampled together from Mon 24 Aug. Nobody was watching,
-  and by today all four GW1 dates read `bonus_added: true` with the round
-  `data_checked` — that answer is gone. This is the second chance.
+**Start with the League table.** It is the smallest of the three screens and it
+answers, in one screen, whether the CM direction lands before six more are built
+on it.
 
-Also still open from before: the clean-sheet divergence needs a defender subbed
-off before his side concedes.
+## 6. Two changes landed this evening, after Craig saw it
 
-## 5. Still Craig's
+- `78e9923` **the paper prints in two colours.** Every rule and column head went
+  from league red to ink; the sheet is ink at an opacity plus one print red
+  `#8f2318`, reached only by LIVE and "yours". `--color-league` is re-pointed at
+  the print red so nothing can reach the brand colour by accident; `.crest`
+  restores it, because a crest is a printed mark rather than page furniture. The
+  stock moved to the reference's rosa — reversing a recorded decision, with the
+  reversal recorded.
+- `8a17574` **Team of the Week is a rail column.** It was a full-bleed pitch
+  closing the lead column and ran most of a phone screen on its own. The lines
+  survive as grouping under small-capital position labels with the shape in the
+  head's aside; it leads the rail, because it is the one block there anybody
+  reads for pleasure.
 
-- The **`adminMode` probe** still needs a second Fantrax account holding one
-  rehearsal team. Everything downstream of the write surface waits on it.
-- `data/mappings/review/proposals.json` still holds `Fred Heath`,
-  `Enzo Kana Biyik`, `Lucas Pitt`. Only a person may write `unmappedBy: "manual"`.
-- **Rename the league in Fantrax** — `getLeagueInfo.leagueName` is still
-  "Tim Hortons Pro League 24/25" and the schedule prints it verbatim.
-- `LINEUP_LOCK_LEAD_MINUTES = 15` is a commissioner setting no API exposes, and
-  sixteen people will act on the 18:45Z it produces tomorrow. Worth one look at
-  the settings page.
-- The **cup** stays a placeholder. Only the playoff half became real, because
-  only the playoff half is published.
-- `probe3.mjs` is still untracked in the root and still yours to delete.
+**Known consequence to look at:** the lead column is now thin on desktop — the
+pitch was what filled it. On the rehearsal league that is partly honest (two ties,
+no filed column). If it still looks thin on the real league with a column filed,
+the answer is the written column and the picture, not the eleven going back.
 
-## 6. The ship-day gates, and the bug the first one caught
+## 7. Hazards
 
-**`verify.yml`'s two-league walk had never run.** It was written on 20 Aug into a
-branch nobody pushed, so its first ever execution was tonight — and it went red.
-Four defects had to be cleared before it could even say why:
+- **Two sessions have been committing in this one tree.** The other is
+  `epl-draft-1-7c` (idle since 18:02). It does not appear in `ListAgents`, so
+  `SendMessage` may not reach it. Do not both edit.
+- **A dev server is running** on `localhost:3000`, started from this tree. Next 16
+  keeps `.next/dev` and `.next/build` separate, so it does not fight the build
+  gate, but it is still running.
+- **The rebase rewrote 24 commit hashes.** Anything holding the old ones is stale.
+- **`npm run dev` reads `apps/companion/.env.local`**, not the repo-root one.
+  Unchanged, still true, still the thing that catches people.
 
-- it could not name WHICH wrong state it found (an outage and a league with teams
-  in it produced the same complaint and want opposite fixes);
-- it never checked the server served the league it was asserting about;
-- `set -e` meant the first walk's failure skipped the second entirely, so the
-  rehearsal half — the one its own comment says has caught a real bug — had still
-  never run;
-- `next start` renames its process to `next-server (v16.2.7)`, so
-  `pkill -f "next start"` matched **nothing**. The server outlived the walk, the
-  next `next start` died with EADDRINUSE, `smoke:wait` was answered by the OLD
-  server, and the second walk reported "10/10 clean" having asked the first
-  walk's app about the second walk's league. Reproduced locally.
+## 8. Still Craig's
 
-**And then the walk earned its keep.** The real-league red was not the empty
-states: six routes were **prerendered static at build time against the default
-league** and served that way whatever the running server was set to.
-`myTeamId` checked `SESSION_SECRET` and returned *before* reading the cookie, and
-that `cookies()` call is what makes the render request-dependent. CI has no
-`.env.local`, so it had no secret, so `/`, `/league`, `/league/matchups`,
-`/squad`, `/matchday` and `/matchday/desk` built static against the rehearsal
-league. `/league/schedule` has no session read and stayed dynamic and correct —
-which is why the schedule printed "Tim Hortons Pro League 24/25" over a table
-reading `test3 1-0-0 45`. Half the app served one league, half the other, every
-page returned 200.
+1. **Create a second Fantrax account owning one rehearsal team.** This is the
+   critical path for the lineup write and nothing else can start it: without it
+   every `adminMode` probe is a self-write and proves nothing.
+2. **Choose a masthead photograph.** The crest-in-a-box ships until then and is
+   not a placeholder, but a grayscale photo is what makes the reference read as
+   print.
+3. **The 10 Oct league swap** — `FANTRAX_LEAGUE_ID` to `ayyoh3n2mr326v2o`, *and*
+   the separate environment in `.github/workflows/editions.yml`, which inherits
+   nothing from Vercel.
 
-This is precisely what `leagueCache` exists to prevent, through a door it cannot
-watch: a static page never reaches the cache, so putting the league id in every
-key cannot help. **On 10 Oct the swap is one environment variable and a redeploy.
-A build that had lost `SESSION_SECRET` would have shipped the rehearsal league to
-sixteen people, silently.**
-
-Fixed, and `secret()` with it — it used `??`, so `SESSION_SECRET=""` counted as a
-real key and every team code would have verified against an HMAC keyed on
-nothing. Verified by building with `.env.local` removed, which is CI's actual
-condition: every league route now reads `ƒ` dynamic where six read `○` static.
-
-**Verify is green for the first time since 19 Aug**, and the two-league walk has
-now completed both halves once: real 10/10, rehearsal 12/12.
-
-### The pile, after 27 Aug
-
-All eight were put to an agent each with instructions to REFUTE them. All eight
-came back real, two with the record corrected.
-
-**Fixed 27 Aug:**
-
-- The four walk defects above.
-- **`staleness.ts` slept through the first missed day.** `overdue` was
-  `ageDays > cadence`, so a daily cadence needed an age of two and the alarm came
-  thirty-three hours late instead of the nine the schedule was tuned for. It has
-  already happened: the rehearsal captures jump 6 Aug to 12 Aug, all post-draft,
-  and the first day passed green. `npm test` was not evidence — it asserted the
-  defect under the heading "tightens to a day once the draft has happened".
-  `PLAN.md` asserted it too, so two documents disagreed and the wrong one was
-  implemented.
-- **`team-codes` could not read the secret, and its advice would have burned it.**
-  No npm script passed `--env-file`, so the script that issues sixteen sign-in
-  codes has never run. Worse, the remedy it printed reads as "write a new secret"
-  — which against a file that already has one silently invalidates every issued
-  code, with no error, `teamForCode` just returning null for all sixteen. It now
-  loads the verifier's own file. `CLAUDE.md` was the reason an operator would have
-  used the wrong one.
-
-**Fixed 28 Aug:**
-
-- **`shape-diff` reddened on 22 differences somebody had already judged**, so the
-  documented chain never reached its third gate. One was not a finding at all —
-  emptiness sentinels reported as lost fields. The other 21 need knowledge a
-  payload differ cannot have (whether a mapper reads the path), so that judgement
-  is now `data/shape/baseline.json`: one audited entry per difference, each with
-  a reason, all 21 verified against the tree first. `settled` reports entries
-  that no longer differ so the file gets pruned instead of quietly growing into a
-  blindfold, and an entry with no reason recorded stops the run at exit 2.
-- **`shape-diff` could exit 0 having compared nothing** — it gated on `dangerous`,
-  which only a comparison can raise. Counts comparisons made and exits 2 when
-  that is zero; a partial refusal still passes, deliberately.
-- **`smoke` asked Fantrax the same question twice** and let the answers disagree,
-  dropping two routes while reporting a full count.
-
-**The documented chain now runs end to end for the first time**: 12/12 routes,
-0 residue, 60 rostered slots with no holes.
-
-**Still open:**
-
-- `smoke`'s desk fragment is printed by all three states it exists to keep apart.
-
-Two of the pile were fixed on 23 Aug (`capture-status` counting directories,
-`build-bridge` rebuilding from nothing) and are already in.
-
-**One lesson worth keeping separate from the bug.** Every hypothesis I could form
-from outside CI was wrong — wrong league, cold-start race, missing session env,
-provider refusal, cache contamination — and none of them reproduced locally. What
-ended it was making the gate print the first words the page actually rendered.
-A gate that says an assertion failed and cannot say what it saw sends somebody to
-reproduce a thing that only happens in CI.
-
-Also unchanged: the bridge was last built 19 Aug against the 19 Aug pool.
-`bridge:check` stays green because it only gates on *rostered* players, which is
-a smaller question than it looks.
-
-## 7. Before every commit, still
+## 9. Before every commit, still
 
 ```bash
-npm test && npm run typecheck && npm run lint && npm run build
-npm run smoke && npm run shape-diff && npm run bridge:check
+npm test          # 669, all green
+npm run typecheck
+npm run lint
+npm run build
 ```
 
-**Pushing is deploying.** `main` → Vercel production, no gate. And never let a
-capture be the last commit in a push — nor a merge commit, for the same reason.
+Plus an eyeball at 390×844 and at ≥lg, and the front page after every phase — the
+season is live. `node tools/ui/navfit.mjs` after any chrome change; it drives
+Chrome over CDP on port 9261.

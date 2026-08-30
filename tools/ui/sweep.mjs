@@ -1,0 +1,111 @@
+// Contrast and overflow across every route, at both widths.
+//
+//   node tools/ui/sweep.mjs [--base http://localhost:3000] [--team-cookie <file>]
+//
+// Nine routes × 390 and 1440. Two questions per page: does any text fail WCAG AA
+// against the ground it is actually painted on, and does the document scroll
+// sideways.
+//
+// The colour arithmetic is the part worth keeping. This app authors in oklch, and
+// `getComputedStyle` hands oklch() straight back — so the ratio cannot be done in
+// JS on the string. Painting the colour once over white and once over black lets
+// the browser do the conversion and recovers both the alpha and the sRGB, whatever
+// space it was written in. Backgrounds are composited up the real ancestor chain
+// for the same reason: a token at 60% over a card over the navy ground is three
+// layers, and reading only the nearest one flatters every figure on the page.
+//
+// Text on an SVG ground is bucketed as "not auditable here" rather than failed.
+// The pitch draws its own ground in SVG, which no ancestor walk can see; calling
+// that a failure trains the reader to ignore the output, which is worse than the
+// gap. The bucket is a work list — check those by eye — never a pass.
+
+import { connect, parseArgs, teamCookie, BASE_URL } from "./cdp.mjs";
+
+const ROUTES = [
+  "/",
+  "/league",
+  "/league/schedule",
+  "/league/matchups",
+  "/squad",
+  "/players",
+  "/matchday",
+  "/matchday/desk",
+  "/fpl",
+];
+
+const WIDTHS = [390, 1440];
+
+const AUDIT = `(function(){
+  var cvs=document.createElement("canvas");cvs.width=cvs.height=1;
+  var ctx=cvs.getContext("2d",{willReadFrequently:true});
+  var cache={};
+  function toRGBA(css){
+    if(cache[css])return cache[css];
+    var o=[];
+    ["#fff","#000"].forEach(function(ground){
+      ctx.globalCompositeOperation="copy";ctx.fillStyle=ground;ctx.fillRect(0,0,1,1);
+      ctx.globalCompositeOperation="source-over";ctx.fillStyle=css;ctx.fillRect(0,0,1,1);
+      o.push(Array.prototype.slice.call(ctx.getImageData(0,0,1,1).data,0,3));
+    });
+    var a=1-(o[0][0]-o[1][0])/255;
+    if(a<0)a=0; if(a>1)a=1;
+    var c=a>0.002?[0,1,2].map(function(i){return o[1][i]/a}):[0,0,0];
+    return cache[css]=[c,a];
+  }
+  function lum(c){var p=c.map(function(v){v=Math.min(255,Math.max(0,v))/255;return v<=0.04045?v/12.92:Math.pow((v+0.055)/1.055,2.4)});return 0.2126*p[0]+0.7152*p[1]+0.0722*p[2]}
+  function over(fg,bg,a){return [0,1,2].map(function(i){return fg[i]*a+bg[i]*(1-a)})}
+  function bgOf(el){var n=el,stack=[],acc=[255,255,255];
+    while(n&&n.nodeType===1){var t=toRGBA(getComputedStyle(n).backgroundColor);
+      if(t[1]>0.002)stack.push(t);n=n.parentElement}
+    for(var i=stack.length-1;i>=0;i--)acc=over(stack[i][0],acc,stack[i][1]);return acc}
+  var out=[],blind=[];
+  Array.prototype.forEach.call(document.querySelectorAll("*"),function(el){
+    var txt="";
+    Array.prototype.forEach.call(el.childNodes,function(n){if(n.nodeType===3&&n.textContent.trim())txt+=n.textContent.trim()+" "});
+    txt=txt.trim(); if(!txt)return;
+    var r=el.getBoundingClientRect(); if(r.width<2||r.height<2)return;
+    var cs=getComputedStyle(el);
+    if(cs.visibility==="hidden"||parseFloat(cs.opacity)===0)return;
+    if(cs.clipPath&&cs.clipPath!=="none"&&r.width<=2)return;
+    var isSvg=el.namespaceURI==="http://www.w3.org/2000/svg";
+    var paint=isSvg?cs.fill:cs.color;
+    if(isSvg&&(!paint||paint==="none"))return;
+    var f=toRGBA(paint);
+    var bg=bgOf(el);
+    var col=over(f[0],bg,f[1]);
+    var a=lum(col),b=lum(bg),hi=Math.max(a,b),lo=Math.min(a,b);
+    var ratio=(hi+0.05)/(lo+0.05);
+    var px=parseFloat(cs.fontSize),bold=parseInt(cs.fontWeight,10)>=700;
+    var need=(px>=24||(px>=18.66&&bold))?3:4.5;
+    if(ratio>=need-0.02)return;
+    var opaque=isSvg||el.closest(".pitch");
+    (opaque?blind:out).push({t:txt.slice(0,26),px:Math.round(px*10)/10,r:Math.round(ratio*100)/100,need:need});
+  });
+  return JSON.stringify({fail:out.slice(0,6),blind:blind.length});
+})()`;
+
+const { flags } = parseArgs(process.argv.slice(2));
+if (flags.base) process.env.BASE_URL = flags.base;
+const base = flags.base ?? BASE_URL;
+
+const cdp = await connect();
+await cdp.setCookie(teamCookie(flags));
+
+let failures = 0;
+for (const width of WIDTHS) {
+  await cdp.setViewport(width, 900);
+  for (const route of ROUTES) {
+    await cdp.send("Page.navigate", { url: base + route });
+    await new Promise((resolve) => setTimeout(resolve, 2200));
+    const { fail, blind } = JSON.parse(await cdp.js(AUDIT));
+    const sideways = await cdp.js(`document.documentElement.scrollWidth > window.innerWidth`);
+    failures += fail.length + (sideways ? 1 : 0);
+    const flag = [fail.length ? `${fail.length} AA` : "", sideways ? "H-SCROLL" : ""].filter(Boolean).join(" ") || "ok";
+    const note = blind ? `  (${blind} on SVG ground — not auditable here, check by hand)` : "";
+    console.log(`${width} ${route.padEnd(20)} ${flag}${note}`);
+    for (const bad of fail) console.log(`      ${bad.r}:1 need ${bad.need} @${bad.px}px  "${bad.t}"`);
+  }
+}
+
+cdp.close();
+process.exit(failures ? 1 : 0);
