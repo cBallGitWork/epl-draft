@@ -69,7 +69,7 @@ export default function PitchPlayer({
       // proportions, which left a hole in the row wherever the bridge had not
       // settled somebody.
       <div className="@container flex w-full flex-col" style={FIGURE}>
-        <div className="pitch-figure grid w-full place-items-center rounded-t-[3px] border border-dashed border-white/35 bg-black/25">
+        <div className="pitch-figure grid w-full place-items-center border border-dashed border-white/35 bg-black/25">
           <span className="numeric text-2xs font-bold text-white/70">
             {positionLabel(rostered.slot.position) ?? "?"}
           </span>
@@ -77,7 +77,7 @@ export default function PitchPlayer({
         <span className="flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-3xs font-bold uppercase leading-none text-bg">
           <span className="w-full truncate">{rostered.slot.fantraxId}</span>
         </span>
-        <span className="flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden rounded-b-[3px] bg-cream/90 px-0.5 text-center text-3xs font-bold leading-none text-bg/70">
+        <span className="flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream/90 px-0.5 text-center text-3xs font-bold leading-none text-bg/70">
           <span className="w-full truncate">{unresolvedShort(rostered.unresolved)}</span>
         </span>
       </div>
@@ -145,7 +145,7 @@ export default function PitchPlayer({
            the squeeze and the number is what gets cut, which is how 90 minutes
            came to be printed as "9". A clipped chip is untidy; a clipped number
            is wrong. */
-        <span className="flex h-[var(--pitch-band)] items-center gap-px overflow-hidden rounded-b-[3px] bg-bg px-0.5">
+        <span className="flex h-[var(--pitch-band)] items-center gap-px overflow-hidden bg-bg px-0.5">
           <span className="flex min-w-0 gap-px overflow-hidden">
             {chips.map((chip, at) => (
               <span
@@ -155,7 +155,7 @@ export default function PitchPlayer({
                 // squeezes cells to about 43px, where two chips and the number
                 // overlap. Dropping the lower-ranked chip is a decision; setting
                 // both of them at six pixels so they fit is not.
-                className={`numeric rounded-[2px] px-0.5 text-3xs font-bold leading-none ${
+                className={`numeric px-0.5 text-3xs font-bold leading-none ${
                   chip.className
                 } ${at === 1 ? "@max-[3.4rem]:hidden" : ""}`}
               >
@@ -177,7 +177,7 @@ export default function PitchPlayer({
       ) : (
         /* His fixture, at full strength while he waits on it. The FDR colour is
            the whole message and dimming it with him left a grey box. */
-        <span className="flex h-[var(--pitch-band)] items-stretch overflow-hidden rounded-b-[3px] bg-cream/90 px-0.5">
+        <span className="flex h-[var(--pitch-band)] items-stretch overflow-hidden bg-cream/90 px-0.5">
           <FixtureChip opposition={opposition} blank={club?.shortName ?? "—"} />
         </span>
       )}

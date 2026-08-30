@@ -124,7 +124,7 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
           {chips.map((chip) => (
             <span
               key={chip.label}
-              className={`numeric rounded-[2px] px-1 text-[0.625rem] font-bold leading-[1.4] ${chip.className}`}
+              className={`numeric px-1 text-[0.625rem] font-bold leading-[1.4] ${chip.className}`}
             >
               {chip.label}
             </span>
@@ -132,7 +132,7 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
           <span className="numeric text-[0.625rem] font-bold text-muted">{done.minutes}&apos;</span>
         </span>
       ) : (
-        <span className="inline-flex w-[4.25rem] shrink-0 overflow-hidden rounded-[3px]">
+        <span className="inline-flex w-[4.25rem] shrink-0 overflow-hidden">
           <FixtureChip opposition={player.opposition} blank="No fixture" />
         </span>
       )}

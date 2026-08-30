@@ -60,7 +60,7 @@ export default function PlayerCard({
         <div className="flex items-baseline justify-between gap-3 rounded-lg border border-line bg-raised px-3 py-2">
           <span className="text-2xs uppercase tracking-widest text-faint">This gameweek</span>
           <span className="flex items-baseline gap-2">
-            <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden rounded-[3px]">
+            <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden">
               <FixtureChip opposition={opposition} blank="No fixture" />
             </span>
             {kickoff ? (

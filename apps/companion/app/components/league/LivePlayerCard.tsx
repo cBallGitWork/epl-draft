@@ -109,7 +109,7 @@ export default function LivePlayerCard({
         )}
 
         <div className="flex items-center justify-between gap-3 rounded-lg border border-line bg-raised px-3 py-2">
-          <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden rounded-[3px]">
+          <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden">
             <FixtureChip opposition={opposition} blank="No fixture" />
           </span>
           <span className="numeric text-2xs text-faint">
@@ -137,7 +137,7 @@ export default function LivePlayerCard({
               {chipsFor(done).map((chip) => (
                 <span
                   key={chip.label}
-                  className={`numeric rounded-[2px] px-1 text-[0.625rem] font-bold leading-[1.4] ${chip.className}`}
+                  className={`numeric px-1 text-[0.625rem] font-bold leading-[1.4] ${chip.className}`}
                 >
                   {chip.label}
                 </span>

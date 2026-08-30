@@ -56,7 +56,7 @@ function Player({
             ? `Swap with ${name}`
             : name
       }
-      className={`block w-full rounded-[3px] transition-opacity ${
+      className={`block w-full transition-opacity ${
         picked ? "ring-2 ring-accent" : ""
       } ${availability === "swappable" ? "ring-1 ring-accent/60" : ""} ${dim ? "opacity-30" : ""}`}
     >

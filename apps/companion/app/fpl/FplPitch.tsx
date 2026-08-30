@@ -87,7 +87,7 @@ function Sticker({
           to show vanished. `inkOn` is in the football layer for exactly this and
           every other surface already asks it. */}
       <span
-        className="numeric flex h-[var(--pitch-band)] w-full items-center justify-center gap-1 rounded-b-[3px] px-0.5 text-[0.625rem] font-bold leading-none"
+        className="numeric flex h-[var(--pitch-band)] w-full items-center justify-center gap-1 px-0.5 text-[0.625rem] font-bold leading-none"
         style={
           club
             ? { backgroundColor: clubColours(club.shortName).primary, color: inkOn(clubColours(club.shortName)) }

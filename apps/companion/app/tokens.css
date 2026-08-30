@@ -71,6 +71,35 @@
      7.0:1 and cream 6.41:1, measured in the browser on 30 Aug 2026. */
   --color-chrome: oklch(0.45 0.13 264);
 
+  /* --- Radius: none ---------------------------------------------------------
+     Everything in Championship Manager is square, and a rounded corner is the
+     single loudest tell that a screen was drawn this decade rather than in 1999.
+
+     NINE keys, not the eight-step scale. The bare `rounded` utility resolves
+     against Tailwind's DEPRECATED `--radius` key (theme.css:502-508, an
+     `@theme default inline reference` block) and not against `--radius-sm` —
+     checked in the emitted CSS, where `.rounded` is an inlined `.25rem` while
+     `.rounded-lg` is a `var()`. Without the last line here, eighteen usages stay
+     round, `Skeleton` among them, which is on every loading screen in the app.
+
+     `rounded-full` is untouched and untouchable: `full` is the static
+     `calc(infinity * 1px)` rather than a theme lookup, so the six things that
+     are round by nature — the team badge, the two portraits, the skeleton
+     circle, the live dot — stay round without being exempted by hand.
+
+     This block outlives the last `rounded-*` in the source, deliberately. It is
+     a constraint and not a utility: its job is that the next `rounded-lg`
+     anybody types renders square. */
+  --radius-xs: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+  --radius: 0px;
+
   /* --- League register (Tim Hortons) ---------------------------------------
      #C8102E, read from timhortons.ca's own markup. Their palette since the 2017
      rebrand is red and white only — the cream below is not theirs, it is the
