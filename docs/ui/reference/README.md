@@ -92,16 +92,56 @@ This is the whole argument for committing the pictures.
 
 ## Index
 
-Read and identified so far:
+All 42 have been read. The table below is the 36 indexed by the cataloguing pass;
+the six read by hand are detailed under it. Twelve carry a dense data table, and
+those are the ones to build from.
 
-| Shot | Screen |
+| Shot | Screen | Dense table | Column heads read off the image |
+|---|---|---|---|
+| `cm0001/01.jpg` | Setup Game main menu |  | — |
+| `cm0102/01.jpg` | Setup Game main menu |  | — |
+| `cm0102/02.jpg` | Live match - Match Overview |  | — |
+| `cm0102/03.jpg` | Game Settings modal dialog |  | — |
+| `cm0102/04.jpg` | Setup Game main menu |  | — |
+| `cm0102/05.jpg` | Save Game Info modal dialog |  | — |
+| `cm0102/06.jpg` | Enter Name - manager details form |  | — |
+| `cm0102/07.jpg` | Club squad list | **✔** | Position(s) |
+| `cm0102/08.jpg` | Player profile - attributes | **✔** | Apps, Con, Asts, MoM, Pass, Tck, Drb, Sh Tar, Av R |
+| `cm0102/09.jpg` | Player news inbox |  | — |
+| `cm0102/10.jpg` | News inbox with Game Options menu |  | — |
+| `cm0102/11.jpg` | News inbox - transfer bid item |  | — |
+| `cm0102/12.jpg` | Save game file dialog |  | — |
+| `cm3/01.jpg` | Setup Game main menu |  | — |
+| `cm3/02.jpg` | Select League(s) — nation picker | **✔** | none drawn — the table has no header row; the three unlabelled columns are nation name, then a SELECTED cell, … |
+| `cm3/03.jpg` | Manager news inbox — article reader |  | news list is 2 columns, unheaded: date/time cell, then headline |
+| `cm3/04.jpg` | Club squad list - Position(s) view | **✔** | Green slot header row: GK, DL, DR, DC, DC, ML, MR, MC, MC, FC, FC, SB1, SB2, SB3, SB4, SB5 (plus 3 unlabelled … |
+| `cm3/05.jpg` | In-match Match Overview - commentary |  | — |
+| `cm3/06.jpg` | In-match Player Ratings - both teams | **✔** | No printed headers. Three unlabelled columns per team: squad number (on a blue ground), player name, rating |
+| `cm3/07.jpg` | Tactics — formation and pitch |  | — |
+| `cm3/08.jpg` | In-match player stats table | **✔** | Pas, Cmp, Key, Tck, Won, Key, Hea, Won, Key, Ast, Sho, On, Con, plus one unlabelled rating column at the far r… |
+| `cm9900/01.jpg` | Setup Game main menu |  | — |
+| `cm9900/02.jpg` | Match report - player ratings | **✔** | none drawn - the list has no header row; columns are positional (squad no. / card / name / sub note / rating /… |
+| `cm9900/03.jpg` | Game Settings modal dialog |  | — |
+| `cm9900/04.jpg` | Select Team (club picker) | **✔** | — |
+| `cm9900/06.jpg` | Club screen - Finances & Info |  | — |
+| `cm9900/08.jpg` | Manager news inbox |  | Date/time (unlabelled), Headline (unlabelled) |
+| `cm9900/10.jpg` | Club squad list | **✔** | GK, DL, DR, DC, DC, ML, MR, MC, MC, FC, FC, SB1, SB2, SB3, SB4, SB5, SB6, SB7, SB8, SB9 (position/selection sl… |
+| `cm9900/11.jpg` | Player profile - attributes | **✔** | Apps, Gls, Con, Pens, Asts, Yel, Red, MoM, Av R |
+| `cm9900/13.jpg` | Transfer bid dialog |  | — |
+| `cm9900/14.jpg` | Set Role At Club dialog |  | — |
+| `cm9900/15.jpg` | Offer Contract - Basic terms |  | — |
+| `cm9900/19.jpg` | Tactics - team formation | **✔** | (none drawn - unheaded 3-column list: shirt number / player name / condition %) |
+| `cm9900/22.jpg` | Match Stats (in-match) |  | — |
+| `cm9900/24.jpg` | League table - English Premier Division | **✔** | Pld, Won, Drn, Lst, For, Ag, Pts |
+| `cm9900/25.jpg` | Squad list - Everton |  | — |
+
+### The six read first, in more detail
+
+| Shot | Why it matters |
 |---|---|
-| `cm9900/05.jpg` | News — tab strip, selected row on a red ground, blue date index cells |
-| `cm9900/09.jpg` | Meet with Board — the clearest look at the rail, and at why the photo had to go |
-| `cm9900/12.jpg` | **Everton Training — the reference table.** Bevelled heads, blue index cells, cyan names, yellow figures, red `Inj`, yellow `Fut`, purple value column |
-| `cm9900/16.jpg` | Match, Player Ratings — club-coloured header panels, greyed non-playing subs, cyan ratings, yellow card boxes |
-| `cm9900/21.jpg` | **Match, Everton Stats — the densest table in the set.** 13 abbreviated stat columns |
+| `cm9900/12.jpg` | **The reference table.** Bevelled heads, blue index cells, cyan names, yellow figures, red `Inj`, yellow `Fut`, purple value column |
+| `cm9900/21.jpg` | **The densest table in the set** — 13 abbreviated stat columns, club-coloured header panels |
+| `cm9900/16.jpg` | Player ratings — greyed non-playing subs, cyan ratings, yellow card boxes |
 | `cm9900/23.jpg` | Transfers — blue date index, yellow clubs, orange destinations, purple fee column |
-
-The remaining 15 in `cm9900/`, and all of `cm3/`, `cm0102/` and `cm0001/`, are
-downloaded and **not yet indexed**. Index them before the screen they inform.
+| `cm9900/05.jpg` | News — tab strip, selected row on a red ground |
+| `cm9900/09.jpg` | Meet with Board — the clearest look at the rail, and at why the photograph had to go |
