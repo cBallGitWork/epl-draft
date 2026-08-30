@@ -1,0 +1,54 @@
+/* Championship Manager 99/00's own furniture: the bevel, the title bar and the
+   index cell. Split out rather than added to `globals.css`, which is already at
+   the 300-line ceiling, and this is one responsibility (CODE_RULES §4).
+
+   **The bevel is the thing CM is remembered for**, and it is a statement about
+   which way a surface faces — never about what the surface contains. So every
+   colour here is a DEPTH token (`--bg` `--surface` `--raised` `--line`) plus the
+   one chrome blue, and none of them is a meaning token. The moment a bevel
+   reaches for `--accent` it starts competing with "yours", which is a reading
+   aid five other screens depend on.
+
+   CM drew its bevels the way Windows 95 did: a two-pixel outset, light on the
+   top and left where the light falls, dark on the bottom and right. Pressed
+   inverts it. That inversion is why the sorted column head is drawn pressed —
+   the affordance and the state are the same object, which is how the game said
+   it. */
+
+.cm-bevel {
+  background: var(--color-raised);
+  border-top: 2px solid var(--color-line);
+  border-left: 2px solid var(--color-line);
+  border-bottom: 2px solid var(--color-bg);
+  border-right: 2px solid var(--color-bg);
+}
+
+/* The pressed face sits a step darker as well as inverting, because a button
+   that only swaps its edges reads as a rendering glitch rather than as down. */
+.cm-bevel-pressed {
+  background: var(--color-surface);
+  border-top: 2px solid var(--color-bg);
+  border-left: 2px solid var(--color-bg);
+  border-bottom: 2px solid var(--color-line);
+  border-right: 2px solid var(--color-line);
+}
+
+/* The royal-blue bar with the bold white title on it, which is how every CM
+   screen opens. Its ground is the one colour in the app that exists to be
+   chrome and nothing else — see `--color-chrome` in tokens.css. */
+.cm-titlebar {
+  background: var(--color-chrome);
+  border-top: 2px solid color-mix(in oklch, var(--color-chrome), white 22%);
+  border-left: 2px solid color-mix(in oklch, var(--color-chrome), white 22%);
+  border-bottom: 2px solid var(--color-bg);
+  border-right: 2px solid var(--color-bg);
+}
+
+/* CM's small leading index cell: a filled block down the left of a table, one
+   step off the ground, carrying the row's number. It is what stops a dense
+   table reading as a wall — the eye counts down the blocks rather than the
+   rows. Deliberately not a zebra: the stripe is on the INDEX, not the row. */
+.cm-index {
+  background: var(--color-surface);
+  box-shadow: inset -1px 0 0 var(--color-bg);
+}

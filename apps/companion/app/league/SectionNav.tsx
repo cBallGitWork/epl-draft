@@ -7,6 +7,13 @@ import Link from "next/link";
 // from the URL because any route in the app can render it, but there are exactly
 // three pages here and each of them knows which one it is. Passing that in costs
 // a prop and saves shipping another component to the phone.
+//
+// **CM's tabs, which are bevelled and butt against each other.** They were
+// rounded pills with a gap between them, which is a modern web tab and reads as
+// one wherever it appears. The active one is drawn PRESSED with the accent on
+// its label — the same object saying both "this is a control" and "this is the
+// one you are on", which is how the game said it and is why there is no separate
+// active border to keep the strip from shifting.
 
 const SECTIONS = [
   { href: "/league", label: "Table", key: "table" },
@@ -18,7 +25,7 @@ export type LeagueSection = (typeof SECTIONS)[number]["key"];
 
 export default function SectionNav({ current }: { current: LeagueSection }) {
   return (
-    <nav aria-label="League views" className="flex gap-1 px-3">
+    <nav aria-label="League views" className="flex">
       {SECTIONS.map((section) => {
         const here = section.key === current;
         return (
@@ -26,17 +33,11 @@ export default function SectionNav({ current }: { current: LeagueSection }) {
             key={section.key}
             href={section.href}
             aria-current={here ? "page" : undefined}
-            // The same shape "active" takes everywhere else in the app: the
-            // accent slot on the border, full-strength ink on the label. It was
-            // a filled panel in the league's red, which is a third answer to a
-            // question the tab bar and the pool's filter chips had already
-            // agreed on — and red is the brand and the live signal, never a
-            // statement about where you are. The border is always drawn so the
-            // strip does not shift by two pixels as you move along it.
-            className={`flex min-h-11 items-center rounded-lg border px-3 text-2xs font-bold uppercase tracking-widest ${
-              here
-                ? "border-accent text-ink"
-                : "border-transparent text-faint hover:bg-raised hover:text-muted"
+            // Red is the brand and the live signal and never a statement about
+            // where you are, which is why the accent carries this and the
+            // league's own colour does not.
+            className={`flex min-h-11 items-center px-3 text-2xs font-bold uppercase tracking-wide lg:min-h-9 ${
+              here ? "cm-bevel-pressed text-accent" : "cm-bevel text-faint hover:text-ink"
             }`}
           >
             {section.label}

@@ -6,6 +6,15 @@ import LeagueCrest from "./LeagueCrest";
 // already drifting (`truncate` on one h1 and not the others). The matchday
 // screen keeps its own header on purpose: baseline-aligned with a live badge on
 // the right, it is a different design, not a seventh copy of this one.
+//
+// **A CM title bar, because every one of its consumers is the Desk.** The paper
+// has its own masthead and never reaches this file, so the royal-blue bar with
+// the bold white title on it — the thing every Championship Manager screen opens
+// with — can be the shared shape rather than one screen's special case.
+//
+// The `sub` line sits UNDER the bar rather than inside it. CM's title bars carry
+// a title and nothing else, and a count or a date set in the bar would make the
+// bar the place where content lives.
 
 export default function PageHeader({
   title,
@@ -19,13 +28,15 @@ export default function PageHeader({
   children?: React.ReactNode;
 }) {
   return (
-    <header className="flex items-center gap-2.5 pt-1">
-      <LeagueCrest height={26} />
-      <div className="min-w-0 flex-1">
-        <h1 className="truncate text-xl font-bold tracking-tight">{title}</h1>
-        {sub ? <p className="numeric text-2xs text-faint">{sub}</p> : null}
-        {children}
+    <header>
+      <div className="cm-titlebar flex items-center gap-2 px-2 py-1">
+        <LeagueCrest height={18} />
+        <h1 className="min-w-0 flex-1 truncate text-sm font-bold uppercase tracking-wide text-ink">
+          {title}
+        </h1>
       </div>
+      {sub ? <p className="numeric px-2 pt-1 text-2xs text-faint">{sub}</p> : null}
+      {children}
     </header>
   );
 }

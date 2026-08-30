@@ -1,21 +1,35 @@
 import Link from "next/link";
 import type { FormGame, StandingsRow } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
-import { yoursBorder } from "../mine";
+import { yoursEdge } from "../mine";
 
 // One team's line in the table.
 //
-// **Two lines rather than one, and the arithmetic decided it.** A phone gives
-// the row about 342px inside its padding. Rank, badge, the record, games back,
-// the win fraction, fantasy points and the league's points come to 286 of that
-// before a single letter of a team name — and to more than all of it on the one
-// row that also carries the YOURS chip. The columns Fantrax publishes do not fit
-// beside a name on a phone, so the name keeps the line and the figures take
-// their own.
+// **A row on the ground, not a card.** CM's tables are the thing the game is
+// remembered for and none of them draws a box round a row: bold rows straight on
+// the dark ground, a rule between them, no zebra. Sixteen bordered cards stacked
+// on a navy field read as sixteen separate objects, when what a table says is
+// that these are sixteen readings of one thing.
 //
-// Nothing is hidden at a small width to make it fit, which is the rule
-// `/players` set (DESIGN §9): a table that drops columns on a phone is a
-// different table, and this league is read on phones.
+// **Dense, and bold.** CM set its tables at about sixteen pixels a row in bold
+// white and nothing on them was quiet. A 44px tap target is binding on a phone
+// (DESIGN §7) and a mouse does not need one, so the row is `min-h-11` and comes
+// down to 36px from `lg` — which is the height the plan already names for the
+// scouting table. The first attempt at this screen was airy at every width and
+// read as a tidy dark list rather than as the game.
+//
+// Each colour is its slot (DESIGN §3) and nothing carries two jobs:
+//
+//   rank    faint          depth, never meaning — CM's quiet leading index cell
+//   team    info           a person, and this is the link that made the token
+//   record  muted          a record is a string, not a figure
+//   form    up/bad/faint   direction, the only thing those two are for
+//   GB/Win%/FP  mid        a figure — CM's orange stat columns
+//   Pts     ink, bold      the total the table is ordered by, CM's bold white
+//
+// **Yours is said three ways and none of them is the name's colour.** The accent
+// edge, the weight, and the chip. Recolouring your own name would take it out of
+// the person slot on the one row you are looking for.
 
 export default function TableRow({
   row,
@@ -30,96 +44,86 @@ export default function TableRow({
   form: readonly FormGame[];
 }) {
   return (
-    <Link
-      href={`/squad/${row.teamId}`}
-      // Your own row takes the raised ground as well as the accent edge. On
-      // sixteen near-identical rows a 4px bar at the margin is easy to scroll
-      // straight past, and this is the one row a manager opened the page to
-      // find.
-      className={`elev flex min-h-14 flex-col justify-center gap-1 rounded-xl border px-3 py-2 hover:bg-raised ${
-        mine ? "bg-raised" : "bg-surface"
-      } ${yoursBorder(mine)}`}
-    >
-      <span className="flex items-center gap-2">
-        {/* Rank and points are the two numbers a table is read for, and both
-            were quieter than the team name until 29 Aug: the rank small and
-            faint, the points bold at body size. They are the figures now, at
-            either end of the line the name is on — the figures below decide
-            neither. */}
-        <span className="numeric w-6 text-lg font-bold leading-none text-muted">{row.rank}</span>
-        <TeamBadge team={{ teamId: row.teamId, name: row.teamName }} url={badge} />
-        <span className={`min-w-0 flex-1 truncate text-sm ${mine ? "font-bold text-ink" : "font-semibold"}`}>
-          {row.teamName}
-        </span>
-        {/* Labelled, not just accented — the border says nothing to anyone who
-            cannot see it. On `bg-bg` rather than `bg-raised`: the row it sits on
-            is now raised, and a chip the same colour as its ground is not a
-            chip. */}
-        {mine ? (
-          <span className="rounded bg-bg px-1.5 py-0.5 text-2xs font-bold uppercase tracking-widest text-accent">
-            You
-          </span>
-        ) : null}
-        <span className="numeric w-8 text-right text-lg font-bold leading-none">{row.points}</span>
-      </span>
+    <tr className={`border-b border-bg ${mine ? "bg-raised" : "hover:bg-surface"}`}>
+      {/* CM's small leading index cell: a filled block down the left of the
+          table carrying the row's number. The eye counts down the blocks rather
+          than the rows, which is what stops a dense table reading as a wall.
+          The accent edge rides on it, so "yours" and the index are one mark. */}
+      <td
+        className={`cm-index numeric px-1.5 text-right text-2xs font-bold text-muted ${yoursEdge(mine)}`}
+      >
+        {row.rank}
+      </td>
 
-      {/* Every figure carries its own word, because this strip has no column
-          heads over it to do the job (DESIGN §7). The record leads because it is
-          the one a league table is normally read with. */}
-      <span className="flex items-center gap-2 pl-8 text-3xs leading-none text-faint">
-        <span className="numeric text-2xs text-muted">
-          {row.won}-{row.drawn}-{row.lost}
-        </span>
+      <td className="pl-2">
+        <Link
+          href={`/squad/${row.teamId}`}
+          className="flex min-h-11 items-center gap-2 text-sm font-bold text-info hover:underline lg:min-h-9"
+        >
+          <TeamBadge team={{ teamId: row.teamId, name: row.teamName }} url={badge} />
+          <span className="min-w-0 truncate">{row.teamName}</span>
+          {/* Labelled, not just accented — the edge says nothing to anyone who
+              cannot see it. */}
+          {mine ? (
+            <span className="shrink-0 bg-accent px-1 text-3xs font-bold uppercase tracking-widest text-bg">
+              You
+            </span>
+          ) : null}
+        </Link>
+      </td>
+
+      <td className="numeric whitespace-nowrap px-1.5 text-right text-2xs font-bold text-ink">
+        {row.won}-{row.drawn}-{row.lost}
+      </td>
+
+      <td className="numeric px-1.5 text-right text-2xs">
         <Form run={form} />
-        <Figure label="GB" value={row.gamesBack === null ? null : String(row.gamesBack)} />
-        <Figure label="Win%" value={winFraction(row.winPercentage)} />
-        <Figure label="FP" value={String(row.pointsFor)} />
-      </span>
-    </Link>
+      </td>
+
+      <td className="numeric px-1.5 text-right text-2xs font-bold text-mid">
+        {row.gamesBack === null ? DASH : row.gamesBack}
+      </td>
+
+      <td className="numeric px-1.5 text-right text-2xs font-bold text-mid">
+        {winFraction(row.winPercentage) ?? DASH}
+      </td>
+
+      <td className="numeric px-1.5 text-right text-2xs font-bold text-mid">{row.pointsFor}</td>
+
+      <td className="numeric px-1.5 text-right text-sm font-bold text-ink">{row.points}</td>
+    </tr>
   );
 }
 
-/** One labelled figure. A dash for a number Fantrax did not give us — never a
- *  nought, which would be a claim about a team that has played nobody. */
-function Figure({ label, value }: { label: string; value: string | null }) {
-  return (
-    <span className="flex items-baseline gap-1">
-      <span className="font-bold uppercase tracking-widest">{label}</span>
-      <span className="numeric text-2xs text-muted">{value ?? "—"}</span>
-    </span>
-  );
-}
+/** Absence, never a nought — a nought is a claim about a team that has played
+ *  nobody (DESIGN §7). */
+const DASH = "—";
 
 /** The last few rounds, newest LAST — left to right is the direction the season
  *  ran, which is how a form guide is read everywhere it appears.
  *
- *  Five at most, because that is what a form guide is and what the strip has
- *  room for; the run behind it is the whole season and each glyph says which
- *  round it was and what the two totals were.
+ *  Five at most, because that is what a form guide is and what the column has
+ *  room for; the run behind it is the whole season, and each glyph's title says
+ *  which round it was and what the two totals were.
  *
  *  **Colour is the direction slot, not a third palette.** A win is green, a loss
  *  is red and a draw is quiet — which is what those two tokens are for and the
- *  only thing they are for. Not the accent yellow, which is spoken for twice on
- *  this very row by the YOURS border and the YOURS chip, and not the loudness
- *  ladder, which would have said a win is merely louder than a draw rather than
- *  a different kind of thing. */
+ *  only thing they are for. Not the accent yellow, which is spoken for on this
+ *  very row by the edge and the chip. */
 function Form({ run }: { run: readonly FormGame[] }) {
-  if (run.length === 0) return <Figure label="Form" value={null} />;
+  if (run.length === 0) return <span className="text-faint">{DASH}</span>;
 
   return (
-    <span className="flex items-baseline gap-1">
-      <span className="font-bold uppercase tracking-widest">Form</span>
-      <span className="numeric flex gap-0.5 text-2xs">
-        {run.slice(-FORM_GAMES).map((game) => (
-          <span
-            key={game.period}
-            title={`Gameweek ${game.period} · ${game.pointsFor}-${game.pointsAgainst}`}
-            className={`font-bold ${TONE[game.result]}`}
-          >
-            {game.result}
-          </span>
-        ))}
-      </span>
+    <span className="flex justify-end gap-0.5">
+      {run.slice(-FORM_GAMES).map((game) => (
+        <span
+          key={game.period}
+          title={`Gameweek ${game.period} · ${game.pointsFor}-${game.pointsAgainst}`}
+          className={`font-bold ${TONE[game.result]}`}
+        >
+          {game.result}
+        </span>
+      ))}
     </span>
   );
 }

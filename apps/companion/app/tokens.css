@@ -59,6 +59,17 @@
      3.2:1 on this ground and this is 5.4:1. The brand red and the live red being
      one hue is the point, since the league IS what is live. */
   --color-live: oklch(0.66 0.215 22);
+  /* Chrome, and only chrome: the royal-blue title bar every CM screen opens
+     with, and the bars that frame a panel. It carries a bold white title and
+     never a figure, a name or a state — it is the frame, not the content.
+
+     A ground rather than a depth step. The `bg → surface → raised → line`
+     ladder is one hue at chroma 0.045 by design, which is what keeps the desk
+     reading as one room; a title bar at that chroma is a grey bar, and CM's is
+     the most saturated thing on its screen. So this is the same hue taken out
+     to 0.13, which makes it chrome rather than another rung. Ink on it is
+     7.0:1 and cream 6.41:1, measured in the browser on 30 Aug 2026. */
+  --color-chrome: oklch(0.45 0.13 264);
 
   /* --- League register (Tim Hortons) ---------------------------------------
      #C8102E, read from timhortons.ca's own markup. Their palette since the 2017

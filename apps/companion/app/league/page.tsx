@@ -1,5 +1,6 @@
+import { Fragment } from "react";
 import { LEAGUE_NAME, seasonForm } from "@epl/core";
-import Columns from "./Columns";
+import Columns, { COLUMNS } from "./Columns";
 import TableRow from "./TableRow";
 import { getSeasonResults } from "./schedule/schedule";
 import { leagueTable, teamBadges } from "../standings";
@@ -89,36 +90,54 @@ export default async function StandingsPage() {
           bounds how stale the cache may get and pushes nothing to a phone left
           open on the sofa, so the table sat still through a whole afternoon. */}
 
-      <Columns />
+      {/* Out to the page's edges and back in again, so a table wider than the
+          phone scrolls sideways inside its own box instead of scrolling the
+          page. The gutter is a variable precisely so the things that break out
+          of it cannot drift from it (globals.css). `/players` set this pattern
+          and DESIGN §9 signed it off: on a phone the columns Fantrax publishes
+          stay reachable rather than being dropped behind a breakpoint. */}
+      <div
+        className="overflow-x-auto"
+        style={{ marginInline: "calc(var(--page-gutter) * -1)", paddingInline: "var(--page-gutter)" }}
+      >
+        <table className="w-full border-collapse text-sm">
+          <Columns />
+          <tbody>
+            {rows.map((row) => (
+              <Fragment key={row.teamId}>
+                <TableRow
+                  row={row}
+                  badge={badges.get(row.teamId)}
+                  mine={row.teamId === mine}
+                  form={form.get(row.teamId) ?? []}
+                />
+                {cut(row.rank, qualify, rows.length) ? (
+                  /* The playoff line, drawn across the table under the last
+                     qualifying place rather than shaded over the rows above it:
+                     a tinted band reads as "these are yours" on the one row a
+                     manager is looking for, and the accent is already spoken for
+                     — twice on that very row, by the edge and by the chip. Which
+                     is why this line is dashed in the league's red rather than
+                     the solid yellow CM drew it in (DESIGN §3).
 
-      <ul className="flex flex-col gap-1.5">
-        {rows.map((row) => (
-          <li key={row.teamId}>
-            <TableRow
-              row={row}
-              badge={badges.get(row.teamId)}
-              mine={row.teamId === mine}
-              form={form.get(row.teamId) ?? []}
-            />
-            {cut(row.rank, qualify, rows.length) ? (
-              /* The playoff line. Drawn under the last qualifying place rather
-                 than shaded across the rows above it: a tinted band reads as
-                 "these are yours" on the one row a manager is looking for, and
-                 the accent is already spoken for — twice on that very row, by
-                 the border and by the chip, which is why this line is dashed in
-                 the league's red rather than the solid yellow CM drew it in.
-                 Absent entirely for a league that declares no playoff, and for a
-                 table shorter than the cut — a line under the bottom row states
-                 a qualification nobody missed. */
-              <p className="flex items-center gap-2 px-1 pt-1.5 text-2xs font-bold uppercase tracking-widest text-faint">
-                <span className="flex-1 border-t border-dashed border-league/70" />
-                Playoffs
-                <span className="flex-1 border-t border-dashed border-league/70" />
-              </p>
-            ) : null}
-          </li>
-        ))}
-      </ul>
+                     Absent entirely for a league that declares no playoff, and
+                     for a table shorter than the cut — a line under the bottom
+                     row states a qualification nobody missed. */
+                  <tr aria-hidden>
+                    <td colSpan={COLUMNS.length} className="p-0">
+                      <span className="flex items-center gap-2 py-1.5 text-3xs font-bold uppercase tracking-widest text-faint">
+                        <span className="flex-1 border-t border-dashed border-league/70" />
+                        Playoffs
+                        <span className="flex-1 border-t border-dashed border-league/70" />
+                      </span>
+                    </td>
+                  </tr>
+                ) : null}
+              </Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </LeagueShell>
   );
 }

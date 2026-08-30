@@ -7,12 +7,26 @@
 // them had the tokens in a different order — harmless today, and exactly how a
 // treatment starts drifting.
 
-const YOURS = "border-line border-l-4 border-l-accent";
+/** The accent edge itself, which is the whole of the mark. */
+const EDGE = "border-l-4 border-l-accent";
+
+const YOURS = `border-line ${EDGE}`;
 const THEIRS = "border-line";
 
-/** The border classes for a row, given whether it is the reader's. */
+/** The border classes for a CARD row, given whether it is the reader's. */
 export function yoursBorder(yours: boolean): string {
   return yours ? YOURS : THEIRS;
+}
+
+/** The same mark on a TABLE row, where the horizontal rules belong to the table
+ *  and only the edge is the row's own.
+ *
+ *  Transparent rather than absent on a row that is not yours: a table draws its
+ *  cells against each other, so an edge that appears only on one row would step
+ *  that row's figures 4px out of the column. A card has its own box and does not
+ *  have that problem, which is why `yoursBorder` leaves the other side bare. */
+export function yoursEdge(yours: boolean): string {
+  return yours ? EDGE : "border-l-4 border-l-transparent";
 }
 
 /** The same list, with the reader's own at the top.

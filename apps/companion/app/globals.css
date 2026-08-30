@@ -6,6 +6,10 @@
 /* The paper's own register, which re-points those tokens at ink on stock for
    the front page. After `tokens.css`, because it answers it. */
 @import "./paper.css";
+/* The desk's Championship Manager furniture — the bevel, the title bar, the
+   index cell. The desk has no class of its own (DESIGN §1), so these are named
+   classes rather than a scope. */
+@import "./desk.css";
 
 :root {
   color-scheme: dark;
