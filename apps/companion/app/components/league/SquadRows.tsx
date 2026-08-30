@@ -49,19 +49,29 @@ export default function SquadRows({
    *  that looked like a button and did nothing is worse than a row. */
   onOpen?: (player: SquadPlayerDetail) => void;
 }) {
+  const scored = lines.some((line) => line.players.some((p) => p.points !== undefined));
+
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col">
+      {/* One bevelled strip over the whole squad, the way a CM table is headed —
+          rather than a small-caps label per position group, which made five
+          headings and no columns. The group bars below separate; this names. */}
+      <div className="cm-bevel flex min-h-7 items-center gap-2 px-2 text-3xs font-bold uppercase">
+        <span className="w-6 shrink-0" />
+        <span className="min-w-0 flex-1">Player</span>
+        <span className="w-[4.25rem] shrink-0 text-right">Fixture</span>
+        {scored ? <span className="w-8 shrink-0 text-right">{projected ? "Proj" : "FPts"}</span> : null}
+      </div>
+
       {lines.map((line) => (
-        <section key={line.position} className="flex flex-col gap-1">
-          <h3 className="flex items-baseline gap-1.5 px-0.5 font-display text-2xs font-bold uppercase tracking-widest text-faint">
+        <section key={line.position} className="flex flex-col">
+          {/* CM's group separator: the pressed face, so the strip above reads as
+              the head and this reads as a divider inside what it heads. */}
+          <h3 className="cm-bevel-pressed flex items-baseline gap-1.5 px-2 py-0.5 font-display text-3xs font-bold uppercase text-ink">
             {line.position ? positionGroup(line.position) : UNPLACED}
             <span className="numeric font-normal">{line.players.length}</span>
-            {/* Only when there is a column to head. */}
-            {line.players.some((player) => player.points !== undefined) ? (
-              <span className="ml-auto font-normal">{projected ? "Proj" : "FPts"}</span>
-            ) : null}
           </h3>
-          <ul className="flex flex-col gap-0.5">
+          <ul className="cm-rows flex flex-col">
             {line.players.map((player) => (
               <li key={player.rostered.slot.fantraxId}>
                 <Row player={player} onOpen={onOpen && (() => onOpen(player))} />
@@ -154,7 +164,7 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
     </>
   );
 
-  const shell = "flex min-h-9 w-full items-center gap-2 border border-line bg-surface px-2 py-1 text-left";
+  const shell = "flex min-h-9 w-full items-center gap-2 px-2 py-1 text-left";
 
   return onOpen ? (
     <button type="button" onClick={onOpen} className={`${shell} hover:bg-raised`}>
