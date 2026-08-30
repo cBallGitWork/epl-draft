@@ -1,4 +1,5 @@
 import { FANTRAX_FXPA_BASE } from "../../config";
+import { demoFxpa, isDemo } from "./demo";
 import { politeFetch } from "../../http/fetch";
 import { FantraxError, pageErrorEnvelope, responseErrorEnvelope } from "./errors";
 
@@ -54,6 +55,11 @@ export async function fxpaRead(
   method: string,
   data: Record<string, unknown> = {},
 ): Promise<unknown> {
+  if (isDemo(leagueId)) {
+    const canned = demoFxpa(method);
+    if (canned !== null) return canned;
+  }
+
   const res = await politeFetch(`${FANTRAX_FXPA_BASE}?leagueId=${encodeURIComponent(leagueId)}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

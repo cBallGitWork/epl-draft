@@ -3,6 +3,7 @@ import { politeFetch } from "../../http/fetch";
 import type { TransactionView } from "../types";
 import { FantraxError, errorEnvelope } from "./errors";
 import { fxpaRead } from "./fxpa";
+import { demoFxea, isDemo } from "./demo";
 import type { RawStandingsPage } from "./standingsPage";
 import type { RawLiveScoring } from "./livescoring";
 import type { RawSchedulePage } from "./results";
@@ -29,6 +30,14 @@ import type {
 // a loop and a single fetch does not.
 
 async function fxeaGet<T>(method: string, params: Record<string, string>): Promise<T> {
+  // The demo league is a source like any other and is answered here, at the one
+  // place every fxea read passes through, so nothing downstream branches on it.
+  if (params.leagueId !== undefined && isDemo(params.leagueId)) {
+    const canned = demoFxea(method);
+    if (canned !== null) return canned as T;
+    throw new FantraxError(method, "DEMO_UNMAPPED", "the demo league has no answer for this read");
+  }
+
   const url = `${FANTRAX_FXEA_BASE}/${method}?${new URLSearchParams(params)}`;
   const res = await politeFetch(url);
 
