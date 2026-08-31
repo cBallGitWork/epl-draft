@@ -10,10 +10,16 @@
 // index is a server one, and a plain table crosses that line without either of
 // them having to care.
 
-/** The paper's territory: the front page, and the inside pages under `/paper`.
- *  One list, because two things key off it — the Gazetta section marks itself
- *  on any of them, and the desk's rail stands down on all of them. */
-const PAPER_ROUTES = ["/", "/paper"];
+/** The paper's territory, and it is ONE route.
+ *
+ *  The Gazetta is one section of six, not a site inside the site: this app is
+ *  a Championship Manager desk with a single newsprint page in it. Inside
+ *  pages were built here on 31 Aug and reverted the same day — a paper with
+ *  its own pages ends up printing the desk's navigation in newsprint, which
+ *  makes the front page look like the app rather than one part of it. Extra
+ *  material (the draft table, the Premier League table, the charts) belongs in
+ *  SECTIONS on the front page, not on pages behind it. */
+const PAPER_ROUTES = ["/"];
 
 /** Each section owns a set of routes, not just the one it links to: a manager
  *  reading a squad or a past gameweek is still in that section, and navigation
