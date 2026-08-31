@@ -1,10 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Archivo_Narrow } from "next/font/google";
 import { LEAGUE_NAME, POLL } from "@epl/core";
-import { footballNow, offerLive, pollSeconds } from "./football";
+import { footballNow, groundFaces, offerLive, pollSeconds } from "./football";
 import { Suspense } from "react";
 import AutoRefresh from "./components/shell/AutoRefresh";
 import LiveNow from "./components/shell/LiveNow";
+import PhotoGround from "./components/football/PhotoGround";
 import Rail from "./components/shell/Rail";
 import "./globals.css";
 
@@ -70,6 +71,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           and a flex item's default `min-width: auto` lets every one of them push
           the column wider than the screen. */}
       <body className="flex min-h-dvh antialiased">
+        {/* Championship Manager drew every screen over a darkened match
+            photograph. It was on one route until now and belongs on all of them,
+            because it is the ground and not a decoration on one page. It stands
+            down on the paper, which is ink on stock.
+
+            No instrument can check what it does to contrast — it is `fixed` at
+            `-z-10`, an ancestor of nothing, so `sweep` composites straight past
+            it. What holds is the bound in the component, which is a statement
+            about every pixel a photograph could contain rather than the one that
+            was sampled. */}
+        <PhotoGround faces={await groundFaces()} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[60] focus: focus:bg-raised focus:px-3 focus:py-2 focus:text-sm"

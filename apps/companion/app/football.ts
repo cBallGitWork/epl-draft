@@ -9,6 +9,7 @@ import {
   fetchFixtures,
   getFootballSnapshot,
   mapFixtures,
+  portraitUrl,
 } from "@epl/core";
 
 // One football snapshot per window, shared by everything that needs it.
@@ -92,6 +93,37 @@ export function pollSeconds(snapshot: FootballSnapshot): number {
  *  the case this window excludes and `isMatchdayLive` was being used to. */
 export function roundUnderway(snapshot: FootballSnapshot): boolean {
   return duringGameweek(snapshot, new Date().toISOString());
+}
+
+/** Enough faces to read as a crowd, few enough to stay one request each and to
+ *  keep the composite legible. */
+const GROUND_FACES = 6;
+
+/** A few real faces for the desk's ground, as portrait URLs.
+ *
+ *  The placeholder behind every desk screen until a match photograph is
+ *  configured — `DESK_GROUND` in core config. Real players rather than stock
+ *  photography, because these are the men actually in the round and a stadium
+ *  nobody in the league plays in would be set dressing.
+ *
+ *  **Spread across the pool rather than taken off the front of it.** FPL orders
+ *  its elements by club, so the first six are six of the same club — which reads
+ *  as a team photograph and not as a crowd. Evenly spaced instead, which lands
+ *  six different shirts, and DETERMINISTIC rather than sampled so the crowd does
+ *  not reshuffle on every poll.
+ *
+ *  Fails to nothing rather than throwing: a ground is decoration, and a football
+ *  provider being down is not a reason for the whole shell to fall over.
+ */
+export async function groundFaces(): Promise<string[]> {
+  try {
+    const { players } = await footballNow();
+    const step = Math.floor(players.length / GROUND_FACES);
+    if (step < 1) return players.map((player) => portraitUrl(player));
+    return Array.from({ length: GROUND_FACES }, (_, at) => portraitUrl(players[at * step]));
+  } catch {
+    return [];
+  }
 }
 
 /** Whether the app offers its Live section: is a round of football under way.

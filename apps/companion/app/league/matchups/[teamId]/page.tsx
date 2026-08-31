@@ -5,7 +5,6 @@ import {
   type RosterDisplay,
   clubById,
   headToHead,
-  isResolved,
   lineupDetail,
   oppositionByClub,
   roundState,
@@ -18,7 +17,6 @@ import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
 import { widestLine } from "../../../components/league/PitchRows";
 import LeagueShell from "../../Shell";
-import PhotoGround from "../../../components/football/PhotoGround";
 import { getLeagueSquads, teamDisplay } from "../../../squads";
 import { roundOf } from "../../../round";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
@@ -212,15 +210,8 @@ export default async function HeadToHeadPage({
     };
   };
 
-  // The men actually on this board, behind it. Resolved slots only — an unmapped
-  // one has no photograph and would thin the crowd for nothing.
-  const faces = [...arranged.values()]
-    .flatMap((sheet) => [...sheet.rows.flatMap((line) => line.players), ...sheet.bench])
-    .flatMap((player) => (isResolved(player.rostered) ? [player.rostered.player] : []));
-
   return (
     <LeagueShell title="Head-to-head" current="matchups" sub={heading}>
-      <PhotoGround players={faces} />
       {/* Both sibling boards say when the scoreboard is down; this one used to
           render the outage as two silent dashes. */}
       {refused === null ? null : (

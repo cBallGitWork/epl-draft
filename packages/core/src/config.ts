@@ -186,6 +186,27 @@ export const FPL_SHIRT_BASE = "https://fantasy.premierleague.com/dist/img/shirts
 export const FANTRAX_BADGE_BASE =
   "https://fantraximg.com/assets/images/icons/fantasyteams";
 
+/** The photograph behind every desk screen, or null while there is none.
+ *
+ *  Championship Manager drew every screen over a darkened match photograph and
+ *  dropping it is most of why a retokened desk still read as a website. DESIGN
+ *  §2 recorded dropping it because "it fails AA outright and no amount of scrim
+ *  fixes a ground that changes under the text" — and the second half of that is
+ *  wrong. A scrim at opacity a over the ground can never composite lighter than
+ *  `a x brightest + (1 - a) x bg`, whatever the photograph holds; that is a
+ *  BOUND, so it can be solved rather than feared. Darken the picture first and
+ *  the same bound buys far more of it. `components/football/PhotoGround` carries
+ *  the arithmetic and the two numbers it solves for.
+ *
+ *  **A path under `public/`, and it wants a real match photograph.** Craig is
+ *  supplying one (31 Aug 2026); until it lands the ground is drawn from the
+ *  round's own portraits, which is a placeholder made of real data rather than
+ *  an invented stadium nobody in the league plays in. Setting this is the whole
+ *  swap. The scrim and the darkening do not move with it, because their product
+ *  is what keeps every screen above the floor.
+ */
+export const DESK_GROUND: string | null = null;
+
 /** The league's clock. Every date a manager reads is in it, whatever their phone
  *  says, because a deadline is the same instant for all sixteen of them and a
  *  capture is filed under the day it happened here.

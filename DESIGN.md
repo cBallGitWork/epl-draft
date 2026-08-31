@@ -47,10 +47,26 @@ and it is the density benchmark: attribute grids, 1–20 ratings, W-D-L strings,
 red and green figures, a text-commentary matchday.
 
 Studied from the game's own screenshots (myabandonware, `championship-manager-
-season-99-00-*`), not from memory of it. **One deliberate departure:** CM drew
-every screen over a darkened match photograph. We keep the darkness and the
-blueness and drop the photograph — it fails AA outright and no amount of scrim
-fixes a ground that changes under the text.
+season-99-00-*`), not from memory of it.
+
+~~**One deliberate departure:** CM drew every screen over a darkened match
+photograph… no amount of scrim fixes a ground that changes under the text.~~
+**Reversed 31 Aug 2026.** The second half of that was wrong, and it was
+checkable: a scrim at opacity α can never composite lighter than
+`α × brightest + (1 − α) × bg`, whatever the photograph holds. That is a BOUND,
+so it is solved rather than feared — and darkening the picture first buys far
+more of it, because the product of the two is what the sum turns on. At
+`brightness(0.25)` and `opacity(0.30)` the tightest ink in the palette lands at
+4.65:1 with the photograph five times as present as a scrim alone allowed.
+`components/football/PhotoGround` carries the arithmetic; `DESK_GROUND` in core
+config is where the photograph goes, and until one lands the ground is drawn
+from the round's own portraits.
+
+**No instrument can check it, which is exactly why it is a bound and not a
+sample.** The ground is `fixed` at `-z-10` — an ancestor of nothing — so `sweep`
+composites straight past it and every route reports clean whatever is behind it.
+A bound holds for every pixel a photograph could contain; a sample holds for the
+one that was tried.
 
 **Which way a surface faces is the whole grammar, and it has three answers.**
 
