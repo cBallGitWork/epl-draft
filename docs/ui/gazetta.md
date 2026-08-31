@@ -198,8 +198,9 @@ the live one, and the lineup gate is the wrong place to be approximately right;
 
 **Facts are live and prose is published, and the split is the whole design.**
 Everything else on this page is computed from data that updates every thirty
-seconds. The column is written twice a week by Claude from a facts-only brief,
-committed to the repo as `data/editions/latest.json`, and baked into the build.
+seconds. The column is written in CI by Claude from a facts-only brief, filed
+as a story into `data/editions/paper.json` — the rolling paper — and baked
+into the build.
 A column that regenerated every thirty seconds would not be a column, and a
 sentence about a score that has since moved is worse than no sentence.
 
