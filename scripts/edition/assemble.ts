@@ -54,7 +54,14 @@ export function matchReportBrief(
         const stats = man.stats.find((row) => row.fixtureId === fixture.id);
         return stats === undefined
           ? []
-          : [{ name: man.player.name, position: man.slot.position, stats }];
+          : [
+              {
+                name: man.player.name,
+                position: man.slot.position,
+                stats,
+                points: facts.playerPoints.get(man.slot.fantraxId) ?? null,
+              },
+            ];
       }),
     }))
     .filter((squad) => squad.players.length > 0)

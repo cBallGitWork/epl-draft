@@ -13,6 +13,10 @@ export interface MatchReportMan {
   /** The roster slot, Fantrax's letter, or null when they did not say. */
   position: string | null;
   stats: PlayerMatchStats;
+  /** What he scored HIS OWNER, priced at the slot he was filed in — Fantrax's
+   *  own number and the only points this league has. Null when Fantrax has not
+   *  priced him. */
+  points: number | null;
 }
 
 export interface MatchReportOwner {
@@ -50,7 +54,12 @@ export function buildMatchReportBrief(brief: MatchReportBrief): string {
   const owners = brief.owners.map((squad) =>
     [
       `${squad.owner}:`,
-      ...squad.players.map((man) => `- ${man.name} (${man.position ?? "?"}): ${statLine(man.stats)}`),
+      ...squad.players.map(
+        (man) =>
+          `- ${man.name} (${man.position ?? "?"}): ${statLine(man.stats)} — ${
+            man.points === null ? "not priced" : `${man.points} points`
+          }`,
+      ),
     ].join("\n"),
   );
 
@@ -77,7 +86,13 @@ export function buildMatchReportBrief(brief: MatchReportBrief): string {
 }
 
 /** A stat line in the vernacular the writer may quote: only what happened,
- *  nothing invented, minutes always first so a cameo reads as one. */
+ *  nothing invented, minutes always first so a cameo reads as one.
+ *
+ *  **Only countable football, never FPL's scoring.** `bonus` and `bps` are
+ *  FPL's own points system and this league does not play under it — handing
+ *  the writer "3 bonus" invites a sentence about points nobody in the league
+ *  is paid. What a man was worth to his owner is Fantrax's number, and it
+ *  arrives beside this line rather than inside it. */
 export function statLine(stats: PlayerMatchStats): string {
   const parts = [`${stats.minutes} min`];
   if (stats.goals > 0) parts.push(`${stats.goals}G`);
@@ -89,6 +104,5 @@ export function statLine(stats: PlayerMatchStats): string {
   if (stats.ownGoals > 0) parts.push(`${stats.ownGoals} OG`);
   if (stats.redCards > 0) parts.push("sent off");
   else if (stats.yellowCards > 0) parts.push("booked");
-  if (stats.bonus > 0) parts.push(`${stats.bonus} bonus`);
   return parts.join(", ");
 }

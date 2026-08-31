@@ -18,6 +18,7 @@ import {
   fetchTeamRosters,
   fetchTransactions,
   mapDraftPicks,
+  mapLivePlayerPoints,
   mapLiveScores,
   mapProjectedTotals,
   mapTeamRosters,
@@ -40,6 +41,10 @@ export interface RoundFacts {
   /** The resolved squads, for the joins only a bridge can make — who owns the
    *  men in a fixture. Empty when the rosters read refused. */
   teams: RosteredTeam[];
+  /** What each man scored his owner this period, priced at the slot he was
+   *  filed in — Fantrax's own number, and the only points this league has.
+   *  Absent rather than nought for a man Fantrax has not priced. */
+  playerPoints: Map<string, number>;
   eleven: TeamOfTheWeek | null;
   fielded: boolean;
   business: Deal[];
@@ -76,6 +81,11 @@ export async function gatherRoundFacts(
     scores: new Map(mapLiveScores(live).map((score) => [score.teamId, score])),
     projected: new Map(mapProjectedTotals(live).map((guess) => [guess.teamId, guess])),
     teams: squads?.teams ?? [],
+    playerPoints: new Map(
+      mapLivePlayerPoints(live).flatMap((squad) =>
+        squad.players.map((player) => [player.fantraxId, player.points] as const),
+      ),
+    ),
     eleven: eleven !== null && eleven.picks.length > 0 ? eleven : null,
     fielded: squads !== null && wasFielded(squads, period),
     business: deals([

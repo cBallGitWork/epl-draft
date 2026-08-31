@@ -139,6 +139,29 @@ export async function squadLivePoints(
   };
 }
 
+/** Every man Fantrax has priced this period, across the whole league, with the
+ *  team holding him.
+ *
+ *  Out of the payload the scoreboard already holds, so a scorers chart costs
+ *  no request. Filtered and flattened out here rather than inside the cache,
+ *  the rule `leagueCache` exists to keep.
+ *
+ *  **Only ever asked once the football has started, and that is a product
+ *  invariant rather than a nicety.** A man priced here is a man in somebody's
+ *  ELEVEN, which is exactly the fact the lineup gate withholds before a
+ *  deadline — a chart naming the league's scorers on a Friday would publish
+ *  sixteen lineups. The caller checks `underway`; `squadLivePoints` above
+ *  carries the same warning for the same reason. */
+export async function leagueScorers(
+  period: number,
+): Promise<{ teamId: string; fantraxId: string; points: number }[]> {
+  const { players, refused } = await readScores(period);
+  if (refused !== null) return [];
+  return players.flatMap(([teamId, squad]) =>
+    squad.map((player) => ({ teamId, fantraxId: player.fantraxId, points: player.points })),
+  );
+}
+
 /** The clean sheets Fantrax has not credited yet, per team.
  *
  *  Empty when the league did not describe its scoring: a preview we cannot price

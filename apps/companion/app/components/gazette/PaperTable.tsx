@@ -38,6 +38,9 @@ export default function PaperTable({
   rows: readonly PaperTableRow[];
 }) {
   if (rows.length === 0) return null;
+  // A column of dashes is not a column. The scorers chart has no "played" to
+  // print, so the cell goes rather than standing empty ten times over.
+  const played = rows.some((row) => row.played !== null);
 
   return (
     <Column title={title} aside={aside}>
@@ -53,8 +56,16 @@ export default function PaperTable({
           <span className={`min-w-0 flex-1 truncate ${row.yours ? "font-bold text-accent" : "text-ink"}`}>
             {row.name}
           </span>
-          <span className="numeric w-6 shrink-0 text-right text-muted">{row.played ?? "—"}</span>
-          <span className="numeric w-12 shrink-0 text-right text-muted">{row.detail ?? "—"}</span>
+          {played ? (
+            <span className="numeric w-6 shrink-0 text-right text-muted">{row.played ?? "—"}</span>
+          ) : null}
+          {/* Not `.numeric`: this cell is a record on a table and a manager's
+              name on a chart, and letterspacing rules follow the content. */}
+          <span
+            className={`w-20 shrink-0 truncate text-right text-muted ${played ? "numeric w-12" : ""}`}
+          >
+            {row.detail ?? "—"}
+          </span>
           <span className="numeric w-7 shrink-0 text-right font-semibold text-ink">
             {row.points ?? "—"}
           </span>
