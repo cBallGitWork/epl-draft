@@ -15,9 +15,23 @@ import Link from "next/link";
 // one you are on", which is how the game said it and is why there is no separate
 // active border to keep the strip from shifting.
 
+/** **Four, which is what the strip holds in `cm9900/24.jpg`** — the game runs
+ *  `Table · Results · Fixtures · Schedule` edge to edge, and ours ran three.
+ *  Craig, 31 Aug: the blue buttons, and Matchups is already one of them, so it
+ *  becomes four.
+ *
+ *  `Results` is the added one and it is CM's own second tab. It is also the only
+ *  candidate that needed no new provider read: `getSeasonResults` is already
+ *  cached for the form guide on the table, and the rounds it files against are
+ *  `getSchedule`'s. Team Stats was the other name on Craig's list and is
+ *  deliberately not here yet — `getStandings` carries `streak` and `wwOrder`
+ *  beyond what the table prints and nothing else, so the screen would open on a
+ *  near-copy of the table. Deferred until it has a shape (Craig's call, same
+ *  day). */
 const SECTIONS = [
   { href: "/league", label: "Table", key: "table" },
   { href: "/league/schedule", label: "Schedule", key: "schedule" },
+  { href: "/league/results", label: "Results", key: "results" },
   { href: "/league/matchups", label: "Matchups", key: "matchups" },
 ] as const;
 
