@@ -3959,6 +3959,43 @@ characters are skipped, because "Son" hits "season" on most of the feed.
 
 ## Season log
 
+- 2026-08-31: **Decision — the desk and the phone get different layouts, not one
+  layout at two sizes** (Craig). The evidence had been accumulating all day and
+  nobody had named it: **46 `lg:` utilities across 14 files**, and `SquadRows`
+  alone carries nine. That is not responsive design, it is two layouts wearing
+  one component and hoping.
+  Every compromise today was a symptom. The rail is one shape at both widths and
+  had to be bottom-aligned on a phone for the thumb and top-aligned on a desk for
+  the game — a position argument that only exists because one component is
+  serving two devices. The squad list needs ~670px and hides eight columns below
+  `lg`. The pitch fits eleven and not fifteen. Two-line rows stack on a phone and
+  go inline on a desk. `.cm-row` is 44px under a thumb and 28 under a mouse.
+  **Championship Manager is an 800×600 artefact.** Its squad screen is two
+  columns of players side by side (`cm9900/25.jpg`); its rail is a 90px column
+  down the left. Neither is a phone layout and no amount of `lg:` makes them one.
+  A phone wants one column, a thumb-reachable bar at the foot, and the four
+  figures that matter. They are two designs, and PRODUCT.md already says so in
+  two places without drawing the conclusion — "phone-first, one column,
+  thumb-reachable" and "the Desk is Championship Manager 99/00".
+  **Two rules, or this becomes two apps that disagree.**
+  1. The split is in ARRANGEMENT only. One data join, one set of domain rules,
+     one `docs/ui/*.md` per screen. A layout may not decide what a number means,
+     what absence prints as, or what the gate withholds. If a rule needs saying
+     twice it belongs in core or in `desk.css`, not in either layout.
+  2. The switch is CSS, never a user-agent read. Every route on this app is
+     cached and `unstable_cache` is keyed on nothing about the caller; sniffing
+     a device would fragment that and put a phone's HTML in a desk's cache.
+     Both arrangements render and one is hidden — the cost is server HTML on the
+     handful of blocks that split, not JavaScript and not a layout shift. Prefer
+     `@container` where the constraint is really SPACE rather than device: the
+     squad list broke this afternoon because its COLUMN was 554px, which no
+     viewport breakpoint could have known.
+  What it settles immediately: the rail stops compromising. The desk gets
+  Championship Manager's rail, top-aligned and outlined, and the phone gets a bar
+  at the foot where a thumb is — which is what `TabNav` was before it was deleted
+  this morning, and deleting it was right for the wrong reason. The squad list
+  becomes CM's two-column table on the desk and a one-column list on the phone.
+
 - 2026-08-31: **Every control on the desk became a Championship Manager plate,
   and the foot button row landed without anybody inventing one.** The plan's L4
   proposed a global foot bar in `layout.tsx` and never said what would be in it —
