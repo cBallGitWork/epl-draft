@@ -5,7 +5,8 @@ import { type LeagueTeam, type LiveTeamScore, type RoundState } from "@epl/core"
 import ScoreFigure from "./ScoreFigure";
 import RoundWord from "./RoundWord";
 import TeamBadge from "./TeamBadge";
-import ViewToggle, { type View } from "./ViewToggle";
+import BoardBar from "./BoardBar";
+import { type View } from "./ViewToggle";
 
 // The head-to-head at full size: both totals side by side, and one manager's
 // team underneath them.
@@ -82,24 +83,17 @@ export default function MatchupBoard({
         />
       </div>
 
-      <div className="flex items-center justify-between gap-3 px-0.5">
-        {/* An empty span when there is nothing to say, so the view toggle stays
-            at the right edge rather than sliding across to meet it. */}
-        {/* The open side's shape, beside the round word and changing with the
-            side — the first thing Championship Manager says about an eleven, and
-            free here: `lineupDetail` already counts it. An empty span when there
-            is nothing to say, so the view toggle stays at the right edge rather
-            than sliding across to meet it. */}
-        {state === null && side.shape === null ? (
-          <span />
-        ) : (
+      {/* The open side's shape, beside the round word and changing with the side
+          — the first thing Championship Manager says about an eleven, and free
+          here: `lineupDetail` already counts it. */}
+      <BoardBar view={view} onPick={setView}>
+        {state === null && side.shape === null ? null : (
           <span className="flex items-baseline gap-2 text-2xs font-bold uppercase text-faint">
             {state === null ? null : <RoundWord state={state} />}
             {side.shape === null ? null : <span className="numeric">{side.shape}</span>}
           </span>
         )}
-        <ViewToggle view={view} onPick={setView} />
-      </div>
+      </BoardBar>
 
       {view === "pitch" ? side.pitch : side.list}
     </div>

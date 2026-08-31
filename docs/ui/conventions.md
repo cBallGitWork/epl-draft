@@ -87,6 +87,8 @@ No fluid clamps except inside the masthead.
 | `league/MoveDialog` | Everywhere one player can go, over the pitch. |
 | `league/TeamSheet` | A live XI plus bench, or the same squad as rows, every player opening `LivePlayerCard`. Both boards that show a lineup that counts draw it. |
 | `league/PitchPlayer` | One player on the pitch: cut-out, name plate, points band. |
+| `league/BoardBar` | The strip above a board: the Pitch/List control at the LEFT and whatever the board has to say opposite it. Three boards had grown their own copy and two of the three agreed about which side the toggle went. |
+| `league/Pending` | Points Fantrax has not credited yet — a clean sheet is settled at the final whistle and FPL has been paying it since the hour mark. Four screens print it; before this they were four spellings of one rule, two of which could reach a `+0`. |
 | `league/SeasonGrid` | Championship Manager's attribute grid — the squad's season as one bevelled panel per scoring group, thirteen keeper columns and eleven outfield, every figure Fantrax's own. The **second panel** on `/squad/[teamId]`, and it costs one cache hit: `squadSeason` already reads this table to price the board. |
 | `league/PlayerImage` | The cut-out itself, with its fallbacks. Client-only, and has to be — see below. |
 | `football/FixtureChip` | Opponent + (H)/(A), coloured by FPL's difficulty. **Never wraps** — the band under a sticker is a fixed 20px with `overflow-hidden`, so a second line is guillotined rather than spilled. |

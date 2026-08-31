@@ -5,7 +5,8 @@ import type { SquadDetailLine, SquadPlayerDetail, SquadReason } from "@epl/core"
 import PlayerCard from "./PlayerCard";
 import SquadPitch from "./SquadPitch";
 import SquadRows from "./SquadRows";
-import ViewToggle, { type View } from "./ViewToggle";
+import BoardBar from "./BoardBar";
+import { type View } from "./ViewToggle";
 
 // A squad with no gameweek to report: the state every squad is in most of the
 // week, and the only state a rival's squad is ever in before its lineups lock.
@@ -62,10 +63,9 @@ export default function SquadBoard({
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between gap-3">
-        <ViewToggle view={view} onPick={setView} />
+      <BoardBar view={view} onPick={setView}>
         <span className="numeric text-2xs text-faint">{players} players</span>
-      </div>
+      </BoardBar>
 
       {explanation ? (
         <p className=" border border-line bg-surface px-3 py-2 text-2xs text-muted">

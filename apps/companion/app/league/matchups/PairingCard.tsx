@@ -4,6 +4,7 @@ import { pairingInvolves } from "@epl/core";
 import ScoreFigure from "../../components/league/ScoreFigure";
 import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder } from "../../mine";
+import Pending from "../../components/league/Pending";
 
 // One head-to-head on the list of eight.
 //
@@ -160,6 +161,12 @@ function Extras({
   // left and the other has none, and that difference is most of what a
   // head-to-head screen is for. Literal zero is a statement, not an absence —
   // which is why this reads the number rather than its truthiness.
+  //
+  // Deliberately a copy of `YourMatchup`'s line and not an extraction: second
+  // occurrence (CODE_RULES §1), and the two must agree, which is the whole
+  // reason this comment names the other one. The pending mark that used to be
+  // the other half of the copy reached four screens on 31 Aug and is
+  // `league/Pending` now.
   const left =
     score?.toPlay == null
       ? null
@@ -169,7 +176,11 @@ function Extras({
           ? "all played"
           : null;
 
-  if (left === null && !(pending && pending.points > 0)) return <span />;
+  // The same truthiness `league/Pending` applies, spelled the same way: nought,
+  // null and no-table-at-all all mean nothing is owed. It was
+  // `!(pending && pending.points > 0)`, which is a third way of writing a rule
+  // that only needs one.
+  if (left === null && !pending?.points) return <span />;
 
   return (
     <span
@@ -178,11 +189,7 @@ function Extras({
       }`}
     >
       {left ? <span className="truncate text-faint">{left}</span> : null}
-      {/* Kept beside the score rather than folded into it. Fantrax's number stays
-          Fantrax's; this is the bit they have not credited yet. */}
-      {pending && pending.points > 0 ? (
-        <span className="numeric shrink-0 font-semibold text-accent">+{pending.points}</span>
-      ) : null}
+      <Pending points={pending?.points} />
     </span>
   );
 }

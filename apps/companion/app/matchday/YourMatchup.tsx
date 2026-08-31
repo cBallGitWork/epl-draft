@@ -13,6 +13,7 @@ import { roundUnderway } from "../football";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
+import Pending from "../components/league/Pending";
 
 // Your head-to-head, at the top of the live view.
 //
@@ -118,6 +119,10 @@ function Extras({
   // `PairingCard`'s line and not an extraction: second occurrence (CODE_RULES
   // §1), and the desk shows no such count. The two must agree, which is the
   // whole reason this comment names the other one.
+  //
+  // What was the other half of this copy has gone: the pending mark reached four
+  // screens on 31 Aug and is `league/Pending` now. What is left duplicated is
+  // this sentence, and it is still only two.
   const left =
     score?.toPlay == null
       ? null
@@ -132,11 +137,7 @@ function Extras({
       className={`flex min-w-0 items-baseline gap-2 ${align === "end" ? "flex-row-reverse" : ""}`}
     >
       {left === null ? null : <span className="truncate text-faint">{left}</span>}
-      {/* Kept beside the score rather than folded into it. Fantrax's number stays
-          Fantrax's; this is the bit they have not credited yet. */}
-      {pending && pending.points > 0 ? (
-        <span className="numeric shrink-0 font-semibold text-accent">+{pending.points}</span>
-      ) : null}
+      <Pending points={pending?.points} />
     </span>
   );
 }

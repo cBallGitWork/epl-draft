@@ -3,7 +3,9 @@
 import { useState } from "react";
 import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
 import TeamSheet from "../../components/league/TeamSheet";
-import ViewToggle, { type View } from "../../components/league/ViewToggle";
+import BoardBar from "../../components/league/BoardBar";
+import { type View } from "../../components/league/ViewToggle";
+import Pending from "../../components/league/Pending";
 
 // A rival's eleven once his lineups have locked — with the Pitch/List control the
 // page had been losing at exactly that moment.
@@ -48,20 +50,14 @@ export default function Sheet({
     <div className="flex flex-col gap-2">
       {/* The same row the withheld view puts here, in the same place, so the
           control does not move down the screen when the gate opens. */}
-      <div className="flex items-center justify-between gap-3">
-        <ViewToggle view={view} onPick={setView} />
+      <BoardBar view={view} onPick={setView}>
         <span className="numeric flex items-baseline gap-2 text-2xs text-faint">
           <span>
             {shape} · {players} players
           </span>
-          {/* Kept beside the total rather than folded into it. Fantrax's number
-              stays Fantrax's; this is the bit they have not credited yet — the
-              same treatment the head-to-head board and the Live tab give it. */}
-          {pending === null ? null : (
-            <span className="font-semibold text-accent">+{pending}</span>
-          )}
+          <Pending points={pending} />
         </span>
-      </div>
+      </BoardBar>
 
       <TeamSheet
         rows={rows}

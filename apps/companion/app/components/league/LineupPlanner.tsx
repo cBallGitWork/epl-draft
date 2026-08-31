@@ -26,6 +26,7 @@ import {
 import LineupPitch from "./LineupPitch";
 import type { PitchRow } from "./PitchRows";
 import MoveDialog from "./MoveDialog";
+import Pending from "./Pending";
 
 // Planning a lineup, not submitting one.
 //
@@ -183,11 +184,9 @@ export default function LineupPlanner({
           the eleven does — a 1-3-4-3 becomes a 1-3-5-2 the moment a midfielder
           comes on for a forward, which is the whole point of naming it on the
           screen where the moving happens. */}
-      <div className="flex items-baseline justify-between gap-3 px-1">
-        <span className="numeric text-2xs font-bold text-faint">{shape}</span>
-        {pending === null ? null : (
-          <span className="numeric text-2xs font-semibold text-accent">+{pending}</span>
-        )}
+      <div className="flex items-baseline justify-between gap-3 px-1 text-2xs">
+        <span className="numeric font-bold text-faint">{shape}</span>
+        <Pending points={pending} />
       </div>
 
       <LineupPitch
