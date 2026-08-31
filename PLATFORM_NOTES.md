@@ -31,6 +31,49 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## `getStandings` has three views and we read two — probed 31 Aug 2026
+
+Craig linked `…/standings;view=SEASON_STATS` as a source for Team Stats. Probed
+live against the rehearsal league, public, no auth, one POST, 52 KB:
+
+`displayedLists.tabs` enumerates the whole set, so this is the complete list
+rather than three we happen to know about:
+
+| View | What Fantrax calls it | We read it as |
+|---|---|---|
+| `REGULAR_SEASON` | Regular Season | `fetchStandingsPage` — the league table |
+| `SCHEDULE` | **Results** | `fetchSeasonResults` — 38 period tables |
+| `SEASON_STATS` | Season Stats | **nothing yet** |
+
+`SEASON_STATS` answers **29 tables**: a summary, four per-position roll-ups
+(`Points`/`Statistics` × `Goalkeeper`/`Outfielder`), and 22 single-category
+leaderboards — Goals, Assists (Official), Assists (Fantasy), Minutes, Clean
+Sheets On Field, Goals Against, Saves, Yellow, Red, PK Saves, PK Missed, Own
+Goals — split by position, each with a `+/-`. Two of the 29 are section headings
+with zero rows (`Standings By Category - Goalkeeper` / `- Outfielder`).
+
+**Two traps, and both would ship as plausible wrong numbers.**
+
+**1. "Games Played" is player-appearances, not rounds.** The summary shows test3
+on 20 games played with the league one round old. It is the squad's appearance
+count. So its `Fantasy Points per Game` — 4.3 off 86 points — is per APPEARANCE,
+and is not the per-round average `teamPeriodStats` computes (86). Both are called
+"per game" and they differ by a factor of the squad size.
+
+**2. The stat tables repeat one header key.** `Standings - Statistics -
+Outfielder` publishes keys `['fpts','sc','sc','sc','sc','sc','sc','sc','sc',
+'sc','sc','sc']` — `sc` eleven times, one per stat. `mapStandings`' rule of
+reading columns by key and never by position is what protects the league table
+from Fantrax letting a manager reorder it, and here it does the opposite: our
+`columns()` keeps the FIRST index per key, so all eleven stats would read as
+Minutes Played. These tables have to be read positionally against their `name`,
+which is the inverse of the rule ten feet up the same file. Whoever builds this
+should put the reason in the mapper.
+
+Nothing is built on any of it — Craig is deciding what Team Stats should hold.
+Today's page is high/low/average/rounds off the results payload, which none of
+the 29 tables above carries.
+
 ## Current priorities
 
 - Keep `packages/core` clean: adapters, maps, scoring, identity.

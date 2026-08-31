@@ -155,6 +155,13 @@ Methods that matter:
   commissioner console. The returned action list is server-driven; do not hardcode.
 - `getMatchups` — Fantrax computes live H2H points itself. Their live scores are
   authoritative; our engine is a fallback proxy.
+- `getStandings` takes a **`view`**, and `displayedLists.tabs` names all three:
+  `REGULAR_SEASON` (the table), `SCHEDULE` (their "Results", 38 period tables)
+  and `SEASON_STATS` (29 tables of per-category team totals). We read the first
+  two. **Its stat tables repeat one header key eleven times**, so they must be
+  read positionally — the inverse of the read-by-key rule the league table needs
+  — and its "Games Played" counts player appearances, not rounds. PLATFORM_NOTES
+  carries the probe.
 - `getScorerDetails`, `getPlayerProfile`, `getPlayerNews`, `setPlayerNews`,
   `setPlayerNote`, `removePlayerNote` — per-player notes are writable and are the
   native home for our player metadata.
