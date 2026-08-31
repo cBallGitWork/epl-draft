@@ -2,9 +2,16 @@ import type { Opposition } from "@epl/core";
 
 // Who a club plays this round, coloured by how hard FPL thinks it is.
 //
-// The colour is the point. "NEW (A)" is three letters that mean nothing to a
-// reader who does not hold the table in their head, and the same three letters
-// on a red ground mean "he has a week off" without being read at all.
+// The colour is the point. "NEW" is three letters that mean nothing to a reader
+// who does not hold the table in their head, and the same three letters on a red
+// ground mean "he has a week off" without being read at all.
+//
+// **`@` for away and nothing for home**, which is four characters where
+// "NEW (A)" was seven. Craig, 31 Aug: the box turns up on five screens and was
+// too long on every one of them. The convention is not invented here — Fantrax
+// prints its own opponent cell as `IPS 2 @MUN 5 F` and that string is already on
+// the pool page two taps away, so the app now says away the same way twice
+// rather than two ways once each.
 //
 // The rating is FPL's, never ours. Difficulty is an opinion, and the only
 // defensible one to print is the one the whole fantasy world is already reading
@@ -113,7 +120,8 @@ export default function FixtureChip({
           className={`numeric grid flex-1 place-items-center whitespace-nowrap px-0.5 text-3xs font-bold leading-[1.5] ${fdrStep(against.difficulty).ink}`}
           style={{ backgroundColor: fdrStep(against.difficulty).ground }}
         >
-          {against.club.shortName} ({against.home ? "H" : "A"})
+          {against.home ? "" : "@"}
+          {against.club.shortName}
         </span>
       ))}
     </span>

@@ -48,15 +48,40 @@ const UNPLACED = "No position";
  *  `measured` is null before FPL publishes the round's advanced stats, and those
  *  four columns read a dash rather than a nought — a nought is a claim that he
  *  did nothing, and absence is not that. */
-const STATS: readonly { key: string; head: string; title: string; of: (done: Contribution) => number | null }[] = [
+const STATS: readonly {
+  key: string;
+  head: string;
+  title: string;
+  of: (done: Contribution) => number | null;
+}[] = [
   { key: "min", head: "Min", title: "Minutes played", of: (d) => d.minutes },
   { key: "g", head: "G", title: "Goals", of: (d) => d.goals },
   { key: "a", head: "A", title: "Assists", of: (d) => d.assists },
-  { key: "cs", head: "CS", title: "Clean sheet", of: (d) => (d.cleanSheet ? 1 : 0) },
+  {
+    key: "cs",
+    head: "CS",
+    title: "Clean sheet",
+    of: (d) => (d.cleanSheet ? 1 : 0),
+  },
   { key: "sv", head: "Sv", title: "Saves", of: (d) => d.saves },
-  { key: "bps", head: "BPS", title: "FPL's bonus points system score", of: (d) => d.measured?.bps ?? null },
-  { key: "xg", head: "xG", title: "Expected goals — FPL's", of: (d) => d.measured?.expectedGoals ?? null },
-  { key: "xa", head: "xA", title: "Expected assists — FPL's", of: (d) => d.measured?.expectedAssists ?? null },
+  {
+    key: "bps",
+    head: "BPS",
+    title: "FPL's bonus points system score",
+    of: (d) => d.measured?.bps ?? null,
+  },
+  {
+    key: "xg",
+    head: "xG",
+    title: "Expected goals — FPL's",
+    of: (d) => d.measured?.expectedGoals ?? null,
+  },
+  {
+    key: "xa",
+    head: "xA",
+    title: "Expected assists — FPL's",
+    of: (d) => d.measured?.expectedAssists ?? null,
+  },
 ];
 
 /** Two decimals for the expected pair and whole numbers for the rest: xG is a
@@ -80,47 +105,79 @@ export default function SquadRows({
    *  that looked like a button and did nothing is worse than a row. */
   onOpen?: (player: SquadPlayerDetail) => void;
 }) {
-  const scored = lines.some((line) => line.players.some((p) => p.points !== undefined));
+  const scored = lines.some((line) =>
+    line.players.some((p) => p.points !== undefined),
+  );
 
   return (
-    <div className="flex flex-col">
-      {/* One bevelled strip over the whole squad, the way a CM table is headed —
+    // **Scrolls sideways above `lg`, and it has to.** The eight stat columns
+    // appear there at 56px each, so the row's fixed width is about 670px before
+    // the name gets a pixel — and since 31 Aug the list shares the screen with
+    // the season grid, which leaves it 554. It fitted while it had the whole
+    // frame; halving the column is what found this. A dense table that does not
+    // fit scrolls inside its panel, which is what the season grid does and what
+    // CM's own tables did. `min-w-max` only above `lg`: on a phone the stat
+    // columns are hidden and the name truncates into whatever is left, which is
+    // right there and would become a sideways scroll if this applied.
+    <div className="overflow-x-auto">
+      <div className="flex flex-col lg:min-w-max">
+        {/* One bevelled strip over the whole squad, the way a CM table is headed —
           rather than a small-caps label per position group, which made five
           headings and no columns. The group bars below separate; this names. */}
-      <div className="cm-bevel flex min-h-7 items-center gap-2 px-2 text-3xs font-bold uppercase">
-        <span className="w-6 shrink-0" />
-        <span className="min-w-0 flex-1 lg:max-w-[18rem]">Player</span>
-        <span className="w-[4.25rem] shrink-0 text-right">Fixture</span>
-        {STATS.map((stat) => (
-          <span key={stat.key} title={stat.title} className="hidden w-14 shrink-0 text-right lg:block">
-            {stat.head}
+        <div className="cm-bevel flex min-h-7 items-center gap-2 px-2 text-3xs font-bold uppercase">
+          <span className="w-6 shrink-0" />
+          <span className="min-w-0 flex-1 lg:min-w-36 lg:max-w-[18rem]">
+            Player
           </span>
-        ))}
-        {scored ? <span className="w-8 shrink-0 text-right">{projected ? "Proj" : "FPts"}</span> : null}
-      </div>
+          <span className="w-12 shrink-0 text-right">Fixture</span>
+          {STATS.map((stat) => (
+            <span
+              key={stat.key}
+              title={stat.title}
+              className="hidden w-14 shrink-0 text-right lg:block"
+            >
+              {stat.head}
+            </span>
+          ))}
+          {scored ? (
+            <span className="w-8 shrink-0 text-right">
+              {projected ? "Proj" : "FPts"}
+            </span>
+          ) : null}
+        </div>
 
-      {lines.map((line) => (
-        <section key={line.position} className="flex flex-col">
-          {/* CM's group separator: the pressed face, so the strip above reads as
+        {lines.map((line) => (
+          <section key={line.position} className="flex flex-col">
+            {/* CM's group separator: the pressed face, so the strip above reads as
               the head and this reads as a divider inside what it heads. */}
-          <h3 className="cm-bevel-pressed flex items-baseline gap-1.5 px-2 py-0.5 font-display text-3xs font-bold uppercase text-ink">
-            {line.position ? positionGroup(line.position) : UNPLACED}
-            <span className="numeric font-normal">{line.players.length}</span>
-          </h3>
-          <ul className="cm-rows flex flex-col">
-            {line.players.map((player) => (
-              <li key={player.rostered.slot.fantraxId}>
-                <Row player={player} onOpen={onOpen && (() => onOpen(player))} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))}
+            <h3 className="cm-bevel-pressed flex items-baseline gap-1.5 px-2 py-0.5 font-display text-3xs font-bold uppercase text-ink">
+              {line.position ? positionGroup(line.position) : UNPLACED}
+              <span className="numeric font-normal">{line.players.length}</span>
+            </h3>
+            <ul className="cm-rows flex flex-col">
+              {line.players.map((player) => (
+                <li key={player.rostered.slot.fantraxId}>
+                  <Row
+                    player={player}
+                    onOpen={onOpen && (() => onOpen(player))}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
     </div>
   );
 }
 
-function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => void }) {
+function Row({
+  player,
+  onOpen,
+}: {
+  player: SquadPlayerDetail;
+  onOpen?: () => void;
+}) {
   const { club, points } = player;
   const colours = clubColours(club?.shortName ?? "");
   const resolved = isResolved(player.rostered) ? player.rostered : null;
@@ -154,13 +211,20 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
             className="h-5 w-5 object-contain"
           />
         ) : (
-          <span aria-hidden className="numeric text-[0.5rem] font-bold text-white/70">
+          <span
+            aria-hidden
+            className="numeric text-[0.5rem] font-bold text-white/70"
+          >
             ?
           </span>
         )}
       </span>
 
-      <span className="min-w-0 flex-1 truncate text-sm font-medium lg:max-w-[18rem]">
+      {/* `lg:min-w-36` is load-bearing: `flex-1 min-w-0` gives way first when the
+          fixed columns outgrow the row, and what gave way was the one thing on
+          the line a reader cannot infer. Measured at 1440 in a 554px column on
+          31 Aug: every name was **0px wide**. */}
+      <span className="min-w-0 flex-1 truncate text-sm font-medium lg:min-w-36 lg:max-w-[18rem]">
         {playerName(player.rostered)}
       </span>
 
@@ -175,7 +239,7 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
       {/* His fixture until he kicks off, and what he has made of it after. The
           same column either way, so a list mid-round does not comb. */}
       {started ? (
-        <span className="flex w-[4.25rem] shrink-0 items-center justify-end gap-0.5">
+        <span className="flex w-12 shrink-0 items-center justify-end gap-0.5">
           {chips.map((chip) => (
             <span
               key={chip.label}
@@ -184,10 +248,12 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
               {chip.label}
             </span>
           ))}
-          <span className="numeric text-[0.625rem] font-bold text-muted">{done.minutes}&apos;</span>
+          <span className="numeric text-[0.625rem] font-bold text-muted">
+            {done.minutes}&apos;
+          </span>
         </span>
       ) : (
-        <span className="inline-flex w-[4.25rem] shrink-0 overflow-hidden">
+        <span className="inline-flex w-12 shrink-0 overflow-hidden">
           <FixtureChip opposition={player.opposition} blank="No fixture" />
         </span>
       )}
@@ -212,7 +278,9 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
       {/* Undefined is no table at all and takes the cell with it; null is a table
           that does not name him, which is a dash. */}
       {points === undefined ? null : (
-        <span className="numeric w-8 shrink-0 text-right text-sm font-bold">{points ?? "—"}</span>
+        <span className="numeric w-8 shrink-0 text-right text-sm font-bold">
+          {points ?? "—"}
+        </span>
       )}
     </>
   );
@@ -222,10 +290,15 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
   // the case the 44px floor exists for. It was a second undocumented exception
   // beside the view toggle's, found by `tools/ui/tapfit.mjs`. `.cm-row` takes it
   // back to 28 above `lg`, where there is no thumb.
-  const shell = "cm-row flex min-h-11 w-full items-center gap-2 px-2 py-1 text-left";
+  const shell =
+    "cm-row flex min-h-11 w-full items-center gap-2 px-2 py-1 text-left";
 
   return onOpen ? (
-    <button type="button" onClick={onOpen} className={`${shell} hover:bg-raised`}>
+    <button
+      type="button"
+      onClick={onOpen}
+      className={`${shell} hover:bg-raised`}
+    >
       {inside}
     </button>
   ) : (
