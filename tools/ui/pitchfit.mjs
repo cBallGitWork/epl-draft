@@ -15,12 +15,12 @@
 // fold, because then a squad cannot be read at a glance — which is the one thing
 // this screen exists for.
 //
-// Two pages behind one route and they have different budgets: the gated view
-// spends `--pitch-page`, and an XI with a bench under it spends
-// `.pitch-with-bench`. The tighter of the two is the one a change breaks first
-// and it is also the more visited, so both are walked. Team ids are discovered
-// rather than written down — they belong to whichever league `FANTRAX_LEAGUE_ID`
-// is serving.
+// Every squad is walked, and most of them report no pitch: the gated board became
+// a table on 31 Aug and only a squad whose lineup is public draws grass at all.
+// That is not a gap in the instrument — "no pitch here" is the right answer for
+// a withheld squad, and the run would be lying if it invented one. Team ids are
+// discovered rather than written down; they belong to whichever league
+// `FANTRAX_LEAGUE_ID` is serving.
 
 import { connect, parseArgs, teamCookie } from "./cdp.mjs";
 

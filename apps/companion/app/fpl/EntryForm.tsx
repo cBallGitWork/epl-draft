@@ -19,7 +19,15 @@ export default function EntryForm() {
         </label>
         <p className="text-sm text-muted">
           The number in the address bar when you look at your own points on the FPL site:
-          fantasy.premierleague.com/entry/<span className="text-ink">1234567</span>/event/1.
+        </p>
+        {/* Its own line, and `break-all`. A URL is one unbreakable token, so at
+            390 — the reference width — it ran past the panel's own border and
+            off the screen edge, clipped rather than scrollable, permanently
+            eating the end of it. Found by `ui-verifier` on 31 Aug; it takes a
+            human opening the image, because the document never scrolled
+            sideways and every instrument therefore called the page clean. */}
+        <p className="break-all font-display text-sm text-muted">
+          fantasy.premierleague.com/entry/<span className="text-ink">1234567</span>/event/1
         </p>
       </div>
 

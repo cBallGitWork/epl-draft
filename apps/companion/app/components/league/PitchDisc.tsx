@@ -84,12 +84,18 @@ export default function PitchDisc({
         chrome
       />
 
-      <span className="flex w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-3xs font-bold uppercase leading-none text-bg">
+      {/* `text-2xs` for the name and `text-xs` for the figure, which is where
+          DESIGN §8 fixed the pitch's type when it closed that item: 3xs is a
+          FLOOR on the grass and not merely the last step down, and the rule that
+          got there is that the card shrinks and the type never does. This drew
+          the name ON the floor and the figure a step below it for an afternoon —
+          a step in the direction §9 had already called too small. */}
+      <span className="flex w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-2xs font-bold uppercase leading-none text-bg">
         <span className="w-full truncate">{playerName(rostered)}</span>
       </span>
 
       {started ? (
-        <span className="numeric w-full bg-bg px-0.5 text-center text-2xs font-bold leading-none text-cream">
+        <span className="numeric w-full bg-bg px-0.5 text-center text-xs font-bold leading-none text-cream">
           {points ?? "—"}
         </span>
       ) : (

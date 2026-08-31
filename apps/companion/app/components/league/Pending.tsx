@@ -32,5 +32,14 @@ export default function Pending({
 
   // Kept beside the total rather than folded into it. Fantrax's number stays
   // Fantrax's; this is the bit they have not credited yet.
-  return <span className="numeric shrink-0 font-semibold text-accent">+{points}</span>;
+  //
+  // **Amber, not the accent.** It was the accent on two screens before this
+  // component existed and on four after, and DESIGN §8 has already adjudicated
+  // the identical case: a positive figure in accent yellow is "a slot violation,
+  // the accent meaning yours, selected, active and nothing else". §8's remedy
+  // was to add the green rather than widen the accent — and the green is ruled
+  // out here too, being "never on a number that merely happens to be positive".
+  // This one is positive by construction; it never went any way. `--color-mid`
+  // is the slot DESIGN names for a figure, and it is 9.0:1 on `--color-surface`.
+  return <span className="numeric shrink-0 font-semibold text-mid">+{points}</span>;
 }

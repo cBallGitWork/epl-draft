@@ -37,21 +37,25 @@ const DESK_CONTROL = 36;
 
 /** Taken deliberately, and read out on every run rather than filtered away.
  *
+ *  **All three are detected structurally, and the first version of this file got
+ *  that wrong.** It matched labels against `/^(#|Rk|Player|…|FP|…)/i`, which is
+ *  anchored at the front and bounded at neither end: `FP` swallowed the rail's
+ *  own **FPL**, `Player` swallowed "Player profile", `Team` swallowed "Team of
+ *  the week". Any of those going under the floor was filed as a recorded
+ *  exception and never reported — a guard that exempts by prefix exempts things
+ *  nobody chose. `register-warden` found it on 31 Aug.
+ *
  *  A **column head** belongs to the head strip it is cut from — CM's is 16px —
  *  and is as wide as its column, so it is a short wide target rather than a
- *  small one. It has been 28px since the tables were built and no doc had ever
- *  measured it.
+ *  small one. It is whatever sits inside a `<th>`.
  *
- *  The **squad board's view toggle** is `min-h-9` at every width and is recorded
- *  in `docs/ui/squad.md` as the app's one deliberate touch-target exception.
+ *  The **Pitch/List toggle** is `min-h-9` at every width, on the head-to-head
+ *  board and on a locked squad. It is whatever sits inside the `role="group"`
+ *  `ViewToggle` draws.
  *
  *  An **inline text link inside a sentence** is prose and not a control — "or
  *  show all 638", "tap through from Live" — and no rule has ever applied to one.
- *  Detected structurally rather than by name: a link inside a `<p>` with text
- *  beside it. A list of strings would go stale the first time somebody rewrote a
- *  sentence, which is the same trap `navfit`'s old copy of the tab labels fell
- *  into. */
-const EXPECTED = /^(#|Rk|Player|Opp|W-D-L|Form|GB|Win%|FP|FPts|FP\/G|Ros|Pts|\+\/-|Team|Pitch|List)/i;
+ *  It is a link inside a `<p>` with text beside it. */
 
 const MEASURE = `(function(){
   var nodes=Array.prototype.slice.call(
@@ -64,7 +68,10 @@ const MEASURE = `(function(){
     var label=(n.textContent||n.getAttribute('aria-label')||n.tagName).trim().replace(/\\s+/g," ");
     var p=n.closest('p');
     var prose=!!p && p.textContent.replace(n.textContent,"").trim().length>0;
-    return [{t:label.slice(0,24), h:Math.round(r.height), prose:prose,
+    var head=!!n.closest('th');
+    var toggle=!!n.closest('[role=group]');
+    return [{t:label.slice(0,24), h:Math.round(r.height),
+             known:prose||head||toggle,
              // Either side of the element: a schedule tie wraps its row div
              // in the link, and a table row IS the link.
              row:String(n.className||"").indexOf('cm-row')>=0
@@ -97,8 +104,8 @@ for (const width of [390, 1440]) {
     const floor = (item) =>
       width < 1024 ? PHONE : item.row ? DESK_ROW : DESK_CONTROL;
     const under = all.filter((item) => item.h < floor(item));
-    const known = under.filter((item) => item.prose || EXPECTED.test(item.t));
-    const news = under.filter((item) => !item.prose && !EXPECTED.test(item.t));
+    const known = under.filter((item) => item.known);
+    const news = under.filter((item) => !item.known);
     failures += news.length;
 
     const note = news.length ? `${news.length} UNDER FLOOR` : "ok";

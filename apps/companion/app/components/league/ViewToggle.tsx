@@ -1,23 +1,20 @@
 "use client";
 
-// Pitch or list, for the same fifteen men.
+// Pitch or list, for the same eleven.
 //
-// Three screens ask it now — the squad board, the head-to-head board, and the
-// squad page once a period has opened — which is the rule of 3 firing. The two
-// copies that already existed had drifted apart in type and shape: one control
-// read `Pitch List` in small capitals with a border, the other `PITCH LIST` in
-// letterspaced 2xs with none, and they sit two taps from each other.
-//
-// The squad board's spelling wins, because `/squad/[teamId]` is the declared
-// reference for the visual direction. That does change how the control looks on
-// the head-to-head board — the one visible consequence of this extraction, and
-// stated rather than buried, because a refactor that quietly restyles a screen
-// is the thing CODE_RULES is guarding against.
+// **Two screens, not three, and not the squad board.** It served three until 31
+// Aug, when the gated squad board lost its pitch and had nothing left to switch
+// between — fifteen men with no arrangement is not a shape (DESIGN §9). What is
+// left is the head-to-head board and a locked squad, the two screens that still
+// draw an eleven two ways. This docblock said "the squad board's spelling wins"
+// for four hours after the squad board stopped calling it, and six documents
+// were citing that sentence back.
 //
 // `min-h-9` rather than `min-h-11` is the app's one deliberate touch-target
-// exception, and it is documented in docs/ui/squad.md. It stays an exception
-// here rather than becoming a precedent: this control sits directly above the
-// thing it switches, so a mis-tap costs a glance and nothing else.
+// exception, recorded in PRODUCT.md and measured by `tools/ui/tapfit.mjs`, which
+// finds it structurally — whatever sits inside this `role="group"`. It stays an
+// exception rather than becoming a precedent: the control sits directly above
+// the thing it switches, so a mis-tap costs a glance and nothing else.
 
 export type View = "pitch" | "list";
 

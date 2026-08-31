@@ -40,12 +40,15 @@
 }
 
 /* A pitch with a bench under it is a different budget, and one number for both
-   made the quiet page pay for the busy one. `/squad/[teamId]` gated spends 159px
-   on furniture; the same route showing an XI spends 298, because it carries a
-   bench strip and a way out to Fantrax that the gated view does not (re-measured
-   31 Aug 2026, at 390×844). Held to the tighter figure, the fifteen-man pitch
-   this whole card was rebuilt for gave up a third of its photograph to pay for a
-   page it is not on.
+   made the quiet page pay for the busy one.
+
+   **The gated squad pitch this was written against no longer exists** — that
+   branch is a table since 31 Aug 2026 (DESIGN §9, reversed), so the only reader
+   of the base `--pitch-page` left is the FPL tab's own pitch, and both squad
+   pitches set the class below. Kept as two numbers rather than collapsed to one:
+   the FPL pitch has no bench and no way out under it, and giving it the busy
+   page's budget would take a third of its photograph to pay for furniture it
+   does not carry — which is the mistake this split was made to undo.
 
    A class rather than an inline style: it belongs beside the budget it
    overrides, and a `style` attribute would put the number in a component that

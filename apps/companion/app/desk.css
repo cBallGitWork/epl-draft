@@ -227,13 +227,16 @@
 }
 
 @media (min-width: 64rem) {
-  :root {
-    --row-badge: 1.25rem;
-    --row-portrait: 1.375rem;
-  }
-
+  /* On `.cm-row` and not on `:root`. Declared at the root they shrank every mark
+     on the desk above `lg`, including the two scoreline panels the paragraph
+     above says must not compress — the CLASS was correctly kept off those and
+     the VARIABLE reached them anyway, so the mechanism disagreed with its own
+     reasoning for a day. A custom property set on the row cascades to whatever
+     the row contains and to nothing else. */
   .cm-row {
     min-height: 1.75rem;
     padding-block: 0.125rem;
+    --row-badge: 1.25rem;
+    --row-portrait: 1.375rem;
   }
 }

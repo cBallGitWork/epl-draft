@@ -236,7 +236,7 @@ export default function LineupPlanner({
               setSlots(team.players.map((p) => p.slot));
               setPicked(null);
             }}
-            className="cm-bevel min-h-9 px-3 text-xs font-medium hover:brightness-110"
+            className="cm-bevel min-h-11 px-3 text-xs font-medium hover:brightness-110 lg:min-h-9"
           >
             Reset
           </button>

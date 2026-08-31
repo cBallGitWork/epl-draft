@@ -4,15 +4,18 @@ import Image from "next/image";
 import { useState } from "react";
 import { type ClubColours, initials, inkOn, portraitUrl } from "@epl/core";
 
-/** How wide an asset the optimizer may serve — the LARGER of the two sizes he is
- *  drawn at, because asking for the smaller and drawing the larger is a soft
+/** How wide an asset the optimizer may serve — the LARGEST slot any caller draws
+ *  him in, because asking for a smaller one and drawing him larger is a soft
  *  photograph nobody thinks to blame the CSS for.
  *
- *  How wide he is actually DRAWN is `--row-portrait` in `desk.css`, which shrinks
- *  with the row that carries him. It was this constant in an inline style, which
- *  has no breakpoint at all. The two no longer have to agree — one is a ceiling
- *  and the other a size — but the ceiling must never drop below the size. */
-const SIZE = 32;
+ *  How wide he is actually DRAWN is `--row-portrait`, which `desk.css` shrinks
+ *  with the row that carries him and `league/PitchDisc` raises to 44px for a
+ *  marker on the grass. That third caller is why this is 44 and not 32: the
+ *  ceiling stood at 32 for an afternoon while the pitch drew 44 off it, which is
+ *  exactly the failure the paragraph above forbids, in the file that forbids it.
+ *  A row's 22–26px slot fetching a 44px source costs a few hundred bytes; a
+ *  blurred face on the one screen built around faces costs the screen. */
+const SIZE = 44;
 
 // A player's headshot on their club's colour.
 //
@@ -50,8 +53,11 @@ export default function PlayerPortrait({
    *  values and not chosen for contrast, and `PhotoGround` refuses colour
    *  photography for the same reason one step further on.
    *
-   *  Championship Manager's own pitch is four colours: the field, one blue for
-   *  every outfielder, one green for the keeper, white for the numbers. Chrome
+   *  Championship Manager's own pitch is four colours (`cm9900/19.jpg`, sampled
+   *  rather than remembered): the field — two greens, mown — one blue for every
+   *  outfielder at `#0023a5`, one green for the keeper at `#037d0c`, and white
+   *  numbers. We draw all eleven the same and give the keeper nothing, which is
+   *  one of those four colours left on the table. Chrome
    *  is this app's "frame, and never content" slot — the title bar and the index
    *  cell — so a disc cut from it is a marker rather than a claim. Ink on it is
    *  7.0:1, which is what the initials fall back to. */

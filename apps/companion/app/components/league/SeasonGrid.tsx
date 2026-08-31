@@ -23,11 +23,14 @@ import type { TeamStats } from "@epl/core";
 // (`GP Min G A AF YC RC PKM OG GAO CS`), every value a real number and not one
 // null in either group.
 //
-// **Stacked under the board rather than beside it, and that is a measurement.**
-// Seventeen columns and a pitch both want the width, so side by side gives
-// neither enough; CM stacks its panels for the same reason (`cm9900/05.jpg`, a
-// list over a detail). The one placement ruled out is a band ABOVE the pitch,
-// which would come out of the pitch's own screen budget.
+// **Beside the board above `lg`, stacked below it.** This comment argued the
+// opposite for a day — "seventeen columns and a pitch both want the width, so
+// side by side gives neither enough" — while its only caller laid the two out
+// side by side, and while the pitch it named had been deleted from that branch
+// by the same commit. `cm9900/05.jpg` does stack a list panel over a detail one,
+// so the citation was sound and the reasoning was not. Both panels scroll their
+// own tables, so neither has to fit; what the phone cannot do is put them side
+// by side, and there they stack.
 //
 // Rows are dense on purpose and the tap floor does not apply to them: nothing in
 // this table is a control, and `min-h-11` is a rule about what a thumb has to

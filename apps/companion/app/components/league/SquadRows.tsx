@@ -241,7 +241,8 @@ function Row({
           side, and it was turning up on five screens. A list is a list of
           readings, and Championship Manager's own squad list carries no
           opponent at all — its columns are position, age, form, morale,
-          condition, value (`cm9900/12.jpg`).
+          condition, value (`cm9900/25.jpg`, and `10.jpg`; `12.jpg` shows the
+          same columns but is Everton TRAINING, which is not the squad list).
 
           Phone only. Above `lg` the stat columns below say the same thing at
           more length, so this was the same match twice on one row. */}
