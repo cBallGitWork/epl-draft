@@ -151,7 +151,11 @@ function Select({
       // here, and no ground either. Only the closed control is ours; the option
       // list is the platform's popup and cannot be styled, which is the reason
       // this is still a `<select>`.
-      className="cm-bevel min-h-11 min-w-0 flex-1 px-2.5 text-sm font-semibold lg:min-h-9"
+      // Capped above `lg`. A dropdown that fills a 1440 screen is a banner; CM's
+      // control strip is four of them at about 155px, left-aligned, and the
+      // strip is the shape rather than any one plate in it. Below `lg` they
+      // still share the row, because there a phone has nothing to spare.
+      className="cm-bevel min-h-11 min-w-0 flex-1 px-2.5 text-sm font-semibold lg:min-h-9 lg:max-w-52"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>
