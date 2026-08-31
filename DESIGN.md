@@ -198,7 +198,8 @@ step declared. §8 records why 3xs is the last step rather than a floor.
 **Every step carries its own line box**, declared beside it in `tokens.css` as
 `calc(box / size)`: 9/12 · 11/14 · 12/16 · 14/18 · 16/22 · 18/24 · 21/26 ·
 24/28 · 30/34 · 34/38 · 45/46. Until 31 Aug 2026 none of them did, and the two
-that are ours alone — `3xs` and `2xs`, which are 168 of the app's 306 type sites
+that are ours alone — `3xs` and `2xs`, which were 168 of the app's 306 type sites
+when this was written and 167 of 271 by the evening of the same day
 — fell through to Preflight's 1.5, putting an 11px label in a 16.5px line box.
 That, and not any `py-`, is why a Championship Manager row kept coming out at
 37px where the game drew it at 18. Prose that wants air asks for it at the point

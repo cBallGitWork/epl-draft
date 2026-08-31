@@ -55,9 +55,11 @@ node tools/ui/tapfit.mjs
 Nine routes × 390 and 1440, against the floor each width actually has: 44px under
 a thumb, and above `lg` 28 for a repeating row, 36 for a control (PRODUCT.md's
 accessibility section). Three exceptions are recorded and read out on every run
-rather than filtered away — a column head, the squad board's view toggle, and an
+rather than filtered away — a column head, the Pitch/List toggle, and an
 inline text link inside a sentence, the last detected structurally so a rewritten
-sentence cannot go stale.
+sentence cannot go stale. The toggle is the Pitch/List one — the head-to-head
+board's and the locked squad's, not the squad board's, which lost its pitch on
+31 Aug.
 
 **Run it after anything that adds a link.** The rule used to be carried by four
 prose checklists asking "are taps `min-h-11`?", and a prose checklist cannot

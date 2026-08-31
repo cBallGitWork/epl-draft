@@ -117,8 +117,11 @@ Championship Manager's own 18.
 **Three exceptions, all deliberate and all measured.** A **column head** belongs
 to the head strip it is cut from and is as wide as its column, so it is a short
 wide target rather than a small one; it has been 28px since the tables were built
-and no document had measured it until now. The **squad board's view toggle** is
-`min-h-9` at every width (`docs/ui/squad.md`). An **inline text link inside a
+and no document had measured it until now. The **Pitch/List toggle** is `min-h-9` at every
+width — on the head-to-head board and on a locked squad, which are the two
+screens that still draw an eleven two ways. It was the squad board's until 31
+Aug, when that board lost its pitch and had nothing left to toggle; the exception
+outlived the screen it was named after by about four hours. An **inline text link inside a
 sentence** — "or show all 638" — is prose and never was a control.
 
 `tools/ui/tapfit.mjs` measures all of this on every route at both widths and

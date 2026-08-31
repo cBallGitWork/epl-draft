@@ -49,16 +49,24 @@ the sofa, so the score under fifteen faces sat still through a whole half.
 
 ## SquadBoard, in reading order
 
-1. **View toggle** — `ViewToggle`, Pitch / List, plus a player count. `min-h-9`,
-   the one deliberate exception to the `min-h-11` touch target. The same control
-   in the same place once the period opens, so it does not move down the screen
-   as the week turns.
+**It is a list, and there is no pitch on it** (Craig, 31 Aug). This board draws
+FIFTEEN with no arrangement, because the arrangement is what the gate withholds —
+and a pitch is a drawing of a shape, so fifteen men in position lines is a
+diagram of something nobody picked. Championship Manager's own squad screen is a
+table for the same reason (`cm9900/25.jpg`). `SquadPitch` was deleted with the
+toggle that switched to it; the eleven that IS a shape keeps its pitch on the
+head-to-head and the planner, and `### The pitch` below describes those two and
+no longer describes this one.
+
+1. **A player count**, and nothing else on that line. There is no view to choose
+   between any more.
 2. **An explanation, only when something is off.** Three of the four gate reasons
    are *our* side failing to read something and are stated. The fourth,
    `not-started`, is the ordinary state of every squad most of every week and is
    deliberately silent — the header already says "squad", and a paragraph
    explaining the normal case cost the pitch a screenful on a phone.
-3. **The pitch** (`SquadPitch`) or **the list** (`SquadRows`).
+3. **The list** (`SquadRows`) — all fifteen, alphabetical inside each position
+   group, which is the order the gate requires.
 4. **The season grid** (`SeasonGrid`) — a second bevelled panel per scoring
    group, under the board. A CM screen is two to four panels laid out together
    and this one was already paid for: `squadSeason` reads the whole `TeamStats`
