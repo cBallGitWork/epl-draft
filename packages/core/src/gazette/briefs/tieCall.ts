@@ -1,5 +1,6 @@
 import type { StoryThread } from "../ledger";
 import type { TieState } from "../tieState";
+import { figure } from "./figure";
 import { storylinesBlock } from "./storylines";
 
 // The facts behind a mid-round call. Short on purpose: a call is a paragraph
@@ -33,8 +34,4 @@ export function buildTieCallBrief(brief: TieCallBrief): string {
   ]
     .filter((block) => block !== null)
     .join("\n\n");
-}
-
-function figure(points: number | null): string {
-  return points === null ? "—" : String(points);
 }

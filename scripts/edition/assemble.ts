@@ -4,10 +4,10 @@ import {
   type Club,
   type Fixture,
   type FootballSnapshot,
-  type Ledger,
   type LiveTeamScore,
   type PeriodPairing,
   type RosteredTeam,
+  type StoryThread,
   type TieState,
   buildFixturePreviewBrief,
   buildMatchReportBrief,
@@ -39,8 +39,7 @@ export function matchReportBrief(
   snapshot: FootballSnapshot,
   facts: RoundFacts,
   clubs: Map<number, Club>,
-  ledger: Ledger,
-  leagueId: string,
+  threads: readonly StoryThread[],
 ): string | null {
   const fixture = snapshot.fixtures.find((each) => each.id === assignment.fixtureId);
   if (fixture === undefined) return null;
@@ -81,7 +80,7 @@ export function matchReportBrief(
     awayScore: fixture.awayScore,
     owners,
     ties,
-    threads: ledger[leagueId]?.threads ?? [],
+    threads,
   });
 }
 
@@ -90,8 +89,7 @@ export function fixturePreviewBrief(
   snapshot: FootballSnapshot,
   facts: RoundFacts,
   clubs: Map<number, Club>,
-  ledger: Ledger,
-  leagueId: string,
+  threads: readonly StoryThread[],
 ): string | null {
   const fixture = snapshot.fixtures.find((each) => each.id === assignment.fixtureId);
   if (fixture === undefined || fixture.kickoff === null) return null;
@@ -143,7 +141,7 @@ export function fixturePreviewBrief(
       awayMen: duel.awayMen,
     })),
     watching,
-    threads: ledger[leagueId]?.threads ?? [],
+    threads,
   });
 }
 
@@ -151,8 +149,7 @@ export function tieCallBrief(
   assignment: Assignment,
   gameweek: number,
   facts: RoundFacts,
-  ledger: Ledger,
-  leagueId: string,
+  threads: readonly StoryThread[],
 ): string | null {
   const pairing = facts.pairings.find(
     (each) =>
@@ -172,7 +169,7 @@ export function tieCallBrief(
     homeToPlay: facts.scores.get(pairing.home.teamId)?.toPlay ?? null,
     awayToPlay: facts.scores.get(pairing.away.teamId)?.toPlay ?? null,
     state,
-    threads: ledger[leagueId]?.threads ?? [],
+    threads,
   });
 }
 

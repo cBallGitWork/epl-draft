@@ -27,7 +27,7 @@ export { markPreview, normalizePublished } from "./published";
 export { normalizePaper, normalizeStory } from "./story";
 export { decided, stories } from "./stories";
 export { teamOfTheWeek } from "./teamOfTheWeek";
-export type { Ledger, ThreadUpdate } from "./ledger";
+export type { Ledger, StoryThread, ThreadUpdate } from "./ledger";
 export type { EditionKind, PublishedEdition } from "./published";
 export type { PublishedPaper, PublishedStory, StoryKind } from "./story";
 export type {

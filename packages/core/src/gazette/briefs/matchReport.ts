@@ -1,6 +1,7 @@
 import type { PlayerMatchStats } from "../../football/types";
 import type { StoryThread } from "../ledger";
 import type { TieState } from "../tieState";
+import { figure } from "./figure";
 import { storylinesBlock } from "./storylines";
 
 // The facts one match report may use and nothing else. Same doctrine as the
@@ -73,10 +74,6 @@ export function buildMatchReportBrief(brief: MatchReportBrief): string {
   ]
     .filter((block) => block !== null)
     .join("\n\n");
-}
-
-function figure(points: number | null): string {
-  return points === null ? "—" : String(points);
 }
 
 /** A stat line in the vernacular the writer may quote: only what happened,

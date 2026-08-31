@@ -3,9 +3,9 @@ import {
   type Club,
   type EditionKind,
   type FootballSnapshot,
-  type Ledger,
   type LeagueInfo,
   type PublishedStory,
+  type StoryThread,
   type ThreadUpdate,
   buildBrief,
   normalizePublished,
@@ -28,7 +28,8 @@ export interface DeskContext {
   snapshot: FootballSnapshot;
   facts: RoundFacts;
   clubs: Map<number, Club>;
-  ledger: Ledger;
+  /** The league's running storylines, for every scoped brief's memory block. */
+  threads: readonly StoryThread[];
   info: LeagueInfo;
   period: number;
   /** The round's first kickoff — a preview's expiry. */
@@ -77,11 +78,11 @@ export function prepare(assignment: Assignment, ctx: DeskContext): { system: str
 
   const scoped =
     assignment.kind === "match-report"
-      ? matchReportBrief(assignment, ctx.snapshot, ctx.facts, ctx.clubs, ctx.ledger, ctx.leagueId)
+      ? matchReportBrief(assignment, ctx.snapshot, ctx.facts, ctx.clubs, ctx.threads)
       : assignment.kind === "fixture-preview"
-        ? fixturePreviewBrief(assignment, ctx.snapshot, ctx.facts, ctx.clubs, ctx.ledger, ctx.leagueId)
+        ? fixturePreviewBrief(assignment, ctx.snapshot, ctx.facts, ctx.clubs, ctx.threads)
         : assignment.kind === "tie-call"
-          ? tieCallBrief(assignment, ctx.snapshot.gameweek, ctx.facts, ctx.ledger, ctx.leagueId)
+          ? tieCallBrief(assignment, ctx.snapshot.gameweek, ctx.facts, ctx.threads)
           : null;
   if (scoped === null) return null;
 

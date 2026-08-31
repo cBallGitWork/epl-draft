@@ -113,7 +113,7 @@ async function main(): Promise<void> {
     snapshot,
     facts,
     clubs,
-    ledger,
+    threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [],
     info,
     period: round.period,
     kickoff,

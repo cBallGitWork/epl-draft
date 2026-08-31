@@ -1,4 +1,5 @@
 import type { StoryThread } from "../ledger";
+import { figure } from "./figure";
 import { storylinesBlock } from "./storylines";
 
 // The facts a preview piece may use. There is no result and no projection in
@@ -51,8 +52,4 @@ export function buildFixturePreviewBrief(brief: FixturePreviewBrief): string {
   ]
     .filter((block) => block !== null)
     .join("\n\n");
-}
-
-function figure(points: number | null): string {
-  return points === null ? "—" : String(points);
 }
