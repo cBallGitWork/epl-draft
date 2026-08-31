@@ -73,9 +73,13 @@ This is the whole argument for committing the pictures.
 
 ## Two things CM did that we deliberately will not
 
-- **The darkened match photograph behind every screen.** `09.jpg` shows why: the
-  disabled options over the goalmouth are barely readable. `DESIGN.md` §2 already
-  recorded dropping it. The library confirms the call rather than reopening it.
+- ~~**The darkened match photograph behind every screen.**~~ **Reversed 31 Aug
+  2026** — it ships, at full strength. `09.jpg` was the whole case for dropping
+  it and `09.jpg` is a screen of bare prose over a goalmouth; every DENSE screen
+  in this library puts its words on a plate or inside a translucent panel and
+  lets the photograph show between them (`24.jpg`, `12.jpg`, `21.jpg`). The
+  reading was right about the pixels and wrong about the rule they demonstrate.
+  `tools/ui/groundfit.mjs` measures ours.
 - **Greying a man out to 2.54:1.** CM put unavailable players below any modern
   floor. Ours grey to `--color-faint`, which is 5.34:1 on our ground — the same
   signal, above `PRODUCT.md`'s AA floor.

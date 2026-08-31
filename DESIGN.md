@@ -58,15 +58,30 @@ so it is solved rather than feared — and darkening the picture first buys far
 more of it, because the product of the two is what the sum turns on. At
 `brightness(0.25)` and `opacity(0.30)` the tightest ink in the palette lands at
 4.65:1 with the photograph five times as present as a scrim alone allowed.
-`components/football/PhotoGround` carries the arithmetic; `DESK_GROUND` in core
-config is where the photograph goes, and until one lands the ground is drawn
-from the round's own portraits.
 
-**No instrument can check it, which is exactly why it is a bound and not a
-sample.** The ground is `fixed` at `-z-10` — an ancestor of nothing — so `sweep`
-composites straight past it and every route reports clean whatever is behind it.
-A bound holds for every pixel a photograph could contain; a sample holds for the
-one that was tried.
+**And then the bound was the wrong instrument too** (Craig, 31 Aug: *the
+background IS the image*). Five times a scrim is still about seven per cent of a
+picture — a dark blue screen with something behind it. The bound was expensive
+because it priced ink sitting DIRECTLY on the photograph, and CM never sells
+that: every word in the game is on a plate or inside a translucent panel
+(`cm9900/24.jpg`, `12.jpg`, `21.jpg`), and the ground shows only between them.
+`09.jpg` — cited here for two months as proof the photograph had to go — is a
+screen of bare prose over a goalmouth, which is the one thing CM's own tables
+never do.
+
+So the desk keeps the rule instead of the bound: **nothing prints text on the
+bare ground.** The photograph runs at full strength, darkened to 0.55 and in
+colour. `components/football/PhotoGround` carries both; `DESK_GROUND` in core
+config is where the picture goes, and until one lands the ground is drawn from
+the round's own portraits.
+
+**The rule is measured where the bound could only be stated.** `sweep` cannot
+help — the ground is `fixed` at `-z-10`, an ancestor of nothing, so it composites
+straight past and reports every route clean whatever is behind it.
+`tools/ui/groundfit.mjs` walks every visible text node on the eight desk routes
+at both widths and accumulates background alpha up the real ancestor chain,
+naming anything under half. Zero bare, 31 Aug 2026. Moving `SCRIM` or `DARKEN` is
+safe for exactly as long as that stays at zero.
 
 **Which way a surface faces is the whole grammar, and it has three answers.**
 
