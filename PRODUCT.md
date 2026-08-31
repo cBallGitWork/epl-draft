@@ -91,6 +91,23 @@ for its own sake.
    at arm's length with a match in peripheral vision. If a number can't be read in a
    glance from there, it is too small, too thin, or too low-contrast.
 
+## The desk is designed first, and the phone is read on
+
+**The reference viewing condition is unchanged** — principle 5 above, a phone at
+arm's length with a match in peripheral vision. Every legibility floor, every tap
+target and every contrast ratio answers to it.
+
+**The design ORDER changed on 31 Aug 2026** (Craig): the desk layout is drawn
+first and the phone is a second design of the same data. Championship Manager is
+an 800×600 artefact and a phone-derived layout cannot become one; the desk is
+also the superset that holds the whole information architecture. The phone is
+never a squeeze of it — per screen, the desk decides what is on it and the phone
+decides which of that a thumb gets. `docs/ui/README.md` carries the working rule.
+
+These are two different claims and only the second one moved. A session reading
+"phone first" and assuming desk-first is a slip should read this paragraph
+instead.
+
 ## Accessibility & Inclusion
 
 WCAG 2.1 AA. Body text ≥4.5:1, large text and numerals ≥3:1, visible focus states,

@@ -67,7 +67,37 @@ Break these and the app is wrong, however good it looks.
 3. **Absence is modelled, never defaulted.** A dash is not a nought. "We could
    not read it" and "it is zero" are different claims and the UI must keep them
    apart.
-4. **Phone first.** One column, thumb-reachable, readable at arm's length.
+4. **Phone first is the VIEWING CONDITION, not the design order** — and the two
+   were one sentence until 31 Aug 2026, which is how a Championship Manager desk
+   kept coming out as a phone screen with CM paint on it.
+
+   **Design the desk first.** CM is an 800×600 design: its density, its
+   two-column squad, its rail, its panel composition. None of that survives being
+   derived from a phone, and every compromise on 31 Aug came from one component
+   serving both, with the phone constraint winning each time. The desk layout is
+   also the superset — it holds the whole information architecture, and the phone
+   is a selection from it.
+
+   **The phone is a second design of the same data, never a squeeze of the
+   desk's.** That distinction is the whole point: "compromise from desktop" is
+   precisely the process that produces cramped desk layouts on phones. Per
+   screen, the desk decides WHAT is on it — the fields, the panels, the order of
+   importance — and the phone then answers, independently, which of those a thumb
+   at arm's length gets and in what one column. Subtraction of CONTENT by
+   importance, not squeezing of LAYOUT.
+
+   **Per screen, not per project.** Desk design and phone design in the same
+   pass. Sixteen managers open this on phones on 10 Oct, and "the phone layouts
+   are next" is how they end up being done in the last week.
+
+   The split is in ARRANGEMENT only: one data join, one set of domain rules, one
+   doc per screen, and the switch is CSS rather than a user-agent read
+   (PLATFORM_NOTES, 31 Aug). Prefer `@container` where the constraint is really
+   space — the squad list broke that afternoon because its COLUMN was 554px,
+   which no viewport breakpoint could have known.
+
+   What has NOT changed, and must not be confused with the above: One column,
+   thumb-reachable, readable at arm's length.
    `min-h-11` is the standard touch target and the Pitch/List toggle is the one
    deliberate exception at `min-h-9` — on the head-to-head board and on a locked
    squad, the two screens that still draw an eleven two ways. Above `lg` the desk keeps its own
