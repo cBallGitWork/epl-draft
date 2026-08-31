@@ -1,6 +1,5 @@
 import {
   FANTRAX_LEAGUE_ID,
-  FantraxError,
   type AvailabilityNote,
   type Deadline,
   type Deal,
@@ -10,30 +9,22 @@ import {
   type LeagueInfo,
   type RosteredTeam,
   type LeagueTeam,
-  type LiveTeamScore,
-  type PeriodPairing,
   type TeamOfTheWeek,
-  type TransactionView,
   availability,
   deals,
-  fetchTransactions,
   isMatchdayLive,
-  mapTransactions,
-  transactionDateLabel,
   nextDeadline,
   editionMatches,
-  periodPairings,
   stories,
   teamOfTheWeek,
   wasFielded,
 } from "@epl/core";
-import { leagueCache } from "./leagueCache";
+import { type Board, readBoard } from "./board";
+import { readDeals } from "./business";
 import { roundUnderway, seasonKickoffs } from "./football";
 import { yoursFirst } from "./mine";
-import { orRefusal } from "./refusals";
 import { edition as published } from "./paper";
-import { liveScores } from "./scoreboard";
-import { type LeagueSquads, type ReadableSquads, getLeagueSquads } from "./squads";
+import { type LeagueSquads, getLeagueSquads } from "./squads";
 
 // What today's paper is made of.
 //
@@ -41,14 +32,6 @@ import { type LeagueSquads, type ReadableSquads, getLeagueSquads } from "./squad
 // with nothing to say does not appear — an edition padded out with "no
 // transactions this week" is a worse paper than a shorter one, and there is no
 // house style worth defending that requires printing an empty box.
-
-/** The period's ties with Fantrax's own totals against them. */
-export interface Board {
-  pairings: PeriodPairing[];
-  /** A Map rather than entries: nothing here crosses a cache boundary — the
-   *  reads inside it are cached, the assembled edition is not. */
-  scores: Map<string, LiveTeamScore>;
-}
 
 /** Why the paper has nothing to print, when it has nothing.
  *
@@ -147,41 +130,6 @@ export interface Edition {
   mine: string | null;
 }
 
-/** The views that make up a week's business.
- *
- *  Two reads rather than one because for a trade the view IS the type: trade rows
- *  carry no `transactionCode`, so a paper reading only `CLAIM_DROP` reports every
- *  waiver claim in the league and none of its trades.
- *
- *  `LINEUP_CHANGE` is captured daily but deliberately not read here. Benching
- *  somebody is not business anyone did with anyone, and on sixteen teams it would
- *  bury the two moves that are. */
-const DEAL_VIEWS: readonly TransactionView[] = ["CLAIM_DROP", "TRADE"];
-
-/** The transaction feed, cached and failure-tolerant.
- *
- *  A claim log we cannot read costs the paper a section, not the paper — and one
- *  view refusing costs it only that view, which is why each is caught on its own.
- *  It is its own cache entry rather than part of the squads read because it
- *  changes on a completely different rhythm — a few times a week, against every
- *  thirty seconds on a Saturday. */
-const readDeals = leagueCache("gazette-deals",
-  async () => {
-    const feeds = await Promise.all(
-      DEAL_VIEWS.map(async (view) => {
-        const raw = await orRefusal(fetchTransactions(FANTRAX_LEAGUE_ID, view));
-        if (raw instanceof FantraxError) return { rows: [], at: null };
-        return { rows: mapTransactions(raw, view), at: transactionDateLabel(raw) };
-      }),
-    );
-    return {
-      rows: feeds.flatMap((feed) => feed.rows),
-      // Every view heads the column the same way; the first that answered wins.
-      at: feeds.map((feed) => feed.at).find((label) => label !== null) ?? null,
-    };
-  },
-);
-
 export async function edition(mine: string | null): Promise<Edition> {
   const [squads, feed, kickoffs] = await Promise.all([
     getLeagueSquads(),
@@ -270,20 +218,6 @@ function silenceOf(squads: LeagueSquads, paper: Omit<Edition, "silence">): Silen
   if ("unavailable" in squads) return { kind: "unavailable", code: squads.unavailable };
   if ("undrafted" in squads) return { kind: "undrafted", code: squads.undrafted };
   return { kind: "quiet" };
-}
-
-/** This period's ties and their totals, from the cache the head-to-head board
- *  already fills — so on a Saturday this is a hit rather than a request.
- *
- *  `getLiveScoringStats` and not the season results table, for two reasons that
- *  both matter: it honours the period, and it carries `toPlay`, which is how the
- *  paper knows a match is over rather than merely quiet. */
-async function readBoard(drafted: ReadableSquads): Promise<Board | null> {
-  const period = drafted.roundPeriod;
-  if (period === null || drafted.info === null) return null;
-
-  const { scores } = await liveScores(period);
-  return { pairings: periodPairings(drafted.info.matchups, drafted.info.teams, period), scores };
 }
 
 /** The week's eleven, once there is a week to pick it from.
