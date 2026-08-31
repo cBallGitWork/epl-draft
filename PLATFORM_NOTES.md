@@ -3863,6 +3863,37 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-31: **The formation is on screen, and it was already being counted.**
+  `lineup()` has always returned `shape` — "1-3-4-3" — and `lineupDetail` dropped
+  it on the floor, so no screen could name an eleven the first way Championship
+  Manager names one. It now travels on `LineupDetail` and appears in three
+  places, each of which had the fact already: `/squad/[teamId]`'s rival sheet
+  (beside the player count, so it costs no height), the lineup planner (its own
+  line above the grass, and **live** — the planner recomputes `lineup()` on every
+  move, so a 1-3-4-3 becomes a 1-3-5-2 under the reader's thumb, which is the
+  whole reason to name it on the screen where the moving happens), and the
+  head-to-head board (beside the round word, changing with the side you open).
+  On the board it is `string | null` and never an empty string: a shape IS the
+  arrangement, so naming one for a withheld side is the leak the gate exists to
+  stop. It is gated on exactly the condition that draws the withheld panel.
+  **`pendingCleanSheets` reached the squad page**, which is the third screen to
+  print it and the one a manager is actually on when he wonders why his defenders
+  are worth nothing. Gated on the page's own `display` and not the league's:
+  only ACTIVE players are owed one, so a `+8` says a defender is in the eleven,
+  and your XI is yours all week where a rival's waits for his period. A squad
+  owed nothing prints nothing — a `+0` would read as a claim the clean sheets had
+  been counted. Cost 20px of the pitch's headroom on the phone (86 → 66) and 20
+  above `md` (72 → 52); everything still draws inside the screen.
+  **Not done, and the plan was wrong about it being free:** `live.breakdown`
+  reaching `LineupPlanner`. There is no card on that branch to put it in — the
+  planner's tap is a MOVE and opens `MoveDialog`, not `LivePlayerCard` — so
+  wiring the data through would need a second gesture to inspect a man, which is
+  a design change and not a wiring. Worth doing: on a rival's XI you can ask "why
+  is he on 12" and on your own you cannot. The natural home is `MoveDialog`,
+  since his points are exactly the input to whether you bench him, and that makes
+  a breakdown list its third rendering — so it is an extraction as well as a
+  feature.
+
 - 2026-08-31: **The desk stopped letterspacing.** 57 sites were adding 0.1em to a
   9 or 11px small capital, and Championship Manager does none of it — its column
   heads, tab labels, rail entries and title bars are all at normal spacing,

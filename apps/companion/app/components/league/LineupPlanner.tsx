@@ -64,6 +64,7 @@ export default function LineupPlanner({
   players,
   limits,
   fantraxUrl,
+  pending,
 }: {
   team: RosteredTeam;
   /** The squad's football detail, flat and unarranged. Arranging it is this
@@ -74,6 +75,10 @@ export default function LineupPlanner({
   players: LeaguePlayerState[];
   limits: RosterLimits;
   fantraxUrl: string;
+  /** Points Fantrax has not credited yet — a clean sheet is settled at the final
+   *  whistle and FPL has been paying it since the hour mark. Null when there are
+   *  none to preview, and never a nought. */
+  pending: number | null;
 }) {
   const [slots, setSlots] = useState<RosterSlot[]>(() => team.players.map((p) => p.slot));
   // Two ways in, and they are different questions, reached by the same target on
@@ -98,7 +103,7 @@ export default function LineupPlanner({
   // The pitch renders the EDITED slots, so what is on screen is the thing being
   // planned. Rebuilt from the real team so `lineup()` is reused exactly as it is
   // — the planner changes assignments, not players.
-  const { rows, bench } = useMemo(() => {
+  const { rows, bench, shape } = useMemo(() => {
     const bySlot = new Map(slots.map((slot) => [slot.fantraxId, slot]));
     const arranged = lineup({
       ...team,
@@ -121,6 +126,11 @@ export default function LineupPlanner({
         players: line.players.flatMap((p) => detail(p.slot)),
       })),
       bench: arranged.bench.flatMap((p) => detail(p.slot)),
+      // Free, and it has to come from HERE rather than from the server: this is
+      // the edited arrangement, so the shape changes under the reader's thumb as
+      // he moves a man. A formation named on the server would be the one he
+      // started with.
+      shape: arranged.shape,
     };
   }, [team, slots, detailOf]);
 
@@ -168,6 +178,18 @@ export default function LineupPlanner({
 
   return (
     <div className="flex flex-col gap-3">
+      {/* The shape, above the grass, because that is where it is read. It is the
+          first thing Championship Manager says about an eleven, and it moves as
+          the eleven does — a 1-3-4-3 becomes a 1-3-5-2 the moment a midfielder
+          comes on for a forward, which is the whole point of naming it on the
+          screen where the moving happens. */}
+      <div className="flex items-baseline justify-between gap-3 px-1">
+        <span className="numeric text-2xs font-bold text-faint">{shape}</span>
+        {pending === null ? null : (
+          <span className="numeric text-2xs font-semibold text-accent">+{pending}</span>
+        )}
+      </div>
+
       <LineupPitch
         rows={rows}
         bench={bench}

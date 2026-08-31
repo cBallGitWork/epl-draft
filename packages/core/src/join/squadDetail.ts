@@ -81,6 +81,16 @@ export interface LineupDetail {
   /** RESERVE slots, in position order. Separate because the active/reserve split
    *  is the statement a lineup makes, not a filter over one. */
   bench: SquadPlayerDetail[];
+  /** The formation, as `lineup()` counts it — "1-3-4-3". Carried rather than
+   *  recomputed: `lineup()` already returns it and this function was dropping it
+   *  on the floor, so every screen that wanted to name a shape would have had to
+   *  count the rows again and could have disagreed with the pitch above it.
+   *
+   *  A string and never a parsed shape. The commissioner sets the position
+   *  vocabulary, so a 1-5-2-3 is legal here and so is one with a line this app
+   *  has never heard of; what this says is how many men stand in each line, in
+   *  the order the pitch draws them. */
+  shape: string;
 }
 
 export function lineupDetail(
@@ -89,11 +99,12 @@ export function lineupDetail(
   opposition: Map<number, Opposition[]>,
   points: Map<string, number | null> | null,
 ): LineupDetail {
-  const { lines, bench } = lineup(team);
+  const { lines, bench, shape } = lineup(team);
   const detail = (rostered: RosteredPlayer) => playerDetail(rostered, clubs, opposition, points);
   return {
     rows: lines.map((line) => ({ position: line.position, players: line.players.map(detail) })),
     bench: bench.map(detail),
+    shape,
   };
 }
 

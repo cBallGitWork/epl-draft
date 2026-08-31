@@ -25,11 +25,21 @@ export default function Sheet({
   bench,
   lines,
   breakdown,
+  shape,
+  pending,
 }: {
   rows: SquadDetailLine[];
   bench: SquadPlayerDetail[];
   lines: SquadDetailLine[];
   breakdown: Record<string, BreakdownLine[]>;
+  /** The formation, "1-3-4-3". `lineup()` has always counted it and
+   *  `lineupDetail` used to drop it; naming a shape is the first thing
+   *  Championship Manager does with an eleven. */
+  shape: string;
+  /** Points Fantrax has not credited yet — a clean sheet is settled at the final
+   *  whistle and FPL has been paying it since the hour mark. Null when there are
+   *  none to preview, and never a nought. */
+  pending: number | null;
 }) {
   const [view, setView] = useState<View>("pitch");
   const players = lines.reduce((total, line) => total + line.players.length, 0);
@@ -40,7 +50,17 @@ export default function Sheet({
           control does not move down the screen when the gate opens. */}
       <div className="flex items-center justify-between gap-3">
         <ViewToggle view={view} onPick={setView} />
-        <span className="numeric text-2xs text-faint">{players} players</span>
+        <span className="numeric flex items-baseline gap-2 text-2xs text-faint">
+          <span>
+            {shape} · {players} players
+          </span>
+          {/* Kept beside the total rather than folded into it. Fantrax's number
+              stays Fantrax's; this is the bit they have not credited yet — the
+              same treatment the head-to-head board and the Live tab give it. */}
+          {pending === null ? null : (
+            <span className="font-semibold text-accent">+{pending}</span>
+          )}
+        </span>
       </div>
 
       <TeamSheet

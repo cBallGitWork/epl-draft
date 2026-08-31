@@ -41,6 +41,11 @@ export interface MatchupSide {
    *  public yet, both are the panel saying so. */
   pitch: ReactNode;
   list: ReactNode;
+  /** His formation — "1-3-4-3" — or null while his lineup is withheld, which is
+   *  the same condition `pitch` and `list` draw the panel for. It has to be null
+   *  and not an empty string: a shape IS the arrangement, and naming one for a
+   *  side whose eleven is not public yet is the leak the gate exists to stop. */
+  shape: string | null;
 }
 
 export default function MatchupBoard({
@@ -80,11 +85,17 @@ export default function MatchupBoard({
       <div className="flex items-center justify-between gap-3 px-0.5">
         {/* An empty span when there is nothing to say, so the view toggle stays
             at the right edge rather than sliding across to meet it. */}
-        {state === null ? (
+        {/* The open side's shape, beside the round word and changing with the
+            side — the first thing Championship Manager says about an eleven, and
+            free here: `lineupDetail` already counts it. An empty span when there
+            is nothing to say, so the view toggle stays at the right edge rather
+            than sliding across to meet it. */}
+        {state === null && side.shape === null ? (
           <span />
         ) : (
-          <span className="text-2xs font-bold uppercase text-faint">
-            <RoundWord state={state} />
+          <span className="flex items-baseline gap-2 text-2xs font-bold uppercase text-faint">
+            {state === null ? null : <RoundWord state={state} />}
+            {side.shape === null ? null : <span className="numeric">{side.shape}</span>}
           </span>
         )}
         <ViewToggle view={view} onPick={setView} />

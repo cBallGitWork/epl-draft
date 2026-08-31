@@ -18,7 +18,7 @@ import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
 import { getLeagueSquads, teamDisplay } from "../../squads";
 import { planningRound, roundOf } from "../../round";
-import { squadLivePoints } from "../../scoreboard";
+import { pendingByTeam, squadLivePoints } from "../../scoreboard";
 import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
 
@@ -136,6 +136,27 @@ export default async function TeamPage({
   // commissioner renames somebody.
   const names = new Map(team.players.map((rostered) => [rostered.slot.fantraxId, playerName(rostered)]));
 
+  // The one number Fantrax's live feed withholds: a clean sheet is not credited
+  // until the final whistle, so a squad's visible total understates it for the
+  // last half-hour of every match. Two screens already say it — the Live tab's
+  // own tie and the head-to-head board — and this is the third, which is the
+  // screen a manager is actually on when he wonders why his defenders are worth
+  // nothing.
+  //
+  // **`display` and not `squads.display`**, and the distinction is the gate's.
+  // Only ACTIVE players are owed one, so a `+8` beside a squad says a defender is
+  // in the eleven — exactly the fact the gate withholds before a deadline.
+  // `pendingByTeam` refuses on anything but `show === "lineup"`, and the value
+  // handed to it here is THIS team's own answer: your XI is yours all week, a
+  // rival's waits for his period to open.
+  //
+  // Nought is not a preview. A squad owed nothing prints nothing rather than a
+  // `+0`, which would read as a claim that the clean sheets have been counted.
+  const owed = pendingByTeam([team], squads.info?.scoring ?? null, squads.snapshot, display).get(
+    teamId,
+  )?.points;
+  const pending = owed ? owed : null;
+
   return (
     <div className="flex flex-col gap-3">
       {/* The only live-points surface that did not move on a Saturday. Both
@@ -178,6 +199,7 @@ export default async function TeamPage({
           players={planning.players.filter((p) => squadIds.has(p.fantraxId))}
           limits={planning.roster}
           fantraxUrl={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}`}
+          pending={pending}
         />
       ) : board !== null ? (
         /* The gate. Before his lineups lock a rival's XI is not visible — the
@@ -223,6 +245,7 @@ export default async function TeamPage({
           {...lineupDetail(team, clubs, opposition, points)}
           lines={squadDetail(squadUnarranged(team), clubs, opposition, points)}
           breakdown={live?.breakdown ?? {}}
+          pending={pending}
         />
       )}
     </div>

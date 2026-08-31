@@ -205,6 +205,10 @@ export default async function HeadToHeadPage({
       mine: mineHere,
       pitch: sheet("pitch"),
       list: sheet("list"),
+      // Only for a side whose eleven is already on screen. `shown` is the same
+      // condition `sheet` draws the withheld panel on, so a shape can never
+      // outrun the arrangement it describes.
+      shape: shown ? (arranged.get(team.teamId)?.shape ?? null) : null,
     };
   };
 
