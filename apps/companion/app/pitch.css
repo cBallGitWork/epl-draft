@@ -24,11 +24,17 @@
    and 1440 alike**. Two numbers were carrying one fact.
 
    The 2rem off each value is the tab bar's room, which `--page-foot` stopped
-   asking for on the same day. Measured after, on the tightest page — the XI with
-   a bench — the pitch takes 460px at 390×844 with **86px in hand** and 516 above
-   `md` with 72; the gated pitch takes 426 with 259 in hand and 684 above `md`
-   with 57. Every one of them draws inside the screen, which is the invariant
-   `docs/ui/squad.md` states and the only thing these numbers are for. */
+   asking for on the same day.
+
+   **Do not write the measurements down here.** Three of the four numbers that
+   used to sit in this paragraph were stale within the day — a formation line
+   landed above the grass and took 20px out of every one of them — and a budget
+   whose evidence rots is a budget nobody re-checks. `node tools/ui/pitchfit.mjs`
+   walks every squad the served league has at 390, 768, 1024 and 1440 and prints
+   where the grass ends against the fold. **The invariant it guards is that the
+   PITCH clears the fold, not that the page does**: the page scrolls on a phone
+   by design, because the season grid is a second panel under the board. On
+   31 Aug 2026 the tightest of the sixteen readings was 100px clear. */
 :root {
   --pitch-page: 16rem;
 }

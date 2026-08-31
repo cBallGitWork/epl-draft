@@ -190,14 +190,16 @@ the sofa, so the score under fifteen faces sat still through a whole half.
   100px of the screen still in hand; the XI takes 428px with 53px in hand.
   That headroom is the margin against the next band somebody adds above the
   pitch — one appeared mid-change and cost 44px of it.
-- **Re-measured 31 Aug 2026, when the rail replaced the tab bar and
-  `--pitch-page` was re-decided** (one value at every width; the 2rem the bar
-  stopped costing at the foot came off both budgets). At 390×844 the XI now takes
-  460px with **86px in hand** and the gated pitch 426 with 259; above `md` they
-  take 516 and 684, with 72 and 57. The two figures above them — 232 and 382 —
-  are August's and are superseded: the same two pages measure **159px and 298px**
-  of furniture today. Everything still draws inside the screen, which is the
-  invariant; the numbers are only how it is checked.
+- **`node tools/ui/pitchfit.mjs` is how this is checked, and typing the answer
+  in here is how it went wrong.** Every number in this bullet was written by hand
+  on 29 and 31 Aug and every one of them was stale within a day — the rail, the
+  re-decided `--pitch-page` and a formation line above the grass each moved them.
+  The instrument walks every squad the served league has at 390, 768, 1024 and
+  1440 and prints where the grass ends against the fold; it exits non-zero if any
+  of them runs past it. The figures above (232/382 of furniture, 468/512/428 of
+  pitch, 53px in hand) are August's, are superseded, and are kept only because
+  they are what a dated record is for. On 31 Aug the tightest of sixteen readings
+  was **100px clear**, at 768.
 
 ### The list
 

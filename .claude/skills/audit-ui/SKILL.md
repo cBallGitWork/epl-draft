@@ -1,10 +1,10 @@
 ---
 name: audit-ui
-description: Run the deterministic UI instruments — contrast and overflow across every route at both widths, tap targets against the floor each width actually has, section-rail fit on the narrowest phones, and a dialog's open/measure/Escape cycle. Use after any visible change touching more than one route, and before closing a phase.
+description: Run the deterministic UI instruments — contrast and overflow across every route at both widths, tap targets against the floor each width actually has, section-rail fit on the narrowest phones, whether a pitch still clears the fold, and a dialog's open/measure/Escape cycle. Use after any visible change touching more than one route, and before closing a phase.
 argument-hint: "[--base <url>]"
 ---
 
-# The four instruments
+# The five instruments
 
 Deterministic checks that a screenshot cannot make. They need the app up and
 headless Chrome on 9261 — see `/shoot` steps 1 and 2 for both.
@@ -64,7 +64,23 @@ prose checklists asking "are taps `min-h-11`?", and a prose checklist cannot
 measure: this instrument's first run found the front page's contents strip
 shipping 12px targets on the one screen with no other way out of it.
 
-## 4. Dialog — open, measure, Escape
+## 4. Pitchfit — does the grass still clear the fold
+
+```bash
+node tools/ui/pitchfit.mjs
+```
+
+Every squad the served league has, at 390 · 768 · 1024 · 1440, on both budgets —
+the gated view spends `--pitch-page` and an XI with a bench spends
+`.pitch-with-bench`. **The invariant is that the PITCH clears the fold, not that
+the page does**: the page scrolls on a phone by design, because the season grid
+is a second panel under the board.
+
+**Run it after anything that adds a band above a pitch.** `docs/ui/squad.md` has
+asked for this measurement since 29 Aug and it was taken by hand every time,
+which is why three numbers written into `pitch.css` were stale inside a day.
+
+## 5. Dialog — open, measure, Escape
 
 ```bash
 node tools/ui/dialog.mjs <route> [--selector '.pitch button'] [--width 390]
