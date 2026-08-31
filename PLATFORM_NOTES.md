@@ -3861,6 +3861,48 @@ That also collapsed a duplicate request. `/league` was asking Fantrax for its
 standings twice per window — the array for the table, the page for the badges —
 and `app/standings.ts` now reads the page once and hands out both.
 
+## The paper starts rolling — the probes that gate it (31 Aug 2026)
+
+The Gazetta is becoming a rolling paper (the approved plan is
+`planning-for-gazetta-features-quiet-lovelace.md`): prose accumulates as
+stories in `data/editions/paper.json` instead of one column a round replacing
+`latest.json`. Doctrine amendment: **facts are live, prose is published — and
+published prose now accumulates.** Still commit-based, still guard-driven,
+still validated before commit. Four probes ran before any design landed on a
+field, and each one moved the design:
+
+- **A top-scorers page may not read `fetchTeamStats` or pool `FPts`.** Both
+  price a man at his `defaultPosId` — the shallower of his eligible positions —
+  never the roster slot. Live today: Saka season FPts 6 on both surfaces while
+  `getLiveScoringStats.statsMap["04y92"].object1` paid his owner 8 at midfield
+  rates, and 7 of 60 rehearsal roster slots differ from the pool's default. The
+  only slot-priced per-player number Fantrax publishes is the live-scoring
+  statsMap, so player charts read that, per period.
+- **`projectedTotalsMap` is populated days before lock** (11/11 active entries,
+  period 3, four days out) and is entry-identical to
+  `calculatedProjectedTotalsMap` until kickoff. The predictions column reads it
+  at the lock window — never `calculatedProjectedTotalsMap`, which improves
+  itself mid-round and would mark its own homework — and treats a pre-lock read
+  as movable, since it reflects whatever lineup is currently set.
+- **No API read carries the waiver-processing schedule.** Full-text grep of
+  both leagues' `getLeagueInfo` for waiver/claim/process: zero keys. Same
+  precedent as the lineup lock, which lives only on the commissioner's settings
+  page. So the Mercato Wire's trigger is DETECTION — a fresh claim batch in the
+  transactions feed since the last covered key — and the cron merely sweeps
+  Thursday morning because Craig says waivers process Wednesday evening. The
+  day is when we look; the feed is what decides.
+- **Only `EXECUTED` transactions are visible.** Every TRADE and CLAIM_DROP row
+  across 20 daily captures carries `resultCode: "EXECUTED"`, and Fantrax's own
+  tab vocabulary has nowhere to put a pending or declined view. Trade coverage
+  reports completed deals; offer-and-decline gossip has no data and is not
+  attempted. (Gap noted: `resultCode` is on the wire and `raw.ts` does not
+  mirror it — add the optional key when trade coverage lands.)
+- **BBC RSS guids double-cover.** The feed re-lists the same article under
+  positional fragments (`…/cn5d7k4nkyvo#0`, `#1`), five duplicates in one
+  77-item fixture (`packages/core/src/news/__fixtures__/bbc-football.xml`).
+  The ledger's news key is the article URL with the fragment stripped, never
+  the raw guid.
+
 ## Season log
 
 - 2026-08-31: **Every control on the desk became a Championship Manager plate,
