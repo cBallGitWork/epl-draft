@@ -35,8 +35,9 @@ interface EditionSection {
   body: string;
 }
 
-/** One tie, called or reported in a line. */
-interface EditionTie {
+/** One tie, called or reported in a line. Shared with `story.ts`, whose ties
+ *  are the same object filed under a rolling story. */
+export interface EditionTie {
   /** Both team ids, so the page joins to its own names rather than printing the
    *  writer's copy of them — a name typed by a model is a name that goes stale
    *  the day somebody renames their team. */
@@ -155,7 +156,9 @@ export function normalizePublished(parsed: unknown): PublishedEdition | null {
   };
 }
 
-function once<T>(items: T[], keyOf: (item: T) => string): T[] {
+/** First wins — a second attempt at the same key is a retry, not a sequel.
+ *  Exported for `story.ts`, which refuses repeats at the same edge. */
+export function once<T>(items: T[], keyOf: (item: T) => string): T[] {
   const seen = new Set<string>();
   return items.filter((item) => {
     const key = keyOf(item);
@@ -175,7 +178,7 @@ function isSection(value: unknown): value is EditionSection {
   );
 }
 
-function isTie(value: unknown): value is EditionTie {
+export function isTie(value: unknown): value is EditionTie {
   const tie = value as Partial<EditionTie>;
   return (
     typeof tie?.homeTeamId === "string" &&

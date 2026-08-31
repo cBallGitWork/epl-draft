@@ -1,0 +1,230 @@
+import { type EditionTie, isTie, once } from "./published";
+
+// The rolling paper: prose as a stack of stories rather than one column a round.
+//
+// `published.ts` records the original contract — facts are live, prose is
+// published — and this file is its successor's shape: published prose now
+// ACCUMULATES. A story is filed when something happened, joins the stack in
+// `data/editions/paper.json`, and leaves it by expiry, supersession or the cap
+// (`frontPage.ts` owns all three). Still commit-based, still validated at this
+// edge from both directions, still never reaching a clock or the network.
+
+/** What kind of story this is. The kind decides its voice, its brief, its place
+ *  in the running order and which inside page prints it — so the list is ours,
+ *  and a kind the page does not know simply does not render. */
+export type StoryKind =
+  | "round-preview"
+  | "round-report"
+  | "match-report"
+  | "fixture-preview"
+  | "tie-call"
+  | "tie-report"
+  | "predictions"
+  | "eleven"
+  | "power-ranking"
+  | "wire"
+  | "dodgers"
+  | "presser"
+  | "studio"
+  | "news"
+  | "table"
+  | "numbers";
+
+const STORY_KINDS: readonly StoryKind[] = [
+  "round-preview", "round-report", "match-report", "fixture-preview",
+  "tie-call", "tie-report", "predictions", "eleven", "power-ranking",
+  "wire", "dodgers", "presser", "studio", "news", "table", "numbers",
+];
+
+/** A quote in a story that is written as speech — the press room and the
+ *  studio, the two places invented quotes are the licensed joke. */
+interface StoryQuote {
+  /** Who is talking, as printed. */
+  speaker: string;
+  /** The manager the persona stands for, when there is one to join names to. */
+  teamId?: string;
+  line: string;
+}
+
+/** One team's entry in a power ranking. */
+interface StoryRank {
+  teamId: string;
+  /** Places moved since last time; 0 is held, negative is fell. */
+  move: number;
+  line: string;
+}
+
+/** One caption keyed to a chart or figure the page draws itself. */
+interface StoryCaption {
+  key: string;
+  line: string;
+}
+
+interface StoryQuizItem {
+  q: string;
+  a: string;
+}
+
+/** The structured cargo some kinds carry beside their prose. Optional per
+ *  member: a presser has quotes and nothing else, a wire may carry a quiz. */
+export interface StoryExtras {
+  quotes?: StoryQuote[];
+  ranks?: StoryRank[];
+  captions?: StoryCaption[];
+  quiz?: StoryQuizItem[];
+}
+
+/** One filed story, as committed.
+ *
+ *  Every field is optional-shaped at the edge (`normalizeStory`) because this
+ *  arrives as JSON a model helped write: the schema is a request, not a
+ *  guarantee, and the page renders whatever survives rather than throw. */
+export interface PublishedStory {
+  /** Ours, computed by the writer, never the model's — it is the dedupe key,
+   *  the archive filename and the anchor the front page links to. */
+  slug: string;
+  kind: StoryKind;
+  /** Same reason `PublishedEdition` carries it: CI files with its environment's
+   *  league and the app serves its own, and both number periods from the same
+   *  Friday — this is the whole rehearsal gate. */
+  leagueId: string;
+  period: number;
+  gameweek: number;
+  /** ISO instant filed. Shown — a reader is entitled to know how old an
+   *  opinion is — and the recency half of the running order. */
+  filedAt: string;
+  /** ISO instant after which the story is not printed, stamped by the writer
+   *  from facts (a preview dies at its kickoff). Null means it leaves by
+   *  supersession or the cap instead. */
+  expiresAt: string | null;
+  /** Which named edition it went out under — "The Pink 'Un" — display copy. */
+  edition: string;
+  byline: string;
+  /** The wordplay headline. */
+  headline: string;
+  /** The same story in plain words, so the pun is never the only telling. */
+  deck: string;
+  /** Paragraphs, split on blank lines by whatever prints it. */
+  body: string;
+  /** The covered-keys this story spends — the ledger's join for dedupe and the
+   *  subject half of supersession. */
+  subjects: string[];
+  /** The splash picture, when CI generated one. A committed file under the
+   *  app's public/, referenced here and rendered only through the newsprint
+   *  treatment. */
+  image: { src: string; alt: string } | null;
+  ties?: EditionTie[];
+  extras?: StoryExtras;
+}
+
+/** The paper file as committed: every story currently in print. */
+export interface PublishedPaper {
+  updatedAt: string;
+  stories: PublishedStory[];
+}
+
+/** Coerce one story or refuse it. Refusal is ordinary — a malformed story is
+ *  "there is no such story", never a thrown page. */
+export function normalizeStory(parsed: unknown): PublishedStory | null {
+  if (parsed === null || typeof parsed !== "object") return null;
+  const raw = parsed as Partial<PublishedStory>;
+
+  // The five that decide whether this is a story at all: unmatchable to a
+  // round, unattributable to a league, unaddressable, or with nothing to
+  // print — each reads as "no story".
+  if (typeof raw.slug !== "string" || raw.slug === "") return null;
+  if (!STORY_KINDS.includes(raw.kind as StoryKind)) return null;
+  if (typeof raw.leagueId !== "string" || raw.leagueId === "") return null;
+  if (typeof raw.period !== "number" || typeof raw.gameweek !== "number") return null;
+  if (typeof raw.headline !== "string" || raw.headline === "") return null;
+
+  const image =
+    raw.image !== null &&
+    typeof raw.image === "object" &&
+    typeof raw.image.src === "string" &&
+    raw.image.src !== "" &&
+    typeof raw.image.alt === "string"
+      ? { src: raw.image.src, alt: raw.image.alt }
+      : null;
+
+  return {
+    slug: raw.slug,
+    kind: raw.kind as StoryKind,
+    leagueId: raw.leagueId,
+    period: raw.period,
+    gameweek: raw.gameweek,
+    filedAt: typeof raw.filedAt === "string" ? raw.filedAt : "",
+    expiresAt: typeof raw.expiresAt === "string" && raw.expiresAt !== "" ? raw.expiresAt : null,
+    edition: typeof raw.edition === "string" ? raw.edition : "",
+    byline: typeof raw.byline === "string" ? raw.byline : "",
+    headline: raw.headline,
+    deck: typeof raw.deck === "string" ? raw.deck : "",
+    body: typeof raw.body === "string" ? raw.body : "",
+    subjects: Array.isArray(raw.subjects)
+      ? raw.subjects.filter((s): s is string => typeof s === "string" && s !== "")
+      : [],
+    image,
+    ties: once(Array.isArray(raw.ties) ? raw.ties.filter(isTie) : [], (t) => `${t.homeTeamId}-${t.awayTeamId}`),
+    extras: normalizeExtras(raw.extras),
+  };
+}
+
+/** The paper as the app (and the writer, re-reading its own output) sees it:
+ *  parsed, story-by-story survivable, and about ONE league — a story filed
+ *  about any other league is not this paper, whatever else it claims. */
+export function normalizePaper(parsed: unknown, leagueId: string): PublishedStory[] {
+  if (parsed === null || typeof parsed !== "object") return [];
+  const raw = parsed as Partial<PublishedPaper>;
+  if (!Array.isArray(raw.stories)) return [];
+
+  const stories = raw.stories
+    .map(normalizeStory)
+    .filter((story): story is PublishedStory => story !== null && story.leagueId === leagueId);
+  // One slug, one story: the slug is the archive name and the page anchor, and
+  // a repeated one is a retry that got committed twice. Newest filing wins,
+  // which is the opposite of `once` — a rewrite supersedes its draft.
+  return once([...stories].reverse(), (story) => story.slug).reverse();
+}
+
+function normalizeExtras(raw: unknown): StoryExtras | undefined {
+  if (raw === null || typeof raw !== "object") return undefined;
+  const extras = raw as Partial<StoryExtras>;
+  const out: StoryExtras = {};
+
+  const quotes = Array.isArray(extras.quotes)
+    ? extras.quotes.filter(
+        (q): q is StoryQuote =>
+          typeof q?.speaker === "string" && q.speaker !== "" &&
+          typeof q.line === "string" && q.line !== "" &&
+          (q.teamId === undefined || typeof q.teamId === "string"),
+      )
+    : [];
+  if (quotes.length > 0) out.quotes = quotes;
+
+  const ranks = Array.isArray(extras.ranks)
+    ? extras.ranks.filter(
+        (r): r is StoryRank =>
+          typeof r?.teamId === "string" && r.teamId !== "" &&
+          typeof r.move === "number" && typeof r.line === "string",
+      )
+    : [];
+  if (ranks.length > 0) out.ranks = once(ranks, (r) => r.teamId);
+
+  const captions = Array.isArray(extras.captions)
+    ? extras.captions.filter(
+        (c): c is StoryCaption =>
+          typeof c?.key === "string" && c.key !== "" && typeof c.line === "string" && c.line !== "",
+      )
+    : [];
+  if (captions.length > 0) out.captions = once(captions, (c) => c.key);
+
+  const quiz = Array.isArray(extras.quiz)
+    ? extras.quiz.filter(
+        (item): item is StoryQuizItem =>
+          typeof item?.q === "string" && item.q !== "" && typeof item.a === "string" && item.a !== "",
+      )
+    : [];
+  if (quiz.length > 0) out.quiz = quiz;
+
+  return Object.keys(out).length > 0 ? out : undefined;
+}

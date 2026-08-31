@@ -1,68 +1,49 @@
-import { mkdirSync, existsSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
-  type Bridge,
   type EditionKind,
-  type FootballSnapshot,
-  type LeagueInfo,
   type PublishedEdition,
-  datedKickoffs,
+  type PublishedStory,
   buildBrief,
-  fetchDraftResults,
+  datedKickoffs,
+  decided,
   fetchLeagueInfo,
-  fetchLiveScoring,
-  fetchTeamRosters,
-  fetchTransactions,
   firstKickoff,
   gameweekStarted,
   getFootballSnapshot,
+  isCovered,
   locksAt,
-  mapDraftPicks,
   mapLeagueInfo,
-  mapLiveScores,
-  mapProjectedTotals,
-  mapTeamRosters,
-  mapTransactions,
+  markPreview,
   normalizePublished,
   periodGameweeks,
-  periodPairings,
-  resolveRosters,
   roundState,
-  availability,
-  deals,
   stories,
-  teamOfTheWeek,
-  wasFielded,
 } from "@epl/core";
-import { EDITIONS_ROOT } from "./paths";
 import { BYLINE, PREVIEW, REPORT } from "./edition/voice";
-import mapping from "../data/mappings/fantrax.json";
+import { gatherRoundFacts } from "./edition/facts";
+import { storyOfEdition, writeColumn } from "./edition/newsroom";
+import { persistFiling, readLedger, readPaperStories } from "./edition/persist";
 
-// The columnist, run from CI twice a week.
+// The columnist, run from CI on a wide cron net.
 //
-// **Facts are live and prose is published.** Everything countable on the front
-// page updates on the app's thirty-second poll; a column cannot, because a
-// column rewritten every thirty seconds is not a column and a sentence about a
-// score that has since moved is worse than no sentence. So the writing happens
-// here, off the app entirely, and the result is committed as data — which
-// triggers the build that bakes it into the page.
+// **Facts are live and prose is published — and published prose accumulates.**
+// Everything countable on the front page updates on the app's thirty-second
+// poll; a column cannot, so the writing happens here, off the app entirely, and
+// each filing joins the rolling paper in `data/editions/paper.json` — which the
+// commit bakes into the page.
 //
 // It is safe to run as often as you like. Every guard below exits 0 rather than
 // failing, in cost order, so the common case is a cron that reads one snapshot
 // and stops: GitHub's schedules are late or skipped often enough that the only
-// reliable design is to fire repeatedly and let the guards decide.
+// reliable design is to fire repeatedly and let the guards decide. The ledger,
+// not the filesystem, is the memory of what was already filed.
 //
 // **It never commits anything it has not validated.** These commits ride
 // `GITHUB_TOKEN` and so run no CI beside them, while changing what the app
-// renders — so the shape check here is the only gate there is, and a model
-// returning something unrenderable must cost us a red workflow rather than a
-// broken front page.
-
-const API = "https://api.anthropic.com/v1/messages";
-const MODEL = process.env.GAZETTA_MODEL ?? "claude-opus-4-8";
-const MAX_TOKENS = 8000;
+// renders — so the shape checks here and in `edition/persist.ts` are the only
+// gate there is, and a model returning something unrenderable must cost us a
+// red workflow rather than a broken front page.
 
 /** Prints the brief and the column instead of writing either. The whole script
  *  bar the commit, so the prompt can be read before it costs anything. */
@@ -115,22 +96,53 @@ async function main(): Promise<void> {
     );
   }
 
-  // The league is in the filename, not only in the payload. Without it a
-  // rehearsal edition filed on the Friday BLOCKS the real one — `existsSync`
-  // below would find it and the run would report "already filed" for a paper
-  // that is about a different competition.
-  const archive = join(EDITIONS_ROOT, `${FANTRAX_LEAGUE_ID}-gw${snapshot.gameweek}-${kind}.json`);
-  if (existsSync(archive)) return say(`Already filed: ${archive}`);
+  // The covered-key is the memory of what was filed — per league, because the
+  // ledger is shared by both and a rehearsal filing must not block the real
+  // one. `existsSync` on an archive used to be this guard; the ledger replaced
+  // it because a rolling paper files many stories a week and the keys are the
+  // one grammar all of them share.
+  const spent = `${kind === "report" ? "round-report" : "round-preview"}:gw${snapshot.gameweek}`;
+  const ledger = readLedger();
+  if (isCovered(ledger, FANTRAX_LEAGUE_ID, spent)) return say(`Already filed: ${spent}`);
 
-  const brief = await gather(kind, info, snapshot, round.period);
+  const facts = await gatherRoundFacts(info, snapshot, round.period);
+  const paper = readPaperStories();
+
+  const brief = buildBrief({
+    kind,
+    gameweek: snapshot.gameweek,
+    period: round.period,
+    teams: info.teams.map((team) => ({ teamId: team.teamId, name: team.name })),
+    pairings: facts.pairings,
+    scores: facts.scores,
+    projected: facts.projected,
+    stories:
+      kind === "report" && facts.eleven !== null
+        ? stories(facts.pairings, facts.scores, facts.fielded ? facts.eleven : null, facts.business, round.period)
+        : [],
+    eleven: facts.eleven,
+    fielded: facts.fielded,
+    deals: facts.business,
+    doubts: facts.doubts,
+    pedigree: facts.pedigree,
+    // The report owns last week's calls: the preview it answers is still on
+    // file (the report's own filing is what retires it), and the results are
+    // pure comparison — a pundit nobody marks is a pundit who never has to be
+    // right.
+    marked:
+      kind === "report"
+        ? markPreview(previewOnFile(paper, round.period), decided(facts.pairings, facts.scores))
+        : null,
+  });
+
   if (DRY_RUN) {
     console.log(brief);
     console.log("\n--- dry run: no column written ---");
     return;
   }
 
-  const column = await write(kind === "report" ? REPORT : PREVIEW, brief);
-  const edition = normalizePublished({
+  const column = await writeColumn(kind === "report" ? REPORT : PREVIEW, brief);
+  const edition = {
     ...column,
     kind,
     leagueId: FANTRAX_LEAGUE_ID,
@@ -138,117 +150,45 @@ async function main(): Promise<void> {
     gameweek: snapshot.gameweek,
     filedAt: new Date().toISOString(),
     byline: BYLINE[kind],
-  });
+  };
   // A column we cannot render is a failed run, never a committed one: the
   // fallback is the facts-only paper the app already prints, and it is better
-  // than a broken page.
-  if (edition === null) throw new Error("The column did not come back in a shape the page can print.");
+  // than a broken page. `storyOfEdition` validates the story shape the same way.
+  const published = normalizePublished(edition);
+  if (published === null) throw new Error("The column did not come back in a shape the page can print.");
 
-  mkdirSync(EDITIONS_ROOT, { recursive: true });
-  const json = `${JSON.stringify(edition, null, 2)}\n`;
-  writeFileSync(archive, json);
-  writeFileSync(join(EDITIONS_ROOT, "latest.json"), json);
-  say(`Filed ${kind} for gameweek ${snapshot.gameweek}: "${edition.headline}"`);
+  const story = storyOfEdition(published, spent, kickoff);
+  persistFiling(
+    { story, mirror: published, spentKeys: [spent], threads: [] },
+    ledger,
+    new Date().toISOString(),
+  );
+  say(`Filed ${kind} for gameweek ${snapshot.gameweek}: "${published.headline}"`);
 }
 
-/** Everything the writer is allowed to know. Read here, at the edge, so
- *  `buildBrief` stays pure and testable. */
-async function gather(
-  kind: EditionKind,
-  info: LeagueInfo,
-  snapshot: FootballSnapshot,
-  period: number,
-): Promise<string> {
-  const gameweek = snapshot.gameweek;
-  const [live, rosters, claims, trades, draft] = await Promise.all([
-    fetchLiveScoring(FANTRAX_LEAGUE_ID, period),
-    fetchTeamRosters(FANTRAX_LEAGUE_ID).catch(() => null),
-    fetchTransactions(FANTRAX_LEAGUE_ID, "CLAIM_DROP").catch(() => null),
-    fetchTransactions(FANTRAX_LEAGUE_ID, "TRADE").catch(() => null),
-    fetchDraftResults(FANTRAX_LEAGUE_ID).catch(() => null),
-  ]);
-
-  const scores = new Map(mapLiveScores(live).map((score) => [score.teamId, score]));
-  const projected = new Map(mapProjectedTotals(live).map((guess) => [guess.teamId, guess]));
-  const pairings = periodPairings(info.matchups, info.teams, period);
-
-  // The squads, and with them the two things only a join can say: who was in the
-  // week's eleven, and whether the arrangement we hold is the one that was
-  // actually fielded.
-  // `as Bridge` and not a looser cast: a JSON import widens `matchedBy` to
-  // `string` and the compiler cannot see that the writer only emits four
-  // literals. Asserted exactly as `apps/companion/app/squads.ts` asserts it, and
-  // for the same reason.
-  const squads =
-    rosters === null ? null : resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge);
-  const eleven = squads === null ? null : teamOfTheWeek(squads.teams, info.roster);
-  const fielded = squads !== null && wasFielded(squads, period);
-
-  const business = deals([
-    ...(claims === null ? [] : mapTransactions(claims, "CLAIM_DROP")),
-    ...(trades === null ? [] : mapTransactions(trades, "TRADE")),
-  ]);
-
-  return buildBrief({
-    kind,
-    gameweek: snapshot.gameweek,
-    period,
-    teams: info.teams.map((team) => ({ teamId: team.teamId, name: team.name })),
-    pairings,
-    scores,
-    projected,
-    stories:
-      kind === "report" && eleven !== null
-        ? stories(pairings, scores, fielded ? eleven : null, business, period)
-        : [],
-    eleven: eleven !== null && eleven.picks.length > 0 ? eleven : null,
-    fielded,
-    deals: business,
-    doubts: squads === null ? [] : availability(squads.teams),
-    // Where each man was taken. Empty until a draft completes, which is the real
-    // league's state until 10 Oct — and an empty map means the brief says
-    // nothing about pedigree rather than calling every squad undrafted.
-    pedigree: new Map(
-      (draft === null ? [] : mapDraftPicks(draft)).map((taken) => [taken.fantraxId, taken]),
-    ),
-    // Marking last week's calls needs last week's edition as well as this
-    // week's results — a second read of a second file, and not wired.
-    marked: null,
-  });
-}
-
-/** One call, by fetch. No SDK: CODE_RULES §2 says no dependency a small local
- *  function would cover, and this is twenty lines. */
-async function write(system: string, brief: string): Promise<Record<string, unknown>> {
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) throw new Error("ANTHROPIC_API_KEY is not set. The column is written in CI, never on Vercel.");
-
-  const response = await fetch(API, {
-    method: "POST",
-    headers: {
-      "x-api-key": key,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: MAX_TOKENS,
-      system,
-      messages: [{ role: "user", content: brief }],
-    }),
-  });
-  if (!response.ok) throw new Error(`Anthropic ${response.status}: ${await response.text()}`);
-
-  const body = (await response.json()) as {
-    stop_reason?: string;
-    content?: { type?: string; text?: string }[];
+/** This round's preview, as filed — the report marks its calls. Only what
+ *  `markPreview` reads is reconstructed; the rest of the old shape is gone. */
+function previewOnFile(paper: PublishedStory[], period: number): PublishedEdition | null {
+  const preview = paper.find(
+    (story) =>
+      story.leagueId === FANTRAX_LEAGUE_ID &&
+      story.kind === "round-preview" &&
+      story.period === period,
+  );
+  if (preview === undefined) return null;
+  return {
+    kind: "preview",
+    leagueId: preview.leagueId,
+    period: preview.period,
+    gameweek: preview.gameweek,
+    filedAt: preview.filedAt,
+    byline: preview.byline,
+    headline: preview.headline,
+    deck: preview.deck,
+    intro: "",
+    sections: [],
+    ties: preview.ties ?? [],
   };
-  // A truncated column is a JSON parse away from garbage, and the parse would
-  // fail with a message about a bracket rather than about a limit.
-  if (body.stop_reason !== "end_turn") throw new Error(`Stopped on ${body.stop_reason}, not a finished column.`);
-
-  const text = body.content?.find((block) => block.type === "text")?.text ?? "";
-  return JSON.parse(text.trim().replace(/^```(?:json)?\n?|```$/g, "")) as Record<string, unknown>;
 }
 
 function say(message: string): void {

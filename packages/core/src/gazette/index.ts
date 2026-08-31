@@ -12,10 +12,15 @@ export { availability } from "./availability";
 export { buildBrief } from "./brief";
 export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
-export { editionMatches, normalizePublished } from "./published";
-export { stories } from "./stories";
+export { MAX_PAPER_STORIES, composePaper } from "./frontPage";
+export { isCovered, normalizeLedger, recordCoverage } from "./ledger";
+export { editionMatches, markPreview, normalizePublished } from "./published";
+export { normalizePaper, normalizeStory } from "./story";
+export { decided, stories } from "./stories";
 export { teamOfTheWeek } from "./teamOfTheWeek";
+export type { Ledger, ThreadUpdate } from "./ledger";
 export type { EditionKind, PublishedEdition } from "./published";
+export type { PublishedPaper, PublishedStory, StoryKind } from "./story";
 export type {
   AvailabilityNote,
   Deadline,
