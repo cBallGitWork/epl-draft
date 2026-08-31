@@ -32,6 +32,7 @@ import {
   teamOfTheWeek,
   wasFielded,
 } from "@epl/core";
+import { BBC_FOOTBALL, affectedBy, fetchFeed, mapNews, type Affected, type NewsItem } from "@epl/core";
 import mapping from "../../data/mappings/fantrax.json";
 
 // Everything the writer is allowed to know, read here at the edge so the brief
@@ -58,6 +59,9 @@ export interface RoundFacts {
    *  else reads it. Empty when the standings read refused, which costs that
    *  column and no other. */
   table: StandingsRow[];
+  /** Wire items that name a man somebody in this league holds, freshest
+   *  first. Triaged here so the newsdesk sees only what has a stake in it. */
+  news: { item: NewsItem; affected: Affected[] }[];
 }
 
 export async function gatherRoundFacts(
@@ -65,7 +69,7 @@ export async function gatherRoundFacts(
   snapshot: FootballSnapshot,
   period: number,
 ): Promise<RoundFacts> {
-  const [live, rosters, claims, trades, draft, standingsPage, standingsRecords] = await Promise.all([
+  const [live, rosters, claims, trades, draft, standingsPage, standingsRecords, wire] = await Promise.all([
     fetchLiveScoring(FANTRAX_LEAGUE_ID, period),
     fetchTeamRosters(FANTRAX_LEAGUE_ID).catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "CLAIM_DROP").catch(() => null),
@@ -76,6 +80,9 @@ export async function gatherRoundFacts(
     // reads for the same reason.
     fetchStandingsPage(FANTRAX_LEAGUE_ID).catch(() => null),
     fetchStandings(FANTRAX_LEAGUE_ID).catch(() => null),
+    // The wire is the one read that is nobody's provider: a feed we cannot
+    // fetch costs the paper its news section and nothing else.
+    fetchFeed(BBC_FOOTBALL).catch(() => null),
   ]);
 
   // The squads, and with them the two things only a join can say: who was in the
@@ -113,6 +120,14 @@ export async function gatherRoundFacts(
       standingsPage === null || standingsRecords === null
         ? []
         : mapStandings(standingsPage, standingsRecords),
+    news:
+      wire === null || squads === null
+        ? []
+        : mapNews(wire)
+            .map((item) => ({ item, affected: affectedBy(item, squads.teams) }))
+            // An item about nobody we hold is not our story, and filing it
+            // would be the paper reprinting the BBC.
+            .filter((story) => story.affected.length > 0),
     pedigree: new Map(
       (draft === null ? [] : mapDraftPicks(draft)).map((taken) => [taken.fantraxId, taken]),
     ),

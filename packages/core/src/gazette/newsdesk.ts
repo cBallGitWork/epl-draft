@@ -46,6 +46,9 @@ export interface DeskState {
   /** Deals in the wire's trailing window. Nought is a quiet week and files no
    *  column — the paper does not manufacture business. */
   dealsInWindow: number;
+  /** Wire items that name a man somebody in the league holds, freshest first.
+   *  Already triaged: an item with no stake in our league never reaches here. */
+  news: readonly { key: string; slug: string }[];
 }
 
 /** Fixtures per round that earn their own report. Four of ten: below the
@@ -57,6 +60,11 @@ export const MATCH_REPORTS_PER_ROUND = 4;
  *  The eleven and the rankings are what the league argues about; the sketches
  *  are the last thing in and the first thing cut on a busy day. */
 const MONDAY_SET: StoryKind[] = ["eleven", "power-ranking", "dodgers", "studio", "presser"];
+
+/** How many wire stories one firing may offer the cap. Two: the desk looks
+ *  every half hour and a transfer-deadline afternoon would otherwise fill the
+ *  paper with other people's news. */
+const NEWS_PER_FIRING = 2;
 
 /** How close a kickoff must be before a preview piece files. Half a day: the
  *  Team Sheet's Friday sweep catches the weekend, and this catches tonight's
@@ -93,6 +101,13 @@ export function newsdesk(
   // nothing new to say however many deals landed.
   if (desk.dealsInWindow > 0) {
     want({ kind: "wire", key: `wire:through-gw${desk.gameweek}`, slug: `gw${desk.gameweek}-wire` });
+  }
+
+  // News files whenever the wire brings something about a man we hold. Its key
+  // is the ARTICLE — fragment stripped, so the same story re-listed as it
+  // moves up the feed is not covered twice.
+  for (const story of desk.news.slice(0, NEWS_PER_FIRING)) {
+    want({ kind: "news", key: `news:${story.key}`, slug: story.slug });
   }
 
   // Calls only while the round is being played: after the last whistle the

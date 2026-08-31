@@ -23,6 +23,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   stakes: [],
   ties: [],
   dealsInWindow: 0,
+  news: [],
   ...over,
 });
 

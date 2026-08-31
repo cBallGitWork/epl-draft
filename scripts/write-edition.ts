@@ -94,6 +94,11 @@ async function main(): Promise<void> {
         facts.pairings,
         clubs,
       ),
+      dealsInWindow: facts.business.length,
+      news: facts.news.map((story) => ({
+        key: story.item.key,
+        slug: `news-${story.item.key.split("/").pop() ?? story.item.key}`,
+      })),
       ties: facts.pairings.map((pairing) => ({
         homeTeamId: pairing.home.teamId,
         awayTeamId: pairing.away.teamId,
@@ -115,6 +120,7 @@ async function main(): Promise<void> {
     clubs,
     threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [],
     info,
+    table: facts.table,
     period: round.period,
     kickoff,
     marked:

@@ -21,6 +21,10 @@ export {
   buildWireBrief,
 } from "./briefs/columns";
 export { buildPresserBrief, buildStudioBrief } from "./briefs/sketches";
+export { buildNewsBrief } from "./briefs/news";
+export { affectedBy } from "./newsTriage";
+export type { NewsAngle } from "./briefs/news";
+export type { Affected } from "./newsTriage";
 export { dodgers } from "./dodgers";
 export { markCalls, predictionTies } from "./predictions";
 export { powerRows } from "./powerRanking";

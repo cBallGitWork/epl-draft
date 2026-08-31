@@ -14,12 +14,14 @@ import {
 } from "@epl/core";
 import { fixturePreviewBrief, matchReportBrief, tieCallBrief } from "./assemble";
 import { columnBrief } from "./columns";
+import { newsBrief } from "./news";
 import type { RoundFacts } from "./facts";
 import { storyOfColumn, storyOfEdition } from "./newsroom";
 import { STORY_BYLINE, editionName } from "./voice/bylines";
 import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, PREDICTIONS, WIRE } from "./voice/columns";
 import { PRESSER, STUDIO } from "./voice/sketches";
+import { NEWS } from "./voice/news";
 import { PREVIEW, REPORT } from "./voice/rounds";
 
 // One assignment in, one prepared desk out: which voice writes it, from which
@@ -89,6 +91,8 @@ export function prepare(assignment: Assignment, ctx: DeskContext): { system: str
         ? fixturePreviewBrief(assignment, ctx.snapshot, ctx.facts, ctx.clubs, ctx.threads)
         : assignment.kind === "tie-call"
           ? tieCallBrief(assignment, ctx.snapshot.gameweek, ctx.facts, ctx.threads)
+          : assignment.kind === "news"
+            ? newsBrief(assignment, ctx.facts, ctx.threads)
           : columnBrief(assignment, {
               gameweek: ctx.snapshot.gameweek,
               facts: ctx.facts,
@@ -117,6 +121,7 @@ const VOICE: Partial<Record<Assignment["kind"], string>> = {
   "power-ranking": POWER_RANKING,
   dodgers: DODGERS,
   wire: WIRE,
+  news: NEWS,
   presser: PRESSER,
   studio: STUDIO,
 };
