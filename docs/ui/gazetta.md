@@ -113,8 +113,17 @@ owns watching. The scrollbar is hidden; the cut-off ninth cell is what says
 "more". The recorded fallback, if the scroller fails tapfit or the eye at 390:
 a stack of one-line rows at desk density.
 
-**While a ball is in the air, your tie is promoted to a full-size row above
-the strip** — figures at `text-4xl`, the old splash's size. The first cut
+**While a ball is in the air, your tie is promoted to a scoreline banner above
+the strip**, set the way a Saturday football paper sets the match it exists
+for: the two names stacked in the display face, a dotted leader running out to
+each figure, the figures at `text-4xl`, and a line beneath naming who is still
+to come. It is *The Pink*'s banner — `WEST HAM ......... 2` — and the leader is
+a dotted border on a growing span rather than a run of full stops, so it takes
+exactly the room left at any name length and can never wrap.
+
+The names are `paper-display` (Fraunces) and never `font-display`: Archivo
+Narrow is the FIGURE face in both registers (DESIGN §6), and a name set in it
+is a name wearing a number's clothes. The first cut
 shrank it to 12px under a 34px headline, and the register warden called it:
 PRODUCT.md's first principle says the live number outranks everything on
 screen while a match runs, and it outranks the look. Between kickoffs the

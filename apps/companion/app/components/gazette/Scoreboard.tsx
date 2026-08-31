@@ -73,8 +73,14 @@ export default function Scoreboard({
   );
 }
 
-/** Your tie while football is on: the live number at the size the principle
- *  asks for, yours on the left whoever Fantrax calls home. */
+/** Your tie while football is on, set the way a Saturday football paper sets
+ *  the match it exists for: the two names stacked, a dotted leader running out
+ *  to each figure, and the figures as large as the sheet allows. It is the
+ *  Pink's scoreline banner — `WEST HAM ......... 2` — and it is the one thing
+ *  on this page unambiguously about YOU.
+ *
+ *  Yours on top whoever Fantrax calls home: there is no ground here, and a
+ *  manager reads his own score first. */
 function Yours({
   pairing,
   scores,
@@ -86,27 +92,77 @@ function Yours({
 }) {
   const [team, opponent] =
     pairing.home.teamId === mine ? [pairing.home, pairing.away] : [pairing.away, pairing.home];
-  const points = scores.get(team.teamId)?.points ?? null;
-  const other = scores.get(opponent.teamId)?.points ?? null;
+  const yours = scores.get(team.teamId);
+  const theirs = scores.get(opponent.teamId);
 
   return (
-    <Link
-      href={`/league/matchups/${team.teamId}`}
-      className="flex min-h-11 items-center gap-3 py-2"
-    >
-      <span className="min-w-0 flex-1 truncate font-bold text-accent">{team.name}</span>
-      <span className="flex shrink-0 items-baseline gap-2">
-        <Changed value={points}>
-          <ScoreFigure points={points} other={other} className="numeric text-4xl font-bold leading-none" />
-        </Changed>
-        <span className="numeric text-sm text-faint">v</span>
-        <Changed value={other}>
-          <ScoreFigure points={other} other={points} className="numeric text-4xl font-bold leading-none" />
-        </Changed>
+    <Link href={`/league/matchups/${team.teamId}`} className="flex flex-col py-2">
+      <ScoreLine name={team.name} score={yours} other={theirs} yours />
+      <ScoreLine name={opponent.name} score={theirs} other={yours} />
+      {/* The line a scoreline cannot carry: who is still to come. Absence here
+          is "Fantrax did not say", never "nobody left" — the rule three
+          screens have already relearned, and the one that decides whether a
+          tie is over. */}
+      <span className="pt-1 font-sans text-3xs uppercase tracking-[0.16em] text-faint">
+        {toPlayLine(team.name, yours?.toPlay ?? null, opponent.name, theirs?.toPlay ?? null)}
       </span>
-      <span className="min-w-0 flex-1 truncate text-right text-muted">{opponent.name}</span>
     </Link>
   );
+}
+
+/** One side of the banner: name, leader, figure. */
+function ScoreLine({
+  name,
+  score,
+  other,
+  yours = false,
+}: {
+  name: string;
+  score: LiveTeamScore | undefined;
+  other: LiveTeamScore | undefined;
+  yours?: boolean;
+}) {
+  const points = score?.points ?? null;
+
+  return (
+    <span className="flex items-baseline gap-2">
+      {/* `paper-display` and not `font-display`: Archivo Narrow is the FIGURE
+          face in both registers (DESIGN §6), and a name set in it would be a
+          name wearing a number's clothes. The paper's display type is
+          Fraunces, and a scoreline banner is display type. */}
+      <span
+        className={`paper-display min-w-0 shrink truncate text-2xl font-black leading-none ${
+          yours ? "text-accent" : "text-ink"
+        }`}
+      >
+        {name}
+      </span>
+      {/* The dotted leader. A border on a growing span rather than a run of
+          full stops: it takes exactly the room that is left, at any name
+          length, and can never wrap onto a second line. */}
+      <span className="min-w-4 flex-1 translate-y-[-0.25em] border-b border-dotted border-current opacity-40" />
+      <Changed value={points}>
+        <ScoreFigure
+          points={points}
+          other={other?.points ?? null}
+          className="numeric text-4xl font-bold leading-none"
+        />
+      </Changed>
+    </span>
+  );
+}
+
+/** "123 3 to play · test2 1 to play", or what can honestly be said of it. */
+function toPlayLine(
+  name: string,
+  yours: number | null,
+  otherName: string,
+  theirs: number | null,
+): string {
+  const side = (label: string, count: number | null) =>
+    count === null ? null : `${label} ${count} to play`;
+  const parts = [side(name, yours), side(otherName, theirs)].filter((part) => part !== null);
+  return parts.length === 0 ? "Fantrax has not said who is left" : parts.join(" · ");
 }
 
 /** One tie as a stacked pair. Yours links to your matchup board; the rest to
