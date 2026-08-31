@@ -53,7 +53,7 @@ export default function PlayerTable({
     >
       <table className="w-full min-w-[34rem] border-collapse text-sm">
         <thead>
-          <tr className="border-b border-line text-2xs uppercase tracking-widest text-faint">
+          <tr className="border-b border-line text-2xs uppercase text-faint">
             {COLUMNS.map((column) => (
               <th
                 key={column.key}

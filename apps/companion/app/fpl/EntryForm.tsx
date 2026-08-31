@@ -13,7 +13,7 @@ export default function EntryForm() {
   return (
     <form action={submit} className="cm-panel flex flex-col gap-3 p-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="entry" className="text-2xs font-bold uppercase tracking-widest text-faint">
+        <label htmlFor="entry" className="text-2xs font-bold uppercase text-faint">
           Your FPL team id
         </label>
         <p className="text-sm text-muted">

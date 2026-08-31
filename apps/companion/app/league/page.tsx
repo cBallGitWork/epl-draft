@@ -136,7 +136,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
                      row states a qualification nobody missed. */
                   <tr aria-hidden>
                     <td colSpan={COLUMNS.length} className="p-0">
-                      <span className="flex items-center gap-2 py-1.5 text-3xs font-bold uppercase tracking-widest text-faint">
+                      <span className="flex items-center gap-2 py-1.5 text-3xs font-bold uppercase text-faint">
                         <span className="flex-1 border-t border-dashed border-league/70" />
                         Playoffs
                         <span className="flex-1 border-t border-dashed border-league/70" />

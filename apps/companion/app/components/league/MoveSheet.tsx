@@ -77,7 +77,7 @@ export default function MoveSheet({
 
       {[...swaps.entries()].map(([position, group]) => (
         <div key={position} className="flex flex-col gap-1">
-          <h4 className="px-1 font-display text-2xs font-bold uppercase tracking-widest text-faint">
+          <h4 className="px-1 font-display text-2xs font-bold uppercase text-faint">
             Start at {position} — who comes off?
           </h4>
           {group.map((move) => (

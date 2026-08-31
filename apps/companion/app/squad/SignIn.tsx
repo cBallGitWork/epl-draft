@@ -13,7 +13,7 @@ export default function SignIn() {
   return (
     <form action={submit} className="cm-panel flex flex-col gap-3 p-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="code" className="text-2xs font-bold uppercase tracking-widest text-faint">
+        <label htmlFor="code" className="text-2xs font-bold uppercase text-faint">
           Your code
         </label>
         <p className="text-sm text-muted">

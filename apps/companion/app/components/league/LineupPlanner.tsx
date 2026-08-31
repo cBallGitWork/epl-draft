@@ -206,7 +206,7 @@ export default function LineupPlanner({
           eleven is a line of furniture telling a manager what he can see. */}
       {dirty ? (
         <div className="flex items-center justify-between gap-2 px-1">
-          <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-faint">
+          <h2 className="font-display text-2xs font-bold uppercase text-faint">
             Planned — not submitted
           </h2>
           <button

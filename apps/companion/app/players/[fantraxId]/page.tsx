@@ -43,7 +43,7 @@ function Facts({ title, note, rows }: { title: string; note?: string; rows: Labe
   if (rows.length === 0) return null;
   return (
     <section className="flex flex-col gap-1">
-      <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-faint">
+      <h2 className="font-display text-2xs font-bold uppercase text-faint">
         {title}
       </h2>
       {note ? <p className="text-2xs text-faint">{note}</p> : null}

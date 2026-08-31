@@ -18,7 +18,7 @@ export default function RoundHeader({ round }: { round: ScheduleRound }) {
   return (
     <div className="flex items-center justify-between gap-3 px-3">
       <span className="text-2xs text-faint">
-        <span className="font-bold uppercase tracking-widest">
+        <span className="font-bold uppercase">
           {round.deadline === null ? "First kickoff" : "Deadline"}
         </span>
         {at === null ? (
@@ -41,7 +41,7 @@ export default function RoundHeader({ round }: { round: ScheduleRound }) {
 function Status({ round }: { round: ScheduleRound }) {
   if (round.status === "live") {
     return (
-      <span className="flex items-center gap-1.5 text-2xs font-bold uppercase tracking-widest text-live">
+      <span className="flex items-center gap-1.5 text-2xs font-bold uppercase text-live">
         <span className="live-dot" />
         Live
       </span>
@@ -49,6 +49,6 @@ function Status({ round }: { round: ScheduleRound }) {
   }
 
   return round.status === "finished" ? (
-    <span className="text-2xs font-bold uppercase tracking-widest text-faint">Full time</span>
+    <span className="text-2xs font-bold uppercase text-faint">Full time</span>
   ) : null;
 }

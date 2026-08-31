@@ -58,7 +58,7 @@ export default function Afternoon({
 
   return (
     <section className="cm-panel flex flex-col gap-1.5 p-3">
-      <h2 className="text-2xs font-bold uppercase tracking-widest text-faint">Your afternoon</h2>
+      <h2 className="text-2xs font-bold uppercase text-faint">Your afternoon</h2>
       <ul className="flex flex-col gap-1">
         {[...groups].map(([kickoff, group]) => (
           <li key={kickoff} className="flex items-baseline gap-2 text-sm">

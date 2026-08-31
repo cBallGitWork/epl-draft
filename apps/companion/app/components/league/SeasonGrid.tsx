@@ -62,7 +62,7 @@ export default function SeasonGrid({
             {/* Its own title bar, which is how a CM panel opens. The bar carries
                 a title and nothing else — the season below it is content. */}
             <div className="cm-titlebar px-2 py-1">
-              <h2 className="truncate text-2xs font-bold uppercase tracking-wide text-ink">
+              <h2 className="truncate text-2xs font-bold uppercase text-ink">
                 {group.name}
               </h2>
             </div>

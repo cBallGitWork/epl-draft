@@ -23,7 +23,7 @@ export default function Pedigree({
 
   return (
     <section className="flex flex-col gap-1">
-      <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-faint">Draft</h2>
+      <h2 className="font-display text-2xs font-bold uppercase text-faint">Draft</h2>
       <div className="flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2">
         {pedigree.origin === "waiver" ? (
           <p className="text-sm text-muted">
@@ -62,7 +62,7 @@ function Value({ against }: { against: number | null }) {
               Math.abs(against) === 1 ? "pick" : "picks"
             } ${against < 0 ? "below" : "above"} where he was taken, among the men this draft took.`
       }
-      className="flex items-baseline gap-1 text-3xs font-bold uppercase tracking-widest text-faint"
+      className="flex items-baseline gap-1 text-3xs font-bold uppercase text-faint"
     >
       <span
         className={`numeric text-sm ${

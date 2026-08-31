@@ -19,7 +19,7 @@ function Figure({ label, value, title }: { label: string; value: string | null; 
   return (
     <div className="flex flex-col items-center gap-0.5 bg-surface px-1 py-1.5">
       <span
-        className="text-2xs uppercase tracking-widest text-faint"
+        className="text-2xs uppercase text-faint"
         title={title}
       >
         {label}

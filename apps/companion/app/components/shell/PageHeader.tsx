@@ -31,7 +31,7 @@ export default function PageHeader({
     <header>
       <div className="cm-titlebar flex items-center gap-2 px-2 py-1">
         <LeagueCrest height={18} />
-        <h1 className="min-w-0 flex-1 truncate text-sm font-bold uppercase tracking-wide text-ink">
+        <h1 className="min-w-0 flex-1 truncate text-sm font-bold uppercase text-ink">
           {title}
         </h1>
       </div>

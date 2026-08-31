@@ -65,7 +65,7 @@ export default function TableRow({
           {/* Labelled, not just accented — the edge says nothing to anyone who
               cannot see it. */}
           {mine ? (
-            <span className="shrink-0 bg-accent px-1 text-3xs font-bold uppercase tracking-widest text-bg">
+            <span className="shrink-0 bg-accent px-1 text-3xs font-bold uppercase text-bg">
               You
             </span>
           ) : null}

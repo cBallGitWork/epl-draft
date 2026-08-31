@@ -280,7 +280,7 @@ function Withheld({
       <p className="max-w-xs text-sm text-muted">{because}</p>
       <Link
         href={`/squad/${team.teamId}`}
-        className="flex min-h-11 items-center text-2xs font-bold uppercase tracking-widest text-accent"
+        className="flex min-h-11 items-center text-2xs font-bold uppercase text-accent"
       >
         See the squad
       </Link>

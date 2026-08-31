@@ -135,7 +135,7 @@ function MatchRow({
             Saturday is most of them. */}
         {yours ? (
           <p className="mb-2 truncate text-xs text-accent">
-            <span className="font-semibold uppercase tracking-wide">Yours</span>
+            <span className="font-semibold uppercase">Yours</span>
             {yours.map((p) => ` · ${p.name}`).join("")}
           </p>
         ) : null}
@@ -222,12 +222,12 @@ function ScoreBlock({ fixture, now }: { fixture: Fixture; now: boolean }) {
       </span>
       {/* State never rides on colour alone — the dot is always paired with a word. */}
       {live ? (
-        <span className="flex items-center gap-1 text-2xs font-semibold uppercase tracking-wide text-live">
+        <span className="flex items-center gap-1 text-2xs font-semibold uppercase text-live">
           <span className="live-dot" />
           Live {fixture.minutes}′
         </span>
       ) : fixture.status === "finished" ? (
-        <span className="text-2xs font-semibold uppercase tracking-wide text-faint">FT</span>
+        <span className="text-2xs font-semibold uppercase text-faint">FT</span>
       ) : fixture.kickoff !== null ? (
         /* The day, in the line that says FT once the match is over — which is
            empty for precisely the fixtures that need it. A round runs Friday to
@@ -235,7 +235,7 @@ function ScoreBlock({ fixture, now }: { fixture: Fixture; now: boolean }) {
            sits above 14:00 because one is Saturday and the other Sunday. The day
            goes here rather than into the time above it, because that slot is the
            one the score lands in and "Sun 14:00" at score size is not a score. */
-        <span className="text-2xs font-semibold uppercase tracking-wide text-faint">
+        <span className="text-2xs font-semibold uppercase text-faint">
           {londonDay(fixture.kickoff)}
         </span>
       ) : null}

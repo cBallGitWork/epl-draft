@@ -57,7 +57,7 @@ export default function Columns({
 }) {
   return (
     <thead>
-      <tr className="text-3xs uppercase tracking-wide">
+      <tr className="text-3xs uppercase">
         {COLUMNS.map((column) => {
           const here = sortable(column.key) && column.key === sort;
           return (

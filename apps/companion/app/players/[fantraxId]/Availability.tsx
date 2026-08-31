@@ -20,7 +20,7 @@ export default function Availability({ player }: { player: FootballPlayer | null
  player.chanceOfPlaying === 0 ?"border-bad":"border-mid"
 }`}
     >
-      <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-muted">
+      <h2 className="font-display text-2xs font-bold uppercase text-muted">
         {player.chanceOfPlaying === null
           ? "Doubt"
           : `${player.chanceOfPlaying}% chance of playing`}

@@ -20,7 +20,7 @@ export default function Section({
   return (
     <section className="flex flex-col gap-2">
       <div className="flex items-baseline justify-between gap-3 border-b border-line pb-1">
-        <h2 className="font-display text-2xs font-bold uppercase tracking-widest text-muted">
+        <h2 className="font-display text-2xs font-bold uppercase text-muted">
           {title}
         </h2>
         {aside ? <span className="text-2xs text-faint">{aside}</span> : null}

@@ -191,6 +191,16 @@ is the two rules arguing. Ten sites did it and none do now. The one exception is
 the sign-in field, where a code is being transcribed one character at a time and
 the space between characters is what a reader checks his typing against.
 
+**And the DESK does not letterspace at all.** Championship Manager's column
+heads, tab labels, rail entries and title bars are all set at normal spacing —
+checked in `cm9900/12.jpg` and `21.jpg`, not remembered — and 57 sites on the
+desk were adding 0.1em to a 9 or 11px small capital. They are gone. This is a
+register rule and not a global one: the **paper keeps its 15**, because §6 above
+gives Archivo's letterspaced small capitals a real job on newsprint, where a
+standing head, a kicker, a dateline and a byline are furniture rather than prose.
+Negative tracking is untouched — the eleven `tracking-tight` are condensed, which
+is the desk's own register.
+
 ## 7. Grammar that outranks the look
 
 Restated because a redesign is exactly when these get broken. Their parents are

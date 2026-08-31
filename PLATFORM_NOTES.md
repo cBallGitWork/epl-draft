@@ -3863,6 +3863,19 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-31: **The desk stopped letterspacing.** 57 sites were adding 0.1em to a
+  9 or 11px small capital, and Championship Manager does none of it — its column
+  heads, tab labels, rail entries and title bars are all at normal spacing,
+  checked in `cm9900/12.jpg` and `21.jpg` rather than remembered. A register rule
+  and not a global one: **the paper keeps its 15**, because DESIGN §6 gives
+  Archivo's letterspaced small capitals a real job on newsprint, where a standing
+  head, a kicker, a dateline and a byline are furniture rather than prose. Every
+  arbitrary-value `tracking-[0.1…em]` in the tree turned out to be on the paper
+  already, which is a good sign the seam was in the right place. Negative
+  tracking is untouched: the eleven `tracking-tight` are condensed, which is the
+  desk's own register. The one surviving positive on the desk is the sign-in
+  field, and it is commented.
+
 - 2026-08-31: **The 44px tap rule stopped being one number, and the rule that
   replaced it caught a bug in the same hour.** Craig's call: the phone keeps 44,
   the desk goes to 28. WCAG 2.1 AA has no tap-target requirement at all, so it

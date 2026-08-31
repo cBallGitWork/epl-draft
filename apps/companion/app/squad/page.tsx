@@ -96,7 +96,7 @@ export default async function SquadsPage() {
               Not you? Sign out
             </button>
           </form>
-          <h2 className="px-3 pt-1 text-2xs font-bold uppercase tracking-widest text-faint">
+          <h2 className="px-3 pt-1 text-2xs font-bold uppercase text-faint">
             Around the league
           </h2>
         </>
@@ -144,7 +144,7 @@ function Squad({
             payload this page fetched. */}
         {opponent ? (
           <span className="truncate text-2xs text-faint">
-            <span className="uppercase tracking-widest">v</span> {opponent}
+            <span className="uppercase">v</span> {opponent}
           </span>
         ) : null}
       </span>
@@ -152,7 +152,7 @@ function Squad({
           anyone who cannot see it. On `bg-bg` because the row it sits on is
           raised, and a chip the colour of its ground is not a chip. */}
       {lead ? (
-        <span className=" bg-bg px-1.5 py-0.5 text-2xs font-bold uppercase tracking-widest text-accent">
+        <span className=" bg-bg px-1.5 py-0.5 text-2xs font-bold uppercase text-accent">
           You
         </span>
       ) : null}

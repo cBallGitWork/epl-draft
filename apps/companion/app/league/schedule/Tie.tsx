@@ -84,7 +84,7 @@ export default function Tie({
           <Points value={away} won={settled && leads(away, home)} />
         </span>
       ) : (
-        <span className="shrink-0 px-3 text-2xs font-bold uppercase tracking-widest text-faint">
+        <span className="shrink-0 px-3 text-2xs font-bold uppercase text-faint">
           v
         </span>
       )}

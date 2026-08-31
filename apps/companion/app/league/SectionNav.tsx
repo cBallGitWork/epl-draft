@@ -36,7 +36,7 @@ export default function SectionNav({ current }: { current: LeagueSection }) {
             // Red is the brand and the live signal and never a statement about
             // where you are, which is why the accent carries this and the
             // league's own colour does not.
-            className="cm-tab flex min-h-11 items-center px-3 text-2xs font-bold uppercase tracking-wide lg:min-h-9"
+            className="cm-tab flex min-h-11 items-center px-3 text-2xs font-bold uppercase lg:min-h-9"
           >
             {section.label}
           </Link>

@@ -65,7 +65,7 @@ export default async function DeskPage() {
 
       <header className="flex items-baseline justify-between gap-3 pt-1">
         <h1 className="text-xl font-bold tracking-tight">The desk</h1>
-        <span className="text-2xs font-bold uppercase tracking-widest text-faint">
+        <span className="text-2xs font-bold uppercase text-faint">
           <RoundWord state={state} />
         </span>
       </header>
@@ -114,7 +114,7 @@ export default async function DeskPage() {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col">
-      <h2 className="pb-1 text-2xs font-bold uppercase tracking-widest text-faint">{title}</h2>
+      <h2 className="pb-1 text-2xs font-bold uppercase text-faint">{title}</h2>
       <div className="flex flex-col divide-y divide-line border-y border-line">{children}</div>
     </section>
   );

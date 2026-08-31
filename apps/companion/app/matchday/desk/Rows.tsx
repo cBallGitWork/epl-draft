@@ -96,7 +96,7 @@ export function Match({
       {/* The tick where the kickoff time used to be. No HT: FPL publishes a
           minute and a finished flag, and a clock stopped on 45 is not a claim
           they have made — a match genuinely in its 45th minute reads the same. */}
-      <span className="w-9 shrink-0 text-right text-2xs font-bold uppercase tracking-wide">
+      <span className="w-9 shrink-0 text-right text-2xs font-bold uppercase">
         {fixture.status === "live" ? (
           <span className="text-live">{fixture.minutes}′</span>
         ) : fixture.status === "finished" ? (

@@ -24,7 +24,7 @@ export default function Loading() {
 function Block({ title, rows }: { title: string; rows: number }) {
   return (
     <section className="flex flex-col">
-      <h2 className="pb-1 text-2xs font-bold uppercase tracking-widest text-faint">{title}</h2>
+      <h2 className="pb-1 text-2xs font-bold uppercase text-faint">{title}</h2>
       <div className="flex flex-col divide-y divide-line border-y border-line">
         {Array.from({ length: rows }, (_, at) => (
           <div key={at} className="flex items-center gap-2 py-1">

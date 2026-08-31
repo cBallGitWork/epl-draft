@@ -58,7 +58,7 @@ export default function PlayerCard({
         </div>
 
         <div className="flex items-baseline justify-between gap-3 border border-line bg-raised px-3 py-2">
-          <span className="text-2xs uppercase tracking-widest text-faint">This gameweek</span>
+          <span className="text-2xs uppercase text-faint">This gameweek</span>
           <span className="flex items-baseline gap-2">
             <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden">
               <FixtureChip opposition={opposition} blank="No fixture" />
@@ -77,7 +77,7 @@ export default function PlayerCard({
  footballer.chanceOfPlaying === 0 ?"border-bad":"border-mid"
 }`}
           >
-            <span className="font-display text-2xs font-bold uppercase tracking-widest text-muted">
+            <span className="font-display text-2xs font-bold uppercase text-muted">
               {footballer.chanceOfPlaying === null
                 ? "Doubt"
                 : `${footballer.chanceOfPlaying}% chance of playing`}

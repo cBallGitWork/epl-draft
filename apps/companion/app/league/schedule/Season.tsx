@@ -56,7 +56,7 @@ export default function Season({
 function Score({ row }: { row: SeasonRow }) {
   if (!row.round.started) {
     return (
-      <span className="shrink-0 text-2xs font-bold uppercase tracking-widest text-faint">
+      <span className="shrink-0 text-2xs font-bold uppercase text-faint">
         To play
       </span>
     );
@@ -92,7 +92,7 @@ function Opponent({
 }) {
   const name = (
     <>
-      <span className="text-2xs font-normal uppercase tracking-widest text-faint">v </span>
+      <span className="text-2xs font-normal uppercase text-faint">v </span>
       {opponent.label}
     </>
   );

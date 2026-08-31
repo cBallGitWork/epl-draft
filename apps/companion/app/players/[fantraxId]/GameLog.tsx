@@ -45,7 +45,7 @@ export default function GameLog({ rows }: { rows: GameLogRow[] }) {
               is off to the right is how well. */}
           <table className="w-full min-w-[34rem] border-collapse text-sm">
             <thead>
-              <tr className="border-b border-line text-2xs uppercase tracking-widest text-faint">
+              <tr className="border-b border-line text-2xs uppercase text-faint">
                 <Head label="GW" align="left" />
                 <Head label="Opp" align="left" />
                 <Head label="Res" title="The score, from his club's point of view" />

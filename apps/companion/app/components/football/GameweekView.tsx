@@ -55,7 +55,7 @@ export default function GameweekView({
           </div>
         </div>
         {live ? (
-          <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-live">
+          <span className="flex items-center gap-1.5 text-xs font-semibold uppercase text-live">
             <span className="live-dot" />
             Live
           </span>

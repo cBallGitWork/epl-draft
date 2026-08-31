@@ -62,7 +62,7 @@ export default function PairingCard({
           badges={badges}
           mine={pairing.home.teamId === mine}
         />
-        <span className="self-center px-1 text-2xs font-bold uppercase tracking-widest text-faint">
+        <span className="self-center px-1 text-2xs font-bold uppercase text-faint">
           v
         </span>
         <Side

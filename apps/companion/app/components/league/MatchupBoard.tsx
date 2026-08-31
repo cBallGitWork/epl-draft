@@ -65,7 +65,7 @@ export default function MatchupBoard({
           the one thing a scoreline exists not to make you do. */}
       <div className="cm-panel flex items-stretch overflow-hidden">
         <Side side={team} against={opponent} open={open === "team"} onOpen={() => setOpen("team")} />
-        <span className="self-center px-1 text-2xs font-bold uppercase tracking-widest text-faint">
+        <span className="self-center px-1 text-2xs font-bold uppercase text-faint">
           v
         </span>
         <Side
@@ -83,7 +83,7 @@ export default function MatchupBoard({
         {state === null ? (
           <span />
         ) : (
-          <span className="text-2xs font-bold uppercase tracking-widest text-faint">
+          <span className="text-2xs font-bold uppercase text-faint">
             <RoundWord state={state} />
           </span>
         )}

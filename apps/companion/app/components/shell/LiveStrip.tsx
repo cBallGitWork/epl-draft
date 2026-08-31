@@ -57,7 +57,7 @@ export default function LiveStrip({
       // inside the page frame: it is the shell speaking, not the page.
       className="sticky top-0 z-40 flex min-h-11 items-center justify-center gap-2.5 bg-league-deep px-[var(--page-gutter)] text-cream"
     >
-      <span className="flex items-center gap-1.5 text-2xs font-bold uppercase tracking-widest">
+      <span className="flex items-center gap-1.5 text-2xs font-bold uppercase">
         <span className="live-dot" />
         Live
       </span>

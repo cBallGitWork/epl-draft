@@ -57,7 +57,7 @@ export default async function YourMatchup() {
   return (
     <section className={`cm-panel flex flex-col gap-2 p-3 ${yoursBorder(true)}`}>
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-2xs font-bold uppercase tracking-widest text-faint">
+        <h2 className="text-2xs font-bold uppercase text-faint">
           Your head-to-head
         </h2>
         <Link
@@ -73,7 +73,7 @@ export default async function YourMatchup() {
 
       <div className="flex items-stretch">
         <Half team={pairing.team} score={yours} against={theirs} mine />
-        <span className="self-center px-1 text-2xs font-bold uppercase tracking-widest text-faint">
+        <span className="self-center px-1 text-2xs font-bold uppercase text-faint">
           v
         </span>
         <Half team={pairing.opponent} score={theirs} against={yours} mirrored />
@@ -83,7 +83,7 @@ export default async function YourMatchup() {
           sits between the two sides because it belongs to neither. */}
       <div className="flex items-baseline justify-between gap-2 text-2xs">
         <Extras score={yours} pending={pending.get(pairing.team.teamId)} underway={underway} />
-        <span className="shrink-0 font-bold uppercase tracking-widest text-faint">
+        <span className="shrink-0 font-bold uppercase text-faint">
           <RoundWord state={state} />
         </span>
         <Extras

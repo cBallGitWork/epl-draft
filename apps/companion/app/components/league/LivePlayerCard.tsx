@@ -132,7 +132,7 @@ export default function LivePlayerCard({
               minutes={done.minutes}
             />
             <p className="flex flex-wrap items-center gap-1 px-0.5 text-2xs text-faint">
-              <span className="font-display font-bold uppercase tracking-widest">FPL records</span>
+              <span className="font-display font-bold uppercase">FPL records</span>
               <span className="numeric text-muted">{done.minutes}&apos;</span>
               {chipsFor(done).map((chip) => (
                 <span
@@ -196,7 +196,7 @@ function Breakdown({
 
   return (
     <div className="overflow-hidden border border-line">
-      <div className="flex items-center justify-between gap-2 bg-raised px-3 py-1.5 font-display text-2xs font-bold uppercase tracking-widest text-faint">
+      <div className="flex items-center justify-between gap-2 bg-raised px-3 py-1.5 font-display text-2xs font-bold uppercase text-faint">
         <span>This period</span>
         <span>Pts</span>
       </div>
@@ -248,7 +248,7 @@ function Breakdown({
       )}
 
       <div className="flex items-center justify-between gap-2 bg-raised px-3 py-2">
-        <span className="font-display text-2xs font-bold uppercase tracking-widest text-muted">
+        <span className="font-display text-2xs font-bold uppercase text-muted">
           Total
         </span>
         <span className="numeric text-xl font-bold leading-none">{points ?? "—"}</span>
