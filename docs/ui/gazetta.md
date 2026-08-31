@@ -42,23 +42,37 @@ business, who is hurt, and when lineups lock.
 4. **The column**, when one has been filed about this round — and then it
    *leads*, taking the picture the desk chose and dropping the desk's own
    headline. See *The written column* below.
-5. **Also this week** — the next two stories as headlines: a kicker and a line,
+5. **The rest of the edition** — everything else filed, under the lead, as
+   articles at a size down: kicker chip, headline, deck, dateline, paragraphs
+   (`gazette/Article`). **The paper is ONE page.** Inside pages under `/paper`
+   were built on 31 Aug and reverted the same day: a second paper route needs a
+   folio and a contents strip, which means printing the app's own six-section
+   navigation in newsprint, and the Gazetta is one section of six rather than a
+   site inside the site. Everything the newsdesk files prints here.
+6. **The two tables** — the draft league (Fantrax's own arithmetic, verbatim)
+   and the Premier League (computed from finished fixtures under the
+   competition's fixed rules), in the sidebar as a back page carries them:
+   rank · team · played · record or goal difference · points, on hairlines, in
+   the tabular face. Neither is a link and neither is a tap target — the
+   sortable, tappable, badged versions are on the League and Players tabs,
+   where a manager goes to USE them, and this is the printed copy.
+7. **Also this week** — the next two desk stories as headlines: a kicker and a line,
    no picture, no standfirst. The hierarchy *is* the design — a newspaper's
    second story is recognisable as the second story before you have read a word
    of it, and a page that gave every story a photograph would be a page with no
    lead on it.
-6. **Team of the week** — the best XI across the whole league, **in the rail**,
+8. **Team of the week** — the best XI across the whole league, **in the rail**,
    grouped into its lines. One man per row: his name and owner at the left, what
    got him picked at the right (`2G · CS`, or minutes if nothing else). `benched` is
    appended to the owner when a manager left his own best player out — **and only
    when the arrangement it was read from is the one that was fielded**; see *What
    may be said about a bench* below.
-7. **The week's business** — trades and claims, grouped so both halves of a trade
+9. **The week's business** — trades and claims, grouped so both halves of a trade
    read as one deal. Fantrax's timestamps, shown verbatim with their zone named
    in the heading, because they carry a US Eastern offset.
-8. **Doubts** — FPL's injury news across every squad, with chance of playing.
+10. **Doubts** — FPL's injury news across every squad, with chance of playing.
    `no word` when FPL has no opinion, which is not the same as 0%.
-9. **Next deadline** — the period boundary, with an explicit note that the
+11. **Next deadline** — the period boundary, with an explicit note that the
    commissioner's real lock is fifteen minutes before the first fixture and is
    not something Fantrax publishes.
 

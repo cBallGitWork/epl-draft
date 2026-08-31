@@ -1,4 +1,5 @@
 import { LEAGUE_NAME, clubById } from "@epl/core";
+import Article from "../components/gazette/Article";
 import Scoreboard from "../components/gazette/Scoreboard";
 import Deals from "../components/gazette/Deals";
 import Doubts from "../components/gazette/Doubts";
@@ -11,9 +12,11 @@ import TeamOfTheWeek from "../components/gazette/TeamOfTheWeek";
 import { FANTRAX_SILENT, SECONDARY_STORIES, servedLeague } from "../config";
 import Column from "../components/gazette/Column";
 import Nothing from "../components/shell/Nothing";
+import PaperTable from "../components/gazette/PaperTable";
 import { edition } from "../edition";
 import { londonDate, londonDayAndTime } from "../londonTime";
 import { readerTeamId } from "../squads";
+import { draftRows, footballRows } from "../tables";
 import { offerLive } from "../football";
 
 // The Gazetta. What the league did this week, on the front page.
@@ -41,6 +44,8 @@ export default async function GazettePage() {
   // of the contents at tea-time on a Saturday.
   const matchday = await offerLive();
   const paper = await edition(mine);
+  // The two tables, from reads the page already makes.
+  const [draft, football] = await Promise.all([draftRows(mine), footballRows()]);
   // One lookup for the whole paper: the lead's cut-out and the eleven's eleven
   // all want the same clubs, keyed the way a snapshot keys them.
   const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
@@ -101,16 +106,25 @@ export default async function GazettePage() {
           a written one, stacked, saying the same thing twice — and a paper runs
           one splash. The picture stays: the story is the same story, and the
           desk is what chose the photograph for it. */}
-          {paper.written ? (
+          {paper.filed[0] ? (
             <>
               {paper.stories[0] ? (
                 <Picture lead={paper.stories[0]} who={who} clubs={clubs} />
               ) : null}
-              <Written story={paper.written} teams={paper.teams} />
+              <Written story={paper.filed[0]} teams={paper.teams} />
             </>
           ) : paper.stories[0] ? (
             <Lead lead={paper.stories[0]} who={who} clubs={clubs} />
           ) : null}
+
+          {/* The front page continuing down the sheet. The paper is one page,
+              so the rest of the edition prints here rather than behind a link
+              — a hairline between each, the way a column break is set. */}
+          {paper.filed.slice(1, SECONDARY_STORIES + 1).map((story) => (
+            <div key={story.slug} className="border-t border-line pt-5">
+              <Article story={story} />
+            </div>
+          ))}
 
           {paper.stories.length > 1 ? (
             <Column title="Also this week">
@@ -176,6 +190,14 @@ export default async function GazettePage() {
               fielded={paper.fielded}
             />
           ) : null}
+
+          {/* The two tables, the way a back page carries them: the league we
+              are actually in first, the one it is played out of second. Rank ·
+              team · played · record or goal difference · points, and neither
+              is a link — the sortable, tappable, badged versions are on the
+              League and Players tabs, where a manager goes to USE them. */}
+          <PaperTable title="The draft table" aside="Fantrax" rows={draft} />
+          <PaperTable title="The Premier League" aside="P · GD · Pts" rows={football} />
 
           {paper.deals.length > 0 ? (
             <Deals deals={paper.deals} at={paper.dealsAt} who={who} />

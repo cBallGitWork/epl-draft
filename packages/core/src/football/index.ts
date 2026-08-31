@@ -57,4 +57,6 @@ export {
 // stays exported from its own module, where its tests reach it.
 export type { FinishedState, RoundState } from "./round";
 export { kickedOff, nextFixtures, oppositionByClub } from "./opposition";
+export { leagueTable } from "./table";
+export type { TableRow } from "./table";
 export type { Opposition } from "./opposition";

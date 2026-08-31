@@ -3897,6 +3897,17 @@ field, and each one moved the design:
   reports completed deals; offer-and-decline gossip has no data and is not
   attempted. (Gap noted: `resultCode` is on the wire and `raw.ts` does not
   mirror it — add the optional key when trade coverage lands.)
+- **FPL's own league table is a dead field.** `bootstrap-static`'s `teams[]`
+  carry `played`, `win`, `draw`, `loss`, `points` and `position`, and on
+  31 Aug — with a gameweek already finished — **0 of 20 clubs had `played > 0`
+  and the whole column summed to zero**. Same shape as `squad_number`: present
+  as a key, never as a value. So the paper's Premier League table is COMPUTED
+  from finished fixtures (`packages/core/src/football/table.ts`), which the
+  layer split permits precisely here — three-for-a-win and goal difference are
+  the competition's own fixed rules, and the football layer is where fixed
+  rules may be constants. A running score on a fixture in play is not counted:
+  FPL writes those, and a table built on them moves a club up for leading at
+  half time.
 - **BBC RSS guids double-cover.** The feed re-lists the same article under
   positional fragments (`…/cn5d7k4nkyvo#0`, `#1`), five duplicates in one
   77-item fixture (`packages/core/src/news/__fixtures__/bbc-football.xml`).

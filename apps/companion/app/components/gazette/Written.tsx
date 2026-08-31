@@ -1,5 +1,6 @@
 import type { LeagueTeam, PublishedStory } from "@epl/core";
 import Column from "./Column";
+import Paragraphs from "./Paragraphs";
 import { londonDayAndTime } from "../../londonTime";
 
 // The written lead, as filed.
@@ -97,34 +98,5 @@ export default function Written({
         </div>
       ) : null}
     </section>
-  );
-}
-
-/** Paragraphs, split on blank lines. The writer is told to file them that way
- *  and a model that files one block instead costs the reader nothing but the
- *  breaks — so this splits rather than validates. */
-function Paragraphs({
-  text,
-  className,
-  /** Whether the first paragraph opens on a drop cap. The column's does and a
-   *  section's does not: a drop cap says "the prose starts here", and a page
-   *  that used it four times would be saying it four times. */
-  dropcap = false,
-}: {
-  text: string;
-  className?: string;
-  dropcap?: boolean;
-}) {
-  const paragraphs = text.split(/\n\n+/).filter((paragraph) => paragraph.trim() !== "");
-  if (paragraphs.length === 0) return null;
-
-  return (
-    <div className={className}>
-      {paragraphs.map((paragraph, at) => (
-        <p key={at} className={at > 0 ? "pt-2.5" : dropcap ? "paper-dropcap" : undefined}>
-          {paragraph.trim()}
-        </p>
-      ))}
-    </div>
   );
 }

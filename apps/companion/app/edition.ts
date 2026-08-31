@@ -107,15 +107,16 @@ export interface Edition {
    *  players did is football and stands either way, which is why the eleven
    *  itself still prints. */
   fielded: boolean;
-  /** The written lead: the top of the rolling paper's running order, or null
-   *  when nothing has ever been filed.
+  /** The rolling paper in print order: the first story leads, the rest run
+   *  under it as further articles. The paper is ONE page, so everything filed
+   *  prints here.
    *
-   *  Unlike the old one-column-a-round shape, this does NOT go null between
-   *  rounds — a paper keeps printing its most recent edition until the next
-   *  one, and the filed instant on the column is what keeps an old opinion
-   *  honest under today's masthead. `composePaper` owns expiry and
-   *  supersession, so what leads is always the newest period's biggest word. */
-  written: PublishedStory | null;
+   *  Unlike the old one-column-a-round shape, the lead does NOT go null
+   *  between rounds — a paper keeps printing its most recent edition until
+   *  the next one, and the filed instant is what keeps an old opinion honest
+   *  under today's masthead. `composePaper` owns expiry, supersession and the
+   *  order. */
+  filed: PublishedStory[];
   /** Every story the week produced, strongest first: the front page leads on the
    *  first and runs the rest as headlines under it. Empty is ordinary — a paper
    *  does not manufacture a story, so most of the week there is nothing here. */
@@ -186,7 +187,7 @@ export async function edition(mine: string | null): Promise<Edition> {
     stories: told,
     // The clock is the app edge's to read (`football.ts`'s rule), which is why
     // the compose happens here rather than in `paper.ts`.
-    written: composePaper(filed, now)[0] ?? null,
+    filed: composePaper(filed, now),
     board,
     mine,
   };
@@ -210,7 +211,8 @@ function silenceOf(squads: LeagueSquads, paper: Omit<Edition, "silence">): Silen
     paper.eleven === null &&
     paper.deals.length === 0 &&
     paper.availability.length === 0 &&
-    paper.deadline === null;
+    paper.deadline === null &&
+    paper.filed.length === 0;
   if (!empty) return null;
 
   if ("unavailable" in squads) return { kind: "unavailable", code: squads.unavailable };
