@@ -45,10 +45,11 @@ export default async function GazettePage() {
   const matchday = await offerLive();
   const paper = await edition(mine);
   // The two tables, from reads the page already makes.
-  const [draft, football] = await Promise.all([draftRows(mine), footballRows()]);
-  // The round's scorers, once the football has started: a priced man is a man
-  // in somebody's eleven, and naming them earlier would publish the lineups.
-  const scorers = await scorerRows(paper.roundPeriod, paper.underway);
+  const [draft, football, scorers] = await Promise.all([
+    draftRows(mine),
+    footballRows(),
+    scorerRows(),
+  ]);
   // One lookup for the whole paper: the lead's cut-out and the eleven's eleven
   // all want the same clubs, keyed the way a snapshot keys them.
   const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
@@ -199,7 +200,7 @@ export default async function GazettePage() {
               team · played · record or goal difference · points, and neither
               is a link — the sortable, tappable, badged versions are on the
               League and Players tabs, where a manager goes to USE them. */}
-          <PaperTable title="The round's scorers" aside="Fantrax points" rows={scorers} />
+          <PaperTable title="The season's scorers" aside="Fantrax FPts" rows={scorers} />
           <PaperTable title="The draft table" aside="Fantrax" rows={draft} />
           <PaperTable title="The Premier League" aside="P · GD · Pts" rows={football} />
 

@@ -1,8 +1,8 @@
-import { isResolved, leagueTable as footballTable } from "@epl/core";
+import { leagueTable as footballTable } from "@epl/core";
 import type { PaperTableRow } from "./components/gazette/PaperTable";
 import { seasonFixtures } from "./football";
-import { leagueScorers } from "./scoreboard";
 import { leagueTable as draftTable } from "./standings";
+import { getLeaguePool } from "./players/pool";
 import { getLeagueSquads } from "./squads";
 
 // The paper's two tables, as rows. Both come off reads the page already makes,
@@ -30,57 +30,55 @@ export async function draftRows(mine: string | null): Promise<PaperTableRow[]> {
   }));
 }
 
-/** How many of the round's scorers the paper prints. A chart, not a database:
+/** How many of the season's scorers the paper prints. A chart, not a database:
  *  ten is what a back page has room for and what a reader scans. */
 const SCORERS_SHOWN = 10;
 
-/** The round's top scorers, in Fantrax's own points.
- *
- *  **Fantrax's number, priced at the slot the man was filed in.** The pool's
- *  `FPts` and the team stats table both price a player at his default
- *  position, so a dual-eligible man filed deeper is under-priced there —
- *  probed 31 Aug, Saka on 6 in the stats table against the 8 his owner
- *  actually got. The live-scoring payload is the one surface that answers what
- *  a man was worth to the manager who owns him, so it is the one this reads.
- *
- *  **Only once the football has started.** A priced man is a man in somebody's
- *  eleven, and naming them before the deadline would publish sixteen lineups
- *  (`leagueScorers` carries the same warning). */
-export async function scorerRows(
-  period: number | null,
-  underway: boolean,
-): Promise<PaperTableRow[]> {
-  if (period === null || !underway) return [];
-  const squads = await getLeagueSquads();
-  if (!("period" in squads)) return [];
+/** What the chart calls a man nobody holds. */
+const UNOWNED = "free agent";
 
-  // fantraxId → the man, and the manager holding him. From the resolved
-  // rosters, so the name comes through the bridge and nothing is name-matched.
-  const named = new Map(
-    squads.period.teams.flatMap((team) =>
-      team.players
-        .filter(isResolved)
-        .map((man) => [man.slot.fantraxId, { name: man.player.name, owner: team.teamName }] as const),
-    ),
-  );
+/** The season's top scorers, in Fantrax's own season totals.
+ *
+ *  **Fantrax's published number, not one of ours.** Their pool table carries a
+ *  season `FPts` for every player and comes back ranked by it, so this is the
+ *  same figure a manager sees on Fantrax's own player list — which is what a
+ *  scorers chart in a paper should be, and it costs nothing: `getLeaguePool`
+ *  already reads it for the Players tab.
+ *
+ *  **It is the player's season, not his owner's return, and the heading says
+ *  so.** Two honest numbers differ here and neither is wrong: this one counts
+ *  every point a man scored whether or not his manager started him — Bruno
+ *  Fernandes tops it on 22 having spent a round on somebody's bench — and it
+ *  prices a dual-eligible man at his default position, so a player filed
+ *  deeper earned his owner more than this says (probed 31 Aug: Saka 6 here
+ *  against the 8 midfield rates paid). What a man was worth to the manager
+ *  holding him is the live-scoring number, per period, and that is a different
+ *  column for a different day. Never print this one under a heading claiming
+ *  it. */
+export async function scorerRows(): Promise<PaperTableRow[]> {
+  const pool = await getLeaguePool();
+  if ("unavailable" in pool) return [];
 
-  return (await leagueScorers(period))
-    .flatMap((scorer) => {
-      const man = named.get(scorer.fantraxId);
-      // A man we cannot name is left out rather than printed as an id: the
-      // bridge is allowed to miss, and a chart of numbers beside blanks is
-      // worse than a shorter chart.
-      return man === undefined || scorer.points <= 0 ? [] : [{ ...scorer, ...man }];
+  const names = new Map(pool.teamNames);
+  return pool.rows
+    .flatMap((row) => {
+      const points = row.stats?.points ?? null;
+      // A player Fantrax has no season figure for is left out rather than
+      // printed as a dash: a chart is the ten who scored, not the pool.
+      return points === null || points <= 0 ? [] : [{ row, points }];
     })
-    .sort((a, b) => b.points - a.points || a.name.localeCompare(b.name))
+    .sort((a, b) => b.points - a.points || a.row.entry.player.displayName.localeCompare(b.row.entry.player.displayName))
     .slice(0, SCORERS_SHOWN)
-    .map((scorer, at) => ({
-      key: scorer.fantraxId,
+    .map(({ row, points }, at) => ({
+      key: row.entry.player.fantraxId,
       rank: at + 1,
-      name: scorer.name,
+      name: row.entry.player.displayName,
       played: null,
-      detail: scorer.owner,
-      points: scorer.points,
+      detail:
+        row.entry.ownerTeamId === null
+          ? UNOWNED
+          : (names.get(row.entry.ownerTeamId) ?? UNOWNED),
+      points,
     }));
 }
 

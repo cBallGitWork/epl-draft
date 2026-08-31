@@ -127,9 +127,6 @@ export interface Edition {
    *  football stops. Reading it twice would be two cache lookups and two chances
    *  for the page to disagree with itself about the score. */
   board: Board | null;
-  /** The period the paper is about, or null when there is no round to report.
-   *  The only period anything on this page may ask Fantrax for. */
-  roundPeriod: number | null;
   /** The reader's own team, when they have signed in. Sections order themselves
    *  around it rather than being neutral. */
   mine: string | null;
@@ -192,7 +189,6 @@ export async function edition(mine: string | null): Promise<Edition> {
     // the compose happens here rather than in `paper.ts`.
     filed: composePaper(filed, now),
     board,
-    roundPeriod,
     mine,
   };
 
