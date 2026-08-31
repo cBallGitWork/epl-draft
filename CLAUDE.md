@@ -258,7 +258,8 @@ rehearsal league. Setting it to `ayyoh3n2mr326v2o` is **most** of the 10 Oct
 swap — the other half is `.github/workflows/editions.yml`, whose job has its own
 environment and inherits nothing from Vercel. Miss it and CI keeps filing a
 column about the rehearsal league; the front page will refuse to print it
-(`PublishedEdition.leagueId`), so the failure is a paper with no prose rather
+(`PublishedStory.leagueId`, filtered by `normalizePaper`), so the failure is a
+paper with no prose rather
 than a paper about the wrong league, but it is still a failure.
 
 Running against the real league now is how the empty states get tested.

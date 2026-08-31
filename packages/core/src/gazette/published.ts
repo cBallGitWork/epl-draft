@@ -8,7 +8,7 @@ import type { StoryResult } from "./types";
 // thirty-second poll through the pure builders beside this file. Prose cannot
 // work that way — a column rewritten every thirty seconds is not a column, and a
 // sentence about a score that has since moved is worse than no sentence. So the
-// writing happens twice a week, off the app entirely, and arrives as data.
+// writing happens in CI, off the app entirely, and arrives as data.
 //
 // Nothing here reaches the network or a clock. This is the contract the round
 // prompts still write against — the writer validates their output here before
@@ -69,8 +69,8 @@ export interface PublishedEdition {
    *  Friday, so period and kind alone would match a rehearsal column onto the
    *  real league's front page. */
   leagueId: string;
-  /** The Fantrax period the column is about. The page prints the column only
-   *  when this matches the round in view — see `editionMatches`. */
+  /** The Fantrax period the column is about. Carried through to the story it
+   *  becomes, where `composePaper` orders and retires on it. */
   period: number;
   /** The gameweek, for the dateline. */
   gameweek: number;

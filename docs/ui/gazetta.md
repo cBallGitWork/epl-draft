@@ -58,24 +58,30 @@ business, who is hurt, and when lineups lock.
    the app's own six-section navigation in newsprint, and the Gazetta is one
    section of six rather than a site inside the site. DESIGN §9 already records
    expanding in place as this app's mobile pattern.
-6. **The two tables** — the draft league (Fantrax's own arithmetic, verbatim)
-   and the Premier League (computed from finished fixtures under the
-   competition's fixed rules), in the sidebar as a back page carries them:
-   rank · team · played · record or goal difference · points, on hairlines, in
-   the tabular face. Neither is a link and neither is a tap target — the
-   sortable, tappable, badged versions are on the League and Players tabs,
-   where a manager goes to USE them, and this is the printed copy.
-7. **Also this week** — the next two desk stories as headlines: a kicker and a line,
+6. **Also this week** — the next two desk stories as headlines: a kicker and a line,
    no picture, no standfirst. The hierarchy *is* the design — a newspaper's
    second story is recognisable as the second story before you have read a word
    of it, and a page that gave every story a photograph would be a page with no
    lead on it.
-8. **Team of the week** — the best XI across the whole league, **in the rail**,
+7. **Team of the week** — the best XI across the whole league, **in the rail**,
    grouped into its lines. One man per row: his name and owner at the left, what
    got him picked at the right (`2G · CS`, or minutes if nothing else). `benched` is
    appended to the owner when a manager left his own best player out — **and only
    when the arrangement it was read from is the one that was fielded**; see *What
    may be said about a bench* below.
+8. **The three tables**, in the sidebar as a back page carries them: the
+   season's scorers (Fantrax's published season FPts — the player's own
+   season, which is not the same as what he earned his owner, so the head says
+   FPts and claims nothing more), the draft league (Fantrax's arithmetic,
+   verbatim) and the Premier League (computed from finished fixtures, because
+   FPL's own table is a dead field — three for a win is the competition's fixed
+   rule and the football layer is where fixed rules may be constants).
+
+   Rank · name · played · record or goal difference · points, on hairlines, in
+   the tabular face; the scorers chart drops the played column rather than
+   printing ten dashes. None of the three is a link or a tap target — the
+   sortable, tappable, badged versions are on the League and Players tabs,
+   where a manager goes to USE them, and these are the printed copies.
 9. **The week's business** — trades and claims, grouped so both halves of a trade
    read as one deal. Fantrax's timestamps, shown verbatim with their zone named
    in the heading, because they carry a US Eastern offset.
@@ -262,11 +268,17 @@ records where that safety went: the pipeline decides what is safe to file, and
 the filed instant prints on the column, so a dated Friday opinion under
 Saturday's strip is honest in a way an undated one was not.
 
-**When there is no column the paper is facts-only and says nothing about it.** A
-paper does not apologise for the column it has not got. That is the state for
-most of every week, because the newest edition on disk is last week's until the
-next one is filed — `editionMatches` is what stops last week's opinions running
-under today's dateline.
+**When nothing has been filed the paper is facts-only and says nothing about
+it.** A paper does not apologise for the column it has not got — the state our
+own league is in until 10 Oct.
+
+Two mechanisms replaced the old one-column-a-round gate, and neither is
+`editionMatches` (which went with `latest.json` on 31 Aug). `normalizePaper`
+in `app/paper.ts` drops every story filed about another league, which is what
+keeps rehearsal prose off the real front page. `composePaper` then drops what
+has expired and retires what a later story superseded — so what leads is
+always the newest period's biggest word, and an old opinion still standing is
+one nothing has answered yet, printed under its own filed date.
 
 The filing time prints. Every other figure on the page is thirty seconds old and
 this could be three days old and still be the current edition; a reader is
