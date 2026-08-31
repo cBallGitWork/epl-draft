@@ -208,6 +208,14 @@
    about what a row SAYS, not about how tall it is, and it belongs with the
    screen rather than with this rule.
 
+   **It goes on the element that SETS a list row's height**, which is usually the
+   row and in a two-part row is each half — the padding has to be reachable or
+   the floor does nothing. And it goes on a row of a LIST: the two scoreline
+   panels wore it for a day and should not have. A scoreline is a one-off panel
+   and one of its halves is a button with a pressed state, so the class both
+   compressed a panel CM would not have compressed and told `tapfit` to hold a
+   control to the row's floor instead of the control's.
+
    The two marks are here rather than in their components because both were a JS
    constant applied as an inline `style`, which has no breakpoint at all: a 26px
    badge with 4px round it cannot fit a 28px row, and no `lg:` utility can reach

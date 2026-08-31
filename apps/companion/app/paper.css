@@ -138,7 +138,7 @@
 }
 
 /* Everything else the paper sets in its display face: headlines at both sizes,
-   and the standing figures a rail prints large. Weight and size come from the
+   and the standing figures the sidebar prints large. Weight and size come from the
    utilities at the point of use — this settles only which face and how tight. */
 .paper-display {
   font-family: var(--paper-display);
@@ -167,7 +167,7 @@
    readable measure divides the available width into. At a phone's 358px it is
    one, at the frame's present 640px it is two, and at the 72rem frame the
    chrome phase is bringing it is three — with no rule here changing. A count
-   would have printed two 150px columns inside a rail grid, which is a measure
+   would have printed two 150px columns inside the sidebar grid, which is a measure
    nobody can read. */
 .paper-columns {
   columns: 17rem;

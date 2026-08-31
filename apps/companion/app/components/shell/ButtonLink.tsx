@@ -24,7 +24,7 @@ import type { ReactNode } from "react";
  *  bordered box out by hand, which is ten chances for the desk to look like a
  *  website in the one place a reader is about to touch it. */
 export const BUTTON =
-  "cm-bevel flex min-h-11 items-center justify-center px-3 py-2.5 text-center text-sm font-medium hover:brightness-110 lg:min-h-9";
+  "cm-bevel flex min-h-11 items-center justify-center px-3 py-2.5 text-sm font-medium hover:brightness-110 lg:min-h-9";
 
 export default function ButtonLink({
   href,

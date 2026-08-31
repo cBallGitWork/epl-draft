@@ -63,16 +63,18 @@ export default async function GazettePage() {
     // The two serifs are declared here and nowhere else. A route that is not the
     // paper never mounts them, which is the whole reason `paperFonts.ts` is not
     // in the layout.
-    // The two serifs are declared here and nowhere else. A route that is not the
-    // paper never mounts them, which is the whole reason `paperFonts.ts` is not
-    // in the layout.
+    //
+    // The paper's second column is a SIDEBAR here and never a "rail". The desk
+    // has a rail now — `shell/Rail`, the six sections down the left — and one
+    // word for two different columns in one codebase is how a reader ends up
+    // reading the wrong file.
     //
     // `@container` and not a breakpoint, for everything below: what decides
     // whether this page can be a broadsheet is the width of the FRAME, not of
-    // the window. A `lg:` rail engages at a 1024px window whatever the frame is
-    // doing, and while the frame was 42rem that cut a 640px page into 304 and
-    // 304 — two equal columns, which is not a lead and a rail. The frame is
-    // wider now and the rail does arrive, but asking the container is what
+    // the window. A `lg:` breakpoint engages at a 1024px window whatever the
+    // frame is doing, and while the frame was 42rem that cut a 640px page into
+    // 304 and 304 — two equal columns, which is not a lead and a sidebar. The
+    // frame is wider now and the sidebar does arrive, but asking the container is what
     // makes that a consequence of there being room rather than a coincidence.
     <div
       className={`paper @container ${fraunces.variable} ${newsreader.variable} -mx-[var(--page-gutter)] -mb-[var(--page-foot)] -mt-3 flex flex-col gap-5 px-[var(--page-gutter)] pb-[calc(2rem+var(--page-foot))] pt-4`}
@@ -91,11 +93,11 @@ export default async function GazettePage() {
       <Index matchday={matchday} />
 
       <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">
-        {/* The lead column. `--page-gutter: 0` inside it once the rail exists:
+        {/* The lead column. `--page-gutter: 0` inside it once the sidebar exists:
             the picture band and the pitch break out of the PAGE's gutters, and
             in a two-column grid the page's gutter is no longer the edge they are
             breaking out to — left as it was, the widest thing on the lead would
-            have run out under the rail. */}
+            have run out under the sidebar. */}
         <div className="flex flex-col gap-5 @3xl:[--page-gutter:0px]">
           {/* While the round is being played the score IS the story, and it is the
           splash. `underway` and not `partial`: before the first kickoff every
@@ -182,13 +184,13 @@ export default async function GazettePage() {
 
         </div>
 
-        {/* The rail. Four short columns a manager scans rather than reads — the
+        {/* The sidebar. Four short columns a manager scans rather than reads — the
             week's best eleven, who is hurt, who signed whom, when the lock is —
             so they are the four that come out of the lead's flow and stand
             beside it. On a phone the grid is one column and this is simply what
             follows, which is the order `docs/ui/gazetta.md` sets.
 
-            The eleven leads the rail because it is the one block here anybody
+            The eleven leads the sidebar because it is the one block here anybody
             reads for pleasure; the other three are admin. It used to close the
             lead column as a full-width pitch, which is the size a picture gets
             and not the size a list of names earns. */}

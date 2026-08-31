@@ -10,7 +10,7 @@ import Column from "./Column";
 // was worth having and the size was not.
 //
 // So the lines stay and the grass goes. A reader still sees 1-4-4-2 — it is in
-// the heading, and the men are grouped under it line by line — but as a rail
+// the heading, and the men are grouped under it line by line — but as a sidebar
 // column beside the lead rather than as the widest thing on the sheet. The
 // reference paper does exactly this with its own best-of list, and it is the
 // block a manager scans rather than reads.

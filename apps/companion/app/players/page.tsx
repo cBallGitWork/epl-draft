@@ -29,10 +29,11 @@ export const revalidate = 30;
  *  edge when active: a modern web chip, and a second way of saying "selected"
  *  beside the one the rest of the desk already uses.
  *
- *  **No `text-*` here, and none inside.** A plate owns its ink (desk.css): on
- *  `--color-chrome`, `--color-muted` is 3.55:1 and fails, so a count dimmed at
- *  the call site would land under the floor on every chip. CM prints its own
- *  count in the label's own colour — "Fitness (40)" — and so does this. */
+ *  **No text COLOUR here, and none inside** — the size is ours, the ink is the
+ *  plate's (desk.css). On `--color-chrome`, `--color-muted` is 3.55:1 and fails,
+ *  so a count dimmed at the call site would land under the floor on every chip.
+ *  CM prints its own count in the label's own colour — "Fitness (40)" — and so
+ *  does this. */
 const CHIP = "cm-tab flex items-center gap-1 px-3 text-sm font-medium";
 
 export default async function PlayersPage({
