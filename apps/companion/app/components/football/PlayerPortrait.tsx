@@ -24,6 +24,7 @@ const SIZE = 32;
 export default function PlayerPortrait({
   player,
   colours,
+  chrome = false,
 }: {
   player: {
     /** FPL's season-stable player code, or **null** for a man FPL has never
@@ -39,13 +40,33 @@ export default function PlayerPortrait({
    *  kit rather than a floating cutout, and the fallback initials take whichever
    *  ink survives it — Fulham, Leeds and Spurs are near-white. */
   colours: ClubColours;
+  /** Draw the disc in chrome instead of the club's colour.
+   *
+   *  For the pitch, and it is a palette decision rather than a taste one. In a
+   *  ROW the club's colour is the identifying mark and there is one of it per
+   *  line, on the desk's own ground. On a PITCH there are fifteen at once, on
+   *  green, and they are twenty brand palettes let into a register where every
+   *  colour is a slot with one meaning — PRODUCT.md says club colours are brand
+   *  values and not chosen for contrast, and `PhotoGround` refuses colour
+   *  photography for the same reason one step further on.
+   *
+   *  Championship Manager's own pitch is four colours: the field, one blue for
+   *  every outfielder, one green for the keeper, white for the numbers. Chrome
+   *  is this app's "frame, and never content" slot — the title bar and the index
+   *  cell — so a disc cut from it is a marker rather than a claim. Ink on it is
+   *  7.0:1, which is what the initials fall back to. */
+  chrome?: boolean;
 }) {
   const [shown, setShown] = useState<"photo" | "initials">("photo");
 
   return (
     <span
       className="relative block shrink-0 overflow-hidden rounded-full ring-1 ring-line"
-      style={{ backgroundColor: colours.primary, width: "var(--row-portrait)", height: "var(--row-portrait)" }}
+      style={{
+        backgroundColor: chrome ? "var(--color-chrome)" : colours.primary,
+        width: "var(--row-portrait)",
+        height: "var(--row-portrait)",
+      }}
     >
       {/* Initials INSTEAD of a photograph, never underneath one — and never
           instead of one that exists.
@@ -75,7 +96,7 @@ export default function PlayerPortrait({
         <span
           aria-hidden
           className="absolute inset-0 grid place-items-center text-2xs font-semibold opacity-85"
-          style={{ color: inkOn(colours) }}
+          style={{ color: chrome ? "var(--color-ink)" : inkOn(colours) }}
         >
           {initials(player.name)}
         </span>

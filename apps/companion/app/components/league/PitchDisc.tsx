@@ -33,6 +33,15 @@ import { positionLabel } from "../../positions";
 // **The fixture stays too** (Craig, same message): the coloured box is handy
 // here, where a manager is picking a side and the card has room for it. It came
 // off the list in the same change.
+//
+// **The disc is chrome and never the club's colour** (Craig, 31 Aug: "colour
+// scheme doesn't work does it? With the circles"). It was `colours.primary`
+// first, which put twenty brand palettes on a green field in a register where
+// every colour is a slot — the exact thing `PhotoGround` greyscales a photograph
+// to avoid, and the exact thing `PitchPlayer` had already removed when it
+// dropped the sticker's backing for "nothing behind them at all". CM's own pitch
+// is four colours. The club still reads, out of the photograph rather than out
+// of the palette, which is where a kit belongs.
 
 /** How wide the head is drawn. Named here because the plate under it is sized
  *  against the CARD and the head against itself — a disc that grew with a
@@ -72,6 +81,7 @@ export default function PitchDisc({
             : (positionLabel(rostered.slot.position) ?? "?"),
         }}
         colours={clubColours(club?.shortName ?? "")}
+        chrome
       />
 
       <span className="flex w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-3xs font-bold uppercase leading-none text-bg">
