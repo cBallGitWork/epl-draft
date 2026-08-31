@@ -24,14 +24,21 @@ import { myTeamId } from "../../session";
 import { teamBadges } from "../../standings";
 import { FANTRAX_SILENT } from "../../config";
 
-// The season, one gameweek at a time across every competition being played on
-// it — or one team's thirty-eight, end to end. Fantrax's schedule is the league;
-// the cup and the playoff are ours, declared in `league/competitions.ts`, which
-// is also where the note saying they are a placeholder comes from.
+// The season ahead, one gameweek at a time across every competition being played
+// on it — or one team's remaining fixtures, end to end. Fantrax's schedule is
+// the league; the cup and the playoff are ours, declared in
+// `league/competitions.ts`, which is also where the note saying they are a
+// placeholder comes from.
 //
 // It opens on the round a reader came for — the one in play, or the next to kick
-// off — with that round's scores already on it. A gameweek that has been played
-// keeps its scores, so this is the archive too.
+// off — with that round's scores already on it.
+//
+// **Current and future, and nothing finished** (Craig, 31 Aug). It used to be
+// the archive as well: every played gameweek kept its scores and the round
+// picker listed all thirty-eight. Results is the archive now, and a fixture list
+// that also holds last month is a fixture list you have to navigate rather than
+// read. The round in play stays here, because it is not finished and because its
+// scores are the reason anyone opens this on a Saturday.
 //
 // The page speaks gameweeks and never periods. Both were on screen, they are the
 // same number all season, and printing one number under two names asks a reader
@@ -91,7 +98,23 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
     );
   }
 
-  const { info, rounds, table } = read;
+  const { info, table } = read;
+  // Finished rounds are Results' now. `status`, which is the round's LABEL and
+  // is the right question here — "has this round's football finished" — rather
+  // than `started`, which asks whether a ball has been kicked and would drop the
+  // round in play, the one round this page most exists for.
+  const rounds = read.rounds.filter((round) => round.status !== "finished");
+
+  if (read.rounds.length > 0 && rounds.length === 0) {
+    return (
+      <LeagueShell title="Schedule" current="schedule" sub={info.name} teams={info.teams.length}>
+        <Nothing title="Season complete" code={`${read.rounds.length} gameweeks, all finished`}>
+          Every round {info.name} plays has been played. They are all on Results.
+        </Nothing>
+      </LeagueShell>
+    );
+  }
+
   if (rounds.length === 0) {
     return (
       <LeagueShell title="Schedule" current="schedule" sub={info.name}>

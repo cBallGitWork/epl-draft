@@ -27,6 +27,7 @@ const ROUTES = [
   "/league",
   "/league/schedule",
   "/league/results",
+  "/league/team-stats",
   "/league/matchups",
   "/squad",
   "/players",

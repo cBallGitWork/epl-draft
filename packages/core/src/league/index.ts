@@ -38,6 +38,8 @@ export { seasonForm } from "./form";
 export type { FormGame, TeamForm } from "./form";
 export { defaultDescending, isSortKey, sortRows } from "./standingsOrder";
 export type { SortKey } from "./standingsOrder";
+export { teamPeriodStats } from "./teamStats";
+export type { TeamPeriodStats } from "./teamStats";
 
 export { pedigreeOf } from "./pedigree";
 export type { Pedigree } from "./pedigree";

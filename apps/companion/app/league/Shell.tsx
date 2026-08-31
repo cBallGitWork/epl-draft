@@ -1,6 +1,7 @@
 import { LEAGUE_NAME } from "@epl/core";
 import PageHeader from "../components/shell/PageHeader";
-import SectionNav from "./SectionNav";
+import Link from "next/link";
+import SectionNav, { FOOT } from "./SectionNav";
 import type { LeagueSection } from "./SectionNav";
 
 // The frame every league section wears, including when it has nothing to show.
@@ -83,6 +84,33 @@ export default function LeagueShell({
         <p className="text-center font-chrome text-sm font-bold text-accent lg:text-lg">{title}</p>
         {children}
       </section>
+
+      {/* **CM's second row, at last.** Every screen in the reference library ends
+          with a row of related screens above its Back/Next pair — `Tactics ▸
+          Training ▸ Last Match ▸ 6th in PRM ▸ History ▸` on `24.jpg` — and the
+          catalogue has listed its absence as one of two things every shot has
+          and we have on none. It exists now because Matchups left the tab strip
+          when Craig named the five that belong there, and a route with a board
+          and a page per pairing needed somewhere to be reached from.
+
+          Buttons and not tabs: a tab says "another view of this screen" and the
+          strip above already says that five times. These are somewhere else you
+          can go, so they are drawn raised — pressable — rather than as plates
+          butted into a bar. */}
+      <nav aria-label="Related screens" className="flex gap-1">
+        {FOOT.map((entry) => (
+          <Link
+            key={entry.key}
+            href={entry.href}
+            aria-current={entry.key === current ? "page" : undefined}
+            className={`flex min-h-11 flex-1 items-center justify-center px-3 font-chrome text-2xs font-bold uppercase lg:min-h-9 lg:text-sm ${
+              entry.key === current ? "cm-bevel-pressed text-accent" : "cm-bevel hover:brightness-110"
+            }`}
+          >
+            {entry.label}
+          </Link>
+        ))}
+      </nav>
     </div>
   );
 }

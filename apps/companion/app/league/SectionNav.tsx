@@ -1,12 +1,11 @@
 import Link from "next/link";
 
-// The League tab holds three views of the same competition, and this is how you
-// get between them.
+// The League tab's own views, and how you get between them.
 //
 // A server component, unlike the section rail: the rail has to work out where it
-// is from the URL because any route in the app can render it, but there are
-// exactly three pages here and each of them knows which one it is. Passing that
-// in costs a prop and saves shipping another component to the phone.
+// is from the URL because any route in the app can render it, but each page here
+// knows which one it is. Passing that in costs a prop and saves shipping another
+// component to the phone.
 //
 // **CM's tabs, which are bevelled and butt against each other.** They were
 // rounded pills with a gap between them, which is a modern web tab and reads as
@@ -15,32 +14,45 @@ import Link from "next/link";
 // one you are on", which is how the game said it and is why there is no separate
 // active border to keep the strip from shifting.
 
-/** **Four, which is what the strip holds in `cm9900/24.jpg`** — the game runs
- *  `Table · Results · Fixtures · Schedule` edge to edge, and ours ran three.
- *  Craig, 31 Aug: the blue buttons, and Matchups is already one of them, so it
- *  becomes four.
+/** **Five blue buttons** (Craig, 31 Aug): Table, Schedule, Results, Player
+ *  Stats, Team Stats. `cm9900/24.jpg` runs four and a foot row of five; ours is
+ *  five and a foot row of one, and the split between the two rows is Craig's
+ *  rather than the game's — CM files Team Stats and Player Stats DOWNSTAIRS and
+ *  he wants them up here.
  *
- *  `Results` is the added one and it is CM's own second tab. It is also the only
- *  candidate that needed no new provider read: `getSeasonResults` is already
- *  cached for the form guide on the table, and the rounds it files against are
- *  `getSchedule`'s. Team Stats was the other name on Craig's list and is
- *  deliberately not here yet — `getStandings` carries `streak` and `wwOrder`
- *  beyond what the table prints and nothing else, so the screen would open on a
- *  near-copy of the table. Deferred until it has a shape (Craig's call, same
- *  day). */
+ *  **Matchups left the strip and did not leave the app.** It is the one entry he
+ *  did not name and it is a live route with a board and a page per pairing, so
+ *  it moved to the foot row rather than out of the navigation — which is CM's
+ *  own second row, the one this repo has been noting the absence of since the
+ *  reference library was catalogued. Said plainly because it is the one part of
+ *  this that was not asked for.
+ *
+ *  **Player Stats leaves the section on purpose.** It points at `/players`, the
+ *  pool, which is a whole screen with its own filters and sort and is already a
+ *  rail destination. A second copy under `/league` would be the same table read
+ *  twice; the tab is a way in from the league context, and no tab draws as
+ *  current there because you are no longer in the section. */
 const SECTIONS = [
   { href: "/league", label: "Table", key: "table" },
   { href: "/league/schedule", label: "Schedule", key: "schedule" },
   { href: "/league/results", label: "Results", key: "results" },
-  { href: "/league/matchups", label: "Matchups", key: "matchups" },
+  { href: "/players", label: "Player Stats", key: "players" },
+  { href: "/league/team-stats", label: "Team Stats", key: "teamStats" },
 ] as const;
 
-export type LeagueSection = (typeof SECTIONS)[number]["key"];
+/** Below the panel, not in the strip. One entry today; CM's own is five
+ *  (`Team Stats · Player Stats · Referee Stats · Awards ▸ · History ▸`) and two
+ *  of those are now upstairs. */
+export const FOOT = [{ href: "/league/matchups", label: "Matchups", key: "matchups" }] as const;
+
+export type LeagueSection =
+  | (typeof SECTIONS)[number]["key"]
+  | (typeof FOOT)[number]["key"];
 
 export default function SectionNav({ current }: { current: LeagueSection }) {
-  // The strip fills the row. CM's four tabs run edge to edge across the whole
-  // content width (`cm9900/24.jpg`, `25.jpg`) — a tab strip is a bar, and three
-  // plates hugging the left are three buttons.
+  // The strip fills the row. CM's tabs run edge to edge across the whole content
+  // width (`cm9900/24.jpg`, `25.jpg`) — a tab strip is a bar, and plates hugging
+  // the left are buttons.
   return (
     <nav aria-label="League views" className="flex">
       {SECTIONS.map((section) => {
