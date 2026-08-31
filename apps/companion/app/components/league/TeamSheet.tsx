@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
 import { playerName } from "@epl/core";
 import LivePlayerCard from "./LivePlayerCard";
-import PitchPlayer from "./PitchPlayer";
+import PitchDisc from "./PitchDisc";
 import PitchRows, { GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
 import SquadRows from "./SquadRows";
 import { FAR_INSET } from "./PitchTurf";
@@ -70,10 +70,15 @@ export default function TeamSheet({
     <div className="pitch-with-bench flex flex-col">
       {mode === "pitch" ? (
         <>
+          {/* The trial's home now (Craig, 31 Aug). The gated squad board lost its
+              pitch — fifteen men with no arrangement is not a shape — and an
+              eleven is, so Championship Manager's flat diagram is drawn here,
+              where there are four fewer men and room for each of them. */}
           <PitchRows
             rows={rows.map((line) => ({ label: line.position, players: line.players }))}
             keyOf={(player) => player.rostered.slot.fantraxId}
             widest={widest}
+            flat
           >
             {(player) => <Cell player={player} onOpen={() => setOpen(player)} />}
           </PitchRows>
@@ -141,7 +146,7 @@ function Cell({ player, onOpen }: { player: SquadPlayerDetail; onOpen: () => voi
       aria-label={playerName(player.rostered)}
       className="block w-full"
     >
-      <PitchPlayer
+      <PitchDisc
         rostered={player.rostered}
         club={player.club}
         opposition={player.opposition}

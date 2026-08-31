@@ -3,18 +3,23 @@
 import { useState } from "react";
 import type { SquadDetailLine, SquadPlayerDetail, SquadReason } from "@epl/core";
 import PlayerCard from "./PlayerCard";
-import SquadPitch from "./SquadPitch";
 import SquadRows from "./SquadRows";
-import BoardBar from "./BoardBar";
-import { type View } from "./ViewToggle";
 
 // A squad with no gameweek to report: the state every squad is in most of the
 // week, and the only state a rival's squad is ever in before its lineups lock.
 //
-// Two arrangements of the same fifteen and one card over the top of them. The
-// client boundary is here rather than lower down because all three share one
-// selection: tapping a face on the pitch and tapping a row in the list have to
-// open the same card, or the two views are two features.
+// **A list, and no pitch** (Craig, 31 Aug: "maybe the squad page doesn't need a
+// pitch, and we save that for the live match h2h, gives us more space too since
+// it's eleven"). This is the branch that draws FIFTEEN — every man a manager
+// holds, with no arrangement, because the arrangement is the thing the gate
+// withholds. A pitch is a drawing of a shape, and this view has no shape to
+// draw: fifteen men in position lines is a diagram of something nobody picked.
+// Championship Manager's own squad screen is a table for the same reason. The
+// eleven that IS a shape keeps its pitch, on the head-to-head and the planner,
+// where there are four fewer men and room for each of them.
+//
+// The client boundary is here rather than lower down because the list and the
+// card share one selection.
 //
 // It is handed the squad already joined to its clubs, fixtures and points
 // (`squadDetail`). That join is a server job: it is pure, it is tested, and
@@ -55,7 +60,6 @@ export default function SquadBoard({
    *  a heading costs no height where a sentence cost a screenful. */
   projected: boolean;
 }) {
-  const [view, setView] = useState<View>("pitch");
   const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
 
   const explanation = EXPLANATION[because];
@@ -63,9 +67,9 @@ export default function SquadBoard({
 
   return (
     <div className="flex flex-col gap-2">
-      <BoardBar view={view} onPick={setView}>
+      <div className="flex items-center justify-end">
         <span className="numeric text-2xs text-faint">{players} players</span>
-      </BoardBar>
+      </div>
 
       {explanation ? (
         <p className=" border border-line bg-surface px-3 py-2 text-2xs text-muted">
@@ -73,11 +77,7 @@ export default function SquadBoard({
         </p>
       ) : null}
 
-      {view === "pitch" ? (
-        <SquadPitch lines={lines} onOpen={setOpen} />
-      ) : (
-        <SquadRows lines={lines} projected={projected} onOpen={setOpen} />
-      )}
+      <SquadRows lines={lines} projected={projected} onOpen={setOpen} />
 
       {open ? (
         <PlayerCard

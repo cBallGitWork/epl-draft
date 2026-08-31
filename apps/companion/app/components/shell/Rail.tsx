@@ -16,10 +16,19 @@ import { SECTIONS, isPaperRoute, owns } from "./sections";
 // icon set — there is none, and inventing one to save 20px is a whole visual
 // language for a rail that already fits.
 //
-// `cm-tab`, which `league/SectionNav.tsx` already wears: the plate is bevelled
-// and the current one is drawn PRESSED with the accent on its label. The bar
-// marked its tab with a border edge that flipped sides between the two shapes,
-// and a rail would have needed a third case; a pressed bevel needs none.
+// **Not `cm-tab`, and that was the mistake** (Craig, 31 Aug: "the side buttons
+// still don't quite look like CM"). Championship Manager draws two different
+// objects and this file had borrowed the wrong one. Its TAB STRIP — the row
+// under a title bar — is a filled royal-blue plate with a bevel, and the current
+// tab is pressed with yellow on it. Its RAIL is nothing like that: dark navy,
+// the page's own ground, with each entry in a thin outlined box and its label in
+// white. Compare `cm9900/12.jpg` and `19.jpg` — the strip and the rail are in
+// the same screenshot and they do not match.
+//
+// So the rail is outlined here and filled nowhere. What it costs is the pressed
+// bevel that used to mark the current section, which the accent and an edge do
+// instead — the same pair `league/TableRow` marks "yours" with, so the mark for
+// "the one you are on" is one object in two places rather than two.
 //
 // **The items sit at the FOOT of the rail below `lg`.** CM's own rail is
 // top-aligned, and on a 844px phone that puts the first section 800px from the
@@ -40,7 +49,9 @@ export default function Rail({ matchday }: { matchday: boolean }) {
   // there stands the rail down without this file hearing about it.
   if (isPaperRoute(pathname)) return null;
 
-  const sections = SECTIONS.filter((section) => matchday || !section.onlyDuringGameweek);
+  const sections = SECTIONS.filter(
+    (section) => matchday || !section.onlyDuringGameweek,
+  );
 
   return (
     <nav
@@ -65,7 +76,11 @@ export default function Rail({ matchday }: { matchday: boolean }) {
                 aria-current={here ? "page" : undefined}
                 // No tracking. CM does not letterspace, and the rail is the one
                 // place the label has no room to spare for it.
-                className="cm-tab flex items-center justify-center px-1 text-center text-3xs font-bold uppercase lg:text-2xs"
+                className={`flex min-h-11 items-center justify-center border px-1 text-center text-3xs font-bold uppercase hover:bg-surface lg:min-h-9 lg:text-2xs ${
+                  here
+                    ? "border-accent border-l-2 text-accent"
+                    : "border-chrome text-ink"
+                }`}
               >
                 {section.label}
               </Link>
