@@ -1,5 +1,5 @@
 import { LEAGUE_NAME, clubById } from "@epl/core";
-import AsItStands from "../components/gazette/AsItStands";
+import Scoreboard from "../components/gazette/Scoreboard";
 import Deals from "../components/gazette/Deals";
 import Doubts from "../components/gazette/Doubts";
 import Lead, { Headline } from "../components/gazette/Stories";
@@ -74,12 +74,11 @@ export default async function GazettePage() {
             breaking out to — left as it was, the widest thing on the lead would
             have run out under the sidebar. */}
         <div className="flex flex-col gap-5 @3xl:[--page-gutter:0px]">
-          {/* While the round is being played the score IS the story, and it is the
-          splash. `underway` and not `partial`: before the first kickoff every
-          total is a legitimate nought, and eight ties reading 0–0 would be
-          reporting a round nobody has played. */}
+          {/* The scoreboard strip. `underway` and not `partial`: before the
+          first kickoff every total is a legitimate nought, and a strip reading
+          0–0 across eight ties would be reporting a round nobody has played. */}
           {paper.board && paper.underway ? (
-            <AsItStands
+            <Scoreboard
               pairings={paper.board.pairings}
               scores={paper.board.scores}
               mine={paper.mine}
@@ -87,23 +86,22 @@ export default async function GazettePage() {
             />
           ) : null}
 
-          {/* The lead. Absent most of the week and absent while football is on, on
-          purpose: a paper does not manufacture a front-page story, and a
-          headline is the one place a provisional claim cannot go.
+          {/* The lead — journalism, AT ALL TIMES. This reverses the recorded
+          rule that suppressed the written column while football was on:
+          "a headline is the one place a provisional claim cannot go" was a
+          rule about the PAGE, and it has moved to the PIPELINE — the writer
+          decides what is safe to file, and every column carries its filed
+          instant, so a Friday preview under Saturday's moving strip is an
+          honest dated opinion rather than a claim about now. The desk's own
+          fact-stories still wait for the round to finish; they carry no
+          dateline and would claim the week.
 
           **When a columnist has filed, HIS headline is the lead and the desk's
           is dropped.** Both would be about the same match — a fact-headline and
           a written one, stacked, saying the same thing twice — and a paper runs
           one splash. The picture stays: the story is the same story, and the
           desk is what chose the photograph for it. */}
-          {/* `!paper.underway`, and it is the same rule `AsItStands` states: while the
-          round is being played the paper reports the score and says nothing
-          about what it means. A filed column BECOMES the lead — see below — so
-          without this the one place a provisional claim may not go is exactly
-          where the preview went, from the Friday lock to the last whistle. The
-          preview's own prose makes it worse: the writer is told "nobody has
-          kicked a ball", so it said so, under moving scores. */}
-          {paper.written && !paper.underway ? (
+          {paper.written ? (
             <>
               {paper.stories[0] ? (
                 <Picture lead={paper.stories[0]} who={who} clubs={clubs} />

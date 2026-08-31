@@ -33,13 +33,12 @@ business, who is hurt, and when lineups lock.
 
    Under it, the line that changes: "Football is on. The scores are moving."
    while live, otherwise when lineups lock.
-2. **As it stands**, while the round is running — your tie at the size the live
-   number deserves, every other tie under it at the desk's density. See *The
-   live splash* below. It replaces a thin bar that said football was on and made
-   you tap to learn anything at all.
+2. **The scoreboard**, while the round is running — a hairline band of every
+   tie in one horizontally scrolling strip, yours first, the Live tab one tap
+   away. See *The scoreboard* below. It replaced the full-height "As it
+   stands" splash when journalism took the lead at all times.
 3. **The lead** — a full-bleed picture band, then a kicker, a headline set larger
-   than anything but the masthead, and a standfirst. Never at the same time as
-   the splash. See *The lead* below.
+   than anything but the masthead, and a standfirst. See *The lead* below.
 4. **The column**, when one has been filed about this round — and then it
    *leads*, taking the picture the desk chose and dropping the desk's own
    headline. See *The written column* below.
@@ -69,14 +68,31 @@ sets a border *colour* plus an explicit left width, so on a ruled row with no
 `border` utility it draws the accent bar and nothing else. One treatment, two
 grounds, and `mine.ts` stays the only place that knows what "yours" looks like.
 
-## The live splash
+## The scoreboard
 
-**The page refreshes itself**, from the shell rather than from here. `/` was
-once the only live-worthy surface in the app that never mounted a poller at all:
-a phone left open on the sofa showed a frozen scoreline under a pulsing dot for
-a whole half. Then it mounted its own, as seven other screens did — and now the
-layout mounts the one, on `pollSeconds`: 30s while the round is under way, 300s
-otherwise, everywhere at once.
+**Journalism leads at all times, and this section records the reversal by
+name.** Until 31 Aug the splash here was "As it stands" — your tie enormous,
+every tie under it, and the written column suppressed from the Friday lock to
+the last whistle, on the rule that a headline is the one place a provisional
+claim cannot go. That rule was about the PAGE, and it moved to the PIPELINE:
+the writer decides what is safe to file, and every column carries its filed
+instant, so a Friday preview printed under Saturday's moving scores is a dated
+opinion rather than a claim about now. What remains on the page is the narrow
+version: the desk's own manufactured stories (`stories()`) still wait for
+`partial` to clear, because a fact-headline carries no dateline and would claim
+the week.
+
+The scores themselves became `Scoreboard.tsx`: a hairline band under the
+contents strip, every tie as a stacked pair in one horizontally scrolling,
+snap-pointed row, yours first with the accent on your name. Each cell is a
+`min-h-11` link — yours to your matchup board, the rest to the Live tab, which
+owns watching. The scrollbar is hidden; the cut-off ninth cell is what says
+"more". The recorded fallback, if the scroller fails tapfit or the eye at 390:
+a stack of one-line rows at desk density.
+
+**The page refreshes itself**, from the shell rather than from here — the
+layout mounts the one `AutoRefresh`, on `pollSeconds`: 30s while the round is
+under way, 300s otherwise.
 
 **A figure that moved says so.** `Changed` wraps each total and flashes it to the
 accent for 700ms when a refresh brings a different number, settling back to
@@ -88,17 +104,12 @@ reduced-motion rule is itself `!important` and would otherwise collapse it.
 
 **Three round questions, and they are not interchangeable.** `live` is a ball in
 the air — the dot and the present tense. `partial` is football still to come —
-what withholds the lead. `underway` is first kickoff to last whistle — what the
-splash asks, because before the first kickoff every total is a legitimate nought
-and eight ties reading 0–0 would be reporting a round nobody has played.
+what withholds the desk's own stories. `underway` is first kickoff to last
+whistle — what the scoreboard asks, because before the first kickoff every total
+is a legitimate nought and a strip reading 0–0 across eight ties would be
+reporting a round nobody has played.
 
-**The splash is never the lead.** While the round is being played the paper
-reports the score and says nothing about what it means. That is the same rule as
-before, not a new one — a headline is the one place a provisional claim cannot
-go — and `underway` being true implies `partial`, so the two can never both
-render.
-
-Not signed in is a neutral desk, not an empty one: the same ties, none promoted.
+Not signed in is a neutral strip, not an empty one: the same ties, none promoted.
 
 ## The lead
 
@@ -197,17 +208,17 @@ calls each tie, and `markPreview` counts those calls against the results so the
 next edition can tell him what he got. A pundit nobody marks is a pundit who
 never has to be right. A **report** files once the football stops.
 
-**It leads when it exists AND the football has stopped, and then the desk's
-headline is dropped.** Both would be about the same match — a fact-headline and a
-written one, stacked, saying the same thing twice. The picture stays, because the
-story is the same story and the desk is what chose the photograph for it.
+**It leads whenever it exists, and then the desk's headline is dropped.** Both
+would be about the same match — a fact-headline and a written one, stacked,
+saying the same thing twice. The picture stays, because the story is the same
+story and the desk is what chose the photograph for it.
 
-The "and the football has stopped" is not a detail. A preview files at the
-Friday lock and `partial` stays true until the last whistle, so left unqualified
-this rule made the preview the LEAD all Saturday — the one place on the page a
-provisional claim may not go, per the rule three sections above. And the writer
-is told "nobody has kicked a ball", so it said exactly that, under moving
-scores. The page reads `!underway`.
+Until 31 Aug this rule read "and the football has stopped" (`!underway`),
+because a preview filed at the Friday lock would otherwise lead all Saturday
+saying "nobody has kicked a ball" under moving scores. *The scoreboard* section
+records where that safety went: the pipeline decides what is safe to file, and
+the filed instant prints on the column, so a dated Friday opinion under
+Saturday's strip is honest in a way an undated one was not.
 
 **When there is no column the paper is facts-only and says nothing about it.** A
 paper does not apologise for the column it has not got. That is the state for
