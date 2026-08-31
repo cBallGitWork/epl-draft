@@ -120,7 +120,7 @@ is more specific than a palette; it is the reason the token names in
 | Slot | Token | Means | On `--bg` |
 |---|---|---|---|
 | Ground | `--color-bg` `surface` `raised` `line` | depth, never meaning | — |
-| Ink | `--color-ink` `muted` `faint` | how loud | 17.1 · 8.7 · 5.3 |
+| Ink | `--color-ink` `muted` `faint` | how loud | 17.0 · 8.6 · 5.7 |
 | Yellow | `--color-accent` | **yours · selected · active · primary** | 13.1 |
 | Cyan | `--color-info` | **a person** — and secondary emphasis | 11.2 |
 | Amber | `--color-mid` | **a figure** | 9.8 |
@@ -131,8 +131,27 @@ is more specific than a palette; it is the reason the token names in
 | Deep league red | `--color-league-deep` | the same red as a **ground with text on it** | — |
 | Cream | `--color-cream` | ink on a colour plate | — |
 
-`--color-faint` on `--color-raised` is 4.6:1. That is the tightest pair in the
+`--color-faint` on `--color-raised` is 4.9:1. That is the tightest pair in the
 set and it is what fixes where the raised step can sit; move one, re-check both.
+
+**The wells are grey and only the page is navy** (Craig, 31 Aug: *the main table
+is still too dark, cm has more of a grey look*). The ramp was hue 265 at chroma
+0.046 throughout, so `--surface` rendered `#0f182f` — a navy plate, not a well.
+Championship Manager's row ground is `#4c4944`: measured off `cm9900/12.jpg` and
+recorded in `docs/ui/reference/README.md` long before anyone read it back.
+
+Hue was free — 265 → 80 at chroma 0.012 shifts every ratio in this table by under
+0.05, because luminance barely notices chroma that low. **Lightness was not, and
+the bound is CM's own.** At its L 0.407 our `--faint` lands on 2.55:1, `--bad` on
+2.66 and `--live` on 2.59; solving for a lift inverts the ladder, since `--faint`
+would need L 0.782 against a `--muted` of 0.76. The game could afford a mid-grey
+because it ran its unavailable ink at **2.54:1**, which §2 already records us
+refusing. So `--surface` sits at the ceiling a 4.5:1 floor allows — `#23201a`,
+L 0.245 — and `--faint` lifted 0.63 → 0.65 to pay for it.
+
+`--color-bg` keeps hue 265 and is the only step that does. `cm9900/24.jpg` is a
+dark BLUE rail beside a warm grey table area; warming the whole ramp turned the
+rail brown, which is a different game.
 
 The live red and the league red are one hue on purpose — the league is what is
 live. The live red is the brand red lifted until it carries text, because
@@ -193,7 +212,7 @@ red so nothing on the page can reach the brand colour by accident — the crest 
 the one exception and `.crest` restores it (§5).
 
 The paper's ink ladder is the same three rungs the desk's is, measured on this
-stock: **14.2 · 7.9 · 5.4** against the desk's 17.1 · 8.7 · 5.3. `--faint` was
+stock: **14.2 · 7.9 · 5.4** against the desk's 17.0 · 8.6 · 5.7. `--faint` was
 0.48 until 29 Aug, which is 3.0:1 — under the floor this file says has no
 exceptions, while carrying every timestamp and percentage on the front page.
 
