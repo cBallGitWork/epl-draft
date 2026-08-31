@@ -9,7 +9,6 @@ import {
   kickedOff,
   playerName,
 } from "@epl/core";
-import FixtureChip from "../football/FixtureChip";
 import StateBox from "../football/StateBox";
 import type { Contribution } from "@epl/core";
 import { chipsFor } from "./Chips";
@@ -129,7 +128,7 @@ export default function SquadRows({
           <span className="min-w-0 flex-1 lg:min-w-36 lg:max-w-[18rem]">
             Player
           </span>
-          <span className="w-12 shrink-0 text-right">Fixture</span>
+          <span className="w-12 shrink-0 text-right lg:hidden">Match</span>
           {STATS.map((stat) => (
             <span
               key={stat.key}
@@ -236,10 +235,18 @@ function Row({
         {club?.shortName ?? "unmapped"}
       </span>
 
-      {/* His fixture until he kicks off, and what he has made of it after. The
-          same column either way, so a list mid-round does not comb. */}
+      {/* What he has made of his match, and nothing before he starts one.
+          **No fixture chip here** (Craig, 31 Aug): the coloured box is handy on
+          the pitch, where a card has room for it and a manager is picking a
+          side, and it was turning up on five screens. A list is a list of
+          readings, and Championship Manager's own squad list carries no
+          opponent at all — its columns are position, age, form, morale,
+          condition, value (`cm9900/12.jpg`).
+
+          Phone only. Above `lg` the stat columns below say the same thing at
+          more length, so this was the same match twice on one row. */}
       {started ? (
-        <span className="flex w-12 shrink-0 items-center justify-end gap-0.5">
+        <span className="flex w-12 shrink-0 items-center justify-end gap-0.5 lg:hidden">
           {chips.map((chip) => (
             <span
               key={chip.label}
@@ -253,9 +260,7 @@ function Row({
           </span>
         </span>
       ) : (
-        <span className="inline-flex w-12 shrink-0 overflow-hidden">
-          <FixtureChip opposition={player.opposition} blank="No fixture" />
-        </span>
+        <span className="w-12 shrink-0 lg:hidden" />
       )}
 
       {/* The stat columns, at desk width only. On a phone the rows are the

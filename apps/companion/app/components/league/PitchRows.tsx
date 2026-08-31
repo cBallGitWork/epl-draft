@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import CmGround from "./CmGround";
 import PitchFrame from "./PitchFrame";
 
 // Players in their lines on a pitch, whatever a line is made of.
@@ -55,7 +56,9 @@ const MAX_CARD = "6.875rem";
  *  the same number. Each strip was carrying a rem of its own — 3.3rem and 3.9rem
  *  against the pitch's 4.35rem — so a reserve stood a quarter smaller than the
  *  man he would come on for, on the same screen, at every width. */
-export function widestLine(rows: readonly { players: readonly unknown[] }[]): number {
+export function widestLine(
+  rows: readonly { players: readonly unknown[] }[],
+): number {
   return Math.max(1, ...rows.map((row) => row.players.length));
 }
 
@@ -130,10 +133,17 @@ export default function PitchRows<T>({
   rows,
   keyOf,
   widest: agreed,
+  flat = false,
   children,
 }: {
   rows: PitchRow<T>[];
   keyOf: (player: T) => string;
+  /** Draw the ground as Championship Manager's flat diagram rather than as
+   *  FPL's photographed trapezoid. A trial (Craig, 31 Aug); the sizing below is
+   *  the same either way, which is the whole reason this is a flag here rather
+   *  than a second component with a second copy of the arithmetic. Whichever
+   *  ground loses gets deleted, and neither gets merged into the other. */
+  flat?: boolean;
   /** A fullest-line count to size against instead of this pitch's own.
    *
    *  For a caller drawing TWO pitches that must agree. The head-to-head is one
@@ -151,38 +161,36 @@ export default function PitchRows<T>({
   // component may not have all of.
   const widest = agreed ?? widestLine(rows);
 
-  return (
-    <PitchFrame>
-      {rows.map((row) => (
-        <ul
-          key={row.label}
-          // The whole set's row count, not this row's index: every card on the
-          // pitch is bounded by the same share of the screen, or a line would
-          // stand at a different height from the line above it.
-          style={rowBudget(rows.length)}
-          // Shrinks rather than wraps. A back five is an ordinary line and does
-          // not fit five cards at full width on a phone — wrapping put one
-          // defender on a row of his own below the other four, which reads as a
-          // formation nobody picked. They give up width instead — and only they
-          // do: the type inside is on the scale and does not come down with the
-          // card.
-          className={`flex items-start justify-center ${GAP_CLASS}`}
-          aria-label={`${row.label} — ${row.players.length}`}
+  const lines = rows.map((row) => (
+    <ul
+      key={row.label}
+      // The whole set's row count, not this row's index: every card on the
+      // pitch is bounded by the same share of the screen, or a line would
+      // stand at a different height from the line above it.
+      style={rowBudget(rows.length)}
+      // Shrinks rather than wraps. A back five is an ordinary line and does
+      // not fit five cards at full width on a phone — wrapping put one
+      // defender on a row of his own below the other four, which reads as a
+      // formation nobody picked. They give up width instead — and only they
+      // do: the type inside is on the scale and does not come down with the
+      // card.
+      className={`flex items-start justify-center ${GAP_CLASS}`}
+      aria-label={`${row.label} — ${row.players.length}`}
+    >
+      {row.players.map((player) => (
+        <li
+          key={keyOf(player)}
+          className="min-w-0 shrink-0"
+          // Fixed, not flexed: the fullest line's share, given to every card
+          // on every line. `max-w` keeps a two-man front line from drawing
+          // cards wider than a squad screen ever wants.
+          style={{ flexBasis: cardBasis(widest) }}
         >
-          {row.players.map((player) => (
-            <li
-              key={keyOf(player)}
-              className="min-w-0 shrink-0"
-              // Fixed, not flexed: the fullest line's share, given to every card
-              // on every line. `max-w` keeps a two-man front line from drawing
-              // cards wider than a squad screen ever wants.
-              style={{ flexBasis: cardBasis(widest) }}
-            >
-              {children(player)}
-            </li>
-          ))}
-        </ul>
+          {children(player)}
+        </li>
       ))}
-    </PitchFrame>
-  );
+    </ul>
+  ));
+
+  return flat ? <CmGround>{lines}</CmGround> : <PitchFrame>{lines}</PitchFrame>;
 }

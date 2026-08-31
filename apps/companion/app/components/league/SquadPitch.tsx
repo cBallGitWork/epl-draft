@@ -1,6 +1,6 @@
 import type { SquadDetailLine, SquadPlayerDetail } from "@epl/core";
 import { playerName } from "@epl/core";
-import PitchPlayer from "./PitchPlayer";
+import PitchDisc from "./PitchDisc";
 import PitchRows from "./PitchRows";
 
 // All fifteen on the grass, in the lines their manager has them filling.
@@ -23,8 +23,16 @@ export default function SquadPitch({
 }) {
   return (
     <PitchRows
-      rows={lines.map((line) => ({ label: line.position, players: line.players }))}
+      rows={lines.map((line) => ({
+        label: line.position,
+        players: line.players,
+      }))}
       keyOf={(player) => player.rostered.slot.fantraxId}
+      // The trial (Craig, 31 Aug): Championship Manager's flat diagram with
+      // cut-out heads on it, instead of FPL's photographed trapezoid with
+      // stickers. The squad board is where it is being judged, so the matchday
+      // XI and the lineup planner are untouched and stand as the comparison.
+      flat
     >
       {(player) => (
         <button
@@ -35,7 +43,7 @@ export default function SquadPitch({
           aria-label={playerName(player.rostered)}
           className="block w-full"
         >
-          <PitchPlayer
+          <PitchDisc
             rostered={player.rostered}
             club={player.club}
             opposition={player.opposition}
