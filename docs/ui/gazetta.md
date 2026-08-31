@@ -42,13 +42,22 @@ business, who is hurt, and when lineups lock.
 4. **The column**, when one has been filed about this round — and then it
    *leads*, taking the picture the desk chose and dropping the desk's own
    headline. See *The written column* below.
-5. **The rest of the edition** — everything else filed, under the lead, as
-   articles at a size down: kicker chip, headline, deck, dateline, paragraphs
-   (`gazette/Article`). **The paper is ONE page.** Inside pages under `/paper`
-   were built on 31 Aug and reverted the same day: a second paper route needs a
-   folio and a contents strip, which means printing the app's own six-section
-   navigation in newsprint, and the Gazetta is one section of six rather than a
-   site inside the site. Everything the newsdesk files prints here.
+5. **The rest of the edition** — everything else filed, as HEADLINES under the
+   lead: kicker in ink, headline, deck, dateline, and "read on"
+   (`gazette/Article`). **A front page prints one article and headlines the
+   rest**, which is what every newspaper does and what this page briefly
+   stopped doing — it printed each filed story in full, stacked, which is a
+   magazine. `HEADLINES_SHOWN` caps it at eight so a busy round does not turn
+   the front page into an index of itself.
+
+   **They open where they stand**, on `<details>`: no client component, no
+   state, keyboard-operable and screen-reader announced for free. Opening in
+   place rather than on another page because **the paper is ONE page** — inside
+   pages under `/paper` were built on 31 Aug and reverted the same day, since a
+   second paper route needs a folio and a contents strip, which means printing
+   the app's own six-section navigation in newsprint, and the Gazetta is one
+   section of six rather than a site inside the site. DESIGN §9 already records
+   expanding in place as this app's mobile pattern.
 6. **The two tables** — the draft league (Fantrax's own arithmetic, verbatim)
    and the Premier League (computed from finished fixtures under the
    competition's fixed rules), in the sidebar as a back page carries them:

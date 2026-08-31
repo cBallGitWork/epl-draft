@@ -9,7 +9,7 @@ import Written from "../components/gazette/Written";
 import Index from "../components/gazette/Index";
 import Masthead from "../components/gazette/Masthead";
 import TeamOfTheWeek from "../components/gazette/TeamOfTheWeek";
-import { FANTRAX_SILENT, SECONDARY_STORIES, servedLeague } from "../config";
+import { FANTRAX_SILENT, HEADLINES_SHOWN, SECONDARY_STORIES, servedLeague } from "../config";
 import Column from "../components/gazette/Column";
 import Nothing from "../components/shell/Nothing";
 import PaperTable from "../components/gazette/PaperTable";
@@ -121,14 +121,16 @@ export default async function GazettePage() {
             <Lead lead={paper.stories[0]} who={who} clubs={clubs} />
           ) : null}
 
-          {/* The front page continuing down the sheet. The paper is one page,
-              so the rest of the edition prints here rather than behind a link
-              — a hairline between each, the way a column break is set. */}
-          {paper.filed.slice(1, SECONDARY_STORIES + 1).map((story) => (
-            <div key={story.slug} className="border-t border-line pt-5">
-              <Article story={story} />
+          {/* The rest of the edition, as a front page carries it: headlines,
+              each opening where it stands. The lead above is the one article
+              printed whole. */}
+          {paper.filed.length > 1 ? (
+            <div className="flex flex-col gap-1">
+              {paper.filed.slice(1, HEADLINES_SHOWN + 1).map((story) => (
+                <Article key={story.slug} story={story} />
+              ))}
             </div>
-          ))}
+          ) : null}
 
           {paper.stories.length > 1 ? (
             <Column title="Also this week">
