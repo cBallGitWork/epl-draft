@@ -51,18 +51,22 @@ export interface Filing {
   threads: readonly ThreadUpdate[];
 }
 
-/** Everything a filing changes, written together so the commit is atomic. */
-export function persistFiling(filing: Filing, ledger: Ledger, now: string): void {
-  const { story } = filing;
-  const existing = readPaperStories();
-  const mine = existing.filter((each) => each.leagueId === story.leagueId);
-  const others = existing.filter((each) => each.leagueId !== story.leagueId);
+/** Everything a firing's filings change, written together so the commit is
+ *  atomic. One firing serves one league — the first story's. */
+export function persistFilings(filings: readonly Filing[], ledger: Ledger, now: string): void {
+  if (filings.length === 0) return;
+  const leagueId = filings[0].story.leagueId;
 
+  const existing = readPaperStories();
+  const mine = existing.filter((each) => each.leagueId === leagueId);
+  const others = existing.filter((each) => each.leagueId !== leagueId);
+
+  const slugs = new Set(filings.map((filing) => filing.story.slug));
   const merged = composePaper(
-    [...mine.filter((each) => each.slug !== story.slug), story],
+    [...mine.filter((each) => !slugs.has(each.slug)), ...filings.map((filing) => filing.story)],
     now,
   ).slice(0, MAX_PAPER_STORIES);
-  // The one impossible outcome: filing a story cannot shrink a paper to
+  // The one impossible outcome: filing stories cannot shrink a paper to
   // nothing. If it did, the compose dropped what it should have kept, and a
   // red run is cheaper than an empty front page.
   if (merged.length === 0) throw new Error("Filing produced an empty paper; refusing to write it.");
@@ -73,12 +77,15 @@ export function persistFiling(filing: Filing, ledger: Ledger, now: string): void
     `${JSON.stringify({ updatedAt: now, stories: [...others, ...merged] }, null, 2)}\n`,
   );
 
-  const archiveDir = join(EDITIONS_ROOT, "archive", story.leagueId);
+  const archiveDir = join(EDITIONS_ROOT, "archive", leagueId);
   mkdirSync(archiveDir, { recursive: true });
-  writeFileSync(join(archiveDir, `${story.slug}.json`), `${JSON.stringify(story, null, 2)}\n`);
-
-  writeFileSync(
-    LEDGER_PATH,
-    `${JSON.stringify(recordCoverage(ledger, story.leagueId, filing.spentKeys, filing.threads, now), null, 2)}\n`,
-  );
+  let book = ledger;
+  for (const filing of filings) {
+    writeFileSync(
+      join(archiveDir, `${filing.story.slug}.json`),
+      `${JSON.stringify(filing.story, null, 2)}\n`,
+    );
+    book = recordCoverage(book, leagueId, filing.spentKeys, filing.threads, now);
+  }
+  writeFileSync(LEDGER_PATH, `${JSON.stringify(book, null, 2)}\n`);
 }

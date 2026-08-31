@@ -8,6 +8,7 @@ import {
   type LeagueInfo,
   type LiveTeamScore,
   type PeriodPairing,
+  type RosteredTeam,
   type TeamOfTheWeek,
   type TeamProjection,
   availability,
@@ -36,6 +37,9 @@ export interface RoundFacts {
   pairings: PeriodPairing[];
   scores: Map<string, LiveTeamScore>;
   projected: Map<string, TeamProjection>;
+  /** The resolved squads, for the joins only a bridge can make — who owns the
+   *  men in a fixture. Empty when the rosters read refused. */
+  teams: RosteredTeam[];
   eleven: TeamOfTheWeek | null;
   fielded: boolean;
   business: Deal[];
@@ -71,6 +75,7 @@ export async function gatherRoundFacts(
     pairings: periodPairings(info.matchups, info.teams, period),
     scores: new Map(mapLiveScores(live).map((score) => [score.teamId, score])),
     projected: new Map(mapProjectedTotals(live).map((guess) => [guess.teamId, guess])),
+    teams: squads?.teams ?? [],
     eleven: eleven !== null && eleven.picks.length > 0 ? eleven : null,
     fielded: squads !== null && wasFielded(squads, period),
     business: deals([

@@ -8,22 +8,28 @@ name: Editions
 # that has since moved is worse than no sentence. So the writing happens here,
 # off the app entirely, and lands as data.
 #
-# Two a week: a preview once lineups lock and before a ball is kicked, a report
-# once the round finishes. The script decides which is due and refuses to write
-# anything else, so this workflow only has to fire often enough to catch the
-# windows.
+# The paper rolls: the newsdesk (`gazette/newsdesk.ts`) decides what is
+# newsworthy each firing — a round column, a match report as a fixture
+# finishes, a tie newly decided, tonight's preview — and the script files up to
+# GAZETTA_STORY_CAP of it. The crons are only when the desk LOOKS; the
+# newsdesk's triggers decide what files, so a rearranged calendar changes
+# data, not this file.
 #
 # **It fires far more often than it writes, and that is the design.** GitHub's
 # schedules are routinely late and sometimes skipped, and our lock is fifteen
 # minutes before the first kickoff — a window no cron can be trusted to hit. So
-# it runs on a wide net and the script's guards decide: already filed, not
-# locked, not finished all exit 0 after one snapshot read. The common run costs
-# a `npm ci` and an HTTP request.
+# it runs on a wide net and the guards decide: nothing new exits 0 after one
+# snapshot read and a local ledger check. The common run costs a `npm ci` and
+# an HTTP request.
 #
-# Cost when it DOES write: one Anthropic call, at most twice a week.
+# Cost when it DOES write: at most GAZETTA_STORY_CAP (2) Anthropic calls per
+# firing. The Actions-minutes budget is the real spend — roughly 110 runs a
+# week at a minute or two each against the 2000 free monthly minutes shared
+# with capture and round-state — and this cron block is the data to trim if
+# that ever bites.
 #
 # Setup, once: ANTHROPIC_API_KEY as a repository secret. The key lives here and
-# never on Vercel — the app reads the committed column and never writes one.
+# never on Vercel — the app reads the committed paper and never writes one.
 
 on:
   schedule:
@@ -31,10 +37,14 @@ on:
     # on the round's first kickoff, so this covers both without knowing which.
     - cron: "0,30 17-23 * * 5"
     - cron: "0,30 10-16 * * 6"
-    # The whistle window. A round ends Saturday evening, Sunday evening or Monday
-    # night, and the report waits for the last of them.
-    - cron: "15 20-23 * * 6,0,1"
-    - cron: "15 6-12 * * 0,1,2"
+    # The match windows: Saturday and Sunday afternoons into the evening, and
+    # weekday evenings for the Friday/Monday fixtures — match reports and tie
+    # calls file as things finish, and the round report rides the same net.
+    - cron: "0,30 11-22 * * 6,0"
+    - cron: "0,30 17-22 * * 1,2,5"
+    # The morning-after sweep: whatever the evening net missed — a late whistle,
+    # a skipped run — files with coffee rather than waiting for football.
+    - cron: "15 6-9 * * 0,1,2"
   workflow_dispatch: {}
 
 # Its own group, deliberately NOT shared with the capture or round-state jobs:

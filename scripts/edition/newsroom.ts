@@ -1,4 +1,4 @@
-import type { EditionKind, PublishedEdition, PublishedStory, StoryKind } from "@epl/core";
+import type { EditionKind, PublishedEdition, PublishedStory, StoryKind, ThreadUpdate } from "@epl/core";
 import { normalizeStory } from "@epl/core";
 
 // The one API call, and the shape a filed column takes in the rolling paper.
@@ -59,6 +59,8 @@ export function storyOfEdition(
   /** When a preview stops being printable: the round's first kickoff. A report
    *  never expires on a clock. */
   expiresAt: string | null,
+  /** The named edition it goes out under — display copy, stamped by the desk. */
+  editionName: string,
 ): PublishedStory {
   const story = normalizeStory({
     slug: `gw${edition.gameweek}-${ROUND_KIND[edition.kind]}`,
@@ -68,7 +70,7 @@ export function storyOfEdition(
     gameweek: edition.gameweek,
     filedAt: edition.filedAt,
     expiresAt: edition.kind === "preview" ? expiresAt : null,
-    edition: "",
+    edition: editionName,
     byline: edition.byline,
     headline: edition.headline,
     deck: edition.deck,
@@ -83,4 +85,62 @@ export function storyOfEdition(
   // normalization if this conversion is wrong — a bug, not bad model output.
   if (story === null) throw new Error("A normalized edition produced an unprintable story.");
   return story;
+}
+
+/** Everything ours about a filing; the model's part is only the words. */
+export interface ColumnMeta {
+  slug: string;
+  kind: StoryKind;
+  leagueId: string;
+  period: number;
+  gameweek: number;
+  filedAt: string;
+  expiresAt: string | null;
+  edition: string;
+  byline: string;
+  /** The covered-key this filing spends — also its one subject. */
+  subject: string;
+}
+
+/** A rolling prose column (the `STORY_SHAPE` contract), stamped and validated
+ *  into a story, with whatever storyline beats the model reported. */
+export function storyOfColumn(
+  column: Record<string, unknown>,
+  meta: ColumnMeta,
+): { story: PublishedStory; threads: ThreadUpdate[] } {
+  const story = normalizeStory({
+    slug: meta.slug,
+    kind: meta.kind,
+    leagueId: meta.leagueId,
+    period: meta.period,
+    gameweek: meta.gameweek,
+    filedAt: meta.filedAt,
+    expiresAt: meta.expiresAt,
+    edition: meta.edition,
+    byline: meta.byline,
+    headline: column.headline,
+    deck: column.deck,
+    body: column.body,
+    subjects: [meta.subject],
+    image: null,
+  });
+  if (story === null) throw new Error(`The ${meta.kind} did not come back in a printable shape.`);
+  return { story, threads: threadUpdates(column.threads) };
+}
+
+/** The model reports at most a few beats; anything malformed is dropped, not
+ *  fixed — the ledger is memory, and remembering garbage is worse than
+ *  forgetting a beat. */
+function threadUpdates(raw: unknown): ThreadUpdate[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .filter((update): update is ThreadUpdate => {
+      const beat = update as Partial<ThreadUpdate>;
+      return (
+        typeof beat?.subject === "string" && beat.subject !== "" &&
+        typeof beat.beat === "string" && beat.beat !== "" &&
+        (beat.status === undefined || beat.status === "open" || beat.status === "retired")
+      );
+    })
+    .slice(0, 3);
 }

@@ -1,52 +1,51 @@
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
-  type EditionKind,
-  type PublishedEdition,
-  type PublishedStory,
-  buildBrief,
+  clubById,
   datedKickoffs,
   decided,
   fetchLeagueInfo,
   firstKickoff,
+  fixtureStakes,
   gameweekStarted,
   getFootballSnapshot,
   isCovered,
   locksAt,
   mapLeagueInfo,
   markPreview,
-  normalizePublished,
+  newsdesk,
   periodGameweeks,
   roundState,
-  stories,
+  tieState,
+  type PublishedEdition,
+  type PublishedStory,
 } from "@epl/core";
-import { BYLINE, PREVIEW, REPORT } from "./edition/voice";
 import { gatherRoundFacts } from "./edition/facts";
-import { storyOfEdition, writeColumn } from "./edition/newsroom";
-import { persistFiling, readLedger, readPaperStories } from "./edition/persist";
+import { file, prepare, type DeskContext } from "./edition/dispatch";
+import { writeColumn } from "./edition/newsroom";
+import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
-// The columnist, run from CI on a wide cron net.
+// The newsroom's orchestrator, run from CI on a wide cron net.
 //
 // **Facts are live and prose is published — and published prose accumulates.**
-// Everything countable on the front page updates on the app's thirty-second
-// poll; a column cannot, so the writing happens here, off the app entirely, and
-// each filing joins the rolling paper in `data/editions/paper.json` — which the
-// commit bakes into the page.
-//
-// It is safe to run as often as you like. Every guard below exits 0 rather than
-// failing, in cost order, so the common case is a cron that reads one snapshot
-// and stops: GitHub's schedules are late or skipped often enough that the only
-// reliable design is to fire repeatedly and let the guards decide. The ledger,
-// not the filesystem, is the memory of what was already filed.
+// Every firing asks the newsdesk what is new since the covered-keys were last
+// spent, takes the top of the running order up to the cap, writes each story
+// from its own scoped brief, and commits the lot — which bakes it into the
+// page. The common case is a firing that finds nothing and exits.
 //
 // **It never commits anything it has not validated.** These commits ride
 // `GITHUB_TOKEN` and so run no CI beside them, while changing what the app
-// renders — so the shape checks here and in `edition/persist.ts` are the only
-// gate there is, and a model returning something unrenderable must cost us a
-// red workflow rather than a broken front page.
+// renders — so the shape checks in `edition/newsroom.ts` and
+// `edition/persist.ts` are the only gate there is, and a model returning
+// something unrenderable must cost us a red workflow rather than a broken
+// front page.
 
-/** Prints the brief and the column instead of writing either. The whole script
- *  bar the commit, so the prompt can be read before it costs anything. */
+/** Model calls one firing may spend. Two: the whistle windows fire every half
+ *  hour, so a burst of news is spread across firings rather than bought at
+ *  once, and a runaway prompt bug costs pennies rather than pounds. */
+const STORY_CAP = Number(process.env.GAZETTA_STORY_CAP ?? 2);
+
+/** Prints the assignments and their briefs instead of writing anything. */
 const DRY_RUN = process.env.DRY_RUN === "1";
 
 async function main(): Promise<void> {
@@ -68,98 +67,94 @@ async function main(): Promise<void> {
   );
   if (round === undefined) return say(`No Fantrax period covers gameweek ${snapshot.gameweek}.`);
 
-  // The report once the football stops; the preview once lineups lock and before
-  // it starts. Between the lock and the first whistle is the preview's window,
-  // and it is a window rather than an instant because a cron cannot hit an
-  // instant — GitHub's jitter routinely exceeds the fifteen minutes between our
-  // lock and the first kickoff.
+  // The preview's window is lock-to-first-whistle, and it is a window rather
+  // than an instant because a cron cannot hit an instant — GitHub's jitter
+  // routinely exceeds the fifteen minutes between our lock and the kickoff. A
+  // missed preview is simply not written: no column beats a false premise.
   const period = info.rosterPeriods.find((each) => each.number === round.period);
   const kickoff = period ? firstKickoff(period, kickoffs) : null;
   const lock = kickoff === null ? null : locksAt(kickoff);
   const locked = lock !== null && Date.now() >= Date.parse(lock);
-
-  // **The preview's window CLOSES at the first whistle, and the lock alone does
-  // not close it.** `locked` stays true from the lock right through the round,
-  // so a run firing mid-match — which is the ordinary case whenever the
-  // lock-time run was skipped, and GitHub skips them — would file a preview
-  // whose brief says nobody has kicked a ball over a match in progress, with
-  // pre-game projections beside it. A missed preview is simply not written: no
-  // column is better than one built on a false premise.
   const started = gameweekStarted(snapshot.fixtures, snapshot.gameweek);
 
-  const kind: EditionKind | null = finished ? "report" : locked && !started ? "preview" : null;
-  if (kind === null) {
-    return say(
-      started
-        ? "The round is under way and not finished. A preview is too late and a report is too early."
-        : "Lineups have not locked. Nothing to file.",
-    );
-  }
-
-  // The covered-key is the memory of what was filed — per league, because the
-  // ledger is shared by both and a rehearsal filing must not block the real
-  // one. `existsSync` on an archive used to be this guard; the ledger replaced
-  // it because a rolling paper files many stories a week and the keys are the
-  // one grammar all of them share.
-  const spent = `${kind === "report" ? "round-report" : "round-preview"}:gw${snapshot.gameweek}`;
   const ledger = readLedger();
-  if (isCovered(ledger, FANTRAX_LEAGUE_ID, spent)) return say(`Already filed: ${spent}`);
-
   const facts = await gatherRoundFacts(info, snapshot, round.period);
-  const paper = readPaperStories();
+  const clubs = clubById(snapshot);
 
-  const brief = buildBrief({
-    kind,
-    gameweek: snapshot.gameweek,
+  const assignments = newsdesk(
+    {
+      gameweek: snapshot.gameweek,
+      period: round.period,
+      finished,
+      locked,
+      started,
+      stakes: fixtureStakes(
+        snapshot.fixtures.filter((fixture) => fixture.gameweek === snapshot.gameweek),
+        facts.teams,
+        facts.pairings,
+        clubs,
+      ),
+      ties: facts.pairings.map((pairing) => ({
+        homeTeamId: pairing.home.teamId,
+        awayTeamId: pairing.away.teamId,
+        state: tieState(
+          facts.scores.get(pairing.home.teamId),
+          facts.scores.get(pairing.away.teamId),
+        ),
+      })),
+    },
+    (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
+    new Date().toISOString(),
+  ).slice(0, STORY_CAP);
+  if (assignments.length === 0) return say("Nothing new to report.");
+
+  const ctx: DeskContext = {
+    leagueId: FANTRAX_LEAGUE_ID,
+    snapshot,
+    facts,
+    clubs,
+    ledger,
+    info,
     period: round.period,
-    teams: info.teams.map((team) => ({ teamId: team.teamId, name: team.name })),
-    pairings: facts.pairings,
-    scores: facts.scores,
-    projected: facts.projected,
-    stories:
-      kind === "report" && facts.eleven !== null
-        ? stories(facts.pairings, facts.scores, facts.fielded ? facts.eleven : null, facts.business, round.period)
-        : [],
-    eleven: facts.eleven,
-    fielded: facts.fielded,
-    deals: facts.business,
-    doubts: facts.doubts,
-    pedigree: facts.pedigree,
-    // The report owns last week's calls: the preview it answers is still on
-    // file (the report's own filing is what retires it), and the results are
-    // pure comparison — a pundit nobody marks is a pundit who never has to be
-    // right.
+    kickoff,
     marked:
-      kind === "report"
-        ? markPreview(previewOnFile(paper, round.period), decided(facts.pairings, facts.scores))
+      finished
+        ? markPreview(previewOnFile(readPaperStories(), round.period), decided(facts.pairings, facts.scores))
         : null,
-  });
+  };
 
+  const filings: Filing[] = [];
+  for (const assignment of assignments) {
+    const desk = prepare(assignment, ctx);
+    // A desk that refuses spends nothing: the facts moved between the
+    // newsdesk's look and the brief's, or the kind has no desk yet.
+    if (desk === null) {
+      say(`No brief for ${assignment.kind} (${assignment.key}); skipped.`);
+      continue;
+    }
+    if (DRY_RUN) {
+      console.log(`\n=== ${assignment.kind} · ${assignment.key} ===\n${desk.brief}`);
+      continue;
+    }
+    // One bad story costs that story; the run fails only when EVERY attempted
+    // story failed, which is the signal of a broken writer rather than a
+    // brittle payload.
+    try {
+      const column = await writeColumn(desk.system, desk.brief);
+      const filed = file(assignment, column, ctx, new Date().toISOString());
+      filings.push({ story: filed.story, spentKeys: [assignment.key], threads: filed.threads });
+      say(`Filed ${assignment.kind}: "${filed.story.headline}"`);
+    } catch (error) {
+      console.error(`${assignment.kind} (${assignment.key}) failed:`, error);
+    }
+  }
   if (DRY_RUN) {
-    console.log(brief);
-    console.log("\n--- dry run: no column written ---");
+    console.log("\n--- dry run: nothing written ---");
     return;
   }
+  if (filings.length === 0) throw new Error("Every attempted story failed; nothing filed.");
 
-  const column = await writeColumn(kind === "report" ? REPORT : PREVIEW, brief);
-  const edition = {
-    ...column,
-    kind,
-    leagueId: FANTRAX_LEAGUE_ID,
-    period: round.period,
-    gameweek: snapshot.gameweek,
-    filedAt: new Date().toISOString(),
-    byline: BYLINE[kind],
-  };
-  // A column we cannot render is a failed run, never a committed one: the
-  // fallback is the facts-only paper the app already prints, and it is better
-  // than a broken page. `storyOfEdition` validates the story shape the same way.
-  const published = normalizePublished(edition);
-  if (published === null) throw new Error("The column did not come back in a shape the page can print.");
-
-  const story = storyOfEdition(published, spent, kickoff);
-  persistFiling({ story, spentKeys: [spent], threads: [] }, ledger, new Date().toISOString());
-  say(`Filed ${kind} for gameweek ${snapshot.gameweek}: "${published.headline}"`);
+  persistFilings(filings, ledger, new Date().toISOString());
 }
 
 /** This round's preview, as filed — the report marks its calls. Only what
