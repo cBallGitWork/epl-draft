@@ -76,7 +76,7 @@ export default function Rail({ matchday }: { matchday: boolean }) {
                 aria-current={here ? "page" : undefined}
                 // No tracking. CM does not letterspace, and the rail is the one
                 // place the label has no room to spare for it.
-                className={`flex min-h-11 items-center justify-center border px-1 text-center text-3xs font-bold uppercase hover:bg-surface lg:min-h-9 lg:text-2xs ${
+                className={`flex min-h-11 items-center justify-center border px-1 text-center font-chrome text-3xs font-bold uppercase hover:bg-surface lg:min-h-9 lg:text-2xs ${
                   here
                     ? "border-accent border-l-2 text-accent"
                     : "border-chrome text-ink"

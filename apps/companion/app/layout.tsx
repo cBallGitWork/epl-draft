@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Archivo_Narrow } from "next/font/google";
+import { Archivo, Archivo_Narrow, Jost, Oxanium } from "next/font/google";
 import { LEAGUE_NAME, POLL } from "@epl/core";
 import { footballNow, groundFaces, offerLive, pollSeconds } from "./football";
 import { Suspense } from "react";
@@ -9,12 +9,47 @@ import PhotoGround from "./components/football/PhotoGround";
 import Rail from "./components/shell/Rail";
 import "./globals.css";
 
-// One superfamily across two widths: Archivo carries the UI, Archivo Narrow the
-// scores and numerals. Width is the contrast axis — pairing two unrelated
-// grotesques reads as an accident rather than a decision.
+// **Championship Manager had two faces and so does the desk now** (Craig, 31
+// Aug). The game set its top header and menu bars in Handel Gothic — geometric,
+// wide, 1970s-futuristic — and its player names and data in Eras Demi, a
+// humanist geometric. Both are licensed and neither is free, so these are the
+// nearest faces that are:
+//
+// · **Oxanium** for chrome — title bars, tab strips, the rail, column heads.
+//   Squarish geometric with 200–800 weights, which is what Handel Gothic's
+//   descendants in game interfaces look like, and it holds up in capitals at
+//   nine pixels where Michroma (closer in shape) is far too wide for a 64px
+//   rail label.
+// · **Jost** for text and names — Futura-lineage geometric humanist, in Eras's
+//   role. It is not an Eras clone; what it shares is the register.
+//
+// Archivo stays, and only the PAPER uses it: DESIGN §6 gives it the letterspaced
+// small capitals a newspaper sets its standing heads in, and a serif at nine
+// pixels with 0.16em of tracking is a smudge. It no longer dresses the desk,
+// which is the whole point — a neutral grotesque is what a screen looks like
+// when nobody chose a typeface.
+//
+// Archivo Narrow keeps every figure in both registers, untouched. That is not
+// deference to the old pairing: `tnum` tabular numerals are why a score does not
+// jitter as it ticks, and DESIGN §6 calls it the single most important
+// typographic decision in a live view.
 const archivo = Archivo({
   subsets: ["latin"],
   variable: "--font-archivo",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const oxanium = Oxanium({
+  subsets: ["latin"],
+  variable: "--font-oxanium",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const jost = Jost({
+  subsets: ["latin"],
+  variable: "--font-jost",
   weight: ["400", "500", "600", "700"],
   display: "swap",
 });
@@ -64,7 +99,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const { matchday, seconds } = await round();
 
   return (
-    <html lang="en-GB" className={`${archivo.variable} ${archivoNarrow.variable}`}>
+    <html lang="en-GB" className={`${archivo.variable} ${archivoNarrow.variable} ${oxanium.variable} ${jost.variable}`}>
       {/* A row, not a stack: Championship Manager's screen is a rail down the
           side and everything else beside it. `min-w-0` on the content column is
           not optional — it is full of `truncate` and `overflow-x-auto` children,

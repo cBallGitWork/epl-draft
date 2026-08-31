@@ -56,7 +56,7 @@ export default function PageHeader({
           }}
         >
           <h1
-            className="min-w-0 flex-1 truncate text-center font-display text-base font-bold"
+            className="min-w-0 flex-1 truncate text-center font-chrome text-base font-bold"
             style={{ color: "var(--color-chrome)" }}
           >
             {title}

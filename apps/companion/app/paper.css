@@ -82,6 +82,12 @@
      `--font-display` is deliberately NOT re-pointed — Archivo Narrow with
      `tnum` sets every figure in both registers, and that is the one thing a
      score keeps when it moves from the desk to newsprint. */
+  /* The paper's small capitals stay Archivo, which is now its face alone — the
+     desk took Oxanium and Jost on 31 Aug and a newspaper has no use for either.
+     `font-sans` is re-pointed here and nowhere else, so a `font-sans` on the
+     sheet still means what §6 says it means. */
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
   --paper-text: var(--font-newsreader), Georgia, "Times New Roman", "Liberation Serif", serif;
   --paper-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
 

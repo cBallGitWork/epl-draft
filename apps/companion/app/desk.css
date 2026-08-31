@@ -39,6 +39,14 @@
 .cm-bevel-pressed,
 .cm-tab,
 .cm-titlebar {
+  /* **The plates carry the chrome face.** Championship Manager set its top
+     header and menu bars in Handel Gothic and everything else in Eras, and a
+     plate is precisely the set of things that were in the first: title bars, tab
+     strips, column heads, buttons, dropdowns. Putting it on the plate rather
+     than on thirty call sites means a new bevelled thing is in the right face
+     without anybody remembering. The rail asks for it by hand, being the one
+     piece of chrome that is deliberately not a plate. */
+  font-family: var(--font-chrome);
   --cm-face: var(--color-face);
   --cm-light: color-mix(in oklch, var(--cm-face), white 55%);
   --cm-dark: color-mix(in oklch, var(--cm-face), black 55%);
