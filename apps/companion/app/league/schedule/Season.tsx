@@ -32,9 +32,9 @@ export default function Season({
 
             <TeamBadge team={row.opponent.team} url={row.opponent.team === null ? undefined : badges.get(row.opponent.team.teamId)} />
 
-            <span className="flex min-w-0 flex-1 flex-col">
+            <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
               <Opponent opponent={row.opponent} gameweek={row.round.gameweek} />
-              <span className="truncate text-2xs text-faint">
+              <span className="shrink-0 truncate text-2xs text-faint">
                 {row.tie.round === null
                   ? row.round.deadline === null
                     ? row.tie.competition.name

@@ -136,14 +136,14 @@ function Squad({
         lead ? "bg-raised" : "bg-surface"
       } ${yoursBorder(lead)}`}
     >
-      <span className="flex min-w-0 flex-1 flex-col">
-        <span className="truncate font-semibold">{team.teamName}</span>
+      <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
+        <span className="min-w-0 truncate font-semibold">{team.teamName}</span>
         {/* The row was a name and a number, sixteen times. Who he plays this
             week is the thing that makes it a fixture list rather than a
             directory, and it costs nothing: the schedule is already in the
             payload this page fetched. */}
         {opponent ? (
-          <span className="truncate text-2xs text-faint">
+          <span className="shrink-0 truncate text-2xs text-faint">
             <span className="uppercase">v</span> {opponent}
           </span>
         ) : null}

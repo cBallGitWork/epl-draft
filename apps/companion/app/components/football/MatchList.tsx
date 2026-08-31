@@ -158,8 +158,8 @@ function MatchRow({
               return (
                 <li key={c.player.id} className="flex items-center gap-2.5">
                   <PlayerPortrait player={c.player} colours={clubColours(club?.shortName ?? "")} />
-                  <span className="min-w-0 flex-1 truncate">
-                    <span className="text-sm font-medium">{c.player.name}</span>
+                  <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
+                    <span className="min-w-0 truncate text-sm font-medium">{c.player.name}</span>
                     {/* Whose player that was. The one line of Soccer Saturday
                         the app was missing: every goal in the round now answers
                         it, and a footballer nobody in the league holds says
@@ -167,7 +167,7 @@ function MatchRow({
                         the 697. */}
                     {owner ? (
                       <span
-                        className={`block truncate text-2xs ${
+                        className={`block shrink-0 truncate text-2xs ${
                           yours?.some((p) => p.code === c.player.code)
                             ? "text-accent"
                             : "text-faint"

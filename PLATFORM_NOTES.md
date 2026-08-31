@@ -3863,6 +3863,26 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-31: **The two-line rows now stack on a phone and go inline above `lg`,
+  which is what finally took the desk to 28.** `.cm-row`'s `min-height` is a
+  floor, so a row carrying two lines ignored it: `/players` sat at 45px and
+  `/squad` at 43 after the tap rule relaxed everything else. Four rows changed —
+  the pool's name over his position and club, the schedule's competition under
+  the tie, the squad list's opponent under the team, and the scorer's owner under
+  his name — with `flex-col lg:flex-row lg:items-baseline lg:gap-2` and
+  `min-w-0 truncate` / `shrink-0` so the name gives way and the meta stays whole.
+  Measured: **`/players` 53 → 29px at 1440 and `/league/squad` 43 → 29**, with
+  every phone row unchanged at 53, 59 and 57.
+  One `lg:py-0` was needed beyond that, on `PlayerTable`'s `<td>`: the cell pads
+  the row from OUTSIDE it and `.cm-row` cannot reach a `<td>`, so 8px there plus
+  the 28 inside was a 37px row on a desk that had asked for 28. The phone keeps
+  the padding and keeps its 53.
+  `SquadRows` had recorded the same finding from the other side in August — two
+  short strings that sit happily beside each other had doubled the height of a
+  fifteen-row list to stack them — and the resolution is that both are true at
+  different widths. A phone has no room to put them side by side and a desk has
+  nothing but.
+
 - 2026-08-31: **The formation is on screen, and it was already being counted.**
   `lineup()` has always returned `shape` — "1-3-4-3" — and `lineupDetail` dropped
   it on the floor, so no screen could name an eleven the first way Championship

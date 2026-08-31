@@ -135,6 +135,18 @@ frame as `--pitch-inset`, which the hoardings read too. One number, three
 readers: it used to be written out twice with a comment asking the next person to
 keep the two in step.
 
+**A two-line row stacks on a phone and goes inline above `lg`.** Four rows do it
+— the pool's name over his position and club, the schedule's competition under
+the tie, the squad list's opponent under the team, the scorer's owner under his
+name — and it is what takes each of them to the desk's 28px, because
+`.cm-row`'s `min-height` is a floor and a second line simply ignores it. The
+pattern is `flex-col lg:flex-row lg:items-baseline lg:gap-2`, with `min-w-0
+truncate` on the line that may be long and `shrink-0` on the short one, so the
+name gives way and the meta stays whole. `SquadRows` records the same finding
+from the other side: two short strings that sit happily beside each other had
+doubled the height of a fifteen-row list to stack them. A phone has no room to
+put them side by side and a desk has nothing but.
+
 **The page's own measurements are tokens, and for one reason: two places read
 each of them and a value that can drift from itself is not a measurement.**
 

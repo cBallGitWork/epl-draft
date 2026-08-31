@@ -91,7 +91,11 @@ export default function PlayerTable({
             return (
               <tr key={entry.player.fantraxId} className="border-b border-line/60 hover:bg-raised">
                 <td className="numeric px-1 text-right text-2xs text-faint">{stats?.rank ?? "—"}</td>
-                <td className="py-1">
+                {/* `lg:py-0` because the cell pads the row from outside it and
+                    `.cm-row` cannot reach a `<td>`: 8px here plus the 28 inside
+                    is a 37px row on a desk that asked for 28. The phone keeps
+                    the padding, and so keeps its 53. */}
+                <td className="py-1 lg:py-0">
                   <Link
                     href={`/players/${entry.player.fantraxId}`}
                     className="cm-row flex min-h-11 items-center gap-2.5 px-1"
@@ -105,9 +109,15 @@ export default function PlayerTable({
                       player={{ code: fplCode, name: entry.player.displayName }}
                       colours={clubColours(toFplClubCode(entry.player.clubCode ?? ""))}
                     />
-                    <span className="flex min-w-0 flex-1 flex-col">
-                      <span className="truncate font-medium">{entry.player.displayName}</span>
-                      <span className="flex items-center gap-1.5 text-2xs text-faint">
+                    {/* Two lines on a phone and one above `lg`, which is what
+                        takes this row from 45px to the desk's 28. `SquadRows`
+                        records the same finding the other way round: two short
+                        strings that sit happily beside each other doubled the
+                        height of a list to stack them. A phone has no room to
+                        put them side by side and a desk has nothing but. */}
+                    <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
+                      <span className="min-w-0 truncate font-medium">{entry.player.displayName}</span>
+                      <span className="flex shrink-0 items-center gap-1.5 text-2xs text-faint">
                         {/* The league's eligibility, not the pool's single
                             position: "F/M" is what the commissioner set and what
                             the planner obeys, and the global pool's letter is a
