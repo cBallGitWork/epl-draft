@@ -2,6 +2,7 @@ import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
   clubById,
+  composePaper,
   datedKickoffs,
   decided,
   fetchLeagueInfo,
@@ -22,6 +23,7 @@ import {
 } from "@epl/core";
 import { gatherRoundFacts } from "./edition/facts";
 import { file, prepare, type DeskContext } from "./edition/dispatch";
+import { drawSplash } from "./edition/image";
 import { writeColumn } from "./edition/newsroom";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
@@ -159,6 +161,20 @@ async function main(): Promise<void> {
     return;
   }
   if (filings.length === 0) throw new Error("Every attempted story failed; nothing filed.");
+
+  // The picture, last and optional. Only the story that will LEAD gets one —
+  // a drawing beside a headline nobody reads first is a drawing nobody sees —
+  // and only when it is one of this firing's, since an older lead already had
+  // its chance. Any failure costs the picture and never the paper.
+  const lead = composePaper(
+    [...readPaperStories().filter((each) => each.leagueId === FANTRAX_LEAGUE_ID), ...filings.map((f) => f.story)],
+    new Date().toISOString(),
+  )[0];
+  const filing = filings.find((each) => each.story.slug === lead?.slug);
+  if (filing !== undefined && filing.story.image === null) {
+    const image = await drawSplash(filing.story);
+    if (image !== null) filing.story = { ...filing.story, image };
+  }
 
   persistFilings(filings, ledger, new Date().toISOString());
 }

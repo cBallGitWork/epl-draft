@@ -177,3 +177,35 @@
 .paper-columns > p {
   break-inside: avoid;
 }
+
+/* The splash picture, printed in the sheet's own two colours.
+   The drawing arrives as a colour image and the paper has an ink and a stock —
+   so it is not shown as it came. `grayscale` first, then a hint of `sepia` to
+   pull the greys toward the ink's warmth, then `multiply` against the rosa so
+   the paper shows through the midtones the way it does through printed ink.
+   The result cannot introduce a third colour whatever the drawing did.
+
+   Deliberately NOT a colour plate (DESIGN §5). A plate — the pitch, a crest —
+   restores the desk's tokens because it is a colour object printed ON the
+   sheet. This is the opposite: an image made to print IN the sheet's colours,
+   so it must not join that selector. */
+.paper-photo {
+  position: relative;
+  background: var(--paper);
+}
+.paper-photo img {
+  filter: grayscale(1) sepia(0.18) contrast(1.08) brightness(1.04);
+  mix-blend-mode: multiply;
+}
+/* The halftone screen: a dot grid at the size a coarse newsprint screen
+   prints at. Faint enough to read as texture rather than as pattern, and
+   `pointer-events: none` so it never eats a tap. */
+.paper-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgb(42 32 24 / 0.25) 0.5px, transparent 0.75px);
+  background-size: 3px 3px;
+  opacity: 0.35;
+}

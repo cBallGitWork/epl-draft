@@ -323,3 +323,30 @@ better picture, and the picture it wants is a league one (draft night, a trophy,
 sixteen names on a board) rather than a stock Premier League shot, which would
 make the paper look like it is about the Premier League rather than about the
 sixteen of us.
+
+**The splash picture is a drawing, and it prints in the sheet's two colours.**
+Separate from the masthead question above and settled differently: the paper's
+LEAD may carry one generated picture, drawn in CI beside the prose. Three rules
+travel with it.
+
+It is an **editorial cartoon and never a photograph or a likeness** — a drawing
+sits on newsprint where a photograph fights it, and generating a face for a real
+footballer is the one thing this paper must not do. §9's own doctrine already
+says a wrong photograph is worse than none; a wrong photograph of a real person
+is worse again.
+
+It is **always printed through `.paper-photo`** (`paper.css`): grayscale toward
+the ink, multiplied against the rosa so the stock shows through the midtones,
+under a halftone screen. Verified against an FFmpeg colour test pattern — the
+most garish input available — which came out in ink and rosa alone. A colour
+image dropped raw onto this sheet is the fastest way to make the front page look
+like a website again.
+
+It is **deliberately not a colour plate** (§5). A plate — the pitch, a crest —
+restores the desk's tokens because it is a colour object printed ON the sheet.
+This is the opposite: an image made to print IN the sheet's own colours, so it
+must never join that selector.
+
+**And the paper goes out without one whenever anything at all goes wrong.** No
+key, a refused call, a bad payload: the prose is already written and validated by
+then, and a paper with a headline and no drawing is a paper.

@@ -1,6 +1,7 @@
 import { LEAGUE_NAME, clubById } from "@epl/core";
 import Article from "../components/gazette/Article";
 import Scoreboard from "../components/gazette/Scoreboard";
+import Splash from "../components/gazette/Splash";
 import Deals from "../components/gazette/Deals";
 import Doubts from "../components/gazette/Doubts";
 import Lead, { Headline } from "../components/gazette/Stories";
@@ -119,7 +120,12 @@ export default async function GazettePage() {
           desk is what chose the photograph for it. */}
           {paper.filed[0] ? (
             <>
-              {paper.stories[0] ? (
+              {/* The drawing when the lead has one, and the desk's own
+                  typographic band when it does not. Never both: a paper runs
+                  one picture over one splash. */}
+              {paper.filed[0].image !== null ? (
+                <Splash story={paper.filed[0]} />
+              ) : paper.stories[0] ? (
                 <Picture lead={paper.stories[0]} who={who} clubs={clubs} />
               ) : null}
               <Written story={paper.filed[0]} teams={paper.teams} />

@@ -30,6 +30,8 @@ name: Editions
 #
 # Setup, once: ANTHROPIC_API_KEY as a repository secret. The key lives here and
 # never on Vercel — the app reads the committed paper and never writes one.
+# OPENAI_API_KEY is the second, and it is optional: without it every edition
+# files exactly as it does now, with a typographic band instead of a drawing.
 
 on:
   schedule:
@@ -72,6 +74,10 @@ jobs:
       - name: File the column, if one is due
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # The splash drawing. Optional by design: unset, it expands to "" and
+          # the writer files the paper without a picture rather than failing
+          # after the prose has been paid for.
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           # The league the column is about. This job's environment is not the
           # app's, so it inherits nothing from Vercel: on 10 Oct this has to move
           # with it. Unset, it expands to "" and `FANTRAX_LEAGUE_ID` falls back
@@ -83,7 +89,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/editions
+          # The drawings ride with the edition that references them: a
+          # story pointing at a file the same commit did not carry is a
+          # broken image on the front page.
+          git add data/editions apps/companion/public/paper
           # The ordinary outcome: a guard said no column was due, so the run did
           # its one snapshot read and stopped.
           if git diff --cached --quiet; then
