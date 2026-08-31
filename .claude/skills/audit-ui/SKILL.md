@@ -27,21 +27,24 @@ clean but carries a bucket is **not** a clean run: shoot those routes and read
 the colours off the image. Calling the bucket a pass is how the pitch's name
 plates would go invisible unnoticed.
 
-## 2. Navfit — does the tab bar still fit
+## 2. Navfit — does the section rail still fit
 
 ```bash
 node tools/ui/navfit.mjs [320 360 390 430]
 ```
 
-Two answers per width. **now:** every rendered tab's column against the width its
-label needs, plus horizontal overflow. **+1 tab:** the same labels against the
-column an extra tab would leave — the Live tab exists only while football is on,
-so the bar a session sees on a Tuesday is one column wider than the bar sixteen
-phones see on a Saturday.
+Three answers per width, because the rail replaced the tab bar on 31 Aug 2026 and
+the fit question turned ninety degrees with it. **labels:** every rendered plate
+against the width its own label needs. **height:** the plates' run against the
+screen, now and with one more section — the Live section exists only while
+football is on, so the rail a session sees on a Tuesday is one plate shorter than
+the rail sixteen phones see on a Saturday, and a rail taller than the viewport
+hides a section behind furniture nobody knows to drag. **rail / page:** what the
+rail leaves the content column, which the bar never took.
 
-Any chrome change re-runs this. At 320px a seventh tab clips Gazetta and Players,
-which is why `/matchday/desk` is reached from the Live tab and not from a tab of
-its own (`docs/ui/desk.md`).
+Any chrome change re-runs this. A seventh section is a height question now rather
+than a width one, but `/matchday/desk` is still reached from the Live section and
+not from one of its own (`docs/ui/desk.md`).
 
 ## 3. Dialog — open, measure, Escape
 

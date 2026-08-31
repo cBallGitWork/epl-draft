@@ -72,7 +72,9 @@ No fluid clamps except inside the masthead.
 | `shell/Nothing` | A page that cannot show what it exists to show, saying why — with the provider's own error code on screen. |
 | `shell/Section` | A headed block with a rule under it. |
 | `shell/ButtonLink` | The one way out of a page. `BUTTON` exports the classes for the single external anchor that cannot be a router link. |
-| `shell/TabNav` | Bottom bar on phones, top bar above `md`. The Live tab only exists while football is on. |
+| `shell/Rail` | Championship Manager's left rail — the app's sections stacked down the side of every desk screen, 64px on a phone and 130 above `lg`, one shape at every width. Stands down on `/`. The Live section only exists while football is on. |
+| `shell/sections` | The six sections as data, and which one a path is in. The rail and the paper's index both print it. |
+| `gazette/Index` | The same six in the paper's register — letterspaced small capitals between two hairlines — because the rail is not on the front page and a front page with no way out is a dead end. |
 | `shell/LeagueCrest` | Our crest. `mark` (no type, legible to ~24px) and `full`. |
 | `shell/AutoRefresh` | The app's **single** client poller, mounted by the layout. `POLL.live` during football, `POLL.idle` otherwise. Eight pages each mounted their own until 29 Aug, sized from whatever snapshot each happened to hold — so a page with no football read of its own simply froze. |
 | `shell/LiveNow` · `shell/LiveStrip` | Your tie in the chrome while a ball is in the air. Stands down on `/` and `/matchday`, which print the same tie larger. |
@@ -119,9 +121,11 @@ the league drew the tallest card and overflowed the phone by 199px while the
 crowded one fitted. `.pitch-figure` caps the height at the room one row has —
 `(100svh - --pitch-page) / --pitch-rows` less the two bands — where
 `--pitch-rows` is set by `PitchRows` and by both bench strips, so a reserve
-matches the man he would replace in height as well as width. `--pitch-page` lives
-beside `--page-foot` in `globals.css` and changes at the same breakpoint, for the
-same reason: above `md` the tab bar moves overhead. **A pitch with a bench under
+matches the man he would replace in height as well as width. `--pitch-page` lives in
+`pitch.css` beside the cap that reads it, and is **one value at every width**: it
+used to rise at `md` because the tab bar went overhead there, and when the rail
+replaced the bar the page was measured spending the same 290px on furniture at
+390, 768, 1024 and 1440 alike. **A pitch with a bench under
 it is a different budget** — `.pitch-with-bench`, set by `TeamSheet` and
 `LineupPitch`, the two that know there is one — because one number for both made
 the quiet page pay for the busy one. Row padding is
@@ -138,12 +142,15 @@ each of them and a value that can drift from itself is not a measurement.**
   negative of the same value. Three files used to write `px-3 sm:px-4` and
   `-mx-3 sm:-mx-4` by hand.
 - `--page-frame` — how wide the page may get. `<main>` and the tab bar above it
-  both read it. They were `max-w-2xl` and `max-w-6xl`, so the bar was a
+  both read it once; they were `max-w-2xl` and `max-w-6xl`, so the bar was a
   broadsheet while the page under it was a 640px column at every viewport, and
-  the front page's rail could never arrive.
-- `--page-foot` — the room `<main>` leaves under the page for the tab bar and the
-  phone's safe area. The front page runs its stock out through it; without that,
-  a cream page ends in a band of desk navy.
+  the front page's rail could never arrive. The rail took the bar's job and sits
+  beside the frame rather than inside it, so `<main>` is the only reader left.
+- `--page-foot` — the room `<main>` leaves under the page. It was the bar's own
+  height plus the phone's safe area and is now 2rem of room at every width, the
+  bar having gone; the inset moved to `body`, where it is the phone's rather than
+  the bar's. The front page runs its stock out through it; without that, a cream
+  page ends in a band of desk navy.
 
 ## Four mechanics worth knowing before you touch them
 

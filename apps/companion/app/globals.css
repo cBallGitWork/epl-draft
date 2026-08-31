@@ -23,28 +23,29 @@
   }
 }
 
-/* How wide the page is allowed to get. One value, because two things frame the
-   app and they must agree: `<main>` and the tab bar above it. They were written
-   out separately as `max-w-2xl` and `max-w-6xl`, so the bar was already a
-   broadsheet while the page under it was still a column — the same drift
-   `--page-gutter` exists to prevent, one element apart. */
+/* How wide the page is allowed to get. It framed two things and now frames one:
+   the tab bar read it too, and a bar that was a broadsheet over a page still in
+   a column is what the token was written to stop. The rail took the bar's job
+   and is not inside the frame — it is beside it — so `<main>` is the only reader
+   left. Kept as a token rather than inlined, because it is a decision about the
+   page and not a number `<main>` happens to carry. */
 :root {
   --page-frame: 72rem;
 }
 
-/* The room `<main>` leaves under the page: the tab bar's own height plus the
-   phone's safe area, and above `md` just room, because the bar is overhead
-   there instead. Named for the same reason `--page-gutter` is — the front page
-   runs its stock out through it, and a page whose ground stops short of the
-   foot of the screen has a seam across the bottom of it. */
-:root {
-  --page-foot: calc(4rem + env(safe-area-inset-bottom));
-}
+/* The room `<main>` leaves under the page. It was the tab bar's own height plus
+   the phone's safe area, dropping to bare room above `md` where the bar went
+   overhead; with the rail down the side there is no bar at any width and no
+   height to leave for one. One value, and the breakpoint went with the bar.
 
-@media (min-width: 48rem) {
-  :root {
-    --page-foot: 2rem;
-  }
+   The phone's inset is not gone, it moved: `body` carries it below, which is
+   where it belongs now that nothing is fixed across the foot of the screen.
+
+   Named for the same reason `--page-gutter` is — the front page runs its stock
+   out through it, and a page whose ground stops short of the foot of the screen
+   has a seam across the bottom of it. */
+:root {
+  --page-foot: 2rem;
 }
 
 /* Out through the page's own gutters, for the two things wide enough to earn
@@ -57,7 +58,10 @@ body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  /* Sits above the bottom tab bar on phones with a home indicator. */
+  /* Keeps the foot of the page off the home indicator. It used to be stated as
+     sitting above the bottom tab bar; there is no bottom bar now, and the inset
+     is the phone's rather than the bar's. The rail carries its own, being
+     positioned against the viewport rather than against this. */
   padding-bottom: env(safe-area-inset-bottom);
   -webkit-tap-highlight-color: transparent;
 }

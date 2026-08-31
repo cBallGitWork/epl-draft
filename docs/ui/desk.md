@@ -3,9 +3,12 @@
 Every score in the league and every score in the round, on one screen, with
 nothing else on it. Jeff's wall of monitors.
 
-Reached from the **Live** tab and nowhere else — six tabs already brushes the
-320px clip `tools/ui/navfit.mjs` measures, and a seventh would cost every other tab its
-label to buy one screen a permanent home.
+Reached from the **Live** section and nowhere else. The argument used to be width
+— six tabs already brushed the 320px clip `tools/ui/navfit.mjs` measured, and a
+seventh would have cost every other tab its label. The rail turned that question
+into a height one on 31 Aug 2026 and a seventh plate does still fit, but the
+answer did not change: a screen reached from the one section it belongs to is
+where it belongs, and six is the whole app.
 
 ## On the page
 

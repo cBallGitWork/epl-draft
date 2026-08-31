@@ -755,7 +755,15 @@ agent are in `data/probes/2026-08-12/`.
 - ADP is real and public here (`averageDraftPosition`), which is the trade scout's
   value map when it lands.
 
-## A third client component: the tab bar
+## A third client component: the tab bar (SUPERSEDED 31 Aug 2026 — now the rail)
+
+**`TabNav` is deleted.** `shell/Rail` replaced it on 31 Aug 2026 and the season
+log carries the argument. What survives verbatim below is the part that did not
+change: the reason the shell's nav is a client component, and route ownership.
+What is now false: the two shapes, the flipping active edge, and the fixed
+bottom bar — the rail is one shape at every width and marks its section with
+`cm-tab`'s pressed bevel. Left standing rather than rewritten, because a log that
+edits its own past stops being one.
 
 `TabNav` is `"use client"` for one reason — `usePathname`. A tab bar that
 cannot say which section you are in is a row of links, and the answer only exists
@@ -3854,6 +3862,51 @@ standings twice per window — the array for the table, the page for the badges 
 and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
+
+- 2026-08-31: **The tab bar became Championship Manager's left rail, and it is one
+  shape at every width.** Craig's verdict on Sunday's foundations was "it's still
+  not CM really, just some columns", and the diagnosis was layout: CM is a 90px
+  rail (11.25% of an 800×600 canvas — `docs/ui/reference/README.md`) with panels
+  beside it, and we had a top bar and one scrolling column. `TabNav` is deleted
+  rather than branched; `shell/Rail` replaces it.
+  **One shape, because the labels are short enough to be one.** At 9px bold
+  uppercase the widest is "Gazetta" at 45px, so a **64px** rail carries real words
+  on a 390 phone — 16% of the screen against CM's 11.25% — and 130px above `lg`.
+  That buys no icon set (there is none, and inventing one to save 20px is a whole
+  visual language) and no third active-state case: `cm-tab`'s pressed bevel, which
+  `league/SectionNav` already wore, marks the current section, where the bar's
+  border edge flipped sides between its two shapes.
+  **The plates sit at the FOOT of the rail below `lg`.** CM's own rail is
+  top-aligned and on an 844px phone that puts the first section 800px from the
+  thumb. PRODUCT.md's one-handed reference condition outranks the look, and
+  DESIGN.md's preamble says so itself.
+  **The rail is not on `/`, so the paper prints its own index.** A 64px navy
+  column beside a broadsheet is a seam, and it would narrow the `@container` the
+  front page's two-column layout keys off. `gazette/Index` sets the same six
+  sections as letterspaced small capitals between two hairlines. The six live in
+  `shell/sections.ts` — one table, two registers, which is what DESIGN §1's "one
+  set of nav bones" now literally means. Without it the front page had two links
+  off it and was a dead end.
+  **Four couplings moved with the bar, and each was a stated reason that had
+  died.** `--page-foot` was the bar's height plus the safe area, dropping to 2rem
+  above `md`; it is 2rem everywhere now and the inset moved to `body`, where it is
+  the phone's rather than the bar's. `--page-frame` had two readers and has one.
+  `LiveStrip` was `md:static` only because two stuck bars would have been a
+  header, and is sticky at every width again. And `--pitch-page` rose at `md` on
+  two premises — the bar going overhead, and "the bands stand further apart up
+  there" — the first dead by construction and **the second simply untrue when
+  measured**: `/squad/[teamId]` with a bench spent 290px on furniture at 390, 768,
+  1024 and 1440 alike. One value at every width, 2rem off each budget for the room
+  the bar stopped asking for. After: the XI takes 460px at 390×844 with 86px in
+  hand and 516 above `md` with 72; the gated pitch 426 with 259, and 684 with 57.
+  **`navfit.mjs` was rewritten in the same commit**, because the tool that guards
+  this change was the thing the change breaks — it queried the bar's equal grid
+  columns. A rail fails in two other axes, so it now asks three questions: do the
+  labels fit the rail's width, does the plate stack fit the screen's height (now,
+  and with one more section), and what the rail leaves the content column. Its
+  first bug was mine: `rail.scrollHeight` on a full-height frame reports the frame
+  back whenever the stack is shorter, so every passing case read as a failure.
+  Sweep is clean at 18 route×width pairs, and `navfit` clean at 320/360/390/430.
 
 - 2026-08-29: **The card needed a bound in the other direction too, and the miss
   was instructive.** Giving the figure the portrait's upright shape (below) tied

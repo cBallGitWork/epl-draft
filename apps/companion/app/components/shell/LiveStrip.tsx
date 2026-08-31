@@ -49,11 +49,13 @@ export default function LiveStrip({
   return (
     <Link
       href={href}
-      // Sticky on a phone, where the tab bar is at the foot and the top is free;
-      // in flow above `md`, where the bar is already holding the top and two
-      // stuck bars would be a header. Full-bleed on its own ground rather than
+      // Sticky at every width. It was in flow above `md`, where the tab bar was
+      // holding the top and two stuck bars would have been a header; the rail
+      // holds the side now and the top of the content column is free, so the one
+      // number a manager wants on a Saturday follows him down a desk screen the
+      // way it already did down a phone. Full-bleed on its own ground rather than
       // inside the page frame: it is the shell speaking, not the page.
-      className="sticky top-0 z-40 flex min-h-11 items-center justify-center gap-2.5 bg-league-deep px-[var(--page-gutter)] text-cream md:static"
+      className="sticky top-0 z-40 flex min-h-11 items-center justify-center gap-2.5 bg-league-deep px-[var(--page-gutter)] text-cream"
     >
       <span className="flex items-center gap-1.5 text-2xs font-bold uppercase tracking-widest">
         <span className="live-dot" />

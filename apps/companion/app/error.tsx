@@ -5,9 +5,9 @@ import { useEffect } from "react";
 // What a reader sees when a read throws.
 //
 // There was nothing here, and the consequence was total: an unhandled error
-// anywhere in a server component takes out the whole tree, tab bar included, so
-// a single provider throwing left sixteen people looking at a blank page with no
-// way to reach any of the other five sections. Every *expected* failure is
+// anywhere in a server component takes out the whole tree, the section rail
+// included, so a single provider throwing left sixteen people looking at a blank
+// page with no way to reach any of the other five sections. Every *expected* failure is
 // already modelled — `Nothing` panels, `orRefusal`, the three states of a points
 // table — so what reaches here is by definition the case nobody predicted, and
 // the one thing it must not do is take the app with it.

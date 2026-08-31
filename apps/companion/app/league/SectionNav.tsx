@@ -3,10 +3,10 @@ import Link from "next/link";
 // The League tab holds three views of the same competition, and this is how you
 // get between them.
 //
-// A server component, unlike the tab bar: the tab bar has to work out where it is
-// from the URL because any route in the app can render it, but there are exactly
-// three pages here and each of them knows which one it is. Passing that in costs
-// a prop and saves shipping another component to the phone.
+// A server component, unlike the section rail: the rail has to work out where it
+// is from the URL because any route in the app can render it, but there are
+// exactly three pages here and each of them knows which one it is. Passing that
+// in costs a prop and saves shipping another component to the phone.
 //
 // **CM's tabs, which are bevelled and butt against each other.** They were
 // rounded pills with a gap between them, which is a modern web tab and reads as

@@ -145,7 +145,7 @@ the sofa, so the score under fifteen faces sat still through a whole half.
   the squad.** Width is a share of the fullest LINE, so a crowded line makes a
   narrow card. Height is a share of the screen divided by the number of ROWS,
   because that is what the pitch has to fit into — `.pitch-figure` in
-  `globals.css`, against `--pitch-page`. Height had no bound at first and the
+  `pitch.css`, against `--pitch-page`. Height had no bound at first and the
   omission bit immediately: card width is `f(widestLine)`, so *fewer* men in a
   line make a *wider* card, and once the figure carries an upright shape a wider
   card is a taller one. The 1-3-4-3 XI — four to a line, the slackest squad in
@@ -166,6 +166,14 @@ the sofa, so the score under fifteen faces sat still through a whole half.
   100px of the screen still in hand; the XI takes 428px with 53px in hand.
   That headroom is the margin against the next band somebody adds above the
   pitch — one appeared mid-change and cost 44px of it.
+- **Re-measured 31 Aug 2026, when the rail replaced the tab bar and
+  `--pitch-page` was re-decided** (one value at every width; the 2rem the bar
+  stopped costing at the foot came off both budgets). At 390×844 the XI now takes
+  460px with **86px in hand** and the gated pitch 426 with 259; above `md` they
+  take 516 and 684, with 72 and 57. The two figures above them — 232 and 382 —
+  are August's and are superseded: the same two pages measure **159px and 298px**
+  of furniture today. Everything still draws inside the screen, which is the
+  invariant; the numbers are only how it is checked.
 
 ### The list
 

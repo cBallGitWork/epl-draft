@@ -42,9 +42,9 @@ Desk idiom on the Paper is a regression and so is the reverse.
 **2 — Is any token doing a second job?** The two that have already caught us:
 
 - *League red never says "active".* A surface that fills its selected item with
-  the league's red is answering a question the tab bar and the filter chips have
-  already answered with the accent slot — three expressions of one concept, two
-  of them agreeing.
+  the league's red is answering a question the section rail and the filter chips
+  have already answered with the accent slot — three expressions of one concept,
+  two of them agreeing.
 - *League red carries text only one step down.* `--color-league` is 4.94:1 under
   cream with nothing spare, and a scoreline dims its trailing side, which lands
   at 2.96:1. That is what `--color-league-deep` exists for.

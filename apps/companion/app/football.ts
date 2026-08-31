@@ -94,6 +94,27 @@ export function roundUnderway(snapshot: FootballSnapshot): boolean {
   return duringGameweek(snapshot, new Date().toISOString());
 }
 
+/** Whether the app offers its Live section: is a round of football under way.
+ *
+ *  Fails **open**. If FPL cannot be reached the section is offered rather than
+ *  hidden — navigation must not lie by omission during the one window it
+ *  matters, and the page behind it says honestly that nothing could be read. The
+ *  reverse failure, a section silently missing mid-match, is the one nobody
+ *  could diagnose from a phone. A stated policy rather than a swallowed default,
+ *  which is the distinction CODE_RULES §2 draws.
+ *
+ *  Two registers ask it: the shell's rail, and the paper's index on the one
+ *  route the rail stands down on. `footballNow` is cached, so the second is a
+ *  cache hit rather than a second megabyte off FPL.
+ */
+export async function offerLive(): Promise<boolean> {
+  try {
+    return roundUnderway(await footballNow());
+  } catch {
+    return true;
+  }
+}
+
 /** How stale a snapshot may be and still be spoken about in the present tense,
  *  as a multiple of the live poll window.
  *

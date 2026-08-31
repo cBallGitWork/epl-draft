@@ -27,6 +27,15 @@ numerals for every figure in both registers**. A score is set the same way on
 newsprint as on the desk, because a score is the one thing that is the same
 object in both places.
 
+**The nav bones are literal.** The six sections are one table
+(`shell/sections.ts`) and each register prints it its own way: the Desk stacks
+them down a Championship Manager rail (`shell/Rail`), the Paper sets them as a
+contents strip in letterspaced small capitals (`gazette/Index`). Same six, same
+order, same gate on Live. The rail is **not** on `/` — a 64px navy column beside
+a broadsheet is a seam, and it would narrow the container the front page's
+two-column layout keys off — which is why the Paper prints its own rather than
+going without.
+
 The Paper is the front page's `.paper` scope. The Desk is the root `@theme` —
 it has no class of its own, because it is the default and giving the default a
 class costs thirty components a class name for nothing.

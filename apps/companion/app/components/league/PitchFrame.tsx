@@ -33,7 +33,7 @@ export default function PitchFrame({ children }: { children: ReactNode }) {
           read as one crowd — but it was set when the pitch carried all fifteen
           and nothing sat under it. An eleven with a bench beneath has a row
           fewer and a strip more, and the old spacing put that strip under the
-          tab bar. */}
+          tab bar that used to run across the foot of a phone. */}
       {/* The side padding is the taper's own inset, not a fixed one and not a
           number of its own: the grass is narrowest at the far goal line, so a
           column padded by exactly that much stands every row inside the

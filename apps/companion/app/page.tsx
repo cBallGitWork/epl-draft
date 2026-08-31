@@ -6,6 +6,7 @@ import Doubts from "./components/gazette/Doubts";
 import Lead, { Headline } from "./components/gazette/Stories";
 import Picture from "./components/gazette/Picture";
 import Written from "./components/gazette/Written";
+import Index from "./components/gazette/Index";
 import Masthead from "./components/gazette/Masthead";
 import TeamOfTheWeek from "./components/gazette/TeamOfTheWeek";
 import { FANTRAX_SILENT, SECONDARY_STORIES, servedLeague } from "./config";
@@ -15,6 +16,7 @@ import { edition } from "./edition";
 import { fraunces, newsreader } from "./paperFonts";
 import { londonDate, londonDayAndTime } from "./londonTime";
 import { readerTeamId } from "./squads";
+import { offerLive } from "./football";
 
 // The Gazetta. What the league did this week, on the front page.
 //
@@ -44,6 +46,11 @@ const DRAFT_DATE = londonDate(servedLeague()?.draftDate ?? "");
 
 export default async function GazettePage() {
   const mine = await readerTeamId();
+  // The desk's rail stands down here, so the paper prints the index itself.
+  // `offerLive` and not `paper.live`: `live` is "a ball is in the air" and goes
+  // false in every gap between kickoffs, which would take the Live section out
+  // of the contents at tea-time on a Saturday.
+  const matchday = await offerLive();
   const paper = await edition(mine);
   // One lookup for the whole paper: the lead's cut-out and the eleven's eleven
   // all want the same clubs, keyed the way a snapshot keys them.
@@ -80,6 +87,8 @@ export default async function GazettePage() {
               : `${LEAGUE_NAME}, week by week.`
         }
       />
+
+      <Index matchday={matchday} />
 
       <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">
         {/* The lead column. `--page-gutter: 0` inside it once the rail exists:
