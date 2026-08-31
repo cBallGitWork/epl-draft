@@ -229,17 +229,52 @@
 
      There is no `--text-5xl` because nothing sets one. The ratio still holds
      across the gap: 6xl is two steps above 4xl. --- */
+  /* Each step carries its own LINE BOX, written as `calc(box / size)` the way
+     Tailwind writes its own — a ratio nobody can read against an absolute height
+     anybody can. Declared here on 31 Aug 2026, and the reason is measured rather
+     than felt.
+
+     v4 emits `.text-sm{font-size:…;line-height:var(--tw-leading,
+     var(--text-sm--line-height))}` for every step it ships, so the nine steps
+     whose names it already owns were quietly borrowing ITS ratios — computed
+     against ITS sizes, not ours. `--text-xl` is 21px here and 20px there, so our
+     xl was sitting in a 29.4px box built for a 20px face.
+
+     `--text-3xs` and `--text-2xs` are ours alone. v4 has no default to lend
+     them, so they emitted font-size and nothing else and fell through to
+     Preflight's `line-height: 1.5` — an 11px label in a 16.5px line box. **That
+     is 168 of the app's 306 type sites, and `text-2xs` alone is 141**: it is the
+     step the whole desk is built out of, which is why a Championship Manager row
+     kept coming out at 37px when the game drew it at 18. No `py-` was doing that;
+     the line box was.
+
+     The boxes sit on a 2px grid and tighten as the type grows, which is what a
+     scale is for: 9/12 · 11/14 · 12/16 · 14/18 · 16/22 · 18/24 · 21/26 · 24/28 ·
+     30/34 · 34/38 · 45/46. The prose that needs air asks for it at the point of
+     use and always did — the paper's columns carry `leading-relaxed` and its
+     decks `leading-snug`, which is where a medium's own leading belongs. */
   --text-3xs: 0.5625rem;
+  --text-3xs--line-height: calc(0.75 / 0.5625);
   --text-2xs: 0.6875rem;
+  --text-2xs--line-height: calc(0.875 / 0.6875);
   --text-xs: 0.75rem;
+  --text-xs--line-height: calc(1 / 0.75);
   --text-sm: 0.875rem;
+  --text-sm--line-height: calc(1.125 / 0.875);
   --text-base: 1rem;
+  --text-base--line-height: calc(1.375 / 1);
   --text-lg: 1.125rem;
+  --text-lg--line-height: calc(1.5 / 1.125);
   --text-xl: 1.3125rem;
+  --text-xl--line-height: calc(1.625 / 1.3125);
   --text-2xl: 1.5rem;
+  --text-2xl--line-height: calc(1.75 / 1.5);
   --text-3xl: 1.875rem;
+  --text-3xl--line-height: calc(2.125 / 1.875);
   --text-4xl: 2.125rem;
+  --text-4xl--line-height: calc(2.375 / 2.125);
   --text-6xl: 2.8125rem;
+  --text-6xl--line-height: calc(2.875 / 2.8125);
 
   /* --- Stacking. One step, because one thing stacks: the stickers sit above
      the pitch's own markings. The rest of the scale arrives with the thing that

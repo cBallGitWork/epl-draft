@@ -3863,6 +3863,41 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-31: **The type scale had no leading of its own, and the plan's account
+  of that was half right in a way worth recording.** The claim was that
+  `tokens.css` declares no `--text-*--line-height` pairs at all, so every step
+  inherits Preflight's 1.5. Checked in the emitted CSS instead of reasoned about:
+  v4 writes `.text-sm{font-size:…;line-height:var(--tw-leading,
+  var(--text-sm--line-height))}` for every step whose NAME it already ships, so
+  nine of our eleven were quietly borrowing v4's ratios — computed against v4's
+  sizes, not ours. `--text-xl` is 21px here and 20px there, so our xl sat in a
+  29.4px box built for a 20px face.
+  **The two that really had nothing are `--text-3xs` and `--text-2xs`, which are
+  ours alone** — v4 has no default to lend them, so they emitted font-size and
+  fell through to 1.5. That is **168 of the app's 306 type sites, and `text-2xs`
+  alone is 141**: the step the whole desk is built out of, an 11px label in a
+  16.5px line box. So the lever was real and sharper than described, and the
+  general claim was false. All eleven steps now declare `calc(box / size)`:
+  9/12 · 11/14 · 12/16 · 14/18 · 16/22 · 18/24 · 21/26 · 24/28 · 30/34 · 34/38 ·
+  45/46. The paper was safe to tighten because its prose already asks for air at
+  the point of use — `leading-relaxed` on the columns, `leading-snug` on the
+  decks.
+  **Ten sites were letterspacing tabular figures against the class that exists to
+  tighten them** — `.numeric` sets `-0.01em` and `tracking-widest` sets `+0.1em`.
+  All ten are fixed. The eleventh stays and is now commented: the sign-in field,
+  where a code is transcribed one character at a time and the space between
+  characters is what a reader checks his typing against. Two `text-[0.5625rem]`
+  literals went to `text-3xs`, which is the same 9px written as the step it is.
+  Still off-scale and not touched today: `text-[0.5rem]` (8px, under the scale's
+  floor) at `PlayerTable:178`, `Columns:100` and `SquadRows:157`, and
+  `text-[0.625rem]` (10px, between two steps) at `SquadRows:182,187`,
+  `LivePlayerCard:140` and `FplPitch:69`.
+  What this did NOT move is the thing the density argument is really about:
+  `/league`'s rows are 45px at 390 and 37 at 1440, `/players`' 53. Those are
+  `min-h-11` and `min-h-9` and two-line rows, not leading. The tap rule is the
+  next lever and it is a documentation change as much as a code one — 17 markdown
+  lines across 12 files plus 8 source comments.
+
 - 2026-08-31: **The two squad panels stand beside each other above `lg`, and the
   fixture chip stopped being guillotined.** Championship Manager's content area
   is 710px of an 800px canvas; a 1440 screen less the rail is 1310. One panel up

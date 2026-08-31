@@ -26,7 +26,7 @@ export default function Season({
               row.round.started ? "" : "text-muted"
             }`}
           >
-            <span className="numeric w-9 shrink-0 text-2xs font-bold uppercase tracking-widest text-faint">
+            <span className="numeric w-9 shrink-0 text-2xs font-bold uppercase text-faint">
               GW{row.round.gameweek}
             </span>
 

@@ -42,7 +42,7 @@ export default function SectionError({
             is which read failed, and this is the difference between a screenshot
             that answers it and one that does not. */}
         {error.digest ? (
-          <p className="numeric pt-1 text-2xs tracking-widest text-faint">{error.digest}</p>
+          <p className="numeric pt-1 text-2xs text-faint">{error.digest}</p>
         ) : null}
       </div>
       <button

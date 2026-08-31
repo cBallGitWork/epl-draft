@@ -168,7 +168,7 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
           anything numeric. Silent for a fit man. */}
       <StateBox player={footballer} />
 
-      <span className="numeric shrink-0 text-[0.5rem] tracking-widest text-faint">
+      <span className="numeric shrink-0 text-3xs text-faint">
         {club?.shortName ?? "unmapped"}
       </span>
 

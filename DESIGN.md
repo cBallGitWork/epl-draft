@@ -176,6 +176,21 @@ The scale is fixed rem, ratio ~1.15, product UI, no fluid clamps outside the
 masthead, and it now runs `--text-3xs` (9px) to `--text-6xl` (45px) with every
 step declared. §8 records why 3xs is the last step rather than a floor.
 
+**Every step carries its own line box**, declared beside it in `tokens.css` as
+`calc(box / size)`: 9/12 · 11/14 · 12/16 · 14/18 · 16/22 · 18/24 · 21/26 ·
+24/28 · 30/34 · 34/38 · 45/46. Until 31 Aug 2026 none of them did, and the two
+that are ours alone — `3xs` and `2xs`, which are 168 of the app's 306 type sites
+— fell through to Preflight's 1.5, putting an 11px label in a 16.5px line box.
+That, and not any `py-`, is why a Championship Manager row kept coming out at
+37px where the game drew it at 18. Prose that wants air asks for it at the point
+of use; the paper's columns are `leading-relaxed` and its decks `leading-snug`.
+
+**A figure is never letterspaced.** `.numeric` sets `letter-spacing: -0.01em`
+precisely so tabular digits line up, and a `tracking-widest` on the same element
+is the two rules arguing. Ten sites did it and none do now. The one exception is
+the sign-in field, where a code is being transcribed one character at a time and
+the space between characters is what a reader checks his typing against.
+
 ## 7. Grammar that outranks the look
 
 From `docs/ui/conventions.md`, restated because a redesign is exactly when these

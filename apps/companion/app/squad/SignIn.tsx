@@ -32,6 +32,12 @@ export default function SignIn() {
           placeholder="ABCD2345"
           // `text-base` deliberately: anything smaller and iOS zooms the page in
           // when the field takes focus.
+          //
+          // The app's one surviving `tracking-widest` on a `.numeric`, and the
+          // only one that is not letterspacing a figure against the class that
+          // exists to tighten it: this is a code being TRANSCRIBED off a message
+          // one character at a time, and the space between the characters is
+          // what a reader checks his typing against.
           className="numeric min-h-11 min-w-0 flex-1 border border-line bg-raised px-3 text-base uppercase tracking-widest text-ink placeholder:text-faint"
         />
         <button

@@ -99,7 +99,7 @@ export default function TeamSheet({
                     className="min-w-0 shrink-0"
                     style={{ flexBasis: cardBasis(widest) }}
                   >
-                    <p className="pb-0.5 text-center font-display text-[0.5625rem] font-bold uppercase tracking-widest text-faint">
+                    <p className="pb-0.5 text-center font-display text-3xs font-bold uppercase tracking-widest text-faint">
                       {positionLabel(player.rostered.slot.position) ?? "—"}
                     </p>
                     <Cell player={player} onOpen={() => setOpen(player)} />

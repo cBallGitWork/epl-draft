@@ -27,7 +27,7 @@ export default function FixtureRun({ run }: { run: Opposition[] }) {
       <ol className="flex max-w-[30rem] items-stretch gap-1">
         {run.map((against) => (
           <li key={against.fixture.id} className="flex min-w-0 flex-1 flex-col gap-1">
-            <span className="numeric text-center text-2xs tracking-widest text-faint">
+            <span className="numeric text-center text-2xs text-faint">
               {/* A rearranged match can lose its round. It keeps its place in
                   the run — it is still his next game — and says so. */}
               {against.fixture.gameweek === null ? "—" : `GW${against.fixture.gameweek}`}

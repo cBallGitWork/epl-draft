@@ -112,10 +112,10 @@ export default function PlayerTable({
                             position: "F/M" is what the commissioner set and what
                             the planner obeys, and the global pool's letter is a
                             different league's answer. */}
-                        <span className="numeric tracking-widest">
+                        <span className="numeric">
                           {positionsLabel(entry.eligiblePositions) ?? "—"}
                         </span>
-                        <span className="numeric tracking-widest">
+                        <span className="numeric">
                           {entry.player.clubCode ?? "—"}
                         </span>
                         {owner ? (

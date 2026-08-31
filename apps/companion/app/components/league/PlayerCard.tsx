@@ -47,7 +47,7 @@ export default function PlayerCard({
 
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-lg font-bold tracking-tight">{name}</h2>
-            <p className="numeric text-2xs tracking-widest text-faint">
+            <p className="numeric text-2xs text-faint">
               {/* The position is the one his manager has him filling, not the
                   list he is eligible for — a Fantrax player can hold several. */}
               {[club?.name, positionLabel(rostered.slot.position)]

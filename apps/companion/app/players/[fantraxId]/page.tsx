@@ -111,7 +111,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
         ) : null}
         <div className="flex min-w-0 flex-1 flex-col gap-0.5 pb-1">
           <h1 className="text-xl font-bold tracking-tight">{intel.name || fantraxId}</h1>
-          <p className="numeric text-2xs tracking-widest text-faint">
+          <p className="numeric text-2xs text-faint">
             {[
               intel.clubShortName,
               positionsFromList(intel.defaultPosition),
