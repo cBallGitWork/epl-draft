@@ -188,16 +188,28 @@ export default async function TeamPage({
            Branching on the board rather than on the display again: it exists
            exactly when the gate is closed, so there is no arrangement of the two
            that renders a board with nothing on it. */
-        <>
+        /* Two panels, and above `lg` they stand beside each other. That is not a
+           preference: Championship Manager's own content area is 710px of an
+           800px canvas, and a 1440 screen less the rail is 1310 — so one panel
+           up here is not a CM screen scaled up, it is a CM screen with half of
+           it missing. Split in two, each panel is about the width the whole game
+           had. Below `lg` they stack, and never the other way round: a band
+           above the pitch comes out of the pitch's own screen budget.
+           `items-start` so the shorter panel does not stretch to the taller
+           one's height, and **`minmax(0,1fr)` on the single column below `lg` as
+           well as on the pair above it**: a grid item's default `min-width: auto`
+           is its content's min-content width, so the season grid's seventeen
+           columns widened the whole page rather than scrolling inside their own
+           panel — a 390 phone laid out at 627. The `overflow-x-auto` around the
+           table cannot help while the column it sits in is free to grow. */
+        <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
           <SquadBoard lines={board.lines} because={board.because} projected={board.projected} />
           {/* The second panel, and it costs one cache hit. `squadSeason` already
               reads this table to price the board; what it used to drop on the
               floor is thirteen scoring columns, a per-game figure and Fantrax's
-              own name for the season. Under the board rather than beside it —
-              seventeen columns and a pitch both want the width — and never above
-              it, which would come out of the pitch's screen budget. */}
+              own name for the season. */}
           {season !== null ? <SeasonGrid stats={season.stats} names={names} /> : null}
-        </>
+        </div>
       ) : (
         /* A rival's XI, once his lineups have locked. Read-only: it is his — but
            every man on it opens the same card the head-to-head board opens, so

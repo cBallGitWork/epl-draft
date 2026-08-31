@@ -71,6 +71,13 @@ the sofa, so the score under fifteen faces sat still through a whole half.
    the width, and a band above the pitch comes out of the pitch's own budget.
    Its rows are dense (~25px) and legitimately so: nothing in the table is a
    control, and `min-h-11` is a rule about what a thumb has to hit.
+   **Above `lg` the two panels stand side by side.** Championship Manager's own
+   content area is 710px of an 800px canvas and a 1440 screen less the rail is
+   1310, so one panel up there is not a CM screen scaled up — it is a CM screen
+   with half of it missing. `minmax(0,1fr)` on the single column below `lg` as
+   well as on the pair above it: a grid item's default `min-width: auto` is its
+   content's min-content width, so without it the seventeen columns widened the
+   whole page and laid a 390 phone out at 627.
 5. **A player card** (`PlayerCard`) over the top, when one is tapped — the "who
    is this" card, not the live one. There is no score to explain on a squad whose
    period has not opened.
@@ -170,7 +177,12 @@ the sofa, so the score under fifteen faces sat still through a whole half.
   fifteen-man pitch — the one this card was rebuilt for — gave up a third of its
   photograph to pay for a page it is not on, so `TeamSheet` and `LineupPitch`
   carry `.pitch-with-bench` and the gated pitch keeps the base.
-- It fits a 390×844 phone with no scrolling. Keep it that way, and **measure the
+- **The PITCH fits a 390×844 phone with no scrolling** — that is the invariant,
+  and it was "the page fits" until the season grid landed under the board on 31
+  Aug 2026. The page scrolls now, deliberately: the pitch ends at 553px on a 390
+  phone and the second panel starts at 565, so a reader sees the whole squad and
+  the head of the grid before touching anything. What must not happen is the
+  pitch running past the fold. Keep it that way, and **measure the
   XI view as well as the gated one** — it is both the tighter page and the more
   visited, and it is the one a change breaks first. Measured 29 Aug, all four
   rehearsal squads, signed in: every one draws inside 844. The gated

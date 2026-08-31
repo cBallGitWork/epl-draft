@@ -19,6 +19,16 @@ import type { Opposition } from "@epl/core";
 // it at a column's width. It was a hard `0.5rem`, which is 8px, is not on the
 // scale, and did not move with the card above it: the one size on a player's
 // card that a wider card would not have fixed.
+//
+// **It never wraps.** The band under a sticker is a fixed 20px with
+// `overflow-hidden` on it, so a label that takes a second line does not spill —
+// it is guillotined through the middle of the glyphs, which is what "MUN (H)"
+// did on a seven-across pitch once the section rail took 64px off the content
+// column (measured 31 Aug 2026: a 31px cell against a 37px label). A label
+// clipped at its right edge can still be read; one cut in half horizontally
+// cannot. The padding is `px-0.5` for the same 6px: at nine pixels two of them
+// are enough to keep the type off the chip's own edge, and four were buying
+// nothing the colour was not already doing.
 
 /** How hard, in five steps, and the ink each step carries.
  *
@@ -75,7 +85,7 @@ export default function FixtureChip({
       // different surfaces — and on the pitch's cream band a light grey on
       // near-white was a blank gameweek nobody could read.
       <span
-        className={`numeric grid flex-1 place-items-center px-1 text-3xs font-bold leading-[1.5] ${UNRATED.ink}`}
+        className={`numeric grid flex-1 place-items-center whitespace-nowrap px-0.5 text-3xs font-bold leading-[1.5] ${UNRATED.ink}`}
         style={{ backgroundColor: UNRATED.ground }}
       >
         {blank}
@@ -100,7 +110,7 @@ export default function FixtureChip({
           // one thing here that is not medium-independent: a chip only ever
           // renders on the desk or on a colour plate, never on the paper's
           // stock, where `--color-cream` is deliberately ink.
-          className={`numeric grid flex-1 place-items-center px-1 text-3xs font-bold leading-[1.5] ${fdrStep(against.difficulty).ink}`}
+          className={`numeric grid flex-1 place-items-center whitespace-nowrap px-0.5 text-3xs font-bold leading-[1.5] ${fdrStep(against.difficulty).ink}`}
           style={{ backgroundColor: fdrStep(against.difficulty).ground }}
         >
           {against.club.shortName} ({against.home ? "H" : "A"})

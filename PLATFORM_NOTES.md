@@ -3863,6 +3863,33 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-31: **The two squad panels stand beside each other above `lg`, and the
+  fixture chip stopped being guillotined.** Championship Manager's content area
+  is 710px of an 800px canvas; a 1440 screen less the rail is 1310. One panel up
+  there is not a CM screen scaled up, it is a CM screen with half of it missing,
+  so `/squad/[teamId]` splits into two columns at `lg` and stacks below it. Both
+  panels are on one 1440×900 screen with 145px in hand, and the pitch still ends
+  above the fold at every width (553px of 844 on a phone, the grid starting at
+  565).
+  **Two traps, both measured rather than argued.** A grid item's default
+  `min-width: auto` is its content's min-content width, so the season grid's
+  seventeen columns widened the whole page instead of scrolling inside their own
+  panel — a 390 phone laid out at **627**, with the `overflow-x-auto` around the
+  table powerless because the column it sat in was free to grow. `minmax(0,1fr)`
+  on the single column below `lg` as well as on the pair above it.
+  And `FixtureChip` had no `whitespace-nowrap`. The band under a sticker is a
+  fixed 20px with `overflow-hidden`, so "MUN (H)" took a second line and was cut
+  through the middle of the glyphs. **The rail is what tipped it over**: a
+  seven-across gated pitch had ~38px cells before and 31 after, against a 37px
+  label. Fixed with `whitespace-nowrap` and `px-1` → `px-0.5`, which brings the
+  label to 33px and puts every fixture on one line at 390, 430 and 768. At 320 it
+  clips 7px off the right edge, which is the graceful end of the rule: a label
+  clipped at its edge can be read and one cut in half cannot.
+  Worth keeping: the first measurement of this was **wrong by a factor of two**,
+  because the probe copied `getComputedStyle().font` and Chrome returns an empty
+  shorthand when the font is set through longhands — so it measured 9px type at
+  the body's 16px and reported a 72px label. Copy the longhands.
+
 - 2026-08-31: **The squad page got its second panel, and it was already paid
   for.** A CM screen is two to four bevelled panels laid out together rather than
   one column that scrolls, and `/squad/[teamId]` was one column. `squadPoints`
