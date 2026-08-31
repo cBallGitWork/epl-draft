@@ -145,3 +145,60 @@ those are the ones to build from.
 | `cm9900/23.jpg` | Transfers — blue date index, yellow clubs, orange destinations, purple fee column |
 | `cm9900/05.jpg` | News — tab strip, selected row on a red ground |
 | `cm9900/09.jpg` | Meet with Board — the clearest look at the rail, and at why the photograph had to go |
+
+## The screens, catalogued — 31 Aug 2026
+
+Six of the twenty-one had never been opened. What follows is what they show, and
+most of it is unbuilt.
+
+| Shot | Screen | What it has that we do not |
+|---|---|---|
+| `25.jpg` | **Everton — Squad** | **Two columns of players side by side**, so a whole squad is one screen with no scroll. A slot plate down the left of each name carrying his POSITION (`GK` `DR` `DC` `SB5`) rather than a row number. A strip of every slot above the list with the unfilled ones greyed and a problem one in red. Eligibility strings in yellow beside each name. |
+| `24.jpg` | **English Premier Division — Table** | The index cell is an **ordinal** — `1st` `2nd` — not a bare number. Your own club in yellow. **A dashed yellow rule under the cut line.** A yellow centred caption INSIDE the panel. A second foot row of related screens above the Back/Next pair. |
+| `13.jpg` | Transfer bid | A form whose unavailable rows are **greyed out** — the third sighting of the treatment `.cm-out` was written for and never wired. Foot buttons named for the action (`Offer`), never `Submit`. |
+| `14.jpg` | Set Role At Club | The photograph at close to full strength behind white and yellow prose. |
+| `19.jpg` | Everton Tactics | The list and the pitch **side by side**, and the pitch a flat diagram of numbered discs. Reserves greyed in the list. Formation in yellow above it. |
+| `22.jpg` | Match Stats | **A comparison table**: one centred column of labels with each side's figure in a blue index block left and right. The label takes its category's own colour — yellow for Yellow Cards, red for Red. |
+
+**Two things every one of them has and we have on none.**
+
+A **yellow centred caption inside the panel** — "League Table", "Position(s)",
+"Achievements", "Everton transfer bid for McSheffrey". The blue title bar names
+the SCREEN; this names what is in the panel. We have the first and not the
+second.
+
+A **second foot row**: related screens (`Tactics ▸ Training ▸ Last Match ▸ 6th in
+PRM ▸ History ▸`) above the Back/Next pair. Ours has the pair and not the row.
+
+## The rail is master buttons plus context buttons
+
+Craig, 31 Aug, and the shots settle it. The master set is constant — `Continue
+Game`, the manager's own name in cyan, `Competitions`, `Nations & Clubs`, `Find`,
+`Game Options` (`12.jpg`, `19.jpg`, `24.jpg`, `25.jpg`). During a match it is
+**replaced**, not extended: `Continue Game`, `Everton Tactics`, `Arsenal
+Tactics`, `Commentary Speed` (`21.jpg`), or `Everton Tactics`, `Torquay
+Tactics`, `Commentary Speed` (`16.jpg`).
+
+So a rail entry is not always a section. Ours is six sections and nothing else;
+CM's is "where you can go from anywhere" over "what this screen can do".
+
+## The title bar has two treatments
+
+Blue with a white title on a club or a person (`12.jpg`, `13.jpg`, `25.jpg`), and
+**white with a blue title on a competition** (`24.jpg`), which also carries a
+`Print ▾` control at its right end. We drew the first and assumed it was the
+only one.
+
+## Both galleries are exhausted, and a second source exists
+
+myabandonware serves 21 for 99/00, 8 for CM3, 12 for 01/02 and 1 for 00/01.
+Numbers 7, 17, 18, 20 and everything past 25 return 404 — probed 31 Aug, so do
+not probe again.
+
+`gamefabrique.com/screenshots/pc/championship-manager-season-99-00-NN.jpg`
+(01–17, no Referer needed) is a second set, and it carries the one screen the
+full-size library does not: **the attribute grid** — three columns of
+`label · 1–20 rating`, tabbed `Profile | Injuries & Bans | Contract | Transfer |
+History`, over a small appearances table. They are 344px thumbnails, so they are
+good for identifying a screen and useless for measuring one. Not committed for
+that reason; `fetch.sh` records the URL.

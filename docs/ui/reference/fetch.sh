@@ -50,3 +50,20 @@ for release in "${RELEASES[@]}"; do
   done
 done
 echo "$total screenshots in $(pwd)"
+
+# ---------------------------------------------------------------------------
+# A second source, deliberately NOT downloaded.
+#
+#   https://gamefabrique.com/screenshots/pc/championship-manager-season-99-00-NN.jpg
+#   NN = 01..17, no Referer needed, no larger variant (probed 31 Aug 2026).
+#
+# 344px thumbnails. Good enough to identify a screen, useless for measuring one,
+# and this library exists to be measured — the README's whole argument is that a
+# CM claim cites a numbered shot rather than a memory. They are recorded here
+# because one of them is the ATTRIBUTE GRID, which the full-size set does not
+# have: three columns of `label · 1-20 rating` over a small appearances table.
+# Fetch them by hand if that screen ever needs looking at again.
+#
+# Both galleries above are exhausted. 99/00 numbers 7, 17, 18, 20 and everything
+# past 25 return 404; so do 9-12 for CM3, 13-16 for 01/02 and 2-8 for 00/01.
+# Probed 31 Aug 2026 — do not probe again.
