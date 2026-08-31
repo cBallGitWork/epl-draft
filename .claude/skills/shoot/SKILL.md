@@ -73,6 +73,20 @@ Open it with the Read tool. Then say what is actually in it, against DESIGN.md:
   and a control 36 (`.cm-row`, PRODUCT.md). For a number rather than an
   impression, `node tools/ui/tapfit.mjs`.
 
+## Beside the game
+
+```bash
+node tools/ui/compare.mjs <route> docs/ui/reference/cm9900/NN.jpg out.png [--width 1440]
+```
+
+Composes the reference and a live screenshot into ONE image, scaled to the same
+height and labelled. The acceptance test for the whole conversion is a
+comparison — "if a stranger can tell which decade each belongs to, it has not
+landed" — and taking it by opening two images in sequence is two looks with a
+memory in between, which loses exactly the differences worth finding: a row
+pitch, a plate's weight, how much of the screen the content actually fills.
+`docs/ui/reference/README.md` says which shot is which screen.
+
 **Never report a screenshot you have not opened.** "Shot written" is a file
 operation, not an observation, and the difference has cost this repo a day.
 
