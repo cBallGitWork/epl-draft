@@ -81,13 +81,19 @@
   }
 }
 
-/* The tab you are on. CM marked it in yellow text on a pressed tab, and this is
-   one of two places the accent is allowed inside chrome. 5.32:1 on the plate.
-   The plate does not change colour, so the strip cannot shift as you move along
-   it. */
+/* The tab you are on. Yellow on the label AND on the border, which is what the
+   reference actually shows — the library's measured palette reads "Active tab |
+   `#ffff03` pure yellow, text **and** border", and `cm9900/24.jpg` draws a plain
+   yellow rectangle round the active tab with no bevel swap at all. This carried a
+   pressed bevel and no border on the strength of a comment that cited memory;
+   `register-warden` caught it on 31 Aug.
+
+   One of two places the accent is allowed inside chrome, at 5.32:1 on the plate.
+   The plate itself does not change colour, so the strip cannot shift as you move
+   along it. */
 .cm-tab[aria-current="page"] {
   color: var(--color-accent);
-  border-color: var(--cm-dark) var(--cm-light) var(--cm-light) var(--cm-dark);
+  border-color: var(--color-accent);
 }
 
 /* CM's small leading index cell: a filled blue block down the left of a table

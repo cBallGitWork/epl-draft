@@ -50,15 +50,22 @@ export default function TableRow({
           than the rows, which is what stops a dense table reading as a wall.
           The accent edge rides on it, so "yours" and the index are one mark. */}
       <td
-        className={`cm-index numeric px-1.5 text-right text-2xs font-bold text-muted ${yoursEdge(mine)}`}
+        className={`cm-index numeric px-1.5 text-right text-2xs font-bold ${yoursEdge(mine)}`}
       >
-        {row.rank}
+        {ordinal(row.rank)}
       </td>
 
       <td className="pl-2">
         <Link
           href={`/squad/${row.teamId}`}
-          className="cm-row flex min-h-11 items-center gap-2 text-sm font-bold text-info hover:underline"
+          // White, not cyan. Cyan is "a person" in this palette and CM spends it
+          // on the manager's own name in the rail; its league table sets every
+          // club in white and the one you manage in yellow (`cm9900/24.jpg`,
+          // where Everton is the yellow row). A fantasy team is named after a
+          // person and is not one.
+          className={`cm-row flex min-h-11 items-center gap-2 text-sm font-bold hover:underline ${
+            mine ? "text-accent" : "text-ink"
+          }`}
         >
           <TeamBadge team={{ teamId: row.teamId, name: row.teamName }} url={badge} />
           <span className="min-w-0 truncate">{row.teamName}</span>
@@ -90,7 +97,14 @@ export default function TableRow({
 
       <td className="numeric px-1.5 text-right text-2xs font-bold text-mid">{row.pointsFor}</td>
 
-      <td className="numeric px-1.5 text-right text-sm font-bold text-ink">{row.points}</td>
+      {/* Points in a plate of their own, the way CM ends its table: the one
+          figure that decides the season, blocked out so the eye runs down the
+          column rather than across the row to find it. */}
+      <td className="p-0">
+        <span className="cm-index numeric flex min-h-7 items-center justify-end px-1.5 text-sm font-bold">
+          {row.points}
+        </span>
+      </td>
     </tr>
   );
 }
@@ -152,4 +166,13 @@ const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;
  *  it as one would put the leader on 1% and the table's best row last. */
 function winFraction(value: number | null): string | null {
   return value === null ? null : value.toFixed(3).replace(/^0/, "");
+}
+
+/** `1` becomes `1st`. CM's index cell carries the ordinal and not the number,
+ *  which is a small thing that reads as the game immediately — a column of
+ *  `1st 2nd 3rd` is a league table and a column of `1 2 3` is a list. */
+function ordinal(rank: number): string {
+  const tens = rank % 100;
+  if (tens >= 11 && tens <= 13) return `${rank}th`;
+  return `${rank}${["th", "st", "nd", "rd"][rank % 10] ?? "th"}`;
 }

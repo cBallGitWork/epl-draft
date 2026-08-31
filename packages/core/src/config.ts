@@ -198,14 +198,18 @@ export const FANTRAX_BADGE_BASE =
  *  the same bound buys far more of it. `components/football/PhotoGround` carries
  *  the arithmetic and the two numbers it solves for.
  *
- *  **A path under `public/`, and it wants a real match photograph.** Craig is
- *  supplying one (31 Aug 2026); until it lands the ground is drawn from the
- *  round's own portraits, which is a placeholder made of real data rather than
- *  an invented stadium nobody in the league plays in. Setting this is the whole
- *  swap. The scrim and the darkening do not move with it, because their product
- *  is what keeps every screen above the floor.
+ *  **A path under `public/`.** Craig, 31 Aug: "the background IS the image. Just
+ *  use a crowd shot from a premier league game." What is there is Anfield before
+ *  kick-off, from Wikimedia Commons — `Crowd_at_Anfield_before_the_match_1.jpg`,
+ *  **CC BY-SA 4.0**, which needs attributing or replacing before this is public.
+ *  Craig pointed at champman0102.net's background packages, which 403 anything
+ *  that is not a browser, so this is a licence-clean stand-in for one of those.
+ *
+ *  Set it to null and the ground falls back to the round's own portraits.
+ *  The scrim and the darkening do not move with either, because their product is
+ *  what keeps every screen above the floor.
  */
-export const DESK_GROUND: string | null = null;
+export const DESK_GROUND: string | null = "/ground/crowd.jpg";
 
 /** The league's clock. Every date a manager reads is in it, whatever their phone
  *  says, because a deadline is the same instant for all sixteen of them and a

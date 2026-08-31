@@ -74,7 +74,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
   // already did this; the table and the matchups board did not.
   if ("unavailable" in rows) {
     return (
-      <LeagueShell title="Table" current="table">
+      <LeagueShell title="League Table" current="table">
         <Nothing title={FANTRAX_SILENT} code={rows.unavailable}>
           The table is theirs to keep, and we cannot read it right now. Nothing here is computed
           from our side, so there is no stale copy to fall back on.
@@ -85,7 +85,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
 
   if (rows.length === 0) {
     return (
-      <LeagueShell title="Table" current="table">
+      <LeagueShell title="League Table" current="table">
         <Nothing title="No table yet" code="getStandings → 0 rows">
           {LEAGUE_NAME} drafts on {DRAFT_DATE}. A table needs teams in it, and Fantrax has none to
           rank.
@@ -95,7 +95,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
   }
 
   return (
-    <LeagueShell title="Table" current="table">
+    <LeagueShell title="League Table" current="table">
       {/* The FP column is Fantrax's live total and moves all weekend. This was
           the last points surface with no refresh on it at all: `revalidate`
           bounds how stale the cache may get and pushes nothing to a phone left
@@ -107,8 +107,15 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
           of it cannot drift from it (globals.css). `/players` set this pattern
           and DESIGN §9 signed it off: on a phone the columns Fantrax publishes
           stay reachable rather than being dropped behind a breakpoint. */}
+      {/* **The table sits on a panel, and over a photograph it has to.** CM never
+          puts a row straight onto its background: the table area is a dark
+          translucent block and the crowd shows through it faintly, which is what
+          lets the photograph be present without the figures fighting it
+          (`cm9900/24.jpg`). At 85% the photograph contributes about three parts
+          in 255 through the panel — it reads, and the ink ladder underneath is
+          still the one it was measured on. */}
       <div
-        className="overflow-x-auto"
+        className="overflow-x-auto bg-surface/85 py-1"
         style={{ marginInline: "calc(var(--page-gutter) * -1)", paddingInline: "var(--page-gutter)" }}
       >
         <table className="w-full border-collapse text-sm">
@@ -126,10 +133,17 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
                   /* The playoff line, drawn across the table under the last
                      qualifying place rather than shaded over the rows above it:
                      a tinted band reads as "these are yours" on the one row a
-                     manager is looking for, and the accent is already spoken for
-                     — twice on that very row, by the edge and by the chip. Which
-                     is why this line is dashed in the league's red rather than
-                     the solid yellow CM drew it in (DESIGN §3).
+                     manager is looking for.
+
+                     **Yellow, dashed** — Craig, 31 Aug, copying `cm9900/24.jpg`,
+                     which draws exactly this line in exactly this colour under
+                     1st place. It was the league's red on the argument that the
+                     accent is already spoken for on the row that carries it, by
+                     the edge and by the chip. That argument is not wrong; CM's
+                     palette simply is not slot-strict here, and a dashed rule
+                     fifteen rows from a chip is not the ambiguity DESIGN §3 is
+                     guarding against. Recorded rather than done quietly, because
+                     it is the accent taking a second meaning on one screen.
 
                      Absent entirely for a league that declares no playoff, and
                      for a table shorter than the cut — a line under the bottom
@@ -137,9 +151,9 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
                   <tr aria-hidden>
                     <td colSpan={COLUMNS.length} className="p-0">
                       <span className="flex items-center gap-2 py-1.5 text-3xs font-bold uppercase text-faint">
-                        <span className="flex-1 border-t border-dashed border-league/70" />
+                        <span className="flex-1 border-t border-dashed border-accent/80" />
                         Playoffs
-                        <span className="flex-1 border-t border-dashed border-league/70" />
+                        <span className="flex-1 border-t border-dashed border-accent/80" />
                       </span>
                     </td>
                   </tr>

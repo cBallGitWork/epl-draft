@@ -78,6 +78,12 @@ export default function Columns({
                   {column.label}
                   {here ? <Arrow down={descending} /> : null}
                 </Link>
+              ) : column.key === "team" ? (
+                /* No plate over the name column. CM's head strip starts at the
+                   first figure and the name column is left bare
+                   (`cm9900/24.jpg`) — the strip is a ruler over the numbers, and
+                   running it across the names makes it a header bar instead. */
+                <span className="flex h-7 items-center px-1.5 text-faint">{column.label}</span>
               ) : (
                 <span
                   className={`cm-bevel flex h-7 items-center whitespace-nowrap px-1.5 ${

@@ -23,7 +23,7 @@ const ROWS = 6;
 
 export default function Loading() {
   return (
-    <LeagueShell title="Table" current="table">
+    <LeagueShell title="League Table" current="table">
       <div aria-busy>
         <table className="w-full border-collapse text-sm">
           <Columns sort="rank" descending={false} />
