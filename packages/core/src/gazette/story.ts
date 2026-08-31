@@ -1,3 +1,4 @@
+import { type StoryExtras, normalizeExtras } from "./extras";
 import { type EditionTie, isTie, once } from "./published";
 
 // The rolling paper: prose as a stack of stories rather than one column a round.
@@ -36,43 +37,7 @@ const STORY_KINDS: readonly StoryKind[] = [
   "wire", "dodgers", "presser", "studio", "news", "table", "numbers",
 ];
 
-/** A quote in a story that is written as speech — the press room and the
- *  studio, the two places invented quotes are the licensed joke. */
-interface StoryQuote {
-  /** Who is talking, as printed. */
-  speaker: string;
-  /** The manager the persona stands for, when there is one to join names to. */
-  teamId?: string;
-  line: string;
-}
-
-/** One team's entry in a power ranking. */
-interface StoryRank {
-  teamId: string;
-  /** Places moved since last time; 0 is held, negative is fell. */
-  move: number;
-  line: string;
-}
-
-/** One caption keyed to a chart or figure the page draws itself. */
-interface StoryCaption {
-  key: string;
-  line: string;
-}
-
-interface StoryQuizItem {
-  q: string;
-  a: string;
-}
-
-/** The structured cargo some kinds carry beside their prose. Optional per
- *  member: a presser has quotes and nothing else, a wire may carry a quiz. */
-export interface StoryExtras {
-  quotes?: StoryQuote[];
-  ranks?: StoryRank[];
-  captions?: StoryCaption[];
-  quiz?: StoryQuizItem[];
-}
+export type { StoryExtras } from "./extras";
 
 /** One filed story, as committed.
  *
@@ -184,47 +149,4 @@ export function normalizePaper(parsed: unknown, leagueId: string): PublishedStor
   // a repeated one is a retry that got committed twice. Newest filing wins,
   // which is the opposite of `once` — a rewrite supersedes its draft.
   return once([...stories].reverse(), (story) => story.slug).reverse();
-}
-
-function normalizeExtras(raw: unknown): StoryExtras | undefined {
-  if (raw === null || typeof raw !== "object") return undefined;
-  const extras = raw as Partial<StoryExtras>;
-  const out: StoryExtras = {};
-
-  const quotes = Array.isArray(extras.quotes)
-    ? extras.quotes.filter(
-        (q): q is StoryQuote =>
-          typeof q?.speaker === "string" && q.speaker !== "" &&
-          typeof q.line === "string" && q.line !== "" &&
-          (q.teamId === undefined || typeof q.teamId === "string"),
-      )
-    : [];
-  if (quotes.length > 0) out.quotes = quotes;
-
-  const ranks = Array.isArray(extras.ranks)
-    ? extras.ranks.filter(
-        (r): r is StoryRank =>
-          typeof r?.teamId === "string" && r.teamId !== "" &&
-          typeof r.move === "number" && typeof r.line === "string",
-      )
-    : [];
-  if (ranks.length > 0) out.ranks = once(ranks, (r) => r.teamId);
-
-  const captions = Array.isArray(extras.captions)
-    ? extras.captions.filter(
-        (c): c is StoryCaption =>
-          typeof c?.key === "string" && c.key !== "" && typeof c.line === "string" && c.line !== "",
-      )
-    : [];
-  if (captions.length > 0) out.captions = once(captions, (c) => c.key);
-
-  const quiz = Array.isArray(extras.quiz)
-    ? extras.quiz.filter(
-        (item): item is StoryQuizItem =>
-          typeof item?.q === "string" && item.q !== "" && typeof item.a === "string" && item.a !== "",
-      )
-    : [];
-  if (quiz.length > 0) out.quiz = quiz;
-
-  return Object.keys(out).length > 0 ? out : undefined;
 }
