@@ -110,6 +110,7 @@ export function buildWireBrief(brief: {
       ? `DROPPED and still unclaimed — the obituaries. Give one or two of these three deadpan lines each in the body ("signed in hope, dropped without ceremony, survived by a bench spot"): ${brief.facts.binned.join(", ")}.`
       : null,
     "TRENDS, never a shopping list. Do not tip anybody, do not say who to claim, and do not rate a player's prospects — you report, you do not advise.",
+    "THE QUIZ: set 3 to 5 questions in `quiz`, each with its answer, drawn ONLY from the facts in this brief and the round it covers. They print at the foot of the column with the answers upside down, so keep them short and keep them answerable.",
     storylinesBlock(brief.threads),
   ]
     .filter((block) => block !== null)

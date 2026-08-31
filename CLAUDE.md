@@ -214,7 +214,7 @@ The full, binding set is in `CODE_RULES.md`. The ones that bite most often here:
 All four green before every commit.
 
 ```bash
-npm test          # vitest across packages/*
+npm test          # vitest across packages/* and scripts/
 npm run typecheck # core, scripts and the app
 npm run lint      # ESLint — `next build` stopped running it at Next 16
 npm run build     # Next production build

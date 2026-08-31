@@ -96,20 +96,6 @@ export function newsdesk(
     want({ kind: "predictions", key: `predictions:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-predictions` });
   }
 
-  // The wire is weekly and keys on the WINDOW rather than the round: it reports
-  // trends across recent business, so a second firing in the same week has
-  // nothing new to say however many deals landed.
-  if (desk.dealsInWindow > 0) {
-    want({ kind: "wire", key: `wire:through-gw${desk.gameweek}`, slug: `gw${desk.gameweek}-wire` });
-  }
-
-  // News files whenever the wire brings something about a man we hold. Its key
-  // is the ARTICLE — fragment stripped, so the same story re-listed as it
-  // moves up the feed is not covered twice.
-  for (const story of desk.news.slice(0, NEWS_PER_FIRING)) {
-    want({ kind: "news", key: `news:${story.key}`, slug: story.slug });
-  }
-
   // Calls only while the round is being played: after the last whistle the
   // report owns every verdict, and before the first there is nothing to call.
   if (desk.started && !desk.finished) {
@@ -160,6 +146,28 @@ export function newsdesk(
         fixtureId: stake.fixtureId,
       });
     }
+  }
+
+  // The look-ahead and the outside world come LAST, and the order is the whole
+  // point of the cap: a tie that has just gone settled is perishable — the
+  // next score can make the call moot and the round-report will own it within
+  // hours — while a waiver trend and a BBC item keep. Queued above the calls,
+  // a Saturday with one claim and two wire items bought a waiver column and
+  // somebody else's transfer news while the paper's own story waited.
+  for (const story of desk.news.slice(0, NEWS_PER_FIRING)) {
+    want({ kind: "news", key: `news:${story.key}`, slug: story.slug });
+  }
+  // is the ARTICLE — fragment stripped, so the same story re-listed as it
+  // moves up the feed is not covered twice.
+  for (const story of desk.news.slice(0, NEWS_PER_FIRING)) {
+    want({ kind: "news", key: `news:${story.key}`, slug: story.slug });
+  }
+
+  // The wire is weekly and keys on the WINDOW rather than the round: it reports
+  // trends across recent business, so a second firing in the same week has
+  // nothing new to say however many deals landed.
+  if (desk.dealsInWindow > 0) {
+    want({ kind: "wire", key: `wire:through-gw${desk.gameweek}`, slug: `gw${desk.gameweek}-wire` });
   }
 
   return out;

@@ -10,9 +10,16 @@ import { type EditionTie, isTie, once } from "./published";
 // (`frontPage.ts` owns all three). Still commit-based, still validated at this
 // edge from both directions, still never reaching a clock or the network.
 
-/** What kind of story this is. The kind decides its voice, its brief, its place
- *  in the running order and which inside page prints it — so the list is ours,
- *  and a kind the page does not know simply does not render. */
+/** What kind of story this is. The kind decides its voice, its brief and its
+ *  place in the running order, so the list is ours — and every member here is
+ *  one the newsdesk can assign and the page can print.
+ *
+ *  `table` and `numbers` were drafted as a Statto column over the sidebar
+ *  charts and are deliberately NOT here: nothing files them, and a kind in
+ *  this union that no desk writes reads as supported when it is not
+ *  (CODE_RULES §2 — if it is not used this phase it is not committed this
+ *  phase). The charts print as facts and need no prose to stand up. The idea
+ *  is kept in the plan, not in the type. */
 export type StoryKind =
   | "round-preview"
   | "round-report"
@@ -27,14 +34,12 @@ export type StoryKind =
   | "dodgers"
   | "presser"
   | "studio"
-  | "news"
-  | "table"
-  | "numbers";
+  | "news";
 
 const STORY_KINDS: readonly StoryKind[] = [
   "round-preview", "round-report", "match-report", "fixture-preview",
   "tie-call", "tie-report", "predictions", "eleven", "power-ranking",
-  "wire", "dodgers", "presser", "studio", "news", "table", "numbers",
+  "wire", "dodgers", "presser", "studio", "news",
 ];
 
 export type { StoryExtras } from "./extras";

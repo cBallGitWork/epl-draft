@@ -6,6 +6,7 @@ import {
   datedKickoffs,
   decided,
   fetchLeagueInfo,
+  fetchLiveScoring,
   firstKickoff,
   fixtureStakes,
   gameweekStarted,
@@ -13,12 +14,15 @@ import {
   isCovered,
   locksAt,
   mapLeagueInfo,
-  markPreview,
+  mapLiveScores,
+  markCalls,
   newsdesk,
   periodGameweeks,
+  periodPairings,
   roundState,
   tieState,
-  type PublishedEdition,
+  type Assignment,
+  type LeagueInfo,
   type PublishedStory,
 } from "@epl/core";
 import { gatherRoundFacts } from "./edition/facts";
@@ -80,6 +84,7 @@ async function main(): Promise<void> {
   const started = gameweekStarted(snapshot.fixtures, snapshot.gameweek);
 
   const ledger = readLedger();
+  const paper = readPaperStories();
   const facts = await gatherRoundFacts(info, snapshot, round.period);
   const clubs = clubById(snapshot);
 
@@ -99,7 +104,7 @@ async function main(): Promise<void> {
       dealsInWindow: facts.business.length,
       news: facts.news.map((story) => ({
         key: story.item.key,
-        slug: `news-${story.item.key.split("/").pop() ?? story.item.key}`,
+        slug: newsSlug(story.item.key),
       })),
       ties: facts.pairings.map((pairing) => ({
         homeTeamId: pairing.home.teamId,
@@ -125,13 +130,15 @@ async function main(): Promise<void> {
     table: facts.table,
     period: round.period,
     kickoff,
-    marked:
-      finished
-        ? markPreview(previewOnFile(readPaperStories(), round.period), decided(facts.pairings, facts.scores))
-        : null,
+    marked: await markLastWeek(paper, info, round.period, assignments),
   };
 
   const filings: Filing[] = [];
+  // Attempts, not assignments: a desk that refuses spends nothing and is an
+  // ordinary outcome, so a firing where every assignment refused must exit
+  // quietly rather than red. Only a call that was actually made and failed is
+  // evidence of a broken writer.
+  let attempted = 0;
   for (const assignment of assignments) {
     const desk = prepare(assignment, ctx);
     // A desk that refuses spends nothing: the facts moved between the
@@ -147,6 +154,7 @@ async function main(): Promise<void> {
     // One bad story costs that story; the run fails only when EVERY attempted
     // story failed, which is the signal of a broken writer rather than a
     // brittle payload.
+    attempted += 1;
     try {
       const column = await writeColumn(desk.system, desk.brief);
       const filed = file(assignment, column, ctx, new Date().toISOString());
@@ -160,7 +168,10 @@ async function main(): Promise<void> {
     console.log("\n--- dry run: nothing written ---");
     return;
   }
-  if (filings.length === 0) throw new Error("Every attempted story failed; nothing filed.");
+  if (filings.length === 0) {
+    if (attempted === 0) return say("Every desk refused on today's facts; nothing to file.");
+    throw new Error(`All ${attempted} attempted stories failed; nothing filed.`);
+  }
 
   // The picture, last and optional. Only the story that will LEAD gets one —
   // a drawing beside a headline nobody reads first is a drawing nobody sees —
@@ -179,29 +190,66 @@ async function main(): Promise<void> {
   persistFilings(filings, ledger, new Date().toISOString());
 }
 
-/** This round's preview, as filed — the report marks its calls. Only what
- *  `markPreview` reads is reconstructed; the rest of the old shape is gone. */
-function previewOnFile(paper: PublishedStory[], period: number): PublishedEdition | null {
-  const preview = paper.find(
-    (story) =>
-      story.leagueId === FANTRAX_LEAGUE_ID &&
-      story.kind === "round-preview" &&
-      story.period === period,
+/** Last week's calls, marked against last week's results.
+ *
+ *  A conditional read, and the only one in the script: it fetches the previous
+ *  period's scores ONLY when a predictions column is actually due and there
+ *  are calls on file to mark. Every other firing pays nothing for it.
+ *
+ *  **Not this period's, which is the bug this replaces.** The predictions
+ *  column files in the lock window, where by construction the round has not
+ *  finished — so marking it against its own round could never produce a
+ *  number, and the "you called N of 8" block was dead. A pundit is marked on
+ *  LAST week: the calls are on file, the results came in, and the next column
+ *  opens by owning the score.
+ *
+ *  It was also looking for a `round-preview` rather than a `predictions`
+ *  story, so even reached it would have marked the wrong column's calls. */
+async function markLastWeek(
+  paper: PublishedStory[],
+  info: LeagueInfo,
+  period: number,
+  assignments: readonly Assignment[],
+): Promise<{ right: number; called: number } | null> {
+  if (!assignments.some((assignment) => assignment.kind === "predictions")) return null;
+
+  const last =
+    paper
+      .filter(
+        (story) =>
+          story.leagueId === FANTRAX_LEAGUE_ID &&
+          story.kind === "predictions" &&
+          story.period < period,
+      )
+      .sort((a, b) => b.period - a.period)[0] ?? null;
+  if (last === null) return null;
+
+  const raw = await fetchLiveScoring(FANTRAX_LEAGUE_ID, last.period).catch(() => null);
+  if (raw === null) return null;
+
+  const scores = new Map(mapLiveScores(raw).map((score) => [score.teamId, score]));
+  return markCalls(
+    last.ties,
+    decided(periodPairings(info.matchups, info.teams, last.period), scores),
   );
-  if (preview === undefined) return null;
-  return {
-    kind: "preview",
-    leagueId: preview.leagueId,
-    period: preview.period,
-    gameweek: preview.gameweek,
-    filedAt: preview.filedAt,
-    byline: preview.byline,
-    headline: preview.headline,
-    deck: preview.deck,
-    intro: "",
-    sections: [],
-    ties: preview.ties ?? [],
-  };
+}
+
+/** A wire item's slug: ours, addressable, and safe as a filename and a DOM id.
+ *
+ *  Not the URL's last segment. `"…/story/".split("/").pop()` is `""` rather
+ *  than undefined, so a trailing slash produced the slug `news-` — and two of
+ *  those collide, at which point the paper silently drops one. A guid carrying
+ *  a query string reached an archive filename and a PNG name the same way. */
+function newsSlug(key: string): string {
+  const cleaned = key
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "")
+    .split("-")
+    .slice(-3)
+    .join("-");
+  return `news-${cleaned === "" ? Date.now().toString(36) : cleaned}`;
 }
 
 function say(message: string): void {

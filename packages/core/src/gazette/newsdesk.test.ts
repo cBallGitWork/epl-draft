@@ -129,6 +129,21 @@ describe("newsdesk", () => {
     ).not.toContain("wire");
   });
 
+  it("puts the perishable before the keepable", () => {
+    // A tie that has just gone settled goes stale within hours — the next
+    // score can moot the call and the report will own it. A waiver trend and
+    // a BBC item keep. With a cap of two, the order IS the decision.
+    const state = desk({
+      dealsInWindow: 4,
+      news: [{ key: "k1", slug: "news-k1" }],
+      ties: [{ homeTeamId: "a", awayTeamId: "b", state: "settled" }],
+      stakes: [stake()],
+    });
+    const kinds = newsdesk(state, none, NOW).map((a) => a.kind);
+    expect(kinds.indexOf("tie-call")).toBeLessThan(kinds.indexOf("wire"));
+    expect(kinds.indexOf("match-report")).toBeLessThan(kinds.indexOf("news"));
+  });
+
   it("puts the round's own word first and the look-ahead last", () => {
     const state = desk({
       finished: true,

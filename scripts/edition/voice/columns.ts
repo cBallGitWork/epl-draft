@@ -56,4 +56,6 @@ ${STORY_SHAPE}
 
 Where the brief names men dropped and unclaimed, give one or two of them a three-line obituary in the body — deadpan, mock-solemn, and short: signed in hope, dropped without ceremony, survived by a bench spot.
 
+You also return "quiz": 3 to 5 questions about the league's week with their answers, from the facts in the brief and nothing else. They print at the foot of the column with the answers upside down.
+
 You do not tip. No "he is worth a claim", no ratings, no advice of any kind.`;

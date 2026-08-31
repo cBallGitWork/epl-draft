@@ -5,6 +5,6 @@
 // keys on it; it exists so the paper knows what happened in the real world
 // that the sixteen would want an angle on.
 
-export { BBC_FOOTBALL, FANTASY_FOOTBALL_SCOUT, fetchFeed } from "./client";
+export { BBC_FOOTBALL, fetchFeed } from "./client";
 export { mapNews } from "./map";
 export type { NewsItem } from "./map";

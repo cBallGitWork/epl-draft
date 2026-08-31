@@ -123,6 +123,21 @@ export function storyOfColumn(
     body: column.body,
     subjects: [meta.subject],
     image: null,
+    // The calls, for the kinds that make them.
+    ties: column.ties,
+    // **The cargo, nested.** Every column prompt asks for its structured part
+    // at the TOP level — `quotes`, `ranks`, `captions`, `quiz` — because that
+    // is the shape a model reliably returns, and `PublishedStory` keeps them
+    // under `extras`. Without this fold the sketches file a scene-setting
+    // paragraph and no sketch, the rankings file an overview and no sixteen,
+    // and the page renders exactly nothing of it — silently, since every
+    // reader of `extras` treats absence as ordinary.
+    extras: {
+      quotes: column.quotes,
+      ranks: column.ranks,
+      captions: column.captions,
+      quiz: column.quiz,
+    },
   });
   if (story === null) throw new Error(`The ${meta.kind} did not come back in a printable shape.`);
   return { story, threads: threadUpdates(column.threads) };

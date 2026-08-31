@@ -44,8 +44,6 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   "power-ranking": 35,
   dodgers: 30,
   wire: 25,
-  table: 15,
-  numbers: 10,
 };
 
 /** The paper in print order: expired dropped, superseded retired, the rest

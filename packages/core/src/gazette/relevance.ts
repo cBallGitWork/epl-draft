@@ -73,7 +73,12 @@ export function fixtureStakes(
       .sort((a, b) => Number(bothSides(b)) - Number(bothSides(a)));
 
     return {
-      key: `${clubs.get(fixture.homeClubId)?.code ?? 0}v${clubs.get(fixture.awayClubId)?.code ?? 0}`,
+      // Club CODES, which are season-stable — never the fixture id, which is
+      // not (`layer-split.md`'s identity rule reaches persisted keys). A club
+      // the snapshot does not carry falls back to its per-season id rather
+      // than to a shared nought: two unknown fixtures keyed `0v0` would spend
+      // one covered-key between them and the second report would never file.
+      key: `${clubs.get(fixture.homeClubId)?.code ?? `x${fixture.homeClubId}`}v${clubs.get(fixture.awayClubId)?.code ?? `x${fixture.awayClubId}`}`,
       fixtureId: fixture.id,
       kickoff: fixture.kickoff,
       finished: fixture.status === "finished",

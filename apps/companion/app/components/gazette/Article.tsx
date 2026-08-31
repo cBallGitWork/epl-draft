@@ -35,8 +35,6 @@ const KICKER: Partial<Record<StoryKind, string>> = {
   presser: "The press room",
   studio: "The studio",
   news: "News",
-  table: "The table",
-  numbers: "The numbers",
 };
 
 export default function Article({
@@ -90,14 +88,14 @@ export default function Article({
       {/* What the column filed BESIDE its prose. A kind that carries none of
           it renders none of it: every one of these returns null on an empty
           list, so a story is never followed by an empty heading. */}
-      <Ranks story={story} named={named} mine={mine} />
+      {story.kind === "power-ranking" ? <Ranks story={story} named={named} mine={mine} /> : null}
       {story.kind === "presser" ? (
         <Quotes story={story} label="Staged for the paper — nobody said any of this" />
       ) : null}
       {story.kind === "studio" ? (
         <Quotes story={story} label="A sketch — nobody said any of this" />
       ) : null}
-      <Quiz story={story} />
+      {story.kind === "wire" ? <Quiz story={story} /> : null}
     </details>
   );
 }

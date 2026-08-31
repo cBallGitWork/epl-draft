@@ -1,0 +1,5 @@
+# The splash drawings land here, one per lead story that got one.
+# Tracked so the directory exists on a fresh CI checkout: the editions
+# workflow stages this path on every run, and `git add` on a path that does
+# not exist fails the step — which would have meant no edition ever committed
+# until an image happened to be drawn first.

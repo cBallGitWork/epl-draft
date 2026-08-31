@@ -60,6 +60,14 @@ export function columnBrief(assignment: Assignment, ctx: ColumnContext): string 
   }
 
   if (assignment.kind === "dodgers") {
+    // The same gate the eleven keeps, and for a stronger reason: this column
+    // is ENTIRELY the claim that somebody was benched. `getTeamRosters` is
+    // asked for no period and Fantrax rolls the label forward hours before the
+    // boundary, so between rounds the arrangement on hand is next week's plan
+    // — and this fires in the finished-round window, which is exactly when
+    // that is most likely. Ungated, the paper names five managers for benching
+    // men they started, in a side nobody fielded.
+    if (!ctx.facts.fielded) return null;
     const benched = dodgers(ctx.facts.teams);
     // Nobody left anybody out worth writing about. A column saying so would be
     // the paper apologising for a week in which every manager picked well.
