@@ -41,12 +41,18 @@ export default function Loading() {
         style={{ marginInline: "calc(var(--page-gutter) * -1)", paddingInline: "var(--page-gutter)" }}
       >
         {Array.from({ length: 8 }, (_, at) => (
-          <div
-            key={at}
-            className="flex min-h-[3.25rem] items-center gap-2.5 border-b border-line/60"
-          >
-            <Skeleton width="2rem" height="2rem" circle />
-            <Skeleton width="40%" height="0.875rem" />
+          // Two bars, because the real row is two lines — his name over his
+          // club — and a skeleton that draws one is a box the row pushes out of
+          // the way when it lands. `min-h-[3.25rem]` was tuned to the row's old
+          // 52px and went stale the moment `.cm-row` relaxed the desk; the shape
+          // tracks it and a number cannot. The circle takes `--row-portrait`,
+          // which is the portrait's own size at whichever width this is.
+          <div key={at} className="cm-row flex min-h-11 items-center gap-2.5 border-b border-line/60">
+            <Skeleton width="var(--row-portrait)" height="var(--row-portrait)" circle />
+            <div className="flex min-w-0 flex-1 flex-col gap-1">
+              <Skeleton width="40%" height="0.875rem" />
+              <Skeleton width="22%" height="0.6875rem" />
+            </div>
           </div>
         ))}
       </div>

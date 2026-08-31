@@ -62,7 +62,10 @@ export default async function YourMatchup() {
         </h2>
         <Link
           href={`/league/matchups/${pairing.team.teamId}`}
-          className="text-2xs text-faint hover:text-muted"
+          // A 44px target inside a 28px header row: the negative margin lets the
+          // tap area grow past the line without the panel growing with it, which
+          // is the only way a header row keeps both its height and its rule.
+          className="-my-2 flex min-h-11 items-center text-2xs text-faint hover:text-muted"
         >
           Both elevens
         </Link>
@@ -160,7 +163,7 @@ function Half({
     // number are, which is the question the number provokes.
     <Link
       href={`/league/matchups/${team.teamId}`}
-      className={`flex min-h-11 min-w-0 flex-1 items-center gap-2 px-2 py-1.5 hover:bg-raised ${
+      className={`cm-row flex min-h-11 min-w-0 flex-1 items-center gap-2 px-2 py-1.5 hover:bg-raised ${
  mirrored ?"flex-row-reverse":""
 }`}
     >

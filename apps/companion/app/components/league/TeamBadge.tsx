@@ -12,8 +12,16 @@ import type { LeagueTeam } from "@epl/core";
 // yet — a semi-final winner, a place in a table nobody holds — gets neither,
 // because there is nobody to letter.
 
+/** The slot, read from `--row-badge` in `desk.css` so it can shrink with the row
+ *  it heads. It was a JS constant applied as an inline style, which has no
+ *  breakpoint: a 26px badge with 4px of padding round it cannot fit the 28px row
+ *  a mouse gets, and no `lg:` utility could reach an attribute.
+ *
+ *  `SIZE` stays, and is the LARGER of the two, because it is what `next/image`
+ *  is told to fetch — asking for the desk's 20px and drawing 26 on a phone is a
+ *  soft badge nobody thinks to blame the CSS for. */
 const SIZE = 26;
-const SLOT = { width: SIZE, height: SIZE };
+const SLOT = { width: "var(--row-badge)", height: "var(--row-badge)" };
 
 export default function TeamBadge({
   team,

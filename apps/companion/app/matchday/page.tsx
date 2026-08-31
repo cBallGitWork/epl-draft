@@ -59,7 +59,10 @@ export default async function MatchdayPage() {
       <div className="flex justify-end pt-1">
         <Link
           href="/matchday/desk"
-          className="text-2xs font-bold uppercase tracking-widest text-faint hover:text-muted"
+          // The one route to that screen, and it shipped as a 14px target.
+          // `min-h-11` rather than padding, so the tap area is the rule's own
+          // number and not an arithmetic of two paddings.
+          className="flex min-h-11 items-center text-2xs font-bold uppercase tracking-widest text-faint hover:text-muted"
         >
           The desk →
         </Link>

@@ -217,7 +217,12 @@ function Row({ player, onOpen }: { player: SquadPlayerDetail; onOpen?: () => voi
     </>
   );
 
-  const shell = "flex min-h-9 w-full items-center gap-2 px-2 py-1 text-left";
+  // `min-h-11` and not the `min-h-9` this carried until 31 Aug 2026: fifteen of
+  // these are buttons, and a list of fifteen tappable rows on a phone is exactly
+  // the case the 44px floor exists for. It was a second undocumented exception
+  // beside the view toggle's, found by `tools/ui/tapfit.mjs`. `.cm-row` takes it
+  // back to 28 above `lg`, where there is no thumb.
+  const shell = "cm-row flex min-h-11 w-full items-center gap-2 px-2 py-1 text-left";
 
   return onOpen ? (
     <button type="button" onClick={onOpen} className={`${shell} hover:bg-raised`}>

@@ -69,7 +69,9 @@ Open it with the Read tool. Then say what is actually in it, against DESIGN.md:
   red never for "active", live red only for a match in play?
 - Is absence an em dash rather than a nought?
 - Are figures in Archivo Narrow, tabular?
-- Are taps `min-h-11`?
+- Are taps `min-h-11` **at phone width**? At desk width a repeating row is 28px
+  and a control 36 (`.cm-row`, PRODUCT.md). For a number rather than an
+  impression, `node tools/ui/tapfit.mjs`.
 
 **Never report a screenshot you have not opened.** "Shot written" is a file
 operation, not an observation, and the difference has cost this repo a day.

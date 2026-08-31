@@ -27,7 +27,7 @@ function Block({ title, rows }: { title: string; rows: number }) {
       <h2 className="pb-1 text-2xs font-bold uppercase tracking-widest text-faint">{title}</h2>
       <div className="flex flex-col divide-y divide-line border-y border-line">
         {Array.from({ length: rows }, (_, at) => (
-          <div key={at} className="flex items-center gap-2 py-1.5">
+          <div key={at} className="flex items-center gap-2 py-1">
             <Skeleton width="55%" height="0.75rem" />
             <Skeleton width="2.5rem" height="0.75rem" />
           </div>

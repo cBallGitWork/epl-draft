@@ -58,7 +58,7 @@ export default function TableRow({
       <td className="pl-2">
         <Link
           href={`/squad/${row.teamId}`}
-          className="flex min-h-11 items-center gap-2 text-sm font-bold text-info hover:underline lg:min-h-9"
+          className="cm-row flex min-h-11 items-center gap-2 text-sm font-bold text-info hover:underline"
         >
           <TeamBadge team={{ teamId: row.teamId, name: row.teamName }} url={badge} />
           <span className="min-w-0 truncate">{row.teamName}</span>

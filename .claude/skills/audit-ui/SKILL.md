@@ -1,10 +1,10 @@
 ---
 name: audit-ui
-description: Run the deterministic UI instruments — contrast and overflow across every route at both widths, tab-bar fit on the narrowest phones, and a dialog's open/measure/Escape cycle. Use after any visible change touching more than one route, and before closing a phase.
+description: Run the deterministic UI instruments — contrast and overflow across every route at both widths, tap targets against the floor each width actually has, section-rail fit on the narrowest phones, and a dialog's open/measure/Escape cycle. Use after any visible change touching more than one route, and before closing a phase.
 argument-hint: "[--base <url>]"
 ---
 
-# The three instruments
+# The four instruments
 
 Deterministic checks that a screenshot cannot make. They need the app up and
 headless Chrome on 9261 — see `/shoot` steps 1 and 2 for both.
@@ -46,7 +46,25 @@ Any chrome change re-runs this. A seventh section is a height question now rathe
 than a width one, but `/matchday/desk` is still reached from the Live section and
 not from one of its own (`docs/ui/desk.md`).
 
-## 3. Dialog — open, measure, Escape
+## 3. Tapfit — is every target as big as its width requires
+
+```bash
+node tools/ui/tapfit.mjs
+```
+
+Nine routes × 390 and 1440, against the floor each width actually has: 44px under
+a thumb, and above `lg` 28 for a repeating row, 36 for a control (PRODUCT.md's
+accessibility section). Three exceptions are recorded and read out on every run
+rather than filtered away — a column head, the squad board's view toggle, and an
+inline text link inside a sentence, the last detected structurally so a rewritten
+sentence cannot go stale.
+
+**Run it after anything that adds a link.** The rule used to be carried by four
+prose checklists asking "are taps `min-h-11`?", and a prose checklist cannot
+measure: this instrument's first run found the front page's contents strip
+shipping 12px targets on the one screen with no other way out of it.
+
+## 4. Dialog — open, measure, Escape
 
 ```bash
 node tools/ui/dialog.mjs <route> [--selector '.pitch button'] [--width 390]

@@ -60,7 +60,10 @@ nothing on it.
   plate (`.pitch`, `.crest`) keeps the desk's tokens; page furniture does not.
 - Absence drawn as `—`, never `0`.
 - Figures in Archivo Narrow, tabular.
-- Taps at least 44px.
+- Taps at least 44px **at 390**. At 1440 a repeating row is 28px and a control
+  36 — that is the rule rather than a regression (PRODUCT.md, 31 Aug 2026).
+  Do not eyeball this: `node tools/ui/tapfit.mjs` measures every route at both
+  widths and names the three recorded exceptions.
 
 **5 — Sweep when more than one route moved.**
 ```bash

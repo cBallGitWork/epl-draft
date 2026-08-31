@@ -96,6 +96,37 @@ for its own sake.
 WCAG 2.1 AA. Body text ≥4.5:1, large text and numerals ≥3:1, visible focus states,
 tap targets ≥44px.
 
+**The 44px is ours and not the standard's** — WCAG 2.1 AA has no tap-target
+requirement at all — and since 31 Aug 2026 it is a rule about a THUMB rather than
+about a screen. Under a thumb everything is 44. Above `lg`, where the pointer is
+a mouse and the reference viewing condition above does not apply, the desk keeps
+its own proportions instead:
+
+| | Above `lg` | Where |
+|---|---|---|
+| A repeating **row** of a list | 28px | `.cm-row`, `desk.css` |
+| A **control** — button, input, tab, way out | 36px | `lg:min-h-9` |
+| A **column head** | 28px, with its strip | see the exception below |
+
+Craig's call, and the phone keeps 44 at every size. One rule rather than a
+judgement per component: `.cm-row` says nothing below `lg`, so adding it to a row
+cannot change what a phone sees. What it bought is sixteen teams on one screen
+where the game showed a division on one — `/league`'s rows are 29px against
+Championship Manager's own 18.
+
+**Three exceptions, all deliberate and all measured.** A **column head** belongs
+to the head strip it is cut from and is as wide as its column, so it is a short
+wide target rather than a small one; it has been 28px since the tables were built
+and no document had measured it until now. The **squad board's view toggle** is
+`min-h-9` at every width (`docs/ui/squad.md`). An **inline text link inside a
+sentence** — "or show all 638" — is prose and never was a control.
+
+`tools/ui/tapfit.mjs` measures all of this on every route at both widths and
+names the exceptions rather than hiding them. It exists because the four guards
+that carried this rule were prose checklists asking "are taps `min-h-11`?", and
+a prose checklist cannot measure: the first run found the front page's contents
+strip shipping 12px targets on the one screen with no other way out of it.
+
 Two domain-specific hazards to hold to that standard. Club colours are brand values,
 not chosen for contrast — several (Fulham, Spurs, Leeds white; Hull amber) fail against
 light surfaces, so club colour is never the sole carrier of meaning and never sits

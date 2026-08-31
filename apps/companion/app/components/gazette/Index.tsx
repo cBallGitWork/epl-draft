@@ -26,7 +26,11 @@ export default function Index({ matchday }: { matchday: boolean }) {
   return (
     <nav
       aria-label="Sections"
-      className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-y border-line py-1.5 font-sans text-3xs font-semibold uppercase tracking-[0.16em]"
+      // No `py-` on the strip: the links carry their own `min-h-11` and the
+      // padding would stack on top of it. They are the front page's only way
+      // into the rest of the app, and they shipped as 12px targets — measured by
+      // `tools/ui/tapfit.mjs`, which is why that instrument exists.
+      className="flex flex-wrap items-center justify-between gap-x-3 border-y border-line font-sans text-3xs font-semibold uppercase tracking-[0.16em]"
     >
       {sections.map((section) => {
         const here = section.href === HERE;
@@ -37,7 +41,7 @@ export default function Index({ matchday }: { matchday: boolean }) {
             aria-current={here ? "page" : undefined}
             // The sheet's one red is the accent slot on the paper, and "where
             // you are" is what the accent says in both registers.
-            className={here ? "text-accent" : "text-muted"}
+            className={`flex min-h-11 items-center ${here ? "text-accent" : "text-muted"}`}
           >
             {section.label}
           </Link>

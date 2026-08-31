@@ -3863,6 +3863,49 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-31: **The 44px tap rule stopped being one number, and the rule that
+  replaced it caught a bug in the same hour.** Craig's call: the phone keeps 44,
+  the desk goes to 28. WCAG 2.1 AA has no tap-target requirement at all, so it
+  was always a house rule, and it was a rule about a THUMB written as if it were
+  about a screen. Above `lg` the desk now keeps its own proportions instead — a
+  repeating ROW 28px, a CONTROL 36, a column head 28 with the strip it is cut
+  from. Measured after: `/league` 37 → **29px**, `/league/schedule` 57 → 29,
+  `/players` 53 → 45 and `/squad` 59 → 43 (both content-bound two-line rows, which
+  the plan predicted). **Every phone row is unchanged**, and that is by
+  construction: `.cm-row` declares nothing below `lg`, so adding it to a row
+  cannot move a phone. Unlayered CSS beats `@layer utilities`, which is why the
+  class overrides the `min-h-*` and `py-*` already on the element without either
+  being removed.
+  **The two marks inside a row were JS constants in inline styles** — `TeamBadge`
+  at 26 and `PlayerPortrait` at 32 — so no `lg:` utility could reach them and a
+  26px badge with 4px round it cannot fit a 28px row. Both read `--row-badge` /
+  `--row-portrait` from `desk.css` now, and both keep asking `next/image` for the
+  LARGER of their two sizes so a phone never gets a picture scaled up from the
+  desk's.
+  **The four guards carrying this rule were prose checklists** — "are taps
+  `min-h-11`?" — and a prose checklist cannot measure. `tools/ui/tapfit.mjs` is
+  the fifth instrument in the drawer, and its first run found **the front page's
+  new contents strip shipping 12px targets**, on the one screen in the app with
+  no other way out of it. It also found a second undocumented exception beside
+  the view toggle's: `SquadRows` had fifteen `min-h-9` buttons on a phone, which
+  is exactly the case the floor exists for. Both fixed. Its three surviving
+  exceptions are read out on every run rather than filtered away, and the
+  inline-prose one is detected structurally — a link inside a `<p>` with text
+  beside it — because a list of strings goes stale the first time somebody
+  rewrites a sentence, which is the trap `navfit`'s old copy of the tab labels
+  fell into.
+  Two skeletons were re-cut so they cannot desync again: the pool's now draws the
+  real row's SHAPE, two bars for a name over a club, instead of a
+  `min-h-[3.25rem]` tuned to the row's old 52px, and both take their circle from
+  the mark's own variable. `matchday/desk/loading` padded `py-1.5` where its row
+  pads `py-1` — a desync that predated today.
+  Amended in the same commit, because the guards reject the work otherwise:
+  `PRODUCT.md` (the parent, and it now carries the table and the three
+  exceptions), `DESIGN.md` §7, `docs/ui/README.md`, `ROADMAP.md`,
+  `.claude/rules/register-palette.md`, `register-warden`, `ui-verifier`,
+  `/shoot` and `/audit-ui`. `DESIGN.md` §7 also stopped attributing the tap rule
+  to `docs/ui/conventions.md`, which has never carried one.
+
 - 2026-08-31: **The type scale had no leading of its own, and the plan's account
   of that was half right in a way worth recording.** The claim was that
   `tokens.css` declares no `--text-*--line-height` pairs at all, so every step

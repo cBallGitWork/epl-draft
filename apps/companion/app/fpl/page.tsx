@@ -102,7 +102,7 @@ export default async function FplPage() {
         <Section title="Mini-leagues">
           <ul className="flex flex-col gap-1">
             {entry.leagues.map((league) => (
-              <li key={league.id} className="flex min-h-11 items-center gap-3 px-1 text-sm">
+              <li key={league.id} className="cm-row flex min-h-11 items-center gap-3 px-1 text-sm">
                 <span className="min-w-0 flex-1 truncate">{league.name}</span>
                 <span className="numeric text-muted">{league.rank ?? "—"}</span>
               </li>

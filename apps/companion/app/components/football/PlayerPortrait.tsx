@@ -4,9 +4,14 @@ import Image from "next/image";
 import { useState } from "react";
 import { type ClubColours, initials, inkOn, portraitUrl } from "@epl/core";
 
-/** How wide he is drawn, and therefore how wide an asset the optimizer may
- *  serve. One number because the two must agree: written out separately they
- *  drift, and the tell is a soft photograph nobody thinks to blame the CSS for. */
+/** How wide an asset the optimizer may serve — the LARGER of the two sizes he is
+ *  drawn at, because asking for the smaller and drawing the larger is a soft
+ *  photograph nobody thinks to blame the CSS for.
+ *
+ *  How wide he is actually DRAWN is `--row-portrait` in `desk.css`, which shrinks
+ *  with the row that carries him. It was this constant in an inline style, which
+ *  has no breakpoint at all. The two no longer have to agree — one is a ceiling
+ *  and the other a size — but the ceiling must never drop below the size. */
 const SIZE = 32;
 
 // A player's headshot on their club's colour.
@@ -40,7 +45,7 @@ export default function PlayerPortrait({
   return (
     <span
       className="relative block shrink-0 overflow-hidden rounded-full ring-1 ring-line"
-      style={{ backgroundColor: colours.primary, width: SIZE, height: SIZE }}
+      style={{ backgroundColor: colours.primary, width: "var(--row-portrait)", height: "var(--row-portrait)" }}
     >
       {/* Initials INSTEAD of a photograph, never underneath one — and never
           instead of one that exists.

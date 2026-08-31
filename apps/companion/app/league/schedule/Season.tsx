@@ -22,7 +22,7 @@ export default function Season({
       {rows.map((row) => (
         <li key={`${row.round.period}-${row.tie.competition.id}-${row.tie.round ?? ""}`}>
           <div
-            className={`flex min-h-14 items-center gap-2.5 px-3 py-2 ${
+            className={`cm-row flex min-h-14 items-center gap-2.5 px-3 py-2 ${
               row.round.started ? "" : "text-muted"
             }`}
           >

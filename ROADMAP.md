@@ -73,7 +73,8 @@ Saturday, and the board's list-mode XI/bench split is the one item still
 deliberately waiting for it.
 
 **Non-negotiables** (from `docs/ui/README.md` + `conventions.md`): the lineup
-gate, provenance at point of use, absence ≠ zero, phone-first `min-h-11`; the
+gate, provenance at point of use, absence ≠ zero, phone-first `min-h-11` (a rule
+about a thumb: above `lg` a desk row is 28px and a control 36); the
 colour registers stay unmuddled; the Tailwind v4 literal-token trap
 (`FixtureChip`'s written-out `Record`); each page's `docs/ui/*.md` updated in
 the same commit or it starts lying. CODE_RULES stays binding — the refactor

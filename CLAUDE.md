@@ -281,8 +281,8 @@ pulled") and before a second build or server. A denial is the hook, not a
 judgement about you; do the thing it names instead.
 
 **`tools/ui/` is the instrument drawer** — `.mjs` browser instruments, outside
-the tsc and vitest globs on purpose. `shot` `probe` `sweep` `navfit` `dialog`
-over one shared `cdp.mjs`. They talk to an already-running headless Chrome on
+the tsc and vitest globs on purpose. `shot` `probe` `sweep` `navfit` `tapfit`
+`dialog` over one shared `cdp.mjs`. They talk to an already-running headless Chrome on
 `CDP_PORT` (9261) and never launch one; auth is `--team-cookie <file>` or
 `TEAM_COOKIE`, never a positional.
 

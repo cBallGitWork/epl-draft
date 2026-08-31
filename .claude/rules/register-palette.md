@@ -59,7 +59,11 @@ capital.
 - **Absence is `—`, never `0`.**
 - **Provenance at the point of use.** Fantrax's numbers are authoritative; ours
   are labelled and **never sit in a column headed `FPts`**.
-- **Taps are `min-h-11`.**
+- **Taps are `min-h-11`** — but that is a rule about a THUMB. Above `lg` the
+  desk keeps its own proportions: a repeating ROW is 28px (`.cm-row` in
+  `desk.css`), a CONTROL 36 (`lg:min-h-9`), a column head 28 with its strip.
+  `PRODUCT.md`'s accessibility section is the parent and carries the three
+  exceptions; `tools/ui/tapfit.mjs` measures it.
 - The lineup gate, the alphabetical gated order and "no active/reserve leak" are
   product invariants, not visual decisions.
 - Motion 150–250ms ease-out, and every animation has a reduced-motion

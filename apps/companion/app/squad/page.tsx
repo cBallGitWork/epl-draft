@@ -132,7 +132,7 @@ function Squad({
   return (
     <Link
       href={`/squad/${team.teamId}`}
-      className={`flex min-h-14 items-center gap-3 px-3 py-2.5 hover:bg-raised ${
+      className={`cm-row flex min-h-14 items-center gap-3 px-3 py-2.5 hover:bg-raised ${
         lead ? "bg-raised" : "bg-surface"
       } ${yoursBorder(lead)}`}
     >

@@ -155,3 +155,61 @@
 .cm-rows > * {
   border-bottom: 1px solid var(--color-line);
 }
+
+/* ---- How tall a row is, and how big the mark at the head of it -------------
+
+   **Two answers, because a row is read by two different instruments.** Under a
+   thumb a row is a 44px tap target — PRODUCT.md's accessibility floor, and the
+   reference viewing condition is a phone held one-handed, so that number is not
+   negotiable there. Under a MOUSE it is a line in a table, and Championship
+   Manager drew one at 18px with about thirty to a screen. Holding the desk to
+   the phone's floor is why sixteen teams take two screens where the game showed
+   a division on one, and it is most of what Craig meant on 31 Aug 2026 by "it's
+   still not CM really". WCAG 2.1 AA has no tap-target requirement at all — 44px
+   is our house rule, so relaxing it where there is no thumb costs no standard.
+   Craig's call, 31 Aug: the phone keeps 44 and the desk goes to 28.
+
+   **`.cm-row` says nothing below `lg`, and that is the whole design.** It is a
+   marker for the media query below, so a row keeps whatever height its own
+   screen chose for a phone — 44px here, 56px where a tie needs two lines — and
+   only the desk is re-decided. Unlayered CSS beats `@layer utilities`, so this
+   overrides the `min-h-*` and `py-*` on the element without either of them
+   having to be removed, which is also why adding the class to a row cannot
+   change what a phone sees.
+
+   **A ROW relaxes; a CONTROL never does.** A button, an input, a tab and a
+   dialog's way out stay `min-h-11` at every width: they are things you aim at
+   rather than lines you read, a mouse misses them as easily as a thumb does, and
+   CM's own buttons are the chunkiest thing on its screen. That distinction is
+   what stops this becoming "everything gets smaller on a desktop".
+
+   The breakpoint is `lg` and not `md`, because 768–1023 is a tablet held in two
+   hands, which is a thumb.
+
+   `min-height` is a FLOOR and not a height. A two-line row — the pool's name
+   over his club, the schedule's date under a tie — stays as tall as its content
+   and only gives back its padding. Collapsing those to one line is a decision
+   about what a row SAYS, not about how tall it is, and it belongs with the
+   screen rather than with this rule.
+
+   The two marks are here rather than in their components because both were a JS
+   constant applied as an inline `style`, which has no breakpoint at all: a 26px
+   badge with 4px round it cannot fit a 28px row, and no `lg:` utility can reach
+   an attribute. Both components keep asking `next/image` for the LARGER of the
+   two sizes, so a phone never gets a soft picture scaled up from the desk's. */
+:root {
+  --row-badge: 1.625rem;
+  --row-portrait: 2rem;
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --row-badge: 1.25rem;
+    --row-portrait: 1.375rem;
+  }
+
+  .cm-row {
+    min-height: 1.75rem;
+    padding-block: 0.125rem;
+  }
+}

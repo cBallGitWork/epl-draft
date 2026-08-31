@@ -193,15 +193,20 @@ the space between characters is what a reader checks his typing against.
 
 ## 7. Grammar that outranks the look
 
-From `docs/ui/conventions.md`, restated because a redesign is exactly when these
-get broken:
+Restated because a redesign is exactly when these get broken. Their parents are
+`docs/ui/conventions.md` and — for the tap rule, which `conventions.md` has never
+carried — `PRODUCT.md`'s accessibility section.
 
 - **Absence is `—`, never `0`.** A confident wrong number is worse than a hedged
   right one.
 - **Provenance at the point of use.** Every derived figure says whose it is.
   Fantrax's numbers are authoritative; ours are labelled and never sit in a
   column headed `FPts`.
-- **Taps are `min-h-11`.**
+- **Taps are `min-h-11`** — but that is a rule about a THUMB. Above `lg` the
+  desk keeps its own proportions: a repeating ROW is 28px (`.cm-row` in
+  `desk.css`), a CONTROL 36 (`lg:min-h-9`), a column head 28 with its strip.
+  `PRODUCT.md`'s accessibility section is the parent and carries the three
+  exceptions; `tools/ui/tapfit.mjs` measures it.
 - The lineup gate, the alphabetical gated order, and "no active/reserve leak"
   are product invariants. They are not visual decisions and a redesign does not
   get to renegotiate them.

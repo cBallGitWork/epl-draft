@@ -68,5 +68,8 @@ Break these and the app is wrong, however good it looks.
    not read it" and "it is zero" are different claims and the UI must keep them
    apart.
 4. **Phone first.** One column, thumb-reachable, readable at arm's length.
-   `min-h-11` is the standard touch target; the squad board's view toggle is the
-   one deliberate exception at `min-h-9`.
+   `min-h-11` is the standard touch target and the squad board's view toggle is
+   the one deliberate exception at `min-h-9`. Above `lg` the desk keeps its own
+   proportions, because the rule is about a thumb and there is no thumb there:
+   a row is 28px (`.cm-row`), a control 36, a column head 28 with its strip.
+   PRODUCT.md carries why and `tools/ui/tapfit.mjs` measures it.

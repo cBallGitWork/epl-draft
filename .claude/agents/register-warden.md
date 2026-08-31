@@ -69,7 +69,11 @@ capitals; the body serif never sets a capital.
 - Absence is `—`, never `0`.
 - Provenance at the point of use: Fantrax's numbers are authoritative, ours are
   labelled, and **ours never sit in a column headed `FPts`**.
-- Taps are `min-h-11`.
+- Taps are `min-h-11` — a rule about a THUMB. Above `lg` a repeating ROW is 28px
+  (`.cm-row`), a control 36. Flag a control shrunk below 36, and flag `.cm-row`
+  on the paper, which is the other register and has no CM rows in it.
+  `tools/ui/tapfit.mjs` measures this; you are judging whether the thing that
+  relaxed is a row.
 - The lineup gate, the alphabetical gated order and "no active/reserve leak" are
   product invariants. A redesign does not get to renegotiate them.
 - Motion 150–250ms ease-out, and every animation has a reduced-motion alternative

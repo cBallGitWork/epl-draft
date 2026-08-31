@@ -119,7 +119,7 @@ function Side({
     // "tap a team" means here. Each squad is one further tap, from there.
     <Link
       href={`/league/matchups/${team.teamId}`}
-      className={`flex min-h-11 min-w-0 flex-1 items-center gap-2 px-3 py-2 hover:bg-raised ${
+      className={`cm-row flex min-h-11 min-w-0 flex-1 items-center gap-2 px-3 py-2 hover:bg-raised ${
         mirrored ? "flex-row-reverse" : ""
       }`}
     >

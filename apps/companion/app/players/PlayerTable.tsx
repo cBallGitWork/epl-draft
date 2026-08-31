@@ -94,7 +94,7 @@ export default function PlayerTable({
                 <td className="py-1">
                   <Link
                     href={`/players/${entry.player.fantraxId}`}
-                    className="flex min-h-11 items-center gap-2.5 px-1"
+                    className="cm-row flex min-h-11 items-center gap-2.5 px-1"
                   >
                     {/* Fantrax's club code translated to FPL's spelling before it
                         reaches the palette. The two agree on eighteen of twenty,
