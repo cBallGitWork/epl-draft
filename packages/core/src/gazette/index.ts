@@ -13,6 +13,22 @@ export { buildBrief } from "./brief";
 export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
 export { buildFixturePreviewBrief } from "./briefs/fixturePreview";
+export {
+  buildDodgersBrief,
+  buildElevenBrief,
+  buildPowerBrief,
+  buildPredictionsBrief,
+  buildWireBrief,
+} from "./briefs/columns";
+export { buildPresserBrief, buildStudioBrief } from "./briefs/sketches";
+export { dodgers } from "./dodgers";
+export { markCalls, predictionTies } from "./predictions";
+export { powerRows } from "./powerRanking";
+export { wireFacts } from "./wire";
+export type { Persona } from "./briefs/sketches";
+export type { Marked, PredictionTie } from "./predictions";
+export type { PowerRow } from "./powerRanking";
+export type { WireFacts } from "./wire";
 export { buildMatchReportBrief } from "./briefs/matchReport";
 export { buildTieCallBrief } from "./briefs/tieCall";
 export { MAX_PAPER_STORIES, composePaper } from "./frontPage";

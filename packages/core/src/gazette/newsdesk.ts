@@ -43,12 +43,20 @@ export interface DeskState {
   /** Every fixture of the round, most-consequential first (`fixtureStakes`). */
   stakes: readonly FixtureStake[];
   ties: readonly DeskTie[];
+  /** Deals in the wire's trailing window. Nought is a quiet week and files no
+   *  column — the paper does not manufacture business. */
+  dealsInWindow: number;
 }
 
 /** Fixtures per round that earn their own report. Four of ten: below the
  *  fourth the headcount thins to fixtures the round-report's tie lines already
  *  cover, and a paper that reports every match is a wire service. */
 export const MATCH_REPORTS_PER_ROUND = 4;
+
+/** The columns a finished round earns, in the order they are worth reading.
+ *  The eleven and the rankings are what the league argues about; the sketches
+ *  are the last thing in and the first thing cut on a busy day. */
+const MONDAY_SET: StoryKind[] = ["eleven", "power-ranking", "dodgers", "studio", "presser"];
 
 /** How close a kickoff must be before a preview piece files. Half a day: the
  *  Team Sheet's Friday sweep catches the weekend, and this catches tonight's
@@ -67,8 +75,24 @@ export function newsdesk(
 
   if (desk.finished) {
     want(round("round-report", desk.gameweek));
+    // The Monday Club's set: the round's considered read. Each is its own
+    // covered-key, so the cap spreads them across firings rather than buying
+    // six columns in one go.
+    for (const kind of MONDAY_SET) {
+      want({ kind, key: `${kind}:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-${kind}` });
+    }
   } else if (desk.locked && !desk.started) {
     want(round("round-preview", desk.gameweek));
+    // The predictions column files in the same window as the preview and is
+    // marked against the results a week later.
+    want({ kind: "predictions", key: `predictions:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-predictions` });
+  }
+
+  // The wire is weekly and keys on the WINDOW rather than the round: it reports
+  // trends across recent business, so a second firing in the same week has
+  // nothing new to say however many deals landed.
+  if (desk.dealsInWindow > 0) {
+    want({ kind: "wire", key: `wire:through-gw${desk.gameweek}`, slug: `gw${desk.gameweek}-wire` });
   }
 
   // Calls only while the round is being played: after the last whistle the

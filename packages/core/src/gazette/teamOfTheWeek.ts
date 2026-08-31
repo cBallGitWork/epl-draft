@@ -28,16 +28,7 @@ export function teamOfTheWeek(
   teams: readonly RosteredTeam[],
   limits: RosterLimits,
 ): TeamOfTheWeek {
-  const candidates: Pick[] = [];
-
-  for (const team of teams) {
-    for (const rostered of team.players) {
-      const pick = considered(rostered, team);
-      if (pick !== null) candidates.push(pick);
-    }
-  }
-
-  candidates.sort((a, b) => b.score - a.score || b.minutes - a.minutes);
+  const candidates = rosteredPicks(teams);
 
   const taken: Pick[] = [];
   const perPosition = new Map<string, number>();
@@ -59,6 +50,22 @@ export function teamOfTheWeek(
 
   const lines = linesOf(taken, limits);
   return { picks: taken, lines, shape: lines.map((line) => line.picks.length).join("-") };
+}
+
+/** Every rostered man who actually played this round, strongest first.
+ *
+ *  The eleven is a selection FROM this; the points dodgers are the men in it
+ *  their own managers left OUT. Two columns off one list, so they can never
+ *  disagree about what a player did. */
+export function rosteredPicks(teams: readonly RosteredTeam[]): Pick[] {
+  const candidates: Pick[] = [];
+  for (const team of teams) {
+    for (const rostered of team.players) {
+      const pick = considered(rostered, team);
+      if (pick !== null) candidates.push(pick);
+    }
+  }
+  return candidates.sort((a, b) => b.score - a.score || b.minutes - a.minutes);
 }
 
 /** A player worth considering, or null.

@@ -22,6 +22,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   started: true,
   stakes: [],
   ties: [],
+  dealsInWindow: 0,
   ...over,
 });
 
@@ -38,7 +39,10 @@ describe("newsdesk", () => {
   });
 
   it("spends nothing already covered", () => {
-    const covered = (key: string) => key === "round-report:gw3";
+    // Everything a finished round earns, already filed: the ordinary outcome
+    // of a cron that fires every half hour.
+    const filed = newsdesk(desk({ finished: true }), () => false, NOW).map((a) => a.key);
+    const covered = (key: string) => filed.includes(key);
     expect(newsdesk(desk({ finished: true }), covered, NOW)).toEqual([]);
   });
 
@@ -50,10 +54,10 @@ describe("newsdesk", () => {
     // The settled tier spends the same key: one call per tie per period,
     // however the state moved after the paper spoke.
     expect(newsdesk(state, (key) => key === "tie-call:p3:avb", NOW)).toEqual([]);
-    // After the last whistle the report owns every verdict.
-    expect(
-      newsdesk(desk({ finished: true, ties: state.ties }), (key) => key.startsWith("round"), NOW),
-    ).toEqual([]);
+    // After the last whistle the report owns every verdict: no call files,
+    // whatever state the ties are in.
+    const done = desk({ finished: true, ties: state.ties });
+    expect(newsdesk(done, none, NOW).map((a) => a.kind)).not.toContain("tie-call");
   });
 
   it("reports only the round's most consequential fixtures, as they finish", () => {
@@ -96,6 +100,32 @@ describe("newsdesk", () => {
       ties: open.ties,
     });
     expect(newsdesk(distant, none, NOW).find((a) => a.kind === "fixture-preview")).toBeUndefined();
+  });
+
+  it("files the Monday set once the round is over, each on its own key", () => {
+    const kinds = newsdesk(desk({ finished: true }), none, NOW).map((a) => a.kind);
+    // The report leads; the considered columns follow in the order they are
+    // worth reading, and the cap spreads them across firings.
+    expect(kinds).toEqual([
+      "round-report", "eleven", "power-ranking", "dodgers", "studio", "presser",
+    ]);
+    // Each spends its own key, so a second firing files only what is left.
+    const after = newsdesk(desk({ finished: true }), (key) => key.startsWith("round-report") || key.startsWith("eleven"), NOW);
+    expect(after.map((a) => a.kind)).toEqual(["power-ranking", "dodgers", "studio", "presser"]);
+  });
+
+  it("files the predictions column in the lock window, beside the preview", () => {
+    const kinds = newsdesk(desk({ started: false }), none, NOW).map((a) => a.kind);
+    expect(kinds).toEqual(["round-preview", "predictions"]);
+  });
+
+  it("files the wire only when there has been business, and once a window", () => {
+    expect(newsdesk(desk({ dealsInWindow: 4 }), none, NOW).map((a) => a.kind)).toContain("wire");
+    // A quiet week files nothing: the paper does not manufacture business.
+    expect(newsdesk(desk({ dealsInWindow: 0 }), none, NOW).map((a) => a.kind)).not.toContain("wire");
+    expect(
+      newsdesk(desk({ dealsInWindow: 9 }), (key) => key === "wire:through-gw3", NOW).map((a) => a.kind),
+    ).not.toContain("wire");
   });
 
   it("puts the round's own word first and the look-ahead last", () => {

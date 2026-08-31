@@ -9,6 +9,7 @@ import {
   type LiveTeamScore,
   type PeriodPairing,
   type RosteredTeam,
+  type StandingsRow,
   type TeamOfTheWeek,
   type TeamProjection,
   availability,
@@ -16,11 +17,14 @@ import {
   fetchDraftResults,
   fetchLiveScoring,
   fetchTeamRosters,
+  fetchStandings,
+  fetchStandingsPage,
   fetchTransactions,
   mapDraftPicks,
   mapLivePlayerPoints,
   mapLiveScores,
   mapProjectedTotals,
+  mapStandings,
   mapTeamRosters,
   mapTransactions,
   periodPairings,
@@ -50,6 +54,10 @@ export interface RoundFacts {
   business: Deal[];
   doubts: AvailabilityNote[];
   pedigree: Map<string, DraftPick>;
+  /** Fantrax's table, verbatim — the power rankings argue with it and nothing
+   *  else reads it. Empty when the standings read refused, which costs that
+   *  column and no other. */
+  table: StandingsRow[];
 }
 
 export async function gatherRoundFacts(
@@ -57,12 +65,17 @@ export async function gatherRoundFacts(
   snapshot: FootballSnapshot,
   period: number,
 ): Promise<RoundFacts> {
-  const [live, rosters, claims, trades, draft] = await Promise.all([
+  const [live, rosters, claims, trades, draft, standingsPage, standingsRecords] = await Promise.all([
     fetchLiveScoring(FANTRAX_LEAGUE_ID, period),
     fetchTeamRosters(FANTRAX_LEAGUE_ID).catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "CLAIM_DROP").catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "TRADE").catch(() => null),
     fetchDraftResults(FANTRAX_LEAGUE_ID).catch(() => null),
+    // Both halves: the page carries the points column and the array carries
+    // games-back, and `mapStandings` merges them — the same pair `/league`
+    // reads for the same reason.
+    fetchStandingsPage(FANTRAX_LEAGUE_ID).catch(() => null),
+    fetchStandings(FANTRAX_LEAGUE_ID).catch(() => null),
   ]);
 
   // The squads, and with them the two things only a join can say: who was in the
@@ -96,6 +109,10 @@ export async function gatherRoundFacts(
     // Where each man was taken. Empty until a draft completes, which is the real
     // league's state until 10 Oct — and an empty map means the brief says
     // nothing about pedigree rather than calling every squad undrafted.
+    table:
+      standingsPage === null || standingsRecords === null
+        ? []
+        : mapStandings(standingsPage, standingsRecords),
     pedigree: new Map(
       (draft === null ? [] : mapDraftPicks(draft)).map((taken) => [taken.fantraxId, taken]),
     ),

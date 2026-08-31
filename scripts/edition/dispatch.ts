@@ -5,6 +5,7 @@ import {
   type FootballSnapshot,
   type LeagueInfo,
   type PublishedStory,
+  type StandingsRow,
   type StoryThread,
   type ThreadUpdate,
   buildBrief,
@@ -12,10 +13,13 @@ import {
   stories,
 } from "@epl/core";
 import { fixturePreviewBrief, matchReportBrief, tieCallBrief } from "./assemble";
+import { columnBrief } from "./columns";
 import type { RoundFacts } from "./facts";
 import { storyOfColumn, storyOfEdition } from "./newsroom";
 import { STORY_BYLINE, editionName } from "./voice/bylines";
 import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL } from "./voice/matches";
+import { DODGERS, ELEVEN, POWER_RANKING, PREDICTIONS, WIRE } from "./voice/columns";
+import { PRESSER, STUDIO } from "./voice/sketches";
 import { PREVIEW, REPORT } from "./voice/rounds";
 
 // One assignment in, one prepared desk out: which voice writes it, from which
@@ -31,6 +35,8 @@ export interface DeskContext {
   /** The league's running storylines, for every scoped brief's memory block. */
   threads: readonly StoryThread[];
   info: LeagueInfo;
+  /** Fantrax's table, for the rankings to argue with. */
+  table: readonly StandingsRow[];
   period: number;
   /** The round's first kickoff — a preview's expiry. */
   kickoff: string | null;
@@ -83,17 +89,37 @@ export function prepare(assignment: Assignment, ctx: DeskContext): { system: str
         ? fixturePreviewBrief(assignment, ctx.snapshot, ctx.facts, ctx.clubs, ctx.threads)
         : assignment.kind === "tie-call"
           ? tieCallBrief(assignment, ctx.snapshot.gameweek, ctx.facts, ctx.threads)
-          : null;
+          : columnBrief(assignment, {
+              gameweek: ctx.snapshot.gameweek,
+              facts: ctx.facts,
+              table: ctx.table,
+              threads: ctx.threads,
+              marked: ctx.marked,
+              named: (teamId) =>
+                ctx.info.teams.find((team) => team.teamId === teamId)?.name ?? teamId,
+            });
   if (scoped === null) return null;
 
-  const system =
-    assignment.kind === "match-report"
-      ? MATCH_REPORT
-      : assignment.kind === "fixture-preview"
-        ? FIXTURE_PREVIEW
-        : TIE_CALL;
+  const system = VOICE[assignment.kind];
+  if (system === undefined) return null;
   return { system, brief: scoped };
 }
+
+/** Which voice writes which kind. A kind with no voice has no desk yet and
+ *  files nothing — the newsdesk may learn about a column before the paper can
+ *  write it. */
+const VOICE: Partial<Record<Assignment["kind"], string>> = {
+  "match-report": MATCH_REPORT,
+  "fixture-preview": FIXTURE_PREVIEW,
+  "tie-call": TIE_CALL,
+  predictions: PREDICTIONS,
+  eleven: ELEVEN,
+  "power-ranking": POWER_RANKING,
+  dodgers: DODGERS,
+  wire: WIRE,
+  presser: PRESSER,
+  studio: STUDIO,
+};
 
 export function file(
   assignment: Assignment,
