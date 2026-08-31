@@ -13,7 +13,7 @@ Your squad, then everyone else's.
   squad. Never silently short.
 
   The opponent costs no read: the schedule is already in the payload this page
-  fetched, and it is what turns a directory of sixteen names into the week's
+  fetched, and it is what turns a directory of ten names into the week's
   fixtures. No schedule for the period, or a Fantrax that would not describe the
   league, renders as no line rather than as a guess.
 - If the reader has not signed in, `SignIn` replaces the personal block. Sign-in

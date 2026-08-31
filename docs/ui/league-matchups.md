@@ -23,7 +23,7 @@ scoring, which was always the doctrine.
   players still to play, and a green `+n` for clean sheets we can see coming but
   Fantrax has not credited yet — **kept beside their number, never folded into
   it**. A side on a literal zero reads `all played`, but only while football is
-  actually on: on a Wednesday everybody has nobody left, and sixteen "all
+  actually on: on a Wednesday everybody has nobody left, and ten "all
   played" labels state the obvious.
 - **The round's state in the sub-heading** — LIVE dot and word, "Full time", or
   "Final", from `roundFinished` ([matchup.md](matchup.md#what-the-round-is-doing)

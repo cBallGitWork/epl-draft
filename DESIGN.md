@@ -42,7 +42,7 @@ class costs thirty components a class name for nothing.
 
 ## 2. The Desk is Championship Manager 99/00
 
-Not "retro-flavoured". The league is sixteen men in their forties who played it,
+Not "retro-flavoured". The league is ten men in their forties who played it,
 and it is the density benchmark: attribute grids, 1–20 ratings, W-D-L strings,
 red and green figures, a text-commentary matchday.
 
@@ -399,9 +399,9 @@ still true of the wall and was never true of a phone.
 **The masthead photograph is deferred, not chosen.** The crest-in-a-box ships and
 is not a placeholder — it is what the paper looks like until someone hands it a
 better picture, and the picture it wants is a league one (draft night, a trophy,
-sixteen names on a board) rather than a stock Premier League shot, which would
+ten names on a board) rather than a stock Premier League shot, which would
 make the paper look like it is about the Premier League rather than about the
-sixteen of us.
+ten of us.
 
 **The splash picture is a drawing, and it prints in the sheet's two colours.**
 Separate from the masthead question above and settled differently: the paper's

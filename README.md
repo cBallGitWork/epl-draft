@@ -1,6 +1,6 @@
 # Tim Hortons Pro League
 
-Live companion for a 16-user Fantrax Premier League draft league — and the
+Live companion for a 10-user Fantrax Premier League draft league — and the
 groundwork for our own draft platform in 27/28.
 
 Fantrax runs the league. This republishes it with the things Fantrax lacks: a

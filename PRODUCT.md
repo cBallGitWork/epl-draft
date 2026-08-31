@@ -6,7 +6,7 @@ product
 
 ## Users
 
-Sixteen friends in a Fantrax Premier League draft league ("Tim Hortons Pro League"),
+Ten friends in a Fantrax Premier League draft league ("Tim Hortons Pro League"),
 plus a commissioner who additionally administers it. Experienced fantasy managers —
 they know what xG is, they don't need a glossary, and they resent being protected from
 their own data.
@@ -50,7 +50,7 @@ things visibly moving, the sense that something is happening right now — carry
 information density of Football Manager. Not one softened by the other: a score centre
 that respects how much its audience already knows.
 
-Partisan matters. This is sixteen named people who talk to each other. The app should
+Partisan matters. This is ten named people who talk to each other. The app should
 know whose team you are and take a side — your players, your rivals, your humiliation.
 Neutrality is for broadcasters, not for a league of mates.
 
@@ -127,7 +127,7 @@ its own proportions instead:
 
 Craig's call, and the phone keeps 44 at every size. One rule rather than a
 judgement per component: `.cm-row` says nothing below `lg`, so adding it to a row
-cannot change what a phone sees. What it bought is sixteen teams on one screen
+cannot change what a phone sees. What it bought is ten teams on one screen
 where the game showed a division on one — `/league`'s rows are 29px against
 Championship Manager's own 18.
 

@@ -14,7 +14,16 @@ capture season-specific tradeoffs.
 ## Current season summary
 
 - Start date: 5 Aug 2026.
-- Season target: support the 16-user Fantrax league from GW6 onwards.
+- Season target: support the **10-user** Fantrax league from GW6 onwards.
+  (Craig, 31 Aug 2026 — it had been 16 since the repo started, and every binding
+  doc said so. Corrected in CLAUDE.md, PRODUCT.md, DESIGN.md, README.md and
+  `docs/ui/`. Entries dated before today in this file still say sixteen and are
+  left alone: a log that gets edited to agree with the present is not a log.)
+  Nothing in the CODE reads the number — team count is `getLeagueInfo.teamInfo`
+  (§3), which answers an empty object for the real league until managers join.
+  The one place ten appears is `PANEL_ROWS` in `app/league/Shell.tsx`, and that
+  is a floor on how tall a panel is drawn, not a claim about the competition:
+  the league's own count wins whenever it is larger.
 - A dummy league carries GW1–GW5. It is drafted early and deliberately small, so
   the roster, lineup and join surfaces get five gameweeks of real football to be
   refined against before the real league drafts. GW1 is not a ship date.

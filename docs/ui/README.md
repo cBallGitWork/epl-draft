@@ -9,7 +9,7 @@ they override anything here. This folder describes *what exists*; those two say
 
 ## The app in one paragraph
 
-Sixteen managers run a Fantrax draft league. Fantrax is the source of truth for
+Ten managers run a Fantrax draft league. Fantrax is the source of truth for
 the competition and is not going anywhere this season; this app republishes that
 league with what Fantrax lacks — a phone-first score centre, a squad screen worth
 opening, and a weekly paper. Everything below is read-only against two providers:
@@ -87,7 +87,7 @@ Break these and the app is wrong, however good it looks.
    importance, not squeezing of LAYOUT.
 
    **Per screen, not per project.** Desk design and phone design in the same
-   pass. Sixteen managers open this on phones on 10 Oct, and "the phone layouts
+   pass. Ten managers open this on phones on 10 Oct, and "the phone layouts
    are next" is how they end up being done in the last week.
 
    The split is in ARRANGEMENT only: one data join, one set of domain rules, one

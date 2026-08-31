@@ -1,6 +1,6 @@
 # `/` — the Gazetta
 
-The front page, and the first thing sixteen people open: the lead, the week's
+The front page, and the first thing ten people open: the lead, the week's
 business, who is hurt, and when lineups lock.
 
 ## In reading order
@@ -214,7 +214,7 @@ there one while football is on: the live bar leads then, and a headline is the
 one place on the page a provisional claim cannot go.
 
 It is deliberately **not** marked when it is about the reader's own team. The
-accent is a reading aid for scanning a list of sixteen and there is nothing here
+accent is a reading aid for scanning a list of ten and there is nothing here
 to scan; a manager knows his own name in a headline.
 
 It is deliberately not a `Column` either, though it borrows that head. A column's
@@ -286,7 +286,7 @@ entitled to know which he is reading.
 
 Team names are joined from ids the writer returns, never from names he types: a
 name typed by a model goes stale the day somebody renames their team, and
-renaming your team is the first thing sixteen people do.
+renaming your team is the first thing ten people do.
 
 ## The eleven has a shape, and the shape is not a picture
 

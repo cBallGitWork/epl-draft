@@ -22,7 +22,7 @@ all week, because you are looking at it in Fantrax anyway and planning only
 matters *before* the deadline. Every other team's waits for its period to open.
 `teamDisplay(squads, mine)` answers for the one team on screen; the league-wide
 `squads.display` stays a rival's answer and must, because things like the
-matchups board's pending clean sheets read it for all sixteen at once.
+matchups board's pending clean sheets read it for all ten at once.
 
 ## How the data reaches the view
 

@@ -52,7 +52,7 @@ negative". There is no green because `--color-up` / `--color-down` are still
 deferred (§8), and the accent yellow is already spoken for twice on this row.
 
 **The reader's own row takes the raised ground as well as the accent edge.** On
-sixteen near-identical rows a 4px bar at the margin is easy to scroll straight
+ten near-identical rows a 4px bar at the margin is easy to scroll straight
 past, and this is the row a manager opened the page to find. The `You` chip sits
 on `bg-bg` for the same reason: a chip the colour of its own ground is not a
 chip.

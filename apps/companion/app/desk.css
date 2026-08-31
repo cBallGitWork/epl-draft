@@ -266,6 +266,22 @@
 :root {
   --row-badge: 1.625rem;
   --row-portrait: 2rem;
+  /* **How tall a table row actually is, so a panel can be sized in ROWS.**
+     Measured off `/league` on 31 Aug 2026, not derived: 45px under a thumb
+     (`min-h-11` plus the rule under it) and 29px on the desk (`.cm-row`'s
+     1.75rem plus the same rule). A panel that wants to hold ten teams needs to
+     multiply by something, and the something has a breakpoint — which is
+     exactly why this is a custom property and not a number in a component.
+     `--table-chrome` is what a table costs before its first row: the yellow
+     caption, the column-head strip, the gap and the panel's own padding. */
+  --table-row: 2.8125rem;
+  --table-chrome: 4.75rem;
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --table-row: 1.8125rem;
+  }
 }
 
 @media (min-width: 64rem) {

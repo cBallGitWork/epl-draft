@@ -13,7 +13,7 @@ at `/` and a Championship Manager 99/00 desk on the other five tabs — one shar
 skeleton, and a palette in which every colour is a slot with one meaning. It also
 records what is deliberately deferred, so an absence is not read as an oversight.
 
-A 16-user **Fantrax** Premier League draft league starts **GW6, 10 Oct 2026**.
+A 10-user **Fantrax** Premier League draft league starts **GW6, 10 Oct 2026**.
 Fantrax is the source of truth for the current season. This repo republishes that
 league with what Fantrax lacks and lays the groundwork for our own platform in
 27/28.
@@ -166,7 +166,7 @@ Fantrax login uses **reCAPTCHA v3 with a v2 image fallback**, plus 2FA and
 `ACCOUNT_LOCKED`. Server-side password login is not viable. Members must provide
 their own browser session cookie. We do not hold passwords.
 
-**And "via a browser extension" is not a plan.** Sixteen friends will not install
+**And "via a browser extension" is not a plan.** Ten friends will not install
 one, and most of them read this on a phone, where Chrome has no extensions at all
 and Safari's are a per-user install nobody is doing. Any write surface has to
 work for a person holding a phone who has never heard of a cookie. The one route
