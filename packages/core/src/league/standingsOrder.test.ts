@@ -8,26 +8,29 @@ function row(over: Partial<StandingsRow> & { teamId: string; rank: number }): St
     won: 0,
     drawn: 0,
     lost: 0,
+    played: 0,
     points: 0,
     pointsFor: 0,
-    gamesBack: null,
-    winPercentage: null,
+    pointsAgainst: 0,
     ...over,
   };
 }
 
+/** Three rounds played, and `d` has conceded most while `a` has conceded least —
+ *  so `against` and `for` disagree about the order, which is the only way to
+ *  tell one is not standing in for the other. */
 const TABLE: StandingsRow[] = [
-  row({ teamId: "a", rank: 1, points: 9, pointsFor: 214, won: 3, gamesBack: 0, winPercentage: 1 }),
-  row({ teamId: "b", rank: 2, points: 6, pointsFor: 181, won: 2, gamesBack: 1, winPercentage: 0.667 }),
-  row({ teamId: "c", rank: 3, points: 6, pointsFor: 198, won: 2, gamesBack: 1, winPercentage: 0.667 }),
-  row({ teamId: "d", rank: 4, points: 0, pointsFor: 121, won: 0, gamesBack: 3, winPercentage: 0 }),
+  row({ teamId: "a", rank: 1, played: 3, won: 3, points: 9, pointsFor: 214, pointsAgainst: 140 }),
+  row({ teamId: "b", rank: 2, played: 3, won: 2, lost: 1, points: 6, pointsFor: 181, pointsAgainst: 166 }),
+  row({ teamId: "c", rank: 3, played: 3, won: 2, lost: 1, points: 6, pointsFor: 198, pointsAgainst: 152 }),
+  row({ teamId: "d", rank: 4, played: 3, lost: 3, points: 0, pointsFor: 121, pointsAgainst: 190 }),
 ];
 
 const order = (rows: readonly StandingsRow[]) => rows.map((r) => r.teamId).join("");
 
 describe("isSortKey", () => {
   it("accepts the columns that are quantities", () => {
-    for (const key of ["rank", "record", "gb", "win", "fp", "pts"]) {
+    for (const key of ["rank", "played", "won", "drawn", "lost", "for", "against", "pts"]) {
       expect(isSortKey(key)).toBe(true);
     }
   });
@@ -39,18 +42,26 @@ describe("isSortKey", () => {
     expect(isSortKey("team")).toBe(false);
     expect(isSortKey(undefined)).toBe(false);
   });
+
+  it("rejects the keys the Fantrax columns were addressed by", () => {
+    // `?sort=fp` and `?sort=gb` are live URLs until this ships. They must fall
+    // back to Fantrax's own order, which is what an unknown key already does.
+    for (const gone of ["record", "gb", "win", "fp"]) expect(isSortKey(gone)).toBe(false);
+  });
 });
 
 describe("defaultDescending", () => {
   it("opens the who-is-best columns at the top", () => {
     expect(defaultDescending("pts")).toBe(true);
-    expect(defaultDescending("fp")).toBe(true);
-    expect(defaultDescending("win")).toBe(true);
+    expect(defaultDescending("for")).toBe(true);
+    expect(defaultDescending("won")).toBe(true);
   });
 
-  it("opens the columns that already count from the leader at the top", () => {
+  it("opens the columns you want the smallest of at the top", () => {
+    // Descending would head a league table with its worst side.
     expect(defaultDescending("rank")).toBe(false);
-    expect(defaultDescending("gb")).toBe(false);
+    expect(defaultDescending("lost")).toBe(false);
+    expect(defaultDescending("against")).toBe(false);
   });
 });
 
@@ -60,7 +71,7 @@ describe("sortRows", () => {
   });
 
   it("orders by a figure", () => {
-    expect(order(sortRows(TABLE, "fp", true))).toBe("acbd");
+    expect(order(sortRows(TABLE, "for", true))).toBe("acbd");
   });
 
   it("breaks a tie on Fantrax's rank, not on array order", () => {
@@ -72,19 +83,22 @@ describe("sortRows", () => {
     expect(order(sortRows(shuffled, "pts", true))).toBe("abcd");
   });
 
-  it("sorts a side with no games-back last, never ahead of the leader", () => {
-    // A nought would put him top; absence is not a lead.
-    const withAbsence = [...TABLE, row({ teamId: "e", rank: 5, gamesBack: null })];
-    expect(order(sortRows(withAbsence, "gb", false))).toBe("abcde");
+  it("orders fewest conceded first, which is not the for column's order", () => {
+    expect(order(sortRows(TABLE, "against", false))).toBe("acbd");
+    // Same result string as `for` descending above, and reached the other way
+    // round: a is best on both, but c beats b on against by conceding less and
+    // on for by scoring more. Read them apart on d, who is last on both, and on
+    // the reversed direction.
+    expect(order(sortRows(TABLE, "against", true))).toBe("dbca");
   });
 
   it("does not mutate its input", () => {
     const before = order(TABLE);
-    sortRows(TABLE, "fp", true);
+    sortRows(TABLE, "for", true);
     expect(order(TABLE)).toBe(before);
   });
 
   it("never rewrites rank", () => {
-    expect(sortRows(TABLE, "fp", true).map((r) => r.rank)).toEqual([1, 3, 2, 4]);
+    expect(sortRows(TABLE, "for", true).map((r) => r.rank)).toEqual([1, 3, 2, 4]);
   });
 });

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { FormGame, StandingsRow } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
+import { cellAlign } from "./Columns";
 import { yoursEdge } from "../mine";
 
 // One team's line in the table.
@@ -20,12 +21,12 @@ import { yoursEdge } from "../mine";
 //
 // Each colour is its slot (DESIGN §3) and nothing carries two jobs:
 //
-//   rank    faint          depth, never meaning — CM's quiet leading index cell
-//   team    info           a person, and this is the link that made the token
-//   record  muted          a record is a string, not a figure
-//   form    up/bad/faint   direction, the only thing those two are for
-//   GB/Win%/FP  mid        a figure — CM's orange stat columns
-//   Pts     ink, bold      the total the table is ordered by, CM's bold white
+//   rank      faint          depth, never meaning — CM's quiet leading index cell
+//   team      info           a person, and this is the link that made the token
+//   Pld W D L ink            the record — all four alike, as `24.jpg` sets them
+//   For/Ag    mid            fantasy points, and a different KIND of number
+//   Pts       ink, bold      the total the table is ordered by, CM's bold white
+//   form      up/bad/faint   direction, the only thing those two are for
 //
 // **Yours is said three ways and none of them is the name's colour.** The accent
 // edge, the weight, and the chip. Recolouring your own name would take it out of
@@ -50,7 +51,7 @@ export default function TableRow({
           than the rows, which is what stops a dense table reading as a wall.
           The accent edge rides on it, so "yours" and the index are one mark. */}
       <td
-        className={`cm-index numeric px-1.5 text-right text-2xs font-bold ${yoursEdge(mine)}`}
+        className={`cm-index numeric px-1.5 text-2xs font-bold ${cellAlign("rank")} ${yoursEdge(mine)}`}
       >
         {ordinal(row.rank)}
       </td>
@@ -63,7 +64,12 @@ export default function TableRow({
           // club in white and the one you manage in yellow (`cm9900/24.jpg`,
           // where Everton is the yellow row). A fantasy team is named after a
           // person and is not one.
-          className={`cm-row flex min-h-11 items-center gap-2 text-sm font-bold hover:underline ${
+          // Bigger than the figures beside it, and bigger than it was (Craig,
+          // 31 Aug). CM sets a club name noticeably larger than its own stat
+          // columns — `24.jpg` runs `Arsenal` at roughly half again the height
+          // of the `6 5 0 1` on the same line — because the name is what you
+          // scan the table FOR and the figures are what you then read across.
+          className={`cm-row flex min-h-11 items-center gap-2 text-base font-bold hover:underline lg:text-lg ${
             mine ? "text-accent" : "text-ink"
           }`}
         >
@@ -79,51 +85,45 @@ export default function TableRow({
         </Link>
       </td>
 
-      <td className="numeric whitespace-nowrap px-1.5 text-right text-2xs font-bold text-ink">
-        {row.won}-{row.drawn}-{row.lost}
-      </td>
+      {/* Pld W D L, each in its own column, which is what a league table is.
+          All four in white, which is `cm9900/24.jpg` — the first attempt set
+          `Pld` quieter on the argument that it is the other three added up, and
+          the game does not agree: its Pld reads exactly as loud as its Won. */}
+      <td className={`${FIGURE} text-ink`}>{row.played}</td>
+      <td className={`${FIGURE} text-ink`}>{row.won}</td>
+      <td className={`${FIGURE} text-ink`}>{row.drawn}</td>
+      <td className={`${FIGURE} text-ink`}>{row.lost}</td>
 
-      <td className="numeric px-1.5 text-right text-2xs">
-        <Form run={form} />
-      </td>
-
-      <td className="numeric px-1.5 text-right text-2xs font-bold text-mid">
-        {gamesBack(row.gamesBack)}
-      </td>
-
-      <td className="numeric px-1.5 text-right text-2xs font-bold text-mid">
-        {winFraction(row.winPercentage) ?? DASH}
-      </td>
-
-      <td className="numeric px-1.5 text-right text-2xs font-bold text-mid">{row.pointsFor}</td>
+      <td className={`${FIGURE} text-mid`}>{row.pointsFor}</td>
+      <td className={`${FIGURE} text-mid`}>{row.pointsAgainst}</td>
 
       {/* Points in a plate of their own, the way CM ends its table: the one
           figure that decides the season, blocked out so the eye runs down the
           column rather than across the row to find it. */}
       <td className="p-0">
-        <span className="cm-index numeric flex min-h-7 items-center justify-end px-1.5 text-sm font-bold">
+        <span className="cm-index numeric flex min-h-7 items-center justify-center px-1.5 text-sm font-bold">
           {row.points}
         </span>
+      </td>
+
+      {/* After the points, where a modern table prints it — CM's own row ends at
+          Pts and has no form guide at all. */}
+      <td className="numeric px-1.5 text-center text-2xs">
+        <Form run={form} />
       </td>
     </tr>
   );
 }
 
+/** Every figure cell, which is eight of the ten columns. Centred, because that
+ *  is how `cm9900/24.jpg` sets a league table and because a one-digit `W` flushed
+ *  right under a centred head reads as a mis-set strip. `Columns.cellAlign` is
+ *  the head's half of the same decision. */
+const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
+
 /** Absence, never a nought — a nought is a claim about a team that has played
  *  nobody (DESIGN §7). */
 const DASH = "—";
-
-/** Games back, at the precision a league table is read at.
- *
- *  Fantrax sends a raw number and this column printed it unchanged, which was
- *  invisible while the rehearsal league had four teams all on whole numbers and
- *  became `0.6666666666666666` the first time a ten-team table was rendered. A
- *  half-game back is a real and ordinary value, so it rounds to one place and
- *  drops a trailing nought rather than to an integer. */
-function gamesBack(value: number | null): string {
-  if (value === null) return DASH;
-  return value.toFixed(1).replace(/\.0$/, "");
-}
 
 /** The last few rounds, newest LAST — left to right is the direction the season
  *  ran, which is how a form guide is read everywhere it appears.
@@ -140,7 +140,7 @@ function Form({ run }: { run: readonly FormGame[] }) {
   if (run.length === 0) return <span className="text-faint">{DASH}</span>;
 
   return (
-    <span className="flex justify-end gap-0.5">
+    <span className="flex justify-center gap-0.5">
       {run.slice(-FORM_GAMES).map((game) => (
         <span
           key={game.period}
@@ -157,16 +157,6 @@ function Form({ run }: { run: readonly FormGame[] }) {
 const FORM_GAMES = 5;
 
 const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;
-
-/** Fantrax's own rendering of their own fraction: `1.000`, `.500`, `.000`.
- *
- *  Three decimals with the leading nought dropped, which is how their table sets
- *  it and how the column headed `Win%` is meant to be read. It is NOT a
- *  percentage — the value for a side that has won every game is 1 — so printing
- *  it as one would put the leader on 1% and the table's best row last. */
-function winFraction(value: number | null): string | null {
-  return value === null ? null : value.toFixed(3).replace(/^0/, "");
-}
 
 /** `1` becomes `1st`. CM's index cell carries the ordinal and not the number,
  *  which is a small thing that reads as the game immediately — a column of

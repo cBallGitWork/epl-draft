@@ -4,22 +4,19 @@ import { mapLeagueInfo } from "./fantrax/map";
 import { mapSeasonResults } from "./fantrax/results";
 import type { RawSchedulePage } from "./fantrax/results";
 import { mapStandings } from "./fantrax/standings";
-import type { RawStandings } from "./fantrax/raw";
 import type { RawLeagueInfo } from "./fantrax/raw";
 import type { RawStandingsPage } from "./fantrax/standingsPage";
 import type { LeagueMatchup, StandingsRow } from "./types";
 import leagueInfoDrafted from "./fantrax/__fixtures__/leagueInfoDrafted.json";
 import seasonResultsLive from "./fantrax/__fixtures__/seasonResultsLive.json";
-import standingsArray from "./fantrax/__fixtures__/standingsArray.json";
 import standingsPage from "./fantrax/__fixtures__/standingsPage.json";
 
 // The rehearsal league on 29 Aug 2026, from the three payloads that meet here:
-// the standings page and array, the season results, and the pairings on
-// `getLeagueInfo`. Gameweek 1 is settled, gameweek 2 was in play as they were
+// the standings page, the season results, and the pairings on `getLeagueInfo`. Gameweek 1 is settled, gameweek 2 was in play as they were
 // recorded, and gameweek 3 reads 0-0 for everybody because Fantrax's results
 // table numbers rounds nobody has played.
 
-const table = mapStandings(standingsPage as RawStandingsPage, standingsArray as RawStandings);
+const table = mapStandings(standingsPage as RawStandingsPage);
 const { matchups } = mapLeagueInfo(leagueInfoDrafted as RawLeagueInfo);
 const results = mapSeasonResults(seasonResultsLive as RawSchedulePage);
 

@@ -2,7 +2,6 @@ import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
   type StandingsRow,
-  fetchStandings,
   fetchStandingsPage,
   mapStandings,
   mapTeamBadges,
@@ -25,13 +24,12 @@ import type { Unavailable } from "./refusals";
 // — and a read hidden inside any one of them is one the other three cannot reach
 // (CODE_RULES §1).
 //
-// **The fxea array came back on 29 Aug, for one column and no more.** It carries
-// `gamesBack` and the page does not, so the two are read together and merged in
-// the mapper. It is the smallest payload Fantrax serves — one short object per
-// team — and it rides the same cache entry, so this is one extra GET per window
-// rather than one per reader. Its failure costs that column and nothing else:
-// the table is built from the page, and a refusal here arrives as an empty array
-// the mapper already models.
+// **And the page is now the WHOLE source.** The fxea array was read alongside it
+// from 29 Aug for exactly one column, `gamesBack`, which is the one thing the
+// page does not publish. On 31 Aug the table was redrawn as a football one and
+// games-back went with the rest of the Americanisms, so the second GET went too:
+// one provider call per cache window here, down from two, and one fewer thing
+// that can fail on the way to a table.
 
 /** Both halves, and the refusal if there was one. Entries rather than a `Map`:
  *  a cache round trip serialises, and a `Map` does not survive it. */
@@ -41,13 +39,10 @@ const read = leagueCache("standings-page",
     badges: [string, string][];
     refused: string | null;
   }> => {
-    const [raw, records] = await Promise.all([
-      orRefusal(fetchStandingsPage(FANTRAX_LEAGUE_ID)),
-      orRefusal(fetchStandings(FANTRAX_LEAGUE_ID)),
-    ]);
+    const raw = await orRefusal(fetchStandingsPage(FANTRAX_LEAGUE_ID));
     if (raw instanceof FantraxError) return { table: [], badges: [], refused: tell(raw) };
     return {
-      table: mapStandings(raw, records instanceof FantraxError ? [] : records),
+      table: mapStandings(raw),
       badges: mapTeamBadges(raw).map((badge) => [badge.teamId, badge.url]),
       refused: null,
     };

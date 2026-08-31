@@ -25,18 +25,49 @@
    ============================================================================ */
 
 @theme {
-  /* --- Surfaces: a four-step ramp, chroma held low and tinted to hue 265 --- */
-  --color-bg: oklch(0.185 0.045 265);
-  --color-surface: oklch(0.215 0.046 265);
-  --color-raised: oklch(0.25 0.048 265);
-  --color-line: oklch(0.36 0.045 265);
+  /* --- Surfaces: a four-step ramp, chroma held low and tinted WARM ------------
 
-  /* --- Ink: every step verified ≥4.5:1 on --color-bg — 17.1 · 8.7 · 5.3 — and
-     --faint verified again on --color-raised, which is the tightest pair in the
-     set at 4.6:1 and therefore the one that fixes where --raised can sit. --- */
-  --color-ink: oklch(0.97 0.01 265);
-  --color-muted: oklch(0.76 0.03 265);
-  --color-faint: oklch(0.63 0.03 265);
+     **Grey, not navy** (Craig, 31 Aug: "the main table is still too dark, cm has
+     more of a grey look"). The ramp was hue 265 at chroma 0.046, which is a
+     visible blue: the panel came out `#0f182f`, a navy plate. Championship
+     Manager's row ground is `#4c4944` — measured off `cm9900/12.jpg` and `21.jpg`
+     and recorded in the reference README months ago — which is oklch L 0.407,
+     chroma 0.009, hue 81. A warm near-neutral, and half again as light.
+
+     **The hue was free and the lightness was not.** Moving 265 → 80 at chroma
+     0.012 changes every contrast ratio in this file by less than 0.05, because
+     WCAG luminance barely notices chroma this low. That alone is most of what
+     "grey look" means, and it cost nothing.
+
+     **CM's actual lightness is unreachable, and the reason is CM's own.** At
+     L 0.407 our tightest inks land at `--faint` 2.55:1, `--bad` 2.66 and
+     `--live` 2.59. The game ran exactly that way — the reference README records
+     its unavailable grey at **2.54:1** — and the same README records our refusal
+     to follow it there. Solving for a lift instead inverts the ladder: `--faint`
+     would need L 0.782 against a `--muted` of 0.76. So the ceiling is a
+     derivation and not a preference, and this ramp sits at it: surface climbed
+     0.215 → 0.245 (`#23201a`) and `--faint` lifted 0.63 → 0.65 to pay for it.
+     Every ink clears 4.5:1 on all three surfaces with margin. Re-derive with
+     `python3` before moving any of these; the whole set is one solution.
+
+     **The page stays NAVY and only the wells go grey**, which is also the game:
+     `cm9900/24.jpg` is a dark blue rail beside a warm grey table area, and the
+     first cut of this warmed the whole ramp and turned the rail brown. So `--bg`
+     keeps hue 265 and is the one step that does — it is the page and the rail,
+     the two things CM leaves blue — while every WELL cut into it is CM's grey.
+     Inks on it: 17.0 · 8.6 · 5.7, unchanged by the move. --- */
+  --color-bg: oklch(0.190 0.045 265);
+  --color-surface: oklch(0.245 0.012 80);
+  --color-raised: oklch(0.255 0.012 80);
+  --color-line: oklch(0.40 0.012 80);
+
+  /* --- Ink: every step verified ≥4.5:1 on all three surfaces. On --color-bg
+     16.9 · 8.6 · 5.7; on --color-surface 14.9 · 7.6 · 5.0; on --color-raised
+     14.5 · 7.3 · 4.9, which is the tightest pair in the set and therefore the
+     one that fixes where --raised can sit. Measured 31 Aug 2026. --- */
+  --color-ink: oklch(0.97 0.008 80);
+  --color-muted: oklch(0.76 0.022 80);
+  --color-faint: oklch(0.65 0.022 80);
 
   /* --- The desk's signals -------------------------------------------------
      CM's grammar is more specific than a palette: each colour is a SLOT with one

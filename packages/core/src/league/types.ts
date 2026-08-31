@@ -161,31 +161,31 @@ export interface StandingsRow {
   won: number;
   drawn: number;
   lost: number;
+  /** Matches played, and the one column here that is OURS.
+   *
+   *  Fantrax's table has no such column — their header publishes `win`, `draw`,
+   *  `loss`, `points`, `winpc`, `wwOrder`, `pointsFor`, `pointsAgainst` and
+   *  `streak`, and nothing else. This is `won + drawn + lost`, which is a
+   *  tautology about their own three numbers rather than a rule of the
+   *  competition, and that is the whole test for what we may compute: what a win
+   *  is WORTH is a commissioner setting and is read (see `points`); how many
+   *  games a record adds up to is arithmetic. */
+  played: number;
   /** The league's points — three for a win here. Read off Fantrax's table and
    *  never computed from the record: what a win is worth is a commissioner
    *  setting (§3), and a league that pays two would get three from us. */
   points: number;
-  /** Fantasy points scored — Fantrax's FPtsF. The first tiebreak, not the
-   *  column the table is ordered by, and the two are one number apart on a
-   *  Saturday. */
+  /** Fantasy points scored — Fantrax's FPtsF, and the table's `For`. The first
+   *  tiebreak, not the column the table is ordered by, and the two are one
+   *  number apart on a Saturday. */
   pointsFor: number;
-  /** How far off the pace, as Fantrax works it out. **Their arithmetic, not
-   *  ours** — half a game per win the leader is ahead is a convention rather
-   *  than a fact, and this league pays three for a win in a sport with draws in
-   *  it, so a formula of ours would be a guess wearing a number's clothes.
+  /** Fantasy points conceded — Fantrax's FPtsA, and the table's `Ag`.
    *
-   *  Null when their array did not carry the team. That is not a hypothetical:
-   *  it is the whole table whenever the second read fails, because this is the
-   *  one column the standings PAGE does not publish. */
-  gamesBack: number | null;
-  /** Games won as a FRACTION of games played — `1` for a side that has won its
-   *  only match, `0.5` for one that has split two. Not a percentage, and never
-   *  printed as one: Fantrax sets it `1.000` / `.500` / `.000` on their own
-   *  table and a `1%` beside a leader would be exactly backwards.
-   *
-   *  Null when the column is absent, which is a shape change rather than a
-   *  league that has not played — an unplayed league answers `.000`. */
-  winPercentage: number | null;
+   *  In a head-to-head league this is a real column and not a curiosity: it is
+   *  the whole of your luck. Two sides on the same points-for can be four places
+   *  apart on who they happened to be drawn against, and `Ag` is where that
+   *  shows. */
+  pointsAgainst: number;
 }
 
 /** Everything `getLeagueInfo` tells us about the competition's configuration.

@@ -17,7 +17,6 @@ import {
   fetchDraftResults,
   fetchLiveScoring,
   fetchTeamRosters,
-  fetchStandings,
   fetchStandingsPage,
   fetchTransactions,
   mapDraftPicks,
@@ -69,17 +68,17 @@ export async function gatherRoundFacts(
   snapshot: FootballSnapshot,
   period: number,
 ): Promise<RoundFacts> {
-  const [live, rosters, claims, trades, draft, standingsPage, standingsRecords, wire] = await Promise.all([
+  const [live, rosters, claims, trades, draft, standingsPage, wire] = await Promise.all([
     fetchLiveScoring(FANTRAX_LEAGUE_ID, period),
     fetchTeamRosters(FANTRAX_LEAGUE_ID).catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "CLAIM_DROP").catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "TRADE").catch(() => null),
     fetchDraftResults(FANTRAX_LEAGUE_ID).catch(() => null),
-    // Both halves: the page carries the points column and the array carries
-    // games-back, and `mapStandings` merges them — the same pair `/league`
-    // reads for the same reason.
+    // The page and not the fxea array: the page carries every column the table
+    // is drawn from. The array was read alongside it for `gamesBack` alone, and
+    // that column went when the table became a football one on 31 Aug — the
+    // same single read `/league` now makes, for the same reason.
     fetchStandingsPage(FANTRAX_LEAGUE_ID).catch(() => null),
-    fetchStandings(FANTRAX_LEAGUE_ID).catch(() => null),
     // The wire is the one read that is nobody's provider: a feed we cannot
     // fetch costs the paper its news section and nothing else.
     fetchFeed(BBC_FOOTBALL).catch(() => null),
@@ -116,10 +115,7 @@ export async function gatherRoundFacts(
     // Where each man was taken. Empty until a draft completes, which is the real
     // league's state until 10 Oct — and an empty map means the brief says
     // nothing about pedigree rather than calling every squad undrafted.
-    table:
-      standingsPage === null || standingsRecords === null
-        ? []
-        : mapStandings(standingsPage, standingsRecords),
+    table: standingsPage === null ? [] : mapStandings(standingsPage),
     news:
       wire === null || squads === null
         ? []

@@ -1,28 +1,27 @@
 import type { StandingsRow } from "../types";
-import type { RawStandings } from "./raw";
 import type { RawStandingsPage, RawStandingsTable, RawTableCell } from "./standingsPage";
 
-// The league table, out of the two shapes Fantrax answers `getStandings` in.
-// Pure.
+// The league table, off the page Fantrax draws for its own site. Pure.
 //
-// **The page leads, and that is the whole point of this file.** The fxea array
-// carries a rank, a total and a record squashed into one string; the page
-// carries the columns Fantrax's own table is drawn from — `win`, `draw`, `loss`,
-// `points` and `winpc`. Points is the number a league table is read for, three
-// for a win in this league, and it exists on no other read.
+// **The page is the whole source, and that is new.** The fxea array carries a
+// rank, a total and a record squashed into one string; the page carries the
+// columns Fantrax's own table is drawn from — `win`, `draw`, `loss`, `points`,
+// `pointsFor`, `pointsAgainst`. Points is the number a league table is read for,
+// three for a win in this league, and it exists on no other read.
 //
-// **The array is here for exactly one column.** `gamesBack` is on it and on
-// nothing else — checked against both surfaces on 29 Aug 2026, when it read
-// 0-0-1-1 across the four rehearsal teams and was live rather than the row of
-// noughts that once made it not worth reading. Half a game per win is a
-// convention and not a fact, so it is read rather than worked out here. Its
-// absence is modelled instead of defaulted: a second read is a second thing that
-// can fail, and every other column on the table survives that failure.
+// **The array used to be read alongside it, for `gamesBack` and nothing else.**
+// That column is gone: games-back is a baseball convention, and on 31 Aug 2026
+// the table was redrawn as a football one — `Pld W D L F A Pts`, which is
+// `cm9900/24.jpg`'s own header and every league table printed in England. With
+// it went the only reason the app and the edition writer each made a second
+// provider call per cache window. The capture and shape-diff scripts still read
+// the array, which is where a payload we do not print belongs.
 //
-// **And it is READ, never computed.** What a win is worth is a commissioner
+// **Points is READ, never computed.** What a win is worth is a commissioner
 // setting, not a fact about football (§3), so adding up three-a-win ourselves
 // would be this app inventing a league rule it happens to have guessed right.
-// Fantrax scores the competition; we print their number.
+// Fantrax scores the competition; we print their number. `played` is the one
+// exception and it is not really one — see the field's own note.
 //
 // The order is theirs too. `rank` comes off the row rather than from sorting on
 // anything of ours: a table whose points tie is broken by fantasy points scored
@@ -33,18 +32,13 @@ import type { RawStandingsPage, RawStandingsTable, RawTableCell } from "./standi
  *  table read positionally would file wins under draws the day that happens. */
 const RANK = "rank";
 const TEAM = "team";
-/** Their key for the win fraction. Named `winpc` and rendered ".000"/"1.000",
- *  which is a proportion set baseball-style and not a percentage — the value for
- *  a side that has won every game is one. */
-const WIN_PC = "winpc";
 
-export function mapStandings(raw: RawStandingsPage, records: RawStandings): StandingsRow[] {
+export function mapStandings(raw: RawStandingsPage): StandingsRow[] {
   const table = standingsTable(raw);
   if (table === null) return [];
 
   const fixed = columns(table.fixedHeader?.cells);
   const scrolling = columns(table.header?.cells);
-  const behind = gamesBackByTeam(records);
 
   const rows: StandingsRow[] = [];
   for (const row of table.rows ?? []) {
@@ -55,17 +49,21 @@ export function mapStandings(raw: RawStandingsPage, records: RawStandings): Stan
 
     const cell = (key: string) => number(at(row.cells, scrolling.get(key))?.content);
 
+    const won = cell("win");
+    const drawn = cell("draw");
+    const lost = cell("loss");
+
     rows.push({
       teamId: team.teamId,
       teamName: team.content ?? "",
       rank: number(at(row.fixedCells, fixed.get(RANK))?.content),
-      won: cell("win"),
-      drawn: cell("draw"),
-      lost: cell("loss"),
+      won,
+      drawn,
+      lost,
+      played: won + drawn + lost,
       points: cell("points"),
       pointsFor: cell("pointsFor"),
-      gamesBack: behind.get(team.teamId) ?? null,
-      winPercentage: fraction(at(row.cells, scrolling.get(WIN_PC))?.content),
+      pointsAgainst: cell("pointsAgainst"),
     });
   }
 
@@ -107,33 +105,4 @@ function at(cells: RawTableCell[] | undefined, index: number | undefined): RawTa
 function number(content: string | undefined): number {
   const value = Number(content);
   return Number.isFinite(value) ? value : 0;
-}
-
-/** The same read, but absent rather than nought when there is nothing there.
- *
- *  A separate function from `number` above and not a flag on it, because the two
- *  answer different questions. Nought is a real record and a real points total;
- *  it is also a real win fraction, which is why a missing column has to be
- *  something else entirely. A team that has won nothing reads `.000`, and a
- *  table with no such column reads a dash. */
-function fraction(content: string | undefined): number | null {
-  if (content === undefined || content.trim() === "") return null;
-  const value = Number(content);
-  return Number.isFinite(value) ? value : null;
-}
-
-/** Games back, by team id, off the fxea array.
- *
- *  Empty for a league that has not started — the real league answers `[]` here
- *  every day until 10 Oct — and empty when the read failed, which the caller
- *  says by passing nothing. Both leave every row on a dash, which is the honest
- *  answer to "how far back" when nobody has played. */
-function gamesBackByTeam(records: RawStandings): Map<string, number> {
-  return new Map(
-    records.flatMap((row) =>
-      typeof row.teamId === "string" && typeof row.gamesBack === "number"
-        ? ([[row.teamId, row.gamesBack]] as [string, number][])
-        : [],
-    ),
-  );
 }

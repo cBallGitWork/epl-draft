@@ -8,23 +8,31 @@ import type { StandingsRow } from "./types";
 // reading the table, not a second opinion about it, which is why it sorts a
 // copy and never touches `rank`.
 
-/** Which column. `rank` is Fantrax's own order and the default. */
-export type SortKey = "rank" | "record" | "gb" | "win" | "fp" | "pts";
+/** Which column. `rank` is Fantrax's own order and the default.
+ *
+ *  One key per printed column since 31 Aug 2026, where `record` used to stand
+ *  for the whole `W-D-L` string and `gb`/`win` for two columns that are no
+ *  longer drawn. A hyphenated record is one cell holding three numbers, and it
+ *  can only ever be sorted by one of them — the table said `W-D-L` and ordered
+ *  silently by wins. */
+export type SortKey = "rank" | "played" | "won" | "drawn" | "lost" | "for" | "against" | "pts";
 
 /** Every sortable column's value, and the direction worth reading first.
  *
- *  A table is opened at the top: points, fantasy points and the win fraction all
- *  answer "who is best" and want the biggest first, while rank and games back
- *  already count upward from the leader. Making the caller pass a direction
- *  would put that judgement at every call site. */
+ *  A table is opened at the top, so most of these want the biggest first: points
+ *  and wins and fantasy points all answer "who is best". Three do not. `rank`
+ *  counts upward from the leader. `lost` and `against` are the columns you want
+ *  the SMALLEST of, and opening them descending would put the worst side in the
+ *  league at the top of a table headed by the best. Making the caller pass a
+ *  direction would put that judgement at every call site. */
 const COLUMN: Record<SortKey, { of: (row: StandingsRow) => number; descending: boolean }> = {
   rank: { of: (row) => row.rank, descending: false },
-  record: { of: (row) => row.won, descending: true },
-  // A side Fantrax gives no games-back for sorts last either way rather than
-  // ahead of the leader, which a nought would do.
-  gb: { of: (row) => row.gamesBack ?? Number.POSITIVE_INFINITY, descending: false },
-  win: { of: (row) => row.winPercentage ?? -1, descending: true },
-  fp: { of: (row) => row.pointsFor, descending: true },
+  played: { of: (row) => row.played, descending: true },
+  won: { of: (row) => row.won, descending: true },
+  drawn: { of: (row) => row.drawn, descending: true },
+  lost: { of: (row) => row.lost, descending: false },
+  for: { of: (row) => row.pointsFor, descending: true },
+  against: { of: (row) => row.pointsAgainst, descending: false },
   pts: { of: (row) => row.points, descending: true },
 };
 
