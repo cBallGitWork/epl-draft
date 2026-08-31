@@ -28,7 +28,7 @@ describe("normalizeStory", () => {
     expect(normalizeStory(story())).toEqual(story());
   });
 
-  it("refuses what cannot be a story: no slug, unknown kind, no league, no round, no headline", () => {
+  it("refuses what cannot be a story: no slug, unknown kind, no league, no round, no headline, no dateline", () => {
     // Each of these reads as "there is no such story", never a thrown page: the
     // payload was written with a model's help, so the schema is a request.
     expect(normalizeStory({ ...story(), slug: "" })).toBeNull();
@@ -36,11 +36,17 @@ describe("normalizeStory", () => {
     expect(normalizeStory({ ...story(), leagueId: "" })).toBeNull();
     expect(normalizeStory({ ...story(), period: "3" })).toBeNull();
     expect(normalizeStory({ ...story(), headline: "" })).toBeNull();
+    // Undated is unprintable, not coerced: the reversal that lets journalism
+    // lead under moving scores leans entirely on the filed instant printing.
+    expect(normalizeStory({ ...story(), filedAt: "" })).toBeNull();
     expect(normalizeStory(null)).toBeNull();
   });
 
   it("coerces the optional cargo and preserves absence as absence", () => {
-    const survived = normalizeStory({ slug: "s", kind: "news", leagueId: LEAGUE, period: 3, gameweek: 3, headline: "H" });
+    const survived = normalizeStory({
+      slug: "s", kind: "news", leagueId: LEAGUE, period: 3, gameweek: 3,
+      headline: "H", filedAt: "2026-08-31T09:00:00.000Z",
+    });
     expect(survived).not.toBeNull();
     expect(survived?.expiresAt).toBeNull();
     expect(survived?.image).toBeNull();

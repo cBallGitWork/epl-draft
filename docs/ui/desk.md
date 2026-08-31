@@ -52,7 +52,7 @@ colour registers are binding and Ceefax's are not ours. Two conventions:
   the density argument has to be made again from scratch.
 - **The figure is shared; the row around it is not.** This note used to say a
   third occurrence of the scoreline grammar would force the extraction. The front
-  page's splash was the third, so `components/league/ScoreFigure` now holds the
+  page's scoreboard was the third, so `components/league/ScoreFigure` now holds the
   part that was genuinely one rule — a dash for a total Fantrax did not give, and
   the trailing side dims — while size, family and width stay the caller's. The
   row is still its own: a card is a 44px tap target, and these are wall rows with

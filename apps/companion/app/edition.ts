@@ -70,7 +70,7 @@ export interface Edition {
    *  the present tense. `partial` is "there is football still to come" and is
    *  what withholds the lead. This one is "there is a score worth printing",
    *  which is neither: before the first kickoff every total is a legitimate
-   *  nought, and a splash reading 0–0 across eight ties would be reporting a
+   *  nought, and a strip reading 0–0 across eight ties would be reporting a
    *  round nobody has played. */
   underway: boolean;
   snapshot: FootballSnapshot | null;
@@ -121,7 +121,7 @@ export interface Edition {
    *  does not manufacture a story, so most of the week there is nothing here. */
   stories: Story[];
   /** This period's ties and Fantrax's totals for them, or null when there is no
-   *  round to report. One read, two readers: the splash prints it while football
+   *  round to report. One read, two readers: the scoreboard prints it while football
    *  is on, and `stories()` decides the week's running order from it once the
    *  football stops. Reading it twice would be two cache lookups and two chances
    *  for the page to disagree with itself about the score. */
@@ -158,9 +158,10 @@ export async function edition(mine: string | null): Promise<Edition> {
   const business = deals(feed.rows);
   const picked = eleven(drafted);
   const board = drafted === null ? null : await readBoard(drafted);
-  // A headline is the one place on the page a provisional claim cannot go, so
-  // the lead waits for a week that is over. While football is on the splash
-  // reports the score and says nothing about what it means.
+  // The desk's own manufactured stories wait for the round to finish: unlike a
+  // filed column they carry no dateline, so mid-round they would claim the
+  // week. (The filed lead prints at all times — gazetta.md records the
+  // reversal and where its safety went.)
   const told =
     board === null || partial
       ? []

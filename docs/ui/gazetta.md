@@ -90,6 +90,15 @@ owns watching. The scrollbar is hidden; the cut-off ninth cell is what says
 "more". The recorded fallback, if the scroller fails tapfit or the eye at 390:
 a stack of one-line rows at desk density.
 
+**While a ball is in the air, your tie is promoted to a full-size row above
+the strip** — figures at `text-4xl`, the old splash's size. The first cut
+shrank it to 12px under a 34px headline, and the register warden called it:
+PRODUCT.md's first principle says the live number outranks everything on
+screen while a match runs, and it outranks the look. Between kickoffs the
+row folds back into the strip — that is the principle's own relaxation
+clause. The promotion is also what keeps `LiveStrip`'s stand-down on `/`
+honest: the front page answers the question in full again while live.
+
 **The page refreshes itself**, from the shell rather than from here — the
 layout mounts the one `AutoRefresh`, on `pollSeconds`: 30s while the round is
 under way, 300s otherwise.

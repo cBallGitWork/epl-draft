@@ -94,14 +94,18 @@ export function normalizeStory(parsed: unknown): PublishedStory | null {
   if (parsed === null || typeof parsed !== "object") return null;
   const raw = parsed as Partial<PublishedStory>;
 
-  // The five that decide whether this is a story at all: unmatchable to a
-  // round, unattributable to a league, unaddressable, or with nothing to
-  // print — each reads as "no story".
+  // The six that decide whether this is a story at all: unmatchable to a
+  // round, unattributable to a league, unaddressable, undated, or with nothing
+  // to print — each reads as "no story". The dateline is REQUIRED, not
+  // coerced: journalism leads at all times now, and the filed instant is the
+  // whole honesty of an opinion printed under moving scores — a story that
+  // cannot say when it was filed is not printable in a rolling paper.
   if (typeof raw.slug !== "string" || raw.slug === "") return null;
   if (!STORY_KINDS.includes(raw.kind as StoryKind)) return null;
   if (typeof raw.leagueId !== "string" || raw.leagueId === "") return null;
   if (typeof raw.period !== "number" || typeof raw.gameweek !== "number") return null;
   if (typeof raw.headline !== "string" || raw.headline === "") return null;
+  if (typeof raw.filedAt !== "string" || raw.filedAt === "") return null;
 
   const image =
     raw.image !== null &&
@@ -118,7 +122,7 @@ export function normalizeStory(parsed: unknown): PublishedStory | null {
     leagueId: raw.leagueId,
     period: raw.period,
     gameweek: raw.gameweek,
-    filedAt: typeof raw.filedAt === "string" ? raw.filedAt : "",
+    filedAt: raw.filedAt,
     expiresAt: typeof raw.expiresAt === "string" && raw.expiresAt !== "" ? raw.expiresAt : null,
     edition: typeof raw.edition === "string" ? raw.edition : "",
     byline: typeof raw.byline === "string" ? raw.byline : "",

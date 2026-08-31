@@ -11,15 +11,15 @@ import { usePathname } from "next/navigation";
 // about. The strip is that number wherever he is.
 //
 // **It stands down on the two pages that already answer the question in full**:
-// the Live tab, and the front page, whose splash prints the same tie at four
-// times the size while football is on. A strip and a scoreline saying one thing
-// on one screen is two designs for one fact, and the narrower would be read
-// first — which is the wrong way round. Client-only for exactly this: a server
-// layout cannot know which route rendered under it.
+// the Live tab, and the front page, whose scoreboard promotes the same tie to
+// full size while a ball is in the air (`gazette/Scoreboard`'s `Yours` row). A
+// strip and a scoreline saying one thing on one screen is two designs for one
+// fact, and the narrower would be read first — which is the wrong way round.
+// Client-only for exactly this: a server layout cannot know which route
+// rendered under it.
 //
-// Both are the pages that carry the live splash, and both carry it under the
-// same condition that puts this here, so the strip is never the only thing
-// missing from a screen.
+// Both carry their answer under the same condition that puts this here, so the
+// strip is never the only thing missing from a screen.
 
 const ANSWERED_IN_FULL = ["/", "/matchday"];
 

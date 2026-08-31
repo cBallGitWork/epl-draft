@@ -5,7 +5,7 @@ import { trails } from "@epl/core";
 // Two things and only two: **a dash for a total Fantrax did not give, never a
 // nought**, and **the trailing side dims**. Both are stated once here because
 // they had been written out five times — the head-to-head card, the desk's wall
-// rows, your own matchup summary, the front page's splash and the head-to-head
+// rows, your own matchup summary, the front page's scoreboard and the head-to-head
 // BOARD — and `docs/ui/desk.md` recorded that the third occurrence is what earns
 // the extraction. The board was the one this missed on the first pass: it sits a
 // component away from the card and was still writing the rule out by hand.

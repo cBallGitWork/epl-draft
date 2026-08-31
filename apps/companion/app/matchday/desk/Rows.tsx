@@ -10,7 +10,7 @@ import { londonDay, londonTime } from "../../londonTime";
 //
 // The FIGURE is shared with every other scoreline in the app — `ScoreFigure`
 // holds the dash-not-nought and trailing-dims rule, and this note used to say a
-// third occurrence would earn it. The front page's splash was the third, so it
+// third occurrence would earn it. The front page's scoreboard was the third, so it
 // was earned and taken. The row AROUND the figure is still deliberately its own:
 // that card is a tap target with a labelled second line, and these are wall rows
 // with no chrome and nothing to tap.
