@@ -111,11 +111,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             because it is the ground and not a decoration on one page. It stands
             down on the paper, which is ink on stock.
 
-            No instrument can check what it does to contrast — it is `fixed` at
-            `-z-10`, an ancestor of nothing, so `sweep` composites straight past
-            it. What holds is the bound in the component, which is a statement
-            about every pixel a photograph could contain rather than the one that
-            was sampled. */}
+            `sweep` cannot check what it does to contrast — it is `fixed` at
+            `-z-10`, an ancestor of nothing, so sweep composites straight past
+            it and calls every route clean whatever is behind it. What holds
+            instead is the rule the component's constants rest on, which is CM's
+            own: nothing prints text on the bare ground, so the photograph is
+            only ever seen between the plates. `tools/ui/groundfit.mjs` measures
+            that on all eight desk routes. */}
         <PhotoGround faces={await groundFaces()} />
         <a
           href="#main"

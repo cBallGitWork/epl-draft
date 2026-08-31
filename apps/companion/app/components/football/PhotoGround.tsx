@@ -39,10 +39,38 @@ import { isPaperRoute } from "../shell/sections";
 // `isPaperRoute` for the same reason the rail does, which is that a server
 // layout cannot know which route rendered under it.
 
-/** The two halves of one bound. Their product is what the sum above solves for,
- *  so neither moves without the other. */
-const SCRIM = 0.3;
-const DARKEN = 0.25;
+/** **The photograph IS the background** (Craig, 31 Aug, three times). It sat at
+ *  opacity 0.30 over brightness 0.25 — about seven per cent of a picture — which
+ *  is a dark blue screen with something behind it, not a ground. Championship
+ *  Manager's is a darkened photograph at full strength: you can read the trophy
+ *  and the red shirts in `cm9900/24.jpg`.
+ *
+ *  **What changed is not the arithmetic, it is where the text is.** The old
+ *  numbers solved a bound for the tightest ink sitting DIRECTLY on the ground.
+ *  CM does not put text on its ground — every word is on a plate or inside a
+ *  translucent panel — and since the panels landed neither do we. So the bound
+ *  moves off the photograph and onto the rule that replaces it, which is the one
+ *  CM actually follows:
+ *
+ *  **Nothing on the desk prints text on the bare ground.** A plate is opaque; a
+ *  panel is `--color-surface` at 88%, and through it this photograph contributes
+ *  about eight parts in 255 — so the ink ladder inside a panel is still the one
+ *  DESIGN §3 measured. Text that appears on the ground is the defect, and the
+ *  fix is a panel, not a darker picture.
+ *
+ *  **And the rule is measured, not asserted.** `node tools/ui/groundfit.mjs`
+ *  walks every visible text node on the eight desk routes at both widths and
+ *  accumulates background alpha up its real ancestor chain; anything under half
+ *  is named. Clean on 31 Aug 2026. Raising DARKEN or SCRIM is safe for exactly
+ *  as long as that stays at zero — which is a different guarantee from the
+ *  bound above, and a checkable one, where the bound could only ever be stated.
+ *
+ *  Kept in colour, unlike the portraits it replaced. That comment argued a
+ *  photograph in colour "would put a seventh hue on every screen" — true of six
+ *  cut-outs floating on the ground, and not of a photograph that IS the ground,
+ *  which is what the game did. */
+const SCRIM = 1;
+const DARKEN = 0.55;
 
 export default function PhotoGround({ faces }: { faces: readonly string[] }) {
   const pathname = usePathname();
@@ -53,10 +81,8 @@ export default function PhotoGround({ faces }: { faces: readonly string[] }) {
     <div
       aria-hidden
       className="pointer-events-none fixed inset-0 -z-10 flex items-end justify-center gap-[1vw] overflow-hidden"
-      // Grayscale because a photograph in colour, under a palette where every
-      // colour is a slot, would put a seventh hue on every screen. CM's own was
-      // in colour and CM's own palette was not this strict.
-      style={{ opacity: SCRIM, filter: `grayscale(1) brightness(${DARKEN})` }}
+      // Darkened and not greyed: see the note on the constants above.
+      style={{ opacity: SCRIM, filter: `brightness(${DARKEN})` }}
     >
       {DESK_GROUND === null ? (
         // The placeholder, and it is real data rather than an invented stadium:
