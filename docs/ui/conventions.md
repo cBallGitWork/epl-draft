@@ -87,6 +87,7 @@ No fluid clamps except inside the masthead.
 | `league/MoveDialog` | Everywhere one player can go, over the pitch. |
 | `league/TeamSheet` | A live XI plus bench, or the same squad as rows, every player opening `LivePlayerCard`. Both boards that show a lineup that counts draw it. |
 | `league/PitchPlayer` | One player on the pitch: cut-out, name plate, points band. |
+| `league/SeasonGrid` | Championship Manager's attribute grid — the squad's season as one bevelled panel per scoring group, thirteen keeper columns and eleven outfield, every figure Fantrax's own. The **second panel** on `/squad/[teamId]`, and it costs one cache hit: `squadSeason` already reads this table to price the board. |
 | `league/PlayerImage` | The cut-out itself, with its fallbacks. Client-only, and has to be — see below. |
 | `football/FixtureChip` | Opponent + (H)/(A), coloured by FPL's difficulty. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |

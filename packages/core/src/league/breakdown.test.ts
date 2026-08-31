@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { breakdownOf, liveBreakdown } from "./breakdown";
+import { breakdownOf, columnLabel, liveBreakdown } from "./breakdown";
 import { mapTeamStats } from "./fantrax/stats";
 import teamStats from "./fantrax/__fixtures__/teamStats.json";
 
@@ -159,5 +159,38 @@ describe("liveBreakdown", () => {
     // Not hypothetical: this threw on the first render after the field was
     // added, off a cache entry written by the deploy before it.
     expect(liveBreakdown([{ category: "5010#6090", points: 5 }], undefined)).toEqual([]);
+  });
+});
+
+/** A column of the recorded header, by its code. Throws rather than asserting
+ *  non-null, so a fixture that stops carrying the column fails as a missing
+ *  column and not as a confusing `undefined`. */
+function column(code: string) {
+  for (const group of stats.groups) {
+    const found = group.columns.find((c) => c.code === code);
+    if (found) return found;
+  }
+  throw new Error(`no ${code} column in the recorded header`);
+}
+
+describe("columnLabel, over the same recorded header", () => {
+  it("cuts Fantrax's prose definition off the label a column head prints", () => {
+    // The rule this league scores a clean sheet by, published on a stat table's
+    // header and nowhere else in the payload.
+    const cs = columnLabel(column("CS"));
+    expect(cs.name).toBe("Clean Sheets On Field");
+    expect(cs.definition).toMatch(/^Awarded to a player who played at least 60 minutes/);
+  });
+
+  it("gives a column Fantrax defines by its name alone a null definition", () => {
+    expect(columnLabel(column("Sv"))).toEqual({ name: "Saves", definition: null });
+  });
+
+  it("falls back to the code rather than printing an empty head", () => {
+    expect(columnLabel({ code: "GAO", name: "" })).toEqual({ name: "GAO", definition: null });
+    expect(columnLabel({ code: "GAO", name: " -- only a rule" })).toEqual({
+      name: "GAO",
+      definition: "only a rule",
+    });
   });
 });

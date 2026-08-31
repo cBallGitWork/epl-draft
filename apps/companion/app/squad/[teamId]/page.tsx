@@ -7,17 +7,19 @@ import {
   lineupDetail,
   oppositionByClub,
   playerDetail,
+  playerName,
   squadDetail,
   squadUnarranged,
 } from "@epl/core";
 import LineupPlanner from "../../components/league/LineupPlanner";
 import PageHeader from "../../components/shell/PageHeader";
+import SeasonGrid from "../../components/league/SeasonGrid";
 import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
 import { getLeagueSquads, teamDisplay } from "../../squads";
 import { planningRound, roundOf } from "../../round";
 import { squadLivePoints } from "../../scoreboard";
-import { squadPoints } from "../../teamStats";
+import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
 
 // One manager's squad, laid out on a pitch. The screen the league opens on a
@@ -119,16 +121,20 @@ export default async function TeamPage({
   // the season table and `Sheet` rendered it under a card headed "This period",
   // at a man's default position rather than his roster slot. This is the same
   // condition `board` is built on, so the two cannot disagree.
-  const season = display.show === "squad" ? await squadPoints(teamId) : null;
+  const season = display.show === "squad" ? await squadSeason(teamId) : null;
   const points = (live?.points ?? season?.points) ?? null;
   const board =
     display.show === "squad"
       ? {
           because: display.because,
-          projected: season?.projected ?? false,
+          projected: season?.stats.season.projected ?? false,
           lines: squadDetail(squadUnarranged(team), clubs, opposition, points),
         }
       : null;
+  // Fantrax's stat rows carry an id and no name, deliberately: the squad already
+  // names every one of them and a second copy is the one that disagrees when a
+  // commissioner renames somebody.
+  const names = new Map(team.players.map((rostered) => [rostered.slot.fantraxId, playerName(rostered)]));
 
   return (
     <div className="flex flex-col gap-3">
@@ -182,7 +188,16 @@ export default async function TeamPage({
            Branching on the board rather than on the display again: it exists
            exactly when the gate is closed, so there is no arrangement of the two
            that renders a board with nothing on it. */
-        <SquadBoard lines={board.lines} because={board.because} projected={board.projected} />
+        <>
+          <SquadBoard lines={board.lines} because={board.because} projected={board.projected} />
+          {/* The second panel, and it costs one cache hit. `squadSeason` already
+              reads this table to price the board; what it used to drop on the
+              floor is thirteen scoring columns, a per-game figure and Fantrax's
+              own name for the season. Under the board rather than beside it —
+              seventeen columns and a pitch both want the width — and never above
+              it, which would come out of the pitch's screen budget. */}
+          {season !== null ? <SeasonGrid stats={season.stats} names={names} /> : null}
+        </>
       ) : (
         /* A rival's XI, once his lineups have locked. Read-only: it is his — but
            every man on it opens the same card the head-to-head board opens, so

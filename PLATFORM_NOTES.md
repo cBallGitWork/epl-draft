@@ -3863,6 +3863,38 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-31: **The squad page got its second panel, and it was already paid
+  for.** A CM screen is two to four bevelled panels laid out together rather than
+  one column that scrolls, and `/squad/[teamId]` was one column. `squadPoints`
+  read the whole `TeamStats` to build a `fantraxId → points` index and dropped
+  everything else: **thirteen goalkeeper columns and eleven outfield ones**, the
+  per-game figure, Fantrax's own name for the season, and their prose definition
+  of every category. It is now `squadSeason` and returns both shapes off the one
+  read, so the index cannot disagree with the table it came from.
+  `SeasonGrid` draws it as CM's attribute grid: a `cm-panel` per scoring group
+  with its own title bar, a bevelled column-head strip, an index block down the
+  left, cyan names and amber figures with negatives in red. Rows are ~25px
+  against the list's 37, and legitimately: nothing in the table is a control, and
+  `min-h-11` is a rule about what a thumb has to hit.
+  **Probed before it was designed** (rehearsal league, 31 Aug): 13 keeper columns
+  `GP Min CS GA Sv YC RC PKS PKM G A AF OG`, 11 outfield
+  `GP Min G A AF YC RC PKM OG GAO CS`, **not one null value in either group**,
+  `GP` renders 0 for everyone because a count of appearances is not a score, and
+  `Min` renders a real 2 because minutes are scored here. Eight of the thirteen
+  keeper columns carry Fantrax's prose rule after a ` -- ` sentinel, which is the
+  only place in the whole payload this league's scoring rules are published — so
+  `split` in `breakdown.ts` became the exported `columnLabel` and now hangs their
+  sentence off each column head. The real league scores five categories the
+  rehearsal league does not, which is why the header is read and never listed.
+  **Stacked under the board rather than beside it**, and that is a measurement
+  and not a preference: seventeen columns and a pitch both want the width, so
+  side by side gives neither enough. CM stacks its own panels for the same reason
+  (`cm9900/05.jpg`, a list panel over a detail panel). The one placement ruled out
+  is a band ABOVE the pitch, which would come out of the pitch's screen budget.
+  What is still open at desk width: the pitch takes 684px of a 900px screen at
+  1440, so the grid is below the fold there. Narrowing the pitch at `lg` would put
+  the two panels beside each other and is the next step, not this one.
+
 - 2026-08-31: **The tab bar became Championship Manager's left rail, and it is one
   shape at every width.** Craig's verdict on Sunday's foundations was "it's still
   not CM really, just some columns", and the diagnosis was layout: CM is a 90px

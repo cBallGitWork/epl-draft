@@ -37,7 +37,15 @@ export interface BreakdownLine {
  *  paragraph, and only the label fits anywhere we print it. */
 const DEFINITION = " -- ";
 
-function split(column: StatColumn): { name: string; definition: string | null } {
+/** A column's label and the rule behind it, cut apart.
+ *
+ *  Exported because the third reader is a column HEAD rather than a line: the
+ *  squad's season grid prints thirteen of these across the top of a table and
+ *  hangs Fantrax's own sentence off each one. The two below ask the same question
+ *  of a value. This is the only place in the app where the league's scoring rules
+ *  are published in prose, and they are published on a stat table's header and
+ *  nowhere else — not on `getLeagueInfo`. */
+export function columnLabel(column: StatColumn): { name: string; definition: string | null } {
   const at = column.name.indexOf(DEFINITION);
   if (at < 0) return { name: column.name.trim() || column.code, definition: null };
   return {
@@ -59,7 +67,7 @@ export function breakdownOf(columns: readonly StatColumn[], line: StatLine): Bre
     .flatMap((points, index) => {
       const column = columns[index];
       if (points === null || points === 0 || column === undefined) return [];
-      return [{ code: column.code, ...split(column), points }];
+      return [{ code: column.code, ...columnLabel(column), points }];
     })
     .sort((a, b) => b.points - a.points);
 }

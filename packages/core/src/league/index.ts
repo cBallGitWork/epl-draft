@@ -29,7 +29,7 @@ export type {
 
 export type { PoolStatRow, StatColumn, StatSeason, TeamStats } from "./stats";
 
-export { breakdownOf, liveBreakdown } from "./breakdown";
+export { breakdownOf, columnLabel, liveBreakdown } from "./breakdown";
 export type { BreakdownLine } from "./breakdown";
 
 export { captureStaleness } from "./staleness";

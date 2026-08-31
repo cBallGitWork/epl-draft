@@ -59,32 +59,42 @@ export const readTeamStats = leagueCache("fantrax-team-stats",
   },
 );
 
-/** Fantasy points per player for one squad, with the season they belong to.
+/** One squad's season table, in the two shapes the squad page draws it in.
+ *
+ *  It used to return the index alone and throw the table away, which is how a
+ *  page that had already paid for thirteen scoring columns came to print one
+ *  number per player. Both shapes come off one read: the index is a derived view
+ *  of the same lines, so returning it beside them cannot disagree with them.
  *
  *  The season travels with the numbers and is never dropped, because Fantrax
  *  answers a *projection* unless the year-to-date code is both known and
  *  honoured — and a column headed with points that silently switches between a
  *  projection and a season total is the confident wrong answer this app exists
- *  to avoid. Null points is null, never nought: Fantrax prints a dash for a
- *  category a player has not registered.
+ *  to avoid.
  *
  *  **A season total, and it takes no period, because the endpoint behind it does
  *  not honour one** — periods 1, 2 and 3 answer byte-identical payloads. It used
  *  to take one, which is how a card came to be headed "This period" over a
  *  running season. The caller that needs a period reads the live scoreboard. */
-export async function squadPoints(teamId: string): Promise<SquadPoints | null> {
+export async function squadSeason(teamId: string): Promise<SquadSeason | null> {
   const stats = await readTeamStats(teamId, await yearToDate());
   if (stats === null) return null;
 
   return {
-    projected: stats.season.projected,
+    stats,
     points: new Map(
       stats.groups.flatMap((group) => group.lines.map((line) => [line.fantraxId, line.points])),
     ),
   };
 }
 
-export interface SquadPoints {
-  projected: boolean;
+export interface SquadSeason {
+  /** Fantrax's own table, whole: which season these are, and one group per
+   *  scoring vocabulary — a keeper is tabled apart from an outfielder because
+   *  they score differently, and their columns differ thirteen against eleven. */
+  stats: TeamStats;
+  /** The same lines indexed by player, which is how a pitch and a list want them:
+   *  a figure against a face. Null points is null, never nought — Fantrax prints
+   *  a dash for a category a player has not registered. */
   points: Map<string, number | null>;
 }

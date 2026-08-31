@@ -59,7 +59,19 @@ the sofa, so the score under fifteen faces sat still through a whole half.
    deliberately silent — the header already says "squad", and a paragraph
    explaining the normal case cost the pitch a screenful on a phone.
 3. **The pitch** (`SquadPitch`) or **the list** (`SquadRows`).
-4. **A player card** (`PlayerCard`) over the top, when one is tapped — the "who
+4. **The season grid** (`SeasonGrid`) — a second bevelled panel per scoring
+   group, under the board. A CM screen is two to four panels laid out together
+   and this one was already paid for: `squadSeason` reads the whole `TeamStats`
+   to price the board and used to drop thirteen keeper columns, eleven outfield
+   ones, `perGame` and Fantrax's own name for the season on the floor. Every
+   figure is theirs, re-rendered by their `FPTS` view as the points that category
+   contributed; the header is read from the league rather than listed, because
+   the real league scores five categories the rehearsal one does not. Stacked
+   under the board and never above it — seventeen columns and a pitch both want
+   the width, and a band above the pitch comes out of the pitch's own budget.
+   Its rows are dense (~25px) and legitimately so: nothing in the table is a
+   control, and `min-h-11` is a rule about what a thumb has to hit.
+5. **A player card** (`PlayerCard`) over the top, when one is tapped — the "who
    is this" card, not the live one. There is no score to explain on a squad whose
    period has not opened.
 
