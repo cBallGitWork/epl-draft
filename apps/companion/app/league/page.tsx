@@ -107,17 +107,9 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
           of it cannot drift from it (globals.css). `/players` set this pattern
           and DESIGN §9 signed it off: on a phone the columns Fantrax publishes
           stay reachable rather than being dropped behind a breakpoint. */}
-      {/* **The table sits on a panel, and over a photograph it has to.** CM never
-          puts a row straight onto its background: the table area is a dark
-          translucent block and the crowd shows through it faintly, which is what
-          lets the photograph be present without the figures fighting it
-          (`cm9900/24.jpg`). At 85% the photograph contributes about three parts
-          in 255 through the panel — it reads, and the ink ladder underneath is
-          still the one it was measured on. */}
-      <div
-        className="overflow-x-auto bg-surface/85 py-1"
-        style={{ marginInline: "calc(var(--page-gutter) * -1)", paddingInline: "var(--page-gutter)" }}
-      >
+      {/* The panel is `LeagueShell`'s now — every view under this tab strip gets
+          the same block, rather than the table carrying a ground of its own. */}
+      <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <Columns sort={sort} descending={descending} />
           <tbody>

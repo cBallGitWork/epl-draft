@@ -189,7 +189,15 @@
   --cm-face: var(--color-face);
   --cm-light: color-mix(in oklch, var(--cm-face), white 55%);
   --cm-dark: color-mix(in oklch, var(--cm-face), black 55%);
-  background: var(--color-surface);
+  /* **Translucent, now that there is a photograph behind it.** CM's panels are
+     not opaque — the match photograph reads faintly through the table area on
+     every screen in the library, and that is most of what makes the ground feel
+     like a ground rather than a border. At 88% the photograph contributes about
+     four parts in 255 through the panel, so the ink ladder underneath is still
+     the one it was measured on: `--color-surface` is the ground every ratio in
+     DESIGN §3 was checked against, and this is that colour with the picture
+     showing through rather than a different colour. */
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
   color: inherit;
   border: 2px solid;
   /* Sunken: dark where a raised control is light. A panel is a well cut into

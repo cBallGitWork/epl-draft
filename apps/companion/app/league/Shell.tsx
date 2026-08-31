@@ -35,8 +35,22 @@ export default function LeagueShell({
           page title in a slot meant for a subject. */}
       <PageHeader title={LEAGUE_NAME} sub={sub} competition />
       <SectionNav current={current} />
-      <p className="pt-1 text-center font-display text-sm font-bold text-accent">{title}</p>
-      {children}
+
+      {/* **One panel, and the caption lives inside it.** A Championship Manager
+          screen is a bordered block that opens with its yellow caption and runs
+          down to the foot — the caption is the panel's own head, not a line
+          floating above a table (`cm9900/24.jpg`, `25.jpg`). Ours had the
+          caption in the gap between two things, which is where a heading goes
+          when nobody has decided what it heads.
+
+          `min-h` so a four-team league still draws a panel rather than a strip:
+          the block is the screen's shape and it should not shrink to its
+          contents, which is exactly why CM's tables look full at twelve rows and
+          ours looked abandoned at four. */}
+      <section className="cm-panel flex min-h-80 flex-col gap-2 p-2">
+        <p className="text-center font-chrome text-sm font-bold text-accent lg:text-lg">{title}</p>
+        {children}
+      </section>
     </div>
   );
 }
