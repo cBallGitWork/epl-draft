@@ -3914,6 +3914,49 @@ field, and each one moved the design:
   The ledger's news key is the article URL with the fragment stripped, never
   the raw guid.
 
+## The columns, and what each one may say (31 Aug 2026)
+
+Seven opinion columns landed with the rolling paper, and the rules that keep
+them honest are worth having in one place:
+
+- **The dodgers say what a man DID, never what he would have scored.** Fantrax
+  prices only the ACTIVE section, so a benched player has no points anywhere in
+  any payload; "he'd have got you 11" would be a number we invented. Goals,
+  assists and clean sheets are countable football and stand alone. The column
+  filters the same `rosteredPicks` the eleven is selected from, so the two can
+  never disagree about what a player did.
+- **The power rankings are not the table and are told so in the brief.** The
+  table prints on the same page and is Fantrax's arithmetic; a second ordering
+  claiming the same authority would be the paper disagreeing with itself. The
+  column exists to say a side is flattered by its record.
+- **The Bin reports trends and never tips.** The week's business already lists
+  every deal on the front page, so a list is the one thing the column must not
+  be. `wireFacts` walks the feed OLDEST-first, because the feed arrives
+  newest-first and the last thing recorded about a man is what became of him —
+  walked the other way, a player dropped last week and reclaimed today reads as
+  binned. A trade counts as a sale rather than an obituary: he was wanted.
+- **The two sketches are the paper's only licensed invented quotes.** Every
+  other voice forbids them outright, because a made-up reaction reads exactly
+  like a real one and sixteen friends who talk to each other would eventually
+  find their own name over a sentence they never said. The press room and the
+  studio are exempt because the form announces itself, both prompts say so, and
+  the page prints a label above them. The facts under a sketch are not part of
+  the licence.
+- **Each column files on its own covered-key**, so the two-call cap spreads the
+  Monday set across firings rather than buying six columns at once, and a
+  column whose facts cannot support it returns null and spends nothing — a
+  quiet week files no wire, an unfielded lineup files no eleven.
+
+## The news wire, and the one rule it bends (31 Aug 2026)
+
+`newsTriage.affectedBy` matches player surnames against wire copy at runtime,
+which `fantrax-adapter.md` forbids. Recorded as an exception, with its
+boundary: every player reaching it is ALREADY resolved through the audited
+bridge, and nothing the match decides is persisted — the story's key is the
+article's URL. A wrong match costs a dull story; a wrong identity through the
+bridge tells sixteen people the wrong man is injured. Surnames under four
+characters are skipped, because "Son" hits "season" on most of the feed.
+
 ## Season log
 
 - 2026-08-31: **Every control on the desk became a Championship Manager plate,

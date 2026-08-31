@@ -287,6 +287,51 @@ PLATFORM_NOTES, 28 Aug.
 touches Vercel — the app only ever reads a committed column), and sign off the
 bylines in `scripts/edition/voice.ts`.
 
+## 10. 31 Aug — the paper started rolling
+
+Craig: *"it's live, like a website"*. The plan is
+`planning-for-gazetta-features-quiet-lovelace.md`. Prose stopped being one
+column a round and became a stack of stories that accumulates.
+
+- **The rolling model.** `PublishedStory` (sixteen kinds) in
+  `data/editions/paper.json`, ordered by one `composePaper` both writer and app
+  consume — expiry, then supersession as a data table, then period over kind
+  over recency. A ledger carries covered-keys (idempotence) and threads that
+  WEAR OUT, so a 38-week season cannot run one joke for twenty weeks.
+- **The newsdesk decides.** `newsdesk()` turns what is new since the last
+  filing into an argued running order; the crons are only when the desk LOOKS.
+  Match reports ranked by draft stakes, ties called mid-round, tonight's
+  preview when an open tie has men on both sides.
+- **The banter set landed**: predictions (marked the week after), the eleven's
+  captions, power rankings, the Points Dodgers, The Bin with obituaries and a
+  quiz, and two sketches — the paper's only licensed invented quotes, both of
+  which say out loud that they are sketches.
+- **The news wire**: a 40-line RSS reader, no XML dependency, keyed on the
+  article URL because the BBC's guid double-covers. Filed as squad news for
+  the manager it hits, never as a club story.
+- **Journalism leads at all times.** The old *As it stands* splash became a
+  scoreboard strip with your own tie promoted to *The Pink*'s scoreline banner
+  while a ball is in the air. The front page prints ONE article and headlines
+  the rest, each opening in place.
+- **Three tables**, in the sidebar as a back page carries them: the draft
+  table (Fantrax verbatim), the Premier League (computed — FPL's own table is
+  a dead field, 0 of 20 populated) and the season's scorers (Fantrax's
+  published FPts, three of the top ten unowned).
+- **The splash drawing**, fail-soft: an editorial cartoon printed through
+  `.paper-photo` so it cannot introduce a third colour.
+
+**Reverted the same day:** inside pages under `/paper`. The Gazetta is one
+section of six, not a site inside the site — a second paper route needs a
+folio and a contents strip, which means printing the desk's own navigation in
+newsprint.
+
+**Craig's items:** `OPENAI_API_KEY` as a repository secret (optional — without
+it every edition files exactly as it does now, with a typographic band instead
+of a drawing); sign off the persona copy in `scripts/edition/voice/bylines.ts`
+and `personas.ts` (the studio pair, the press-room traits, the edition names);
+fill `data/derbies.json` if derbies are wanted; and decide the §2b layout
+items still parked — unequal column widths and the tables side by side.
+
 ## Explicitly parked
 
 `apps/lab` · FPL authenticated endpoints · member-held cookies in any form ·
