@@ -1,5 +1,6 @@
 import PageHeader from "../components/shell/PageHeader";
 import Skeleton from "../components/shell/Skeleton";
+import { BUTTON } from "../components/shell/ButtonLink";
 
 // The pool, waiting on Fantrax's 533 KB of stats.
 //
@@ -18,20 +19,27 @@ export default function Loading() {
           name="q"
           placeholder="Find a player"
           aria-label="Find a player"
-          className="min-h-11 min-w-0 flex-1 border border-line bg-surface px-3 text-base"
+          className="cm-panel min-h-11 min-w-0 flex-1 px-3 text-base"
         />
         <button
           type="submit"
-          className="min-h-11 border border-line px-3 text-sm font-medium hover:bg-raised"
+          className={BUTTON}
         >
           Find
         </button>
       </form>
 
+      {/* Real plates with a bar in them, not blocks the shape of one. `cm-tab`
+          owns the height, so these cannot drift from the chips that land in
+          them the way a copied `2.75rem` did — and an empty bevelled tab is
+          Championship Manager's own idiom for one with nothing in it yet
+          (`cm9900/12.jpg`, the greyed "Unused" pair). */}
       <div className="flex flex-wrap gap-1.5">
-        <Skeleton width="7rem" height="2.75rem" />
-        <Skeleton width="6rem" height="2.75rem" />
-        <Skeleton width="4rem" height="2.75rem" />
+        {["7rem", "6rem", "4rem"].map((width) => (
+          <span key={width} className="cm-tab flex items-center px-3" style={{ width }}>
+            <Skeleton width="100%" height="0.875rem" />
+          </span>
+        ))}
       </div>
 
       {/* The table's own row: a 32px mark on his club's colour, then his name.

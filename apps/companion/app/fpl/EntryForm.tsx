@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { rememberEntry } from "./actions";
+import { BUTTON } from "../components/shell/ButtonLink";
 
 // Your FPL team id — the number in the URL when you look at your own points on
 // the FPL site. Client only so a bad number can be answered without losing the
@@ -29,12 +30,12 @@ export default function EntryForm() {
           inputMode="numeric"
           required
           placeholder="1234567"
-          className="numeric min-h-11 min-w-0 flex-1 border border-line bg-raised px-3 text-base text-ink placeholder:text-faint"
+          className="cm-panel numeric min-h-11 min-w-0 flex-1 px-3 text-base text-ink placeholder:text-faint"
         />
         <button
           type="submit"
           disabled={pending}
-          className="min-h-11 bg-raised px-4 text-sm font-bold text-ink disabled:opacity-50"
+          className={`${BUTTON} shrink-0 font-bold disabled:opacity-50`}
         >
           {pending ? "…" : "Save"}
         </button>

@@ -32,7 +32,9 @@ export default function ViewToggle({
     <div
       role="group"
       aria-label="How to show the squad"
-      className="flex border border-line bg-surface p-0.5"
+      // The plates butt against each other, which is how CM draws a strip; the
+      // box-with-a-gap around them was a modern segmented control.
+      className="flex"
     >
       <ViewButton current={view} value="pitch" onPick={onPick} />
       <ViewButton current={view} value="list" onPick={onPick} />
@@ -55,9 +57,14 @@ function ViewButton({
       type="button"
       onClick={() => onPick(value)}
       aria-pressed={here}
+      // Pressed rather than filled. The affordance and the state are one
+      // object, which is how the game said it and how `league/Columns` already
+      // draws a sorted column head — and it keeps the two plates the same
+      // colour, so the strip cannot shift as you move along it. `aria-pressed`
+      // carries the state for a reader who cannot see a bevel.
       className={`min-h-9 px-3.5 text-xs font-semibold capitalize ${
- here ?"bg-raised text-ink":"text-faint hover:text-muted"
-}`}
+        here ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110"
+      }`}
     >
       {value}
     </button>

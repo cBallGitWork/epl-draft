@@ -3,6 +3,7 @@
 import type { Move, SlotOption } from "@epl/core";
 import Modal from "../shell/Modal";
 import MoveSheet from "./MoveSheet";
+import { BUTTON } from "../shell/ButtonLink";
 
 // Everywhere one player can go, over the pitch rather than under it.
 //
@@ -44,7 +45,7 @@ export default function MoveDialog({
         <button
           type="button"
           onClick={onClose}
-          className="min-h-11 border border-line px-3 text-sm font-medium hover:bg-raised"
+          className={BUTTON}
         >
           Close
         </button>

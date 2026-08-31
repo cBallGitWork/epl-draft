@@ -110,18 +110,31 @@ function GameweekLink({
   label: string;
   align?: "start" | "end";
 }) {
-  const classes = `min-h-11 flex-1 border border-line px-3 py-2.5 ${
+  const classes = `min-h-11 flex-1 px-3 py-2.5 lg:min-h-9 ${
     align === "end" ? "text-right" : ""
   }`;
 
+  // Not a plate, deliberately. Championship Manager fills the gap in a foot row
+  // with a greyed "Unused" tab (`cm9900/12.jpg`), and a plate that does nothing
+  // is the one thing worse than a gap — so a round that is not there keeps its
+  // place with a flat outline, and only a round you can reach is a button.
   if (gameweek === null) {
-    return <span className={`${classes} text-faint opacity-40`}>{label}</span>;
+    return (
+      <span className={`${classes} border border-line text-faint opacity-40`}>{label}</span>
+    );
   }
 
+  // CM's foot pair — its own Back and Next. A bevel because it is a control, and
+  // the plate owns its ink: no `text-*` here, and the round loses its `--muted`
+  // for the same reason, which on the grey plate is 1.5:1 and was legible only
+  // because the plate was not there yet.
   return (
-    <Link href={`/gw/${gameweek}`} className={`${classes} font-medium hover:bg-raised`}>
+    <Link
+      href={`/gw/${gameweek}`}
+      className={`cm-bevel ${classes} font-medium hover:brightness-110`}
+    >
       {label}
-      <span className="numeric text-muted"> · GW{gameweek}</span>
+      <span className="numeric"> · GW{gameweek}</span>
     </Link>
   );
 }

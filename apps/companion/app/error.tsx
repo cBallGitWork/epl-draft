@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { BUTTON } from "./components/shell/ButtonLink";
 
 // What a reader sees when a read throws.
 //
@@ -48,7 +49,7 @@ export default function SectionError({
       <button
         type="button"
         onClick={reset}
-        className="min-h-11 border border-line px-4 text-sm font-medium hover:bg-raised"
+        className={BUTTON}
       >
         Try again
       </button>

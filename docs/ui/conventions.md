@@ -71,7 +71,7 @@ No fluid clamps except inside the masthead.
 | `shell/PageHeader` | How a section opens: crest, title, one sub-line. |
 | `shell/Nothing` | A page that cannot show what it exists to show, saying why — with the provider's own error code on screen. |
 | `shell/Section` | A headed block with a rule under it. |
-| `shell/ButtonLink` | The one way out of a page. `BUTTON` exports the classes for the single external anchor that cannot be a router link. |
+| `shell/ButtonLink` | The one way out of a page, drawn as CM's own button (`cm-bevel`). `BUTTON` exports the plate for everything that presses but is not a link — the two dialogs' foot pairs, the search's submit, the error page's way back, the planner's external anchor. Ten sites had written the bordered box out by hand. |
 | `shell/Rail` | Championship Manager's left rail — the app's sections stacked down the side of every desk screen, 64px on a phone and 130 above `lg`, one shape at every width. Stands down on `/`. The Live section only exists while football is on. |
 | `shell/sections` | The six sections as data, and which one a path is in. The rail and the paper's index both print it. |
 | `gazette/Index` | The same six in the paper's register — letterspaced small capitals between two hairlines — because the rail is not on the front page and a front page with no way out is a dead end. |

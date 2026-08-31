@@ -20,7 +20,7 @@ function Action({ label, onPlay }: { label: string; onPlay: () => void }) {
     <button
       type="button"
       onClick={onPlay}
-      className="min-h-11 border border-line bg-surface px-3 text-left text-sm font-medium hover:bg-raised"
+      className="cm-bevel flex min-h-11 w-full items-center px-3 text-left text-sm font-medium hover:brightness-110 lg:min-h-9"
     >
       {label}
     </button>

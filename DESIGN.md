@@ -52,6 +52,25 @@ every screen over a darkened match photograph. We keep the darkness and the
 blueness and drop the photograph — it fails AA outright and no amount of scrim
 fixes a ground that changes under the text.
 
+**Which way a surface faces is the whole grammar, and it has three answers.**
+
+| | Class | What it is |
+|---|---|---|
+| **Raised** | `cm-bevel` | something you press — a button, a dropdown, a column head, a way out of a page |
+| **Pressed** | `cm-bevel-pressed` | the same thing, held down: the sorted column, the view you are on |
+| **Sunken** | `cm-panel` | a well cut into the chrome — a panel, and a text field, which is a panel one line tall |
+
+A blue plate (`cm-tab`, `cm-titlebar`) is the same mechanism in chrome rather
+than grey: the title bar every screen opens with, and any strip where you pick
+one of a set — the League's three views, the section rail, the pool's filters.
+The one you are on is drawn PRESSED with the accent on its label, so the
+affordance and the state are one object rather than two marks.
+
+**A plate owns its ink.** Dark ink on the grey plate is 7.52:1 and `--color-ink`
+on it is 2.27; on the blue plate ink is 7.0 and `--color-muted` is 3.55 and
+fails. So no call site sets `text-*` on either, and a count inside a tab is the
+label's own colour — which is how the game printed "Fitness (40)".
+
 ## 3. The Desk's palette
 
 Each colour is a **slot with one meaning**. This is CM's actual grammar and it

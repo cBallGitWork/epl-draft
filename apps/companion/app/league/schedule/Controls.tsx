@@ -113,7 +113,7 @@ export default function Controls({
       <noscript>
         <button
           type="submit"
-          className="min-h-11 border border-line px-3 text-sm font-medium"
+          className="cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9"
         >
           Show
         </button>
@@ -146,7 +146,12 @@ function Select({
       aria-label={label}
       value={value}
       onChange={onPick}
-      className="min-h-11 min-w-0 flex-1 border border-line bg-surface px-2.5 text-sm font-semibold text-ink"
+      // CM's control strip: a bevelled grey plate with the native indicator on
+      // it. The plate owns its ink — dark on grey at 7.52:1 — so no `text-*`
+      // here, and no ground either. Only the closed control is ours; the option
+      // list is the platform's popup and cannot be styled, which is the reason
+      // this is still a `<select>`.
+      className="cm-bevel min-h-11 min-w-0 flex-1 px-2.5 text-sm font-semibold lg:min-h-9"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>

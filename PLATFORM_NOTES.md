@@ -3863,6 +3863,42 @@ and `app/standings.ts` now reads the page once and hands out both.
 
 ## Season log
 
+- 2026-08-31: **Every control on the desk became a Championship Manager plate,
+  and the foot button row landed without anybody inventing one.** The plan's L4
+  proposed a global foot bar in `layout.tsx` and never said what would be in it —
+  CM's foot strip is always a set of RELATED SCREENS, and ours is already
+  `SectionNav` at the top, so a global bar would have been furniture. What the
+  screens actually lacked was not a row but a look: `/matchday` and `/gw/[n]`
+  already end in a pair of ways out, and drawing them the game's way is the whole
+  of L4. `ButtonLink`'s `BUTTON` — which the plan asserted was already
+  `cm-bevel` and was in fact a 1px `--line` border — now is one, and ten
+  hand-written copies of that border went with it.
+  **Three surfaces, one grammar**, now written into DESIGN §2: raised
+  (`cm-bevel`) is something you press, pressed (`cm-bevel-pressed`) is the same
+  thing held down, sunken (`cm-panel`) is a well — a panel, and a text field,
+  which is a panel one line tall. So the FPL entry form is a sunken panel holding
+  a sunken field and a raised button, which is `cm9900/03.jpg`'s settings dialog
+  exactly. The schedule's three `<select>`s are CM's control strip; only the
+  closed control is ours, which is why they are still `<select>`s.
+  **The pool's filters were a tab strip pretending to be chips.** Bordered boxes
+  with an accent EDGE when active — a modern web chip, and a second way of saying
+  "selected" beside the pressed-and-yellow one the rest of the desk uses. They
+  are `cm-tab` now, like `league/SectionNav` and the rail, with `aria-current`
+  doing the work. Their counts lost `text-faint`: on `--color-chrome` that is
+  3.55:1 and fails, and CM prints its own count in the label's colour —
+  "Fitness (40)".
+  `.cm-tab` took the tab height with it, 44px under a thumb and 36 above `lg`,
+  because three call sites wanted the same pair and a strip whose plates disagree
+  about their height is not a strip. That let the pool's loading skeleton wear
+  the real plate with a bar inside it rather than a `2.75rem` copied off it —
+  and an empty bevelled tab is the game's own idiom for one with nothing in it
+  yet (`cm9900/12.jpg`'s greyed "Unused" pair).
+  `ViewToggle` is a raised plate and a pressed one instead of a box with a filled
+  half; the `min-h-9` exception `ROADMAP` records as Craig's is untouched.
+  The one control deliberately left alone is the sign-in submit, which is
+  `--color-league`: that is a brand decision rather than a CM one.
+  Sweep, tapfit, navfit and the dialog cycle all clean.
+
 - 2026-08-31: **The two-line rows now stack on a phone and go inline above `lg`,
   which is what finally took the desk to 28.** `.cm-row`'s `min-height` is a
   floor, so a row carrying two lines ignored it: `/players` sat at 45px and

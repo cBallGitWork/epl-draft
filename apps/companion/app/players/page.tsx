@@ -7,6 +7,7 @@ import { PAGE_ROWS, filterHref, playersQuery, showAllHref, shownRows } from "./q
 import type { PlayersSearchParams } from "./query";
 import { FANTRAX_SILENT } from "../config";
 import { positionLabel } from "../positions";
+import { BUTTON } from "../components/shell/ButtonLink";
 
 // Every player Fantrax knows, what our league has decided about him, and what
 // Fantrax scores him. The numbers are theirs under our league's scoring, which
@@ -19,11 +20,20 @@ import { positionLabel } from "../positions";
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
-function chip(active: boolean): string {
-  return `flex min-h-11 items-center gap-1.5 border px-3 text-sm font-medium ${
-    active ? "border-accent text-ink" : "border-line text-muted hover:bg-raised"
-  }`;
-}
+/** A filter, drawn as the tab it behaves like.
+ *
+ *  These pick one of a set and change what the page lists, which is what a
+ *  Championship Manager tab strip is — so they wear `cm-tab`, exactly as
+ *  `league/SectionNav` does, and the one you are on is drawn PRESSED with the
+ *  accent on its label by `desk.css`. They were bordered boxes with an accent
+ *  edge when active: a modern web chip, and a second way of saying "selected"
+ *  beside the one the rest of the desk already uses.
+ *
+ *  **No `text-*` here, and none inside.** A plate owns its ink (desk.css): on
+ *  `--color-chrome`, `--color-muted` is 3.55:1 and fails, so a count dimmed at
+ *  the call site would land under the floor on every chip. CM prints its own
+ *  count in the label's own colour — "Fitness (40)" — and so does this. */
+const CHIP = "cm-tab flex items-center gap-1 px-3 text-sm font-medium";
 
 export default async function PlayersPage({
   searchParams,
@@ -80,11 +90,11 @@ export default async function PlayersPage({
           defaultValue={(query.q ?? "").trim()}
           placeholder="Find a player"
           aria-label="Find a player"
-          className="min-h-11 min-w-0 flex-1 border border-line bg-surface px-3 text-base"
+          className="cm-panel min-h-11 min-w-0 flex-1 px-3 text-base"
         />
         <button
           type="submit"
-          className="min-h-11 border border-line px-3 text-sm font-medium hover:bg-raised"
+          className={BUTTON}
         >
           Find
         </button>
@@ -97,19 +107,19 @@ export default async function PlayersPage({
             <Link
               key={code}
               href={filterHref(query, "status", code)}
-              aria-current={query.status === code ? "true" : undefined}
-              className={chip(query.status === code)}
+              aria-current={query.status === code ? "page" : undefined}
+              className={CHIP}
             >
               {STATUS[code] ?? code}
-              <span className="numeric text-2xs text-faint">{count}</span>
+              <span className="numeric">({count})</span>
             </Link>
           ))}
         {pool.positions.map((position) => (
           <Link
             key={position}
             href={filterHref(query, "pos", position)}
-            aria-current={query.pos === position ? "true" : undefined}
-            className={chip(query.pos === position)}
+            aria-current={query.pos === position ? "page" : undefined}
+            className={CHIP}
           >
             {positionLabel(position) ?? position}
           </Link>

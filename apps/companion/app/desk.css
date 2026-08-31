@@ -65,6 +65,22 @@
   color: var(--color-ink);
 }
 
+/* How tall a tab is, and it is the CONTROL floor rather than the row one: 44px
+   under a thumb and 36 above `lg`, which is where `league/SectionNav` and the
+   section rail already stood and where the pool's filter strip now joins them.
+   On the plate rather than on three call sites, because a tab strip whose plates
+   disagree about their height is not a strip — and because the loading skeleton
+   can then wear the real plate instead of a number copied off it. */
+.cm-tab {
+  min-height: 2.75rem;
+}
+
+@media (min-width: 64rem) {
+  .cm-tab {
+    min-height: 2.25rem;
+  }
+}
+
 /* The tab you are on. CM marked it in yellow text on a pressed tab, and this is
    one of two places the accent is allowed inside chrome. 5.32:1 on the plate.
    The plate does not change colour, so the strip cannot shift as you move along

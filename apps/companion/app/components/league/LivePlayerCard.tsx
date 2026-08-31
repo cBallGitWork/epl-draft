@@ -17,6 +17,7 @@ import { chipsFor } from "./Chips";
 import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { unresolvedReason } from "../../unresolved";
+import { BUTTON } from "../shell/ButtonLink";
 
 // What a player is scoring, and why.
 //
@@ -149,14 +150,14 @@ export default function LivePlayerCard({
         <div className="flex gap-2">
           <Link
             href={`/players/${rostered.slot.fantraxId}`}
-            className="min-h-11 flex-1 border border-line px-3 py-2.5 text-center text-sm font-medium hover:bg-raised"
+            className={`${BUTTON} flex-1`}
           >
             Full profile
           </Link>
           <button
             type="button"
             onClick={onClose}
-            className="min-h-11 flex-1 border border-line px-3 py-2.5 text-sm font-medium hover:bg-raised"
+            className={`${BUTTON} flex-1`}
           >
             Close
           </button>

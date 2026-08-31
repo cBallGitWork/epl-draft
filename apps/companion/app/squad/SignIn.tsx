@@ -38,7 +38,7 @@ export default function SignIn() {
           // exists to tighten it: this is a code being TRANSCRIBED off a message
           // one character at a time, and the space between the characters is
           // what a reader checks his typing against.
-          className="numeric min-h-11 min-w-0 flex-1 border border-line bg-raised px-3 text-base uppercase tracking-widest text-ink placeholder:text-faint"
+          className="cm-panel numeric min-h-11 min-w-0 flex-1 px-3 text-base uppercase tracking-widest text-ink placeholder:text-faint"
         />
         <button
           type="submit"
