@@ -24,6 +24,9 @@ const SECTIONS = [
 export type LeagueSection = (typeof SECTIONS)[number]["key"];
 
 export default function SectionNav({ current }: { current: LeagueSection }) {
+  // The strip fills the row. CM's four tabs run edge to edge across the whole
+  // content width (`cm9900/24.jpg`, `25.jpg`) — a tab strip is a bar, and three
+  // plates hugging the left are three buttons.
   return (
     <nav aria-label="League views" className="flex">
       {SECTIONS.map((section) => {
@@ -36,7 +39,7 @@ export default function SectionNav({ current }: { current: LeagueSection }) {
             // Red is the brand and the live signal and never a statement about
             // where you are, which is why the accent carries this and the
             // league's own colour does not.
-            className="cm-tab flex items-center px-3 text-2xs font-bold uppercase"
+            className="cm-tab flex flex-1 items-center justify-center px-3 text-2xs font-bold uppercase lg:text-sm"
           >
             {section.label}
           </Link>

@@ -73,6 +73,16 @@
   color: var(--color-ink);
 }
 
+/* The title bar is the biggest thing on a Championship Manager screen: 60px of
+   a 600px canvas, which is 3.3 times its own row. Ours was 1.2 times. See the
+   note on `.cm-tab` above — the same mistake, and this is where it showed most,
+   because a title bar is the first thing a screen says. */
+@media (min-width: 64rem) {
+  .cm-titlebar {
+    min-height: 6rem;
+  }
+}
+
 /* How tall a tab is, and it is the CONTROL floor rather than the row one: 44px
    under a thumb and 36 above `lg`, which is where `league/SectionNav` and the
    section rail already stood and where the pool's filter strip now joins them.
@@ -84,8 +94,18 @@
 }
 
 @media (min-width: 64rem) {
+  /* **3.5rem, and the tap floor was never the target.** Championship Manager's
+     tab strip is 36px on a 600px canvas against an 18px row — twice a row —
+     and ours sat at 36px against a 29px row, which is 1.2. Every plate on the
+     desk was drawn to the FLOOR the tap rule sets rather than to a size, and a
+     floor is a minimum: chrome bigger than 36 breaks nothing and chrome the
+     size of the minimum is why Craig kept saying the screens do not look like
+     the game. Measured 31 Aug against `docs/ui/reference/README.md`'s geometry.
+
+     CM is dense in its ROWS and chunky in its CHROME, and a day spent driving
+     density down applied the first half to both. */
   .cm-tab {
-    min-height: 2.25rem;
+    min-height: 3.5rem;
   }
 }
 

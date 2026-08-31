@@ -48,7 +48,7 @@ export default function PageHeader({
         {/* The same bevel mechanism with the plate turned over — the light and
             dark edges mixed off `--color-ink` instead of off the chrome. */}
         <div
-          className="flex items-center gap-2 border-2 px-2 py-1"
+          className="flex min-h-16 items-center gap-2 border-2 px-2 py-1 lg:min-h-24"
           style={{
             background: "var(--color-ink)",
             borderColor:
@@ -56,7 +56,7 @@ export default function PageHeader({
           }}
         >
           <h1
-            className="min-w-0 flex-1 truncate text-center font-chrome text-base font-bold"
+            className="min-w-0 flex-1 truncate text-center font-chrome text-xl font-bold lg:text-3xl"
             style={{ color: "var(--color-chrome)" }}
           >
             {title}
