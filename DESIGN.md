@@ -62,9 +62,18 @@ fixes a ground that changes under the text.
 
 A blue plate (`cm-tab`, `cm-titlebar`) is the same mechanism in chrome rather
 than grey: the title bar every screen opens with, and any strip where you pick
-one of a set — the League's three views, the section rail, the pool's filters.
-The one you are on is drawn PRESSED with the accent on its label, so the
-affordance and the state are one object rather than two marks.
+one of a set — the League's three views, the pool's filters. The one you are on
+is drawn PRESSED with the accent on its label, so the affordance and the state
+are one object rather than two marks.
+
+**The section rail is not one of these**, and this paragraph named it as one for
+half a day. Championship Manager draws two different objects and they appear in
+the same screenshot: the tab strip under a title bar is a filled plate with a
+pressed yellow current tab, and the RAIL is the page's own navy with each entry
+in a thin outlined box (`cm9900/12.jpg`, `19.jpg`). `shell/Rail` is outlined, and
+marks the current section with the accent on its label AND on its border —
+which is what the reference actually shows, measured in the library's own palette
+table.
 
 **A plate owns its ink.** Dark ink on the grey plate is 7.52:1 and `--color-ink`
 on it is 2.27; on the blue plate ink is 7.0 and `--color-muted` is 3.55 and
@@ -289,11 +298,30 @@ Recorded so the next agent does not read the absence as an oversight.
 Craig's answers on the wireframe canvas. Where one contradicts §8 above or the
 overhaul plan, this section wins.
 
-**The pitch stays the squad screen's default.** The plan and the boards both
-proposed demoting it to a toggle behind a dense table; that is rejected. So
-`/squad/[teamId]` keeps its pitch, keeps the 390×844 no-scroll budget, and keeps
-its standing as the reference page — `docs/ui/squad.md` and `docs/ui/README.md`
-are not retired.
+~~**The pitch stays the squad screen's default.**~~ **Reversed 31 Aug 2026,
+Craig: "maybe the squad page doesn't need a pitch, and we save that for the live
+match h2h, gives us more space too since it's eleven."** Recorded here rather
+than in a child, because a child cannot amend this section and for two days the
+tree said one thing and the binding doc said the other.
+
+What was decided on 29 Aug and is now overturned: the plan and the boards
+proposed demoting the pitch to a toggle behind a dense table, and that was
+rejected. The reversal goes further than the demotion did — `SquadPitch` is
+deleted, not hidden.
+
+The reasoning, so the next reversal has something to argue with. **The gated
+board draws FIFTEEN with no arrangement**, because the arrangement is exactly
+what the gate withholds, and a pitch is a drawing of a shape: fifteen men in
+position lines is a diagram of something nobody picked. Championship Manager's
+own squad screen is a table (`cm9900/25.jpg`, and `10.jpg`). The eleven that IS
+a shape keeps its pitch — on the head-to-head and on the planner — where there
+are four fewer men and room for each.
+
+Two consequences. `/squad/[teamId]` is no longer the reference page for the
+pitch; the head-to-head is. And **the 390×844 no-scroll budget is now about the
+PITCH clearing the fold, not the page** — the page scrolls by design, because the
+season grid is a second panel under the board. `tools/ui/pitchfit.mjs` is what
+checks it. `docs/ui/squad.md` and `docs/ui/README.md` are still not retired.
 
 The consequence is the part worth writing down. §8 defers the 6–7px clamp floors
 on the player cards as "survivable only once the pitch is demoted". **That escape
