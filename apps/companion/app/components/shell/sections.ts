@@ -10,12 +10,17 @@
 // index is a server one, and a plain table crosses that line without either of
 // them having to care.
 
+/** The paper's territory: the front page, and the inside pages under `/paper`.
+ *  One list, because two things key off it — the Gazetta section marks itself
+ *  on any of them, and the desk's rail stands down on all of them. */
+const PAPER_ROUTES = ["/", "/paper"];
+
 /** Each section owns a set of routes, not just the one it links to: a manager
  *  reading a squad or a past gameweek is still in that section, and navigation
  *  that goes blank as soon as you tap into a detail page has stopped saying
  *  where you are. */
 export const SECTIONS = [
-  { href: "/", label: "Gazetta", routes: ["/"] },
+  { href: "/", label: "Gazetta", routes: PAPER_ROUTES },
   { href: "/league", label: "League", routes: ["/league"] },
   { href: "/squad", label: "Squads", routes: ["/squad"] },
   // "Live" rather than "Matchday": the section only exists while football is on,
@@ -27,4 +32,11 @@ export const SECTIONS = [
 
 export function owns(routes: readonly string[], pathname: string): boolean {
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
+}
+
+/** Whether a route is newsprint rather than desk. The rail asks it to stand
+ *  down; anything else that needs to know which register it is under asks here
+ *  rather than keeping its own list of paper routes. */
+export function isPaperRoute(pathname: string): boolean {
+  return owns(PAPER_ROUTES, pathname);
 }

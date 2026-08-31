@@ -1,22 +1,19 @@
 import { LEAGUE_NAME } from "@epl/core";
-import Column from "./components/gazette/Column";
-import Masthead from "./components/gazette/Masthead";
-import Skeleton from "./components/shell/Skeleton";
+import Column from "../components/gazette/Column";
+import Masthead from "../components/gazette/Masthead";
+import Skeleton from "../components/shell/Skeleton";
 
 // The front page, printed before the news has come in.
 //
 // The masthead is the real one: nothing on it is read from Fantrax, so the paper
 // carries its own name, its rule and its standing line from the first paint and
-// only the stories are waiting. The wrapper is `page.tsx`'s own, so the `.paper`
-// register is already on and the edition lands into these blocks rather than
-// re-colouring the screen under the reader.
+// only the stories are waiting. The wrapper — and with it the `.paper`
+// register and the serifs — is the group layout's, so the edition lands into
+// these blocks rather than re-colouring the screen under the reader.
 
 export default function Loading() {
   return (
-    <div
-      aria-busy
-      className="paper -mx-[var(--page-gutter)] -mt-[var(--page-gutter)] flex flex-col gap-5 px-[var(--page-gutter)] pb-8 pt-4"
-    >
+    <div aria-busy className="flex flex-col gap-5">
       {/* No dateline yet — it is a claim about when the edition was assembled, and
           the masthead already answers null with the paper's own name. */}
       <Masthead at={null} line={`${LEAGUE_NAME}, week by week.`} />

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SECTIONS } from "../shell/sections";
+import { SECTIONS, owns } from "../shell/sections";
 
 // The paper's contents strip: where else in the app to go, printed.
 //
@@ -15,12 +15,17 @@ import { SECTIONS } from "../shell/sections";
 // Archivo and not the body serif, on §6's rule: a serif at nine pixels with
 // 0.16em of tracking is a smudge, and an index is furniture rather than prose.
 
-/** The route this strip is printed on, and therefore the one it marks. A server
- *  component on exactly one page does not need `usePathname` to know where it
- *  is. */
-const HERE = "/";
-
-export default function Index({ matchday }: { matchday: boolean }) {
+export default function Index({
+  matchday,
+  here,
+}: {
+  matchday: boolean;
+  /** The route this strip is printed on, and therefore the one it marks. A
+   *  server component is told where it is by the page that prints it, which is
+   *  cheaper and stiller than `usePathname` and keeps the strip out of the
+   *  client bundle. */
+  here: string;
+}) {
   const sections = SECTIONS.filter((section) => matchday || !section.onlyDuringGameweek);
 
   return (
@@ -33,15 +38,15 @@ export default function Index({ matchday }: { matchday: boolean }) {
       className="flex flex-wrap items-center justify-between gap-x-3 border-y border-line font-sans text-3xs font-semibold uppercase tracking-[0.16em]"
     >
       {sections.map((section) => {
-        const here = section.href === HERE;
+        const current = owns(section.routes, here);
         return (
           <Link
             key={section.href}
             href={section.href}
-            aria-current={here ? "page" : undefined}
+            aria-current={current ? "page" : undefined}
             // The sheet's one red is the accent slot on the paper, and "where
             // you are" is what the accent says in both registers.
-            className={`flex min-h-11 items-center ${here ? "text-accent" : "text-muted"}`}
+            className={`flex min-h-11 items-center ${current ? "text-accent" : "text-muted"}`}
           >
             {section.label}
           </Link>

@@ -1,22 +1,20 @@
-import type { Viewport } from "next";
 import { LEAGUE_NAME, clubById } from "@epl/core";
-import AsItStands from "./components/gazette/AsItStands";
-import Deals from "./components/gazette/Deals";
-import Doubts from "./components/gazette/Doubts";
-import Lead, { Headline } from "./components/gazette/Stories";
-import Picture from "./components/gazette/Picture";
-import Written from "./components/gazette/Written";
-import Index from "./components/gazette/Index";
-import Masthead from "./components/gazette/Masthead";
-import TeamOfTheWeek from "./components/gazette/TeamOfTheWeek";
-import { FANTRAX_SILENT, SECONDARY_STORIES, servedLeague } from "./config";
-import Column from "./components/gazette/Column";
-import Nothing from "./components/shell/Nothing";
-import { edition } from "./edition";
-import { fraunces, newsreader } from "./paperFonts";
-import { londonDate, londonDayAndTime } from "./londonTime";
-import { readerTeamId } from "./squads";
-import { offerLive } from "./football";
+import AsItStands from "../components/gazette/AsItStands";
+import Deals from "../components/gazette/Deals";
+import Doubts from "../components/gazette/Doubts";
+import Lead, { Headline } from "../components/gazette/Stories";
+import Picture from "../components/gazette/Picture";
+import Written from "../components/gazette/Written";
+import Index from "../components/gazette/Index";
+import Masthead from "../components/gazette/Masthead";
+import TeamOfTheWeek from "../components/gazette/TeamOfTheWeek";
+import { FANTRAX_SILENT, SECONDARY_STORIES, servedLeague } from "../config";
+import Column from "../components/gazette/Column";
+import Nothing from "../components/shell/Nothing";
+import { edition } from "../edition";
+import { londonDate, londonDayAndTime } from "../londonTime";
+import { readerTeamId } from "../squads";
+import { offerLive } from "../football";
 
 // The Gazetta. What the league did this week, on the front page.
 //
@@ -27,18 +25,9 @@ import { offerLive } from "./football";
 //
 // Sections that have nothing to say do not appear. An edition padded out with
 // "no transactions this week" is a worse paper than a shorter one.
-
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
-export const revalidate = 30;
-
-// The paper is the one surface that is not dark, so it is the one surface whose
-// browser chrome the root layout gets wrong: an iOS address bar in the app's
-// dark chrome above a cream page is a seam across the top of the front page.
-// sRGB of `--paper` in tokens.css, repeated as a literal for the same reason the
-// layout repeats `--color-bg` — this is serialised into a <meta> tag at build
-// time and cannot read a CSS variable. Change both together.
-export const viewport: Viewport = { themeColor: "#f6ddd2" };
+//
+// The `.paper` register, the serifs, the cream chrome and the poll cadence are
+// the group layout's — `(paper)/layout.tsx` — so this file is only the edition.
 
 /** Draft night for the league we are actually serving — the two draft nine weeks
  *  apart, so this is read from config rather than written down. */
@@ -60,25 +49,11 @@ export default async function GazettePage() {
     teamId === null ? "the wire" : (names.get(teamId) ?? "—");
 
   return (
-    // The two serifs are declared here and nowhere else. A route that is not the
-    // paper never mounts them, which is the whole reason `paperFonts.ts` is not
-    // in the layout.
-    //
     // The paper's second column is a SIDEBAR here and never a "rail". The desk
     // has a rail now — `shell/Rail`, the six sections down the left — and one
     // word for two different columns in one codebase is how a reader ends up
     // reading the wrong file.
-    //
-    // `@container` and not a breakpoint, for everything below: what decides
-    // whether this page can be a broadsheet is the width of the FRAME, not of
-    // the window. A `lg:` breakpoint engages at a 1024px window whatever the
-    // frame is doing, and while the frame was 42rem that cut a 640px page into
-    // 304 and 304 — two equal columns, which is not a lead and a sidebar. The
-    // frame is wider now and the sidebar does arrive, but asking the container is what
-    // makes that a consequence of there being room rather than a coincidence.
-    <div
-      className={`paper @container ${fraunces.variable} ${newsreader.variable} -mx-[var(--page-gutter)] -mb-[var(--page-foot)] -mt-3 flex flex-col gap-5 px-[var(--page-gutter)] pb-[calc(2rem+var(--page-foot))] pt-4`}
-    >
+    <>
       <Masthead
         at={paper.snapshot?.fetchedAt ?? null}
         line={
@@ -90,7 +65,7 @@ export default async function GazettePage() {
         }
       />
 
-      <Index matchday={matchday} />
+      <Index matchday={matchday} here="/" />
 
       <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">
         {/* The lead column. `--page-gutter: 0` inside it once the sidebar exists:
@@ -234,6 +209,6 @@ export default async function GazettePage() {
           ) : null}
         </div>
       </div>
-    </div>
+    </>
   );
 }

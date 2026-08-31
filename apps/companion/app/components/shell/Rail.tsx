@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { SECTIONS, owns } from "./sections";
+import { SECTIONS, isPaperRoute, owns } from "./sections";
 
 // Championship Manager's left rail: the app's sections stacked down the side of
 // every desk screen, at every width.
@@ -30,15 +30,15 @@ import { SECTIONS, owns } from "./sections";
 // Client only because the current section has to be known, and `usePathname` is
 // the only way to know it. Nothing else here is interactive.
 
-/** The paper is the other register and prints its own index (`gazette/Index`).
- *  A rail beside it would inset a broadsheet by 64px of navy — and shift the
- *  `@container` threshold the front page's two-column layout keys off, so the
- *  paper would go narrow for a reason that has nothing to do with the paper. */
-const PAPER = "/";
-
 export default function Rail({ matchday }: { matchday: boolean }) {
   const pathname = usePathname();
-  if (pathname === PAPER) return null;
+  // The paper is the other register and prints its own index (`gazette/Index`).
+  // A rail beside it would inset a broadsheet by 64px of navy — and shift the
+  // `@container` threshold the front page's two-column layout keys off, so the
+  // paper would go narrow for a reason that has nothing to do with the paper.
+  // `sections.ts` says which routes are the paper, so an inside page added
+  // there stands the rail down without this file hearing about it.
+  if (isPaperRoute(pathname)) return null;
 
   const sections = SECTIONS.filter((section) => matchday || !section.onlyDuringGameweek);
 
