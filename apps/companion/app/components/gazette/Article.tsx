@@ -1,6 +1,9 @@
 import type { PublishedStory, StoryKind } from "@epl/core";
 import { londonDayAndTime } from "../../londonTime";
 import Paragraphs from "./Paragraphs";
+import Quiz from "./Quiz";
+import Quotes from "./Quotes";
+import Ranks from "./Ranks";
 
 // A story under the lead: the headline, and the article behind it.
 //
@@ -36,7 +39,17 @@ const KICKER: Partial<Record<StoryKind, string>> = {
   numbers: "The numbers",
 };
 
-export default function Article({ story }: { story: PublishedStory }) {
+export default function Article({
+  story,
+  named,
+  mine,
+}: {
+  story: PublishedStory;
+  /** Team names are joined at render from the ids a column returned — a name
+   *  typed by a model goes stale the day somebody renames their team. */
+  named: (teamId: string) => string;
+  mine: string | null;
+}) {
   const kicker = KICKER[story.kind];
 
   return (
@@ -74,6 +87,17 @@ export default function Article({ story }: { story: PublishedStory }) {
         </span>
       </summary>
       <Paragraphs text={story.body} className="pt-2.5 text-sm leading-relaxed text-ink" />
+      {/* What the column filed BESIDE its prose. A kind that carries none of
+          it renders none of it: every one of these returns null on an empty
+          list, so a story is never followed by an empty heading. */}
+      <Ranks story={story} named={named} mine={mine} />
+      {story.kind === "presser" ? (
+        <Quotes story={story} label="Staged for the paper — nobody said any of this" />
+      ) : null}
+      {story.kind === "studio" ? (
+        <Quotes story={story} label="A sketch — nobody said any of this" />
+      ) : null}
+      <Quiz story={story} />
     </details>
   );
 }

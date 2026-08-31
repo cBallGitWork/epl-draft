@@ -53,6 +53,13 @@ export default async function GazettePage() {
   // One lookup for the whole paper: the lead's cut-out and the eleven's eleven
   // all want the same clubs, keyed the way a snapshot keys them.
   const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
+  // The selector's captions, if that column has filed. Keyed by player name,
+  // which is what the column was given and told to key on.
+  const captions = new Map(
+    (paper.filed.find((story) => story.kind === "eleven")?.extras?.captions ?? []).map(
+      (caption) => [caption.key, caption.line] as const,
+    ),
+  );
   const names = new Map(paper.teams.map((team) => [team.teamId, team.name]));
   const who = (teamId: string | null) =>
     teamId === null ? "the wire" : (names.get(teamId) ?? "—");
@@ -127,7 +134,7 @@ export default async function GazettePage() {
           {paper.filed.length > 1 ? (
             <div className="flex flex-col gap-1">
               {paper.filed.slice(1, HEADLINES_SHOWN + 1).map((story) => (
-                <Article key={story.slug} story={story} />
+                <Article key={story.slug} story={story} named={who} mine={paper.mine} />
               ))}
             </div>
           ) : null}
@@ -194,6 +201,7 @@ export default async function GazettePage() {
               mine={paper.mine}
               partial={paper.partial}
               fielded={paper.fielded}
+              captions={captions}
             />
           ) : null}
 
