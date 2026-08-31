@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { editionMatches, markPreview, normalizePublished } from "./published";
+import { markPreview, normalizePublished } from "./published";
 import type { PublishedEdition } from "./published";
 import type { StoryResult } from "./types";
 
@@ -22,38 +22,6 @@ const result = (winner: string, loser: string): StoryResult => ({
   winner: { teamId: winner, name: winner, points: 45 },
   loser: { teamId: loser, name: loser, points: 31 },
   margin: 14,
-});
-
-describe("editionMatches", () => {
-  it("prints a column only for the round on screen", () => {
-    // The newest edition on disk is last week's for most of every week. Printed
-    // unchecked, the paper reports a round that finished eight days ago under
-    // today's masthead.
-    expect(editionMatches(edition({ period: 1 }), 1, "report", "zbn1z3ukmsgb36sz")).toBe(true);
-    expect(editionMatches(edition({ period: 1 }), 2, "report", "zbn1z3ukmsgb36sz")).toBe(false);
-  });
-
-  // The 10 Oct swap in miniature. Both leagues number their periods from the same
-  // Friday — verified byte-identical in today's captures — so period and kind
-  // alone match an edition written about the rehearsal league to the real
-  // league's front page, and print a column naming test2 and test3 to sixteen
-  // people. CI writes the column with whatever `FANTRAX_LEAGUE_ID` it inherits;
-  // the page must not take one on trust.
-  it("refuses a column written about another league", () => {
-    const rehearsal = edition({ leagueId: "zbn1z3ukmsgb36sz" });
-    expect(editionMatches(rehearsal, 1, "report", "zbn1z3ukmsgb36sz")).toBe(true);
-    expect(editionMatches(rehearsal, 1, "report", "ayyoh3n2mr326v2o")).toBe(false);
-  });
-
-  it("will not print a preview as a report, or the other way round", () => {
-    expect(editionMatches(edition({ kind: "preview" }), 1, "report", "zbn1z3ukmsgb36sz")).toBe(false);
-    expect(editionMatches(edition({ kind: "preview" }), 1, "preview", "zbn1z3ukmsgb36sz")).toBe(true);
-  });
-
-  it("treats no edition and no round as ordinary", () => {
-    expect(editionMatches(null, 1, "report", "zbn1z3ukmsgb36sz")).toBe(false);
-    expect(editionMatches(edition(), null, "report", "zbn1z3ukmsgb36sz")).toBe(false);
-  });
 });
 
 describe("normalizePublished", () => {

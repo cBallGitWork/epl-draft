@@ -7,16 +7,15 @@ import {
   normalizeStory,
   recordCoverage,
   type Ledger,
-  type PublishedEdition,
   type PublishedStory,
   type ThreadUpdate,
 } from "@epl/core";
 import { EDITIONS_ROOT } from "../paths";
 
-// Where a filing lands: the paper, the ledger, the archive, and (until the app
-// reads the paper directly) the latest.json mirror. All in one commit, which is
-// why the validation here is load-bearing — these commits ride GITHUB_TOKEN and
-// run no CI, so what this file refuses is the only refusal there is.
+// Where a filing lands: the paper, the ledger, the archive. All in one commit,
+// which is why the validation here is load-bearing — these commits ride
+// GITHUB_TOKEN and run no CI, so what this file refuses is the only refusal
+// there is.
 
 const PAPER_PATH = join(EDITIONS_ROOT, "paper.json");
 const LEDGER_PATH = join(EDITIONS_ROOT, "ledger.json");
@@ -48,9 +47,6 @@ export function readLedger(): Ledger {
 
 export interface Filing {
   story: PublishedStory;
-  /** The old shape, mirrored to latest.json while the app still reads it. Null
-   *  once a filing kind has no old shape to mirror. */
-  mirror: PublishedEdition | null;
   spentKeys: readonly string[];
   threads: readonly ThreadUpdate[];
 }
@@ -85,8 +81,4 @@ export function persistFiling(filing: Filing, ledger: Ledger, now: string): void
     LEDGER_PATH,
     `${JSON.stringify(recordCoverage(ledger, story.leagueId, filing.spentKeys, filing.threads, now), null, 2)}\n`,
   );
-
-  if (filing.mirror !== null) {
-    writeFileSync(join(EDITIONS_ROOT, "latest.json"), `${JSON.stringify(filing.mirror, null, 2)}\n`);
-  }
 }

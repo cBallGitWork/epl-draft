@@ -1,20 +1,19 @@
 import {
-  FANTRAX_LEAGUE_ID,
   type AvailabilityNote,
   type Deadline,
   type Deal,
   type FootballSnapshot,
-  type PublishedEdition,
+  type PublishedStory,
   type Story,
   type LeagueInfo,
   type RosteredTeam,
   type LeagueTeam,
   type TeamOfTheWeek,
   availability,
+  composePaper,
   deals,
   isMatchdayLive,
   nextDeadline,
-  editionMatches,
   stories,
   teamOfTheWeek,
   wasFielded,
@@ -23,7 +22,7 @@ import { type Board, readBoard } from "./board";
 import { readDeals } from "./business";
 import { roundUnderway, seasonKickoffs } from "./football";
 import { yoursFirst } from "./mine";
-import { edition as published } from "./paper";
+import { filed } from "./paper";
 import { type LeagueSquads, getLeagueSquads } from "./squads";
 
 // What today's paper is made of.
@@ -108,13 +107,15 @@ export interface Edition {
    *  players did is football and stands either way, which is why the eleven
    *  itself still prints. */
   fielded: boolean;
-  /** The written column, when one has been filed about the round in view.
+  /** The written lead: the top of the rolling paper's running order, or null
+   *  when nothing has ever been filed.
    *
-   *  Null is the ordinary state and not a failure: a column is filed twice a
-   *  week, so for most of every week the newest one on disk is about a round
-   *  that is no longer on screen — and the paper then prints its facts and no
-   *  prose rather than last week's opinions under today's dateline. */
-  written: PublishedEdition | null;
+   *  Unlike the old one-column-a-round shape, this does NOT go null between
+   *  rounds — a paper keeps printing its most recent edition until the next
+   *  one, and the filed instant on the column is what keeps an old opinion
+   *  honest under today's masthead. `composePaper` owns expiry and
+   *  supersession, so what leads is always the newest period's biggest word. */
+  written: PublishedStory | null;
   /** Every story the week produced, strongest first: the front page leads on the
    *  first and runs the rest as headlines under it. Empty is ordinary — a paper
    *  does not manufacture a story, so most of the week there is nothing here. */
@@ -182,13 +183,9 @@ export async function edition(mine: string | null): Promise<Edition> {
     underway,
     fielded,
     stories: told,
-    // A report once the round's football has finished, a preview at every other
-    // moment — `partial` is any dated unfinished fixture, so it knows nothing
-    // about the lock and does not claim to. The same question decides whether
-    // the desk's own stories may run.
-    written: editionMatches(published, roundPeriod, partial ? "preview" : "report", FANTRAX_LEAGUE_ID)
-      ? published
-      : null,
+    // The clock is the app edge's to read (`football.ts`'s rule), which is why
+    // the compose happens here rather than in `paper.ts`.
+    written: composePaper(filed, now)[0] ?? null,
     board,
     mine,
   };

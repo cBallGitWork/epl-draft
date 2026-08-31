@@ -14,7 +14,7 @@ export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
 export { MAX_PAPER_STORIES, composePaper } from "./frontPage";
 export { isCovered, normalizeLedger, recordCoverage } from "./ledger";
-export { editionMatches, markPreview, normalizePublished } from "./published";
+export { markPreview, normalizePublished } from "./published";
 export { normalizePaper, normalizeStory } from "./story";
 export { decided, stories } from "./stories";
 export { teamOfTheWeek } from "./teamOfTheWeek";

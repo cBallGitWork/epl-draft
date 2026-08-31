@@ -1,19 +1,20 @@
-import type { LeagueTeam, PublishedEdition } from "@epl/core";
+import type { LeagueTeam, PublishedStory } from "@epl/core";
 import Column from "./Column";
 import { londonDayAndTime } from "../../londonTime";
 
-// The written column, as filed.
+// The written lead, as filed.
 //
 // Everything else on the front page is computed from facts that update every
-// thirty seconds. This is the one part somebody wrote, twice a week, and it
-// reads differently on purpose: a headline with wordplay in it, a deck saying
-// the same thing plainly underneath so the joke is never the only thing telling
-// you what happened, and paragraphs.
+// thirty seconds. This is the one part somebody wrote, and it reads differently
+// on purpose: a headline with wordplay in it, a deck saying the same thing
+// plainly underneath so the joke is never the only thing telling you what
+// happened, and paragraphs.
 //
 // **The byline and the filing time are not decoration.** A reader is entitled to
 // know that this part of the paper is older than the numbers above it, and by
-// how much. Every other figure on the page is thirty seconds old; this could be
-// three days old and still be the current edition.
+// how much — the rolling paper prints its most recent edition until the next
+// one, so this can be days old and still be current, including under a moving
+// scoreboard. The dateline is what makes that honest.
 //
 // Team names are joined here, from ids the writer returned. He is given both and
 // told to return the id, because a name typed by a model is a name that goes
@@ -21,74 +22,66 @@ import { londonDayAndTime } from "../../londonTime";
 // first thing sixteen people do.
 
 export default function Written({
-  edition,
+  story,
   teams,
 }: {
-  edition: PublishedEdition;
+  story: PublishedStory;
   teams: readonly LeagueTeam[];
 }) {
   const named = new Map(teams.map((team) => [team.teamId, team.name]));
+  // Only a kind that predicts carries calls; everything else reports.
+  const calls = story.kind === "round-preview" || story.kind === "predictions";
 
   return (
     <section className="flex flex-col">
       {/* The column runs under its standing title, the way a column does, and
           the title is a tag rather than a line on a rule — the same inverted ink
-          chip the lead's kicker wears, because they are the same object. The
-          byline IS that title here, so it is printed once: it was on the rule
-          and again in the line beneath, which read as a paper introducing itself
-          twice. */}
-      <p className="text-center">
-        <span className="inline-block bg-ink px-2 py-1 font-sans text-2xs font-bold uppercase tracking-[0.15em] text-bg">
-          {edition.byline || (edition.kind === "preview" ? "The form guide" : "The back page")}
-        </span>
-      </p>
+          chip the lead's kicker wears, because they are the same object. */}
+      {story.byline !== "" ? (
+        <p className="text-center">
+          <span className="inline-block bg-ink px-2 py-1 font-sans text-2xs font-bold uppercase tracking-[0.15em] text-bg">
+            {story.byline}
+          </span>
+        </p>
+      ) : null}
 
       <h2 className="paper-display text-balance pt-2.5 text-center text-4xl font-black leading-[1.02] text-ink">
-        {edition.headline}
+        {story.headline}
       </h2>
-      {edition.deck ? (
-        <p className="pt-2 text-center text-lg italic leading-snug text-muted">{edition.deck}</p>
+      {story.deck ? (
+        <p className="pt-2 text-center text-lg italic leading-snug text-muted">{story.deck}</p>
       ) : null}
 
       <span className="mx-auto mt-3 h-px w-6 bg-ink" />
 
-      {/* When it was filed, and it is not decoration: every other figure on this
-          page is thirty seconds old and this could be three days old and still
-          be the current edition. A reader is entitled to know which he is
-          reading. */}
-      {edition.filedAt ? (
+      {/* When it was filed — and, once the editions carry names, which edition
+          it went out under. Not decoration: every other figure on this page is
+          thirty seconds old and this could be days old and still be the current
+          edition. A reader is entitled to know which he is reading. */}
+      {story.filedAt ? (
         <p className="pt-2.5 text-center font-sans text-3xs uppercase tracking-[0.16em] text-faint">
-          Filed {londonDayAndTime(edition.filedAt)}
+          {story.edition !== "" ? `${story.edition} · ` : ""}Filed {londonDayAndTime(story.filedAt)}
         </p>
       ) : null}
 
       {/* The one block of prose on the page, so it is the one block set the way
           prose is set: newspaper columns, and a drop cap where they start. */}
       <Paragraphs
-        text={edition.intro}
+        text={story.body}
         dropcap
         className="paper-columns pt-3 text-sm leading-relaxed text-ink"
       />
 
-      {edition.sections.map((section) => (
-        <div key={section.key} className="pt-4">
-          <p className="border-b border-line pb-1 font-sans text-2xs font-bold uppercase tracking-widest text-faint">
-            {section.heading}
-          </p>
-          <Paragraphs text={section.body} className="pt-2 text-sm leading-relaxed text-ink" />
-        </div>
-      ))}
-
-      {edition.ties.length > 0 ? (
+      {story.ties !== undefined && story.ties.length > 0 ? (
         <div className="pt-4">
-          <Column title={edition.kind === "preview" ? "He calls it" : "Tie by tie"}>
+          <Column title={calls ? "He calls it" : "Tie by tie"}>
             <ul>
-              {edition.ties.map((tie) => (
+              {story.ties.map((tie) => (
                 <li key={`${tie.homeTeamId}-${tie.awayTeamId}`} className="py-2">
                   <p className="font-sans text-2xs uppercase tracking-widest text-faint">
                     {named.get(tie.homeTeamId) ?? "—"} v {named.get(tie.awayTeamId) ?? "—"}
-                    {/* A call, marked as one. Only a preview carries these, and
-                        an unmade call prints nothing rather than a hedge. */}
+                    {/* A call, marked as one. An unmade call prints nothing
+                        rather than a hedge. */}
                     {tie.callsTeamId ? (
                       <span className="font-bold text-cream">
                         {" "}

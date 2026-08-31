@@ -10,8 +10,11 @@ import type { StoryResult } from "./types";
 // sentence about a score that has since moved is worse than no sentence. So the
 // writing happens twice a week, off the app entirely, and arrives as data.
 //
-// Nothing here reaches the network or a clock. This is the contract the writer
-// must satisfy and the check the page makes before it prints a word.
+// Nothing here reaches the network or a clock. This is the contract the round
+// prompts still write against — the writer validates their output here before
+// converting it to a rolling `PublishedStory` (`story.ts`), which is the shape
+// the page reads. When the round kinds get their own story-shaped prompts,
+// this file goes with them; `markPreview` is the part that outlives it.
 
 /** Which column this is.
  *
@@ -86,33 +89,6 @@ export interface PublishedEdition {
   intro: string;
   sections: EditionSection[];
   ties: EditionTie[];
-}
-
-/** Whether this column is about the round on screen.
- *
- *  The one check the page makes, and it is not decoration: an edition is
- *  committed to the repo and served until the next one replaces it, so on the
- *  Friday of the following week the newest column on disk is last week's. Printed
- *  unchecked, the paper would run a report of a round that finished eight days
- *  ago under a masthead dated today.
- *
- *  A mismatched edition is not an error and not a stale label — it is simply not
- *  this week's paper, so the page prints the facts and no column. */
-export function editionMatches(
-  edition: PublishedEdition | null,
-  period: number | null,
-  kind: EditionKind,
-  /** The league the app is actually serving. An edition about any other league
-   *  is not this paper, whatever period it claims. */
-  leagueId: string,
-): boolean {
-  return (
-    edition !== null &&
-    period !== null &&
-    edition.leagueId === leagueId &&
-    edition.period === period &&
-    edition.kind === kind
-  );
 }
 
 /** Coerce whatever was on disk into something a page can render.

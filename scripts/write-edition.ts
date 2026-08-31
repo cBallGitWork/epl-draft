@@ -158,11 +158,7 @@ async function main(): Promise<void> {
   if (published === null) throw new Error("The column did not come back in a shape the page can print.");
 
   const story = storyOfEdition(published, spent, kickoff);
-  persistFiling(
-    { story, mirror: published, spentKeys: [spent], threads: [] },
-    ledger,
-    new Date().toISOString(),
-  );
+  persistFiling({ story, spentKeys: [spent], threads: [] }, ledger, new Date().toISOString());
   say(`Filed ${kind} for gameweek ${snapshot.gameweek}: "${published.headline}"`);
 }
 

@@ -106,7 +106,7 @@ export default async function GazettePage() {
               {paper.stories[0] ? (
                 <Picture lead={paper.stories[0]} who={who} clubs={clubs} />
               ) : null}
-              <Written edition={paper.written} teams={paper.teams} />
+              <Written story={paper.written} teams={paper.teams} />
             </>
           ) : paper.stories[0] ? (
             <Lead lead={paper.stories[0]} who={who} clubs={clubs} />
