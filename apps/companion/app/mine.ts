@@ -1,4 +1,4 @@
-// Marking the reader's own team on a list of sixteen, and putting it first.
+// Marking the reader's own team on a list of ten, and putting it first.
 //
 // One treatment everywhere, because it is a reading aid rather than decoration:
 // a manager scanning the standings, the fixtures, the doubts and the front page
@@ -27,6 +27,20 @@ export function yoursBorder(yours: boolean): string {
  *  have that problem, which is why `yoursBorder` leaves the other side bare. */
 export function yoursEdge(yours: boolean): string {
   return yours ? EDGE : "border-l-4 border-l-transparent";
+}
+
+/** The same mark in INK, for the team's own name.
+ *
+ *  The edge marks the row; this marks the word, and the two are one treatment —
+ *  which is why they live together. Seven screens had hand-copied the pair of
+ *  tokens after `yoursBorder`/`yoursEdge` had already ended the copying for the
+ *  border half.
+ *
+ *  Yellow rather than cyan for yours, and the reason is a slot rule rather than
+ *  a preference: cyan is "a person" in this palette, and a fantasy team is named
+ *  after one without being one. */
+export function yoursInk(yours: boolean): string {
+  return yours ? "text-accent" : "text-ink";
 }
 
 /** The same list, with the reader's own at the top.

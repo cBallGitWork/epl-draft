@@ -36,7 +36,7 @@ export const WRONG_CODE_DELAY_MS = 700;
  *  Here rather than in core, because core serves any consumer of this league and
  *  only this companion prints a paper. */
 export const PAPER_NAME = "The Gazetta";
-export const PAPER_STANDING_LINE = "Sixteen managers, one league, every week";
+export const PAPER_STANDING_LINE = "Ten managers, one league, every week";
 
 /** How much of the paper prints on the front page.
  *

@@ -3,7 +3,7 @@ import type { LeagueTeam, LiveTeamScore, PeriodPairing, PendingCleanSheets } fro
 import { pairingInvolves } from "@epl/core";
 import ScoreFigure from "../../components/league/ScoreFigure";
 import TeamBadge from "../../components/league/TeamBadge";
-import { yoursBorder } from "../../mine";
+import { yoursBorder, yoursInk } from "../../mine";
 import Pending from "../../components/league/Pending";
 
 // One head-to-head on the list of eight.
@@ -128,7 +128,7 @@ function Side({
       <span
         className={`min-w-0 flex-1 truncate text-sm font-semibold ${
           mirrored ? "text-right" : "text-left"
-        } ${mine ? "text-accent" : "text-ink"}`}
+        } ${yoursInk(mine)}`}
       >
         {team.name}
       </span>

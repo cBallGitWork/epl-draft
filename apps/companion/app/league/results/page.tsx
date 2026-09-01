@@ -61,14 +61,11 @@ export default async function ResultsPage() {
     byPeriod.set(result.period, period);
   }
 
-  // **Finished, and not merely started.** The first cut filtered on `started` —
-  // a ball has been kicked — and the round in play came out top of the list with
-  // its half-time scores presented as results, one side of each bolded as the
-  // winner. `Season.tsx` had already settled that: a half-time lead is not a
-  // win, and the two views must not answer that differently about the same
-  // fixture. A round still running is on Matchups and on Live, which is where a
-  // number that moves belongs; this page is the archive and everything on it is
-  // final.
+  // **Finished, and not merely started** — see `gameweekStatus` in core. The
+  // first cut filtered on `started` and the round in play came out top of the
+  // list with its half-time scores presented as results. A round still running
+  // is on Matchups and on Live, which is where a number that moves belongs; this
+  // page is the archive and everything on it is final.
   //
   // `byPeriod.has` as well, because a finished round Fantrax has not scored is
   // not a round of 0-0 draws — `PeriodResult.points` is null exactly when the

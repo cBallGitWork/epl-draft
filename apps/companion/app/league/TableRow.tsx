@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { FormGame, StandingsRow } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
 import { cellAlign } from "./Columns";
-import { yoursEdge } from "../mine";
+import { yoursEdge, yoursInk } from "../mine";
 
 // One team's line in the table.
 //
@@ -70,7 +70,7 @@ export default function TableRow({
           // of the `6 5 0 1` on the same line — because the name is what you
           // scan the table FOR and the figures are what you then read across.
           className={`cm-row flex min-h-11 items-center gap-2 text-base font-bold hover:underline lg:text-lg ${
-            mine ? "text-accent" : "text-ink"
+            yoursInk(mine)
           }`}
         >
           <TeamBadge team={{ teamId: row.teamId, name: row.teamName }} url={badge} />

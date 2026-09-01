@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { type LiveTeamScore, type PeriodPairing, pairingInvolves } from "@epl/core";
-import { yoursFirst } from "../../mine";
+import { yoursFirst, yoursInk } from "../../mine";
 import Changed from "../shell/Changed";
 import ScoreFigure from "../league/ScoreFigure";
 
@@ -132,7 +132,7 @@ function ScoreLine({
           Fraunces, and a scoreline banner is display type. */}
       <span
         className={`paper-display min-w-0 shrink truncate text-2xl font-black leading-none ${
-          yours ? "text-accent" : "text-ink"
+          yoursInk(yours)
         }`}
       >
         {name}

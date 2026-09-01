@@ -12,7 +12,7 @@ import { liveScores, pendingByTeam } from "../scoreboard";
 import { roundUnderway } from "../football";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
-import { yoursBorder } from "../mine";
+import { yoursBorder, yoursInk } from "../mine";
 import Pending from "../components/league/Pending";
 
 // Your head-to-head, at the top of the live view.
@@ -171,7 +171,7 @@ function Half({
       <span
         className={`min-w-0 flex-1 truncate text-sm font-semibold ${
           mirrored ? "text-right" : "text-left"
-        } ${mine ? "text-accent" : "text-ink"}`}
+        } ${yoursInk(mine)}`}
       >
         {team.name}
       </span>

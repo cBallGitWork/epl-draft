@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { leads } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
 import { londonDate } from "../../londonTime";
@@ -62,14 +63,10 @@ function Score({ row }: { row: SeasonRow }) {
     );
   }
 
-  // Only at full time, exactly as the scoreline does it. A half-time lead is not
-  // a win, and the two views must not answer that differently about the same
-  // fixture — this one used to mark a winner the moment a score existed.
+  // Only at full time, exactly as the scoreline does it — see `gameweekStatus`
+  // in core for why a half-time lead is not a win.
   const won =
-    row.round.status === "finished" &&
-    row.pointsFor !== null &&
-    row.pointsAgainst !== null &&
-    row.pointsFor > row.pointsAgainst;
+    row.round.status === "finished" && leads(row.pointsFor, row.pointsAgainst);
 
   return (
     <span className="numeric shrink-0 text-lg font-bold">

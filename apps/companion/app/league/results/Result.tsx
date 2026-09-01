@@ -1,7 +1,7 @@
 import Link from "next/link";
-import type { PeriodPairing, LeagueTeam } from "@epl/core";
+import { leads, type PeriodPairing, type LeagueTeam } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
-import { yoursBorder } from "../../mine";
+import { yoursBorder, yoursInk } from "../../mine";
 
 // One finished head-to-head, as a scoreline.
 //
@@ -26,9 +26,8 @@ import { yoursBorder } from "../../mine";
 // **The winner is the only thing bolder than the rest.** A finished result has
 // one fact worth the emphasis and it is who won; both totals print in full
 // because the margin is the other half of the story. Marking a winner at all is
-// only safe because the page hands this FINISHED rounds — a half-time lead is
-// not a win (`Season.tsx`), and the first cut of the page broke that by listing
-// the round in play.
+// only safe because the page hands this FINISHED rounds — see `gameweekStatus`
+// in core.
 
 export default function Result({
   pairing,
@@ -52,7 +51,7 @@ export default function Result({
       <Side
         team={pairing.home}
         total={home}
-        beat={beat(home, away)}
+        beat={leads(home, away)}
         badge={badges.get(pairing.home.teamId)}
         mine={mine}
       />
@@ -60,7 +59,7 @@ export default function Result({
       <Side
         team={pairing.away}
         total={away}
-        beat={beat(away, home)}
+        beat={leads(away, home)}
         badge={badges.get(pairing.away.teamId)}
         mine={mine}
         away
@@ -72,12 +71,6 @@ export default function Result({
 /** Absence, never a nought. A period Fantrax has not scored was not drawn 0-0,
  *  and `PeriodResult.points` is null exactly when it could not be read. */
 const DASH = "—";
-
-/** Whether this side won it. Null on either total is not a draw — it is a result
- *  we cannot call, and calling it would be the confident wrong answer. */
-function beat(ours: number | null, theirs: number | null): boolean {
-  return ours !== null && theirs !== null && ours > theirs;
-}
 
 function Side({
   team,
@@ -113,7 +106,7 @@ function Side({
       <span
         className={`min-w-0 flex-1 truncate text-sm font-bold ${
           away ? "text-right" : ""
-        } ${yours ? "text-accent" : "text-ink"}`}
+        } ${yoursInk(yours)}`}
       >
         {team.name}
       </span>

@@ -47,8 +47,8 @@ export default function Tie({
   // wrong number, wearing the one costume that looks most like an answer.
   const kicked = round.started;
 
-  // Marking a winner needs the football to be over. A half-time lead is not a
-  // win, and saying so is the confident wrong answer.
+  // Marking a winner needs the football to be over — see `gameweekStatus` in
+  // core.
   const settled = round.status === "finished";
 
   // A cup final between two semi-final winners has nothing to open either.

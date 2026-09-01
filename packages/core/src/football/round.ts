@@ -86,7 +86,16 @@ export function gameweekStarted(fixtures: readonly Fixture[], gameweek: number):
  *  labelling thirty-eight rounds at once holds the season and not one round of
  *  it. A gameweek with no fixtures answers "upcoming" — "every match has ended"
  *  is vacuously true of none, and a full-time label on a week that has not been
- *  scheduled is the confident wrong answer. */
+ *  scheduled is the confident wrong answer.
+ *
+ *  **A half-time lead is not a win, and this is where that rule lives.** Every
+ *  view that marks a winner — the results board, the schedule's season rows and
+ *  tie rows, the team-stats table — gates on `"finished"` from here, and each of
+ *  them once carried its own copy of the reason. They must not answer
+ *  differently about the same fixture: one of them used to mark a winner the
+ *  moment a score existed, so a side ahead at the break was printed as having
+ *  beaten a side still playing. The score is real before the round is over; the
+ *  result is not. */
 export function gameweekStatus(
   fixtures: readonly Fixture[],
   gameweek: number,

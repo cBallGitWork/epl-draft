@@ -4,6 +4,7 @@ import TeamBadge from "../../components/league/TeamBadge";
 import LeagueShell from "../Shell";
 import { getSchedule, getSeasonResults } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
+import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
 import { FANTRAX_SILENT } from "../../config";
 
@@ -44,9 +45,9 @@ export default async function TeamStatsPage() {
 
   const { info, rounds, table } = schedule;
 
-  // Finished rounds only, and the same test Results uses. A round in play has a
-  // total that is still moving, and a high-water mark that changes while you
-  // read it is not a statistic.
+  // Finished rounds only, the same test Results uses — see `gameweekStatus` in
+  // core. A round in play has a total that is still moving, and a high-water
+  // mark that changes while you read it is not a statistic.
   const played = new Set(
     rounds
       .filter((round) => round.status === "finished")
@@ -132,9 +133,9 @@ export default async function TeamStatsPage() {
                   </td>
                   <td className="pl-2">
                     <span
-                      className={`cm-row flex min-h-11 items-center gap-2 text-base font-bold lg:text-lg ${
-                        yours ? "text-accent" : "text-ink"
-                      }`}
+                      className={`cm-row flex min-h-11 items-center gap-2 text-base font-bold lg:text-lg ${yoursInk(
+                        yours,
+                      )}`}
                     >
                       <TeamBadge
                         team={{ teamId: row.teamId, name: row.teamName }}

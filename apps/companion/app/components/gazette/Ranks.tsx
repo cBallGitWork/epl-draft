@@ -1,6 +1,7 @@
 import type { PublishedStory } from "@epl/core";
+import { yoursInk } from "../../mine";
 
-// The power rankings' sixteen, printed as the column's own order.
+// The power rankings' ten, printed as the column's own order.
 //
 // **It looks deliberately unlike the tables in the sidebar**, because it is a
 // different kind of claim: those are arithmetic and this is an argument. So no
@@ -26,9 +27,9 @@ export default function Ranks({
           <p className="flex items-baseline gap-2">
             <span className="numeric w-5 shrink-0 text-right text-faint">{at + 1}</span>
             <span
-              className={`min-w-0 flex-1 truncate font-semibold ${
-                rank.teamId === mine ? "text-accent" : "text-ink"
-              }`}
+              className={`min-w-0 flex-1 truncate font-semibold ${yoursInk(
+                rank.teamId === mine,
+              )}`}
             >
               {named(rank.teamId)}
             </span>
