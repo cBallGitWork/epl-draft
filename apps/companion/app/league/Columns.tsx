@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { SortKey } from "@epl/core";
 import { sortHref } from "./sort";
+import { Head, HeadRow, NameHead, PLATE } from "../components/league/TableHeads";
 
 // The table's column heads, in one place because two files print them: the page
 // and the skeleton it waits behind. They were written out twice, and on 29 Aug
@@ -101,16 +102,17 @@ export default function Columns({
 }) {
   return (
     <thead>
-      <tr className="text-3xs uppercase">
+      <HeadRow>
         {COLUMNS.map((column) => {
           const here = sortable(column.key) && column.key === sort;
+          // The name column has no plate, and `NameHead` is that cell.
+          if (column.key === "team") return <NameHead key={column.key} label={column.label} />;
           return (
-            <th
+            <Head
               key={column.key}
-              scope="col"
+              width={column.width}
               title={column.title}
-              aria-sort={here ? (descending ? "descending" : "ascending") : undefined}
-              className={`p-0 font-bold ${column.width}`}
+              sorted={here ? (descending ? "descending" : "ascending") : undefined}
             >
               {sortable(column.key) ? (
                 <Link
@@ -122,25 +124,13 @@ export default function Columns({
                   {column.label}
                   {here ? <Arrow down={descending} /> : null}
                 </Link>
-              ) : column.key === "team" ? (
-                /* No plate over the name column. CM's head strip starts at the
-                   first figure and the name column is left bare
-                   (`cm9900/24.jpg`) — the strip is a ruler over the numbers, and
-                   running it across the names makes it a header bar instead. */
-                <span className="flex h-7 items-center px-1.5 text-faint">{column.label}</span>
               ) : (
-                <span
-                  className={`cm-bevel flex h-7 items-center whitespace-nowrap px-1.5 ${
-                    JUSTIFY[column.align]
-                  }`}
-                >
-                  {column.label}
-                </span>
+                <span className={PLATE}>{column.label}</span>
               )}
-            </th>
+            </Head>
           );
         })}
-      </tr>
+      </HeadRow>
     </thead>
   );
 }

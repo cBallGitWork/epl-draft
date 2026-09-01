@@ -1,6 +1,7 @@
 import { teamPeriodStats } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
+import { Head, HeadRow, NameHead, PLATE } from "../../components/league/TableHeads";
 import LeagueShell from "../Shell";
 import { getSchedule, getSeasonResults } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
@@ -96,28 +97,20 @@ export default async function TeamStatsPage() {
             Each team&apos;s scoring across finished rounds
           </caption>
           <thead>
-            <tr className="text-3xs uppercase">
-              <th scope="col" className="w-8 p-0 font-bold lg:w-14">
+            <HeadRow>
+              {/* The index column's head is empty and still plated-less: a
+                  numbered column needs no label, and the strip starts at the
+                  first figure either way. */}
+              <Head width="w-8 lg:w-14">
                 <span className="flex h-7 items-center justify-center px-1.5" />
-              </th>
-              <th scope="col" className="p-0 font-bold">
-                <span className="flex h-7 items-center px-1.5 text-faint">
-                  Team
-                </span>
-              </th>
+              </Head>
+              <NameHead label="Team" />
               {HEADS.map((head) => (
-                <th
-                  key={head.label}
-                  scope="col"
-                  title={head.title}
-                  className={`p-0 font-bold ${head.width}`}
-                >
-                  <span className="cm-bevel flex h-7 items-center justify-center whitespace-nowrap px-1.5">
-                    {head.label}
-                  </span>
-                </th>
+                <Head key={head.label} width={head.width} title={head.title}>
+                  <span className={PLATE}>{head.label}</span>
+                </Head>
               ))}
-            </tr>
+            </HeadRow>
           </thead>
           <tbody>
             {rows.map((row) => {
