@@ -112,18 +112,6 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   const lines = categories.get(category.key) ?? [];
   const board = rankBy(lines, category, measure);
 
-  // **Padded to the league's own size while the rehearsal league is short.**
-  // Craig, 1 Sep 2026: "can we add 6 other placeholder teams for now, thats our
-  // real league" — the real one is ten and the rehearsal one is four, and four
-  // rows flatter every layout decision made against them. These are not data:
-  // they carry no figures, they are drawn in `--color-faint`, and they exist so
-  // the screen is judged at the height it will actually be.
-  //
-  // Gone the moment the league is full, without an edit — `PANEL_ROWS` is the
-  // same floor `LeagueShell` draws the panel to, and a league of ten pads by
-  // nought. The real league on draft night will have ten of its own and never
-  // see one of these.
-  const placeholders = Math.max(0, PANEL_ROWS - board.length);
   const named = new Map(table.map((row) => [row.teamId, row.teamName]));
 
   return (
@@ -239,20 +227,6 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                   </tr>
                 );
               })}
-              {Array.from({ length: placeholders }, (_, at) => (
-                <tr key={`empty-${at}`} className="border-b border-bg">
-                  <td className="cm-index numeric px-1.5 text-center text-2xs font-bold opacity-40">
-                    {ordinal(board.length + at + 1)}
-                  </td>
-                  <td className="pl-2">
-                    <span className="cm-row flex min-h-11 items-center gap-2 text-base font-bold text-faint lg:text-lg">
-                      &mdash;
-                    </span>
-                  </td>
-                  <td className={`${FIGURE} text-faint`}>{DASH}</td>
-                  <td className={`${FIGURE} text-faint`}>{DASH}</td>
-                </tr>
-              ))}
             </tbody>
           </table>
         </div>
@@ -261,10 +235,6 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
     </LeagueShell>
   );
 }
-
-/** How many rows the board is drawn to hold — the league's own size, and the
- *  same floor `LeagueShell` sizes its panel to. Ten, because the league is ten. */
-const PANEL_ROWS = 10;
 
 /** CM's second foot row, at last.
  *

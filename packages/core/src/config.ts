@@ -88,12 +88,23 @@ export interface FantraxLeague {
   draftDate: string;
 }
 
-/** Both leagues are public — these are the ids in their league URLs, not
- *  credentials. `rehearsal` is the 4-team league drafted on 6 Aug; everything is
- *  built against it so that on 10 Oct the only change is which id the app
+/** All three leagues are public — these are the ids in their league URLs, not
+ *  credentials.
+ *
+ *  `rehearsal` is the 4-team league drafted on 6 Aug and is what most of this
+ *  app was built against. `dummy` is its ten-team replacement (Craig, 1 Sep
+ *  2026), and ten is the point: the real league is ten, and a screen judged
+ *  against four is judged at the wrong height — the Team Stats board had to
+ *  fake six rows to be looked at honestly. It answers the same 29-table
+ *  `SEASON_STATS` shape with real figures in every category, checked on the day
+ *  it was made.
+ *
+ *  `real` stays empty until draft night and is the standing test that empty
+ *  states degrade honestly. On 10 Oct the only change is which id the app
  *  serves. */
 export const FANTRAX_LEAGUES: readonly FantraxLeague[] = [
   { key: "real", leagueId: "ayyoh3n2mr326v2o", draftDate: "2026-10-10" },
+  { key: "dummy", leagueId: "w05aib75mtj36y1g", draftDate: "2026-08-06" },
   { key: "rehearsal", leagueId: "zbn1z3ukmsgb36sz", draftDate: "2026-08-06" },
 ];
 
@@ -110,7 +121,24 @@ export const FANTRAX_LEAGUES: readonly FantraxLeague[] = [
  *  league id and every read would fail on a blank leagueId with no clue why.
  *  The same trap `secret()` was carrying on 27 Aug. */
 export const FANTRAX_LEAGUE_ID =
-  process.env.FANTRAX_LEAGUE_ID || FANTRAX_LEAGUES[1].leagueId;
+  process.env.FANTRAX_LEAGUE_ID || leagueId("dummy");
+
+/** One league's id by name.
+ *
+ *  By KEY and not by index. The default used to be `FANTRAX_LEAGUES[1]`, and
+ *  adding a league to the middle of that list silently repointed the whole app
+ *  at a different league — which is exactly what happened when `dummy` was
+ *  inserted on 1 Sep 2026. It happened to be the league we wanted; that it was
+ *  luck rather than intent is the reason this exists.
+ *
+ *  Throws rather than falling back: a name that is not in the list is a typo,
+ *  and a typo that quietly serves the wrong league is the failure this is
+ *  written to make impossible. */
+function leagueId(key: string): string {
+  const league = FANTRAX_LEAGUES.find((entry) => entry.key === key);
+  if (league === undefined) throw new Error(`No Fantrax league named "${key}"`);
+  return league.leagueId;
+}
 
 /** How many players to ask Fantrax's stats read for in one page.
  *
