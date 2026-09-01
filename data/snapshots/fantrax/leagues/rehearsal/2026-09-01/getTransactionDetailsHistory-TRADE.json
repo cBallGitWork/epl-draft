@@ -1,0 +1,355 @@
+{
+  "paginatedResultSet": {
+    "totalNumPages": 1,
+    "pageNumber": 1,
+    "maxResultsPerPage": 100,
+    "totalNumResults": 1
+  },
+  "filterSettings": {
+    "positionOrGroup": "ALL",
+    "view": "TRADE",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  },
+  "displayedSelections": {
+    "positionOrGroup": "ALL",
+    "view": "TRADE",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  },
+  "miscData": {
+    "deleteTransactionExecutedDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "This will only delete the transaction record - <b style=\"color:#8B0000\">it will not undo it - it will not move any players</b>. Are you sure you want to permanently delete this?"
+    },
+    "deleteTransactionNotExecutedDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "Are you sure you want to permanently delete this?"
+    },
+    "heading": "2026 test1dsfds",
+    "undoTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "Are you sure you want to undo this transaction?"
+    },
+    "undoTooltip": "Undo transaction",
+    "executeTooltip": "Execute transaction if team was not updated with players",
+    "deleteTooltip": "Delete transaction from view",
+    "editTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        },
+        {
+          "id": "option1",
+          "label": "Cancel"
+        }
+      ],
+      "text": "# of periods to move transaction forward:"
+    },
+    "editTooltip": "Edit Transaction",
+    "editTransactionSuccessDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        }
+      ],
+      "text": "Transaction successfully edited and re-executed."
+    },
+    "executeTransactionSuccessDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        }
+      ],
+      "text": "Transaction successfully executed."
+    },
+    "executeTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "???word.Ok: en_US???"
+        },
+        {
+          "id": "option1",
+          "label": "Cancel"
+        }
+      ],
+      "text": "Please confirm that you want to executed the highlighted transaction since the system has detected that it was not executed."
+    },
+    "editTransactionMaximumForward": 200
+  },
+  "displayedLists": {
+    "teams": [
+      {
+        "name": "All Teams",
+        "id": "ALL"
+      },
+      {
+        "name": "123",
+        "id": "8enbgqo5msgb375j"
+      },
+      {
+        "name": "test2",
+        "id": "pbxm9fgimshcpazf"
+      },
+      {
+        "name": "test3",
+        "id": "j9zadacnmshcpazf"
+      },
+      {
+        "name": "test4",
+        "id": "sezrgvl2mshcpazf"
+      }
+    ],
+    "tabs": [
+      {
+        "name": "Claim/Drop",
+        "id": "CLAIM_DROP"
+      },
+      {
+        "name": "Trade",
+        "id": "TRADE"
+      },
+      {
+        "name": "Lineup",
+        "id": "LINEUP_CHANGE"
+      }
+    ],
+    "positions": [
+      {
+        "name": "All",
+        "id": "ALL"
+      },
+      {
+        "name": "Outfielders",
+        "id": "SOCCER_NON_GOALIE"
+      },
+      {
+        "name": "Defender",
+        "id": "POS_703"
+      },
+      {
+        "name": "Midfielder",
+        "id": "POS_702"
+      },
+      {
+        "name": "Forward",
+        "id": "POS_701"
+      },
+      {
+        "name": "Goalkeeper",
+        "id": "POS_704"
+      }
+    ]
+  },
+  "table": {
+    "caption": "Trades",
+    "header": {
+      "cells": [
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "From",
+          "shortName": "From",
+          "key": "from"
+        },
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "To",
+          "shortName": "To",
+          "key": "to"
+        },
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "Date Processed (EDT)",
+          "shortName": "Date (EDT)",
+          "key": "date"
+        },
+        {
+          "sortDirection": 1,
+          "name": "{0} on which this transaction takes effect",
+          "shortName": "Gameweek",
+          "key": "week"
+        }
+      ]
+    },
+    "rows": [
+      {
+        "scorer": {
+          "teamName": "Bournemouth",
+          "urlName": "adrien-truffert",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Bournemouth.png",
+          "scorerId": "06uyc",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Aug 30, 6:27 AM: Truffert generated six crosses (zero...",
+              "typeId": "9"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110034",
+          "name": "Adrien Truffert",
+          "teamShortName": "BOU",
+          "shortName": "A. Truffert"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "numInGroup": 2,
+        "txSetId": "trm6y84gmsq41g2x",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "123",
+            "leagueId": "zbn1z3ukmsgb36sz",
+            "key": "from",
+            "teamId": "8enbgqo5msgb375j"
+          },
+          {
+            "align": "LEFT",
+            "content": "test2",
+            "leagueId": "zbn1z3ukmsgb36sz",
+            "key": "to",
+            "teamId": "pbxm9fgimshcpazf"
+          },
+          {
+            "align": "LEFT",
+            "content": "Wed Aug 12, 2026, 9:13AM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "1",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Arsenal",
+          "urlName": "gabriel-dos-santos-magalhaes",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Arsenal.png",
+          "scorerId": "05nzu",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "703"
+          ],
+          "defaultPosId": "703",
+          "posShortNames": "D",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Aug 24, 1:01 PM: Gabriel had one shot (zero on goal) in...",
+              "typeId": "8"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "703"
+          ],
+          "teamId": "110000",
+          "name": "Gabriel Magalhaes",
+          "teamShortName": "ARS",
+          "shortName": "Gabriel Magalhaes"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "txSetId": "trm6y84gmsq41g2x",
+        "feesUsed": false,
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "test2",
+            "leagueId": "zbn1z3ukmsgb36sz",
+            "key": "from",
+            "teamId": "pbxm9fgimshcpazf"
+          },
+          {
+            "align": "LEFT",
+            "content": "123",
+            "leagueId": "zbn1z3ukmsgb36sz",
+            "key": "to",
+            "teamId": "8enbgqo5msgb375j"
+          },
+          {
+            "content": "1",
+            "key": "week"
+          }
+        ]
+      }
+    ]
+  }
+}
