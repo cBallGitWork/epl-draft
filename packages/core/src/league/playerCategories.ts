@@ -41,6 +41,10 @@ export interface PlayerCategory {
   /** Keepers and outfielders publish different vocabularies, so a category can
    *  belong to one of them. Absent means both carry it. */
   only?: "keeper" | "outfield";
+  /** The other half's name for the same fact, when Fantrax spells it
+   *  differently. Read as a fallback, never added: a player is in exactly one
+   *  half, so at most one of the two columns is ever present on his row. */
+  also?: string;
 }
 
 /** **Minutes are deliberately absent** (Craig: "dont do minutes"). It is on both
@@ -57,8 +61,15 @@ export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   { key: "CS", group: "defensive", label: "Clean sheets" },
   { key: "Sv", group: "defensive", label: "Saves", only: "keeper" },
   { key: "PKS", group: "defensive", label: "Penalties saved", only: "keeper" },
-  { key: "GA", group: "defensive", label: "Goals against", lowIsGood: true, only: "keeper" },
-  { key: "GAO", group: "defensive", label: "Goals against", lowIsGood: true, only: "outfield" },
+  // **One entry, two column names.** Fantrax calls it `GA` on a keeper's read
+  // and `GAO` on an outfielder's, and they are the same defensive fact — the
+  // goals that went in while he was on the pitch. Two entries shipped for an
+  // hour and put "Goals against" in the category strip TWICE, leading to two
+  // different boards a reader could not tell apart. `also` is how one category
+  // reads a column that is spelled differently in the other half; the team board
+  // settled the same question the same way (Craig, 1 Sep: "goals against is a
+  // def and keeper stat, so we can combine that").
+  { key: "GA", group: "defensive", label: "Goals against", lowIsGood: true, also: "GAO" },
   { key: "YC", group: "discipline", label: "Yellow cards", lowIsGood: true },
   { key: "RC", group: "discipline", label: "Red cards", lowIsGood: true },
   { key: "OG", group: "discipline", label: "Own goals", lowIsGood: true },

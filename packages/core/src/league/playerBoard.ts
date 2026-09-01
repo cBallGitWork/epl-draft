@@ -40,7 +40,12 @@ export function rankPlayers(
   category: PlayerCategory,
   limit: number = BOARD_ROWS,
 ): PlayerBoardRow[] {
-  const of = (line: PlayerStatLine): number | null => line.stats[category.key] ?? null;
+  // `also` second and never summed: a player is in exactly one half of the
+  // pool, so at most one of the two spellings is on his row. `??` rather than
+  // `+` is the difference between reading one fact under two names and
+  // double-counting it.
+  const of = (line: PlayerStatLine): number | null =>
+    line.stats[category.key] ?? (category.also ? line.stats[category.also] ?? null : null);
 
   const scored = lines.filter((line) => of(line) !== null);
   const sorted = [...scored].sort((a, b) => {

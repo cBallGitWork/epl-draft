@@ -54,3 +54,40 @@ describe("rankPlayers", () => {
     expect(rankPlayers([], GOALS)).toEqual([]);
   });
 });
+
+describe("rankPlayers — the two spellings of goals against", () => {
+  const AGAINST = {
+    key: "GA",
+    group: "defensive" as const,
+    label: "Goals against",
+    lowIsGood: true,
+    also: "GAO",
+  };
+
+  const keeper = (id: string, ga: number): PlayerStatLine => ({
+    fantraxId: id, name: id, club: null, clubShort: null, position: "G",
+    ownerTeamId: null, stats: { GA: ga },
+  });
+  const outfield = (id: string, gao: number): PlayerStatLine => ({
+    fantraxId: id, name: id, club: null, clubShort: null, position: "D",
+    ownerTeamId: null, stats: { GAO: gao },
+  });
+
+  it("reads both halves under one category", () => {
+    // Fantrax calls it `GA` for a keeper and `GAO` for everyone in front of him.
+    // Two entries put "Goals against" in the strip twice, leading to two boards.
+    const board = rankPlayers([keeper("k", 9), outfield("o", 2)], AGAINST);
+    expect(board.map((row) => row.line.fantraxId)).toEqual(["o", "k"]);
+    expect(board.map((row) => row.value)).toEqual([2, 9]);
+  });
+
+  it("does not double-count a row carrying both", () => {
+    // Not seen in the payload — a player is in exactly one half — but `+` here
+    // instead of `??` would be silently wrong if it ever were.
+    const both: PlayerStatLine = {
+      fantraxId: "b", name: "b", club: null, clubShort: null, position: "D",
+      ownerTeamId: null, stats: { GA: 3, GAO: 40 },
+    };
+    expect(rankPlayers([both], AGAINST)[0]?.value).toBe(3);
+  });
+});

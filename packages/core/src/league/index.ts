@@ -123,6 +123,7 @@ export { PLAYER_CATEGORIES, playerCategoryFor, playersInGroup } from "./playerCa
 export type { PlayerCategory } from "./playerCategories";
 export { BOARD_ROWS, rankPlayers } from "./playerBoard";
 export type { PlayerBoardRow } from "./playerBoard";
+export { ordinal } from "./ordinal";
 export { rankBy } from "./categoryBoard";
 export type { BoardRow } from "./categoryBoard";
 export type { CategoryLine, RawSeasonStats } from "./fantrax/seasonStats";

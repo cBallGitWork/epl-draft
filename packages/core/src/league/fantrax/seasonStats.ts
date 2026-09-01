@@ -1,3 +1,5 @@
+import { numeric } from "./stats";
+
 // `getStandings` with `view: "SEASON_STATS"` — every team's season totals, per
 // category, in one anonymous request.
 //
@@ -124,8 +126,8 @@ export function mapSeasonStats(raw: RawSeasonStats): Map<string, CategoryLine[]>
       // Points sit two before the team, the figure one after it. Relative to the
       // team cell rather than at fixed indices, so the row survives a column
       // being added at the front — which is what `rank` and `diff1` already are.
-      const points = number(cells[at - 2]?.content);
-      const value = number(cells[at + 1]?.content);
+      const points = numeric(cells[at - 2]?.content);
+      const value = numeric(cells[at + 1]?.content);
 
       const held = lines.get(teamId);
       lines.set(teamId, {
@@ -152,10 +154,3 @@ function add(held: number | null | undefined, next: number | null): number | nul
   return held + next;
 }
 
-/** Fantrax prints thousands with a comma — "1,382" — so this strips them before
- *  parsing. Without that, every minutes figure over a thousand reads as 1. */
-function number(content: string | undefined): number | null {
-  if (content === undefined || content.trim() === "") return null;
-  const parsed = Number(content.replace(/,/g, ""));
-  return Number.isFinite(parsed) ? parsed : null;
-}

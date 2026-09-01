@@ -20,7 +20,7 @@ import { type StatCategory } from "@epl/core";
 // changing the select navigates on the spot. A control that needs a script stops
 // working on the connection where it matters most.
 
-const HERE = "/league/team-stats";
+import { TEAM_STATS as HERE } from "../SectionNav";
 
 export default function Filters({
   categories,

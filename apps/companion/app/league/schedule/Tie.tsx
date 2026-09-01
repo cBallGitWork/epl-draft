@@ -164,9 +164,20 @@ function Side({
     </>
   );
 
+  // **A tap floor on the LINK, and the row height under `lg`.** These sides are
+  // 26px tappable links on a phone — `tapfit` has reported ten of them under the
+  // 44px floor since the league went to ten teams, and four before that, because
+  // the count scales with the league. The floor belongs on the link rather than
+  // on the row: only one of the two branches below is tappable, and a `min-h` on
+  // the plain `<div>` would push every unplayed fixture taller for nothing.
+  //
+  // `.cm-row` with it, which is the documented pair (`desk.css`: "`.cm-row` says
+  // nothing below `lg`, and that is the whole design") — the phone gets its 44
+  // and the desk comes back down to CM's 28.
   const classes = `flex min-w-0 flex-1 items-center gap-2 ${
     at === "away" ? "flex-row-reverse" : ""
   }`;
+  const tappable = `cm-row min-h-11 ${classes}`;
 
   // Into the squad: a round still to come has no head-to-head worth opening, and
   // the fifteen names are public all week whatever the lineup gate is doing.
@@ -175,7 +186,7 @@ function Side({
   ) : (
     <Link
       href={`/squad/${side.team.teamId}?gw=${gameweek}`}
-      className={`${classes} hover:underline`}
+      className={`${tappable} hover:underline`}
     >
       {body}
     </Link>

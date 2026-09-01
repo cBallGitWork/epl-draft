@@ -1,14 +1,16 @@
 import Link from "next/link";
 import {
-  GROUPS,
   type GroupKey,
   type LeagueTeam,
   type PlayerBoardRow,
   clubColours,
+  ordinal,
   playersInGroup,
   toFplClubCode,
 } from "@epl/core";
 import PlayerPortrait from "../components/football/PlayerPortrait";
+import GroupNav from "../components/league/GroupNav";
+import { PLAYERS } from "../league/SectionNav";
 
 // CM's stat board, on the player pool.
 //
@@ -17,9 +19,10 @@ import PlayerPortrait from "../components/football/PlayerPortrait";
 // categories** — see `playerCategories.ts` for why the numbers are theirs and
 // not FPL's on a screen about fantasy scoring.
 //
-// The board is the first twenty. `BOARD_ROWS` records why: the pool is 646 and
-// the question "who leads" is answered in the first twenty; the rest is a
-// directory, which is what the table below this already is.
+// The board is the first `BOARD_ROWS` of the pool, in a box that holds
+// `VISIBLE_ROWS` of them — see those constants for why each is the number it is.
+// The rest of the 646 is the directory below this, which has the search and the
+// filters a scroll box cannot offer.
 
 export default function Board({
   rows,
@@ -62,7 +65,7 @@ export default function Board({
           edge. */}
       <div
         className="cm-panel cm-scroll overflow-auto p-2"
-        style={{ maxHeight: "calc(14 * var(--table-row) + var(--table-chrome))" }}
+        style={{ maxHeight: `calc(${VISIBLE_ROWS} * var(--table-row) + var(--table-chrome))` }}
       >
         <table className="w-full border-collapse text-sm">
           <caption className="sr-only">
@@ -159,7 +162,7 @@ export default function Board({
         {playersInGroup(group).map((entry) => (
           <Link
             key={entry.key}
-            href={`/players?group=${group}&cat=${entry.key}`}
+            href={`${PLAYERS}?group=${group}&cat=${entry.key}`}
             aria-current={entry.label === category ? "page" : undefined}
             className="cm-tab flex flex-1 items-center justify-center whitespace-nowrap px-2 text-2xs font-bold uppercase lg:min-h-9 lg:text-sm"
           >
@@ -168,21 +171,24 @@ export default function Board({
         ))}
       </nav>
 
-      <nav aria-label="Stat groups" className="flex flex-wrap">
-        {GROUPS.filter((entry) => entry.key !== "appearances").map((entry) => (
-          <Link
-            key={entry.key}
-            href={`/players?group=${entry.key}`}
-            aria-current={entry.key === group ? "page" : undefined}
-            className="cm-tab flex min-h-11 flex-1 items-center justify-center px-2 text-2xs font-bold uppercase lg:min-h-9 lg:text-sm"
-          >
-            {entry.label}
-          </Link>
-        ))}
-      </nav>
+      <GroupNav
+        group={group}
+        href={(key) => `${PLAYERS}?group=${key}`}
+        omit={["appearances"]}
+      />
     </div>
   );
 }
+
+/** How many rows the box shows at once, the rest reached by the scrollbar.
+ *
+ *  Fourteen because that is what CM's own stat lists show — the Average Rating
+ *  shot has fourteen visible with a scrollbar saying there are more, and the
+ *  scrollbar only means anything if the list is longer than the box. Counted in
+ *  ROWS rather than set in pixels for the reason `LeagueShell` sizes its panel
+ *  that way: `--table-row` is measured and differs between the phone and the
+ *  desk, so a pixel height would be right at one width and wrong at the other. */
+const VISIBLE_ROWS = 14;
 
 const DASH = "—";
 /** A cell in the list. Tight: CM's own rows are 18px at 800x600 and `.cm-row`
@@ -190,9 +196,3 @@ const DASH = "—";
  *  whole reason the height lives on the class rather than on a `min-h`. */
 const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
 
-/** `1` becomes `1st`. CM's index cell carries the ordinal and not the number. */
-function ordinal(rank: number): string {
-  const tens = rank % 100;
-  if (tens >= 11 && tens <= 13) return `${rank}th`;
-  return `${rank}${["th", "st", "nd", "rd"][rank % 10] ?? "th"}`;
-}

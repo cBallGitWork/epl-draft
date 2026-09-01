@@ -1,3 +1,4 @@
+import { ordinal } from "./ordinal";
 import type { PeriodPairing } from "./selectors";
 import type { LeagueTeam, StandingsRow } from "./types";
 
@@ -131,15 +132,6 @@ function drawn(seed: Seed, table: readonly StandingsRow[]): TieSide {
   // read as a bye rather than as a place nobody holds yet.
   if (!row || row.teamName === "") return { team: null, label: ordinal(seed) };
   return { team: { teamId: row.teamId, name: row.teamName }, label: row.teamName };
-}
-
-const SUFFIX = ["th", "st", "nd", "rd"];
-
-/** "1st", "2nd", "11th". */
-function ordinal(place: number): string {
-  const teens = place % 100;
-  if (teens >= 11 && teens <= 13) return `${place}th`;
-  return `${place}${SUFFIX[place % 10] ?? "th"}`;
 }
 
 /** One competition's ties in one gameweek, or one round of one competition's.

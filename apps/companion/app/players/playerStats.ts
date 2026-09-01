@@ -39,6 +39,12 @@ export const getPlayerStats = leagueCache("player-stats", async (): Promise<Play
   return [...lines(outfield), ...lines(keepers)];
 });
 
-function lines(raw: unknown): PlayerStatLine[] {
-  return raw instanceof FantraxError ? [] : mapPlayerStats(raw as RawPlayerStats);
+/** One half's response, mapped, or nothing if that half refused.
+ *
+ *  Typed rather than `unknown` with a cast. The first cut took `unknown` and
+ *  cast to `RawPlayerStats` inside, which is exactly the unchecked cast on
+ *  provider data that CODE_RULES forbids — and it buys nothing here, because
+ *  `orRefusal` already returns the union this narrows. */
+function lines(raw: RawPlayerStats | FantraxError): PlayerStatLine[] {
+  return raw instanceof FantraxError ? [] : mapPlayerStats(raw);
 }

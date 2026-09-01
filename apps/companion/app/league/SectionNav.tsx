@@ -40,6 +40,18 @@ const SECTIONS = [
   { href: "/league/team-stats", label: "Team Stats", key: "teamStats" },
 ] as const;
 
+/** The two routes that build their own query strings, named once.
+ *
+ *  Both were written out three or four times each — in a `HERE` constant, in a
+ *  sort link, in a group link, in a category link — and `SECTIONS` above was
+ *  already the place the app declares where a section lives. A route spelled in
+ *  five files is a route that can be renamed in four of them.
+ *
+ *  Read off `SECTIONS` rather than re-typed, so the tab strip and the links
+ *  cannot disagree about where a page is. */
+export const TEAM_STATS = SECTIONS[4].href;
+export const PLAYERS = SECTIONS[3].href;
+
 /** Reachable from the section but not a tab in it. Matchups has a board and a
  *  page per pairing, so it stays navigable; it is not in the strip because Craig
  *  named the five that belong there and this was not one.

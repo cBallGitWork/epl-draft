@@ -1,16 +1,18 @@
 import Link from "next/link";
 import {
-  GROUPS,
   categoryFor,
   isMeasure,
   groupFor,
   inGroup,
+  ordinal,
   rankBy,
   type Measure,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
 import { Head, HeadRow, NameHead } from "../../components/league/TableHeads";
+import GroupNav from "../../components/league/GroupNav";
+import { TEAM_STATS } from "../SectionNav";
 import LeagueShell from "../Shell";
 import Filters from "./Filters";
 import { getSeasonStats } from "./seasonStats";
@@ -244,7 +246,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
           row was sitting hard against the final rule, which read as one more
           line of the table rather than as a bar under it. */}
       <div className="pt-2">
-        <Groups group={group} />
+        <GroupNav group={group} href={(key) => `${TEAM_STATS}?group=${key}`} />
       </div>
     </LeagueShell>
   );
@@ -285,7 +287,7 @@ function SortHead({
   return (
     <Head width="w-20 lg:w-32" title={title} sorted={here ? "descending" : undefined}>
       <Link
-        href={`/league/team-stats?${query.toString()}`}
+        href={`${TEAM_STATS}?${query.toString()}`}
         className={`flex h-7 items-center justify-center whitespace-nowrap px-1.5 ${
           here ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110"
         }`}
@@ -293,58 +295,6 @@ function SortHead({
         {label}
       </Link>
     </Head>
-  );
-}
-
-/** CM's second foot row, at last.
- *
- *  Craig, 1 Sep 2026: "like CM, we could have another row of blue buttons under
- *  the table, could then separate the categories into defensive / attacking /
- *  appearance / discipline". The reference has listed this row's absence as one
- *  of two things every screen in the library has and we had on none — related
- *  destinations under the panel, above the Back/Next pair.
- *
- *  Twelve categories in one dropdown was a list you scrolled. Four buttons over
- *  three or four each is a screen you read, and it is the same move CM makes
- *  with `Team Stats · Player Stats · Referee Stats · Awards · History`.
- *
- *  Inside the panel's own stack rather than in `LeagueShell`: this row is about
- *  THIS screen's contents, where the shell's pair is about moving between
- *  screens. A section that grew its own second row would put it here too.
- *
- *  The current group is drawn pressed — the same object the sortable heads and
- *  the tab strip use, so "the one you are on" is one thing in three places. */
-function Groups({ group }: { group: string }) {
-  return (
-    <nav
-      aria-label="Stat groups"
-      // Wraps rather than overflowing. Four plates do not fit a 390 phone —
-      // "Discipline" ran off the right edge — and a nav you cannot see the end
-      // of is a nav with entries nobody finds. Two by two under a thumb, one row
-      // of four on the desk.
-      className="flex flex-wrap"
-    >
-      {GROUPS.map((entry) => (
-        <Link
-          key={entry.key}
-          href={`/league/team-stats?group=${entry.key}`}
-          aria-current={entry.key === group ? "page" : undefined}
-          // **Blue plates, not grey** — Craig, 1 Sep: "remember the bottom row
-          // is blue", and the shot he attached settles it: CM's foot row is the
-          // same royal blue as its tab strip with white labels, and the current
-          // one carries a yellow border and yellow text. Grey is the BUTTON
-          // plate in this vocabulary (a dropdown, a column head); this row is
-          // navigation, and it takes the navigation colour.
-          //
-          // `cm-tab` rather than `cm-bevel` for exactly that reason — the strip
-          // above and this row are the same object in two places, so the mark
-          // for "the one you are on" comes free and cannot drift.
-          className="cm-tab flex min-h-11 flex-1 items-center justify-center px-2 text-2xs font-bold uppercase lg:min-h-9 lg:text-sm"
-        >
-          {entry.label}
-        </Link>
-      ))}
-    </nav>
   );
 }
 
@@ -362,11 +312,3 @@ const LABEL: Record<Measure, string> = {
   value: "by raw total",
 };
 
-/** `1` becomes `1st`. CM's index cell carries the ordinal and not the number,
- *  which is a small thing that reads as the game immediately — a column of
- *  `1st 2nd 3rd` is a league table and a column of `1 2 3` is a list. */
-function ordinal(rank: number): string {
-  const tens = rank % 100;
-  if (tens >= 11 && tens <= 13) return `${rank}th`;
-  return `${rank}${["th", "st", "nd", "rd"][rank % 10] ?? "th"}`;
-}

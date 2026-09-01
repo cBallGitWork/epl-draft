@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { FormGame, StandingsRow } from "@epl/core";
+import { ordinal, type FormGame, type StandingsRow } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
 import { cellAlign } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
@@ -158,11 +158,3 @@ const FORM_GAMES = 5;
 
 const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;
 
-/** `1` becomes `1st`. CM's index cell carries the ordinal and not the number,
- *  which is a small thing that reads as the game immediately — a column of
- *  `1st 2nd 3rd` is a league table and a column of `1 2 3` is a list. */
-function ordinal(rank: number): string {
-  const tens = rank % 100;
-  if (tens >= 11 && tens <= 13) return `${rank}th`;
-  return `${rank}${["th", "st", "nd", "rd"][rank % 10] ?? "th"}`;
-}

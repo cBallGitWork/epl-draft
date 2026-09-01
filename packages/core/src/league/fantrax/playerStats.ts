@@ -1,3 +1,5 @@
+import { numeric } from "./stats";
+
 // Per-player RAW stats — goals, assists, clean sheets, saves, cards — from
 // `getPlayerStats`, which only answers them when asked by position group.
 //
@@ -118,7 +120,7 @@ export function mapPlayerStats(raw: RawPlayerStats): PlayerStatLine[] {
         continue;
       }
       if (head === "" || FANTASY_COLUMNS.has(head)) continue;
-      stats[head] = number(cell?.content);
+      stats[head] = numeric(cell?.content);
     }
 
     lines.push({
@@ -135,10 +137,3 @@ export function mapPlayerStats(raw: RawPlayerStats): PlayerStatLine[] {
   return lines;
 }
 
-/** Fantrax comma-groups thousands — "3,368" minutes — so the separator is
- *  stripped before parsing. Without it every four-figure total reads as 3. */
-function number(content: string | undefined): number | null {
-  if (content === undefined || content.trim() === "") return null;
-  const parsed = Number(content.replace(/,/g, ""));
-  return Number.isFinite(parsed) ? parsed : null;
-}
