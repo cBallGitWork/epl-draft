@@ -1,7 +1,6 @@
 import { LEAGUE_NAME } from "@epl/core";
 import PageHeader from "../components/shell/PageHeader";
-import Link from "next/link";
-import SectionNav, { steps } from "./SectionNav";
+import SectionNav from "./SectionNav";
 import type { LeagueSection } from "./SectionNav";
 
 // The frame every league section wears, including when it has nothing to show.
@@ -46,8 +45,6 @@ export default function LeagueShell({
   teams?: number;
   children: React.ReactNode;
 }) {
-  const { back, next } = steps(current);
-
   return (
     <div className="flex flex-col gap-3">
       {/* The competition's own bar, and the competition's own NAME on it. CM
@@ -87,45 +84,6 @@ export default function LeagueShell({
         {children}
       </section>
 
-      {/* **CM's last bar: the Back/Next pair.** Every screen in the reference
-          library ends with it — two wide plates across the foot, below whatever
-          else the screen carries (`cm9900/24.jpg`, and the pair is in `12.jpg`,
-          `21.jpg` and `25.jpg` too). Craig asked for it on 1 Sep after landing
-          on Team Stats from the strip and finding no way back: "when clicking on
-          team stats, we need a back button (but the actual game has back arrows
-          in the last nav bar)".
-
-          **It replaced the Matchups row rather than joining it.** That row was
-          CM's OTHER foot bar — related screens, `Tactics ▸ Training ▸ History ▸`
-          — and it had exactly one entry, so it read as a stray button under the
-          panel rather than as a bar (Craig: "ditch matchups row underneath").
-          Matchups keeps its own tab in the strip above, which is where a view of
-          this competition belongs; when there are three or four related screens
-          worth naming, the second row earns its place back.
-
-          A real `<a>` and not a history call: the pair has to work on the first
-          page of a session, where there is nothing to go back TO, and a button
-          that does nothing on arrival is worse than a link that always goes
-          somewhere. Back is the section's own index and Next is the tab after
-          this one, which is what CM's arrows step through. */}
-      <nav aria-label="Page" className="flex gap-1">
-        <Link
-          href={back.href}
-          className="cm-bevel flex min-h-11 flex-1 items-center justify-center gap-2 px-3 font-chrome text-2xs font-bold uppercase hover:brightness-110 lg:min-h-9 lg:text-sm"
-        >
-          <span aria-hidden>◂</span>
-          {back.label}
-        </Link>
-        {next === null ? null : (
-          <Link
-            href={next.href}
-            className="cm-bevel flex min-h-11 flex-1 items-center justify-center gap-2 px-3 font-chrome text-2xs font-bold uppercase hover:brightness-110 lg:min-h-9 lg:text-sm"
-          >
-            {next.label}
-            <span aria-hidden>▸</span>
-          </Link>
-        )}
-      </nav>
     </div>
   );
 }

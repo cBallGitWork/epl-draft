@@ -1,7 +1,9 @@
 import Link from "next/link";
 import {
+  GROUPS,
   categoryFor,
-  isMeasure,
+  groupFor,
+  inGroup,
   rankBy,
   type Measure,
 } from "@epl/core";
@@ -56,15 +58,28 @@ import { FANTRAX_SILENT } from "../../config";
 export const revalidate = 30;
 
 /** Next 16 hands these as a Promise, so it is awaited like `params`. */
-type Search = Promise<{ cat?: string; by?: string }>;
+type Search = Promise<{ cat?: string; by?: string; group?: string }>;
 
 export default async function TeamStatsPage({ searchParams }: { searchParams: Search }) {
   const query = await searchParams;
   // An unknown category falls back to the first rather than throwing: the choice
   // arrives in a URL, and a shared link with a stale name should still show a
   // board.
-  const category = categoryFor(query.cat);
-  const measure: Measure = isMeasure(query.by) ? query.by : "points";
+  // The group first, then the category WITHIN it. A category from another group
+  // is not an error — a shared link survives the row being reorganised — it just
+  // falls back to that group's first, which is a board rather than a blank.
+  const group = groupFor(query.group);
+  const choices = inGroup(group);
+  const category =
+    choices.find((entry) => entry.key === query.cat) ?? choices[0] ?? categoryFor(undefined);
+
+  // Fantasy points, always. The board prints BOTH columns now, so the measure is
+  // what it is SORTED by and not what it shows — and with both visible, a
+  // control to swap which one leads was furniture (Craig, 1 Sep: "remove the
+  // dropdown row since thats now redundant"). Kept as a constant rather than
+  // deleted: `rankBy` still takes it, and a raw-total ordering is one query
+  // parameter away if the row ever wants it back.
+  const measure: Measure = "points";
 
   const [schedule, mine, badges, categories] = await Promise.all([
     getSchedule(),
@@ -96,11 +111,24 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
 
   const lines = categories.get(category.key) ?? [];
   const board = rankBy(lines, category, measure);
+
+  // **Padded to the league's own size while the rehearsal league is short.**
+  // Craig, 1 Sep 2026: "can we add 6 other placeholder teams for now, thats our
+  // real league" — the real one is ten and the rehearsal one is four, and four
+  // rows flatter every layout decision made against them. These are not data:
+  // they carry no figures, they are drawn in `--color-faint`, and they exist so
+  // the screen is judged at the height it will actually be.
+  //
+  // Gone the moment the league is full, without an edit — `PANEL_ROWS` is the
+  // same floor `LeagueShell` draws the panel to, and a league of ten pads by
+  // nought. The real league on draft night will have ten of its own and never
+  // see one of these.
+  const placeholders = Math.max(0, PANEL_ROWS - board.length);
   const named = new Map(table.map((row) => [row.teamId, row.teamName]));
 
   return (
     <LeagueShell title="Team Stats" current="teamStats" teams={info.teams.length}>
-      <Filters category={category.key} measure={measure} />
+      <Filters categories={choices} category={category.key} group={group} />
 
       {board.length === 0 ? (
         <Nothing title="Nothing recorded yet" code={`${played.size} finished rounds scored`}>
@@ -113,12 +141,13 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
               — CSS tables only render row borders when collapsed — and the index
               column runs together into one unbroken blue bar down the left. */}
           <table
-            // `max-w` on the TABLE and not on a column: `max-width` on a `<th>`
-            // is ignored under automatic table layout, which is why capping the
-            // name column changed nothing. Two number columns cannot fill 1440,
-            // so the table stops short of it and the pair sits where the eye
-            // already is instead of at the far edge.
-            className="w-full max-w-3xl border-collapse text-sm"
+            // Full width, and the figures ride the right edge — Craig, 1 Sep:
+            // "it just needs to be at the end of the far right i think". The cap
+            // that pulled them in was the answer to ONE floating column; with
+            // both printing, the pair holds together and the far right is where
+            // a total belongs. CM does the same on its own stat board: the
+            // rating column sits hard right against the scrollbar.
+            className="w-full border-collapse text-sm"
           >
             <caption className="sr-only">
               Every team ranked by {category.label}, {LABEL[measure]}
@@ -139,16 +168,15 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                 <Head
                   width="w-20 lg:w-32"
                   title={`${category.key} — fantasy points`}
-                  sorted={measure === "points" ? "descending" : undefined}
+                  sorted="descending"
                 >
-                  <span className={measure === "points" ? PRESSED : PLATE}>FPts</span>
+                  <span className={PRESSED}>FPts</span>
                 </Head>
                 <Head
                   width="w-20 lg:w-32"
                   title={`${category.key} — raw total`}
-                  sorted={measure === "value" ? "descending" : undefined}
                 >
-                  <span className={measure === "value" ? PRESSED : PLATE}>Total</span>
+                  <span className={PLATE}>Total</span>
                 </Head>
               </HeadRow>
             </thead>
@@ -184,40 +212,109 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                         </span>
                       </Link>
                     </td>
-                    {/* The sorted column carries the weight — Craig, 1 Sep:
-                        "TOTAL could be a bigger font". Set at the name's own
-                        size and a step up above `lg`, which is the pairing
-                        `24.jpg` uses: CM runs its club name and its figures at
-                        the same height. The other column stays in `--color-mid`
-                        at the row size, so the board says at a glance which
-                        number it is ordered on without a second colour or an
-                        arrow doing it. */}
-                    <td
-                      className={`${FIGURE} ${
-                        measure === "points"
-                          ? "text-lg text-accent lg:text-2xl"
-                          : "text-mid"
-                      }`}
-                    >
+                    {/* **Both figures at one size.** They were set apart for a
+                        few minutes — the sorted one large, the other small — and
+                        it read as two different kinds of number rather than as
+                        one row (Craig, 1 Sep: "keep same font for fpts and
+                        total, two different looks terrible"). Which column the
+                        board is ordered by is said ONCE, by the pressed plate
+                        above it, and saying it twice made the table look
+                        mis-set. Same size, same weight; the sorted one takes
+                        the accent and the other `--color-mid`, which is the
+                        figure slot either way. */}
+                    <td className={`${FIGURE} text-accent`}>
                       {row.points === null ? DASH : row.points.toLocaleString("en-GB")}
                     </td>
-                    <td
-                      className={`${FIGURE} ${
-                        measure === "value"
-                          ? "text-lg text-accent lg:text-2xl"
-                          : "text-mid"
-                      }`}
-                    >
+                    {/* White, not amber. `--color-mid` is "a figure" in the
+                        palette and it is the right slot — but beside
+                        `--color-accent` on the same row the two are a shade
+                        apart, and the board lost the one thing the pair has to
+                        say: which column it is ordered by. The sorted one keeps
+                        the accent; this takes `--color-ink`, which is the same
+                        distance from it that CM puts between its yellow figures
+                        and its white names. */}
+                    <td className={`${FIGURE} text-ink`}>
                       {row.value === null ? DASH : row.value.toLocaleString("en-GB")}
                     </td>
                   </tr>
                 );
               })}
+              {Array.from({ length: placeholders }, (_, at) => (
+                <tr key={`empty-${at}`} className="border-b border-bg">
+                  <td className="cm-index numeric px-1.5 text-center text-2xs font-bold opacity-40">
+                    {ordinal(board.length + at + 1)}
+                  </td>
+                  <td className="pl-2">
+                    <span className="cm-row flex min-h-11 items-center gap-2 text-base font-bold text-faint lg:text-lg">
+                      &mdash;
+                    </span>
+                  </td>
+                  <td className={`${FIGURE} text-faint`}>{DASH}</td>
+                  <td className={`${FIGURE} text-faint`}>{DASH}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       )}
+      <Groups group={group} />
     </LeagueShell>
+  );
+}
+
+/** How many rows the board is drawn to hold — the league's own size, and the
+ *  same floor `LeagueShell` sizes its panel to. Ten, because the league is ten. */
+const PANEL_ROWS = 10;
+
+/** CM's second foot row, at last.
+ *
+ *  Craig, 1 Sep 2026: "like CM, we could have another row of blue buttons under
+ *  the table, could then separate the categories into defensive / attacking /
+ *  appearance / discipline". The reference has listed this row's absence as one
+ *  of two things every screen in the library has and we had on none — related
+ *  destinations under the panel, above the Back/Next pair.
+ *
+ *  Twelve categories in one dropdown was a list you scrolled. Four buttons over
+ *  three or four each is a screen you read, and it is the same move CM makes
+ *  with `Team Stats · Player Stats · Referee Stats · Awards · History`.
+ *
+ *  Inside the panel's own stack rather than in `LeagueShell`: this row is about
+ *  THIS screen's contents, where the shell's pair is about moving between
+ *  screens. A section that grew its own second row would put it here too.
+ *
+ *  The current group is drawn pressed — the same object the sortable heads and
+ *  the tab strip use, so "the one you are on" is one thing in three places. */
+function Groups({ group }: { group: string }) {
+  return (
+    <nav
+      aria-label="Stat groups"
+      // Wraps rather than overflowing. Four plates do not fit a 390 phone —
+      // "Discipline" ran off the right edge — and a nav you cannot see the end
+      // of is a nav with entries nobody finds. Two by two under a thumb, one row
+      // of four on the desk.
+      className="flex flex-wrap"
+    >
+      {GROUPS.map((entry) => (
+        <Link
+          key={entry.key}
+          href={`/league/team-stats?group=${entry.key}`}
+          aria-current={entry.key === group ? "page" : undefined}
+          // **Blue plates, not grey** — Craig, 1 Sep: "remember the bottom row
+          // is blue", and the shot he attached settles it: CM's foot row is the
+          // same royal blue as its tab strip with white labels, and the current
+          // one carries a yellow border and yellow text. Grey is the BUTTON
+          // plate in this vocabulary (a dropdown, a column head); this row is
+          // navigation, and it takes the navigation colour.
+          //
+          // `cm-tab` rather than `cm-bevel` for exactly that reason — the strip
+          // above and this row are the same object in two places, so the mark
+          // for "the one you are on" comes free and cannot drift.
+          className="cm-tab flex min-h-11 flex-1 items-center justify-center px-2 text-2xs font-bold uppercase lg:min-h-9 lg:text-sm"
+        >
+          {entry.label}
+        </Link>
+      ))}
+    </nav>
   );
 }
 
@@ -225,7 +322,10 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
  *  it (DESIGN §7). */
 const DASH = "—";
 
-const FIGURE = "numeric px-1.5 text-center text-2xs font-bold text-ink";
+/** One figure cell. Set at the row's own size rather than the head's small
+ *  caps: this board has two number columns where the league table has ten, so
+ *  they can afford to be read rather than scanned. */
+const FIGURE = "numeric px-1.5 text-center text-base font-bold lg:text-lg";
 
 /** The sorted column's plate, drawn pressed. The same object the league table's
  *  sortable heads use, so "the column this is ordered by" looks the same in both

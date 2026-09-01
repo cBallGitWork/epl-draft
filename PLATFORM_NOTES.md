@@ -70,6 +70,15 @@ Minutes Played. These tables have to be read positionally against their `name`,
 which is the inverse of the rule ten feet up the same file. Whoever builds this
 should put the reason in the mapper.
 
+**A third league, to see the whole vocabulary.** Craig, 1 Sep 2026: "i could
+make another fantrax league that opens up all scoring categories so we can get
+all the data it has". `SEASON_STATS` publishes what THIS league scores, so a
+category nobody pays for is invisible — the Appearances group has only Minutes
+because sub-on/sub-off and bench points are not scored here, not because Fantrax
+lacks them. A rehearsal league with every category enabled would answer, once,
+what the full set is. **Deferred** as of 1 Sep; until then, absence in this
+payload means "not scored in our league" and never "Fantrax does not track it".
+
 Nothing is built on any of it — Craig is deciding what Team Stats should hold.
 Today's page is high/low/average/rounds off the results payload, which none of
 the 29 tables above carries.

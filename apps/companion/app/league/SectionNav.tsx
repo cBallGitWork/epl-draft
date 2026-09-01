@@ -50,31 +50,6 @@ const SECTIONS = [
  *  earns the row back. */
 export const FOOT = [{ href: "/league/matchups", label: "Matchups", key: "matchups" }] as const;
 
-/** Where the foot pair points from here.
- *
- *  CM ends every screen with a Back/Next pair and its arrows step through the
- *  screens in order, so this is that order — the tab strip's own, which is the
- *  one a reader has just been looking at.
- *
- *  Back from the FIRST tab, and from anywhere off the strip, is the section
- *  index: a pair that vanishes on one screen is a pair that moves the panel
- *  above it, and "Table" is a truer answer than a disabled plate. Next is null
- *  on the last tab and the plate simply is not drawn — Back alone is a bar, and
- *  a dead "Next" is a lie about what is there. */
-export function steps(current: LeagueSection): {
-  back: { href: string; label: string };
-  next: { href: string; label: string } | null;
-} {
-  const at = SECTIONS.findIndex((section) => section.key === current);
-  const previous = at > 0 ? SECTIONS[at - 1] : undefined;
-  const following = at === -1 ? undefined : SECTIONS[at + 1];
-
-  return {
-    back: previous ?? { href: "/league", label: "Table" },
-    next: following ?? null,
-  };
-}
-
 export type LeagueSection =
   | (typeof SECTIONS)[number]["key"]
   | (typeof FOOT)[number]["key"];

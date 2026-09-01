@@ -2,8 +2,14 @@ import { describe, expect, it } from "vitest";
 import { rankBy } from "./categoryBoard";
 import type { CategoryLine } from "./fantrax/seasonStats";
 
-const GOALS = { key: "Goals", label: "Goals", short: "G" };
-const AGAINST = { key: "Goals Against", label: "Goals against", short: "GA", lowIsGood: true };
+const GOALS = { key: "Goals", group: "attacking", label: "Goals", short: "G" } as const;
+const AGAINST = {
+  key: "Goals Against",
+  group: "defensive",
+  label: "Goals against",
+  short: "GA",
+  lowIsGood: true,
+} as const;
 
 const line = (teamId: string, points: number | null, value: number | null): CategoryLine => ({
   teamId,
