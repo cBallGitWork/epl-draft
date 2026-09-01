@@ -114,11 +114,18 @@ export { mapTeamBadges } from "./fantrax/badges";
 export type { TeamBadge } from "./fantrax/badges";
 export { mapSeasonResults } from "./fantrax/results";
 export type { PeriodResult } from "./fantrax/results";
+export { mapSeasonStats } from "./fantrax/seasonStats";
+export { CATEGORIES, categoryFor, isMeasure } from "./categories";
+export type { Measure, StatCategory } from "./categories";
+export { rankBy } from "./categoryBoard";
+export type { BoardRow } from "./categoryBoard";
+export type { CategoryLine, RawSeasonStats } from "./fantrax/seasonStats";
 export {
   fetchDraftResults,
   fetchLeagueInfo,
   fetchPlayerPool,
   fetchSeasonResults,
+  fetchSeasonStats,
   fetchStandings,
   fetchStandingsPage,
   fetchTeamRosters,

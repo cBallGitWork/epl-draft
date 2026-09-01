@@ -7,6 +7,7 @@ import { demoFxea, isDemo } from "./demo";
 import type { RawStandingsPage } from "./standingsPage";
 import type { RawLiveScoring } from "./livescoring";
 import type { RawSchedulePage } from "./results";
+import type { RawSeasonStats } from "./seasonStats";
 import type { RawPlayerProfile } from "./profile";
 import type { RawPoolStats, RawStatTables } from "./stats";
 import type { RawTransactionHistory } from "./transactions";
@@ -161,6 +162,17 @@ export function fetchStandingsPage(leagueId: string): Promise<RawStandingsPage> 
  *  one is the number that moves during a match. */
 export function fetchSeasonResults(leagueId: string): Promise<RawSchedulePage> {
   return fxpaRead(leagueId, "getStandings", { view: "SCHEDULE" }) as Promise<RawSchedulePage>;
+}
+
+/** Every team's season totals per category, in one request.
+ *
+ *  Public, the third of `getStandings`' three views — `displayedLists.tabs`
+ *  names them all, which is where the argument comes from rather than a guess.
+ *  It answers 29 tables: a summary, four per-position roll-ups and 22
+ *  single-category leaderboards split into a goalkeeper block and an outfielder
+ *  block. `mapSeasonStats` carries the two traps that split creates. */
+export function fetchSeasonStats(leagueId: string): Promise<RawSeasonStats> {
+  return fxpaRead(leagueId, "getStandings", { view: "SEASON_STATS" }) as Promise<RawSeasonStats>;
 }
 
 /** Every team's fantasy points for one period, as Fantrax scores them.

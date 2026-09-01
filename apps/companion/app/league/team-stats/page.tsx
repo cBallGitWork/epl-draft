@@ -1,45 +1,83 @@
 import Link from "next/link";
-import { teamPeriodStats } from "@epl/core";
+import {
+  categoryFor,
+  isMeasure,
+  rankBy,
+  teamPeriodStats,
+  type Measure,
+} from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
 import { Head, HeadRow, NameHead, PLATE } from "../../components/league/TableHeads";
 import LeagueShell from "../Shell";
+import Filters from "./Filters";
+import { getSeasonStats } from "./seasonStats";
 import { getSchedule, getSeasonResults } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
 import { FANTRAX_SILENT } from "../../config";
 
-// How each side got to its total, which is the one thing the table cannot say.
+// Every team ranked by one category — CM's stat board, on fantasy data.
 //
-// The fifth blue button (Craig, 31 Aug). It was deferred that morning for a good
-// reason — `getStandings` carries `streak` and `wwOrder` beyond what the table
-// prints and nothing else, so a screen built on the standings payload would open
-// on a near-copy of the table. This is built on the RESULTS payload instead, and
-// that is a different question: a total throws away the distribution that made
-// it, and two sides level on points-for can be a metronome and a coin-flip.
+// **The screen is a leaderboard and not a spreadsheet** (Craig, 1 Sep 2026,
+// against CM's "Average Rating" shot). One category at a time, every side in
+// order, the figure at the end. The alternative — twelve categories as twelve
+// columns — is what Fantrax's own page does, and it is unreadable on a phone and
+// answers no question anybody asks.
 //
-// No provider read of its own. `getSeasonResults` is already cached for the
-// table's form guide and `getSchedule` already numbers the rounds.
+// **Two grey boxes, at the two ends of the strip.** Left picks the category,
+// right picks whether the order is by fantasy points or by the raw figure.
+// Fantasy points is the default because this is a fantasy league: 1,500 minutes
+// is not better than 1,400 unless those minutes were worth more.
+//
+// **The categories are ours and the totals are Fantrax's.** Their SEASON_STATS
+// view publishes each category TWICE, split into a goalkeeper block and an
+// outfielder block, and nobody thinks of clean sheets kept by their keeper and
+// clean sheets kept by their defenders as two statistics. `mapSeasonStats` adds
+// them, and carries the two traps that split creates.
+//
+// High and Low stay, on Craig's call ("i like having a best and worst score,
+// just for fantasy points for a week") — they are the one thing the board cannot
+// say, because they are about a ROUND and every category here is a season total.
+//
+// **No owner column, and not for want of asking.** CM's board names a player and
+// his club, and the fantasy equivalent would be the team and its manager. Fantrax
+// publishes no such field: `getLeagueInfo.teamInfo` is `{name, id}` and nothing
+// else, checked against both leagues on 1 Sep 2026, and we hold no owner list of
+// our own — `TEAM_CODES` maps a code to a team, never to a person. So the column
+// was dropped rather than filled with a name we would have had to invent
+// (Craig, 1 Sep: "ok ditch the manager name then"). If owners ever want naming,
+// they are ours to collect and not Fantrax's to supply.
 
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
-export default async function TeamStatsPage() {
-  const [schedule, results, badges, mine] = await Promise.all([
+/** Next 16 hands these as a Promise, so it is awaited like `params`. */
+type Search = Promise<{ cat?: string; by?: string }>;
+
+export default async function TeamStatsPage({ searchParams }: { searchParams: Search }) {
+  const query = await searchParams;
+  // An unknown category falls back to the first rather than throwing: the choice
+  // arrives in a URL, and a shared link with a stale name should still show a
+  // board.
+  const category = categoryFor(query.cat);
+  const measure: Measure = isMeasure(query.by) ? query.by : "points";
+
+  const [schedule, mine, badges, results, categories] = await Promise.all([
     getSchedule(),
-    getSeasonResults(),
-    teamBadges(),
     readerTeamId(),
+    teamBadges(),
+    getSeasonResults(),
+    getSeasonStats(),
   ]);
 
   if ("unavailable" in schedule) {
     return (
       <LeagueShell title="Team Stats" current="teamStats">
-        <Nothing title={FANTRAX_SILENT} code={schedule.unavailable}>
-          These are read off the league&apos;s own results, and we cannot reach
-          them right now.
+        <Nothing title="Team Stats unavailable" code={FANTRAX_SILENT}>
+          {schedule.unavailable}
         </Nothing>
       </LeagueShell>
     );
@@ -55,147 +93,121 @@ export default async function TeamStatsPage() {
       .filter((round) => round.status === "finished")
       .map((round) => round.period),
   );
-  const stats = new Map(
+  const rounds5 = new Map(
     teamPeriodStats(results, played).map((row) => [row.teamId, row]),
   );
 
-  if (stats.size === 0) {
-    return (
-      <LeagueShell
-        title="Team Stats"
-        current="teamStats"
-        teams={info.teams.length}
-      >
-        <Nothing
-          title="Nothing to average yet"
-          code={`${played.size} finished rounds scored`}
-        >
-          A distribution needs rounds in it. These fill in as {info.name} plays.
-        </Nothing>
-      </LeagueShell>
-    );
-  }
-
-  // The league's own order, so a reader moving between the two tabs finds the
-  // same sixteen names in the same places. Ordering by average here would be a
-  // second opinion about the table on a screen that is not the table.
-  const rows = [...table].sort((a, b) => a.rank - b.rank);
+  const lines = categories.get(category.key) ?? [];
+  const board = rankBy(lines, category, measure);
+  const named = new Map(table.map((row) => [row.teamId, row.teamName]));
 
   return (
-    <LeagueShell
-      title="Team Stats"
-      current="teamStats"
-      teams={info.teams.length}
-    >
-      <div className="overflow-x-auto">
-        {/* `border-collapse`, exactly as `/league` sets it. With
-            `border-separate` the `border-b` on each `<tr>` is not drawn at all —
-            CSS tables only render row borders when collapsed — and the index
-            column runs together into one unbroken blue bar down the left, which
-            is how the first cut of this shipped. */}
-        <table className="w-full border-collapse text-sm">
-          <caption className="sr-only">
-            Each team&apos;s scoring across finished rounds
-          </caption>
-          <thead>
-            <HeadRow>
-              {/* The index column's head is empty and still plated-less: a
-                  numbered column needs no label, and the strip starts at the
-                  first figure either way. */}
-              <Head width="w-8 lg:w-14">
-                <span className="flex h-7 items-center justify-center px-1.5" />
-              </Head>
-              <NameHead label="Team" />
-              {HEADS.map((head) => (
-                <Head key={head.label} width={head.width} title={head.title}>
-                  <span className={PLATE}>{head.label}</span>
+    <LeagueShell title="Team Stats" current="teamStats" teams={info.teams.length}>
+      <Filters category={category.key} measure={measure} />
+
+      {board.length === 0 ? (
+        <Nothing title="Nothing recorded yet" code={`${played.size} finished rounds scored`}>
+          {category.label} fills in as {info.name} plays.
+        </Nothing>
+      ) : (
+        <div className="overflow-x-auto">
+          {/* `border-collapse`, exactly as `/league` sets it. With
+              `border-separate` the `border-b` on each `<tr>` is not drawn at all
+              — CSS tables only render row borders when collapsed — and the index
+              column runs together into one unbroken blue bar down the left. */}
+          <table className="w-full border-collapse text-sm">
+            <caption className="sr-only">
+              Every team ranked by {category.label}, {LABEL[measure]}
+            </caption>
+            <thead>
+              <HeadRow>
+                <Head width="w-10 lg:w-16">
+                  <span className="flex h-7 items-center justify-center px-1.5" />
                 </Head>
-              ))}
-            </HeadRow>
-          </thead>
-          <tbody>
-            {rows.map((row) => {
-              const stat = stats.get(row.teamId);
-              const yours = row.teamId === mine;
-              return (
-                <tr
-                  key={row.teamId}
-                  className={`border-b border-bg ${yours ? "bg-raised" : "hover:bg-surface"}`}
-                >
-                  <td className="cm-index numeric px-1.5 text-center text-2xs font-bold">
-                    {row.rank}
-                  </td>
-                  <td className="pl-2">
-                    {/* A link, and the same one the table one tab away draws.
-                        It was a `<span>` styled identically to `TableRow`'s
-                        `<Link>` — so a name that looks exactly like a link on
-                        the Table did nothing here, which is worse than a name
-                        that never looked tappable at all. */}
-                    <Link
-                      href={`/squad/${row.teamId}`}
-                      className={`cm-row flex min-h-11 items-center gap-2 text-base font-bold hover:underline lg:text-lg ${yoursInk(
-                        yours,
-                      )}`}
-                    >
-                      <TeamBadge
-                        team={{ teamId: row.teamId, name: row.teamName }}
-                        url={badges.get(row.teamId)}
-                      />
-                      <span className="min-w-0 truncate">{row.teamName}</span>
-                    </Link>
-                  </td>
-                  <td className={FIGURE}>{stat?.scored ?? DASH}</td>
-                  <td className={`${FIGURE} text-mid`}>{stat?.high ?? DASH}</td>
-                  <td className={`${FIGURE} text-mid`}>{stat?.low ?? DASH}</td>
-                  <td className={`${FIGURE} text-mid`}>
-                    {mean(stat?.average)}
-                  </td>
-                  <td className={`${FIGURE} text-mid`}>{row.pointsFor}</td>
-                  <td className={`${FIGURE} text-mid`}>{row.pointsAgainst}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                <NameHead label="Team" />
+                <Head width="w-16 lg:w-28" title="Best round — fantasy points in one period">
+                  <span className={PLATE}>High</span>
+                </Head>
+                <Head width="w-16 lg:w-28" title="Worst round — fantasy points in one period">
+                  <span className={PLATE}>Low</span>
+                </Head>
+                <Head width="w-20 lg:w-32" title={category.key}>
+                  <span className={PLATE}>{HEAD[measure]}</span>
+                </Head>
+              </HeadRow>
+            </thead>
+            <tbody>
+              {board.map((row) => {
+                const yours = row.teamId === mine;
+                const week = rounds5.get(row.teamId);
+                const figure = measure === "points" ? row.points : row.value;
+
+                return (
+                  <tr
+                    key={row.teamId}
+                    className={`border-b border-bg ${yours ? "bg-raised" : "hover:bg-surface"}`}
+                  >
+                    {/* The ordinal, in CM's own index block. `24.jpg` runs
+                        `1st 2nd 3rd` down the left of every table it draws, and
+                        a column of bare numbers is a list where a column of
+                        ordinals is a league. */}
+                    <td className="cm-index numeric px-1.5 text-center text-2xs font-bold">
+                      {ordinal(row.rank)}
+                    </td>
+                    <td className="pl-2">
+                      <Link
+                        href={`/squad/${row.teamId}`}
+                        className={`cm-row flex min-h-11 items-center gap-2 text-base font-bold hover:underline lg:text-lg ${yoursInk(
+                          yours,
+                        )}`}
+                      >
+                        <TeamBadge
+                          team={{ teamId: row.teamId, name: named.get(row.teamId) ?? row.teamId }}
+                          url={badges.get(row.teamId)}
+                        />
+                        <span className="min-w-0 truncate">
+                          {named.get(row.teamId) ?? row.teamId}
+                        </span>
+                      </Link>
+                    </td>
+                    <td className={`${FIGURE} text-mid`}>{week?.high ?? DASH}</td>
+                    <td className={`${FIGURE} text-mid`}>{week?.low ?? DASH}</td>
+                    {/* The category's own figure, and the only column on this
+                        screen the order is about. Yellow because CM pays every
+                        stat figure the same `#faff00` (measured, `21.jpg`). */}
+                    <td className={`${FIGURE} text-base text-accent lg:text-lg`}>
+                      {figure === null ? DASH : figure.toLocaleString("en-GB")}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </LeagueShell>
   );
 }
 
-/** Absence, never a nought — a team with no scored round has not averaged nought
- *  (DESIGN §7). */
+/** Absence, never a nought — a team with no reading has not recorded nought of
+ *  it (DESIGN §7). */
 const DASH = "—";
 
 const FIGURE = "numeric px-1.5 text-center text-2xs font-bold text-ink";
 
-const HEADS = [
-  {
-    label: "Rds",
-    title: "Finished rounds with a readable total",
-    width: "w-9 lg:w-16",
-  },
-  { label: "High", title: "Best round", width: "w-11 lg:w-20" },
-  { label: "Low", title: "Worst round", width: "w-11 lg:w-20" },
-  {
-    label: "Avg",
-    title: "Mean per round, to one decimal",
-    width: "w-12 lg:w-20",
-  },
-  {
-    label: "For",
-    title: "Fantasy points scored — Fantrax's FPtsF",
-    width: "w-11 lg:w-20",
-  },
-  {
-    label: "Ag",
-    title: "Fantasy points conceded — Fantrax's FPtsA",
-    width: "w-11 lg:w-20",
-  },
-] as const;
+/** What the ranked column is headed. `FPts` is Fantrax's own abbreviation and is
+ *  reserved for Fantrax's own numbers, which these are. */
+const HEAD: Record<Measure, string> = { points: "FPts", value: "Total" };
+const LABEL: Record<Measure, string> = {
+  points: "by fantasy points",
+  value: "by raw total",
+};
 
-/** One decimal, and the trailing nought stays. `60.0` beside `59.5` reads as a
- *  column; `60` beside `59.5` reads as two different kinds of number — the same
- *  reason `tnum` is on every figure in the app. */
-function mean(value: number | null | undefined): string {
-  return value === null || value === undefined ? DASH : value.toFixed(1);
+/** `1` becomes `1st`. CM's index cell carries the ordinal and not the number,
+ *  which is a small thing that reads as the game immediately — a column of
+ *  `1st 2nd 3rd` is a league table and a column of `1 2 3` is a list. */
+function ordinal(rank: number): string {
+  const tens = rank % 100;
+  if (tens >= 11 && tens <= 13) return `${rank}th`;
+  return `${rank}${["th", "st", "nd", "rd"][rank % 10] ?? "th"}`;
 }
