@@ -183,6 +183,17 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
               })}
             </tbody>
           </table>
+          {/* Why the two boxes can disagree, said once under the board rather
+              than left for a reader to work out from a rank that moved.
+              Flipping the measure genuinely inverts some categories: a side
+              conceding fewest goals across the fewest minutes tops the raw
+              column and sits bottom of the points one, and both are right.
+              Fantrax has already priced the minutes; the raw figure has not. */}
+          <p className="px-1.5 pt-2 text-2xs text-faint">
+            Fantasy points are Fantrax&apos;s own and already account for how
+            long a squad was on the pitch. A raw total does not, so the two
+            orders can differ.
+          </p>
         </div>
       )}
     </LeagueShell>

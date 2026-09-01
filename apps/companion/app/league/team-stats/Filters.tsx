@@ -47,9 +47,17 @@ export default function Filters({
   }
 
   return (
-    <form method="get" action={HERE} className="flex items-center gap-2">
-      {/* Left and right, with the gap between them doing the pushing. CM's
-          strip has its two controls at the ends of the panel's width and
+    <form
+      method="get"
+      action={HERE}
+      // `justify-between` and NOT a `flex-1` spacer between the two. A spacer
+      // is a third flex item competing for the same row, and on a 390 phone it
+      // won — both selects were squeezed until their labels clipped ("Goals
+      // ag…", "Raw tot…"). Space-between gives the leftover to the GAP, which
+      // is what "at the two ends" actually means.
+      className="flex flex-wrap items-center justify-between gap-2"
+    >
+      {/* CM's strip has its two controls at the ends of the panel's width and
           nothing in the middle. */}
       <Select
         name="cat"
@@ -58,7 +66,6 @@ export default function Filters({
         options={CATEGORIES.map((entry) => ({ value: entry.key, label: entry.label }))}
         onPick={pick}
       />
-      <span className="flex-1" />
       <Select
         name="by"
         label="Ranked by"
@@ -106,7 +113,13 @@ function Select({
       // and no ground either. Only the closed control is ours; the option list
       // is the platform's popup and cannot be styled, which is why this is still
       // a `<select>`.
-      className="cm-bevel min-h-11 min-w-0 max-w-[45%] px-2.5 text-sm font-semibold lg:min-h-9 lg:max-w-52"
+      // Sized by its own longest option and nothing else. Two earlier attempts
+      // both clipped a label on a 390 phone: `max-w-[45%]` cut "Goals against"
+      // to "Goals agains", and `flex-1 basis-0` split the row evenly and cut
+      // BOTH. A truncated label reads as a typo rather than as an ellipsis, and
+      // the widest pair here — "Assists (fantasy)" and "Fantasy points" — still
+      // fits a 390 row when neither is being squeezed.
+      className="cm-bevel min-h-11 px-2.5 text-sm font-semibold lg:min-h-9"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>
