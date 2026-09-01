@@ -9,7 +9,6 @@ import {
   toFplClubCode,
 } from "@epl/core";
 import PlayerPortrait from "../components/football/PlayerPortrait";
-import { Head, HeadRow, NameHead, PLATE } from "../components/league/TableHeads";
 
 // CM's stat board, on the player pool.
 //
@@ -69,26 +68,15 @@ export default function Board({
           <caption className="sr-only">
             The pool ranked by {category}, Fantrax&apos;s own count
           </caption>
-          <thead>
-            <HeadRow>
-              <Head width="w-10 lg:w-16">
-                <span className="flex h-7 items-center justify-center px-1.5" />
-              </Head>
-              <NameHead label="Player" />
-              <Head width="w-10 lg:w-16" title="What Fantrax lists him as">
-                <span className={PLATE}>Pos</span>
-              </Head>
-              <Head width="w-24 lg:w-40" title="The fantasy team holding him">
-                <span className={PLATE}>Team</span>
-              </Head>
-              <Head width="w-16 lg:w-28" title="His Premier League club">
-                <span className={PLATE}>Club</span>
-              </Head>
-              <Head width="w-16 lg:w-24" title={category}>
-                <span className={PLATE}>{category}</span>
-              </Head>
-            </HeadRow>
-          </thead>
+          {/* **No column heads, because CM has none.** Craig, 1 Sep 2026:
+              "the rows don't really look like CM, we don't need column headers
+              for all". The Average Rating shot is a caption and then the list —
+              no `Pos`, no `Club`, no header over the rating. The caption above
+              this table already says which category it is, and a head over every
+              column repeats it while stealing a row's worth of height from a
+              board whose whole problem was density. The `<caption>` stays for a
+              screen reader, which is the one reader that cannot see the strip
+              above. */}
           <tbody>
             {rows.map((row) => {
               const owner = row.line.ownerTeamId
@@ -100,9 +88,25 @@ export default function Board({
                   <td className="cm-index numeric px-1.5 text-center text-2xs font-bold">
                     {ordinal(row.rank)}
                   </td>
-                  <td className="pl-2">
+                  {/* `w-full` on the NAME cell, which under automatic table
+                      layout means "take the slack" rather than "be the whole
+                      row" — the other cells keep their content width and the
+                      name absorbs what is left. Without it the name pushed the
+                      figure off the right edge of a 390 phone and the board
+                      ranked by goals did not show the goals. `max-w-0` plus
+                      `truncate` inside is what makes the name give way rather
+                      than the column that matters. */}
+                  <td className="w-full max-w-0 pl-2">
                     <Link
                       href={`/players/${row.line.fantraxId}`}
+                      // `min-h-11` AND `.cm-row`, which is the documented pair
+                      // rather than a belt and braces: `desk.css` says in as
+                      // many words that "`.cm-row` says nothing below `lg`, and
+                      // that is the whole design" — the phone's 44px tap floor
+                      // is the `min-h-11`, and the class takes over at `lg` to
+                      // bring the row down to CM's 28. Dropping the `min-h`
+                      // took every row on a 390 phone to 32px, which tapfit
+                      // caught as 50 under-floor targets in one sweep.
                       className="cm-row flex min-h-11 items-center gap-2 font-bold hover:underline"
                     >
                       <PlayerPortrait
@@ -115,18 +119,28 @@ export default function Board({
                       <span className="min-w-0 truncate">{row.line.name}</span>
                     </Link>
                   </td>
-                  <td className={`${FIGURE} text-faint`}>{row.line.position ?? DASH}</td>
+                  {/* Position and club stand down under a thumb. A 390 phone
+                      cannot hold six columns and the one it was dropping was
+                      the FIGURE — a board ranked by goals that does not show
+                      the goals. What a reader needs on a phone is the order,
+                      the man, who owns him and the number; his position and his
+                      club are on his own page, one tap away. */}
+                  <td className={`${FIGURE} hidden text-faint lg:table-cell`}>
+                    {row.line.position ?? DASH}
+                  </td>
                   {/* **"In the bin" for nobody's player** (Craig, 1 Sep). Not a
                       dash: an unowned player is not a missing reading, he is a
                       free agent, and the league has a word for that. */}
-                  <td className="px-1.5 text-2xs">
+                  <td className="max-w-24 px-1.5 text-2xs lg:max-w-none">
                     {owner === null ? (
                       <span className="text-faint">In the bin</span>
                     ) : (
-                      <span className="truncate font-bold text-mid">{owner}</span>
+                      <span className="block truncate font-bold text-mid">{owner}</span>
                     )}
                   </td>
-                  <td className={`${FIGURE} text-faint`}>{row.line.clubShort ?? DASH}</td>
+                  <td className={`${FIGURE} hidden text-faint lg:table-cell`}>
+                    {row.line.clubShort ?? DASH}
+                  </td>
                   <td className={`${FIGURE} text-base text-accent lg:text-lg`}>
                     {row.value === null ? DASH : row.value.toLocaleString("en-GB")}
                   </td>
@@ -171,6 +185,9 @@ export default function Board({
 }
 
 const DASH = "—";
+/** A cell in the list. Tight: CM's own rows are 18px at 800x600 and `.cm-row`
+ *  holds the desk to 28 with the phone's 44px tap floor intact, which is the
+ *  whole reason the height lives on the class rather than on a `min-h`. */
 const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
 
 /** `1` becomes `1st`. CM's index cell carries the ordinal and not the number. */
