@@ -20,6 +20,9 @@
 export interface StatCategory {
   key: string;
   label: string;
+  /** Two or three letters for a column head. Fantrax's own abbreviations where
+   *  it has one, because a reader who knows their scoring page knows these. */
+  short: string;
   /** True when a low figure is the better one. Cards, own goals and goals
    *  against are the categories where topping the table is bad news, and a board
    *  that ranked them descending would put the worst side first under a heading
@@ -32,18 +35,18 @@ export interface StatCategory {
  *  `Assists (Fantasy)` first and `Yellow Cards` last is an accident of the
  *  alphabet, not an order anybody wants to read. */
 export const CATEGORIES: readonly StatCategory[] = [
-  { key: "Minutes Played", label: "Minutes" },
-  { key: "Goals", label: "Goals" },
-  { key: "Assists (Official)", label: "Assists" },
-  { key: "Assists (Fantasy)", label: "Assists (fantasy)" },
-  { key: "Clean Sheets On Field", label: "Clean sheets" },
-  { key: "Saves", label: "Saves" },
-  { key: "Penalty Kick Saves", label: "Penalties saved" },
-  { key: "Goals Against", label: "Goals against", lowIsGood: true },
-  { key: "Yellow Cards", label: "Yellow cards", lowIsGood: true },
-  { key: "Red Cards", label: "Red cards", lowIsGood: true },
-  { key: "Penalty Kicks Missed", label: "Penalties missed", lowIsGood: true },
-  { key: "Own Goals", label: "Own goals", lowIsGood: true },
+  { key: "Minutes Played", label: "Minutes", short: "Min" },
+  { key: "Goals", label: "Goals", short: "G" },
+  { key: "Assists (Official)", label: "Assists", short: "A" },
+  { key: "Assists (Fantasy)", label: "Assists (fantasy)", short: "AF" },
+  { key: "Clean Sheets On Field", label: "Clean sheets", short: "CS" },
+  { key: "Saves", label: "Saves", short: "Sv" },
+  { key: "Penalty Kick Saves", label: "Penalties saved", short: "PKS" },
+  { key: "Goals Against", label: "Goals against", short: "GA", lowIsGood: true },
+  { key: "Yellow Cards", label: "Yellow cards", short: "YC", lowIsGood: true },
+  { key: "Red Cards", label: "Red cards", short: "RC", lowIsGood: true },
+  { key: "Penalty Kicks Missed", label: "Penalties missed", short: "PKM", lowIsGood: true },
+  { key: "Own Goals", label: "Own goals", short: "OG", lowIsGood: true },
 ];
 
 export function categoryFor(key: string | undefined): StatCategory {

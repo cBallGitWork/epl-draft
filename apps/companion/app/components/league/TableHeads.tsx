@@ -43,7 +43,9 @@ export function Head({
   title?: string | undefined;
   /** Set only by a sortable table, and only on the column in force. */
   sorted?: "ascending" | "descending" | undefined;
-  children: ReactNode;
+  /** Absent on a spacer column — a `<th>` with nothing in it, which is how a
+   *  table holds a gap open without a plate floating in it. */
+  children?: ReactNode;
 }) {
   return (
     <th

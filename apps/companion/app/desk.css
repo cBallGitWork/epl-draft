@@ -132,8 +132,20 @@
    `--color-chrome`, not a depth step. `--color-surface` is 1.06:1 off the ground
    and would be an index cell nobody can see; this is 2.44:1 with its number at
    7.0:1 on it. The accent edge rides here, so "yours" and the index are one mark. */
+/* CM's index cell — the blue block down the left of every table it draws.
+   Craig, 1 Sep 2026: "the blue that we use in the table should be a blue closer
+   to the nav bar", and the reference agrees. The game runs its title bar and tab
+   strip at `#0030a6` and its index cell at `#1f13a7` (measured, `12.jpg` /
+   `21.jpg` / `23.jpg`) — two blues a step apart, not one blue and a dark one.
+
+   Ours had drifted the other way: `--color-chrome` is the NAV's own token, so
+   the cell and the strip were the same value and the cell read as a lighter
+   patch of the same furniture rather than as its own object. This lifts it to
+   the strip's family while keeping the step CM keeps — the same hue, one rung
+   more saturated and slightly deeper, so a row of them reads as a spine and not
+   as a second tab bar. */
 .cm-index {
-  background: var(--color-chrome);
+  background: var(--color-index);
   color: var(--color-ink);
   box-shadow: inset -1px 0 0 var(--color-bg);
 }

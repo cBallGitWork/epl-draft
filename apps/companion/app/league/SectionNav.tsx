@@ -40,10 +40,40 @@ const SECTIONS = [
   { href: "/league/team-stats", label: "Team Stats", key: "teamStats" },
 ] as const;
 
-/** Below the panel, not in the strip. One entry today; CM's own is five
- *  (`Team Stats · Player Stats · Referee Stats · Awards ▸ · History ▸`) and two
- *  of those are now upstairs. */
+/** Reachable from the section but not a tab in it. Matchups has a board and a
+ *  page per pairing, so it stays navigable; it is not in the strip because Craig
+ *  named the five that belong there and this was not one.
+ *
+ *  It had a foot ROW of its own for a day and lost it (Craig, 1 Sep: "ditch
+ *  matchups row underneath") — one entry is a stray button under a panel, not a
+ *  bar. CM's own second row is five wide, and when this is three or four it
+ *  earns the row back. */
 export const FOOT = [{ href: "/league/matchups", label: "Matchups", key: "matchups" }] as const;
+
+/** Where the foot pair points from here.
+ *
+ *  CM ends every screen with a Back/Next pair and its arrows step through the
+ *  screens in order, so this is that order — the tab strip's own, which is the
+ *  one a reader has just been looking at.
+ *
+ *  Back from the FIRST tab, and from anywhere off the strip, is the section
+ *  index: a pair that vanishes on one screen is a pair that moves the panel
+ *  above it, and "Table" is a truer answer than a disabled plate. Next is null
+ *  on the last tab and the plate simply is not drawn — Back alone is a bar, and
+ *  a dead "Next" is a lie about what is there. */
+export function steps(current: LeagueSection): {
+  back: { href: string; label: string };
+  next: { href: string; label: string } | null;
+} {
+  const at = SECTIONS.findIndex((section) => section.key === current);
+  const previous = at > 0 ? SECTIONS[at - 1] : undefined;
+  const following = at === -1 ? undefined : SECTIONS[at + 1];
+
+  return {
+    back: previous ?? { href: "/league", label: "Table" },
+    next: following ?? null,
+  };
+}
 
 export type LeagueSection =
   | (typeof SECTIONS)[number]["key"]

@@ -1,7 +1,7 @@
 import { LEAGUE_NAME } from "@epl/core";
 import PageHeader from "../components/shell/PageHeader";
 import Link from "next/link";
-import SectionNav, { FOOT } from "./SectionNav";
+import SectionNav, { steps } from "./SectionNav";
 import type { LeagueSection } from "./SectionNav";
 
 // The frame every league section wears, including when it has nothing to show.
@@ -46,6 +46,8 @@ export default function LeagueShell({
   teams?: number;
   children: React.ReactNode;
 }) {
+  const { back, next } = steps(current);
+
   return (
     <div className="flex flex-col gap-3">
       {/* The competition's own bar, and the competition's own NAME on it. CM
@@ -85,31 +87,44 @@ export default function LeagueShell({
         {children}
       </section>
 
-      {/* **CM's second row, at last.** Every screen in the reference library ends
-          with a row of related screens above its Back/Next pair — `Tactics ▸
-          Training ▸ Last Match ▸ 6th in PRM ▸ History ▸` on `24.jpg` — and the
-          catalogue has listed its absence as one of two things every shot has
-          and we have on none. It exists now because Matchups left the tab strip
-          when Craig named the five that belong there, and a route with a board
-          and a page per pairing needed somewhere to be reached from.
+      {/* **CM's last bar: the Back/Next pair.** Every screen in the reference
+          library ends with it — two wide plates across the foot, below whatever
+          else the screen carries (`cm9900/24.jpg`, and the pair is in `12.jpg`,
+          `21.jpg` and `25.jpg` too). Craig asked for it on 1 Sep after landing
+          on Team Stats from the strip and finding no way back: "when clicking on
+          team stats, we need a back button (but the actual game has back arrows
+          in the last nav bar)".
 
-          Buttons and not tabs: a tab says "another view of this screen" and the
-          strip above already says that five times. These are somewhere else you
-          can go, so they are drawn raised — pressable — rather than as plates
-          butted into a bar. */}
-      <nav aria-label="Related screens" className="flex gap-1">
-        {FOOT.map((entry) => (
+          **It replaced the Matchups row rather than joining it.** That row was
+          CM's OTHER foot bar — related screens, `Tactics ▸ Training ▸ History ▸`
+          — and it had exactly one entry, so it read as a stray button under the
+          panel rather than as a bar (Craig: "ditch matchups row underneath").
+          Matchups keeps its own tab in the strip above, which is where a view of
+          this competition belongs; when there are three or four related screens
+          worth naming, the second row earns its place back.
+
+          A real `<a>` and not a history call: the pair has to work on the first
+          page of a session, where there is nothing to go back TO, and a button
+          that does nothing on arrival is worse than a link that always goes
+          somewhere. Back is the section's own index and Next is the tab after
+          this one, which is what CM's arrows step through. */}
+      <nav aria-label="Page" className="flex gap-1">
+        <Link
+          href={back.href}
+          className="cm-bevel flex min-h-11 flex-1 items-center justify-center gap-2 px-3 font-chrome text-2xs font-bold uppercase hover:brightness-110 lg:min-h-9 lg:text-sm"
+        >
+          <span aria-hidden>◂</span>
+          {back.label}
+        </Link>
+        {next === null ? null : (
           <Link
-            key={entry.key}
-            href={entry.href}
-            aria-current={entry.key === current ? "page" : undefined}
-            className={`flex min-h-11 flex-1 items-center justify-center px-3 font-chrome text-2xs font-bold uppercase lg:min-h-9 lg:text-sm ${
-              entry.key === current ? "cm-bevel-pressed text-accent" : "cm-bevel hover:brightness-110"
-            }`}
+            href={next.href}
+            className="cm-bevel flex min-h-11 flex-1 items-center justify-center gap-2 px-3 font-chrome text-2xs font-bold uppercase hover:brightness-110 lg:min-h-9 lg:text-sm"
           >
-            {entry.label}
+            {next.label}
+            <span aria-hidden>▸</span>
           </Link>
-        ))}
+        )}
       </nav>
     </div>
   );

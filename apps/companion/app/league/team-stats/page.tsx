@@ -3,7 +3,6 @@ import {
   categoryFor,
   isMeasure,
   rankBy,
-  teamPeriodStats,
   type Measure,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
@@ -12,7 +11,7 @@ import { Head, HeadRow, NameHead, PLATE } from "../../components/league/TableHea
 import LeagueShell from "../Shell";
 import Filters from "./Filters";
 import { getSeasonStats } from "./seasonStats";
-import { getSchedule, getSeasonResults } from "../schedule/schedule";
+import { getSchedule } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
@@ -37,9 +36,11 @@ import { FANTRAX_SILENT } from "../../config";
 // clean sheets kept by their defenders as two statistics. `mapSeasonStats` adds
 // them, and carries the two traps that split creates.
 //
-// High and Low stay, on Craig's call ("i like having a best and worst score,
-// just for fantasy points for a week") — they are the one thing the board cannot
-// say, because they are about a ROUND and every category here is a season total.
+// **One figure per row, and it is the category's.** High and Low rode along for
+// a day and came off on sight (Craig, 1 Sep: "ditch high low, looks bad") — they
+// answered a different question from the one the board asks, and three number
+// columns on a leaderboard is a spreadsheet again. A best and worst round is
+// still worth having; it belongs to a screen about ROUNDS, which this is not.
 //
 // **No owner column, and not for want of asking.** CM's board names a player and
 // his club, and the fantasy equivalent would be the team and its manager. Fantrax
@@ -65,11 +66,10 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   const category = categoryFor(query.cat);
   const measure: Measure = isMeasure(query.by) ? query.by : "points";
 
-  const [schedule, mine, badges, results, categories] = await Promise.all([
+  const [schedule, mine, badges, categories] = await Promise.all([
     getSchedule(),
     readerTeamId(),
     teamBadges(),
-    getSeasonResults(),
     getSeasonStats(),
   ]);
 
@@ -86,15 +86,12 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   const { info, rounds, table } = schedule;
 
   // Finished rounds only, the same test Results uses — see `gameweekStatus` in
-  // core. A round in play has a total that is still moving, and a high-water
-  // mark that changes while you read it is not a statistic.
+  // core. Kept for the empty state's count and nothing else now: a category with
+  // no readings should say how far into the season that is.
   const played = new Set(
     rounds
       .filter((round) => round.status === "finished")
       .map((round) => round.period),
-  );
-  const rounds5 = new Map(
-    teamPeriodStats(results, played).map((row) => [row.teamId, row]),
   );
 
   const lines = categories.get(category.key) ?? [];
@@ -115,7 +112,14 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
               `border-separate` the `border-b` on each `<tr>` is not drawn at all
               — CSS tables only render row borders when collapsed — and the index
               column runs together into one unbroken blue bar down the left. */}
-          <table className="w-full border-collapse text-sm">
+          <table
+            // `max-w` on the TABLE and not on a column: `max-width` on a `<th>`
+            // is ignored under automatic table layout, which is why capping the
+            // name column changed nothing. Two number columns cannot fill 1440,
+            // so the table stops short of it and the pair sits where the eye
+            // already is instead of at the far edge.
+            className="w-full max-w-3xl border-collapse text-sm"
+          >
             <caption className="sr-only">
               Every team ranked by {category.label}, {LABEL[measure]}
             </caption>
@@ -125,22 +129,32 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                   <span className="flex h-7 items-center justify-center px-1.5" />
                 </Head>
                 <NameHead label="Team" />
-                <Head width="w-16 lg:w-28" title="Best round — fantasy points in one period">
-                  <span className={PLATE}>High</span>
+                {/* Both numbers, always. Craig, 1 Sep: "have fantasy points and
+                    raw value in two columns" — which also answers the floating
+                    figure, because one number on a full-width table flings
+                    itself to the far edge and two hold each other in. The
+                    right-hand select now only REORDERS; it no longer decides
+                    what you can see, and the column it ordered by is drawn
+                    pressed so the board says which one it is sorted on. */}
+                <Head
+                  width="w-20 lg:w-32"
+                  title={`${category.key} — fantasy points`}
+                  sorted={measure === "points" ? "descending" : undefined}
+                >
+                  <span className={measure === "points" ? PRESSED : PLATE}>FPts</span>
                 </Head>
-                <Head width="w-16 lg:w-28" title="Worst round — fantasy points in one period">
-                  <span className={PLATE}>Low</span>
-                </Head>
-                <Head width="w-20 lg:w-32" title={category.key}>
-                  <span className={PLATE}>{HEAD[measure]}</span>
+                <Head
+                  width="w-20 lg:w-32"
+                  title={`${category.key} — raw total`}
+                  sorted={measure === "value" ? "descending" : undefined}
+                >
+                  <span className={measure === "value" ? PRESSED : PLATE}>Total</span>
                 </Head>
               </HeadRow>
             </thead>
             <tbody>
               {board.map((row) => {
                 const yours = row.teamId === mine;
-                const week = rounds5.get(row.teamId);
-                const figure = measure === "points" ? row.points : row.value;
 
                 return (
                   <tr
@@ -170,30 +184,37 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                         </span>
                       </Link>
                     </td>
-                    <td className={`${FIGURE} text-mid`}>{week?.high ?? DASH}</td>
-                    <td className={`${FIGURE} text-mid`}>{week?.low ?? DASH}</td>
-                    {/* The category's own figure, and the only column on this
-                        screen the order is about. Yellow because CM pays every
-                        stat figure the same `#faff00` (measured, `21.jpg`). */}
-                    <td className={`${FIGURE} text-base text-accent lg:text-lg`}>
-                      {figure === null ? DASH : figure.toLocaleString("en-GB")}
+                    {/* The sorted column carries the weight — Craig, 1 Sep:
+                        "TOTAL could be a bigger font". Set at the name's own
+                        size and a step up above `lg`, which is the pairing
+                        `24.jpg` uses: CM runs its club name and its figures at
+                        the same height. The other column stays in `--color-mid`
+                        at the row size, so the board says at a glance which
+                        number it is ordered on without a second colour or an
+                        arrow doing it. */}
+                    <td
+                      className={`${FIGURE} ${
+                        measure === "points"
+                          ? "text-lg text-accent lg:text-2xl"
+                          : "text-mid"
+                      }`}
+                    >
+                      {row.points === null ? DASH : row.points.toLocaleString("en-GB")}
+                    </td>
+                    <td
+                      className={`${FIGURE} ${
+                        measure === "value"
+                          ? "text-lg text-accent lg:text-2xl"
+                          : "text-mid"
+                      }`}
+                    >
+                      {row.value === null ? DASH : row.value.toLocaleString("en-GB")}
                     </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
-          {/* Why the two boxes can disagree, said once under the board rather
-              than left for a reader to work out from a rank that moved.
-              Flipping the measure genuinely inverts some categories: a side
-              conceding fewest goals across the fewest minutes tops the raw
-              column and sits bottom of the points one, and both are right.
-              Fantrax has already priced the minutes; the raw figure has not. */}
-          <p className="px-1.5 pt-2 text-2xs text-faint">
-            Fantasy points are Fantrax&apos;s own and already account for how
-            long a squad was on the pitch. A raw total does not, so the two
-            orders can differ.
-          </p>
         </div>
       )}
     </LeagueShell>
@@ -206,9 +227,10 @@ const DASH = "—";
 
 const FIGURE = "numeric px-1.5 text-center text-2xs font-bold text-ink";
 
-/** What the ranked column is headed. `FPts` is Fantrax's own abbreviation and is
- *  reserved for Fantrax's own numbers, which these are. */
-const HEAD: Record<Measure, string> = { points: "FPts", value: "Total" };
+/** The sorted column's plate, drawn pressed. The same object the league table's
+ *  sortable heads use, so "the column this is ordered by" looks the same in both
+ *  places rather than being invented twice. */
+const PRESSED = "cm-bevel-pressed flex h-7 items-center justify-center whitespace-nowrap px-1.5";
 const LABEL: Record<Measure, string> = {
   points: "by fantasy points",
   value: "by raw total",
