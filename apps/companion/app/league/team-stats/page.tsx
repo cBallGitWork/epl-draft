@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { teamPeriodStats } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
@@ -125,8 +126,14 @@ export default async function TeamStatsPage() {
                     {row.rank}
                   </td>
                   <td className="pl-2">
-                    <span
-                      className={`cm-row flex min-h-11 items-center gap-2 text-base font-bold lg:text-lg ${yoursInk(
+                    {/* A link, and the same one the table one tab away draws.
+                        It was a `<span>` styled identically to `TableRow`'s
+                        `<Link>` — so a name that looks exactly like a link on
+                        the Table did nothing here, which is worse than a name
+                        that never looked tappable at all. */}
+                    <Link
+                      href={`/squad/${row.teamId}`}
+                      className={`cm-row flex min-h-11 items-center gap-2 text-base font-bold hover:underline lg:text-lg ${yoursInk(
                         yours,
                       )}`}
                     >
@@ -135,7 +142,7 @@ export default async function TeamStatsPage() {
                         url={badges.get(row.teamId)}
                       />
                       <span className="min-w-0 truncate">{row.teamName}</span>
-                    </span>
+                    </Link>
                   </td>
                   <td className={FIGURE}>{stat?.scored ?? DASH}</td>
                   <td className={`${FIGURE} text-mid`}>{stat?.high ?? DASH}</td>
