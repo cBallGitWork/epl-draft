@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   GROUPS,
   categoryFor,
+  isMeasure,
   groupFor,
   inGroup,
   rankBy,
@@ -9,7 +10,7 @@ import {
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
-import { Head, HeadRow, NameHead, PLATE } from "../../components/league/TableHeads";
+import { Head, HeadRow, NameHead } from "../../components/league/TableHeads";
 import LeagueShell from "../Shell";
 import Filters from "./Filters";
 import { getSeasonStats } from "./seasonStats";
@@ -73,13 +74,13 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   const category =
     choices.find((entry) => entry.key === query.cat) ?? choices[0] ?? categoryFor(undefined);
 
-  // Fantasy points, always. The board prints BOTH columns now, so the measure is
-  // what it is SORTED by and not what it shows — and with both visible, a
-  // control to swap which one leads was furniture (Craig, 1 Sep: "remove the
-  // dropdown row since thats now redundant"). Kept as a constant rather than
-  // deleted: `rankBy` still takes it, and a raw-total ordering is one query
-  // parameter away if the row ever wants it back.
-  const measure: Measure = "points";
+  // Which column the board is ordered by. The dropdown that used to ask this
+  // went when both columns started printing — it was choosing between two things
+  // already on screen — but the CHOICE is still real, and for a beat there was
+  // no way to make it (Craig, 1 Sep: "cant select total as filter"). It is the
+  // column heads now, which is how `/league` has always sorted: a link, so the
+  // server orders, the phone gets HTML, and the ordering survives being shared.
+  const measure: Measure = isMeasure(query.by) ? query.by : "points";
 
   const [schedule, mine, badges, categories] = await Promise.all([
     getSchedule(),
@@ -153,19 +154,22 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     right-hand select now only REORDERS; it no longer decides
                     what you can see, and the column it ordered by is drawn
                     pressed so the board says which one it is sorted on. */}
-                <Head
-                  width="w-20 lg:w-32"
-                  title={`${category.key} — fantasy points`}
-                  sorted="descending"
-                >
-                  <span className={PRESSED}>FPts</span>
-                </Head>
-                <Head
-                  width="w-20 lg:w-32"
-                  title={`${category.key} — raw total`}
-                >
-                  <span className={PLATE}>Total</span>
-                </Head>
+                <SortHead
+                  by="points"
+                  measure={measure}
+                  label="FPts"
+                  title={`${category.key} — order by fantasy points`}
+                  group={group}
+                  category={category.key}
+                />
+                <SortHead
+                  by="value"
+                  measure={measure}
+                  label="Total"
+                  title={`${category.key} — order by raw total`}
+                  group={group}
+                  category={category.key}
+                />
               </HeadRow>
             </thead>
             <tbody>
@@ -210,7 +214,9 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                         mis-set. Same size, same weight; the sorted one takes
                         the accent and the other `--color-mid`, which is the
                         figure slot either way. */}
-                    <td className={`${FIGURE} text-accent`}>
+                    <td
+                      className={`${FIGURE} ${measure === "points" ? "text-accent" : "text-ink"}`}
+                    >
                       {row.points === null ? DASH : row.points.toLocaleString("en-GB")}
                     </td>
                     {/* White, not amber. `--color-mid` is "a figure" in the
@@ -221,7 +227,9 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                         the accent; this takes `--color-ink`, which is the same
                         distance from it that CM puts between its yellow figures
                         and its white names. */}
-                    <td className={`${FIGURE} text-ink`}>
+                    <td
+                      className={`${FIGURE} ${measure === "value" ? "text-accent" : "text-ink"}`}
+                    >
                       {row.value === null ? DASH : row.value.toLocaleString("en-GB")}
                     </td>
                   </tr>
@@ -239,6 +247,52 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
         <Groups group={group} />
       </div>
     </LeagueShell>
+  );
+}
+
+/** A column head you can order by.
+ *
+ *  The same object `league/Columns.tsx` draws: a bevelled plate that is a LINK,
+ *  drawn pressed when the table is ordered by it, so the affordance and the
+ *  state are one thing the way the game said it. A link and not a handler for
+ *  the reason `sort.ts` records — the server orders, the phone gets HTML, and
+ *  the ordering survives being shared.
+ *
+ *  It carries the group and the category through, because a head that sorted and
+ *  silently dropped which category you were looking at would be a worse control
+ *  than none. */
+function SortHead({
+  by,
+  measure,
+  label,
+  title,
+  group,
+  category,
+}: {
+  by: Measure;
+  measure: Measure;
+  label: string;
+  title: string;
+  group: string;
+  category: string;
+}) {
+  const here = by === measure;
+  const query = new URLSearchParams({ group, cat: category });
+  // Fantasy points is the default, so it is spelled as no parameter at all —
+  // one URL for the default rather than two, as `/league` does with `rank`.
+  if (by !== "points") query.set("by", by);
+
+  return (
+    <Head width="w-20 lg:w-32" title={title} sorted={here ? "descending" : undefined}>
+      <Link
+        href={`/league/team-stats?${query.toString()}`}
+        className={`flex h-7 items-center justify-center whitespace-nowrap px-1.5 ${
+          here ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110"
+        }`}
+      >
+        {label}
+      </Link>
+    </Head>
   );
 }
 
@@ -303,10 +357,6 @@ const DASH = "—";
  *  they can afford to be read rather than scanned. */
 const FIGURE = "numeric px-1.5 text-center text-base font-bold lg:text-lg";
 
-/** The sorted column's plate, drawn pressed. The same object the league table's
- *  sortable heads use, so "the column this is ordered by" looks the same in both
- *  places rather than being invented twice. */
-const PRESSED = "cm-bevel-pressed flex h-7 items-center justify-center whitespace-nowrap px-1.5";
 const LABEL: Record<Measure, string> = {
   points: "by fantasy points",
   value: "by raw total",
