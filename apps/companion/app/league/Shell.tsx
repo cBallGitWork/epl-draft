@@ -46,7 +46,12 @@ export default function LeagueShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-3">
+    // `gap-2` and not `gap-3`. The stack is four boxes now rather than three —
+    // bar, strip, caption, content — and 12px between each of them spread the
+    // screen out until the panels stopped reading as one object. CM butts its
+    // title bar, tab strip and panels almost together; this is that, with enough
+    // air to keep the bevels legible.
+    <div className="flex flex-col gap-2">
       {/* The competition's own bar, and the competition's own NAME on it. CM
           heads this screen "English Premier Division" and lets the tab strip
           under it say which view you are on — the bar names the thing, the tabs
@@ -55,17 +60,22 @@ export default function LeagueShell({
       <PageHeader title={LEAGUE_NAME} sub={sub} competition />
       <SectionNav current={current} />
 
-      {/* **One panel, and the caption lives inside it.** A Championship Manager
-          screen is a bordered block that opens with its yellow caption and runs
-          down to the foot — the caption is the panel's own head, not a line
-          floating above a table (`cm9900/24.jpg`, `25.jpg`). Ours had the
-          caption in the gap between two things, which is where a heading goes
-          when nobody has decided what it heads.
+      {/* **Two boxes, not one.** Craig, 1 Sep 2026, against CM's stat screen:
+          "the team stats title row is a row itself, its own box, then the table
+          etc is its own container". The shot bears it out — "Average Rating"
+          sits on its own bordered strip with the two grey controls, and the list
+          under it is a separate bordered block. This had them in one panel with
+          the caption floating at the top of it, which is a heading inside a box
+          rather than a box of its own. */}
+      <section className="cm-panel px-2 py-1.5">
+        <p className="text-center font-chrome text-sm font-bold text-accent lg:text-lg">{title}</p>
+      </section>
 
-          `min-h` so a four-team league still draws a panel rather than a strip:
-          the block is the screen's shape and it should not shrink to its
-          contents, which is exactly why CM's tables look full at twelve rows and
-          ours looked abandoned at four.
+      {/* The content's own container, sized to hold the league.
+          `min-h` so a short league still draws a panel rather than a strip: the
+          block is the screen's shape and it should not shrink to its contents,
+          which is why CM's tables look full at twelve rows and ours looked
+          abandoned at four.
 
           **Sized in ROWS rather than in pixels**, which is the difference
           between a panel that holds the league and a panel that happens to be
@@ -80,7 +90,6 @@ export default function LeagueShell({
           minHeight: `calc(${Math.max(teams ?? 0, PANEL_ROWS)} * var(--table-row) + var(--table-chrome))`,
         }}
       >
-        <p className="text-center font-chrome text-sm font-bold text-accent lg:text-lg">{title}</p>
         {children}
       </section>
 

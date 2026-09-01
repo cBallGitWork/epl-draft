@@ -231,7 +231,13 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
           </table>
         </div>
       )}
-      <Groups group={group} />
+      {/* A gap between the last row and the buttons — Craig, 1 Sep: "add a small
+          gap between bottom of the table and rows". CM leaves air there too; the
+          row was sitting hard against the final rule, which read as one more
+          line of the table rather than as a bar under it. */}
+      <div className="pt-2">
+        <Groups group={group} />
+      </div>
     </LeagueShell>
   );
 }
