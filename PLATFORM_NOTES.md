@@ -70,6 +70,36 @@ Minutes Played. These tables have to be read positionally against their `name`,
 which is the inverse of the rule ten feet up the same file. Whoever builds this
 should put the reason in the mapper.
 
+### `getPlayerStats` carries raw stats — but only when asked by POSITION GROUP
+
+Probed 1 Sep 2026, and it overturns a conclusion reached an hour earlier that
+Fantrax does not publish per-player raw stats at all. It does. The parameter is
+**`positionOrGroup`**, which Craig found in his own browser URL
+(`/players;statusOrTeamFilter=ALL;pageNumber=1;positionOrGroup=SOCCER_NON_GOALIE`):
+
+| `positionOrGroup` | Columns |
+|---|---|
+| omitted, or `ALL` | **7** — `Rk Sta Opp FPts FP/G Ros +/-`, fantasy only |
+| `SOCCER_NON_GOALIE` | **18** — the 7 plus `GP Min G A AF YC RC PKM OG GAO CS` |
+| `SOCCER_GOALIE` | **20** — the 7 plus `GP Min CS GA Sv YC RC PKS PKM G A AF OG` |
+
+So two calls cover the pool with raw stats. It is the same goalkeeper/outfielder
+split `SEASON_STATS` has at team level, and the same combining rule applies.
+
+**Why this was nearly missed, recorded because the reasoning was sound and the
+answer was still wrong:** a probe of eight `statsType`/`scoringCategoryType`
+combinations returned 7 columns every time, five of them server-rejected with
+"not available for this league's sport", and `hideStatsFilter: true` on every
+response. That is a coherent story — Fantrax hides the category switch for EPL —
+and it pointed at the wrong conclusion, because the switch that matters is not a
+category type at all. **`data.tabs` and `scoringCategoryTypes` enumerate what the
+payload offers and neither mentions `positionOrGroup`**, so no amount of reading
+the response would have found it; it came from a URL.
+
+`getPlayerProfile` also carries a full raw stat line per player
+(`{"playerId": "<scorerId>"}`, not `scorerId`), but throttles at ~27 calls even
+batched into one POST — fine for one player's page, unusable for a board.
+
 **A third league, to see the whole vocabulary.** Craig, 1 Sep 2026: "i could
 make another fantrax league that opens up all scoring categories so we can get
 all the data it has". `SEASON_STATS` publishes what THIS league scores, so a

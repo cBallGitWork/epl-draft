@@ -2,11 +2,21 @@ import Link from "next/link";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import PlayerTable, { STATUS } from "./PlayerTable";
+import Board from "./Board";
+import { getPlayerStats } from "./playerStats";
 import { getLeaguePool } from "./pool";
+import { leagueTable } from "../standings";
 import { PAGE_ROWS, filterHref, playersQuery, showAllHref, shownRows } from "./query";
 import type { PlayersSearchParams } from "./query";
 import { FANTRAX_SILENT } from "../config";
 import { positionLabel } from "../positions";
+import {
+  type GroupKey,
+  groupFor,
+  playerCategoryFor,
+  playersInGroup,
+  rankPlayers,
+} from "@epl/core";
 import { BUTTON } from "../components/shell/ButtonLink";
 
 // Every player Fantrax knows, what our league has decided about him, and what
@@ -36,13 +46,36 @@ export const revalidate = 30;
  *  does this. */
 const CHIP = "cm-tab flex items-center gap-1 px-3 text-sm font-medium";
 
+/** Next hands a repeated query parameter as an array. The board wants one. */
+function first(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
+
 export default async function PlayersPage({
   searchParams,
 }: {
   searchParams: Promise<PlayersSearchParams>;
 }) {
-  const [pool, asked] = await Promise.all([getLeaguePool(), searchParams]);
+  const [pool, asked, lines, table] = await Promise.all([
+    getLeaguePool(),
+    searchParams,
+    getPlayerStats(),
+    leagueTable(),
+  ]);
   const query = playersQuery(asked);
+
+  // The board's own state, read straight off the query rather than through
+  // `playersQuery`: those are the DIRECTORY's filters and these choose what the
+  // leaderboard above it ranks. Two questions on one page, and folding them into
+  // one query object would have every chip carrying a category it knows nothing
+  // about.
+  const group: GroupKey = groupFor(first(asked.group));
+  const choices = playersInGroup(group);
+  const category =
+    choices.find((entry) => entry.key === first(asked.cat)) ??
+    choices[0] ??
+    playerCategoryFor(undefined);
+  const board = rankPlayers(lines, category);
 
   if ("unavailable" in pool) {
     return (
@@ -79,6 +112,24 @@ export default async function PlayersPage({
           </>
         }
       />
+
+      {board.length > 0 ? (
+        <Board
+          rows={board}
+          group={group}
+          category={category.label}
+          teams={
+            new Map(
+              "unavailable" in table
+                ? []
+                : table.map((row) => [row.teamId, { teamId: row.teamId, name: row.teamName }]),
+            )
+          }
+          codes={
+            new Map(pool.rows.map((row) => [row.entry.player.fantraxId, row.fplCode]))
+          }
+        />
+      ) : null}
 
       <form action="/players" className="flex gap-1.5">
         {/* The chips, the sort and the box all filter the same list, so each has

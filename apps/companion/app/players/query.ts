@@ -17,6 +17,10 @@ import type { PoolRow } from "./pool";
  *  follows for a provider: types describe reality, and the narrowing happens
  *  where the two meet. */
 export interface PlayersSearchParams {
+  /** The board's own two, kept apart from the table's filters below: they
+   *  choose what the LEADERBOARD ranks, not what the directory lists. */
+  group?: string | string[];
+  cat?: string | string[];
   q?: string | string[];
   pos?: string | string[];
   status?: string | string[];

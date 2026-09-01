@@ -8,6 +8,7 @@ import type { RawStandingsPage } from "./standingsPage";
 import type { RawLiveScoring } from "./livescoring";
 import type { RawSchedulePage } from "./results";
 import type { RawSeasonStats } from "./seasonStats";
+import type { PositionGroup } from "./playerStats";
 import type { RawPlayerProfile } from "./profile";
 import type { RawPoolStats, RawStatTables } from "./stats";
 import type { RawTransactionHistory } from "./transactions";
@@ -204,11 +205,28 @@ export function fetchPoolStats(
   leagueId: string,
   perPage: number,
   season?: string,
+  /** Which half of the pool, and **the switch that turns raw stats on**.
+   *
+   *  Omitted or `"ALL"`, this read answers 7 fantasy columns — `Rk Sta Opp FPts
+   *  FP/G Ros +/-` — and no raw stat at all. Named, it answers 18 for the
+   *  outfield (`GP Min G A AF YC RC PKM OG GAO CS`) and 20 for keepers (`GP Min
+   *  CS GA Sv YC RC PKS PKM G A AF OG`).
+   *
+   *  Nothing in the payload says so. `data.tabs` and `scoringCategoryTypes`
+   *  enumerate what the read offers and neither mentions this parameter, and
+   *  `hideStatsFilter: true` comes back on every response — so eight probes of
+   *  `statsType` and `scoringCategoryType` concluded, coherently and wrongly,
+   *  that Fantrax does not publish per-player raw stats for EPL. It does. The
+   *  parameter came off Craig's own browser URL on 1 Sep 2026, and PLATFORM_NOTES
+   *  records the near-miss because reading the response harder would never have
+   *  found it. */
+  positionOrGroup?: PositionGroup,
 ): Promise<RawPoolStats> {
   return fxpaRead(leagueId, "getPlayerStats", {
     statusOrTeamFilter: "ALL",
     pageNumber: "1",
     maxResultsPerPage: String(perPage),
+    ...(positionOrGroup ? { positionOrGroup } : {}),
     ...(season ? { seasonOrProjection: season } : {}),
   }) as Promise<RawPoolStats>;
 }

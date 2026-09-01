@@ -150,6 +150,99 @@
   box-shadow: inset -1px 0 0 var(--color-bg);
 }
 
+/* CM's scrollbar: a grey channel down the right of a list, with a raised thumb
+   and an arrow button at each end.
+
+   Craig, 1 Sep 2026: "add the grey scrolling arrow to the right. we can then
+   make it top 50?" — and the two halves of that are one thing. A list is only
+   allowed to be longer than its box if the box says so, and in `cm9900/24.jpg`
+   and the Average Rating shot the scrollbar is what says it: without one, a
+   table cut at twenty looks like a table with twenty rows in it.
+
+   Drawn from the same plate vocabulary as everything else on the desk — the
+   thumb is a `cm-bevel` face with the same light/dark edges, the channel is the
+   ground it runs in. WebKit only, which covers Safari and every Chromium
+   browser and therefore every phone this league is read on; Firefox gets
+   `scrollbar-color`, which is narrower but the right colours. Neither is a
+   fallback for the other — they are two vocabularies for one object.
+
+   The arrow BUTTONS are `::-webkit-scrollbar-button`. They do not scroll on
+   click without JavaScript; they are furniture, and CM's are too on a screen
+   this size. What they buy is the shape a reader recognises. */
+.cm-scroll {
+  /* **No `scrollbar-color` here, and that is the whole trick.** Chrome now
+     honours the standard property in preference to the `::-webkit-scrollbar`
+     pseudo-elements — set both and the pseudo-elements are ignored entirely,
+     which is how this shipped a 4px hairline instead of the 16px bar the rules
+     below describe. Measured: `offsetWidth - clientWidth` was 4 with it and 16
+     without. Firefox gets `scrollbar-width` and its own colours in the block at
+     the end, where it cannot reach Chrome. */
+  /* Always drawn, never an overlay that fades in. macOS and iOS hide a
+     scrollbar until it moves, which on THIS control defeats the point: the bar
+     is what tells a reader the list continues past the box, and a bar that
+     appears only once you have already scrolled tells them nothing they had not
+     just found out. CM's is permanent furniture and so is this. */
+  scrollbar-gutter: stable;
+}
+
+
+.cm-scroll::-webkit-scrollbar {
+  width: 1rem;
+}
+
+.cm-scroll::-webkit-scrollbar-track {
+  background: var(--color-bg);
+  box-shadow: inset 1px 0 0 color-mix(in oklch, var(--color-face), black 55%);
+}
+
+.cm-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-face);
+  border: 2px solid;
+  border-color: color-mix(in oklch, var(--color-face), white 55%)
+    color-mix(in oklch, var(--color-face), black 55%)
+    color-mix(in oklch, var(--color-face), black 55%)
+    color-mix(in oklch, var(--color-face), white 55%);
+}
+
+/* The arrow at each end. `single-button` draws one per end rather than the pair
+   at the bottom some platforms default to, which is what CM has. */
+.cm-scroll::-webkit-scrollbar-button:single-button {
+  background: var(--color-face);
+  border: 2px solid;
+  border-color: color-mix(in oklch, var(--color-face), white 55%)
+    color-mix(in oklch, var(--color-face), black 55%)
+    color-mix(in oklch, var(--color-face), black 55%)
+    color-mix(in oklch, var(--color-face), white 55%);
+  height: 1rem;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 0.5rem;
+}
+
+/* The glyphs, as data URIs because a scrollbar button cannot hold a child. The
+   fill is `--color-bg` written out: a pseudo-element's background image cannot
+   read a custom property, which is the same constraint `viewport.themeColor`
+   carries in `layout.tsx`. Change with the token. */
+.cm-scroll::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path d='M4 1 L7 6 L1 6 Z' fill='%23091227'/></svg>");
+}
+
+.cm-scroll::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path d='M4 7 L1 2 L7 2 Z' fill='%23091227'/></svg>");
+}
+
+/* Firefox, which has no `::-webkit-scrollbar` and would otherwise draw its own.
+   `@supports` on a WebKit-only selector is the standard way to reach exactly
+   the browsers the block above cannot: Chrome and Safari match the selector and
+   skip this, Firefox does not match and takes it. No arrows there — Firefox
+   does not offer them — but the colours and the width are right. */
+@supports not selector(::-webkit-scrollbar) {
+  .cm-scroll {
+    scrollbar-width: auto;
+    scrollbar-color: var(--color-face) var(--color-bg);
+  }
+}
+
 /* CM's state box — the red `Inj` beside a name.
 
    Red for all of them, because `--color-bad` is already "a loss, a doubt, a
