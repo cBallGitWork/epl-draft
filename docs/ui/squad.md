@@ -281,10 +281,18 @@ unresolved when it is, and a way out to the full profile.
 
 ## Known gaps
 
-- **Your own squad has no list view, ever.** It renders `LineupPlanner` all week
-  — your lineup is yours all week — and the planner's subject is the
-  arrangement, which a list cannot express. Deliberate, but it does mean the one
-  squad you look at most is the one you cannot read as rows.
+- ~~**Your own squad has no list view, ever.**~~ Overruled by Craig, 2 Sep 2026:
+  "my squad will have list view, change, old rule". The reasoning that stood
+  behind it — the planner's subject is the arrangement, which a list cannot
+  express — was an argument for the pitch, never against a list *beside* it, and
+  it quietly conceded its own cost in the next sentence: the one squad you look
+  at most was the one you could not read as rows. The desk has the width for
+  both (19.jpg), so at `lg` the planner keeps the left and a squad list takes
+  the right. The phone still gets the planner alone.
+
+  What does not change with it: the active/reserve rules above are product
+  invariants, not properties of the pitch. A list rendered beside a gated view
+  inherits nothing by being adjacent — it is gated on its own.
 - ~~**Future gameweeks are not browsable.**~~ `?gw=` works since 22 Aug, resolved
   through the calendar seam exactly as the head-to-head route resolves it, and
   the schedule's rows link into it — so tapping a side in a March fixture opens
