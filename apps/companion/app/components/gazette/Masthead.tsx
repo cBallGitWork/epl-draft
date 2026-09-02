@@ -1,6 +1,6 @@
 import { LEAGUE_NAME, SEASON } from "@epl/core";
 import LeagueCrest from "../shell/LeagueCrest";
-import { PAPER_NAME, PAPER_STANDING_LINE } from "../../config";
+import { PAPER_NAME } from "../../config";
 import { londonDate } from "../../londonTime";
 
 // The paper's own name, set the way a paper sets it.
@@ -25,9 +25,14 @@ export default function Masthead({
    *  opening the same cached edition either side of midnight must not be shown
    *  two different days. Null when there is no edition to date. */
   at,
+  /** The round this edition is about, printed as its number. A paper's plate
+   *  carries facts — publisher, date, number, price — and this is the number.
+   *  Null before a round exists, when the plate prints the price alone. */
+  round,
 }: {
-  line: string;
+  line: string | null;
   at: string | null;
+  round: number | null;
 }) {
   return (
     <header className="flex flex-col">
@@ -65,8 +70,8 @@ export default function Masthead({
           The plate used to sit the mark on a solid red field a quarter of the
           box wide, which put the loudest colour on the page directly under the
           nameplate. The mark keeps its own red; the field it stands on is the
-          stock, divided from the standing line by a rule — which is the frame
-          the reference gives its photograph. */}
+          stock, divided from the furniture beside it by a rule — which is the
+          frame the reference gives its photograph. */}
       <div className="mt-3 flex items-stretch border-2" style={{ borderColor: "currentColor" }}>
         <div
           className="flex w-24 shrink-0 items-center justify-center border-r-2 py-3"
@@ -74,19 +79,23 @@ export default function Masthead({
         >
           <LeagueCrest variant="mark" height={44} />
         </div>
-        <div className="flex min-w-0 flex-col justify-center gap-1 px-3 py-2">
-          <p className="text-sm italic leading-snug">{PAPER_STANDING_LINE}</p>
-          {/* The price is real, in the sense that it is fixed and printed and
-              nobody pays it. A paper has one; this one costs nothing and says
-              so. */}
-          <p className="font-sans text-3xs font-semibold uppercase tracking-[0.16em] text-faint">
-            Free
-          </p>
+        {/* Masthead furniture, and all of it fact. The strapline that stood
+            here was cut on 2 Sep 2026 — see `config.ts`. What replaces it is
+            what a nameplate actually carries: which number this is, and what
+            it costs. The price is real, in the sense that it is fixed and
+            printed and nobody pays it. */}
+        <div className="flex min-w-0 flex-col justify-center gap-1 px-3 py-2 font-sans text-3xs font-semibold uppercase tracking-[0.16em]">
+          {round === null ? null : <p>No. {round}</p>}
+          <p className="text-faint">Free</p>
         </div>
       </div>
 
-      {/* The line that changes: football is on, or when lineups lock. */}
-      <p className="pt-3 text-center text-sm italic text-muted">{line}</p>
+      {/* The line that changes: football is on, or when lineups lock. When
+          neither is true a paper prints nothing rather than a slogan, which is
+          why this is nullable. */}
+      {line === null ? null : (
+        <p className="pt-3 text-center text-sm italic text-muted">{line}</p>
+      )}
     </header>
   );
 }

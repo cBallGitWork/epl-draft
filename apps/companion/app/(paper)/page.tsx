@@ -71,14 +71,19 @@ export default async function GazettePage() {
     // word for two different columns in one codebase is how a reader ends up
     // reading the wrong file.
     <>
+      {/* Two service notices and no third. It used to fall back to
+          "{LEAGUE_NAME}, week by week." when neither applied, which is a
+          strapline wearing a notice's clothes — the masthead's other slogan,
+          cut the same day. Null prints nothing. */}
       <Masthead
         at={paper.snapshot?.fetchedAt ?? null}
+        round={paper.round}
         line={
           paper.live
             ? "Football is on. The scores are moving."
             : paper.deadline
               ? `Lineups lock ${londonDayAndTime(paper.deadline.locksAt)}.`
-              : `${LEAGUE_NAME}, week by week.`
+              : null
         }
       />
 

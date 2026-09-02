@@ -73,6 +73,9 @@ export interface Edition {
    *  nought, and a strip reading 0–0 across eight ties would be reporting a
    *  round nobody has played. */
   underway: boolean;
+  /** The round this edition is about, printed on the masthead as its number.
+   *  Null before a round exists, when the plate prints the price alone. */
+  round: number | null;
   snapshot: FootballSnapshot | null;
   deals: Deal[];
   availability: AvailabilityNote[];
@@ -170,6 +173,7 @@ export async function edition(mine: string | null): Promise<Edition> {
 
   const paper = {
     live: drafted ? isMatchdayLive(drafted.snapshot) : false,
+    round: roundPeriod,
     snapshot: drafted?.snapshot ?? null,
     deals: business,
     dealsAt: feed.at,

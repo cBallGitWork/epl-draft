@@ -27,16 +27,22 @@ export const SEASON_IN_SECONDS = 60 * 60 * 24 * 300;
  *  slow no. */
 export const WRONG_CODE_DELAY_MS = 700;
 
-/** The paper's own name, and the line it stands on.
+/** The paper's own name.
  *
  *  Not the league's name, which is the publisher and prints above the title in
  *  the small capitals a masthead puts a publisher in. The two are different
  *  things and the front page had been setting one where the other belongs:
  *  a screen announces which app you are in, a masthead names the publication.
  *  Here rather than in core, because core serves any consumer of this league and
- *  only this companion prints a paper. */
+ *  only this companion prints a paper.
+ *
+ *  There is no standing line beside it. "Ten managers, one league, every week"
+ *  stood in the crest plate until 2 Sep 2026 and was cut: a masthead carries
+ *  facts — a publisher, a date, an edition, a price — and a strapline counting
+ *  the readership is a product's tagline, which is what made the plate read as
+ *  a landing page. It had also been wrong for a month, which is the other thing
+ *  a slogan does. */
 export const PAPER_NAME = "The Gazetta";
-export const PAPER_STANDING_LINE = "Ten managers, one league, every week";
 
 /** How much of the paper prints on the front page.
  *

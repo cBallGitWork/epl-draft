@@ -1,4 +1,3 @@
-import { LEAGUE_NAME } from "@epl/core";
 import Column from "../components/gazette/Column";
 import Masthead from "../components/gazette/Masthead";
 import Skeleton from "../components/shell/Skeleton";
@@ -14,9 +13,10 @@ import Skeleton from "../components/shell/Skeleton";
 export default function Loading() {
   return (
     <div aria-busy className="flex flex-col gap-5">
-      {/* No dateline yet — it is a claim about when the edition was assembled, and
-          the masthead already answers null with the paper's own name. */}
-      <Masthead at={null} line={`${LEAGUE_NAME}, week by week.`} />
+      {/* No dateline, no number and no notice yet: each is a claim about an
+          edition that has not arrived. The masthead answers null with the
+          paper's own name, which is the one thing true before it loads. */}
+      <Masthead at={null} line={null} round={null} />
 
       {/* The lead: the picture band at its printed height, then the kicker, the
           headline over two lines and the standfirst under it. */}
