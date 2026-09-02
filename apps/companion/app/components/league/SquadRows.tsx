@@ -7,7 +7,7 @@ import {
   fixtureLabel,
   isResolved,
   kickedOff,
-  playerName,
+  fullPlayerName,
 } from "@epl/core";
 import StateBox from "../football/StateBox";
 import { chipsFor } from "./Chips";
@@ -228,7 +228,7 @@ function Row({
       </span>
 
       <span className="min-w-0 flex-[1_1_5rem] truncate text-sm font-medium">
-        {playerName(player.rostered)}
+        {fullPlayerName(player.rostered)}
       </span>
 
       {/* Why he is not playing, in the place CM put it: beside the name, before

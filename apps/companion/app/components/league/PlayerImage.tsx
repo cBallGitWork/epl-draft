@@ -116,11 +116,13 @@ export default function PlayerImage({
           height={145}
           sizes={sizes}
           onError={() => setRung(rung === "initials" ? "initials" : NEXT[rung])}
-          // `object-top` for a cut-out STANDING on grass, where the feet are
-          // what gets cropped. Inside a round disc it puts the head against the
-          // ceiling with a chin at the bottom edge, so a disc says so and gets
-          // the face centred instead (`--pitch-crop`, set by `PitchDisc`).
-          className={`h-full w-full object-cover [object-position:center_var(--pitch-crop,top)] drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
+          // **Cover-and-crop-at-the-top by default; a disc asks for contain.**
+          // A cut-out STANDING on grass wants its feet cropped and its head
+          // whole, which is `object-cover object-top`. Inside a round disc that
+          // crops the sides AND the chin, because the portraits are 110x140 —
+          // taller than wide — so a disc sets `--pitch-fit: contain` and gets
+          // the whole head, drawn smaller.
+          className={`h-full w-full [object-fit:var(--pitch-fit,cover)] [object-position:center_var(--pitch-crop,top)] drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
             kickedOff ? "" : "opacity-80 grayscale-[35%]"
           }`}
         />

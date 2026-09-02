@@ -1,6 +1,6 @@
 "use client";
 
-import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
+import { type BreakdownLine, type SquadDetailLine, type SquadPlayerDetail, teamColours } from "@epl/core";
 import { useState } from "react";
 import TeamSheet from "../../components/league/TeamSheet";
 import BoardBar from "../../components/league/BoardBar";
@@ -29,6 +29,7 @@ export default function Sheet({
   breakdown,
   pending,
   eligibility,
+  teamId,
 }: {
   rows: SquadDetailLine[];
   bench: SquadPlayerDetail[];
@@ -43,6 +44,8 @@ export default function Sheet({
   pending: number | null;
   /** Eligible positions by Fantrax id, for the list's position column. */
   eligibility?: Record<string, string[]>;
+  /** Whose squad this is — the disc rings take his secondary colour. */
+  teamId: string;
 }) {
   // Opens on the LIST: a squad screen is a list of who you have, and the pitch
   // is the second reading of it. Phone only — above `lg` both are drawn and the
@@ -112,6 +115,7 @@ export default function Sheet({
             mode="pitch"
             inColumn
             show="fixture"
+            outline={teamColours(teamId).secondary}
           />
         </div>
       </div>

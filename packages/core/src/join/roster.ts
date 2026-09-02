@@ -162,6 +162,20 @@ export function playerName(rostered: RosteredPlayer): string {
   return isResolved(rostered) ? rostered.player.name : rostered.slot.fantraxId;
 }
 
+/** His name in full, for a list that has the width for one: `Bruno Fernandes`.
+ *
+ *  **FPL's `fullName`, not its `web_name`** (Craig, 2 Sep: "player list on left
+ *  — use full name, Fantrax has this on their roster page"). `web_name` is what
+ *  the game prints on a shirt, which is a surname for most men and a surname
+ *  with an initial for the ones who clash — right for a 48px disc and needlessly
+ *  terse in a column that can hold "Kiernan Dewsbury-Hall".
+ *
+ *  An unresolved slot still answers with its id, exactly as `playerName` does:
+ *  there is no footballer behind it and so no name of any length. */
+export function fullPlayerName(rostered: RosteredPlayer): string {
+  return isResolved(rostered) ? rostered.player.fullName : rostered.slot.fantraxId;
+}
+
 /** His name at the size a pitch draws one: `Hemmings`, `G.Hemmings` for a clash.
  *
  *  **A surname, because a disc is 64px wide** (Craig, 2 Sep: "'george hemmings'

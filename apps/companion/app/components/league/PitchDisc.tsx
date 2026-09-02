@@ -47,6 +47,7 @@ export default function PitchDisc({
   opposition,
   points,
   show = "points",
+  outline = "var(--color-chrome)",
 }: {
   rostered: RosteredPlayer;
   club: Club | undefined;
@@ -56,6 +57,16 @@ export default function PitchDisc({
   points?: number | null;
   /** What the plate under his name carries. */
   show?: "points" | "fixture";
+  /** The RING round the disc — the fantasy team's secondary colour (Craig,
+   *  2 Sep). The fill stays chrome, which is what `19.jpg` draws and what
+   *  `teamColours.ts` requires: a team's colour identifies a side in a
+   *  confrontation, and a ring is a trim rather than an identity. It reads as
+   *  one squad's eleven without claiming to be the team's own plate.
+   *
+   *  Defaults to the chrome itself, so a caller that has no team — the
+   *  head-to-head, which draws two sides and settles them another way — gets
+   *  the plain disc rather than a fallback colour pretending to be somebody's. */
+  outline?: string;
 }) {
   const resolved = isResolved(rostered) ? rostered : null;
   const started = kickedOff(opposition);
@@ -84,22 +95,34 @@ export default function PitchDisc({
             its discs are the same blue as the title bar and the rail, which is
             furniture rather than identity. Ours were also failing at the job —
             most of the table ringed the turf at under 2:1.
-          · The face fills the circle. `PlayerImage` crops `object-top` because
-            it normally stands on grass with its feet cut off; inside a disc that
-            put the head against the ceiling with a chin at the bottom edge.
-            `object-cover` centred on the face is what a round crop wants.
+          · The whole head fits the circle. `PlayerImage` crops `object-top`
+            because it normally stands on grass with its feet cut off; inside a
+            disc that cropped the chin instead, so a disc asks for `contain`.
           · Smaller. The circle was 64px against a name at 10 — it dominated the
             row and pushed the lines apart.
 
           `--row-portrait` is the size `PlayerImage` reads, so it is set here and
           the image sizes itself off it. */}
       <span
-        className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-chrome bg-chrome"
+        className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 bg-chrome"
         style={
           {
-            // Pull the crop down a touch: a portrait's head sits in the upper
-            // third of the frame, so dead centre puts it high in a circle.
-            "--pitch-crop": "22%",
+            // The ring is the team's; the fill stays chrome.
+            borderColor: outline,
+            // **The head, whole, filling the disc** (Craig, 2 Sep: "it's cut
+            // off at the bottom… do we just zoom in, or use more of the
+            // portrait?").
+            //
+            // Measured rather than guessed, after two wrong answers: the source
+            // is 220x280 head-and-shoulders, and the HEAD occupies roughly the
+            // top 45% of it, centred. So `cover` at a 22% offset cropped the
+            // chin (too tight), and `contain` fitted the whole 220x280 inside a
+            // circle and left the man tiny in a field of chrome (too loose).
+            //
+            // The answer is `cover` — which fills the disc — with the frame
+            // positioned near the top, where the head is. `18%` puts the crown
+            // just inside the ring and the chin just above the bottom of it.
+            "--pitch-crop": "18%",
           } as CSSProperties
         }
       >
