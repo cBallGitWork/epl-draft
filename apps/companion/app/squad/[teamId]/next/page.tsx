@@ -21,6 +21,8 @@ import Link from "next/link";
 // every squad screen reads, and `headToHead` is the same selector the squad tab
 // uses for the "v opponent" line in its subheading.
 
+// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function NextMatchPage({

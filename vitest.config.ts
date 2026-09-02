@@ -14,6 +14,21 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     environment: "node",
-    include: ["packages/*/src/**/*.test.ts", "scripts/**/*.test.ts"],
+    include: [
+      "packages/*/src/**/*.test.ts",
+      "scripts/**/*.test.ts",
+      // **`apps/` joined on 2 Sep, and the reason is a bug it let through.**
+      // The comment above says the pure logic "lives in packages/*, which is
+      // exactly where it belongs" — an aspiration stated as a fact. Nine files
+      // and ~540 lines of it sit in `apps/companion/app` importing only
+      // `@epl/core` or nothing, and two of them shipped wrong: `movement` and
+      // `kindOf` were pure functions in a component file where no test could
+      // reach them, and nine tests then found six failures against the logic
+      // they had been running in production.
+      //
+      // Widening is not permission to put domain logic in the app. It removes
+      // the excuse for the logic that is already there being untested.
+      "apps/*/app/**/*.test.ts",
+    ],
   },
 });

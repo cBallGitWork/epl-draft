@@ -30,24 +30,35 @@ const DATE = new Intl.DateTimeFormat("en-GB", {
   timeZone: LEAGUE_TIMEZONE,
 });
 
-/** "Saturday 10 October" — a day, for something too far off to have a time.
+/** Format an instant, or hand back the string when it cannot be read as one.
  *
- *  Hands back whatever it was given when that cannot be read as a date. `Intl`
- *  throws on an invalid one, and these are formatted at module scope, so the
- *  alternative is a page that fails to import over a date it only mentions. */
-export function londonDate(iso: string): string {
+ *  **`Intl.format` throws on an invalid date**, and every caller here is passing
+ *  a string from a provider we do not control, during a render. So a malformed
+ *  timestamp is not a wrong time on the screen, it is a page that does not
+ *  render at all over a date it mentions in passing.
+ *
+ *  `londonDate` carried this guard and its three siblings did not, on no stated
+ *  reason — they take the same untrusted string from the same feeds. Written
+ *  once here so the four cannot disagree again; the first test ever written
+ *  under `apps/` is what found them disagreeing. */
+function readable(iso: string, format: Intl.DateTimeFormat): string {
   const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? iso : DATE.format(at);
+  return Number.isNaN(at.getTime()) ? iso : format.format(at);
+}
+
+/** "Saturday 10 October" — a day, for something too far off to have a time. */
+export function londonDate(iso: string): string {
+  return readable(iso, DATE);
 }
 
 /** "15:00" */
 export function londonTime(iso: string): string {
-  return TIME.format(new Date(iso));
+  return readable(iso, TIME);
 }
 
 /** "Fri 18:30" — for anything far enough away that the hour alone is ambiguous. */
 export function londonDayAndTime(iso: string): string {
-  return DAY_AND_TIME.format(new Date(iso));
+  return readable(iso, DAY_AND_TIME);
 }
 
 /** "Sun" — the day on its own, for a list whose times are already in a column of
@@ -59,5 +70,5 @@ export function londonDayAndTime(iso: string): string {
  *  `londonDayAndTime` is the answer; where the time is a fixed compact slot with
  *  a score's worth of width, the day goes beside it instead of inside it. */
 export function londonDay(iso: string): string {
-  return WEEKDAY.format(new Date(iso));
+  return readable(iso, WEEKDAY);
 }

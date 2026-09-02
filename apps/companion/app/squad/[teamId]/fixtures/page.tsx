@@ -25,6 +25,8 @@ import { teamBadges } from "../../../standings";
 // seeded off a table that has barely any season in it yet. A team's own fixture
 // tab shows the fixtures the league actually publishes.
 
+// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function FixturesPage({
