@@ -325,6 +325,15 @@ section of six, not a site inside the site — a second paper route needs a
 folio and a contents strip, which means printing the desk's own navigation in
 newsprint.
 
+**And un-reverted on 2 Sep 2026** (Craig), once the paper had columns to put
+on them: the writer filed its first stories that afternoon, and a front page
+cannot print two whole columns while a headline that opens in place is one
+nobody can link to. `/paper/{slug}` and `/paper/reports` ship with a numbered
+folio and a 200ms page turn. The revert's complaints are answered rather than
+dropped — the desk's six names still print once, in `Index`; the paper's own
+strip carries only the paper's pages; and an inside page leads with THE
+GAZETTA, never with a section name.
+
 **Craig's items:** `OPENAI_API_KEY` as a repository secret (optional — without
 it every edition files exactly as it does now, with a typographic band instead
 of a drawing); sign off the persona copy in `scripts/edition/voice/bylines.ts`

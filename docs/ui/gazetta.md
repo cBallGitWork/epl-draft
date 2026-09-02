@@ -50,14 +50,23 @@ business, who is hurt, and when lineups lock.
    magazine. `HEADLINES_SHOWN` caps it at eight so a busy round does not turn
    the front page into an index of itself.
 
-   **They open where they stand**, on `<details>`: no client component, no
-   state, keyboard-operable and screen-reader announced for free. Opening in
-   place rather than on another page because **the paper is ONE page** — inside
-   pages under `/paper` were built on 31 Aug and reverted the same day, since a
-   second paper route needs a folio and a contents strip, which means printing
-   the app's own six-section navigation in newsprint, and the Gazetta is one
-   section of six rather than a site inside the site. DESIGN §9 already records
-   expanding in place as this app's mobile pattern.
+   **They turn to a page**, on a `<Link>`: each headline says "turn to page 2"
+   and does it, and the article prints whole at `/paper/{slug}`.
+
+   *This reverses what this list said until 2 Sep 2026.* Inside pages were
+   built on 31 Aug and reverted the same day, and headlines opened where they
+   stood on `<details>` instead — the argument being that a second paper route
+   needs a folio and a contents strip, which means printing the app's own
+   six-section navigation in newsprint, and the Gazetta is one section of six
+   rather than a site inside the site.
+
+   What changed is that the paper now files columns. On 31 Aug nothing ever
+   had, so an inside page was furniture with nothing behind it. The revert's
+   two complaints are answered rather than dropped: the desk's six names still
+   print exactly once, in `Index`, and the paper's own strip (`Pages`) lists
+   only the paper's pages, as numbered ink chips; and an inside page opens on
+   `Folio`, which leads with THE GAZETTA and puts the section and its number
+   under it, so a masthead is never displaced by a word like "Reports".
 6. **Also this week** — the next two desk stories as headlines: a kicker and a line,
    no picture, no standfirst. The hierarchy *is* the design — a newspaper's
    second story is recognisable as the second story before you have read a word
@@ -356,3 +365,40 @@ instant, never a clock.
 running order that decides it is in `gazette/stories.ts`. It was recorded here
 rather than smuggled into a restyle precisely because deciding what the lead *is*
 was a behaviour change; it then got one.
+
+
+## The paper's pages
+
+Added 2 Sep 2026, when the writer filed its first columns.
+
+| Route | What |
+|---|---|
+| `/` | The front page. Page 1. |
+| `/paper/reports` | Page 2: `round-report`, `match-report`, `tie-report`, `tie-call`, `fixture-preview`, `round-preview`. |
+| `/paper/{slug}` | Any one story, printed whole. |
+| `/paper` | Redirects to `/` — a prefix is not a page. |
+
+`components/gazette/paperPages.ts` is the running order and the single source
+of both the folio's number and the teaser's "turn to page 2". **The numbers are
+declared, not derived**: a folio is a promise that page 2 is where page 2 was
+yesterday, so a section that files nothing keeps its number and prints its own
+empty line rather than renumbering the paper.
+
+**Two strips, and they are not the same list.** `Index` carries the app's six
+sections, which is why the front page is not a dead end; `Pages` carries the
+paper's pages as numbered ink chips. Printing the desk's names twice over in
+newsprint is what got inside pages reverted on 31 Aug.
+
+**The page turn** is `document.startViewTransition`, driven by `TurnLink` — the
+paper's only client component. Not React's `<ViewTransition>`, which ships only
+in the experimental channel and is absent from the React this app pins. 200ms
+and `--ease-out-quart`, per DESIGN §7. A browser without the API navigates
+normally; `prefers-reduced-motion` is declined in `TurnLink` and cut again by
+the blanket rule in `globals.css`, and no carve-out is owed because a turn
+carries no information beyond "you navigated".
+
+**Known gap:** an article page reads `paper.json`, which keeps the most recent
+stories. Nothing has ever fallen off it; when one does, that slug 404s into the
+paper's own "Not in this edition" until an archive reader exists. Deliberate —
+the app makes no runtime filesystem reads, and adding one for a case that has
+not happened is machinery for nothing.

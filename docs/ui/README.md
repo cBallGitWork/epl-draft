@@ -21,6 +21,8 @@ nothing.**
 | Route | File | What it is |
 |---|---|---|
 | `/` | [gazetta.md](gazetta.md) | The week's paper. Lead, deals, doubts, next deadline. |
+| `/paper/{slug}` | [gazetta.md](gazetta.md) | One story, printed whole, under a numbered folio. |
+| `/paper/reports` | [gazetta.md](gazetta.md) | Page 2: the match-shaped columns. |
 | `/league` | [league-table.md](league-table.md) | The table. Fantrax computes it. |
 | `/league/schedule` | [league-schedule.md](league-schedule.md) | One gameweek, every competition on it. |
 | `/league/matchups` | [league-matchups.md](league-matchups.md) | This period's head-to-heads, with live points. |

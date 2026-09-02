@@ -15,7 +15,7 @@ The site is two things at once and stopped pretending otherwise on 29 Aug 2026.
 
 | | **The Paper** | **The Desk** |
 |---|---|---|
-| Where | `/`, and everything written | League · Squads · Live · Players · FPL |
+| Where | `/` and `/paper/*`, and everything written | League · Squads · Live · Players · FPL |
 | What it is | a newspaper, printed | a management terminal |
 | Ground | warm off-white stock | blue-black |
 | Type | serif display and prose | one bold humanist sans |
