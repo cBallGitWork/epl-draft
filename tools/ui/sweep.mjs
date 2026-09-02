@@ -33,6 +33,8 @@ const ROUTES = [
   "/matchday",
   "/matchday/desk",
   "/fpl",
+  "/paper/reports",
+  "/paper/gw2-round-report",
 ];
 
 const WIDTHS = [390, 1440];

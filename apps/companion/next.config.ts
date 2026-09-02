@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
       { source: "/matchup", destination: "/league/matchups", permanent: true },
       { source: "/team", destination: "/squad", permanent: true },
       { source: "/team/:teamId", destination: "/squad/:teamId", permanent: true },
+      // A prefix is not a page: `/paper` is where the paper's inside pages
+      // live, and the paper's own front is `/`.
+      { source: "/paper", destination: "/", permanent: true },
     ];
   },
 

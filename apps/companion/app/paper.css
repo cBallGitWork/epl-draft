@@ -215,3 +215,47 @@
   background-size: 3px 3px;
   opacity: 0.35;
 }
+
+/* --- The page turn ------------------------------------------------------
+   A leaf going over: the page you are leaving slides off to the left as the
+   one you are turning to comes in from the right, both under a short fade.
+
+   200ms and `--ease-out-quart`, which is DESIGN §7's motion rule verbatim
+   (150-250ms, ease-out) and adds no token. It is the paper's ONLY animation
+   and `paper.css` had none before it; the desk has no leaves to turn, so the
+   keyframes are addressed to the paper's own view-transition group and to
+   nothing else.
+
+   No reduced-motion carve-out is owed. A turn carries no information beyond
+   "you navigated", so the blanket rule in `globals.css` — which cuts every
+   animation to 0.01ms — is a complete and honest answer. Only `.value-changed`
+   needed an exception, because its whole content is that something changed.
+   `TurnLink` also declines to start a transition at all under that setting,
+   which is stiller than starting one that animates to nothing. */
+
+@keyframes paper-leaf-out {
+  to {
+    opacity: 0;
+    transform: translateX(-2.5%);
+  }
+}
+
+@keyframes paper-leaf-in {
+  from {
+    opacity: 0;
+    transform: translateX(2.5%);
+  }
+}
+
+/* Gated on an attribute `TurnLink` sets for the length of the turn. A
+   view-transition pseudo-element is document-level and cannot be nested under
+   `.paper`, so the SCOPE is the flag: nothing else in the app starts a
+   transition, and if anything ever does it animates the browser's default
+   cross-fade rather than borrowing the paper's leaf. */
+html[data-turning]::view-transition-old(root) {
+  animation: paper-leaf-out 200ms var(--ease-out-quart) both;
+}
+
+html[data-turning]::view-transition-new(root) {
+  animation: paper-leaf-in 200ms var(--ease-out-quart) both;
+}

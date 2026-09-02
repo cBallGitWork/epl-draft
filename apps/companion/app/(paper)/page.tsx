@@ -1,5 +1,6 @@
 import { LEAGUE_NAME, clubById } from "@epl/core";
-import Article from "../components/gazette/Article";
+import Pages from "../components/gazette/Pages";
+import Teaser from "../components/gazette/Teaser";
 import Scoreboard from "../components/gazette/Scoreboard";
 import Splash from "../components/gazette/Splash";
 import Deals from "../components/gazette/Deals";
@@ -89,6 +90,12 @@ export default async function GazettePage() {
 
       <Index matchday={matchday} here="/" />
 
+      {/* The paper's own pages, under the app's sections. Two strips and not
+          one: the index says where else in the APP to go and this says which
+          page of the PAPER you are on. Printing the desk's six names twice
+          over in newsprint is what got inside pages reverted on 31 Aug. */}
+      <Pages here="/" />
+
       <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">
         {/* The lead column. `--page-gutter: 0` inside it once the sidebar exists:
             the picture band and the pitch break out of the PAGE's gutters, and
@@ -145,7 +152,7 @@ export default async function GazettePage() {
           {paper.filed.length > 1 ? (
             <div className="flex flex-col gap-1">
               {paper.filed.slice(1, HEADLINES_SHOWN + 1).map((story) => (
-                <Article key={story.slug} story={story} named={who} mine={paper.mine} />
+                <Teaser key={story.slug} story={story} />
               ))}
             </div>
           ) : null}

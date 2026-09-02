@@ -29,6 +29,8 @@ const ROUTES = [
   "/matchday",
   "/matchday/desk",
   "/fpl",
+  "/paper/reports",
+  "/paper/gw2-round-report",
 ];
 
 /** The floors, by what the thing IS rather than by what it looks like.
