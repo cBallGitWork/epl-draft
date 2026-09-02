@@ -172,6 +172,13 @@ export function playerName(rostered: RosteredPlayer): string {
  *
  *  An unresolved slot still answers with its id, exactly as `playerName` does:
  *  there is no footballer behind it and so no name of any length. */
+/** A name with its accents removed, for comparing FPL's two spellings of one
+ *  man. Display never uses this — the accented form is his name and is what is
+ *  printed; this only decides whether two strings are the same word. */
+function fold(value: string): string {
+  return value.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+}
+
 export function fullPlayerName(rostered: RosteredPlayer): string {
   if (!isResolved(rostered)) return rostered.slot.fantraxId;
 
@@ -200,7 +207,13 @@ export function fullPlayerName(rostered: RosteredPlayer): string {
   const first = fullName.split(" ")[0];
   // One-word players (Rodri, Ederson), and anyone whose shirt name is the whole
   // of him. Then the shirt name IS the answer.
-  if (!first || name === first || fullName === name) return name;
+  //
+  // **Compared with the accents folded off.** FPL spells the two fields
+  // differently for the same man — "Yéremy Pino Santos" against a shirt name of
+  // "Yeremy" — so an exact comparison saw two different words, prefixed one to
+  // the other, and the column read "Yéremy Yeremy". One real case in the current
+  // pool, found by running this over every element rather than by reading it.
+  if (!first || fold(name) === fold(first) || fullName === name) return name;
 
   return `${first} ${name}`;
 }

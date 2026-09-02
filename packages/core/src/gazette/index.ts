@@ -12,6 +12,7 @@ export { availability } from "./availability";
 export { buildBrief } from "./brief";
 export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
+export { kindOf, movement } from "./dealSides";
 export { strangers } from "./strangers";
 export { buildFixturePreviewBrief } from "./briefs/fixturePreview";
 export {

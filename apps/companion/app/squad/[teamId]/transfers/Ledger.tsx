@@ -1,5 +1,5 @@
 import type { Deal, DealSide } from "@epl/core";
-import { inkOn, teamColours } from "@epl/core";
+import { inkOn, kindOf, movement, teamColours } from "@epl/core";
 
 // One manager's business, drawn as Championship Manager's Transfers screen.
 //
@@ -24,50 +24,6 @@ import { inkOn, teamColours } from "@epl/core";
 // The fee column has no equivalent and is dropped rather than faked: a draft
 // league has no money, and the period is what a manager actually knows a move
 // by. That is the one place this screen deliberately parts from the shot.
-
-/** Which way a deal ran for the manager whose screen this is.
- *
- *  The same row means opposite things to the two sides of a trade, and a ledger
- *  that says "in" on both is a ledger nobody can read.
- *
- *  **What LEFT is not simply his own outbound rows** (Craig, 2 Sep: "trade
- *  doesn't show who was traded for"). `deals()` files each half of a trade under
- *  the team that GAINED that player, so a two-way swap gives this manager one
- *  inbound row and his partner the other — and filtering outbound to his own id
- *  found nothing, printing a dash where the man he gave up belongs. A trade's
- *  outgoing side is every inbound row belonging to somebody ELSE, which is what
- *  a swap means and what `23.jpg`'s destination column says.
- *
- *  A waiver claim is unaffected: its drop is genuinely his, filed outbound under
- *  his own id, and no second team is on the deal to be mistaken for a partner. */
-function movement(deal: Deal, teamId: string) {
-  const mine = (side: { teamId: string | null }) => side.teamId === teamId;
-  const theirs = (side: { teamId: string | null }) => side.teamId !== teamId;
-
-  return {
-    in: deal.inbound.filter(mine),
-    out: [...deal.outbound.filter(mine), ...deal.inbound.filter(theirs)],
-    /** Who he dealt WITH. Null for a claim off the pool, which is nobody. */
-    partner: deal.inbound.find(theirs)?.teamId ?? null,
-  };
-}
-
-/** What a deal is called, in the words this league says it in (Craig, 2 Sep).
- *
- *  **A claim is two different things and Fantrax files them as one.** Taking a
- *  man another manager dropped is a WAIVER; taking one nobody has ever owned is
- *  a pick-up off the free pool — which this league calls the Bin. The rows do
- *  not distinguish them, but they distinguish themselves: a waiver claim has a
- *  drop on the same `setId` and a bin pick-up does not.
- *
- *  Championship Manager names a transaction for what it IS rather than for the
- *  API method behind it, which is the same reason its buttons say `Offer` rather
- *  than `Submit`. */
-function kindOf(deal: Deal, cameFromBin: boolean): string {
-  if (deal.kind === "trade") return "Trade";
-  if (deal.kind === "claim") return cameFromBin ? "Bin Pick Up" : "Waiver";
-  return deal.kind === "lineup" ? "Lineup" : "Move";
-}
 
 export default function Ledger({
   deals,
@@ -98,7 +54,7 @@ export default function Ledger({
       <div className="overflow-x-auto">
         <ul className="cm-rows flex flex-col">
           {deals.map((deal) => {
-            const { in: arrived, out: left, partner } = movement(deal, teamId);
+            const { in: arrived, out: left, partners } = movement(deal, teamId);
             return (
               <li
                 key={deal.setId || `${deal.processedAt}-${deal.period}`}
@@ -140,7 +96,7 @@ export default function Ledger({
                     says when — a period is how the league counts a week, not how a
                     reader dates a transfer. */}
                 <span className="w-20 shrink-0 text-3xs font-bold uppercase text-accent">
-                  {kindOf(deal, left.length === 0)}
+                  {kindOf(deal, arrived.length, left.length)}
                 </span>
                 </span>
 
@@ -157,7 +113,7 @@ export default function Ledger({
                     place in the app where two teams meet. A claim came off the
                     pool, which is not a team and gets no plate. */}
                 <span className="w-16 shrink-0 self-start lg:self-auto">
-                  {partner === null ? (
+                  {partners.length === 0 ? (
                     /* **"The Bin", which is what this league calls the free
                         pool** (Craig, 2 Sep). Fantrax says "free agent" and CM
                         would say whatever the game says — the point of naming a
@@ -168,7 +124,19 @@ export default function Ledger({
                       The Bin
                     </span>
                   ) : (
-                    <Partner teamId={partner} name={names[partner]} />
+                    /* One plate, and a count when there is more than one team on
+                        the deal. A three-way trade named only the first partner
+                        and read as a straight swap with him — `movement` returns
+                        the whole list now, so the truncation is this view's and
+                        it says so rather than hiding it. */
+                    <span className="flex flex-col items-stretch gap-0.5">
+                      <Partner teamId={partners[0]} name={names[partners[0]]} />
+                      {partners.length > 1 ? (
+                        <span className="text-center text-3xs text-faint">
+                          +{partners.length - 1}
+                        </span>
+                      ) : null}
+                    </span>
                   )}
                 </span>
               </li>

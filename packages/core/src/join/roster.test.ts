@@ -224,6 +224,20 @@ describe("fullPlayerName", () => {
     expect(fullPlayerName(man("Jair Paula da Cunha Filho", "Jair Cunha"))).toBe("Jair Cunha");
   });
 
+  it("does not double a name when the accents differ", () => {
+    // Yéremy Pino Santos, web_name "Yeremy" — FPL strips the accent from the
+    // shirt name and the guard below compared the two exactly, so the forename
+    // and the surname were the same word and the column read "Yéremy Yeremy".
+    // One real case in the current pool, found by comparing every element.
+    expect(fullPlayerName(man("Yéremy Pino Santos", "Yeremy"))).toBe("Yeremy");
+  });
+
+  it("still prefixes a forename when the accented name is genuinely different", () => {
+    // The fold must not swallow a real surname: Hincapié's shirt name is his
+    // surname unaccented, and he still wants his forename in a list column.
+    expect(fullPlayerName(man("Piero Hincapié", "Hincapie"))).toBe("Piero Hincapie");
+  });
+
   it("leaves a one-word player alone", () => {
     expect(fullPlayerName(man("Rodrigo 'Rodri' Hernandez Cascante", "Rodrigo"))).toBe("Rodrigo");
   });
