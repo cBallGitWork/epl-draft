@@ -64,6 +64,18 @@ describe("strangers", () => {
     expect(strangers(prose, BRIEF)).toEqual(["Dedić", "Isak"]);
   });
 
+  it("forgives an opener followed by a figure or a hyphen", () => {
+    // "Fifty-six to 45 over testf", "Sits 76 to 35", "Ninety-four scored" —
+    // all sentence openers the check reported as footballers, because the rule
+    // only forgave a following LOWERCASE word and a figure is neither.
+    const prose = [
+      "Groß scored. Fifty-six to 45 over testf.",
+      "The pair banked twelve. Sits 76 to 35 over test31121.",
+      "Nothing to show. Ninety-four scored and beaten by eleven.",
+    ].join("\n");
+    expect(strangers(prose, BRIEF)).toEqual([]);
+  });
+
   it("treats the start of a line as the start of a sentence", () => {
     // A power ranking's rows arrive one per line. "Top of the table..." opens
     // a line rather than following a full stop, and reported as a stranger

@@ -149,11 +149,12 @@ function alwaysOpensASentence(prose: string, word: string): boolean {
     const opens =
       before === "" || /[.!?:]$/u.test(before) || /\n[ \t]*$/u.test(line);
     if (!opens) return false;
-    // An opener is only forgiven when a lowercase word follows it: "Losing to
-    // test4 by 11" is a sentence, whereas "Dedić kept a clean sheet" opens
-    // with a man's name. The distinction is whether the NEXT word could be
-    // the subject — a name is followed by what he did.
-    const after = prose.slice(match.index + word.length).trimStart();
-    return /^\p{Ll}/u.test(after);
+    // An opener is only forgiven when what follows could not be a surname:
+    // a lowercase word, a digit, or a hyphenated continuation. "Losing to
+    // test4 by 11", "Fifty-six to 45" and "Sits 76 to 35" all open sentences;
+    // "Dedić kept a clean sheet" opens with a man. The distinction is whether
+    // the NEXT token could be the rest of a name.
+    const after = prose.slice(match.index + word.length);
+    return /^[-–]|^\s*[\p{Ll}\d]/u.test(after);
   });
 }
