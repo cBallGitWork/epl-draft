@@ -39,28 +39,28 @@ export default function Written({
           the title is a tag rather than a line on a rule — the same inverted ink
           chip the lead's kicker wears, because they are the same object. */}
       {story.byline !== "" ? (
-        <p className="text-center">
+        <p>
           <span className="inline-block bg-ink px-2 py-1 font-sans text-2xs font-bold uppercase tracking-[0.15em] text-bg">
             {story.byline}
           </span>
         </p>
       ) : null}
 
-      <h2 className="paper-display text-balance pt-2.5 text-center text-4xl font-black leading-[1.02] text-ink">
+      <h2 className="paper-display text-balance pt-2.5 text-4xl font-black leading-[1.02] text-ink @3xl:text-6xl">
         {story.headline}
       </h2>
       {story.deck ? (
-        <p className="pt-2 text-center text-lg italic leading-snug text-muted">{story.deck}</p>
+        <p className="pt-2 text-lg italic leading-snug text-muted">{story.deck}</p>
       ) : null}
 
-      <span className="mx-auto mt-3 h-px w-6 bg-ink" />
+      <span className="mt-3 block h-px w-6 bg-ink" />
 
       {/* When it was filed — and, once the editions carry names, which edition
           it went out under. Not decoration: every other figure on this page is
           thirty seconds old and this could be days old and still be the current
           edition. A reader is entitled to know which he is reading. */}
       {story.filedAt ? (
-        <p className="pt-2.5 text-center font-sans text-3xs uppercase tracking-[0.16em] text-faint">
+        <p className="pt-2.5 font-sans text-3xs uppercase tracking-[0.16em] text-faint">
           {story.edition !== "" ? `${story.edition} · ` : ""}Filed {londonDayAndTime(story.filedAt)}
         </p>
       ) : null}

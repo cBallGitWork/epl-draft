@@ -66,7 +66,7 @@ export default function Article({
             {kicker}
           </span>
         ) : null}
-        <h3 className="paper-display text-balance text-xl font-black leading-[1.08] text-ink">
+        <h3 className="paper-display text-balance text-2xl font-black leading-[1.08] text-ink">
           {story.headline}
         </h3>
         {story.deck !== "" ? (
