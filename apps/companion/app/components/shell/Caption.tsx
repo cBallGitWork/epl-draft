@@ -15,7 +15,7 @@ import type { ReactNode } from "react";
 export default function Caption({ children }: { children: ReactNode }) {
   return (
     <section className="cm-panel px-2 py-1.5">
-      <p className="text-center font-chrome text-sm font-bold text-accent lg:text-lg">
+      <p className="cm-title text-center font-chrome text-sm font-bold text-accent lg:text-lg">
         {children}
       </p>
     </section>

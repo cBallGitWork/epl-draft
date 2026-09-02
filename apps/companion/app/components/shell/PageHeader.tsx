@@ -74,7 +74,7 @@ export default function PageHeader({
           }}
         >
           <h1
-            className="min-w-0 flex-1 truncate text-center font-chrome text-xl font-bold lg:text-3xl"
+            className="cm-title min-w-0 flex-1 truncate text-center font-chrome text-xl font-bold lg:text-3xl"
             style={{ color: "var(--color-chrome)" }}
           >
             {title}
@@ -109,7 +109,7 @@ export default function PageHeader({
       >
         {plate ? null : <LeagueCrest height={18} />}
         <h1
-          className={`min-w-0 flex-1 truncate font-bold uppercase ${
+          className={`cm-title min-w-0 flex-1 truncate font-bold uppercase ${
             plate
               ? "text-center font-chrome text-xl lg:text-3xl"
               : "text-sm text-ink"

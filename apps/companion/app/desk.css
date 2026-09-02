@@ -83,6 +83,29 @@
   }
 }
 
+/* The title's own shadow, which the game sets and we never had.
+
+   `cm9900/24.jpg` prints "English Premier Division" in blue on the light
+   competition plate with a soft grey shadow offset down and right; `25.jpg`
+   does the same with white on the blue club plate. It is on the DISPLAY type
+   only — the tab labels beside it are flat in every shot, and copying it onto
+   them would make the whole screen soft.
+
+   In `em` rather than pixels because the same title is `text-xl` under a thumb
+   and `text-3xl` on the desk: a fixed 2px is two different marks at the two
+   sizes, and the smaller one is a smudge under 20px type.
+
+   It carries no meaning and no contrast: WCAG measures the foreground against
+   the background and a shadow is neither, so this changes no ratio in
+   `tools/ui/sweep.mjs`. It is depth, which is the one thing the bevel and this
+   have in common and the reason both live in this file.
+
+   Deliberately NOT on `.paper`. Ink on stock does not cast a shadow, and the
+   masthead is a different register with a different set of rules (DESIGN §1). */
+.cm-title {
+  text-shadow: 0.06em 0.06em 0.07em rgb(0 0 0 / 0.45);
+}
+
 /* How tall a tab is, and it is the CONTROL floor rather than the row one: 44px
    under a thumb and 36 above `lg`, which is where `league/SectionNav` and the
    section rail already stood and where the pool's filter strip now joins them.
