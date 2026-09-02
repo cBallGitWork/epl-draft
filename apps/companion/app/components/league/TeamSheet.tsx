@@ -5,9 +5,9 @@ import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/cor
 import { playerName } from "@epl/core";
 import LivePlayerCard from "./LivePlayerCard";
 import PitchDisc from "./PitchDisc";
-import { type Instruction, tactics } from "@epl/core";
 import PitchRows, { GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
 import SquadRows from "./SquadRows";
+import { type TeamColours, teamColours } from "@epl/core";
 import { FAR_INSET } from "./PitchTurf";
 import { positionLabel } from "../../positions";
 
@@ -37,6 +37,9 @@ export default function TeamSheet({
   mode,
   widest: agreed,
   eligibility,
+  inColumn = false,
+  show,
+  teamId,
 }: {
   /** The XI in its positional lines, arranged on the server — `slot.status` is
    *  blanked on the way here, so this is the last shape that knows the split. */
@@ -48,6 +51,12 @@ export default function TeamSheet({
    *  keyed by Fantrax id. Empty when Fantrax refused the table. */
   breakdown: Record<string, BreakdownLine[]>;
   mode: "pitch" | "list";
+  /** The pitch stands beside a list rather than alone — see `CmGround`. */
+  inColumn?: boolean;
+  /** What each disc's plate carries — see `PitchDisc`. */
+  show?: "points" | "fixture";
+  /** The fantasy team whose pitch this is — the disc's one colour. */
+  teamId?: string;
   /** Eligible positions by Fantrax id, passed straight to the list. A record
    *  rather than a `Map` because this crosses to the browser — see `SquadRows`. */
   eligibility?: Record<string, string[]>;
@@ -57,12 +66,8 @@ export default function TeamSheet({
   widest?: number;
 }) {
   const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
+  const team = teamColours(teamId ?? "");
 
-  // Who pushes forward, from the shape itself. `rows` is the arrangement — the
-  // lines back to front — which is exactly what `tactics` reads, and the bench
-  // is deliberately not passed: a reserve has no place in a formation and so no
-  // instruction to draw.
-  const arrows = tactics(rows.map((line) => ({ position: "", players: line.players.map((p) => p.rostered) })));
 
   // One number for the grass and for the strip beneath it. A reserve is the same
   // card as the man he would replace, so the bench counts as a line when the
@@ -95,12 +100,14 @@ export default function TeamSheet({
             keyOf={(player) => player.rostered.slot.fantraxId}
             widest={widest}
             flat
+            inColumn={inColumn}
           >
             {(player) => (
               <Cell
                 player={player}
                 onOpen={() => setOpen(player)}
-                instruction={arrows.get(player.rostered.slot.fantraxId)}
+                show={show}
+                team={team}
               />
             )}
           </PitchRows>
@@ -129,7 +136,7 @@ export default function TeamSheet({
                     <p className="pb-0.5 text-center font-display text-3xs font-bold uppercase text-faint">
                       {positionLabel(player.rostered.slot.position) ?? "—"}
                     </p>
-                    <Cell player={player} onOpen={() => setOpen(player)} />
+                    <Cell player={player} onOpen={() => setOpen(player)} team={team} />
                   </li>
                 ))}
               </ul>
@@ -161,11 +168,13 @@ export default function TeamSheet({
 function Cell({
   player,
   onOpen,
-  instruction,
+  show,
+  team,
 }: {
   player: SquadPlayerDetail;
   onOpen: () => void;
-  instruction?: Instruction;
+  show?: "points" | "fixture";
+  team: TeamColours;
 }) {
   return (
     <button
@@ -181,7 +190,8 @@ function Cell({
         club={player.club}
         opposition={player.opposition}
         points={player.points}
-        instruction={instruction}
+        show={show}
+        team={team}
       />
     </button>
   );

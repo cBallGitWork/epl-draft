@@ -5,6 +5,7 @@ import {
   fetchLeagueInfo,
   mapLeagueInfo,
   periodGameweeks,
+  lastLockedPeriod,
   planningPeriod,
 } from "@epl/core";
 import { leagueCache } from "./leagueCache";
@@ -102,6 +103,31 @@ export async function planningRound(): Promise<Round | null> {
   // `planningPeriod` has already stepped over those.
   const gameweek = calendar.find((entry) => entry.period === period)?.gameweeks[0];
   return gameweek === undefined ? null : { gameweek, period };
+}
+
+/** The round a RIVAL's squad screen opens on: the last week whose lineups have
+ *  locked, and therefore the last week with an arrangement anybody may see.
+ *
+ *  Your own team does not use this — `planningRound` is right there, because the
+ *  planner is about the week you can still change. This is for every other team,
+ *  where pointing at the planning week guaranteed the gate withheld the eleven
+ *  and the pitch was never visible from an ordinary tap.
+ *
+ *  Falls back to the planning round before the season's first lock, when there
+ *  is no locked week to show. */
+export async function lastLockedRound(): Promise<Round | null> {
+  const [info, kickoffs, calendar] = await Promise.all([
+    leagueInfo(),
+    seasonKickoffs(),
+    readCalendar(),
+  ]);
+  if (info === null) return null;
+
+  const period = lastLockedPeriod(info.rosterPeriods, kickoffs, new Date().toISOString());
+  if (period === null) return planningRound();
+
+  const gameweek = calendar.find((entry) => entry.period === period)?.gameweeks[0];
+  return gameweek === undefined ? planningRound() : { gameweek, period };
 }
 
 export async function roundOf(gameweek: number): Promise<Round | null> {

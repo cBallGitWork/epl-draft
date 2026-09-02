@@ -183,9 +183,20 @@
      sit within 0.03 lightness of each other, so a card on the grass had nothing
      but a 2.5px white edge holding it off the background. The turf now sits well
      below the sticker's backdrop range (0.52–0.68) and the cards lift off it. --- */
-  --color-pitch-turf: oklch(0.455 0.132 151);
-  --color-pitch-mow: oklch(0.425 0.125 151);
-  --color-pitch-line: oklch(0.97 0.02 151);
+  /* **Championship Manager's pitch is DARK** (Craig, 2 Sep, comparing ours to
+     the AC Milan shot side by side). Measured off that image, the game's turf
+     sits around #1e4620 — a deep green that lets white-and-yellow type sit
+     straight on it with no plate. Ours was oklch 0.455, a bright studio green
+     that needed a black plate under every name, and the plates are what made
+     our pitch read as a diagram of cards rather than as a pitch.
+
+     The mow is one step down rather than two: CM's stripes are only just
+     visible, which is what a mown pitch actually looks like from a stand. */
+  --color-pitch-turf: oklch(0.335 0.085 148);
+  --color-pitch-mow: oklch(0.315 0.080 148);
+  /* Thin, dark and complete, as the shot draws them: the markings are a
+     diagram's lines, not floodlit paint. */
+  --color-pitch-line: oklch(0.62 0.055 148);
   /* How deep the hoardings are. Read by the boards themselves, by the turf that
      starts under them and by the padding that keeps the far row clear of them —
      three places that must agree, and did not until this was one value. */

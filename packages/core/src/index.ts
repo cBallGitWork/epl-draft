@@ -27,5 +27,4 @@ export * from "./gazette";
 export * from "./news";
 export * from "./join/roster";
 export * from "./join/squadDetail";
-export * from "./join/tactics";
 export * from "./league";

@@ -134,6 +134,7 @@ export default function PitchRows<T>({
   keyOf,
   widest: agreed,
   flat = false,
+  inColumn = false,
   children,
 }: {
   rows: PitchRow<T>[];
@@ -163,6 +164,8 @@ export default function PitchRows<T>({
    *  Whichever ground loses gets deleted, and neither gets merged into the
    *  other. */
   flat?: boolean;
+  /** Passed to `CmGround`: fill the column instead of bleeding. */
+  inColumn?: boolean;
   /** A fullest-line count to size against instead of this pitch's own.
    *
    *  For a caller drawing TWO pitches that must agree. The head-to-head is one
@@ -211,5 +214,5 @@ export default function PitchRows<T>({
     </ul>
   ));
 
-  return flat ? <CmGround>{lines}</CmGround> : <PitchFrame>{lines}</PitchFrame>;
+  return flat ? <CmGround inColumn={inColumn}>{lines}</CmGround> : <PitchFrame>{lines}</PitchFrame>;
 }

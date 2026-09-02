@@ -16,7 +16,7 @@ import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
 import TeamShell from "./Shell";
 import { getLeagueSquads, teamDisplay } from "../../squads";
-import { planningRound, roundOf } from "../../round";
+import { lastLockedRound, leagueInfo, planningRound, roundOf } from "../../round";
 import { pendingByTeam, squadLivePoints } from "../../scoreboard";
 import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
@@ -49,7 +49,36 @@ export default async function TeamPage({
   // period is what Fantrax is asked for and the gameweek is what FPL is asked
   // for. Same resolution the head-to-head route makes.
   const asked = Number(gw);
-  const round = Number.isInteger(asked) ? await roundOf(asked) : await planningRound();
+  // **Which week this screen is about, and it is not the same question for every
+  // team** (Craig, 2 Sep, more than once: tapping a squad from the league should
+  // land on a pitch).
+  //
+  // Your own squad is about the week you can still CHANGE — that is what a
+  // planner is — so it takes the planning round. Everybody else's is about an
+  // arrangement, and the planning week is precisely the one the gate withholds:
+  // pointing a rival's screen there meant the eleven was never visible from an
+  // ordinary tap, all week, every week. The last LOCKED week is the most recent
+  // one that has an arrangement to show, and on a Saturday it is the live one.
+  //
+  // `?gw=` still wins over both: a reader who named a week gets that week.
+  //
+  // Resolved from the league's own team list rather than from the roster read
+  // this decides, which would be circular: `leagueInfo` names every team and is
+  // separately cached, so asking it costs nothing a squad screen was not already
+  // paying.
+  // Named apart from `mine` below, which is the authority: that one validates
+  // against the ROSTERED teams and is what every gate and label reads. This is
+  // the same question asked early enough to choose a week, off the league's own
+  // list, and the two can only disagree for a team that exists in the league and
+  // holds no roster — which has no squad screen to show either way.
+  const info = await leagueInfo();
+  const asksOwn = info === null ? false : (await myTeamId(info.teams)) === teamId;
+
+  const round = Number.isInteger(asked)
+    ? await roundOf(asked)
+    : asksOwn
+      ? await planningRound()
+      : await lastLockedRound();
   const squads = await getLeagueSquads(round);
   // No squads exist and no such team: both are genuinely 404. Fantrax being
   // unreachable is not — that is a state of ours, and it belongs on /team where
@@ -248,6 +277,7 @@ export default async function TeamPage({
           breakdown={live?.breakdown ?? {}}
           pending={pending}
           eligibility={eligibility}
+          teamId={teamId}
         />
       )}
     </TeamShell>

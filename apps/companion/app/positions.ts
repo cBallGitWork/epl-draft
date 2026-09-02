@@ -64,12 +64,22 @@ export function positionsFromList(positions: string | null | undefined): string 
  *  gets more versatile, because the column is fixed and the string is not.
  *  `MID/FWD` at seven characters set the whole column's width for the eleven
  *  players in twelve who need three. */
+/** Back to front, which is the order every football list uses and the order the
+ *  squad list itself is in. Fantrax sends eligibility in its own order — `"F,M"`
+ *  for Saka — and printing that verbatim gave `F/M` where the man is a midfielder
+ *  who can play up front (Craig, 2 Sep: "if a f/m, put M first").
+ *
+ *  A letter this table has never seen sorts last rather than being dropped, on
+ *  `positionLabel`'s rule: an unknown position is still a position. */
+const DEPTH: Record<string, number> = { G: 0, D: 1, M: 2, F: 3 };
+
 export function positionsLabel(positions: readonly string[]): string | null {
-  const kept = positions.filter((p) => p);
+  const kept = [...positions]
+    .filter((p) => p)
+    .sort((a, b) => (DEPTH[a] ?? 99) - (DEPTH[b] ?? 99));
   if (kept.length === 0) return null;
   if (kept.length === 1) return positionLabel(kept[0]) ?? null;
-  // Fantrax's own letters, joined — which is what the short form IS. An unknown
-  // letter passes through as itself, on `positionLabel`'s rule.
+  // Fantrax's own letters, joined — which is what the short form IS.
   return kept.join("/");
 }
 

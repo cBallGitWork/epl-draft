@@ -118,6 +118,41 @@ function lineupsLocked(
  *  Periods are read in their own order rather than the list's: the answer is the
  *  EARLIEST unlocked week, and a payload that arrived out of order would
  *  otherwise hand back whichever one came first. */
+/** The most recent period whose lineups HAVE locked — the last week whose
+ *  arrangements are public.
+ *
+ *  **The default a rival's squad screen wants** (Craig, 2 Sep, several times:
+ *  "tap league, tap a squad… this needs the pitch view too"). `planningPeriod`
+ *  is the right answer for your OWN team, whose planner is about the week you
+ *  can still change — but pointing a rival's screen at that week guarantees the
+ *  gate withholds it, so the pitch was never once visible from an ordinary tap.
+ *  A screen whose whole subject is an arrangement should open on a week that
+ *  HAS one.
+ *
+ *  Mid-round the two coincide: once Saturday's lock passes, the live week is
+ *  both the last locked one and the one being played, which is exactly what a
+ *  reader wants on a matchday.
+ *
+ *  Null before the season's first lock — nobody has arranged anything yet — and
+ *  the caller falls back to the planning week, which is all there is to show.
+ *
+ *  Read in period order and taken from the END, so a payload that arrived out of
+ *  order cannot hand back an early week. */
+export function lastLockedPeriod(
+  periods: LeaguePeriod[],
+  kickoffs: readonly GameweekKickoff[],
+  at: string,
+): number | null {
+  const ordered = [...periods].sort((a, b) => a.number - b.number);
+  let latest: number | null = null;
+  for (const period of ordered) {
+    // `=== true` and not truthiness, on `planningPeriod`'s rule: null is a week
+    // with no lock to measure, and unknown is not locked.
+    if (lineupsLocked(period, kickoffs, at) === true) latest = period.number;
+  }
+  return latest;
+}
+
 export function planningPeriod(
   periods: LeaguePeriod[],
   kickoffs: readonly GameweekKickoff[],

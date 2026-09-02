@@ -93,6 +93,17 @@
 .pitch {
   position: relative;
   overflow: hidden;
+  /* **Portrait, and the CONTENT is what fills it** — measured, after two
+     attempts that were not. `cm9900/19.jpg` draws its pitch at about 1.2 times
+     as tall as it is wide.
+
+     A hard `aspect-ratio` clipped, because the rows inside are content and set
+     their own height. `min-height: 122cqw` then made it 1757px against 554 wide
+     — a ratio of 3.17 — because the element was its own query container and the
+     units compounded. So the shape is a plain `aspect-ratio` again and the rows
+     inside are made to FIT it rather than to set it: `PitchRows` sizes a card
+     against the pitch, not the pitch against the cards. */
+  aspect-ratio: 0.82;
   /* No ground of its own. What lies outside the taper is the page, the way it is
      on FPL's: a second green out there reads as a second surface, and the pitch
      stops being a thing sitting on the page and becomes a panel with a border. */

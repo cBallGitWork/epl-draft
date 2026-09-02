@@ -1,13 +1,14 @@
+import type { CSSProperties } from "react";
 import {
   type Club,
   type Opposition,
   type RosteredPlayer,
   isResolved,
   kickedOff,
-  playerName,
+  pitchName,
 } from "@epl/core";
-import type { Instruction } from "@epl/core";
 import PlayerImage from "./PlayerImage";
+import { type TeamColours, fixtureLabel } from "@epl/core";
 
 // One player on Championship Manager's pitch: a head, a name, and what he is
 // worth. The marker half of the `CmGround` trial.
@@ -45,7 +46,8 @@ export default function PitchDisc({
   club,
   opposition,
   points,
-  instruction,
+  show = "points",
+  team,
 }: {
   rostered: RosteredPlayer;
   club: Club | undefined;
@@ -53,14 +55,17 @@ export default function PitchDisc({
   /** What our league scores him this period. Undefined is no table at all,
    *  null a table that does not name him. */
   points?: number | null;
-  /** Whether the shape has him pushing forward — see `join/tactics.ts`. */
-  instruction?: Instruction;
+  /** What the plate under his name carries. */
+  show?: "points" | "fixture";
+  /** The FANTASY team's colours — the disc's ring and fill. One colour for the
+   *  whole eleven, which is what makes them read as a side. */
+  team: TeamColours;
 }) {
   const resolved = isResolved(rostered) ? rostered : null;
   const started = kickedOff(opposition);
 
   return (
-    <div className="relative flex w-full flex-col items-center gap-0.5">
+    <div className="relative flex w-full flex-col items-center">
       {/* **The arrow, above the man who is going forward** — which is how the
           shot draws it and, more to the point, is the only mark on CM's pitch
           that says anything about intent. Ours is derived from the shape rather
@@ -70,30 +75,36 @@ export default function PitchDisc({
           `aria-hidden`, and the instruction is not otherwise announced: it is a
           restatement of the formation printed in words above the pitch, so a
           reader who cannot see it has already been told. */}
-      {instruction === "forward" ? (
-        <span
-          aria-hidden
-          className="absolute -top-3 font-chrome text-sm font-bold leading-none text-accent"
-        >
-          ↑
-        </span>
-      ) : null}
+      {/* **A circle in the TEAM's colour, with his face filling it** (Craig,
+          2 Sep). Three corrections to the first cut, all from the shot:
 
-      {/* **The cut-out, with nothing behind it** (Craig, 2 Sep: "use the player
-          portrait but not background"). `PlayerPortrait` drew a chrome DISC
-          under every head — CM's numbered circle with a face in it — and the
-          circle is the half we do not need: the game draws a disc because it
-          has a number to put in one, and we have a photograph, which is its own
-          shape. `PlayerImage` is the cut-out ladder the pitch already uses
-          elsewhere, so a man with no photograph still reads as somebody. */}
-      <span className="relative block h-11 w-11 overflow-hidden">
+          · The ground is the FANTASY team's colour, not the football club's.
+            The pitch is a picture of one manager's side, so eleven different
+            club colours turned it into eleven separate badges — CM's discs are
+            all one colour for exactly that reason, and the colour is the team's.
+          · The face fills the circle. `PlayerImage` crops `object-top` because
+            it normally stands on grass with its feet cut off; inside a disc that
+            put the head against the ceiling with a chin at the bottom edge.
+            `object-cover` centred on the face is what a round crop wants.
+          · Smaller. The circle was 64px against a name at 10 — it dominated the
+            row and pushed the lines apart.
+
+          `--row-portrait` is the size `PlayerImage` reads, so it is set here and
+          the image sizes itself off it. */}
+      <span
+        className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 lg:h-14 lg:w-14"
+        style={
+          {
+            borderColor: team.primary,
+            backgroundColor: team.secondary,
+            // Pull the crop down a touch: a portrait's head sits in the upper
+            // third of the frame, so dead centre puts it high in a circle.
+            "--pitch-crop": "22%",
+          } as CSSProperties
+        }
+      >
         {resolved === null ? (
-          /* A slot the bridge has not settled has no footballer behind it and
-             so no portrait to fall back through. His position on a plain plate
-             says what the pitch actually knows about him, which is where he is
-             standing — and `SquadRows` prints "unmapped" on the same man, so
-             the two readings agree. */
-          <span className="grid h-full w-full place-items-center bg-surface font-display text-3xs font-bold uppercase text-faint">
+          <span className="grid h-full w-full place-items-center font-display text-3xs font-bold uppercase text-bg">
             {rostered.slot.position || "?"}
           </span>
         ) : (
@@ -102,31 +113,42 @@ export default function PitchDisc({
             club={club}
             keeper={rostered.slot.position === "G"}
             kickedOff
-            sizes="44px"
+            sizes="56px"
           />
         )}
       </span>
 
-      {/* **The name on the grass, in white, as the game sets it.** It was on a
-          cream PLATE — added when white-at-nine-pixels over grass was found
-          unreadable — and the shot says the answer was the wrong one: CM puts
-          white type straight on the pitch and makes it legible by being bigger
-          and bolder, not by putting a card behind it. A row of cream plates
-          reads as fifteen labels; the grass should show between the players.
+      {/* **Yellow, on the grass, with no plate under it** — which is exactly
+          how the AC Milan shot sets a name, and the last thing between ours and
+          it (Craig, 2 Sep: "compared the two, ours is just not good enough
+          yet"). The plate went in when white-at-nine-pixels over a BRIGHT green
+          was found unreadable; the turf is CM's dark green now, and yellow on it
+          measures well clear — so the plate is solving a problem that no longer
+          exists, and a row of black bars is what made our pitch read as cards on
+          grass rather than as a team on a pitch.
 
-          The drop shadow is what buys the contrast the plate was buying, and it
-          costs no ground: `groundfit` measures text on the BARE ground and a
-          shadowed glyph over grass still fails that test, which is why the
-          pitch is exempt — it is a photograph of grass we drew, not the
-          match photograph the rule is about. */}
-      <span className="w-full truncate px-0.5 text-center font-display text-2xs font-bold uppercase leading-none text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.9)]">
-        {playerName(rostered)}
+          `--color-accent` is the token, and this is one of the few places the
+          slot's meaning bends: on a pitch a name in yellow is CM's own
+          convention for a player, not a claim that he is "yours". The shadow is
+          what carries it over the mown stripes. */}
+      <span className="w-full truncate px-0.5 text-center font-display text-2xs font-bold uppercase leading-none text-accent [text-shadow:0_1px_3px_rgb(0_0_0/0.95)]">
+        {pitchName(rostered)}
       </span>
 
-      {/* His score, or his fixture before a ball is kicked. On the dark plate
-          CM uses for a figure on grass. */}
-      <span className="numeric w-full bg-bg/80 px-0.5 text-center text-2xs font-bold leading-none text-cream">
-        {started ? (points ?? "—") : (club?.shortName ?? "—")}
+      {/* **What he is worth, or who he plays** — and which of the two is the
+          caller's to say. The squad screen wants the FIXTURE (Craig, 2 Sep:
+          "pitch view on squad page does not need points, just the next fixture
+          I guess"), because a squad is about the week ahead; the head-to-head
+          wants the points, because that screen is about a score. CM's own
+          tactics pitch carries neither — its discs hold a shirt NUMBER — so
+          there is no reference answer and this follows the question each screen
+          is asking. */}
+      <span className="numeric w-full truncate px-0.5 text-center text-3xs font-bold leading-none text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.95)]">
+        {show === "fixture"
+          ? (fixtureLabel(opposition) ?? club?.shortName ?? "—")
+          : started
+            ? (points ?? "—")
+            : (club?.shortName ?? "—")}
       </span>
     </div>
   );

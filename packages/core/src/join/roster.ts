@@ -161,3 +161,27 @@ function statsByPlayer(snapshot: FootballSnapshot): Map<number, PlayerMatchStats
 export function playerName(rostered: RosteredPlayer): string {
   return isResolved(rostered) ? rostered.player.name : rostered.slot.fantraxId;
 }
+
+/** His name at the size a pitch draws one: `Hemmings`, `G.Hemmings` for a clash.
+ *
+ *  **A surname, because a disc is 64px wide** (Craig, 2 Sep: "'george hemmings'
+ *  just needs to be 'Hemmings' or G.Hemmings"). FPL's `web_name` is usually a
+ *  surname already — it is what the game prints on a shirt — but not always:
+ *  where two players share one it sends the full name instead, and those are the
+ *  ones that overflow a disc.
+ *
+ *  So the initial is kept when there is one to keep, which is exactly the case
+ *  `web_name` was disambiguating. `B.Fernandes` is FPL's own spelling of that
+ *  and this leaves it alone; `George Hemmings` becomes `G.Hemmings`, which
+ *  carries the same disambiguation in half the width. */
+export function pitchName(rostered: RosteredPlayer): string {
+  const full = playerName(rostered);
+  const at = full.lastIndexOf(" ");
+  if (at <= 0) return full;
+
+  const surname = full.slice(at + 1);
+  const first = full.slice(0, at);
+  // A one-word forename becomes an initial; anything longer (a two-part name, a
+  // particle like "van der") is left alone rather than mangled.
+  return first.includes(" ") ? full : `${first[0]}.${surname}`;
+}

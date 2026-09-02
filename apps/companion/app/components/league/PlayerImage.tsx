@@ -116,7 +116,11 @@ export default function PlayerImage({
           height={145}
           sizes={sizes}
           onError={() => setRung(rung === "initials" ? "initials" : NEXT[rung])}
-          className={`h-full w-full object-cover object-top drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
+          // `object-top` for a cut-out STANDING on grass, where the feet are
+          // what gets cropped. Inside a round disc it puts the head against the
+          // ceiling with a chin at the bottom edge, so a disc says so and gets
+          // the face centred instead (`--pitch-crop`, set by `PitchDisc`).
+          className={`h-full w-full object-cover [object-position:center_var(--pitch-crop,top)] drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
             kickedOff ? "" : "opacity-80 grayscale-[35%]"
           }`}
         />

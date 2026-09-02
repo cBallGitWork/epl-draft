@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { periodToRead, planningPeriod, rosterDisplay } from "./visibility";
+import { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from "./visibility";
 import type { GameweekKickoff } from "./calendar";
 import type { LeaguePeriod } from "./types";
 
@@ -257,6 +257,42 @@ describe("planningPeriod", () => {
   it("says nothing when every week has locked, or when there is no calendar", () => {
     expect(planningPeriod(periods, kickoffs, "2027-06-01T12:00:00.000Z")).toBeNull();
     expect(planningPeriod([], kickoffs, BEFORE_THE_SEASON)).toBeNull();
+  });
+});
+
+// The other end of the same question. `planningPeriod` is the week you can still
+// change; this is the last week anybody may SEE — and a rival's squad screen
+// wants the second, because the first is precisely the week the gate withholds.
+describe("lastLockedPeriod", () => {
+  it("says nothing before the season's first lock", () => {
+    // Nobody has arranged anything yet, and the caller falls back to the
+    // planning week because that is all there is to show.
+    expect(lastLockedPeriod(periods, kickoffs, BEFORE_THE_SEASON)).toBeNull();
+  });
+
+  it("turns over at the lock, not at the round's end", () => {
+    expect(lastLockedPeriod(periods, kickoffs, justBefore(P2_LOCKS))).toBe(1);
+    expect(lastLockedPeriod(periods, kickoffs, P2_LOCKS)).toBe(2);
+  });
+
+  it("is the LIVE week mid-round, which is what a reader wants on a Saturday", () => {
+    // The same instant `planningPeriod` answers 3 for: the week being played has
+    // locked, so it is both the last locked one and the one with football in it.
+    const midWeekend = "2026-08-29T13:53:00.000Z";
+    expect(planningPeriod(periods, kickoffs, midWeekend)).toBe(3);
+    expect(lastLockedPeriod(periods, kickoffs, midWeekend)).toBe(2);
+  });
+
+  it("holds the last week of the season once every week has locked", () => {
+    // Where `planningPeriod` runs out and answers null, this still has an answer
+    // — the season's arrangements do not stop being visible when it ends.
+    expect(planningPeriod(periods, kickoffs, "2027-06-01T12:00:00.000Z")).toBeNull();
+    expect(lastLockedPeriod(periods, kickoffs, "2027-06-01T12:00:00.000Z")).not.toBeNull();
+  });
+
+  it("never counts a week it cannot find a lock in", () => {
+    // Unknown is not locked, on the same rule `planningPeriod` reads it by.
+    expect(lastLockedPeriod([], kickoffs, "2027-06-01T12:00:00.000Z")).toBeNull();
   });
 });
 

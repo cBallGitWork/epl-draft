@@ -47,7 +47,7 @@ export type { Pedigree } from "./pedigree";
 export { firstKickoff, locksAt, periodGameweeks } from "./calendar";
 export type { GameweekKickoff } from "./calendar";
 
-export { periodToRead, planningPeriod, rosterDisplay } from "./visibility";
+export { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from "./visibility";
 export type { RosterDisplay, SquadReason } from "./visibility";
 
 export { applyMove, eligibilityOf, eligibleSlots, legalMoves } from "./moves";

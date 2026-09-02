@@ -22,45 +22,54 @@ export default function Sheet({
   bench,
   lines,
   breakdown,
-  shape,
   pending,
   eligibility,
+  teamId,
 }: {
   rows: SquadDetailLine[];
   bench: SquadPlayerDetail[];
   lines: SquadDetailLine[];
   breakdown: Record<string, BreakdownLine[]>;
-  /** The formation, "1-3-4-3". `lineup()` has always counted it and
-   *  `lineupDetail` used to drop it; naming a shape is the first thing
-   *  Championship Manager does with an eleven. */
-  shape: string;
+  /** The formation, "1-3-4-3". Taken and not drawn: it arrives on the spread
+   *  from `lineupDetail` and the pitch says it better than the string does. */
+  shape?: string;
   /** Points Fantrax has not credited yet — a clean sheet is settled at the final
    *  whistle and FPL has been paying it since the hour mark. Null when there are
    *  none to preview, and never a nought. */
   pending: number | null;
   /** Eligible positions by Fantrax id, for the list's position column. */
   eligibility?: Record<string, string[]>;
+  /** Whose pitch this is — every disc takes his colour. */
+  teamId: string;
 }) {
 
   return (
     <div className="flex flex-col gap-2">
-      {/* The formation in yellow above the pitch, as `cm9900/19.jpg` and the
-          01/02 Bayern shot both set it. */}
-      <div className="flex items-baseline justify-between gap-2 px-1">
-        <span className="numeric font-chrome text-sm font-bold text-accent">{shape}</span>
-        <Pending points={pending} />
-      </div>
+      {/* **No shape line** (Craig, 2 Sep: "so remove 1-3-4-3"). The AC Milan
+          shot heads its pitch "5-3-2 Attacking*" because the game is about to
+          let you EDIT it — a tactics screen names the thing it is editing. Ours
+          is a read-only arrangement and the pitch below states the shape better
+          than a hyphenated string does: you can see it is three at the back. */}
+      {pending === null ? null : (
+        <div className="flex justify-end px-1">
+          <Pending points={pending} />
+        </div>
+      )}
 
-      {/* **List left, pitch right** (`19.jpg`). The list carries the whole
-          squad — the XI and the reserves under them — and the pitch carries the
-          ELEVEN and nothing else (Craig, 2 Sep: "it's a squad page so maybe just
-          the first eleven here"). That is what the game does: the Bayern shot
-          lists eighteen names down the left and draws eleven on the grass, with
-          the reserves greyed in the list rather than drawn as a bench.
-      
+      {/* **List left, pitch right, and the two the same width** (Craig, 2 Sep:
+          "the pitch needs to be longer, and same size as the list really"). The
+          Milan and Bayern shots both split their tactics screen down the middle
+          — the list is not the main thing with a diagram beside it, they are two
+          readings of one team given equal room. Ours ran 3fr against 2fr, which
+          made the list the screen and the pitch an illustration of it.
+
+          The list carries the whole squad, XI and reserves; the pitch carries
+          the ELEVEN and nothing else, which is what the game does — eighteen
+          names down the left, eleven on the grass.
+
           Below `lg` they stack, list first: a phone gets the names, and the
           pitch under them rather than instead of them. */}
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
         <TeamSheet
           rows={rows}
           bench={bench}
@@ -78,6 +87,9 @@ export default function Sheet({
           lines={lines}
           breakdown={breakdown}
           mode="pitch"
+          inColumn
+          show="fixture"
+          teamId={teamId}
         />
       </div>
     </div>

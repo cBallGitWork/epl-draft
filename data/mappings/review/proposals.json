@@ -48,25 +48,20 @@
     "reason": "below-threshold"
   },
   {
-    "fantraxId": "07855",
-    "fantraxName": "Enzo Kana Biyik",
-    "clubCode": "MUN",
-    "positionHint": "F",
+    "fantraxId": "06nbu",
+    "fantraxName": "Stephen Mfuni",
+    "clubCode": "COV",
+    "positionHint": "D",
     "candidates": [
       {
-        "fplCode": 576620,
-        "name": "Bendito Mantato",
-        "score": 53
+        "fplCode": 684268,
+        "name": "George Shepherd",
+        "score": 52
       },
       {
-        "fplCode": 596047,
-        "name": "Chido Obi",
-        "score": 25
-      },
-      {
-        "fplCode": 547676,
-        "name": "Tyler Fredricson",
-        "score": 24
+        "fplCode": 549653,
+        "name": "Norman Bassette",
+        "score": 35
       }
     ],
     "reason": "below-threshold"
