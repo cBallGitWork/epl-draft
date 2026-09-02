@@ -47,6 +47,15 @@ on:
     # The morning-after sweep: whatever the evening net missed — a late whistle,
     # a skipped run — files with coffee rather than waiting for football.
     - cron: "15 6-9 * * 0,1,2"
+    # Waiver business. Claims process Wednesday evening (Craig), and NO API read
+    # carries that schedule, so the Mercato Wire's trigger is DETECTION — a
+    # fresh claim batch in the transactions feed — and these crons are only when
+    # we look. The league clock is Europe/London and crons are UTC: 17-22 UTC is
+    # evening under both BST and GMT, which is why this mirrors the weekday band
+    # rather than picking an hour. Thursday morning catches a batch that landed
+    # after the last Wednesday firing.
+    - cron: "0,30 17-22 * * 3"
+    - cron: "15 6-9 * * 4"
   workflow_dispatch: {}
 
 # Its own group, deliberately NOT shared with the capture or round-state jobs:
