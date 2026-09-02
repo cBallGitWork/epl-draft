@@ -68,5 +68,5 @@ export {
   sortTable,
 } from "./tableOrder";
 export type { PlacedRow, TableSortKey } from "./tableOrder";
-export type { ClubStats, Record as ClubRecord, Result } from "./clubStats";
+export type { ClubRecord, ClubStats, Result } from "./clubStats";
 export type { Opposition } from "./opposition";

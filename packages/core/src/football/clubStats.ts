@@ -20,8 +20,13 @@ import type { Club, Fixture, FootballPlayer, SeasonTotals } from "./types";
 // kept a clean sheet.
 
 /** One side of a record — the same six figures a table row carries, for a
- *  subset of the fixtures. */
-export interface Record {
+ *  subset of the fixtures.
+ *
+ *  Not called `Record`, which is what a football writer would call it: that name
+ *  shadows TypeScript's own `Record<K, V>` inside this file, so the next person
+ *  to want a keyed map here would get a confusing error instead of a utility
+ *  type. */
+export interface ClubRecord {
   played: number;
   won: number;
   drawn: number;
@@ -34,8 +39,8 @@ export type Result = "W" | "D" | "L";
 
 export interface ClubStats {
   clubId: number;
-  home: Record;
-  away: Record;
+  home: ClubRecord;
+  away: ClubRecord;
   /** Every result this season, **oldest first** — left to right is the direction
    *  the season ran, which is how a form guide is read wherever it appears. The
    *  whole run rather than the last five: how many a guide shows is a question
@@ -107,13 +112,13 @@ export function clubStats(
   return [...rows.values()];
 }
 
-function blank(): Record {
+function blank(): ClubRecord {
   return { played: 0, won: 0, drawn: 0, lost: 0, goalsFor: 0, goalsAgainst: 0 };
 }
 
 /** One club's half of one match, written into the right half of its record and
  *  onto the end of its run. */
-function side(row: ClubStats, half: Record, scored: number, conceded: number): void {
+function side(row: ClubStats, half: ClubRecord, scored: number, conceded: number): void {
   half.played += 1;
   half.goalsFor += scored;
   half.goalsAgainst += conceded;

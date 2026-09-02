@@ -63,15 +63,23 @@ function Side({ club, align }: { club: Club | undefined; align?: "end" }) {
         align === "end" ? "flex-row-reverse text-right" : ""
       }`}
     >
-      <Image
-        src={club === undefined ? "" : crestUrl(club)}
-        alt=""
-        width={22}
-        height={22}
-        className="h-[1.375rem] w-[1.375rem] shrink-0 object-contain"
-        aria-hidden
-        unoptimized
-      />
+      {/* No crest rather than an empty `src`. `next/image` throws on `""`, so a
+          fixture naming a club this snapshot does not carry would have taken
+          the whole list down — and the gap is held open regardless, so the
+          scorelines stay in one column either way. */}
+      {club === undefined ? (
+        <span aria-hidden className="h-[1.375rem] w-[1.375rem] shrink-0" />
+      ) : (
+        <Image
+          src={crestUrl(club)}
+          alt=""
+          width={22}
+          height={22}
+          className="h-[1.375rem] w-[1.375rem] shrink-0 object-contain"
+          aria-hidden
+          unoptimized
+        />
+      )}
       {/* The three-letter label under a thumb and the name on the desk, as the
           table does it — two crests, a score and two names do not fit 326px. */}
       <span className="min-w-0 truncate text-sm font-bold lg:hidden">
