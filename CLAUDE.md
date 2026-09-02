@@ -9,9 +9,10 @@ rules, not preferences. Exceptions are recorded in `PLATFORM_NOTES.md` in the
 same commit.
 
 **`DESIGN.md` is binding for anything visible.** Two registers — a printed paper
-at `/` and a Championship Manager 99/00 desk on the other five tabs — one shared
-skeleton, and a palette in which every colour is a slot with one meaning. It also
-records what is deliberately deferred, so an absence is not read as an oversight.
+at `/` and a Championship Manager 99/00 desk on the other five tabs — League,
+Prem, Live, Players and FPL — one shared skeleton, and a palette in which every
+colour is a slot with one meaning. It also records what is deliberately
+deferred, so an absence is not read as an oversight.
 
 A 10-user **Fantrax** Premier League draft league starts **GW6, 10 Oct 2026**.
 Fantrax is the source of truth for the current season. This repo republishes that

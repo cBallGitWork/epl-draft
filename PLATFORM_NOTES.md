@@ -4631,3 +4631,90 @@ the wrong thing about which league it was serving.
 no-script `Show` button, the glossary strip (one), and `const DASH = "—"` — four
 declarations against SIXTY inline uses of the glyph, which is the DASH lesson by
 name and the reason it stays duplicated.
+
+## 2 Sep 2026 — the Premiership section, and what it cost the layers
+
+**`/prem` exists, and it is the inverse of `/league`.** Fantrax says almost
+nothing about the actual Premier League, so the app had no screen for it: the
+only place the real table had ever been printed was six lines on the back page of
+the paper. Five routes now — the table, results, fixtures, a team-stats board and
+a club stub — under "FA Barclays Premiership", which is the period name the
+reference heads its own table screen with.
+
+The two tables are the layer split made visible. `/league` **quotes** Fantrax's
+arithmetic and may never compute a table, because three-for-a-win is a
+commissioner setting. `/prem` **must** compute one, because three-for-a-win is a
+rule of the competition. `docs/ui/prem.md` carries the whole argument.
+
+### `bootstrap-static` re-probed, 2 Sep 2026
+
+1,730,358 bytes. 651 elements, 20 teams, 38 events; GW2 current, finished and
+`data_checked`.
+
+- `goals_scored`, `assists`, `clean_sheets`: **651/651 present and non-null** on
+  every element. This is what let the football layer carry them (below).
+- `squad_number`: still **null on all 651**. The standing note holds.
+- `teams[]`: `played`, `win`, `draw`, `loss`, `points` are **nought on all 20**
+  with two rounds signed off. `form`, `strength` and `team_division` are **null
+  on all 20**.
+- **`position` is NOT nought** — it is 1–20 and distinct on all twenty.
+  `football/table.ts` and this file both used to say it was, which was wrong
+  about the field and right about the conclusion: it sits beside a `played` of
+  nought on every club, so whatever it orders is not a record anybody has played.
+  Corrected in both places. Do not print it, and do not carry it into the domain
+  — an unused field is bloat.
+
+### The `SeasonTotals` reversal, and the bound that travels with it
+
+`SeasonTotals` refused goals, assists and clean sheets on the rule that Fantrax
+is the authority on what Fantrax pays for. **That rule is unchanged.** It is a
+rule about a SCREEN and it forbids the two providers' counts of one fact SIDE BY
+SIDE — which is what DESIGN §7 actually guards against. The Premiership section
+carries no Fantrax number at all, and there FPL's count of a Premier League goal
+simply is the Premier League's count.
+
+So the three are now on the type, with the bound in the docblock: **they may not
+appear on a fantasy screen beside a Fantrax figure.** `/prem` is theirs;
+`/players`, `/squad/[teamId]` and the matchup boards are not. A reviewer should
+treat a `season.goals` in the league register as a defect.
+
+### Two bugs found while building it
+
+**A sort key from the URL could reach the prototype chain.** `isSortKey` guarded
+with `value in COLUMN`, and `in` walks the prototype. `toString`, `constructor`,
+`valueOf` and `__proto__` all passed; `COLUMN[key].of` was then undefined and
+`sortRows` called it. `/league?sort=toString` was a 500 anybody could type.
+`Object.hasOwn` now, in both order modules, with the four names in the tests.
+Found by writing the football table's own module and testing the guard the copy
+had inherited.
+
+**An unpublished roster cap was left to two callers.** `f62a1f3` made
+`RosterLimits.maxActivePlayers` nullable — correctly — and `teamOfTheWeek` and
+`LineupPlanner` were not given the decision the type's docblock demands.
+Typecheck was red on main. A team of the week now names nobody without a stated
+size (the position caps sum to fourteen, so eleven and fourteen are both
+inventions), and the empty-places notice does not appear.
+
+### Open, and not mine to close
+
+**`notFound()` answers 200.** `/prem/club/abc`, `/gw/999` and
+`/players/nosuchplayer` all render the 404 page with an HTTP **200**; a route
+that does not exist at all (`/nosuchroute`) correctly answers 404. It is
+app-wide and predates this section — measured on the pre-existing routes, not
+just the new one — so it is recorded rather than fixed here. Worth settling
+before launch: a soft 404 is a page search engines and link checkers believe.
+
+### Instruments
+
+`tools/ui/sweep.mjs` and `tapfit.mjs` carry their own route lists, so a new
+section is invisible to them until it is added. `/prem` is in both. It clears AA
+at 390 and 1440 with no sideways page scroll, and passes tapfit with nine
+recorded exceptions — the sortable column heads, the same class `/league`
+records eight of.
+
+`shot.mjs` could not capture against Chrome 152 headless while a second session
+drove the same browser: it sets the viewport BEFORE navigating, and
+`Page.captureScreenshot` then never returns. Enabling `Page`, navigating,
+settling and overriding the metrics LAST works. Not changed — the instrument is
+shared and the failure was not reproduced on a browser with one client — but
+recorded, because it cost an hour.

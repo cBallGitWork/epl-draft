@@ -29,6 +29,11 @@ nothing.**
 | `/league/matchups/[teamId]` | [matchup.md](matchup.md) | One head-to-head: two totals, and the eleven behind each. |
 | `/league/results` | [league-schedule.md](league-schedule.md) | The archive: every finished round, newest first. |
 | `/league/team-stats` | [league-table.md](league-table.md) | The league ranked by one scoring category at a time. |
+| `/prem` | [prem.md](prem.md) | **The real Premier League table, computed from finished fixtures.** |
+| `/prem/results` | [prem.md](prem.md) | Every finished round of football, newest first. |
+| `/prem/fixtures` | [prem.md](prem.md) | Every round still to come, soonest first. |
+| `/prem/team-stats` | [prem.md](prem.md) | The twenty ranked by one measure at a time. |
+| `/prem/club/[code]` | [prem.md](prem.md) | One club: its identity and its record. A stub. |
 | `/squad` | [squads.md](squads.md) | Yours, then everyone else's. |
 | `/squad/[teamId]` | [squad.md](squad.md) | **One squad: the list and the pitch. The reference page for the new look.** |
 | `/squad/[teamId]/transfers` | [squad.md](squad.md) | His business, in Championship Manager's ledger. |
