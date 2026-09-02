@@ -87,9 +87,13 @@ function Opponent({
    *  `Tie` carries it, and this view was missed when that one was fixed. */
   gameweek: number;
 }) {
+  // **The gap is a class, not a trailing space in the markup.** It was `"v "`,
+  // and a flex container collapses that space away — which is how the tap-floor
+  // fix below turned every row into "Vtest3331". A space that only survives
+  // while its parent is not flex is not a space, it is a coincidence.
   const name = (
     <>
-      <span className="text-2xs font-normal uppercase text-faint">v </span>
+      <span className="pr-1 text-2xs font-normal uppercase text-faint">v</span>
       {opponent.label}
     </>
   );
@@ -99,7 +103,22 @@ function Opponent({
   ) : (
     <Link
       href={`/squad/${opponent.team.teamId}?gw=${gameweek}`}
-      className="truncate text-sm font-semibold hover:underline"
+      // **`min-h-11` and the `.cm-row` pair**, which this link had neither of:
+      // it was 18px of text in a 56px row, so the row looked thumbable and only
+      // the name actually was. `tapfit` never saw it because its route list
+      // holds no query strings and this view only existed at
+      // `/league/schedule?team=`; a team's own Fixtures tab put it on a plain
+      // route and the instrument found all thirty-eight of them at once.
+      //
+      // `.cm-row` is what lets the desk keep 28px while the phone gets 44 —
+      // pairing the two is the documented lesson from 1 Sep, not a belt-and-
+      // braces double rule.
+      //
+      // **`inline-flex`, not `flex`.** A block-level flex box took the link out
+      // of the line it shares with the "v" and the date, and the first cut of
+      // this fix printed "Vtestf" with the date pushed onto a row of its own.
+      // The height has to grow without the link leaving the text flow.
+      className="cm-row inline-flex min-h-11 items-center truncate text-sm font-semibold hover:underline"
     >
       {name}
     </Link>

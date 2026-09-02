@@ -93,6 +93,23 @@ const base = flags.base ?? BASE_URL;
 const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));
 
+// A team's own five screens, discovered rather than written down — the ids are
+// the league's and change with `FANTRAX_LEAGUE_ID`, so a static list would name
+// a 404 the day the app is pointed at the real league. `tapfit` discovers its
+// team page the same way and for the same reason.
+//
+// They are swept because they are where the app's only per-team COLOUR is: a
+// title bar and a match header drawn in a team's own hex rather than in a token
+// the palette has already had checked. That is exactly the kind of pair this
+// instrument exists to measure, and no other route in the list has one.
+await cdp.setViewport(390, 900);
+await cdp.open("/squad", 2200);
+const team = await cdp.js(
+  `(document.querySelector('a[href^="/squad/"]')||{}).getAttribute
+     ? document.querySelector('a[href^="/squad/"]').getAttribute("href") : ""`,
+);
+if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((tab) => `${team}/${tab}`));
+
 let failures = 0;
 for (const width of WIDTHS) {
   await cdp.setViewport(width, 900);

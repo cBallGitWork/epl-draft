@@ -95,7 +95,12 @@ const team = await cdp.js(
   `(document.querySelector('a[href^="/squad/"]')||{}).getAttribute
      ? document.querySelector('a[href^="/squad/"]').getAttribute("href") : ""`,
 );
-if (team) ROUTES.push(team);
+// And his four other screens. A team is five routes now rather than one, and an
+// instrument that measures the first cannot vouch for the other four — the tab
+// strip itself is a row of controls with a tap floor, and it appears on all
+// five. Appended from the discovered id for the same reason the id is
+// discovered: writing them down would pin them to one league.
+if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((tab) => `${team}/${tab}`));
 
 let failures = 0;
 for (const width of [390, 1440]) {
