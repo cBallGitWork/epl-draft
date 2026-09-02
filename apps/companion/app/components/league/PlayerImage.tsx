@@ -56,7 +56,18 @@ export default function PlayerImage({
   keeper,
   kickedOff,
   sizes = "88px",
+  fill = false,
 }: {
+  /** Fill the parent instead of taking `.pitch-figure`'s landscape shape.
+   *
+   *  **This is what was cropping every disc.** `.pitch-figure` forces
+   *  `aspect-ratio: 1.32` — a wide box, right for a cut-out standing on grass
+   *  and wrong inside a circle, where it made the image 46x35 in a 46x46 disc
+   *  and cut the bottom quarter off. Three attempts at re-cropping and
+   *  re-zooming the IMAGE could not fix a box that was the wrong shape; Craig
+   *  said so repeatedly and I kept adjusting the wrong thing. A caller drawing
+   *  its own frame says so and gets `h-full`. */
+  fill?: boolean;
   player: Pick<FootballPlayer, "code" | "name">;
   club: Club | undefined;
   /** Which of the club's two kits. A keeper drawn in an outfield shirt is the
@@ -104,7 +115,7 @@ export default function PlayerImage({
     // 110×140 and FPL's kit is 110×145. A box wider than it is tall therefore
     // throws away most of both, which is why the default is the thing a caller
     // overrides rather than the thing every caller lives with.
-    <div className="pitch-figure relative w-full overflow-hidden">
+    <div className={`relative w-full overflow-hidden ${fill ? "h-full" : "pitch-figure"}`}>
       {source ? (
         <Image
           // Keyed by the rung so a failed src is replaced rather than retried:
@@ -116,13 +127,18 @@ export default function PlayerImage({
           height={145}
           sizes={sizes}
           onError={() => setRung(rung === "initials" ? "initials" : NEXT[rung])}
-          // **Cover-and-crop-at-the-top by default; a disc asks for contain.**
+          // **Cover, cropped at the top by default; a disc asks for centre.**
           // A cut-out STANDING on grass wants its feet cropped and its head
-          // whole, which is `object-cover object-top`. Inside a round disc that
-          // crops the sides AND the chin, because the portraits are 110x140 —
-          // taller than wide — so a disc sets `--pitch-fit: contain` and gets
-          // the whole head, drawn smaller.
-          className={`h-full w-full [object-fit:var(--pitch-fit,cover)] [object-position:center_var(--pitch-crop,top)] drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
+          // whole, which is `object-top`. In a round disc that clips the chin,
+          // so `PitchDisc` sets `--pitch-crop: center` and the portrait fills
+          // the circle with the overflow trimmed evenly top and bottom.
+          //
+          // `--pitch-zoom` is a small scale a round frame can ask for, pinned to
+          // the TOP so the crown stays in view as it grows. It earns its place
+          // now that the frame is square: the same knob failed twice while the
+          // box was `.pitch-figure`'s 1.32 landscape, because scaling cannot fix
+          // a frame that is the wrong shape.
+          className={`h-full w-full origin-top object-cover [object-position:center_var(--pitch-crop,top)] [scale:var(--pitch-zoom,1)] drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
             kickedOff ? "" : "opacity-80 grayscale-[35%]"
           }`}
         />

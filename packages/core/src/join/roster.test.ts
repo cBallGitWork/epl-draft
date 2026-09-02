@@ -4,7 +4,8 @@ import type { Bridge } from "../identity/bridge";
 import { mapTeamRosters } from "../league/fantrax/rosters";
 import type { RawTeamRosters } from "../league/fantrax/raw";
 import type { PeriodRosters } from "../league/types";
-import { isResolved, resolveRosters, wasFielded } from "./roster";
+import type { RosteredPlayer } from "./roster";
+import { fullPlayerName, isResolved, resolveRosters, wasFielded } from "./roster";
 import bridgeFixture from "./__fixtures__/bridge.json";
 import footballPlayers from "./__fixtures__/footballPlayers.json";
 import rehearsalRosters from "./__fixtures__/rehearsalRosters.json";
@@ -197,5 +198,37 @@ describe("wasFielded", () => {
   it("is false when there is no round in view, even with no label either", () => {
     expect(wasFielded({ period: 3, teams: [] }, null)).toBe(false);
     expect(wasFielded({ period: null, teams: [] }, null)).toBe(false);
+  });
+});
+
+// The name a list column shows, which is neither of FPL's two fields.
+describe("fullPlayerName", () => {
+  const man = (fullName: string, name: string): RosteredPlayer => ({
+    slot: { fantraxId: "x", position: "M", status: "ACTIVE" },
+    player: { ...players[0], fullName, name },
+    stats: [],
+  });
+
+  it("joins the forename to the shirt name", () => {
+    // Fantrax's own roster says "Matheus Cunha", and this arrives at it from
+    // FPL's two fields — the pool carries their spelling and the ROSTER does
+    // not, so it cannot simply be read.
+    expect(fullPlayerName(man("Matheus Santos Carneiro da Cunha", "Cunha"))).toBe("Matheus Cunha");
+    expect(fullPlayerName(man("Rodrigo Muniz Carvalho", "Muniz"))).toBe("Rodrigo Muniz");
+  });
+
+  it("leaves a name FPL has already disambiguated", () => {
+    // A dot or a space in the shirt name means FPL is separating two players
+    // who share a surname. Prefixing would give "Bruno B.Fernandes".
+    expect(fullPlayerName(man("Bruno Borges Fernandes", "B.Fernandes"))).toBe("B.Fernandes");
+    expect(fullPlayerName(man("Jair Paula da Cunha Filho", "Jair Cunha"))).toBe("Jair Cunha");
+  });
+
+  it("leaves a one-word player alone", () => {
+    expect(fullPlayerName(man("Rodrigo 'Rodri' Hernandez Cascante", "Rodrigo"))).toBe("Rodrigo");
+  });
+
+  it("answers with the id when the bridge has not settled him", () => {
+    expect(fullPlayerName({ slot: { fantraxId: "078wl", position: "G", status: "ACTIVE" }, unresolved: "unmapped" })).toBe("078wl");
   });
 });

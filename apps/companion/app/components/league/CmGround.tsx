@@ -40,6 +40,14 @@ const LENGTH_M = 105;
 const BOX = { width: 40.32, depth: 16.5 };
 const SIX = { width: 18.32, depth: 5.5 };
 const CENTRE_CIRCLE_M = 9.15;
+const PENALTY_SPOT_M = 11;
+
+/** Half the chord where the penalty arc crosses the box line, as a percentage of
+ *  the pitch's width. The arc is a 9.15m circle round the spot; the box line is
+ *  16.5m out and the spot 11m, so the arc is 5.5m from centre there and its
+ *  half-width is the other side of that right triangle. */
+const ARC_HALF =
+  (Math.sqrt(CENTRE_CIRCLE_M ** 2 - (BOX.depth - PENALTY_SPOT_M) ** 2) / WIDTH_M) * 100;
 
 const pct = (m: number, of: number) => (m / of) * 100;
 
@@ -122,6 +130,28 @@ export default function CmGround({
             height={pct(SIX.depth, LENGTH_M)}
           />
 
+          {/* **The D outside each box** (Craig, 2 Sep: "both boxes on the pitch
+              are missing the circle"). It was dropped when the pitch was a half
+              — an unclipped ellipse put a semicircle INSIDE the penalty area,
+              which is a marking no pitch has — and an arc is the honest way to
+              draw it rather than the reason to leave it out.
+
+              Computed, not eyeballed: the arc is 9.15m from the spot, the spot
+              is 11m from the goal line and the box line is 16.5m, so the arc
+              crosses that line 7.31m either side of centre — 10.75% of a 68m
+              width. `A rx ry 0 0 1` sweeps the short way between those points,
+              which is the part outside the box. */}
+          <path
+            d={`M ${50 - ARC_HALF} ${100 - pct(BOX.depth, LENGTH_M)}
+                A ${pct(CENTRE_CIRCLE_M, WIDTH_M)} ${pct(CENTRE_CIRCLE_M, LENGTH_M)} 0 0 1
+                  ${50 + ARC_HALF} ${100 - pct(BOX.depth, LENGTH_M)}`}
+          />
+          <path
+            d={`M ${50 - ARC_HALF} ${pct(BOX.depth, LENGTH_M)}
+                A ${pct(CENTRE_CIRCLE_M, WIDTH_M)} ${pct(CENTRE_CIRCLE_M, LENGTH_M)} 0 0 0
+                  ${50 + ARC_HALF} ${pct(BOX.depth, LENGTH_M)}`}
+          />
+
           <line x1="0.5" y1="50" x2="99.5" y2="50" />
           {/* An ellipse and not a circle: the viewBox is stretched to whatever
               box the frame is, so a circle would come out an ellipse anyway and
@@ -165,7 +195,18 @@ export default function CmGround({
           `pt-[28%]` is the empty attacking third `19.jpg` leaves above the front
           line; `justify-between` spreads the rest, so the keeper sits on his own
           goal line rather than a third of a pitch above it. */}
-      <div className="absolute inset-0 z-base flex flex-col-reverse justify-between px-2 pb-2 pt-[28%]">
+      {/* **The lines, spread down the pitch** (Craig, 2 Sep: "players can still
+          be spaced out a little, drop the keeper down a small amount, defenders
+          down, mids stay, and forwards just a little — lots of the pitch view
+          still wasted space").
+
+          `justify-between` inside a padded box does the spreading; the padding
+          is what decides where the block sits. A small head margin and almost
+          none at the foot drops the whole side down the pitch — the keeper onto
+          his own line where a keeper stands, and the midfield and forwards a
+          little further from the halfway line than they were (Craig, 2 Sep:
+          "drop mid and forward down a very small amount"). */}
+      <div className="absolute inset-0 z-base flex flex-col-reverse justify-between px-2 pb-1 pt-[10%]">
         {children}
       </div>
     </div>

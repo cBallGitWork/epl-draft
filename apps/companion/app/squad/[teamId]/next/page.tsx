@@ -74,7 +74,6 @@ export default async function NextMatchPage({
       ) : (
         <Fixture
           gameweek={squads.snapshot.gameweek}
-          period={squads.roundPeriod}
           home={{ teamId: tie.team.teamId, name: tie.team.name, rank: placing.get(tie.team.teamId) }}
           away={{
             teamId: tie.opponent.teamId,
@@ -94,12 +93,10 @@ export default async function NextMatchPage({
  *  this app already follows. */
 function Fixture({
   gameweek,
-  period,
   home,
   away,
 }: {
   gameweek: number;
-  period: number | null;
   home: SideTeam;
   away: SideTeam;
 }) {
@@ -111,16 +108,20 @@ function Fixture({
           belongs with the match rather than with the page. `cm9900/21.jpg` puts
           the ground on a strip under its match header for the same reason: the
           circumstances of the fixture sit with the fixture. */}
-      <div className="cm-titlebar flex items-baseline justify-center gap-2 px-2 py-1">
+      {/* An ordinary strip, not a masthead (Craig, 2 Sep: "huge row for the
+          gameweek, make it normal size — remove Period 3 text"). It was
+          inheriting the plated title bar's `min-h-16 lg:min-h-24`, which is the
+          size a screen's SUBJECT is set at; the round is a caption on this one.
+          The period goes with it: it is how the league counts a week and the
+          gameweek is how a reader dates one, and printing both put one number
+          under two names. */}
+      {/* `cm-tab` and not `cm-titlebar`: the title bar carries a `min-height` of
+          6rem above `lg` because it is a screen's masthead, and a `min-h-0`
+          beside it loses on specificity — which is the right outcome, since
+          fighting a plate's own height means the wrong plate was chosen. A tab
+          plate is the same chrome at a strip's height. */}
+      <div className="cm-tab flex items-center justify-center px-2 py-1">
         <span className="numeric text-2xs font-bold uppercase text-ink">Gameweek {gameweek}</span>
-        {period === null ? null : (
-          /* **Full ink, not an opacity.** `text-ink/70` on the chrome plate
-             measured 4.36:1 and the floor is 4.5 — sweep caught it. A plate owns
-             its ink (DESIGN §2) and dimming it with alpha is exactly the move
-             that rule exists to stop; the period reads as secondary because it
-             is smaller and lighter in weight, which costs no contrast. */
-          <span className="numeric text-3xs font-normal text-ink">Period {period}</span>
-        )}
       </div>
 
       <div className="flex items-stretch gap-2 p-2">

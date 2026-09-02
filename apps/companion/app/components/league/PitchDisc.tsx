@@ -73,15 +73,6 @@ export default function PitchDisc({
 
   return (
     <div className="relative flex w-full flex-col items-center">
-      {/* **The arrow, above the man who is going forward** — which is how the
-          shot draws it and, more to the point, is the only mark on CM's pitch
-          that says anything about intent. Ours is derived from the shape rather
-          than from an instruction, because Fantrax sells a roster slot and no
-          tactic; `join/tactics.ts` carries the rule and the reasoning.
-
-          `aria-hidden`, and the instruction is not otherwise announced: it is a
-          restatement of the formation printed in words above the pitch, so a
-          reader who cannot see it has already been told. */}
       {/* **A circle with his face filling it, and the circle is CHROME.**
 
           · One colour for all eleven, because eleven club colours turned the
@@ -104,25 +95,31 @@ export default function PitchDisc({
           `--row-portrait` is the size `PlayerImage` reads, so it is set here and
           the image sizes itself off it. */}
       <span
-        className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 bg-chrome"
+        className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border bg-chrome"
         style={
           {
             // The ring is the team's; the fill stays chrome.
             borderColor: outline,
-            // **The head, whole, filling the disc** (Craig, 2 Sep: "it's cut
-            // off at the bottom… do we just zoom in, or use more of the
-            // portrait?").
+            // **The portrait fills the circle** (Craig, 2 Sep, after I had
+            // three goes at it: "YOU are cutting the players off at the bottom
+            // 25%, the players should just fill the entire circle").
             //
-            // Measured rather than guessed, after two wrong answers: the source
-            // is 220x280 head-and-shoulders, and the HEAD occupies roughly the
-            // top 45% of it, centred. So `cover` at a 22% offset cropped the
-            // chin (too tight), and `contain` fitted the whole 220x280 inside a
-            // circle and left the man tiny in a field of chrome (too loose).
+            // He is right and the fault was mine at every attempt: I kept
+            // pinning the image to the TOP and then arguing about how far to
+            // zoom, which by construction pushes the bottom quarter out of the
+            // frame. `object-cover` on its own already fills a box and crops
+            // the overflow evenly — the source is 220x280, so in a square disc
+            // it trims a little from top and bottom and keeps the middle, which
+            // is where a head-and-shoulders portrait keeps its head.
             //
-            // The answer is `cover` — which fills the disc — with the frame
-            // positioned near the top, where the head is. `18%` puts the crown
-            // just inside the ring and the chin just above the bottom of it.
-            "--pitch-crop": "18%",
+            // A touch of zoom so he fills the disc rather than sitting in it,
+            // and the frame pushed DOWN so the crown stays inside the ring as he
+            // grows (Craig, 2 Sep: "zoom in… like 1.10", then another
+            // 5% on top of it).
+            // `origin-top` is what makes the pair work: the image grows
+            // downward from its top edge rather than outward from its middle.
+            "--pitch-crop": "12%",
+            "--pitch-zoom": "1.15",
           } as CSSProperties
         }
       >
@@ -141,6 +138,7 @@ export default function PitchDisc({
             club={club}
             keeper={rostered.slot.position === "G"}
             kickedOff
+            fill
             sizes="56px"
           />
         )}

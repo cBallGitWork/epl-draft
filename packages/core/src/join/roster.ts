@@ -173,7 +173,36 @@ export function playerName(rostered: RosteredPlayer): string {
  *  An unresolved slot still answers with its id, exactly as `playerName` does:
  *  there is no footballer behind it and so no name of any length. */
 export function fullPlayerName(rostered: RosteredPlayer): string {
-  return isResolved(rostered) ? rostered.player.fullName : rostered.slot.fantraxId;
+  if (!isResolved(rostered)) return rostered.slot.fantraxId;
+
+  const { fullName, name } = rostered.player;
+
+  // **A forename and the shirt name, not the whole birth certificate** (Craig,
+  // 2 Sep: "Fantrax uses a shorter name on their roster list page — Matheus
+  // Cunha and not Matheus Santos Carneiro da Cunha").
+  //
+  // Fantrax does carry that shorter form, and we cannot reach it here: it is on
+  // the POOL, and the squad screens read rosters, which carry an id and no name
+  // at all. A whole extra provider read for a display string is a bad trade, and
+  // FPL already holds both halves — `fullName` is every name he has and
+  // `web_name` is the one on his shirt.
+  //
+  // So the two are recombined: the first word of the full name, then the shirt
+  // name. "Matheus Santos Carneiro da Cunha" + "Cunha" gives "Matheus Cunha",
+  // which is Fantrax's own answer arrived at from FPL's fields.
+  //
+  // A shirt name carrying a dot or a space is FPL disambiguating two players who
+  // share a surname — "B.Fernandes", "Bruno G.", "Jair Cunha". It is already
+  // short and already unambiguous, so it is the answer as it stands: prefixing a
+  // forename would give "Bruno B.Fernandes".
+  if (name.includes(".") || name.includes(" ")) return name;
+
+  const first = fullName.split(" ")[0];
+  // One-word players (Rodri, Ederson), and anyone whose shirt name is the whole
+  // of him. Then the shirt name IS the answer.
+  if (!first || name === first || fullName === name) return name;
+
+  return `${first} ${name}`;
 }
 
 /** His name at the size a pitch draws one: `Hemmings`, `G.Hemmings` for a clash.
