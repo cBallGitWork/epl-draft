@@ -1,5 +1,10 @@
+"use client";
+
 import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
+import { useState } from "react";
 import TeamSheet from "../../components/league/TeamSheet";
+import BoardBar from "../../components/league/BoardBar";
+import { type View } from "../../components/league/ViewToggle";
 import Pending from "../../components/league/Pending";
 
 // A rival's eleven once his lineups have locked — with the Pitch/List control the
@@ -39,6 +44,10 @@ export default function Sheet({
   /** Eligible positions by Fantrax id, for the list's position column. */
   eligibility?: Record<string, string[]>;
 }) {
+  // Opens on the LIST: a squad screen is a list of who you have, and the pitch
+  // is the second reading of it. Phone only — above `lg` both are drawn and the
+  // control is hidden.
+  const [view, setView] = useState<View>("list");
 
   return (
     <div className="flex flex-col gap-2">
@@ -47,8 +56,21 @@ export default function Sheet({
           let you EDIT it — a tactics screen names the thing it is editing. Ours
           is a read-only arrangement and the pitch below states the shape better
           than a hyphenated string does: you can see it is three at the back. */}
+      {/* **The toggle is the PHONE's answer, and only the phone's.** Stacking
+          the list and the pitch put the grass 421px past the fold at 390 —
+          `pitchfit`'s own named failure, and it fails it at the width the
+          product is designed for first: a reader at the top of the page saw
+          fourteen names and a sliver of green. `ui-verifier` measured it.
+
+          Above `lg` there is room for both and no choice to make, so the control
+          goes: a toggle between two things you can already see is a control that
+          does nothing. */}
+      <div className="flex items-center justify-between gap-2 px-1 lg:hidden">
+        <BoardBar view={view} onPick={setView} />
+        <Pending points={pending} />
+      </div>
       {pending === null ? null : (
-        <div className="flex justify-end px-1">
+        <div className="hidden justify-end px-1 lg:flex">
           <Pending points={pending} />
         </div>
       )}
@@ -64,29 +86,34 @@ export default function Sheet({
           the ELEVEN and nothing else, which is what the game does — eighteen
           names down the left, eleven on the grass.
 
-          Below `lg` they stack, list first: a phone gets the names, and the
-          pitch under them rather than instead of them. */}
+          Below `lg` the toggle above chooses which of them you get, because
+          neither is legible at half a phone and both together put the grass off
+          the bottom of the screen. */}
       <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
-        <TeamSheet
-          rows={rows}
-          bench={bench}
-          lines={lines}
-          breakdown={breakdown}
-          mode="list"
-          eligibility={eligibility}
-        />
-        <TeamSheet
-          rows={rows}
-          // **No bench on the grass.** The eleven is the formation; a reserve
-          // has no place in one, and the strip under the pitch was drawing four
-          // men who are not playing at the same size as the ones who are.
-          bench={[]}
-          lines={lines}
-          breakdown={breakdown}
-          mode="pitch"
-          inColumn
-          show="fixture"
-        />
+        <div className={view === "list" ? "" : "hidden lg:block"}>
+          <TeamSheet
+            rows={rows}
+            bench={bench}
+            lines={lines}
+            breakdown={breakdown}
+            mode="list"
+            eligibility={eligibility}
+          />
+        </div>
+        <div className={view === "pitch" ? "" : "hidden lg:block"}>
+          <TeamSheet
+            rows={rows}
+            // **No bench on the grass.** The eleven is the formation; a reserve
+            // has no place in one, and the strip under the pitch was drawing
+            // four men who are not playing at the same size as the ones who are.
+            bench={[]}
+            lines={lines}
+            breakdown={breakdown}
+            mode="pitch"
+            inColumn
+            show="fixture"
+          />
+        </div>
       </div>
     </div>
   );
