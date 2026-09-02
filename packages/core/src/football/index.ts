@@ -61,5 +61,12 @@ export { fixtureLabel, kickedOff, nextFixtures, oppositionByClub } from "./oppos
 export { leagueTable } from "./table";
 export type { TableRow } from "./table";
 export { clubStats } from "./clubStats";
+export {
+  defaultDescendingTable,
+  isTableSortKey,
+  placed,
+  sortTable,
+} from "./tableOrder";
+export type { PlacedRow, TableSortKey } from "./tableOrder";
 export type { ClubStats, Record as ClubRecord, Result } from "./clubStats";
 export type { Opposition } from "./opposition";

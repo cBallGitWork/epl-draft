@@ -56,6 +56,16 @@ const PAPER_ROUTES = ["/", "/paper"];
 export const SECTIONS = [
   { href: "/", label: "Gazetta", routes: PAPER_ROUTES },
   { href: "/league", label: "League", routes: ["/league"] },
+  // **"Prem", and the bar says the rest.** The rail is 64px below `lg` and
+  // "Gazetta" already measures 45px of it at 9px bold uppercase, so
+  // "Premiership" wraps to two lines and a rail plate taller than its
+  // neighbours is not a rail. The title bar carries "FA Barclays Premiership"
+  // in full, which is where a competition's name belongs (`cm9900/24.jpg`).
+  //
+  // Beside League, because the competition sits beside the competition: one is
+  // the fantasy league we play and the other is the football it is played on,
+  // and a reader moving between them is asking the same question twice.
+  { href: "/prem", label: "Prem", routes: ["/prem"] },
   // "Live" rather than "Matchday": the section only exists while football is on,
   // so that is what it means.
   { href: "/matchday", label: "Live", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },

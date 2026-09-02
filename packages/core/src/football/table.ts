@@ -26,6 +26,11 @@ const DRAW = 1;
 
 export interface TableRow {
   clubId: number;
+  /** FPL's season-stable club code — what the crest URL is keyed on, and the
+   *  only one of the two identifiers that may be persisted. `clubId` is
+   *  per-season and must never reach a URL, a mapping file or disk
+   *  (CODE_RULES §3). */
+  code: number;
   name: string;
   shortName: string;
   played: number;
@@ -46,6 +51,7 @@ export function leagueTable(fixtures: readonly Fixture[], clubs: readonly Club[]
       club.id,
       {
         clubId: club.id,
+        code: club.code,
         name: club.name,
         shortName: club.shortName,
         played: 0, won: 0, drawn: 0, lost: 0,

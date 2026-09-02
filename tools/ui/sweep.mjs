@@ -28,6 +28,7 @@ const ROUTES = [
   "/league/results",
   "/league/team-stats",
   "/league/matchups",
+  "/prem",
   "/squad",
   "/players",
   "/matchday",
