@@ -204,9 +204,14 @@ export default function CmGround({
           is what decides where the block sits. A small head margin and almost
           none at the foot drops the whole side down the pitch — the keeper onto
           his own line where a keeper stands, and the midfield and forwards a
-          little further from the halfway line than they were (Craig, 2 Sep:
-          "drop mid and forward down a very small amount"). */}
-      <div className="absolute inset-0 z-base flex flex-col-reverse justify-between px-2 pb-1 pt-[10%]">
+          little further from the halfway line than they were.
+
+          The head padding is what moves the outfield: a bigger one squeezes the
+          block downward toward the keeper, who is pinned to his own line by the
+          near-zero foot padding (Craig, 2 Sep: "drop mid and forward down a very
+          small amount", then "move all outfield positions down towards the
+          keeper JUST a little bit"). */}
+      <div className="absolute inset-0 z-base flex flex-col-reverse justify-between px-2 pb-1 pt-[16%]">
         {children}
       </div>
     </div>

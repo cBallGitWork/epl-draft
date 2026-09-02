@@ -48,6 +48,8 @@ export default function PitchDisc({
   points,
   show = "points",
   outline = "var(--color-chrome)",
+  fill = "var(--color-chrome)",
+  ink = "var(--color-cream)",
 }: {
   rostered: RosteredPlayer;
   club: Club | undefined;
@@ -57,6 +59,10 @@ export default function PitchDisc({
   points?: number | null;
   /** What the plate under his name carries. */
   show?: "points" | "fixture";
+  /** The ink for anything drawn ON the fill — `inkOn(colours)`. */
+  ink?: string;
+  /** The disc's FILL — the fantasy team's primary. */
+  fill?: string;
   /** The RING round the disc — the fantasy team's secondary colour (Craig,
    *  2 Sep). The fill stays chrome, which is what `19.jpg` draws and what
    *  `teamColours.ts` requires: a team's colour identifies a side in a
@@ -95,10 +101,21 @@ export default function PitchDisc({
           `--row-portrait` is the size `PlayerImage` reads, so it is set here and
           the image sizes itself off it. */}
       <span
-        className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border bg-chrome"
+        className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border-2"
         style={
           {
-            // The ring is the team's; the fill stays chrome.
+            // **Both from the team** (Craig, 2 Sep: "you've hardcoded blue,
+            // it's team colours — so on test4, it's yellow background, black
+            // outline"). The fill is his primary and the ring his secondary,
+            // which is the pair a kit uses and the pair `teamColours` publishes.
+            //
+            // The disc was chrome for a stretch on the reading that a team's
+            // colour identifies a SIDE in a confrontation and a squad screen has
+            // one side. That is `teamColours.ts`'s own rule and it was the wrong
+            // reading of it: eleven discs in one manager's colours are not
+            // claiming to be a side against anybody, they are the reason the
+            // eleven read as HIS. Craig's call, and it is his league.
+            backgroundColor: fill,
             borderColor: outline,
             // **The portrait fills the circle** (Craig, 2 Sep, after I had
             // three goes at it: "YOU are cutting the players off at the bottom
@@ -113,23 +130,27 @@ export default function PitchDisc({
             // is where a head-and-shoulders portrait keeps its head.
             //
             // A touch of zoom so he fills the disc rather than sitting in it,
-            // and the frame pushed DOWN so the crown stays inside the ring as he
-            // grows (Craig, 2 Sep: "zoom in… like 1.10", then another
+            // and the frame pushed down just enough to keep the crown inside the
+            // ring as he grows — 6%, not the 12% that left a band of chrome
+            // above every head (Craig, 2 Sep: "zoom in… like 1.10", then another
             // 5% on top of it).
             // `origin-top` is what makes the pair work: the image grows
             // downward from its top edge rather than outward from its middle.
-            "--pitch-crop": "12%",
+            "--pitch-crop": "6%",
             "--pitch-zoom": "1.15",
           } as CSSProperties
         }
       >
         {resolved === null ? (
-          /* `text-cream` on the chrome plate, which is a pair DESIGN has
-             measured. It was `text-bg` over the team's `secondary`, and for the
-             two teams whose secondary is near-black that came out at 1.1:1 —
-             an invisible letter, and a hard AA failure `register-warden`
-             caught. A plate owns its ink (§2). */
-          <span className="grid h-full w-full place-items-center font-display text-3xs font-bold uppercase text-cream">
+          /* **Ink chosen for the plate it is on.** The disc is a team's own
+             colour now, so a fixed ink cannot be right for all ten: `inkOn`
+             computes it, which is the same helper the title bar and the match
+             header use and the reason a 1.1:1 label was caught here once
+             already. A plate owns its ink (§2). */
+          <span
+            className="grid h-full w-full place-items-center font-display text-3xs font-bold uppercase"
+            style={{ color: ink }}
+          >
             {rostered.slot.position || "?"}
           </span>
         ) : (

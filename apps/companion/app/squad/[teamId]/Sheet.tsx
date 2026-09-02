@@ -1,6 +1,6 @@
 "use client";
 
-import { type BreakdownLine, type SquadDetailLine, type SquadPlayerDetail, teamColours } from "@epl/core";
+import { type BreakdownLine, type SquadDetailLine, type SquadPlayerDetail, inkOn, teamColours } from "@epl/core";
 import { useState } from "react";
 import TeamSheet from "../../components/league/TeamSheet";
 import BoardBar from "../../components/league/BoardBar";
@@ -115,7 +115,11 @@ export default function Sheet({
             mode="pitch"
             inColumn
             show="fixture"
+            // His own colours: the plate is his primary and the ring his
+            // secondary, which is how a kit is put together.
+            fill={teamColours(teamId).primary}
             outline={teamColours(teamId).secondary}
+            ink={inkOn(teamColours(teamId))}
           />
         </div>
       </div>

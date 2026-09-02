@@ -39,6 +39,8 @@ export default function TeamSheet({
   inColumn = false,
   show,
   outline,
+  fill,
+  ink,
 }: {
   /** The XI in its positional lines, arranged on the server — `slot.status` is
    *  blanked on the way here, so this is the last shape that knows the split. */
@@ -56,6 +58,9 @@ export default function TeamSheet({
   show?: "points" | "fixture";
   /** The ring round every disc — see `PitchDisc`. */
   outline?: string;
+  /** The disc fill, and the ink that reads on it. */
+  fill?: string;
+  ink?: string;
   /** Eligible positions by Fantrax id, passed straight to the list. A record
    *  rather than a `Map` because this crosses to the browser — see `SquadRows`. */
   eligibility?: Record<string, string[]>;
@@ -106,6 +111,8 @@ export default function TeamSheet({
                 onOpen={() => setOpen(player)}
                 show={show}
                 outline={outline}
+                fill={fill}
+                ink={ink}
               />
             )}
           </PitchRows>
@@ -134,7 +141,7 @@ export default function TeamSheet({
                     <p className="pb-0.5 text-center font-display text-3xs font-bold uppercase text-faint">
                       {positionLabel(player.rostered.slot.position) ?? "—"}
                     </p>
-                    <Cell player={player} onOpen={() => setOpen(player)} outline={outline} />
+                    <Cell player={player} onOpen={() => setOpen(player)} outline={outline} fill={fill} ink={ink} />
                   </li>
                 ))}
               </ul>
@@ -168,11 +175,15 @@ function Cell({
   onOpen,
   show,
   outline,
+  fill,
+  ink,
 }: {
   player: SquadPlayerDetail;
   onOpen: () => void;
   show?: "points" | "fixture";
   outline?: string;
+  fill?: string;
+  ink?: string;
 }) {
   return (
     <button
@@ -190,6 +201,8 @@ function Cell({
         points={player.points}
         show={show}
         outline={outline}
+        fill={fill}
+        ink={ink}
       />
     </button>
   );
