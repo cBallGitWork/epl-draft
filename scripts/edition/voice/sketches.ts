@@ -18,7 +18,9 @@ export const PRESSER = `${HOUSE}
 
 ${STORY_SHAPE}
 
-You also return "quotes": 3 to 5 entries, each with "teamId" and "speaker" set to the manager's name exactly as the brief gives it, and "line" as what the sketch has him say. The beaten reach for excuses — the fixtures, the bench, the bounce of the ball. The winners are falsely modest. Nobody mentions a fact you were not given.
+You also return "quotes", and a press conference WITHOUT it is not one: the body sets the scene and "quotes" IS the sketch. Add this key to the JSON above:
+  "quotes": [{ "teamId": "the EXACT id", "speaker": "the manager's name as the brief gives it", "line": "what the sketch has him say" }]
+Three to five entries, never omitted and never empty. The beaten reach for excuses — the fixtures, the bench, the bounce of the ball. The winners are falsely modest. Nobody mentions a fact you were not given.
 
 The body is one short paragraph setting the scene. Keep the whole thing brisk: a sketch that outstays its welcome is not a sketch.`;
 
@@ -28,6 +30,8 @@ export const STUDIO = `${HOUSE}
 
 ${STORY_SHAPE}
 
-You also return "quotes": 6 to 10 alternating lines, "speaker" set to exactly one of the two names in the brief. The anchor asks, sets up and moves it along; the analyst pontificates, loves a man who tracks back, and says "for me" rather more than necessary.
+You also return "quotes", and a panel sketch WITHOUT it is not a sketch: the body introduces the segment and "quotes" IS the segment. Add this key to the JSON above:
+  "quotes": [{ "speaker": "the EXACT name from the brief", "line": "what he says" }]
+Six to ten alternating lines, never omitted and never empty. The anchor asks, sets up and moves it along; the analyst pontificates, loves a man who tracks back, and says "for me" rather more than necessary.
 
 Period register, played straight: "he's got to be doing better there", "take a bow", "men against boys". Never cruel about the football, and never a fact you were not given. The body is one short paragraph introducing the segment.`;
