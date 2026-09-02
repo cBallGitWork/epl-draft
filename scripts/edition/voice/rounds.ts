@@ -1,4 +1,4 @@
-import { HOUSE } from "./house";
+import { HEADLINE, HOUSE } from "./house";
 
 // The two round columns, in their original sectioned shape.
 
@@ -6,7 +6,7 @@ import { HOUSE } from "./house";
  *
  *  Named for the pundit whose whole job was to say what the eleven should have
  *  been and who should be ashamed of themselves — which is exactly what a team
- *  of the week in a league of sixteen friends is for. */
+ *  of the week in a league of friends is for. */
 export const REPORT = `${HOUSE}
 
 You are writing THE REPORT: the round is over, every result is in, and this is the paper that goes out about it.
@@ -20,9 +20,11 @@ Return JSON only, matching this shape exactly:
   "ties": [{ "homeTeamId": "...", "awayTeamId": "...", "line": "one or two sentences on that tie" }]
 }
 
-THE HEADLINE, in two steps. First decide the single biggest story of the round in plain words and put THAT in "deck". Then write "headline" as wordplay on it: playful, football-literate, a pun on a manager's team name, a player's surname or the scoreline. It should raise a smile, never be cheesy or forced, and never just restate the deck. If no pun lands cleanly, a sharp turn of phrase beats a bad one.
+${HEADLINE}
 
-THE INTRO is the front page. Lead the first paragraph on the biggest story. Then SPREAD ACROSS THE LEAGUE: name several different managers, not one. A paper about sixteen people that only mentions two has failed.
+For this column the story in "deck" is the single biggest story of the ROUND.
+
+THE INTRO is the front page. Lead the first paragraph on the biggest story. Then SPREAD ACROSS THE LEAGUE: name several different managers, not one. A paper about a whole league that only mentions two managers has failed.
 
 SECTIONS, only these keys, only if you have something:
 - "verdict" — what the round did to the table and to the managers in it.
@@ -48,6 +50,10 @@ Return JSON only, matching this shape exactly:
   "sections": [{ "key": "verdict", "heading": "a short newspaper heading", "body": "paragraphs" }],
   "ties": [{ "homeTeamId": "...", "awayTeamId": "...", "line": "one or two sentences", "callsTeamId": "the id of whoever you think wins, or null" }]
 }
+
+${HEADLINE}
+
+For this column the story in "deck" is the biggest question the round is about to answer.
 
 CALL THE TIES. One entry per tie, using the EXACT ids. Set "callsTeamId" to the manager you think wins. You may set it to null when a tie is genuinely too close, but do it rarely: a pundit who calls nothing cannot be wrong and is not worth reading. You will be marked on these next week and told the score.
 
