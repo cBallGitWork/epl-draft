@@ -48,9 +48,15 @@ import { persistFilings, readLedger, readPaperStories, type Filing } from "./edi
 // something unrenderable must cost us a red workflow rather than a broken
 // front page.
 
-/** Model calls one firing may spend. Two: the whistle windows fire every half
- *  hour, so a burst of news is spread across firings rather than bought at
- *  once, and a runaway prompt bug costs pennies rather than pounds. */
+/** Stories one firing may FILE — not model calls it may consider, and not
+ *  assignments it may look at. A desk that refuses costs nothing and the next
+ *  assignment takes its place (`hasRoom`, and the comment in the loop below).
+ *
+ *  The default stays two for a local run; CI passes ten, because the newsdesk
+ *  offers a dozen assignments for a finished round and a cap of two took four
+ *  firings to reach the first match report. The ledger is what makes a big cap
+ *  safe: an already-covered key is never queued, so no cap can file the same
+ *  story twice. */
 const STORY_CAP = Number(process.env.GAZETTA_STORY_CAP ?? 2);
 
 /** Prints the assignments and their briefs instead of writing anything. */

@@ -22,8 +22,10 @@ name: Editions
 # snapshot read and a local ledger check. The common run costs a `npm ci` and
 # an HTTP request.
 #
-# Cost when it DOES write: at most GAZETTA_STORY_CAP (2) Anthropic calls per
-# firing. The Actions-minutes budget is the real spend — roughly 110 runs a
+# Cost when it DOES write: at most GAZETTA_STORY_CAP (10, set below) stories
+# per firing, and one Anthropic call each. A desk that refuses spends nothing,
+# so a firing costs what it FILES rather than what it considers. The
+# Actions-minutes budget is still the real spend — roughly 110 runs a
 # week at a minute or two each against the 2000 free monthly minutes shared
 # with capture and round-state — and this cron block is the data to trim if
 # that ever bites.
@@ -82,6 +84,14 @@ jobs:
 
       - name: File the column, if one is due
         env:
+          # Stories one firing may file. Ten, because the newsdesk offers a
+          # dozen assignments for a finished round and the cap used to stop at
+          # two — which, with two kinds that refused every time, filed nothing
+          # at all for a whole period. The ledger refuses an already-covered
+          # key, so no cap can file the same story twice, and match reports
+          # gate on each FIXTURE finishing, so a Saturday firing cannot spend a
+          # round whose Sunday and Monday games are still to come.
+          GAZETTA_STORY_CAP: "10"
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           # The splash drawing. Optional by design: unset, it expands to "" and
           # the writer files the paper without a picture rather than failing
