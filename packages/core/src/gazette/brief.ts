@@ -141,12 +141,18 @@ function eleven(brief: Brief): string | null {
  *  temptation we put there ourselves, and the flag is the thing that has to go. */
 function line(pick: Pick, fielded: boolean, pedigree: Map<string, DraftPick>): string {
   const did = [
-    pick.goals > 0 ? `${pick.goals} goals` : null,
-    pick.assists > 0 ? `${pick.assists} assists` : null,
+    // Singular where it is one. The brief said "1 assists" until 2 Sep 2026,
+    // and ungrammatical input invites a model to paraphrase its way out — the
+    // first story this paper filed turned "3 goals, 1 assists" into "three and
+    // one", which is a shorthand nobody uses. `house.ts` now forbids the
+    // invention; this stops provoking it.
+    pick.goals > 0 ? `${pick.goals} ${pick.goals === 1 ? "goal" : "goals"}` : null,
+    pick.assists > 0 ? `${pick.assists} ${pick.assists === 1 ? "assist" : "assists"}` : null,
     pick.cleanSheet ? "clean sheet" : null,
-    pick.saves > 0 ? `${pick.saves} saves` : null,
+    pick.saves > 0 ? `${pick.saves} ${pick.saves === 1 ? "save" : "saves"}` : null,
   ].filter((note) => note !== null);
-  const done = did.length > 0 ? did.join(", ") : `${pick.minutes} minutes`;
+  const done =
+    did.length > 0 ? did.join(", ") : `${pick.minutes} ${pick.minutes === 1 ? "minute" : "minutes"}`;
   const benched = !fielded || pick.started ? "" : " — BENCHED";
   // An entry means he was drafted there. No entry, in a league whose draft we
   // HAVE, means he came off the waiver wire — its own pedigree and a different
