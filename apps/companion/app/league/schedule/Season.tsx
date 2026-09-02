@@ -25,29 +25,62 @@ export default function Season({
   teamId?: string;
 }) {
   return (
-    <ul className="cm-rows flex flex-col">
+    // **Championship Manager's own fixture list** (Craig, 2 Sep, with the shot).
+    // Five columns and every one of them a colour with a job: a blue DATE block
+    // down the left, the opponent in white, H or A in cyan, the competition in
+    // yellow, and the result on a purple ground hard against the right edge.
+    // Ours had the date as grey prose inside the name column and the competition
+    // beside it in the same grey, which is the same five facts with four of them
+    // wearing the same clothes.
+    //
+    // The scroll bar is CM's too, and it is deliberately visible: the season is
+    // 38 rounds and the panel holds about a dozen, so a list that hides its own
+    // bar looks like a list that ends.
+    <ul className="cm-rows cm-scroll flex max-h-[34rem] flex-col overflow-y-auto">
       {rows.map((row) => (
         <li key={`${row.round.period}-${row.tie.competition.id}-${row.tie.round ?? ""}`}>
           <div
-            className={`cm-row flex min-h-14 items-center gap-2.5 px-3 py-2 ${
+            className={`cm-row flex min-h-11 items-center gap-2 px-1.5 ${
               row.round.started ? "" : "text-muted"
             }`}
           >
-            <span className="numeric w-9 shrink-0 text-2xs font-bold uppercase text-faint">
-              GW{row.round.gameweek}
+            {/* The date block. CM carries the DAY here — "Sat 4th Aug" — and
+                the round number is ours to add, because a fantasy season is
+                numbered in a way a football calendar is not. */}
+            {/* The round always; the DATE only where there is room for it.
+                Both inside 5.5rem truncated the date to "Friday 21 Aug…" and
+                left the opponent — the one thing a fixture list is FOR — with
+                no width at all. */}
+            <span className="cm-index numeric flex shrink-0 items-baseline gap-1 px-1.5 py-0.5 text-3xs font-bold">
+              <span>GW{row.round.gameweek}</span>
+              {row.round.deadline === null ? null : (
+                <span className="hidden font-normal opacity-90 lg:inline">
+                  {londonDate(row.round.deadline)}
+                </span>
+              )}
             </span>
 
             <TeamBadge team={row.opponent.team} url={row.opponent.team === null ? undefined : badges.get(row.opponent.team.teamId)} />
 
-            <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
+            <span className="min-w-0 flex-1 truncate">
               <Opponent opponent={row.opponent} gameweek={row.round.gameweek} />
-              <span className="shrink-0 truncate text-2xs text-faint">
-                {row.tie.round === null
-                  ? row.round.deadline === null
-                    ? row.tie.competition.name
-                    : londonDate(row.round.deadline)
-                  : `${row.tie.competition.name} · ${row.tie.round}`}
-              </span>
+            </span>
+
+            {/* **CM's H/A column is deliberately absent.** The shot has one and
+                a fantasy fixture cannot fill it: Fantrax names a home and an
+                away because its schedule has the fields, but there is no ground
+                and `teamSeason.ts` already drops the distinction for that
+                reason. Printing an H would be inventing a venue, and an empty
+                column is furniture. Four columns, then, and the fifth is the
+                one fact this list has that CM's does not — the score. */}
+
+            {/* The competition, in yellow — `First Division` in the shot. A
+                knockout names its round beside it, which is the one thing our
+                calendar has that a league fixture list does not. */}
+            <span className="hidden w-20 shrink-0 truncate text-3xs font-bold uppercase text-accent lg:block">
+              {row.tie.round === null
+                ? row.tie.competition.name
+                : `${row.tie.competition.name} · ${row.tie.round}`}
             </span>
 
             {/* **The score is the link, not the row** (Craig, 2 Sep: "tap a
@@ -77,10 +110,20 @@ export default function Season({
 /** The result, or the fact that there is not one yet. A fixture still to come
  *  shows nothing at all rather than a nought Fantrax would happily supply. */
 function Score({ row }: { row: SeasonRow }) {
+  // **A plate either way, played or not** — CM's fixture list runs a filled
+  // block down its right edge on every row, carrying `1:1` where there is a
+  // result and `---` where there is not (the shot Craig sent). A row whose
+  // right-hand column simply vanishes breaks the column, and the dashes are
+  // what make the list read as a season rather than as a handful of results.
+  //
+  // `cm-index` rather than a new purple: the game's money column is white on a
+  // filled ground, which is the same mechanism this token already is, and
+  // DESIGN §3 retired `pl-purple` deliberately — every colour here is a slot
+  // with one meaning and "a score" is not a new one.
   if (!row.round.started) {
     return (
-      <span className="shrink-0 text-2xs font-bold uppercase text-faint">
-        To play
+      <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center text-2xs font-bold opacity-60">
+        —
       </span>
     );
   }
@@ -91,10 +134,10 @@ function Score({ row }: { row: SeasonRow }) {
     row.round.status === "finished" && leads(row.pointsFor, row.pointsAgainst);
 
   return (
-    <span className="numeric shrink-0 text-lg font-bold">
-      <span className={won ? "text-ink" : ""}>{row.pointsFor ?? "—"}</span>
-      <span className="px-1 text-2xs font-normal text-faint">–</span>
-      <span className="text-muted">{row.pointsAgainst ?? "—"}</span>
+    <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center text-2xs font-bold">
+      <span className={won ? "text-accent" : ""}>{row.pointsFor ?? "—"}</span>
+      <span className="px-0.5 font-normal opacity-70">–</span>
+      <span className="opacity-80">{row.pointsAgainst ?? "—"}</span>
     </span>
   );
 }
