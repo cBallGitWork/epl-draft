@@ -20,6 +20,7 @@ import {
   periodGameweeks,
   periodPairings,
   roundState,
+  strangers,
   tieState,
   type Assignment,
   type LeagueInfo,
@@ -158,6 +159,16 @@ async function main(): Promise<void> {
     try {
       const column = await writeColumn(desk.system, desk.brief);
       const filed = file(assignment, column, ctx, new Date().toISOString());
+      // **Every name in the prose against every name in the brief.** The first
+      // real story this paper ever filed put a Newcastle defender who is on
+      // nobody's roster into the team of the week, twice, and dropped the man
+      // he replaced — see `gazette/strangers.ts`. It reads perfectly, which is
+      // why it needs a machine rather than a proofreader. A warning and not a
+      // refusal: the check is deliberately eager, so a human reads the list.
+      const unknown = strangers(prose(filed.story), desk.brief);
+      if (unknown.length > 0) {
+        say(`  ⚠ ${assignment.kind} names ${unknown.length} not in its brief: ${unknown.join(", ")}`);
+      }
       filings.push({ story: filed.story, spentKeys: [assignment.key], threads: filed.threads });
       say(`Filed ${assignment.kind}: "${filed.story.headline}"`);
     } catch (error) {
@@ -240,6 +251,27 @@ async function markLastWeek(
  *  than undefined, so a trailing slash produced the slug `news-` — and two of
  *  those collide, at which point the paper silently drops one. A guid carrying
  *  a query string reached an archive filename and a PNG name the same way. */
+/** Every written surface of a filed story, as one string to check names in.
+ *  The body is not all of it: the tie lines carried half of the first
+ *  hallucination this caught, and the ranks and captions are prose too. */
+function prose(story: PublishedStory): string {
+  const extras = story.extras ?? {};
+  const parts: unknown[] = [
+    // Not the headline: it is title-case by construction, so every ordinary
+    // word in it reports as a stranger. A fabricated footballer does his
+    // damage in the sentence-case prose underneath.
+    story.deck,
+    story.body,
+    ...(story.ties ?? []).map((tie) => tie.line),
+    ...(Array.isArray(extras.ranks) ? extras.ranks : []),
+    ...(Array.isArray(extras.captions) ? extras.captions : []),
+    ...(Array.isArray(extras.quotes) ? extras.quotes : []),
+  ];
+  return parts
+    .map((part) => (typeof part === "string" ? part : JSON.stringify(part ?? "")))
+    .join("\n");
+}
+
 function newsSlug(key: string): string {
   const cleaned = key
     .toLowerCase()
