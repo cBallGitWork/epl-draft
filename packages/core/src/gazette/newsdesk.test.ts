@@ -39,6 +39,40 @@ describe("newsdesk", () => {
     expect(midRound.find((a) => a.kind === "round-preview" || a.kind === "round-report")).toBeUndefined();
   });
 
+  it("files each wire item once, and no more than the cap", () => {
+    // The loop over the news list was written out TWICE, so a news day queued
+    // every item two deep. `want` guards the LEDGER, not the running order, so
+    // nothing caught it: with a story cap of two, one BBC item could buy both
+    // of a firing's model calls and file the same slug twice.
+    const news = [
+      { key: "a", slug: "news-a" },
+      { key: "b", slug: "news-b" },
+      { key: "c", slug: "news-c" },
+    ];
+    const keys = newsdesk(desk({ news }), none, NOW)
+      .filter((a) => a.kind === "news")
+      .map((a) => a.key);
+    expect(keys).toEqual(["news:a", "news:b"]);
+    expect(new Set(keys).size).toBe(keys.length);
+  });
+
+  it("never lists one assignment twice, whatever the desk is holding", () => {
+    // The running order is spent top-down against a cap, so a duplicate does
+    // not merely repeat itself: it displaces the story underneath it.
+    const state = desk({
+      finished: true,
+      news: [
+        { key: "a", slug: "news-a" },
+        { key: "b", slug: "news-b" },
+      ],
+      dealsInWindow: 3,
+      stakes: [stake(), stake({ key: "1v2", fixtureId: 12 })],
+      ties: [{ homeTeamId: "a", awayTeamId: "b", state: "probable" }],
+    });
+    const keys = newsdesk(state, none, NOW).map((a) => a.key);
+    expect(new Set(keys).size).toBe(keys.length);
+  });
+
   it("spends nothing already covered", () => {
     // Everything a finished round earns, already filed: the ordinary outcome
     // of a cron that fires every half hour.

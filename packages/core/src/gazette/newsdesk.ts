@@ -154,11 +154,9 @@ export function newsdesk(
   // hours — while a waiver trend and a BBC item keep. Queued above the calls,
   // a Saturday with one claim and two wire items bought a waiver column and
   // somebody else's transfer news while the paper's own story waited.
-  for (const story of desk.news.slice(0, NEWS_PER_FIRING)) {
-    want({ kind: "news", key: `news:${story.key}`, slug: story.slug });
-  }
-  // is the ARTICLE — fragment stripped, so the same story re-listed as it
-  // moves up the feed is not covered twice.
+  //
+  // The key is the ARTICLE — fragment stripped, so the same story re-listed as
+  // it moves up the feed is not covered twice.
   for (const story of desk.news.slice(0, NEWS_PER_FIRING)) {
     want({ kind: "news", key: `news:${story.key}`, slug: story.slug });
   }
