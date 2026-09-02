@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { NO_SEASON } from "../football/noSeason";
 import { DODGERS_SHOWN, dodgers } from "./dodgers";
 import type { RosteredTeam } from "../join/roster";
 import type { PlayerMatchStats } from "../football/types";
@@ -15,7 +16,7 @@ const man = (name: string, status: string, over: Partial<PlayerMatchStats> = {})
   slot: { fantraxId: name, position: "M", status },
   player: {
     id: 1, code: 1, name, fullName: name, clubId: 1,
-    status: "a", news: "", chanceOfPlaying: null, optaCode: null,
+    status: "a", news: "", chanceOfPlaying: null, optaCode: null, season: NO_SEASON,
   },
   stats: [stats(over)],
 });

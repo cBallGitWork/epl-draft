@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { NO_SEASON } from "./noSeason";
 import { NOTABLE_SAVES } from "../config";
 import type { FootballSnapshot, PlayerMatchStats } from "./types";
 import {
@@ -12,7 +13,7 @@ import {
 
 const player = (id: number, name: string, clubId = 1) => ({
   id, code: 1000 + id, name, fullName: name, clubId,
-  status: "a", news: "", chanceOfPlaying: null, optaCode: null,
+  status: "a", news: "", chanceOfPlaying: null, optaCode: null, season: NO_SEASON,
 });
 
 const stat = (over: Partial<PlayerMatchStats> & { playerId: number }): PlayerMatchStats => ({

@@ -8,6 +8,7 @@ export type {
   Fixture,
   FixtureStatus,
   FootballPlayer,
+  SeasonTotals,
   FootballSnapshot,
   PlayerMatchStats,
 } from "./types";
@@ -57,6 +58,7 @@ export {
 // stays exported from its own module, where its tests reach it.
 export type { FinishedState, RoundState } from "./round";
 export { fixtureLabel, kickedOff, nextFixtures, oppositionByClub } from "./opposition";
+export { NO_SEASON } from "./noSeason";
 export { leagueTable } from "./table";
 export type { TableRow } from "./table";
 export type { Opposition } from "./opposition";

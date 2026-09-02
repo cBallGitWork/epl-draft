@@ -1,4 +1,5 @@
 import { notFound, redirect } from "next/navigation";
+import type { RosteredTeam } from "@epl/core";
 import { getLeagueSquads } from "../../squads";
 import { planningRound } from "../../round";
 
@@ -32,7 +33,7 @@ export async function teamOr404(teamId: string): Promise<TeamIdentity> {
  *  are already sitting in it, so the second one is free. */
 export async function leagueTeams(
   teamId: string,
-): Promise<{ team: TeamIdentity; names: Record<string, string> }> {
+): Promise<{ team: TeamIdentity; names: Record<string, string>; squad: RosteredTeam }> {
   const squads = await getLeagueSquads(await planningRound());
   if ("undrafted" in squads) notFound();
   if ("unavailable" in squads) redirect("/squad");
@@ -45,5 +46,5 @@ export async function leagueTeams(
   const names: Record<string, string> = {};
   for (const entry of squads.period.teams) names[entry.teamId] = entry.teamName;
 
-  return { team: { teamId: team.teamId, teamName: team.teamName }, names };
+  return { team: { teamId: team.teamId, teamName: team.teamName }, names, squad: team };
 }

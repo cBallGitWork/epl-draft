@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { NO_SEASON } from "../football/noSeason";
 import { bothSides, fixtureStakes } from "./relevance";
 import type { Club, Fixture, FootballPlayer } from "../football/types";
 import type { RosteredTeam } from "../join/roster";
@@ -13,7 +14,7 @@ const player = (clubId: number, code: number): FootballPlayer => ({
   status: "a",
   news: "",
   chanceOfPlaying: null,
-  optaCode: null,
+  optaCode: null, season: NO_SEASON,
 });
 
 const rostered = (teamId: string, men: { clubId: number; code: number; status?: string }[]): RosteredTeam => ({

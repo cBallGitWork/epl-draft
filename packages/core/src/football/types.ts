@@ -41,6 +41,41 @@ export interface FootballPlayer {
   /** Opta's identifier, when FPL publishes it — the most reliable bridge to other
    *  data providers, so we keep it even though we don't consume it yet. */
   optaCode: string | null;
+  /** What he has done across the season so far, as FPL counts it.
+   *
+   *  **Only the things our league does not score.** Fantrax is the authority on
+   *  goals, assists and clean sheets because those are what it pays for, and
+   *  printing FPL's count of the same fact beside theirs is exactly the
+   *  provenance collision DESIGN §7 forbids. What FPL has and Fantrax has not is
+   *  the UNDERLYING play — expected goals, tackles, recoveries — and the
+   *  denominators under everything, minutes and starts. */
+  season: SeasonTotals;
+}
+
+/** A player's season to date, from FPL's own bootstrap.
+ *
+ *  Every field is present on all 629 elements (probed 2 Sep 2026), so these are
+ *  plain numbers rather than nullable: a man who has not played reads nought
+ *  everywhere, which is true of him and not an absence. */
+export interface SeasonTotals {
+  minutes: number;
+  /** Appearances from the start, which is not the same as appearances — a
+   *  substitute has minutes and no start. */
+  starts: number;
+  expectedGoals: number;
+  expectedAssists: number;
+  expectedGoalsConceded: number;
+  tackles: number;
+  /** FPL publishes clearances, blocks and interceptions as one figure and never
+   *  separately, so it is carried as the one thing it is. */
+  clearancesBlocksInterceptions: number;
+  recoveries: number;
+  saves: number;
+  goalsConceded: number;
+  bonus: number;
+  /** FPL's own bonus-points system score — the number the bonus is derived
+   *  from, and a better reading of a performance than the bonus itself. */
+  bps: number;
 }
 
 export type FixtureStatus = "upcoming" | "live" | "finished";

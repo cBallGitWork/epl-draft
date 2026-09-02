@@ -27,6 +27,26 @@ interface RawElement {
   news: string;
   chance_of_playing_next_round: number | null;
   opta_code: string | null;
+
+  // Season totals. Present on all 629 elements, probed 2 Sep 2026 — every one
+  // of them, not most, which is why these are plain rather than optional.
+  //
+  // The expected figures arrive as STRINGS ("0.53"), unlike the counts, because
+  // FPL serialises its decimals that way. Mirrored as strings here for the same
+  // reason `squad_number` is mirrored at all: `raw.ts` says what FPL sends, and
+  // the mapper is where it becomes a number.
+  minutes: number;
+  starts: number;
+  expected_goals: string;
+  expected_assists: string;
+  expected_goals_conceded: string;
+  tackles: number;
+  clearances_blocks_interceptions: number;
+  recoveries: number;
+  saves: number;
+  goals_conceded: number;
+  bonus: number;
+  bps: number;
 }
 
 interface RawEvent {

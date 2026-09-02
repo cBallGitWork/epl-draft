@@ -93,7 +93,6 @@ export default function SquadRows({
               and an opponent added it gave way to NOTHING: every name rendered
               0px wide under a header printed on top of the next one. A basis
               holds a floor at both widths and lets the row scroll instead. */}
-          <span className="min-w-0 flex-[1_1_5rem]">Player</span>
           {/* **Position is a COLUMN, not a bar over a group** (Craig, 2 Sep:
               "dont use grey bars for positions, we have players who can play
               multiple positions"). He is right and the reference is with him:
@@ -102,6 +101,8 @@ export default function SquadRows({
               heading. Grouping him under a single letter is a claim the data
               does not support — Saka is `F,M` and 48 of 607 are like him. */}
           <span className="w-[3.25rem] shrink-0">Pos</span>
+          <span className="min-w-0 flex-[1_1_5rem]">Player</span>
+
           {/* Who his CLUB plays this week — the football fixture, not ours. */}
           <span className="w-[4.75rem] shrink-0">Opponent</span>
           {/* **Points, and only points** (Craig, 2 Sep: "FPts is first row,
@@ -215,14 +216,6 @@ function Row({
           fixed columns outgrow the row, and what gave way was the one thing on
           the line a reader cannot infer. Measured at 1440 in a 554px column on
           31 Aug: every name was **0px wide**. */}
-      <span className="min-w-0 flex-[1_1_5rem] truncate text-sm font-medium">
-        {playerName(player.rostered)}
-      </span>
-
-      {/* Why he is not playing, in the place CM put it: beside the name, before
-          anything numeric. Silent for a fit man. */}
-      <StateBox player={footballer} />
-
       {/* What he is ELIGIBLE at, which is not the slot he is filling. Yellow
           because `cm9900/25.jpg` sets the eligibility strings in yellow beside
           each name — and because our own palette spends amber on a figure and
@@ -233,6 +226,16 @@ function Row({
           ? positionsLabel(eligible)
           : positionsLabel([player.rostered.slot.position ?? ""])) ?? "—"}
       </span>
+
+      <span className="min-w-0 flex-[1_1_5rem] truncate text-sm font-medium">
+        {playerName(player.rostered)}
+      </span>
+
+      {/* Why he is not playing, in the place CM put it: beside the name, before
+          anything numeric. Silent for a fit man. */}
+      <StateBox player={footballer} />
+
+
 
       {/* His club's fixture this week. Craig asked for it and the reference does
           not forbid it: `12.jpg` carries no opponent because it is a TRAINING

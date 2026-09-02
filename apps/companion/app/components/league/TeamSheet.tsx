@@ -71,7 +71,12 @@ export default function TeamSheet({
   return (
     // `pitch-with-bench`: the strip below the grass is this page's, so the
     // card's height budget has to know about it. See `globals.css`.
-    <div className="pitch-with-bench flex flex-col">
+    // `pitch-with-bench` is a HEIGHT BUDGET for the grass and the strip under
+    // it, so it belongs only on the mode that draws them. On the list it was
+    // sizing a table to a pitch's screen allowance — which is why the list beside
+    // the pitch had no panel edge where the phone's had one: the budget was
+    // shrinking it out from under `SquadRows`' own `cm-panel`.
+    <div className={`flex flex-col ${mode === "pitch" ? "pitch-with-bench" : ""}`}>
       {mode === "pitch" ? (
         <>
           {/* The trial's home now (Craig, 31 Aug). The gated squad board lost its

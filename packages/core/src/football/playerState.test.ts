@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { NO_SEASON } from "./noSeason";
 import { availabilityOf, isDoubtful } from "./playerState";
 import type { FootballPlayer } from "./types";
 
@@ -12,7 +13,7 @@ function player(over: Partial<FootballPlayer> = {}): FootballPlayer {
     status: "a",
     news: "",
     chanceOfPlaying: null,
-    optaCode: null,
+    optaCode: null, season: NO_SEASON,
     ...over,
   };
 }

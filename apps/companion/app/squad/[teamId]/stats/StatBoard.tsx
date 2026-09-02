@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { PLAYER_CATEGORIES, type PlayerStatLine } from "@epl/core";
+import { PLAYER_CATEGORIES, type PlayerStatLine, type SeasonTotals } from "@epl/core";
 import { positionsFromList } from "../../../positions";
 
 // One squad's season, in Championship Manager's own stat-screen grammar.
@@ -36,6 +36,32 @@ const VIEWS = [
   { key: "attacking", label: "Attacking" },
   { key: "defensive", label: "Defensive" },
   { key: "discipline", label: "Discipline" },
+  { key: "underlying", label: "Underlying (FPL)" },
+] as const;
+
+/** What FPL knows that our league does not score.
+ *
+ *  **Named as FPL's on the control, which is how DESIGN §7 is satisfied here.**
+ *  The rule bites when two sources answer the same question and a reader cannot
+ *  tell whose figure he is reading — so goals and assists are absent from this
+ *  view entirely, because Fantrax pays for those and is the authority on them.
+ *  What is left is the play UNDER the scoring, which our league does not count
+ *  at all, and the denominators under everything else.
+ *
+ *  `xGC` is a defender's and a keeper's column: the goals a side was expected to
+ *  concede while he was on the pitch, which is the closest thing FPL publishes
+ *  to "was he any good at the back". */
+const UNDERLYING = [
+  { key: "minutes", head: "Min", label: "Minutes played" },
+  { key: "starts", head: "St", label: "Starts — not the same as appearances" },
+  { key: "expectedGoals", head: "xG", label: "Expected goals", decimals: true },
+  { key: "expectedAssists", head: "xA", label: "Expected assists", decimals: true },
+  { key: "expectedGoalsConceded", head: "xGC", label: "Expected goals conceded", decimals: true },
+  { key: "tackles", head: "Tck", label: "Tackles" },
+  { key: "clearancesBlocksInterceptions", head: "CBI", label: "Clearances, blocks and interceptions — FPL publishes the three as one figure" },
+  { key: "recoveries", head: "Rec", label: "Ball recoveries" },
+  { key: "saves", head: "Sv", label: "Saves" },
+  { key: "bps", head: "BPS", label: "FPL's bonus points system score" },
 ] as const;
 
 type ViewKey = (typeof VIEWS)[number]["key"];
@@ -63,7 +89,20 @@ function totalOf(line: PlayerStatLine): number | null {
   return figures.length === 0 ? null : figures.reduce((sum, value) => sum + value, 0);
 }
 
-export default function StatBoard({ lines }: { lines: readonly PlayerStatLine[] }) {
+export default function StatBoard({
+  lines,
+  underlying,
+  names,
+}: {
+  lines: readonly PlayerStatLine[];
+  /** FPL's season totals by Fantrax id, for the underlying view. Absent for a
+   *  slot the bridge has not settled, which is ordinary — the pool carries
+   *  academy names FPL has never listed — and reads as a row of dashes. */
+  underlying: Record<string, SeasonTotals>;
+  /** The roster's spelling of each name, by id. Fantrax's stat rows say
+   *  "Schade, Kevin" and every other screen says "Kevin Schade". */
+  names: Record<string, string>;
+}) {
   const [view, setView] = useState<ViewKey>("fantasy");
   // **Null is the squad's own order** (Craig, 2 Sep: sort by tapping, default
   // squad order). The read arrives in roster order — keepers first, then out by
@@ -75,14 +114,18 @@ export default function StatBoard({ lines }: { lines: readonly PlayerStatLine[] 
   const columns =
     view === "fantasy"
       ? PLAYER_CATEGORIES
-      : PLAYER_CATEGORIES.filter((category) => category.group === view);
+      : view === "underlying"
+        ? []
+        : PLAYER_CATEGORIES.filter((category) => category.group === view);
 
   const rows = useMemo(() => {
     if (sort === null) return [...lines];
-    const value = (line: PlayerStatLine) =>
-      sort.key === "pts"
-        ? totalOf(line)
-        : figure(line, sort.key, PLAYER_CATEGORIES.find((c) => c.key === sort.key)?.also);
+    const value = (line: PlayerStatLine) => {
+      if (sort.key === "pts") return totalOf(line);
+      const fpl = UNDERLYING.find((column) => column.key === sort.key);
+      if (fpl) return underlying[line.fantraxId]?.[fpl.key] ?? null;
+      return figure(line, sort.key, PLAYER_CATEGORIES.find((c) => c.key === sort.key)?.also);
+    };
     return [...lines].sort((a, b) => {
       // **Absence sorts last whichever way the column runs.** A man with no
       // figure has not scored nought — he has no reading — and floating him to
@@ -93,7 +136,7 @@ export default function StatBoard({ lines }: { lines: readonly PlayerStatLine[] 
       if (y === null) return -1;
       return sort.descending ? y - x : x - y;
     });
-  }, [lines, sort]);
+  }, [lines, sort, underlying]);
 
   /** Tapping a head sorts by it; tapping the sorted one turns it round.
    *
@@ -151,6 +194,18 @@ export default function StatBoard({ lines }: { lines: readonly PlayerStatLine[] 
               <th scope="col" className="p-0 text-left font-bold">
                 <span className="cm-bevel flex h-6 items-center px-1.5">Club</span>
               </th>
+              {view === "underlying"
+                ? UNDERLYING.map((column) => (
+                    <SortHead
+                      key={column.key}
+                      label={column.head}
+                      title={column.label}
+                      sorted={sort?.key === column.key}
+                      descending={sort?.descending ?? true}
+                      onSort={() => sortBy(column.key)}
+                    />
+                  ))
+                : null}
               {columns.map((category) => (
                 <SortHead
                   key={category.key}
@@ -190,15 +245,48 @@ export default function StatBoard({ lines }: { lines: readonly PlayerStatLine[] 
                 <td className="p-0 text-2xs">
                   <Link
                     href={`/players/${line.fantraxId}`}
-                    className="cm-row flex min-h-11 items-center px-1.5 text-info hover:underline lg:min-h-0"
+                    // **`min-h-11` on a phone and `.cm-row` above it**, which is
+                    // the documented pair — but written as a breakpoint rather
+                    // than as one class. `.cm-row` alone left the link 14px and
+                    // `tapfit` found fifteen of them under the floor; `min-h-11`
+                    // alone applied at both widths and stood every row of the
+                    // table at 90px, which is the opposite of a CM stat screen
+                    // (`21.jpg` fits thirteen columns and twelve players on an
+                    // 800x600 canvas). The floor is a rule about a THUMB, so it
+                    // belongs where there is one.
+                    className="cm-row flex min-h-11 items-center px-1.5 text-info hover:underline lg:min-h-7"
                   >
-                    {line.name}
+                    {names[line.fantraxId] ?? line.name}
                   </Link>
                 </td>
                 <td className="px-1.5 py-1 text-3xs font-bold text-mid">
                   {positionsFromList(line.position) ?? "—"}
                 </td>
                 <td className="px-1.5 py-1 text-2xs text-muted">{line.clubShort ?? "—"}</td>
+                {view === "underlying"
+                  ? UNDERLYING.map((column) => {
+                      const totals = underlying[line.fantraxId];
+                      const value = totals?.[column.key];
+                      return (
+                        <td
+                          key={column.key}
+                          className={`numeric px-1.5 py-1 text-right text-2xs ${
+                            value ? "text-mid" : "text-faint"
+                          }`}
+                        >
+                          {/* A slot the bridge has not settled has no
+                              footballer behind it and so no season — a dash,
+                              which is absence, against the nought that means he
+                              played and did none of it. */}
+                          {value === undefined
+                            ? "—"
+                            : "decimals" in column && column.decimals
+                              ? value.toFixed(2)
+                              : value}
+                        </td>
+                      );
+                    })
+                  : null}
                 {columns.map((category) => {
                   const value = figure(line, category.key, category.also);
                   return (
@@ -231,6 +319,34 @@ export default function StatBoard({ lines }: { lines: readonly PlayerStatLine[] 
           </tbody>
         </table>
       </div>
+
+      {/* **The glossary, under the table** (Craig, 2 Sep: "maybe a glossary at
+          the bottom for all the abbreviations? or the top?"). Under, because it
+          is a reference rather than an introduction — a reader who knows `CBI`
+          should not have to scroll past its definition to reach the numbers,
+          and one who does not knows where the key of a table lives.
+          `cm9900/21.jpg` runs thirteen abbreviated heads with no key at all,
+          which works in a game whose manual you own and not on a phone.
+
+          It names only the columns actually on screen, so switching the view
+          changes the key with it. */}
+      <dl className="flex flex-wrap gap-x-3 gap-y-0.5 border-t border-line px-2 py-1.5 text-3xs">
+        {(view === "underlying"
+          ? UNDERLYING.map((column) => [column.head, column.label] as const)
+          : columns.map((category) => [category.key, category.label] as const)
+        ).map(([head, label]) => (
+          <span key={head} className="flex items-baseline gap-1">
+            <dt className="font-bold text-mid">{head}</dt>
+            <dd className="text-faint">{label}</dd>
+          </span>
+        ))}
+        {view === "fantasy" ? (
+          <span className="flex items-baseline gap-1">
+            <dt className="font-bold text-accent">Pts</dt>
+            <dd className="text-faint">Our total of his scoring categories</dd>
+          </span>
+        ) : null}
+      </dl>
     </section>
   );
 }

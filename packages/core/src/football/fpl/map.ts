@@ -32,6 +32,25 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
     news: e.news ?? "",
     chanceOfPlaying: e.chance_of_playing_next_round ?? null,
     optaCode: e.opta_code ?? null,
+    season: {
+      // `NUMERIC` throughout, not just on the expected trio: these are scraped
+      // fields on a payload we do not control, and the counts arriving as
+      // numbers today is an observation rather than a guarantee. It coerces a
+      // missing or unparseable value to nought, which is the right reading for
+      // a season total — a player FPL says nothing about has done nothing.
+      minutes: NUMERIC(e.minutes),
+      starts: NUMERIC(e.starts),
+      expectedGoals: NUMERIC(e.expected_goals),
+      expectedAssists: NUMERIC(e.expected_assists),
+      expectedGoalsConceded: NUMERIC(e.expected_goals_conceded),
+      tackles: NUMERIC(e.tackles),
+      clearancesBlocksInterceptions: NUMERIC(e.clearances_blocks_interceptions),
+      recoveries: NUMERIC(e.recoveries),
+      saves: NUMERIC(e.saves),
+      goalsConceded: NUMERIC(e.goals_conceded),
+      bonus: NUMERIC(e.bonus),
+      bps: NUMERIC(e.bps),
+    },
   }));
 }
 

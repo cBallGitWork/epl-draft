@@ -1,5 +1,6 @@
+import { isResolved, playerName, type SeasonTotals } from "@epl/core";
 import TeamShell from "../Shell";
-import { teamOr404 } from "../team";
+import { leagueTeams } from "../team";
 import { getPlayerStats } from "../../../players/playerStats";
 import StatBoard from "./StatBoard";
 
@@ -31,9 +32,34 @@ export default async function StatsPage({
   params: Promise<{ teamId: string }>;
 }) {
   const { teamId } = await params;
-  const [team, all] = await Promise.all([teamOr404(teamId), getPlayerStats()]);
+  const [{ team, squad }, all] = await Promise.all([leagueTeams(teamId), getPlayerStats()]);
 
   const his = all.filter((line) => line.ownerTeamId === teamId);
+
+  // **What FPL knows and Fantrax does not** (Craig, 2 Sep: "we just use stats
+  // not covered by fantasy points, so goals/assists we don't need, but xg/xa
+  // etc, tackles, interceptions").
+  //
+  // That instruction is also what keeps DESIGN §7 satisfied: the provenance rule
+  // bites when two sources answer the SAME question and a reader cannot tell
+  // whose number he is reading. Goals and assists are Fantrax's because Fantrax
+  // pays for them; expected goals, tackles, recoveries and the minutes under
+  // them are facts our league does not score at all, so there is no second
+  // answer for them to disagree with.
+  //
+  // Costs no request: the squad is already resolved through the bridge for this
+  // page's own name, and every resolved slot carries the footballer whose season
+  // totals `mapPlayers` now fills from bootstrap.
+  const underlying: Record<string, SeasonTotals> = {};
+  for (const rostered of squad.players) {
+    if (isResolved(rostered)) underlying[rostered.slot.fantraxId] = rostered.player.season;
+  }
+
+  // Fantrax's stat rows and the roster disagree about a man's name — "Schade,
+  // Kevin" against "Kevin Schade" — and the roster's is the one every other
+  // screen prints. Keyed by id, which is the join both sides actually share.
+  const names: Record<string, string> = {};
+  for (const rostered of squad.players) names[rostered.slot.fantraxId] = playerName(rostered);
 
   return (
     <TeamShell
@@ -49,7 +75,7 @@ export default async function StatsPage({
           </p>
         </section>
       ) : (
-        <StatBoard lines={his} />
+        <StatBoard lines={his} underlying={underlying} names={names} />
       )}
     </TeamShell>
   );

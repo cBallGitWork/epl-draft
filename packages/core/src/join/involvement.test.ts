@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
+import { NO_SEASON } from "../football/noSeason";
 import type { Fixture, FootballPlayer } from "../football/types";
 import type { RosteredPlayer, RosteredTeam } from "./roster";
 import { fixtureInvolvement, owners } from "./involvement";
 
 const player = (id: number, name: string, clubId: number): FootballPlayer => ({
   id, code: 900 + id, name, fullName: name, clubId,
-  status: "a", news: "", chanceOfPlaying: null, optaCode: null,
+  status: "a", news: "", chanceOfPlaying: null, optaCode: null, season: NO_SEASON,
 });
 
 const holds = (...players: FootballPlayer[]): RosteredPlayer[] =>

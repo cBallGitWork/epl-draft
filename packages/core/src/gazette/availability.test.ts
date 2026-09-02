@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { NO_SEASON } from "../football/noSeason";
 import type { FootballPlayer } from "../football/types";
 import type { RosteredTeam } from "../join/roster";
 import { availability } from "./availability";
 
 const footballer = (over: Partial<FootballPlayer>): FootballPlayer => ({
-  id: 1, code: 1, name: "Player", fullName: "Player", clubId: 1, status: "a", news: "", chanceOfPlaying: null, optaCode: null, ...over,
+  id: 1, code: 1, name: "Player", fullName: "Player", clubId: 1, status: "a", news: "", chanceOfPlaying: null, optaCode: null, season: NO_SEASON, ...over,
 });
 
 const squad = (players: FootballPlayer[]): RosteredTeam => ({

@@ -9,6 +9,13 @@ const bootstrap = (over: Partial<RawBootstrap> = {}): RawBootstrap => ({
       id: 1, code: 154561, web_name: "Raya", first_name: "David", second_name: "Raya Martín",
       team: 1, element_type: 1, squad_number: 22, status: "a", news: "",
       chance_of_playing_next_round: null, opta_code: "p123",
+      // Season totals as FPL sends them: the counts as numbers, the expected
+      // trio as strings. Real figures rather than zeros, so the mapper's
+      // string-to-number coercion is actually under test.
+      minutes: 180, starts: 2, expected_goals: "0.12", expected_assists: "0.34",
+      expected_goals_conceded: "1.53", tackles: 3,
+      clearances_blocks_interceptions: 7, recoveries: 19, saves: 8,
+      goals_conceded: 2, bonus: 1, bps: 45,
     },
   ],
   events: [
@@ -77,6 +84,34 @@ describe("mapPlayers", () => {
   // element_type is FPL's fantasy classification, not a property of the footballer.
   // Fantrax files the same player differently and allows several positions at once,
   // so it stays in raw.ts and never reaches a domain type.
+  it("reads the season totals, with the expected trio parsed off strings", () => {
+    const [p] = mapPlayers(bootstrap());
+    expect(p.season.minutes).toBe(180);
+    expect(p.season.starts).toBe(2);
+    // FPL serialises its decimals as strings and its counts as numbers; both
+    // arrive here as numbers or the columns built on them cannot be sorted.
+    expect(p.season.expectedGoals).toBeCloseTo(0.12);
+    expect(p.season.expectedAssists).toBeCloseTo(0.34);
+    expect(p.season.expectedGoalsConceded).toBeCloseTo(1.53);
+    expect(p.season.tackles).toBe(3);
+    expect(p.season.clearancesBlocksInterceptions).toBe(7);
+    expect(p.season.recoveries).toBe(19);
+    expect(p.season.bps).toBe(45);
+  });
+
+  it("reads a missing total as nought rather than as absent", () => {
+    // Scraped data on a payload we do not control. A player FPL says nothing
+    // about has done nothing, which is a fact rather than a hole.
+    const [p] = mapPlayers(
+      bootstrap({
+        elements: [
+          { ...bootstrap().elements[0], minutes: undefined as unknown as number },
+        ],
+      }),
+    );
+    expect(p.season.minutes).toBe(0);
+  });
+
   it("does not carry a position", () => {
     const [p] = mapPlayers(bootstrap());
     expect(p).not.toHaveProperty("position");

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { NO_SEASON } from "../football/noSeason";
 import type { PlayerMatchStats } from "../football/types";
 import recorded from "../league/fantrax/__fixtures__/scoringSystem.json";
 import { mapScoringRules } from "../league/fantrax/scoring";
@@ -22,7 +23,7 @@ const player = (
 ): RosteredPlayer => ({
   slot: { fantraxId: `f${position}${stats.length}${status}`, position, status },
   player: {
-    id: 1, code: 1, name: "N", fullName: "N", clubId: 1, status: "a", news: "", chanceOfPlaying: null, optaCode: null,
+    id: 1, code: 1, name: "N", fullName: "N", clubId: 1, status: "a", news: "", chanceOfPlaying: null, optaCode: null, season: NO_SEASON,
   },
   stats,
 });

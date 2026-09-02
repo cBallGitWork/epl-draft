@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { NO_SEASON } from "../football/noSeason";
 import { affectedBy } from "./newsTriage";
 import type { RosteredTeam } from "../join/roster";
 import type { NewsItem } from "../news/map";
@@ -15,7 +16,7 @@ const man = (name: string) => ({
   slot: { fantraxId: name, position: "M", status: "ACTIVE" },
   player: {
     id: 1, code: 1, name, fullName: name, clubId: 1,
-    status: "a", news: "", chanceOfPlaying: null, optaCode: null,
+    status: "a", news: "", chanceOfPlaying: null, optaCode: null, season: NO_SEASON,
   },
   stats: [],
 });

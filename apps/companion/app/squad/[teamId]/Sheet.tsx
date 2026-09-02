@@ -73,10 +73,11 @@ export default function Sheet({
           already carries it in the bar above. */}
       <div className="hidden items-baseline justify-between gap-2 px-1 lg:flex">
         <span className="numeric font-chrome text-sm font-bold text-accent">{shape}</span>
-        <span className="numeric flex items-baseline gap-2 text-2xs text-faint">
-          <span>{players} players</span>
-          <Pending points={pending} />
-        </span>
+        {/* The count came off here as it did on the withheld board (Craig,
+            2 Sep). What is left is the one thing this line is for: points
+            Fantrax has not credited yet, which nothing else on the screen
+            says. */}
+        <Pending points={pending} />
       </div>
 
       {/* **List left, pitch right** (Craig, 2 Sep), which is `19.jpg`: the game
