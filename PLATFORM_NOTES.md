@@ -31,6 +31,35 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## `getTeamRosters` honours a period, and the answer differs — probed 2 Sep 2026
+
+`fetchTeamRosters(leagueId, period)` echoes the period asked for, verbatim.
+Asked without one it answers with whatever Fantrax currently labels the
+rosters, **and that label rolls the moment a round's last fixture ends** — so
+for about four days in seven it names next week.
+
+Measured on the dummy league, 2 Sep, while the round in view was period 2:
+
+| asked | echoed | teams | first squad |
+|---|---|---|---|
+| (none) | **3** | 10 | 15 |
+| 1 | 1 | 10 | 15 |
+| 2 | 2 | 10 | 15 |
+| 3 | 3 | 10 | 15 |
+
+**It is a different answer and not merely a different label: 3 of 10 teams
+field a different ACTIVE side in period 2 than in period 3.** Status on this
+public endpoint is the string `status: "ACTIVE" | "RESERVE"` — not the SPA's
+`statusId`, which is absent here.
+
+Why it mattered: `gatherRoundFacts` asked without a period while every other
+read in it asked for the round's. `wasFielded` compares the two, so it was
+false for every column that fires after a round finishes — which is all of
+them — and `eleven` and `dodgers` refuse outright when it is false, because
+"benched" is a claim about a side somebody actually picked. Those two columns
+could never file, and because a refusal spends no covered-key they sat at the
+top of every firing's running order and wedged the paper behind them.
+
 ## `getStandings` has three views and we read two — probed 31 Aug 2026
 
 Craig linked `…/standings;view=SEASON_STATS` as a source for Team Stats. Probed
@@ -518,7 +547,7 @@ invisible because `CLAUDE.md`'s verify section lists only `npm test` and
 
 ### `process.env` inside `packages/core/src/config.ts` (§5, purity at the core)
 
-`FANTRAX_LEAGUE_ID` reads the environment, defaulting to the rehearsal league.
+`FANTRAX_LEAGUE_ID` reads the environment, defaulting to the dummy league.
 Setting that variable is the entire 10 Oct swap, and it is what lets CI point a
 build at the real (empty) league today and watch every view meet its empty states.
 
