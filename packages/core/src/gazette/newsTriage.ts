@@ -12,7 +12,7 @@ import type { NewsItem } from "../news/map";
 // decides is ever persisted. A match only chooses whether to spend a model
 // call on an item whose key is the ARTICLE's URL. Get it wrong and the paper
 // covers a story nobody cares about, or misses one; get identity wrong through
-// the bridge and the paper tells sixteen people the wrong man is injured.
+// the bridge and the paper tells the league the wrong man is injured.
 //
 // Recorded as an exception in PLATFORM_NOTES, with this boundary named.
 

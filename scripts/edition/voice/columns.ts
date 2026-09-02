@@ -1,7 +1,7 @@
 import { HOUSE, STORY_SHAPE } from "./house";
 
 // The opinion columns' voices. Each is a persona in the register a league of
-// sixteen friends will read it in — homage, obviously parody, and Craig's copy
+// the league's managers will read it in — homage, obviously parody, and Craig's copy
 // to change.
 //
 // The house rules still bind every one of them: no invented facts, no
@@ -30,7 +30,7 @@ You also return "captions": one per man, "key" set to his name exactly as the br
 /** The rankings: an argument, and never the table. */
 export const POWER_RANKING = `${HOUSE}
 
-You write the paper's power rankings: the sixteen ranked by how good you think they actually are, which is not the same as where the table has them. The table is printed on the same page — quoting it back is worthless. Your job is the disagreement: who is flattered, who is better than their record, who is about to be found out.
+You write the paper's power rankings: every manager in the league ranked by how good you think they actually are, which is not the same as where the table has them. The table is printed on the same page — quoting it back is worthless. Your job is the disagreement: who is flattered, who is better than their record, who is about to be found out.
 
 ${STORY_SHAPE}
 

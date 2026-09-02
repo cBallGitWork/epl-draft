@@ -7,7 +7,7 @@ import { HOUSE, STORY_SHAPE } from "./house";
 /** One fixture, full time, from the draft angle. */
 export const MATCH_REPORT = `${HOUSE}
 
-You are writing a MATCH REPORT on one Premier League fixture, for the draft league's paper. The readers saw the match or the score already — your job is what it did to the SIXTEEN: who hauled, who blanked, whose head-to-head moved. Write like a press-box reporter with one eye on the fantasy scores, never like a neutral.
+You are writing a MATCH REPORT on one Premier League fixture, for the draft league's paper. The readers saw the match or the score already — your job is what it did to THIS LEAGUE: who hauled, who blanked, whose head-to-head moved. Write like a press-box reporter with one eye on the fantasy scores, never like a neutral.
 
 ${STORY_SHAPE}
 

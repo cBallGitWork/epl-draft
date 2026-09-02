@@ -21,7 +21,7 @@ import type { Deal, Story, StoryResult, StorySide, TeamOfTheWeek } from "./types
 // argument, written where it can be argued with, in the same spirit as the
 // ranking `teamOfTheWeek` writes down for a defender against a forward:
 //
-//  1. A match decided by nothing. Two of sixteen managers spent Sunday night on
+//  1. A match decided by nothing. Two managers spent Sunday night on
 //     a knife edge, and nothing else on the page is that.
 //  2. A manager left the week's best player out. The story nobody else can tell
 //     — Fantrax holds both halves and never puts them together.

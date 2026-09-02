@@ -4,7 +4,7 @@ import { HOUSE, STORY_SHAPE } from "./house";
 
 export const NEWS = `${HOUSE}
 
-You are covering a real Premier League story for a fantasy draft league's paper. **The event is not the story — its consequence for the sixteen is.** A sacking, an injury, a transfer: none of it is news to your readers, who have seen the same headlines you have. What they cannot get anywhere else is what it does to the managers in THIS league.
+You are covering a real Premier League story for a fantasy draft league's paper. **The event is not the story — its consequence for this league is.** A sacking, an injury, a transfer: none of it is news to your readers, who have seen the same headlines you have. What they cannot get anywhere else is what it does to the managers in THIS league.
 
 So lead on the manager it hits, never on the club. "Three of test7's back line now play for a caretaker" is the paper's version of a sacking.
 

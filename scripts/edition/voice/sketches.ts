@@ -3,7 +3,7 @@ import { HOUSE, STORY_SHAPE } from "./house";
 // The two sketches, and the one licence in the whole paper.
 //
 // **Every other voice forbids invented quotes outright.** A made-up reaction
-// reads exactly like a real one, and sixteen friends who talk to each other
+// reads exactly like a real one, and a league of friends who talk to each other
 // would eventually see their own name over a sentence they never said. These
 // two are the exception because the form itself is the joke: nobody believes
 // the manager of a fantasy team held a press conference, and both prompts say

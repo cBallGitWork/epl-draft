@@ -37,7 +37,7 @@ export function buildNewsBrief(brief: {
       .filter((line) => line !== null)
       .join("\n"),
     [
-      "OUR STAKE, and this is the story. The event is the Premier League's; the paper's angle is what it does to the sixteen. Lead on the manager it hits, never on the club:",
+      "OUR STAKE, and this is the story. The event is the Premier League's; the paper's angle is what it does to this league. Lead on the manager it hits, never on the club:",
       ...affected.map((man) => `- ${man.playerName}, owned by ${man.ownerName}`),
     ].join("\n"),
     "Two short paragraphs. If the wire copy does not actually say what it means for these players — and it usually will not — say what is known and stop. You do not know how long anybody is out for unless you were told.",

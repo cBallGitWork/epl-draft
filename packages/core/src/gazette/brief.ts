@@ -74,7 +74,7 @@ function heading(brief: Brief): string {
   return [
     `EDITION: ${brief.kind === "preview" ? "PREVIEW — written after lineups locked, before a ball is kicked" : "REPORT — written after the round finished"}`,
     `GAMEWEEK ${brief.gameweek}, scored in Fantrax period ${brief.period}.`,
-    `THE SIXTEEN (use these names EXACTLY; the id in brackets is what you return, never the name): ${names}`,
+    `THE ${brief.teams.length} MANAGERS (use these names EXACTLY; the id in brackets is what you return, never the name): ${names}`,
   ].join("\n");
 }
 
@@ -151,7 +151,7 @@ function line(pick: Pick, fielded: boolean, pedigree: Map<string, DraftPick>): s
   // An entry means he was drafted there. No entry, in a league whose draft we
   // HAVE, means he came off the waiver wire — its own pedigree and a different
   // story. No pedigree at all means we know nothing, and saying "off the wire"
-  // then would tell the writer that sixteen squads went undrafted. Absence is
+  // then would tell the writer that every squad went undrafted. Absence is
   // not a wire pickup, on the same rule that a dash is not a nought.
   const drafted = pedigree.get(pick.fantraxId);
   const where =

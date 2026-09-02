@@ -43,7 +43,7 @@ export function buildPredictionsBrief(brief: {
     .join("\n\n");
 }
 
-/** The power rankings: the sixteen ranked by opinion, expressly not by table. */
+/** The power rankings: every manager ranked by opinion, expressly not by table. */
 export function buildPowerBrief(brief: {
   gameweek: number;
   rows: readonly PowerRow[];
@@ -60,7 +60,7 @@ export function buildPowerBrief(brief: {
       "THE FACTS. Rank them in `ranks`, using the EXACT ids, best first, with `move` as places gained or lost since your last ranking (0 if you have not ranked them before) and one argumentative line each:",
       ...rows,
     ].join("\n"),
-    "Write the body as two short paragraphs of overview — who is going well, who is fooling nobody — and let `ranks` carry the sixteen lines.",
+    "Write the body as two short paragraphs of overview — who is going well, who is fooling nobody — and let `ranks` carry one line per manager, every one of them.",
     storylinesBlock(brief.threads),
   ]
     .filter((block) => block !== null)

@@ -3,7 +3,7 @@ import type { StoryResult } from "./types";
 
 // The facts a power ranking is argued from. The ARGUMENT is the column's — it
 // is an opinion piece and expressly not the table — but the facts under it are
-// ours, so the model ranks sixteen sides it has actually been told about.
+// ours, so the model ranks only sides it has actually been told about.
 //
 // **It is never the table and must never read like one.** The table is
 // Fantrax's arithmetic and prints on the same page; a second ordering claiming

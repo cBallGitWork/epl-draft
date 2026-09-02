@@ -129,7 +129,7 @@ export function storyOfColumn(
     // at the TOP level — `quotes`, `ranks`, `captions`, `quiz` — because that
     // is the shape a model reliably returns, and `PublishedStory` keeps them
     // under `extras`. Without this fold the sketches file a scene-setting
-    // paragraph and no sketch, the rankings file an overview and no sixteen,
+    // paragraph and no sketch, the rankings file an overview and no ranked list,
     // and the page renders exactly nothing of it — silently, since every
     // reader of `extras` treats absence as ordinary.
     extras: {
