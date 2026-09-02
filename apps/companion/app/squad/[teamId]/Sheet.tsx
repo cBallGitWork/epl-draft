@@ -24,7 +24,6 @@ export default function Sheet({
   breakdown,
   pending,
   eligibility,
-  teamId,
 }: {
   rows: SquadDetailLine[];
   bench: SquadPlayerDetail[];
@@ -39,8 +38,6 @@ export default function Sheet({
   pending: number | null;
   /** Eligible positions by Fantrax id, for the list's position column. */
   eligibility?: Record<string, string[]>;
-  /** Whose pitch this is — every disc takes his colour. */
-  teamId: string;
 }) {
 
   return (
@@ -89,7 +86,6 @@ export default function Sheet({
           mode="pitch"
           inColumn
           show="fixture"
-          teamId={teamId}
         />
       </div>
     </div>

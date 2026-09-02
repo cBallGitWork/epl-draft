@@ -277,7 +277,6 @@ export default async function TeamPage({
           breakdown={live?.breakdown ?? {}}
           pending={pending}
           eligibility={eligibility}
-          teamId={teamId}
         />
       )}
     </TeamShell>

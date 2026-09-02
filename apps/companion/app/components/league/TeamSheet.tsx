@@ -7,7 +7,6 @@ import LivePlayerCard from "./LivePlayerCard";
 import PitchDisc from "./PitchDisc";
 import PitchRows, { GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
 import SquadRows from "./SquadRows";
-import { type TeamColours, teamColours } from "@epl/core";
 import { FAR_INSET } from "./PitchTurf";
 import { positionLabel } from "../../positions";
 
@@ -39,7 +38,6 @@ export default function TeamSheet({
   eligibility,
   inColumn = false,
   show,
-  teamId,
 }: {
   /** The XI in its positional lines, arranged on the server — `slot.status` is
    *  blanked on the way here, so this is the last shape that knows the split. */
@@ -55,8 +53,6 @@ export default function TeamSheet({
   inColumn?: boolean;
   /** What each disc's plate carries — see `PitchDisc`. */
   show?: "points" | "fixture";
-  /** The fantasy team whose pitch this is — the disc's one colour. */
-  teamId?: string;
   /** Eligible positions by Fantrax id, passed straight to the list. A record
    *  rather than a `Map` because this crosses to the browser — see `SquadRows`. */
   eligibility?: Record<string, string[]>;
@@ -66,7 +62,6 @@ export default function TeamSheet({
   widest?: number;
 }) {
   const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
-  const team = teamColours(teamId ?? "");
 
 
   // One number for the grass and for the strip beneath it. A reserve is the same
@@ -107,7 +102,6 @@ export default function TeamSheet({
                 player={player}
                 onOpen={() => setOpen(player)}
                 show={show}
-                team={team}
               />
             )}
           </PitchRows>
@@ -136,7 +130,7 @@ export default function TeamSheet({
                     <p className="pb-0.5 text-center font-display text-3xs font-bold uppercase text-faint">
                       {positionLabel(player.rostered.slot.position) ?? "—"}
                     </p>
-                    <Cell player={player} onOpen={() => setOpen(player)} team={team} />
+                    <Cell player={player} onOpen={() => setOpen(player)} />
                   </li>
                 ))}
               </ul>
@@ -169,12 +163,10 @@ function Cell({
   player,
   onOpen,
   show,
-  team,
 }: {
   player: SquadPlayerDetail;
   onOpen: () => void;
   show?: "points" | "fixture";
-  team: TeamColours;
 }) {
   return (
     <button
@@ -191,7 +183,6 @@ function Cell({
         opposition={player.opposition}
         points={player.points}
         show={show}
-        team={team}
       />
     </button>
   );

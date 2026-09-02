@@ -8,7 +8,7 @@ import {
   pitchName,
 } from "@epl/core";
 import PlayerImage from "./PlayerImage";
-import { type TeamColours, fixtureLabel } from "@epl/core";
+import { fixtureLabel } from "@epl/core";
 
 // One player on Championship Manager's pitch: a head, a name, and what he is
 // worth. The marker half of the `CmGround` trial.
@@ -47,7 +47,6 @@ export default function PitchDisc({
   opposition,
   points,
   show = "points",
-  team,
 }: {
   rostered: RosteredPlayer;
   club: Club | undefined;
@@ -57,9 +56,6 @@ export default function PitchDisc({
   points?: number | null;
   /** What the plate under his name carries. */
   show?: "points" | "fixture";
-  /** The FANTASY team's colours — the disc's ring and fill. One colour for the
-   *  whole eleven, which is what makes them read as a side. */
-  team: TeamColours;
 }) {
   const resolved = isResolved(rostered) ? rostered : null;
   const started = kickedOff(opposition);
@@ -75,13 +71,19 @@ export default function PitchDisc({
           `aria-hidden`, and the instruction is not otherwise announced: it is a
           restatement of the formation printed in words above the pitch, so a
           reader who cannot see it has already been told. */}
-      {/* **A circle in the TEAM's colour, with his face filling it** (Craig,
-          2 Sep). Three corrections to the first cut, all from the shot:
+      {/* **A circle with his face filling it, and the circle is CHROME.**
 
-          · The ground is the FANTASY team's colour, not the football club's.
-            The pitch is a picture of one manager's side, so eleven different
-            club colours turned it into eleven separate badges — CM's discs are
-            all one colour for exactly that reason, and the colour is the team's.
+          · One colour for all eleven, because eleven club colours turned the
+            pitch into eleven separate badges. That much of the first cut was
+            right, and it is what `19.jpg` does.
+          · But the colour is the chrome blue, NOT the fantasy team's.
+            `teamColours.ts` says in its own docblock where a team's colour may
+            appear — "the team's own title bar and each side of a head-to-head,
+            and nowhere else" — because the colour's one job is telling two sides
+            of a confrontation apart, and a squad screen has one side. CM agrees:
+            its discs are the same blue as the title bar and the rail, which is
+            furniture rather than identity. Ours were also failing at the job —
+            most of the table ringed the turf at under 2:1.
           · The face fills the circle. `PlayerImage` crops `object-top` because
             it normally stands on grass with its feet cut off; inside a disc that
             put the head against the ceiling with a chin at the bottom edge.
@@ -92,11 +94,9 @@ export default function PitchDisc({
           `--row-portrait` is the size `PlayerImage` reads, so it is set here and
           the image sizes itself off it. */}
       <span
-        className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 lg:h-14 lg:w-14"
+        className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-chrome bg-chrome"
         style={
           {
-            borderColor: team.primary,
-            backgroundColor: team.secondary,
             // Pull the crop down a touch: a portrait's head sits in the upper
             // third of the frame, so dead centre puts it high in a circle.
             "--pitch-crop": "22%",
@@ -104,7 +104,12 @@ export default function PitchDisc({
         }
       >
         {resolved === null ? (
-          <span className="grid h-full w-full place-items-center font-display text-3xs font-bold uppercase text-bg">
+          /* `text-cream` on the chrome plate, which is a pair DESIGN has
+             measured. It was `text-bg` over the team's `secondary`, and for the
+             two teams whose secondary is near-black that came out at 1.1:1 —
+             an invisible letter, and a hard AA failure `register-warden`
+             caught. A plate owns its ink (§2). */
+          <span className="grid h-full w-full place-items-center font-display text-3xs font-bold uppercase text-cream">
             {rostered.slot.position || "?"}
           </span>
         ) : (
@@ -118,20 +123,22 @@ export default function PitchDisc({
         )}
       </span>
 
-      {/* **Yellow, on the grass, with no plate under it** — which is exactly
-          how the AC Milan shot sets a name, and the last thing between ours and
-          it (Craig, 2 Sep: "compared the two, ours is just not good enough
-          yet"). The plate went in when white-at-nine-pixels over a BRIGHT green
-          was found unreadable; the turf is CM's dark green now, and yellow on it
-          measures well clear — so the plate is solving a problem that no longer
-          exists, and a row of black bars is what made our pitch read as cards on
-          grass rather than as a team on a pitch.
+      {/* **White, on the grass, with no plate under it.** The plate went in when
+          white-at-nine-pixels over a BRIGHT green was unreadable; the turf is
+          CM's dark green now and white measures 11.58:1 on it, so the plate
+          solves a problem that no longer exists — and a row of black bars is
+          what made this read as cards on grass rather than as a team.
 
-          `--color-accent` is the token, and this is one of the few places the
-          slot's meaning bends: on a pitch a name in yellow is CM's own
-          convention for a player, not a claim that he is "yours". The shadow is
-          what carries it over the mown stripes. */}
-      <span className="w-full truncate px-0.5 text-center font-display text-2xs font-bold uppercase leading-none text-accent [text-shadow:0_1px_3px_rgb(0_0_0/0.95)]">
+          **Not yellow, and `19.jpg` is why.** A comment here claimed CM sets its
+          names in yellow and `register-warden` checked the image: the names on
+          that tactics pitch are WHITE, and the only yellow on the screen is the
+          shape heading, the selection box, the pressed tab and the rail's
+          current entry — every one of them a selection or a state, which is
+          exactly what `--color-accent` means in DESIGN §3. Spending the accent
+          on a bare identifier would have made "yours" the colour of eleven names
+          on nine other managers' squads, on a screen that now opens on a rival's
+          by default. */}
+      <span className="w-full truncate px-0.5 text-center font-display text-2xs font-bold uppercase leading-none text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.95)]">
         {pitchName(rostered)}
       </span>
 
