@@ -145,8 +145,14 @@
    more saturated and slightly deeper, so a row of them reads as a spine and not
    as a second tab bar. */
 .cm-index {
-  background: var(--color-index);
-  color: var(--color-ink);
+  /* `--cm-index` so a scope can re-point the block without every call site
+     learning about it. A TEAM's screens set it to that manager's own colour
+     (Craig, 2 Sep: "fixtures, stats all use blue in their rows, this should be
+     team dependent to make the page unique") — the index block is the one
+     repeating fill down a CM table, so it is what carries a page's identity.
+     Everything outside a team scope keeps the deep blue it has always had. */
+  background: var(--cm-index, var(--color-index));
+  color: var(--cm-index-ink, var(--color-ink));
   box-shadow: inset -1px 0 0 var(--color-bg);
 }
 

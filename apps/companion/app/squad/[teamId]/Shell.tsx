@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { inkOn, teamColours } from "@epl/core";
 import PageHeader from "../../components/shell/PageHeader";
 import TeamTabs from "./TeamTabs";
@@ -48,7 +49,21 @@ export default function TeamShell({
   return (
     // `gap-2` for `LeagueShell`'s reason: four boxes down the page, and 12px
     // between each of them stops them reading as one object.
-    <div className="flex flex-col gap-2">
+    // **The team's colour, set once for all five tabs.** `--cm-index` re-points
+    // the index block every CM table runs down its left — the ranks on Stats,
+    // the rounds on Fixtures, the dates on Transfers — so a manager's screens
+    // are his rather than the league's deep blue (Craig, 2 Sep). Scoped here
+    // rather than passed to each table: it is a property of whose screen this
+    // is, and every table inside inherits it without knowing.
+    <div
+      className="flex flex-col gap-2"
+      style={
+        {
+          "--cm-index": plate.background,
+          "--cm-index-ink": plate.ink,
+        } as CSSProperties
+      }
+    >
       <PageHeader title={team.teamName} sub={sub} plate={plate} />
       <TeamTabs teamId={team.teamId} current={current} empty={empty} />
 

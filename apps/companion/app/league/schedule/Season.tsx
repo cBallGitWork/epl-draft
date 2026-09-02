@@ -135,7 +135,15 @@ function Score({ row }: { row: SeasonRow }) {
 
   return (
     <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center text-2xs font-bold">
-      <span className={won ? "text-accent" : ""}>{row.pointsFor ?? "—"}</span>
+      {/* **Weight, not colour, for a win.** The accent marked it until the
+          index block learned to take a team's own colour — and yellow on a
+          green plate measured 2.43:1, which `sweep` caught. A plate owns its
+          ink (DESIGN §2), and this plate's ink is now whatever `inkOn` chose
+          for that manager, so nothing may set a colour on top of it. Underline
+          says "this one won" without touching the pair. */}
+      <span className={won ? "underline decoration-2 underline-offset-2" : ""}>
+        {row.pointsFor ?? "—"}
+      </span>
       <span className="px-0.5 font-normal opacity-70">–</span>
       <span className="opacity-80">{row.pointsAgainst ?? "—"}</span>
     </span>

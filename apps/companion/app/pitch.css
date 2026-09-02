@@ -102,8 +102,16 @@
      — a ratio of 3.17 — because the element was its own query container and the
      units compounded. So the shape is a plain `aspect-ratio` again and the rows
      inside are made to FIT it rather than to set it: `PitchRows` sizes a card
-     against the pitch, not the pitch against the cards. */
-  aspect-ratio: 0.82;
+     against the pitch, not the pitch against the cards.
+
+     **0.95 and not the reference's ~1.2** (Craig, 2 Sep: "pitch view is much
+     taller than the list screen, we can make it smaller"). Measured at 1440:
+     the list ran 527px in a 554px column and the pitch 676 — 149px longer, so
+     the two columns it is meant to balance did not. The game's own pitch is
+     taller than wide against a list of eighteen names; ours holds eleven beside
+     a list of fifteen rows, so the shape that balances the pair here is not the
+     shape that balanced it there. Re-measure if the row count changes. */
+  aspect-ratio: 0.95;
   /* No ground of its own. What lies outside the taper is the page, the way it is
      on FPL's: a second green out there reads as a second surface, and the pitch
      stops being a thing sitting on the page and becomes a panel with a border. */

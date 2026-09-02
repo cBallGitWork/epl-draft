@@ -92,7 +92,13 @@ export default function Sheet({
           Below `lg` the toggle above chooses which of them you get, because
           neither is legible at half a phone and both together put the grass off
           the bottom of the screen. */}
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
+      {/* `lg:gap-10` and not `gap-3` (Craig, 2 Sep: "pitch is too wide, just
+          make a bigger gap between list and pitch view"). Two equal columns
+          butted three pixels apart read as one wide object split down the
+          middle; the air is what makes them two readings of the same team
+          standing side by side, and it takes width off the pitch without
+          changing its shape. */}
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-10">
         <div className={view === "list" ? "" : "hidden lg:block"}>
           <TeamSheet
             rows={rows}
