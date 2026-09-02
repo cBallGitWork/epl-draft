@@ -36,8 +36,12 @@ const COLUMN: Record<SortKey, { of: (row: StandingsRow) => number; descending: b
   pts: { of: (row) => row.points, descending: true },
 };
 
+/** `Object.hasOwn` and not `in`: `in` walks the prototype chain, so `toString`
+ *  and `constructor` both pass it, and `COLUMN[key].of` is then undefined rather
+ *  than a reader. A sort key arrives in a URL, which made that a 500 anybody
+ *  could type — `/league?sort=toString`. */
 export function isSortKey(value: string | undefined): value is SortKey {
-  return value !== undefined && value in COLUMN;
+  return value !== undefined && Object.hasOwn(COLUMN, value);
 }
 
 /** The natural direction for a column, so a first tap reads the useful way. */

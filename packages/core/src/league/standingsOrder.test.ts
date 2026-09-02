@@ -47,6 +47,12 @@ describe("isSortKey", () => {
     // `?sort=fp` and `?sort=gb` are live URLs until this ships. They must fall
     // back to Fantrax's own order, which is what an unknown key already does.
     for (const gone of ["record", "gb", "win", "fp"]) expect(isSortKey(gone)).toBe(false);
+    // `in` walked the prototype chain and let these through, and the column
+    // lookup after the guard then read `.of` off a function. A sort key arrives
+    // in a URL, so `/league?sort=toString` was a 500 anybody could type.
+    for (const inherited of ["toString", "constructor", "valueOf", "__proto__"]) {
+      expect(isSortKey(inherited)).toBe(false);
+    }
   });
 });
 
