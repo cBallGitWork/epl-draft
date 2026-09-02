@@ -69,7 +69,7 @@ function words(text: string): string[] {
 /** Every capitalised token the prompt contains, plus each part of a hyphenated
  *  or dotted name — the brief may print "B.Fernandes" where the prose writes
  *  "Fernandes", and that is the same man being referred to correctly. */
-export function namesInBrief(brief: string): Set<string> {
+function namesInBrief(brief: string): Set<string> {
   const known = new Set<string>();
   for (const word of words(brief)) {
     known.add(word);

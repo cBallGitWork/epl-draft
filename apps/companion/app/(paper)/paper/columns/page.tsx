@@ -1,11 +1,12 @@
 import { readerTeamId } from "../../../squads";
 import { edition } from "../../../edition";
 import Folio from "../../../components/gazette/Folio";
+import { named } from "../../../components/gazette/named";
 import Pages from "../../../components/gazette/Pages";
 import Teaser from "../../../components/gazette/Teaser";
 import Written from "../../../components/gazette/Written";
 import Extras from "../../../components/gazette/Extras";
-import { PAPER_PAGES } from "../../../components/gazette/paperPages";
+import { pageAt } from "../../../components/gazette/paperPages";
 
 // Page 3: the opinion columns.
 //
@@ -18,13 +19,12 @@ import { PAPER_PAGES } from "../../../components/gazette/paperPages";
 // so it cannot be imported.
 export const revalidate = 30;
 
-const PAGE = PAPER_PAGES.find((page) => page.href === "/paper/columns")!;
+const PAGE = pageAt("/paper/columns");
 
 export default async function ColumnsPage() {
   const mine = await readerTeamId();
   const paper = await edition(mine);
-  const names = new Map(paper.teams.map((team) => [team.teamId, team.name]));
-  const who = (teamId: string) => names.get(teamId) ?? "—";
+  const who = named(paper.teams);
 
   const stories = paper.filed.filter((story) => PAGE.kinds?.includes(story.kind));
   const [lead, ...rest] = stories;

@@ -84,8 +84,9 @@ export function newsdesk(
   if (desk.finished) {
     want(round("round-report", desk.gameweek));
     // The Monday Club's set: the round's considered read. Each is its own
-    // covered-key, so the cap spreads them across firings rather than buying
-    // six columns in one go.
+    // covered-key, so a column filed once is never queued again — which is what
+    // lets the writer file the whole set in one firing when it has room, and
+    // pick up whatever is left in the next one when it has not.
     for (const kind of MONDAY_SET) {
       want({ kind, key: `${kind}:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-${kind}` });
     }

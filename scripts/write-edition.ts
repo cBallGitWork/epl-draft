@@ -30,6 +30,8 @@ import {
 import { gatherRoundFacts } from "./edition/facts";
 import { file, prepare, type DeskContext } from "./edition/dispatch";
 import { drawSplash } from "./edition/image";
+import { CARGO, prose } from "./edition/checks";
+import { markLastWeek } from "./edition/marking";
 import { writeColumn } from "./edition/newsroom";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
@@ -229,49 +231,6 @@ async function main(): Promise<void> {
   persistFilings(filings, ledger, new Date().toISOString());
 }
 
-/** Last week's calls, marked against last week's results.
- *
- *  A conditional read, and the only one in the script: it fetches the previous
- *  period's scores ONLY when a predictions column is actually due and there
- *  are calls on file to mark. Every other firing pays nothing for it.
- *
- *  **Not this period's, which is the bug this replaces.** The predictions
- *  column files in the lock window, where by construction the round has not
- *  finished — so marking it against its own round could never produce a
- *  number, and the "you called N of 8" block was dead. A pundit is marked on
- *  LAST week: the calls are on file, the results came in, and the next column
- *  opens by owning the score.
- *
- *  It was also looking for a `round-preview` rather than a `predictions`
- *  story, so even reached it would have marked the wrong column's calls. */
-async function markLastWeek(
-  paper: PublishedStory[],
-  info: LeagueInfo,
-  period: number,
-  assignments: readonly Assignment[],
-): Promise<{ right: number; called: number } | null> {
-  if (!assignments.some((assignment) => assignment.kind === "predictions")) return null;
-
-  const last =
-    paper
-      .filter(
-        (story) =>
-          story.leagueId === FANTRAX_LEAGUE_ID &&
-          story.kind === "predictions" &&
-          story.period < period,
-      )
-      .sort((a, b) => b.period - a.period)[0] ?? null;
-  if (last === null) return null;
-
-  const raw = await fetchLiveScoring(FANTRAX_LEAGUE_ID, last.period).catch(() => null);
-  if (raw === null) return null;
-
-  const scores = new Map(mapLiveScores(raw).map((score) => [score.teamId, score]));
-  return markCalls(
-    last.ties,
-    decided(periodPairings(info.matchups, info.teams, last.period), scores),
-  );
-}
 
 /** A wire item's slug: ours, addressable, and safe as a filename and a DOM id.
  *
@@ -279,52 +238,6 @@ async function markLastWeek(
  *  than undefined, so a trailing slash produced the slug `news-` — and two of
  *  those collide, at which point the paper silently drops one. A guid carrying
  *  a query string reached an archive filename and a PNG name the same way. */
-/** The kinds whose substance lives in `extras` rather than in the body, and
- *  which member carries it. A kind absent from this table legitimately files
- *  without extras. */
-const CARGO: Partial<Record<Assignment["kind"], "quotes" | "ranks" | "captions" | "quiz">> = {
-  "power-ranking": "ranks",
-  eleven: "captions",
-  presser: "quotes",
-  studio: "quotes",
-};
-
-/** Every written surface of a filed story, as one string to check names in.
- *  The body is not all of it: the tie lines carried half of the first
- *  hallucination this caught, and the ranks and captions are prose too. */
-function prose(story: PublishedStory): string {
-  const extras = story.extras ?? {};
-  const parts: unknown[] = [
-    // Not the headline: it is title-case by construction, so every ordinary
-    // word in it reports as a stranger. A fabricated footballer does his
-    // damage in the sentence-case prose underneath.
-    story.deck,
-    story.body,
-    ...(story.ties ?? []).map((tie) => tie.line),
-    // The WRITTEN member of each cargo row and never the row itself: a rank
-    // carries a teamId, and stringifying the object put "Id" and "teamId"
-    // into the checked text as though the column had named a footballer.
-    ...sentences(extras.ranks, "line"),
-    ...sentences(extras.captions, "text"),
-    ...sentences(extras.quotes, "text"),
-  ];
-  // Each part on its own line, and every line is a sentence for the check's
-  // purposes — a rank line opens with a capital the way a sentence does.
-  return parts.filter((part): part is string => typeof part === "string").join("\n");
-}
-
-/** The written sentence out of each cargo row, by whichever key holds it.
- *  Anything that is not a string is dropped rather than stringified. */
-function sentences(rows: unknown, ...keys: string[]): string[] {
-  if (!Array.isArray(rows)) return [];
-  return rows.flatMap((row) => {
-    if (typeof row === "string") return [row];
-    if (row === null || typeof row !== "object") return [];
-    const record = row as Record<string, unknown>;
-    return keys.map((key) => record[key]).filter((value): value is string => typeof value === "string");
-  });
-}
-
 function newsSlug(key: string): string {
   const cleaned = key
     .toLowerCase()

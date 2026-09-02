@@ -16,7 +16,8 @@ import paper from "../../../data/editions/paper.json";
 //
 // `normalizePaper` filters to the league THIS app serves, which is the whole
 // rehearsal gate; ordering is `composePaper`'s and is applied by `edition.ts`,
-// which owns the clock. The seed carries no stories, which is an honest empty —
-// a missing file would be a broken build.
+// which owns the clock. An empty file is an honest empty — the paper had never
+// filed a story until 2 Sep 2026 and the front page said so rather than
+// pretending — whereas a MISSING file would be a broken build.
 
 export const filed: PublishedStory[] = normalizePaper(paper, FANTRAX_LEAGUE_ID);

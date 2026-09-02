@@ -1,4 +1,5 @@
 import { LEAGUE_NAME, clubById } from "@epl/core";
+import { named } from "../components/gazette/named";
 import Pages from "../components/gazette/Pages";
 import Teaser from "../components/gazette/Teaser";
 import Scoreboard from "../components/gazette/Scoreboard";
@@ -62,9 +63,11 @@ export default async function GazettePage() {
       (caption) => [caption.key, caption.line] as const,
     ),
   );
-  const names = new Map(paper.teams.map((team) => [team.teamId, team.name]));
-  const who = (teamId: string | null) =>
-    teamId === null ? "the wire" : (names.get(teamId) ?? "—");
+  // The same join the inside pages make, plus the one case only this page has:
+  // a deal whose other side is nobody — a waiver claim comes from the wire, not
+  // from a manager.
+  const byId = named(paper.teams);
+  const who = (teamId: string | null) => (teamId === null ? "the wire" : byId(teamId));
 
   return (
     // The paper's second column is a SIDEBAR here and never a "rail". The desk

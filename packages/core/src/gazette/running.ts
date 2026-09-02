@@ -1,5 +1,3 @@
-import type { Assignment } from "./newsdesk";
-
 // How many of a firing's assignments actually get a turn.
 //
 // **The cap counts stories FILED, not assignments considered.** That sounds
@@ -26,25 +24,4 @@ import type { Assignment } from "./newsdesk";
  *  nothing and the next one gets the turn. */
 export function hasRoom(filed: number, cap: number): boolean {
   return filed < cap;
-}
-
-/** The assignments a firing would ATTEMPT, given which of them refuse.
- *
- *  Exported for the test and for nothing else — the writer runs the same rule
- *  inline because it must interleave real model calls with it. `refuses` stands
- *  in for `prepare()` returning null. */
-export function attempted(
-  order: readonly Assignment[],
-  cap: number,
-  refuses: (assignment: Assignment) => boolean,
-): Assignment[] {
-  const out: Assignment[] = [];
-  let filed = 0;
-  for (const assignment of order) {
-    if (!hasRoom(filed, cap)) break;
-    if (refuses(assignment)) continue;
-    out.push(assignment);
-    filed += 1;
-  }
-  return out;
 }

@@ -5,6 +5,7 @@ import { edition } from "../../../edition";
 import { filed } from "../../../paper";
 import Extras from "../../../components/gazette/Extras";
 import Folio from "../../../components/gazette/Folio";
+import { named } from "../../../components/gazette/named";
 import Written from "../../../components/gazette/Written";
 import Pages from "../../../components/gazette/Pages";
 import { pageOf } from "../../../components/gazette/paperPages";
@@ -63,8 +64,7 @@ export default async function StoryPage({ params }: { params: Promise<{ slug: st
   // model goes stale the day somebody renames their team.
   const mine = await readerTeamId();
   const paper = await edition(mine);
-  const names = new Map(paper.teams.map((team) => [team.teamId, team.name]));
-  const who = (teamId: string) => names.get(teamId) ?? "—";
+  const who = named(paper.teams);
 
   const page = pageOf(story.kind);
 

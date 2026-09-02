@@ -41,6 +41,18 @@ export const PAPER_PAGES: readonly PaperPage[] = [
   },
 ];
 
+/** The page at a route, or a thrown error naming the route.
+ *
+ *  The two section pages looked themselves up with a non-null assertion, which
+ *  turns a renamed href into `undefined.label` at render — a stack trace about
+ *  a property, three frames from the table that actually disagreed. This says
+ *  which route is missing, at build, in one line. */
+export function pageAt(href: string): PaperPage {
+  const page = PAPER_PAGES.find((each) => each.href === href);
+  if (page === undefined) throw new Error(`No paper page declares ${href}.`);
+  return page;
+}
+
 /** The page a story belongs on, for a teaser that says where to turn. Null when
  *  no page claims the kind, which is ordinary: a column with no page of its own
  *  is read on the front page and nowhere else. */
