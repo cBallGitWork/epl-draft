@@ -147,7 +147,14 @@ export default function LineupPlanner({
   // it, so an empty list is the ordinary case and anything in it came from
   // Fantrax — which is exactly why it has to be said rather than assumed away.
   const broken = violations(slots, eligibility, limits);
-  const empty = limits.maxActivePlayers - slots.filter(isActive).length;
+  // **Null where the league has published no cap**, which is not nought free
+  // places but no such thing as a free place: without a stated XI size there is
+  // nothing for a shortfall to be measured against
+  // (`RosterLimits.maxActivePlayers`). The notice below simply does not appear.
+  const empty =
+    limits.maxActivePlayers === null
+      ? null
+      : limits.maxActivePlayers - slots.filter(isActive).length;
 
   function play(move: Move) {
     setSlots((current) => applyMove(current, move));
@@ -243,7 +250,7 @@ export default function LineupPlanner({
         </div>
       ) : null}
 
-      {broken.length > 0 || empty > 0 ? (
+      {broken.length > 0 || (empty !== null && empty > 0) ? (
         <ul className="flex flex-col gap-1 border border-line bg-surface px-3 py-2">
           {broken.map((violation) => (
             <li key={sentence(violation, nameOf)} className="text-2xs text-bad">
@@ -253,7 +260,7 @@ export default function LineupPlanner({
           {/* Not a violation, and deliberately worded so it cannot be read as
               one: Fantrax publishes no minimum per position, so an under-filled
               XI breaks no rule the commissioner set. */}
-          {empty > 0 ? (
+          {empty !== null && empty > 0 ? (
             <li className="text-2xs text-muted">
               {empty} empty {empty === 1 ? "place" : "places"} in the XI — allowed, and nothing
               scores from them.

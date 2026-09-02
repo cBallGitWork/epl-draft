@@ -133,4 +133,15 @@ describe("teamOfTheWeek", () => {
   it("has nothing to say before a ball is kicked", () => {
     expect(teamOfTheWeek([], limits)).toEqual({ picks: [], lines: [], shape: "" });
   });
+
+  it("names nobody when the league has published no cap on the XI", () => {
+    // Not a team of whatever the position caps add up to. Fourteen is as
+    // invented as eleven when the league has said neither.
+    expect(
+      teamOfTheWeek([performer("Haaland", "F", { goals: 3 })], {
+        ...limits,
+        maxActivePlayers: null,
+      }),
+    ).toEqual({ picks: [], lines: [], shape: "" });
+  });
 });

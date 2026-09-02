@@ -28,6 +28,15 @@ export function teamOfTheWeek(
   teams: readonly RosteredTeam[],
   limits: RosterLimits,
 ): TeamOfTheWeek {
+  // **No published total is no team**, and not a team of whatever the position
+  // caps happen to add up to. `RosterLimits.maxActivePlayers` is null where the
+  // league has not stated a cap, and its own docblock makes the decision the
+  // caller's: eleven is OUR league's answer, not the game's, and the caps sum to
+  // fourteen under our settings, so either number invented here is the exact
+  // hardcoding the position check below already refuses. The two other callers
+  // — `league/violations` and `league/moves` — both guard the same way.
+  if (limits.maxActivePlayers === null) return { picks: [], lines: [], shape: "" };
+
   const candidates = rosteredPicks(teams);
 
   const taken: Pick[] = [];
