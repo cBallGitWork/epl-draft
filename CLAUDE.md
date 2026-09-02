@@ -244,21 +244,33 @@ npm run team-codes      # issue one sign-in code per team; prints them once
 `- Environments: .env.local` at startup when it has loaded one; its absence is
 the tell.
 
-**Scripts load nothing unless their npm script says so**, and only one does:
+**Scripts load nothing unless their npm script says so**, and now two do:
 `team-codes` passes `--env-file=apps/companion/.env.local`, because the secret it
 mints hashes with must be the one the app verifies with, and reading the
-verifier's own file is what stops the two drifting.
+verifier's own file is what stops the two drifting; `edition` passes
+`--env-file-if-exists=.env.local` (the repo-root one), because the writer's keys
+are nobody else's and the app never holds them.
 
-Two scripts read a secret from the ENVIRONMENT rather than from a file, and both
-only ever run in CI: `write-edition` needs `ANTHROPIC_API_KEY` and throws without
-it, and it now needs `FANTRAX_LEAGUE_ID` too. Every other script reads public
-endpoints and needs nothing — and nothing in the tracked tree reads
-`FANTRAX_COOKIE` at all.
+**`-if-exists`, and not the plain flag.** The same script runs in CI, where there
+is no `.env.local` and the key arrives as a repository secret in the environment.
+A hard `--env-file` would abort the workflow on a missing file, which is the one
+place the file is *supposed* to be missing.
+
+`write-edition` needs `ANTHROPIC_API_KEY` and throws without it, and it needs
+`FANTRAX_LEAGUE_ID` too; `OPENAI_API_KEY` is optional and costs only the drawing.
+Every other script reads public endpoints and needs nothing — and nothing in the
+tracked tree reads `FANTRAX_COOKIE` at all.
 
 *This paragraph used to say scripts read the repo-root file via `node --env-file`.
 Nothing did: no npm script passed the flag, so `npm run team-codes` failed with
 "SESSION_SECRET is not set" while both files held one, and the remedy it printed
 would have invalidated every code already issued. Corrected 27 Aug 2026.*
+
+*And it said both key-reading scripts "only ever run in CI". `write-edition` ran
+locally on 2 Sep to file the paper's first stories, which is what exposed that
+`npm run edition` passed no `--env-file` at all: a key sitting in either
+`.env.local` was silently ignored, and the command failed as though no key
+existed anywhere. Corrected 2 Sep 2026.*
 
 `FANTRAX_LEAGUE_ID` selects the league the app serves; it defaults to the
 rehearsal league. Setting it to `ayyoh3n2mr326v2o` is **most** of the 10 Oct
