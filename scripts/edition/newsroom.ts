@@ -38,7 +38,47 @@ export async function writeColumn(system: string, brief: string): Promise<Record
   if (body.stop_reason !== "end_turn") throw new Error(`Stopped on ${body.stop_reason}, not a finished column.`);
 
   const text = body.content?.find((block) => block.type === "text")?.text ?? "";
-  return JSON.parse(text.trim().replace(/^```(?:json)?\n?|```$/g, "")) as Record<string, unknown>;
+  const fenced = text.trim().replace(/^```(?:json)?\n?|```$/g, "");
+  try {
+    return JSON.parse(fenced) as Record<string, unknown>;
+  } catch {
+    // **A real newline inside a JSON string is not JSON.** The house style asks
+    // for paragraphs separated by blank lines and the model occasionally
+    // obliges literally, inside the quotes, where the spec requires `\n`. Two
+    // of ten columns died that way on 2 Sep — good prose, thrown away on a
+    // control character.
+    //
+    // So one repair and only one: escape the control characters that appear
+    // INSIDE string literals, then parse again. It is deliberately not a
+    // tolerant parser — a column whose braces are wrong is still a failure, and
+    // a second exception here is the honest outcome.
+    return JSON.parse(__escapeControlsInStrings(fenced)) as Record<string, unknown>;
+  }
+}
+
+/** Escape raw newlines, tabs and carriage returns that sit inside a JSON string
+ *  literal, leaving the ones between fields alone. Walks the text tracking
+ *  whether it is inside quotes, which is enough to tell the two apart. */
+export function __escapeControlsInStrings(json: string): string {
+  const ESCAPES: Record<string, string> = { "\n": "\\n", "\r": "\\r", "\t": "\\t" };
+  let out = "";
+  let inString = false;
+  let escaped = false;
+  for (const character of json) {
+    if (escaped) {
+      out += character;
+      escaped = false;
+      continue;
+    }
+    if (character === "\\" && inString) {
+      out += character;
+      escaped = true;
+      continue;
+    }
+    if (character === '"') inString = !inString;
+    out += inString && ESCAPES[character] !== undefined ? ESCAPES[character] : character;
+  }
+  return out;
 }
 
 const ROUND_KIND: Record<EditionKind, StoryKind> = {

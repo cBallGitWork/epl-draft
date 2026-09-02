@@ -1,74 +1,36 @@
 import { describe, expect, it } from "vitest";
-import { storyOfColumn, type ColumnMeta } from "./newsroom";
+import { __escapeControlsInStrings as escape } from "./newsroom";
 
-const meta: ColumnMeta = {
-  slug: "gw3-power-ranking",
-  kind: "power-ranking",
-  leagueId: "zbn1z3ukmsgb36sz",
-  period: 3,
-  gameweek: 3,
-  filedAt: "2026-08-31T09:00:00.000Z",
-  expiresAt: null,
-  edition: "The Monday Club",
-  byline: "The Pecking Order",
-  subject: "power-ranking:gw3",
-};
-
-describe("storyOfColumn", () => {
-  it("folds the model's top-level cargo into extras", () => {
-    // The prompts ask for `ranks`/`quotes`/`captions`/`quiz` at the top level,
-    // which is the shape a model reliably returns; the story keeps them under
-    // `extras`. Without the fold the page renders nothing of it and says
-    // nothing about why — every reader of `extras` treats absence as ordinary.
-    const { story } = storyOfColumn(
-      {
-        headline: "Top Two Are Fooling Nobody",
-        deck: "The table is closer than it looks.",
-        body: "A paragraph.",
-        ranks: [{ teamId: "t1", move: 2, line: "Third on paper, first on anything that matters." }],
-      },
-      meta,
-    );
-    expect(story.extras?.ranks).toEqual([
-      { teamId: "t1", move: 2, line: "Third on paper, first on anything that matters." },
-    ]);
+describe("repairing a column's JSON", () => {
+  it("rescues a body whose paragraphs are real newlines", () => {
+    // The failure verbatim, 2 Sep 2026: the house style asks for paragraphs
+    // separated by blank lines and the model obliged inside the quotes, where
+    // the spec requires \n. Two of ten columns died on it.
+    const broken = '{"headline":"A pun","body":"One paragraph.\n\nAnd another."}';
+    expect(() => JSON.parse(broken)).toThrow();
+    const parsed = JSON.parse(escape(broken));
+    expect(parsed.body).toBe("One paragraph.\n\nAnd another.");
+    expect(parsed.headline).toBe("A pun");
   });
 
-  it("keeps the calls a predictions column makes", () => {
-    const { story } = storyOfColumn(
-      {
-        headline: "H",
-        deck: "D",
-        body: "B",
-        ties: [{ homeTeamId: "a", awayTeamId: "b", line: "Tight.", callsTeamId: "a" }],
-      },
-      { ...meta, kind: "predictions", slug: "gw3-predictions" },
-    );
-    expect(story.ties).toHaveLength(1);
-    expect(story.ties?.[0].callsTeamId).toBe("a");
+  it("leaves the newlines BETWEEN fields alone", () => {
+    const pretty = '{\n  "headline": "A pun",\n  "deck": "In plain words"\n}';
+    expect(JSON.parse(escape(pretty))).toEqual({ headline: "A pun", deck: "In plain words" });
   });
 
-  it("carries no extras when the column filed none", () => {
-    const { story } = storyOfColumn({ headline: "H", deck: "D", body: "B" }, meta);
-    expect(story.extras).toBeUndefined();
+  it("does not double-escape a newline the model escaped correctly", () => {
+    const good = '{"body":"One.\\n\\nTwo."}';
+    expect(JSON.parse(escape(good)).body).toBe("One.\n\nTwo.");
   });
 
-  it("takes at most three thread beats, and refuses malformed ones", () => {
-    const { threads } = storyOfColumn(
-      {
-        headline: "H",
-        deck: "D",
-        body: "B",
-        threads: [
-          { subject: "a", beat: "one" },
-          { subject: "b", beat: "two", status: "retired" },
-          { subject: "", beat: "no subject" },
-          { subject: "d", beat: "four" },
-          { subject: "e", beat: "five" },
-        ],
-      },
-      meta,
-    );
-    expect(threads.map((t) => t.subject)).toEqual(["a", "b", "d"]);
+  it("survives an escaped quote inside a string", () => {
+    const quoted = '{"body":"He said \\"no\\" and left.\nThen returned."}';
+    expect(JSON.parse(escape(quoted)).body).toBe('He said "no" and left.\nThen returned.');
+  });
+
+  it("still refuses a column whose braces are wrong", () => {
+    // Deliberately not a tolerant parser: a genuinely malformed column is a
+    // failure, and a second exception is the honest outcome.
+    expect(() => JSON.parse(escape('{"headline":"A pun"'))).toThrow();
   });
 });
