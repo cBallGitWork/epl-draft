@@ -33,6 +33,10 @@ const TABS = [
 
 export type PremSection = (typeof TABS)[number]["key"];
 
+/** The board's own route, read off `TABS` rather than re-typed: a route spelled
+ *  in three files is a route that can be renamed in two of them. */
+export const TEAM_STATS = TABS[3].href;
+
 /** The route the club pages hang off, named once. A route spelled in five files
  *  is a route that can be renamed in four of them — `SectionNav` records the
  *  same decision for `/league`'s two query-string routes. */
