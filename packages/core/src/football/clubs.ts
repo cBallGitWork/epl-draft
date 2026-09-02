@@ -53,19 +53,50 @@ export function crestUrl(club: Pick<Club, "code">): string {
   return `${PL_ASSET_BASE}/badges/t${club.code}.svg`;
 }
 
-/** Some clubs' primary is near-white, so a white label on it vanishes. Pick the
- *  readable ink for text sitting on the club's primary colour. */
+/** Some colours are near-white and a white label on them vanishes. Pick the
+ *  readable ink for text sitting on one.
+ *
+ *  **Whichever of the two actually contrasts more, computed** — not a brightness
+ *  guess. This asked Rec. 601 luma whether the ground was "light" and took white
+ *  whenever it was not, which is a different question from the one that matters
+ *  and gets a different answer on a saturated mid-tone: a #e08a00 orange scores
+ *  0.58 luma, reads as "dark", and takes white ink at **2.69:1** — half the AA
+ *  floor. `tools/ui/sweep.mjs` found three such pairs the day the fantasy teams
+ *  got colours of their own, because a hand-authored palette of twenty clubs had
+ *  happened not to contain one.
+ *
+ *  Every one of the twenty clubs gets the same ink it got before, so this is a
+ *  fix rather than a restyle — checked against the whole table, and the two
+ *  tightest (Arsenal 4.49, Sunderland 4.48) were already as good as their reds
+ *  allow either way round.
+ *
+ *  It is still not a guarantee: a mid-grey has no readable ink at all and this
+ *  returns the better of two bad answers rather than pretending. The palette is
+ *  hand-authored and `sweep` measures it, which is where a real floor is kept. */
 export function inkOn(colours: ClubColours): string {
-  return isLight(colours.primary) ? "#0b0c10" : "#ffffff";
+  return contrast(colours.primary, "#ffffff") >= contrast(colours.primary, INK)
+    ? "#ffffff"
+    : INK;
 }
 
-function isLight(hex: string): boolean {
+/** The desk's near-black, for a plate that wants dark ink. */
+const INK = "#0b0c10";
+
+/** WCAG 2.1 relative luminance, which is what a contrast ratio is defined on —
+ *  and is not luma. The sRGB channels are linearised first; skipping that step
+ *  is the whole of the bug above. */
+function luminance(hex: string): number {
   const h = hex.replace("#", "");
-  const r = parseInt(h.slice(0, 2), 16);
-  const g = parseInt(h.slice(2, 4), 16);
-  const b = parseInt(h.slice(4, 6), 16);
-  // Rec. 601 luma — good enough for a contrast decision, and dependency-free.
-  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.6;
+  const channels = [0, 2, 4].map((at) => parseInt(h.slice(at, at + 2), 16) / 255);
+  const [r, g, b] = channels.map((v) =>
+    v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4,
+  );
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contrast(a: string, b: string): number {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
 }
 
 /** The club's kit, keyed on the same stable club code as the crest.
