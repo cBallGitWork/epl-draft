@@ -43,21 +43,36 @@ export interface FootballPlayer {
   optaCode: string | null;
   /** What he has done across the season so far, as FPL counts it.
    *
-   *  **Only the things our league does not score.** Fantrax is the authority on
-   *  goals, assists and clean sheets because those are what it pays for, and
-   *  printing FPL's count of the same fact beside theirs is exactly the
-   *  provenance collision DESIGN §7 forbids. What FPL has and Fantrax has not is
-   *  the UNDERLYING play — expected goals, tackles, recoveries — and the
-   *  denominators under everything, minutes and starts. */
+   *  Two kinds of number, and the difference is who is entitled to state it.
+   *  The UNDERLYING play — expected goals, tackles, recoveries, and the
+   *  denominators under everything — is FPL's alone; Fantrax publishes none of
+   *  it. The three the competition itself counts are carried too, and
+   *  `SeasonTotals` records the bound they come with. */
   season: SeasonTotals;
 }
 
 /** A player's season to date, from FPL's own bootstrap.
  *
- *  Every field is present on all 629 elements (probed 2 Sep 2026), so these are
+ *  Every field is present on all 651 elements (probed 2 Sep 2026), so these are
  *  plain numbers rather than nullable: a man who has not played reads nought
  *  everywhere, which is true of him and not an absence. */
 export interface SeasonTotals {
+  /** What the competition counts him for: goals, assists, clean sheets.
+   *
+   *  **These were deliberately absent until 2 Sep 2026**, on the rule stated
+   *  below: Fantrax is the authority on what Fantrax pays for, and printing
+   *  FPL's count of the same fact beside theirs is the provenance collision
+   *  DESIGN §7 forbids. That rule is unchanged and it is a rule about a SCREEN,
+   *  not about the layer — it forbids the two counts side by side, and the
+   *  Premiership section has no Fantrax number on it at all. There, FPL's count
+   *  of a Premier League goal simply is the Premier League's count.
+   *
+   *  So the bound travels with the field: **these may not appear on a fantasy
+   *  screen beside a Fantrax figure.** `/prem` is theirs; `/players`,
+   *  `/squad/[teamId]` and the matchup boards are not. */
+  goals: number;
+  assists: number;
+  cleanSheets: number;
   minutes: number;
   /** Appearances from the start, which is not the same as appearances — a
    *  substitute has minutes and no start. */

@@ -60,4 +60,6 @@ export type { FinishedState, RoundState } from "./round";
 export { fixtureLabel, kickedOff, nextFixtures, oppositionByClub } from "./opposition";
 export { leagueTable } from "./table";
 export type { TableRow } from "./table";
+export { clubStats } from "./clubStats";
+export type { ClubStats, Record as ClubRecord, Result } from "./clubStats";
 export type { Opposition } from "./opposition";

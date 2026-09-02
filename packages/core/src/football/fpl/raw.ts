@@ -37,6 +37,12 @@ interface RawElement {
   // the mapper is where it becomes a number.
   minutes: number;
   starts: number;
+  /** The three the competition itself counts. Present and non-null on all 651
+   *  elements, probed 2 Sep 2026 — the same denominator as the rest of this
+   *  block, which is why they are plain rather than optional. */
+  goals_scored: number;
+  assists: number;
+  clean_sheets: number;
   expected_goals: string;
   expected_assists: string;
   expected_goals_conceded: string;

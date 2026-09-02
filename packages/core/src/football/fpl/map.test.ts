@@ -12,6 +12,7 @@ const bootstrap = (over: Partial<RawBootstrap> = {}): RawBootstrap => ({
       // Season totals as FPL sends them: the counts as numbers, the expected
       // trio as strings. Real figures rather than zeros, so the mapper's
       // string-to-number coercion is actually under test.
+      goals_scored: 0, assists: 1, clean_sheets: 2,
       minutes: 180, starts: 2, expected_goals: "0.12", expected_assists: "0.34",
       expected_goals_conceded: "1.53", tackles: 3,
       clearances_blocks_interceptions: 7, recoveries: 19, saves: 8,
@@ -79,6 +80,16 @@ describe("mapPlayers", () => {
     const [p] = mapPlayers(bootstrap());
     expect(p.code).toBe(154561);
     expect(p.fullName).toBe("David Raya Martín");
+  });
+
+  it("carries the three the competition itself counts", () => {
+    // Nought is a real reading here and not an absence: a keeper who has scored
+    // no goals has scored none. What is under test is that the three arrive at
+    // all — they were deliberately dropped until 2 Sep 2026.
+    const [p] = mapPlayers(bootstrap());
+    expect(p.season.goals).toBe(0);
+    expect(p.season.assists).toBe(1);
+    expect(p.season.cleanSheets).toBe(2);
   });
 
   // element_type is FPL's fantasy classification, not a property of the footballer.

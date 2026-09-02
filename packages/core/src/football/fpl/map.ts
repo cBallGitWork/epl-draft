@@ -38,6 +38,9 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
       // numbers today is an observation rather than a guarantee. It coerces a
       // missing or unparseable value to nought, which is the right reading for
       // a season total — a player FPL says nothing about has done nothing.
+      goals: NUMERIC(e.goals_scored),
+      assists: NUMERIC(e.assists),
+      cleanSheets: NUMERIC(e.clean_sheets),
       minutes: NUMERIC(e.minutes),
       starts: NUMERIC(e.starts),
       expectedGoals: NUMERIC(e.expected_goals),

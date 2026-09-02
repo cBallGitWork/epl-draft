@@ -18,6 +18,26 @@ declare const process: { env: Record<string, string | undefined> };
 /** The competition, as our members know it. */
 export const LEAGUE_NAME = "Tim Hortons Pro League";
 
+/** The competition the football layer describes, as it is headed on the desk.
+ *
+ *  Ours to state rather than FPL's to publish: the bootstrap names 20 clubs and
+ *  38 events and nowhere says what the thing they are playing in is called.
+ *  Deliberately the period name Championship Manager 99/00 heads its own table
+ *  screen with — this section is a reproduction of `cm9900/24.jpg`, and a
+ *  reproduction that says "Premier League" is a modern app in CM's clothes. */
+export const COMPETITION_NAME = "FA Barclays Premiership";
+
+/** Where the season's cuts fall, counted from each end of the table.
+ *
+ *  A rule of the competition and not of ours, which is the whole test the layer
+ *  split applies — the football layer may hold a constant precisely because
+ *  nobody in our league can change this one, exactly as `table.ts` holds three
+ *  for a win. FPL publishes neither number.
+ *
+ *  `relegate` counts UP from the bottom rather than naming a place, so a
+ *  division of any size draws its line where the division actually ends. */
+export const PREMIERSHIP_CUTS = { qualify: 4, relegate: 3 };
+
 /** Premier League season this build targets, in FPL's own notation. */
 export const SEASON = "2026/27";
 

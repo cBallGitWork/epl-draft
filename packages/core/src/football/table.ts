@@ -3,10 +3,16 @@ import type { Club, Fixture } from "./types";
 // The Premier League table, computed from finished fixtures.
 //
 // **Computed, and it has to be.** FPL's bootstrap carries `played`, `win`,
-// `draw`, `loss`, `points` and `position` on every club and they are zero on
-// all twenty with a gameweek already finished (counted 31 Aug 2026) — the same
-// shape of dead field as `squad_number`. A field that is always null is not a
-// field, so the table is built from results rather than read.
+// `draw`, `loss` and `points` on every club and every one of them is nought on
+// all twenty with two gameweeks finished and signed off (re-counted 2 Sep 2026)
+// — the same shape of dead field as `squad_number`. A field that is always
+// nought is not a field, so the table is built from results rather than read.
+//
+// `position` is the exception and is still not a way out: it is non-zero and
+// distinct on all twenty, but it sits beside a `played` of nought on every club,
+// so whatever it is ordering it is not a record anybody has played. This file
+// used to say it was nought too, which was wrong about the field and right about
+// the conclusion.
 //
 // This belongs in the FOOTBALL layer precisely because its rules are fixed for
 // everyone: three for a win, goal difference, then goals scored, is the
