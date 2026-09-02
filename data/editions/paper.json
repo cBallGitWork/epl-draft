@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-02T16:10:48.299Z",
+  "updatedAt": "2026-09-02T16:43:19.740Z",
   "stories": [
     {
       "slug": "gw2-round-report",
@@ -269,18 +269,66 @@
       "leagueId": "w05aib75mtj36y1g",
       "period": 2,
       "gameweek": 2,
-      "filedAt": "2026-09-02T16:07:07.551Z",
+      "filedAt": "2026-09-02T16:43:19.731Z",
       "expiresAt": null,
       "edition": "The Monday Club",
       "byline": "The Selector",
-      "headline": "Bruno Runs Deep, Dedić Runs Dry",
-      "deck": "B.Fernandes hauls at the head of the team of the week while Dedić's clean-sheet return rots on his own bench",
-      "body": "B.Fernandes is the man of the week and it is not close. Three goals and an assist from midfield is the sort of line forwards dream about, and 123 got it from a man wearing the M. Everything else in the eleven orbits him.\n\nThe back three picked itself on the balance of goals and shutouts. Tarkowski went up and scored, a defender doing forward's work. Calafiori kept the sheet clean and still found an assist. And then there is Dedić, an assist and a clean sheet of his own, benched by his own manager at test3331, which is the loudest note in the whole side. The football does not care where you were sitting.\n\nThe midfield is where the week lived. Cherki's brace off the bench of nobody's imagination, Gibbs-White's goal and assist, Groß mirroring it, Scott chipping in a goal and a clean sheet from the middle. Five in a five-man line and each of them earned the shirt on merit, not on filler.\n\nUp front Haaland's two and the twin one-and-assists from Mbeumo and João Pedro carry the front three without argument. Mbeumo doubling up as creator and finisher is the sort of shift that keeps a forward nailed on.\n\nSpare a thought for the men left out. Scott's clean sheet from midfield is a rare thing, and it edged sharper claims. Nobody in this eleven blanked, nobody was carried. The 3-5-3 leans hard on that packed middle, and this week the middle held.",
+      "headline": "Fernandes Files A Full Report",
+      "deck": "B.Fernandes hauls three goals and an assist to headline the team of the week in a 3-5-3.",
+      "body": "B.Fernandes is the man of the week and the argument is over before it starts: three goals and an assist from midfield, ninety minutes, nothing left on the table. A midfielder outscoring the forwards is the whole story, and 123 had him.\n\nThe back three picks itself on returns and clean sheets both. Calafiori kept his sheet and chipped in an assist, Tarkowski went one better and scored his, and that goal is what edges 123's Reinildo out of the frame despite a six that on another week walks in. The Dedić case is its own scandal below.\n\nThe middle is where this side is won. Cherki's two goals from midfield off eighty-one minutes is a forward's return in a playmaker's shirt, Gibbs-White and Groß both paired a goal with an assist, and Scott married a goal to a clean sheet from the engine room. Five across the park and every one of them returned twice over.\n\nUp top Haaland's brace leads a front line that all pulled their weight: Mbeumo and João Pedro each took a goal and an assist. Three forwards, six combined returns, no passengers.\n\nUnlucky is the wrong word for Dedić, who was benched by his own manager and still turned in an assist and a clean sheet, so spare the sympathy for someone who missed out entirely. The three at the back over a fourth defender is the only shape that fits this many attacking midfielders, and it fits like a glove.",
       "subjects": [
         "eleven:gw2"
       ],
       "image": null,
-      "ties": []
+      "ties": [],
+      "extras": {
+        "captions": [
+          {
+            "key": "B.Fernandes",
+            "line": "Three goals and an assist from midfield, and the rest of the eleven are playing for second."
+          },
+          {
+            "key": "Haaland",
+            "line": "A brace and the responsibility of leading the line, both discharged without fuss."
+          },
+          {
+            "key": "Cherki",
+            "line": "Two goals inside eighty-one minutes, a forward's haul stitched onto a midfielder's shirt."
+          },
+          {
+            "key": "Gibbs-White",
+            "line": "A goal and an assist across the full ninety, the complete midfield afternoon."
+          },
+          {
+            "key": "Mbeumo",
+            "line": "A goal and an assist, and nobody in this front three carried more than his share better."
+          },
+          {
+            "key": "João Pedro",
+            "line": "A goal and an assist, quietly doing exactly what a forward in this side is asked to."
+          },
+          {
+            "key": "Scott",
+            "line": "A goal and a clean sheet from midfield in eighty-six, two jobs done at once."
+          },
+          {
+            "key": "Groß",
+            "line": "A goal and an assist over ninety, ruthlessly efficient in the middle of the park."
+          },
+          {
+            "key": "Tarkowski",
+            "line": "A defender who scored his own goal, and that goal is why he is here."
+          },
+          {
+            "key": "Dedić",
+            "line": "An assist and a clean sheet from a man his own manager did not trust to start."
+          },
+          {
+            "key": "Calafiori",
+            "line": "A clean sheet kept and an assist supplied, the defender who did both ends of the pitch."
+          }
+        ]
+      }
     },
     {
       "slug": "gw2-power-ranking",

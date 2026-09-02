@@ -3,7 +3,6 @@
     "covered": [
       "round-report:gw2",
       "power-ranking:gw2",
-      "eleven:gw2",
       "dodgers:gw2",
       "presser:gw2",
       "match:gw2:2v94",
@@ -13,15 +12,23 @@
       "wire:through-gw2",
       "studio:gw2",
       "match:gw2:56v54",
-      "news:https://www.bbc.co.uk/sport/football/articles/c3wj1qw5x04o"
+      "news:https://www.bbc.co.uk/sport/football/articles/c3wj1qw5x04o",
+      "eleven:gw2"
     ],
     "threads": [
       {
-        "subject": "123's twin Sunderland defenders",
-        "beat": "Reinildo and Hume return six each, twelve off one clean sheet",
+        "subject": "Dedić benched by his own manager",
+        "beat": "Assist and a clean sheet from a man his own manager left on the bench.",
         "status": "open",
         "beats": 1,
-        "lastUsedAt": "2026-09-02T16:10:48.299Z"
+        "lastUsedAt": "2026-09-02T16:43:19.740Z"
+      },
+      {
+        "subject": "123's twin Sunderland defenders",
+        "beat": "Reinildo's six is left out, edged at the back by Tarkowski's goal.",
+        "status": "retired",
+        "beats": 3,
+        "lastUsedAt": "2026-09-02T16:43:19.740Z"
       },
       {
         "subject": "test3's Ndiaye at his new club",
