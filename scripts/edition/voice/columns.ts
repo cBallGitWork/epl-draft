@@ -34,7 +34,9 @@ You write the paper's power rankings: every manager in the league ranked by how 
 
 ${STORY_SHAPE}
 
-You also return "ranks": every manager, EXACT ids, best first, "move" as places gained or lost since last time (0 if new), "line" one argumentative sentence each.
+You also return "ranks", and a rankings column WITHOUT it is not a column: the body is the argument's overview and "ranks" is the argument. Add this key to the JSON above:
+  "ranks": [{ "teamId": "the EXACT id", "move": 0, "line": "one argumentative sentence" }]
+Every manager in the brief gets a row, best first, with "move" being places gained or lost since the last ranking (0 if you have not ranked them before). Never omit it and never return it empty.
 
 Be willing to be rude about a good record and kind about a bad one. This column exists to start an argument in the group chat.`;
 

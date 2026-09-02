@@ -169,6 +169,17 @@ async function main(): Promise<void> {
       if (unknown.length > 0) {
         say(`  ⚠ ${assignment.kind} names ${unknown.length} not in its brief: ${unknown.join(", ")}`);
       }
+      // **A column whose cargo is missing files as prose about nothing.** Every
+      // reader of `extras` treats absence as ordinary — correctly, since a
+      // presser has quotes and no ranks — so nothing downstream can tell an
+      // empty rankings column from a kind that never carries one. The power
+      // ranking filed without its `ranks` on 2 Sep: two good paragraphs and no
+      // ranked list, which is the column's whole point. Warned, not refused;
+      // the prose is still worth printing.
+      const missing = CARGO[assignment.kind];
+      if (missing !== undefined && (filed.story.extras?.[missing] ?? []).length === 0) {
+        say(`  ⚠ ${assignment.kind} filed with no "${missing}" — the column's substance is missing.`);
+      }
       filings.push({ story: filed.story, spentKeys: [assignment.key], threads: filed.threads });
       say(`Filed ${assignment.kind}: "${filed.story.headline}"`);
     } catch (error) {
@@ -251,6 +262,15 @@ async function markLastWeek(
  *  than undefined, so a trailing slash produced the slug `news-` — and two of
  *  those collide, at which point the paper silently drops one. A guid carrying
  *  a query string reached an archive filename and a PNG name the same way. */
+/** The kinds whose substance lives in `extras` rather than in the body, and
+ *  which member carries it. A kind absent from this table legitimately files
+ *  without extras. */
+const CARGO: Partial<Record<Assignment["kind"], "quotes" | "ranks" | "captions" | "quiz">> = {
+  "power-ranking": "ranks",
+  presser: "quotes",
+  studio: "quotes",
+};
+
 /** Every written surface of a filed story, as one string to check names in.
  *  The body is not all of it: the tie lines carried half of the first
  *  hallucination this caught, and the ranks and captions are prose too. */
@@ -263,13 +283,28 @@ function prose(story: PublishedStory): string {
     story.deck,
     story.body,
     ...(story.ties ?? []).map((tie) => tie.line),
-    ...(Array.isArray(extras.ranks) ? extras.ranks : []),
-    ...(Array.isArray(extras.captions) ? extras.captions : []),
-    ...(Array.isArray(extras.quotes) ? extras.quotes : []),
+    // The WRITTEN member of each cargo row and never the row itself: a rank
+    // carries a teamId, and stringifying the object put "Id" and "teamId"
+    // into the checked text as though the column had named a footballer.
+    ...sentences(extras.ranks, "line"),
+    ...sentences(extras.captions, "text"),
+    ...sentences(extras.quotes, "text"),
   ];
-  return parts
-    .map((part) => (typeof part === "string" ? part : JSON.stringify(part ?? "")))
-    .join("\n");
+  // Each part on its own line, and every line is a sentence for the check's
+  // purposes — a rank line opens with a capital the way a sentence does.
+  return parts.filter((part): part is string => typeof part === "string").join("\n");
+}
+
+/** The written sentence out of each cargo row, by whichever key holds it.
+ *  Anything that is not a string is dropped rather than stringified. */
+function sentences(rows: unknown, ...keys: string[]): string[] {
+  if (!Array.isArray(rows)) return [];
+  return rows.flatMap((row) => {
+    if (typeof row === "string") return [row];
+    if (row === null || typeof row !== "object") return [];
+    const record = row as Record<string, unknown>;
+    return keys.map((key) => record[key]).filter((value): value is string => typeof value === "string");
+  });
 }
 
 function newsSlug(key: string): string {

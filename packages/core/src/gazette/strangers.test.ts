@@ -60,7 +60,25 @@ describe("strangers", () => {
   });
 
   it("reports each stranger once, sorted, however often it appears", () => {
-    const prose = "Dedić again. Dedić once more, alongside Isak.";
+    const prose = "At the back Dedić held firm. Groß found Dedić again, alongside Isak.";
     expect(strangers(prose, BRIEF)).toEqual(["Dedić", "Isak"]);
+  });
+
+  it("treats the start of a line as the start of a sentence", () => {
+    // A power ranking's rows arrive one per line. "Top of the table..." opens
+    // a line rather than following a full stop, and reported as a stranger
+    // until the check learned that a newline opens a sentence too.
+    const prose = "League-high 103 and third.\nTop of the table, 96 scored.";
+    expect(strangers(prose, BRIEF)).toEqual([]);
+  });
+
+  it("forgives a capitalised word that only ever opens a sentence", () => {
+    // "Losing" tripped the check on its first live run. A stop-list of openers
+    // always lags the prose, so the shape decides: a word found only after a
+    // full stop and followed by lowercase is doing an opener's job. A man the
+    // brief never named turns up mid-sentence, because that is where a paper
+    // reports what he did.
+    const prose = "Losing to test4 by 11 is no disgrace. Elsewhere the margins were tighter.";
+    expect(strangers(prose, BRIEF)).toEqual([]);
   });
 });

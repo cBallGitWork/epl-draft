@@ -31,25 +31,25 @@ const NOT_A_NAME = new Set([
   // Sentence openers and connectives that appear capitalised mid-prose.
   "A", "An", "And", "As", "At", "Across", "After", "All", "Already", "Also",
   "Another", "Any", "Are", "Around", "Away",
-  "Back", "Best", "Both", "But", "By",
-  "Down", "During",
+  "Back", "Beating", "Best", "Both", "Both", "But", "By",
+  "Down", "Dropping", "During",
   "Each", "Elsewhere", "Even", "Every", "Everything",
   "First", "For", "Four", "From", "Full",
   "He", "Her", "Here", "His", "How", "However",
   "If", "In", "Into", "Is", "It", "Its",
   "Just",
-  "Last", "Left",
+  "Last", "Leading", "Left", "Losing",
   "More", "Most",
   "Never", "New", "Next", "Nine", "No", "Nobody", "None", "Not", "Nothing", "Now",
   "Of", "On", "One", "Only", "Or", "Others", "Out", "Over",
-  "Past", "Perhaps",
+  "Past", "Perhaps", "Playing", "Pointless",
   "Right",
-  "Second", "Seven", "She", "Since", "Six", "So", "Some", "Still",
+  "Scoring", "Second", "Seven", "She", "Since", "Six", "So", "Some", "Still",
   "Ten", "That", "The", "Their", "Them", "Then", "There", "These", "They",
   "Third", "This", "Those", "Three", "Through", "To", "Two",
   "Under", "Until", "Up",
   "West", "What", "When", "Where", "Which", "While", "Who", "Whose", "With",
-  "Yet", "You", "Your",
+  "Watching", "Winning", "Yet", "You", "Your",
   // Football furniture that is capitalised but is not a person.
   "Full", "Premier", "League", "Saturday", "Sunday", "Monday", "Tuesday",
   "Wednesday", "Thursday", "Friday",
@@ -111,6 +111,13 @@ export function strangers(prose: string, brief: string): string[] {
     // beside it is ALSO unknown — that is a whole stranger rather than a
     // fuller spelling of somebody we were given.
     if (nextTo(prose, word, known)) continue;
+    // **Only ever at the start of a sentence, and never anywhere else.** A
+    // stop-list of openers ("Elsewhere", "Losing", "Across") is a list that
+    // will always lag the prose, so the shape is checked instead: a word that
+    // appears exclusively after a full stop is doing a sentence opener's job.
+    // A footballer the brief never named turns up mid-sentence too, because
+    // that is where a paper reports what he did.
+    if (alwaysOpensASentence(prose, word)) continue;
     found.add(word);
   }
   return [...found].sort();
@@ -124,4 +131,29 @@ function nextTo(prose: string, word: string, known: Set<string>): boolean {
   const pattern = new RegExp(`${escaped}[\\s]+(\\p{Lu}[\\p{L}'’-]*)`, "gu");
   const after = [...prose.matchAll(pattern)].map((match) => match[1].replace(/['’]s$/u, ""));
   return after.length > 0 && after.every((next) => known.has(next));
+}
+
+/** Whether every occurrence of `word` sits at the start of a sentence — after
+ *  a full stop, or at the very beginning of a line. A name that never once
+ *  appears mid-sentence is almost certainly a capitalised ordinary word. */
+function alwaysOpensASentence(prose: string, word: string): boolean {
+  const escaped = word.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  const every = [...prose.matchAll(new RegExp(escaped, "gu"))];
+  if (every.length === 0) return false;
+  return every.every((match) => {
+    const before = prose.slice(0, match.index).trimEnd();
+    // A newline opens a sentence as surely as a full stop does: each rank line
+    // and each tie line arrives as its own line, and the first word of one is
+    // in exactly the position "Elsewhere" or "Top" occupies.
+    const line = prose.slice(0, match.index);
+    const opens =
+      before === "" || /[.!?:]$/u.test(before) || /\n[ \t]*$/u.test(line);
+    if (!opens) return false;
+    // An opener is only forgiven when a lowercase word follows it: "Losing to
+    // test4 by 11" is a sentence, whereas "Dedić kept a clean sheet" opens
+    // with a man's name. The distinction is whether the NEXT word could be
+    // the subject — a name is followed by what he did.
+    const after = prose.slice(match.index + word.length).trimStart();
+    return /^\p{Ll}/u.test(after);
+  });
 }
