@@ -1,8 +1,24 @@
 {
   "w05aib75mtj36y1g": {
     "covered": [
-      "round-report:gw2"
+      "round-report:gw2",
+      "power-ranking:gw2"
     ],
-    "threads": []
+    "threads": [
+      {
+        "subject": "123's scoring ceiling",
+        "beat": "103 again and a 41-point win, still only third; the arithmetic is robbing them.",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-02T15:24:39.902Z"
+      },
+      {
+        "subject": "testf's phantom zero",
+        "beat": "94 scored and beaten by eleven; two rounds, two blanks, zero justice.",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-02T15:24:39.902Z"
+      }
+    ]
   }
 }
