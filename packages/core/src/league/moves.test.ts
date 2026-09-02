@@ -19,7 +19,14 @@ import planning from "./__fixtures__/lineupPlanning.json";
 
 const slots = planning.slots as RosterSlot[];
 const eligibility = eligibilityOf(planning.eligibility);
-const limits = planning.rehearsalLimits as RosterLimits;
+// The recorded rehearsal league publishes every cap, so these are numbers here
+// even though the type allows null — a league that has not said is a different
+// case and `violations.test.ts` covers it separately.
+const limits = planning.rehearsalLimits as RosterLimits & {
+  maxTotalPlayers: number;
+  maxActivePlayers: number;
+  maxReservePlayers: number;
+};
 const realLimits = planning.realLimits as RosterLimits;
 
 const at = (id: string) => slots.find((s) => s.fantraxId === id);

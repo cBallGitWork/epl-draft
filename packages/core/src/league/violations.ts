@@ -34,7 +34,11 @@ export function violations(
   const found: Violation[] = [];
   const active = slots.filter(isActive);
 
-  if (active.length > limits.maxActivePlayers) {
+  // **A cap of null is a cap nobody can break.** Each of these guards the null
+  // explicitly rather than leaning on a comparison, because `x > null` coerces
+  // to `x > 0` and reports every squad as illegal — which is the bug this
+  // nullability exists to make unwritable.
+  if (limits.maxActivePlayers !== null && active.length > limits.maxActivePlayers) {
     found.push({ kind: "too-many-active", count: active.length, cap: limits.maxActivePlayers });
   }
 
@@ -42,7 +46,7 @@ export function violations(
   // Fantrax's, and a third value belongs in this count rather than vanishing from
   // both of them.
   const reserves = slots.length - active.length;
-  if (reserves > limits.maxReservePlayers) {
+  if (limits.maxReservePlayers !== null && reserves > limits.maxReservePlayers) {
     found.push({ kind: "too-many-reserve", count: reserves, cap: limits.maxReservePlayers });
   }
 

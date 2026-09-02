@@ -92,9 +92,11 @@ function mapRosterLimits(info: RawRosterInfo | undefined): RosterLimits {
   }
 
   return {
-    maxTotalPlayers: info?.maxTotalPlayers ?? 0,
-    maxActivePlayers: info?.maxTotalActivePlayers ?? 0,
-    maxReservePlayers: info?.maxTotalReservePlayers ?? 0,
+    // `?? null` and never `?? 0`: a cap Fantrax did not publish is one nobody
+    // can break, and folding it to nought made every squad break it.
+    maxTotalPlayers: info?.maxTotalPlayers ?? null,
+    maxActivePlayers: info?.maxTotalActivePlayers ?? null,
+    maxReservePlayers: info?.maxTotalReservePlayers ?? null,
     maxActiveByPosition,
   };
 }

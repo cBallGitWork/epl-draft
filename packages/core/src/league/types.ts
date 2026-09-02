@@ -47,9 +47,17 @@ export interface LeaguePlayerState {
 
 /** The roster shape the league enforces, as configured by the commissioner. */
 export interface RosterLimits {
-  maxTotalPlayers: number;
-  maxActivePlayers: number;
-  maxReservePlayers: number;
+  /** **Null where the league has not published a cap**, and never zero.
+   *
+   *  `mapLeagueInfo` folded an absent limit to `0` with `?? 0`, which made every
+   *  squad of any size break a rule the commissioner had never stated — a
+   *  fifteen-man roster reported as three violations against caps of nought.
+   *  Absence is not zero, which CODE_RULES states as a rule and DESIGN states
+   *  again for the screen; this is the type saying it too, so a caller cannot
+   *  compare against a limit without deciding what to do when there is none. */
+  maxTotalPlayers: number | null;
+  maxActivePlayers: number | null;
+  maxReservePlayers: number | null;
   /** Position letter to maximum active count, e.g. `{ G: 1, D: 5, M: 5, F: 3 }`. */
   maxActiveByPosition: Record<string, number>;
 }

@@ -97,7 +97,12 @@ export function eligibleSlots(
 
     // A player already in the XI moving between positions does not grow it, so
     // the squad-wide cap only binds on the way in from the bench.
-    if (!alreadyActive && activeCount >= limits.maxActivePlayers) {
+    // A cap the league did not publish cannot block a move.
+    if (
+      !alreadyActive &&
+      limits.maxActivePlayers !== null &&
+      activeCount >= limits.maxActivePlayers
+    ) {
       return { position, open: false, blockedBy: "squad-full" as const };
     }
 
@@ -154,7 +159,10 @@ export function legalMoves(
   }
 
   const benched = slots.filter((s) => !isActive(s)).length;
-  if (active && benched < limits.maxReservePlayers) moves.push({ kind: "demote", fantraxId });
+  // A bench with no published cap has room: an unstated limit cannot be full.
+  if (active && (limits.maxReservePlayers === null || benched < limits.maxReservePlayers)) {
+    moves.push({ kind: "demote", fantraxId });
+  }
 
   return moves;
 }

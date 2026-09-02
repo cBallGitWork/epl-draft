@@ -162,6 +162,13 @@ export function playerName(rostered: RosteredPlayer): string {
   return isResolved(rostered) ? rostered.player.name : rostered.slot.fantraxId;
 }
 
+/** A name with its accents removed, for comparing FPL's two spellings of one
+ *  man. Display never uses this — the accented form is his name and is what is
+ *  printed; this only decides whether two strings are the same word. */
+function fold(value: string): string {
+  return value.normalize("NFD").replace(/\p{Diacritic}/gu, "");
+}
+
 /** His name in full, for a list that has the width for one: `Bruno Fernandes`.
  *
  *  **FPL's `fullName`, not its `web_name`** (Craig, 2 Sep: "player list on left
@@ -172,13 +179,6 @@ export function playerName(rostered: RosteredPlayer): string {
  *
  *  An unresolved slot still answers with its id, exactly as `playerName` does:
  *  there is no footballer behind it and so no name of any length. */
-/** A name with its accents removed, for comparing FPL's two spellings of one
- *  man. Display never uses this — the accented form is his name and is what is
- *  printed; this only decides whether two strings are the same word. */
-function fold(value: string): string {
-  return value.normalize("NFD").replace(/\p{Diacritic}/gu, "");
-}
-
 export function fullPlayerName(rostered: RosteredPlayer): string {
   if (!isResolved(rostered)) return rostered.slot.fantraxId;
 

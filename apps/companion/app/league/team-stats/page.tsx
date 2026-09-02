@@ -94,8 +94,8 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   if ("unavailable" in schedule) {
     return (
       <LeagueShell title="Team Stats" current="teamStats">
-        <Nothing title="Team Stats unavailable" code={FANTRAX_SILENT}>
-          {schedule.unavailable}
+        <Nothing title={FANTRAX_SILENT} code={schedule.unavailable}>
+          The season table is Fantrax&apos;s own, and we cannot read it right now.
         </Nothing>
       </LeagueShell>
     );
