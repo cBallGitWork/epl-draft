@@ -22,6 +22,17 @@ export interface TeamIdentity {
 }
 
 export async function teamOr404(teamId: string): Promise<TeamIdentity> {
+  return (await leagueTeams(teamId)).team;
+}
+
+/** The same read, plus every OTHER team's name by id.
+ *
+ *  The transfers ledger needs both: whose screen this is, and who he traded
+ *  with. Two calls would be two reads of the same cached payload — and the names
+ *  are already sitting in it, so the second one is free. */
+export async function leagueTeams(
+  teamId: string,
+): Promise<{ team: TeamIdentity; names: Record<string, string> }> {
   const squads = await getLeagueSquads(await planningRound());
   if ("undrafted" in squads) notFound();
   if ("unavailable" in squads) redirect("/squad");
@@ -29,5 +40,10 @@ export async function teamOr404(teamId: string): Promise<TeamIdentity> {
   const team = squads.period.teams.find((t) => t.teamId === teamId);
   if (!team) notFound();
 
-  return { teamId: team.teamId, teamName: team.teamName };
+  // A record rather than a `Map`: this crosses to a client component and the
+  // boundary serialises through JSON, where a `Map` arrives as `{}`.
+  const names: Record<string, string> = {};
+  for (const entry of squads.period.teams) names[entry.teamId] = entry.teamName;
+
+  return { team: { teamId: team.teamId, teamName: team.teamName }, names };
 }

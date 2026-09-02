@@ -3,8 +3,8 @@ import type { LeagueTransaction } from "../league/types";
 import { deals } from "./deals";
 
 const tx = (over: Partial<LeagueTransaction> & { fantraxId: string }): LeagueTransaction => ({
-  setId: "s1", kind: "claim", playerName: "A Player", fromTeamId: null, toTeamId: null,
-  processedAt: "Wed Aug 12, 2026, 9:14AM", period: 1, executed: true, ...over,
+  setId: "s1", kind: "claim", playerName: "A Player", position: null, fromTeamId: null,
+  toTeamId: null, processedAt: "Wed Aug 12, 2026, 9:14AM", period: 1, executed: true, ...over,
 });
 
 describe("deals", () => {

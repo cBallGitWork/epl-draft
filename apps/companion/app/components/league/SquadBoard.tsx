@@ -49,6 +49,7 @@ export default function SquadBoard({
   lines,
   because,
   projected,
+  eligibility,
 }: {
   lines: SquadDetailLine[];
   because: SquadReason;
@@ -59,25 +60,27 @@ export default function SquadBoard({
    *  between a projection and a season total is the confident wrong answer, and
    *  a heading costs no height where a sentence cost a screenful. */
   projected: boolean;
+  /** Eligible positions by Fantrax id, passed straight to the list. A record
+   *  rather than a `Map` because this crosses to the browser — see `SquadRows`. */
+  eligibility?: Record<string, string[]>;
+
 }) {
   const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
 
   const explanation = EXPLANATION[because];
-  const players = lines.reduce((total, line) => total + line.players.length, 0);
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-end">
-        <span className="numeric text-2xs text-faint">{players} players</span>
-      </div>
-
+      {/* The count came off (Craig, 2 Sep: "remove 15 players"). It said the
+          same thing the list says by being fifteen rows long, and CM heads its
+          squad with the club's name rather than with an inventory. */}
       {explanation ? (
         <p className=" border border-line bg-surface px-3 py-2 text-2xs text-muted">
           {explanation}
         </p>
       ) : null}
 
-      <SquadRows lines={lines} projected={projected} onOpen={setOpen} />
+      <SquadRows lines={lines} projected={projected} onOpen={setOpen} eligibility={eligibility} />
 
       {open ? (
         <PlayerCard

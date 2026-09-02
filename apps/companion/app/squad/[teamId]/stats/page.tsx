@@ -41,7 +41,6 @@ export default async function StatsPage({
       title="Stats"
       current="stats"
       empty={his.length === 0 ? ["stats"] : []}
-      sub={his.length > 0 ? `${his.length} players · season to date` : null}
     >
       {his.length === 0 ? (
         <section className="cm-panel px-3 py-6">

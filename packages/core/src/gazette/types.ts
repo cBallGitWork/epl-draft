@@ -12,13 +12,30 @@
  *  trade — Fantrax files them as separate rows sharing a `setId`, and reading
  *  them apart is how you get a feed that says a manager signed a player and,
  *  separately and mysteriously, lost one. */
+/** One player on one side of a deal.
+ *
+ *  Carries his position because a swap cannot be read without it: a defender for
+ *  a forward is a different piece of business from a defender for a defender,
+ *  and two names alone do not say which. */
+export interface DealSide {
+  playerName: string;
+  teamId: string | null;
+  /** Fantrax's letters — "D", or "F,M" for a man eligible at two.
+   *
+   *  Optional rather than nullable, and the distinction is deliberate: the
+   *  transaction feed is the only source that carries it, so a `Deal` built from
+   *  anywhere else genuinely has no opinion — which is a different thing from a
+   *  row that carried the field empty. Views print nothing in both cases. */
+  position?: string | null;
+}
+
 export interface Deal {
   setId: string;
   kind: "claim" | "trade" | "lineup" | "unknown";
   /** Who gained, and what. Empty for a straight drop. */
-  inbound: { playerName: string; teamId: string | null }[];
+  inbound: DealSide[];
   /** Who lost, and what. Empty for a claim off the wire that cost nobody. */
-  outbound: { playerName: string; teamId: string | null }[];
+  outbound: DealSide[];
   /** Fantrax's own string, verbatim. It carries no offset, so it is shown as
    *  they wrote it rather than reinterpreted into a timezone we guessed. */
   processedAt: string | null;

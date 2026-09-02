@@ -89,6 +89,19 @@ export default async function TeamPage({
   const planning = mine && display.show === "lineup" && squads.info !== null ? squads.info : null;
   const squadIds = new Set(team.players.map((p) => p.slot.fantraxId));
 
+  // What each of them is ELIGIBLE at, which is not the slot his manager filed
+  // him in. Fantrax publishes both and they disagree for 48 of 607 — Saka is
+  // `F,M` and is filed at M — so the list's position column reads this and the
+  // scoring reads the slot. Fifteen entries, not the pool's 697: this crosses to
+  // the browser and the other 682 are not this manager's business.
+  //
+  // A record rather than a `Map` because of that crossing: the boundary
+  // serialises through JSON and a `Map` arrives as `{}` with no `.get`.
+  const eligibility: Record<string, string[]> = {};
+  for (const state of squads.info?.players ?? []) {
+    if (squadIds.has(state.fantraxId)) eligibility[state.fantraxId] = state.eligiblePositions;
+  }
+
   // What our league scores each of them, and the two branches below read it from
   // different places on purpose.
   //
@@ -224,7 +237,12 @@ export default async function TeamPage({
            panel — a 390 phone laid out at 627. The `overflow-x-auto` around the
            table cannot help while the column it sits in is free to grow. */
         <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
-          <SquadBoard lines={board.lines} because={board.because} projected={board.projected} />
+          <SquadBoard
+            lines={board.lines}
+            because={board.because}
+            projected={board.projected}
+            eligibility={eligibility}
+          />
           {/* The second panel, and it costs one cache hit. `squadSeason` already
               reads this table to price the board; what it used to drop on the
               floor is thirteen scoring columns, a per-game figure and Fantrax's
@@ -245,6 +263,7 @@ export default async function TeamPage({
           lines={squadDetail(squadUnarranged(team), clubs, opposition, points)}
           breakdown={live?.breakdown ?? {}}
           pending={pending}
+          eligibility={eligibility}
         />
       )}
     </TeamShell>

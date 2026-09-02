@@ -132,6 +132,11 @@ export interface LeagueTransaction {
   /** As Fantrax renders it here ("Kevin Schade") — reading order already, unlike
    *  the pool's "Schade, Kevin". Display only; the id is the join key. */
   playerName: string;
+  /** Fantrax's position letters for him, as they spell them here — "D", and
+   *  "F,M" for a man eligible at two. Their opinion and commissioner-mutable,
+   *  like every other position in this layer, so it is display only and never a
+   *  join key. Null when the row carried none. */
+  position: string | null;
   /** Null where there is no team on that side: nobody owns a free agent, and a
    *  dropped player goes to the pool rather than to another manager. */
   fromTeamId: string | null;

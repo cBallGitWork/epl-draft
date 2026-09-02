@@ -88,16 +88,32 @@ export default function PageHeader({
 
   return (
     <header>
-      {/* `cm-titlebar` still carries the bevel, the height and the type; only the
-          two colours move. Left alone when no plate is given, so every screen
-          that does not have a subject with a colour is untouched. */}
+      {/* `cm-titlebar` still carries the bevel; the plate moves the two colours.
+          Left alone when no plate is given, so every screen that does not have a
+          subject with a colour is untouched.
+
+          **A plated bar is drawn at the competition bar's size, and without the
+          crest** (Craig, 2 Sep: "team title needs to match the league title in
+          size/font etc, logo bye bye"). The reference agrees and says why:
+          `cm9900/24.jpg` heads the league and `25.jpg` heads Everton, and the
+          two bars are the same object at the same scale — the title is the
+          SUBJECT of the screen either way, and a club does not get a smaller
+          bar than the division it plays in. The crest goes because it is the
+          LEAGUE's mark: on a team's own screen it says the wrong thing, and CM
+          puts nothing but the name in that bar. */}
       <div
-        className="cm-titlebar flex items-center gap-2 px-2 py-1"
+        className={`cm-titlebar flex items-center gap-2 px-2 py-1 ${
+          plate ? "min-h-16 lg:min-h-24" : ""
+        }`}
         style={plate ? { background: plate.background } : undefined}
       >
-        <LeagueCrest height={18} />
+        {plate ? null : <LeagueCrest height={18} />}
         <h1
-          className="min-w-0 flex-1 truncate text-sm font-bold uppercase text-ink"
+          className={`min-w-0 flex-1 truncate font-bold uppercase ${
+            plate
+              ? "text-center font-chrome text-xl lg:text-3xl"
+              : "text-sm text-ink"
+          }`}
           style={plate ? { color: plate.ink } : undefined}
         >
           {title}

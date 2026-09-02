@@ -35,6 +35,7 @@ export default function TeamSheet({
   breakdown,
   mode,
   widest: agreed,
+  eligibility,
 }: {
   /** The XI in its positional lines, arranged on the server — `slot.status` is
    *  blanked on the way here, so this is the last shape that knows the split. */
@@ -46,6 +47,9 @@ export default function TeamSheet({
    *  keyed by Fantrax id. Empty when Fantrax refused the table. */
   breakdown: Record<string, BreakdownLine[]>;
   mode: "pitch" | "list";
+  /** Eligible positions by Fantrax id, passed straight to the list. A record
+   *  rather than a `Map` because this crosses to the browser — see `SquadRows`. */
+  eligibility?: Record<string, string[]>;
   /** The card width to agree with, when another sheet is on the same screen.
    *  See `PitchRows`. The bench takes it too, or the strip would go on sizing
    *  itself while the grass above it held still. */
@@ -115,7 +119,7 @@ export default function TeamSheet({
           ) : null}
         </>
       ) : (
-        <SquadRows lines={lines} projected={false} onOpen={setOpen} />
+        <SquadRows lines={lines} projected={false} onOpen={setOpen} eligibility={eligibility} />
       )}
 
       {open ? (

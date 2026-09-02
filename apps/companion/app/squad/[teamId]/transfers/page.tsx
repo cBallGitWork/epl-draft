@@ -1,6 +1,6 @@
 import { deals } from "@epl/core";
 import TeamShell from "../Shell";
-import { teamOr404 } from "../team";
+import { leagueTeams } from "../team";
 import { readDeals } from "../../../business";
 import Ledger from "./Ledger";
 
@@ -25,8 +25,7 @@ export default async function TransfersPage({
   params: Promise<{ teamId: string }>;
 }) {
   const { teamId } = await params;
-  const team = await teamOr404(teamId);
-  const feed = await readDeals();
+  const [{ team, names }, feed] = await Promise.all([leagueTeams(teamId), readDeals()]);
 
   // His side of the league's business. A deal is his if he is on either side of
   // it — the claim he made, and the drop he made to afford it.
@@ -63,7 +62,7 @@ export default async function TransfersPage({
           </p>
         </section>
       ) : (
-        <Ledger deals={his} teamId={teamId} />
+        <Ledger deals={his} teamId={teamId} names={names} />
       )}
     </TeamShell>
   );

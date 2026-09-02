@@ -180,6 +180,8 @@ export function mapTransactions(
       kind,
       fantraxId,
       playerName: row.scorer?.name ?? "",
+      // Their spelling, untouched: "D", or "F,M" for a man eligible at two.
+      position: row.scorer?.posShortNames ?? null,
       ...movement(kind, cells),
       // Verbatim, e.g. "Wed Aug 12, 2026, 9:14AM". Left unparsed for the same
       // reason the standings record is: the string carries no offset, the header

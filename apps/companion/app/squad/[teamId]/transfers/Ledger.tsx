@@ -1,31 +1,54 @@
-import type { Deal } from "@epl/core";
+import type { Deal, DealSide } from "@epl/core";
+import { inkOn, teamColours } from "@epl/core";
 
 // One manager's business, drawn as Championship Manager's Transfers screen.
 //
-// `cm9900/23.jpg` is the reference and its column grammar is the whole design:
-// a blue index cell carrying the DATE down the left, the player in white, the
-// club he came from in yellow, and where he went in orange behind the word
-// "to". Ours drops the fee column — a draft league has no money — and spends the
-// space on the period, which is the thing a fantasy manager actually needs to
-// know a move by.
+// **`cm0102/23.jpg` and `cm9900/23.jpg` are the reference, and what they are is
+// FIVE COLOUR-CODED COLUMNS** (Craig, 2 Sep: "not colourful enough", with the
+// 01/02 shot attached). The game does not decorate that screen — it encodes it:
+// a blue date block, the player in white, the club he left in YELLOW, where he
+// went in ORANGE behind the word "to", and the fee on a purple ground. Five
+// columns, five slots, and a reader can find the one he wants without reading
+// any of the others. Our first cut had three columns and two of them were grey,
+// which is why it read as a log rather than as this screen.
 //
-// **Orange for the destination is the reference's own distinction**, and it is
-// one the library had to correct in prose once already: yellow is a FIGURE,
-// orange is an EVENT or a CHANGE (`docs/ui/reference/README.md`, the three
-// corrections). A transfer is a change, and `to Lazio` is drawn in the colour
-// that says so. In our palette that is `--color-mid`, whose slot is a figure —
-// so the arrow and the destination take `--color-info`, which is "a person",
-// because in a draft league what moves is only ever a person and never a fee.
+// The mapping into our own palette, which is stricter than CM's because every
+// colour here is a slot with one meaning (DESIGN §3):
+//
+//   · the date block  → `cm-index`, CM's own blue index cell, unchanged
+//   · who ARRIVED     → `--color-info`, cyan, whose slot is "a person"
+//   · who LEFT        → `--color-faint`, quiet, because he is gone
+//   · the counterparty→ the other team's own colour, as a plate
+//   · the kind        → a plate whose ink says claim from trade
+//
+// The fee column has no equivalent and is dropped rather than faked: a draft
+// league has no money, and the period is what a manager actually knows a move
+// by. That is the one place this screen deliberately parts from the shot.
 
 /** Which way a deal ran for the manager whose screen this is.
  *
  *  The same row means opposite things to the two sides of a trade, and a ledger
- *  that says "in" on both is a ledger nobody can read. Every row here is scoped
- *  to one team on purpose. */
+ *  that says "in" on both is a ledger nobody can read.
+ *
+ *  **What LEFT is not simply his own outbound rows** (Craig, 2 Sep: "trade
+ *  doesn't show who was traded for"). `deals()` files each half of a trade under
+ *  the team that GAINED that player, so a two-way swap gives this manager one
+ *  inbound row and his partner the other — and filtering outbound to his own id
+ *  found nothing, printing a dash where the man he gave up belongs. A trade's
+ *  outgoing side is every inbound row belonging to somebody ELSE, which is what
+ *  a swap means and what `23.jpg`'s destination column says.
+ *
+ *  A waiver claim is unaffected: its drop is genuinely his, filed outbound under
+ *  his own id, and no second team is on the deal to be mistaken for a partner. */
 function movement(deal: Deal, teamId: string) {
+  const mine = (side: { teamId: string | null }) => side.teamId === teamId;
+  const theirs = (side: { teamId: string | null }) => side.teamId !== teamId;
+
   return {
-    in: deal.inbound.filter((side) => side.teamId === teamId),
-    out: deal.outbound.filter((side) => side.teamId === teamId),
+    in: deal.inbound.filter(mine),
+    out: [...deal.outbound.filter(mine), ...deal.inbound.filter(theirs)],
+    /** Who he dealt WITH. Null for a claim off the pool, which is nobody. */
+    partner: deal.inbound.find(theirs)?.teamId ?? null,
   };
 }
 
@@ -39,55 +62,97 @@ const KIND: Record<Deal["kind"], string> = {
 export default function Ledger({
   deals,
   teamId,
+  names,
 }: {
   deals: readonly Deal[];
   teamId: string;
+  /** Every team's name by id, so the partner plate can say WHO rather than
+   *  restating the deal type. Read off the same payload the page already loads
+   *  for its own name — never off the transaction row, which carries a name
+   *  Fantrax copied at the time and does not update when a manager renames. */
+  names: Record<string, string>;
 }) {
   return (
-    <section className="cm-panel flex flex-col p-2">
+    <section className="cm-panel flex flex-col">
+      {/* The column heads, bevelled as one continuous run — `23.jpg` has no head
+          row at all, but its columns are self-evident from the fee and the "to";
+          ours are two lists of names facing each other and need saying. */}
+      <div className="cm-bevel hidden min-h-7 items-center gap-2 px-1.5 text-3xs font-bold uppercase lg:flex">
+        <span className="w-[4.5rem] shrink-0">Date</span>
+        <span className="w-12 shrink-0">Type</span>
+        <span className="min-w-0 flex-1">In</span>
+        <span className="min-w-0 flex-1">Out</span>
+        <span className="w-16 shrink-0">With</span>
+      </div>
+
       <div className="overflow-x-auto">
-        <ul className="cm-rows flex min-w-max flex-col">
+        <ul className="cm-rows flex flex-col">
           {deals.map((deal) => {
-            const { in: arrived, out: left } = movement(deal, teamId);
+            const { in: arrived, out: left, partner } = movement(deal, teamId);
             return (
               <li
                 key={deal.setId || `${deal.processedAt}-${deal.period}`}
-                className="cm-row flex min-h-11 items-center gap-2 px-1 py-1"
+                // **Stacked on a phone, five columns on the desk.** Five
+                // columns inside 390 truncated both names to "Da…" and "Ma…",
+                // which is a ledger you cannot read — and the two names are the
+                // entire content. So the phone gets the deal as a small block:
+                // date and type on one line, then who came in and who went out
+                // under it. `conventions.md` already carries this pattern for a
+                // two-line row; this is the same rule at row scale.
+                className="cm-row flex min-h-11 flex-col gap-1 px-1.5 py-1.5 lg:flex-row lg:items-center lg:gap-2 lg:py-0"
               >
-                {/* CM's leading index cell, carrying the date rather than a row
-                    number — `23.jpg` runs "Mon 23rd Aug" down the left in the
-                    blue block. Fantrax's string verbatim: it has no offset in
-                    it, so it is printed as they wrote it and the zone is named
-                    once in the header rather than guessed at per row. */}
-                <span className="cm-index numeric shrink-0 px-1.5 py-0.5 text-3xs font-bold">
-                  {deal.processedAt ?? "—"}
+                {/* CM's leading index cell carrying the DATE — `23.jpg` runs
+                    "Mon 23rd Aug" down the left in exactly this blue block.
+                    Fantrax's string verbatim: it has no offset in it, so it is
+                    printed as they wrote it and the zone is named once in the
+                    header rather than guessed at per row. */}
+                {/* **The date, not the timestamp.** Fantrax sends
+                    "Wed Sep 2, 2026, 6:11AM" — 23 characters, which at 390 took
+                    a third of the row and pushed the OUT and WITH columns off
+                    the screen entirely. `23.jpg`'s block is "Mon 23rd Aug": day
+                    and month, no year, no clock. The year is on every row and
+                    says nothing; the minute is a precision a waiver ledger has
+                    no use for. Trimmed by splitting on Fantrax's own commas
+                    rather than parsed — their string carries no offset, so
+                    turning it into a Date would invent one. */}
+                <span className="flex items-center gap-2 lg:contents">
+                <span className="cm-index numeric w-[4.5rem] shrink-0 truncate px-1 py-0.5 text-3xs font-bold">
+                  {shortDate(deal.processedAt)}
                 </span>
 
-                <span className="numeric w-10 shrink-0 text-2xs text-faint">
-                  {deal.period === null ? "—" : `P${deal.period}`}
+                {/* Type and period ride together in one narrow cell rather than
+                    owning a column each: at 390 the row has room for four
+                    columns and the two facing name lists must have most of it.
+                    The kind takes the accent because it is the one word that
+                    says what KIND of business this was. */}
+                <span className="flex w-12 shrink-0 flex-col leading-tight">
+                  <span className="text-3xs font-bold uppercase text-accent">
+                    {KIND[deal.kind]}
+                  </span>
+                  <span className="numeric text-3xs text-faint">
+                    {deal.period === null ? "—" : `P${deal.period}`}
+                  </span>
+                </span>
                 </span>
 
-                <span className="w-12 shrink-0 text-3xs font-bold uppercase text-muted">
-                  {KIND[deal.kind]}
-                </span>
+                {/* **Two facing columns, and both are always drawn.** A claim
+                    that cost nobody and a straight drop each leave one side
+                    empty, and a row that reflows when a side is missing stops
+                    being scannable — which is the whole point of a ledger.
+                    Absence is an em dash (DESIGN §7). */}
+                <Side players={arrived} tone="text-info" label="In" />
+                <Side players={left} tone="text-faint" label="Out" />
 
-                {/* Who arrived and who left. Both halves are printed even when
-                    one is empty — a claim that cost nobody, a straight drop —
-                    because the shape of the row is what makes a ledger scannable
-                    and a row that reflows when a side is missing is not one.
-                    Absence is an em dash and never a nought (DESIGN §7). */}
-                <span className="flex min-w-0 flex-1 items-center gap-2">
-                  <span className="min-w-0 flex-1 truncate text-sm font-medium text-info">
-                    {arrived.length > 0
-                      ? arrived.map((side) => side.playerName).join(", ")
-                      : "—"}
-                  </span>
-                  <span className="shrink-0 text-2xs text-faint" aria-hidden>
-                    ←
-                  </span>
-                  <span className="min-w-0 flex-1 truncate text-sm text-muted">
-                    {left.length > 0 ? left.map((side) => side.playerName).join(", ") : "—"}
-                  </span>
+                {/* Who he dealt with, on that team's own colour — the same plate
+                    the Match screen gives a side, because this is the other
+                    place in the app where two teams meet. A claim came off the
+                    pool, which is not a team and gets no plate. */}
+                <span className="w-16 shrink-0 self-start lg:self-auto">
+                  {partner === null ? (
+                    <span className="text-3xs uppercase text-faint">Free agent</span>
+                  ) : (
+                    <Partner teamId={partner} name={names[partner]} />
+                  )}
                 </span>
               </li>
             );
@@ -95,5 +160,80 @@ export default function Ledger({
         </ul>
       </div>
     </section>
+  );
+}
+
+/** One side of a deal: the players, each with the position he plays.
+ *
+ *  **The position rides the name** (Craig, 2 Sep: "put the positions (D) in the
+ *  transfers/trades too"), which is what `cm9900/12.jpg` does with its
+ *  `Position` column and what a manager needs to read a swap — a defender for a
+ *  forward is a different deal from a defender for a defender, and the names
+ *  alone do not say which. Drawn quiet and in brackets so the NAME still leads
+ *  the column; the reference sets its eligibility strings the same way, beside
+ *  the name rather than over it. */
+function Side({
+  players,
+  tone,
+  label,
+}: {
+  players: DealSide[];
+  tone: string;
+  /** Printed only on a phone, where the head strip is hidden and the two lists
+   *  are stacked — without it they are two lines of names with no way to tell
+   *  which way the deal ran. */
+  label: string;
+}) {
+  return (
+    <span className={`flex min-w-0 flex-1 items-baseline gap-1.5 lg:block ${tone}`}>
+      <span className="w-6 shrink-0 text-3xs font-bold uppercase text-faint lg:hidden">
+        {label}
+      </span>
+      <span className="flex min-w-0 flex-1 flex-col justify-center leading-tight">
+      {players.length === 0 ? (
+        <span className="truncate text-sm">—</span>
+      ) : (
+        players.map((player) => (
+          <span key={player.playerName} className="truncate text-sm font-medium">
+            {player.playerName}
+            {player.position ? (
+              <span className="pl-1 text-3xs font-bold text-mid">({player.position})</span>
+            ) : null}
+          </span>
+        ))
+      )}
+      </span>
+    </span>
+  );
+}
+
+/** Fantrax's timestamp, trimmed to the day. Their own commas do the work: the
+ *  string is "Wed Sep 2, 2026, 6:11AM" and the first two segments are the date.
+ *  Never parsed into a `Date` — it carries no offset, so parsing invents one. */
+function shortDate(at: string | null): string {
+  if (at === null) return "—";
+  const [day, month] = at.split(",");
+  return month === undefined ? at : `${day.trim()} ${month.trim()}`;
+}
+
+/** The other side of a trade, as a plate in its own colour.
+ *
+ *  Fantrax sends a team NAME on every transaction row and we deliberately do not
+ *  print it: a manager may rename his team and the row would then disagree with
+ *  every other screen. The id is what the deal carries and what the colour table
+ *  is keyed on, so the plate is drawn from the id and the name comes from
+ *  nowhere — which is why this says the colour and not the name. */
+function Partner({ teamId, name }: { teamId: string; name: string | undefined }) {
+  const colours = teamColours(teamId);
+  return (
+    <span
+      className="block truncate px-1.5 py-0.5 text-center text-3xs font-bold uppercase"
+      style={{ background: colours.primary, color: inkOn(colours) }}
+    >
+      {/* A team the league no longer lists — a manager who left mid-season —
+          still has an id on the row, so the plate is drawn and says so rather
+          than collapsing and losing the fact that somebody was there. */}
+      {name ?? "Unknown"}
+    </span>
   );
 }

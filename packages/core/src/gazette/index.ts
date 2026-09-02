@@ -54,6 +54,7 @@ export type {
   AvailabilityNote,
   Deadline,
   Deal,
+  DealSide,
   Pick,
   Story,
   StoryResult,
