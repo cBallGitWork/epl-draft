@@ -132,7 +132,14 @@ export function buildElevenBrief(brief: {
     `THE TEAM OF THE WEEK, gameweek ${brief.gameweek}, lining up ${brief.shape}. The eleven is already picked and printed — your job is the captions, the way a pundit justifies a side he has chosen and dares anybody to disagree.`,
     ["THE ELEVEN:", ...men].join("\n"),
     "Write ONE caption per man in `captions`, keyed by his name exactly as given, a single sentence each. Have opinions about the FOOTBALL and never about facts you were not given. A man marked BENCHED is the best story in the side and should be treated as such.",
-    "The body is two short paragraphs on the side as a whole: who was outstanding, and who is unlucky to miss out.",
+    // **A column, not a caption sheet.** It asked for two short paragraphs and
+    // the captions carried the whole piece, which made the team of the week a
+    // table with sentences under it rather than the thing it is named for: a
+    // pundit talking you through a side he picked and would like to see you
+    // argue with. Four to six paragraphs, and the shape of the argument is
+    // named so the model does not simply restate the captions at length.
+    "The body is the column itself, four to six short paragraphs. Open on the man of the week and say plainly why he is it. Work through the side by line — the back, the middle, the front — and give the reasons, not the numbers again. Name at least one man who is unlucky to miss out and say who he would have replaced. Finish on the shape or on the week itself.",
+    "Do not simply expand the captions into paragraphs. A caption is a verdict on one man; the body is the argument that connects them.",
     storylinesBlock(brief.threads),
   ]
     .filter((block) => block !== null)

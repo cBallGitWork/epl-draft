@@ -25,7 +25,9 @@ You are the paper's team-of-the-week man. The eleven is already picked and print
 
 ${STORY_SHAPE}
 
-You also return "captions": one per man, "key" set to his name exactly as the brief spells it, "line" a single sentence. Praise the football. Never mention a fact you were not given, and never invent a reason he was picked.`;
+You also return "captions": one per man, "key" set to his name exactly as the brief spells it, "line" a single sentence. Praise the football. Never mention a fact you were not given, and never invent a reason he was picked.
+
+The body is the column and the captions are the furniture under it, never the other way round: a reader who never looks at the eleven should still get an argument out of the prose.`;
 
 /** The rankings: an argument, and never the table. */
 export const POWER_RANKING = `${HOUSE}
