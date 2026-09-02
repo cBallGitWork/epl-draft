@@ -1,0 +1,55 @@
+{
+  "period": 3,
+  "rosters": {
+    "yf96763gmtj31zni": {
+      "teamName": "test31121",
+      "rosterItems": [],
+      "salaryCap": 200
+    },
+    "8enbgqo5msgb375j": {
+      "teamName": "123",
+      "rosterItems": [],
+      "salaryCap": 200
+    },
+    "sezrgvl2mshcpazf": {
+      "teamName": "test4",
+      "rosterItems": [],
+      "salaryCap": 200
+    },
+    "pbxm9fgimshcpazf": {
+      "teamName": "test2",
+      "rosterItems": [],
+      "salaryCap": 200
+    },
+    "j9zadacnmshcpazf": {
+      "teamName": "test3",
+      "rosterItems": [],
+      "salaryCap": 200
+    },
+    "v6bxgqm5mtj31znh": {
+      "teamName": "test31",
+      "rosterItems": [],
+      "salaryCap": 200
+    },
+    "mxet9tt7mtj31zni": {
+      "teamName": "testf",
+      "rosterItems": [],
+      "salaryCap": 200
+    },
+    "vzqubu25mtj31zni": {
+      "teamName": "test3331",
+      "rosterItems": [],
+      "salaryCap": 200
+    },
+    "jtsmt5jxmtj31znh": {
+      "teamName": "test1",
+      "rosterItems": [],
+      "salaryCap": 200
+    },
+    "dq2yk3zxmtj31znh": {
+      "teamName": "test211",
+      "rosterItems": [],
+      "salaryCap": 200
+    }
+  }
+}
