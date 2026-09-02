@@ -1,4 +1,4 @@
-import Link from "next/link";
+import TabStrip from "../components/shell/TabStrip";
 
 // The League tab's own views, and how you get between them.
 //
@@ -7,12 +7,8 @@ import Link from "next/link";
 // knows which one it is. Passing that in costs a prop and saves shipping another
 // component to the phone.
 //
-// **CM's tabs, which are bevelled and butt against each other.** They were
-// rounded pills with a gap between them, which is a modern web tab and reads as
-// one wherever it appears. The active one is drawn PRESSED with the accent on
-// its label — the same object saying both "this is a control" and "this is the
-// one you are on", which is how the game said it and is why there is no separate
-// active border to keep the strip from shifting.
+// The plates themselves are `shell/TabStrip` now — this file is the list and the
+// argument for it, which is the half worth keeping in the section.
 
 /** **Five blue buttons** (Craig, 31 Aug): Table, Schedule, Results, Player
  *  Stats, Team Stats. `cm9900/24.jpg` runs four and a foot row of five; ours is
@@ -67,27 +63,10 @@ export type LeagueSection =
   | (typeof FOOT)[number]["key"];
 
 export default function SectionNav({ current }: { current: LeagueSection }) {
-  // The strip fills the row. CM's tabs run edge to edge across the whole content
-  // width (`cm9900/24.jpg`, `25.jpg`) — a tab strip is a bar, and plates hugging
-  // the left are buttons.
-  return (
-    <nav aria-label="League views" className="flex">
-      {SECTIONS.map((section) => {
-        const here = section.key === current;
-        return (
-          <Link
-            key={section.key}
-            href={section.href}
-            aria-current={here ? "page" : undefined}
-            // Red is the brand and the live signal and never a statement about
-            // where you are, which is why the accent carries this and the
-            // league's own colour does not.
-            className="cm-tab flex flex-1 items-center justify-center px-3 text-2xs font-bold uppercase lg:text-sm"
-          >
-            {section.label}
-          </Link>
-        );
-      })}
-    </nav>
-  );
+  // Matchups is a `LeagueSection` and is not in the strip, so on that route no
+  // plate is current — the same state `/players` puts the strip in. Narrowed
+  // here rather than in `TabStrip`, which should not have to know that this
+  // section has entries its own strip does not list.
+  const here = SECTIONS.find((section) => section.key === current)?.key ?? null;
+  return <TabStrip label="League views" tabs={SECTIONS} current={here} />;
 }
