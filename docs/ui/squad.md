@@ -279,6 +279,48 @@ unresolved when it is, and a way out to the full profile.
   your own lineup from you. The rule is narrower now — your own team always, every
   other team once its period opens — so there is nothing left to switch off.
 
+## The five tabs — a team is a spine, not a page
+
+Added 2 Sep 2026. `cm9900/25.jpg` runs `Squad · Transfers · Next Match ·
+Fixtures · Finances & Info` across the top of Everton and `cm0102/07.jpg` runs
+the identical set two releases later, so this is the reference's own shape
+rather than one invented here. Ours drops the finances, which a fantasy team
+does not have, and spends the slot on Stats.
+
+`squad/[teamId]/Shell.tsx` is the frame all five wear: the team's title bar in
+his own colour, the strip, and a caption box. It also sets `--cm-index` once, so
+every index block on every tab runs in that manager's colour rather than the
+league's deep blue.
+
+**The League strip is not replaced, because it was never here.** `/squad` has
+never rendered `SectionNav`; the rail is the only thing that has ever marked
+this section, and it goes on doing it — `owns()` prefix-matches `/squad/`.
+
+| Tab | Route | What it is | Where the data comes from |
+|---|---|---|---|
+| Squad | `/squad/[teamId]` | The list and the pitch, side by side on the desk | the rosters read this page already makes |
+| Transfers | `…/transfers` | His business, as `cm0102/23.jpg`'s five-column ledger | `readDeals`, filtered to him — the same feed the paper's business column reads |
+| Match | `…/next` | Who he plays, both sides on their own colours (`21.jpg`) | `headToHead`, already on the page |
+| Fixtures | `…/fixtures` | The whole season, played and to come | `seasonRows` + `Season`, imported from `/league/schedule` rather than copied |
+| Stats | `…/stats` | Every man he owns, filtered by category | `getPlayerStats` filtered on `ownerTeamId`, off a warm cache |
+
+**Three of the four cost no new request.** That is why they are tabs and not a
+later phase: the reads were already being made and were being thrown away.
+
+**A tab with nothing behind it greys and stays put** (`.cm-out`, its first
+consumer after three sightings in the reference). `cm0102/07.jpg` greys an
+unavailable `Training` rather than hiding it: a strip that loses a plate has
+moved every plate after it, and a reader who tapped Transfers yesterday would
+find Fixtures where it was.
+
+**Which round a tab shows is not one question.** Your own squad opens on the
+PLANNING round, because a planner is about the week you can still change.
+Everybody else's opens on the last LOCKED round — the most recent week with a
+visible arrangement — because the planning week is precisely the one the gate
+withholds, and pointing a rival's screen there meant the pitch was never once
+visible from an ordinary tap. Mid-round the two coincide, which is what a reader
+wants on a Saturday. `?gw=` still wins over both.
+
 ## Known gaps
 
 - ~~**Your own squad has no list view, ever.**~~ Overruled by Craig, 2 Sep 2026:

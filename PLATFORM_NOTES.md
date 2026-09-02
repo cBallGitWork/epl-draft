@@ -4564,3 +4564,70 @@ characters are skipped, because "Son" hits "season" on most of the feed.
   does not send. Settled the period↔gameweek question: aligned by **kickoff**, all
   38 periods and all 380 fixtures, with `npm run periods` re-checking against live
   FPL. The bridge resolved all 60 drafted players with zero misses.
+
+## 2 Sep 2026 — the squad week, and two refactor passes
+
+**A team became five screens.** `/squad/[teamId]` gained `Transfers · Match ·
+Fixtures · Stats` beside the squad itself, on Championship Manager's own club
+spine — `cm9900/25.jpg` and `cm0102/07.jpg` run the identical set two releases
+apart. Three of the four cost no new request: the reads were already being made
+and thrown away. `readDeals` in particular had been mapped, tested and cached
+since the paper's business column and had exactly one consumer, though
+`league/types.ts` had always said the rows were kept flat so that a team's
+history could be a filter over the same read.
+
+**Which round a squad screen opens on is not one question, and getting it wrong
+hid the pitch for a week.** `planningPeriod` returns the first week still taking
+changes, which is right for your own planner and is precisely the week the gate
+withholds from everyone else — so tapping a rival from the league table landed
+on a list and never on a pitch. `lastLockedPeriod` is the counterpart: the most
+recent week with a visible arrangement, which mid-round is the live one.
+
+**The pitch was rebuilt against the reference and got most of the way there by
+being measured rather than adjusted.** Three attempts at the disc's crop failed
+because the fault was the FRAME: `PlayerImage` wraps itself in `.pitch-figure`,
+which forces a 1.32 landscape ratio, so inside a circle the image box was 46x35
+in a 46x46 disc and the bottom quarter was gone before any cropping was
+considered. Probing the rendered box would have found it on the first report
+rather than the fifth. The same lesson landed twice more: a `min-height: 122cqw`
+produced a pitch of ratio 3.17 because the element was its own query container,
+and the two-column balance was only settled by measuring both columns (527
+against 676) rather than by looking.
+
+**The layer split holds.** Checked directly during the tree-wide audit:
+`packages/core/src/league` imports nothing from `football/` in source and the
+reverse is also zero. Purity holds too — no clocks, randomness or environment
+reads in any mapper, scorer or selector. Worth recording, because CLAUDE.md
+leans on both claims and neither had been verified since they were written.
+
+**Three provider-shaped bugs, all of the same kind.** An absent roster cap became
+`0` via `?? 0`, so a league that has not published its limits — the real
+league's state until draft night — reported every squad as breaking three rules
+nobody had stated. A bare drop was labelled "Waiver" because `deals()` maps
+`kind:"drop"` to "claim". A three-way trade named one partner because
+`movement` used `.find()`. All three are absence or multiplicity being flattened
+into a single confident answer.
+
+**`apps/` was unreachable by any test, and the config comment said otherwise.**
+It claimed the pure logic "lives in packages/*, which is exactly where it
+belongs" — an aspiration written as a fact, while nine files and ~540 lines of
+pure logic sat in `apps/companion/app`. The glob widened on 2 Sep; the first
+test it allowed found `londonTime("")` throwing `RangeError`, because one of
+four sibling formatters guarded a malformed date and three did not.
+
+**`revalidate` had 21 hand-written copies and nothing checking them.**
+`PAGE_REVALIDATE` says every route segment must repeat it as a literal, because
+Next analyses it statically — a real constraint whose cost is 21 chances to
+drift. `scripts/revalidate.test.ts` now walks `app/` and asserts each equals the
+constant. It reads `layout.tsx` as well as `page.tsx`, because `(paper)/layout.tsx`
+carries one of the copies and a page-only glob would have passed while missing it.
+
+**`FANTRAX_LEAGUE_ID` defaults to DUMMY, not rehearsal.** Three documents said
+rehearsal and none was ever right, including `.claude/rules/fantrax-adapter.md`,
+which loads at the start of every session — so every session began by being told
+the wrong thing about which league it was serving.
+
+**Declined at two, so they are not re-opened:** the two-column desk grid, the
+no-script `Show` button, the glossary strip (one), and `const DASH = "—"` — four
+declarations against SIXTY inline uses of the glyph, which is the DASH lesson by
+name and the reason it stays duplicated.

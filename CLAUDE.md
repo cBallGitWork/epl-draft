@@ -305,13 +305,13 @@ judgement about you; do the thing it names instead.
 
 **`tools/ui/` is the instrument drawer** — `.mjs` browser instruments, outside
 the tsc and vitest globs on purpose. `shot` `compare` `probe` `sweep` `navfit`
-`tapfit` `pitchfit` `dialog` over one shared `cdp.mjs`. They talk to an already-running headless Chrome on
+`tapfit` `pitchfit` `groundfit` `dialog` over one shared `cdp.mjs`. They talk to an already-running headless Chrome on
 `CDP_PORT` (9261) and never launch one; auth is `--team-cookie <file>` or
 `TEAM_COOKIE`, never a positional.
 
-**Skills are the named rituals** — `/verify` `/shoot` `/audit-ui` `/probe`, and
-four runbooks Craig starts: `/phase-gate` `/handover` `/swap-day`
-`/rehearsal-saturday`.
+**Skills are the named rituals** — `/verify` `/shoot` `/audit-ui` `/probe`
+`/refactor`, and four runbooks Craig starts: `/phase-gate` `/handover`
+`/swap-day` `/rehearsal-saturday`.
 
 **Agents are read-only** and see what a diff review cannot: `ui-verifier` opens
 the screenshots, `probe-runner` counts the payload, `register-warden` judges

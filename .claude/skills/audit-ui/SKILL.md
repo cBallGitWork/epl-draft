@@ -4,7 +4,7 @@ description: Run the deterministic UI instruments — contrast and overflow acro
 argument-hint: "[--base <url>]"
 ---
 
-# The five instruments
+# The six instruments
 
 Deterministic checks that a screenshot cannot make. They need the app up and
 headless Chrome on 9261 — see `/shoot` steps 1 and 2 for both.
@@ -82,7 +82,30 @@ is a second panel under the board.
 asked for this measurement since 29 Aug and it was taken by hand every time,
 which is why three numbers written into `pitch.css` were stale inside a day.
 
-## 5. Dialog — open, measure, Escape
+## 5. Groundfit — nothing prints on the bare ground
+
+```bash
+node tools/ui/groundfit.mjs [--team-cookie <file>]
+```
+
+**Sweep cannot substitute for this and never could.** The desk's photograph is
+`fixed` at `-z-10` and is an ancestor of nothing, so sweep composites straight
+past it and reports every route clean whatever is behind the text. DESIGN §2
+keeps a RULE rather than a contrast bound — nothing prints text on the bare
+ground — and this is the only thing that measures it: it walks every visible
+text node and accumulates background alpha up the real ancestor chain, naming
+anything under half.
+
+Zero bare is the pass. Moving `SCRIM` or `DARKEN` in `PhotoGround` is safe for
+exactly as long as this stays at zero.
+
+**One known blind spot, worth stating so a green run is not over-read.** It
+breaks at the first opaque ancestor, so text inside an opaque panel is counted
+as covered and never measured — which includes every name on the flat pitch,
+because `.pitch` paints its own turf. Those pairs are held by arithmetic in
+`tokens.css` and by `sweep`, not by this.
+
+## 6. Dialog — open, measure, Escape
 
 ```bash
 node tools/ui/dialog.mjs <route> [--selector '.pitch button'] [--width 390]

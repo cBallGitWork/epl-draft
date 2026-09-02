@@ -78,7 +78,7 @@ the round's own portraits.
 **The rule is measured where the bound could only be stated.** `sweep` cannot
 help — the ground is `fixed` at `-z-10`, an ancestor of nothing, so it composites
 straight past and reports every route clean whatever is behind it.
-`tools/ui/groundfit.mjs` walks every visible text node on the eight desk routes
+`tools/ui/groundfit.mjs` walks every visible text node on the desk routes
 at both widths and accumulates background alpha up the real ancestor chain,
 naming anything under half. Zero bare, 31 Aug 2026. Moving `SCRIM` or `DARKEN` is
 safe for exactly as long as that stays at zero.
@@ -279,6 +279,22 @@ gives Archivo's letterspaced small capitals a real job on newsprint, where a
 standing head, a kicker, a dateline and a byline are furniture rather than prose.
 Negative tracking is untouched — the eleven `tracking-tight` are condensed, which
 is the desk's own register.
+
+**The desk's display type casts a shadow, and only the display type does.**
+`cm9900/24.jpg` sets "English Premier Division" in blue on the light competition
+plate with a soft grey shadow offset down and right; `25.jpg` does the same in
+white on Everton's blue one. `.cm-title` in `desk.css` is that mark, and it is
+worn by exactly three things: the title-bar `h1` in both of `PageHeader`'s bars,
+and the yellow caption inside a panel. **Not the tab labels, the column heads or
+the rail** — they are flat in every shot, and softening them makes the whole
+screen soft. Set in `em`, because the same title is 20px under a thumb and 30px
+on the desk and a fixed offset is two different marks at the two sizes.
+
+It changes no contrast ratio: WCAG measures a foreground against a background
+and a shadow is neither, so `sweep.mjs` reads the same numbers before and after.
+It is depth, which is what it shares with the bevel and why it lives in the same
+file. **The paper does not get it** — ink on stock casts no shadow, and the
+masthead is the other register (§1).
 
 ## 7. Grammar that outranks the look
 

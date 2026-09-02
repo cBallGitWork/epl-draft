@@ -27,8 +27,14 @@ nothing.**
 | `/league/schedule` | [league-schedule.md](league-schedule.md) | One gameweek, every competition on it. |
 | `/league/matchups` | [league-matchups.md](league-matchups.md) | This period's head-to-heads, with live points. |
 | `/league/matchups/[teamId]` | [matchup.md](matchup.md) | One head-to-head: two totals, and the eleven behind each. |
+| `/league/results` | [league-schedule.md](league-schedule.md) | The archive: every finished round, newest first. |
+| `/league/team-stats` | [league-table.md](league-table.md) | The league ranked by one scoring category at a time. |
 | `/squad` | [squads.md](squads.md) | Yours, then everyone else's. |
-| `/squad/[teamId]` | [squad.md](squad.md) | **One squad. The reference page for the new look.** |
+| `/squad/[teamId]` | [squad.md](squad.md) | **One squad: the list and the pitch. The reference page for the new look.** |
+| `/squad/[teamId]/transfers` | [squad.md](squad.md) | His business, in Championship Manager's ledger. |
+| `/squad/[teamId]/next` | [squad.md](squad.md) | Who he plays, both sides on their own colours. |
+| `/squad/[teamId]/fixtures` | [squad.md](squad.md) | His whole season, played and to come. |
+| `/squad/[teamId]/stats` | [squad.md](squad.md) | Every man he owns, by scoring category or FPL's underlying numbers. |
 | `/matchday` | [matchday.md](matchday.md) | Live: your head-to-head, then the real football. |
 | `/matchday/desk` | [desk.md](desk.md) | Every score in the league and the round, on one screen. |
 | `/gw/[gameweek]` | [gameweek.md](gameweek.md) | Any round of football, addressable. |
