@@ -14,6 +14,7 @@ export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
 export { kindOf, movement } from "./dealSides";
 export { strangers } from "./strangers";
+export { hasRoom } from "./running";
 export { buildFixturePreviewBrief } from "./briefs/fixturePreview";
 export {
   buildDodgersBrief,

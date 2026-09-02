@@ -11,6 +11,7 @@ import {
   fixtureStakes,
   gameweekStarted,
   getFootballSnapshot,
+  hasRoom,
   isCovered,
   locksAt,
   mapLeagueInfo,
@@ -118,7 +119,7 @@ async function main(): Promise<void> {
     },
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     new Date().toISOString(),
-  ).slice(0, STORY_CAP);
+  );
   if (assignments.length === 0) return say("Nothing new to report.");
 
   const ctx: DeskContext = {
@@ -141,6 +142,16 @@ async function main(): Promise<void> {
   // evidence of a broken writer.
   let attempted = 0;
   for (const assignment of assignments) {
+    // **The cap counts STORIES FILED, not assignments considered**, and the
+    // difference is the whole bug it fixes. The order used to be sliced to the
+    // cap before any desk was asked for a brief, so two kinds that refuse —
+    // and a refusal spends no key, so they are still top of the order next
+    // time — wedged the paper permanently: `eleven` and `dodgers` took both of
+    // every firing's two places from 2 Sep, and four working match reports,
+    // the presser and the studio behind them were unreachable for the rest of
+    // the period. A refusal now costs nothing and the next assignment gets the
+    // turn.
+    if (!hasRoom(filings.length, STORY_CAP)) break;
     const desk = prepare(assignment, ctx);
     // A desk that refuses spends nothing: the facts moved between the
     // newsdesk's look and the brief's, or the kind has no desk yet.
@@ -267,6 +278,7 @@ async function markLastWeek(
  *  without extras. */
 const CARGO: Partial<Record<Assignment["kind"], "quotes" | "ranks" | "captions" | "quiz">> = {
   "power-ranking": "ranks",
+  eleven: "captions",
   presser: "quotes",
   studio: "quotes",
 };
