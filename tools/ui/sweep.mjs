@@ -34,6 +34,7 @@ const ROUTES = [
   "/matchday/desk",
   "/fpl",
   "/paper/reports",
+  "/paper/columns",
   "/paper/gw2-round-report",
 ];
 

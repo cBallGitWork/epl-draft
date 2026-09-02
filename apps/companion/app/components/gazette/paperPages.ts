@@ -30,6 +30,15 @@ export const PAPER_PAGES: readonly PaperPage[] = [
     // The match-shaped kinds: what happened, and what is about to.
     kinds: ["round-report", "match-report", "tie-report", "tie-call", "fixture-preview", "round-preview"],
   },
+  {
+    href: "/paper/columns",
+    label: "The Monday Club",
+    number: 3,
+    // The opinion columns, named for the edition they file under
+    // (`voice/bylines.ts`). Not "Columns": a paper's inside page has a name,
+    // and this one already had it.
+    kinds: ["eleven", "power-ranking", "dodgers", "presser", "studio", "predictions"],
+  },
 ];
 
 /** The page a story belongs on, for a teaser that says where to turn. Null when
