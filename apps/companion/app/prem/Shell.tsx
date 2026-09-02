@@ -34,7 +34,6 @@ const PANEL_ROWS = 20;
 export default function PremShell({
   title,
   current,
-  sub,
   rows,
   children,
 }: {
@@ -43,7 +42,6 @@ export default function PremShell({
    *  box, and every screen in the reference carries both. */
   title: string;
   current: PremSection;
-  sub?: React.ReactNode;
   /** How many rows the panel is drawn to hold, when the caller knows better
    *  than `PANEL_ROWS` — a results page holds rounds rather than clubs. */
   rows?: number;
@@ -51,7 +49,11 @@ export default function PremShell({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <PageHeader title={COMPETITION_NAME} sub={sub} competition />
+      {/* No `sub`. `PageHeader` will set a line under the bar and every screen
+          in the reference has nothing there — a count floating between the bar
+          and the strip reads as debris rather than as a caption, and the
+          caption box below already names the screen. */}
+      <PageHeader title={COMPETITION_NAME} competition />
       <PremNav current={current} />
       <Caption>{title}</Caption>
 
