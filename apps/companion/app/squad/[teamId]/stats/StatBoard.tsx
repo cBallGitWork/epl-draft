@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import Link from "next/link";
 import { PLAYER_CATEGORIES, type PlayerStatLine } from "@epl/core";
 import { positionsFromList } from "../../../positions";
 
@@ -64,11 +65,46 @@ function totalOf(line: PlayerStatLine): number | null {
 
 export default function StatBoard({ lines }: { lines: readonly PlayerStatLine[] }) {
   const [view, setView] = useState<ViewKey>("fantasy");
+  // **Null is the squad's own order** (Craig, 2 Sep: sort by tapping, default
+  // squad order). The read arrives in roster order — keepers first, then out by
+  // depth — which is the order the Squad tab prints, so the two screens agree
+  // until a reader asks for something else. A default sort would have them
+  // disagree from the first render.
+  const [sort, setSort] = useState<{ key: string; descending: boolean } | null>(null);
 
   const columns =
     view === "fantasy"
       ? PLAYER_CATEGORIES
       : PLAYER_CATEGORIES.filter((category) => category.group === view);
+
+  const rows = useMemo(() => {
+    if (sort === null) return [...lines];
+    const value = (line: PlayerStatLine) =>
+      sort.key === "pts"
+        ? totalOf(line)
+        : figure(line, sort.key, PLAYER_CATEGORIES.find((c) => c.key === sort.key)?.also);
+    return [...lines].sort((a, b) => {
+      // **Absence sorts last whichever way the column runs.** A man with no
+      // figure has not scored nought — he has no reading — and floating him to
+      // the top of an ascending sort would answer "who conceded fewest" with
+      // eleven players who have not played.
+      const [x, y] = [value(a), value(b)];
+      if (x === null) return y === null ? 0 : 1;
+      if (y === null) return -1;
+      return sort.descending ? y - x : x - y;
+    });
+  }, [lines, sort]);
+
+  /** Tapping a head sorts by it; tapping the sorted one turns it round.
+   *
+   *  Opens DESCENDING because every column here is a count of something a
+   *  manager did, and "most" is the question — even for the low-is-good ones,
+   *  where the first tap answers "who is costing me cards" before the second
+   *  answers "who is clean". */
+  const sortBy = (key: string) =>
+    setSort((current) =>
+      current?.key === key ? { key, descending: !current.descending } : { key, descending: true },
+    );
 
   return (
     <section className="cm-panel flex flex-col">
@@ -92,7 +128,12 @@ export default function StatBoard({ lines }: { lines: readonly PlayerStatLine[] 
         </select>
       </div>
 
-      <div className="overflow-x-auto">
+      {/* `cm-scroll` is CM's own bevelled bar with arrow buttons, and it is
+          here to be SEEN (Craig, 2 Sep: "scroll bar at bottom to make it obvious
+          we need to scroll"). A table wider than its panel that hides its own
+          scrollbar is a table whose remaining columns do not exist as far as a
+          reader knows. The pool board already wears it. */}
+      <div className="cm-scroll overflow-x-auto">
         <table className="w-full border-collapse whitespace-nowrap">
           <thead>
             <tr className="text-3xs uppercase">
@@ -111,36 +152,49 @@ export default function StatBoard({ lines }: { lines: readonly PlayerStatLine[] 
                 <span className="cm-bevel flex h-6 items-center px-1.5">Club</span>
               </th>
               {columns.map((category) => (
-                <th
+                <SortHead
                   key={category.key}
-                  scope="col"
-                  // The category's full name, since the header is an
-                  // abbreviation Fantrax chose and not one a reader knows.
+                  label={category.key}
                   title={category.label}
-                  className="p-0 font-bold"
-                >
-                  <span className="cm-bevel flex h-6 items-center justify-end px-1.5">
-                    {category.key}
-                  </span>
-                </th>
+                  sorted={sort?.key === category.key}
+                  descending={sort?.descending ?? true}
+                  onSort={() => sortBy(category.key)}
+                />
               ))}
               {view === "fantasy" ? (
-                <th scope="col" className="p-0 font-bold" title="Our total of his scoring categories">
-                  <span className="cm-bevel flex h-6 items-center justify-end px-1.5">Pts</span>
-                </th>
+                <SortHead
+                  label="Pts"
+                  title="Our total of his scoring categories"
+                  sorted={sort?.key === "pts"}
+                  descending={sort?.descending ?? true}
+                  onSort={() => sortBy("pts")}
+                />
               ) : null}
             </tr>
           </thead>
 
           <tbody>
-            {lines.map((line, index) => (
+            {rows.map((line, index) => (
               <tr key={line.fantraxId} className="border-b border-bg">
                 <td className="cm-index numeric px-1.5 py-1 text-right text-3xs font-bold">
                   {index + 1}
                 </td>
                 {/* Cyan, because the palette spends it on a person and this is
                     the only column here that is one. */}
-                <td className="px-1.5 py-1 text-2xs text-info">{line.name}</td>
+                {/* His name opens his page (Craig, 2 Sep: "tapping a player
+                    brings up card too"). A link and not the squad list's dialog:
+                    that card takes a `SquadPlayerDetail` — a roster slot joined
+                    to a footballer and a fixture — and this table holds a flat
+                    pool line, which is a different shape from a different
+                    endpoint. The profile is where the whole of him is anyway. */}
+                <td className="p-0 text-2xs">
+                  <Link
+                    href={`/players/${line.fantraxId}`}
+                    className="cm-row flex min-h-11 items-center px-1.5 text-info hover:underline lg:min-h-0"
+                  >
+                    {line.name}
+                  </Link>
+                </td>
                 <td className="px-1.5 py-1 text-3xs font-bold text-mid">
                   {positionsFromList(line.position) ?? "—"}
                 </td>
@@ -178,5 +232,47 @@ export default function StatBoard({ lines }: { lines: readonly PlayerStatLine[] 
         </table>
       </div>
     </section>
+  );
+}
+
+/** A column head that sorts, drawn PRESSED when it is the one in force.
+ *
+ *  That is the desk's whole grammar for a control that is also a state
+ *  (`DESIGN.md` §2): raised is something you press, pressed is the same thing
+ *  held down — the sorted column and the view you are on. So the affordance and
+ *  the state are one object rather than a head with a caret bolted beside it,
+ *  which is how Championship Manager marks its own sorted column. */
+function SortHead({
+  label,
+  title,
+  sorted,
+  descending,
+  onSort,
+}: {
+  label: string;
+  title: string;
+  sorted: boolean;
+  descending: boolean;
+  onSort: () => void;
+}) {
+  return (
+    // `aria-sort` belongs on the cell and not on the control inside it — the
+    // role that carries it is `columnheader`, which is the `<th>`.
+    <th
+      scope="col"
+      className="p-0 font-bold"
+      title={title}
+      aria-sort={sorted ? (descending ? "descending" : "ascending") : "none"}
+    >
+      <button
+        type="button"
+        onClick={onSort}
+        className={`flex h-6 w-full items-center justify-end px-1.5 ${
+          sorted ? "cm-bevel-pressed text-accent" : "cm-bevel"
+        }`}
+      >
+        {label}
+      </button>
+    </th>
   );
 }

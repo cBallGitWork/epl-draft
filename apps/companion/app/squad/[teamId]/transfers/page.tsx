@@ -41,19 +41,6 @@ export default async function TransfersPage({
       title="Transfers"
       current="transfers"
       empty={his.length === 0 ? ["transfers"] : []}
-      sub={
-        his.length > 0 ? (
-          <>
-            {his.length} {his.length === 1 ? "deal" : "deals"}
-            {/* Fantrax's own column heading, e.g. "Date (EDT)". Their timestamps
-                carry no offset, so the zone is NAMED rather than converted —
-                `conventions.md` makes that binding, and a US Eastern string
-                reinterpreted as London is wrong by five hours for half the
-                season. */}
-            {feed.at ? ` · ${feed.at}` : null}
-          </>
-        ) : null
-      }
     >
       {his.length === 0 ? (
         <section className="cm-panel px-3 py-6">

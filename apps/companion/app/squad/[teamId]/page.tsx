@@ -3,7 +3,6 @@ import {
   FANTRAX_APP_BASE,
   FANTRAX_LEAGUE_ID,
   clubById,
-  headToHead,
   lineupDetail,
   oppositionByClub,
   playerDetail,
@@ -65,14 +64,6 @@ export default async function TeamPage({
   // matchup card and the squad list both lead here — and the two readings want
   // different things said, so the page knows which it is serving.
   const mine = (await myTeamId(squads.period.teams)) === teamId;
-
-  // This manager's pairing, so the squad screen says who Saturday is against.
-  // Undefined is ordinary — no schedule for this period, or Fantrax would not
-  // describe the league — and renders as no line rather than a guess.
-  const opponent =
-    squads.info !== null && squads.roundPeriod !== null
-      ? headToHead(squads.info.matchups, squads.info.teams, squads.roundPeriod, teamId)?.opponent
-      : undefined;
 
   const clubs = clubById(squads.snapshot);
   const opposition = oppositionByClub(squads.snapshot);
@@ -185,13 +176,6 @@ export default async function TeamPage({
       team={team}
       title={mine ? "Your squad" : "Squad"}
       current="squad"
-      sub={
-        <>
-          Period {squads.roundPeriod ?? "—"} · Gameweek {squads.snapshot.gameweek}
-          {opponent ? ` · v ${opponent.name}` : null}
-          {display.show === "squad" ? " · squad" : null}
-        </>
-      }
     >
       {planning !== null ? (
         <LineupPlanner

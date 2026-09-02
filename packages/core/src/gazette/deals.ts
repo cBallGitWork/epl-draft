@@ -108,5 +108,5 @@ export function deals(transactions: readonly LeagueTransaction[]): Deal[] {
 }
 
 function side(row: LeagueTransaction, teamId: string | null) {
-  return { playerName: row.playerName, position: row.position, teamId };
+  return { playerName: row.playerName, position: row.position, club: row.club, teamId };
 }

@@ -56,7 +56,7 @@ export {
 // is publishing the one that has been asked in the other's place before. It
 // stays exported from its own module, where its tests reach it.
 export type { FinishedState, RoundState } from "./round";
-export { kickedOff, nextFixtures, oppositionByClub } from "./opposition";
+export { fixtureLabel, kickedOff, nextFixtures, oppositionByClub } from "./opposition";
 export { leagueTable } from "./table";
 export type { TableRow } from "./table";
 export type { Opposition } from "./opposition";

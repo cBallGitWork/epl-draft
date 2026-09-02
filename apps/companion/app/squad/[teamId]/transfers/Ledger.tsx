@@ -52,12 +52,22 @@ function movement(deal: Deal, teamId: string) {
   };
 }
 
-const KIND: Record<Deal["kind"], string> = {
-  claim: "Claim",
-  trade: "Trade",
-  lineup: "Lineup",
-  unknown: "Move",
-};
+/** What a deal is called, in the words this league says it in (Craig, 2 Sep).
+ *
+ *  **A claim is two different things and Fantrax files them as one.** Taking a
+ *  man another manager dropped is a WAIVER; taking one nobody has ever owned is
+ *  a pick-up off the free pool — which this league calls the Bin. The rows do
+ *  not distinguish them, but they distinguish themselves: a waiver claim has a
+ *  drop on the same `setId` and a bin pick-up does not.
+ *
+ *  Championship Manager names a transaction for what it IS rather than for the
+ *  API method behind it, which is the same reason its buttons say `Offer` rather
+ *  than `Submit`. */
+function kindOf(deal: Deal, cameFromBin: boolean): string {
+  if (deal.kind === "trade") return "Trade";
+  if (deal.kind === "claim") return cameFromBin ? "Bin Pick Up" : "Waiver";
+  return deal.kind === "lineup" ? "Lineup" : "Move";
+}
 
 export default function Ledger({
   deals,
@@ -78,8 +88,8 @@ export default function Ledger({
           row at all, but its columns are self-evident from the fee and the "to";
           ours are two lists of names facing each other and need saying. */}
       <div className="cm-bevel hidden min-h-7 items-center gap-2 px-1.5 text-3xs font-bold uppercase lg:flex">
-        <span className="w-[4.5rem] shrink-0">Date</span>
-        <span className="w-12 shrink-0">Type</span>
+        <span className="w-24 shrink-0">Date</span>
+        <span className="w-20 shrink-0">Type</span>
         <span className="min-w-0 flex-1">In</span>
         <span className="min-w-0 flex-1">Out</span>
         <span className="w-16 shrink-0">With</span>
@@ -116,7 +126,7 @@ export default function Ledger({
                     rather than parsed — their string carries no offset, so
                     turning it into a Date would invent one. */}
                 <span className="flex items-center gap-2 lg:contents">
-                <span className="cm-index numeric w-[4.5rem] shrink-0 truncate px-1 py-0.5 text-3xs font-bold">
+                <span className="cm-index numeric w-24 shrink-0 truncate px-1.5 py-0.5 text-3xs font-bold">
                   {shortDate(deal.processedAt)}
                 </span>
 
@@ -125,13 +135,12 @@ export default function Ledger({
                     columns and the two facing name lists must have most of it.
                     The kind takes the accent because it is the one word that
                     says what KIND of business this was. */}
-                <span className="flex w-12 shrink-0 flex-col leading-tight">
-                  <span className="text-3xs font-bold uppercase text-accent">
-                    {KIND[deal.kind]}
-                  </span>
-                  <span className="numeric text-3xs text-faint">
-                    {deal.period === null ? "—" : `P${deal.period}`}
-                  </span>
+                {/* The period came off (Craig, 2 Sep: "remove P3 in type"). It
+                    was a second number under a word, and the date above already
+                    says when — a period is how the league counts a week, not how a
+                    reader dates a transfer. */}
+                <span className="w-20 shrink-0 text-3xs font-bold uppercase text-accent">
+                  {kindOf(deal, left.length === 0)}
                 </span>
                 </span>
 
@@ -149,7 +158,15 @@ export default function Ledger({
                     pool, which is not a team and gets no plate. */}
                 <span className="w-16 shrink-0 self-start lg:self-auto">
                   {partner === null ? (
-                    <span className="text-3xs uppercase text-faint">Free agent</span>
+                    /* **"The Bin", which is what this league calls the free
+                        pool** (Craig, 2 Sep). Fantrax says "free agent" and CM
+                        would say whatever the game says — the point of naming a
+                        thing is that the people using it recognise it, and ten
+                        managers who have said "the bin" for years do not
+                        recognise "free agent" as the same place. */
+                    <span className="block truncate border border-line px-1.5 py-0.5 text-center text-3xs font-bold uppercase text-faint">
+                      The Bin
+                    </span>
                   ) : (
                     <Partner teamId={partner} name={names[partner]} />
                   )}
@@ -198,6 +215,15 @@ function Side({
             {player.playerName}
             {player.position ? (
               <span className="pl-1 text-3xs font-bold text-mid">({player.position})</span>
+            ) : null}
+            {/* His real club (Craig, 2 Sep: "let's put the club team in here
+                too"). `23.jpg` prints the club he came FROM in yellow beside
+                every name, which is the same fact — a reader knows a signing by
+                who he plays for as much as by his name. Quiet rather than
+                yellow because the position beside it already has the amber and
+                two amber strings on one line is neither of them emphasised. */}
+            {player.club ? (
+              <span className="numeric pl-1 text-3xs text-faint">{player.club}</span>
             ) : null}
           </span>
         ))

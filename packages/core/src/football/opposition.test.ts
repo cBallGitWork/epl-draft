@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
-import type { Fixture, FootballSnapshot } from "./types";
-import { kickedOff, nextFixtures, oppositionByClub } from "./opposition";
+import type { Club, Fixture, FootballSnapshot } from "./types";
+import type { Opposition } from "./opposition";
+import { fixtureLabel, kickedOff, nextFixtures, oppositionByClub } from "./opposition";
 
 const club = (id: number, shortName: string) => ({ id, code: id * 10, name: shortName, shortName });
 
@@ -189,5 +190,24 @@ describe("nextFixtures", () => {
 
   it("gives a club with nothing left an empty run, not a short one padded out", () => {
     expect(run([fixture({ id: 1, status: "finished" })])).toEqual([]);
+  });
+});
+
+describe("fixtureLabel", () => {
+  const match = (shortName: string, home: boolean) =>
+    ({ club: { shortName } as Club, home, difficulty: null }) as Opposition;
+
+  it("writes a fixture the one way the app writes them", () => {
+    expect(fixtureLabel([match("BRE", true)])).toBe("BRE (H)");
+    expect(fixtureLabel([match("ARS", false)])).toBe("ARS (A)");
+  });
+
+  it("joins both halves of a double rather than picking one", () => {
+    expect(fixtureLabel([match("BRE", true), match("ARS", false)])).toBe("BRE (H) · ARS (A)");
+  });
+
+  it("answers null for a blank gameweek, so each caller draws its own nothing", () => {
+    expect(fixtureLabel([])).toBeNull();
+    expect(fixtureLabel(undefined)).toBeNull();
   });
 });

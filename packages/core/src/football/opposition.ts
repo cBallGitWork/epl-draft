@@ -132,3 +132,27 @@ export function nextFixtures(
   }
   return run;
 }
+
+/** How a fixture is written wherever one appears: `BRE (H)`, `ARS (A)`.
+ *
+ *  Craig, 2 Sep 2026, as a site-wide rule: "just have BRE (H) instead of v BRE,
+ *  or @" — and "(A) instead of at". Four screens were spelling the same fact
+ *  three different ways (`v BRE`, `@ BRE`, and a bare `H`/`A` chip beside the
+ *  club), which is exactly the drift a shared function exists to stop.
+ *
+ *  **The bracket is the convention every printed fixture list uses**, which is
+ *  the argument for it over `v` and `@`: those two carry the same information at
+ *  the cost of reading as different KINDS of thing — a preposition before the
+ *  name and a symbol before the name — while `(H)` and `(A)` are one shape with
+ *  one letter changed, and a column of them scans in a way a column of mixed
+ *  `v`/`@` does not.
+ *
+ *  A double gameweek is both fixtures joined, because both are real and picking
+ *  one would print a confident wrong opponent. A blank one is null rather than a
+ *  dash: the caller decides what nothing looks like in its own row. */
+export function fixtureLabel(opposition: readonly Opposition[] | undefined): string | null {
+  if (opposition === undefined || opposition.length === 0) return null;
+  return opposition
+    .map((match) => `${match.club.shortName} (${match.home ? "H" : "A"})`)
+    .join(" · ");
+}

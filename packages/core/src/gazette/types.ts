@@ -27,6 +27,8 @@ export interface DealSide {
    *  anywhere else genuinely has no opinion — which is a different thing from a
    *  row that carried the field empty. Views print nothing in both cases. */
   position?: string | null;
+  /** His real club, "ARS". Optional for the same reason as the position. */
+  club?: string | null;
 }
 
 export interface Deal {

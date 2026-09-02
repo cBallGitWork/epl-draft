@@ -14,9 +14,15 @@ import { londonDate } from "../../londonTime";
 export default function Season({
   rows,
   badges,
+  teamId,
 }: {
   rows: SeasonRow[];
   badges: Map<string, string>;
+  /** Whose season this is. Present only where a matchup page can be reached —
+   *  the team's own Fixtures tab — so the score becomes a link there and stays
+   *  plain text on the schedule's own view, which already has that side's
+   *  matchup a tap away in its own row. */
+  teamId?: string;
 }) {
   return (
     <ul className="cm-rows flex flex-col">
@@ -44,7 +50,23 @@ export default function Season({
               </span>
             </span>
 
-            <Score row={row} />
+            {/* **The score is the link, not the row** (Craig, 2 Sep: "tap a
+                row/score to go to the matchup page"). The row cannot be one:
+                it already contains the opponent's link to his squad, and an
+                anchor inside an anchor is invalid HTML that browsers resolve by
+                dropping one of them. So the two taps are the two things a reader
+                wants from the row — the name opens the squad, the score opens
+                the match. */}
+            {teamId === undefined ? (
+              <Score row={row} />
+            ) : (
+              <Link
+                href={`/league/matchups/${teamId}?gw=${row.round.gameweek}`}
+                className="cm-row inline-flex min-h-11 shrink-0 items-center hover:underline"
+              >
+                <Score row={row} />
+              </Link>
+            )}
           </div>
         </li>
       ))}

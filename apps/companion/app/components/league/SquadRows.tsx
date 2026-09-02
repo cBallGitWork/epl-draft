@@ -2,15 +2,14 @@ import Image from "next/image";
 import {
   type SquadDetailLine,
   type SquadPlayerDetail,
-  clubColours,
   contribution,
   crestUrl,
+  fixtureLabel,
   isResolved,
   kickedOff,
   playerName,
 } from "@epl/core";
 import StateBox from "../football/StateBox";
-import type { Contribution } from "@epl/core";
 import { chipsFor } from "./Chips";
 import { positionsLabel } from "../../positions";
 
@@ -35,61 +34,6 @@ import { positionsLabel } from "../../positions";
 // come from us. The rule survives in the fallback: a letter `positions.ts` has
 // never seen is printed verbatim, so a commissioner who files wingers under `W`
 // gets `W` rather than a guess.
-
-/** The stat columns, in one place because the head strip and the rows both print
- *  them — the fault this file already carries a comment about, where the heads
- *  said W-L-T after the cells had stopped.
- *
- *  Every value is on `contribution()`, which the row already computes. None of
- *  this costs a request: it is the same `PlayerMatchStats[]` the pitch reads to
- *  draw a chip, and the list was throwing it away after two chips.
- *
- *  `measured` is null before FPL publishes the round's advanced stats, and those
- *  four columns read a dash rather than a nought — a nought is a claim that he
- *  did nothing, and absence is not that. */
-const STATS: readonly {
-  key: string;
-  head: string;
-  title: string;
-  of: (done: Contribution) => number | null;
-}[] = [
-  { key: "min", head: "Min", title: "Minutes played", of: (d) => d.minutes },
-  { key: "g", head: "G", title: "Goals", of: (d) => d.goals },
-  { key: "a", head: "A", title: "Assists", of: (d) => d.assists },
-  {
-    key: "cs",
-    head: "CS",
-    title: "Clean sheet",
-    of: (d) => (d.cleanSheet ? 1 : 0),
-  },
-  { key: "sv", head: "Sv", title: "Saves", of: (d) => d.saves },
-  {
-    key: "bps",
-    head: "BPS",
-    title: "FPL's bonus points system score",
-    of: (d) => d.measured?.bps ?? null,
-  },
-  {
-    key: "xg",
-    head: "xG",
-    title: "Expected goals — FPL's",
-    of: (d) => d.measured?.expectedGoals ?? null,
-  },
-  {
-    key: "xa",
-    head: "xA",
-    title: "Expected assists — FPL's",
-    of: (d) => d.measured?.expectedAssists ?? null,
-  },
-];
-
-/** Two decimals for the expected pair and whole numbers for the rest: xG is a
- *  fraction of a goal and printing it as one is the only way it means anything,
- *  while a rounded 0 would say he had no chances. */
-function figure(key: string, value: number | null): string {
-  if (value === null) return "—";
-  return key === "xg" || key === "xa" ? value.toFixed(2) : String(value);
-}
 
 export default function SquadRows({
   lines,
@@ -142,7 +86,7 @@ export default function SquadRows({
           rather than a small-caps label per position group, which made five
           headings and no columns. The group bars below separate; this names. */}
         <div className="cm-bevel flex min-h-7 items-center gap-1.5 px-1.5 text-3xs font-bold uppercase">
-          <span className="w-7 shrink-0" />
+          <span className="w-6 shrink-0" />
           {/* **`min-w-0 flex-1` and a basis, not a min-width.** The name column
               is the only elastic one on the row, so it is what gives way when
               the fixed columns outgrow the track — and at 390 with a position
@@ -160,20 +104,16 @@ export default function SquadRows({
           <span className="w-[3.25rem] shrink-0">Pos</span>
           {/* Who his CLUB plays this week — the football fixture, not ours. */}
           <span className="w-[4.75rem] shrink-0">Opponent</span>
-          <span className="hidden w-12 shrink-0 text-right lg:hidden">Match</span>
-          {STATS.map((stat) => (
-            <span
-              key={stat.key}
-              title={stat.title}
-              className="hidden w-14 shrink-0 text-right lg:block"
-            >
-              {stat.head}
-            </span>
-          ))}
+          {/* **Points, and only points** (Craig, 2 Sep: "FPts is first row,
+              maybe just that stat only", then "FPts at the right hand side").
+              The eight per-match stat columns came off with that: they answered
+              the same question at more length, and the Stats tab now answers it
+              properly, with a filter over every category. What is left is the
+              one figure a manager scans a squad FOR, in the last column — which
+              is where `cm9900/12.jpg` puts its own, Value hard against the right
+              edge with the readings before it. */}
           {scored ? (
-            <span className="w-8 shrink-0 text-right">
-              {projected ? "Proj" : "FPts"}
-            </span>
+            <span className="w-9 shrink-0 text-right">{projected ? "Proj" : "FPts"}</span>
           ) : null}
         </div>
 
@@ -213,7 +153,6 @@ function Row({
   onOpen?: () => void;
 }) {
   const { club, points } = player;
-  const colours = clubColours(club?.shortName ?? "");
   const resolved = isResolved(player.rostered) ? player.rostered : null;
   const done = contribution(resolved ? resolved.stats : []);
   // Null for a slot the bridge has not settled, which is ordinary — the pool
@@ -223,16 +162,8 @@ function Row({
   // Two is what fits beside the minutes in the fixture column.
   const chips = chipsFor(done).slice(0, 2);
 
-  // Who his club plays, in the shape a manager says it: "v LIV" at home, "@ LIV"
-  // away. A double gameweek joins both rather than picking one — the whole
-  // reason `opposition` is a list is that both edges are real — and a blank one
-  // prints nothing at all rather than a dash pretending to be a fixture.
-  const fixture =
-    player.opposition && player.opposition.length > 0
-      ? player.opposition
-          .map((match) => `${match.home ? "v" : "@"} ${match.club.shortName}`)
-          .join(" ")
-      : null;
+  // Who his club plays, in the app's one spelling of a fixture — `BRE (H)`.
+  const fixture = fixtureLabel(player.opposition);
 
   // One line, not two. Stacking his club under his name doubled the height of a
   // fifteen-row list to carry two short strings that sit happily beside each
@@ -250,10 +181,14 @@ function Row({
 
           The portrait keeps the screens where it has room — the pitch, the
           profile masthead, the player card. */}
-      <span
-        className="grid h-6 w-6 shrink-0 place-items-center p-[2px]"
-        style={{ backgroundColor: colours.primary }}
-      >
+      {/* **No tile behind the crest** (Craig, 2 Sep: "logos can remove
+          background"). A Premier League badge is drawn to stand on its own —
+          it carries its own shape and its own colours — and a club-coloured
+          square behind it was a second statement of the same fact, competing
+          with the badge it was meant to support. `cm9900/24.jpg` sets its club
+          names on the bare row; nothing in the reference puts a plate behind an
+          identifying mark. */}
+      <span className="grid h-6 w-6 shrink-0 place-items-center">
         {club ? (
           /* Sized in both axes. `h-full` resolves to auto against an
              auto-sized grid row, so only the width bound applied and a 150:112
@@ -304,9 +239,11 @@ function Row({
           screen, and a fantasy manager's question — is my defender at home to a
           side that concedes — is not one Championship Manager's own squad had to
           answer. Club then opponent, so the eye reads "ARS v LIV" as one fact. */}
-      <span className="numeric flex w-[4.75rem] shrink-0 items-baseline gap-1 text-3xs">
-        <span className="text-faint">{club?.shortName ?? "unmapped"}</span>
-        {fixture ? <span className="text-muted">{fixture}</span> : null}
+      {/* `fixtureLabel` already names the club he plays, so his own club is not
+          repeated beside it — "ARS  BRE (H)" reads as two clubs with no
+          relation. An unmapped slot has no fixture to show and says so. */}
+      <span className="numeric w-[4.75rem] shrink-0 truncate text-3xs text-muted">
+        {fixture ?? <span className="text-faint">unmapped</span>}
       </span>
 
       {/* What he has made of his match, and nothing before he starts one.
@@ -336,27 +273,10 @@ function Row({
         </span>
       ) : null}
 
-      {/* The stat columns, at desk width only. On a phone the rows are the
-          subject and the fixture and the total are what a manager is scanning
-          for; here there is room for what he actually did. */}
-      {STATS.map((stat) => (
-        <span
-          key={stat.key}
-          className="numeric hidden w-14 shrink-0 text-right text-2xs font-bold text-mid lg:block"
-        >
-          {/* A man who has not kicked off has not scored nought — he has not
-              played, and DESIGN §7 puts a dash there. `contribution([])` answers
-              zeros for every field, which is right for the sum it is doing and
-              wrong for a column: fourteen rows of noughts before a ball is
-              kicked reads as a squad that did nothing. */}
-          {started ? figure(stat.key, stat.of(done)) : "—"}
-        </span>
-      ))}
-
-      {/* Undefined is no table at all and takes the cell with it; null is a table
-          that does not name him, which is a dash. */}
+      {/* Undefined is no table at all and takes the cell with it; null is a
+          table that does not name him, which is a dash. */}
       {points === undefined ? null : (
-        <span className="numeric w-8 shrink-0 text-right text-sm font-bold">
+        <span className="numeric w-9 shrink-0 text-right text-sm font-bold text-accent">
           {points ?? "—"}
         </span>
       )}

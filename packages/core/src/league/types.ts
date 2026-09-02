@@ -137,6 +137,10 @@ export interface LeagueTransaction {
    *  like every other position in this layer, so it is display only and never a
    *  join key. Null when the row carried none. */
   position: string | null;
+  /** His real club's short name, as Fantrax spells it here — "ARS". Their
+   *  opinion of it, like the position beside it, and display only. Null when the
+   *  row carried none. */
+  club: string | null;
   /** Null where there is no team on that side: nobody owns a free agent, and a
    *  dropped player goes to the pool rather than to another manager. */
   fromTeamId: string | null;

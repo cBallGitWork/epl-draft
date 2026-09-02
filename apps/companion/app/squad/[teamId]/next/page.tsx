@@ -1,7 +1,8 @@
-import { headToHead, inkOn, teamColours } from "@epl/core";
+import { headToHead, inkOn, ordinal, teamColours } from "@epl/core";
 import TeamShell from "../Shell";
 import { getLeagueSquads } from "../../../squads";
 import { planningRound } from "../../../round";
+import { leagueTable } from "../../../standings";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 
@@ -29,7 +30,10 @@ export default async function NextMatchPage({
   const { teamId } = await params;
   // The whole read rather than `teamOr404`, because this screen needs the
   // matchups and the period as well as the name — one read either way.
-  const squads = await getLeagueSquads(await planningRound());
+  const [squads, table] = await Promise.all([
+    getLeagueSquads(await planningRound()),
+    leagueTable(),
+  ]);
   if ("undrafted" in squads) notFound();
   if ("unavailable" in squads) redirect("/squad");
 
@@ -41,17 +45,20 @@ export default async function NextMatchPage({
       ? headToHead(squads.info.matchups, squads.info.teams, squads.roundPeriod, teamId)
       : undefined;
 
+  // Where each side stands, for the bracket beside his name. Fantrax's own
+  // placing and never a sort of ours — where a points tie is broken is a rule of
+  // their competition. Empty when the table would not answer, and then the
+  // bracket is simply absent rather than showing a guess.
+  const placing = new Map(
+    "unavailable" in table ? [] : table.map((row) => [row.teamId, row.rank] as const),
+  );
+
   return (
     <TeamShell
       team={team}
       title="Next Match"
       current="next"
       empty={tie === undefined ? ["next"] : []}
-      sub={
-        <>
-          Period {squads.roundPeriod ?? "—"} · Gameweek {squads.snapshot.gameweek}
-        </>
-      }
     >
       {tie === undefined ? (
         <section className="cm-panel px-3 py-6">
@@ -66,8 +73,14 @@ export default async function NextMatchPage({
         </section>
       ) : (
         <Fixture
-          home={{ teamId: tie.team.teamId, name: tie.team.name }}
-          away={{ teamId: tie.opponent.teamId, name: tie.opponent.name }}
+          gameweek={squads.snapshot.gameweek}
+          period={squads.roundPeriod}
+          home={{ teamId: tie.team.teamId, name: tie.team.name, rank: placing.get(tie.team.teamId) }}
+          away={{
+            teamId: tie.opponent.teamId,
+            name: tie.opponent.name,
+            rank: placing.get(tie.opponent.teamId),
+          }}
         />
       )}
     </TeamShell>
@@ -80,15 +93,37 @@ export default async function NextMatchPage({
  *  screen this is reads first, which is the rule every head-to-head surface in
  *  this app already follows. */
 function Fixture({
+  gameweek,
+  period,
   home,
   away,
 }: {
-  home: { teamId: string; name: string };
-  away: { teamId: string; name: string };
+  gameweek: number;
+  period: number | null;
+  home: SideTeam;
+  away: SideTeam;
 }) {
   return (
-    <section className="cm-panel flex flex-col gap-2 p-2">
-      <div className="flex items-stretch gap-2">
+    <section className="cm-panel flex flex-col">
+      {/* **The round gets a row of its own** (Craig, 2 Sep: "have a row for the
+          gameweek"). It was in the subheading above the tabs, which is where a
+          reader looks last — and on a screen about ONE match, which round it is
+          belongs with the match rather than with the page. `cm9900/21.jpg` puts
+          the ground on a strip under its match header for the same reason: the
+          circumstances of the fixture sit with the fixture. */}
+      <div className="cm-titlebar flex items-baseline justify-center gap-2 px-2 py-1">
+        <span className="numeric text-2xs font-bold uppercase text-ink">Gameweek {gameweek}</span>
+        {period === null ? null : (
+          /* **Full ink, not an opacity.** `text-ink/70` on the chrome plate
+             measured 4.36:1 and the floor is 4.5 — sweep caught it. A plate owns
+             its ink (DESIGN §2) and dimming it with alpha is exactly the move
+             that rule exists to stop; the period reads as secondary because it
+             is smaller and lighter in weight, which costs no contrast. */
+          <span className="numeric text-3xs font-normal text-ink">Period {period}</span>
+        )}
+      </div>
+
+      <div className="flex items-stretch gap-2 p-2">
         <Side team={home} />
         <span className="flex shrink-0 items-center px-1 font-chrome text-2xs font-bold uppercase text-faint">
           v
@@ -99,20 +134,29 @@ function Fixture({
   );
 }
 
-function Side({
-  team,
-  linked = false,
-}: {
-  team: { teamId: string; name: string };
-  linked?: boolean;
-}) {
+interface SideTeam {
+  teamId: string;
+  name: string;
+  /** Where he stands in the league. Undefined when the table would not answer. */
+  rank: number | undefined;
+}
+
+function Side({ team, linked = false }: { team: SideTeam; linked?: boolean }) {
   const colours = teamColours(team.teamId);
   const label = (
     <span
-      className="flex min-h-11 flex-1 items-center justify-center px-2 text-center text-sm font-bold uppercase"
+      className="flex min-h-11 flex-1 flex-col items-center justify-center px-2 text-center leading-tight"
       style={{ background: colours.primary, color: inkOn(colours) }}
     >
-      {team.name}
+      <span className="text-sm font-bold uppercase">{team.name}</span>
+      {/* His placing, in brackets under the name (Craig, 2 Sep). `cm9900/25.jpg`
+          runs "6th in PRM" in its foot row — a club's standing is part of how
+          the game introduces it, and on a match header it is the one fact that
+          says whether this is a hard fixture. On his own plate rather than
+          beside it, so the ink stays the plate's own readable pair. */}
+      {team.rank === undefined ? null : (
+        <span className="numeric text-3xs font-bold opacity-80">({ordinal(team.rank)})</span>
+      )}
     </span>
   );
 

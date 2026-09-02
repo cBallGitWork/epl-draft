@@ -66,7 +66,6 @@ export default async function FixturesPage({
       title="Fixtures"
       current="fixtures"
       empty={rows.length === 0 ? ["fixtures"] : []}
-      sub={rows.length > 0 ? `${rows.length} rounds · ${info.name}` : null}
     >
       <section className="cm-panel flex flex-col p-2">
         {rows.length === 0 ? (
@@ -74,7 +73,7 @@ export default async function FixturesPage({
             Fantrax has paired {team.teamName} with nobody this season.
           </p>
         ) : (
-          <Season rows={rows} badges={badges} />
+          <Season rows={rows} badges={badges} teamId={teamId} />
         )}
       </section>
     </TeamShell>

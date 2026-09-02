@@ -72,7 +72,12 @@ export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
   { key: "GA", group: "defensive", label: "Goals against", lowIsGood: true, also: "GAO" },
   { key: "YC", group: "discipline", label: "Yellow cards", lowIsGood: true },
   { key: "RC", group: "discipline", label: "Red cards", lowIsGood: true },
-  { key: "OG", group: "discipline", label: "Own goals", lowIsGood: true },
+  // **Defensive, not discipline** (Craig, 2 Sep: "OG to defensive"). It was
+  // filed with the cards on the reading that an own goal is a blunder, and the
+  // team board still files it that way — but on a PLAYER's row the question
+  // being asked is what he did at the back, and putting the ball in his own net
+  // is the most defensive thing on the list. A card is a foul; this is a goal.
+  { key: "OG", group: "defensive", label: "Own goals", lowIsGood: true },
 ];
 
 /** The categories in one group. */
