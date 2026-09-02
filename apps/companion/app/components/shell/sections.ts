@@ -25,10 +25,22 @@ const PAPER_ROUTES = ["/"];
  *  reading a squad or a past gameweek is still in that section, and navigation
  *  that goes blank as soon as you tap into a detail page has stopped saying
  *  where you are. */
+/** **Squads is not a section** (Craig, 2 Sep: "I think we can remove the squads
+ *  icon in nav bar, it's redundant with accessing the squads via the league
+ *  anyways"). He is right about the redundancy and the reference agrees about
+ *  the principle: Championship Manager's rail is "where you can go from
+ *  anywhere" — Competitions, Nations & Clubs, Find — and a CLUB is never on it,
+ *  because you reach a club through the competition it plays in. A squad is our
+ *  club screen and every route into it is a team name somebody tapped: the
+ *  league table, the schedule, results, team stats, the matchup board, a
+ *  player's profile. Eight of them, counted.
+ *
+ *  `/squad` itself still exists and still works — the index is a real page and
+ *  the sign-in lives on it. It is simply not a destination the rail offers,
+ *  which is the difference between a route and a section. */
 export const SECTIONS = [
   { href: "/", label: "Gazetta", routes: PAPER_ROUTES },
   { href: "/league", label: "League", routes: ["/league"] },
-  { href: "/squad", label: "Squads", routes: ["/squad"] },
   // "Live" rather than "Matchday": the section only exists while football is on,
   // so that is what it means.
   { href: "/matchday", label: "Live", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },

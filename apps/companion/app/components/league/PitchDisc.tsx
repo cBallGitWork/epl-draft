@@ -1,16 +1,13 @@
-import type { CSSProperties } from "react";
 import {
   type Club,
   type Opposition,
   type RosteredPlayer,
-  clubColours,
   isResolved,
   kickedOff,
   playerName,
 } from "@epl/core";
-import FixtureChip from "../football/FixtureChip";
-import PlayerPortrait from "../football/PlayerPortrait";
-import { positionLabel } from "../../positions";
+import type { Instruction } from "@epl/core";
+import PlayerImage from "./PlayerImage";
 
 // One player on Championship Manager's pitch: a head, a name, and what he is
 // worth. The marker half of the `CmGround` trial.
@@ -43,17 +40,12 @@ import { positionLabel } from "../../positions";
 // is four colours. The club still reads, out of the photograph rather than out
 // of the palette, which is where a kit belongs.
 
-/** How wide the head is drawn. Named here because the plate under it is sized
- *  against the CARD and the head against itself — a disc that grew with a
- *  two-man front line would stand a third larger than the same man in a back
- *  five, which is the trap `PitchRows` records for the sticker. */
-const HEAD = "2.75rem";
-
 export default function PitchDisc({
   rostered,
   club,
   opposition,
   points,
+  instruction,
 }: {
   rostered: RosteredPlayer;
   club: Club | undefined;
@@ -61,48 +53,81 @@ export default function PitchDisc({
   /** What our league scores him this period. Undefined is no table at all,
    *  null a table that does not name him. */
   points?: number | null;
+  /** Whether the shape has him pushing forward — see `join/tactics.ts`. */
+  instruction?: Instruction;
 }) {
   const resolved = isResolved(rostered) ? rostered : null;
   const started = kickedOff(opposition);
 
   return (
-    <div
-      className="flex w-full flex-col items-center gap-1"
-      style={{ "--row-portrait": HEAD } as CSSProperties}
-    >
-      <PlayerPortrait
-        player={{
-          // A slot the bridge has not settled has no face and no code; the
-          // portrait falls back to his initials on the club's colour, and an
-          // unsettled slot has no club either, so it lands on the neutral.
-          code: resolved?.player.code ?? null,
-          name: resolved
-            ? resolved.player.name
-            : (positionLabel(rostered.slot.position) ?? "?"),
-        }}
-        colours={clubColours(club?.shortName ?? "")}
-        chrome
-      />
+    <div className="relative flex w-full flex-col items-center gap-0.5">
+      {/* **The arrow, above the man who is going forward** — which is how the
+          shot draws it and, more to the point, is the only mark on CM's pitch
+          that says anything about intent. Ours is derived from the shape rather
+          than from an instruction, because Fantrax sells a roster slot and no
+          tactic; `join/tactics.ts` carries the rule and the reasoning.
 
-      {/* `text-2xs` for the name and `text-xs` for the figure, which is where
-          DESIGN §8 fixed the pitch's type when it closed that item: 3xs is a
-          FLOOR on the grass and not merely the last step down, and the rule that
-          got there is that the card shrinks and the type never does. This drew
-          the name ON the floor and the figure a step below it for an afternoon —
-          a step in the direction §9 had already called too small. */}
-      <span className="flex w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-2xs font-bold uppercase leading-none text-bg">
-        <span className="w-full truncate">{playerName(rostered)}</span>
+          `aria-hidden`, and the instruction is not otherwise announced: it is a
+          restatement of the formation printed in words above the pitch, so a
+          reader who cannot see it has already been told. */}
+      {instruction === "forward" ? (
+        <span
+          aria-hidden
+          className="absolute -top-3 font-chrome text-sm font-bold leading-none text-accent"
+        >
+          ↑
+        </span>
+      ) : null}
+
+      {/* **The cut-out, with nothing behind it** (Craig, 2 Sep: "use the player
+          portrait but not background"). `PlayerPortrait` drew a chrome DISC
+          under every head — CM's numbered circle with a face in it — and the
+          circle is the half we do not need: the game draws a disc because it
+          has a number to put in one, and we have a photograph, which is its own
+          shape. `PlayerImage` is the cut-out ladder the pitch already uses
+          elsewhere, so a man with no photograph still reads as somebody. */}
+      <span className="relative block h-11 w-11 overflow-hidden">
+        {resolved === null ? (
+          /* A slot the bridge has not settled has no footballer behind it and
+             so no portrait to fall back through. His position on a plain plate
+             says what the pitch actually knows about him, which is where he is
+             standing — and `SquadRows` prints "unmapped" on the same man, so
+             the two readings agree. */
+          <span className="grid h-full w-full place-items-center bg-surface font-display text-3xs font-bold uppercase text-faint">
+            {rostered.slot.position || "?"}
+          </span>
+        ) : (
+          <PlayerImage
+            player={resolved.player}
+            club={club}
+            keeper={rostered.slot.position === "G"}
+            kickedOff
+            sizes="44px"
+          />
+        )}
       </span>
 
-      {started ? (
-        <span className="numeric w-full bg-bg px-0.5 text-center text-xs font-bold leading-none text-cream">
-          {points ?? "—"}
-        </span>
-      ) : (
-        <span className="flex w-full items-stretch overflow-hidden">
-          <FixtureChip opposition={opposition} blank={club?.shortName ?? "—"} />
-        </span>
-      )}
+      {/* **The name on the grass, in white, as the game sets it.** It was on a
+          cream PLATE — added when white-at-nine-pixels over grass was found
+          unreadable — and the shot says the answer was the wrong one: CM puts
+          white type straight on the pitch and makes it legible by being bigger
+          and bolder, not by putting a card behind it. A row of cream plates
+          reads as fifteen labels; the grass should show between the players.
+
+          The drop shadow is what buys the contrast the plate was buying, and it
+          costs no ground: `groundfit` measures text on the BARE ground and a
+          shadowed glyph over grass still fails that test, which is why the
+          pitch is exempt — it is a photograph of grass we drew, not the
+          match photograph the rule is about. */}
+      <span className="w-full truncate px-0.5 text-center font-display text-2xs font-bold uppercase leading-none text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.9)]">
+        {playerName(rostered)}
+      </span>
+
+      {/* His score, or his fixture before a ball is kicked. On the dark plate
+          CM uses for a figure on grass. */}
+      <span className="numeric w-full bg-bg/80 px-0.5 text-center text-2xs font-bold leading-none text-cream">
+        {started ? (points ?? "—") : (club?.shortName ?? "—")}
+      </span>
     </div>
   );
 }

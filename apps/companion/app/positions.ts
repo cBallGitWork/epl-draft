@@ -51,14 +51,26 @@ export function positionsFromList(positions: string | null | undefined): string 
   return positionsLabel(positions.split(",").map((p) => p.trim()));
 }
 
-/** Several eligible positions as one label: `MID/FWD`.
+/** Several eligible positions as one label: `MID` alone, `M/F` for two.
  *
  *  Fantrax lets a man hold more than one and 48 of 607 in this pool do. Which of
  *  them he is *scored* at is his manager's choice and lives on the roster slot,
- *  never here — this only says what he is allowed to be. */
+ *  never here — this only says what he is allowed to be.
+ *
+ *  **One position spells out, two abbreviate** (Craig, 2 Sep: "if a player has
+ *  two positions, make it M/F for space, then make the column shorter"). The
+ *  reason is width and the reference backs it: `cm9900/12.jpg` sets a single
+ *  position as `D C` and a double as `D/DM RC` — the game gets terser as a man
+ *  gets more versatile, because the column is fixed and the string is not.
+ *  `MID/FWD` at seven characters set the whole column's width for the eleven
+ *  players in twelve who need three. */
 export function positionsLabel(positions: readonly string[]): string | null {
-  const labelled = positions.map((p) => positionLabel(p)).filter((p): p is string => p !== null);
-  return labelled.length === 0 ? null : labelled.join("/");
+  const kept = positions.filter((p) => p);
+  if (kept.length === 0) return null;
+  if (kept.length === 1) return positionLabel(kept[0]) ?? null;
+  // Fantrax's own letters, joined — which is what the short form IS. An unknown
+  // letter passes through as itself, on `positionLabel`'s rule.
+  return kept.join("/");
 }
 
 /** A heading over everyone playing there: `Defenders`.

@@ -5,6 +5,7 @@ import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/cor
 import { playerName } from "@epl/core";
 import LivePlayerCard from "./LivePlayerCard";
 import PitchDisc from "./PitchDisc";
+import { type Instruction, tactics } from "@epl/core";
 import PitchRows, { GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
 import SquadRows from "./SquadRows";
 import { FAR_INSET } from "./PitchTurf";
@@ -57,6 +58,12 @@ export default function TeamSheet({
 }) {
   const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
 
+  // Who pushes forward, from the shape itself. `rows` is the arrangement — the
+  // lines back to front — which is exactly what `tactics` reads, and the bench
+  // is deliberately not passed: a reserve has no place in a formation and so no
+  // instruction to draw.
+  const arrows = tactics(rows.map((line) => ({ position: "", players: line.players.map((p) => p.rostered) })));
+
   // One number for the grass and for the strip beneath it. A reserve is the same
   // card as the man he would replace, so the bench counts as a line when the
   // width is chosen — otherwise a bench of five under a widest line of four is
@@ -89,7 +96,13 @@ export default function TeamSheet({
             widest={widest}
             flat
           >
-            {(player) => <Cell player={player} onOpen={() => setOpen(player)} />}
+            {(player) => (
+              <Cell
+                player={player}
+                onOpen={() => setOpen(player)}
+                instruction={arrows.get(player.rostered.slot.fantraxId)}
+              />
+            )}
           </PitchRows>
 
           {bench.length > 0 ? (
@@ -145,7 +158,15 @@ export default function TeamSheet({
   );
 }
 
-function Cell({ player, onOpen }: { player: SquadPlayerDetail; onOpen: () => void }) {
+function Cell({
+  player,
+  onOpen,
+  instruction,
+}: {
+  player: SquadPlayerDetail;
+  onOpen: () => void;
+  instruction?: Instruction;
+}) {
   return (
     <button
       type="button"
@@ -160,6 +181,7 @@ function Cell({ player, onOpen }: { player: SquadPlayerDetail; onOpen: () => voi
         club={player.club}
         opposition={player.opposition}
         points={player.points}
+        instruction={instruction}
       />
     </button>
   );

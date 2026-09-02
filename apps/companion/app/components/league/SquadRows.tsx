@@ -86,7 +86,7 @@ export default function SquadRows({
           rather than a small-caps label per position group, which made five
           headings and no columns. The group bars below separate; this names. */}
         <div className="cm-bevel flex min-h-7 items-center gap-1.5 px-1.5 text-3xs font-bold uppercase">
-          <span className="w-6 shrink-0" />
+          <span className="w-7 shrink-0" />
           {/* **`min-w-0 flex-1` and a basis, not a min-width.** The name column
               is the only elastic one on the row, so it is what gives way when
               the fixed columns outgrow the track — and at 390 with a position
@@ -100,7 +100,7 @@ export default function SquadRows({
               `AM/F C`, because a man eligible at two cannot live under one
               heading. Grouping him under a single letter is a claim the data
               does not support — Saka is `F,M` and 48 of 607 are like him. */}
-          <span className="w-[3.25rem] shrink-0">Pos</span>
+          <span className="w-9 shrink-0">Pos</span>
           <span className="min-w-0 flex-[1_1_5rem]">Player</span>
 
           {/* Who his CLUB plays this week — the football fixture, not ours. */}
@@ -189,7 +189,7 @@ function Row({
           with the badge it was meant to support. `cm9900/24.jpg` sets its club
           names on the bare row; nothing in the reference puts a plate behind an
           identifying mark. */}
-      <span className="grid h-6 w-6 shrink-0 place-items-center">
+      <span className="grid h-7 w-7 shrink-0 place-items-center">
         {club ? (
           /* Sized in both axes. `h-full` resolves to auto against an
              auto-sized grid row, so only the width bound applied and a 150:112
@@ -198,9 +198,9 @@ function Row({
           <Image
             src={crestUrl(club)}
             alt=""
-            width={18}
-            height={18}
-            className="h-5 w-5 object-contain"
+            width={22}
+            height={22}
+            className="h-6 w-6 object-contain"
           />
         ) : (
           <span
@@ -221,7 +221,7 @@ function Row({
           each name — and because our own palette spends amber on a figure and
           this is closer to one than to prose. Falls back to his slot when the
           league would not say. */}
-      <span className="w-[3.25rem] shrink-0 truncate text-3xs font-bold text-mid">
+      <span className="w-9 shrink-0 truncate text-3xs font-bold text-mid">
         {(eligible && eligible.length > 0
           ? positionsLabel(eligible)
           : positionsLabel([player.rostered.slot.position ?? ""])) ?? "—"}

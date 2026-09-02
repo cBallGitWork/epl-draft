@@ -141,8 +141,27 @@ export default function PitchRows<T>({
   /** Draw the ground as Championship Manager's flat diagram rather than as
    *  FPL's photographed trapezoid. A trial (Craig, 31 Aug); the sizing below is
    *  the same either way, which is the whole reason this is a flag here rather
-   *  than a second component with a second copy of the arithmetic. Whichever
-   *  ground loses gets deleted, and neither gets merged into the other. */
+   *  than a second component with a second copy of the arithmetic.
+   *
+   *  **The four pitches, and what each is FOR** (Craig, 2 Sep: "we need to code
+   *  to make sure the different pitches show different things"). They share this
+   *  sizing and nothing else, and each answers a different question:
+   *
+   *  | Screen | Ground | Marker | What it says |
+   *  |---|---|---|---|
+   *  | Squad (a rival, locked) | `CmGround` flat | `PitchDisc` | how he set up — cut-out, name on the grass, tactic arrow, XI only |
+   *  | Squad (your own) | `PitchFrame` trapezoid | `PitchPlayer` | what you can still CHANGE — draggable, bench, violations |
+   *  | Head-to-head | `CmGround` flat | `PitchDisc` | two elevens sized to agree, via `widest` |
+   *  | FPL | `PitchFrame` trapezoid | `PlayerImage` | the real Premier League's XI, which is not our game at all |
+   *
+   *  The split is the register, not decoration: **flat is the desk's diagram and
+   *  the trapezoid is football's photograph.** A screen about ARRANGEMENT — how
+   *  a manager lined up, or how you are about to — gets the diagram, because a
+   *  diagram is what a formation is. A screen about the real match gets the
+   *  perspective, because that is a picture of a pitch.
+   *
+   *  Whichever ground loses gets deleted, and neither gets merged into the
+   *  other. */
   flat?: boolean;
   /** A fullest-line count to size against instead of this pitch's own.
    *
