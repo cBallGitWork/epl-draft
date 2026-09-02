@@ -12,10 +12,10 @@ import {
   squadUnarranged,
 } from "@epl/core";
 import LineupPlanner from "../../components/league/LineupPlanner";
-import PageHeader from "../../components/shell/PageHeader";
 import SeasonGrid from "../../components/league/SeasonGrid";
 import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
+import TeamShell from "./Shell";
 import { getLeagueSquads, teamDisplay } from "../../squads";
 import { planningRound, roundOf } from "../../round";
 import { pendingByTeam, squadLivePoints } from "../../scoreboard";
@@ -158,29 +158,28 @@ export default async function TeamPage({
   const pending = owed ? owed : null;
 
   return (
-    <div className="flex flex-col gap-3">
-      {/* The only live-points surface that did not move on a Saturday. Both
-          arrangements below carry Fantrax's totals and FPL's minutes, and
-          `revalidate` bounds staleness without pushing anything to a phone
-          already open on the sofa. Same cadence as the head-to-head board that
-          shows the same numbers. */}
-      {/* Who he plays belongs on the same line as who he is. It had a line of
-          its own under the period, which is where a reader looks last. */}
-      <PageHeader
-        title={[
-          mine ? `${team.teamName} — your squad` : team.teamName,
-          opponent ? `vs ${opponent.name}` : null,
-        ]
-          .filter(Boolean)
-          .join(" ")}
-        sub={
-          <>
-            Period {squads.roundPeriod ?? "—"} · Gameweek {squads.snapshot.gameweek}
-            {display.show === "squad" ? " · squad" : null}
-          </>
-        }
-      />
-
+    /* The only live-points surface that did not move on a Saturday. Both
+       arrangements below carry Fantrax's totals and FPL's minutes, and
+       `revalidate` bounds staleness without pushing anything to a phone already
+       open on the sofa. Same cadence as the head-to-head board that shows the
+       same numbers. */
+    /* Who he plays belongs on the same line as who he is — it had a line of its
+       own under the period, which is where a reader looks last. It rides the
+       `sub` now rather than the bar: the bar is the TEAM, because that is what
+       every other tab under it is also about, and a bar reading "test2 vs
+       test3" on Transfers would be naming a fixture over a ledger. */
+    <TeamShell
+      team={team}
+      title={mine ? "Your squad" : "Squad"}
+      current="squad"
+      sub={
+        <>
+          Period {squads.roundPeriod ?? "—"} · Gameweek {squads.snapshot.gameweek}
+          {opponent ? ` · v ${opponent.name}` : null}
+          {display.show === "squad" ? " · squad" : null}
+        </>
+      }
+    >
       {planning !== null ? (
         <LineupPlanner
           team={team}
@@ -248,6 +247,6 @@ export default async function TeamPage({
           pending={pending}
         />
       )}
-    </div>
+    </TeamShell>
   );
 }

@@ -124,6 +124,8 @@ export type { PlayerCategory } from "./playerCategories";
 export { BOARD_ROWS, rankPlayers } from "./playerBoard";
 export type { PlayerBoardRow } from "./playerBoard";
 export { ordinal } from "./ordinal";
+export { teamColours } from "./teamColours";
+export type { TeamColours } from "./teamColours";
 export { rankBy } from "./categoryBoard";
 export type { BoardRow } from "./categoryBoard";
 export type { CategoryLine, RawSeasonStats } from "./fantrax/seasonStats";

@@ -1,0 +1,70 @@
+import { deals } from "@epl/core";
+import TeamShell from "../Shell";
+import { teamOr404 } from "../team";
+import { readDeals } from "../../../business";
+import Ledger from "./Ledger";
+
+// What one manager has done all season.
+//
+// The feed behind this has been mapped, tested and cached since the paper's
+// business column was built, and until now the ONLY thing that read it was that
+// column — which prints the week's activity across the league. The rows were
+// deliberately kept flat so that a team's history, a player's history and the
+// week's activity could each be a filter over the same read (`league/types.ts`
+// says so in as many words); this is the first of the three that was missing.
+//
+// Grouped through `deals()` rather than listed raw, because a claim and the drop
+// that paid for it are one piece of business. Read apart they become a manager
+// signing somebody and, separately and mysteriously, losing somebody else.
+
+export const revalidate = 30;
+
+export default async function TransfersPage({
+  params,
+}: {
+  params: Promise<{ teamId: string }>;
+}) {
+  const { teamId } = await params;
+  const team = await teamOr404(teamId);
+  const feed = await readDeals();
+
+  // His side of the league's business. A deal is his if he is on either side of
+  // it — the claim he made, and the drop he made to afford it.
+  const his = deals(feed.rows).filter(
+    (deal) =>
+      deal.inbound.some((side) => side.teamId === teamId) ||
+      deal.outbound.some((side) => side.teamId === teamId),
+  );
+
+  return (
+    <TeamShell
+      team={team}
+      title="Transfers"
+      current="transfers"
+      empty={his.length === 0 ? ["transfers"] : []}
+      sub={
+        his.length > 0 ? (
+          <>
+            {his.length} {his.length === 1 ? "deal" : "deals"}
+            {/* Fantrax's own column heading, e.g. "Date (EDT)". Their timestamps
+                carry no offset, so the zone is NAMED rather than converted —
+                `conventions.md` makes that binding, and a US Eastern string
+                reinterpreted as London is wrong by five hours for half the
+                season. */}
+            {feed.at ? ` · ${feed.at}` : null}
+          </>
+        ) : null
+      }
+    >
+      {his.length === 0 ? (
+        <section className="cm-panel px-3 py-6">
+          <p className="text-center text-2xs text-muted">
+            {team.teamName} has made no moves this season.
+          </p>
+        </section>
+      ) : (
+        <Ledger deals={his} teamId={teamId} />
+      )}
+    </TeamShell>
+  );
+}

@@ -20,6 +20,7 @@ export default function PageHeader({
   title,
   sub,
   competition = false,
+  plate,
   children,
 }: {
   title: string;
@@ -40,6 +41,23 @@ export default function PageHeader({
    *  ink and ground swapped: 7.0:1 either way round, because contrast is a
    *  property of the pair and not of which one is behind. */
   competition?: boolean;
+  /** The plate this bar is drawn on, when the subject has a colour of its own —
+   *  a fantasy team does, and nothing else here yet.
+   *
+   *  **Not a third treatment, an override on the club/person one.** The bar is
+   *  already the shape Championship Manager draws a club with (`cm9900/25.jpg`);
+   *  what a team's colour changes is the plate, not the design. `21.jpg` is the
+   *  argument for allowing it at all — the game colours a side's header in that
+   *  side's own colours, and a fantasy team is the object this app has that a
+   *  club is there.
+   *
+   *  Inline rather than a token, because a Tailwind v4 theme variable is dropped
+   *  unless its name appears literally in scanned source and there is no literal
+   *  name for a colour picked per team at runtime. `clubColours` reaches its call
+   *  sites the same way.
+   *
+   *  Absent leaves the chrome blue every other screen opens with. */
+  plate?: { background: string; ink: string };
   children?: React.ReactNode;
 }) {
   if (competition) {
@@ -70,9 +88,18 @@ export default function PageHeader({
 
   return (
     <header>
-      <div className="cm-titlebar flex items-center gap-2 px-2 py-1">
+      {/* `cm-titlebar` still carries the bevel, the height and the type; only the
+          two colours move. Left alone when no plate is given, so every screen
+          that does not have a subject with a colour is untouched. */}
+      <div
+        className="cm-titlebar flex items-center gap-2 px-2 py-1"
+        style={plate ? { background: plate.background } : undefined}
+      >
         <LeagueCrest height={18} />
-        <h1 className="min-w-0 flex-1 truncate text-sm font-bold uppercase text-ink">
+        <h1
+          className="min-w-0 flex-1 truncate text-sm font-bold uppercase text-ink"
+          style={plate ? { color: plate.ink } : undefined}
+        >
           {title}
         </h1>
       </div>
