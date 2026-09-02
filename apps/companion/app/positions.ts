@@ -24,14 +24,6 @@ const SHORT: Record<string, string> = {
   F: "FWD",
 };
 
-/** The same four as a heading over a group of them. */
-const GROUP: Record<string, string> = {
-  G: "Goalkeepers",
-  D: "Defenders",
-  M: "Midfielders",
-  F: "Forwards",
-};
-
 /** What a manager reads on a shirt: `GK`, `DEF`, `MID`, `FWD`.
  *
  *  Null and empty both answer `null` rather than a dash or a blank string, so
@@ -81,13 +73,4 @@ export function positionsLabel(positions: readonly string[]): string | null {
   if (kept.length === 1) return positionLabel(kept[0]) ?? null;
   // Fantrax's own letters, joined — which is what the short form IS.
   return kept.join("/");
-}
-
-/** A heading over everyone playing there: `Defenders`.
- *
- *  Spelled out rather than `DEF`, because a heading has the room and a column of
- *  three-letter headings reads as a form. Unknown letters print verbatim on the
- *  same rule as `positionLabel`. */
-export function positionGroup(position: string): string {
-  return GROUP[position] ?? position;
 }

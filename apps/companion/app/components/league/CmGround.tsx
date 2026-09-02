@@ -172,45 +172,14 @@ export default function CmGround({
           the join keeps one ordering in the data and lets each view draw it the
           way that view reads.
 
-          `justify-end` with a generous gap: the Milan shot spends most of its
-          height on the space BETWEEN lines, which is what makes a formation look
-          like a shape rather than like a list with pictures. */}
-      {/* **The team stands in its own half and a bit**, not across the whole
-          picture. `19.jpg` puts Everton's back four just above their own box and
-          the front three around the halfway line, leaving the top third of the
-          pitch empty — which is what makes it read as a team on a pitch rather
-          than as rows filling a rectangle.
+          **`absolute inset-0`, so the lines live INSIDE the shape** rather than
+          setting it: the pitch's `aspect-ratio` is the frame and the rows fill
+          it, which is what stops the two fighting over the height.
 
-          `justify-between` inside a padded box rather than `justify-end` with a
-          gap: the lines then SPREAD to fill the space they are given, which is
-          what stops the keeper being stranded a third of a pitch from his back
-          line while the outfield bunches. The padding is what leaves the
-          attacking end empty. */}
-      {/* **`absolute inset-0`, so the lines live INSIDE the shape** rather than
-          setting it. The pitch's `aspect-ratio` is the frame; the rows fill it
-          and share out whatever height that leaves, which is what stops the two
-          fighting — and the fight is what produced a 3.17 ratio and a keeper
-          off the bottom of the screen.
-
-          `pt-[28%]` is the empty attacking third `19.jpg` leaves above the front
-          line; `justify-between` spreads the rest, so the keeper sits on his own
-          goal line rather than a third of a pitch above it. */}
-      {/* **The lines, spread down the pitch** (Craig, 2 Sep: "players can still
-          be spaced out a little, drop the keeper down a small amount, defenders
-          down, mids stay, and forwards just a little — lots of the pitch view
-          still wasted space").
-
-          `justify-between` inside a padded box does the spreading; the padding
-          is what decides where the block sits. A small head margin and almost
-          none at the foot drops the whole side down the pitch — the keeper onto
-          his own line where a keeper stands, and the midfield and forwards a
-          little further from the halfway line than they were.
-
-          The head padding is what moves the outfield: a bigger one squeezes the
-          block downward toward the keeper, who is pinned to his own line by the
-          near-zero foot padding (Craig, 2 Sep: "drop mid and forward down a very
-          small amount", then "move all outfield positions down towards the
-          keeper JUST a little bit"). */}
+          The head padding is what positions the side. It leaves the attacking
+          end empty, as `19.jpg` does, and squeezes the block down toward the
+          keeper — who is pinned to his own goal line by the near-zero padding at
+          the foot. `justify-between` shares out what is left. */}
       <div className="absolute inset-0 z-base flex flex-col-reverse justify-between px-2 pb-1 pt-[16%]">
         {children}
       </div>

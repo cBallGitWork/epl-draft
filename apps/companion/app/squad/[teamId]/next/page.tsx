@@ -1,3 +1,4 @@
+import TabEmpty from "../../../components/league/TabEmpty";
 import { headToHead, inkOn, ordinal, teamColours } from "@epl/core";
 import TeamShell from "../Shell";
 import { getLeagueSquads } from "../../../squads";
@@ -61,16 +62,12 @@ export default async function NextMatchPage({
       empty={tie === undefined ? ["next"] : []}
     >
       {tie === undefined ? (
-        <section className="cm-panel px-3 py-6">
-          <p className="text-center text-2xs text-muted">
-            {/* Two different absences and only one of them is a fault. Fantrax
+        <TabEmpty>{/* Two different absences and only one of them is a fault. Fantrax
                 not describing the league at all is an outage; the league simply
                 not pairing this side in this period is an ordinary bye. */}
             {squads.info === null
               ? "We cannot read the league's own description of itself right now."
-              : `${team.teamName} has no fixture in this period.`}
-          </p>
-        </section>
+              : `${team.teamName} has no fixture in this period.`}</TabEmpty>
       ) : (
         <Fixture
           gameweek={squads.snapshot.gameweek}

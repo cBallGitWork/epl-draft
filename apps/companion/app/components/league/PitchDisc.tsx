@@ -17,10 +17,10 @@ import { fixtureLabel } from "@epl/core";
 // discs aren't ideal for us… let's trial player cut out"). We have no number to
 // draw: FPL's `squad_number` is a key that is null on all 622 elements, which
 // `CLAUDE.md` records as a fact rather than a gap. A face is what we do have,
-// and `PlayerPortrait` already draws one as a disc — the club's colour behind
-// it, his initials when the photograph 403s, and the whole fallback ladder that
-// took a day to get right. It sizes off `--row-portrait`, so this sets that and
-// nothing else.
+// and `PlayerImage` already draws one — this season's photograph, then one of
+// ours, then his club's kit, then his initials. The disc is sized by the literal
+// below rather than by a token, because it is this component's own geometry and
+// nothing else reads it.
 //
 // **The name stays, unlike CM's.** The game gets away with bare numbers because
 // the squad list stands beside the pitch carrying the same numbers; ours is a
@@ -97,9 +97,7 @@ export default function PitchDisc({
             disc that cropped the chin instead, so a disc asks for `contain`.
           · Smaller. The circle was 64px against a name at 10 — it dominated the
             row and pushed the lines apart.
-
-          `--row-portrait` is the size `PlayerImage` reads, so it is set here and
-          the image sizes itself off it. */}
+ */}
       <span
         className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border-2"
         style={

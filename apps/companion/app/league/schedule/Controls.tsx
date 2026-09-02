@@ -1,5 +1,6 @@
 "use client";
 
+import { SELECT } from "../../components/shell/ButtonLink";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { COMPETITIONS, type LeagueTeam } from "@epl/core";
@@ -155,7 +156,7 @@ function Select({
       // control strip is four of them at about 155px, left-aligned, and the
       // strip is the shape rather than any one plate in it. Below `lg` they
       // still share the row, because there a phone has nothing to spare.
-      className="cm-bevel min-h-11 min-w-0 flex-1 px-2.5 text-sm font-semibold lg:min-h-9 lg:max-w-52"
+      className={`${SELECT} min-w-0 flex-1 lg:max-w-52`}
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>

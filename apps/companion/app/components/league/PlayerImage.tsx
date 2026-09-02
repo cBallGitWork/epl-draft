@@ -127,11 +127,13 @@ export default function PlayerImage({
           height={145}
           sizes={sizes}
           onError={() => setRung(rung === "initials" ? "initials" : NEXT[rung])}
-          // **Cover, cropped at the top by default; a disc asks for centre.**
-          // A cut-out STANDING on grass wants its feet cropped and its head
-          // whole, which is `object-top`. In a round disc that clips the chin,
-          // so `PitchDisc` sets `--pitch-crop: center` and the portrait fills
-          // the circle with the overflow trimmed evenly top and bottom.
+          // **Cover, cropped at the top by default; a round frame moves the
+          // crop down.** A cut-out STANDING on grass wants its feet cropped and
+          // its head whole, which is `object-top`. In a circle that same crop
+          // clips the chin, so `--pitch-crop` lets a caller pin its own vertical
+          // offset — the X stays centred either way, which is why only the Y is
+          // a variable. The caller owns the number; naming one here would be a
+          // second place for it to drift.
           //
           // `--pitch-zoom` is a small scale a round frame can ask for, pinned to
           // the TOP so the crown stays in view as it grows. It earns its place

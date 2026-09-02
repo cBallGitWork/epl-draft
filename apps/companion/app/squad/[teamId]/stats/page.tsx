@@ -1,3 +1,4 @@
+import TabEmpty from "../../../components/league/TabEmpty";
 import { isResolved, playerName, type SeasonTotals } from "@epl/core";
 import TeamShell from "../Shell";
 import { leagueTeams } from "../team";
@@ -69,11 +70,7 @@ export default async function StatsPage({
       empty={his.length === 0 ? ["stats"] : []}
     >
       {his.length === 0 ? (
-        <section className="cm-panel px-3 py-6">
-          <p className="text-center text-2xs text-muted">
-            Fantrax has no statistical line for anybody on this squad yet.
-          </p>
-        </section>
+        <TabEmpty>Fantrax has no statistical line for anybody on this squad yet.</TabEmpty>
       ) : (
         <StatBoard lines={his} underlying={underlying} names={names} />
       )}

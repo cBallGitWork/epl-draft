@@ -1,3 +1,4 @@
+import Caption from "../components/shell/Caption";
 import Link from "next/link";
 import {
   type GroupKey,
@@ -50,11 +51,7 @@ export default function Board({
           Its own caption strip above it, for the same reason the league screens
           have one: the blue bar names the SCREEN and this names what is in the
           panel. */}
-      <section className="cm-panel px-2 py-1.5">
-        <p className="text-center font-chrome text-sm font-bold text-accent lg:text-lg">
-          {category}
-        </p>
-      </section>
+      <Caption>{category}</Caption>
 
       {/* **A box shorter than its list, and a scrollbar that says so.** Fifty
           rows in a container sized to about fourteen, which is what CM's own

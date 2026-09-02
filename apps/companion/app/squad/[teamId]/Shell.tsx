@@ -1,3 +1,4 @@
+import Caption from "../../components/shell/Caption";
 import type { CSSProperties } from "react";
 import { inkOn, teamColours } from "@epl/core";
 import PageHeader from "../../components/shell/PageHeader";
@@ -69,9 +70,7 @@ export default function TeamShell({
 
       {/* The caption's own box, not a heading inside the content's (Craig,
           1 Sep). */}
-      <section className="cm-panel px-2 py-1.5">
-        <p className="text-center font-chrome text-sm font-bold text-accent lg:text-lg">{title}</p>
-      </section>
+      <Caption>{title}</Caption>
 
       {children}
     </div>

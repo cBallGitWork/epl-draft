@@ -1,3 +1,4 @@
+import Caption from "../components/shell/Caption";
 import { LEAGUE_NAME } from "@epl/core";
 import PageHeader from "../components/shell/PageHeader";
 import SectionNav from "./SectionNav";
@@ -67,9 +68,7 @@ export default function LeagueShell({
           under it is a separate bordered block. This had them in one panel with
           the caption floating at the top of it, which is a heading inside a box
           rather than a box of its own. */}
-      <section className="cm-panel px-2 py-1.5">
-        <p className="text-center font-chrome text-sm font-bold text-accent lg:text-lg">{title}</p>
-      </section>
+      <Caption>{title}</Caption>
 
       {/* The content's own container, sized to hold the league.
           `min-h` so a short league still draws a panel rather than a strip: the

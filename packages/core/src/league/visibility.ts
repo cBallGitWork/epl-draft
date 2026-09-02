@@ -100,24 +100,6 @@ function lineupsLocked(
   return now >= Date.parse(locks);
 }
 
-/** The first period whose lineups have NOT locked — the week a manager can still
- *  change, and therefore the week the squad screens are about.
- *
- *  Mid-round the two are not the same week. Fantrax goes on serving the live
- *  period to a no-parameter read all weekend, so a squad screen that takes what
- *  it is given shows an arrangement nobody can alter, under a running score that
- *  belongs to the matchday board. What a manager opens Squads FOR is the eleven
- *  he can still pick.
- *
- *  `=== false` and not a truthiness test, for the reason the gate below has:
- *  `lineupsLocked` answers null for a period it cannot find a lock in — a week
- *  with no football, or one FPL has not dated — and unknown is not "still open".
- *  Such a period is stepped over, and a season of them answers null, which the
- *  caller reads as "take whatever Fantrax considers open".
- *
- *  Periods are read in their own order rather than the list's: the answer is the
- *  EARLIEST unlocked week, and a payload that arrived out of order would
- *  otherwise hand back whichever one came first. */
 /** The most recent period whose lineups HAVE locked — the last week whose
  *  arrangements are public.
  *
@@ -153,6 +135,24 @@ export function lastLockedPeriod(
   return latest;
 }
 
+/** The first period whose lineups have NOT locked — the week a manager can still
+ *  change, and therefore the week the squad screens are about.
+ *
+ *  Mid-round the two are not the same week. Fantrax goes on serving the live
+ *  period to a no-parameter read all weekend, so a squad screen that takes what
+ *  it is given shows an arrangement nobody can alter, under a running score that
+ *  belongs to the matchday board. What a manager opens Squads FOR is the eleven
+ *  he can still pick.
+ *
+ *  `=== false` and not a truthiness test, for the reason the gate below has:
+ *  `lineupsLocked` answers null for a period it cannot find a lock in — a week
+ *  with no football, or one FPL has not dated — and unknown is not "still open".
+ *  Such a period is stepped over, and a season of them answers null, which the
+ *  caller reads as "take whatever Fantrax considers open".
+ *
+ *  Periods are read in their own order rather than the list's: the answer is the
+ *  EARLIEST unlocked week, and a payload that arrived out of order would
+ *  otherwise hand back whichever one came first. */
 export function planningPeriod(
   periods: LeaguePeriod[],
   kickoffs: readonly GameweekKickoff[],

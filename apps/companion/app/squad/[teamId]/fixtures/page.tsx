@@ -1,3 +1,4 @@
+import TabEmpty from "../../../components/league/TabEmpty";
 import { type CompetitionTie, leagueTies, periodPairings } from "@epl/core";
 import TeamShell from "../Shell";
 import { teamOr404 } from "../team";
@@ -37,12 +38,8 @@ export default async function FixturesPage({
   if ("unavailable" in read) {
     return (
       <TeamShell team={team} title="Fixtures" current="fixtures" empty={["fixtures"]}>
-        <section className="cm-panel px-3 py-6">
-          <p className="text-center text-2xs text-muted">
-            The schedule is part of the league&apos;s own description of itself, and we cannot read
-            it right now.
-          </p>
-        </section>
+        <TabEmpty>The schedule is part of the league&apos;s own description of itself, and we cannot read
+            it right now.</TabEmpty>
       </TeamShell>
     );
   }

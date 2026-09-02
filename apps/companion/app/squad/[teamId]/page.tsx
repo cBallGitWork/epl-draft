@@ -196,11 +196,6 @@ export default async function TeamPage({
        `revalidate` bounds staleness without pushing anything to a phone already
        open on the sofa. Same cadence as the head-to-head board that shows the
        same numbers. */
-    /* Who he plays belongs on the same line as who he is — it had a line of its
-       own under the period, which is where a reader looks last. It rides the
-       `sub` now rather than the bar: the bar is the TEAM, because that is what
-       every other tab under it is also about, and a bar reading "test2 vs
-       test3" on Transfers would be naming a fixture over a ledger. */
     <TeamShell
       team={team}
       title={mine ? "Your squad" : "Squad"}

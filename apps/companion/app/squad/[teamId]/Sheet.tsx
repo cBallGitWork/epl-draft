@@ -52,6 +52,10 @@ export default function Sheet({
   // control is hidden.
   const [view, setView] = useState<View>("list");
 
+  // Looked up once. It was three calls to `teamColours(teamId)` on one element —
+  // the same table read three times to build one plate.
+  const colours = teamColours(teamId);
+
   return (
     <div className="flex flex-col gap-2">
       {/* **No shape line** (Craig, 2 Sep: "so remove 1-3-4-3"). The AC Milan
@@ -123,9 +127,9 @@ export default function Sheet({
             show="fixture"
             // His own colours: the plate is his primary and the ring his
             // secondary, which is how a kit is put together.
-            fill={teamColours(teamId).primary}
-            outline={teamColours(teamId).secondary}
-            ink={inkOn(teamColours(teamId))}
+            fill={colours.primary}
+            outline={colours.secondary}
+            ink={inkOn(colours)}
           />
         </div>
       </div>

@@ -1,3 +1,4 @@
+import TabEmpty from "../../../components/league/TabEmpty";
 import { deals } from "@epl/core";
 import TeamShell from "../Shell";
 import { leagueTeams } from "../team";
@@ -43,11 +44,7 @@ export default async function TransfersPage({
       empty={his.length === 0 ? ["transfers"] : []}
     >
       {his.length === 0 ? (
-        <section className="cm-panel px-3 py-6">
-          <p className="text-center text-2xs text-muted">
-            {team.teamName} has made no moves this season.
-          </p>
-        </section>
+        <TabEmpty>{team.teamName} has made no moves this season.</TabEmpty>
       ) : (
         <Ledger deals={his} teamId={teamId} names={names} />
       )}

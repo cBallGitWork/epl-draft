@@ -1,5 +1,6 @@
 "use client";
 
+import { SELECT } from "../../components/shell/ButtonLink";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { type StatCategory } from "@epl/core";
@@ -59,7 +60,7 @@ export default function Filters({
         // is the platform's popup and cannot be styled, which is why this is
         // still a `<select>`. Sized by its own longest option: a percentage cap
         // clipped "Goals against" to "Goals agains" on a 390 phone.
-        className="cm-bevel min-h-11 px-2.5 text-sm font-semibold lg:min-h-9"
+        className={`${SELECT}`}
       >
         {categories.map((entry) => (
           <option key={entry.key} value={entry.key}>

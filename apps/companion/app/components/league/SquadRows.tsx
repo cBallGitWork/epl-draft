@@ -2,15 +2,12 @@ import Image from "next/image";
 import {
   type SquadDetailLine,
   type SquadPlayerDetail,
-  contribution,
   crestUrl,
   fixtureLabel,
   isResolved,
-  kickedOff,
   fullPlayerName,
 } from "@epl/core";
 import StateBox from "../football/StateBox";
-import { chipsFor } from "./Chips";
 import { positionsLabel } from "../../positions";
 
 // The same fifteen as a list. Offered beside the pitch rather than instead of
@@ -155,13 +152,9 @@ function Row({
 }) {
   const { club, points } = player;
   const resolved = isResolved(player.rostered) ? player.rostered : null;
-  const done = contribution(resolved ? resolved.stats : []);
   // Null for a slot the bridge has not settled, which is ordinary — the pool
   // carries academy names FPL has never listed — and reads as silence.
   const footballer = resolved?.player ?? null;
-  const started = kickedOff(player.opposition);
-  // Two is what fits beside the minutes in the fixture column.
-  const chips = chipsFor(done).slice(0, 2);
 
   // Who his club plays, in the app's one spelling of a fixture — `BRE (H)`.
   const fixture = fixtureLabel(player.opposition);
@@ -248,33 +241,6 @@ function Row({
       <span className="numeric w-[4.75rem] shrink-0 truncate text-3xs text-muted">
         {fixture ?? <span className="text-faint">unmapped</span>}
       </span>
-
-      {/* What he has made of his match, and nothing before he starts one.
-          **No fixture chip here** (Craig, 31 Aug): the coloured box is handy on
-          the pitch, where a card has room for it and a manager is picking a
-          side, and it was turning up on five screens. A list is a list of
-          readings, and Championship Manager's own squad list carries no
-          opponent at all — its columns are position, age, form, morale,
-          condition, value (`cm9900/25.jpg`, and `10.jpg`; `12.jpg` shows the
-          same columns but is Everton TRAINING, which is not the squad list).
-
-          Phone only. Above `lg` the stat columns below say the same thing at
-          more length, so this was the same match twice on one row. */}
-      {started ? (
-        <span className="hidden w-12 shrink-0 items-center justify-end gap-0.5">
-          {chips.map((chip) => (
-            <span
-              key={chip.label}
-              className={`numeric px-1 text-[0.625rem] font-bold leading-[1.4] ${chip.className}`}
-            >
-              {chip.label}
-            </span>
-          ))}
-          <span className="numeric text-[0.625rem] font-bold text-muted">
-            {done.minutes}&apos;
-          </span>
-        </span>
-      ) : null}
 
       {/* Undefined is no table at all and takes the cell with it; null is a
           table that does not name him, which is a dash. */}
