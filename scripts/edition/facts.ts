@@ -70,7 +70,18 @@ export async function gatherRoundFacts(
 ): Promise<RoundFacts> {
   const [live, rosters, claims, trades, draft, standingsPage, wire] = await Promise.all([
     fetchLiveScoring(FANTRAX_LEAGUE_ID, period),
-    fetchTeamRosters(FANTRAX_LEAGUE_ID).catch(() => null),
+    // **The ROUND's period, not today's.** Asked without one, Fantrax answers
+    // with whatever it currently labels the rosters — and it rolls that label
+    // the moment a round's last fixture ends, so for about four days in seven
+    // it names next week. Every other read here already asks for the round's
+    // period; this one did not, which made `wasFielded` false for every column
+    // that fires AFTER a round finishes, which is all of them. `eleven` and
+    // `dodgers` could therefore never file at all.
+    //
+    // Probed 2 Sep 2026 (rehearsal league): the period asked for is echoed back
+    // verbatim, and 3 of 10 teams field a genuinely different side in period 2
+    // than in period 3 — so this is a different answer, not a different label.
+    fetchTeamRosters(FANTRAX_LEAGUE_ID, period).catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "CLAIM_DROP").catch(() => null),
     fetchTransactions(FANTRAX_LEAGUE_ID, "TRADE").catch(() => null),
     fetchDraftResults(FANTRAX_LEAGUE_ID).catch(() => null),
