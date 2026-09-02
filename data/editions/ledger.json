@@ -2,22 +2,47 @@
   "w05aib75mtj36y1g": {
     "covered": [
       "round-report:gw2",
-      "power-ranking:gw2"
+      "power-ranking:gw2",
+      "eleven:gw2",
+      "dodgers:gw2",
+      "presser:gw2",
+      "match:gw2:2v94",
+      "match:gw2:8v36",
+      "match:gw2:14v17",
+      "news:https://www.bbc.co.uk/sport/football/articles/clyjmd19887o",
+      "wire:through-gw2",
+      "studio:gw2",
+      "match:gw2:56v54",
+      "news:https://www.bbc.co.uk/sport/football/articles/c3wj1qw5x04o"
     ],
     "threads": [
       {
-        "subject": "123's scoring ceiling",
-        "beat": "103 again and a 41-point win, still only third; the arithmetic is robbing them.",
+        "subject": "123's twin Sunderland defenders",
+        "beat": "Reinildo and Hume return six each, twelve off one clean sheet",
         "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-02T15:24:39.902Z"
+        "beats": 1,
+        "lastUsedAt": "2026-09-02T16:10:48.299Z"
+      },
+      {
+        "subject": "test3's Ndiaye at his new club",
+        "beat": "Ndiaye leaves Everton for Manchester City, up to £65m.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-02T16:10:48.299Z"
+      },
+      {
+        "subject": "123's scoring ceiling",
+        "beat": "A marquee-priced asset joins the cause, though the points, not the price tag, are what 123 keep chasing.",
+        "status": "open",
+        "beats": 7,
+        "lastUsedAt": "2026-09-02T16:08:40.917Z"
       },
       {
         "subject": "testf's phantom zero",
-        "beat": "94 scored and beaten by eleven; two rounds, two blanks, zero justice.",
+        "beat": "94 scored, beaten by eleven again, and now shopping to fix it.",
         "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-02T15:24:39.902Z"
+        "beats": 6,
+        "lastUsedAt": "2026-09-02T16:08:40.917Z"
       }
     ]
   }

@@ -1,0 +1,48 @@
+{
+  "slug": "gw2-presser",
+  "kind": "presser",
+  "leagueId": "w05aib75mtj36y1g",
+  "period": 2,
+  "gameweek": 2,
+  "filedAt": "2026-09-02T16:07:34.807Z",
+  "expiresAt": null,
+  "edition": "The Monday Club",
+  "byline": "The Press Room",
+  "headline": "123 Post Forty, Bank Nothing But Third",
+  "deck": "123 win by 41 in gameweek 2 but the margins elsewhere are tighter; testf score 94 and lose again.",
+  "body": "The press room fills for gameweek 2. Five winners, five losers, and one demolition that still cannot buy top billing. 123 turn a 41-point margin and answer questions about a table that refuses to reward them. testf take their seat, 94 on the board, beaten again, and the phrase phantom zero hangs unspoken over the row.",
+  "subjects": [
+    "presser:gw2"
+  ],
+  "image": null,
+  "ties": [],
+  "extras": {
+    "quotes": [
+      {
+        "teamId": "98yx3o50mtj36y3g",
+        "speaker": "123",
+        "line": "Forty-one is a nice number. Third is a nicer question for someone else."
+      },
+      {
+        "teamId": "g80h3bf5mtj36y3g",
+        "speaker": "test31121",
+        "line": "We ran into a buzzsaw. Nothing to say that the scoreline hasn't already screamed."
+      },
+      {
+        "teamId": "pzmd243ymtj36y3g",
+        "speaker": "testf",
+        "line": "Ninety-four points. Two rounds, two defeats. I'd like a word with the fixture list."
+      },
+      {
+        "teamId": "deo9ljvtmtj36y3g",
+        "speaker": "test4",
+        "line": "Eleven's a comfortable margin. We just kept our heads and let the board do the talking."
+      },
+      {
+        "teamId": "y6viv6jfmtj36y3g",
+        "speaker": "test3",
+        "line": "Ten points, quiet win. Nothing clever from me, the lads returned."
+      }
+    ]
+  }
+}
