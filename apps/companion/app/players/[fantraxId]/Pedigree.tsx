@@ -1,4 +1,5 @@
 import type { Pedigree } from "@epl/core";
+import { signed } from "@epl/core";
 
 // What the draft paid for him.
 //
@@ -69,8 +70,7 @@ function Value({ against }: { against: number | null }) {
           against < 0 ? "text-bad" : against > 0 ? "text-up" : "text-ink"
         }`}
       >
-        {against > 0 ? "+" : ""}
-        {against}
+        {signed(against)}
       </span>
       on his pick
     </span>

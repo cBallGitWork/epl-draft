@@ -9,6 +9,7 @@ import {
   isResolved,
   kickedOff,
   playerName,
+  signed,
 } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
 import Modal from "../shell/Modal";
@@ -241,7 +242,7 @@ function Breakdown({
               <span
                 className={`numeric text-sm font-bold ${line.points < 0 ? "text-bad" : "text-ink"}`}
               >
-                {line.points > 0 ? `+${line.points}` : line.points}
+                {signed(line.points)}
               </span>
             </li>
           ))}

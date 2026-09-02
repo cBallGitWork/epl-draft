@@ -273,8 +273,11 @@ locally on 2 Sep to file the paper's first stories, which is what exposed that
 existed anywhere. Corrected 2 Sep 2026.*
 
 `FANTRAX_LEAGUE_ID` selects the league the app serves; it defaults to the
-rehearsal league. Setting it to `ayyoh3n2mr326v2o` is **most** of the 10 Oct
-swap — the other half is `.github/workflows/editions.yml`, whose job has its own
+**dummy** league (`config.ts` — `process.env.FANTRAX_LEAGUE_ID || leagueId("dummy")`).
+This said "rehearsal" in three places until 2 Sep 2026 and was never true: the
+dummy league is the ten-team one `next dev` opens on, and the rehearsal league
+is a separate id you have to ask for. Setting it to `ayyoh3n2mr326v2o` is
+**most** of the 10 Oct swap — the other half is `.github/workflows/editions.yml`, whose job has its own
 environment and inherits nothing from Vercel. Miss it and CI keeps filing a
 column about the rehearsal league; the front page will refuse to print it
 (`PublishedStory.leagueId`, filtered by `normalizePaper`), so the failure is a

@@ -1,4 +1,4 @@
-import { leagueTable as footballTable } from "@epl/core";
+import { leagueTable as footballTable, signed } from "@epl/core";
 import type { PaperTableRow } from "./components/gazette/PaperTable";
 import { seasonFixtures } from "./football";
 import { leagueTable as draftTable } from "./standings";
@@ -95,7 +95,7 @@ export async function footballRows(): Promise<PaperTableRow[]> {
     rank: at + 1,
     name: row.name,
     played: row.played,
-    detail: row.goalDifference > 0 ? `+${row.goalDifference}` : String(row.goalDifference),
+    detail: signed(row.goalDifference),
     points: row.points,
   }));
 }

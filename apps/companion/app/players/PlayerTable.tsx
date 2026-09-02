@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { clubColours, toFplClubCode } from "@epl/core";
+import { clubColours, signed, toFplClubCode } from "@epl/core";
 import PlayerPortrait from "../components/football/PlayerPortrait";
 import type { PoolRow } from "./pool";
 import { COLUMNS, activeSort, sortHref } from "./query";
@@ -177,8 +177,7 @@ function Trend({ value }: { value: number | null }) {
   if (value === 0) return <span className="text-faint">0%</span>;
   return (
     <span className={value > 0 ? "text-up" : "text-bad"}>
-      {value > 0 ? "+" : ""}
-      {value}%
+      {signed(value)}%
     </span>
   );
 }

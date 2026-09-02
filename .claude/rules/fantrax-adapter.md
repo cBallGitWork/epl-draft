@@ -48,7 +48,9 @@ reads `apps/companion/.env.local` because the secret it mints with must be the
 one the app verifies with.
 
 `FANTRAX_LEAGUE_ID` selects the league the app serves and defaults to the
-rehearsal league.
+**dummy** league — the ten-team one `next dev` opens on. The rehearsal league is
+a separate id you have to ask for; this file said "rehearsal" until 2 Sep 2026
+and was never right.
 
 ## Writes are confirm-then-execute, flagged, and audited
 

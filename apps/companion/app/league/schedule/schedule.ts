@@ -80,7 +80,7 @@ export interface Schedule {
  *  Only the league's own description of itself is fatal. A table we cannot read
  *  costs the placeholder brackets their seeding and they print places instead,
  *  which is not worth losing the fixtures over and states nothing false. */
-const readSeason = leagueCache("schedule-season",
+export const getSchedule = leagueCache("schedule-season",
   async (): Promise<Schedule | Unavailable> => {
     const [raw, season, standings] = await Promise.all([
       orRefusal(fetchLeagueInfo(FANTRAX_LEAGUE_ID)),
@@ -135,17 +135,13 @@ const readSeason = leagueCache("schedule-season",
   },
 );
 
-export function getSchedule(): Promise<Schedule | Unavailable> {
-  return readSeason();
-}
-
 /** Every team's total in every period, from Fantrax's own results table.
  *
  *  One request for the whole season, which is what makes a season view
  *  affordable — the live read answers one period at a time, and thirty-eight of
  *  those to draw one screen is not a trade worth making.
  *
- *  Read separately from `readSeason` and only when a season is actually being
+ *  Read separately from `getSchedule` and only when a season is actually being
  *  shown, so a reader looking at one gameweek does not pay for thirty-eight.
  *
  *  Failure is empty rather than fatal: a season with no results is every row on

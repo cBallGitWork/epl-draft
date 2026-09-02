@@ -1,3 +1,4 @@
+import { signed } from "@epl/core";
 import Section from "../../components/shell/Section";
 import type { PlayerSeason } from "./season";
 
@@ -60,7 +61,7 @@ export default function Breakdown({ season }: { season: PlayerSeason | null }) {
                 category.points < 0 ? "text-bad" : "text-ink"
               }`}
             >
-              {category.points > 0 ? `+${category.points}` : category.points}
+              {signed(category.points)}
             </span>
           </li>
         ))}
