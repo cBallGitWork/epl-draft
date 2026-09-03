@@ -98,7 +98,6 @@ No fluid clamps except inside the masthead.
 | `shell/Caption` | The yellow centred caption inside a panel. The bar above names the subject; this names the view. Every screen in the reference carries both. |
 | `shell/Modal` | A native `<dialog>` over the page. Not a hand-rolled overlay — the element already does focus, Escape and the backdrop. |
 | `shell/Changed` | A figure that has just moved, briefly marked. The live desk's only animation. |
-| `league/TableHeads` | CM's bevelled head strip, and the only place its mechanics live: the row, the cell, the plate, the bare name cell, and `SortHead` — the plate as a LINK, drawn pressed when the table is ordered by it. Three tables sort through it. The column LISTS stay with their tables, because different columns mean genuinely different widths. |
 | `league/TableCells` | The other half: `IndexCell`, the ordinal in CM's index block (`24.jpg` runs `1st 2nd 3rd` down the left of every table it draws), and `ROW_LINK`, the class a board's name cell links with. Both arrived at three occurrences and not before. |
 | `league/TeamBadge` | A fantasy manager's own badge, with its initial and its dashed placeholder. The club-side equivalent is deliberately NOT extracted — see the note under this table. |
 | `league/TabEmpty` | The empty state INSIDE a shell: one muted line in a panel. Not `shell/Nothing`, which is a whole-page state and takes a provider code. |

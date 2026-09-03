@@ -1,5 +1,5 @@
 import { clubColours } from "@epl/core";
-import Nothing from "../../../components/shell/Nothing";
+import TabEmpty from "../../../components/league/TabEmpty";
 import ButtonLink from "../../../components/shell/ButtonLink";
 import ClubShell from "./Shell";
 import SquadTable from "./SquadTable";
@@ -37,9 +37,7 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
     <ClubShell club={club} title="Squad" current="squad">
       <section className="cm-panel flex flex-col gap-2 p-2">
         {squad.length === 0 ? (
-          <Nothing title="No squad to show" code={`club code ${club.code}`}>
-            FPL names this club but lists nobody on its books.
-          </Nothing>
+          <TabEmpty>FPL names {club.name} but lists nobody on its books.</TabEmpty>
         ) : (
           <>
             <SquadTable

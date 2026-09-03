@@ -1,5 +1,5 @@
 import { clubById } from "@epl/core";
-import Nothing from "../../../../components/shell/Nothing";
+import TabEmpty from "../../../../components/league/TabEmpty";
 import { footballNow } from "../../../../football";
 import ClubShell from "../Shell";
 import Run from "../Run";
@@ -54,9 +54,7 @@ export default async function ClubFixturesPage({ params }: { params: Promise<{ c
         style={{ minHeight: "calc(20 * var(--table-row) + var(--table-chrome))" }}
       >
         {run.length === 0 ? (
-          <Nothing title="No fixtures" code={`club code ${club.code}`}>
-            FPL has published no match with this club in it.
-          </Nothing>
+          <TabEmpty>FPL has published no match with {club.name} in it.</TabEmpty>
         ) : (
           <>
             <Run fixtures={run} clubs={clubById(snapshot)} />

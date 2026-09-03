@@ -160,8 +160,13 @@ the 29 tables above carries.
 - Keep `packages/core` clean: adapters, maps, scoring, identity.
 - Keep `apps/companion` focused on the live app experience.
 - Keep `apps/lab` as the future 27/28 prototype.
-- Avoid building a server-side Fantrax login unless the extension/cookie flow is
-  solved.
+- **Do not build a server-side Fantrax login.** reCAPTCHA v3 with a v2 fallback,
+  plus 2FA, makes it unviable, and we hold no passwords (CLAUDE.md's auth
+  constraint). The write surface is the commissioner's own cookie plus
+  `adminMode`. **A browser extension is not an option** and has not been since
+  19 Aug 2026 — see `SEASON_LOG.md`, "The extension plan is dead, and it was
+  dead on arrival". *This line read "unless the extension/cookie flow is solved"
+  until 3 Sep 2026, which left the extension route sounding open.*
 
 ## Known constraints
 
@@ -531,22 +536,37 @@ longer one here.)
 
 ### The root layout swallows a failed snapshot read (§2, no defensive try/catch)
 
-`footballIsOn()` in `apps/companion/app/layout.tsx` wraps `getFootballSnapshot()`
-in a `try/catch` that returns `true`. §2 forbids exactly this — swallow and
-default — and the rest of the tree honours it: the FPL client says so in a
-comment as it rethrows, and `refusals.ts` catches only `FantraxError`.
+`offerLive()` in `apps/companion/app/football.ts:142` wraps `footballNow()` — and
+so `getFootballSnapshot()` under it — in a `try/catch` that returns `true`. The
+root layout calls it to decide whether the Live section exists. §2 forbids
+exactly this, swallow and default, and the rest of the tree honours it: the FPL
+client says so in a comment as it rethrows, and `refusals.ts` catches only
+`FantraxError`.
 
-It stands here for two reasons that do not apply anywhere else. A root layout
-that throws takes **every route** down with it, including the pages that would
-otherwise have rendered fine and reported the failure themselves; there is no
-`error.tsx` in the app, so the alternative is a blank screen for a tab bar.
-And the default is chosen, not convenient: **it fails open**, showing the
-Matchday tab rather than hiding it. A tab that should not be there leads to a
-page that says plainly it could not read anything; a section that silently
-vanishes mid-match is the failure nobody can diagnose from a phone.
+It stands for two reasons that do not apply anywhere else. A root layout that
+throws takes **every route** down with it, including the pages that would
+otherwise have rendered fine and reported the failure themselves. And the default
+is chosen, not convenient: **it fails open**, offering the Live section rather
+than hiding it. A section that should not be there leads to a page that says
+plainly it could not read anything; one that silently vanishes mid-match is the
+failure nobody can diagnose from a phone.
 
-If an `error.tsx` ever lands, this should be revisited — that is the shape that
-would let the layout throw honestly.
+**Corrected 3 Sep 2026, and the correction is the point.** This entry named
+`footballIsOn()` in `layout.tsx`, which has not existed for some time — the
+function was renamed and moved to `football.ts`, and the only `footballIsOn` left
+in the tree is dead text inside `.next` build chunks. It also said "there is no
+`error.tsx` in the app, so the alternative is a blank screen", and
+`apps/companion/app/error.tsx` has existed since 22 Aug 2026 (`ea854494`). Both
+were found by `docs-drift-auditor` on the first run after this file's standing
+half stopped being exempt from it, which is the whole argument for the split.
+
+**The escape hatch it named is still shut, for a different reason than it
+thought.** The entry said "if an `error.tsx` ever lands, this should be
+revisited". One did, and revisiting it does not help: Next's App Router does not
+route a throw from the **root** layout to `app/error.tsx` — only
+`app/global-error.tsx` catches that, and there is no such file. So the exception
+stands, and the condition for lifting it is now stated correctly: **a
+`global-error.tsx`**, not an `error.tsx`.
 
 ### Branching on a Fantrax error code in `app/squad/league.ts` (§3-adjacent)
 

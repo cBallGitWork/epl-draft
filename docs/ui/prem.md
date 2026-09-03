@@ -87,10 +87,18 @@ from the bottom**, so a division of any size draws the line where it ends.
 
 ## What it costs
 
-Nothing. `footballNow()` and `seasonFixtures()` are both `unstable_cache`d and
-both already warm on every page view — the layout reads one to decide whether the
-Live tab exists, and the league schedule reads the other. The real Premier League
-is the same for everybody, which is exactly what makes it cacheable.
+**Nothing, for the four routes this section opened with.** `footballNow()` and
+`seasonFixtures()` are both `unstable_cache`d and both already warm on every page
+view — the layout reads one to decide whether the Live tab exists, and the league
+schedule reads the other. The real Premier League is the same for everybody,
+which is exactly what makes it cacheable.
+
+**The club page broke that, deliberately, on 3 Sep 2026**, and the cost is set
+out under "Two position columns" below: its Elig column reads Fantrax through
+`leagueInfo`, which the layout does not warm. A reader arriving from anywhere
+else in the app pays a cache hit; a club page reached cold makes a request no
+other `/prem` route makes. *This paragraph said "Nothing" unconditionally for a
+day after that stopped being true of the whole section.*
 
 ## Results and Fixtures
 
@@ -208,7 +216,7 @@ the same export that will fill the Pos column — one crossing, not two.
 |---|---|---|
 | Table, Results, Fixtures, Team Stats | FPL silent | `Nothing`, with the provider's code |
 | `/prem/club/[code]` | code is not an integer, or names no club | `notFound()` |
-| Squad | FPL lists nobody | "No squad to show" |
+| Squad | FPL lists nobody | `TabEmpty` |
 | Squad | Fantrax silent | Elig empties to `—`; the squad still renders |
 | Match | every published match played | `TabEmpty`, and the tab greys |
 | Fixtures | no match with this club | `TabEmpty`, and the tab greys |
