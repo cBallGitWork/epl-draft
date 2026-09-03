@@ -16,7 +16,7 @@ export default function Loading() {
       {/* No dateline, no number and no notice yet: each is a claim about an
           edition that has not arrived. The masthead answers null with the
           paper's own name, which is the one thing true before it loads. */}
-      <Masthead at={null} line={null} round={null} />
+      <Masthead at={null} />
 
       {/* The lead: the picture band at its printed height, then the kicker, the
           headline over two lines and the standfirst under it. */}

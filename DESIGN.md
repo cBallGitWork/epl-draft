@@ -429,12 +429,19 @@ already on the page; the `≥lg` wall at `/matchday/desk` keeps the no-tap rule
 written because the wall is read across a room rather than operated, and that is
 still true of the wall and was never true of a phone.
 
-**The masthead photograph is deferred, not chosen.** The crest-in-a-box ships and
-is not a placeholder — it is what the paper looks like until someone hands it a
-better picture, and the picture it wants is a league one (draft night, a trophy,
-ten names on a board) rather than a stock Premier League shot, which would
-make the paper look like it is about the Premier League rather than about the
-ten of us.
+**The masthead photograph is deferred, not chosen.** The picture it wants is a
+league one (draft night, a trophy, ten names on a board) rather than a stock
+Premier League shot, which would make the paper look like it is about the
+Premier League rather than about the ten of us.
+
+*The crest-in-a-box that held its place was cut on 3 Sep 2026, Craig: "No. 2 /
+Free / Lineups lock Fri 19:45 — remove this. remove."* The deferral above stands;
+what went is the frame, plus the edition number, the price and the standing
+service line beside it — a fifth of a phone screen restating the crest every
+other tab already carries and a lock the sidebar already gives to the minute.
+**The absence is now the honest state**: the masthead is publisher, title and
+dateline, and when a league picture exists it arrives as a picture rather than
+as a box that has been waiting for one.
 
 **The splash picture is a drawing, and it prints in the sheet's two colours.**
 Separate from the masthead question above and settled differently: the paper's

@@ -1,5 +1,4 @@
 import { LEAGUE_NAME, SEASON } from "@epl/core";
-import LeagueCrest from "../shell/LeagueCrest";
 import { PAPER_NAME } from "../../config";
 import { londonDate } from "../../londonTime";
 
@@ -8,10 +7,20 @@ import { londonDate } from "../../londonTime";
 // A masthead, not a page header. Every other section of the app opens with the
 // crest at the left and the title beside it, because those are screens. This is
 // a front page, and the furniture is the difference: the publisher's name in
-// small capitals above the title, the title itself in the display face, a
-// dateline fenced between two heavy rules, and a plate under it. None of that is
-// decoration — it is what a reader recognises before reading a word, and no app
-// has any of it.
+// small capitals above the title, the title itself in the display face, and a
+// dateline fenced between two heavy rules. None of that is decoration — it is
+// what a reader recognises before reading a word, and no app has any of it.
+//
+// **Four rows and then the paper starts.** It carried two more until 3 Sep 2026
+// and both are gone on Craig's ruling. A PLATE — the crest in a ruled box beside
+// "No. 2" and "Free" — took a fifth of a phone screen to say the crest at the
+// top of every other tab already says, and an edition number and a price nobody
+// pays are furniture pretending to be facts. And a STANDING LINE under it, which
+// said either "Football is on. The scores are moving." or when lineups lock;
+// both are stated by something that is already on the page — the scoreboard
+// strip appears exactly when football is on, and *Next deadline* in the sidebar
+// carries the lock to the minute. A masthead that repeats the page is a masthead
+// paying for itself twice.
 //
 // **The title is the paper's, and the line above it is the league's.** It used
 // to set the league's name at masthead size, which is a screen announcing which
@@ -19,20 +28,13 @@ import { londonDate } from "../../londonTime";
 // line over the top, the way it is on every front page ever printed.
 
 export default function Masthead({
-  line,
   /** When this edition was assembled. A dateline is a claim about *when*, so it
    *  is the snapshot's instant rather than the reader's clock — two managers
    *  opening the same cached edition either side of midnight must not be shown
    *  two different days. Null when there is no edition to date. */
   at,
-  /** The round this edition is about, printed as its number. A paper's plate
-   *  carries facts — publisher, date, number, price — and this is the number.
-   *  Null before a round exists, when the plate prints the price alone. */
-  round,
 }: {
-  line: string | null;
   at: string | null;
-  round: number | null;
 }) {
   return (
     <header className="flex flex-col">
@@ -57,45 +59,6 @@ export default function Masthead({
         <span>{at === null ? LEAGUE_NAME : londonDate(at)}</span>
         <span className="numeric">{SEASON}</span>
       </div>
-
-      {/* The plate. A front page carries a picture under its title, and until
-          somebody chooses a photograph this is the frame it will drop into with
-          the mark printed in it — a crest is the one image we are certain of,
-          which is the same argument the portraits make for a club badge over a
-          wrong face.
-          The crest is a colour plate and knows it: `.crest` restores the tokens
-          `.paper` re-pointed at ink, so its cream ring and leaf stay cream on
-          the league's red rather than being stamped red on red.
-
-          The plate used to sit the mark on a solid red field a quarter of the
-          box wide, which put the loudest colour on the page directly under the
-          nameplate. The mark keeps its own red; the field it stands on is the
-          stock, divided from the furniture beside it by a rule — which is the
-          frame the reference gives its photograph. */}
-      <div className="mt-3 flex items-stretch border-2" style={{ borderColor: "currentColor" }}>
-        <div
-          className="flex w-24 shrink-0 items-center justify-center border-r-2 py-3"
-          style={{ borderColor: "currentColor" }}
-        >
-          <LeagueCrest variant="mark" height={44} />
-        </div>
-        {/* Masthead furniture, and all of it fact. The strapline that stood
-            here was cut on 2 Sep 2026 — see `config.ts`. What replaces it is
-            what a nameplate actually carries: which number this is, and what
-            it costs. The price is real, in the sense that it is fixed and
-            printed and nobody pays it. */}
-        <div className="flex min-w-0 flex-col justify-center gap-1 px-3 py-2 font-sans text-3xs font-semibold uppercase tracking-[0.16em]">
-          {round === null ? null : <p>No. {round}</p>}
-          <p className="text-faint">Free</p>
-        </div>
-      </div>
-
-      {/* The line that changes: football is on, or when lineups lock. When
-          neither is true a paper prints nothing rather than a slogan, which is
-          why this is nullable. */}
-      {line === null ? null : (
-        <p className="pt-3 text-center text-sm italic text-muted">{line}</p>
-      )}
     </header>
   );
 }

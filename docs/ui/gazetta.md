@@ -21,18 +21,26 @@ business, who is hurt, and when lineups lock.
    at the right, small capitals and letterspaced. That row is the whole
    difference between a masthead and an `<h1>`, and no app has one.
 
-   Under the dateline, a **plate**: a two-pixel ink rule around the crest, ruled
-   off from the standing line beside it. It is the frame a photograph
-   drops into and it is not a placeholder — DESIGN.md §9 records that the crest
-   in a box is what the paper looks like until somebody hands it a league
-   picture, and that a stock Premier League shot is the wrong answer.
-
    The date is the **edition's** instant, not the reader's clock: two managers
    opening the same cached edition either side of midnight must not be shown
    two different days.
 
-   Under it, the line that changes: "Football is on. The scores are moving."
-   while live, otherwise when lineups lock.
+   **And then the paper starts.** Four rows and nothing else. Two more stood
+   here until 3 Sep 2026 and both were cut on Craig's ruling:
+
+   - a **plate** — the crest in a two-pixel ruled box beside `No. {round}` and
+     "Free" — which spent a fifth of a phone screen saying what the crest at the
+     top of every other tab already says, and set an edition number and a price
+     nobody pays as though they were facts a reader wanted. DESIGN §9's
+     "crest-in-a-box ships and is not a placeholder" is answered rather than
+     contradicted: the deferred masthead photograph is still deferred, and the
+     box that was holding its place is gone with it. When a league picture
+     exists, it comes back as a picture.
+   - a **standing line** under it, reading either "Football is on. The scores
+     are moving." or when lineups lock. Both are said by the page already — the
+     scoreboard strip appears exactly when football is on, and *Next deadline*
+     in the sidebar carries the lock to the minute. A masthead that repeats the
+     page pays for itself twice.
 2. **The scoreboard**, while the round is running — a hairline band of every
    tie in one horizontally scrolling strip, yours first, the Live tab one tap
    away. See *The scoreboard* below. It replaced the full-height "As it
