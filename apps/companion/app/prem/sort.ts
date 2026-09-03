@@ -1,4 +1,5 @@
 import { type TableSortKey, defaultDescendingTable } from "@epl/core";
+import { TABLE } from "./PremNav";
 
 // Where a sortable column head links to.
 //
@@ -19,6 +20,6 @@ export function tableHref(
   descending: boolean,
 ): string {
   const next = key === current ? !descending : defaultDescendingTable(key);
-  if (key === "place" && next === false) return "/prem";
-  return `/prem?sort=${key}${next ? "&dir=desc" : ""}`;
+  if (key === "place" && next === false) return TABLE;
+  return `${TABLE}?sort=${key}${next ? "&dir=desc" : ""}`;
 }

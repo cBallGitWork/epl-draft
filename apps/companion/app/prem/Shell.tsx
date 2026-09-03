@@ -29,7 +29,7 @@ import type { PremSection } from "./PremNav";
  *  season this whole section is rewritten for. It is still read from the caller
  *  where the caller knows — a table drawn before FPL answers should not be a
  *  strip. */
-const PANEL_ROWS = 20;
+export const PANEL_ROWS = 20;
 
 export default function PremShell({
   title,

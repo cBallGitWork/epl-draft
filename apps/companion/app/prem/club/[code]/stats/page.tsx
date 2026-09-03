@@ -2,7 +2,6 @@ import { clubColours, clubStats, ordinal } from "@epl/core";
 import type { Result } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
 import Section from "../../../../components/shell/Section";
-import { footballNow } from "../../../../football";
 import ClubShell from "../Shell";
 import Comparison from "../Comparison";
 import Leaders from "../Leaders";
@@ -25,15 +24,14 @@ const FORM_GAMES = 5;
 
 export default async function ClubStatsPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const [{ club, clubs, players, fixtures }, snapshot] = await Promise.all([
-    clubOr404(code),
-    footballNow(),
-  ]);
+  const { club, snapshot, fixtures } = await clubOr404(code);
 
-  const place = standing(fixtures, clubs, club);
+  const place = standing(fixtures, snapshot.clubs, club);
   // With the players, unlike the stub that preceded this: `squad` totals are
   // summed over whoever is passed, and an empty list made every one of them nought.
-  const stats = clubStats(fixtures, clubs, snapshot.players).find((row) => row.clubId === club.id);
+  const stats = clubStats(fixtures, snapshot.clubs, snapshot.players).find(
+    (row) => row.clubId === club.id,
+  );
 
   return (
     <ClubShell
@@ -77,7 +75,10 @@ export default async function ClubStatsPage({ params }: { params: Promise<{ code
           </Section>
 
           <Section title="Carrying the season">
-            <Leaders players={players} colours={clubColours(club.shortName)} />
+            <Leaders
+              players={snapshot.players.filter((player) => player.clubId === club.id)}
+              colours={clubColours(club.shortName)}
+            />
           </Section>
         </section>
       )}

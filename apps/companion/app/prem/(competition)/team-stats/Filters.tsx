@@ -2,9 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
-import { SELECT } from "../../components/shell/ButtonLink";
+import { SELECT } from "../../../components/shell/ButtonLink";
 import { CATEGORIES } from "./categories";
-import { TEAM_STATS } from "../PremNav";
+import { TEAM_STATS } from "../../PremNav";
 
 // The one grey box on the board, at the left of its own strip.
 //

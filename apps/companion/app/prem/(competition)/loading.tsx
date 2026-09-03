@@ -1,6 +1,6 @@
-import Columns, { COLUMNS } from "./Columns";
-import PremShell from "./Shell";
-import Skeleton from "../components/shell/Skeleton";
+import Columns, { COLUMNS } from "../Columns";
+import PremShell from "../Shell";
+import Skeleton from "../../components/shell/Skeleton";
 
 // What the table looks like while FPL is answering.
 //

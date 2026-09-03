@@ -13,7 +13,7 @@ export type {
   PlayerMatchStats,
 } from "./types";
 
-export { clubColours, crestUrl, inkOn, shirtUrl } from "./clubs";
+export { clubColours, crestUrl, inkOn, plateOn, shirtUrl } from "./clubs";
 export type { ClubColours } from "./clubs";
 export { initials, portraitUrl } from "./portraits";
 export { getFootballSnapshot } from "./snapshot";

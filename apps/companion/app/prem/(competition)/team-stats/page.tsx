@@ -1,14 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { clubStats, crestUrl, leagueTable, ordinal } from "@epl/core";
-import Nothing from "../../components/shell/Nothing";
-import { Head, HeadRow, NameHead } from "../../components/league/TableHeads";
-import { IndexCell, ROW_LINK } from "../../components/league/TableCells";
-import PremShell from "../Shell";
-import { CLUB } from "../PremNav";
+import Nothing from "../../../components/shell/Nothing";
+import { Head, HeadRow, NameHead } from "../../../components/league/TableHeads";
+import { IndexCell, ROW_LINK } from "../../../components/league/TableCells";
+import PremShell from "../../Shell";
+import { CLUB } from "../../PremNav";
 import Filters from "./Filters";
 import { categoryFor, type Club } from "./categories";
-import { footballNow, seasonFixtures } from "../../football";
+import { footballNow, seasonFixtures } from "../../../football";
 
 // Every club ranked by one measure — CM's stat board, on the real competition.
 //

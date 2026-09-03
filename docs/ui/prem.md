@@ -195,7 +195,7 @@ unreachable now costs a column where it used to cost this section nothing.
 Failure-tolerant by construction, for that reason: `leagueInfo` already returns
 null when Fantrax refuses, the column empties to dashes, and the squad renders
 regardless. `/prem` itself — the table, results, fixtures, team stats — still
-costs no provider request, and `prem/page.tsx` says so about itself.
+costs no provider request, and `prem/(competition)/page.tsx` says so about itself.
 
 ### Fixtures is the Premier League only
 
@@ -227,6 +227,16 @@ the same export that will fill the Pos column — one crossing, not two.
 Keyed on FPL's **season-stable club code**, never `clubId`: a URL is persisted
 the moment somebody shares it, and FPL's per-season ids are recycled
 (CODE_RULES §3).
+
+## The route group
+
+`prem/(competition)/` holds the table, results, fixtures and team stats; the
+club pages sit outside it. The URLs are unchanged — a group is invisible to the
+router — and the reason is `loading.tsx`: Next applies a segment's loading file
+to everything beneath it, so a league-table skeleton at `/prem` was streamed in
+front of every club page. Measured on 3 Sep 2026 before the move: the wrong
+skeleton at byte 7,980 of `/prem/club/3/stats`, the club's own at 8,655. A group
+is the only way to scope a loading boundary to the routes it describes.
 
 ## What is deliberately absent
 

@@ -8,11 +8,11 @@ import {
   placed,
   sortTable,
 } from "@epl/core";
-import Columns, { COLUMNS } from "./Columns";
-import ClubRow from "./ClubRow";
-import PremShell from "./Shell";
-import Nothing from "../components/shell/Nothing";
-import { footballNow, seasonFixtures } from "../football";
+import Columns, { COLUMNS } from "../Columns";
+import ClubRow from "../ClubRow";
+import PremShell from "../Shell";
+import Nothing from "../../components/shell/Nothing";
+import { footballNow, seasonFixtures } from "../../football";
 
 // The Premier League table.
 //

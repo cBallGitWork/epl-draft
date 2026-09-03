@@ -1,6 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { Club } from "@epl/core";
-import { clubColours, inkOn } from "@epl/core";
+import { clubColours, plateOn } from "@epl/core";
 import Caption from "../../../components/shell/Caption";
 import PageHeader from "../../../components/shell/PageHeader";
 import ClubTabs from "./ClubTabs";
@@ -12,9 +12,11 @@ import type { ClubTab } from "./ClubTabs";
 // what KIND of thing the screen is about: `cm9900/24.jpg` is the division — a
 // light plate with the title in blue — and `25.jpg` is Everton, a filled plate
 // carrying the name. A club is somebody IN the competition rather than the
-// competition, so it takes the second, in that club's own colours. `inkOn` is
-// what keeps a pale club readable — it picks dark ink for a light plate, which
-// is `cm9900/16.jpg`'s white Torquay and not a case we invented.
+// competition, so it takes the second, in that club's own colours. `plateOn`
+// computes the pair — the fill and whichever ink survives it — because a
+// background without its ink is the half of the decision that makes a pale club
+// unreadable. `cm9900/16.jpg`'s white Torquay is the case, and not one we
+// invented.
 //
 // **A copy of `squad/[teamId]/Shell`, deliberately.** Subtract `PageHeader`'s
 // plate variant, `TabStrip`, `Caption` and `TabEmpty` — all four already shared
@@ -41,8 +43,7 @@ export default function ClubShell({
   empty?: readonly ClubTab[];
   children: ReactNode;
 }) {
-  const colours = clubColours(club.shortName);
-  const plate = { background: colours.primary, ink: inkOn(colours) };
+  const plate = plateOn(clubColours(club.shortName));
 
   return (
     // **The club's colour, set once for every tab.** `--cm-index` re-points the

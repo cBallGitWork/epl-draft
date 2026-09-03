@@ -1,6 +1,6 @@
 import { clubById } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
-import { footballNow } from "../../../../football";
+import { PANEL_ROWS } from "../../../Shell";
 import ClubShell from "../Shell";
 import Run from "../Run";
 import { clubOr404 } from "../club";
@@ -29,7 +29,7 @@ export const revalidate = 30;
 
 export default async function ClubFixturesPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const [{ club, fixtures }, snapshot] = await Promise.all([clubOr404(code), footballNow()]);
+  const { club, snapshot, fixtures } = await clubOr404(code);
 
   // Undated last, which is where a match the television has not picked belongs:
   // it is not "before everything", which is where a null sorts by accident.
@@ -51,7 +51,7 @@ export default async function ClubFixturesPage({ params }: { params: Promise<{ c
     >
       <section
         className="cm-panel flex flex-col gap-2 p-2"
-        style={{ minHeight: "calc(20 * var(--table-row) + var(--table-chrome))" }}
+        style={{ minHeight: `calc(${PANEL_ROWS} * var(--table-row) + var(--table-chrome))` }}
       >
         {run.length === 0 ? (
           <TabEmpty>FPL has published no match with {club.name} in it.</TabEmpty>

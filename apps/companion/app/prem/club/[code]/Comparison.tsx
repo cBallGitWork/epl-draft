@@ -9,7 +9,7 @@ import type { CSSProperties } from "react";
 // being read twice.
 
 /** One side of the comparison. */
-export interface Column {
+interface Column {
   label: string;
   /** That side's own colour, when the two sides are different things.
    *
@@ -24,7 +24,7 @@ export interface Column {
   plate?: { background: string; ink: string };
 }
 
-export interface Row {
+interface Row {
   label: string;
   left: number;
   right: number;

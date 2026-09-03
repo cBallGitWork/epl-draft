@@ -79,6 +79,23 @@ export function inkOn(colours: ClubColours): string {
     : INK;
 }
 
+/** The filled plate a SUBJECT's title bar is drawn on, in its own colours.
+ *
+ *  `cm9900/25.jpg` is Everton and `21.jpg` is Everton against Arsenal: when a CM
+ *  screen is about somebody rather than about the competition, the bar is filled
+ *  with their colour and the title takes whichever ink survives it. The pair is
+ *  always computed together — a background without its ink is the half of the
+ *  decision that makes a pale club unreadable — so it is one call.
+ *
+ *  Extracted at three: `squad/[teamId]/Shell` for a fantasy side,
+ *  `prem/club/[code]/Shell` for a club, and the club's own match header, which
+ *  draws two of them against each other. It takes the colours rather than the
+ *  subject because the two layers name their subjects differently — a team id
+ *  and a club's short name — and only the colours are common. */
+export function plateOn(colours: ClubColours): { background: string; ink: string } {
+  return { background: colours.primary, ink: inkOn(colours) };
+}
+
 /** The desk's near-black, for a plate that wants dark ink. */
 const INK = "#0b0c10";
 

@@ -1,6 +1,6 @@
 import Caption from "../../components/shell/Caption";
 import type { CSSProperties } from "react";
-import { inkOn, teamColours } from "@epl/core";
+import { plateOn, teamColours } from "@epl/core";
 import PageHeader from "../../components/shell/PageHeader";
 import TeamTabs from "./TeamTabs";
 import type { TeamTab } from "./TeamTabs";
@@ -44,8 +44,7 @@ export default function TeamShell({
   // His own colours on his own bar. `inkOn` is what keeps a pale side readable —
   // it picks dark ink for a light plate, which is `cm9900/16.jpg`'s white Torquay
   // and not a case we invented.
-  const colours = teamColours(team.teamId);
-  const plate = { background: colours.primary, ink: inkOn(colours) };
+  const plate = plateOn(teamColours(team.teamId));
 
   return (
     // `gap-2` for `LeagueShell`'s reason: four boxes down the page, and 12px

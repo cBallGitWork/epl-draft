@@ -1,8 +1,8 @@
 import { clubById } from "@epl/core";
-import Nothing from "../../components/shell/Nothing";
-import PremShell from "../Shell";
-import Rounds, { byRound, panelRows } from "../Rounds";
-import { footballNow, seasonFixtures } from "../../football";
+import Nothing from "../../../components/shell/Nothing";
+import PremShell from "../../Shell";
+import Rounds, { byRound, panelRows } from "../../Rounds";
+import { footballNow, seasonFixtures } from "../../../football";
 
 // What has already happened: every finished round, newest first.
 //

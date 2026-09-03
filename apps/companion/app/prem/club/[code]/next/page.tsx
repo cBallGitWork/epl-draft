@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { clubById, clubColours, clubStats, inkOn, nextFixtures, ordinal } from "@epl/core";
+import { clubById, clubColours, clubStats, nextFixtures, ordinal, plateOn } from "@epl/core";
 import type { Club } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
 import { fdrStep } from "../../../../components/football/FixtureChip";
-import { footballNow } from "../../../../football";
 import { londonDayAndTime } from "../../../../londonTime";
 import { CLUB } from "../../../PremNav";
 import ClubShell from "../Shell";
@@ -29,10 +28,7 @@ export const revalidate = 30;
 
 export default async function ClubNextPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
-  const [{ club, clubs, fixtures }, snapshot] = await Promise.all([
-    clubOr404(code),
-    footballNow(),
-  ]);
+  const { club, snapshot, fixtures } = await clubOr404(code);
 
   // The season's fixtures, not the round in view: the next match may be weeks
   // away for a club whose gameweek is a blank.
@@ -46,8 +42,8 @@ export default async function ClubNextPage({ params }: { params: Promise<{ code:
         <Fixture
           club={club}
           fixture={next}
-          stats={clubStats(fixtures, clubs, snapshot.players)}
-          place={(entry: Club) => standing(fixtures, clubs, entry)?.place}
+          stats={clubStats(fixtures, snapshot.clubs, snapshot.players)}
+          place={(entry: Club) => standing(fixtures, snapshot.clubs, entry)?.place}
         />
       )}
     </ClubShell>
@@ -121,8 +117,8 @@ function Fixture({
       {home === undefined || away === undefined ? null : (
         <div className="border-t border-line p-2">
           <Comparison
-            left={{ label: homeClub.shortName, plate: plateOf(homeClub) }}
-            right={{ label: awayClub.shortName, plate: plateOf(awayClub) }}
+            left={{ label: homeClub.shortName, plate: plate(homeClub) }}
+            right={{ label: awayClub.shortName, plate: plate(awayClub) }}
             rows={[
               { label: "Played", left: home.played, right: away.played },
               { label: "Won", left: home.won, right: away.won },
@@ -141,10 +137,13 @@ function Fixture({
   );
 }
 
-/** A club's plate: its colour, and whichever ink survives it. */
-function plateOf(club: Club): { background: string; ink: string } {
-  const colours = clubColours(club.shortName);
-  return { background: colours.primary, ink: inkOn(colours) };
+/** A club's plate. Three sites in this file want it — the two sides of the
+ *  header and each column of the comparison under them — and `clubColours` is
+ *  keyed on the short name, which is a detail none of the three should carry.
+ *  Local rather than in core: `plateOn` is the shared primitive and giving it a
+ *  club-shaped wrapper there would leave it with one caller of its own. */
+function plate(club: Club): { background: string; ink: string } {
+  return plateOn(clubColours(club.shortName));
 }
 
 function Side({
@@ -156,11 +155,11 @@ function Side({
   rank: number | undefined;
   linked: boolean;
 }) {
-  const plate = plateOf(club);
+  const colours = plate(club);
   const label = (
     <span
       className="flex min-h-11 flex-1 flex-col items-center justify-center px-2 text-center leading-tight"
-      style={{ background: plate.background, color: plate.ink }}
+      style={{ background: colours.background, color: colours.ink }}
     >
       <span className="text-sm font-bold uppercase">{club.name}</span>
       {rank === undefined ? null : (

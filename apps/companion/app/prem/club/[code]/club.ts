@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import type { Club, FootballPlayer, Fixture, TableRow } from "@epl/core";
+import type { Club, FootballSnapshot, Fixture, TableRow } from "@epl/core";
 import { isUnmapped, leagueTable } from "@epl/core";
 import { footballNow, seasonFixtures } from "../../../football";
 import { leagueInfo } from "../../../round";
@@ -24,7 +24,7 @@ import { bridge } from "../../../squads";
  *  section was not already making. */
 export async function clubOr404(
   code: string,
-): Promise<{ club: Club; clubs: readonly Club[]; players: FootballPlayer[]; fixtures: Fixture[] }> {
+): Promise<{ club: Club; snapshot: FootballSnapshot; fixtures: Fixture[] }> {
   const wanted = Number(code);
   // Reject anything that is not a plain club code before asking FPL for it —
   // "3.5" and "3abc" both coerce to something `Number` will happily accept.
@@ -34,15 +34,13 @@ export async function clubOr404(
   const club = snapshot.clubs.find((entry) => entry.code === wanted);
   if (club === undefined) notFound();
 
-  return {
-    club,
-    clubs: snapshot.clubs,
-    // One line rather than a `playersByClub` selector in core: this is the only
-    // caller. It earns a name in `football/selectors.ts` at the second, which is
-    // what CODE_RULES §1 says and when it says it.
-    players: snapshot.players.filter((player) => player.clubId === club.id),
-    fixtures,
-  };
+  // **The whole snapshot, not a selection out of it.** This returned `clubs` and
+  // the club's own `players`, which meant every tab that also wanted `clubById`
+  // or the full player list called `footballNow()` a SECOND time — three of the
+  // four did. Cached, so it cost no request, but two reads of one thing in one
+  // render is two places for them to disagree, and it read as though the tab
+  // were fetching something this did not have.
+  return { club, snapshot, fixtures };
 }
 
 /** Where the club stands, or null when the competition has not placed it.
