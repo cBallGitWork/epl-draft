@@ -206,17 +206,36 @@
      below describe. Measured: `offsetWidth - clientWidth` was 4 with it and 16
      without. Firefox gets `scrollbar-width` and its own colours in the block at
      the end, where it cannot reach Chrome. */
-  /* Always drawn, never an overlay that fades in. macOS and iOS hide a
-     scrollbar until it moves, which on THIS control defeats the point: the bar
-     is what tells a reader the list continues past the box, and a bar that
-     appears only once you have already scrolled tells them nothing they had not
-     just found out. CM's is permanent furniture and so is this. */
+}
+
+/* **The reserved gutter is a VERTICAL decision, so it is its own class.**
+   Always drawn, never an overlay that fades in: macOS and iOS hide a scrollbar
+   until it moves, which on this control defeats the point — the bar is what
+   tells a reader the list continues past the box, and a bar that appears only
+   once you have already scrolled tells them nothing they had not just found
+   out. CM's is permanent furniture.
+
+   It was on `.cm-scroll` itself, and `scrollbar-gutter` reserves the INLINE-end
+   gutter — the vertical bar's. On the two boards that scroll sideways and not
+   down, that was 16px of dead space on the right of a 298px board on a 390
+   phone, holding a bar that can never appear, while the horizontal bar they
+   actually wanted got nothing. Measured before the split. */
+.cm-scroll-y {
   scrollbar-gutter: stable;
 }
 
 
+/* Both bars, and `height` is not a tidy-up. `width` sizes the VERTICAL bar and
+   `height` the horizontal one, so a class that set only `width` left every
+   sideways-scrolling board on the platform default — which on macOS is an
+   overlay that fades — and the two boards wearing this were asked for the
+   opposite (Craig, 2 Sep: "scroll bar at bottom to make it obvious we need to
+   scroll"). Measured before: `offsetHeight - clientHeight` was 0 on the club
+   stats board, so the bar Craig asked for reserved no space and drew nothing
+   until a finger moved. */
 .cm-scroll::-webkit-scrollbar {
   width: 1rem;
+  height: 1rem;
 }
 
 .cm-scroll::-webkit-scrollbar-track {
@@ -258,6 +277,17 @@
 
 .cm-scroll::-webkit-scrollbar-button:single-button:vertical:increment {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path d='M4 7 L1 2 L7 2 Z' fill='%23091227'/></svg>");
+}
+
+/* The same pair turned on their side, for a board that scrolls sideways. Without
+   these a horizontal bar draws the button plates with no glyph on them, which
+   reads as a broken control rather than as furniture. */
+.cm-scroll::-webkit-scrollbar-button:single-button:horizontal:decrement {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path d='M1 4 L6 1 L6 7 Z' fill='%23091227'/></svg>");
+}
+
+.cm-scroll::-webkit-scrollbar-button:single-button:horizontal:increment {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'><path d='M7 4 L2 7 L2 1 Z' fill='%23091227'/></svg>");
 }
 
 /* Firefox, which has no `::-webkit-scrollbar` and would otherwise draw its own.

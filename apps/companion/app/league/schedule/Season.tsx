@@ -36,7 +36,7 @@ export default function Season({
     // The scroll bar is CM's too, and it is deliberately visible: the season is
     // 38 rounds and the panel holds about a dozen, so a list that hides its own
     // bar looks like a list that ends.
-    <ul className="cm-rows cm-scroll flex max-h-[34rem] flex-col overflow-y-auto">
+    <ul className="cm-rows cm-scroll cm-scroll-y flex max-h-[34rem] flex-col overflow-y-auto">
       {rows.map((row) => (
         <li key={`${row.round.period}-${row.tie.competition.id}-${row.tie.round ?? ""}`}>
           <div

@@ -63,7 +63,7 @@ export default function Board({
           number of rows at both widths rather than half of one at the bottom
           edge. */}
       <div
-        className="cm-panel cm-scroll overflow-auto p-2"
+        className="cm-panel cm-scroll cm-scroll-y overflow-auto p-2"
         style={{ maxHeight: `calc(${VISIBLE_ROWS} * var(--table-row) + var(--table-chrome))` }}
       >
         <table className={BOARD}>
