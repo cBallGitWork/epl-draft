@@ -1,6 +1,7 @@
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
+  fetchBootstrap,
   fetchLeagueInfo,
   fetchTeamRosters,
   mapLeagueInfo,
@@ -31,16 +32,39 @@ import {
 
 const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
 
-/** Every route the app serves that needs no id. */
+/** Every route the app serves that needs no id.
+ *
+ *  **Kept against `next build`'s own route table, not against memory.** This
+ *  list went eight routes stale between 1 and 3 Sep — the whole `/prem` section
+ *  shipped to production with no entry here, and so did `/league/results`,
+ *  `/league/team-stats` and both `/paper` indexes. `sweep.mjs` and `tapfit.mjs`
+ *  carry their own lists and drifted the same way for the same reason. A new
+ *  route is unwalked until it is written down, so write it down in the commit
+ *  that adds it.
+ *
+ *  The id-scoped routes are appended in `main` from ids read live, never from
+ *  literals. **`/paper/[slug]` is the one route this walk does not reach**, and
+ *  deliberately: a slug exists only once the columnist has filed, so deriving
+ *  one means either skipping on the empty league — which is most days — or
+ *  asserting a story that CI has no key to write. Left to `/paper/columns`,
+ *  which is walked and which renders the same stories' titles. */
 const ROUTES = [
   "/",
   "/league",
   "/league/schedule",
   "/league/matchups",
+  "/league/results",
+  "/league/team-stats",
   "/squad",
   "/players",
   "/matchday",
   "/matchday/desk",
+  "/paper/columns",
+  "/paper/reports",
+  "/prem",
+  "/prem/results",
+  "/prem/fixtures",
+  "/prem/team-stats",
   "/gw/1",
   "/fpl",
 ] as const;
@@ -135,26 +159,82 @@ async function expectedName(): Promise<string | null> {
  *  the first call and refused the second was "drafted" with no team id, which
  *  silently dropped the two id-scoped routes while the walk still reported the
  *  full count it had shrunk. Asking once means the two answers cannot disagree. */
-async function league(): Promise<{ drafted: boolean; teamId: string | null }> {
+async function league(): Promise<{
+  drafted: boolean;
+  teamId: string | null;
+  playerId: string | null;
+}> {
   try {
     const [team] = mapTeamRosters(await fetchTeamRosters(FANTRAX_LEAGUE_ID)).teams;
-    return { drafted: team !== undefined, teamId: team?.teamId ?? null };
+    return {
+      drafted: team !== undefined,
+      teamId: team?.teamId ?? null,
+      // A player somebody actually holds, taken from the roster this read
+      // already returned. `/players` links to this page for every name on it,
+      // and an id invented here would test a 404 rather than a player.
+      playerId: team?.slots[0]?.fantraxId ?? null,
+    };
   } catch (error) {
-    if (error instanceof FantraxError) return { drafted: false, teamId: null };
+    if (error instanceof FantraxError) {
+      return { drafted: false, teamId: null, playerId: null };
+    }
     throw error;
   }
 }
 
+/** A club code `/prem/club/[code]` will actually resolve, or null if FPL will
+ *  not say.
+ *
+ *  **Read, never written down.** The route takes FPL's `code`, which is
+ *  season-stable but is still their number and not ours, and a literal in this
+ *  file would be a second place that has to be right. Any club answers the
+ *  question being asked — does the page every club name in `/prem` links to
+ *  render — so the walk takes the first one FPL lists.
+ *
+ *  This is the section's only id-scoped route, and it is the one whose failure
+ *  is least visible: `/prem`'s table would look perfectly well while every name
+ *  in it led nowhere. */
+async function clubCode(): Promise<number | null> {
+  try {
+    const [club] = (await fetchBootstrap()).teams;
+    return club?.code ?? null;
+  } catch {
+    return null;
+  }
+}
+
 async function main() {
-  const { drafted: hasTeams, teamId: id } = await league();
+  const { drafted: hasTeams, teamId: id, playerId } = await league();
+  const club = await clubCode();
   const paths: string[] = [...ROUTES];
   // The three biggest screens in the app take an id, so a walk that skipped them
-  // would be a walk that missed the squad board and the head-to-head.
-  if (id !== null) paths.push(`/squad/${id}`, `/league/matchups/${id}`);
+  // would be a walk that missed the squad board and the head-to-head — and the
+  // squad board's four tabs are links off a page this walk already opens, which
+  // is the cheapest kind of route to leave unchecked and the easiest to break.
+  if (id !== null) {
+    paths.push(
+      `/squad/${id}`,
+      `/squad/${id}/fixtures`,
+      `/squad/${id}/next`,
+      `/squad/${id}/stats`,
+      `/squad/${id}/transfers`,
+      `/league/matchups/${id}`,
+    );
+  }
+  if (playerId !== null) paths.push(`/players/${playerId}`);
+  if (club !== null) paths.push(`/prem/club/${club}`);
 
   console.log(
     `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${hasTeams ? "drafted" : "no teams"})\n`,
   );
+
+  // Skipped, and SAID so — the same rule the served-league check follows below.
+  // A club page is the only thing in this walk that needs FPL rather than
+  // Fantrax, so it is the only line that can vanish for a reason unrelated to
+  // the league, and a walk that quietly drops a route still prints a full count.
+  if (club === null) {
+    console.log("~ /prem/club  FPL would not name a club, so this route was not walked\n");
+  }
 
   // **Is this server even serving the league these expectations came from?**
   //
