@@ -4,16 +4,22 @@
   "leagueId": "w05aib75mtj36y1g",
   "period": 2,
   "gameweek": 2,
-  "filedAt": "2026-09-02T16:07:44.808Z",
+  "filedAt": "2026-09-03T13:13:37.416Z",
   "expiresAt": null,
   "edition": "The Monday Club",
   "byline": "The Back Page",
-  "headline": "Schade Draws A Long Bow For 123",
-  "deck": "Schade and Calvert-Lewin trade sixes; 123 keep piling on points but still lead where it counts.",
-  "body": "Schade did the damage for 123, the goal inside 87 minutes worth six and the only Leeds return that mattered to a wallet. Stach chipped two more from the same stable. Another double return, another mountain of points, and 123 sit 76 to 35 over test31121, all but done. Ampadu's ninety was a lonely two the other way.\n\nCalvert-Lewin answered for test1, six of his own off the Brentford goal, Kelleher adding a save and a clean two behind him. Not enough. test211's Damsgaard banked the clean sheet before coming off on 68, Bogle a quiet two, and test211 hold 48 to 40, all but decided.\n\nLewis-Potter's assist gave test3331 five, but test2's Trafford stopped four for three and the tie leans 49 to 40 against them. Ajer booked for a single point, Justin ninety for two, Aaronson a half for one, Rodon barely a third of the pitch. Jensen never left the bench.",
+  "headline": "Schade And Calvert-Lewin Shade The Points",
+  "deck": "Leeds and Brentford drew 1-1, both scorers rostered and returning six.",
+  "body": "The one goal apiece came off two forwards this league owns. Schade struck for Brentford, six points to 123 across eighty-seven minutes. Calvert-Lewin answered for Leeds, six for test1 across the ninety.\n\nLewis-Potter fed one for test3331, five points and the game's best supporting return. Damsgaard held a clean sheet through sixty-eight, three for test211. Trafford kept four out for test2, three points, while Kelleher managed a single save at the other end.\n\nStach filled the ninety without a return, two for 123. Ajer went into the book for one, test3331's other man. Ampadu, Justin, Bogle full backs of the scoreboard variety, twos across the board. Aaronson lasted forty-five for a single point, Rodon thirty-three for the same. Jensen never left the bench for test3.\n\nSchade's six does nothing to dent 123's 76-35 rout of test31121. test1's Calvert-Lewin keeps the pressure on in a tie test211 lead 48-40, all but sealed. test2's 49-40 over test3331 holds, Trafford and Lewis-Potter cancelling out on the same page.",
   "subjects": [
     "match:gw2:2v94"
   ],
   "image": null,
+  "face": {
+    "code": 177815,
+    "name": "Calvert-Lewin",
+    "clubId": 13,
+    "position": "F"
+  },
   "ties": []
 }

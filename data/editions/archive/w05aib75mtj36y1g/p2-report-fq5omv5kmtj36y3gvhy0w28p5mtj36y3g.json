@@ -1,0 +1,25 @@
+{
+  "slug": "p2-report-fq5omv5kmtj36y3gvhy0w28p5mtj36y3g",
+  "kind": "tie-report",
+  "leagueId": "w05aib75mtj36y1g",
+  "period": 2,
+  "gameweek": 2,
+  "filedAt": "2026-09-03T12:58:10.935Z",
+  "expiresAt": null,
+  "edition": "The Monday Club",
+  "byline": "",
+  "headline": "test1 Spread Loads, Pedro Left Wanting",
+  "deck": "test1 beats test211 48-40, six contributors to test211's top-heavy 40.",
+  "body": "test1 got there by committee. Lavia and Palmer led the midfield with seven apiece, Calvert-Lewin, Egan and Saka all returned six, Semenyo five. No blank in the six, nothing under five, and 48 on the board.\n\ntest211 leaned on João Pedro's seven up top and got nothing else to match it. Castagne and Roefs returned six each, then the drop: Enciso and Gakpo five apiece, Fatawu four.\n\nThat Fatawu four is the number that hurts. test211 needed his forwards firing to keep pace and one of them managed four. Eight short.",
+  "subjects": [
+    "tie-report:p2:fq5omv5kmtj36y3gvhy0w28p5mtj36y3g"
+  ],
+  "image": null,
+  "face": {
+    "code": 475168,
+    "name": "João Pedro",
+    "clubId": 6,
+    "position": "F"
+  },
+  "ties": []
+}

@@ -4,16 +4,22 @@
   "leagueId": "w05aib75mtj36y1g",
   "period": 2,
   "gameweek": 2,
-  "filedAt": "2026-09-02T16:10:42.186Z",
+  "filedAt": "2026-09-03T13:17:12.208Z",
   "expiresAt": null,
   "edition": "The Monday Club",
   "byline": "The Back Page",
-  "headline": "Sunderland Bank The Sheet, 123 Cash It",
-  "deck": "Sunderland's clean sheet feeds a stack of defenders, with 123 doubling up on it",
-  "body": "One goal, one clean sheet, and the Sunderland back line paid out across half the league. Reinildo and Hume both went 90 minutes for six apiece, and 123 banked twelve from the pair alone. Sits 76 to 35 over test31121, whose Berge managed two off the bench at Fulham. That one is all but done.\n\ntest211 rode the same wall. Roefs kept his sheet for six, Castagne added six more off 67 minutes, King chipped in two. Forty to 48 down against test1, so the clean sheet keeps it live rather than winning it.\n\ntest4 got the goal that mattered. Isidor on for 26 minutes and off the mark, five points from almost nothing, with E.Le Fée adding three on the sheet. Fifty-six to 45 over testf, whose men were all on the wrong end of it: Ballard and Xhaka held their clean sheet for six and three, N.Angulo blanked on a two. Leno's three saves earned test3331 three, but a keeper conceding once doesn't move the needle against test2.",
+  "headline": "Isidor Twenty-Six, Fulham Nil",
+  "deck": "Sunderland beat Fulham 1-0, Isidor's goal in twenty-six minutes the difference for test4",
+  "body": "One goal decided it and Isidor had it, five points off twenty-six minutes for test4. A forward on the pitch barely a third of the match, gone before the hour, and the return dwarfs the men who saw it out.\n\nThe clean sheets stacked up either side. Roefs and Castagne kept it tight for test211, six apiece, Castagne off sixty-seven with the shutout intact. Reinildo and Hume held the line for 123, six each. Ballard did the same for testf, though N.Angulo blanked the clean sheet into two and Xhaka's three barely registers. Leno faced it at the other end, three saves for test3331, a losing keeper still on three.\n\nGonzalo played the ninety and returned nothing for test3, a forward's blank. E.Le Fée's shutout gives test4 three more on top of Isidor's five, a fine afternoon for one manager. King, Berge, Bobb: small change, two and two and three.\n\nAcross the head-to-heads it barely moves the settled ones. test4 sit 56 to 45 over testf, all but done. 123 tower 76 to 35 over test31121, the clean-sheet pair carrying it home.",
   "subjects": [
     "match:gw2:56v54"
   ],
   "image": null,
+  "face": {
+    "code": 223827,
+    "name": "Ballard",
+    "clubId": 20,
+    "position": "D"
+  },
   "ties": []
 }
