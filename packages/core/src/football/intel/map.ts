@@ -56,6 +56,32 @@ export function xiFault(club: IntelClubXi | undefined): string | null {
   return null;
 }
 
+/** Whether a predicted eleven is for the round it is about to be drawn under,
+ *  or a sentence saying which two rounds disagree.
+ *
+ *  **The round is in the export's FILENAME and therefore in a static import**,
+ *  so it is chosen when the app is built and the heading above it is chosen when
+ *  the page is requested. Those are different moments and nothing made them
+ *  agree: with `gw3.json` still on disk, a build after the round turned served
+ *  last week's eleven under a heading naming this week's opponent — eleven real
+ *  names, a real formation, and the wrong match. `xiFault` cannot see it, because
+ *  the file is a perfectly good eleven; it is only the wrong one.
+ *
+ *  A sentence rather than a boolean, on `xiFault`'s precedent: a board that
+ *  refuses to draw has to be able to say why, and "we hold GW3 and this is GW4"
+ *  is the whole diagnosis.
+ *
+ *  **Silence is not a fault.** A fixture with no round — an undated TV pick — is
+ *  a question this cannot answer rather than a disagreement, and refusing there
+ *  would blank a board over a missing field. The check is for the case where
+ *  both numbers are known and differ, which is the case that has actually
+ *  happened. */
+export function xiRoundFault(xi: IntelXi | null, gameweek: number | null): string | null {
+  const held = xi?.manifest?.gameweek;
+  if (!Number.isInteger(held) || !Number.isInteger(gameweek)) return null;
+  return held === gameweek ? null : `predicted for GW${held}, not GW${gameweek}`;
+}
+
 /** One club's predicted eleven, in the rows its formation draws.
  *
  *  **The source's own order IS the line-up, so it is chunked and never

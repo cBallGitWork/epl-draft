@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { predictedEleven, predictionAge, setPieceOrder, squadIntel, xiFault } from "./map";
+import {
+  predictedEleven,
+  predictionAge,
+  setPieceOrder,
+  squadIntel,
+  xiFault,
+  xiRoundFault,
+} from "./map";
 import type { IntelClubXi, IntelPlayer, IntelSquads, IntelXi } from "./types";
 
 function player(code: number, over: Partial<IntelPlayer> = {}): IntelPlayer {
@@ -93,6 +100,36 @@ describe("xiFault", () => {
 
   it("catches a formation it cannot resolve", () => {
     expect(xiFault(eleven({ slots: null }))).toBe("unknown formation 4-2-3-1");
+  });
+});
+
+describe("xiRoundFault", () => {
+  const xi = (gameweek: number): IntelXi => ({
+    manifest: { ...MANIFEST, gameweek },
+    fetchedAt: null,
+    source: "ffscout",
+    clubs: {},
+  });
+
+  it("passes when the export is for the round being drawn", () => {
+    expect(xiRoundFault(xi(3), 3)).toBeNull();
+  });
+
+  it("names both rounds when they disagree", () => {
+    // The failure this exists for: `gw3.json` is a perfectly good eleven, so
+    // `xiFault` passes it, and it is drawn under a heading naming GW4's
+    // opponent with nothing on screen out of place.
+    expect(xiRoundFault(xi(3), 4)).toBe("predicted for GW3, not GW4");
+  });
+
+  it("says nothing when the fixture has no round", () => {
+    // An undated TV pick is a question this cannot answer, not a
+    // disagreement — refusing there would blank a board over a missing field.
+    expect(xiRoundFault(xi(3), null)).toBeNull();
+  });
+
+  it("says nothing when there is no export to check", () => {
+    expect(xiRoundFault(null, 4)).toBeNull();
   });
 });
 

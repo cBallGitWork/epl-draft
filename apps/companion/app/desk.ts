@@ -46,7 +46,18 @@
  *  field, and the `v` between two team names. They share the LOOK and share
  *  nothing else, so each keeps its own `px-`, `flex` and font — `${LABEL}`
  *  after a caller's own classes, never instead of them. */
-export const LABEL = "text-2xs font-bold uppercase text-faint";
+export const SMALL_CAPS = "text-2xs font-bold uppercase";
+
+/** The same furniture, in the ink it is furniture in. This is the one to reach
+ *  for; `SMALL_CAPS` exists for the caller that needs a DIFFERENT ink.
+ *
+ *  **And that caller cannot get it by appending one.** Two colour utilities on
+ *  one element are resolved by their order in the generated stylesheet, not by
+ *  their order in the class attribute, so `${LABEL} text-bad` renders faint —
+ *  measured, not assumed: `lab(59.45 1.43 8.41)` against `text-bad`'s
+ *  `lab(58.88 53.44 31.17)`. The club page's refusal line was grey for exactly
+ *  as long as it took to probe it. Compose from `SMALL_CAPS` instead. */
+export const LABEL = `${SMALL_CAPS} text-faint`;
 
 /** A figure in a repeating row: tabular, centred, and small enough that a column
  *  of them reads as a column. Three files declared it byte-identically under a

@@ -61,7 +61,14 @@ export { fixtureLabel, kickedOff, nextFixtures, oppositionByClub } from "./oppos
 export { leagueTable } from "./table";
 export type { TableRow } from "./table";
 export { clubStats } from "./clubStats";
-export { predictedEleven, predictionAge, setPieceOrder, squadIntel, xiFault } from "./intel/map";
+export {
+  predictedEleven,
+  predictionAge,
+  setPieceOrder,
+  squadIntel,
+  xiFault,
+  xiRoundFault,
+} from "./intel/map";
 export {
   defaultDescendingTable,
   isTableSortKey,
