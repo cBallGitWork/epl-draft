@@ -48,10 +48,19 @@ wc -l <file>                           # a line-count or ceiling claim
 - **Field claims.** Anything asserting a provider carries a field. Hand these to
   `probe-runner` rather than guessing.
 
-**4 — Do not confuse a record with a claim.** `PLATFORM_NOTES.md` is a season log
+**4 — Do not confuse a record with a claim.** `SEASON_LOG.md` is the season log
 and its dated entries are supposed to describe the past. A note saying "on 19 Aug
 this returned X" is TRUE as a record even if the answer has since changed. A
 sentence in `CLAUDE.md` saying "this returns X" is a present-tense claim.
+
+**`PLATFORM_NOTES.md` is no longer exempt**, and that is the point of the 3 Sep
+2026 split: the diary moved to `SEASON_LOG.md` and what is left is the standing
+half — the probes marked "do not re-derive", the decisions, the recorded rule
+exceptions, `Current priorities` and `Known constraints`. Those are present-tense
+claims and they are yours to check. A probe section keeps its date and asserts a
+population; **check the date, then check whether anything in the tree now
+depends on a number that has moved** — `probe-runner` counts it rather than you
+guessing.
 
 ## Output
 

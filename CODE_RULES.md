@@ -59,6 +59,13 @@ this exists).
 ## 4. Small files, not monoliths
 
 - **Soft ceiling 200 lines, hard ceiling 300** per source file. At 300, split.
+- **A shared component lives in the directory that matches its LAYER**, under
+  `apps/companion/app/components/`: `shell/` is the cross-register frame — the
+  things both the desk and the paper wear; `league/` is the desk register's own
+  furniture; `football/` is anything drawn from the football layer; `gazette/`
+  is the paper's. It moves there at the THIRD occurrence, like anything else,
+  and it gets its row in `docs/ui/conventions.md` **in the same commit** — that
+  table reached 31 of 78 files by everyone skipping this line.
 - One responsibility per file, and the filename says it:
   `client.ts` (I/O) · `map.ts` (pure transform) · `types.ts` · `selectors.ts`
   (pure reads) · `snapshot.ts` (orchestration). Follow the shape already set by

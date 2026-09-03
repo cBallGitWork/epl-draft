@@ -78,8 +78,22 @@ apps/lab        the 27/28 platform prototype — empty on purpose
 
 ## Platform notes
 
-We keep a living season log in `PLATFORM_NOTES.md`.
-Use it for:
+We keep two files, split on 3 Sep 2026 because one of them had reached 4,784
+lines and the 300 an agent actually needs were buried in the middle of it.
+
+**`PLATFORM_NOTES.md` — the standing half, and it is meant to be READ.** What is
+true now, what was probed and must not be re-derived, what was decided, and
+which rules have recorded exceptions. It is no longer exempt from
+`docs-drift-auditor`, which is the point of splitting it.
+
+**`SEASON_LOG.md` — the dated entries, and they are meant to be SEARCHED.** An
+account of a day's work. True as a record, never a claim about the tree today.
+
+The rule for which half a new section belongs in: a standing fact, a probe
+result, a decision or a rule goes in the first; an account of a day's work goes
+in the second.
+
+Use them for:
 
 - architecture and data decisions
 - Fantrax/FPL quirks and API gotchas
