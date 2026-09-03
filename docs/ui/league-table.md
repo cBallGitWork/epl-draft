@@ -2,31 +2,35 @@
 
 Fantrax computes the standings. **This page never adds anything up.**
 
-Wrapped in `LeagueShell`: page header, then the three-way section nav (Table ·
-Schedule · Matchups) that the League tab is divided into. The nav stays on screen
-even in the empty states — without it, a reader landing here during an outage has
-no way to reach the other two and the section becomes a dead end.
+Wrapped in `LeagueShell`: page header, then the section nav — `Table · Schedule
+· Results · Player Stats · Team Stats` — that the League tab is divided into.
+The nav stays on screen even in the empty states: without it a reader landing
+here during an outage has no way to reach the others and the section becomes a
+dead end. **Matchups is not on the strip**; it is in `SectionNav`'s `FOOT`,
+which is where CM files a screen that is about a fixture rather than about the
+division.
+
+*This paragraph said "the three-way section nav (Table · Schedule · Matchups)"
+until 3 Sep 2026, and had been wrong since 31 Aug — the strip gained Results and
+both stats boards and lost Matchups on the same day. Corrected against
+`league/SectionNav.tsx`.*
 
 ## On the page
 
-Standings rows as Fantrax gives them: rank, team, record, games back, the win
-fraction, fantasy points scored, and the league's points.
+Standings rows as Fantrax gives them, under the heads `# Team Pld W D L For Ag
+Pts Form` — a football league table, which is what `cm9900/24.jpg` prints and
+what every table in an English newspaper sets.
 
-**The row is two lines, and the arithmetic decided it.** A phone gives the row
-about 342px inside its padding, and those columns come to 286 of it before a
-single letter of a team name — to more than all of it on the one row that also
-carries the `You` chip. So the name keeps the first line and the figures take
-their own. Nothing is dropped at a small width to make it fit: that is the rule
-`/players` set (DESIGN §9), and this league is read on phones.
+**One row, one line, every column sortable but the name and the form.**
+`league/Columns.tsx` carries the list and `components/league/TableHeads` draws
+the strip.
 
-**Rank and points are the two numbers a table is read for**, and both used to be
-quieter than the team name — the rank small and faint, the points bold at body
-size. They are the figures now, set in the tabular face at either end of the line
-the name is on. Everything on the second line decides neither.
-
-**Every figure on that second line carries its own word**, because there are no
-column heads over it to do the job. `Columns` heads the first line only — a head
-over a figure that is not under it is worse than no head at all.
+*This section described a TWO-LINE row with a figure-and-its-own-word under the
+name, and three columns that no longer exist. All of it went on 31 Aug 2026 when
+the table became a football table; the doc was corrected 3 Sep. What follows in
+"Known gaps" about `FP`, `Win%` and `GB` went with them and is struck through
+there rather than deleted, because a dated record of a removed column is worth
+more than a silence.*
 
 **`Form` is the last five rounds, oldest first**, joined in `league/form.ts` from
 the season results (one request for all 38) and the pairings `getLeagueInfo`
@@ -72,23 +76,24 @@ lives in `app/badges.ts` and is shared by the schedule, the matchups list and th
 head-to-head board, so it is one cache entry for four surfaces rather than a
 second read for one page.
 
-**The points column is headed `FP`, not `Points`.** In a league table "points"
-means the standings — three for a win — and this column is Fantrax points
-scored, which is a different number the same word was claiming. The `W-D-L`
-beside it is Fantrax's own record, in their own column order.
+~~**The points column is headed `FP`, not `Points`.**~~ **Gone 31 Aug 2026.**
+It is `For` now — a league table calls what you scored `For`, and the Fantrax
+abbreviation was the last of that vocabulary on the screen. `Pts` is the
+league's own points, which is what a reader means by the word.
 
-**`Win%` is not a percentage and is not printed as one.** Fantrax's `winpc` is a
-fraction — literally `1` for a side that has won its only match — set
-baseball-style as `1.000` / `.500` / `.000`, which is how it is printed here.
-A `1%` beside the leader would put the table's best row last.
+~~**`Win%` is not a percentage and is not printed as one.**~~ **Column deleted
+31 Aug 2026.** A baseball proportion set `.500`, needing a paragraph to explain,
+saying less than `W D L` says in three narrower columns.
 
-**`GB` is Fantrax's arithmetic and comes off a second read.** It is the one
-column their standings PAGE does not carry, so `/league` also reads the fxea
-array for it. That read failing costs the column and nothing else: it dashes,
-because a team Fantrax has no number for is not a team level with the leader.
-Half a game per win is a convention rather than a fact, and this league pays
-three for a win in a sport with draws in it, so it is read and never worked out
-here.
+~~**`GB` is Fantrax's arithmetic and comes off a second read.**~~ **Column
+deleted 31 Aug 2026**, and losing it took a second provider read out of `/league`
+and out of the edition writer with it. Games back is half a game per win: a
+baseball convention, in a sport with draws in it, in a league paying three for a
+win. `league/Columns.tsx` records all three removals by name.
+
+~~**`W-D-L` in one cell.**~~ **Split 31 Aug 2026.** Three numbers crushed into
+one cell can only ever be sorted by one of the three, and this one silently
+sorted by wins under a head that named all three.
 
 **No movement arrows.** A rank a week ago cannot be had: rebuilding last week's
 table needs what a win is worth, `getLeagueInfo` does not publish it, and this

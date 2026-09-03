@@ -23,6 +23,7 @@ nothing.**
 | `/` | [gazetta.md](gazetta.md) | The week's paper. Lead, deals, doubts, next deadline. |
 | `/paper/{slug}` | [gazetta.md](gazetta.md) | One story, printed whole, under a numbered folio. |
 | `/paper/reports` | [gazetta.md](gazetta.md) | Page 2: the match-shaped columns. |
+| `/paper/columns` | [gazetta.md](gazetta.md) | Every column filed, newest first. |
 | `/league` | [league-table.md](league-table.md) | The table. Fantrax computes it. |
 | `/league/schedule` | [league-schedule.md](league-schedule.md) | One gameweek, every competition on it. |
 | `/league/matchups` | [league-matchups.md](league-matchups.md) | This period's head-to-heads, with live points. |
@@ -53,18 +54,16 @@ nothing.**
 Shared: [conventions.md](conventions.md) — tokens, components, the rules a
 redesign must not break.
 
-## Where the new visual direction lives
+## The template
 
-**`../../DESIGN.md` is binding and supersedes this section.** It holds the two
-registers, the palette and the retirements; what follows describes the app as it
-stood before the overhaul began and is kept for the geometry, which survives.
+A new section's doc starts from [TEMPLATE.md](TEMPLATE.md), which writes down
+the shape every file here already has. It was reverse-engineered from `prem.md`
+and `squad.md` for years before anybody wrote it down.
 
-`/squad/[teamId]` was rebuilt most recently and is the reference: full-bleed
-pitch on a gentle taper with sponsor hoardings, cut-out portraits standing on the
-grass with nothing drawn behind them, a cream name plate and a band under it that
-is his FDR fixture until he kicks off and his score after it, a pitch/list
-toggle, and a tap-to-open player card. Pull the rest of the app toward it, not
-the other way round.
+*This replaced a section headed "Where the new visual direction lives", which
+opened by saying `DESIGN.md` superseded it and then described the app as it
+stood before the overhaul. Twelve lines that told a reader to read something
+else. Deleted 3 Sep 2026; DESIGN.md is binding and is linked at the top.*
 
 ## Four things that are not style
 

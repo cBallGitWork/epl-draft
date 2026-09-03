@@ -94,6 +94,41 @@ No fluid clamps except inside the masthead.
 | `league/PlayerImage` | The cut-out itself, with its fallbacks. Client-only, and has to be — see below. |
 | `football/FixtureChip` | Opponent + (H)/(A), coloured by FPL's difficulty. **Never wraps** — the band under a sticker is a fixed 20px with `overflow-hidden`, so a second line is guillotined rather than spilled. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
+| `shell/TabStrip` | The blue tab strip under a title bar. Three strips use it — the League section, a fantasy team's five views, a club's four. `dim` greys a tab that has nothing behind it for THIS subject and keeps it in place, which is CM's answer for an empty view (`cm0102/07.jpg`). |
+| `shell/Caption` | The yellow centred caption inside a panel. The bar above names the subject; this names the view. Every screen in the reference carries both. |
+| `shell/Modal` | A native `<dialog>` over the page. Not a hand-rolled overlay — the element already does focus, Escape and the backdrop. |
+| `shell/Changed` | A figure that has just moved, briefly marked. The live desk's only animation. |
+| `league/TableHeads` | CM's bevelled head strip, and the only place its mechanics live: the row, the cell, the plate, the bare name cell, and `SortHead` — the plate as a LINK, drawn pressed when the table is ordered by it. Three tables sort through it. The column LISTS stay with their tables, because different columns mean genuinely different widths. |
+| `league/TableCells` | The other half: `IndexCell`, the ordinal in CM's index block (`24.jpg` runs `1st 2nd 3rd` down the left of every table it draws), and `ROW_LINK`, the class a board's name cell links with. Both arrived at three occurrences and not before. |
+| `league/TeamBadge` | A fantasy manager's own badge, with its initial and its dashed placeholder. The club-side equivalent is deliberately NOT extracted — see the note under this table. |
+| `league/TabEmpty` | The empty state INSIDE a shell: one muted line in a panel. Not `shell/Nothing`, which is a whole-page state and takes a provider code. |
+| `league/GroupNav` | The stat groups under a board. Deliberately not `TabStrip`: it wraps, it is drawn shorter, and it lists groups rather than routes. |
+| `league/ScoreFigure` | A score, at the one size and weight every board sets it. |
+| `league/RoundWord` | "Gameweek 7" and its short forms, spelled once so four screens cannot disagree. |
+| `league/Chips` | The little state chips on a player — captain, bench, the rest. |
+| `league/ViewToggle` | Pitch or list, as one control. |
+| `league/SquadRows` · `league/SquadBoard` | A squad as rows, and the gated board around it. |
+| `league/MatchupBoard` | The head-to-head, both XIs and the running totals. |
+| `league/LineupPlanner` · `league/MoveSheet` | Picking an XI, and everywhere one player can go. |
+| `league/PlayerCard` · `league/LivePlayerCard` | One player, tapped open — settled and live. |
+| `league/PitchDisc` · `league/CmGround` | A marker on the grass, and the ground it stands on. |
+| `football/StateBox` | The box beside a name saying why he is not playing. Silent for a fit player: a box reading "fit" on every row makes the one worth seeing harder to find. **It must survive a greyed row** — the whole point of it is to say why the row is grey. |
+| `football/MatchList` · `football/GameweekView` | The round in view, each fixture a native `<details>` that expands into who did what. |
+| `football/PhotoGround` | The darkened match photograph behind the desk. Fixed, `-z-10`. |
+| `gazette/*` | The paper's own furniture — masthead, folio, columns, teasers, the drawing, the front page's sections. It is the other register and is documented in [gazetta.md](gazetta.md) rather than here, because none of it is shared with the desk. |
+
+**Not extracted, and worth knowing why.** The crest-and-name cell reads as five
+occurrences and is two: `prem/ClubRow` and `prem/team-stats` draw the same 26px
+badge, while `prem/Match` draws 22 with a spacer for a club the snapshot lacks,
+the club page draws 56 in a heading, `players/[fantraxId]` puts one on a
+portrait, and `MatchList` draws 24 with a round grey fallback. One component
+across those takes a size, a fallback and an alignment, which is the generic
+mechanism CODE_RULES §1 forbids. Two is a coincidence — copy it.
+
+Likewise the sort-href builder: `league/sort.ts` and `prem/sort.ts` are the same
+function and that is TWO, while `players/query.ts` preserves the filter and
+search state through its own `href()` and Team Stats uses different parameter
+names. `SortHead` takes the href as a prop for exactly that reason.
 
 **Rows shrink, they never wrap — and every card is the same size.** A back five
 does not fit five cards at full width on a phone, and wrapping put one defender
