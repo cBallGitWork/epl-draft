@@ -200,6 +200,16 @@ export const SUBMIT = "cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9";
  *   is named only if all 68 adopt it, which is a decision about the absence
  *   grammar (DESIGN §7) rather than about class strings.
  *
+ * The TAB LABEL at `px-2 text-2xs` — 2 sites, `players/Board`'s measure strip
+ *   and `components/league/GroupNav`, whose class strings differ only in
+ *   `whitespace-nowrap` against `min-h-11`. Below the bar, and neither is a
+ *   `TabStrip`: `GroupNav` records why it stays out, and Board's is a strip of
+ *   MEASURES rather than routes. The app has five tab-label recipes and this
+ *   pair is two of them; the other three are `TabStrip`'s `phrase` and `word`
+ *   — both measured and both justified, see its docblock — and the pool's
+ *   filter `CHIP`, which is a chip at `text-sm` and a different object. So the
+ *   five are not five spellings of one thing, which is what the count implied.
+ *
  * The pitch NAME PLATE — 2 sites, `FplPitch` and `PitchPlayer`, and the whole
  *   long string is byte-identical in both. Below the bar, and `PitchRows`
  *   already owns `NAME_SIZE` and `GAP_CLASS` for the pitches, so that is where

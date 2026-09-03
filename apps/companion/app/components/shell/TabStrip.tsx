@@ -57,10 +57,22 @@ export default function TabStrip<K extends string>({
    *  "Player Stats". `word` is the team strip's 9px, chosen when every entry is
    *  one word so the plates all sit on one line.
    *
-   *  **The two disagree today and one of them is probably drift** — they were
-   *  written days apart and neither was measured. Carried across rather than
-   *  reconciled, because a refactor and a visual change may not land in one
-   *  commit (CODE_RULES, refactor triggers). Settle it at 390 with `tapfit`. */
+   *  **Measured at 390 on 3 Sep 2026, and neither is drift.** This used to say
+   *  one of them probably was, and asked for the measurement; here it is.
+   *
+   *  A `word` strip is four or five plates sharing the width, so each is about
+   *  76px with 8px of padding a side — 56px of room for a label. Every label in
+   *  every strip is one word and fits at 11px except one: `PremNav`'s "Team
+   *  Stats" needs 70px unwrapped at `2xs` and 58px at `3xs`, so at 11px it wraps
+   *  to two lines inside a 44px plate. Dropping the padding to `px-1` buys 8px
+   *  and still leaves it 2px short.
+   *
+   *  So the 9px is load-bearing, and it is bought by ONE label. DESIGN §6's
+   *  density table says a tab is set at `2xs`, which makes `word` the table's
+   *  documented exception rather than a second opinion — and the cheapest way to
+   *  delete it is to shorten that label, which is Craig's call and not a
+   *  refactor's. `phrase` keeps 11px because a section strip's entries are
+   *  phrases and it has fewer of them. */
   labels?: "phrase" | "word";
 }) {
   // The strip fills the row. CM's tabs run edge to edge across the whole content
