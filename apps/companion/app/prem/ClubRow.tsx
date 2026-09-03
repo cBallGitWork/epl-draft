@@ -3,6 +3,7 @@ import Link from "next/link";
 import { type Result, type TableRow, crestUrl, ordinal } from "@epl/core";
 import { cellAlign } from "./Columns";
 import { CLUB } from "./PremNav";
+import { ROW_LINK } from "../components/league/TableCells";
 
 // One club's line in the Premier League table.
 //
@@ -56,7 +57,7 @@ export default function ClubRow({
           // on the one you manage — and on this table you manage none of them.
           // Bigger than the figures beside it, because the name is what you scan
           // the table FOR and the figures are what you then read across.
-          className="cm-row flex min-h-11 items-center gap-2 text-base font-bold hover:underline lg:text-lg"
+          className={ROW_LINK}
         >
           <Crest code={row.code} name={row.name} />
           {/* The full name on the desk, the three-letter label under a thumb.

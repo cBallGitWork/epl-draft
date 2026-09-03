@@ -11,6 +11,7 @@ import {
 } from "@epl/core";
 import PlayerPortrait from "../components/football/PlayerPortrait";
 import GroupNav from "../components/league/GroupNav";
+import { IndexCell } from "../components/league/TableCells";
 import { PLAYERS } from "../league/SectionNav";
 
 // CM's stat board, on the player pool.
@@ -85,9 +86,7 @@ export default function Board({
 
               return (
                 <tr key={row.line.fantraxId} className="border-b border-bg hover:bg-surface">
-                  <td className="cm-index numeric px-1.5 text-center text-2xs font-bold">
-                    {ordinal(row.rank)}
-                  </td>
+                  <IndexCell>{ordinal(row.rank)}</IndexCell>
                   {/* `w-full` on the NAME cell, which under automatic table
                       layout means "take the slack" rather than "be the whole
                       row" — the other cells keep their content width and the

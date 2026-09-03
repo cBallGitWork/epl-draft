@@ -3,6 +3,7 @@ import Link from "next/link";
 import { clubStats, crestUrl, leagueTable, ordinal } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import { Head, HeadRow, NameHead } from "../../components/league/TableHeads";
+import { IndexCell, ROW_LINK } from "../../components/league/TableCells";
 import PremShell from "../Shell";
 import { CLUB } from "../PremNav";
 import Filters from "./Filters";
@@ -102,13 +103,11 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     numbers is a list where a column of ordinals is a league.
                     This one counts the BOARD rather than the table — it is the
                     ranking the reader asked for. */}
-                <td className="cm-index numeric px-1.5 text-center text-2xs font-bold">
-                  {ordinal(at + 1)}
-                </td>
+                <IndexCell>{ordinal(at + 1)}</IndexCell>
                 <td className="pl-2">
                   <Link
                     href={`${CLUB}/${club.table.code}`}
-                    className="cm-row flex min-h-11 items-center gap-2 text-base font-bold hover:underline lg:text-lg"
+                    className={ROW_LINK}
                   >
                     <Image
                       src={crestUrl({ code: club.table.code })}

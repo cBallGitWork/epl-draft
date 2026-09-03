@@ -11,6 +11,7 @@ import {
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
 import { Head, HeadRow, NameHead, SortHead } from "../../components/league/TableHeads";
+import { IndexCell, ROW_LINK } from "../../components/league/TableCells";
 import GroupNav from "../../components/league/GroupNav";
 import { TEAM_STATS } from "../SectionNav";
 import LeagueShell from "../Shell";
@@ -182,15 +183,11 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                         `1st 2nd 3rd` down the left of every table it draws, and
                         a column of bare numbers is a list where a column of
                         ordinals is a league. */}
-                    <td className="cm-index numeric px-1.5 text-center text-2xs font-bold">
-                      {ordinal(row.rank)}
-                    </td>
+                    <IndexCell>{ordinal(row.rank)}</IndexCell>
                     <td className="pl-2">
                       <Link
                         href={`/squad/${row.teamId}`}
-                        className={`cm-row flex min-h-11 items-center gap-2 text-base font-bold hover:underline lg:text-lg ${yoursInk(
-                          yours,
-                        )}`}
+                        className={`${ROW_LINK} ${yoursInk(yours)}`}
                       >
                         <TeamBadge
                           team={{ teamId: row.teamId, name: named.get(row.teamId) ?? row.teamId }}
