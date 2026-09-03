@@ -30,13 +30,34 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
 const none = () => false;
 
 describe("newsdesk", () => {
-  it("files the report once the round finishes, and the preview only in the lock window", () => {
-    expect(newsdesk(desk({ finished: true }), none, NOW)[0]?.kind).toBe("round-report");
+  it("files a report per tie once the round finishes, and the preview only in the lock window", () => {
+    const ties = [
+      { homeTeamId: "a", awayTeamId: "b", state: "settled" as const },
+      { homeTeamId: "c", awayTeamId: "d", state: "settled" as const },
+    ];
+    const finished = newsdesk(desk({ finished: true, ties }), none, NOW);
+    // **One story per tie and never one about the league.** Two ties, two
+    // reports, each keyed on its own pair.
+    expect(finished.filter((a) => a.kind === "tie-report").map((a) => a.key)).toEqual([
+      "tie-report:p3:avb",
+      "tie-report:p3:cvd",
+    ]);
     expect(newsdesk(desk({ started: false }), none, NOW)[0]?.kind).toBe("round-preview");
     // Mid-round is neither: a preview is too late and a report is too early —
     // the writer's own window rule, kept.
-    const midRound = newsdesk(desk(), none, NOW);
-    expect(midRound.find((a) => a.kind === "round-preview" || a.kind === "round-report")).toBeUndefined();
+    const midRound = newsdesk(desk({ ties }), none, NOW);
+    expect(midRound.find((a) => a.kind === "round-preview" || a.kind === "tie-report")).toBeUndefined();
+  });
+
+  it("reports a tie whatever state it was left in, unlike a mid-round call", () => {
+    // A call fires only on a tie that is decided, because an open one has
+    // nothing to call. A REPORT fires on every tie: the round is over, so the
+    // one that went to the wire is the one most worth reading about.
+    const ties = [{ homeTeamId: "a", awayTeamId: "b", state: "open" as const }];
+    expect(newsdesk(desk({ ties }), none, NOW).map((a) => a.kind)).not.toContain("tie-report");
+    expect(newsdesk(desk({ finished: true, ties }), none, NOW).map((a) => a.kind)).toContain(
+      "tie-report",
+    );
   });
 
   it("files each wire item once, and no more than the cap", () => {
@@ -138,14 +159,19 @@ describe("newsdesk", () => {
   });
 
   it("files the Monday set once the round is over, each on its own key", () => {
-    const kinds = newsdesk(desk({ finished: true }), none, NOW).map((a) => a.kind);
-    // The report leads; the considered columns follow in the order they are
+    const ties = [{ homeTeamId: "a", awayTeamId: "b", state: "settled" as const }];
+    const kinds = newsdesk(desk({ finished: true, ties }), none, NOW).map((a) => a.kind);
+    // The reporting leads; the considered columns follow in the order they are
     // worth reading, and the cap spreads them across firings.
     expect(kinds).toEqual([
-      "round-report", "eleven", "power-ranking", "dodgers", "studio", "presser",
+      "tie-report", "eleven", "power-ranking", "dodgers", "studio", "presser",
     ]);
     // Each spends its own key, so a second firing files only what is left.
-    const after = newsdesk(desk({ finished: true }), (key) => key.startsWith("round-report") || key.startsWith("eleven"), NOW);
+    const after = newsdesk(
+      desk({ finished: true, ties }),
+      (key) => key.startsWith("tie-report") || key.startsWith("eleven"),
+      NOW,
+    );
     expect(after.map((a) => a.kind)).toEqual(["power-ranking", "dodgers", "studio", "presser"]);
   });
 
@@ -178,14 +204,14 @@ describe("newsdesk", () => {
     expect(kinds.indexOf("match-report")).toBeLessThan(kinds.indexOf("news"));
   });
 
-  it("puts the round's own word first and the look-ahead last", () => {
+  it("puts the round's own reporting first and the look-ahead last", () => {
     const state = desk({
       finished: true,
       stakes: [stake()],
       ties: [{ homeTeamId: "a", awayTeamId: "b", state: "settled" }],
     });
     const kinds = newsdesk(state, none, NOW).map((a) => a.kind);
-    expect(kinds[0]).toBe("round-report");
+    expect(kinds[0]).toBe("tie-report");
     expect(kinds).toContain("match-report");
   });
 });

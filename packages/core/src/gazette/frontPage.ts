@@ -13,14 +13,17 @@ import type { PublishedStory, StoryKind } from "./story";
  *  keeps everything older; the paper is a paper, not an archive. */
 export const MAX_PAPER_STORIES = 24;
 
-/** What a newly filed story retires, by kind, within its own period. The
- *  round-report is the round's last word: the preview it answers, the mid-round
- *  calls it confirms or corrects, and the predictions column it marks are all
- *  now history the report owns. A table row, not code branches, so the next
- *  supersession is one line. */
+/** What a newly filed story retires, by kind, within its own period. A tie
+ *  report is the round's last word: it confirms or corrects the mid-round call
+ *  on its own tie, and its existence proves the football has stopped — which
+ *  makes the whole-round preview and the predictions column it marks history
+ *  too, whichever tie files first. A table row, not code branches, so the next
+ *  supersession is one line.
+ *
+ *  These three sat on `round-report` until 3 Sep 2026, when the single article
+ *  about the whole league was replaced by one report per tie. */
 const SUPERSEDES: Partial<Record<StoryKind, readonly StoryKind[]>> = {
-  "round-report": ["round-preview", "tie-call", "predictions"],
-  "tie-report": ["tie-call"],
+  "tie-report": ["tie-call", "round-preview", "predictions"],
 };
 
 /** The kind's standing in the running order — higher leads. Scale, not hue:
@@ -30,9 +33,8 @@ const SUPERSEDES: Partial<Record<StoryKind, readonly StoryKind[]>> = {
  *  stand"). Recency breaks ties within a band; the PERIOD outranks all of it,
  *  because a paper that leads with last week is not a paper. */
 const KIND_WEIGHT: Record<StoryKind, number> = {
-  "round-report": 90,
+  "tie-report": 90,
   "match-report": 85,
-  "tie-report": 80,
   "tie-call": 78,
   news: 70,
   "fixture-preview": 65,

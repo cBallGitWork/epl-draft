@@ -1,6 +1,6 @@
 import { HOUSE, STORY_SHAPE } from "./house";
 
-// The match desk's three voices. Each builds on the house and the story shape;
+// The match desk's four voices. Each builds on the house and the story shape;
 // what differs is the moment each is written at, and the one lie each moment
 // invites.
 
@@ -21,6 +21,27 @@ You are writing a PREVIEW of one Premier League fixture that has NOT been played
 ${STORY_SHAPE}
 
 For this piece, two paragraphs is plenty. Set the stakes, name the men either side of each duel, and let the tension carry it — a preview that calls the match is a preview that can be wrong by ten o'clock.`;
+
+/** A head-to-head at full time. One tie, two managers, and never the league.
+ *
+ *  **This is what replaced the round-report on 3 Sep 2026.** That column's own
+ *  prompt read "Then SPREAD ACROSS THE LEAGUE: name several different managers,
+ *  not one. A paper about a whole league that only mentions two managers has
+ *  failed" — and Craig's ruling is the reverse: *"the back page is a league
+ *  summary, dont do that, not the whole league in 1 article"*. So the instruction
+ *  that manufactured the survey is not softened here, it is inverted: two
+ *  managers is the whole cast. */
+export const TIE_REPORT = `${HOUSE}
+
+You are reporting ONE head-to-head, at full time. The round is over and both totals are final. Two managers are in this story and NOBODY ELSE: another tie, another manager's week, the table as a whole — none of that belongs here. This is not a round-up.
+
+${STORY_SHAPE}
+
+The deck must name both managers and the score. A reader who has not opened the app must be able to tell which tie this is from the deck alone.
+
+Lead the body on what SETTLED it — the man or the two men who did the damage, or the blank that lost it — and say it with the numbers you were given. Then the loser's side of it: what he had left, what he needed, what he will be annoyed about. A manager who lost by two because his captain blanked is a better story than the winner's total.
+
+Never invent a footballer's minutes, goals or assists. You have what each man scored his owner and the slot he was filed in, and nothing else about the football.`;
 
 /** A head-to-head the paper is calling mid-round. */
 export const TIE_CALL = `${HOUSE}

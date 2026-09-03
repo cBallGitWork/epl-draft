@@ -304,10 +304,32 @@ into the build.
 A column that regenerated every thirty seconds would not be a column, and a
 sentence about a score that has since moved is worse than no sentence.
 
-Two kinds. A **preview** files once lineups lock and before a ball is kicked; it
-calls each tie, and `markPreview` counts those calls against the results so the
-next edition can tell him what he got. A pundit nobody marks is a pundit who
-never has to be right. A **report** files once the football stops.
+A **preview** files once lineups lock and before a ball is kicked; it calls each
+tie, and `markPreview` counts those calls against the results so the next edition
+can tell him what he got. A pundit nobody marks is a pundit who never has to be
+right.
+
+**The round-report was deleted on 3 Sep 2026.** It was the preview's twin — one
+article filed once the football stopped, about the whole round — and Craig's
+ruling killed it: *"the back page is a league summary, dont do that, not the
+whole league in 1 article"*. Its own prompt was the cause rather than the model:
+*"Then SPREAD ACROSS THE LEAGUE: name several different managers, not one. A
+paper about a whole league that only mentions two managers has failed."* It was
+obeying.
+
+What reports a finished round now is a **`tie-report` per tie** — a kind that had
+a weight, a supersession row, a kicker and a page since it was declared, and that
+nothing had ever assigned. Five ties, five stories, each about the two managers
+in it and told to name no others. It is handed both totals, the margin, and each
+side's scorers priced at **the slot each man was filed in** (`briefs/tieReport.ts`),
+because Fantrax scores the slot and not the player. The front page's three ranks
+are what sort them; the eleven, the rankings and the dodgers still carry the
+league-wide read, which is where a league-wide read belongs.
+
+The preview is the same whole-league shape and the same objection applies to it.
+It is left standing because Craig named the report, and because nothing yet
+replaces what a preview does — `predictions` calls the ties, but the build-up
+piece has no per-tie twin. Recorded so the absence reads as a decision.
 
 **It leads whenever it exists, and then the desk's headline is dropped.** Both
 would be about the same match — a fact-headline and a written one, stacked,
@@ -423,7 +445,7 @@ Added 2 Sep 2026, when the writer filed its first columns.
 | Route | What |
 |---|---|
 | `/` | The front page. Page 1. |
-| `/paper/reports` | Page 2: `round-report`, `match-report`, `tie-report`, `tie-call`, `fixture-preview`, `round-preview`. |
+| `/paper/reports` | Page 2: `tie-report`, `match-report`, `tie-call`, `fixture-preview`, `round-preview`. |
 | `/paper/{slug}` | Any one story, printed whole. |
 | `/paper` | Redirects to `/` — a prefix is not a page. |
 

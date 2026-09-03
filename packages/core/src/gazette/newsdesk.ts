@@ -8,11 +8,20 @@ import type { TieState } from "./tieState";
 // catches up on the next look.
 //
 // The running order is an editor's argument, in the `stories.ts` tradition:
-// the round's own word first (report, then preview — each is the whole round);
-// then the perishable (a tie newly decided is a call that goes stale the
-// moment the next score moves); then the meat (match reports, biggest stakes
-// first); then the look-ahead (a preview piece can wait an hour, tonight's
-// kickoff notwithstanding). The cap in the orchestrator takes from the top.
+// the round's own reporting first (a report per TIE once the football stops,
+// then the preview); then the perishable (a tie newly decided is a call that
+// goes stale the moment the next score moves); then the meat (match reports,
+// biggest stakes first); then the look-ahead (a preview piece can wait an hour,
+// tonight's kickoff notwithstanding). The cap in the orchestrator takes from
+// the top.
+//
+// **A finished round files a report per tie, and never one about the league.**
+// It filed a single `round-report` until 3 Sep 2026 whose prompt said "SPREAD
+// ACROSS THE LEAGUE… a paper about a whole league that only mentions two
+// managers has failed", and Craig's ruling reversed exactly that: *"the back
+// page is a league summary, dont do that, not the whole league in 1 article"*.
+// A tie has two managers in it, which is how many a story can be about; five
+// ties are five stories, and the front page's three ranks are what sort them.
 
 export interface Assignment {
   kind: StoryKind;
@@ -52,8 +61,8 @@ export interface DeskState {
 }
 
 /** Fixtures per round that earn their own report. Four of ten: below the
- *  fourth the headcount thins to fixtures the round-report's tie lines already
- *  cover, and a paper that reports every match is a wire service. */
+ *  fourth the headcount thins to fixtures nobody in the league had a man in,
+ *  and a paper that reports every match is a wire service. */
 export const MATCH_REPORTS_PER_ROUND = 4;
 
 /** The columns a finished round earns, in the order they are worth reading.
@@ -82,7 +91,18 @@ export function newsdesk(
   };
 
   if (desk.finished) {
-    want(round("round-report", desk.gameweek));
+    // One report per tie, in the order the ties are given — `desk.ties` arrives
+    // from the period's pairings and the orchestrator's cap takes from the top,
+    // so a busy firing reports the ties it has room for and the next one picks
+    // up the rest. Each is its own covered-key, so none is written twice.
+    for (const tie of desk.ties) {
+      want({
+        kind: "tie-report",
+        key: `tie-report:p${desk.period}:${tie.homeTeamId}v${tie.awayTeamId}`,
+        slug: `p${desk.period}-report-${tie.homeTeamId}v${tie.awayTeamId}`,
+        tie: { homeTeamId: tie.homeTeamId, awayTeamId: tie.awayTeamId },
+      });
+    }
     // The Monday Club's set: the round's considered read. Each is its own
     // covered-key, so a column filed once is never queued again — which is what
     // lets the writer file the whole set in one firing when it has room, and
@@ -91,7 +111,7 @@ export function newsdesk(
       want({ kind, key: `${kind}:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-${kind}` });
     }
   } else if (desk.locked && !desk.started) {
-    want(round("round-preview", desk.gameweek));
+    want(roundPreview(desk.gameweek));
     // The predictions column files in the same window as the preview and is
     // marked against the results a week later.
     want({ kind: "predictions", key: `predictions:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-predictions` });
@@ -151,7 +171,7 @@ export function newsdesk(
 
   // The look-ahead and the outside world come LAST, and the order is the whole
   // point of the cap: a tie that has just gone settled is perishable — the
-  // next score can make the call moot and the round-report will own it within
+  // next score can make the call moot and the tie's own report will own it within
   // hours — while a waiver trend and a BBC item keep. Queued above the calls,
   // a Saturday with one claim and two wire items bought a waiver column and
   // somebody else's transfer news while the paper's own story waited.
@@ -172,8 +192,12 @@ export function newsdesk(
   return out;
 }
 
-function round(kind: "round-report" | "round-preview", gameweek: number): Assignment {
-  return { kind, key: `${kind}:gw${gameweek}`, slug: `gw${gameweek}-${kind}` };
+function roundPreview(gameweek: number): Assignment {
+  return {
+    kind: "round-preview",
+    key: `round-preview:gw${gameweek}`,
+    slug: `gw${gameweek}-round-preview`,
+  };
 }
 
 function upcoming(kickoff: string | null, now: string): boolean {

@@ -38,6 +38,7 @@ export type { PowerRow } from "./powerRanking";
 export type { WireFacts } from "./wire";
 export { buildMatchReportBrief } from "./briefs/matchReport";
 export { buildTieCallBrief } from "./briefs/tieCall";
+export { buildTieReportBrief } from "./briefs/tieReport";
 export { MAX_PAPER_STORIES, composePaper } from "./frontPage";
 export { isCovered, normalizeLedger, recordCoverage } from "./ledger";
 export { newsdesk } from "./newsdesk";

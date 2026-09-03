@@ -12,6 +12,7 @@ import {
   buildFixturePreviewBrief,
   buildMatchReportBrief,
   buildTieCallBrief,
+  buildTieReportBrief,
   bothSides,
   isActive,
   isResolved,
@@ -178,6 +179,57 @@ export function tieCallBrief(
     state,
     threads,
   });
+}
+
+/** One side of a finished tie: his total, and the men who made it.
+ *
+ *  **The slot he was filed in, and never a position off the player.** Fantrax
+ *  scores the roster slot — Saka is `F,M`, filed at M, and paid at midfield
+ *  rates — so `man.slot.position` is the honest letter here and the pool's
+ *  default would be a different, wrong number. `playerPoints` is already priced
+ *  the same way: it is what the man was worth to THIS manager.
+ *
+ *  Active slots only. A reserve cannot score, and a bench listed among the
+ *  scorers would have the writer explaining a nought nobody was owed. */
+function sideOf(team: RosteredTeam | undefined, facts: RoundFacts) {
+  const scorers = (team?.players ?? [])
+    .filter(isResolved)
+    .filter((man) => isActive(man.slot))
+    .flatMap((man) => {
+      const points = facts.playerPoints.get(man.slot.fantraxId);
+      // Absent rather than nought: a man Fantrax has not priced is withheld,
+      // the way every other brief withholds him.
+      return points === undefined
+        ? []
+        : [{ name: man.player.name, position: man.slot.position, points }];
+    })
+    .sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
+
+  return {
+    name: team?.teamName ?? "",
+    points: facts.scores.get(team?.teamId ?? "")?.points ?? null,
+    scorers,
+  };
+}
+
+export function tieReportBrief(
+  assignment: Assignment,
+  gameweek: number,
+  facts: RoundFacts,
+  threads: readonly StoryThread[],
+): string | null {
+  const pairing = facts.pairings.find(
+    (each) =>
+      each.home.teamId === assignment.tie?.homeTeamId &&
+      each.away.teamId === assignment.tie?.awayTeamId,
+  );
+  if (pairing === undefined) return null;
+
+  const byId = (teamId: string) => facts.teams.find((team) => team.teamId === teamId);
+  const home = { ...sideOf(byId(pairing.home.teamId), facts), name: pairing.home.name };
+  const away = { ...sideOf(byId(pairing.away.teamId), facts), name: pairing.away.name };
+
+  return buildTieReportBrief({ gameweek, home, away, threads });
 }
 
 function stateOf(pairing: PeriodPairing, scores: Map<string, LiveTeamScore>): TieState {

@@ -17,7 +17,7 @@ function filed(order: readonly string[], cap: number, refuses: (kind: string) =>
 
 /** A finished round, in the order the newsdesk emits it. */
 const ROUND = [
-  "round-report",
+  "tie-report:avb",
   "eleven",
   "power-ranking",
   "dodgers",
@@ -33,10 +33,10 @@ const wedged = (kind: string) => kind === "eleven" || kind === "dodgers";
 describe("the running order", () => {
   it("fills the cap with stories rather than with refusals", () => {
     // THE BUG. The order was sliced to the cap before any desk was asked for a
-    // brief, so a firing of two got [round-report, eleven]: one story and one
-    // refusal. The next got [eleven, power-ranking], and every firing after
+    // brief, so a firing of two got [the round's report, eleven]: one story and
+    // one refusal. The next got [eleven, power-ranking], and every firing after
     // that got [eleven, dodgers] — two refusals, "nothing to file", forever.
-    expect(filed(ROUND, 2, wedged)).toEqual(["round-report", "power-ranking"]);
+    expect(filed(ROUND, 2, wedged)).toEqual(["tie-report:avb", "power-ranking"]);
   });
 
   it("reaches the match reports queued behind six columns", () => {

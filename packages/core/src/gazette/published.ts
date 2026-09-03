@@ -16,14 +16,14 @@ import type { StoryResult } from "./types";
 // the page reads. When the round kinds get their own story-shaped prompts,
 // this file goes with them; `markPreview` is the part that outlives it.
 
-/** Which column this is.
+/** The round column that still uses the old sectioned edition shape.
  *
- *  Two, because they are written at different moments about different things and
- *  only one of them can be wrong in an interesting way. `preview` goes out once
- *  lineups lock and predicts; `report` goes out once the football stops and
- *  reports. A page showing a preview after the round has been played would be
- *  printing a forecast as if it were news. */
-export type EditionKind = "preview" | "report";
+ *  A one-member union, and deliberately still a union: "report" was the other
+ *  member until 3 Sep 2026, when the single article about the whole league was
+ *  replaced by one `tie-report` per tie. Collapsing this to a bare string is a
+ *  refactor of the edition shape and not part of that behaviour change — it
+ *  lands on its own, with `buildBrief`'s `kind` and `ROUND_KIND` beside it. */
+export type EditionKind = "preview";
 
 /** One paragraph-shaped piece of the column, keyed so a section that arrives
  *  empty simply does not print. */

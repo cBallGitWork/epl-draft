@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PeriodPairing } from "../league/selectors";
-import type { LiveTeamScore } from "../league/points";
+import type { TeamProjection } from "../league/points";
 import { buildBrief } from "./brief";
 import type { Brief } from "./brief";
 import type { Pick, TeamOfTheWeek } from "./types";
@@ -17,9 +17,9 @@ const pairing = (home: string, away: string): PeriodPairing => ({
   away: { teamId: away, name: NAMES[away] ?? away },
 });
 
-const scores = (over: Record<string, [number | null, number | null]>) =>
-  new Map<string, LiveTeamScore>(
-    Object.entries(over).map(([teamId, [points, toPlay]]) => [teamId, { teamId, points, toPlay }]),
+const projected = (over: Record<string, number | null>) =>
+  new Map<string, TeamProjection>(
+    Object.entries(over).map(([teamId, points]) => [teamId, { teamId, points }]),
   );
 
 const pick = (over: Partial<Pick> = {}): Pick => ({
@@ -41,7 +41,7 @@ const pick = (over: Partial<Pick> = {}): Pick => ({
 });
 
 const brief = (over: Partial<Brief> = {}): Brief => ({
-  kind: "report",
+  kind: "preview",
   gameweek: 1,
   period: 1,
   teams: [
@@ -49,14 +49,11 @@ const brief = (over: Partial<Brief> = {}): Brief => ({
     { teamId: "b", name: "Rivals" },
   ],
   pairings: [pairing("a", "b")],
-  scores: scores({ a: [45, 0], b: [31, 0] }),
-  stories: [],
   eleven: null,
   fielded: true,
   deals: [],
   doubts: [],
-  marked: null,
-  projected: new Map(),
+  projected: projected({ a: 45, b: 31 }),
   pedigree: new Map(),
   ...over,
 });
@@ -68,15 +65,8 @@ describe("buildBrief", () => {
     expect(text).toContain("never the name");
   });
 
-  it("says a tie still being played is not a result", () => {
-    const text = buildBrief(brief({ scores: scores({ a: [45, 0], b: [31, 3] }) }));
-    expect(text).toContain("IN PLAY");
-    expect(text).toContain("do not say anyone won it");
-    expect(text).not.toContain("FINAL");
-  });
-
   it("says a dash is not a nought, beside the dash", () => {
-    const text = buildBrief(brief({ scores: scores({ a: [45, 0], b: [null, 0] }) }));
+    const text = buildBrief(brief({ projected: projected({ a: 45, b: null }) }));
     expect(text).toContain("v — Rivals");
     expect(text).toContain("NOT nought");
   });
@@ -95,42 +85,32 @@ describe("buildBrief", () => {
     expect(allowed).toContain("— BENCHED");
   });
 
-  it("gives a preview Fantrax's projections, never its untouched scores", () => {
+  it("gives the preview Fantrax's projections, and never a total that reads as played", () => {
     // Before a ball is kicked `totalFpts` is a truthful nought for everybody, so
     // a preview built on scores hands its writer nought against nought for every
-    // tie while calling them projections.
-    const text = buildBrief(
-      brief({
-        kind: "preview",
-        scores: scores({ a: [0, 11], b: [0, 11] }),
-        projected: new Map([
-          ["a", { teamId: "a", points: 41.7 }],
-          ["b", { teamId: "b", points: 40 }],
-        ]),
-      }),
-    );
+    // tie while calling them projections. It is not given scores at all now: the
+    // played branch went with the round-report on 3 Sep 2026.
+    const text = buildBrief(brief({ projected: projected({ a: 41.7, b: 40 }) }));
     expect(text).toContain("Craig 41.7 v 40 Rivals");
     expect(text).toContain("PROJECTED");
     expect(text).not.toContain("IN PLAY");
+    expect(text).not.toContain("FINAL");
   });
 
   it("shows a dash for a squad Fantrax will not guess at", () => {
-    const text = buildBrief(
-      brief({ kind: "preview", projected: new Map([["a", { teamId: "a", points: null }]]) }),
-    );
+    const text = buildBrief(brief({ projected: projected({ a: null, b: null }) }));
     expect(text).toContain("Craig — v — Rivals");
   });
 
-  it("asks a preview for calls and a report for none", () => {
-    expect(buildBrief(brief({ kind: "preview" }))).toContain("callsTeamId");
-    expect(buildBrief(brief({ kind: "preview" }))).toContain("not a score");
-    expect(buildBrief(brief({ kind: "report" }))).toContain("leave `callsTeamId` unset");
+  it("asks the preview for calls, and says its numbers are projections", () => {
+    expect(buildBrief(brief())).toContain("callsTeamId");
+    expect(buildBrief(brief())).toContain("not a score");
   });
 
   it("leaves out every block it has nothing for", () => {
     // A brief padded with empty headings is a brief that invites a model to fill
     // them, which is exactly how a paper gets a transfer nobody made.
-    const quiet = buildBrief(brief({ pairings: [], scores: new Map() }));
+    const quiet = buildBrief(brief({ pairings: [] }));
     expect(quiet).not.toContain("THE TIES");
     expect(quiet).not.toContain("WHO IS HURT");
     expect(quiet).not.toContain("THE WEEK'S BUSINESS");
@@ -185,7 +165,4 @@ describe("buildBrief", () => {
     expect(text).not.toContain("off the wire");
   });
 
-  it("makes the pundit own last week's score", () => {
-    expect(buildBrief(brief({ marked: { right: 5, called: 8 } }))).toContain("called 5 of 8");
-  });
 });

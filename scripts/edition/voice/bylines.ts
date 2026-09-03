@@ -6,7 +6,6 @@ import { LEAGUE_TIMEZONE, type StoryKind } from "@epl/core";
 // empty, which the page renders as nothing.
 
 export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
-  "round-report": "The Back Page",
   "round-preview": "The Form Guide",
   "match-report": "The Back Page",
   "fixture-preview": "The Form Guide",

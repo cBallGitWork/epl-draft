@@ -7,8 +7,8 @@ const NOW = "2026-08-31T12:00:00.000Z";
 // Its own factory rather than an import from story.test.ts: importing a test
 // file registers that file's tests a second time inside this suite.
 const story = (over: Partial<PublishedStory> = {}): PublishedStory => ({
-  slug: "gw3-report",
-  kind: "round-report",
+  slug: "p3-report-a-v-b",
+  kind: "tie-report",
   leagueId: "zbn1z3ukmsgb36sz",
   period: 3,
   gameweek: 3,
@@ -19,7 +19,7 @@ const story = (over: Partial<PublishedStory> = {}): PublishedStory => ({
   headline: "Something clever",
   deck: "Something plain.",
   body: "A paragraph.",
-  subjects: ["round-report:gw3"],
+  subjects: ["tie-report:p3:a-v-b"],
   image: null,
   ties: [],
   ...over,
@@ -46,13 +46,13 @@ describe("composePaper", () => {
     expect(paper).toHaveLength(1);
   });
 
-  it("lets the round-report retire its period's preview, calls and predictions", () => {
+  it("lets a tie report retire its period's preview, calls and predictions", () => {
     const paper = composePaper(
       [
         story({ slug: "preview", kind: "round-preview", filedAt: "2026-08-28T18:00:00.000Z" }),
         story({ slug: "call", kind: "tie-call", filedAt: "2026-08-30T16:00:00.000Z" }),
         story({ slug: "lawro", kind: "predictions", filedAt: "2026-08-29T10:00:00.000Z" }),
-        story({ slug: "report", kind: "round-report", filedAt: "2026-08-31T09:00:00.000Z" }),
+        story({ slug: "report", kind: "tie-report", filedAt: "2026-08-31T09:00:00.000Z" }),
         story({ slug: "next-preview", kind: "round-preview", period: 4, gameweek: 4 }),
       ],
       NOW,
@@ -79,7 +79,7 @@ describe("composePaper", () => {
   it("leads with the newest period, then reporting over columns, then recency", () => {
     const paper = composePaper(
       [
-        story({ slug: "old-report", kind: "round-report", period: 2, gameweek: 2 }),
+        story({ slug: "old-report", kind: "tie-report", period: 2, gameweek: 2 }),
         story({ slug: "column", kind: "eleven", period: 3, filedAt: "2026-08-31T10:00:00.000Z" }),
         story({ slug: "match", kind: "match-report", period: 3, subjects: ["match:gw3:1v2"], filedAt: "2026-08-30T21:00:00.000Z" }),
         story({ slug: "later-match", kind: "match-report", period: 3, subjects: ["match:gw3:3v7"], filedAt: "2026-08-31T09:00:00.000Z" }),

@@ -83,7 +83,6 @@ export function __escapeControlsInStrings(json: string): string {
 
 const ROUND_KIND: Record<EditionKind, StoryKind> = {
   preview: "round-preview",
-  report: "round-report",
 };
 
 /** A round column, re-expressed as one story in the rolling paper.

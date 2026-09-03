@@ -4,7 +4,7 @@ import type { PublishedEdition } from "./published";
 import type { StoryResult } from "./types";
 
 const edition = (over: Partial<PublishedEdition> = {}): PublishedEdition => ({
-  kind: "report",
+  kind: "preview",
   leagueId: "zbn1z3ukmsgb36sz",
   period: 1,
   gameweek: 1,
@@ -119,6 +119,12 @@ describe("markPreview", () => {
 
   it("marks nothing when there is no preview to mark", () => {
     expect(markPreview(null, [result("a", "b")])).toBeNull();
-    expect(markPreview(edition({ kind: "report" }), [result("a", "b")])).toBeNull();
+    // A shape that is not a preview, as it arrives from JSON — the kind is a
+    // one-member union in the type and still a claim at the edge.
+    expect(
+      markPreview({ ...preview, kind: "report" } as unknown as Parameters<typeof markPreview>[0], [
+        result("a", "b"),
+      ]),
+    ).toBeNull();
   });
 });

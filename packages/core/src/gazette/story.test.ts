@@ -6,7 +6,7 @@ const LEAGUE = "zbn1z3ukmsgb36sz";
 
 const story = (over: Partial<PublishedStory> = {}): PublishedStory => ({
   slug: "gw3-report",
-  kind: "round-report",
+  kind: "tie-report",
   leagueId: LEAGUE,
   period: 3,
   gameweek: 3,
@@ -17,7 +17,7 @@ const story = (over: Partial<PublishedStory> = {}): PublishedStory => ({
   headline: "Something clever",
   deck: "Something plain.",
   body: "A paragraph.\n\nAnother.",
-  subjects: ["round-report:gw3"],
+  subjects: ["tie-report:p3:a-v-b"],
   image: null,
   ties: [],
   ...over,

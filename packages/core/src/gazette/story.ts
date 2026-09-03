@@ -22,7 +22,6 @@ import { type EditionTie, isTie, once } from "./published";
  *  is kept in the plan, not in the type. */
 export type StoryKind =
   | "round-preview"
-  | "round-report"
   | "match-report"
   | "fixture-preview"
   | "tie-call"
@@ -37,7 +36,7 @@ export type StoryKind =
   | "news";
 
 const STORY_KINDS: readonly StoryKind[] = [
-  "round-preview", "round-report", "match-report", "fixture-preview",
+  "round-preview", "match-report", "fixture-preview",
   "tie-call", "tie-report", "predictions", "eleven", "power-ranking",
   "wire", "dodgers", "presser", "studio", "news",
 ];

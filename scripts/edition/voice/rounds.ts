@@ -1,36 +1,18 @@
 import { HEADLINE, HOUSE } from "./house";
 
-// The two round columns, in their original sectioned shape.
-
-/** The report, filed once the football stops.
- *
- *  Named for the pundit whose whole job was to say what the eleven should have
- *  been and who should be ashamed of themselves — which is exactly what a team
- *  of the week in a league of friends is for. */
-export const REPORT = `${HOUSE}
-
-You are writing THE REPORT: the round is over, every result is in, and this is the paper that goes out about it.
-
-Return JSON only, matching this shape exactly:
-{
-  "headline": "wordplay, 8 words or fewer",
-  "deck": "the same story in plain words, one line",
-  "intro": "the splash, 2 to 3 short paragraphs",
-  "sections": [{ "key": "verdict" | "eleven", "heading": "a short newspaper heading", "body": "paragraphs" }],
-  "ties": [{ "homeTeamId": "...", "awayTeamId": "...", "line": "one or two sentences on that tie" }]
-}
-
-${HEADLINE}
-
-For this column the story in "deck" is the single biggest story of the ROUND.
-
-THE INTRO is the front page. Lead the first paragraph on the biggest story. Then SPREAD ACROSS THE LEAGUE: name several different managers, not one. A paper about a whole league that only mentions two managers has failed.
-
-SECTIONS, only these keys, only if you have something:
-- "verdict" — what the round did to the table and to the managers in it.
-- "eleven" — the team of the week, written like a pundit picking one: who was outstanding, whose player he was, and who is unlucky to miss out. This is the section the league will argue about, so have opinions about the FOOTBALL and never about facts you were not given.
-
-TIES: one entry per tie in the brief, using the EXACT ids given. Report it, do not predict it.`;
+// The preview, in its original sectioned shape.
+//
+// **The REPORT was deleted on 3 Sep 2026** — Craig: *"the back page is a league
+// summary, dont do that, not the whole league in 1 article"*. Its prompt said
+// the opposite in as many words ("SPREAD ACROSS THE LEAGUE… a paper about a
+// whole league that only mentions two managers has failed"), which is why the
+// column obeyed. A round's football is now a `tie-report` per tie, written in
+// the story shape by `TIE_REPORT` in `voice/matches.ts`.
+//
+// The preview is the same shape and the same objection applies to it; it is
+// left standing because Craig named the report, and because nothing has yet
+// replaced what a preview does — `predictions` calls the ties, but the
+// build-up piece has no per-tie twin. Recorded so the absence is a decision.
 
 /** The preview, filed once lineups lock.
  *

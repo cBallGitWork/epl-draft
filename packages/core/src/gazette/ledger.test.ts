@@ -13,10 +13,11 @@ const FILED = "2026-08-31T09:00:00.000Z";
 
 describe("recordCoverage", () => {
   it("spends keys once and answers isCovered", () => {
-    const ledger = recordCoverage({}, LEAGUE, ["round-report:gw3", "round-report:gw3"], [], FILED);
-    expect(ledger[LEAGUE].covered).toEqual(["round-report:gw3"]);
-    expect(isCovered(ledger, LEAGUE, "round-report:gw3")).toBe(true);
-    expect(isCovered(ledger, "ayyoh3n2mr326v2o", "round-report:gw3")).toBe(false);
+    const key = "tie-report:p3:avb";
+    const ledger = recordCoverage({}, LEAGUE, [key, key], [], FILED);
+    expect(ledger[LEAGUE].covered).toEqual([key]);
+    expect(isCovered(ledger, LEAGUE, key)).toBe(true);
+    expect(isCovered(ledger, "ayyoh3n2mr326v2o", key)).toBe(false);
   });
 
   it("drops the oldest keys past the cap", () => {

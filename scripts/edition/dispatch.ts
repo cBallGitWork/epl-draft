@@ -10,19 +10,18 @@ import {
   type ThreadUpdate,
   buildBrief,
   normalizePublished,
-  stories,
 } from "@epl/core";
-import { fixturePreviewBrief, matchReportBrief, tieCallBrief } from "./assemble";
+import { fixturePreviewBrief, matchReportBrief, tieCallBrief, tieReportBrief } from "./assemble";
 import { columnBrief } from "./columns";
 import { newsBrief } from "./news";
 import type { RoundFacts } from "./facts";
 import { storyOfColumn, storyOfEdition } from "./newsroom";
 import { STORY_BYLINE, editionName } from "./voice/bylines";
-import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL } from "./voice/matches";
+import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL, TIE_REPORT } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, PREDICTIONS, WIRE } from "./voice/columns";
 import { PRESSER, STUDIO } from "./voice/sketches";
 import { NEWS } from "./voice/news";
-import { PREVIEW, REPORT } from "./voice/rounds";
+import { PREVIEW } from "./voice/rounds";
 
 // One assignment in, one prepared desk out: which voice writes it, from which
 // brief, and how the words come back as a story. A kind with no desk yet
@@ -46,8 +45,11 @@ export interface DeskContext {
   marked: { right: number; called: number } | null;
 }
 
+/** The one kind still written in the old sectioned edition shape. The report
+ *  was the other until 3 Sep 2026; a round's football is now covered by a
+ *  `tie-report` per tie, which is written in the story shape like everything
+ *  else. When the preview follows, this table and `EditionKind` go with it. */
 const ROUND_OF: Partial<Record<Assignment["kind"], EditionKind>> = {
-  "round-report": "report",
   "round-preview": "preview",
 };
 
@@ -55,31 +57,19 @@ export function prepare(assignment: Assignment, ctx: DeskContext): { system: str
   const round = ROUND_OF[assignment.kind];
   if (round !== undefined) {
     return {
-      system: round === "report" ? REPORT : PREVIEW,
+      system: PREVIEW,
       brief: buildBrief({
         kind: round,
         gameweek: ctx.snapshot.gameweek,
         period: ctx.period,
         teams: ctx.info.teams.map((team) => ({ teamId: team.teamId, name: team.name })),
         pairings: ctx.facts.pairings,
-        scores: ctx.facts.scores,
         projected: ctx.facts.projected,
-        stories:
-          round === "report" && ctx.facts.eleven !== null
-            ? stories(
-                ctx.facts.pairings,
-                ctx.facts.scores,
-                ctx.facts.fielded ? ctx.facts.eleven : null,
-                ctx.facts.business,
-                ctx.period,
-              )
-            : [],
         eleven: ctx.facts.eleven,
         fielded: ctx.facts.fielded,
         deals: ctx.facts.business,
         doubts: ctx.facts.doubts,
         pedigree: ctx.facts.pedigree,
-        marked: round === "report" ? ctx.marked : null,
       }),
     };
   }
@@ -91,6 +81,8 @@ export function prepare(assignment: Assignment, ctx: DeskContext): { system: str
         ? fixturePreviewBrief(assignment, ctx.snapshot, ctx.facts, ctx.clubs, ctx.threads)
         : assignment.kind === "tie-call"
           ? tieCallBrief(assignment, ctx.snapshot.gameweek, ctx.facts, ctx.threads)
+          : assignment.kind === "tie-report"
+            ? tieReportBrief(assignment, ctx.snapshot.gameweek, ctx.facts, ctx.threads)
           : assignment.kind === "news"
             ? newsBrief(assignment, ctx.facts, ctx.threads)
           : columnBrief(assignment, {
@@ -116,6 +108,7 @@ const VOICE: Partial<Record<Assignment["kind"], string>> = {
   "match-report": MATCH_REPORT,
   "fixture-preview": FIXTURE_PREVIEW,
   "tie-call": TIE_CALL,
+  "tie-report": TIE_REPORT,
   predictions: PREDICTIONS,
   eleven: ELEVEN,
   "power-ranking": POWER_RANKING,

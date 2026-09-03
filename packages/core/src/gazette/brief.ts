@@ -1,7 +1,7 @@
 import type { PeriodPairing } from "../league/selectors";
 import type { LiveTeamScore, TeamProjection } from "../league/points";
 import type { DraftPick } from "../league/fantrax/draft";
-import type { AvailabilityNote, Deal, Pick, Story, TeamOfTheWeek } from "./types";
+import type { AvailabilityNote, Deal, Pick, TeamOfTheWeek } from "./types";
 
 // The facts a columnist is given, and the only ones he may use.
 //
@@ -20,31 +20,24 @@ import type { AvailabilityNote, Deal, Pick, Story, TeamOfTheWeek } from "./types
 
 /** Everything the writer is told, already reduced to what we can stand behind. */
 export interface Brief {
-  kind: "preview" | "report";
+  kind: "preview";
   gameweek: number;
   period: number;
   /** Team names by id, so the writer never invents one and the page can still
    *  join on ids afterwards. */
   teams: { teamId: string; name: string }[];
   pairings: readonly PeriodPairing[];
-  /** What each squad has actually scored. Read by a REPORT. */
-  scores: Map<string, LiveTeamScore>;
   /** What Fantrax reckons each squad will score. Read by a PREVIEW, and read by
    *  nothing else: before a ball is kicked `scores` is a truthful nought for
    *  everybody, so a preview built on it hands its writer nought against nought
    *  for every tie while telling him they are projections. */
   projected: Map<string, TeamProjection>;
-  /** Ranked, from `stories()`. What the desk already thinks the week's stories
-   *  are — the writer may disagree about emphasis, never about facts. */
-  stories: readonly Story[];
   eleven: TeamOfTheWeek | null;
   /** Whether the eleven's `started` flags describe the side that was actually
    *  fielded. When false the writer is told not to mention benching at all. */
   fielded: boolean;
   deals: readonly Deal[];
   doubts: readonly AvailabilityNote[];
-  /** How the last preview's calls turned out, for the writer to own or dodge. */
-  marked: { right: number; called: number } | null;
   /** Where each man was drafted, by Fantrax id. Empty before a draft completes,
    *  which is the real league's state until 10 Oct. */
   pedigree: Map<string, DraftPick>;
@@ -63,8 +56,6 @@ export function buildBrief(brief: Brief): string {
     eleven(brief),
     business(brief, who),
     doubts(brief, who),
-    desk(brief, who),
-    marked(brief),
   ];
   return blocks.filter((block) => block !== null).join("\n\n");
 }
@@ -72,7 +63,7 @@ export function buildBrief(brief: Brief): string {
 function heading(brief: Brief): string {
   const names = brief.teams.map((team) => `${team.name} [${team.teamId}]`).join(", ");
   return [
-    `EDITION: ${brief.kind === "preview" ? "PREVIEW — written after lineups locked, before a ball is kicked" : "REPORT — written after the round finished"}`,
+    "EDITION: PREVIEW — written after lineups locked, before a ball is kicked",
     `GAMEWEEK ${brief.gameweek}, scored in Fantrax period ${brief.period}.`,
     `THE ${brief.teams.length} MANAGERS (use these names EXACTLY; the id in brackets is what you return, never the name): ${names}`,
   ].join("\n");
@@ -80,39 +71,24 @@ function heading(brief: Brief): string {
 
 /** The head-to-heads, with the one rule that stops every invented sentence.
  *
- *  `toPlay` is Fantrax's own count of active men whose fixture has not finished,
- *  and it is the difference between "he won" and "he is winning". Null means
- *  they did not say, which is not the same as nobody left — a distinction the
- *  app has had to relearn on three separate screens. */
+ *  Projections only, and labelled as such on every line. This block carried a
+ *  played branch until 3 Sep 2026 — Fantrax's live totals, with FINAL or IN PLAY
+ *  against each tie — which was the round-report's half of it; a round's results
+ *  are now reported one tie at a time by `briefs/tieReport.ts`, which is handed
+ *  the men as well as the totals. */
 function ties(brief: Brief): string | null {
   if (brief.pairings.length === 0) return null;
 
-  const lines = brief.pairings.map((pairing) =>
-    brief.kind === "preview"
-      ? `- [${pairing.home.teamId}] ${pairing.home.name} ${points(brief.projected.get(pairing.home.teamId))} v ${points(brief.projected.get(pairing.away.teamId))} ${pairing.away.name} [${pairing.away.teamId}] — PROJECTED`
-      : played(pairing, brief.scores),
+  const lines = brief.pairings.map(
+    (pairing) =>
+      `- [${pairing.home.teamId}] ${pairing.home.name} ${points(brief.projected.get(pairing.home.teamId))} v ${points(brief.projected.get(pairing.away.teamId))} ${pairing.away.name} [${pairing.away.teamId}] — PROJECTED`,
   );
 
   return [
-    brief.kind === "preview"
-      ? "THE TIES. Nobody has kicked a ball. **Every number below is Fantrax's own projection, not a score**, and you must never write about one as though the football has happened. Write one line per tie in `ties`, and set `callsTeamId` to the id of whoever you think wins — or null if you will not call it. A tie you decline costs you nothing; a tie you call is marked next week."
-      : "THE TIES (write one line per tie in `ties`; leave `callsTeamId` unset). A tie marked IN PLAY is NOT a result — do not say anyone won it.",
+    "THE TIES. Nobody has kicked a ball. **Every number below is Fantrax's own projection, not a score**, and you must never write about one as though the football has happened. Write one line per tie in `ties`, and set `callsTeamId` to the id of whoever you think wins — or null if you will not call it. A tie you decline costs you nothing; a tie you call is marked next week.",
     "A dash is a total Fantrax did not give. It is NOT nought and you may not treat it as a low score.",
     ...lines,
   ].join("\n");
-}
-
-function played(pairing: PeriodPairing, scores: Map<string, LiveTeamScore>): string {
-  const home = scores.get(pairing.home.teamId);
-  const away = scores.get(pairing.away.teamId);
-  // `toPlay` is Fantrax's own count of active men whose fixture has not
-  // finished, and it is the whole difference between "he won" and "he is
-  // winning". Null means they did not say, which is not the same as nobody left.
-  const state =
-    home?.toPlay === 0 && away?.toPlay === 0
-      ? "FINAL"
-      : `IN PLAY (${home?.toPlay ?? "?"} and ${away?.toPlay ?? "?"} still to play)`;
-  return `- [${pairing.home.teamId}] ${pairing.home.name} ${points(home)} v ${points(away)} ${pairing.away.name} [${pairing.away.teamId}] — ${state}`;
 }
 
 function points(score: { points: number | null } | undefined): string {
@@ -199,26 +175,3 @@ function doubts(brief: Brief, who: Who): string | null {
   ].join("\n");
 }
 
-/** What the desk already thinks the stories are.
- *
- *  Handed over as a ranking rather than as instructions: the running order is
- *  argued in `stories.ts` and the writer is entitled to disagree about which
- *  matters most. What he is not entitled to do is find a story in facts he was
- *  not given. */
-function desk(brief: Brief, who: Who): string | null {
-  if (brief.stories.length === 0) return null;
-  const lines = brief.stories.map((story) => {
-    if (story.kind === "bench") {
-      return `- LEFT OUT: ${story.pick.ownerName} did not start ${story.pick.playerName}${story.lost ? `, and lost ${story.lost.loser.points}–${story.lost.winner.points} to ${story.lost.winner.name}` : ""}`;
-    }
-    if (story.kind === "trade") return `- TRADE: ${story.sides.map(who).join(" and ")} did business`;
-    const word = story.kind === "squeaker" ? "DECIDED BY NOTHING" : "A HAMMERING";
-    return `- ${word}: ${story.result.winner.name} beat ${story.result.loser.name} by ${story.result.margin}`;
-  });
-  return ["THE DESK'S RUNNING ORDER, strongest first. Lead on one of these.", ...lines].join("\n");
-}
-
-function marked(brief: Brief): string | null {
-  if (brief.marked === null) return null;
-  return `YOUR LAST COLUMN: you called ${brief.marked.right} of ${brief.marked.called}. Own it in a line — briefly, and without a paragraph of excuses.`;
-}

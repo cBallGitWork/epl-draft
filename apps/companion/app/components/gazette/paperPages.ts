@@ -28,7 +28,7 @@ export const PAPER_PAGES: readonly PaperPage[] = [
     label: "Reports",
     number: 2,
     // The match-shaped kinds: what happened, and what is about to.
-    kinds: ["round-report", "match-report", "tie-report", "tie-call", "fixture-preview", "round-preview"],
+    kinds: ["tie-report", "match-report", "tie-call", "fixture-preview", "round-preview"],
   },
   {
     href: "/paper/columns",
