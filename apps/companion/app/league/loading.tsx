@@ -1,7 +1,7 @@
 import Columns, { COLUMNS } from "./Columns";
 import LeagueShell from "./Shell";
 import Skeleton from "../components/shell/Skeleton";
-import { BOARD } from "@/app/desk";
+import { BOARD, ROW_RULE } from "@/app/desk";
 
 // The table, waiting on Fantrax.
 //
@@ -30,7 +30,7 @@ export default function Loading() {
           <Columns sort="rank" descending={false} />
           <tbody>
             {Array.from({ length: ROWS }, (_, at) => (
-              <tr key={at} className="border-b border-line/60">
+              <tr key={at} className={ROW_RULE}>
                 {COLUMNS.map((column) => (
                   <td key={column.key} className="px-1 py-1">
                     {column.key === "team" ? (

@@ -1,6 +1,6 @@
 import Section from "../../components/shell/Section";
 import type { GameLogRow } from "./scouting";
-import { SCROLL } from "@/app/desk";
+import { ROW_RULE, SCROLL } from "@/app/desk";
 
 // His season, match by match — the thing this app held the data for and had
 // never once shown.
@@ -66,7 +66,7 @@ export default function GameLog({ rows }: { rows: GameLogRow[] }) {
             </thead>
             <tbody>
               {rows.map(({ match, opponent }) => (
-                <tr key={match.fixtureId} className="border-b border-line/60 hover:bg-raised">
+                <tr key={match.fixtureId} className={`${ROW_RULE} hover:bg-raised`}>
                   <td className="numeric py-1.5 pr-2 text-left text-2xs text-faint">
                     {match.gameweek}
                   </td>

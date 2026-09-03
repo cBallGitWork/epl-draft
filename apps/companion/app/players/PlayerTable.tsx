@@ -5,7 +5,7 @@ import type { PoolRow } from "./pool";
 import { COLUMNS, activeSort, sortHref } from "./query";
 import { positionsLabel } from "../positions";
 import type { PlayersQuery } from "./query";
-import { SCROLL } from "@/app/desk";
+import { ROW_RULE, SCROLL } from "@/app/desk";
 
 // The pool as a table. Sorting is a link, not a click handler: the server does
 // the ordering, the phone gets HTML, and the sort survives being shared.
@@ -90,7 +90,7 @@ export default function PlayerTable({
               ? (teamNames.get(entry.ownerTeamId) ?? entry.ownerTeamId)
               : null;
             return (
-              <tr key={entry.player.fantraxId} className="border-b border-line/60 hover:bg-raised">
+              <tr key={entry.player.fantraxId} className={`${ROW_RULE} hover:bg-raised`}>
                 <td className="numeric px-1 text-right text-2xs text-faint">{stats?.rank ?? "—"}</td>
                 {/* `lg:py-0` because the cell pads the row from outside it and
                     `.cm-row` cannot reach a `<td>`: 8px here plus the 28 inside
