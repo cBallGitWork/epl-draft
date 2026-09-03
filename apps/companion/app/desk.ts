@@ -76,7 +76,13 @@ export const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
 /** The same cell when it is holding a position, a shirt number or anything else
  *  the reader scans PAST on the way to a figure. Same geometry, quieter ink and
  *  no weight — the pair is the point, and they must stay the same width or the
- *  column bends. */
+ *  column bends.
+ *
+ *  **One caller**, and named anyway, which §1 normally forbids. It is here as
+ *  half of a PAIR rather than as an abstraction over its callers: the thing
+ *  being recorded is that this and `FIGURE` share a geometry on purpose, and a
+ *  second copy written from scratch would not know that. If it is still at one
+ *  next refactor, delete it and inline the string. */
 export const SLOT_FIGURE = "numeric px-1.5 text-center text-2xs text-faint";
 
 /** Which way a form result leans. Two files declared this byte-identically.
@@ -150,6 +156,21 @@ export const HEAD_PLATE_END =
  *  its own spacing and says the reason; a caller without one takes this. */
 export const PANEL = "cm-panel flex flex-col gap-2 p-2";
 
+/** The same well with no spacing of its own, for a panel whose single child
+ *  manages its own — a board, a ledger, a grid. Six sites wrote it.
+ *
+ *  A separate name rather than `PANEL` minus two utilities, because it is a
+ *  different decision: `PANEL` spaces a COLUMN OF THINGS, and this holds ONE
+ *  thing that is already spaced. A gap with nothing to sit between is how
+ *  `squad/[teamId]/fixtures` came to declare one. */
+export const PANEL_FLUSH = "cm-panel flex flex-col";
+
+/** The `<th>` a stats board's head plate sits in: no padding, because the plate
+ *  inside carries it, and left because the plate decides its own alignment.
+ *  Three boards wrote it — the club's, the squad's and the season grid — which
+ *  are the same three that share `HEAD_PLATE`. */
+export const HEAD_CELL = "p-0 text-left font-bold";
+
 /** One stated fact in a stack of them: a bordered row tall enough to be aimed
  *  at, holding a label and its value. Four sites wrote it — the player page's
  *  own facts, his draft pedigree, his projection, and the Prem player page.
@@ -212,6 +233,20 @@ export const SUBMIT = "cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9";
  *   Naming it a tenth time would hide the scatter behind a plausible name. It
  *   is named only if all 68 adopt it, which is a decision about the absence
  *   grammar (DESIGN §7) rather than about class strings.
+ *
+ * **Above the bar and deliberately left, with the count** — the honest half of
+ *   this section, counted on 3 Sep 2026 and belonging to the next pass rather
+ *   than to the end of a long one:
+ *
+ *     `text-xl font-bold tracking-tight`   6 files — a section heading, spread
+ *                                          across matchday, `/gw` and a player
+ *     `numeric text-2xs text-faint`        4 files — a quiet figure
+ *     `px-3 text-2xs text-faint`           5 sites
+ *     `flex items-baseline justify-between gap-3 pt-1`  5 sites
+ *
+ *   None of these is sediment from this run; they were all there before it, and
+ *   extracting four more recipes in the last hour of a session is how a name
+ *   gets chosen from tiredness rather than from meaning.
  *
  * The TAB LABEL at `px-2 text-2xs` — 2 sites, `players/Board`'s measure strip
  *   and `components/league/GroupNav`, whose class strings differ only in

@@ -1,6 +1,6 @@
 import type { Deal, DealSide } from "@epl/core";
 import { inkOn, kindOf, movement, teamColours } from "@epl/core";
-import { SCROLL } from "@/app/desk";
+import { PANEL_FLUSH, SCROLL } from "@/app/desk";
 
 // One manager's business, drawn as Championship Manager's Transfers screen.
 //
@@ -42,7 +42,7 @@ export default function Ledger({
   names: Record<string, string>;
 }) {
   return (
-    <section className="cm-panel flex flex-col">
+    <section className={PANEL_FLUSH}>
       {/* The column heads, bevelled as one continuous run — `23.jpg` has no head
           row at all, but its columns are self-evident from the fee and the "to";
           ours are two lists of names facing each other and need saying. */}

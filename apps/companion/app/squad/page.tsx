@@ -10,7 +10,7 @@ import { planningRound } from "../round";
 import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
 import { FANTRAX_SILENT, servedLeague } from "../config";
-import { LABEL } from "@/app/desk";
+import { LABEL, PANEL } from "@/app/desk";
 
 // Your squad, and everyone else's. Until the draft this is the empty state,
 // which is the state our real league is actually in and therefore the one that
@@ -48,10 +48,12 @@ export default async function SquadsPage() {
   if ("unavailable" in squads) {
     return (
       <div className="flex flex-col gap-3">
-        <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
-          The league is fine. We just cannot read it right now, so rather than guess at your squad
-          this says nothing.
-        </Nothing>
+        <section className={PANEL}>
+          <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
+            The league is fine. We just cannot read it right now, so rather than guess at your squad
+            this says nothing.
+          </Nothing>
+        </section>
         <SignIn />
       </div>
     );
@@ -60,10 +62,12 @@ export default async function SquadsPage() {
   if ("undrafted" in squads) {
     return (
       <div className="flex flex-col gap-3">
-        <Nothing title="Nobody has a squad yet" code={squads.undrafted}>
-          {LEAGUE_NAME} drafts on {DRAFT_DATE}. Until then Fantrax has a competition and no teams
-          in it, so there is nothing to line up.
-        </Nothing>
+        <section className={PANEL}>
+          <Nothing title="Nobody has a squad yet" code={squads.undrafted}>
+            {LEAGUE_NAME} drafts on {DRAFT_DATE}. Until then Fantrax has a competition and no teams
+            in it, so there is nothing to line up.
+          </Nothing>
+        </section>
         <SignIn />
       </div>
     );

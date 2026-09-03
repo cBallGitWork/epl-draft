@@ -1,6 +1,6 @@
 import { columnLabel } from "@epl/core";
 import type { TeamStats } from "@epl/core";
-import { HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
+import { HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, PANEL_FLUSH, ROW_RULE, SCROLL } from "@/app/desk";
 
 // Championship Manager's attribute grid, for a squad's season.
 //
@@ -62,7 +62,7 @@ export default function SeasonGrid({
       {stats.groups
         .filter((group) => group.lines.length > 0)
         .map((group) => (
-          <section key={group.name} className="cm-panel flex flex-col">
+          <section key={group.name} className={PANEL_FLUSH}>
             {/* Its own title bar, which is how a CM panel opens. The bar carries
                 a title and nothing else — the season below it is content. */}
             <div className="cm-titlebar px-2 py-1">
@@ -91,7 +91,7 @@ export default function SeasonGrid({
                     <th scope="col" className="p-0 font-bold">
                       <span className={HEAD_PLATE_END}>#</span>
                     </th>
-                    <th scope="col" className="p-0 text-left font-bold">
+                    <th scope="col" className={HEAD_CELL}>
                       <span className={HEAD_PLATE}>Player</span>
                     </th>
                     {group.columns.map((column) => {

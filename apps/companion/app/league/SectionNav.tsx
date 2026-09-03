@@ -48,25 +48,21 @@ const SECTIONS = [
 export const TEAM_STATS = SECTIONS[4].href;
 export const PLAYERS = SECTIONS[3].href;
 
-/** Reachable from the section but not a tab in it. Matchups has a board and a
- *  page per pairing, so it stays navigable; it is not in the strip because Craig
- *  named the five that belong there and this was not one.
+/** The five tabs, plus the one section a route can BE on without being in the
+ *  strip.
  *
- *  It had a foot ROW of its own for a day and lost it (Craig, 1 Sep: "ditch
- *  matchups row underneath") — one entry is a stray button under a panel, not a
- *  bar. CM's own second row is five wide, and when this is three or four it
- *  earns the row back.
+ *  **Matchups is that one.** It has a board and a page per pairing, so it stays
+ *  navigable; it is not a tab because Craig named the five that belong there and
+ *  this was not one. It had a foot ROW of its own for a day and lost it (Craig,
+ *  1 Sep: "ditch matchups row underneath") — one entry is a stray button under a
+ *  panel, not a bar. CM's own second row is five wide, and when this is three or
+ *  four it earns the row back.
  *
- *  Not exported: it lost its row and its last importer with it, and an export
- *  nobody imports is API this file has to keep working (§2). It is still read
- *  here, by `LeagueSection` — which is the point of keeping the constant at
- *  all, since Matchups is a section a route can BE on without being in the
- *  strip. */
-const FOOT = [{ href: "/league/matchups", label: "Matchups", key: "matchups" }] as const;
-
-export type LeagueSection =
-  | (typeof SECTIONS)[number]["key"]
-  | (typeof FOOT)[number]["key"];
+ *  A bare string literal and not a `FOOT` array, which is what this was: the
+ *  array had lost its row and then its last importer, so it survived only to
+ *  have `typeof` taken of it — an `href` and a `label` nothing read, kept alive
+ *  to spell one word. The word is here and the reasoning came with it. */
+export type LeagueSection = (typeof SECTIONS)[number]["key"] | "matchups";
 
 export default function SectionNav({ current }: { current: LeagueSection }) {
   // Matchups is a `LeagueSection` and is not in the strip, so on that route no

@@ -9,7 +9,7 @@ import FplPitch from "./FplPitch";
 import EntryForm from "./EntryForm";
 import { forgetEntry } from "./actions";
 import { myEntryId, mySide } from "./entry";
-import { LABEL } from "@/app/desk";
+import { LABEL, PANEL } from "@/app/desk";
 
 // The other game, kept small on purpose.
 //
@@ -42,9 +42,11 @@ export default async function FplPage() {
     return (
       <div className="flex flex-col gap-3">
         <PageHeader title="FPL" />
-        <Nothing title="FPL has never heard of that id" code={`entry ${entryId}`}>
-          Check the number in the address bar when you look at your own points on their site.
-        </Nothing>
+        <section className={PANEL}>
+          <Nothing title="FPL has never heard of that id" code={`entry ${entryId}`}>
+            Check the number in the address bar when you look at your own points on their site.
+          </Nothing>
+        </section>
         <EntryForm />
       </div>
     );

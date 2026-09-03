@@ -102,7 +102,10 @@ export default function Run({
                   {fixture.status === "live" ? (
                     <span className="text-live">{mine}–{theirs}</span>
                   ) : played ? (
-                    <Link href={`${MATCH}/${fixture.id}`} className="hover:underline">
+                    <Link
+                      href={`${MATCH}/${fixture.id}`}
+                      className="cm-row flex min-h-11 items-center justify-center hover:underline"
+                    >
                       {mine}–{theirs}
                     </Link>
                   ) : (

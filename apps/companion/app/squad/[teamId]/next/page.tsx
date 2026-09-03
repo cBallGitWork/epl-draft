@@ -6,7 +6,7 @@ import { planningRound } from "../../../round";
 import { leagueTable } from "../../../standings";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { LABEL } from "@/app/desk";
+import { LABEL, PANEL_FLUSH } from "@/app/desk";
 
 // Who he plays, and the one screen in this app that is about a confrontation.
 //
@@ -101,7 +101,7 @@ function Fixture({
   away: SideTeam;
 }) {
   return (
-    <section className="cm-panel flex flex-col">
+    <section className={PANEL_FLUSH}>
       {/* **The round gets a row of its own** (Craig, 2 Sep: "have a row for the
           gameweek"). It was in the subheading above the tabs, which is where a
           reader looks last — and on a screen about ONE match, which round it is

@@ -19,7 +19,7 @@ import { fantraxProjection, playerPedigree } from "./draft";
 import { gameLog, scouting } from "./scouting";
 import type { FootballPlayer } from "@epl/core";
 import { positionsFromList } from "../../positions";
-import { FACT, LABEL } from "@/app/desk";
+import { FACT, LABEL, PANEL } from "@/app/desk";
 
 // One player, as Fantrax sees him. Reached by tapping a name in the pool, and
 // that is the whole politeness policy: one profile per tap, never a sweep of the
@@ -74,10 +74,12 @@ export default async function PlayerPage({ params }: { params: Promise<{ fantrax
 
   if ("unavailable" in intel) {
     return (
-      <Nothing title="No profile for that player" code={intel.unavailable}>
-        Either Fantrax does not know that id or it is not answering. Both come back the same way,
-        so this does not guess which.
-      </Nothing>
+      <section className={PANEL}>
+        <Nothing title="No profile for that player" code={intel.unavailable}>
+          Either Fantrax does not know that id or it is not answering. Both come back the same way,
+          so this does not guess which.
+        </Nothing>
+      </section>
     );
   }
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { FootballPlayer } from "@epl/core";
 import { SELECT } from "../../../../components/shell/ButtonLink";
 import { VIEWS, reading } from "./measures";
-import { HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
+import { HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, PANEL_FLUSH, ROW_RULE, SCROLL } from "@/app/desk";
 
 // A club's season, player by player, in Championship Manager's stat-screen
 // grammar.
@@ -66,7 +66,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
     );
 
   return (
-    <section className="cm-panel flex flex-col">
+    <section className={PANEL_FLUSH}>
       {/* CM's grey bevelled control, on its own strip above the table, which is
           where the game puts it (`21.jpg`, `25.jpg`). */}
       <div className="flex items-center gap-2 border-b border-line px-2 py-1.5">
@@ -101,12 +101,12 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
               <th scope="col" className="p-0 font-bold">
                 <span className={HEAD_PLATE_END}>#</span>
               </th>
-              <th scope="col" className="p-0 text-left font-bold">
+              <th scope="col" className={HEAD_CELL}>
                 <span className={HEAD_PLATE}>Player</span>
               </th>
               {/* Position is a column here for the reason it is one on the squad
                   list: a man eligible at two cannot be filed under one letter. */}
-              <th scope="col" className="p-0 text-left font-bold">
+              <th scope="col" className={HEAD_CELL}>
                 <span className={HEAD_PLATE}>Pos</span>
               </th>
               {measures.map((measure) => (
@@ -159,7 +159,13 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                     cyan and cited the same shots for it, off a reference row
                     that had read its own images wrong. */}
                 <td className="px-1.5 text-sm font-bold text-ink">
-                  <Link href={`/prem/player/${player.code}`} className="hover:underline">
+                  <Link
+                    href={`/prem/player/${player.code}`}
+                    // The floor, on `StatBoard`'s precedent — the sibling board
+                    // this one is otherwise a copy of. A `<td>` cannot stretch
+                    // its child, so the link carries it.
+                    className="cm-row flex min-h-11 items-center hover:underline"
+                  >
                     {player.fullName}
                   </Link>
                 </td>

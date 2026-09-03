@@ -85,7 +85,13 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
                       />
                       <Link
                         href={`${PLAYER}/${player.code}`}
-                        className={`min-w-0 flex-1 truncate text-sm font-bold hover:underline ${
+                        // The row's own floor, restated on the LINK. `tapfit`
+                        // measures the link, and an 18px target inside a 44px
+                        // row is a row you can miss. `self-stretch` was tried
+                        // first and lands on 43 against a 44 floor — the row's
+                        // min-height is not its content box — so the number is
+                        // written out and matches the `<li>` above it exactly.
+                        className={`flex min-h-11 min-w-0 flex-1 items-center truncate text-sm font-bold hover:underline lg:min-h-9 ${
                           out ? "text-faint" : "text-ink"
                         }`}
                       >

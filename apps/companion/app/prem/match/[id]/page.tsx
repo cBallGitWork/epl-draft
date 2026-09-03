@@ -9,7 +9,7 @@ import ButtonLink from "../../../components/shell/ButtonLink";
 import { footballNow, seasonFixtures } from "../../../football";
 import { londonDayAndDate, londonTime } from "../../../londonTime";
 import { CLUB } from "../../PremNav";
-import { SCORE_CREST, SCORE_CREST_PX } from "@/app/desk";
+import { PANEL_FLUSH, SCORE_CREST, SCORE_CREST_PX } from "@/app/desk";
 
 // One match.
 //
@@ -55,7 +55,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         {fixture.gameweek === null ? "Gameweek TBC" : `Gameweek ${fixture.gameweek}`}
       </Caption>
 
-      <section className="cm-panel flex flex-col">
+      <section className={PANEL_FLUSH}>
         <div className="cm-tab flex items-center justify-between gap-2 px-2 py-1">
           <span className="numeric text-2xs font-bold uppercase text-ink">
             {fixture.kickoff === null ? "Date TBC" : londonDayAndDate(fixture.kickoff)}

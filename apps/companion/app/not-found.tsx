@@ -32,7 +32,7 @@ import { SMALL_CAPS } from "./desk";
 
 export default function NotFound() {
   return (
-    <div className="cm-panel flex flex-col items-center gap-4 p-6 py-10 text-center">
+    <div className="cm-panel flex flex-col items-center gap-4 px-6 py-10 text-center">
       <LeagueCrest variant="full" height={104} />
       <div className="flex flex-col gap-1.5">
         <h1 className="font-display text-2xl font-bold tracking-tight">
