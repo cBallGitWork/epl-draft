@@ -19,6 +19,7 @@ import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { unresolvedReason } from "../../unresolved";
 import { BUTTON } from "../shell/ButtonLink";
+import { LABEL } from "@/app/desk";
 
 // What a player is scoring, and why.
 //
@@ -198,7 +199,7 @@ function Breakdown({
 
   return (
     <div className="overflow-hidden border border-line">
-      <div className="flex items-center justify-between gap-2 bg-raised px-3 py-1.5 font-display text-2xs font-bold uppercase text-faint">
+      <div className={`flex items-center justify-between gap-2 bg-raised px-3 py-1.5 font-display ${LABEL}`}>
         <span>This period</span>
         <span>Pts</span>
       </div>

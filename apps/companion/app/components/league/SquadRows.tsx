@@ -9,6 +9,7 @@ import {
 } from "@epl/core";
 import StateBox from "../football/StateBox";
 import { positionsLabel } from "../../positions";
+import { SCROLL } from "@/app/desk";
 
 // The same fifteen as a list. Offered beside the pitch rather than instead of
 // it: the pitch answers "what does this squad look like" and a list answers "who
@@ -87,7 +88,7 @@ export default function SquadRows({
     // dense table in the app breaking it, because it was drawn bare wherever it
     // was placed. `cm9900/12.jpg` has its whole table inside a sunken well and
     // lets the picture show between panels, never through one.
-    <div className={bare ? "overflow-x-auto" : "cm-panel overflow-x-auto"}>
+    <div className={bare ? SCROLL : `cm-panel ${SCROLL}`}>
       <div className="flex flex-col lg:min-w-max">
         {/* One bevelled strip over the whole squad, the way a CM table is headed —
           rather than a small-caps label per position group, which made five

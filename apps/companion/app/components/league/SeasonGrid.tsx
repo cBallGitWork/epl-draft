@@ -1,5 +1,6 @@
 import { columnLabel } from "@epl/core";
 import type { TeamStats } from "@epl/core";
+import { HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
 
 // Championship Manager's attribute grid, for a squad's season.
 //
@@ -80,7 +81,7 @@ export default function SeasonGrid({
               {stats.season.name || (stats.season.projected ? "Fantrax projects" : "This season")}
             </p>
 
-            <div className="overflow-x-auto">
+            <div className={SCROLL}>
               <table className="w-full border-collapse whitespace-nowrap">
                 <thead>
                   <tr className="text-3xs uppercase">
@@ -88,10 +89,10 @@ export default function SeasonGrid({
                         the cell: these tables collapse their borders, so a strip
                         of bevelled cells loses its inner edges (desk.css). */}
                     <th scope="col" className="p-0 font-bold">
-                      <span className="cm-bevel flex h-6 items-center justify-end px-1.5">#</span>
+                      <span className={HEAD_PLATE_END}>#</span>
                     </th>
                     <th scope="col" className="p-0 text-left font-bold">
-                      <span className="cm-bevel flex h-6 items-center px-1.5">Player</span>
+                      <span className={HEAD_PLATE}>Player</span>
                     </th>
                     {group.columns.map((column) => {
                       const { name, definition } = columnLabel(column);
@@ -106,24 +107,24 @@ export default function SeasonGrid({
                           title={definition === null ? name : `${name} — ${definition}`}
                           className="p-0 font-bold"
                         >
-                          <span className="cm-bevel flex h-6 items-center justify-end px-1.5">
+                          <span className={HEAD_PLATE_END}>
                             {column.code}
                           </span>
                         </th>
                       );
                     })}
                     <th scope="col" className="p-0 font-bold" title="Fantasy points, Fantrax's own">
-                      <span className="cm-bevel flex h-6 items-center justify-end px-1.5">FPts</span>
+                      <span className={HEAD_PLATE_END}>FPts</span>
                     </th>
                     <th scope="col" className="p-0 font-bold" title="Fantasy points a game">
-                      <span className="cm-bevel flex h-6 items-center justify-end px-1.5">FP/G</span>
+                      <span className={HEAD_PLATE_END}>FP/G</span>
                     </th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {group.lines.map((line, index) => (
-                    <tr key={line.fantraxId} className="border-b border-bg">
+                    <tr key={line.fantraxId} className={ROW_RULE}>
                       {/* CM's leading index block, so the eye counts down the
                           blocks rather than the rows. */}
                       <td className="cm-index numeric px-1.5 py-1 text-right text-3xs font-bold">

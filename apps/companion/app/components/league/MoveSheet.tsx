@@ -1,4 +1,5 @@
 import type { Blocker, Move, SlotOption } from "@epl/core";
+import { LABEL } from "@/app/desk";
 
 // The sheet under a tapped player: everywhere he can go, and why he cannot go
 // anywhere else.
@@ -77,7 +78,7 @@ export default function MoveSheet({
 
       {[...swaps.entries()].map(([position, group]) => (
         <div key={position} className="flex flex-col gap-1">
-          <h4 className="px-1 font-display text-2xs font-bold uppercase text-faint">
+          <h4 className={`px-1 font-display ${LABEL}`}>
             Start at {position} — who comes off?
           </h4>
           {group.map((move) => (

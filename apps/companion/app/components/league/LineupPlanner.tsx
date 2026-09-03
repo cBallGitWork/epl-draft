@@ -27,6 +27,7 @@ import LineupPitch from "./LineupPitch";
 import type { PitchRow } from "./PitchRows";
 import MoveDialog from "./MoveDialog";
 import Pending from "./Pending";
+import { LABEL } from "@/app/desk";
 
 // Planning a lineup, not submitting one.
 //
@@ -234,7 +235,7 @@ export default function LineupPlanner({
           eleven is a line of furniture telling a manager what he can see. */}
       {dirty ? (
         <div className="flex items-center justify-between gap-2 px-1">
-          <h2 className="font-display text-2xs font-bold uppercase text-faint">
+          <h2 className={`font-display ${LABEL}`}>
             Planned — not submitted
           </h2>
           <button

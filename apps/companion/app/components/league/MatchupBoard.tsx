@@ -7,6 +7,7 @@ import RoundWord from "./RoundWord";
 import TeamBadge from "./TeamBadge";
 import BoardBar from "./BoardBar";
 import { type View } from "./ViewToggle";
+import { LABEL } from "@/app/desk";
 
 // The head-to-head at full size: both totals side by side, and one manager's
 // team underneath them.
@@ -71,7 +72,7 @@ export default function MatchupBoard({
           the one thing a scoreline exists not to make you do. */}
       <div className="cm-panel flex items-stretch overflow-hidden">
         <Side side={team} against={opponent} open={open === "team"} onOpen={() => setOpen("team")} />
-        <span className="self-center px-1 text-2xs font-bold uppercase text-faint">
+        <span className={`self-center px-1 ${LABEL}`}>
           v
         </span>
         <Side
@@ -88,7 +89,7 @@ export default function MatchupBoard({
           here: `lineupDetail` already counts it. */}
       <BoardBar view={view} onPick={setView}>
         {state === null && side.shape === null ? null : (
-          <span className="flex items-baseline gap-2 text-2xs font-bold uppercase text-faint">
+          <span className={`flex items-baseline gap-2 ${LABEL}`}>
             {state === null ? null : <RoundWord state={state} />}
             {side.shape === null ? null : <span className="numeric">{side.shape}</span>}
           </span>

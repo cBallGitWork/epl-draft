@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { FIGURE } from "@/app/desk";
 
 // The two cells a CM board's rows are built from, opposite `TableHeads`.
 //
@@ -26,7 +27,7 @@ import type { ReactNode } from "react";
  *  is the division's blue on a competition screen and the club's own on its. */
 export function IndexCell({ children }: { children: ReactNode }) {
   return (
-    <td className="cm-index numeric px-1.5 text-center text-2xs font-bold">{children}</td>
+    <td className={`cm-index ${FIGURE}`}>{children}</td>
   );
 }
 
