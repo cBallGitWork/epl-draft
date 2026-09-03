@@ -75,10 +75,11 @@ export const SHOULDER_STORIES = 2;
 /** How many filed stories run as headlines under the written lead, shoulders
  *  included.
  *
- *  **A front page prints ONE article and headlines the rest**, which is what
- *  every newspaper does and what this page briefly stopped doing: it printed
- *  every filed story in full, one after another, which is a magazine. The lead
- *  runs whole; everything else is a headline that turns to a page.
+ *  **A front page prints headlines and no articles at all.** It printed every
+ *  filed story in full until 2 Sep, which is a magazine; then just the lead in
+ *  full until 3 Sep, which put the second story on the sheet some nineteen
+ *  hundred pixels down a phone and made the ranks under it furniture nobody
+ *  reached. The articles are on the pages behind — a headline turns to one.
  *
  *  Eight, against a paper that holds up to `MAX_PAPER_STORIES`: a busy round
  *  fills the sheet without the front page becoming an index of itself. */

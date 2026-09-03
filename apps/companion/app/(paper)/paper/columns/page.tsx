@@ -10,8 +10,9 @@ import { pageAt } from "../../../components/gazette/paperPages";
 
 // Page 3: the opinion columns.
 //
-// Same grammar as page 2 and as the front page — one article printed whole, the
-// rest as headlines behind it. What differs is only the shelf, which is read
+// Same grammar as page 2 — one article printed whole, the rest as headlines
+// behind it, which is what the front page did until 3 Sep 2026 and what an
+// INSIDE page keeps. What differs is only the shelf, which is read
 // from `paperPages.ts` rather than written here, so the page and the folio and
 // the teaser's "turn to page 3" can never disagree about what lives on it.
 

@@ -10,9 +10,11 @@ import { pageAt } from "../../../components/gazette/paperPages";
 
 // Page 2: the match-shaped columns.
 //
-// The same grammar the front page uses — one article printed whole, the rest as
-// headlines behind it — because it is proven, it is phone-first, and it costs no
-// new component. What differs is the shelf: this page prints only the kinds that
+// One article printed whole, the rest as headlines behind it. That was the front
+// page's grammar too until 3 Sep 2026, when the front page dropped to headlines
+// alone — and an INSIDE page keeps it, because an inside page is where an
+// article goes and a reader who turned to page 2 has already chosen to read.
+// What differs from page 3 is the shelf: this page prints only the kinds that
 // are about football that has been played or is about to be.
 
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically,

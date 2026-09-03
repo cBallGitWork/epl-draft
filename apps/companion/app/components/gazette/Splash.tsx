@@ -1,36 +1,60 @@
-import Image from "next/image";
+import TurnLink from "./TurnLink";
 import type { PublishedStory } from "@epl/core";
+import { londonDayAndTime } from "../../londonTime";
+import { pageOf } from "./paperPages";
 
-// The lead's picture, when CI drew one.
+// The splash: the top story on the front page, as a front page carries it.
 //
-// **Printed in the sheet's own two colours, never as it arrived.** The
-// treatment is `.paper-photo` in `paper.css`: grayscale toward the ink,
-// multiplied against the rosa so the stock shows through the midtones, and a
-// halftone screen over it. A colour drawing dropped onto newsprint is the
-// single fastest way to make this page look like a website again.
+// **The front page prints headlines and no articles at all**, which reverses
+// the rule this file's predecessor was built on. Until 3 Sep 2026 the lead ran
+// WHOLE here — byline, headline, deck, two columns of prose and the tie-by-tie
+// block — on the argument that a paper prints one article and headlines the
+// rest. The argument was right about a broadsheet and wrong about the object
+// this actually is: the whole column pushed the second story roughly nineteen
+// hundred pixels down a phone, so the sheet's other two ranks were furniture
+// nobody reached. A front page's job is to make you choose what to read, and it
+// cannot do that while the first choice is already being read to you.
 //
-// No text ever sits on the picture, so the contrast floor is untouched — the
-// headline and deck are below it, where a paper puts them.
-
-/** The band's printed height, in the same proportion `Picture` uses. */
-const BAND = "aspect-[16/9]";
+// So this is the same block `Written` opens with, minus the prose, plus the
+// affordance: it turns to the article. `Written` still prints it whole at
+// `/paper/{slug}`, which is where an article goes.
+//
+// The byline chip, the ornament rule and the dateline are all deliberate
+// carry-overs — a reader is entitled to know this part of the paper was written
+// by somebody and may be days older than the numbers above it, and that is as
+// true of a headline as of a column.
 
 export default function Splash({ story }: { story: PublishedStory }) {
-  if (story.image === null) return null;
+  const page = pageOf(story.kind);
 
   return (
-    <figure className={`bleed paper-photo relative ${BAND} overflow-hidden`}>
-      <Image
-        src={story.image.src}
-        alt={story.image.alt}
-        fill
-        // The band is full-bleed at every width the paper is read at, so the
-        // browser may as well be told rather than left to guess from a layout
-        // it has not done yet.
-        sizes="100vw"
-        className="object-cover"
-        priority
-      />
-    </figure>
+    <section className="flex flex-col">
+      <TurnLink href={`/paper/${story.slug}`} className="flex flex-col">
+        {story.byline !== "" ? (
+          <p>
+            <span className="inline-block bg-ink px-2 py-1 font-sans text-2xs font-bold uppercase tracking-[0.15em] text-bg">
+              {story.byline}
+            </span>
+          </p>
+        ) : null}
+
+        <h2 className="paper-display text-balance pt-2.5 text-4xl font-black leading-[1.02] text-ink @3xl:text-6xl">
+          {story.headline}
+        </h2>
+        {story.deck ? (
+          <p className="pt-2 text-lg italic leading-snug text-muted">{story.deck}</p>
+        ) : null}
+
+        <span className="mt-3 block h-px w-6 bg-ink" />
+
+        <p className="pt-2.5 font-sans text-3xs uppercase tracking-[0.16em] text-faint">
+          {story.edition !== "" ? `${story.edition} · ` : ""}
+          {story.filedAt ? `Filed ${londonDayAndTime(story.filedAt)} · ` : ""}
+          <span className="text-muted">
+            {page === null ? "read on" : `turn to page ${page.number}`}
+          </span>
+        </p>
+      </TurnLink>
+    </section>
   );
 }

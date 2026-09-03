@@ -77,13 +77,17 @@ export default async function StoryPage({ params }: { params: Promise<{ slug: st
       />
       <Pages here={page?.href ?? "/"} />
 
-      {/* `Written` and not a second copy of it. The front page's lead is the
-          same object printed the same way — byline chip, headline, deck,
-          ornament, dateline, two columns of prose and the tie-by-tie block —
-          and hand-rolling that here would be a second layout to keep in step,
-          which is the drift the whole `components/gazette` folder exists to
-          avoid. It also carries the ties, which the hand-rolled version was
-          silently dropping. */}
+      {/* `Written` and not a second copy of it. Page 2 and page 3 print their
+          own lead through it as well — byline chip, headline, deck, ornament,
+          dateline, two columns of prose and the tie-by-tie block — and hand-
+          rolling that here would be a second layout to keep in step, which is
+          the drift the whole `components/gazette` folder exists to avoid.
+
+          The FRONT page no longer prints an article at all: `Splash` there is
+          this component's opening block minus the prose, plus the link that
+          arrives here. Two components and not one variant, because what they
+          have in common is five lines of markup and what differs is whether a
+          reader has chosen to read yet. */}
       <article className="pt-4">
         <Written story={story} teams={paper.teams} />
         <Extras story={story} named={who} mine={paper.mine} />

@@ -41,13 +41,29 @@ business, who is hurt, and when lineups lock.
    than anything but the masthead, and a standfirst. See *The lead* below.
 4. **The column**, when one has been filed about this round — and then it
    *leads*, taking the picture the desk chose and dropping the desk's own
-   headline. See *The written column* below.
+   headline. It runs as a **splash** (`gazette/Splash`): the byline chip, the
+   headline, the deck, the ornament rule, the dateline, and "turn to page 2".
+   See *The written column* below.
+
+   **The front page prints headlines and no articles at all**, and this is the
+   second reversal of that rule in two days. It printed every filed story in
+   full until 2 Sep — a magazine. It then printed the LEAD in full until 3 Sep,
+   on the argument that a broadsheet runs its splash whole down column one; true
+   of a broadsheet, and wrong about this object, because a whole column pushed
+   the second story on the sheet some nineteen hundred pixels down a phone and
+   left the two ranks below it as furniture nobody reached. A front page's job
+   is to make a reader choose what to read, and it cannot do that while the
+   first choice is already being read to him.
+
+   `Written` still prints the article whole, at `/paper/{slug}` and at the head
+   of pages 2 and 3 — an inside page is where an article goes, and a reader who
+   turned to one has already chosen. `Splash` is `Written`'s opening block minus
+   the prose plus the link; two components rather than one variant, because what
+   they share is five lines of markup and what differs is whether the reader has
+   chosen yet.
 5. **The shoulders and the briefs** — everything else filed, at two ranks under
-   the lead rather than one. **A front page prints one article and headlines the
-   rest**, which is what every newspaper does and what this page briefly stopped
-   doing — it printed each filed story in full, stacked, which is a magazine.
-   `HEADLINES_SHOWN` caps the whole tail at eight so a busy round does not turn
-   the front page into an index of itself.
+   the splash rather than one. `HEADLINES_SHOWN` caps the whole tail at eight so
+   a busy round does not turn the front page into an index of itself.
 
    **The two shoulders** (`SHOULDER_STORIES`, `gazette/Teaser`) run side by side
    directly under the lead, each with its standing head, headline, deck and
@@ -67,7 +83,8 @@ business, who is hurt, and when lineups lock.
    *This reverses what this list said until 3 Sep 2026.* The tail was a single
    flat column of up to eight `Teaser`s, all set identically, so the second
    story on the sheet and the eighth were the same size and the page had one
-   rank on it under the lead.
+   rank on it under the lead. With the splash now a headline too, the three are
+   three sizes of the same object, which is what makes the ranking legible.
 
    **They turn to a page**, on a `<Link>`: each headline says "turn to page 2"
    and does it, and the article prints whole at `/paper/{slug}`.
@@ -288,6 +305,11 @@ never has to be right. A **report** files once the football stops.
 would be about the same match — a fact-headline and a written one, stacked,
 saying the same thing twice. The picture stays, because the story is the same
 story and the desk is what chose the photograph for it.
+
+**On the front page it leads as a HEADLINE.** The prose is at `/paper/{slug}`,
+one tap away, and `Splash` prints the block that gets you there. Reversed 3 Sep
+2026 — see item 4 of the reading order for the argument, which is about how far
+down a phone the second story ends up.
 
 Until 31 Aug this rule read "and the football has stopped" (`!underway`),
 because a preview filed at the Friday lock would otherwise lead all Saturday

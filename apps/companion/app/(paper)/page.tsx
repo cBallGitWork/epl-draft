@@ -4,12 +4,12 @@ import Pages from "../components/gazette/Pages";
 import Teaser from "../components/gazette/Teaser";
 import Brief from "../components/gazette/Brief";
 import Scoreboard from "../components/gazette/Scoreboard";
+import Drawing from "../components/gazette/Drawing";
 import Splash from "../components/gazette/Splash";
 import Deals from "../components/gazette/Deals";
 import Doubts from "../components/gazette/Doubts";
 import Lead, { Headline } from "../components/gazette/Stories";
 import Picture from "../components/gazette/Picture";
-import Written from "../components/gazette/Written";
 import Index from "../components/gazette/Index";
 import Masthead from "../components/gazette/Masthead";
 import TeamOfTheWeek from "../components/gazette/TeamOfTheWeek";
@@ -76,9 +76,9 @@ export default async function GazettePage() {
   const byId = named(paper.teams);
   const who = (teamId: string | null) => (teamId === null ? "the wire" : byId(teamId));
 
-  // The sheet's three ranks. The lead runs whole above; these are the second
-  // and the third, and they are sliced here rather than in the markup so the
-  // two boundaries are one line apart and cannot drift.
+  // The sheet's three ranks under the splash: these are the second and the
+  // third, sliced here rather than in the markup so the two boundaries are one
+  // line apart and cannot drift.
   const shoulders = paper.filed.slice(1, SHOULDER_STORIES + 1);
   const briefs = paper.filed.slice(SHOULDER_STORIES + 1, HEADLINES_SHOWN + 1);
 
@@ -145,18 +145,26 @@ export default async function GazettePage() {
           is dropped.** Both would be about the same match — a fact-headline and
           a written one, stacked, saying the same thing twice — and a paper runs
           one splash. The picture stays: the story is the same story, and the
-          desk is what chose the photograph for it. */}
+          desk is what chose the photograph for it.
+
+          **And it is a HEADLINE, not the article.** This page printed the lead
+          column whole until 3 Sep 2026, which put the second story on the sheet
+          about nineteen hundred pixels down a phone — so the two ranks under it
+          were furniture nobody reached. A front page's job is to make a reader
+          choose what to read, and it cannot do that while the first choice is
+          being read to him. `Written` prints it whole at `/paper/{slug}`, which
+          is where an article goes. */}
           {paper.filed[0] ? (
             <>
               {/* The drawing when the lead has one, and the desk's own
                   typographic band when it does not. Never both: a paper runs
                   one picture over one splash. */}
               {paper.filed[0].image !== null ? (
-                <Splash story={paper.filed[0]} />
+                <Drawing story={paper.filed[0]} />
               ) : paper.stories[0] ? (
                 <Picture lead={paper.stories[0]} who={who} clubs={clubs} />
               ) : null}
-              <Written story={paper.filed[0]} teams={paper.teams} />
+              <Splash story={paper.filed[0]} />
             </>
           ) : paper.stories[0] ? (
             <Lead lead={paper.stories[0]} who={who} clubs={clubs} />

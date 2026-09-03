@@ -7,12 +7,18 @@ import { pageOf } from "./paperPages";
 // A shoulder: the headline of a story at the second rank, and where to turn for
 // the article.
 //
-// **A front page prints one article and headlines the rest.** The lead runs
-// whole (`Written`); a shoulder is a headline, a deck and a line saying where it
-// continues, and everything below it is a `Brief` — head, headline, folio, and
-// nothing else. The page runs two of these side by side, which is why the
+// **A front page prints headlines and no articles at all**, so the three ranks
+// on it are three sizes of headline: the `Splash` above, two of these, and a
+// column of `Brief`s below. A shoulder is a headline, a deck and a line saying
+// where it continues; a brief drops the deck and the dateline and keeps the
+// folio number. The page runs two of these side by side, which is why the
 // headline is set a step down from the measure it had when eight of them ran
 // stacked at full width.
+//
+// The inside pages (`/paper/reports`, `/paper/columns`) use it too, under the
+// one article each of those prints whole — which is the grammar the front page
+// had until 3 Sep and an INSIDE page keeps, because an inside page is where an
+// article goes.
 //
 // It was `Article`, and it opened in place: a `<details>` that unfolded the
 // whole column where it stood, because the Gazetta was one route and there was
