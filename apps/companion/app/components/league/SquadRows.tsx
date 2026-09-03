@@ -37,8 +37,18 @@ export default function SquadRows({
   projected,
   onOpen,
   eligibility,
+  bare = false,
 }: {
   lines: SquadDetailLine[];
+  /** Skip the panel, because a caller has already drawn one round this AND
+   *  whatever stands beside it.
+   *
+   *  The default draws its own for `groundfit`'s reason below, and that must not
+   *  be removed — this is the narrow case where a second one would nest a box in
+   *  a box. `squad/[teamId]/Sheet` sets it so the list and the pitch share a
+   *  single box, which is what `/prem/club/[code]` does and what Craig asked
+   *  this to copy (3 Sep 2026). */
+  bare?: boolean;
   /** Whether the points are Fantrax's projection rather than a season played.
    *  The heading says which, because the numbers cannot. */
   projected: boolean;
@@ -77,7 +87,7 @@ export default function SquadRows({
     // dense table in the app breaking it, because it was drawn bare wherever it
     // was placed. `cm9900/12.jpg` has its whole table inside a sunken well and
     // lets the picture show between panels, never through one.
-    <div className="cm-panel overflow-x-auto">
+    <div className={bare ? "overflow-x-auto" : "cm-panel overflow-x-auto"}>
       <div className="flex flex-col lg:min-w-max">
         {/* One bevelled strip over the whole squad, the way a CM table is headed —
           rather than a small-caps label per position group, which made five

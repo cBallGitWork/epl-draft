@@ -94,6 +94,12 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
           <caption className="sr-only">Every player, by {view}</caption>
           <thead>
             <tr className="text-3xs uppercase">
+              {/* CM runs `1st 2nd 3rd` down the left of every table it draws,
+                  and `squad/[teamId]/stats` runs a plain count — a board is a
+                  ranking once a head is tapped, and the number is what says so. */}
+              <th scope="col" className="p-0 font-bold">
+                <span className="cm-bevel flex h-6 items-center justify-end px-1.5">#</span>
+              </th>
               <th scope="col" className="p-0 text-left font-bold">
                 <span className="cm-bevel flex h-6 items-center px-1.5">Player</span>
               </th>
@@ -126,9 +132,14 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
             </tr>
           </thead>
           <tbody>
-            {ordered.map(({ player, position }) => (
+            {ordered.map(({ player, position }, at) => (
               <tr key={player.id} className="cm-row border-b border-bg hover:bg-surface">
-                <td className="px-1.5 text-sm font-bold">
+                <td className="cm-index numeric px-1.5 text-right text-2xs font-bold">{at + 1}</td>
+                {/* Cyan, because `--color-info` is "a person" in the palette and
+                    a name is the only thing on this board that is one. It is
+                    what `squad/[teamId]/stats` sets and what CM sets for a
+                    person on every screen it draws. */}
+                <td className="px-1.5 text-sm font-bold text-info">
                   <Link href={`/prem/player/${player.code}`} className="hover:underline">
                     {player.fullName}
                   </Link>

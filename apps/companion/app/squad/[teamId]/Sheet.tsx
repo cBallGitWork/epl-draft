@@ -102,6 +102,15 @@ export default function Sheet({
           middle; the air is what makes them two readings of the same team
           standing side by side, and it takes width off the pitch without
           changing its shape. */}
+      {/* **One box round both** (Craig, 3 Sep 2026: "i like that the real team
+          squad page has one box to contain the pitch and list. fantasy team
+          pitch does not do this and it looks bad, copy real team"). The list
+          drew its own panel and the grass drew none, so the pair read as a
+          table with a picture loose beside it rather than as two readings of one
+          squad. `/prem/club/[code]` puts both inside a single `cm-panel` and
+          this now does the same; `bare` is what stops the list drawing a second
+          one inside this. */}
+      <section className="cm-panel flex flex-col gap-2 p-2">
       <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-10">
         <div className={view === "list" ? "" : "hidden lg:block"}>
           <TeamSheet
@@ -111,6 +120,7 @@ export default function Sheet({
             breakdown={breakdown}
             mode="list"
             eligibility={eligibility}
+            bare
           />
         </div>
         <div className={view === "pitch" ? "" : "hidden lg:block"}>
@@ -133,6 +143,7 @@ export default function Sheet({
           />
         </div>
       </div>
+      </section>
     </div>
   );
 }

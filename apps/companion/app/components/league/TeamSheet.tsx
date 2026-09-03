@@ -37,6 +37,7 @@ export default function TeamSheet({
   widest: agreed,
   eligibility,
   inColumn = false,
+  bare = false,
   show,
   outline,
   fill,
@@ -54,6 +55,9 @@ export default function TeamSheet({
   mode: "pitch" | "list";
   /** The pitch stands beside a list rather than alone — see `CmGround`. */
   inColumn?: boolean;
+  /** The caller has drawn one box round this and whatever is beside it, so the
+   *  list must not draw a second inside it. Passed straight to `SquadRows`. */
+  bare?: boolean;
   /** What each disc's plate carries — see `PitchDisc`. */
   show?: "points" | "fixture";
   /** The ring round every disc — see `PitchDisc`. */
@@ -149,7 +153,13 @@ export default function TeamSheet({
           ) : null}
         </>
       ) : (
-        <SquadRows lines={lines} projected={false} onOpen={setOpen} eligibility={eligibility} />
+        <SquadRows
+          lines={lines}
+          projected={false}
+          onOpen={setOpen}
+          eligibility={eligibility}
+          bare={bare}
+        />
       )}
 
       {open ? (
