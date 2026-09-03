@@ -3,6 +3,7 @@ import { LEAGUE_COMPETITION, type CompetitionTie, type TieSide, leads } from "@e
 import type { ScheduleRound } from "./schedule";
 import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder } from "../../mine";
+import { LABEL } from "@/app/desk";
 
 // One tie, as a scoreline: both sides on one row with the score between them,
 // the way a results page has printed a football match for a hundred years.
@@ -84,7 +85,7 @@ export default function Tie({
           <Points value={away} won={settled && leads(away, home)} />
         </span>
       ) : (
-        <span className="shrink-0 px-3 text-2xs font-bold uppercase text-faint">
+        <span className={`shrink-0 px-3 ${LABEL}`}>
           v
         </span>
       )}

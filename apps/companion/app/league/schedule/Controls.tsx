@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { COMPETITIONS, type LeagueTeam } from "@epl/core";
 import { yoursFirst } from "../../mine";
+import { SUBMIT } from "@/app/desk";
 
 // The three dropdowns: which gameweek, which competition, and whose fixture
 // list.
@@ -114,7 +115,7 @@ export default function Controls({
       <noscript>
         <button
           type="submit"
-          className="cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9"
+          className={SUBMIT}
         >
           Show
         </button>

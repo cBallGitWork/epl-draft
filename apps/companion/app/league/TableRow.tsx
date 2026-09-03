@@ -3,6 +3,7 @@ import { ordinal, type FormGame, type StandingsRow } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
 import { cellAlign } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
+import { FIGURE, ROW_RULE, TONE } from "@/app/desk";
 
 // One team's line in the table.
 //
@@ -45,7 +46,7 @@ export default function TableRow({
   form: readonly FormGame[];
 }) {
   return (
-    <tr className={`border-b border-bg ${mine ? "bg-raised" : "hover:bg-surface"}`}>
+    <tr className={`${ROW_RULE} ${mine ? "bg-raised" : "hover:bg-surface"}`}>
       {/* CM's small leading index cell: a filled block down the left of the
           table carrying the row's number. The eye counts down the blocks rather
           than the rows, which is what stops a dense table reading as a wall.
@@ -115,12 +116,6 @@ export default function TableRow({
   );
 }
 
-/** Every figure cell, which is eight of the ten columns. Centred, because that
- *  is how `cm9900/24.jpg` sets a league table and because a one-digit `W` flushed
- *  right under a centred head reads as a mis-set strip. `Columns.cellAlign` is
- *  the head's half of the same decision. */
-const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
-
 /** Absence, never a nought — a nought is a claim about a team that has played
  *  nobody (DESIGN §7). */
 const DASH = "—";
@@ -156,5 +151,4 @@ function Form({ run }: { run: readonly FormGame[] }) {
 
 const FORM_GAMES = 5;
 
-const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;
 

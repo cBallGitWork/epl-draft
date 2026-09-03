@@ -1,6 +1,7 @@
 import type { SortKey } from "@epl/core";
 import { sortHref } from "./sort";
 import { Head, HeadRow, NameHead, PLATE, SortHead } from "../components/league/TableHeads";
+import { TEXT } from "@/app/desk";
 
 // The table's column heads, in one place because two files print them: the page
 // and the skeleton it waits behind. They were written out twice, and on 29 Aug
@@ -76,8 +77,6 @@ export const COLUMNS: readonly Column[] = [
  *  against its right edge under a centred `W` is the arrangement that made the
  *  strip look mis-set. The name stays left, because a name is read and not
  *  compared. */
-const TEXT = { left: "text-left", center: "text-center", right: "text-right" } as const;
-
 /** The cell class for a column, so the row prints the same alignment the head
  *  does. Exported because `TableRow` is the other half of this table and the two
  *  drifting apart is exactly what the shared `COLUMNS` list exists to stop. */

@@ -22,6 +22,7 @@ import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
 import { FANTRAX_SILENT } from "../../config";
+import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
 
 // Every team ranked by one category — CM's stat board, on fantasy data.
 //
@@ -127,7 +128,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
           {category.label} fills in as {info.name} plays.
         </Nothing>
       ) : (
-        <div className="overflow-x-auto">
+        <div className={SCROLL}>
           {/* `border-collapse`, exactly as `/league` sets it. With
               `border-separate` the `border-b` on each `<tr>` is not drawn at all
               — CSS tables only render row borders when collapsed — and the index
@@ -139,7 +140,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
             // both printing, the pair holds together and the far right is where
             // a total belongs. CM does the same on its own stat board: the
             // rating column sits hard right against the scrollbar.
-            className="w-full border-collapse text-sm"
+            className={BOARD}
           >
             <caption className="sr-only">
               Every team ranked by {category.label}, {LABEL[measure]}
@@ -177,7 +178,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                 return (
                   <tr
                     key={row.teamId}
-                    className={`border-b border-bg ${yours ? "bg-raised" : "hover:bg-surface"}`}
+                    className={`${ROW_RULE} ${yours ? "bg-raised" : "hover:bg-surface"}`}
                   >
                     {/* The ordinal, in CM's own index block. `24.jpg` runs
                         `1st 2nd 3rd` down the left of every table it draws, and

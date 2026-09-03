@@ -22,6 +22,7 @@ import { type StatCategory } from "@epl/core";
 // working on the connection where it matters most.
 
 import { TEAM_STATS as HERE } from "../SectionNav";
+import { SUBMIT } from "@/app/desk";
 
 export default function Filters({
   categories,
@@ -69,7 +70,7 @@ export default function Filters({
         ))}
       </select>
       <noscript>
-        <button type="submit" className="cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9">
+        <button type="submit" className={SUBMIT}>
           Show
         </button>
       </noscript>

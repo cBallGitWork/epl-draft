@@ -2,6 +2,7 @@ import Link from "next/link";
 import { leads, type PeriodPairing, type LeagueTeam } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder, yoursInk } from "../../mine";
+import { LABEL } from "@/app/desk";
 
 // One finished head-to-head, as a scoreline.
 //
@@ -55,7 +56,7 @@ export default function Result({
         badge={badges.get(pairing.home.teamId)}
         mine={mine}
       />
-      <span className="self-center px-1 text-2xs font-bold uppercase text-faint">v</span>
+      <span className={`self-center px-1 ${LABEL}`}>v</span>
       <Side
         team={pairing.away}
         total={away}

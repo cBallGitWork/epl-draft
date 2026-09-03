@@ -5,6 +5,7 @@ import ScoreFigure from "../../components/league/ScoreFigure";
 import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder, yoursInk } from "../../mine";
 import Pending from "../../components/league/Pending";
+import { LABEL } from "@/app/desk";
 
 // One head-to-head on the list of eight.
 //
@@ -63,7 +64,7 @@ export default function PairingCard({
           badges={badges}
           mine={pairing.home.teamId === mine}
         />
-        <span className="self-center px-1 text-2xs font-bold uppercase text-faint">
+        <span className={`self-center px-1 ${LABEL}`}>
           v
         </span>
         <Side

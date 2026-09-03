@@ -11,6 +11,7 @@ import { readerTeamId } from "../squads";
 import { leagueInfo } from "../round";
 import { londonDate } from "../londonTime";
 import { FANTRAX_SILENT, servedLeague } from "../config";
+import { BOARD, SCROLL } from "@/app/desk";
 
 // The table. Fantrax computes it — the record, the points and the order are
 // theirs, and this page never adds them up itself. Three for a win is a
@@ -109,8 +110,8 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
           stay reachable rather than being dropped behind a breakpoint. */}
       {/* The panel is `LeagueShell`'s now — every view under this tab strip gets
           the same block, rather than the table carrying a ground of its own. */}
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-sm">
+      <div className={SCROLL}>
+        <table className={BOARD}>
           <Columns sort={sort} descending={descending} />
           <tbody>
             {sortRows(rows, sort, descending).map((row) => (

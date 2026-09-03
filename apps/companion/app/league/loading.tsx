@@ -1,6 +1,7 @@
 import Columns, { COLUMNS } from "./Columns";
 import LeagueShell from "./Shell";
 import Skeleton from "../components/shell/Skeleton";
+import { BOARD } from "@/app/desk";
 
 // The table, waiting on Fantrax.
 //
@@ -25,7 +26,7 @@ export default function Loading() {
   return (
     <LeagueShell title="League Table" current="table">
       <div aria-busy>
-        <table className="w-full border-collapse text-sm">
+        <table className={BOARD}>
           <Columns sort="rank" descending={false} />
           <tbody>
             {Array.from({ length: ROWS }, (_, at) => (

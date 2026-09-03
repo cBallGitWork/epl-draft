@@ -1,5 +1,6 @@
 import type { ScheduleRound } from "./schedule";
 import { londonDate, londonTime } from "../../londonTime";
+import { LABEL } from "@/app/desk";
 
 // A round's own line: when lineups lock, and where the football has got to.
 //
@@ -49,6 +50,6 @@ function Status({ round }: { round: ScheduleRound }) {
   }
 
   return round.status === "finished" ? (
-    <span className="text-2xs font-bold uppercase text-faint">Full time</span>
+    <span className={LABEL}>Full time</span>
   ) : null;
 }
