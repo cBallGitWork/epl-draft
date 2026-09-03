@@ -1,9 +1,17 @@
 import { once } from "./published";
 
 // The structured cargo some story kinds carry beside their prose: the press
-// room's quotes, a power ranking's rows, Statto's chart captions, the quiz.
-// Its own file because it is its own contract — the prose is paragraphs
-// whatever the kind, and this is everything that is not paragraphs.
+// room's quotes, a power ranking's rows, the quiz. Its own file because it is
+// its own contract — the prose is paragraphs whatever the kind, and this is
+// everything that is not paragraphs.
+//
+// **The eleven's CAPTIONS were deleted on 3 Sep 2026**, Craig: *"the
+// descriptiosn are the same 'STAT + quippy bit', pure ai shite."* He is right
+// and it was structural: one sentence per man, asked for eleven at a time,
+// against a brief that gives each man a name, a slot and a stat line. There is
+// nothing else for that sentence to be. The eleven keeps its column — the
+// argument connecting the side is prose a pundit can actually write — and the
+// side itself is printed from the facts, unannotated.
 
 /** A quote in a story that is written as speech — the press room and the
  *  studio, the two places invented quotes are the licensed joke. */
@@ -23,12 +31,6 @@ interface StoryRank {
   line: string;
 }
 
-/** One caption keyed to a chart or figure the page draws itself. */
-interface StoryCaption {
-  key: string;
-  line: string;
-}
-
 interface StoryQuizItem {
   q: string;
   a: string;
@@ -39,7 +41,6 @@ interface StoryQuizItem {
 export interface StoryExtras {
   quotes?: StoryQuote[];
   ranks?: StoryRank[];
-  captions?: StoryCaption[];
   quiz?: StoryQuizItem[];
 }
 
@@ -66,14 +67,6 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
       )
     : [];
   if (ranks.length > 0) out.ranks = once(ranks, (r) => r.teamId);
-
-  const captions = Array.isArray(extras.captions)
-    ? extras.captions.filter(
-        (c): c is StoryCaption =>
-          typeof c?.key === "string" && c.key !== "" && typeof c.line === "string" && c.line !== "",
-      )
-    : [];
-  if (captions.length > 0) out.captions = once(captions, (c) => c.key);
 
   const quiz = Array.isArray(extras.quiz)
     ? extras.quiz.filter(

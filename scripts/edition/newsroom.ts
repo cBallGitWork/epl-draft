@@ -178,7 +178,7 @@ export function storyOfColumn(
     // The calls, for the kinds that make them.
     ties: column.ties,
     // **The cargo, nested.** Every column prompt asks for its structured part
-    // at the TOP level — `quotes`, `ranks`, `captions`, `quiz` — because that
+    // at the TOP level — `quotes`, `ranks`, `quiz` — because that
     // is the shape a model reliably returns, and `PublishedStory` keeps them
     // under `extras`. Without this fold the sketches file a scene-setting
     // paragraph and no sketch, the rankings file an overview and no ranked list,
@@ -187,7 +187,6 @@ export function storyOfColumn(
     extras: {
       quotes: column.quotes,
       ranks: column.ranks,
-      captions: column.captions,
       quiz: column.quiz,
     },
   });

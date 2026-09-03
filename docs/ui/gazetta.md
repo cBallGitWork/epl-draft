@@ -149,6 +149,15 @@ business, who is hurt, and when lineups lock.
    appended to the owner when a manager left his own best player out — **and only
    when the arrangement it was read from is the one that was fielded**; see *What
    may be said about a bench* below.
+
+   **A team sheet and not an annotated one.** The selector's column used to file
+   a caption per man and this section printed them under each row; both were cut
+   on 3 Sep 2026, Craig: *"the descriptiosn are the same 'STAT + quippy bit',
+   pure ai shite."* He is right and it was structural rather than a bad run —
+   one sentence per man, eleven at a time, written from a name, a slot and a stat
+   line, has nowhere to go but the stat and a flourish. The eleven column
+   survives as a column: the case for the side, on page 3, where a pundit's
+   argument is something a pundit can actually write.
 8. **The three tables**, in the sidebar as a back page carries them: the
    season's scorers (Fantrax's published season FPts — the player's own
    season, which is not the same as what he earned his owner, so the head says

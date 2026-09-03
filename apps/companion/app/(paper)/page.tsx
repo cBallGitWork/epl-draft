@@ -64,13 +64,6 @@ export default async function GazettePage() {
   // One lookup for the whole paper: the lead's cut-out and the eleven's eleven
   // all want the same clubs, keyed the way a snapshot keys them.
   const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
-  // The selector's captions, if that column has filed. Keyed by player name,
-  // which is what the column was given and told to key on.
-  const captions = new Map(
-    (paper.filed.find((story) => story.kind === "eleven")?.extras?.captions ?? []).map(
-      (caption) => [caption.key, caption.line] as const,
-    ),
-  );
   // The same join the inside pages make, plus the one case only this page has:
   // a deal whose other side is nobody — a waiver claim comes from the wire, not
   // from a manager.
@@ -268,7 +261,6 @@ export default async function GazettePage() {
               mine={paper.mine}
               partial={paper.partial}
               fielded={paper.fielded}
-              captions={captions}
             />
           ) : null}
 

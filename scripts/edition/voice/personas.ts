@@ -16,5 +16,3 @@ export const MANAGER_TRAITS: Record<string, string> = {};
 export const STUDIO_ANCHOR = "The anchor";
 export const STUDIO_ANALYST = "The analyst";
 
-/** Statto's byline over the numbers page's captions. */
-export const STATTO = "The statistician";

@@ -14,9 +14,8 @@ import type { Assignment, PublishedStory } from "@epl/core";
 /** The kinds whose substance lives in `extras` rather than in the body, and
  *  which member carries it. A kind absent from this table legitimately files
  *  without extras. */
-export const CARGO: Partial<Record<Assignment["kind"], "quotes" | "ranks" | "captions" | "quiz">> = {
+export const CARGO: Partial<Record<Assignment["kind"], "quotes" | "ranks" | "quiz">> = {
   "power-ranking": "ranks",
-  eleven: "captions",
   presser: "quotes",
   studio: "quotes",
 };
@@ -36,9 +35,16 @@ export function prose(story: PublishedStory): string {
     // The WRITTEN member of each cargo row and never the row itself: a rank
     // carries a teamId, and stringifying the object put "Id" and "teamId"
     // into the checked text as though the column had named a footballer.
+    //
+    // **`line`, and the quote's `speaker` beside it.** This read `"text"` for
+    // quotes and captions until 3 Sep 2026, and neither type has ever had a
+    // `text` — both hold their sentence in `line`, as `StoryRank` does. So the
+    // check silently saw no quote and no caption for as long as it has existed,
+    // and a quote is the one surface where an invented person is certain to
+    // appear: it is attributed to somebody by construction. The speaker is
+    // checked too, which is where that name would be.
     ...sentences(extras.ranks, "line"),
-    ...sentences(extras.captions, "text"),
-    ...sentences(extras.quotes, "text"),
+    ...sentences(extras.quotes, "speaker", "line"),
   ];
   // Each part on its own line, and every line is a sentence for the check's
   // purposes — a rank line opens with a capital the way a sentence does.

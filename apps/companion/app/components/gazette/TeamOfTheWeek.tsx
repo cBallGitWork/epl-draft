@@ -35,14 +35,9 @@ export default function TeamOfTheWeek({
   mine,
   partial,
   fielded,
-  captions,
 }: {
   eleven: Eleven;
   mine: string | null;
-  /** The selector's line on each man, keyed by his name as the column wrote
-   *  it. Empty until that column files — the eleven is picked from facts and
-   *  reads perfectly without a word of opinion on it. */
-  captions?: Map<string, string>;
   /** Whether the round is still being played. Said in the heading rather than
    *  left to the reader: an eleven picked from four fixtures of ten is not the
    *  week's, and on a Saturday tea-time it fills its forward line with men who
@@ -70,7 +65,6 @@ export default function TeamOfTheWeek({
                 pick={pick}
                 mine={pick.ownerTeamId === mine}
                 fielded={fielded}
-                caption={captions?.get(pick.playerName)}
               />
             ))}
           </ul>
@@ -87,17 +81,7 @@ export default function TeamOfTheWeek({
  *  benching is the best story on the page and keeps its place beside the owner
  *  who did it, said only of a lineup we know he was left out of.
  */
-function Man({
-  pick,
-  mine,
-  fielded,
-  caption,
-}: {
-  pick: Pick;
-  mine: boolean;
-  fielded: boolean;
-  caption?: string;
-}) {
+function Man({ pick, mine, fielded }: { pick: Pick; mine: boolean; fielded: boolean }) {
   return (
     <li className="pt-0.5">
       <span className="flex items-baseline justify-between gap-2">
@@ -111,12 +95,6 @@ function Man({
         </span>
         <span className="numeric shrink-0 text-2xs text-muted">{did(pick)}</span>
       </span>
-      {/* The selector's line, when he has filed one. Italic and a size down:
-          it is opinion under a row of fact, and a reader should be able to
-          tell which is which without being told. */}
-      {caption === undefined ? null : (
-        <span className="block pt-0.5 text-2xs italic leading-snug text-muted">{caption}</span>
-      )}
     </li>
   );
 }

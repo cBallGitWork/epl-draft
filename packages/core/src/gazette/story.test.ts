@@ -63,7 +63,7 @@ describe("normalizeStory", () => {
       .toEqual({ src: "/paper/gw3.webp", alt: "The rout" });
   });
 
-  it("dedupes quotes' hosts, ranks and captions but never the quiz", () => {
+  it("dedupes a power ranking's rows but never the quiz", () => {
     const survived = normalizeStory(
       story({
         kind: "power-ranking",

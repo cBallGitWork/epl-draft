@@ -116,7 +116,7 @@ describe("buildWireBrief", () => {
 });
 
 describe("buildElevenBrief", () => {
-  it("marks the benched man as the story and asks for a caption each", () => {
+  it("marks the benched man as the story, and asks for a column rather than a list", () => {
     const brief = buildElevenBrief({
       gameweek: 3,
       picks: [pick(), pick({ playerName: "Haaland", started: true, ownerName: "123" })],
@@ -124,8 +124,12 @@ describe("buildElevenBrief", () => {
       threads: [],
     });
     expect(brief).toContain("BENCHED by his own manager");
-    expect(brief).toContain("ONE caption per man");
     expect(brief).toContain("lining up 1-4-4-2");
+    // It asked for "ONE caption per man" until 3 Sep 2026 and Craig cut them:
+    // eleven one-sentence verdicts written from a name, a slot and a stat line
+    // have nowhere to go but the stat and a flourish.
+    expect(brief).not.toContain("caption per man");
+    expect(brief).toContain("No man gets his own sentence in turn");
   });
 });
 

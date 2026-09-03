@@ -1,5 +1,4 @@
 import type { PublishedStory } from "@epl/core";
-import Captions from "./Captions";
 import Quiz from "./Quiz";
 import Quotes from "./Quotes";
 import Ranks from "./Ranks";
@@ -21,7 +20,6 @@ export default function Extras({
   mine: string | null;
 }) {
   if (story.kind === "power-ranking") return <Ranks story={story} named={named} mine={mine} />;
-  if (story.kind === "eleven") return <Captions story={story} />;
   if (story.kind === "presser") {
     return <Quotes story={story} label="Staged for the paper — nobody said any of this" />;
   }
