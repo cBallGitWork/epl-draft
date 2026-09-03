@@ -244,21 +244,45 @@
 }
 
 /* --- The page turn ------------------------------------------------------
-   A leaf going over: the page you are leaving slides off to the left as the
+   A leaf going over: the sheet you are leaving slides off to the left as the
    one you are turning to comes in from the right, both under a short fade.
 
    200ms and `--ease-out-quart`, which is DESIGN §7's motion rule verbatim
    (150-250ms, ease-out) and adds no token. It is the paper's ONLY animation
-   and `paper.css` had none before it; the desk has no leaves to turn, so the
-   keyframes are addressed to the paper's own view-transition group and to
-   nothing else.
+   and `paper.css` had none before it.
 
-   No reduced-motion carve-out is owed. A turn carries no information beyond
-   "you navigated", so the blanket rule in `globals.css` — which cuts every
-   animation to 0.01ms — is a complete and honest answer. Only `.value-changed`
-   needed an exception, because its whole content is that something changed.
-   `TurnLink` also declines to start a transition at all under that setting,
-   which is stiller than starting one that animates to nothing. */
+   **THE LEAF IS THE SHEET AND NOT THE WINDOW**, and getting that wrong is why
+   Craig's verdict on the first version was that it "sucks on chrome". It
+   animated `::view-transition-old(root)` / `new(root)` — the whole root
+   snapshot — so the navy ground outside the sheet, the section rail and the
+   browser's own chrome all slid across with it. A page turn in which the desk
+   moves is not a page turn; it is the window sliding.
+
+   So `.paper` takes a `view-transition-name` of its own and the leaf is
+   addressed to THAT, while the root group and its two snapshots are pinned
+   still. The named element is the group LAYOUT's div, which Next keeps mounted
+   across every paper route, so the same node is captured either side and the
+   browser has one group rather than two unrelated ones.
+
+   `object-fit: none` with a top anchor on both snapshots, and the group's own
+   animation off: the front page is several times the height of an inside page,
+   and a group animating between those two sizes draws the old sheet squashed
+   into the new one's box. Anchored at natural size it slides instead, which is
+   what a leaf does.
+
+   **The reduced-motion carve-out IS owed, and this file used to argue it was
+   not.** The old comment here said the blanket rule in `globals.css` — which
+   cuts every animation to 0.01ms — was "a complete and honest answer". It is
+   not: that rule selects `*`, `*::before` and `*::after`, and a
+   view-transition pseudo-element is in none of those. Nothing reached these
+   rules. In practice no reduced-motion user has seen the turn, because
+   `TurnLink` declines to start a transition at all under that setting — which
+   is stiller than starting one that animates to nothing — but that is the
+   belt, and this is the braces. */
+
+.paper {
+  view-transition-name: paper-leaf;
+}
 
 @keyframes paper-leaf-out {
   to {
@@ -279,10 +303,40 @@
    `.paper`, so the SCOPE is the flag: nothing else in the app starts a
    transition, and if anything ever does it animates the browser's default
    cross-fade rather than borrowing the paper's leaf. */
-html[data-turning]::view-transition-old(root) {
+html[data-turning]::view-transition-old(paper-leaf) {
   animation: paper-leaf-out 200ms var(--ease-out-quart) both;
 }
 
-html[data-turning]::view-transition-new(root) {
+html[data-turning]::view-transition-new(paper-leaf) {
   animation: paper-leaf-in 200ms var(--ease-out-quart) both;
+}
+
+/* Natural size, anchored top, so two sheets of very different heights slide
+   past each other rather than one squashing into the other's box. */
+html[data-turning]::view-transition-old(paper-leaf),
+html[data-turning]::view-transition-new(paper-leaf) {
+  height: 100%;
+  width: 100%;
+  object-fit: none;
+  object-position: top center;
+}
+
+html[data-turning]::view-transition-group(paper-leaf) {
+  animation: none;
+}
+
+/* The window holds still. The root snapshot is now everything OUTSIDE the
+   sheet — the navy ground and the app's chrome — and across two paper routes
+   those pixels are identical, so the honest animation for them is none. */
+html[data-turning]::view-transition-group(root),
+html[data-turning]::view-transition-old(root),
+html[data-turning]::view-transition-new(root) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-turning]::view-transition-old(paper-leaf),
+  html[data-turning]::view-transition-new(paper-leaf) {
+    animation-duration: 0.01ms;
+  }
 }

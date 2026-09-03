@@ -36,7 +36,6 @@ const ROUTES = [
   "/fpl",
   "/paper/reports",
   "/paper/columns",
-  "/paper/gw2-round-report",
 ];
 
 const WIDTHS = [390, 1440];
@@ -114,6 +113,20 @@ const team = await cdp.js(
 );
 if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((tab) => `${team}/${tab}`));
 
+// One article, DISCOVERED off the front page rather than written down. It was
+// `/paper/gw2-round-report` until 3 Sep 2026, which broke the sweep outright the
+// day the round-report kind was deleted: the slug still parses, the story no
+// longer normalizes, the route 404s, and the audit crashed rather than reporting
+// a failure. A slug names one story in one round's edition and is the last thing
+// that should be a constant here — every other per-record route in this list is
+// already derived for exactly that reason.
+await cdp.open("/", 2200);
+const article = await cdp.js(
+  `(document.querySelector('a[href^="/paper/"]:not([href="/paper/reports"]):not([href="/paper/columns"])')||{}).getAttribute
+     ? document.querySelector('a[href^="/paper/"]:not([href="/paper/reports"]):not([href="/paper/columns"])').getAttribute("href") : ""`,
+);
+if (article) ROUTES.push(article);
+
 // A club's own screens, discovered off the table for the same reason the team's
 // are discovered off `/squad`: the codes are FPL's and a written-down one names
 // a 404 the season a club goes down. They are swept because the club bar is the
@@ -135,7 +148,13 @@ for (const width of WIDTHS) {
     await cdp.send("Page.navigate", { url: base + route });
     await new Promise((resolve) => setTimeout(resolve, 2200));
     const { fail, blind } = JSON.parse(await cdp.js(AUDIT));
-    const sideways = await cdp.js(`document.documentElement.scrollWidth > window.innerWidth`);
+    // `document.documentElement` is null for the instant a navigation is
+    // between documents, and reading `.scrollWidth` off it threw the whole
+    // sweep away — one unsettled route and no report at all, for the routes
+    // before it as well as after. Answered as "not measurable" instead.
+    const sideways = await cdp.js(
+      `document.documentElement ? document.documentElement.scrollWidth > window.innerWidth : false`,
+    );
     failures += fail.length + (sideways ? 1 : 0);
     const flag = [fail.length ? `${fail.length} AA` : "", sideways ? "H-SCROLL" : ""].filter(Boolean).join(" ") || "ok";
     const note = blind ? `  (${blind} on SVG ground — not auditable here, check by hand)` : "";
