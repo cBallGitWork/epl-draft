@@ -40,7 +40,12 @@ export default function Comparison({
   right: Column;
 }) {
   return (
-    <table className="w-full border-collapse text-sm">
+    // **Capped and centred on the desk.** A comparison is read ACROSS one line,
+    // and full width at 1440 put the two figures 1,400px apart with an empty
+    // middle — the eye cannot pair them, which is the one thing this shape
+    // exists to do. `cm9900/22.jpg` keeps its two columns close and lets the
+    // panel hold the air. The phone is already narrow enough to need no cap.
+    <table className="w-full border-collapse text-sm lg:mx-auto lg:max-w-2xl">
       <thead>
         <tr className="text-3xs uppercase">
           <Heading column={left} />
