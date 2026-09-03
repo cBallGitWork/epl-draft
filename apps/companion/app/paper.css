@@ -216,6 +216,33 @@
   opacity: 0.35;
 }
 
+/* A player, printed as a paper prints a photograph.
+
+   `.paper-photo` above filters the IMAGE and leaves its ground alone, which is
+   right for a drawing dropped straight onto the stock. A face does not stand on
+   the stock — he stands on his club's colour, with the crest behind him — and a
+   saturated club colour under a headline, once per story, down the whole page,
+   is precisely the "themed screen rather than newsprint" DESIGN §4 spends a
+   paragraph on. That band was justified when there was ONE of it over the
+   splash; there is now one per rank.
+
+   So the filter goes on the BAND and not the image: kit, crest and cut-out all
+   go through the same ink, and the club's colours survive as the value that
+   tells Forest from Chelsea rather than as the colours themselves. */
+.paper .paper-face {
+  position: relative;
+  filter: grayscale(1) sepia(0.2) contrast(1.06) brightness(1.03);
+}
+.paper .paper-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgb(42 32 24 / 0.25) 0.5px, transparent 0.75px);
+  background-size: 3px 3px;
+  opacity: 0.35;
+}
+
 /* --- The page turn ------------------------------------------------------
    A leaf going over: the page you are leaving slides off to the left as the
    one you are turning to comes in from the right, both under a short fade.

@@ -5,6 +5,7 @@ import Teaser from "../components/gazette/Teaser";
 import Brief from "../components/gazette/Brief";
 import Scoreboard from "../components/gazette/Scoreboard";
 import Drawing from "../components/gazette/Drawing";
+import Face from "../components/gazette/Face";
 import Splash from "../components/gazette/Splash";
 import Deals from "../components/gazette/Deals";
 import Doubts from "../components/gazette/Doubts";
@@ -80,6 +81,10 @@ export default async function GazettePage() {
   // third, sliced here rather than in the markup so the two boundaries are one
   // line apart and cannot drift.
   const shoulders = paper.filed.slice(1, SHOULDER_STORIES + 1);
+  // Pictures on the shoulders only when every shoulder has one. See `Teaser`:
+  // twin seconds that start their headlines at different heights read as a
+  // fault, not as a rank.
+  const shouldersPictured = shoulders.every((story) => story.face !== null);
   const briefs = paper.filed.slice(SHOULDER_STORIES + 1, HEADLINES_SHOWN + 1);
 
   return (
@@ -149,8 +154,15 @@ export default async function GazettePage() {
               {/* The drawing when the lead has one, and the desk's own
                   typographic band when it does not. Never both: a paper runs
                   one picture over one splash. */}
+              {/* Three pictures in order of how much we know: CI's drawing when
+                  it made one, then the splash's own man, then the desk's
+                  typographic band. Never two — a paper runs one picture over
+                  one splash. The face outranks the band because a scorer is a
+                  photograph and a scoreline set large is a stand-in for one. */}
               {paper.filed[0].image !== null ? (
                 <Drawing story={paper.filed[0]} />
+              ) : paper.filed[0].face ? (
+                <Face face={paper.filed[0].face} clubs={clubs} rank="splash" />
               ) : paper.stories[0] ? (
                 <Picture lead={paper.stories[0]} who={who} clubs={clubs} />
               ) : null}
@@ -174,7 +186,12 @@ export default async function GazettePage() {
           {shoulders.length > 0 ? (
             <div className="grid auto-cols-fr grid-flow-col gap-x-5">
               {shoulders.map((story) => (
-                <Teaser key={story.slug} story={story} />
+                <Teaser
+                  key={story.slug}
+                  story={story}
+                  clubs={clubs}
+                  pictured={shouldersPictured}
+                />
               ))}
             </div>
           ) : null}
@@ -184,7 +201,7 @@ export default async function GazettePage() {
           {briefs.length > 0 ? (
             <ul>
               {briefs.map((story) => (
-                <Brief key={story.slug} story={story} />
+                <Brief key={story.slug} story={story} clubs={clubs} />
               ))}
             </ul>
           ) : null}

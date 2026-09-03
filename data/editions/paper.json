@@ -1,50 +1,105 @@
 {
-  "updatedAt": "2026-09-02T16:43:19.740Z",
+  "updatedAt": "2026-09-03T13:00:32.175Z",
   "stories": [
     {
-      "slug": "gw2-round-report",
-      "kind": "round-report",
+      "slug": "p2-report-1b6gp5utmtj36y3gvkg18w2cvmtj36y3g",
+      "kind": "tie-report",
       "leagueId": "w05aib75mtj36y1g",
       "period": 2,
       "gameweek": 2,
-      "filedAt": "2026-09-02T15:06:57.753Z",
+      "filedAt": "2026-09-03T13:00:32.172Z",
       "expiresAt": null,
       "edition": "The Monday Club",
-      "byline": "The Back Page",
-      "headline": "Fernandes Puts 123 Beyond All Reason",
-      "deck": "123 hammer test31121 by 41 behind a Bruno Fernandes hat-trick and Haaland double",
-      "body": "123 did not win a match this round, they conducted an audit. 76 to 35 over test31121, the widest margin the desk logged, and every number pointed one way.\n\nB.Fernandes ran it: three goals, one assist, the R1, pick 1 doing exactly what a first overall is drafted to do. Haaland added two behind him and Groß chipped a goal and an assist. test31121 had no answer, and Georginio carrying a knock did not help the count.\n\nElsewhere the margins were tighter. test4 saw off testf 56 to 45, test1 edged test211 48 to 40, test3 nipped test31 38 to 28, and test2 held off test3331 49 to 40. Four honest results and one demolition.\n\n123 sit at the top of the conversation after that. When your R1 pick returns thirteen points of goal involvement on his own and your R3 forward doubles up, the table looks after itself.\n\ntest4 keep pace with a win over testf, Cherki and Mbeumo both returning. test1, test3 and test2 all bank narrow ones. test31121 and test3331 are the men left counting what went wrong.\n\nB.Fernandes walks in and takes the armband with him. Three and one for 123, the round's outstanding return, and nobody comes close. Haaland alongside him with the brace, Cherki matching the goal count for test4.\n\nAcross the middle Gibbs-White, Mbeumo and João Pedro all posted a goal and an assist apiece, the sort of dual returns that win weeks. Scott chipped in a goal and kept a clean sheet on test3331's ledger, a tidy shift for an R5, pick 48.\n\nAt the back Tarkowski scored for testf, while Dedić and Calafiori paired a clean sheet with an assist. Groß is the unlucky one to slide down the order, a goal and an assist for 123 and still not front of the queue on a day like this.",
+      "byline": "",
+      "headline": "Cunha The Difference As test2 Bank Nine",
+      "deck": "test2 beat test3331 49 to 40, Cunha's 8 the top score of the tie.",
+      "body": "test2 got there on the front foot. Cunha top-scored the tie with eight, Isak behind him on six, and a defence that all paid out: Ajayi, Giles and Hall six apiece. Millar's six from midfield rounded it. Six men, no passengers.\n\ntest3331 needed a haul from the top and got none. Scott's seven was the best he had, Ndoye and Lewis-Potter chipped six and five up front, and the back pair of Thomas and White matched them on six. Respectable numbers, but nothing that swings nine.\n\nCook is where the annoyance sits. Three from midfield, a return that barely registered, and in a defeat this size every point left on the pitch stings.",
       "subjects": [
-        "round-report:gw2"
+        "tie-report:p2:1b6gp5utmtj36y3gvkg18w2cvmtj36y3g"
       ],
       "image": null,
-      "ties": [
-        {
-          "homeTeamId": "fq5omv5kmtj36y3g",
-          "awayTeamId": "hy0w28p5mtj36y3g",
-          "line": "test1 edged it 48 to 40, João Pedro's goal and assist not enough to save test211."
-        },
-        {
-          "homeTeamId": "y6viv6jfmtj36y3g",
-          "awayTeamId": "dpdkp2bbmtj36y3g",
-          "line": "test3 home by 38 to 28, Gibbs-White returning a goal and an assist and Calafiori a clean sheet and an assist."
-        },
-        {
-          "homeTeamId": "deo9ljvtmtj36y3g",
-          "awayTeamId": "pzmd243ymtj36y3g",
-          "line": "test4 by 56 to 45, Cherki and Mbeumo doing the damage against Tarkowski's goal for testf."
-        },
-        {
-          "homeTeamId": "1b6gp5utmtj36y3g",
-          "awayTeamId": "kg18w2cvmtj36y3g",
-          "line": "test2 held on 49 to 40, Scott and Dedić's clean-sheet returns not enough for test3331."
-        },
-        {
-          "homeTeamId": "98yx3o50mtj36y3g",
-          "awayTeamId": "g80h3bf5mtj36y3g",
-          "line": "76 to 35. B.Fernandes three and one, Haaland two, Groß one and one. test31121 flattened."
-        }
-      ]
+      "face": {
+        "code": 430871,
+        "name": "Cunha",
+        "clubId": 16,
+        "position": "F"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p2-report-deo9ljvtmtj36y3gvpzmd243ymtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 2,
+      "gameweek": 2,
+      "filedAt": "2026-09-03T13:00:25.090Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Cherki Ripe, testf Left Wanting",
+      "deck": "test4 beat testf 56 to 45, Cherki's 11 the headline return in midfield.",
+      "body": "test4 got the midfield haul that testf never came close to matching. Cherki led it with 11, Foden backed him with 8, and Mbeumo added another 8 up top. Raya's 6 in goal underpinned the lot. Six men in returns, none below Isidor's 5.\n\ntestf leaned on his defence and it wasn't enough. Tarkowski's 8 was the top score on his side, Ballard chipped in 6, Tzolakis 7 between the sticks. Solid, but a back line and a keeper doing the heavy lifting is a losing shape.\n\nThe forwards are where it fell apart. Evanilson and Rogers managed 5 apiece, and Barnes blanked the midfield with just 3. Against Cherki and Foden's 19 between them, testf's engine room never got going. Eleven points, and the gap sits in the middle of the park.",
+      "subjects": [
+        "tie-report:p2:deo9ljvtmtj36y3gvpzmd243ymtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 466052,
+        "name": "Cherki",
+        "clubId": 15,
+        "position": "M"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p2-report-y6viv6jfmtj36y3gvdpdkp2bbmtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 2,
+      "gameweek": 2,
+      "filedAt": "2026-09-03T12:58:18.463Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Gibbs-White Whites Out test31",
+      "deck": "test3 beats test31 38-28 as Gibbs-White's 10 leads the way",
+      "body": "test3 built it at the top. Gibbs-White returned 10 from midfield, Calafiori nine from defence, and that pairing alone matched more than half of test31's entire week. Wissa added six, Maguire four behind Pickford's clean-sheet three, and the ten-point margin was set before the forwards even mattered.\n\ntest31 never found a big one. Thiaw's six from defence was the best of it, Belloumi and Munoz five apiece up front, and nothing higher anywhere on the sheet. Six men, none in double figures, 28 all told.\n\nThe forwards are where test31 will stew. Belloumi five, Munoz five, Barry two, and no return big enough to close a ten-point hole. Bobb and Buendía chipped in three and two from midfield, but against Gibbs-White and Calafiori that was never going to be enough.",
+      "subjects": [
+        "tie-report:p2:y6viv6jfmtj36y3gvdpdkp2bbmtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 222531,
+        "name": "Gibbs-White",
+        "clubId": 18,
+        "position": "M"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p2-report-fq5omv5kmtj36y3gvhy0w28p5mtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 2,
+      "gameweek": 2,
+      "filedAt": "2026-09-03T12:58:10.935Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "test1 Spread Loads, Pedro Left Wanting",
+      "deck": "test1 beats test211 48-40, six contributors to test211's top-heavy 40.",
+      "body": "test1 got there by committee. Lavia and Palmer led the midfield with seven apiece, Calvert-Lewin, Egan and Saka all returned six, Semenyo five. No blank in the six, nothing under five, and 48 on the board.\n\ntest211 leaned on João Pedro's seven up top and got nothing else to match it. Castagne and Roefs returned six each, then the drop: Enciso and Gakpo five apiece, Fatawu four.\n\nThat Fatawu four is the number that hurts. test211 needed his forwards firing to keep pace and one of them managed four. Eight short.",
+      "subjects": [
+        "tie-report:p2:fq5omv5kmtj36y3gvhy0w28p5mtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 475168,
+        "name": "João Pedro",
+        "clubId": 6,
+        "position": "F"
+      },
+      "ties": []
     },
     {
       "slug": "gw2-match-56v54",
@@ -63,6 +118,7 @@
         "match:gw2:56v54"
       ],
       "image": null,
+      "face": null,
       "ties": []
     },
     {
@@ -82,6 +138,7 @@
         "match:gw2:14v17"
       ],
       "image": null,
+      "face": null,
       "ties": []
     },
     {
@@ -101,6 +158,7 @@
         "match:gw2:8v36"
       ],
       "image": null,
+      "face": null,
       "ties": []
     },
     {
@@ -120,6 +178,7 @@
         "match:gw2:2v94"
       ],
       "image": null,
+      "face": null,
       "ties": []
     },
     {
@@ -139,6 +198,7 @@
         "news:https://www.bbc.co.uk/sport/football/articles/c3wj1qw5x04o"
       ],
       "image": null,
+      "face": null,
       "ties": []
     },
     {
@@ -158,6 +218,7 @@
         "news:https://www.bbc.co.uk/sport/football/articles/clyjmd19887o"
       ],
       "image": null,
+      "face": null,
       "ties": []
     },
     {
@@ -177,6 +238,7 @@
         "studio:gw2"
       ],
       "image": null,
+      "face": null,
       "ties": [],
       "extras": {
         "quotes": [
@@ -232,6 +294,7 @@
         "presser:gw2"
       ],
       "image": null,
+      "face": null,
       "ties": [],
       "extras": {
         "quotes": [
@@ -280,6 +343,7 @@
         "eleven:gw2"
       ],
       "image": null,
+      "face": null,
       "ties": [],
       "extras": {
         "captions": [
@@ -347,6 +411,7 @@
         "power-ranking:gw2"
       ],
       "image": null,
+      "face": null,
       "ties": [],
       "extras": {
         "ranks": [
@@ -420,6 +485,7 @@
         "dodgers:gw2"
       ],
       "image": null,
+      "face": null,
       "ties": []
     },
     {
@@ -439,6 +505,7 @@
         "wire:through-gw2"
       ],
       "image": null,
+      "face": null,
       "ties": [],
       "extras": {
         "quiz": [

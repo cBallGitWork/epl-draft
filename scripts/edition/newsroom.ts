@@ -1,4 +1,11 @@
-import type { EditionKind, PublishedEdition, PublishedStory, StoryKind, ThreadUpdate } from "@epl/core";
+import type {
+  EditionKind,
+  PublishedEdition,
+  PublishedStory,
+  StoryFace,
+  StoryKind,
+  ThreadUpdate,
+} from "@epl/core";
 import { normalizeStory } from "@epl/core";
 
 // The one API call, and the shape a filed column takes in the rolling paper.
@@ -139,6 +146,11 @@ export interface ColumnMeta {
   byline: string;
   /** The covered-key this filing spends — also its one subject. */
   subject: string;
+  /** The man the page prints a picture of, picked by the desk from the facts
+   *  (`assemble.faceOf`). Null for a kind with no man in it. It sits in the meta
+   *  and not in the column deliberately: everything the model returned is read
+   *  off `column` below, and the photograph is not the model's to choose. */
+  face: StoryFace | null;
 }
 
 /** A rolling prose column (the `STORY_SHAPE` contract), stamped and validated
@@ -162,6 +174,7 @@ export function storyOfColumn(
     body: column.body,
     subjects: [meta.subject],
     image: null,
+    face: meta.face,
     // The calls, for the kinds that make them.
     ties: column.ties,
     // **The cargo, nested.** Every column prompt asks for its structured part

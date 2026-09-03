@@ -1,5 +1,6 @@
 import TurnLink from "./TurnLink";
-import type { PublishedStory } from "@epl/core";
+import Face from "./Face";
+import type { Club, PublishedStory } from "@epl/core";
 import { KICKER } from "./kickers";
 import { pageOf } from "./paperPages";
 
@@ -15,20 +16,32 @@ import { pageOf } from "./paperPages";
 // — "turn to page 2" five times down one column is a paper nagging. A kind with
 // no page of its own prints nothing there and is read on the front page.
 
-export default function Brief({ story }: { story: PublishedStory }) {
+export default function Brief({
+  story,
+  clubs,
+}: {
+  story: PublishedStory;
+  clubs: Map<number, Club>;
+}) {
   const kicker = KICKER[story.kind];
   const page = pageOf(story.kind);
 
   return (
     <li id={story.slug} className="scroll-mt-4 border-t border-line">
-      <TurnLink href={`/paper/${story.slug}`} className="flex min-h-11 flex-col justify-center gap-0.5 py-2">
-        <span className="flex items-baseline justify-between gap-3 font-sans text-3xs uppercase tracking-[0.16em]">
-          {kicker !== undefined ? <span className="font-bold text-muted">{kicker}</span> : <span />}
-          {page !== null ? <span className="numeric shrink-0 text-faint">p{page.number}</span> : null}
+      {/* Thumbnail at the left, headline at the right — the shape a paper's
+          news-in-brief column has and the shape a news app's list has, for the
+          same reason: at this size a picture is an identifier, not a picture. */}
+      <TurnLink href={`/paper/${story.slug}`} className="flex min-h-11 items-center gap-3 py-2">
+        {story.face ? <Face face={story.face} clubs={clubs} rank="brief" /> : null}
+        <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5">
+          <span className="flex items-baseline justify-between gap-3 font-sans text-3xs uppercase tracking-[0.16em]">
+            {kicker !== undefined ? <span className="font-bold text-muted">{kicker}</span> : <span />}
+            {page !== null ? <span className="numeric shrink-0 text-faint">p{page.number}</span> : null}
+          </span>
+          <h3 className="paper-display text-pretty text-base font-bold leading-snug text-ink">
+            {story.headline}
+          </h3>
         </span>
-        <h3 className="paper-display text-pretty text-base font-bold leading-snug text-ink">
-          {story.headline}
-        </h3>
       </TurnLink>
     </li>
   );

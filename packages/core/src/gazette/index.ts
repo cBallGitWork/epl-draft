@@ -53,7 +53,7 @@ export { decided, stories } from "./stories";
 export { teamOfTheWeek } from "./teamOfTheWeek";
 export type { Ledger, StoryThread, ThreadUpdate } from "./ledger";
 export type { EditionKind, PublishedEdition } from "./published";
-export type { PublishedPaper, PublishedStory, StoryKind } from "./story";
+export type { PublishedPaper, PublishedStory, StoryFace, StoryKind } from "./story";
 export type {
   AvailabilityNote,
   Deadline,

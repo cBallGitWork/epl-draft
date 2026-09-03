@@ -21,6 +21,7 @@ const story = (over: Partial<PublishedStory> = {}): PublishedStory => ({
   body: "A paragraph.",
   subjects: ["tie-report:p3:a-v-b"],
   image: null,
+  face: null,
   ties: [],
   ...over,
 });

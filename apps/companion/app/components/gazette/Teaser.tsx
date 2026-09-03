@@ -1,5 +1,6 @@
 import TurnLink from "./TurnLink";
-import type { PublishedStory } from "@epl/core";
+import Face from "./Face";
+import type { Club, PublishedStory } from "@epl/core";
 import { londonDayAndTime } from "../../londonTime";
 import { KICKER } from "./kickers";
 import { pageOf } from "./paperPages";
@@ -30,13 +31,38 @@ import { pageOf } from "./paperPages";
 // Still no client component and still one tap. A `<TurnLink>` is keyboard-operable
 // and announced for free, exactly as `<details>` was.
 
-export default function Teaser({ story }: { story: PublishedStory }) {
+export default function Teaser({
+  story,
+  clubs,
+  pictured = false,
+}: {
+  story: PublishedStory;
+  /** The round's clubs, for the picture. Empty is ordinary and costs the card
+   *  its kit, not its headline. */
+  clubs: Map<number, Club>;
+  /** Whether this row of shoulders is running pictures.
+   *
+   *  **Twin shoulders carry pictures together or not at all**, which is why the
+   *  caller decides and not the story. One card with a band and one without
+   *  starts their two headlines at different heights, and a pair of seconds
+   *  that do not line up reads as a fault rather than as a rank — the whole
+   *  point of running them abreast is that they are equals. A kind with no man
+   *  in it (a power ranking is about ten managers) therefore stands the other
+   *  one's picture down too. The inside pages run a single column and pass
+   *  nothing, so a teaser there is text, as it was. */
+  pictured?: boolean;
+}) {
   const kicker = KICKER[story.kind];
   const page = pageOf(story.kind);
 
   return (
     <article id={story.slug} className="scroll-mt-4 border-t border-line pt-3">
       <TurnLink href={`/paper/${story.slug}`} className="flex min-h-11 flex-col justify-center gap-1">
+        {pictured && story.face ? (
+          <span className="-mt-3 mb-1 block">
+            <Face face={story.face} clubs={clubs} rank="shoulder" />
+          </span>
+        ) : null}
         {/* Ink, not the accent. The sheet's one red is spent on what is live
             and on what is yours; a kicker over every headline would put four
             or five red marks down the page, which is what DESIGN §4 records as

@@ -11,7 +11,13 @@ import {
   buildBrief,
   normalizePublished,
 } from "@epl/core";
-import { fixturePreviewBrief, matchReportBrief, tieCallBrief, tieReportBrief } from "./assemble";
+import {
+  faceOf,
+  fixturePreviewBrief,
+  matchReportBrief,
+  tieCallBrief,
+  tieReportBrief,
+} from "./assemble";
 import { columnBrief } from "./columns";
 import { newsBrief } from "./news";
 import type { RoundFacts } from "./facts";
@@ -161,5 +167,9 @@ export function file(
     edition: editionName(assignment.kind, filedAt),
     byline: STORY_BYLINE[assignment.kind] ?? "",
     subject: assignment.key,
+    // The picture, chosen HERE from the facts and not from the prose. A model
+    // that named the man would be a model choosing the photograph, which is the
+    // one thing `strangers()` exists to catch it doing.
+    face: faceOf(assignment, { facts: ctx.facts, fixtures: ctx.snapshot.fixtures }),
   });
 }

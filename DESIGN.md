@@ -214,7 +214,19 @@ the one exception and `.crest` restores it (§5).
 **Rank set in scale means the sheet needs ranks to set.** The front page runs
 three under the masthead, and all three are headlines: the **splash**, two
 **shoulders** side by side beneath it with their decks, and the rest as
-**briefs** — standing head, headline, folio number, nothing else. **No article
+**briefs** — a thumbnail, standing head, headline, folio number, nothing else.
+
+**Every rank carries a picture, and the size is the hierarchy.** A band over the
+splash, a card on each shoulder, a 56px thumbnail on a brief. *This reverses "a
+page that gave every story a photograph would be a page with no lead on it",
+which was recorded doctrine until 3 Sep 2026* — true only while every photograph
+is the same size, and falsified by the reference Craig handed over, a news site's
+front page on a phone, which pictures the hero, both sub-heads and every list
+item and still reads as three ranks. **They print through the ink**
+(`.paper-face`), band and all: a saturated club colour under every headline,
+once per story down the page, is the themed screen this section spends a
+paragraph on, and one band over one splash could afford what a picture at every
+rank cannot. **No article
 prints on the front page at all.** The splash ran whole there until 3 Sep 2026,
 which is what a broadsheet does and the wrong answer on a phone: a full column
 put the second story on the sheet some nineteen hundred pixels down, so the two

@@ -1,3 +1,4 @@
+import { clubById } from "@epl/core";
 import { readerTeamId } from "../../../squads";
 import { edition } from "../../../edition";
 import Folio from "../../../components/gazette/Folio";
@@ -25,6 +26,9 @@ const PAGE = pageAt("/paper/columns");
 export default async function ColumnsPage() {
   const mine = await readerTeamId();
   const paper = await edition(mine);
+  // The same lookup the front page makes, for the same reason: the teasers
+  // below carry a face, and a face wants its club's kit and crest.
+  const clubs = paper.snapshot ? clubById(paper.snapshot) : new Map();
   const who = named(paper.teams);
 
   const stories = paper.filed.filter((story) => PAGE.kinds?.includes(story.kind));
@@ -50,7 +54,7 @@ export default async function ColumnsPage() {
             <Extras story={lead} named={who} mine={paper.mine} />
           </section>
           {rest.map((story) => (
-            <Teaser key={story.slug} story={story} />
+            <Teaser key={story.slug} story={story} clubs={clubs} />
           ))}
         </div>
       )}

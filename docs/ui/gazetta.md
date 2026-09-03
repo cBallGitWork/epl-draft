@@ -84,9 +84,31 @@ business, who is hurt, and when lineups lock.
    and a lone half-width column with dead paper beside it is worse than a wide
    one.
 
-   **The briefs** (`gazette/Brief`) take the rest: standing head, headline, and
-   the folio number ranged right. No deck and no dateline — dropping them is
-   what keeps the third rank visibly third.
+   **The briefs** (`gazette/Brief`) take the rest: a thumbnail, standing head,
+   headline, and the folio number ranged right. No deck and no dateline —
+   dropping them is what keeps the third rank visibly third.
+
+   **Every rank carries a picture, and the SIZE is the hierarchy** — a band over
+   the splash, a card on each shoulder, a 56px thumbnail on a brief
+   (`gazette/Face`). *This reverses "a page that gave every story a photograph
+   would be a page with no lead on it", which stood here until 3 Sep 2026.* That
+   is true only while every photograph is the same size, and the reference Craig
+   handed over — a news site's front page on a phone — pictures the hero, both
+   sub-heads and every list item, and reads as three ranks anyway.
+
+   **The man is chosen by the desk, never by the writer.** `assemble.faceOf`
+   takes the highest-scoring rostered man off the same numbers the brief was
+   built from — across both sides of a tie, across everyone with a man in a
+   fixture, or the best of the eleven — so the picture cannot contradict the
+   prose and a model cannot name its way into the photograph. Null for a kind
+   with no man in it, which is ordinary: a power ranking is about ten managers.
+   It is stamped into `PublishedStory.face` at file time, and `PlayerImage`'s
+   four rungs (this season's photograph, one of ours, his club's kit, his
+   initials) mean a man with no picture never borrows a wrong one.
+
+   **The twin shoulders carry pictures together or not at all.** One card with a
+   band and one without starts their headlines at different heights, and a pair
+   of seconds that do not line up reads as a fault rather than as a rank.
 
    *This reverses what this list said until 3 Sep 2026.* The tail was a single
    flat column of up to eight `Teaser`s, all set identically, so the second
