@@ -1,7 +1,6 @@
-import Link from "next/link";
 import type { SortKey } from "@epl/core";
 import { sortHref } from "./sort";
-import { Head, HeadRow, NameHead, PLATE } from "../components/league/TableHeads";
+import { Head, HeadRow, NameHead, PLATE, SortHead } from "../components/league/TableHeads";
 
 // The table's column heads, in one place because two files print them: the page
 // and the skeleton it waits behind. They were written out twice, and on 29 Aug
@@ -77,7 +76,6 @@ export const COLUMNS: readonly Column[] = [
  *  against its right edge under a centred `W` is the arrangement that made the
  *  strip look mis-set. The name stays left, because a name is read and not
  *  compared. */
-const JUSTIFY = { left: "justify-start", center: "justify-center", right: "justify-end" } as const;
 const TEXT = { left: "text-left", center: "text-center", right: "text-right" } as const;
 
 /** The cell class for a column, so the row prints the same alignment the head
@@ -104,41 +102,29 @@ export default function Columns({
     <thead>
       <HeadRow>
         {COLUMNS.map((column) => {
-          const here = sortable(column.key) && column.key === sort;
           // The name column has no plate, and `NameHead` is that cell.
           if (column.key === "team") return <NameHead key={column.key} label={column.label} />;
+          if (!sortable(column.key)) {
+            return (
+              <Head key={column.key} width={column.width} title={column.title}>
+                <span className={PLATE}>{column.label}</span>
+              </Head>
+            );
+          }
+          const here = column.key === sort;
           return (
-            <Head
+            <SortHead
               key={column.key}
               width={column.width}
               title={column.title}
+              align={column.align}
+              href={sortHref(column.key, sort, descending)}
+              label={column.label}
               sorted={here ? (descending ? "descending" : "ascending") : undefined}
-            >
-              {sortable(column.key) ? (
-                <Link
-                  href={sortHref(column.key, sort, descending)}
-                  className={`flex h-7 items-center gap-0.5 whitespace-nowrap px-1.5 ${
-                    JUSTIFY[column.align]
-                  } ${here ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110"}`}
-                >
-                  {column.label}
-                  {here ? <Arrow down={descending} /> : null}
-                </Link>
-              ) : (
-                <span className={PLATE}>{column.label}</span>
-              )}
-            </Head>
+            />
           );
         })}
       </HeadRow>
     </thead>
-  );
-}
-
-function Arrow({ down }: { down: boolean }) {
-  return (
-    <span aria-hidden className="text-[0.5rem] leading-none">
-      {down ? "▼" : "▲"}
-    </span>
   );
 }

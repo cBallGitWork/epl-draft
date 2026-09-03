@@ -10,7 +10,7 @@ import {
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
-import { Head, HeadRow, NameHead } from "../../components/league/TableHeads";
+import { Head, HeadRow, NameHead, SortHead } from "../../components/league/TableHeads";
 import GroupNav from "../../components/league/GroupNav";
 import { TEAM_STATS } from "../SectionNav";
 import LeagueShell from "../Shell";
@@ -156,22 +156,17 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     right-hand select now only REORDERS; it no longer decides
                     what you can see, and the column it ordered by is drawn
                     pressed so the board says which one it is sorted on. */}
-                <SortHead
-                  by="points"
-                  measure={measure}
-                  label="FPts"
-                  title={`${category.key} — order by fantasy points`}
-                  group={group}
-                  category={category.key}
-                />
-                <SortHead
-                  by="value"
-                  measure={measure}
-                  label="Total"
-                  title={`${category.key} — order by raw total`}
-                  group={group}
-                  category={category.key}
-                />
+                {MEASURES.map((entry) => (
+                  <SortHead
+                    key={entry.by}
+                    width="w-20 lg:w-32"
+                    title={`${category.key} — order by ${entry.title}`}
+                    href={measureHref(entry.by, group, category.key)}
+                    label={entry.label}
+                    sorted={measure === entry.by ? "descending" : undefined}
+                    arrow={false}
+                  />
+                ))}
               </HeadRow>
             </thead>
             <tbody>
@@ -252,50 +247,18 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   );
 }
 
-/** A column head you can order by.
- *
- *  The same object `league/Columns.tsx` draws: a bevelled plate that is a LINK,
- *  drawn pressed when the table is ordered by it, so the affordance and the
- *  state are one thing the way the game said it. A link and not a handler for
- *  the reason `sort.ts` records — the server orders, the phone gets HTML, and
- *  the ordering survives being shared.
+/** Where a measure's head links to.
  *
  *  It carries the group and the category through, because a head that sorted and
  *  silently dropped which category you were looking at would be a worse control
- *  than none. */
-function SortHead({
-  by,
-  measure,
-  label,
-  title,
-  group,
-  category,
-}: {
-  by: Measure;
-  measure: Measure;
-  label: string;
-  title: string;
-  group: string;
-  category: string;
-}) {
-  const here = by === measure;
+ *  than none.
+ *
+ *  Fantasy points is the default, so it is spelled as no parameter at all — one
+ *  URL for the default rather than two, as `/league` does with `rank`. */
+function measureHref(by: Measure, group: string, category: string): string {
   const query = new URLSearchParams({ group, cat: category });
-  // Fantasy points is the default, so it is spelled as no parameter at all —
-  // one URL for the default rather than two, as `/league` does with `rank`.
   if (by !== "points") query.set("by", by);
-
-  return (
-    <Head width="w-20 lg:w-32" title={title} sorted={here ? "descending" : undefined}>
-      <Link
-        href={`${TEAM_STATS}?${query.toString()}`}
-        className={`flex h-7 items-center justify-center whitespace-nowrap px-1.5 ${
-          here ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110"
-        }`}
-      >
-        {label}
-      </Link>
-    </Head>
-  );
+  return `${TEAM_STATS}?${query.toString()}`;
 }
 
 /** Absence, never a nought — a team with no reading has not recorded nought of
@@ -311,4 +274,11 @@ const LABEL: Record<Measure, string> = {
   points: "by fantasy points",
   value: "by raw total",
 };
+
+/** The two heads, which are a pair of MEASURES rather than a row of columns —
+ *  both are always descending, which is why they take no arrow. */
+const MEASURES: readonly { by: Measure; label: string; title: string }[] = [
+  { by: "points", label: "FPts", title: "fantasy points" },
+  { by: "value", label: "Total", title: "raw total" },
+];
 

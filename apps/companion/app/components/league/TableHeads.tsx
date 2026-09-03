@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 
 // The bevelled head strip both league tables print.
 //
@@ -21,8 +22,14 @@ import type { ReactNode } from "react";
 // **The plate is a button because a CM head IS one** — the bevel is not
 // decoration on a CM table, it is what the table is remembered for, and the
 // sorted column is drawn pressed so the affordance and the state are one object.
-// `Columns.tsx` keeps the pressed variant and the link branch, because only one
-// of the two tables sorts.
+//
+// *This file used to keep the pressed variant and the link branch out, "because
+// only one of the two tables sorts". Three of them sort now — `/league`, `/prem`
+// and the Team Stats board, the third having hand-rolled the plate with two
+// class strings character-identical to the other two. So `SortHead` is here,
+// which is CODE_RULES §1's third occurrence arriving exactly as it says it
+// will: the third use is what tells you what actually varies, and it was the
+// alignment and the arrow.*
 
 /** The head row itself. `text-3xs uppercase` is the strip's own type and the
  *  cells inherit it, which is why it sits here rather than on each `<th>`. */
@@ -63,6 +70,69 @@ export function Head({
  *  a centred head, and a single digit jammed against its right edge under a
  *  centred `W` is what made the first strip look mis-set. */
 export const PLATE = "cm-bevel flex h-7 items-center justify-center whitespace-nowrap px-1.5";
+
+/** Where a sortable head's label sits inside its plate. The figures are centred
+ *  — every one in `cm9900/24.jpg` is, under a centred head — and a name is read
+ *  rather than compared, so it stays left. */
+const JUSTIFY = { left: "justify-start", center: "justify-center", right: "justify-end" } as const;
+
+/** A head cell the reader can order by: the bevelled plate as a LINK, drawn
+ *  pressed when the table is ordered by it.
+ *
+ *  A link and not a click handler, for the reason both `sort.ts` files record —
+ *  the server does the ordering, the phone gets HTML, and the ordering survives
+ *  being shared. Which is why the href is a prop: each table spells its own
+ *  query, and the two that do it identically are two, which §1 leaves alone.
+ *
+ *  `gap-0.5` is unconditional and costs a head with no arrow nothing — a gap
+ *  needs two children to appear. */
+export function SortHead({
+  width,
+  title,
+  href,
+  label,
+  align = "center",
+  sorted,
+  arrow = true,
+}: {
+  width: string;
+  title?: string | undefined;
+  href: string;
+  label: string;
+  align?: "left" | "center" | "right";
+  /** Which way the table is ordered by THIS column, or undefined when it is not
+   *  the column in force. Drives the pressed plate, `aria-sort` and the arrow
+   *  together, so the three can never disagree — which they did on `/players`
+   *  before `activeSort` resolved them in one place. */
+  sorted?: "ascending" | "descending" | undefined;
+  /** Off for a head that is one of a pair of MEASURES rather than one of a row
+   *  of columns. Team Stats' FPts/Total heads are both always descending, so an
+   *  arrow there would state a direction the reader cannot change and the
+   *  pressed plate has already said everything true. */
+  arrow?: boolean;
+}) {
+  return (
+    <Head width={width} title={title} sorted={sorted}>
+      <Link
+        href={href}
+        className={`flex h-7 items-center gap-0.5 whitespace-nowrap px-1.5 ${JUSTIFY[align]} ${
+          sorted === undefined ? "cm-bevel hover:brightness-110" : "cm-bevel-pressed"
+        }`}
+      >
+        {label}
+        {arrow && sorted !== undefined ? <Arrow down={sorted === "descending"} /> : null}
+      </Link>
+    </Head>
+  );
+}
+
+function Arrow({ down }: { down: boolean }) {
+  return (
+    <span aria-hidden className="text-[0.5rem] leading-none">
+      {down ? "▼" : "▲"}
+    </span>
+  );
+}
 
 /** The name column's head, which carries no plate.
  *
