@@ -1,3 +1,15 @@
+> **Archived 3 Sep 2026.** Its four weeks ran 6 Aug – 3 Sep and all of them are
+> past. Nothing in the tree referenced it: no `.claude/` skill, agent or hook,
+> no other root document, no script. Kept rather than deleted so a filename in
+> an old note still opens something.
+>
+> Nothing was rescued out of it because nothing needed to be. Its sharpest
+> paragraph — *"FPL has hard rules; custom rules are Fantrax's product"* — is
+> already `CLAUDE.md`'s "Why they split, precisely", and its `## Verified live
+> today (6 Aug 2026)` probe is already `PLATFORM_NOTES.md`'s "Verified Fantrax
+> facts (probed live 6 Aug 2026, both leagues)". Superseded for planning by
+> `ROADMAP.md`, which covers the same span and is still maintained.
+
 # Four weeks to "change the league id"
 
 ## Context

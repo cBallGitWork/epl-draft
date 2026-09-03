@@ -8,8 +8,20 @@ disable-model-invocation: true
 # Write the handover
 
 `HANDOVER.md` at the repo root is read first by whoever comes next, and it is
-read newest-first, so the top of it carries the load. It replaces the previous
-one — this repo keeps one, and git keeps the rest.
+read newest-first, so the top of it carries the load. The root keeps exactly
+one.
+
+**Move the one it replaces to `docs/archive/handovers/<its-date>.md` rather than
+overwriting it.** Git keeps the bytes either way, but a handover names hazards,
+deliberate absences and open questions that outlive its own state line, and the
+next reader who finds "the 29 Aug handover" cited in a commit message or a
+PLATFORM_NOTES entry should be able to open it without a `git log`. Archived
+first, in the same commit:
+
+```bash
+mkdir -p docs/archive/handovers
+git mv HANDOVER.md docs/archive/handovers/<date-of-the-one-being-replaced>.md
+```
 
 ## 1. Gather the facts BEFORE writing prose
 
@@ -53,8 +65,8 @@ worse than one with none, because the next session trusts it.
 ## 5. Stage narrowly
 
 ```bash
-git add HANDOVER.md
+git add HANDOVER.md docs/archive/handovers/
 ```
 
-That one path. Never `-A` — a hook denies it, and another session may be
+Those paths. Never `-A` — a hook denies it, and another session may be
 mid-commit in this tree.

@@ -1,9 +1,18 @@
 # What's needed — 2/3 Sep 2026, the Premiership day
 
-Replaces the 29 Aug handover. State: `main`, **72 commits ahead of `origin/main`,
-NOT pushed**, nothing behind. Working tree **clean**. `npm test` (880 across 89
-files) · `typecheck` · `lint` · `build` (27 routes) were all run **on this tree,
-just now** — not before a rebase, not yesterday.
+Replaces the 29 Aug handover, which is now `docs/archive/handovers/`.
+
+> **The state line below is spent.** Those 72 commits were pushed on 3 Sep 2026
+> along with a rebase onto the CI capture that had landed meanwhile;
+> `origin/main` has them and everything since. The rest of this file is still
+> the standing record of what was built on the Premiership day — §2's two live
+> bugs, §3's section, §4's deliberate absences and §5's hazards all read true —
+> so it is corrected in place rather than reopened on a claim that has been
+> answered.
+
+State as written on 2/3 Sep: `main`, 72 commits ahead of `origin/main`, not
+pushed, nothing behind. Working tree clean. `npm test` (880 across 89 files) ·
+`typecheck` · `lint` · `build` (27 routes) all run on that tree.
 
 Seventy-three commits since 2 Sep, from two sessions in one tree. One built the
 paper out into a real newspaper with pages; the other built `/prem`, the section
@@ -20,7 +29,7 @@ are live faults on routes that already shipped.
 
 Production is serving code from before 29 Aug while five days of work looks done.
 
-**Rebase, never merge** — `vercel.json` reads `git diff HEAD^ HEAD`, so a merge
+**Rebase, never merge** — `apps/companion/vercel.json` reads `git diff HEAD^ HEAD`, so a merge
 commit shows it an empty diff and it skips the build.
 
 ---
