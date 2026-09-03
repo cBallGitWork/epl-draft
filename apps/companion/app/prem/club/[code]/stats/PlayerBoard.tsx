@@ -110,7 +110,25 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                 <span className={HEAD_PLATE}>Pos</span>
               </th>
               {measures.map((measure) => (
-                <th key={measure.key} scope="col" className="p-0 font-bold" title={measure.label}>
+                <th
+                  key={measure.key}
+                  scope="col"
+                  className="p-0 font-bold"
+                  title={measure.label}
+                  // On the CELL and not on the button inside it: the role that
+                  // carries `aria-sort` is `columnheader`, which is the `<th>`.
+                  // Without it the pressed bevel says which column orders this
+                  // board and nothing says it to a screen reader — the sibling
+                  // implementation in `squad/[teamId]/stats/SortHead` has always
+                  // had this, and the two boards look identical.
+                  aria-sort={
+                    sort?.key === measure.key
+                      ? sort.descending
+                        ? "descending"
+                        : "ascending"
+                      : "none"
+                  }
+                >
                   <button
                     type="button"
                     onClick={() => sortBy(measure.key)}
