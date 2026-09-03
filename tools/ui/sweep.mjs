@@ -125,7 +125,7 @@ const club = await cdp.js(
   `(document.querySelector('a[href^="/prem/club/"]')||{}).getAttribute
      ? document.querySelector('a[href^="/prem/club/"]').getAttribute("href") : ""`,
 );
-if (club) ROUTES.push(club, `${club}/fixtures`);
+if (club) ROUTES.push(club, ...["next", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
 
 
 let failures = 0;

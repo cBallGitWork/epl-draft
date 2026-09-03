@@ -25,7 +25,13 @@ import { CLUB } from "../../PremNav";
  *  same reason. */
 const TABS = [
   { segment: "", label: "Squad", key: "squad" },
+  // "Match", not "Next Match": two words wrap at 390 while the others sit on
+  // one, and a strip whose plates disagree about their height is not a strip.
+  // CM's own tabs are one word wherever it can manage it, and the screen it
+  // heads says "Next Match" in the caption box, where there is room.
+  { segment: "/next", label: "Match", key: "next" },
   { segment: "/fixtures", label: "Fixtures", key: "fixtures" },
+  { segment: "/stats", label: "Stats", key: "stats" },
 ] as const;
 
 export type ClubTab = (typeof TABS)[number]["key"];

@@ -138,12 +138,21 @@ the reference for both, and it is a strip over a panel rather than one page.
 | Tab | Route | What | Source |
 |---|---|---|---|
 | Squad | `/prem/club/[code]` | Every man on the books, ordered by minutes | FPL bootstrap; Fantrax for eligibility |
+| Match | `…/next` | The next fixture, both sides on their own colours | FPL fixtures |
 | Fixtures | `…/fixtures` | The club's season, oldest first | FPL fixtures |
+| Stats | `…/stats` | Home against away, the season, and who is carrying it | FPL |
 
-Two more are drawn in the plan and not built: **Match** (the next fixture, both
-records side by side) and **Stats** (the home/away comparison `cm9900/22.jpg`
-sets, and who is carrying the season). `ClubTabs` lists what exists; a tab is
-added in the commit that builds it.
+**Match puts the home side first, and the fantasy screen does not.** A fantasy
+fixture has no ground, so `squad/[teamId]/next` leads with whoever's page you
+are on; a real one does, and a match header that put the away side left would
+be printing the fixture backwards. Each side's record is the half that will
+actually apply — the home club's home record against the away club's away one —
+because a whole-season figure either side compares two numbers neither of which
+is about this fixture.
+
+**The Stats comparison is one club, so both columns take one colour**; the Match
+comparison is two clubs, so each column takes its own. `Comparison`'s `plate` is
+optional for exactly that reason, and `cm9900/22.jpg` is the shape.
 
 **Tactics is not a tab and will not be one.** `25.jpg` has no Tactics tab —
 `Tactics · Training · Last Match · 6th in PRM · History` is the FOOT row under
@@ -179,6 +188,11 @@ the left is already the shape that carries the answer — it prints `GW7` and
 would print the competition beside the round — so the limit is the feed's and
 not the layout's.
 
+**The named source is the sister repo's `team_match_log.parquet`** (Craig, 3 Sep
+2026: *"that's what the team log parquet is for"*). It carries a `competition`
+column beside the round, which is exactly the pair the block needs, and it is
+the same export that will fill the Pos column — one crossing, not two.
+
 ## States
 
 | Screen | State | What it says |
@@ -187,7 +201,10 @@ not the layout's.
 | `/prem/club/[code]` | code is not an integer, or names no club | `notFound()` |
 | Squad | FPL lists nobody | "No squad to show" |
 | Squad | Fantrax silent | Elig empties to `—`; the squad still renders |
+| Match | every published match played | `TabEmpty`, and the tab greys |
 | Fixtures | no match with this club | `TabEmpty`, and the tab greys |
+| Stats | no finished fixture to build a record from | `TabEmpty`, and the tab greys |
+| Stats | nobody has any of a measure yet | "Nobody yet" — never a nought-scoring man named top scorer |
 | Any club tab | still loading | its own skeleton — **not** `/prem`'s league table |
 
 Keyed on FPL's **season-stable club code**, never `clubId`: a URL is persisted

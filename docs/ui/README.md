@@ -34,7 +34,9 @@ nothing.**
 | `/prem/fixtures` | [prem.md](prem.md) | Every round still to come, soonest first. |
 | `/prem/team-stats` | [prem.md](prem.md) | The twenty ranked by one measure at a time. |
 | `/prem/club/[code]` | [prem.md](prem.md) | One club's squad, with the real position and Fantrax's eligibility side by side. |
+| `/prem/club/[code]/next` | [prem.md](prem.md) | The club's next fixture, both sides on their own colours. |
 | `/prem/club/[code]/fixtures` | [prem.md](prem.md) | That club's season, oldest first. Premier League only. |
+| `/prem/club/[code]/stats` | [prem.md](prem.md) | Home against away, the season, and who is carrying it. |
 | `/squad` | [squads.md](squads.md) | Yours, then everyone else's. |
 | `/squad/[teamId]` | [squad.md](squad.md) | **One squad: the list and the pitch. The reference page for the new look.** |
 | `/squad/[teamId]/transfers` | [squad.md](squad.md) | His business, in Championship Manager's ledger. |
