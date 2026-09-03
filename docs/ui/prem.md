@@ -128,11 +128,67 @@ scoring open smallest-first, because a board that did otherwise would head the
 ranking with the worst side in the division. Ties fall back to the table's own
 order, so two clubs level on clean sheets do not swap places between refreshes.
 
-## The club page
+## The club — a spine, not a page
 
-A stub, and honest about it. It carries the club's identity, its place and its
-record, and says in words that the squad, the fixture run and the season are
-still to come — a screen that simply stops is one a reader assumes is broken.
+Grown out of the stub on 3 Sep 2026 (Craig: *"the prem team page. similar
+structure to the fantasy team page"*). It wears its own colours and carries
+tabs, exactly as `/squad/[teamId]` does for a fantasy side — `cm9900/25.jpg` is
+the reference for both, and it is a strip over a panel rather than one page.
+
+| Tab | Route | What | Source |
+|---|---|---|---|
+| Squad | `/prem/club/[code]` | Every man on the books, ordered by minutes | FPL bootstrap; Fantrax for eligibility |
+| Fixtures | `…/fixtures` | The club's season, oldest first | FPL fixtures |
+
+Two more are drawn in the plan and not built: **Match** (the next fixture, both
+records side by side) and **Stats** (the home/away comparison `cm9900/22.jpg`
+sets, and who is carrying the season). `ClubTabs` lists what exists; a tab is
+added in the commit that builds it.
+
+**Tactics is not a tab and will not be one.** `25.jpg` has no Tactics tab —
+`Tactics · Training · Last Match · 6th in PRM · History` is the FOOT row under
+the panel. It arrives there when there is a real XI to draw, and it is the
+second entry the foot row has been waiting for since this section shipped.
+
+### Two position columns, and why there are two
+
+**Pos** is the real-life position — `GK`, `DC`, `RB`. It prints `—` today: the
+football layer carries no position by rule (`football/types.ts`), and the feed
+that will fill it is the sister repo's. The column is drawn now so nothing
+shifts when it fills, and it stands down under a thumb, where forty pixels of
+dashes costs a name the room to be read.
+
+**Elig** is what our Fantrax league is willing to field him as, and it is headed
+as Fantrax's because that is what it is. The two are not one column and must
+never become one: `MID` against Saka's name would say Arsenal play him in
+midfield, when what is true is that *this league* files him there — and which of
+his `F,M` actually scores is the roster slot his manager picked, a fact about a
+team rather than about a man.
+
+**This is the only place the two layers meet on a Premiership screen**, and it
+is a join through the audited bridge, never a name match. It costs the section
+its "no provider request" property, so it is failure-tolerant by construction:
+`leagueInfo` already returns null when Fantrax refuses, the column empties to
+dashes, and the squad renders regardless.
+
+### Fixtures is the Premier League only
+
+FPL publishes one competition, so there is no cup or European tie to show and no
+honest way to imply one. The page says so under the list. The round block down
+the left is already the shape that carries the answer — it prints `GW7` and
+would print the competition beside the round — so the limit is the feed's and
+not the layout's.
+
+## States
+
+| Screen | State | What it says |
+|---|---|---|
+| Table, Results, Fixtures, Team Stats | FPL silent | `Nothing`, with the provider's code |
+| `/prem/club/[code]` | code is not an integer, or names no club | `notFound()` |
+| Squad | FPL lists nobody | "No squad to show" |
+| Squad | Fantrax silent | Elig empties to `—`; the squad still renders |
+| Fixtures | no match with this club | `TabEmpty`, and the tab greys |
+| Any club tab | still loading | its own skeleton — **not** `/prem`'s league table |
 
 Keyed on FPL's **season-stable club code**, never `clubId`: a URL is persisted
 the moment somebody shares it, and FPL's per-season ids are recycled

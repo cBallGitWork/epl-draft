@@ -222,7 +222,7 @@ async function main() {
     );
   }
   if (playerId !== null) paths.push(`/players/${playerId}`);
-  if (club !== null) paths.push(`/prem/club/${club}`);
+  if (club !== null) paths.push(`/prem/club/${club}`, `/prem/club/${club}/fixtures`);
 
   console.log(
     `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${hasTeams ? "drafted" : "no teams"})\n`,

@@ -106,6 +106,20 @@ const team = await cdp.js(
 // discovered: writing them down would pin them to one league.
 if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((tab) => `${team}/${tab}`));
 
+// A club's own screens, discovered off the table for the same reason the team's
+// are discovered off `/squad`: the codes are FPL's and a written-down one names
+// a 404 the season a club goes down. They are swept because the club bar is the
+// app's only per-CLUB colour — twenty hexes from `clubColours`, none of them a
+// token the palette has already had checked, and `inkOn` picking the ink for
+// each. Point it at a pale side (Fulham, Leeds, Spurs) by hand at least once.
+await cdp.open("/prem", 2200);
+const club = await cdp.js(
+  `(document.querySelector('a[href^="/prem/club/"]')||{}).getAttribute
+     ? document.querySelector('a[href^="/prem/club/"]').getAttribute("href") : ""`,
+);
+if (club) ROUTES.push(club, `${club}/fixtures`);
+
+
 let failures = 0;
 for (const width of [390, 1440]) {
   for (const route of ROUTES) {
