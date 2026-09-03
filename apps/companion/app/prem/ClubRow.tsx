@@ -4,6 +4,7 @@ import { type Result, type TableRow, crestUrl, ordinal } from "@epl/core";
 import { cellAlign } from "./Columns";
 import { CLUB } from "./PremNav";
 import { ROW_LINK } from "../components/league/TableCells";
+import { FIGURE, ROW_RULE, TONE } from "@/app/desk";
 
 // One club's line in the Premier League table.
 //
@@ -38,7 +39,7 @@ export default function ClubRow({
   form: readonly Result[];
 }) {
   return (
-    <tr className="border-b border-bg hover:bg-surface">
+    <tr className={`${ROW_RULE} hover:bg-surface`}>
       {/* CM's small leading index cell: a filled block down the left carrying
           the row's number, so the eye counts down the blocks rather than the
           rows. An ORDINAL, which is what `cm9900/24.jpg` prints — `1st`, `2nd`
@@ -99,11 +100,6 @@ export default function ClubRow({
     </tr>
   );
 }
-
-/** Every figure cell, which is seven of the eleven columns. Centred, because
- *  that is how `cm9900/24.jpg` sets a league table and because a one-digit `Won`
- *  flushed right under a centred head reads as a mis-set strip. */
-const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
 
 /** Absence, never a nought — a nought is a claim (DESIGN §7). */
 const DASH = "—";
@@ -170,4 +166,3 @@ function Form({ run }: { run: readonly Result[] }) {
 
 const FORM_GAMES = 5;
 
-const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;

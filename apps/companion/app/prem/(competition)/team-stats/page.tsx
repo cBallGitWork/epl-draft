@@ -9,6 +9,7 @@ import { CLUB } from "../../PremNav";
 import Filters from "./Filters";
 import { categoryFor, type Club } from "./categories";
 import { footballNow, seasonFixtures } from "../../../football";
+import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
 
 // Every club ranked by one measure — CM's stat board, on the real competition.
 //
@@ -77,8 +78,8 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
         <p className="text-3xs uppercase text-faint">FPL&apos;s own figures</p>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-sm">
+      <div className={SCROLL}>
+        <table className={BOARD}>
           <thead>
             <HeadRow>
               <Head width="w-8 lg:w-14" />
@@ -97,7 +98,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
           </thead>
           <tbody>
             {board.map(({ club, figure }, at) => (
-              <tr key={club.table.clubId} className="border-b border-bg hover:bg-surface">
+              <tr key={club.table.clubId} className={`${ROW_RULE} hover:bg-surface`}>
                 {/* The ordinal in CM's index block: `24.jpg` runs `1st 2nd 3rd`
                     down the left of every table it draws, and a column of bare
                     numbers is a list where a column of ordinals is a league.

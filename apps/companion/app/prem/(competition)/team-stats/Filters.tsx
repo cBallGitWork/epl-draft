@@ -5,6 +5,7 @@ import type { FormEvent } from "react";
 import { SELECT } from "../../../components/shell/ButtonLink";
 import { CATEGORIES } from "./categories";
 import { TEAM_STATS } from "../../PremNav";
+import { SUBMIT } from "@/app/desk";
 
 // The one grey box on the board, at the left of its own strip.
 //
@@ -33,7 +34,7 @@ export default function Filters({ category }: { category: string }) {
         ))}
       </select>
       <noscript>
-        <button type="submit" className="cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9">
+        <button type="submit" className={SUBMIT}>
           Show
         </button>
       </noscript>

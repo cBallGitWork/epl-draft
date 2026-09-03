@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { FootballPlayer } from "@epl/core";
 import { SELECT } from "../../../../components/shell/ButtonLink";
 import { VIEWS, reading } from "./measures";
+import { HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
 
 // A club's season, player by player, in Championship Manager's stat-screen
 // grammar.
@@ -89,7 +90,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
       {/* `cm-scroll` is CM's own bevelled bar, and it is here to be SEEN: a
           table wider than its panel that hides its own scrollbar is a table
           whose remaining columns do not exist as far as a reader knows. */}
-      <div className="cm-scroll overflow-x-auto">
+      <div className={`cm-scroll ${SCROLL}`}>
         <table className="w-full border-collapse whitespace-nowrap">
           <caption className="sr-only">Every player, by {view}</caption>
           <thead>
@@ -98,15 +99,15 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                   and `squad/[teamId]/stats` runs a plain count — a board is a
                   ranking once a head is tapped, and the number is what says so. */}
               <th scope="col" className="p-0 font-bold">
-                <span className="cm-bevel flex h-6 items-center justify-end px-1.5">#</span>
+                <span className={HEAD_PLATE_END}>#</span>
               </th>
               <th scope="col" className="p-0 text-left font-bold">
-                <span className="cm-bevel flex h-6 items-center px-1.5">Player</span>
+                <span className={HEAD_PLATE}>Player</span>
               </th>
               {/* Position is a column here for the reason it is one on the squad
                   list: a man eligible at two cannot be filed under one letter. */}
               <th scope="col" className="p-0 text-left font-bold">
-                <span className="cm-bevel flex h-6 items-center px-1.5">Pos</span>
+                <span className={HEAD_PLATE}>Pos</span>
               </th>
               {measures.map((measure) => (
                 <th key={measure.key} scope="col" className="p-0 font-bold" title={measure.label}>
@@ -133,7 +134,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
           </thead>
           <tbody>
             {ordered.map(({ player, position }, at) => (
-              <tr key={player.id} className="cm-row border-b border-bg hover:bg-surface">
+              <tr key={player.id} className={`cm-row ${ROW_RULE} hover:bg-surface`}>
                 <td className="cm-index numeric px-1.5 text-right text-2xs font-bold">{at + 1}</td>
                 {/* Cyan, because `--color-info` is "a person" in the palette and
                     a name is the only thing on this board that is one. It is

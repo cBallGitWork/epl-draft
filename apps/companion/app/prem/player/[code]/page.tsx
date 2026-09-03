@@ -8,6 +8,7 @@ import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
 import { footballNow } from "../../../football";
 import { CLUB } from "../../PremNav";
+import { FACT } from "@/app/desk";
 
 // One footballer, and for now only what the bootstrap already knows.
 //
@@ -97,7 +98,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ code: s
 /** One figure and its name, on the fact-row shape `/players/[fantraxId]` uses. */
 function Figure({ label, value }: { label: string; value: number }) {
   return (
-    <div className="flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2">
+    <div className={FACT}>
       <dt className="min-w-0 flex-1 truncate text-sm text-muted">{label}</dt>
       <dd className="numeric font-bold">{value}</dd>
     </div>

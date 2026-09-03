@@ -7,6 +7,7 @@ import StateBox from "../../../components/football/StateBox";
 import { positionsLabel } from "../../../positions";
 import { PLAYER } from "../../PremNav";
 import type { LeagueOpinion } from "./club";
+import { BOARD, FIGURE, ROW_RULE, SCROLL, SLOT_FIGURE } from "@/app/desk";
 
 // Every man on the club's books, as Championship Manager files a squad.
 //
@@ -40,8 +41,8 @@ export default function SquadTable({
   intel: ReadonlyMap<number, IntelPlayer>;
 }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse text-sm">
+    <div className={SCROLL}>
+      <table className={BOARD}>
         <caption className="sr-only">
           The club&apos;s squad, ordered by the position our league files each man at
         </caption>
@@ -108,8 +109,13 @@ export default function SquadTable({
             const know = intel.get(player.code);
 
             return (
-              <tr key={player.id} className="border-b border-bg hover:bg-surface">
-                <td className={`${SLOT} ${dim}`}>{know?.squadNumber ?? DASH}</td>
+              <tr key={player.id} className={`${ROW_RULE} hover:bg-surface`}>
+                {/* `SLOT_FIGURE` and not the index block: `ClubShell` scopes
+                    `--cm-index` to the club, so a filled plate here would be
+                    twenty rows of the club at full saturation — and about a
+                    third of the column is empty anyway, because the identity
+                    files carry a number for four men in five. */}
+                <td className={`${SLOT_FIGURE} ${dim}`}>{know?.squadNumber ?? DASH}</td>
                 <td className="w-full max-w-0 pl-2">
                   <Link
                     href={`${PLAYER}/${player.code}`}
@@ -128,7 +134,7 @@ export default function SquadTable({
                     <StateBox player={player} />
                   </Link>
                 </td>
-                <td className={`${FIGURE} ${dim || "text-muted"}`}>
+                <td className={`${WIDE_FIGURE} ${dim || "text-muted"}`}>
                   {positionsLabel(opinion?.positions ?? []) ?? DASH}
                 </td>
                 {/* The owner's name, or what our league says instead: "WW" on
@@ -138,14 +144,14 @@ export default function SquadTable({
                 <td className={`px-1.5 text-center text-2xs ${dim || "text-info"}`}>
                   <span className="block truncate">{owner(opinion) ?? DASH}</span>
                 </td>
-                <td className={`${FIGURE} ${dim || "text-ink"}`}>{player.season.minutes}</td>
-                <td className={`${FIGURE} hidden lg:table-cell ${dim || "text-ink"}`}>
+                <td className={`${WIDE_FIGURE} ${dim || "text-ink"}`}>{player.season.minutes}</td>
+                <td className={`${WIDE_FIGURE} hidden lg:table-cell ${dim || "text-ink"}`}>
                   {player.season.starts}
                 </td>
-                <td className={`${FIGURE} hidden lg:table-cell ${dim || "text-mid"}`}>
+                <td className={`${WIDE_FIGURE} hidden lg:table-cell ${dim || "text-mid"}`}>
                   {player.season.goals}
                 </td>
-                <td className={`${FIGURE} hidden lg:table-cell ${dim || "text-mid"}`}>
+                <td className={`${WIDE_FIGURE} hidden lg:table-cell ${dim || "text-mid"}`}>
                   {player.season.assists}
                 </td>
               </tr>
@@ -178,13 +184,6 @@ export function fantasyDepth(opinion: LeagueOpinion | undefined): number {
   return first === undefined ? Number.MAX_SAFE_INTEGER : positionDepth(first);
 }
 
-/** The shirt-number slot.
- *
- *  Quiet rather than CM's filled plate: `ClubShell` scopes `--cm-index` to the
- *  club, so an index block here is twenty rows of the club at full saturation,
- *  and roughly a third of the column is empty — the identity files carry a
- *  number for about four men in five and the export clears the collisions. */
-const SLOT = "numeric px-1.5 text-center text-2xs text-faint";
-
-/** One figure cell, at the row's own size. */
-const FIGURE = "numeric px-1.5 text-center text-2xs font-bold lg:text-sm";
+/** One figure cell, at the row's own size — `lg:text-sm` because this table has
+ *  fewer columns than a league table and can afford the step on a desk. */
+const WIDE_FIGURE = `${FIGURE} lg:text-sm`;

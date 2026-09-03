@@ -1,6 +1,7 @@
 import Columns, { COLUMNS } from "../Columns";
 import PremShell from "../Shell";
 import Skeleton from "../../components/shell/Skeleton";
+import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
 
 // What the table looks like while FPL is answering.
 //
@@ -17,12 +18,12 @@ const ROWS = 20;
 export default function Loading() {
   return (
     <PremShell title="League Table" current="table" rows={ROWS}>
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-sm">
+      <div className={SCROLL}>
+        <table className={BOARD}>
           <Columns sort="place" descending={false} />
           <tbody>
             {Array.from({ length: ROWS }, (_, at) => (
-              <tr key={at} className="border-b border-bg">
+              <tr key={at} className={ROW_RULE}>
                 <td className="cm-index px-1.5">
                   <Skeleton width="w-4" height="h-3" />
                 </td>

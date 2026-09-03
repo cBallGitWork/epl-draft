@@ -5,6 +5,7 @@ import { crestUrl } from "@epl/core";
 import { londonDayAndDate, londonTime } from "../../../londonTime";
 import { CLUB } from "../../PremNav";
 import { MATCH } from "./match";
+import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
 
 // One club's season, played and to come, in the order it runs.
 //
@@ -32,8 +33,8 @@ export default function Run({
   clubs: Map<number, Club>;
 }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse text-sm">
+    <div className={SCROLL}>
+      <table className={BOARD}>
         <caption className="sr-only">{club.name}&apos;s season, oldest first</caption>
         <tbody>
           {fixtures.map((fixture) => {
@@ -47,7 +48,7 @@ export default function Run({
             const theirs = home ? fixture.awayScore : fixture.homeScore;
 
             return (
-              <tr key={fixture.id} className="cm-row border-b border-bg hover:bg-surface">
+              <tr key={fixture.id} className={`cm-row ${ROW_RULE} hover:bg-surface`}>
                 {/* The date in the club's own colour (Craig, 3 Sep 2026:
                     "fixtures, needs the team colours for the date box").
                     `cm-index` is CM's index block and `ClubShell` has already

@@ -1,6 +1,7 @@
 import type { TableSortKey } from "@epl/core";
 import { tableHref } from "./sort";
 import { Head, HeadRow, NameHead, PLATE, SortHead } from "../components/league/TableHeads";
+import { TEXT } from "@/app/desk";
 
 // The table's column heads, in one place because two files print them: the page
 // and the skeleton it waits behind. `league/Columns.tsx` records the bug that
@@ -41,12 +42,6 @@ export const COLUMNS: readonly Column[] = [
   { key: "pts", label: "Pts", title: "Three for a win, one for a draw", align: "center", width: "w-10 lg:w-24" },
   { key: "form", label: "Form", title: "The last five, oldest first", align: "center", width: "w-14 lg:w-32" },
 ];
-
-/** Where a column's content sits, as a flex class and as a text class. Centred,
- *  which is what `cm9900/24.jpg` does — every figure in the game's table is
- *  centred under a centred head. The name stays left, because a name is read and
- *  not compared. */
-const TEXT = { left: "text-left", center: "text-center", right: "text-right" } as const;
 
 /** The cell class for a column, so the row prints the same alignment the head
  *  does. Exported because `ClubRow` is the other half of this table, and the two

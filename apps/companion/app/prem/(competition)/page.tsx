@@ -13,6 +13,7 @@ import ClubRow from "../ClubRow";
 import PremShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
 import { footballNow, seasonFixtures } from "../../football";
+import { BOARD, SCROLL } from "@/app/desk";
 
 // The Premier League table.
 //
@@ -80,8 +81,8 @@ export default async function TablePage({ searchParams }: { searchParams: Search
       {/* Out to the page's edges and back in again, so a table wider than the
           phone scrolls sideways inside its own box instead of scrolling the
           page. */}
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-sm">
+      <div className={SCROLL}>
+        <table className={BOARD}>
           <Columns sort={sort} descending={descending} />
           <tbody>
             {sortTable(placed(table), sort, descending).map(({ row, place }) => (
