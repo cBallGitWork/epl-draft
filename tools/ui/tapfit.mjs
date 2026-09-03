@@ -119,6 +119,20 @@ const club = await cdp.js(
 );
 if (club) ROUTES.push(club, ...["next", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
 
+// The player page a club's squad list links to, discovered off the club page for
+// the same reason the club is discovered off the table.
+if (club) await cdp.open(club, 2200);
+const linked = await cdp.js(
+  `(function(){
+     var out = {};
+     var p = document.querySelector('a[href^="/prem/player/"]');
+     if (p) out.player = p.getAttribute("href");
+     return JSON.stringify(out);
+   })()`,
+);
+const player = JSON.parse(linked || "{}").player;
+if (player) ROUTES.push(player);
+
 
 let failures = 0;
 for (const width of [390, 1440]) {

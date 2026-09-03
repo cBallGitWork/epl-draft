@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import type { Club, FootballSnapshot, Fixture, TableRow } from "@epl/core";
-import { isUnmapped, leagueTable } from "@epl/core";
+import { isResolved, isUnmapped, leagueTable } from "@epl/core";
 import { footballNow, seasonFixtures } from "../../../football";
 import { leagueInfo } from "../../../round";
+import { getLeagueSquads } from "../../../squads";
 import { bridge } from "../../../squads";
 
 // What every club tab reads, in one place.
@@ -59,43 +60,76 @@ export function standing(
   return row === undefined ? null : { row, place: at + 1 };
 }
 
-/** What our league says each of these men is eligible to play as, by FPL code.
+/** What OUR league says about each of these men, by FPL code.
  *
  *  **This is the one place the two layers meet on a Premiership screen, and it
- *  is a join, not a merge.** Fantrax's letters are a rule of OUR competition —
+ *  is a join, not a merge.** Fantrax's letters are a rule of our competition —
  *  the commissioner's vocabulary, not a fact about the footballer — so they are
- *  read through the bridge and handed over labelled as Fantrax's, in their own
- *  column, beside the real-life position rather than instead of it. A single
- *  column carrying both would say Arsenal play Saka at midfield, when what is
- *  true is that this league files him there; and which of `F,M` actually scores
- *  is the roster slot his manager picked, which is a fact about a team and not
- *  about a man (CLAUDE.md, "Fantrax scores the roster slot").
+ *  read through the bridge and handed over labelled as Fantrax's, beside the
+ *  real-life position rather than instead of it. A single column carrying both
+ *  would say Arsenal play Saka at midfield, when what is true is that this
+ *  league files him there; and which of `F,M` actually scores is the roster slot
+ *  his manager picked, a fact about a team and not about a man (CLAUDE.md,
+ *  "Fantrax scores the roster slot").
  *
  *  **Empty when Fantrax will not answer, never an error.** `leagueInfo` is
  *  already failure-tolerant for `round.ts`'s reason, and a club page is
  *  football: losing a column our league contributed must not lose the squad.
  *
- *  The bridge is stored the other way round — Fantrax's id to FPL's code — so
- *  it is inverted here. Built once by `npm run bridge` and audited; never
+ *  The bridge is stored the other way round — Fantrax's id to FPL's code — so it
+ *  is inverted here. Built once by `npm run bridge` and audited; never
  *  name-matched at runtime. */
-export async function fantraxPositions(): Promise<Map<number, string[]>> {
-  const info = await leagueInfo();
+export interface LeagueOpinion {
+  /** What this league deems him eligible to play as. */
+  positions: string[];
+  /** Fantrax's own code, raw: "T" taken, "WW" waivers, "FA" free agent. Their
+   *  vocabulary, so it is carried rather than translated — an undrafted league
+   *  marks everybody "WW" and a drafted one splits all three, and anything
+   *  keying off a letter would be reading a league state as a player fact. */
+  status: string;
+  /** The team holding him, or null when nobody does. A NAME rather than an id
+   *  because the only thing a Premiership screen does with it is print it. */
+  owner: string | null;
+}
+
+export async function leagueOpinions(): Promise<Map<number, LeagueOpinion>> {
+  const [info, squads] = await Promise.all([leagueInfo(), getLeagueSquads()]);
   if (info === null) return new Map();
 
-  // `isUnmapped` rather than a truthiness check: a bridge row is a union, and
-  // an unmapped one is a settled ANSWER — 120 of the pool are academy names FPL
-  // has never listed — not a missing value to skip past quietly.
+  // `isUnmapped` rather than a truthiness check: a bridge row is a union, and an
+  // unmapped one is a settled ANSWER — 120 of the pool are academy names FPL has
+  // never listed — not a missing value to skip past quietly.
   const fplCodeOf = new Map<string, number>();
   for (const [fantraxId, entry] of Object.entries(bridge)) {
     if (!isUnmapped(entry)) fplCodeOf.set(fantraxId, entry.fplCode);
   }
 
-  const positions = new Map<number, string[]>();
-  for (const player of info.players) {
-    const code = fplCodeOf.get(player.fantraxId);
-    if (code !== undefined && player.eligiblePositions.length > 0) {
-      positions.set(code, player.eligiblePositions);
+  // Who holds whom, keyed on FPL's code — read off the RESOLVED slot rather
+  // than through the bridge a second time. `join/roster` has already done that
+  // join and carries the footballer, so an owner is `player.code` and needs no
+  // second lookup. An unresolved slot is a man FPL has never listed, and he is
+  // not on a Premier League club's squad list either.
+  //
+  // An undrafted or unreadable league answers nobody, which is a true statement
+  // about it rather than a reason to drop the other columns.
+  const owners = new Map<number, string>();
+  if (!("undrafted" in squads) && !("unavailable" in squads)) {
+    for (const team of squads.period.teams) {
+      for (const held of team.players) {
+        if (isResolved(held)) owners.set(held.player.code, team.teamName);
+      }
     }
   }
-  return positions;
+
+  const opinions = new Map<number, LeagueOpinion>();
+  for (const player of info.players) {
+    const code = fplCodeOf.get(player.fantraxId);
+    if (code === undefined) continue;
+    opinions.set(code, {
+      positions: player.eligiblePositions,
+      status: player.status,
+      owner: owners.get(code) ?? null,
+    });
+  }
+  return opinions;
 }

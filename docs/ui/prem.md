@@ -148,7 +148,7 @@ the reference for both, and it is a strip over a panel rather than one page.
 | Squad | `/prem/club/[code]` | Every man on the books, ordered by minutes | FPL bootstrap; Fantrax for eligibility |
 | Match | `…/next` | The next fixture, both sides on their own colours | FPL fixtures |
 | Fixtures | `…/fixtures` | The club's season, oldest first | FPL fixtures |
-| Stats | `…/stats` | Home against away, the season, and who is carrying it | FPL |
+| Stats | `…/stats` | Every player, by one group of measures, sortable | FPL |
 
 **Match puts the home side first, and the fantasy screen does not.** A fantasy
 fixture has no ground, so `squad/[teamId]/next` leads with whoever's page you
@@ -166,6 +166,59 @@ optional for exactly that reason, and `cm9900/22.jpg` is the shape.
 `Tactics · Training · Last Match · 6th in PRM · History` is the FOOT row under
 the panel. It arrives there when there is a real XI to draw, and it is the
 second entry the foot row has been waiting for since this section shipped.
+
+### Two more routes, both stubs on purpose
+
+`/prem/player/[code]` and `/prem/match/[id]` (Craig, 3 Sep 2026: "clicking a
+player takes them to a player page (just scaffold, will do later)" and "clicking
+a prem fixture takes it to match page (just scaffold for now)"). Every name on a
+squad list and every score in the section is a link, and a link to a 404 is
+worse than no link.
+
+**The player page is not `/players/[fantraxId]`.** That one is the fantasy pool:
+Fantrax's points, his eligibility, who holds him, what he cost at the draft.
+This is the footballer — FPL's own counts and nothing our league has an opinion
+about. Two screens about one person, keyed differently on purpose: this takes
+FPL's season-stable `code`.
+
+**The match page takes the fixture `id`**, which is not season-stable — and
+neither is a fixture. This match exists in this season and nowhere else, so
+there is nothing for a stable key to outlive.
+
+### The squad list
+
+Ordered by **the position our league files each man at** (Craig: "needs to be
+ordered by fantasy position") — `positionDepth` in the join layer, keeper
+through attack, which is the order `cm9900/25.jpg` runs down its slot strip. A
+man our league has no opinion about sorts last rather than into goal.
+
+`#` is the squad number and prints `—`: FPL publishes `squad_number` as a key on
+every element and null as a value on all 622 of them, counted 29 Aug. It fills
+from the sister repo, which carries it for 527 of 625.
+
+`Owner` is who holds him in our league, or Fantrax's own letter instead — `WW`
+on waivers, `FA` a free agent. A NAME and never a figure, which is what keeps it
+clear of `SeasonTotals`' bound: the bound forbids FPL's counts standing beside a
+Fantrax FIGURE, and this is a fact about our league rather than a second count
+of a Premier League goal.
+
+**Players FPL marks unavailable are dropped, and only that state** (Craig:
+"remove UNAV players, they are out of the game"). FPL's `u` is not a knock — it
+is a man no longer in the competition, a loan out of the league or a contract
+expired. The injured and the suspended stay and are greyed, because a squad list
+that omits them cannot be checked against a team sheet.
+
+### The fixture run
+
+`cm9900/24.jpg`'s club fixture list, which names **the opponent once** — a date,
+who they played, whether it was home, the competition, the score. It does not
+print the club whose page you are on (Craig: "we dont [want] to put the same
+team over and over"), which is the whole difference from `prem/Match`: that one
+draws both sides because it lists a round rather than a campaign.
+
+The score is the club's own goals first whichever end it was at — a column read
+down a season means nothing if half of them are reversed — and it links to the
+match page. Full date and kick-off time on every row, in their own columns.
 
 ### Two position columns, and why there are two
 
@@ -220,8 +273,9 @@ the same export that will fill the Pos column — one crossing, not two.
 | Squad | Fantrax silent | Elig empties to `—`; the squad still renders |
 | Match | every published match played | `TabEmpty`, and the tab greys |
 | Fixtures | no match with this club | `TabEmpty`, and the tab greys |
-| Stats | no finished fixture to build a record from | `TabEmpty`, and the tab greys |
-| Stats | nobody has any of a measure yet | "Nobody yet" — never a nought-scoring man named top scorer |
+| Stats | FPL lists nobody | `TabEmpty`, and the tab greys |
+| `/prem/player/[code]` | code is not an integer, or names no player | `notFound()` |
+| `/prem/match/[id]` | id is not an integer, or names no fixture | `notFound()` |
 | Any club tab | still loading | its own skeleton — **not** `/prem`'s league table |
 
 Keyed on FPL's **season-stable club code**, never `clubId`: a URL is persisted

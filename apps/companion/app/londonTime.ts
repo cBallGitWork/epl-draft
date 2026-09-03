@@ -23,6 +23,13 @@ const WEEKDAY = new Intl.DateTimeFormat("en-GB", {
   timeZone: LEAGUE_TIMEZONE,
 });
 
+const DAY_AND_DATE = new Intl.DateTimeFormat("en-GB", {
+  weekday: "short",
+  day: "numeric",
+  month: "short",
+  timeZone: LEAGUE_TIMEZONE,
+});
+
 const DATE = new Intl.DateTimeFormat("en-GB", {
   weekday: "long",
   day: "numeric",
@@ -49,6 +56,18 @@ function readable(iso: string, format: Intl.DateTimeFormat): string {
 /** "Saturday 10 October" — a day, for something too far off to have a time. */
 export function londonDate(iso: string): string {
   return readable(iso, DATE);
+}
+
+/** "Sat 5 Mar" — a dated day short enough for a column.
+ *
+ *  `londonDate` spells the weekday and the month out, which is right in a
+ *  sentence and too wide for a fixture list; `londonDayAndTime` gives the day
+ *  and the hour but no date at all, which cannot be read down a season. A club's
+ *  whole campaign needs the date on every row (Craig, 3 Sep 2026: "get the full
+ *  date in and ko time"), so this is the third shape and it goes through the
+ *  same guard as the others. */
+export function londonDayAndDate(iso: string): string {
+  return readable(iso, DAY_AND_DATE);
 }
 
 /** "15:00" */

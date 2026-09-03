@@ -57,10 +57,12 @@ export default async function ClubFixturesPage({ params }: { params: Promise<{ c
           <TabEmpty>FPL has published no match with {club.name} in it.</TabEmpty>
         ) : (
           <>
-            <Run fixtures={run} clubs={clubById(snapshot)} />
+            <Run fixtures={run} club={club} clubs={clubById(snapshot)} />
             <p className="text-2xs text-faint">
               Premier League only — FPL publishes no cup or European tie. The other competitions
-              arrive with a feed that carries them.
+              arrive with the sister repo&apos;s <span className="whitespace-nowrap">team
+              match log</span>, whose competition column is what the column on the right is
+              waiting for.
             </p>
           </>
         )}

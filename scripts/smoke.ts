@@ -2,6 +2,8 @@ import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
   fetchBootstrap,
+  fetchFixtures,
+  mapFixtures,
   fetchLeagueInfo,
   fetchTeamRosters,
   mapLeagueInfo,
@@ -203,9 +205,29 @@ async function clubCode(): Promise<number | null> {
   }
 }
 
+/** A footballer's season-stable code and a real fixture id, for the two pages
+ *  those link to.
+ *
+ *  Read for `clubCode`'s reason: both are FPL's numbers, and a literal here
+ *  would be a second place that has to be right. The fixture comes from the
+ *  season list rather than the bootstrap because a fixture id is not in the
+ *  bootstrap at all. */
+async function footballerAndMatch(): Promise<{ footballer: number | null; match: number | null }> {
+  try {
+    const [bootstrap, fixtures] = await Promise.all([fetchBootstrap(), fetchFixtures()]);
+    return {
+      footballer: bootstrap.elements[0]?.code ?? null,
+      match: mapFixtures(fixtures)[0]?.id ?? null,
+    };
+  } catch {
+    return { footballer: null, match: null };
+  }
+}
+
 async function main() {
   const { drafted: hasTeams, teamId: id, playerId } = await league();
   const club = await clubCode();
+  const { footballer, match } = await footballerAndMatch();
   const paths: string[] = [...ROUTES];
   // The three biggest screens in the app take an id, so a walk that skipped them
   // would be a walk that missed the squad board and the head-to-head — and the
@@ -230,6 +252,8 @@ async function main() {
       `/prem/club/${club}/stats`,
     );
   }
+  if (footballer !== null) paths.push(`/prem/player/${footballer}`);
+  if (match !== null) paths.push(`/prem/match/${match}`);
 
   console.log(
     `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${hasTeams ? "drafted" : "no teams"})\n`,

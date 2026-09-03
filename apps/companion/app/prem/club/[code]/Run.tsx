@@ -1,56 +1,117 @@
+import Image from "next/image";
+import Link from "next/link";
 import type { Club, Fixture } from "@epl/core";
-import Match from "../../Match";
+import { crestUrl } from "@epl/core";
+import { londonDayAndDate, londonTime } from "../../../londonTime";
+import { CLUB } from "../../PremNav";
+import { MATCH } from "./match";
 
 // One club's season, played and to come, in the order it runs.
 //
-// **A flat list and not `prem/Rounds`.** A club plays once a round, so grouping
-// this by round is thirty-eight headings over thirty-eight rows — the heading
-// would carry the only thing the row does not, which is the gameweek, so the
-// gameweek goes in the index block instead. That block takes the club's own
-// colour, because `ClubShell` scopes `--cm-index` to it: exactly what CM does
-// when a screen belongs to a club rather than to the division.
+// **The opponent once, never the fixture twice.** `cm9900/24.jpg`'s club fixture
+// list is `Sat 5th Mar · Montpellier · H · French Cup 11th Rnd · 2-2` — a date,
+// who they played, whether it was home, which competition, and the score. It
+// does not print the club whose page you are on, because you are on it (Craig,
+// 3 Sep 2026: "we dont [want] to put the same team over and over"). That is the
+// whole difference from `prem/Match`, which draws BOTH sides because it lists a
+// round rather than a campaign, and it is why this does not reuse it.
 //
-// **The round block is narrow under a thumb, and that is a budget rather than a
-// taste.** `Match` splits what is left of the row between two club names either
-// side of a fixed score column, so every pixel this block takes comes out of
-// both names at once — at `w-12` each club had 41px and "ARS" truncated to "A…".
-// At `w-9` with a tighter gap they have 49, which fits. The alternative was
-// narrowing `Match`'s score column, and that would have changed two shipped
-// screens to fix a third.
-//
-// **A live match is marked here rather than inside `Match`.** `Match` prints a
-// score the moment FPL has one, which is right on `/prem/results` and
-// `/prem/fixtures` because both exclude a round in play — a club's whole season
-// does not, and a running score with no tense reads as a final one. The marker
-// is this file's business; giving `Match` a prop two other callers would never
-// pass is the parameter CODE_RULES §1 forbids.
+// **A live match is marked here.** `Match` prints a score the moment FPL has
+// one, which is right on `/prem/results` and `/prem/fixtures` because both
+// exclude a round in play — a club's whole season does not, and a running score
+// with no tense reads as a final one.
 
 export default function Run({
   fixtures,
+  club,
   clubs,
 }: {
   fixtures: readonly Fixture[];
+  /** Whose season this is — the side that is NOT named on each row. */
+  club: Club;
   clubs: Map<number, Club>;
 }) {
   return (
-    <div className="cm-rows flex flex-col">
-      {fixtures.map((fixture) => (
-        <div key={fixture.id} className="flex items-center gap-1 lg:gap-2">
-          <span className="cm-index numeric flex h-6 w-9 shrink-0 items-center justify-center text-3xs font-bold lg:w-12 lg:text-2xs">
-            {fixture.gameweek === null ? "—" : `GW${fixture.gameweek}`}
-          </span>
-          {/* A div, not a span: `Match`'s root is a block, and a block inside
-              an inline element is invalid nesting the parser rewrites — which
-              collapsed every side to a few pixels and truncated "ARS" to "A…".
-              */}
-          <div className="min-w-0 flex-1">
-            <Match fixture={fixture} clubs={clubs} />
-          </div>
-          {fixture.status === "live" ? (
-            <span className="shrink-0 pr-2 text-3xs font-bold uppercase text-live">Live</span>
-          ) : null}
-        </div>
-      ))}
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse text-sm">
+        <caption className="sr-only">{club.name}&apos;s season, oldest first</caption>
+        <tbody>
+          {fixtures.map((fixture) => {
+            const home = fixture.homeClubId === club.id;
+            const opponent = clubs.get(home ? fixture.awayClubId : fixture.homeClubId);
+            const played = fixture.homeScore !== null && fixture.awayScore !== null;
+            // The club's own goals first, whichever end it was at — a column of
+            // scores read down a season means nothing if half of them are the
+            // other way round.
+            const mine = home ? fixture.homeScore : fixture.awayScore;
+            const theirs = home ? fixture.awayScore : fixture.homeScore;
+
+            return (
+              <tr key={fixture.id} className="cm-row border-b border-bg hover:bg-surface">
+                <td className="numeric whitespace-nowrap px-1.5 text-3xs text-muted lg:text-2xs">
+                  {fixture.kickoff === null ? "TBC" : londonDayAndDate(fixture.kickoff)}
+                </td>
+                <td className="numeric whitespace-nowrap px-1 text-3xs text-faint lg:text-2xs">
+                  {fixture.kickoff === null ? "" : londonTime(fixture.kickoff)}
+                </td>
+                <td className="w-full max-w-0 px-1">
+                  {opponent === undefined ? (
+                    <span className="text-sm text-faint">{DASH}</span>
+                  ) : (
+                    <Link
+                      href={`${CLUB}/${opponent.code}`}
+                      className="flex min-h-11 items-center gap-2 font-bold hover:underline lg:min-h-7"
+                    >
+                      <Image
+                        src={crestUrl(opponent)}
+                        alt=""
+                        width={22}
+                        height={22}
+                        className="h-[1.375rem] w-[1.375rem] shrink-0 object-contain"
+                        aria-hidden
+                        unoptimized
+                      />
+                      <span className="min-w-0 truncate text-sm lg:hidden">
+                        {opponent.shortName}
+                      </span>
+                      <span className="hidden min-w-0 truncate text-sm lg:inline">
+                        {opponent.name}
+                      </span>
+                    </Link>
+                  )}
+                </td>
+                {/* Home or away, which is what lets the opponent be named once. */}
+                <td className="px-1 text-center text-2xs font-bold text-muted">
+                  {home ? "H" : "A"}
+                </td>
+                {/* The competition. One value today and the column is the point:
+                    FPL publishes the league and nothing else, so a cup tie has
+                    nowhere to come from yet — see the note under the list. */}
+                <td className="hidden whitespace-nowrap px-1.5 text-2xs text-faint lg:table-cell">
+                  {COMPETITION}
+                </td>
+                <td className="numeric w-14 whitespace-nowrap px-1.5 text-center text-sm font-bold">
+                  {fixture.status === "live" ? (
+                    <span className="text-live">{mine}–{theirs}</span>
+                  ) : played ? (
+                    <Link href={`${MATCH}/${fixture.id}`} className="hover:underline">
+                      {mine}–{theirs}
+                    </Link>
+                  ) : (
+                    <span className="text-faint">{DASH}</span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
+
+/** What FPL's fixture list is a list OF. Named rather than inlined so the day a
+ *  second competition arrives, the literal is already in one place. */
+const COMPETITION = "Premier League";
+
+const DASH = "—";

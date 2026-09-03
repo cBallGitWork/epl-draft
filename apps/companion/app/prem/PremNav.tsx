@@ -47,6 +47,11 @@ export const TEAM_STATS = TABS[3].href;
  *  same decision for `/league`'s two query-string routes. */
 export const CLUB = "/prem/club";
 
+/** The footballer's own page, keyed on FPL's season-stable code. Named here
+ *  beside `CLUB` for the same reason: a squad list, a leaders board and the
+ *  player page's own way back all spell it. */
+export const PLAYER = "/prem/player";
+
 export default function PremNav({ current }: { current: PremSection }) {
   // `word` and not `phrase`: measured at 390, where a 74px plate sets "Team
   // Stats" on two lines at 11px and on one at 9px. The plates stay level either
