@@ -1435,6 +1435,16 @@ email, not billing — see the hosting section.
 
 ## Work items
 
+- [ ] **Look at the desk on a real phone, once the site is mapped out** (Craig,
+      3 Sep 2026). The headless Chrome the instruments drive reserves no layout
+      height for a horizontal scrollbar whatever the CSS says, so three things
+      from 3 Sep are measured but not SEEN on hardware: `cm-scroll`'s bottom bar
+      on the two stats boards (`::-webkit-scrollbar` gained a `height` and a
+      `:horizontal` arrow pair that day), the 16px of dead gutter reclaimed
+      beside them, and whether the bevelled bar reads as furniture at 390 or as
+      clutter. Everything else that day was read back off a screenshot;
+      **this is the one claim in it that a screenshot cannot settle.**
+
 - [x] Settle the two conflicting fuzzy rows (Andrews, Koumas) and sign off the
       other eleven — all 13 `conflicting` rows now carry `auditedAt`. *Landed
       19 Aug 2026; see the identity bridge section above for the reasoning.*
