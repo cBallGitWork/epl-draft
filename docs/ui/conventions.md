@@ -221,17 +221,25 @@ with its row here in the same commit.**
 
 | Recipe | What it is | Was |
 |---|---|---|
-| `LABEL` | The desk's small-caps label — the four classes that make a word furniture. Callers keep their own layout and font. | 26 sites, 22 files |
+| `SMALL_CAPS` | The small-caps geometry with no ink, for the caller that needs a different one. | `LABEL`'s other half |
+| `LABEL` | `SMALL_CAPS` in the ink furniture is set in. Callers keep their own layout and font. **Appending a colour does not work** — two colour utilities are resolved by stylesheet order, so `${LABEL} text-bad` renders faint; compose from `SMALL_CAPS`. | 26 sites, 22 files |
 | `FIGURE` | A figure in a repeating row: tabular, centred, `2xs`. | 3 identical private `const FIGURE` |
 | `SLOT_FIGURE` | The same cell holding something the reader scans past — a shirt number, a position. Same width or the column bends. | 1, named as `FIGURE`'s pair |
 | `TONE` | Which way a form result leans. `W`/`D`/`L` as DESIGN §3's direction pair. | 2 byte-identical |
 | `TEXT` | Where a column's text sits. `TableHeads.JUSTIFY` is the flex twin. | 2 byte-identical |
 | `BOARD` | A table that fills its panel and rules its own rows. | 9 files |
-| `ROW_RULE` | The rule between two rows. `border-bg`, the darker step, so a table reads as ruled rather than as fifteen boxes. | 11 files |
+| `ROW_RULE` | The rule between two rows of a TABLE. `border-bg`, the darker step, so a table reads as grooved rather than as fifteen boxes. A LIST is ruled `--color-line` by `.cm-rows` instead, and that distinction is why both colours exist. | 14 files |
 | `SCROLL` | What a board is wrapped in so a phone can reach its far columns. | 14 sites |
 | `HEAD_PLATE` · `HEAD_PLATE_END` | A column head on a stats board (`h-6`), left over a name and right over a figure. `TableHeads.PLATE` is the `h-7` twin over a table. | 12 sites, 3 files |
+| `PANEL` | The default panel: a CM well holding a column of things. A caller with a reason keeps its own spacing and states it; a caller without one takes this. | 6 sites agreed already, 4 strays joined |
 | `FACT` | One stated fact in a stack: bordered, at the tap floor at both widths. | 4 files |
+| `SCORE_CREST` · `SCORE_CREST_PX` | The 22px crest beside a scoreline. **Not `--row-badge`**, which is 26px, drops to 20 on the desk, and is set on `.cm-row` — a class a scoreline panel must never wear. | 7 literals across 3 files |
 | `SUBMIT` | The button that submits a form it sits inside. | 3 sites |
+
+One CSS class was split in the same run: **`.cm-scroll` draws CM's bevelled bar
+in either axis, and `.cm-scroll-y` adds the reserved gutter**, because
+`scrollbar-gutter` reserves the inline-end one and two boards that scroll only
+sideways were paying 16px for a bar that could never appear.
 
 **`desk.ts` records what it declined, with the count**, and that section is the
 point of the file rather than an afterthought. `const DASH = "—"` is named in 9
