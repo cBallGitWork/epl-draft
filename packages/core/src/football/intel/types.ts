@@ -57,13 +57,6 @@ export interface IntelPlayer {
   squadNumber: number | null;
   status: string;
   expectedReturnGw: number | null;
-  /** Who takes a set piece, as a RANK — `{ corners: 1 }` is the first choice,
-   *  and a missing key means he is not in the order for that one.
-   *
-   *  Null for the four men in five nobody has ranked. FPL has no notion of this
-   *  at all, which is why it comes across the bridge: it is the sister repo's
-   *  own reading of who actually steps up. */
-  setPieces: Record<string, number> | null;
   /** His position bucketed into a pitch line — `GK`, `CB`, `FB`, `DM`, `CM`,
    *  `AM`, `WF`, `CF`. The sister repo's own bucketing, not ours: it owns the
    *  football taxonomy and a second copy here is a second thing to be wrong.
@@ -103,4 +96,34 @@ export interface IntelXi {
   source: string | null;
   /** By FPL club code as a string, because a JSON object's keys are strings. */
   clubs: Record<string, IntelClubXi>;
+}
+
+/** One man's share of a club's set pieces — 0.53 of its penalties, not "first
+ *  choice". A share is what the source measures; it orders the same way and says
+ *  more. */
+export interface IntelTaker {
+  code: number;
+  share: number;
+}
+
+/** Who takes a CLUB's set pieces.
+ *
+ *  **Club-scoped, and that is the whole point.** The first version of this read
+ *  a rank off each player, which is a fact about a PLAYER and travels with him:
+ *  Manchester City's penalty order came out led by a man who earned his rank at
+ *  Everton. This is FFScout's own per-club page, so a signing arrives with no
+ *  set-piece history at all — which is the truth about him at his new club.
+ *
+ *  A piece nobody takes is absent rather than empty. */
+export interface IntelClubPieces {
+  penalties?: IntelTaker[];
+  freeKicks?: IntelTaker[];
+  corners?: IntelTaker[];
+}
+
+export interface IntelSetPieces {
+  manifest: IntelManifest;
+  source: string | null;
+  /** By FPL club code as a string, because a JSON object's keys are strings. */
+  clubs: Record<string, IntelClubPieces>;
 }

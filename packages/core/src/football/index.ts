@@ -71,11 +71,14 @@ export {
 export type { PlacedRow, TableSortKey } from "./tableOrder";
 export type { ClubRecord, ClubStats, Result } from "./clubStats";
 export type {
+  IntelClubPieces,
   IntelClubXi,
   IntelManifest,
   IntelPlayer,
   IntelSquads,
+  IntelSetPieces,
   IntelStarter,
+  IntelTaker,
   IntelXi,
 } from "./intel/types";
 export type { Opposition } from "./opposition";

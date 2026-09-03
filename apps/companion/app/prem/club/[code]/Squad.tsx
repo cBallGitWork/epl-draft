@@ -35,6 +35,7 @@ export default function Squad({
   club,
   eleven,
   formation,
+  against,
 }: {
   players: readonly FootballPlayer[];
   colours: ClubColours;
@@ -45,6 +46,8 @@ export default function Squad({
    *  which is an ordinary state, not a fault: the export runs by hand. */
   eleven: ElevenLine[];
   formation: string | null;
+  /** "v Chelsea · Sun 6 Sep", or null when there is no next match. */
+  against: string | null;
 }) {
   const [view, setView] = useState<"pitch" | "list">("list");
   const hasEleven = eleven.length > 0 && formation !== null;
@@ -54,6 +57,7 @@ export default function Squad({
     <Eleven
       lines={eleven}
       formation={formation}
+      against={against}
       club={club}
       colours={colours}
       playerOf={(code) => byCode.get(code) ?? null}

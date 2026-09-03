@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { availabilityOf, clubColours, setPieceOrder } from "@epl/core";
-import type { IntelPlayer } from "@epl/core";
+import type { IntelClubPieces } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
 import Section from "../../../../components/shell/Section";
 import PlayerPortrait from "../../../../components/football/PlayerPortrait";
 import StateBox from "../../../../components/football/StateBox";
-import { intelSquads } from "../../../../intel";
+import { intelSetPieces } from "../../../../intel";
 import { PLAYER } from "../../../PremNav";
 import ClubShell from "../Shell";
 import { clubOr404 } from "../club";
@@ -31,26 +31,21 @@ export const revalidate = 30;
 /** The three the source ranks, in the order they are worth to a manager: a
  *  penalty is a goal most of the time, a corner is a chance a dozen times a
  *  game. The key is the sister repo's own spelling. */
-const PIECES: readonly { key: string; label: string }[] = [
+const PIECES = [
   { key: "penalties", label: "Penalties" },
-  { key: "fk_direct", label: "Direct free kicks" },
+  { key: "freeKicks", label: "Direct free kicks" },
   { key: "corners", label: "Corners" },
-];
+] as const satisfies readonly { key: keyof IntelClubPieces; label: string }[];
 
 export default async function SetPiecesPage({ params }: { params: Promise<{ code: string }> }) {
   const { code } = await params;
   const { club, snapshot } = await clubOr404(code);
   const colours = clubColours(club.shortName);
 
-  const squad = snapshot.players.filter((player) => player.clubId === club.id);
-  const byCode = new Map(squad.map((player) => [player.code, player]));
-  // His club's men, as the intel has them — the ranks live there and the
-  // footballer lives in the snapshot, so the two meet on the code.
-  const ranked = squad
-    .map((player) => intelSquads.get(player.code))
-    .filter((entry): entry is IntelPlayer => entry !== undefined);
-
-  const orders = setPieceOrder(ranked, PIECES.map((piece) => piece.key)).filter(
+  const byCode = new Map(
+    snapshot.players.filter((player) => player.clubId === club.id).map((p) => [p.code, p]),
+  );
+  const orders = setPieceOrder(intelSetPieces.clubs[club.shortName], PIECES).filter(
     (order) => order.takers.length > 0,
   );
 
@@ -69,10 +64,7 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
       ) : (
         <section className="cm-panel flex flex-col gap-3 p-2">
           {orders.map((order) => (
-            <Section
-              key={order.piece}
-              title={PIECES.find((piece) => piece.key === order.piece)?.label ?? order.piece}
-            >
+            <Section key={order.piece} title={order.label}>
               <ul className="cm-rows flex flex-col">
                 {order.takers.map((taker, at) => {
                   const player = byCode.get(taker.code);
@@ -105,9 +97,14 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
               </ul>
             </Section>
           ))}
+          {/* **Fantasy Football Scout's own per-club page**, and the share is
+              theirs: 0.53 of the penalties, not "first choice". Club-scoped on
+              purpose — an earlier cut read a rank off each PLAYER, which travels
+              with him, and Manchester City's penalty order came out led by a man
+              who earned it at Everton. */}
           <p className="text-2xs text-faint">
-            Read off the season by the intel feed, not published by FPL. About one man in five is
-            ranked, so a name missing here is one nobody has seen take one.
+            Fantasy Football Scout&apos;s reading of who steps up, as a share of the club&apos;s
+            own set pieces. Not published by FPL.
           </p>
         </section>
       )}

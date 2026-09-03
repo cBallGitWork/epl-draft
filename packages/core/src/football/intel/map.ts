@@ -1,4 +1,12 @@
-import type { IntelClubXi, IntelPlayer, IntelSquads, IntelXi, IntelStarter } from "./types";
+import type {
+  IntelClubPieces,
+  IntelClubXi,
+  IntelPlayer,
+  IntelSquads,
+  IntelStarter,
+  IntelTaker,
+  IntelXi,
+} from "./types";
 
 // Reading the sister repo's export, and refusing the parts of it that are wrong.
 //
@@ -102,24 +110,19 @@ function outfieldShape(formation: string | null | undefined): number[] | null {
   return parts.reduce((total, n) => total + n, 0) === STARTING_XI - 1 ? parts : null;
 }
 
-/** One club's set-piece order, by piece, first taker first.
+/** One club's set-piece order, biggest share first.
  *
- *  **A rank is not a count, so the list is only as long as the ranks go.** A man
- *  with no entry for a piece is not last in that order — he is not in it — and
- *  padding the list with everybody would turn "nobody has ranked him" into "he
- *  is eleventh choice for corners", which the source never said.
- *
- *  Pieces come back in the order given, so a caller decides what is worth
- *  showing rather than this deciding for it. */
+ *  Pieces come back in the order asked for, and one nobody takes comes back
+ *  empty rather than missing — a caller that wants to say "nobody takes these"
+ *  needs to be told, and a caller that does not can filter. */
 export function setPieceOrder(
-  players: readonly IntelPlayer[],
-  pieces: readonly string[],
-): { piece: string; takers: IntelPlayer[] }[] {
-  return pieces.map((piece) => ({
-    piece,
-    takers: players
-      .filter((player) => typeof player.setPieces?.[piece] === "number")
-      .sort((a, b) => (a.setPieces?.[piece] ?? 0) - (b.setPieces?.[piece] ?? 0)),
+  club: IntelClubPieces | undefined,
+  pieces: readonly { key: keyof IntelClubPieces; label: string }[],
+): { piece: string; label: string; takers: IntelTaker[] }[] {
+  return pieces.map(({ key, label }) => ({
+    piece: key,
+    label,
+    takers: [...(club?.[key] ?? [])].sort((a, b) => b.share - a.share),
   }));
 }
 

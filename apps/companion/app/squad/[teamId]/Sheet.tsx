@@ -124,6 +124,14 @@ export default function Sheet({
           />
         </div>
         <div className={view === "pitch" ? "" : "hidden lg:block"}>
+          {/* **A heading over the grass** (Craig, 3 Sep 2026: "both the fantasy
+              and real squad pages need a title/caption over the pitch"). Eleven
+              faces on a pitch do not say what eleven they are: this is the side
+              as it stands, and the club page says "Predicted XI" over its own
+              because that one is a guess and this one is not. */}
+          <p className="cm-title pb-1 text-center font-chrome text-2xs font-bold text-accent lg:text-sm">
+            First-choice XI
+          </p>
           <TeamSheet
             rows={rows}
             // **No bench on the grass.** The eleven is the formation; a reserve

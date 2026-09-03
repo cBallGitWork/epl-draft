@@ -1,7 +1,8 @@
-import type { IntelPlayer, IntelSquads, IntelXi } from "@epl/core";
+import type { IntelPlayer, IntelSetPieces, IntelSquads, IntelXi } from "@epl/core";
 import { squadIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/gw3.json";
+import piecesFile from "../../../data/intel/set-pieces/26-27.json";
 
 // Where the app supplies the sister repo's export.
 //
@@ -38,6 +39,9 @@ export const intelSquads: Map<number, IntelPlayer> = squadIntel(
 
 /** The predicted elevens, as the export left them. */
 export const intelXi = xiFile as unknown as IntelXi;
+
+/** Who takes each club's set pieces, by FPL club code. */
+export const intelSetPieces = piecesFile as unknown as IntelSetPieces;
 
 /** One club's line for a man, for arranging a pitch.
  *

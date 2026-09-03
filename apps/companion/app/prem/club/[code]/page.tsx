@@ -1,4 +1,4 @@
-import { availabilityOf, clubColours, predictedEleven, xiFault } from "@epl/core";
+import { availabilityOf, clubById, clubColours, nextFixtures, predictedEleven, xiFault } from "@epl/core";
 import TabEmpty from "../../../components/league/TabEmpty";
 import ButtonLink from "../../../components/shell/ButtonLink";
 import ClubShell from "./Shell";
@@ -6,6 +6,7 @@ import Squad from "./Squad";
 import { fantasyDepth } from "./SquadTable";
 import { TABLE } from "../../PremNav";
 import { intelSquads, intelXi } from "../../../intel";
+import { londonDayAndDate } from "../../../londonTime";
 import { clubOr404, leagueOpinions, standing } from "./club";
 import { ordinal } from "@epl/core";
 
@@ -65,6 +66,15 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
   // check `intel-check` runs: a club that is not eleven, or a formation whose
   // places do not add up, is NAMED rather than drawn short — a pitch with ten
   // men on it is the failure nobody notices.
+  // Who the eleven is against. The season's fixtures rather than the round in
+  // view: a club's next match may be weeks off if its gameweek is blank.
+  const [next] = nextFixtures(fixtures, clubById(snapshot), club.id, 1);
+  const against =
+    next === undefined
+      ? null
+      : `v ${next.club.shortName}` +
+        (next.fixture.kickoff === null ? "" : ` · ${londonDayAndDate(next.fixture.kickoff)}`);
+
   const predicted = intelXi.clubs[club.shortName];
   const eleven = xiFault(predicted) === null ? predictedEleven(predicted) : [];
 
@@ -83,6 +93,7 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
               club={club}
               eleven={eleven}
               formation={predicted?.formation ?? null}
+              against={against}
             />
             {/* Said rather than left blank. A column of dashes with no
                 explanation reads as broken; a column of dashes with one reads

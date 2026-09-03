@@ -12,7 +12,6 @@ function player(code: number, over: Partial<IntelPlayer> = {}): IntelPlayer {
     canCover: [],
     depthTier: 1,
     squadNumber: null,
-    setPieces: null,
     status: "available",
     expectedReturnGw: null,
     line: "CB",
@@ -136,28 +135,31 @@ describe("predictedEleven", () => {
 });
 
 describe("setPieceOrder", () => {
-  const takers = [
-    player(1, { setPieces: { corners: 2, penalties: 1 } }),
-    player(2, { setPieces: { corners: 1 } }),
-    player(3, { setPieces: null }),
-  ];
+  const PIECES = [
+    { key: "penalties", label: "Penalties" },
+    { key: "corners", label: "Corners" },
+  ] as const;
+  const city = {
+    penalties: [
+      { code: 2, share: 0.27 },
+      { code: 1, share: 0.53 },
+    ],
+  };
 
-  it("orders each piece by rank, first taker first", () => {
-    const [corners, pens] = setPieceOrder(takers, ["corners", "penalties"]);
-    expect(corners?.takers.map((p) => p.code)).toEqual([2, 1]);
-    expect(pens?.takers.map((p) => p.code)).toEqual([1]);
-  });
-
-  it("leaves out a man who is not in that order at all", () => {
-    // A rank is not a count. Padding the list with everybody would turn "nobody
-    // has ranked him" into "he is third choice", which the source never said.
-    const [corners] = setPieceOrder(takers, ["corners"]);
-    expect(corners?.takers.map((p) => p.code)).not.toContain(3);
+  it("orders each piece by share, the biggest first", () => {
+    const [pens] = setPieceOrder(city, PIECES);
+    expect(pens?.takers.map((t) => t.code)).toEqual([1, 2]);
   });
 
   it("answers for a piece nobody takes, rather than dropping it", () => {
-    const [none] = setPieceOrder(takers, ["fk_direct"]);
-    expect(none).toEqual({ piece: "fk_direct", takers: [] });
+    // A caller that wants to say "nobody takes these" has to be told; one that
+    // does not can filter.
+    const [, corners] = setPieceOrder(city, PIECES);
+    expect(corners).toEqual({ piece: "corners", label: "Corners", takers: [] });
+  });
+
+  it("answers for a club the source has never listed", () => {
+    expect(setPieceOrder(undefined, PIECES).every((p) => p.takers.length === 0)).toBe(true);
   });
 });
 

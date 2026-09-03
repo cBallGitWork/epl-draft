@@ -13,10 +13,11 @@ import PitchRows from "../../../components/league/PitchRows";
 // and `PitchDisc` stopped taking a roster slot on 3 Sep so that a Premier League
 // eleven could use it without a Fantrax id going anywhere near a football page.
 //
-// **The keeper stands at the BOTTOM**, which is this site's own arrangement:
-// the fantasy pitch attacks up the screen, so the goal a squad defends is the
-// near one. FFScout lists its eleven keeper-first, so the rows are reversed on
-// the way in rather than at the source.
+// **The keeper stands at the BOTTOM**, which is this site's own arrangement: the
+// pitch attacks UP the screen, so the goal a squad defends is the near one.
+// `PitchRows` already draws its first row nearest that goal, and `predictedEleven`
+// hands the rows over goal-first — so they are passed straight through. Reversing
+// them here turned the pitch upside down and put the forward on the goal line.
 //
 // The formation is set above the grass because `cm9900/19.jpg` sets it there —
 // "4-4-2*" in yellow over Everton's pitch. It reads `4-2-3-1` and not
@@ -30,6 +31,7 @@ export interface ElevenLine {
 export default function Eleven({
   lines,
   formation,
+  against,
   club,
   colours,
   playerOf,
@@ -37,6 +39,9 @@ export default function Eleven({
 }: {
   lines: ElevenLine[];
   formation: string;
+  /** What the eleven is FOR — "v Chelsea · Sun 6 Sep". Null when FPL has
+   *  published no next match, and then the caption says only what it is. */
+  against: string | null;
   club: Club;
   colours: ClubColours;
   /** The footballer behind a code, or null when the snapshot has not got him. */
@@ -45,12 +50,17 @@ export default function Eleven({
    *  no opinion, or would not answer. */
   positionOf: (code: number) => string | null;
 }) {
-  // Attacking up the screen, so the last row drawn is the one nearest the
-  // reader — the keeper's.
-  const rows = [...lines].reverse();
-
   return (
     <div className="flex flex-col gap-1">
+      {/* **What the eleven is and who it is against** (Craig, 3 Sep 2026: "real
+          team needs Predicted XI versus next opponent whoever that is, use
+          dates"). A pitch with no heading is eleven faces on grass; the reader
+          has to be told this is a PREDICTION and which match it is for, or it
+          reads as a team sheet. The formation goes on the same line because
+          `cm9900/19.jpg` sets its shape over the pitch and this is that line. */}
+      <p className="cm-title text-center font-chrome text-2xs font-bold text-accent lg:text-sm">
+        Predicted XI{against === null ? "" : ` ${against}`}
+      </p>
       <p className="cm-title text-center font-chrome text-sm font-bold text-accent lg:text-base">
         {formation}
       </p>
@@ -65,7 +75,7 @@ export default function Eleven({
           for a pitch that is the widest thing on the screen, and full-bleed made
           this one 1,132px wide and 1,192 tall — 556px past the fold at 1440. */}
       <PitchRows
-        rows={rows.map((row) => ({ label: row.line, players: row.players }))}
+        rows={lines.map((row) => ({ label: row.line, players: row.players }))}
         keyOf={(starter) => String(starter.code)}
         flat
         inColumn
