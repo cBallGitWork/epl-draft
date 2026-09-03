@@ -1,0 +1,182 @@
+// The desk's recipes: the layer between a token and a page.
+//
+// `tokens.css` says what a colour and a type step MEAN, and `desk.css` names
+// twelve component looks. Neither could say what a screen actually writes, so
+// every screen wrote it out — the small-caps label 26 times across 22 files, the
+// rule between table rows 11 times across 11, one head plate 12 times in three.
+// A recipe is the composition of look, layout and size, and it had no home.
+//
+// **Where a recipe lives — the rule, because the codebase has all three kinds
+// and picked between them by accident.**
+//
+//   A pure APPEARANCE — fill, border, bevel, ink → a class in `desk.css`. The
+//   cascade owns it, which is how `.paper` re-points the same tokens without
+//   touching a component.
+//
+//   Appearance PLUS layout, with per-caller variation → an exported class
+//   string, here. A component would own nothing but a string and would need a
+//   `className` prop to hand it back.
+//
+//   Appearance plus layout, NO variation, at three or more sites → a component.
+//   It owns its element and its aria, and a caller cannot get it half right.
+//
+// So the look stays in CSS and the composed recipe becomes a typed string. Not
+// CSS-only: `desk.css` is already past §4's 300-line ceiling, and a string
+// composes with a caller's own — `${ROW_LINK} ${yoursInk(yours)}` — where a
+// class cannot. Not components-only: §1 forbids one built for a single caller.
+//
+// Named for the register it serves, which is what CODE_RULES §4 asks. `ui.ts`
+// is `utils.ts` wearing a different word and §4 bans that family by name. The
+// paper keeps its own recipes; this file is the desk's.
+//
+// **The bar for entry is three occurrences**, and the count is recorded beside
+// each one so the next session can check it rather than trust it. The trap this
+// file must not become is `DASH`: nine files name `const DASH = "—"` against 68
+// unnamed `"—"` literals in 34 others, which makes the codebase LOOK
+// centralised while it is not. That is worse than honest duplication, because
+// the plausible name hides the scatter. See "Declined" at the foot.
+
+/* ---- Labels and figures --------------------------------------------------- */
+
+/** The desk's small-caps label — the four classes that make a word furniture
+ *  rather than content. 26 sites in 22 files wrote it out.
+ *
+ *  Four classes and no layout, because the layout is genuinely per-caller: this
+ *  is an `h2` at the head of a panel, a `dt` in a figure list, a `label` over a
+ *  field, and the `v` between two team names. They share the LOOK and share
+ *  nothing else, so each keeps its own `px-`, `flex` and font — `${LABEL}`
+ *  after a caller's own classes, never instead of them. */
+export const LABEL = "text-2xs font-bold uppercase text-faint";
+
+/** A figure in a repeating row: tabular, centred, and small enough that a column
+ *  of them reads as a column. Three files declared it byte-identically under a
+ *  private `const FIGURE` — `league/TableRow`, `prem/ClubRow`, `players/Board`.
+ *
+ *  Two more files declare a `FIGURE` that is this string plus a size:
+ *  `lg:text-sm` on the club squad table and `text-base font-bold lg:text-lg` on
+ *  Team Stats. They are not folded in here, because "one figure size per
+ *  density" is a visible decision and this file is not allowed to make one.
+ *
+ *  `.numeric` is what makes the digits line up (`font-display` plus `tnum`), and
+ *  DESIGN §6 is why nothing here letterspaces: `.numeric` already sets -0.01em
+ *  and a `tracking-*` on the same element is the two rules arguing. */
+export const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
+
+/** The same cell when it is holding a position, a shirt number or anything else
+ *  the reader scans PAST on the way to a figure. Same geometry, quieter ink and
+ *  no weight — the pair is the point, and they must stay the same width or the
+ *  column bends. */
+export const SLOT_FIGURE = "numeric px-1.5 text-center text-2xs text-faint";
+
+/** Which way a form result leans. Two files declared this byte-identically.
+ *
+ *  It is DESIGN §3's direction pair spelled for one letter each: green is a
+ *  gain, red is a loss, and a draw is neither, so it takes the quiet ink rather
+ *  than a third colour. A yellow draw would be the accent making a claim about
+ *  a result, and the accent means "yours". */
+export const TONE = { W: "text-up", D: "text-faint", L: "text-bad" } as const;
+
+/** Where the text in a column sits. Two files declared this byte-identically,
+ *  and `TableHeads` has the `justify-*` twin for the flexed head plate. */
+export const TEXT = {
+  left: "text-left",
+  center: "text-center",
+  right: "text-right",
+} as const;
+
+/* ---- Boards --------------------------------------------------------------- */
+
+/** A table that fills its panel and rules its own rows. Nine files wrote it.
+ *
+ *  `border-collapse` because the row rule below is a border and two adjacent
+ *  borders on a separated table is a 2px rule. */
+export const BOARD = "w-full border-collapse text-sm";
+
+/** The rule between two rows of a table. Eleven files wrote it.
+ *
+ *  `border-bg` and not `border-line`: inside a panel the darker step reads as a
+ *  ruled table where the lighter one reads as fifteen separate boxes, which is
+ *  the same argument `.cm-rows` makes in `desk.css` for a list. Four further
+ *  rows say `border-line/60` instead — two of them in a loading skeleton, whose
+ *  job is to look like the table it stands in. That disagreement is visible, so
+ *  it is phase 2's to settle and not this file's. */
+export const ROW_RULE = "border-b border-bg";
+
+/** What a board is wrapped in so a narrow phone can reach its far columns.
+ *
+ *  Fourteen wrappers on the desk scroll sideways and TWO of them add
+ *  `cm-scroll`, CM's own bevelled bar — which is the worst of both, because a
+ *  reader learns the bar means "there is more this way" and then meets twelve
+ *  boards without one. Phase 2 settles it in one direction or the other; this
+ *  names the geometry only, so that settlement is one edit here. */
+export const SCROLL = "overflow-x-auto";
+
+/** A column head on a STATS board — the bevelled plate at the height a board of
+ *  measures uses, as against `TableHeads.PLATE`'s `h-7` for a table of rows.
+ *  Twelve sites in three files wrote it.
+ *
+ *  Two of them, because a head is left over a name and right over a figure: the
+ *  figures are centred or right under a centred head in `cm9900/24.jpg`, and a
+ *  name is read rather than compared, so it stays left. The height difference
+ *  between this and `PLATE` is one of the conflicts DESIGN §6's density table
+ *  now records; naming both is what makes reconciling them a single edit. */
+export const HEAD_PLATE = "cm-bevel flex h-6 items-center px-1.5";
+export const HEAD_PLATE_END =
+  "cm-bevel flex h-6 items-center justify-end px-1.5";
+
+/* ---- Panels and controls -------------------------------------------------- */
+
+/** One stated fact in a stack of them: a bordered row tall enough to be aimed
+ *  at, holding a label and its value. Four sites wrote it — the player page's
+ *  own facts, his draft pedigree, his projection, and the Prem player page.
+ *
+ *  `min-h-11` and NOT `.cm-row`: this is a line you read, but it is also often
+ *  a link, and desk.css is explicit that a control keeps its floor at every
+ *  width. A row of a LIST relaxes to 28 on the desk; a stack of four facts is
+ *  not a list. */
+export const FACT =
+  "flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2";
+
+/** The button that submits a form it sits inside — the plate at `BUTTON`'s
+ *  height without `BUTTON`'s `flex` centring, because a `<button>` centres its
+ *  own label and a form row wants to size it by its text. Three sites wrote it.
+ *
+ *  Not `ButtonLink.BUTTON` with the flex removed, because that string is a LINK
+ *  looking like a button and this is a real submit; they agree today and the
+ *  reason each is what it is differs. If they diverge, they diverge here. */
+export const SUBMIT = "cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9";
+
+/* ---- Moved in, unchanged -------------------------------------------------- */
+//
+// These already existed and already had callers; they are re-exported from here
+// so that "where is the button" has one answer, and their old homes keep
+// exporting them so nothing broke in the commit that moved them.
+//
+//   BUTTON, SELECT   components/shell/ButtonLink.tsx
+//   PLATE, SortHead  components/league/TableHeads.tsx
+//   ROW_LINK         components/league/TableCells.tsx
+//   NAME_SIZE, GAP_CLASS  components/league/PitchRows.tsx
+//
+// They are NOT re-exported as bare names here, because a component that owns an
+// element and a string that decorates one are different things and only the
+// second belongs in this file. Import them from their components.
+
+/* ---- Declined, with the count ---------------------------------------------
+ *
+ * The section that saves the next session the counting.
+ *
+ * `const DASH = "—"` — 9 named against 68 unnamed literals in 34 files.
+ *   Naming it a tenth time would hide the scatter behind a plausible name. It
+ *   is named only if all 68 adopt it, which is a decision about the absence
+ *   grammar (DESIGN §7) rather than about class strings.
+ *
+ * `tracking-[-0.01em]` — 2 sites, and both are `.numeric`'s own letter-spacing
+ *   written out again, which DESIGN §6 forbids outright. They are deleted, not
+ *   named.
+ *
+ * `h-[1.375rem] w-[1.375rem]` — 4 sites, and a magic 22px where `--row-badge`
+ *   and `--row-portrait` already exist with a breakpoint each. A token, not a
+ *   recipe.
+ *
+ * The submit-quiet pair above — 2 sites. Under the bar.
+ */

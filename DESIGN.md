@@ -325,6 +325,51 @@ It is depth, which is what it shares with the bevel and why it lives in the same
 file. **The paper does not get it** — ink on stock casts no shadow, and the
 masthead is the other register (§1).
 
+### Density — how tall a thing is, and what size it is set in
+
+§3 gives every colour a slot with one meaning, and that table is why the token
+names survived when every value changed. **Size and density had no such table**,
+and the cost was measurable: five sizes for "a number in a table", one file using
+three at once; the `cm-index` block drawn at three sizes with four alignments;
+five tab-label recipes where the component's own docblock says there should be
+two. Named against a ladder, those become disagreements. Unnamed, they were just
+what each file happened to say.
+
+The ladder is CM's, taken through PRODUCT.md's tap floor. Every row names the
+recipe in `app/desk.ts` that implements it, so a doc and its code cannot drift
+apart silently.
+
+| Role | Phone | Desk | Type step | Recipe |
+|---|---|---|---|---|
+| Plated title bar | 64 | 96 | `xl`–`3xl`, `.cm-title` | `PageHeader` |
+| A row that needs two lines | 56 | 28 | `sm` | `.cm-row` + `min-h-14` |
+| **A control** — button, select, input, tab, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
+| **A row of a list** | **44** | **28** | `base`/`lg` name, `2xs` figures | `.cm-row` + `ROW_LINK` |
+| One stated fact in a stack | 44 | 44 | `2xs` label, `sm` value | `FACT` |
+| A column head over a table | 28 | 28 | `2xs` | `PLATE` (`h-7`) |
+| A column head over a stats board | 24 | 24 | `2xs` | `HEAD_PLATE` (`h-6`) |
+| A figure in a row | — | — | `2xs`, `.numeric` | `FIGURE` |
+| A label that is furniture | — | — | `2xs` bold caps | `LABEL` |
+
+**Three of these are rules and the rest are consequences.** 44 is PRODUCT.md's
+tap floor and is not negotiable under a thumb; 36 is a control on the desk; 28 is
+a repeating row on the desk, which is `.cm-row` and is the number that makes a
+division fit on a screen. `desk.css` carries the long argument for the pair and
+`tools/ui/tapfit.mjs` measures it.
+
+**A row relaxes and a control never does.** A button, a tab and a select stay at
+their floor at every width — they are aimed at rather than read, and a mouse
+misses them as easily as a thumb does. That distinction is the whole reason this
+is a table of roles and not a table of pixels.
+
+**The last two rows deliberately state no height.** A figure and a label are set
+inside a row and take the row's; giving either its own height is what produced
+the 37px Championship Manager row §6 opens with.
+
+*The head-plate pair — 28 over a table, 24 over a stats board — is a
+disagreement, not a rule. Both are now named, which is what makes settling it a
+single edit rather than fifteen.*
+
 ## 7. Grammar that outranks the look
 
 Restated because a redesign is exactly when these get broken. Their parents are
