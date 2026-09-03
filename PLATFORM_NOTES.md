@@ -1568,7 +1568,7 @@ What is left, in order of how much it asks of a member:
    and members authenticated by the team codes we already issue. A member needs
    to know nothing. **Unprobed** — whether `adminMode` actually writes another
    team's roster is the question the whole path rests on, and it is answerable
-   safely against the rehearsal league, whose four teams belong to nobody.
+   safely against the rehearsal league, whose teams belong to nobody.
 2. **A native shell with a webview login.** Open Fantrax's own login in a
    webview, let the member clear reCAPTCHA and 2FA there, keep the cookie the
    webview collects. This is how everyone else solves it. It also means we are
@@ -4718,3 +4718,67 @@ drove the same browser: it sets the viewport BEFORE navigating, and
 settling and overriding the metrics LAST works. Not changed — the instrument is
 shared and the failure was not reproduced on a browser with one client — but
 recorded, because it cost an hour.
+
+## 3 Sep 2026 — the push, and what the push explained
+
+The 73 commits went to `origin/main`. Two things only became visible once they
+had.
+
+### `dummy` was never OVERDUE; CI could not see it
+
+`capture:status` had been reporting `dummy: no captures yet` and exiting
+non-zero, while `capture-status.yml` — the watchdog whose entire job is to make
+that noise reach a human — stayed green every day. Both run the same script over
+the same `FANTRAX_LEAGUES`, so one of them was reading a different list.
+
+It was. `dummy` entered `FANTRAX_LEAGUES` on 1 Sep in `81437fc`, and that commit
+was inside the unpushed 73. CI checks out `origin/main`, which knew two leagues,
+so it captured two and checked two and was honestly green about the two it knew.
+The local tree knew three. **A watchdog checks out the code, and unpushed code is
+a watchdog with a shorter list** — the failure is invisible from the CI side by
+construction, because the missing league is missing from the question as well as
+the answer.
+
+1 and 2 Sep are gone for `dummy` and cannot be backfilled. The 3 Sep capture is
+its first day. From the 05:10 UTC run CI picks it up unaided, the list being the
+same one.
+
+### Both non-real leagues are ten now, and the docs said otherwise
+
+Counted off the capture history, which is what makes it checkable:
+
+```
+rehearsal/getTeamRosters — 4 teams every day 2026-08-06 … 2026-09-01
+                           10 teams from 2026-09-02
+```
+
+`getLeagueInfo` gives both leagues the *same ten team names* — `123`, `test2`,
+`test1`, `test3331`, `test31121`, `test211`, `test31`, `testf`, `test3`, `test4`
+— in a different order. So the rehearsal league was expanded to ten on 2 Sep and
+`dummy`, made on 1 Sep expressly as "its ten-team replacement", replaced a
+problem that stopped existing the following day.
+
+Three present-tense claims were false and are corrected: `config.ts`'s
+`FANTRAX_LEAGUES` docblock, `demo.ts`'s reason for existing (reframed to the past
+tense it was always describing), and `league/page.tsx`'s `cut()` note, whose "the
+rehearsal league is four teams away from it" was arithmetic about a count that
+had changed. The test-fixture comments in `roster.test.ts`, `map.test.ts`,
+`rosters.test.ts` and `draft.test.ts` say four and are **left alone** — they
+describe a payload captured on 6 Aug, and that payload still has four teams in
+it.
+
+**Not collapsed to one league, deliberately.** Two near-identical ten-team
+leagues cost a capture each and confuse the next reader, so it is worth doing —
+but not before 10 Oct. `shape-diff` reads `rehearsal` as its reference against
+`real`, and a league key is a directory of a month's history under
+`data/snapshots/` that a rename would strand.
+
+### `shape-diff` exits 1, and it is the baseline that is behind
+
+Two paths missing on the real league's `fxpa getStandings`:
+`tableList[].header.cells[].align` and `tableList[].subCaption`. The real league
+is `NO_TEAMS`, so its standings page has no rows to carry a header cell or a
+sub-caption. `results.ts` already types `subCaption?: string`. Everything else
+in the report is `+` — the real league carrying *more* than the rehearsal
+reference, which is the documented between-league variance. The baseline at
+`data/shape/baseline.json` wants the sentence; no code wants a change.

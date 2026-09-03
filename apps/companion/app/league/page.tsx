@@ -163,8 +163,8 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
  *
  *  Never under the last one: a line beneath the bottom of the table announces a
  *  cut nobody missed. A two-team league whose top two qualify is exactly the
- *  shape that would draw one, and the rehearsal league is four teams away from
- *  it. */
+ *  shape that would draw one, and no league we serve is anywhere near it — the
+ *  smallest is ten. */
 function cut(rank: number, qualify: number | null, teams: number): boolean {
   return qualify !== null && rank === qualify && rank < teams;
 }

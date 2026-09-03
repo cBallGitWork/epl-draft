@@ -111,13 +111,23 @@ export interface FantraxLeague {
 /** All three leagues are public — these are the ids in their league URLs, not
  *  credentials.
  *
- *  `rehearsal` is the 4-team league drafted on 6 Aug and is what most of this
- *  app was built against. `dummy` is its ten-team replacement (Craig, 1 Sep
- *  2026), and ten is the point: the real league is ten, and a screen judged
- *  against four is judged at the wrong height — the Team Stats board had to
- *  fake six rows to be looked at honestly. It answers the same 29-table
+ *  `rehearsal` was drafted on 6 Aug with four teams and is what most of this app
+ *  was built against. `dummy` was made as its ten-team replacement (Craig, 1 Sep
+ *  2026) because ten is the point: the real league is ten, and a screen judged
+ *  against four is judged at the wrong height — the Team Stats board had to fake
+ *  six rows to be looked at honestly. It answers the same 29-table
  *  `SEASON_STATS` shape with real figures in every category, checked on the day
  *  it was made.
+ *
+ *  **Both are ten now.** The rehearsal league was expanded on 2 Sep 2026 and
+ *  carries the same ten team names as `dummy` — the capture history is the
+ *  record: 4 teams every day from 6 Aug to 1 Sep, 10 from 2 Sep. So `dummy` is
+ *  no longer a replacement for anything, and the two are near-duplicates that
+ *  cost a capture each. Worth collapsing to one, but not before 10 Oct:
+ *  `shape-diff` reads `rehearsal` as its reference against `real`, and a league
+ *  is a directory of history under `data/snapshots/` that a rename would strand.
+ *  This paragraph used to say `rehearsal` *is* the four-team league, which
+ *  stopped being true the day before it was read. Corrected 3 Sep 2026.
  *
  *  `real` stays empty until draft night and is the standing test that empty
  *  states degrade honestly. On 10 Oct the only change is which id the app

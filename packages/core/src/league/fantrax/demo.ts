@@ -3,10 +3,12 @@ import payloads from "./demoPayloads.json";
 // A league with ten teams in it, for building screens against.
 //
 // The real league does not publish a team list until it drafts — `teamInfo` is
-// an empty object on every capture — and the rehearsal league has four teams
-// with five-character names. So every dense table in this app has been designed
-// against four rows and the names "test2" and "123", which flatters a layout in
-// exactly the way a ten-team league with real names will not.
+// an empty object on every capture — and the rehearsal league had four teams
+// with five-character names when this was written. So every dense table in this
+// app has been designed against four rows and the names "test2" and "123", which
+// flatters a layout in exactly the way a ten-team league with real names will
+// not. (The rehearsal league was itself expanded to ten on 2 Sep 2026; the names
+// are still "test2" and "123", so the second half of that still holds.)
 //
 // **This is a source, not a mode.** It is selected the same way any other league
 // is, by `FANTRAX_LEAGUE_ID`, and the payloads are the provider's own shapes —
