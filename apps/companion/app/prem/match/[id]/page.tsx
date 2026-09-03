@@ -9,6 +9,7 @@ import ButtonLink from "../../../components/shell/ButtonLink";
 import { footballNow, seasonFixtures } from "../../../football";
 import { londonDayAndDate, londonTime } from "../../../londonTime";
 import { CLUB } from "../../PremNav";
+import { SCORE_CREST, SCORE_CREST_PX } from "@/app/desk";
 
 // One match.
 //
@@ -99,9 +100,9 @@ function Side({ club }: { club: Club | undefined }) {
         <Image
           src={crestUrl(club)}
           alt=""
-          width={22}
-          height={22}
-          className="h-[1.375rem] w-[1.375rem] shrink-0 object-contain"
+          width={SCORE_CREST_PX}
+          height={SCORE_CREST_PX}
+          className={`${SCORE_CREST} object-contain`}
           aria-hidden
           unoptimized
         />

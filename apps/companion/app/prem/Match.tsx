@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { type Club, type Fixture, crestUrl } from "@epl/core";
 import { londonDayAndTime } from "../londonTime";
+import { SCORE_CREST, SCORE_CREST_PX } from "@/app/desk";
 
 // One match, as a scoreline.
 //
@@ -68,14 +69,14 @@ function Side({ club, align }: { club: Club | undefined; align?: "end" }) {
           the whole list down — and the gap is held open regardless, so the
           scorelines stay in one column either way. */}
       {club === undefined ? (
-        <span aria-hidden className="h-[1.375rem] w-[1.375rem] shrink-0" />
+        <span aria-hidden className={SCORE_CREST} />
       ) : (
         <Image
           src={crestUrl(club)}
           alt=""
-          width={22}
-          height={22}
-          className="h-[1.375rem] w-[1.375rem] shrink-0 object-contain"
+          width={SCORE_CREST_PX}
+          height={SCORE_CREST_PX}
+          className={`${SCORE_CREST} object-contain`}
           aria-hidden
           unoptimized
         />

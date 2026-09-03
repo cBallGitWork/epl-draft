@@ -6,6 +6,7 @@ import { londonDayAndDate, londonTime } from "../../../londonTime";
 import { CLUB } from "../../PremNav";
 import { MATCH } from "./match";
 import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
+import { SCORE_CREST, SCORE_CREST_PX } from "@/app/desk";
 
 // One club's season, played and to come, in the order it runs.
 //
@@ -72,9 +73,9 @@ export default function Run({
                       <Image
                         src={crestUrl(opponent)}
                         alt=""
-                        width={22}
-                        height={22}
-                        className="h-[1.375rem] w-[1.375rem] shrink-0 object-contain"
+                        width={SCORE_CREST_PX}
+                        height={SCORE_CREST_PX}
+                        className={`${SCORE_CREST} object-contain`}
                         aria-hidden
                         unoptimized
                       />

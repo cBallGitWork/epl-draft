@@ -148,6 +148,25 @@ export const HEAD_PLATE_END =
 export const FACT =
   "flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2";
 
+/** The crest beside a scoreline: 22px, at both widths, held open even when the
+ *  club is missing so a column of scores stays a column. Four sites wrote
+ *  `h-[1.375rem] w-[1.375rem]` and three of them wrote `width={22} height={22}`
+ *  beside it, which is a magic number twice over.
+ *
+ *  **Deliberately not `--row-badge`.** That token is 26px, drops to 20 on the
+ *  desk, and is set ON `.cm-row` — and `desk.css` says in as many words that a
+ *  scoreline panel must not wear `.cm-row`, because one of its halves is a
+ *  button and the class would hold a control to a row's floor. So the token
+ *  cannot reach here and would be the wrong number if it did. 22 is the
+ *  scoreline's own size, and this is where it is written down.
+ *
+ *  `_PX` is what `next/image` is told to FETCH and the class is what the page
+ *  draws — `TeamBadge`'s `BADGE_PX`/`BADGE_SLOT` pair, for its reason: a source
+ *  fetched smaller than it is drawn is a soft crest nobody thinks to blame the
+ *  CSS for. They are the same number here because this mark has no breakpoint. */
+export const SCORE_CREST = "h-[1.375rem] w-[1.375rem] shrink-0";
+export const SCORE_CREST_PX = 22;
+
 /** The button that submits a form it sits inside — the plate at `BUTTON`'s
  *  height without `BUTTON`'s `flex` centring, because a `<button>` centres its
  *  own label and a form row wants to size it by its text. Three sites wrote it.
@@ -181,13 +200,17 @@ export const SUBMIT = "cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9";
  *   is named only if all 68 adopt it, which is a decision about the absence
  *   grammar (DESIGN §7) rather than about class strings.
  *
- * `tracking-[-0.01em]` — 2 sites, and both are `.numeric`'s own letter-spacing
- *   written out again, which DESIGN §6 forbids outright. They are deleted, not
- *   named.
+ * The pitch NAME PLATE — 2 sites, `FplPitch` and `PitchPlayer`, and the whole
+ *   long string is byte-identical in both. Below the bar, and `PitchRows`
+ *   already owns `NAME_SIZE` and `GAP_CLASS` for the pitches, so that is where
+ *   the third one goes rather than here.
  *
- * `h-[1.375rem] w-[1.375rem]` — 4 sites, and a magic 22px where `--row-badge`
- *   and `--row-portrait` already exist with a breakpoint each. A token, not a
- *   recipe.
+ *   Its `tracking-[-0.01em]` was reported as duplicating `.numeric`'s own
+ *   letter-spacing — "the two rules arguing" that DESIGN §6 forbids. Checked:
+ *   neither element carries `.numeric`, so nothing is arguing. It is a NAME on
+ *   a fixed-height band, condensed to fit, and §6 says in as many words that
+ *   negative tracking is untouched. The duplication is real and the rule breach
+ *   was not.
  *
  * The submit-quiet pair above — 2 sites. Under the bar.
  */
