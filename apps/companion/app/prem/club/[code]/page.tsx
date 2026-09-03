@@ -4,6 +4,7 @@ import ButtonLink from "../../../components/shell/ButtonLink";
 import ClubShell from "./Shell";
 import SquadTable, { fantasyDepth } from "./SquadTable";
 import { TABLE } from "../../PremNav";
+import { intelSquads } from "../../../intel";
 import { clubOr404, leagueOpinions, standing } from "./club";
 import { ordinal } from "@epl/core";
 
@@ -48,6 +49,12 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
     .sort(
       (a, b) =>
         fantasyDepth(league.get(a.code)) - fantasyDepth(league.get(b.code)) ||
+        // **Depth before minutes.** The sister's chart says who is first choice
+        // within his club and position, which is the question a squad list
+        // answers; minutes only approximates it and gets a returning first
+        // choice wrong all season. A man it has no tier for sorts after the men
+        // it does, rather than into the first-choice block.
+        depth(intelSquads.get(a.code)?.depthTier) - depth(intelSquads.get(b.code)?.depthTier) ||
         b.season.minutes - a.season.minutes ||
         b.season.starts - a.season.starts ||
         a.name.localeCompare(b.name),
@@ -64,13 +71,14 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
               players={squad}
               colours={clubColours(club.shortName)}
               league={league}
+              intel={intelSquads}
             />
             {/* Said rather than left blank. A column of dashes with no
                 explanation reads as broken; a column of dashes with one reads
                 as early. */}
             <p className="text-2xs text-faint">
-              Ordered by the position our league files each man at, then by minutes played.
-              Squad numbers and real positions arrive with the intel feed; players FPL has
+              Ordered by the position our league files each man at, then by the depth chart.
+              A dash under Pos is a man whose position FPL only guesses at; players FPL has
               marked unavailable are not listed.
             </p>
           </>
@@ -86,4 +94,14 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
       </ButtonLink>
     </ClubShell>
   );
+}
+
+/** Where a man sits in his club's depth chart, as a number to sort on.
+ *
+ *  Tier 0 is *unavailable* in the sister's vocabulary — out of the competition
+ *  rather than injured — and those men are already dropped above, so it should
+ *  never arrive. A man with no tier at all sorts after everyone who has one:
+ *  absent is not first choice. */
+function depth(tier: number | null | undefined): number {
+  return tier === null || tier === undefined || tier === 0 ? Number.MAX_SAFE_INTEGER : tier;
 }

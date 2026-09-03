@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ClubColours, FootballPlayer } from "@epl/core";
+import type { ClubColours, FootballPlayer, IntelPlayer } from "@epl/core";
 import { availabilityOf, positionDepth } from "@epl/core";
 import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
 import PlayerPortrait from "../../../components/football/PlayerPortrait";
@@ -29,12 +29,15 @@ export default function SquadTable({
   players,
   colours,
   league,
+  intel,
 }: {
   /** Already ordered by the page. This draws; it does not rank. */
   players: readonly FootballPlayer[];
   colours: ClubColours;
   /** Our league's opinion by FPL code, empty when Fantrax would not say. */
   league: ReadonlyMap<number, LeagueOpinion>;
+  /** The sister repo's, by the same key. Empty when it has never exported. */
+  intel: ReadonlyMap<number, IntelPlayer>;
 }) {
   return (
     <div className="overflow-x-auto">
@@ -49,18 +52,25 @@ export default function SquadTable({
                 publishes `squad_number` as a key on every element and null as a
                 value on all of them, counted 29 Aug. It fills from the intel
                 feed, which carries it for 527 of 625. */}
-            <Head width="w-8 lg:w-14" title="Squad number — arrives with the intel feed">
+            <Head width="w-8 lg:w-14" title="Squad number">
               <span className={PLATE}>#</span>
             </Head>
             <NameHead label="Player" />
             {/* Fantrax's, and headed as Fantrax's. DESIGN's provenance rule is
                 the whole reason this is its own column rather than merged with
                 the real-life position. */}
+            {/* His real position, and OUR league's, side by side. Two columns
+                and never one: `MID` against Saka's name would claim Arsenal play
+                him in midfield, when what is true is that this league files him
+                there. */}
+            <Head width="hidden w-12 lg:table-cell lg:w-20" title="His real position">
+              <span className={PLATE}>Pos</span>
+            </Head>
             <Head
               width="w-12 lg:w-20"
               title="What our Fantrax league will field him as — not a fact about the footballer"
             >
-              <span className={PLATE}>Pos</span>
+              <span className={PLATE}>Elig</span>
             </Head>
             <Head width="w-20 lg:w-32" title="Who holds him in our league">
               <span className={PLATE}>Owner</span>
@@ -94,10 +104,11 @@ export default function SquadTable({
             // the box saying WHY the row is grey.
             const dim = availability.out ? "text-faint" : "";
             const opinion = league.get(player.code);
+            const know = intel.get(player.code);
 
             return (
               <tr key={player.id} className="border-b border-bg hover:bg-surface">
-                <td className={`${SLOT} ${dim}`}>{DASH}</td>
+                <td className={`${SLOT} ${dim}`}>{know?.squadNumber ?? DASH}</td>
                 <td className="w-full max-w-0 pl-2">
                   <Link
                     href={`${PLAYER}/${player.code}`}
@@ -110,6 +121,13 @@ export default function SquadTable({
                     <span className={`min-w-0 truncate ${dim}`}>{player.name}</span>
                     <StateBox player={player} />
                   </Link>
+                </td>
+                {/* Null is a real answer here and a common one: 146 of 651 came
+                    from FPL's own `element_type`, which is a fantasy
+                    classification and not a fact about the footballer, so the
+                    export sends none rather than that. */}
+                <td className={`${FIGURE} hidden lg:table-cell ${dim || "text-muted"}`}>
+                  {know?.position ?? DASH}
                 </td>
                 <td className={`${FIGURE} ${dim || "text-muted"}`}>
                   {positionsLabel(opinion?.positions ?? []) ?? DASH}
@@ -161,7 +179,12 @@ export function fantasyDepth(opinion: LeagueOpinion | undefined): number {
   return first === undefined ? Number.MAX_SAFE_INTEGER : positionDepth(first);
 }
 
-/** The position slot, quiet until it has a number in it. */
+/** The shirt-number slot.
+ *
+ *  Quiet rather than CM's filled plate: `ClubShell` scopes `--cm-index` to the
+ *  club, so an index block here is twenty rows of the club at full saturation,
+ *  and roughly a third of the column is empty — the identity files carry a
+ *  number for about four men in five and the export clears the collisions. */
 const SLOT = "numeric px-1.5 text-center text-2xs text-faint";
 
 /** One figure cell, at the row's own size. */
