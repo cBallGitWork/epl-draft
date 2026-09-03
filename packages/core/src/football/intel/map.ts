@@ -16,6 +16,7 @@ import type { IntelClubXi, IntelPlayer, IntelSquads, IntelXi, IntelStarter } fro
 
 const STARTING_XI = 11;
 
+
 /** Every player the export carries, by FPL code.
  *
  *  Rows without a usable code are dropped rather than kept under a nonsense key:
@@ -47,49 +48,59 @@ export function xiFault(club: IntelClubXi | undefined): string | null {
   return null;
 }
 
-/** One club's predicted eleven, arranged into the lines its formation plays.
+/** One club's predicted eleven, in the rows its formation draws.
  *
- *  Ordered back to front — keeper, defence, midfield, attack — which is the
- *  order every football list uses and the order the pitch draws from its own
- *  goal line outwards.
+ *  **The source's own order IS the line-up, so it is chunked and never
+ *  regrouped.** FFScout lists Arsenal's 4-2-3-1 as keeper, right-back across to
+ *  left-back, the two, the three, the one — and Chelsea's 3-4-3 the same way. So
+ *  the rows are the formation's numbers taken off that order in sequence. An
+ *  earlier version grouped the men by their real positions instead, which drew a
+ *  4-2-3-1 as seven rows of one or two, split a 3-4-3's wing-backs out of the
+ *  four a reader counts them in, and needed a position for every man to do it.
+ *  Mirroring the source needs none and is what the source meant.
  *
- *  **A man is placed by his line and not by his probability.** The formation
- *  says how many go in each; the men are filled in most-likely-first so that
- *  where the two disagree the surest starter keeps his place. A line the
- *  formation does not name — a man whose position the export could not settle —
- *  goes last under `null`, visible rather than dropped. */
+ *  **The keeper is not in the formation.** `4-2-3-1` is ten outfield players;
+ *  the eleventh keeps goal and is drawn as his own row. A shape whose numbers do
+ *  not add to ten is refused rather than guessed at.
+ *
+ *  Rows come back goal-first, which is the order a pitch is drawn in. */
 export function predictedEleven(
   club: IntelClubXi | undefined,
-  lineOf: (code: number) => string | null,
 ): { line: string; players: IntelStarter[] }[] {
   if (club === undefined) return [];
-  const wanted = club.slots ?? {};
 
-  const byLine = new Map<string, IntelStarter[]>();
-  for (const line of ORDER) {
-    if (wanted[line] !== undefined) byLine.set(line, []);
+  const shape = outfieldShape(club.formation);
+  const starters = club.starters ?? [];
+  if (shape === null || starters.length !== STARTING_XI) return [];
+
+  const [keeper, ...outfield] = starters;
+  const rows = [{ line: "GK", players: [keeper] }];
+
+  let at = 0;
+  for (const count of shape) {
+    // **Reversed, because the source lists a line RIGHT to left.** FFScout gives
+    // Arsenal's back four as White (RB), Konsa, Gabriel, Calafiori (LB); drawn
+    // in that order across a pitch the right-back stands on the reader's left,
+    // which is the wrong side of the field. A pitch is drawn from the viewer's
+    // seat, so the row is turned round on the way out.
+    rows.push({ line: String(count), players: outfield.slice(at, at + count).reverse() });
+    at += count;
   }
-
-  const spare: IntelStarter[] = [];
-  for (const starter of [...(club.starters ?? [])].sort((a, b) => b.prob - a.prob)) {
-    const line = lineOf(starter.code);
-    const row = line === null ? undefined : byLine.get(line);
-    if (row === undefined) spare.push(starter);
-    else row.push(starter);
-  }
-
-  const rows = [...byLine].map(([line, players]) => ({ line, players }));
-  // Whoever the formation had no room for. Not dropped: eleven men were
-  // predicted and eleven must be drawable, even when one of them cannot be
-  // placed.
-  if (spare.length > 0) rows.push({ line: "", players: spare });
   return rows.filter((row) => row.players.length > 0);
 }
 
-/** The lines a pitch draws, from the goal outwards. The sister repo's own
- *  vocabulary (`positional_rank.position_to_group`), written down here only as
- *  an ORDER — the bucketing itself stays there. */
-const ORDER = ["GK", "CB", "FB", "DM", "CM", "AM", "WF", "CF"] as const;
+/** A formation as its outfield row sizes, or null when it cannot be read.
+ *
+ *  Ten and not eleven: the keeper is nobody's `4` and no formation counts him.
+ *  A string that does not add up is refused — a shape we cannot read is one we
+ *  must not guess at, and drawing ten men in a row called `4` would be the
+ *  screen disagreeing with the label above it. */
+function outfieldShape(formation: string | null | undefined): number[] | null {
+  if (!formation) return null;
+  const parts = formation.split("-").map((part) => Number(part.trim()));
+  if (parts.length < 2 || parts.some((n) => !Number.isInteger(n) || n < 1)) return null;
+  return parts.reduce((total, n) => total + n, 0) === STARTING_XI - 1 ? parts : null;
+}
 
 /** How old the prediction is, in whole hours, or null when it will not say.
  *

@@ -48,7 +48,13 @@ export default function Run({
 
             return (
               <tr key={fixture.id} className="cm-row border-b border-bg hover:bg-surface">
-                <td className="numeric whitespace-nowrap px-1.5 text-3xs text-muted lg:text-2xs">
+                {/* The date in the club's own colour (Craig, 3 Sep 2026:
+                    "fixtures, needs the team colours for the date box").
+                    `cm-index` is CM's index block and `ClubShell` has already
+                    scoped `--cm-index` to this club, so the block is the club's
+                    without this file knowing which club it is on — the same
+                    mechanism the gameweek column uses two cells along. */}
+                <td className="cm-index numeric whitespace-nowrap px-1.5 text-center text-3xs font-bold lg:text-2xs">
                   {fixture.kickoff === null ? "TBC" : londonDayAndDate(fixture.kickoff)}
                 </td>
                 <td className="numeric whitespace-nowrap px-1 text-3xs text-faint lg:text-2xs">

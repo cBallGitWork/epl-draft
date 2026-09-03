@@ -59,18 +59,19 @@ export default function SquadTable({
             {/* Fantrax's, and headed as Fantrax's. DESIGN's provenance rule is
                 the whole reason this is its own column rather than merged with
                 the real-life position. */}
-            {/* His real position, and OUR league's, side by side. Two columns
-                and never one: `MID` against Saka's name would claim Arsenal play
-                him in midfield, when what is true is that this league files him
-                there. */}
-            <Head width="hidden w-12 lg:table-cell lg:w-20" title="His real position">
-              <span className={PLATE}>Pos</span>
-            </Head>
+            {/* **His real position is NOT a column here** (Craig, 3 Sep 2026:
+                "remove the real life position from this, doesnt work really on
+                this"). It is still exported, still read, and still the thing
+                that arranges the predicted eleven into the shape its club
+                plays — a granular `RCB`/`LWB` earns its place on a pitch and
+                does not earn a column beside a letter our league would field
+                him at. The pipeline is kept for the CM-style draft manager the
+                27/28 platform is for. */}
             <Head
               width="w-12 lg:w-20"
               title="What our Fantrax league will field him as — not a fact about the footballer"
             >
-              <span className={PLATE}>Elig</span>
+              <span className={PLATE}>Pos</span>
             </Head>
             <Head width="w-20 lg:w-32" title="Who holds him in our league">
               <span className={PLATE}>Owner</span>
@@ -115,19 +116,17 @@ export default function SquadTable({
                     className="cm-row flex min-h-11 items-center gap-2 font-bold hover:underline"
                   >
                     <PlayerPortrait
-                      player={{ code: player.code, name: player.name }}
+                      player={{ code: player.code, name: player.fullName }}
                       colours={colours}
                     />
-                    <span className={`min-w-0 truncate ${dim}`}>{player.name}</span>
+                    {/* First name and surname (Craig, 3 Sep 2026). FPL's `name` is
+                        its own web short form — "Raya", "J.Timber" — which is
+                        right on a pitch card 46px wide and wrong in a column
+                        with room for a person. `fullName` is `first_name
+                        second_name` from the bootstrap. */}
+                    <span className={`min-w-0 truncate ${dim}`}>{player.fullName}</span>
                     <StateBox player={player} />
                   </Link>
-                </td>
-                {/* Null is a real answer here and a common one: 146 of 651 came
-                    from FPL's own `element_type`, which is a fantasy
-                    classification and not a fact about the footballer, so the
-                    export sends none rather than that. */}
-                <td className={`${FIGURE} hidden lg:table-cell ${dim || "text-muted"}`}>
-                  {know?.position ?? DASH}
                 </td>
                 <td className={`${FIGURE} ${dim || "text-muted"}`}>
                   {positionsLabel(opinion?.positions ?? []) ?? DASH}

@@ -1,10 +1,11 @@
-import { availabilityOf, clubColours } from "@epl/core";
+import { availabilityOf, clubColours, predictedEleven, xiFault } from "@epl/core";
 import TabEmpty from "../../../components/league/TabEmpty";
 import ButtonLink from "../../../components/shell/ButtonLink";
 import ClubShell from "./Shell";
-import SquadTable, { fantasyDepth } from "./SquadTable";
+import Squad from "./Squad";
+import { fantasyDepth } from "./SquadTable";
 import { TABLE } from "../../PremNav";
-import { intelSquads } from "../../../intel";
+import { intelSquads, intelXi } from "../../../intel";
 import { clubOr404, leagueOpinions, standing } from "./club";
 import { ordinal } from "@epl/core";
 
@@ -60,6 +61,13 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
         a.name.localeCompare(b.name),
     );
 
+  // The predicted eleven, and only when it is a real one. `xiFault` is the same
+  // check `intel-check` runs: a club that is not eleven, or a formation whose
+  // places do not add up, is NAMED rather than drawn short — a pitch with ten
+  // men on it is the failure nobody notices.
+  const predicted = intelXi.clubs[club.shortName];
+  const eleven = xiFault(predicted) === null ? predictedEleven(predicted) : [];
+
   return (
     <ClubShell club={club} title="Squad" current="squad">
       <section className="cm-panel flex flex-col gap-2 p-2">
@@ -67,19 +75,21 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
           <TabEmpty>FPL names {club.name} but lists nobody on its books.</TabEmpty>
         ) : (
           <>
-            <SquadTable
+            <Squad
               players={squad}
               colours={clubColours(club.shortName)}
               league={league}
               intel={intelSquads}
+              club={club}
+              eleven={eleven}
+              formation={predicted?.formation ?? null}
             />
             {/* Said rather than left blank. A column of dashes with no
                 explanation reads as broken; a column of dashes with one reads
                 as early. */}
             <p className="text-2xs text-faint">
               Ordered by the position our league files each man at, then by the depth chart.
-              A dash under Pos is a man whose position FPL only guesses at; players FPL has
-              marked unavailable are not listed.
+              Players FPL has marked unavailable are not listed.
             </p>
           </>
         )}

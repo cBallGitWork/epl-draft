@@ -97,40 +97,40 @@ describe("xiFault", () => {
 });
 
 describe("predictedEleven", () => {
-  const lines: Record<number, string> = {
-    1: "GK", 2: "CB", 3: "CB", 4: "FB", 5: "FB",
-    6: "DM", 7: "DM", 8: "AM", 9: "WF", 10: "WF", 11: "CF",
-  };
-  const lineOf = (code: number) => lines[code] ?? null;
-
-  it("arranges the eleven back to front, in the formation's own lines", () => {
-    const rows = predictedEleven(eleven(), lineOf);
-    expect(rows.map((row) => row.line)).toEqual(["GK", "CB", "FB", "DM", "AM", "WF", "CF"]);
-    expect(rows.map((row) => row.players.length)).toEqual([1, 2, 2, 2, 1, 2, 1]);
+  it("chunks the source's own order into the formation's rows", () => {
+    // FFScout lists a 4-2-3-1 as keeper, right-back across to left-back, the
+    // two, the three, the one. Mirroring that needs no positions at all.
+    const rows = predictedEleven(eleven());
+    expect(rows.map((row) => row.line)).toEqual(["GK", "4", "2", "3", "1"]);
+    expect(rows.map((row) => row.players.length)).toEqual([1, 4, 2, 3, 1]);
+    // Turned round within the line: the source lists a back four right-back
+    // first, and a pitch is drawn from the reader's seat, so the right-back
+    // belongs on the right.
+    expect(rows[1]?.players.map((p) => p.code)).toEqual([5, 4, 3, 2]);
   });
 
-  it("fills each line most-likely-first, so the surest starter keeps his place", () => {
-    const club = eleven({
-      starters: [
-        { code: 2, prob: 0.5 },
-        { code: 3, prob: 0.9 },
-        ...eleven().starters.filter((s) => s.code !== 2 && s.code !== 3),
-      ],
-    });
-    const backs = predictedEleven(club, lineOf).find((row) => row.line === "CB");
-    expect(backs?.players.map((p) => p.code)).toEqual([3, 2]);
-  });
-
-  it("keeps a man the formation has no room for, rather than dropping him", () => {
-    // Eleven were predicted and eleven must be drawable, even when one of them
-    // has no position the export could settle.
-    const rows = predictedEleven(eleven(), (code) => (code === 11 ? null : lineOf(code)));
+  it("keeps the keeper out of the formation", () => {
+    // `4-2-3-1` is ten outfield players. The eleventh keeps goal and is his own
+    // row; no formation counts him.
+    const rows = predictedEleven(eleven({ formation: "3-4-3" }));
+    expect(rows.map((row) => row.line)).toEqual(["GK", "3", "4", "3"]);
     expect(rows.flatMap((row) => row.players).length).toBe(11);
-    expect(rows.at(-1)?.line).toBe("");
+  });
+
+  it("refuses a shape whose numbers do not add to ten", () => {
+    // Drawing ten men in a row labelled "4" would be the screen disagreeing
+    // with the label above it, so it draws nothing and the caller says so.
+    expect(predictedEleven(eleven({ formation: "4-4-4" }))).toEqual([]);
+    expect(predictedEleven(eleven({ formation: "nonsense" }))).toEqual([]);
+  });
+
+  it("refuses a squad that is not eleven, rather than drawing it short", () => {
+    const ten = eleven({ starters: eleven().starters.slice(0, 10) });
+    expect(predictedEleven(ten)).toEqual([]);
   });
 
   it("draws nothing for a club with no prediction", () => {
-    expect(predictedEleven(undefined, lineOf)).toEqual([]);
+    expect(predictedEleven(undefined)).toEqual([]);
   });
 });
 

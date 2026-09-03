@@ -1,11 +1,9 @@
 import type { CSSProperties } from "react";
+import type { FootballPlayer } from "@epl/core";
 import {
   type Club,
   type Opposition,
-  type RosteredPlayer,
-  isResolved,
   kickedOff,
-  pitchName,
 } from "@epl/core";
 import PlayerImage from "./PlayerImage";
 import { fixtureLabel } from "@epl/core";
@@ -42,16 +40,40 @@ import { fixtureLabel } from "@epl/core";
 // of the palette, which is where a kit belongs.
 
 export default function PitchDisc({
-  rostered,
+  player,
+  label,
+  name,
+  keeper,
   club,
   opposition,
   points,
   show = "points",
+  band,
   outline = "var(--color-chrome)",
   fill = "var(--color-chrome)",
   ink = "var(--color-cream)",
 }: {
-  rostered: RosteredPlayer;
+  /** The footballer, or null for a slot with nobody behind it — a bridge that
+   *  has not settled a fantasy roster line. A real club's eleven is always
+   *  somebody, so it never passes null.
+   *
+   *  **A footballer and not a roster slot.** This took a `RosteredPlayer` until
+   *  3 Sep 2026, which is the league layer's own shape and carries a Fantrax id
+   *  — so the grass was unreachable for anything that is not a fantasy squad,
+   *  and a Premier League club's predicted eleven has no such id and never will.
+   *  The two callers translate their own vocabulary on the way in, which is
+   *  where a layer's words belong. */
+  player: FootballPlayer | null;
+  /** What the disc says when there is no photograph: a position, a shirt number,
+   *  a "?". The caller's word, already translated. */
+  label: string;
+  /** His name as it should read on the grass — the caller's spelling, because
+   *  the two layers disagree about it: a fantasy slot the bridge never settled
+   *  still has a name to print, and a footballer has his own. */
+  name: string;
+  /** Whether he keeps goal, which changes the kit `PlayerImage` draws. A boolean
+   *  rather than a letter to test, so neither layer's spelling reaches here. */
+  keeper: boolean;
   club: Club | undefined;
   opposition?: Opposition[];
   /** What our league scores him this period. Undefined is no table at all,
@@ -59,6 +81,14 @@ export default function PitchDisc({
   points?: number | null;
   /** What the plate under his name carries. */
   show?: "points" | "fixture";
+  /** A line of the caller's own, which wins over `show`.
+   *
+   *  For a plate that is neither a score nor a fixture: a club's predicted
+   *  eleven puts how LIKELY he is to start there, which is the only honest
+   *  thing a prediction can say about itself. Without this it fell through to
+   *  the club's own short name on every disc — eleven identical labels saying
+   *  nothing. */
+  band?: string;
   /** The ink for anything drawn ON the fill — `inkOn(colours)`. */
   ink?: string;
   /** The disc's FILL — the fantasy team's primary. */
@@ -74,7 +104,6 @@ export default function PitchDisc({
    *  the plain disc rather than a fallback colour pretending to be somebody's. */
   outline?: string;
 }) {
-  const resolved = isResolved(rostered) ? rostered : null;
   const started = kickedOff(opposition);
 
   return (
@@ -139,7 +168,7 @@ export default function PitchDisc({
           } as CSSProperties
         }
       >
-        {resolved === null ? (
+        {player === null ? (
           /* **Ink chosen for the plate it is on.** The disc is a team's own
              colour now, so a fixed ink cannot be right for all ten: `inkOn`
              computes it, which is the same helper the title bar and the match
@@ -149,13 +178,13 @@ export default function PitchDisc({
             className="grid h-full w-full place-items-center font-display text-3xs font-bold uppercase"
             style={{ color: ink }}
           >
-            {rostered.slot.position || "?"}
+            {label}
           </span>
         ) : (
           <PlayerImage
-            player={resolved.player}
+            player={player}
             club={club}
-            keeper={rostered.slot.position === "G"}
+            keeper={keeper}
             kickedOff
             fill
             sizes="56px"
@@ -179,7 +208,7 @@ export default function PitchDisc({
           on nine other managers' squads, on a screen that now opens on a rival's
           by default. */}
       <span className="w-full truncate px-0.5 text-center font-display text-2xs font-bold uppercase leading-none text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.95)]">
-        {pitchName(rostered)}
+        {name}
       </span>
 
       {/* **What he is worth, or who he plays** — and which of the two is the
@@ -191,11 +220,12 @@ export default function PitchDisc({
           there is no reference answer and this follows the question each screen
           is asking. */}
       <span className="numeric w-full truncate px-0.5 text-center text-3xs font-bold leading-none text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.95)]">
-        {show === "fixture"
-          ? (fixtureLabel(opposition) ?? club?.shortName ?? "—")
-          : started
-            ? (points ?? "—")
-            : (club?.shortName ?? "—")}
+        {band ??
+          (show === "fixture"
+            ? (fixtureLabel(opposition) ?? club?.shortName ?? "—")
+            : started
+              ? (points ?? "—")
+              : (club?.shortName ?? "—"))}
       </span>
     </div>
   );

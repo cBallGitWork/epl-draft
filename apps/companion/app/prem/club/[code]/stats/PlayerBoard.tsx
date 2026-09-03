@@ -130,7 +130,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
               <tr key={player.id} className="cm-row border-b border-bg hover:bg-surface">
                 <td className="px-1.5 text-sm font-bold">
                   <Link href={`/prem/player/${player.code}`} className="hover:underline">
-                    {player.name}
+                    {player.fullName}
                   </Link>
                 </td>
                 <td className="px-1.5 text-2xs text-muted">{position ?? DASH}</td>

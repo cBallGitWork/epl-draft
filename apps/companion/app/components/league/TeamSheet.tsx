@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
-import { playerName } from "@epl/core";
+import { isResolved, pitchName, playerName } from "@epl/core";
 import LivePlayerCard from "./LivePlayerCard";
 import PitchDisc from "./PitchDisc";
 import PitchRows, { GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
@@ -195,7 +195,13 @@ function Cell({
       className="block w-full"
     >
       <PitchDisc
-        rostered={player.rostered}
+        // The league layer's own vocabulary, translated here rather than inside
+        // the disc — which is what lets a Premier League eleven use the same
+        // grass without a Fantrax id anywhere near it.
+        player={isResolved(player.rostered) ? player.rostered.player : null}
+        label={player.rostered.slot.position || "?"}
+        name={pitchName(player.rostered)}
+        keeper={player.rostered.slot.position === "G"}
         club={player.club}
         opposition={player.opposition}
         points={player.points}

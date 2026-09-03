@@ -68,6 +68,17 @@ const teams = JSON.parse(
 );
 if (teams.length === 0) throw new Error("no squads on /squad — is the league drafted?");
 
+// The club pitch, discovered off the table the way the club pages are elsewhere.
+// It draws a PREDICTED eleven rather than a picked one, but it is the same
+// grass, the same `PitchRows` card sizing and the same fold to clear — so it is
+// measured with the rest or it is not measured at all.
+await cdp.open("/prem", 2200);
+const club = await cdp.js(
+  `(document.querySelector('a[href^="/prem/club/"]')||{}).getAttribute
+     ? document.querySelector('a[href^="/prem/club/"]').getAttribute("href") : ""`,
+);
+if (club) teams.push(club);
+
 let failures = 0;
 for (const route of teams) {
   for (const [width, height] of SIZES) {
