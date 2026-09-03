@@ -1,42 +1,41 @@
 {
   "capturedAt": "2026-09-03T11:45:33.645Z",
-  "leagueId": "ayyoh3n2mr326v2o",
+  "leagueId": "w05aib75mtj36y1g",
   "reads": [
     {
       "method": "getLeagueInfo",
       "ok": true,
-      "bytes": 74927
+      "bytes": 128301
     },
     {
       "method": "getTeamRosters",
-      "ok": false,
-      "code": "NO_TEAMS",
-      "message": "Fantrax getTeamRosters: NO_TEAMS — There are currently no teams in this league"
+      "ok": true,
+      "bytes": 16525
     },
     {
       "method": "getStandings",
       "ok": true,
-      "bytes": 3
+      "bytes": 1775
     },
     {
       "method": "getDraftResults",
       "ok": true,
-      "bytes": 74
+      "bytes": 25166
     },
     {
       "method": "getTransactionDetailsHistory-CLAIM_DROP",
       "ok": true,
-      "bytes": 3953
+      "bytes": 8495
     },
     {
       "method": "getTransactionDetailsHistory-TRADE",
       "ok": true,
-      "bytes": 3937
+      "bytes": 9072
     },
     {
       "method": "getTransactionDetailsHistory-LINEUP_CHANGE",
       "ok": true,
-      "bytes": 3971
+      "bytes": 9035
     }
   ]
 }
