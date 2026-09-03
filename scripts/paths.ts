@@ -41,6 +41,19 @@ export const SHAPE_BASELINE_PATH = join(REPO_ROOT, "data", "shape", "baseline.js
  *  reads. */
 export const EDITIONS_ROOT = join(REPO_ROOT, "data", "editions");
 
+/** The sister repo's export — real positions, squad numbers, a predicted eleven.
+ *
+ *  Under `data/` and NOT under `data/snapshots` or `data/probes`, for the same
+ *  load-bearing reason `EDITIONS_ROOT` is: `apps/companion/vercel.json` excludes
+ *  exactly those two from the build trigger, and the app imports this export
+ *  statically, so it is baked in at build time. A commit carrying a new export
+ *  MUST redeploy or it is data nobody reads.
+ *
+ *  Written by `make export-epl-draft` in `~/ai-carling-premiership`, never by
+ *  anything here — which is why `intel-check` exists: nothing in this repo can
+ *  make it fresher, so the least it can do is say how old it is. */
+export const INTEL_ROOT = join(REPO_ROOT, "data", "intel");
+
 /** Where the matcher leaves what it would not decide, for a human to settle. */
 export const REVIEW_ROOT = join(MAPPINGS_ROOT, "review");
 
