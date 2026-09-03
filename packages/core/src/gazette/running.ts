@@ -10,7 +10,7 @@
 // kind is still at the top of the order on the next firing, and the one after
 // that. On 2 Sep 2026 two of them (`eleven` and `dodgers`, both gating on a
 // flag that cannot be true after a round finishes) took both places in every
-// firing, and the four match reports, the presser and the studio queued behind
+// firing, and the four match reports and the columns queued behind
 // them were unreachable for the rest of the period. The paper reported
 // "nothing to file" while holding a dozen assignments it could have written.
 //

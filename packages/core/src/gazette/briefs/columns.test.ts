@@ -6,7 +6,6 @@ import {
   buildPredictionsBrief,
   buildWireBrief,
 } from "./columns";
-import { buildPresserBrief, buildStudioBrief } from "./sketches";
 import type { Pick, StoryResult } from "../types";
 
 const pick = (over: Partial<Pick> = {}): Pick => ({
@@ -130,32 +129,5 @@ describe("buildElevenBrief", () => {
     // have nowhere to go but the stat and a flourish.
     expect(brief).not.toContain("caption per man");
     expect(brief).toContain("No man gets his own sentence in turn");
-  });
-});
-
-describe("the sketches", () => {
-  it("announces the press room as staged, and plays it off real results", () => {
-    const brief = buildPresserBrief({
-      gameweek: 3,
-      results: [result],
-      personas: [{ teamId: "t1", name: "test2", trait: "graciously" }],
-      threads: [],
-    });
-    expect(brief).toContain("never presented as real");
-    expect(brief).toContain("test2 (id t1) — plays it graciously beat test3");
-  });
-
-  it("names both speakers so the studio cannot invent a third", () => {
-    const brief = buildStudioBrief({
-      gameweek: 3,
-      tie: { homeName: "test2", awayName: "test3", homePoints: 45, awayPoints: 31.4 },
-      talkingPoints: ["Cherki's two decided it"],
-      anchor: "The anchor",
-      analyst: "The analyst",
-      threads: [],
-    });
-    expect(brief).toContain('exactly "The anchor" or "The analyst"');
-    expect(brief).toContain("Cherki's two decided it");
-    expect(brief).toContain("obviously a sketch");
   });
 });

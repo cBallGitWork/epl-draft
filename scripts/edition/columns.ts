@@ -1,14 +1,11 @@
 import {
   type Assignment,
-  type Persona,
   type StandingsRow,
   type StoryThread,
   buildDodgersBrief,
   buildElevenBrief,
   buildPowerBrief,
   buildPredictionsBrief,
-  buildPresserBrief,
-  buildStudioBrief,
   buildWireBrief,
   decided,
   dodgers,
@@ -18,7 +15,6 @@ import {
   wireFacts,
 } from "@epl/core";
 import type { RoundFacts } from "./facts";
-import { MANAGER_TRAITS, STUDIO_ANALYST, STUDIO_ANCHOR } from "./voice/personas";
 
 // The opinion columns' wiring: what each one is told, out of the facts the
 // firing already gathered. The joins live here rather than in core for the
@@ -95,63 +91,5 @@ export function columnBrief(assignment: Assignment, ctx: ColumnContext): string 
     return buildWireBrief({ gameweek: ctx.gameweek, facts, named: ctx.named, threads: ctx.threads });
   }
 
-  if (assignment.kind === "presser") {
-    if (results.length === 0) return null;
-    return buildPresserBrief({
-      gameweek: ctx.gameweek,
-      results,
-      personas: personasFor(results, ctx.named),
-      threads: ctx.threads,
-    });
-  }
-
-  if (assignment.kind === "studio") {
-    // The round's biggest tie by margin's opposite: the closest of them, which
-    // is the one two pundits can actually disagree about.
-    const tie = [...results].sort((a, b) => a.margin - b.margin)[0];
-    if (tie === undefined) return null;
-    return buildStudioBrief({
-      gameweek: ctx.gameweek,
-      tie: {
-        homeName: tie.winner.name,
-        awayName: tie.loser.name,
-        homePoints: tie.winner.points,
-        awayPoints: tie.loser.points,
-      },
-      talkingPoints: talkingPoints(ctx.facts, tie.winner.teamId, tie.loser.teamId),
-      anchor: STUDIO_ANCHOR,
-      analyst: STUDIO_ANALYST,
-      threads: ctx.threads,
-    });
-  }
-
   return null;
-}
-
-/** The managers in this round's results, with whatever trait Craig has set.
- *  An empty table is a working sketch: the persona is then played off his
- *  result alone. */
-function personasFor(
-  results: readonly ReturnType<typeof decided>[number][],
-  named: (teamId: string) => string,
-): Persona[] {
-  const ids = new Set(results.flatMap((result) => [result.winner.teamId, result.loser.teamId]));
-  return [...ids].map((teamId) => ({
-    teamId,
-    name: named(teamId),
-    trait: MANAGER_TRAITS[teamId] ?? "",
-  }));
-}
-
-/** What the studio has to talk about: the men who actually did something for
- *  the two sides in the tie. */
-function talkingPoints(facts: RoundFacts, ...teamIds: string[]): string[] {
-  if (facts.eleven === null) return [];
-  return facts.eleven.picks
-    .filter((pick) => teamIds.includes(pick.ownerTeamId))
-    .slice(0, 4)
-    .map(
-      (pick) =>
-        `${pick.playerName} (${pick.ownerName}): ${pick.goals}G ${pick.assists}A${pick.cleanSheet ? " clean sheet" : ""} in ${pick.minutes} min${pick.started ? "" : ", and was on the bench"}`,
-    );
 }

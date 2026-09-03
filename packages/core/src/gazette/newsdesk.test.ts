@@ -163,16 +163,14 @@ describe("newsdesk", () => {
     const kinds = newsdesk(desk({ finished: true, ties }), none, NOW).map((a) => a.kind);
     // The reporting leads; the considered columns follow in the order they are
     // worth reading, and the cap spreads them across firings.
-    expect(kinds).toEqual([
-      "tie-report", "eleven", "power-ranking", "dodgers", "studio", "presser",
-    ]);
+    expect(kinds).toEqual(["tie-report", "eleven", "power-ranking", "dodgers"]);
     // Each spends its own key, so a second firing files only what is left.
     const after = newsdesk(
       desk({ finished: true, ties }),
       (key) => key.startsWith("tie-report") || key.startsWith("eleven"),
       NOW,
     );
-    expect(after.map((a) => a.kind)).toEqual(["power-ranking", "dodgers", "studio", "presser"]);
+    expect(after.map((a) => a.kind)).toEqual(["power-ranking", "dodgers"]);
   });
 
   it("files the predictions column in the lock window, beside the preview", () => {

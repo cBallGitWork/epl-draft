@@ -15,8 +15,6 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   "power-ranking": "The Pecking Order",
   dodgers: "Own Goals & Gaffs",
   wire: "The Bin",
-  presser: "The Press Room",
-  studio: "The Studio",
   news: "The Wire",
 };
 
@@ -28,9 +26,7 @@ export function editionName(kind: StoryKind, filedAt: string): string {
   if (kind === "round-preview" || kind === "predictions") return "The Form Guide";
   if (kind === "fixture-preview" || kind === "news") return "The Team Sheet";
   if (kind === "wire" || kind === "dodgers") return "The Mercato Wire";
-  if (kind === "eleven" || kind === "power-ranking" || kind === "presser" || kind === "studio") {
-    return "The Monday Club";
-  }
+  if (kind === "eleven" || kind === "power-ranking") return "The Monday Club";
 
   const day = new Intl.DateTimeFormat("en-GB", {
     timeZone: LEAGUE_TIMEZONE,

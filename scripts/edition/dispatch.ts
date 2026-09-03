@@ -25,7 +25,6 @@ import { storyOfColumn, storyOfEdition } from "./newsroom";
 import { STORY_BYLINE, editionName } from "./voice/bylines";
 import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL, TIE_REPORT } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, PREDICTIONS, WIRE } from "./voice/columns";
-import { PRESSER, STUDIO } from "./voice/sketches";
 import { NEWS } from "./voice/news";
 import { PREVIEW } from "./voice/rounds";
 
@@ -121,8 +120,6 @@ const VOICE: Partial<Record<Assignment["kind"], string>> = {
   dodgers: DODGERS,
   wire: WIRE,
   news: NEWS,
-  presser: PRESSER,
-  studio: STUDIO,
 };
 
 export function file(

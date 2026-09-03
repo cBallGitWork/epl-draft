@@ -31,14 +31,12 @@ export type StoryKind =
   | "power-ranking"
   | "wire"
   | "dodgers"
-  | "presser"
-  | "studio"
   | "news";
 
 const STORY_KINDS: readonly StoryKind[] = [
   "round-preview", "match-report", "fixture-preview",
   "tie-call", "tie-report", "predictions", "eleven", "power-ranking",
-  "wire", "dodgers", "presser", "studio", "news",
+  "wire", "dodgers", "news",
 ];
 
 export type { StoryExtras } from "./extras";

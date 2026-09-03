@@ -23,7 +23,6 @@ export {
   buildPredictionsBrief,
   buildWireBrief,
 } from "./briefs/columns";
-export { buildPresserBrief, buildStudioBrief } from "./briefs/sketches";
 export { buildNewsBrief } from "./briefs/news";
 export { affectedBy } from "./newsTriage";
 export type { NewsAngle } from "./briefs/news";
@@ -32,7 +31,6 @@ export { dodgers } from "./dodgers";
 export { markCalls, predictionTies } from "./predictions";
 export { powerRows } from "./powerRanking";
 export { wireFacts } from "./wire";
-export type { Persona } from "./briefs/sketches";
 export type { Marked, PredictionTie } from "./predictions";
 export type { PowerRow } from "./powerRanking";
 export type { WireFacts } from "./wire";

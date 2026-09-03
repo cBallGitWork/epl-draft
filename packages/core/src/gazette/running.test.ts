@@ -21,8 +21,6 @@ const ROUND = [
   "eleven",
   "power-ranking",
   "dodgers",
-  "studio",
-  "presser",
   "match-report:MUNvARS",
   "match-report:LIVvEVE",
 ];
@@ -39,12 +37,14 @@ describe("the running order", () => {
     expect(filed(ROUND, 2, wedged)).toEqual(["tie-report:avb", "power-ranking"]);
   });
 
-  it("reaches the match reports queued behind six columns", () => {
+  it("reaches the match reports queued behind the columns", () => {
     const got = filed(ROUND, 10, wedged);
     expect(got).toContain("match-report:MUNvARS");
     expect(got).toContain("match-report:LIVvEVE");
     expect(got).not.toContain("eleven");
-    expect(got).toHaveLength(6);
+    // Everything in the order except the two wedged kinds. It was six until
+    // 3 Sep 2026, when the two sketches were cut from the Monday set.
+    expect(got).toHaveLength(ROUND.length - 2);
   });
 
   it("never files more than the cap", () => {

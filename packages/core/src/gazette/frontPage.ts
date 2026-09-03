@@ -40,8 +40,6 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   "fixture-preview": 65,
   "round-preview": 60,
   predictions: 55,
-  studio: 50,
-  presser: 45,
   eleven: 40,
   "power-ranking": 35,
   dodgers: 30,

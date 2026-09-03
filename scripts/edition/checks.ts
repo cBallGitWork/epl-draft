@@ -14,10 +14,8 @@ import type { Assignment, PublishedStory } from "@epl/core";
 /** The kinds whose substance lives in `extras` rather than in the body, and
  *  which member carries it. A kind absent from this table legitimately files
  *  without extras. */
-export const CARGO: Partial<Record<Assignment["kind"], "quotes" | "ranks" | "quiz">> = {
+export const CARGO: Partial<Record<Assignment["kind"], "ranks" | "quiz">> = {
   "power-ranking": "ranks",
-  presser: "quotes",
-  studio: "quotes",
 };
 
 /** Every written surface of a filed story, as one string to check names in.
@@ -36,15 +34,14 @@ export function prose(story: PublishedStory): string {
     // carries a teamId, and stringifying the object put "Id" and "teamId"
     // into the checked text as though the column had named a footballer.
     //
-    // **`line`, and the quote's `speaker` beside it.** This read `"text"` for
-    // quotes and captions until 3 Sep 2026, and neither type has ever had a
-    // `text` — both hold their sentence in `line`, as `StoryRank` does. So the
-    // check silently saw no quote and no caption for as long as it has existed,
-    // and a quote is the one surface where an invented person is certain to
-    // appear: it is attributed to somebody by construction. The speaker is
-    // checked too, which is where that name would be.
+    // **`line`, and not `"text"`.** It read `"text"` for the quotes and the
+    // captions until 3 Sep 2026, and neither type ever had a `text` — both held
+    // their sentence in `line`, as `StoryRank` does and as this row always
+    // correctly did. So the check silently saw neither of them for as long as it
+    // existed. Both cargoes have since gone (the captions on Craig's ruling, the
+    // quotes with the sketches), so `ranks` is the whole of it; the lesson is
+    // kept here because the next cargo added will be read the same way.
     ...sentences(extras.ranks, "line"),
-    ...sentences(extras.quotes, "speaker", "line"),
   ];
   // Each part on its own line, and every line is a sentence for the check's
   // purposes — a rank line opens with a capital the way a sentence does.

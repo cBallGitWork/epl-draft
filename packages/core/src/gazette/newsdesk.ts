@@ -66,9 +66,11 @@ export interface DeskState {
 export const MATCH_REPORTS_PER_ROUND = 4;
 
 /** The columns a finished round earns, in the order they are worth reading.
- *  The eleven and the rankings are what the league argues about; the sketches
- *  are the last thing in and the first thing cut on a busy day. */
-const MONDAY_SET: StoryKind[] = ["eleven", "power-ranking", "dodgers", "studio", "presser"];
+ *  The eleven and the rankings are what the league argues about.
+ *
+ *  It ended `"studio", "presser"` until 3 Sep 2026 — two invented-quote
+ *  sketches, cut on Craig's ruling: *"this is rubbish, ditch."* */
+const MONDAY_SET: StoryKind[] = ["eleven", "power-ranking", "dodgers"];
 
 /** How many wire stories one firing may offer the cap. Two: the desk looks
  *  every half hour and a transfer-deadline afternoon would otherwise fill the

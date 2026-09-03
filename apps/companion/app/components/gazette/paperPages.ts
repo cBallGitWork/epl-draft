@@ -37,7 +37,7 @@ export const PAPER_PAGES: readonly PaperPage[] = [
     // The opinion columns, named for the edition they file under
     // (`voice/bylines.ts`). Not "Columns": a paper's inside page has a name,
     // and this one already had it.
-    kinds: ["eleven", "power-ranking", "dodgers", "presser", "studio", "predictions"],
+    kinds: ["eleven", "power-ranking", "dodgers", "predictions"],
   },
 ];
 

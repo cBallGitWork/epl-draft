@@ -158,7 +158,7 @@ async function main(): Promise<void> {
     // and a refusal spends no key, so they are still top of the order next
     // time — wedged the paper permanently: `eleven` and `dodgers` took both of
     // every firing's two places from 2 Sep, and four working match reports,
-    // the presser and the studio behind them were unreachable for the rest of
+    // the columns behind them were unreachable for the rest of
     // the period. A refusal now costs nothing and the next assignment gets the
     // turn.
     if (!hasRoom(filings.length, STORY_CAP)) break;
@@ -214,7 +214,7 @@ async function main(): Promise<void> {
       }
       // **A column whose cargo is missing files as prose about nothing.** Every
       // reader of `extras` treats absence as ordinary — correctly, since a
-      // presser has quotes and no ranks — so nothing downstream can tell an
+      // wire has a quiz and no ranks — so nothing downstream can tell an
       // empty rankings column from a kind that never carries one. The power
       // ranking filed without its `ranks` on 2 Sep: two good paragraphs and no
       // ranked list, which is the column's whole point. Warned, not refused;

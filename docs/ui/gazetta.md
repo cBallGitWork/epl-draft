@@ -362,6 +362,16 @@ because Fantrax scores the slot and not the player. The front page's three ranks
 are what sort them; the eleven, the rankings and the dodgers still carry the
 league-wide read, which is where a league-wide read belongs.
 
+**The two sketches were deleted on 3 Sep 2026** — the press room and the studio,
+Craig: *"this is rubbish, ditch."* They were the paper's only invented-quote
+columns and the only exception to HOUSE's "NEVER INVENT A QUOTE OR A REACTION";
+the doctrine was that a sketch announced as a sketch may put words in a
+manager's mouth. The exception is gone with the columns that needed it, so
+nothing in this paper invents a quote now — which is the plainer rule and the
+one HOUSE already states without an asterisk. Gone with them:
+`StoryExtras.quotes`, `Quotes.tsx`, both briefs, both voices, the personas
+table and the two studio names.
+
 The preview is the same whole-league shape and the same objection applies to it.
 It is left standing because Craig named the report, and because nothing yet
 replaces what a preview does — `predictions` calls the ties, but the build-up

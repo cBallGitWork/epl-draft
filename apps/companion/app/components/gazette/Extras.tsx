@@ -1,6 +1,5 @@
 import type { PublishedStory } from "@epl/core";
 import Quiz from "./Quiz";
-import Quotes from "./Quotes";
 import Ranks from "./Ranks";
 
 // What a column filed BESIDE its prose, by kind.
@@ -20,10 +19,6 @@ export default function Extras({
   mine: string | null;
 }) {
   if (story.kind === "power-ranking") return <Ranks story={story} named={named} mine={mine} />;
-  if (story.kind === "presser") {
-    return <Quotes story={story} label="Staged for the paper — nobody said any of this" />;
-  }
-  if (story.kind === "studio") return <Quotes story={story} label="A sketch — nobody said any of this" />;
   if (story.kind === "wire") return <Quiz story={story} />;
   return null;
 }
