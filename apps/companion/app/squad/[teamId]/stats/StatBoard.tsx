@@ -193,7 +193,7 @@ export default function StatBoard({
                     // (`21.jpg` fits thirteen columns and twelve players on an
                     // 800x600 canvas). The floor is a rule about a THUMB, so it
                     // belongs where there is one.
-                    className="cm-row flex min-h-11 items-center px-1.5 text-info hover:underline lg:min-h-7"
+                    className="cm-row flex min-h-11 items-center px-1.5 text-info hover:underline"
                   >
                     {names[line.fantraxId] ?? line.name}
                   </Link>

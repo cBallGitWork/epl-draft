@@ -67,7 +67,7 @@ export default function Run({
                   ) : (
                     <Link
                       href={`${CLUB}/${opponent.code}`}
-                      className="flex min-h-11 items-center gap-2 font-bold hover:underline lg:min-h-7"
+                      className="cm-row flex min-h-11 items-center gap-2 font-bold hover:underline"
                     >
                       <Image
                         src={crestUrl(opponent)}
