@@ -16,6 +16,12 @@ import { BUTTON } from "./components/shell/ButtonLink";
 // Deliberately not a `try/catch` swallowing a default (CODE_RULES §2). Nothing
 // is guessed at and no number is invented: the section says it broke, names what
 // broke, and offers the way back.
+//
+// **On a `.cm-panel`, for `not-found.tsx`'s reason.** This boundary replaces
+// everything below the root layout, so it lands on the bare stadium photograph
+// with nothing between — and `PhotoGround`'s rule, which `tools/ui/groundfit.mjs`
+// measures on every desk route, is that nothing prints text on the bare ground.
+// Neither of the app's two refusal pages was keeping it.
 
 export default function SectionError({
   error,
@@ -31,7 +37,7 @@ export default function SectionError({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center gap-4 py-10 text-center">
+    <div className="cm-panel flex flex-col items-center gap-4 p-6 py-10 text-center">
       <div className="flex flex-col gap-1.5">
         <h1 className="font-display text-2xl font-bold tracking-tight">This section broke</h1>
         <p className="mx-auto max-w-xs text-sm text-muted">

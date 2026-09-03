@@ -1315,6 +1315,63 @@ The real league cannot substitute: it has no teams until 10 Oct, and by the time
 it has fifteen belonging to real people, writing to one to see what happens is
 not a probe, it is an incident.
 
+## A streamed 404 answers 200, by design — probed 3 Sep 2026, do not re-derive
+
+Six routes answer `200` to a URL that does not exist, and two answer `404`. It
+looked per-route and arbitrary. It is neither, and the rule is exact:
+
+**Every route with a `loading.tsx` answers 200; every route without one answers
+404.** Eight of eight, checked against a production build:
+
+| 200 | 404 |
+|---|---|
+| `/prem/club/[code]` · `/gw/[gameweek]` · `/players/[fantraxId]` · `/squad/[teamId]` · `/league/matchups/[teamId]` · `/paper/[slug]` | `/prem/player/[code]` · `/prem/match/[id]` · an unmatched URL |
+
+Next's own docs say so in as many words (`next/dist/docs/01-app/03-api-reference/
+03-file-conventions/loading.md`, "Status Codes"): a `loading.tsx` is a Suspense
+boundary, the response body starts streaming when its fallback renders, and the
+headers — status line included — have gone by then. `notFound()` thrown after
+that point cannot change the status.
+
+**The crawler half is already handled and the plan's premise for "fix it" was
+wrong.** Next injects `<meta name="robots" content="noindex">` into the streamed
+HTML precisely for this case — verified present on all five of our soft 404s. So
+these are not pages "crawlers and link checkers believe"; they are pages crawlers
+are explicitly told to ignore. What is left seeing a 200 is `curl -I` and
+analytics, which is a real but small cost.
+
+**The documented fix is one we should not take.** Next says to check existence in
+`proxy` before the body streams, and in the same breath says to keep proxy checks
+fast and avoid fetching content there. Our checks are `footballNow()`,
+`seasonFixtures()` and `getLeagueSquads()` — the whole point of the check is the
+fetch. Moving them into a proxy would put our two provider reads in front of
+every request in the app to fix a status line on six.
+
+So the status codes stay as they are. **What was actually wrong was what the
+reader saw**, and that is fixed: see below.
+
+### The desk had no `not-found.tsx` until 3 Sep 2026
+
+`(paper)/not-found.tsx` is scoped to its route group, so every refusal outside it
+fell through to Next's built-in page — `404` in Vercel's system font beside a
+hairline rule, drawn over our stadium photograph, inside our rail, between the
+section plates. DESIGN §1 gives this app two registers; that was a third, and the
+one a reader meets on the day something is wrong. `app/not-found.tsx` is the desk's
+own, on `error.tsx`'s shape.
+
+Both refusal pages now sit on a `.cm-panel`. Neither did, and both were printing a
+headline and a paragraph straight onto the photograph — which is the one rule
+`PhotoGround` exists to keep and `tools/ui/groundfit.mjs` measures, and neither
+page is in that tool's route list because neither can be reached by URL.
+
+### `next dev` and `next build` share `.next/` and will lie to you
+
+The first production check of the new page reported Next's default 404 while
+`.next/server/app/_not-found.html` on disk plainly contained ours. The dev server
+was running against the same directory. `rm -rf apps/companion/.next` with dev
+stopped, rebuild, and the page appears. Worth an hour to anyone who does not know
+it: **stop `next dev` before trusting a `next start`.**
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for
