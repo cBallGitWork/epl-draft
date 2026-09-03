@@ -232,6 +232,8 @@ with its row here in the same commit.**
 | `SCROLL` | What a board is wrapped in so a phone can reach its far columns. | 14 sites |
 | `HEAD_PLATE` · `HEAD_PLATE_END` | A column head on a stats board (`h-6`), left over a name and right over a figure. `TableHeads.PLATE` is the `h-7` twin over a table. | 12 sites, 3 files |
 | `PANEL` | The default panel: a CM well holding a column of things. A caller with a reason keeps its own spacing and states it; a caller without one takes this. | 6 sites agreed already, 4 strays joined |
+| `PANEL_FLUSH` | The same well with no spacing of its own, for a panel whose single child manages it — a board, a ledger, a grid. A different decision from `PANEL`, not `PANEL` minus two utilities. | 6 sites |
+| `HEAD_CELL` | The `<th>` a stats board's head plate sits in: no padding, because the plate carries it. | 3 boards — the same three that share `HEAD_PLATE` |
 | `FACT` | One stated fact in a stack: bordered, at the tap floor at both widths. | 4 files |
 | `SCORE_CREST` · `SCORE_CREST_PX` | The 22px crest beside a scoreline. **Not `--row-badge`**, which is 26px, drops to 20 on the desk, and is set on `.cm-row` — a class a scoreline panel must never wear. | 7 literals across 3 files |
 | `SUBMIT` | The button that submits a form it sits inside. | 3 sites |
