@@ -1,0 +1,815 @@
+{
+  "period": 3,
+  "rosters": {
+    "yf96763gmtj31zni": {
+      "teamName": "test31121",
+      "rosterItems": [
+        {
+          "id": "04sjt",
+          "position": "G",
+          "status": "RESERVE"
+        },
+        {
+          "id": "05r9b",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04lav",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05gcs",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05o2p",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0689w",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06cmm",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "062a9",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06fuw",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06rgg",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "06ex4",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "05nzu",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06xzd",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06msb",
+          "position": "M",
+          "status": "RESERVE"
+        },
+        {
+          "id": "0326x",
+          "position": "F",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "8enbgqo5msgb375j": {
+      "teamName": "123",
+      "rosterItems": [
+        {
+          "id": "070f9",
+          "position": "M",
+          "status": "RESERVE"
+        },
+        {
+          "id": "06zqq",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "061vq",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06pia",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05gcr",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06v0g",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0788g",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0703c",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "06zvn",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06yb9",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06zbx",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "056iy",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04fk1",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "070hs",
+          "position": "G",
+          "status": "RESERVE"
+        },
+        {
+          "id": "067zv",
+          "position": "F",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "sezrgvl2mshcpazf": {
+      "teamName": "test4",
+      "rosterItems": [
+        {
+          "id": "06v07",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "070hl",
+          "position": "G",
+          "status": "RESERVE"
+        },
+        {
+          "id": "0521z",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04abb",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "03yqz",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05y7c",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06v0t",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05ogb",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "070hi",
+          "position": "M",
+          "status": "RESERVE"
+        },
+        {
+          "id": "05nil",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "06v0p",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05trb",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05a6e",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05tqx",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05u1m",
+          "position": "D",
+          "status": "RESERVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "pbxm9fgimshcpazf": {
+      "teamName": "test2",
+      "rosterItems": [
+        {
+          "id": "05uhs",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0784p",
+          "position": "M",
+          "status": "RESERVE"
+        },
+        {
+          "id": "0785j",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "03ksl",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "066sd",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "05o6h",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05oz3",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0646f",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "067yz",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "03yww",
+          "position": "G",
+          "status": "RESERVE"
+        },
+        {
+          "id": "05y9n",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "052h1",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04agz",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "068yt",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04sjv",
+          "position": "D",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "j9zadacnmshcpazf": {
+      "teamName": "test3",
+      "rosterItems": [
+        {
+          "id": "06zbm",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "05tr9",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "03gu4",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05r94",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04e1c",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06r6s",
+          "position": "G",
+          "status": "RESERVE"
+        },
+        {
+          "id": "06nu7",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06v0y",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "05tre",
+          "position": "M",
+          "status": "RESERVE"
+        },
+        {
+          "id": "032f9",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0784w",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "03mfe",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "07898",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05uor",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04qr9",
+          "position": "M",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "v6bxgqm5mtj31znh": {
+      "teamName": "test31",
+      "rosterItems": [
+        {
+          "id": "05ye7",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06y9m",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06ybp",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "061vp",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06cmu",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04f6h",
+          "position": "G",
+          "status": "RESERVE"
+        },
+        {
+          "id": "076qg",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06r5b",
+          "position": "M",
+          "status": "RESERVE"
+        },
+        {
+          "id": "078mm",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "076dg",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "051kl",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05gcc",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05ybq",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "076dq",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0700p",
+          "position": "D",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "mxet9tt7mtj31zni": {
+      "teamName": "testf",
+      "rosterItems": [
+        {
+          "id": "04abn",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06r9w",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "06p6j",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0639x",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05uht",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05nns",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "072zs",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0427d",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06y26",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "07877",
+          "position": "M",
+          "status": "RESERVE"
+        },
+        {
+          "id": "078az",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04ge6",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04yme",
+          "position": "G",
+          "status": "RESERVE"
+        },
+        {
+          "id": "05omu",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0435m",
+          "position": "M",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "vzqubu25mtj31zni": {
+      "teamName": "test3331",
+      "rosterItems": [
+        {
+          "id": "0477b",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "043qy",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "02lz0",
+          "position": "G",
+          "status": "RESERVE"
+        },
+        {
+          "id": "04e1e",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05uel",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04qor",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "062p3",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06zna",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06f8y",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "02lpf",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06onv",
+          "position": "M",
+          "status": "RESERVE"
+        },
+        {
+          "id": "067ys",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "078ud",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "05l2z",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "067x8",
+          "position": "D",
+          "status": "RESERVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "jtsmt5jxmtj31znh": {
+      "teamName": "test1",
+      "rosterItems": [
+        {
+          "id": "049tq",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05l27",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "06v21",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "050jq",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "02m5l",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04qfz",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05l8q",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "04y92",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05unu",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06mpp",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "06y29",
+          "position": "M",
+          "status": "RESERVE"
+        },
+        {
+          "id": "045ob",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05uds",
+          "position": "G",
+          "status": "RESERVE"
+        },
+        {
+          "id": "068y0",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06fxe",
+          "position": "M",
+          "status": "ACTIVE"
+        }
+      ],
+      "salaryCap": 200
+    },
+    "dq2yk3zxmtj31znh": {
+      "teamName": "test211",
+      "rosterItems": [
+        {
+          "id": "067yv",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06y59",
+          "position": "M",
+          "status": "RESERVE"
+        },
+        {
+          "id": "05244",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "0784y",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "061xs",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06v51",
+          "position": "D",
+          "status": "RESERVE"
+        },
+        {
+          "id": "06jh3",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "03frx",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05g2o",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05o4c",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06mgd",
+          "position": "F",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "06znb",
+          "position": "G",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "05o8o",
+          "position": "D",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "063q8",
+          "position": "M",
+          "status": "ACTIVE"
+        },
+        {
+          "id": "062ct",
+          "position": "G",
+          "status": "RESERVE"
+        }
+      ],
+      "salaryCap": 200
+    }
+  }
+}
