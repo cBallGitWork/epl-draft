@@ -29,7 +29,8 @@ HARD RULES, and each of these is a sentence a paper like this gets wrong:
 - NO HISTORY, NO RECORDS, NO CAREERS. You have this round and nothing else. Never write "his first since", "a record", "making history", or any claim about a player's past.
 - NO REAL-WORLD FOOTBALL KNOWLEDGE. What you remember about these players from outside the brief is not evidence and is frequently out of date.
 - NEVER INVENT A QUOTE OR A REACTION. Nobody in this league has spoken to you.
-- BRITISH football English throughout. Clean sheet, not shutout. Pitch, not field. Sent off, not ejected. Match or game, never soccer.
+- BRITISH football English throughout. Clean sheet, not shutout. Pitch, not field. Sent off, not ejected. Match or game, never soccer. Line-up, not lineup. Table, not standings.
+- BANNED PHRASES, and every one of these has been printed. American sports-desk register: "banked", "banks", "cashed in", "chipped in", "made five for", "off 62 minutes", "ran the board", "moved the needle", "came up big", "the difference maker". Filler that says nothing: "on the day", "at the end of the day", "when all was said and done". A man SCORED, or he HAULED, or he RETURNED. He did not bank anything.
 - Say "12 points", never "12 fantasy points".
 - STAT LINES ARE WRITTEN OUT. The brief gives you "3 goals, 1 assist"; you write "three goals and an assist". Real football has its own words and they are welcome — a brace, a hat-trick, a clean sheet, a blank. Invented shorthand is not: never "three and one", never "one and one", never a scoreline standing in for a stat line.
 - No em-dashes. No markdown, no emoji, no hashtags.
@@ -42,12 +43,14 @@ FANTASY VERNACULAR is welcome where it fits and never forced: a haul, blanked, a
  *  The register is the Football Italia paper review — James Richardson reading
  *  out a Gazzetta pun over a coffee, entirely deadpan. The joke is in the
  *  wordplay and never in the delivery: a headline that winks at you has already
- *  failed. Extracted because three prompts now carry it — `STORY_SHAPE` below
- *  and both round columns — and the third of them, PREVIEW, had been carrying
- *  no headline rule at all, so its puns were an accident. */
+ *  failed. Extracted because two prompts carry it — `STORY_SHAPE` below and
+ *  PREVIEW in `rounds.ts`, which had been carrying no headline rule at all, so
+ *  its puns were an accident. (Three, until the round-report went on 3 Sep.) */
 export const HEADLINE = `THE HEADLINE, in two steps. First decide the story in plain words and put THAT in "deck". Then write "headline" as wordplay on it.
 
-The register is the Italian sports paper read out straight: a deadpan, football-literate pun on a manager's team name, a player's surname or the scoreline, delivered absolutely straight and never explained. The groan is earned, never announced: no exclamation marks, no nudging, no "so to speak". It must never just restate the deck. If no pun lands cleanly, a sharp turn of phrase beats a bad one.`;
+The register is the Italian sports paper read out straight: a deadpan, football-literate pun on a manager's team name, a player's surname or the scoreline, delivered absolutely straight and never explained. The groan is earned, never announced: no exclamation marks, no nudging, no "so to speak". It must never just restate the deck. If no pun lands cleanly, a sharp turn of phrase beats a bad one.
+
+The banned phrases above are banned in the headline too, and "bank" hardest of all — a front page went out with five of them.`;
 
 /** The JSON contract for the rolling prose kinds — one story, one body. The
  *  round columns keep their older sectioned shape in `rounds.ts`; everything

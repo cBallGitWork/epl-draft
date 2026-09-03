@@ -21,6 +21,7 @@ import {
   periodGameweeks,
   periodPairings,
   roundState,
+  standingHeadlines,
   strangers,
   tieState,
   type Assignment,
@@ -167,8 +168,20 @@ async function main(): Promise<void> {
       say(`No brief for ${assignment.kind} (${assignment.key}); skipped.`);
       continue;
     }
+    // **The page, handed to a writer who cannot see it.** Every story is its own
+    // model call from its own scoped brief, so nothing stops two of them landing
+    // on the same joke — and nothing did: five "bank" headlines and two "Left
+    // Wanting" went out on 3 Sep. This is the sub-editor's look at the page,
+    // rebuilt each turn so a story filed a moment ago is already on it.
+    const standing = standingHeadlines(
+      composePaper([...paper, ...filings.map((each) => each.story)], new Date().toISOString())
+        .filter((story) => story.leagueId === FANTRAX_LEAGUE_ID)
+        .map((story) => story.headline),
+    );
+    const brief = standing === null ? desk.brief : `${desk.brief}\n\n${standing}`;
+
     if (DRY_RUN) {
-      console.log(`\n=== ${assignment.kind} · ${assignment.key} ===\n${desk.brief}`);
+      console.log(`\n=== ${assignment.kind} · ${assignment.key} ===\n${brief}`);
       continue;
     }
     // One bad story costs that story; the run fails only when EVERY attempted
@@ -176,7 +189,7 @@ async function main(): Promise<void> {
     // brittle payload.
     attempted += 1;
     try {
-      const column = await writeColumn(desk.system, desk.brief);
+      const column = await writeColumn(desk.system, brief);
       const filed = file(assignment, column, ctx, new Date().toISOString());
       // **Every name in the prose against every name in the brief.** The first
       // real story this paper ever filed put a Newcastle defender who is on
@@ -184,7 +197,7 @@ async function main(): Promise<void> {
       // he replaced — see `gazette/strangers.ts`. It reads perfectly, which is
       // why it needs a machine rather than a proofreader. A warning and not a
       // refusal: the check is deliberately eager, so a human reads the list.
-      const unknown = strangers(prose(filed.story), desk.brief);
+      const unknown = strangers(prose(filed.story), brief);
       if (unknown.length > 0) {
         say(`  ⚠ ${assignment.kind} names ${unknown.length} not in its brief: ${unknown.join(", ")}`);
       }

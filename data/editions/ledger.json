@@ -17,9 +17,18 @@
       "tie-report:p2:fq5omv5kmtj36y3gvhy0w28p5mtj36y3g",
       "tie-report:p2:y6viv6jfmtj36y3gvdpdkp2bbmtj36y3g",
       "tie-report:p2:deo9ljvtmtj36y3gvpzmd243ymtj36y3g",
-      "tie-report:p2:1b6gp5utmtj36y3gvkg18w2cvmtj36y3g"
+      "tie-report:p2:1b6gp5utmtj36y3gvkg18w2cvmtj36y3g",
+      "tie-report:p2:98yx3o50mtj36y3gvg80h3bf5mtj36y3g",
+      "news:https://www.bbc.co.uk/sport/football/articles/c14dx8eze1do"
     ],
     "threads": [
+      {
+        "subject": "test211's Gakpo hold",
+        "beat": "Gakpo stays put despite Barcola's arrival; test211 keeps him.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-03T13:08:59.701Z"
+      },
       {
         "subject": "Dedić benched by his own manager",
         "beat": "Assist and a clean sheet from a man his own manager left on the bench.",
