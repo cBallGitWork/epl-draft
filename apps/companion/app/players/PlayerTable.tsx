@@ -130,7 +130,7 @@ export default function PlayerTable({
                           {entry.player.clubCode ?? "—"}
                         </span>
                         {owner ? (
-                          <span className="truncate font-bold text-mid">{owner}</span>
+                          <span className="truncate font-bold text-ink">{owner}</span>
                         ) : (
                           <span>{STATUS[entry.status] ?? entry.status}</span>
                         )}

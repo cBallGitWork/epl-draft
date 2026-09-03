@@ -80,12 +80,22 @@ export default function GameLog({ rows }: { rows: GameLogRow[] }) {
                   <Cell value={match.minutes} quiet={match.minutes === 0} />
                   <Cell value={match.goals} loud={match.goals > 0} />
                   <Cell value={match.assists} loud={match.assists > 0} />
+                  {/* A clean sheet is a GAIN, so it takes the direction pair's
+                      green (DESIGN §3) rather than the amber that means a
+                      figure. `CS` is a letter pair, not a number. */}
                   <td className="numeric px-1 text-right text-2xs">
-                    {match.cleanSheet ? <span className="text-mid">CS</span> : dash}
+                    {match.cleanSheet ? <span className="text-up">CS</span> : dash}
                   </td>
                   <Cell value={match.saves} loud={match.saves > 0} />
                   <td className="numeric px-1 text-right text-2xs font-bold">
                     {match.redCards > 0 ? <span className="text-bad">R</span> : null}
+                    {/* **`Y` keeps amber, and it is not the figure slot
+                        speaking.** A card's colour is the card's — DESIGN §3's
+                        own carve-out for the retired brand set, which survives
+                        "where it is DATA rather than dress", as the fixture
+                        scale and club colours do. Inking it `text-bad` for
+                        "a negative" would make it the same red as `R` beside
+                        it, and the two cards are not the same thing. */}
                     {match.yellowCards > 0 ? <span className="text-mid">Y</span> : null}
                     {match.redCards === 0 && match.yellowCards === 0 ? dash : null}
                   </td>

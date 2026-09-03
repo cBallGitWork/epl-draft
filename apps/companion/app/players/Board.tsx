@@ -130,12 +130,17 @@ export default function Board({
                   </td>
                   {/* **"In the bin" for nobody's player** (Craig, 1 Sep). Not a
                       dash: an unowned player is not a missing reading, he is a
-                      free agent, and the league has a word for that. */}
+                      free agent, and the league has a word for that.
+
+                      The owner is plain ink and not `text-mid`. Amber is
+                      DESIGN §3's slot for A FIGURE, and a manager's team name is
+                      not one — it was the loudest thing in a row whose figures
+                      are the point, and it was making the same claim they do. */}
                   <td className="max-w-24 px-1.5 text-2xs lg:max-w-none">
                     {owner === null ? (
                       <span className="text-faint">In the bin</span>
                     ) : (
-                      <span className="block truncate font-bold text-mid">{owner}</span>
+                      <span className="block truncate font-bold text-ink">{owner}</span>
                     )}
                   </td>
                   <td className={`${FIGURE} hidden text-faint lg:table-cell`}>
