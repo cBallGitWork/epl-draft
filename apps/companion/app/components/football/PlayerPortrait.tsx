@@ -15,7 +15,7 @@ import { type ClubColours, initials, inkOn, portraitUrl } from "@epl/core";
  *  exactly the failure the paragraph above forbids, in the file that forbids it.
  *  A row's 22–26px slot fetching a 44px source costs a few hundred bytes; a
  *  blurred face on the one screen built around faces costs the screen. */
-const SIZE = 44;
+const PORTRAIT_PX = 44;
 
 // A player's headshot on their club's colour.
 //
@@ -92,9 +92,9 @@ export default function PlayerPortrait({
         <Image
           src={portraitUrl({ code: player.code })}
           alt=""
-          width={SIZE}
-          height={SIZE}
-          sizes={`${SIZE}px`}
+          width={PORTRAIT_PX}
+          height={PORTRAIT_PX}
+          sizes={`${PORTRAIT_PX}px`}
           onError={() => setShown("initials")}
           className="relative h-full w-full object-cover object-top"
         />

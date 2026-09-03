@@ -55,8 +55,14 @@ export const PLAYERS = SECTIONS[3].href;
  *  It had a foot ROW of its own for a day and lost it (Craig, 1 Sep: "ditch
  *  matchups row underneath") — one entry is a stray button under a panel, not a
  *  bar. CM's own second row is five wide, and when this is three or four it
- *  earns the row back. */
-export const FOOT = [{ href: "/league/matchups", label: "Matchups", key: "matchups" }] as const;
+ *  earns the row back.
+ *
+ *  Not exported: it lost its row and its last importer with it, and an export
+ *  nobody imports is API this file has to keep working (§2). It is still read
+ *  here, by `LeagueSection` — which is the point of keeping the constant at
+ *  all, since Matchups is a section a route can BE on without being in the
+ *  strip. */
+const FOOT = [{ href: "/league/matchups", label: "Matchups", key: "matchups" }] as const;
 
 export type LeagueSection =
   | (typeof SECTIONS)[number]["key"]

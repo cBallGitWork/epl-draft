@@ -38,7 +38,7 @@ import { NAME_SIZE } from "./PitchRows";
  *  Set here and not in the token layer, so it reaches this card and not the two
  *  other pitches — the FPL tab's and the paper's team of the week — which carry
  *  different things under the picture and are somebody else's call. */
-const FIGURE = { "--pitch-figure": "110 / 140" } as CSSProperties;
+const PORTRAIT_RATIO = { "--pitch-figure": "110 / 140" } as CSSProperties;
 
 export default function PitchPlayer({
   rostered,
@@ -68,7 +68,7 @@ export default function PitchPlayer({
       // the same height in the line. It used to be one box of its own
       // proportions, which left a hole in the row wherever the bridge had not
       // settled somebody.
-      <div className="@container flex w-full flex-col" style={FIGURE}>
+      <div className="@container flex w-full flex-col" style={PORTRAIT_RATIO}>
         <div className="pitch-figure grid w-full place-items-center border border-dashed border-white/35 bg-black/25">
           <span className="numeric text-2xs font-bold text-white/70">
             {positionLabel(rostered.slot.position) ?? "?"}
@@ -94,7 +94,7 @@ export default function PitchPlayer({
   const chips = chipsFor(t).slice(0, 2);
 
   return (
-    <div className="@container flex w-full flex-col" style={FIGURE}>
+    <div className="@container flex w-full flex-col" style={PORTRAIT_RATIO}>
       {/* Drawn back until he kicks off, and only the photograph is. It replaced
           the count of players still to play that used to sit on the
           head-to-head tabs: the same fact, said where it names the men rather

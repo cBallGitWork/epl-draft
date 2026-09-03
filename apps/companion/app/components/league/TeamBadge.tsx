@@ -17,11 +17,11 @@ import type { LeagueTeam } from "@epl/core";
  *  breakpoint: a 26px badge with 4px of padding round it cannot fit the 28px row
  *  a mouse gets, and no `lg:` utility could reach an attribute.
  *
- *  `SIZE` stays, and is the LARGER of the two, because it is what `next/image`
+ *  `BADGE_PX` stays, and is the LARGER of the two, because it is what `next/image`
  *  is told to fetch — asking for the desk's 20px and drawing 26 on a phone is a
  *  soft badge nobody thinks to blame the CSS for. */
-const SIZE = 26;
-const SLOT = { width: "var(--row-badge)", height: "var(--row-badge)" };
+const BADGE_PX = 26;
+const BADGE_SLOT = { width: "var(--row-badge)", height: "var(--row-badge)" };
 
 export default function TeamBadge({
   team,
@@ -44,13 +44,13 @@ export default function TeamBadge({
   if (team !== null && url !== undefined) {
     // Decorative: the name is right beside it, and a screen reader hearing the
     // team twice learns nothing the second time.
-    return <Image src={url} alt="" width={SIZE} height={SIZE} style={SLOT} className="shrink-0 rounded-full" />;
+    return <Image src={url} alt="" width={BADGE_PX} height={BADGE_PX} style={BADGE_SLOT} className="shrink-0 rounded-full" />;
   }
 
   return (
     <span
       aria-hidden
-      style={SLOT}
+      style={BADGE_SLOT}
       className={`grid shrink-0 place-items-center rounded-full font-display text-2xs font-bold ${
         team === null ? "border border-dashed border-line" : "bg-raised text-faint"
       }`}
