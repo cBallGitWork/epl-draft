@@ -1,6 +1,81 @@
 {
-  "updatedAt": "2026-09-03T13:08:59.701Z",
+  "updatedAt": "2026-09-03T13:17:12.212Z",
   "stories": [
+    {
+      "slug": "p2-report-1b6gp5utmtj36y3gvkg18w2cvmtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 2,
+      "gameweek": 2,
+      "filedAt": "2026-09-03T13:17:00.752Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Cunha Leads, test3331 Comes Up Light",
+      "deck": "test2 beat test3331 49-40, Cunha's eight the top score.",
+      "body": "Cunha settled it. Eight from the forward slot led test2's line, Isak six alongside him, and the back three of Ajayi, Giles and Hall returned six apiece. Six from Millar in midfield too. No blank anywhere on the sheet, and that spread is why the margin read nine.\n\ntest3331 had Scott top-scoring on seven and honest sixes from Ndoye, Thomas and White. The floor was the problem. Lewis-Potter's five and Cook's three at the bottom of the midfield gave nothing back, and there was no eight or nine anywhere to answer Cunha.\n\ntest3331 needed one man to go big and got a ceiling of seven. Six sixes for test2, one from every filled slot, made the difference no single haul could close.",
+      "subjects": [
+        "tie-report:p2:1b6gp5utmtj36y3gvkg18w2cvmtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 430871,
+        "name": "Cunha",
+        "clubId": 16,
+        "position": "F"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p2-report-deo9ljvtmtj36y3gvpzmd243ymtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 2,
+      "gameweek": 2,
+      "filedAt": "2026-09-03T13:16:52.830Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Cherki Sharp, testf Falls Eleven Short",
+      "deck": "test4 beat testf 56 to 45, Cherki's eleven leading the way.",
+      "body": "Cherki topped it with eleven for test4, Foden and Mbeumo both on eight behind him. Elanga six, Raya six from the clean sheet, Isidor a five to round the return. Six men, every one on the board.\n\ntestf never got there. Tarkowski led with eight, Tzolakis seven, Ballard six, and a back line doing more than the front. Evanilson and Rogers both blanked to fives, Barnes stranded on three.\n\nThe forwards were the wound. testf needed his attackers to answer Cherki and got twenty-two of his forty-five from two defenders and a keeper. Eleven short, and it points straight at the men up top.",
+      "subjects": [
+        "tie-report:p2:deo9ljvtmtj36y3gvpzmd243ymtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 466052,
+        "name": "Cherki",
+        "clubId": 15,
+        "position": "M"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p2-report-y6viv6jfmtj36y3gvdpdkp2bbmtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 2,
+      "gameweek": 2,
+      "filedAt": "2026-09-03T13:16:45.272Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Gibbs-White Tips test3 Over The Line",
+      "deck": "test3 beat test31 38-28, Gibbs-White's ten leading the way",
+      "body": "Gibbs-White's ten fronted it for test3, and Calafiori's nine behind him made the margin safe. Wissa added six, Maguire four, Pickford three from the sticks, Gonzalo two. Thirty-eight, and never really threatened.\n\ntest31 had no answer in the same weight class. Thiaw's six was the top score and it topped out at that; Belloumi and Munoz five apiece, Bobb three, Barry and Buendía two each. Six men, twenty-eight, no single haul to build on.\n\nThat is the difference laid bare. test3 got a ten and a nine; test31's best pair barely cleared the number Calafiori managed alone.",
+      "subjects": [
+        "tie-report:p2:y6viv6jfmtj36y3gvdpdkp2bbmtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 222531,
+        "name": "Gibbs-White",
+        "clubId": 18,
+        "position": "M"
+      },
+      "ties": []
+    },
     {
       "slug": "p2-report-98yx3o50mtj36y3gvg80h3bf5mtj36y3g",
       "kind": "tie-report",
@@ -22,81 +97,6 @@
         "code": 141746,
         "name": "B.Fernandes",
         "clubId": 16,
-        "position": "M"
-      },
-      "ties": []
-    },
-    {
-      "slug": "p2-report-1b6gp5utmtj36y3gvkg18w2cvmtj36y3g",
-      "kind": "tie-report",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 2,
-      "gameweek": 2,
-      "filedAt": "2026-09-03T13:00:32.172Z",
-      "expiresAt": null,
-      "edition": "The Monday Club",
-      "byline": "",
-      "headline": "Cunha The Difference As test2 Bank Nine",
-      "deck": "test2 beat test3331 49 to 40, Cunha's 8 the top score of the tie.",
-      "body": "test2 got there on the front foot. Cunha top-scored the tie with eight, Isak behind him on six, and a defence that all paid out: Ajayi, Giles and Hall six apiece. Millar's six from midfield rounded it. Six men, no passengers.\n\ntest3331 needed a haul from the top and got none. Scott's seven was the best he had, Ndoye and Lewis-Potter chipped six and five up front, and the back pair of Thomas and White matched them on six. Respectable numbers, but nothing that swings nine.\n\nCook is where the annoyance sits. Three from midfield, a return that barely registered, and in a defeat this size every point left on the pitch stings.",
-      "subjects": [
-        "tie-report:p2:1b6gp5utmtj36y3gvkg18w2cvmtj36y3g"
-      ],
-      "image": null,
-      "face": {
-        "code": 430871,
-        "name": "Cunha",
-        "clubId": 16,
-        "position": "F"
-      },
-      "ties": []
-    },
-    {
-      "slug": "p2-report-deo9ljvtmtj36y3gvpzmd243ymtj36y3g",
-      "kind": "tie-report",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 2,
-      "gameweek": 2,
-      "filedAt": "2026-09-03T13:00:25.090Z",
-      "expiresAt": null,
-      "edition": "The Monday Club",
-      "byline": "",
-      "headline": "Cherki Ripe, testf Left Wanting",
-      "deck": "test4 beat testf 56 to 45, Cherki's 11 the headline return in midfield.",
-      "body": "test4 got the midfield haul that testf never came close to matching. Cherki led it with 11, Foden backed him with 8, and Mbeumo added another 8 up top. Raya's 6 in goal underpinned the lot. Six men in returns, none below Isidor's 5.\n\ntestf leaned on his defence and it wasn't enough. Tarkowski's 8 was the top score on his side, Ballard chipped in 6, Tzolakis 7 between the sticks. Solid, but a back line and a keeper doing the heavy lifting is a losing shape.\n\nThe forwards are where it fell apart. Evanilson and Rogers managed 5 apiece, and Barnes blanked the midfield with just 3. Against Cherki and Foden's 19 between them, testf's engine room never got going. Eleven points, and the gap sits in the middle of the park.",
-      "subjects": [
-        "tie-report:p2:deo9ljvtmtj36y3gvpzmd243ymtj36y3g"
-      ],
-      "image": null,
-      "face": {
-        "code": 466052,
-        "name": "Cherki",
-        "clubId": 15,
-        "position": "M"
-      },
-      "ties": []
-    },
-    {
-      "slug": "p2-report-y6viv6jfmtj36y3gvdpdkp2bbmtj36y3g",
-      "kind": "tie-report",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 2,
-      "gameweek": 2,
-      "filedAt": "2026-09-03T12:58:18.463Z",
-      "expiresAt": null,
-      "edition": "The Monday Club",
-      "byline": "",
-      "headline": "Gibbs-White Whites Out test31",
-      "deck": "test3 beats test31 38-28 as Gibbs-White's 10 leads the way",
-      "body": "test3 built it at the top. Gibbs-White returned 10 from midfield, Calafiori nine from defence, and that pairing alone matched more than half of test31's entire week. Wissa added six, Maguire four behind Pickford's clean-sheet three, and the ten-point margin was set before the forwards even mattered.\n\ntest31 never found a big one. Thiaw's six from defence was the best of it, Belloumi and Munoz five apiece up front, and nothing higher anywhere on the sheet. Six men, none in double figures, 28 all told.\n\nThe forwards are where test31 will stew. Belloumi five, Munoz five, Barry two, and no return big enough to close a ten-point hole. Bobb and Buendía chipped in three and two from midfield, but against Gibbs-White and Calafiori that was never going to be enough.",
-      "subjects": [
-        "tie-report:p2:y6viv6jfmtj36y3gvdpdkp2bbmtj36y3g"
-      ],
-      "image": null,
-      "face": {
-        "code": 222531,
-        "name": "Gibbs-White",
-        "clubId": 18,
         "position": "M"
       },
       "ties": []
@@ -132,18 +132,23 @@
       "leagueId": "w05aib75mtj36y1g",
       "period": 2,
       "gameweek": 2,
-      "filedAt": "2026-09-02T16:10:42.186Z",
+      "filedAt": "2026-09-03T13:17:12.208Z",
       "expiresAt": null,
       "edition": "The Monday Club",
       "byline": "The Back Page",
-      "headline": "Sunderland Bank The Sheet, 123 Cash It",
-      "deck": "Sunderland's clean sheet feeds a stack of defenders, with 123 doubling up on it",
-      "body": "One goal, one clean sheet, and the Sunderland back line paid out across half the league. Reinildo and Hume both went 90 minutes for six apiece, and 123 banked twelve from the pair alone. Sits 76 to 35 over test31121, whose Berge managed two off the bench at Fulham. That one is all but done.\n\ntest211 rode the same wall. Roefs kept his sheet for six, Castagne added six more off 67 minutes, King chipped in two. Forty to 48 down against test1, so the clean sheet keeps it live rather than winning it.\n\ntest4 got the goal that mattered. Isidor on for 26 minutes and off the mark, five points from almost nothing, with E.Le Fée adding three on the sheet. Fifty-six to 45 over testf, whose men were all on the wrong end of it: Ballard and Xhaka held their clean sheet for six and three, N.Angulo blanked on a two. Leno's three saves earned test3331 three, but a keeper conceding once doesn't move the needle against test2.",
+      "headline": "Isidor Twenty-Six, Fulham Nil",
+      "deck": "Sunderland beat Fulham 1-0, Isidor's goal in twenty-six minutes the difference for test4",
+      "body": "One goal decided it and Isidor had it, five points off twenty-six minutes for test4. A forward on the pitch barely a third of the match, gone before the hour, and the return dwarfs the men who saw it out.\n\nThe clean sheets stacked up either side. Roefs and Castagne kept it tight for test211, six apiece, Castagne off sixty-seven with the shutout intact. Reinildo and Hume held the line for 123, six each. Ballard did the same for testf, though N.Angulo blanked the clean sheet into two and Xhaka's three barely registers. Leno faced it at the other end, three saves for test3331, a losing keeper still on three.\n\nGonzalo played the ninety and returned nothing for test3, a forward's blank. E.Le Fée's shutout gives test4 three more on top of Isidor's five, a fine afternoon for one manager. King, Berge, Bobb: small change, two and two and three.\n\nAcross the head-to-heads it barely moves the settled ones. test4 sit 56 to 45 over testf, all but done. 123 tower 76 to 35 over test31121, the clean-sheet pair carrying it home.",
       "subjects": [
         "match:gw2:56v54"
       ],
       "image": null,
-      "face": null,
+      "face": {
+        "code": 223827,
+        "name": "Ballard",
+        "clubId": 20,
+        "position": "D"
+      },
       "ties": []
     },
     {
@@ -152,18 +157,23 @@
       "leagueId": "w05aib75mtj36y1g",
       "period": 2,
       "gameweek": 2,
-      "filedAt": "2026-09-02T16:08:19.729Z",
+      "filedAt": "2026-09-03T13:16:08.386Z",
       "expiresAt": null,
       "edition": "The Monday Club",
       "byline": "The Back Page",
-      "headline": "Gibbs-White Puts Ten Past The Table",
-      "deck": "Gibbs-White's goal-and-assist double is the standout return from a 2-2 draw, hauling ten for test3.",
-      "body": "Gibbs-White ran the Forest board. A goal, an assist, ten points from ninety minutes, and test3's edge over test31 hardens toward decided at 38-28. Nothing else in this fixture came close.\n\nNdoye backed him with a goal off 65 minutes, six for test3331, though test2 still holds 49-40 with Isak's own strike answering. Isak took six of his own, one goal in ninety. Munoz matched him for a goal but leaked a booking, five for test31.\n\nWirtz supplied one assist and got booked, four for test1 in a tie test211 sit ahead of at 48-40. Gakpo's assist made five for test211 before he came off on 70. N.Williams chipped an assist, four for test4.\n\nThe blanks bite. McAtee and Szoboszlai walked off with two points apiece and nothing to show. Aina played 85, picked up a yellow, returned zero. Gravenberch got 19 minutes and one point, barely a cameo for test1.",
+      "headline": "Gibbs-White Alone Denies The Reds",
+      "deck": "Liverpool drew 2-2 with Nott'm Forest; Gibbs-White returned ten with a goal and an assist.",
+      "body": "Two apiece, and Forest walk away with the ten-point man. Gibbs-White scored and set one up, ninety minutes, the full haul for test3. Ndoye backed him with a goal off sixty-five, six points, and N.Williams from the back added an assist for test4. Forest's rostered men did the damage.\n\nLiverpool's midfield offered little. Wirtz got the assist and the booking, ninety and four points for test1. Szoboszlai ninety and blank at two for test31121, Gravenberch nineteen minutes and one for test1. Gakpo drew an assist off seventy for test211, five more, the faith intact.\n\nMunoz scored and was booked, five for test31. Isak scored, six for test2, Isak's ninety worth every one of them. McAtee ninety and two for test2. Aina eighty-five, booked, nothing, a blank for test211.\n\nGibbs-White's ten stretches test3 to 38-28 over test31, all but done despite Munoz's return. test211's 40 sits behind test1's 48, Gakpo and Aina splitting.",
       "subjects": [
         "match:gw2:14v17"
       ],
       "image": null,
-      "face": null,
+      "face": {
+        "code": 222531,
+        "name": "Gibbs-White",
+        "clubId": 18,
+        "position": "M"
+      },
       "ties": []
     },
     {
@@ -172,18 +182,23 @@
       "leagueId": "w05aib75mtj36y1g",
       "period": 2,
       "gameweek": 2,
-      "filedAt": "2026-09-02T16:08:10.675Z",
+      "filedAt": "2026-09-03T13:13:55.457Z",
       "expiresAt": null,
       "edition": "The Monday Club",
       "byline": "The Back Page",
-      "headline": "Groß Domestic Product Booms For 123",
-      "deck": "Groß hauls ten in Chelsea's win but 123's numbers stay academic in a decided tie.",
-      "body": "Groß was the pick of the day. A goal and an assist from midfield, ninety minutes, ten points, and yet another line that says 123 keep printing and keep losing the argument. Lacroix's lone point and Neto's six padded the pile. Same problem: 76 to 35 over test31121, all but decided, another crooked scoreboard that still ends third somewhere.\n\ntest211's João Pedro did everything a forward can and one thing he shouldn't. A goal, an assist, and an own goal netted seven, enough to keep the nose in front of test1 at 40 to 48. Palmer answered with a goal and seven of his own for test1, Lavia matched it, and that tie stays live on the numbers even as the arrow points one way.\n\nBrighton's back line was misery for the owners. De Cuyper played the ninety for nothing, Verbruggen shipped four and banked one save for a flat zero, and Dunk's booking dragged test3 into minus figures. Rogers found an assist for five in a losing cause. Kostoulas an assist and five off the bench for test31121, small change against a 41-point deficit.\n\ntestf's ledger reads Rogers for five, and the phantom keeps haunting: still short in a tie that leans testf's way at 56 to 45, but the blanks that dogged them elsewhere haven't stopped following the name around.",
+      "headline": "Groß Profit In Seven-Goal Split",
+      "deck": "Chelsea beat Brighton 4-3, and 123's Groß leads the way with ten",
+      "body": "Seven goals shared, four to Chelsea, and the fantasy ledger runs almost as long as the scoreline. Groß was the pick of it, a goal and an assist for ten points to 123, with Neto adding a goal and Lacroix a limp single from ninety.\n\nJoão Pedro carried the load and the burden both, a goal and an assist undercut by an own goal, seven points to test211 that read better before the deduction. Palmer and Lavia struck for a goal apiece, seven each, test1 twice in profit on the same afternoon.\n\nThe Brighton back end offered nothing worth owning. De Cuyper and Verbruggen blanked at zero for test31, and Dunk's booking dragged test3 into the red at minus one. Kostoulas found an assist for five, Rogers likewise for testf.",
       "subjects": [
         "match:gw2:8v36"
       ],
       "image": null,
-      "face": null,
+      "face": {
+        "code": 60307,
+        "name": "Groß",
+        "clubId": 5,
+        "position": "M"
+      },
       "ties": []
     },
     {
@@ -192,18 +207,23 @@
       "leagueId": "w05aib75mtj36y1g",
       "period": 2,
       "gameweek": 2,
-      "filedAt": "2026-09-02T16:07:44.808Z",
+      "filedAt": "2026-09-03T13:13:37.416Z",
       "expiresAt": null,
       "edition": "The Monday Club",
       "byline": "The Back Page",
-      "headline": "Schade Draws A Long Bow For 123",
-      "deck": "Schade and Calvert-Lewin trade sixes; 123 keep piling on points but still lead where it counts.",
-      "body": "Schade did the damage for 123, the goal inside 87 minutes worth six and the only Leeds return that mattered to a wallet. Stach chipped two more from the same stable. Another double return, another mountain of points, and 123 sit 76 to 35 over test31121, all but done. Ampadu's ninety was a lonely two the other way.\n\nCalvert-Lewin answered for test1, six of his own off the Brentford goal, Kelleher adding a save and a clean two behind him. Not enough. test211's Damsgaard banked the clean sheet before coming off on 68, Bogle a quiet two, and test211 hold 48 to 40, all but decided.\n\nLewis-Potter's assist gave test3331 five, but test2's Trafford stopped four for three and the tie leans 49 to 40 against them. Ajer booked for a single point, Justin ninety for two, Aaronson a half for one, Rodon barely a third of the pitch. Jensen never left the bench.",
+      "headline": "Schade And Calvert-Lewin Shade The Points",
+      "deck": "Leeds and Brentford drew 1-1, both scorers rostered and returning six.",
+      "body": "The one goal apiece came off two forwards this league owns. Schade struck for Brentford, six points to 123 across eighty-seven minutes. Calvert-Lewin answered for Leeds, six for test1 across the ninety.\n\nLewis-Potter fed one for test3331, five points and the game's best supporting return. Damsgaard held a clean sheet through sixty-eight, three for test211. Trafford kept four out for test2, three points, while Kelleher managed a single save at the other end.\n\nStach filled the ninety without a return, two for 123. Ajer went into the book for one, test3331's other man. Ampadu, Justin, Bogle full backs of the scoreboard variety, twos across the board. Aaronson lasted forty-five for a single point, Rodon thirty-three for the same. Jensen never left the bench for test3.\n\nSchade's six does nothing to dent 123's 76-35 rout of test31121. test1's Calvert-Lewin keeps the pressure on in a tie test211 lead 48-40, all but sealed. test2's 49-40 over test3331 holds, Trafford and Lewis-Potter cancelling out on the same page.",
       "subjects": [
         "match:gw2:2v94"
       ],
       "image": null,
-      "face": null,
+      "face": {
+        "code": 177815,
+        "name": "Calvert-Lewin",
+        "clubId": 13,
+        "position": "F"
+      },
       "ties": []
     },
     {

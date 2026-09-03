@@ -3420,3 +3420,126 @@ sub-caption. `results.ts` already types `subCaption?: string`. Everything else
 in the report is `+` — the real league carrying *more* than the rehearsal
 reference, which is the documented between-league variance. The baseline at
 `data/shape/baseline.json` wants the sentence; no code wants a change.
+
+## 3 Sep 2026 — the club became a spine, and two rules were counted rather than quoted
+
+### The refactors, and the two the plan asked for that were not owed
+
+The plan for this session listed seven extractions as "owed at three or more
+under §1". Counted rather than taken on trust, two of them were not:
+
+- **The sort-href builder.** `league/sort.ts` and `prem/sort.ts` are the same
+  function, and that is TWO. `players/query.ts` only looks like a third — it
+  preserves the filter and search state through its own `href()` — and Team
+  Stats uses different parameter names entirely. An earlier draft of the commit
+  merged them and was wrong to. `SortHead` takes the href as a **prop** instead,
+  which is why the two `sort.ts` files are still there.
+- **`ClubBadge`.** Reads as five occurrences and is two: `prem/ClubRow` and
+  `prem/team-stats` draw the same 26px badge, while `Match` draws 22 with a
+  spacer for a club the snapshot lacks, the club page draws 56 in a heading,
+  `players/[fantraxId]` puts one on a portrait and `MatchList` draws 24 with a
+  round grey fallback. One component across those takes a size, a fallback and
+  an alignment — the generic mechanism §1 forbids.
+
+What *was* owed: the sortable head at three (both `Columns` files plus Team
+Stats, which had hand-rolled the plate with character-identical class strings),
+and `IndexCell` and `ROW_LINK` at three each. Extracting the head also took
+`league/team-stats/page.tsx` from 314 lines to 281 — back under the hard
+ceiling it had been over.
+
+**The refactor was verified against the deployed build rather than by eye.**
+Production was still running the pre-refactor code, so every `<th>` on `/league`
+and `/prem` could be diffed against it: byte-identical, sorted and unsorted. The
+Team Stats heads differ by one inert class — `gap-0.5`, which needs two flex
+children to draw anything and those heads have one. That is a stronger claim
+than a screenshot can make, and it took one script.
+
+### The club page, and three faults only the screen showed
+
+Four tabs on `cm9900/25.jpg`'s shape. `ClubShell` is a deliberate copy of
+`squad/[teamId]/Shell` — two spines are a coincidence, and the trigger for a
+shared `PlateShell` is named in its docblock as the third plated subject.
+
+Three things went wrong in ways the diff could not show:
+
+1. **The position slot in an `IndexCell` was twenty rows of Arsenal red.**
+   `ClubShell` scopes `--cm-index` to the club, and CM's own slot plate earns
+   that colour by carrying `GK`/`DR`/`DC` where ours carried a dash.
+2. **Seven columns do not fit 326px.** Names truncated to "Mosqu…", "Ødega…".
+   `St` and `A` joined `Pos` at `lg` only.
+3. **The round block at `w-12` truncated "ARS" to "A…".** `Match` splits what is
+   left of the row between two club names either side of a fixed score column,
+   so every pixel the block takes comes out of both names at once — 41px each at
+   `w-12`, 49 at `w-9`. Narrowing `Match`'s score column instead would have
+   changed two shipped screens to fix a third.
+
+And one the instrument found: **`.cm-out` on a row repainted the badge that says
+why the row is greyed.** It is `.cm-out, .cm-out *`, and the badge is
+`--color-bad` behind `--color-bg`, so forcing its ink to `--color-faint` put
+"Inj" at **1.04:1**. `sweep` measured it six times on Man City. The dimming is
+per-cell now and the badge is left alone. `cm-out` has one other caller —
+`TabStrip`'s dimmed tabs, which hold plain text and are fine — so the fix is
+local rather than a `.cm-out .cm-state` guard for a caller that does not exist.
+
+### The two position columns, and the layer crossing they are
+
+Craig, 3 Sep: *"we kinda need the fantrax positions"* … *"for players"* … *"we
+can have both tbh"*. So the squad list carries **two** columns: `Pos`, the
+real-life position, empty until the sister repo's feed lands, and `Elig`, what
+our Fantrax league is willing to field him as, headed as Fantrax's.
+
+**They may never become one column.** `MID` against Saka's name would claim
+Arsenal play him in midfield, when what is true is that *this league* files him
+there — and which of his `F,M` actually scores is the roster slot his manager
+picked, a fact about a team rather than about a man.
+
+This is the only place the two layers meet on a Premiership screen. It goes
+through the audited bridge, never a name match, and `leagueInfo` was already
+failure-tolerant so the column empties to dashes rather than taking the squad
+down with it. The join works: Saka reads `M/F`, Lewis-Skelly `D/M`, Raya `GK`.
+
+**What it costs is a dependency, not a request.** `leagueInfo` is one
+`leagueCache` entry shared with `/league` and every squad page, so a reader who
+has been anywhere else pays a cache hit. But the layout does not warm it — it
+reads `footballNow` and `offerLive` only — so a club page reached cold makes a
+Fantrax request no `/prem` page used to, and Fantrax being unreachable now costs
+a column where it used to cost this section nothing at all.
+
+### Fixtures is one competition, and the parquet is the named answer
+
+FPL publishes the Premier League and nothing else, so there is no cup or
+European tie to show. The page says so under the list rather than presenting a
+partial season as a whole one. Craig named the source for the rest: *"that's
+what the team log parquet is for"* — the sister repo's
+`team_match_log.parquet`, whose `competition` column sits beside the round,
+which is exactly the pair the index block down the left already draws. It is the
+same export that fills `Pos`, so it is one crossing rather than two.
+
+### What the docs were saying that was not true
+
+`docs/ui/league-table.md` had been wrong since 31 Aug in about twenty lines: a
+"three-way section nav (Table · Schedule · Matchups)" for a strip that gained
+Results and both stats boards and lost Matchups that day; a two-line row that is
+now one; and three columns — `FP`, `Win%`, `GB` — that were deleted. The column
+paragraphs are struck through in place with the date, because a dated record of
+a removed column is worth more than a silence.
+
+`docs/ui/conventions.md` named 31 of the 78 files under `components/`, which is
+how a shared file lands undocumented: nothing ever said to add the row.
+CODE_RULES §4 now does, along with which directory a shared component belongs in
+— and the table covers every `shell/`, `league/` and `football/` file.
+
+`docs/ui/TEMPLATE.md` is new, and it is only the shape these files already had.
+
+### PLATFORM_NOTES was five files in one
+
+4,784 lines, and the two hundred an agent actually needs — `Current priorities`,
+`Known constraints`, `Recorded rule exceptions` — sat behind about 3,400 lines
+of diary. Split on a stated rule: a standing fact, a probe result, a decision or
+a rule stays; an account of a day's work moves. 61 sections in, 26 stayed.
+
+**The reason it was worth doing is `docs-drift-auditor`.** It skipped
+PLATFORM_NOTES wholesale because a season log's dated entries are supposed to
+describe the past — which also exempted every present-tense probe, decision and
+constraint buried in it. The exemption moved with the diary; what is left is
+checkable, and it was checked in this session for the first time.

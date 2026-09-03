@@ -175,10 +175,19 @@ his `F,M` actually scores is the roster slot his manager picked, a fact about a
 team rather than about a man.
 
 **This is the only place the two layers meet on a Premiership screen**, and it
-is a join through the audited bridge, never a name match. It costs the section
-its "no provider request" property, so it is failure-tolerant by construction:
-`leagueInfo` already returns null when Fantrax refuses, the column empties to
-dashes, and the squad renders regardless.
+is a join through the audited bridge, never a name match.
+
+**What it costs is a dependency, not a request.** `leagueInfo` is one
+`leagueCache` entry shared with `/league` and every squad page, so a reader who
+has been anywhere else in the app pays a cache hit. But the layout does not warm
+it — it reads `footballNow` and `offerLive` only — so a club page reached cold
+makes a Fantrax request no other `/prem` page makes, and Fantrax being
+unreachable now costs a column where it used to cost this section nothing.
+
+Failure-tolerant by construction, for that reason: `leagueInfo` already returns
+null when Fantrax refuses, the column empties to dashes, and the squad renders
+regardless. `/prem` itself — the table, results, fixtures, team stats — still
+costs no provider request, and `prem/page.tsx` says so about itself.
 
 ### Fixtures is the Premier League only
 

@@ -73,6 +73,11 @@ business, who is hurt, and when lineups lock.
    the splash rather than one. `HEADLINES_SHOWN` caps the whole tail at eight so
    a busy round does not turn the front page into an index of itself.
 
+   The splash's own picture is `gazette/Drawing` when CI drew one and
+   `gazette/Face` otherwise; it was `Splash.tsx` until 3 Sep 2026, which is the
+   wrong word for a photograph — a paper's splash is its top story, and that
+   name is now on the component that prints one.
+
    **The two shoulders** (`SHOULDER_STORIES`, `gazette/Teaser`) run side by side
    directly under the lead, each with its standing head, headline, deck and
    dateline. Two columns at *every* width, phones included: the splash / two

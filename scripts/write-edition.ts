@@ -20,6 +20,7 @@ import {
   newsdesk,
   periodGameweeks,
   periodPairings,
+  banned,
   roundState,
   standingHeadlines,
   strangers,
@@ -200,6 +201,16 @@ async function main(): Promise<void> {
       const unknown = strangers(prose(filed.story), brief);
       if (unknown.length > 0) {
         say(`  ⚠ ${assignment.kind} names ${unknown.length} not in its brief: ${unknown.join(", ")}`);
+      }
+      // **The register, checked rather than asked for.** Same doctrine as
+      // `strangers` above and the same reason: HOUSE generates its banned list
+      // from this one, and a front page still went out with five "bank"
+      // headlines while the rule was in the prompt. Warned, not refused — an
+      // eager check a human reads is useful; one that refuses would throw away
+      // a good story over a surname.
+      const printed = banned(`${filed.story.headline}\n${prose(filed.story)}`);
+      if (printed.length > 0) {
+        say(`  ⚠ ${assignment.kind} prints banned phrasing: ${printed.join(", ")}`);
       }
       // **A column whose cargo is missing files as prose about nothing.** Every
       // reader of `extras` treats absence as ordinary — correctly, since a

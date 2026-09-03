@@ -115,7 +115,7 @@ No fluid clamps except inside the masthead.
 | `football/StateBox` | The box beside a name saying why he is not playing. Silent for a fit player: a box reading "fit" on every row makes the one worth seeing harder to find. **It must survive a greyed row** — the whole point of it is to say why the row is grey. |
 | `football/MatchList` · `football/GameweekView` | The round in view, each fixture a native `<details>` that expands into who did what. |
 | `football/PhotoGround` | The darkened match photograph behind the desk. Fixed, `-z-10`. |
-| `gazette/*` | The paper's own furniture — masthead, folio, columns, teasers, the drawing, the front page's sections. It is the other register and is documented in [gazetta.md](gazetta.md) rather than here, because none of it is shared with the desk. |
+| `gazette/*` | The paper's own furniture — masthead, folio, columns, the three ranks of headline (`Splash`, `Teaser`, `Brief`), their pictures (`Face`, `Drawing`) and the front page's sections. It is the other register and is documented in [gazetta.md](gazetta.md) rather than here, because none of it is shared with the desk; CODE_RULES §4's same-commit row is that file's reading order. |
 
 **Not extracted, and worth knowing why.** The crest-and-name cell reads as five
 occurrences and is two: `prem/ClubRow` and `prem/team-stats` draw the same 26px

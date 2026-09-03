@@ -1,33 +1,46 @@
 {
   "w05aib75mtj36y1g": {
     "covered": [
-      "round-report:gw2",
       "power-ranking:gw2",
       "dodgers:gw2",
       "presser:gw2",
-      "match:gw2:2v94",
-      "match:gw2:8v36",
-      "match:gw2:14v17",
       "news:https://www.bbc.co.uk/sport/football/articles/clyjmd19887o",
       "wire:through-gw2",
       "studio:gw2",
-      "match:gw2:56v54",
       "news:https://www.bbc.co.uk/sport/football/articles/c3wj1qw5x04o",
       "eleven:gw2",
       "tie-report:p2:fq5omv5kmtj36y3gvhy0w28p5mtj36y3g",
+      "tie-report:p2:98yx3o50mtj36y3gvg80h3bf5mtj36y3g",
+      "news:https://www.bbc.co.uk/sport/football/articles/c14dx8eze1do",
+      "match:gw2:2v94",
+      "match:gw2:8v36",
+      "match:gw2:14v17",
       "tie-report:p2:y6viv6jfmtj36y3gvdpdkp2bbmtj36y3g",
       "tie-report:p2:deo9ljvtmtj36y3gvpzmd243ymtj36y3g",
       "tie-report:p2:1b6gp5utmtj36y3gvkg18w2cvmtj36y3g",
-      "tie-report:p2:98yx3o50mtj36y3gvg80h3bf5mtj36y3g",
-      "news:https://www.bbc.co.uk/sport/football/articles/c14dx8eze1do"
+      "match:gw2:56v54"
     ],
     "threads": [
       {
-        "subject": "test211's Gakpo hold",
-        "beat": "Gakpo stays put despite Barcola's arrival; test211 keeps him.",
+        "subject": "test3's Forest core after Ndiaye's exit",
+        "beat": "Gibbs-White's ten again, and Calafiori's nine, carry test3 past test31",
         "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-03T13:08:59.701Z"
+        "beats": 3,
+        "lastUsedAt": "2026-09-03T13:17:12.212Z"
+      },
+      {
+        "subject": "test211's Gakpo hold",
+        "beat": "Another assist off seventy, five more; the faith holds even as Aina blanks.",
+        "status": "open",
+        "beats": 5,
+        "lastUsedAt": "2026-09-03T13:16:08.398Z"
+      },
+      {
+        "subject": "test3's Ndiaye at his new club",
+        "beat": "Ndiaye gone to City, and Gibbs-White's ten keeps test3's Forest core paying its way.",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-03T13:12:55.284Z"
       },
       {
         "subject": "Dedić benched by his own manager",
@@ -42,13 +55,6 @@
         "status": "retired",
         "beats": 3,
         "lastUsedAt": "2026-09-02T16:43:19.740Z"
-      },
-      {
-        "subject": "test3's Ndiaye at his new club",
-        "beat": "Ndiaye leaves Everton for Manchester City, up to £65m.",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-02T16:10:48.299Z"
       },
       {
         "subject": "123's scoring ceiling",

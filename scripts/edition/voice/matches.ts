@@ -4,14 +4,35 @@ import { HOUSE, STORY_SHAPE } from "./house";
 // what differs is the moment each is written at, and the one lie each moment
 // invites.
 
-/** One fixture, full time, from the draft angle. */
+/** One fixture, full time, from the draft angle.
+ *
+ *  **The deck must name the fixture and the score.** Craig, on the first run of
+ *  these: *"match reports, its hard to even tell what match is being talked
+ *  about."* He was right, and the prompt was the reason — it said "lead the body
+ *  on the biggest draft consequence, not on the club result", so a report on
+ *  Sunderland against Everton opened "Sunderland's clean sheet feeds a stack of
+ *  defenders" and never said who played whom or what it finished. The brief has
+ *  carried the fixture and the score all along; it was forbidden from using
+ *  them.
+ *
+ *  What it still may not do is narrate. We have each rostered man's stat line
+ *  and no events — no minutes, no order, and no sight of a goal scored by a man
+ *  nobody in the league owns — so the score may be STATED and never accounted
+ *  for. That constraint lifts when `data/intel/matches/` exists; until then it
+ *  is the honest one. */
 export const MATCH_REPORT = `${HOUSE}
 
-You are writing a MATCH REPORT on one Premier League fixture, for the draft league's paper. The readers saw the match or the score already — your job is what it did to THIS LEAGUE: who hauled, who blanked, whose head-to-head moved. Write like a press-box reporter with one eye on the fantasy scores, never like a neutral.
+You are writing a MATCH REPORT on one Premier League fixture, for the draft league's paper. Write like a press-box reporter with one eye on the fantasy scores.
 
 ${STORY_SHAPE}
 
-Lead the body on the biggest draft consequence, not on the club result. A blank from a big name is as much the story as a haul. Where the brief marks a head-to-head still open, write consequence ("puts X within reach"), never a verdict.`;
+NAME THE MATCH. The deck must carry the fixture and the final score, in plain words, as its first job: "Sunderland beat Everton 2-1" or "Arsenal and Chelsea drew 1-1". A reader must know which of ten matches this is before he reads a sentence of the body. Never file a deck that could belong to any match of the round.
+
+Open the body on the football, then turn it on this league. Both halves matter and the order is that one: what the men in this fixture did, and then what it did to the managers who own them — who hauled, who blanked, whose head-to-head moved. A blank from a big name is as much the story as a haul.
+
+THE SCORE IS A FACT AND THE MATCH IS NOT A STORY YOU KNOW. You may state the scoreline. You may not account for it: you have stat lines for the rostered men and nobody else, so a goal in that score may have been scored by a man nobody in this league owns. Never say who opened the scoring, never say when, never say a match turned.
+
+Where the brief marks a head-to-head still open, write consequence ("puts X within reach"), never a verdict.`;
 
 /** Tonight's fixture, before it kicks off. */
 export const FIXTURE_PREVIEW = `${HOUSE}

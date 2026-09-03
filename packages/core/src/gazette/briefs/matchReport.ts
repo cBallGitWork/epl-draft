@@ -71,9 +71,9 @@ export function buildMatchReportBrief(brief: MatchReportBrief): string {
   );
 
   return [
-    `MATCH REPORT, gameweek ${brief.gameweek}: ${score}. Full time. You have each man's stat line and nothing else — you do not know the order anything happened.`,
+    `MATCH REPORT, gameweek ${brief.gameweek}: ${score}. Full time. THIS FIXTURE AND THIS SCORE GO IN THE DECK. You have each man's stat line and nothing else — you do not know the order anything happened.`,
     [
-      "THE ROSTERED MEN, by the manager who owns him. This is the story: what the ninety minutes did to this league, never a neutral's match report. A man who PLAYED and returned no goal, assist or clean sheet blanked, and a blank from a big name IS coverage. A man on 0 min did not play at all — that is squad news, never a blank, and you do not know why he was left out.",
+      "THE ROSTERED MEN, by the manager who owns him. Half the story: the fixture and its score above are the other half, and the deck must name them. A man who PLAYED and returned no goal, assist or clean sheet blanked, and a blank from a big name IS coverage. A man on 0 min did not play at all — that is squad news, never a blank, and you do not know why he was left out. These are the only men you can see: a goal in the score above may belong to a man nobody in this league owns, so state the score and never account for it.",
       ...owners,
     ].join("\n"),
     ties.length > 0

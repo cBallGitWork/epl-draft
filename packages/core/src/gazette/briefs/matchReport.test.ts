@@ -75,3 +75,40 @@ describe("buildMatchReportBrief", () => {
     expect(brief).toContain("never verdicts");
   });
 });
+
+describe("naming the match", () => {
+  it("tells the writer the fixture and score belong in the deck", () => {
+    // Craig, on the first run of these: "match reports, its hard to even tell
+    // what match is being talked about." The brief has always carried the
+    // fixture and the score; the voice forbade using them.
+    const brief = buildMatchReportBrief({
+      gameweek: 2,
+      home: "Sunderland",
+      away: "Everton",
+      homeScore: 2,
+      awayScore: 1,
+      owners: [],
+      ties: [],
+      threads: [],
+    });
+    expect(brief).toContain("Sunderland 2–1 Everton");
+    expect(brief).toContain("GO IN THE DECK");
+  });
+
+  it("says the score may not be accounted for, because we cannot see every scorer", () => {
+    // We have stat lines for ROSTERED men only. A goal in the score can belong
+    // to a man nobody in the league owns, so "state it, never explain it" is the
+    // honest instruction until `data/intel/matches/` exists.
+    const brief = buildMatchReportBrief({
+      gameweek: 2,
+      home: "Sunderland",
+      away: "Everton",
+      homeScore: 2,
+      awayScore: 1,
+      owners: [{ owner: "Craig", players: [] }],
+      ties: [],
+      threads: [],
+    });
+    expect(brief).toContain("never account for it");
+  });
+});
