@@ -74,6 +74,14 @@ this exists).
   share the file until the parent hits the ceiling, then it moves out.
 - No `utils.ts`, `helpers.ts`, `common.ts`, or `misc.ts`. If it has no better
   name, it has no clear responsibility yet.
+- **A repeated class string is named in `apps/companion/app/desk.ts` at the
+  third occurrence**, with its row in `docs/ui/conventions.md` in the same
+  commit — the same bar and the same bookkeeping a shared component gets. That
+  file's header carries the rule for choosing between a CSS class, a class
+  string and a component; `desk.ts` is only the middle one. It also records what
+  it DECLINED and the count, which is what stops the file becoming a `DASH`: a
+  shared constant most call sites ignore makes the codebase look centralised
+  while it is not.
 - Functions: if you cannot see the whole function on one screen, split it.
 
 ## 5. Good code

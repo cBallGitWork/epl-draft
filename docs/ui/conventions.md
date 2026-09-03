@@ -202,6 +202,47 @@ each of them and a value that can drift from itself is not a measurement.**
   the bar's. The front page runs its stock out through it; without that, a cream
   page ends in a band of desk navy.
 
+## Recipes — where a shared class string lives
+
+A component owns an element; a recipe is the composition of look, layout and
+size that a screen writes. The codebase had all three kinds of home and picked
+between them by accident, so the rule is stated before the table.
+
+| The thing is… | Home | Why |
+|---|---|---|
+| A pure **appearance** — fill, border, bevel, ink | a class in `app/desk.css` | the cascade owns it, and `.paper` re-points the same tokens without touching a component |
+| Appearance **plus layout**, with per-caller variation | an exported class string in `app/desk.ts` | a component would own nothing but a string and would need a `className` prop to hand it back |
+| Appearance plus layout, **no variation**, at 3+ sites | a component under `app/components/` | it owns its element and its aria, and a caller cannot get it half right |
+
+`app/desk.ts` is the middle row's home, paired with `desk.css` — the looks in the
+stylesheet, the recipes beside it. Named for the register it serves; the paper
+keeps its own. **A repeated class string is named there at the third occurrence,
+with its row here in the same commit.**
+
+| Recipe | What it is | Was |
+|---|---|---|
+| `LABEL` | The desk's small-caps label — the four classes that make a word furniture. Callers keep their own layout and font. | 26 sites, 22 files |
+| `FIGURE` | A figure in a repeating row: tabular, centred, `2xs`. | 3 identical private `const FIGURE` |
+| `SLOT_FIGURE` | The same cell holding something the reader scans past — a shirt number, a position. Same width or the column bends. | 1, named as `FIGURE`'s pair |
+| `TONE` | Which way a form result leans. `W`/`D`/`L` as DESIGN §3's direction pair. | 2 byte-identical |
+| `TEXT` | Where a column's text sits. `TableHeads.JUSTIFY` is the flex twin. | 2 byte-identical |
+| `BOARD` | A table that fills its panel and rules its own rows. | 9 files |
+| `ROW_RULE` | The rule between two rows. `border-bg`, the darker step, so a table reads as ruled rather than as fifteen boxes. | 11 files |
+| `SCROLL` | What a board is wrapped in so a phone can reach its far columns. | 14 sites |
+| `HEAD_PLATE` · `HEAD_PLATE_END` | A column head on a stats board (`h-6`), left over a name and right over a figure. `TableHeads.PLATE` is the `h-7` twin over a table. | 12 sites, 3 files |
+| `FACT` | One stated fact in a stack: bordered, at the tap floor at both widths. | 4 files |
+| `SUBMIT` | The button that submits a form it sits inside. | 3 sites |
+
+**`desk.ts` records what it declined, with the count**, and that section is the
+point of the file rather than an afterthought. `const DASH = "—"` is named in 9
+files against 68 unnamed `"—"` literals in 34 others: a shared constant most call
+sites ignore makes a codebase look centralised while it is not, which is worse
+than honest duplication because the plausible name hides the scatter.
+
+DESIGN §6's density table is the other half of this — it says how tall each of
+these is and what size it is set in, and every row of it names the recipe here
+that implements it.
+
 ## Four mechanics worth knowing before you touch them
 
 **Portraits are transparent cut-outs, and nothing is drawn behind them.** That is
