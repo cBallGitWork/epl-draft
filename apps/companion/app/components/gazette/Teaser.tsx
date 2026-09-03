@@ -4,11 +4,15 @@ import { londonDayAndTime } from "../../londonTime";
 import { KICKER } from "./kickers";
 import { pageOf } from "./paperPages";
 
-// A story under the lead: the headline, and where to turn for the article.
+// A shoulder: the headline of a story at the second rank, and where to turn for
+// the article.
 //
 // **A front page prints one article and headlines the rest.** The lead runs
-// whole (`Written`); everything else is a headline, a deck and a line saying
-// where it continues.
+// whole (`Written`); a shoulder is a headline, a deck and a line saying where it
+// continues, and everything below it is a `Brief` — head, headline, folio, and
+// nothing else. The page runs two of these side by side, which is why the
+// headline is set a step down from the measure it had when eight of them ran
+// stacked at full width.
 //
 // It was `Article`, and it opened in place: a `<details>` that unfolded the
 // whole column where it stood, because the Gazetta was one route and there was
@@ -37,7 +41,7 @@ export default function Teaser({ story }: { story: PublishedStory }) {
             {kicker}
           </span>
         ) : null}
-        <h3 className="paper-display text-balance text-2xl font-black leading-[1.08] text-ink">
+        <h3 className="paper-display text-balance text-xl font-black leading-[1.08] text-ink @3xl:text-2xl">
           {story.headline}
         </h3>
         {story.deck !== "" ? (

@@ -60,12 +60,25 @@ export const DOUBTS_SHOWN = 8;
  *  the fourth-best story of the week is not news. */
 export const SECONDARY_STORIES = 2;
 
-/** How many filed stories run as headlines under the written lead.
+/** How many filed stories run beside the lead, at the second rank.
+ *
+ *  Two, because that is the shape every front page converges on — a splash, two
+ *  shoulders under it, and the rest in briefs. It is what a broadsheet does with
+ *  a fold and what a news site does on a phone, which is the same problem twice:
+ *  a reader must be able to rank the top three stories before reading a word.
+ *
+ *  Under this the page printed eight identical teasers in one column, so the
+ *  second story and the eighth were set the same size and the sheet had one
+ *  rank on it instead of three. */
+export const SHOULDER_STORIES = 2;
+
+/** How many filed stories run as headlines under the written lead, shoulders
+ *  included.
  *
  *  **A front page prints ONE article and headlines the rest**, which is what
  *  every newspaper does and what this page briefly stopped doing: it printed
  *  every filed story in full, one after another, which is a magazine. The lead
- *  runs whole; everything else is a headline that opens where it stands.
+ *  runs whole; everything else is a headline that turns to a page.
  *
  *  Eight, against a paper that holds up to `MAX_PAPER_STORIES`: a busy round
  *  fills the sheet without the front page becoming an index of itself. */

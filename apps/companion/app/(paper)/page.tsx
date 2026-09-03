@@ -2,6 +2,7 @@ import { LEAGUE_NAME, clubById } from "@epl/core";
 import { named } from "../components/gazette/named";
 import Pages from "../components/gazette/Pages";
 import Teaser from "../components/gazette/Teaser";
+import Brief from "../components/gazette/Brief";
 import Scoreboard from "../components/gazette/Scoreboard";
 import Splash from "../components/gazette/Splash";
 import Deals from "../components/gazette/Deals";
@@ -12,7 +13,13 @@ import Written from "../components/gazette/Written";
 import Index from "../components/gazette/Index";
 import Masthead from "../components/gazette/Masthead";
 import TeamOfTheWeek from "../components/gazette/TeamOfTheWeek";
-import { FANTRAX_SILENT, HEADLINES_SHOWN, SECONDARY_STORIES, servedLeague } from "../config";
+import {
+  FANTRAX_SILENT,
+  HEADLINES_SHOWN,
+  SECONDARY_STORIES,
+  SHOULDER_STORIES,
+  servedLeague,
+} from "../config";
 import Column from "../components/gazette/Column";
 import Nothing from "../components/shell/Nothing";
 import PaperTable from "../components/gazette/PaperTable";
@@ -68,6 +75,12 @@ export default async function GazettePage() {
   // from a manager.
   const byId = named(paper.teams);
   const who = (teamId: string | null) => (teamId === null ? "the wire" : byId(teamId));
+
+  // The sheet's three ranks. The lead runs whole above; these are the second
+  // and the third, and they are sliced here rather than in the markup so the
+  // two boundaries are one line apart and cannot drift.
+  const shoulders = paper.filed.slice(1, SHOULDER_STORIES + 1);
+  const briefs = paper.filed.slice(SHOULDER_STORIES + 1, HEADLINES_SHOWN + 1);
 
   return (
     // The paper's second column is a SIDEBAR here and never a "rail". The desk
@@ -149,15 +162,33 @@ export default async function GazettePage() {
             <Lead lead={paper.stories[0]} who={who} clubs={clubs} />
           ) : null}
 
-          {/* The rest of the edition, as a front page carries it: headlines,
-              each opening where it stands. The lead above is the one article
-              printed whole. */}
-          {paper.filed.length > 1 ? (
-            <div className="flex flex-col gap-1">
-              {paper.filed.slice(1, HEADLINES_SHOWN + 1).map((story) => (
+          {/* The shoulders: the two stories that rank behind the lead, side by
+              side under it, each with its deck and its dateline. Two columns at
+              every width and not just the wide one — a phone is where this page
+              is read, and a news site on a phone runs its two seconds abreast
+              for the same reason a broadsheet does: side by side is what says
+              "these two are equals, and both are below the splash".
+
+              `grid-flow-col auto-cols-fr` rather than `grid-cols-2`, because a
+              round that filed only two stories has ONE shoulder, and a lone
+              half-width story with dead paper beside it is a column that lost
+              its neighbour. Flowing by column gives it the full measure. */}
+          {shoulders.length > 0 ? (
+            <div className="grid auto-cols-fr grid-flow-col gap-x-5">
+              {shoulders.map((story) => (
                 <Teaser key={story.slug} story={story} />
               ))}
             </div>
+          ) : null}
+
+          {/* The rest, in briefs: standing head, headline, folio number. No deck
+              and no dateline, which is what keeps the third rank visibly third. */}
+          {briefs.length > 0 ? (
+            <ul>
+              {briefs.map((story) => (
+                <Brief key={story.slug} story={story} />
+              ))}
+            </ul>
           ) : null}
 
           {paper.stories.length > 1 ? (

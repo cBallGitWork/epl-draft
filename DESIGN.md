@@ -211,6 +211,17 @@ is set in scale, not in hue. `paper.css` re-points `--color-league` at the print
 red so nothing on the page can reach the brand colour by accident — the crest is
 the one exception and `.crest` restores it (§5).
 
+**Rank set in scale means the sheet needs ranks to set.** The front page runs
+three under the masthead: the lead whole, two **shoulders** side by side beneath
+it with their decks, and the rest as **briefs** — standing head, headline, folio
+number, nothing else. Two columns for the shoulders at every width including a
+phone's, because splash / two seconds / briefs is what a broadsheet does above
+the fold and what a news site does on a 390px screen, and a reader has to be able
+to rank the top three before reading a word of any of them. The tail was one flat
+column of eight identically-set teasers until 3 Sep 2026, which spends the
+scale ladder on the lead alone and leaves the second story indistinguishable from
+the eighth. `docs/ui/gazetta.md` carries the reading order.
+
 The paper's ink ladder is the same three rungs the desk's is, measured on this
 stock: **14.2 · 7.9 · 5.4** against the desk's 17.0 · 8.6 · 5.7. `--faint` was
 0.48 until 29 Aug, which is 3.0:1 — under the floor this file says has no

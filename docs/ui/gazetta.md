@@ -42,13 +42,32 @@ business, who is hurt, and when lineups lock.
 4. **The column**, when one has been filed about this round — and then it
    *leads*, taking the picture the desk chose and dropping the desk's own
    headline. See *The written column* below.
-5. **The rest of the edition** — everything else filed, as HEADLINES under the
-   lead: kicker in ink, headline, deck, dateline, and "read on"
-   (`gazette/Article`). **A front page prints one article and headlines the
-   rest**, which is what every newspaper does and what this page briefly
-   stopped doing — it printed each filed story in full, stacked, which is a
-   magazine. `HEADLINES_SHOWN` caps it at eight so a busy round does not turn
+5. **The shoulders and the briefs** — everything else filed, at two ranks under
+   the lead rather than one. **A front page prints one article and headlines the
+   rest**, which is what every newspaper does and what this page briefly stopped
+   doing — it printed each filed story in full, stacked, which is a magazine.
+   `HEADLINES_SHOWN` caps the whole tail at eight so a busy round does not turn
    the front page into an index of itself.
+
+   **The two shoulders** (`SHOULDER_STORIES`, `gazette/Teaser`) run side by side
+   directly under the lead, each with its standing head, headline, deck and
+   dateline. Two columns at *every* width, phones included: the splash / two
+   seconds / briefs shape is what a broadsheet does above the fold and what a
+   news site does on a 390px screen, and it is the same problem solved twice —
+   a reader has to be able to rank the top three stories before reading a word.
+   The grid flows by column (`grid-flow-col auto-cols-fr`) rather than being
+   fixed at two, because a round that filed only two stories has ONE shoulder
+   and a lone half-width column with dead paper beside it is worse than a wide
+   one.
+
+   **The briefs** (`gazette/Brief`) take the rest: standing head, headline, and
+   the folio number ranged right. No deck and no dateline — dropping them is
+   what keeps the third rank visibly third.
+
+   *This reverses what this list said until 3 Sep 2026.* The tail was a single
+   flat column of up to eight `Teaser`s, all set identically, so the second
+   story on the sheet and the eighth were the same size and the page had one
+   rank on it under the lead.
 
    **They turn to a page**, on a `<Link>`: each headline says "turn to page 2"
    and does it, and the article prints whole at `/paper/{slug}`.
@@ -67,7 +86,7 @@ business, who is hurt, and when lineups lock.
    only the paper's pages, as numbered ink chips; and an inside page opens on
    `Folio`, which leads with THE GAZETTA and puts the section and its number
    under it, so a masthead is never displaced by a word like "Reports".
-6. **Also this week** — the next two desk stories as headlines: a kicker and a line,
+6. **Also this week** — the next two DESK stories as headlines: a kicker and a line,
    no picture, no standfirst. The hierarchy *is* the design — a newspaper's
    second story is recognisable as the second story before you have read a word
    of it, and a page that gave every story a photograph would be a page with no
