@@ -17,7 +17,9 @@ import { SCROLL } from "@/app/desk";
 // colour here is a slot with one meaning (DESIGN §3):
 //
 //   · the date block  → `cm-index`, CM's own blue index cell, unchanged
-//   · who ARRIVED     → `--color-info`, cyan, whose slot is "a person"
+//   · who ARRIVED     → white, because a NAME IS WHITE in CM (`12.jpg`,
+//                      `16.jpg`, `21.jpg`), and the pairing below carries the
+//                      direction on its own
 //   · who LEFT        → `--color-faint`, quiet, because he is gone
 //   · the counterparty→ the other team's own colour, as a plate
 //   · the kind        → a plate whose ink says claim from trade
@@ -106,7 +108,7 @@ export default function Ledger({
                     empty, and a row that reflows when a side is missing stops
                     being scannable — which is the whole point of a ledger.
                     Absence is an em dash (DESIGN §7). */}
-                <Side players={arrived} tone="text-info" label="In" />
+                <Side players={arrived} tone="text-ink" label="In" />
                 <Side players={left} tone="text-faint" label="Out" />
 
                 {/* Who he dealt with, on that team's own colour — the same plate

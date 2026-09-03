@@ -122,7 +122,7 @@ is more specific than a palette; it is the reason the token names in
 | Ground | `--color-bg` `surface` `raised` `line` | depth, never meaning | — |
 | Ink | `--color-ink` `muted` `faint` | how loud | 17.0 · 8.6 · 5.7 |
 | Yellow | `--color-accent` | **yours · selected · active · primary** | 13.1 |
-| Cyan | `--color-info` | **a person** — and secondary emphasis | 11.2 |
+| Cyan | `--color-info` | **a derived reading** — ours rather than recorded | 11.2 |
 | Amber | `--color-mid` | **a figure** | 9.8 |
 | Red | `--color-bad` | **a loss, a doubt, a negative** | 5.6 |
 | Green | `--color-up` | **a gain** — the other half of the direction pair | 9.9 |
@@ -130,6 +130,21 @@ is more specific than a palette; it is the reason the token names in
 | League red | `--color-league` | the league's own mark. Chrome only | 3.2 |
 | Deep league red | `--color-league-deep` | the same red as a **ground with text on it** | — |
 | Cream | `--color-cream` | ink on a colour plate | — |
+
+**Cyan said "a person" until 3 Sep 2026, and that was a misread of the
+reference.** `docs/ui/reference/README.md` recorded a "person link" in cyan and
+cited two shots for it; the shots say the opposite, and the correction is now at
+the head of that table. A name in Championship Manager is WHITE — grey when the
+man is unavailable — and the cyan is the column beside it: the rating in
+`16.jpg`, the Position and training schedule in `12.jpg`, the condition in
+`21.jpg`. One cyan name per screen is the selected row, which is a state.
+
+So the slot is **a reading we DERIVED**, against white for a fact somebody
+recorded. That is a distinction this app already has to make and makes in words
+— §7's provenance rule says our figures are labelled and never sit in a column
+headed `FPts` — and it now has a colour for it. Seven sites inked a player's
+name cyan and none do; the slot is deliberately near-empty until a derived
+figure claims it, which is better than it meaning two things.
 
 `--color-faint` on `--color-raised` is 4.9:1. That is the tightest pair in the
 set and it is what fixes where the raised step can sit; move one, re-check both.

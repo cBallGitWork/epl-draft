@@ -60,11 +60,12 @@ export default function TableRow({
       <td className="pl-2">
         <Link
           href={`/squad/${row.teamId}`}
-          // White, not cyan. Cyan is "a person" in this palette and CM spends it
-          // on the manager's own name in the rail; its league table sets every
-          // club in white and the one you manage in yellow (`cm9900/24.jpg`,
-          // where Everton is the yellow row). A fantasy team is named after a
-          // person and is not one.
+          // White, and yellow for the one you manage — CM's league table
+          // (`cm9900/24.jpg`, where Everton is the yellow row). This used to
+          // justify itself by saying cyan means "a person" and a team is not
+          // one; the palette no longer says that, and the answer is unchanged
+          // because it never rested on it. A NAME IS WHITE in CM, a person's
+          // included.
           // Bigger than the figures beside it, and bigger than it was (Craig,
           // 31 Aug). CM sets a club name noticeably larger than its own stat
           // columns — `24.jpg` runs `Arsenal` at roughly half again the height

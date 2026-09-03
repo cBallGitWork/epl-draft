@@ -135,7 +135,7 @@ export default function SeasonGrid({
                           seventeen columns are — so squeezing the name buys no
                           screen and loses the one thing on the row a reader
                           cannot infer from the figures. */}
-                      <td className="px-1.5 py-1 text-2xs text-info">
+                      <td className="px-1.5 py-1 text-2xs text-ink">
                         {names.get(line.fantraxId) ?? line.fantraxId}
                       </td>
                       {line.values.map((value, at) => (

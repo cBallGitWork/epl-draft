@@ -43,13 +43,32 @@ At our 800px-equivalent widths that 18px row is why CM reads as dense and a
 
 Sampled from the images. Ratios computed against CM's own row ground `#4c4944`.
 
+**A NAME IS WHITE.** This table said cyan was a "person link" and cited
+`12.jpg` and `21.jpg` names for it, and it was wrong — wrong in the one row that
+had been driving colour decisions in the app. Re-read off the images on 3 Sep
+2026 (Craig: *"looking at cm, text is white for all"*):
+
+- `12.jpg` — every name in the Everton squad is white. The cyan is the
+  **Position** column (`D/DM LC`, `AM/F C`) and the **Inf** column's repeated
+  "Fitness", plus the manager's own name in the rail.
+- `21.jpg` — ten of eleven names are white; one is cyan, and it is the
+  highlighted row rather than a person being a person.
+- `16.jpg` — every name white, unavailable ones grey, and the **ratings** column
+  cyan down both sides.
+
+So cyan marks **a reading the game DERIVED** — a rating, a condition, a
+position — against white for a recorded fact and grey for a man who is not
+available. One cyan name per screen is the selection, which is a state and not
+a category.
+
+
 | Role | CM's value | Ratio | Where |
 |---|---|---|---|
 | Title bar | `#0030a6` royal blue | 10.64 vs its white title | `12.jpg`, `23.jpg` |
 | Active tab | `#ffff03` pure yellow, text **and** border | — | `05.jpg`, `16.jpg`, `21.jpg` |
 | Index cell | `#1f13a7` deep blue block | 10.75 vs its white number | `12.jpg`, `21.jpg`, `23.jpg` |
 | Button / column-head plate | light grey, highlight edge `#fbf9fc` | **7.34** off the ground | `12.jpg` |
-| Person link | `#6bfdfa` cyan | 7.28 | `12.jpg` names, `21.jpg` names |
+| Derived reading | `#6bfdfa` cyan | 7.28 | `16.jpg` ratings, `12.jpg` Position, `21.jpg` Cond. |
 | Stat figure | `#faff00` **yellow** | 8.26 | `21.jpg` stat columns |
 | Unavailable | `#7d8e6c` grey | **2.54** | `16.jpg`, `21.jpg` non-playing subs |
 | `Inj` box | red fill, white text | — | `12.jpg` (Billic) |
@@ -143,7 +162,7 @@ those are the ones to build from.
 
 | Shot | Why it matters |
 |---|---|
-| `cm9900/12.jpg` | **The reference table.** Bevelled heads, blue index cells, cyan names, yellow figures, red `Inj`, yellow `Fut`, purple value column |
+| `cm9900/12.jpg` | **The reference table.** Bevelled heads, blue index cells, **white names**, a cyan Position column, yellow figures, red `Inj`, yellow `Fut`, purple value column |
 | `cm9900/21.jpg` | **The densest table in the set** — 13 abbreviated stat columns, club-coloured header panels |
 | `cm9900/16.jpg` | Player ratings — greyed non-playing subs, cyan ratings, yellow card boxes |
 | `cm9900/23.jpg` | Transfers — blue date index, yellow clubs, orange destinations, purple fee column |

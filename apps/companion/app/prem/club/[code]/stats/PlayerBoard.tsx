@@ -154,11 +154,11 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
             {ordered.map(({ player, position }, at) => (
               <tr key={player.id} className={`cm-row ${ROW_RULE} hover:bg-surface`}>
                 <td className="cm-index numeric px-1.5 text-right text-2xs font-bold">{at + 1}</td>
-                {/* Cyan, because `--color-info` is "a person" in the palette and
-                    a name is the only thing on this board that is one. It is
-                    what `squad/[teamId]/stats` sets and what CM sets for a
-                    person on every screen it draws. */}
-                <td className="px-1.5 text-sm font-bold text-info">
+                {/* White, which is what CM sets a name in on every screen it
+                    draws — `12.jpg`, `16.jpg` and `21.jpg`, checked. This said
+                    cyan and cited the same shots for it, off a reference row
+                    that had read its own images wrong. */}
+                <td className="px-1.5 text-sm font-bold text-ink">
                   <Link href={`/prem/player/${player.code}`} className="hover:underline">
                     {player.fullName}
                   </Link>

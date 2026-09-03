@@ -86,7 +86,7 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
                       <Link
                         href={`${PLAYER}/${player.code}`}
                         className={`min-w-0 flex-1 truncate text-sm font-bold hover:underline ${
-                          out ? "text-faint" : "text-info"
+                          out ? "text-faint" : "text-ink"
                         }`}
                       >
                         {player.fullName}

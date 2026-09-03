@@ -6,7 +6,7 @@
 
    · THE DESK — League, Squads, Live, Players, FPL. This is a management
      terminal, so it is dressed as one: Championship Manager 99/00's blue-black
-     ground, yellow for what is yours or active, cyan for a person, amber for a
+     ground, yellow for what is yours or active, cyan for a derived reading, amber for a
      figure, red for a loss and green for a gain. CM's own ground was a darkened
      match photograph; we keep the darkness and the blueness and drop the
      photograph, which no contrast ratio survives.
@@ -81,7 +81,9 @@
   /* Yours, selected, active, primary. CM yellow. 13.1:1 on --color-bg, and the
      same pair inverted for a yellow chip with dark ink on it. */
   --color-accent: oklch(0.88 0.16 95);
-  /* A person, and secondary emphasis. CM's link cyan. 11.2:1. Pulled back from
+  /* A reading we derived rather than a fact somebody recorded — CM's own
+     use, which is the rating column, Position and condition, never a name.
+     11.2:1. Pulled back from
      PL's #05f0ff, which is a neon and reads as the Premier League's rather than
      as a colour in this room. */
   --color-info: oklch(0.82 0.13 210);

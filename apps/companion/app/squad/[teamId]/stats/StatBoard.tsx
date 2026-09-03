@@ -13,8 +13,9 @@ import { HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
 //
 // `cm9900/21.jpg` is the density target and the argument for the shape: thirteen
 // abbreviated columns, printed noughts rather than blanks, the figures in yellow
-// and the names in cyan. It is the densest table in the reference library and it
-// is what a manager reads after a round.
+// and the names in WHITE — this said cyan until 3 Sep 2026, off a reference row
+// that had misread its own screenshots. It is the densest table in the reference
+// library and it is what a manager reads after a round.
 //
 // **The groups are a filter, not one enormous table** (Craig, 2 Sep: "separate
 // the two, add a grey filter dropdown at top — fantasy stats, attacking stats,
@@ -193,7 +194,7 @@ export default function StatBoard({
                     // (`21.jpg` fits thirteen columns and twelve players on an
                     // 800x600 canvas). The floor is a rule about a THUMB, so it
                     // belongs where there is one.
-                    className="cm-row flex min-h-11 items-center px-1.5 text-info hover:underline"
+                    className="cm-row flex min-h-11 items-center px-1.5 text-ink hover:underline"
                   >
                     {names[line.fantraxId] ?? line.name}
                   </Link>

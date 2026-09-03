@@ -101,9 +101,9 @@ function Side({
       }`}
     >
       <TeamBadge team={team} url={badge} />
-      {/* White, and yellow for yours — the table's own rule, and for its reason:
-          cyan is "a person" in this palette and a fantasy team is named after
-          one without being one. */}
+      {/* White, and yellow for yours — the table's own rule. Its old reason
+          (cyan means "a person", a team is not one) was resting on a misread of
+          the reference; the rule stands on CM's own league table instead. */}
       <span
         className={`min-w-0 flex-1 truncate text-sm font-bold ${
           away ? "text-right" : ""

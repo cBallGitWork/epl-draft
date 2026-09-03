@@ -13,7 +13,7 @@ paths:
 | Token | Means — and only this |
 |---|---|
 | `--color-accent` (yellow) | **yours · selected · active · primary** |
-| `--color-info` (cyan) | **a person** — and secondary emphasis |
+| `--color-info` (cyan) | **a derived reading** — ours rather than recorded. **A name is WHITE** (CM's own; see `docs/ui/reference/README.md`) |
 | `--color-mid` (amber) | **a figure** |
 | `--color-bad` (red) | a loss, a doubt, a negative |
 | `--color-up` (green) | a gain — the other half of the direction pair |

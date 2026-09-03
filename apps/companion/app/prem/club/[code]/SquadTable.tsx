@@ -141,7 +141,7 @@ export default function SquadTable({
                     waivers, "FA" a free agent. Fantrax's own letters, carried
                     rather than translated — the vocabulary is theirs, and an
                     undrafted league marks everybody WW. */}
-                <td className={`px-1.5 text-center text-2xs ${dim || "text-info"}`}>
+                <td className={`px-1.5 text-center text-2xs ${dim || "text-ink"}`}>
                   <span className="block truncate">{owner(opinion) ?? DASH}</span>
                 </td>
                 <td className={`${WIDE_FIGURE} ${dim || "text-ink"}`}>{player.season.minutes}</td>
