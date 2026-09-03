@@ -9,6 +9,7 @@ import { intelSetPieces } from "../../../../intel";
 import { PLAYER } from "../../../PremNav";
 import ClubShell from "../Shell";
 import { clubOr404 } from "../club";
+import { PANEL } from "@/app/desk";
 
 // Who steps up: corners, free kicks and penalties, in the order they take them.
 //
@@ -62,7 +63,7 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
           season, so it fills in as one is played.
         </TabEmpty>
       ) : (
-        <section className="cm-panel flex flex-col gap-3 p-2">
+        <section className={PANEL}>
           {orders.map((order) => (
             <Section key={order.piece} title={order.label}>
               <ul className="cm-rows flex flex-col">

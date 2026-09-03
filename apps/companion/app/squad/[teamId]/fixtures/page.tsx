@@ -6,6 +6,7 @@ import Season from "../../../league/schedule/Season";
 import { getSchedule, getSeasonResults, type ScheduleRound } from "../../../league/schedule/schedule";
 import { seasonRows } from "../../../league/schedule/teamSeason";
 import { teamBadges } from "../../../standings";
+import { PANEL } from "@/app/desk";
 
 // Every round this side is in, end to end.
 //
@@ -66,7 +67,7 @@ export default async function FixturesPage({
       current="fixtures"
       empty={rows.length === 0 ? ["fixtures"] : []}
     >
-      <section className="cm-panel flex flex-col p-2">
+      <section className={PANEL}>
         {rows.length === 0 ? (
           <p className="px-1 py-6 text-center text-2xs text-muted">
             Fantrax has paired {team.teamName} with nobody this season.

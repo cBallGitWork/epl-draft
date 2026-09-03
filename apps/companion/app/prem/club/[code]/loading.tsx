@@ -1,6 +1,7 @@
 import PageHeader from "../../../components/shell/PageHeader";
 import SkeletonRows from "../../../components/shell/SkeletonRows";
 import Skeleton from "../../../components/shell/Skeleton";
+import { PANEL } from "@/app/desk";
 
 // What a club screen looks like before FPL answers.
 //
@@ -33,7 +34,7 @@ export default function LoadingClub() {
     <div className="flex flex-col gap-2">
       <PageHeader title="Club" />
       <Skeleton width="100%" height="2.25rem" />
-      <section className="cm-panel flex flex-col gap-2 p-2">
+      <section className={PANEL}>
         <SkeletonRows count={SKELETON_ROWS} height="var(--table-row)" />
       </section>
     </div>

@@ -137,6 +137,19 @@ export const HEAD_PLATE_END =
 
 /* ---- Panels and controls -------------------------------------------------- */
 
+/** The default panel: a Championship Manager well holding a column of things,
+ *  at the spacing six of them already agreed on.
+ *
+ *  Twenty-one distinct `cm-panel` spellings were counted across the app, which
+ *  read as no rule at all. It is closer to three: `gap-2 p-2` at six sites is
+ *  this, `gap-3 p-4` at three is the roomy one a page-level panel uses, and
+ *  `gap-2 p-3` at three is between them. The rest are singletons, and a
+ *  singleton is where a panel drifted rather than where it decided.
+ *
+ *  Named so a panel has a default to depart FROM. A caller with a reason keeps
+ *  its own spacing and says the reason; a caller without one takes this. */
+export const PANEL = "cm-panel flex flex-col gap-2 p-2";
+
 /** One stated fact in a stack of them: a bordered row tall enough to be aimed
  *  at, holding a label and its value. Four sites wrote it — the player page's
  *  own facts, his draft pedigree, his projection, and the Prem player page.

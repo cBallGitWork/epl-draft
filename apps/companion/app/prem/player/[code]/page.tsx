@@ -8,7 +8,7 @@ import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
 import { footballNow } from "../../../football";
 import { CLUB } from "../../PremNav";
-import { FACT } from "@/app/desk";
+import { FACT, PANEL } from "@/app/desk";
 
 // One footballer, and for now only what the bootstrap already knows.
 //
@@ -48,7 +48,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ code: s
       <PageHeader title={player.fullName} plate={plate} />
       <Caption>Player</Caption>
 
-      <section className="cm-panel flex flex-col gap-3 p-3">
+      <section className={PANEL}>
         <div className="flex items-center gap-3">
           <PlayerPortrait player={{ code: player.code, name: player.name }} colours={colours} />
           <div className="min-w-0 flex-1">

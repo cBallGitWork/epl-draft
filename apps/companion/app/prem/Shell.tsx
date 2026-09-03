@@ -3,6 +3,7 @@ import Caption from "../components/shell/Caption";
 import PageHeader from "../components/shell/PageHeader";
 import PremNav from "./PremNav";
 import type { PremSection } from "./PremNav";
+import { PANEL } from "@/app/desk";
 
 // The frame every Premiership screen wears, including when it has nothing to
 // show.
@@ -62,7 +63,7 @@ export default function PremShell({
           `desk.css`, measured rather than assumed). A panel that shrinks to its
           contents is why CM's tables look full and ours looked abandoned. */}
       <section
-        className="cm-panel flex flex-col gap-2 p-2"
+        className={PANEL}
         style={{
           minHeight: `calc(${Math.max(rows ?? 0, PANEL_ROWS)} * var(--table-row) + var(--table-chrome))`,
         }}

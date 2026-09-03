@@ -14,7 +14,7 @@ import Squad from "./Squad";
 import { fantasyDepth } from "./SquadTable";
 import { TABLE } from "../../PremNav";
 import { intelSquads, intelXi } from "../../../intel";
-import { SMALL_CAPS } from "@/app/desk";
+import { PANEL, SMALL_CAPS } from "@/app/desk";
 import { londonDayAndDate } from "../../../londonTime";
 import { clubOr404, leagueOpinions, standing } from "./club";
 import { ordinal } from "@epl/core";
@@ -97,7 +97,7 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
 
   return (
     <ClubShell club={club} title="Squad" current="squad">
-      <section className="cm-panel flex flex-col gap-2 p-2">
+      <section className={PANEL}>
         {squad.length === 0 ? (
           <TabEmpty>FPL names {club.name} but lists nobody on its books.</TabEmpty>
         ) : (

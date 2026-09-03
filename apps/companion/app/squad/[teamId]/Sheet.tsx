@@ -6,6 +6,7 @@ import TeamSheet from "../../components/league/TeamSheet";
 import BoardBar from "../../components/league/BoardBar";
 import { type View } from "../../components/league/ViewToggle";
 import Pending from "../../components/league/Pending";
+import { PANEL } from "@/app/desk";
 
 // A rival's eleven once his lineups have locked — with the Pitch/List control the
 // page had been losing at exactly that moment.
@@ -110,7 +111,7 @@ export default function Sheet({
           squad. `/prem/club/[code]` puts both inside a single `cm-panel` and
           this now does the same; `bare` is what stops the list drawing a second
           one inside this. */}
-      <section className="cm-panel flex flex-col gap-2 p-2">
+      <section className={PANEL}>
       <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-10">
         <div className={view === "list" ? "" : "hidden lg:block"}>
           <TeamSheet

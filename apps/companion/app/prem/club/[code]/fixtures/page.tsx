@@ -4,6 +4,7 @@ import { PANEL_ROWS } from "../../../Shell";
 import ClubShell from "../Shell";
 import Run from "../Run";
 import { clubOr404 } from "../club";
+import { PANEL } from "@/app/desk";
 
 // The club's season on one screen — what it has played and what it has left, in
 // the order the season runs.
@@ -50,7 +51,7 @@ export default async function ClubFixturesPage({ params }: { params: Promise<{ c
       empty={run.length === 0 ? ["fixtures"] : []}
     >
       <section
-        className="cm-panel flex flex-col gap-2 p-2"
+        className={PANEL}
         style={{ minHeight: `calc(${PANEL_ROWS} * var(--table-row) + var(--table-chrome))` }}
       >
         {run.length === 0 ? (

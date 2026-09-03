@@ -4,7 +4,7 @@ import {
   fixturesInOrder,
 } from "@epl/core";
 import { londonDayAndTime } from "../londonTime";
-import { LABEL } from "@/app/desk";
+import { LABEL, PANEL } from "@/app/desk";
 
 // Your afternoon: who of yours is still to come, and when.
 //
@@ -58,7 +58,7 @@ export default function Afternoon({
   if (groups.size === 0) return null;
 
   return (
-    <section className="cm-panel flex flex-col gap-1.5 p-3">
+    <section className={PANEL}>
       <h2 className={LABEL}>Your afternoon</h2>
       <ul className="flex flex-col gap-1">
         {[...groups].map(([kickoff, group]) => (

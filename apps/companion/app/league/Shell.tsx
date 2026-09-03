@@ -3,6 +3,7 @@ import { LEAGUE_NAME } from "@epl/core";
 import PageHeader from "../components/shell/PageHeader";
 import SectionNav from "./SectionNav";
 import type { LeagueSection } from "./SectionNav";
+import { PANEL } from "@/app/desk";
 
 // The frame every league section wears, including when it has nothing to show.
 //
@@ -84,7 +85,7 @@ export default function LeagueShell({
           the breakpoint — see `--table-row` in `desk.css`, which is measured
           rather than assumed. */}
       <section
-        className="cm-panel flex flex-col gap-2 p-2"
+        className={PANEL}
         style={{
           minHeight: `calc(${Math.max(teams ?? 0, PANEL_ROWS)} * var(--table-row) + var(--table-chrome))`,
         }}
