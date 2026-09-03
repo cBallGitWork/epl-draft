@@ -73,15 +73,19 @@ export default function SquadTable({
         <tbody>
           {players.map((player) => {
             const availability = availabilityOf(player);
-            return (
-              <tr
-                key={player.id}
-                // Dimmed whole, which is CM's own answer for a man who cannot
-                // play: `25.jpg` greys the unavailable rather than hiding them,
-                // because a squad list that omits the injured is a squad list
-                // that cannot be checked against the team sheet.
-                className={`border-b border-bg hover:bg-surface ${availability.out ? "cm-out" : ""}`}
-              >
+              // Greyed rather than hidden, which is CM's own answer for a man
+              // who cannot play (`cm9900/25.jpg`): a squad list that omits the
+              // injured cannot be checked against a team sheet.
+              //
+              // **Cell by cell, and NOT `.cm-out` on the row.** That class is
+              // `.cm-out, .cm-out *`, so it repaints the state badge too — and
+              // the badge is `--color-bad` behind `--color-bg`, so forcing its
+              // ink to `--color-faint` put "Inj" at **1.04:1**, which `sweep`
+              // caught six times on Man City. The one thing that must survive
+              // the greying is the box saying WHY the row is grey.
+              const dim = availability.out ? "text-faint" : "";
+              return (
+              <tr key={player.id} className="border-b border-bg hover:bg-surface">
                 <td className={`${SLOT} hidden lg:table-cell`}>{DASH}</td>
                 <td className="w-full max-w-0 pl-2">
                   <span className="cm-row flex min-h-11 items-center gap-2 font-bold">
@@ -89,17 +93,17 @@ export default function SquadTable({
                       player={{ code: player.code, name: player.name }}
                       colours={colours}
                     />
-                    <span className="min-w-0 truncate">{player.name}</span>
+                    <span className={`min-w-0 truncate ${dim}`}>{player.name}</span>
                     <StateBox player={player} />
                   </span>
                 </td>
-                <td className={`${FIGURE} text-muted`}>
+                <td className={`${FIGURE} ${dim || "text-muted"}`}>
                   {positionsLabel(fantrax.get(player.code) ?? []) ?? DASH}
                 </td>
-                <td className={`${FIGURE} text-ink`}>{player.season.minutes}</td>
-                <td className={`${FIGURE} hidden text-ink lg:table-cell`}>{player.season.starts}</td>
-                <td className={`${FIGURE} text-mid`}>{player.season.goals}</td>
-                <td className={`${FIGURE} hidden text-mid lg:table-cell`}>{player.season.assists}</td>
+                <td className={`${FIGURE} ${dim || "text-ink"}`}>{player.season.minutes}</td>
+                <td className={`${FIGURE} hidden lg:table-cell ${dim || "text-ink"}`}>{player.season.starts}</td>
+                <td className={`${FIGURE} ${dim || "text-mid"}`}>{player.season.goals}</td>
+                <td className={`${FIGURE} hidden lg:table-cell ${dim || "text-mid"}`}>{player.season.assists}</td>
               </tr>
             );
           })}
