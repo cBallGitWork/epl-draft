@@ -39,6 +39,53 @@ import { SECTIONS, isPaperRoute, owns } from "./sections";
 // Client only because the current section has to be known, and `usePathname` is
 // the only way to know it. Nothing else here is interactive.
 
+/** Championship Manager's back and forward arrows.
+ *
+ *  `docs/ui/reference/README.md` reads them off the rail: the date in yellow,
+ *  **arrow steppers**, the manager's name in cyan, then the sections. They sit
+ *  above the plates because that is where the game puts them (`cm9900/24.jpg`).
+ *
+ *  **Desk only** (Craig, 3 Sep 2026). Below `lg` the rail is 64px — already 16%
+ *  of a 390 screen — and a phone has the browser's own back gesture plus a
+ *  thumb that owns the bottom of the screen. Two more plates there would cost
+ *  the sections the room they were measured into.
+ *
+ *  **Ink, not the accent.** CM draws them yellow, and our accent slot means
+ *  "yours · selected · active" — an arrow is none of the three, and spending
+ *  the accent on chrome is the slot violation DESIGN §5 is about.
+ *
+ *  **Forward is never greyed, and that is the honest answer rather than the
+ *  faithful one.** CM greys Next when there is nowhere forward. Only the
+ *  Navigation API can tell us that, `history` cannot, and it is absent in
+ *  Safari — which is most of the phones this is hidden on anyway. A control
+ *  greyed by a guess is worse than one that is simply live: pressing forward
+ *  with nowhere to go does nothing, which is what it looks like it will do. */
+function Steppers() {
+  return (
+    <div className="hidden border-b border-line lg:flex">
+      <button
+        type="button"
+        onClick={() => history.back()}
+        aria-label="Back"
+        className="flex min-h-11 flex-1 items-center justify-center border-r border-chrome text-sm text-ink hover:bg-surface"
+      >
+        {/* A glyph rather than an icon set: there is none in this app, and
+            introducing one for two arrows is a whole visual language for a pair
+            of buttons (`Rail`'s own argument about the section labels). */}
+        <span aria-hidden>←</span>
+      </button>
+      <button
+        type="button"
+        onClick={() => history.forward()}
+        aria-label="Forward"
+        className="flex min-h-11 flex-1 items-center justify-center text-sm text-ink hover:bg-surface"
+      >
+        <span aria-hidden>→</span>
+      </button>
+    </div>
+  );
+}
+
 export default function Rail({ matchday }: { matchday: boolean }) {
   const pathname = usePathname();
   // The paper is the other register and prints its own index (`gazette/Index`).
@@ -66,6 +113,7 @@ export default function Rail({ matchday }: { matchday: boolean }) {
       // so the home indicator and a landscape notch both land on it.
       className="sticky top-0 z-50 flex h-dvh w-16 shrink-0 flex-col justify-end self-start overflow-y-auto border-r border-line bg-bg pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] lg:w-[8.125rem] lg:justify-start"
     >
+      <Steppers />
       <ul className="flex flex-col">
         {sections.map((section) => {
           const here = owns(section.routes, pathname);
