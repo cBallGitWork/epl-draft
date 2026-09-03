@@ -9,6 +9,7 @@ import FplPitch from "./FplPitch";
 import EntryForm from "./EntryForm";
 import { forgetEntry } from "./actions";
 import { myEntryId, mySide } from "./entry";
+import { LABEL } from "@/app/desk";
 
 // The other game, kept small on purpose.
 //
@@ -125,7 +126,7 @@ export default async function FplPage() {
 function Figure({ label, value }: { label: string; value: number | null }) {
   return (
     <div className="cm-panel px-3 py-2">
-      <dt className="text-2xs font-bold uppercase text-faint">{label}</dt>
+      <dt className={LABEL}>{label}</dt>
       <dd className="numeric text-xl font-bold">{value === null ? "—" : value.toLocaleString("en-GB")}</dd>
     </div>
   );
@@ -184,7 +185,7 @@ function Bench({ picks, players, clubs }: { picks: FplPick[]; players: Players; 
 
   return (
     <div className="flex flex-col gap-1 pt-2">
-      <h3 className="flex items-baseline justify-between gap-3 border-t border-line pt-2 text-2xs font-bold uppercase text-faint">
+      <h3 className={`flex items-baseline justify-between gap-3 border-t border-line pt-2 ${LABEL}`}>
         Bench
         <span className="numeric font-normal">{total} left on it</span>
       </h3>

@@ -6,6 +6,7 @@ import { planningRound } from "../../../round";
 import { leagueTable } from "../../../standings";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import { LABEL } from "@/app/desk";
 
 // Who he plays, and the one screen in this app that is about a confrontation.
 //
@@ -125,7 +126,7 @@ function Fixture({
 
       <div className="flex items-stretch gap-2 p-2">
         <Side team={home} />
-        <span className="flex shrink-0 items-center px-1 font-chrome text-2xs font-bold uppercase text-faint">
+        <span className={`flex shrink-0 items-center px-1 font-chrome ${LABEL}`}>
           v
         </span>
         <Side team={away} linked />

@@ -14,6 +14,7 @@ import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
 import { yoursBorder, yoursInk } from "../mine";
 import Pending from "../components/league/Pending";
+import { LABEL } from "@/app/desk";
 
 // Your head-to-head, at the top of the live view.
 //
@@ -58,7 +59,7 @@ export default async function YourMatchup() {
   return (
     <section className={`cm-panel flex flex-col gap-2 p-3 ${yoursBorder(true)}`}>
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-2xs font-bold uppercase text-faint">
+        <h2 className={LABEL}>
           Your head-to-head
         </h2>
         <Link
@@ -74,7 +75,7 @@ export default async function YourMatchup() {
 
       <div className="flex items-stretch">
         <Half team={pairing.team} score={yours} against={theirs} mine />
-        <span className="self-center px-1 text-2xs font-bold uppercase text-faint">
+        <span className={`self-center px-1 ${LABEL}`}>
           v
         </span>
         <Half team={pairing.opponent} score={theirs} against={yours} mirrored />

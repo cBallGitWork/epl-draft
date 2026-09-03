@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { claimTeam } from "./actions";
+import { LABEL } from "@/app/desk";
 
 // One box: your code. Client only because the wrong-code message has to come
 // back without losing the page, which is what `useActionState` is for — the form
@@ -13,7 +14,7 @@ export default function SignIn() {
   return (
     <form action={submit} className="cm-panel flex flex-col gap-3 p-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="code" className="text-2xs font-bold uppercase text-faint">
+        <label htmlFor="code" className={LABEL}>
           Your code
         </label>
         <p className="text-sm text-muted">

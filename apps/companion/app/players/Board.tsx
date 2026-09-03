@@ -13,6 +13,7 @@ import PlayerPortrait from "../components/football/PlayerPortrait";
 import GroupNav from "../components/league/GroupNav";
 import { IndexCell } from "../components/league/TableCells";
 import { PLAYERS } from "../league/SectionNav";
+import { BOARD, FIGURE, ROW_RULE } from "@/app/desk";
 
 // CM's stat board, on the player pool.
 //
@@ -65,7 +66,7 @@ export default function Board({
         className="cm-panel cm-scroll overflow-auto p-2"
         style={{ maxHeight: `calc(${VISIBLE_ROWS} * var(--table-row) + var(--table-chrome))` }}
       >
-        <table className="w-full border-collapse text-sm">
+        <table className={BOARD}>
           <caption className="sr-only">
             The pool ranked by {category}, Fantrax&apos;s own count
           </caption>
@@ -85,7 +86,7 @@ export default function Board({
                 : null;
 
               return (
-                <tr key={row.line.fantraxId} className="border-b border-bg hover:bg-surface">
+                <tr key={row.line.fantraxId} className={`${ROW_RULE} hover:bg-surface`}>
                   <IndexCell>{ordinal(row.rank)}</IndexCell>
                   {/* `w-full` on the NAME cell, which under automatic table
                       layout means "take the slack" rather than "be the whole
@@ -187,8 +188,3 @@ export default function Board({
 const VISIBLE_ROWS = 14;
 
 const DASH = "—";
-/** A cell in the list. Tight: CM's own rows are 18px at 800x600 and `.cm-row`
- *  holds the desk to 28 with the phone's 44px tap floor intact, which is the
- *  whole reason the height lives on the class rather than on a `min-h`. */
-const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
-

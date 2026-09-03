@@ -10,6 +10,7 @@ import { planningRound } from "../round";
 import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
 import { FANTRAX_SILENT, servedLeague } from "../config";
+import { LABEL } from "@/app/desk";
 
 // Your squad, and everyone else's. Until the draft this is the empty state,
 // which is the state our real league is actually in and therefore the one that
@@ -96,7 +97,7 @@ export default async function SquadsPage() {
               Not you? Sign out
             </button>
           </form>
-          <h2 className="px-3 pt-1 text-2xs font-bold uppercase text-faint">
+          <h2 className={`px-3 pt-1 ${LABEL}`}>
             Around the league
           </h2>
         </>

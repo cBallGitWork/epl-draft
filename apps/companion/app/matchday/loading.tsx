@@ -4,6 +4,7 @@ import ButtonLink from "../components/shell/ButtonLink";
 import LeagueCrest from "../components/shell/LeagueCrest";
 import Skeleton from "../components/shell/Skeleton";
 import SkeletonRows from "../components/shell/SkeletonRows";
+import { LABEL } from "@/app/desk";
 
 // The live centre, before either provider has answered.
 //
@@ -24,7 +25,7 @@ export default function Loading() {
       <div className="flex justify-end pt-1">
         <Link
           href="/matchday/desk"
-          className="text-2xs font-bold uppercase text-faint hover:text-muted"
+          className={`${LABEL} hover:text-muted`}
         >
           The desk →
         </Link>

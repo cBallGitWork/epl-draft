@@ -5,6 +5,7 @@ import type { PoolRow } from "./pool";
 import { COLUMNS, activeSort, sortHref } from "./query";
 import { positionsLabel } from "../positions";
 import type { PlayersQuery } from "./query";
+import { SCROLL } from "@/app/desk";
 
 // The pool as a table. Sorting is a link, not a click handler: the server does
 // the ordering, the phone gets HTML, and the sort survives being shared.
@@ -48,7 +49,7 @@ export default function PlayerTable({
     // `overflow-x-auto` on the breakout rather than on the table, so the header
     // row scrolls with its body.
     <div
-      className="overflow-x-auto"
+      className={SCROLL}
       style={{ marginInline: "calc(var(--page-gutter) * -1)", paddingInline: "var(--page-gutter)" }}
     >
       <table className="w-full min-w-[34rem] border-collapse text-sm">

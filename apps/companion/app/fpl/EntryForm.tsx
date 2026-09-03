@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { rememberEntry } from "./actions";
 import { BUTTON } from "../components/shell/ButtonLink";
+import { LABEL } from "@/app/desk";
 
 // Your FPL team id — the number in the URL when you look at your own points on
 // the FPL site. Client only so a bad number can be answered without losing the
@@ -14,7 +15,7 @@ export default function EntryForm() {
   return (
     <form action={submit} className="cm-panel flex flex-col gap-3 p-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="entry" className="text-2xs font-bold uppercase text-faint">
+        <label htmlFor="entry" className={LABEL}>
           Your FPL team id
         </label>
         <p className="text-sm text-muted">

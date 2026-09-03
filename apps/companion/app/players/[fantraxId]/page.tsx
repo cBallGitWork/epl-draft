@@ -19,6 +19,7 @@ import { fantraxProjection, playerPedigree } from "./draft";
 import { gameLog, scouting } from "./scouting";
 import type { FootballPlayer } from "@epl/core";
 import { positionsFromList } from "../../positions";
+import { FACT, LABEL } from "@/app/desk";
 
 // One player, as Fantrax sees him. Reached by tapping a name in the pool, and
 // that is the whole politeness policy: one profile per tap, never a sweep of the
@@ -43,7 +44,7 @@ function Facts({ title, note, rows }: { title: string; note?: string; rows: Labe
   if (rows.length === 0) return null;
   return (
     <section className="flex flex-col gap-1">
-      <h2 className="font-display text-2xs font-bold uppercase text-faint">
+      <h2 className={`font-display ${LABEL}`}>
         {title}
       </h2>
       {note ? <p className="text-2xs text-faint">{note}</p> : null}
@@ -51,7 +52,7 @@ function Facts({ title, note, rows }: { title: string; note?: string; rows: Labe
         {rows.map((row) => (
           <div
             key={row.label}
-            className="flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2"
+            className={FACT}
           >
             {/* Fantrax's short label, with their own longer wording behind it.
                 The long form is a full sentence on some rows and would wrap to

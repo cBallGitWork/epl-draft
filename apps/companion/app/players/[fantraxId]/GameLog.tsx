@@ -1,5 +1,6 @@
 import Section from "../../components/shell/Section";
 import type { GameLogRow } from "./scouting";
+import { SCROLL } from "@/app/desk";
 
 // His season, match by match — the thing this app held the data for and had
 // never once shown.
@@ -33,7 +34,7 @@ export default function GameLog({ rows }: { rows: GameLogRow[] }) {
         <p className="text-sm text-muted">No match he has played yet this season.</p>
       ) : (
         <div
-          className="overflow-x-auto"
+          className={SCROLL}
           style={{
             marginInline: "calc(var(--page-gutter) * -1)",
             paddingInline: "var(--page-gutter)",

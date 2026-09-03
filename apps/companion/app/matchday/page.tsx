@@ -10,6 +10,7 @@ import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
 import PageHeader from "../components/shell/PageHeader";
 import { londonDayAndTime } from "../londonTime";
+import { LABEL } from "@/app/desk";
 
 // The live centre. Your head-to-head first, the real football under it — the
 // order a manager actually cares about them in.
@@ -62,7 +63,7 @@ export default async function MatchdayPage() {
           // The one route to that screen, and it shipped as a 14px target.
           // `min-h-11` rather than padding, so the tap area is the rule's own
           // number and not an arithmetic of two paddings.
-          className="flex min-h-11 items-center text-2xs font-bold uppercase text-faint hover:text-muted"
+          className={`flex min-h-11 items-center ${LABEL} hover:text-muted`}
         >
           The desk →
         </Link>

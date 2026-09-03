@@ -1,6 +1,7 @@
 import PageHeader from "../components/shell/PageHeader";
 import Section from "../components/shell/Section";
 import Skeleton from "../components/shell/Skeleton";
+import { LABEL } from "@/app/desk";
 
 // The other game, waiting on FPL.
 //
@@ -21,7 +22,7 @@ export default function Loading() {
       <dl className="grid grid-cols-3 gap-1.5">
         {FIGURES.map((label) => (
           <div key={label} className="cm-panel px-3 py-2">
-            <dt className="text-2xs font-bold uppercase text-faint">{label}</dt>
+            <dt className={LABEL}>{label}</dt>
             <dd>
               <Skeleton width="3.5rem" height="1.75rem" />
             </dd>

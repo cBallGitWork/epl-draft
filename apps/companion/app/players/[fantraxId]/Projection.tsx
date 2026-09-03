@@ -1,4 +1,5 @@
 import Section from "../../components/shell/Section";
+import { FACT } from "@/app/desk";
 
 // What Fantrax reckons he will do this period.
 //
@@ -23,7 +24,7 @@ export default function Projection({
 
   return (
     <Section title={`Gameweek ${projection.gameweek}`} aside="Fantrax's projection">
-      <div className="flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2">
+      <div className={FACT}>
         <p
           className="min-w-0 flex-1 text-sm text-muted"
           title="Fantrax's own guess, under this league's scoring. It is not what he has scored."

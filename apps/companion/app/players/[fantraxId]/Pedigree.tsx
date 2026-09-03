@@ -1,5 +1,6 @@
 import type { Pedigree } from "@epl/core";
 import { signed } from "@epl/core";
+import { FACT, LABEL } from "@/app/desk";
 
 // What the draft paid for him.
 //
@@ -24,8 +25,8 @@ export default function Pedigree({
 
   return (
     <section className="flex flex-col gap-1">
-      <h2 className="font-display text-2xs font-bold uppercase text-faint">Draft</h2>
-      <div className="flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2">
+      <h2 className={`font-display ${LABEL}`}>Draft</h2>
+      <div className={FACT}>
         {pedigree.origin === "waiver" ? (
           <p className="text-sm text-muted">
             Undrafted. He came off the waiver wire, which cost a claim rather than a pick.
