@@ -117,7 +117,7 @@ const club = await cdp.js(
   `(document.querySelector('a[href^="/prem/club/"]')||{}).getAttribute
      ? document.querySelector('a[href^="/prem/club/"]').getAttribute("href") : ""`,
 );
-if (club) ROUTES.push(club, ...["next", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
+if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
 
 // The player page a club's squad list links to, discovered off the club page for
 // the same reason the club is discovered off the table.

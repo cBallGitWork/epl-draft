@@ -57,6 +57,13 @@ export interface IntelPlayer {
   squadNumber: number | null;
   status: string;
   expectedReturnGw: number | null;
+  /** Who takes a set piece, as a RANK — `{ corners: 1 }` is the first choice,
+   *  and a missing key means he is not in the order for that one.
+   *
+   *  Null for the four men in five nobody has ranked. FPL has no notion of this
+   *  at all, which is why it comes across the bridge: it is the sister repo's
+   *  own reading of who actually steps up. */
+  setPieces: Record<string, number> | null;
   /** His position bucketed into a pitch line — `GK`, `CB`, `FB`, `DM`, `CM`,
    *  `AM`, `WF`, `CF`. The sister repo's own bucketing, not ours: it owns the
    *  football taxonomy and a second copy here is a second thing to be wrong.

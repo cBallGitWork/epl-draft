@@ -33,7 +33,15 @@ async function main(): Promise<void> {
 
   console.log(`squads: ${players.size} players, exported ${age(squads.manifest.exportedAt)}`);
   console.log(`  ${real} with a real position, ${players.size - real} FPL's own guess`);
-  console.log(`  ${numbers} squad numbers${cleared > 0 ? `, ${cleared} cleared as collisions` : ""}`);
+  // Reported and not resolved: the source has genuine duplicates — three
+  // Manchester City players all claim 8 — so there is no tie-break that is not a
+  // guess, and a guess that deletes numbers a club actually wears is worse than
+  // printing what the source says. A rising count is the tell that the upstream
+  // squad numbers are getting worse.
+  console.log(
+    `  ${numbers} squad numbers` +
+      (cleared > 0 ? `, ${cleared} of them shared with a club-mate` : ""),
+  );
   for (const source of squads.manifest.sources) {
     console.log(`  built from ${source.path} (${age(source.mtime)})`);
   }

@@ -1,6 +1,5 @@
 import type { Club, ClubColours, FootballPlayer, IntelStarter } from "@epl/core";
 import { inkOn } from "@epl/core";
-import CmGround from "../../../components/league/CmGround";
 import PitchDisc from "../../../components/league/PitchDisc";
 import PitchRows from "../../../components/league/PitchRows";
 
@@ -55,17 +54,23 @@ export default function Eleven({
       <p className="cm-title text-center font-chrome text-sm font-bold text-accent lg:text-base">
         {formation}
       </p>
-      {/* `inColumn`, because this stands beside the squad list rather than
-          alone: bleeding is right for a pitch that is the widest thing on the
-          screen, and full-bleed made this one 1,132px wide and 1,192 tall —
-          `pitchfit` measured it 556px past the fold at 1440. */}
-      <CmGround inColumn>
-        <PitchRows
-          rows={rows.map((row) => ({ label: row.line, players: row.players }))}
-          keyOf={(starter) => String(starter.code)}
-          inColumn
-        >
-          {(starter) => {
+      {/* **`PitchRows` draws its own ground** — `flat` picks CM's diagram and
+          its absence picks `PitchFrame`'s photographed trapezoid, which is the
+          FPL tab's. Wrapping this in a `CmGround` of its own put one pitch
+          inside the other and drew the hoardings and goal of the wrong one over
+          the right one (Craig, 3 Sep 2026: "still showing the fpl pitch on top
+          of the designed pitch"). `TeamSheet` passes the two flags and nothing
+          else, so this does too.
+          `inColumn` because it stands beside the squad list: bleeding is right
+          for a pitch that is the widest thing on the screen, and full-bleed made
+          this one 1,132px wide and 1,192 tall — 556px past the fold at 1440. */}
+      <PitchRows
+        rows={rows.map((row) => ({ label: row.line, players: row.players }))}
+        keyOf={(starter) => String(starter.code)}
+        flat
+        inColumn
+      >
+        {(starter) => {
             const player = playerOf(starter.code);
             return (
               <PitchDisc
@@ -96,8 +101,7 @@ export default function Eleven({
               />
             );
           }}
-        </PitchRows>
-      </CmGround>
+      </PitchRows>
     </div>
   );
 }

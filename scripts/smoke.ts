@@ -247,7 +247,7 @@ async function main() {
   if (club !== null) {
     paths.push(
       `/prem/club/${club}`,
-      `/prem/club/${club}/next`,
+      `/prem/club/${club}/set-pieces`,
       `/prem/club/${club}/fixtures`,
       `/prem/club/${club}/stats`,
     );

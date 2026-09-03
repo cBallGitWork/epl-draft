@@ -102,6 +102,27 @@ function outfieldShape(formation: string | null | undefined): number[] | null {
   return parts.reduce((total, n) => total + n, 0) === STARTING_XI - 1 ? parts : null;
 }
 
+/** One club's set-piece order, by piece, first taker first.
+ *
+ *  **A rank is not a count, so the list is only as long as the ranks go.** A man
+ *  with no entry for a piece is not last in that order — he is not in it — and
+ *  padding the list with everybody would turn "nobody has ranked him" into "he
+ *  is eleventh choice for corners", which the source never said.
+ *
+ *  Pieces come back in the order given, so a caller decides what is worth
+ *  showing rather than this deciding for it. */
+export function setPieceOrder(
+  players: readonly IntelPlayer[],
+  pieces: readonly string[],
+): { piece: string; takers: IntelPlayer[] }[] {
+  return pieces.map((piece) => ({
+    piece,
+    takers: players
+      .filter((player) => typeof player.setPieces?.[piece] === "number")
+      .sort((a, b) => (a.setPieces?.[piece] ?? 0) - (b.setPieces?.[piece] ?? 0)),
+  }));
+}
+
 /** How old the prediction is, in whole hours, or null when it will not say.
  *
  *  Off `fetchedAt` and never the manifest's `exportedAt`: a prediction is stale

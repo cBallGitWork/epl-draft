@@ -2,16 +2,16 @@
  "manifest": {
   "season": "26-27",
   "gameweek": null,
-  "exportedAt": "2026-09-03T16:12:01.809575+00:00",
+  "exportedAt": "2026-09-03T16:52:01.291914+00:00",
   "rows": 651,
   "sources": [
    {
     "path": "data/derived/team_squad/season=26-27/team_squad.parquet",
-    "mtime": "2026-09-03T15:39:14.591816+00:00"
+    "mtime": "2026-09-03T16:25:25.056835+00:00"
    }
   ],
   "fpl": "https://fantasy.premierleague.com/api/bootstrap-static/",
-  "numberCollisions": 111
+  "numberCollisions": 205
  },
  "players": [
   {
@@ -23,7 +23,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -37,6 +38,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -55,6 +57,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": {
+    "corners": 8,
+    "penalties": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -73,7 +79,8 @@
     "SS"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 8,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -91,6 +98,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 12,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -103,7 +111,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 3,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "doubtful",
    "expectedReturnGw": null
   },
@@ -122,6 +131,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 24,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -139,6 +149,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 41,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -155,6 +169,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 9,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -176,6 +191,11 @@
    ],
    "depthTier": 2,
    "squadNumber": 39,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 2,
+    "penalties": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -194,6 +214,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 29,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -212,6 +233,11 @@
    ],
    "depthTier": 1,
    "squadNumber": 7,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 2,
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -228,6 +254,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 17,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -245,6 +274,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -266,6 +296,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
+   "setPieces": {
+    "fk_direct": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -287,6 +320,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 11,
+   "setPieces": {
+    "corners": 7
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -299,7 +335,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -317,6 +354,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -335,6 +373,9 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": {
+    "corners": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -352,7 +393,8 @@
     "ST"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 11,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -370,6 +412,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": 7
   },
@@ -388,7 +431,8 @@
     "LWB"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -401,7 +445,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 2,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": 7
   },
@@ -419,6 +464,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 33,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -437,6 +483,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -454,6 +501,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 49,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -471,6 +519,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 53,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -488,8 +537,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 3
   },
   {
    "code": 616077,
@@ -504,7 +554,8 @@
     "SS"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 10,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -518,6 +569,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -536,6 +588,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 20,
+   "setPieces": {
+    "corners": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -553,6 +608,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 12,
+   "setPieces": {
+    "corners": 4
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -570,6 +628,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -588,6 +647,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 7,
+   "setPieces": {
+    "corners": 6
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -601,6 +663,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 5,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -617,6 +680,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -633,6 +697,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 11,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -650,6 +717,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -668,6 +736,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
+   "setPieces": {
+    "fk_direct": 1,
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -684,7 +756,10 @@
     "RWB"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 2,
+   "setPieces": {
+    "corners": 5
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -702,6 +777,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 29,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -720,6 +796,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 31,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -736,6 +813,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -752,7 +830,8 @@
     "RB"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -770,6 +849,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -783,6 +863,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -800,6 +881,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 22,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -816,6 +898,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 35,
+   "setPieces": null,
    "status": "suspended",
    "expectedReturnGw": 5
   },
@@ -832,8 +915,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 24,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 999
   },
   {
    "code": 469247,
@@ -848,7 +932,8 @@
     "DM"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 17,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -866,6 +951,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -884,6 +970,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 17,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -903,6 +990,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 26,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -921,6 +1009,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 15,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -938,6 +1027,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -955,6 +1045,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -973,6 +1064,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -990,6 +1082,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -1007,6 +1100,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 16,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1024,6 +1118,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -1041,6 +1136,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1057,7 +1153,8 @@
     "DM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 7,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1075,6 +1172,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 47,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1091,6 +1189,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -1103,7 +1202,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 23,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1120,6 +1220,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 13,
+   "setPieces": {
+    "corners": 5
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1137,6 +1240,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 5,
+   "setPieces": {
+    "fk_direct": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1153,6 +1259,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 28,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1170,6 +1277,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 33,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1183,6 +1293,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 21,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1200,6 +1311,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -1217,6 +1329,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 16,
+   "setPieces": {
+    "corners": 7
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1235,8 +1350,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 22,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 4
   },
   {
    "code": 451490,
@@ -1252,6 +1368,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1269,6 +1386,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1287,8 +1405,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 24,
+   "setPieces": null,
    "status": "doubtful",
-   "expectedReturnGw": null
+   "expectedReturnGw": 3
   },
   {
    "code": 465730,
@@ -1305,6 +1424,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 55,
+   "setPieces": {
+    "fk_direct": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1322,6 +1444,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 20,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1339,6 +1462,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1354,7 +1478,8 @@
     "SS"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 28,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": 6
   },
@@ -1368,6 +1493,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1384,6 +1510,10 @@
    ],
    "depthTier": 2,
    "squadNumber": 26,
+   "setPieces": {
+    "corners": 8,
+    "fk_direct": 2
+   },
    "status": "doubtful",
    "expectedReturnGw": null
   },
@@ -1401,6 +1531,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1419,6 +1550,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 23,
+   "setPieces": {
+    "fk_direct": 5
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1436,6 +1570,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -1454,8 +1589,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 41,
+   "setPieces": null,
    "status": "doubtful",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 536916,
@@ -1467,6 +1603,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 40,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -1483,6 +1620,9 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1499,7 +1639,8 @@
     "DM"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 11,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -1513,6 +1654,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 42,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1530,6 +1672,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 11,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1551,6 +1694,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 19,
+   "setPieces": {
+    "corners": 6
+   },
    "status": "injured",
    "expectedReturnGw": 12
   },
@@ -1568,6 +1714,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1586,6 +1733,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 7,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -1602,8 +1750,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 9,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 610799,
@@ -1619,6 +1768,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 44,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1637,6 +1787,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1654,6 +1805,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1672,6 +1824,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 84,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1689,6 +1842,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1702,6 +1856,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1719,6 +1874,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 15,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1740,7 +1896,11 @@
     "ST"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 7,
+   "setPieces": {
+    "corners": 9,
+    "fk_direct": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1757,6 +1917,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": {
+    "corners": 8
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1773,6 +1936,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 10,
+   "setPieces": {
+    "corners": 10
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1789,7 +1955,10 @@
     "RB"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 10,
+   "setPieces": {
+    "fk_direct": 5
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -1805,7 +1974,8 @@
     "CM"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1824,6 +1994,11 @@
    ],
    "depthTier": 1,
    "squadNumber": 7,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 1,
+    "penalties": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1842,6 +2017,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 19,
+   "setPieces": {
+    "fk_direct": 2,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1855,6 +2034,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1872,6 +2052,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 18,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1889,6 +2070,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -1907,6 +2089,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 30,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1920,6 +2103,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 40,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -1933,6 +2117,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 12,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1950,6 +2135,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 23,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1967,6 +2153,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -1988,6 +2175,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 21,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -2005,6 +2193,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2022,6 +2211,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2040,6 +2230,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 50,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2058,6 +2249,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 77,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2074,6 +2266,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": {
+    "corners": 7,
+    "fk_direct": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2090,6 +2286,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2109,7 +2306,10 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 22,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -2126,6 +2326,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2143,6 +2344,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 22,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2159,6 +2361,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 64,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2171,7 +2374,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -2191,6 +2395,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 13,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2208,6 +2413,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 14,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2225,6 +2431,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 35,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2242,6 +2449,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2255,6 +2463,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 62,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2271,6 +2480,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 27,
+   "setPieces": {
+    "corners": 7
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2289,6 +2501,11 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 2,
+    "penalties": 3
+   },
    "status": "doubtful",
    "expectedReturnGw": null
   },
@@ -2307,6 +2524,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2324,6 +2542,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 23,
+   "setPieces": {
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2341,6 +2562,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 22,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2359,6 +2581,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 24,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2377,6 +2603,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 32,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2394,6 +2621,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -2416,6 +2644,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2434,6 +2663,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2447,6 +2679,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 12,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2465,6 +2698,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 18,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2482,6 +2716,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2500,6 +2735,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 7,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2516,6 +2754,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2534,6 +2773,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 11,
+   "setPieces": {
+    "corners": 8
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2550,9 +2792,10 @@
     "SS"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 27,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 570241,
@@ -2568,6 +2811,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2584,6 +2828,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 87,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2601,6 +2846,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 33,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2617,7 +2863,8 @@
     "RB"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 12,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2634,6 +2881,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 18,
+   "setPieces": {
+    "fk_direct": 1,
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2652,8 +2903,9 @@
    ],
    "depthTier": 4,
    "squadNumber": 14,
+   "setPieces": null,
    "status": "doubtful",
-   "expectedReturnGw": null
+   "expectedReturnGw": 4
   },
   {
    "code": 98980,
@@ -2665,6 +2917,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 26,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2681,7 +2934,8 @@
     "RCB"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 14,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -2695,6 +2949,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -2711,6 +2966,10 @@
    ],
    "depthTier": 2,
    "squadNumber": 24,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2724,6 +2983,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 5,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -2742,6 +3002,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 27,
+   "setPieces": {
+    "corners": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2760,6 +3023,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 80,
+   "setPieces": {
+    "fk_direct": 3,
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2776,6 +3043,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 7,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2793,6 +3064,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2810,6 +3082,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2827,6 +3100,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2849,6 +3123,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 43,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2867,6 +3142,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2882,7 +3158,8 @@
     "CM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 27,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2899,6 +3176,7 @@
    ],
    "depthTier": 4,
    "squadNumber": 25,
+   "setPieces": null,
    "status": "doubtful",
    "expectedReturnGw": null
   },
@@ -2915,7 +3193,8 @@
     "DM"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 14,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -2933,6 +3212,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2948,7 +3228,8 @@
     "SS"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 38,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -2965,6 +3246,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -2977,7 +3259,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 26,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -2994,6 +3277,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 45,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3011,6 +3295,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3024,6 +3309,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 39,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3039,7 +3325,8 @@
     "LM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3056,6 +3343,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3069,6 +3357,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 23,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -3086,6 +3375,7 @@
    ],
    "depthTier": 3,
    "squadNumber": 34,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3103,6 +3393,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3120,6 +3411,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "doubtful",
    "expectedReturnGw": null
   },
@@ -3137,6 +3429,7 @@
    ],
    "depthTier": 4,
    "squadNumber": 38,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3155,6 +3448,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 41,
+   "setPieces": {
+    "corners": 8,
+    "penalties": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3168,6 +3465,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3185,6 +3483,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 24,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3198,6 +3497,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 13,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3215,6 +3515,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": {
+    "corners": 4,
+    "penalties": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3232,6 +3536,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3248,6 +3553,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 11,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -3265,6 +3573,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3282,6 +3591,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 22,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3300,6 +3610,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": {
+    "penalties": 5
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3317,7 +3630,8 @@
     "ST"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3335,6 +3649,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -3352,6 +3667,11 @@
    ],
    "depthTier": 4,
    "squadNumber": 29,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 2,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3370,6 +3690,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 37,
+   "setPieces": {
+    "penalties": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3383,6 +3706,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 5,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3401,6 +3725,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3418,8 +3743,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 38,
+   "setPieces": null,
    "status": "available",
-   "expectedReturnGw": null
+   "expectedReturnGw": 3
   },
   {
    "code": 436761,
@@ -3435,6 +3761,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 15,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -3452,6 +3779,7 @@
    ],
    "depthTier": 4,
    "squadNumber": 28,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3469,6 +3797,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 27,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3485,7 +3814,8 @@
     "RB"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3502,7 +3832,8 @@
     "RWB"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 29,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -3521,6 +3852,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 17,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3534,6 +3866,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3552,6 +3885,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 12,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3564,7 +3901,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -3582,7 +3920,8 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 17,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -3601,6 +3940,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 7,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3618,6 +3958,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3634,6 +3975,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -3652,6 +3994,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 26,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -3668,7 +4011,8 @@
     "LWB"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 3,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -3685,6 +4029,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3702,6 +4047,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 54,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -3719,6 +4065,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3736,6 +4083,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3754,6 +4102,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 19,
+   "setPieces": {
+    "corners": 7
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3767,6 +4118,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 40,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3787,6 +4139,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 8,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3799,7 +4152,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 20,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3813,6 +4167,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3830,6 +4185,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3848,6 +4204,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3864,6 +4221,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 15,
+   "setPieces": {
+    "corners": 8
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3881,6 +4241,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 24,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -3898,6 +4259,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3915,6 +4277,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3933,6 +4296,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 14,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "injured",
    "expectedReturnGw": 6
   },
@@ -3945,9 +4311,12 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 23,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 4
   },
   {
    "code": 242313,
@@ -3963,6 +4332,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3979,6 +4349,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -3996,7 +4367,8 @@
     "ST"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4014,6 +4386,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 26,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4031,7 +4404,11 @@
     "RW"
    ],
    "depthTier": 3,
-   "squadNumber": null,
+   "squadNumber": 7,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4048,6 +4425,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 28,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4065,6 +4443,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4082,6 +4461,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 11,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4103,6 +4483,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 29,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4121,6 +4502,10 @@
    ],
    "depthTier": 2,
    "squadNumber": 21,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4140,6 +4525,10 @@
    ],
    "depthTier": 0,
    "squadNumber": 55,
+   "setPieces": {
+    "fk_direct": 3,
+    "penalties": 3
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -4156,6 +4545,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 20,
+   "setPieces": {
+    "corners": 5
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4172,9 +4564,10 @@
     "RB"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 28,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 999
   },
   {
    "code": 533646,
@@ -4190,6 +4583,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4207,6 +4601,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4224,6 +4619,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4240,6 +4636,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4259,6 +4656,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 59,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -4276,6 +4674,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4293,6 +4692,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 25,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -4310,6 +4710,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 23,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4331,6 +4732,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 7,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4348,6 +4750,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4361,6 +4764,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 5,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4374,6 +4778,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4392,6 +4797,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 10,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4407,9 +4813,10 @@
     "CM"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 6,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 4
   },
   {
    "code": 138001,
@@ -4421,6 +4828,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 17,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4438,6 +4846,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4456,6 +4865,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 22,
+   "setPieces": {
+    "corners": 5
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4473,6 +4885,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 16,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4486,6 +4899,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 42,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4502,6 +4916,11 @@
    ],
    "depthTier": 2,
    "squadNumber": 37,
+   "setPieces": {
+    "corners": 4,
+    "fk_direct": 1,
+    "penalties": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4523,6 +4942,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 20,
+   "setPieces": {
+    "fk_direct": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4540,6 +4962,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -4556,6 +4979,7 @@
    ],
    "depthTier": 3,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4573,6 +4997,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 32,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4589,6 +5014,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 14,
+   "setPieces": {
+    "penalties": 4
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -4610,6 +5038,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 33,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4627,6 +5056,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 39,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -4647,6 +5077,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 26,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4664,6 +5095,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 15,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4681,6 +5113,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 34,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4698,7 +5131,8 @@
     "ST"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 32,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4717,6 +5151,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4733,6 +5170,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 45,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4749,6 +5187,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 10,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": 6
   },
@@ -4762,6 +5201,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4775,6 +5215,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 40,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4791,6 +5232,11 @@
    ],
    "depthTier": 1,
    "squadNumber": 17,
+   "setPieces": {
+    "corners": 4,
+    "fk_direct": 1,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4807,6 +5253,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4824,6 +5271,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 21,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4841,6 +5289,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4858,6 +5307,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 33,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4874,7 +5326,8 @@
     "RB"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4892,6 +5345,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 30,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4908,6 +5362,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4925,6 +5380,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 32,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4942,6 +5398,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4958,6 +5415,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4975,6 +5433,7 @@
    ],
    "depthTier": 3,
    "squadNumber": 5,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -4992,6 +5451,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5009,6 +5469,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5027,6 +5488,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 52,
+   "setPieces": {
+    "corners": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5044,6 +5508,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5056,7 +5521,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -5074,6 +5540,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "doubtful",
    "expectedReturnGw": null
   },
@@ -5091,6 +5558,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5109,6 +5577,9 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5127,6 +5598,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 37,
+   "setPieces": {
+    "corners": 6
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5145,6 +5619,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5163,6 +5638,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 24,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5180,6 +5656,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5195,7 +5672,8 @@
     "SS"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5213,6 +5691,9 @@
    ],
    "depthTier": 3,
    "squadNumber": 25,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "doubtful",
    "expectedReturnGw": null
   },
@@ -5225,7 +5706,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -5243,6 +5725,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 12,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5260,6 +5743,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5277,6 +5761,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 17,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5290,6 +5775,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5306,7 +5792,8 @@
     "LWB"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5325,6 +5812,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5343,6 +5833,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 20,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5360,6 +5851,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "doubtful",
    "expectedReturnGw": null
   },
@@ -5377,6 +5869,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 10,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5395,6 +5888,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 11,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5412,6 +5906,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 3,
+   "setPieces": {
+    "corners": 4,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5430,6 +5928,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 7,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -5447,6 +5946,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 27,
+   "setPieces": {
+    "corners": 6
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5464,6 +5966,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5480,7 +5983,8 @@
     "RWB"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 2,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -5494,6 +5998,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 29,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -5511,6 +6016,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 5,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5527,7 +6033,8 @@
     "LWB"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 29,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -5545,6 +6052,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 30,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": 3
   },
@@ -5562,6 +6070,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 36,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -5579,6 +6088,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5596,6 +6106,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 18,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -5609,6 +6120,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5625,6 +6137,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 47,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5642,7 +6155,8 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 25,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -5660,6 +6174,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5673,6 +6188,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -5690,6 +6206,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5706,6 +6223,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 94,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -5723,6 +6241,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -5739,6 +6258,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -5756,6 +6276,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 62,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5773,6 +6297,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5788,7 +6313,8 @@
     "CM"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 5,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -5806,6 +6332,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5823,6 +6350,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5840,6 +6368,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5856,6 +6385,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5872,6 +6402,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5889,6 +6420,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5906,6 +6438,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5919,6 +6452,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 27,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5931,7 +6465,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5944,7 +6479,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5961,6 +6497,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 47,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -5977,7 +6514,8 @@
     "RWB"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 7,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -5995,6 +6533,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6012,6 +6551,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6029,6 +6569,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 21,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6045,6 +6586,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 20,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6061,6 +6606,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 61,
+   "setPieces": null,
    "status": "doubtful",
    "expectedReturnGw": null
   },
@@ -6078,6 +6624,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6095,6 +6642,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6112,6 +6660,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 23,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6128,7 +6677,8 @@
     "RWB"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 2,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6145,6 +6695,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 9,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6162,7 +6715,8 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 11,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6180,6 +6734,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 14,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -6198,6 +6753,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 11,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6211,6 +6767,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6227,6 +6784,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -6243,6 +6801,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6261,6 +6820,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 38,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6278,7 +6838,12 @@
     "ST"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 47,
+   "setPieces": {
+    "corners": 8,
+    "fk_direct": 3,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6295,7 +6860,8 @@
     "RB"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6313,6 +6879,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 3,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6330,6 +6900,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 35,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6345,7 +6916,8 @@
     "SS"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 9,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6364,6 +6936,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6381,7 +6954,11 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 11,
+   "setPieces": {
+    "corners": 5,
+    "penalties": 3
+   },
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -6398,6 +6975,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 26,
+   "setPieces": {
+    "corners": 7,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6415,6 +6996,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6433,6 +7015,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 7,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6450,7 +7033,10 @@
     "ST"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 20,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6463,7 +7049,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 20,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6482,6 +7069,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 8,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6499,6 +7087,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6512,6 +7101,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6530,6 +7120,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": {
+    "corners": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6543,6 +7136,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6560,6 +7154,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6576,6 +7171,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6594,6 +7192,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6614,6 +7215,10 @@
    ],
    "depthTier": 2,
    "squadNumber": 36,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6631,6 +7236,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6652,6 +7258,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 20,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6665,6 +7272,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 12,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6682,6 +7290,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": 11
   },
@@ -6699,6 +7308,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6716,7 +7326,8 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 11,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6733,7 +7344,8 @@
     "RWB"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 2,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6750,6 +7362,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 17,
+   "setPieces": {
+    "penalties": 3
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6771,6 +7386,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 5,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6789,7 +7405,10 @@
     "DM"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": {
+    "corners": 6
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6808,6 +7427,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 11,
+   "setPieces": {
+    "fk_direct": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6821,6 +7443,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6838,6 +7461,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 29,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6855,7 +7479,8 @@
     "RW"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 11,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6873,6 +7498,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6890,6 +7516,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6907,6 +7534,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 24,
+   "setPieces": {
+    "corners": 4,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6924,8 +7555,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 44,
+   "setPieces": null,
    "status": "doubtful",
-   "expectedReturnGw": null
+   "expectedReturnGw": 3
   },
   {
    "code": 492859,
@@ -6943,7 +7575,8 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 29,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -6961,6 +7594,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -6977,6 +7611,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -6994,6 +7629,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7011,6 +7647,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7028,6 +7665,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7045,6 +7683,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7058,6 +7697,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7070,7 +7710,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7088,6 +7729,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7107,8 +7749,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 12,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 4
   },
   {
    "code": 206915,
@@ -7127,6 +7770,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 17,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -7144,6 +7788,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 21,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7161,6 +7806,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 30,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7179,6 +7825,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 14,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7196,9 +7845,10 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 25,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 243016,
@@ -7212,7 +7862,10 @@
     "CM"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 10,
+   "setPieces": {
+    "penalties": 5
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7231,6 +7884,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 18,
+   "setPieces": {
+    "corners": 5,
+    "penalties": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7247,6 +7904,11 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": {
+    "corners": 4,
+    "fk_direct": 1,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7260,6 +7922,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -7276,6 +7939,7 @@
    ],
    "depthTier": 3,
    "squadNumber": 38,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7293,6 +7957,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 19,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -7310,6 +7975,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7323,6 +7989,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 25,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7336,6 +8003,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7353,6 +8021,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7370,6 +8039,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 22,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -7387,6 +8057,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 53,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7404,8 +8075,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 11
   },
   {
    "code": 494595,
@@ -7422,6 +8094,11 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 2,
+    "penalties": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7438,6 +8115,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7453,9 +8131,10 @@
     "SS"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 22,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 11
   },
   {
    "code": 514514,
@@ -7471,6 +8150,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7487,7 +8167,8 @@
     "RB"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7504,6 +8185,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 43,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -7521,6 +8203,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7539,6 +8222,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7552,6 +8236,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 91,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -7572,6 +8257,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 42,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7589,6 +8275,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7607,6 +8294,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 73,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7620,8 +8308,9 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 46,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 9
   },
   {
    "code": 91651,
@@ -7632,7 +8321,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 8,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7646,6 +8336,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7659,6 +8350,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7676,6 +8368,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 23,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -7693,6 +8386,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7706,6 +8400,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 99,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7723,6 +8418,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7741,6 +8437,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 47,
+   "setPieces": {
+    "corners": 4,
+    "fk_direct": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7757,6 +8457,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": {
+    "corners": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7773,6 +8476,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 16,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -7791,6 +8495,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7813,6 +8520,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 11,
+   "setPieces": {
+    "penalties": 4
+   },
    "status": "injured",
    "expectedReturnGw": 3
   },
@@ -7834,6 +8544,10 @@
    ],
    "depthTier": 0,
    "squadNumber": 14,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 4
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -7852,6 +8566,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 18,
+   "setPieces": {
+    "penalties": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7870,6 +8587,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 29,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7889,7 +8609,12 @@
     "SS"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 8,
+   "setPieces": {
+    "corners": 7,
+    "fk_direct": 2,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7909,7 +8634,8 @@
     "LWB"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7927,6 +8653,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 27,
+   "setPieces": {
+    "penalties": 5
+   },
    "status": "doubtful",
    "expectedReturnGw": null
   },
@@ -7944,7 +8673,11 @@
     "RW"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 18,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7963,6 +8696,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 75,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7980,6 +8714,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 82,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -7997,6 +8732,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 32,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8009,7 +8745,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 3,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -8027,6 +8764,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8044,6 +8782,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 19,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8061,6 +8800,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 45,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8080,6 +8820,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 10,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -8097,6 +8838,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 44,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8114,6 +8856,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8131,6 +8874,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8148,6 +8892,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8165,6 +8910,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -8178,6 +8924,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -8191,6 +8938,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 26,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8208,6 +8956,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 5,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8225,6 +8974,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 23,
+   "setPieces": {
+    "corners": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8243,6 +8995,11 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": {
+    "corners": 4,
+    "fk_direct": 1,
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8258,7 +9015,10 @@
     "CM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 8,
+   "setPieces": {
+    "penalties": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8276,7 +9036,8 @@
     "ST"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 10,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8293,9 +9054,12 @@
     "DM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 19,
+   "setPieces": {
+    "fk_direct": 3
+   },
    "status": "doubtful",
-   "expectedReturnGw": null
+   "expectedReturnGw": 3
   },
   {
    "code": 209365,
@@ -8307,8 +9071,9 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 3
   },
   {
    "code": 216051,
@@ -8324,6 +9089,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 20,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8341,6 +9107,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8358,6 +9125,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 12,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8373,7 +9141,8 @@
     "CM"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 15,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -8392,6 +9161,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8410,6 +9180,11 @@
    ],
    "depthTier": 1,
    "squadNumber": 19,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 2,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8422,7 +9197,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -8442,6 +9218,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 11,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8455,6 +9232,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 91,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8471,6 +9249,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 30,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8488,6 +9267,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 43,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -8506,8 +9286,11 @@
    ],
    "depthTier": 0,
    "squadNumber": 16,
+   "setPieces": {
+    "corners": 6
+   },
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 516895,
@@ -8522,6 +9305,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 37,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8538,7 +9322,8 @@
     "DM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 8,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8554,7 +9339,8 @@
     "CM"
    ],
    "depthTier": 3,
-   "squadNumber": null,
+   "squadNumber": 8,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8570,7 +9356,8 @@
     "CM"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 20,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": 5
   },
@@ -8587,7 +9374,8 @@
     "DM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 10,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8600,7 +9388,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -8614,6 +9403,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 15,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8630,7 +9420,8 @@
     "DM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 7,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8648,6 +9439,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 7,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8665,6 +9457,7 @@
    ],
    "depthTier": 4,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8682,6 +9475,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8700,6 +9494,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 13,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8716,7 +9511,8 @@
     "RB"
    ],
    "depthTier": 3,
-   "squadNumber": null,
+   "squadNumber": 26,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8734,6 +9530,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 33,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": 4
   },
@@ -8747,6 +9544,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8759,7 +9557,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8781,6 +9580,9 @@
    ],
    "depthTier": 2,
    "squadNumber": 23,
+   "setPieces": {
+    "corners": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8798,6 +9600,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 5,
+   "setPieces": {
+    "fk_direct": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8818,8 +9623,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 7,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 4
   },
   {
    "code": 200089,
@@ -8835,7 +9641,8 @@
     "RW"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 28,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8854,6 +9661,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 15,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8872,6 +9680,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 11,
+   "setPieces": {
+    "penalties": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8889,6 +9700,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8910,6 +9722,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 41,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8930,8 +9743,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 21,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 3
   },
   {
    "code": 449434,
@@ -8948,6 +9762,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 36,
+   "setPieces": {
+    "corners": 8
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8965,6 +9782,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8982,6 +9800,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 28,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -8998,6 +9817,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 14,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9017,6 +9837,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 27,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -9030,6 +9853,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9047,6 +9871,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 20,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9065,8 +9893,11 @@
    ],
    "depthTier": 0,
    "squadNumber": 18,
+   "setPieces": {
+    "penalties": 2
+   },
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 545477,
@@ -9082,6 +9913,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -9098,6 +9930,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 67,
+   "setPieces": {
+    "corners": 7
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9115,6 +9950,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9128,6 +9964,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9144,6 +9981,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9161,6 +9999,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9177,6 +10016,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9194,6 +10034,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9210,6 +10051,7 @@
    ],
    "depthTier": 3,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9226,6 +10068,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9239,6 +10084,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9255,6 +10101,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 34,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9271,6 +10118,9 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": {
+    "corners": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9288,6 +10138,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9304,6 +10155,7 @@
    ],
    "depthTier": 4,
    "squadNumber": 22,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9324,7 +10176,10 @@
     "ST"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 20,
+   "setPieces": {
+    "fk_direct": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9341,8 +10196,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 6,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 3
   },
   {
    "code": 215136,
@@ -9357,6 +10213,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 7,
+   "setPieces": {
+    "corners": 5,
+    "fk_direct": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9370,6 +10230,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 31,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9388,6 +10249,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
+   "setPieces": {
+    "fk_direct": 1,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9405,6 +10270,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9421,6 +10287,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 23,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9441,6 +10308,7 @@
    ],
    "depthTier": 4,
    "squadNumber": 8,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9454,6 +10322,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 13,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9470,6 +10339,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 87,
+   "setPieces": {
+    "corners": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9488,6 +10360,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 27,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9503,7 +10376,10 @@
     "SS"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 9,
+   "setPieces": {
+    "penalties": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9520,7 +10396,8 @@
     "DM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9541,6 +10418,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 20,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9564,6 +10442,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 26,
+   "setPieces": {
+    "corners": 6
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -9582,6 +10463,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 99,
+   "setPieces": {
+    "penalties": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9595,6 +10479,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -9612,8 +10497,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 6
   },
   {
    "code": 503301,
@@ -9631,7 +10517,10 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 20,
+   "setPieces": {
+    "corners": 4
+   },
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -9649,6 +10538,7 @@
    ],
    "depthTier": 0,
    "squadNumber": null,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -9666,6 +10556,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 44,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -9683,6 +10574,7 @@
    ],
    "depthTier": 2,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9700,6 +10592,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 32,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9717,6 +10610,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 5,
+   "setPieces": {
+    "fk_direct": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9733,6 +10629,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 34,
+   "setPieces": {
+    "corners": 4,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9750,6 +10650,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9767,6 +10668,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 26,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -9780,6 +10682,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9797,6 +10700,7 @@
    ],
    "depthTier": 3,
    "squadNumber": 13,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9813,7 +10717,8 @@
     "RB"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 22,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9827,6 +10732,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 15,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9844,6 +10750,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 5,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9856,7 +10763,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -9874,6 +10782,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 23,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9890,6 +10799,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 18,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9908,6 +10818,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9928,6 +10839,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 14,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9945,6 +10857,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 33,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -9963,6 +10876,11 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 2,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9981,6 +10899,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 32,
+   "setPieces": {
+    "corners": 5
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -9994,6 +10915,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 22,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10007,6 +10929,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10020,6 +10943,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 3,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -10039,7 +10963,8 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 11,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -10057,7 +10982,10 @@
     "ST"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 32,
+   "setPieces": {
+    "fk_direct": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10077,8 +11005,11 @@
    ],
    "depthTier": 0,
    "squadNumber": 19,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 9
   },
   {
    "code": 549912,
@@ -10098,6 +11029,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 68,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10115,6 +11047,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10136,6 +11069,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 11,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10152,6 +11086,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 27,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10169,6 +11104,7 @@
    ],
    "depthTier": 4,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10185,6 +11121,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10202,6 +11139,7 @@
    ],
    "depthTier": 1,
    "squadNumber": null,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10219,6 +11157,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 30,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10232,6 +11171,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 1,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10249,6 +11189,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10266,6 +11207,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 33,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10283,6 +11225,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 26,
+   "setPieces": {
+    "corners": 3
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10298,7 +11243,10 @@
     "SS"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 9,
+   "setPieces": {
+    "penalties": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10316,8 +11264,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 10,
+   "setPieces": null,
    "status": "doubtful",
-   "expectedReturnGw": null
+   "expectedReturnGw": 3
   },
   {
    "code": 184254,
@@ -10328,7 +11277,8 @@
    "secondaryPositions": [],
    "canCover": [],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 1,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -10345,6 +11295,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 30,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10363,6 +11314,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 9,
+   "setPieces": {
+    "penalties": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10376,6 +11330,7 @@
    "canCover": [],
    "depthTier": 2,
    "squadNumber": 40,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10392,7 +11347,8 @@
     "RB"
    ],
    "depthTier": 3,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10406,6 +11362,7 @@
    "canCover": [],
    "depthTier": 0,
    "squadNumber": 17,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -10423,7 +11380,8 @@
     "RW"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 23,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10444,6 +11402,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 24,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -10460,6 +11419,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 8,
+   "setPieces": {
+    "corners": 10,
+    "fk_direct": 4
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10478,6 +11441,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 7,
+   "setPieces": {
+    "fk_direct": 2,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10496,6 +11463,10 @@
    ],
    "depthTier": 1,
    "squadNumber": 23,
+   "setPieces": {
+    "corners": 6,
+    "fk_direct": 1
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10513,6 +11484,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 21,
+   "setPieces": null,
    "status": "injured",
    "expectedReturnGw": null
   },
@@ -10533,6 +11505,11 @@
    ],
    "depthTier": 4,
    "squadNumber": 20,
+   "setPieces": {
+    "corners": 7,
+    "fk_direct": 3,
+    "penalties": 2
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10549,7 +11526,8 @@
     "DM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 10,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10567,6 +11545,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 29,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10585,7 +11564,8 @@
     "DM"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 29,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -10599,6 +11579,7 @@
    "canCover": [],
    "depthTier": 1,
    "squadNumber": 31,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10616,6 +11597,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 13,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10632,6 +11614,7 @@
    ],
    "depthTier": 0,
    "squadNumber": 44,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -10649,6 +11632,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 37,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10669,9 +11653,14 @@
     "ST"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 7,
+   "setPieces": {
+    "corners": 8,
+    "fk_direct": 2,
+    "penalties": 3
+   },
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 26
   },
   {
    "code": 499716,
@@ -10687,6 +11676,7 @@
    ],
    "depthTier": 4,
    "squadNumber": 2,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10705,6 +11695,7 @@
    ],
    "depthTier": 2,
    "squadNumber": 47,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10721,7 +11712,8 @@
     "DM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 8,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10745,9 +11737,10 @@
     "ST"
    ],
    "depthTier": 2,
-   "squadNumber": null,
+   "squadNumber": 33,
+   "setPieces": null,
    "status": "doubtful",
-   "expectedReturnGw": null
+   "expectedReturnGw": 3
   },
   {
    "code": 511499,
@@ -10764,6 +11757,9 @@
    ],
    "depthTier": 1,
    "squadNumber": 39,
+   "setPieces": {
+    "corners": 9
+   },
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10781,6 +11777,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 14,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10797,7 +11794,8 @@
     "RB"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 26,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -10819,8 +11817,9 @@
    ],
    "depthTier": 0,
    "squadNumber": 28,
+   "setPieces": null,
    "status": "injured",
-   "expectedReturnGw": null
+   "expectedReturnGw": 12
   },
   {
    "code": 551226,
@@ -10837,6 +11836,7 @@
    ],
    "depthTier": 1,
    "squadNumber": 18,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10853,6 +11853,7 @@
    ],
    "depthTier": 3,
    "squadNumber": 15,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10869,7 +11870,8 @@
     "DM"
    ],
    "depthTier": 1,
-   "squadNumber": null,
+   "squadNumber": 10,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   },
@@ -10891,7 +11893,8 @@
     "RWB"
    ],
    "depthTier": 0,
-   "squadNumber": null,
+   "squadNumber": 33,
+   "setPieces": null,
    "status": "left_club",
    "expectedReturnGw": null
   },
@@ -10908,7 +11911,8 @@
     "RB"
    ],
    "depthTier": 4,
-   "squadNumber": null,
+   "squadNumber": 4,
+   "setPieces": null,
    "status": "available",
    "expectedReturnGw": null
   }

@@ -25,11 +25,13 @@ import { CLUB } from "../../PremNav";
  *  same reason. */
 const TABS = [
   { segment: "", label: "Squad", key: "squad" },
-  // "Match", not "Next Match": two words wrap at 390 while the others sit on
-  // one, and a strip whose plates disagree about their height is not a strip.
-  // CM's own tabs are one word wherever it can manage it, and the screen it
-  // heads says "Next Match" in the caption box, where there is room.
-  { segment: "/next", label: "Match", key: "next" },
+  // **Set Pieces, where Match used to be** (Craig, 3 Sep 2026: "we can replace
+  // match (fixtures have it) with set piece takers"). The Match tab was a
+  // duplicate — the fixture run opens on the next game and says who, when and
+  // where — and a set-piece order is the one thing on this club that a reader
+  // cannot get anywhere else. One word each, so the strip's plates still agree
+  // about their height.
+  { segment: "/set-pieces", label: "Pieces", key: "setPieces" },
   { segment: "/fixtures", label: "Fixtures", key: "fixtures" },
   { segment: "/stats", label: "Stats", key: "stats" },
 ] as const;

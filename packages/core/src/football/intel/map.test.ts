@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { predictedEleven, predictionAge, squadIntel, xiFault } from "./map";
+import { predictedEleven, predictionAge, setPieceOrder, squadIntel, xiFault } from "./map";
 import type { IntelClubXi, IntelPlayer, IntelSquads, IntelXi } from "./types";
 
 function player(code: number, over: Partial<IntelPlayer> = {}): IntelPlayer {
@@ -12,6 +12,7 @@ function player(code: number, over: Partial<IntelPlayer> = {}): IntelPlayer {
     canCover: [],
     depthTier: 1,
     squadNumber: null,
+    setPieces: null,
     status: "available",
     expectedReturnGw: null,
     line: "CB",
@@ -131,6 +132,32 @@ describe("predictedEleven", () => {
 
   it("draws nothing for a club with no prediction", () => {
     expect(predictedEleven(undefined)).toEqual([]);
+  });
+});
+
+describe("setPieceOrder", () => {
+  const takers = [
+    player(1, { setPieces: { corners: 2, penalties: 1 } }),
+    player(2, { setPieces: { corners: 1 } }),
+    player(3, { setPieces: null }),
+  ];
+
+  it("orders each piece by rank, first taker first", () => {
+    const [corners, pens] = setPieceOrder(takers, ["corners", "penalties"]);
+    expect(corners?.takers.map((p) => p.code)).toEqual([2, 1]);
+    expect(pens?.takers.map((p) => p.code)).toEqual([1]);
+  });
+
+  it("leaves out a man who is not in that order at all", () => {
+    // A rank is not a count. Padding the list with everybody would turn "nobody
+    // has ranked him" into "he is third choice", which the source never said.
+    const [corners] = setPieceOrder(takers, ["corners"]);
+    expect(corners?.takers.map((p) => p.code)).not.toContain(3);
+  });
+
+  it("answers for a piece nobody takes, rather than dropping it", () => {
+    const [none] = setPieceOrder(takers, ["fk_direct"]);
+    expect(none).toEqual({ piece: "fk_direct", takers: [] });
   });
 });
 
