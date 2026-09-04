@@ -185,13 +185,22 @@ export interface MatchEvent {
    *  because stoppage time is not a number and rounding it to one would lose the
    *  only part anybody quotes. */
   minute: string;
-  /** The same instant in seconds, which is the only ORDERABLE form of it.
+  /** Seconds elapsed **in this fixture**, which is the orderable form of
+   *  `minute`. `minute` is for reading; this is for sorting.
    *
-   *  `minute` is for reading and this is for sorting, and they are kept apart
-   *  because a wire across ten simultaneous matches has to interleave them:
-   *  `"90+2"` sorts before `"9"` as a string and equals 90 as a number, and both
-   *  answers are wrong. Seconds since kick-off, so stoppage time keeps its
-   *  place after the ninety. */
+   *  They are kept apart because the printed clock does not sort: `"90+2"` comes
+   *  before `"9"` as a string and equals 90 as a number, and both are wrong.
+   *
+   *  **It orders one match and NOT a round.** It is elapsed time from this
+   *  fixture's own kick-off, so a 12:30 match and a 17:30 one both start at 0 —
+   *  a wire interleaving ten matches must order on
+   *  `kickoff + seconds`, not on this alone.
+   *
+   *  **And the provider's own field is not monotonic even within a match.**
+   *  Recorded: `end 1` carries 2910 and the second half's `start` carries 2700,
+   *  going backwards across the interval. Every one of those period-boundary
+   *  types is outside `MatchEventKind`, so the events this app keeps are safely
+   *  ordered — but anything widening the kind list inherits the hazard. */
   seconds: number;
   /** Opta's own sentence, verbatim. Ours is the ownership beside it, never the
    *  prose: this is a wire we are reprinting, not a report we are writing. */

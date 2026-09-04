@@ -86,7 +86,18 @@ describe("mapMatchEvents", () => {
     expect(events.find((e) => e.id === 2_790_543)?.minute).toBe("90+2");
   });
 
-  it("carries an orderable clock beside the readable one", () => {
+  it("drops the period-boundary types whose seconds run backwards", () => {
+    // `end 1` carries 2910 and the second half's `start` carries 2700 — the
+    // provider's clock restarts at the interval. None of them is a kind we
+    // keep, which is the only reason `seconds` orders this list at all.
+    const boundaries = PLAYED.events.content.filter((e) =>
+      ["start", "end 1", "end 2", "end 14"].includes(e.type),
+    );
+    expect(boundaries.length).toBeGreaterThan(0);
+    expect(mapMatchEvents(boundaries, 1, codes)).toEqual([]);
+  });
+
+  it("carries a clock that orders THIS match, and says so", () => {
     // The reason the two are kept apart: as a string "90+2" sorts before "9",
     // and as a number it equals 90. A wire interleaving ten matches needs
     // neither answer.
