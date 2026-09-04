@@ -1,9 +1,22 @@
 import { describe, expect, it } from "vitest";
 import recordedFixture from "../__fixtures__/plFixture.json";
 import recordedRound from "../__fixtures__/plRound.json";
+import recordedStats from "../__fixtures__/plMatchStats.json";
 import recordedStreams from "../__fixtures__/plTextstream.json";
-import { mapMatchEvents, mapRoundGoals, plFixtureCode, plMatchClock, plPlayerCodes } from "./map";
-import type { RawPlFixture, RawPlFixturePage, RawPlTextstream } from "./raw";
+import {
+  mapMatchEvents,
+  mapRoundGoals,
+  plFixtureCode,
+  plMatchClock,
+  plMatchMetrics,
+  plPlayerCodes,
+} from "./map";
+import type {
+  RawPlFixture,
+  RawPlFixturePage,
+  RawPlMatchStats,
+  RawPlTextstream,
+} from "./raw";
 
 // Recorded from the Premier League's own API on 4 Sep 2026, never fetched
 // (CODE_RULES §6). The match is Liverpool 2-2 Nottingham Forest, gameweek 2 —
@@ -220,3 +233,40 @@ describe("mapRoundGoals", () => {
   });
 });
 
+
+// Recorded from `/stats/match/128939` on 4 Sep 2026 — the same Liverpool 2-2
+// Nottingham Forest, so the two files describe one match.
+const STATS = recordedStats as unknown as RawPlMatchStats;
+
+describe("plMatchMetrics", () => {
+  const liverpool = plMatchMetrics(STATS, 10);
+  const forest = plMatchMetrics(STATS, 15);
+
+  it("reads a metric by Opta's own name", () => {
+    expect(liverpool?.("possession_percentage")).toBe(69.1);
+    expect(liverpool?.("total_scoring_att")).toBe(13);
+  });
+
+  it("answers NOUGHT for a metric they omitted, not undefined", () => {
+    // The inversion this whole function exists for. Neither side was sent off,
+    // so `total_red_card` is absent from both — and a board printing a dash for
+    // "no red cards" would hedge a fact we hold. Counted across 40 team-sides,
+    // the metric is present on exactly 1, and there was exactly 1 red card.
+    expect(liverpool?.("total_red_card")).toBe(0);
+    expect(forest?.("total_red_card")).toBe(0);
+    expect(STATS.data["10"].M.some((m) => m.name === "total_red_card")).toBe(false);
+  });
+
+  it("keys on the provider's team id and gives both sides", () => {
+    expect(liverpool).not.toBeNull();
+    expect(forest).not.toBeNull();
+    expect(liverpool?.("goals")).toBe(2);
+    expect(forest?.("goals")).toBe(2);
+  });
+
+  it("answers null for a fixture they have no stats for, which IS an absence", () => {
+    // Distinct from the zero above: no stats at all may not become a board of
+    // noughts. The caller has to tell the two apart, so the types do.
+    expect(plMatchMetrics(STATS, 999)).toBeNull();
+  });
+});

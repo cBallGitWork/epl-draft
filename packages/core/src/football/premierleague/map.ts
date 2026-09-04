@@ -1,5 +1,5 @@
 import type { MatchEvent, MatchEventKind } from "../types";
-import type { RawPlEvent, RawPlFixture } from "./raw";
+import type { RawPlEvent, RawPlFixture, RawPlMatchStats } from "./raw";
 
 // Pure raw → domain. No clock, no network, no environment (CODE_RULES §5).
 //
@@ -186,4 +186,28 @@ const GOAL_KINDS: Record<string, MatchEventKind> = {
   P: "penalty-goal",
   O: "own-goal",
 };
+
+/** One side's Opta metrics, by name, with nought for the ones they omitted.
+ *
+ *  **The defaulting is the whole function.** `/stats/match` leaves out a metric
+ *  whose value is nought — red cards appear on 1 of 40 team-sides — so a caller
+ *  reading the array directly gets `undefined` for "no red cards" and, following
+ *  the app's usual grammar, prints a dash for a fact we hold. `DESIGN.md` §7's
+ *  "Absence is `—`, never `0`" is about a figure the provider could not give;
+ *  this is a provider saying nought by saying nothing, and it is the one place
+ *  in the app where defaulting to zero is the honest answer.
+ *
+ *  Keyed by the provider's team id as it keys them. Returns null for a fixture
+ *  they have no stats for at all — which IS an absence, and a caller may not
+ *  turn that into a board of noughts. */
+export function plMatchMetrics(
+  stats: RawPlMatchStats,
+  teamId: number,
+): ((metric: string) => number) | null {
+  const side = stats.data[String(teamId)];
+  if (side === undefined) return null;
+
+  const byName = new Map(side.M.map((m) => [m.name, m.value]));
+  return (metric: string) => byName.get(metric) ?? 0;
+}
 

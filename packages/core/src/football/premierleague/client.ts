@@ -1,6 +1,11 @@
 import { PL_COMPETITION, PL_COMP_SEASON, PL_FOOTBALL_API_BASE, PL_TEXTSTREAM_PAGE } from "../../config";
 import { politeFetch } from "../../http/fetch";
-import type { RawPlFixture, RawPlFixturePage, RawPlTextstream } from "./raw";
+import type {
+  RawPlFixture,
+  RawPlFixturePage,
+  RawPlMatchStats,
+  RawPlTextstream,
+} from "./raw";
 
 // All Premier League API I/O, and nowhere else. The mapping next door stays pure.
 //
@@ -66,3 +71,18 @@ export function fetchPlTextstream(id: number): Promise<RawPlTextstream> {
     `/fixtures/${id}/textstream/EN?pageSize=${PL_TEXTSTREAM_PAGE}&sort=asc`,
   );
 }
+
+/** Every Opta metric for both sides of one match — possession, shots, corners,
+ *  fouls, offsides, tackles, headers and about 160 more.
+ *
+ *  This is the read `prem/match/[id]/MatchTabs` has been waiting for. Its
+ *  docblock ships two tabs where Championship Manager runs four, on the ground
+ *  that *"the two missing ones are the two we have no data for"* — and that is
+ *  no longer true of Match Stats: `cm9900/22.jpg`'s board is twelve of thirteen
+ *  rows from this one call. Action Zones still has no source.
+ *
+ *  **A metric worth nought is absent rather than zero** — see `RawPlMetric`. */
+export function fetchPlMatchStats(id: number): Promise<RawPlMatchStats> {
+  return get<RawPlMatchStats>(`/stats/match/${id}`);
+}
+

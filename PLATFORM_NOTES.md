@@ -492,6 +492,11 @@ the code.
 
 ## The Premier League's own API — probed live 4 Sep 2026, do not re-derive
 
+**The full endpoint surface is catalogued in `docs/providers/premier-league-api.md`** —
+eighteen endpoints that answer, eight that 404, every metric vocabulary in full, and CM's
+Match Stats board mapped row by row onto Opta's own names. What follows is the part that
+is a decision rather than a field list.
+
 `www.premierleague.com` is a shell over `footballapi.pulselive.com`. Public, and
 re-tested with each header removed in turn: **no headers are required at all**. Two
 response headers set the terms — `cache-control: max-age=30`, which is already
