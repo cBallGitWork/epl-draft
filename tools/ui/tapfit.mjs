@@ -32,7 +32,6 @@ const ROUTES = [
   "/fpl",
   "/paper/reports",
   "/paper/columns",
-  "/paper/gw2-round-report",
 ];
 
 /** The floors, by what the thing IS rather than by what it looks like.
@@ -132,6 +131,30 @@ const linked = await cdp.js(
 );
 const player = JSON.parse(linked || "{}").player;
 if (player) ROUTES.push(player);
+
+// One article, DISCOVERED off the front page rather than written down. This list
+// carried `/paper/gw2-round-report` as a literal until 4 Sep 2026, which is the
+// same constant `sweep.mjs` had already been broken by and fixed: a slug names
+// one story in one round's edition, so it 404s the day that story's kind is
+// deleted — and a tap audit against a 404 reports a page with no controls on it
+// as a page that passes.
+await cdp.open("/", 2200);
+const article = await cdp.js(
+  `(document.querySelector('a[href^="/paper/"]:not([href="/paper/reports"]):not([href="/paper/columns"])')||{}).getAttribute
+     ? document.querySelector('a[href^="/paper/"]:not([href="/paper/reports"]):not([href="/paper/columns"])').getAttribute("href") : ""`,
+);
+if (article) ROUTES.push(article);
+
+// One player's four screens, DISCOVERED off the pool for the reason the team's
+// and the club's are: a `fantraxId` names one man in one league's pool, and a
+// written-down one is a 404 the day he leaves.
+await cdp.open("/players", 2200);
+const man = await cdp.js(
+  `(document.querySelector('a[href^="/players/"]')||{}).getAttribute
+     ? document.querySelector('a[href^="/players/"]').getAttribute("href") : ""`,
+);
+if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) => `${man}/${tab}`));
+
 
 
 let failures = 0;

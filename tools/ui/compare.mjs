@@ -23,7 +23,7 @@
 import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { CAPTURE_CEILING, connect, parseArgs, teamCookie } from "./cdp.mjs";
 
 const { flags, positional } = parseArgs(process.argv.slice(2));
 const [route, reference, out = "compare.png"] = positional;
@@ -43,6 +43,20 @@ const CM = { width: 800, height: 600 };
 const width = Number(flags.width ?? 1440);
 const height = Number(flags.height ?? 900);
 
+/** How far to blow the pair up. Doubling CM's own 600 is what makes a 1999 row
+ *  legible beside a 2026 one, but the composite is then two images wide and
+ *  4.49 Mpx — past what the browser will hand back (`CAPTURE_CEILING`), which
+ *  is why this instrument hung on its second capture and never wrote a file.
+ *  So the zoom is derived from the ceiling rather than asserted: take the most
+ *  we can get, which is the honest version of "as big as possible". */
+const pairBox = (zoom) => ({
+  width: Math.round(CM.width * zoom + (width / height) * CM.height * zoom) + 40,
+  height: Math.round(CM.height * zoom) + 60,
+});
+let zoom = 2;
+while (zoom > 1 && pairBox(zoom).width * pairBox(zoom).height > CAPTURE_CEILING) zoom -= 0.05;
+const pair = pairBox(zoom);
+
 const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));
 await cdp.setViewport(width, height, 1);
@@ -58,7 +72,7 @@ writeFileSync(
   body { margin:0; background:#111; color:#eee; font:12px ui-monospace,monospace; display:flex; }
   figure { margin:0; }
   figcaption { padding:4px 8px; background:#000; white-space:nowrap; }
-  img { display:block; height:${CM.height * 2}px; width:auto; image-rendering:auto; }
+  img { display:block; height:${Math.round(CM.height * zoom)}px; width:auto; image-rendering:auto; }
 </style>
 <figure>
   <figcaption>Championship Manager 99/00 &mdash; ${reference.split("/").pop()} (${CM.width}&times;${CM.height})</figcaption>
@@ -70,10 +84,10 @@ writeFileSync(
 </figure>`,
 );
 
-// Tall enough for both at double CM's height, and wide enough that neither is
-// cropped: the live shot is the wider of the two once scaled, and a composite
-// that clips the thing being judged is worse than no composite.
-await cdp.setViewport(Math.round(CM.width * 2 + (width / height) * CM.height * 2) + 40, CM.height * 2 + 60);
+// Wide enough that neither is cropped: the live shot is the wider of the two
+// once scaled, and a composite that clips the thing being judged is worse than
+// no composite.
+await cdp.setViewport(pair.width, pair.height);
 await cdp.send("Page.navigate", { url: `file://${page}` });
 await new Promise((resolve) => setTimeout(resolve, 900));
 const composite = await cdp.send("Page.captureScreenshot", { format: "png" });

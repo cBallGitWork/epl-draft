@@ -140,6 +140,19 @@ const club = await cdp.js(
 );
 if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
 
+// One player's four screens, DISCOVERED off the pool rather than written down,
+// for the reason the team's and the club's are: a `fantraxId` names one man in
+// one league's pool, and a written-down one is a 404 the day he leaves. They are
+// swept because the player bar is a per-CLUB colour like the club's, and
+// because the attribute grid is the densest type on the desk — `xs` labels
+// against `--color-muted`, which is the pair a contrast sweep exists for.
+await cdp.open("/players", 2200);
+const man = await cdp.js(
+  `(document.querySelector('a[href^="/players/"]')||{}).getAttribute
+     ? document.querySelector('a[href^="/players/"]').getAttribute("href") : ""`,
+);
+if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) => `${man}/${tab}`));
+
 // The player page a club's squad list links to, discovered off the club page for
 // the same reason the club is discovered off the table.
 if (club) await cdp.open(club, 2200);

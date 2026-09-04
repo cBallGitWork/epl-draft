@@ -22,6 +22,38 @@ import { readFileSync } from "node:fs";
 export const CDP_PORT = process.env.CDP_PORT ?? "9261";
 export const BASE_URL = process.env.BASE_URL ?? "http://localhost:3000";
 
+/** The largest surface Chrome 152 headless will actually hand back.
+ *
+ *  `Page.captureScreenshot` does not fail past this — it never returns, and the
+ *  wedged renderer takes the NEXT instrument down with it, which is why a run
+ *  used to die one tool after the one that broke it. Measured 4 Sep 2026 on a
+ *  fresh browser, one capture per launch, `--headless=new --disable-gpu`:
+ *
+ *      1900x1900  3.61 Mpx  ok        2000x2000  4.00 Mpx  hang
+ *      2048x1400  2.87 Mpx  ok        2100x2100  4.41 Mpx  hang
+ *      1440x1800  2.59 Mpx  ok        2880x1800  5.18 Mpx  hang
+ *
+ *  So the wall sits just under 4 Mpx — a 16 MB buffer at 4 bytes a pixel — and
+ *  it is the PRODUCT that matters, not the width or the height: 2880x900 is
+ *  fine and 2000x2000 is not. 1440 at 2x is 5.18 Mpx, which is why the desk
+ *  shot was the one that always hung.
+ *
+ *  PLATFORM_NOTES blamed "a second session driving the same browser". That was
+ *  a coincidence of when it was first seen; it reproduces on a browser nothing
+ *  else is touching. */
+export const CAPTURE_CEILING = 3_500_000;
+
+const megapixels = (width, height, scale) => ((width * scale * height * scale) / 1e6).toFixed(2);
+
+/** The requested scale, or the largest one that still fits under the ceiling.
+ *  Steps down rather than cropping, because a shorter page is a different
+ *  screenshot and a less dense one is the same screenshot. */
+export function fittedScale(width, height, scale) {
+  let fitted = scale;
+  while (fitted > 1 && width * fitted * height * fitted > CAPTURE_CEILING) fitted -= 1;
+  return fitted;
+}
+
 /** `--flag value` pairs pulled out of argv; positionals returned in order. */
 export function parseArgs(argv) {
   const flags = {};
@@ -87,13 +119,24 @@ export async function connect() {
       await send("Network.setCookie", { name: "team", value, domain: "localhost", path: "/" });
     },
 
-    setViewport: (width, height, scale = 1) =>
-      send("Emulation.setDeviceMetricsOverride", {
+    /** Viewport, with the scale stepped down if the surface would not survive
+     *  capture. See CAPTURE_CEILING — this is the one place that knows the
+     *  device-pixel product, so it is the one place that can hold the line. */
+    setViewport: (width, height, scale = 1) => {
+      const fitted = fittedScale(width, height, scale);
+      if (fitted !== scale) {
+        console.warn(
+          `capture ceiling: ${width}x${height} at ${scale}x is ${megapixels(width, height, scale)} Mpx — ` +
+            `shooting at ${fitted}x instead. The image is a true reading of the layout at a lower density.`,
+        );
+      }
+      return send("Emulation.setDeviceMetricsOverride", {
         width,
         height,
-        deviceScaleFactor: scale,
+        deviceScaleFactor: fitted,
         mobile: width < 768,
-      }),
+      });
+    },
 
     /** Navigate and give hydration time to finish. The wait is a constant
      *  rather than a readiness probe on purpose: every readiness signal this

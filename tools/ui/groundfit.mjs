@@ -82,8 +82,20 @@ const AUDIT = `(function(){
     // on the screen at all.
     if (el.closest("[aria-hidden='true']")) continue;
     if (el.closest(".sr-only")) continue;
+    // **Stop BEFORE <body>, and this is the whole instrument.** The walk used to
+    // run to <html>, which meant it counted body's own background — and
+    // globals.css gives body an opaque --color-bg. So cover reached 1.00 for
+    // every text node on every desk route and this audit could not fail; its
+    // "Zero bare, 31 Aug 2026" was vacuous, and DESIGN §2 rests the photograph
+    // reversal on that number.
+    //
+    // The render is the other way round: <html> is transparent, so body's
+    // background propagates to the CANVAS, and PhotoGround's fixed inset-0
+    // -z-10 paints above the canvas background. That is why the photograph is
+    // visible at all. Body's fill is therefore BEHIND the picture and covers
+    // nothing; only a background between the text and the photograph does.
     var cover = 0, node = el;
-    while (node && node !== document.documentElement) {
+    while (node && node !== document.body) {
       var cs = getComputedStyle(node);
       var a = alphaOf(cs.backgroundColor);
       if (cs.backgroundImage && cs.backgroundImage !== "none") a = 1;
@@ -108,6 +120,17 @@ const AUDIT = `(function(){
 const { flags } = parseArgs(process.argv.slice(2));
 const cdp = await connect();
 await cdp.setCookie(teamCookie(flags));
+
+// One player's four screens, DISCOVERED off the pool for the reason the team's
+// and the club's are: a `fantraxId` names one man in one league's pool, and a
+// written-down one is a 404 the day he leaves.
+await cdp.open("/players", 2200);
+const man = await cdp.js(
+  `(document.querySelector('a[href^="/players/"]')||{}).getAttribute
+     ? document.querySelector('a[href^="/players/"]').getAttribute("href") : ""`,
+);
+if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) => `${man}/${tab}`));
+
 
 let failures = 0;
 for (const width of [390, 1440]) {
