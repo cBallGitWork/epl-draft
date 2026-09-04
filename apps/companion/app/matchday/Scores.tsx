@@ -119,9 +119,9 @@ export function FootballRow({
       <span className="numeric shrink-0 text-sm font-bold">
         {played ? (
           <>
-            {fixture.homeScore}
-            <span className="px-1 text-faint">&ndash;</span>
-            {fixture.awayScore}
+            {spelled(fixture.homeScore)}
+            <span className="text-faint">&ndash;</span>
+            {spelled(fixture.awayScore)}
           </>
         ) : (
           <span className="font-normal text-muted">
@@ -204,3 +204,35 @@ export function Scores({
     </>
   );
 }
+
+/** How many a side has to put past you before the vidiprinter says it twice.
+ *
+ *  Four — not a number of ours. It is the threshold Sky's teleprinter has used
+ *  for decades, and the whole joke is that the machine stops trusting you to
+ *  believe the digit.
+ *
+ *  **A deliberate copy of `matchday/desk/Rows`, not an extraction.** Second
+ *  occurrence, and CODE_RULES §1 is explicit: *"Two occurrences: leave it
+ *  duplicated. Two similar things are a coincidence, not a pattern."* The third
+ *  earns a home, and this comment is what stops the two drifting apart in the
+ *  meantime — they must agree, because the same match is on both screens.
+ *
+ *  **A football fact only.** There is no equivalent for a fantasy total: "a lot
+ *  of points" has no custom behind it, and inventing a threshold would be us
+ *  making the joke rather than quoting it. Which is why the draft table above
+ *  does not call this. */
+const SPELL_FROM = 4;
+
+const WORDS = ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"];
+
+function spelled(goals: number | null) {
+  if (goals === null) return null;
+  const word = goals >= SPELL_FROM ? WORDS[goals] : undefined;
+  return (
+    <span className="px-0.5">
+      {goals}
+      {word ? <span className="pl-1 text-2xs font-bold text-faint">({word})</span> : null}
+    </span>
+  );
+}
+

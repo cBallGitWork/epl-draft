@@ -176,7 +176,7 @@ function Half({
             the edge and by position — `mine.ts`'s own mark, and the reason it
             exists as a border rather than only as an ink. */}
         <span
-          className="cm-title min-w-0 flex-1 truncate font-chrome text-lg font-bold uppercase lg:text-2xl"
+          className="cm-title min-w-0 flex-1 truncate font-chrome text-base font-bold uppercase lg:text-2xl"
           style={{ color: ink }}
         >
           {team.name}
@@ -187,7 +187,13 @@ function Half({
           dimmed trailing side is lower still, which is why `ScoreFigure` — whose
           whole job is to dim the trailing figure — may not come inside the box.
           The dash for a total Fantrax did not give is kept by hand. */}
-      <span className="cm-bevel numeric flex min-h-16 w-16 shrink-0 items-center justify-center text-2xl font-bold lg:min-h-20 lg:w-24 lg:text-4xl">
+      {/* Narrower and a step smaller under a thumb than on the desk, measured:
+          at `w-16 text-2xl` the away plate had 79px for a name and clipped
+          `test31` to `TEST…`. A manager's own name may not truncate on the one
+          screen that is about him, and the score is still the biggest figure on
+          the page at `text-xl`. `w-14` holds a Fantrax total's four characters
+          (`61.4`), which is the widest thing this box ever carries. */}
+      <span className="cm-bevel numeric flex min-h-16 w-14 shrink-0 items-center justify-center text-xl font-bold lg:min-h-20 lg:w-24 lg:text-4xl">
         {points === null ? "\u2014" : points}
       </span>
     </div>

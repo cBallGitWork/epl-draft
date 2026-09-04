@@ -26,6 +26,7 @@ import { readerTeamId } from "../squads";
 import { roundGoals } from "../commentary";
 import { wireLines } from "./wireLines";
 import Wire from "./Wire";
+import Flash from "./Flash";
 import { WIRE_LINES } from "@epl/core";
 import PageHeader from "../components/shell/PageHeader";
 import { londonDayAndTime } from "../londonTime";
@@ -72,6 +73,15 @@ export default async function MatchdayPage() {
     getLeagueSquads(),
   ]);
   const wire = wireLines(goals, snapshot, league.owners, mine);
+
+  // The newest goal in the round, for the flash. `roundGoals` is already sorted
+  // newest first on the wall clock, so this is the head of it — and the wire's
+  // first "scored" line is the same event seen through the ownership join.
+  const latest = goals.find((g) => g.kind !== "disallowed-goal") ?? null;
+  const latestLine =
+    latest === null ? null : (wire.lines.find((l) => l.key === `${latest.id}:scored`) ?? null);
+  const latestFixture =
+    latest === null ? null : (snapshot.fixtures.find((f) => f.code === latest.fixtureCode) ?? null);
 
   // The draft's eight ties, beside the round's ten matches. A league with no
   // draft yet, no schedule, or a Fantrax that would not answer costs the first
@@ -129,6 +139,11 @@ export default async function MatchdayPage() {
           app is for: the round's goals with the manager holding each man. The
           fixture list under it says what the scores are; this says who did it
           and what it cost whom. */}
+      {/* The loudest thing under the score: what just happened, and whose he
+          was. Above the wire because it is the wire's top line said once, at
+          the size the moment deserves — `cm0102/02.jpg` draws both on one
+          screen for the same reason. */}
+      <Flash goal={latest} line={latestLine} fixture={latestFixture} clubs={clubById(snapshot)} />
       <Wire lines={wire.lines} unresolved={wire.unresolved} limit={WIRE_LINES} />
       {during ? (
         <>
