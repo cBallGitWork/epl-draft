@@ -56,6 +56,8 @@ describe("buildMatchReportBrief", () => {
     ties: [
       { homeName: "test2", awayName: "test3", homePoints: 41, awayPoints: 39, state: "open" },
     ],
+    events: [],
+    sides: null,
     threads: [],
   });
 
@@ -70,7 +72,12 @@ describe("buildMatchReportBrief", () => {
   it("states the two rules at the point of temptation", () => {
     // You do not know how the football happened, and an open tie gets
     // consequence, never a verdict.
-    expect(brief).toContain("you do not know the order anything happened");
+    // This used to pin the sentence "you do not know the order anything
+    // happened", which the brief stated unconditionally. That WAS the defect: a
+    // writer with no sequence can only enumerate, and the filed GW2 column duly
+    // came out as a ledger. The rule is now conditional on the timeline, so the
+    // test asserts the branch rather than the sentence.
+    expect(brief).toContain("YOU DO NOT HAVE THE ORDER");
     expect(brief).toContain("never verdicts");
   });
 });
@@ -88,6 +95,8 @@ describe("naming the match", () => {
       awayScore: 1,
       owners: [],
       ties: [],
+      events: [],
+      sides: null,
       threads: [],
     });
     expect(brief).toContain("Sunderland 2–1 Everton");
@@ -106,8 +115,73 @@ describe("naming the match", () => {
       awayScore: 1,
       owners: [{ owner: "Craig", players: [] }],
       ties: [],
+      events: [],
+      sides: null,
       threads: [],
     });
     expect(brief).toContain("never account for it");
+  });
+});
+
+describe("buildMatchReportBrief — the football, in the order it happened", () => {
+  const withTimeline = (over: Partial<Parameters<typeof buildMatchReportBrief>[0]> = {}) =>
+    buildMatchReportBrief({
+      gameweek: 2,
+      home: "Sunderland",
+      away: "Fulham",
+      homeScore: 1,
+      awayScore: 0,
+      owners: [],
+      ties: [],
+      threads: [],
+      events: [
+        { minute: "26", kind: "goal", player: "Isidor", other: "Le Fée" },
+        { minute: "67", kind: "substitution", player: "Reinildo", other: "Castagne" },
+        { minute: "81", kind: "yellow-card", player: "Xhaka", other: null },
+      ],
+      sides: [
+        { club: "Sunderland", possession: 42, shots: 8, onTarget: 3, corners: 4, fouls: 11 },
+        { club: "Fulham", possession: 58, shots: 14, onTarget: 5, corners: 7, fouls: 9 },
+      ],
+      ...over,
+    });
+
+  it("gives the writer the minute, which is the whole fix", () => {
+    // The filed GW2 column read "Isidor Twenty-Six, Fulham Nil" — a MINUTE set
+    // in a scoreline's grammar, because the only figures beside the man were his
+    // minutes and his points and nothing said which was which.
+    const out = withTimeline();
+    expect(out).toContain("26' GOAL Isidor, assisted by Le Fée");
+    expect(out).toContain("A minute is a minute and never a score");
+  });
+
+  it("names the second man by what he did, which differs by event", () => {
+    const out = withTimeline();
+    expect(out).toContain("assisted by Le Fée");
+    expect(out).toContain("Reinildo on, Castagne off");
+    expect(out).toContain("Xhaka booked");
+  });
+
+  it("tells the writer it has NO order when the commentary could not be read", () => {
+    // The instruction inverts with the data. A writer told it has a timeline it
+    // has not got will invent one, which is the failure this replaced.
+    const out = withTimeline({ events: [] });
+    expect(out).toContain("YOU DO NOT HAVE THE ORDER");
+    expect(out).not.toContain("HOW THE MATCH WENT");
+  });
+
+  it("carries a handful of figures and not a spreadsheet", () => {
+    const out = withTimeline();
+    expect(out).toContain("42% of the ball");
+    expect(out).toContain("14 shots (5 on target)");
+    // The provider publishes ~170 metrics a side. A writer handed all of them
+    // writes the spreadsheet this is fixing, at higher resolution.
+    expect(out).not.toContain("progressive_carries");
+  });
+
+  it("says nothing about the figures rather than printing noughts", () => {
+    const out = withTimeline({ sides: null });
+    expect(out).not.toContain("THE TWO SIDES");
+    expect(out).not.toContain("0% of the ball");
   });
 });

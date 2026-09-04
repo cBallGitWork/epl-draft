@@ -1,5 +1,6 @@
 import {
   FANTRAX_LEAGUE_ID,
+  clubById,
   type AvailabilityNote,
   type Bridge,
   type Deal,
@@ -33,6 +34,7 @@ import {
 } from "@epl/core";
 import { BBC_FOOTBALL, affectedBy, fetchFeed, mapNews, type Affected, type NewsItem } from "@epl/core";
 import mapping from "../../data/mappings/fantrax.json";
+import { type MatchFootball, roundFootball } from "./football";
 
 // Everything the writer is allowed to know, read here at the edge so the brief
 // builders stay pure. One read per surface, each caught on its own: a feed we
@@ -61,6 +63,16 @@ export interface RoundFacts {
   /** Wire items that name a man somebody in this league holds, freshest
    *  first. Triaged here so the newsdesk sees only what has a stake in it. */
   news: { item: NewsItem; affected: Affected[] }[];
+  /** What happened in each played fixture, by FPL fixture id — the minute of
+   *  every goal, who assisted it, the cards and the substitutions, and a handful
+   *  of each side's figures.
+   *
+   *  **The half the match report never had.** Its brief used to say outright
+   *  that the writer did not know the order anything happened, so the column
+   *  could only enumerate — and it read like a ledger because it was one.
+   *  Empty when the Premier League's feed could not be read, which costs the
+   *  report its spine and makes it say so. */
+  football: Map<number, MatchFootball>;
 }
 
 export async function gatherRoundFacts(
@@ -106,6 +118,11 @@ export async function gatherRoundFacts(
     rosters === null ? null : resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge);
   const eleven = squads === null ? null : teamOfTheWeek(squads.teams, info.roster);
 
+  // Their feed, and the only read here that is nobody else's provider twice
+  // over: about two requests a fixture, which is nothing for a nightly writer
+  // and would be a great deal on a page a phone refreshes every thirty seconds.
+  const football = await roundFootball(snapshot.gameweek, snapshot, clubById(snapshot));
+
   return {
     pairings: periodPairings(info.matchups, info.teams, period),
     scores: new Map(mapLiveScores(live).map((score) => [score.teamId, score])),
@@ -127,6 +144,7 @@ export async function gatherRoundFacts(
     // league's state until 10 Oct — and an empty map means the brief says
     // nothing about pedigree rather than calling every squad undrafted.
     table: standingsPage === null ? [] : mapStandings(standingsPage),
+    football,
     news:
       wire === null || squads === null
         ? []

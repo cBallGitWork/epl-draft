@@ -160,6 +160,11 @@ export function matchReportBrief(
       state: stateOf(pairing, facts.scores),
     }));
 
+  // What actually happened, in the order it happened. Absent when their feed
+  // could not be read, and the brief's instruction inverts with it rather than
+  // leaving a writer to infer a sequence it has not got.
+  const football = facts.football.get(fixture.id);
+
   return buildMatchReportBrief({
     gameweek: snapshot.gameweek,
     home: clubs.get(fixture.homeClubId)?.name ?? "Home",
@@ -168,6 +173,8 @@ export function matchReportBrief(
     awayScore: fixture.awayScore,
     owners,
     ties,
+    events: football?.events ?? [],
+    sides: football?.sides ?? null,
     threads,
   });
 }
