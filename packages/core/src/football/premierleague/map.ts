@@ -89,13 +89,15 @@ export function mapMatchEvents(
     // field is optional on the wire — and an event we cannot place in the match
     // is not one we can put in a timeline.
     const minute = event.time?.label;
-    if (kind === undefined || minute === undefined) continue;
+    const seconds = event.time?.secs;
+    if (kind === undefined || minute === undefined || seconds === undefined) continue;
 
     mapped.push({
       id: event.id,
       fixtureCode,
       kind,
       minute,
+      seconds,
       text: event.text,
       players: (event.playerIds ?? []).map((id) => codes.get(id) ?? null),
     });

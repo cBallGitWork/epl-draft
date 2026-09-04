@@ -86,6 +86,19 @@ describe("mapMatchEvents", () => {
     expect(events.find((e) => e.id === 2_790_543)?.minute).toBe("90+2");
   });
 
+  it("carries an orderable clock beside the readable one", () => {
+    // The reason the two are kept apart: as a string "90+2" sorts before "9",
+    // and as a number it equals 90. A wire interleaving ten matches needs
+    // neither answer.
+    const stoppage = events.find((e) => e.id === 2_790_543);
+    const ninth = events.find((e) => e.id === 2_789_801);
+    expect(stoppage?.minute).toBe("90+2");
+    expect(stoppage?.seconds).toBeGreaterThan(ninth?.seconds ?? 0);
+    expect([...events].sort((a, b) => a.seconds - b.seconds).map((e) => e.id)).toEqual(
+      events.map((e) => e.id),
+    );
+  });
+
   it("calls a penalty its own kind, so a goals feed reading only `goal` cannot miss it", () => {
     expect(events.find((e) => e.id === 2_790_385)?.kind).toBe("penalty-goal");
   });

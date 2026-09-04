@@ -185,6 +185,14 @@ export interface MatchEvent {
    *  because stoppage time is not a number and rounding it to one would lose the
    *  only part anybody quotes. */
   minute: string;
+  /** The same instant in seconds, which is the only ORDERABLE form of it.
+   *
+   *  `minute` is for reading and this is for sorting, and they are kept apart
+   *  because a wire across ten simultaneous matches has to interleave them:
+   *  `"90+2"` sorts before `"9"` as a string and equals 90 as a number, and both
+   *  answers are wrong. Seconds since kick-off, so stoppage time keeps its
+   *  place after the ninety. */
+  seconds: number;
   /** Opta's own sentence, verbatim. Ours is the ownership beside it, never the
    *  prose: this is a wire we are reprinting, not a report we are writing. */
   text: string;

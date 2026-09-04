@@ -7,9 +7,14 @@
 // genuinely absent on some row of those two files, not a defensive guess.
 
 /** A clock label, or a competition name, or a date — the API wraps most scalars
- *  in an object carrying the string it wants printed. */
+ *  in an object carrying the string it wants printed.
+ *
+ *  An event's time carries `secs` beside the label. It is the only orderable
+ *  form of the clock: `"90+2"` does not sort, and a wire across ten matches has
+ *  to interleave them. */
 export interface RawPlLabel {
   label: string;
+  secs?: number;
 }
 
 /** `{secs: 5760, label: "90+6'00"}`. Absent entirely before kick-off, which is
