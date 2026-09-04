@@ -42,6 +42,13 @@ export const TABLE = TABS[0].href;
  *  in three files is a route that can be renamed in two of them. */
 export const TEAM_STATS = TABS[3].href;
 
+/** The two round lists, read off `TABS` for `TABLE`'s reason. A match page's way
+ *  out is whichever one that match is actually on — a finished fixture is not on
+ *  the fixtures page and an upcoming one is not among the results — so both are
+ *  spelled here rather than a third and fourth time downstairs. */
+export const RESULTS = TABS[1].href;
+export const FIXTURES = TABS[2].href;
+
 /** The route the club pages hang off, named once. A route spelled in five files
  *  is a route that can be renamed in four of them — `SectionNav` records the
  *  same decision for `/league`'s two query-string routes. */

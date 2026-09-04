@@ -166,6 +166,17 @@ export interface PlayerMatchStats {
   defensiveContribution: number;
   expectedGoals: number;
   expectedAssists: number;
+  /** What FPL's own game paid him for THIS fixture, summed from the `explain`
+   *  block that describes it.
+   *
+   *  **FPL's scoring and never ours.** It may not be printed in a column headed
+   *  `FPts`, which is Fantrax's word for Fantrax's scoring of a slot we chose —
+   *  `gameLog.ts` states the same bound about the same figure. It is here
+   *  because it is the only per-fixture fantasy figure that exists for every
+   *  player in every match: Fantrax publishes a period total for the men a
+   *  manager started (6 of a fixture's 32, counted 4 Sep 2026) and a true
+   *  per-match figure only through one rate-limited request per player. */
+  fplPoints: number;
 }
 
 /** Everything the football layer knows right now. Assembled by an adapter

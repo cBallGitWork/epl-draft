@@ -1484,6 +1484,104 @@ The real league cannot substitute: it has no teams until 10 Oct, and by the time
 it has fifteen belonging to real people, writing to one to see what happens is
 not a probe, it is an incident.
 
+## A Fantrax points figure per man per MATCH is a capture, not a read (4 Sep 2026)
+
+Asked because a match screen wanted one. Counted against FPL fixture 11's **32**
+participants, in the dummy league, period 2 — and period 2 is gameweek 2 exactly,
+measured with `periodGameweeks` against live kickoffs for all three leagues
+rather than assumed from the numbers matching.
+
+| Read | Answers for | What it answers with |
+|---|---|---|
+| `fetchLiveScoring` → `mapLivePlayerPoints` (wired, used by `scoreboard.ts`) | **6 of 32** | a **PERIOD total**, ACTIVE slots only |
+| `getPlayerProfile` → `recentGames` | **32 of 32** | a true per-match figure, free agents included |
+| FPL `/event/{gw}/live/` `explain[]` | **32 of 32** | FPL's own per-fixture points, exact |
+
+Three things this settles.
+
+**The wired read is not a match figure and cannot be made into one.** 12 of the
+32 were rostered at all and only 6 were ACTIVE; a RESERVE who played 90 minutes
+has no key in `statsMap` at all — an absence, not a nought. And a period total
+equals a match total only while a period holds one gameweek, which is true today
+for all three leagues and is not a property anybody promised.
+
+**The complete Fantrax answer costs 32 requests.** `recentGames` is one player
+per request and Fantrax's own limiter fired within roughly thirty back-to-back
+calls (`"You're viewing player profiles too quickly"`), clearing once paced. So
+it belongs in a paced capture writing a data file, the way `npm run capture`
+already works — never in a page render. **Not built.**
+
+**`mapPoolStats`, `mapTeamStats` and `mapPlayerStats` have no per-match
+dimension at all** — season-to-date or season-projection, whole pool or one team,
+with no `period` or fixture argument on either endpoint. Do not re-derive.
+
+Past periods DO return settled data: `dummy` periods 1 and 2 both answer
+`allEventsFinished: true` with 110 and 106 ACTIVE entries. The **real** league
+answers 0 for both, with one synthetic `"-3"` (`LG_AVG`) key and an empty
+`statsMap` — Fantrax's placeholder for a league with no teams, not a refusal, and
+the same underlying fact as `getTeamRosters`' `NO_TEAMS`.
+
+## FPL's fixture list carries a whole scoresheet nobody was reading (4 Sep 2026)
+
+`GET /api/fixtures/` returns a **`stats` array on every fixture** and `raw.ts`
+did not model it, so `seasonFixtures()` — a read the app already makes on eleven
+call sites — was fetching and discarding three quarters of a match screen on
+every page view. Counted across all 380 fixtures:
+
+| | |
+|---|---|
+| identifiers on a finished fixture | **11** — `goals_scored`, `assists`, `own_goals`, `penalties_saved`, `penalties_missed`, `yellow_cards`, `red_cards`, `saves`, `bonus`, `bps`, `defensive_contribution` |
+| on an unstarted one | `stats` is `[]` — an **empty array**, not eleven empty identifiers |
+| shape | each identifier is `{h: [{value, element}], a: [...]}`, so the SIDE is stated and not derived |
+| `element` | FPL's **per-season id**, never the code |
+
+**The `bps` sub-block is exactly the appearance list.** Fixture 11 of gameweek 2:
+32 distinct elements under `bps`, 32 players with `minutes > 0` in
+`/event/2/live/`, no misses and no false positives. So who played is derivable
+from a 26 KB read, and `minutes` is the only thing the fixture list does not have.
+
+**`bps` is SIGNED.** 47 of the season's 616 entries were below nought, floor −14,
+and **not one was exactly nought**. A filter written `bps > 0` silently drops the
+five worst players in a match; a column that paints −8 amber is calling a loss a
+measurement. `--color-bad` is the slot.
+
+### Why it is a per-ROUND read and not a season one
+
+Three measurements, and each rules out the obvious alternative.
+
+**The season read grows past the bootstrap.** `/api/fixtures/` is 183 KB today
+with 20 of 380 populated. A finished fixture is 2,938 bytes against an unstarted
+one's 342, so all 380 finished is **~1.1 MB by May** — and `seasonFixtures()` is
+read on the paper's front page (`app/tables.ts`) and on `/matchday`.
+
+**A second cached read of the same URL costs a second request.** Next treats
+every fetch inside `unstable_cache` as `force-no-store` (`patch-fetch.js`), so
+the Data Cache does not dedupe it; React's request memoization is per render pass
+while the two entries go stale independently. And `unstable_cache` stores
+`JSON.stringify` and re-parses on every hit, so folding sheets into
+`seasonFixtures` would put a megabyte parse on both of those pages.
+
+**`?event=N` is 26 KB and a played round never changes again** — the same
+lifetime argument `gameweekSnapshot` already makes for staying out of
+`footballNow`. `gameweekSheets(gw)` in `app/football.ts`.
+
+The score, `status` and `settled` still come from `seasonFixtures` and nowhere
+else: two independently cached reads of one URL can disagree.
+
+### What FPL does not publish anywhere, checked
+
+**No minute for a goal** — not the fixture list, not `/event/{gw}/live/`'s
+`explain`, not `element-summary`. No line-up, no formation, no possession, no
+shots, no corners, no referee, no attendance. All of it is in the sister repo and
+lags full time by about a day; `scripts/export/epl_draft_intel.py` now writes a
+fourth file for it (`matches/{season}.json`), which is not read by the app yet.
+
+**SofaScore files an own goal as a plain `goal` event with no flag.** Verified
+across all 20 logged 26-27 matches: 17 name only men FPL also calls scorers, and
+the three that do not name Lindelöf, Donnarumma and Greaves — exactly the three
+in FPL's `own_goals` lists. A screen trusting that feed alone would print an own
+goal as a goal for the wrong side. FPL's block is the discriminator.
+
 ## A streamed 404 answers 200, by design — probed 3 Sep 2026, do not re-derive
 
 Six routes answer `200` to a URL that does not exist, and two answer `404`. It
@@ -1495,6 +1593,12 @@ looked per-route and arbitrary. It is neither, and the rule is exact:
 | 200 | 404 |
 |---|---|
 | `/prem/club/[code]` · `/gw/[gameweek]` · `/players/[fantraxId]` · `/squad/[teamId]` · `/league/matchups/[teamId]` · `/paper/[slug]` | `/prem/player/[code]` · `/prem/match/[id]` · an unmatched URL |
+
+**`/prem/match/[id]` grew two tabs on 4 Sep 2026 and deliberately did not grow a
+`loading.tsx`**, which is the first time this rule has been applied rather than
+observed. It has one slow read — Fantrax, for the owner names — and that goes
+behind `<Suspense>` with a local skeleton instead, the way the player screen
+streams its blocks. So the route keeps a true 404 and pays nothing for it.
 
 Next's own docs say so in as many words (`next/dist/docs/01-app/03-api-reference/
 03-file-conventions/loading.md`, "Status Codes"): a `loading.tsx` is a Suspense

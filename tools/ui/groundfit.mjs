@@ -20,7 +20,7 @@
 // The paper is not swept. It is ink on stock with no photograph under it, and
 // `isPaperRoute` is what stands the ground down.
 
-import { connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
 
 /** The desk. `/` is the paper and has no ground to sit on. */
 const ROUTES = [
@@ -124,12 +124,20 @@ await cdp.setCookie(teamCookie(flags));
 // One player's four screens, DISCOVERED off the pool for the reason the team's
 // and the club's are: a `fantraxId` names one man in one league's pool, and a
 // written-down one is a 404 the day he leaves.
-await cdp.open("/players", 2200);
-const man = await cdp.js(
-  `(document.querySelector('a[href^="/players/"]')||{}).getAttribute
-     ? document.querySelector('a[href^="/players/"]').getAttribute("href") : ""`,
-);
+const man = await discover(cdp, "/players", 'a[href^="/players/"]');
 if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) => `${man}/${tab}`));
+
+// One match's two screens, discovered off the results list — where the score
+// became a link on 4 Sep 2026 and had never been one before. A written-down
+// fixture id is a 404 the same season, because `Fixture.id` is per-season and so
+// is a fixture.
+//
+// Walked because the match bar prints two club names as DISPLAY type straight
+// onto a club colour, and the Players board prints two more over its column
+// heads. Four strings on four grounds none of which is a token this instrument
+// has already had checked.
+const match = await discover(cdp, "/prem/results", 'a[href^="/prem/match/"]');
+if (match) ROUTES.push(match, `${match}/players`);
 
 
 let failures = 0;

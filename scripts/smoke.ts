@@ -253,7 +253,10 @@ async function main() {
     );
   }
   if (footballer !== null) paths.push(`/prem/player/${footballer}`);
-  if (match !== null) paths.push(`/prem/match/${match}`);
+  // Both of a match's views. The Players tab is where an empty sheet lands —
+  // every fixture before its first kickoff has one, and this walk is the only
+  // thing that opens that state on a league whose season has not started.
+  if (match !== null) paths.push(`/prem/match/${match}`, `/prem/match/${match}/players`);
 
   console.log(
     `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${hasTeams ? "drafted" : "no teams"})\n`,

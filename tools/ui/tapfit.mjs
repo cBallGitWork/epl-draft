@@ -15,7 +15,7 @@
 // they are read out rather than hidden, so a run is a work list and never a
 // silent pass.
 
-import { connect, parseArgs, teamCookie } from "./cdp.mjs";
+import { connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
 
 const ROUTES = [
   "/",
@@ -93,11 +93,7 @@ await cdp.setCookie(teamCookie(flags));
  *  league's and change with `FANTRAX_LEAGUE_ID`. `/squad/[teamId]` is the most
  *  visited screen in the app and a static route list cannot name it. */
 await cdp.setViewport(390, 900);
-await cdp.open("/squad", 2200);
-const team = await cdp.js(
-  `(document.querySelector('a[href^="/squad/"]')||{}).getAttribute
-     ? document.querySelector('a[href^="/squad/"]').getAttribute("href") : ""`,
-);
+const team = await discover(cdp, "/squad", 'a[href^="/squad/"]');
 // And his four other screens. A team is five routes now rather than one, and an
 // instrument that measures the first cannot vouch for the other four — the tab
 // strip itself is a row of controls with a tap floor, and it appears on all
@@ -111,12 +107,26 @@ if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((t
 // app's only per-CLUB colour — twenty hexes from `clubColours`, none of them a
 // token the palette has already had checked, and `inkOn` picking the ink for
 // each. Point it at a pale side (Fulham, Leeds, Spurs) by hand at least once.
-await cdp.open("/prem", 2200);
-const club = await cdp.js(
-  `(document.querySelector('a[href^="/prem/club/"]')||{}).getAttribute
-     ? document.querySelector('a[href^="/prem/club/"]').getAttribute("href") : ""`,
-);
+const club = await discover(cdp, "/prem", 'a[href^="/prem/club/"]');
 if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
+
+// One match's two screens, discovered off the results list — where the score
+// became a link on 4 Sep 2026 and had never been one before. A written-down
+// fixture id is a 404 next August, and unlike a club code it is a 404 the same
+// season: `Fixture.id` is per-season and so is the fixture.
+//
+// Swept because the match bar is the app's only place TWO club colours meet, and
+// `inkOn` has to answer for both of them at once — the pale-side case
+// (`cm9900/16.jpg` runs Everton against a white Torquay) is a real pairing and
+// not an edge. The Players board carries the same pair over two column heads.
+const match = await discover(cdp, "/prem/results", 'a[href^="/prem/match/"]');
+if (match) ROUTES.push(match, `${match}/players`);
+
+// And a match nobody has played, which is a different screen under the same
+// two bars: no scoresheet, a `v` where the score goes, and the Players tab
+// greyed. The results list cannot produce one, so it takes its own read.
+const coming = await discover(cdp, "/prem/fixtures", 'a[href^="/prem/match/"]');
+if (coming && coming !== match) ROUTES.push(coming);
 
 // The player page a club's squad list links to, discovered off the club page for
 // the same reason the club is discovered off the table.
@@ -148,11 +158,7 @@ if (article) ROUTES.push(article);
 // One player's four screens, DISCOVERED off the pool for the reason the team's
 // and the club's are: a `fantraxId` names one man in one league's pool, and a
 // written-down one is a 404 the day he leaves.
-await cdp.open("/players", 2200);
-const man = await cdp.js(
-  `(document.querySelector('a[href^="/players/"]')||{}).getAttribute
-     ? document.querySelector('a[href^="/players/"]').getAttribute("href") : ""`,
-);
+const man = await discover(cdp, "/players", 'a[href^="/players/"]');
 if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) => `${man}/${tab}`));
 
 

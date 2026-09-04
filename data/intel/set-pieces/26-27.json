@@ -2,12 +2,12 @@
  "manifest": {
   "season": "26-27",
   "gameweek": null,
-  "exportedAt": "2026-09-03T17:17:51.579416+00:00",
+  "exportedAt": "2026-09-04T18:08:10.329727+00:00",
   "rows": 20,
   "sources": [
    {
     "path": "data/reference/set_piece_takers.json",
-    "mtime": "2026-09-03T17:01:39.010537+00:00"
+    "mtime": "2026-09-04T16:53:58.471963+00:00"
    }
   ],
   "fpl": "https://fantasy.premierleague.com/api/bootstrap-static/"

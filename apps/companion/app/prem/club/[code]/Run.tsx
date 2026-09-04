@@ -98,19 +98,26 @@ export default function Run({
                 <td className="hidden whitespace-nowrap px-1.5 text-2xs text-faint lg:table-cell">
                   {COMPETITION}
                 </td>
+                {/* **Every row is a link now, whatever state the match is in.**
+                    It used to be the played ones only, which was right while the
+                    match page said "this is what the fixture list knows" over a
+                    scoreline — a preview and a live sheet had nothing behind
+                    them. Both do now, and a fixture nobody can open is a fixture
+                    with no way to see who is in it. The live cell keeps its ink:
+                    a running score reads as a final one without it. */}
                 <td className="numeric w-14 whitespace-nowrap px-1.5 text-center text-sm font-bold">
-                  {fixture.status === "live" ? (
-                    <span className="text-live">{mine}–{theirs}</span>
-                  ) : played ? (
-                    <Link
-                      href={`${MATCH}/${fixture.id}`}
-                      className="cm-row flex min-h-11 items-center justify-center hover:underline"
-                    >
-                      {mine}–{theirs}
-                    </Link>
-                  ) : (
-                    <span className="text-faint">{DASH}</span>
-                  )}
+                  <Link
+                    href={`${MATCH}/${fixture.id}`}
+                    className="cm-row flex min-h-11 items-center justify-center hover:underline"
+                  >
+                    {fixture.status === "live" ? (
+                      <span className="text-live">{mine}–{theirs}</span>
+                    ) : played ? (
+                      `${mine}–${theirs}`
+                    ) : (
+                      <span className="text-faint">{DASH}</span>
+                    )}
+                  </Link>
                 </td>
               </tr>
             );

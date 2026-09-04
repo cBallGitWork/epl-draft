@@ -93,12 +93,31 @@ view — the layout reads one to decide whether the Live tab exists, and the lea
 schedule reads the other. The real Premier League is the same for everybody,
 which is exactly what makes it cacheable.
 
-**The club page broke that, deliberately, on 3 Sep 2026**, and the cost is set
-out under "Two position columns" below: its Elig column reads Fantrax through
-`leagueInfo`, which the layout does not warm. A reader arriving from anywhere
-else in the app pays a cache hit; a club page reached cold makes a request no
-other `/prem` route makes. *This paragraph said "Nothing" unconditionally for a
-day after that stopped being true of the whole section.*
+**Two routes have broken that, both deliberately, and this paragraph is now the
+only place both are written down.**
+
+The **club page**, 3 Sep 2026: the cost is set out under "Two position columns"
+below, where its Elig column reads Fantrax through `leagueInfo`. *This paragraph
+said "Nothing" unconditionally for a day after that stopped being true.*
+
+The **match page**, 4 Sep 2026: it names the fantasy squad holding each man on
+the scoresheet and counts the managers with somebody in the match, through
+`marks()` and `getLeagueSquads`. Same shape of cost — one `leagueCache` entry
+shared with `/league` and every squad page, so a reader who has been anywhere
+else pays a cache hit and one reached cold makes a request. What buys it is
+`PRODUCT.md`'s partisan principle: a goal in the Premier League is also
+somebody's afternoon, and a match is the one screen in this section where that
+is the question. It is streamed behind `<Suspense>` and `marks()` returns an
+empty object on every ordinary failure, so the football renders with no Fantrax
+at all.
+
+It costs one thing more the club page does not: **a second cached FPL read**,
+`gameweekSheets`, at 26 KB a round. Never `seasonFixtures` fattened — the whole
+season's `stats` blocks are 183 KB today and about 1.1 MB by May, and that read
+is on the paper's front page.
+
+`/prem` itself — the table, results, fixtures, team stats — still costs no
+provider request.
 
 ## Results and Fixtures
 
@@ -146,7 +165,7 @@ the reference for both, and it is a strip over a panel rather than one page.
 | Tab | Route | What | Source |
 |---|---|---|---|
 | Squad | `/prem/club/[code]` | Every man on the books, ordered by minutes | FPL bootstrap; Fantrax for eligibility |
-| Match | `…/next` | The next fixture, both sides on their own colours | FPL fixtures |
+| Pieces | `…/set-pieces` | Who takes the penalties, free kicks and corners | FFScout, via the sister repo |
 | Fixtures | `…/fixtures` | The club's season, oldest first | FPL fixtures |
 | Stats | `…/stats` | Every player, by one group of measures, sortable | FPL |
 
@@ -167,13 +186,21 @@ optional for exactly that reason, and `cm9900/22.jpg` is the shape.
 the panel. It arrives there when there is a real XI to draw, and it is the
 second entry the foot row has been waiting for since this section shipped.
 
-### Two more routes, both stubs on purpose
+### Two more routes, one of them still a stub
 
-`/prem/player/[code]` and `/prem/match/[id]` (Craig, 3 Sep 2026: "clicking a
-player takes them to a player page (just scaffold, will do later)" and "clicking
-a prem fixture takes it to match page (just scaffold for now)"). Every name on a
-squad list and every score in the section is a link, and a link to a 404 is
-worse than no link.
+`/prem/player/[code]` (Craig, 3 Sep 2026: "clicking a player takes them to a
+player page (just scaffold, will do later)"). Every name on a squad list is a
+link, and a link to a 404 is worse than no link.
+
+`/prem/match/[id]` was the other, and stopped being one on 4 Sep 2026 — it has
+its own file, [match.md](match.md).
+
+**And the sentence above used to cover both by saying "every score in the section
+is a link", which was never true.** `prem/Match` — the row on Results and on
+Fixtures, which is where a reader lands from the rail — rendered its scoreline as
+a bare `<span>` and had done since the section shipped. The only two links that
+ever reached the match page were a club's fixture run and a player's match log,
+and neither of them is in this section's four tabs. Both round lists link now.
 
 **The player page is not `/players/[fantraxId]`.** That one is the fantasy pool:
 Fantrax's points, his eligibility, who holds him, what he cost at the draft.
@@ -183,7 +210,8 @@ FPL's season-stable `code`.
 
 **The match page takes the fixture `id`**, which is not season-stable — and
 neither is a fixture. This match exists in this season and nowhere else, so
-there is nothing for a stable key to outlive.
+there is nothing for a stable key to outlive. [match.md](match.md) carries the
+rest of it.
 
 ### The squad list
 
@@ -271,11 +299,11 @@ the same export that will fill the Pos column — one crossing, not two.
 | `/prem/club/[code]` | code is not an integer, or names no club | `notFound()` |
 | Squad | FPL lists nobody | `TabEmpty` |
 | Squad | Fantrax silent | Elig empties to `—`; the squad still renders |
-| Match | every published match played | `TabEmpty`, and the tab greys |
+| Pieces | nobody named for any piece | `TabEmpty`, and the tab greys |
 | Fixtures | no match with this club | `TabEmpty`, and the tab greys |
 | Stats | FPL lists nobody | `TabEmpty`, and the tab greys |
 | `/prem/player/[code]` | code is not an integer, or names no player | `notFound()` |
-| `/prem/match/[id]` | id is not an integer, or names no fixture | `notFound()` |
+| `/prem/match/[id]` | id is not an integer, or names no fixture | `notFound()` — its own states are in [match.md](match.md) |
 | Any club tab | still loading | its own skeleton — **not** `/prem`'s league table |
 
 Keyed on FPL's **season-stable club code**, never `clubId`: a URL is persisted

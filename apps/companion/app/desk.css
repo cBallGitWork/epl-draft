@@ -342,6 +342,18 @@
   color: var(--color-faint);
 }
 
+/* The same greying on a blue plate, which the rule above cannot reach.
+   **A plate owns its ink** (DESIGN §2), and this is the greyed half of that:
+   `--color-faint` is 5.30:1 on the page ground and 2.35:1 on `--color-chrome`,
+   so a dimmed TAB was the one place `.cm-out` shipped under the floor. Nothing
+   had ever dimmed one until `/prem/match/[id]` greyed Players before kickoff;
+   `sweep` read 2.36:1 at both widths. The club and squad strips have carried the
+   same latent failure since they were built, and are fixed by this too. */
+.cm-tab.cm-out,
+.cm-tab.cm-out * {
+  color: var(--color-faint-plate);
+}
+
 /* A CM screen is not one page with headings down it; it is several bevelled
    PANELS, each opening with its own title bar. That is the structural half of
    this conversion and the half a recolour cannot reach.
@@ -362,7 +374,18 @@
      DESIGN §3 was checked against, and this is that colour with the picture
      showing through rather than a different colour. */
   background: color-mix(in srgb, var(--color-surface) 88%, transparent);
-  color: inherit;
+  /* **No `color` here, and the omission is load-bearing.** This carried
+     `color: inherit`, which does nothing a panel needs — a `<div>` inherits its
+     colour anyway — and one thing nobody wanted: it is a plain class selector at
+     the same specificity as Tailwind's `text-*`, and `desk.css` is loaded after
+     the utilities, so `class="cm-panel text-info"` resolved to the INHERITED
+     ink and the utility was silently discarded.
+
+     Found 4 Sep 2026 by reading the rendered colour off the player screen's
+     position line, which `RealPosition` describes as "the first thing in this
+     app entitled to that colour" and which had been drawing in white since it
+     was written. `desk.ts` records the same trap for two utilities on one
+     element; this is the class-versus-utility half of it. */
   border: 2px solid;
   /* Sunken: dark where a raised control is light. A panel is a well cut into
      the chrome and a button sits proud of it, and drawing both the same way is

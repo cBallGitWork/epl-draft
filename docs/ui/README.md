@@ -35,11 +35,12 @@ nothing.**
 | `/prem/fixtures` | [prem.md](prem.md) | Every round still to come, soonest first. |
 | `/prem/team-stats` | [prem.md](prem.md) | The twenty ranked by one measure at a time. |
 | `/prem/club/[code]` | [prem.md](prem.md) | One club's squad, with the real position and Fantrax's eligibility side by side. |
-| `/prem/club/[code]/next` | [prem.md](prem.md) | The club's next fixture, both sides on their own colours. |
+| `/prem/club/[code]/set-pieces` | [prem.md](prem.md) | Who takes that club's penalties, free kicks and corners. |
 | `/prem/club/[code]/fixtures` | [prem.md](prem.md) | That club's season, oldest first. Premier League only. |
 | `/prem/club/[code]/stats` | [prem.md](prem.md) | Every player, by one group of measures, sortable. |
+| `/prem/match/[id]` | [match.md](match.md) | One match: who scored, who assisted, who was booked, and whose they are. |
+| `/prem/match/[id]/players` | [match.md](match.md) | Both team sheets, by FPL's bonus-points index. |
 | `/prem/player/[code]` | [prem.md](prem.md) | One footballer. A stub. **Not** the fantasy pool's player page. |
-| `/prem/match/[id]` | [prem.md](prem.md) | One match. A stub. |
 | `/squad` | [squads.md](squads.md) | Yours, then everyone else's. |
 | `/squad/[teamId]` | [squad.md](squad.md) | **One squad: the list and the pitch. The reference page for the new look.** |
 | `/squad/[teamId]/transfers` | [squad.md](squad.md) | His business, in Championship Manager's ledger. |

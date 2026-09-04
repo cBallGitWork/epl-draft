@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import { type Club, type Fixture, crestUrl } from "@epl/core";
 import { londonDayAndTime } from "../londonTime";
+import { MATCH } from "./club/[code]/match";
 import { SCORE_CREST, SCORE_CREST_PX } from "@/app/desk";
 
 // One match, as a scoreline.
@@ -16,6 +18,20 @@ import { SCORE_CREST, SCORE_CREST_PX } from "@/app/desk";
 //
 // A row and not a card: `.cm-rows` rules between them, which is what a list of
 // readings has instead of a gap.
+//
+// **The scoreline is a link, and it was not one until 4 Sep 2026.** This file's
+// own docblock and `docs/ui/prem.md` both said every score in the section opened
+// a match; neither was true, and the two links that actually reached
+// `/prem/match/[id]` were a club's fixture run and a player's match log. The
+// section's own two round lists — the pages a reader lands on from the rail —
+// were the ones that could not.
+//
+// **A tappable score is a CONTROL** and takes the control floor — 44 under a
+// thumb, 36 on the desk (DESIGN §6). It cost nothing here, which is worth saying
+// because it cost something everywhere else: this row was already `min-h-11
+// lg:min-h-9` before it was a link, so the whole change is the `div` becoming an
+// anchor. `players/[fantraxId]/MatchLog` records the same ruling where the bill
+// was real — one linked cell there holds a whole table off `.cm-row`'s 28.
 
 export default function Match({
   fixture,
@@ -29,7 +45,10 @@ export default function Match({
   const played = fixture.homeScore !== null && fixture.awayScore !== null;
 
   return (
-    <div className="flex min-h-11 items-center gap-2 px-2 py-1.5 lg:min-h-9">
+    <Link
+      href={`${MATCH}/${fixture.id}`}
+      className="flex min-h-11 items-center gap-2 px-2 py-1.5 hover:bg-raised lg:min-h-9"
+    >
       <Side club={home} />
       {/* The middle column is fixed so every scoreline in the list sits on one
           vertical line — a column of scores that wanders with the length of the
@@ -42,7 +61,7 @@ export default function Match({
         )}
       </span>
       <Side club={away} align="end" />
-    </div>
+    </Link>
   );
 }
 

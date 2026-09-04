@@ -20,7 +20,7 @@ const appearance = (fill: Partial<PlayerMatchStats>): PlayerMatchStats => ({
   bps: 0,
   defensiveContribution: 0,
   expectedGoals: 0,
-  expectedAssists: 0,
+  expectedAssists: 0, fplPoints: 0,
   ...fill,
 });
 

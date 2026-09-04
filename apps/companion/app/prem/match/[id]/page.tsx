@@ -1,113 +1,128 @@
-import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { clubById, clubColours, crestUrl, inkOn } from "@epl/core";
-import type { Club } from "@epl/core";
-import Caption from "../../../components/shell/Caption";
-import PageHeader from "../../../components/shell/PageHeader";
-import ButtonLink from "../../../components/shell/ButtonLink";
-import { footballNow, seasonFixtures } from "../../../football";
+import { Suspense } from "react";
+import { goalMinutes, scoresheet, sheetSides } from "@epl/core";
+import type { SheetRow } from "@epl/core";
+import Skeleton from "../../../components/shell/Skeleton";
 import { londonDayAndDate, londonTime } from "../../../londonTime";
-import { CLUB } from "../../PremNav";
-import { PANEL_FLUSH, SCORE_CREST, SCORE_CREST_PX } from "@/app/desk";
+import { PANEL } from "@/app/desk";
+import MatchShell from "./Shell";
+import Scoresheet from "./Scoresheet";
+import Preview from "./Preview";
+import PlayerStats from "./PlayerStats";
+import { matchOwners, readMatch } from "./match";
+import type { Match } from "./match";
 
-// One match.
+// One match, on Championship Manager's Match Overview.
 //
-// **A stub on purpose** (Craig, 3 Sep 2026: "clicking a prem fixture takes it
-// to match page (just scaffold for now)"). Every score in this section is a
-// link, and a link to a 404 is worse than no link: this is where they land,
-// carrying the two sides, the score and when it was played, with the room for
-// the goals, the line-ups and the match stats left visibly empty rather than
-// filled with something invented.
-//
-// **A competition bar, not a club one.** A match belongs to neither side, so it
-// takes neither side's plate — `cm9900/24.jpg`'s light competition plate is the
-// one for a screen the division owns, and the two clubs get their own colours
-// below it, which is what `21.jpg` does with a match header.
-//
-// Keyed on FPL's fixture `id`, which is the one identifier a fixture has. Unlike
-// a club code or a player code it is not season-stable — but neither is a
-// fixture: this match exists in this season and nowhere else, so there is
-// nothing for a stable key to outlive.
+// `cm0102/02.jpg` is the shape: a dated plate at the left, the competition and
+// the half-time score at the right, the scorers under them with their minutes,
+// and a line of match facts along the foot — referee, attendance, weather. Ours
+// carries the first three; FPL publishes no attendance and no weather, and the
+// referee is on 2 of the 20 matches the sister repo has logged.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
-// it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
 export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const wanted = Number(id);
-  if (!Number.isInteger(wanted)) notFound();
-
-  const [snapshot, fixtures] = await Promise.all([footballNow(), seasonFixtures()]);
-  const fixture = fixtures.find((entry) => entry.id === wanted);
-  if (fixture === undefined) notFound();
-
-  const clubs = clubById(snapshot);
-  const home = clubs.get(fixture.homeClubId);
-  const away = clubs.get(fixture.awayClubId);
-  const played = fixture.homeScore !== null && fixture.awayScore !== null;
+  const match = await readMatch(id);
+  const { fixture } = match;
 
   return (
-    <div className="flex flex-col gap-2">
-      <PageHeader title="Match" competition />
-      <Caption>
-        {fixture.gameweek === null ? "Gameweek TBC" : `Gameweek ${fixture.gameweek}`}
-      </Caption>
-
-      <section className={PANEL_FLUSH}>
-        <div className="cm-tab flex items-center justify-between gap-2 px-2 py-1">
+    <MatchShell match={match} current="overview">
+      <section className={PANEL}>
+        {/* The date in full and the round beside it, which is `02.jpg`'s own
+            head: `Saturday 8th September 2007` on a plate at the left and
+            `Serie A / HT 2-0` at the right. The round takes the cyan (Craig,
+            4 Sep 2026) and the slot agrees — a gameweek number is a reading we
+            derived from FPL's calendar, not a fact printed on a ticket. */}
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b border-line pb-1">
           <span className="numeric text-2xs font-bold uppercase text-ink">
             {fixture.kickoff === null ? "Date TBC" : londonDayAndDate(fixture.kickoff)}
           </span>
-          <span className="numeric text-2xs font-bold text-ink">
-            {fixture.kickoff === null ? "" : londonTime(fixture.kickoff)}
-          </span>
+          <span className="numeric text-2xs font-bold text-info">{state(match)}</span>
         </div>
 
-        <div className="flex items-stretch gap-2 p-2">
-          <Side club={home} />
-          <span className="numeric flex shrink-0 items-center px-1 text-lg font-bold">
-            {played ? `${fixture.homeScore}–${fixture.awayScore}` : "v"}
-          </span>
-          <Side club={away} />
-        </div>
+        {fixture.status === "upcoming" ? (
+          <Preview match={match} />
+        ) : (
+          <Suspense fallback={<SheetWaiting />}>
+            <Sheet match={match} />
+          </Suspense>
+        )}
 
-        <p className="border-t border-line p-2 text-2xs text-faint">
-          The goals, the line-ups and the match statistics are still to come. Until then this is
-          what the fixture list knows.
-        </p>
+        <Facts match={match} />
       </section>
 
-      <ButtonLink href="/prem/results">Back to the results</ButtonLink>
+      <PlayerStats match={match} />
+    </MatchShell>
+  );
+}
+
+/** CM's foot line: `Referee - David Elleray · Attendance - 49745 · Weather`.
+ *
+ *  We have the first and neither of the others — FPL publishes no attendance and
+ *  no weather anywhere, and the referee is on **2 of the 20** matches the sister
+ *  repo has logged (Andy Madley and Samuel Barrott, counted 4 Sep 2026). So the
+ *  line draws what it has and disappears entirely rather than printing three
+ *  labels over three dashes. */
+function Facts({ match }: { match: Match }) {
+  const referee = match.logged?.referee ?? null;
+  if (referee === null) return null;
+  return (
+    <p className="border-t border-line pt-1 text-2xs text-faint">
+      Referee &mdash; <span className="text-muted">{referee}</span>
+    </p>
+  );
+}
+
+/** The scoresheet, with the minutes and our league's names on it. */
+async function Sheet({ match }: { match: Match }) {
+  const owners = await matchOwners(match.fixture);
+  const { home, away } = sides(match);
+  return (
+    <Scoresheet
+      home={scoresheet(home)}
+      away={scoresheet(away)}
+      minutes={goalMinutes(match.logged)}
+      owners={owners}
+    />
+  );
+}
+
+function SheetWaiting() {
+  return (
+    <div aria-busy className="grid grid-cols-2 gap-2 py-1">
+      {Array.from({ length: 6 }, (_, at) => (
+        <Skeleton key={at} width="80%" height="0.875rem" />
+      ))}
     </div>
   );
 }
 
-/** One side, on its own colour and linking to its club — except when the
- *  snapshot does not carry it, which holds the space rather than guessing. */
-function Side({ club }: { club: Club | undefined }) {
-  if (club === undefined) {
-    return <span aria-hidden className="min-h-11 flex-1 border border-dashed border-line" />;
-  }
-  const colours = clubColours(club.shortName);
-  return (
-    <Link href={`${CLUB}/${club.code}`} className="flex min-w-0 flex-1">
-      <span
-        className="flex min-h-11 flex-1 items-center justify-center gap-2 px-2 text-center"
-        style={{ background: colours.primary, color: inkOn(colours) }}
-      >
-        <Image
-          src={crestUrl(club)}
-          alt=""
-          width={SCORE_CREST_PX}
-          height={SCORE_CREST_PX}
-          className={`${SCORE_CREST} object-contain`}
-          aria-hidden
-          unoptimized
-        />
-        <span className="min-w-0 truncate text-sm font-bold uppercase">{club.name}</span>
-      </span>
-    </Link>
-  );
+/** Both team sheets, or two empty ones for a match FPL has filed nothing for. */
+function sides(match: Match): { home: SheetRow[]; away: SheetRow[] } {
+  return match.sheet === null
+    ? { home: [], away: [] }
+    : sheetSides(match.sheet, match.snapshot);
+}
+
+/** The round, the tense, and the half-time score when we have one.
+ *
+ *  Four rungs and not two. `settled` is FPL's own sign-off that the bonus has
+ *  been added and stopped moving — a one-to-two-hour window after the whistle in
+ *  which the figures below are still provisional, and nothing may print a flat
+ *  `FT` over numbers about to change. */
+function state(match: Match): string {
+  const { fixture, live, finished, logged } = match;
+  const round = fixture.gameweek === null ? "Gameweek TBC" : `Gameweek ${fixture.gameweek}`;
+  const half =
+    logged?.halfTime.home === null || logged?.halfTime.home === undefined
+      ? null
+      : `HT ${logged.halfTime.home}–${logged.halfTime.away}`;
+  const parts = [round];
+  if (live) parts.push(`Live ${fixture.minutes}′`);
+  else if (finished) parts.push(fixture.settled ? "FT" : "FT · bonus provisional");
+  else if (fixture.kickoff !== null) parts.push(londonTime(fixture.kickoff));
+  else parts.push("Kick-off TBC");
+  if (half !== null) parts.push(half);
+  return parts.join(" · ");
 }

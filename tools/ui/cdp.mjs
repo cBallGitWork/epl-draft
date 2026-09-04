@@ -73,6 +73,47 @@ export function teamCookie(flags) {
   return process.env.TEAM_COOKIE ?? null;
 }
 
+/** The first href on `route` matching `selector`, or a loud nothing.
+ *
+ *  **Every instrument here discovers its per-record routes rather than writing
+ *  them down** — a fantraxId, a club code, a fixture id and a story slug all
+ *  name one row in one league's data, and a written-down one is a 404 the day
+ *  that row moves.
+ *
+ *  What each of them did with a MISS was skip the push and carry on, and that is
+ *  a silent cap: on 4 Sep 2026 a cold dev server answered `/prem`, `/players`
+ *  and `/prem/results` slower than the settle window, four discoveries came back
+ *  empty, and `sweep` reported `ok` on twenty routes and **exited 0** having
+ *  never opened the other thirteen — including the three it had just been taught
+ *  about. A green audit that covered two thirds of the app is worse than a red
+ *  one, because only one of them makes anybody look.
+ *
+ *  So a miss is announced and counted. The caller decides whether to fail; none
+ *  of them may decide to say nothing. */
+export async function discover(cdp, route, selector, settle = 2200) {
+  const read = async (wait) => {
+    await cdp.open(route, wait);
+    return cdp.js(
+      `(document.querySelector('${selector}')||{}).getAttribute
+         ? document.querySelector('${selector}').getAttribute("href") : ""`,
+    );
+  };
+
+  // **Twice, and the second time with four times the patience.** The misses this
+  // function was written to announce turned out to be a settle window rather
+  // than a selector: `/players` draws 638 rows and `/prem/results` thirty-eight
+  // rounds, and on a dev server that has just recompiled either can answer
+  // slower than 2.2s. One retry turns the common case quiet again without
+  // turning a real miss quiet with it.
+  const href = (await read(settle)) || (await read(settle * 4));
+  if (!href) {
+    console.error(
+      `  ! nothing matching ${selector} on ${route}, twice — those routes are NOT in this run.`,
+    );
+  }
+  return href;
+}
+
 export async function connect() {
   const targets = await (await fetch(`http://localhost:${CDP_PORT}/json`)).json();
   const page = targets.find((t) => t.type === "page");

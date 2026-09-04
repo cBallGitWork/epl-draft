@@ -118,7 +118,11 @@ export function mapLiveStats(live: RawLive): PlayerMatchStats[] {
   for (const el of live.elements ?? []) {
     const single = (el.explain ?? []).length === 1;
     for (const block of el.explain ?? []) {
-      out.push(statsFor(el, block.fixture, valuesOf(block.stats), single));
+      // Summed here rather than read off `el.stats.total_points`, which is the
+      // GAMEWEEK's: on a double that figure belongs to two fixtures at once and
+      // would be printed whole against each of them.
+      const points = (block.stats ?? []).reduce((total, stat) => total + (stat.points ?? 0), 0);
+      out.push(statsFor(el, block.fixture, valuesOf(block.stats), single, points));
     }
   }
   return out;
@@ -135,6 +139,10 @@ function statsFor(
   fixtureId: number,
   perFixture: Record<string, number>,
   single: boolean,
+  /** The same block's `points`, already summed. Passed in rather than re-walked
+   *  here because `perFixture` has thrown the points away by the time it
+   *  arrives — it is keyed on identifier and holds only the VALUE. */
+  points: number,
 ): PlayerMatchStats {
   const agg = el.stats ?? {};
   // Prefer the per-fixture value; fall back to the aggregate only when the player
@@ -162,6 +170,7 @@ function statsFor(
     defensiveContribution: NUMERIC(agg.defensive_contribution),
     expectedGoals: NUMERIC(agg.expected_goals),
     expectedAssists: NUMERIC(agg.expected_assists),
+    fplPoints: points,
   };
 }
 

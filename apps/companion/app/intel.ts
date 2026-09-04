@@ -1,8 +1,16 @@
-import type { IntelPlayer, IntelSetPieces, IntelSquads, IntelXi } from "@epl/core";
-import { squadIntel } from "@epl/core";
+import type {
+  IntelMatch,
+  IntelMatches,
+  IntelPlayer,
+  IntelSetPieces,
+  IntelSquads,
+  IntelXi,
+} from "@epl/core";
+import { matchIntel, squadIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/gw3.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
+import matchesFile from "../../../data/intel/matches/26-27.json";
 
 // Where the app supplies the sister repo's export.
 //
@@ -52,6 +60,17 @@ export const intelXi = xiFile as unknown as IntelXi;
 
 /** Who takes each club's set pieces, by FPL club code. */
 export const intelSetPieces = piecesFile as unknown as IntelSetPieces;
+
+/** Every match the sister repo has logged, by FPL's fixture id.
+ *
+ *  **Not per round, unlike the eleven.** An XI is for one gameweek and names it
+ *  in its filename; a match log accumulates all season, so this is one file that
+ *  grows and the question a screen asks is per FIXTURE — `matchIntel` returns a
+ *  Map and a miss is the ordinary answer. 20 of 380 on 4 Sep 2026, running about
+ *  a day behind full time. */
+export const intelMatches: Map<number, IntelMatch> = matchIntel(
+  matchesFile as unknown as IntelMatches,
+);
 
 /** One club's line for a man, for arranging a pitch.
  *

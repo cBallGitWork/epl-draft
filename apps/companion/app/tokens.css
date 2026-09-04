@@ -180,6 +180,20 @@
   --color-league-deep: oklch(0.45 0.17 22);
   --color-cream: oklch(0.94 0.02 75);
 
+  /* The quiet ink where the quiet ink cannot be read: on the blue plate.
+     `--color-league-deep` above is the same idea for the same reason — a slot
+     restated on a ground that will not carry it.
+
+     `--color-faint` is 5.30:1 on the page and **2.35:1 on `--color-chrome`**,
+     which nobody had checked because nothing had ever greyed a TAB. The match
+     screen's Players plate greys before a ball is kicked, `sweep` measured it at
+     2.36 and this is the answer: 4.65:1 on the plate, against `--color-ink`'s
+     6.97 on the same ground, so it still reads as the dimmer of the two.
+
+     Any dimmed thing on a blue plate takes this. On the page ground, keep
+     `--color-faint` — this one is 6.4:1 there and would not read as quiet. */
+  --color-faint-plate: oklch(0.84 0.022 80);
+
   /* --- Pitch ---------------------------------------------------------------
      Deliberately darker than the sticker's studio green. The two greens used to
      sit within 0.03 lightness of each other, so a card on the grass had nothing

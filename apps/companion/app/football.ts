@@ -8,7 +8,12 @@ import {
   duringGameweek,
   fetchFixtures,
   getFootballSnapshot,
+  type MatchSheet,
+  type PlayerMatchStats,
+  fetchLive,
   mapFixtures,
+  mapLiveStats,
+  mapMatchSheets,
   portraitUrl,
 } from "@epl/core";
 
@@ -55,6 +60,59 @@ export const gameweekSnapshot: (gameweek: number) => Promise<FootballSnapshot> =
 export const seasonFixtures: () => Promise<Fixture[]> = unstable_cache(
   async () => mapFixtures(await fetchFixtures()),
   ["season-fixtures"],
+  { revalidate: PAGE_REVALIDATE },
+);
+
+/** One round's match sheets — who did what in each of its ten fixtures.
+ *
+ *  **A per-round read and deliberately not a slice of `seasonFixtures`.** Three
+ *  measurements, all taken 4 Sep 2026, and each of them rules out the obvious
+ *  alternative:
+ *
+ *  `?event=N` is **26 KB**. The whole season is 183 KB today and rising fast —
+ *  an unstarted fixture is 342 bytes and a finished one 2,938, so all 380
+ *  finished is about **1.1 MB by May**. `seasonFixtures` is read on the paper's
+ *  front page and on `/matchday`; fattening it would put a megabyte and a
+ *  `JSON.parse` of it on both.
+ *
+ *  A second cached read of the SAME whole-season URL would not be free either.
+ *  Next treats every fetch inside `unstable_cache` as `force-no-store`, so the
+ *  Data Cache does not dedupe it, and React's memoization is per render pass
+ *  while these two entries go stale independently.
+ *
+ *  And a played round never changes again, which is `gameweekSnapshot`'s own
+ *  argument for staying out of `footballNow` one function above.
+ *
+ *  The score, the status and `settled` are **not** taken from here. They come
+ *  from `seasonFixtures` and nowhere else: two independently cached reads of one
+ *  URL can disagree, and a page showing one read's score beside the other's
+ *  scorers is a page arguing with itself. */
+export const gameweekSheets: (gameweek: number) => Promise<MatchSheet[]> = unstable_cache(
+  async (gameweek: number) => mapMatchSheets(await fetchFixtures(gameweek)),
+  ["football-sheets"],
+  { revalidate: PAGE_REVALIDATE },
+);
+
+/** One round's per-player figures, per fixture.
+ *
+ *  **What it is for, when `gameweekSheets` above already exists.** That read is
+ *  26 KB and gives the scoresheet — who scored, who assisted, cards, bonus, and
+ *  a bps that is genuinely this fixture's. It carries no MINUTES and no points,
+ *  because the fixture list publishes neither. This one is 437 KB and carries
+ *  both, per fixture, for every player in every match of the season.
+ *
+ *  **Why the points are worth 437 KB.** They are the only per-fixture fantasy
+ *  figure that exists for everybody. Counted 4 Sep 2026 against fixture 11's 32
+ *  participants: Fantrax's live scoring gives a figure for **6**, and what it
+ *  gives is a PERIOD total rather than a match one; Fantrax's per-player profile
+ *  gives a true match figure for all 32 and costs one rate-limited request each.
+ *  FPL's `explain` block gives all 32, exactly, in one read.
+ *
+ *  Cached per round like its two neighbours, and for their reason: a played
+ *  round never changes again, so this is paid once per gameweek for the season. */
+export const gameweekLive: (gameweek: number) => Promise<PlayerMatchStats[]> = unstable_cache(
+  async (gameweek: number) => mapLiveStats(await fetchLive(gameweek)),
+  ["football-live"],
   { revalidate: PAGE_REVALIDATE },
 );
 

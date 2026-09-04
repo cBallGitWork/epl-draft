@@ -13,7 +13,7 @@ export type {
   PlayerMatchStats,
 } from "./types";
 
-export { clubColours, crestUrl, inkOn, plateOn, shirtUrl } from "./clubs";
+export { clubColours, clubGround, crestUrl, inkOn, plateOn, shirtUrl } from "./clubs";
 export type { ClubColours } from "./clubs";
 export { initials, portraitUrl } from "./portraits";
 export { getFootballSnapshot } from "./snapshot";
@@ -21,12 +21,28 @@ export { getFootballSnapshot } from "./snapshot";
 // the whole-season fixture list (it fetches one gameweek) and the raw bootstrap
 // (it returns a mapped snapshot, and the bridge needs FPL's own field names).
 export { fetchBootstrap, fetchFixtures } from "./fpl/client";
+// One round's live feed, and the mapper that turns it into per-FIXTURE figures.
+// `getFootballSnapshot` reads both for the round it is building; a match screen
+// wants an OLDER round, which is the whole reason these are reachable on their
+// own. `football.ts`'s `gameweekLive` says what it costs and what it buys.
+export { fetchLive } from "./fpl/client";
+export { mapLiveStats } from "./fpl/map";
 // One player's own season, match by match — the only read here keyed by FPL's
 // per-season element id, and the only one with the four measurements a live
 // snapshot cannot give per fixture. `gameLog.ts` says why.
 export { fetchElementSummary } from "./fpl/client";
 export { mapGameLog } from "./gameLog";
 export type { GameLogEntry } from "./gameLog";
+// What happened in ONE MATCH, for every player in it, off the season fixture
+// list's own `stats` block — the read the app already makes and used to throw
+// away. `matchSheet.ts` sets it against the two neighbours above and says what
+// it cannot answer, which is minutes.
+export { mapMatchSheets, scoresheet, sheetSides } from "./matchSheet";
+// The other half of a match, from the sister repo: the minutes, the line-up
+// positions and the team figures FPL publishes nowhere. `intel/matches.ts` sets
+// it against the read above and says which one wins where both could answer.
+export { goalMinutes, loggedPlayers, matchIntel, matchLine, subNote } from "./intel/matches";
+export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // The same read at season scale — his career before this one. `seasons.ts` says
 // why it is a separate file and why its column set is as short as it is.
 export { mapPastSeasons } from "./seasons";
@@ -35,6 +51,7 @@ export type { PastSeason } from "./seasons";
 // Ours, never Sports Interactive's — `attributes.ts` says why there is no feed.
 export { attributes } from "./attributes";
 export type { Attribute, Scouted } from "./attributes";
+export { KEEPER_ONLY, OUTFIELD_ONLY } from "./attributes";
 export { mapFixtures } from "./fpl/map";
 export {
   adjacentGameweeks,
@@ -89,6 +106,11 @@ export type {
   IntelClubPieces,
   IntelClubXi,
   IntelManifest,
+  IntelMatch,
+  IntelMatchEvent,
+  IntelMatchPlayer,
+  IntelMatchSide,
+  IntelMatches,
   IntelPlayer,
   IntelSquads,
   IntelSetPieces,

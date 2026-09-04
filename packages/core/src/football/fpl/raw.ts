@@ -112,6 +112,30 @@ export interface RawBootstrap {
   events: RawEvent[];
 }
 
+/** One player's figure under one identifier, on one side of one fixture.
+ *
+ *  `element` is FPL's per-season id and not the season-stable `code`. Nothing
+ *  built from this may be persisted (CODE_RULES §3) — a fixture belongs to one
+ *  season and so does everything the fixture list says about it. */
+export interface RawStatEntry {
+  value: number;
+  element: number;
+}
+
+/** One identifier's home and away lists for a fixture.
+ *
+ *  Eleven identifiers, counted across all 380 fixtures on 4 Sep 2026:
+ *  `goals_scored`, `assists`, `own_goals`, `penalties_saved`,
+ *  `penalties_missed`, `yellow_cards`, `red_cards`, `saves`, `bonus`, `bps`,
+ *  `defensive_contribution`. A finished match carries all eleven whether or not
+ *  anybody earned them, so an identifier with two empty lists is a goalless
+ *  match and a MISSING identifier is a shape change. */
+export interface RawFixtureStat {
+  identifier: string;
+  h: RawStatEntry[];
+  a: RawStatEntry[];
+}
+
 export interface RawFixture {
   id: number;
   event: number | null;
@@ -129,6 +153,17 @@ export interface RawFixture {
    *  to print it. */
   team_h_difficulty?: number;
   team_a_difficulty?: number;
+  /** Who did what, on both sides — the whole of a match's scoresheet bar the
+   *  minutes, and the only place FPL publishes it per fixture for a round it is
+   *  no longer serving live.
+   *
+   *  **Optional because the array is the state.** Counted on 4 Sep 2026: 20
+   *  finished fixtures carry eleven identifiers each, and all 360 that had not
+   *  started carry `[]` — an EMPTY ARRAY, not eleven empty identifiers. So the
+   *  key itself was on all 380, and it is marked optional only so a recorded
+   *  payload from before the field existed still parses. The mapper defaults
+   *  rather than asserts for that reason. */
+  stats?: RawFixtureStat[];
 }
 
 /** One scoring identifier's value in one fixture, from the live endpoint's

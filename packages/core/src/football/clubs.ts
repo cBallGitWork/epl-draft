@@ -43,6 +43,57 @@ const CLUB_COLOURS: Record<string, ClubColours> = {
  *  rather than crashing or showing a hole. */
 const FALLBACK: ClubColours = { primary: "#4b5563", secondary: "#FFFFFF" };
 
+/** Where each club plays. Twenty rows, on `CLUB_COLOURS`' own argument.
+ *
+ *  **No provider we hold publishes a venue.** FPL's fixture carries none;
+ *  SofaScore's match payload carries `venue_lat`/`venue_lon` and both are null
+ *  on every 26-27 row we have captured, and its event block has no venue object
+ *  at all (checked 4 Sep 2026). So this is hand-authored, exactly as the colours
+ *  are, and for the same reason: twenty rows that change about once a decade,
+ *  against scraping something and getting it subtly wrong.
+ *
+ *  **Safe because FPL publishes one competition.** Every fixture in the football
+ *  layer is a league match at the home club's own ground, so the home club names
+ *  the venue and there is no neutral tie to get wrong. A cup semi-final at
+ *  Wembley would break that, and there is no cup in the feed to break it with —
+ *  `docs/ui/prem.md` records the same limit for the fixture list's competition
+ *  column.
+ *
+ *  `gazette/banned.ts` forbids the PAPER from naming a ground, and that stands:
+ *  it is a rule about a language model recalling one, not about a table somebody
+ *  wrote down. This is the table, and the paper still may not reach for it. */
+const CLUB_GROUNDS: Record<string, string> = {
+  ARS: "Emirates Stadium, London",
+  AVL: "Villa Park, Birmingham",
+  BOU: "Vitality Stadium, Bournemouth",
+  BRE: "Gtech Community Stadium, London",
+  BHA: "Amex Stadium, Falmer",
+  CHE: "Stamford Bridge, London",
+  COV: "Coventry Building Society Arena, Coventry",
+  CRY: "Selhurst Park, London",
+  EVE: "Hill Dickinson Stadium, Liverpool",
+  FUL: "Craven Cottage, London",
+  HUL: "MKM Stadium, Hull",
+  IPS: "Portman Road, Ipswich",
+  LEE: "Elland Road, Leeds",
+  LIV: "Anfield, Liverpool",
+  MCI: "Etihad Stadium, Manchester",
+  MUN: "Old Trafford, Manchester",
+  NEW: "St James' Park, Newcastle",
+  NFO: "The City Ground, Nottingham",
+  TOT: "Tottenham Hotspur Stadium, London",
+  SUN: "Stadium of Light, Sunderland",
+};
+
+/** The home club's ground, or null for one nobody has written down.
+ *
+ *  Null and never a guess: a promoted club arrives every August and a made-up
+ *  ground under a real club's name is the confident wrong answer DESIGN §7
+ *  refuses. The caption falls back to naming the round instead. */
+export function clubGround(shortName: string): string | null {
+  return CLUB_GROUNDS[shortName] ?? null;
+}
+
 export function clubColours(shortName: string): ClubColours {
   return CLUB_COLOURS[shortName] ?? FALLBACK;
 }

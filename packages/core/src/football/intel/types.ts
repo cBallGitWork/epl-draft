@@ -127,3 +127,69 @@ export interface IntelSetPieces {
   /** By FPL club code as a string, because a JSON object's keys are strings. */
   clubs: Record<string, IntelClubPieces>;
 }
+
+/** One player's line in a match the sister repo has logged.
+ *
+ *  **Everything FPL's fixture list cannot say.** That read gives the scoresheet —
+ *  scorers, assisters, cards, bonus, bps — for all 380 matches and carries no
+ *  minute, no line-up and no position. This carries those and repeats none of it.
+ *
+ *  Keyed on FPL's season-stable `code`, like every other file here. */
+export interface IntelMatchPlayer {
+  code: number;
+  side: "home" | "away";
+  started: boolean;
+  /** His real position in THIS match — `DC`, `AMC`, `FWL`. Null for a man who
+   *  did not start: `SUB` and `BENCH` are not positions, and the football layer
+   *  refuses a classification that is not one. */
+  position: string | null;
+  minutes: number | null;
+  /** The minute he came on, and the minute he went off. Null is a real answer
+   *  for a man who played the whole match and for one who never came on — the
+   *  two are told apart by `minutes`, not by these. */
+  onAt: number | null;
+  offAt: number | null;
+  /** SofaScore's out of ten. Theirs and labelled as theirs. */
+  rating: number | null;
+}
+
+/** A goal or a card, with the minute — the one thing FPL publishes nowhere.
+ *
+ *  **An own goal arrives as a plain `goal` and the consumer must reconcile.**
+ *  Counted across all 20 logged matches on 4 Sep 2026: 17 name only men FPL also
+ *  calls scorers, and the three that do not are exactly the three in FPL's
+ *  `own_goals` lists. A screen trusting this alone would credit an own goal to
+ *  the wrong side. FPL's fixture block is the discriminator. */
+export interface IntelMatchEvent {
+  kind: "goal" | "card";
+  code: number;
+  minute: number;
+}
+
+/** One side's shape and its match figures. Every figure is null where the
+ *  source took no measurement — never nought, which would be a reading. */
+export interface IntelMatchSide {
+  formation: string | null;
+  stats: Record<string, number | null>;
+}
+
+export interface IntelMatch {
+  /** FPL's per-season fixture id. **The one place this export keys on an id
+   *  rather than a code**, and it is safe for the reason the match ROUTE gives
+   *  about its own URL: a fixture belongs to one season and nowhere else, so
+   *  there is nothing for a stable key to outlive. */
+  fplFixtureId: number;
+  matchId: string;
+  halfTime: { home: number | null; away: number | null };
+  /** 2 of 20 on 4 Sep 2026. Null is the common answer and prints a dash. */
+  referee: string | null;
+  home: IntelMatchSide;
+  away: IntelMatchSide;
+  players: IntelMatchPlayer[];
+  events: IntelMatchEvent[];
+}
+
+export interface IntelMatches {
+  manifest: IntelManifest;
+  fixtures: IntelMatch[];
+}

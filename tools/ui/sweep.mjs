@@ -19,7 +19,7 @@
 // that a failure trains the reader to ignore the output, which is worse than the
 // gap. The bucket is a work list — check those by eye — never a pass.
 
-import { connect, parseArgs, teamCookie, BASE_URL } from "./cdp.mjs";
+import { BASE_URL, connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
 
 const ROUTES = [
   "/",
@@ -106,11 +106,7 @@ await cdp.setCookie(teamCookie(flags));
 // the palette has already had checked. That is exactly the kind of pair this
 // instrument exists to measure, and no other route in the list has one.
 await cdp.setViewport(390, 900);
-await cdp.open("/squad", 2200);
-const team = await cdp.js(
-  `(document.querySelector('a[href^="/squad/"]')||{}).getAttribute
-     ? document.querySelector('a[href^="/squad/"]').getAttribute("href") : ""`,
-);
+const team = await discover(cdp, "/squad", 'a[href^="/squad/"]');
 if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((tab) => `${team}/${tab}`));
 
 // One article, DISCOVERED off the front page rather than written down. It was
@@ -133,11 +129,7 @@ if (article) ROUTES.push(article);
 // app's only per-CLUB colour — twenty hexes from `clubColours`, none of them a
 // token the palette has already had checked, and `inkOn` picking the ink for
 // each. Point it at a pale side (Fulham, Leeds, Spurs) by hand at least once.
-await cdp.open("/prem", 2200);
-const club = await cdp.js(
-  `(document.querySelector('a[href^="/prem/club/"]')||{}).getAttribute
-     ? document.querySelector('a[href^="/prem/club/"]').getAttribute("href") : ""`,
-);
+const club = await discover(cdp, "/prem", 'a[href^="/prem/club/"]');
 if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
 
 // One player's four screens, DISCOVERED off the pool rather than written down,
@@ -146,12 +138,26 @@ if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => 
 // swept because the player bar is a per-CLUB colour like the club's, and
 // because the attribute grid is the densest type on the desk — `xs` labels
 // against `--color-muted`, which is the pair a contrast sweep exists for.
-await cdp.open("/players", 2200);
-const man = await cdp.js(
-  `(document.querySelector('a[href^="/players/"]')||{}).getAttribute
-     ? document.querySelector('a[href^="/players/"]').getAttribute("href") : ""`,
-);
+const man = await discover(cdp, "/players", 'a[href^="/players/"]');
 if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) => `${man}/${tab}`));
+
+// One match's two screens, discovered off the results list — where the score
+// became a link on 4 Sep 2026 and had never been one before. A written-down
+// fixture id is a 404 next August, and unlike a club code it is a 404 the same
+// season: `Fixture.id` is per-season and so is the fixture.
+//
+// Swept because the match bar is the app's only place TWO club colours meet, and
+// `inkOn` has to answer for both of them at once — the pale-side case
+// (`cm9900/16.jpg` runs Everton against a white Torquay) is a real pairing and
+// not an edge. The Players board carries the same pair over two column heads.
+const match = await discover(cdp, "/prem/results", 'a[href^="/prem/match/"]');
+if (match) ROUTES.push(match, `${match}/players`);
+
+// And a match nobody has played, which is a different screen under the same
+// two bars: no scoresheet, a `v` where the score goes, and the Players tab
+// greyed. The results list cannot produce one, so it takes its own read.
+const coming = await discover(cdp, "/prem/fixtures", 'a[href^="/prem/match/"]');
+if (coming && coming !== match) ROUTES.push(coming);
 
 // The player page a club's squad list links to, discovered off the club page for
 // the same reason the club is discovered off the table.
