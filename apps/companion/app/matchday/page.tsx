@@ -8,6 +8,11 @@ import GameweekView from "../components/football/GameweekView";
 import Afternoon from "./Afternoon";
 import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
+import { readerTeamId } from "../squads";
+import { roundGoals } from "../commentary";
+import { wireLines } from "./wireLines";
+import Wire from "./Wire";
+import { WIRE_LINES } from "@epl/core";
 import PageHeader from "../components/shell/PageHeader";
 import { londonDayAndTime } from "../londonTime";
 import { LABEL } from "@/app/desk";
@@ -43,6 +48,15 @@ async function matchday(): Promise<{
 export default async function MatchdayPage() {
   const { snapshot, during, up } = await matchday();
   const league = await marks(snapshot.fixtures);
+
+  // The round's goals, joined to the men who own them. One upstream request for
+  // ten matches, and the one question on this page neither Fantrax nor FPL can
+  // answer: not just who scored, but whose he is.
+  const [goals, mine] = await Promise.all([
+    roundGoals(snapshot.gameweek, snapshot.players),
+    readerTeamId(),
+  ]);
+  const wire = wireLines(goals, snapshot, league.owners, mine);
 
   // The tab is hidden between gameweeks, but the route still has to answer:
   // someone lands here from a bookmark, or is reading it when the last match
@@ -84,6 +98,11 @@ export default async function MatchdayPage() {
       {/* Under the scoreline, because it is the same question asked forwards:
           the card says where you are, this says what is left to change it. */}
       <Afternoon snapshot={snapshot} players={league.afternoon} />
+      {/* Above the football, because it IS the football answered the way this
+          app is for: the round's goals with the manager holding each man. The
+          fixture list under it says what the scores are; this says who did it
+          and what it cost whom. */}
+      <Wire lines={wire.lines} unresolved={wire.unresolved} limit={WIRE_LINES} />
       {during ? (
         <GameweekView snapshot={snapshot} mine={league.mine} owners={league.owners} />
       ) : (

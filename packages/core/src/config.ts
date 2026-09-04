@@ -82,6 +82,15 @@ export const PL_COMPETITION = 1;
  *  logic for a resource that is never long enough to need it. */
 export const PL_TEXTSTREAM_PAGE = 300;
 
+/** How many wire lines a panel draws.
+ *
+ *  A round of ten matches produces about 31 goals, and a goal with an assist
+ *  produces two lines, so the whole round is roughly 50 rows — readable as a
+ *  panel and far too long as the top of a page. This is the panel's length and
+ *  not a drawer: the rest of the round is on the fixture list underneath, where
+ *  every scorer is already named. */
+export const WIRE_LINES = 8;
+
 /** How a provider sees us.
  *
  *  A real browser string rather than a bot's. Both providers front their APIs
