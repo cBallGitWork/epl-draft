@@ -13,6 +13,11 @@ import Section from "../../components/shell/Section";
 // between them. The tabs choose now, and each block sits under the question it
 // answers.
 //
+// **No note, no subtitle, no explanation.** It carried a `note` prop for one
+// caller, whose line explained a heading that already said the same thing. A
+// block that needs a sentence to justify itself is a block whose heading is
+// wrong (PRODUCT.md: terse, never explanatory).
+//
 // Local to this route on purpose. It is one component with one shape and four
 // callers inside the same folder; `CODE_RULES §4` moves a component to a shared
 // directory at the third occurrence ACROSS routes, and this has one.
@@ -26,12 +31,10 @@ import Section from "../../components/shell/Section";
  *  that something is missing. */
 export default function Facts({
   title,
-  note,
   rows,
   without = [],
 }: {
   title: string;
-  note?: string;
   rows: readonly LabelledValue[];
   /** Labels to drop, for a block whose caller already prints them elsewhere on
    *  the same screen (Craig, 4 Sep 2026: "You have birthdate and age twice,
@@ -43,7 +46,6 @@ export default function Facts({
   if (shown.length === 0) return null;
   return (
     <Section title={title}>
-      {note ? <p className="text-2xs text-faint">{note}</p> : null}
       {/* Columns on the desk, one stack on a phone. A `FACT` row is a label
           and a figure pushed to opposite ends, so a full-width one at 1440 puts
           900px of nothing between "Birthplace" and "Sheffield" — a phone layout

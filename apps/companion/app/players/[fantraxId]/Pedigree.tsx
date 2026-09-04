@@ -22,25 +22,21 @@ export default function Pedigree({
    *  is still worth printing without a name on it. */
   drafterName: string | null;
 }) {
-  if (pedigree.origin === "unknown") return null;
+  // **Nothing at all for a man the draft did not take.** It used to draw a
+  // sentence — "Undrafted. He came off the waiver wire, which cost a claim
+  // rather than a pick." — which is a paragraph in a panel restating what the
+  // Business list below already shows as a dated claim. A block with nothing to
+  // add is the surplus this screen keeps being asked to lose.
+  if (pedigree.origin !== "draft") return null;
 
   return (
     <Section title="Draft">
       <div className={FACT}>
-        {pedigree.origin === "waiver" ? (
-          <p className="text-sm text-muted">
-            Undrafted. He came off the waiver wire, which cost a claim rather
-            than a pick.
-          </p>
-        ) : (
-          <>
-            <p className="min-w-0 flex-1 text-sm text-muted">
-              Round {pedigree.round}, pick {pedigree.overall}
-              {drafterName === null ? null : <> · {drafterName}</>}
-            </p>
-            <Value against={pedigree.against} />
-          </>
-        )}
+        <p className="min-w-0 flex-1 text-sm text-muted">
+          Round {pedigree.round}, pick {pedigree.overall}
+          {drafterName === null ? null : <> · {drafterName}</>}
+        </p>
+        <Value against={pedigree.against} />
       </div>
     </Section>
   );

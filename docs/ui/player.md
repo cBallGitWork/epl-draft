@@ -133,10 +133,16 @@ deems him eligible for — and the whole-of-Fantrax market: ADP, percent drafted
 and the two ownership percentages, which are every league on the site and not
 ours.
 
-It carries **no fantasy-points figure and no season row** (Craig, 4 Sep 2026:
-"Remove at this club and In this league sections too. Keep it clean"). What is
-left is how he arrived, what has happened since, and what the rest of Fantrax will
-pay.
+It carries **no fantasy-points figure, no season row, no prose and no note**
+(Craig, 4 Sep 2026: "Remove at this club and In this league sections too. Keep it
+clean", then "strip out all the unneeded Info"). What is left is how he arrived,
+what has happened since, and what the rest of Fantrax will pay.
+
+**Draft is one row and disappears for a man the draft did not take.** It used to
+draw a sentence — "Undrafted. He came off the waiver wire, which cost a claim
+rather than a pick." — which is a paragraph in a panel restating what the Business
+list below already shows as a dated claim. The market block lost its note for the
+same reason: it explained a heading that already said it.
 
 **No fantasy-points figure appears on this tab** (Craig, 4 Sep 2026: "Remove all
 unneeded info from transfer tab like stats"). Fantrax mixes his scoring into two

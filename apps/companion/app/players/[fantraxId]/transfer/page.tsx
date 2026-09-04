@@ -63,9 +63,12 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
           is what makes it a price rather than an opinion — and the two ownership
           percentages belong beside the draft numbers rather than under a heading
           of their own, because all four answer one question. */}
+      {/* The heading is the whole explanation. It used to carry a note reading
+          "Their whole userbase, not ours — which is what makes it a market
+          price", which explains a heading that already says it — and PRODUCT.md
+          asks for terse and never explanatory. */}
       <Facts
         title="Across every Fantrax league"
-        note="Their whole userbase, not ours — which is what makes it a market price."
         rows={[...intel.market, ...intel.highlights.filter((row) => DEMAND.includes(row.label))]}
       />
 
