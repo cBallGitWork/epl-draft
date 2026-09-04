@@ -73,17 +73,29 @@ export const LABEL = `${SMALL_CAPS} text-faint`;
  *  and a `tracking-*` on the same element is the two rules arguing. */
 export const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
 
-/** The same cell when it is holding a position, a shirt number or anything else
- *  the reader scans PAST on the way to a figure. Same geometry, quieter ink and
- *  no weight — the pair is the point, and they must stay the same width or the
- *  column bends.
+/** A figure the reader is meant to scan PAST — a subordinate line under a
+ *  louder one: a club's three letters beside a name, a record under a heading,
+ *  a dash where a measurement is missing.
  *
- *  **One caller**, and named anyway, which §1 normally forbids. It is here as
- *  half of a PAIR rather than as an abstraction over its callers: the thing
- *  being recorded is that this and `FIGURE` share a geometry on purpose, and a
- *  second copy written from scratch would not know that. If it is still at one
- *  next refactor, delete it and inline the string. */
-export const SLOT_FIGURE = "numeric px-1.5 text-center text-2xs text-faint";
+ *  **Nine sites in five files**, counted 4 Sep 2026. This file's own "Declined"
+ *  section listed it at four files and left it for "the next pass" on the
+ *  grounds that extracting four recipes at the end of a long run is how a name
+ *  gets chosen from tiredness. This is that pass, and the count has moved.
+ *
+ *  No padding and no alignment, because the nine callers genuinely differ there:
+ *  three are inline `span`s in a flex column, two are `p`s in a dialog, and the
+ *  rest sit in cells that set their own. What they share is the SIZE and the
+ *  INK, which is the whole of the recipe. */
+export const QUIET_FIGURE = "numeric text-2xs text-faint";
+
+/** The same quiet figure as a table CELL, holding a position, a shirt number or
+ *  anything else beside a real figure. `FIGURE`'s geometry with `FIGURE`'s
+ *  weight and ink removed — the pair is the point, and they must stay the same
+ *  width or the column bends.
+ *
+ *  Composed from `QUIET_FIGURE` rather than spelled out, so the two cannot drift
+ *  in ink or size while claiming to be a pair. */
+export const SLOT_FIGURE = `${QUIET_FIGURE} px-1.5 text-center`;
 
 /** Which way a form result leans. Two files declared this byte-identically.
  *

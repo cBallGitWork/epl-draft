@@ -9,7 +9,7 @@ import FplPitch from "./FplPitch";
 import EntryForm from "./EntryForm";
 import { forgetEntry } from "./actions";
 import { myEntryId, mySide } from "./entry";
-import { LABEL, PANEL } from "@/app/desk";
+import { LABEL, PANEL, QUIET_FIGURE } from "@/app/desk";
 
 // The other game, kept small on purpose.
 //
@@ -168,7 +168,7 @@ function Picks({
               ) : null}
               {pick.isViceCaptain ? <span className="ml-1.5 text-2xs text-faint">V</span> : null}
             </span>
-            <span className="numeric text-2xs text-faint">{club?.shortName ?? ""}</span>
+            <span className={QUIET_FIGURE}>{club?.shortName ?? ""}</span>
             <span className="numeric w-8 text-right font-bold">{pick.points}</span>
           </li>
         );

@@ -118,13 +118,18 @@ No fluid clamps except inside the masthead.
 | `football/PhotoGround` | The darkened match photograph behind the desk. Fixed, `-z-10`. |
 | `gazette/*` | The paper's own furniture — masthead, folio, columns, the three ranks of headline (`Splash`, `Teaser`, `Brief`), their pictures (`Face`, `Drawing`) and the front page's sections. It is the other register and is documented in [gazetta.md](gazetta.md) rather than here, because none of it is shared with the desk; CODE_RULES §4's same-commit row is that file's reading order. |
 
-**Not extracted, and worth knowing why.** The crest-and-name cell reads as five
+**Not extracted, and worth knowing why.** The crest-and-name cell reads as six
 occurrences and is two: `prem/ClubRow` and `prem/team-stats` draw the same 26px
 badge, while `prem/Match` draws 22 with a spacer for a club the snapshot lacks,
 the club page draws 56 in a heading, `players/[fantraxId]` puts one on a
-portrait, and `MatchList` draws 24 with a round grey fallback. One component
-across those takes a size, a fallback and an alignment, which is the generic
-mechanism CODE_RULES §1 forbids. Two is a coincidence — copy it.
+portrait, `MatchList` draws 24 with a round grey fallback, and — since 4 Sep
+2026 — `prem/match/[id]/MatchBar` draws 24/36 on a club-coloured plate with the
+whole half as its tap target. One component across those takes a size, a
+fallback, an alignment and an image policy, which is the generic mechanism
+CODE_RULES §1 forbids. Two is a coincidence — copy it.
+
+*The count moved from five to six and the answer did not, which is the point of
+recording it: the new one is the least like the other five.*
 
 Likewise the sort-href builder: `league/sort.ts` and `prem/sort.ts` are the same
 function and that is TWO, while `players/query.ts` preserves the filter and
@@ -226,6 +231,7 @@ with its row here in the same commit.**
 | `SMALL_CAPS` | The small-caps geometry with no ink, for the caller that needs a different one. | `LABEL`'s other half |
 | `LABEL` | `SMALL_CAPS` in the ink furniture is set in. Callers keep their own layout and font. **Appending a colour does not work** — two colour utilities are resolved by stylesheet order, so `${LABEL} text-bad` renders faint; compose from `SMALL_CAPS`. | 26 sites, 22 files |
 | `FIGURE` | A figure in a repeating row: tabular, centred, `2xs`. | 3 identical private `const FIGURE` |
+| `QUIET_FIGURE` | `numeric text-2xs text-faint` — a figure the reader scans PAST. **Nine sites in five files**, counted 4 Sep 2026; `desk.ts` had listed it under "Declined" at four files and left it for the next pass, and this was that pass. `SLOT_FIGURE` is now composed from it rather than spelling it out, so the pair cannot drift. |
 | `SLOT_FIGURE` | The same cell holding something the reader scans past — a shirt number, a position. Same width or the column bends. | 1, named as `FIGURE`'s pair |
 | `TONE` | Which way a form result leans. `W`/`D`/`L` as DESIGN §3's direction pair. | 2 byte-identical |
 | `TEXT` | Where a column's text sits. `TableHeads.JUSTIFY` is the flex twin. | 2 byte-identical |

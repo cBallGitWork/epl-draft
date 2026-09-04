@@ -19,7 +19,7 @@ import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { unresolvedReason } from "../../unresolved";
 import { BUTTON } from "../shell/ButtonLink";
-import { FACT_LABEL, LABEL } from "@/app/desk";
+import { FACT_LABEL, LABEL, QUIET_FIGURE } from "@/app/desk";
 
 // What a player is scoring, and why.
 //
@@ -94,7 +94,7 @@ export default function LivePlayerCard({
           </span>
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-lg font-bold tracking-tight">{playerName(rostered)}</h2>
-            <p className="numeric text-2xs text-faint">
+            <p className={QUIET_FIGURE}>
               {/* The position his manager has him filling, not the list he is
                   eligible for — a Fantrax player can hold several. */}
               {[club?.name, positionLabel(rostered.slot.position)].filter(Boolean).join(" · ")}
@@ -115,7 +115,7 @@ export default function LivePlayerCard({
           <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden">
             <FixtureChip opposition={opposition} blank="No fixture" />
           </span>
-          <span className="numeric text-2xs text-faint">
+          <span className={QUIET_FIGURE}>
             {started
               ? `${done.minutes}' played`
               : kickoff

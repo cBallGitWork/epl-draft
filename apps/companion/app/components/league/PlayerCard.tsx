@@ -9,6 +9,7 @@ import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { unresolvedReason } from "../../unresolved";
 import { BUTTON } from "../shell/ButtonLink";
+import { QUIET_FIGURE } from "@/app/desk";
 
 // One player, over the squad rather than instead of it.
 //
@@ -48,7 +49,7 @@ export default function PlayerCard({
 
           <div className="min-w-0 flex-1">
             <h2 className="truncate text-lg font-bold tracking-tight">{name}</h2>
-            <p className="numeric text-2xs text-faint">
+            <p className={QUIET_FIGURE}>
               {/* The position is the one his manager has him filling, not the
                   list he is eligible for — a Fantrax player can hold several. */}
               {[club?.name, positionLabel(rostered.slot.position)]
@@ -65,7 +66,7 @@ export default function PlayerCard({
               <FixtureChip opposition={opposition} blank="No fixture" />
             </span>
             {kickoff ? (
-              <span className="numeric text-2xs text-faint">{londonDayAndTime(kickoff)}</span>
+              <span className={QUIET_FIGURE}>{londonDayAndTime(kickoff)}</span>
             ) : null}
           </span>
         </div>

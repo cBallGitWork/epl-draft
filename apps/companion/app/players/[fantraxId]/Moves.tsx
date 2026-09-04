@@ -1,5 +1,5 @@
 import Section from "../../components/shell/Section";
-import { FACT_LABEL, ROW_RULE } from "@/app/desk";
+import { FACT_LABEL, QUIET_FIGURE, ROW_RULE } from "@/app/desk";
 import type { PlayerMove } from "./dossier";
 
 // Every move this league has made with him: claimed, dropped, traded.
@@ -58,7 +58,7 @@ export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
             {transaction.executed ? null : (
               <span className="text-2xs uppercase text-faint">Pending</span>
             )}
-            <span className="numeric text-2xs text-faint">{transaction.processedAt ?? "—"}</span>
+            <span className={QUIET_FIGURE}>{transaction.processedAt ?? "—"}</span>
           </li>
         ))}
       </ul>
