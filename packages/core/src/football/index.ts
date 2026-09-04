@@ -44,7 +44,6 @@ export {
   mapMatchEvents,
   mapRoundGoals,
   plFixtureCode,
-  plMatchClock,
   plMatchMetrics,
   plPlayerCodes,
 } from "./premierleague/map";

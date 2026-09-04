@@ -24,12 +24,25 @@ import { LABEL } from "@/app/desk";
 // there is nothing to say, so a reader who has not signed in, or whose league
 // has not drafted, gets the football and no empty furniture.
 //
-// One scoreline row, the same grammar as the head-to-head board and the
-// matchups list. It was two stacked halves, which is a different design for the
-// same fact one tap away from the board that already reads it correctly — and a
-// scoreline exists so two numbers can be compared without moving your eyes
-// across the screen. The board stays one tap behind: this answers "am I
-// winning", and the board answers "with whom", which is the question the number
+// **It wears Championship Manager's match header, and that is a DEPARTURE from
+// the grammar the other two share.** This block used to say "one scoreline row,
+// the same grammar as the head-to-head board and the matchups list", and
+// `docs/ui/matchday.md` still says all three surfaces share one — neither is
+// true of this file any more, and the change was made deliberately (4 Sep 2026)
+// rather than drifted into.
+//
+// The reason: on a screen carrying a wire, five draft ties and ten fixtures, a
+// scoreline ROW is one row among sixteen and nothing outranks anything.
+// PRODUCT.md's first principle is that the live number is the interface, so the
+// tie takes the two club-coloured plates `cm9900/21.jpg` gives a MATCH and the
+// rest of the screen becomes subordinate to it. The list and the board keep the
+// row, because on those screens it is the thing itself rather than the headline.
+//
+// **What it costs, stated so nobody re-discovers it as a bug**: `ScoreFigure`
+// cannot come inside a `cm-bevel` — DESIGN §2, ink on that plate is 2.27:1 —
+// so this is the one head-to-head in the app whose trailing figure does not dim
+// and whose dash is kept by hand. The board stays one tap behind: this answers
+// "am I winning", and the board answers "with whom", which is the question the number
 // provokes rather than the question itself.
 
 export default async function YourMatchup() {

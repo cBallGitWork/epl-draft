@@ -9,9 +9,15 @@
 /** A clock label, or a competition name, or a date — the API wraps most scalars
  *  in an object carrying the string it wants printed.
  *
- *  An event's time carries `secs` beside the label. It is the only orderable
- *  form of the clock: `"90+2"` does not sort, and a wire across ten matches has
- *  to interleave them. */
+ *  An event's time carries `secs` beside the label, and a kick-off carries
+ *  `millis`. **They order different things and are not interchangeable.**
+ *  `secs` is elapsed time in ITS OWN fixture, so it orders one match; `millis`
+ *  is the only wall clock in the payload, and `kickoff.millis + secs × 1000` is
+ *  what interleaves a round. `"90+2"` sorts as neither.
+ *
+ *  This block used to call `secs` "the only orderable form of the clock… a wire
+ *  across ten matches has to interleave them", which is precisely the thing it
+ *  cannot do: two matches kicking off at different times both start at nought. */
 export interface RawPlLabel {
   label: string;
   secs?: number;

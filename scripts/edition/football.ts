@@ -4,7 +4,6 @@ import {
   type FootballSnapshot,
   type MatchReportEvent,
   type MatchReportSide,
-  PL_COMPETITION,
   fetchPlFixture,
   fetchPlMatchStats,
   fetchPlRound,
@@ -140,6 +139,3 @@ function sidesOf(
   });
   return [sides[0], sides[1]] as const;
 }
-
-/** Named so the competition constant is read from config rather than assumed. */
-export const COMPETITION = PL_COMPETITION;

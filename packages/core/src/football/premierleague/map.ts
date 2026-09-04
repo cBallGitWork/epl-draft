@@ -111,23 +111,6 @@ export function mapMatchEvents(
   return mapped;
 }
 
-/** The match clock as the ground announces it — `"13"`, `"45+2"`, `"90+6"`.
- *
- *  Null before kick-off, when the provider sends no clock at all. Their label
- *  carries seconds (`"13'00"`) and nothing in football is quoted to the second,
- *  so the seconds are dropped here rather than in every caller.
- *
- *  This is the reason to read this provider at all for a scoreline: FPL's
- *  `minutes` is a player-minutes field that happens to track the match, and
- *  `docs/ui/desk.md` records that it cannot say half time — "a clock stopped on
- *  45 is not a claim they have made". This one can. */
-export function plMatchClock(fixture: RawPlFixture): string | null {
-  const label = fixture.clock?.label;
-  if (label === undefined) return null;
-  const [minutes] = label.split("'");
-  return minutes.length === 0 ? null : minutes;
-}
-
 /** Every goal in a round, from the one read that carries them all.
  *
  *  The round's fixtures answer with a `goals` array per match — scorer,
@@ -161,7 +144,7 @@ export function mapRoundGoals(
       if (kind === undefined || minute === undefined || secs === undefined) continue;
 
       goals.push({
-        id: fixtureCode * 100_000 + secs,
+        id: fixtureCode * SECONDS_PER_MATCH + secs,
         fixtureCode,
         kind,
         minute: minute.split("'")[0],
@@ -179,6 +162,16 @@ export function mapRoundGoals(
   }
   return goals;
 }
+
+/** The stride that keeps a synthesised goal id inside its own fixture.
+ *
+ *  This payload publishes no id for a goal, so one is made from the fixture and
+ *  the goal's own clock — stable across polls because both halves are. The
+ *  stride only has to exceed the longest match anyone will ever play: ninety
+ *  minutes is 5,400 seconds, extra time takes it to 7,200, and this is an order
+ *  of magnitude clear of both. It was written inline as `100_000` and said none
+ *  of that. */
+const SECONDS_PER_MATCH = 100_000;
 
 /** The round read's own one-letter vocabulary, which is not the commentary's. */
 const GOAL_KINDS: Record<string, MatchEventKind> = {

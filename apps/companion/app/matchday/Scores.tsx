@@ -141,10 +141,16 @@ export function FootballRow({
       </span>
       {/* Counted rather than tinted, which is `MatchList`'s own finding: a bare
           wash saturates once fifteen players span ten fixtures, and every row
-          marked is no row marked. */}
-      <span className="numeric w-6 shrink-0 text-right text-2xs font-bold text-accent">
-        {yours ? yours.length : ""}
-      </span>
+          marked is no row marked.
+          **And the word stays with the number**, which the first build dropped:
+          an accent figure alone makes COLOUR the sole carrier of "yours", and
+          PRODUCT.md's accessibility clause says to pair every colour signal with
+          a label. `MatchList` prints `2 yours` and had it right. */}
+      {yours ? (
+        <span className={`${SMALL_CAPS} shrink-0 text-accent`}>
+          <span className="numeric">{yours.length}</span> yours
+        </span>
+      ) : null}
     </Row>
   );
 }

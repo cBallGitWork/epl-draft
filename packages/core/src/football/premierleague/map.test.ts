@@ -7,7 +7,6 @@ import {
   mapMatchEvents,
   mapRoundGoals,
   plFixtureCode,
-  plMatchClock,
   plMatchMetrics,
   plPlayerCodes,
 } from "./map";
@@ -154,15 +153,6 @@ describe("mapMatchEvents", () => {
   });
 });
 
-describe("plMatchClock", () => {
-  it("drops the seconds nobody quotes", () => {
-    expect(plMatchClock(DETAIL)).toBe("90+6");
-  });
-
-  it("answers null before kick-off, when the provider sends no clock at all", () => {
-    expect(plMatchClock(UNSTARTED.fixture)).toBeNull();
-  });
-});
 
 // Gameweek 2's ten fixtures, recorded WITH `altIds=true` — the parameter the
 // round read answers no join key at all without.
