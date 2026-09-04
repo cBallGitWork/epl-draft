@@ -138,6 +138,14 @@ export interface RawFixtureStat {
 
 export interface RawFixture {
   id: number;
+  /** The fixture's SEASON-STABLE id, as against `id` which is per-season.
+   *
+   *  Present on all 380 and never read until the Premier League's own API gave
+   *  it a job: their `altIds.opta` is this number with a `g` in front of it, so
+   *  it is the join between FPL's fixture and Opta's commentary on it. Same
+   *  distinction as a player's `code` against his `id`, and the same rule
+   *  applies — this is the one that may be persisted. */
+  code: number;
   event: number | null;
   kickoff_time: string | null;
   started: boolean;

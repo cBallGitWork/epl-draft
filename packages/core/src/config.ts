@@ -43,6 +43,45 @@ export const SEASON = "2026/27";
 
 export const FPL_API_BASE = "https://fantasy.premierleague.com/api";
 
+/** The Premier League's own football API, which is what `premierleague.com`
+ *  itself is a shell over. Public and unauthenticated: probed 4 Sep 2026 with
+ *  every header removed in turn, and a bare request answers 200.
+ *
+ *  It is the FOOTBALL layer's second provider, not a third layer. FPL publishes
+ *  what a player scored; this publishes what happened — a minute-stamped event
+ *  feed, a real match clock, half-time, lineups, formations, shirt numbers,
+ *  the referee and the attendance. Both describe the same Premier League, and
+ *  they join on ids neither of them chose: FPL's `fixture.code` is this API's
+ *  `altIds.opta` less its `g`, and FPL's `opta_code` is a player's `altIds.opta`
+ *  exactly.
+ *
+ *  **Server-side only.** It answers
+ *  `access-control-allow-origin: https://www.premierleague.com`, so a browser
+ *  may not read it; nothing here may move into a `"use client"` component.
+ *  Its own `cache-control` is `max-age=30`, which is `PAGE_REVALIDATE` — asking
+ *  faster than that returns the same bytes from their CDN. */
+export const PL_FOOTBALL_API_BASE = "https://footballapi.pulselive.com/football";
+
+/** The Premier League's id for the season in `SEASON`.
+ *
+ *  Their own, opaque, and published only through
+ *  `/football/competitions/1/compseasons` — 841 for 2026/27, read there on
+ *  4 Sep 2026. It changes every summer and there is no way to compute it, which
+ *  is why it is a constant beside `SEASON` rather than anything derived. */
+export const PL_COMP_SEASON = 841;
+
+/** Premier League competition id. 1 is the Premier League itself; the same API
+ *  serves the EFL and the women's game under other numbers. */
+export const PL_COMPETITION = 1;
+
+/** How many commentary lines to ask for at once.
+ *
+ *  A whole match is 107 on the busiest of the thirty in gameweeks 1-3, so this
+ *  is a ceiling with room rather than a page size anybody has to turn. Asking
+ *  for one page and getting all of it is what keeps the client free of paging
+ *  logic for a resource that is never long enough to need it. */
+export const PL_TEXTSTREAM_PAGE = 300;
+
 /** How a provider sees us.
  *
  *  A real browser string rather than a bot's. Both providers front their APIs

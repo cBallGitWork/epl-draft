@@ -31,7 +31,7 @@ const against: Opposition[] = [
     home: false,
     difficulty: 4,
     fixture: {
-      id: 1, gameweek: 6, homeClubId: 2, awayClubId: 1, kickoff: null,
+      id: 1, code: 1, gameweek: 6, homeClubId: 2, awayClubId: 1, kickoff: null,
       homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0,
       homeDifficulty: 2, awayDifficulty: 4,
     },

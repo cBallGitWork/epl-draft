@@ -29,7 +29,7 @@ const rostered = (teamId: string, men: { clubId: number; code: number; status?: 
 
 const fixture = (id: number, homeClubId: number, awayClubId: number, over: Partial<Fixture> = {}): Fixture => ({
   id,
-  gameweek: 3,
+  code: 1, gameweek: 3,
   homeClubId,
   awayClubId,
   kickoff: "2026-08-29T14:00:00.000Z",

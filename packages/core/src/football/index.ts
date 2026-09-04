@@ -11,6 +11,8 @@ export type {
   SeasonTotals,
   FootballSnapshot,
   PlayerMatchStats,
+  MatchEvent,
+  MatchEventKind,
 } from "./types";
 
 export { clubColours, clubGround, crestUrl, inkOn, plateOn, shirtUrl } from "./clubs";
@@ -27,6 +29,20 @@ export { fetchBootstrap, fetchFixtures } from "./fpl/client";
 // own. `football.ts`'s `gameweekLive` says what it costs and what it buys.
 export { fetchLive } from "./fpl/client";
 export { mapLiveStats } from "./fpl/map";
+// The Premier League's own feed — the football layer's SECOND provider, and the
+// only source of a goal's minute, a real match clock, a team sheet or a
+// substitution. FPL publishes none of them. It joins on ids neither provider
+// chose: `Fixture.code` against their `altIds.opta`, and FPL's `opta_code`
+// against a player's. Server-side only; their CORS admits their own site alone.
+export { fetchPlFixture, fetchPlRound, fetchPlTextstream } from "./premierleague/client";
+export { mapMatchEvents, plFixtureCode, plMatchClock, plPlayerCodes } from "./premierleague/map";
+export type {
+  RawPlEvent,
+  RawPlFixture,
+  RawPlFixturePage,
+  RawPlTeamList,
+  RawPlTextstream,
+} from "./premierleague/raw";
 // One player's own season, match by match — the only read here keyed by FPL's
 // per-season element id, and the only one with the four measurements a live
 // snapshot cannot give per fixture. `gameLog.ts` says why.

@@ -13,7 +13,7 @@ import { gameweekStarted, gameweekStatus, nextRound } from "./round";
 /** One fixture, with the eleven fields written once. An upcoming, unsettled match
  *  at gameweek 1's first kickoff; what a test is about is the override beside it. */
 const fixture = (over: Partial<Fixture> & { id: number }): Fixture => ({
-  gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z",
+  code: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z",
   homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0,
   homeDifficulty: null, awayDifficulty: null, ...over,
 });

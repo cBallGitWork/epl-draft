@@ -114,6 +114,11 @@ export type FixtureStatus = "upcoming" | "live" | "finished";
 /** A real Premier League match. */
 export interface Fixture {
   id: number;
+  /** FPL's season-stable fixture code, and the join to the Premier League's own
+   *  API — their `altIds.opta` is `g` followed by this number. `id` is
+   *  per-season and is what the app's own routes address; this is what crosses
+   *  to another provider. */
+  code: number;
   gameweek: number | null;
   homeClubId: number;
   awayClubId: number;
@@ -140,6 +145,65 @@ export interface Fixture {
    *  different claims and only one of them is FPL's. */
   homeDifficulty: number | null;
   awayDifficulty: number | null;
+}
+
+/** The kinds of event this app has any use for.
+ *
+ *  Opta publishes twenty-six types and a round of ten matches carries about
+ *  1,083 events; these seven are the ones that move a fantasy score or change
+ *  who is on the pitch. Everything else — every corner, throw-in and free kick
+ *  won — is dropped in the mapper rather than filtered by a caller, because a
+ *  feed nobody could read is not a feed with a filter missing.
+ *
+ *  `disallowed-goal` is Opta's `VAR cancelled goal`, and it is a NARRATIVE line
+ *  rather than a correction: checked across gameweeks 1-3, a cancelled goal is
+ *  never also published as a `goal`, so counting goals from this feed reproduces
+ *  every scoreline exactly (21 of 21) and nothing ever has to be un-printed. */
+export type MatchEventKind =
+  | "goal"
+  | "penalty-goal"
+  | "own-goal"
+  | "disallowed-goal"
+  | "yellow-card"
+  | "red-card"
+  | "substitution";
+
+/** One thing that happened in a match, with the minute it happened in.
+ *
+ *  The Premier League's own feed, which is the only source of a goal's minute we
+ *  have ever had — FPL publishes none, anywhere, and the sister repo's export
+ *  runs about a day behind full time. */
+export interface MatchEvent {
+  /** The provider's id for this line. Stable across polls, so a list keys on it
+   *  rather than on an index that shifts as events arrive. */
+  id: number;
+  /** FPL's season-stable fixture code, read off the provider's `altIds.opta`.
+   *  The code and not the id, because this crossed a provider boundary. */
+  fixtureCode: number;
+  kind: MatchEventKind;
+  /** The clock as the feed prints it — `"07"`, `"45+2"`, `"90+6"`. A string
+   *  because stoppage time is not a number and rounding it to one would lose the
+   *  only part anybody quotes. */
+  minute: string;
+  /** Opta's own sentence, verbatim. Ours is the ownership beside it, never the
+   *  prose: this is a wire we are reprinting, not a report we are writing. */
+  text: string;
+  /** FPL player CODES, and **positional by kind** — checked on every such event
+   *  in gameweeks 1-3, with no exceptions:
+   *
+   *  | kind | `players` |
+   *  |---|---|
+   *  | `goal`, `penalty-goal` | `[scorer]` or `[scorer, assister]` |
+   *  | `own-goal`, `disallowed-goal` | `[scorer]` |
+   *  | `yellow-card`, `red-card` | `[booked]` |
+   *  | `substitution` | `[on, off]` |
+   *
+   *  **Null holds the place of a man we could not resolve**, rather than the
+   *  array closing up around him: the position IS the meaning here, and a
+   *  compacted array would silently promote an assister to scorer. Counted 4 Sep
+   *  2026 — 20 of the 360 players named across a round's events are absent from
+   *  the `/players` collection, so this is a real case and not a defensive one. */
+  players: (number | null)[];
 }
 
 /** One player's contribution in one match. The fields are deliberately the raw

@@ -28,7 +28,7 @@ const bootstrap = (over: Partial<RawBootstrap> = {}): RawBootstrap => ({
 });
 
 const fixture = (over: Partial<RawFixture> = {}): RawFixture => ({
-  id: 1, event: 1, kickoff_time: "2026-08-21T19:00:00Z", started: false, finished: false,
+  id: 1, code: 1, event: 1, kickoff_time: "2026-08-21T19:00:00Z", started: false, finished: false,
   finished_provisional: false, minutes: 0, team_h: 1, team_a: 7, team_h_score: null,
   team_a_score: null, ...over,
 });

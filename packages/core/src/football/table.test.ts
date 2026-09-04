@@ -10,7 +10,7 @@ const clubs: Club[] = [
 
 const fixture = (over: Partial<Fixture>): Fixture => ({
   id: 1,
-  gameweek: 1,
+  code: 1, gameweek: 1,
   homeClubId: 1,
   awayClubId: 2,
   kickoff: "2026-08-15T14:00:00.000Z",

@@ -23,7 +23,7 @@ const team = (players: RosteredPlayer[]): RosteredTeam => ({
 });
 
 const match = (id: number, homeClubId: number, awayClubId: number): Fixture => ({
-  id, gameweek: 6, homeClubId, awayClubId, kickoff: "2026-10-10T14:00:00Z",
+  id, code: id, gameweek: 6, homeClubId, awayClubId, kickoff: "2026-10-10T14:00:00Z",
   homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0,
   homeDifficulty: null, awayDifficulty: null,
 });

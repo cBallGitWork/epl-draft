@@ -65,6 +65,7 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
 export function mapFixtures(raw: RawFixture[]): Fixture[] {
   return raw.map((f) => ({
     id: f.id,
+    code: f.code,
     gameweek: f.event,
     homeClubId: f.team_h,
     awayClubId: f.team_a,

@@ -6,7 +6,7 @@ import { fixtureLabel, kickedOff, nextFixtures, oppositionByClub } from "./oppos
 const club = (id: number, shortName: string) => ({ id, code: id * 10, name: shortName, shortName });
 
 const fixture = (over: Partial<Fixture> & { id: number }): Fixture => ({
-  gameweek: 6, homeClubId: 1, awayClubId: 2, kickoff: "2026-10-10T14:00:00Z",
+  code: 1, gameweek: 6, homeClubId: 1, awayClubId: 2, kickoff: "2026-10-10T14:00:00Z",
   homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0,
   homeDifficulty: 2, awayDifficulty: 4, ...over,
 });

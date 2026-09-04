@@ -9,7 +9,7 @@ const CLUBS: Club[] = [
 ];
 
 const match = (over: Partial<Fixture>): Fixture => ({
-  id: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-15T14:00:00Z",
+  id: 1, code: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-15T14:00:00Z",
   homeScore: 0, awayScore: 0, status: "finished", settled: true, minutes: 90,
   homeDifficulty: null, awayDifficulty: null, ...over,
 });

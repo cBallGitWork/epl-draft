@@ -92,9 +92,9 @@ describe("fixturesInOrder", () => {
   it("sorts by kickoff and pushes undated TV picks to the end", () => {
     const s = snap({
       fixtures: [
-        { id: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
-        { id: 2, gameweek: 1, homeClubId: 3, awayClubId: 4, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
-        { id: 3, gameweek: 1, homeClubId: 5, awayClubId: 6, kickoff: "2026-08-21T14:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
+        { id: 1, code: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
+        { id: 2, code: 2, gameweek: 1, homeClubId: 3, awayClubId: 4, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
+        { id: 3, code: 3, gameweek: 1, homeClubId: 5, awayClubId: 6, kickoff: "2026-08-21T14:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
       ],
     });
     expect(fixturesInOrder(s).map((f) => f.id)).toEqual([3, 2, 1]);
@@ -105,9 +105,9 @@ describe("datedKickoffs", () => {
   it("drops the undated and keeps the rest in the order they arrived", () => {
     expect(
       datedKickoffs([
-        { id: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
-        { id: 2, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
-        { id: 3, gameweek: 2, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-28T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
+        { id: 1, code: 1, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
+        { id: 2, code: 2, gameweek: 1, homeClubId: 1, awayClubId: 2, kickoff: null, homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
+        { id: 3, code: 3, gameweek: 2, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-28T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null },
       ]),
     ).toEqual([
       { gameweek: 1, kickoff: "2026-08-21T19:00:00Z" },
@@ -119,7 +119,7 @@ describe("datedKickoffs", () => {
   // the league layer asks this for a gameweek's kickoff, and there is no
   // gameweek to answer for.
   it("drops a fixture with no gameweek, dated or not", () => {
-    expect(datedKickoffs([{ id: 4, gameweek: null, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null }])).toEqual([]);
+    expect(datedKickoffs([{ id: 4, code: 4, gameweek: null, homeClubId: 1, awayClubId: 2, kickoff: "2026-08-21T19:00:00Z", homeScore: null, awayScore: null, status: "upcoming", settled: false, minutes: 0, homeDifficulty: null, awayDifficulty: null }])).toEqual([]);
   });
 });
 
