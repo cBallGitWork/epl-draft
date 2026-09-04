@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import recordedFixture from "../__fixtures__/plFixture.json";
+import recordedRound from "../__fixtures__/plRound.json";
 import recordedStreams from "../__fixtures__/plTextstream.json";
-import { mapMatchEvents, plFixtureCode, plMatchClock, plPlayerCodes } from "./map";
-import type { RawPlFixture, RawPlTextstream } from "./raw";
+import { mapMatchEvents, mapRoundGoals, plFixtureCode, plMatchClock, plPlayerCodes } from "./map";
+import type { RawPlFixture, RawPlFixturePage, RawPlTextstream } from "./raw";
 
 // Recorded from the Premier League's own API on 4 Sep 2026, never fetched
 // (CODE_RULES §6). The match is Liverpool 2-2 Nottingham Forest, gameweek 2 —
@@ -149,3 +150,73 @@ describe("plMatchClock", () => {
     expect(plMatchClock(UNSTARTED.fixture)).toBeNull();
   });
 });
+
+// Gameweek 2's ten fixtures, recorded WITH `altIds=true` — the parameter the
+// round read answers no join key at all without.
+const ROUND = recordedRound as unknown as RawPlFixturePage;
+
+describe("mapRoundGoals", () => {
+  /** Every player named in the round's goals, coded as his own id plus a
+   *  million, so a wrong join shows up rather than coinciding. */
+  const roundCodes = new Map(
+    ROUND.content.flatMap((f) =>
+      (f.goals ?? []).flatMap((g) =>
+        [g.personId, g.assistId].flatMap((id) =>
+          id === undefined ? [] : [[id, id + 1_000_000] as [number, number]],
+        ),
+      ),
+    ),
+  );
+  const goals = mapRoundGoals(ROUND.content, roundCodes);
+
+  it("answers every goal in the round from ONE read", () => {
+    // The whole reason the live path is one request and not ten.
+    expect(ROUND.content).toHaveLength(10);
+    expect(goals).toHaveLength(32);
+  });
+
+  it("reconciles with every scoreline", () => {
+    // The property, not the four goals: counted across gameweeks 1-3 this holds
+    // on 21 of 21 played fixtures, own goals and penalties included.
+    for (const fixture of ROUND.content) {
+      const [home, away] = fixture.teams;
+      const scored = (home.score ?? 0) + (away.score ?? 0);
+      expect(goals.filter((g) => g.fixtureCode === plFixtureCode(fixture))).toHaveLength(
+        scored,
+      );
+    }
+  });
+
+  it("reads the round's own one-letter vocabulary, which is not the commentary's", () => {
+    // Counted off the recording: 27 `G`, 3 `O`, 2 `P`.
+    const kinds = goals.map((g) => g.kind);
+    expect(kinds.filter((k) => k === "goal")).toHaveLength(27);
+    expect(kinds.filter((k) => k === "own-goal")).toHaveLength(3);
+    expect(kinds.filter((k) => k === "penalty-goal")).toHaveLength(2);
+  });
+
+  it("holds the assist's place when nobody was credited with one", () => {
+    // 22 of 32 carry an assist across the round; the rest are unassisted goals
+    // and not gaps, so the slot stays and the value is null.
+    expect(goals.every((g) => g.players.length === 2)).toBe(true);
+    expect(goals.filter((g) => g.players[1] !== null)).toHaveLength(22);
+  });
+
+  it("orders the round on the wall clock and not on the match clock", () => {
+    // Two matches kicking off at different times both start their own clock at
+    // nought; sorting a round on `seconds` alone puts the afternoon out of
+    // order. `absolute` is the field that does not.
+    const byAbsolute = [...goals].sort((a, b) => (a.absolute ?? 0) - (b.absolute ?? 0));
+    const bySeconds = [...goals].sort((a, b) => a.seconds - b.seconds);
+    expect(byAbsolute.map((g) => g.id)).not.toEqual(bySeconds.map((g) => g.id));
+    expect(goals.every((g) => g.absolute !== null)).toBe(true);
+  });
+
+  it("gives every goal a stable id, so a poll does not redraw the wire", () => {
+    expect(new Set(goals.map((g) => g.id)).size).toBe(goals.length);
+    expect(mapRoundGoals(ROUND.content, roundCodes).map((g) => g.id)).toEqual(
+      goals.map((g) => g.id),
+    );
+  });
+});
+

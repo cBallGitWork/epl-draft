@@ -202,6 +202,12 @@ export interface MatchEvent {
    *  types is outside `MatchEventKind`, so the events this app keeps are safely
    *  ordered — but anything widening the kind list inherits the hazard. */
   seconds: number;
+  /** The same instant as a wall clock — kick-off plus `seconds`, in epoch
+   *  milliseconds — which is the only field that orders events ACROSS fixtures.
+   *
+   *  Null when the provider gave no kick-off time for the match, so a caller
+   *  sorting a round drops it rather than sorting it to 1970. */
+  absolute: number | null;
   /** Opta's own sentence, verbatim. Ours is the ownership beside it, never the
    *  prose: this is a wire we are reprinting, not a report we are writing. */
   text: string;

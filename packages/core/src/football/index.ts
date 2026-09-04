@@ -35,11 +35,18 @@ export { mapLiveStats } from "./fpl/map";
 // chose: `Fixture.code` against their `altIds.opta`, and FPL's `opta_code`
 // against a player's. Server-side only; their CORS admits their own site alone.
 export { fetchPlFixture, fetchPlRound, fetchPlTextstream } from "./premierleague/client";
-export { mapMatchEvents, plFixtureCode, plMatchClock, plPlayerCodes } from "./premierleague/map";
+export {
+  mapMatchEvents,
+  mapRoundGoals,
+  plFixtureCode,
+  plMatchClock,
+  plPlayerCodes,
+} from "./premierleague/map";
 export type {
   RawPlEvent,
   RawPlFixture,
   RawPlFixturePage,
+  RawPlGoal,
   RawPlTeamList,
   RawPlTextstream,
 } from "./premierleague/raw";

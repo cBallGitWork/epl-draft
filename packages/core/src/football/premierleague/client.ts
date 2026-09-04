@@ -23,15 +23,23 @@ async function get<T>(path: string): Promise<T> {
   return (await res.json()) as T;
 }
 
-/** One round's fixtures, carrying the live clock, the half-time score, the
- *  ground and — once it is published — the attendance.
+/** One round's fixtures — and every goal in it.
  *
- *  Ten rows for a normal gameweek. This is the cheap read: it is the only one
- *  that answers "which matches are on" and it costs one request for the round. */
+ *  Ten rows for a normal gameweek, carrying the live clock, the half-time score,
+ *  the ground, the attendance once published, and **`goals`**: the scorer, the
+ *  assister and the minute of every goal in all ten matches. Counted across
+ *  gameweeks 1-3, that array reconciles with the scoreline on 21 of 21 played
+ *  fixtures, so the round's goals cost ONE request and the per-fixture stream is
+ *  needed only for cards, substitutions and Opta's prose.
+ *
+ *  **`altIds=true` is not optional.** Without it the response carries no
+ *  `altIds` on any fixture — 0 of 10, measured — and there is then no join to
+ *  FPL at all. The failure is a screen with nothing on it rather than an error,
+ *  which is why the parameter is here and not left to a caller. */
 export function fetchPlRound(gameweek: number): Promise<RawPlFixturePage> {
   return get<RawPlFixturePage>(
     `/fixtures?comps=${PL_COMPETITION}&compSeasons=${PL_COMP_SEASON}` +
-      `&gameweekNumbers=${gameweek}&pageSize=20&page=0&sort=asc`,
+      `&gameweekNumbers=${gameweek}&pageSize=20&page=0&sort=asc&altIds=true`,
   );
 }
 

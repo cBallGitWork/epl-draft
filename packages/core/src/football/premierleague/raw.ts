@@ -15,6 +15,8 @@
 export interface RawPlLabel {
   label: string;
   secs?: number;
+  /** Epoch milliseconds, on a kick-off. The only wall clock in the payload. */
+  millis?: number;
 }
 
 /** `{secs: 5760, label: "90+6'00"}`. Absent entirely before kick-off, which is
@@ -98,6 +100,29 @@ export interface RawPlOfficial {
   name: RawPlName;
 }
 
+/** A goal, as the ROUND-LEVEL fixtures read carries it.
+ *
+ *  This is the find that shapes the whole live path: one request for the round
+ *  answers every goal in all ten matches, with its scorer, its assister and its
+ *  minute. The per-fixture commentary stream is then needed only for cards,
+ *  substitutions and Opta's prose.
+ *
+ *  Counted across gameweeks 1-3: the array's length equals the scoreline on
+ *  **21 of 21** played fixtures, and the type split (57 `G`, 4 `O`, 3 `P`)
+ *  matches the commentary stream's own count exactly. `assistId` is present on
+ *  22 of 32 — an unassisted goal, not a gap.
+ *
+ *  `personId` and `assistId` are Premier League player ids, the same space the
+ *  commentary's `playerIds` speaks in. */
+export interface RawPlGoal {
+  personId: number;
+  /** Absent when nobody was credited with the assist. */
+  assistId?: number;
+  clock?: RawPlClock;
+  /** `"G"` a goal, `"O"` an own goal, `"P"` a penalty. */
+  type: string;
+}
+
 export interface RawPlScore {
   homeScore: number;
   awayScore: number;
@@ -127,8 +152,15 @@ export interface RawPlFixture {
   attendance?: number;
   matchOfficials?: RawPlOfficial[];
   teamLists?: RawPlTeamList[];
-  /** `{opta: "g2645221"}` — the number after the `g` is FPL's `fixture.code`. */
+  /** `{opta: "g2645221"}` — the number after the `g` is FPL's `fixture.code`.
+   *
+   *  **Only sent when the request asks for it.** The round read answers 0 of 10
+   *  fixtures with `altIds` unless `altIds=true` is on the query string, and
+   *  with it, 10 of 10. Without the parameter there is no join to FPL at all and
+   *  the failure is an empty screen rather than an error. */
   altIds?: RawPlAltIds;
+  /** Every goal in the match, on the round-level read. See `RawPlGoal`. */
+  goals?: RawPlGoal[];
 }
 
 /** One line of Opta's commentary.

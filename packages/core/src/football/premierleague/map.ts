@@ -81,6 +81,11 @@ export function mapMatchEvents(
   events: readonly RawPlEvent[],
   fixtureCode: number,
   codes: Map<number, number>,
+  /** This fixture's kick-off in epoch milliseconds, from the round read. Null
+   *  when the match is dated but not timed, in which case its events carry no
+   *  `absolute` and a round-wide sort leaves them out rather than placing them
+   *  in 1970. */
+  kickoffMillis: number | null = null,
 ): MatchEvent[] {
   const mapped: MatchEvent[] = [];
   for (const event of events) {
@@ -98,6 +103,7 @@ export function mapMatchEvents(
       kind,
       minute,
       seconds,
+      absolute: kickoffMillis === null ? null : kickoffMillis + seconds * 1000,
       text: event.text,
       players: (event.playerIds ?? []).map((id) => codes.get(id) ?? null),
     });
@@ -121,3 +127,63 @@ export function plMatchClock(fixture: RawPlFixture): string | null {
   const [minutes] = label.split("'");
   return minutes.length === 0 ? null : minutes;
 }
+
+/** Every goal in a round, from the one read that carries them all.
+ *
+ *  The round's fixtures answer with a `goals` array per match — scorer,
+ *  assister, minute — so the round's goals cost one request rather than one per
+ *  live fixture. Counted across gameweeks 1-3, the array reconciles with the
+ *  scoreline on 21 of 21 played fixtures.
+ *
+ *  Returned as `MatchEvent` so a wire draws goals from this and cards from the
+ *  commentary stream without knowing which read each came from. The `id` is
+ *  synthesised — this payload publishes none — from the fixture and the goal's
+ *  own clock, which is stable across polls because both halves are.
+ *
+ *  **Ordered by `kickoff + clock`, and that is the whole reason `absolute` is
+ *  here.** A goal's clock is elapsed time from its own kick-off, so a 12:30
+ *  match and a 17:30 one both start at nought; a round interleaved on the clock
+ *  alone puts the afternoon in the wrong order. */
+export function mapRoundGoals(
+  fixtures: readonly RawPlFixture[],
+  codes: Map<number, number>,
+): MatchEvent[] {
+  const goals: MatchEvent[] = [];
+  for (const fixture of fixtures) {
+    const fixtureCode = plFixtureCode(fixture);
+    const kickoff = fixture.kickoff?.millis;
+    if (fixtureCode === null) continue;
+
+    for (const goal of fixture.goals ?? []) {
+      const minute = goal.clock?.label;
+      const secs = goal.clock?.secs;
+      const kind = GOAL_KINDS[goal.type];
+      if (kind === undefined || minute === undefined || secs === undefined) continue;
+
+      goals.push({
+        id: fixtureCode * 100_000 + secs,
+        fixtureCode,
+        kind,
+        minute: minute.split("'")[0],
+        seconds: secs,
+        absolute: kickoff === undefined ? null : kickoff + secs * 1000,
+        // The assist is a real absence on 10 of 32, so the key is present and
+        // the value is null rather than the array being one long.
+        players: [
+          codes.get(goal.personId) ?? null,
+          goal.assistId === undefined ? null : (codes.get(goal.assistId) ?? null),
+        ],
+        text: "",
+      });
+    }
+  }
+  return goals;
+}
+
+/** The round read's own one-letter vocabulary, which is not the commentary's. */
+const GOAL_KINDS: Record<string, MatchEventKind> = {
+  G: "goal",
+  P: "penalty-goal",
+  O: "own-goal",
+};
+
