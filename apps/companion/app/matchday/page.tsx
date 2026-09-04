@@ -2,12 +2,26 @@ import Link from "next/link";
 import { Suspense } from "react";
 import ButtonLink from "../components/shell/ButtonLink";
 import Skeleton from "../components/shell/Skeleton";
-import { type FootballSnapshot, duringGameweek, nextRound } from "@epl/core";
-import { footballNow, seasonFixtures } from "../football";
-import GameweekView from "../components/football/GameweekView";
+import {
+  type FootballSnapshot,
+  type LiveTeamScore,
+  clubById,
+  duringGameweek,
+  fixturesInOrder,
+  nextRound,
+  periodPairings,
+  roundState,
+} from "@epl/core";
+import { footballNow, seasonFixtures, speaksForNow } from "../football";
+import { Scores } from "./Scores";
+import RoundWord from "../components/league/RoundWord";
+import Caption from "../components/shell/Caption";
+import { getLeagueSquads } from "../squads";
+import { liveScores } from "../scoreboard";
 import Afternoon from "./Afternoon";
 import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
+
 import { readerTeamId } from "../squads";
 import { roundGoals } from "../commentary";
 import { wireLines } from "./wireLines";
@@ -52,11 +66,24 @@ export default async function MatchdayPage() {
   // The round's goals, joined to the men who own them. One upstream request for
   // ten matches, and the one question on this page neither Fantrax nor FPL can
   // answer: not just who scored, but whose he is.
-  const [goals, mine] = await Promise.all([
+  const [goals, mine, squads] = await Promise.all([
     roundGoals(snapshot.gameweek, snapshot.players),
     readerTeamId(),
+    getLeagueSquads(),
   ]);
   const wire = wireLines(goals, snapshot, league.owners, mine);
+
+  // The draft's eight ties, beside the round's ten matches. A league with no
+  // draft yet, no schedule, or a Fantrax that would not answer costs the first
+  // table and nothing else — the football half needs none of them.
+  const drafted = "period" in squads ? squads : null;
+  const period = drafted?.roundPeriod ?? null;
+  const pairings =
+    drafted?.info != null && period !== null
+      ? periodPairings(drafted.info.matchups, drafted.info.teams, period)
+      : [];
+  const { scores } =
+    period === null ? { scores: new Map<string, LiveTeamScore>() } : await liveScores(period);
 
   // The tab is hidden between gameweeks, but the route still has to answer:
   // someone lands here from a bookmark, or is reading it when the last match
@@ -104,7 +131,27 @@ export default async function MatchdayPage() {
           and what it cost whom. */}
       <Wire lines={wire.lines} unresolved={wire.unresolved} limit={WIRE_LINES} />
       {during ? (
-        <GameweekView snapshot={snapshot} mine={league.mine} owners={league.owners} />
+        <>
+          {/* CM's yellow caption INSIDE a panel, which is where `cm0102/02.jpg`
+              puts "Second Half" and `cm9900/24.jpg` puts "League Table". The
+              first build put this in a bare `<header>` over the photograph —
+              DESIGN §2's "nothing prints text on the bare ground", and the one
+              rule `groundfit.mjs` exists to measure. */}
+          <Caption>
+            Gameweek {snapshot.gameweek} <span className="text-muted">&middot;</span>{" "}
+            <RoundWord state={roundState(snapshot)} />
+          </Caption>
+          <Scores
+            pairings={pairings}
+            scores={scores}
+            mine={mine}
+            fixtures={fixturesInOrder(snapshot)}
+            clubs={clubById(snapshot)}
+            involved={league.mine}
+            now={speaksForNow(snapshot)}
+            gameweek={snapshot.gameweek}
+          />
+        </>
       ) : (
         <BetweenGameweeks snapshot={snapshot} up={up} />
       )}
