@@ -490,6 +490,98 @@ its subtitle, correctly and verbatim (§3: server-driven, never our copy), so on
 to any test we could write.** It belongs in the ship-day runbook rather than in
 the code.
 
+## The Premier League's own API — probed live 4 Sep 2026, do not re-derive
+
+`www.premierleague.com` is a shell over `footballapi.pulselive.com`. Public, and
+re-tested with each header removed in turn: **no headers are required at all**. Two
+response headers set the terms — `cache-control: max-age=30`, which is already
+`PAGE_REVALIDATE`, and `access-control-allow-origin: https://www.premierleague.com`,
+so it is a **server-side read only** and may never be reached from a client component.
+
+It is the football layer's second provider (`football/premierleague/`). FPL says what a
+player scored; this says what happened.
+
+### The joins are ids neither provider chose, and both were counted
+
+| | ours | theirs | evidence |
+|---|---|---|---|
+| Fixture | FPL `fixture.code` | `altIds.opta` less its `g` | identical |
+| Player | FPL `opta_code` | a squad player's `altIds.opta` | `opta_code` non-null 652/652; a full match's lineup+bench joined **40 of 40** |
+
+**`altIds=true` is not optional on the round read.** Without it, **0 of 10** fixtures
+carry any `altIds`; with it, 10 of 10. The failure is an empty screen rather than an
+error. The same parameter is required on `/football/players`.
+
+### The reads, and what each is for
+
+- `/fixtures?comps=1&compSeasons=…&gameweekNumbers=N&altIds=true` — one request for the
+  round. Live clock (`clock.label`, a real one, where FPL has only `minutes`), `phase`,
+  `halfTimeScore`, `ground`, `matchOfficials`, `attendance` — **and `goals`**: scorer,
+  assister and minute for every goal in all ten matches. Counted across GW1–3, that array
+  reconciles with the scoreline on **21 of 21** played fixtures.
+- `/fixtures/{id}` — team sheets, formations (as lines of player ids), shirt numbers,
+  captain. **The only complete source of the player-id map**: `/players` misses 20 of the
+  360 players who appear in a round's events, 14 in a goal, card or substitution, one a
+  scorer. All twenty are on a team sheet. `scripts/pl-bridge.ts` harvests from sheets and
+  accumulates; re-checked against every player named in every goal and event of GW1–3,
+  **0 unresolved of 360**.
+- `/fixtures/{id}/textstream/EN?pageSize=300` — Opta's minute-stamped commentary. 99–107
+  events for a full match. **`pageSize=100` truncates.** All 30 fixtures of GW1–3 answer
+  200, an unstarted one with an empty `content`.
+- `/stats/match/{id}` — **~170 Opta metrics per side**, 34 KB, present on **21 of 21**
+  played fixtures.
+
+### `time.secs` is per-fixture and not monotonic
+
+Elapsed seconds from that fixture's own kick-off, so a 12:30 match and a 17:30 one both
+start at nought — a round interleaved on it alone puts the afternoon out of order. Order
+on `kickoff.millis + secs × 1000` (`MatchEvent.absolute`). It also runs **backwards**
+across the interval: `end 1` carries 2910 and the second half's `start` carries 2700.
+Every period-boundary type is outside `MatchEventKind`, so the events we keep are safely
+ordered — a test pins that, because it is a consequence of the kind list and not a
+property of the feed.
+
+### The feed is append-only
+
+A goal cancelled by VAR is published as the cancellation and **never also as a goal**, so
+counting it never has to be un-printed. `penalty goal` is its own type — a goals feed
+reading only `goal` loses every penalty. `end 14` means "match ends" and its minute label
+is junk.
+
+### `/stats/match` OMITS A METRIC THAT IS ZERO — and that inverts a binding rule
+
+Counted across 40 team-sides of two completed rounds:
+
+| | present |
+|---|---|
+| Shots · Off target · Fouls · Possession · Passes completed · Tackles won · Headers won | **40/40** |
+| Corners | 39/40 |
+| On target | 37/40 |
+| Yellow cards | 36/40 |
+| Offsides | 27/40 |
+| **Red cards** | **1/40** |
+
+There was exactly **one red card** in those rounds. The metric is absent because the
+value is nought, not because it is unknown.
+
+**So absence here means ZERO, which is the opposite of `DESIGN.md` §7's "Absence is `—`,
+never `0`".** That rule is about a figure a provider could not give us; this is a
+provider saying nought by saying nothing. A Match Stats board printing `—` for red cards
+would be hedging a fact we have. **Any reader of this endpoint defaults a missing metric
+to 0 and says so at the call site** — and that is the one place in the app where it is
+correct to do so.
+
+### What this makes shippable that `MatchTabs` records as blocked
+
+`apps/companion/app/prem/match/[id]/MatchTabs.tsx` ships two tabs where CM runs four, on
+the stated ground that *"the two missing ones are the two we have no data for"* — Match
+Stats and Action Zones — because "FPL publishes no possession, no shots, no corners and
+no zones anywhere". That is now false for the first of them: possession, shots, on
+target, corners, fouls, offsides, tackles and headers are all on `/stats/match`, which is
+**cm9900/22.jpg's board almost row for row**. Match Report is the textstream. Neither is
+built yet; the docblock's condition — *"Stats and Zones arrive with their data"* — is met
+for Stats and still unmet for Zones.
+
 ## Recorded rule exceptions
 
 ### `desk.css` at 434 and `tokens.css` at 343 (recorded 3 Sep 2026)
