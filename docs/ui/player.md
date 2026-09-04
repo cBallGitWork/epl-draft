@@ -155,9 +155,11 @@ The scoring rows are dropped by name; the two ownership rows are KEPT by name. T
 asymmetry is deliberate: `FPts` and `FP/G` are stable labels, and the rank's is not
 — it carries the position (`Rank G/Ov`, `Rank D/Ov`) and cannot be matched by a
 fixed string.
-CM's `Contract` is folded in here as one row — **At this club · Joined**, from
-FPL's `team_join_date` (633/652). It is a stand-in: what this tab wants is
-Fantrax's own `TEAM_SERVICE_TIME`, which their payload names and will not serve.
+
+**CM's `Contract` is not folded in here, and was for one commit.** It drew FPL's
+`team_join_date` as an "At this club · Joined" row — a stand-in for Fantrax's own
+`TEAM_SERVICE_TIME`, which is now reachable through `tab` and unread. The stand-in
+went with the strip; the real thing is a mapping job.
 
 ## History
 

@@ -8,7 +8,7 @@ import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
 import { footballNow } from "../../../football";
 import { CLUB } from "../../PremNav";
-import { FACT, PANEL } from "@/app/desk";
+import { FACT, FACT_LABEL, PANEL } from "@/app/desk";
 
 // One footballer, and for now only what the bootstrap already knows.
 //
@@ -99,7 +99,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ code: s
 function Figure({ label, value }: { label: string; value: number }) {
   return (
     <div className={FACT}>
-      <dt className="min-w-0 flex-1 truncate text-sm text-muted">{label}</dt>
+      <dt className={FACT_LABEL}>{label}</dt>
       <dd className="numeric font-bold">{value}</dd>
     </div>
   );

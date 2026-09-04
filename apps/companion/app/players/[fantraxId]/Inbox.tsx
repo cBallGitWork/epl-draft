@@ -59,8 +59,16 @@ export default function Inbox({ items }: { items: readonly NewsItem[] }) {
               }`}
             >
               {/* CM's index block, in his club's colour like every other one on
-                  his screens. `--cm-index` is scoped by the shell above. */}
-              <span className="numeric flex w-24 shrink-0 items-center justify-center bg-[var(--cm-index,var(--color-index))] px-1 text-2xs text-[var(--cm-index-ink,var(--color-ink))]">
+                  his screens — `.cm-index` from `desk.css`, which owns the
+                  `--cm-index` fallback and the inset rule the shell re-points.
+                  This wrote the two custom properties out in Tailwind for one
+                  commit, which is a second copy of a decision that already has a
+                  home.
+
+                  `w-24` because the widest label this formats is a Wednesday in
+                  September — "Wed 19 Aug" at `2xs` — and a column that resizes
+                  per row stops being a column. */}
+              <span className="cm-index numeric flex w-24 shrink-0 items-center justify-center px-1 text-2xs">
                 {item.at === null ? "—" : WHEN.format(new Date(item.at))}
               </span>
               <span

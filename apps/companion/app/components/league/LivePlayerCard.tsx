@@ -19,7 +19,7 @@ import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { unresolvedReason } from "../../unresolved";
 import { BUTTON } from "../shell/ButtonLink";
-import { LABEL } from "@/app/desk";
+import { FACT_LABEL, LABEL } from "@/app/desk";
 
 // What a player is scoring, and why.
 //
@@ -235,7 +235,7 @@ function Breakdown({
                   they publish the rules a manager would otherwise have to guess
                   — what counts as a clean sheet is their sentence, not ours. */}
               <span
-                className="min-w-0 flex-1 truncate text-sm text-muted"
+                className={FACT_LABEL}
                 title={line.definition ?? undefined}
               >
                 {line.name}

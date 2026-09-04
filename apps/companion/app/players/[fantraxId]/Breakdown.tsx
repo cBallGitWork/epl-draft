@@ -1,5 +1,6 @@
 import { signed } from "@epl/core";
 import Section from "../../components/shell/Section";
+import { FACT_LABEL } from "@/app/desk";
 import type { PlayerSeason } from "./season";
 
 // The first view in this app that explains a number rather than printing one.
@@ -58,7 +59,7 @@ export default function Breakdown({ season }: { season: PlayerSeason | null }) {
                 publish the rules a manager would otherwise have to guess, like
                 what counts as a clean sheet. Their sentence, not ours. */}
             <span
-              className="min-w-0 flex-1 truncate text-sm text-muted"
+              className={FACT_LABEL}
               title={category.definition ?? undefined}
             >
               {category.name}

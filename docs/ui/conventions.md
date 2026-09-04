@@ -237,6 +237,7 @@ with its row here in the same commit.**
 | `PANEL_FLUSH` | The same well with no spacing of its own, for a panel whose single child manages it — a board, a ledger, a grid. A different decision from `PANEL`, not `PANEL` minus two utilities. | 6 sites |
 | `HEAD_CELL` | The `<th>` a stats board's head plate sits in: no padding, because the plate carries it. | 3 boards — the same three that share `HEAD_PLATE` |
 | `FACT` | One stated fact in a stack: bordered, at the tap floor at both widths. | 4 files |
+| `FACT_LABEL` | The label half of a `FACT` row — takes the room the figure does not, and truncates rather than wrapping. The truncation is the part worth naming: a Fantrax label is a full sentence on some rows, and a row that wraps to three lines stops being a row. | 5 files |
 | `SCORE_CREST` · `SCORE_CREST_PX` | The 22px crest beside a scoreline. **Not `--row-badge`**, which is 26px, drops to 20 on the desk, and is set on `.cm-row` — a class a scoreline panel must never wear. | 7 literals across 3 files |
 | `SUBMIT` | The button that submits a form it sits inside. | 3 sites |
 

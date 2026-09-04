@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import Section from "../../components/shell/Section";
 import { ROW_RULE, SCROLL } from "@/app/desk";
 import type { MatchRow } from "./matchRows";
@@ -108,19 +109,11 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
                 <Cell value={fpl.match.minutes} />
                 <Cell value={fpl.match.goals} loud={fpl.match.goals > 0} />
                 <Cell value={fpl.match.assists} loud={fpl.match.assists > 0} />
-                <td className="numeric px-1 text-right text-muted">
-                  {fpl.match.cleanSheet ? "Y" : dash}
-                </td>
+                <Cell value={fpl.match.cleanSheet ? "Y" : dash} />
                 <Cell value={fpl.match.saves} />
-                <td className="numeric px-1 text-right text-muted">
-                  {two(fpl.match.expectedGoals)}
-                </td>
-                <td className="numeric px-1 text-right text-muted">
-                  {two(fpl.match.expectedAssists)}
-                </td>
-                <td className="numeric px-1 text-right text-muted">
-                  {fpl.match.defensiveContribution ?? dash}
-                </td>
+                <Cell value={two(fpl.match.expectedGoals)} />
+                <Cell value={two(fpl.match.expectedAssists)} />
+                <Cell value={fpl.match.defensiveContribution ?? dash} />
                 <Cell value={fpl.match.bps} />
                 <Cell value={fpl.match.bonus} loud={fpl.match.bonus > 0} />
                 <td className="numeric px-1 text-right font-bold">
@@ -131,21 +124,11 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
                 <td className="numeric border-l border-line px-1 text-right font-bold text-mid">
                   {paid?.points ?? dash}
                 </td>
-                <td className="numeric px-1 text-right text-muted">
-                  {paid?.shots ?? dash}
-                </td>
-                <td className="numeric px-1 text-right text-muted">
-                  {paid?.shotsOnTarget ?? dash}
-                </td>
-                <td className="numeric px-1 text-right text-muted">
-                  {paid?.foulsCommitted ?? dash}
-                </td>
-                <td className="numeric px-1 text-right text-muted">
-                  {paid?.foulsSuffered ?? dash}
-                </td>
-                <td className="numeric px-1 text-right text-muted">
-                  {paid?.offsides ?? dash}
-                </td>
+                <Cell value={paid?.shots ?? dash} />
+                <Cell value={paid?.shotsOnTarget ?? dash} />
+                <Cell value={paid?.foulsCommitted ?? dash} />
+                <Cell value={paid?.foulsSuffered ?? dash} />
+                <Cell value={paid?.offsides ?? dash} />
               </tr>
             ))}
           </tbody>
@@ -189,8 +172,13 @@ function Head({
 }
 
 /** A figure. Nought is drawn quiet rather than absent — FPL measured it, and a
- *  dash here would say it had not. */
-function Cell({ value, loud = false }: { value: number; loud?: boolean }) {
+ *  dash here would say it had not.
+ *
+ *  **Takes a node, not a number**, which is what let nine hand-written `<td>`s
+ *  in this file collapse into it: the columns that hold a decimal, a dash or a
+ *  `?? dash` were writing `numeric px-1 text-right text-muted` out again because
+ *  the component would only take a `number`. */
+function Cell({ value, loud = false }: { value: ReactNode; loud?: boolean }) {
   return (
     <td
       className={`numeric px-1 text-right ${loud ? "font-bold text-mid" : "text-muted"}`}

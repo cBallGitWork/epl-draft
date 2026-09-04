@@ -182,6 +182,16 @@ export const HEAD_CELL = "p-0 text-left font-bold";
 export const FACT =
   "flex min-h-11 items-center gap-2.5 border border-line bg-surface px-3 py-2";
 
+/** The label half of a `FACT` row: takes the room the figure does not, and
+ *  truncates rather than wrapping.
+ *
+ *  Five sites wrote it out — `Facts`, `Breakdown` and `Moves` on the player
+ *  screen, `LivePlayerCard`, and `prem/player/[code]` — which is the third
+ *  occurrence twice over. The truncation is the part worth naming: a Fantrax
+ *  label is a full sentence on some rows, and a row that wraps to three lines
+ *  stops being a row. */
+export const FACT_LABEL = "min-w-0 flex-1 truncate text-sm text-muted";
+
 /** The crest beside a scoreline: 22px, at both widths, held open even when the
  *  club is missing so a column of scores stays a column. Four sites wrote
  *  `h-[1.375rem] w-[1.375rem]` and three of them wrote `width={22} height={22}`

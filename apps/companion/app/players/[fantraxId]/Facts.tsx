@@ -1,5 +1,5 @@
 import type { LabelledValue } from "@epl/core";
-import { FACT } from "@/app/desk";
+import { FACT, FACT_LABEL } from "@/app/desk";
 import Section from "../../components/shell/Section";
 
 // One block of name-and-value rows, under a heading that says whose they are.
@@ -58,7 +58,7 @@ export default function Facts({
                 The long form is a full sentence on some rows and would wrap to
                 three lines on a phone. */}
             <dt
-              className="min-w-0 flex-1 truncate text-sm text-muted"
+              className={FACT_LABEL}
               title={row.description ?? undefined}
             >
               {row.label}

@@ -1,5 +1,5 @@
 import Section from "../../components/shell/Section";
-import { ROW_RULE } from "@/app/desk";
+import { FACT_LABEL, ROW_RULE } from "@/app/desk";
 import type { PlayerMove } from "./dossier";
 
 // Every move this league has made with him: claimed, dropped, traded.
@@ -49,7 +49,7 @@ export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
             <span className="text-sm font-bold">
               {KIND[transaction.kind] ?? transaction.kind}
             </span>
-            <span className="min-w-0 flex-1 truncate text-sm text-muted">
+            <span className={FACT_LABEL}>
               {/* Null on either side is not a gap: nobody owns a free agent, and
                   a dropped man goes to the pool rather than to a manager. */}
               {fromName === null ? null : <>from {fromName} </>}
