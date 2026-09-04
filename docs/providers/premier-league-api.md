@@ -77,17 +77,23 @@ are **404 — probed, do not retry**.
 | `/competitions` | small | 115 competitions |
 | `/broadcasting-schedule/fixtures` | ~1 KB | UK broadcasters (Sky, TNT…). **`content` was empty when probed** — do not build on it without re-counting |
 
-## The written match reports — indexed, but the prose is not served
+## The written match reports — the prose IS served, but not for the reports
 
 There is a second API on the same host: **`/content/premierleague/text/EN`**. It is the
 site's editorial content, and the match reports are in it — an article tagged
 `label:Match report` · `franchise:match-reports` · `content-format:long-read` ·
 `content-type:article` was found for the Ipswich–Liverpool game on the first look.
 
-**But `body` is 0 characters — in the list view and in the single-item fetch alike.**
-`/content/premierleague/text/EN/{id}` answers 200 with the title, a ~70-character summary,
-the tags and the references, and no prose at all. So the endpoint indexes the article and
-does not serve it.
+**`body` is 0 characters on those items — in the list view and the single-item fetch
+alike.** *This file first said the endpoint "indexes the article and does not serve it".
+That was wrong, and Craig called it: measured across **300 items spanning
+2025-09-04 to 2026-09-04, 47 carry a body**, up to 62 KB. The endpoint serves prose.*
+
+What is true is narrower and stranger. Across those same 300 items there are **only two
+tagged as match reports at all**, they are duplicates of one another, and both have an
+empty body and a 74-character summary. Whether that is because the match had just
+finished, or because reports are syndicated in without their text, **n=2 cannot say** —
+re-count after a full weekend before building anything on it.
 
 Three things about it, all measured, none obvious:
 
