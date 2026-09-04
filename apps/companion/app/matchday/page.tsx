@@ -138,8 +138,18 @@ export default async function MatchdayPage() {
               DESIGN §2's "nothing prints text on the bare ground", and the one
               rule `groundfit.mjs` exists to measure. */}
           <Caption>
-            Gameweek {snapshot.gameweek} <span className="text-muted">&middot;</span>{" "}
-            <RoundWord state={roundState(snapshot)} />
+            Gameweek {snapshot.gameweek}
+            {/* The separator belongs to the word, not to the number. `RoundWord`
+                renders nothing between kickoffs — which is right, there is no
+                state to name — and the first build printed a trailing "·" over
+                the gap. */}
+            {roundState(snapshot) === null ? null : (
+              <>
+                {" "}
+                <span className="text-muted">&middot;</span>{" "}
+                <RoundWord state={roundState(snapshot)} />
+              </>
+            )}
           </Caption>
           <Scores
             pairings={pairings}

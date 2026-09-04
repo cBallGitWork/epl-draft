@@ -26,19 +26,15 @@ import { SMALL_CAPS } from "@/app/desk";
 // (CODE_RULES §1); the third earns the extraction, and it will be the one that
 // settles which of the two floors is right.
 
-/** The index block down the left, which is the only repeating fill CM's tables
- *  have. A bare number and not an ordinal: `cm9900/24.jpg` runs `1st 2nd 3rd`
- *  down a LEAGUE TABLE, where the number is the standing and means something.
- *  Eighteen scorelines are in kickoff order, so a number here is a row's place
- *  in a list and an ordinal would be claiming a rank nobody computed. */
-function Index({ n }: { n: number }) {
-  return (
-    <span className="cm-index numeric flex w-7 shrink-0 items-center justify-center self-stretch text-2xs font-bold">
-      {n}
-    </span>
-  );
-}
-
+/** **No index cell, and that is a decision rather than an omission.**
+ *
+ *  The first build put CM's blue block down the left of both tables carrying
+ *  `1..10` — a row's place in a list, which is not a fact about anything. The
+ *  reference's index block always carries something: an ordinal in a league
+ *  table (`cm9900/24.jpg`, where the number IS the standing), a shirt number in
+ *  a squad or a ratings list (`cm3/06.jpg`, `cm9900/16.jpg`). Fifteen scorelines
+ *  in kickoff order have no such number, and drawing one anyway is decoration
+ *  wearing data's clothes. The wire keeps its block because the minute is real. */
 function Row({ children }: { children: React.ReactNode }) {
   return <li className="flex min-h-11 items-center gap-2 lg:min-h-7">{children}</li>;
 }
@@ -50,12 +46,10 @@ function Row({ children }: { children: React.ReactNode }) {
  *  nothing else — deliberately NOT the leader, which is `matchup.md`'s
  *  constraint and the reason five other screens can be scanned for "mine". */
 export function DraftRow({
-  n,
   pairing,
   scores,
   mine,
 }: {
-  n: number;
   pairing: PeriodPairing;
   scores: Map<string, LiveTeamScore>;
   mine: string | null;
@@ -66,7 +60,6 @@ export function DraftRow({
 
   return (
     <Row>
-      <Index n={n} />
       <span
         className={`min-w-0 flex-1 truncate text-sm ${
           pairing.home.teamId === mine ? "font-bold text-accent" : "text-ink"
@@ -98,17 +91,19 @@ export function DraftRow({
 /** One Premier League match, one line, with the tick of state where the kickoff
  *  time used to be — the vidiprinter's own convention, and the desk's. */
 export function FootballRow({
-  n,
   fixture,
   clubs,
   yours,
   now,
 }: {
-  n: number;
   fixture: Fixture;
   clubs: Map<number, Club>;
-  /** His players in this match. The accent means "yours" here exactly as it does
-   *  on the draft rows above, which is what makes the two tables one screen. */
+  /** His players in this match — printed as a COUNT and never as a tint.
+   *
+   *  `MatchList` found this and the first build of this file ignored it: with
+   *  fifteen players across ten fixtures, eight of the ten rows come out accented
+   *  and every row marked is no row marked. The number is also what ranks one
+   *  match above another, which a wash cannot do. */
   yours?: FootballPlayer[];
   /** Whether the snapshot is fresh enough to speak in the present tense. */
   now: boolean;
@@ -117,12 +112,10 @@ export function FootballRow({
   const away = clubs.get(fixture.awayClubId)?.shortName ?? "—";
   const played = fixture.homeScore !== null && fixture.awayScore !== null;
   const live = now && fixture.status === "live";
-  const ink = yours ? "font-bold text-accent" : "text-ink";
 
   return (
     <Row>
-      <Index n={n} />
-      <span className={`min-w-0 flex-1 truncate text-sm ${ink}`}>{home}</span>
+      <span className="min-w-0 flex-1 truncate text-sm text-ink">{home}</span>
       <span className="numeric shrink-0 text-sm font-bold">
         {played ? (
           <>
@@ -136,7 +129,7 @@ export function FootballRow({
           </span>
         )}
       </span>
-      <span className={`min-w-0 flex-1 truncate text-right text-sm ${ink}`}>{away}</span>
+      <span className="min-w-0 flex-1 truncate text-right text-sm text-ink">{away}</span>
       <span className={`${SMALL_CAPS} w-8 shrink-0 text-right`}>
         {live ? (
           <span className="text-live">{fixture.minutes}&prime;</span>
@@ -183,10 +176,9 @@ export function Scores({
       {pairings.length > 0 ? (
         <Section title="The draft" aside={`Gameweek ${gameweek}`}>
           <ul className="cm-rows">
-            {pairings.map((p, i) => (
+            {pairings.map((p) => (
               <DraftRow
                 key={`${p.home.teamId}-${p.away.teamId}`}
-                n={i + 1}
                 pairing={p}
                 scores={scores}
                 mine={mine}
@@ -198,10 +190,9 @@ export function Scores({
 
       <Section title="The football" aside="The Premier League">
         <ul className="cm-rows">
-          {fixtures.map((f, i) => (
+          {fixtures.map((f) => (
             <FootballRow
               key={f.id}
-              n={i + 1}
               fixture={f}
               clubs={clubs}
               yours={involved?.get(f.id)}

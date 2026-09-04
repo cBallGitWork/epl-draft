@@ -5,14 +5,15 @@ import {
   type LeagueTeam,
   type LiveTeamScore,
   type PendingCleanSheets,
+  inkOn,
+  teamColours,
 } from "@epl/core";
 import RoundWord from "../components/league/RoundWord";
-import ScoreFigure from "../components/league/ScoreFigure";
 import { liveScores, pendingByTeam } from "../scoreboard";
 import { roundUnderway } from "../football";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
-import { yoursBorder, yoursInk } from "../mine";
+import { yoursBorder } from "../mine";
 import Pending from "../components/league/Pending";
 import { LABEL } from "@/app/desk";
 
@@ -57,7 +58,7 @@ export default async function YourMatchup() {
   const underway = roundUnderway(squads.snapshot);
 
   return (
-    <section className={`cm-panel flex flex-col gap-2 p-3 ${yoursBorder(true)}`}>
+    <section className={`cm-panel flex flex-col gap-2 p-2 ${yoursBorder(true)}`}>
       <div className="flex items-center justify-between gap-3">
         <h2 className={LABEL}>
           Your head-to-head
@@ -74,11 +75,8 @@ export default async function YourMatchup() {
       </div>
 
       <div className="flex items-stretch">
-        <Half team={pairing.team} score={yours} against={theirs} mine />
-        <span className={`self-center px-1 ${LABEL}`}>
-          v
-        </span>
-        <Half team={pairing.opponent} score={theirs} against={yours} mirrored />
+        <Half team={pairing.team} score={yours} mine />
+        <Half team={pairing.opponent} score={theirs} />
       </div>
 
       {/* Everything a scoreline may not carry, wearing its label. The state word
@@ -146,44 +144,52 @@ function Extras({
 function Half({
   team,
   score,
-  against,
   mine = false,
-  mirrored = false,
 }: {
   team: LeagueTeam;
   score: LiveTeamScore | undefined;
-  against: LiveTeamScore | undefined;
   mine?: boolean;
-  mirrored?: boolean;
 }) {
   const points = score?.points ?? null;
-  const other = against?.points ?? null;
+  const colours = teamColours(team.teamId);
+  const ink = inkOn(colours);
 
   return (
-    // Into the head-to-head board, opened on the side that was tapped. The
-    // summary answers "am I winning"; the board is where the players behind the
-    // number are, which is the question the number provokes.
-    <Link
-      href={`/league/matchups/${team.teamId}`}
-      className={`flex min-h-11 min-w-0 flex-1 items-center gap-2 px-2 py-1.5 hover:bg-raised ${
- mirrored ?"flex-row-reverse":""
-}`}
+    // Championship Manager's match header, with the managers where the clubs
+    // are: `cm9900/21.jpg` sets Everton's blue against Arsenal's red and
+    // `16.jpg` sets the same blue against Torquay's WHITE, so a pale side is a
+    // case the reference has rather than an edge we invented — `inkOn` answers
+    // it. Neither plate is mirrored and each score sits at ITS OWN right edge,
+    // which is `MatchBar`'s recorded correction (Craig, 4 Sep: "the scores go on
+    // the right hand side of each team row, currently its centered").
+    <div
+      className={`flex min-h-16 min-w-0 flex-1 items-center lg:min-h-20 ${
+        mine ? "border-l-4 border-l-accent" : ""
+      }`}
+      style={{ background: colours.primary }}
     >
-      <span
-        className={`min-w-0 flex-1 truncate text-sm font-semibold ${
-          mirrored ? "text-right" : "text-left"
-        } ${yoursInk(mine)}`}
+      <Link
+        href={`/league/matchups/${team.teamId}`}
+        className="flex min-w-0 flex-1 items-center self-stretch px-2"
       >
-        {team.name}
+        {/* Accent ink is unavailable on a colour plate, so "yours" is carried by
+            the edge and by position — `mine.ts`'s own mark, and the reason it
+            exists as a border rather than only as an ink. */}
+        <span
+          className="cm-title min-w-0 flex-1 truncate font-chrome text-lg font-bold uppercase lg:text-2xl"
+          style={{ color: ink }}
+        >
+          {team.name}
+        </span>
+      </Link>
+      {/* **The plate owns its ink**, so nothing sets `text-*` in here. That is
+          not a style note: `--color-ink` on the grey bevel is 2.27:1 and the
+          dimmed trailing side is lower still, which is why `ScoreFigure` — whose
+          whole job is to dim the trailing figure — may not come inside the box.
+          The dash for a total Fantrax did not give is kept by hand. */}
+      <span className="cm-bevel numeric flex min-h-16 w-16 shrink-0 items-center justify-center text-2xl font-bold lg:min-h-20 lg:w-24 lg:text-4xl">
+        {points === null ? "\u2014" : points}
       </span>
-      {/* The live number is the interface: biggest thing on the page. Only the
-          number dims for trailing — a name that dimmed for losing would give
-          accent a second meaning. */}
-      <ScoreFigure
-        points={points}
-        other={other}
-        className="numeric shrink-0 text-3xl font-bold leading-none"
-      />
-    </Link>
+    </div>
   );
 }
