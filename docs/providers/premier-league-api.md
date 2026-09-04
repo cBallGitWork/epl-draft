@@ -77,6 +77,36 @@ are **404 — probed, do not retry**.
 | `/competitions` | small | 115 competitions |
 | `/broadcasting-schedule/fixtures` | ~1 KB | UK broadcasters (Sky, TNT…). **`content` was empty when probed** — do not build on it without re-counting |
 
+## The written match reports — indexed, but the prose is not served
+
+There is a second API on the same host: **`/content/premierleague/text/EN`**. It is the
+site's editorial content, and the match reports are in it — an article tagged
+`label:Match report` · `franchise:match-reports` · `content-format:long-read` ·
+`content-type:article` was found for the Ipswich–Liverpool game on the first look.
+
+**But `body` is 0 characters — in the list view and in the single-item fetch alike.**
+`/content/premierleague/text/EN/{id}` answers 200 with the title, a ~70-character summary,
+the tags and the references, and no prose at all. So the endpoint indexes the article and
+does not serve it.
+
+Three things about it, all measured, none obvious:
+
+- **The references are not fixtures.** They are `SDP_FOOTBALL_TEAM` (Opta team ids —
+  `40` and `14` for Ipswich and Liverpool), `SDP_FOOTBALL_SEASON` and
+  `SDP_FOOTBALL_COMPETITION`. Querying `references=FOOTBALL_FIXTURE:{id}` returns **0
+  entries**, which looks like "no reports exist" and is not. To tie a report to a match you
+  join on the two Opta team ids plus the season.
+- **`pageInfo.numEntries` reads 0 while `content` returns five items.** The pagination
+  metadata on this endpoint is not to be trusted; count the array.
+- `canonicalUrl` was empty on the item checked, so even the link back is not reliably there.
+
+**And the judgement, which outlasts the field list.** These are the Premier League's own
+written journalism. Opta's event feed is a record of facts — who scored, when, from where —
+and this is an authored article. The Gazetta already writes its own prose from facts
+(`scripts/write-edition.ts`), and that is the right shape: feed it the minute-by-minute and
+the ~170 match metrics, not somebody else's report. If we ever want to point at theirs, the
+title and a link are the surface to use, never the body.
+
 ## The traps, all measured
 
 1. **`/stats/match` omits a metric whose value is zero.** Counted over 40 team-sides:
