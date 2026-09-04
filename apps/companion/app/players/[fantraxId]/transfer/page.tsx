@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { StackWaiting } from "../Waiting";
 import Facts from "../Facts";
 import Foot from "../Foot";
-import Joined from "../Joined";
 import Moves from "../Moves";
 import NoProfile from "../NoProfile";
 import Pedigree from "../Pedigree";
@@ -27,14 +26,6 @@ import { subject } from "../subject";
 
 export const revalidate = 30;
 
-/** Fantrax's own labels for his scoring, dropped from this tab.
- *
- *  Their shortNames and stable ones — unlike the rank row beside them, whose
- *  label carries the position (`Rank G/Ov`, `Rank D/Ov`) and so cannot be matched
- *  by a fixed string. That is why the whole-of-Fantrax block is built from a
- *  KEEP list below rather than filtered by a drop list here. */
-const SCORING = ["FPts", "FP/G"];
-
 /** The two whole-of-Fantrax rows that are about DEMAND rather than performance:
  *  how many leagues hold him, and how many start him. Kept by name rather than
  *  filtering the rank out, because the rank's label moves with his position. */
@@ -45,7 +36,7 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
   const found = await subject(fantraxId);
   if ("unavailable" in found) return <NoProfile code={found.unavailable} />;
 
-  const { intel, football } = found;
+  const { intel } = found;
 
   return (
     <PlayerShell
@@ -67,14 +58,6 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
       <Suspense fallback={<StackWaiting />}>
         <Business fantraxId={fantraxId} />
       </Suspense>
-
-      {/* Championship Manager's Contract tab, folded in as one row — we hold one
-          fact about his employment and Fantrax's service time is unreachable. */}
-      <Joined date={football?.player.joinedClub ?? null} />
-
-      {/* Where he stands in THIS league: whose he is, and what the commissioner
-          deems him eligible for. His points are not here — see the note above. */}
-      <Facts title="In this league" rows={intel.league} without={SCORING} />
 
       {/* How much of Fantrax wants him. Their whole userbase and not ours, which
           is what makes it a price rather than an opinion — and the two ownership

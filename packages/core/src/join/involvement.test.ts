@@ -6,7 +6,7 @@ import { fixtureInvolvement, owners } from "./involvement";
 
 const player = (id: number, name: string, clubId: number): FootballPlayer => ({
   id, code: 900 + id, name, fullName: name, clubId,
-  status: "a", news: "", chanceOfPlaying: null, optaCode: null, birthDate: null, joinedClub: null, season: NO_SEASON,
+  status: "a", news: "", chanceOfPlaying: null, optaCode: null, birthDate: null, newsAdded: null, season: NO_SEASON,
 });
 
 const holds = (...players: FootballPlayer[]): RosteredPlayer[] =>

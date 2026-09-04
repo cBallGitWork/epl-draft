@@ -30,10 +30,10 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
     clubId: e.team,
     status: e.status ?? "a",
     news: e.news ?? "",
+    newsAdded: e.news_added ?? null,
     chanceOfPlaying: e.chance_of_playing_next_round ?? null,
     optaCode: e.opta_code ?? null,
     birthDate: e.birth_date ?? null,
-    joinedClub: e.team_join_date ?? null,
     season: {
       // `NUMERIC` throughout, not just on the expected trio: these are scraped
       // fields on a payload we do not control, and the counts arriving as

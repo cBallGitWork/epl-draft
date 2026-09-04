@@ -98,25 +98,27 @@ manager actually arrives with.
 
 ## News
 
-CM's `Injuries & Bans`, under a name a manager would look for. FPL states
-availability — a status letter, a percentage, its own line — and Fantrax's
-provider files a report. A tab carrying only the first is half an answer for a fit
-man, which is why this was two tabs until 4 Sep 2026.
+Championship Manager's news screen, which is an email client: a list of dated rows
+at the top, newest first, and the newest opened underneath with its headline
+centred in yellow over its body.
 
-**The story comes from `getPlayerNews`, not from the profile.** The profile's
-`latestNews` is the same story truncated to one sentence beside "Analysis
-available to registered users"; `getPlayerNews` hands over the full body, the full
-analysis and a real timestamp, unauthenticated. It **ignores `playerId` and
-answers for the whole pool** — 74 stories on 4 Sep 2026, one per player — so it is
-read whole once, cached, and filtered here. The second tap on any player costs
-nothing.
+The accent is right here by our own rules and not only by CM's: DESIGN §3 gives it
+to *yours · selected · active*, and the opened item is the selected one — the
+single place on this screen where anything is.
 
-It is the LATEST and the heading says so. One story per player is not a history
-and the screen does not offer one.
+**Fantrax's stories and nothing else** (Craig, 4 Sep 2026: "Remove the FPL part").
+FPL publishes one availability line, and that is a STATE rather than a story —
+whether he can play, which the badge and the pitch already answer. Putting it in a
+list of dated reports made the newest item a sentence saying nothing had happened.
 
-Availability is asked of `availabilityOf` and never re-derived: core switches on
-`status` first, so a man carrying `i` with no news and no stated chance is injured
-to it and read "Nothing reported" here for one commit.
+**Trimmed to 1 July**, which is where a football year starts and where a summer
+signing's news begins to matter. The year is derived from the date rather than
+written down: January to June belongs to the July before it, so a constant would
+be wrong from New Year's Day and would silently show eighteen months.
+
+The body is dropped when it IS the headline. Fantrax files match reports whose
+headline and content are the same sentence — most of them — and printing both put
+one line twice under itself. A transfer story has a longer body and gets both.
 
 ## Transfer
 
@@ -130,6 +132,11 @@ Then the draft pick, our league's row — whose he is and what the commissioner
 deems him eligible for — and the whole-of-Fantrax market: ADP, percent drafted,
 and the two ownership percentages, which are every league on the site and not
 ours.
+
+It carries **no fantasy-points figure and no season row** (Craig, 4 Sep 2026:
+"Remove at this club and In this league sections too. Keep it clean"). What is
+left is how he arrived, what has happened since, and what the rest of Fantrax will
+pay.
 
 **No fantasy-points figure appears on this tab** (Craig, 4 Sep 2026: "Remove all
 unneeded info from transfer tab like stats"). Fantrax mixes his scoring into two
@@ -235,8 +242,10 @@ from FPL's fantasy classification.
   Neither is here: FPL publishes no shot LOCATION at all, and the sister repo's
   Understat shot data has not been exported for it. That is a pipeline job
   upstream before it is a screen job here.
-- **`getPlayerProfile`'s deeper sections are unreachable.** `TEAM_SERVICE_TIME`,
-  `GAME_LOG_FANTASY` and `NEWS_NOTES` are named in the payload's own `sections`
-  list, but `section`, `sectionCode`, `view` and `displayedSelections.sectionCode`
-  were each tried on 4 Sep 2026 and each ignored — byte-identical responses every
-  time. Service time is what CM's Transfer tab would really want.
+- **`getPlayerProfile`'s deeper sections are open, and three are unread.** The
+  parameter is **`tab`**, taking the `code` off the payload's own `sections` list —
+  found on 4 Sep 2026 after eleven other names were tried and ignored. `NEWS_NOTES`
+  is read. **`TEAM_SERVICE_TIME`** (a row per gameweek: team, status, position),
+  **`TRANSACTIONS_FANTASY`** (richer than the league-wide feed — it names what was
+  dropped in the same move) and **`GAME_LOG_FANTASY`** are not. Service time is
+  what CM's Transfer tab would really want.

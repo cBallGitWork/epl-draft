@@ -1,6 +1,7 @@
-import { FANTRAX_LEAGUE_ID, FantraxError, fetchPlayerNews, mapPlayerNews } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, FantraxError, PAGE_REVALIDATE, fetchPlayerStories, mapPlayerStories } from "@epl/core";
+import { orderKey } from "@epl/core";
 import type { LeagueTransaction, PlayerStory } from "@epl/core";
-import { leagueCache } from "../../leagueCache";
+import { unstable_cache } from "next/cache";
 import { orRefusal } from "../../refusals";
 import { readDeals } from "../../business";
 import { getLeagueSquads } from "../../squads";
@@ -14,25 +15,41 @@ import { getLeagueSquads } from "../../squads";
 // player costs nothing — which is the opposite of `getPlayerProfile`, where one
 // tap is one request and a sweep is forbidden.
 
-/** Every story Fantrax's provider has filed about anybody in the pool.
+/** Everything written about him this football year, newest first.
  *
- *  Its own cache entry rather than part of the squads read, on `business.ts`'s
- *  reasoning: news moves on a different rhythm from a lineup, and a news read we
- *  cannot make should cost a block rather than a screen. */
-const readNews = leagueCache("player-news", async (): Promise<PlayerStory[]> => {
-  const raw = await orRefusal(fetchPlayerNews(FANTRAX_LEAGUE_ID));
-  return raw instanceof FantraxError ? [] : mapPlayerNews(raw);
-});
+ *  **A second read per tap, and it is worth one.** `getPlayerProfile` is already
+ *  one request per tap and this is a second against the same endpoint — but it is
+ *  the only route to a HISTORY. The pool-wide `getPlayerNews` files one story per
+ *  player and the profile's own `latestNews` is a truncated sentence; this is
+ *  every story with its full analysis. Cached on the player, so a reader moving
+ *  between his tabs pays once.
+ *
+ *  A news read we cannot make costs the block and not the screen. */
+export function playerStories(fantraxId: string, now: Date): Promise<PlayerStory[]> {
+  return unstable_cache(
+    async () => {
+      const raw = await orRefusal(fetchPlayerStories(FANTRAX_LEAGUE_ID, fantraxId));
+      if (raw instanceof FantraxError) return [];
+      const from = footballYearFrom(now);
+      return mapPlayerStories(raw).filter((story) => story.at === null || story.at >= from);
+    },
+    ["player-stories", fantraxId],
+    { revalidate: PAGE_REVALIDATE },
+  )();
+}
 
-/** The latest thing said about him, or null.
+/** Midnight on 1 July of the football year `now` falls in (Craig, 4 Sep 2026:
+ *  "Just show from 1 July this year").
  *
- *  **The latest, and not a season's worth.** Fantrax files one story per player —
- *  74 stories across 74 players on 4 Sep 2026 — so this is his most recent and
- *  the screen must not offer it as a history. Sorted anyway, because "one" is an
- *  observation about a payload and not a guarantee about it. */
-export async function playerStory(fantraxId: string): Promise<PlayerStory | null> {
-  const stories = (await readNews()).filter((story) => story.fantraxId === fantraxId);
-  return stories.sort((a, b) => (b.at ?? 0) - (a.at ?? 0))[0] ?? null;
+ *  **The year is derived, never written down.** A season runs July to June, so
+ *  January to June belongs to the July before it — a constant `2026` here would
+ *  be wrong from 1 January and silently show eighteen months of news. July is the
+ *  constant because that is when a football year starts and when a summer
+ *  signing's news begins to matter; the year it lands in is arithmetic. */
+function footballYearFrom(now: Date): number {
+  const JULY = 6; // `getMonth` is zero-based, and this is the one place that bites.
+  const year = now.getMonth() >= JULY ? now.getFullYear() : now.getFullYear() - 1;
+  return new Date(year, JULY, 1).getTime();
 }
 
 /** One move in this league, with the sides named rather than left as ids. */
@@ -73,7 +90,7 @@ export function movesOf(
   fantraxId: string,
   names: ReadonlyMap<string, string>,
 ): PlayerMove[] {
-  return rows
+  const moves = rows
     .filter((row) => row.fantraxId === fantraxId)
     .map((transaction) => ({
       transaction,
@@ -82,8 +99,22 @@ export function movesOf(
       // name is also null — a raw team id is a worse label than none.
       fromName: transaction.fromTeamId === null ? null : (names.get(transaction.fromTeamId) ?? null),
       toName: transaction.toTeamId === null ? null : (names.get(transaction.toTeamId) ?? null),
-    }))
-    // Newest first, which is the order a history is read in. The feed arrives
-    // oldest first.
-    .reverse();
+    }));
+
+  // **Newest first, and NOT by reversing the feed.** PLATFORM_NOTES records that
+  // each transaction view arrives newest-first ON ITS OWN, so a reverse gives
+  // oldest-first — the opposite of what was asked for — and concatenating two
+  // views leaves every claim before every trade, which is not a history either.
+  // `orderKey` is the same comparison the paper's week is built on.
+  //
+  // All-or-nothing, on that file's rule: one row we cannot date would sit where
+  // the comparator happened to put it, and the feed order it displaced was at
+  // least each view's own truth.
+  const keyed: { move: PlayerMove; key: number }[] = [];
+  for (const move of moves) {
+    const key = orderKey(move.transaction.processedAt);
+    if (key === null) return moves;
+    keyed.push({ move, key });
+  }
+  return keyed.sort((a, b) => b.key - a.key).map((entry) => entry.move);
 }

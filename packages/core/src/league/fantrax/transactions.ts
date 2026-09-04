@@ -196,3 +196,40 @@ export function mapTransactions(
 
   return transactions;
 }
+
+/** A sortable number for "Wed Aug 12, 2026, 9:14AM", or null if it does not read.
+ *
+ *  Deliberately not an instant and never stored as one. The string carries no
+ *  offset — Fantrax puts that in the column heading, in English, as "Date
+ *  Processed (EDT)" — so the only honest reading is a key for comparing rows that
+ *  all came from one league's feed in one displayed timezone. `Deal.processedAt`
+ *  stays their string verbatim, and nothing but ordering ever sees this number.
+ *
+ *  Null on anything unrecognised, a translated month included. */
+const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+
+/** A sortable key for Fantrax's own date string, and never an instant.
+ *
+ *  **It lives here rather than in the paper, because this is the file that owns
+ *  the field it reads.** `LeagueTransaction.processedAt` is Fantrax's string
+ *  verbatim; this is the only thing entitled to make a number of it, and it moved
+ *  the day a second reader appeared — a player's own move list, which needs the
+ *  same order for the same reason.
+ *
+ *  Nothing but ordering ever sees the number. */
+export function orderKey(processedAt: string | null): number | null {
+  const parts = /([a-z]{3})[a-z]* (\d{1,2}), (\d{4}), (\d{1,2}):(\d{2})\s*([ap])m/i.exec(
+    processedAt ?? "",
+  );
+  if (!parts) return null;
+
+  // Defaults only satisfy the type checker: a match supplies all six groups.
+  const [, month = "", day = "", year = "", hour = "", minute = "", meridiem = ""] = parts;
+  const monthIndex = MONTHS.indexOf(month.toLowerCase());
+  if (monthIndex < 0) return null;
+
+  // 12AM is hour zero and 12PM is hour twelve; every other PM hour adds twelve.
+  const hours = (Number(hour) % 12) + (meridiem.toLowerCase() === "p" ? 12 : 0);
+  const days = (Number(year) * 12 + monthIndex) * 32 + Number(day);
+  return (days * 24 + hours) * 60 + Number(minute);
+}

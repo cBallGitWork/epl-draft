@@ -26,6 +26,13 @@ interface RawElement {
   status: string;
   news: string;
   chance_of_playing_next_round: number | null;
+  /** When FPL attached the line in `news`, ISO with microseconds. Present on all
+   *  162 elements that carry news, probed 4 Sep 2026 — so it is optional here for
+   *  the elements that carry none, and never null beside a non-empty `news`.
+   *
+   *  It is what makes an availability note an ITEM rather than a state: without a
+   *  date there is nothing to sort a news list by. */
+  news_added?: string | null;
   opta_code: string | null;
   /** `1995-09-15`. Present on 633 of 652, probed 4 Sep 2026 — so it is optional
    *  here and nullable in the domain, unlike the season block beside it.
@@ -36,10 +43,15 @@ interface RawElement {
    *  published anywhere, and Fantrax gives the birthplace as plain text. */
   birth_date?: string | null;
   /** `2024-07-04` — when he signed for the club he is at. Present on the same
-   *  633 of 652 as `birth_date` (probed 4 Sep 2026), and optional here for the
-   *  same reason. It is the one fact about a footballer's employment FPL
-   *  publishes, and it is what stands in for Fantrax's service time while the
-   *  section carrying that is unreachable. */
+   *  633 of 652 as `birth_date`, probed 4 Sep 2026.
+   *
+   *  Mirrored and **deliberately not carried into the domain**, on
+   *  `squad_number`'s precedent above. It was, for one commit, as a stand-in for
+   *  Fantrax's unreachable service time on the Transfer tab — and the tab was
+   *  then cut back to how he arrived and what he is worth (Craig, 4 Sep 2026:
+   *  "Remove at this club and In this league sections too. Keep it clean"). A
+   *  domain field with no reader is CODE_RULES §2's dead pipeline; the wire fact
+   *  stays recorded here so the next session does not have to re-probe it. */
   team_join_date?: string | null;
 
   // Season totals. Present on all 629 elements, probed 2 Sep 2026 — every one

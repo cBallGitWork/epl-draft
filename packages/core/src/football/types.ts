@@ -36,6 +36,9 @@ export interface FootballPlayer {
   status: string;
   /** Free-text injury/availability note from FPL, empty when there's nothing to say. */
   news: string;
+  /** When that line was attached, ISO, or null when there is no line. What makes
+   *  it an item on a news list rather than a state on a badge. */
+  newsAdded: string | null;
   /** 0–100 chance of playing the next round; null when FPL has no opinion. */
   chanceOfPlaying: number | null;
   /** Opta's identifier, when FPL publishes it — the most reliable bridge to other
@@ -45,10 +48,6 @@ export interface FootballPlayer {
    *  filled in. Championship Manager opens every profile with this line, and it
    *  is the only thing on that line we hold ourselves. */
   birthDate: string | null;
-  /** ISO date he joined his current club, or null. Championship Manager gives
-   *  this its own tab; we hold one fact where the game simulates a contract, so
-   *  it is a row on Transfer rather than a fifth plate. */
-  joinedClub: string | null;
   /** What he has done across the season so far, as FPL counts it.
    *
    *  Two kinds of number, and the difference is who is entitled to state it.

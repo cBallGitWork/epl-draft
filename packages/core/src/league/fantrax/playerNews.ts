@@ -1,83 +1,81 @@
-// `getPlayerNews` → what is being said about the players in this league's pool.
+// `getPlayerProfile?tab=NEWS_NOTES` → everything that has been written about one
+// player, newest first.
 //
-// **It ignores `playerId` and answers for the whole pool**, which is the whole
-// reason it is worth a read: one 94 KB request carries the latest story for every
-// player anybody has news about — 74 of them on 4 Sep 2026 — so a screen about
-// one man costs nothing beyond the first tap on any man.
+// **`tab` is the parameter, and finding it opened five sections.** The payload's
+// own `sections` list names `OVERVIEW`, `STATS`, `SPLITS`, `GAME_LOG_FANTASY`,
+// `GAME_LOG`, `NEWS_NOTES`, `TRANSACTIONS_FANTASY`, `TEAM_SERVICE_TIME` and
+// `TRANSACTIONS`, and only `OVERVIEW` ever came back. `section`, `sectionCode`,
+// `view`, `selectedSection`, `displayedSection`, `sectionType`, `contentSection`,
+// `pageSection`, `sectionName`, `selectedTab` and `activeSection` were each tried
+// and each ignored — the response was byte-identical every time. `tab` is the
+// name, probed 4 Sep 2026, and it takes the `code` off that same list.
 //
-// **The story is WHOLE here, and gated on the profile.** `getPlayerProfile`'s
-// `latestNews` is one truncated sentence beside "Analysis available to registered
-// users". The same story arrives on this endpoint with its full `content`, its
-// full `analysis` and a real timestamp, unauthenticated. That is the difference
-// between a headline and a report, and it is why the player screen reads this
-// rather than the profile's own line.
-//
-// **`poolType` is required and the value barely matters.** The call is refused
-// outright without it — `MISSING_PARAM: poolType, must be 'POOL' or 'ALL' or
-// 'WATCH_LIST'` — and `POOL` and `ALL` returned byte-identical 94 KB responses
-// while `WATCH_LIST` returned 85 bytes and nothing. Probed 4 Sep 2026.
-//
-// One story per player, not a history: 74 stories across 74 distinct players.
-// A screen may say "the latest" and may not say "his news this season".
+// **This is a HISTORY, where the pool feed was a headline.** `getPlayerNews`
+// returns the whole pool's latest — one story per player — and
+// `getPlayerProfile`'s `latestNews` returns one sentence of it with the analysis
+// behind a login. This returns every story filed about him, each with its full
+// body, its full analysis and a real timestamp.
 
-/** Only the keys we traverse. Every one is optional: this is a scraped payload
- *  and `raw.ts`'s rule applies to it as much as to the rest of the adapter. */
-export interface RawPlayerNews {
-  stories?: {
-    scorerFantasy?: { scorerId?: string };
-    playerNews?: {
-      id?: string;
-      headlineNoBrief?: string;
-      content?: string;
-      analysis?: string;
-      /** Epoch milliseconds. The one date in this adapter that arrives as a
-       *  number rather than as one of Fantrax's unparseable strings. */
-      newsDate?: number;
+/** Only the keys we traverse. Every one optional: scraped payload, `raw.ts`'s
+ *  rule. */
+export interface RawNewsSection {
+  sectionContent?: {
+    NEWS_NOTES?: {
+      playerNews?: {
+        id?: string;
+        headlineNoBrief?: string;
+        content?: string;
+        analysis?: string;
+        /** Epoch milliseconds — the one date in this adapter that is a number
+         *  rather than one of Fantrax's unparseable strings. */
+        newsDate?: number;
+      }[];
     };
-  }[];
+  };
 }
 
-/** One story about one player, as Fantrax's provider filed it. */
+/** One story about him, as Fantrax's provider filed it. */
 export interface PlayerStory {
-  /** Their id for the man, which is our join key. */
-  fantraxId: string;
-  /** The provider's own headline, already elided with an ellipsis by them. */
+  /** Their id for it, which is what makes two stories on the same day distinct. */
+  id: string;
+  /** The provider's own headline. */
   headline: string;
   /** The story itself, whole. */
   content: string;
-  /** The provider's reading of what it means for a fantasy manager. Null when
-   *  they filed a story without one. */
+  /** The provider's reading of what it means for a manager. Null when they filed
+   *  a story without one. */
   analysis: string | null;
-  /** Epoch milliseconds, or null. Never turned into a Date here — this file is
-   *  pure and a Date is a reading of a clock's timezone. */
+  /** Epoch milliseconds, or null. Never made a `Date` here — this file is pure
+   *  and a `Date` is a reading of a clock's timezone. */
   at: number | null;
 }
 
-/** Every story in the payload, keyed by nothing and filtered by the caller.
+/** Every story filed about him, newest first.
  *
- *  A story with no player or no words is dropped rather than rendered empty: the
- *  join key is the only thing that makes one of these attributable at all. */
-export function mapPlayerNews(raw: RawPlayerNews): PlayerStory[] {
+ *  Sorted rather than trusted: the payload arrives newest-first today and that is
+ *  an observation about it, not a promise. A story with no date sinks, because it
+ *  cannot be shown to be recent and putting it on top would claim that it is. */
+export function mapPlayerStories(raw: RawNewsSection): PlayerStory[] {
+  const stories = raw.sectionContent?.NEWS_NOTES?.playerNews ?? [];
   const out: PlayerStory[] = [];
-  for (const story of raw.stories ?? []) {
-    const fantraxId = story.scorerFantasy?.scorerId;
-    const news = story.playerNews;
-    const content = text(news?.content) ?? text(news?.headlineNoBrief);
-    if (!fantraxId || content === null) continue;
+  for (const story of stories) {
+    const content = text(story.content) ?? text(story.headlineNoBrief);
+    if (content === null) continue;
     out.push({
-      fantraxId,
-      headline: text(news?.headlineNoBrief) ?? content,
+      id: story.id ?? content,
+      headline: text(story.headlineNoBrief) ?? content,
       content,
-      analysis: text(news?.analysis),
-      at: typeof news?.newsDate === "number" ? news.newsDate : null,
+      analysis: text(story.analysis),
+      at: typeof story.newsDate === "number" ? story.newsDate : null,
     });
   }
-  return out;
+  return out.sort((a, b) => (b.at ?? -Infinity) - (a.at ?? -Infinity));
 }
 
-/** Tags out, because Fantrax puts them inside its own strings elsewhere in the
- *  same API and a provider string reaching a template with markup in it is
- *  either printed as angle brackets or trusted. */
+/** Tags out, because Fantrax puts them inside its own strings elsewhere in this
+ *  same API — `<b>test4</b>` is a real cell value on the transactions section —
+ *  and a provider string reaching a template with markup in it is either printed
+ *  as angle brackets or trusted. */
 function text(value: string | undefined): string | null {
   if (typeof value !== "string") return null;
   const stripped = value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();

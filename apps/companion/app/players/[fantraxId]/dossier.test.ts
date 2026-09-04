@@ -36,9 +36,31 @@ describe("movesOf", () => {
     expect(got.transaction.toTeamId).toBe("gone");
   });
 
-  it("reads newest first — the feed arrives oldest first", () => {
-    const rows = [move({ setId: "old", period: 1 }), move({ setId: "new", period: 5 })];
-    expect(movesOf(rows, "03gu4", NAMES).map((m) => m.transaction.setId)).toEqual(["new", "old"]);
+  it("reads newest first, by the date and not by the feed's order", () => {
+    // The feed arrives newest-first PER VIEW, so a reverse would give oldest
+    // first — and concatenating claims and trades leaves every claim before every
+    // trade, which is not a history either. `orderKey` is the same comparison the
+    // paper's week is built on.
+    const rows = [
+      move({ setId: "mid", processedAt: "Wed Aug 12, 2026, 9:14AM" }),
+      move({ setId: "new", processedAt: "Fri Sep 4, 2026, 8:00AM" }),
+      move({ setId: "old", processedAt: "Mon Aug 3, 2026, 11:30PM" }),
+    ];
+    expect(movesOf(rows, "03gu4", NAMES).map((m) => m.transaction.setId)).toEqual([
+      "new",
+      "mid",
+      "old",
+    ]);
+  });
+
+  it("leaves the feed order alone when one row cannot be dated", () => {
+    // All-or-nothing: a row we cannot read would sit where the comparator
+    // happened to put it, and the order it displaced was at least the view's own.
+    const rows = [
+      move({ setId: "a", processedAt: "Fri Sep 4, 2026, 8:00AM" }),
+      move({ setId: "b", processedAt: null }),
+    ];
+    expect(movesOf(rows, "03gu4", NAMES).map((m) => m.transaction.setId)).toEqual(["a", "b"]);
   });
 
   it("keeps a pending move rather than hiding it", () => {

@@ -92,10 +92,11 @@ export {
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
 export { mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel, PlayerMatch } from "./fantrax/profile";
-export { mapTransactions, transactionDateLabel } from "./fantrax/transactions";
-// The pool's news, read whole once — `playerNews.ts` says why it is not per-player.
-export { fetchPlayerNews } from "./fantrax/client";
-export { mapPlayerNews } from "./fantrax/playerNews";
+export { mapTransactions, orderKey, transactionDateLabel } from "./fantrax/transactions";
+// Everything written about one player. `playerNews.ts` records the `tab`
+// parameter that reaches it, and the eleven names that did not.
+export { fetchPlayerStories } from "./fantrax/client";
+export { mapPlayerStories } from "./fantrax/playerNews";
 export type { PlayerStory } from "./fantrax/playerNews";
 // Exported so the app can hold a raw payload across a cache boundary before
 // mapping it — the mapper stays the only place raw meets clean.

@@ -1055,14 +1055,36 @@ The **tables** stay refused, and the reason is no longer only their weight:
   cell contents in the same payload. `profile.ts` strips tags before anything
   leaves it.
 
-**The deeper sections cannot be reached yet, and this is a known unknown rather
-than an absence.** The payload's own `sections` list names `OVERVIEW`, `STATS`,
-`SPLITS`, `GAME_LOG_FANTASY`, `GAME_LOG`, `NEWS_NOTES`, `TRANSACTIONS_FANTASY`,
-**`TEAM_SERVICE_TIME`** and `TRANSACTIONS`, but only `OVERVIEW` ever comes back
-populated. `section`, `sectionCode`, `view` and `displayedSelections.sectionCode`
-were each tried and each **ignored** — byte-identical 14,844-byte responses every
-time. Service time is what a Transfer tab really wants; `team_join_date` on FPL's
-bootstrap covers it until the parameter is found.
+### The parameter is `tab`, and it opens all nine sections (4 Sep 2026)
+
+The payload's own `sections` list names `OVERVIEW`, `STATS`, `SPLITS`,
+`GAME_LOG_FANTASY`, `GAME_LOG`, `NEWS_NOTES`, `TRANSACTIONS_FANTASY`,
+**`TEAM_SERVICE_TIME`** and `TRANSACTIONS`, and for one day only `OVERVIEW` came
+back. **`tab` is the parameter**, and it takes the `code` off that same list.
+
+Eleven names were tried before it and every one was ignored — byte-identical
+responses each time: `section`, `sectionCode`, `view`, `selectedSection`,
+`displayedSection`, `sectionType`, `contentSection`, `pageSection`, `sectionName`,
+`selectedTab`, `activeSection`. The tell was the response SIZE: 16,058 bytes for
+every miss and 5,700 for the hit.
+
+What each answers, measured with `playerId` `078wl`:
+
+| `tab` | bytes | what is in it |
+|---|---|---|
+| `NEWS_NOTES` | 5,700 | **read** — every story about him, full body and full analysis, `newsDate` in epoch ms |
+| `TEAM_SERVICE_TIME` | 4,626 | a row per gameweek: `period`, `team`, `status`, `position` |
+| `TRANSACTIONS_FANTASY` | 4,620 | `date`, `action`, `details` — richer than the league-wide feed, because it names what was dropped in the same move: `Claimed (FA) by <b>test4</b>` / `Dropped <b>David Raya</b>` |
+| `GAME_LOG_FANTASY` | 9,178 | tables plus a `seasons` list and a `selectedSeason` |
+| `SPLITS` | 12,156 | tables plus seasons |
+| `STATS` | 6,073 | tables |
+
+Only `NEWS_NOTES` is read. **Service time is what a Transfer tab really wants** and
+`TRANSACTIONS_FANTASY` would supersede the league-wide feed the player screen
+currently filters — both are now a mapping job rather than a probe.
+
+Note the `<b>` in those cell values: this section carries markup inside its own
+strings like the rest of the payload, and nothing may render it as markup.
 
 ## The pool page: status is league state, not a player fact
 

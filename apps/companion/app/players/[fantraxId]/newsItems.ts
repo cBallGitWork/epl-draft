@@ -1,0 +1,48 @@
+import type { PlayerStory } from "@epl/core";
+
+// Everything written about him this football year, as an inbox.
+//
+// **`newsItems.ts`, not `inbox.ts`, and the reason is the filesystem.** macOS is
+// case-insensitive, so a model beside its component collides — `Inbox.tsx` and
+// `inbox.ts` are one path to it, and tsc reports "differs only in casing" from
+// inside the program it has already loaded twice. `MatchLog.tsx` and
+// `matchRows.ts` are the same pairing for the same reason.
+//
+// **Fantrax's stories and nothing else** (Craig, 4 Sep 2026: "Remove the FPL
+// part"). FPL publishes one availability line, which is a STATE — whether he can
+// play — and not a story about him; it belongs to the badge and the pitch, where
+// `availabilityOf` already answers it. Mixing a state into a list of dated
+// reports made the newest item a sentence saying nothing had happened.
+//
+// The history is `getPlayerProfile?tab=NEWS_NOTES`. Suzuki's runs from his
+// transfer from Parma on 19 August to his debut against Arsenal on 1 September.
+
+export interface NewsItem {
+  /** Fantrax's own id for the story, so two on one day stay distinct. */
+  id: string;
+  /** The line a reader scans. */
+  headline: string;
+  /** The whole of it. */
+  body: string;
+  /** The provider's reading of what it means for a manager. Often absent. */
+  analysis: string | null;
+  /** Epoch milliseconds, or null. Sorted on, so a dateless item sinks. */
+  at: number | null;
+}
+
+/** His items, newest first (Craig, 4 Sep 2026: "Most recent for news and
+ *  transfers should be at the top").
+ *
+ *  A dateless item goes last rather than first: it cannot be shown to be recent,
+ *  and putting it at the top would be claiming that it is. */
+export function inbox(stories: readonly PlayerStory[]): NewsItem[] {
+  return stories
+    .map((story) => ({
+      id: story.id,
+      headline: story.headline,
+      body: story.content,
+      analysis: story.analysis,
+      at: story.at,
+    }))
+    .sort((a, b) => (b.at ?? -Infinity) - (a.at ?? -Infinity));
+}

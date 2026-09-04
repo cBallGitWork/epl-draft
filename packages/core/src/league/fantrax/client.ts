@@ -11,7 +11,7 @@ import type { RawSeasonStats } from "./seasonStats";
 import type { PositionGroup } from "./playerStats";
 import type { RawPlayerProfile } from "./profile";
 import type { RawPoolStats, RawStatTables } from "./stats";
-import type { RawPlayerNews } from "./playerNews";
+import type { RawNewsSection } from "./playerNews";
 import type { RawTransactionHistory } from "./transactions";
 import type {
   RawDraftResults,
@@ -141,14 +141,18 @@ export function fetchTransactions(
   }) as Promise<RawTransactionHistory>;
 }
 
-/** What is being said about the pool — the whole pool, in one read.
+/** Everything written about one player, newest first.
  *
- *  `poolType` is required and the endpoint refuses the call without it. It
- *  ignores `playerId` entirely, so this takes none: `playerNews.ts` says why one
- *  league-wide read is the right shape and why the story is fuller here than on
- *  the profile. */
-export function fetchPlayerNews(leagueId: string): Promise<RawPlayerNews> {
-  return fxpaRead(leagueId, "getPlayerNews", { poolType: "ALL" }) as Promise<RawPlayerNews>;
+ *  **`tab` is the parameter that reaches a profile's sections**, and it took
+ *  eleven guesses to find — `playerNews.ts` lists them. It takes the `code` off
+ *  the payload's own `sections` list, and it opens the other four sections too:
+ *  `TEAM_SERVICE_TIME`, `GAME_LOG_FANTASY`, `TRANSACTIONS_FANTASY` and `SPLITS`
+ *  all answer, none of which anything reads yet. */
+export function fetchPlayerStories(leagueId: string, playerId: string): Promise<RawNewsSection> {
+  return fxpaRead(leagueId, "getPlayerProfile", {
+    playerId,
+    tab: "NEWS_NOTES",
+  }) as Promise<RawNewsSection>;
 }
 
 /** The standings page Fantrax draws for its own site: the table and the badges,

@@ -5,7 +5,7 @@ import type { RosteredTeam } from "../join/roster";
 import { teamOfTheWeek } from "./teamOfTheWeek";
 
 const footballer = (over: Partial<FootballPlayer>): FootballPlayer => ({
-  id: 1, code: 1, name: "Player", fullName: "Player", clubId: 1, status: "a", news: "", chanceOfPlaying: null, optaCode: null, birthDate: null, joinedClub: null, season: NO_SEASON, ...over,
+  id: 1, code: 1, name: "Player", fullName: "Player", clubId: 1, status: "a", news: "", chanceOfPlaying: null, optaCode: null, birthDate: null, newsAdded: null, season: NO_SEASON, ...over,
 });
 
 const limits = {
