@@ -126,9 +126,22 @@ lists a player's moves between clubs and ours lists his between managers. A
 pending move is drawn quiet and labelled, because Fantrax distinguishes proposed
 from executed and the default filter hides the proposals.
 
-Then the draft pick and what he has repaid, our league's row, and the
-whole-of-Fantrax market — ADP and percent drafted, which are every league on the
-site and not ours.
+Then the draft pick, our league's row — whose he is and what the commissioner
+deems him eligible for — and the whole-of-Fantrax market: ADP, percent drafted,
+and the two ownership percentages, which are every league on the site and not
+ours.
+
+**No fantasy-points figure appears on this tab** (Craig, 4 Sep 2026: "Remove all
+unneeded info from transfer tab like stats"). Fantrax mixes his scoring into two
+of the blocks it hands over — `FPts` and `FP/G` in the league row, and those plus
+his positional rank among the whole-of-Fantrax numbers — and all of it is Data's
+job now, in Data's shape. A points total in two places on one screen is a reader
+checking whether they agree.
+
+The scoring rows are dropped by name; the two ownership rows are KEPT by name. The
+asymmetry is deliberate: `FPts` and `FP/G` are stable labels, and the rank's is not
+— it carries the position (`Rank G/Ov`, `Rank D/Ov`) and cannot be matched by a
+fixed string.
 CM's `Contract` is folded in here as one row — **At this club · Joined**, from
 FPL's `team_join_date` (633/652). It is a stand-in: what this tab wants is
 Fantrax's own `TEAM_SERVICE_TIME`, which their payload names and will not serve.

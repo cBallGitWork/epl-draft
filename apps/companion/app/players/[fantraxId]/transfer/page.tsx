@@ -17,8 +17,28 @@ import { subject } from "../subject";
 // across every Fantrax league, and how many of them have him — which is the same
 // question a draft league asks instead. `Contract` is folded in here rather than
 // given a fifth plate: we hold one fact about his employment and it is a date.
+//
+// **No fantasy-points figure appears on this tab** (Craig, 4 Sep 2026: "Remove
+// all unneeded info from transfer tab like stats"). Fantrax mixes his scoring
+// into two of the blocks it hands over — `FPts` and `FP/G` in the league row, and
+// those plus his positional rank among the whole-of-Fantrax numbers — and all of
+// it is now Data's job, in Data's shape. A points total in two places on one
+// screen is a reader checking whether they agree.
 
 export const revalidate = 30;
+
+/** Fantrax's own labels for his scoring, dropped from this tab.
+ *
+ *  Their shortNames and stable ones — unlike the rank row beside them, whose
+ *  label carries the position (`Rank G/Ov`, `Rank D/Ov`) and so cannot be matched
+ *  by a fixed string. That is why the whole-of-Fantrax block is built from a
+ *  KEEP list below rather than filtered by a drop list here. */
+const SCORING = ["FPts", "FP/G"];
+
+/** The two whole-of-Fantrax rows that are about DEMAND rather than performance:
+ *  how many leagues hold him, and how many start him. Kept by name rather than
+ *  filtering the rank out, because the rank's label moves with his position. */
+const DEMAND = ["Ros", "Start"];
 
 export default async function PlayerTransfer({ params }: { params: Promise<{ fantraxId: string }> }) {
   const { fantraxId } = await params;
@@ -52,27 +72,18 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
           fact about his employment and Fantrax's service time is unreachable. */}
       <Joined date={football?.player.joinedClub ?? null} />
 
-      {/* **The season is named or the heading does not pretend to one.**
-          `PlayerIntel.season` is nullable and its own docblock says the UI must
-          say so rather than letting figures stand undated — this rendered
-          `In this league · ` with a trailing separator for one commit. */}
-      <Facts
-        title={intel.season ? `In this league · ${intel.season}` : "In this league"}
-        note={
-          intel.season
-            ? undefined
-            : "Fantrax did not say which season these describe, so read them with care."
-        }
-        rows={intel.league}
-      />
-      {/* Fantrax's own scoring and rankings — his position rank, his points, how
-          much of the site holds him. Theirs, and never recomputed from football
-          facts: that decision is permanent (PLATFORM_NOTES). */}
-      <Facts title={intel.season ? `Fantrax · ${intel.season}` : "Fantrax"} rows={intel.highlights} />
+      {/* Where he stands in THIS league: whose he is, and what the commissioner
+          deems him eligible for. His points are not here — see the note above. */}
+      <Facts title="In this league" rows={intel.league} without={SCORING} />
+
+      {/* How much of Fantrax wants him. Their whole userbase and not ours, which
+          is what makes it a price rather than an opinion — and the two ownership
+          percentages belong beside the draft numbers rather than under a heading
+          of their own, because all four answer one question. */}
       <Facts
         title="Across every Fantrax league"
         note="Their whole userbase, not ours — which is what makes it a market price."
-        rows={intel.market}
+        rows={[...intel.market, ...intel.highlights.filter((row) => DEMAND.includes(row.label))]}
       />
 
       <Foot ownerTeamId={intel.ownerTeamId} />
