@@ -1,4 +1,10 @@
-import { attributes, mapPastSeasons, fetchElementSummary } from "@epl/core";
+import {
+  KEEPER_ONLY,
+  OUTFIELD_ONLY,
+  attributes,
+  mapPastSeasons,
+  fetchElementSummary,
+} from "@epl/core";
 import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, Scouted } from "@epl/core";
 import { unstable_cache } from "next/cache";
 import { PAGE_REVALIDATE } from "@epl/core";
@@ -27,7 +33,32 @@ export async function playerGrid(player: FootballPlayer): Promise<Attribute[]> {
     player: man,
     setPieceShare: shares.get(man.code) ?? null,
   });
-  return attributes(scouted(player), snapshot.players.map(scouted));
+  // **Rated against EVERYONE, then filtered.** The percentile still runs over
+  // the whole division — a keeper's Handling means "better than most players",
+  // which is the only reading a percentile has — and what the position decides
+  // is which rows are worth printing, never what they are measured against.
+  return keeperGrid(player.code)
+    ? attributes(scouted(player), snapshot.players.map(scouted)).filter(
+        (row) => !OUTFIELD_ONLY.includes(row.name),
+      )
+    : attributes(scouted(player), snapshot.players.map(scouted)).filter(
+        (row) => !KEEPER_ONLY.includes(row.name),
+      );
+}
+
+/** Whether to draw him a keeper's grid.
+ *
+ *  **The sister repo's real position, never FPL's `element_type`.** That one is
+ *  a fantasy classification and the football layer refuses it by rule, which is
+ *  also why this decision cannot live in `attributes.ts` — core has no position
+ *  to ask. `line` is the export's own bucketing.
+ *
+ *  A man with no settled position — 146 of 651, all of them the ones whose
+ *  position came from FPL's letter — gets the outfielder's grid. It is the
+ *  commoner answer by twelve to one, and the two rows he loses by it are the two
+ *  an outfielder is bottom of anyway. */
+function keeperGrid(code: number): boolean {
+  return intelSquads.get(code)?.line === "GK";
 }
 
 /** Every man's share of his club's set pieces, added across the three duties.

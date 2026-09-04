@@ -26,6 +26,20 @@ import Section from "../../components/shell/Section";
 // (DESIGN §3), and a grid of thirty numbers all reading "active" would spend the
 // slot on nothing. `--color-mid` is the slot whose one meaning is "a figure",
 // which is what every one of these is.
+//
+// **And the good ones are the loud ones** (Craig, 4 Sep 2026: *"good attributes
+// - give a orange/red colouring"*). The ramp is a step down in LOUDNESS rather
+// than a second hue: `--color-mid` — amber, and the warmest ink in the set — for
+// the top of the scale, then `--color-muted`, then `--color-faint`. Red was the
+// obvious reading of "orange/red" and is refused: `--color-bad`'s one meaning is
+// *a loss, a doubt, a negative*, and painting a 19 with it would invert the one
+// slot the rest of the app relies on to mean the opposite.
+//
+// **No provenance line and no derivation paragraph** (Craig, same: *"remove this
+// row text"* and *"Ours, derived - and that text"*). Both were here on DESIGN
+// §7's instruction — provenance at the point of use — and their removal is an
+// amendment to that rule rather than an oversight of it; DESIGN.md records it
+// with the date. What each rating is made of survives on each row's `title`.
 
 export default function AttributeGrid({
   attributes,
@@ -41,7 +55,7 @@ export default function AttributeGrid({
     // Fifteen CM-shaped 1-20s next to a Premier League portrait read as Sports
     // Interactive's, which is the single reading `attributes.ts` exists to
     // refuse. DESIGN §7: provenance at the point of use.
-    <Section title="Attributes" aside="Ours, derived">
+    <Section title="Attributes">
       <dl className="grid grid-cols-2 gap-x-4 lg:grid-cols-3">
         {attributes.map((attribute) => (
           <div
@@ -61,11 +75,7 @@ export default function AttributeGrid({
             >
               {attribute.name}
             </dt>
-            <dd
-              className={`numeric text-xs font-bold lg:text-sm ${
-                attribute.rating === null ? "text-faint" : "text-mid"
-              }`}
-            >
+            <dd className={`numeric text-xs font-bold lg:text-sm ${ink(attribute.rating)}`}>
               {/* Absence is a dash, never a nought — DESIGN §7. A man under the
                   minutes floor has not been measured, and a 1 would say he was
                   measured and found to be the worst in the division. */}
@@ -74,13 +84,20 @@ export default function AttributeGrid({
           </div>
         ))}
       </dl>
-      {/* What each rating is made of, once, rather than fifteen times in a
-          `title` nobody on a phone can reach. */}
-      <p className="text-2xs text-faint">
-        Rated 1&ndash;20 against every player in the division who has played,
-        off Premier League numbers. Not Championship Manager&apos;s, and not a
-        scout&apos;s.
-      </p>
     </Section>
   );
 }
+
+/** How loud a rating is drawn, on the 1&ndash;20 scale CM uses.
+ *
+ *  Thresholds rather than a gradient: fifteen shades of amber is not a reading,
+ *  and CM's own grid is legible because a value is either notable or it is not.
+ *  15 is the top quarter of the scale and 8 the bottom half of the middle. */
+function ink(rating: number | null): string {
+  if (rating === null) return "text-faint";
+  if (rating >= GOOD) return "text-mid";
+  return rating >= ORDINARY ? "text-muted" : "text-faint";
+}
+
+const GOOD = 15;
+const ORDINARY = 8;

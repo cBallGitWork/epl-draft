@@ -181,3 +181,33 @@ function stamina(man: Scouted): number | null {
   const { minutes, starts } = man.player.season;
   return starts > 0 ? minutes / starts : null;
 }
+
+/** The two measures that are only a goalkeeper's, and the ones that are only an
+ *  outfielder's.
+ *
+ *  **The split is Craig's, 4 Sep 2026** — *"give keepers their own stats,
+ *  outfielders for the rest"* — and it reverses a decision this file used to
+ *  defend in its own header. That paragraph argued a keeper handled himself: an
+ *  outfielder makes no saves, sits at the bottom of Handling, and CM draws
+ *  Michael Ball at Handling 1. True, and it produced a grid where two of fifteen
+ *  rows were dead for 600 of 651 men and thirteen were dead for the other 51.
+ *
+ *  **Names, not a filter, because this layer has no position.** Deciding whether
+ *  a man is a keeper needs a position, and the football layer refuses to hold one
+ *  (`types.ts`) — FPL publishes only its own fantasy classification. So core owns
+ *  the vocabulary and the app, which has the sister repo's real position, owns
+ *  the choosing. */
+export const KEEPER_ONLY: readonly string[] = ["Handling", "Reflexes"];
+
+/** What a keeper is not rated on. Everything about scoring, creating and
+ *  defending in open play — a keeper ranked against outfielders on Finishing is
+ *  a row that says nothing except that he is a goalkeeper. */
+export const OUTFIELD_ONLY: readonly string[] = [
+  "Finishing",
+  "Off The Ball",
+  "Long Shots",
+  "Creativity",
+  "Marking",
+  "Tackling",
+  "Work Rate",
+];

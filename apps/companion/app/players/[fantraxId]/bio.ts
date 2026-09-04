@@ -21,12 +21,33 @@
  *
  *  `now` is injected because this is a pure function and the age is the only
  *  thing on the screen that changes without the data changing. */
-export function bornLine(birthDate: string | null, now: Date): string | null {
+export function bornLine(
+  birthDate: string | null,
+  now: Date,
+  /** Where he is from, as Fantrax writes it — `"Maia, Portugal"`. The COUNTRY is
+   *  taken off the end of it and the town dropped, because CM's line is a
+   *  nationality: `cm9900/11.jpg` reads `Born 2.10.79 (Age 19). English.` and
+   *  the Özil profile `Born 15.10.79 (Age 21). German (17 caps/2 goals).`
+   *
+   *  A country and a nationality are not the same word — CM writes "English"
+   *  where this writes "England" — and inventing the adjective would need a
+   *  table of demonyms nobody has checked. The country is the fact we hold. */
+  birthplace: string | null = null,
+): string | null {
   const born = parseIsoDate(birthDate);
-  if (born === null) return null;
+  const from = country(birthplace);
+  if (born === null) return from === null ? null : `${from}.`;
   const age = ageOn(born, now);
   const stamp = `${born.day}.${born.month}.${String(born.year % 100).padStart(2, "0")}`;
-  return age === null ? `Born ${stamp}.` : `Born ${stamp} (Age ${age}).`;
+  const line = age === null ? `Born ${stamp}.` : `Born ${stamp} (Age ${age}).`;
+  return from === null ? line : `${line} ${from}.`;
+}
+
+/** The country out of a birthplace. Null for an empty string or one Fantrax
+ *  padded with nothing, which it does — `profile.ts` records the empty rows. */
+function country(birthplace: string | null): string | null {
+  const parts = (birthplace ?? "").split(",").map((part) => part.trim()).filter(Boolean);
+  return parts.length === 0 ? null : parts[parts.length - 1];
 }
 
 interface BornOn {

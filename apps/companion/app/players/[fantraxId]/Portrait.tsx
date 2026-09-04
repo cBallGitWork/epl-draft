@@ -49,7 +49,10 @@ export default function Portrait({
 
   return (
     <div
-      className="relative shrink-0 overflow-hidden "
+      // `object-top` inside `PlayerImage` keeps his head in frame when the
+      // column is taller than the cut-out; the club colour fills the rest, which
+      // is what it is for.
+      className="relative shrink-0 overflow-hidden"
       style={{ backgroundColor: colours.primary, width: WIDTH }}
     >
       {/* `kickedOff` is true because this page has no round in it. Drawn back

@@ -5,9 +5,7 @@ import { footballNow } from "../../football";
 import Nothing from "../../components/shell/Nothing";
 import { PANEL } from "@/app/desk";
 import AttributeGrid from "./AttributeGrid";
-import Facts from "./Facts";
 import FixtureRun from "./FixtureRun";
-import Foot from "./Foot";
 import NoProfile from "./NoProfile";
 import PlayerShell from "./PlayerShell";
 import Portrait from "./Portrait";
@@ -68,7 +66,14 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
           layout is drawn first and the phone is a second design of the same data
           (PRODUCT.md, 31 Aug) — at 1440 a single column left 900px of empty row
           between every label and its value, which is a phone layout stretched. */}
-      <div className="flex flex-col gap-2 lg:flex-row lg:items-start">
+      {/* **`items-stretch`, so the portrait is as tall as the grid beside it**
+          (Craig, 4 Sep 2026: *"portarit has awkward sapce under it"*). It was
+          `items-start`, which sized the portrait to its own image and left a
+          band of club colour under it wherever the attribute grid ran longer —
+          a keeper's grid is eight rows and an outfielder's thirteen, so the gap
+          changed size per man. `cm9900/11.jpg` has no such gap: its picture is
+          the ground the whole panel is drawn on. */}
+      <div className="flex flex-col gap-2 lg:flex-row lg:items-stretch">
         {/* No portrait for a man FPL has never listed, and nothing standing in
             for one: he has no code, so there is no photograph, no kit and no
             crest to draw. That is 88 of the 694 in the pool and it is a settled
@@ -91,7 +96,6 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
           ) : (
             <AttributeGrid attributes={grid} />
           )}
-          <RealPosition position={position} />
         </div>
       </div>
 
@@ -124,13 +128,20 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
         <Projected fantraxId={fantraxId} ownerTeamId={intel.ownerTeamId} />
       </Suspense>
 
-      {/* The man himself, as Fantrax files him. Birthdate and Age are dropped:
-          the box under the tabs already says `Born 5.3.93 (Age 33).`, and a
-          screen that states a fact twice invites a reader to check whether the
-          two agree. Birthplace, height and weight are only here. */}
-      <Facts title="Player" rows={intel.personal} without={["Birthdate", "Age"]} />
+      {/* **What he actually is, last and loudest** (Craig, 4 Sep 2026), which is
+          where `cm9900/11.jpg` puts it: `Defender/Defensive Midfielder
+          (Left/Centre)` in cyan across the foot of the panel, under the
+          appearances table and above the buttons. It had been sitting inside the
+          grid column, where it read as a caption on the attributes.
 
-      <Foot ownerTeamId={intel.ownerTeamId} />
+          The Player block of birthplace, height and weight is gone with it: the
+          country is in the caption under the tabs now, and height and weight are
+          two figures no screen in this app has ever asked a question about.
+
+          So are the two foot buttons (Craig: *"remove - his squad/back to pool
+          for now"*). CM's foot is Back/Next and ours were named destinations;
+          the rail reaches both at every width. */}
+      <RealPosition position={position} />
     </PlayerShell>
   );
 }

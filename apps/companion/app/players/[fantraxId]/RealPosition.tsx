@@ -58,8 +58,13 @@ export default function RealPosition({ position }: { position: IntelPlayer | nul
   // on 4 Sep 2026 and could report for the first time — it had been counting
   // body's opaque background and passing everything. The line is the marquee
   // element of the screen and was the loudest thing on the picture.
+  // **Bigger, and last on the screen** (Craig, 4 Sep 2026: *"this goes at bottom
+  // … in cyyan tet and bigger"*). `cm9900/11.jpg` sets it across the foot of the
+  // panel at about the size of the title bar's own type, well above the grid it
+  // sits under — it is the sentence the whole screen is building to, and at
+  // `text-sm` it read as a caption on the attributes.
   return (
-    <p className="cm-panel cm-title px-2 py-1 text-center font-chrome text-sm font-bold text-info lg:text-base">
+    <p className="cm-panel cm-title px-2 py-2 text-center font-chrome text-base font-bold text-info lg:text-2xl">
       {label}
     </p>
   );

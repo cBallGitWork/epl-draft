@@ -130,6 +130,7 @@ is more specific than a palette; it is the reason the token names in
 | League red | `--color-league` | the league's own mark. Chrome only | 3.2 |
 | Deep league red | `--color-league-deep` | the same red as a **ground with text on it** | — |
 | Cream | `--color-cream` | ink on a colour plate | — |
+| Quiet on a plate | `--color-faint-plate` | the same **quiet** as `--color-faint`, on the blue plate that will not carry it | — |
 
 **Cyan said "a person" until 3 Sep 2026, and that was a misread of the
 reference.** `docs/ui/reference/README.md` recorded a "person link" in cyan and
@@ -173,6 +174,16 @@ live. The live red is the brand red lifted until it carries text, because
 `#C8102E` is 3.2:1 on this ground.
 
 **Two consequences that have already caught us out.**
+
+*A dimmed thing on a blue plate takes `--color-faint-plate`, not `--color-faint`.*
+`--color-faint` is 5.30:1 on the page ground and **2.35:1 on `--color-chrome`**,
+and nothing had ever checked it there because nothing had ever greyed a TAB.
+`/prem/match/[id]` greys its Players plate before a ball is kicked;
+`tools/ui/sweep.mjs` read 2.36:1 at both widths on 4 Sep 2026. The replacement is
+4.77:1 measured off the rendered pixels, against `--color-ink`'s 6.97 on the same
+ground — so it still reads as the dimmer of the two, which is the whole job.
+`.cm-tab.cm-out` in `desk.css` is where it lands, and the club and squad strips
+have carried the same latent failure since they were built.
 
 *The league's red carries text only one step down.* `--color-league` is 4.94:1
 under cream, which passes and leaves nothing over — and a scoreline needs
@@ -396,6 +407,17 @@ carried — `PRODUCT.md`'s accessibility section.
 - **Provenance at the point of use.** Every derived figure says whose it is.
   Fantrax's numbers are authoritative; ours are labelled and never sit in a
   column headed `FPts`.
+
+  **Amended 4 Sep 2026 (Craig).** The rule is about a FIGURE that could be
+  mistaken for somebody else's, not about every block carrying a byline. Three
+  provenance lines came off the player screen on his instruction — the attribute
+  grid's "Ours, derived" and its "Rated 1&ndash;20 against every player in the
+  division…" paragraph, and the seasons table's "FPL's own" — because a screen
+  whose every panel is captioned with its source reads as a spreadsheet's
+  footnotes rather than as Championship Manager. What stays is the part that
+  prevents a misreading: `FPts` is Fantrax's word alone, FPL's points are headed
+  as FPL's wherever they could be taken for ours, and each attribute row still
+  carries what it was derived from in its `title`.
 - **Taps are `min-h-11`** — but that is a rule about a THUMB. Above `lg` the
   desk keeps its own proportions: a repeating ROW is 28px (`.cm-row` in
   `desk.css`), a CONTROL 36 (`lg:min-h-9`), a column head 28 with its strip.

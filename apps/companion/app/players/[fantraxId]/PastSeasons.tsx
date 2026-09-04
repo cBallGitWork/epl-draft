@@ -28,17 +28,31 @@ import { IndexCell } from "../../components/league/TableCells";
 
 export default function PastSeasons({
   seasons,
+  current,
 }: {
   seasons: readonly PastSeason[];
+  /** This season, drawn as the first row. **FPL's own arrangement** (Craig,
+   *  4 Sep 2026: *"this season at top, have previous sesasons underneath"*),
+   *  and one table rather than two: the columns are identical, and two tables
+   *  with the same heads one above the other is a reader checking whether they
+   *  agree. Null for a man with no minutes this season. */
+  current?: PastSeason | null;
 }) {
-  if (seasons.length === 0) {
+  if (seasons.length === 0 && !current) {
     // A debutant, and a real answer rather than an empty table. A heading over
     // no rows is a claim that something failed to load.
     return null;
   }
 
+  const rows = current ? [current, ...seasons] : seasons;
+
   return (
-    <Section title="Before this season" aside="FPL's own">
+    // **"Previous seasons", and no provenance line** (Craig, 4 Sep 2026:
+    // *"remove … before this season / FPL's own row"*). FPL's own player page
+    // heads the same table "Previous Seasons" and this tab follows it: the
+    // current season on top, the completed ones under. "Before this season" was
+    // relative to a table that is no longer above it.
+    <Section title={current ? "Seasons" : "Previous seasons"}>
       <div className={SCROLL}>
         <table className={BOARD}>
           <thead>
@@ -60,7 +74,7 @@ export default function PastSeasons({
             </tr>
           </thead>
           <tbody>
-            {seasons.map((season) => (
+            {rows.map((season) => (
               <tr key={season.season} className={ROW_RULE}>
                 {/* `IndexCell` IS the `<td>` — it is not a block to put inside
                     one. Wrapping it nested a cell in a cell, which the browser

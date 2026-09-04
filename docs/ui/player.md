@@ -257,3 +257,72 @@ from FPL's fantasy classification.
   **`TRANSACTIONS_FANTASY`** (richer than the league-wide feed — it names what was
   dropped in the same move) and **`GAME_LOG_FANTASY`** are not. Service time is
   what CM's Transfer tab would really want.
+
+## Rebuilt against the reference, 4 Sep 2026
+
+Craig read the built screen and sent a list. What changed, and what the change
+answers to:
+
+**The bar names the FANTASY side, not the club** — `Bruno Fernandes (123)`,
+and no shirt number. CM writes `3. Michael Ball (Everton)` because in that game
+the club is the thing you manage; ours is not, the club is already on the
+portrait in its own colours and on its crest, and the number was null for 98 of
+625 men.
+
+**The caption carries where he is from** — `Born 8.9.94 (Age 31). Portugal.`,
+which is `cm9900/11.jpg`'s own line (`Born 2.10.79 (Age 19). English.`). The
+country is taken off the end of Fantrax's birthplace and the town dropped; the
+adjective is not invented, because a demonym table is not a fact we hold. The
+Birthplace/Height/Weight block went with it.
+
+**Keepers get their own grid.** `KEEPER_ONLY` and `OUTFIELD_ONLY` in
+`football/attributes.ts` name the measures; the app chooses between them off the
+sister repo's real position, because the football layer holds no position by
+rule. An outfielder loses Handling and Reflexes; a keeper loses the seven about
+scoring, creating and defending in open play. That reverses an argument this
+file's own header used to make — that a keeper handled himself, because an
+outfielder sits at the bottom of Handling — which was true and produced a grid
+with two dead rows for 600 men and thirteen for the other 51.
+
+**Good attributes are the loud ones.** A step down in loudness rather than a
+second hue: `--color-mid` above 15, `--color-muted` to 8, `--color-faint` below.
+Red was the obvious reading of Craig's *"orange/red"* and is refused —
+`--color-bad` means *a loss, a doubt, a negative*, and a 19 painted with it
+inverts the one slot the rest of the app leans on.
+
+**The position line closes the screen**, in cyan and at `2xl`, which is where
+`cm9900/11.jpg` puts `Defender/Defensive Midfielder (Left/Centre)`. It had been
+inside the grid column, reading as a caption on the attributes.
+
+**It had also never been cyan.** `.cm-panel` carried `color: inherit` — a
+declaration a panel does not need, at the same specificity as Tailwind's
+`text-*` and loaded after it, so `class="cm-panel text-info"` resolved to the
+inherited ink and the utility was silently dropped. Found by reading the rendered
+colour rather than the source. `desk.css` records it.
+
+**The appearances table is CM's**, not FPL's: competition rows down the left
+against plated heads, `Apps Min Gls Asts Con CS Sv Yel Red FPL`. One row, because
+FPL publishes one competition — five rows of dashes would be five confident
+statements that he has played no cup football.
+
+**History is FPL's stack in our formatting** — this season as the first row of
+one table, the completed ones under it. Two tables with the same heads, one above
+the other, is a reader checking whether they agree.
+
+**Transfer closes with a sentence** — `Taken by 123 with pick 1 of round 1.` in
+cyan, under the business, the position line's shape doing the same job. The
+whole-of-Fantrax demand block is gone.
+
+**News opens any item.** `?story=` in the URL rather than client state, so a
+story can be linked and the tab stays one server read. Rows carry the time as
+well as the date, and the headline no longer prints twice.
+
+**No foot buttons on any tab.** CM's foot is Back/Next; ours were named
+destinations the rail already reaches at every width.
+
+### What the pass deleted
+
+`Facts.tsx` (both readers removed), `Breakdown.tsx` and `season.ts`'s
+`playerSeason` — the Fantrax year-to-date pipeline behind the History block that
+went. When a screen goes its reads rarely go with it; these were found by
+following each export back to a consumer and finding none.

@@ -1,7 +1,7 @@
 import Section from "../../components/shell/Section";
-import { ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
 import type { MatchRow } from "./matchRows";
-import { per90, totalsOf } from "./matchRows";
+import { totalsOf } from "./matchRows";
 import { IndexCell } from "../../components/league/TableCells";
 
 // What the season adds up to, above the matches that made it.
@@ -13,23 +13,26 @@ import { IndexCell } from "../../components/league/TableCells";
 // where the pitch maps land when the sister repo exports the shot data they
 // need.
 //
-// **Two rows, and both are Championship Manager's.** `cm9900/11.jpg` closes a
-// profile with rows of appearances against columns of statistics; FPL's own
-// player page closes the same table with `Totals` and `Per 90`. Two references,
-// one shape. The row label sits in CM's index block, drawn in the club's colour
-// like every other index cell on his screens.
+// **Championship Manager's own appearances table, and only its own** (Craig,
+// 4 Sep 2026: *"this row is bad. copy the rows the real cm profile shows."*).
+// `cm9900/11.jpg` closes a profile with COMPETITION rows down the left —
+// `Non Competitive · League · Cup · Continental · International · Senior Club` —
+// against plated column heads reading `Apps Gls Con Pens Asts Yel Red MoM Av R`.
+// This had been FPL's `Totals`/`Per 90` pair against thirteen abbreviations,
+// which is a fantasy site's table wearing CM's furniture.
 //
-// Everything left of the rule is FPL's measurement of the play; everything right
-// is Fantrax's scoring of it. `FPts` is the only per-match source of our league's
-// points anywhere, and it totals over the matches Fantrax reached rather than
-// over the season — a sum of the season would count matches nobody showed us as
-// noughts.
+// **One row, because FPL publishes one competition.** The other five of CM's
+// rows are cups, Europe and internationals, and nothing in the feed knows about
+// any of them — `docs/ui/prem.md` records the same limit for the fixture list's
+// competition column. Six rows of dashes would be five confident statements that
+// he has played no cup football, which is not a thing we know.
+//
+// **`Pens`, `MoM` and `Av R` are not drawn**, for the same reason: no source.
+// What replaces them is what we do measure — clean sheets, saves and FPL's own
+// points. The row label sits in CM's index block, drawn in the club's colour
+// like every other index cell on his screens.
 
 const dash = <span className="text-faint">—</span>;
-const two = (value: number | null) =>
-  value === null ? dash : value.toFixed(2);
-const one = (value: number | null) =>
-  value === null ? dash : value.toFixed(1);
 const whole = (value: number | null) => (value === null ? dash : String(value));
 
 export default function SeasonTable({
@@ -41,57 +44,31 @@ export default function SeasonTable({
 }) {
   if (rows.length === 0) return null;
   const t = totalsOf(rows);
-  const rate = (value: number | null) => per90(value, t.minutes);
 
   return (
-    <Section
-      title={season ? `Season · ${season}` : "Season"}
-      aside="FPL's own · Fantrax's own"
-    >
+    <Section title={season ? `Season · ${season}` : "Season"}>
       <div className={SCROLL}>
-        <table className="w-full min-w-[44rem] border-collapse text-2xs">
-          <thead className="border-b border-line text-faint">
+        <table className={BOARD}>
+          <thead>
             <tr>
-              <th scope="col" className="py-1.5 pr-2 text-left font-bold">
-                {rows.length} apps
+              <th className={HEAD_CELL}>
+                <div className={HEAD_PLATE}>Competition</div>
               </th>
               {COLUMNS.map((column) => (
-                <th
-                  key={column.head}
-                  scope="col"
-                  title={column.title}
-                  className={`whitespace-nowrap px-1 py-1.5 text-right font-bold ${
-                    column.rule ? "border-l border-line" : ""
-                  }`}
-                >
-                  {column.head}
+                <th key={column.head} className={HEAD_CELL} title={column.title}>
+                  <div className={HEAD_PLATE_END}>{column.head}</div>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            <tr className={`${ROW_RULE} font-bold`}>
-              <IndexCell>Total</IndexCell>
+            <tr className={ROW_RULE}>
+              {/* CM's left column names the competition, not the row's kind.
+                  `League` is the only one FPL publishes. */}
+              <IndexCell>League</IndexCell>
               {COLUMNS.map((column) => (
-                <td
-                  key={column.head}
-                  className={`numeric px-1 text-right ${column.rule ? "border-l border-line" : ""}`}
-                >
+                <td key={column.head} className="numeric px-1.5 text-right text-2xs font-bold">
                   {column.total(t)}
-                </td>
-              ))}
-            </tr>
-            <tr className="text-muted">
-              <IndexCell>Per 90</IndexCell>
-              {COLUMNS.map((column) => (
-                <td
-                  key={column.head}
-                  className={`numeric px-1 text-right ${column.rule ? "border-l border-line" : ""}`}
-                >
-                  {/* A per-ninety of no minutes is a dash, never a division by
-                      nought — and a count that has no meaningful rate (minutes
-                      itself) simply has no cell. */}
-                  {column.rate ? column.rate(t, rate) : dash}
                 </td>
               ))}
             </tr>
@@ -103,7 +80,6 @@ export default function SeasonTable({
 }
 
 type Totals = ReturnType<typeof totalsOf>;
-type Rate = (value: number | null) => number | null;
 
 interface Column {
   head: string;
@@ -111,81 +87,19 @@ interface Column {
   /** A rule down the left marks where FPL's account ends and Fantrax's begins. */
   rule?: boolean;
   total: (t: Totals) => React.ReactNode;
-  rate?: (t: Totals, per: Rate) => React.ReactNode;
 }
 
 const COLUMNS: readonly Column[] = [
-  {
-    head: "Min",
-    title: "Minutes played",
-    total: (t) => t.minutes.toLocaleString("en-GB"),
-  },
-  {
-    head: "G",
-    title: "Goals",
-    total: (t) => t.goals,
-    rate: (t, per) => two(per(t.goals)),
-  },
-  {
-    head: "A",
-    title: "Assists",
-    total: (t) => t.assists,
-    rate: (t, per) => two(per(t.assists)),
-  },
-  {
-    head: "xG",
-    title: "Expected goals",
-    total: (t) => two(t.expectedGoals),
-    rate: (t, per) => two(per(t.expectedGoals)),
-  },
-  {
-    head: "xA",
-    title: "Expected assists",
-    total: (t) => two(t.expectedAssists),
-    rate: (t, per) => two(per(t.expectedAssists)),
-  },
-  {
-    head: "BPS",
-    title: "FPL's bonus-points score",
-    total: (t) => t.bps,
-    rate: (t, per) => one(per(t.bps)),
-  },
-  {
-    head: "B",
-    title: "Bonus points",
-    total: (t) => t.bonus,
-    rate: (t, per) => one(per(t.bonus)),
-  },
-  {
-    head: "FPL",
-    title: "FPL's points, under FPL's rules — not this league's",
-    total: (t) => t.fplPoints,
-    rate: (t, per) => one(per(t.fplPoints)),
-  },
-  {
-    head: "FPts",
-    title:
-      "This league's points — Fantrax's own, over the matches they publish",
-    rule: true,
-    total: (t) => whole(t.points),
-    rate: (t, per) => one(per(t.points)),
-  },
-  {
-    head: "S",
-    title: "Shots — Fantrax's own; FPL does not publish it",
-    total: (t) => whole(t.shots),
-    rate: (t, per) => one(per(t.shots)),
-  },
-  {
-    head: "SOT",
-    title: "Shots on target — Fantrax's own",
-    total: (t) => whole(t.shotsOnTarget),
-    rate: (t, per) => one(per(t.shotsOnTarget)),
-  },
-  {
-    head: "FC",
-    title: "Fouls committed — Fantrax's own",
-    total: (t) => whole(t.foulsCommitted),
-    rate: (t, per) => one(per(t.foulsCommitted)),
-  },
+  { head: "Apps", title: "Appearances", total: (t) => whole(t.apps) },
+  { head: "Min", title: "Minutes played", total: (t) => t.minutes.toLocaleString("en-GB") },
+  { head: "Gls", title: "Goals", total: (t) => whole(t.goals) },
+  { head: "Asts", title: "Assists", total: (t) => whole(t.assists) },
+  { head: "Con", title: "Goals conceded while he was on", total: (t) => whole(t.conceded) },
+  { head: "CS", title: "Clean sheets", total: (t) => whole(t.cleanSheets) },
+  { head: "Sv", title: "Saves", total: (t) => whole(t.saves) },
+  { head: "Yel", title: "Yellow cards", total: (t) => whole(t.yellowCards) },
+  { head: "Red", title: "Red cards", total: (t) => whole(t.redCards) },
+  // FPL's own points, and headed as FPL's. Never `FPts`, which is Fantrax's word
+  // for Fantrax's scoring of a roster slot we chose.
+  { head: "FPL", title: "FPL's own points", total: (t) => whole(t.fplPoints) },
 ];

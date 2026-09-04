@@ -1,7 +1,6 @@
 import Inbox from "../Inbox";
 import { inbox } from "../newsItems";
 import { playerStories } from "../dossier";
-import Foot from "../Foot";
 import NoProfile from "../NoProfile";
 import PlayerShell from "../PlayerShell";
 import { subject } from "../subject";
@@ -24,12 +23,20 @@ import { subject } from "../subject";
 
 export const revalidate = 30;
 
-export default async function PlayerNews({ params }: { params: Promise<{ fantraxId: string }> }) {
-  const { fantraxId } = await params;
+export default async function PlayerNews({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ fantraxId: string }>;
+  /** Which story is open. **In the URL and not in state**, so a story can be
+   *  linked, and so the page stays a server component — the whole inbox is one
+   *  read and a client boundary here would ship the list twice. `?story=` for
+   *  the same reason every other query on the desk is spelled out. */
+  searchParams: Promise<{ story?: string }>;
+}) {
+  const [{ fantraxId }, { story }] = await Promise.all([params, searchParams]);
   const found = await subject(fantraxId);
   if ("unavailable" in found) return <NoProfile code={found.unavailable} />;
-
-  const { intel } = found;
 
   return (
     <PlayerShell
@@ -40,9 +47,11 @@ export default async function PlayerNews({ params }: { params: Promise<{ fantrax
       {/* Championship Manager's news screen: a dated row per item, newest first,
           and the newest opened underneath. Every story Fantrax's provider has
           filed about him since 1 July. */}
-      <Inbox items={inbox(await playerStories(fantraxId, new Date()))} />
-
-      <Foot ownerTeamId={intel.ownerTeamId} />
+      <Inbox
+        items={inbox(await playerStories(fantraxId, new Date()))}
+        href={(id) => `/players/${fantraxId}/news?story=${encodeURIComponent(id)}`}
+        openId={story}
+      />
     </PlayerShell>
   );
 }

@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import type { Club } from "@epl/core";
 import { clubColours } from "@epl/core";
 import PlateShell from "../../components/shell/PlateShell";
 import PlayerTabs from "./PlayerTabs";
@@ -43,7 +42,7 @@ export default function PlayerShell({
   current: PlayerTab;
   children: ReactNode;
 }) {
-  const { intel, football } = subject;
+  const { intel, football, ownerName } = subject;
   const club = football?.club;
   // The clock lives here rather than in each of the four routes. It is the one
   // thing on the screen that changes without the data changing, and a server
@@ -60,13 +59,21 @@ export default function PlayerShell({
   // in tabular figures. `groundfit` reported that as text on the bare ground the
   // moment the instrument was repaired, because `sub` sits on no plate. So it
   // gets a panel of its own, which is what a CM screen is made of anyway.
-  const born = bornLine(football?.player.birthDate ?? null, new Date());
+  // **Where he is from goes in CM's own line** (Craig, 4 Sep 2026: *"put theire
+  // nationality in Born 8.9.94 (Age 31). row"*), which is what the reference does
+  // — `Born 2.10.79 (Age 19). English.` — and it is why the Player block of
+  // birthplace, height and weight is gone from the profile. One fact, one place.
+  const born = bornLine(
+    football?.player.birthDate ?? null,
+    new Date(),
+    labelled(intel.personal, "Birthplace"),
+  );
   return (
     // `clubColours` answers its own grey fallback for an empty short name, which
     // is what the 88 unbridged men in the pool get.
     <PlateShell
       colours={clubColours(club?.shortName ?? "")}
-      title={heading(intel.name || fantraxId, club, intel.squadNumber)}
+      title={heading(intel.name || fantraxId, ownerName)}
       tabs={<PlayerTabs fantraxId={fantraxId} current={current} empty={hollow(subject)} />}
     >
       {/* CM's caption box, in CM's position, carrying what CM carries — the man,
@@ -83,22 +90,31 @@ export default function PlayerShell({
   );
 }
 
-/** `5. Harry Maguire (MUN)`, CM's own construction.
+/** One labelled row's value out of a Fantrax block, or null.
  *
- *  Every part of it is optional except the name. A man with no shirt number
- *  loses the prefix rather than getting a `0.`, and one the bridge has not
- *  settled loses the club rather than getting empty brackets.
+ *  Fantrax pads these blocks with empty rows — `profile.ts` records it — so a
+ *  present label with an empty value is as absent as a missing one. */
+function labelled(rows: readonly { label: string; value: string }[], label: string): string | null {
+  return rows.find((row) => row.label === label)?.value?.trim() || null;
+}
+
+/** `Bruno Fernandes (test4)`, which is CM's construction with our subject in it.
  *
- *  **The club's SHORT name, where CM writes the full one.** `3. Michael Ball
- *  (Everton)` fits 800px because both halves are short; `5. Harry Maguire (Man
- *  Utd)` measures 306px into the 282 a 390 phone gives the bar, and
- *  `PageHeader` truncates — so it shipped as `5. HARRY MAGUIRE (MAN ...`, which
- *  is worse than either whole answer. The three-letter form fits at every width,
- *  and the crest and the club's own colour are both already on the portrait
- *  underneath it. */
-function heading(name: string, club: Club | undefined, squadNumber: string | null): string {
-  const numbered = squadNumber ? `${squadNumber}. ${name}` : name;
-  return club ? `${numbered} (${club.shortName})` : numbered;
+ *  **The FANTASY team in the brackets, not the club** (Craig, 4 Sep 2026: *"lets
+ *  put the fantasy team in here rather than club team"*). CM writes `3. Michael
+ *  Ball (Everton)` because in that game the club is the thing you are managing.
+ *  Ours is not: the reader manages a fantasy side, the club is already on the
+ *  portrait beneath in its own colours and on its crest, and whose he IS is the
+ *  fact this bar was spending its brackets on twice.
+ *
+ *  **And no shirt number** (Craig, same): CM's prefix is a squad number in the
+ *  club you manage. Ours came from the sister repo, was null for 98 of 625, and
+ *  a bar that reads `8. ` on some men and not others is a bar with a hole in it.
+ *
+ *  A free agent loses the brackets rather than getting empty ones — the same
+ *  rule the club form had. */
+function heading(name: string, ownerName: string | null): string {
+  return ownerName === null ? name : `${name} (${ownerName})`;
 }
 
 /** The views that have nothing behind them for this man.

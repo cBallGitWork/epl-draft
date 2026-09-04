@@ -72,6 +72,18 @@ export interface MatchTotals {
   shots: number | null;
   shotsOnTarget: number | null;
   foulsCommitted: number | null;
+  /** Championship Manager's own columns — `Con`, `Yel`, `Red` in `cm9900/11.jpg`,
+   *  plus the two its keeper rows want. All FPL's, all per match, all summed
+   *  over the season the game log covers. */
+  /** How many matches he actually turned out in — CM's first column. Counted
+   *  off the rows FPL wrote a minute against, never `rows.length`: the game log
+   *  carries a row per fixture whether or not he appeared. */
+  apps: number;
+  conceded: number;
+  cleanSheets: number;
+  yellowCards: number;
+  redCards: number;
+  saves: number;
 }
 
 export function totalsOf(rows: readonly MatchRow[]): MatchTotals {
@@ -92,6 +104,14 @@ export function totalsOf(rows: readonly MatchRow[]): MatchTotals {
     bonus: sum((r) => r.fpl.match.bonus),
     bps: sum((r) => r.fpl.match.bps),
     fplPoints: sum((r) => r.fpl.match.fplPoints),
+    // Championship Manager's own columns, added 4 Sep 2026 when the profile's
+    // table took `cm9900/11.jpg`'s shape: `Apps Gls Con Pens Asts Yel Red`.
+    apps: rows.filter((row) => row.fpl.match.minutes > 0).length,
+    conceded: sum((r) => r.fpl.match.conceded),
+    cleanSheets: rows.filter((row) => row.fpl.match.cleanSheet).length,
+    yellowCards: sum((r) => r.fpl.match.yellowCards),
+    redCards: sum((r) => r.fpl.match.redCards),
+    saves: sum((r) => r.fpl.match.saves),
     points: theirs((m) => m.points),
     shots: theirs((m) => m.shots),
     shotsOnTarget: theirs((m) => m.shotsOnTarget),

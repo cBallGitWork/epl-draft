@@ -1,10 +1,8 @@
 import { Suspense } from "react";
 import { StackWaiting } from "../Waiting";
-import Facts from "../Facts";
-import Foot from "../Foot";
 import Moves from "../Moves";
 import NoProfile from "../NoProfile";
-import Pedigree from "../Pedigree";
+import Pedigree, { DraftLine } from "../Pedigree";
 import PlayerShell from "../PlayerShell";
 import { playerPedigree } from "../draft";
 import { playerMoves } from "../dossier";
@@ -26,17 +24,10 @@ import { subject } from "../subject";
 
 export const revalidate = 30;
 
-/** The two whole-of-Fantrax rows that are about DEMAND rather than performance:
- *  how many leagues hold him, and how many start him. Kept by name rather than
- *  filtering the rank out, because the rank's label moves with his position. */
-const DEMAND = ["Ros", "Start"];
-
 export default async function PlayerTransfer({ params }: { params: Promise<{ fantraxId: string }> }) {
   const { fantraxId } = await params;
   const found = await subject(fantraxId);
   if ("unavailable" in found) return <NoProfile code={found.unavailable} />;
-
-  const { intel } = found;
 
   return (
     <PlayerShell
@@ -59,20 +50,18 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
         <Business fantraxId={fantraxId} />
       </Suspense>
 
-      {/* How much of Fantrax wants him. Their whole userbase and not ours, which
-          is what makes it a price rather than an opinion — and the two ownership
-          percentages belong beside the draft numbers rather than under a heading
-          of their own, because all four answer one question. */}
-      {/* The heading is the whole explanation. It used to carry a note reading
-          "Their whole userbase, not ours — which is what makes it a market
-          price", which explains a heading that already says it — and PRODUCT.md
-          asks for terse and never explanatory. */}
-      <Facts
-        title="Across every Fantrax league"
-        rows={[...intel.market, ...intel.highlights.filter((row) => DEMAND.includes(row.label))]}
-      />
+      {/* Last on the tab, under the business, in cyan — the Profile's position
+          line in the same place doing the same job. */}
+      <Suspense fallback={null}>
+        <Origin fantraxId={fantraxId} />
+      </Suspense>
 
-      <Foot ownerTeamId={intel.ownerTeamId} />
+      {/* **The whole-of-Fantrax block is gone** (Craig, 4 Sep 2026: *"remove
+          Across every Fantrax league / Drafted 100% / ADP 1.84 / Ros 100% /
+          Start 100%"*). Four percentages about every league on the site, on a
+          tab whose question is what happened to him in OURS — and the one of
+          them that bears on our draft, how his cost compares to his ranking,
+          is already the figure beside the pick. */}
     </PlayerShell>
   );
 }
@@ -81,11 +70,18 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
  *  `playerPedigree` never answers null — a failed pool read comes back as an
  *  `origin: "unknown"` pedigree, so the card always has something to draw. */
 async function Draft({ fantraxId }: { fantraxId: string }) {
-  const { pedigree, drafterName } = await playerPedigree(fantraxId);
-  return <Pedigree pedigree={pedigree} drafterName={drafterName} />;
+  const { pedigree } = await playerPedigree(fantraxId);
+  return <Pedigree pedigree={pedigree} />;
 }
 
 /** His moves in this league, read behind the boundary above. */
 async function Business({ fantraxId }: { fantraxId: string }) {
   return <Moves moves={await playerMoves(fantraxId)} />;
+}
+
+/** Where he came from, read behind its own boundary. It is the same cached pool
+ *  read the Draft card makes, so the second call costs nothing. */
+async function Origin({ fantraxId }: { fantraxId: string }) {
+  const { pedigree, drafterName } = await playerPedigree(fantraxId);
+  return <DraftLine pedigree={pedigree} drafterName={drafterName} />;
 }

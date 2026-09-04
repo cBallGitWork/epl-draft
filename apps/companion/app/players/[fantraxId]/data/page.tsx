@@ -4,7 +4,6 @@ import type { FootballPlayer, PlayerMatch } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import { PANEL } from "@/app/desk";
 import { footballNow } from "../../../football";
-import Foot from "../Foot";
 import MatchLog from "../MatchLog";
 import SeasonTable from "../SeasonTable";
 import NoProfile from "../NoProfile";
@@ -57,7 +56,6 @@ export default async function PlayerData({ params }: { params: Promise<{ fantrax
         </Suspense>
       )}
 
-      <Foot ownerTeamId={intel.ownerTeamId} />
     </PlayerShell>
   );
 }

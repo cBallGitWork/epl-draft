@@ -1,15 +1,16 @@
 import { Suspense } from "react";
+import { clubById } from "@epl/core";
+import type { FootballPlayer, PlayerMatch } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
-import { StackWaiting, TableWaiting } from "../Waiting";
+import { TableWaiting } from "../Waiting";
 import { PANEL } from "@/app/desk";
-import type { FootballPlayer } from "@epl/core";
-import Breakdown from "../Breakdown";
-import Foot from "../Foot";
+import { footballNow } from "../../../football";
 import NoProfile from "../NoProfile";
 import PastSeasons from "../PastSeasons";
 import PlayerShell from "../PlayerShell";
 import { pastSeasons } from "../grid";
-import { playerSeason } from "../season";
+import { joinMatches, totalsOf } from "../matchRows";
+import { gameLog } from "../scouting";
 import { subject } from "../subject";
 
 // Championship Manager's `History`: the appearances table under the attribute
@@ -41,38 +42,67 @@ export default async function PlayerHistory({ params }: { params: Promise<{ fant
         </section>
       ) : (
         <Suspense fallback={<TableWaiting />}>
-          <Record player={football.player} />
+          <Career player={football.player} paid={intel.matches} season={intel.season} />
         </Suspense>
       )}
 
-      {/* What he has been worth in OUR league, by the categories that pay —
-          Fantrax's own breakdown, which sums to their total exactly. A different
-          question from the two tables above and a different provenance, so it
-          sits under its own heading (DESIGN §7).
-
-          Only for a player somebody owns: the read answers null for a free agent
-          without asking Fantrax anything, so a boundary there would put a card
-          on screen that could only ever come back empty. */}
-      {intel.ownerTeamId === null ? null : (
-        <Suspense fallback={<StackWaiting />}>
-          <Season fantraxId={fantraxId} ownerTeamId={intel.ownerTeamId} />
-        </Suspense>
-      )}
-
-      <Foot ownerTeamId={intel.ownerTeamId} />
+      {/* **The Fantrax year-to-date block is gone** (Craig, 4 Sep 2026:
+          *"remove … 22FPts · 11 a game / Goals +15 / Minutes Played +4 …
+          poitnless"*). It restated his league total beside three category
+          deltas, on a tab whose question is what he has done across SEASONS —
+          and the total it restated is on the Profile already. */}
     </PlayerShell>
   );
 }
 
-/** His completed seasons. The match log for THIS season moved to Data on 4 Sep
- *  2026 — it is the same table and it was rendering on two tabs, which is the
- *  thing a tab strip exists to stop. */
-async function Record({ player }: { player: FootballPlayer }) {
-  return <PastSeasons seasons={await pastSeasons(player)} />;
-}
-
-/** His season in our league, read behind the boundary above. Nothing but the
- *  await lives here — the card itself is `Breakdown`, unchanged. */
-async function Season({ fantraxId, ownerTeamId }: { fantraxId: string; ownerTeamId: string }) {
-  return <Breakdown season={await playerSeason(fantraxId, ownerTeamId)} />;
+/** His career, this season first.
+ *
+ *  `Career` rather than `Record`, which TypeScript owns as a built-in type and
+ *  which the compiler reads as one the moment it is used as a component.
+ *
+ *  The 38-row match log stays on Data — it is the same table and it was
+ *  rendering on two tabs, which is the thing a tab strip exists to stop. What
+ *  comes back here is the season as ONE row, which is what FPL's own player page
+ *  puts above its Previous Seasons table and what makes the two comparable at a
+ *  glance. */
+async function Career({
+  player,
+  paid,
+  season,
+}: {
+  player: FootballPlayer;
+  paid: PlayerMatch[];
+  season: string | null;
+}) {
+  const [seasons, log, snapshot] = await Promise.all([
+    pastSeasons(player),
+    gameLog(player),
+    footballNow(),
+  ]);
+  const t = totalsOf(joinMatches(log, paid, clubById(snapshot)));
+  return (
+    <PastSeasons
+      seasons={seasons}
+      // Only when he has actually played. A row of noughts under a season label
+      // would say he turned out and did nothing, where the truth is that the
+      // season has not reached him yet.
+      current={
+        t.minutes === 0
+          ? null
+          : {
+              season: season ?? "This season",
+              minutes: t.minutes,
+              goals: t.goals,
+              assists: t.assists,
+              cleanSheets: t.cleanSheets,
+              goalsConceded: t.conceded,
+              yellowCards: t.yellowCards,
+              redCards: t.redCards,
+              saves: t.saves,
+              bonus: t.bonus,
+              fplPoints: t.fplPoints,
+            }
+      }
+    />
+  );
 }
