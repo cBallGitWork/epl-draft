@@ -27,6 +27,14 @@ export { fetchBootstrap, fetchFixtures } from "./fpl/client";
 export { fetchElementSummary } from "./fpl/client";
 export { mapGameLog } from "./gameLog";
 export type { GameLogEntry } from "./gameLog";
+// The same read at season scale — his career before this one. `seasons.ts` says
+// why it is a separate file and why its column set is as short as it is.
+export { mapPastSeasons } from "./seasons";
+export type { PastSeason } from "./seasons";
+// Championship Manager's attribute grid, rated out of play we already measure.
+// Ours, never Sports Interactive's — `attributes.ts` says why there is no feed.
+export { attributes } from "./attributes";
+export type { Attribute, Scouted } from "./attributes";
 export { mapFixtures } from "./fpl/map";
 export {
   adjacentGameweeks,

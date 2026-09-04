@@ -27,6 +27,20 @@ interface RawElement {
   news: string;
   chance_of_playing_next_round: number | null;
   opta_code: string | null;
+  /** `1995-09-15`. Present on 633 of 652, probed 4 Sep 2026 — so it is optional
+   *  here and nullable in the domain, unlike the season block beside it.
+   *
+   *  The nineteen without one are not a class: they are men FPL has listed and
+   *  not finished filling in. `region` sits at the same 633 and is deliberately
+   *  NOT mirrored — it is an opaque integer over 67 values with no lookup table
+   *  published anywhere, and Fantrax gives the birthplace as plain text. */
+  birth_date?: string | null;
+  /** `2024-07-04` — when he signed for the club he is at. Present on the same
+   *  633 of 652 as `birth_date` (probed 4 Sep 2026), and optional here for the
+   *  same reason. It is the one fact about a footballer's employment FPL
+   *  publishes, and it is what stands in for Fantrax's service time while the
+   *  section carrying that is unreachable. */
+  team_join_date?: string | null;
 
   // Season totals. Present on all 629 elements, probed 2 Sep 2026 — every one
   // of them, not most, which is why these are plain rather than optional.
@@ -46,6 +60,17 @@ interface RawElement {
   expected_goals: string;
   expected_assists: string;
   expected_goals_conceded: string;
+  /** FPL's own three indices, and two of them are Championship Manager's own
+   *  attribute names. Strings like the expected family, present on all 652
+   *  elements and non-zero on ~340 of them (probed 4 Sep 2026) — which is the
+   *  count of men who have played, not a gap in the feed.
+   *
+   *  `ict_index` is deliberately not mirrored: it is these three combined, and a
+   *  fourth field holding a function of the other three is the kind of thing
+   *  CODE_RULES §2 calls bloat. */
+  influence: string;
+  creativity: string;
+  threat: string;
   tackles: number;
   clearances_blocks_interceptions: number;
   recoveries: number;
@@ -151,8 +176,45 @@ export interface RawHistoryEntry {
   expected_assists?: string;
 }
 
-/** `element-summary/{id}/`. Also carries `fixtures` (his run to come) and
- *  `history_past` (previous seasons); neither is read, so neither is typed. */
+/** One completed season, from `element-summary`'s `history_past`.
+ *
+ *  Only the columns that are REAL IN EVERY SEASON are typed, and that is a
+ *  measured list rather than a cautious one. FPL writes every key on every row,
+ *  so a missing statistic is indistinguishable from a zero — and it publishes
+ *  rows going back to 2014/15, long before it collected most of what it collects
+ *  now. Counted across eight long-career players on 4 Sep 2026:
+ *
+ *      minutes · total_points · goals_scored · assists         every season
+ *      clean_sheets · goals_conceded · cards · bonus · bps      every season
+ *      starts · expected_goals · expected_assists              2022/23 onward
+ *      defensive_contribution                                  2024/25 onward
+ *      tackles · recoveries · clearances_blocks_interceptions   2025/26 onward
+ *
+ *  So `starts` is zero for Maguire's 2021/22 — a season in which he played 2,513
+ *  minutes — and an appearances column built on it would print that zero with a
+ *  straight face.
+ *  The fix is not a table of first-seasons to dash against — it is to show the
+ *  columns that never lie, which is also the set Championship Manager's own
+ *  appearances table carries. Minutes stands in for appearances, which FPL has
+ *  never published here at all. */
+export interface RawPastSeason {
+  season_name: string;
+  total_points: number;
+  minutes: number;
+  goals_scored: number;
+  assists: number;
+  clean_sheets: number;
+  goals_conceded: number;
+  yellow_cards: number;
+  red_cards: number;
+  saves: number;
+  bonus: number;
+}
+
+/** `element-summary/{id}/`. Also carries `fixtures` (his run to come); nothing
+ *  reads it — the football snapshot already answers the fixture run — so it
+ *  stays untyped. */
 export interface RawElementSummary {
   history: RawHistoryEntry[];
+  history_past: RawPastSeason[];
 }

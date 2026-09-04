@@ -730,6 +730,117 @@ Other facts worth not re-deriving:
   2017 rebrand is red and white only; the cream in our tokens is the 1964–85
   identity's register, chosen deliberately because the album is a period object.
 
+## The portrait ceiling was more than twice as high as recorded (4 Sep 2026)
+
+`portraits.ts` said the Premier League published one size, `110x140`, serving a
+220x280 image, and that "the source is the ceiling rather than the encoding" — the
+front page's soft lead picture was blamed on it. **`500x500` was there the whole
+time and nothing in the tree asked for it.**
+
+Probed across the ladder under the current `premierleague25` prefix:
+
+| path | HTTP | actual pixels | bytes |
+|---|---|---|---|
+| `40x40` | 200 | — | 12 KB |
+| `110x140` | 200 on **105/120** | **220x280** | 83 KB |
+| `220x280` | 200 on **12/120** | 220x280 | 105 KB |
+| **`500x500`** | **200 on 104/120** | **500x500** | **249 KB** |
+| `250x250` `330x330` `150x200` `660x840`, any `.webp` | 403 | — | — |
+
+So the path labelled `110x140` serves a 220x280 image, and `500x500` is 2.27x
+its linear resolution. **`220x280` as a literal path is NOT a second name for the
+small one** — it answers on one player in ten and 404s on the rest. This section
+first said the two were the same image under two names, from a single player who
+happened to have both; the denominators above are the correction, and the reason
+a count belongs beside every one of these.
+
+**The two we ask for are the same men**: 105 and 104 with an overlap of 104 — no
+player has the large without the small, and one in 120 has the small without the
+large. `PlayerImage` therefore falls large → small before the rest of its ladder,
+and that first rung fires about once a squad.
+
+It is **square** rather than 4:5, so the crop framing differs from the small one.
+`next.config.ts` already allow-lists `premierleague25/**`, so nothing there
+changed. The player profile draws at 176 CSS px against it, up from 112.
+
+Incidentally: the "roughly a quarter of players have no photograph" in
+`PlayerImage`'s docblock was **15 of 120** — one in eight. The set has improved,
+and that comment has been corrected in the same commit rather than only here.
+
+## `groundfit` could not fail, and DESIGN §2 rests on its number (4 Sep 2026)
+
+`tools/ui/groundfit.mjs` walked a text node's ancestors accumulating background
+alpha and stopped at `document.documentElement` — **which meant it counted
+`<body>`, and `globals.css` gives body an opaque `--color-bg`.** Measured: body's
+computed background is `lab(5.87 1.94 -15.65)` at alpha **1.00**, `<html>` is
+`rgba(0,0,0,0)`. So `cover` reached 1.00 for every text node on every desk route
+and the audit could not report anything. Its "Zero bare, 31 Aug 2026" — the
+number DESIGN §2 rests the photograph reversal on, and the bound under *"moving
+`SCRIM` or `DARKEN` is safe for exactly as long as that stays at zero"* — was
+vacuous.
+
+The render is the other way round. `<html>` is transparent, so body's background
+propagates to the **canvas**, and `PhotoGround`'s `fixed inset-0 -z-10` paints
+above the canvas background. That is why the photograph is visible at all, and it
+means body's fill is BEHIND the picture and covers nothing.
+
+Fixed: the walk now stops before `<body>`. What it then reports, at both widths:
+
+| route | text on the bare ground |
+|---|---|
+| `/players` | 40 (the cap) |
+| `/matchday/desk` | 40 (the cap) |
+| `/league/matchups` | 4 |
+| `/matchday` | 2 |
+| `/league/schedule` | 1 |
+| `/fpl` | 1 |
+
+**The player routes fail it too**, and that is the honest reading: what the
+repaired instrument reports is an app-wide pattern, not six unlucky screens.
+
+**`components/shell/Section` is the offender, and it is everywhere.** Its heading
+(`font-display text-2xs font-bold uppercase text-muted`) and its `aside` sit on no
+plate, so every headed block in the app prints two strings on the photograph.
+`PageHeader`'s `sub` (`numeric px-2 pt-1 text-2xs text-faint`) is the same shape,
+and so are `FixtureRun`'s gameweek labels and `/players`' sort links.
+
+**Nothing app-wide is fixed here.** Giving `Section` a plate changes every screen
+in the app and is a DESIGN.md decision rather than a feature commit's. What the
+player screen did fix is the two things it introduced: the cyan real-position line
+— the marquee element of the screen, and the loudest thing that was on the
+picture — and the bio line, both of which now sit on `cm-panel`.
+
+DESIGN §2's "Zero bare, 31 Aug 2026" should be restated with the date of a run
+that could have failed.
+
+## `Page.captureScreenshot` hangs past ~4 Mpx — and the recorded cause was wrong
+
+`tools/ui/shot.mjs` at `--width 1440` never returned, and PLATFORM_NOTES blamed
+"a second session driving the same browser". That was a coincidence of when it was
+first seen. It reproduces on a freshly launched browser nothing else is touching,
+one capture per launch, `--headless=new --disable-gpu`:
+
+| surface | device pixels | result |
+|---|---|---|
+| 1440x1800 @1x | 2.59 Mpx | ok |
+| 2048x1400 @1x | 2.87 Mpx | ok |
+| 1900x1900 @1x | 3.61 Mpx | ok |
+| **2000x2000 @1x** | **4.00 Mpx** | **hang** |
+| 2100x2100 @1x | 4.41 Mpx | hang |
+| 2880x1800 @1x | 5.18 Mpx | hang |
+| **1440x900 @2x** | **5.18 Mpx** | **hang** |
+
+It is the **product** that matters, not the width or the height: 2880x900 is fine
+and 2000x2000 is not. The wall sits just under 4 Mpx — a 16 MB buffer at four
+bytes a pixel. 1440 at 2x is 5.18 Mpx, which is why the DESK shot was the one that
+always hung, and why nobody noticed at 390.
+
+**It does not fail, it never returns, and the wedged renderer takes the NEXT
+instrument down with it** — which is why a run used to die one tool after the one
+that broke it. `cdp.mjs` now holds `CAPTURE_CEILING` and steps the scale down to
+fit, saying so on stderr; `compare.mjs` derives its composite zoom from the same
+constant instead of hardcoding a doubling that came to 4.49 Mpx.
+
 ## Rule exception: the bridge is asserted, not parsed, at the app edge
 
 `apps/companion/app/squad/league.ts` does `mapping as Bridge` on the JSON import.
@@ -912,10 +1023,46 @@ agent are in `data/probes/2026-08-12/`.
   untruncated.
 - `headshotUrl` is the **club crest** when they have no photo
   (`usesTeamLogoAsHeadshot: true`), so it cannot be rendered as a portrait.
-- `sectionContent` (stats, splits, game logs) is refused rather than forgotten:
-  most of the payload's weight, columns keyed by numeric stat ids, no consumer.
+- `sectionContent` (stats, splits, game logs) is **still** refused, and the reason
+  hardened on 4 Sep 2026 — see below.
 - ADP is real and public here (`averageDraftPosition`), which is the trade scout's
   value map when it lands.
+
+### `sectionContent`, re-probed 4 Sep 2026 — one line read, the tables still refused
+
+Only `latestNews` is read, and it is now on the player screen's Fitness tab: one
+dated sentence about his last match, whole rather than truncated. The analysis
+behind it is gated (`analysisTitle: "Analysis available to registered users"`) and
+we do not pretend to it.
+
+The **tables** stay refused, and the reason is no longer only their weight:
+
+- **A percentile needs the whole division, and this endpoint answers one player at
+  a time.** The player screen's attribute grid rates a man against everyone who
+  has played, so a statistic only reachable one profile at a time cannot feed it —
+  and looping over 697 profiles is the thing this endpoint's politeness policy
+  forbids. Shots, shots on target, fouls committed, fouls suffered and offsides
+  are all here and all Fantrax-only; the pool-wide route to them is
+  `getPlayerStats` with `positionOrGroup`, which needs its own probe.
+- **The stat ids are per-SPORT, because the endpoint does not check the sport.**
+  Asking our EPL league for a player id belonging to another sport returns a
+  complete, confident NFL profile — `Sk`, `FF`, `IntYd`, `Hur` — under our league
+  id, with no error. Football's ids are the `6xxx` block (`6210` shots, `6230`
+  shots on target, `6040` fouls committed, `6050` fouls suffered, `6130` offsides),
+  stable across five EPL players checked. A caller must never assume the table in
+  front of it is football.
+- **Cells carry HTML.** `'Fri Aug 28 -<br/>Thu Sep 3'` and `'<b>D</b>: 2'` are real
+  cell contents in the same payload. `profile.ts` strips tags before anything
+  leaves it.
+
+**The deeper sections cannot be reached yet, and this is a known unknown rather
+than an absence.** The payload's own `sections` list names `OVERVIEW`, `STATS`,
+`SPLITS`, `GAME_LOG_FANTASY`, `GAME_LOG`, `NEWS_NOTES`, `TRANSACTIONS_FANTASY`,
+**`TEAM_SERVICE_TIME`** and `TRANSACTIONS`, but only `OVERVIEW` ever comes back
+populated. `section`, `sectionCode`, `view` and `displayedSelections.sectionCode`
+were each tried and each **ignored** — byte-identical 14,844-byte responses every
+time. Service time is what a Transfer tab really wants; `team_join_date` on FPL's
+bootstrap covers it until the parameter is found.
 
 ## The pool page: status is league state, not a player fact
 
@@ -1434,6 +1581,16 @@ why Vercel blocked the first production deployment: an unmatched commit author
 email, not billing — see the hosting section.
 
 ## Work items
+
+- [ ] **Six routes print text on the bare ground** — `/players` and
+      `/matchday/desk` at the 40-row cap, `/league/matchups` 4, `/matchday` 2,
+      `/league/schedule` 1, `/fpl` 1. All pre-existing, all invisible until
+      `groundfit.mjs` was repaired on 4 Sep 2026 (it counted body's opaque
+      background and could not fail). The commonest offender is `PageHeader`'s
+      `sub`, which sits on no plate, and `/players`' sort links. **DESIGN §2's
+      "Zero bare, 31 Aug 2026" should be restated with the date of a run that
+      could have failed** — the sentence bounding `SCRIM` and `DARKEN` depends
+      on it.
 
 - [ ] **Look at the desk on a real phone, once the site is mapped out** (Craig,
       3 Sep 2026). The headless Chrome the instruments drive reserves no layout

@@ -11,6 +11,7 @@ import type { RawSeasonStats } from "./seasonStats";
 import type { PositionGroup } from "./playerStats";
 import type { RawPlayerProfile } from "./profile";
 import type { RawPoolStats, RawStatTables } from "./stats";
+import type { RawPlayerNews } from "./playerNews";
 import type { RawTransactionHistory } from "./transactions";
 import type {
   RawDraftResults,
@@ -138,6 +139,16 @@ export function fetchTransactions(
     view,
     maxResultsPerPage: String(TRANSACTION_PAGE_SIZE),
   }) as Promise<RawTransactionHistory>;
+}
+
+/** What is being said about the pool — the whole pool, in one read.
+ *
+ *  `poolType` is required and the endpoint refuses the call without it. It
+ *  ignores `playerId` entirely, so this takes none: `playerNews.ts` says why one
+ *  league-wide read is the right shape and why the story is fuller here than on
+ *  the profile. */
+export function fetchPlayerNews(leagueId: string): Promise<RawPlayerNews> {
+  return fxpaRead(leagueId, "getPlayerNews", { poolType: "ALL" }) as Promise<RawPlayerNews>;
 }
 
 /** The standings page Fantrax draws for its own site: the table and the badges,

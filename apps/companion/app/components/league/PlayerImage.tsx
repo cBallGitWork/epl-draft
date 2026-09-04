@@ -14,11 +14,17 @@ import { type Club, type FootballPlayer, initials, portraitUrl, shirtUrl } from 
 // there is the browser failing to load it — a HEAD request per player would be
 // seven hundred of them.
 //
-// Four rungs: this season's photograph, one of ours, his club's kit, then his
-// initials.
+// Five rungs: the large photograph, the small one, one of ours, his club's kit,
+// then his initials.
 //
-// Roughly a quarter of players have no photograph in the Premier League's
-// current set, and the set before it is two seasons stale — Bruno Guimarães is
+// The first rung only exists for a caller that asked for `large`, and it is
+// cheap insurance rather than a real branch: the Premier League's 500x500 set
+// and its 110x140 set are the same men to within one player in a hundred and
+// twenty (`portraits.ts` records the count), so it fires about once a squad.
+//
+// One player in eight has no photograph in the Premier League's current set —
+// 15 of a random 120 on 4 Sep 2026, down from the quarter this comment claimed
+// while the set was worse — and the set before it is two seasons stale — Bruno Guimarães is
 // in that gap. Ours fill it: `public/portraits/{code}.png`, keyed on the same
 // season-stable code everything else keys on, dropped in by hand and served from
 // our own origin. A missing one costs a local 404 and nothing else — which was
@@ -28,9 +34,10 @@ import { type Club, type FootballPlayer, initials, portraitUrl, shirtUrl } from 
 // rather than taken of a man, so it is right the day he signs. Initials are only
 // reached for a player whose club we cannot name either.
 
-type Rung = "photo" | "ours" | "shirt" | "initials";
+type Rung = "large" | "photo" | "ours" | "shirt" | "initials";
 
 const NEXT: Record<Exclude<Rung, "initials">, Rung> = {
+  large: "photo",
   photo: "ours",
   ours: "shirt",
   shirt: "initials",
@@ -57,7 +64,15 @@ export default function PlayerImage({
   kickedOff,
   sizes = "88px",
   fill = false,
+  large = false,
 }: {
+  /** Ask for the 500x500 source instead of the 220x280 one.
+   *
+   *  For a portrait with room to be looked at, and nothing else — it is 249 KB
+   *  against 83, which is right for one man on his own page and wrong for
+   *  fifteen on a pitch. A caller that sets this must also set `sizes`, or Next
+   *  will serve the big file down to an 88px box for no gain. */
+  large?: boolean;
   /** Fill the parent instead of taking `.pitch-figure`'s landscape shape.
    *
    *  **This is what was cropping every disc.** `.pitch-figure` forces
@@ -88,18 +103,20 @@ export default function PlayerImage({
    *  hardest. */
   sizes?: string;
 }) {
-  const [rung, setRung] = useState<Rung>("photo");
-  // Four rungs, and the fourth has to be able to serve NOTHING — that is what
-  // makes it the floor. This used to end `: club && shirtUrl(club, keeper)`,
+  const [rung, setRung] = useState<Rung>(large ? "large" : "photo");
+  // The LAST rung has to be able to serve NOTHING — that is what makes it the
+  // floor. This used to end `: club && shirtUrl(club, keeper)`,
   // which answers the shirt's own URL at the `initials` rung as well as at
   // `shirt`. So a club we can name but whose kit will not load retried the
   // identical src, `onError` set `initials` over `initials`, `key` did not
   // change, nothing remounted, and the card was left as a broken image: an
   // empty box on the grass, for the one player the fallback exists for.
   const source =
-    rung === "photo"
-      ? portraitUrl(player)
-      : rung === "ours"
+    rung === "large"
+      ? portraitUrl(player, "large")
+      : rung === "photo"
+        ? portraitUrl(player)
+        : rung === "ours"
         ? ourPortrait(player.code)
         : rung === "shirt"
           ? club && shirtUrl(club, keeper)
@@ -126,6 +143,13 @@ export default function PlayerImage({
           width={110}
           height={145}
           sizes={sizes}
+          // A LARGE portrait is the largest thing on its page by construction,
+          // so it is the Largest Contentful Paint and Next asks for it to be
+          // preloaded rather than discovered. Tied to `large` rather than given
+          // a prop of its own: the one caller that wants the big source is the
+          // one caller whose image is the LCP, and a second flag would be a
+          // second thing to keep in step (CODE_RULES §1).
+          priority={large}
           onError={() => setRung(rung === "initials" ? "initials" : NEXT[rung])}
           // **Cover, cropped at the top by default; a round frame moves the
           // crop down.** A cut-out STANDING on grass wants its feet cropped and

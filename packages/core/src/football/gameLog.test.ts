@@ -54,6 +54,7 @@ describe("mapGameLog", () => {
   it("says nothing rather than nought when FPL published no measurement", () => {
     const withoutXg: RawElementSummary = {
       history: [{ ...played.history[0], expected_goals: undefined, defensive_contribution: undefined }],
+      history_past: [],
     };
     expect(mapGameLog(withoutXg)[0]).toMatchObject({
       expectedGoals: null,
@@ -74,6 +75,7 @@ describe("mapGameLog", () => {
         { ...played.history[0], round: 3, fixture: 30 },
         { ...played.history[0], round: 3, fixture: 31 },
       ],
+      history_past: [],
     };
     expect(mapGameLog(twice).map((row) => `${row.gameweek}/${row.fixtureId}`)).toEqual([
       "3/31",
@@ -83,6 +85,6 @@ describe("mapGameLog", () => {
   });
 
   it("has nothing to say before a ball is kicked", () => {
-    expect(mapGameLog({ history: [] })).toEqual([]);
+    expect(mapGameLog({ history: [], history_past: [] })).toEqual([]);
   });
 });

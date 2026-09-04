@@ -13,7 +13,7 @@ function player(over: Partial<FootballPlayer> = {}): FootballPlayer {
     status: "a",
     news: "",
     chanceOfPlaying: null,
-    optaCode: null, season: NO_SEASON,
+    optaCode: null, birthDate: null, joinedClub: null, season: NO_SEASON,
     ...over,
   };
 }

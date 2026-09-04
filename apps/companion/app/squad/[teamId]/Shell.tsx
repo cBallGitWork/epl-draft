@@ -1,7 +1,5 @@
-import Caption from "../../components/shell/Caption";
-import type { CSSProperties } from "react";
-import { plateOn, teamColours } from "@epl/core";
-import PageHeader from "../../components/shell/PageHeader";
+import { teamColours } from "@epl/core";
+import PlateShell from "../../components/shell/PlateShell";
 import TeamTabs from "./TeamTabs";
 import type { TeamTab } from "./TeamTabs";
 
@@ -16,9 +14,13 @@ import type { TeamTab } from "./TeamTabs";
 // two bars and which one you get says what KIND of thing the screen is about:
 // `cm9900/24.jpg` is a competition, drawn light with a blue title; `25.jpg` is a
 // club, drawn as a filled plate with the name on it. A fantasy team is somebody
-// in the competition rather than the competition, so it takes the second — and
-// once the colour table lands it is that team's own colour on that plate, which
-// is the whole of what `21.jpg` does with a club's identity.
+// in the competition rather than the competition, so it takes the second, in
+// that manager's own colour.
+//
+// The bar, the caption and the `--cm-index` re-point are `PlateShell`'s now —
+// extracted at the third plated subject, exactly where `prem/club/[code]/Shell`
+// predicted. What is left here is what is this subject's own: which colour table
+// he is looked up in, and which tabs he has.
 
 export default function TeamShell({
   team,
@@ -32,46 +34,20 @@ export default function TeamShell({
    *  the bar, so both come from the same object rather than being passed
    *  separately and drifting. */
   team: { teamId: string; teamName: string };
-  /** What this VIEW is — "Squad", "The Wire". CM's yellow caption inside the
-   *  panel: the bar above names the team, this names what is in the box, and
-   *  every screen in the reference has both. */
+  /** What this VIEW is — "Squad", "The Wire". */
   title: string;
   current: TeamTab;
   sub?: React.ReactNode;
   empty?: readonly TeamTab[];
   children: React.ReactNode;
 }) {
-  // His own colours on his own bar. `inkOn` is what keeps a pale side readable —
-  // it picks dark ink for a light plate, which is `cm9900/16.jpg`'s white Torquay
-  // and not a case we invented.
-  const plate = plateOn(teamColours(team.teamId));
-
+  // A manager's colour comes from `teamColours` and a club's from
+  // `clubColours`. That difference is the reason `PlateShell` takes the colours
+  // resolved rather than an id.
   return (
-    // `gap-2` for `LeagueShell`'s reason: four boxes down the page, and 12px
-    // between each of them stops them reading as one object.
-    // **The team's colour, set once for all five tabs.** `--cm-index` re-points
-    // the index block every CM table runs down its left — the ranks on Stats,
-    // the rounds on Fixtures, the dates on Transfers — so a manager's screens
-    // are his rather than the league's deep blue (Craig, 2 Sep). Scoped here
-    // rather than passed to each table: it is a property of whose screen this
-    // is, and every table inside inherits it without knowing.
-    <div
-      className="flex flex-col gap-2"
-      style={
-        {
-          "--cm-index": plate.background,
-          "--cm-index-ink": plate.ink,
-        } as CSSProperties
-      }
-    >
-      <PageHeader title={team.teamName} sub={sub} plate={plate} />
-      <TeamTabs teamId={team.teamId} current={current} empty={empty} />
-
-      {/* The caption's own box, not a heading inside the content's (Craig,
-          1 Sep). */}
-      <Caption>{title}</Caption>
-
+    <PlateShell colours={teamColours(team.teamId)} title={team.teamName} sub={sub} caption={title}
+      tabs={<TeamTabs teamId={team.teamId} current={current} empty={empty} />}>
       {children}
-    </div>
+    </PlateShell>
   );
 }

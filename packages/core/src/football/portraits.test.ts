@@ -48,5 +48,17 @@ describe("portraitUrl", () => {
   it("does not prefix the file with p, which the crest-era path did", () => {
     expect(portraitUrl({ code: 223094 })).not.toContain("/p223094");
   });
+
+  it("stays on the small size unless asked, so no caller changes by accident", () => {
+    expect(portraitUrl({ code: 223094 })).toBe(portraitUrl({ code: 223094 }, "small"));
+  });
+
+  it("builds the large path the Premier League also serves", () => {
+    // Whole again, and for the same reason: 250x250 and 330x330 both 403 under
+    // this prefix, so a partial match would not tell 500x500 from a guess.
+    expect(portraitUrl({ code: 223094 }, "large")).toBe(
+      "https://resources.premierleague.com/premierleague25/photos/players/500x500/223094.png",
+    );
+  });
 });
 

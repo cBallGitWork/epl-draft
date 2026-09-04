@@ -106,11 +106,22 @@ Use them for:
 ### FPL — public, no auth
 
 - `GET /api/bootstrap-static/` — 1.3 MB: 20 clubs, 38 events, and an element
-  count that moves with the transfer window (564 on 3 Aug, 600 on 22 Aug — read
-  it, never assume it).
+  count that moves with the transfer window (564 on 3 Aug, 600 on 22 Aug, **652 on
+  4 Sep** — read it, never assume it).
   Player `code` is **season-stable** (portraits key off it); `id` is per-season and
   **must not be persisted across seasons**. Carries `opta_code`, `news`,
   `chance_of_playing_next_round`.
+  **109 keys per element; the mapper reads 31 and the domain carries 28.** Counted 4 Sep 2026, the ones a player
+  screen wants: `birth_date` 633/652 · `team_join_date` 633 · `known_name` 72 ·
+  `status` 652 (`a`490 `u`91 `i`55 `d`15 `s`1) · `influence`/`creativity`/`threat`
+  652 as decimal STRINGS · `penalties_order` 64, `direct_freekicks_order` 56,
+  `corners_and_indirect_freekicks_order` 79 · `scout_news_link` 43.
+  Counted and **refused**: the three `*_text` companions to the set-piece orders
+  are **0/652** — the order is the data, the prose is not; `scout_risks` is a key
+  on all 652 and a non-empty array on **7**, every entry `loan_ineligible`, which
+  is a footnote and never a tab; `region` is 633 but 67 opaque integers with no
+  lookup published, retired by Fantrax's plain-text birthplace;
+  `teams[].strength_attack_*`/`strength_defence_*` are **0/20 non-zero**.
   `squad_number` is present as a **key and never as a value** — null on all 622
   elements, checked 29 Aug 2026. This entry used to list it among the fields
   bootstrap carries, which is how a shirt-number fallback came to be designed on
@@ -118,6 +129,14 @@ Use them for:
   building on it.
 - `GET /api/fixtures/?event={gw}` — fixtures with `started` / `finished` /
   `finished_provisional` / `minutes` / scores.
+- `GET /api/element-summary/{id}/` — one player's own season, 13.7 KB. `history`
+  (per-GW, the only read that gives bps and expected goals PER FIXTURE),
+  `history_past` (completed seasons) and `fixtures` (his run, with FPL's own
+  difficulty). **`history_past` writes every key on every row back to 2014/15**,
+  so a statistic FPL did not collect that year is a nought and not an absence —
+  `starts`, the expected family, tackles and defensive contribution all read zero
+  for Maguire's 2021/22, a season in which he played **2,513 minutes**. Counted
+  4 Sep 2026 across eight long-career players; `fpl/raw.ts` carries the table.
 - `GET /api/event/{gw}/live/` — per-player stats. `{"elements": []}` before the
   round's first kickoff is normal and not an error. **After it, there is a row
   for every player in the league, not only those who played** — 600 elements,
@@ -128,9 +147,17 @@ Use them for:
   turns, and provisional bonus is by construction the current BPS order — so
   agreement with BPS is not evidence a bonus is final. Nothing reads this; the
   `settled`/`dataChecked` ladder derives the same rungs from reads we already make.
-- Portraits: `…/premierleague25/photos/players/110x140/{code}.png` — **PNG only**
+- Portraits: `…/premierleague25/photos/players/{size}/{code}.png` — **PNG only**
   (webp/jpg 403), and note there is no `p` before the code and no 250x250 under
-  this prefix. `premierleague25` is the Premier League's own string, read out of
+  this prefix. **Two sizes worth asking for, not one** — counted across 120 random
+  players on 4 Sep 2026: `110x140` **105/120**, and it serves a real 220x280 PNG
+  despite the name; **`500x500` 104/120**, a real 500x500. `220x280` as a literal
+  path is **12/120** and mostly a genuine 404, so it is not a second name for the
+  small one — that claim came from probing a single player who happened to have
+  it, and is the reason this line carries a denominator. This file and
+  `portraits.ts` both said 110x140 was the only size published, and a soft lead
+  picture was blamed on a ceiling that sits more than twice as high. 15 of the
+  120 have no photograph at any size. `premierleague25` is the Premier League's own string, read out of
   FPL's production bundle on 19 Aug 2026; it does **not** track the season (we
   are in 26/27) and `premierleague26` answers 502, so it is a recorded fact and
   never something to compute.

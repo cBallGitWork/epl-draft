@@ -41,6 +41,14 @@ export interface FootballPlayer {
   /** Opta's identifier, when FPL publishes it — the most reliable bridge to other
    *  data providers, so we keep it even though we don't consume it yet. */
   optaCode: string | null;
+  /** ISO `1995-09-15`, or null for the nineteen in six hundred FPL has not
+   *  filled in. Championship Manager opens every profile with this line, and it
+   *  is the only thing on that line we hold ourselves. */
+  birthDate: string | null;
+  /** ISO date he joined his current club, or null. Championship Manager gives
+   *  this its own tab; we hold one fact where the game simulates a contract, so
+   *  it is a row on Transfer rather than a fifth plate. */
+  joinedClub: string | null;
   /** What he has done across the season so far, as FPL counts it.
    *
    *  Two kinds of number, and the difference is who is entitled to state it.
@@ -80,6 +88,15 @@ export interface SeasonTotals {
   expectedGoals: number;
   expectedAssists: number;
   expectedGoalsConceded: number;
+  /** FPL's three indices. Influence and Creativity are Championship Manager's
+   *  own words for the same two ideas, which is why the attribute grid can print
+   *  them under their own names rather than under a paraphrase.
+   *
+   *  Season TOTALS, not rates — they accumulate with minutes, so anything
+   *  comparing two players has to divide by ninety first. */
+  influence: number;
+  creativity: number;
+  threat: number;
   tackles: number;
   /** FPL publishes clearances, blocks and interceptions as one figure and never
    *  separately, so it is carried as the one thing it is. */

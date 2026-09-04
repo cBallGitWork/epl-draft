@@ -23,7 +23,7 @@ const player = (
 ): RosteredPlayer => ({
   slot: { fantraxId: `f${position}${stats.length}${status}`, position, status },
   player: {
-    id: 1, code: 1, name: "N", fullName: "N", clubId: 1, status: "a", news: "", chanceOfPlaying: null, optaCode: null, season: NO_SEASON,
+    id: 1, code: 1, name: "N", fullName: "N", clubId: 1, status: "a", news: "", chanceOfPlaying: null, optaCode: null, birthDate: null, joinedClub: null, season: NO_SEASON,
   },
   stats,
 });

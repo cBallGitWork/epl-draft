@@ -1,6 +1,7 @@
 import type { Pedigree } from "@epl/core";
 import { signed } from "@epl/core";
-import { FACT, LABEL } from "@/app/desk";
+import { FACT } from "@/app/desk";
+import Section from "../../components/shell/Section";
 
 // What the draft paid for him.
 //
@@ -24,12 +25,12 @@ export default function Pedigree({
   if (pedigree.origin === "unknown") return null;
 
   return (
-    <section className="flex flex-col gap-1">
-      <h2 className={`font-display ${LABEL}`}>Draft</h2>
+    <Section title="Draft">
       <div className={FACT}>
         {pedigree.origin === "waiver" ? (
           <p className="text-sm text-muted">
-            Undrafted. He came off the waiver wire, which cost a claim rather than a pick.
+            Undrafted. He came off the waiver wire, which cost a claim rather
+            than a pick.
           </p>
         ) : (
           <>
@@ -41,7 +42,7 @@ export default function Pedigree({
           </>
         )}
       </div>
-    </section>
+    </Section>
   );
 }
 
@@ -53,7 +54,8 @@ export default function Pedigree({
  *  yet (§8), and the accent is not it. A dash when Fantrax has no ranking for
  *  him — nought is a real answer here and means he is exactly what he cost. */
 function Value({ against }: { against: number | null }) {
-  if (against === null) return <span className="numeric text-sm text-faint">—</span>;
+  if (against === null)
+    return <span className="numeric text-sm text-faint">—</span>;
 
   return (
     <span

@@ -55,11 +55,133 @@ describe("mapPlayerProfile", () => {
     expect(rostered.personal.map((row) => row.label)).not.toContain("College");
   });
 
+  it("reads the season row positionally, header cell against row cell", () => {
+    const withStats = mapPlayerProfile({
+      sectionContent: {
+        OVERVIEW: {
+          tables: [
+            // Several rows: not the season table. Listed first on purpose — the
+            // real payload puts Recent Games straight after it.
+            {
+              caption: "Recent Games",
+              header: { cells: [{ shortName: "Date" }, { shortName: "FPts" }] },
+              rows: [{ cells: [{ content: "Aug 30" }] }, { cells: [{ content: "Aug 22" }] }],
+            },
+            {
+              caption: "2026-27 Stats",
+              header: {
+                cells: [
+                  { shortName: "GP", name: "Games Played" },
+                  { shortName: "S", name: "Shots" },
+                  { shortName: "FC", name: "Fouls Committed" },
+                ],
+              },
+              rows: [{ cells: [{ content: "2" }, { content: "3" }, { content: "2" }] }],
+            },
+          ],
+        },
+      },
+    });
+    expect(withStats.stats.map((row) => `${row.label}=${row.value}`)).toEqual([
+      "GP=2",
+      "S=3",
+      "FC=2",
+    ]);
+    expect(withStats.stats[1].description).toBe("Shots");
+  });
+
+  it("drops a column whose cell is missing rather than sliding the rest up", () => {
+    // Positional reading's one hazard: a short row must not pair Shots with
+    // Fouls. A pair that cannot be made is dropped, never shifted.
+    const ragged = mapPlayerProfile({
+      sectionContent: {
+        OVERVIEW: {
+          tables: [
+            {
+              header: { cells: [{ shortName: "GP" }, { shortName: "S" }, { shortName: "FC" }] },
+              rows: [{ cells: [{ content: "2" }, {}, { content: "2" }] }],
+            },
+          ],
+        },
+      },
+    });
+    expect(ragged.stats.map((row) => `${row.label}=${row.value}`)).toEqual(["GP=2", "FC=2"]);
+  });
+
+  it("has no season row when Fantrax sends no single-row table", () => {
+    expect(mapPlayerProfile({ sectionContent: { OVERVIEW: { tables: [] } } }).stats).toEqual([]);
+    expect(mapPlayerProfile({}).stats).toEqual([]);
+  });
+
+  it("reads his recent matches by stat id, not by column label", () => {
+    const withGames = mapPlayerProfile({
+      sectionContent: {
+        OVERVIEW: {
+          tables: [
+            {
+              caption: "Recent Games",
+              header: {
+                cells: [
+                  { key: "date", shortName: "Date" },
+                  { key: "opponent", shortName: "Opp" },
+                  { key: "fpts", shortName: "FPts" },
+                  { key: "6210#-1", shortName: "S" },
+                ],
+              },
+              rows: [
+                { cells: [{ content: "Aug 30" }, { content: "IPS" }, { content: "3" }, { content: "1" }] },
+                { cells: [{ content: "Aug 22" }, { content: "@HUL" }, { content: "0" }, { content: "2" }] },
+              ],
+            },
+          ],
+        },
+      },
+    });
+    expect(withGames.matches).toHaveLength(2);
+    expect(withGames.matches[0]).toMatchObject({ opponent: "IPS", home: true, points: 3, shots: 1 });
+    // `@` is Fantrax's away marker and this is where it stops being a string.
+    expect(withGames.matches[1]).toMatchObject({ opponent: "HUL", home: false, points: 0 });
+  });
+
+  it("does not mistake the other four tables for the match one", () => {
+    // `Upcoming Games` names its column `opp`, `Recent Trends` prefixes every id
+    // with `5010#`, and the season table has no opponent at all. Only the match
+    // table carries both `opponent` and `fpts`.
+    const decoys = mapPlayerProfile({
+      sectionContent: {
+        OVERVIEW: {
+          tables: [
+            { caption: "Upcoming Games", header: { cells: [{ key: "date" }, { key: "opp" }] }, rows: [{ cells: [{}, {}] }] },
+            { caption: "Recent Trends", header: { cells: [{ key: "trend" }, { key: "fpts" }] }, rows: [{ cells: [{}, {}] }] },
+          ],
+        },
+      },
+    });
+    expect(decoys.matches).toEqual([]);
+  });
+
+  it("reads a figure it cannot parse as absent, not as nought", () => {
+    const ragged = mapPlayerProfile({
+      sectionContent: {
+        OVERVIEW: {
+          tables: [
+            {
+              header: { cells: [{ key: "opponent" }, { key: "fpts" }, { key: "6210#-1" }] },
+              rows: [{ cells: [{ content: "IPS" }, { content: "-" }, {}] }],
+            },
+          ],
+        },
+      },
+    });
+    expect(ragged.matches[0]).toMatchObject({ opponent: "IPS", points: null, shots: null });
+  });
+
   it("survives a payload with nothing in it", () => {
     // Every field on the wire is optional here as on fxea, and a profile we
     // cannot read must render as an empty page rather than throw one.
     const empty = mapPlayerProfile({});
     expect(empty).toMatchObject({ name: "", season: null, ownerTeamId: null });
+    expect(empty.matches).toEqual([]);
     expect([empty.league, empty.highlights, empty.market, empty.personal]).toEqual([[], [], [], []]);
   });
 });

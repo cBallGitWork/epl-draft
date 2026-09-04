@@ -14,7 +14,8 @@ const bootstrap = (over: Partial<RawBootstrap> = {}): RawBootstrap => ({
       // string-to-number coercion is actually under test.
       goals_scored: 0, assists: 1, clean_sheets: 2,
       minutes: 180, starts: 2, expected_goals: "0.12", expected_assists: "0.34",
-      expected_goals_conceded: "1.53", tackles: 3,
+      expected_goals_conceded: "1.53",
+      influence: "17.4", creativity: "5.2", threat: "0.0", tackles: 3,
       clearances_blocks_interceptions: 7, recoveries: 19, saves: 8,
       goals_conceded: 2, bonus: 1, bps: 45,
     },

@@ -14,7 +14,7 @@ const player = (clubId: number, code: number): FootballPlayer => ({
   status: "a",
   news: "",
   chanceOfPlaying: null,
-  optaCode: null, season: NO_SEASON,
+  optaCode: null, birthDate: null, joinedClub: null, season: NO_SEASON,
 });
 
 const rostered = (teamId: string, men: { clubId: number; code: number; status?: string }[]): RosteredTeam => ({

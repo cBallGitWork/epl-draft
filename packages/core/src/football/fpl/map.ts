@@ -32,6 +32,8 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
     news: e.news ?? "",
     chanceOfPlaying: e.chance_of_playing_next_round ?? null,
     optaCode: e.opta_code ?? null,
+    birthDate: e.birth_date ?? null,
+    joinedClub: e.team_join_date ?? null,
     season: {
       // `NUMERIC` throughout, not just on the expected trio: these are scraped
       // fields on a payload we do not control, and the counts arriving as
@@ -46,6 +48,9 @@ export function mapPlayers(raw: RawBootstrap): FootballPlayer[] {
       expectedGoals: NUMERIC(e.expected_goals),
       expectedAssists: NUMERIC(e.expected_assists),
       expectedGoalsConceded: NUMERIC(e.expected_goals_conceded),
+      influence: NUMERIC(e.influence),
+      creativity: NUMERIC(e.creativity),
+      threat: NUMERIC(e.threat),
       tackles: NUMERIC(e.tackles),
       clearancesBlocksInterceptions: NUMERIC(e.clearances_blocks_interceptions),
       recoveries: NUMERIC(e.recoveries),

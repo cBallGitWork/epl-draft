@@ -14,18 +14,29 @@ import PlayerImage from "../../components/league/PlayerImage";
 // there is no pitch here, and a transparent cut-out over the page background is
 // a head floating in the dark. The colour is the same one his 32px mark in the
 // pool sits on, so the two readings of him agree.
+//
+// **He no longer carries his shirt number.** It moved into the title bar, where
+// Championship Manager puts it: `3. Michael Ball (Everton)` (`cm9900/11.jpg`).
+// A number on the portrait AND in the heading is the club said twice, which is
+// the fault the crest comment below already names.
 
 /** How wide he is drawn here, and what the optimizer may serve for it. One
  *  number for the same reason it is one number in `PlayerPortrait`: written out
  *  separately they drift, and a soft photograph is not something anyone thinks
- *  to blame a class name for. */
-const WIDTH = 112;
+ *  to blame a class name for.
+ *
+ *  **176, up from 112, and the source is what changed.** This file used to be
+ *  bounded by `portraits.ts`'s recorded ceiling of 220x280 — 112 CSS px is 224
+ *  device px on a 2x phone, which was the whole of it. The Premier League also
+ *  publishes 500x500 under the same prefix and nothing here knew (probed 4 Sep
+ *  2026), so 176 is now 352 device px against a 500px source with room to
+ *  spare. */
+const WIDTH = 176;
 
 export default function Portrait({
   player,
   club,
   position,
-  squadNumber,
 }: {
   player: FootballPlayer;
   club: Club | undefined;
@@ -33,9 +44,6 @@ export default function Portrait({
    *  fallback draws. A keeper in an outfield shirt is the kind of quiet
    *  wrongness that survives review. */
   position: string | null;
-  /** Fantrax's, and a string because that is how they publish it — printed
-   *  verbatim rather than parsed, on the rule that their vocabulary is theirs. */
-  squadNumber: string | null;
 }) {
   const colours = clubColours(club?.shortName ?? "");
 
@@ -52,17 +60,9 @@ export default function Portrait({
         club={club}
         keeper={isGoalkeeper(position)}
         kickedOff
+        large
         sizes={`${WIDTH}px`}
       />
-
-      {/* His number, where a shirt would carry it. Absent for most of the pool —
-          Fantrax and FPL both leave it null more often than not — and absent is
-          simply no chip rather than a chip with a dash in it. */}
-      {squadNumber === null ? null : (
-        <span className="numeric absolute bottom-1 right-1 bg-bg/70 px-1.5 text-2xs font-bold text-cream">
-          {squadNumber}
-        </span>
-      )}
 
       {/* The crest sits on the portrait rather than beside the name: it is the
           same identifying fact as the colour behind him, and putting it in the

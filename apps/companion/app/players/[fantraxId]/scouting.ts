@@ -3,18 +3,15 @@ import {
   FIXTURE_RUN,
   PAGE_REVALIDATE,
   clubById,
-  contribution,
   fetchElementSummary,
-  kickedOff,
   mapGameLog,
   nextFixtures,
-  oppositionByClub,
 } from "@epl/core";
-import type { Club, Contribution, FootballPlayer, GameLogEntry, Opposition } from "@epl/core";
+import type { Club, FootballPlayer, GameLogEntry, Opposition } from "@epl/core";
 import { footballNow, seasonFixtures } from "../../football";
 
-// The football layer's answer about one footballer: what he has done, and what
-// is coming. Beside `season.ts` rather than inside it because the two are
+// The football layer's answer about one footballer: what is coming, and what he
+// has done. Beside `season.ts` rather than inside it because the two are
 // different questions with different sources — that file is his season as
 // FANTRAX scores it, and none of this is scored by anybody.
 //
@@ -22,12 +19,6 @@ import { footballNow, seasonFixtures } from "../../football";
 // snapshot and the calendar every other screen holds, so a profile view costs
 // FPL nothing for the round and the run; only the game log is a request of its
 // own, and it is the one thing on this page behind a boundary.
-
-/** What he has done in the round on screen. */
-export interface RoundSoFar {
-  gameweek: number;
-  done: Contribution;
-}
 
 /** One match he has played, with the club he played it against.
  *
@@ -39,34 +30,22 @@ export interface GameLogRow {
   opponent: Club | undefined;
 }
 
-/** His round and his run to come.
+/** The next few matches his club has, in order.
  *
- *  Null for the round — not a row of noughts — in the two states where a nought
- *  would be a claim nobody can support: before HIS match has kicked off, and
- *  when FPL's live feed could not be read at all. Those are opposite situations
- *  and both are honestly answered by having no card rather than an empty one.
+ *  **This used to answer his round as well**, and the round half went with the
+ *  card that drew it (Craig, 4 Sep 2026: "Remove gameweek so far"). What that
+ *  card knew is worth keeping here rather than in a deleted file: FPL opens a
+ *  stat line for every player in the league at the round's FIRST whistle, so
+ *  anything gated on the round rather than on HIS match reports "0 minutes, 0
+ *  goals" for a man playing on the Monday. `kickedOff` is the football layer's
+ *  answer to that and it was written because four other views had got it wrong.
  *
- *  His match, and deliberately not the round's first: FPL opens a stat line for
- *  every player in the league at the round's first whistle, so a card gated on
- *  the ROUND reported "Gameweek 2 so far — 0 minutes, 0 goals" for a man playing
- *  on the Monday. `kickedOff` is the football layer's answer to exactly that,
- *  and it was written because four other views had already got it wrong. */
-export async function scouting(
-  player: FootballPlayer,
-): Promise<{ round: RoundSoFar | null; run: Opposition[] }> {
+ *  The read is already warm — `footballNow` and `seasonFixtures` are the
+ *  snapshot and the calendar every other screen holds — so this costs FPL
+ *  nothing. Only the game log below is a request of its own. */
+export async function scouting(player: FootballPlayer): Promise<Opposition[]> {
   const [snapshot, fixtures] = await Promise.all([footballNow(), seasonFixtures()]);
-  const playing =
-    !snapshot.statsUnavailable && kickedOff(oppositionByClub(snapshot).get(player.clubId));
-
-  return {
-    round: playing
-      ? {
-          gameweek: snapshot.gameweek,
-          done: contribution(snapshot.stats.filter((s) => s.playerId === player.id)),
-        }
-      : null,
-    run: nextFixtures(fixtures, clubById(snapshot), player.clubId, FIXTURE_RUN),
-  };
+  return nextFixtures(fixtures, clubById(snapshot), player.clubId, FIXTURE_RUN);
 }
 
 /** Every match of his season, most recent first.

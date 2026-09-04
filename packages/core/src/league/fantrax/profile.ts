@@ -23,9 +23,26 @@
 //     means every league on the site and reads exactly like a statement about
 //     ours.
 //
-// `sectionContent` — the stats, splits and game-log tables — is refused rather
-// than forgotten. It is most of the payload's weight, its columns are keyed by
-// numeric stat ids, and nothing on screen asks for it yet.
+// `sectionContent` carries the stats, splits and game-log TABLES, and they are
+// still refused: most of the payload's weight, columns keyed by numeric stat ids
+// (`6210` is shots), and — the reason that matters — a percentile needs the whole
+// division and this endpoint is one player at a time. Its one line of prose is
+// read, because that needs no population.
+//
+// **Two traps in that section, both confirmed live on 4 Sep 2026.**
+//
+//  · **Cells carry HTML.** `'Fri Aug 28 -<br/>Thu Sep 3'` and `'<b>D</b>: 2'`
+//    are real cell contents. Nothing here is ever rendered as markup.
+//
+//  · **The endpoint does not check the sport.** Asking an EPL league for a
+//    player id from another sport returns a complete, confident NFL profile —
+//    `Sk`, `FF`, `IntYd` — under our league id. So the stat ids are per-sport
+//    and a caller must never assume the table in front of it is football.
+
+import { recentGames, seasonStats } from "./profileTables";
+import type { PlayerMatch, RawTable } from "./profileTables";
+
+export type { PlayerMatch } from "./profileTables";
 
 /** One name-and-value pair, of which this payload is almost entirely made.
  *
@@ -43,7 +60,7 @@ export interface LabelledValue {
   value: string;
 }
 
-interface RawLabelled {
+export interface RawLabelled {
   name?: string;
   shortName?: string;
   description?: string;
@@ -78,6 +95,21 @@ export interface RawPlayerProfile {
     leagueData?: RawLabelled[];
     personalInfo?: RawLabelled[];
   };
+  sectionContent?: {
+    OVERVIEW?: {
+      /** One dated sentence about his last match. `analysisTitle` sits beside it
+       *  reading "Analysis available to registered users" — the sentence is open
+       *  and the analysis behind it is not, so only the sentence is read. */
+      latestNews?: { title?: string; subTitle?: string; text?: string };
+      /** Five of them: his season, his recent games, his recent trends, what is
+       *  coming, and his games per position. Only the season row is read, and it
+       *  is read POSITIONALLY — header cell `i` against row cell `i` — because a
+       *  Fantrax table identifies its columns by a numeric stat id and its
+       *  `shortName` is a display label. The same rule `getStandings`' stat
+       *  tables already needed. */
+      tables?: RawTable[];
+    };
+  };
 }
 
 /** Everything worth showing about one player, sorted by whose statement it is. */
@@ -105,9 +137,28 @@ export interface PlayerIntel {
   /** Birthplace, age, height. Football's, in the loosest sense, and only ever
    *  decoration — the football layer is where facts about footballers live. */
   personal: LabelledValue[];
+  /** His season as Fantrax counts it: games, goals, assists, and the five things
+   *  FPL does not publish at all — **shots, shots on target, fouls committed,
+   *  fouls suffered and offsides**.
+   *
+   *  Read for ONE player, on his own page, from a profile already fetched for the
+   *  tap that opened it. That is the whole difference from the attribute grid,
+   *  which needs the same numbers for the whole division and therefore cannot
+   *  have them: a percentile needs a population and this endpoint answers one man
+   *  at a time. */
+  stats: LabelledValue[];
+  /** His recent matches as Fantrax scored them — and the only per-match source of
+   *  OUR LEAGUE'S points anywhere. FPL's points are FPL's, under FPL's rules.
+   *
+   *  **Recent, and how recent is not knowable yet.** The table is captioned
+   *  "Recent Games" and returned two rows for a two-match season on 4 Sep 2026,
+   *  so its window could be five, ten or the season. FPL's history is the spine
+   *  of any match table and covers every match; these fill in where they reach
+   *  and the screen dashes the rest. */
+  matches: PlayerMatch[];
 }
 
-function text(value: string | number | undefined): string | null {
+export function text(value: string | number | undefined): string | null {
   if (typeof value === "number") return String(value);
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
@@ -169,5 +220,7 @@ export function mapPlayerProfile(raw: RawPlayerProfile): PlayerIntel {
     // arrive in `highlightStats` with their meaning spelled out.
     market: rows([misc.percentDrafted, misc.averageDraftPosition].filter((v) => v !== undefined)),
     personal: rows(misc.personalInfo),
+    stats: seasonStats(raw),
+    matches: recentGames(raw),
   };
 }

@@ -21,9 +21,16 @@ export default function Breakdown({ season }: { season: PlayerSeason | null }) {
 
   // What the numbers are, from what Fantrax answered rather than what we asked
   // for — it has been known to hand back a projection either way.
+  //
+  // **The heading names the league, and that is not decoration.** This block now
+  // sits under two tables headed "FPL's own" — his match log and his previous
+  // seasons — and every figure in it is Fantrax's, under this commissioner's
+  // scoring. `FPts` in the aside is Fantrax's exclusive word and says so to a
+  // reader who already knows; the heading has to say it to one who does not
+  // (DESIGN §7, provenance at the point of use).
   const heading = season.season.projected
     ? "Fantrax projects"
-    : season.season.name || "This season";
+    : `In this league · ${season.season.name || "this season"}`;
 
   return (
     <Section
