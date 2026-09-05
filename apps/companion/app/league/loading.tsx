@@ -32,7 +32,11 @@ export default function Loading() {
             {Array.from({ length: ROWS }, (_, at) => (
               <tr key={at} className={ROW_RULE}>
                 {COLUMNS.map((column) => (
-                  <td key={column.key} className="px-1 py-1">
+                  // `column.width` and not just the padding: the width string
+                  // carries the column's VISIBILITY as well as its size, so a
+                  // skeleton that ignores it draws ten cells over the eight the
+                  // answer lands in and the table jumps sideways on arrival.
+                  <td key={column.key} className={`px-1 py-1 ${column.width}`}>
                     {column.key === "team" ? (
                       // The one cell whose height sets the row's, so the real
                       // rows land inside these boxes rather than pushing them

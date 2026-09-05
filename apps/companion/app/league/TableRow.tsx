@@ -26,9 +26,25 @@ import { FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 //   rank      faint          depth, never meaning — CM's quiet leading index cell
 //   team      ink            white, and ACCENT for the one you manage
 //   Pld W D L ink            the record — all four alike, as `24.jpg` sets them
-//   For/Ag    mid            fantasy points, and a different KIND of number
+//   For/Ag    ink            a column of a standings table is ink (DESIGN §3)
 //   Pts       ink, bold      the total the table is ordered by, CM's bold white
 //   form      up/bad/faint   direction, the only thing those two are for
+//
+// **The amber left this table on 5 Sep 2026** (Craig). `--color-mid` means "a
+// figure", and it was carrying For and Ag on the reasoning that fantasy points
+// are a different KIND of number from a win count. They are — and the table
+// already says so by giving them their own columns. What amber was actually
+// doing was colouring two columns of a table in which every other figure is
+// white, and `cm9900/24.jpg`'s own table is white throughout with yellow for
+// your club alone. Two hues in one row is where a reader starts looking for a
+// meaning that is not there.
+//
+// **And the phone gets fewer columns than the desk.** Ag and Form are `hidden
+// lg:table-cell` — a table whose last column is what the table is FOR shows it
+// at 390 without scrolling, and this one is for Pts. For stays, because
+// points-for is a head-to-head league's tiebreak and the reader's own is the
+// number he is here to compare. `Columns.COLUMNS` carries the same pair on its
+// heads; the two lists agreeing is what that file exists for.
 //
 // **Yours is said two ways: the accent edge and the accent NAME.** It was three
 // — edge, weight and a `YOU` chip — and it was four when the name's colour was
@@ -101,8 +117,8 @@ export default function TableRow({
       <td className={`${FIGURE} text-ink`}>{row.drawn}</td>
       <td className={`${FIGURE} text-ink`}>{row.lost}</td>
 
-      <td className={`${FIGURE} text-mid`}>{row.pointsFor}</td>
-      <td className={`${FIGURE} text-mid`}>{row.pointsAgainst}</td>
+      <td className={`${FIGURE} text-ink`}>{row.pointsFor}</td>
+      <td className={`${FIGURE} hidden text-ink lg:table-cell`}>{row.pointsAgainst}</td>
 
       {/* Points in a plate of their own, the way CM ends its table: the one
           figure that decides the season, blocked out so the eye runs down the
@@ -115,7 +131,7 @@ export default function TableRow({
 
       {/* After the points, where a modern table prints it — CM's own row ends at
           Pts and has no form guide at all. */}
-      <td className="numeric px-1.5 text-center text-2xs">
+      <td className="numeric hidden px-1.5 text-center text-2xs lg:table-cell">
         <Form run={form} />
       </td>
     </tr>

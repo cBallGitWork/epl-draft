@@ -77,8 +77,15 @@ export default function ClubRow({
       <td className={`${FIGURE} text-ink`}>{row.drawn}</td>
       <td className={`${FIGURE} text-ink`}>{row.lost}</td>
 
-      <td className={`${FIGURE} text-mid`}>{row.goalsFor}</td>
-      <td className={`${FIGURE} text-mid`}>{row.goalsAgainst}</td>
+      {/* **Ink, and not on the phone.** Amber means "a figure" and was colouring
+          two columns of a table in which every other figure is white; CM's own
+          table (`cm9900/24.jpg`) is white throughout with yellow for your club
+          alone. And below `lg` the pair goes with Form: a table's last column
+          should be what the table is FOR, and this one is for Pts. GD stays
+          under a thumb, being the competition's own first tiebreak — the two
+          numbers it is made of are the ones a phone can spare. */}
+      <td className={`${FIGURE} hidden text-ink lg:table-cell`}>{row.goalsFor}</td>
+      <td className={`${FIGURE} hidden text-ink lg:table-cell`}>{row.goalsAgainst}</td>
 
       {/* Goal difference is a DIRECTION and takes the direction pair — it is the
           one column on this table whose sign is the reason for printing it.
@@ -94,7 +101,7 @@ export default function ClubRow({
         </span>
       </td>
 
-      <td className="numeric px-1.5 text-center text-2xs">
+      <td className="numeric hidden px-1.5 text-center text-2xs lg:table-cell">
         <Form run={form} />
       </td>
     </tr>

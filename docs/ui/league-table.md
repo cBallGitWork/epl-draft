@@ -25,6 +25,19 @@ what every table in an English newspaper sets.
 `league/Columns.tsx` carries the list and `components/league/TableHeads` draws
 the strip.
 
+**The phone gets eight of the ten** (5 Sep 2026). `Ag` and `Form` are `hidden
+lg:table-cell`, which takes the table from 380px to 310 and puts `Pts` on a 390
+screen without a sideways scroll — the rule being that a table whose last column
+is what the table is FOR shows it under a thumb, and a many-measure stats board
+is the shape that scrolls instead. `For` stays: points-for is a head-to-head
+league's tiebreak, so it is a column a reader compares rather than one he audits.
+The visibility rides in each column's `width` string, so the heads, the rows and
+the loading skeleton all read it from one place.
+
+**And For and Ag are ink, not amber** (Craig, same day). DESIGN §3's amber slot
+now reads "a figure standing alone beside a name — never a column of a standings
+table". `cm9900/24.jpg` is white throughout with yellow for your own club.
+
 *This section described a TWO-LINE row with a figure-and-its-own-word under the
 name, and three columns that no longer exist. All of it went on 31 Aug 2026 when
 the table became a football table; the doc was corrected 3 Sep. What follows in

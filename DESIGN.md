@@ -165,7 +165,7 @@ is more specific than a palette; it is the reason the token names in
 | Ink | `--color-ink` `muted` `faint` | how loud | 17.0 · 8.6 · 5.7 |
 | Yellow | `--color-accent` | **yours · selected · active · primary** | 13.1 |
 | Cyan | `--color-info` | **a derived reading** — ours rather than recorded | 11.2 |
-| Amber | `--color-mid` | **a figure** | 9.8 |
+| Amber | `--color-mid` | **a figure standing alone beside a name** — never a column of a standings table | 9.8 |
 | Red | `--color-bad` | **a loss, a doubt, a negative** | 5.6 |
 | Green | `--color-up` | **a gain** — the other half of the direction pair | 9.9 |
 | Live red | `--color-live` | **a match in play**, and nothing else | 5.4 |
@@ -188,6 +188,18 @@ recorded. That is a distinction this app already has to make and makes in words
 headed `FPts` — and it now has a colour for it. Seven sites inked a player's
 name cyan and none do; the slot is deliberately near-empty until a derived
 figure claims it, which is better than it meaning two things.
+
+**Amber narrowed on 5 Sep 2026** (Craig), and the wording is the whole change:
+*a figure standing alone beside a name — a fact, a ledger line, a board's value —
+never a column of a standings table, where every figure is ink and only yours
+takes the accent.* It had been carrying For and Ag on `/league` and `/prem`, on
+the reasoning that fantasy points and goals are a different KIND of number from a
+win count. They are, and the table already says so by giving them their own
+columns; what the colour was doing was tinting two columns of a table in which
+every other figure is white. `cm9900/24.jpg` is white throughout with yellow for
+your own club, and two hues in one row is where a reader starts looking for a
+meaning that is not there. Where amber still belongs is where it is the ONLY
+figure on the line — a stated fact, a transaction's value, a board's one measure.
 
 `--color-faint` on `--color-raised` is 4.9:1. That is the tightest pair in the
 set and it is what fixes where the raised step can sit; move one, re-check both.

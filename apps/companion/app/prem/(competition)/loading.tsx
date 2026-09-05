@@ -33,13 +33,16 @@ export default function Loading() {
                     <Skeleton width="w-24" height="h-4" />
                   </span>
                 </td>
-                {/* Counted off `COLUMNS` rather than written out: the place and
-                    the club are drawn above, and the rest is however many the
-                    table declares. A literal here is the exact bug
-                    `Columns.tsx` says it exists to prevent — the heads and the
-                    skeleton drifting apart the day a column is added. */}
-                {Array.from({ length: COLUMNS.length - 2 }, (_, cell) => (
-                  <td key={cell} className="px-1.5">
+                {/* Read off `COLUMNS` rather than written out: the place and
+                    the club are drawn above, and the rest is whatever the table
+                    declares. A literal here is the exact bug `Columns.tsx` says
+                    it exists to prevent — the heads and the skeleton drifting
+                    apart the day a column is added. It takes each column's
+                    `width` too, which carries VISIBILITY as well as size: a
+                    count alone drew eleven cells on a phone the answer fills
+                    with eight, and the table jumped sideways on arrival. */}
+                {COLUMNS.slice(2).map((column) => (
+                  <td key={column.key} className={`px-1.5 ${column.width}`}>
                     <Skeleton width="w-full" height="h-3" />
                   </td>
                 ))}

@@ -36,11 +36,11 @@ export const COLUMNS: readonly Column[] = [
   { key: "won", label: "Won", title: "Won", align: "center", width: "w-8 lg:w-16" },
   { key: "drawn", label: "Drn", title: "Drawn", align: "center", width: "w-8 lg:w-16" },
   { key: "lost", label: "Lst", title: "Lost", align: "center", width: "w-8 lg:w-16" },
-  { key: "for", label: "For", title: "Goals scored", align: "center", width: "w-9 lg:w-20" },
-  { key: "against", label: "Ag", title: "Goals conceded", align: "center", width: "w-9 lg:w-20" },
+  { key: "for", label: "For", title: "Goals scored", align: "center", width: "hidden w-9 lg:table-cell lg:w-20" },
+  { key: "against", label: "Ag", title: "Goals conceded", align: "center", width: "hidden w-9 lg:table-cell lg:w-20" },
   { key: "gd", label: "GD", title: "Goal difference — the competition's first tiebreak", align: "center", width: "w-10 lg:w-20" },
   { key: "pts", label: "Pts", title: "Three for a win, one for a draw", align: "center", width: "w-10 lg:w-24" },
-  { key: "form", label: "Form", title: "The last five, oldest first", align: "center", width: "w-14 lg:w-32" },
+  { key: "form", label: "Form", title: "The last five, oldest first", align: "center", width: "hidden w-14 lg:table-cell lg:w-32" },
 ];
 
 /** The cell class for a column, so the row prints the same alignment the head

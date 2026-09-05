@@ -63,9 +63,9 @@ export const COLUMNS: readonly Column[] = [
   { key: "drawn", label: "D", title: "Drawn", align: "center", width: "w-7 lg:w-16" },
   { key: "lost", label: "L", title: "Lost", align: "center", width: "w-7 lg:w-16" },
   { key: "for", label: "For", title: "Fantasy points scored — Fantrax's FPtsF", align: "center", width: "w-11 lg:w-24" },
-  { key: "against", label: "Ag", title: "Fantasy points conceded — Fantrax's FPtsA", align: "center", width: "w-11 lg:w-24" },
+  { key: "against", label: "Ag", title: "Fantasy points conceded — Fantrax's FPtsA", align: "center", width: "hidden w-11 lg:table-cell lg:w-24" },
   { key: "pts", label: "Pts", title: "League points — the commissioner's own, never counted here", align: "center", width: "w-10 lg:w-24" },
-  { key: "form", label: "Form", title: "The last five rounds, oldest first", align: "center", width: "w-14 lg:w-32" },
+  { key: "form", label: "Form", title: "The last five rounds, oldest first", align: "center", width: "hidden w-14 lg:table-cell lg:w-32" },
 ];
 
 /** Where a column's content sits, as a flex class and as a text class.

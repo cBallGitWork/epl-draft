@@ -49,6 +49,14 @@ reproduction in the app and sets most of its decisions:
 - **`Pld Won Drn Lst For Ag Pts`**, centred under centred heads. We add `GD`,
   which the game leaves out and which the competition orders on — a table whose
   first tiebreak is invisible cannot be checked by the reader.
+- **Under `lg`, `For`, `Ag` and `Form` stand down** (5 Sep 2026): 408px of table
+  in a 346px wrapper was clipping `PTS`, which is the column the table is FOR.
+  `GD` stays — it is the competition's own first tiebreak, and the two numbers it
+  is made of are the pair a phone can spare. The visibility rides in each
+  column's `width` string in `prem/Columns.tsx`, so the heads, the rows and the
+  loading skeleton read it from one place.
+- **`For` and `Ag` are ink**, not amber: DESIGN §3's slot means a figure standing
+  alone beside a name, never a column of a standings table.
 - **A dashed rule under the cut**, in yellow.
 
 ## The strip
