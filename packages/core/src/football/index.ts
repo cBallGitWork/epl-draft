@@ -103,6 +103,8 @@ export {
 export type { MatchContribution } from "./selectors";
 export { availabilityOf, isDoubtful } from "./playerState";
 export type { Availability, PlayerState } from "./playerState";
+export { formByPlayer, playedRounds } from "./form";
+export type { PlayerForm, RoundStats } from "./form";
 
 // What a round is doing, as against what a snapshot contains — see `round.ts`
 // for why the two are separate questions and why asking one in place of the
