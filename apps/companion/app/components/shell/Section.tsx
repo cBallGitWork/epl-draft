@@ -42,7 +42,14 @@ export default function Section({
   return (
     <section className={PANEL}>
       <div className="flex items-baseline justify-between gap-3 border-b border-line pb-1">
-        <h2 className="font-display text-2xs font-bold uppercase text-muted">
+        {/* **The chrome face, not the figure one.** It was `font-display`, which
+            `tokens.css` reserves for FIGURES — Archivo Narrow with `tnum` — and
+            a panel's own title is chrome: `desk.css` puts `--font-chrome` on
+            every plate for exactly this reason, and `Caption` and `PageHeader`
+            were already in it. Craig, 5 Sep 2026: "for all rows, use the correct
+            CM font please", and a heading over the rows is the same argument.
+            One heading, and it is on every headed panel in the app. */}
+        <h2 className="font-chrome text-2xs font-bold uppercase text-muted">
           {title}
         </h2>
         {aside ? <span className="text-2xs text-faint">{aside}</span> : null}
