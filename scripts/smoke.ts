@@ -140,20 +140,6 @@ const NEVER: Record<string, string> = {
   "/gw/1": "No fixtures scheduled for this gameweek yet.",
 };
 
-/** The name Fantrax gives the league this walk is deriving its expectations
- *  from, or null if it will not say.
- *
- *  The schedule prints it verbatim as the section's subtitle, which is what
- *  makes it checkable from out here without the app growing an endpoint. */
-async function expectedName(): Promise<string | null> {
-  try {
-    return mapLeagueInfo(await fetchLeagueInfo(FANTRAX_LEAGUE_ID)).name || null;
-  } catch (error) {
-    if (error instanceof FantraxError) return null;
-    throw error;
-  }
-}
-
 /** Whether the league has teams, and the first of them.
  *
  *  **One read answering both.** They used to be two functions issuing the same
@@ -164,6 +150,7 @@ async function expectedName(): Promise<string | null> {
 async function league(): Promise<{
   drafted: boolean;
   teamId: string | null;
+  teamName: string | null;
   playerId: string | null;
 }> {
   try {
@@ -171,6 +158,9 @@ async function league(): Promise<{
     return {
       drafted: team !== undefined,
       teamId: team?.teamId ?? null,
+      // The string the served-league check looks for. It comes off this read
+      // rather than a second one for the reason the docblock above gives.
+      teamName: team?.teamName || null,
       // A player somebody actually holds, taken from the roster this read
       // already returned. `/players` links to this page for every name on it,
       // and an id invented here would test a 404 rather than a player.
@@ -178,7 +168,7 @@ async function league(): Promise<{
     };
   } catch (error) {
     if (error instanceof FantraxError) {
-      return { drafted: false, teamId: null, playerId: null };
+      return { drafted: false, teamId: null, teamName: null, playerId: null };
     }
     throw error;
   }
@@ -225,7 +215,7 @@ async function footballerAndMatch(): Promise<{ footballer: number | null; match:
 }
 
 async function main() {
-  const { drafted: hasTeams, teamId: id, playerId } = await league();
+  const { drafted: hasTeams, teamId: id, teamName, playerId } = await league();
   const club = await clubCode();
   const { footballer, match } = await footballerAndMatch();
   const paths: string[] = [...ROUTES];
@@ -280,19 +270,35 @@ async function main() {
   // CI run that cost an evening, and the walk could not say so because it had
   // never been able to see which league the server had.
   //
-  // Checked, not assumed, and checked against the one page that prints the
-  // league's own name — which is also the read the 10 Oct swap turns.
-  const name = await expectedName();
+  // Checked, not assumed, and checked against a MANAGER'S OWN TEAM NAME on the
+  // league table.
+  //
+  // **It used to look for the LEAGUE's name on the schedule**, on the strength of
+  // that page printing it verbatim as its subtitle — and the subtitle went on
+  // 5 Sep 2026, when the schedule stopped passing a `sub` at all (`8a46eb1`,
+  // "one row, one name recipe"). So this gate aborted the whole walk on every
+  // run after it, reporting that the server was on the wrong league when the
+  // server was fine and the sentence it was looking for had simply been deleted.
+  // A check whose expectation nothing in the app maintains is worse than no
+  // check: it fails loudly for a reason that has nothing to do with the failure
+  // it was written to catch.
+  //
+  // A team name is a better anchor for the same question. It is unique to the
+  // league, it comes off a read this walk already makes, and `/league` is the
+  // one page that cannot render without it — so a match proves the server is on
+  // this league AND that the table drew.
+  const name = teamName;
   if (name === null) {
     // Skipped, and SAID so. A check that quietly does not run is the shape of
     // defect this whole gate exists to catch: the walk below would go green
-    // having never established which app it was walking. Not fatal — Fantrax
-    // refusing is a state, and the routes are still worth walking — but the
-    // report must not imply a check that did not happen.
-    console.log("~ served league  Fantrax would not name it, so this walk cannot verify it\n");
+    // having never established which app it was walking. Not fatal — a league
+    // with no teams is the real league's own state until 10 Oct, and the routes
+    // are still worth walking — but the report must not imply a check that did
+    // not happen.
+    console.log("~ served league  no team is named yet, so this walk cannot verify it\n");
   } else {
-    const schedule = await fetch(`${BASE}/league/schedule`, { redirect: "follow" });
-    const body = await schedule.text();
+    const table = await fetch(`${BASE}/league`, { redirect: "follow" });
+    const body = await table.text();
     if (!body.includes(name)) {
       console.log(`✗ served league  expected "${name}" (${FANTRAX_LEAGUE_ID})`);
       console.log(
