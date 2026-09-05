@@ -172,7 +172,17 @@ export interface RawPlFixture {
    *  than during it. FPL publishes no attendance at all. */
   attendance?: number;
   matchOfficials?: RawPlOfficial[];
-  teamLists?: RawPlTeamList[];
+  /** **Always two entries, and the ENTRIES are null until the sheets are
+   *  published** — which is not the same shape as an absent array and is the
+   *  reason this is typed the way it is. Counted 5 Sep 2026 across the 30
+   *  fixtures of GW1-3 plus GW4: `teamLists` present 30/30, and 4 null entries
+   *  among the 60 sides, all four being the two GW3 fixtures nobody had named a
+   *  side for. Every GW4 fixture, a week out, answers `[null, null]`.
+   *
+   *  So "has this fixture been named" is `teamLists[i] !== null`, which is an
+   *  exact tell and not a clock — and a mapper that indexes straight into an
+   *  entry throws on every unstarted match. */
+  teamLists?: (RawPlTeamList | null)[];
   /** `{opta: "g2645221"}` — the number after the `g` is FPL's `fixture.code`.
    *
    *  **Only sent when the request asks for it.** The round read answers 0 of 10

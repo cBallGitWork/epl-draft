@@ -59,6 +59,12 @@ async function main(): Promise<void> {
     for (const fixture of played) {
       const detail = await fetchPlFixture(fixture.id);
       for (const list of detail.teamLists ?? []) {
+        // A side nobody has named is a null ENTRY in a two-long array, not an
+        // absent array (`RawPlFixture.teamLists`). It never reached here — the
+        // `status !== "U"` filter above sees to that — but it was counted as a
+        // sheet and then read straight into, so the guard is the honest form of
+        // the filter's promise and the harvest count stops over-reporting.
+        if (list === null) continue;
         sheets++;
         for (const player of [...list.lineup, ...list.substitutes]) {
           const opta = player.altIds?.opta;

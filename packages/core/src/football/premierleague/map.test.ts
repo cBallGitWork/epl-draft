@@ -32,9 +32,11 @@ const DETAIL = recordedFixture as unknown as RawPlFixture;
  *  join is visible rather than coincidental. */
 const optaToCode = new Map(
   [...(DETAIL.teamLists ?? [])].flatMap((list) =>
-    [...list.lineup, ...list.substitutes].flatMap((p) =>
-      p.altIds ? [[p.altIds.opta, p.id + 1_000_000] as [string, number]] : [],
-    ),
+    list === null
+      ? []
+      : [...list.lineup, ...list.substitutes].flatMap((p) =>
+          p.altIds ? [[p.altIds.opta, p.id + 1_000_000] as [string, number]] : [],
+        ),
   ),
 );
 
@@ -341,5 +343,34 @@ describe("plMatchMetrics", () => {
     // Distinct from the zero above: no stats at all may not become a board of
     // noughts. The caller has to tell the two apart, so the types do.
     expect(plMatchMetrics(STATS, 999)).toBeNull();
+  });
+});
+
+describe("an unnamed fixture", () => {
+  // **`[null, null]`, and it is the shape every match more than an hour or two
+  // out answers with** — counted 5 Sep 2026 across GW4, seven days off: all ten
+  // fixtures. It is two entries and no sheets, so a `length === 0` test passes
+  // it through and the next line reads `.teamId` off null.
+  const unnamed = {
+    ...DETAIL,
+    teamLists: [null, null],
+  } as unknown as RawPlFixture;
+
+  it("has no sheets rather than throwing", () => {
+    expect(plTeamSheets(unnamed, optaToCode)).toBeNull();
+  });
+
+  it("codes nobody rather than throwing", () => {
+    expect(plPlayerCodes(unnamed, optaToCode).size).toBe(0);
+  });
+
+  // A half-published fixture is not a shape the feed has been seen to send, and
+  // the answer for it is the same one: a sheet for one side only is not a sheet.
+  it("refuses a fixture named on one side only", () => {
+    const half = {
+      ...DETAIL,
+      teamLists: [(DETAIL.teamLists ?? [])[0], null],
+    } as unknown as RawPlFixture;
+    expect(plTeamSheets(half, optaToCode)).toBeNull();
   });
 });

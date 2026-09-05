@@ -54,6 +54,11 @@ export function plPlayerCodes(
 ): Map<number, number> {
   const codes = new Map<number, number>();
   for (const list of fixture.teamLists ?? []) {
+    // A side nobody has named yet is a null ENTRY in a two-long array, not an
+    // absent array — see `RawPlFixture.teamLists`. This read `list.lineup`
+    // straight and threw on every unstarted fixture, which the app's own
+    // try/catch was quietly absorbing as "no sheets".
+    if (list === null || list === undefined) continue;
     for (const player of [...list.lineup, ...list.substitutes]) {
       const opta = player.altIds?.opta;
       const code = opta === undefined ? undefined : optaToCode.get(opta);
@@ -105,7 +110,12 @@ export function plTeamSheets(
   fixture: RawPlFixture,
   optaToCode: Map<string, number>,
 ): { home: PlTeamSheet; away: PlTeamSheet } | null {
-  const lists = fixture.teamLists ?? [];
+  // **Not `length === 0`.** An unnamed fixture answers `[null, null]`, which is
+  // two entries and no sheets — so the length test passed and `entry.teamId`
+  // threw one line later. Counted 5 Sep 2026: every fixture a week out answers
+  // exactly that. The docblock above has always said null means "not published";
+  // this is the shape that actually says it.
+  const lists = (fixture.teamLists ?? []).filter((entry) => entry !== null && entry !== undefined);
   if (lists.length === 0) return null;
 
   const sheetFor = (teamId: number): PlTeamSheet | null => {
