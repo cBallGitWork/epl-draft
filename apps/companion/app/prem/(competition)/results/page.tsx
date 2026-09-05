@@ -25,7 +25,7 @@ export default async function ResultsPage() {
 
   if (played.length === 0) {
     return (
-      <PremShell title="Results" current="results">
+      <PremShell current="results">
         <Nothing title="Nothing played yet" code="no finished fixture">
           Results appear here as soon as a round finishes. A round being played is on Live,
           where its score is meant to move.
@@ -35,9 +35,7 @@ export default async function ResultsPage() {
   }
 
   return (
-    <PremShell
-      title="Results"
-      current="results"
+    <PremShell current="results"
       rows={panelRows(played)}
     >
       <Rounds rounds={played} clubs={clubById(snapshot)} />

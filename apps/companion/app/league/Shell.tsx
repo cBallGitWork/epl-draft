@@ -4,6 +4,7 @@ import PageHeader from "../components/shell/PageHeader";
 import SectionNav from "./SectionNav";
 import type { LeagueSection } from "./SectionNav";
 import { PANEL } from "@/app/desk";
+import { LEAGUE_CAPTION } from "../titles";
 
 // The frame every league section wears, including when it has nothing to show.
 //
@@ -35,12 +36,22 @@ export default function LeagueShell({
   teams,
   children,
 }: {
-  /** What this VIEW is — "League Table", "Schedule". Printed as CM prints it:
-   *  a yellow caption centred inside the panel, under the tab strip and over the
-   *  content. The blue bar above names the competition; this names what is in
-   *  the panel, and every screen in the game has both. */
-  title: string;
+  /** Which view this is. **The caption is looked up from it** rather than passed
+   *  beside it (`app/titles.ts`): a page wrote its own title two or three times
+   *  over — the page, its loading skeleton, and each early return for a Fantrax
+   *  that would not answer — and one of those going stale is a screen that
+   *  renames itself while it loads. Counted before extracting: `League Table` at
+   *  7 sites, `Matchups` and `Results` at 6.
+   *
+   *  Printed as CM prints it: a yellow caption centred inside the panel, under
+   *  the tab strip and over the content. The blue bar above names the
+   *  competition; this names what is in the panel, and every screen in the game
+   *  has both. */
   current: LeagueSection;
+  /** The caption, for the one route the section table cannot name: the
+   *  head-to-head is a page under Matchups rather than a section, so `current`
+   *  says "matchups" and the screen is not that. */
+  title?: string;
   sub?: React.ReactNode;
   /** How many teams are in the league, when the caller knows. The panel is drawn
    *  to hold that many rows, or `PANEL_ROWS`, whichever is more. */
@@ -69,7 +80,7 @@ export default function LeagueShell({
           under it is a separate bordered block. This had them in one panel with
           the caption floating at the top of it, which is a heading inside a box
           rather than a box of its own. */}
-      <Caption>{title}</Caption>
+      <Caption>{title ?? LEAGUE_CAPTION[current]}</Caption>
 
       {/* The content's own container, sized to hold the league.
           `min-h` so a short league still draws a panel rather than a strip: the

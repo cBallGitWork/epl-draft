@@ -75,7 +75,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
   // already did this; the table and the matchups board did not.
   if ("unavailable" in rows) {
     return (
-      <LeagueShell title="League Table" current="table" teams={info?.teams.length}>
+      <LeagueShell current="table" teams={info?.teams.length}>
         <Nothing title={FANTRAX_SILENT} code={rows.unavailable}>
           The table is theirs to keep, and we cannot read it right now. Nothing here is computed
           from our side, so there is no stale copy to fall back on.
@@ -86,7 +86,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
 
   if (rows.length === 0) {
     return (
-      <LeagueShell title="League Table" current="table" teams={info?.teams.length}>
+      <LeagueShell current="table" teams={info?.teams.length}>
         <Nothing title="No table yet" code="getStandings → 0 rows">
           {LEAGUE_NAME} drafts on {DRAFT_DATE}. A table needs teams in it, and Fantrax has none to
           rank.
@@ -96,7 +96,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
   }
 
   return (
-    <LeagueShell title="League Table" current="table" teams={info?.teams.length}>
+    <LeagueShell current="table" teams={info?.teams.length}>
       {/* The FP column is Fantrax's live total and moves all weekend. This was
           the last points surface with no refresh on it at all: `revalidate`
           bounds how stale the cache may get and pushes nothing to a phone left

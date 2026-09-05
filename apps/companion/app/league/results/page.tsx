@@ -41,7 +41,7 @@ export default async function ResultsPage() {
 
   if ("unavailable" in schedule) {
     return (
-      <LeagueShell title="Results" current="results">
+      <LeagueShell current="results">
         <Nothing title={FANTRAX_SILENT} code={schedule.unavailable}>
           The season is theirs to keep, and we cannot read it right now.
         </Nothing>
@@ -82,7 +82,7 @@ export default async function ResultsPage() {
 
   if (played.length === 0) {
     return (
-      <LeagueShell title="Results" current="results" teams={info.teams.length}>
+      <LeagueShell current="results" teams={info.teams.length}>
         <Nothing title="Nothing played yet" code="no started round has a result">
           {info.name} has results here as soon as a round finishes. A round still being
           played is on Matchups, where its score is meant to move.
@@ -92,7 +92,7 @@ export default async function ResultsPage() {
   }
 
   return (
-    <LeagueShell title="Results" current="results" teams={info.teams.length}>
+    <LeagueShell current="results" teams={info.teams.length}>
       <div className="flex flex-col gap-3">
         {played.map((round) => (
           <section key={round.period} className="flex flex-col">

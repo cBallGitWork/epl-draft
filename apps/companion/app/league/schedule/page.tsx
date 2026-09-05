@@ -62,7 +62,7 @@ export default async function SchedulePage() {
 
   if ("unavailable" in read) {
     return (
-      <LeagueShell title="Schedule" current="schedule">
+      <LeagueShell current="schedule">
         <Nothing title={FANTRAX_SILENT} code={read.unavailable}>
           The schedule is part of the league&apos;s own description of itself, and we cannot read it
           right now.
@@ -80,7 +80,7 @@ export default async function SchedulePage() {
 
   if (read.rounds.length > 0 && rounds.length === 0) {
     return (
-      <LeagueShell title="Schedule" current="schedule" sub={info.name} teams={info.teams.length}>
+      <LeagueShell current="schedule" sub={info.name} teams={info.teams.length}>
         <Nothing title="Season complete" code={`${read.rounds.length} gameweeks, all finished`}>
           Every round {info.name} plays has been played. They are all on Results.
         </Nothing>
@@ -90,7 +90,7 @@ export default async function SchedulePage() {
 
   if (rounds.length === 0) {
     return (
-      <LeagueShell title="Schedule" current="schedule" sub={info.name}>
+      <LeagueShell current="schedule" sub={info.name}>
         <Nothing
           title="No calendar to read"
           code={`${info.scoringPeriods.length} periods, 0 gameweeks`}
@@ -130,7 +130,7 @@ export default async function SchedulePage() {
   ];
 
   return (
-    <LeagueShell title="Schedule" current="schedule" sub={info.name}>
+    <LeagueShell current="schedule" sub={info.name}>
       {refused === null ? null : (
         <p className="px-3 text-2xs text-faint">
           Fantrax&apos;s scoreboard is not answering, so there are no points to show. The fixtures

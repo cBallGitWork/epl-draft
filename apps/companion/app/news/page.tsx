@@ -1,9 +1,12 @@
 import Link from "next/link";
 import type { InboxCategory, InboxItem } from "@epl/core";
+import { LEAGUE_NAME } from "@epl/core";
+import Caption from "../components/shell/Caption";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
 import { londonDayAndDate } from "../londonTime";
+import { NEWS } from "../titles";
 import { HEAD_PLATE, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
 
 // The manager's news, the way Championship Manager files it.
@@ -70,15 +73,23 @@ export default async function NewsPage({
 
   return (
     <div className="flex flex-col gap-2">
-      {/* **His team's news, the way the game says it** — `Mike Paul News` in the
-          shot, which is the manager's own name. Ours is his team's, because that
-          is what this league calls a manager and what every other title bar in
-          the app puts in that slot. A reader with no team gets the league's, and
-          the screen is still worth reading: most of what is on it is the
-          league's news as much as his. */}
+      {/* **The bar names the SUBJECT and the caption names the VIEW**, which is
+          the app's rule and was the one screen breaking it (Craig, 5 Sep 2026:
+          "news needs the proper CM title like the rest of the app"). It read
+          `TEST2 NEWS` on the bar with no caption at all — the two boxes
+          collapsed into one. CM's own news bar does exactly that, and it is the
+          single screen in the library that does; `app/titles.ts` carries the
+          rule and why ours wins.
+
+          The subject is the LEAGUE and not the manager, on what is actually in
+          the list: another manager's signing, a doubt on a rival's squad, the
+          round's deadline. It is his news the way the table is his table. That
+          also keeps one shell for a reader with no team, who still has every
+          reason to read it. */}
       <PageHeader
-        title={inbox.mineName === null ? "News" : `${inbox.mineName} News`}
+        title={LEAGUE_NAME}
         sub={inbox.gameweek === null ? undefined : `Gameweek ${inbox.gameweek}`}
+        competition
       />
 
       {/* The strip. Not `TabStrip`: these are not routes, they are filters on
@@ -103,6 +114,8 @@ export default async function NewsPage({
           </Link>
         ))}
       </nav>
+
+      <Caption>{NEWS}</Caption>
 
       {shown.length === 0 ? (
         <section className="cm-panel p-3">

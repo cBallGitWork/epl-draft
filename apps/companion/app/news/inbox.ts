@@ -40,11 +40,6 @@ export interface Inbox {
    *  still worth reading signed out — it is the league's news as well as his —
    *  but nothing goes red. */
   mine: string | null;
-  /** His team's NAME, for the title bar. CM heads this screen with the
-   *  manager's own name (`Mike Paul News`) and this league calls a manager by
-   *  his team. Null for a reader with no team, and then the bar just says
-   *  News. */
-  mineName: string | null;
   gameweek: number | null;
 }
 
@@ -115,7 +110,6 @@ export async function readInbox(): Promise<Inbox> {
     ),
     names,
     mine,
-    mineName: mine === null ? null : (names.get(mine) ?? null),
     gameweek,
   };
 }

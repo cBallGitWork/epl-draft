@@ -25,7 +25,7 @@ export default async function FixturesPage() {
 
   if (ahead.length === 0) {
     return (
-      <PremShell title="Fixtures" current="fixtures">
+      <PremShell current="fixtures">
         <Nothing title="Nothing left to play" code="no upcoming fixture">
           Every match FPL has published has been played. Next season&apos;s fixtures arrive when
           they are drawn.
@@ -35,9 +35,7 @@ export default async function FixturesPage() {
   }
 
   return (
-    <PremShell
-      title="Fixtures"
-      current="fixtures"
+    <PremShell current="fixtures"
       rows={panelRows(ahead)}
     >
       <Rounds rounds={ahead} clubs={clubById(snapshot)} />

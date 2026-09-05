@@ -8,7 +8,7 @@ import SkeletonRows from "../../components/shell/SkeletonRows";
 
 export default function Loading() {
   return (
-    <LeagueShell title="Matchups" current="matchups">
+    <LeagueShell current="matchups">
       <div aria-busy>
         <SkeletonRows count={4} height="4.5rem" />
       </div>

@@ -12,7 +12,7 @@ import SkeletonRows from "../../components/shell/SkeletonRows";
 
 export default function Loading() {
   return (
-    <LeagueShell title="Schedule" current="schedule">
+    <LeagueShell current="schedule">
       <div aria-busy className="flex flex-col gap-3">
         <div className="flex flex-wrap gap-1.5 px-3">
           <Skeleton width="100%" height="2.75rem" />

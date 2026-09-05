@@ -4,6 +4,7 @@ import PageHeader from "../components/shell/PageHeader";
 import PremNav from "./PremNav";
 import type { PremSection } from "./PremNav";
 import { PANEL } from "@/app/desk";
+import { PREM_CAPTION } from "../titles";
 
 // The frame every Premiership screen wears, including when it has nothing to
 // show.
@@ -33,15 +34,15 @@ import { PANEL } from "@/app/desk";
 export const PANEL_ROWS = 20;
 
 export default function PremShell({
-  title,
   current,
   rows,
   children,
 }: {
-  /** What this VIEW is — "League Table", "Results". CM's yellow caption inside
-   *  the panel: the bar above names the competition, this names what is in the
-   *  box, and every screen in the reference carries both. */
-  title: string;
+  /** Which view this is. **The caption is looked up from it** rather than passed
+   *  beside it — see `app/titles.ts`, and `league/Shell` for the count that
+   *  earned it. CM's yellow caption inside the panel: the bar above names the
+   *  competition, this names what is in the box, and every screen in the
+   *  reference carries both. */
   current: PremSection;
   /** How many rows the panel is drawn to hold, when the caller knows better
    *  than `PANEL_ROWS` — a results page holds rounds rather than clubs. */
@@ -56,7 +57,7 @@ export default function PremShell({
           caption box below already names the screen. */}
       <PageHeader title={COMPETITION_NAME} competition />
       <PremNav current={current} />
-      <Caption>{title}</Caption>
+      <Caption>{PREM_CAPTION[current]}</Caption>
 
       {/* Sized in ROWS rather than pixels, because only CSS has the breakpoint:
           a row is 45px under a thumb and 29px on the desk (`--table-row` in

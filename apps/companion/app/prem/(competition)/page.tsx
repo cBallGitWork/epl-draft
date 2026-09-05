@@ -53,7 +53,7 @@ export default async function TablePage({ searchParams }: { searchParams: Search
 
   if (table.length === 0) {
     return (
-      <PremShell title="League Table" current="table">
+      <PremShell current="table">
         <Nothing title="No clubs to rank" code="bootstrap-static → 0 teams">
           The table is built from the clubs and fixtures FPL publishes, and it has named none.
         </Nothing>
@@ -77,7 +77,7 @@ export default async function TablePage({ searchParams }: { searchParams: Search
   const relegation = table.length - PREMIERSHIP_CUTS.relegate;
 
   return (
-    <PremShell title="League Table" current="table" rows={table.length}>
+    <PremShell current="table" rows={table.length}>
       {/* Out to the page's edges and back in again, so a table wider than the
           phone scrolls sideways inside its own box instead of scrolling the
           page. */}

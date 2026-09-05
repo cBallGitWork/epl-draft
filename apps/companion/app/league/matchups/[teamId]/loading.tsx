@@ -1,4 +1,5 @@
 import LeagueShell from "../../Shell";
+import { HEAD_TO_HEAD } from "../../../titles";
 import Skeleton from "../../../components/shell/Skeleton";
 
 // One head-to-head, waiting on both elevens.
@@ -9,7 +10,7 @@ import Skeleton from "../../../components/shell/Skeleton";
 
 export default function Loading() {
   return (
-    <LeagueShell title="Head-to-head" current="matchups">
+    <LeagueShell current="matchups" title={HEAD_TO_HEAD}>
       <div aria-busy className="flex flex-col gap-2">
         <div className="cm-panel flex items-center gap-3 px-3">
           <Skeleton width="45%" height="3.5rem" />

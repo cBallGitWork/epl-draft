@@ -95,7 +95,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
 
   if ("unavailable" in schedule) {
     return (
-      <LeagueShell title="Team Stats" current="teamStats">
+      <LeagueShell current="teamStats">
         <Nothing title={FANTRAX_SILENT} code={schedule.unavailable}>
           The season table is Fantrax&apos;s own, and we cannot read it right now.
         </Nothing>
@@ -120,7 +120,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   const named = new Map(table.map((row) => [row.teamId, row.teamName]));
 
   return (
-    <LeagueShell title="Team Stats" current="teamStats" teams={info.teams.length}>
+    <LeagueShell current="teamStats" teams={info.teams.length}>
       <Filters categories={choices} category={category.key} group={group} />
 
       {board.length === 0 ? (

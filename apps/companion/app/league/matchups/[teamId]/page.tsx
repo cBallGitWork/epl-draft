@@ -17,6 +17,7 @@ import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
 import { widestLine } from "../../../components/league/PitchRows";
 import LeagueShell from "../../Shell";
+import { HEAD_TO_HEAD } from "../../../titles";
 import { getLeagueSquads, teamDisplay } from "../../../squads";
 import { roundOf } from "../../../round";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
@@ -94,7 +95,7 @@ export default async function HeadToHeadPage({
 
   if (pairing === undefined) {
     return (
-      <LeagueShell title="Head-to-head" current="matchups" sub={heading}>
+      <LeagueShell current="matchups" title={HEAD_TO_HEAD} sub={heading}>
         <Nothing title="Nobody this period" code={`period ${period}`}>
           {named.teamName} has no pairing in period {period} — a bye, or a schedule that has not
           reached its first head-to-head. Nothing is being withheld; there is nothing to pair.

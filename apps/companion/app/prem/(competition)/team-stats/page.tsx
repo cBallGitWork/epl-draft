@@ -51,7 +51,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
 
   if (clubs.length === 0) {
     return (
-      <PremShell title="Team Stats" current="teamStats">
+      <PremShell current="teamStats">
         <Nothing title="No clubs to rank" code="bootstrap-static → 0 teams">
           The board is built from the clubs and fixtures FPL publishes, and it has named none.
         </Nothing>
@@ -69,7 +69,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
     );
 
   return (
-    <PremShell title="Team Stats" current="teamStats" rows={clubs.length}>
+    <PremShell current="teamStats" rows={clubs.length}>
       {/* The category picker on its own strip above the board, with the rule
           under it — `cm9900`'s stat screen puts its two grey controls exactly
           here, and `league/team-stats` follows the same shot. */}

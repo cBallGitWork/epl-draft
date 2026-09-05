@@ -27,7 +27,7 @@ export default async function MatchupPage() {
 
   if ("unavailable" in squads) {
     return (
-      <LeagueShell title="Matchups" current="matchups">
+      <LeagueShell current="matchups">
         <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
         Fantrax would not hand back the teams, so there is nobody to pair up.
         </Nothing>
@@ -37,7 +37,7 @@ export default async function MatchupPage() {
 
   if ("undrafted" in squads) {
     return (
-      <LeagueShell title="Matchups" current="matchups">
+      <LeagueShell current="matchups">
         <Nothing title="Nobody plays anybody yet" code={squads.undrafted}>
         A schedule needs teams in it. Until the draft, Fantrax has pairings for nobody, so there is
         no matchup to show.
@@ -49,7 +49,7 @@ export default async function MatchupPage() {
   const period = squads.roundPeriod;
   if (squads.info === null || period === null) {
     return (
-      <LeagueShell title="Matchups" current="matchups">
+      <LeagueShell current="matchups">
         <Nothing title="No schedule to read">
         Fantrax answered the rosters but would not say which period it is or who plays whom, and a
         matchup page that guessed either would be making its fixtures up.
@@ -61,7 +61,7 @@ export default async function MatchupPage() {
   const pairings = periodPairings(squads.info.matchups, squads.info.teams, period);
   if (pairings.length === 0) {
     return (
-      <LeagueShell title="Matchups" current="matchups">
+      <LeagueShell current="matchups">
         <Nothing title="No pairings this period" code={`period ${period}`}>
         The schedule does not cover this period — a bye week, or a season that has not reached its
         first head-to-head yet. Nobody is hiding anything; there is nothing to pair.
@@ -89,9 +89,7 @@ export default async function MatchupPage() {
   const ordered = yoursFirst(pairings, (pairing) => pairingInvolves(pairing, mine));
 
   return (
-    <LeagueShell
-      title="Matchups"
-      current="matchups"
+    <LeagueShell current="matchups"
       // Gameweek, not "Period 1 · Gameweek 1". They are the same number every
       // week this season, and printing one number under two names asks a reader
       // to work out whether they are the same thing.

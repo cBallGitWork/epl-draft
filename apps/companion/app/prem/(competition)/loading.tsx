@@ -17,7 +17,7 @@ const ROWS = 20;
 
 export default function Loading() {
   return (
-    <PremShell title="League Table" current="table" rows={ROWS}>
+    <PremShell current="table" rows={ROWS}>
       <div className={SCROLL}>
         <table className={BOARD}>
           <Columns sort="place" descending={false} />

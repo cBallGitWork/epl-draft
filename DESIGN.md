@@ -111,6 +111,29 @@ on it is 2.27; on the blue plate ink is 7.0 and `--color-muted` is 3.55 and
 fails. So no call site sets `text-*` on either, and a count inside a tab is the
 label's own colour — which is how the game printed "Fitness (40)".
 
+**A screen has a SUBJECT and a VIEW, and they are two boxes.** The plated bar
+names what the screen is ABOUT — a competition, a club, a manager, a footballer.
+The yellow caption under the tab strip names which of that subject's views you
+are looking at. `cm9900/24.jpg` heads the bar `English Premier Division` and
+captions the panel `League Table`; `25.jpg` heads it `Everton` and captions the
+panel below it. Every screen in the library carries both, and none of them mixes
+the two.
+
+The one exception in the reference is CM's own news screen, whose bar reads
+`Mike Paul News` — subject and view in one line, with no caption. The app does
+not copy it (Craig, 5 Sep 2026: *"news needs the proper CM title like the rest of
+the app"*): `/news` heads the bar with the league and captions the panel `News`,
+because a rule that holds on nine screens and not the tenth is not a rule.
+
+**And a caption is never a literal at a call site.** `app/titles.ts` holds them
+all, keyed on the section a shell already knows it is, so `LeagueShell` and
+`PremShell` look their own up and a page passes no title at all. Counted before
+extracting: `League Table` was written at 7 sites, `Matchups` and `Results` at 6,
+`Schedule`, `Team Stats` and `Fixtures` at 5 — every screen writing its own name
+two or three times over, across the page, its loading skeleton and each
+early-return branch. One of those going stale is a screen that renames itself
+while it loads.
+
 ## 3. The Desk's palette
 
 Each colour is a **slot with one meaning**. This is CM's actual grammar and it

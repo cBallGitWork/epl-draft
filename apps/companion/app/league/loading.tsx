@@ -24,7 +24,7 @@ const ROWS = 6;
 
 export default function Loading() {
   return (
-    <LeagueShell title="League Table" current="table">
+    <LeagueShell current="table">
       <div aria-busy>
         <table className={BOARD}>
           <Columns sort="rank" descending={false} />
