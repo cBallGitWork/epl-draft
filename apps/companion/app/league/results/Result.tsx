@@ -35,8 +35,13 @@ export default function Result({
   points,
   badges,
   mine,
+  gameweek,
 }: {
   pairing: PeriodPairing;
+  /** The round this result belongs to, so a side opens the head-to-head ON ITS
+   *  OWN WEEK rather than on whatever Fantrax is pointing at today. Without it
+   *  a September result opened December's tie. */
+  gameweek: number;
   /** Each side's settled total for the period, by team id. */
   points: Map<string, number | null>;
   badges: Map<string, string>;
@@ -55,6 +60,7 @@ export default function Result({
         beat={leads(home, away)}
         badge={badges.get(pairing.home.teamId)}
         mine={mine}
+        gameweek={gameweek}
       />
       <span className={`self-center px-1 ${LABEL}`}>v</span>
       <Side
@@ -63,6 +69,7 @@ export default function Result({
         beat={leads(away, home)}
         badge={badges.get(pairing.away.teamId)}
         mine={mine}
+        gameweek={gameweek}
         away
       />
     </div>
@@ -79,6 +86,7 @@ function Side({
   beat,
   badge,
   mine,
+  gameweek,
   away = false,
 }: {
   team: LeagueTeam;
@@ -86,6 +94,7 @@ function Side({
   beat: boolean;
   badge: string | undefined;
   mine: string | null;
+  gameweek: number;
   /** The away side reads inward: its total against the middle and its badge on
    *  the outside, so the two numbers meet either side of the `v` and the margin
    *  between them is the answer without anyone doing the subtraction. */
@@ -95,7 +104,13 @@ function Side({
 
   return (
     <Link
-      href={`/squad/${team.teamId}`}
+      // **The head-to-head, not the squad.** A result IS a tie, and the screen
+      // that reads one is the board — opened on the side that was tapped, and on
+      // the round's own gameweek so a September result shows September's eleven
+      // rather than today's. This is the schedule's own link, which sent a
+      // gameweek from the day it was written while this sent a reader to a squad
+      // page that knows nothing about the match he tapped.
+      href={`/league/matchups/${team.teamId}?gw=${gameweek}`}
       className={`cm-row flex min-h-11 min-w-0 flex-1 items-center gap-2 px-2 hover:bg-raised ${
         away ? "flex-row-reverse" : ""
       }`}

@@ -103,6 +103,7 @@ export default async function ResultsPage() {
                   key={`${pairing.home.teamId}-${pairing.away.teamId}`}
                   pairing={pairing}
                   points={byPeriod.get(round.period) ?? EMPTY}
+                  gameweek={round.gameweek}
                   badges={badges}
                   mine={mine}
                 />

@@ -70,5 +70,13 @@ export default function SectionNav({ current }: { current: LeagueSection }) {
   // here rather than in `TabStrip`, which should not have to know that this
   // section has entries its own strip does not list.
   const here = SECTIONS.find((section) => section.key === current)?.key ?? null;
-  return <TabStrip label="League views" tabs={SECTIONS} current={here} />;
+  // **`labels="word"`, and it is a measured fix rather than a preference.** At
+  // the default 11px the fifth plate ran 34px past a 390 viewport — measured
+  // through CDP on `/league/matchups/[teamId]`, the one route that put a wide
+  // panel under this strip. `docs/ui/prem.md` records the sibling strip hitting
+  // the same wall on the same label: "at 11px 'Team Stats' takes two lines in a
+  // 76px plate at 390 while its three neighbours take one". That strip runs
+  // four tabs and this one runs five, so it was always going to bite here
+  // first.
+  return <TabStrip label="League views" tabs={SECTIONS} current={here} labels="word" />;
 }
