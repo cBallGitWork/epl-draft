@@ -2,10 +2,11 @@ import { describe, expect, it } from "vitest";
 import type { Club, FootballPlayer, FootballSnapshot, MatchEvent, RoundBreak } from "@epl/core";
 import { isBreak, wireLines } from "./wireLines";
 
-// The half-time score is the only derived number on this screen, and it is
-// derived because the Premier League's round read does not publish one — 0 of 10
-// counted 5 Sep 2026, the completed fixtures included. What it is derived FROM is
-// the goals already on the wire, so these cases are the arithmetic of that.
+// The break row and its ordering. Half time was here for an evening and went
+// (Craig, 5 Sep 2026: "ditch the HT") — on a Saturday teatime it landed directly
+// under the full time for the same match with the same scoreline, spending two of
+// the rows the fold pays for on one fact. The derivation that fed it went with
+// it, which is why nothing here counts goals any more.
 
 const HOME = 1;
 const AWAY = 2;
@@ -49,13 +50,6 @@ function goal(over: Partial<MatchEvent> & { minute: string; code: number }): Mat
   } as MatchEvent;
 }
 
-const HALF_TIME: RoundBreak = {
-  fixtureCode: FIXTURE,
-  kind: "half-time",
-  seconds: 2700,
-  absolute: 2_700_000,
-};
-
 const FULL_TIME: RoundBreak = {
   fixtureCode: FIXTURE,
   kind: "full-time",
@@ -73,38 +67,6 @@ describe("wireLines breaks", () => {
     expect(breakRow([], [FULL_TIME], [])).toEqual(["HOM 3 v AWY 1"]);
   });
 
-  it("counts the half-time score off the goals of the first half", () => {
-    const players = [player(10, HOME), player(20, AWAY)];
-    const events = [
-      goal({ minute: "12", code: 10 }),
-      goal({ minute: "40", code: 20 }),
-      goal({ minute: "63", code: 10 }),
-    ];
-    expect(breakRow(events, [HALF_TIME], players)).toEqual(["HOM 1 v AWY 1"]);
-  });
-
-  // The label is the football clock, so a goal in first-half stoppage reads
-  // "45+3" and parses to 45. The feed's own seconds cannot be used for this:
-  // the second half restarts at 2,700, so a 46th-minute goal reads LOWER.
-  it("counts a goal in first-half stoppage time as a first-half goal", () => {
-    const players = [player(10, HOME)];
-    expect(breakRow([goal({ minute: "45+3", code: 10 })], [HALF_TIME], players)).toEqual([
-      "HOM 1 v AWY 0",
-    ]);
-  });
-
-  it("credits an own goal to the side the scorer does not play for", () => {
-    const players = [player(10, HOME)];
-    const own = goal({ minute: "20", code: 10, kind: "own-goal" });
-    expect(breakRow([own], [HALF_TIME], players)).toEqual(["HOM 0 v AWY 1"]);
-  });
-
-  it("does not count another match's goals", () => {
-    const players = [player(10, HOME)];
-    const elsewhere = goal({ minute: "20", code: 10, fixtureCode: 999 });
-    expect(breakRow([elsewhere], [HALF_TIME], players)).toEqual(["HOM 0 v AWY 0"]);
-  });
-
   it("drops a break whose fixture the snapshot does not carry", () => {
     const stray: RoundBreak = { ...FULL_TIME, fixtureCode: 999 };
     expect(breakRow([], [stray], [])).toEqual([]);
@@ -116,11 +78,10 @@ describe("wireLines breaks", () => {
       goal({ minute: "12", code: 10, absolute: 720_000 }),
       goal({ minute: "80", code: 10, absolute: 4_800_000 }),
     ];
-    const rows = wireLines(events, [HALF_TIME, FULL_TIME], snapshot(players), undefined, null);
+    const rows = wireLines(events, [FULL_TIME], snapshot(players), undefined, null);
     expect(rows.lines.map((row) => (isBreak(row) ? row.kind : row.minute))).toEqual([
       "full-time",
       "80",
-      "half-time",
       "12",
     ]);
   });

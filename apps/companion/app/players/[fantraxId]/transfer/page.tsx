@@ -1,9 +1,11 @@
 import { Suspense } from "react";
+import { FANTRAX_PLAYER_BASE } from "@epl/core";
 import { StackWaiting } from "../Waiting";
 import Moves from "../Moves";
 import NoProfile from "../NoProfile";
 import Pedigree, { DraftLine } from "../Pedigree";
 import PlayerShell from "../PlayerShell";
+import { BUTTON } from "../../../components/shell/ButtonLink";
 import { playerPedigree } from "../draft";
 import { playerMoves } from "../dossier";
 import { subject } from "../subject";
@@ -55,6 +57,27 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
       <Suspense fallback={null}>
         <Origin fantraxId={fantraxId} />
       </Suspense>
+
+      {/* **The way out, and this tab is the one that earns it.** Every other
+          screen answers a question; this one ends in an ACT — a claim, a drop, a
+          trade — and Fantrax is where all three happen. A screen that lists what
+          a manager could do with a player and then leaves him to find the man
+          again on another site is the dead end `fpl/page` names in its own
+          words.
+
+          One segment, and it was probed rather than guessed: their rows carry a
+          `urlName` slug and their own anchors use it, but the bundle declares
+          `player/:playerId` and a status code cannot tell you — the SPA serves
+          its shell with a 200 for an id that does not exist. `scorerId` is our
+          `fantraxId`, so this costs no read. PLATFORM_NOTES carries it. */}
+      <a
+        href={`${FANTRAX_PLAYER_BASE}/${fantraxId}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={BUTTON}
+      >
+        Open on Fantrax &nearr;
+      </a>
 
       {/* **The whole-of-Fantrax block is gone** (Craig, 4 Sep 2026: *"remove
           Across every Fantrax league / Drafted 100% / ADP 1.84 / Ros 100% /

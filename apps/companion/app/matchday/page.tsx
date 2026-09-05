@@ -30,7 +30,6 @@ import { readerTeamId } from "../squads";
 import { roundBreaks, roundGoals } from "../commentary";
 import { wireLines } from "./wireLines";
 import Wire from "./Wire";
-import { WIRE_LINES } from "@epl/core";
 import { londonDayKey } from "../londonTime";
 import { BetweenGameweeks, MatchupWaiting } from "./Between";
 
@@ -173,12 +172,33 @@ export default async function MatchdayPage() {
           below carries its own header for the case where there is no football,
           and this one answers the question the tab is named for. */}
       <PageHeader
-        title={`Gameweek ${snapshot.gameweek}`}
+        // **The round AND its state, on the bar** (Craig, 5 Sep 2026: "gameweek
+        // 3 LIVE as the title"). The state was under it, in `RoundWord`, on a
+        // 24px sub line — which is the right place for a date or a count and the
+        // wrong place for the one word this tab exists to say. A reader opening
+        // the Live tab at ten past four is asking whether football is on; the
+        // bar is what he reads first.
+        //
+        // Only when there IS a state. Between rounds `roundState` answers null,
+        // and a bar reading "Gameweek 4" with nothing after it is the honest
+        // shape of a Tuesday.
+        title={`Gameweek ${snapshot.gameweek}${roundState(snapshot) === "live" ? " LIVE" : ""}`}
         sub={
           // `RoundWord` renders nothing between kickoffs, which is right — there
           // is no state to name — and `PageHeader.Sub` renders nothing for a
           // false child, so the strip goes with it rather than drawing empty.
-          roundState(snapshot) === null ? undefined : <RoundWord state={roundState(snapshot)} />
+          //
+          // **And nothing while it is LIVE**, because the bar above now says that
+          // word. The two states this still carries are "Full time" and "Final",
+          // which are qualifications on a number rather than headlines: Final is
+          // a promise that the total has stopped moving, and a bar is the wrong
+          // place for a promise about a figure three panels down.
+          //
+          // The live DOT goes with it, and the rule it served survives: state
+          // never rides on colour alone, and the bar's own LIVE is the word.
+          roundState(snapshot) === null || roundState(snapshot) === "live" ? undefined : (
+            <RoundWord state={roundState(snapshot)} />
+          )
         }
         competition
       />
@@ -209,7 +229,7 @@ export default async function MatchdayPage() {
           wire whose first row said the same goal — `cm0102/02.jpg` draws both on
           one screen, and the game's version announces an event the screen has no
           other record of. Ours had one directly underneath. */}
-      <Wire lines={wire.lines} limit={WIRE_LINES} />
+      <Wire lines={wire.lines} />
       {during ? (
         <>
           <Scores

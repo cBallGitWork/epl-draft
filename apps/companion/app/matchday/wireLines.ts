@@ -94,7 +94,7 @@ export interface Wire {
 /** Which of the two a row is. The `kind` vocabularies are disjoint, so this is a
  *  narrowing and not a guess. */
 export function isBreak(row: WireRow): row is WireBreak {
-  return row.kind === "half-time" || row.kind === "full-time";
+  return row.kind === "full-time";
 }
 
 /* **The `unresolved` count is gone**, and it is a deleted PIPELINE rather than a
@@ -128,12 +128,6 @@ const SECOND: Partial<Record<MatchEventKind, true>> = {
 function clubOf(club: Club | undefined) {
   return club === undefined ? null : { short: club.shortName, crest: crestUrl(club) };
 }
-
-/** The last minute of the first half, as a football minute. A goal at 45+3
- *  prints "45+3" and parses to 45, which is what makes the parse the right
- *  reading: the label is the football clock and the feed's own seconds restart
- *  at 2,700 for the second half. */
-const FIRST_HALF_LAST_MINUTE = 45;
 
 export function wireLines(
   events: readonly MatchEvent[],
@@ -183,10 +177,7 @@ export function wireLines(
     const away = clubs.get(fixture.awayClubId);
     if (home === undefined || away === undefined) continue;
 
-    const score =
-      brk.kind === "full-time"
-        ? { home: fixture.homeScore, away: fixture.awayScore }
-        : halfTimeScore(events, brk.fixtureCode, fixture, players);
+    const score = { home: fixture.homeScore, away: fixture.awayScore };
 
     lines.push({
       key: `${brk.kind}:${brk.fixtureCode}`,
@@ -203,46 +194,4 @@ export function wireLines(
   // dated and did not time has no place in that order and sorts last rather than
   // into 1970 — `roundGoals` makes the same choice for the same reason.
   return { lines: lines.sort((a, b) => (b.at ?? 0) - (a.at ?? 0)) };
-}
-
-/** The score as it stood at the interval, counted off the goals already on the
- *  wire.
- *
- *  **Derived here because the round read does not publish it** — `halfTimeScore`
- *  is on the Premier League's per-fixture detail and absent from the round, 0 of
- *  10 counted 5 Sep 2026 — and the alternative is ten more requests on the screen
- *  sixteen phones poll every thirty seconds. Every goal the count needs is
- *  already in this function's hands.
- *
- *  An OWN GOAL is credited to the man who put it in his own net, so it scores for
- *  the side he does not play for. That is the one line here that is not a tally.
- *
- *  A goal whose scorer the bridge could not place is not counted, and the line is
- *  drawn anyway — which is the honest failure mode: a half-time score short by a
- *  goal is visible beside the full-time one, where a suppressed line would say
- *  the half never ended. `npm run pl-bridge` is what takes the unplaced count
- *  back to nought. */
-function halfTimeScore(
-  events: readonly MatchEvent[],
-  fixtureCode: number,
-  fixture: Fixture,
-  players: Map<number, FootballPlayer>,
-): { home: number; away: number } {
-  let home = 0;
-  let away = 0;
-
-  for (const event of events) {
-    if (event.fixtureCode !== fixtureCode) continue;
-    if (Number.parseInt(event.minute, 10) > FIRST_HALF_LAST_MINUTE) continue;
-    const code = event.players[0];
-    if (code === undefined || code === null) continue;
-    const club = players.get(code)?.clubId;
-    if (club === undefined) continue;
-
-    const scoredForHome = (club === fixture.homeClubId) !== (event.kind === "own-goal");
-    if (scoredForHome) home += 1;
-    else away += 1;
-  }
-
-  return { home, away };
 }

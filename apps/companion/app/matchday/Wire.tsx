@@ -50,9 +50,9 @@ import { isBreak, type WireBreak, type WireLine, type WireRow } from "./wireLine
 /** The word in the event slot. Opta's own vocabulary, said in CM's register,
  *  plus the two a match says about itself.
  *
- *  `HT` and `FT` rather than "Half time" and "Full time": the slot is 48px, which
- *  is what "Sent off" needs, and the two-letter forms are what every scoreboard
- *  in the game has printed since before Sky had a teleprinter. */
+ *  `FT` rather than "Full time": the slot is 48px, which is what "Sent off"
+ *  needs, and the two-letter form is what every scoreboard in the game has
+ *  printed since before Sky had a teleprinter. */
 const WORD: Record<MatchEventKind | WireBreak["kind"], string> = {
   goal: "Goal",
   "penalty-goal": "Pen",
@@ -61,7 +61,6 @@ const WORD: Record<MatchEventKind | WireBreak["kind"], string> = {
   "yellow-card": "Booked",
   "red-card": "Sent off",
   substitution: "Sub",
-  "half-time": "HT",
   "full-time": "FT",
 };
 
@@ -77,19 +76,31 @@ const TONE: Partial<Record<MatchEventKind, string>> = {
   "disallowed-goal": "text-bad",
 };
 
-export default function Wire({
-  lines,
-  limit,
-}: {
-  lines: readonly WireRow[];
-  limit: number;
-}) {
+export default function Wire({ lines }: { lines: readonly WireRow[] }) {
   if (lines.length === 0) return null;
 
   return (
     <Section title="The wire">
-      <ul className="cm-rows">
-        {lines.slice(0, limit).map((row) =>
+      {/* **A box shorter than the list, and a bar that says so** (Craig, 5 Sep
+          2026: "needs a down arrow to see other/previous rows"). The list was
+          `slice(0, 8)` and nothing else — rows past the eighth were never
+          rendered and nothing on screen said they existed, on a round that
+          carries about forty. `.cm-scroll` is CM's own bevelled bar and
+          `desk.css` already draws its increment arrow as an inline SVG triangle;
+          `.cm-scroll-y` reserves the gutter so it is permanent furniture rather
+          than macOS's fade-in overlay. `news/page` set the same shape for the
+          same reason — "a list cut at eight with no bar looks like a list with
+          eight things in it".
+
+          **And the CAP went with it.** `WIRE_LINES = 8` sliced the list before
+          the box ever saw it, so a box that scrolls had 339px of content in a
+          320px window — a bar with nowhere to go. Its docblock argued the panel
+          was "the panel's length and not a drawer, the rest of the round is on
+          the fixture list underneath": a drawer is exactly what Craig asked for,
+          and the fixture list names a scorer without saying whose he is, which
+          is the one thing this panel is for. The box is the length now. */}
+      <ul className="cm-rows cm-scroll cm-scroll-y max-h-80 overflow-y-auto lg:max-h-96">
+        {lines.map((row) =>
           isBreak(row) ? <BreakRow key={row.key} row={row} /> : <Row key={row.key} line={row} />,
         )}
       </ul>
@@ -119,16 +130,24 @@ const WORD_SLOT = "flex w-12 shrink-0 items-center";
 
 function Row({ line }: { line: WireLine }) {
   return (
-    <li className="flex min-h-11 items-stretch gap-2 lg:min-h-7">
+    <li className="flex min-h-9 items-start gap-2 lg:min-h-7 lg:items-center">
       <span className={`${WORD_SLOT} ${SMALL_CAPS} ${TONE[line.kind] ?? "text-ink"}`}>
         {WORD[line.kind]}
       </span>
-      <Man man={line.man} club={line.club} minute={line.minute} />
-      {/* Held open rather than dropped, so a panel of goals keeps its columns
-          whether or not each one was assisted. An unassisted goal is a fact and
-          the empty half is what says so. */}
-      <div className="min-w-0 flex-1">
-        {line.second === null ? null : (
+      {/* **One line per MAN, and the two men share a line only where there is
+          room.** Craig asked for the manager to sit after the minute rather than
+          stacked under the name, and it does — but four things and a crest is
+          about 165px, so two men on one 390px line truncated both the name and
+          the manager. A goal and its assist are still ONE row, which is the
+          thing that mattered; below `lg` the row is two lines of it. */}
+      <div className="flex min-w-0 flex-1 flex-col gap-0.5 lg:flex-row lg:gap-2">
+        <Man man={line.man} club={line.club} minute={line.minute} />
+        {/* Held open above `lg` so a panel of goals keeps its columns whether or
+            not each one was assisted; not held open below, where an empty line
+            would be a blank row rather than a blank column. */}
+        {line.second === null ? (
+          <span className="hidden min-w-0 flex-1 lg:block" />
+        ) : (
           <Man man={line.second} label={SECOND_WORD[line.kind]} />
         )}
       </div>
@@ -136,10 +155,25 @@ function Row({ line }: { line: WireLine }) {
   );
 }
 
-/** One man and whoever holds him, stacked. The name is the event and the
- *  manager is what it cost — which is the sentence no other score centre in the
- *  world prints, so it goes under every name rather than only under the ones a
- *  reader owns. */
+/** One man: his club's crest, his name, the minute, and whoever holds him — in
+ *  that order, on ONE line (Craig, 5 Sep 2026: "the club logo goes in front of
+ *  the player name, make it pop more", "have the manger name after the minute
+ *  number, keep it on one ron").
+ *
+ *  **It was two lines with the crest fourth.** The name came first, then the
+ *  minute, then a 14px crest, then the three letters, and the manager sat
+ *  underneath in `3xs`. Two things were wrong with that. The crest is the only
+ *  COLOUR the row has — everything else is ink, muted or faint — and it was
+ *  behind the two things that already identify the man, doing no work. And the
+ *  manager on his own line is what made a wire row 44px tall, which is what
+ *  bounded the panel at eight rows.
+ *
+ *  So the crest leads at 20px, and the row is one line. The three letters go with
+ *  the stack: a crest at 20px is legible as a club, and printing the name of the
+ *  club beside the picture of it was furniture the row could not afford.
+ *
+ *  The manager keeps the accent when he is yours, which is the one thing on this
+ *  panel the accent means. */
 function Man({
   man,
   club,
@@ -154,45 +188,31 @@ function Man({
   label?: string;
   /** The clock, in brackets after his name, which is Sky's own arrangement
    *  (`LUKE AYLING (16)`). On the first man only — the assist happened at the
-   *  same minute as the goal by construction, and saying it twice is the thing
-   *  one row per event was written to stop. */
+   *  same minute as the goal by construction. */
   minute?: string;
 }) {
   return (
-    <div className="flex min-w-0 flex-1 flex-col justify-center">
-      <span className="flex min-w-0 items-baseline gap-1">
-        {label ? <span className={`${SMALL_CAPS} shrink-0 text-faint`}>{label}</span> : null}
-        <span className={`min-w-0 truncate text-ink ${ROW_NAME}`}>
-          {man?.player.name ?? "\u2014"}
-        </span>
-        {minute === undefined ? null : (
-          <span className="numeric shrink-0 text-2xs text-muted">({minute}&prime;)</span>
-        )}
-        {club === null || club === undefined ? null : (
-          <>
-            {/* **The crest, not just the letters** (Craig, 5 Sep 2026: "add team
-                logo too for the row"). 14px, which is `ScoreRow`'s own badge on
-                a phone — the two rows sit six pixels apart on this screen and a
-                club drawn two sizes would be the disagreement this run has been
-                closing. The letters stay: a crest at 14px is a colour, and the
-                three letters are what a reader actually reads. */}
-            <Image
-              src={club.crest}
-              alt=""
-              width={18}
-              height={18}
-              className="h-3.5 w-3.5 shrink-0 object-contain"
-            />
-            <span className={`${SMALL_CAPS} shrink-0 text-muted`}>{club.short}</span>
-          </>
-        )}
-      </span>
+    <span className="flex min-w-0 flex-1 items-center gap-1.5">
+      {club === null || club === undefined ? null : (
+        <Image
+          src={club.crest}
+          alt=""
+          width={40}
+          height={40}
+          className="h-5 w-5 shrink-0 object-contain"
+        />
+      )}
+      {label ? <span className={`${SMALL_CAPS} shrink-0 text-faint`}>{label}</span> : null}
+      <span className={`min-w-0 truncate text-ink ${ROW_NAME}`}>{man?.player.name ?? "\u2014"}</span>
+      {minute === undefined ? null : (
+        <span className="numeric shrink-0 text-2xs text-muted">({minute}&prime;)</span>
+      )}
       <span
-        className={`truncate text-3xs ${man?.mine === true ? "text-accent" : "text-muted"}`}
+        className={`min-w-0 truncate text-2xs ${man?.mine === true ? "text-accent" : "text-muted"}`}
       >
         {man?.owner?.teamName ?? <span className="text-faint">&mdash;</span>}
       </span>
-    </div>
+    </span>
   );
 }
 

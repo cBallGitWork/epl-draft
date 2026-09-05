@@ -1,12 +1,22 @@
 import type { RawPlFixture } from "./raw";
 import { plFixtureCode } from "./map";
 
-// Half time and full time, off the round read the wire already holds.
+// Full time, off the round read the wire already holds.
 //
 // Craig, 5 Sep 2026: *"Wire should also include half and full time."* Sky's
 // vidiprinter prints `HALF TIME  LEEDS 1  BRISTOL CITY 0` between the goals, and
 // a wire that only ever says GOAL cannot tell a reader that the 2-1 he is
 // looking at is finished.
+//
+// **And half time came straight back out, the same evening** (Craig: *"ditch the
+// HT"*). On a Saturday teatime the two land within an hour of each other and the
+// scoreline between them rarely moves, so the wire drew `HT HUL 0 v AVL 0`
+// directly under `FT HUL 0 v AVL 0` — the same eight rows the fold pays for,
+// spent saying one thing twice. Ten fixtures would have been twenty rows of
+// furniture between the goals a reader came for.
+//
+// Full time survives because it is the one thing a scoreline cannot say about
+// itself: a 2-1 with a clock on it and a 2-1 that is finished look identical.
 //
 // **One request, and it is a request already made.** The obvious source is the
 // per-fixture textstream, which carries Opta's own `end 1` and `end 14` lines
@@ -39,19 +49,13 @@ import { plFixtureCode } from "./map";
 export interface RoundBreak {
   /** FPL's season-stable fixture code, so it joins the same way a goal does. */
   fixtureCode: number;
-  kind: "half-time" | "full-time";
-  /** Elapsed seconds in this fixture at the break, for ordering within a match.
-   *
-   *  **A lower bound at half time, and exact at full time.** The feed's clock
-   *  moves on into the second half, so the interval's own reading cannot be read
-   *  back later; what is certain is that half time came after the last
-   *  first-half goal and no earlier than 45 minutes, and that is what this
-   *  carries. Full time is the fixture's own final clock — 5,760 seconds for a
-   *  match that ended 90+6.
-   *
-   *  It is used to ORDER a wire and never printed, so a bound is enough: the
-   *  guarantee that matters is that HALF TIME sits under the last goal of the
-   *  first half rather than over it. */
+  /** One member, and it stays a literal union because it is what the wire's row
+   *  type discriminates on — a goal's `kind` comes from Opta's vocabulary and
+   *  this must never collide with it. */
+  kind: "full-time";
+  /** Elapsed seconds in this fixture at full time — the feed's own final clock,
+   *  5,760 for a match that ended 90+6. Used to ORDER a wire and never printed,
+   *  which is what puts it after every goal in its own match. */
   seconds: number;
   /** The same instant as a wall clock, which is the only field that orders
    *  events across ten matches. Null when the fixture is dated and not timed,
@@ -59,73 +63,33 @@ export interface RoundBreak {
   absolute: number | null;
 }
 
-/** Nominal half time, in seconds. A first half runs longer than this every week;
- *  what it can never do is run shorter, which is what makes it a floor. */
-const FIRST_HALF = 45 * 60;
-
-/** The break follows the last event of its half rather than sharing a second
- *  with it. One second, because the feed's clock is in seconds. */
-const AFTER = 1;
-
-/** Every interval reached in a round, oldest first.
+/** Every full time reached in a round, oldest first.
  *
- *  A fixture yields up to two: half time once the first half is over, and full
- *  time once the match is. An unstarted match yields none, and a match in its
- *  first half yields none — the wire is a record of what has happened.
- *
- *  **"Past the first half" and not a letter.** `phase` is `"1"` while the first
- *  half is on and `"F"` when the match is over; the letter for the interval
- *  itself was not observed in the count above, so this asks whether the fixture
- *  has started and left `"1"` behind. A phase letter nobody has seen cannot make
- *  this wrong — it can only be one more value that means "not the first half",
- *  which is the answer either way. */
+ *  A match that has not finished yields nothing — the wire is a record of what
+ *  has happened. */
 export function mapRoundBreaks(fixtures: readonly RawPlFixture[]): RoundBreak[] {
   const breaks: RoundBreak[] = [];
 
   for (const fixture of fixtures) {
     const fixtureCode = plFixtureCode(fixture);
-    if (fixtureCode === null) continue;
-
-    const kickoff = fixture.kickoff?.millis;
-    const at = (seconds: number): RoundBreak["absolute"] =>
-      kickoff === undefined ? null : kickoff + seconds * 1000;
-
-    if (started(fixture) && !inFirstHalf(fixture)) {
-      const seconds = Math.max(FIRST_HALF, lastFirstHalfGoal(fixture) + AFTER);
-      breaks.push({ fixtureCode, kind: "half-time", seconds, absolute: at(seconds) });
-    }
+    if (fixtureCode === null || fixture.status !== "C") continue;
 
     // The final clock, or the nominal ninety if the feed gave none — a complete
     // fixture with no clock is not one we have seen, and a break sorted to
     // kick-off would be worse than one sorted to ninety minutes.
-    if (fixture.status === "C") {
-      const seconds = fixture.clock?.secs ?? FIRST_HALF * 2;
-      breaks.push({ fixtureCode, kind: "full-time", seconds, absolute: at(seconds) });
-    }
+    const seconds = fixture.clock?.secs ?? NINETY_MINUTES;
+    const kickoff = fixture.kickoff?.millis;
+    breaks.push({
+      fixtureCode,
+      kind: "full-time",
+      seconds,
+      absolute: kickoff === undefined ? null : kickoff + seconds * 1000,
+    });
   }
 
   return breaks.sort((a, b) => (a.absolute ?? 0) - (b.absolute ?? 0));
 }
 
-function started(fixture: RawPlFixture): boolean {
-  return fixture.status !== "U";
-}
+/** The fallback clock for a complete fixture the feed gave none for. */
+const NINETY_MINUTES = 90 * 60;
 
-function inFirstHalf(fixture: RawPlFixture): boolean {
-  return fixture.phase === "1";
-}
-
-/** The clock of the last goal scored before the interval, or nought.
- *
- *  Each goal carries its own `phase`, which is the feed's own answer to which
- *  half it was in and is better than reading its minute: a goal at 45+3 reads
- *  2,824 seconds, past the nominal forty-five, and is still a first-half goal. */
-function lastFirstHalfGoal(fixture: RawPlFixture): number {
-  let latest = 0;
-  for (const goal of fixture.goals ?? []) {
-    if (goal.phase !== "1") continue;
-    const secs = goal.clock?.secs;
-    if (secs !== undefined && secs > latest) latest = secs;
-  }
-  return latest;
-}

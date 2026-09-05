@@ -9,6 +9,7 @@ import { leagueTable } from "../standings";
 import { PAGE_ROWS, filterHref, playersQuery, showAllHref, shownRows } from "./query";
 import type { PlayersSearchParams } from "./query";
 import { FANTRAX_SILENT } from "../config";
+import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH } from "@epl/core";
 import { positionLabel } from "../positions";
 import {
   type GroupKey,
@@ -226,6 +227,21 @@ export default async function PlayersPage({
           Fantrax has numbers for {pool.missing} more than this read carried; those rows show a dash.
         </p>
       ) : null}
+
+      {/* **The way out.** This screen is where a manager decides who to claim,
+          and Fantrax is where the claim happens — we read their league and never
+          write to it. Their own list rather than their home page, on the
+          matrix-parameter path taken off a real browser session; a deeper guess
+          would break silently the day they reorganise their routes, which is the
+          reason `FANTRAX_APP_BASE` has carried that warning since it was added. */}
+      <a
+        href={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}/${FANTRAX_PLAYERS_PATH}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={BUTTON}
+      >
+        Claim on Fantrax &nearr;
+      </a>
     </LeagueShell>
   );
 }

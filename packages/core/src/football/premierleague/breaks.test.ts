@@ -25,55 +25,33 @@ describe("mapRoundBreaks", () => {
     expect(mapRoundBreaks([fixture({})])).toEqual([]);
   });
 
-  it("gives nothing while the first half is still on", () => {
-    const live = fixture({ status: "L", phase: "1", clock: { secs: 480, label: "08'00" } });
-    expect(mapRoundBreaks([live])).toEqual([]);
+  // **Half time is not a break any more** (Craig, 5 Sep 2026: "ditch the HT").
+  // A match in play yields nothing at all, whichever half it is in.
+  it("gives nothing for a match still being played", () => {
+    for (const phase of ["1", "H", "2"]) {
+      const live = fixture({ status: "L", phase, clock: { secs: 3000, label: "50'00" } });
+      expect(mapRoundBreaks([live])).toEqual([]);
+    }
   });
 
-  it("gives half time once the match is past the first half", () => {
-    const live = fixture({ status: "L", phase: "2", clock: { secs: 3000, label: "50'00" } });
-    const breaks = mapRoundBreaks([live]);
-    expect(breaks.map((b) => b.kind)).toEqual(["half-time"]);
-    expect(breaks[0]?.seconds).toBe(45 * 60);
-    expect(breaks[0]?.absolute).toBe(KICKOFF + 45 * 60 * 1000);
+  it("gives full time at the feed's own final clock", () => {
+    const done = fixture({ status: "C", phase: "F", clock: { secs: 5760, label: "90+6'00" } });
+    const breaks = mapRoundBreaks([done]);
+    expect(breaks.map((b) => b.kind)).toEqual(["full-time"]);
+    expect(breaks[0]?.seconds).toBe(5760);
+    expect(breaks[0]?.absolute).toBe(KICKOFF + 5760 * 1000);
   });
 
-  // The bound that matters: a goal at 45+3 is 2,824 seconds, past the nominal
-  // forty-five, and HALF TIME under it would read as a goal scored after it.
-  it("puts half time after the last goal of the first half", () => {
-    const live = fixture({
-      status: "L",
-      phase: "2",
-      goals: [
-        { personId: 1, clock: { secs: 360, label: "06'00" }, phase: "1", type: "G" },
-        { personId: 2, clock: { secs: 2824, label: "45+3'00" }, phase: "1", type: "G" },
-      ],
-    });
-    expect(mapRoundBreaks([live])[0]?.seconds).toBe(2825);
-  });
-
-  // The second half's own clock restarts at 2,700, so a 46th-minute goal reads
-  // 2,760 — lower than the first half's stoppage. Only the goal's own `phase`
-  // separates them, which is why the clock is not read for it.
-  it("ignores second-half goals when placing half time", () => {
-    const live = fixture({
-      status: "L",
-      phase: "2",
-      goals: [{ personId: 1, clock: { secs: 2760, label: "46'00" }, phase: "2", type: "G" }],
-    });
-    expect(mapRoundBreaks([live])[0]?.seconds).toBe(45 * 60);
-  });
-
-  it("gives both breaks for a finished match, at the feed's own final clock", () => {
+  // Every goal is at or before the final whistle, so the break sorts under the
+  // last of them rather than over it. That is the whole job of `seconds`.
+  it("sorts after every goal in its own match", () => {
     const done = fixture({
       status: "C",
       phase: "F",
       clock: { secs: 5760, label: "90+6'00" },
+      goals: [{ personId: 1, clock: { secs: 5700, label: "90+5'00" }, phase: "2", type: "G" }],
     });
-    const breaks = mapRoundBreaks([done]);
-    expect(breaks.map((b) => b.kind)).toEqual(["half-time", "full-time"]);
-    expect(breaks[1]?.seconds).toBe(5760);
-    expect(breaks[1]?.absolute).toBe(KICKOFF + 5760 * 1000);
+    expect(mapRoundBreaks([done])[0]?.seconds).toBeGreaterThan(5700);
   });
 
   it("drops a fixture with no FPL code, since nothing could join it", () => {
@@ -94,6 +72,6 @@ describe("mapRoundBreaks", () => {
       altIds: { opta: "g2645222" },
     };
     const codes = mapRoundBreaks([late, early]).map((b) => b.fixtureCode);
-    expect(codes).toEqual([2645221, 2645221, 2645222, 2645222]);
+    expect(codes).toEqual([2645221, 2645222]);
   });
 });

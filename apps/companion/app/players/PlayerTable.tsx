@@ -71,7 +71,7 @@ export default function PlayerTable({
                 }
                 className={`whitespace-nowrap py-1.5 font-bold ${
                   column.key === "name" || column.key === "opp" ? "text-left" : "text-right"
-                } ${column.key === "name" ? "" : NARROW}`}
+                } ${column.key === "name" ? STICKY_LEAD : NARROW}`}
               >
                 <Link
                   href={sortHref(query, column.key)}
@@ -99,7 +99,7 @@ export default function PlayerTable({
                     `.cm-row` cannot reach a `<td>`: 8px here plus the 28 inside
                     is a 37px row on a desk that asked for 28. The phone keeps
                     the padding, and so keeps its 53. */}
-                <td className="py-1 lg:py-0">
+                <td className={`py-1 lg:py-0 ${STICKY_LEAD}`}>
                   <Link
                     href={`/players/${entry.player.fantraxId}`}
                     className="cm-row flex min-h-11 items-center gap-2.5 px-1"
@@ -174,6 +174,24 @@ export default function PlayerTable({
 
 /** Every column but the name, which takes whatever is left. */
 const NARROW = "w-14";
+
+/** The name column, frozen against the sideways scroll.
+ *
+ *  **DESIGN §9 decided this on 29 Aug 2026 and nothing built it** — the sideways
+ *  scroll landed, the sticky column did not, and the file recorded the gap
+ *  ("the frozen name column has not been built"). Seven columns on a 390 phone
+ *  means the figures are read with the man's name off-screen, which is a table
+ *  answering "23" to no question.
+ *
+ *  **An opaque ground is the whole trick and it must not be a token that moves.**
+ *  A sticky cell is painted over by whatever scrolls under it unless it has a
+ *  fill of its own; `bg-surface` is the panel's own well, so the frozen column
+ *  reads as part of the table rather than as a plate laid on top of it. The
+ *  right rule is what says the scroll passes UNDER it rather than beside it.
+ *
+ *  The head and the body cell take the same class, because a head that does not
+ *  freeze with its column is a label sliding off its own figures. */
+const STICKY_LEAD = "sticky left-0 z-10 bg-surface border-r border-line";
 
 /** Which way ownership moved, said in the sign as well as the colour — a green
  *  number and a red one are the same number to a reader who cannot tell them
