@@ -33,6 +33,25 @@
   --page-frame: 72rem;
 }
 
+/* **And it grows on a big monitor** (Craig, 5 Sep 2026: "desktop letters/numbers
+   can be hard to read, and doesnt scale with a bigger monitor well either").
+   72rem is 1152px, so on a 2560 screen the app sat in a 1152px column with 700px
+   of photograph either side and every figure at the same size it is on a laptop
+   — the page got no bigger and the type got relatively smaller, which is the
+   second half of what he is describing.
+
+   96rem at `2xl` and no further. Championship Manager's own canvas is 800x600
+   and its proportions are what the density table is built on; a table allowed to
+   run 2000px wide stops being a table and becomes a spreadsheet, and a row whose
+   name column is 900px is one the eye cannot track across. This is one step, and
+   it is the step that stops the frame looking like a mistake on a large screen.
+   The TYPE's own step is in `tokens.css`, at the same breakpoint. */
+@media (min-width: 96rem) {
+  :root {
+    --page-frame: 96rem;
+  }
+}
+
 /* The room `<main>` leaves under the page. It was the tab bar's own height plus
    the phone's safe area, dropping to bare room above `md` where the bar went
    overhead; with the rail down the side there is no bar at any width and no

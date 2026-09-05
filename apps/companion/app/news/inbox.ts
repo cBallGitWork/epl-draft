@@ -106,7 +106,7 @@ export async function readInbox(): Promise<Inbox> {
                 ?.locksAt ?? null),
         yours,
       }),
-      availabilityNews(doubts, nameOf, gameweek, mine),
+      availabilityNews(doubts, gameweek, mine),
     ),
     names,
     mine,

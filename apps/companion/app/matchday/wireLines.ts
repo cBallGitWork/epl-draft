@@ -6,7 +6,7 @@ import type {
   MatchEventKind,
   PlayerOwner,
 } from "@epl/core";
-import { playerByCode } from "@epl/core";
+import { crestUrl, playerByCode } from "@epl/core";
 
 // The ownership join, and the only sentence in this app that neither Fantrax nor
 // FPL can print: *Salah just scored, and he is Dave's.*
@@ -34,7 +34,10 @@ export interface WireLine {
   key: string;
   minute: string;
   kind: MatchEventKind;
-  club: string | null;
+  /** His club, as the row draws it: the crest and the three letters. Null for a
+   *  man the chain could not place, who has no club to name either. Craig, 5 Sep
+   *  2026: "add team logo too for the row". */
+  club: { short: string; crest: string } | null;
   /** The man the event is about: the scorer, the booked man, the substitute
    *  coming on. Null when the chain could not place him, which is a different
    *  answer from "nobody owns him" and is drawn differently. */
@@ -83,6 +86,11 @@ const SECOND: Partial<Record<MatchEventKind, true>> = {
   substitution: true,
 };
 
+/** A club as the wire draws it, or null when we cannot name one. */
+function clubOf(club: Club | undefined) {
+  return club === undefined ? null : { short: club.shortName, crest: crestUrl(club) };
+}
+
 export function wireLines(
   events: readonly MatchEvent[],
   snapshot: FootballSnapshot,
@@ -121,7 +129,7 @@ export function wireLines(
       key: String(event.id),
       minute: event.minute,
       kind: event.kind,
-      club: man === null ? null : (clubs.get(man.player.clubId)?.shortName ?? null),
+      club: man === null ? clubOf(undefined) : clubOf(clubs.get(man.player.clubId)),
       man,
       second,
     });

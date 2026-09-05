@@ -68,57 +68,63 @@ describe("availabilityNews", () => {
     ...over,
   });
 
-  it("prints FPL's own words and says who holds him", () => {
-    const [item] = availabilityNews([note()], name, 3, "t2");
+  it("files the reader's OWN men and nobody else's", () => {
+    // Craig, 5 Sep 2026: "should just be your team only for player news". A
+    // rival's doubt is real news and it is not HIS news — 150 men across ten
+    // squads is a feed, not an inbox, and it buries the two he can act on.
+    expect(availabilityNews([note()], 3, "t1")).toHaveLength(1);
+    expect(availabilityNews([note()], 3, "t2")).toEqual([]);
+    // Nobody signed in files none rather than all: a reader with no team has no
+    // doubts to be told about.
+    expect(availabilityNews([note()], 3, null)).toEqual([]);
+  });
+
+  it("prints FPL's own words and nothing else", () => {
+    const [item] = availabilityNews([note()], 3, "t1");
     expect(item.headline).toBe("Alexander Isak is 75% to play");
-    expect(item.body).toBe("Knock - 75% chance of playing. Craig's XI holds him.");
+    expect(item.body).toBe("Knock - 75% chance of playing.");
     expect(item.category).toBe("injury");
   });
 
   it("carries the round rather than a date it invented", () => {
     // FPL publishes no "as of" for a doubt: it is a state that holds now, and
     // dating it to the moment we read it would be a fact we made up.
-    const [item] = availabilityNews([note()], name, 3, null);
+    const [item] = availabilityNews([note()], 3, "t1");
     expect(item.at).toBeNull();
     expect(item.gameweek).toBe(3);
   });
 
-  it("goes red only for the reader's own man, and only when he is a real doubt", () => {
+  it("goes red only when he is a real doubt", () => {
+    // Every item here is his now, so the red ground distinguishes the one thing
+    // left: a man who is a real doubt from one who merely carries a note.
     const yours = (chance: number | null) =>
-      availabilityNews([note({ chance })], name, 3, "t1")[0].urgent;
+      availabilityNews([note({ chance })], 3, "t1")[0].urgent;
     expect(yours(0)).toBe(true);
     expect(yours(25)).toBe(true);
     expect(yours(75)).toBe(false);
     // No opinion from FPL is not a doubt. Null is not zero — "no comment" and
     // "will not play" are different things to a manager picking a side.
     expect(yours(null)).toBe(false);
-    // A rival's man is news and never bad news.
-    expect(availabilityNews([note({ chance: 0 })], name, 3, "t2")[0].urgent).toBe(false);
   });
 
   it("puts a full stop on FPL's note when it has none", () => {
-    // Their wording is inconsistent about it, and this body always puts a second
-    // sentence after theirs — so without the stop the screen prints
-    // "…rest of the season Craig's XI holds him."
+    // Their wording is inconsistent about it. The body is theirs alone now, so
+    // the stop is the difference between a sentence and a fragment on a screen
+    // that sets it under a headline.
     const [item] = availabilityNews(
       [note({ news: "Has joined Birmingham on loan for the rest of the season" })],
-      name,
       3,
-      null,
+      "t1",
     );
-    expect(item.body).toBe(
-      "Has joined Birmingham on loan for the rest of the season. Craig's XI holds him.",
-    );
+    expect(item.body).toBe("Has joined Birmingham on loan for the rest of the season.");
     // And never a second one where they already ended the sentence.
-    expect(availabilityNews([note()], name, 3, null)[0].body).toBe(
-      "Knock - 75% chance of playing. Craig's XI holds him.",
-    );
+    expect(availabilityNews([note()], 3, "t1")[0].body).toBe("Knock - 75% chance of playing.");
   });
 
-  it("keeps a man nobody holds", () => {
-    const [item] = availabilityNews([note({ teamId: null })], name, 3, "t1");
-    expect(item.body).toContain("Nobody in the league holds him.");
-    expect(item.urgent).toBe(false);
+  it("drops a man nobody in the league holds", () => {
+    // He is on the wire, which is a fact about the wire and not about the
+    // reader's squad. The pool is where a free agent's news belongs.
+    expect(availabilityNews([note({ teamId: null })], 3, "t1")).toEqual([]);
   });
 });
 
@@ -156,7 +162,7 @@ describe("roundNews", () => {
 describe("inboxItems", () => {
   it("puts dated items first, newest first, and undated ones after", () => {
     const items = inboxItems(
-      availabilityNews([{ playerName: "P", teamId: "t1", news: "n", chance: 0 }], name, 3, null),
+      availabilityNews([{ playerName: "P", teamId: "t1", news: "n", chance: 0 }], 3, "t1"),
       roundNews({ gameweek: 3, deadline: "2026-09-04T18:45:00Z", yours: null }),
       dealNews([{ ...claim, processedAt: "2026-09-05T09:00:00Z" }], name),
     );
@@ -171,12 +177,12 @@ describe("inboxItems", () => {
     // The paper sorts availability with the reader's own men first, and that is
     // a reading aid this must not undo.
     const notes: AvailabilityNote[] = [
-      { playerName: "Mine", teamId: "t1", news: "", chance: 0 },
-      { playerName: "Theirs", teamId: "t2", news: "", chance: 0 },
+      { playerName: "Second", teamId: "t1", news: "", chance: 0 },
+      { playerName: "First", teamId: "t1", news: "", chance: 0 },
     ];
-    expect(inboxItems(availabilityNews(notes, name, 3, "t1")).map((i) => i.id)).toEqual([
-      "doubt:Mine",
-      "doubt:Theirs",
+    expect(inboxItems(availabilityNews(notes, 3, "t1")).map((i) => i.id)).toEqual([
+      "doubt:Second",
+      "doubt:First",
     ]);
   });
 });

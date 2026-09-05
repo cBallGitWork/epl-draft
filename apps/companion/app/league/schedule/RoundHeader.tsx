@@ -1,6 +1,5 @@
 import type { ScheduleRound } from "./schedule";
 import { londonDate, londonTime } from "../../londonTime";
-import { LABEL } from "@/app/desk";
 
 // A round's own line: when lineups lock, and where the football has got to.
 //
@@ -17,15 +16,24 @@ export default function RoundHeader({ round }: { round: ScheduleRound }) {
   const at = round.deadline ?? round.kickoff;
 
   return (
-    <div className="flex items-center justify-between gap-3 px-3">
-      <span className="text-2xs text-faint">
-        <span className="font-bold uppercase">
+    // **On the plate Results already uses for the same job** (Craig, 5 Sep 2026:
+    // "league/schedule - deadline rows missing grey etc"). This was bare text
+    // over the photograph while its opposite number on Results — the gameweek a
+    // block of scorelines sits under — was a `cm-bevel` run at `h-7`. One list
+    // of ties, two ways of heading a block of them; `groundfit` could not see it
+    // because the panel around them is translucent and technically a ground.
+    //
+    // `HEAD_PLATE`'s height and the chrome face, so this strip, the column heads
+    // and Results' own head are one object at one size.
+    <div className="cm-bevel flex h-7 items-center justify-between gap-3 px-1.5 font-chrome text-2xs font-bold">
+      <span>
+        <span className="uppercase">
           {round.deadline === null ? "First kickoff" : "Deadline"}
         </span>
         {at === null ? (
           " not yet dated"
         ) : (
-          <span className="numeric">
+          <span className="numeric font-normal">
             {" "}
             {londonDate(at)} · {londonTime(at)}
           </span>
@@ -41,8 +49,12 @@ export default function RoundHeader({ round }: { round: ScheduleRound }) {
  *  it has already said it. */
 function Status({ round }: { round: ScheduleRound }) {
   if (round.status === "live") {
+    // **No `--color-live` here** — the strip is a light plate now and a plate
+    // owns its ink (DESIGN §2). Their red measures 1.39:1 on it, which is the
+    // failure `sweep` caught twice today on the same mistake. The dot still
+    // carries the colour, because a 6px mark is not text and WCAG measures text.
     return (
-      <span className="flex items-center gap-1.5 text-2xs font-bold uppercase text-live">
+      <span className="flex items-center gap-1.5 uppercase">
         <span className="live-dot" />
         Live
       </span>
@@ -50,6 +62,6 @@ function Status({ round }: { round: ScheduleRound }) {
   }
 
   return round.status === "finished" ? (
-    <span className={LABEL}>Full time</span>
+    <span className="font-normal uppercase opacity-70">Full time</span>
   ) : null;
 }

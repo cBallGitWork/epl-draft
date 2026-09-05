@@ -59,9 +59,17 @@ export default function Tie({
   // core. A half-time lead is not a win.
   const settled = round.status === "finished";
 
-  // A cup final between two semi-final winners has nothing to open either.
+  // **A fixture still to come opens its match page too** (Craig, 5 Sep 2026:
+  // "non played matches in draft should go to a match page too"). It was gated
+  // on `round.started` because an unplayed round has no score and no eleven
+  // anyone may see — both true, and neither a reason to make the row dead: the
+  // head-to-head draws the two squads with the lineup gate closed and says so,
+  // which is the honest version of "who am I playing in March" and a better
+  // answer than nothing happening when you tap.
+  //
+  // A cup final between two semi-final winners still opens nothing, because
+  // there is nobody in it yet.
   const opens =
-    round.started &&
     tie.competition.id === LEAGUE_COMPETITION.id &&
     tie.home.team !== null &&
     tie.away.team !== null;

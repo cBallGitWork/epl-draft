@@ -390,3 +390,28 @@
     --text-xs--line-height: calc(1.0625 / 0.8125);
   }
 }
+
+/* And one step further on a big monitor (Craig, 5 Sep 2026: "doesnt scale with a
+   bigger monitor well either"). At 1536 and up the page frame grows to 96rem
+   (`globals.css`), so the same row is drawn wider — and a figure that was small
+   at 1152px is smaller still against 1536 of content. The three small steps take
+   another pixel and `sm` joins them, because at this width it is body copy in a
+   wide column rather than a dense label.
+
+   Two steps and no more, and no fluid clamp. DESIGN §6 is explicit that this is
+   product UI on a fixed rem scale — the masthead is the one exception — and a
+   scale that interpolates is one nothing can be measured against. What this
+   buys is that the desk has THREE sizes for a reader to sit at rather than one:
+   a laptop, a monitor, and a phone. */
+@media (min-width: 96rem) {
+  :root {
+    --text-3xs: 0.6875rem;
+    --text-3xs--line-height: calc(0.875 / 0.6875);
+    --text-2xs: 0.8125rem;
+    --text-2xs--line-height: calc(1.0625 / 0.8125);
+    --text-xs: 0.875rem;
+    --text-xs--line-height: calc(1.125 / 0.875);
+    --text-sm: 0.9375rem;
+    --text-sm--line-height: calc(1.1875 / 0.9375);
+  }
+}

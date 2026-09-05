@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { MatchEventKind } from "@epl/core";
 import Section from "../components/shell/Section";
 import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
@@ -133,7 +134,7 @@ function Man({
   man: WireLine["man"];
   /** The club, on the first man only: the second is in the same match by
    *  construction, and printing it twice would be furniture. */
-  club?: string | null;
+  club?: WireLine["club"];
   /** What he did, when it is not the event's own word. */
   label?: string;
 }) {
@@ -144,7 +145,24 @@ function Man({
         <span className={`min-w-0 truncate text-ink ${ROW_NAME}`}>
           {man?.player.name ?? "\u2014"}
         </span>
-        {club ? <span className={`${SMALL_CAPS} shrink-0 text-muted`}>{club}</span> : null}
+        {club === null || club === undefined ? null : (
+          <>
+            {/* **The crest, not just the letters** (Craig, 5 Sep 2026: "add team
+                logo too for the row"). 14px, which is `ScoreRow`'s own badge on
+                a phone — the two rows sit six pixels apart on this screen and a
+                club drawn two sizes would be the disagreement this run has been
+                closing. The letters stay: a crest at 14px is a colour, and the
+                three letters are what a reader actually reads. */}
+            <Image
+              src={club.crest}
+              alt=""
+              width={18}
+              height={18}
+              className="h-3.5 w-3.5 shrink-0 object-contain"
+            />
+            <span className={`${SMALL_CAPS} shrink-0 text-muted`}>{club.short}</span>
+          </>
+        )}
       </span>
       <span
         className={`truncate text-3xs ${man?.mine === true ? "text-accent" : "text-muted"}`}

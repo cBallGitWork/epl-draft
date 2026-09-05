@@ -135,16 +135,26 @@ const DOUBT = 50;
  *  instead. */
 export function availabilityNews(
   notes: readonly AvailabilityNote[],
-  teamName: (teamId: string) => string | null,
   /** The round the doubt is about, which is the only "when" this source has. */
   gameweek: number | null,
-  /** The reader's own team, so his own men can go red. Null when nobody is
-   *  signed in, and then nothing does. */
+  /** The reader's own team. **His own men and nobody else's** (Craig, 5 Sep
+   *  2026: "should just be your team only for player news"), which is the
+   *  filter as well as the red ground.
+   *
+   *  A rival's doubt is real news and it is not HIS news: this screen is the
+   *  manager's inbox, and 150 men across ten squads is a feed rather than an
+   *  inbox — a hundred rows he cannot act on, burying the two he can. The
+   *  league's whole injury list is still a thing the Gazetta prints, off the
+   *  same `availability` builder.
+   *
+   *  Null — nobody signed in — files none of them rather than all of them. A
+   *  reader with no team has no doubts to be told about, and showing him the
+   *  league's would be the feed this filter exists to stop. */
   mine: string | null,
 ): InboxItem[] {
-  return notes.map((note) => {
-    const who = note.teamId === null ? null : teamName(note.teamId);
-    return {
+  return notes
+    .filter((note) => mine !== null && note.teamId === mine)
+    .map((note) => ({
       id: `doubt:${note.playerName}`,
       category: "injury" as const,
       at: null,
@@ -153,19 +163,15 @@ export function availabilityNews(
         note.chance === null
           ? `${note.playerName} carries a note`
           : `${note.playerName} ${note.chance === 0 ? "is out" : `is ${note.chance}% to play`}`,
-      // Whose problem it is comes second, because the man is the news and the
-      // owner is what makes it yours. A man nobody holds still gets an item: he
-      // is on the wire, and that is a fact about the wire.
-      body: [
-        stopped(note.news),
-        who === null ? "Nobody in the league holds him." : `${who} holds him.`,
-      ]
-        .filter((line) => line.length > 0)
-        .join(" "),
+      // Just his words. The owner's name was a second sentence here, saying
+      // whose problem it was — and on a screen that now files only the reader's
+      // own men it said "yours" in a longer way on every row.
+      body: stopped(note.news),
       teamId: note.teamId,
-      urgent: mine !== null && note.teamId === mine && (note.chance ?? 100) < DOUBT,
-    };
-  });
+      // Every item here is his, so the red ground is the one thing it still
+      // distinguishes: a man who is a real doubt from one who carries a note.
+      urgent: (note.chance ?? 100) < DOUBT,
+    }));
 }
 
 /** One round of our own competition, as CM's Competitions tab.
