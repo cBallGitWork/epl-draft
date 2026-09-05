@@ -40,8 +40,10 @@ export default function TabStrip<K extends string>({
   label: string;
   tabs: readonly (Tab & { key: K })[];
   /** Which tab you are on, and `null` is a real answer rather than a missing
-   *  one: `SectionNav`'s Player Stats points at `/players`, which is outside the
-   *  section, so no tab draws as current once you are there. */
+   *  one: `SectionNav`'s Matchups is a section a route can BE on without being
+   *  in the strip, so no plate is current there. Player Stats used to be the
+   *  other such case and no longer is — it wears the shell and takes its own
+   *  plate (5 Sep 2026). */
   current: K | null;
   /** Tabs with nothing behind them for this subject — a side that has made no
    *  transactions, a period with no pairing.

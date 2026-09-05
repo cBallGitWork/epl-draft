@@ -117,6 +117,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
             {sortRows(rows, sort, descending).map((row) => (
               <Fragment key={row.teamId}>
                 <TableRow
+                  sort={sort}
                   row={row}
                   badge={badges.get(row.teamId)}
                   mine={row.teamId === mine}

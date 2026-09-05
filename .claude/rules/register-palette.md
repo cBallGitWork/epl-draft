@@ -14,7 +14,7 @@ paths:
 |---|---|
 | `--color-accent` (yellow) | **yours · selected · active · primary** |
 | `--color-info` (cyan) | **a derived reading** — ours rather than recorded. **A name is WHITE** (CM's own; see `docs/ui/reference/README.md`) |
-| `--color-mid` (amber) | **a figure** |
+| `--color-mid` (amber) | **a figure standing alone beside a name** — a fact, a ledger line, a board's one measure. **Never a column of a standings table**, where every figure is ink and only yours takes the accent |
 | `--color-bad` (red) | a loss, a doubt, a negative |
 | `--color-up` (green) | a gain — the other half of the direction pair |
 | `--color-live` | **a match in play**, and nothing else |

@@ -1,6 +1,6 @@
 import Link from "next/link";
+import LeagueShell from "../league/Shell";
 import Nothing from "../components/shell/Nothing";
-import PageHeader from "../components/shell/PageHeader";
 import PlayerTable, { STATUS } from "./PlayerTable";
 import Board from "./Board";
 import { getPlayerStats } from "./playerStats";
@@ -18,7 +18,6 @@ import {
   rankPlayers,
 } from "@epl/core";
 import { BUTTON } from "../components/shell/ButtonLink";
-import { PANEL } from "@/app/desk";
 
 // Every player Fantrax knows, what our league has decided about him, and what
 // Fantrax scores him. The numbers are theirs under our league's scoring, which
@@ -26,6 +25,20 @@ import { PANEL } from "@/app/desk";
 // predicted — Fantrax defaults these reads to a projection, and a column headed
 // FPts that silently switches between the two would be the confident wrong
 // answer.
+//
+// **It wears `LeagueShell` now, and it always should have** (5 Sep 2026). The
+// section strip already lists Player Stats and `LeagueSection` already keys it;
+// what was missing was the frame, so this screen opened on a bar of a third
+// shape with no strip at all and printed its directory straight onto the match
+// photograph — the one thing DESIGN §2 forbids, and 40 of `groundfit`'s findings.
+// The shell's panel is the plate that fixes it.
+//
+// **The caption is the CATEGORY, not the view.** `cm9900`'s own stat screen
+// captions its panel `Average Rating` and lets the tab strip say which section
+// you are in, which is the arrangement here: the bar names the competition, the
+// strip marks Player Stats, and the caption names what the board is ranked by.
+// That is why `Board` no longer draws a `Caption` of its own — two captions
+// stacked is the screen saying its own name twice.
 
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
@@ -80,12 +93,12 @@ export default async function PlayersPage({
 
   if ("unavailable" in pool) {
     return (
-      <section className={PANEL}>
+      <LeagueShell current="players">
         <Nothing title={FANTRAX_SILENT} code={pool.unavailable}>
           The player pool is Fantrax&apos;s and we cannot read it right now. Ownership is the part
           that would go stale first, so this shows nothing rather than yesterday&apos;s.
         </Nothing>
-      </section>
+      </LeagueShell>
     );
   }
 
@@ -100,22 +113,21 @@ export default async function PlayersPage({
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <PageHeader
-        title="Players"
-        sub={
-          <>
-            {shown.length} of {pool.rows.length}
-            {pool.season ? (
-              <>
-                {" · "}
-                {pool.season.projected ? "Fantrax projection" : pool.season.name || "this season"}
-              </>
-            ) : null}
-          </>
-        }
-      />
-
+    <LeagueShell
+      current="players"
+      title={board.length > 0 ? category.label : undefined}
+      sub={
+        <>
+          {shown.length} of {pool.rows.length}
+          {pool.season ? (
+            <>
+              {" · "}
+              {pool.season.projected ? "Fantrax projection" : pool.season.name || "this season"}
+            </>
+          ) : null}
+        </>
+      }
+    >
       {board.length > 0 ? (
         <Board
           rows={board}
@@ -214,6 +226,6 @@ export default async function PlayersPage({
           Fantrax has numbers for {pool.missing} more than this read carried; those rows show a dash.
         </p>
       ) : null}
-    </div>
+    </LeagueShell>
   );
 }

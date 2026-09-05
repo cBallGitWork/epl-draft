@@ -28,9 +28,13 @@ export const STATUS: Record<string, string> = {
 
 // Nothing is hidden on a phone any more. It used to drop the rank behind a
 // breakpoint on the grounds that a row holds four things — which is true of a
-// row that must fit, and this one no longer has to. The table breaks out of the
-// page gutter and scrolls sideways instead, so every column Fantrax publishes is
-// reachable on the smallest screen rather than absent from it. Craig's call.
+// row that must fit, and this one no longer has to. The table scrolls sideways
+// instead, so every column Fantrax publishes is reachable on the smallest screen
+// rather than absent from it. Craig's call.
+//
+// It is the second shape in A5's rule: a table whose last column is what the
+// table is FOR subtracts columns so it fits, and a many-measure directory like
+// this one keeps all of them and scrolls, with CM's own bevelled bar saying so.
 
 export default function PlayerTable({
   rows,
@@ -44,14 +48,13 @@ export default function PlayerTable({
   const current = activeSort(query);
 
   return (
-    // Out to the page's edges and then some: the gutter is a variable precisely
-    // so the two things that break out of it cannot drift from it (globals.css).
-    // `overflow-x-auto` on the breakout rather than on the table, so the header
-    // row scrolls with its body.
-    <div
-      className={SCROLL}
-      style={{ marginInline: "calc(var(--page-gutter) * -1)", paddingInline: "var(--page-gutter)" }}
-    >
+    // **No gutter breakout any more.** The table used to run out through the
+    // page's own gutters because the directory was printing on the bare ground
+    // and had nothing to be inside; it is in `LeagueShell`'s panel now, and a
+    // child that breaks out of a panel breaks out of the plate that is the whole
+    // reason the panel is there. `cm-scroll` for the bar, on the wrapper rather
+    // than on the table, so the header row scrolls with its body.
+    <div className={`cm-scroll ${SCROLL}`}>
       <table className="w-full min-w-[34rem] border-collapse text-sm">
         <thead>
           <tr className="border-b border-line text-2xs uppercase text-faint">

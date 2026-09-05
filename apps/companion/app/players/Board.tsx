@@ -1,4 +1,3 @@
-import Caption from "../components/shell/Caption";
 import Link from "next/link";
 import {
   type GroupKey,
@@ -36,6 +35,9 @@ export default function Board({
 }: {
   rows: PlayerBoardRow[];
   group: GroupKey;
+  /** Which category the rows are ranked by. The panel's caption names it
+   *  (`players/page`); this is for the screen reader's own caption and for
+   *  marking the current plate on the strip below. */
   category: string;
   teams: Map<string, LeagueTeam>;
   /** FPL's season-stable player code, for the portrait. Null is ordinary — the
@@ -45,17 +47,14 @@ export default function Board({
 }) {
   return (
     <div className="flex flex-col gap-2">
-      {/* **The board needs its own plate**, and `/players` is not a league route
-          so `LeagueShell` does not give it one. Without it the match photograph
-          runs straight through every row — `groundfit` exists to catch exactly
-          that, and CM's own rule is that nothing prints on the bare ground.
+      {/* **The plate and the caption are the shell's now** (5 Sep 2026). This
+          drew both, on the reasoning that `/players` was not a league route and
+          so got no frame from `LeagueShell`. It is one — the section strip has
+          listed Player Stats all along — so the page wears the shell, the shell's
+          panel is the plate nothing prints outside of, and its caption carries
+          the category this board is ranked by.
 
-          Its own caption strip above it, for the same reason the league screens
-          have one: the blue bar names the SCREEN and this names what is in the
-          panel. */}
-      <Caption>{category}</Caption>
-
-      {/* **A box shorter than its list, and a scrollbar that says so.** Fifty
+          **A box shorter than its list, and a scrollbar that says so.** Fifty
           rows in a container sized to about fourteen, which is what CM's own
           stat lists do — the scrollbar is not decoration on them, it is the
           thing that makes a cut list read as a long one rather than as a short
@@ -63,7 +62,7 @@ export default function Board({
           number of rows at both widths rather than half of one at the bottom
           edge. */}
       <div
-        className="cm-panel cm-scroll cm-scroll-y overflow-auto p-2"
+        className="cm-scroll cm-scroll-y overflow-auto"
         style={{ maxHeight: `calc(${VISIBLE_ROWS} * var(--table-row) + var(--table-chrome))` }}
       >
         <table className={BOARD}>

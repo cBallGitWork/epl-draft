@@ -610,6 +610,42 @@ Recorded rather than taken, because the right one is Craig's. Until then `sweep`
 has one standing failure on the fixtures Sunderland appear in, and a run that
 reports exactly this and nothing else is a clean run.
 
+## Open — amber outside the standings tables (counted 5 Sep 2026)
+
+DESIGN §3's amber slot was narrowed to "never a column of a standings table" and
+`/league` and `/prem` were corrected. `register-warden` counted six further
+surfaces that set SEVERAL amber measures on one line — the shape the narrowing
+condemns — and they are boards of measures rather than standings tables, so
+whether the slot should reach them is a separate question and Craig's:
+
+| File | What is amber |
+|---|---|
+| `prem/club/[code]/SquadTable.tsx:169,172` | goals and assists, with minutes and starts ink on the same line |
+| `prem/club/[code]/stats/PlayerBoard.tsx:176` | every measure column |
+| `squad/[teamId]/stats/StatBoard.tsx:214,245` | every category and underlying column |
+| `players/[fantraxId]/MatchLog.tsx:124,184` | the FPts column, on a row of sixteen figures |
+| `players/[fantraxId]/AttributeGrid.tsx:98` | thirty ratings; its docblock quotes the RETIRED wording |
+| `components/league/SeasonGrid.tsx:47` | the same, and quotes it too |
+
+Three more put amber on something that is not a figure under either wording —
+position letters at `components/league/SquadRows.tsx:228`,
+`squad/[teamId]/transfers/Ledger.tsx:188` and `squad/[teamId]/stats/StatBoard.tsx:202`,
+and glossary abbreviations at `StatBoard.tsx:279` — and three put it on a
+PARAGRAPH of prose (`components/league/PlayerCard.tsx:92`,
+`components/league/LivePlayerCard.tsx:109,193`), where the unresolved-slot reason
+reads as a doubt and `--color-bad` is the slot for that.
+
+Two stale sentences found in the same count, both harmless to the pixel:
+`league/team-stats/page.tsx:217` says `--color-mid` "is the right slot" for a
+column it correctly draws in ink; and DESIGN §3 and `league/page.tsx:133` both
+give the cut line's red a reason citing the YOURS chip, which went on 5 Sep — the
+count still holds (the border and the accent NAME), the citation does not.
+
+**Also open, and older**: the playoff cut line is `border-accent/80` on both
+`/league` and `/prem`, DESIGN §3 says it should be red, and `docs/ui/prem.md:60`
+records the yellow as settled. Both cannot be true, and the narrowed amber
+paragraph ends "only yours takes the accent", which sharpens it.
+
 ## Recorded rule exceptions
 
 ### `desk.css` and `tokens.css` (recorded 3 Sep 2026)

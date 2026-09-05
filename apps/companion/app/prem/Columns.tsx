@@ -24,6 +24,9 @@ type Column = {
   title: string | undefined;
   align: "left" | "center" | "right";
   width: string;
+  /** A column the phone does without, so the last one — the column the table is
+   *  FOR — fits at 390 without a sideways scroll. */
+  deskOnly?: true;
 };
 
 /** One column, and the list is what `colSpan` counts — a rule drawn across the
@@ -36,11 +39,11 @@ export const COLUMNS: readonly Column[] = [
   { key: "won", label: "Won", title: "Won", align: "center", width: "w-8 lg:w-16" },
   { key: "drawn", label: "Drn", title: "Drawn", align: "center", width: "w-8 lg:w-16" },
   { key: "lost", label: "Lst", title: "Lost", align: "center", width: "w-8 lg:w-16" },
-  { key: "for", label: "For", title: "Goals scored", align: "center", width: "hidden w-9 lg:table-cell lg:w-20" },
-  { key: "against", label: "Ag", title: "Goals conceded", align: "center", width: "hidden w-9 lg:table-cell lg:w-20" },
+  { key: "for", label: "For", title: "Goals scored", align: "center", width: "w-9 lg:w-20", deskOnly: true },
+  { key: "against", label: "Ag", title: "Goals conceded", align: "center", width: "w-9 lg:w-20", deskOnly: true },
   { key: "gd", label: "GD", title: "Goal difference — the competition's first tiebreak", align: "center", width: "w-10 lg:w-20" },
   { key: "pts", label: "Pts", title: "Three for a win, one for a draw", align: "center", width: "w-10 lg:w-24" },
-  { key: "form", label: "Form", title: "The last five, oldest first", align: "center", width: "hidden w-14 lg:table-cell lg:w-32" },
+  { key: "form", label: "Form", title: "The last five, oldest first", align: "center", width: "w-14 lg:w-32", deskOnly: true },
 ];
 
 /** The cell class for a column, so the row prints the same alignment the head
@@ -48,6 +51,16 @@ export const COLUMNS: readonly Column[] = [
  *  drifting apart is what the shared `COLUMNS` list exists to stop. */
 export function cellAlign(key: Column["key"]): string {
   return TEXT[COLUMNS.find((column) => column.key === key)?.align ?? "center"];
+}
+
+/** Whether this column stands down under a thumb — unless the table is ORDERED
+ *  by it. `league/Columns` carries the long form of the argument; the short one
+ *  is that `display: none` takes the pressed plate, the arrow and `aria-sort`
+ *  out with the column, so a phone on a shared `?sort=for` link would show an
+ *  order with no visible author. */
+export function deskOnly(key: Column["key"], sort: TableSortKey): string {
+  const column = COLUMNS.find((entry) => entry.key === key);
+  return column?.deskOnly && key !== sort ? "hidden lg:table-cell" : "";
 }
 
 /** A column the reader can order by. `form` is a run of letters and `club` a
@@ -71,7 +84,11 @@ export default function Columns({
           if (column.key === "club") return <NameHead key={column.key} label={column.label} />;
           if (!sortable(column.key)) {
             return (
-              <Head key={column.key} width={column.width} title={column.title}>
+              <Head
+                key={column.key}
+                width={`${column.width} ${deskOnly(column.key, sort)}`}
+                title={column.title}
+              >
                 <span className={PLATE}>{column.label}</span>
               </Head>
             );
@@ -80,7 +97,7 @@ export default function Columns({
           return (
             <SortHead
               key={column.key}
-              width={column.width}
+              width={`${column.width} ${deskOnly(column.key, sort)}`}
               title={column.title}
               align={column.align}
               href={tableHref(column.key, sort, descending)}

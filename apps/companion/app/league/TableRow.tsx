@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ordinal, type FormGame, type StandingsRow } from "@epl/core";
+import { ordinal, type FormGame, type SortKey, type StandingsRow } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
 import { ROW_LINK } from "../components/league/TableCells";
-import { cellAlign } from "./Columns";
+import { cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
 import { FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 
@@ -39,12 +39,13 @@ import { FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 // your club alone. Two hues in one row is where a reader starts looking for a
 // meaning that is not there.
 //
-// **And the phone gets fewer columns than the desk.** Ag and Form are `hidden
-// lg:table-cell` — a table whose last column is what the table is FOR shows it
-// at 390 without scrolling, and this one is for Pts. For stays, because
-// points-for is a head-to-head league's tiebreak and the reader's own is the
-// number he is here to compare. `Columns.COLUMNS` carries the same pair on its
-// heads; the two lists agreeing is what that file exists for.
+// **And the phone gets fewer columns than the desk.** Ag and Form stand down —
+// a table whose last column is what the table is FOR shows it at 390 without
+// scrolling, and this one is for Pts. For stays, because points-for is a
+// head-to-head league's tiebreak and the reader's own is the number he is here
+// to compare. The call is `Columns.deskOnly`, which the head, this row and the
+// loading skeleton all ask, and which keeps a column visible when the table is
+// ORDERED by it — a hidden cell takes the pressed plate and `aria-sort` with it.
 //
 // **Yours is said two ways: the accent edge and the accent NAME.** It was three
 // — edge, weight and a `YOU` chip — and it was four when the name's colour was
@@ -59,12 +60,17 @@ export default function TableRow({
   badge,
   mine,
   form,
+  sort,
 }: {
   row: StandingsRow;
   badge: string | undefined;
   mine: boolean;
   /** Oldest first, and empty for a side whose run we cannot vouch for. */
   form: readonly FormGame[];
+  /** What the table is ordered by, because a column the phone stands down is
+   *  shown anyway when it is the one doing the ordering — see `deskOnly`. The
+   *  head and the cell have to make the same call or they slide apart. */
+  sort: SortKey;
 }) {
   return (
     <tr className={`${ROW_RULE} ${mine ? "bg-raised" : "hover:bg-surface"}`}>
@@ -118,7 +124,7 @@ export default function TableRow({
       <td className={`${FIGURE} text-ink`}>{row.lost}</td>
 
       <td className={`${FIGURE} text-ink`}>{row.pointsFor}</td>
-      <td className={`${FIGURE} hidden text-ink lg:table-cell`}>{row.pointsAgainst}</td>
+      <td className={`${FIGURE} text-ink ${deskOnly("against", sort)}`}>{row.pointsAgainst}</td>
 
       {/* Points in a plate of their own, the way CM ends its table: the one
           figure that decides the season, blocked out so the eye runs down the
@@ -131,7 +137,7 @@ export default function TableRow({
 
       {/* After the points, where a modern table prints it — CM's own row ends at
           Pts and has no form guide at all. */}
-      <td className="numeric hidden px-1.5 text-center text-2xs lg:table-cell">
+      <td className={`numeric px-1.5 text-center text-2xs ${deskOnly("form", sort)}`}>
         <Form run={form} />
       </td>
     </tr>

@@ -87,7 +87,7 @@ export default async function TablePage({ searchParams }: { searchParams: Search
           <tbody>
             {sortTable(placed(table), sort, descending).map(({ row, place }) => (
               <Fragment key={row.clubId}>
-                <ClubRow row={row} place={place} form={form.get(row.clubId) ?? []} />
+                <ClubRow row={row} place={place} form={form.get(row.clubId) ?? []} sort={sort} />
                 {/* The two lines the season is decided by, drawn across the
                     table under the last qualifying place rather than shaded
                     over the rows above — a tinted band reads as "these are

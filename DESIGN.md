@@ -114,6 +114,24 @@ six bevelled plates are twelve bevel edges across a 390px phone, and a bevelled
 foot row under a bevelled tab strip is two identical objects bracketing a screen
 with nothing saying which is the section and which is the view.
 
+**A table on a phone has two shapes, and which one it is is decided by its LAST
+column.** A table whose last column is what the table is FOR — `Pts` on a
+standings table — shows that column at 390 without a sideways scroll, and drops
+whatever it must to do it. A many-measure board — the pool's directory, a stats
+board, a match's player stats — keeps every column and scrolls sideways with CM's
+own bevelled bar, because there is no last column that matters more than the
+rest and hiding any of them is choosing for the reader.
+
+The columns that stand down are named in each table's own `COLUMNS` list, in the
+same `width` string that sizes them, so the heads, the rows and the loading
+skeleton read one source. **A column the table is ORDERED by is never hidden**:
+`display: none` takes the pressed plate, the sort arrow and `aria-sort` out with
+it, so a phone arriving on a shared `?sort=` link would show an order with no
+visible author and nothing in the accessibility tree to say what it was.
+
+Settled 5 Sep 2026, and §9's `/players` decision is the same rule read the other
+way — the pool is the board that scrolls.
+
 **And a foot row is set in mixed case at `xs`, not 9px bold capitals.** CM's own
 runs at around 13px mixed case regular. Nothing in the game is set at 9px bold
 caps, and ours put the smallest type in the app on the object a thumb lands on
@@ -198,8 +216,17 @@ win count. They are, and the table already says so by giving them their own
 columns; what the colour was doing was tinting two columns of a table in which
 every other figure is white. `cm9900/24.jpg` is white throughout with yellow for
 your own club, and two hues in one row is where a reader starts looking for a
-meaning that is not there. Where amber still belongs is where it is the ONLY
-figure on the line — a stated fact, a transaction's value, a board's one measure.
+meaning that is not there.
+
+**The narrowing is a negative clause and deliberately not a positive one.** The
+first draft of this paragraph ended "where amber still belongs is where it is the
+ONLY figure on the line", which reads well and is contradicted by six shipped
+surfaces — the club squad table, two stat boards, a match log, the attribute grid
+and the season grid all set several amber measures on a line. Those are boards of
+measures rather than standings tables, and whether the slot should reach them is
+a separate question from the one Craig answered. Counted 5 Sep 2026 by
+`register-warden`; listed in PLATFORM_NOTES as open. What §3 says today is only
+what the tree does: **never a column of a standings table.**
 
 `--color-faint` on `--color-raised` is 4.9:1. That is the tightest pair in the
 set and it is what fixes where the raised step can sit; move one, re-check both.
@@ -584,6 +611,10 @@ position block is still one line however many are in it.*
 The scouting table's sixteen columns do not become mobile view presets. This
 preserves `docs/ui/players.md`'s "nothing is hidden on a phone" record, which
 therefore stands rather than being rewritten. A sticky first column is the cost.
+
+*Still the answer for `/players`, and 5 Sep 2026 gave it a general rule that says
+why — see §2's table geometry below. The frozen name column has not been built;
+the sideways scroll has, with CM's own bar on it.*
 
 **The live desk splits.** Mobile `/matchday` rows expand in place from data
 already on the page; the `≥lg` wall at `/matchday/desk` keeps the no-tap rule

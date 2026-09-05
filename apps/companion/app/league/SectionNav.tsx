@@ -23,11 +23,17 @@ import TabStrip from "../components/shell/TabStrip";
  *  reference library was catalogued. Said plainly because it is the one part of
  *  this that was not asked for.
  *
- *  **Player Stats leaves the section on purpose.** It points at `/players`, the
- *  pool, which is a whole screen with its own filters and sort and is already a
- *  rail destination. A second copy under `/league` would be the same table read
- *  twice; the tab is a way in from the league context, and no tab draws as
- *  current there because you are no longer in the section. */
+ *  **Player Stats is a league view that lives at `/players`.** The route is
+ *  outside the `/league` prefix because the pool is also reached from the Prem's
+ *  own strip — one screen, two ways in — and a second copy under `/league` would
+ *  be the same table read twice.
+ *
+ *  This paragraph used to add that no tab draws as current there, "because you
+ *  are no longer in the section". That was true of the ROUTE and never of the
+ *  screen: the page wears `LeagueShell` as of 5 Sep 2026, so Player Stats is the
+ *  current plate on it like any other view. What the old arrangement bought was a
+ *  screen with no strip, no panel and a bar of a third shape, printing its
+ *  directory on the bare photograph. */
 const SECTIONS = [
   { href: "/league", label: "Table", key: "table" },
   { href: "/league/schedule", label: "Schedule", key: "schedule" },
@@ -77,9 +83,10 @@ export type LeagueSection = (typeof SECTIONS)[number]["key"] | "matchups";
 
 export default function SectionNav({ current }: { current: LeagueSection }) {
   // Matchups is a `LeagueSection` and is not in the strip, so on that route no
-  // plate is current — the same state `/players` puts the strip in. Narrowed
-  // here rather than in `TabStrip`, which should not have to know that this
-  // section has entries its own strip does not list.
+  // plate is current. It is the ONLY one now — `/players` was the second until
+  // it took the shell and its own plate with it. Narrowed here rather than in
+  // `TabStrip`, which should not have to know that this section has an entry its
+  // own strip does not list.
   const here = SECTIONS.find((section) => section.key === current)?.key ?? null;
   // **`labels="word"`, and it is a measured fix rather than a preference.** At
   // the default 11px the fifth plate ran 34px past a 390 viewport — measured

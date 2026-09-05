@@ -1,4 +1,4 @@
-import Columns, { COLUMNS } from "./Columns";
+import Columns, { COLUMNS, deskOnly } from "./Columns";
 import LeagueShell from "./Shell";
 import Skeleton from "../components/shell/Skeleton";
 import { BOARD, ROW_RULE } from "@/app/desk";
@@ -36,7 +36,7 @@ export default function Loading() {
                   // carries the column's VISIBILITY as well as its size, so a
                   // skeleton that ignores it draws ten cells over the eight the
                   // answer lands in and the table jumps sideways on arrival.
-                  <td key={column.key} className={`px-1 py-1 ${column.width}`}>
+                  <td key={column.key} className={`px-1 py-1 ${column.width} ${deskOnly(column.key, "rank")}`}>
                     {column.key === "team" ? (
                       // The one cell whose height sets the row's, so the real
                       // rows land inside these boxes rather than pushing them

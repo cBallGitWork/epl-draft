@@ -5,6 +5,13 @@ Fantrax scores him.
 
 ## On the page
 
+**It is a League view and wears `LeagueShell`** (5 Sep 2026). The bar carries the
+competition, the section strip marks Player Stats, and the caption names the
+category the board is ranked by — `cm9900`'s own stat screen captions its panel
+`Average Rating`. Before this the screen opened on a bare ~30px bar with no strip
+and no panel, and printed its directory straight onto the match photograph: 40 of
+`groundfit`'s findings, and the one thing DESIGN §2 forbids.
+
 - **Every row leads with a face on his club's colour** — the same 32px mark the
   fixture list uses. It carries two things at once: the photograph where there
   is one, and the club always, because the circle behind it is the kit. A man
@@ -29,10 +36,14 @@ Fantrax scores him.
   the ordering, the phone gets HTML, and a sort survives being shared.
 - **Nothing is hidden on a phone.** The rank used to drop behind a breakpoint on
   the grounds that a row holds four things — true of a row that must fit, and
-  since 22 Aug this one does not. The table breaks out of the page gutter and
-  scrolls sideways instead, carrying all seven columns `getPlayerStats`
-  publishes: rank, player, his fixture, FPts, FP/G, and the two ownership
-  columns that are the only outside opinion anywhere in the app.
+  since 22 Aug this one does not. The table scrolls sideways instead, carrying
+  all seven columns `getPlayerStats` publishes: rank, player, his fixture, FPts,
+  FP/G, and the two ownership columns that are the only outside opinion anywhere
+  in the app. DESIGN §2's table-geometry rule (5 Sep 2026) is why this stands
+  where the standings tables subtract: a directory has no last column that
+  matters more than the rest, so hiding any of them is choosing for the reader.
+  The **gutter breakout went on 5 Sep** with the shell — a child that breaks out
+  of a panel breaks out of the plate the panel is there to provide.
 - **`Opp (ET)` names its clock in the heading.** Fantrax renders that cell in the
   league's own timezone, which is US Eastern — "Sun 9:00AM" is a 14:00 kickoff —
   and every other time in this app is London. Their words, their clock, named.

@@ -37,7 +37,16 @@ export default function MatchShell({
   const ground = home === undefined ? null : clubGround(home.shortName);
 
   return (
-    <div className="flex flex-col gap-2">
+    // **Tall enough to hold the screen, so the foot row lands at the foot of
+    // it.** The related-screens strip is the last thing on a match page and CM
+    // draws it across the bottom; on a short match — a preview with no scoresheet
+    // — it was floating halfway up with a third of a phone of bare photograph
+    // under it. `mt-auto` on the strip puts it at the bottom of this box, and
+    // this box is the viewport less the two pieces of chrome the page did not
+    // draw itself: the air above it and the room held for the section nav.
+    // A long match pushes past and the strip follows the content, which is the
+    // same rule read the other way.
+    <div className="flex min-h-[calc(100dvh-var(--page-top)-var(--page-foot))] flex-col gap-2">
       <MatchBar
         home={home}
         away={away}
@@ -50,7 +59,9 @@ export default function MatchShell({
       <MatchTabs id={fixture.id} current={current} />
       <Caption>{ground ?? roundName(match)}</Caption>
       {children}
-      <MatchFoot home={home} away={away} />
+      <div className="mt-auto">
+        <MatchFoot home={home} away={away} />
+      </div>
     </div>
   );
 }

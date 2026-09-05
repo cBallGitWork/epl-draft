@@ -1,8 +1,12 @@
-import PageHeader from "../components/shell/PageHeader";
+import LeagueShell from "../league/Shell";
 import Skeleton from "../components/shell/Skeleton";
 import { BUTTON } from "../components/shell/ButtonLink";
 
 // The pool, waiting on Fantrax's 533 KB of stats.
+//
+// `LeagueShell` is the real one, so the bar, the section strip and the panel are
+// on screen and working before a row exists — the same rule `league/loading`
+// sets, and the reason this route stopped drawing a header of its own.
 //
 // The search box is real and works from the first frame: it is a GET form to
 // this same route, so a reader who came here to find one player can type his
@@ -11,10 +15,8 @@ import { BUTTON } from "../components/shell/ButtonLink";
 
 export default function Loading() {
   return (
-    <div aria-busy className="flex flex-col gap-3">
-      <PageHeader title="Players" sub={<Skeleton width="10rem" height="0.75rem" />} />
-
-      <form action="/players" className="flex gap-1.5">
+    <LeagueShell current="players" sub={<Skeleton width="10rem" height="0.75rem" />}>
+      <form aria-busy action="/players" className="flex gap-1.5">
         <input
           name="q"
           placeholder="Find a player"
@@ -43,11 +45,9 @@ export default function Loading() {
       </div>
 
       {/* The table's own row: a 32px mark on his club's colour, then his name.
-          Out through the gutter like the real one, so the rows are the same
-          width they will be. */}
-      <div
-        style={{ marginInline: "calc(var(--page-gutter) * -1)", paddingInline: "var(--page-gutter)" }}
-      >
+          Inside the shell's panel like the real one, so the rows are the same
+          width they will be — the gutter breakout went with the plate. */}
+      <div aria-busy>
         {Array.from({ length: 8 }, (_, at) => (
           // Two bars, because the real row is two lines — his name over his
           // club — and a skeleton that draws one is a box the row pushes out of
@@ -64,6 +64,6 @@ export default function Loading() {
           </div>
         ))}
       </div>
-    </div>
+    </LeagueShell>
   );
 }

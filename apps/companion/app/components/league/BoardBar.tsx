@@ -44,7 +44,7 @@ export default function BoardBar({
 }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className={toggleClass}>
+      <span className={`flex-1 ${toggleClass}`}>
         <ViewToggle view={view} onPick={onPick} />
       </span>
       {children}

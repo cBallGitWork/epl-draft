@@ -27,12 +27,18 @@ type Column = {
   title: string | undefined;
   align: "left" | "center" | "right";
   width: string;
+  /** A column the phone does without, so the last one — the column the table is
+   *  FOR — fits at 390 without a sideways scroll. */
+  deskOnly?: true;
 };
 
 /** One column, and the list is what `colSpan` counts — a rule drawn across the
  *  table needs to know how wide the table is, and a literal 8 here is a number
  *  that goes wrong the day a column is added. It went from eight to ten on
- *  31 Aug 2026, which is the day that mattered.
+ *  31 Aug 2026, which is the day that mattered. Below `lg` two of the ten are
+ *  `display: none` and the rule spans them at zero width, which is harmless and
+ *  measured — a `colSpan` of the visible count would need the width the server
+ *  does not have.
  *
  *  **A football league table, which is what `cm9900/24.jpg` prints.** Its header
  *  reads `Pld Won Drn Lst For Ag Pts` and so does every table in an English
@@ -63,9 +69,9 @@ export const COLUMNS: readonly Column[] = [
   { key: "drawn", label: "D", title: "Drawn", align: "center", width: "w-7 lg:w-16" },
   { key: "lost", label: "L", title: "Lost", align: "center", width: "w-7 lg:w-16" },
   { key: "for", label: "For", title: "Fantasy points scored — Fantrax's FPtsF", align: "center", width: "w-11 lg:w-24" },
-  { key: "against", label: "Ag", title: "Fantasy points conceded — Fantrax's FPtsA", align: "center", width: "hidden w-11 lg:table-cell lg:w-24" },
+  { key: "against", label: "Ag", title: "Fantasy points conceded — Fantrax's FPtsA", align: "center", width: "w-11 lg:w-24", deskOnly: true },
   { key: "pts", label: "Pts", title: "League points — the commissioner's own, never counted here", align: "center", width: "w-10 lg:w-24" },
-  { key: "form", label: "Form", title: "The last five rounds, oldest first", align: "center", width: "hidden w-14 lg:table-cell lg:w-32" },
+  { key: "form", label: "Form", title: "The last five rounds, oldest first", align: "center", width: "w-14 lg:w-32", deskOnly: true },
 ];
 
 /** Where a column's content sits, as a flex class and as a text class.
@@ -82,6 +88,23 @@ export const COLUMNS: readonly Column[] = [
  *  drifting apart is exactly what the shared `COLUMNS` list exists to stop. */
 export function cellAlign(key: Column["key"]): string {
   return TEXT[COLUMNS.find((column) => column.key === key)?.align ?? "center"];
+}
+
+/** Whether this column stands down under a thumb — **unless the table is ORDERED
+ *  by it**, which is the exception that keeps the rule honest.
+ *
+ *  `display: none` does not quieten a column, it deletes it: the pressed plate,
+ *  the arrow and `aria-sort` all live on that cell, so a phone arriving on a
+ *  shared `?sort=against` link would show rows in an order with no visible
+ *  author and nothing in the accessibility tree to say what it was. The wrapper
+ *  the table sits in already scrolls sideways (`league/page`), so the one case
+ *  where nine columns will not fit is the case that was always going to scroll.
+ *
+ *  Found by key like `cellAlign`, and for the same reason: the head, the row and
+ *  the loading skeleton have to agree, and `COLUMNS` is where they agree. */
+export function deskOnly(key: Column["key"], sort: SortKey): string {
+  const column = COLUMNS.find((entry) => entry.key === key);
+  return column?.deskOnly && key !== sort ? "hidden lg:table-cell" : "";
 }
 
 /** A column the reader can order by. `form` is a run of letters and `team` a
@@ -105,7 +128,11 @@ export default function Columns({
           if (column.key === "team") return <NameHead key={column.key} label={column.label} />;
           if (!sortable(column.key)) {
             return (
-              <Head key={column.key} width={column.width} title={column.title}>
+              <Head
+                key={column.key}
+                width={`${column.width} ${deskOnly(column.key, sort)}`}
+                title={column.title}
+              >
                 <span className={PLATE}>{column.label}</span>
               </Head>
             );
@@ -114,7 +141,7 @@ export default function Columns({
           return (
             <SortHead
               key={column.key}
-              width={column.width}
+              width={`${column.width} ${deskOnly(column.key, sort)}`}
               title={column.title}
               align={column.align}
               href={sortHref(column.key, sort, descending)}

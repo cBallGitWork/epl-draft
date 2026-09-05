@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { type Result, type TableRow, crestUrl, ordinal } from "@epl/core";
-import { cellAlign } from "./Columns";
+import { type Result, type TableRow, type TableSortKey, crestUrl, ordinal } from "@epl/core";
+import { cellAlign, deskOnly } from "./Columns";
 import { CLUB } from "./PremNav";
 import { ROW_LINK } from "../components/league/TableCells";
 import { FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
@@ -21,7 +21,8 @@ import { FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 //   place     faint          depth, never meaning — CM's quiet leading index
 //   club      ink            the name you scan the table FOR
 //   Pld W D L ink            the record — all four alike, as `24.jpg` sets them
-//   For/Ag    mid            a figure, and a different KIND of number
+//   For/Ag    ink            a column of a standings table is ink (DESIGN §3),
+//                             and the phone does without both — see `deskOnly`
 //   GD        up/bad/faint   direction, which is the only thing those two are for
 //   Pts       ink, bold      the total the table is ordered by, in its own plate
 //   form      up/bad/faint   the same pair, and the same reason
@@ -30,6 +31,7 @@ export default function ClubRow({
   row,
   place,
   form,
+  sort,
 }: {
   row: TableRow;
   /** The competition's own place, which is not the row's position on screen
@@ -37,6 +39,9 @@ export default function ClubRow({
   place: number;
   /** Oldest first, as the whole season ran. This prints the tail of it. */
   form: readonly Result[];
+  /** What the table is ordered by: a column the phone stands down is shown
+   *  anyway when it is the one doing the ordering (`Columns.deskOnly`). */
+  sort: TableSortKey;
 }) {
   return (
     <tr className={`${ROW_RULE} hover:bg-surface`}>
@@ -84,8 +89,8 @@ export default function ClubRow({
           should be what the table is FOR, and this one is for Pts. GD stays
           under a thumb, being the competition's own first tiebreak — the two
           numbers it is made of are the ones a phone can spare. */}
-      <td className={`${FIGURE} hidden text-ink lg:table-cell`}>{row.goalsFor}</td>
-      <td className={`${FIGURE} hidden text-ink lg:table-cell`}>{row.goalsAgainst}</td>
+      <td className={`${FIGURE} text-ink ${deskOnly("for", sort)}`}>{row.goalsFor}</td>
+      <td className={`${FIGURE} text-ink ${deskOnly("against", sort)}`}>{row.goalsAgainst}</td>
 
       {/* Goal difference is a DIRECTION and takes the direction pair — it is the
           one column on this table whose sign is the reason for printing it.
@@ -101,7 +106,7 @@ export default function ClubRow({
         </span>
       </td>
 
-      <td className="numeric hidden px-1.5 text-center text-2xs lg:table-cell">
+      <td className={`numeric px-1.5 text-center text-2xs ${deskOnly("form", sort)}`}>
         <Form run={form} />
       </td>
     </tr>

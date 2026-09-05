@@ -30,7 +30,10 @@ export default function ViewToggle({
       role="group"
       aria-label="How to show the squad"
       // The plates butt against each other, which is how CM draws a strip; the
-      // box-with-a-gap around them was a modern segmented control.
+      // box-with-a-gap around them was a modern segmented control. **And they
+      // fill the row** — CM's own pair at the foot of a screen (`Back` · `Next`)
+      // spans it, and two content-width plates floating at the left of an empty
+      // bar read as leftovers rather than as a control.
       className="flex"
     >
       <ViewButton current={view} value="pitch" onPick={onPick} />
@@ -59,7 +62,10 @@ function ViewButton({
       // draws a sorted column head — and it keeps the two plates the same
       // colour, so the strip cannot shift as you move along it. `aria-pressed`
       // carries the state for a reader who cannot see a bevel.
-      className={`min-h-9 px-3.5 text-xs font-semibold capitalize ${
+      // `min-h-9` and not `min-h-11`: PRODUCT.md's recorded tap exception for a
+      // control that is one of a pair filling the row, where the target is the
+      // whole half of the bar rather than a plate you have to find.
+      className={`min-h-9 flex-1 px-3.5 text-xs font-semibold capitalize ${
         here ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110"
       }`}
     >
