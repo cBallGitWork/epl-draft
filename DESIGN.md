@@ -97,14 +97,28 @@ one of a set — the League's three views, the pool's filters. The one you are o
 is drawn PRESSED with the accent on its label, so the affordance and the state
 are one object rather than two marks.
 
-**The section rail is not one of these**, and this paragraph named it as one for
-half a day. Championship Manager draws two different objects and they appear in
-the same screenshot: the tab strip under a title bar is a filled plate with a
-pressed yellow current tab, and the RAIL is the page's own navy with each entry
-in a thin outlined box (`cm9900/12.jpg`, `19.jpg`). `shell/Rail` is outlined, and
-marks the current section with the accent on its label AND on its border —
-which is what the reference actually shows, measured in the library's own palette
-table.
+**Navigation is THREE objects, and the game draws all three in one screenshot.**
+This paragraph has now been wrong twice in the same way — first calling the rail
+a tab strip, then calling the foot row one — and both times because two things
+were blue.
+
+| Object | Class | How CM draws it | Ours |
+|---|---|---|---|
+| **Tab strip** — one of a subject's views | `cm-tab` | filled royal-blue plates, bevelled, current one pressed with a yellow label and border | `shell/TabStrip`, `league/GroupNav`, `players/Board` |
+| **Rail** — where you can go from anywhere, on a desk | — | the page's own navy, each entry in a thin outlined box | `shell/Rail` above `lg`, accent on the label AND the border |
+| **Foot row** — related screens, across the bottom | `cm-foot` | ONE filled strip, flat, a light edge along the top and a rule between plates, current marked on the label alone | `shell/Rail` below `lg`, `prem/match/[id]/MatchFoot` |
+
+`cm9900/12.jpg` and `19.jpg` carry the strip and the rail together; `24.jpg` and
+`cm0102/02.jpg` carry the foot row. **Flat is the foot row's whole distinction**:
+six bevelled plates are twelve bevel edges across a 390px phone, and a bevelled
+foot row under a bevelled tab strip is two identical objects bracketing a screen
+with nothing saying which is the section and which is the view.
+
+**And a foot row is set in mixed case at `xs`, not 9px bold capitals.** CM's own
+runs at around 13px mixed case regular. Nothing in the game is set at 9px bold
+caps, and ours put the smallest type in the app on the object a thumb lands on
+most. 13px does not fit six plates at 320 and 12px does; `tools/ui/navfit.mjs`
+holds that line.
 
 **A plate owns its ink.** Dark ink on the grey plate is 7.52:1 and `--color-ink`
 on it is 2.27; on the blue plate ink is 7.0 and `--color-muted` is 3.55 and
@@ -405,6 +419,7 @@ apart silently.
 | Plated title bar | 64 | 96 | `xl`–`3xl`, `.cm-title` | `PageHeader` |
 | A row that needs two lines | 56 | 28 | `sm` | `.cm-row` + `min-h-14` |
 | **A control** — button, select, input, tab, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
+| A foot-row plate | 44 | 56 | `xs` mixed case | `.cm-foot` |
 | **A row of a list** | **44** | **28** | `base`/`lg` name, `2xs` figures | `.cm-row` + `ROW_LINK` |
 | One stated fact in a stack | 44 | 44 | `2xs` label, `sm` value | `FACT` |
 | A column head over a table | 28 | 28 | `2xs` | `PLATE` (`h-7`) |

@@ -17,6 +17,11 @@ import { CLUB } from "../../PremNav";
 // to the round list goes with it — the rail is one tap away at every width, and
 // the browser has its own gesture.
 //
+// **`.cm-foot`, and this file is why the class exists.** It IS the object CM
+// draws across the bottom of a screen, and so is the phone's section nav; both
+// wore `cm-tab`, which is the strip UNDER a title bar. The foot row is flat with
+// one light edge along the top and a rule between plates — see `desk.css`.
+//
 // **The middle plate goes nowhere on purpose.** It is the placeholder for the
 // advanced data (Craig: *"Add a placeholder button for section where advanced
 // data goes"*) — possession, shots, corners and the action zones, which arrive
@@ -34,11 +39,11 @@ export default function MatchFoot({
   away: Club | undefined;
 }) {
   return (
-    <nav aria-label="Related screens" className="flex">
+    <nav aria-label="Related screens" className="cm-foot flex">
       <Plate club={home} />
       <span
         aria-disabled="true"
-        className="cm-tab cm-out flex flex-1 items-center justify-center px-2 text-center text-3xs font-bold uppercase lg:text-sm"
+        className="cm-out flex flex-1 items-center justify-center px-2 text-center text-xs font-medium lg:text-sm"
       >
         Match Stats
       </span>
@@ -54,7 +59,7 @@ function Plate({ club }: { club: Club | undefined }) {
   return (
     <Link
       href={`${CLUB}/${club.code}`}
-      className="cm-tab flex flex-1 items-center justify-center px-2 text-center text-3xs font-bold uppercase lg:text-sm"
+      className="flex flex-1 items-center justify-center px-2 text-center text-xs font-medium lg:text-sm"
     >
       {club.shortName} Stats
     </Link>

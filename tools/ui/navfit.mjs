@@ -26,6 +26,12 @@
 // Labels are read out of the rail rather than carried here. Its predecessor kept
 // its own list of the six and the list went stale the day "Matchday" was renamed
 // "Live" to buy the room.
+//
+// **A plate's label is its first `<span>`, not everything it says.** The Live
+// plate carries your score under its label (`shell/LiveCount`), so the anchor's
+// own `textContent` reads "Live18 v 4" — a label 44px wide measured as one 78px
+// wide, and a fit report that fails on a plate that fits. The rail's entries have
+// no span and fall back to the anchor, which is the same string they always were.
 
 import { connect, parseArgs, teamCookie } from "./cdp.mjs";
 
@@ -37,18 +43,22 @@ const MEASURE = `(function(){
   if(!rail) throw new Error("no section rail found — is this the app?");
   var links=Array.prototype.slice.call(rail.querySelectorAll('a[href]'));
   var items=links.filter(function(a){return a.textContent.trim()});
+  // Only the plates, and only the ones with a label: the Live plate's figure
+  // lives inside the same anchor, so counting spans would double that section.
   if(!items.length) throw new Error("rail has no labelled sections");
-  var cs=getComputedStyle(items[0]);
+  var cs=getComputedStyle(items[0].querySelector("span")||items[0]);
   var probe=document.createElement("span");
   probe.style.cssText="position:absolute;visibility:hidden;white-space:nowrap;font:"+cs.font
     +";letter-spacing:"+cs.letterSpacing+";text-transform:"+cs.textTransform;
   document.body.appendChild(probe);
   var rows=items.map(function(a){
     var r=a.getBoundingClientRect();
-    probe.textContent=a.textContent.trim();
-    return {t:a.textContent.trim(), box:Math.round(r.width), h:Math.round(r.height),
+    var label=a.querySelector("span")||a;
+    var lr=label.getBoundingClientRect();
+    probe.textContent=label.textContent.trim();
+    return {t:label.textContent.trim(), box:Math.round(r.width), h:Math.round(r.height),
             needs:Math.ceil(probe.getBoundingClientRect().width),
-            clipped:a.scrollWidth>Math.ceil(r.width)+1};
+            clipped:label.scrollWidth>Math.ceil(lr.width)+1};
   });
   probe.remove();
   var rr=rail.getBoundingClientRect();

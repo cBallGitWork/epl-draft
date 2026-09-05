@@ -4,9 +4,11 @@ import { LEAGUE_NAME, POLL } from "@epl/core";
 import { footballNow, groundFaces, offerLive, pollSeconds } from "./football";
 import { Suspense } from "react";
 import AutoRefresh from "./components/shell/AutoRefresh";
+import LiveCount from "./components/shell/LiveCount";
 import LiveNow from "./components/shell/LiveNow";
 import PhotoGround from "./components/football/PhotoGround";
 import Rail from "./components/shell/Rail";
+import { liveTie } from "./components/shell/liveTie";
 import "./globals.css";
 
 // **Championship Manager had two faces and so does the desk now** (Craig, 31
@@ -98,6 +100,14 @@ async function round(): Promise<{ matchday: boolean; seconds: number }> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { matchday, seconds } = await round();
 
+  // **Started, not awaited.** Two pieces of chrome draw the same live tie — the
+  // red strip on the desk and the score under the Live plate on the phone — and
+  // the shell renders above every page in the app, so awaiting Fantrax here
+  // would hold up the football, the paper and the pool alike. One promise, two
+  // consumers, each behind its own boundary: one read rather than two, and
+  // neither of them blocking.
+  const tie = liveTie();
+
   return (
     <html lang="en-GB" className={`${archivo.variable} ${archivoNarrow.variable} ${oxanium.variable} ${jost.variable}`}>
       {/* A row, not a stack: Championship Manager's screen is a rail down the
@@ -125,7 +135,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           Skip to content
         </a>
-        <Rail matchday={matchday} />
+        <Rail
+          matchday={matchday}
+          live={
+            <Suspense fallback={null}>
+              <LiveCount tie={tie} />
+            </Suspense>
+          }
+        />
         <div className="flex min-w-0 flex-1 flex-col">
           {/* One poller for the whole app. It was eight, each reading the
               interval off whatever snapshot its own page happened to hold — so a
@@ -153,7 +170,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               because a strip that flickers in as a grey bar and out again is
               worse than one that arrives a beat late. */}
           <Suspense fallback={null}>
-            <LiveNow />
+            <LiveNow tie={tie} />
           </Suspense>
           {/* The bottom padding is room and nothing else now. It used to be the
               tab bar's own height plus the phone's safe area, because the bar

@@ -147,6 +147,62 @@
   border-color: var(--color-accent);
 }
 
+/* CM's THIRD navigation object: the foot row.
+   Championship Manager draws three and we drew two with one class. The rail runs
+   down the side of a desk screen; the TAB STRIP sits under a title bar and picks
+   one of a subject's views; the FOOT ROW runs across the bottom carrying related
+   screens — `Team Stats · Player Stats · Referee Stats · Awards · History` on the
+   League Table (`cm9900/24.jpg`), `Milan Stats · Player Ratings · Latest Scores`
+   in `cm0102/02.jpg`. Both of ours wore `.cm-tab`, so two identical bevelled
+   strips with the same yellow current mark bracketed every phone screen and
+   nothing said which was the section and which was the view.
+
+   **Flat, and that is the difference.** The game bevels its tab strip and draws
+   the foot row as one continuous plate divided by rules — one light edge along
+   the top of the ROW rather than four around each plate, and a hairline between
+   the plates, which is `.cm-index`'s own idiom. Six bevelled plates were twelve
+   bevel edges in 390px.
+
+   Two wearers: `shell/Rail`'s phone nav and `prem/match/[id]/MatchFoot`. The fill
+   is on the ROW, so the phone's safe-area inset inside the nav is blue rather
+   than a strip of ground under the plates. */
+.cm-foot {
+  font-family: var(--font-chrome);
+  --cm-face: var(--color-chrome);
+  background: var(--cm-face);
+  color: var(--color-ink);
+  border-top: 2px solid color-mix(in oklch, var(--cm-face), white 55%);
+}
+
+.cm-foot > * {
+  min-height: 2.75rem;
+}
+
+/* The rule between plates, not a border around each: `inset` so it costs no box,
+   and `--color-bg` because CM divides a filled strip with the page's own dark
+   rather than with a lighter line. Not on the first, which would draw one down
+   the left edge of the screen. */
+.cm-foot > * + * {
+  box-shadow: inset 1px 0 0 var(--color-bg);
+}
+
+/* The section you are on: the label, and nothing else. The tab strip marks its
+   current plate with the accent on the label AND the border, and it can — it has
+   borders. This has one edge along the whole row, so a border mark here would
+   redraw the row. Two objects, two marks. */
+.cm-foot > [aria-current="page"] {
+  color: var(--color-accent);
+}
+
+@media (min-width: 64rem) {
+  /* The desk's chrome step, the same one `.cm-tab` takes. Only `MatchFoot` wears
+     this above `lg` — the phone nav is `lg:hidden` — and a foot row shorter than
+     the tab strip on the same screen is not the same object twice. */
+  .cm-foot > * {
+    min-height: 3.5rem;
+  }
+}
+
 /* CM's small leading index cell: a filled blue block down the left of a table
    carrying the row's number, so the eye counts down the blocks rather than the
    rows. It is what stops a dense table reading as a wall, and it is deliberately
@@ -350,7 +406,9 @@
    `sweep` read 2.36:1 at both widths. The club and squad strips have carried the
    same latent failure since they were built, and are fixed by this too. */
 .cm-tab.cm-out,
-.cm-tab.cm-out * {
+.cm-tab.cm-out *,
+.cm-foot .cm-out,
+.cm-foot .cm-out * {
   color: var(--color-faint-plate);
 }
 

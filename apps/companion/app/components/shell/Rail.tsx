@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { SECTIONS, isPaperRoute, owns } from "./sections";
 
@@ -23,23 +24,27 @@ import { SECTIONS, isPaperRoute, owns } from "./sections";
 // Live tab went from 58px to 74 the moment the rail came off the side. A foot
 // row costs 44px of HEIGHT instead, which is the axis a phone has to spare.
 //
-// **Not `cm-tab`, and that was the mistake** (Craig, 31 Aug: "the side buttons
-// still don't quite look like CM") — which is true of the RAIL and was never
-// true of the foot row. Championship Manager draws two different objects and
-// this file had borrowed the wrong one for the side. Its TAB STRIP and its FOOT
-// ROW are filled royal-blue plates with a bevel and the current one marked in
-// yellow; its RAIL is dark navy, the page's own ground, with each entry in a
-// thin outlined box and its label in white. Compare `cm9900/12.jpg` and
-// `19.jpg` — the strip and the rail are in the same screenshot and they do not
-// match. Both spellings are now drawn, each where the game draws it.
+// **Three objects, not two** (5 Sep 2026, the second correction to this note).
+// The first said the rail was not a `cm-tab` and was right; it then put the FOOT
+// ROW in one, on the strength of both being blue. They are not the same object
+// either. Championship Manager bevels the tab strip under a title bar — a set of
+// a subject's views, one of them pressed — and draws the foot row as a single
+// filled strip divided by rules, with the current entry marked on its label
+// alone. Wearing `cm-tab` for both meant two identical bevelled strips
+// bracketing every phone screen, twelve bevel edges across 390px, and nothing
+// saying which was the section and which was the view. `.cm-foot` in `desk.css`
+// is the third object; the rail is outlined navy, and all three are drawn where
+// the game draws them.
 //
 // **Six plates, and the grouping question was answered by measuring.** Craig
 // asked to "group options where appropriate", and the honest answer is that
-// nothing needed grouping away: at 390 six plates are 65px each and the widest
-// label is "GAZETTA" at 38px in 9px bold uppercase; at 320 they are 53px, which
-// still clears it. `navfit.mjs` holds that line. The grouping that WAS
-// appropriate went inside a section instead — see `sections.ts` on where the
-// news inbox lives.
+// nothing needed grouping away: at 390 six plates are 65px each and at 320 they
+// are 53px. The labels are mixed case at `text-xs` now rather than 9px bold
+// capitals — CM sets its own foot row at around 13px mixed case, and 9px bold
+// caps is a size nothing in the game is set in — so the measurement was taken
+// again: 12px medium "Gazetta" needs 44px against 49px of room at 320.
+// `navfit.mjs` holds that line. The grouping that WAS appropriate went inside a
+// section instead — see `sections.ts` on where the news inbox lives.
 //
 // Client only because the current section has to be known, and `usePathname` is
 // the only way to know it. Nothing else here is interactive.
@@ -91,7 +96,23 @@ function Steppers() {
   );
 }
 
-export default function Rail({ matchday }: { matchday: boolean }) {
+export default function Rail({
+  matchday,
+  live,
+}: {
+  matchday: boolean;
+  /** Your live score, for the Live plate to carry under its label. A server
+   *  component handed down as a node, because this file is a client one and the
+   *  number comes off Fantrax — the layout renders it and the rail places it.
+   *
+   *  Rendered on the section marked `onlyDuringGameweek`, which is the Live one.
+   *  Not matched on its href: `sections.ts` is where the app's divisions are
+   *  written down, and a component that reaches past it for a literal route is
+   *  the drift that table exists to prevent. The flag is also the honest key —
+   *  it marks the section that exists only while a round is on, and a score is
+   *  exactly the fact that exists only then. */
+  live: ReactNode;
+}) {
   const pathname = usePathname();
   // The paper is the other register and prints its own index (`gazette/Index`).
   // A rail beside it would inset a broadsheet by 64px of navy — and shift the
@@ -118,10 +139,15 @@ export default function Rail({ matchday }: { matchday: boolean }) {
           no gap, which is how CM draws a strip. */}
       <nav
         aria-label="Sections"
-        className="fixed inset-x-0 bottom-0 z-50 flex pb-[env(safe-area-inset-bottom)] lg:hidden"
+        className="cm-foot fixed inset-x-0 bottom-0 z-50 flex pb-[env(safe-area-inset-bottom)] lg:hidden"
       >
         {sections.map((section) => (
-          <Plate key={section.href} section={section} here={owns(section.routes, pathname)} />
+          <Plate
+            key={section.href}
+            section={section}
+            here={owns(section.routes, pathname)}
+            score={section.onlyDuringGameweek ? live : null}
+          />
         ))}
       </nav>
 
@@ -163,30 +189,41 @@ export default function Rail({ matchday }: { matchday: boolean }) {
 
 /** One plate of the foot row.
  *
- *  `.cm-tab` and nothing else: the plate carries the royal blue, the bevel, the
- *  chrome face and — through `.cm-tab[aria-current="page"]` — the yellow label
- *  and yellow border that mark the one you are on. A plate owns its ink
- *  (DESIGN §2), so nothing here sets a colour, which is also why the current
- *  mark could not be hand-rolled the way the rail's is: on blue,
- *  `--color-accent` is 5.32:1 and the rail's own `text-ink` would be 7.0.
+ *  The plate carries no class of its own: `.cm-foot` on the row owns the fill,
+ *  the chrome face, the rule between plates and — through
+ *  `.cm-foot > [aria-current]` — the yellow label that marks the one you are on.
+ *  A plate owns its ink (DESIGN §2), so nothing here sets a colour; on blue,
+ *  `--color-accent` is 5.32:1 and `--color-ink` 7.0.
+ *
+ *  **Mixed case at `text-xs`, which is what the game sets.** `cm9900/24.jpg`
+ *  runs its foot row at around 13px mixed case regular; ours were 9px bold
+ *  capitals, a size and a weight nothing in Championship Manager is set in, and
+ *  the smallest type anywhere on the phone was on the object a thumb lands on
+ *  most. 13px does not fit six plates at 320 and 12px does, so this is the
+ *  largest size that clears `navfit`.
  *
  *  `flex-1` with `min-w-0`, so six plates share the width evenly and a long
  *  label truncates rather than pushing the bar off the screen — the failure
- *  `navfit.mjs` exists to catch. */
+ *  `navfit.mjs` exists to catch. The label is its own `<span>` because the Live
+ *  plate carries a second line under it, and `navfit` measures the label rather
+ *  than everything the plate happens to say. */
 function Plate({
   section,
   here,
+  score,
 }: {
   section: (typeof SECTIONS)[number];
   here: boolean;
+  score: ReactNode;
 }) {
   return (
     <Link
       href={section.href}
       aria-current={here ? "page" : undefined}
-      className="cm-tab flex min-w-0 flex-1 items-center justify-center truncate px-1 text-center text-3xs font-bold uppercase"
+      className="flex min-w-0 flex-1 flex-col items-center justify-center px-0.5 text-center text-xs font-medium leading-tight"
     >
-      {section.label}
+      <span className="max-w-full truncate">{section.label}</span>
+      {score}
     </Link>
   );
 }
