@@ -1,5 +1,5 @@
 import type { MatchEvent, MatchEventKind } from "../types";
-import type { RawPlEvent, RawPlFixture, RawPlMatchStats } from "./raw";
+import type { RawPlEvent, RawPlFixture, RawPlMatchStats, RawPlSquadPlayer } from "./raw";
 
 // Pure raw → domain. No clock, no network, no environment (CODE_RULES §5).
 //
@@ -61,6 +61,77 @@ export function plPlayerCodes(
     }
   }
   return codes;
+}
+
+/** One man as a team sheet names him, joined to FPL where the bridge can. */
+export interface PlSquadMan {
+  /** FPL's season-stable player `code`, or null when the bridge could not place
+   *  him. Null is a real answer and not a failure to try: the Premier League
+   *  registers a squad before FPL lists everyone in it, which is the same lag
+   *  `scripts/pl-bridge.ts` exists for. He keeps his name either way. */
+  code: number | null;
+  name: string;
+  /** The number on his back in THIS match. Absent for a man the payload gave
+   *  none — counted rather than assumed, and drawn as an empty block. */
+  shirt: number | null;
+  captain: boolean;
+}
+
+/** A side's sheet: who started, who sat, and the shape. */
+export interface PlTeamSheet {
+  /** The Premier League's own team id, which is what `teamLists` is keyed on. */
+  teamId: number;
+  lineup: PlSquadMan[];
+  substitutes: PlSquadMan[];
+  /** `"4-2-3-1"`, or null for a fixture whose sheet carries no formation. */
+  formation: string | null;
+}
+
+/** Both sides' team sheets, home first.
+ *
+ *  **The only source of an unused substitute anywhere in this app.** FPL's
+ *  per-fixture stats carry a row for a man who accrued something and nothing for
+ *  a man who sat, so a ratings board built from them is eleven names and a bench
+ *  that does not exist. The Premier League's own fixture detail carries both
+ *  lists, and this is the read `client.ts` already had and nothing drew.
+ *
+ *  **Home first, off `teams` rather than off `teamLists`.** The two arrays are
+ *  independently ordered and only the first says which side is at home; matching
+ *  them on `teamId` is what stops a sheet being drawn under the wrong crest.
+ *  A fixture with no sheets at all — one nobody has named a side for yet —
+ *  answers null rather than two empty ones, so a caller can tell "not published"
+ *  from "eleven men and no bench". */
+export function plTeamSheets(
+  fixture: RawPlFixture,
+  optaToCode: Map<string, number>,
+): { home: PlTeamSheet; away: PlTeamSheet } | null {
+  const lists = fixture.teamLists ?? [];
+  if (lists.length === 0) return null;
+
+  const sheetFor = (teamId: number): PlTeamSheet | null => {
+    const list = lists.find((entry) => entry.teamId === teamId);
+    return list === undefined
+      ? null
+      : {
+          teamId,
+          lineup: list.lineup.map((man) => squadMan(man, optaToCode)),
+          substitutes: list.substitutes.map((man) => squadMan(man, optaToCode)),
+          formation: list.formation?.label ?? null,
+        };
+  };
+
+  const [home, away] = (fixture.teams ?? []).map((side) => sheetFor(side.team.id));
+  return home == null || away == null ? null : { home, away };
+}
+
+function squadMan(man: RawPlSquadPlayer, optaToCode: Map<string, number>): PlSquadMan {
+  const opta = man.altIds?.opta;
+  return {
+    code: (opta === undefined ? undefined : optaToCode.get(opta)) ?? null,
+    name: man.name.display,
+    shirt: man.matchShirtNumber ?? null,
+    captain: man.captain === true,
+  };
 }
 
 /** The commentary, reduced to what a fantasy league reads and joined to FPL.

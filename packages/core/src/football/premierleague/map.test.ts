@@ -9,6 +9,7 @@ import {
   plFixtureCode,
   plMatchMetrics,
   plPlayerCodes,
+  plTeamSheets,
 } from "./map";
 import type {
   RawPlFixture,
@@ -65,6 +66,56 @@ describe("plPlayerCodes", () => {
 
   it("drops a player FPL has no code for rather than inventing one", () => {
     expect(plPlayerCodes(DETAIL, new Map()).size).toBe(0);
+  });
+});
+
+describe("plTeamSheets", () => {
+  const sheets = plTeamSheets(DETAIL, optaToCode);
+
+  it("gives both sides their eleven, their bench and their shape", () => {
+    // The whole point: FPL's per-fixture stats carry a row for a man who
+    // accrued something and NOTHING for one who sat, so a ratings board built
+    // from them has no bench at all. This is the only source of an unused
+    // substitute anywhere in the app.
+    expect(sheets?.home.lineup).toHaveLength(11);
+    expect(sheets?.home.substitutes).toHaveLength(9);
+    expect(sheets?.away.lineup).toHaveLength(11);
+    expect(sheets?.away.substitutes).toHaveLength(9);
+    expect(sheets?.home.formation).toBe("4-2-3-1");
+    expect(sheets?.away.formation).toBe("3-4-2-1");
+  });
+
+  it("puts the HOME side first, off `teams` rather than off `teamLists`", () => {
+    // The two arrays are independently ordered and only the first says which
+    // side is at home. Matching them on `teamId` is what stops a sheet being
+    // drawn under the wrong crest — Liverpool are at home in this one.
+    expect(sheets?.home.teamId).toBe(10);
+    expect(sheets?.away.teamId).toBe(15);
+  });
+
+  it("carries the shirt number the payload gave and the captain's armband", () => {
+    const captains = [...(sheets?.home.lineup ?? []), ...(sheets?.away.lineup ?? [])].filter(
+      (man) => man.captain,
+    );
+    expect(captains).toHaveLength(2);
+    expect(sheets?.home.lineup.every((man) => man.shirt !== null)).toBe(true);
+  });
+
+  it("keeps a man FPL has no code for, with his name and a null code", () => {
+    // A doubt about our bridge is not a doubt about whether he sat on the bench.
+    // The Premier League registers a squad before FPL lists everyone in it,
+    // which is the lag `scripts/pl-bridge.ts` exists for.
+    const blind = plTeamSheets(DETAIL, new Map());
+    expect(blind?.home.substitutes).toHaveLength(9);
+    expect(blind?.home.substitutes.every((man) => man.code === null)).toBe(true);
+    expect(blind?.home.substitutes[0].name.length).toBeGreaterThan(0);
+  });
+
+  it("answers null for a fixture nobody has named a side for", () => {
+    // Told apart from "eleven men and no bench", which is a different fact and
+    // one a caller draws differently.
+    expect(plTeamSheets({ ...DETAIL, teamLists: [] }, optaToCode)).toBeNull();
+    expect(plTeamSheets(PLAYED.fixture, optaToCode)).toBeNull();
   });
 });
 

@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 import { PAGE_REVALIDATE, type FootballPlayer, type MatchEvent, mapRoundGoals } from "@epl/core";
-import { fetchPlRound } from "@epl/core";
+import { fetchPlFixture, fetchPlRound, plFixtureCode, plTeamSheets } from "@epl/core";
 import bridge from "../../../data/mappings/premierleague.json";
 
 // The round's goals, from the Premier League's own feed.
@@ -85,4 +85,48 @@ export async function roundGoals(
   const round = await plRound(gameweek);
   const goals = mapRoundGoals(round.content, playerCodes(players));
   return goals.sort((a, b) => (b.absolute ?? 0) - (a.absolute ?? 0));
+}
+
+/** One fixture's detail, cached per Premier League id.
+ *
+ *  Their own read, ~24 KB, and the only source of an unused substitute anywhere
+ *  in this app — see `plTeamSheets`. Cached on the same thirty seconds as
+ *  everything else here, so a match page refreshing all afternoon costs them one
+ *  request per window between every reader.
+ *
+ *  Raw rather than mapped, for `plRound`'s reason: the mapping needs the
+ *  bootstrap, which is a different cache with a different lifetime, and folding
+ *  them together would expire a team sheet whenever a price changed. */
+const plFixture = unstable_cache(
+  async (id: number) => fetchPlFixture(id),
+  ["pl-fixture"],
+  { revalidate: PAGE_REVALIDATE },
+);
+
+/** Both sides' team sheets for one of OUR fixtures, or null.
+ *
+ *  **Two hops, because the two providers number matches differently.** We hold
+ *  FPL's season-stable `code`; the Premier League wants its own id. The round
+ *  read carries both — that is what `altIds=true` buys — so the round resolves
+ *  the id and the detail read answers the sheet. Both are cached, and the round
+ *  one is already warm from the wire.
+ *
+ *  Null, never a throw, at every step that can fail: a round they will not serve,
+ *  a fixture our code does not appear in, a match nobody has named a side for.
+ *  A team sheet is something a match page adds to a board it can already draw
+ *  without one, so its absence costs a bench and never the screen.
+ */
+export async function teamSheets(
+  gameweek: number,
+  fixtureCode: number,
+  players: readonly FootballPlayer[],
+): Promise<ReturnType<typeof plTeamSheets>> {
+  try {
+    const round = await plRound(gameweek);
+    const theirs = round.content.find((fixture) => plFixtureCode(fixture) === fixtureCode);
+    if (theirs === undefined) return null;
+    return plTeamSheets(await plFixture(theirs.id), optaToCode(players));
+  } catch {
+    return null;
+  }
 }

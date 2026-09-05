@@ -354,6 +354,24 @@
   color: var(--color-faint-plate);
 }
 
+/* And the INDEX block, which is the same trap on the other blue plate and was
+   caught the same way — by `sweep`, on the day something first greyed a row that
+   had one. The match ratings board dims an unused substitute (`.cm-out` on the
+   row) and his shirt number sits in a `.cm-index`, so the grey reached a plate
+   and read **2.97:1** across six cells.
+
+   A rule of its own rather than a shared selector with the tab above, because
+   the two plates are different colours — `--color-index` is a rung deeper than
+   `--color-chrome`, which is the step CM keeps between them — and a ratio that
+   holds on one is not evidence about the other. Both take `--color-faint-plate`
+   today and both are measured; if the palette moves them apart, this is where
+   the second value goes. */
+.cm-index.cm-out,
+.cm-out .cm-index,
+.cm-out .cm-index * {
+  color: var(--color-faint-plate);
+}
+
 /* A CM screen is not one page with headings down it; it is several bevelled
    PANELS, each opening with its own title bar. That is the structural half of
    this conversion and the half a recolour cannot reach.

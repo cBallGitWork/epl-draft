@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { clubColours, inkOn, loggedPlayers, matchLine, sheetSides, subNote } from "@epl/core";
-import type { Club, IntelMatchPlayer, PlayerOwner, SheetRow } from "@epl/core";
+import type { Club, IntelMatchPlayer, PlSquadMan, PlayerOwner, SheetRow } from "@epl/core";
 import Squads from "../Squads";
 import { IndexCell } from "../../../../components/league/TableCells";
 import Skeleton from "../../../../components/shell/Skeleton";
@@ -10,6 +10,7 @@ import { PLAYER } from "../../../PremNav";
 import { BOARD, PANEL_FLUSH, ROW_RULE } from "@/app/desk";
 import MatchShell from "../Shell";
 import { matchOwners, readMatch } from "../match";
+import { teamSheets } from "../../../../commentary";
 import type { Match } from "../match";
 
 // What the afternoon was worth, both sides at once.
@@ -66,14 +67,43 @@ async function BothSquads({ match }: { match: Match }) {
 }
 
 async function Board({ match }: { match: Match }) {
-  const owners = await matchOwners(match.fixture);
+  // **The bench comes from the Premier League and can only come from there**
+  // (Craig, 5 Sep 2026: "needs to include the bench as well"). FPL's per-fixture
+  // stats carry a row for a man who accrued something and nothing at all for one
+  // who sat, so this board was eleven names a side and a bench that did not
+  // exist. `teamSheets` is two cached reads — the round to resolve their fixture
+  // id, the detail for the sheet — and answers null rather than throwing, so a
+  // provider that will not serve costs the bench and never the board.
+  const [owners, sheets] = await Promise.all([
+    matchOwners(match.fixture),
+    // A fixture FPL has not put in a gameweek has no round to resolve their id
+    // from, which is a real state — a postponement loses its `event` — and one
+    // the bench simply does not exist for.
+    match.fixture.gameweek === null
+      ? null
+      : teamSheets(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
+  ]);
   const { home, away } = sheetSides(match.sheet ?? { fixtureId: 0, lines: [] }, match.snapshot);
   const logged = loggedPlayers(match.logged);
 
   return (
     <div className="grid grid-cols-2 gap-2">
-      <Side club={match.home} rows={home} logged={logged} owners={owners} match={match} />
-      <Side club={match.away} rows={away} logged={logged} owners={owners} match={match} />
+      <Side
+        club={match.home}
+        rows={home}
+        bench={sheets?.home.substitutes}
+        logged={logged}
+        owners={owners}
+        match={match}
+      />
+      <Side
+        club={match.away}
+        rows={away}
+        bench={sheets?.away.substitutes}
+        logged={logged}
+        owners={owners}
+        match={match}
+      />
     </div>
   );
 }
@@ -81,12 +111,17 @@ async function Board({ match }: { match: Match }) {
 function Side({
   club,
   rows,
+  bench,
   logged,
   owners,
   match,
 }: {
   club: Club | undefined;
   rows: readonly SheetRow[];
+  /** Everyone the Premier League named on this side's bench. Undefined when
+   *  their sheet is not published — told apart from an empty one, which is a
+   *  side that genuinely named nobody. */
+  bench: readonly PlSquadMan[] | undefined;
   logged: Map<number, IntelMatchPlayer>;
   owners: Map<number, PlayerOwner>;
   match: Match;
@@ -100,6 +135,21 @@ function Side({
       matchLine(logged.get(b.player.code)?.position ?? null);
     return line !== 0 ? line : points(match, b) - points(match, a);
   });
+
+  // Everyone on the bench who never got on. Matched on FPL's `code`, which is
+  // what both sides of this join speak — the sheet through the Opta bridge, the
+  // board through the bootstrap.
+  const appeared = new Set(rows.map((row) => row.player.code));
+  const unused = (bench ?? []).filter((man) => man.code === null || !appeared.has(man.code));
+
+  // **FPL's short name where we have it, the sheet's where we do not.** The
+  // Premier League gives a man his full name — `Michele Di Gregorio` — and the
+  // eleven above him is FPL's web form, `Barnes`. One column, two naming
+  // conventions, and the long one wraps to two lines beside rows that do not.
+  // The join is already made, so this costs a lookup and nothing else.
+  const named = new Map(match.snapshot.players.map((player) => [player.code, player.name]));
+  const shortName = (man: PlSquadMan) =>
+    (man.code === null ? undefined : named.get(man.code)) ?? man.name;
 
   return (
     <section className={PANEL_FLUSH}>
@@ -124,6 +174,35 @@ function Side({
           ))}
         </tbody>
       </table>
+      {/* **The men who did not get on**, under a rule and their own caption —
+          which is where `cm9900/16.jpg` puts them and how it tells them apart
+          from the eleven: same columns, greyed, below a line.
+
+          Only those who never appeared. A substitute who came on has a row
+          above with minutes and a figure against it, and printing him twice
+          would be the same man in two states on one board. `rows` is FPL's list
+          of everyone who accrued something, so it is exactly the set to
+          subtract. */}
+      {unused.length === 0 ? null : (
+        <>
+          <p className="border-t border-line px-1.5 pt-1 text-3xs font-bold uppercase text-faint">
+            Substitutes
+          </p>
+          <table className={BOARD}>
+            <tbody>
+              {unused.map((man) => (
+                <tr key={`${man.name}-${man.shirt ?? ""}`} className={`${ROW_RULE} cm-out`}>
+                  <IndexCell>{man.shirt ?? ""}</IndexCell>
+                  <td className="px-1.5 py-1 text-sm">{shortName(man)}</td>
+                  {/* No figure. He did not play, and a nought here would be a
+                      claim about an afternoon he had no part in (DESIGN §7). */}
+                  <td className="numeric w-8 px-1.5 text-right text-sm">&mdash;</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
       <p className="mt-auto border-t border-line px-1.5 py-1 text-3xs text-faint">
         Points · FPL&rsquo;s own
       </p>

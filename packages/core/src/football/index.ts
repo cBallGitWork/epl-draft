@@ -46,7 +46,9 @@ export {
   plFixtureCode,
   plMatchMetrics,
   plPlayerCodes,
+  plTeamSheets,
 } from "./premierleague/map";
+export type { PlSquadMan, PlTeamSheet } from "./premierleague/map";
 export type {
   RawPlEvent,
   RawPlFixture,
