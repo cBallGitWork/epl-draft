@@ -19,10 +19,12 @@ import { plFixtureCode } from "./map";
 //
 // · `status` — `"U"` upcoming, `"L"` live, `"C"` complete. 10/10.
 // · `phase` — `"0"` upcoming, `"1"` first half, `"F"` full time; `raw.ts`
-//   documents `"2"` for the second half. Seen: `"0"` on 2, `"1"` on 1, `"F"` on
-//   7. **No fixture was at half time during the count**, so the phase letter for
-//   the interval itself is unverified — which is why the rule below is "past the
-//   first half" rather than a match on one letter.
+//   documents `"2"` for the second half. Seen in that count: `"0"` on 2, `"1"` on
+//   1, `"F"` on 7 — no fixture was at half time, so the interval's own letter was
+//   unverified. **It is `"H"`, seen live at 17:26Z the same evening** (Hull v
+//   Aston Villa, `status=L phase=H`), and the wire drew its `HT` line off it. The
+//   rule below stays "past the first half" rather than a match on that letter,
+//   which is what made it right before anyone had seen one.
 // · `clock` — `{secs, label}`, and on a COMPLETE fixture it is the final
 //   whistle: `5760 / "90+6'00"`. 8/10 (absent on the two unstarted).
 // · **`halfTimeScore` is absent on all ten.** It is on the DETAIL read and not

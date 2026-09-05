@@ -148,9 +148,10 @@ export interface RawPlGround {
  *
  *  `status` is `"U"` upcoming, `"L"` live, `"C"` complete — 10/10 on GW3, counted
  *  5 Sep 2026. `phase` is `"0"` upcoming, `"1"` first half and `"F"` full time in
- *  that same count (2, 1 and 7 of the ten), with `"2"` the second half. **No
- *  fixture was at half time during the count**, so the letter for the interval
- *  itself is unverified and nothing should match on one. The two disagree only in
+ *  that same count (2, 1 and 7 of the ten), with `"2"` the second half and `"H"`
+ *  the interval — that last one seen live at 17:26Z the same evening, after the
+ *  count found no fixture at half time. Nothing matches on a single letter
+ *  anyway; `breaks.ts` asks whether a fixture has LEFT the first half. The two disagree only in
  *  the sense that a status letter is about the fixture and a phase is about the
  *  ball. */
 export interface RawPlFixture {
