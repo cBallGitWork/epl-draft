@@ -142,6 +142,58 @@ the response would have found it; it came from a URL.
 (`{"playerId": "<scorerId>"}`, not `scorerId`), but throttles at ~27 calls even
 batched into one POST — fine for one player's page, unusable for a board.
 
+### There is no days-back window, and the payload advertises one — probed 5 Sep 2026
+
+Fantrax's own players screen draws a **Days Back** control reading `1 7 14 30
+60`, and the payload backs it up twice over: `goBackDays: [1,7,14,30,60]` at the
+top level and in `displayedLists`, with `displayedSeasonOrProjection.showGoBackDays:
+true`. A "form over the last month" column was planned on it. **It cannot be
+driven, and the control is not what it looks like.**
+
+Ten parameter spellings were tried first — `daysBack`, `numDaysBack`, `days`,
+`lastNDays`, `timeframeTypeCode`, `statsRange`, `dateRange`, `timeframeNumDays`,
+`statsPeriod`, `timeStartTypeDays`, at 7 and 30, on the dummy and rehearsal
+leagues. Every one answered 200 with a byte-identical board.
+
+**`goBackDays` is the field's real name and it is inert.** Paired with
+`timeframeTypeCode: "BY_DATE"` the board DOES change and the echo becomes
+`SEASON_926_BY_DATE` — which reads like success and is not. Asked at 1, 7, 14,
+30 and 60 days the five boards are **identical to each other**, and the season
+object comes back spanning `2026-08-21 → 2027-05-31` at every one of them: the
+whole season, the same range YTD reports. So `BY_DATE` is a different *scoring
+basis*, not a window — `displayedTimeStartType` reads `PERIOD_ONLY`, and 2 of
+583 rows on the dummy league and 11 of 583 on the real one come back **higher
+than the same man's season total**, which no subset of a season can be.
+
+The lesson is the one this section already carries in another place: asking is
+not knowing, and neither is a changed answer. A published enumeration is a
+description of a UI control, not a promise about a parameter — the same shape of
+mistake as `hideStatsFilter` above and `squad_number` in CLAUDE.md.
+
+**Consequence for `/players`:** the form column is the sister repo's SofaScore
+rating and FPL minutes, not a Fantrax `FPts (30d)`. Recorded so it is not
+re-planned.
+
+### The player deep link is `/player/{scorerId}`, read out of their bundle
+
+Probed 5 Sep 2026, because the plan called for a link out to Fantrax and a
+guessed provider URL is forbidden.
+
+**The status code cannot answer this.** Fantrax is a single-page app:
+`/player/semi-ajayi/03ksl`, `/player/03ksl` and
+`/player/not-a-real-person/zzzzz` all answer **200** with the same shell, the
+same `<title>Fantrax - The Home of Fantasy Sports</title>`, no `og:title` for
+the man and no canonical link. A 200 here means the server served its shell.
+
+So the route was read out of Fantrax's own production bundle — the technique
+that settled `premierleague25` for the portraits. `main-5QAFZCGR.js` declares
+`player/:playerId`, one segment. **`scorerId` alone is the route**; the
+`urlName` slug that rides on every `statsTable` row (`semi-ajayi`,
+`bruno-miguel-borges-fernandes`) is decoration in their own anchors and not part
+of the path.
+
+`scorerId` is our `fantraxId`, so the link needs nothing we do not already hold.
+
 **A third league, to see the whole vocabulary.** Craig, 1 Sep 2026: "i could
 make another fantrax league that opens up all scoring categories so we can get
 all the data it has". `SEASON_STATS` publishes what THIS league scores, so a
@@ -1534,7 +1586,7 @@ anonymous callers get `ACTIVE`, which is what scores anyway. Per-player *points*
 (`statsMap`, `statsMap2`) are `{}` in every section, so what they will hold is
 unknown.
 
-### `getPlayerStats` is public — and its default view is a projection
+### `getPlayerStats` is public — and its default view ~~is a projection~~ WAS
 
 The players page: 708 players, 20 per page, 36 pages. Rows carry `scorerId` (our
 `fantraxId`), the player's news `icons`, and **which of our teams owns him**
@@ -1542,10 +1594,17 @@ The players page: 708 players, 20 per page, 36 pages. Rows carry `scorerId` (our
 
 Two traps, both load-bearing:
 
-- **The default is `PROJECTION_0_926_SEASON`.** Haaland's "179" is Fantrax's
-  projection for a season that has not started, not anything anyone has scored.
-  The season must be read from `displayedSeasonOrProjection`, never assumed —
-  the same currentOrRecentSeason trap `getPlayerProfile` set, in a new place.
+- ~~**The default is `PROJECTION_0_926_SEASON`.**~~ **It flipped, and the read
+  was built to survive it.** Re-probed 5 Sep 2026 across all three leagues: the
+  default is now `SEASON_926_YEAR_TO_DATE`, "2026-27 - YTD", real played
+  numbers. The 13 Aug note left this open — *"whether it flips to real numbers
+  once games exist is unknown and resolves itself on 21 Aug"* — and it did.
+  Nothing needed rebuilding, which is the point worth keeping: `season()` in
+  `fantrax/stats.ts` reads `timeframeTypeCode` off the answer and sets
+  `projected` from it, so the heading followed the payload without anyone
+  touching it. **The rule that survives is the rule, not the value it had:** the
+  season must be read from `displayedSeasonOrProjection`, never assumed — the
+  same currentOrRecentSeason trap `getPlayerProfile` set, in a new place.
   **Corrected 13 Aug (evening):** this note originally said the real views "must
   be asked for by code". They cannot be asked for here at all — see below.
 - **The default column set is seven wide** — Rk, Status, Opp, FPts, FP/G, Ros,

@@ -52,8 +52,14 @@ and no panel, and printed its directory straight onto the match photograph: 40 o
 ## Provenance, which is load-bearing here
 
 The heading says which season the numbers are **and whether they were played or
-predicted**. Fantrax defaults these reads to a projection, and a column headed
-FPts that silently switched between the two would be the confident wrong answer.
+predicted**, and a column headed FPts that silently switched between the two
+would be the confident wrong answer.
+
+*Fantrax used to default this read to a projection and now defaults it to
+`SEASON_926_YEAR_TO_DATE` — re-probed 5 Sep 2026, PLATFORM_NOTES carries it. The
+heading changed by itself, which is the whole reason it is read off the payload
+rather than written here: `season()` takes `timeframeTypeCode` from the answer.
+So this section is unchanged in what it requires and only its example moved.*
 
 ## States
 
