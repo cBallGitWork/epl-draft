@@ -648,6 +648,37 @@ paragraph ends "only yours takes the accent", which sharpens it.
 
 ## Recorded rule exceptions
 
+### `packages/core/src/config.ts` (recorded 5 Sep 2026)
+
+Past §4's 300-line hard ceiling, and it is the one file where §3 outranks §4:
+**"zero magic values in logic or UI — all live in one config module"**. Splitting
+it means a second config module, and the day there are two of those is the day a
+value is added to the wrong one. About 40% of the file is docblock, and every
+constant in it carries the count or the probe it came from — which is the point
+of the file rather than padding.
+
+**The condition for revisiting**: a second RESPONSIBILITY arriving, not growth. A
+provider adapter's own constants, a build-time table, anything that is not "a
+value this app must not repeat".
+
+Recorded on the commit that added `FANTRAX_TIMEZONE`, which is what CODE_RULES
+asks for and what nobody had done for this file.
+
+### Files over the ceiling with NO entry (counted 5 Sep 2026)
+
+Neither recorded nor split, so both of §4's ways out are open and this is the
+honest state of it:
+
+`scripts/smoke.ts` · `apps/companion/app/paper.css` · `scripts/edition/assemble.ts` ·
+`packages/core/src/football/premierleague/map.ts` · `apps/companion/app/desk.ts` ·
+`apps/companion/app/prem/match/[id]/players/page.tsx` ·
+`apps/companion/app/(paper)/page.tsx` · `packages/core/src/football/types.ts`
+
+The plan for each is in the fresh-eyes review's Workstream E — most are splits
+rather than exceptions, and `map.ts` and `assemble.ts` are split first as part of
+the Premier League feed work because two new functions land in them. Listed here
+so the entry above cannot be read as "the exceptions are complete".
+
 ### `desk.css` and `tokens.css` (recorded 3 Sep 2026)
 
 Both are past CODE_RULES §4's 300-line hard ceiling, and `line_ceiling.sh`
