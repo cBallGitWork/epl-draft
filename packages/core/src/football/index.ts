@@ -50,6 +50,8 @@ export {
   plTeamSheets,
 } from "./premierleague/map";
 export type { PlCommentaryLine, PlSquadMan, PlTeamSheet } from "./premierleague/map";
+export { mapRoundBreaks } from "./premierleague/breaks";
+export type { RoundBreak } from "./premierleague/breaks";
 export type {
   RawPlEvent,
   RawPlFixture,

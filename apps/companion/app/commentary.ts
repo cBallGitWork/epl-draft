@@ -1,5 +1,12 @@
 import { unstable_cache } from "next/cache";
-import { PAGE_REVALIDATE, type FootballPlayer, type MatchEvent, mapRoundGoals } from "@epl/core";
+import {
+  PAGE_REVALIDATE,
+  type FootballPlayer,
+  type MatchEvent,
+  type RoundBreak,
+  mapRoundBreaks,
+  mapRoundGoals,
+} from "@epl/core";
 import type { PlCommentaryLine } from "@epl/core";
 import {
   fetchPlFixture,
@@ -93,6 +100,20 @@ export async function roundGoals(
   const round = await plRound(gameweek);
   const goals = mapRoundGoals(round.content, playerCodes(players));
   return goals.sort((a, b) => (b.absolute ?? 0) - (a.absolute ?? 0));
+}
+
+/** Every interval reached in the round — half time and full time, oldest first.
+ *
+ *  Craig, 5 Sep 2026: *"Wire should also include half and full time."* Off the
+ *  SAME cached round read the goals come from, so the wire's whole cost is still
+ *  one upstream request for ten matches. The per-fixture textstream carries
+ *  Opta's own `end 1` and `end 14` lines and would cost ten.
+ *
+ *  Empty rather than a throw, for `roundGoals`' reason: the caller draws the
+ *  round either way, and a wire missing its full-time lines is a wire with fewer
+ *  lines rather than a claim that nothing has finished. */
+export async function roundBreaks(gameweek: number): Promise<RoundBreak[]> {
+  return mapRoundBreaks((await plRound(gameweek)).content);
 }
 
 /** One fixture's detail, cached per Premier League id.

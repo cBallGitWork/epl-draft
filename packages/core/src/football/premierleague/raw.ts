@@ -125,6 +125,11 @@ export interface RawPlGoal {
   /** Absent when nobody was credited with the assist. */
   assistId?: number;
   clock?: RawPlClock;
+  /** Which half it was scored in — `"1"` or `"2"`. The feed's own answer, and
+   *  better than reading the clock: a goal at 45+3 is 2,824 seconds, past the
+   *  nominal forty-five, and is still a first-half goal. Counted 5 Sep 2026 on
+   *  GW3, present on every goal in the round. */
+  phase?: string;
   /** `"G"` a goal, `"O"` an own goal, `"P"` a penalty. */
   type: string;
 }
@@ -141,9 +146,13 @@ export interface RawPlGround {
 
 /** A fixture, as either the fixture list or the textstream's own header gives it.
  *
- *  `status` is `"U"` upcoming, `"L"` live, `"C"` complete. `phase` is `"1"`,
- *  `"2"` or `"F"`. The two disagree only in the sense that a status letter is
- *  about the fixture and a phase is about the ball. */
+ *  `status` is `"U"` upcoming, `"L"` live, `"C"` complete — 10/10 on GW3, counted
+ *  5 Sep 2026. `phase` is `"0"` upcoming, `"1"` first half and `"F"` full time in
+ *  that same count (2, 1 and 7 of the ten), with `"2"` the second half. **No
+ *  fixture was at half time during the count**, so the letter for the interval
+ *  itself is unverified and nothing should match on one. The two disagree only in
+ *  the sense that a status letter is about the fixture and a phase is about the
+ *  ball. */
 export interface RawPlFixture {
   id: number;
   status: string;
@@ -151,6 +160,11 @@ export interface RawPlFixture {
   teams: RawPlTeamScore[];
   kickoff?: RawPlLabel;
   clock?: RawPlClock;
+  /** **Absent on this read.** 0 of 10 on GW3, counted 5 Sep 2026, the seven
+   *  completed fixtures included — it is published on the DETAIL read and not on
+   *  the round one. Kept in the type because the two share it; a caller wanting
+   *  the interval score off the round read must derive it or ask for the
+   *  fixture. */
   halfTimeScore?: RawPlScore;
   ground?: RawPlGround;
   /** Present once the gate figure is published, which is after the match rather

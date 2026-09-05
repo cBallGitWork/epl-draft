@@ -2,14 +2,25 @@ import Image from "next/image";
 import type { MatchEventKind } from "@epl/core";
 import Section from "../components/shell/Section";
 import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
-import type { WireLine } from "./wireLines";
+import { isBreak, type WireBreak, type WireLine, type WireRow } from "./wireLines";
 
 // The vidiprinter that knows whose everybody is.
 //
-// Championship Manager's own table body — an index block down the left carrying
-// the minute, the name in WHITE beside it (`cm9900/24.jpg`, and the reference
-// README's correction of 3 Sep: a name is never cyan) — with one column the game
-// never had, because the game was not a draft league: the manager who holds him.
+// **Sky's own, and the shape is deliberate** (Craig, 5 Sep 2026, with a still of
+// Soccer Saturday's teleprinter: *"the wire should mock Gillette Soccer Saturday
+// a little like this. Have the minute in brackets rather than the blue tab."*)
+// Sky runs `GOAL   LEEDS 1 BRISTOL CITY 0   LUKE AYLING (16)` — the word, the
+// match, and the man with his minute after his name. Ours keeps the word and the
+// man and spends the middle of the row on the thing no score centre in the world
+// prints: the manager who holds him.
+//
+// The minute left the blue index block for those brackets. The block was CM's
+// own leading cell and it was the loudest object on the panel — a royal-blue
+// plate down the left of every row, restating a number that belongs to the name
+// beside it. A wire is read down the NAMES.
+//
+// The name is in WHITE (`cm9900/24.jpg`, and the reference README's correction of
+// 3 Sep: a name is never cyan).
 //
 // **One row per EVENT, and both men on it** (Craig, 5 Sep 2026: "for the wire,
 // maybe a goal and assist should be on same line"). It was one row per man, so
@@ -36,8 +47,13 @@ import type { WireLine } from "./wireLines";
 // first build wrapped each row in a `Link` with `tabIndex={-1}` — which is a
 // control hidden from the keyboard, the worse of both answers.
 
-/** The word in the event slot. Opta's own vocabulary, said in CM's register. */
-const WORD: Record<MatchEventKind, string> = {
+/** The word in the event slot. Opta's own vocabulary, said in CM's register,
+ *  plus the two a match says about itself.
+ *
+ *  `HT` and `FT` rather than "Half time" and "Full time": the slot is 48px, which
+ *  is what "Sent off" needs, and the two-letter forms are what every scoreboard
+ *  in the game has printed since before Sky had a teleprinter. */
+const WORD: Record<MatchEventKind | WireBreak["kind"], string> = {
   goal: "Goal",
   "penalty-goal": "Pen",
   "own-goal": "OG",
@@ -45,6 +61,8 @@ const WORD: Record<MatchEventKind, string> = {
   "yellow-card": "Booked",
   "red-card": "Sent off",
   substitution: "Sub",
+  "half-time": "HT",
+  "full-time": "FT",
 };
 
 /** A red card is the negative slot; a yellow one is NOT the accent slot.
@@ -63,7 +81,7 @@ export default function Wire({
   lines,
   limit,
 }: {
-  lines: readonly WireLine[];
+  lines: readonly WireRow[];
   limit: number;
 }) {
   if (lines.length === 0) return null;
@@ -71,9 +89,9 @@ export default function Wire({
   return (
     <Section title="The wire">
       <ul className="cm-rows">
-        {lines.slice(0, limit).map((line) => (
-          <Row key={line.key} line={line} />
-        ))}
+        {lines.slice(0, limit).map((row) =>
+          isBreak(row) ? <BreakRow key={row.key} row={row} /> : <Row key={row.key} line={row} />,
+        )}
       </ul>
       {/* **The unmatched count is not printed** (Craig, 5 Sep 2026: "remove 1 man
           not matched to a player"). It was here so our own failure to place a
@@ -95,21 +113,17 @@ const SECOND_WORD: Partial<Record<MatchEventKind, string>> = {
   substitution: "Off",
 };
 
+/** The event word's own column, at one width so the names below it line up
+ *  whatever the row says. Wide enough for "Sent off", which is the longest. */
+const WORD_SLOT = "flex w-12 shrink-0 items-center";
+
 function Row({ line }: { line: WireLine }) {
   return (
     <li className="flex min-h-11 items-stretch gap-2 lg:min-h-7">
-      {/* CM's index block, carrying the minute rather than a row number, and
-          self-stretched so it is the height of its row — in the reference the
-          blue runs edge to edge down the table's left, never floating in it. */}
-      <span className="cm-index numeric flex w-9 shrink-0 items-center justify-center text-2xs font-bold">
-        {line.minute}&prime;
-      </span>
-      <span
-        className={`flex w-12 shrink-0 items-center ${SMALL_CAPS} ${TONE[line.kind] ?? "text-ink"}`}
-      >
+      <span className={`${WORD_SLOT} ${SMALL_CAPS} ${TONE[line.kind] ?? "text-ink"}`}>
         {WORD[line.kind]}
       </span>
-      <Man man={line.man} club={line.club} />
+      <Man man={line.man} club={line.club} minute={line.minute} />
       {/* Held open rather than dropped, so a panel of goals keeps its columns
           whether or not each one was assisted. An unassisted goal is a fact and
           the empty half is what says so. */}
@@ -130,6 +144,7 @@ function Man({
   man,
   club,
   label,
+  minute,
 }: {
   man: WireLine["man"];
   /** The club, on the first man only: the second is in the same match by
@@ -137,6 +152,11 @@ function Man({
   club?: WireLine["club"];
   /** What he did, when it is not the event's own word. */
   label?: string;
+  /** The clock, in brackets after his name, which is Sky's own arrangement
+   *  (`LUKE AYLING (16)`). On the first man only — the assist happened at the
+   *  same minute as the goal by construction, and saying it twice is the thing
+   *  one row per event was written to stop. */
+  minute?: string;
 }) {
   return (
     <div className="flex min-w-0 flex-1 flex-col justify-center">
@@ -145,6 +165,9 @@ function Man({
         <span className={`min-w-0 truncate text-ink ${ROW_NAME}`}>
           {man?.player.name ?? "\u2014"}
         </span>
+        {minute === undefined ? null : (
+          <span className="numeric shrink-0 text-2xs text-muted">({minute}&prime;)</span>
+        )}
         {club === null || club === undefined ? null : (
           <>
             {/* **The crest, not just the letters** (Craig, 5 Sep 2026: "add team
@@ -170,5 +193,49 @@ function Man({
         {man?.owner?.teamName ?? <span className="text-faint">&mdash;</span>}
       </span>
     </div>
+  );
+}
+
+/** A match reaching half time or full time — Sky's own `HALF TIME  LEEDS 1
+ *  BRISTOL CITY 0`, in the word slot and the two columns the events use.
+ *
+ *  **No manager under it, and that is what makes it read as a different kind of
+ *  line** without a second treatment: an event row is two names over two
+ *  managers, and this is one scoreline across the middle. It is the same 44px
+ *  row, because a wire whose rows are two heights stops scanning as a wire.
+ *
+ *  The score is a figure standing alone beside a name, which is the amber slot
+ *  (DESIGN §3) — but this line has two of them and they are being compared, so
+ *  they are ink like every other scoreline in the app, and only the dash for a
+ *  score the provider withheld is quiet. */
+function BreakRow({ row }: { row: WireBreak }) {
+  return (
+    <li className="flex min-h-11 items-center gap-2 lg:min-h-7">
+      {/* **Not the accent**, which means "yours · selected · active" on this very
+          panel and would be a second meaning for the one mark five screens read.
+          Not `--color-live` either: that means a match in PLAY and this is a
+          match that has stopped. Quieter than an event word, which is the honest
+          rank — a break is a state rather than something that happened to
+          somebody, and the scoreline beside it is the news. */}
+      <span className={`${WORD_SLOT} ${SMALL_CAPS} text-muted`}>{WORD[row.kind]}</span>
+      <span className="flex min-w-0 flex-1 items-center gap-2">
+        {row.sides.map((side, at) => (
+          <span key={side.short} className="flex min-w-0 items-center gap-1.5">
+            {at === 0 ? null : <span className="text-2xs text-faint">v</span>}
+            <Image
+              src={side.crest}
+              alt=""
+              width={18}
+              height={18}
+              className="h-3.5 w-3.5 shrink-0 object-contain"
+            />
+            <span className={`${SMALL_CAPS} shrink-0 text-muted`}>{side.short}</span>
+            <span className="numeric shrink-0 text-sm font-bold text-ink">
+              {side.score ?? <span className="text-faint">&mdash;</span>}
+            </span>
+          </span>
+        ))}
+      </span>
+    </li>
   );
 }

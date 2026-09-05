@@ -34,7 +34,35 @@ football under it.
    like if you only ever picture a Saturday. GW1 ran Friday night to Monday
    night and the strip read `15:00` above `14:00` — right, because one was
    Saturday and the other Sunday, and unreadable, because it said neither.
-3. **`GameweekView`** — the round's fixtures (see [gameweek.md](gameweek.md)),
+3. **`Wire`** — Sky's teleprinter, with the ownership on it. Craig, 5 Sep 2026,
+   with a still of Soccer Saturday: *"the wire should mock Gillette Soccer
+   Saturday a little like this. Have the minute in brackets rather than the blue
+   tab. Wire should also include half and full time."* Sky runs `GOAL   LEEDS 1
+   BRISTOL CITY 0   LUKE AYLING (16)`; ours keeps the word and the man, puts the
+   minute in brackets after his name, and spends the middle of the row on the
+   sentence no score centre in the world prints — the manager who holds him.
+
+   **The minute left CM's blue index block for those brackets.** The block was a
+   royal-blue plate down the left of every row restating a number that belongs to
+   the name beside it, and it was the loudest object on the panel. A wire is read
+   down the names.
+
+   **`HT` and `FT` rows carry the scoreline**, interleaved by wall clock like
+   everything else, because `HALF TIME` between the goals is what tells a reader
+   the 2-1 he is looking at is not going to move. They are `text-muted` and
+   deliberately neither the accent (which means "yours" on this very panel) nor
+   `--color-live` (which means a match in PLAY, and these have stopped).
+
+   Both come off the SAME cached round read as the goals — one upstream request
+   for ten matches. The full-time score is the fixture's own; **the half-time
+   score is derived**, because the Premier League publishes `halfTimeScore` on its
+   per-fixture detail read and not on the round one (0 of 10, counted 5 Sep 2026),
+   and the alternative is ten more requests on the screen sixteen phones poll
+   every thirty seconds. It is counted off the goals already on the wire, by the
+   football minute — a goal at `45+3` parses to 45 — with an own goal credited to
+   the side its scorer does not play for. `matchday/wireLines.test.ts` is that
+   arithmetic.
+4. **`GameweekView`** — the round's fixtures (see [gameweek.md](gameweek.md)),
    now with **your players marked and every scorer tagged with the squad holding
    him**. The two halves of the page finally share both grammars: the scoreline,
    and the accent mark that means "yours".

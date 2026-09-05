@@ -5,6 +5,8 @@ import type {
   MatchEvent,
   MatchEventKind,
   PlayerOwner,
+  RoundBreak,
+  Fixture,
 } from "@epl/core";
 import { crestUrl, playerByCode } from "@epl/core";
 
@@ -14,6 +16,32 @@ import { crestUrl, playerByCode } from "@epl/core";
 // It lives at the app edge and not in core because it crosses the two layers —
 // the football layer knows the goal, the league layer knows the roster, and
 // neither may import the other (CLAUDE.md). A selector here is where they meet.
+
+/** A row of the wire: something that happened to a MAN, or a match reaching an
+ *  interval. The two are one list because the wire is chronological and Sky's own
+ *  vidiprinter interleaves them — `HALF TIME` between the goals is what tells a
+ *  reader the 2-1 he is looking at is not going to move for fifteen minutes.
+ *
+ *  Discriminated on `kind`, whose two vocabularies are disjoint: `MatchEventKind`
+ *  is Opta's and never says "half-time". */
+export type WireRow = WireLine | WireBreak;
+
+/** A match at half time or full time, with the score as it stood. */
+export interface WireBreak {
+  key: string;
+  kind: RoundBreak["kind"];
+  /** Home first, as a scoreline is read. Absent for a fixture the snapshot does
+   *  not carry, in which case the break is dropped rather than drawn nameless. */
+  sides: readonly WireSide[];
+  at: number | null;
+}
+
+export interface WireSide {
+  short: string;
+  crest: string;
+  /** Null is a score the provider did not give, and prints as a dash. */
+  score: number | null;
+}
 
 /** One event, and the one or two men it paid.
  *
@@ -45,6 +73,10 @@ export interface WireLine {
   /** The second man the event named — the assister, or the one going off. Null
    *  for an unassisted goal and for every event that names one man. */
   second: WireMan | null;
+  /** Kick-off plus elapsed, which is the only field that orders ten matches
+   *  against each other — a 12:30 match and a 17:30 one both start their own
+   *  clock at nought. Null for a match the feed dated and did not time. */
+  at: number | null;
 }
 
 /** A man on the wire, and who holds him. */
@@ -56,7 +88,13 @@ export interface WireMan {
 }
 
 export interface Wire {
-  lines: WireLine[];
+  lines: WireRow[];
+}
+
+/** Which of the two a row is. The `kind` vocabularies are disjoint, so this is a
+ *  narrowing and not a guess. */
+export function isBreak(row: WireRow): row is WireBreak {
+  return row.kind === "half-time" || row.kind === "full-time";
 }
 
 /* **The `unresolved` count is gone**, and it is a deleted PIPELINE rather than a
@@ -91,29 +129,31 @@ function clubOf(club: Club | undefined) {
   return club === undefined ? null : { short: club.shortName, crest: crestUrl(club) };
 }
 
+/** The last minute of the first half, as a football minute. A goal at 45+3
+ *  prints "45+3" and parses to 45, which is what makes the parse the right
+ *  reading: the label is the football clock and the feed's own seconds restart
+ *  at 2,700 for the second half. */
+const FIRST_HALF_LAST_MINUTE = 45;
+
 export function wireLines(
   events: readonly MatchEvent[],
+  breaks: readonly RoundBreak[],
   snapshot: FootballSnapshot,
   owners: Map<number, PlayerOwner> | undefined,
   mine: string | null,
 ): Wire {
   const players = playerByCode(snapshot);
   const clubs = new Map<number, Club>(snapshot.clubs.map((c) => [c.id, c]));
-
-  const lines: WireLine[] = [];
+  const fixtures = new Map<number, Fixture>(snapshot.fixtures.map((f) => [f.code, f]));
 
   /** One slot of an event, joined to the man and to whoever holds him.
    *
-   *  Three answers, and the middle one is the one that has to stay separate:
-   *  `undefined` is a slot the feed left empty — an unassisted goal, which is a
-   *  fact and not a gap; `null` is a man the feed named and the bridge could not
-   *  place, which is OUR failure and is counted. Only the third is a man. */
+   *  Two answers now that nothing counts them: a slot the feed left empty — an
+   *  unassisted goal, which is a fact and not a gap — and a man it named that the
+   *  bridge could not place both come through as null and both print the dash.
+   *  The comment above `Wire` records what that cost. */
   const manAt = (event: MatchEvent, slot: number): WireMan | null => {
     const code = event.players[slot];
-    // Three answers collapse to two now that nothing counts them: a slot the
-    // feed left empty (an unassisted goal, which is a fact) and a man it named
-    // that the bridge could not place both come through as null and both print
-    // the dash. The comment above `Wire` records what that cost.
     if (code === undefined || code === null) return null;
     const player = players.get(code) ?? null;
     if (player === null) return null;
@@ -121,19 +161,88 @@ export function wireLines(
     return { player, owner, mine: owner !== null && owner.teamId === mine };
   };
 
-  for (const event of events) {
+  const lines: WireRow[] = events.map((event) => {
     const man = manAt(event, 0);
-    const second = SECOND[event.kind] === true ? manAt(event, 1) : null;
-
-    lines.push({
+    return {
       key: String(event.id),
       minute: event.minute,
       kind: event.kind,
       club: man === null ? clubOf(undefined) : clubOf(clubs.get(man.player.clubId)),
       man,
-      second,
+      second: SECOND[event.kind] === true ? manAt(event, 1) : null,
+      at: event.absolute,
+    };
+  });
+
+  for (const brk of breaks) {
+    const fixture = fixtures.get(brk.fixtureCode);
+    // A fixture the snapshot does not carry is one we cannot name either side
+    // of, and `FULL TIME — v —` is furniture rather than news.
+    if (fixture === undefined) continue;
+    const home = clubs.get(fixture.homeClubId);
+    const away = clubs.get(fixture.awayClubId);
+    if (home === undefined || away === undefined) continue;
+
+    const score =
+      brk.kind === "full-time"
+        ? { home: fixture.homeScore, away: fixture.awayScore }
+        : halfTimeScore(events, brk.fixtureCode, fixture, players);
+
+    lines.push({
+      key: `${brk.kind}:${brk.fixtureCode}`,
+      kind: brk.kind,
+      sides: [
+        { short: home.shortName, crest: crestUrl(home), score: score.home },
+        { short: away.shortName, crest: crestUrl(away), score: score.away },
+      ],
+      at: brk.absolute,
     });
   }
 
-  return { lines };
+  // Newest first, which is what the panel is for. A row whose match the feed
+  // dated and did not time has no place in that order and sorts last rather than
+  // into 1970 — `roundGoals` makes the same choice for the same reason.
+  return { lines: lines.sort((a, b) => (b.at ?? 0) - (a.at ?? 0)) };
+}
+
+/** The score as it stood at the interval, counted off the goals already on the
+ *  wire.
+ *
+ *  **Derived here because the round read does not publish it** — `halfTimeScore`
+ *  is on the Premier League's per-fixture detail and absent from the round, 0 of
+ *  10 counted 5 Sep 2026 — and the alternative is ten more requests on the screen
+ *  sixteen phones poll every thirty seconds. Every goal the count needs is
+ *  already in this function's hands.
+ *
+ *  An OWN GOAL is credited to the man who put it in his own net, so it scores for
+ *  the side he does not play for. That is the one line here that is not a tally.
+ *
+ *  A goal whose scorer the bridge could not place is not counted, and the line is
+ *  drawn anyway — which is the honest failure mode: a half-time score short by a
+ *  goal is visible beside the full-time one, where a suppressed line would say
+ *  the half never ended. `npm run pl-bridge` is what takes the unplaced count
+ *  back to nought. */
+function halfTimeScore(
+  events: readonly MatchEvent[],
+  fixtureCode: number,
+  fixture: Fixture,
+  players: Map<number, FootballPlayer>,
+): { home: number; away: number } {
+  let home = 0;
+  let away = 0;
+
+  for (const event of events) {
+    if (event.fixtureCode !== fixtureCode) continue;
+    if (Number.parseInt(event.minute, 10) > FIRST_HALF_LAST_MINUTE) continue;
+    const code = event.players[0];
+    if (code === undefined || code === null) continue;
+    const club = players.get(code)?.clubId;
+    if (club === undefined) continue;
+
+    const scoredForHome = (club === fixture.homeClubId) !== (event.kind === "own-goal");
+    if (scoredForHome) home += 1;
+    else away += 1;
+  }
+
+  return { home, away };
 }

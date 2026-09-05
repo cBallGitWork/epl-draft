@@ -27,7 +27,7 @@ import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
 
 import { readerTeamId } from "../squads";
-import { roundGoals } from "../commentary";
+import { roundBreaks, roundGoals } from "../commentary";
 import { wireLines } from "./wireLines";
 import Wire from "./Wire";
 import { WIRE_LINES } from "@epl/core";
@@ -73,12 +73,15 @@ export default async function MatchdayPage() {
   // The round's goals, joined to the men who own them. One upstream request for
   // ten matches, and the one question on this page neither Fantrax nor FPL can
   // answer: not just who scored, but whose he is.
-  const [goals, mine, squads] = await Promise.all([
+  // The breaks come off the SAME cached round read as the goals, so half time
+  // and full time cost nothing upstream.
+  const [goals, breaks, mine, squads] = await Promise.all([
     roundGoals(snapshot.gameweek, snapshot.players),
+    roundBreaks(snapshot.gameweek),
     readerTeamId(),
     getLeagueSquads(),
   ]);
-  const wire = wireLines(goals, snapshot, league.owners, mine);
+  const wire = wireLines(goals, breaks, snapshot, league.owners, mine);
 
   // **The day being played, not the whole round** — Craig, 5 Sep 2026: *"Maybe
   // the live tab only shows matches from TODAY, to keep the space?"* A gameweek
