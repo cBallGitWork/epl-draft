@@ -25,6 +25,7 @@ export default function Result({
   pairing,
   points,
   badges,
+  places,
   mine,
   gameweek,
 }: {
@@ -36,6 +37,10 @@ export default function Result({
   /** Each side's settled total for the period, by team id. */
   points: Map<string, number | null>;
   badges: Map<string, string>;
+  /** Each team's place in the table, for CM's blue block. Today's standing, not
+   *  the one it held on the week of the result — the table is a running order
+   *  and this app holds no history of it. */
+  places: Map<string, number>;
   /** The reader's own team, or null when nobody is signed in. */
   mine: string | null;
 }) {
@@ -47,8 +52,8 @@ export default function Result({
 
   return (
     <ScoreRow
-      home={side(pairing.home, badges, mine, leads(away, home))}
-      away={side(pairing.away, badges, mine, leads(home, away))}
+      home={side(pairing.home, badges, places, mine, leads(away, home))}
+      away={side(pairing.away, badges, places, mine, leads(home, away))}
       score={{ home: figure(home), away: figure(away) }}
       href={`/league/matchups/${opensOn}?gw=${gameweek}`}
     />
@@ -61,10 +66,17 @@ function figure(value: number | null) {
   return value === null ? <span className="text-faint">&mdash;</span> : value;
 }
 
-function side(team: LeagueTeam, badges: Map<string, string>, mine: string | null, lost: boolean) {
+function side(
+  team: LeagueTeam,
+  badges: Map<string, string>,
+  places: Map<string, number>,
+  mine: string | null,
+  lost: boolean,
+) {
   return {
     name: team.name,
     badge: badges.get(team.teamId),
+    place: places.get(team.teamId) ?? null,
     mine: team.teamId === mine,
     lost,
   };

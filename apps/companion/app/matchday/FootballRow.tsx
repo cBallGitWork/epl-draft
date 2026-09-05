@@ -1,4 +1,4 @@
-import { type Club, type Fixture, type FootballPlayer, crestUrl } from "@epl/core";
+import { type Club, type Fixture, crestUrl } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
 import { londonTime } from "../londonTime";
 import { SMALL_CAPS } from "@/app/desk";
@@ -20,18 +20,15 @@ import { SMALL_CAPS } from "@/app/desk";
 export default function FootballRow({
   fixture,
   clubs,
-  yours,
+  places,
   now,
 }: {
   fixture: Fixture;
   clubs: Map<number, Club>;
-  /** His players in this match — printed as a COUNT and never as a tint.
-   *
-   *  `MatchList` found this and the first build of this file ignored it: with
-   *  fifteen players across ten fixtures, eight of the ten rows come out accented
-   *  and every row marked is no row marked. The number is also what ranks one
-   *  match above another, which a wash cannot do. */
-  yours?: FootballPlayer[];
+  /** Where each club stands in the real table, by club id — CM's blue block
+   *  (`cm9900/24.jpg`). Empty while no football has been played, which is a
+   *  table with no ranking in it rather than twenty sides in 1st. */
+  places: Map<number, number>;
   /** Whether the snapshot is fresh enough to speak in the present tense. */
   now: boolean;
 }) {
@@ -42,50 +39,52 @@ export default function FootballRow({
 
   return (
     <ScoreRow
-      home={club(home)}
-      away={club(away)}
+      home={club(home, places)}
+      away={club(away, places)}
       score={played ? { home: spelled(fixture.homeScore), away: spelled(fixture.awayScore) } : null}
       pending={fixture.kickoff === null ? "TBC" : londonTime(fixture.kickoff)}
       // **Always a node, even when it is empty**, which is what holds the tail
-      // column open across the panel: a match with no clock and none of your men
-      // in it still has to leave the space, or its two names take 48px the rows
-      // around it do not have and every kickoff time lands somewhere different.
+      // column open across the panel: a match with no clock still has to leave
+      // the space, or its two names take 48px the rows around it do not have and
+      // every kickoff time lands somewhere different.
+      //
+      // **The `N yours` count is gone** (Craig, 5 Sep 2026: "Remove 'you' from
+      // all rows where it appears"). It was the only thing in this slot that was
+      // not about the match, and the wire directly above says the same thing
+      // better: it names WHICH of your men did something rather than counting
+      // how many of them are on the pitch. Nothing upstream changed —
+      // `involvement.marks()` still feeds the wire and "Your afternoon" — so
+      // what went is a label, not a read. It also paid for the position block:
+      // 48px back, which is what the two names needed once the row grew a
+      // fourth column.
       tail={
-        <>
-          {/* The state, in the vidiprinter's own place. `--color-live` is a
-              match in play and nothing else (DESIGN §3), so it is the one thing
-              on the row that moves and the only thing wearing that red. */}
-          {live ? (
-            <span className={`${SMALL_CAPS} numeric text-live`}>{fixture.minutes}&prime;</span>
-          ) : fixture.status === "finished" ? (
-            <span className={`${SMALL_CAPS} text-faint`}>FT</span>
-          ) : null}
-          {/* Counted rather than tinted, which is `MatchList`'s own finding: a
-              bare wash saturates once fifteen players span ten fixtures, and
-              every row marked is no row marked.
-              **And the word stays with the number.** A lone accent figure makes
-              COLOUR the sole carrier of "yours", which PRODUCT.md forbids — it
-              was hidden below `lg` for 34px of width and read as a mystery 1 on
-              the one screen this app is for. The football row's two names are
-              three letters each under a thumb, so the width was there. */}
-          {yours && yours.length > 0 ? (
-            <span className="text-3xs font-bold uppercase text-accent lg:text-2xs">
-              <span className="numeric">{yours.length}</span> yours
-            </span>
-          ) : null}
-        </>
+        /* The state, in the vidiprinter's own place. `--color-live` is a match
+           in play and nothing else (DESIGN §3), so it is the one thing on the
+           row that moves and the only thing wearing that red. */
+        live ? (
+          <span className={`${SMALL_CAPS} numeric text-live`}>{fixture.minutes}&prime;</span>
+        ) : fixture.status === "finished" ? (
+          <span className={`${SMALL_CAPS} text-faint`}>FT</span>
+        ) : (
+          <></>
+        )
       }
       href={`/prem/match/${fixture.id}`}
     />
   );
 }
 
-/** One side of a football match. A club FPL has not named is the em dash and no
- *  crest — a fixture we cannot read one end of is still a fixture. */
-function club(entry: Club | undefined) {
+/** One side of a football match. A club FPL has not named is the em dash, no
+ *  crest and no place — a fixture we cannot read one end of is still a fixture. */
+function club(entry: Club | undefined, places: Map<number, number>) {
   return entry === undefined
     ? { name: "—" }
-    : { name: entry.name, short: entry.shortName, badge: crestUrl(entry) };
+    : {
+        name: entry.name,
+        short: entry.shortName,
+        badge: crestUrl(entry),
+        place: places.get(entry.id) ?? null,
+      };
 }
 
 /** How many a side has to put past you before the vidiprinter says it twice.

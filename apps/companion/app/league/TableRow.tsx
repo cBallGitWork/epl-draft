@@ -23,15 +23,19 @@ import { FIGURE, ROW_RULE, TONE } from "@/app/desk";
 // Each colour is its slot (DESIGN §3) and nothing carries two jobs:
 //
 //   rank      faint          depth, never meaning — CM's quiet leading index cell
-//   team      info           a person, and this is the link that made the token
+//   team      ink            white, and ACCENT for the one you manage
 //   Pld W D L ink            the record — all four alike, as `24.jpg` sets them
 //   For/Ag    mid            fantasy points, and a different KIND of number
 //   Pts       ink, bold      the total the table is ordered by, CM's bold white
 //   form      up/bad/faint   direction, the only thing those two are for
 //
-// **Yours is said three ways and none of them is the name's colour.** The accent
-// edge, the weight, and the chip. Recolouring your own name would take it out of
-// the person slot on the one row you are looking for.
+// **Yours is said two ways: the accent edge and the accent NAME.** It was three
+// — edge, weight and a `YOU` chip — and it was four when the name's colour was
+// counted, which this docblock used to deny on the reasoning that cyan meant "a
+// person". The palette no longer says that (`docs/ui/reference/README.md`, 3 Sep:
+// A NAME IS WHITE), the reference sets your own club in yellow and every other
+// in white, and Craig removed the chip on 5 Sep. Edge plus ink, and nothing
+// else.
 
 export default function TableRow({
   row,
@@ -77,13 +81,15 @@ export default function TableRow({
         >
           <TeamBadge team={{ teamId: row.teamId, name: row.teamName }} url={badge} />
           <span className="min-w-0 truncate">{row.teamName}</span>
-          {/* Labelled, not just accented — the edge says nothing to anyone who
-              cannot see it. */}
-          {mine ? (
-            <span className="shrink-0 bg-accent px-1 text-3xs font-bold uppercase text-bg">
-              You
-            </span>
-          ) : null}
+          {/* **No YOU chip** (Craig, 5 Sep 2026: "Remove 'you' from all rows
+              where it appears. Just use yellow text for the team"). It was here
+              on the argument that a label survives a reader who cannot see the
+              accent — which is right, and which the ACCENT EDGE on the index
+              cell beside it already satisfies: that is a shape and not a hue, it
+              is `mine.ts`'s own mark, and PRODUCT.md asks for colour to be
+              paired with "a label, shape or position". So the pairing survives
+              and the third statement of it does not. `cm9900/24.jpg` prints
+              Everton in yellow and nothing else. */}
         </Link>
       </td>
 
@@ -131,7 +137,7 @@ const DASH = "—";
  *  **Colour is the direction slot, not a third palette.** A win is green, a loss
  *  is red and a draw is quiet — which is what those two tokens are for and the
  *  only thing they are for. Not the accent yellow, which is spoken for on this
- *  very row by the edge and the chip. */
+ *  very row by the edge and the name. */
 function Form({ run }: { run: readonly FormGame[] }) {
   if (run.length === 0) return <span className="text-faint">{DASH}</span>;
 

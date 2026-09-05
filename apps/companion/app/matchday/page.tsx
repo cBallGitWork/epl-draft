@@ -8,6 +8,7 @@ import {
   clubById,
   duringGameweek,
   fixturesInOrder,
+  leagueTable as realTable,
   leagueTies,
   nextRound,
   periodPairings,
@@ -51,6 +52,10 @@ export const revalidate = 30;
  *  already where this page touches the world. */
 async function matchday(): Promise<{
   snapshot: FootballSnapshot;
+  /** The whole season's fixtures. Returned rather than dropped, because the real
+   *  table is built from them and re-fetching would be a second cache lookup for
+   *  a value already in hand. */
+  season: Fixture[];
   during: boolean;
   up: { gameweek: number; kickoff: string } | null;
 }> {
@@ -59,11 +64,11 @@ async function matchday(): Promise<{
   // the read that sees the rest of the calendar, and it is already warm.
   const [snapshot, season] = await Promise.all([footballNow(), seasonFixtures()]);
   const at = new Date().toISOString();
-  return { snapshot, during: duringGameweek(snapshot, at), up: nextRound(season, at) };
+  return { snapshot, season, during: duringGameweek(snapshot, at), up: nextRound(season, at) };
 }
 
 export default async function MatchdayPage() {
-  const { snapshot, during, up } = await matchday();
+  const { snapshot, season, during, up } = await matchday();
   const league = await marks(snapshot.fixtures);
 
   // The round's goals, joined to the men who own them. One upstream request for
@@ -86,6 +91,20 @@ export default async function MatchdayPage() {
   // reader who opens this on a Tuesday, or before FPL has dated the round, must
   // not be shown an empty panel — `duringGameweek` is a four-day window and this
   // filter is a one-day one, so the two disagree for most of the week.
+  // **Both tables, for CM's blue block** (Craig, 5 Sep 2026: "The blue box in CM
+  // is for league position… Put current league position there instead"). Two
+  // competitions on one screen means two rankings, and neither may stand in for
+  // the other: a manager's place is Fantrax's own rank off the standings, and a
+  // club's is its place in the real table, which is the ARRAY ORDER of
+  // `leagueTable` — a `TableRow` carries no rank of its own precisely because
+  // the list IS the ranking (`football/table.ts`).
+  //
+  // Costs nothing new: `seasonFixtures` is already fetched by `matchday()` above
+  // and `leagueTable` is pure.
+  const clubPlaces = new Map(
+    realTable(season, snapshot.clubs).map((row, at) => [row.clubId, at + 1]),
+  );
+
   const round = fixturesInOrder(snapshot);
   const day = londonDayKey(new Date().toISOString());
   const onToday = round.filter((f) => f.kickoff !== null && londonDayKey(f.kickoff) === day);
@@ -117,6 +136,12 @@ export default async function MatchdayPage() {
   // Fantrax's pairings, and the knockouts `league/competitions.ts` declares.
   // Both reads behind this are already warm — the board's badges and the table
   // come off one cached `getStandings`.
+  // Fantrax's own rank, by team id. Empty when the scoreboard would not answer,
+  // which draws empty blocks rather than a made-up ordering.
+  const places = new Map(
+    "unavailable" in table ? [] : table.map((row) => [row.teamId, row.rank] as const),
+  );
+
   const ties: CompetitionTie[] =
     drafted?.info != null && period !== null
       ? [
@@ -196,10 +221,11 @@ export default async function MatchdayPage() {
             ties={ties}
             scores={scores}
             badges={badges}
+            places={places}
+            clubPlaces={clubPlaces}
             mine={mine}
             fixtures={today}
             clubs={clubById(snapshot)}
-            involved={league.mine}
             now={speaksForNow(snapshot)}
             gameweek={snapshot.gameweek}
           />

@@ -3,7 +3,6 @@ import {
   type Club,
   type CompetitionTie,
   type Fixture,
-  type FootballPlayer,
   type LiveTeamScore,
   groupTies,
 } from "@epl/core";
@@ -52,12 +51,17 @@ export function DraftRow({
   tie,
   scores,
   badges,
+  places,
   mine,
   gameweek,
 }: {
   tie: CompetitionTie;
   scores: Map<string, LiveTeamScore>;
   badges: Map<string, string>;
+  /** Where each manager stands in our own table, by team id — CM's blue block
+   *  (`cm9900/24.jpg`, whose index cell is `1st`, `2nd`, `3rd`). Fantrax's own
+   *  rank and never a sort of ours. */
+  places: Map<string, number>;
   mine: string | null;
   gameweek: number;
 }) {
@@ -75,8 +79,8 @@ export function DraftRow({
 
   return (
     <ScoreRow
-      home={side(tie, "home", badges, mine)}
-      away={side(tie, "away", badges, mine)}
+      home={side(tie, "home", badges, places, mine)}
+      away={side(tie, "away", badges, places, mine)}
       // A fantasy total is a number Fantrax either has or has not; there is no
       // "not kicked off yet" for it, and `ScoreFigure`'s dash is the answer when
       // it is missing. So the score is never null here and no `pending` is
@@ -97,20 +101,24 @@ export function Scores({
   ties,
   scores,
   badges,
+  places,
+  clubPlaces,
   mine,
   fixtures,
   clubs,
-  involved,
   now,
   gameweek,
 }: {
   ties: readonly CompetitionTie[];
   scores: Map<string, LiveTeamScore>;
   badges: Map<string, string>;
+  /** Our league's table, by team id. */
+  places: Map<string, number>;
+  /** The real one, by club id. */
+  clubPlaces: Map<number, number>;
   mine: string | null;
   fixtures: readonly Fixture[];
   clubs: Map<number, Club>;
-  involved?: Map<number, FootballPlayer[]>;
   now: boolean;
   gameweek: number;
 }) {
@@ -135,6 +143,7 @@ export function Scores({
                   tie={tie}
                   scores={scores}
                   badges={badges}
+                  places={places}
                   mine={mine}
                   gameweek={gameweek}
                 />
@@ -151,7 +160,7 @@ export function Scores({
         <ul className="cm-rows">
           {fixtures.map((f) => (
             <li key={f.id}>
-              <FootballRow fixture={f} clubs={clubs} yours={involved?.get(f.id)} now={now} />
+              <FootballRow fixture={f} clubs={clubs} places={clubPlaces} now={now} />
             </li>
           ))}
         </ul>
@@ -160,17 +169,21 @@ export function Scores({
   );
 }
 
-/** One side of a draft tie, in the row's own vocabulary. */
+/** One side of a draft tie, in the row's own vocabulary. A seat nobody has been
+ *  drawn into yet has no badge and no place — which is a fact about a cup draw
+ *  and not a gap. */
 function side(
   tie: CompetitionTie,
   at: "home" | "away",
   badges: Map<string, string>,
+  places: Map<string, number>,
   mine: string | null,
 ) {
   const seat = tie[at];
   return {
     name: seat.label,
     badge: seat.team === null ? undefined : badges.get(seat.team.teamId),
+    place: seat.team === null ? null : (places.get(seat.team.teamId) ?? null),
     mine: seat.team !== null && seat.team.teamId === mine,
   };
 }

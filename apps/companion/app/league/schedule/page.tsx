@@ -104,6 +104,10 @@ export default async function SchedulePage() {
 
   const [mine, crests] = await Promise.all([myTeamId(info.teams), teamBadges()]);
 
+  // Fantrax's own rank, for CM's blue block. Off the table this page already
+  // reads to seed the knockout brackets, so it costs nothing.
+  const places = new Map(table.map((row) => [row.teamId, row.rank] as const));
+
   // **Only the rounds that have started, and there is at most one.** Fantrax
   // answers for any period asked, so a page showing the whole season forward
   // would otherwise spend thirty-odd requests on totals that are all nought.
@@ -147,6 +151,7 @@ export default async function SchedulePage() {
             ties={tiesIn(round)}
             points={points.get(round.period) ?? EMPTY}
             badges={crests}
+            places={places}
             mine={mine}
           />
         ))}
@@ -161,12 +166,14 @@ function Round({
   ties,
   points,
   badges,
+  places,
   mine,
 }: {
   round: ScheduleRound;
   ties: CompetitionTie[];
   points: Map<string, number | null>;
   badges: Map<string, string>;
+  places: Map<string, number>;
   mine: string | null;
 }) {
   if (ties.length === 0) return null;
@@ -192,7 +199,14 @@ function Round({
           <ul className="cm-rows flex flex-col">
             {group.ties.map((tie, at) => (
               <li key={`${tie.home.label}-${tie.away.label}-${at}`}>
-                <Tie tie={tie} points={points} badges={badges} round={round} mine={mine} />
+                <Tie
+                  tie={tie}
+                  points={points}
+                  badges={badges}
+                  places={places}
+                  round={round}
+                  mine={mine}
+                />
               </li>
             ))}
           </ul>

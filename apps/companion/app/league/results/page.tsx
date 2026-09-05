@@ -49,7 +49,13 @@ export default async function ResultsPage() {
     );
   }
 
-  const { info, rounds } = schedule;
+  const { info, rounds, table } = schedule;
+
+  // Fantrax's own rank, for CM's blue block. TODAY's standing rather than the
+  // one each side held on the week of the result — the table is a running order
+  // and this app keeps no history of it, so a row says where a manager is now
+  // and not where he was in September.
+  const places = new Map(table.map((row) => [row.teamId, row.rank] as const));
 
   // Every team's total for a period, by period. Built once rather than filtered
   // per round: thirty-eight rounds each scanning the whole season is the shape
@@ -105,6 +111,7 @@ export default async function ResultsPage() {
                   points={byPeriod.get(round.period) ?? EMPTY}
                   gameweek={round.gameweek}
                   badges={badges}
+                  places={places}
                   mine={mine}
                 />
               ))}

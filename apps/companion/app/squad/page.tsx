@@ -153,14 +153,12 @@ function Squad({
           </span>
         ) : null}
       </span>
-      {/* A label, not just an accent: the border alone carries no meaning to
-          anyone who cannot see it. On `bg-bg` because the row it sits on is
-          raised, and a chip the colour of its ground is not a chip. */}
-      {lead ? (
-        <span className=" bg-bg px-1.5 py-0.5 text-2xs font-bold uppercase text-accent">
-          You
-        </span>
-      ) : null}
+      {/* **No YOU chip** (Craig, 5 Sep 2026: "Remove 'you' from all rows where it
+          appears. Just use yellow text for the team"). It was here because a
+          border alone carries nothing to a reader who cannot see it — and the
+          pairing PRODUCT.md asks for is still there without the chip: the accent
+          EDGE is a position, and this row is sorted to the top of the list,
+          which is a second one. */}
       <span className="numeric shrink-0 text-sm text-muted">{team.players.length}</span>
       {/* Never silently short. A squad we cannot fully identify says so here
           rather than rendering fourteen of fifteen on the pitch. */}

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ordinal } from "@epl/core";
 
 // Championship Manager's results row, and the app now has one spelling of it.
 //
@@ -30,13 +31,25 @@ import type { ReactNode } from "react";
 // is a tap target and its rows are 26px with no floor at all, which `desk.md`
 // makes binding by name.
 //
-// **What the index block holds is the badge, and that is a departure recorded
-// rather than smuggled.** CM's block carries a nation — a flag-like chip that
-// says which side this is before you have read the name. Ours is the club crest
-// or the manager's own Fantrax badge, which is the same job in this league's
-// vocabulary and is what Craig asked for in the same message (*"for all rows
-// with a prem team, include logo. draft - use the team logo from fantrax"*). The
-// block keeps CM's blue, so a column of them still reads as the spine.
+// **The index block holds the side's LEAGUE POSITION** (Craig, 5 Sep 2026: *"The
+// blue box in CM is for league position… Put current league position there
+// instead. Keep the logos in the row."*). It held the badge for half a day, on a
+// reading of the Evening Results shot where the block carries a NATION — which
+// it does, and which is a fact about the team rather than a ranking. `24.jpg`
+// is the one to follow: CM's league table runs `1st` `2nd` `3rd` down the same
+// blue block, and a position is the thing that block means everywhere else in
+// the game and everywhere else in this app (`league/TableRow`, `prem/ClubRow`,
+// the wire's minute).
+//
+// So the badge moved one column right and sits beside the name, which is where
+// every other list in this app already draws it. Both are on the row and each is
+// in the slot it belongs in — which is also what pays for the extra width: see
+// `GRID`.
+//
+// **The position is the caller's to supply and may be absent.** A cup side
+// nobody has been drawn into has none, and neither does a club in a table with
+// no football played in it yet. Absent draws an empty block rather than a nought
+// — the block is the spine and it holds its place (DESIGN §7).
 
 /** One side of a scoreline. */
 export interface ScoreSide {
@@ -46,9 +59,14 @@ export interface ScoreSide {
    *  desktop - full team name". Falls back to the full name when a side has no
    *  short form, which is every Fantrax manager. */
   short?: string;
-  /** The badge for the index block. Undefined draws the block empty rather than
-   *  a stand-in picture: a wrong image is worse than none. */
+  /** His badge, beside the name. Undefined draws nothing rather than a stand-in
+   *  picture: a wrong image is worse than none, because only one of the two looks
+   *  like an answer. */
   badge?: string;
+  /** Where he stands in his own competition — the ordinal that goes in CM's blue
+   *  block. Null or undefined for a side with no position: a placeholder in a
+   *  cup draw, or a club in a table nobody has played a game in. */
+  place?: number | null;
   /** The reader's own team — the accent, and the only thing it means here. */
   mine?: boolean;
   /** Settled and BEHIND, which is the one this has to be. The reference prints
@@ -59,12 +77,14 @@ export interface ScoreSide {
   lost?: boolean;
 }
 
-/** The badge inside the index block: 18px, at both widths.
+/** The badge beside the name: 16px under a thumb, 18 on the desk.
  *
- *  The block around it is 32px under a thumb and 36 on the desk, which is what a
- *  390 screen has to spare after two names, two totals and a tail — measured,
- *  not chosen. CM's own block is 5.4% of its canvas and ours is 8%, because a
- *  Fantrax total is `61.4` where a football score is one digit. */
+ *  Smaller than `TeamBadge`'s 26/20, and deliberately: this row now carries a
+ *  position block AND a badge AND two names AND two totals inside 282px on a
+ *  390 phone, so every fixed thing on it is at the smallest size it can be read
+ *  at. `_PX` is what `next/image` is told to fetch and is the LARGER of the two,
+ *  on `TeamBadge`'s own rule — a source fetched smaller than it is drawn is a
+ *  soft badge nobody thinks to blame the CSS for. */
 const BADGE_PX = 18;
 
 export default function ScoreRow({
@@ -131,7 +151,7 @@ export default function ScoreRow({
           the panel landed at a slightly different x, which is the one thing a
           column of scorelines exists to avoid. */}
       {tail === undefined ? null : (
-        <span className="flex w-12 shrink-0 items-center justify-end gap-1 text-right lg:w-20 lg:px-1">
+        <span className="flex w-7 shrink-0 items-center justify-end gap-1 text-right lg:w-20 lg:px-1">
           {tail}
         </span>
       )}
@@ -162,13 +182,19 @@ export default function ScoreRow({
  *  vertical, which is the whole reason the eye can run down a results screen.
  *
  *  **What a 390 phone actually has, measured rather than budgeted.** The grid is
- *  282px inside the panel; the two blocks, the score and the tail take 168 of it
- *  and the gaps 10, which leaves 52px for each name. That is why the phone
- *  prints a club's three letters and the desk prints Nottingham Forest — Craig's
- *  own "full desktop - full team name", and the arithmetic that makes it the
- *  only available answer rather than a preference. A Fantrax manager has no
- *  short form, so his name truncates; the badge beside it is what identifies him
- *  at that width, which is the job CM's nation block does in the reference. */
+ *  282px inside the panel and the gaps take 10 of it. A row with a tail spends
+ *  156 more on two blocks, the score and the tail, leaving **58px a name**; one
+ *  without spends 128 and leaves 73. Take the badge and its gap off the first and
+ *  a club has about 40px of text — which is why the phone prints three letters
+ *  and the desk prints Nottingham Forest. That is Craig's own "full desktop -
+ *  full team name", and the arithmetic is what makes it the only available answer
+ *  rather than a preference.
+ *
+ *  A Fantrax manager has no short form, so his name truncates on the phone; the
+ *  badge beside it and the position block before it are what identify him at that
+ *  width. **The tail is 28px and not 48**, which it was until the ownership count
+ *  came off it: all that is left in there is a clock or `FT`, and the 20px went
+ *  to the two names. */
 /** Five tracks when the row has no tail, six when it has.
  *
  *  **Written out twice rather than composed**, and `desk.ts` records the reason
@@ -195,16 +221,12 @@ function Block({ side }: { side: ScoreSide }) {
     // y=290, six rows with no gap at all. This gives the padding back to the
     // block and to nothing else, so the row keeps the height the density table
     // sets and the blue meets.
-    <span className="cm-index flex w-8 shrink-0 items-center justify-center lg:-my-0.5 lg:w-9">
-      {side.badge === undefined ? null : (
-        <Image
-          src={side.badge}
-          alt=""
-          width={BADGE_PX}
-          height={BADGE_PX}
-          className="h-[1.125rem] w-[1.125rem] object-contain"
-        />
-      )}
+    <span className="cm-index numeric flex w-8 shrink-0 items-center justify-center text-3xs font-bold lg:-my-0.5 lg:w-9">
+      {/* An ORDINAL, which is what `cm9900/24.jpg` prints — `1st`, `2nd` — and
+          not a bare number. Empty rather than a dash for a side with no place:
+          the block is furniture that holds the column, and a dash inside it
+          would read as a figure. */}
+      {side.place === null || side.place === undefined ? "" : ordinal(side.place)}
     </span>
   );
 }
@@ -221,10 +243,23 @@ function Block({ side }: { side: ScoreSide }) {
 function Name({ side }: { side: ScoreSide }) {
   return (
     <span
-      className={`flex min-w-0 items-center font-chrome text-sm font-bold lg:text-base ${
+      className={`flex min-w-0 items-center gap-1 font-chrome text-sm font-bold lg:gap-1.5 lg:text-base ${
         side.mine === true ? "text-accent" : side.lost === true ? "text-muted" : "text-ink"
       }`}
     >
+      {/* **The logo stays in the row** (Craig, 5 Sep 2026), beside the name
+          rather than inside the blue block — which is where every other list in
+          this app already draws it, and where it has to be now that the block
+          carries a position. */}
+      {side.badge === undefined ? null : (
+        <Image
+          src={side.badge}
+          alt=""
+          width={BADGE_PX}
+          height={BADGE_PX}
+          className="h-3.5 w-3.5 shrink-0 object-contain lg:h-[1.125rem] lg:w-[1.125rem]"
+        />
+      )}
       <span className="truncate lg:hidden">{side.short ?? side.name}</span>
       <span className="hidden truncate lg:inline">{side.name}</span>
     </span>

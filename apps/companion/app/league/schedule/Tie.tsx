@@ -37,6 +37,7 @@ export default function Tie({
   tie,
   points,
   badges,
+  places,
   round,
   mine,
 }: {
@@ -45,6 +46,8 @@ export default function Tie({
   points: Map<string, number | null>;
   /** Each team's badge, by team id. */
   badges: Map<string, string>;
+  /** Each team's place in the table, for CM's blue block. Fantrax's own rank. */
+  places: Map<string, number>;
   round: ScheduleRound;
   mine: string | null;
 }) {
@@ -69,8 +72,8 @@ export default function Tie({
 
   return (
     <ScoreRow
-      home={side(tie.home, badges, mine, settled && leads(away, home))}
-      away={side(tie.away, badges, mine, settled && leads(home, away))}
+      home={side(tie.home, badges, places, mine, settled && leads(away, home))}
+      away={side(tie.away, badges, places, mine, settled && leads(home, away))}
       score={round.started ? { home: figure(home), away: figure(away) } : null}
       pending={<span className={LABEL}>v</span>}
       href={opens && opensOn !== undefined ? `/league/matchups/${opensOn}?gw=${round.gameweek}` : undefined}
@@ -88,10 +91,17 @@ function figure(value: number | null) {
   return value === null ? <span className="text-faint">&mdash;</span> : value;
 }
 
-function side(seat: TieSide, badges: Map<string, string>, mine: string | null, lost: boolean) {
+function side(
+  seat: TieSide,
+  badges: Map<string, string>,
+  places: Map<string, number>,
+  mine: string | null,
+  lost: boolean,
+) {
   return {
     name: seat.label,
     badge: seat.team === null ? undefined : badges.get(seat.team.teamId),
+    place: seat.team === null ? null : (places.get(seat.team.teamId) ?? null),
     mine: seat.team !== null && seat.team.teamId === mine,
     lost,
   };
