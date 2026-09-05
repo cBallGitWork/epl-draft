@@ -311,7 +311,19 @@ step declared. §8 records why 3xs is the last step rather than a floor.
 
 **Every step carries its own line box**, declared beside it in `tokens.css` as
 `calc(box / size)`: 9/12 · 11/14 · 12/16 · 14/18 · 16/22 · 18/24 · 21/26 ·
-24/28 · 30/34 · 34/38 · 45/46. Until 31 Aug 2026 none of them did, and the two
+24/28 · 30/34 · 34/38 · 45/46.
+
+**The three smallest steps are one pixel bigger from `lg`** — 10/13 · 12/15 ·
+13/17 — and that is the one place in this scale with a breakpoint. Craig, 5 Sep
+2026: *"on desktop, the fonts on rows are quite small and hard to read at
+times."* The density table below relaxes a repeating ROW from 44px to 28 above
+`lg`, on CM's own proportions, and nothing in that argument said the TYPE inside
+the row had to come down with it: the row got denser and the label stayed at the
+phone's 11px, which on a 1440 screen at arm's length is a smaller angular size
+than the same label under a thumb. CM's own row is 18px of a 600px canvas and its
+type fills most of it. The ladder keeps its order and every box stays on the 2px
+grid, so no height in the table below moves — the heights are `min-h-*`, not
+content. Until 31 Aug 2026 none of them did, and the two
 that are ours alone — `3xs` and `2xs`, which were 168 of the app's 306 type sites
 when this was written and 167 of 271 by the evening of the same day
 — fell through to Preflight's 1.5, putting an 11px label in a 16.5px line box.

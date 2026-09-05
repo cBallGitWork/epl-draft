@@ -357,3 +357,36 @@
   /* --- Motion: 150–250ms, ease-out only. Users are in flow. --- */
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
+
+/* The three smallest steps, one pixel bigger on a desk.
+ *
+ * Craig, 5 Sep 2026: *"on desktop, the fonts on rows are quite small and hard to
+ * read at times."*
+ *
+ * **A step is a size, and a size is not a density decision** — which is the part
+ * the desk got wrong. `desk.css` relaxes a repeating ROW from 44px to 28 above
+ * `lg`, on CM's own proportions, and it was right to; nothing in that argument
+ * said the TYPE inside the row had to come down with it. The row is what got
+ * denser and the label stayed at the phone's 11px, which on a 1440 screen at
+ * arm's length is a smaller angular size than the same label under a thumb.
+ * Championship Manager's own row is 18px of a 600px canvas and its type fills
+ * most of it; ours was 11px of a 28px row.
+ *
+ * One pixel, on the three steps the desk is actually built out of —
+ * `--text-2xs` alone is 141 of the app's 306 type sites. The ladder keeps its
+ * order (10 · 12 · 13 · 14) and every line box stays on the 2px grid, so no
+ * measured height in DESIGN §6's density table moves: these are all inside rows
+ * and plates whose heights are set by `min-h-*`, not by their content.
+ *
+ * Below `lg` nothing changes. The phone was never the complaint and its 44px row
+ * has the space anyway. */
+@media (min-width: 64rem) {
+  :root {
+    --text-3xs: 0.625rem;
+    --text-3xs--line-height: calc(0.8125 / 0.625);
+    --text-2xs: 0.75rem;
+    --text-2xs--line-height: calc(0.9375 / 0.75);
+    --text-xs: 0.8125rem;
+    --text-xs--line-height: calc(1.0625 / 0.8125);
+  }
+}
