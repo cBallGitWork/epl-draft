@@ -123,7 +123,10 @@ if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => 
 // (`cm9900/16.jpg` runs Everton against a white Torquay) is a real pairing and
 // not an edge. The Players board carries the same pair over two column heads.
 const match = await discover(cdp, "/prem/results", 'a[href^="/prem/match/"]');
-if (match) ROUTES.push(match, `${match}/players`);
+// All four of the match's tabs. Two arrived on 5 Sep 2026 — Player Stats came
+// off the Overview and the Match Report is the Premier League's own commentary
+// — and a tab this list does not name is a tab that ships unmeasured.
+if (match) ROUTES.push(match, `${match}/stats`, `${match}/players`, `${match}/report`);
 
 // And a match nobody has played, which is a different screen under the same
 // two bars: no scoresheet, a `v` where the score goes, and the Players tab

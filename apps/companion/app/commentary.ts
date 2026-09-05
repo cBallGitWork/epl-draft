@@ -1,6 +1,14 @@
 import { unstable_cache } from "next/cache";
 import { PAGE_REVALIDATE, type FootballPlayer, type MatchEvent, mapRoundGoals } from "@epl/core";
-import { fetchPlFixture, fetchPlRound, plFixtureCode, plTeamSheets } from "@epl/core";
+import type { PlCommentaryLine } from "@epl/core";
+import {
+  fetchPlFixture,
+  fetchPlRound,
+  fetchPlTextstream,
+  plCommentary,
+  plFixtureCode,
+  plTeamSheets,
+} from "@epl/core";
 import bridge from "../../../data/mappings/premierleague.json";
 
 // The round's goals, from the Premier League's own feed.
@@ -116,17 +124,100 @@ const plFixture = unstable_cache(
  *  A team sheet is something a match page adds to a board it can already draw
  *  without one, so its absence costs a bench and never the screen.
  */
+async function theirFixtureId(gameweek: number, fixtureCode: number): Promise<number | null> {
+  const round = await plRound(gameweek);
+  return round.content.find((fixture) => plFixtureCode(fixture) === fixtureCode)?.id ?? null;
+}
+
 export async function teamSheets(
   gameweek: number,
   fixtureCode: number,
   players: readonly FootballPlayer[],
 ): Promise<ReturnType<typeof plTeamSheets>> {
   try {
-    const round = await plRound(gameweek);
-    const theirs = round.content.find((fixture) => plFixtureCode(fixture) === fixtureCode);
-    if (theirs === undefined) return null;
-    return plTeamSheets(await plFixture(theirs.id), optaToCode(players));
+    const id = await theirFixtureId(gameweek, fixtureCode);
+    if (id === null) return null;
+    return plTeamSheets(await plFixture(id), optaToCode(players));
   } catch {
     return null;
   }
+}
+
+/** One fixture's commentary, cached per Premier League id.
+ *
+ *  4-19 KB for a played match and about 880 bytes for one nobody has started —
+ *  an unstarted fixture answers its header and no events rather than a 404,
+ *  which is what makes this safe to ask for on any match page. `pageSize` is
+ *  `PL_TEXTSTREAM_PAGE` because the recorded match carries 107 events and the
+ *  provider's own default truncates at 100. */
+const plStream = unstable_cache(
+  async (id: number) => fetchPlTextstream(id),
+  ["pl-textstream"],
+  { revalidate: PAGE_REVALIDATE },
+);
+
+/** Opta's minute-stamped commentary for one of OUR fixtures, newest first.
+ *
+ *  Craig, 5 Sep 2026: *"needs a match report section that we take from the
+ *  premier league site."* This is that read, and it is the one DESIGN §2 has
+ *  named as missing since the reference library was catalogued — "a
+ *  text-commentary matchday". The mapper was written and tested on 4 Sep and
+ *  drew nothing until now.
+ *
+ *  Empty, never a throw, at every step that can fail — the same tolerance
+ *  `teamSheets` has and for the same reason: a report is something a match page
+ *  adds to a screen it can already draw. */
+export async function matchReport(
+  gameweek: number,
+  fixtureCode: number,
+): Promise<PlCommentaryLine[]> {
+  try {
+    const id = await theirFixtureId(gameweek, fixtureCode);
+    if (id === null) return [];
+    return plCommentary((await plStream(id)).events.content);
+  } catch {
+    return [];
+  }
+}
+
+/** Every goal's minute in ONE fixture, by FPL player code.
+ *
+ *  Craig, 5 Sep 2026: *"live match, we can add the minutes too this now."* He is
+ *  right that it is new: the scoresheet's minutes came from the sister repo's
+ *  match log, which has **20 of 380** matches in it, so the overwhelming
+ *  majority of scorers had a name and no clock. The Premier League's round read
+ *  carries a minute for every goal in all ten matches, for one request, and it
+ *  is already cached for the wire.
+ *
+ *  Merged INTO the log rather than replacing it, and the log wins a tie: it is
+ *  the sister repo's own reading of the same match, and where the two disagree
+ *  the argument is not one this function should settle silently. In practice
+ *  they never meet — 20 fixtures against 380.
+ */
+export async function matchGoalMinutes(
+  gameweek: number,
+  fixtureCode: number,
+  players: readonly FootballPlayer[],
+  logged: Map<number, number[]>,
+): Promise<Map<number, number[]>> {
+  const minutes = new Map(logged);
+  try {
+    for (const goal of await roundGoals(gameweek, players)) {
+      if (goal.fixtureCode !== fixtureCode) continue;
+      // An own goal is credited to the man who put it in his own net, and the
+      // scoresheet already prints him under the side he plays FOR with `og`
+      // beside his name — so his minute belongs to him, not to the beneficiary.
+      const code = goal.players[0];
+      if (code === null || code === undefined || minutes.has(code)) continue;
+      // `minute` reads "45+2" for stoppage time; the scoresheet takes numbers,
+      // so the added-time half is dropped rather than guessed at. A goal in the
+      // 47th minute of the first half is a 45th-minute goal on any teleprinter.
+      const at = Number.parseInt(goal.minute, 10);
+      if (Number.isNaN(at)) continue;
+      minutes.set(code, [...(minutes.get(code) ?? []), at]);
+    }
+  } catch {
+    // Their API refusing costs the minutes and never the scoresheet.
+  }
+  return minutes;
 }

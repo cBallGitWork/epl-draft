@@ -27,11 +27,26 @@ import { MATCH } from "../../club/[code]/match";
 
 const TABS = [
   { segment: "", label: "Overview", key: "overview" },
+  // **Player Stats came off the Overview and became a tab** (Craig, 5 Sep 2026:
+  // "player stats can be its own blue bar at the top of the match page, remove
+  // from overview"). It was the second half of that screen, under the scoresheet
+  // and the facts line, which made the Overview two screens and buried what CM's
+  // own Overview is: a dated head, who scored and when, and a foot line.
+  // `cm0102/02.jpg` carries no table at all and has a FOOT ROW of five buttons
+  // for everything that is one.
+  { segment: "/stats", label: "Player Stats", key: "stats" },
   // **"Fantasy Scores", not "Players"** (Craig, 4 Sep 2026). The board is not a
   // list of who turned out — the football layer's own screens do that — it is
   // what the afternoon was worth, which is the question this app exists to
   // answer. Two words, so the strip keeps `TabStrip`'s denser label size.
   { segment: "/players", label: "Fantasy Scores", key: "players" },
+  // **The Premier League's own minute-by-minute** (Craig, 5 Sep 2026: "needs a
+  // match report section that we take from the premier league site"). CM's own
+  // fourth tab on this screen is `Match Report` (`cm0102/02.jpg`), which is the
+  // absence DESIGN §2 has carried by name since the reference was catalogued —
+  // "a text-commentary matchday". The mapper has been written and tested since
+  // 4 Sep and drew nothing.
+  { segment: "/report", label: "Match Report", key: "report" },
 ] as const;
 
 export type MatchTab = (typeof TABS)[number]["key"];

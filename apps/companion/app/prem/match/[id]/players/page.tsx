@@ -5,6 +5,7 @@ import type { Club, IntelMatchPlayer, PlSquadMan, PlayerOwner, SheetRow } from "
 import Squads from "../Squads";
 import { IndexCell } from "../../../../components/league/TableCells";
 import Skeleton from "../../../../components/shell/Skeleton";
+import { chipsFor } from "../../../../components/league/Chips";
 import { intelSquads } from "../../../../intel";
 import { PLAYER } from "../../../PremNav";
 import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE } from "@/app/desk";
@@ -36,6 +37,14 @@ import type { Match } from "../match";
 // `FPts`, which is Fantrax's word for Fantrax's scoring of a slot we chose.
 
 export const revalidate = 30;
+
+/** How many chips a row shows before it stops.
+ *
+ *  Two, which is `chipsFor`'s own reasoning read at a narrower column: "a player
+ *  who has done more than two of these has plainly had a day, and the two that
+ *  show are the two that decided it". This column shares its width with the sub
+ *  note, so it takes the tighter number. */
+const MARKS = 2;
 
 export default async function MatchPlayersPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -242,10 +251,41 @@ function Row({
           )}
         </Link>
       </td>
-      {/* ORANGE, which `docs/ui/reference/README.md` records as CM's ink for an
-          EVENT or a change — never for a figure. `16.jpg` writes `on 71` and
-          `sub 58` in exactly this column. */}
-      <td className="numeric whitespace-nowrap px-1 text-right text-3xs text-mid">{note ?? ""}</td>
+      {/* **What he did, as the app's own chips** (Craig, 5 Sep 2026: "maybe here
+          we add goal, assist and yellow card icons"). Not an icon set — the app
+          has none, and `shell/Rail` records why introducing one for two marks is
+          a whole visual language — but `chipsFor` is exactly this vocabulary
+          already, drawn on the pitch and in the pool: `G`, `A`, `RC`, `YC`, with
+          the tones and the order a manager would rank them in. Same events, same
+          two letters, same colours, on a third screen.
+
+          Beside the sub note rather than instead of it, and the note keeps its
+          ORANGE — `docs/ui/reference/README.md` records that as CM's ink for an
+          EVENT or a change, and `16.jpg` writes `on 71` and `sub 58` in exactly
+          this column. */}
+      <td className="whitespace-nowrap px-1 text-right">
+        <span className="inline-flex items-center gap-0.5">
+          {chipsFor(row.line)
+            .slice(0, MARKS)
+            .map((chip, at) => (
+              <span
+                key={chip.label}
+                // **The second chip stands down under a thumb**, measured: with
+                // both, this board took the document to 405px against a 390
+                // viewport — two chips plus a sub note plus a figure, twice, in
+                // a two-column table. `chipsFor` is already ordered most
+                // consequential first, so the one that survives is the one that
+                // decided his afternoon.
+                className={`px-1 text-3xs font-bold ${at > 0 ? "hidden lg:inline" : ""} ${
+                  chip.className
+                }`}
+              >
+                {chip.label}
+              </span>
+            ))}
+          {note === null ? null : <span className="numeric text-3xs text-mid">{note}</span>}
+        </span>
+      </td>
       {/* CYAN (Craig, 4 Sep 2026: *"scores need cyan"*), and the slot agrees: a
           fantasy score is a reading DERIVED by a scoring system from recorded
           events, which is exactly what `--color-info` means. `16.jpg` runs its

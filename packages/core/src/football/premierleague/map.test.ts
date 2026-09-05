@@ -7,6 +7,7 @@ import {
   mapMatchEvents,
   mapRoundGoals,
   plFixtureCode,
+  plCommentary,
   plMatchMetrics,
   plPlayerCodes,
   plTeamSheets,
@@ -208,6 +209,37 @@ describe("mapMatchEvents", () => {
 // Gameweek 2's ten fixtures, recorded WITH `altIds=true` — the parameter the
 // round read answers no join key at all without.
 const ROUND = recordedRound as unknown as RawPlFixturePage;
+
+describe("plCommentary", () => {
+  const lines = plCommentary(PLAYED.events.content);
+
+  it("keeps the WHOLE vocabulary, which is the difference from mapMatchEvents", () => {
+    // That one reduces to seven kinds because the Live tab prints a wire and
+    // 1,083 events a round is a firehose. A report is the opposite question:
+    // one match, and everything that happened in it.
+    expect(lines.length).toBeGreaterThan(events.length);
+    const kinds = new Set(lines.map((line) => line.type));
+    expect(kinds.has("attempt saved")).toBe(true);
+    expect(kinds.has("corner")).toBe(true);
+    expect(kinds.has("goal")).toBe(true);
+  });
+
+  it("runs newest first", () => {
+    const seconds = lines.map((line) => line.seconds);
+    expect([...seconds].sort((a, b) => b - a)).toEqual(seconds);
+  });
+
+  it("drops an event it cannot place in the match", () => {
+    // `end 14` means "match ends" and carries a junk `time.label` of "01"; an
+    // event with no time is one we cannot put in a timeline at all.
+    const blind = plCommentary([
+      { id: 1, type: "goal", text: "Goal!" },
+      { id: 2, type: "goal", text: "", time: { label: "3", secs: 180 } },
+      { id: 3, type: "goal", text: "Goal!", time: { label: "5", secs: 300 } },
+    ]);
+    expect(blind.map((line) => line.id)).toEqual([3]);
+  });
+});
 
 describe("mapRoundGoals", () => {
   /** Every player named in the round's goals, coded as his own id plus a

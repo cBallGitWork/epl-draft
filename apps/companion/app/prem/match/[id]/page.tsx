@@ -7,8 +7,8 @@ import { PANEL } from "@/app/desk";
 import MatchShell from "./Shell";
 import Scoresheet from "./Scoresheet";
 import Preview from "./Preview";
-import PlayerStats from "./PlayerStats";
 import { matchOwners, readMatch } from "./match";
+import { matchGoalMinutes } from "../../../commentary";
 import type { Match } from "./match";
 
 // One match, on Championship Manager's Match Overview.
@@ -52,7 +52,6 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         <Facts match={match} />
       </section>
 
-      <PlayerStats match={match} />
     </MatchShell>
   );
 }
@@ -74,15 +73,32 @@ function Facts({ match }: { match: Match }) {
   );
 }
 
-/** The scoresheet, with the minutes and our league's names on it. */
+/** The scoresheet, with the minutes and our league's names on it.
+ *
+ *  **The minutes come from the Premier League now** (Craig, 5 Sep 2026: "live
+ *  match, we can add the minutes too this now"), merged over the sister repo's
+ *  match log rather than replacing it. The log has 20 of 380 matches in it, so
+ *  nearly every scorer on this screen had a name and no clock; their round read
+ *  carries a minute for every goal in all ten matches, for one request, and it
+ *  is already cached for the Live tab's wire. */
 async function Sheet({ match }: { match: Match }) {
-  const owners = await matchOwners(match.fixture);
+  const [owners, minutes] = await Promise.all([
+    matchOwners(match.fixture),
+    match.fixture.gameweek === null
+      ? Promise.resolve(goalMinutes(match.logged))
+      : matchGoalMinutes(
+          match.fixture.gameweek,
+          match.fixture.code,
+          match.snapshot.players,
+          goalMinutes(match.logged),
+        ),
+  ]);
   const { home, away } = sides(match);
   return (
     <Scoresheet
       home={scoresheet(home)}
       away={scoresheet(away)}
-      minutes={goalMinutes(match.logged)}
+      minutes={minutes}
       owners={owners}
     />
   );

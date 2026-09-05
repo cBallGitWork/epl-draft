@@ -134,6 +134,50 @@ function squadMan(man: RawPlSquadPlayer, optaToCode: Map<string, number>): PlSqu
   };
 }
 
+/** One line of Opta's commentary, as a report prints it. */
+export interface PlCommentaryLine {
+  id: number;
+  /** Opta's own type, verbatim — `goal`, `attempt saved`, `corner`, `lineup`.
+   *  Not mapped to our seven kinds: a REPORT wants the whole vocabulary, and
+   *  `mapMatchEvents` exists precisely to reduce it. */
+  type: string;
+  /** `"26"`, `"45+2"` — for reading, never for sorting. */
+  minute: string;
+  /** Elapsed IN THIS FIXTURE. Orders one match and runs BACKWARDS across the
+   *  interval (`end 1` 2910, second-half `start` 2700), which is survivable here
+   *  only because a report is one match. It may never order a round. */
+  seconds: number;
+  text: string;
+}
+
+/** Opta's minute-stamped commentary for one match, newest first.
+ *
+ *  **The whole vocabulary, which is the difference from `mapMatchEvents`.** That
+ *  one keeps seven kinds because the Live tab prints a wire and 1,083 events a
+ *  round is a firehose; a match report is the opposite question — one match, and
+ *  everything that happened in it. Measured across GW1-3: 2,215 events over 30
+ *  fixtures, 99 in a complete one.
+ *
+ *  **Newest first**, which is a live decision rather than a literary one: the
+ *  tab is open while the match is on, and the thing a reader wants is the last
+ *  thing that happened. It reads as a report afterwards either way, the way a
+ *  live blog does.
+ *
+ *  An event with no time or no text is dropped — one we cannot place in the
+ *  match is not one we can put in a timeline, and `end 14` carries a junk label
+ *  of `"01"` which is exactly the case that rule catches. */
+export function plCommentary(events: readonly RawPlEvent[]): PlCommentaryLine[] {
+  const lines: PlCommentaryLine[] = [];
+  for (const event of events) {
+    const minute = event.time?.label;
+    const seconds = event.time?.secs;
+    if (minute === undefined || seconds === undefined) continue;
+    if (event.text.trim().length === 0) continue;
+    lines.push({ id: event.id, type: event.type, minute, seconds, text: event.text });
+  }
+  return lines.sort((a, b) => b.seconds - a.seconds);
+}
+
 /** The commentary, reduced to what a fantasy league reads and joined to FPL.
  *
  *  **`fixtureCode` is a parameter and not read off the payload**, because the

@@ -140,7 +140,10 @@ if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) =
 // heads. Four strings on four grounds none of which is a token this instrument
 // has already had checked.
 const match = await discover(cdp, "/prem/results", 'a[href^="/prem/match/"]');
-if (match) ROUTES.push(match, `${match}/players`);
+// All four of the match's tabs. Two arrived on 5 Sep 2026 — Player Stats came
+// off the Overview and the Match Report is the Premier League's own commentary
+// — and a tab this list does not name is a tab that ships unmeasured.
+if (match) ROUTES.push(match, `${match}/stats`, `${match}/players`, `${match}/report`);
 
 
 let failures = 0;

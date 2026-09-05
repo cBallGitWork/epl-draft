@@ -44,11 +44,12 @@ export {
   mapMatchEvents,
   mapRoundGoals,
   plFixtureCode,
+  plCommentary,
   plMatchMetrics,
   plPlayerCodes,
   plTeamSheets,
 } from "./premierleague/map";
-export type { PlSquadMan, PlTeamSheet } from "./premierleague/map";
+export type { PlCommentaryLine, PlSquadMan, PlTeamSheet } from "./premierleague/map";
 export type {
   RawPlEvent,
   RawPlFixture,
