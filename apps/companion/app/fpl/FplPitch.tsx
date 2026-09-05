@@ -2,6 +2,7 @@ import { clubColours, inkOn, isFplKeeper } from "@epl/core";
 import type { Club, FootballPlayer, FplLine, FplPick } from "@epl/core";
 import PitchRows, { NAME_SIZE } from "../components/league/PitchRows";
 import PlayerImage from "../components/league/PlayerImage";
+import type { Played } from "./played";
 
 // Your FPL XI on the grass.
 //
@@ -20,17 +21,21 @@ export default function FplPitch({
   rows,
   players,
   clubs,
+  played,
 }: {
   rows: FplLine[];
   players: Map<number, FootballPlayer>;
   clubs: Map<number, Club>;
+  /** Whether his club has kicked off. See `played.ts` — a man who has not
+   *  appeared has no number, which is a dash and never a nought. */
+  played: Played;
 }) {
   return (
     <PitchRows
       rows={rows.map((row) => ({ label: row.label, players: row.players }))}
       keyOf={(pick: FplPick) => String(pick.code)}
     >
-      {(pick) => <Sticker pick={pick} players={players} clubs={clubs} />}
+      {(pick) => <Sticker pick={pick} players={players} clubs={clubs} played={played} />}
     </PitchRows>
   );
 }
@@ -39,13 +44,16 @@ function Sticker({
   pick,
   players,
   clubs,
+  played,
 }: {
   pick: FplPick;
   players: Map<number, FootballPlayer>;
   clubs: Map<number, Club>;
+  played: Played;
 }) {
   const player = players.get(pick.code);
   const club = player ? clubs.get(player.clubId) : undefined;
+  const on = played(pick.code);
 
   return (
     <div className="@container flex w-full flex-col">
@@ -54,11 +62,13 @@ function Sticker({
           player={player ?? { code: pick.code, name: "" }}
           club={club}
           keeper={isFplKeeper(pick.line)}
-          // Everyone on this pitch has kicked off or is about to: FPL publishes a
-          // side only for a round it has started scoring. The drawn-back state
-          // belongs to our own league's pitch, where a Monday night fixture is
-          // three days off.
-          kickedOff
+          // **Drawn back until his club kicks off**, which this claimed was
+          // impossible: "everyone on this pitch has kicked off or is about to —
+          // FPL publishes a side only for a round it has started scoring". FPL
+          // publishes picks from the deadline, which is before the first
+          // kickoff, and a round runs Friday to Monday — so on a Saturday
+          // morning eleven men were drawn as though they had all played.
+          kickedOff={on}
         />
         {/* The armband, where a shirt carries it. Vice only when there is no
             captain to outrank him would be wrong: FPL names both, and which one
@@ -94,7 +104,9 @@ function Sticker({
             : undefined
         }
       >
-        {pick.points}
+        {/* A dash, never a nought. He has not scored nothing; there is no
+            number yet (DESIGN §7). */}
+        {on ? pick.points : "\u2014"}
       </span>
     </div>
   );

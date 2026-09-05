@@ -183,7 +183,23 @@ export default function PitchRows<T>({
   // component may not have all of.
   const widest = agreed ?? widestLine(rows);
 
-  const lines = rows.map((row) => (
+  // **Forwards at the top, keeper at the bottom** (Craig, 5 Sep 2026: "forwards
+  // at top etc"), and `cm9900/19.jpg` settles it: Everton's number 1 is the
+  // green disc at the FOOT of the tactics pitch and 9, 8 and 34 are along the
+  // top. Championship Manager has you attacking up the screen. FPL draws it the
+  // other way and this app had copied FPL.
+  //
+  // **Reversed HERE and not in the arrangement**, which is the part worth
+  // saying: `lineup()` derives the shape string from its own line order, so
+  // flipping `join/lineup.ts` would print a 1-3-4-3 as "3-4-3-1". Back-to-front
+  // is what the arrangement MEANS; which end of the pitch it is drawn from is
+  // what a view decides. One reverse here covers all four pitches, so they
+  // cannot disagree about which way the team is kicking.
+  //
+  // The furniture already suited it: `PitchFrame` draws its goal and its
+  // hoardings at the top, and that is now the goal the side is attacking rather
+  // than the one it is defending — which is the more natural picture of the two.
+  const lines = [...rows].reverse().map((row) => (
     <ul
       key={row.label}
       // The whole set's row count, not this row's index: every card on the

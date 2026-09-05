@@ -165,12 +165,15 @@ export default function CmGround({
         </g>
       </svg>
 
-      {/* **`flex-col-reverse`, so the keeper stands at the foot.** The lines
-          arrive keeper-first — that is the order the squad is grouped in and the
-          order the list prints — and a pitch drawn top-down from that order puts
-          the goalkeeper in the attacking third. Reversing here rather than at
-          the join keeps one ordering in the data and lets each view draw it the
-          way that view reads.
+      {/* **The keeper stands at the foot, and the reversing is no longer here.**
+          This carried `flex-col-reverse` for the right reason — the lines arrive
+          keeper-first, which is the order the squad is grouped in and the order
+          the list prints, and drawing that top-down puts the goalkeeper in the
+          attacking third. What was wrong was the PLACE: only the flat ground
+          reversed, so the two pitches this app draws disagreed about which way
+          the team was kicking. `PitchRows` does it once for both now (Craig,
+          5 Sep 2026: "forwards at top etc"), and taking it off here is what
+          stopped the flat one double-reversing back to keeper-at-top.
 
           **`absolute inset-0`, so the lines live INSIDE the shape** rather than
           setting it: the pitch's `aspect-ratio` is the frame and the rows fill
@@ -180,7 +183,7 @@ export default function CmGround({
           end empty, as `19.jpg` does, and squeezes the block down toward the
           keeper — who is pinned to his own goal line by the near-zero padding at
           the foot. `justify-between` shares out what is left. */}
-      <div className="absolute inset-0 z-base flex flex-col-reverse justify-between px-2 pb-1 pt-[16%]">
+      <div className="absolute inset-0 z-base flex flex-col justify-between px-2 pb-1 pt-[16%]">
         {children}
       </div>
     </div>

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import LeagueCrest from "./LeagueCrest";
 
 // How a section opens: the crest, the title, and at most a line or two under it.
@@ -80,7 +81,7 @@ export default function PageHeader({
             {title}
           </h1>
         </div>
-        {sub ? <p className="numeric px-2 pt-1 text-2xs text-faint">{sub}</p> : null}
+        <Sub>{sub}</Sub>
         {children}
       </header>
     );
@@ -119,8 +120,38 @@ export default function PageHeader({
           {title}
         </h1>
       </div>
-      {sub ? <p className="numeric px-2 pt-1 text-2xs text-faint">{sub}</p> : null}
+      <Sub>{sub}</Sub>
       {children}
     </header>
+  );
+}
+
+/** The line under the title bar: a league's name, a gameweek, a manager.
+ *
+ *  **On a plate, because nothing prints on the bare ground** (DESIGN §2, and the
+ *  one rule `tools/ui/groundfit.mjs` exists to measure). It was a bare `<p>` on
+ *  the photograph, and it was FOUR of the six findings that instrument had open
+ *  on 5 Sep 2026 — the schedule's league name, the head-to-head's gameweek and
+ *  the number beside it, and the FPL tab's manager. One `<p>`, four routes,
+ *  every one of them a line a reader is meant to read against a bright patch of
+ *  a crowd photograph.
+ *
+ *  **And it was written out TWICE in this file**, once per header variant, which
+ *  is how the first fix cleared three routes and left the fourth exactly as it
+ *  was. That is the whole argument for it being a component rather than a
+ *  string: two copies of a `<p>` in one file agreed for months and then did not.
+ *
+ *  A thin bevelled strip and not a `cm-panel`: it is a line of chrome under the
+ *  title bar, which is the shape `cm9900/24.jpg` gives its own column-head run,
+ *  and a panel here would read as a second content box above the real one. `h-6`
+ *  is `HEAD_PLATE`'s height, so this strip and the column heads further down a
+ *  page agree.
+ *
+ *  The plate owns its ink, so the `text-faint` came off with the ground —
+ *  `--color-faint` is 2.35:1 on a plate and dark ink is 7.52. */
+function Sub({ children }: { children?: ReactNode }) {
+  if (children === undefined || children === null || children === false) return null;
+  return (
+    <p className="cm-bevel numeric flex h-6 items-center px-2 text-2xs font-bold">{children}</p>
   );
 }

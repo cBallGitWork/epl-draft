@@ -2,12 +2,13 @@ import Link from "next/link";
 import type { ClubColours, FootballPlayer, IntelPlayer } from "@epl/core";
 import { availabilityOf, positionDepth } from "@epl/core";
 import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
+import { IndexCell } from "../../../components/league/TableCells";
 import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
 import { positionsLabel } from "../../../positions";
 import { PLAYER } from "../../PremNav";
 import type { LeagueOpinion } from "./club";
-import { BOARD, FIGURE, ROW_RULE, SCROLL, SLOT_FIGURE } from "@/app/desk";
+import { BOARD, FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
 
 // Every man on the club's books, as Championship Manager files a squad.
 //
@@ -110,12 +111,29 @@ export default function SquadTable({
 
             return (
               <tr key={player.id} className={`${ROW_RULE} hover:bg-surface`}>
-                {/* `SLOT_FIGURE` and not the index block: `ClubShell` scopes
-                    `--cm-index` to the club, so a filled plate here would be
-                    twenty rows of the club at full saturation — and about a
-                    third of the column is empty anyway, because the identity
-                    files carry a number for four men in five. */}
-                <td className={`${SLOT_FIGURE} ${dim}`}>{know?.squadNumber ?? DASH}</td>
+                {/* **CM's blue index block** (Craig, 5 Sep 2026: "squad number
+                    needs the blue box aronund sqyad number"). It was
+                    `SLOT_FIGURE` on two arguments, and both are answered rather
+                    than overruled:
+
+                    · "`ClubShell` scopes `--cm-index` to the club, so a filled
+                      plate would be twenty rows at full saturation" — which is
+                      what a club page is FOR. Craig asked for exactly that
+                      scoping on 2 Sep ("this should be team dependent to make
+                      the page unique"), and the two sibling boards that already
+                      draw this number — the match squads and the player ratings
+                      — both use the block. Three spellings of one cell was the
+                      real defect.
+                    · "about a third of the column is empty" — the block draws
+                      empty rather than a dash there, which is what the sisters
+                      do. A number four men in five have is a column, not a gap.
+
+                    **No `dim`, and that is DESIGN §2 rather than an oversight.**
+                    A plate owns its ink: `--color-faint` is 2.35:1 on a blue
+                    plate, so greying an unavailable man's shirt number here
+                    would put the one cell that says which row is grey under the
+                    floor. The rest of the row still greys. */}
+                <IndexCell>{know?.squadNumber ?? ""}</IndexCell>
                 <td className="w-full max-w-0 pl-2">
                   <Link
                     href={`${PLAYER}/${player.code}`}

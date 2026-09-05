@@ -1,15 +1,15 @@
-import { clubById, clubColours, fplLineup, playerByCode } from "@epl/core";
+import { clubById, fplLineup, kickedOff, oppositionByClub, playerByCode } from "@epl/core";
 import type { FplPick } from "@epl/core";
 import { footballNow } from "../football";
 import Nothing from "../components/shell/Nothing";
 import Section from "../components/shell/Section";
 import PageHeader from "../components/shell/PageHeader";
-import PlayerPortrait from "../components/football/PlayerPortrait";
 import FplPitch from "./FplPitch";
 import EntryForm from "./EntryForm";
 import { forgetEntry } from "./actions";
 import { myEntryId, mySide } from "./entry";
-import { LABEL, PANEL, QUIET_FIGURE } from "@/app/desk";
+import { FPL_SITE, type Played } from "./played";
+import { LABEL, PANEL, SMALL_CAPS } from "@/app/desk";
 
 // The other game, kept small on purpose.
 //
@@ -21,6 +21,30 @@ import { LABEL, PANEL, QUIET_FIGURE } from "@/app/desk";
 // Every number here is FPL's, under FPL's scoring, and the page says so. The
 // same footballer is worth different amounts in the two games, and a reader on
 // an adjacent tab has to be told which game they are looking at.
+//
+// **The relic pass** (Craig, 5 Sep 2026: *"Its a relic, needs to use CM UI for
+// all data on this pitch, rows, titles, pitch etc, forwards at top etc. and a
+// link to the proper fpl page. and it needs a bench. round always showing as
+// zero, and players as zero when not played a game yet"*). Four of those five
+// are answered here and the fifth is `PitchRows`:
+//
+// **A nought is not an absence, and this page printed nought for both.** A man
+// whose club has not kicked off has not scored nothing — there is no number yet,
+// and DESIGN §7 has one mark for that. It came from `mapSquad` being handed
+// `live.get(element) ?? 0`, and the fallback is right where FPL omits a man from
+// a round it IS scoring; it is wrong before a ball is kicked. So the CLOCK
+// decides, not the payload: `played.ts` asks the football snapshot whether his
+// club's fixture has started. The round total takes the same rule for the same
+// reason — "Round 0" on a Friday is a claim about a round nobody has played.
+//
+// **The bench was there and was not a bench.** Four bordered cards on their own
+// grounds, in a register whose rows sit straight on the ground with a rule
+// between them. It is `.cm-rows` now, with CM's blue index block carrying the
+// order they come on in — which is the one thing that ordering means, and
+// exactly what an index block is for.
+//
+// **A way out to FPL's own page**, which a tab about somebody else's game should
+// always have had: this shows a side and cannot change one.
 
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
@@ -55,8 +79,26 @@ export default async function FplPage() {
   const snapshot = await footballNow();
   const players = playerByCode(snapshot);
   const clubs = clubById(snapshot);
+  const opposition = oppositionByClub(snapshot);
   const { entry, squad } = side;
   const arrangement = squad === null ? null : fplLineup(squad);
+
+  /** Whether this man's club has kicked off in the round on screen.
+   *
+   *  The football snapshot's own `status`, which is FPL's statement about its
+   *  own fixtures — not a clock of ours and not the presence of a row in the
+   *  live feed. CLAUDE.md counts that feed at 600 rows once a round starts, 569
+   *  of them on no minutes, so a row says the ROUND has started and never that
+   *  the MAN has appeared. */
+  const played: Played = (code) => {
+    const player = players.get(code);
+    return player === undefined ? false : kickedOff(opposition.get(player.clubId));
+  };
+
+  // Any of his men kicked off is the round having started for HIM, which is what
+  // a round total is about. A blank week — every one of his fifteen idle — is the
+  // one case where nought and "nothing yet" genuinely differ.
+  const anyPlayed = squad?.picks.some((pick) => played(pick.code)) ?? false;
 
   return (
     <div className="flex flex-col gap-4">
@@ -65,7 +107,10 @@ export default async function FplPage() {
       <dl className="grid grid-cols-3 gap-1.5">
         <Figure label="Overall" value={entry.overallPoints} />
         <Figure label="Rank" value={entry.overallRank} />
-        <Figure label="Round" value={squad?.total ?? entry.gameweekPoints} />
+        <Figure
+          label="Round"
+          value={anyPlayed ? (squad?.total ?? entry.gameweekPoints) : null}
+        />
       </dl>
 
       {squad && arrangement ? (
@@ -86,8 +131,13 @@ export default async function FplPage() {
               The bench stays a list. It is four men in the order they would come
               on, which is an ordering rather than a shape, and standing them on
               grass would claim a formation nobody picked. */}
-          <FplPitch rows={arrangement.rows} players={players} clubs={clubs} />
-          <Bench picks={arrangement.bench} players={players} clubs={clubs} />
+          <FplPitch
+            rows={arrangement.rows}
+            players={players}
+            clubs={clubs}
+            played={played}
+          />
+          <Bench picks={arrangement.bench} players={players} clubs={clubs} played={played} />
         </Section>
       ) : (
         // Keeps the section rather than dropping to a bare sentence between the
@@ -103,22 +153,50 @@ export default async function FplPage() {
 
       {entry.leagues.length > 0 ? (
         <Section title="Mini-leagues">
-          <ul className="flex flex-col gap-1">
+          <ul className="cm-rows">
             {entry.leagues.map((league) => (
-              <li key={league.id} className="cm-row flex min-h-11 items-center gap-3 px-1 text-sm">
-                <span className="min-w-0 flex-1 truncate">{league.name}</span>
-                <span className="numeric text-muted">{league.rank ?? "—"}</span>
+              <li key={league.id} className="cm-row flex min-h-11 items-center gap-2 px-1">
+                <span className="min-w-0 flex-1 truncate font-chrome text-sm font-bold">
+                  {league.name}
+                </span>
+                {/* CYAN, and the slot agrees: a rank is a reading DERIVED from
+                    everybody's totals rather than a fact anybody recorded, which
+                    is what `--color-info` means (DESIGN §3). */}
+                <span className="numeric shrink-0 text-sm font-bold text-info">
+                  {league.rank === null ? <span className="text-faint">&mdash;</span> : league.rank.toLocaleString("en-GB")}
+                </span>
               </li>
             ))}
           </ul>
         </Section>
       ) : null}
 
-      <form action={forgetEntry}>
-        <button type="submit" className="min-h-11 px-1 text-2xs text-faint hover:text-muted">
-          Not your side? Forget it
-        </button>
-      </form>
+      {/* **Their game, their page.** This tab shows a side and can never change
+          one: transfers, captaincy and chips are all on FPL's own site, and a
+          screen that reads somebody else's game without saying where to act on
+          it is a dead end. On the round the page is about, so the two agree. */}
+      <div className="flex flex-wrap items-center gap-2">
+        <a
+          href={`${FPL_SITE}/entry/${entryId}/event/${squad?.gameweek ?? snapshot.gameweek}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`cm-bevel flex min-h-11 items-center px-3 lg:min-h-9 ${SMALL_CAPS}`}
+        >
+          Open on FPL &nearr;
+        </a>
+        {/* On a plate too, and for the same reason as the link beside it: a
+            control on the bare photograph is DESIGN §2's one prohibition, and
+            `groundfit` had this button open. Quieter than the way OUT — this is
+            the thing you press once — so it takes the plate without the caps. */}
+        <form action={forgetEntry}>
+          <button
+            type="submit"
+            className="cm-bevel min-h-11 px-3 text-2xs hover:brightness-110 lg:min-h-9"
+          >
+            Not your side? Forget it
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
@@ -137,61 +215,63 @@ function Figure({ label, value }: { label: string; value: number | null }) {
 type Players = ReturnType<typeof playerByCode>;
 type Clubs = ReturnType<typeof clubById>;
 
-function Picks({
+/** The four who did not start, under a heading that totals them. "Did my bench
+ *  outscore my side" is the question a benched hat-trick provokes, and it is the
+ *  one sum on this page worth doing for a reader — it is about picks he made,
+ *  not about what FPL scored him, which stays FPL's.
+ *
+ *  CM's rows, not four bordered cards: the reference puts a list straight on the
+ *  ground with a rule between the rows and one repeating fill, the blue index
+ *  block down the left. Here the block carries the order they would come on in,
+ *  which is the one thing FPL's bench ordering means and exactly the kind of
+ *  fact an index block is for. */
+function Bench({
   picks,
   players,
   clubs,
+  played,
 }: {
   picks: FplPick[];
   players: Players;
   clubs: Clubs;
+  played: Played;
 }) {
-  return (
-    <ul className="flex flex-col gap-1">
-      {picks.map((pick) => {
-        const player = players.get(pick.code);
-        const club = player ? clubs.get(player.clubId) : undefined;
-        return (
-          <li
-            key={pick.code}
-            className={`flex min-h-11 items-center gap-2.5 border border-line px-2 py-1.5 ${
- pick.multiplier === 0 ?"opacity-60":"bg-surface"
-}`}
-          >
-            {player && club ? (
-              <PlayerPortrait player={player} colours={clubColours(club.shortName)} />
-            ) : null}
-            <span className="min-w-0 flex-1 truncate text-sm font-semibold">
-              {player?.name ?? "—"}
-              {pick.isCaptain ? (
-                <span className="ml-1.5 bg-raised px-1 text-2xs font-bold text-info">C</span>
-              ) : null}
-              {pick.isViceCaptain ? <span className="ml-1.5 text-2xs text-faint">V</span> : null}
-            </span>
-            <span className={QUIET_FIGURE}>{club?.shortName ?? ""}</span>
-            <span className="numeric w-8 text-right font-bold">{pick.points}</span>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
-
-/** The four who did not start, under a heading that totals them. "Did my bench
- *  outscore my side" is the question a benched hat-trick provokes, and it is the
- *  one sum on this page worth doing for a reader — it is about picks he made,
- *  not about what FPL scored him, which stays FPL's. */
-function Bench({ picks, players, clubs }: { picks: FplPick[]; players: Players; clubs: Clubs }) {
   if (picks.length === 0) return null;
-  const total = picks.reduce((sum, pick) => sum + pick.points, 0);
+  // Only what has actually been scored. A bench of four idle men "left nought
+  // on it", which is a sentence about a round nobody has played.
+  const counted = picks.filter((pick) => played(pick.code));
+  const total = counted.reduce((sum, pick) => sum + pick.points, 0);
 
   return (
     <div className="flex flex-col gap-1 pt-2">
       <h3 className={`flex items-baseline justify-between gap-3 border-t border-line pt-2 ${LABEL}`}>
         Bench
-        <span className="numeric font-normal">{total} left on it</span>
+        <span className="numeric font-normal">
+          {counted.length === 0 ? "nothing played yet" : `${total} left on it`}
+        </span>
       </h3>
-      <Picks picks={picks} players={players} clubs={clubs} />
+      <ul className="cm-rows">
+        {picks.map((pick, at) => {
+          const player = players.get(pick.code);
+          const club = player ? clubs.get(player.clubId) : undefined;
+          return (
+            <li key={pick.code} className="cm-row flex min-h-11 items-stretch gap-2">
+              <span className="cm-index numeric flex w-7 shrink-0 items-center justify-center text-2xs font-bold">
+                {at + 1}
+              </span>
+              <span className="flex min-w-0 flex-1 items-center truncate font-chrome text-sm font-bold text-ink">
+                {player?.name ?? "—"}
+              </span>
+              <span className={`flex shrink-0 items-center ${SMALL_CAPS} text-muted`}>
+                {club?.shortName ?? ""}
+              </span>
+              <span className="numeric flex w-8 shrink-0 items-center justify-end text-sm font-bold text-info">
+                {played(pick.code) ? pick.points : <span className="text-faint">&mdash;</span>}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
