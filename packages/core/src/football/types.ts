@@ -253,6 +253,11 @@ export interface PlayerMatchStats {
   defensiveContribution: number;
   expectedGoals: number;
   expectedAssists: number;
+  /** Whether he was in the eleven, as a COUNT for the round — a gameweek total
+   *  like the four above it, so **never summed across one round's rows**.
+   *  Counted before it was mapped: 653/653 non-null, and never a start against
+   *  nought minutes (`fpl/map.ts` carries the probe). */
+  starts: number;
   /** What FPL's own game paid him for THIS fixture, summed from the `explain`
    *  block that describes it.
    *

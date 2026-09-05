@@ -20,7 +20,7 @@ const stats = (over: Partial<PlayerMatchStats> = {}): PlayerMatchStats => ({
   bps: 0,
   defensiveContribution: 0,
   expectedGoals: 0,
-  expectedAssists: 0, fplPoints: 0, ...over,
+  expectedAssists: 0, fplPoints: 0, starts: 1, ...over,
 });
 
 describe("statLine", () => {

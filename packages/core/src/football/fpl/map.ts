@@ -190,6 +190,19 @@ function statsFor(
     defensiveContribution: NUMERIC(agg.defensive_contribution),
     expectedGoals: NUMERIC(agg.expected_goals),
     expectedAssists: NUMERIC(agg.expected_assists),
+    // **Counted live before it was mapped** (5 Sep 2026), on this app's own rule
+    // that a field present as a key and absent as a value is not a field —
+    // `squad_number` cost a whole shirt-number fallback that way. `starts` is
+    // real: the key and a non-null value on all 653 elements of GW3 and all of
+    // GW1 and GW2; 176 of 653 above nought in a round still being played,
+    // against 246 with minutes, which is the right shape because the difference
+    // is substitutes. Never a start recorded against nought minutes.
+    //
+    // It joins this group rather than `v()` because `explain` carries
+    // point-scoring identifiers only and a start scores nothing by itself. So it
+    // is the ROUND's count on a double, written onto both rows — `starts > 1` is
+    // unobserved rather than impossible, since no double has been played yet.
+    starts: NUMERIC(agg.starts),
     fplPoints: points,
   };
 }

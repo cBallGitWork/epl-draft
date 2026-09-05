@@ -163,6 +163,36 @@ describe("mapLiveStats", () => {
   it("returns nothing before the first kickoff", () => {
     expect(mapLiveStats({ elements: [] })).toEqual([]);
   });
+
+  it("carries `starts` off the aggregate, and repeats it on a double", () => {
+    // `explain` covers point-scoring identifiers only and a start scores nothing
+    // by itself, so this can only come off the round aggregate — which means it
+    // is the ROUND's count written onto every fixture row. A caller summing the
+    // rows of one round would report two starts for one appearance.
+    const rows = mapLiveStats({
+      elements: [
+        {
+          id: 1,
+          stats: { minutes: 135, starts: 1, bps: 60 },
+          explain: [
+            { fixture: 10, stats: [{ identifier: "minutes", points: 2, value: 90 }] },
+            { fixture: 11, stats: [{ identifier: "minutes", points: 1, value: 45 }] },
+          ],
+        },
+      ],
+    });
+    expect(rows.map((r) => r.starts)).toEqual([1, 1]);
+  });
+
+  it("reads a substitute's nought rather than inferring one from minutes", () => {
+    // 45 minutes off the bench and 45 minutes of a start are the same number and
+    // different men, which is the whole reason this field is mapped instead of
+    // being derived from a minutes threshold.
+    const rows = mapLiveStats({
+      elements: [{ id: 2, stats: { minutes: 45, starts: 0 }, explain: [{ fixture: 10, stats: [] }] }],
+    });
+    expect(rows[0]).toMatchObject({ minutes: 45, starts: 0 });
+  });
 });
 
 describe("buildSnapshot", () => {
