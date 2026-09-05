@@ -68,7 +68,7 @@ No fluid clamps except inside the masthead.
 
 | Component | Job |
 |---|---|
-| `shell/PageHeader` | How a section opens: crest, title, one sub-line. |
+| `shell/PageHeader` | How a section opens: the title bar and one sub-line under it. **Two bars, not three** — a light competition plate and a blue club/person one, both `min-h-16 lg:min-h-24` with the title centred. The bare ~30px strip with the league crest in it was retired 5 Sep 2026: a screen's SUBJECT is the biggest object on it whatever the subject is, and the crest is the LEAGUE's mark, which says the wrong thing on the FPL tab. |
 | `shell/Nothing` | A page that cannot show what it exists to show, saying why — with the provider's own error code on screen. |
 | `shell/Section` | A headed block with a rule under it. |
 | `shell/ButtonLink` | The one way out of a page, drawn as CM's own button (`cm-bevel`). `BUTTON` exports the plate for everything that presses but is not a link — the two dialogs' foot pairs, the search's submit, the error page's way back, the planner's external anchor. Ten sites had written the bordered box out by hand. |
@@ -205,11 +205,18 @@ each of them and a value that can drift from itself is not a measurement.**
   broadsheet while the page under it was a 640px column at every viewport, and
   the front page's rail could never arrive. The rail took the bar's job and sits
   beside the frame rather than inside it, so `<main>` is the only reader left.
-- `--page-foot` — the room `<main>` leaves under the page. It was the bar's own
-  height plus the phone's safe area and is now 2rem of room at every width, the
-  bar having gone; the inset moved to `body`, where it is the phone's rather than
-  the bar's. The front page runs its stock out through it; without that, a cream
-  page ends in a band of desk navy.
+- `--page-foot` — the room `<main>` leaves under the page, **and the breakpoint
+  is back**: `2.75rem + 1rem` below `lg`, which is `.cm-foot`'s own plate height
+  plus the air under the last panel, and 2rem above it where there is no bar. It
+  had gone flat at 2rem for the four days the rail held every width; the foot row
+  returned to the phone on 5 Sep 2026 and the breakpoint with it. The safe-area
+  inset is the nav's own, inside the fixed element, so it is under the plates
+  rather than under the page. The front page runs its stock out through it;
+  without that, a cream page ends in a band of desk navy.
+- `--page-top` — the air above the page's first object, 0.5rem. A token because
+  two things must agree: `<main>` sets it, and `prem/match/[id]/Shell` subtracts
+  it (with `--page-foot`) to know how tall a full-viewport match is, so its foot
+  row lands at the foot of a short one.
 
 ## Recipes — where a shared class string lives
 

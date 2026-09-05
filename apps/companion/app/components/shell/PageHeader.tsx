@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-// How a section opens: the crest, the title, and at most a line or two under it.
+// How a section opens: the title bar, and at most a line or two under it.
 // Five screens had grown their own copy of this header by the time /matchup
 // added a sixth, which is well past the rule of 2/3 — and the copies were
 // already drifting (`truncate` on one h1 and not the others). The matchday

@@ -1000,11 +1000,13 @@ of it; `/squad` is a sign-out button and an "Around the league" heading. Neither
 is fixed here and both are now the whole of the list, which is a different
 statement from the app-wide pattern the next paragraph describes.
 
-**`components/shell/Section` is the offender, and it is everywhere.** Its heading
-(`font-display text-2xs font-bold uppercase text-muted`) and its `aside` sit on no
-plate, so every headed block in the app prints two strings on the photograph.
-`PageHeader`'s `sub` (`numeric px-2 pt-1 text-2xs text-faint`) is the same shape,
-and so are `FixtureRun`'s gameweek labels and `/players`' sort links.
+**`components/shell/Section` was the offender, and it was everywhere.** Its
+heading (`font-display text-2xs font-bold uppercase text-muted`) and its `aside`
+sit on no plate, so every headed block in the app prints two strings on the
+photograph. `PageHeader`'s `sub` was the same shape — *was*: it took
+`border border-line bg-surface` on 5 Sep 2026 and that one `<p>` is what closed
+four of the six routes. `FixtureRun`'s gameweek labels are still bare, and
+`/players`' sort links went with the board.
 
 **Nothing app-wide is fixed here.** Giving `Section` a plate changes every screen
 in the app and is a DESIGN.md decision rather than a feature commit's. What the
@@ -1910,15 +1912,15 @@ email, not billing — see the hosting section.
 
 ## Work items
 
-- [ ] **Six routes print text on the bare ground** — `/players` and
-      `/matchday/desk` at the 40-row cap, `/league/matchups` 4, `/matchday` 2,
-      `/league/schedule` 1, `/fpl` 1. All pre-existing, all invisible until
-      `groundfit.mjs` was repaired on 4 Sep 2026 (it counted body's opaque
-      background and could not fail). The commonest offender is `PageHeader`'s
-      `sub`, which sits on no plate, and `/players`' sort links. **DESIGN §2's
-      "Zero bare, 31 Aug 2026" should be restated with the date of a run that
-      could have failed** — the sentence bounding `SCRIM` and `DARKEN` depends
-      on it.
+- [x] ~~**Six routes print text on the bare ground**~~ — **two, as of 5 Sep
+      2026.** All pre-existing, all invisible until `groundfit.mjs` was repaired
+      on 4 Sep (it counted body's opaque background and could not fail). Four
+      closed when `PageHeader`'s `sub` took a surface and `/players` took
+      `LeagueShell`; the run table above carries both counts. What is left is
+      `/matchday/desk` at the cap — the `≥lg` wall, which has never had a plate
+      under any of it — and `/squad` at 2. DESIGN §2's "Zero bare, 31 Aug 2026"
+      is struck and restated against the 5 Sep run, which is the sentence
+      bounding `SCRIM` and `DARKEN`.
 
 - [ ] **Look at the desk on a real phone, once the site is mapped out** (Craig,
       3 Sep 2026). The headless Chrome the instruments drive reserves no layout

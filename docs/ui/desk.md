@@ -3,12 +3,17 @@
 Every score in the league and every score in the round, on one screen, with
 nothing else on it. Jeff's wall of monitors.
 
-Reached from the **Live** section and nowhere else. The argument used to be width
-— six tabs already brushed the 320px clip `tools/ui/navfit.mjs` measured, and a
-seventh would have cost every other tab its label. The rail turned that question
-into a height one on 31 Aug 2026 and a seventh plate does still fit, but the
-answer did not change: a screen reached from the one section it belongs to is
-where it belongs, and six is the whole app.
+Reached from the **Live** section and nowhere else. The argument was width — six
+tabs already brushed the 320px clip `tools/ui/navfit.mjs` measured, and a seventh
+would have cost every other tab its label. The rail turned that into a height
+question on 31 Aug 2026, and the foot row turned it back on 5 Sep: **the two
+shapes fail on different axes**, which is why `navfit` reads which one is on
+screen and asks it its own question — a rail runs out of HEIGHT and a foot row
+runs out of WIDTH per plate. On the phone, which is the shape that matters here,
+six plates are 53px at 320 against a 44px label and a seventh would be 45.
+
+The answer did not change under either framing: a screen reached from the one
+section it belongs to is where it belongs, and six is the whole app.
 
 ## On the page
 
