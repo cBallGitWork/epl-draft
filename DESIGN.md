@@ -127,6 +127,11 @@ label's own colour — which is how the game printed "Fitness (40)".
 
 **A screen has a SUBJECT and a VIEW, and they are two boxes.** The plated bar
 names what the screen is ABOUT — a competition, a club, a manager, a footballer.
+There is no third, smaller bar for a subject with no colour of its own: the
+subject is the biggest object on a CM screen whatever it is, and a footballer
+does not get a 30px strip where the division he plays in gets 64. Retired 5 Sep
+2026, with the league crest that rode in it — it is the LEAGUE's mark, and on the
+FPL tab or a Premier League player's page it says the wrong thing.
 The yellow caption under the tab strip names which of that subject's views you
 are looking at. `cm9900/24.jpg` heads the bar `English Premier Division` and
 captions the panel `League Table`; `25.jpg` heads it `Everton` and captions the
@@ -417,6 +422,7 @@ apart silently.
 | Role | Phone | Desk | Type step | Recipe |
 |---|---|---|---|---|
 | Plated title bar | 64 | 96 | `xl`–`3xl`, `.cm-title` | `PageHeader` |
+| The caption under it | 28 | 40 | `sm`–`lg`, `.cm-title` | `shell/Caption` |
 | A row that needs two lines | 56 | 28 | `sm` | `.cm-row` + `min-h-14` |
 | **A control** — button, select, input, tab, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
 | A foot-row plate | 44 | 56 | `xs` mixed case | `.cm-foot` |

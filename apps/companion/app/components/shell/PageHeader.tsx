@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import LeagueCrest from "./LeagueCrest";
 
 // How a section opens: the crest, the title, and at most a line or two under it.
 // Five screens had grown their own copy of this header by the time /matchup
@@ -16,6 +15,18 @@ import LeagueCrest from "./LeagueCrest";
 // The `sub` line sits UNDER the bar rather than inside it. CM's title bars carry
 // a title and nothing else, and a count or a date set in the bar would make the
 // bar the place where content lives.
+//
+// **One bar shape, and the third one is gone** (5 Sep 2026). This file drew three:
+// a 64px cream competition plate, a 64px club plate, and — for any subject with
+// no colour of its own — a bare ~30px strip with the league crest in it and the
+// title at `text-sm`. So `/players`, `/fpl`, `/squad` and `/prem/player/[code]`
+// opened on a different OBJECT from every other screen in the app, and
+// `groundfit` counted the directory printing on the bare photograph underneath
+// it. The argument that retired it is `25.jpg`'s, already made below for the
+// plated bar: a screen's SUBJECT is the biggest thing on it whatever the subject
+// is, and a club does not get a smaller bar than the division it plays in. The
+// crest went with it for the reason recorded there — it is the LEAGUE's mark, and
+// on the FPL tab or a Premier League footballer's page it says the wrong thing.
 
 export default function PageHeader({
   title,
@@ -43,7 +54,8 @@ export default function PageHeader({
    *  property of the pair and not of which one is behind. */
   competition?: boolean;
   /** The plate this bar is drawn on, when the subject has a colour of its own —
-   *  a fantasy team does, and nothing else here yet.
+   *  a fantasy team does, and nothing else here yet. Absent leaves the chrome
+   *  blue, which is the bar every other screen opens with, at the same size.
    *
    *  **Not a third treatment, an override on the club/person one.** The bar is
    *  already the shape Championship Manager draws a club with (`cm9900/25.jpg`);
@@ -103,18 +115,11 @@ export default function PageHeader({
           LEAGUE's mark: on a team's own screen it says the wrong thing, and CM
           puts nothing but the name in that bar. */}
       <div
-        className={`cm-titlebar flex items-center gap-2 px-2 py-1 ${
-          plate ? "min-h-16 lg:min-h-24" : ""
-        }`}
+        className="cm-titlebar flex min-h-16 items-center gap-2 px-2 py-1 lg:min-h-24"
         style={plate ? { background: plate.background } : undefined}
       >
-        {plate ? null : <LeagueCrest height={18} />}
         <h1
-          className={`cm-title min-w-0 flex-1 truncate font-bold uppercase ${
-            plate
-              ? "text-center font-chrome text-xl lg:text-3xl"
-              : "text-sm text-ink"
-          }`}
+          className="cm-title min-w-0 flex-1 truncate text-center font-chrome text-xl font-bold uppercase lg:text-3xl"
           style={plate ? { color: plate.ink } : undefined}
         >
           {title}

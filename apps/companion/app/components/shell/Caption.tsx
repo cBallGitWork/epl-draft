@@ -12,9 +12,16 @@ import type { ReactNode } from "react";
 // (CODE_RULES §1). `PageHeader.tsx` records the same decision taken once already
 // for the bar above it, at five copies and drifting.
 
+// **Its height is stated rather than padded, and the phone's is 28.** It was
+// `py-1.5` at both widths, which made it whatever the type inside it happened to
+// measure — 32px under a thumb. The phone's budget above the first row of data
+// is the thing being spent here (five bands of chrome and 64% of the screen left
+// for the table), and a caption is a LABEL on a panel rather than a control: it
+// is read, never aimed at, so the 44px tap floor is not its floor. The desk's 40
+// is unchanged.
 export default function Caption({ children }: { children: ReactNode }) {
   return (
-    <section className="cm-panel px-2 py-1.5">
+    <section className="cm-panel flex min-h-7 items-center justify-center px-2 lg:min-h-10">
       <p className="cm-title text-center font-chrome text-sm font-bold text-accent lg:text-lg">
         {children}
       </p>
