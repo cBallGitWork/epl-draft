@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { fetchBootstrap, squadIntel, xiFault } from "@epl/core";
+import { fetchBootstrap, roundFinished, squadIntel, xiFault } from "@epl/core";
 import type { IntelSquads, IntelXi } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 
@@ -84,28 +84,34 @@ async function main(): Promise<void> {
   }
 
   // The one that makes this file worth running: is the prediction for a round
-  // that has already been played?
-  const current = await nextRound();
-  if (current === null) {
-    console.log("  FPL would not say which round is next, so the age is unchecked.");
-  } else if (round < current) {
+  // whose football has already been played?
+  //
+  // **`finished`, and not `is_next`, which is what this asked until 5 Sep 2026.**
+  // FPL flips `is_next` the moment a deadline passes, so from Friday teatime it
+  // names the round AFTER the one being played — and this check called Saturday's
+  // own prediction "wrong" every single matchday, which is how a check trains the
+  // person reading it to ignore it. Verified live that day: GW3 `is_current` with
+  // ten matches in play, `is_next` already 4.
+  const played = await roundPlayed(round);
+  if (played === null) {
+    console.log("  FPL would not say whether that round has been played, so the age is unchecked.");
+  } else if (played) {
     console.error(
-      `  ✗ this eleven is for gameweek ${round} and FPL is on ${current} — ` +
+      `  ✗ this eleven is for gameweek ${round}, whose football has been played — ` +
         "it is not stale, it is wrong. Re-run the export.",
     );
     process.exitCode = 1;
   } else {
-    console.log(`  it is for the round FPL has next (${current}).`);
+    console.log(`  gameweek ${round} still has football to come.`);
   }
 }
 
-/** The round FPL says is next, or null when it will not answer. Not fatal: this
- *  script's other answers are still true without the network. */
-async function nextRound(): Promise<number | null> {
+/** Whether FPL has finished the round this export predicts, or null when it will
+ *  not answer. Not fatal: this script's other answers are still true without the
+ *  network. The judgement is `roundFinished` in core, where it is tested. */
+async function roundPlayed(round: number): Promise<boolean | null> {
   try {
-    const bootstrap = await fetchBootstrap();
-    const next = bootstrap.events.find((event) => event.is_next);
-    return next?.id ?? null;
+    return roundFinished(await fetchBootstrap(), round);
   } catch {
     return null;
   }

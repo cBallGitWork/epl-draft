@@ -101,6 +101,25 @@ export function focusGameweek(raw: RawBootstrap): { gameweek: number; deadline: 
   return { gameweek: chosen?.id ?? 1, deadline: chosen?.deadline_time ?? null };
 }
 
+/** Whether FPL has finished a round's football. Null for a round it does not
+ *  list, which is the honest answer for a number out of the season's range.
+ *
+ *  **The question a freshness check actually wants, and not `is_next`.** FPL
+ *  flips `is_next` to the following round the moment a deadline passes, so from
+ *  Friday teatime it names GW4 while GW3's ten matches are still being played —
+ *  and a check reading it calls Saturday's own prediction "wrong" every week.
+ *  `is_current` is no better in the other direction: `round.ts` records that FPL
+ *  keeps it on a FINISHED round until the next deadline, so a Thursday check
+ *  would call a spent prediction current.
+ *
+ *  `finished` is neither: it is a statement about the football, which is what
+ *  "has this already been played" means. Counted live on 5 Sep 2026 with GW3 in
+ *  play — GW1 and GW2 `finished: true`, GW3 `is_current: true, finished: false`,
+ *  GW4 `is_next: true, finished: false`. */
+export function roundFinished(raw: RawBootstrap, gameweek: number): boolean | null {
+  return (raw.events ?? []).find((event) => event.id === gameweek)?.finished ?? null;
+}
+
 const NUMERIC = (v: number | string | undefined): number => {
   const n = typeof v === "string" ? Number.parseFloat(v) : v;
   return Number.isFinite(n) ? (n as number) : 0;

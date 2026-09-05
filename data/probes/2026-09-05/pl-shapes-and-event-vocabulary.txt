@@ -1,0 +1,46 @@
+== matchOfficials ==
+  {"matchOfficialId":165267,"role":"MAIN","birth":{},"name":{"display":"Darren England","first":"Darren","last":"England"},"id":16986}
+  {"matchOfficialId":165268,"birth":{},"name":{"display":"Richard West","first":"Richard","last":"West"},"id":16970}
+  {"matchOfficialId":165269,"birth":{},"name":{"display":"Adrian Holmes","first":"Adrian","last":"Holmes"},"id":17005}
+  {"matchOfficialId":165270,"role":"FOURTH_OFFICIAL","birth":{},"name":{"display":"Lewis Smith","first":"Lewis","last":"Smith"},"id":24477}
+  {"matchOfficialId":165271,"role":"VAR","birth":{},"name":{"display":"Nicholas Hopton","first":"Nicholas","last":"Hopton"},"id":17400}
+  {"matchOfficialId":165272,"role":"ASSISTANT_VAR","birth":{},"name":{"display":"Gary Beswick","first":"Gary","last":"Beswick"},"id":16981}
+
+== ground ==
+  {"name":"Portman Road","city":"Ipswich","source":"OPTA","id":9568}
+
+== one team sheet, trimmed ==
+  keys: teamId,lineup,substitutes,formation
+  formation: {"label":"4-2-3-1","players":[[67189],[15154,49884,49254,51454],[16044,40161],[127644,125827,122002],[313194]]}
+  lineup[0]: {"matchPosition":"M","matchShirtNumber":7,"captain":false,"playerId":0,"info":{"position":"F","shirtNum":7,"positionInfo":"Right Winger"},"nationalTeam":{"isoCode":"GH","country":"Ghana","demonym":"Ghanan"},"birth":{"date":{"millis":1078704000000,"label":"8 March 2004"},"country":{"isoCode":"GH","country":"Ghana","demonym":"Ghanan"},"place":"Tamale"},"age":"22 years 180 days","name":{"display":"Abdul Fatawu","first":"Abdul Fatawu","last":"Issahaku"},"id":127644,"altIds":{"opta":"p531442"}}
+  substitutes[0]: {"matchPosition":"M","matchShirtNumber":12,"captain":false,"playerId":0,"info":{"position":"M","shirtNum":12,"positionInfo":"Centre Defensive Midfielder"},"nationalTeam":{"isoCode":"PT","country":"Portugal","demonym":"Portugese"},"birth":{"date":{"millis":935020800000,"label":"19 August 1999"},"country":{"isoCode":"AO","country":"Angola","demonym":"Angolan"},"place":"Lobito"},"age":"27 years 16 days","name":{"display":"Florentino","first":"Florentino Ibrain","last":"Morris Luís"},"id":63851,"altIds":{"opta":"p216055"}}
+  captain fields on lineup: ["matchPosition","matchShirtNumber","captain","playerId","info","nationalTeam","birth","age","name","id","altIds"]
+
+== event types across GW1-3 textstreams ==
+  28 streams read
+   642  free kick lost
+   627  free kick won
+   280  miss
+   252  corner
+   242  substitution
+   240  attempt blocked
+   145  attempt saved
+   108  offside
+   103  yellow card
+    69  goal
+    55  start
+    55  added time
+    28  lineup
+    28  end 1
+    27  start delay
+    27  end 2
+    27  end 14
+    26  end delay
+    13  post
+     9  contentious referee decisions
+     5  penalty lost
+     5  penalty won
+     5  own goal
+     5  VAR cancelled goal
+     4  penalty goal
+     1  red card

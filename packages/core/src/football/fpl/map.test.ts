@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { RawBootstrap, RawFixture, RawLive } from "./raw";
-import { buildSnapshot, focusGameweek, mapFixtures, mapLiveStats, mapPlayers } from "./map";
+import {
+  buildSnapshot,
+  focusGameweek,
+  mapFixtures,
+  mapLiveStats,
+  mapPlayers,
+  roundFinished,
+} from "./map";
 
 const bootstrap = (over: Partial<RawBootstrap> = {}): RawBootstrap => ({
   teams: [{ id: 1, code: 3, name: "Arsenal", short_name: "ARS" }],
@@ -235,5 +242,34 @@ describe("buildSnapshot", () => {
       gameweek: 99, fetchedAt: "2026-08-21T18:00:00Z",
     });
     expect(snap.deadline).toBeNull();
+  });
+});
+
+describe("roundFinished", () => {
+  // The three states one bootstrap holds at once, counted live on 5 Sep 2026
+  // with GW3 in play: a played round, the round being played, and the round
+  // whose deadline is next.
+  const events = {
+    events: [
+      { id: 1, is_current: false, is_next: false, finished: true },
+      { id: 3, is_current: true, is_next: false, finished: false },
+      { id: 4, is_current: false, is_next: true, finished: false },
+    ],
+  } as unknown as RawBootstrap;
+
+  it("answers about the FOOTBALL, not about the deadline", () => {
+    expect(roundFinished(events, 1)).toBe(true);
+    // The one that matters: GW3's football is still being played while FPL has
+    // already moved `is_next` to 4, because its deadline has passed. A check
+    // reading `is_next` calls Saturday's own prediction wrong every week.
+    expect(roundFinished(events, 3)).toBe(false);
+    expect(roundFinished(events, 4)).toBe(false);
+  });
+
+  it("is null for a round FPL does not list", () => {
+    // Not false: "we have no idea" and "it has not been played" are different
+    // answers, and only one of them should fail a freshness check.
+    expect(roundFinished(events, 39)).toBeNull();
+    expect(roundFinished({ events: [] } as unknown as RawBootstrap, 1)).toBeNull();
   });
 });

@@ -1,0 +1,21 @@
+now: 2026-09-05T17:28:13.183Z
+GW3 128949  IPS v LIV              status=C phase=F kickoff 1348m ago  teamLists=2 real=2 officials=6 attendance=30019
+GW3 128951  NEW v BOU              status=C phase=F kickoff 358m ago  teamLists=2 real=2 officials=6 attendance=52643
+GW3 128944  BRE v SUN              status=C phase=F kickoff 208m ago  teamLists=2 real=2 officials=6 attendance=17131
+GW3 128945  BHA v LEE              status=C phase=F kickoff 208m ago  teamLists=2 real=2 officials=6 attendance=-
+GW3 128947  FUL v CRY              status=C phase=F kickoff 208m ago  teamLists=2 real=2 officials=6 attendance=-
+GW3 128950  MCI v COV              status=C phase=F kickoff 208m ago  teamLists=2 real=2 officials=6 attendance=60765
+GW3 128952  NFO v TOT              status=C phase=F kickoff 208m ago  teamLists=2 real=2 officials=6 attendance=30686
+GW3 128948  HUL v AVL              status=L phase=H kickoff 58m ago  teamLists=2 real=2 officials=6 attendance=-
+GW3 128946  EVE v MUN              status=U phase=0 kickoff in 1172m  teamLists=2 real=0 officials=0 attendance=-
+GW3 128943  ARS v CHE              status=U phase=0 kickoff in 1322m  teamLists=2 real=0 officials=0 attendance=-
+GW4 128953  AVL v NFO              status=U phase=0 kickoff in 9872m  teamLists=2 real=0 officials=0 attendance=-
+GW4 128954  BOU v BRE              status=U phase=0 kickoff in 9872m  teamLists=2 real=0 officials=0 attendance=-
+GW4 128955  CHE v HUL              status=U phase=0 kickoff in 9872m  teamLists=2 real=0 officials=0 attendance=-
+GW4 128957  CRY v IPS              status=U phase=0 kickoff in 9872m  teamLists=2 real=0 officials=0 attendance=-
+GW4 128959  LIV v FUL              status=U phase=0 kickoff in 9872m  teamLists=2 real=0 officials=0 attendance=-
+GW4 128962  TOT v EVE              status=U phase=0 kickoff in 10022m  teamLists=2 real=0 officials=0 attendance=-
+GW4 128961  SUN v ARS              status=U phase=0 kickoff in 10172m  teamLists=2 real=0 officials=0 attendance=-
+GW4 128956  COV v BHA              status=U phase=0 kickoff in 11252m  teamLists=2 real=0 officials=0 attendance=-
+GW4 128960  MUN v MCI              status=U phase=0 kickoff in 11402m  teamLists=2 real=0 officials=0 attendance=-
+GW4 128958  LEE v NEW              status=U phase=0 kickoff in 13052m  teamLists=2 real=0 officials=0 attendance=-
