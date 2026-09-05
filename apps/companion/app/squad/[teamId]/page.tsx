@@ -268,7 +268,6 @@ export default async function TeamPage({
            `rows` and `bench`, which is the whole of what the join returns. */
         <Sheet
           {...lineupDetail(team, clubs, opposition, points)}
-          lines={squadDetail(squadUnarranged(team), clubs, opposition, points)}
           breakdown={live?.breakdown ?? {}}
           pending={pending}
           eligibility={eligibility}

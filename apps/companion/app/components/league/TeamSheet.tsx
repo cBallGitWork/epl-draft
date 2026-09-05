@@ -9,6 +9,7 @@ import PitchRows, { GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchR
 import SquadRows from "./SquadRows";
 import { FAR_INSET } from "./PitchTurf";
 import { positionLabel } from "../../positions";
+import { LABEL } from "@/app/desk";
 
 // A team as it lines up on a day that counts: the eleven on the grass, the
 // reserves in a strip under them, and every one of them a way into what he is
@@ -31,7 +32,6 @@ import { positionLabel } from "../../positions";
 export default function TeamSheet({
   rows,
   bench,
-  lines,
   breakdown,
   mode,
   widest: agreed,
@@ -44,11 +44,12 @@ export default function TeamSheet({
   ink,
 }: {
   /** The XI in its positional lines, arranged on the server — `slot.status` is
-   *  blanked on the way here, so this is the last shape that knows the split. */
+   *  blanked on the way here, so this is the last shape that knows the split.
+   *  **Both views draw it now**: the list took a separately-built unarranged copy
+   *  until 5 Sep 2026, so the pitch and the list disagreed about whether this
+   *  screen knows who starts. */
   rows: SquadDetailLine[];
   bench: SquadPlayerDetail[];
-  /** The same squad grouped for the list, reserves among the starters. */
-  lines: SquadDetailLine[];
   /** Each player's points broken into the league's own scoring categories,
    *  keyed by Fantrax id. Empty when Fantrax refused the table. */
   breakdown: Record<string, BreakdownLine[]>;
@@ -153,13 +154,50 @@ export default function TeamSheet({
           ) : null}
         </>
       ) : (
-        <SquadRows
-          lines={lines}
-          projected={false}
-          onOpen={setOpen}
-          eligibility={eligibility}
-          bare={bare}
-        />
+        // **The eleven, then the bench** (Craig, 5 Sep 2026: "list view does not
+        // have the bench, in fact, you are just putting the squad, needs the
+        // eleve and bench"). He is right and the cause was one prop: the list was
+        // fed `squadUnarranged`, whose entire job is to REMOVE the arrangement —
+        // fifteen men sorted alphabetically within their position so that even
+        // the payload order cannot leak who starts. That is the correct shape for
+        // a rival's squad before his period opens, and it is not what this branch
+        // is: the caller has already decided the eleven is showable (a withheld
+        // side never reaches here) and the PITCH beside it has been drawing the
+        // arrangement all along. One screen, two views, and only one of them knew
+        // the lineup.
+        //
+        // Two lists rather than one with a flag, because the bench is a different
+        // statement rather than a filter over the same one — which is the
+        // argument `lineupDetail` already makes for returning `rows` and `bench`
+        // as two fields.
+        <div className="flex flex-col gap-2">
+          <SquadRows
+            lines={rows}
+            projected={false}
+            onOpen={setOpen}
+            eligibility={eligibility}
+            bare={bare}
+          />
+          {bench.length === 0 ? null : (
+            <>
+              {/* On a plate, because nothing prints on the bare ground
+                  (DESIGN §2) — the two lists draw their own panels and a heading
+                  between them would sit on the photograph, which is the one
+                  thing `groundfit` measures. */}
+              <p className={`cm-panel px-2 py-1 text-center ${LABEL}`}>Bench</p>
+              <SquadRows
+                // The bench as one unlabelled line. `SquadRows` discards a
+                // line's own position anyway — a man's position is a column on
+                // his row (Craig, 2 Sep) — so the group needs no name.
+                lines={[{ position: "", players: bench }]}
+                projected={false}
+                onOpen={setOpen}
+                eligibility={eligibility}
+                bare={bare}
+              />
+            </>
+          )}
+        </div>
       )}
 
       {open ? (

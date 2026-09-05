@@ -25,7 +25,6 @@ import { PANEL } from "@/app/desk";
 export default function Sheet({
   rows,
   bench,
-  lines,
   breakdown,
   pending,
   eligibility,
@@ -33,7 +32,6 @@ export default function Sheet({
 }: {
   rows: SquadDetailLine[];
   bench: SquadPlayerDetail[];
-  lines: SquadDetailLine[];
   breakdown: Record<string, BreakdownLine[]>;
   /** The formation, "1-3-4-3". Taken and not drawn: it arrives on the spread
    *  from `lineupDetail` and the pitch says it better than the string does. */
@@ -116,7 +114,6 @@ export default function Sheet({
           <TeamSheet
             rows={rows}
             bench={bench}
-            lines={lines}
             breakdown={breakdown}
             mode="list"
             eligibility={eligibility}
@@ -138,7 +135,6 @@ export default function Sheet({
             // has no place in one, and the strip under the pitch was drawing
             // four men who are not playing at the same size as the ones who are.
             bench={[]}
-            lines={lines}
             breakdown={breakdown}
             mode="pitch"
             inColumn

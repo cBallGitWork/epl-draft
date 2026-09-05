@@ -8,8 +8,6 @@ import {
   lineupDetail,
   oppositionByClub,
   roundState,
-  squadDetail,
-  squadUnarranged,
   wasFielded,
 } from "@epl/core";
 import MatchupBoard, { type MatchupSide } from "../../../components/league/MatchupBoard";
@@ -184,13 +182,11 @@ export default async function HeadToHeadPage({
     const sheet = (mode: "pitch" | "list") => {
       const detail = arranged.get(team.teamId);
       if (!shown || roster === undefined || detail === undefined) return withheld;
-      const points = priced?.points ?? null;
       return (
         <TeamSheet
           rows={detail.rows}
           bench={detail.bench}
           widest={widest}
-          lines={squadDetail(squadUnarranged(roster), clubs, opposition, points)}
           breakdown={priced?.breakdown ?? {}}
           mode={mode}
         />
