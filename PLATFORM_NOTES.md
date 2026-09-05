@@ -1945,6 +1945,16 @@ shots, no corners, no referee, no attendance. All of it is in the sister repo an
 lags full time by about a day; `scripts/export/epl_draft_intel.py` now writes a
 fourth file for it (`matches/{season}.json`), which is not read by the app yet.
 
+**Four more files are specified and not yet written**, on Craig's call of 5 Sep
+2026 to connect the projections and the pitch maps before 10 Oct:
+`eye-test`, `shots`, `positions` and `projections`. The contract — row shapes,
+the code key, normalised shot coordinates, the 96-cell heat grid, size caps, and
+what is deliberately NOT exported — is `docs/providers/intel-export.md`, written
+for the sister-repo session to build against. Two things it settles that would
+otherwise be re-litigated: **pass maps are out** (the FotMob builder is dead for
+26-27 and 380 raw match directories go unread), and **`role_cluster_label` is
+refused** as a displayed role.
+
 **SofaScore files an own goal as a plain `goal` event with no flag.** Verified
 across all 20 logged 26-27 matches: 17 name only men FPL also calls scorers, and
 the three that do not name Lindelöf, Donnarumma and Greaves — exactly the three
