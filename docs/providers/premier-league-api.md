@@ -5,7 +5,9 @@ Everything below was probed live on **4 Sep 2026** against the 2026/27 season. C
 counts, not estimates. **Do not re-derive any of it** — add to it.
 
 `PLATFORM_NOTES.md` carries the decisions and the one rule this provider inverts; this
-file is the surface.
+file is the surface. **`live-reporting.md` is the map of all three providers** — what
+answers which question on a Saturday, what it costs, and what is built — and is the
+one to read first if the question is "what can we show at ten to four".
 
 ## Access
 
