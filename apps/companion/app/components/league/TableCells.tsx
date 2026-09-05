@@ -26,10 +26,26 @@ import { FIGURE } from "@/app/desk";
  *  `--cm-index` is re-pointed by a team's or a club's shell — so the same cell
  *  is the division's blue on a competition screen and the club's own on its. */
 export function IndexCell({ children }: { children: ReactNode }) {
-  return (
-    <td className={`cm-index ${FIGURE}`}>{children}</td>
-  );
+  return <td className={`cm-index ${INDEX_WIDTH} ${FIGURE}`}>{children}</td>;
 }
+
+/** How wide the block is, and it is a WIDTH rather than a padding.
+ *
+ *  Craig, 5 Sep 2026, on the match ratings board: *"blue tab needs to be same
+ *  size as the rest."* A `<td>` sizes to its content, so a shirt number of 7 got
+ *  a narrower block than 77 and a man the identity files carry no number for got
+ *  the narrowest of all — eleven blocks down a column, six different widths, and
+ *  the two sides of a match disagreeing with each other as well.
+ *
+ *  The block is the SPINE (`desk.css` on `.cm-index`): what makes a column of
+ *  them read as one object is that they are the same shape, which is the whole
+ *  reason the reference's own is a fixed chip. 32px under a thumb and 36 on the
+ *  desk, which is `shell/ScoreRow`'s block — the same object, so the same
+ *  number, and now every index block in the app is one size.
+ *
+ *  Exported so a caller drawing the block outside a `<td>` can hold the line
+ *  without copying the two classes. */
+export const INDEX_WIDTH = "w-8 lg:w-9";
 
 /** The name cell's link on a board row.
  *

@@ -124,7 +124,7 @@ export default function ScoreRow({
       }`}
     >
       <Block side={home} />
-      <Name side={home} />
+      <Name side={home} at="home" />
       {/* The score column, and the colon is the reference's own separator —
           `1:3`, not `1-3`. Cyan, which is DESIGN §3's derived-reading slot and
           exactly what the game spends it on here. `.numeric` is what keeps a
@@ -142,19 +142,26 @@ export default function ScoreRow({
           </>
         )}
       </span>
-      <Name side={away} />
-      <Block side={away} />
-      {/* **A fixed width, for the score column's own reason.** It was `auto`,
-          so a row with nothing to say on the right — a match none of your men
-          are in — was 40px narrower in that column than the rows around it, and
-          the two `1fr` name columns took the difference. Every kickoff time in
-          the panel landed at a slightly different x, which is the one thing a
-          column of scorelines exists to avoid. */}
+      <Name side={away} at="away" />
+      {/* **The tail sits INSIDE the away block, not past it** (Craig, 5 Sep
+          2026: "live matches, the 45' is on the right of the blue tab, should be
+          left"). A block is the row's outer edge at both ends — that is what
+          makes a column of them a spine, and a clock hanging off the right of
+          the last one broke the spine on the one panel that has a tail while
+          the panels without one kept it.
+
+          **A fixed width, for the score column's own reason.** It was `auto`,
+          so a row with nothing to say there — a match not yet kicked off — was
+          narrower in that column than the rows around it, and the two `1fr`
+          name columns took the difference. Every kickoff time in the panel
+          landed at a slightly different x, which is the one thing a column of
+          scorelines exists to avoid. */}
       {tail === undefined ? null : (
-        <span className="flex w-7 shrink-0 items-center justify-end gap-1 text-right lg:w-20 lg:px-1">
+        <span className="flex w-7 shrink-0 items-center justify-end gap-1 text-right lg:w-16 lg:px-1">
           {tail}
         </span>
       )}
+      <Block side={away} />
     </div>
   );
 
@@ -208,6 +215,18 @@ const GRID = {
   tailed: "grid-cols-[auto_1fr_auto_1fr_auto_auto] gap-x-0.5 lg:gap-x-2",
 } as const;
 
+/** Which way a side reads. The home half runs badge-then-name outward from its
+ *  block; the away half is that mirrored, so **both badges sit against their own
+ *  block** and the two names meet in the middle either side of the score.
+ *
+ *  Craig, 5 Sep 2026: *"the right hand side fantrax team should have the logo on
+ *  the right, not left."* It is the arrangement the app's own scoreline rows
+ *  used before they were unified — `Result` and `Tie` each carried a
+ *  `flex-row-reverse` for the away side — and the reason is the reference's:
+ *  `craig/01-evening-results.jpg` puts its identity chip at each END of the row,
+ *  and a badge is the second half of that chip. */
+const READS = { home: "", away: "flex-row-reverse" } as const;
+
 /** CM's blue block, at each end of the row and self-stretched to its full
  *  height — in the reference the blue runs edge to edge with no gap between one
  *  row's block and the next's, which is what makes a column of them a spine
@@ -240,12 +259,12 @@ function Block({ side }: { side: ScoreSide }) {
  *  Two names, one slot: the short form under a thumb and the full one from `lg`.
  *  Both are rendered and one is hidden, rather than branching in JS, because a
  *  server component cannot know the width and a media query can. */
-function Name({ side }: { side: ScoreSide }) {
+function Name({ side, at }: { side: ScoreSide; at: "home" | "away" }) {
   return (
     <span
       className={`flex min-w-0 items-center gap-1 font-chrome text-sm font-bold lg:gap-1.5 lg:text-base ${
-        side.mine === true ? "text-accent" : side.lost === true ? "text-muted" : "text-ink"
-      }`}
+        READS[at]
+      } ${side.mine === true ? "text-accent" : side.lost === true ? "text-muted" : "text-ink"}`}
     >
       {/* **The logo stays in the row** (Craig, 5 Sep 2026), beside the name
           rather than inside the blue block — which is where every other list in

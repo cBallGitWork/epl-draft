@@ -19,7 +19,7 @@ import { leagueTable, teamBadges } from "../standings";
 import { footballNow, seasonFixtures, speaksForNow } from "../football";
 import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
-import Caption from "../components/shell/Caption";
+import PageHeader from "../components/shell/PageHeader";
 import { getLeagueSquads } from "../squads";
 import { liveScores } from "../scoreboard";
 import Afternoon from "./Afternoon";
@@ -164,6 +164,31 @@ export default async function MatchdayPage() {
   // been on screen all week.
   return (
     <div className="flex flex-col gap-4">
+      {/* **The round is the page's TITLE, at the top and at the size of one**
+          (Craig, 5 Sep 2026: "Gameweek 3 · Live - this should be at the top, big
+          title"). It was a yellow caption two thirds of the way down, between
+          the wire and the scores, where it read as a heading for the tables
+          under it rather than as the name of the screen — and the one fact a
+          manager wants first from this tab is which round is on and whether it
+          is live.
+
+          `PageHeader` and not `Caption`, which is the app's own rule (see
+          `app/titles.ts`): the plated bar names the SUBJECT of a screen and the
+          yellow caption names the view. The subject here is the round.
+
+          Drawn at every state, including between rounds — `BetweenGameweeks`
+          below carries its own header for the case where there is no football,
+          and this one answers the question the tab is named for. */}
+      <PageHeader
+        title={`Gameweek ${snapshot.gameweek}`}
+        sub={
+          // `RoundWord` renders nothing between kickoffs, which is right — there
+          // is no state to name — and `PageHeader.Sub` renders nothing for a
+          // false child, so the strip goes with it rather than drawing empty.
+          roundState(snapshot) === null ? undefined : <RoundWord state={roundState(snapshot)} />
+        }
+        competition
+      />
       {/* **No way out at the top of the page** (Craig, 5 Sep 2026: "remove desk
           button"). The desk is still at `/matchday/desk` and the wall is still
           the thing to put on a television; what it does not get is the first
@@ -198,25 +223,6 @@ export default async function MatchdayPage() {
       <Wire lines={wire.lines} unresolved={wire.unresolved} limit={WIRE_LINES} />
       {during ? (
         <>
-          {/* CM's yellow caption INSIDE a panel, which is where `cm0102/02.jpg`
-              puts "Second Half" and `cm9900/24.jpg` puts "League Table". The
-              first build put this in a bare `<header>` over the photograph —
-              DESIGN §2's "nothing prints text on the bare ground", and the one
-              rule `groundfit.mjs` exists to measure. */}
-          <Caption>
-            Gameweek {snapshot.gameweek}
-            {/* The separator belongs to the word, not to the number. `RoundWord`
-                renders nothing between kickoffs — which is right, there is no
-                state to name — and the first build printed a trailing "·" over
-                the gap. */}
-            {roundState(snapshot) === null ? null : (
-              <>
-                {" "}
-                <span className="text-muted">&middot;</span>{" "}
-                <RoundWord state={roundState(snapshot)} />
-              </>
-            )}
-          </Caption>
           <Scores
             ties={ties}
             scores={scores}

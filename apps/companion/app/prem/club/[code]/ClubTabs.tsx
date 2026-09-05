@@ -31,7 +31,11 @@ const TABS = [
   // where — and a set-piece order is the one thing on this club that a reader
   // cannot get anywhere else. One word each, so the strip's plates still agree
   // about their height.
-  { segment: "/set-pieces", label: "Pieces", key: "setPieces" },
+  // **"Set Pieces" in full** (Craig, 5 Sep 2026: "title on button needs to be
+  // set pieces). It was abbreviated to fit a four-plate strip at 390; the strip
+  // wraps its labels to two lines (`TabStrip`'s `labels="word"`), so the room
+  // was there and "Pieces" was a word that means nothing on its own.
+  { segment: "/set-pieces", label: "Set Pieces", key: "setPieces" },
   { segment: "/fixtures", label: "Fixtures", key: "fixtures" },
   { segment: "/stats", label: "Stats", key: "stats" },
 ] as const;

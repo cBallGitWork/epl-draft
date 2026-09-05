@@ -17,7 +17,6 @@ import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
 import { widestLine } from "../../../components/league/PitchRows";
 import LeagueShell from "../../Shell";
-import SectionNav from "../../SectionNav";
 import { getLeagueSquads, teamDisplay } from "../../../squads";
 import { roundOf } from "../../../round";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
@@ -204,10 +203,6 @@ export default async function HeadToHeadPage({
       mine: mineHere,
       pitch: sheet("pitch"),
       list: sheet("list"),
-      // Only for a side whose eleven is already on screen. `shown` is the same
-      // condition `sheet` draws the withheld panel on, so a shape can never
-      // outrun the arrangement it describes.
-      shape: shown ? (arranged.get(team.teamId)?.shape ?? null) : null,
     };
   };
 
@@ -224,12 +219,13 @@ export default async function HeadToHeadPage({
     // them, which is the difference between the eleven and the bench being one
     // view and being one and a bit.
     //
-    // The tab strip stays. Without it a reader who lands here from a bookmark
-    // has no way back into the section, which is the argument `LeagueShell`'s
-    // own docblock makes about empty states and which does not depend on the
-    // caption above it.
+    // **And no tab strip either** (Craig, 5 Sep 2026: "remove blue bar on this
+    // page too for now"). It was kept on the argument that a reader landing from
+    // a bookmark needs a way back into the section — which the app answers a
+    // different way now that the phone's navigation is a foot row: League is one
+    // plate away at every width, and a strip whose five entries all leave the
+    // match is five controls above the score.
     <div className="flex flex-col gap-2">
-      <SectionNav current="matchups" />
       {/* Both sibling boards say when the scoreboard is down; this one used to
           render the outage as two silent dashes. */}
       {refused === null ? null : (
@@ -255,7 +251,7 @@ export default async function HeadToHeadPage({
             : "; the elevens are today's squads rather than the ones that were fielded."}
         </p>
       ) : null}
-      <MatchupBoard team={side(pairing.team)} opponent={side(pairing.opponent)} state={state} />
+      <MatchupBoard team={side(pairing.team)} opponent={side(pairing.opponent)} />
     </div>
   );
 }

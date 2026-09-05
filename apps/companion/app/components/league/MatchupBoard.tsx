@@ -4,11 +4,9 @@ import { useState, type ReactNode } from "react";
 import {
   type LeagueTeam,
   type LiveTeamScore,
-  type RoundState,
   inkOn,
   teamColours,
 } from "@epl/core";
-import RoundWord from "./RoundWord";
 import TeamBadge from "./TeamBadge";
 import BoardBar from "./BoardBar";
 import { type View } from "./ViewToggle";
@@ -53,22 +51,15 @@ export interface MatchupSide {
    *  public yet, both are the panel saying so. */
   pitch: ReactNode;
   list: ReactNode;
-  /** His formation — "1-3-4-3" — or null while his lineup is withheld, which is
-   *  the same condition `pitch` and `list` draw the panel for. It has to be null
-   *  and not an empty string: a shape IS the arrangement, and naming one for a
-   *  side whose eleven is not public yet is the leak the gate exists to stop. */
-  shape: string | null;
 }
 
 export default function MatchupBoard({
   team,
   opponent,
-  state,
 }: {
   /** The side the URL named, and the one the board opens on. */
   team: MatchupSide;
   opponent: MatchupSide;
-  state: RoundState;
 }) {
   const [open, setOpen] = useState<Which>("team");
   const [view, setView] = useState<View>("pitch");
@@ -91,49 +82,46 @@ export default function MatchupBoard({
         <Side side={opponent} open={open === "opponent"} onOpen={() => setOpen("opponent")} />
       </div>
 
-      {/* The open side's shape, beside the round word and changing with the side
-          — the first thing Championship Manager says about an eleven, and free
-          here: `lineupDetail` already counts it. */}
-      <BoardBar view={view} onPick={setView} toggleClass="lg:hidden">
-        {/* **On a surface, because nothing prints on the bare ground** (DESIGN
-            §2, and the rule `groundfit.mjs` exists to measure). This was two
-            faint words floating on the photograph, unnoticed while the toggle
-            beside it filled the row; hiding that toggle above `lg` left the
-            shape alone out there and made it obvious.
+      {/* **The toggle, and nothing beside it** (Craig, 5 Sep 2026: "remove Live
+          / 1-3-4-3 row too"). It carried the round word and the open side's
+          formation, and both said something the screen says better elsewhere: a
+          round in play is already a red bar across the top of the app, and a
+          shape is eleven men arranged on grass six pixels below it. A strip that
+          repeats what is under it is furniture.
 
-            **A PANEL and not a bevel, and `sweep` is why.** The first fix used
-            `cm-bevel`, and a plate owns its ink — `RoundWord` brings
-            `--color-live` with it, which is 1.39:1 on light grey and was the one
-            AA failure on the whole app. `--color-surface` is the ground every
-            ratio in DESIGN §3 was measured against, so the word keeps the
-            contrast it was checked at and the ground is still not bare. */}
-        {state === null && side.shape === null ? null : (
-          <span className="flex h-6 items-baseline gap-2 border border-line bg-surface px-2 text-2xs font-bold uppercase text-muted">
-            {state === null ? null : <RoundWord state={state} />}
-            {side.shape === null ? null : <span className="numeric">{side.shape}</span>}
-          </span>
-        )}
-      </BoardBar>
+          It switches BOTH sides now rather than one, so it is live at every
+          width — the `toggleClass` that used to hide it above `lg` went with the
+          pitch-and-list pairing it was written for. */}
+      <BoardBar view={view} onPick={setView} />
 
-      {/* **The desk shows both, and the phone shows one** — Craig, 5 Sep 2026:
-          *"desktop can show pitch and list, or just both teams?"* The first of
-          the two, and the reason is that it is the pair Championship Manager
-          itself puts on a match screen: the grass on one side and the ratings
-          list on the other (`cm3/06.jpg`, `cm9900/16.jpg`). It also answers the
-          two questions this screen exists for at once — the pitch says who is
-          arranged where and still to come, the list says what each man has
-          actually scored, and on a phone reading one costs you the other.
+      {/* **The desk shows BOTH SIDES, in whichever view the toggle says**
+          (Craig, 5 Sep 2026: "live MATCH view on desktop, show both pitches at
+          same time… make a pitch/list tab to swap between both"). It showed the
+          open side's pitch beside its own list for an hour — his other option
+          the same day — and both teams at once is the better answer for a reason
+          `matchup.md` has had open since it was written: the two elevens could
+          only be compared by switching halves, which is the one thing a
+          head-to-head exists to let you do.
 
-          **Both nodes are already rendered**, so this adds no request, no join
-          and no second copy of the eleven: the page hands over `pitch` and
-          `list` for each side either way, and below `lg` one of the two was
-          simply thrown away. The toggle is hidden above `lg` for the same
-          reason — a control that switches between two things both on screen is
-          a control with nothing to do. */}
+          The phone still shows one side, because thirty players at 390 is
+          fifteen unreadable ones, and the halves above are how you change it.
+
+          **All four nodes are already rendered**, so this adds no request, no
+          join and no second copy of an eleven: the page hands over `pitch` and
+          `list` per side either way, and any two of the four are on screen at
+          once. */}
       <div className="lg:hidden">{view === "pitch" ? side.pitch : side.list}</div>
       <div className="hidden lg:grid lg:grid-cols-2 lg:items-start lg:gap-2">
-        {side.pitch}
-        {side.list}
+        {/* **Each side in its own box, keyed by the manager it belongs to.**
+            React reads two sibling expressions in one container as a list and
+            asks for keys — and it is right to here, because swapping the view
+            swaps both children at once and an unkeyed pair would let it reuse
+            one side's DOM for the other's. The key is the team, so it survives
+            the toggle and does not survive a different manager. */}
+        <div key={team.team.teamId}>{view === "pitch" ? team.pitch : team.list}</div>
+        <div key={opponent.team.teamId}>
+          {view === "pitch" ? opponent.pitch : opponent.list}
+        </div>
       </div>
     </div>
   );
@@ -214,8 +202,12 @@ function Side({
       </span>
 
       {/* The open half owns what is below it, and says so with a bar rather than
-          colour alone. */}
-      {open ? <span aria-hidden className="absolute inset-x-0 bottom-0 h-1 bg-accent" /> : null}
+          colour alone. **Below `lg` only**: from there both sides are on screen
+          and neither is "the open one", so a bar under one of them would mark a
+          state that has stopped existing. */}
+      {open ? (
+        <span aria-hidden className="absolute inset-x-0 bottom-0 h-1 bg-accent lg:hidden" />
+      ) : null}
     </button>
   );
 }

@@ -120,13 +120,13 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
             {stale === null ? null : (
               <p className={`${SMALL_CAPS} text-bad`}>No predicted eleven — {stale}.</p>
             )}
-            {/* Said rather than left blank. A column of dashes with no
-                explanation reads as broken; a column of dashes with one reads
-                as early. */}
-            <p className="text-2xs text-faint">
-              Ordered by the position our league files each man at, then by the depth chart.
-              Players FPL has marked unavailable are not listed.
-            </p>
+            {/* **The paragraph explaining the ordering is gone** (Craig, 5 Sep
+                2026). It was here on the argument that a column of dashes with
+                no explanation reads as broken — true of a column of dashes, and
+                this board has none: the sort is the column headings' own job,
+                and two sentences of prose under a table is the thing
+                `strip-unneeded-info` names. The reasoning survives where it
+                belongs, in `SquadTable`'s docblock. */}
           </>
         )}
       </section>
