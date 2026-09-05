@@ -169,6 +169,31 @@ rather than by game.
 | Shot | Screen | What it settles |
 |---|---|---|
 | `craig/01-evening-results.jpg` | **Evening Results** — six scorelines over a stadium photograph | The RESULTS ROW, which the app had four spellings of. See below. |
+| `craig/02-news.jpg` | **Mike Paul News** — the manager's inbox | The NEWS SCREEN, which the app had none of, and the blue FOOT ROW on a phone. See below. |
+
+#### `02-news.jpg`, read — 5 Sep 2026
+
+CM's news inbox, and the shot that settled two separate things.
+
+**The screen.** A white title bar reading `Mike Paul News` — the MANAGER's news,
+not the club's — then a four-plate tab strip `All · Messages · Competitions ·
+Injuries and Bans`. Under it a dated list: a blue date block down the left, the
+headline beside it, one row filled RED because it is the one being read. Below
+the list, the open item's headline centred in yellow and its body in white under
+that. A `Filter :` control and a `Next Unread` button sit between the two. The
+foot row is `Contracts and Media · Transfers · Jobs · Records`.
+
+| What it settles | Where it went |
+|---|---|
+| An inbox is CM's first screen and this app had none | `/news` — its OWN section, because CM's rail entry for it is the manager's name | 
+| The tabs are the game's own four words | `TABS` in that page — business is a MESSAGE, a round is a COMPETITION |
+| The blue block here carries a DATE | which is the third thing that block carries, after a league position and a minute |
+| **The selected row is filled red** — and a second row is important without being selected | two marks, not one: a fill for "you are reading this", red INK for "this is bad news about you" |
+| **The foot row is filled royal blue** | the phone's navigation (`shell/Rail`), which was a dark outlined rail at every width |
+
+**The one thing in the shot we do not copy**: it sets the open headline and its
+body straight onto the photograph. DESIGN §2 forbids that and `groundfit`
+measures it, so ours are inside a panel.
 
 #### `01-evening-results.jpg`, measured — 5 Sep 2026
 

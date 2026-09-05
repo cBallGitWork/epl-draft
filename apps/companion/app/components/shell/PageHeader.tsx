@@ -141,17 +141,22 @@ export default function PageHeader({
  *  was. That is the whole argument for it being a component rather than a
  *  string: two copies of a `<p>` in one file agreed for months and then did not.
  *
- *  A thin bevelled strip and not a `cm-panel`: it is a line of chrome under the
- *  title bar, which is the shape `cm9900/24.jpg` gives its own column-head run,
- *  and a panel here would read as a second content box above the real one. `h-6`
- *  is `HEAD_PLATE`'s height, so this strip and the column heads further down a
- *  page agree.
+ *  **A SURFACE and not a plate, and `sweep` is why.** The first fix made it a
+ *  `cm-bevel`, and a plate owns its ink: `/league/matchups` passes `RoundWord`
+ *  into this slot, which brings `--color-live` with it, and that is 1.39:1 on
+ *  light grey. One AA failure across the whole app, at both widths, from making
+ *  chrome out of something every caller treats as content — a gameweek, a league
+ *  name, a manager, a live round word. `--color-surface` is the ground every
+ *  ratio in DESIGN §3 was measured against, so a caller's ink keeps the contrast
+ *  it was checked at and the line is still not on the photograph.
  *
- *  The plate owns its ink, so the `text-faint` came off with the ground —
- *  `--color-faint` is 2.35:1 on a plate and dark ink is 7.52. */
+ *  `h-6` is `HEAD_PLATE`'s height, so this strip and the column heads further
+ *  down a page agree. */
 function Sub({ children }: { children?: ReactNode }) {
   if (children === undefined || children === null || children === false) return null;
   return (
-    <p className="cm-bevel numeric flex h-6 items-center px-2 text-2xs font-bold">{children}</p>
+    <p className="numeric flex h-6 items-center border border-line bg-surface px-2 text-2xs font-bold text-muted">
+      {children}
+    </p>
   );
 }

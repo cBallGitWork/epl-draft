@@ -95,14 +95,20 @@ export default function MatchupBoard({
           — the first thing Championship Manager says about an eleven, and free
           here: `lineupDetail` already counts it. */}
       <BoardBar view={view} onPick={setView} toggleClass="lg:hidden">
-        {/* **On a plate, because nothing prints on the bare ground** (DESIGN §2,
-            and the rule `groundfit.mjs` exists to measure). This was two faint
-            words floating on the photograph, and it went unnoticed while the
-            toggle beside it filled the row — hiding that toggle above `lg` left
-            the shape alone out there and made it obvious. The bevel owns its
-            ink, so `LABEL`'s colour comes off with it. */}
+        {/* **On a surface, because nothing prints on the bare ground** (DESIGN
+            §2, and the rule `groundfit.mjs` exists to measure). This was two
+            faint words floating on the photograph, unnoticed while the toggle
+            beside it filled the row; hiding that toggle above `lg` left the
+            shape alone out there and made it obvious.
+
+            **A PANEL and not a bevel, and `sweep` is why.** The first fix used
+            `cm-bevel`, and a plate owns its ink — `RoundWord` brings
+            `--color-live` with it, which is 1.39:1 on light grey and was the one
+            AA failure on the whole app. `--color-surface` is the ground every
+            ratio in DESIGN §3 was measured against, so the word keeps the
+            contrast it was checked at and the ground is still not bare. */}
         {state === null && side.shape === null ? null : (
-          <span className="cm-bevel flex h-6 items-baseline gap-2 px-2 text-2xs font-bold uppercase">
+          <span className="flex h-6 items-baseline gap-2 border border-line bg-surface px-2 text-2xs font-bold uppercase text-muted">
             {state === null ? null : <RoundWord state={state} />}
             {side.shape === null ? null : <span className="numeric">{side.shape}</span>}
           </span>

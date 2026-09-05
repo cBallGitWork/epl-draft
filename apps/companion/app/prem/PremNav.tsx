@@ -29,25 +29,56 @@ const TABS = [
   { href: "/prem/results", label: "Results", key: "results" },
   { href: "/prem/fixtures", label: "Fixtures", key: "fixtures" },
   { href: "/prem/team-stats", label: "Team Stats", key: "teamStats" },
+  // **The pool, which came off the navigation bar on 5 Sep 2026 and had to land
+  // somewhere.** `/players` is the PREMIER LEAGUE's players priced by our
+  // league's scoring, and you reach a thing through the competition it belongs
+  // to — `shell/sections.ts` makes that argument about squads and clubs and it
+  // holds here. It is the League strip's `Player Stats` too, so the pool has two
+  // ways in rather than the one plate it lost.
+  //
+  // **It leaves the section, exactly as it does on the League's strip**, so no
+  // tab draws as current when you are on it: `PremSection` has no `players` key
+  // and a page there is no longer in this section. That is the difference
+  // between a tab and a way OUT, and both strips now carry the same one.
+  { href: "/players", label: "Players", key: "players" },
 ] as const;
 
-export type PremSection = (typeof TABS)[number]["key"];
+/** Which tab a page IS. `players` is deliberately not one: that entry leaves the
+ *  section (see the note on it), so no page passes it and no tab draws as
+ *  current when a reader is on the pool. */
+export type PremSection = Exclude<(typeof TABS)[number]["key"], "players">;
 
-/** The section's own front door, read off `TABS` rather than re-typed. Two
- *  consumers spell it: the default sort, which is the table's address with no
- *  query on it, and a club page's way back out. */
-export const TABLE = TABS[0].href;
+/** These routes, found by KEY rather than by position.
+ *
+ *  They were `TABS[0]`, `TABS[1]`, `TABS[2]` and `TABS[3]`, and the sibling
+ *  strip proved that dangerous on 5 Sep 2026: inserting one tab into
+ *  `league/SectionNav` silently repointed `PLAYERS` at a different screen, with
+ *  nothing failing to say so. A position in an array is not a name, and this
+ *  table is ordered by what reads well on a strip — Results before Fixtures, on
+ *  an argument about which day a reader arrives.
+ *
+ *  `at()` throws rather than returning undefined, so a key that stops existing
+ *  is a build that stops rather than a link that quietly moves. */
+function at(key: (typeof TABS)[number]["key"]): string {
+  const found = TABS.find((tab) => tab.key === key);
+  if (found === undefined) throw new Error(`no prem tab keyed ${key}`);
+  return found.href;
+}
 
-/** The board's own route, read off `TABS` rather than re-typed: a route spelled
- *  in three files is a route that can be renamed in two of them. */
-export const TEAM_STATS = TABS[3].href;
+/** The section's own front door. Two consumers spell it: the default sort, which
+ *  is the table's address with no query on it, and a club page's way back out. */
+export const TABLE = at("table");
 
-/** The two round lists, read off `TABS` for `TABLE`'s reason. A match page's way
- *  out is whichever one that match is actually on — a finished fixture is not on
- *  the fixtures page and an upcoming one is not among the results — so both are
+/** The board's own route: a route spelled in three files is a route that can be
+ *  renamed in two of them. */
+export const TEAM_STATS = at("teamStats");
+
+/** The two round lists, for `TABLE`'s reason. A match page's way out is
+ *  whichever one that match is actually on — a finished fixture is not on the
+ *  fixtures page and an upcoming one is not among the results — so both are
  *  spelled here rather than a third and fourth time downstairs. */
-export const RESULTS = TABS[1].href;
-export const FIXTURES = TABS[2].href;
+export const RESULTS = at("results");
+export const FIXTURES = at("fixtures");
 
 /** The route the club pages hang off, named once. A route spelled in five files
  *  is a route that can be renamed in four of them — `SectionNav` records the

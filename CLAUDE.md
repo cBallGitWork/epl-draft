@@ -10,7 +10,7 @@ same commit.
 
 **`DESIGN.md` is binding for anything visible.** Two registers — a printed paper
 at `/` and a Championship Manager 99/00 desk on the other five tabs — League,
-Prem, Live, Players and FPL — one shared skeleton, and a palette in which every
+Prem, Live, News and FPL — one shared skeleton, and a palette in which every
 colour is a slot with one meaning. It also records what is deliberately
 deferred, so an absence is not read as an oversight.
 

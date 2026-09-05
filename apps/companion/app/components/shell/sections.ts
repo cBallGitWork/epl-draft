@@ -69,9 +69,25 @@ export const SECTIONS = [
   // "Live" rather than "Matchday": the section only exists while football is on,
   // so that is what it means.
   { href: "/matchday", label: "Live", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },
-  { href: "/players", label: "Players", routes: ["/players"] },
+  // **The manager's inbox, and it is a section rather than a tab** (Craig, 5 Sep
+  // 2026: "Should [news] be its own section and not the league?"). The game
+  // agrees and says why: CM's rail entry for this screen is the MANAGER'S NAME
+  // and its title bar reads `Mike Paul News` — the news belongs to the man, not
+  // to the competition he plays in.
+  { href: "/news", label: "News", routes: ["/news"] },
   { href: "/fpl", label: "FPL", routes: ["/fpl"] },
 ];
+
+// **The pool is not a section either, and it is the second entry to leave for
+// the squads' reason.** `navfit` measures six plates as the bar's ceiling — a
+// seventh is 45px against a 53px label at 320 — so News arriving meant something
+// going, and the pool is the one with somewhere else to be.
+//
+// Championship Manager's rail is "where you can go from anywhere", and you reach
+// a thing through the competition it belongs to. `/players` is the PREMIER
+// LEAGUE's players, priced by our league's scoring — so it sits on both
+// competitions' strips now, the League's `Player Stats` where it always was and
+// the Prem's beside it. One entry off the bar, two ways in rather than one.
 
 export function owns(routes: readonly string[], pathname: string): boolean {
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));

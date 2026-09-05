@@ -45,7 +45,24 @@
    out through it, and a page whose ground stops short of the foot of the screen
    has a seam across the bottom of it. */
 :root {
-  --page-foot: 2rem;
+  /* **Room for the foot row, back again below `lg`** (Craig, 5 Sep 2026: "mobile
+     view needs the blue nav bar at the bottom"). The note above this records the
+     breakpoint going away when the bar became a rail; the bar is back on the
+     phone, so the breakpoint is too, and the note is kept rather than rewritten
+     because the reasoning it carries is still why the DESK has none.
+
+     `2.75rem` is `.cm-tab`'s own height and `1rem` is the air under the last
+     panel — read off the plate rather than guessed, so a taller tab cannot leave
+     the page's last row underneath one. The safe-area inset is the nav's own and
+     is not added here: it is inside the fixed element, so it is already below
+     the plates rather than under the page. */
+  --page-foot: calc(2.75rem + 1rem);
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --page-foot: 2rem;
+  }
 }
 
 /* Out through the page's own gutters, for the two things wide enough to earn

@@ -4,37 +4,42 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SECTIONS, isPaperRoute, owns } from "./sections";
 
-// Championship Manager's left rail: the app's sections stacked down the side of
-// every desk screen, at every width.
+// Championship Manager's navigation, in the two shapes the game itself has: a
+// rail down the side of a desk screen, and a blue plate row across the foot.
 //
-// **It replaces the tab bar rather than joining it.** The bar was one component
-// in two shapes — fixed to the foot of a phone, sticky across the top of a desk
-// — and a rail would have been a third. It is one shape here because the labels
-// are short enough to be one: at 9px bold uppercase the widest is "Gazetta" at
-// 45px, so a 64px rail carries real words on a 390 phone. That is 16% of the
-// screen against CM's own 11.25% (`docs/ui/reference/README.md`), and it buys no
-// icon set — there is none, and inventing one to save 20px is a whole visual
-// language for a rail that already fits.
+// **The phone gets the FOOT ROW** (Craig, 5 Sep 2026, with `cm0102/02.jpg` and
+// the news shot: "mobile view needs the blue nav bar at the bottom… Desktop
+// unchanged"). Both objects are in the reference and they are not the same
+// thing: `cm9900/24.jpg` runs `Team Stats · Player Stats · Referee Stats ·
+// Awards · History` in blue across the bottom of the League Table, and the news
+// screen runs `Contracts and Media · Transfers · Jobs · Records`. The rail is
+// dark navy with outlined plates; the foot row is filled royal blue. So this
+// file draws the rail above `lg` and the foot row below it, and neither is a
+// squeezed version of the other.
+//
+// **It cost the phone nothing and gave it 64px.** The rail was 16% of a 390
+// screen against CM's own 11.25%, and it was the width every scoreline row on
+// the app has been fighting for — measured the same day, a name column on the
+// Live tab went from 58px to 74 the moment the rail came off the side. A foot
+// row costs 44px of HEIGHT instead, which is the axis a phone has to spare.
 //
 // **Not `cm-tab`, and that was the mistake** (Craig, 31 Aug: "the side buttons
-// still don't quite look like CM"). Championship Manager draws two different
-// objects and this file had borrowed the wrong one. Its TAB STRIP — the row
-// under a title bar — is a filled royal-blue plate with a bevel, and the current
-// tab is pressed with yellow on it. Its RAIL is nothing like that: dark navy,
-// the page's own ground, with each entry in a thin outlined box and its label in
-// white. Compare `cm9900/12.jpg` and `19.jpg` — the strip and the rail are in
-// the same screenshot and they do not match.
+// still don't quite look like CM") — which is true of the RAIL and was never
+// true of the foot row. Championship Manager draws two different objects and
+// this file had borrowed the wrong one for the side. Its TAB STRIP and its FOOT
+// ROW are filled royal-blue plates with a bevel and the current one marked in
+// yellow; its RAIL is dark navy, the page's own ground, with each entry in a
+// thin outlined box and its label in white. Compare `cm9900/12.jpg` and
+// `19.jpg` — the strip and the rail are in the same screenshot and they do not
+// match. Both spellings are now drawn, each where the game draws it.
 //
-// So the rail is outlined here and filled nowhere. What it costs is the pressed
-// bevel that used to mark the current section, which the accent and an edge do
-// instead — the same pair `league/TableRow` marks "yours" with, so the mark for
-// "the one you are on" is one object in two places rather than two.
-//
-// **The items sit at the FOOT of the rail below `lg`.** CM's own rail is
-// top-aligned, and on a 844px phone that puts the first section 800px from the
-// thumb. PRODUCT.md's reference viewing condition is a phone held one-handed and
-// it outranks the look (DESIGN.md's own preamble says so), so the plates stay in
-// the thumb's arc on a phone and stand where the game put them on a desk.
+// **Six plates, and the grouping question was answered by measuring.** Craig
+// asked to "group options where appropriate", and the honest answer is that
+// nothing needed grouping away: at 390 six plates are 65px each and the widest
+// label is "GAZETTA" at 38px in 9px bold uppercase; at 320 they are 53px, which
+// still clears it. `navfit.mjs` holds that line. The grouping that WAS
+// appropriate went inside a section instead — see `sections.ts` on where the
+// news inbox lives.
 //
 // Client only because the current section has to be known, and `usePathname` is
 // the only way to know it. Nothing else here is interactive.
@@ -101,41 +106,87 @@ export default function Rail({ matchday }: { matchday: boolean }) {
   );
 
   return (
-    <nav
-      aria-label="Sections"
-      // Its own ground rather than the body's, because it is opaque furniture:
-      // `PhotoGround` is `fixed … -z-10` and would otherwise run its faces up
-      // the side of the screen behind the labels. The rule down its right edge
-      // is what makes it a column rather than a margin — the plates run out
-      // partway and CM's rail keeps its boundary all the way to the foot of the
-      // screen. Its own safe-area insets for the same reason the fixed bar had
-      // them: a sticky full-height element is positioned against the viewport,
-      // so the home indicator and a landscape notch both land on it.
-      className="sticky top-0 z-50 flex h-dvh w-16 shrink-0 flex-col justify-end self-start overflow-y-auto border-r border-line bg-bg pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] lg:w-[8.125rem] lg:justify-start"
+    <>
+      {/* **The foot row, below `lg`.** Fixed rather than sticky: it is across
+          the bottom of the VIEWPORT, which is what a thumb reaches, and a
+          sticky element in the body's flex row would still take a column's
+          width from the page. `--page-foot` is what holds the space for it, and
+          it grows below `lg` in `globals.css` for exactly this.
+
+          Its own bottom inset, because a fixed element is positioned against
+          the viewport and the home indicator lands on it. The plates butt with
+          no gap, which is how CM draws a strip. */}
+      <nav
+        aria-label="Sections"
+        className="fixed inset-x-0 bottom-0 z-50 flex pb-[env(safe-area-inset-bottom)] lg:hidden"
+      >
+        {sections.map((section) => (
+          <Plate key={section.href} section={section} here={owns(section.routes, pathname)} />
+        ))}
+      </nav>
+
+      {/* **The rail, from `lg`.** Unchanged (Craig, 5 Sep: "Desktop unchanged").
+          Its own ground rather than the body's, because it is opaque furniture:
+          `PhotoGround` is `fixed … -z-10` and would otherwise run its faces up
+          the side of the screen behind the labels. The rule down its right edge
+          is what makes it a column rather than a margin — the plates run out
+          partway and CM's rail keeps its boundary all the way to the foot. */}
+      <nav
+        aria-label="Sections"
+        className="sticky top-0 z-50 hidden h-dvh w-[8.125rem] shrink-0 flex-col self-start overflow-y-auto border-r border-line bg-bg pl-[env(safe-area-inset-left)] lg:flex"
+      >
+        <Steppers />
+        <ul className="flex flex-col">
+          {sections.map((section) => {
+            const here = owns(section.routes, pathname);
+            return (
+              <li key={section.href} className="contents">
+                <Link
+                  href={section.href}
+                  aria-current={here ? "page" : undefined}
+                  // No tracking. CM does not letterspace, and the rail is the
+                  // one place the label has no room to spare for it.
+                  className={`flex min-h-14 items-center justify-center border px-1 text-center font-chrome text-2xs font-bold uppercase hover:bg-surface ${
+                    here ? "border-accent border-l-2 text-accent" : "border-chrome text-ink"
+                  }`}
+                >
+                  {section.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </>
+  );
+}
+
+/** One plate of the foot row.
+ *
+ *  `.cm-tab` and nothing else: the plate carries the royal blue, the bevel, the
+ *  chrome face and — through `.cm-tab[aria-current="page"]` — the yellow label
+ *  and yellow border that mark the one you are on. A plate owns its ink
+ *  (DESIGN §2), so nothing here sets a colour, which is also why the current
+ *  mark could not be hand-rolled the way the rail's is: on blue,
+ *  `--color-accent` is 5.32:1 and the rail's own `text-ink` would be 7.0.
+ *
+ *  `flex-1` with `min-w-0`, so six plates share the width evenly and a long
+ *  label truncates rather than pushing the bar off the screen — the failure
+ *  `navfit.mjs` exists to catch. */
+function Plate({
+  section,
+  here,
+}: {
+  section: (typeof SECTIONS)[number];
+  here: boolean;
+}) {
+  return (
+    <Link
+      href={section.href}
+      aria-current={here ? "page" : undefined}
+      className="cm-tab flex min-w-0 flex-1 items-center justify-center truncate px-1 text-center text-3xs font-bold uppercase"
     >
-      <Steppers />
-      <ul className="flex flex-col">
-        {sections.map((section) => {
-          const here = owns(section.routes, pathname);
-          return (
-            <li key={section.href} className="contents">
-              <Link
-                href={section.href}
-                aria-current={here ? "page" : undefined}
-                // No tracking. CM does not letterspace, and the rail is the one
-                // place the label has no room to spare for it.
-                className={`flex min-h-11 items-center justify-center border px-1 text-center font-chrome text-3xs font-bold uppercase hover:bg-surface lg:min-h-14 lg:text-2xs ${
-                  here
-                    ? "border-accent border-l-2 text-accent"
-                    : "border-chrome text-ink"
-                }`}
-              >
-                {section.label}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </nav>
+      {section.label}
+    </Link>
   );
 }

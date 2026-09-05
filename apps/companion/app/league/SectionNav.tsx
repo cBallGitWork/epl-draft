@@ -36,17 +36,28 @@ const SECTIONS = [
   { href: "/league/team-stats", label: "Team Stats", key: "teamStats" },
 ] as const;
 
-/** The two routes that build their own query strings, named once.
+/** The routes that build their own query strings, named once.
  *
  *  Both were written out three or four times each — in a `HERE` constant, in a
  *  sort link, in a group link, in a category link — and `SECTIONS` above was
  *  already the place the app declares where a section lives. A route spelled in
  *  five files is a route that can be renamed in four of them.
  *
- *  Read off `SECTIONS` rather than re-typed, so the tab strip and the links
- *  cannot disagree about where a page is. */
-export const TEAM_STATS = SECTIONS[4].href;
-export const PLAYERS = SECTIONS[3].href;
+ *  **Found by KEY and not by index**, which is the change. They were
+ *  `SECTIONS[3]` and `SECTIONS[4]`, and inserting News at position 3 on 5 Sep
+ *  2026 silently repointed `PLAYERS` at the inbox — every link in the pool would
+ *  have gone to the wrong screen, with nothing failing to say so. A position in
+ *  an array is not a name, and this table is ordered by what reads well on a
+ *  strip. `at()` throws rather than returning undefined, so a key that stops
+ *  existing is a build that stops rather than a link that quietly moves. */
+function at(key: (typeof SECTIONS)[number]["key"]): string {
+  const found = SECTIONS.find((section) => section.key === key);
+  if (found === undefined) throw new Error(`no league section keyed ${key}`);
+  return found.href;
+}
+
+export const TEAM_STATS = at("teamStats");
+export const PLAYERS = at("players");
 
 /** The five tabs, plus the one section a route can BE on without being in the
  *  strip.

@@ -34,6 +34,9 @@ const ROUTES = [
   "/matchday",
   "/matchday/desk",
   "/fpl",
+  // The manager's inbox, added with the section on 5 Sep 2026. A route this
+  // list does not name is a route that ships unmeasured.
+  "/news",
   "/paper/reports",
   "/paper/columns",
 ];

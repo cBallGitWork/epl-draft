@@ -52,6 +52,13 @@ const MEASURE = `(function(){
   });
   probe.remove();
   var rr=rail.getBoundingClientRect();
+  // Which way the navigation runs, read off the plates rather than assumed.
+  // The app draws two shapes of it — a rail down the side of a desk screen and a
+  // blue foot row across the bottom of a phone (shell/Rail) — and they fail on
+  // different axes: a rail runs out of HEIGHT and a foot row runs out of WIDTH
+  // per plate. Two plates on the same y is a row.
+  var across = items.length > 1
+    && Math.abs(items[0].getBoundingClientRect().top - items[1].getBoundingClientRect().top) < 2;
   // The plates' own run, not the rail's scrollHeight: the rail is a full-height
   // frame with the stack inside it, so its scrollHeight reports the frame back
   // whenever the stack is shorter than the screen — which is every passing case.
@@ -59,6 +66,7 @@ const MEASURE = `(function(){
   var main=document.getElementById("main");
   return JSON.stringify({
     vw:window.innerWidth, vh:window.innerHeight, doc:document.documentElement.scrollWidth,
+    across:across,
     rail:Math.round(rr.width), stack:Math.round(list.getBoundingClientRect().height),
     frame:Math.round(rr.height),
     page:main?Math.round(main.getBoundingClientRect().width):null,
@@ -75,20 +83,38 @@ for (const width of widths) {
   const out = JSON.parse(await cdp.js(MEASURE));
 
   const clipped = out.rows.filter((row) => row.clipped).map((row) => `${row.t}(${row.needs}>${row.box})`);
-  // One more section is one more plate, and the tallest plate is what it costs.
+  // **What one more section would cost, on the axis this shape actually fails
+  // on.** A rail runs out of height and a foot row runs out of width per plate:
+  // the same question, asked of a different measurement, and asking the rail's
+  // question of a row answered "WOULD SCROLL" on a bar that cannot scroll.
+  const widest = Math.max(...out.rows.map((row) => row.needs));
+  // The padding a plate keeps around its own label, taken from the tightest one
+  // on screen rather than from a constant — it is `px-1` today and a change to
+  // it must move this number without anybody editing the instrument.
+  const padding = Math.min(...out.rows.map((row) => row.box - row.needs));
+  const next = out.across
+    ? { room: Math.floor(out.rail / (out.rows.length + 1)), needs: widest + Math.max(0, padding) }
+    : null;
   const plate = Math.max(...out.rows.map((row) => row.h));
-  const overflows = out.stack > out.frame;
-  const wouldOverflow = out.stack + plate > out.frame;
+  const overflows = out.across ? false : out.stack > out.frame;
+  const wouldOverflow = out.across
+    ? next.room < next.needs
+    : out.stack + plate > out.frame;
   failures += clipped.length + (out.doc > out.vw ? 1 : 0) + (overflows ? 1 : 0);
 
   console.log(
     `${width}px  viewport=${out.vw}×${out.vh} doc=${out.doc}${out.doc > out.vw ? "  H-SCROLL" : ""}` +
-      `  rail=${out.rail} page=${out.page}  ${out.rows.length} sections`,
+      `  nav=${out.across ? "foot row" : "rail"} ${out.rail}×${out.frame} page=${out.page}` +
+      `  ${out.rows.length} sections`,
   );
   console.log(`   labels:  ${clipped.length ? `CLIPS ${clipped.join(" ")}` : "all fit"}`);
   console.log(
-    `   height:  stack=${out.stack} frame=${out.frame}${overflows ? "  RAIL SCROLLS" : ""}` +
-      `   +1 section (${plate}px): ${wouldOverflow ? "WOULD SCROLL" : "still fits"}`,
+    out.across
+      ? `   width:   plate=${Math.min(...out.rows.map((r) => r.box))} widest label=${widest}` +
+        `   +1 section: ${next.room}px each vs ${next.needs} needed — ` +
+        `${wouldOverflow ? "WOULD CLIP" : "still fits"}`
+      : `   height:  stack=${out.stack} frame=${out.frame}${overflows ? "  RAIL SCROLLS" : ""}` +
+        `   +1 section (${plate}px): ${wouldOverflow ? "WOULD SCROLL" : "still fits"}`,
   );
 }
 

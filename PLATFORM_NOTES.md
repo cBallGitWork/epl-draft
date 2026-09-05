@@ -587,6 +587,29 @@ target, corners, fouls, offsides, tackles and headers are all on `/stats/match`,
 built yet; the docblock's condition — *"Stats and Zones arrive with their data"* — is met
 for Stats and still unmet for Zones.
 
+## Sunderland's red is 0.02 under AA, and `inkOn` cannot fix it (5 Sep 2026)
+
+`sweep` reports one AA failure on `/prem/match/{id}` whenever Sunderland are on
+it: `SUN` at **4.48:1 against a needed 4.5**, at 18px on the club's own plate.
+
+**It is not a bug in `inkOn`.** That function picks the BETTER of white and the
+desk's near-black against the plate, and for this red white IS the better one —
+4.48 is the best ratio the club's own colour allows. Nothing in the code is
+choosing wrongly.
+
+Which leaves two answers and neither is free:
+
+- **Darken the plate** when neither ink clears the floor. That is a change to
+  what a club's colour IS, on every screen that draws one, to buy 0.02 on one
+  club — and `clubColours` exists so a side looks like itself.
+- **Raise the type** to 24px bold, where the large-text floor is 3:1 and this
+  clears comfortably. That is a density decision about the match header, which
+  DESIGN §6's table owns.
+
+Recorded rather than taken, because the right one is Craig's. Until then `sweep`
+has one standing failure on the fixtures Sunderland appear in, and a run that
+reports exactly this and nothing else is a clean run.
+
 ## Recorded rule exceptions
 
 ### `desk.css` at 501 and `tokens.css` at 359 (recorded 3 Sep 2026, counted again 5 Sep)
