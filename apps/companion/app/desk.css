@@ -549,8 +549,19 @@
      1.75rem plus the same rule). A panel that wants to hold ten teams needs to
      multiply by something, and the something has a breakpoint — which is
      exactly why this is a custom property and not a number in a component.
-     `--table-chrome` is what a table costs before its first row: the yellow
-     caption, the column-head strip, the gap and the panel's own padding. */
+     `--table-chrome` is what a table costs before its first row — and it is
+     **measured against the wrong box, which is recorded rather than changed
+     here.** It counts the yellow caption and the gap under it as well as the
+     head strip and the panel's own padding; the four readers all put it on the
+     PANEL, and the caption is a separate section above that. Measured 5 Sep
+     2026 on `/league`: panel top to first row is 38px at both widths, so every
+     panel sized this way carries 39px of empty ground under its last row, and
+     `players/Board` puts the same number on a scroll box that has no head strip
+     in it at all. Four boxes, four different chromes, one constant.
+
+     Not corrected in the phone run because the four are genuinely different
+     boxes and picking one number for them is what produced this; it wants the
+     refactor pass and a measurement per reader. */
   --table-row: 2.8125rem;
   --table-chrome: 4.75rem;
 }

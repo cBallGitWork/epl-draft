@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Club, ClubColours, FootballPlayer, IntelPlayer } from "@epl/core";
-import BoardBar from "../../../components/league/BoardBar";
+import ViewToggle from "../../../components/league/ViewToggle";
 import { positionsLabel } from "../../../positions";
 import Eleven from "./Eleven";
 import type { ElevenLine } from "./Eleven";
@@ -75,7 +75,7 @@ export default function Squad({
           between them would be a control with nothing to decide. */}
       {grass === null ? null : (
         <div className="lg:hidden">
-          <BoardBar view={view} onPick={setView} />
+          <ViewToggle view={view} onPick={setView} />
         </div>
       )}
 

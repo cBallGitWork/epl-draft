@@ -8,8 +8,7 @@ import {
   teamColours,
 } from "@epl/core";
 import TeamBadge from "./TeamBadge";
-import BoardBar from "./BoardBar";
-import { type View } from "./ViewToggle";
+import ViewToggle, { type View } from "./ViewToggle";
 
 // The head-to-head at full size: both totals side by side, and one manager's
 // team underneath them.
@@ -92,7 +91,7 @@ export default function MatchupBoard({
           It switches BOTH sides now rather than one, so it is live at every
           width — the `toggleClass` that used to hide it above `lg` went with the
           pitch-and-list pairing it was written for. */}
-      <BoardBar view={view} onPick={setView} />
+      <ViewToggle view={view} onPick={setView} />
 
       {/* **The desk shows BOTH SIDES, in whichever view the toggle says**
           (Craig, 5 Sep 2026: "live MATCH view on desktop, show both pitches at

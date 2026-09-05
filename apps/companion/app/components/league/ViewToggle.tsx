@@ -18,6 +18,19 @@
 
 export type View = "pitch" | "list";
 
+// **`BoardBar` was retired into this file on 5 Sep 2026.** That component existed
+// to fix WHERE the toggle sat — "the toggle is on the left and the aside opposite
+// it, one decision in one place rather than three that agreed twice" — and by the
+// day it went it was doing none of that: its `toggleClass` prop had lost its last
+// caller (its own docblock still said "one caller needs it"), its `children` slot
+// had never had one, and `squad/[teamId]/Sheet` had wrapped it in a second
+// `justify-between` row to put a count beside it, which is the duplication the
+// file was written to prevent. What was left forwarded two arguments, which
+// CODE_RULES §2 names.
+//
+// The decision it carried is now geometry rather than a component: the plates
+// FILL their row, so there is no left or right for them to disagree about.
+
 export default function ViewToggle({
   view,
   onPick,
@@ -34,7 +47,10 @@ export default function ViewToggle({
       // fill the row** — CM's own pair at the foot of a screen (`Back` · `Next`)
       // spans it, and two content-width plates floating at the left of an empty
       // bar read as leftovers rather than as a control.
-      className="flex"
+      // `flex-1` so it fills the row wherever it is put: inert in a block parent,
+      // where the strip is block-level and fills anyway, and load-bearing in the
+      // one caller that shares its row with something else.
+      className="flex flex-1"
     >
       <ViewButton current={view} value="pitch" onPick={onPick} />
       <ViewButton current={view} value="list" onPick={onPick} />

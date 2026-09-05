@@ -3,8 +3,7 @@
 import { type BreakdownLine, type SquadDetailLine, type SquadPlayerDetail, inkOn, teamColours } from "@epl/core";
 import { useState } from "react";
 import TeamSheet from "../../components/league/TeamSheet";
-import BoardBar from "../../components/league/BoardBar";
-import { type View } from "../../components/league/ViewToggle";
+import ViewToggle, { type View } from "../../components/league/ViewToggle";
 import Pending from "../../components/league/Pending";
 import { PANEL } from "@/app/desk";
 
@@ -74,7 +73,7 @@ export default function Sheet({
           goes: a toggle between two things you can already see is a control that
           does nothing. */}
       <div className="flex items-center justify-between gap-2 px-1 lg:hidden">
-        <BoardBar view={view} onPick={setView} />
+        <ViewToggle view={view} onPick={setView} />
         <Pending points={pending} />
       </div>
       {pending === null ? null : (
