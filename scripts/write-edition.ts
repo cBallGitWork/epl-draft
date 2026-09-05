@@ -29,7 +29,7 @@ import {
   type LeagueInfo,
   type PublishedStory,
 } from "@epl/core";
-import { gatherRoundFacts } from "./edition/facts";
+import { gatherRoundFacts, withFootball } from "./edition/facts";
 import { file, prepare, type DeskContext } from "./edition/dispatch";
 import { drawSplash } from "./edition/image";
 import { CARGO, prose } from "./edition/checks";
@@ -135,7 +135,12 @@ async function main(): Promise<void> {
   const ctx: DeskContext = {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
-    facts,
+    // **The Premier League's feed is fetched HERE and not with the other reads**
+    // — after the desk has said there is a column to write. It is 31 requests
+    // against 11 for everything else together, the desk reads none of it, and
+    // about a hundred and ten firings a week end at the line above. See
+    // `withFootball`.
+    facts: await withFootball(facts, snapshot),
     clubs,
     threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [],
     info,

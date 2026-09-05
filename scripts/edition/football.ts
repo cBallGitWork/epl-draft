@@ -68,9 +68,10 @@ export async function roundFootball(
   );
 
   // The round's goals arrive in ONE read, with the minute and the assister —
-  // which is the whole reason this is affordable.
-  const goals = mapRoundGoals(round.content, new Map());
-
+  // which is the whole reason this is affordable. Mapped per fixture below,
+  // where the player codes for that match are known: a round-wide call with an
+  // empty code map, which is what stood here, resolves nobody and was assigned
+  // to a variable nothing read.
   for (const fixture of round.content) {
     const code = plFixtureCode(fixture);
     const ours = code === null ? undefined : byCode.get(code);
