@@ -190,7 +190,15 @@ export default function PitchDisc({
             player={player}
             club={club}
             keeper={keeper}
-            kickedOff
+            // **`started`, not a bare `kickedOff`.** The attribute was the JSX
+            // boolean shorthand, which reads as `kickedOff={true}` and happens
+            // to share its name with the imported predicate — so every disc on
+            // every pitch was drawn at full strength whether or not his club had
+            // kicked off, while the `started` this line wanted sat computed two
+            // lines up and was spent only on the band below. `fpl/FplPitch` was
+            // the one cell that got it right and its docblock records the same
+            // bug being fixed there once already.
+            kickedOff={started}
             fill
             sizes="64px"
           />

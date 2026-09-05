@@ -95,7 +95,18 @@ export default function LineupPitch({
   return (
     // `pitch-with-bench`: the strip below the grass is this page's, so the
     // card's height budget has to know about it. See `globals.css`.
-    <div className="pitch-with-bench flex flex-col">
+    //
+    // **And the width is capped at the fold**, for the reason `fpl/FplPitch`
+    // carries in full: `.pitch`'s ratio turns whatever width it is given into a
+    // height, and the planner is the other pitch with no second column beside it
+    // — `pitchfit` measured it 1,213 wide and 1,464 tall at 1440, **564px past
+    // the fold**, on the one screen a manager picks his side on. The cap reads
+    // `--pitch-page`, which this element has just set to the bench's own budget,
+    // so the two agree by construction.
+    //
+    // Second occurrence of this expression, so it is copied rather than named
+    // (CODE_RULES §1). A third pitch with nothing beside it earns a recipe.
+    <div className="pitch-with-bench mx-auto flex w-full max-w-[calc((100svh-var(--pitch-page))*var(--pitch-ratio))] flex-col">
       <PitchRows
         rows={rows}
         keyOf={(player) => player.rostered.slot.fantraxId}

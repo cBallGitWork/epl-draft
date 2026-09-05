@@ -79,6 +79,18 @@ const club = await cdp.js(
 );
 if (club) teams.push(club);
 
+// **`/fpl`, and its absence is why a 552px overflow shipped.** It draws the same
+// `PitchRows` on the same `.pitch` ratio and it is the ONE pitch with no second
+// column beside it — so it is the one most likely to fail this, and it was the
+// one route this walk never opened. Measured 5 Sep 2026 before the fix: 1,132
+// wide and 1,192 tall at 1440, ending 552px past the fold, 622 of it empty grass
+// under the keeper.
+//
+// It needs the `fpl` cookie to draw anything; without one the page is a sign-in
+// form with no pitch on it, which this walk reports as "no pitch" rather than as
+// a pass.
+teams.push("/fpl");
+
 let failures = 0;
 for (const route of teams) {
   for (const [width, height] of SIZES) {

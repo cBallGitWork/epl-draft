@@ -37,6 +37,36 @@
    31 Aug 2026 the tightest of the sixteen readings was 100px clear. */
 :root {
   --pitch-page: 16rem;
+  /* **The shape, as a number two rules read.** `.pitch`'s own `aspect-ratio` is
+     the first; the second is a caller that has to bound its own WIDTH by the
+     height it has, because the ratio turns any width it is given into a height —
+     see `fpl/FplPitch`, where a full-column pitch came out 1,132 wide and 1,192
+     tall at 1440, 552px past the fold.
+
+     **On `:root` and not on `.pitch`**, which is where it was for one commit: a
+     custom property inherits DOWN, so the wrapper that has to do the bounding is
+     the one element that cannot see a value set on the pitch inside it. That
+     read the fallback instead and drew a pitch 987px tall at 768.
+
+     0.62 under a thumb and 0.95 from `lg`; the long argument for both numbers is
+     on `.pitch` below. */
+  --pitch-ratio: 0.62;
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --pitch-ratio: 0.95;
+  }
+}
+
+/* What the FPL tab spends above its grass, measured rather than inherited.
+   `tools/ui/pitchfit.mjs` read the base 16rem as 4px short at 1024 and 1440 — a
+   title bar, a sub line, two figures and a section head come to 260, not 256 —
+   and 4px past the fold is still past it. Its own entry rather than a nudge to
+   the base, because the base is the number every OTHER pitch's cap is measured
+   against and this page's chrome is not theirs. */
+.pitch-fpl {
+  --pitch-page: 16.5rem;
 }
 
 /* A pitch with a bench under it is a different budget, and one number for both
@@ -130,17 +160,13 @@
      that balanced the pair there is answering a question this width does not
      ask. 361 / 0.62 = 582, which clears the 460 four rows need plus the bottom row s'' fixture chip, with room for a
      1-5-2-3 — legal here, because the shape is the commissioner's. */
-  aspect-ratio: 0.62;
+  aspect-ratio: var(--pitch-ratio);
   /* No ground of its own. What lies outside the taper is the page, the way it is
      on FPL's: a second green out there reads as a second surface, and the pitch
      stops being a thing sitting on the page and becomes a panel with a border. */
 }
 
-@media (min-width: 64rem) {
-  .pitch {
-    aspect-ratio: 0.95;
-  }
-}
+
 
 /* The photograph on a player card, and the only thing on it with two bounds.
 

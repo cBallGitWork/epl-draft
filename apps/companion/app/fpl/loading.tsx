@@ -9,17 +9,18 @@ import { LABEL } from "@/app/desk";
 // costs nothing and the form paints with it, so the only arrival this frame is
 // ever on screen for is the one that has an entry id and is fetching a side.
 
-/** The three figures across the top, in their printed order. Their labels are
- *  this page's own chrome, not FPL's answer, so they are here rather than
- *  standing in as blocks. */
-const FIGURES = ["Overall", "Rank", "Round"];
+/** The figures across the top, in their printed order. Their labels are this
+ *  page's own chrome, not FPL's answer, so they are here rather than standing in
+ *  as blocks — and they must match `page.tsx`'s own two, or the frame shows one
+ *  more panel than the answer fills. */
+const FIGURES = ["This week", "Rank"];
 
 export default function Loading() {
   return (
     <div aria-busy className="flex flex-col gap-4">
       <PageHeader title="FPL" sub={<Skeleton width="8rem" height="0.75rem" />} />
 
-      <dl className="grid grid-cols-3 gap-1.5">
+      <dl className="grid grid-cols-2 gap-1.5">
         {FIGURES.map((label) => (
           <div key={label} className="cm-panel px-3 py-2">
             <dt className={LABEL}>{label}</dt>

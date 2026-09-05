@@ -85,7 +85,7 @@ No fluid clamps except inside the masthead.
 | `shell/SkeletonRows` | The app's standard card stack at a given height, for a `loading.tsx` that has to draw its route's real frame rather than a spinner. |
 | `league/TableHeads` | Championship Manager's bevelled head strip, and the only place its mechanics live: the row, the cell, the plate, the bare name cell that starts it, and `SortHead` — the plate as a LINK, drawn pressed when the table is ordered by it. Three tables sort through it (`/league`, `/prem`, Team Stats); the column LISTS stay with their tables, because different columns mean genuinely different widths. |
 | `league/PitchFrame` | Hoardings + goal + turf. Full-bleed. |
-| `league/PitchRows` | Players in their lines on a `PitchFrame`. **Owns card width, the name's size, and the shrink-not-wrap policy** — all three pitches go through it. |
+| `league/PitchRows` | Players in their lines, on whichever ground `flat` picks — `CmGround`'s diagram or `PitchFrame`'s trapezoid. **Owns card width, the name's size, and the shrink-not-wrap policy** — all FOUR pitches go through it (both squad views, the head-to-head and `/fpl`). What it does NOT own is the pitch's width against the fold: `.pitch`'s ratio turns any width into a height, so a pitch with no second column beside it caps its own — `fpl/FplPitch` and `league/LineupPitch`, two occurrences, copied rather than named. |
 | `league/PitchTurf` | The grass in perspective, as an inline SVG. |
 | `league/LineupPitch` | Your own XI plus the bench, one target per player: tap to pick, tap again for the rest. |
 | `league/MoveDialog` | Everywhere one player can go, over the pitch. |

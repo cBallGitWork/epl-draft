@@ -153,13 +153,19 @@ export default function PitchRows<T>({
    *  | Squad (a rival, locked) | `CmGround` flat | `PitchDisc` | how he set up — cut-out, name on the grass, tactic arrow, XI only |
    *  | Squad (your own) | `PitchFrame` trapezoid | `PitchPlayer` | what you can still CHANGE — draggable, bench, violations |
    *  | Head-to-head | `CmGround` flat | `PitchDisc` | two elevens sized to agree, via `widest` |
-   *  | FPL | `PitchFrame` trapezoid | `PlayerImage` | the real Premier League's XI, which is not our game at all |
+   *  | FPL | `CmGround` flat | `PitchDisc` | your own FPL XI, with the armband its wrapper draws |
    *
    *  The split is the register, not decoration: **flat is the desk's diagram and
    *  the trapezoid is football's photograph.** A screen about ARRANGEMENT — how
    *  a manager lined up, or how you are about to — gets the diagram, because a
    *  diagram is what a formation is. A screen about the real match gets the
    *  perspective, because that is a picture of a pitch.
+   *
+   *  **The FPL tab moved to the diagram on 5 Sep 2026** (Craig: "using the wrong
+   *  pitch, we use a different pitch elsewhere"), which leaves the planner as the
+   *  only trapezoid. On the rule above that is the right way round: an FPL side is
+   *  an ARRANGEMENT you are reading, not a match you are watching. The trapezoid's
+   *  remaining claim is the one screen you can still change.
    *
    *  Whichever ground loses gets deleted, and neither gets merged into the
    *  other. */

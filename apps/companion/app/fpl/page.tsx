@@ -104,13 +104,23 @@ export default async function FplPage() {
     <div className="flex flex-col gap-4">
       <PageHeader title={entry.teamName || "FPL"} sub={entry.managerName} />
 
-      <dl className="grid grid-cols-3 gap-1.5">
-        <Figure label="Overall" value={entry.overallPoints} />
+      {/* **Two figures, and the first is this WEEK's** (Craig, 5 Sep 2026:
+          "remove overall points score, just use weekly", "round - 0 still, just
+          remove that box").
+          The Round box was the reason: it preferred `squad.total` over
+          `entry.gameweekPoints`, and `squad.total` is FPL's own stored round
+          total, which lags its live one — measured at 19:44 on 5 Sep it printed
+          3 while the eleven on the grass that minute summed to 27. A figure
+          contradicted by the pitch six pixels under it is worse than no figure.
+          So the box goes and the WEEKLY number takes the first slot, off
+          `summary_event_points`, which is the same read the rank comes from.
+
+          The season total goes with it: this tab answers "how did I do this
+          week", and the pitch below it is a week. A running total belongs on a
+          screen about a season and there is not one. */}
+      <dl className="grid grid-cols-2 gap-1.5">
+        <Figure label="This week" value={anyPlayed ? entry.gameweekPoints : null} />
         <Figure label="Rank" value={entry.overallRank} />
-        <Figure
-          label="Round"
-          value={anyPlayed ? (squad?.total ?? entry.gameweekPoints) : null}
-        />
       </dl>
 
       {squad && arrangement ? (
@@ -135,7 +145,7 @@ export default async function FplPage() {
             rows={arrangement.rows}
             players={players}
             clubs={clubs}
-            played={played}
+            opposition={opposition}
           />
           <Bench picks={arrangement.bench} players={players} clubs={clubs} played={played} />
         </Section>
