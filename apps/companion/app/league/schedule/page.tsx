@@ -1,6 +1,4 @@
-import type { ReactNode } from "react";
 import {
-  COMPETITIONS,
   LEAGUE_COMPETITION,
   PLACEHOLDER_ROUNDS,
   type CompetitionTie,
@@ -10,35 +8,46 @@ import {
   seededTies,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
-import Section from "../../components/shell/Section";
 import LeagueShell from "../Shell";
-import Controls from "./Controls";
 import RoundHeader from "./RoundHeader";
-import Season from "./Season";
 import Tie from "./Tie";
-import { getSchedule, getSeasonResults, type ScheduleRound } from "./schedule";
-import { seasonRows } from "./teamSeason";
-import { footballNow } from "../../football";
+import { getSchedule, type ScheduleRound } from "./schedule";
 import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
 import { teamBadges } from "../../standings";
 import { FANTRAX_SILENT } from "../../config";
 
-// The season ahead, one gameweek at a time across every competition being played
-// on it — or one team's remaining fixtures, end to end. Fantrax's schedule is
-// the league; the cup and the playoff are ours, declared in
-// `league/competitions.ts`, which is also where the note saying they are a
-// placeholder comes from.
+// The season ahead: every round the league still has to play, in gameweek order,
+// across every competition being played on it. Fantrax's schedule is the league;
+// the cup and the playoff are ours, declared in `league/competitions.ts`, which
+// is also where the note saying they are a placeholder comes from.
 //
-// It opens on the round a reader came for — the one in play, or the next to kick
-// off — with that round's scores already on it.
+// **No controls, and that is the change** — Craig, 5 Sep 2026: *"Dont show all
+// the grey arrows here, just show all fixtures for the league itself. CM rows
+// etc."* The three dropdowns were a round picker, a competition filter and a team
+// picker, and they made a fixture list into something you navigate. A schedule is
+// a thing you scroll: `cm9900/24.jpg`'s own Schedule tab is one list with a
+// scrollbar down the side, and the reference has no filter control anywhere in
+// it.
 //
-// **Current and future, and nothing finished** (Craig, 31 Aug). It used to be
-// the archive as well: every played gameweek kept its scores and the round
-// picker listed all thirty-eight. Results is the archive now, and a fixture list
-// that also holds last month is a fixture list you have to navigate rather than
-// read. The round in play stays here, because it is not finished and because its
-// scores are the reason anyone opens this on a Saturday.
+// What each control cost to remove, so the trade is on the record rather than in
+// a commit message:
+//
+//   the ROUND picker    nothing. Every round is on the page now, in order, and
+//                       the one being played is at the top of it.
+//   the COMPETITION     nothing. `groupTies` already gives each competition its
+//                       own headed block, so filtering to one was hiding the
+//                       other rather than finding it.
+//   the TEAM picker     one view, which moved rather than went. A team's whole
+//                       season is on that team's own Fixtures tab
+//                       (`/squad/[teamId]/fixtures`), which is where a reader
+//                       looking for one team already is, and which draws it with
+//                       the same `Season` component off the same `seasonRows`.
+//
+// **Current and future, and nothing finished** (Craig, 31 Aug). Results is the
+// archive; a fixture list that also holds last month is a fixture list you have
+// to navigate rather than read. The round in play stays here, because it is not
+// finished and because its scores are the reason anyone opens this on a Saturday.
 //
 // The page speaks gameweeks and never periods. Both were on screen, they are the
 // same number all season, and printing one number under two names asks a reader
@@ -48,44 +57,8 @@ import { FANTRAX_SILENT } from "../../config";
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
-/** What the URL may say. All three are optional and all three are checked
- *  against what the league has: a typed gameweek outside the calendar, or a team
- *  that is not in this league, opens the default view rather than an empty one. */
-interface Query {
-  gw?: string;
-  comp?: string;
-  team?: string;
-}
-
-/** The round a reader means, resolved once.
- *
- *  Both views need it and they used to work it out separately, with different
- *  fallbacks — one ended the season, the other started it. That is two answers
- *  to one question, which is one more than a page may have. */
-function chooseRound(
-  rounds: readonly ScheduleRound[],
-  asked: string | undefined,
-  now: number,
-): ScheduleRound {
-  const wanted = Number(asked);
-  return (
-    rounds.find((round) => round.gameweek === wanted) ??
-    // FPL's round while it still has football left in it. `now` is
-    // `focusGameweek`, and FPL keeps that pointer on a finished round until the
-    // next deadline — four days, across a Monday-night round. A `>=` here let
-    // the round just played win all four of them, so a schedule opened on last
-    // week. `status` is the whole round's, and a part-played round reads
-    // "upcoming", which is what this wants.
-    rounds.find((round) => round.gameweek === now && round.status !== "finished") ??
-    // Else the next round the league covers — a season joined at gameweek 6 has
-    // no gameweek 1, and the last round is all that is left of a finished one.
-    rounds.find((round) => round.gameweek > now) ??
-    rounds[rounds.length - 1]
-  );
-}
-
-export default async function SchedulePage({ searchParams }: { searchParams: Promise<Query> }) {
-  const [read, query, football] = await Promise.all([getSchedule(), searchParams, footballNow()]);
+export default async function SchedulePage() {
+  const read = await getSchedule();
 
   if ("unavailable" in read) {
     return (
@@ -130,117 +103,106 @@ export default async function SchedulePage({ searchParams }: { searchParams: Pro
   }
 
   const [mine, crests] = await Promise.all([myTeamId(info.teams), teamBadges()]);
-  const round = chooseRound(rounds, query.gw, football.gameweek);
-  const chosenTeam = info.teams.find((entry) => entry.teamId === query.team) ?? null;
-  const chosen = COMPETITIONS.find((competition) => competition.id === query.comp) ?? null;
+
+  // **Only the rounds that have started, and there is at most one.** Fantrax
+  // answers for any period asked, so a page showing the whole season forward
+  // would otherwise spend thirty-odd requests on totals that are all nought.
+  // `started` and not `status`: the round in play is exactly the one whose
+  // scores are worth a request.
+  const scoring = rounds.filter((round) => round.started);
+  const boards = await Promise.all(scoring.map((round) => liveScores(round.period)));
+  const points = new Map<number, Map<string, number | null>>(
+    scoring.map((round, at) => [
+      round.period,
+      new Map([...boards[at].scores].map(([team, score]) => [team, score.points])),
+    ]),
+  );
+  const refused = boards.find((board) => board.refused !== null)?.refused ?? null;
 
   /** Every tie in one gameweek: Fantrax's pairings and our declared knockouts. */
-  const tiesIn = (at: ScheduleRound): CompetitionTie[] =>
-    [
-      ...leagueTies(periodPairings(info.matchups, info.teams, at.period)),
-      ...seededTies(PLACEHOLDER_ROUNDS, table, at.gameweek),
-    ].filter((tie) => chosen === null || tie.competition.id === chosen.id);
+  const tiesIn = (at: ScheduleRound): CompetitionTie[] => [
+    ...leagueTies(periodPairings(info.matchups, info.teams, at.period)),
+    ...seededTies(PLACEHOLDER_ROUNDS, table, at.gameweek),
+  ];
 
-  const shell = (children: ReactNode) => (
+  return (
     <LeagueShell title="Schedule" current="schedule" sub={info.name}>
-      <Controls
-        gameweeks={rounds.map((entry) => entry.gameweek)}
-        gameweek={round.gameweek}
-        competition={chosen?.id ?? ""}
-        teams={info.teams}
-        team={chosenTeam?.teamId ?? ""}
-        mine={mine}
-      />
-      {children}
-    </LeagueShell>
-  );
-
-  // ---- One team's whole season ------------------------------------------
-  if (chosenTeam !== null) {
-    // One request for the whole season's results, and only on this branch: a
-    // reader looking at one gameweek must not pay for thirty-eight.
-    const rows = seasonRows(rounds, tiesIn, await getSeasonResults(), chosenTeam.teamId);
-
-    return shell(
-      rows.length === 0 ? (
-        <Nothing title="Nothing on this calendar" code={`${rounds.length} gameweeks`}>
-          {chosen === null
-            ? `Fantrax has paired ${chosenTeam.name} with nobody this season, and no knockout round has drawn them either.`
-            : `${chosenTeam.name} is not in the ${chosen.name.toLowerCase()} this season.`}
-        </Nothing>
-      ) : (
-        <Season rows={rows} badges={crests} />
-      ),
-    );
-  }
-
-  // ---- One gameweek ------------------------------------------------------
-  const ties = tiesIn(round);
-
-  // Only once there is football to have scored in. Fantrax answers for any
-  // period asked, so a reader browsing March would otherwise spend a request per
-  // gameweek on totals the board has already decided not to print.
-  const board = round.started ? await liveScores(round.period) : null;
-  const points = new Map([...(board?.scores ?? [])].map(([team, score]) => [team, score.points]));
-
-  return shell(
-    <>
-      {/* Only while the round on screen is the one being played. A reader
-          looking at March in August is not watching anything move.
-
-          Under way, not in play. `status === "live"` is true only while a ball
-          is actually being kicked, so between Saturday's kickoffs and right
-          through Sunday the page stopped asking — while the FP column beside
-          every name is Fantrax's live total, still moving. That is the same
-          distinction `pollSeconds` is built on: the wide window is right for a
-          poll rate and wrong for a dot. Asked of this round rather than of the
-          snapshot, because the snapshot is always the current round and this
-          page is the one that shows any of them. */}
-
-      <RoundHeader round={round} />
-
-      {board?.refused ? (
+      {refused === null ? null : (
         <p className="px-3 text-2xs text-faint">
           Fantrax&apos;s scoreboard is not answering, so there are no points to show. The fixtures
-          below are still right. <span className="numeric">{board.refused}</span>
+          below are still right. <span className="numeric">{refused}</span>
         </p>
-      ) : null}
-
-      {ties.length === 0 ? (
-        <Nothing title="Nothing on" code={`gameweek ${round.gameweek}`}>
-          {chosen === null
-            ? "No competition has a fixture in this gameweek — a bye, or a league nobody has been drawn into yet."
-            : `The ${chosen.name.toLowerCase()} is not played in this gameweek.`}
-        </Nothing>
-      ) : (
-        <div className="flex flex-col gap-4">
-          {groupTies(ties).map((group) => (
-            <Section
-              key={`${group.competition.id}-${group.round ?? ""}`}
-              title={
-                group.round === null
-                  ? group.competition.name
-                  : `${group.competition.name} · ${group.round}`
-              }
-              aside={group.competition.id === LEAGUE_COMPETITION.id ? undefined : "Placeholder draw"}
-            >
-              <ul className="cm-rows flex flex-col">
-                {group.ties.map((tie, at) => (
-                  <li key={`${tie.home.label}-${tie.away.label}-${at}`}>
-                    <Tie
-                      tie={tie}
-                      points={points}
-                      badges={crests}
-                      round={round}
-                      mine={mine}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </Section>
-          ))}
-        </div>
       )}
-    </>,
+
+      {/* **The whole season in one scrolling box, with CM's own bar down the
+          side.** A list is only allowed to be longer than its box if the box
+          says so — `desk.css` makes that argument for `.cm-scroll` and the
+          reference makes it for the Schedule tab, where the bar is what tells a
+          reader the season continues past the twelfth row. */}
+      <div className="cm-scroll cm-scroll-y flex max-h-[42rem] flex-col gap-4 overflow-y-auto">
+        {rounds.map((round) => (
+          <Round
+            key={round.period}
+            round={round}
+            ties={tiesIn(round)}
+            points={points.get(round.period) ?? EMPTY}
+            badges={crests}
+            mine={mine}
+          />
+        ))}
+      </div>
+    </LeagueShell>
   );
 }
+
+/** One gameweek: its deadline, and every tie being played on it. */
+function Round({
+  round,
+  ties,
+  points,
+  badges,
+  mine,
+}: {
+  round: ScheduleRound;
+  ties: CompetitionTie[];
+  points: Map<string, number | null>;
+  badges: Map<string, string>;
+  mine: string | null;
+}) {
+  if (ties.length === 0) return null;
+
+  return (
+    <section className="flex flex-col gap-1">
+      <RoundHeader round={round} />
+      {groupTies(ties).map((group) => (
+        <div key={`${group.competition.id}-${group.round ?? ""}`} className="flex flex-col">
+          {/* The competition's own head, in the chrome face, the way CM captions
+              a block inside a panel. The LEAGUE's block is unheaded: a schedule
+              of which nine rows in ten are the league would be a column of one
+              repeated word, and the two lines a cup round adds are exactly the
+              rows that need naming. */}
+          {group.competition.id === LEAGUE_COMPETITION.id && group.round === null ? null : (
+            <h3 className="cm-bevel flex h-6 items-center px-1.5 font-chrome text-3xs font-bold uppercase">
+              {group.round === null
+                ? group.competition.name
+                : `${group.competition.name} · ${group.round}`}
+              <span className="pl-2 font-normal opacity-70">Placeholder draw</span>
+            </h3>
+          )}
+          <ul className="cm-rows flex flex-col">
+            {group.ties.map((tie, at) => (
+              <li key={`${tie.home.label}-${tie.away.label}-${at}`}>
+                <Tie tie={tie} points={points} badges={badges} round={round} mine={mine} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+  );
+}
+
+/** Hoisted rather than written inline: a `new Map()` in the render would be a
+ *  fresh object per round, and every round but the one in play wants the same
+ *  empty one. */
+const EMPTY: Map<string, number | null> = new Map();

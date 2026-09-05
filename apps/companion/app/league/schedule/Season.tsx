@@ -18,11 +18,14 @@ export default function Season({
 }: {
   rows: SeasonRow[];
   badges: Map<string, string>;
-  /** Whose season this is. Present only where a matchup page can be reached —
-   *  the team's own Fixtures tab — so the score becomes a link there and stays
-   *  plain text on the schedule's own view, which already has that side's
-   *  matchup a tap away in its own row. */
-  teamId?: string;
+  /** Whose season this is.
+   *
+   *  **Required, as of 5 Sep 2026.** It was optional because the schedule's own
+   *  `?team=` view drew this list with no matchup to open; that view went with
+   *  the schedule's dropdowns, so the team's own Fixtures tab is the only caller
+   *  and the score is always a link. The unlinked branch was dead code behind a
+   *  `?` (CODE_RULES §2). */
+  teamId: string;
 }) {
   return (
     // **Championship Manager's own fixture list** (Craig, 2 Sep, with the shot).
@@ -90,16 +93,12 @@ export default function Season({
                 dropping one of them. So the two taps are the two things a reader
                 wants from the row — the name opens the squad, the score opens
                 the match. */}
-            {teamId === undefined ? (
+            <Link
+              href={`/league/matchups/${teamId}?gw=${row.round.gameweek}`}
+              className="cm-row inline-flex min-h-11 shrink-0 items-center hover:underline"
+            >
               <Score row={row} />
-            ) : (
-              <Link
-                href={`/league/matchups/${teamId}?gw=${row.round.gameweek}`}
-                className="cm-row inline-flex min-h-11 shrink-0 items-center hover:underline"
-              >
-                <Score row={row} />
-              </Link>
-            )}
+            </Link>
           </div>
         </li>
       ))}
@@ -181,7 +180,9 @@ function Opponent({
       // the name actually was. `tapfit` never saw it because its route list
       // holds no query strings and this view only existed at
       // `/league/schedule?team=`; a team's own Fixtures tab put it on a plain
-      // route and the instrument found all thirty-eight of them at once.
+      // route and the instrument found all thirty-eight of them at once. That
+      // query view is gone as of 5 Sep 2026 and the Fixtures tab is the only
+      // caller, which is what put this component under the instrument for good.
       //
       // `.cm-row` is what lets the desk keep 28px while the phone gets 44 —
       // pairing the two is the documented lesson from 1 Sep, not a belt-and-

@@ -46,6 +46,10 @@ export default function FootballRow({
       away={club(away)}
       score={played ? { home: spelled(fixture.homeScore), away: spelled(fixture.awayScore) } : null}
       pending={fixture.kickoff === null ? "TBC" : londonTime(fixture.kickoff)}
+      // **Always a node, even when it is empty**, which is what holds the tail
+      // column open across the panel: a match with no clock and none of your men
+      // in it still has to leave the space, or its two names take 48px the rows
+      // around it do not have and every kickoff time lands somewhere different.
       tail={
         <>
           {/* The state, in the vidiprinter's own place. `--color-live` is a

@@ -84,8 +84,14 @@ export default function ScoreRow({
    *  or the `v` a fixture list prints. */
   pending?: ReactNode;
   /** The right-hand slot, past the away block: a clock, `FT`, a day, a count of
-   *  the reader's men in the match. Held open even when empty so a column of
-   *  rows keeps its columns. */
+   *  the reader's men in the match.
+   *
+   *  **`undefined` removes the column; an empty node keeps it.** The distinction
+   *  is the one a panel needs: a football row always passes something, even when
+   *  the match is unstarted and none of your men are in it, so every kickoff time
+   *  in the panel lands at the same x. A results row passes nothing at all, and
+   *  a permanently empty 48px column on a 390 screen is 48px the two names
+   *  wanted. */
   tail?: ReactNode;
   /** Where the whole row leads. A row without one is not a control and takes no
    *  tap floor. */
@@ -93,7 +99,7 @@ export default function ScoreRow({
 }) {
   const row = (
     <div
-      className={`grid min-h-11 items-stretch lg:min-h-7 ${GRID} ${
+      className={`grid min-h-11 items-stretch lg:min-h-7 ${tail === undefined ? GRID.plain : GRID.tailed} ${
         home.mine === true || away.mine === true ? "border-l-4 border-l-accent" : ""
       }`}
     >
@@ -103,7 +109,7 @@ export default function ScoreRow({
           `1:3`, not `1-3`. Cyan, which is DESIGN §3's derived-reading slot and
           exactly what the game spends it on here. `.numeric` is what keeps a
           column of them lined up. */}
-      <span className="numeric flex w-14 shrink-0 items-center justify-center text-sm font-bold text-info lg:w-24 lg:text-base">
+      <span className="numeric flex w-16 shrink-0 items-center justify-center gap-1 text-sm font-bold text-info lg:w-24 lg:text-base">
         {score === null ? (
           <span className="text-2xs font-normal text-faint">{pending}</span>
         ) : (
@@ -124,9 +130,11 @@ export default function ScoreRow({
           the two `1fr` name columns took the difference. Every kickoff time in
           the panel landed at a slightly different x, which is the one thing a
           column of scorelines exists to avoid. */}
-      <span className="flex w-12 shrink-0 items-center justify-end gap-1 text-right lg:w-20 lg:px-1">
-        {tail}
-      </span>
+      {tail === undefined ? null : (
+        <span className="flex w-12 shrink-0 items-center justify-end gap-1 text-right lg:w-20 lg:px-1">
+          {tail}
+        </span>
+      )}
     </div>
   );
 
@@ -161,7 +169,18 @@ export default function ScoreRow({
  *  only available answer rather than a preference. A Fantrax manager has no
  *  short form, so his name truncates; the badge beside it is what identifies him
  *  at that width, which is the job CM's nation block does in the reference. */
-const GRID = "grid-cols-[auto_1fr_auto_1fr_auto_auto] gap-x-0.5 lg:gap-x-2";
+/** Five tracks when the row has no tail, six when it has.
+ *
+ *  **Written out twice rather than composed**, and `desk.ts` records the reason
+ *  by name: two utilities of one kind on one element are resolved by their order
+ *  in the GENERATED stylesheet, not by their order in the class attribute, so
+ *  `${GRID} grid-cols-[...six...]` picks a winner nobody chose. Both spellings
+ *  also have to appear literally in scanned source or Tailwind v4 emits
+ *  neither. */
+const GRID = {
+  plain: "grid-cols-[auto_1fr_auto_1fr_auto] gap-x-0.5 lg:gap-x-2",
+  tailed: "grid-cols-[auto_1fr_auto_1fr_auto_auto] gap-x-0.5 lg:gap-x-2",
+} as const;
 
 /** CM's blue block, at each end of the row and self-stretched to its full
  *  height — in the reference the blue runs edge to edge with no gap between one

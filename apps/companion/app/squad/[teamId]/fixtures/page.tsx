@@ -10,15 +10,16 @@ import { PANEL } from "@/app/desk";
 
 // Every round this side is in, end to end.
 //
-// **The screen exists already** — `/league/schedule?team=<id>` is this, and has
-// been since the schedule grew a team filter. What it did not have was a way in
-// from the team: a reader on a squad had to go to League, then Schedule, then
-// pick the side out of a select. So this is the same three functions read from
-// the other direction, not a second implementation of them.
+// **This is now the ONLY way to read one team's whole season.** It was the
+// second one: `/league/schedule?team=<id>` drew the same view behind a select,
+// and that select went on 5 Sep 2026 with the schedule's other two ("Dont show
+// all the grey arrows here, just show all fixtures for the league itself"). The
+// view moved rather than went, and this is where a reader looking for one team
+// already is — a squad's own Fixtures tab, rather than League, then Schedule,
+// then picking the side out of a dropdown.
 //
-// `seasonRows` and `Season` are imported rather than copied for that reason. If
-// the season row ever changes shape it changes in one place, and the two screens
-// cannot drift into disagreeing about what a fixture looks like.
+// `seasonRows` and `Season` still live under `league/schedule/` because that is
+// where the shape belongs; nothing else reads them now.
 //
 // **The knockouts are deliberately not here.** The schedule's own view mixes
 // Fantrax's pairings with `seededTies`, the placeholder cup and playoff declared
