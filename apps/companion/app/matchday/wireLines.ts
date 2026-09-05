@@ -34,9 +34,6 @@ export interface WireLine {
   key: string;
   minute: string;
   kind: MatchEventKind;
-  /** FPL's fixture id, for the link. **Not `fixtureCode`** — the code is the
-   *  season-stable join key, and `/prem/match/[id]` takes the per-season id. */
-  fixtureId: number | null;
   club: string | null;
   /** The man the event is about: the scorer, the booked man, the substitute
    *  coming on. Null when the chain could not place him, which is a different
@@ -57,14 +54,20 @@ export interface WireMan {
 
 export interface Wire {
   lines: WireLine[];
-  /** Men an event named that the bridge could not place.
-   *
-   *  Counted and printed rather than hidden: a dash means "nobody holds him",
-   *  which is a fact about the league, and using the same mark for our own
-   *  failure to resolve him would be this app telling itself a wrong number.
-   *  `npm run pl-bridge` is what takes it back to nought. */
-  unresolved: number;
 }
+
+/* **The `unresolved` count is gone**, and it is a deleted PIPELINE rather than a
+   hidden number. It existed so our own failure to place a man wore a different
+   mark from "nobody in the league holds him", and it was printed as a foot line
+   under the panel; Craig took that line off on 5 Sep 2026 ("remove 1 man not
+   matched to a player"), which left a counter incremented, carried across a
+   boundary and read by nobody — CODE_RULES §2's dead pipeline behind removed UI.
+
+   The distinction it guarded is still drawn: a man the bridge could not place
+   comes through as `man: null` and prints the dash, exactly as a man nobody owns
+   does. What is lost is the ability to notice the bridge going stale FROM THE
+   SCREEN, and that check has a better home anyway — `npm run pl-bridge`
+   reharvests and reports, which is where an operational number belongs. */
 
 /** How many men each kind of event names, and what the second one did.
  *
@@ -88,10 +91,8 @@ export function wireLines(
 ): Wire {
   const players = playerByCode(snapshot);
   const clubs = new Map<number, Club>(snapshot.clubs.map((c) => [c.id, c]));
-  const fixtureIds = new Map(snapshot.fixtures.map((f) => [f.code, f.id]));
 
   const lines: WireLine[] = [];
-  let unresolved = 0;
 
   /** One slot of an event, joined to the man and to whoever holds him.
    *
@@ -101,16 +102,13 @@ export function wireLines(
    *  place, which is OUR failure and is counted. Only the third is a man. */
   const manAt = (event: MatchEvent, slot: number): WireMan | null => {
     const code = event.players[slot];
-    if (code === undefined) return null;
-    if (code === null) {
-      unresolved++;
-      return null;
-    }
+    // Three answers collapse to two now that nothing counts them: a slot the
+    // feed left empty (an unassisted goal, which is a fact) and a man it named
+    // that the bridge could not place both come through as null and both print
+    // the dash. The comment above `Wire` records what that cost.
+    if (code === undefined || code === null) return null;
     const player = players.get(code) ?? null;
-    if (player === null) {
-      unresolved++;
-      return null;
-    }
+    if (player === null) return null;
     const owner = owners?.get(code) ?? null;
     return { player, owner, mine: owner !== null && owner.teamId === mine };
   };
@@ -123,12 +121,11 @@ export function wireLines(
       key: String(event.id),
       minute: event.minute,
       kind: event.kind,
-      fixtureId: fixtureIds.get(event.fixtureCode) ?? null,
       club: man === null ? null : (clubs.get(man.player.clubId)?.shortName ?? null),
       man,
       second,
     });
   }
 
-  return { lines, unresolved };
+  return { lines };
 }

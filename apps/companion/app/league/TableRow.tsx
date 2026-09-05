@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { ordinal, type FormGame, type StandingsRow } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
+import { ROW_LINK } from "../components/league/TableCells";
 import { cellAlign } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
-import { FIGURE, ROW_RULE, TONE } from "@/app/desk";
+import { FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 
 // One team's line in the table.
 //
@@ -75,12 +76,10 @@ export default function TableRow({
           // columns — `24.jpg` runs `Arsenal` at roughly half again the height
           // of the `6 5 0 1` on the same line — because the name is what you
           // scan the table FOR and the figures are what you then read across.
-          className={`cm-row flex min-h-11 items-center gap-2 text-base font-bold hover:underline lg:text-lg ${
-            yoursInk(mine)
-          }`}
+          className={`${ROW_LINK} ${yoursInk(mine)}`}
         >
           <TeamBadge team={{ teamId: row.teamId, name: row.teamName }} url={badge} />
-          <span className="min-w-0 truncate">{row.teamName}</span>
+          <span className={`min-w-0 truncate ${ROW_NAME}`}>{row.teamName}</span>
           {/* **No YOU chip** (Craig, 5 Sep 2026: "Remove 'you' from all rows
               where it appears. Just use yellow text for the team"). It was here
               on the argument that a label survives a reader who cannot see the

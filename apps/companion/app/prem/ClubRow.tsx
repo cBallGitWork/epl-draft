@@ -4,7 +4,7 @@ import { type Result, type TableRow, crestUrl, ordinal } from "@epl/core";
 import { cellAlign } from "./Columns";
 import { CLUB } from "./PremNav";
 import { ROW_LINK } from "../components/league/TableCells";
-import { FIGURE, ROW_RULE, TONE } from "@/app/desk";
+import { FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 
 // One club's line in the Premier League table.
 //
@@ -67,8 +67,8 @@ export default function ClubRow({
               390 — CM itself sets `Middlesbrough` at a width it has and we do
               not. Both are rendered and CSS picks, so there is no breakpoint
               guess in the markup. */}
-          <span className="min-w-0 truncate lg:hidden">{row.shortName}</span>
-          <span className="hidden min-w-0 truncate lg:inline">{row.name}</span>
+          <span className={`min-w-0 truncate lg:hidden ${ROW_NAME}`}>{row.shortName}</span>
+          <span className={`hidden min-w-0 truncate lg:inline ${ROW_NAME}`}>{row.name}</span>
         </Link>
       </td>
 

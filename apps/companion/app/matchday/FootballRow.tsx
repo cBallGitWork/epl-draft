@@ -43,31 +43,16 @@ export default function FootballRow({
       away={club(away, places)}
       score={played ? { home: spelled(fixture.homeScore), away: spelled(fixture.awayScore) } : null}
       pending={fixture.kickoff === null ? "TBC" : londonTime(fixture.kickoff)}
-      // **Always a node, even when it is empty**, which is what holds the tail
-      // column open across the panel: a match with no clock still has to leave
-      // the space, or its two names take 48px the rows around it do not have and
-      // every kickoff time lands somewhere different.
-      //
-      // **The `N yours` count is gone** (Craig, 5 Sep 2026: "Remove 'you' from
-      // all rows where it appears"). It was the only thing in this slot that was
-      // not about the match, and the wire directly above says the same thing
-      // better: it names WHICH of your men did something rather than counting
-      // how many of them are on the pitch. Nothing upstream changed —
-      // `involvement.marks()` still feeds the wire and "Your afternoon" — so
-      // what went is a label, not a read. It also paid for the position block:
-      // 48px back, which is what the two names needed once the row grew a
-      // fourth column.
-      tail={
-        /* The state, in the vidiprinter's own place. `--color-live` is a match
-           in play and nothing else (DESIGN §3), so it is the one thing on the
-           row that moves and the only thing wearing that red. */
+      // The state, in the vidiprinter's own place — inside the score cell, right
+      // of the figures (Craig, 5 Sep 2026). `--color-live` is a match in play
+      // and nothing else (DESIGN §3), so it is the one thing on the row that
+      // moves and the only thing wearing that red.
+      clock={
         live ? (
           <span className={`${SMALL_CAPS} numeric text-live`}>{fixture.minutes}&prime;</span>
         ) : fixture.status === "finished" ? (
           <span className={`${SMALL_CAPS} text-faint`}>FT</span>
-        ) : (
-          <></>
-        )
+        ) : null
       }
       href={`/prem/match/${fixture.id}`}
     />

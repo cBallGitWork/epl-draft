@@ -1,6 +1,6 @@
 import type { MatchEventKind } from "@epl/core";
 import Section from "../components/shell/Section";
-import { SMALL_CAPS } from "@/app/desk";
+import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import type { WireLine } from "./wireLines";
 
 // The vidiprinter that knows whose everybody is.
@@ -60,31 +60,28 @@ const TONE: Partial<Record<MatchEventKind, string>> = {
 
 export default function Wire({
   lines,
-  unresolved,
   limit,
 }: {
   lines: readonly WireLine[];
-  unresolved: number;
   limit: number;
 }) {
   if (lines.length === 0) return null;
 
   return (
-    <Section title="The wire" aside="Opta, via the Premier League">
+    <Section title="The wire">
       <ul className="cm-rows">
         {lines.slice(0, limit).map((line) => (
           <Row key={line.key} line={line} />
         ))}
       </ul>
-      {/* Our own failure to place a man wears its own mark and is counted.
-          A dash means nobody in the league holds him, which is a fact about the
-          league; using the same mark for both would be the screen telling itself
-          a wrong number. `npm run pl-bridge` takes this back to nought. */}
-      {unresolved > 0 ? (
-        <p className="text-3xs text-faint">
-          {unresolved} {unresolved === 1 ? "man" : "men"} not matched to a player
-        </p>
-      ) : null}
+      {/* **The unmatched count is not printed** (Craig, 5 Sep 2026: "remove 1 man
+          not matched to a player"). It was here so our own failure to place a
+          man wore a different mark from "nobody in the league holds him" — a
+          real distinction, and one for US rather than for a reader: he cannot
+          act on it, it appears on the screen he opens at ten to four, and
+          `npm run pl-bridge` is what takes it back to nought. The count is still
+          computed and still crosses in `Wire.unresolved`, so the day it wants a
+          home it has one. */}
     </Section>
   );
 }
@@ -144,7 +141,7 @@ function Man({
     <div className="flex min-w-0 flex-1 flex-col justify-center">
       <span className="flex min-w-0 items-baseline gap-1">
         {label ? <span className={`${SMALL_CAPS} shrink-0 text-faint`}>{label}</span> : null}
-        <span className="min-w-0 truncate font-chrome text-sm font-bold text-ink">
+        <span className={`min-w-0 truncate text-ink ${ROW_NAME}`}>
           {man?.player.name ?? "\u2014"}
         </span>
         {club ? <span className={`${SMALL_CAPS} shrink-0 text-muted`}>{club}</span> : null}

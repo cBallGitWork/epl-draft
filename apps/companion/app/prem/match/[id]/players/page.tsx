@@ -7,7 +7,7 @@ import { IndexCell } from "../../../../components/league/TableCells";
 import Skeleton from "../../../../components/shell/Skeleton";
 import { intelSquads } from "../../../../intel";
 import { PLAYER } from "../../../PremNav";
-import { BOARD, PANEL_FLUSH, ROW_RULE } from "@/app/desk";
+import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE } from "@/app/desk";
 import MatchShell from "../Shell";
 import { matchOwners, readMatch } from "../match";
 import { teamSheets } from "../../../../commentary";
@@ -193,7 +193,7 @@ function Side({
               {unused.map((man) => (
                 <tr key={`${man.name}-${man.shirt ?? ""}`} className={`${ROW_RULE} cm-out`}>
                   <IndexCell>{man.shirt ?? ""}</IndexCell>
-                  <td className="px-1.5 py-1 text-sm">{shortName(man)}</td>
+                  <td className={`px-1.5 py-1 ${ROW_NAME}`}>{shortName(man)}</td>
                   {/* No figure. He did not play, and a nought here would be a
                       claim about an afternoon he had no part in (DESIGN §7). */}
                   <td className="numeric w-8 px-1.5 text-right text-sm">&mdash;</td>
@@ -234,7 +234,9 @@ function Row({
           href={`${PLAYER}/${row.player.code}`}
           className="group flex min-h-11 flex-col justify-center px-1.5 lg:min-h-9"
         >
-          <span className="min-w-0 truncate text-sm group-hover:underline">{row.player.name}</span>
+          <span className={`min-w-0 truncate group-hover:underline ${ROW_NAME}`}>
+            {row.player.name}
+          </span>
           {owner === undefined ? null : (
             <span className="min-w-0 truncate text-3xs text-faint">{owner.teamName}</span>
           )}

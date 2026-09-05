@@ -60,5 +60,4 @@ export const INDEX_WIDTH = "w-8 lg:w-9";
  *  `min-h-11`, and the class takes over at `lg` to bring the row down to CM's
  *  28. Dropping the `min-h` took every row on a 390 phone to 32px, which
  *  `tapfit` caught as 50 under-floor targets in one sweep. */
-export const ROW_LINK =
-  "cm-row flex min-h-11 items-center gap-2 text-base font-bold hover:underline lg:text-lg";
+export const ROW_LINK = "cm-row flex min-h-11 items-center gap-2 hover:underline";

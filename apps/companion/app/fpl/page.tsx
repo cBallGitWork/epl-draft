@@ -9,7 +9,7 @@ import EntryForm from "./EntryForm";
 import { forgetEntry } from "./actions";
 import { myEntryId, mySide } from "./entry";
 import { FPL_SITE, type Played } from "./played";
-import { LABEL, PANEL, SMALL_CAPS } from "@/app/desk";
+import { LABEL, PANEL, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 
 // The other game, kept small on purpose.
 //
@@ -156,7 +156,7 @@ export default async function FplPage() {
           <ul className="cm-rows">
             {entry.leagues.map((league) => (
               <li key={league.id} className="cm-row flex min-h-11 items-center gap-2 px-1">
-                <span className="min-w-0 flex-1 truncate font-chrome text-sm font-bold">
+                <span className={`min-w-0 flex-1 truncate ${ROW_NAME}`}>
                   {league.name}
                 </span>
                 {/* CYAN, and the slot agrees: a rank is a reading DERIVED from
@@ -259,7 +259,7 @@ function Bench({
               <span className="cm-index numeric flex w-7 shrink-0 items-center justify-center text-2xs font-bold">
                 {at + 1}
               </span>
-              <span className="flex min-w-0 flex-1 items-center truncate font-chrome text-sm font-bold text-ink">
+              <span className={`flex min-w-0 flex-1 items-center truncate text-ink ${ROW_NAME}`}>
                 {player?.name ?? "—"}
               </span>
               <span className={`flex shrink-0 items-center ${SMALL_CAPS} text-muted`}>

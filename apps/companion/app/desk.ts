@@ -59,6 +59,40 @@ export const SMALL_CAPS = "text-2xs font-bold uppercase";
  *  as long as it took to probe it. Compose from `SMALL_CAPS` instead. */
 export const LABEL = `${SMALL_CAPS} text-faint`;
 
+/** **A NAME in a repeating row** — a club, a manager, a footballer.
+ *
+ *  Craig, 5 Sep 2026: *"im still worried that multiple rows with similar items
+ *  look different, different fonts. we should try to unify where we can."* He is
+ *  right, and the count says how badly. One thing — the name you scan a list FOR
+ *  — was drawn **seven ways in two faces and four sizes** on 5 Sep:
+ *
+ *    league/TableRow        sans   base / lg:lg   bold
+ *    prem/ClubRow           sans   base / lg:lg   bold      (via ROW_LINK)
+ *    league/team-stats      sans   base / lg:lg   bold      (via ROW_LINK)
+ *    prem/team-stats        sans   base / lg:lg   bold      (via ROW_LINK)
+ *    prem/match players     sans   sm             normal
+ *    prem/club SquadTable   sans   inherited      bold
+ *    players/PlayerTable    sans   inherited      medium
+ *    matchday/Wire          CHROME sm / lg:base   bold
+ *    shell/ScoreRow         CHROME sm / lg:base   bold
+ *
+ *  **The chrome face wins**, because Craig asked for it by name the same day
+ *  ("for all rows, use the correct CM font please") and because it is the face
+ *  `desk.css` already puts on every plate — a row and the column head above it
+ *  were in different families.
+ *
+ *  **`sm` under a thumb and `base` on the desk**, which is the pair the two
+ *  chrome sites already used and the one the density table names for a row. The
+ *  `base`/`lg:lg` sites came down a step: they were sized against CM's league
+ *  table, where a club name is half again the figures beside it — and that is a
+ *  ratio between the NAME and the FIGURE, which `--text-2xs` going up a pixel on
+ *  the desk already narrowed.
+ *
+ *  No `truncate` and no `min-w-0`: those are the caller's, because whether a
+ *  name may be cut depends on what is beside it, and half these sites sit in a
+ *  `<td>` that handles it. */
+export const ROW_NAME = "font-chrome text-sm font-bold lg:text-base";
+
 /** A figure in a repeating row: tabular, centred, and small enough that a column
  *  of them reads as a column. Three files declared it byte-identically under a
  *  private `const FIGURE` — `league/TableRow`, `prem/ClubRow`, `players/Board`.
@@ -204,24 +238,13 @@ export const FACT =
  *  stops being a row. */
 export const FACT_LABEL = "min-w-0 flex-1 truncate text-sm text-muted";
 
-/** The crest beside a scoreline: 22px, at both widths, held open even when the
- *  club is missing so a column of scores stays a column. Four sites wrote
- *  `h-[1.375rem] w-[1.375rem]` and three of them wrote `width={22} height={22}`
- *  beside it, which is a magic number twice over.
- *
- *  **Deliberately not `--row-badge`.** That token is 26px, drops to 20 on the
- *  desk, and is set ON `.cm-row` — and `desk.css` says in as many words that a
- *  scoreline panel must not wear `.cm-row`, because one of its halves is a
- *  button and the class would hold a control to a row's floor. So the token
- *  cannot reach here and would be the wrong number if it did. 22 is the
- *  scoreline's own size, and this is where it is written down.
- *
- *  `_PX` is what `next/image` is told to FETCH and the class is what the page
- *  draws — `TeamBadge`'s `BADGE_PX`/`BADGE_SLOT` pair, for its reason: a source
- *  fetched smaller than it is drawn is a soft crest nobody thinks to blame the
- *  CSS for. They are the same number here because this mark has no breakpoint. */
-export const SCORE_CREST = "h-[1.375rem] w-[1.375rem] shrink-0";
-export const SCORE_CREST_PX = 22;
+/* `SCORE_CREST` / `SCORE_CREST_PX` were here and are gone — **down to one
+   caller**, counted 5 Sep 2026. They were extracted at four scoreline rows;
+   `shell/ScoreRow` absorbed three of them and draws its own badge, and the
+   fourth (`prem/club/[code]/Run`) is a club's fixture run, which is not a
+   scoreline at all. §1 forbids a recipe built for a single caller as firmly as
+   it forbids a fourth copy, so the number moved back into `Run.tsx` beside the
+   `next/image` call that is now its only consumer. */
 
 /** The button that submits a form it sits inside — the plate at `BUTTON`'s
  *  height without `BUTTON`'s `flex` centring, because a `<button>` centres its

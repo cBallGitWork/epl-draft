@@ -8,7 +8,7 @@ import StateBox from "../../../components/football/StateBox";
 import { positionsLabel } from "../../../positions";
 import { PLAYER } from "../../PremNav";
 import type { LeagueOpinion } from "./club";
-import { BOARD, FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 
 // Every man on the club's books, as Championship Manager files a squad.
 //
@@ -148,7 +148,7 @@ export default function SquadTable({
                         right on a pitch card 46px wide and wrong in a column
                         with room for a person. `fullName` is `first_name
                         second_name` from the bootstrap. */}
-                    <span className={`min-w-0 truncate ${dim}`}>{player.fullName}</span>
+                    <span className={`min-w-0 truncate ${ROW_NAME} ${dim}`}>{player.fullName}</span>
                     <StateBox player={player} />
                   </Link>
                 </td>

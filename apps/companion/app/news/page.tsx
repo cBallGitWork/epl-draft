@@ -7,7 +7,7 @@ import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
 import { londonDayAndDate } from "../londonTime";
 import { NEWS } from "../titles";
-import { HEAD_PLATE, PANEL_FLUSH, SMALL_CAPS } from "@/app/desk";
+import { HEAD_PLATE, PANEL_FLUSH, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 
 // The manager's news, the way Championship Manager files it.
 //
@@ -201,7 +201,7 @@ function Row({
           : londonDayAndDate(item.at)}
       </span>
       <span
-        className={`flex min-w-0 flex-1 items-center truncate py-1 font-chrome text-sm font-bold ${
+        className={`flex min-w-0 flex-1 items-center truncate py-1 ${ROW_NAME} ${
           open ? "text-ink" : item.urgent ? "text-bad" : "text-ink"
         }`}
       >

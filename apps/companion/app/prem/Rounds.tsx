@@ -17,9 +17,13 @@ export interface Round {
 export default function Rounds({
   rounds,
   clubs,
+  places,
 }: {
   rounds: readonly Round[];
   clubs: Map<number, Club>;
+  /** Each club's place in the table, for the row's blue block. Built by the
+   *  page, because it is the page that holds the season's fixtures. */
+  places: Map<number, number>;
 }) {
   return (
     <div className="flex flex-col gap-3">
@@ -35,7 +39,7 @@ export default function Rounds({
           </h2>
           <div className="cm-rows flex flex-col">
             {round.fixtures.map((fixture) => (
-              <Match key={fixture.id} fixture={fixture} clubs={clubs} />
+              <Match key={fixture.id} fixture={fixture} clubs={clubs} places={places} />
             ))}
           </div>
         </section>

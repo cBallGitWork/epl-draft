@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Club, Fixture } from "@epl/core";
-import { crestUrl } from "@epl/core";
+import { COMPETITION_NAME, crestUrl } from "@epl/core";
 import { londonDayAndDate, londonTime } from "../../../londonTime";
 import { CLUB } from "../../PremNav";
 import { MATCH } from "./match";
 import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
-import { SCORE_CREST, SCORE_CREST_PX } from "@/app/desk";
+
 
 // One club's season, played and to come, in the order it runs.
 //
@@ -73,9 +73,9 @@ export default function Run({
                       <Image
                         src={crestUrl(opponent)}
                         alt=""
-                        width={SCORE_CREST_PX}
-                        height={SCORE_CREST_PX}
-                        className={`${SCORE_CREST} object-contain`}
+                        width={CREST_PX}
+                        height={CREST_PX}
+                        className={`${CREST} object-contain`}
                         aria-hidden
                         unoptimized
                       />
@@ -130,6 +130,23 @@ export default function Run({
 
 /** What FPL's fixture list is a list OF. Named rather than inlined so the day a
  *  second competition arrives, the literal is already in one place. */
-const COMPETITION = "Premier League";
+// The competition, said the one way this app says it. Craig, 5 Sep 2026:
+// "league is known as FA Barclays Premiership throughout, full change on that."
+// `config.ts` is where the name lives; a second spelling here is a second thing
+// to be wrong when the sponsor changes.
+const COMPETITION = COMPETITION_NAME;
+
+/** The crest beside a fixture in this run: 22px, at both widths.
+ *
+ *  Lived in `desk.ts` as `SCORE_CREST` while four scoreline rows shared it.
+ *  `shell/ScoreRow` absorbed three and draws its own; this is a club's fixture
+ *  RUN rather than a scoreline, so it is now the only caller and the number
+ *  belongs here (CODE_RULES §1: a recipe for one caller is not a recipe).
+ *
+ *  `_PX` is what `next/image` is told to FETCH and the class is what the page
+ *  draws — `TeamBadge`'s own pair, for its reason: a source fetched smaller than
+ *  it is drawn is a soft crest nobody thinks to blame the CSS for. */
+const CREST = "h-[1.375rem] w-[1.375rem] shrink-0";
+const CREST_PX = 22;
 
 const DASH = "—";

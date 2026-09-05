@@ -5,7 +5,7 @@ import type { PoolRow } from "./pool";
 import { COLUMNS, activeSort, sortHref } from "./query";
 import { positionsLabel } from "../positions";
 import type { PlayersQuery } from "./query";
-import { ROW_RULE, SCROLL } from "@/app/desk";
+import { ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 
 // The pool as a table. Sorting is a link, not a click handler: the server does
 // the ordering, the phone gets HTML, and the sort survives being shared.
@@ -117,7 +117,9 @@ export default function PlayerTable({
                         height of a list to stack them. A phone has no room to
                         put them side by side and a desk has nothing but. */}
                     <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
-                      <span className="min-w-0 truncate font-medium">{entry.player.displayName}</span>
+                      <span className={`min-w-0 truncate ${ROW_NAME}`}>
+                        {entry.player.displayName}
+                      </span>
                       <span className="flex shrink-0 items-center gap-1.5 text-2xs text-faint">
                         {/* The league's eligibility, not the pool's single
                             position: "F/M" is what the commissioner set and what

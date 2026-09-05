@@ -1,4 +1,4 @@
-import { clubById } from "@epl/core";
+import { clubById, leagueTable } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import PremShell from "../../Shell";
 import Rounds, { byRound, panelRows } from "../../Rounds";
@@ -21,6 +21,13 @@ export const revalidate = 30;
 export default async function FixturesPage() {
   const [snapshot, fixtures] = await Promise.all([footballNow(), seasonFixtures()]);
 
+  // Each club's place, for the row's blue block. The ARRAY ORDER of
+  // `leagueTable` — a `TableRow` carries no rank of its own precisely because
+  // the list IS the ranking — and pure, off fixtures this page already holds.
+  const places = new Map(
+    leagueTable(fixtures, snapshot.clubs).map((row, at) => [row.clubId, at + 1]),
+  );
+
   const ahead = byRound(fixtures.filter((fixture) => fixture.status === "upcoming"));
 
   if (ahead.length === 0) {
@@ -38,7 +45,7 @@ export default async function FixturesPage() {
     <PremShell current="fixtures"
       rows={panelRows(ahead)}
     >
-      <Rounds rounds={ahead} clubs={clubById(snapshot)} />
+      <Rounds rounds={ahead} clubs={clubById(snapshot)} places={places} />
     </PremShell>
   );
 }
