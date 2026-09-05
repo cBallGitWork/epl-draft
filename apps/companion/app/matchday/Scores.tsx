@@ -1,163 +1,102 @@
-import type { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing } from "@epl/core";
-import ScoreFigure from "../components/league/ScoreFigure";
+import {
+  LEAGUE_COMPETITION,
+  type Club,
+  type CompetitionTie,
+  type Fixture,
+  type FootballPlayer,
+  type LiveTeamScore,
+  groupTies,
+} from "@epl/core";
+import ScoreRow from "../components/shell/ScoreRow";
 import Section from "../components/shell/Section";
-import { londonDay, londonTime } from "../londonTime";
-import { SMALL_CAPS } from "@/app/desk";
+import FootballRow from "./FootballRow";
 
-// Both competitions, one screen, at Championship Manager's own density.
+// Both competitions, one screen, in Championship Manager's own results row.
 //
-// Craig, 4 Sep 2026: *"The table of prem matches needs proper cm rows and the
-// draft matches to show too."* The Live tab had ten fixtures drawn as 54px cards
-// with crests, a chevron and a stacked time-over-day — which is a fixture LIST,
-// and the reference has nothing like it. `docs/ui/reference/README.md`, measured
-// off the pixels: *"Rows sit straight on the ground: no card, no zebra, no gap.
-// The only repeating fill is the index cell down the left."*
+// Craig, 5 Sep 2026, with `craig/01-evening-results.jpg` attached: *"Live match rows, this is
+// how champ man looks (blue box for position). scores in cyan, teams in white.
+// full desktop - full team name."* `components/shell/ScoreRow` is that row, and
+// it is shared with the schedule and with Results — the measurements and the one
+// deliberate departure are in its docblock.
 //
 // **The draft above the football, because that is the order a manager cares
 // about them in** — the same argument `matchday.md` already makes for putting
-// his own tie first. Eight head-to-heads and ten matches is eighteen rows, which
-// at CM's 28 is one desk screen and at the phone's 44 is a short scroll.
+// his own tie first.
 //
-// **Not `matchday/desk/Rows`, and not yet extracted from it.** That wall draws
-// the same two facts and is a different object: it is read at arm's length,
-// nothing on it is a tap target, and its rows are 26px with no floor at all
-// because `desk.md` makes "nothing here is a link" binding by name. These carry
-// the phone's 44 and the desk's 28. Two spellings of one row is a coincidence
-// (CODE_RULES §1); the third earns the extraction, and it will be the one that
-// settles which of the two floors is right.
+// Three things changed here beyond the row itself, all asked for in the same
+// message:
+//
+// **The draft panel is headed by the COMPETITION, not by the word "draft"**
+// (*"'The draft' should be which comp it is (we will have duel comps at
+// times)"*). It takes `CompetitionTie` and `groupTies` now, which is the
+// schedule's own shape, so a cup round played the same week gets its own panel
+// and its own name instead of being folded into the league's eight.
+//
+// **The football panel lost its heading** (*"remove 'The football / The Premier
+// League' line"*). Both halves of it restated what the tab and the caption above
+// already say; the draft's heading survives because a competition name is a
+// fact and "the football" is not.
+//
+// **Today only, where there is a today** (*"Maybe the live tab only shows
+// matches from TODAY, to keep the space?"*). A gameweek is spread over three or
+// four days and eight of the ten rows on a Sunday are about matches that
+// finished yesterday. The whole round is the fallback, because a reader who
+// opens this on a Tuesday must not be shown an empty panel.
 
-/** **No index cell, and that is a decision rather than an omission.**
+/** One head-to-head in our league — or a cup tie, which is why it takes a
+ *  `CompetitionTie` rather than the pairing Fantrax hands over.
  *
- *  The first build put CM's blue block down the left of both tables carrying
- *  `1..10` — a row's place in a list, which is not a fact about anything. The
- *  reference's index block always carries something: an ordinal in a league
- *  table (`cm9900/24.jpg`, where the number IS the standing), a shirt number in
- *  a squad or a ratings list (`cm3/06.jpg`, `cm9900/16.jpg`). Fifteen scorelines
- *  in kickoff order have no such number, and drawing one anyway is decoration
- *  wearing data's clothes. The wire keeps its block because the minute is real. */
-function Row({ children }: { children: React.ReactNode }) {
-  return <li className="flex min-h-11 items-center gap-2 lg:min-h-7">{children}</li>;
-}
-
-/** One head-to-head in our league, one line.
- *
- *  `ScoreFigure` is the shared rule and not a copy: a total Fantrax did not give
- *  is a dash, and the trailing side dims. Accent marks the reader's own team and
- *  nothing else — deliberately NOT the leader, which is `matchup.md`'s
- *  constraint and the reason five other screens can be scanned for "mine". */
+ *  A side nobody has been drawn into yet has no badge, no id and no link; its
+ *  label is printed as the name, which is what `TieSide` is for. */
 export function DraftRow({
-  pairing,
+  tie,
   scores,
+  badges,
   mine,
+  gameweek,
 }: {
-  pairing: PeriodPairing;
+  tie: CompetitionTie;
   scores: Map<string, LiveTeamScore>;
+  badges: Map<string, string>;
   mine: string | null;
+  gameweek: number;
 }) {
-  const home = scores.get(pairing.home.teamId)?.points ?? null;
-  const away = scores.get(pairing.away.teamId)?.points ?? null;
-  const yours = pairing.home.teamId === mine || pairing.away.teamId === mine;
+  const home = pointsOf(tie.home.team?.teamId, scores);
+  const away = pointsOf(tie.away.team?.teamId, scores);
+  const yours = mine !== null && (tie.home.team?.teamId === mine || tie.away.team?.teamId === mine);
+  // Opened on the reader's own side when he is in it, else on the home side.
+  // The board shows the same tie either way and a manager reads his own first.
+  const opensOn = yours ? mine : tie.home.team?.teamId;
+  // Only the LEAGUE's own ties open a board: the head-to-head route resolves its
+  // pairing out of Fantrax's schedule and knows nothing about competitions, so a
+  // cup tie would land on whatever league fixture those two happened to have
+  // that week — a different match, with nothing on screen to say so.
+  const opens = tie.competition.id === LEAGUE_COMPETITION.id && opensOn !== undefined;
 
   return (
-    <Row>
-      <span
-        className={`min-w-0 flex-1 truncate text-sm ${
-          pairing.home.teamId === mine ? "font-bold text-accent" : "text-ink"
-        }`}
-      >
-        {pairing.home.name}
-      </span>
-      <span className="numeric shrink-0 text-sm font-bold">
-        <ScoreFigure points={home} other={away} /> <span className="text-faint">&ndash;</span>{" "}
-        <ScoreFigure points={away} other={home} />
-      </span>
-      <span
-        className={`min-w-0 flex-1 truncate text-right text-sm ${
-          pairing.away.teamId === mine ? "font-bold text-accent" : "text-ink"
-        }`}
-      >
-        {pairing.away.name}
-      </span>
-      {/* The tick slot the football rows keep for a clock. Empty here on
-          purpose: a fantasy tie has no minute of its own, and borrowing the
-          round's would be a number true of neither side. */}
-      <span className={`${SMALL_CAPS} w-8 shrink-0 text-right text-accent`}>
-        {yours ? "You" : ""}
-      </span>
-    </Row>
-  );
-}
-
-/** One Premier League match, one line, with the tick of state where the kickoff
- *  time used to be — the vidiprinter's own convention, and the desk's. */
-export function FootballRow({
-  fixture,
-  clubs,
-  yours,
-  now,
-}: {
-  fixture: Fixture;
-  clubs: Map<number, Club>;
-  /** His players in this match — printed as a COUNT and never as a tint.
-   *
-   *  `MatchList` found this and the first build of this file ignored it: with
-   *  fifteen players across ten fixtures, eight of the ten rows come out accented
-   *  and every row marked is no row marked. The number is also what ranks one
-   *  match above another, which a wash cannot do. */
-  yours?: FootballPlayer[];
-  /** Whether the snapshot is fresh enough to speak in the present tense. */
-  now: boolean;
-}) {
-  const home = clubs.get(fixture.homeClubId)?.shortName ?? "—";
-  const away = clubs.get(fixture.awayClubId)?.shortName ?? "—";
-  const played = fixture.homeScore !== null && fixture.awayScore !== null;
-  const live = now && fixture.status === "live";
-
-  return (
-    <Row>
-      <span className="min-w-0 flex-1 truncate text-sm text-ink">{home}</span>
-      <span className="numeric shrink-0 text-sm font-bold">
-        {played ? (
-          <>
-            {spelled(fixture.homeScore)}
-            <span className="text-faint">&ndash;</span>
-            {spelled(fixture.awayScore)}
-          </>
-        ) : (
-          <span className="font-normal text-muted">
-            {fixture.kickoff === null ? "TBC" : londonTime(fixture.kickoff)}
-          </span>
-        )}
-      </span>
-      <span className="min-w-0 flex-1 truncate text-right text-sm text-ink">{away}</span>
-      <span className={`${SMALL_CAPS} w-8 shrink-0 text-right`}>
-        {live ? (
-          <span className="text-live">{fixture.minutes}&prime;</span>
-        ) : fixture.status === "finished" ? (
-          <span className="text-faint">FT</span>
-        ) : fixture.kickoff !== null ? (
-          <span className="text-faint">{londonDay(fixture.kickoff)}</span>
-        ) : null}
-      </span>
-      {/* Counted rather than tinted, which is `MatchList`'s own finding: a bare
-          wash saturates once fifteen players span ten fixtures, and every row
-          marked is no row marked.
-          **And the word stays with the number**, which the first build dropped:
-          an accent figure alone makes COLOUR the sole carrier of "yours", and
-          PRODUCT.md's accessibility clause says to pair every colour signal with
-          a label. `MatchList` prints `2 yours` and had it right. */}
-      {yours ? (
-        <span className={`${SMALL_CAPS} shrink-0 text-accent`}>
-          <span className="numeric">{yours.length}</span> yours
-        </span>
-      ) : null}
-    </Row>
+    <ScoreRow
+      home={side(tie, "home", badges, mine)}
+      away={side(tie, "away", badges, mine)}
+      // A fantasy total is a number Fantrax either has or has not; there is no
+      // "not kicked off yet" for it, and `ScoreFigure`'s dash is the answer when
+      // it is missing. So the score is never null here and no `pending` is
+      // needed — which is the difference between this row and the football one.
+      score={{ home: figure(home), away: figure(away) }}
+      // **Nothing in the tail, and that is not an omission.** A fantasy tie has
+      // no minute of its own, and borrowing the round's would be a number true
+      // of neither side. It carried a `You` chip for a day: `mine.ts` says
+      // "yours is said three ways", the accent edge and the accent name are two
+      // of them already, and a third spent 48px of a 390 screen restating what
+      // the row's own left edge had said.
+      href={opens ? `/league/matchups/${opensOn}?gw=${gameweek}` : undefined}
+    />
   );
 }
 
 export function Scores({
-  pairings,
+  ties,
   scores,
+  badges,
   mine,
   fixtures,
   clubs,
@@ -165,8 +104,9 @@ export function Scores({
   now,
   gameweek,
 }: {
-  pairings: readonly PeriodPairing[];
+  ties: readonly CompetitionTie[];
   scores: Map<string, LiveTeamScore>;
+  badges: Map<string, string>;
   mine: string | null;
   fixtures: readonly Fixture[];
   clubs: Map<number, Club>;
@@ -179,66 +119,68 @@ export function Scores({
       {/* Absent rather than empty for a league with no draft yet, no schedule,
           or a Fantrax that would not answer — the football half needs none of
           them, which is what keeps "this works with no Fantrax at all" true. */}
-      {pairings.length > 0 ? (
-        <Section title="The draft" aside={`Gameweek ${gameweek}`}>
+      {groupTies(ties).map((group) => (
+        <Section
+          key={`${group.competition.id}-${group.round ?? ""}`}
+          title={
+            group.round === null
+              ? group.competition.name
+              : `${group.competition.name} · ${group.round}`
+          }
+        >
           <ul className="cm-rows">
-            {pairings.map((p) => (
-              <DraftRow
-                key={`${p.home.teamId}-${p.away.teamId}`}
-                pairing={p}
-                scores={scores}
-                mine={mine}
-              />
+            {group.ties.map((tie, at) => (
+              <li key={`${tie.home.label}-${tie.away.label}-${at}`}>
+                <DraftRow
+                  tie={tie}
+                  scores={scores}
+                  badges={badges}
+                  mine={mine}
+                  gameweek={gameweek}
+                />
+              </li>
             ))}
           </ul>
         </Section>
-      ) : null}
+      ))}
 
-      <Section title="The football" aside="The Premier League">
+      {/* No heading. The tab says Live, the caption above says which gameweek and
+          whether it is in play, and "The football / The Premier League" said
+          neither of those things twice. */}
+      <section className="cm-panel flex flex-col p-2">
         <ul className="cm-rows">
           {fixtures.map((f) => (
-            <FootballRow
-              key={f.id}
-              fixture={f}
-              clubs={clubs}
-              yours={involved?.get(f.id)}
-              now={now}
-            />
+            <li key={f.id}>
+              <FootballRow fixture={f} clubs={clubs} yours={involved?.get(f.id)} now={now} />
+            </li>
           ))}
         </ul>
-      </Section>
+      </section>
     </>
   );
 }
 
-/** How many a side has to put past you before the vidiprinter says it twice.
- *
- *  Four — not a number of ours. It is the threshold Sky's teleprinter has used
- *  for decades, and the whole joke is that the machine stops trusting you to
- *  believe the digit.
- *
- *  **A deliberate copy of `matchday/desk/Rows`, not an extraction.** Second
- *  occurrence, and CODE_RULES §1 is explicit: *"Two occurrences: leave it
- *  duplicated. Two similar things are a coincidence, not a pattern."* The third
- *  earns a home, and this comment is what stops the two drifting apart in the
- *  meantime — they must agree, because the same match is on both screens.
- *
- *  **A football fact only.** There is no equivalent for a fantasy total: "a lot
- *  of points" has no custom behind it, and inventing a threshold would be us
- *  making the joke rather than quoting it. Which is why the draft table above
- *  does not call this. */
-const SPELL_FROM = 4;
-
-const WORDS = ["ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE"];
-
-function spelled(goals: number | null) {
-  if (goals === null) return null;
-  const word = goals >= SPELL_FROM ? WORDS[goals] : undefined;
-  return (
-    <span className="px-0.5">
-      {goals}
-      {word ? <span className="pl-1 text-2xs font-bold text-faint">({word})</span> : null}
-    </span>
-  );
+/** One side of a draft tie, in the row's own vocabulary. */
+function side(
+  tie: CompetitionTie,
+  at: "home" | "away",
+  badges: Map<string, string>,
+  mine: string | null,
+) {
+  const seat = tie[at];
+  return {
+    name: seat.label,
+    badge: seat.team === null ? undefined : badges.get(seat.team.teamId),
+    mine: seat.team !== null && seat.team.teamId === mine,
+  };
 }
 
+function pointsOf(teamId: string | undefined, scores: Map<string, LiveTeamScore>) {
+  return teamId === undefined ? null : (scores.get(teamId)?.points ?? null);
+}
+
+/** Absence, never a nought — a total Fantrax has not given us is not a nil
+ *  (DESIGN §7). */
+function figure(points: number | null) {
+  return points === null ? <span className="text-faint">&mdash;</span> : points;
+}

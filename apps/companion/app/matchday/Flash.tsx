@@ -49,7 +49,7 @@ export default function Flash({
   return (
     <section
       className={
-        line.mine
+        line.man?.mine === true
           ? // Accent fill with the page's own ground as ink: 13.1:1, and both
             // halves of the pair are already in DESIGN §3's table.
             "flex min-h-14 items-center gap-3 bg-accent px-3 text-bg lg:min-h-9"
@@ -65,13 +65,13 @@ export default function Flash({
         {fixture.awayScore ?? 0} {away}
       </span>
       <span className="min-w-0 flex-1 truncate text-sm font-bold">
-        {line.player?.name ?? "—"}
+        {line.man?.player.name ?? "—"}
         <span className="numeric pl-1.5 font-normal">{goal.minute}&prime;</span>
       </span>
       {/* Whose he is, which is the half of this sentence no other score centre
           in the world can print. */}
       <span className={`${SMALL_CAPS} shrink-0 truncate`}>
-        {line.owner?.teamName ?? <span className="opacity-60">&mdash;</span>}
+        {line.man?.owner?.teamName ?? <span className="opacity-60">&mdash;</span>}
       </span>
     </section>
   );

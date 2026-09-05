@@ -589,20 +589,20 @@ for Stats and still unmet for Zones.
 
 ## Recorded rule exceptions
 
-### `desk.css` at 434 and `tokens.css` at 343 (recorded 3 Sep 2026)
+### `desk.css` at 501 and `tokens.css` at 359 (recorded 3 Sep 2026, counted again 5 Sep)
 
 Both are past CODE_RULES §4's 300-line hard ceiling, and `line_ceiling.sh`
 covers `.css` — so it has been asking for this entry on every commit that
 touched either, and nobody wrote it. Recorded now rather than split now, and the
 reason is that neither is doing two jobs:
 
-- **`desk.css` (434)** is one job — the Championship Manager desk. `.cm-panel`,
+- **`desk.css` (501)** is one job — the Championship Manager desk. `.cm-panel`,
   `.cm-bevel`, `.cm-row`, `.cm-rows`, `.cm-index`, `.cm-tab`, `.cm-out`,
   `.cm-scroll`. Splitting it by count rather than by responsibility means
   choosing an arbitrary line, and §4's own rule is one responsibility per file
   with the filename saying it. A second file would have to be called something
   like `desk-more.css`, which is `misc.ts` wearing a stylesheet's clothes.
-- **`tokens.css` (343)** already paid this once: its header records that
+- **`tokens.css` (359)** already paid this once: its header records that
   `paper.css` was split out of it *because* the pair crossed 300. What is left
   is the single `@theme` layer — 111 custom properties, one palette. Cutting it
   again splits a palette in half, and DESIGN.md's whole argument is that the

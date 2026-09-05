@@ -1,17 +1,20 @@
-import Link from "next/link";
 import { Suspense } from "react";
-import ButtonLink from "../components/shell/ButtonLink";
-import Skeleton from "../components/shell/Skeleton";
 import {
+  PLACEHOLDER_ROUNDS,
+  type CompetitionTie,
+  type Fixture,
   type FootballSnapshot,
   type LiveTeamScore,
   clubById,
   duringGameweek,
   fixturesInOrder,
+  leagueTies,
   nextRound,
   periodPairings,
   roundState,
+  seededTies,
 } from "@epl/core";
+import { leagueTable, teamBadges } from "../standings";
 import { footballNow, seasonFixtures, speaksForNow } from "../football";
 import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
@@ -28,8 +31,8 @@ import { wireLines } from "./wireLines";
 import Wire from "./Wire";
 import Flash from "./Flash";
 import { WIRE_LINES } from "@epl/core";
-import PageHeader from "../components/shell/PageHeader";
-import { londonDayAndTime } from "../londonTime";
+import { londonDayKey } from "../londonTime";
+import { BetweenGameweeks, MatchupWaiting } from "./Between";
 
 // The live centre. Your head-to-head first, the real football under it — the
 // order a manager actually cares about them in.
@@ -73,12 +76,27 @@ export default async function MatchdayPage() {
   ]);
   const wire = wireLines(goals, snapshot, league.owners, mine);
 
+  // **The day being played, not the whole round** — Craig, 5 Sep 2026: *"Maybe
+  // the live tab only shows matches from TODAY, to keep the space?"* A gameweek
+  // runs Friday to Monday, so on a Sunday afternoon six of the ten rows are
+  // about matches that finished yesterday and the two that are on are below the
+  // fold.
+  //
+  // **The whole round is the fallback and that is the load-bearing half.** A
+  // reader who opens this on a Tuesday, or before FPL has dated the round, must
+  // not be shown an empty panel — `duringGameweek` is a four-day window and this
+  // filter is a one-day one, so the two disagree for most of the week.
+  const round = fixturesInOrder(snapshot);
+  const day = londonDayKey(new Date().toISOString());
+  const onToday = round.filter((f) => f.kickoff !== null && londonDayKey(f.kickoff) === day);
+  const today: readonly Fixture[] = onToday.length > 0 ? onToday : round;
+
   // The newest goal in the round, for the flash. `roundGoals` is already sorted
   // newest first on the wall clock, so this is the head of it — and the wire's
   // first "scored" line is the same event seen through the ownership join.
   const latest = goals.find((g) => g.kind !== "disallowed-goal") ?? null;
   const latestLine =
-    latest === null ? null : (wire.lines.find((l) => l.key === `${latest.id}:scored`) ?? null);
+    latest === null ? null : (wire.lines.find((l) => l.key === String(latest.id)) ?? null);
   const latestFixture =
     latest === null ? null : (snapshot.fixtures.find((f) => f.code === latest.fixtureCode) ?? null);
 
@@ -87,12 +105,29 @@ export default async function MatchdayPage() {
   // table and nothing else — the football half needs none of them.
   const drafted = "period" in squads ? squads : null;
   const period = drafted?.roundPeriod ?? null;
-  const pairings =
+  const [{ scores }, badges, table] = await Promise.all([
+    period === null ? { scores: new Map<string, LiveTeamScore>() } : liveScores(period),
+    teamBadges(),
+    leagueTable(),
+  ]);
+
+  // Every tie being played this week, not only the league's eight — Craig, 5 Sep
+  // 2026: *"'The draft' should be which comp it is (we will have duel comps at
+  // times)."* The schedule's own shape and the schedule's own two sources:
+  // Fantrax's pairings, and the knockouts `league/competitions.ts` declares.
+  // Both reads behind this are already warm — the board's badges and the table
+  // come off one cached `getStandings`.
+  const ties: CompetitionTie[] =
     drafted?.info != null && period !== null
-      ? periodPairings(drafted.info.matchups, drafted.info.teams, period)
+      ? [
+          ...leagueTies(periodPairings(drafted.info.matchups, drafted.info.teams, period)),
+          ...seededTies(
+            PLACEHOLDER_ROUNDS,
+            "unavailable" in table ? [] : table,
+            snapshot.gameweek,
+          ),
+        ]
       : [];
-  const { scores } =
-    period === null ? { scores: new Map<string, LiveTeamScore>() } : await liveScores(period);
 
   // The tab is hidden between gameweeks, but the route still has to answer:
   // someone lands here from a bookmark, or is reading it when the last match
@@ -104,25 +139,12 @@ export default async function MatchdayPage() {
   // been on screen all week.
   return (
     <div className="flex flex-col gap-4">
-      {/* The Desk is reached from here and nowhere else — six tabs already
-          brushes the 320px clip `tools/ui/navfit.mjs` measures, and a seventh would cost
-          every other tab its label to buy one screen a permanent home. */}
-      <div className="flex justify-end pt-1">
-        <Link
-          href="/matchday/desk"
-          // **On a plate, because it is a control and because nothing prints on
-          // the bare ground.** It was naked text over the photograph — the last
-          // of the forty `groundfit` counted on this route before the football
-          // list became panels, and DESIGN §2 puts a way OUT of a page on a
-          // raised surface anyway. The bevel owns its ink, so no `text-*` here.
-          //
-          // `min-h-11` rather than padding, so the tap area is the rule's own
-          // number and not an arithmetic of two paddings.
-          className="cm-bevel flex min-h-11 items-center px-3 text-2xs font-bold uppercase lg:min-h-9"
-        >
-          The desk →
-        </Link>
-      </div>
+      {/* **No way out at the top of the page** (Craig, 5 Sep 2026: "remove desk
+          button"). The desk is still at `/matchday/desk` and the wall is still
+          the thing to put on a television; what it does not get is the first
+          object on the screen a manager opens at ten to four. The three
+          questions this tab exists to answer are all below it, and a control
+          above them pushed each one 56px further down the fold. */}
       {/* The head-to-head arrives after the football, and the boundary is what
           lets it. `YourMatchup` makes the one read on this page nothing else
           waits for — `getLiveScoringStats`, the busiest request the app makes on
@@ -171,10 +193,11 @@ export default async function MatchdayPage() {
             )}
           </Caption>
           <Scores
-            pairings={pairings}
+            ties={ties}
             scores={scores}
+            badges={badges}
             mine={mine}
-            fixtures={fixturesInOrder(snapshot)}
+            fixtures={today}
             clubs={clubById(snapshot)}
             involved={league.mine}
             now={speaksForNow(snapshot)}
@@ -184,96 +207,6 @@ export default async function MatchdayPage() {
       ) : (
         <BetweenGameweeks snapshot={snapshot} up={up} />
       )}
-    </div>
-  );
-}
-
-/** The head-to-head card at its own height while the scoreboard is read.
- *
- *  Neutral-bordered rather than accented: the accent means "yours" everywhere in
- *  the app, and this is drawn before anything has established that the reader
- *  has a team at all.
- *
- *  `YourMatchup` renders nothing for a reader with no team or no pairing, so for
- *  him this card appears and goes. Drawn anyway: every one of the sixteen this
- *  app is for has both during a round, and holding the space for the number they
- *  came to read is worth a flicker on the visit that has no number. */
-function MatchupWaiting() {
-  return (
-    <section
-      aria-busy
-      className="cm-panel flex flex-col gap-2 p-3"
-    >
-      <Skeleton width="9rem" height="0.75rem" />
-      <Skeleton width="100%" height="2.75rem" />
-      <Skeleton width="60%" height="0.75rem" />
-    </section>
-  );
-}
-
-function BetweenGameweeks({
-  snapshot,
-  up,
-}: {
-  snapshot: FootballSnapshot;
-  /** The round the next ball will be kicked in, from the whole season's
-   *  fixtures. Null only when the season's football is genuinely all played. */
-  up: { gameweek: number; kickoff: string } | null;
-}) {
-  // The round in view is the one FPL is pointing at, and after the last whistle
-  // it keeps pointing at it until the next deadline — hours, and across a
-  // Monday-night round, four days. `up` is the other question, and it is the one
-  // this page used to have no way to ask: it read the next kickoff off the
-  // snapshot, which holds only the focused round, so a finished round looked
-  // like a season with nothing left in it.
-  const over = up === null || up.gameweek !== snapshot.gameweek;
-
-  return (
-    <div className="flex flex-col gap-3">
-      <PageHeader
-        title="No football today"
-        sub={over ? `Gameweek ${snapshot.gameweek} is done` : `Gameweek ${snapshot.gameweek} next`}
-      />
-
-      <div className="cm-panel flex flex-col gap-3 p-4">
-        {up === null ? (
-          <p className="text-sm text-muted">Every match of the season has been played.</p>
-        ) : (
-          <p className="text-sm text-muted">
-            {over ? `Gameweek ${up.gameweek} starts ` : "First kickoff "}
-            <span className="numeric font-semibold text-ink">{londonDayAndTime(up.kickoff)}</span>.
-          </p>
-        )}
-        {/* FPL's deadline is the focused round's, and the next round's is not on
-            this payload. Only worth printing while the two are the same round —
-            and the lock that actually matters is the commissioner's, which the
-            paper announces on the front page. */}
-        {!over && snapshot.deadline ? (
-          <p className="text-sm text-muted">
-            FPL&apos;s deadline is{" "}
-            <span className="numeric text-ink">{londonDayAndTime(snapshot.deadline)}</span>. Ours is
-            the commissioner&apos;s, and it is on the League tab.
-          </p>
-        ) : null}
-      </div>
-
-      <div className="flex gap-2">
-        {/* The finished round keeps its button. On a Tuesday the thing a reader
-            wants is Monday night's result, and sending them only forwards would
-            take it away to fix a sentence. */}
-        <ButtonLink href={`/gw/${snapshot.gameweek}`} fill>
-          {over ? `GW${snapshot.gameweek} results` : "The fixtures"}
-        </ButtonLink>
-        {over && up !== null ? (
-          <ButtonLink href={`/gw/${up.gameweek}`} fill>
-            {`GW${up.gameweek} fixtures`}
-          </ButtonLink>
-        ) : (
-          <ButtonLink href="/league/matchups" fill>
-            Who plays whom
-          </ButtonLink>
-        )}
-      </div>
     </div>
   );
 }

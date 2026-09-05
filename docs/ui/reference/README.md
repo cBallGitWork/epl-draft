@@ -158,6 +158,34 @@ those are the ones to build from.
 | `cm9900/24.jpg` | League table - English Premier Division | **✔** | Pld, Won, Drn, Lst, For, Ag, Pts |
 | `cm9900/25.jpg` | Squad list - Everton |  | — |
 
+### Sent by Craig — `craig/`
+
+The shots Craig sends mid-build, kept because *"record the screenshots ive
+attached and keep comparing"* (5 Sep 2026) makes them the thing to check against
+rather than a passing note. Provenance is as given: they are Championship
+Manager, and which release is not always pinned. Filed by the date they arrived
+rather than by game.
+
+| Shot | Screen | What it settles |
+|---|---|---|
+| `craig/01-evening-results.jpg` | **Evening Results** — six scorelines over a stadium photograph | The RESULTS ROW, which the app had four spellings of. See below. |
+
+#### `01-evening-results.jpg`, measured — 5 Sep 2026
+
+920 x 562. Sampled off the pixels, not judged by eye; the working is in the
+session that built `components/shell/ScoreRow.tsx`.
+
+| Thing | Measured | What it means for us |
+|---|---|---|
+| Index block | `#02068d`, **x 27-76 (50px)** left and **860-910 (51px)** right | **One at EACH end of the row**, not just the left. It carries the side's NATION — an identity chip, which is the job our club crest and Fantrax badge do |
+| The blue is **continuous** | unbroken from y=116 to y=290 at x=30 | Six rows, **no gap between one block and the next**. A column of them is a spine; 2px of row padding between them makes it a stack of chips |
+| Row pitch | **29.2px** of a 562px shot | |
+| Team name | `#f3f8fc` **white**, mixed case, LEFT in its own column | Not right-aligned against the score. Every home name starts at the same x, every away name starts at the same x — it is a GRID |
+| Score | `#befafc` **cyan**, separated by a **colon** | `1:3`, never `1-3`. Cyan is DESIGN §3's derived-reading slot and this is what the game spends it on |
+| Yours | `#ffff03` **yellow on the NAME** (Man City, one of six) | The accent slot, unchanged. The score stays cyan on your own row |
+| Panel edge | photograph `#252c1c` runs straight into plate `#434c51` — **no lighter pixel on the boundary** | **CM does not bevel this panel.** `.cm-panel` drew a sunken bevel and Craig asked for it to go; `cm9900/24.jpg`'s League Table agrees. Every bevel in the library is on a CONTROL |
+| Title plate | yellow caption on a grey-blue plate | The `Caption` treatment we already have, and the same one `24.jpg` uses for "League Table" |
+
 ### The six read first, in more detail
 
 | Shot | Why it matters |

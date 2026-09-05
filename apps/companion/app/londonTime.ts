@@ -30,6 +30,13 @@ const DAY_AND_DATE = new Intl.DateTimeFormat("en-GB", {
   timeZone: LEAGUE_TIMEZONE,
 });
 
+const DAY_KEY = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: LEAGUE_TIMEZONE,
+});
+
 const DATE = new Intl.DateTimeFormat("en-GB", {
   weekday: "long",
   day: "numeric",
@@ -90,4 +97,18 @@ export function londonDayAndTime(iso: string): string {
  *  a score's worth of width, the day goes beside it instead of inside it. */
 export function londonDay(iso: string): string {
   return readable(iso, WEEKDAY);
+}
+
+/** The London calendar day an instant falls on, as `2026-09-05`.
+ *
+ *  For COMPARING two instants, never for printing one. A gameweek is spread over
+ *  three or four days and the Live tab shows the day being played (`matchday`);
+ *  "is this match today" cannot be asked of a UTC timestamp, because a 20:00
+ *  kickoff in October is the 5th in London and the 5th in UTC while a 00:30
+ *  one in June is not.
+ *
+ *  `en-CA` for the sortable `YYYY-MM-DD` order, which is the only thing this
+ *  locale is chosen for — nothing formatted by it reaches a screen. */
+export function londonDayKey(iso: string): string {
+  return readable(iso, DAY_KEY);
 }

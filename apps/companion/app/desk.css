@@ -387,10 +387,24 @@
      was written. `desk.ts` records the same trap for two utilities on one
      element; this is the class-versus-utility half of it. */
   border: 2px solid;
-  /* Sunken: dark where a raised control is light. A panel is a well cut into
-     the chrome and a button sits proud of it, and drawing both the same way is
-     how a screen stops having a front and a back. */
-  border-color: var(--cm-dark) var(--cm-light) var(--cm-light) var(--cm-dark);
+  /* **No light edge, and the reference is the reason** (Craig, 5 Sep 2026: "the
+     grey transparent box does not need a white shadow around it").
+
+     This drew a SUNKEN bevel — dark top-left, light bottom-right — on the
+     argument that a panel is a well and a button sits proud of it. The argument
+     is sound and the premise was not: Championship Manager does not bevel this
+     object at all. Measured across the light edge of the results panel in the
+     shot Craig sent (`craig/01-evening-results.jpg`, and `24.jpg`'s League Table says the
+     same): the photograph runs `#252c1c` straight into the plate's `#434c51`
+     with no lighter pixel anywhere on the boundary. Every bevel in the library
+     is on a CONTROL — a column head, a button, the scrollbar, an index cell —
+     and the panel behind them is a flat translucent plate.
+
+     A uniform dark edge and not `border: none`, because the plate still has to
+     be told from a bright patch of the photograph; that boundary is in the
+     reference, it is just not a highlight. `--cm-light` stays declared above:
+     the plates cut from this file's other classes still take it. */
+  border-color: var(--cm-dark);
 }
 
 /* A list of readings, not a stack of objects. The rule between rows is what a
