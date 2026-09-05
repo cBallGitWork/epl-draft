@@ -14,10 +14,13 @@ import type { PremSection } from "./prem/PremNav";
 // ABOUT — a competition, a club, a manager, a footballer — and the yellow
 // caption is which of that subject's views you are looking at.
 //
-// The news screen broke it: it put `TEST2 NEWS` on the bar and had no caption,
-// which is the two boxes collapsed into one. CM's own news bar reads `Mike Paul
-// News` and does the same thing, and it is the one place in the library that
-// does — the app's rule wins over one screen of the game's.
+// **The news screen is the one exception, and it is the reference's** (Craig,
+// 5 Sep 2026, reversing his own ruling of that morning). CM's own inbox bar reads
+// `Mike Paul News` — the two boxes collapsed into one, on the single screen in
+// the library that does it — and ours reads `123 News` for the same reason: the
+// news belongs to the manager, and a bar naming the competition made it the
+// league's noticeboard rather than his post. So `/news` draws no caption, and
+// `NEWS` below is a word the BAR ends with rather than a caption's text.
 //
 // **Why a table and not a string at each call site**, counted 5 Sep 2026 before
 // extracting (CODE_RULES §1 wants the number): `League Table` was written at 7
@@ -59,7 +62,12 @@ export const PREM_CAPTION: Record<PremSection, string> = {
   teamStats: "Team Stats",
 };
 
-/** The manager's inbox. Its own section, so it has no shell to look it up —
- *  named here anyway, because the point of this file is that a caption is never
- *  a literal at a call site. */
+/** The manager's inbox — the word his own bar ends with (`123 News`), and the
+ *  whole bar for a reader with no team.
+ *
+ *  Named here rather than written at its three call sites — the page, its loading
+ *  frame, and the signed-out title — for this file's own reason: a screen's name
+ *  is never a literal at a call site, or one of the three renames itself while
+ *  the other two do not. It stopped being a CAPTION on 5 Sep 2026; it did not
+ *  stop being a name. */
 export const NEWS = "News";

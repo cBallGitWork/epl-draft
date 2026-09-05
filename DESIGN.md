@@ -167,11 +167,19 @@ captions the panel `League Table`; `25.jpg` heads it `Everton` and captions the
 panel below it. Every screen in the library carries both, and none of them mixes
 the two.
 
-The one exception in the reference is CM's own news screen, whose bar reads
-`Mike Paul News` — subject and view in one line, with no caption. The app does
-not copy it (Craig, 5 Sep 2026: *"news needs the proper CM title like the rest of
-the app"*): `/news` heads the bar with the league and captions the panel `News`,
-because a rule that holds on nine screens and not the tenth is not a rule.
+**The one exception is CM's own news screen, and it is granted.** Its bar reads
+`Mike Paul News` — subject and view in one line, with no caption — and it is the
+single screen in the library that does.
+
+The app refused the exception on 5 Sep 2026, on the argument that a rule holding
+on nine screens and not the tenth is not a rule, and heading the bar with the
+league instead. Craig reversed it the same evening (*"needs 'Draft team name
+news' not pro league"*), and the reference is right: the news IS the manager's —
+his signings, his doubts, his round — and a bar reading the competition made it
+the league's noticeboard rather than his post. So `/news` heads the bar
+`123 News` and draws no caption, because "News" under a bar that already ends in
+the word is the two boxes saying one thing twice. A reader with no team gets the
+plain word, which is also what the loading frame shows.
 
 **And a caption is never a literal at a call site.** `app/titles.ts` holds them
 all, keyed on the section a shell already knows it is, so `LeagueShell` and

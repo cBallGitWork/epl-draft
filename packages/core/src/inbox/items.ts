@@ -73,12 +73,7 @@ export function dealNews(
           ? `${who ?? "A manager"} sign ${listed(gained.slice(0, NAMES_IN_HEADLINE))}`
           : `${who ?? "A manager"} release ${listed(lost.slice(0, NAMES_IN_HEADLINE))}`;
 
-    const body = [
-      gained.length > 0 ? `In: ${listed(gained)}.` : null,
-      lost.length > 0 ? `Out: ${listed(lost)}.` : null,
-    ]
-      .filter((line) => line !== null)
-      .join(" ");
+    const body = dealBody(deal, gained, lost, who, teamName);
 
     return [
       {
@@ -97,6 +92,58 @@ export function dealNews(
       },
     ];
   });
+}
+
+/** What the message says under the headline.
+ *
+ *  **A sentence, not a ledger** (Craig, 5 Sep 2026, quoting the worst of it back:
+ *  *"test4 sign Zion Suzuki (AVL) / In: Zion Suzuki (AVL). Out: David Raya
+ *  (ARS)."* — "not good"). It was `In: …` and `Out: …`, which is the shape of the
+ *  transaction row it was built from and reads as a receipt. Worse, it restated
+ *  the headline's own nouns: a reader who has just read "test4 sign Zion Suzuki"
+ *  is told again, in a colon list, that Zion Suzuki is in.
+ *
+ *  What a message adds to a subject line is the OTHER half — a claim's cost, a
+ *  release's destination, a trade's return. So the body says what the headline
+ *  did not, in the fewest words that carry it, and says nothing at all when
+ *  there is nothing to add.
+ *
+ *  Still no adjective and no advice: this is the same house voice as the paper. */
+function dealBody(
+  deal: Deal,
+  gained: readonly string[],
+  lost: readonly string[],
+  who: string | null,
+  teamName: (teamId: string) => string | null,
+): string {
+  const manager = who ?? "A manager";
+
+  if (deal.kind === "trade") {
+    // **Each man with the manager he joins**, which is the one thing a trade's
+    // headline cannot carry: it names the two managers and not who went where.
+    // Reading the direction off each side's own `teamId` also survives however
+    // Fantrax happens to split the rows — a 1-for-1 came through as two INBOUND
+    // sides and no outbound, so a body built from `gained` and `lost` said
+    // "A and B changes hands" and named neither destination.
+    const moves = deal.inbound.map((side) => {
+      // A side Fantrax filed against no team — rare, and the name still moved.
+      const to = side.teamId === null ? null : teamName(side.teamId);
+      return `${named(side)} joins ${to ?? "a manager"}`;
+    });
+    return moves.length > 0 ? `${listed(moves)}.` : "";
+  }
+
+  if (gained.length > 0) {
+    const cost =
+      lost.length > 0
+        ? ` ${listed(lost)} ${lost.length === 1 ? "makes" : "make"} way.`
+        : "";
+    return `${listed(gained)} ${gained.length === 1 ? "joins" : "join"} ${manager} off the waiver wire.${cost}`;
+  }
+
+  return lost.length > 0
+    ? `${listed(lost)} ${lost.length === 1 ? "leaves" : "leave"} ${manager} and ${lost.length === 1 ? "is" : "are"} back in the pool.`
+    : "";
 }
 
 /** Both managers, when a trade has two. Reads as the game would say it. */
@@ -219,7 +266,14 @@ export function roundNews({
       category: "competition",
       at: null,
       gameweek,
-      headline: `Gameweek ${gameweek}: ${won ? "won" : drawn ? "drawn" : "lost"} against ${yours.opponent}`,
+      // **A sentence rather than a log line.** It read `Gameweek 3: lost against
+      // testf`, which is a row out of a results table with a colon in it, and
+      // the body under it was the bare score. A message says what happened.
+      headline: won
+        ? `You beat ${yours.opponent} in gameweek ${gameweek}`
+        : drawn
+          ? `You drew with ${yours.opponent} in gameweek ${gameweek}`
+          : `${yours.opponent} beat you in gameweek ${gameweek}`,
       body: `${yours.points} to ${yours.against}.`,
       teamId: null,
       // A defeat is bad news about you, which is exactly what CM's red ground

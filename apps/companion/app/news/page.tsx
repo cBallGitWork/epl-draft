@@ -1,7 +1,6 @@
 import Link from "next/link";
-import type { InboxCategory, InboxItem } from "@epl/core";
-import { LEAGUE_NAME, fantraxDay, fantraxMoment } from "@epl/core";
-import Caption from "../components/shell/Caption";
+import type { InboxItem } from "@epl/core";
+import { fantraxMoment, fantraxTime } from "@epl/core";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
@@ -46,86 +45,58 @@ import { PANEL_FLUSH, QUIET_FIGURE, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
-/** CM's own four, in CM's own order. `all` is the absence of a filter rather
- *  than a category, which is why it is not on `InboxCategory`. */
-const TABS: readonly { key: string; label: string; of: InboxCategory | null }[] = [
-  { key: "all", label: "All", of: null },
-  { key: "messages", label: "Messages", of: "message" },
-  { key: "competitions", label: "Competitions", of: "competition" },
-  { key: "injuries", label: "Injuries and Bans", of: "injury" },
-];
+// **The four-tab filter strip is gone** (Craig, 5 Sep 2026: "ditch the blue
+// row"). `All · Messages · Competitions · Injuries and Bans` is CM's own strip
+// and it was drawn faithfully — four blue plates, two lines tall on a phone so
+// "Injuries and Bans" could not clip. What it filtered was four items. The
+// game's inbox runs for a season of a hundred and gets its money back; ours runs
+// a week of a league of ten, and a filter over four rows is chrome asking to be
+// paid for what it saves.
+//
+// It comes back the day there is a list long enough to want it, and CM's four
+// words are the ones it comes back as — `InboxCategory` still carries them and
+// every item is still filed under one.
 
 const HERE = "/news";
 
 export default async function NewsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string; item?: string }>;
+  searchParams: Promise<{ item?: string }>;
 }) {
-  const [{ tab, item }, inbox] = await Promise.all([searchParams, readInbox()]);
+  const [{ item }, inbox] = await Promise.all([searchParams, readInbox()]);
 
-  const chosen = TABS.find((entry) => entry.key === tab) ?? TABS[0];
-  const shown = inbox.items.filter((entry) => chosen.of === null || entry.category === chosen.of);
   // The one being read: what the URL asked for, or the top of the list. CM opens
   // on the newest and so does this — an inbox with nothing selected is a list
   // with a blank half under it.
-  const open = shown.find((entry) => entry.id === item) ?? shown[0] ?? null;
+  const open = inbox.items.find((entry) => entry.id === item) ?? inbox.items[0] ?? null;
+  // Whose inbox this is. `readInbox` already resolves both halves — the id off
+  // the signed cookie and the name off `getLeagueInfo` — so this costs no read.
+  const mine = inbox.mine === null ? null : (inbox.names.get(inbox.mine) ?? null);
 
   return (
     <div className="flex flex-col gap-2">
-      {/* **The bar names the SUBJECT and the caption names the VIEW**, which is
-          the app's rule and was the one screen breaking it (Craig, 5 Sep 2026:
-          "news needs the proper CM title like the rest of the app"). It read
-          `TEST2 NEWS` on the bar with no caption at all — the two boxes
-          collapsed into one. CM's own news bar does exactly that, and it is the
-          single screen in the library that does; `app/titles.ts` carries the
-          rule and why ours wins.
+      {/* **The bar is the MANAGER's, and this screen is CM's one exception to
+          the two-boxes rule** (Craig, 5 Sep 2026: "needs 'Draft team name news'
+          not pro league"). `cm9900`'s own inbox heads the bar `Mike Paul News` —
+          subject and view in one line, with no caption under it — and it is the
+          single screen in the library that does.
 
-          The subject is the LEAGUE and not the manager, on what is actually in
-          the list: another manager's signing, a doubt on a rival's squad, the
-          round's deadline. It is his news the way the table is his table. That
-          also keeps one shell for a reader with no team, who still has every
-          reason to read it. */}
-      <PageHeader
-        title={LEAGUE_NAME}
-        sub={inbox.gameweek === null ? undefined : `Gameweek ${inbox.gameweek}`}
-        competition
-      />
+          The app refused that exception earlier the same day, on the argument
+          that a rule holding on nine screens and not the tenth is not a rule.
+          The reference wins: the news IS the manager's, and a bar reading the
+          competition made it look like the league's noticeboard rather than his
+          post. So the caption goes with the change — "News" under a bar that
+          already ends in the word is the two boxes saying one thing twice.
 
-      {/* The strip. Not `TabStrip`: these are not routes, they are filters on
-          one route, and a strip that took `href`s would have to be told to keep
-          the item in the query string on every entry. Four plates, CM's own. */}
-      <nav aria-label="News" className="flex">
-        {TABS.map((entry) => (
-          <Link
-            key={entry.key}
-            href={entry.key === "all" ? HERE : `${HERE}?tab=${entry.key}`}
-            aria-current={entry.key === chosen.key ? "page" : undefined}
-            // **Wraps rather than truncates**, which the first build had the
-            // wrong way round: "Injuries and Bans" is CM's own label and at 390
-            // across four plates it came out "NJURIES AND BANS" — `truncate`
-            // clips the left of a centred line. `TabStrip` solved this once
-            // already with its `labels="word"`, and the answer is the same: a
-            // plate is allowed to be two lines tall, and a clipped word is not
-            // a label.
-            className="cm-tab flex min-w-0 flex-1 items-center justify-center px-1 py-1 text-center text-3xs font-bold uppercase leading-tight lg:text-2xs"
-          >
-            {entry.label}
-          </Link>
-        ))}
-      </nav>
+          A reader with no team keeps a bar and it says the plain word, which is
+          also what the loading frame shows. */}
+      <PageHeader title={mine === null ? NEWS : `${mine} ${NEWS}`} />
 
-      <Caption>{NEWS}</Caption>
-
-      {shown.length === 0 ? (
+      {inbox.items.length === 0 ? (
         <section className="cm-panel p-3">
-          <Nothing
-            title="Nothing filed"
-            code={`${inbox.items.length} items, 0 in ${chosen.label.toLowerCase()}`}
-          >
-            {inbox.items.length === 0
-              ? "The club has been told nothing yet — no business, no doubts, and no round to report."
-              : `Nothing under ${chosen.label.toLowerCase()}. The other tabs have the rest.`}
+          <Nothing title="Nothing filed" code="0 items">
+            The club has been told nothing yet — no business, no doubts, and no round to report.
           </Nothing>
         </section>
       ) : (
@@ -141,14 +112,9 @@ export default async function NewsPage({
               because a list cut at eight with no bar looks like a list with
               eight things in it (`desk.css` on `.cm-scroll`). */}
           <ul className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-72 overflow-y-auto lg:max-h-64`}>
-            {shown.map((entry) => (
+            {inbox.items.map((entry) => (
               <li key={entry.id}>
-                <Row
-                  item={entry}
-                  tab={chosen.key}
-                  open={entry.id === open?.id}
-                  names={inbox.names}
-                />
+                <Row item={entry} open={entry.id === open?.id} names={inbox.names} />
               </li>
             ))}
           </ul>
@@ -175,19 +141,17 @@ export default async function NewsPage({
  *  without either disappearing. */
 function Row({
   item,
-  tab,
   open,
   names,
 }: {
   item: InboxItem;
-  tab: string;
   open: boolean;
   names: Map<string, string>;
 }) {
   const who = item.teamId === null ? null : names.get(item.teamId);
   return (
     <Link
-      href={`${HERE}?${tab === "all" ? "" : `tab=${tab}&`}item=${encodeURIComponent(item.id)}`}
+      href={`${HERE}?item=${encodeURIComponent(item.id)}`}
       aria-current={open ? "true" : undefined}
       className={`cm-row flex min-h-11 items-stretch gap-2 ${
         open ? "bg-league-deep" : "hover:bg-surface"
@@ -255,11 +219,20 @@ function Read({ item }: { item: InboxItem }) {
  *  Fantrax's is a stamp in their own zone and is RE-SPELLED — `Sep 2` into
  *  `2 Sep` — because converting it is how a transaction moves a day. The block
  *  drew their US string verbatim beside our `Sat 12 Sept` until 5 Sep 2026, and
- *  the item with neither falls back to its round. */
+ *  the item with neither falls back to its round.
+ *
+ *  **And it carries the CLOCK** (Craig, 5 Sep 2026: "the blue row tab should
+ *  include the time too, we have it"). He is right that we have it: every deal
+ *  carries Fantrax's hour and minute by construction — `fantraxParts`' regex
+ *  requires one — and the deadline is a real instant. What has no clock is a
+ *  standing state: the round's own result and every doubt are `at: null` with a
+ *  gameweek, because FPL publishes no "as of" for a doubt and dating it to the
+ *  moment we read it would invent a fact. Those two still show `GW3`, which is
+ *  the honest answer and the reason this function has three branches. */
 function itemDay(item: InboxItem): string {
   if (item.at === null) return item.gameweek === null ? "" : `GW${item.gameweek}`;
-  if ("iso" in item.at) return londonDayAndDate(item.at.iso);
-  return fantraxDay(item.at.fantrax) ?? "";
+  if ("iso" in item.at) return `${londonDayAndDate(item.at.iso)} ${londonTime(item.at.iso)}`;
+  return fantraxTime(item.at.fantrax) ?? "";
 }
 
 /** The same date with its clock, for the item being read. Fantrax's carries the

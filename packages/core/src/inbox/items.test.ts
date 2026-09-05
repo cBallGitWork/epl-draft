@@ -27,7 +27,11 @@ describe("dealNews", () => {
   it("names the manager and what he signed", () => {
     const [item] = dealNews([claim], name);
     expect(item.headline).toBe("Craig's XI sign Alexander Isak (LIV)");
-    expect(item.body).toBe("In: Alexander Isak (LIV). Out: Cody Gakpo (LIV).");
+    // **A sentence, not a ledger.** The body says what the headline did not —
+    // the claim's cost — rather than restating its own nouns in a colon list.
+    expect(item.body).toBe(
+      "Alexander Isak (LIV) joins Craig's XI off the waiver wire. Cody Gakpo (LIV) makes way.",
+    );
     expect(item.teamId).toBe("t1");
     expect(item.category).toBe("message");
   });
@@ -40,6 +44,26 @@ describe("dealNews", () => {
     expect(items).toHaveLength(1);
     expect(items[0].headline).toBe("Craig's XI and Dave's XI agree a trade");
     expect(items[0].teamId).toBeNull();
+  });
+
+  // The bug this shape was written against: Fantrax filed a 1-for-1 as two
+  // INBOUND sides and no outbound, so a body built from "what came in" and "what
+  // went out" said "A and B changes hands" — plural subject, singular verb, and
+  // neither destination named. Reading each side's own `teamId` cannot get that
+  // wrong however the rows are split.
+  it("names each man's destination in a trade", () => {
+    const [item] = dealNews([trade], name);
+    expect(item.body).toBe("Declan Rice joins Craig's XI.");
+  });
+
+  it("says a claim's cost rather than restating its headline", () => {
+    const [item] = dealNews([{ ...claim, outbound: [] }], name);
+    expect(item.body).toBe("Alexander Isak (LIV) joins Craig's XI off the waiver wire.");
+  });
+
+  it("says where a released man went", () => {
+    const [item] = dealNews([{ ...claim, inbound: [] }], name);
+    expect(item.body).toBe("Cody Gakpo (LIV) leaves Craig's XI and is back in the pool.");
   });
 
   it("never marks business urgent", () => {
@@ -137,7 +161,7 @@ describe("roundNews", () => {
     });
     expect(items.map((item) => item.headline)).toEqual([
       "Gameweek 3 lineups lock",
-      "Gameweek 3: won against Dave's XI",
+      "You beat Dave's XI in gameweek 3",
     ]);
   });
 
@@ -147,7 +171,7 @@ describe("roundNews", () => {
     expect(result(1, 2).urgent).toBe(true);
     expect(result(2, 1).urgent).toBe(false);
     expect(result(2, 2).urgent).toBe(false);
-    expect(result(2, 2).headline).toBe("Gameweek 3: drawn against D");
+    expect(result(2, 2).headline).toBe("You drew with D in gameweek 3");
   });
 
   it("files nothing for a tie with no score", () => {

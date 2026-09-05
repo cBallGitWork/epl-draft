@@ -148,6 +148,28 @@ export function fantraxMoment(stamp: string): string | null {
   return `${parts.weekday} ${parts.day} ${parts.month}, ${hour}:${minute} ${meridiem} ET`;
 }
 
+/** `"Wed 2 Sept 6:11am"` — the date and the clock, for a cell too narrow to name
+ *  the zone.
+ *
+ *  **The zone is dropped and the case is lowered, and both are the blue block's
+ *  doing.** `fantraxMoment` spells `6:11 AM ET` because it sits under a paragraph
+ *  where a bare hour beside our London kickoffs would be read as London; the
+ *  index block is 64px of three-extra-small type where "ET" is a third of the
+ *  line and the reader's own deadline is two rows above in London. The block's
+ *  job is ordering — is this newer than that — and the read pane below it carries
+ *  the full moment with the zone named for anyone comparing.
+ *
+ *  Still a re-spelling and never a conversion: every part comes out of their
+ *  string. */
+export function fantraxTime(stamp: string): string | null {
+  const parts = fantraxParts(stamp);
+  if (parts === null) return null;
+  const hour = parts.hours % 12 === 0 ? 12 : parts.hours % 12;
+  const meridiem = parts.hours < 12 ? "am" : "pm";
+  const minute = String(parts.minutes).padStart(2, "0");
+  return `${parts.weekday} ${parts.day} ${parts.month} ${hour}:${minute}${meridiem}`;
+}
+
 /** One comparable number for both shapes, and nothing but ordering ever sees it.
  *
  *  **Both are read as a calendar in Fantrax's own zone**, which is what makes
