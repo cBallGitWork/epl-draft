@@ -124,11 +124,16 @@ export default function PitchDisc({
           · The whole head fits the circle. `PlayerImage` crops `object-top`
             because it normally stands on grass with its feet cut off; inside a
             disc that cropped the chin instead, so a disc asks for `contain`.
-          · Smaller. The circle was 64px against a name at 10 — it dominated the
-            row and pushed the lines apart.
- */}
+
+          **56px under a thumb and 64 on the desk** (Craig, 5 Sep 2026: "player
+          icons can be bigger here"). It was 48 at both widths, on a note saying
+          64 "dominated the row" — which was measured on a card that had no
+          ceiling then. `PitchRows.MAX_CARD` is 110px now and the card is about
+          70 at 390, so 48 left a quarter of the card empty on the phone and more
+          than half of it on the desk. The face is what a manager reads an eleven
+          by, and it was the smallest thing on the card. */}
       <span
-        className="relative block h-12 w-12 shrink-0 overflow-hidden rounded-full border-2"
+        className="relative block h-14 w-14 shrink-0 overflow-hidden rounded-full border-2 lg:h-16 lg:w-16"
         style={
           {
             // **Both from the team** (Craig, 2 Sep: "you've hardcoded blue,
@@ -187,7 +192,7 @@ export default function PitchDisc({
             keeper={keeper}
             kickedOff
             fill
-            sizes="56px"
+            sizes="64px"
           />
         )}
       </span>

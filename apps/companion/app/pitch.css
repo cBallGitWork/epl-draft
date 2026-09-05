@@ -111,10 +111,35 @@
      taller than wide against a list of eighteen names; ours holds eleven beside
      a list of fifteen rows, so the shape that balances the pair here is not the
      shape that balanced it there. Re-measure if the row count changes. */
-  aspect-ratio: 0.95;
+  /* **0.72 under a thumb, and it is a clipping fix rather than a taste.**
+     Measured 5 Sep 2026 on `/squad/[teamId]` at 390: `.pitch` was 343px tall
+     against a `scrollHeight` of 460, so a 1-3-4-3 lost its midfield and its
+     forwards behind `overflow: hidden` — seven of eleven men, on the screen a
+     manager opens to look at his own side. It clips silently, which is why it
+     survived: there is no scrollbar and no error, the pitch simply ends.
+
+     The two constraints on this box did not agree. `--pitch-page` reserves what
+     the page spends on everything that is not grass and hands the rest to
+     `.pitch-figure`'s cap, which at 390 allows four rows in 420px; the ratio
+     gives the box 361 / 0.95 = 380. The ratio is the binding one, and the cap
+     cannot see it.
+
+     0.95 is kept from `lg` up, where it was measured and where it is right: it
+     exists to balance the pitch against a 15-row list in the next column
+     (Craig, 2 Sep, at 1440). There is no next column on a phone, so the number
+     that balanced the pair there is answering a question this width does not
+     ask. 361 / 0.62 = 582, which clears the 460 four rows need plus the bottom row s'' fixture chip, with room for a
+     1-5-2-3 — legal here, because the shape is the commissioner's. */
+  aspect-ratio: 0.62;
   /* No ground of its own. What lies outside the taper is the page, the way it is
      on FPL's: a second green out there reads as a second surface, and the pitch
      stops being a thing sitting on the page and becomes a panel with a border. */
+}
+
+@media (min-width: 64rem) {
+  .pitch {
+    aspect-ratio: 0.95;
+  }
 }
 
 /* The photograph on a player card, and the only thing on it with two bounds.

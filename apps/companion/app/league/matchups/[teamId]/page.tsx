@@ -17,6 +17,7 @@ import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
 import { widestLine } from "../../../components/league/PitchRows";
 import LeagueShell from "../../Shell";
+import SectionNav from "../../SectionNav";
 import { getLeagueSquads, teamDisplay } from "../../../squads";
 import { roundOf } from "../../../round";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
@@ -211,7 +212,24 @@ export default async function HeadToHeadPage({
   };
 
   return (
-    <LeagueShell title="Head-to-head" current="matchups" sub={heading}>
+    // **A MATCH screen, not a league section wearing one** (Craig, 5 Sep 2026:
+    // "remove Tim Hortons Pro League here… remove Head-to-head row… match score
+    // row should be at top").
+    //
+    // `LeagueShell` gives every League view a competition title bar, a tab strip
+    // and a yellow caption, which is right for a table and wrong here: a match
+    // belongs to neither side and to no section, and `prem/match/[id]` already
+    // makes that argument for the real thing — its `MatchBar` IS its header. Two
+    // objects came off the top of this page and 114px of a 844px phone came with
+    // them, which is the difference between the eleven and the bench being one
+    // view and being one and a bit.
+    //
+    // The tab strip stays. Without it a reader who lands here from a bookmark
+    // has no way back into the section, which is the argument `LeagueShell`'s
+    // own docblock makes about empty states and which does not depend on the
+    // caption above it.
+    <div className="flex flex-col gap-2">
+      <SectionNav current="matchups" />
       {/* Both sibling boards say when the scoreboard is down; this one used to
           render the outage as two silent dashes. */}
       {refused === null ? null : (
@@ -238,7 +256,7 @@ export default async function HeadToHeadPage({
         </p>
       ) : null}
       <MatchupBoard team={side(pairing.team)} opponent={side(pairing.opponent)} state={state} />
-    </LeagueShell>
+    </div>
   );
 }
 

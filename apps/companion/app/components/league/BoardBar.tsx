@@ -25,6 +25,7 @@ export default function BoardBar({
   view,
   onPick,
   children,
+  toggleClass = "",
 }: {
   view: View;
   onPick: (view: View) => void;
@@ -32,10 +33,20 @@ export default function BoardBar({
    *  needs no placeholder: with the toggle at the left, nothing to say is
    *  nothing drawn. */
   children?: ReactNode;
+  /** Classes for the box the toggle sits in.
+   *
+   *  One caller needs it and the need is a BREAKPOINT: the head-to-head shows
+   *  both arrangements from `lg` and has nothing left for the control to switch,
+   *  so it passes `lg:hidden`. A boolean could not say that — a server-rendered
+   *  strip has no width — and the alternative was each board hand-rolling this
+   *  row again, which is what this file exists to stop. */
+  toggleClass?: string;
 }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <ViewToggle view={view} onPick={onPick} />
+      <span className={toggleClass}>
+        <ViewToggle view={view} onPick={onPick} />
+      </span>
       {children}
     </div>
   );

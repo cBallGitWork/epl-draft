@@ -12,15 +12,20 @@ import RoundWord from "./RoundWord";
 import TeamBadge from "./TeamBadge";
 import BoardBar from "./BoardBar";
 import { type View } from "./ViewToggle";
-import { LABEL } from "@/app/desk";
 
 // The head-to-head at full size: both totals side by side, and one manager's
 // team underneath them.
 //
-// Two tabs rather than two pitches. Thirty players on a phone is fifteen
-// unreadable ones, and the tab a manager is not looking at still carries the
-// number he came for. So the scores live on the tabs permanently and the team
-// below belongs to whichever side is open.
+// **Two tabs rather than two pitches, and that is a decision about the PHONE.**
+// Thirty players at 390 is fifteen unreadable ones, and the tab a manager is not
+// looking at still carries the number he came for. So the scores live on the
+// tabs permanently and the team below belongs to whichever side is open.
+//
+// **On the desk the open side gets both arrangements at once** — the grass on
+// the left and the same eleven as rows on the right, which is the pair CM puts
+// on its own match screen (`cm3/06.jpg`, `cm9900/16.jpg`) and Craig's choice of
+// the two he offered on 5 Sep 2026. It costs nothing: both nodes were already
+// rendered and below `lg` one of them was thrown away.
 //
 // The leader is deliberately NOT accent-tinted. Accent means "your team" on five
 // other screens (`mine.ts`) and marks your name here too, so a second meaning
@@ -89,16 +94,41 @@ export default function MatchupBoard({
       {/* The open side's shape, beside the round word and changing with the side
           — the first thing Championship Manager says about an eleven, and free
           here: `lineupDetail` already counts it. */}
-      <BoardBar view={view} onPick={setView}>
+      <BoardBar view={view} onPick={setView} toggleClass="lg:hidden">
+        {/* **On a plate, because nothing prints on the bare ground** (DESIGN §2,
+            and the rule `groundfit.mjs` exists to measure). This was two faint
+            words floating on the photograph, and it went unnoticed while the
+            toggle beside it filled the row — hiding that toggle above `lg` left
+            the shape alone out there and made it obvious. The bevel owns its
+            ink, so `LABEL`'s colour comes off with it. */}
         {state === null && side.shape === null ? null : (
-          <span className={`flex items-baseline gap-2 ${LABEL}`}>
+          <span className="cm-bevel flex h-6 items-baseline gap-2 px-2 text-2xs font-bold uppercase">
             {state === null ? null : <RoundWord state={state} />}
             {side.shape === null ? null : <span className="numeric">{side.shape}</span>}
           </span>
         )}
       </BoardBar>
 
-      {view === "pitch" ? side.pitch : side.list}
+      {/* **The desk shows both, and the phone shows one** — Craig, 5 Sep 2026:
+          *"desktop can show pitch and list, or just both teams?"* The first of
+          the two, and the reason is that it is the pair Championship Manager
+          itself puts on a match screen: the grass on one side and the ratings
+          list on the other (`cm3/06.jpg`, `cm9900/16.jpg`). It also answers the
+          two questions this screen exists for at once — the pitch says who is
+          arranged where and still to come, the list says what each man has
+          actually scored, and on a phone reading one costs you the other.
+
+          **Both nodes are already rendered**, so this adds no request, no join
+          and no second copy of the eleven: the page hands over `pitch` and
+          `list` for each side either way, and below `lg` one of the two was
+          simply thrown away. The toggle is hidden above `lg` for the same
+          reason — a control that switches between two things both on screen is
+          a control with nothing to do. */}
+      <div className="lg:hidden">{view === "pitch" ? side.pitch : side.list}</div>
+      <div className="hidden lg:grid lg:grid-cols-2 lg:items-start lg:gap-2">
+        {side.pitch}
+        {side.list}
+      </div>
     </div>
   );
 }
