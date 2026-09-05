@@ -15,6 +15,7 @@ import {
   plCommentary,
   plFixtureCode,
   plTeamSheets,
+  shortProse,
 } from "@epl/core";
 import bridge from "../../../data/mappings/premierleague.json";
 
@@ -114,6 +115,127 @@ export async function roundGoals(
  *  lines rather than a claim that nothing has finished. */
 export async function roundBreaks(gameweek: number): Promise<RoundBreak[]> {
   return mapRoundBreaks((await plRound(gameweek)).content);
+}
+
+/** Every line of Opta's commentary across the round, newest first, with the
+ *  club names cut down.
+ *
+ *  **The second wire** (Craig, 5 Sep 2026: *"WE use the match report text? … but
+ *  we can shortern it"*, and *"maybe we have different versions of the wire on
+ *  the home page for now and decide which is best"*). It answers three of his
+ *  asks at once, because Opta's own sentences already carry what our row wire
+ *  cannot: `GOAL OVERTURNED BY VAR: Florian Wirtz scores but the goal is ruled
+ *  out` and `Penalty Brentford. Kevin Schade draws a foul in the penalty area` —
+ *  the VAR line and the man who won a penalty, which our league pays a fantasy
+ *  assist for.
+ *
+ *  **And it is the expensive wire, which is the point of offering both.** The row
+ *  wire is ONE request for ten matches, off the round read. This is one per
+ *  fixture that has kicked off — up to ten more, ~200 KB, per thirty-second
+ *  window — because the textstream is the only place the prose exists and there
+ *  is no round-level equivalent. Both are cached on the same window, so the cost
+ *  is per window and not per reader; a reader who never opens this variant pays
+ *  none of it.
+ *
+ *  Ordered on `kickoff + seconds`, not on `seconds`: a 12:30 match and a 17:30
+ *  one both start their own clock at nought, and `plCommentary` sorts within one
+ *  match by construction. An unstarted fixture is skipped rather than asked —
+ *  its stream is a header and no events.
+ *
+ *  Empty, never a throw, at every step: a wire is something this page adds to a
+ *  round it can already draw. */
+export async function roundCommentary(gameweek: number): Promise<ProseLine[]> {
+  const round = await plRound(gameweek).catch(() => null);
+  if (round === null) return [];
+
+  // Opta's long name to the short one, off the SAME object — each fixture's
+  // `teams[].team` carries both, so the shortener needs no table of our own and
+  // no second read.
+  const names = new Map<string, string>();
+  for (const fixture of round.content) {
+    for (const side of fixture.teams ?? []) {
+      const long = side.team?.name;
+      const short = side.team?.club?.abbr ?? side.team?.shortName;
+      if (long && short) names.set(long, short);
+    }
+  }
+
+  const lines: ProseLine[] = [];
+  for (const fixture of round.content) {
+    if (fixture.status === "U") continue;
+    const kickoff = fixture.kickoff?.millis;
+    const stream = await plStream(fixture.id).catch(() => null);
+    if (stream === null) continue;
+    for (const line of plCommentary(stream.events.content)) {
+      if (!WIRE_TYPES.has(line.type)) continue;
+      // **`end 14` carries a junk clock and has to borrow the fixture's.** Its
+      // own time is `{secs: 0, label: "01"}` — `map.ts` records the label as junk
+      // and drops only events with NO time, so "Match ends" survives with a
+      // reading of nought and sorts to kick-off, above every goal in its own
+      // match. The final whistle is the fixture's `clock`, which the round read
+      // beside it already carries.
+      const ends = line.type === FULL_TIME;
+      const seconds = ends ? (fixture.clock?.secs ?? line.seconds) : line.seconds;
+      lines.push({
+        id: `${fixture.id}:${line.id}`,
+        minute: ends ? "FT" : line.minute,
+        text: shortProse(line.text, names),
+        at: kickoff === undefined ? null : kickoff + seconds * 1000,
+      });
+    }
+  }
+
+  return lines.sort((a, b) => (b.at ?? 0) - (a.at ?? 0));
+}
+
+/** Opta's types a WIRE prints, out of the twenty-odd it publishes.
+ *
+ *  **The whole vocabulary is a firehose, not a wire.** Counted across the 28
+ *  played fixtures of GW1-3: 642 `free kick lost`, 627 `free kick won`, 280
+ *  `miss`, 252 `corner`, 240 `attempt blocked`. Unfiltered, the first ten lines
+ *  of a round were four free kicks, an added-time announcement and two missed
+ *  shots — `plCommentary` keeps everything on purpose, because a match REPORT
+ *  wants the whole thing, and the filter belongs to the caller that does not.
+ *
+ *  These nine are what a teleprinter prints and what our league pays for: the
+ *  score, the two cards, the substitution that ends a man's minutes, the goal VAR
+ *  took away, and the man who WON a penalty — the last two being exactly what
+ *  Craig asked for and what the row wire has no source for.
+ *
+ *  `end 14` and not `end 2`: the first is "Match ends", the second is "Second
+ *  Half ends", and a wire that prints both says full time twice. `end 1` is half
+ *  time, which came off this panel the same evening.
+ *
+ *  Opta's own strings, verbatim, for the reason `KINDS` in core is written out —
+ *  the strings are theirs and a translation table is the only honest place to
+ *  meet them. */
+const FULL_TIME = "end 14";
+
+const WIRE_TYPES = new Set([
+  "goal",
+  "penalty goal",
+  "own goal",
+  "VAR cancelled goal",
+  "penalty won",
+  "yellow card",
+  "red card",
+  "substitution",
+  FULL_TIME,
+]);
+
+/** One line of the prose wire. */
+export interface ProseLine {
+  /** Stable across polls: the fixture's id and the event's own, because an
+   *  event id is unique within a stream and not across the round. */
+  id: string;
+  /** The clock as the feed prints it — `"07"`, `"45+2"` — or `"FT"`, which is
+   *  the one line whose own label is junk. */
+  minute: string;
+  /** Opta's sentence, with the club names cut down and the club in brackets
+   *  after a player removed. Never paraphrased. */
+  text: string;
+  /** Kick-off plus elapsed, the only field that orders ten matches. */
+  at: number | null;
 }
 
 /** One fixture's detail, cached per Premier League id.

@@ -19,7 +19,9 @@ import { leagueTable, teamBadges } from "../standings";
 import { footballNow, seasonFixtures, speaksForNow } from "../football";
 import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
+import Link from "next/link";
 import PageHeader from "../components/shell/PageHeader";
+import ProseWire from "./ProseWire";
 import { getLeagueSquads } from "../squads";
 import { liveScores } from "../scoreboard";
 import Afternoon from "./Afternoon";
@@ -27,7 +29,7 @@ import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
 
 import { readerTeamId } from "../squads";
-import { roundBreaks, roundGoals } from "../commentary";
+import { roundBreaks, roundCommentary, roundGoals } from "../commentary";
 import { wireLines } from "./wireLines";
 import Wire from "./Wire";
 import { londonDayKey } from "../londonTime";
@@ -65,7 +67,20 @@ async function matchday(): Promise<{
   return { snapshot, season, during: duringGameweek(snapshot, at), up: nextRound(season, at) };
 }
 
-export default async function MatchdayPage() {
+export default async function MatchdayPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ wire?: string }>;
+}) {
+  // **Two wires, and which one is a query rather than a route** (Craig, 5 Sep
+  // 2026: "maybe we have different versions of the wire on the home page for now
+  // and decide which is best?"). A second route would be a second page to keep in
+  // step for a comparison that is meant to end in one of them being deleted.
+  //
+  // It also gates the COST. The prose wire is up to ten textstream requests a
+  // window against the row wire's one, and nothing fetches it unless it is the
+  // variant being read.
+  const prose = (await searchParams).wire === PROSE;
   const { snapshot, season, during, up } = await matchday();
   const league = await marks(snapshot.fixtures);
 
@@ -229,7 +244,12 @@ export default async function MatchdayPage() {
           wire whose first row said the same goal — `cm0102/02.jpg` draws both on
           one screen, and the game's version announces an event the screen has no
           other record of. Ours had one directly underneath. */}
-      <Wire lines={wire.lines} />
+      <WirePick prose={prose} />
+      {prose ? (
+        <ProseWire lines={await roundCommentary(snapshot.gameweek)} />
+      ) : (
+        <Wire lines={wire.lines} />
+      )}
       {during ? (
         <>
           <Scores
@@ -249,5 +269,36 @@ export default async function MatchdayPage() {
         <BetweenGameweeks snapshot={snapshot} up={up} />
       )}
     </div>
+  );
+}
+
+/** Which wire the reader is looking at.
+ *
+ *  **A temporary object with a date on it.** Two designs for one panel is
+ *  normally the thing this codebase refuses; it exists because Craig asked to see
+ *  both on a real Saturday before choosing, and it goes the moment he does. The
+ *  loser is deleted rather than kept behind a flag.
+ *
+ *  `cm-tab`, because picking one of a set is what a tab strip is. */
+const PROSE = "report";
+
+function WirePick({ prose }: { prose: boolean }) {
+  return (
+    <nav aria-label="Which wire" className="flex">
+      <Link
+        href="/matchday"
+        aria-current={prose ? undefined : "page"}
+        className="cm-tab flex flex-1 items-center justify-center px-2 text-center text-2xs font-bold uppercase"
+      >
+        Rows
+      </Link>
+      <Link
+        href={`/matchday?wire=${PROSE}`}
+        aria-current={prose ? "page" : undefined}
+        className="cm-tab flex flex-1 items-center justify-center px-2 text-center text-2xs font-bold uppercase"
+      >
+        Report
+      </Link>
+    </nav>
   );
 }
