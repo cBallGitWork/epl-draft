@@ -80,8 +80,16 @@ help — the ground is `fixed` at `-z-10`, an ancestor of nothing, so it composi
 straight past and reports every route clean whatever is behind it.
 `tools/ui/groundfit.mjs` walks every visible text node on the desk routes
 at both widths and accumulates background alpha up the real ancestor chain,
-naming anything under half. Zero bare, 31 Aug 2026. Moving `SCRIM` or `DARKEN` is
-safe for exactly as long as that stays at zero.
+naming anything under half.
+
+**"Zero bare, 31 Aug 2026" is struck**: that run was vacuous. The instrument
+stopped its walk at `<html>` and therefore counted `<body>`, which `globals.css`
+gives an opaque fill, so every text node on every route measured as covered and
+the audit could not fail. It was repaired on 4 Sep and reported six routes over —
+two of them at its cap. **Two remain, re-run 5 Sep 2026**: `/matchday/desk` at
+the cap, which is the `≥lg` wall and has never had a plate under any of it, and
+`/squad` at 2. PLATFORM_NOTES carries the run. Moving `SCRIM` or `DARKEN` is safe
+for exactly as long as those two are the whole of the list.
 
 **Which way a surface faces is the whole grammar, and it has three answers.**
 

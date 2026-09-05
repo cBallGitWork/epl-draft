@@ -1,5 +1,6 @@
 import type { AvailabilityNote, Deal, DealSide } from "../gazette/types";
 import type { InboxItem } from "./types";
+import { whenKey } from "./when";
 
 // The three builders that fill the inbox, and the merge that orders it.
 //
@@ -83,7 +84,9 @@ export function dealNews(
       {
         id: `deal:${deal.setId}`,
         category: "message" as const,
-        at: deal.processedAt,
+        // Their stamp, tagged as theirs. `Deal.processedAt` is
+        // `"Wed Sep 2, 2026, 6:11AM"` — offsetless, in their zone.
+        at: deal.processedAt === null ? null : { fantrax: deal.processedAt },
         gameweek: null,
         headline,
         body,
@@ -197,7 +200,7 @@ export function roundNews({
     items.push({
       id: `deadline:${gameweek}`,
       category: "competition",
-      at: deadline,
+      at: deadline === null ? null : { iso: deadline },
       gameweek,
       headline: `Gameweek ${gameweek} lineups lock`,
       // The commissioner's, never FPL's — `locksAt` derives it in one place so
@@ -240,13 +243,16 @@ export function roundNews({
  *  already sorts availability with the reader's own men first, and that is a
  *  reading aid this must not undo. */
 export function inboxItems(...groups: readonly InboxItem[][]): InboxItem[] {
-  const all = groups.flat();
-  const dated = all.filter((item) => item.at !== null);
-  const undated = all.filter((item) => item.at === null);
-  // Newest first. `at` is compared as a STRING and that is deliberate: Fantrax's
-  // own label carries no offset (`Deal.processedAt`), so parsing it would be
-  // guessing a timezone, and an ISO deadline sorts correctly as text anyway.
-  // Where the two shapes meet the order is arbitrary and says nothing false.
-  dated.sort((a, b) => (a.at ?? "").localeCompare(b.at ?? "") * -1);
-  return [...dated, ...undated];
+  const keyed = groups.flat().map((item) => ({ item, key: whenKey(item.at) }));
+  const dated = keyed.filter((row) => row.key !== null);
+  const undated = keyed.filter((row) => row.key === null);
+  // Newest first, on one calendar. This compared the two shapes as TEXT and said
+  // in as many words that the order where they met "says nothing false" — which
+  // was wrong twice over: `"2026-09-12T…"` sorts under `"Wed Sep 2…"` by first
+  // character, so the round's deadline appeared beneath ten days of older deals,
+  // and the two shapes met on every list this app has ever drawn. `whenKey` puts
+  // both into Fantrax's own calendar, which is the one comparison that converts
+  // neither of them.
+  dated.sort((a, b) => (b.key ?? 0) - (a.key ?? 0));
+  return [...dated, ...undated].map((row) => row.item);
 }

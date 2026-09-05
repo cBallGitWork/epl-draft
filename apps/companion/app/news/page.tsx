@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { InboxCategory, InboxItem } from "@epl/core";
-import { LEAGUE_NAME } from "@epl/core";
+import { LEAGUE_NAME, fantraxDay, fantraxMoment } from "@epl/core";
 import Caption from "../components/shell/Caption";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
-import { londonDayAndDate } from "../londonTime";
+import { londonDayAndDate, londonTime } from "../londonTime";
 import { NEWS } from "../titles";
-import { HEAD_PLATE, PANEL_FLUSH, ROW_NAME, SMALL_CAPS } from "@/app/desk";
+import { PANEL_FLUSH, QUIET_FIGURE, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 
 // The manager's news, the way Championship Manager files it.
 //
@@ -194,11 +194,7 @@ function Row({
       }`}
     >
       <span className="cm-index numeric flex w-16 shrink-0 items-center justify-center px-1 text-center text-3xs font-bold leading-tight lg:w-24">
-        {item.at === null
-          ? item.gameweek === null
-            ? ""
-            : `GW${item.gameweek}`
-          : londonDayAndDate(item.at)}
+        {itemDay(item)}
       </span>
       <span
         className={`flex min-w-0 flex-1 items-center truncate py-1 ${ROW_NAME} ${
@@ -240,7 +236,36 @@ function Read({ item }: { item: InboxItem }) {
         {item.headline}
       </h2>
       <p className="text-sm text-ink lg:text-base">{item.body}</p>
-      {item.at === null ? null : <p className={`${HEAD_PLATE} numeric self-start`}>{item.at}</p>}
+      {/* **A quiet figure, not a column head.** `HEAD_PLATE` is a bevelled plate
+          for the head of a stats board, and this is a date under a paragraph —
+          the plate said "sort by me" about a line nothing can be sorted by. It is
+          the last thing on the item and the first thing a reader skips, which is
+          what `QUIET_FIGURE` is the recipe for. */}
+      {itemMoment(item) === null ? null : (
+        <p className={`${QUIET_FIGURE} self-start`}>{itemMoment(item)}</p>
+      )}
     </article>
   );
+}
+
+/** What the blue block says: the day it happened, or the round it belongs to.
+ *
+ *  **Two vocabularies, and the tag on `at` is what tells them apart.** Ours is an
+ *  instant and is formatted in London like every other time this app prints;
+ *  Fantrax's is a stamp in their own zone and is RE-SPELLED — `Sep 2` into
+ *  `2 Sep` — because converting it is how a transaction moves a day. The block
+ *  drew their US string verbatim beside our `Sat 12 Sept` until 5 Sep 2026, and
+ *  the item with neither falls back to its round. */
+function itemDay(item: InboxItem): string {
+  if (item.at === null) return item.gameweek === null ? "" : `GW${item.gameweek}`;
+  if ("iso" in item.at) return londonDayAndDate(item.at.iso);
+  return fantraxDay(item.at.fantrax) ?? "";
+}
+
+/** The same date with its clock, for the item being read. Fantrax's carries the
+ *  zone on its face (`Wed 2 Sep, 6:11 AM ET`) because we did not convert it. */
+function itemMoment(item: InboxItem): string | null {
+  if (item.at === null) return null;
+  if ("iso" in item.at) return `${londonDayAndDate(item.at.iso)}, ${londonTime(item.at.iso)}`;
+  return fantraxMoment(item.at.fantrax);
 }

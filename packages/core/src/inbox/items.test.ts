@@ -10,7 +10,7 @@ const claim: Deal = {
   kind: "claim",
   inbound: [{ playerName: "Alexander Isak", teamId: "t1", club: "LIV" }],
   outbound: [{ playerName: "Cody Gakpo", teamId: "t1", club: "LIV" }],
-  processedAt: "Fri Sep 4, 7:45pm",
+  processedAt: "Fri Sep 4, 2026, 7:45PM",
   period: 3,
 };
 
@@ -19,7 +19,7 @@ const trade: Deal = {
   kind: "trade",
   inbound: [{ playerName: "Declan Rice", teamId: "t1" }],
   outbound: [{ playerName: "Kai Havertz", teamId: "t2" }],
-  processedAt: "Thu Sep 3, 1:00pm",
+  processedAt: "Thu Sep 3, 2026, 1:00PM",
   period: 3,
 };
 
@@ -164,7 +164,11 @@ describe("inboxItems", () => {
     const items = inboxItems(
       availabilityNews([{ playerName: "P", teamId: "t1", news: "n", chance: 0 }], 3, "t1"),
       roundNews({ gameweek: 3, deadline: "2026-09-04T18:45:00Z", yours: null }),
-      dealNews([{ ...claim, processedAt: "2026-09-05T09:00:00Z" }], name),
+      // Fantrax's own shape, which is what `Deal.processedAt` actually carries —
+      // an ISO here made the test agree with a merge that could not order the
+      // two. 9AM Eastern on the 5th is after the deadline's 14:45 Eastern on the
+      // 4th, which is the comparison `whenKey` exists to make.
+      dealNews([{ ...claim, processedAt: "Sat Sep 5, 2026, 9:00AM" }], name),
     );
     expect(items.map((item) => item.id)).toEqual([
       "deal:s1",

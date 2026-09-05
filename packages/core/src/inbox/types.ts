@@ -1,3 +1,5 @@
+import type { InboxWhen } from "./when";
+
 // The manager's inbox: what the club has been told, newest first.
 //
 // **`inbox/` and not `news/`, and the collision is the reason.** `src/news/` is
@@ -41,11 +43,16 @@ export interface InboxItem {
    *  never from an index, which changes the moment anything is filed above it. */
   id: string;
   category: InboxCategory;
-  /** When it happened. **Fantrax's own string, verbatim, where it has one** — it
+  /** When it happened, and WHICH KIND of "when" it is — `when.ts` carries the
+   *  argument. Fantrax's own string is kept verbatim where it has one, because it
    *  carries no offset and reinterpreting it into a timezone we guessed is how a
-   *  transaction moves a day. Null for an item whose source is a standing state
-   *  rather than an event: a doubt is true now and was not "filed" at a moment. */
-  at: string | null;
+   *  transaction moves a day; ours is a real instant. One field carrying both
+   *  vocabularies untagged is what sorted a 12 Sep deadline under 2 Sep deals and
+   *  printed a US stamp beside a British date.
+   *
+   *  Null for an item whose source is a standing state rather than an event: a
+   *  doubt is true now and was not "filed" at a moment. */
+  at: InboxWhen | null;
   /** The round it belongs to, for an item with no date of its own. Between them
    *  the two answer "when", which is what CM's blue block carries. */
   gameweek: number | null;

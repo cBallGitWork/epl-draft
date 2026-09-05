@@ -945,19 +945,29 @@ propagates to the **canvas**, and `PhotoGround`'s `fixed inset-0 -z-10` paints
 above the canvas background. That is why the photograph is visible at all, and it
 means body's fill is BEHIND the picture and covers nothing.
 
-Fixed: the walk now stops before `<body>`. What it then reports, at both widths:
+Fixed: the walk now stops before `<body>`. What it reported that day, at both
+widths — and what it reports now, re-run 5 Sep 2026 after the phone work:
 
-| route | text on the bare ground |
-|---|---|
-| `/players` | 40 (the cap) |
-| `/matchday/desk` | 40 (the cap) |
-| `/league/matchups` | 4 |
-| `/matchday` | 2 |
-| `/league/schedule` | 1 |
-| `/fpl` | 1 |
+| route | 4 Sep | 5 Sep |
+|---|---|---|
+| `/players` | 40 (the cap) | **0** |
+| `/matchday/desk` | 40 (the cap) | 40 (the cap) |
+| `/league/matchups` | 4 | **0** |
+| `/matchday` | 2 | **0** |
+| `/league/schedule` | 1 | **0** |
+| `/fpl` | 1 | **0** |
+| `/squad` | — | **2** |
 
-**The player routes fail it too**, and that is the honest reading: what the
-repaired instrument reports is an app-wide pattern, not six unlucky screens.
+**What closed four of them was `PageHeader`'s `Sub` taking a surface**, which is
+the shape that paragraph below names — one `<p>`, four routes. `/players` closed
+when the screen took `LeagueShell` and its panel (5 Sep): the directory had been
+printing on the photograph because it had nothing to be inside.
+
+**What is left is two.** `/matchday/desk` at the cap is the `≥lg` wall, which is
+a whole screen built to be read across a room and has never had a plate under any
+of it; `/squad` is a sign-out button and an "Around the league" heading. Neither
+is fixed here and both are now the whole of the list, which is a different
+statement from the app-wide pattern the next paragraph describes.
 
 **`components/shell/Section` is the offender, and it is everywhere.** Its heading
 (`font-display text-2xs font-bold uppercase text-muted`) and its `aside` sit on no

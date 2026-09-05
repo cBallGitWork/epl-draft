@@ -325,6 +325,19 @@ export const DESK_GROUND: string | null = "/ground/crowd.jpg";
  *  today: this is our league's, and the two are separate questions. */
 export const LEAGUE_TIMEZONE = "Europe/London";
 
+/** The zone Fantrax stamps its own dates in, which is NOT ours.
+ *
+ *  `LeagueTransaction.processedAt` is `"Wed Sep 2, 2026, 6:11AM"` with no offset
+ *  in it, and the offset is in their column heading instead — in English, as
+ *  "Date Processed (EDT)". So this is a recorded provider fact, not a preference.
+ *
+ *  **It is for ORDERING and for naming the zone on screen, never for converting
+ *  a stamp into an instant.** `inbox/when.ts` uses it to put an ISO deadline and
+ *  a Fantrax stamp into one calendar so they can be compared; nothing turns their
+ *  string into a time we then print as London. The whole point of keeping their
+ *  string verbatim is that a converted transaction can move a day. */
+export const FANTRAX_TIMEZONE = "America/New_York";
+
 /** How many saves are worth mentioning.
  *
  *  A keeper makes one or two most weeks and it says nothing; a number worth
