@@ -4,6 +4,17 @@ const nextConfig: NextConfig = {
   // `@epl/core` ships raw TypeScript (no build step), so Next has to compile it.
   transpilePackages: ["@epl/core", "@epl/ui"],
 
+  // The dev overlay's own badge, off. It is a fixed circle in the bottom-left
+  // corner of every dev render, which is where the foot row's first plate is —
+  // so GAZETTA has been half-covered in every screenshot this app has taken.
+  // The instruments read the dev server, so a badge over a nav plate is a badge
+  // over the thing being measured.
+  //
+  // `false` and not a `position`: moving it puts it on a different plate. Build
+  // and runtime errors still surface — this is the idle indicator only, and 16.2
+  // takes `false | { position }` for it.
+  devIndicators: false,
+
   // The old URLs have been shared in a sixteen-person group chat, so they keep
   // working rather than 404ing on someone who scrolled back to find one.
   async redirects() {

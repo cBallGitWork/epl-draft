@@ -162,7 +162,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               through it, which is why it is a token rather than a `pb-`. */}
           <main
             id="main"
-            className="mx-auto w-full max-w-[var(--page-frame)] px-[var(--page-gutter)] pb-[var(--page-foot)] pt-3"
+            className="mx-auto w-full max-w-[var(--page-frame)] px-[var(--page-gutter)] pb-[var(--page-foot)] pt-[var(--page-top)]"
           >
             {children}
           </main>

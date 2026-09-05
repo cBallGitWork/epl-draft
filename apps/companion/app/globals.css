@@ -52,6 +52,21 @@
   }
 }
 
+/* The air above the page's first object, and it is a token because two things
+   have to agree about it: `<main>` sets it, and a screen that fills the viewport
+   has to subtract it. `prem/match/[id]/Shell` is the second reader — its foot
+   row sits at the bottom of a short match and after the content on a long one,
+   which is a `min-h` computed from the two pieces of chrome the page did not
+   draw itself.
+
+   0.5rem rather than the 0.75 it was. The phone's chrome budget is measured from
+   the top of the viewport to the first row of data, and four pixels of it were
+   being spent on air between two objects that are already separated by a border
+   — CM leaves none at all there. */
+:root {
+  --page-top: 0.5rem;
+}
+
 /* The room `<main>` leaves under the page. It was the tab bar's own height plus
    the phone's safe area, dropping to bare room above `md` where the bar went
    overhead; with the rail down the side there is no bar at any width and no
