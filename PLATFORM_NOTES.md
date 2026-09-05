@@ -610,6 +610,112 @@ Recorded rather than taken, because the right one is Craig's. Until then `sweep`
 has one standing failure on the fixtures Sunderland appear in, and a run that
 reports exactly this and nothing else is a clean run.
 
+## Workstream B surveyed against the tree (5 Sep 2026)
+
+Eight read-only agents mapped the edition pipeline before any of Workstream B was
+built. **The plan is wrong in about twenty-five specific places**, and most of
+them are the kind that only shows up when you try to write the line. Recorded
+here rather than in the plan file, because the plan is a dated document and this
+is what the tree says.
+
+### The three that change what a change IS
+
+- **B1's guard cannot go where the plan puts it.** `write-edition.ts` never names
+  `roundFootball`; the fetch is at `facts.ts:124`, inside `gatherRoundFacts`, and
+  `RoundFacts.football` was a required field read at `assemble.ts:166`. The
+  premise held — the fetch was 33 lines before the quiet exit — so the fix was to
+  split the TYPE (`DeskFacts` / `RoundFacts`) and add `withFootball` at the one
+  place a brief is built. **Done.**
+- **`dispatch.file` cannot add a second subject.** `subjects` is hard-wired to one
+  value at `newsroom.ts:126` and `:175`, and `ColumnMeta.subject` is a `string`.
+  Worse, `Assignment` (`newsdesk.ts:26-35`) carries `fixtureId` — FPL's per-season
+  id — and not the club-code `stake.key` the `fixture:gw{gw}:{key}` subject needs;
+  that key exists only as a suffix of `assignment.key` and is computed at
+  `relevance.ts:81`. B5's supersession is a three-file change, not a table.
+- **A new story kind has six tables to join and only one of them fails loudly.**
+  `KIND_WEIGHT` (`frontPage.ts:35`) is the only total `Record<StoryKind, …>` in
+  the tree and will not compile without a row. `STORY_KINDS` (`story.ts:36-40`) is
+  a plain array, so omitting the kind there makes `normalizeStory` refuse every
+  story of it **with a green typecheck and a green build** — which is exactly the
+  failure B7 has just swept up. `PAPER_PAGES` is not in core at all
+  (`components/gazette/paperPages.ts`, `readonly string[]`), and `KICKER`,
+  `STORY_BYLINE` and `faceOf` all take an unhandled kind silently.
+
+### Counts the plan quotes that have moved or were never right
+
+- `plFixtureByCode` **does not exist**, under that or any name. The two things the
+  plan conflates point in opposite directions: `commentary.ts:148` `theirFixtureId`
+  takes an FPL code and returns the PROVIDER's id; `football.ts:64` builds a map
+  over OUR fixtures. `optaToCode` IS duplicated — `football.ts:66-68` inline vs
+  `commentary.ts:47-53` as a function — and the two have drifted textually.
+- `commentary.ts:41-58` is the wrong range and not a duplicate of core's
+  `plPlayerCodes`: it builds the map from the checked-in bridge, round-wide, with
+  no detail request; `plPlayerCodes` harvests it from ONE fixture's `teamLists`,
+  which the round read does not carry.
+- **`plMatchFacts` needs the detail read for `referee` only.** On the round read:
+  `ground` 10/10, `attendance` 9/10, `matchOfficials` **0/10**. Both reads answer
+  with `RawPlFixture`, so a round-only call gives three of the four fields at zero
+  extra requests — which the signature or the docblock should say.
+- **The team sheet is not as coarse as D1 assumes.** Beside `matchPosition`'s
+  single letter, each squad player carries an `info` block — absent from
+  `RawPlSquadPlayer` — with `info.positionInfo` on 40/40 giving "Left Winger",
+  "Centre Defensive Midfielder" and thirteen more, plus `info.position`, which
+  disagrees with `matchPosition` on 5 of 40. The letter is where he played today;
+  the string is where he is registered. **D1's verdict on intel `position` should
+  be re-argued against `positionInfo`, not against the letter.**
+- `banned.ts` does **not** ban every ground. Five of the twenty have no entry at
+  all (Vitality, Coventry Building Society, MKM, The City Ground, Tottenham
+  Hotspur Stadium) and four more only by nickname — and the whole-word regex at
+  `banned.ts:66` will not find "the Emirates" inside "Emirates Stadium". No city
+  is banned either, although `house.ts:39` forbids them.
+- `house.ts:40` — *"A MINUTES FIGURE IS NOT A SUBSTITUTION"* — is the rule that
+  blocks B2's per-man `on 61'/off 78'` line, and B3 does not name it. `HEADLINE`
+  at `house.ts:63` restates the ban a fourth time.
+- `TIE_REPORT`'s rule is two sentences (`matches.ts:65`), not the tail fragment B3
+  quotes; removing the tail leaves a prompt still forbidding the minutes.
+- There are **three** stale intel references, not two:
+  `briefs/matchReport.test.ts:109` carries the same clause and asserts the brief
+  still says "never account for it" — so that test contradicts B3 and moves with it.
+- `manFootball` can be called by **two** of its three briefs as written:
+  `TieReportSide.scorers` is `{name, position, points}` with no code
+  (`tieReport.ts:26`), and `sideOf` does not emit one. And `eleven`/`dodgers` are
+  not football-less — they already print goals, assists, clean sheets, saves and
+  minutes through `did(pick)` (`briefs/columns.ts:157-164`). What they lack is the
+  minute-stamp and the on/off.
+- `stateOf` has three callers and only one is tie-shaped, so B2's `ties.ts` split
+  leaves the fixture-shaped file importing from it.
+- **`prepare` is in `dispatch.ts:61`, not `assemble.ts`**, returns
+  `{system, brief} | null` from TWO return sites both of which B3's lifts must
+  cover, and has no test file at all. B3's test is a new `dispatch.test.ts`.
+- **B6's line would not compile**: `wireLines` takes five arguments
+  (`events, breaks, snapshot, owners, mine`) as of 5 Sep, and `Wire.lines` is
+  `WireRow[]` — a union — so a stop press must branch on `isBreak` or filter, and
+  then answer whether the paper prints FULL TIME.
+- `plRound`'s literal keyParts is `["pl-round"]`; the gameweek is the cached
+  function's argument. And `warm.yml` curls `/matchday` every 5 minutes against a
+  30-second revalidate, so the front page shares one entry per 30s window across
+  both pages — not "zero upstream requests".
+- The archive 404 does not arrive at GW5. `paper.json` holds 16, the cap is 24,
+  `GAZETTA_STORY_CAP` is 10 and six GW3 assignments are already queued, so the
+  first successful firing writes `gw2-wire` and `gw2-dodgers` out — potentially
+  the week of 7 Sep.
+- `editions.yml` had failed **75** runs in a row as of 17:07Z on 5 Sep, not 69.
+  The count moves about 27 a day, so quote the date with it or drop the number.
+- Setting `OPENAI_API_KEY` does not give every story a picture: `write-edition.ts:245`
+  draws only when the merged paper's LEAD is one of this firing's filings — at most
+  one image per firing, and none when an older story leads.
+- The per-firing PL cost is `1 + 3 × (fixtures not "U")`, so 31 is the steady state
+  and not the constant: 25 during a Saturday, 1 before a round's first kickoff.
+  `politeFetch` retries twice more on a retryable status, so 31 is a floor, and
+  `football.ts:74`'s loop is serial, so the wall clock is the sum.
+
+### The order the tree agrees with
+
+B7 → B1 are done. `map.ts`'s split now has a second in-folder dependent
+(`breaks.ts`, which imports `plFixtureCode` — that stays in `map.ts`, so the split
+is unaffected). `PlTeamSheet` and the private `squadMan` must move with
+`plTeamSheets`, and `index.ts:43-52` is the barrel edit.
+
 ## Open — amber outside the standings tables (counted 5 Sep 2026)
 
 DESIGN §3's amber slot was narrowed to "never a column of a standings table" and
