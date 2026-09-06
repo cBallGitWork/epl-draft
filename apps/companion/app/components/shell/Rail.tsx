@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { SECTIONS, isPaperRoute, owns } from "./sections";
+import Modal from "./Modal";
+import { SECTIONS, barSections, isPaperRoute, overflowSections, owns } from "./sections";
 
 // Championship Manager's navigation, in the two shapes the game itself has: a
 // rail down the side of a desk screen, and a blue plate row across the foot.
@@ -114,6 +115,12 @@ export default function Rail({
   live: ReactNode;
 }) {
   const pathname = usePathname();
+  // Whether the `More` sheet is open. The only state in this file, and it is
+  // here rather than inside a `More` component because `Modal`'s own docblock
+  // records the rule: every caller is rendered conditionally by a parent holding
+  // the open state, so a Close button calls `onClose` and the panel goes away
+  // because it is no longer rendered.
+  const [more, setMore] = useState(false);
   // The paper is the other register and prints its own index (`gazette/Index`).
   // A rail beside it would inset a broadsheet by 64px of navy — and shift the
   // `@container` threshold the front page's two-column layout keys off, so the
@@ -125,6 +132,7 @@ export default function Rail({
   const sections = SECTIONS.filter(
     (section) => matchday || !section.onlyDuringGameweek,
   );
+  const behind = overflowSections(sections);
 
   return (
     <>
@@ -141,7 +149,7 @@ export default function Rail({
         aria-label="Sections"
         className="cm-foot fixed inset-x-0 bottom-0 z-50 flex pb-[env(safe-area-inset-bottom)] lg:hidden"
       >
-        {sections.map((section) => (
+        {barSections(sections).map((section) => (
           <Plate
             key={section.href}
             section={section}
@@ -149,7 +157,63 @@ export default function Rail({
             score={section.onlyDuringGameweek ? live : null}
           />
         ))}
+        {/* **The door, and it is a plate like any other.** It carries
+            `aria-current` when you are standing in one of the sections behind
+            it, because a bar that marks where you are must not go blank the
+            moment you walk through it — that is the same rule every other plate
+            keeps, and the reason `owns()` exists. `aria-expanded` says it opens
+            something rather than going somewhere, which is the one thing a
+            screen reader cannot see from the label. */}
+        {behind.length > 0 ? (
+          <button
+            type="button"
+            onClick={() => setMore(true)}
+            aria-expanded={more}
+            aria-current={behind.some((section) => owns(section.routes, pathname)) ? "page" : undefined}
+            className="flex min-w-0 flex-1 flex-col items-center justify-center px-0.5 text-center text-xs font-medium leading-tight"
+          >
+            <span className="max-w-full truncate">More</span>
+          </button>
+        ) : null}
       </nav>
+
+      {/* Full width and on the floor, because it is the foot row's own drawer:
+          this only ever opens below `lg`, where 92vw is the whole screen anyway,
+          and it should read as the bar unfolding rather than as a card that
+          happened to appear. */}
+      {more ? (
+        <Modal onClose={() => setMore(false)} width="100vw" anchor="bottom">
+          <ul className="flex flex-col">
+            {behind.map((section) => {
+              const here = owns(section.routes, pathname);
+              return (
+                <li key={section.href} className="contents">
+                  <Link
+                    href={section.href}
+                    onClick={() => setMore(false)}
+                    aria-current={here ? "page" : undefined}
+                    // A row of a list under a thumb, so 44 and no `.cm-row`:
+                    // this sheet only ever opens below `lg`, where that class
+                    // says nothing anyway, and the desk's 28 would be a
+                    // proportion for a surface the desk never sees.
+                    //
+                    // The accent is set here rather than by an `aria-[current]`
+                    // variant: Tailwind v4 drops a class whose name is not
+                    // literally in the scanned source, and a nav that silently
+                    // stopped marking where you are is exactly the failure the
+                    // `--color-fdr-` trap already cost this app once.
+                    className={`flex min-h-11 items-center border-b border-line px-3 text-base font-bold last:border-b-0 hover:bg-raised ${
+                      here ? "text-accent" : ""
+                    }`}
+                  >
+                    {section.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </Modal>
+      ) : null}
 
       {/* **The rail, from `lg`.** Unchanged (Craig, 5 Sep: "Desktop unchanged").
           Its own ground rather than the body's, because it is opaque furniture:

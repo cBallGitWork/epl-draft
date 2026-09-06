@@ -28,11 +28,21 @@ import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 export default function Modal({
   onClose,
   width,
+  anchor = "centre",
   children,
 }: {
   onClose: () => void;
   /** How wide the panel wants to be, on a screen with room for it. */
   width: string;
+  /** Where the panel sits. **A second position, not a second component**: the
+   *  three cards that earned this abstraction are all answers to "tell me about
+   *  this thing I tapped" and belong in the middle of the screen, and the
+   *  section overflow is not — it is opened from the foot row by a thumb, and a
+   *  menu that appears at the far end of the screen from the control that opened
+   *  it makes a reader look twice for what they just asked for.
+   *
+   *  `centre` is the default and every existing caller keeps it untouched. */
+  anchor?: "centre" | "bottom";
   children: ReactNode;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -51,7 +61,26 @@ export default function Modal({
         if (event.target === dialog.current) onClose();
       }}
       style={{ "--modal-width": width } as CSSProperties}
-      className="m-auto w-[min(var(--modal-width),92vw)] border border-line bg-surface p-0 text-ink backdrop:bg-black/70"
+      // `mb-0` rather than a `bottom-0`: a `<dialog>` in the top layer is
+      // centred by its own auto margins, so the way to sit it on the floor is to
+      // take the bottom margin away and leave the top one auto. The foot row is
+      // `fixed` under the backdrop, so the sheet rises to meet the plate that
+      // opened it.
+      className={`border-line bg-surface p-0 text-ink backdrop:bg-black/70 ${
+        anchor === "bottom"
+          ? // No 92vw cap and only a top border: a drawer spans its screen, and
+            // an inset one leaves the foot row showing down both sides of it,
+            // which reads as a card that landed on the bar rather than as the
+            // bar opening. Its own bottom inset, because the home indicator
+            // lands on a panel sitting this low — the same reason the foot row
+            // carries one.
+            // `max-w-none` because the USER AGENT caps a dialog at
+            // `calc(100% - 6px - 2em)`, which is why a full-width drawer came
+            // out inset by an em either side with the foot row showing through
+            // the gap. Preflight does not reset it.
+            "mx-auto mb-0 mt-auto w-[var(--modal-width)] max-w-none border-t pb-[env(safe-area-inset-bottom)]"
+          : "m-auto w-[min(var(--modal-width),92vw)] border"
+      }`}
     >
       {children}
     </dialog>

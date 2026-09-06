@@ -149,6 +149,33 @@ caps, and ours put the smallest type in the app on the object a thumb lands on
 most. 13px does not fit six plates at 320 and 12px does; `tools/ui/navfit.mjs`
 holds that line.
 
+**Six plates is the bar's ceiling, and the sixth is now a DOOR.** Craig, 5 Sep
+2026: *"if we tap a section, it could bring up more options."* The ceiling was
+measured and is not negotiable — six plates at 320 are 53px each against a
+widest label of 44 (`Gazetta`, exactly), and a seventh gives 45px against a 36px
+budget, so `Gazetta` and `League` would both clip. That arithmetic is why the
+pool was taken OFF the bar on 5 Sep rather than added to it, and it would have
+demanded a rename of two existing sections every time the app grew.
+
+So the last plate is `More`, and everything past the fifth section lives behind
+it: a full-width drawer on the floor, drawn by `shell/Modal` at
+`anchor="bottom"`. The bar keeps exactly six plates for ever and the ceiling
+stops being a limit on how many sections the app may have.
+
+Three things about it are rules rather than choices. **It is a plate, not a new
+object** — same width, same type, same `.cm-foot` ink, and it takes
+`aria-current` when you are standing in one of the sections behind it, because a
+bar that marks where you are must not go blank the moment you walk through the
+door. **It opens on the floor**, because it is opened by a thumb from the bar
+and a menu that appears at the far end of the screen from the control that
+opened it makes a reader look twice for what they just asked for. And **the desk
+rail does not use it at all**: it runs down the side of a 1440 screen with room
+for a dozen entries, and a disclosure on a surface where everything already fits
+is chrome hiding things for no reason.
+
+`navfit` was measuring anchors only and reported "5 sections" on a six-plate bar
+— then offered room for a seventh that was already spent. It counts the door now.
+
 **A plate owns its ink.** Dark ink on the grey plate is 7.52:1 and `--color-ink`
 on it is 2.27; on the blue plate ink is 7.0 and `--color-muted` is 3.55 and
 fails. So no call site sets `text-*` on either, and a count inside a tab is the

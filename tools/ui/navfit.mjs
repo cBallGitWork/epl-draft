@@ -41,7 +41,17 @@ const widths = positional.length ? positional.map(Number) : [320, 360, 390, 430]
 const MEASURE = `(function(){
   var rail=document.querySelector('nav[aria-label=Sections]');
   if(!rail) throw new Error("no section rail found — is this the app?");
-  var links=Array.prototype.slice.call(rail.querySelectorAll('a[href]'));
+  // **A plate is not always a link.** The foot row's last plate is \`More\`, a
+  // BUTTON that opens the overflow sheet rather than going anywhere, and it
+  // takes a sixth of the row exactly as its neighbours do. Counting anchors
+  // alone reported "5 sections" on a six-plate bar and then offered room for a
+  // seventh that was already spent — the instrument guarding the ceiling would
+  // have waved through the very overflow it exists to prevent.
+  //
+  // \`:scope > button\` and not any button: the desk rail's back/forward steppers
+  // are buttons too, nested a div deep, and they are chrome above the plates
+  // rather than sections.
+  var links=Array.prototype.slice.call(rail.querySelectorAll('a[href], :scope > button'));
   var items=links.filter(function(a){return a.textContent.trim()});
   // Only the plates, and only the ones with a label: the Live plate's figure
   // lives inside the same anchor, so counting spans would double that section.

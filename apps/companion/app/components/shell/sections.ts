@@ -53,7 +53,37 @@ const PAPER_ROUTES = ["/", "/paper"];
  *  `/squad` itself still exists and still works — the index is a real page and
  *  the sign-in lives on it. It is simply not a destination the rail offers,
  *  which is the difference between a route and a section. */
-export const SECTIONS = [
+export interface Section {
+  href: string;
+  label: string;
+  routes: string[];
+  /** Only while football is on. The Live section and nothing else. */
+  onlyDuringGameweek?: boolean;
+  /** **Behind `More` on a phone, flat on the desk rail.**
+   *
+   *  The foot row has a hard ceiling and it is measured, not felt: six plates at
+   *  320 are 53px each and a label may be 44 wide, which `Gazetta` exactly is. A
+   *  seventh plate gives 45px against a 36px budget, so `Gazetta` and `League`
+   *  would both clip — a seventh section was therefore impossible without
+   *  renaming two existing ones, and that is why the pool was taken OFF the bar
+   *  on 5 Sep 2026 rather than added to it.
+   *
+   *  `More` is the way out of that, and it is Craig's (5 Sep 2026: *"if we tap a
+   *  section, it could bring up more options"*). The bar keeps its six plates
+   *  for ever — five sections and a door — and every section after the fifth
+   *  lands behind that door instead of costing the bar a rename. The ceiling
+   *  stops being a limit on how many sections the app may have.
+   *
+   *  **The desk rail does not use it.** It runs down the side of a 1440 screen
+   *  with room for a dozen entries, and a disclosure on a surface where
+   *  everything already fits is chrome hiding things for no reason. So the two
+   *  shapes list the same sections and only the phone groups the tail — which is
+   *  the same relationship they already have, the rail being outlined navy and
+   *  the foot row a filled strip. */
+  overflow?: boolean;
+}
+
+export const SECTIONS: Section[] = [
   { href: "/", label: "Gazetta", routes: PAPER_ROUTES },
   { href: "/league", label: "League", routes: ["/league"] },
   // **"Prem", and the bar says the rest.** The rail is 64px below `lg` and
@@ -75,8 +105,31 @@ export const SECTIONS = [
   // and its title bar reads `Mike Paul News` — the news belongs to the man, not
   // to the competition he plays in.
   { href: "/news", label: "News", routes: ["/news"] },
-  { href: "/fpl", label: "FPL", routes: ["/fpl"] },
+  // **Scout is a section again** (Craig, 5 Sep 2026: *"I think this function
+  // will be its own section away from the league etc"*), and DESIGN §1 has
+  // listed Players among the Desk's own all along — it was `sections.ts` that
+  // drifted when the bar ran out of room, not the design.
+  //
+  // **"Scout", not "Players".** It is this repo's own word for the activity
+  // already — `scouting.ts`, DESIGN §9's "scouting table", ROADMAP §7's
+  // "scouting notes, waiver intel" — and Championship Manager's rail carries
+  // `Find` in exactly this slot, a verb rather than a noun for the same job. The
+  // URL stays `/players`, because a URL is persisted the moment somebody shares
+  // it and the route did not change.
+  { href: "/players", label: "Scout", routes: ["/players"], overflow: true },
+  { href: "/fpl", label: "FPL", routes: ["/fpl"], overflow: true },
 ];
+
+/** The plates a phone's foot row draws, in order, before `More` is added. */
+export function barSections(sections: readonly Section[]): Section[] {
+  return sections.filter((section) => !section.overflow);
+}
+
+/** What is behind `More`. Empty means the door is not drawn at all — a `More`
+ *  that opens onto nothing is a control that does nothing. */
+export function overflowSections(sections: readonly Section[]): Section[] {
+  return sections.filter((section) => section.overflow);
+}
 
 // **The pool is not a section either, and it is the second entry to leave for
 // the squads' reason.** `navfit` measures six plates as the bar's ceiling — a
