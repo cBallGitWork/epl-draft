@@ -47,21 +47,28 @@ football under it.
    the name beside it, and it was the loudest object on the panel. A wire is read
    down the names.
 
-   **`HT` and `FT` rows carry the scoreline**, interleaved by wall clock like
-   everything else, because `HALF TIME` between the goals is what tells a reader
-   the 2-1 he is looking at is not going to move. They are `text-muted` and
-   deliberately neither the accent (which means "yours" on this very panel) nor
-   `--color-live` (which means a match in PLAY, and these have stopped).
+   **`FT` rows carry the scoreline**, interleaved by wall clock like everything
+   else, because full time is the one thing a scoreline cannot say about itself: a
+   2-1 with a clock on it and a 2-1 that is finished look identical. They are
+   `text-muted` and deliberately neither the accent (which means "yours" on this
+   very panel) nor `--color-live` (which means a match in PLAY, and these have
+   stopped). Off the SAME cached round read as the goals — one upstream request
+   for ten matches.
 
-   Both come off the SAME cached round read as the goals — one upstream request
-   for ten matches. The full-time score is the fixture's own; **the half-time
-   score is derived**, because the Premier League publishes `halfTimeScore` on its
-   per-fixture detail read and not on the round one (0 of 10, counted 5 Sep 2026),
-   and the alternative is ten more requests on the screen sixteen phones poll
-   every thirty seconds. It is counted off the goals already on the wire, by the
-   football minute — a goal at `45+3` parses to 45 — with an own goal credited to
-   the side its scorer does not play for. `matchday/wireLines.test.ts` is that
-   arithmetic.
+   **Half time was here for an evening and went** (Craig, 5 Sep 2026: *"ditch the
+   HT"*). On a Saturday teatime it lands within an hour of full time with the
+   scoreline unchanged between them, so the wire drew `HT HUL 0 v AVL 0` directly
+   under `FT HUL 0 v AVL 0` — ten fixtures would have been twenty rows of
+   furniture between the goals. The derivation that fed it went too: the Premier
+   League publishes `halfTimeScore` on its per-fixture DETAIL read and not on the
+   round one (0 of 10, counted 5 Sep 2026), which is still worth knowing and is
+   why the score had to be counted off the goals rather than read.
+
+   **Two versions, behind a `Rows · Report` strip.** The second is Opta's own
+   prose, shortened — see `roundCommentary`. It carries the VAR-cancelled goal and
+   the man who won a penalty, which the row wire has no source for, and it loses
+   the ownership, which is the row wire's whole reason for existing. A temporary
+   object: the loser is deleted rather than kept behind a flag.
 4. **`GameweekView`** — the round's fixtures (see [gameweek.md](gameweek.md)),
    now with **your players marked and every scorer tagged with the squad holding
    him**. The two halves of the page finally share both grammars: the scoreline,

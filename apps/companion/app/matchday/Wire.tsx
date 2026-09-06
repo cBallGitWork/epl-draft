@@ -33,11 +33,12 @@ import { isBreak, type WireBreak, type WireLine, type WireRow } from "./wireLine
 // event in the same positional array, so the pairing is structural. See
 // `wireLines.SECOND`.
 //
-// **Two columns, name over owner in each.** Four facts and a phone: the two
-// names are what happened and the two managers are what it cost, and stacking
-// each pair keeps a goal on one row at 390 without truncating a surname to three
-// letters. The row is still the 44px floor, because two 11px lines is what 44px
-// is for.
+// **Two columns, and one line in each.** Four facts and a phone: the two names
+// are what happened and the two managers are what it cost. They were stacked —
+// name over owner — until 5 Sep 2026, which is what made a row 44px tall and
+// bounded the panel at eight of them; the pair now runs inline and the row is
+// `min-h-9`, with the two men sharing a line only from `lg` where there is room.
+// Nothing here is a tap target, so the 44px floor was never this row's.
 //
 // **No row is a link, and the first build got that wrong twice over.**
 // `docs/ui/desk.md`'s argument holds for its own reason: sixty 44px controls
@@ -109,9 +110,9 @@ export default function Wire({ lines }: { lines: readonly WireRow[] }) {
           man wore a different mark from "nobody in the league holds him" — a
           real distinction, and one for US rather than for a reader: he cannot
           act on it, it appears on the screen he opens at ten to four, and
-          `npm run pl-bridge` is what takes it back to nought. The count is still
-          computed and still crosses in `Wire.unresolved`, so the day it wants a
-          home it has one. */}
+          `npm run pl-bridge` is what takes it back to nought. The COUNT went with
+          the line — `wireLines` records why it is a deleted pipeline rather than
+          a hidden number, and `Wire` has one field. */}
     </Section>
   );
 }

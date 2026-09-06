@@ -150,8 +150,13 @@ export interface RawPlGround {
  *  5 Sep 2026. `phase` is `"0"` upcoming, `"1"` first half and `"F"` full time in
  *  that same count (2, 1 and 7 of the ten), with `"2"` the second half and `"H"`
  *  the interval — that last one seen live at 17:26Z the same evening, after the
- *  count found no fixture at half time. Nothing matches on a single letter
- *  anyway; `breaks.ts` asks whether a fixture has LEFT the first half. The two disagree only in
+ *  count found no fixture at half time.
+ *
+ *  **`phase` has no reader in the tree.** `breaks.ts` keys its one rule off
+ *  `status === "C"`, which became the whole of it when half time left the wire.
+ *  The letters are recorded here as provider shape, so that the next thing
+ *  wanting "which half is it" knows they exist and knows nothing depends on
+ *  them. The two disagree only in
  *  the sense that a status letter is about the fixture and a phase is about the
  *  ball. */
 export interface RawPlFixture {

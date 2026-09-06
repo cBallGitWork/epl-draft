@@ -59,6 +59,11 @@ this exists).
 ## 4. Small files, not monoliths
 
 - **Soft ceiling 200 lines, hard ceiling 300** per source file. At 300, split.
+- **A `*.test.ts` file's ceiling is 500**, and it is a different rule rather than a
+  laxer one. A source file's length measures how much it is doing; a test file's
+  measures how many cases it has, and splitting one at a line count means cutting
+  a suite in half at whichever assertion happens to sit on line 300. Split a test
+  file when the THING it tests splits, and never before.
 - **A shared component lives in the directory that matches its LAYER**, under
   `apps/companion/app/components/`: `shell/` is the cross-register frame — the
   things both the desk and the paper wear; `league/` is the desk register's own

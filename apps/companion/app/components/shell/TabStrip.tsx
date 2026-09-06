@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TAB } from "@/app/desk";
 
 // Championship Manager's blue tab strip: the row of plates under a title bar
 // where you pick one of a set.
@@ -92,9 +93,7 @@ export default function TabStrip<K extends string>({
             // The accent carries "the one you are on", from `desk.css` rather
             // than from here: red is the brand and the live signal and never a
             // statement about where you are.
-            className={`cm-tab flex flex-1 items-center justify-center font-bold uppercase lg:text-sm ${
-              LABELS[labels]
-            } ${
+            className={`${TAB} ${LABELS[labels]} ${
               // Never on the tab you are on: the accent already says "selected",
               // and greying the current plate would have the strip make two
               // claims about one object.

@@ -153,6 +153,7 @@ export default function PitchRows<T>({
    *  | Squad (a rival, locked) | `CmGround` flat | `PitchDisc` | how he set up — cut-out, name on the grass, tactic arrow, XI only |
    *  | Squad (your own) | `PitchFrame` trapezoid | `PitchPlayer` | what you can still CHANGE — draggable, bench, violations |
    *  | Head-to-head | `CmGround` flat | `PitchDisc` | two elevens sized to agree, via `widest` |
+   *  | Club (predicted) | `CmGround` flat | `PitchDisc` | who a real club is expected to start — the only one about a club rather than a squad |
    *  | FPL | `CmGround` flat | `PitchDisc` | your own FPL XI, with the armband its wrapper draws |
    *
    *  The split is the register, not decoration: **flat is the desk's diagram and

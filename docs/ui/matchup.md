@@ -15,7 +15,11 @@ is not used for anything: there is no ground.
    side's team below; the open half is raised and carries a foot bar. Your own
    name reads in accent, the standard "this is yours" mark. **One number per
    side and nothing beside it** — see the constraint below.
-2. **Pitch / List**, with the round's state opposite it — see below.
+2. **Pitch / List**, and nothing beside it. The round word and the open side's
+   formation sat opposite it until 5 Sep 2026 and both said something the screen
+   says better elsewhere — a round in play is a red bar across the top of the app,
+   and a shape is eleven men arranged on grass six pixels below. The two plates
+   fill the row (`ViewToggle`), which is CM's own `Back` · `Next`.
 3. **The open side's team** (`TeamSheet`) — the eleven on the grass and the
    bench in a strip under it, or the same squad as rows (`SquadRows`, shared
    with the squad board). Every player is a button.
@@ -173,7 +177,11 @@ counting them, which is the question a manager is actually asking at 4pm.
 
 ## Known gaps
 
-- The list does not separate the eleven from the bench; it groups by position and
-  answers "who has he got". The pitch is where the arrangement lives.
+- ~~The list does not separate the eleven from the bench.~~ **Closed 5 Sep 2026.**
+  It was fed `squadUnarranged`, whose job is to REMOVE the arrangement — the right
+  shape for a rival's squad before his period opens, and not what this branch is,
+  since a withheld side never reaches it and the pitch beside it had been drawing
+  the lineup all along. Both views draw the eleven in its formation lines, then a
+  plated `Bench`, then the reserves.
 - The two elevens can only be compared by switching halves. Whether that is worth
   fixing on a phone is an open question — the alternative is thirty players.

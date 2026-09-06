@@ -34,6 +34,7 @@ import { wireLines } from "./wireLines";
 import Wire from "./Wire";
 import { londonDayKey } from "../londonTime";
 import { BetweenGameweeks, MatchupWaiting } from "./Between";
+import { TAB } from "@/app/desk";
 
 // The live centre. Your head-to-head first, the real football under it — the
 // order a manager actually cares about them in.
@@ -288,14 +289,14 @@ function WirePick({ prose }: { prose: boolean }) {
       <Link
         href="/matchday"
         aria-current={prose ? undefined : "page"}
-        className="cm-tab flex flex-1 items-center justify-center px-2 text-center text-2xs font-bold uppercase"
+        className={`${TAB} px-2 text-center text-2xs`}
       >
         Rows
       </Link>
       <Link
         href={`/matchday?wire=${PROSE}`}
         aria-current={prose ? "page" : undefined}
-        className="cm-tab flex flex-1 items-center justify-center px-2 text-center text-2xs font-bold uppercase"
+        className={`${TAB} px-2 text-center text-2xs`}
       >
         Report
       </Link>

@@ -36,22 +36,12 @@ import { PANEL_FLUSH, QUIET_FIGURE, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 // can send somebody — and it means the page does not ship a reducer to a phone
 // to do what a link already does.
 //
-// **What the tabs are is CM's, not ours.** `All · Messages · Competitions ·
-// Injuries and Bans` are the game's four words and they are already right:
-// business is a message, a round is a competition, and a doubtful player is an
-// injury or a ban. See `core/inbox/types.ts`.
-
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
-// it cannot be imported — change both together. (PLATFORM_NOTES records why.)
-export const revalidate = 30;
-
-// **The four-tab filter strip is gone** (Craig, 5 Sep 2026: "ditch the blue
-// row"). `All · Messages · Competitions · Injuries and Bans` is CM's own strip
-// and it was drawn faithfully — four blue plates, two lines tall on a phone so
-// "Injuries and Bans" could not clip. What it filtered was four items. The
-// game's inbox runs for a season of a hundred and gets its money back; ours runs
-// a week of a league of ten, and a filter over four rows is chrome asking to be
-// paid for what it saves.
+// **There is no filter strip** (Craig, 5 Sep 2026: *"ditch the blue row"*).
+// `All · Messages · Competitions · Injuries and Bans` is CM's own and was drawn
+// faithfully — four blue plates, two lines tall on a phone so "Injuries and Bans"
+// could not clip. What it filtered was four items. The game's inbox runs a season
+// of a hundred and gets its money back; ours runs a week of a league of ten, and
+// a filter over four rows is chrome asking to be paid for what it saves.
 //
 // It comes back the day there is a list long enough to want it, and CM's four
 // words are the ones it comes back as — `InboxCategory` still carries them and
@@ -129,8 +119,9 @@ export default async function NewsPage({
 /** One line in the list: when, and what.
  *
  *  **The blue block carries the date**, which is what CM's carries here — the
- *  same block that holds a league position on a scoreline row and a minute on
- *  the wire. It is the row's "when", and an item with no date of its own falls
+ *  same block that holds a league position on a scoreline row. The wire's own
+ *  minute left that block on 5 Sep 2026 for brackets after the player's name —
+ *  so a scoreline row and this are the two the app has left. It is the row's "when", and an item with no date of its own falls
  *  back to its round (`core/inbox/types.ts` on why a doubt has neither).
  *
  *  **The open row is on a red ground and the URGENT one is in red ink**, which

@@ -28,13 +28,12 @@ import { plFixtureCode } from "./map";
 // all ten fixtures:
 //
 // · `status` — `"U"` upcoming, `"L"` live, `"C"` complete. 10/10.
-// · `phase` — `"0"` upcoming, `"1"` first half, `"F"` full time; `raw.ts`
-//   documents `"2"` for the second half. Seen in that count: `"0"` on 2, `"1"` on
-//   1, `"F"` on 7 — no fixture was at half time, so the interval's own letter was
-//   unverified. **It is `"H"`, seen live at 17:26Z the same evening** (Hull v
-//   Aston Villa, `status=L phase=H`), and the wire drew its `HT` line off it. The
-//   rule below stays "past the first half" rather than a match on that letter,
-//   which is what made it right before anyone had seen one.
+// · `phase` — `"0"` upcoming, `"1"` first half, `"H"` the interval, `"2"` the
+//   second half, `"F"` full time. **Nothing here reads it**: the rule below is
+//   `status === "C"`, and it became that when half time went — a completed
+//   fixture is what a full-time row is about, and `status` says so in one letter
+//   without the interval's own letter mattering. Recorded because `raw.ts` types
+//   it and a reader will otherwise assume it is load-bearing.
 // · `clock` — `{secs, label}`, and on a COMPLETE fixture it is the final
 //   whistle: `5760 / "90+6'00"`. 8/10 (absent on the two unstarted).
 // · **`halfTimeScore` is absent on all ten.** It is on the DETAIL read and not
@@ -66,7 +65,8 @@ export interface RoundBreak {
 /** Every full time reached in a round, oldest first.
  *
  *  A match that has not finished yields nothing — the wire is a record of what
- *  has happened. */
+ *  has happened — and "finished" is `status === "C"`, the fixture's own letter,
+ *  rather than anything about which half the ball is in. */
 export function mapRoundBreaks(fixtures: readonly RawPlFixture[]): RoundBreak[] {
   const breaks: RoundBreak[] = [];
 

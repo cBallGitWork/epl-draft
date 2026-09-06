@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GROUPS, type GroupKey } from "@epl/core";
+import { TAB } from "@/app/desk";
 
 // CM's second foot row: the stat groups, as a row of blue plates under a board.
 //
@@ -42,7 +43,7 @@ export default function GroupNav({
           key={entry.key}
           href={href(entry.key)}
           aria-current={entry.key === group ? "page" : undefined}
-          className="cm-tab flex min-h-11 flex-1 items-center justify-center px-2 text-2xs font-bold uppercase lg:min-h-9 lg:text-sm"
+          className={`${TAB} min-h-11 px-2 text-2xs lg:min-h-9`}
         >
           {entry.label}
         </Link>

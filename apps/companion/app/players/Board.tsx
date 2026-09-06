@@ -12,7 +12,7 @@ import PlayerPortrait from "../components/football/PlayerPortrait";
 import GroupNav from "../components/league/GroupNav";
 import { IndexCell } from "../components/league/TableCells";
 import { PLAYERS } from "../league/SectionNav";
-import { BOARD, FIGURE, ROW_RULE } from "@/app/desk";
+import { BOARD, FIGURE, ROW_RULE, TAB } from "@/app/desk";
 
 // CM's stat board, on the player pool.
 //
@@ -165,7 +165,7 @@ export default function Board({
             key={entry.key}
             href={`${PLAYERS}?group=${group}&cat=${entry.key}`}
             aria-current={entry.label === category ? "page" : undefined}
-            className="cm-tab flex flex-1 items-center justify-center whitespace-nowrap px-2 text-2xs font-bold uppercase lg:min-h-9 lg:text-sm"
+            className={`${TAB} whitespace-nowrap px-2 text-2xs lg:min-h-9`}
           >
             {entry.label}
           </Link>

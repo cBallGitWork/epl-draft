@@ -174,6 +174,24 @@ export const ROW_RULE = "border-b border-bg";
  *  names the geometry only, so that settlement is one edit here. */
 export const SCROLL = "overflow-x-auto";
 
+/** One plate of a TAB STRIP: the blue plate, filling its share of the row, with
+ *  its label centred in the chrome face.
+ *
+ *  **Five spellings, counted 6 Sep 2026** — `shell/TabStrip`, `players/Board`,
+ *  `league/GroupNav` and the wire picker's two on `/matchday` — which is past
+ *  §4's third occurrence twice over, and the copying had already diverged: the
+ *  wire picker was written without `lg:text-sm`, so the one strip added that day
+ *  sat at 9px on a desk where every other strip steps to 14.
+ *
+ *  **Size and padding stay the caller's**, because the four genuinely differ and
+ *  an options bag reconciling them is the abstraction §1 forbids: `TabStrip`
+ *  takes its size from a prop, `GroupNav` keeps a 44px floor that relaxes to 36,
+ *  and `Board` will not let a category label wrap. What is shared is the plate,
+ *  the fill of the row, the centring and the face — which is exactly what a strip
+ *  IS, and what a fifth caller would otherwise get half right. */
+export const TAB =
+  "cm-tab flex flex-1 items-center justify-center font-bold uppercase lg:text-sm";
+
 /** A column head on a STATS board — the bevelled plate at the height a board of
  *  measures uses, as against `TableHeads.PLATE`'s `h-7` for a table of rows.
  *  Twelve sites in three files wrote it.

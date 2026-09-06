@@ -482,7 +482,8 @@ apart silently.
 | Plated title bar | 64 | 96 | `xl`–`3xl`, `.cm-title` | `PageHeader` |
 | The caption under it | 28 | 40 | `sm`–`lg`, `.cm-title` | `shell/Caption` |
 | A row that needs two lines | 56 | 28 | `sm` | `.cm-row` + `min-h-14` |
-| **A control** — button, select, input, tab, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
+| **A control** — button, select, input, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
+| **A tab** — one plate of a strip | **44** | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |
 | A foot-row plate | 44 | 56 | `xs` mixed case | `.cm-foot` |
 | **A row of a list** | **44** | **28** | `base`/`lg` name, `2xs` figures | `.cm-row` + `ROW_LINK` |
 | One stated fact in a stack | 44 | 44 | `2xs` label, `sm` value | `FACT` |
@@ -497,10 +498,17 @@ a repeating row on the desk, which is `.cm-row` and is the number that makes a
 division fit on a screen. `desk.css` carries the long argument for the pair and
 `tools/ui/tapfit.mjs` measures it.
 
-**A row relaxes and a control never does.** A button, a tab and a select stay at
-their floor at every width — they are aimed at rather than read, and a mouse
+**A row relaxes and a control never does — and a TAB is the exception to both.**
+A button and a select stay at their floor at every width — they are aimed at rather than read, and a mouse
 misses them as easily as a thumb does. That distinction is the whole reason this
 is a table of roles and not a table of pixels.
+
+The tab GROWS instead, to 56 — `desk.css` carries the argument and it is the one
+that undid a day's work: "every plate on the desk was drawn to the FLOOR the tap
+rule sets rather than to a size, and chrome the size of the minimum is why Craig
+kept saying the screens do not look like the game." CM is dense in its rows and
+chunky in its chrome. This row said 36 until 6 Sep 2026, against a stylesheet that
+has said 3.5rem since 31 Aug.
 
 **The last two rows deliberately state no height.** A figure and a label are set
 inside a row and take the row's; giving either its own height is what produced
