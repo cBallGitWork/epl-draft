@@ -102,10 +102,18 @@ export function shownRows(
   raw: Map<string, Record<string, number | null>>,
 ): PoolRow[] {
   const needle = (query.q ?? "").trim().toLowerCase();
+  const status = chosen(query.status);
+  const positions = chosen(query.pos);
   const filtered = rows.filter(
     (row) =>
-      (!query.status || row.entry.status === query.status) &&
-      (!query.pos || row.entry.eligiblePositions.includes(query.pos)) &&
+      // **Any of the chosen, not all of them** — the two filters are unions
+      // within themselves and an intersection between: "a defender or a
+      // midfielder, who is also a free agent". Requiring every chosen position
+      // at once would be a filter that empties itself on the second tap, since
+      // almost nobody is eligible at three.
+      (status.length === 0 || status.includes(row.entry.status)) &&
+      (positions.length === 0 ||
+        positions.some((position) => row.entry.eligiblePositions.includes(position))) &&
       (!needle || row.entry.player.displayName.toLowerCase().includes(needle)),
   );
 
@@ -153,8 +161,31 @@ export function sortHref(query: PlayersQuery, key: string): string {
   return href(query, { sort: key, dir: descending ? "desc" : "asc" });
 }
 
-/** Tapping the filter you are already on clears it, so every chip is its own way
- *  back and the page needs no "all" button to undo itself. */
+/** The values chosen for one filter, in the order they were chosen.
+ *
+ *  A comma list in one parameter rather than a repeated one: `?pos=D,M` is
+ *  readable in the address bar, survives being shared, and keeps the GET form's
+ *  hidden fields as the plain strings they already were. Blanks are dropped so a
+ *  trailing comma somebody typed is not a filter on the empty string. */
+export function chosen(value: string | undefined): string[] {
+  return (value ?? "").split(",").filter(Boolean);
+}
+
+/** Whether a chip is on. */
+export function isChosen(query: PlayersQuery, key: "status" | "pos", value: string): boolean {
+  return chosen(query[key]).includes(value);
+}
+
+/** Add a filter, or take it away if it is already on.
+ *
+ *  **Several at once** (Craig, 6 Sep 2026: *"think we need the ability to select
+ *  multiple filters as well"*). It set one value and cleared it on a second tap,
+ *  so choosing defenders and midfielders together was impossible and the chips
+ *  behaved like a tab strip — which is what they are drawn as, and was the tell.
+ *  Every chip is still its own way back, and turning the last one off drops the
+ *  parameter rather than leaving an empty one in the URL. */
 export function filterHref(query: PlayersQuery, key: "status" | "pos", value: string): string {
-  return href(query, { [key]: query[key] === value ? undefined : value });
+  const on = chosen(query[key]);
+  const next = on.includes(value) ? on.filter((entry) => entry !== value) : [...on, value];
+  return href(query, { [key]: next.length > 0 ? next.join(",") : undefined });
 }

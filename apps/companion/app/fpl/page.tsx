@@ -192,7 +192,7 @@ export default async function FplPage() {
           rel="noopener noreferrer"
           className={`cm-bevel flex min-h-11 items-center px-3 lg:min-h-9 ${SMALL_CAPS}`}
         >
-          Open on FPL &nearr;
+          Open on FPL ↗
         </a>
         {/* On a plate too, and for the same reason as the link beside it: a
             control on the bare photograph is DESIGN §2's one prohibition, and

@@ -76,7 +76,7 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
         rel="noopener noreferrer"
         className={BUTTON}
       >
-        Open on Fantrax &nearr;
+        Open on Fantrax ↗
       </a>
 
       {/* **The whole-of-Fantrax block is gone** (Craig, 4 Sep 2026: *"remove
