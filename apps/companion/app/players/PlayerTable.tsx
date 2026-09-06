@@ -3,6 +3,7 @@ import { clubColours, signed, toFplClubCode } from "@epl/core";
 import PlayerPortrait from "../components/football/PlayerPortrait";
 import type { PoolRow } from "./pool";
 import { COLUMNS, type PoolColumn, type RawStats } from "./columns";
+import { HeadRow, SortHead } from "../components/league/TableHeads";
 import { activeSort, sortHref } from "./query";
 import type { PlayersQuery } from "./query";
 import { ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
@@ -61,35 +62,47 @@ export default function PlayerTable({
     <div className={`cm-scroll ${SCROLL}`}>
       <table className="w-full border-collapse text-sm">
         <thead>
-          <tr className="border-b border-line text-2xs uppercase text-faint">
-            {COLUMNS.map((column) => (
-              <th
-                key={column.key}
-                scope="col"
-                aria-sort={
-                  current.key === column.key
-                    ? current.descending
-                      ? "descending"
-                      : "ascending"
-                    : undefined
-                }
-                className={`whitespace-nowrap py-1.5 font-bold ${
-                  column.kind === "text" ? "text-left" : "text-right"
-                } ${column.key === "name" ? STICKY_LEAD : ""} ${phone(column)}`}
-              >
-                <Link
-                  href={sortHref(query, column.key)}
+          {/* **The shared head strip, not a fifth spelling of it** (Craig, 6 Sep
+              2026: *"where are the column headers using a grey box that can be
+              selected. Another instance of us using different code for 6
+              different tables"*). This drew a bare `<th>` with a link and an
+              arrow in it, so the one table in the app with twenty-four sortable
+              columns was the one with no bevelled plate on any of them — and CM's
+              head plate is not decoration, it is what the table is remembered
+              for. `TableHeads` already owned the mechanics for the three tables
+              that sort; this is the fourth, and the plate, the pressed state,
+              `aria-sort` and the arrow now come from one place for all of them. */}
+          <HeadRow>
+            {COLUMNS.map((column) =>
+              column.key === "name" ? (
+                // `NameHead`'s markup written out rather than imported, because
+                // this head has to carry `STICKY_LEAD` and that component takes
+                // no class — it is the bare name cell CM's strip starts with
+                // (`cm9900/24.jpg`: the ruler runs over the numbers, not the
+                // names). Two occurrences of one line, which §1 leaves alone;
+                // the third takes a class prop.
+                <th key={column.key} scope="col" className={`p-0 font-bold ${STICKY_LEAD}`}>
+                  <span className="flex h-7 items-center px-1.5 text-faint">{column.label}</span>
+                </th>
+              ) : (
+                <SortHead
+                  key={column.key}
+                  width={phone(column)}
                   title={column.title}
-                  className={`inline-flex min-h-9 items-center gap-1 px-1.5 ${
-                    current.key === column.key ? "text-accent" : "hover:text-muted"
-                  }`}
-                >
-                  {column.label}
-                  {current.key === column.key ? <Arrow down={current.descending} /> : null}
-                </Link>
-              </th>
-            ))}
-          </tr>
+                  href={sortHref(query, column.key)}
+                  label={column.label}
+                  align={column.kind === "text" ? "left" : "right"}
+                  sorted={
+                    current.key === column.key
+                      ? current.descending
+                        ? "descending"
+                        : "ascending"
+                      : undefined
+                  }
+                />
+              ),
+            )}
+          </HeadRow>
         </thead>
         <tbody>
           {rows.map((row) => (
@@ -236,12 +249,4 @@ const STICKY_LEAD = "sticky left-0 z-10 bg-surface border-r border-line";
 function Trend({ value }: { value: number }) {
   if (value === 0) return <span className="text-faint">0%</span>;
   return <span className={value > 0 ? "text-up" : "text-bad"}>{signed(value)}%</span>;
-}
-
-function Arrow({ down }: { down: boolean }) {
-  return (
-    <span aria-hidden className="text-[0.5rem] leading-none">
-      {down ? "▼" : "▲"}
-    </span>
-  );
 }
