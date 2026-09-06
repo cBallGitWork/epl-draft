@@ -28,7 +28,7 @@ export { fetchBootstrap, fetchFixtures } from "./fpl/client";
 // wants an OLDER round, which is the whole reason these are reachable on their
 // own. `football.ts`'s `gameweekLive` says what it costs and what it buys.
 export { fetchLive } from "./fpl/client";
-export { mapLiveStats, roundFinished } from "./fpl/map";
+export { mapLiveStats, roundPlayed } from "./fpl/map";
 // The Premier League's own feed — the football layer's SECOND provider, and the
 // only source of a goal's minute, a real match clock, a team sheet or a
 // substitution. FPL publishes none of them. It joins on ids neither provider

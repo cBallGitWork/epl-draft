@@ -156,7 +156,7 @@ describe("roundNews", () => {
   it("files the deadline and the reader's own result", () => {
     const items = roundNews({
       gameweek: 3,
-      deadline: "2026-09-04T18:45:00Z",
+      deadline: { gameweek: 3, locksAt: "2026-09-04T18:45:00Z" },
       yours: { opponent: "Dave's XI", points: 61.4, against: 58.9 },
     });
     expect(items.map((item) => item.headline)).toEqual([
@@ -187,7 +187,11 @@ describe("inboxItems", () => {
   it("puts dated items first, newest first, and undated ones after", () => {
     const items = inboxItems(
       availabilityNews([{ playerName: "P", teamId: "t1", news: "n", chance: 0 }], 3, "t1"),
-      roundNews({ gameweek: 3, deadline: "2026-09-04T18:45:00Z", yours: null }),
+      roundNews({
+        gameweek: 3,
+        deadline: { gameweek: 3, locksAt: "2026-09-04T18:45:00Z" },
+        yours: null,
+      }),
       // Fantrax's own shape, which is what `Deal.processedAt` actually carries —
       // an ISO here made the test agree with a merge that could not order the
       // two. 9AM Eastern on the 5th is after the deadline's 14:45 Eastern on the

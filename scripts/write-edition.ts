@@ -140,7 +140,7 @@ async function main(): Promise<void> {
     // against 11 for everything else together, the desk reads none of it, and
     // about a hundred and ten firings a week end at the line above. See
     // `withFootball`.
-    facts: await withFootball(facts, snapshot),
+    facts: await withFootball(facts, snapshot, assignments),
     clubs,
     threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [],
     info,

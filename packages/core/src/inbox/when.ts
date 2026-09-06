@@ -116,22 +116,6 @@ function capitalised(word: string): string {
   return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
 }
 
-/** `"Wed 2 Sept"` — Fantrax's own date in British order and British spelling.
- *
- *  **A re-spelling, not a conversion.** Every part comes out of their string:
- *  the weekday is theirs, the day is theirs, the month is theirs. What changes
- *  is the ORDER — `Sep 2` is American and `2 Sep` is not — and a British reader
- *  should not have to notice which of two dates on one screen came from a US
- *  provider. Nothing here can move a transaction to another day, because nothing
- *  here computes one.
- *
- *  Null when the stamp does not read, so a caller can fall back rather than
- *  print a mangled date. */
-export function fantraxDay(stamp: string): string | null {
-  const parts = fantraxParts(stamp);
-  return parts === null ? null : `${parts.weekday} ${parts.day} ${parts.month}`;
-}
-
 /** `"Wed 2 Sept, 6:11 AM ET"` — the same date with the clock, and the zone named.
  *
  *  **The zone is on the face of it because we did not convert it.** Fantrax

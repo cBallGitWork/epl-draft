@@ -1,36 +1,42 @@
 import { describe, expect, it } from "vitest";
-import { fantraxDay, fantraxMoment, whenKey } from "./when";
+import { fantraxMoment, fantraxTime, whenKey } from "./when";
 
 // Fantrax's real stamp, as `LeagueTransaction.processedAt` carries it.
 const STAMP = "Wed Sep 2, 2026, 6:11AM";
 
-describe("fantraxDay", () => {
-  it("uses the British short month the rest of the desk uses", () => {
-    // Every other month agrees between the two; September does not, and it is
-    // the month the league starts in.
-    expect(fantraxDay("Thu Aug 13, 2026, 9:00AM")).toBe("Thu 13 Aug");
-    expect(fantraxDay("Thu Sep 3, 2026, 9:00AM")).toBe("Thu 3 Sept");
+describe("fantraxTime", () => {
+  // What the blue index block draws. It carries its own 12-hour conversion rather
+  // than sharing `fantraxMoment`'s, which is why noon and midnight are asserted
+  // twice in this file: the copy is the one nothing else exercises.
+  it("re-spells their date in British order and adds the clock", () => {
+    expect(fantraxTime(STAMP)).toBe("Wed 2 Sept 6:11am");
   });
 
-  it("re-spells their date in British order and invents nothing", () => {
-    // "Sept", not their "Sep": the block prints the round's deadline through
-    // `en-GB` directly above this, and one column cannot spell one month twice.
-    expect(fantraxDay(STAMP)).toBe("Wed 2 Sept");
+  it("uses the British short month the rest of the desk uses", () => {
+    expect(fantraxTime("Thu Aug 13, 2026, 9:00AM")).toBe("Thu 13 Aug 9:00am");
+    expect(fantraxTime("Thu Sep 3, 2026, 9:00AM")).toBe("Thu 3 Sept 9:00am");
+  });
+
+  it("says noon and midnight the way a clock does", () => {
+    expect(fantraxTime("Wed Sep 2, 2026, 12:00PM")).toBe("Wed 2 Sept 12:00pm");
+    expect(fantraxTime("Wed Sep 2, 2026, 12:30AM")).toBe("Wed 2 Sept 12:30am");
+  });
+
+  // The difference from `fantraxMoment`, which is the reason both exist: the
+  // block is 64px of three-extra-small type and has no room to name the zone.
+  it("names no zone, where the read pane does", () => {
+    expect(fantraxTime(STAMP)).not.toContain("ET");
+    expect(fantraxMoment(STAMP)).toContain("ET");
   });
 
   it("keeps the day THEY filed it under, whatever the hour", () => {
-    // The point of re-spelling rather than converting: 11PM Eastern is the next
-    // morning in London, and a transaction that moves a day is worse than a US
-    // date order.
-    expect(fantraxDay("Wed Sep 2, 2026, 11:59PM")).toBe("Wed 2 Sept");
+    expect(fantraxTime("Wed Sep 2, 2026, 11:59PM")).toBe("Wed 2 Sept 11:59pm");
   });
 
   it("gives null for anything that does not read", () => {
-    expect(fantraxDay("2026-09-02T06:11:00Z")).toBeNull();
-    expect(fantraxDay("")).toBeNull();
-    // A translated month is unrecognised rather than guessed at.
-    expect(fantraxDay("Mer Sep 2, 2026, 6:11AM")).toBe("Mer 2 Sept");
-    expect(fantraxDay("Wed Set 2, 2026, 6:11AM")).toBeNull();
+    expect(fantraxTime("2026-09-02T06:11:00Z")).toBeNull();
+    expect(fantraxTime("")).toBeNull();
+    expect(fantraxTime("Wed Set 2, 2026, 6:11AM")).toBeNull();
   });
 });
 

@@ -4,9 +4,7 @@ import {
   fetchBootstrap,
   fetchFixtures,
   mapFixtures,
-  fetchLeagueInfo,
   fetchTeamRosters,
-  mapLeagueInfo,
   mapTeamRosters,
 } from "@epl/core";
 

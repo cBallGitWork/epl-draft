@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { clubGround } from "@epl/core";
+import { matchFacts } from "../../../commentary";
 import Caption from "../../../components/shell/Caption";
 import MatchBar from "./MatchBar";
 import MatchFoot from "./MatchFoot";
@@ -24,7 +25,7 @@ import type { Match } from "./match";
 // A ground nobody has written down falls back to the round — `clubGround`
 // returns null for a promoted club rather than inventing a stadium.
 
-export default function MatchShell({
+export default async function MatchShell({
   match,
   current,
   children,
@@ -34,7 +35,14 @@ export default function MatchShell({
   children: ReactNode;
 }) {
   const { fixture, home, away } = match;
-  const ground = home === undefined ? null : clubGround(home.shortName);
+  // **The ground the match was actually played on**, off the round read the wire
+  // already caches — so it costs nothing and it is right for a neutral venue or a
+  // club that has moved, which the hand-authored table can never be. It falls
+  // back to that table, which is what it is still for.
+  const facts =
+    fixture.gameweek === null ? null : await matchFacts(fixture.gameweek, fixture.code);
+  const ground =
+    facts?.ground ?? (home === undefined ? null : clubGround(home.shortName));
 
   return (
     // **Tall enough to hold the screen, so the foot row lands at the foot of

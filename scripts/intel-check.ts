@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { fetchBootstrap, roundFinished, squadIntel, xiFault } from "@epl/core";
+import { fetchBootstrap, roundPlayed, squadIntel, xiFault } from "@epl/core";
 import type { IntelSquads, IntelXi } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 
@@ -92,7 +92,7 @@ async function main(): Promise<void> {
   // own prediction "wrong" every single matchday, which is how a check trains the
   // person reading it to ignore it. Verified live that day: GW3 `is_current` with
   // ten matches in play, `is_next` already 4.
-  const played = await roundPlayed(round);
+  const played = await askFpl(round);
   if (played === null) {
     console.log("  FPL would not say whether that round has been played, so the age is unchecked.");
   } else if (played) {
@@ -108,10 +108,10 @@ async function main(): Promise<void> {
 
 /** Whether FPL has finished the round this export predicts, or null when it will
  *  not answer. Not fatal: this script's other answers are still true without the
- *  network. The judgement is `roundFinished` in core, where it is tested. */
-async function roundPlayed(round: number): Promise<boolean | null> {
+ *  network. The judgement is `roundPlayed` in core, where it is tested. */
+async function askFpl(round: number): Promise<boolean | null> {
   try {
-    return roundFinished(await fetchBootstrap(), round);
+    return roundPlayed(await fetchBootstrap(), round);
   } catch {
     return null;
   }

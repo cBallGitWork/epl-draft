@@ -101,8 +101,16 @@ export function focusGameweek(raw: RawBootstrap): { gameweek: number; deadline: 
   return { gameweek: chosen?.id ?? 1, deadline: chosen?.deadline_time ?? null };
 }
 
-/** Whether FPL has finished a round's football. Null for a round it does not
+/** Whether a round's football has been PLAYED. Null for a round FPL does not
  *  list, which is the honest answer for a number out of the season's range.
+ *
+ *  **Not `roundFinished`, which is already taken and asks a different question.**
+ *  `round.ts` has one of that name — "which finished state is this round in",
+ *  answering `final`/`provisional`/null off a snapshot's own fixtures — and
+ *  `football/index.ts` records in writing that it is deliberately NOT exported,
+ *  because it is half an answer that `roundState` completes. Exporting a second
+ *  `roundFinished` made `import { roundFinished } from "@epl/core"` resolve to
+ *  this one, past a comment saying the name is absent on purpose.
  *
  *  **The question a freshness check actually wants, and not `is_next`.** FPL
  *  flips `is_next` to the following round the moment a deadline passes, so from
@@ -116,7 +124,7 @@ export function focusGameweek(raw: RawBootstrap): { gameweek: number; deadline: 
  *  "has this already been played" means. Counted live on 5 Sep 2026 with GW3 in
  *  play — GW1 and GW2 `finished: true`, GW3 `is_current: true, finished: false`,
  *  GW4 `is_next: true, finished: false`. */
-export function roundFinished(raw: RawBootstrap, gameweek: number): boolean | null {
+export function roundPlayed(raw: RawBootstrap, gameweek: number): boolean | null {
   return (raw.events ?? []).find((event) => event.id === gameweek)?.finished ?? null;
 }
 

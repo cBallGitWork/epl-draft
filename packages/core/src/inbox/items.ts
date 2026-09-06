@@ -236,20 +236,28 @@ export function roundNews({
   yours,
 }: {
   gameweek: number | null;
-  /** When lineups lock, ISO. Null when the league described no roster period. */
-  deadline: string | null;
+  /** The NEXT lock, and **the round it belongs to rather than the round in
+   *  view** — which are the same only on the two days between a round finishing
+   *  and the next deadline passing.
+   *
+   *  It was an ISO string alone, and the item took its round number from
+   *  `gameweek`: so from Friday teatime until the following Friday the row read
+   *  "Gameweek 3 lineups lock" over a block dated the 12th, which is GW4's lock.
+   *  A deadline is the one item on this screen that is about a round the reader
+   *  is not looking at, so it carries its own. */
+  deadline: { gameweek: number; locksAt: string } | null;
   /** The reader's own finished tie, or null while it is unplayed or he has none. */
   yours: { opponent: string; points: number | null; against: number | null } | null;
 }): InboxItem[] {
   const items: InboxItem[] = [];
 
-  if (gameweek !== null && deadline !== null) {
+  if (deadline !== null) {
     items.push({
-      id: `deadline:${gameweek}`,
+      id: `deadline:${deadline.gameweek}`,
       category: "competition",
-      at: deadline === null ? null : { iso: deadline },
-      gameweek,
-      headline: `Gameweek ${gameweek} lineups lock`,
+      at: { iso: deadline.locksAt },
+      gameweek: deadline.gameweek,
+      headline: `Gameweek ${deadline.gameweek} lineups lock`,
       // The commissioner's, never FPL's — `locksAt` derives it in one place so
       // this and the paper's masthead cannot print different times.
       body: "The commissioner's deadline. Anything not in your eleven by then does not count.",

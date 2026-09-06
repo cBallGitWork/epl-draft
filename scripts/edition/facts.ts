@@ -1,3 +1,4 @@
+import type { StoryKind } from "@epl/core";
 import {
   FANTRAX_LEAGUE_ID,
   clubById,
@@ -112,7 +113,23 @@ export interface RoundFacts extends DeskFacts {
 export async function withFootball(
   facts: DeskFacts,
   snapshot: FootballSnapshot,
+  assignments: readonly { kind: StoryKind }[],
 ): Promise<RoundFacts> {
+  // **And only when a MATCH REPORT is being written**, which is the other half of
+  // the same saving. `match-report` is the one brief that reads
+  // `RoundFacts.football` — every other kind is built from Fantrax and the BBC —
+  // so a firing whose only assignment is a `news` or a `wire` column was still
+  // paying the whole Premier League round for a column that cannot mention it.
+  // On the schedule in `editions.yml` that is most of the midweek firings that
+  // file anything at all.
+  //
+  // An empty map rather than an absent field: the brief already inverts on it and
+  // says the report has no timeline (`briefs/matchReport.ts`), which is the
+  // truthful thing for it to say when nobody asked for the football.
+  if (!assignments.some((assignment) => assignment.kind === "match-report")) {
+    return { ...facts, football: new Map() };
+  }
+
   return {
     ...facts,
     football: await roundFootball(snapshot.gameweek, snapshot, clubById(snapshot)),

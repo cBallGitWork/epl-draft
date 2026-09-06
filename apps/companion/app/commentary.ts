@@ -7,13 +7,14 @@ import {
   mapRoundBreaks,
   mapRoundGoals,
 } from "@epl/core";
-import type { PlCommentaryLine } from "@epl/core";
+import type { PlCommentaryLine, PlMatchFacts } from "@epl/core";
 import {
   fetchPlFixture,
   fetchPlRound,
   fetchPlTextstream,
   plCommentary,
   plFixtureCode,
+  plMatchFacts,
   plTeamSheets,
   shortProse,
 } from "@epl/core";
@@ -236,6 +237,27 @@ export interface ProseLine {
   text: string;
   /** Kick-off plus elapsed, the only field that orders ten matches. */
   at: number | null;
+}
+
+/** Where a match was played, how many watched, and who refereed it — off the
+ *  ROUND read, which is already cached for the wire.
+ *
+ *  **Zero new requests for three of the four fields.** Both reads answer with the
+ *  same `RawPlFixture`, and the round carries `ground` 10/10 and `attendance`
+ *  9/10 (counted 5 Sep 2026); only `referee` is detail-only, so it comes back
+ *  null here. A match screen wanting the referee asks for the fixture.
+ *
+ *  This is what retires `clubGround` — core's hand-authored table of twenty
+ *  stadium names, which is a guess for a neutral venue and wrong for a club that
+ *  moves. Null when the round will not answer or does not carry the fixture, and
+ *  then the caller falls back to the table it always had. */
+export async function matchFacts(
+  gameweek: number,
+  fixtureCode: number,
+): Promise<PlMatchFacts | null> {
+  const round = await plRound(gameweek).catch(() => null);
+  const fixture = round?.content.find((entry) => plFixtureCode(entry) === fixtureCode);
+  return fixture === undefined ? null : plMatchFacts(fixture);
 }
 
 /** One fixture's detail, cached per Premier League id.
