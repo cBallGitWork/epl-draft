@@ -1,12 +1,14 @@
-import LeagueShell from "../league/Shell";
+import ScoutShell from "./Shell";
 import Skeleton from "../components/shell/Skeleton";
 import { BUTTON } from "../components/shell/ButtonLink";
+import { COLUMNS } from "./columns";
+import { SCROLL } from "@/app/desk";
 
 // The pool, waiting on Fantrax's 533 KB of stats.
 //
-// `LeagueShell` is the real one, so the bar, the section strip and the panel are
-// on screen and working before a row exists — the same rule `league/loading`
-// sets, and the reason this route stopped drawing a header of its own.
+// `ScoutShell` is the real one, so the bar, the caption and the panel are on
+// screen and working before a row exists — the same rule `league/loading` sets,
+// and the reason this route stopped drawing a header of its own.
 //
 // The search box is real and works from the first frame: it is a GET form to
 // this same route, so a reader who came here to find one player can type his
@@ -15,7 +17,7 @@ import { BUTTON } from "../components/shell/ButtonLink";
 
 export default function Loading() {
   return (
-    <LeagueShell current="players" sub={<Skeleton width="10rem" height="0.75rem" />}>
+    <ScoutShell sub={<Skeleton width="10rem" height="0.75rem" />}>
       <form aria-busy action="/players" className="flex gap-1.5">
         <input
           name="q"
@@ -44,26 +46,59 @@ export default function Loading() {
         ))}
       </div>
 
-      {/* The table's own row: a 32px mark on his club's colour, then his name.
-          Inside the shell's panel like the real one, so the rows are the same
-          width they will be — the gutter breakout went with the plate. */}
-      <div aria-busy>
-        {Array.from({ length: 8 }, (_, at) => (
-          // Two bars, because the real row is two lines — his name over his
-          // club — and a skeleton that draws one is a box the row pushes out of
-          // the way when it lands. `min-h-[3.25rem]` was tuned to the row's old
-          // 52px and went stale the moment `.cm-row` relaxed the desk; the shape
-          // tracks it and a number cannot. The circle takes `--row-portrait`,
-          // which is the portrait's own size at whichever width this is.
-          <div key={at} className="cm-row flex min-h-11 items-center gap-2.5 border-b border-line/60">
-            <Skeleton width="var(--row-portrait)" height="var(--row-portrait)" circle />
-            <div className="flex min-w-0 flex-1 flex-col gap-1">
-              <Skeleton width="40%" height="0.875rem" />
-              <Skeleton width="22%" height="0.6875rem" />
-            </div>
-          </div>
-        ))}
+      {/* **The table's own shape, which is now a TABLE.** It drew a portrait
+          and two stacked bars — the row the directory had before 6 Sep 2026,
+          when it was a name over a club and five figures. The directory is
+          twenty-four sortable columns now, so a skeleton of two-line rows is a
+          shape the real thing pushes out of the way when it lands.
+
+          The heads are real and read `COLUMNS`, which is DESIGN's rule for a
+          skeleton: one source, so the frame that loads cannot describe a
+          different table from the one that arrives. The rows are bars, because
+          a figure that has not arrived has no width worth guessing. */}
+      <div className={`cm-scroll ${SCROLL}`} aria-busy>
+        <table className="w-full border-collapse text-sm">
+          <thead>
+            <tr className="border-b border-line text-2xs uppercase text-faint">
+              {COLUMNS.map((column) => (
+                <th
+                  key={column.key}
+                  scope="col"
+                  className={`whitespace-nowrap px-1.5 py-1.5 font-bold ${
+                    column.kind === "text" ? "text-left" : "text-right"
+                  }`}
+                >
+                  {column.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: 8 }, (_, at) => (
+              <tr key={at} className="border-b border-line/60">
+                {COLUMNS.map((column) =>
+                  column.key === "name" ? (
+                    <td key={column.key} className="py-1 lg:py-0">
+                      <span className="cm-row flex min-h-11 items-center gap-2.5 px-1">
+                        <Skeleton
+                          width="var(--row-portrait)"
+                          height="var(--row-portrait)"
+                          circle
+                        />
+                        <Skeleton width="6rem" height="0.875rem" />
+                      </span>
+                    </td>
+                  ) : (
+                    <td key={column.key} className="px-1.5">
+                      <Skeleton width="1.5rem" height="0.6875rem" />
+                    </td>
+                  ),
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </LeagueShell>
+    </ScoutShell>
   );
 }

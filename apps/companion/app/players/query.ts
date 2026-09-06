@@ -1,4 +1,5 @@
 import type { PoolRow } from "./pool";
+import { COLUMNS, columnFor } from "./columns";
 
 // What the URL says the table should show. State lives in the address bar rather
 // than in browser state: a server component stays a server component, the whole
@@ -54,6 +55,14 @@ export function playersQuery(raw: PlayersSearchParams): PlayersQuery {
   };
 }
 
+/** Where the pool lives.
+ *
+ *  It was `PLAYERS` in `league/SectionNav` while the pool was a league view, and
+ *  it came here on 6 Sep 2026 with the section (`players/Shell`). This file
+ *  already built every other `/players` href, so the literal was here twice
+ *  over anyway — the constant is the third spelling collapsing into the two. */
+export const POOL = "/players";
+
 /** How many rows a page carries before it says so and offers the rest.
  *
  *  The pool is seven hundred names and all of them is a fifth of a megabyte
@@ -63,50 +72,16 @@ export function playersQuery(raw: PlayersSearchParams): PlayersQuery {
  *  hundred, and the rest is one tap away and said out loud. */
 export const PAGE_ROWS = 100;
 
-/** The sortable columns, in the order they appear. Keys are short because they
- *  end up in the address bar. */
-export const COLUMNS = [
-  { key: "rank", label: "Rk", title: "Fantrax's own ranking across the whole pool", ascending: true },
-  { key: "name", label: "Player", title: "Name", ascending: true },
-  {
-    key: "opp",
-    // The zone is in the heading because Fantrax's kickoff times are in the
-    // league's own — US Eastern — and every other time in this app is London.
-    // "Sun 9:00AM" here is a 14:00 kickoff, and unlabelled that is the one
-    // mistake `londonTime.ts` exists to prevent. Their words, their clock, named.
-    label: "Opp (ET)",
-    title: "His fixture, in Fantrax's words and Fantrax's US Eastern clock",
-    ascending: true,
-  },
-  { key: "fpts", label: "FPts", title: "Fantasy points, under this league's scoring", ascending: false },
-  { key: "fpg", label: "FP/G", title: "Fantasy points per game", ascending: false },
-  { key: "ros", label: "Ros", title: "Share of all Fantrax leagues rostering him", ascending: false },
-  { key: "trend", label: "+/-", title: "How that share moved since last week", ascending: false },
-] as const;
-
-export type ColumnKey = (typeof COLUMNS)[number]["key"];
-
-const VALUE: Record<ColumnKey, (row: PoolRow) => number | string | null> = {
-  rank: (row) => row.stats?.rank ?? null,
-  name: (row) => row.entry.player.displayName,
-  opp: (row) => row.stats?.opponent ?? null,
-  fpts: (row) => row.stats?.points ?? null,
-  fpg: (row) => row.stats?.perGame ?? null,
-  ros: (row) => row.stats?.rostered ?? null,
-  trend: (row) => row.stats?.trend ?? null,
-};
-
-function column(key: string | undefined) {
-  return COLUMNS.find((entry) => entry.key === key);
-}
-
 /** Which column the table is ordered by and which way, resolved once.
  *
  *  Three things need this answer — the ordering, the arrow drawn on the header,
  *  and the link that reverses it — and they must never disagree. They did: the
- *  default view sorted by rank ascending while drawing a descending arrow. */
-export function activeSort(query: PlayersQuery): { key: ColumnKey; descending: boolean } {
-  const chosen = column(query.sort) ?? COLUMNS[0];
+ *  default view sorted by rank ascending while drawing a descending arrow.
+ *
+ *  The column table itself is `columns.ts` now, because it grew from seven to
+ *  twenty-four and carries a reader per column. */
+export function activeSort(query: PlayersQuery): { key: string; descending: boolean } {
+  const chosen = columnFor(query.sort) ?? COLUMNS[0];
   const fallback = chosen.ascending ? "asc" : "desc";
   return { key: chosen.key, descending: (query.dir ?? fallback) === "desc" };
 }
@@ -115,8 +90,17 @@ export function activeSort(query: PlayersQuery): { key: ColumnKey; descending: b
  *
  *  Rows Fantrax has no number for sort last whichever way the column runs. They
  *  are not bottom of the table — they are the academy names it has never scored
- *  — and floating them to the top of an ascending sort would read as nought. */
-export function shownRows(rows: readonly PoolRow[], query: PlayersQuery): PoolRow[] {
+ *  — and floating them to the top of an ascending sort would read as nought.
+ *
+ *  **The raw stats come in as an argument**, because half the sortable columns
+ *  now live in the grouped payload rather than on the row: a table that could
+ *  show `Sv` and not order by it would be a column a reader taps and nothing
+ *  happens. */
+export function shownRows(
+  rows: readonly PoolRow[],
+  query: PlayersQuery,
+  raw: Map<string, Record<string, number | null>>,
+): PoolRow[] {
   const needle = (query.q ?? "").trim().toLowerCase();
   const filtered = rows.filter(
     (row) =>
@@ -126,11 +110,11 @@ export function shownRows(rows: readonly PoolRow[], query: PlayersQuery): PoolRo
   );
 
   const { key, descending } = activeSort(query);
-  const read = VALUE[key];
+  const read = columnFor(key) ?? COLUMNS[0];
 
   return filtered.sort((left, right) => {
-    const a = read(left);
-    const b = read(right);
+    const a = read.value(left, raw.get(left.entry.player.fantraxId));
+    const b = read.value(right, raw.get(right.entry.player.fantraxId));
     if (a === null) return b === null ? 0 : 1;
     if (b === null) return -1;
     const order = typeof a === "string" && typeof b === "string" ? a.localeCompare(b) : Number(a) - Number(b);
@@ -150,7 +134,7 @@ function href(query: PlayersQuery, changes: Partial<PlayersQuery>): string {
     if (value) next.set(name, value);
   }
   const search = next.toString();
-  return search ? `/players?${search}` : "/players";
+  return search ? `${POOL}?${search}` : POOL;
 }
 
 /** The same list, showing every row. */
@@ -162,10 +146,10 @@ export function showAllHref(query: PlayersQuery): string {
  *
  *  A column not currently sorted starts in the direction that answers the
  *  question being asked of it: points highest first, names from A. */
-export function sortHref(query: PlayersQuery, key: ColumnKey): string {
+export function sortHref(query: PlayersQuery, key: string): string {
   const current = activeSort(query);
   const descending =
-    current.key === key ? !current.descending : !(column(key)?.ascending ?? true);
+    current.key === key ? !current.descending : !(columnFor(key)?.ascending ?? true);
   return href(query, { sort: key, dir: descending ? "desc" : "asc" });
 }
 

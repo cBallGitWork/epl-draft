@@ -39,16 +39,37 @@ import type { PremSection } from "./prem/PremNav";
 // the caption reads `League Table`. A strip is short because it is a row of
 // plates; a caption is the screen's name.
 
-/** Our league's views. */
+/** Our league's views.
+ *
+ *  **`players` left on 6 Sep 2026** and took its caption with it: the pool is
+ *  its own section now (`players/Shell`), so its name is no longer one of the
+ *  league's views to look up. */
 export const LEAGUE_CAPTION: Record<LeagueSection, string> = {
   table: "League Table",
   schedule: "Schedule",
   results: "Results",
-  players: "Player Stats",
   teamStats: "Team Stats",
   // Not a tab (`SectionNav` records why), but a section a route can BE on.
   matchups: "Matchups",
 };
+
+/** The scouting section's own bar.
+ *
+ *  **A subject, not a view** — which is why it is a bare name here rather than an
+ *  entry in a caption table. `SCOUT_CAPTION` below is the view.
+ *
+ *  "Scout" and not "Players" for two reasons that agree. It is already this
+ *  repo's word for the activity — `players/[fantraxId]/scouting.ts`, DESIGN §9's
+ *  "scouting table", ROADMAP §7's "scouting notes, waiver intel" — and
+ *  Championship Manager's own rail carries `Find` in exactly this slot, a verb
+ *  for the same job rather than a noun for the people it is done to. It also
+ *  measures 32px against the 36px a seventh foot-row plate would allow, where
+ *  "Players" measures 42 — not the reason, but the reason it costs nothing. */
+export const SCOUT = "Scout";
+
+/** The scouting section's one view. The pool overrides it with the category the
+ *  board is ranked by, exactly as `cm9900/16.jpg` captions its stat list. */
+export const SCOUT_CAPTION = "Player Stats";
 
 /** The head-to-head, which is a route under Matchups rather than a section of
  *  its own — so it needs a caption the section's own name would get wrong. */

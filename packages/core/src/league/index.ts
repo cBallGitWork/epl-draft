@@ -122,10 +122,8 @@ export { GROUPS, categoryFor, groupFor, inGroup, isMeasure } from "./categories"
 export type { GroupKey, Measure, StatCategory } from "./categories";
 export { mapPlayerStats, KEEPER, OUTFIELD } from "./fantrax/playerStats";
 export type { PlayerStatLine, PositionGroup, RawPlayerStats } from "./fantrax/playerStats";
-export { PLAYER_CATEGORIES, playerCategoryFor, playersInGroup } from "./playerCategories";
+export { PLAYER_CATEGORIES } from "./playerCategories";
 export type { PlayerCategory } from "./playerCategories";
-export { BOARD_ROWS, rankPlayers } from "./playerBoard";
-export type { PlayerBoardRow } from "./playerBoard";
 export { ordinal } from "./ordinal";
 export { signed } from "./signed";
 export { teamColours } from "./teamColours";

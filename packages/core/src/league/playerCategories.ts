@@ -81,10 +81,3 @@ export const PLAYER_CATEGORIES: readonly PlayerCategory[] = [
 ];
 
 /** The categories in one group. */
-export function playersInGroup(group: GroupKey): PlayerCategory[] {
-  return PLAYER_CATEGORIES.filter((category) => category.group === group);
-}
-
-export function playerCategoryFor(key: string | undefined): PlayerCategory {
-  return PLAYER_CATEGORIES.find((category) => category.key === key) ?? PLAYER_CATEGORIES[0]!;
-}

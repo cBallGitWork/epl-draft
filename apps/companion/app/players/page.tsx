@@ -1,45 +1,40 @@
 import Link from "next/link";
-import LeagueShell from "../league/Shell";
+import ScoutShell from "./Shell";
 import Nothing from "../components/shell/Nothing";
 import PlayerTable, { STATUS } from "./PlayerTable";
-import Board from "./Board";
 import { getPlayerStats } from "./playerStats";
 import { getLeaguePool } from "./pool";
-import { leagueTable } from "../standings";
 import { PAGE_ROWS, filterHref, playersQuery, showAllHref, shownRows } from "./query";
 import type { PlayersSearchParams } from "./query";
 import { FANTRAX_SILENT } from "../config";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH } from "@epl/core";
 import { positionLabel } from "../positions";
-import {
-  type GroupKey,
-  groupFor,
-  playerCategoryFor,
-  playersInGroup,
-  rankPlayers,
-} from "@epl/core";
 import { BUTTON } from "../components/shell/ButtonLink";
 
 // Every player Fantrax knows, what our league has decided about him, and what
 // Fantrax scores him. The numbers are theirs under our league's scoring, which
 // is why the heading says which season they are and whether they were played or
-// predicted — Fantrax defaults these reads to a projection, and a column headed
-// FPts that silently switches between the two would be the confident wrong
-// answer.
+// predicted — a column headed FPts that silently switched between the two would
+// be the confident wrong answer. (That read defaulted to a PROJECTION until
+// 5 Sep 2026 and now defaults to year-to-date; the heading followed the payload
+// without anyone touching it, which is the whole reason it is read off the
+// answer. PLATFORM_NOTES carries the re-probe.)
 //
-// **It wears `LeagueShell` now, and it always should have** (5 Sep 2026). The
-// section strip already lists Player Stats and `LeagueSection` already keys it;
-// what was missing was the frame, so this screen opened on a bar of a third
-// shape with no strip at all and printed its directory straight onto the match
-// photograph — the one thing DESIGN §2 forbids, and 40 of `groundfit`'s findings.
-// The shell's panel is the plate that fixes it.
+// **It is its own section as of 6 Sep 2026** (Craig: *"I think this function
+// will be its own section away from the league etc"*), so it wears `ScoutShell`
+// rather than `LeagueShell`. It wore the league's frame for a day, which fixed
+// the real fault of the day before — a bar of a third shape, no panel, and the
+// directory printed straight onto the match photograph, which is the one thing
+// DESIGN §2 forbids and was 40 of `groundfit`'s findings — but it did it by
+// putting a screen about six hundred Premier League footballers under a bar
+// naming our ten-team fantasy competition. True about who PRICES them and wrong
+// about who they are.
 //
-// **The caption is the CATEGORY, not the view.** `cm9900`'s own stat screen
-// captions its panel `Average Rating` and lets the tab strip say which section
-// you are in, which is the arrangement here: the bar names the competition, the
-// strip marks Player Stats, and the caption names what the board is ranked by.
-// That is why `Board` no longer draws a `Caption` of its own — two captions
-// stacked is the screen saying its own name twice.
+// **The caption is the CATEGORY, not the view.** `cm9900/16.jpg` captions its
+// stat list `Average Rating` and lets the frame say where you are, which is the
+// arrangement here: the bar names the section, and the caption names what the
+// board is ranked by. That is why `Board` draws no `Caption` of its own — two
+// captions stacked is the screen saying its own name twice.
 
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
@@ -61,49 +56,37 @@ export const revalidate = 30;
  *  does this. */
 const CHIP = "cm-tab flex items-center gap-1 px-3 text-sm font-medium";
 
-/** Next hands a repeated query parameter as an array. The board wants one. */
-function first(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
-}
-
 export default async function PlayersPage({
   searchParams,
 }: {
   searchParams: Promise<PlayersSearchParams>;
 }) {
-  const [pool, asked, lines, table] = await Promise.all([
+  const [pool, asked, lines] = await Promise.all([
     getLeaguePool(),
     searchParams,
     getPlayerStats(),
-    leagueTable(),
   ]);
   const query = playersQuery(asked);
 
-  // The board's own state, read straight off the query rather than through
-  // `playersQuery`: those are the DIRECTORY's filters and these choose what the
-  // leaderboard above it ranks. Two questions on one page, and folding them into
-  // one query object would have every chip carrying a category it knows nothing
-  // about.
-  const group: GroupKey = groupFor(first(asked.group));
-  const choices = playersInGroup(group);
-  const category =
-    choices.find((entry) => entry.key === first(asked.cat)) ??
-    choices[0] ??
-    playerCategoryFor(undefined);
-  const board = rankPlayers(lines, category);
+  // The raw counts, by Fantrax id. Two reads feed this table and neither is new:
+  // the plain `getPlayerStats` carries the seven fantasy columns on `PoolRow`,
+  // and the same endpoint asked by position group carries the eighteen or twenty
+  // raw ones. `mapPlayerStats` drops the fantasy seven from its bag, so the two
+  // do not overlap and each column reads from exactly one of them.
+  const raw = new Map(lines.map((line) => [line.fantraxId, line.stats]));
 
   if ("unavailable" in pool) {
     return (
-      <LeagueShell current="players">
+      <ScoutShell>
         <Nothing title={FANTRAX_SILENT} code={pool.unavailable}>
           The player pool is Fantrax&apos;s and we cannot read it right now. Ownership is the part
           that would go stale first, so this shows nothing rather than yesterday&apos;s.
         </Nothing>
-      </LeagueShell>
+      </ScoutShell>
     );
   }
 
-  const shown = shownRows(pool.rows, query);
+  const shown = shownRows(pool.rows, query, raw);
   const capped = query.all ? shown : shown.slice(0, PAGE_ROWS);
 
   const counted = new Map<string, number>();
@@ -114,9 +97,7 @@ export default async function PlayersPage({
   }
 
   return (
-    <LeagueShell
-      current="players"
-      title={board.length > 0 ? category.label : undefined}
+    <ScoutShell
       sub={
         <>
           {shown.length} of {pool.rows.length}
@@ -129,24 +110,6 @@ export default async function PlayersPage({
         </>
       }
     >
-      {board.length > 0 ? (
-        <Board
-          rows={board}
-          group={group}
-          category={category.label}
-          teams={
-            new Map(
-              "unavailable" in table
-                ? []
-                : table.map((row) => [row.teamId, { teamId: row.teamId, name: row.teamName }]),
-            )
-          }
-          codes={
-            new Map(pool.rows.map((row) => [row.entry.player.fantraxId, row.fplCode]))
-          }
-        />
-      ) : null}
-
       <form action="/players" className="flex gap-1.5">
         {/* The chips, the sort and the box all filter the same list, so each has
             to carry the others' state — a GET form posts only its own fields. */}
@@ -199,7 +162,7 @@ export default async function PlayersPage({
           Nobody in the pool matches that. Tap a filter again to clear it.
         </p>
       ) : (
-        <PlayerTable rows={capped} query={query} teamNames={pool.teamNames} />
+        <PlayerTable rows={capped} query={query} teamNames={pool.teamNames} raw={raw} />
       )}
 
       {capped.length < shown.length ? (
@@ -242,6 +205,6 @@ export default async function PlayersPage({
       >
         Claim on Fantrax &nearr;
       </a>
-    </LeagueShell>
+    </ScoutShell>
   );
 }

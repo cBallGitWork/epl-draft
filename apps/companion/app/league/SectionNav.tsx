@@ -11,10 +11,11 @@ import TabStrip from "../components/shell/TabStrip";
 // argument for it, which is the half worth keeping in the section.
 
 /** **Five blue buttons** (Craig, 31 Aug): Table, Schedule, Results, Player
- *  Stats, Team Stats. `cm9900/24.jpg` runs four and a foot row of five; ours is
+ *  Stats, Team Stats. `cm9900/24.jpg` runs four and a foot row of five; ours was
  *  five and a foot row of one, and the split between the two rows is Craig's
  *  rather than the game's — CM files Team Stats and Player Stats DOWNSTAIRS and
- *  he wants them up here.
+ *  he wanted them up here. **It is four now**, Player Stats having become a
+ *  section of its own; see below.
  *
  *  **Matchups left the strip and did not leave the app.** It is the one entry he
  *  did not name and it is a live route with a board and a page per pairing, so
@@ -23,31 +24,32 @@ import TabStrip from "../components/shell/TabStrip";
  *  reference library was catalogued. Said plainly because it is the one part of
  *  this that was not asked for.
  *
- *  **Player Stats is a league view that lives at `/players`.** The route is
- *  outside the `/league` prefix because the pool is also reached from the Prem's
- *  own strip — one screen, two ways in — and a second copy under `/league` would
- *  be the same table read twice.
+ *  **Player Stats left on 6 Sep 2026, and it left the section rather than the
+ *  strip** (Craig: *"I think this function will be its own section away from the
+ *  league etc"*). It is `Scout` now, with its own bar and its own `players/Shell`,
+ *  reached from the section nav like any other section.
  *
- *  This paragraph used to add that no tab draws as current there, "because you
- *  are no longer in the section". That was true of the ROUTE and never of the
- *  screen: the page wears `LeagueShell` as of 5 Sep 2026, so Player Stats is the
- *  current plate on it like any other view. What the old arrangement bought was a
- *  screen with no strip, no panel and a bar of a third shape, printing its
- *  directory on the bare photograph. */
+ *  So the strip is FOUR. That is the second time this list has been renumbered by
+ *  a screen growing up rather than by a preference, and both times the entry was
+ *  a route that had never been under `/league` at all — the pool was outside the
+ *  prefix from the day it was built, because the same table is also reached from
+ *  the Prem's own strip and a second copy under `/league` would be one screen
+ *  read twice. A view that lives outside your prefix and answers to another
+ *  section's bar was always a section wearing a tab. */
 const SECTIONS = [
   { href: "/league", label: "Table", key: "table" },
   { href: "/league/schedule", label: "Schedule", key: "schedule" },
   { href: "/league/results", label: "Results", key: "results" },
-  { href: "/players", label: "Player Stats", key: "players" },
   { href: "/league/team-stats", label: "Team Stats", key: "teamStats" },
 ] as const;
 
-/** The routes that build their own query strings, named once.
+/** The route that builds its own query strings, named once.
  *
- *  Both were written out three or four times each — in a `HERE` constant, in a
- *  sort link, in a group link, in a category link — and `SECTIONS` above was
- *  already the place the app declares where a section lives. A route spelled in
- *  five files is a route that can be renamed in four of them.
+ *  There were two of these and the pool took its own with it on 6 Sep 2026. Each
+ *  was written out three or four times — in a `HERE` constant, in a sort link, in
+ *  a group link, in a category link — and `SECTIONS` above was already the place
+ *  the app declares where a section lives. A route spelled in five files is a
+ *  route that can be renamed in four of them.
  *
  *  **Found by KEY and not by index**, which is the change. They were
  *  `SECTIONS[3]` and `SECTIONS[4]`, and inserting News at position 3 on 5 Sep
@@ -63,9 +65,8 @@ function at(key: (typeof SECTIONS)[number]["key"]): string {
 }
 
 export const TEAM_STATS = at("teamStats");
-export const PLAYERS = at("players");
 
-/** The five tabs, plus the one section a route can BE on without being in the
+/** The four tabs, plus the one section a route can BE on without being in the
  *  strip.
  *
  *  **Matchups is that one.** It has a board and a page per pairing, so it stays
@@ -83,8 +84,8 @@ export type LeagueSection = (typeof SECTIONS)[number]["key"] | "matchups";
 
 export default function SectionNav({ current }: { current: LeagueSection }) {
   // Matchups is a `LeagueSection` and is not in the strip, so on that route no
-  // plate is current. It is the ONLY one now — `/players` was the second until
-  // it took the shell and its own plate with it. Narrowed here rather than in
+  // plate is current. It is the only one, `/players` having left the section
+  // entirely on 6 Sep 2026. Narrowed here rather than in
   // `TabStrip`, which should not have to know that this section has an entry its
   // own strip does not list.
   const here = SECTIONS.find((section) => section.key === current)?.key ?? null;
@@ -93,8 +94,8 @@ export default function SectionNav({ current }: { current: LeagueSection }) {
   // through CDP on `/league/matchups/[teamId]`, the one route that put a wide
   // panel under this strip. `docs/ui/prem.md` records the sibling strip hitting
   // the same wall on the same label: "at 11px 'Team Stats' takes two lines in a
-  // 76px plate at 390 while its three neighbours take one". That strip runs
-  // four tabs and this one runs five, so it was always going to bite here
-  // first.
+  // 76px plate at 390 while its three neighbours take one". Both strips run four
+  // tabs now, and this one ran five when it was measured — so it bit here first
+  // and the setting stays, because the label that broke it is still on the strip.
   return <TabStrip label="League views" tabs={SECTIONS} current={here} labels="word" />;
 }
