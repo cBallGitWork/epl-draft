@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import Modal from "./Modal";
-import { SECTIONS, barSections, isPaperRoute, overflowSections, owns } from "./sections";
+import FootRow from "./FootRow";
+import { SECTIONS, isPaperRoute, owns } from "./sections";
 
 // Championship Manager's navigation, in the two shapes the game itself has: a
 // rail down the side of a desk screen, and a blue plate row across the foot.
@@ -15,9 +15,13 @@ import { SECTIONS, barSections, isPaperRoute, overflowSections, owns } from "./s
 // thing: `cm9900/24.jpg` runs `Team Stats · Player Stats · Referee Stats ·
 // Awards · History` in blue across the bottom of the League Table, and the news
 // screen runs `Contracts and Media · Transfers · Jobs · Records`. The rail is
-// dark navy with outlined plates; the foot row is filled royal blue. So this
-// file draws the rail above `lg` and the foot row below it, and neither is a
-// squeezed version of the other.
+// dark navy with outlined plates; the foot row is filled royal blue. Neither is
+// a squeezed version of the other, so **the foot row is `FootRow.tsx` and this
+// file is the rail** — they were one file until the overflow drawer landed and
+// took it past §4's soft ceiling, which was the point at which "two objects, one
+// file" stopped being a convenience and started being the thing DESIGN §2 warns
+// about. What is left here is the rail, and the choice of which shape a width
+// gets: this decides the section list once, from the round, and hands it down.
 //
 // **It cost the phone nothing and gave it 64px.** The rail was 16% of a 390
 // screen against CM's own 11.25%, and it was the width every scoreline row on
@@ -115,12 +119,6 @@ export default function Rail({
   live: ReactNode;
 }) {
   const pathname = usePathname();
-  // Whether the `More` sheet is open. The only state in this file, and it is
-  // here rather than inside a `More` component because `Modal`'s own docblock
-  // records the rule: every caller is rendered conditionally by a parent holding
-  // the open state, so a Close button calls `onClose` and the panel goes away
-  // because it is no longer rendered.
-  const [more, setMore] = useState(false);
   // The paper is the other register and prints its own index (`gazette/Index`).
   // A rail beside it would inset a broadsheet by 64px of navy — and shift the
   // `@container` threshold the front page's two-column layout keys off, so the
@@ -132,88 +130,10 @@ export default function Rail({
   const sections = SECTIONS.filter(
     (section) => matchday || !section.onlyDuringGameweek,
   );
-  const behind = overflowSections(sections);
 
   return (
     <>
-      {/* **The foot row, below `lg`.** Fixed rather than sticky: it is across
-          the bottom of the VIEWPORT, which is what a thumb reaches, and a
-          sticky element in the body's flex row would still take a column's
-          width from the page. `--page-foot` is what holds the space for it, and
-          it grows below `lg` in `globals.css` for exactly this.
-
-          Its own bottom inset, because a fixed element is positioned against
-          the viewport and the home indicator lands on it. The plates butt with
-          no gap, which is how CM draws a strip. */}
-      <nav
-        aria-label="Sections"
-        className="cm-foot fixed inset-x-0 bottom-0 z-50 flex pb-[env(safe-area-inset-bottom)] lg:hidden"
-      >
-        {barSections(sections).map((section) => (
-          <Plate
-            key={section.href}
-            section={section}
-            here={owns(section.routes, pathname)}
-            score={section.onlyDuringGameweek ? live : null}
-          />
-        ))}
-        {/* **The door, and it is a plate like any other.** It carries
-            `aria-current` when you are standing in one of the sections behind
-            it, because a bar that marks where you are must not go blank the
-            moment you walk through it — that is the same rule every other plate
-            keeps, and the reason `owns()` exists. `aria-expanded` says it opens
-            something rather than going somewhere, which is the one thing a
-            screen reader cannot see from the label. */}
-        {behind.length > 0 ? (
-          <button
-            type="button"
-            onClick={() => setMore(true)}
-            aria-expanded={more}
-            aria-current={behind.some((section) => owns(section.routes, pathname)) ? "page" : undefined}
-            className="flex min-w-0 flex-1 flex-col items-center justify-center px-0.5 text-center text-xs font-medium leading-tight"
-          >
-            <span className="max-w-full truncate">More</span>
-          </button>
-        ) : null}
-      </nav>
-
-      {/* Full width and on the floor, because it is the foot row's own drawer:
-          this only ever opens below `lg`, where 92vw is the whole screen anyway,
-          and it should read as the bar unfolding rather than as a card that
-          happened to appear. */}
-      {more ? (
-        <Modal onClose={() => setMore(false)} width="100vw" anchor="bottom">
-          <ul className="flex flex-col">
-            {behind.map((section) => {
-              const here = owns(section.routes, pathname);
-              return (
-                <li key={section.href} className="contents">
-                  <Link
-                    href={section.href}
-                    onClick={() => setMore(false)}
-                    aria-current={here ? "page" : undefined}
-                    // A row of a list under a thumb, so 44 and no `.cm-row`:
-                    // this sheet only ever opens below `lg`, where that class
-                    // says nothing anyway, and the desk's 28 would be a
-                    // proportion for a surface the desk never sees.
-                    //
-                    // The accent is set here rather than by an `aria-[current]`
-                    // variant: Tailwind v4 drops a class whose name is not
-                    // literally in the scanned source, and a nav that silently
-                    // stopped marking where you are is exactly the failure the
-                    // `--color-fdr-` trap already cost this app once.
-                    className={`flex min-h-11 items-center border-b border-line px-3 text-base font-bold last:border-b-0 hover:bg-raised ${
-                      here ? "text-accent" : ""
-                    }`}
-                  >
-                    {section.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </Modal>
-      ) : null}
+      <FootRow sections={sections} pathname={pathname} live={live} />
 
       {/* **The rail, from `lg`.** Unchanged (Craig, 5 Sep: "Desktop unchanged").
           Its own ground rather than the body's, because it is opaque furniture:
@@ -248,46 +168,5 @@ export default function Rail({
         </ul>
       </nav>
     </>
-  );
-}
-
-/** One plate of the foot row.
- *
- *  The plate carries no class of its own: `.cm-foot` on the row owns the fill,
- *  the chrome face, the rule between plates and — through
- *  `.cm-foot > [aria-current]` — the yellow label that marks the one you are on.
- *  A plate owns its ink (DESIGN §2), so nothing here sets a colour; on blue,
- *  `--color-accent` is 5.32:1 and `--color-ink` 7.0.
- *
- *  **Mixed case at `text-xs`, which is what the game sets.** `cm9900/24.jpg`
- *  runs its foot row at around 13px mixed case regular; ours were 9px bold
- *  capitals, a size and a weight nothing in Championship Manager is set in, and
- *  the smallest type anywhere on the phone was on the object a thumb lands on
- *  most. 13px does not fit six plates at 320 and 12px does, so this is the
- *  largest size that clears `navfit`.
- *
- *  `flex-1` with `min-w-0`, so six plates share the width evenly and a long
- *  label truncates rather than pushing the bar off the screen — the failure
- *  `navfit.mjs` exists to catch. The label is its own `<span>` because the Live
- *  plate carries a second line under it, and `navfit` measures the label rather
- *  than everything the plate happens to say. */
-function Plate({
-  section,
-  here,
-  score,
-}: {
-  section: (typeof SECTIONS)[number];
-  here: boolean;
-  score: ReactNode;
-}) {
-  return (
-    <Link
-      href={section.href}
-      aria-current={here ? "page" : undefined}
-      className="flex min-w-0 flex-1 flex-col items-center justify-center px-0.5 text-center text-xs font-medium leading-tight"
-    >
-      <span className="max-w-full truncate">{section.label}</span>
-      {score}
-    </Link>
   );
 }
