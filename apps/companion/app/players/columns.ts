@@ -33,6 +33,13 @@ export type RawStats = Record<string, number | null> | undefined;
 export type ColumnKind = "text" | "number" | "percent" | "signed";
 
 export interface PoolColumn {
+  /** Stands down under a thumb. **Only ever true of a column the table is not
+   *  ORDERED by** — DESIGN §2: hiding the sorted column takes the pressed plate,
+   *  the arrow and `aria-sort` with it, so a phone arriving on a shared `?sort=`
+   *  link would show an order with no visible author and nothing in the
+   *  accessibility tree to say what it was. `PlayerTable` keeps that promise by
+   *  drawing a hidden column anyway when it is the one being sorted by. */
+  phoneHidden?: true;
   /** Short, because it ends up in the address bar. */
   key: string;
   label: string;
@@ -63,6 +70,11 @@ export const COLUMNS: PoolColumn[] = [
     title: "Fantrax's own ranking across the whole pool",
     kind: "number",
     ascending: true,
+    // Craig, 6 Sep 2026: *"for mobile ditch the rank column in scout, wasted
+    // space"*. It is the widest cheap column and the one a phone can most afford
+    // to lose — the rows are in an order the reader chose, and the absolute
+    // ranking is a desk question.
+    phoneHidden: true,
     value: (row) => row.stats?.rank ?? null,
   },
   {
@@ -158,6 +170,17 @@ export const COLUMNS: PoolColumn[] = [
   count("PKM", "PKM", "Penalties missed"),
   count("OG", "OG", "Own goals"),
 ];
+
+/** What the board is ordered by when the URL says nothing.
+ *
+ *  **Fantrax's own default, and it is now ours** — their players screen opens
+ *  sorted by `FPts` descending, which is the question a manager scanning the
+ *  wire is actually asking. It was `Rk` by position in this list, which is the
+ *  same order by a different name and made the rank column load-bearing on a
+ *  screen that has just stood it down under a thumb. Named rather than taken as
+ *  `COLUMNS[0]`, so reordering the table cannot silently change what it sorts
+ *  by — the mistake `league/SectionNav` records having made with `SECTIONS[3]`. */
+export const DEFAULT_SORT = "fpts";
 
 export function columnFor(key: string | undefined): PoolColumn | undefined {
   return COLUMNS.find((column) => column.key === key);

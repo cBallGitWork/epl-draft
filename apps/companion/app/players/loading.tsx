@@ -66,7 +66,7 @@ export default function Loading() {
                   scope="col"
                   className={`whitespace-nowrap px-1.5 py-1.5 font-bold ${
                     column.kind === "text" ? "text-left" : "text-right"
-                  }`}
+                  } ${column.phoneHidden ? "hidden lg:table-cell" : ""}`}
                 >
                   {column.label}
                 </th>
@@ -89,7 +89,10 @@ export default function Loading() {
                       </span>
                     </td>
                   ) : (
-                    <td key={column.key} className="px-1.5">
+                    <td
+                      key={column.key}
+                      className={`px-1.5 ${column.phoneHidden ? "hidden lg:table-cell" : ""}`}
+                    >
                       <Skeleton width="1.5rem" height="0.6875rem" />
                     </td>
                   ),

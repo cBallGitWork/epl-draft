@@ -1,5 +1,5 @@
 import type { PoolRow } from "./pool";
-import { COLUMNS, columnFor } from "./columns";
+import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
 
 // What the URL says the table should show. State lives in the address bar rather
 // than in browser state: a server component stays a server component, the whole
@@ -81,7 +81,7 @@ export const PAGE_ROWS = 100;
  *  The column table itself is `columns.ts` now, because it grew from seven to
  *  twenty-four and carries a reader per column. */
 export function activeSort(query: PlayersQuery): { key: string; descending: boolean } {
-  const chosen = columnFor(query.sort) ?? COLUMNS[0];
+  const chosen = columnFor(query.sort) ?? columnFor(DEFAULT_SORT) ?? COLUMNS[0];
   const fallback = chosen.ascending ? "asc" : "desc";
   return { key: chosen.key, descending: (query.dir ?? fallback) === "desc" };
 }
@@ -110,7 +110,7 @@ export function shownRows(
   );
 
   const { key, descending } = activeSort(query);
-  const read = columnFor(key) ?? COLUMNS[0];
+  const read = columnFor(key) ?? columnFor(DEFAULT_SORT) ?? COLUMNS[0];
 
   return filtered.sort((left, right) => {
     const a = read.value(left, raw.get(left.entry.player.fantraxId));

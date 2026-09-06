@@ -49,6 +49,11 @@ export default function PlayerTable({
   raw: Map<string, Record<string, number | null>>;
 }) {
   const current = activeSort(query);
+  /** A column stands down under a thumb unless it is the one being ordered by —
+   *  DESIGN §2's rule, kept here rather than in the column table because only
+   *  the render knows what the current sort is. */
+  const phone = (column: PoolColumn) =>
+    column.phoneHidden && current.key !== column.key ? "hidden lg:table-cell" : "";
 
   return (
     // `cm-scroll` for the bar, on the wrapper rather than on the table, so the
@@ -70,7 +75,7 @@ export default function PlayerTable({
                 }
                 className={`whitespace-nowrap py-1.5 font-bold ${
                   column.kind === "text" ? "text-left" : "text-right"
-                } ${column.key === "name" ? STICKY_LEAD : ""}`}
+                } ${column.key === "name" ? STICKY_LEAD : ""} ${phone(column)}`}
               >
                 <Link
                   href={sortHref(query, column.key)}
@@ -96,6 +101,7 @@ export default function PlayerTable({
                   row={row}
                   stats={raw.get(row.entry.player.fantraxId)}
                   teamNames={teamNames}
+                  hide={phone(column)}
                 />
               ))}
             </tr>
@@ -113,18 +119,23 @@ function Cell({
   row,
   stats,
   teamNames,
+  hide,
 }: {
   column: PoolColumn;
   row: PoolRow;
   stats: RawStats;
   teamNames: Map<string, string>;
+  /** The breakpoint class its head is wearing, so the two cannot disagree — a
+   *  column hidden in the body and shown in the head is a table with a label
+   *  over the wrong figures. */
+  hide: string;
 }) {
   if (column.key === "name") {
     return (
       // `lg:py-0` because the cell pads the row from outside it and `.cm-row`
       // cannot reach a `<td>`: 8px here plus the 28 inside is a 37px row on a
       // desk that asked for 28. The phone keeps the padding, and so keeps its 53.
-      <td className={`py-1 lg:py-0 ${STICKY_LEAD}`}>
+      <td className={`py-1 lg:py-0 ${STICKY_LEAD} ${hide}`}>
         <Link
           href={`/players/${row.entry.player.fantraxId}`}
           className="cm-row flex min-h-11 items-center gap-2.5 px-1"
@@ -159,7 +170,7 @@ function Cell({
       ? (teamNames.get(row.entry.ownerTeamId) ?? row.entry.ownerTeamId)
       : null;
     return (
-      <td className="whitespace-nowrap px-1.5 text-left text-2xs">
+      <td className={`whitespace-nowrap px-1.5 text-left text-2xs ${hide}`}>
         {owner ? (
           <span className="font-bold text-ink">{owner}</span>
         ) : (
@@ -171,21 +182,21 @@ function Cell({
 
   if (column.kind === "text") {
     return (
-      <td className="whitespace-nowrap px-1.5 text-left text-2xs text-faint">{value ?? DASH}</td>
+      <td className={`whitespace-nowrap px-1.5 text-left text-2xs text-faint ${hide}`}>{value ?? DASH}</td>
     );
   }
 
   if (value === null) {
-    return <td className="numeric px-1.5 text-right text-2xs text-faint">{DASH}</td>;
+    return <td className={`numeric px-1.5 text-right text-2xs text-faint ${hide}`}>{DASH}</td>;
   }
 
   if (column.kind === "percent") {
-    return <td className="numeric px-1.5 text-right text-2xs text-muted">{value}%</td>;
+    return <td className={`numeric px-1.5 text-right text-2xs text-muted ${hide}`}>{value}%</td>;
   }
 
   if (column.kind === "signed") {
     return (
-      <td className="numeric px-1.5 text-right text-2xs">
+      <td className={`numeric px-1.5 text-right text-2xs ${hide}`}>
         <Trend value={Number(value)} />
       </td>
     );
@@ -196,7 +207,7 @@ function Cell({
   // twenty, and a table where every column shouts has no hierarchy at all.
   return (
     <td
-      className={`numeric px-1.5 text-right ${
+      className={`numeric px-1.5 text-right ${hide} ${
         column.key === "fpts" ? "font-bold" : "text-2xs text-muted"
       }`}
     >
