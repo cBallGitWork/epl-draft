@@ -1,5 +1,5 @@
 import Section from "../components/shell/Section";
-import type { ProseLine } from "../commentary";
+import type { WireProseLine } from "../commentary";
 
 // The wire in Opta's own words — the second version, for comparing.
 //
@@ -24,7 +24,7 @@ import type { ProseLine } from "../commentary";
 // It is also the expensive one — see `roundCommentary` for the request count.
 // Nothing fetches it unless this variant is the one being read.
 
-export default function ProseWire({ lines }: { lines: readonly ProseLine[] }) {
+export default function ProseWire({ lines }: { lines: readonly WireProseLine[] }) {
   if (lines.length === 0) return null;
 
   return (

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { RawPlFixture } from "./raw";
 import { mapRoundBreaks } from "./breaks";
+import { mapRoundGoals } from "./map";
 
 // The shapes are the ones counted live on GW3, 5 Sep 2026 — see `breaks.ts` for
 // the count. A fixture that has not started, one in its first half, one past it
@@ -42,16 +43,26 @@ describe("mapRoundBreaks", () => {
     expect(breaks[0]?.absolute).toBe(KICKOFF + 5760 * 1000);
   });
 
-  // Every goal is at or before the final whistle, so the break sorts under the
-  // last of them rather than over it. That is the whole job of `seconds`.
+  // **Full time sorts after the goals, and this asserts it against the goals.**
+  // The version of this test written on 5 Sep put a goal in the fixture and then
+  // checked `seconds > 5700` — which passes with the goal deleted, because
+  // `mapRoundBreaks` never reads them. So it could not detect the regression it
+  // was named for. Taking both mappers over the SAME fixture is what makes the
+  // comparison real: `absolute` is what `wireLines` orders on.
   it("sorts after every goal in its own match", () => {
     const done = fixture({
       status: "C",
       phase: "F",
       clock: { secs: 5760, label: "90+6'00" },
-      goals: [{ personId: 1, clock: { secs: 5700, label: "90+5'00" }, phase: "2", type: "G" }],
+      goals: [
+        { personId: 1, clock: { secs: 540, label: "09'00" }, phase: "1", type: "G" },
+        { personId: 2, clock: { secs: 5700, label: "90+5'00" }, phase: "2", type: "G" },
+      ],
     });
-    expect(mapRoundBreaks([done])[0]?.seconds).toBeGreaterThan(5700);
+    const whistle = mapRoundBreaks([done])[0]?.absolute ?? 0;
+    const goals = mapRoundGoals([done], new Map()).map((goal) => goal.absolute ?? 0);
+    expect(goals).toHaveLength(2);
+    for (const goal of goals) expect(whistle).toBeGreaterThan(goal);
   });
 
   it("drops a fixture with no FPL code, since nothing could join it", () => {
