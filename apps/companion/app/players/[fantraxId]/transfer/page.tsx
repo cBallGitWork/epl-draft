@@ -5,10 +5,10 @@ import Moves from "../Moves";
 import NoProfile from "../NoProfile";
 import Pedigree, { DraftLine } from "../Pedigree";
 import PlayerShell from "../PlayerShell";
-import { BUTTON } from "../../../components/shell/ButtonLink";
 import { playerPedigree } from "../draft";
 import { playerMoves } from "../dossier";
 import { subject } from "../subject";
+import OutLink from "../../../components/shell/OutLink";
 
 // Championship Manager's `Transfer` tab: what he cost and what he is worth.
 //
@@ -70,14 +70,7 @@ export default async function PlayerTransfer({ params }: { params: Promise<{ fan
           `player/:playerId` and a status code cannot tell you — the SPA serves
           its shell with a 200 for an id that does not exist. `scorerId` is our
           `fantraxId`, so this costs no read. PLATFORM_NOTES carries it. */}
-      <a
-        href={`${FANTRAX_PLAYER_BASE}/${fantraxId}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={BUTTON}
-      >
-        Open on Fantrax ↗
-      </a>
+      <OutLink href={`${FANTRAX_PLAYER_BASE}/${fantraxId}`}>Open on Fantrax</OutLink>
 
       {/* **The whole-of-Fantrax block is gone** (Craig, 4 Sep 2026: *"remove
           Across every Fantrax league / Drafted 100% / ADP 1.84 / Ros 100% /

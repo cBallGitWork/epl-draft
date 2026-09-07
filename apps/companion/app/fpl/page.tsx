@@ -10,6 +10,7 @@ import { forgetEntry } from "./actions";
 import { myEntryId, mySide } from "./entry";
 import { FPL_SITE, type Played } from "./played";
 import { LABEL, PANEL, ROW_NAME, SMALL_CAPS } from "@/app/desk";
+import OutLink from "../components/shell/OutLink";
 
 // The other game, kept small on purpose.
 //
@@ -186,14 +187,12 @@ export default async function FplPage() {
           screen that reads somebody else's game without saying where to act on
           it is a dead end. On the round the page is about, so the two agree. */}
       <div className="flex flex-wrap items-center gap-2">
-        <a
+        <OutLink
           href={`${FPL_SITE}/entry/${entryId}/event/${squad?.gameweek ?? snapshot.gameweek}`}
-          target="_blank"
-          rel="noopener noreferrer"
           className={`cm-bevel flex min-h-11 items-center px-3 lg:min-h-9 ${SMALL_CAPS}`}
         >
-          Open on FPL ↗
-        </a>
+          Open on FPL
+        </OutLink>
         {/* On a plate too, and for the same reason as the link beside it: a
             control on the bare photograph is DESIGN §2's one prohibition, and
             `groundfit` had this button open. Quieter than the way OUT — this is

@@ -1,5 +1,5 @@
 import TabStrip from "../components/shell/TabStrip";
-import { POOL } from "./query";
+import { COMPARE, POOL } from "./query";
 
 // Scout's own views.
 //
@@ -16,7 +16,7 @@ import { POOL } from "./query";
 
 const VIEWS = [
   { href: POOL, label: "Board", key: "pool" },
-  { href: "/players/compare", label: "Compare", key: "compare" },
+  { href: COMPARE, label: "Compare", key: "compare" },
 ] as const;
 
 export type ScoutView = (typeof VIEWS)[number]["key"];

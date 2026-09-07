@@ -28,7 +28,8 @@ export default function CompareBar({ a, b }: { a: Side; b: Side }) {
   );
 }
 
-export interface Side {
+/** Not exported: the page passes a literal, which structural typing checks. */
+interface Side {
   name: string;
   club: Club | undefined;
   /** FPL's season-stable code, for the face. Null for a man the bridge has never

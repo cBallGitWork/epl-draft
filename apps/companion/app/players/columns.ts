@@ -29,17 +29,19 @@ import type { PoolRow } from "./pool";
 export type RawStats = Record<string, number | null> | undefined;
 
 /** How a figure is drawn. The table owns the ink; this says what shape the
- *  value is, which is the one thing the column knows and the cell does not. */
-export type ColumnKind = "text" | "number" | "percent" | "signed";
+ *  value is, which is the one thing the column knows and the cell does not.
+ *  Not exported: `PlayerTable` reads the FIELD and never names the type. */
+type ColumnKind = "text" | "number" | "percent" | "signed";
 
 export interface PoolColumn {
-  /** Stands down under a thumb. **Only ever true of a column the table is not
-   *  ORDERED by** — DESIGN §2: hiding the sorted column takes the pressed plate,
-   *  the arrow and `aria-sort` with it, so a phone arriving on a shared `?sort=`
-   *  link would show an order with no visible author and nothing in the
-   *  accessibility tree to say what it was. `PlayerTable` keeps that promise by
-   *  drawing a hidden column anyway when it is the one being sorted by. */
-  phoneHidden?: true;
+  /** Stands down under a thumb. **`deskOnly` and not `phoneHidden`**, which is
+   *  what this was called for a day: `league/Columns` and `prem/Columns` named
+   *  the concept first and a third name for one idea is how a grep stops finding
+   *  all of it. `desk.ts`'s `standDown` is the shared rule, and it is the one
+   *  DESIGN §2 rests on — a hidden column is DELETED, taking the pressed plate,
+   *  the arrow and `aria-sort` with it, so this is never applied to the column
+   *  the table is ordered by. */
+  deskOnly?: true;
   /** Short, because it ends up in the address bar. */
   key: string;
   label: string;
@@ -74,7 +76,7 @@ export const COLUMNS: PoolColumn[] = [
     // space"*. It is the widest cheap column and the one a phone can most afford
     // to lose — the rows are in an order the reader chose, and the absolute
     // ranking is a desk question.
-    phoneHidden: true,
+    deskOnly: true,
     value: (row) => row.stats?.rank ?? null,
   },
   {

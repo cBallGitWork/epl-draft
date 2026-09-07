@@ -2,7 +2,7 @@ import ScoutShell from "./Shell";
 import Skeleton from "../components/shell/Skeleton";
 import { BUTTON } from "../components/shell/ButtonLink";
 import { COLUMNS } from "./columns";
-import { SCROLL } from "@/app/desk";
+import { DESK_ONLY, SCROLL } from "@/app/desk";
 
 // The pool, waiting on Fantrax's 533 KB of stats.
 //
@@ -66,7 +66,7 @@ export default function Loading() {
                   scope="col"
                   className={`whitespace-nowrap px-1.5 py-1.5 font-bold ${
                     column.kind === "text" ? "text-left" : "text-right"
-                  } ${column.phoneHidden ? "hidden lg:table-cell" : ""}`}
+                  } ${column.deskOnly ? DESK_ONLY : ""}`}
                 >
                   {column.label}
                 </th>
@@ -91,7 +91,7 @@ export default function Loading() {
                   ) : (
                     <td
                       key={column.key}
-                      className={`px-1.5 ${column.phoneHidden ? "hidden lg:table-cell" : ""}`}
+                      className={`px-1.5 ${column.deskOnly ? DESK_ONLY : ""}`}
                     >
                       <Skeleton width="1.5rem" height="0.6875rem" />
                     </td>

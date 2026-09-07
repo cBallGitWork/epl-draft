@@ -4,7 +4,8 @@ import { FIGURE } from "@/app/desk";
 // The two cells a CM board's rows are built from, opposite `TableHeads`.
 //
 // Both arrived at three occurrences and not before. The index block was written
-// out verbatim in `league/team-stats`, `prem/team-stats` and `players/Board`;
+// out verbatim in `league/team-stats`, `prem/team-stats` and `players/Board`
+// (deleted 6 Sep 2026);
 // the linked name row in the two boards and `prem/ClubRow`. `results/Result`
 // carries a fourth spelling of the link — `px-2 hover:bg-raised`, on a flex row
 // rather than a table — and its own docblock records that as the THIRD time the

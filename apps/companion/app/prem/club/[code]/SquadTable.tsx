@@ -8,7 +8,7 @@ import StateBox from "../../../components/football/StateBox";
 import { positionsLabel } from "../../../positions";
 import { PLAYER } from "../../PremNav";
 import type { LeagueOpinion } from "./club";
-import { BOARD, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 
 // Every man on the club's books, as Championship Manager files a squad.
 //
@@ -163,13 +163,13 @@ export default function SquadTable({
                   <span className="block truncate">{owner(opinion) ?? DASH}</span>
                 </td>
                 <td className={`${WIDE_FIGURE} ${dim || "text-ink"}`}>{player.season.minutes}</td>
-                <td className={`${WIDE_FIGURE} hidden lg:table-cell ${dim || "text-ink"}`}>
+                <td className={`${WIDE_FIGURE} ${DESK_ONLY} ${dim || "text-ink"}`}>
                   {player.season.starts}
                 </td>
-                <td className={`${WIDE_FIGURE} hidden lg:table-cell ${dim || "text-mid"}`}>
+                <td className={`${WIDE_FIGURE} ${DESK_ONLY} ${dim || "text-mid"}`}>
                   {player.season.goals}
                 </td>
-                <td className={`${WIDE_FIGURE} hidden lg:table-cell ${dim || "text-mid"}`}>
+                <td className={`${WIDE_FIGURE} ${DESK_ONLY} ${dim || "text-mid"}`}>
                   {player.season.assists}
                 </td>
               </tr>

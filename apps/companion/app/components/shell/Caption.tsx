@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 // every screen in the reference library carries both.
 //
 // Extracted at three hand-rolled copies — `league/Shell.tsx`, `players/Board.tsx`
-// and `squad/[teamId]/Shell.tsx`, the class string byte-identical at all three
+// (since deleted) and `squad/[teamId]/Shell.tsx`, the class string byte-identical
 // (CODE_RULES §1). `PageHeader.tsx` records the same decision taken once already
 // for the bar above it, at five copies and drifting.
 

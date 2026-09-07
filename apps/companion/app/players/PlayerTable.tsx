@@ -4,9 +4,9 @@ import PlayerPortrait from "../components/football/PlayerPortrait";
 import type { PoolRow } from "./pool";
 import { COLUMNS, type PoolColumn, type RawStats } from "./columns";
 import { HeadRow, SortHead } from "../components/league/TableHeads";
-import { activeSort, sortHref } from "./query";
+import { COMPARE, activeSort, sortHref } from "./query";
 import type { PlayersQuery } from "./query";
-import { ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { ROW_NAME, ROW_RULE, SCROLL, standDown } from "@/app/desk";
 
 // The pool as a table — and since 6 Sep 2026 as the WHOLE table (Craig: *"the
 // landing screen for scout should really be showing as many columns as possible
@@ -50,11 +50,11 @@ export default function PlayerTable({
   raw: Map<string, Record<string, number | null>>;
 }) {
   const current = activeSort(query);
-  /** A column stands down under a thumb unless it is the one being ordered by —
-   *  DESIGN §2's rule, kept here rather than in the column table because only
-   *  the render knows what the current sort is. */
-  const phone = (column: PoolColumn) =>
-    column.phoneHidden && current.key !== column.key ? "hidden lg:table-cell" : "";
+  /** A column stands down under a thumb unless it is the one being ordered by.
+   *  The rule is `desk.ts`'s `standDown` — three files had written it out and
+   *  this was the third — and only the render knows the current sort, so the
+   *  lookup stays here and the judgement does not. */
+  const phone = (column: PoolColumn) => standDown(column.deskOnly, current.key === column.key);
 
   return (
     // `cm-scroll` for the bar, on the wrapper rather than on the table, so the
@@ -160,7 +160,7 @@ function Cell({
         <Link
           href={
             query.compare && query.compare !== row.entry.player.fantraxId
-              ? `/players/compare?a=${query.compare}&b=${row.entry.player.fantraxId}`
+              ? `${COMPARE}?a=${query.compare}&b=${row.entry.player.fantraxId}`
               : `/players/${row.entry.player.fantraxId}`
           }
           className="cm-row flex min-h-11 items-center gap-2.5 px-1"

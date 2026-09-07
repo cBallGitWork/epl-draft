@@ -10,7 +10,8 @@ import { StackWaiting } from "../[fantraxId]/Waiting";
 import { playerGrid, realPosition } from "../[fantraxId]/grid";
 import { subject } from "../[fantraxId]/subject";
 import { BUTTON } from "../../components/shell/ButtonLink";
-import { POOL } from "../query";
+import { COMPARE, POOL } from "../query";
+import OutLink from "../../components/shell/OutLink";
 
 // Two players, side by side.
 //
@@ -107,7 +108,7 @@ export default async function ComparePage({
         </Link>
         {/* The swap costs nothing and answers the one thing a mirrored table
             cannot: which side you are reading. */}
-        <Link href={`/players/compare?a=${b}&b=${a}`} className={BUTTON}>
+        <Link href={`${COMPARE}?a=${b}&b=${a}`} className={BUTTON}>
           Swap sides
         </Link>
       </div>
@@ -117,15 +118,9 @@ export default async function ComparePage({
           { id: a, name: names.a },
           { id: b, name: names.b },
         ].map((man) => (
-          <a
-            key={man.id}
-            href={`${FANTRAX_PLAYER_BASE}/${man.id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={BUTTON}
-          >
-            {man.name} on Fantrax ↗
-          </a>
+          <OutLink key={man.id} href={`${FANTRAX_PLAYER_BASE}/${man.id}`}>
+            {man.name} on Fantrax
+          </OutLink>
         ))}
       </div>
     </ScoutShell>

@@ -95,7 +95,8 @@ export const ROW_NAME = "font-chrome text-sm font-bold lg:text-base";
 
 /** A figure in a repeating row: tabular, centred, and small enough that a column
  *  of them reads as a column. Three files declared it byte-identically under a
- *  private `const FIGURE` — `league/TableRow`, `prem/ClubRow`, `players/Board`.
+ *  private `const FIGURE` — `league/TableRow`, `prem/ClubRow`, and `players/Board`
+ *  (deleted 6 Sep 2026, when the pool's leaderboard became a directory).
  *
  *  Two more files declare a `FIGURE` that is this string plus a size:
  *  `lg:text-sm` on the club squad table and `text-base font-bold lg:text-lg` on
@@ -288,11 +289,39 @@ export const SUBMIT = "cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9";
 // element and a string that decorates one are different things and only the
 // second belongs in this file. Import them from their components.
 
+/* ---- A column that stands down under a thumb ------------------------------ */
+
+/** The class a desk-only column wears. **Eight sites in five files**, counted
+ *  7 Sep 2026 — `league/Columns`, `prem/Columns`, `prem/club/[code]/SquadTable`
+ *  three times, `players/PlayerTable` and its loading skeleton twice. */
+export const DESK_ONLY = "hidden lg:table-cell";
+
+/** Whether this column stands down under a thumb — **unless the table is
+ *  ORDERED by it**.
+ *
+ *  **Three copies of one rule, counted 7 Sep 2026**: `league/Columns.deskOnly`,
+ *  `prem/Columns.deskOnly` and `players/PlayerTable`'s own `phone()`, the last
+ *  of which had renamed the concept to `phoneHidden` on the way past. Each
+ *  closed over its own `COLUMNS` list, which is why the FINDING stays in each
+ *  file and only the judgement moves here — the varying part is how a column is
+ *  looked up and the shared part is what to do once it is found.
+ *
+ *  It is the rule DESIGN §2 rests on, which is why it must not drift: `display:
+ *  none` does not quieten a column, it deletes it. The pressed plate, the sort
+ *  arrow and `aria-sort` all live on that cell, so a phone arriving on a shared
+ *  `?sort=` link would show an order with no visible author and nothing in the
+ *  accessibility tree to say what it was. Three files agreeing by hand is three
+ *  chances for one of them to stop. */
+export function standDown(deskOnly: boolean | undefined, sorted: boolean): string {
+  return deskOnly && !sorted ? DESK_ONLY : "";
+}
+
 /* ---- Declined, with the count ---------------------------------------------
  *
  * The section that saves the next session the counting.
  *
- * `const DASH = "—"` — 9 named against 68 unnamed literals in 34 files.
+ * `const DASH = "—"` — 10 named against 64 unnamed literals in 34 files
+ *   (re-counted 7 Sep 2026; it was 9 against 68).
  *   Naming it a tenth time would hide the scatter behind a plausible name. It
  *   is named only if all 68 adopt it, which is a decision about the absence
  *   grammar (DESIGN §7) rather than about class strings.
@@ -307,15 +336,20 @@ export const SUBMIT = "cm-bevel min-h-11 px-3 text-sm font-medium lg:min-h-9";
  *     `px-3 text-2xs text-faint`           5 sites
  *     `flex items-baseline justify-between gap-3 pt-1`  5 sites
  *
+ *   `Array.isArray(v) ? v[v.length - 1] : v` — the repeated-query-parameter
+ *   narrowing, **2 sites** (`players/query.ts`, `players/compare/page.tsx`).
+ *   Two is a coincidence and §1 leaves it alone; the third moves it.
+ *
  *   None of these is sediment from this run; they were all there before it, and
  *   extracting four more recipes in the last hour of a session is how a name
  *   gets chosen from tiredness rather than from meaning.
  *
- * The TAB LABEL at `px-2 text-2xs` — 2 sites, `players/Board`'s measure strip
- *   and `components/league/GroupNav`, whose class strings differ only in
- *   `whitespace-nowrap` against `min-h-11`. Below the bar, and neither is a
- *   `TabStrip`: `GroupNav` records why it stays out, and Board's is a strip of
- *   MEASURES rather than routes. The app has five tab-label recipes and this
+ * The TAB LABEL at `px-2 text-2xs` — was 2 sites, `players/Board`'s measure
+ *   strip and `components/league/GroupNav`, whose class strings differed only in
+ *   `whitespace-nowrap` against `min-h-11`. **It is ONE since 6 Sep 2026**, Board
+ *   having gone with the leaderboard it labelled, so it is below the bar by a
+ *   wider margin than when this was written and stays where it is. `GroupNav`
+ *   records why it is not a `TabStrip`. The app has five tab-label recipes and this
  *   pair is two of them; the other three are `TabStrip`'s `phrase` and `word`
  *   — both measured and both justified, see its docblock — and the pool's
  *   filter `CHIP`, which is a chip at `text-sm` and a different object. So the

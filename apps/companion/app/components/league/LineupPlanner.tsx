@@ -10,9 +10,6 @@ import type {
   SquadPlayerDetail,
   Violation,
 } from "@epl/core";
-// The look without the component: this one link leaves the app, so it stays a
-// plain anchor with `target="_blank"` rather than becoming a router link.
-import { BUTTON } from "../shell/ButtonLink";
 import {
   applyMove,
   eligibilityOf,
@@ -28,6 +25,7 @@ import type { PitchRow } from "./PitchRows";
 import MoveDialog from "./MoveDialog";
 import Pending from "./Pending";
 import { LABEL } from "@/app/desk";
+import OutLink from "../shell/OutLink";
 
 // Planning a lineup, not submitting one.
 //
@@ -270,9 +268,7 @@ export default function LineupPlanner({
         </ul>
       ) : null}
 
-      <a href={fantraxUrl} target="_blank" rel="noreferrer" className={BUTTON}>
-        Set this lineup in Fantrax
-      </a>
+      <OutLink href={fantraxUrl}>Set this lineup in Fantrax</OutLink>
     </div>
   );
 }

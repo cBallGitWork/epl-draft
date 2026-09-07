@@ -1,7 +1,7 @@
 import type { SortKey } from "@epl/core";
 import { sortHref } from "./sort";
 import { Head, HeadRow, NameHead, PLATE, SortHead } from "../components/league/TableHeads";
-import { TEXT } from "@/app/desk";
+import { TEXT, standDown } from "@/app/desk";
 
 // The table's column heads, in one place because two files print them: the page
 // and the skeleton it waits behind. They were written out twice, and on 29 Aug
@@ -104,7 +104,7 @@ export function cellAlign(key: Column["key"]): string {
  *  the loading skeleton have to agree, and `COLUMNS` is where they agree. */
 export function deskOnly(key: Column["key"], sort: SortKey): string {
   const column = COLUMNS.find((entry) => entry.key === key);
-  return column?.deskOnly && key !== sort ? "hidden lg:table-cell" : "";
+  return standDown(column?.deskOnly, key === sort);
 }
 
 /** A column the reader can order by. `form` is a run of letters and `team` a

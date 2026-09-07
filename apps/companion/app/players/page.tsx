@@ -10,6 +10,7 @@ import { FANTRAX_SILENT } from "../config";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH } from "@epl/core";
 import { positionLabel } from "../positions";
 import { BUTTON } from "../components/shell/ButtonLink";
+import OutLink from "../components/shell/OutLink";
 
 // Every player Fantrax knows, what our league has decided about him, and what
 // Fantrax scores him. The numbers are theirs under our league's scoring, which
@@ -236,14 +237,9 @@ export default async function PlayersPage({
           matrix-parameter path taken off a real browser session; a deeper guess
           would break silently the day they reorganise their routes, which is the
           reason `FANTRAX_APP_BASE` has carried that warning since it was added. */}
-      <a
-        href={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}/${FANTRAX_PLAYERS_PATH}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={BUTTON}
-      >
-        Claim on Fantrax ↗
-      </a>
+      <OutLink href={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}/${FANTRAX_PLAYERS_PATH}`}>
+        Claim on Fantrax
+      </OutLink>
     </ScoutShell>
   );
 }

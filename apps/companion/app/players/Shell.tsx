@@ -38,9 +38,12 @@ import { SCOUT, SCOUT_CAPTION } from "../titles";
  *
  *  Not the league's ten and not the division's twenty: this panel holds a
  *  DIRECTORY, and the number that matters is how much of one a reader can see
- *  before scrolling. Fourteen is `players/Board`'s own `VISIBLE_ROWS`, taken
- *  from CM's stat list in `cm9900/16.jpg` — the shot shows fourteen with a
- *  scrollbar saying there are more, which is the arrangement here. */
+ *  before scrolling. Fourteen is `cm9900/16.jpg`'s own count: the shot shows
+ *  fourteen rows with a scrollbar saying there are more, which is the
+ *  arrangement here. It reached this file from `players/Board`'s `VISIBLE_ROWS`,
+ *  which is why it is cited to the SHOT now — that file was deleted on 6 Sep
+ *  2026 and a constant whose only authority is a deleted file is a number
+ *  nobody can check. */
 const PANEL_ROWS = 14;
 
 export default function ScoutShell({

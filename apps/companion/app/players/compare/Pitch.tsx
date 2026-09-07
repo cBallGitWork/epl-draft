@@ -34,8 +34,9 @@ import { pitchSpot } from "../../pitchSpot";
 // not before; a control offering maps that cannot be drawn is worse than none.
 
 /** One man on the pitch. `position` is null for a role the table cannot place,
- *  and the caption says so rather than dropping him silently. */
-export interface Marker {
+ *  and the caption says so rather than dropping him silently. Not exported: the
+ *  page passes a literal and structural typing checks it. */
+interface Marker {
   name: string;
   club: Club | undefined;
   position: string | null;

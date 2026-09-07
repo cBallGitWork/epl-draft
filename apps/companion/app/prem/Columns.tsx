@@ -1,7 +1,7 @@
 import type { TableSortKey } from "@epl/core";
 import { tableHref } from "./sort";
 import { Head, HeadRow, NameHead, PLATE, SortHead } from "../components/league/TableHeads";
-import { TEXT } from "@/app/desk";
+import { TEXT, standDown } from "@/app/desk";
 
 // The table's column heads, in one place because two files print them: the page
 // and the skeleton it waits behind. `league/Columns.tsx` records the bug that
@@ -60,7 +60,7 @@ export function cellAlign(key: Column["key"]): string {
  *  order with no visible author. */
 export function deskOnly(key: Column["key"], sort: TableSortKey): string {
   const column = COLUMNS.find((entry) => entry.key === key);
-  return column?.deskOnly && key !== sort ? "hidden lg:table-cell" : "";
+  return standDown(column?.deskOnly, key === sort);
 }
 
 /** A column the reader can order by. `form` is a run of letters and `club` a
