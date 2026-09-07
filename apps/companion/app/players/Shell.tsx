@@ -1,5 +1,7 @@
 import Caption from "../components/shell/Caption";
 import PageHeader from "../components/shell/PageHeader";
+import PoolNav from "./PoolNav";
+import type { ScoutView } from "./PoolNav";
 import { PANEL } from "@/app/desk";
 import { SCOUT, SCOUT_CAPTION } from "../titles";
 
@@ -21,10 +23,10 @@ import { SCOUT, SCOUT_CAPTION } from "../titles";
 // competition; it is the activity. So it takes the royal-blue bar every other
 // subject-without-a-colour takes, which is `/fpl` and `/squad` today.
 //
-// **No tab strip, and that is a count rather than an omission.** The section has
-// one view. `league/SectionNav` records the ruling this follows — Craig, 1 Sep
-// 2026, on a foot row that had lost all but one entry: "one entry is a stray
-// button under a panel, not a bar". The strip arrives with the second view.
+// **The strip arrived with the second view**, which is how it was meant to: this
+// shipped without one because the section had a single view, on
+// `league/SectionNav`'s recorded ruling that "one entry is a stray button under a
+// panel, not a bar". Compare is the second, so `PoolNav` draws two plates.
 //
 // A copy of `prem/Shell`'s composition rather than a generalisation of it, on
 // that file's own argument: three shells are still four lines of composition
@@ -44,8 +46,22 @@ const PANEL_ROWS = 14;
 export default function ScoutShell({
   title,
   sub,
+  current = "pool",
+  rows = PANEL_ROWS,
   children,
 }: {
+  /** Which view this is, for the strip's current plate. */
+  current?: ScoutView;
+  /** How many rows to hold the panel open for, when the view knows better.
+   *
+   *  **An override and not a floor**, which is where this differs from
+   *  `prem/Shell`'s `rows` — that one takes the larger of the two because every
+   *  Premiership view is a table of at least twenty clubs. Scout has two views
+   *  of different kinds: the board IS a directory and wants the fourteen rows,
+   *  and Compare is three stacked panels that fill their own height. Taking the
+   *  max there held fourteen rows of empty ground open under the attributes,
+   *  which is the opposite of the fault the floor exists to prevent. */
+  rows?: number;
   /** What the panel is ranked by, when the screen knows — the pool's caption is
    *  its CATEGORY, which is `cm9900/16.jpg`'s own arrangement: the bar names the
    *  subject, the strip marks the section, and the caption says `Average Rating`.
@@ -57,6 +73,7 @@ export default function ScoutShell({
   return (
     <div className="flex flex-col gap-2">
       <PageHeader title={SCOUT} sub={sub} />
+      <PoolNav current={current} />
       <Caption>{title ?? SCOUT_CAPTION}</Caption>
 
       {/* Sized in ROWS rather than pixels, because only CSS has the breakpoint:
@@ -66,7 +83,7 @@ export default function ScoutShell({
       <section
         className={PANEL}
         style={{
-          minHeight: `calc(${PANEL_ROWS} * var(--table-row) + var(--table-chrome))`,
+          minHeight: `calc(${rows} * var(--table-row) + var(--table-chrome))`,
         }}
       >
         {children}

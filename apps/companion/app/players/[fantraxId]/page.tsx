@@ -4,6 +4,8 @@ import type { FootballPlayer, PlayerMatch } from "@epl/core";
 import { footballNow } from "../../football";
 import Nothing from "../../components/shell/Nothing";
 import { PANEL } from "@/app/desk";
+import ButtonLink from "../../components/shell/ButtonLink";
+import { POOL } from "../query";
 import AttributeGrid from "./AttributeGrid";
 import FixtureRun from "./FixtureRun";
 import NoProfile from "./NoProfile";
@@ -142,6 +144,13 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
           for now"*). CM's foot is Back/Next and ours were named destinations;
           the rail reaches both at every width. */}
       <RealPosition position={position} />
+
+      {/* **An action, not a sixth tab.** `PlayerTabs` is five because CM is five
+          (`cm9900/11.jpg`), and `player.md` records the foot buttons coming off
+          every tab because they were named destinations the rail already
+          reaches. This is neither: it is a thing you DO to the man on screen,
+          and it leaves with him — the board becomes a picker for the second. */}
+      <ButtonLink href={`${POOL}?compare=${fantraxId}`}>Compare with…</ButtonLink>
     </PlayerShell>
   );
 }

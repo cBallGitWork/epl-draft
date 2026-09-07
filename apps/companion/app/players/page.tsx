@@ -4,7 +4,7 @@ import Nothing from "../components/shell/Nothing";
 import PlayerTable, { STATUS } from "./PlayerTable";
 import { getPlayerStats } from "./playerStats";
 import { getLeaguePool } from "./pool";
-import { PAGE_ROWS, filterHref, isChosen, playersQuery, showAllHref, shownRows } from "./query";
+import { PAGE_ROWS, POOL, filterHref, isChosen, playersQuery, showAllHref, shownRows } from "./query";
 import type { PlayersSearchParams } from "./query";
 import { FANTRAX_SILENT } from "../config";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH } from "@epl/core";
@@ -155,6 +155,18 @@ export default async function PlayersPage({
           Find
         </button>
       </form>
+
+      {/* Said out loud while the board is a picker, because a table whose rows
+          have quietly changed destination is a screen that lies about what a tap
+          does. It carries its own way out. */}
+      {query.compare ? (
+        <p className="flex flex-wrap items-center gap-2 border border-accent bg-surface px-3 py-2 text-sm">
+          <span className="font-bold text-accent">Pick the second player.</span>
+          <Link href={POOL} className="underline">
+            Cancel
+          </Link>
+        </p>
+      ) : null}
 
       <div className="flex flex-wrap gap-1.5">
         {[...counted.entries()]

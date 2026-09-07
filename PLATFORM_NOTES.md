@@ -1962,8 +1962,8 @@ fourth file for it (`matches/{season}.json`), which is not read by the app yet.
 
 **Four more files are specified and not yet written**, on Craig's call of 5 Sep
 2026 to connect the projections and the pitch maps before 10 Oct:
-`eye-test`, `shots`, `positions` and `projections`. The contract — row shapes,
-the code key, normalised shot coordinates, the 96-cell heat grid, size caps, and
+`eye-test`, `events`, `positions` and `projections`. The contract — row shapes,
+the code key, normalised event coordinates, the 96-cell heat grid, size caps, and
 what is deliberately NOT exported — is `docs/providers/intel-export.md`, written
 for the sister-repo session to build against. Two things it settles that would
 otherwise be re-litigated: **pass maps are out** (the FotMob builder is dead for

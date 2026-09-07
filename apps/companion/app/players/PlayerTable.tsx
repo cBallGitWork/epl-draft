@@ -112,6 +112,7 @@ export default function PlayerTable({
                   key={column.key}
                   column={column}
                   row={row}
+                  query={query}
                   stats={raw.get(row.entry.player.fantraxId)}
                   teamNames={teamNames}
                   hide={phone(column)}
@@ -130,12 +131,14 @@ export default function PlayerTable({
 function Cell({
   column,
   row,
+  query,
   stats,
   teamNames,
   hide,
 }: {
   column: PoolColumn;
   row: PoolRow;
+  query: PlayersQuery;
   stats: RawStats;
   teamNames: Map<string, string>;
   /** The breakpoint class its head is wearing, so the two cannot disagree — a
@@ -149,8 +152,17 @@ function Cell({
       // cannot reach a `<td>`: 8px here plus the 28 inside is a 37px row on a
       // desk that asked for 28. The phone keeps the padding, and so keeps its 53.
       <td className={`py-1 lg:py-0 ${STICKY_LEAD} ${hide}`}>
+        {/* **Where a row leads depends on what the reader is doing.** With a
+            first man chosen (`?compare=`), the board IS the picker and every row
+            completes the pair; otherwise a row is the man's own screen. One
+            table, two jobs, and the URL says which — no mode toggle, and a
+            half-made comparison survives a filter, a sort and being shared. */}
         <Link
-          href={`/players/${row.entry.player.fantraxId}`}
+          href={
+            query.compare && query.compare !== row.entry.player.fantraxId
+              ? `/players/compare?a=${query.compare}&b=${row.entry.player.fantraxId}`
+              : `/players/${row.entry.player.fantraxId}`
+          }
           className="cm-row flex min-h-11 items-center gap-2.5 px-1"
         >
           {/* Fantrax's club code translated to FPL's spelling before it reaches

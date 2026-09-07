@@ -18,6 +18,7 @@ import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
  *  follows for a provider: types describe reality, and the narrowing happens
  *  where the two meet. */
 export interface PlayersSearchParams {
+  compare?: string | string[];
   /** The board's own two, kept apart from the table's filters below: they
    *  choose what the LEADERBOARD ranks, not what the directory lists. */
   group?: string | string[];
@@ -32,6 +33,11 @@ export interface PlayersSearchParams {
 
 /** The same query, narrowed. */
 export interface PlayersQuery {
+  /** The first man of a comparison, while one is being chosen. The board becomes
+   *  a picker: every row leads to `/players/compare` with him on one side rather
+   *  than to the player's own screen. URL state, so the half-made comparison
+   *  survives a filter, a sort and being shared. */
+  compare?: string;
   q?: string;
   pos?: string;
   status?: string;
@@ -46,6 +52,7 @@ export function playersQuery(raw: PlayersSearchParams): PlayersQuery {
   const one = (value: string | string[] | undefined): string | undefined =>
     Array.isArray(value) ? value[value.length - 1] : value;
   return {
+    compare: one(raw.compare),
     q: one(raw.q),
     pos: one(raw.pos),
     status: one(raw.status),

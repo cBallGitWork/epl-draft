@@ -82,22 +82,32 @@ Source: `data/staging/sofascore/eye_test_features.parquet`, joined
 `ss_player_id → provider_to_root("sofascore") → root fpl_code`.
 **Cap: 200 KB.** Roughly 651 rows × 22 numbers.
 
-## 2. `shots/26-27.json` — the shot map
+## 2. `events/26-27.json` — the maps
 
-One row per shot. `docs/ui/match.md` already names the absence as the Action
-Zones gap, so the screen has a written home before the file exists.
+One row per ACTION, not per shot. `docs/ui/match.md` already names the absence as
+the Action Zones gap, so the screen has a written home before the file exists.
+
+**Widened from shots on 6 Sep 2026** (Craig, on the comparison pitch: *"filter
+for the different stats (shots/recoveries etc)"*). A shots-only file answers one
+of the maps he asked for and forecloses the rest: the comparison screen's map
+picker is a control with one option until defensive actions arrive too, and a
+second file per action type would be four joins doing one join's work. `kind` is
+what the picker filters on.
 
 ```jsonc
 {
   "manifest": { /* … */ },
-  "shots": [
+  "events": [
     {
       "code": 118748,
       "fplFixtureId": 21,        // joined via match_provider_map("sofascore","fpl_fixture")
       "minute": 63,
+      "kind": "shot",            // shot | recovery | tackle | interception | clearance
+                                 // | key-pass | duel | save
       "x": 88.4, "y": 51.2,      // NORMALISED 0–100, attacking left→right
+      "outcome": "goal",         // per kind, and a closed set per kind — see below
+      // Shot-only, absent on every other kind rather than nulled:
       "xg": 0.34,
-      "outcome": "goal",         // goal | saved | off-target | blocked | post
       "situation": "open-play",  // open-play | corner | free-kick | penalty | throw-in
       "bodyPart": "right-foot"   // right-foot | left-foot | head | other
     }
@@ -110,13 +120,25 @@ uses its own pitch and the app must not learn five of them; 0–100 in both axes
 with the shooter always attacking to the right is the one convention this repo
 will draw against.
 
+**`kind` is the picker's vocabulary, so it is the one field that must not
+drift.** The comparison screen builds its map filter from the kinds actually
+present in the file rather than from a list of its own — a picker offering a map
+with no points behind it is worse than a shorter picker — so a kind the exporter
+stops emitting removes itself from the control, and a new one appears without an
+app change.
+
 **Vocabularies are closed sets and a value outside them is dropped, not
 guessed.** If SofaScore sends something new, the exporter names it in the
 manifest rather than passing it through — a screen colouring by outcome cannot
 render a word it has never heard.
 
-Source: `data/staging/sofascore/shots.parquet` (staged and currently unconsumed).
-**Cap: 5 MB at season end. Slice to the current season only.**
+Sources: `data/staging/sofascore/shots.parquet` for the shots (staged and
+currently unconsumed), and the per-match event feeds under
+`data/raw/sofascore/{season}/premier-league/{match}/` for the rest. **Cap: 8 MB
+at season end. Slice to the current season only**, and if that cap binds, drop
+the least-used kinds rather than sampling within one — half a player's recoveries
+is a map that is quietly wrong, where a missing kind is a picker with one fewer
+option and no lie in it.
 
 ## 3. `positions/26-27.json` — average position, and the heat grid
 
