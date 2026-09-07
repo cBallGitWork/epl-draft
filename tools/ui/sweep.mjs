@@ -31,6 +31,11 @@ const ROUTES = [
   "/prem",
   "/squad",
   "/players",
+  // Scout's second view. Its two ids are in the QUERY rather than the path, so
+  // `discover` cannot reach it by following a link off the board — the board
+  // only links here once a first man has been chosen. Two real ids, like every
+  // other fixed entry in this list.
+  "/players/compare?a=05gcr&b=03ksl",
   "/matchday",
   "/matchday/desk",
   "/fpl",
@@ -141,7 +146,13 @@ if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => 
 // swept because the player bar is a per-CLUB colour like the club's, and
 // because the attribute grid is the densest type on the desk — `xs` labels
 // against `--color-muted`, which is the pair a contrast sweep exists for.
-const man = await discover(cdp, "/players", 'a[href^="/players/"]');
+// **`tbody`, and that is not decoration.** The bare selector took the first
+// `/players/` link on the page, which from 6 Sep 2026 is the Compare tab in
+// Scout's own strip — so these instruments walked `/players/compare/data` and
+// friends, which resolve to the PLAYER route with a `fantraxId` of "compare",
+// and stopped covering a real player screen at all. A man is a row of the
+// directory, so the directory's body is where to look for one.
+const man = await discover(cdp, "/players", 'tbody a[href^="/players/"]');
 if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) => `${man}/${tab}`));
 
 // One match's two screens, discovered off the results list — where the score

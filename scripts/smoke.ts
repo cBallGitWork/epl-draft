@@ -57,6 +57,11 @@ const ROUTES = [
   "/league/team-stats",
   "/squad",
   "/players",
+  // Scout's second view. Its two ids are in the QUERY rather than the path, so
+  // `discover` cannot reach it by following a link off the board — the board
+  // only links here once a first man has been chosen. Two real ids, like every
+  // other fixed entry in this list.
+  "/players/compare?a=05gcr&b=03ksl",
   "/matchday",
   "/matchday/desk",
   "/paper/columns",
