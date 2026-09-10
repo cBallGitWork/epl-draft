@@ -252,10 +252,19 @@ async function main() {
     );
   }
   if (footballer !== null) paths.push(`/prem/player/${footballer}`);
-  // Both of a match's views. The Players tab is where an empty sheet lands —
+  // Three of a match's views. The Players tab is where an empty sheet lands —
   // every fixture before its first kickoff has one, and this walk is the only
-  // thing that opens that state on a league whose season has not started.
-  if (match !== null) paths.push(`/prem/match/${match}`, `/prem/match/${match}/players`);
+  // thing that opens that state on a league whose season has not started. Match
+  // Stats is here for the other half of that: it is the one tab whose whole
+  // content comes from a provider FPL does not mirror, so a 200 from it is the
+  // only proof the Premier League's `/stats/match` still answers.
+  if (match !== null) {
+    paths.push(
+      `/prem/match/${match}`,
+      `/prem/match/${match}/players`,
+      `/prem/match/${match}/team-stats`,
+    );
+  }
 
   console.log(
     `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${hasTeams ? "drafted" : "no teams"})\n`,

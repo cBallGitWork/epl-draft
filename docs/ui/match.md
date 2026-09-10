@@ -66,25 +66,94 @@ between the plates rather than at each side's own edge; an unplayed match drew
 `V V`; the caption named the view; and an "In our league" panel counted rostered
 men under the scoresheet. All four are gone.
 
-## Two tabs, where the game runs four
+## Five tabs, where the game runs four
 
 `cm9900/22.jpg` runs `Match Overview · Match Stats · Action Zones · Match
-Report`. FPL publishes no possession, no shots, no corners and no zones anywhere;
-those come from the sister repo and arrive about a day after full time. Shipping
-them would be two plates of four dead on every fixture ever played.
+Report`. We carry three of those four, plus Player Stats and Fantasy Scores —
+`Overview · Player Stats · Match Stats · Fantasy Scores · Match Report`.
 
-**`TabStrip`'s `dim` is not the answer to that.** Its docblock says it greys a
-view with nothing behind it *for this subject*, and every use in the app is a
-computed per-club or per-team condition. A plate greyed for all 380 matches reads
-as broken rather than as honest. This section has already ruled on the same case
-once — [prem.md](prem.md): *"Tactics is not a tab and will not be one… It arrives
-there when there is a real XI to draw."*
+*This section said "two tabs, where the game runs four" until 10 Sep 2026, and
+both halves were stale. The strip had grown to four, and Match Stats had a source
+the whole time: `fetchPlMatchStats` was written on 4 Sep and had no caller in the
+app for six days. `22.jpg`'s board is **thirteen of thirteen rows** from that one
+call.*
 
-**Fantasy Scores is where the game files Player Ratings**, which is a FOOT
-button in `16.jpg` and `21.jpg` rather than a tab. It is a tab here because it is
-the view this app exists for. The foot row is drawn as well, and what it carries
-is what the reference says that row is for — other screens, plus the plate
-waiting on the advanced data.
+**Action Zones stays off, and it is now the only one.** No provider publishes a
+zone. `TabStrip`'s `dim` is not the answer: its docblock says it greys a view
+with nothing behind it *for this subject*, and a plate greyed for all 380 matches
+reads as broken rather than honest. This section has already ruled on the same
+case once — [prem.md](prem.md): *"Tactics is not a tab and will not be one… It
+arrives there when there is a real XI to draw."*
+
+**`/team-stats` and not `/stats`**, which Player Stats already holds. The two are
+a real pair and the names say which is which: Match Stats is the two SIDES
+against each other, Player Stats is every man in the match.
+
+**Fantasy Scores is where the game files Player Ratings**, which is a FOOT button
+in `16.jpg` and `21.jpg` rather than a tab. It is a tab here because it is the
+view this app exists for. The foot row is drawn as well and carries the two clubs
+— the third plate on it was a dead `<span>` reading "Match Stats" until that
+became a real tab, and a foot plate and a tab to one place is the screen
+repeating itself.
+
+## Match Stats
+
+`cm9900/22.jpg`, thirteen rows in its order: Shots On Goal, On Target, Off
+Target, Corners, Free Kicks, Throw-Ins, Fouls, Offsides, Passes Completed,
+Tackles Won, Headers Won, Yellow Cards, Red Cards.
+
+A figure plate each side with the label between them, which is why it is a
+three-column grid and not a table: the label is the axis and the figures are its
+ends, where a table would make one side the subject and the other a column.
+Capped at `max-w-2xl` on a desk, because the reference is a PROPORTION — `22.jpg`
+is ~690px on an 800px canvas, and stretched to 1440 the same markup put a
+thousand pixels of turf between `14` and `10`.
+
+Cyan on the three percentages, which is `--color-info` doing its job: a
+proportion is a reading we derived and a count is Opta's. `22.jpg` prints the
+same three in cyan and the two card LABELS in their own cards' colours.
+
+**Opta's metric names are not English** and `matchStats.ts` carries the table:
+`fk_foul_lost` is fouls COMMITTED and `fk_foul_won` fouls WON, `total_throws`
+includes the keeper's. **A metric worth nought is absent from the payload**,
+which inverts DESIGN §7 — see [premier-league-api.md](../providers/premier-league-api.md).
+
+Under it, the **shot map**: every shot in the match on one pitch, the two sides
+attacking opposite ways. The away side is mirrored because every coordinate the
+sister repo exports is player-relative — both sides are stored attacking right —
+and `mirrorShot` rotates rather than flips, since turning a pitch around swaps
+left and right as well as ends. Radius carries xG by its square root so AREA is
+proportional; outcome is fill and weight, and colour is the club's.
+
+## The team sheet
+
+`cm9900/16.jpg`, both sides, and every column on it has a 30/30 source since
+10 Sep 2026. The shirt number is the Premier League's `matchShirtNumber` — the
+number he wore in THIS match — the sub note and the card are its `events` array,
+and the order is the FORMATION rather than a position string, so a back three
+stops being read as a back four.
+
+*Three of those columns read the sister repo's match log until 10 Sep, which
+covers fixtures 1-20 of a season whose other exports reach 30. Ipswich 0-2
+Liverpool drew no numbers, no sub notes and no order at all.*
+
+A booking is a small coloured block between the number and the name — CM's own
+mark, in a slot every row keeps so the names stay in one column. `YC` and `RC`
+are filtered out of the chips beside it: the block already says it.
+
+**Stacked under a thumb and paired on a desk.** CM runs both elevens facing each
+other on an 800px canvas where each panel gets ~340; ours is 390, and two columns
+gave each side 175 against a row measuring 199, so the away side's points column
+was pushed out of its panel and clipped. The document never overflowed and no
+element reported a right edge past the viewport — only the screenshot caught it.
+
+Under the board, the **formation**, drawn with the flat CM diagram rather than the
+photographed trapezoid, which is `PitchRows`' own rule: a screen about
+ARRANGEMENT gets the diagram. One `widest` across both pitches, so the two halves
+of one match are drawn to one scale. It is UNDER the board and not over it: a
+pitch is 612px tall at 390 and two of them put the scores this tab exists for two
+screens down. It clears the fold on its own (780 against 844) — but clearing the
+fold and being the first thing a reader meets are different claims.
 
 ## The scoresheet
 

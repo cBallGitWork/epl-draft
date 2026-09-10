@@ -115,6 +115,66 @@ and this is an authored article. The Gazetta already writes its own prose from f
 the ~170 match metrics, not somebody else's report. If we ever want to point at theirs, the
 title and a link are the surface to use, never the body.
 
+## The fixture detail carries its OWN events array
+
+Found 10 Sep 2026, and not previously documented or typed. `GET /fixtures/{id}`
+answers with an `events` array beside the team sheets — a second, compact feed
+that is **not** the textstream, and the only place a substitution's minute and a
+booking's minute are published as DATA rather than inside Opta's prose.
+
+Counted across the 30 completed fixtures of gameweeks 1-3, 862 rows:
+
+| type | rows | `description` |
+|---|---|---|
+| `S` substitution | 538 | `ON` 269, `OFF` 269 |
+| `B` booking | 118 | `Y` 117, `R` **1** |
+| `G` goal | 76 | `G`, with `assistId` on 56 |
+| `PS` / `PE` period marks | 60 / 60 | none |
+| `O` own goal | 5 | `O` |
+| `P` penalty | 4 | `P` |
+| `MP` missed penalty | 1 | `MP` |
+
+Present and non-empty on **30/30** completed fixtures and absent on all 10
+upcoming ones, so it is an exact tell for "has this been played" rather than a
+clock to interpret.
+
+Four things about it, all measured, none obvious:
+
+1. **The goal types are three, not one.** `G` + `O` + `P` = 76 + 5 + 4 = **85**,
+   and the sister repo's independent shot export counts exactly 85 goals over the
+   same 30 fixtures. A reader taking only `G` silently drops nine, and one that
+   files `O` under goals credits a man with an own goal.
+2. **A card can belong to nobody.** 121 of the 862 rows carry no `personId`; 120
+   are the period marks and **the 121st is a real booking** with a `teamId` and no
+   man — Newcastle v Bournemouth at 71', a bench or staff card. A reader must
+   tolerate a card that belongs to a side.
+3. **The pairing of a substitution is the feed's ORDER and nothing else.** Each
+   `ON` is immediately followed by its own `OFF`: **269 of 269** adjacent pairs,
+   every pair agreeing on both minute and `teamId`, no fixture with an odd number
+   of rows. This matters because a side can make three changes in the same minute
+   — Liverpool at 71' in the recorded fixture — and pairing on the clock then
+   pairs arbitrarily. `plSubstitutions` is the only thing that may do this join;
+   `plManMatches` is per-man and has already lost the order.
+4. **`MP` is a missed penalty and is real**, carrying a man. Read and dropped by
+   `sheetEvents.ts` deliberately — CM's ratings board has no such mark and FPL's
+   own sheet publishes `penaltiesMissed` — and named here so it is not re-found.
+
+Typed as `RawPlFixtureEvent`; mapped by `premierleague/sheetEvents.ts` into
+`PlManMatch` (per man) and `PlSubstitution` (per change).
+
+## Highlights are not available — do not re-probe this
+
+Checked 10 Sep 2026. There is **no** `highlights`, `video`, `videos`, `media`,
+`matchReport` or `report` key on the round read, the fixture detail, the
+textstream or `/stats/match`. `content.pulselive.com`, which older notes reach
+for, **no longer resolves**. The match page's own HTML names
+`checkout.plplus.premierleague.com` and `ottapp-appgw-client-a.proda.epl.tv3cloud.com`
+— DRM'd subscription OTT behind a paywall.
+
+So there is nothing to embed, and the answer is not "we have not found it yet".
+If we ever want to point at theirs, a title and a link is the surface, never the
+body — the same ruling this file already makes about their written reports.
+
 ## The traps, all measured
 
 1. **`/stats/match` omits a metric whose value is zero.** Counted over 40 team-sides:

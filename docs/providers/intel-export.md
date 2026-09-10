@@ -109,7 +109,7 @@ what the picker filters on.
       "outcome": "goal",         // per kind, and a closed set per kind — see below
       // Shot-only, absent on every other kind rather than nulled:
       "xg": 0.34,
-      "situation": "open-play",  // open-play | corner | free-kick | penalty | throw-in
+      "situation": "assisted",   // SEE THE CORRECTION BELOW — this list is wrong
       "bodyPart": "right-foot"   // right-foot | left-foot | head | other
     }
   ]
@@ -301,3 +301,73 @@ Each new file needs, in this repo and in the same commit as its first reader:
 a type in `packages/core/src/football/intel/`, a parser beside it (**parse, never
 assert** — it is provider data written by another repo on another schedule), a
 `__fixtures__` sample, tests, and a line in `scripts/intel-check.ts`.
+
+---
+
+## Corrections and requests, 10 Sep 2026
+
+Filed while building the match screen's shot map and team sheet.
+
+### `situation` is not the closed set this file specifies
+
+The spec above says `open-play | corner | free-kick | penalty | throw-in`.
+Counted over all 824 shots in `shots/26-27.json`:
+
+| value | rows |
+|---|---|
+| `assisted` | 402 |
+| `corner` | 125 |
+| `regular` | 110 |
+| `fast-break` | 58 |
+| `set-piece` | 53 |
+| `throw-in-set-piece` | 47 |
+| `free-kick` | 24 |
+| `penalty` | 5 |
+
+**`open-play` and `throw-in` never appear**, and four values are undocumented.
+`shots.ts:17` asserts "every vocabulary here is a closed set the exporter
+enforces" while typing the field as a loose `string | null`, so nothing caught
+it. Nothing in the app reads `situation` yet; a screen that does must be written
+against the counted list, not the specified one.
+
+### A key pass map has no source this season — REFUSED, with the evidence
+
+Asked for on 10 Sep and not buildable. Both candidates were checked:
+
+- **`pass_network.parquet`** holds `layout_x`/`layout_y` on a 0-1 scale, and a
+  4-3-3 keeper sits at exactly `(0.100, 0.500)`. Those are formation SLOT
+  coordinates — a lineup diagram, not a network with edges. This file already
+  refuses it and the refusal stands.
+- **`goal_chains.parquet`** IS a genuine located build-up map, with `x`, `y` and
+  `event_type` per node and `pass` the commonest type. It holds 4,127 rows for
+  24-25 and 3,498 for 25-26 and **0 for 26-27**.
+
+So the map is not "not built yet", it is unsourced. Revisit only if goal chains
+backfill for this season, and note it would then be a GOAL build-up map rather
+than all key passes.
+
+### Requested: `positions/26-27.json` (§3), which is specified and unbuilt
+
+The average-position map is blocked on it and nothing else. The upstream table
+needs no work:
+
+- `data/staging/sofascore/avg_positions.parquet` — **925 rows, 30/30 Premier
+  League matches, 385 players** for 26-27
+- `match_id, player_id, team_side, average_x, average_y, points_count`
+- the **same 0-100 frame** as the touch clouds, and the same `player_id` join the
+  touches export already makes
+- `team_side` is the part worth having: a match map draws two sides on one pitch
+  and one of them must be turned around, and this says which
+
+**No starter flag is needed.** `PlTeamSheet.lineup` is an exact eleven at 30/30
+from the Premier League's own feed, so the starting-XI filter happens on our side
+(Craig, 10 Sep: the map is the eleven who started, never a substitute — a sub's
+centroid comes off as few as one touch and is a noisy point pretending to be a
+position). Ship the rows as they are.
+
+### Also stale: `matches/26-27.json`
+
+20 fixtures against 30 in the source logs, exported 4 Sep. Re-running the
+exporter is the whole fix. Until then `matchIntel` answers nothing for fixtures
+21-30 while `shots` and `touches` cover them — which is why the team sheet stopped
+reading it for shirt numbers, sub notes and ordering.

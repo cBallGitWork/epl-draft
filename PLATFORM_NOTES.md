@@ -542,6 +542,42 @@ its subtitle, correctly and verbatim (§3: server-driven, never our copy), so on
 to any test we could write.** It belongs in the ship-day runbook rather than in
 the code.
 
+## The fixture detail's own `events` array, and why it retired a sister-repo read (10 Sep 2026)
+
+`GET /fixtures/{id}` carries an `events` array beside the team sheets. It is not the
+textstream and it was neither typed nor documented until now — the full count is in
+`docs/providers/premier-league-api.md`, and the standing facts are these.
+
+**It is on 30/30 completed fixtures and absent on all 10 upcoming ones**, which makes it an
+exact tell for "has this been played". 862 rows over gameweeks 1-3: 538 substitution rows
+(269 `ON`, 269 `OFF`), 118 bookings, 76 goals, 5 own goals, 4 penalties, 1 missed penalty,
+120 period marks.
+
+**What it replaced.** The match screen's shirt numbers, sub notes and player ordering came
+from the sister repo's `matches/26-27.json`, which covers fixtures **1-20** of a season
+whose `shots` and `touches` exports already cover **1-30**. Ipswich 0-2 Liverpool — the
+match Craig was looking at — had no sub notes, no numbers and no order at all. The
+replacement costs no request: `matchFeed.ts` already fetches and caches this detail for the
+team sheets.
+
+**Three traps, each counted rather than guessed:**
+
+- **Three goal types.** `G` + `O` + `P` = 85, which is exactly the goal count the sister
+  repo's independent shot export gives for the same 30 fixtures. Reading only `G` drops
+  nine; filing `O` under goals credits a man with an own goal.
+- **A card can belong to nobody** — one booking in 118 carries a `teamId` and no
+  `personId`, a bench or staff card.
+- **A substitution pairs on the feed's ORDER, not on the minute.** 269/269 adjacent pairs
+  are an `ON` followed by its own `OFF`. This is load-bearing: a side can make three changes
+  in one minute, and pairing on the clock drew *"Flemming for Maeda"* when he came on for
+  Emersonn — two true men and one false sentence. `plSubstitutions` owns this join because
+  `plManMatches` is per-man and has already lost the order.
+
+**Highlights are not available and this is settled.** No `highlights`/`video`/`media` key on
+any endpoint; `content.pulselive.com` no longer resolves; the match page names
+`checkout.plplus.premierleague.com` and `epl.tv3cloud.com`, which is DRM'd subscription OTT.
+There is nothing to embed. Do not re-probe.
+
 ## The Premier League's own API — probed live 4 Sep 2026, do not re-derive
 
 **The full endpoint surface is catalogued in `docs/providers/premier-league-api.md`** —

@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { fetchBootstrap, roundPlayed, squadIntel, touchIntel, xiFault } from "@epl/core";
-import type { IntelSquads, IntelTouches, IntelXi } from "@epl/core";
+import { fetchBootstrap, roundPlayed, shotIntel, squadIntel, touchIntel, xiFault } from "@epl/core";
+import type { IntelShots, IntelSquads, IntelTouches, IntelXi } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 
 // How old the intel is, and whether it still says what the app assumes.
@@ -47,6 +47,7 @@ async function main(): Promise<void> {
   }
 
   checkTouches();
+  checkShots();
 
   // The XI names its own round in its filename, so the directory is read rather
   // than a name guessed: whichever round was exported is the one to judge.
@@ -132,6 +133,36 @@ function checkTouches(): void {
       `exported ${age(touches.manifest.exportedAt)}`,
   );
   for (const source of touches.manifest.sources) {
+    console.log(`  built from ${source.path} (${age(source.mtime)})`);
+  }
+}
+
+/** The shots behind the analysis screen's map and the match screen's.
+ *
+ *  **It shipped without a line here**, which the export contract requires in the
+ *  same commit as a file's first reader — `intel.ts` has read it since 10 Sep and
+ *  this script checked squads, xi and touches only. Added when the match screen
+ *  became its second reader.
+ *
+ *  A WARNING and not a failure, for `checkTouches`' reason. The count worth
+ *  printing is FIXTURES rather than shots: a season's shot total only ever goes
+ *  up, so it cannot tell you the export has stopped, and the round it reaches
+ *  can. */
+function checkShots(): void {
+  const path = join(INTEL_ROOT, "shots", "26-27.json");
+  const shots = read<IntelShots>(path);
+  if (shots === null) {
+    console.log("\nshots: no export — the shot maps will be empty.");
+    return;
+  }
+  const byCode = shotIntel(shots);
+  const taken = [...byCode.values()].flat();
+  const fixtures = new Set(taken.map((shot) => shot.fplFixtureId)).size;
+  console.log(
+    `\nshots: ${taken.length} shots, ${byCode.size} players, ${fixtures} fixtures, ` +
+      `exported ${age(shots.manifest.exportedAt)}`,
+  );
+  for (const source of shots.manifest.sources) {
     console.log(`  built from ${source.path} (${age(source.mtime)})`);
   }
 }
