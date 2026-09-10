@@ -1,12 +1,10 @@
-import Link from "next/link";
-import { clubColours, signed, toFplClubCode } from "@epl/core";
-import PlayerPortrait from "../components/football/PlayerPortrait";
 import type { PoolRow } from "./pool";
-import { COLUMNS, type PoolColumn, type RawStats } from "./columns";
-import { HeadRow, SortHead } from "../components/league/TableHeads";
-import { COMPARE, activeSort, sortHref } from "./query";
+import { type PoolColumn } from "./columns";
+import { HeadRow, MUTE, SortHead } from "../components/league/TableHeads";
+import { activeSort, sortHref } from "./query";
 import type { PlayersQuery } from "./query";
-import { ROW_NAME, ROW_RULE, SCROLL, standDown } from "@/app/desk";
+import { ROW_RULE, SCROLL } from "@/app/desk";
+import Cell, { STICKY_LEAD } from "./Cell";
 
 // The pool as a table — and since 6 Sep 2026 as the WHOLE table (Craig: *"the
 // landing screen for scout should really be showing as many columns as possible
@@ -22,72 +20,101 @@ import { ROW_NAME, ROW_RULE, SCROLL, standDown } from "@/app/desk";
 // own bevelled bar, because there is no last column that matters more than the
 // rest and hiding any of them is choosing for the reader.
 //
-// **The name column is frozen** (DESIGN §9, decided 29 Aug 2026): twenty-four
+// **The name column is frozen** (DESIGN §9, decided 29 Aug 2026): twenty
 // columns on a 390 phone means the figures are read with the man's name off
 // screen, which is a table answering "23" to no question.
 
-/** Fantrax's status codes in the manager's words. Theirs is the vocabulary, so
- *  anything we have not seen shows as the raw code rather than as a guess — an
- *  undrafted league marks all 697 "WW", and a fourth letter would appear here
- *  before it appeared in this file. */
-export const STATUS: Record<string, string> = {
-  FA: "Free agent",
-  WW: "Waivers",
-  T: "Rostered",
-};
-
 export default function PlayerTable({
   rows,
+  columns,
   query,
   teamNames,
   raw,
+  rated,
+  cuts,
 }: {
   rows: readonly PoolRow[];
+  /** The columns this plate shows — the spine plus one group's, or all
+   *  twenty. **Passed in rather than read off `COLUMNS` here**, because the
+   *  page has already worked the set out to compute the cuts against it, and a
+   *  table that decided its own columns could draw a mark for a column it is not
+   *  drawing. */
+  columns: readonly PoolColumn[];
   query: PlayersQuery;
   teamNames: Map<string, string>;
   /** The grouped payload's raw counts, by Fantrax id. Absent for a man that
    *  read did not carry, which is ordinary and prints a dash. */
   raw: Map<string, Record<string, number | null>>;
+  /** Whether the counts are drawn per ninety minutes. */
+  rated: boolean;
+  /** What a figure must reach to be lit, by column key. */
+  cuts: Map<string, number | null>;
 }) {
   const current = activeSort(query);
-  /** A column stands down under a thumb unless it is the one being ordered by.
-   *  The rule is `desk.ts`'s `standDown` — three files had written it out and
-   *  this was the third — and only the render knows the current sort, so the
-   *  lookup stays here and the judgement does not. */
-  const phone = (column: PoolColumn) => standDown(column.deskOnly, current.key === column.key);
-
   return (
     // `cm-scroll` for the bar, on the wrapper rather than on the table, so the
     // header row scrolls with its body.
-    <div className={`cm-scroll ${SCROLL}`}>
+    //
+    // **`bg-surface` — the board is OPAQUE, and it is the only table in the app
+    // that has to be** (Craig, 10 Sep 2026: *"also it needs to be opaque too"*).
+    // `.cm-panel` is deliberately 88% and its docblock defends the choice well:
+    // CM's own panels let the match photograph read faintly through, and at 88%
+    // the picture contributes about four parts in 255, so the ink ladder is
+    // still the one DESIGN §3 measured. That argument holds for a ten-row
+    // standings table set in `text-base`. It does not hold here. This board is
+    // twenty columns of `text-2xs` figures, and the photograph behind it is
+    // not an average — it has a white crowd and a red hoarding in it, which is
+    // 12% of something bright rather than 12% of the mean, arriving under the
+    // smallest type on the desk.
+    //
+    // The tell was already on screen before Craig named it: `STICKY_LEAD` has
+    // carried an opaque `bg-surface` since the name column was frozen, so the
+    // board was rendering with a solid first column and nineteen translucent
+    // ones — the panel disagreeing with itself down a visible seam.
+    //
+    // The same colour the panel is mixing FROM, so nothing shifts but the
+    // photograph going away.
+    <div className={`cm-scroll bg-surface ${SCROLL}`}>
       <table className="w-full border-collapse text-sm">
         <thead>
           {/* **The shared head strip, not a fifth spelling of it** (Craig, 6 Sep
               2026: *"where are the column headers using a grey box that can be
               selected. Another instance of us using different code for 6
               different tables"*). This drew a bare `<th>` with a link and an
-              arrow in it, so the one table in the app with twenty-four sortable
+              arrow in it, so the one table in the app with twenty sortable
               columns was the one with no bevelled plate on any of them — and CM's
               head plate is not decoration, it is what the table is remembered
               for. `TableHeads` already owned the mechanics for the three tables
               that sort; this is the fourth, and the plate, the pressed state,
               `aria-sort` and the arrow now come from one place for all of them. */}
           <HeadRow>
-            {COLUMNS.map((column) =>
+            {columns.map((column) =>
               column.key === "name" ? (
                 // `NameHead`'s markup written out rather than imported, because
                 // this head has to carry `STICKY_LEAD` and that component takes
                 // no class — it is the bare name cell CM's strip starts with
                 // (`cm9900/24.jpg`: the ruler runs over the numbers, not the
                 // names). Two occurrences of one line, which §1 leaves alone;
-                // the third takes a class prop.
+                // the third takes a class prop. The WORD is `MUTE` for the same
+                // reason it is on every other name column, and the class comes
+                // from the component this copies rather than being spelled out
+                // again — a copied line that drifts on the one thing it is
+                // about is the failure `TableHeads` exists to stop.
                 <th key={column.key} scope="col" className={`p-0 font-bold ${STICKY_LEAD}`}>
-                  <span className="flex h-7 items-center px-1.5 text-faint">{column.label}</span>
+                  <span className="flex h-7 items-center px-1.5">
+                    <span className={MUTE}>{column.label}</span>
+                  </span>
                 </th>
               ) : (
                 <SortHead
                   key={column.key}
-                  width={phone(column)}
+                  // Every column is drawn at every width now that nothing stands
+                  // down, so there is no breakpoint class to hand it. `SortHead`
+                  // requires the prop because its other two callers — the league
+                  // table and the Premiership one — still hide columns on a
+                  // phone; making it optional is a change to a shared component
+                  // for one caller's convenience, which §1 declines.
+                  width=""
                   title={column.title}
                   href={sortHref(query, column.key)}
                   label={column.label}
@@ -107,7 +134,7 @@ export default function PlayerTable({
         <tbody>
           {rows.map((row) => (
             <tr key={row.entry.player.fantraxId} className={`${ROW_RULE} hover:bg-raised`}>
-              {COLUMNS.map((column) => (
+              {columns.map((column) => (
                 <Cell
                   key={column.key}
                   column={column}
@@ -115,7 +142,8 @@ export default function PlayerTable({
                   query={query}
                   stats={raw.get(row.entry.player.fantraxId)}
                   teamNames={teamNames}
-                  hide={phone(column)}
+                  rated={rated}
+                  cut={cuts.get(column.key) ?? null}
                 />
               ))}
             </tr>
@@ -124,141 +152,4 @@ export default function PlayerTable({
       </table>
     </div>
   );
-}
-
-/** One cell. The name is a link with a face on it and everything else is a
- *  figure, so this is two shapes rather than twenty-four. */
-function Cell({
-  column,
-  row,
-  query,
-  stats,
-  teamNames,
-  hide,
-}: {
-  column: PoolColumn;
-  row: PoolRow;
-  query: PlayersQuery;
-  stats: RawStats;
-  teamNames: Map<string, string>;
-  /** The breakpoint class its head is wearing, so the two cannot disagree — a
-   *  column hidden in the body and shown in the head is a table with a label
-   *  over the wrong figures. */
-  hide: string;
-}) {
-  if (column.key === "name") {
-    return (
-      // `lg:py-0` because the cell pads the row from outside it and `.cm-row`
-      // cannot reach a `<td>`: 8px here plus the 28 inside is a 37px row on a
-      // desk that asked for 28. The phone keeps the padding, and so keeps its 53.
-      <td className={`py-1 lg:py-0 ${STICKY_LEAD} ${hide}`}>
-        {/* **Where a row leads depends on what the reader is doing.** With a
-            first man chosen (`?compare=`), the board IS the picker and every row
-            completes the pair; otherwise a row is the man's own screen. One
-            table, two jobs, and the URL says which — no mode toggle, and a
-            half-made comparison survives a filter, a sort and being shared. */}
-        <Link
-          href={
-            query.compare && query.compare !== row.entry.player.fantraxId
-              ? `${COMPARE}?a=${query.compare}&b=${row.entry.player.fantraxId}`
-              : `/players/${row.entry.player.fantraxId}`
-          }
-          className="cm-row flex min-h-11 items-center gap-2.5 px-1"
-        >
-          {/* Fantrax's club code translated to FPL's spelling before it reaches
-              the palette. The two agree on eighteen of twenty, and the other two
-              would take the fallback grey on every row they appeared in — a
-              wrong answer that looks exactly like a club we have no colours
-              for. */}
-          <PlayerPortrait
-            player={{ code: row.fplCode, name: row.entry.player.displayName }}
-            colours={clubColours(toFplClubCode(row.entry.player.clubCode ?? ""))}
-          />
-          {/* Capped under a thumb, uncapped on the desk. The name is FROZEN, so
-              it is legible at any scroll position — what a reader is scrolling
-              for is the figures, and an uncapped name took two thirds of a 390
-              screen and left three columns showing. `truncate` rather than a
-              smaller type: DESIGN §8's rule for the pitch cards is the rule
-              here too — the box shrinks and the type never does. */}
-          <span className={`min-w-0 truncate max-w-[7rem] lg:max-w-none ${ROW_NAME}`}>
-            {row.entry.player.displayName}
-          </span>
-        </Link>
-      </td>
-    );
-  }
-
-  const value = column.value(row, stats);
-
-  if (column.key === "owner") {
-    const owner = row.entry.ownerTeamId
-      ? (teamNames.get(row.entry.ownerTeamId) ?? row.entry.ownerTeamId)
-      : null;
-    return (
-      <td className={`whitespace-nowrap px-1.5 text-left text-2xs ${hide}`}>
-        {owner ? (
-          <span className="font-bold text-ink">{owner}</span>
-        ) : (
-          <span className="text-faint">{STATUS[row.entry.status] ?? row.entry.status ?? DASH}</span>
-        )}
-      </td>
-    );
-  }
-
-  if (column.kind === "text") {
-    return (
-      <td className={`whitespace-nowrap px-1.5 text-left text-2xs text-faint ${hide}`}>{value ?? DASH}</td>
-    );
-  }
-
-  if (value === null) {
-    return <td className={`numeric px-1.5 text-right text-2xs text-faint ${hide}`}>{DASH}</td>;
-  }
-
-  if (column.kind === "percent") {
-    return <td className={`numeric px-1.5 text-right text-2xs text-muted ${hide}`}>{value}%</td>;
-  }
-
-  if (column.kind === "signed") {
-    return (
-      <td className={`numeric px-1.5 text-right text-2xs ${hide}`}>
-        <Trend value={Number(value)} />
-      </td>
-    );
-  }
-
-  // `FPts` is the one figure the whole board is ordered by out of the box, so it
-  // is the one drawn at full strength. Everything else is a measure among
-  // twenty, and a table where every column shouts has no hierarchy at all.
-  return (
-    <td
-      className={`numeric px-1.5 text-right ${hide} ${
-        column.key === "fpts" ? "font-bold" : "text-2xs text-muted"
-      }`}
-    >
-      {value}
-    </td>
-  );
-}
-
-const DASH = "—";
-
-/** The name column, frozen against the sideways scroll.
- *
- *  **An opaque ground is the whole trick and it must not be a token that moves.**
- *  A sticky cell is painted over by whatever scrolls under it unless it has a
- *  fill of its own; `bg-surface` is the panel's own well, so the frozen column
- *  reads as part of the table rather than as a plate laid on top of it. The
- *  right rule is what says the scroll passes UNDER it rather than beside it.
- *
- *  The head and the body cell take the same class, because a head that does not
- *  freeze with its column is a label sliding off its own figures. */
-const STICKY_LEAD = "sticky left-0 z-10 bg-surface border-r border-line";
-
-/** Which way ownership moved, said in the sign as well as the colour — a green
- *  number and a red one are the same number to a reader who cannot tell them
- *  apart. Nought is neither, and is drawn quiet rather than as a flat week. */
-function Trend({ value }: { value: number }) {
-  if (value === 0) return <span className="text-faint">0%</span>;
-  return <span className={value > 0 ? "text-up" : "text-bad"}>{signed(value)}%</span>;
 }

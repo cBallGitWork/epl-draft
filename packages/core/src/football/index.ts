@@ -15,7 +15,7 @@ export type {
   MatchEventKind,
 } from "./types";
 
-export { clubColours, clubGround, crestUrl, inkOn, plateOn, shirtUrl } from "./clubs";
+export { clubColours, clubGround, crestForShortName, crestUrl, inkOn, plateOn, shirtUrl } from "./clubs";
 export type { ClubColours } from "./clubs";
 export { initials, portraitUrl } from "./portraits";
 export { getFootballSnapshot } from "./snapshot";

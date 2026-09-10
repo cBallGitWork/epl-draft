@@ -1,5 +1,7 @@
 import type { PoolRow } from "./pool";
 import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
+import { figureOf } from "./figure";
+import { groupFor, type PoolGroupKey } from "./groups";
 
 // What the URL says the table should show. State lives in the address bar rather
 // than in browser state: a server component stays a server component, the whole
@@ -19,13 +21,26 @@ import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
  *  where the two meet. */
 export interface PlayersSearchParams {
   compare?: string | string[];
-  /** The board's own two, kept apart from the table's filters below: they
-   *  choose what the LEADERBOARD ranks, not what the directory lists. */
+  /** Which plate of columns the board is on. **It used to mean something else
+   *  entirely** — this page was a CM leaderboard of one measure until 6 Sep
+   *  2026, and `group`/`cat` chose WHICH measure it ranked. That board is gone
+   *  and `cat` went with it (it had no reader left; found 10 Sep). The name is
+   *  reused rather than retired because a group of columns is what a reader
+   *  means by it, and an old shared link now lands on the whole board rather
+   *  than on an error. */
   group?: string | string[];
-  cat?: string | string[];
   q?: string | string[];
   pos?: string | string[];
   status?: string | string[];
+  /** How the board is expressed rather than what it lists — which columns are
+   *  on it, whether they are rated, and how much football a man must have
+   *  played to appear. */
+  per?: string | string[];
+  club?: string | string[];
+  /** Whether the filter drawer is open. URL state and not React state, so the
+   *  one control that reveals all the others is not the only one on this page
+   *  that needs a script — see `BoardBar`. */
+  panel?: string | string[];
   sort?: string | string[];
   dir?: string | string[];
   all?: string | string[];
@@ -44,6 +59,10 @@ export interface PlayersQuery {
   sort?: string;
   dir?: string;
   all?: string;
+  group?: string;
+  per?: string;
+  club?: string;
+  panel?: string;
 }
 
 /** The last value wins, which is what a browser does with a repeated field and
@@ -59,7 +78,26 @@ export function playersQuery(raw: PlayersSearchParams): PlayersQuery {
     sort: one(raw.sort),
     dir: one(raw.dir),
     all: one(raw.all),
+    group: one(raw.group),
+    per: one(raw.per),
+    club: one(raw.club),
+    panel: one(raw.panel),
   };
+}
+
+/** Which plate the board is on. */
+export function activeGroup(query: PlayersQuery): PoolGroupKey {
+  return groupFor(query.group);
+}
+
+/** Whether the counts are drawn per ninety minutes.
+ *
+ *  One value and not a number, because there is one rate anybody asks a football
+ *  table for. `?per=90` reads as what it is in the address bar, and anything
+ *  else is off — a toggle that a stray query string could put into a third state
+ *  is a toggle with a bug in it. */
+export function isPer90(query: PlayersQuery): boolean {
+  return query.per === "90";
 }
 
 /** Where the pool lives.
@@ -97,7 +135,7 @@ export const PAGE_ROWS = 100;
  *  default view sorted by rank ascending while drawing a descending arrow.
  *
  *  The column table itself is `columns.ts` now, because it grew from seven to
- *  twenty-four and carries a reader per column. */
+ *  twenty-four — twenty today — and carries a reader per column. */
 export function activeSort(query: PlayersQuery): { key: string; descending: boolean } {
   const chosen = columnFor(query.sort) ?? columnFor(DEFAULT_SORT) ?? COLUMNS[0];
   const fallback = chosen.ascending ? "asc" : "desc";
@@ -122,8 +160,17 @@ export function shownRows(
   const needle = (query.q ?? "").trim().toLowerCase();
   const status = chosen(query.status);
   const positions = chosen(query.pos);
+  const club = (query.club ?? "").trim();
+  const rated = isPer90(query);
   const filtered = rows.filter(
     (row) =>
+      // **One club or all of them**, unlike the two filters below it. Those are
+      // unions within themselves because a reader wants defenders OR
+      // midfielders; nobody asks for "Arsenal or Chelsea", and twenty chips is
+      // the wall `ClubPicker` exists to avoid. A single value also means the
+      // control can be a `<select>`, which is the right object for a set of
+      // twenty.
+      (club === "" || row.entry.player.clubCode === club) &&
       // **Any of the chosen, not all of them** — the two filters are unions
       // within themselves and an intersection between: "a defender or a
       // midfielder, who is also a free agent". Requiring every chosen position
@@ -139,8 +186,13 @@ export function shownRows(
   const read = columnFor(key) ?? columnFor(DEFAULT_SORT) ?? COLUMNS[0];
 
   return filtered.sort((left, right) => {
-    const a = read.value(left, raw.get(left.entry.player.fantraxId));
-    const b = read.value(right, raw.get(right.entry.player.fantraxId));
+    // **`figureOf` and not `read.value`**, so the order is the order of what is
+    // ON SCREEN. Under the per-90 toggle a column prints a rate and used to sort
+    // by the raw count behind it — a table whose arrow points at a column it is
+    // not actually ordered by, which is the one failure `activeSort`'s docblock
+    // already records this page making once.
+    const a = figureOf(read, left, raw.get(left.entry.player.fantraxId), rated);
+    const b = figureOf(read, right, raw.get(right.entry.player.fantraxId), rated);
     if (a === null) return b === null ? 0 : 1;
     if (b === null) return -1;
     const order = typeof a === "string" && typeof b === "string" ? a.localeCompare(b) : Number(a) - Number(b);
@@ -161,6 +213,22 @@ function href(query: PlayersQuery, changes: Partial<PlayersQuery>): string {
   }
   const search = next.toString();
   return search ? `${POOL}?${search}` : POOL;
+}
+
+/** The same board with one setting changed — the plate, the rate, the minutes
+ *  floor.
+ *
+ *  **One exported builder rather than three**, because the three would differ
+ *  only in which key they set and each would need its own "and undefined turns
+ *  it off" sentence. `filterHref` below stays its own function for the opposite
+ *  reason: it does not set a value, it toggles one INSIDE a comma list, which is
+ *  a different operation that happens to produce a link.
+ *
+ *  Passing `undefined` drops the key, which is what lets every control here undo
+ *  itself: `{ per: undefined }` is the per-90 toggle turning off and
+ *  `{ mins: undefined }` is the minutes floor going back to the whole pool. */
+export function boardHref(query: PlayersQuery, changes: Partial<PlayersQuery>): string {
+  return href(query, changes);
 }
 
 /** The same list, showing every row. */

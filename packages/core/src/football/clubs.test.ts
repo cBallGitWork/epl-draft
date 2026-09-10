@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clubColours, crestUrl, inkOn , shirtUrl } from "./clubs";
+import { clubColours, crestForShortName, crestUrl, inkOn, shirtUrl } from "./clubs";
 
 const DARK_INK = "#0b0c10";
 const WHITE_INK = "#ffffff";
@@ -75,5 +75,33 @@ describe("shirtUrl", () => {
     expect(shirtUrl(arsenal, true)).toBe(
       "https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_3_1-110.png",
     );
+  });
+});
+
+describe("crestForShortName", () => {
+  it("finds the crest for a club named the way FPL names it", () => {
+    expect(crestForShortName("ARS")).toContain("/badges/t3.svg");
+  });
+
+  it("knows every club this division has, and knows it has colours too", () => {
+    // The two hand-authored tables in `clubs.ts` are the same twenty clubs and
+    // must not drift apart: a club with colours and no code draws a coloured
+    // nothing, and a club with a code and no colours draws a grey badge. The
+    // list is spelled out because it is what changes on promotion day — the same
+    // maintenance moment as the two tables it checks.
+    const division = [
+      "ARS", "AVL", "BHA", "BOU", "BRE", "CHE", "COV", "CRY", "EVE", "FUL",
+      "HUL", "IPS", "LEE", "LIV", "MCI", "MUN", "NEW", "NFO", "SUN", "TOT",
+    ];
+    for (const shortName of division) {
+      expect(crestForShortName(shortName), shortName).not.toBeNull();
+      expect(clubColours(shortName).primary, shortName).not.toBe(clubColours("XYZ").primary);
+    }
+  });
+
+  it("answers null for a club it has never seen, rather than a wrong badge", () => {
+    // A promoted side before the tables are updated. A wrong crest is worse than
+    // none, because only one of the two looks like an answer.
+    expect(crestForShortName("XYZ")).toBeNull();
   });
 });

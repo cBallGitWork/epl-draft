@@ -46,9 +46,16 @@ import { SCOUT, SCOUT_CAPTION } from "../titles";
  *  nobody can check. */
 const PANEL_ROWS = 14;
 
+/* **`sub` is gone** (10 Sep 2026). It drew the line under the title bar — the
+   pool's count and which season its figures are — and Craig took the line off
+   the board (*"remove that row"*). `compare` never passed one, and the skeleton
+   held a bar open for something that would never arrive. `PageHeader` still
+   takes a `sub` for the five screens that use one; this shell simply has no
+   caller for it. The provenance it carried moved into the caption, where it
+   appears only when the figures are a projection — `page.tsx` records why. */
+
 export default function ScoutShell({
   title,
-  sub,
   current = "pool",
   rows = PANEL_ROWS,
   children,
@@ -70,12 +77,11 @@ export default function ScoutShell({
    *  subject, the strip marks the section, and the caption says `Average Rating`.
    *  Falls back to the view's own name. */
   title?: string;
-  sub?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-2">
-      <PageHeader title={SCOUT} sub={sub} />
+      <PageHeader title={SCOUT} />
       <PoolNav current={current} />
       <Caption>{title ?? SCOUT_CAPTION}</Caption>
 

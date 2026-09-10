@@ -804,6 +804,200 @@ count still holds (the border and the accent NAME), the citation does not.
 records the yellow as settled. Both cannot be true, and the narrowed amber
 paragraph ends "only yours takes the accent", which sharpens it.
 
+## Settled — the pool board marks standouts, and the rule is a threshold (10 Sep 2026)
+
+Craig put Opta's season-stats grid beside `/players` — *"it organises the data
+much better than us, but we still keep our standard CM style"* — and the board
+took three of its ideas plus a fourth that is ours.
+
+**The shading is a THRESHOLD, not a ramp, and that was Craig's call.** Opta shades
+every numeric cell on a continuous brown-to-purple scale. DESIGN §3 cannot have
+one: a hue sliding through a range is a colour saying twenty things where every
+other colour in that table says one. Asked, Craig ruled *"magnitude ramp, but
+maybe just highlight the really good values? we also can use better colours for
+us too"*, which is a better rule than the one it replaces — a cell is lit or it is
+not, so there is no second strength to misread. Two new slots, `--color-hot` and
+`--color-cold`, both grounds; DESIGN §3 carries the derivation and the ratios.
+
+**They are the direction pair filled, and they shipped brown first.** The first
+cut took the reference's own hue and Craig threw it out on sight — *"can we use
+more fun CM colours than brown though?"*. Brown is nobody's slot in `tokens.css`,
+and the answer was already in the table: `--color-up` and `--color-bad` at a
+ground lightness. No new hue, and nobody has ever misread green.
+
+**What earns a mark, and the wrong turn on the way to it.** The first cut took the
+top DECILE by rank — the tenth-best figure and everything at or above it. That is
+right for a continuous measure and wrong for almost every column here, because
+these are small integers: goals after three rounds run 0–3, so the tenth-best
+figure is a 2 and every 2 lights, which is a third of the column. Bolting a
+ceiling onto the decile then over-corrected and put `G` and `CS` dark — the two
+columns the marks were most useful on. Both faults were visible on screen and
+neither was visible in the tests, which is why this is recorded.
+
+The rule that shipped is stated the way a reader would state it: **light the
+highest figures, taking whole values at a time, for as long as that stays inside a
+sixth of the men who have a figure at all.** Consequences worth knowing before
+anyone "fixes" them:
+
+- A column whose top value is common lights **nothing**. `GP` three rounds in is 3
+  for everyone; `Min` in August has thirty men in a hundred on 270; `YC` is a
+  column of ones. All three are dark, and that is the true answer.
+- `Min` will begin to light later in the season as the ever-presents thin out.
+  Playing every minute is remarkable in April and ordinary in August.
+- Noughts are dropped before the population is sized. `G` reads nought for 490 of
+  652, and counting them would make the top sixth "anyone who has scored twice" —
+  a statement about squad size, not football.
+- **Whole values or none.** Ten of the thirty men tied on 270 cannot be lit and
+  the other twenty left dark; there is no difference between them a reader can
+  see.
+- The population is **the rows actually drawn**, not all six hundred matching
+  ones. Over the full set the top sixth is a hundred men and the first page would
+  be solid. So a mark means "the top of this column, among what is in front of
+  you", and it re-reads on every filter.
+
+**The board is opaque, and it is the only table in the app that is.** Craig:
+*"also it needs to be opaque too"*. `.cm-panel` is deliberately 88% and its
+docblock defends it well for a ten-row table in `text-base`; it does not hold for
+twenty-four columns of `text-2xs` over a photograph containing a white crowd and a
+red hoarding. The tell was already on screen — the frozen name column has carried
+an opaque fill since it was frozen, so the board rendered with one solid column
+and twenty-three translucent ones.
+
+**Three other things came from the reference**, all of them URL state so the board
+stays a server component and a filtered view stays shareable: stat-group plates
+(`All` first and still the default, so nothing Craig asked for on 6 Sep left the
+board), a per-90 toggle, and a minutes floor as chips rather than Opta's slider.
+
+*The minutes floor lasted a morning* — *"per 90 is just a toggle, remove the
+minutes thing"*. It was two chips, a derivation, a narrowing and a filter clause
+to answer "hide men who barely play", which a reader answers by looking at the
+`Min` column. Worth keeping from it: it shipped hardcoded as `[0, 90, 450]` and
+the `450+` chip emptied the board to "0 of 672", because a constant that encodes
+how far through a season we are fails silently and only for part of the year. The
+guard that mattered survives as arithmetic rather than a control — `per90`
+refuses anybody under one match, which is what stops four minutes and a goal
+reading as 22.5 per 90.
+
+**Two traps found while wiring it, both recorded in code:**
+
+- The per-90 toggle changes what a column PRINTS, so it has to change what the
+  table SORTS by. `figureOf` is now the single answer for "what does this column
+  show for this man", read by the cell, the comparator and the mark arithmetic.
+  Three readers working it out separately is a table sorted by a number nobody
+  can see.
+- A stat-group plate could hide the column the board is ordered by, which is
+  `desk.ts`'s `standDown` rule arriving in a second place: a hidden column is
+  DELETED, taking the pressed plate, the arrow and `aria-sort` with it.
+  `columnsIn` therefore always keeps the sorted column, whatever plate is on.
+
+**"Messy" meant something more specific than clutter, and the diagnosis is worth
+keeping.** Craig: *"when i said messy, i meant essentially three rows of column
+headers"*. The board had a blue stat-group strip, a grey field of eleven filter
+chips, and then the table's own grey head strip — and the middle two wear THE
+SAME BEVEL. `cm-bevel` means "something you press", which a chip and a column
+head both are, so three consecutive full-width rows of small bold capitals read
+as three header rows stacked and a reader cannot tell which belongs to the table.
+It was never the number of controls; it was that a control and a column head are
+the same object in this vocabulary. Worth remembering before adding a fourth
+bevelled row anywhere on the desk.
+
+**The fix went behind one `Filter` plate and then came half back out**, on
+Craig's second look at Opta's DESKTOP shot: *"i think we can get most things onto
+one row though"*. He is right — their grid runs search, stat-group tabs, `PER 90`
+and `MIN MINUTES` across one line and keeps only the position and team pickers in
+the drawer. Hiding everything cured the stacking and threw the desk's width away
+with it, and made the most frequent action — changing the stat group — two taps.
+
+So the row holds what a reader changes often and the drawer holds the tail, and
+**what is on the row grows with the width in two steps, both measured**. Read off
+the rendered page at five widths on 10 Sep 2026 (`row` is the control row's inner
+width, and the frame is max-width capped so 1440 is barely wider than 1280):
+
+```
+1024   row  842   form 176 + plates 579 + filter 75 = 830   fits
+1280   row 1098   …plus the figure chips, 1136            over
+1440   row 1100   the same                                over
+1536   row 1354   1152                                    fits
+1800   row 1484
+```
+
+`lg` therefore takes the stat groups and **`2xl` adds the figure chips**. `xl`
+was the first guess and it is wrong by 36px — and it failed SILENTLY, which is
+the part worth recording: the plate strip is `flex-1`, so rather than overflowing
+it quietly took 525 of the 579 it needs and wrapped `Market` onto a line of its
+own. A row that fits because one of its children folded is not a row that fits,
+and only a screenshot showed it. The row is now one line at every width from 390
+to 1800, verified by comparing the row's height against its tallest child rather
+than by counting distinct `top` values — with `items-center`, children on the
+same line have different tops, and the first probe reported three lines where
+there was one.
+
+The plate carries a count of what is on, so a shut drawer cannot hide a filtered
+board — and the count is per width, totalling only what the drawer still holds at
+that step, because counting controls a reader can already see wearing their own
+pressed bevels is the screen saying it twice. The caption above names the stat
+group, so a closed drawer cannot hide which columns are on either. Inside, three
+labelled bands — Columns, Figures, Who — which the flat field never had; eleven
+chips were doing three unrelated jobs with nothing saying so.
+
+**One regression caught by an instrument rather than by eye:** making the strip a
+component left its `<nav aria-label="Stat groups">` behind in the layout file, so
+for one build it was six bare links with no landmark and no label — and "All" and
+"Scoring" say nothing out of context. The probe looked for the element and got
+null. The `<nav>` lives inside the component now, so a future move cannot strand
+it again.
+
+**The drawer opens through the URL (`?panel=1`) and not through React state.**
+Every other control on this page is a link, which is what lets a filtered board
+be shared and read with no JavaScript; a `useState` drawer would make the one
+control that reveals all the others the only one needing a script. It also means
+"the board with the filters open on Defensive" is a link you can send somebody.
+
+**One control size for the whole row** — *"all buttons different sizes, we can CM
+this now"*. Five kinds of control at four heights and three type sizes. `desk.css`
+already puts the chrome face on every plate class; the geometry is layout and
+belongs to the caller, so `players/BoardControls` exports `PLATE` and the row now
+differs only in colour. Two stated exceptions: the search field keeps
+`text-base`, because an iPhone zooms the page on focus below 16px; and the club
+`<select>` takes `PLATE_TYPE`, the same recipe minus the flex, because
+`display: flex` on a replaced element is not portable.
+
+**The club filter is the one thing the removed columns actually cost.** Position
+and status have had filters since 6 Sep — they predate this work, so dropping
+those columns traded nothing. Club had none, and it is a `<select>` rather than
+chips: twenty clubs is a wall, and it is single-value where the others are unions
+because nobody asks for "Arsenal or Chelsea". The list is read off the POOL, not
+the football layer's twenty, so no option can empty the board.
+
+**Three smaller calls the same day, all Craig's:** the `Rk` column is gone
+outright rather than merely standing down on a phone; the `Opp` cell is trimmed
+to the fixture (`MCI`, `@CHE`) with `fixtureOnly`, which also retires the `(ET)`
+in its heading — a zone note over a column with no clock in it is furniture
+explaining something that is no longer there — and, the time gone, the column is
+narrow enough to come back to the phone.
+
+## `.cm-tab`'s height cannot be overridden by a utility (10 Sep 2026)
+
+`league/GroupNav` has carried `lg:min-h-9` since the day it was written, and it
+has **never taken effect**. Measured on the shipped `/league/team-stats` board:
+the plate computes `min-height: 56px`, and its class list ends
+`… min-h-11 px-2 text-2xs lg:min-h-9`.
+
+`desk.css` sets `.cm-tab { min-height: 3.5rem }` inside a `@media (min-width:
+64rem)` block. A Tailwind utility and that rule are both **one class** of
+specificity, so the cascade falls through to source order — and `desk.css` is
+emitted after the utilities. Any call site trying to shrink a `.cm-tab` with a
+`min-h-*` is writing a class that does nothing, silently, and the two places that
+tried both believed they had.
+
+The fix is a modifier in the same file, `.cm-tab-quiet` (44px, 36 above `lg`),
+added for the pool board's stat groups when Craig asked *"we already have blue
+bars on this page, do we need them this big?"*. `GroupNav` is **not** changed
+here — its plates are a foot row under a ten-row board rather than a second strip
+competing with a section nav, and changing how a shipped screen looks was not
+what was asked. But its dead utility is now a known thing rather than a puzzle
+for whoever next wonders why the plates will not shrink.
+
 ## Recorded rule exceptions
 
 ### `packages/core/src/config.ts` (recorded 5 Sep 2026)
@@ -838,7 +1032,7 @@ Seventeen files at HEAD. Three are recorded below (`desk.css`, `tokens.css`,
 The eleven left with no entry:
 
 `apps/companion/app/commentary.ts` (388) · `scripts/smoke.ts` (377) ·
-`apps/companion/app/paper.css` (342) · `apps/companion/app/desk.ts` (337) ·
+`apps/companion/app/paper.css` (342) · `apps/companion/app/desk.ts` (384) ·
 `packages/core/src/football/premierleague/map.ts` (331) ·
 `scripts/edition/assemble.ts` (324) · `packages/core/src/inbox/items.ts` (320) ·
 `apps/companion/app/prem/match/[id]/players/page.tsx` (318) ·

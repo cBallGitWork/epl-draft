@@ -1,15 +1,28 @@
 import Link from "next/link";
 import ScoutShell from "./Shell";
 import Nothing from "../components/shell/Nothing";
-import PlayerTable, { STATUS } from "./PlayerTable";
+import PlayerTable from "./PlayerTable";
+import BoardBar from "./BoardBar";
 import { getPlayerStats } from "./playerStats";
 import { getLeaguePool } from "./pool";
-import { PAGE_ROWS, POOL, filterHref, isChosen, playersQuery, showAllHref, shownRows } from "./query";
+import {
+  PAGE_ROWS,
+  POOL,
+  activeGroup,
+  activeSort,
+  isPer90,
+  playersQuery,
+  showAllHref,
+  shownRows,
+} from "./query";
 import type { PlayersSearchParams } from "./query";
+import { POOL_GROUPS, columnsIn } from "./groups";
+import type { PoolGroupKey } from "./groups";
+import { figureOf } from "./figure";
+import { cutsFor } from "./standout";
 import { FANTRAX_SILENT } from "../config";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH } from "@epl/core";
-import { positionLabel } from "../positions";
-import { BUTTON } from "../components/shell/ButtonLink";
+import type { StatSeason } from "@epl/core";
 import OutLink from "../components/shell/OutLink";
 
 // Every player Fantrax knows, what our league has decided about him, and what
@@ -41,46 +54,11 @@ import OutLink from "../components/shell/OutLink";
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 
-/** A filter, drawn as the TOGGLE it behaves like.
- *
- *  **It was a `cm-tab` and multi-select killed that reading** (Craig, 6 Sep
- *  2026: *"those blue button for search are terrible here"*, alongside asking
- *  for several filters at once). A Championship Manager tab strip picks ONE of a
- *  set and marks exactly one plate current — that is what the object means, and
- *  it is why `league/SectionNav` and the section rail wear it. Six blue plates
- *  where any number can be lit at once is a tab strip making a claim it cannot
- *  keep, and at `text-sm` with `px-3` they were the loudest thing on a screen
- *  whose point is a table of six hundred names.
- *
- *  So they take DESIGN §2's other grammar, which fits exactly: `cm-bevel` is
- *  "something you press" and `cm-bevel-pressed` is "the same thing, held down".
- *  A filter that is on IS held down. It is also the same grey plate the column
- *  heads above them wear, so the two rows of controls on this screen finally
- *  read as one family rather than as a blue bar and a grey one.
- *
- *  `min-h-11 lg:min-h-9` is the CONTROL floor and not a row's: a filter is aimed
- *  at rather than read, and DESIGN §6 is explicit that a control never relaxes
- *  below its floor under a thumb.
- *
- *  **A tick and not the accent, and that is `desk.css`'s rule rather than a
- *  taste.** It reads in as many words: "a plate owns its ink. No call site sets
- *  `text-*` on one. Dark ink on the grey plate is 7.52:1 and `--color-ink` on it
- *  is 2.27:1, so a component that brought its own colour would silently land
- *  under the floor." This file set `text-accent` on the pressed plate for one
- *  build and `probe.mjs` read the same dark ink off a pressed chip and an
- *  unpressed one — the utility dropped exactly as that paragraph says, and the
- *  accent would have been illegible if it had won.
- *
- *  So the pressed bevel carries the state and a tick carries it again in a
- *  SHAPE, which is what PRODUCT.md's accessibility section asks for: pair every
- *  signal with a label, shape or position rather than leaving it to a colour. A
- *  two-pixel inverted bevel on a 44px plate is a real mark and a quiet one, and
- *  a reader scanning six chips for the two that are on should not have to look
- *  twice. */
-const CHIP =
-  "cm-bevel flex min-h-11 items-center gap-1 px-2 text-2xs font-bold uppercase hover:brightness-110 lg:min-h-9";
-const CHIP_ON =
-  "cm-bevel-pressed flex min-h-11 items-center gap-1 px-2 text-2xs font-bold uppercase lg:min-h-9";
+/* The filter chips and the stat-group strip moved to `BoardBar.tsx` on 10 Sep
+   2026, with the docblock recording why they are bevels rather than tabs. This
+   page had reached 256 lines and most of them were a control field it was
+   drawing by hand; what is left here is the page's own job — read, filter, count
+   and say what could not be read. */
 
 export default async function PlayersPage({
   searchParams,
@@ -115,6 +93,36 @@ export default async function PlayersPage({
   const shown = shownRows(pool.rows, query, raw);
   const capped = query.all ? shown : shown.slice(0, PAGE_ROWS);
 
+  const group = activeGroup(query);
+  const rated = isPer90(query);
+  const columns = columnsIn(group, activeSort(query).key);
+
+  // **The cuts are taken over the rows actually DRAWN**, which is what makes a
+  // mark mean "the top of this column, among what is in front of you" — see
+  // `standout.ts`. Over all six hundred matching rows the top decile would be
+  // sixty-five men, and a board sorted by points would light nearly every cell
+  // on its first page.
+  //
+  // Only the columns that have a top worth marking are asked, so a rank, a
+  // fixture and a name never enter the arithmetic at all.
+  const cuts = cutsFor(
+    columns.filter((column) => column.mark !== undefined),
+    (column) =>
+      capped.map((row) => {
+        const value = figureOf(column, row, raw.get(row.entry.player.fantraxId), rated);
+        return typeof value === "number" ? value : null;
+      }),
+  );
+
+  // **Every club with a man in the pool, from the pool itself.** Not the twenty
+  // Premier League clubs from the football layer: this is a filter over THIS
+  // list, and offering a club whose players are all missing from the read would
+  // be an option that empties the board. Sorted, because Fantrax's own order is
+  // whatever their query returned.
+  const clubs = [
+    ...new Set(pool.rows.map((row) => row.entry.player.clubCode).filter(Boolean)),
+  ].sort() as string[];
+
   const counted = new Map<string, number>();
   for (const row of pool.rows) {
     // Skipped rather than counted under a blank label: a player our league has
@@ -124,39 +132,8 @@ export default async function PlayersPage({
 
   return (
     <ScoutShell
-      sub={
-        <>
-          {shown.length} of {pool.rows.length}
-          {pool.season ? (
-            <>
-              {" · "}
-              {pool.season.projected ? "Fantrax projection" : pool.season.name || "this season"}
-            </>
-          ) : null}
-        </>
-      }
+      title={caption(group, pool.season)}
     >
-      <form action="/players" className="flex gap-1.5">
-        {/* The chips, the sort and the box all filter the same list, so each has
-            to carry the others' state — a GET form posts only its own fields. */}
-        {(["status", "pos", "sort", "dir", "all"] as const).map((key) =>
-          query[key] ? <input key={key} type="hidden" name={key} value={query[key]} /> : null,
-        )}
-        <input
-          name="q"
-          defaultValue={(query.q ?? "").trim()}
-          placeholder="Find a player"
-          aria-label="Find a player"
-          className="cm-panel min-h-11 min-w-0 flex-1 px-3 text-base"
-        />
-        <button
-          type="submit"
-          className={BUTTON}
-        >
-          Find
-        </button>
-      </form>
-
       {/* Said out loud while the board is a picker, because a table whose rows
           have quietly changed destination is a screen that lies about what a tap
           does. It carries its own way out. */}
@@ -169,40 +146,29 @@ export default async function PlayersPage({
         </p>
       ) : null}
 
-      <div className="flex flex-wrap gap-1.5">
-        {[...counted.entries()]
-          .sort(([a], [b]) => a.localeCompare(b))
-          .map(([code, count]) => (
-            <Link
-              key={code}
-              href={filterHref(query, "status", code)}
-              aria-pressed={isChosen(query, "status", code)}
-              className={isChosen(query, "status", code) ? CHIP_ON : CHIP}
-            >
-              {isChosen(query, "status", code) ? <Tick /> : null}
-              {STATUS[code] ?? code}
-              <span className="numeric font-normal">{count}</span>
-            </Link>
-          ))}
-        {pool.positions.map((position) => (
-          <Link
-            key={position}
-            href={filterHref(query, "pos", position)}
-            aria-pressed={isChosen(query, "pos", position)}
-            className={isChosen(query, "pos", position) ? CHIP_ON : CHIP}
-          >
-            {isChosen(query, "pos", position) ? <Tick /> : null}
-            {positionLabel(position) ?? position}
-          </Link>
-        ))}
-      </div>
+      <BoardBar
+        query={query}
+        group={group}
+        positions={pool.positions}
+        clubs={clubs}
+        counted={counted}
+        rated={rated}
+      />
 
       {shown.length === 0 ? (
         <p className=" border border-line bg-surface px-3 py-2.5 text-sm text-muted">
           Nobody in the pool matches that. Tap a filter again to clear it.
         </p>
       ) : (
-        <PlayerTable rows={capped} query={query} teamNames={pool.teamNames} raw={raw} />
+        <PlayerTable
+          rows={capped}
+          columns={columns}
+          query={query}
+          teamNames={pool.teamNames}
+          raw={raw}
+          rated={rated}
+          cuts={cuts}
+        />
       )}
 
       {capped.length < shown.length ? (
@@ -244,13 +210,32 @@ export default async function PlayersPage({
   );
 }
 
-/** The mark on a filter that is on. `aria-hidden` because `aria-pressed` on the
- *  link already says it, and a screen reader announcing "tick DEF pressed" says
- *  it twice. */
-function Tick() {
-  return (
-    <span aria-hidden className="text-[0.625rem] leading-none">
-      ✓
-    </span>
-  );
+/** What the caption says.
+ *
+ *  **It names the plate, because the drawer can hide it.** DESIGN §2's reading of
+ *  `cm9900/16.jpg` is that the bar says where you are and the caption says what
+ *  the board IS — that shot captions its stat list `Average Rating`. Below `lg`
+ *  the stat groups live behind the Filter plate, so the caption is the only
+ *  thing left saying which columns are on screen. `all` falls through to Scout's
+ *  own caption rather than printing "All", which is a word about a control and
+ *  not a name for a board.
+ *
+ *  **And it carries the provenance, but only when the provenance bites.** The
+ *  count-and-season line under the title bar came off on 10 Sep 2026 (Craig:
+ *  *"remove that row"*), and it was doing one job worth keeping: saying whether
+ *  the `FPts` column holds what a man SCORED or what Fantrax PREDICTS he will.
+ *  That read defaulted to a projection until 5 Sep and now defaults to
+ *  year-to-date, and it can change again without anybody touching this app — a
+ *  column headed `FPts` that silently switched between the two is the confident
+ *  wrong answer DESIGN §7 exists to prevent.
+ *
+ *  So the label appears exactly when it changes the meaning of the board. Actual
+ *  season-to-date figures are what a reader already assumes and get no words; a
+ *  projection says so, in the caption, every time. A permanent bar saying "YTD"
+ *  is furniture, and furniture is what gets stopped being read. */
+function caption(group: PoolGroupKey, season: StatSeason | null): string | undefined {
+  const name = group === "all" ? undefined : POOL_GROUPS.find((e) => e.key === group)?.label;
+  if (!season?.projected) return name;
+  const warning = `${season.name || "This season"} — Fantrax projection`;
+  return name ? `${name} · ${warning}` : warning;
 }

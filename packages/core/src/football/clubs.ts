@@ -100,6 +100,62 @@ export function clubColours(shortName: string): ClubColours {
 
 /** Club crest. `code` is FPL's season-stable club code, so these URLs keep working
  *  across seasons. SVG scales to any size for free — prefer it over the PNGs. */
+/** FPL's season-stable club `code`, by the `shortName` the API returns.
+ *
+ *  **The crest needs a number and most of this app holds a name.** `crestUrl`
+ *  takes `Pick<Club, "code">`, which every screen drawn from a football snapshot
+ *  already has — but the pool board is Fantrax's, and what it holds is a
+ *  three-letter club code. It deliberately does not join the football layer
+ *  (`players/pool.ts`: a page that is entirely Fantrax's would gain a second
+ *  provider it could fail on), so the twenty numbers have to be data rather than
+ *  a read.
+ *
+ *  **Constants are allowed here and that is the layering, not a shortcut.**
+ *  CLAUDE.md's rule is that the football layer models a game whose rules are
+ *  fixed for everyone, so they can be constants; it is the LEAGUE layer where a
+ *  number must be read from `getLeagueInfo`. A club's code is as fixed as its
+ *  colours, which is why this sits beside `CLUB_COLOURS` and shares its
+ *  twenty keys exactly.
+ *
+ *  Read off `bootstrap-static` on 10 Sep 2026 rather than written from memory,
+ *  which is what `packages/core/src/football/` asks for and what the
+ *  `CLUB_COLOURS` docblock above means by "changes once a season". Re-read them
+ *  when the division changes; a promoted club that is missing here draws no
+ *  crest rather than the wrong one. */
+const CLUB_FPL_CODES: Record<string, number> = {
+  ARS: 3,
+  AVL: 7,
+  BHA: 36,
+  BOU: 91,
+  BRE: 94,
+  CHE: 8,
+  COV: 9,
+  CRY: 31,
+  EVE: 11,
+  FUL: 54,
+  HUL: 88,
+  IPS: 40,
+  LEE: 2,
+  LIV: 14,
+  MCI: 43,
+  MUN: 1,
+  NEW: 4,
+  NFO: 17,
+  SUN: 56,
+  TOT: 6,
+};
+
+/** The crest for a club we know only by its short name, or null when we do not
+ *  know it at all.
+ *
+ *  **Null rather than a fallback badge**, on `portraits.ts`'s own rule and for
+ *  the same reason: a wrong crest is worse than none, because only one of the
+ *  two looks like an answer. A caller draws its own absence. */
+export function crestForShortName(shortName: string): string | null {
+  const code = CLUB_FPL_CODES[shortName];
+  return code === undefined ? null : crestUrl({ code });
+}
+
 export function crestUrl(club: Pick<Club, "code">): string {
   return `${PL_ASSET_BASE}/badges/t${club.code}.svg`;
 }

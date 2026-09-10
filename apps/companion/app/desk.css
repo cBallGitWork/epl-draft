@@ -132,6 +132,37 @@
   }
 }
 
+/* **A SUBORDINATE strip**, for the second row of plates on a screen that already
+   has one.
+
+   Craig, 10 Sep 2026, on the pool board's stat groups: *"these have blue bars,
+   but we already have blue bars on this page, do we need them this big?"* He is
+   right, and the rule above is why it happened: `.cm-tab` is 56px above `lg`
+   because a Championship Manager tab strip is chunky, and that reasoning is
+   about the strip a screen is NAVIGATED by. A second strip choosing a view of
+   the same board is not that object, and drawn at the same height it competes
+   with it — three blue bars of one size on one screen, none of them ranked.
+
+   So the modifier drops it to the CONTROL floor, which is where a strip of this
+   kind was always meant to sit: 36px, against the section strip's 56.
+
+   **A class rather than a utility, and that is the whole reason this exists.**
+   `league/GroupNav` has carried `lg:min-h-9` since it was written and it has
+   NEVER taken effect — measured 10 Sep 2026 on `/league/team-stats`, where the
+   plate computes `min-height: 56px`. A Tailwind utility and this file's media
+   rule are both one class of specificity, so the cascade is decided by source
+   order, and this file comes last. Any call site trying to shrink a `.cm-tab`
+   with a `min-h-*` is writing a class that does nothing, silently. */
+.cm-tab-quiet {
+  min-height: 2.75rem;
+}
+
+@media (min-width: 64rem) {
+  .cm-tab-quiet {
+    min-height: 2.25rem;
+  }
+}
+
 /* The tab you are on. Yellow on the label AND on the border, which is what the
    reference actually shows — the library's measured palette reads "Active tab |
    `#ffff03` pure yellow, text **and** border", and `cm9900/24.jpg` draws a plain

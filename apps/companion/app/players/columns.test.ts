@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
+import { fixtureOnly, COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
 
 describe("COLUMNS", () => {
   it("gives every column a unique key", () => {
@@ -23,11 +23,12 @@ describe("COLUMNS", () => {
     expect(columnFor(DEFAULT_SORT)?.key).toBe(DEFAULT_SORT);
   });
 
-  it("never stands the sorted column down — the name column has no plate", () => {
-    // `deskOnly` is a request the render overrides for the column in force
-    // (DESIGN §2). The name column is the frozen lead and must never carry it,
-    // because a directory with no names is not a directory.
-    expect(columnFor("name")?.deskOnly).toBeUndefined();
+  it("has no column that stands down under a thumb", () => {
+    // `deskOnly` was deleted on 10 Sep 2026 with `rank`, its last user. This is
+    // the assertion that keeps the removal honest rather than a comment: if a
+    // column earns the flag back, the plumbing in `PlayerTable` and `Cell` has
+    // to come back with it, and this fails first.
+    expect(COLUMNS.every((column) => !("deskOnly" in column))).toBe(true);
   });
 
   it("reads a raw count out of the grouped payload and dashes an absent one", () => {
@@ -38,5 +39,25 @@ describe("COLUMNS", () => {
     // than nought, and the cell must get null rather than 0.
     expect(goals!.value({} as never, {})).toBeNull();
     expect(goals!.value({} as never, undefined)).toBeNull();
+  });
+});
+
+describe("fixtureOnly", () => {
+  it("keeps the club and drops Fantrax's kickoff", () => {
+    expect(fixtureOnly("MCI Sun 11:30AM")).toBe("MCI");
+  });
+
+  it("keeps the away marker, which belongs to the fixture and not the clock", () => {
+    expect(fixtureOnly("@CHE Sat 10:00AM")).toBe("@CHE");
+  });
+
+  it("passes a cell that is only a fixture through whole", () => {
+    // A blank gameweek and a bye both arrive with no time on them.
+    expect(fixtureOnly("BYE")).toBe("BYE");
+  });
+
+  it("reads an empty cell as an absence rather than an empty fixture", () => {
+    expect(fixtureOnly("   ")).toBeNull();
+    expect(fixtureOnly(null)).toBeNull();
   });
 });
