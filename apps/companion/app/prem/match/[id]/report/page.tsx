@@ -5,7 +5,7 @@ import SkeletonRows from "../../../../components/shell/SkeletonRows";
 import MatchShell from "../Shell";
 import { readMatch } from "../match";
 import type { Match } from "../match";
-import { matchReport } from "../../../../commentary";
+import { matchReport } from "../../../../matchFeed";
 import { PANEL_FLUSH, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 
 // The match, minute by minute, in Opta's own words.

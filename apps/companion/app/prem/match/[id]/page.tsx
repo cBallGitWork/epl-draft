@@ -8,7 +8,7 @@ import MatchShell from "./Shell";
 import Scoresheet from "./Scoresheet";
 import Preview from "./Preview";
 import { matchOwners, readMatch } from "./match";
-import { matchGoalMinutes } from "../../../commentary";
+import { matchGoalMinutes } from "../../../matchFeed";
 import type { Match } from "./match";
 
 // One match, on Championship Manager's Match Overview.

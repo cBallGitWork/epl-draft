@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { clubGround } from "@epl/core";
-import { matchFacts } from "../../../commentary";
+import { matchFacts } from "../../../matchFeed";
 import Caption from "../../../components/shell/Caption";
 import MatchBar from "./MatchBar";
 import MatchFoot from "./MatchFoot";

@@ -11,7 +11,7 @@ import { PLAYER } from "../../../PremNav";
 import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE } from "@/app/desk";
 import MatchShell from "../Shell";
 import { matchOwners, readMatch } from "../match";
-import { teamSheets } from "../../../../commentary";
+import { teamSheets } from "../../../../matchFeed";
 import type { Match } from "../match";
 
 // What the afternoon was worth, both sides at once.
