@@ -215,6 +215,14 @@ with `aria-current`, a URL parameter and a `<Link>`, never React state.
 **Both men always draw the same map.** Two pitches on two different kinds is not
 a comparison, so the control sits once above both.
 
+**`scroll={false}` on every plate.** Next scrolls to the top on each navigation,
+which is right for a link to somewhere else and wrong for a control that changes
+one panel in place: the maps sit well below the fold, so choosing one scrolled
+the thing you had just chosen off the screen (Craig, 10 Sep 2026: *"everytime you
+touch touch/shot map you go back to the top of the page"*). `Search.tsx` and
+`PickField` pass the same flag to `router.replace` for the same reason. Measured
+both ways after the fix: 0px of drift from a scroll position of 369.
+
 **The head does not name the map**, because the picker under it does. Titling the
 section "Shot map" over a plate reading "Shot map" is the duplication Craig
 struck off the search boxes the same day.

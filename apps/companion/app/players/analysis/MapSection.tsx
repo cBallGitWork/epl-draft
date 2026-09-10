@@ -76,6 +76,16 @@ export default function MapSection({
               key={each}
               href={href(each)}
               aria-current={each === kind ? "page" : undefined}
+              // **`scroll={false}`, or the picker throws the reader back to the
+              // top of the page** (Craig, 10 Sep 2026: *"everytime you touch
+              // touch/shot map you go back to the top of the page"*). Next
+              // scrolls to the top on every navigation by default, which is
+              // right for a link to somewhere ELSE and wrong for a control that
+              // changes one panel in place — the maps sit well below the fold,
+              // so choosing one scrolled the thing you chose off the screen.
+              // `Search.tsx` and `PickField` already pass the same flag to
+              // `router.replace` for the same reason.
+              scroll={false}
               className={`cm-tab cm-tab-quiet ${PLATE}`}
             >
               {MAP_LABEL[each]}
