@@ -1,6 +1,6 @@
 import type { Deal, DealSide } from "@epl/core";
 import { inkOn, kindOf, movement, teamColours } from "@epl/core";
-import { PANEL_FLUSH, SCROLL } from "@/app/desk";
+import { PANEL_FLUSH, ROW_NAME, SCROLL } from "@/app/desk";
 
 // One manager's business, drawn as Championship Manager's Transfers screen.
 //
@@ -85,7 +85,7 @@ export default function Ledger({
                     rather than parsed — their string carries no offset, so
                     turning it into a Date would invent one. */}
                 <span className="flex items-center gap-2 lg:contents">
-                <span className="cm-index numeric w-24 shrink-0 truncate px-1.5 py-0.5 text-3xs font-bold">
+                <span className="cm-index numeric w-24 shrink-0 truncate px-1.5 py-0.5">
                   {shortDate(deal.processedAt)}
                 </span>
 
@@ -182,7 +182,7 @@ function Side({
         <span className="truncate text-sm">—</span>
       ) : (
         players.map((player) => (
-          <span key={player.playerName} className="truncate text-sm font-medium">
+          <span key={player.playerName} className={`truncate ${ROW_NAME}`}>
             {player.playerName}
             {player.position ? (
               <span className="pl-1 text-3xs font-bold text-mid">({player.position})</span>

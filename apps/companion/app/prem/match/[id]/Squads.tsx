@@ -4,7 +4,7 @@ import { clubColours, inkOn } from "@epl/core";
 import { IndexCell } from "../../../components/league/TableCells";
 import { intelSquads } from "../../../intel";
 import { PLAYER } from "../../PremNav";
-import { BOARD, PANEL_FLUSH, ROW_RULE } from "@/app/desk";
+import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE } from "@/app/desk";
 
 // Both clubs' books, before a ball is kicked (Craig, 4 Sep 2026: *"players tab
 // can just be the two squad lists (like we do on the actual team page, but just
@@ -88,7 +88,7 @@ function Side({
                     href={`${PLAYER}/${player.code}`}
                     className="group flex min-h-11 flex-col justify-center px-1.5 lg:min-h-9"
                   >
-                    <span className="min-w-0 truncate text-sm group-hover:underline">
+                    <span className={`min-w-0 truncate group-hover:underline ${ROW_NAME}`}>
                       {player.name}
                     </span>
                     {owner === undefined ? null : (

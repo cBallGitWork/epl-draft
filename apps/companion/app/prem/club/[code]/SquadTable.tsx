@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ClubColours, FootballPlayer, IntelPlayer } from "@epl/core";
 import { availabilityOf, positionDepth } from "@epl/core";
-import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
+import { Head, HeadRow, MUTE, NameHead, PLATE } from "../../../components/league/TableHeads";
 import { IndexCell } from "../../../components/league/TableCells";
 import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
@@ -55,7 +55,9 @@ export default function SquadTable({
                 value on all of them, counted 29 Aug. It fills from the intel
                 feed, which carries it for 527 of 625. */}
             <Head width="w-8 lg:w-14" title="Squad number">
-              <span className={PLATE}>#</span>
+              <span className={PLATE}>
+                <span className={MUTE}>Squad number</span>
+              </span>
             </Head>
             <NameHead label="Player" />
             {/* Fantrax's, and headed as Fantrax's. DESIGN's provenance rule is
@@ -152,7 +154,7 @@ export default function SquadTable({
                     <StateBox player={player} />
                   </Link>
                 </td>
-                <td className={`${WIDE_FIGURE} ${dim || "text-muted"}`}>
+                <td className={`${FIGURE} ${dim || "text-muted"}`}>
                   {positionsLabel(opinion?.positions ?? []) ?? DASH}
                 </td>
                 {/* The owner's name, or what our league says instead: "WW" on
@@ -162,14 +164,14 @@ export default function SquadTable({
                 <td className={`px-1.5 text-center text-2xs ${dim || "text-ink"}`}>
                   <span className="block truncate">{owner(opinion) ?? DASH}</span>
                 </td>
-                <td className={`${WIDE_FIGURE} ${dim || "text-ink"}`}>{player.season.minutes}</td>
-                <td className={`${WIDE_FIGURE} ${DESK_ONLY} ${dim || "text-ink"}`}>
+                <td className={`${FIGURE} ${dim || "text-ink"}`}>{player.season.minutes}</td>
+                <td className={`${FIGURE} ${DESK_ONLY} ${dim || "text-ink"}`}>
                   {player.season.starts}
                 </td>
-                <td className={`${WIDE_FIGURE} ${DESK_ONLY} ${dim || "text-mid"}`}>
+                <td className={`${FIGURE} ${DESK_ONLY} ${dim || "text-mid"}`}>
                   {player.season.goals}
                 </td>
-                <td className={`${WIDE_FIGURE} ${DESK_ONLY} ${dim || "text-mid"}`}>
+                <td className={`${FIGURE} ${DESK_ONLY} ${dim || "text-mid"}`}>
                   {player.season.assists}
                 </td>
               </tr>
@@ -202,6 +204,3 @@ export function fantasyDepth(opinion: LeagueOpinion | undefined): number {
   return first === undefined ? Number.MAX_SAFE_INTEGER : positionDepth(first);
 }
 
-/** One figure cell, at the row's own size — `lg:text-sm` because this table has
- *  fewer columns than a league table and can afford the step on a desk. */
-const WIDE_FIGURE = `${FIGURE} lg:text-sm`;

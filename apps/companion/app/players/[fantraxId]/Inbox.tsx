@@ -99,7 +99,7 @@ export default function Inbox({
                   `w-24` because the widest label this formats is a Wednesday in
                   September — "Wed 19 Aug" at `2xs` — and a column that resizes
                   per row stops being a column. */}
-              <span className="cm-index numeric flex w-24 shrink-0 items-center justify-center px-1 text-2xs">
+              <span className="cm-index numeric flex w-24 shrink-0 items-center justify-center px-1">
                 {item.at === null ? "—" : WHEN.format(new Date(item.at))}
               </span>
               <span

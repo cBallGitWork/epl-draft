@@ -16,6 +16,7 @@ import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
 import { teamBadges } from "../../standings";
 import { FANTRAX_SILENT } from "../../config";
+import { HEAD_PLATE } from "@/app/desk";
 
 // The season ahead: every round the league still has to play, in gameweek order,
 // across every competition being played on it. Fantrax's schedule is the league;
@@ -189,7 +190,7 @@ function Round({
               repeated word, and the two lines a cup round adds are exactly the
               rows that need naming. */}
           {group.competition.id === LEAGUE_COMPETITION.id && group.round === null ? null : (
-            <h3 className="cm-bevel flex h-6 items-center px-1.5 font-chrome text-3xs font-bold uppercase">
+            <h3 className={`${HEAD_PLATE} text-3xs font-bold uppercase`}>
               {group.round === null
                 ? group.competition.name
                 : `${group.competition.name} · ${group.round}`}

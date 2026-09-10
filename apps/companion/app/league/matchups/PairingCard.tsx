@@ -5,7 +5,7 @@ import ScoreFigure from "../../components/league/ScoreFigure";
 import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder, yoursInk } from "../../mine";
 import Pending from "../../components/league/Pending";
-import { LABEL } from "@/app/desk";
+import { LABEL, ROW_NAME } from "@/app/desk";
 
 // One head-to-head on the list of eight.
 //
@@ -127,7 +127,7 @@ function Side({
     >
       <TeamBadge team={team} url={badges.get(team.teamId)} />
       <span
-        className={`min-w-0 flex-1 truncate text-sm font-semibold ${
+        className={`min-w-0 flex-1 truncate ${ROW_NAME} ${
           mirrored ? "text-right" : "text-left"
         } ${yoursInk(mine)}`}
       >

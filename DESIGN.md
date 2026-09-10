@@ -103,6 +103,31 @@ safe for exactly as long as that one is the whole of the list.
 | **Pressed** | `cm-bevel-pressed` | the same thing, held down: the sorted column, the view you are on |
 | **Sunken** | `cm-panel` | a well cut into the chrome — a panel, and a text field, which is a panel one line tall |
 
+**A fourth surface, and it is the one a reader counts down: the INDEX BLOCK.**
+`cm-index`, the filled blue chip down the left of every table CM draws, carrying
+the rank or the shirt number. It is not raised, pressed or sunken, and it is not
+a chip with a look of its own: **the whole COLUMN is one gradient, light at its
+head and dark at its foot, and each chip is a slice of it.** Craig, 7 Sep 2026:
+*"the blue has a gradient down the page"*, and against a first attempt that
+ramped each block separately, *"the gradient is going down the whole list, not a
+gradient for each individual piece"*. A per-block ramp gives every chip the same
+light top and the same dark base, so a column of them is one shape repeated;
+CM's is one shape cut into slices, and where a chip sits on the ramp is itself
+information.
+
+`background-attachment: fixed` is what makes many separate elements share one
+gradient — it moves the background positioning area from the element to the
+viewport — and it is the only way to do it without a call site knowing its own
+row number, which is the requirement. Ours was a flat slab until that day, so
+ten of them read as one continuous blue bar with a hairline scratched across it.
+
+Two consequences. **The 1px row rule is now the only thing separating two
+chips**, which is CM's own answer (`cm9900/24.jpg` separates its blocks with a
+single dark line and nothing else). And the ink has to clear its floor against
+EVERY point on the ramp rather than against one flat face: measured down
+`/league` at 390 on 7 Sep 2026, the ten chips run `rgb(53 84 169)` at 1st to
+`rgb(22 46 124)` at 10th, and `--color-ink` on them is 6.4:1 to 11.2:1.
+
 A blue plate (`cm-tab`, `cm-titlebar`) is the same mechanism in chrome rather
 than grey: the title bar every screen opens with, and any strip where you pick
 one of a set — the League's three views, the pool's filters. The one you are on
@@ -140,6 +165,21 @@ skeleton read one source. **A column the table is ORDERED by is never hidden**:
 `display: none` takes the pressed plate, the sort arrow and `aria-sort` out with
 it, so a phone arriving on a shared `?sort=` link would show an order with no
 visible author and nothing in the accessibility tree to say what it was.
+
+**And the first two columns carry no head at all** (Craig, 10 Sep 2026: *"the
+rank (blue tabs) does not need a column header (hashtag) / remove team / repeat
+this for all tables the same"*). A column of `1st 2nd 3rd` in a blue block says
+what it is, and so does a column of names with a crest on each; the `#` and the
+`Team` were labelling the only two columns in the table that label themselves.
+`cm9900/24.jpg` heads neither and starts its strip at the first figure — the
+strip is a ruler over the FIGURES. The cells stay, because they hold the columns
+open, and so does the word: `TableHeads.MUTE` takes it to `sr-only` rather than
+deleting it, because an empty `<th scope="col">` announces every cell under it
+with no header, and on a sortable placing that same word is the accessible name
+of a link. **Ten tables and one loading skeleton, one rule**, counted 10 Sep
+2026 — `/league`, `/prem`, both Team Stats boards, the club squad list, the club
+and squad stat boards, the season grid, a match's player stats and the pool. A
+plate drawn empty on a stat board is this decision, not an oversight.
 
 Settled 5 Sep 2026, and §9's `/players` decision is the same rule read the other
 way — the pool is the board that scrolls.
@@ -390,6 +430,7 @@ hoarding in it, which is 12% of something bright rather than 12% of the mean. Th
 tell was on screen before it was named: the frozen name column has carried an
 opaque fill since it was frozen, so the board rendered with one solid column and
 twenty-three translucent ones.
+
 **Retired, and why:** the Premier League's brand set (green primary, pink LIVE,
 neon cyan) was the football register doing league-register work, and the
 football is now one tab of six. It survives only where it is *data* rather than
@@ -532,7 +573,7 @@ standing head, a kicker, a dateline and a byline are furniture rather than prose
 Negative tracking is untouched — the eleven `tracking-tight` are condensed, which
 is the desk's own register.
 
-**The desk's display type casts a shadow, and only the display type does.**
+**The desk's display type casts a shadow — and so does a row's NAME.**
 `cm9900/24.jpg` sets "English Premier Division" in blue on the light competition
 plate with a soft grey shadow offset down and right; `25.jpg` does the same in
 white on Everton's blue one. `.cm-title` in `desk.css` is that mark, and it is
@@ -542,11 +583,44 @@ the rail** — they are flat in every shot, and softening them makes the whole
 screen soft. Set in `em`, because the same title is 20px under a thumb and 30px
 on the desk and a fixed offset is two different marks at the two sizes.
 
-It changes no contrast ratio: WCAG measures a foreground against a background
-and a shadow is neither, so `sweep.mjs` reads the same numbers before and after.
-It is depth, which is what it shares with the bevel and why it lives in the same
-file. **The paper does not get it** — ink on stock casts no shadow, and the
-masthead is the other register (§1).
+*This paragraph read "and ONLY the display type does" until 7 Sep 2026, and it
+was a misread of the same shots.* Craig sent the crop that settles it (*"Font is
+bolder and stands out more, and has a slight shadow"*), and both references
+agree once you enlarge them: `cm9900/24.jpg` at the `1st` / `2nd` / `3rd` column
+carries a dark fringe below and right of every glyph, and `cm0102/07.jpg` does
+the same down a squad list.
+
+**What takes it is the INDEX BLOCK's text, not the row's name.** That
+distinction cost an hour: the first attempt put the shadow, a weight and a size
+step on `ROW_NAME`, and Craig's correction was *"i mean the text in the blue
+box"* — his original message says "the league placing", which is the ordinal in
+the chip. The row name is unchanged and stays `sm`/`lg:base` bold.
+
+So `.cm-index` in `desk.css` owns its text the way `.cm-bevel` owns its ink:
+**size, weight 800, and a shadow at a third of `.cm-title`'s offset**, on the
+class, so all twenty blue blocks in the app take it without a call site knowing.
+They had been writing that text four sizes and three weights between them, and
+they now set layout and nothing else.
+
+The size was left at the call sites for an hour, behind a `PLACING` recipe, on
+the argument that a chip holding a date is not a placing. Craig overruled it
+(*"i think we can have the same for now and il find the correct exceptions"*),
+and he is right about which way the default should fall: **one size everywhere
+makes an exception an ADDITION** — a `text-3xs` written after the class, which a
+reader can grep and a screen can be checked against — where twenty disagreeing
+sites cannot be told from twenty decisions. `sm` under a thumb and `base` on the
+desk, which is `24.jpg`'s own proportion: the placing fills most of the chip
+there, and ours ran at `text-2xs` in a 45px row.
+
+800 is a weight `layout.tsx` did not load and now does, for this alone. It is
+the one place on the desk heavier than 700, and the reference is why: CM sets
+the placing heavier than the club name beside it, which is the opposite of the
+ratio inside a row.
+
+Like `.cm-title` it is kept off the paper by not being worn there — the `(paper)`
+routes reach `gazette/*` and two shell components, and nothing there draws an
+index block. Ink on stock casts no shadow, and if one ever crosses, that is the
+rule to write.
 
 ### Density — how tall a thing is, and what size it is set in
 
@@ -570,11 +644,11 @@ apart silently.
 | **A control** — button, select, input, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
 | **A tab** — one plate of a strip | **44** | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |
 | A foot-row plate | 44 | 56 | `xs` mixed case | `.cm-foot` |
-| **A row of a list** | **44** | **28** | `base`/`lg` name, `2xs` figures | `.cm-row` + `ROW_LINK` |
+| **A row of a list** | **44** | **28** | `sm`/`lg:base` name in the CHROME face, `sm` figures at both widths | `.cm-row` + `ROW_LINK` + `ROW_NAME` + `FIGURE` |
 | One stated fact in a stack | 44 | 44 | `2xs` label, `sm` value | `FACT` |
 | A column head over a table | 28 | 28 | `2xs` | `PLATE` (`h-7`) |
 | A column head over a stats board | 24 | 24 | `2xs` | `HEAD_PLATE` (`h-6`) |
-| A figure in a row | — | — | `2xs`, `.numeric` | `FIGURE` |
+| A figure in a row | — | — | `sm`, `.numeric` | `ROW_FIGURE`, worn by `FIGURE` (centred) and `BOARD_FIGURE` (right) |
 | A label that is furniture | — | — | `2xs` bold caps | `LABEL` |
 
 **Three of these are rules and the rest are consequences.** 44 is PRODUCT.md's
@@ -598,6 +672,26 @@ has said 3.5rem since 31 Aug.
 **The last two rows deliberately state no height.** A figure and a label are set
 inside a row and take the row's; giving either its own height is what produced
 the 37px Championship Manager row §6 opens with.
+
+**A figure takes a step and a label does not** (Craig, 10 Sep 2026: *"The
+numbers in the rows for each column are still too small on desktop"*). **Still**
+is the word that made this a rule rather than a nudge: the three smallest STEPS
+had already gone up a pixel on 5 Sep, which moved the figures from 11px to 12 and
+left the ratio exactly where it was. The placing block and the name are both
+`base` on a desk, so a row read 16 · 16 · **12** — and the twelve is the part of
+a standings table the table is for. The step is the figure's own (`ROW_FIGURE`)
+rather than another pixel on `--text-2xs`, which is 141 of the app's type sites
+and mostly labels, and labels never complained.
+
+**And it is one step for both widths, not a `lg:` pair.** This shipped as
+`2xs`/`lg:sm` on the reasoning that the phone was never the complaint and its
+44px row has the room anyway; Craig answered the first half within the hour —
+*"numbers in rows are good on desktop, still small/hard to read to mobile"* — and
+the second half was the argument FOR fixing it rather than against. A 44px row
+carrying an 11px figure is a row with 33px of nothing in it, and 11px of
+`.numeric` is 11px of a CONDENSED face at the smallest size on the screen, beside
+a name already set at `sm`. Measured after: a `/league` row at 390 is 44.5px with
+every figure in it at 14px, and the table still does not scroll sideways.
 
 *The head-plate pair — 28 over a table, 24 over a stats board — is a
 disagreement, not a rule. Both are now named, which is what makes settling it a

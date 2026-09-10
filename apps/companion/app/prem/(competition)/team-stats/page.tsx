@@ -9,7 +9,7 @@ import { CLUB } from "../../PremNav";
 import Filters from "./Filters";
 import { categoryFor, type Club } from "./categories";
 import { footballNow, seasonFixtures } from "../../../football";
-import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 
 // Every club ranked by one measure — CM's stat board, on the real competition.
 //
@@ -119,15 +119,19 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                       aria-hidden
                       unoptimized
                     />
-                    <span className="min-w-0 truncate lg:hidden">{club.table.shortName}</span>
-                    <span className="hidden min-w-0 truncate lg:inline">{club.table.name}</span>
+                    <span className={`min-w-0 truncate lg:hidden ${ROW_NAME}`}>
+                      {club.table.shortName}
+                    </span>
+                    <span className={`hidden min-w-0 truncate lg:inline ${ROW_NAME}`}>
+                      {club.table.name}
+                    </span>
                   </Link>
                 </td>
                 {/* The accent, because this is the column the board is ordered
                     by and there is only one of it. `league/team-stats` prints
                     two figures and spends the accent on whichever is sorted;
                     here every figure on screen is that column. */}
-                <td className="numeric px-1.5 text-center text-sm font-bold text-accent">
+                <td className={`${FIGURE} text-accent`}>
                   {figure.toLocaleString("en-GB")}
                 </td>
               </tr>

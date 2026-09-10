@@ -1,5 +1,5 @@
 import Section from "../../components/shell/Section";
-import { BOARD, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, BOARD_FIGURE, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
 import type { MatchRow } from "./matchRows";
 import { totalsOf } from "./matchRows";
 import { IndexCell } from "../../components/league/TableCells";
@@ -67,7 +67,7 @@ export default function SeasonTable({
                   `League` is the only one FPL publishes. */}
               <IndexCell>League</IndexCell>
               {COLUMNS.map((column) => (
-                <td key={column.head} className="numeric px-1.5 text-right text-2xs font-bold">
+                <td key={column.head} className={`${BOARD_FIGURE} font-bold`}>
                   {column.total(t)}
                 </td>
               ))}

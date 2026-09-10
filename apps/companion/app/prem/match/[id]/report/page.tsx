@@ -94,7 +94,7 @@ function Line({ line }: { line: PlCommentaryLine }) {
     <li className="flex min-h-11 items-stretch gap-2 lg:min-h-9">
       {/* `w-11`, because stoppage time reads `90+7` and CM's block is a fixed
           chip. The wire's is `w-9` and never has to hold one. */}
-      <span className="cm-index numeric flex w-11 shrink-0 items-center justify-center text-2xs font-bold">
+      <span className="cm-index numeric flex w-11 shrink-0 items-center justify-center">
         {line.minute}&prime;
       </span>
       {/* **A label only where it is a MARKER**, which is the fix and not a

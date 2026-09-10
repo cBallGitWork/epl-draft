@@ -804,6 +804,264 @@ count still holds (the border and the accent NAME), the citation does not.
 records the yellow as settled. Both cannot be true, and the narrowed amber
 paragraph ends "only yours takes the accent", which sharpens it.
 
+## Settled — one row style across tables, fixture lists and squad lists (7 Sep 2026)
+
+Craig, with a crop of a Championship Manager squad list: *"the league placing
+(now this is site wide)… theres a VERY small gap between rows i think (Can you
+even see it). Font is bolder and stands out more, and has a slight shadow. this
+is the same for league tables/fixture pages/squad lists etc. We need to have this
+style throughout the app, so it means creating a shared universal code rather
+than hardcoding a different style to each page"*, and then *"the blue has a
+gradient down the page"*.
+
+**The reference was measured rather than judged**, down a column of index blocks
+in `cm0102/07.jpg` at x 128 and `cm9900/25.jpg` at x 118:
+
+| | CM 99/00 | CM 01/02 | Ours, before | Ours, after |
+|---|---|---|---|---|
+| block | 2px light edge, flat body, 2px dark | 141 → 125 → 73 in blue, top to bottom | flat `rgb(31 60 156)`, whole row | a slice of one page-tall ramp |
+| down the column | — | light at the head, dark at the foot | no change at all | `rgb(53 84 169)` at 1st → `rgb(22 46 124)` at 10th |
+| gap between blocks | 1px | 0 — the gradient's dark end IS the gap | 1px in `--color-bg` | unchanged, and now legible |
+| row rule | none | none | **two values**: `--color-bg` on a table, `--color-line` on a list | `--color-bg` on both |
+
+Three edits, none of them at a call site:
+
+1. **The blue is ONE gradient down the page**, not one per chip. The first
+   attempt ramped each block separately and Craig rejected it the same hour:
+   *"the gradient is going down the whole list, not a gradient for each
+   individual piece."* He is right and the distinction matters — a per-block ramp
+   gives every chip the same light top and the same dark base, so a column is one
+   shape repeated, where CM's is one shape cut into slices and where a chip sits
+   on the ramp is itself information.
+
+   **`background-attachment: fixed` is the mechanism**, and it is the only way in
+   CSS for many separate elements to share one gradient without each learning its
+   own row number — it moves the background positioning area from the element to
+   the viewport. Zero call sites, which was the requirement.
+
+   Three consequences. The gradient is anchored to the SCREEN and not to the
+   list, so a chip changes shade as the page scrolls under it. **The 1px row rule
+   is now the only thing separating two chips** — CM's own answer, and the "VERY
+   small gap" the question was about. And the ink has to clear its floor against
+   every point on the ramp rather than one flat face: measured down `/league` at
+   390, the ten chips run `rgb(53 84 169)` at 1st to `rgb(22 46 124)` at 10th and
+   `--color-ink` on them is **6.4:1 to 11.2:1**, with `sweep.mjs` clean at both
+   widths.
+
+   `background-color` stays declared and the gradient is `background-image`,
+   because the `background` shorthand would reset the colour to `transparent` and
+   both `sweep.mjs` and `groundfit.mjs` walk `background-color` up the ancestor
+   chain — a block that paints solid blue and reports transparent would take
+   every index cell in the app out of both instruments at once. It is also the
+   fallback wherever `fixed` is refused.
+
+   **Unwitnessed on hardware**: `background-attachment: fixed` is the classic iOS
+   Safari jank case. It is cheap here (a 32px chip, not a full-bleed hero), but
+   the standing "look at the desk on a real phone" work item now has a second
+   thing to look at.
+2. **`.cm-index` owns its text**, the way `.cm-bevel` owns its ink: size, weight
+   800 and CM's shadow, on the class, so all twenty blue blocks take it without a
+   call site knowing. They had been writing that text **four sizes and three
+   weights** between them — `text-3xs`, `text-2xs`, `text-sm`, one stepping
+   `3xs`→`2xs`, seventeen `font-bold`, one with no weight and one at
+   `opacity-60`. All twenty now set layout and nothing else.
+
+   **The size took two goes.** It was left at the call sites first, behind a
+   `PLACING` recipe used at the four ordinal sites, on the argument that a chip
+   holding a date is not a placing and blanket-sizing it is how a `w-16` box
+   starts wrapping. Craig overruled it the same hour: *"i think we can have the
+   same for now and il find the correct exceptions (such as ones that hold a date
+   for example)."* He is right about which way the default falls — **one size
+   everywhere makes an exception an ADDITION**, a `text-3xs` written after the
+   class that a reader can grep and a screen can be checked against, where twenty
+   disagreeing sites cannot be told from twenty decisions. The wrapping risk is
+   real, and it is now a list somebody can read off a screen. **Found so far,
+   7 Sep 2026:**
+
+   | Site | What the chip holds | What happened |
+   |---|---|---|
+   | `news/page.tsx:151` | `Sat 12 Sept 14:45` in a `w-16` box | wraps to **three lines**, taking the row to ~110px. The clearest exception in the app and the first to want a `text-3xs` back. |
+   | `squad/[teamId]/transfers/Ledger.tsx:88` | a short date, `w-24 truncate` | **unverified** — the dummy league's team has made no moves, so the ledger draws its empty state. Check on the real league. |
+   | `players/[fantraxId]/Inbox.tsx:102` | a date, `w-24` | no overflow measured. |
+   | `league/schedule/Season.tsx:57` | `GW11` plus a deadline | fits at both widths, read back off `/squad/[teamId]/fixtures`. |
+
+   The rest — placings, scores, shirt numbers, `GW{n}` — measured clean at 390
+   and 1440 by walking every `.cm-index` on nineteen routes for `scrollWidth >
+   clientWidth`. **That check has a hole and the news chip is it**: a box with no
+   fixed height does not overflow, it GROWS, so the instrument reported nothing
+   while the row tripled. Overflow is the wrong question for a chip free to get
+   taller; row height is the right one, and the screenshot is what caught it.
+
+   800 is a weight `layout.tsx` did not load and now does, for this alone. It is
+   the only thing on the desk heavier than 700, and the reference is the reason:
+   `cm9900/24.jpg` sets the placing heavier than the club name beside it, which
+   is the opposite of the ratio inside a row.
+
+   **This was aimed at the wrong thing for an hour**, and the mistake is worth
+   recording because the message was not ambiguous. Craig wrote "the league
+   placing… Font is bolder and stands out more, and has a slight shadow", and
+   this session read "placing" as the row and put the shadow, an 800 weight and a
+   size step on `ROW_NAME`. His correction: *"i mean the text in the blue box,
+   you did the row itself, undo and change blue box text"*. `ROW_NAME` is back to
+   `font-chrome text-sm font-bold lg:text-base`, unchanged from where 5 Sep left
+   it. **The noun in a UI complaint is usually the object**: "placing" is the
+   ordinal, not the line it sits on.
+3. **`.cm-rows` rules its rows in `--color-bg`**, which is `ROW_RULE`'s colour.
+   `desk.ts` had carried this disagreement as "phase 2's to settle" since
+   `ROW_RULE` was named, and a universal row style is what makes it one edit.
+
+**And three sites were still outside `ROW_NAME`**, which is the "hardcoding a
+different style to each page" half of the same message: `components/league/SquadRows`
+at `text-sm font-medium` (the squad list Craig named), `squad/page` at a bare
+`font-semibold`, and `components/football/MatchList` at `text-sm font-semibold` —
+all three in the UI face rather than the chrome one. `desk.ts`'s `ROW_NAME`
+docblock records the September count that folded seven other spellings in; these
+are the three it missed.
+
+**And three sites were still outside `ROW_NAME`**, which is the "hardcoding a
+different style to each page" half of the same message: `components/league/SquadRows`
+at `text-sm font-medium` (the squad list Craig named), `squad/page` at a bare
+`font-semibold`, and `components/football/MatchList` at `text-sm font-semibold` —
+all three in the UI face rather than the chrome one. `desk.ts`'s `ROW_NAME`
+docblock records the September count that folded seven other spellings in; these
+are the three it missed. That part stands: it is what makes a squad row and a
+table row the same object, and it is independent of the placing.
+
+**Left inert rather than swept**: the seventeen `font-bold` and the sizes on
+non-placing `.cm-index` sites are now no-ops against the unlayered class. They go
+as each file is next touched, rather than in a twenty-file diff that would bury
+the three edits above.
+
+## Settled — the round head is one component (7 Sep 2026)
+
+Craig: *"this doesnt actually show what gameweek it is"* (`/league/schedule`).
+
+Three copies of one strip, counted the same day. `prem/Rounds` and
+`league/results` wrote `cm-bevel flex h-7 items-center px-1.5 font-chrome
+text-2xs font-bold uppercase text-ink` byte for byte and both said
+`Gameweek {n}`; `league/schedule/RoundHeader` wrote a fourth spelling that said
+DEADLINE and a date and never named the round at all. So the bug and the
+duplication were one thing: the number that went missing is the number the other
+two copies had.
+
+`components/shell/RoundHead` now owns it, and the gameweek is the component's own
+rather than a caller's string — the one thing all three heads must say is the one
+thing a caller cannot get wrong. The schedule's date came down to
+`londonDayAndDate` in the same change, because "Saturday 12 September" spelled
+out took 60% of a 390px plate on its own.
+
+**Two dead utilities went with it.** `.cm-bevel` sets both `color:
+var(--color-bg)` and `font-family: var(--font-chrome)` unlayered, which beats a
+`@layer utilities` declaration whatever the class order — so `text-ink` and
+`font-chrome` on a bevelled plate have never done anything. The ink one is worth
+recording: `--color-ink` on that plate is 2.27:1, so what two shipped sites asked
+for was a contrast failure and what saved them was the cascade. Anything wearing
+`.cm-bevel` should carry neither.
+
+## Settled — the three dense grids joined the row style (10 Sep 2026)
+
+Craig, on `/squad/[teamId]/stats`: *"this page, using the non standard font
+agreed in other similar tables, refactor"*.
+
+**Why three earlier sweeps walked past them.** `ROW_NAME` had already collected
+fifteen sites over 5–7 Sep and its docblock lists the four deliberate
+exclusions, so the assumption was that the remainder were exclusions too. They
+were not: the three misses are the dense stat GRIDS, and what they have in
+common is that **none of them writes a name into a `<span>` of its own** —
+
+| | how the name was set |
+|---|---|
+| `squad/[teamId]/stats/StatBoard` | nothing on the name at all; it inherited `text-2xs` from the `<td>` |
+| `components/league/SeasonGrid` | `text-2xs` on the `<td>` |
+| `prem/club/[code]/stats/PlayerBoard` | `text-sm font-bold` — the size and the weight, in the UI face |
+
+A grep for a name's own class string finds none of the three. The lesson is the
+counting method rather than the miss: a class on a `<td>` that its child inherits
+is invisible to every search written for the child.
+
+**The row height does not move, and the reason is in the stylesheet rather than
+in the measurement.** `desk.css` sets `.cm-index` to `--text-sm`, and to
+`--text-base` above 64rem (the `@layer components` block under the size
+argument) — which is **exactly the pair `ROW_NAME` grows the name to**. So the
+index block in the same row was already the taller of the two by construction,
+and the name growing to match it cannot move the row. The worry it answers was
+`SeasonGrid`, which carries **no `.cm-row` anywhere in the file**: its `<tr>` has
+only `ROW_RULE`, so nothing else caps it.
+
+Confirmed against the box as well, by building its exact `<tr>` in the live page:
+
+| | 390px | 1440px |
+|---|---|---|
+| before — `text-2xs` | 11px/14px, row **26.5px** | 12px/15px, row **30.5px** |
+| after — `ROW_NAME` | 14px/18px, row **26.5px** | 16px/22px, row **30.5px** |
+
+**The standing fact is conditional, and must be quoted with its condition: a grid
+may take `ROW_NAME` with no `.cm-row` floor *while `.cm-index` is set to the same
+step*.** Those are two independent declarations in two files that have agreed
+only since 7 Sep, and nothing holds them together — `desk.ts` names one and
+`desk.css` the other. Give `ROW_NAME` a further step without giving `.cm-index`
+the same one and the floor is gone, with `SeasonGrid` the row that has nothing
+else propping it up. Do not re-derive this, and do not add a `.cm-row` to
+`SeasonGrid` on the strength of it today.
+
+`PlayerBoard`'s long names widen its name column on the desk — 555px → 588px at
+1440 — and the table still overflows its panel by **0px**, so the `lg:` step is
+paid for out of slack the column already had. At 390 the column does not move
+(243px → 242px), because `ROW_NAME` is `text-sm` there and that is what it was.
+
+**`SeasonGrid` is not shootable against the dummy league `config.ts` defaults
+to** — which is not the same as unshootable, and the stronger phrasing was in
+this section for an hour before being corrected. It looks like a broken route
+either way, so the two gates are worth naming:
+
+- `page.tsx:157` — `display.show === "squad" ? await squadSeason(teamId) : null`.
+  A **rival's** page never renders it whatever the data says, because the panel
+  is tied to the branch that labels a figure a season total.
+- `page.tsx:258` — `season !== null`. `squadSeason` returns null only when
+  `readTeamStats` does, which is a property of **the league you point at**, not
+  of the tree.
+
+So the route to an image is the documented one: `FANTRAX_LEAGUE_ID=ayyoh3n2mr326v2o`,
+and CLAUDE.md's own standing line — *"Running against the real league now is how
+the empty states get tested"*. Probing 31 Aug against the rehearsal league is
+where that component's column counts came from, and the same pointing is needed
+to see it. **`SeasonGrid` is therefore the one file in this change whose
+`ROW_NAME` edit has no image behind it, and also the one with no `.cm-row`** —
+five minutes with a real-league cookie closes that, rather than a standing
+exception. Its verification here is a measurement plus the stylesheet, which is
+sound but is not a screenshot.
+
+**The refactor Craig asked for in the same sentence: the board's columns are one
+list.** `StatBoard` branched on `view === "underlying"` in three separate places
+— the head strip, the cell row and the glossary — and appended the fantasy total
+as a fourth special case inside each of them. One column's existence was
+therefore stated six times, and its arithmetic a seventh, in a sort comparator
+that searched `UNDERLYING`, then `PLAYER_CATEGORIES`, then special-cased `"pts"`.
+Six of the seven were free to disagree with the one that mattered.
+
+`statViews.ts` now owns a `Measure` — head, label, and **the function that reads
+it off a row** — and `measuresFor(view)` returns the columns on screen. The head
+strip, the cells and the glossary walk that one list, so a view cannot put a
+column in the table and leave it out of the key. The file was the right home
+already: it is the pure, JSX-free half of this screen, split off when the
+component crossed the 300-line ceiling.
+
+Two things about it are decisions rather than mechanics:
+
+- **`readingOf` resolves a key against every view, not the visible one.** Sorting
+  outlives its column — order the squad by goals, switch to the defensive group,
+  and the order stands, which is what the old comparator did by accident of
+  reaching straight into `PLAYER_CATEGORIES`. A comparator that could only see
+  what is on screen would drop silently back to roster order on the switch, and
+  that would have been a behaviour change smuggled into a refactor.
+- **The total is a `Measure` with a `loud` flag, not an epilogue.** It is what
+  the board adds up to, so it wears the accent where the others take the tone
+  ladder; making it a column is what removed the three special cases.
+
+Verified by reading the rendered table in all five views: heads, glossary keys
+and row cells agree in each, `xG` still prints to two places and a null still
+prints an em dash against a played nought. `StatBoard` went 292 → 254 lines.
+
 ## Settled — the pool board marks standouts, and the rule is a threshold (10 Sep 2026)
 
 Craig put Opta's season-stats grid beside `/players` — *"it organises the data

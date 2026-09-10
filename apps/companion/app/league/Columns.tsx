@@ -14,12 +14,15 @@ import { TEXT, standDown } from "@/app/desk";
 // is what a CM table IS. It is drawn as a button because it behaves as one — the
 // sorted column is drawn pressed, so the affordance and the state are one object.
 //
-// The Team head keeps the bevel and is not a link. The bevelled strip is one
-// object in CM — a header row with a gap cut in it stops reading as a strip —
-// and this cell is a part of it rather than a button pretending to be one: it
-// has no hover, no arrow and no href, which is the difference between a surface
-// and a control. Sorting by name is not offered because a league table is not
-// read alphabetically.
+// The name cell carries no plate and no word: CM's strip is a ruler over the
+// FIGURES and starts at the first of them (`cm9900/24.jpg`), and a column of
+// names with a crest on each has never needed telling apart from one. Sorting by
+// name is not offered either, because a league table is not read alphabetically.
+//
+// *This paragraph said the Team head "keeps the bevel and is not a link" until
+// 10 Sep 2026. Half of it was never true — `NameHead` has drawn a bare cell
+// since it was extracted — and the reasoning it gave for the bevel was doing the
+// work of explaining why the cell has no hover and no href. It still hasn't.*
 
 type Column = {
   key: SortKey | "team" | "form";
@@ -30,6 +33,10 @@ type Column = {
   /** A column the phone does without, so the last one — the column the table is
    *  FOR — fits at 390 without a sideways scroll. */
   deskOnly?: true;
+  /** A column whose head is blank because the column names itself. The label is
+   *  still written, and still reaches a screen reader — `TableHeads.MUTE`
+   *  carries the argument. */
+  mute?: true;
 };
 
 /** One column, and the list is what `colSpan` counts — a rule drawn across the
@@ -60,9 +67,13 @@ type Column = {
  *    in three narrower columns.
  *
  *  And `FP` became `For`. It is the same number; a league table calls what you
- *  scored `For`, and the Fantrax abbreviation was the last of the vocabulary. */
+ *  scored `For`, and the Fantrax abbreviation was the last of the vocabulary.
+ *
+ *  **Two of the ten heads print nothing** — the placing and the name, which are
+ *  the two columns that label themselves. `TableHeads.MUTE` carries Craig's call
+ *  and the reason the words are still written down. */
 export const COLUMNS: readonly Column[] = [
-  { key: "rank", label: "#", title: "Fantrax's own order", align: "center", width: "w-8 lg:w-14" },
+  { key: "rank", label: "Placing", title: "Fantrax's own order", align: "center", width: "w-8 lg:w-14", mute: true },
   { key: "team", label: "Team", title: undefined, align: "left", width: "" },
   { key: "played", label: "Pld", title: "Played — won, drawn and lost added up", align: "center", width: "w-8 lg:w-20" },
   { key: "won", label: "W", title: "Won", align: "center", width: "w-7 lg:w-16" },
@@ -146,6 +157,7 @@ export default function Columns({
               align={column.align}
               href={sortHref(column.key, sort, descending)}
               label={column.label}
+              mute={column.mute}
               sorted={here ? (descending ? "descending" : "ascending") : undefined}
             />
           );

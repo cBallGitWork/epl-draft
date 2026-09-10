@@ -9,7 +9,7 @@ import { intelSetPieces } from "../../../../intel";
 import { PLAYER } from "../../../PremNav";
 import ClubShell from "../Shell";
 import { clubOr404 } from "../club";
-import { PANEL } from "@/app/desk";
+import { PANEL, ROW_NAME } from "@/app/desk";
 
 // Who steps up: corners, free kicks and penalties, in the order they take them.
 //
@@ -76,7 +76,7 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
                       {/* The rank in CM's index block, in the club's own colour —
                           `ClubShell` has scoped it. First choice is the point of
                           the screen, so it is the first thing on the row. */}
-                      <span className="cm-index numeric flex h-6 w-6 shrink-0 items-center justify-center text-2xs font-bold">
+                      <span className="cm-index numeric flex h-6 w-6 shrink-0 items-center justify-center">
                         {at + 1}
                       </span>
                       <PlayerPortrait
@@ -91,7 +91,7 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
                         // first and lands on 43 against a 44 floor — the row's
                         // min-height is not its content box — so the number is
                         // written out and matches the `<li>` above it exactly.
-                        className={`flex min-h-11 min-w-0 flex-1 items-center truncate text-sm font-bold hover:underline lg:min-h-9 ${
+                        className={`flex min-h-11 min-w-0 flex-1 items-center truncate hover:underline lg:min-h-9 ${ROW_NAME} ${
                           out ? "text-faint" : "text-ink"
                         }`}
                       >

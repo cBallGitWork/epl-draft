@@ -265,7 +265,7 @@ function Bench({
           const club = player ? clubs.get(player.clubId) : undefined;
           return (
             <li key={pick.code} className="cm-row flex min-h-11 items-stretch gap-2">
-              <span className="cm-index numeric flex w-7 shrink-0 items-center justify-center text-2xs font-bold">
+              <span className="cm-index numeric flex w-7 shrink-0 items-center justify-center">
                 {at + 1}
               </span>
               <span className={`flex min-w-0 flex-1 items-center truncate text-ink ${ROW_NAME}`}>

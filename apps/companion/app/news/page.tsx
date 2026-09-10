@@ -148,7 +148,17 @@ function Row({
         open ? "bg-league-deep" : "hover:bg-surface"
       }`}
     >
-      <span className="cm-index numeric flex w-16 shrink-0 items-center justify-center px-1 text-center text-3xs font-bold leading-tight lg:w-24">
+      {/* **The one exception to `.cm-index`'s size**, and the mechanism working
+          as designed: this chip holds a DATE — "Sat 12 Sept 14:45" — where every
+          other blue block in the app holds a placing, a score or a shirt number.
+          At the class's own `sm`/`lg:base` it wrapped to three lines at 390 and
+          two at 1440, taking the row to 54px; measured across 29 routes on
+          7 Sep 2026, it is the only chip in the app that does.
+
+          `text-3xs` and `leading-tight` after the class, which is what an
+          exception looks like now that the size sits in `@layer components`. It
+          is greppable, and it says a decision was made here. */}
+      <span className="cm-index numeric flex w-16 shrink-0 items-center justify-center px-1 text-center text-3xs leading-tight lg:w-24">
         {itemDay(item)}
       </span>
       <span

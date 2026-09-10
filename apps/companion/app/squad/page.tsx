@@ -10,7 +10,7 @@ import { planningRound } from "../round";
 import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
 import { FANTRAX_SILENT, servedLeague } from "../config";
-import { LABEL, PANEL } from "@/app/desk";
+import { LABEL, PANEL, ROW_NAME } from "@/app/desk";
 
 // Your squad, and everyone else's. Until the draft this is the empty state,
 // which is the state our real league is actually in and therefore the one that
@@ -142,7 +142,7 @@ function Squad({
       } ${yoursBorder(lead)}`}
     >
       <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
-        <span className="min-w-0 truncate font-semibold">{team.teamName}</span>
+        <span className={`min-w-0 truncate ${ROW_NAME}`}>{team.teamName}</span>
         {/* The row was a name and a number, sixteen times. Who he plays this
             week is the thing that makes it a fixture list rather than a
             directory, and it costs nothing: the schedule is already in the

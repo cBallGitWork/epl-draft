@@ -8,35 +8,43 @@ Same `LeagueShell` frame as the table.
 
 ## On the page
 
-Three dropdowns — the round, the competition, and a **fixture list** — then the
-ties, boxed by competition. `Controls` builds its own labels from the league's
-own data; the page hands over rounds, teams and who is reading. Each tie is **one row**: both sides with their
-badges and the score between them, the way a results page prints a football
-match.
+**No controls at all**, since 5 Sep 2026 (Craig: *"Dont show all the grey arrows
+here, just show all fixtures for the league itself. CM rows etc."*). Every round
+the league still has to play, in gameweek order, in one scrolling box with CM's
+own bar down the side. A schedule is a thing you scroll, not a thing you
+navigate: `cm9900/24.jpg`'s own Schedule tab is one list with a scrollbar and no
+filter control anywhere on it. `page.tsx`'s docblock carries what each removed
+dropdown cost — the round picker and the competition filter cost nothing, and the
+team picker's one view moved to `/squad/[teamId]/fixtures`, which draws it with
+the same `Season` component off the same `seasonRows`.
+
+Under each round's head, the ties, boxed by competition. Each tie is **one row**:
+both sides with their badges and the score between them, the way a results page
+prints a football match.
 
 A round still to come shows **`test4 v test2`, never `0 – 0`**. Fantrax answers 0
 for every unplayed period, and printing it against a date in March states a
 result for a match nobody has played.
 
-The fixture list dropdown swaps the page for one team's whole season — every
-round it is in, the league's and any knockout it has been drawn into, that
-team's total first, with results where there are any and "To play" where there
-are not. The reader's own team sorts first and is named `(you)`. It costs one
-request: `getStandings?view=SCHEDULE` answers the whole season's results at
-once, and is read only on that branch.
+**Current and future, and nothing finished** (Craig, 31 Aug). Results is the
+archive; a fixture list that also holds last month is a fixture list you have to
+navigate rather than read. The round in play stays, because it is not finished
+and because its scores are the reason anyone opens this on a Saturday — and it
+is the only round that costs a scores request, since Fantrax would answer any
+period asked and thirty-odd of them are all nought.
 
-Picking a gameweek is the way back out of a fixture list — the two are views of
-the same season and only one can be on screen, so the control you just used
-decides which.
+### The head names the ROUND, and then the deadline
 
-It **opens on the round the reader came for**: FPL's current-or-next gameweek,
-narrowed to one the league actually covers. That round's scores come with it, so
-a gameweek in the past shows the totals it finished on and the winner marked —
-`getLiveScoringStats` honours `period`, so the archive costs no extra read.
+`shell/RoundHead` — the same strip Results and the Prem's fixture lists head
+their blocks with, so the three cannot disagree about what a round is called.
+It said DEADLINE and a date and nothing else until 7 Sep 2026, which names the
+moment and not the round: a reader scrolling a season had to count Saturdays to
+work out where he was, while Results, one tab away, headed every block
+`Gameweek 4`. Craig: *"this doesnt actually show what gameweek it is"*.
 
-State lives in the address bar (`?gw=6&comp=cup`, or `?team=<teamId>`), like
-`/players`. The selects sit in a GET form and submit without JavaScript; with it,
-changing either one navigates on the spot.
+The date came down to `londonDayAndDate` in the same change — "Saturday 12
+September" spelled out took 60% of a 390px plate on its own, and the round's
+name now shares it.
 
 ### The date is the deadline
 
@@ -114,8 +122,7 @@ points is scored by the week's points.
 |---|---|
 | `page.tsx` | The route: which view, and the empty states. |
 | `schedule.ts` | The four provider reads, and the season's results on their own. |
-| `Controls.tsx` | The three dropdowns. The only client component here. |
-| `RoundHeader.tsx` | Deadline, and whether the round is live or done. |
+| `RoundHeader.tsx` | What this screen adds to `shell/RoundHead`: the deadline, and whether the round is live or done. |
 | `Tie.tsx` | One scoreline. |
 | `Season.tsx` / `teamSeason.ts` | One team's whole season — the view, and the rows. |
 

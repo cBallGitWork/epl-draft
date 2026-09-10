@@ -22,7 +22,7 @@ import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
 import { FANTRAX_SILENT } from "../../config";
-import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 
 // Every team ranked by one category — CM's stat board, on fantasy data.
 //
@@ -143,7 +143,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
             className={BOARD}
           >
             <caption className="sr-only">
-              Every team ranked by {category.label}, {LABEL[measure]}
+              Every team ranked by {category.label}, {ORDERED_BY[measure]}
             </caption>
             <thead>
               <HeadRow>
@@ -194,7 +194,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                           team={{ teamId: row.teamId, name: named.get(row.teamId) ?? row.teamId }}
                           url={badges.get(row.teamId)}
                         />
-                        <span className="min-w-0 truncate">
+                        <span className={`min-w-0 truncate ${ROW_NAME}`}>
                           {named.get(row.teamId) ?? row.teamId}
                         </span>
                       </Link>
@@ -263,12 +263,13 @@ function measureHref(by: Measure, group: string, category: string): string {
  *  it (DESIGN §7). */
 const DASH = "—";
 
-/** One figure cell. Set at the row's own size rather than the head's small
- *  caps: this board has two number columns where the league table has ten, so
- *  they can afford to be read rather than scanned. */
-const FIGURE = "numeric px-1.5 text-center text-base font-bold lg:text-lg";
-
-const LABEL: Record<Measure, string> = {
+/** How the caption says which way the board is ordered.
+ *
+ *  Named `ORDERED_BY` and not `LABEL`, which is what it was called until 7 Sep
+ *  2026: `desk.ts` exports a `LABEL` that is a CLASS STRING, this file now
+ *  imports from `desk.ts`, and two things called `LABEL` in one file is the
+ *  collision that makes the next reader check which one they have. */
+const ORDERED_BY: Record<Measure, string> = {
   points: "by fantasy points",
   value: "by raw total",
 };

@@ -27,13 +27,16 @@ type Column = {
   /** A column the phone does without, so the last one — the column the table is
    *  FOR — fits at 390 without a sideways scroll. */
   deskOnly?: true;
+  /** A column whose head is blank because the column names itself —
+   *  `TableHeads.MUTE`, and `league/Columns` for the same pair. */
+  mute?: true;
 };
 
 /** One column, and the list is what `colSpan` counts — a rule drawn across the
  *  table has to know how wide the table is, and a literal here is a number that
  *  goes wrong the day a column is added. */
 export const COLUMNS: readonly Column[] = [
-  { key: "place", label: "#", title: "Where the competition puts them", align: "center", width: "w-8 lg:w-14" },
+  { key: "place", label: "Place", title: "Where the competition puts them", align: "center", width: "w-8 lg:w-14", mute: true },
   { key: "club", label: "Club", title: undefined, align: "left", width: "" },
   { key: "played", label: "Pld", title: "Played — won, drawn and lost added up", align: "center", width: "w-8 lg:w-20" },
   { key: "won", label: "Won", title: "Won", align: "center", width: "w-8 lg:w-16" },
@@ -102,6 +105,7 @@ export default function Columns({
               align={column.align}
               href={tableHref(column.key, sort, descending)}
               label={column.label}
+              mute={column.mute}
               sorted={here ? (descending ? "descending" : "ascending") : undefined}
             />
           );

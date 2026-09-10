@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { PlayerOwner, SheetRow } from "@epl/core";
 import { PLAYER } from "../../PremNav";
-import { SMALL_CAPS } from "@/app/desk";
+import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
 
 // Who scored, when, and who made it.
 //
@@ -76,7 +76,7 @@ function Column({
               className="group flex min-h-11 items-baseline gap-2 lg:min-h-9"
             >
               <span className="min-w-0 flex-1">
-                <span className="truncate text-sm font-bold group-hover:underline">
+                <span className={`truncate group-hover:underline ${ROW_NAME}`}>
                   {player.name}
                 </span>
                 {noted(line) === null ? null : (

@@ -4,7 +4,7 @@ import TeamBadge from "../components/league/TeamBadge";
 import { ROW_LINK } from "../components/league/TableCells";
 import { cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
-import { FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
+import { FIGURE, ROW_FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 
 // One team's line in the table.
 //
@@ -17,18 +17,28 @@ import { FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 // **Dense, and bold.** CM set its tables at about sixteen pixels a row in bold
 // white and nothing on them was quiet. A 44px tap target is binding on a phone
 // (DESIGN §7) and a mouse does not need one, so the row is `min-h-11` and comes
-// down to 36px from `lg` — which is the height the plan already names for the
-// scouting table. The first attempt at this screen was airy at every width and
-// read as a tidy dark list rather than as the game.
+// down to **28px** from `lg` — `.cm-row` in `desk.css`, which is the number that
+// makes a division fit on a screen. The first attempt at this screen was airy at
+// every width and read as a tidy dark list rather than as the game.
+//
+// *This said 36px until 7 Sep 2026, and had done since before Craig's 31 Aug
+// call to take a desk row to 28. The stylesheet has said 1.75rem throughout.*
 //
 // Each colour is its slot (DESIGN §3) and nothing carries two jobs:
 //
-//   rank      faint          depth, never meaning — CM's quiet leading index cell
+//   rank      the BLOCK's   `.cm-index` owns its own ink, size, weight and
+//                           shadow — the cell sets alignment and nothing else
 //   team      ink            white, and ACCENT for the one you manage
 //   Pld W D L ink            the record — all four alike, as `24.jpg` sets them
 //   For/Ag    ink            a column of a standings table is ink (DESIGN §3)
-//   Pts       ink, bold      the total the table is ordered by, CM's bold white
+//   Pts       the BLOCK's   the total the table is ordered by, in the same block
+//                           as the rank, so the table opens and closes on one mark
 //   form      up/bad/faint   direction, the only thing those two are for
+//
+// *The rank read "faint — depth, never meaning" until 7 Sep 2026 and never was:
+// it has been white on the blue block since the block was introduced, and is now
+// 800 with CM's shadow. A row of the table that describes the row is the one
+// comment that must not drift.*
 //
 // **The amber left this table on 5 Sep 2026** (Craig). `--color-mid` means "a
 // figure", and it was carrying For and Ag on the reasoning that fantasy points
@@ -79,7 +89,7 @@ export default function TableRow({
           than the rows, which is what stops a dense table reading as a wall.
           The accent edge rides on it, so "yours" and the index are one mark. */}
       <td
-        className={`cm-index numeric px-1.5 text-2xs font-bold ${cellAlign("rank")} ${yoursEdge(mine)}`}
+        className={`cm-index numeric px-1.5 ${cellAlign("rank")} ${yoursEdge(mine)}`}
       >
         {ordinal(row.rank)}
       </td>
@@ -130,14 +140,14 @@ export default function TableRow({
           figure that decides the season, blocked out so the eye runs down the
           column rather than across the row to find it. */}
       <td className="p-0">
-        <span className="cm-index numeric flex min-h-7 items-center justify-center px-1.5 text-sm font-bold">
+        <span className="cm-index numeric flex min-h-7 items-center justify-center px-1.5">
           {row.points}
         </span>
       </td>
 
       {/* After the points, where a modern table prints it — CM's own row ends at
           Pts and has no form guide at all. */}
-      <td className={`numeric px-1.5 text-center text-2xs ${deskOnly("form", sort)}`}>
+      <td className={`numeric px-1.5 text-center ${ROW_FIGURE} ${deskOnly("form", sort)}`}>
         <Form run={form} />
       </td>
     </tr>

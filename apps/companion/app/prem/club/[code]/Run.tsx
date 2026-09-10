@@ -5,7 +5,7 @@ import { COMPETITION_NAME, crestUrl } from "@epl/core";
 import { londonDayAndDate, londonTime } from "../../../londonTime";
 import { CLUB } from "../../PremNav";
 import { MATCH } from "./match";
-import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 
 
 // One club's season, played and to come, in the order it runs.
@@ -56,7 +56,7 @@ export default function Run({
                     scoped `--cm-index` to this club, so the block is the club's
                     without this file knowing which club it is on — the same
                     mechanism the gameweek column uses two cells along. */}
-                <td className="cm-index numeric whitespace-nowrap px-1.5 text-center text-3xs font-bold lg:text-2xs">
+                <td className="cm-index numeric whitespace-nowrap px-1.5 text-center">
                   {fixture.kickoff === null ? "TBC" : londonDayAndDate(fixture.kickoff)}
                 </td>
                 <td className="numeric whitespace-nowrap px-1 text-3xs text-faint lg:text-2xs">
@@ -68,7 +68,7 @@ export default function Run({
                   ) : (
                     <Link
                       href={`${CLUB}/${opponent.code}`}
-                      className="cm-row flex min-h-11 items-center gap-2 font-bold hover:underline"
+                      className="cm-row flex min-h-11 items-center gap-2 hover:underline"
                     >
                       <Image
                         src={crestUrl(opponent)}
@@ -79,10 +79,10 @@ export default function Run({
                         aria-hidden
                         unoptimized
                       />
-                      <span className="min-w-0 truncate text-sm lg:hidden">
+                      <span className={`min-w-0 truncate lg:hidden ${ROW_NAME}`}>
                         {opponent.shortName}
                       </span>
-                      <span className="hidden min-w-0 truncate text-sm lg:inline">
+                      <span className={`hidden min-w-0 truncate lg:inline ${ROW_NAME}`}>
                         {opponent.name}
                       </span>
                     </Link>

@@ -1,7 +1,17 @@
 import type { ScheduleRound } from "./schedule";
-import { londonDate, londonTime } from "../../londonTime";
+import RoundHead from "../../components/shell/RoundHead";
+import { londonDayAndDate, londonTime } from "../../londonTime";
 
-// A round's own line: when lineups lock, and where the football has got to.
+// A round's own line: WHICH gameweek it is, when lineups lock, and where the
+// football has got to.
+//
+// **The gameweek is new, and its absence was the bug** (Craig, 7 Sep 2026:
+// *"this doesnt actually show what gameweek it is"*). The strip said DEADLINE
+// and a date, which names the moment and not the round — so a reader scrolling
+// a season had to count Saturdays to find out where he was, while Results, four
+// clicks away, headed every one of its blocks `Gameweek 4`. It is `RoundHead`'s
+// now, shared with Results and with the Prem's own fixture lists, so the three
+// cannot disagree about what a round is called again.
 //
 // The deadline and not the first kickoff, because the deadline is the only time
 // on this page a manager has to act on. Fifteen minutes earlier than the
@@ -11,6 +21,11 @@ import { londonDate, londonTime } from "../../londonTime";
 // A round the league gave no roster period for falls back to the kickoff and
 // says so, rather than labelling a kickoff as a deadline — those are different
 // claims and only one of them is a thing to be late for.
+//
+// **`londonDayAndDate` and not `londonDate`**: the strip now carries the round's
+// name as well as its date, and "Saturday 12 September" spelled out took 60% of
+// a 390px plate on its own. "Sat 12 Sep" is the same fact at half the width, and
+// it is the shape a fixture list already uses everywhere else.
 
 export default function RoundHeader({ round }: { round: ScheduleRound }) {
   const at = round.deadline ?? round.kickoff;
@@ -22,25 +37,22 @@ export default function RoundHeader({ round }: { round: ScheduleRound }) {
     // block of scorelines sits under — was a `cm-bevel` run at `h-7`. One list
     // of ties, two ways of heading a block of them; `groundfit` could not see it
     // because the panel around them is translucent and technically a ground.
-    //
-    // `HEAD_PLATE`'s height and the chrome face, so this strip, the column heads
-    // and Results' own head are one object at one size.
-    <div className="cm-bevel flex h-7 items-center justify-between gap-3 px-1.5 font-chrome text-2xs font-bold">
-      <span>
-        <span className="uppercase">
-          {round.deadline === null ? "First kickoff" : "Deadline"}
+    <RoundHead gameweek={round.gameweek}>
+      <span className="flex min-w-0 items-center gap-3">
+        <span className="truncate">
+          <span>{round.deadline === null ? "First kickoff" : "Deadline"}</span>
+          {at === null ? (
+            " not yet dated"
+          ) : (
+            <span className="numeric font-normal normal-case">
+              {" "}
+              {londonDayAndDate(at)} · {londonTime(at)}
+            </span>
+          )}
         </span>
-        {at === null ? (
-          " not yet dated"
-        ) : (
-          <span className="numeric font-normal">
-            {" "}
-            {londonDate(at)} · {londonTime(at)}
-          </span>
-        )}
+        <Status round={round} />
       </span>
-      <Status round={round} />
-    </div>
+    </RoundHead>
   );
 }
 
@@ -54,7 +66,7 @@ function Status({ round }: { round: ScheduleRound }) {
     // failure `sweep` caught twice today on the same mistake. The dot still
     // carries the colour, because a 6px mark is not text and WCAG measures text.
     return (
-      <span className="flex items-center gap-1.5 uppercase">
+      <span className="flex shrink-0 items-center gap-1.5">
         <span className="live-dot" />
         Live
       </span>
@@ -62,6 +74,6 @@ function Status({ round }: { round: ScheduleRound }) {
   }
 
   return round.status === "finished" ? (
-    <span className="font-normal uppercase opacity-70">Full time</span>
+    <span className="shrink-0 font-normal opacity-70">Full time</span>
   ) : null;
 }

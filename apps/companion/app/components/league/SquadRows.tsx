@@ -9,7 +9,7 @@ import {
 } from "@epl/core";
 import StateBox from "../football/StateBox";
 import { positionsLabel } from "../../positions";
-import { SCROLL } from "@/app/desk";
+import { ROW_NAME, SCROLL } from "@/app/desk";
 
 // The same fifteen as a list. Offered beside the pitch rather than instead of
 // it: the pitch answers "what does this squad look like" and a list answers "who
@@ -231,7 +231,13 @@ function Row({
           : positionsLabel([player.rostered.slot.position ?? ""])) ?? "—"}
       </span>
 
-      <span className="min-w-0 flex-[1_1_5rem] truncate text-sm font-medium">
+      {/* `ROW_NAME` and not a size of its own (Craig, 7 Sep 2026). This was
+          `text-sm font-medium` in the UI face — the one row in the app a manager
+          reads fifteen of at a time, set lighter and in a different family from
+          every other name in a list. The `flex-` is the caller's, because what
+          gives way when the fixed columns outgrow the row is this screen's
+          decision and not the recipe's. */}
+      <span className={`min-w-0 flex-[1_1_5rem] truncate ${ROW_NAME}`}>
         {fullPlayerName(player.rostered)}
       </span>
 

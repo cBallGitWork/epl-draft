@@ -1,5 +1,6 @@
 import type { Club, Fixture } from "@epl/core";
 import Match from "./Match";
+import RoundHead from "../components/shell/RoundHead";
 
 // The season as rounds, each under its own head.
 //
@@ -29,14 +30,7 @@ export default function Rounds({
     <div className="flex flex-col gap-3">
       {rounds.map((round) => (
         <section key={round.gameweek} className="flex flex-col">
-          {/* The round's own head in the chrome face, the way CM captions a
-              block inside a panel — `league/results` sets the identical strip
-              over its own rounds. Gameweeks and never periods: the two are one
-              number all season, and printing one number under two names asks
-              the reader to work out whether they are the same thing. */}
-          <h2 className="cm-bevel flex h-7 items-center px-1.5 font-chrome text-2xs font-bold uppercase text-ink">
-            Gameweek {round.gameweek}
-          </h2>
+          <RoundHead gameweek={round.gameweek} />
           <div className="cm-rows flex flex-col">
             {round.fixtures.map((fixture) => (
               <Match key={fixture.id} fixture={fixture} clubs={clubs} places={places} />

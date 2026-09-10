@@ -3,8 +3,18 @@ import { loggedPlayers, matchLine, sheetSides } from "@epl/core";
 import type { Club, IntelMatchPlayer, SheetRow } from "@epl/core";
 import Section from "../../../components/shell/Section";
 import { PLAYER } from "../../PremNav";
-import { BOARD, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
+import {
+  BOARD,
+  BOARD_FIGURE,
+  HEAD_CELL,
+  HEAD_PLATE,
+  HEAD_PLATE_END,
+  ROW_NAME,
+  ROW_RULE,
+  SCROLL,
+} from "@/app/desk";
 import type { Match } from "./match";
+import { MUTE } from "../../../components/league/TableHeads";
 
 // Every man in the match, and what he did in it (Craig, 4 Sep 2026: *"Add a
 // players stats section. This can be a table of rows like fantrax/fpl do for a
@@ -59,7 +69,9 @@ export default function PlayerStats({ match }: { match: Match }) {
           <thead>
             <tr>
               <th className={HEAD_CELL}>
-                <div className={HEAD_PLATE}>Player</div>
+                <div className={HEAD_PLATE}>
+                  <span className={MUTE}>Player</span>
+                </div>
               </th>
               <th className={HEAD_CELL}>
                 <div className={HEAD_PLATE}>Pos</div>
@@ -85,7 +97,7 @@ export default function PlayerStats({ match }: { match: Match }) {
                     <span className="numeric shrink-0 text-3xs text-faint">
                       {row.club?.shortName ?? "—"}
                     </span>
-                    <span className="min-w-0 truncate text-sm">{row.player.name}</span>
+                    <span className={`min-w-0 truncate ${ROW_NAME}`}>{row.player.name}</span>
                   </Link>
                 </td>
                 {/* His position in THIS match, from the log — not a fantasy
@@ -97,7 +109,7 @@ export default function PlayerStats({ match }: { match: Match }) {
                 {COLUMNS.map((column) => {
                   const value = column.of(row);
                   return (
-                    <td key={column.head} className="numeric px-1.5 text-right text-2xs">
+                    <td key={column.head} className={BOARD_FIGURE}>
                       {value === null || value === 0 ? (
                         <span className="text-faint">{DASH}</span>
                       ) : (
@@ -110,7 +122,7 @@ export default function PlayerStats({ match }: { match: Match }) {
                     recorded — SofaScore computed it. `--color-info` means a
                     derived reading, and `cm9900/16.jpg` runs its ratings in the
                     same ink. */}
-                <td className="numeric px-1.5 text-right text-2xs font-bold text-info">
+                <td className={`${BOARD_FIGURE} font-bold text-info`}>
                   {row.logged?.rating ?? <span className="font-normal text-faint">{DASH}</span>}
                 </td>
               </tr>

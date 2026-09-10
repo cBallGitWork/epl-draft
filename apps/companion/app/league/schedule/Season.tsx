@@ -3,6 +3,7 @@ import { leads } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
 import { londonDate } from "../../londonTime";
+import { ROW_NAME } from "@/app/desk";
 
 // One team's season on one screen: every round it is in, who it plays, and what
 // each one finished. The league's fixtures and any knockout it has been drawn
@@ -54,7 +55,7 @@ export default function Season({
                 Both inside 5.5rem truncated the date to "Friday 21 Aug…" and
                 left the opponent — the one thing a fixture list is FOR — with
                 no width at all. */}
-            <span className="cm-index numeric flex shrink-0 items-baseline gap-1 px-1.5 py-0.5 text-3xs font-bold">
+            <span className="cm-index numeric flex shrink-0 items-baseline gap-1 px-1.5 py-0.5">
               <span>GW{row.round.gameweek}</span>
               {row.round.deadline === null ? null : (
                 <span className="hidden font-normal opacity-90 lg:inline">
@@ -121,7 +122,7 @@ function Score({ row }: { row: SeasonRow }) {
   // with one meaning and "a score" is not a new one.
   if (!row.round.started) {
     return (
-      <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center text-2xs font-bold opacity-60">
+      <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center opacity-60">
         —
       </span>
     );
@@ -133,7 +134,7 @@ function Score({ row }: { row: SeasonRow }) {
     row.round.status === "finished" && leads(row.pointsFor, row.pointsAgainst);
 
   return (
-    <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center text-2xs font-bold">
+    <span className="cm-index numeric flex h-6 w-12 shrink-0 items-center justify-center">
       {/* **Weight, not colour, for a win.** The accent marked it until the
           index block learned to take a team's own colour — and yellow on a
           green plate measured 2.43:1, which `sweep` caught. A plate owns its
@@ -171,7 +172,14 @@ function Opponent({
   );
 
   return opponent.team === null ? (
-    <span className="truncate text-sm italic text-faint">{name}</span>
+    // The same recipe as the linked branch below, because this is the same
+    // slot: one opponent name, drawn twice because only one of the two is a
+    // link. It was `text-sm italic text-faint` against the link's `ROW_NAME`,
+    // so a round with no opponent drawn yet sat a step smaller than the rounds
+    // around it — the exact drift Craig named on 7 Sep 2026. The italic and the
+    // faint stay: they are what says "nobody yet", and `ROW_NAME` carries no
+    // ink of its own to argue with.
+    <span className={`truncate italic text-faint ${ROW_NAME}`}>{name}</span>
   ) : (
     <Link
       href={`/squad/${opponent.team.teamId}?gw=${gameweek}`}
@@ -192,7 +200,7 @@ function Opponent({
       // of the line it shares with the "v" and the date, and the first cut of
       // this fix printed "Vtestf" with the date pushed onto a row of its own.
       // The height has to grow without the link leaving the text flow.
-      className="cm-row inline-flex min-h-11 items-center truncate text-sm font-semibold hover:underline"
+      className={`cm-row inline-flex min-h-11 items-center truncate hover:underline ${ROW_NAME}`}
     >
       {name}
     </Link>

@@ -4,7 +4,7 @@ import { type Result, type TableRow, type TableSortKey, crestUrl, ordinal } from
 import { cellAlign, deskOnly } from "./Columns";
 import { CLUB } from "./PremNav";
 import { ROW_LINK } from "../components/league/TableCells";
-import { FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
+import { FIGURE, ROW_FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 
 // One club's line in the Premier League table.
 //
@@ -49,7 +49,7 @@ export default function ClubRow({
           the row's number, so the eye counts down the blocks rather than the
           rows. An ORDINAL, which is what `cm9900/24.jpg` prints — `1st`, `2nd`
           — and not a bare number. */}
-      <td className={`cm-index numeric px-1.5 text-2xs font-bold ${cellAlign("place")}`}>
+      <td className={`cm-index numeric px-1.5 ${cellAlign("place")}`}>
         {ordinal(place)}
       </td>
 
@@ -101,12 +101,12 @@ export default function ClubRow({
           figure that decides the season, blocked out so the eye runs down the
           column rather than across the row to find it. */}
       <td className="p-0">
-        <span className="cm-index numeric flex min-h-7 items-center justify-center px-1.5 text-sm font-bold">
+        <span className="cm-index numeric flex min-h-7 items-center justify-center px-1.5">
           {row.points}
         </span>
       </td>
 
-      <td className={`numeric px-1.5 text-center text-2xs ${deskOnly("form", sort)}`}>
+      <td className={`numeric px-1.5 text-center ${ROW_FIGURE} ${deskOnly("form", sort)}`}>
         <Form run={form} />
       </td>
     </tr>
