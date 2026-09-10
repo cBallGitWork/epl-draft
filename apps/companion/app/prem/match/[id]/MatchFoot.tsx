@@ -41,12 +41,6 @@ export default function MatchFoot({
   return (
     <nav aria-label="Related screens" className="cm-foot flex">
       <Plate club={home} />
-      <span
-        aria-disabled="true"
-        className="cm-out flex flex-1 items-center justify-center px-2 text-center text-xs font-medium lg:text-sm"
-      >
-        Match Stats
-      </span>
       <Plate club={away} />
     </nav>
   );
