@@ -125,7 +125,11 @@ export async function matchGoalMinutes(
       // 47th minute of the first half is a 45th-minute goal on any teleprinter.
       const at = Number.parseInt(goal.minute, 10);
       if (Number.isNaN(at)) continue;
-      minutes.set(code, [...(minutes.get(code) ?? []), at]);
+      // **Ascending, because `roundGoals` is newest-first and a scoresheet reads
+      // forwards.** Isak's brace printed `9' 6'` the moment the guard above was
+      // fixed, which is both of his goals in the wrong order — the sort is the
+      // other half of that fix.
+      minutes.set(code, [...(minutes.get(code) ?? []), at].sort((a, b) => a - b));
     }
   } catch {
     // Their API refusing costs the minutes and never the scoresheet.

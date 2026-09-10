@@ -123,7 +123,9 @@ function marks(line: SheetRow["line"]): string {
   if (line.goals > 0) said.push(line.goals > 1 ? `${line.goals} goals` : "goal");
   if (line.assists > 0) said.push(line.assists > 1 ? `${line.assists} assists` : "assist");
   if (line.penaltiesSaved > 0) said.push("pen saved");
+  // A booking is not a line on this sheet — `named` no longer lets one on it,
+  // and a scorer who was also booked would otherwise be the one man annotated
+  // with a mark the screen has decided not to carry.
   if (line.redCards > 0) said.push("red");
-  else if (line.yellowCards > 0) said.push("booked");
   return said.join(" · ");
 }

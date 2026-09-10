@@ -190,6 +190,15 @@ export function scoresheet(rows: readonly SheetRow[]): SheetRow[] {
     .sort((a, b) => rank(b.line) - rank(a.line));
 }
 
+/** **A booking does not name a man on this sheet** (Craig, 10 Sep 2026: *"we
+ *  probably dont need yellow cards to show"*), and a sending off still does.
+ *
+ *  The Overview is CM's own — who scored and when — and a yellow card is not
+ *  that. It was also the only mark on this sheet carried in three places at
+ *  once: the Team Sheet now draws CM's card block beside the man's number, the
+ *  Match Report groups the round's cards, and Match Stats counts them per side.
+ *  A red card stays because it CHANGES the match rather than annotating it — one
+ *  in the whole of gameweeks 1-3, and on the day it happens it is the story. */
 function named(line: MatchSheetLine): boolean {
   return (
     line.goals > 0 ||
@@ -197,7 +206,6 @@ function named(line: MatchSheetLine): boolean {
     line.ownGoals > 0 ||
     line.penaltiesSaved > 0 ||
     line.penaltiesMissed > 0 ||
-    line.yellowCards > 0 ||
     line.redCards > 0
   );
 }
@@ -212,7 +220,6 @@ function rank(line: MatchSheetLine): number {
     line.penaltiesSaved * 150 +
     line.redCards * 100 +
     line.penaltiesMissed * 50 +
-    line.yellowCards * 10 +
     line.bps / 1000
   );
 }

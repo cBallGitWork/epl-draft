@@ -108,14 +108,33 @@ describe("scoresheet", () => {
   const { home, away } = sheetSides(played, snapshotOf(played.lines.map((l) => l.playerId)));
 
   it("names only the men a scoresheet names", () => {
-    // Six away men did something named — two scorers, three assisters (one of
-    // whom also scored), an own goal and two bookings — against sixteen who
-    // merely turned out.
+    // Four away men did something named — two scorers, three assisters (one of
+    // whom also scored) and an own goal — against sixteen who merely turned out.
     const named = scoresheet(away).map((r) => r.line.playerId);
     expect(named).toContain(399);
     expect(named).toContain(398);
     expect(named).toContain(384);
     expect(named.length).toBeLessThan(away.length);
+  });
+
+  it("does not name a man for a booking alone", () => {
+    // Craig, 10 Sep 2026: *"we probably dont need yellow cards to show."* The
+    // Overview is who scored and when; a yellow is carried in three other places
+    // now — the card block on the Team Sheet, the Report's grouped events, and
+    // Match Stats' per-side count.
+    const booked = away.filter(
+      (r) => r.line.yellowCards > 0 && r.line.goals === 0 && r.line.assists === 0,
+    );
+    expect(booked.length).toBeGreaterThan(0);
+    const named = new Set(scoresheet(away).map((r) => r.line.playerId));
+    for (const man of booked) expect(named.has(man.line.playerId)).toBe(false);
+  });
+
+  it("still names a man sent off", () => {
+    // A red card CHANGES a match rather than annotating it, so it stays on the
+    // sheet where a yellow does not.
+    const sent = { ...away[0].line, goals: 0, assists: 0, yellowCards: 0, redCards: 1 };
+    expect(scoresheet([{ ...away[0], line: sent }])).toHaveLength(1);
   });
 
   it("leaves out a keeper's saves and a man's bonus", () => {
