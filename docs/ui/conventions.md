@@ -323,6 +323,12 @@ answers before asking for an image at all — so no `useState`, no `onError`, no
   aspect-ratio *and* a max-height and the two disagree on a short viewport, so an
   inner box takes the card's height and derives its width. Bound the other way
   round (`max-h-full max-w-full`) the numeral came out below the hem.
+- **The hem is cropped, and the crop is one constant.** The jersey inside the
+  file measures 0.680 wide-to-tall where other sites draw about 0.88 — ours is a
+  photograph and theirs is an illustration, so it reads long. `KEPT` is the
+  fraction drawn; the card's shape and the numeral's height both derive from it.
+  It crops the FOOT, because the collar, crest, sponsor and number are the top
+  four fifths and the hem identifies nobody.
 - **The number, on the two pitches that have one.** Centred just below the
   sponsor — the only patch of a Premier League kit nobody else has bought — in
   `inkOn(colours)` with a contrast ring under it. The ring is load-bearing:

@@ -1344,6 +1344,30 @@ Also present and not used: `shirt_0-220.png`, a grey blank with a white cross �
 FPL's own "unknown club". `resources.premierleague.com/…/kits/` is a 403 and
 there is no SVG. The `special/` prefix returns the standard file byte-for-byte.
 
+### The kit is LONG, counted off the alpha channel
+
+Craig, 10 Sep 2026, beside two other sites' pitches: *"our shirts seem a little
+long."* It is the asset and not the box. Walking the alpha channel of nine of the
+forty (palette PNGs with a `tRNS` chunk, so a plain RGBA read returns nothing):
+
+| | Canvas | Visible jersey | Padding | Ratio |
+|---|---|---|---|---|
+| outfield | 220×290 | **193×284** | L15 R12 T4 B2 | **0.680** |
+| keeper | 220×290 | **207×283** | L7 R6 T3 B4 | **0.731** |
+
+Identical across every club checked, so it is a template and not per-club. The
+sites he put beside it draw a shirt at about **0.88**: ours is a photographed
+full-length jersey, theirs a stubbier illustration, and no box arithmetic turns
+one into the other — the padding is 2–4px, so there is nothing to reclaim.
+
+So the hem is cropped. `KEPT` in `PlayerShirt` is the fraction of the jersey
+drawn and everything else derives from it: the card's shape is `0.680 / KEPT` and
+the numeral sits at `0.52 / KEPT` down what survives. Cropping the FOOT is the
+point — collar, crest, sponsor and number are the top four fifths.
+
+The consequence for the fold is favourable: a 110×129 card is **16px shorter**
+than the 110×145 it replaced, on every row of every pitch.
+
 ### Where a number comes from, and where there is none
 
 | Screen | Source | Counted |

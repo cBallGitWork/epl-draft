@@ -35,7 +35,29 @@ import { type Club, clubColours, initials, inkOn, shirtUrl } from "@epl/core";
  *  Still exported, because `PitchPlayer`'s unresolved slot draws a dashed box of
  *  the same shape with no kit in it, and a hole of the wrong shape in a row is
  *  the defect this whole file is bounded by. */
-export const KIT_RATIO = { "--pitch-figure": "110 / 145" } as CSSProperties;
+export const KIT_RATIO = { "--pitch-figure": "110 / 129" } as CSSProperties;
+
+/** How much of the kit is drawn, measured off the files rather than judged.
+ *
+ *  **The kit is LONG** (Craig, 10 Sep 2026: *"our shirts seem a little long"*),
+ *  and it is the asset and not the box. Counted that day by walking the alpha
+ *  channel of nine of the forty: the shirt inside the 220x290 canvas is
+ *  **193x284** for an outfield kit and **207x283** for a keeper's, identical
+ *  across every club — so the padding is 2-4px and the visible jersey is
+ *  **0.680** wide-to-tall. The sites Craig put beside it draw a shirt at about
+ *  0.88. Ours is a photographed full-length jersey; theirs is a stubbier
+ *  illustration, and no box arithmetic turns one into the other.
+ *
+ *  So the hem is cropped. `KEPT` is the fraction of the jersey drawn, and every
+ *  other number here is derived from it rather than typed beside it:
+ *
+ *  · the card's shape is `0.680 / KEPT` — 110 / 129 at KEPT = 0.80
+ *  · the numeral sits at `NUMBER_AT / KEPT` down the visible part
+ *
+ *  Cropping the FOOT and not the shoulders is the whole point: the collar, the
+ *  crest, the sponsor and the number are the top four fifths, and the hem is the
+ *  part a reader identifies nothing by. */
+const KEPT = 0.8;
 
 export default function PlayerShirt({
   club,
@@ -114,7 +136,7 @@ export default function PlayerShirt({
           rectangle and a percentage down it is a true fraction of the kit.
           Bounding it the other way round (`max-h-full max-w-full`) let the two
           disagree, and the numeral came out below the hem. */}
-      <span className="relative block h-full aspect-[110/145]">
+      <span className="relative block h-full overflow-hidden aspect-[110/129]">
         <Image
           src={shirtUrl(club, keeper)}
           alt=""
@@ -125,7 +147,12 @@ export default function PlayerShirt({
           // it for a retina screen — which is the whole reason `shirtUrl` moved
           // off the 110 file.
           sizes="110px"
-          className={`h-full w-full object-contain drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
+          // **Cover from the TOP, so the crop takes the hem.** `contain` was
+          // right while the box was the file's shape and is wrong now that it is
+          // the kit's: it would letterbox the jersey back inside the shorter box
+          // and undo the crop, which is the same class of mistake as the
+          // landscape default this file already records.
+          className={`h-full w-full object-cover object-top drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
             kickedOff ? "" : "opacity-80 grayscale-[35%]"
           }`}
         />
@@ -156,8 +183,11 @@ export default function PlayerShirt({
             // serves every club. It was 40% for one screenshot and printed
             // "FLY BE4ER" across Arsenal's chest: legible, because the ring does
             // its job, and still two pieces of type fighting over one patch.
-            className="numeric absolute inset-x-0 top-[52%] text-center text-sm font-bold leading-none lg:text-base"
-            style={{ color: ink, textShadow: ring(ink) }}
+            // 52% down the whole jersey, which is `52 / KEPT` = 65% down the
+            // part of it that survives the crop. Derived rather than retyped, so
+            // moving `KEPT` cannot leave the number behind on the hem.
+            className="numeric absolute inset-x-0 text-center text-sm font-bold leading-none lg:text-base"
+            style={{ top: `${0.52 / KEPT * 100}%`, color: ink, textShadow: ring(ink) }}
           >
             {number}
           </span>

@@ -182,10 +182,16 @@ export default function CmGround({
           It leaves the attacking end empty, as `19.jpg` does, and squeezes the
           block toward the keeper — who is pinned to his own goal line by the
           near-zero padding at the END HE IS ON. That end is the head now, so the
-          16% is at the foot; left where it was it would have held the keeper a
-          sixth of a pitch off his line and pushed the forwards through the far
-          goal. `justify-between` shares out what is left. */}
-      <div className="absolute inset-0 z-base flex flex-col justify-between px-2 pb-[16%] pt-1">
+          reserved band is at the foot; left where it was it would have held the
+          keeper a sixth of a pitch off his line and pushed the forwards through
+          the far goal. `justify-between` shares out what is left.
+
+          **7% and not 16%** (Craig, 10 Sep 2026: *"the strikers could be a
+          little lower"*). 16% was the figure the pitch was tuned to while it
+          was drawn the other way up, and inherited without being re-measured
+          when the side turned round: it left a fifth of the grass empty under
+          the front line and pulled the whole shape up into its own half. */}
+      <div className="absolute inset-0 z-base flex flex-col justify-between px-2 pb-[7%] pt-1">
         {children}
       </div>
     </div>

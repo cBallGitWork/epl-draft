@@ -161,8 +161,15 @@ no longer describes this one.
   card would upscale the picture it exists to show. It was 4.35rem, which pinned
   every screen from about 768px up at 69.6px and a 9px name — so the desktop
   pitch was cap-starved where the phone is width-starved.
-- **The KIT is drawn at the shape of the file it comes from** — 110×145 —
-  **up to the height one row has room for**. The box was `1.32`, wider than it
+- **The KIT is drawn at the shape of the CROPPED kit** — 110×129 — **up to the
+  height one row has room for**. Not the file's 110×145, and not the jersey's own
+  shape either: counted off the alpha channel on 10 Sep 2026, the shirt inside
+  the 220×290 canvas is 193×284 for an outfield kit and 207×283 for a keeper's,
+  which is **0.680** wide-to-tall against about 0.88 on the sites Craig put
+  beside it. Ours is a photographed full-length jersey and theirs is a stubbier
+  illustration, so the hem is cropped — `KEPT` in `PlayerShirt`, and the card's
+  shape and the numeral's height are both derived from it rather than typed
+  beside it. The box was `1.32`, wider than it
   stood, which threw away three fifths of every asset and left a 33px face on a
   phone while a quarter of the screen under the pitch went unused.
 
