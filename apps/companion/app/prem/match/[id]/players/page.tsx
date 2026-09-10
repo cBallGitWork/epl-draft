@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Squads from "../Squads";
 import Skeleton from "../../../../components/shell/Skeleton";
+import Formation from "../Formation";
 import MatchShell from "../Shell";
 import TeamSheet from "../TeamSheet";
 import { matchOwners, readMatch } from "../match";
@@ -83,10 +84,25 @@ async function Board({ match }: { match: Match }) {
   // Their sheet is the only source of a bench, so without it there is no team
   // sheet to draw — and both squads is the honest fallback rather than eleven
   // names pretending to be a lineup.
-  return sheets === null ? (
-    <BothSquads match={match} />
-  ) : (
-    <TeamSheet match={match} sheets={sheets} events={events} owners={owners} />
+  if (sheets === null) return <BothSquads match={match} />;
+
+  // **The board first and the shape under it**, which is the opposite of how it
+  // was first drawn and the measurement is why: a pitch is 612px tall at 390 and
+  // two of them put the scores this tab exists for two screens down. It clears
+  // the fold on its own — `pitchfit`'s invariant is that the GRASS fits the first
+  // screen, not the page — but clearing the fold and being the first thing a
+  // reader meets are different claims, and only one of them is this tab's
+  // question.
+  //
+  // No picker over the pitch, because there is one kind of map to draw.
+  // `maps.ts` records the rule: a control offering a single choice is furniture.
+  // Average position joins it when the sister repo exports one.
+  const byCode = new Map(match.snapshot.players.map((player) => [player.code, player]));
+  return (
+    <div className="flex flex-col gap-2">
+      <TeamSheet match={match} sheets={sheets} events={events} owners={owners} />
+      <Formation sheets={sheets} home={match.home} away={match.away} byCode={byCode} />
+    </div>
   );
 }
 
