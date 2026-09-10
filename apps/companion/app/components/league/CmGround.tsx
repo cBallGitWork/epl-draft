@@ -2,18 +2,22 @@ import type { ReactNode } from "react";
 
 // Championship Manager's pitch: flat, seen from directly above, drawn in lines.
 //
-// **A trial** (Craig, 31 Aug): "pitch view doesn't really fit in with CM".
-// `cm9900/19.jpg` is why he is right. The game's tactics screen puts the squad
-// list down the left and, beside it, a plain green rectangle with white markings
-// and numbered discs on it — no perspective, no photographs, no name plates. Our
-// pitch is FPL's: a trapezoid seen from behind the goal, with cut-out stickers
-// standing on it. It is a good drawing of a different game.
+// **It began as a trial** (Craig, 31 Aug): "pitch view doesn't really fit in with
+// CM". `cm9900/19.jpg` is why he was right. The game's tactics screen puts the
+// squad list down the left and, beside it, a plain green rectangle with white
+// markings and numbered discs on it — no perspective and no photographs. What
+// this replaced was FPL's: a trapezoid seen from behind the goal with cut-out
+// stickers standing on it, which is a good drawing of a different game. The
+// trial won: five of the six pitches are drawn here and `PitchFrame`'s trapezoid
+// keeps only the lineup planner.
 //
-// This is the ground half of the trial. The markers are `PitchMarker`, and they
-// are cut-out heads rather than CM's numbers, because we have no shirt numbers
-// to draw — FPL's `squad_number` is a key that is null on every element, which
-// `CLAUDE.md` records — and because a face is the one thing sixteen managers can
-// read at 24px without being told.
+// This is the ground half. The markers are `PitchMarker`, and they are the
+// club's KIT on a translucent wash under Championship Manager's own bevelled
+// plate — the plate is the game's, the kit is not. CM had a shirt number to put
+// on its discs and we do not draw one: FPL's `squad_number` is null on every
+// element, the sister repo's collides inside a club on 13 of 20 predicted
+// elevens, and Craig took the number off the shirt on 10 Sep 2026 in any case.
+// The name on the plate does that work.
 //
 // **No hoardings and no crest.** They belong to the photograph the other pitch
 // is; this is a diagram, and a diagram with advertising on it is a diagram

@@ -1464,6 +1464,21 @@ it to whoever the file lists first prints a confident wrong number on somebody.
 match, off the Premier League's own team sheet, and two men in one lineup cannot
 share one.
 
+### The opponent band is a new surface for a recorded sub-AA pair
+
+`inkOn` picks whichever ink contrasts more, which is not the same as clearing
+4.5:1 — its own docblock says so, and `clubs.ts` records the two tightest as
+Arsenal **4.49** and Sunderland **4.48**. Recomputed across all twenty on 10 Sep
+2026 when the pitch band took the opponent's colour: **2 of 20 under AA**, those
+same two, by two hundredths.
+
+Nothing new is broken — it is the palette's own limit and both numbers were
+already written down — but the count of SURFACES carrying it went up: every card
+whose opponent is Arsenal or Sunderland now draws that pair, on every pitch.
+`sweep` cannot see it, because a pitch card sits on an SVG ground it reports as
+"not auditable here". Fixing it means changing a club's colour, which is a
+palette decision and not this one.
+
 ## Keeper at the top — the direction reversed (10 Sep 2026)
 
 Craig: *"currently we go strikers at top, keeper bottom, lets reverse this."*

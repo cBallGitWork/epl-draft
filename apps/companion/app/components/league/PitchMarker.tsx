@@ -1,9 +1,15 @@
 import type { CSSProperties } from "react";
-import type { FootballPlayer } from "@epl/core";
-import { type Club, type Opposition, clubColours, inkOn, kickedOff } from "@epl/core";
+import {
+  type Club,
+  type FootballPlayer,
+  type Opposition,
+  clubColours,
+  fixtureLabel,
+  kickedOff,
+  plateOn,
+} from "@epl/core";
 import PlayerShirt from "./PlayerShirt";
-import { fixtureLabel } from "@epl/core";
-import { NAME_SIZE } from "./PitchRows";
+import { NAME_SIZE, PITCH_BAND } from "./PitchRows";
 
 // One player on Championship Manager's pitch: a shirt, a name, and what he is
 // worth. The marker half of the `CmGround` pair.
@@ -30,8 +36,11 @@ import { NAME_SIZE } from "./PitchRows";
 // it, and a row of black bars is what made this read as cards on grass rather
 // than as a team.
 //
-// **And the number is back on the two pitches that have one** — which is the
-// shape CM drew all along, arrived at from the other end. See `PlayerShirt`.
+// **And no number anywhere** (Craig, 10 Sep 2026: "ditch the number actually").
+// One rode on the chest for an afternoon, on the reading that eleven identical
+// kits need one to tell them apart; the plate below carries the name at the
+// card's full width instead, and every board that LISTS these men still keeps
+// the number in the blue index block, which is where CM keeps it.
 
 export default function PitchMarker({
   player,
@@ -115,7 +124,11 @@ export default function PitchMarker({
   const single = band === undefined && show === "fixture" && opposition?.length === 1
     ? opposition[0]
     : undefined;
-  const against = single === undefined ? undefined : clubColours(single.club.shortName);
+  // **`plateOn` and not a background beside an `inkOn` call**, because its whole
+  // reason is that the two are one decision: a ground without the ink that
+  // survives it is the half that makes a pale club unreadable. Spurs and Hull
+  // are exactly that case here.
+  const plate = single === undefined ? undefined : plateOn(clubColours(single.club.shortName));
 
   return (
     // **An opaque card, and it is a reversal.** This drew its name and its line
@@ -162,9 +175,7 @@ export default function PitchMarker({
           alone; a card padding either side of that was taking another 8, which
           is `MOSQUE…` instead of `MOSQUERA`. The shirt can afford the inset
           because a kit reads at any width and a truncated name does not. */}
-      <span
-        className={`cm-bevel flex h-[var(--pitch-band)] items-center justify-center overflow-hidden px-0.5 text-center font-bold uppercase leading-none ${NAME_SIZE}`}
-      >
+      <span className={`cm-bevel uppercase ${PITCH_BAND} ${NAME_SIZE}`}>
         <span className="w-full truncate">{name}</span>
       </span>
 
@@ -173,11 +184,11 @@ export default function PitchMarker({
           a coloured strip with no words in it. */}
       {line === "" ? null : (
         <span
-          className="numeric flex h-[var(--pitch-band)] items-center justify-center overflow-hidden px-0.5 text-center text-3xs font-bold leading-none"
+          className={`numeric text-3xs ${PITCH_BAND}`}
           style={
-            against === undefined
+            plate === undefined
               ? { background: "var(--color-bg)", color: "var(--color-cream)" }
-              : ({ background: against.primary, color: inkOn(against) } as CSSProperties)
+              : ({ background: plate.background, color: plate.ink } as CSSProperties)
           }
         >
           <span className="w-full truncate">{line}</span>

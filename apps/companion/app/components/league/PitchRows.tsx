@@ -121,6 +121,31 @@ export function rowBudget(rows: number): CSSProperties {
  *  The plate is a fixed band with the name centred in it, for the same reason:
  *  type set on its own line height made every plate a different height, so
  *  Haaland and João Pedro stood at different heights in the same row. */
+/** One line of a pitch card: the card's own fixed band height, centred, and it
+ *  truncates rather than wraps.
+ *
+ *  **Five sites, and the last refactor pass named this file as the destination.**
+ *  It declined the extraction at two — `FplPitch` and `PitchPlayer`, byte
+ *  identical — with the note that "`PitchRows` already owns `NAME_SIZE` and
+ *  `GAP_CLASS` for the pitches, so that is where the third one goes rather than
+ *  here". `FplPitch` has since lost its own plate to `PitchMarker`, and the two
+ *  cards between them now draw five: a name and a line on the marker, and a
+ *  name, a fixture and an unresolved reason on the planner.
+ *
+ *  **The height is the load-bearing part.** A line whose cards stand at
+ *  different heights stops reading as a line, and `.pitch-figure`'s own ceiling
+ *  subtracts exactly `2 * --pitch-band` from the room a row has — so a card that
+ *  sized a band by its content would be bounded against a number it no longer
+ *  matched.
+ *
+ *  What each site adds for itself is its GROUND and its INK, which is the part
+ *  that genuinely differs: Championship Manager's bevelled plate on the marker,
+ *  cream on the planner, and a club's own colour under a fixture. The two bands
+ *  that are NOT this — the planner's chip row and its `FixtureChip` holder — lay
+ *  their children out differently on purpose and are left alone. */
+export const PITCH_BAND =
+  "flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden px-0.5 text-center font-bold leading-none";
+
 export const NAME_SIZE = "text-2xs";
 
 export interface PitchRow<T> {
@@ -150,11 +175,12 @@ export default function PitchRows<T>({
    *
    *  | Screen | Ground | Marker | What it says |
    *  |---|---|---|---|
-   *  | Squad (a rival, locked) | `CmGround` flat | `PitchDisc` | how he set up — cut-out, name on the grass, tactic arrow, XI only |
+   *  | Squad (a rival, locked) | `CmGround` flat | `PitchMarker` | how he set up — kit, name on CM's plate, the fixture in the opponent's colour, XI only |
    *  | Squad (your own) | `PitchFrame` trapezoid | `PitchPlayer` | what you can still CHANGE — draggable, bench, violations |
-   *  | Head-to-head | `CmGround` flat | `PitchDisc` | two elevens sized to agree, via `widest` |
-   *  | Club (predicted) | `CmGround` flat | `PitchDisc` | who a real club is expected to start — the only one about a club rather than a squad |
-   *  | FPL | `CmGround` flat | `PitchDisc` | your own FPL XI, with the armband its wrapper draws |
+   *  | Head-to-head | `CmGround` flat | `PitchMarker` | two elevens sized to agree, via `widest` |
+   *  | Club (predicted) | `CmGround` flat | `PitchMarker` | who a real club is expected to start — the only one about a club rather than a squad |
+   *  | FPL | `CmGround` flat | `PitchMarker` | your own FPL XI, with the armband its wrapper draws |
+   *  | Match (played) | `CmGround` flat | `PitchMarker` | the shape both sides were named in — `prem/match/[id]/Formation` |
    *
    *  The split is the register, not decoration: **flat is the desk's diagram and
    *  the trapezoid is football's photograph.** A screen about ARRANGEMENT — how

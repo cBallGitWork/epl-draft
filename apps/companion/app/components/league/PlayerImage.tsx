@@ -63,7 +63,6 @@ export default function PlayerImage({
   keeper,
   kickedOff,
   sizes = "88px",
-  fill = false,
   large = false,
 }: {
   /** Ask for the 500x500 source instead of the 220x280 one.
@@ -73,16 +72,6 @@ export default function PlayerImage({
    *  fifteen on a pitch. A caller that sets this must also set `sizes`, or Next
    *  will serve the big file down to an 88px box for no gain. */
   large?: boolean;
-  /** Fill the parent instead of taking `.pitch-figure`'s landscape shape.
-   *
-   *  **This is what was cropping every disc.** `.pitch-figure` forces
-   *  `aspect-ratio: 1.32` — a wide box, right for a cut-out standing on grass
-   *  and wrong inside a circle, where it made the image 46x35 in a 46x46 disc
-   *  and cut the bottom quarter off. Three attempts at re-cropping and
-   *  re-zooming the IMAGE could not fix a box that was the wrong shape; Craig
-   *  said so repeatedly and I kept adjusting the wrong thing. A caller drawing
-   *  its own frame says so and gets `h-full`. */
-  fill?: boolean;
   player: Pick<FootballPlayer, "code" | "name">;
   club: Club | undefined;
   /** Which of the club's two kits. A keeper drawn in an outfield shirt is the
@@ -132,7 +121,7 @@ export default function PlayerImage({
     // 110×140 and FPL's kit is 110×145. A box wider than it is tall therefore
     // throws away most of both, which is why the default is the thing a caller
     // overrides rather than the thing every caller lives with.
-    <div className={`relative w-full overflow-hidden ${fill ? "h-full" : "pitch-figure"}`}>
+    <div className="pitch-figure relative w-full overflow-hidden">
       {source ? (
         <Image
           // Keyed by the rung so a failed src is replaced rather than retried:
@@ -151,20 +140,17 @@ export default function PlayerImage({
           // second thing to keep in step (CODE_RULES §1).
           priority={large}
           onError={() => setRung(rung === "initials" ? "initials" : NEXT[rung])}
-          // **Cover, cropped at the top by default; a round frame moves the
-          // crop down.** A cut-out STANDING on grass wants its feet cropped and
-          // its head whole, which is `object-top`. In a circle that same crop
-          // clips the chin, so `--pitch-crop` lets a caller pin its own vertical
-          // offset — the X stays centred either way, which is why only the Y is
-          // a variable. The caller owns the number; naming one here would be a
-          // second place for it to drift.
+          // **Cover, cropped at the top.** A cut-out STANDING on grass wants its
+          // feet cropped and its head whole, which is `object-top`.
           //
-          // `--pitch-zoom` is a small scale a round frame can ask for, pinned to
-          // the TOP so the crown stays in view as it grows. It earns its place
-          // now that the frame is square: the same knob failed twice while the
-          // box was `.pitch-figure`'s 1.32 landscape, because scaling cannot fix
-          // a frame that is the wrong shape.
-          className={`h-full w-full origin-top object-cover [object-position:center_var(--pitch-crop,top)] [scale:var(--pitch-zoom,1)] drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
+          // It used to read `--pitch-crop` and `--pitch-zoom` so that a ROUND
+          // frame could pin its own vertical offset and scale up inside the
+          // circle. `PitchDisc` was the only thing that ever set them and it
+          // became `PitchMarker` on 10 Sep 2026, which draws a kit and no
+          // circle — so both variables had a reader here and no writer
+          // anywhere. A variable nothing sets is its own fallback with extra
+          // steps.
+          className={`h-full w-full object-cover object-top drop-shadow-[0_2px_3px_oklch(0_0_0/0.45)] ${
             kickedOff ? "" : "opacity-80 grayscale-[35%]"
           }`}
         />

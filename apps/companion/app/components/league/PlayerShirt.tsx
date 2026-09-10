@@ -79,7 +79,6 @@ export default function PlayerShirt({
   keeper,
   kickedOff,
   name,
-  fill = false,
 }: {
   club: Club | undefined;
   /** Which of the club's two kits. The keeper's is the `_1` variant and a
@@ -93,9 +92,6 @@ export default function PlayerShirt({
   kickedOff: boolean;
   /** Only for the initials a club we cannot name falls to. */
   name: string;
-  /** Fill the parent instead of taking `.pitch-figure`'s shape, for a caller
-   *  that draws its own frame. */
-  fill?: boolean;
 }) {
   // **An early return and not a ternary in the JSX**, because the branch is what
   // decides whether there are colours at all — and a `club!` inside the other
@@ -105,7 +101,7 @@ export default function PlayerShirt({
     return (
       <div
         style={KIT_RATIO}
-        className={`relative w-full overflow-hidden ${fill ? "h-full" : "pitch-figure"}`}
+        className="pitch-figure relative w-full overflow-hidden"
       >
         <span
           className={`grid h-full w-full place-items-center font-display text-sm font-bold text-cream/80 ${
@@ -121,7 +117,7 @@ export default function PlayerShirt({
   return (
     <div
       style={KIT_RATIO}
-      className={`flex w-full justify-center overflow-hidden ${fill ? "h-full" : "pitch-figure"}`}
+      className="pitch-figure flex w-full justify-center overflow-hidden"
     >
       {/* **An inner box that IS the kit.** `.pitch-figure` carries an
           aspect-ratio AND a max-height, and on a short viewport the cap wins:

@@ -96,7 +96,7 @@ No fluid clamps except inside the masthead.
 | `league/SeasonGrid` | Championship Manager's attribute grid — the squad's season as one bevelled panel per scoring group, thirteen keeper columns and eleven outfield, every figure Fantrax's own. The **second panel** on `/squad/[teamId]`, and it costs one cache hit: `squadSeason` already reads this table to price the board. |
 | `league/PlayerImage` | The cut-out photograph, with its fallback ladder. Client-only, and has to be — see below. **Four callers, none of them a pitch**: the player profile, the paper's face and picture, and the live card. |
 | `league/PlayerShirt` | The club's kit, and the only place it is drawn. What every pitch draws now. Server component — it has no ladder to walk. |
-| `league/PitchMarker` | One player on the flat pitch: a kit on a translucent wash, his name on Championship Manager's bevelled plate, and under it the fixture **in the opponent's own colour**. Was `PitchDisc`, and was a cut-out head in a coloured circle until 10 Sep 2026. |
+| `league/PitchMarker` · `league/CmGround` | A marker on the grass, and the ground it stands on. The marker is a kit on a translucent wash, the name on Championship Manager's bevelled plate, and under it the fixture **in the opponent's own colour**. Was `PitchDisc`, a cut-out head in a coloured circle, until 10 Sep 2026. |
 | `football/FixtureChip` | Opponent + (H)/(A), coloured by FPL's difficulty. **Never wraps** — the band under a sticker is a fixed 20px with `overflow-hidden`, so a second line is guillotined rather than spilled. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
 | `shell/TabStrip` | The blue tab strip under a title bar. Five strips use it — the League section, the Premiership section, a fantasy team's five views, a club's four, a player's five. (It read "three" until 4 Sep 2026 and had been undercounting `PremNav` since 2 Sep.) `dim` greys a tab that has nothing behind it for THIS subject and keeps it in place, which is CM's answer for an empty view (`cm0102/07.jpg`). |
@@ -119,7 +119,6 @@ No fluid clamps except inside the masthead.
 | `league/MatchupBoard` | The head-to-head, both XIs and the running totals. |
 | `league/LineupPlanner` · `league/MoveSheet` | Picking an XI, and everywhere one player can go. |
 | `league/PlayerCard` · `league/LivePlayerCard` | One player, tapped open — settled and live. |
-| `league/PitchDisc` · `league/CmGround` | A marker on the grass, and the ground it stands on. |
 | `football/StateBox` | The box beside a name saying why he is not playing. Silent for a fit player: a box reading "fit" on every row makes the one worth seeing harder to find. **It must survive a greyed row** — the whole point of it is to say why the row is grey. |
 | `football/MatchList` · `football/GameweekView` | The round in view, each fixture a native `<details>` that expands into who did what. |
 | `football/PhotoGround` | The darkened match photograph behind the desk. Fixed, `-z-10`. |

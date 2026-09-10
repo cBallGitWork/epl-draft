@@ -64,7 +64,7 @@ a `Sticker` of its own beside it.
 The copy was justified on the grounds that `PitchPlayer` "takes a Fantrax roster
 slot joined to a footballer, and a pick is neither". That stopped being true on
 3 Sep, when the disc was changed to take a plain `FootballPlayer` for exactly this
-reason. So the sticker is gone and `PitchDisc` draws the picks. The armband is the
+reason. So the sticker is gone and `PitchMarker` draws the picks. The armband is the
 one thing the disc has no place for — our league has no captain — and it is drawn
 by this tab's own wrapper rather than by a prop with one caller.
 

@@ -12,7 +12,7 @@ import { chipsFor } from "./Chips";
 import PlayerShirt, { KIT_RATIO } from "./PlayerShirt";
 import { positionLabel } from "../../positions";
 import { unresolvedShort } from "../../unresolved";
-import { NAME_SIZE } from "./PitchRows";
+import { NAME_SIZE, PITCH_BAND } from "./PitchRows";
 
 // One player as he stands on the pitch: his club's kit, his name on a plate, and
 // under it whatever there is to say — his fixture until he kicks off, his
@@ -62,10 +62,10 @@ export default function PitchPlayer({
             {positionLabel(rostered.slot.position) ?? "?"}
           </span>
         </div>
-        <span className="flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display text-3xs font-bold uppercase leading-none text-bg">
+        <span className={`bg-cream font-display text-3xs uppercase text-bg ${PITCH_BAND}`}>
           <span className="w-full truncate">{rostered.slot.fantraxId}</span>
         </span>
-        <span className="flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream/90 px-0.5 text-center text-3xs font-bold leading-none text-bg/70">
+        <span className={`bg-cream/90 text-3xs text-bg/70 ${PITCH_BAND}`}>
           <span className="w-full truncate">{unresolvedShort(rostered.unresolved)}</span>
         </span>
       </div>
@@ -88,10 +88,7 @@ export default function PitchPlayer({
           tabs: the same fact, said where it names the men rather than totting
           them up. Dimming the whole card said it too, and took the fixture
           colour and the name with it — the two things a waiting player still
-          needs.
-
-          **No number**, because a fantasy fifteen is fifteen different kits and
-          is told apart by them. See `PlayerShirt`. */}
+          needs. */}
       <PlayerShirt
         club={club}
         keeper={isGoalkeeper(rostered.slot.position)}
@@ -111,13 +108,12 @@ export default function PitchPlayer({
           graceful end of the rule is the ellipsis, and "Dewsbury-H…" at eleven
           pixels is worth more than "Dewsbury-Hall" at seven.
 
-          **And it stays the ellipsis even though two pitches now draw a number**
-          (10 Sep 2026), because those two are about a REAL club: their numbers
-          come from the sister repo's squad list and the Premier League's own
-          team sheet, neither of which knows a Fantrax roster line. Nothing about
-          FPL's dead field has changed. */}
+          **And it stayed the ellipsis.** A number rode on the chest of the OTHER
+          pitch card for one afternoon on 10 Sep 2026 and came off again ("ditch
+          the number actually"), so no pitch in the app draws one and this
+          paragraph describes every card rather than an exception. */}
       <span
-        className={`flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display font-bold uppercase leading-none tracking-[-0.01em] text-bg ${NAME_SIZE}`}
+        className={`bg-cream font-display uppercase tracking-[-0.01em] text-bg ${PITCH_BAND} ${NAME_SIZE}`}
       >
         <span className="w-full truncate">{player.name}</span>
       </span>

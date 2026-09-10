@@ -125,7 +125,12 @@ function Goal({
       {assister === undefined ? null : (
         <Link
           href={`${PLAYER}/${assister.code}`}
-          className="ml-3 flex min-h-9 items-baseline gap-1.5 hover:underline lg:ml-4 lg:min-h-7"
+          // **`min-h-11` on the phone and the desk step above it**, which is the
+          // pair the other way round from how this shipped. `min-h-9` is the
+          // DESK's control height; on a 390 screen it is 36px against a 44px
+          // thumb floor, and `tapfit` had it as the app's only two failures.
+          // The scorer link three lines down already gets it right.
+          className="ml-3 flex min-h-11 items-baseline gap-1.5 hover:underline lg:ml-4 lg:min-h-7"
         >
           <span className={`${SMALL_CAPS} shrink-0 text-faint`}>A</span>
           <span className="min-w-0 truncate font-chrome text-sm font-bold text-muted lg:text-base">
