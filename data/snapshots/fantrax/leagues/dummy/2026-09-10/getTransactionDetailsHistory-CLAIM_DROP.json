@@ -1,0 +1,358 @@
+{
+  "paginatedResultSet": {
+    "totalNumPages": 1,
+    "pageNumber": 1,
+    "maxResultsPerPage": 100,
+    "totalNumResults": 1
+  },
+  "filterSettings": {
+    "positionOrGroup": "ALL",
+    "view": "CLAIM_DROP",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  },
+  "displayedSelections": {
+    "positionOrGroup": "ALL",
+    "view": "CLAIM_DROP",
+    "adminMode": false,
+    "includeDeleted": false,
+    "team": "ALL",
+    "executedOnly": true
+  },
+  "miscData": {
+    "deleteTransactionExecutedDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "This will only delete the transaction record - <b style=\"color:#8B0000\">it will not undo it - it will not move any players</b>. Are you sure you want to permanently delete this?"
+    },
+    "deleteTransactionNotExecutedDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "Are you sure you want to permanently delete this?"
+    },
+    "heading": "2026 test1dsfds (2)",
+    "undoTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "Yes"
+        },
+        {
+          "id": "option1",
+          "label": "No"
+        }
+      ],
+      "text": "Are you sure you want to undo this transaction?"
+    },
+    "undoTooltip": "Undo transaction",
+    "executeTooltip": "Execute transaction if team was not updated with players",
+    "deleteTooltip": "Delete transaction from view",
+    "editTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        },
+        {
+          "id": "option1",
+          "label": "Cancel"
+        }
+      ],
+      "text": "# of periods to move transaction forward:"
+    },
+    "editTooltip": "Edit Transaction",
+    "editTransactionSuccessDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        }
+      ],
+      "text": "Transaction successfully edited and re-executed."
+    },
+    "executeTransactionSuccessDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "OK"
+        }
+      ],
+      "text": "Transaction successfully executed."
+    },
+    "executeTransactionDialog": {
+      "alwaysShowOpener": false,
+      "options": [
+        {
+          "id": "option0",
+          "label": "???word.Ok: en_US???"
+        },
+        {
+          "id": "option1",
+          "label": "Cancel"
+        }
+      ],
+      "text": "Please confirm that you want to executed the highlighted transaction since the system has detected that it was not executed."
+    },
+    "editTransactionMaximumForward": 200
+  },
+  "displayedLists": {
+    "teams": [
+      {
+        "name": "All Teams",
+        "id": "ALL"
+      },
+      {
+        "name": "123",
+        "id": "98yx3o50mtj36y3g"
+      },
+      {
+        "name": "test1",
+        "id": "hy0w28p5mtj36y3g"
+      },
+      {
+        "name": "test2",
+        "id": "1b6gp5utmtj36y3g"
+      },
+      {
+        "name": "test211",
+        "id": "fq5omv5kmtj36y3g"
+      },
+      {
+        "name": "test3",
+        "id": "y6viv6jfmtj36y3g"
+      },
+      {
+        "name": "test31",
+        "id": "dpdkp2bbmtj36y3g"
+      },
+      {
+        "name": "test31121",
+        "id": "g80h3bf5mtj36y3g"
+      },
+      {
+        "name": "test3331",
+        "id": "kg18w2cvmtj36y3g"
+      },
+      {
+        "name": "test4",
+        "id": "deo9ljvtmtj36y3g"
+      },
+      {
+        "name": "testf",
+        "id": "pzmd243ymtj36y3g"
+      }
+    ],
+    "tabs": [
+      {
+        "name": "Claim/Drop",
+        "id": "CLAIM_DROP"
+      },
+      {
+        "name": "Trade",
+        "id": "TRADE"
+      },
+      {
+        "name": "Lineup",
+        "id": "LINEUP_CHANGE"
+      }
+    ],
+    "positions": [
+      {
+        "name": "All",
+        "id": "ALL"
+      },
+      {
+        "name": "Outfielders",
+        "id": "SOCCER_NON_GOALIE"
+      },
+      {
+        "name": "Defender",
+        "id": "POS_703"
+      },
+      {
+        "name": "Midfielder",
+        "id": "POS_702"
+      },
+      {
+        "name": "Forward",
+        "id": "POS_701"
+      },
+      {
+        "name": "Goalkeeper",
+        "id": "POS_704"
+      }
+    ]
+  },
+  "table": {
+    "caption": "Claims / Drops",
+    "header": {
+      "cells": [
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "Team",
+          "shortName": "Team",
+          "key": "team"
+        },
+        {
+          "align": "LEFT",
+          "sortDirection": 1,
+          "name": "Date Processed (EDT)",
+          "shortName": "Date (EDT)",
+          "key": "date"
+        },
+        {
+          "sortDirection": 1,
+          "name": "Gameweek",
+          "shortName": "Gameweek",
+          "key": "week"
+        }
+      ]
+    },
+    "rows": [
+      {
+        "scorer": {
+          "teamName": "Aston Villa",
+          "urlName": "zion-suzuki",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Aston_Villa.png",
+          "scorerId": "078wl",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "704"
+          ],
+          "defaultPosId": "704",
+          "posShortNames": "G",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 8, 3:15 PM: Suzuki made five saves and allowed two...",
+              "typeId": "9"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "704"
+          ],
+          "teamId": "110011",
+          "name": "Zion Suzuki",
+          "teamShortName": "AVL",
+          "shortName": "Z. Suzuki"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "FA",
+        "numInGroup": 2,
+        "txSetId": "8zz5gpx9mtjxrhdh",
+        "feesUsed": false,
+        "transactionCode": "CLAIM",
+        "transactionType": "Claim",
+        "deleted": false,
+        "cells": [
+          {
+            "align": "LEFT",
+            "content": "test4",
+            "leagueId": "w05aib75mtj36y1g",
+            "rowspan": 2,
+            "key": "team",
+            "teamId": "deo9ljvtmtj36y3g"
+          },
+          {
+            "align": "LEFT",
+            "content": "Wed Sep 2, 2026, 6:11AM",
+            "rowspan": 2,
+            "key": "date"
+          },
+          {
+            "content": "3",
+            "key": "week"
+          }
+        ]
+      },
+      {
+        "scorer": {
+          "teamName": "Arsenal",
+          "urlName": "david-raya",
+          "headshotUrl": "https://fantraximg.com/assets/images/logos/sportsteam/epl/Arsenal.png",
+          "scorerId": "05tqx",
+          "upcomingEventStatusId": "2",
+          "teamLogo": true,
+          "posIdsNoFlex": [
+            "704"
+          ],
+          "defaultPosId": "704",
+          "posShortNames": "G",
+          "team": false,
+          "icons": [
+            {
+              "tooltip": "Expected to play in upcoming/current game",
+              "typeId": "32"
+            },
+            {
+              "tooltip": "Sep 7, 2:54 AM: Raya had four saves and allowed one...",
+              "typeId": "9"
+            }
+          ],
+          "rookie": false,
+          "minorsEligible": false,
+          "posIds": [
+            "704"
+          ],
+          "teamId": "110000",
+          "name": "David Raya",
+          "teamShortName": "ARS",
+          "shortName": "D. Raya"
+        },
+        "resultCode": "EXECUTED",
+        "executed": true,
+        "result": {
+          "content": "Executed"
+        },
+        "claimType": "",
+        "txSetId": "8zz5gpx9mtjxrhdh",
+        "feesUsed": false,
+        "transactionCode": "DROP",
+        "transactionType": "Drop",
+        "deleted": false,
+        "cells": [
+          {
+            "content": "3",
+            "key": "week"
+          }
+        ]
+      }
+    ]
+  }
+}
