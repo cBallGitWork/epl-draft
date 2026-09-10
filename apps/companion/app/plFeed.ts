@@ -1,9 +1,15 @@
 import { unstable_cache } from "next/cache";
 import { PAGE_REVALIDATE, type FootballPlayer } from "@epl/core";
-import { fetchPlFixture, fetchPlRound, fetchPlTextstream, plFixtureCode } from "@epl/core";
+import {
+  fetchPlFixture,
+  fetchPlMatchStats,
+  fetchPlRound,
+  fetchPlTextstream,
+  plFixtureCode,
+} from "@epl/core";
 import bridge from "../../../data/mappings/premierleague.json";
 
-// The Premier League feed's spine: the identity join, the three cached reads, and
+// The Premier League feed's spine: the identity join, the four cached reads, and
 // the id hop between their match numbers and ours. Nothing here answers a
 // question — `commentary.ts` asks the round's, `matchFeed.ts` asks one match's.
 //
@@ -90,6 +96,17 @@ export const plFixture = unstable_cache(
 export const plStream = unstable_cache(
   async (id: number) => fetchPlTextstream(id),
   ["pl-textstream"],
+  { revalidate: PAGE_REVALIDATE },
+);
+
+/** Every Opta metric for both sides of one match, cached per Premier League id.
+ *
+ *  ~32 KB and about 151 metrics a side. Cached on the same thirty seconds as the
+ *  rest, and worth saying plainly: this read has existed in `client.ts` since
+ *  4 Sep and nothing in the app called it. */
+export const plStats = unstable_cache(
+  async (id: number) => fetchPlMatchStats(id),
+  ["pl-match-stats"],
   { revalidate: PAGE_REVALIDATE },
 );
 

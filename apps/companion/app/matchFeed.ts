@@ -1,7 +1,20 @@
-import type { FootballPlayer, PlCommentaryLine, PlMatchFacts } from "@epl/core";
-import { plCommentary, plFixtureCode, plMatchFacts, plTeamSheets } from "@epl/core";
+import type {
+  FootballPlayer,
+  MatchStatRow,
+  PlCommentaryLine,
+  PlManMatch,
+  PlMatchFacts,
+} from "@epl/core";
+import {
+  plCommentary,
+  plFixtureCode,
+  plManMatches,
+  plMatchBoard,
+  plMatchFacts,
+  plTeamSheets,
+} from "@epl/core";
 import { roundGoals } from "./commentary";
-import { optaToCode, plFixture, plRound, plStream, theirFixtureId } from "./plFeed";
+import { optaToCode, plFixture, plRound, plStats, plStream, theirFixtureId } from "./plFeed";
 
 // What ONE match's screen asks the Premier League. The round's own questions are
 // next door in `commentary.ts`; the reads, the caches and the identity join both
@@ -118,4 +131,54 @@ export async function matchGoalMinutes(
     // Their API refusing costs the minutes and never the scoresheet.
   }
   return minutes;
+}
+
+/** What each man did in one match, by FPL player code.
+ *
+ *  **Off the SAME cached detail read `teamSheets` makes**, so a screen drawing a
+ *  team sheet and its marks costs one request rather than two. That is the whole
+ *  argument for reading the fixture's own `events` rather than the textstream:
+ *  the sheet already needs this response.
+ *
+ *  Empty on a fixture nobody has played — `events` is absent on all ten upcoming
+ *  fixtures of a round — which is the same answer as their API refusing, and the
+ *  caller draws neither differently. */
+export async function matchManEvents(
+  gameweek: number,
+  fixtureCode: number,
+  players: readonly FootballPlayer[],
+): Promise<Map<number, PlManMatch>> {
+  try {
+    const id = await theirFixtureId(gameweek, fixtureCode);
+    if (id === null) return new Map();
+    return plManMatches(await plFixture(id), optaToCode(players));
+  } catch {
+    return new Map();
+  }
+}
+
+/** Championship Manager's thirteen-row Match Stats board for one fixture.
+ *
+ *  **Two reads, and the round one is already warm.** The round resolves their id
+ *  AND names which side is at home — `/stats/match` keys its data on their team
+ *  ids and says nothing about home and away, so the order has to come from the
+ *  fixture. Getting that from `teamLists` instead would draw the board under the
+ *  wrong crests, which is the same trap `plTeamSheets` records.
+ *
+ *  Null when they will not answer, when our code is not in the round, or when
+ *  they hold no stats for a side. A board is a comparison and half of one is not
+ *  a smaller board. */
+export async function matchStatsBoard(
+  gameweek: number,
+  fixtureCode: number,
+): Promise<MatchStatRow[] | null> {
+  try {
+    const round = await plRound(gameweek);
+    const fixture = round.content.find((entry) => plFixtureCode(entry) === fixtureCode);
+    const [home, away] = fixture?.teams ?? [];
+    if (fixture === undefined || home === undefined || away === undefined) return null;
+    return plMatchBoard(await plStats(fixture.id), home.team.id, away.team.id);
+  } catch {
+    return null;
+  }
 }
