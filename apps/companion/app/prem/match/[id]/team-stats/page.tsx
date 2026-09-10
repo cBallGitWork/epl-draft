@@ -43,7 +43,7 @@ export default async function MatchTeamStatsPage({ params }: { params: Promise<{
   return (
     <MatchShell match={match} current="team-stats">
       <div className="flex flex-col gap-2">
-        <MatchStats rows={rows} home={match.home} away={match.away} />
+        <MatchStats rows={rows} />
         <ShotMap
           home={match.home}
           away={match.away}
