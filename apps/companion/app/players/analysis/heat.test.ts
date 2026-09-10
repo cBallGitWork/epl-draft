@@ -65,7 +65,9 @@ describe("shade", () => {
     // The fault this replaced: five rounds in, a man's busiest cell holds three
     // touches, so a cell holding ONE is a third of the way up the scale. A flat
     // gain drew it at full strength and every map was warm goal to goal.
-    expect(shade(1 / 3)).toBeLessThan(0.25);
+    // Against the PEAK rather than against a number, because the two are tuned
+    // together — a brighter map raises both and the floor must stay the floor.
+    expect(shade(1 / 3)).toBeLessThan(shade(1) / 3);
   });
 
   it("keeps the top bands apart instead of clipping them together", () => {

@@ -93,22 +93,27 @@ export function heatCells(points: readonly Touch[]): HeatCell[] {
  *  full strength and every map was warm from one goal to the other — which is
  *  the "rough squares" complaint solved and replaced with a worse one.
  *
- *  Squaring-ish (1.8) drops a one-in-three cell to about a seventh while leaving
- *  the peak where it is, so what survives is where he actually was. */
-const FALLOFF = 1.8;
+ *  It started at 1.8, which killed the fog and took most of the warmth with it
+ *  (Craig, 10 Sep 2026: *"heat maps are a little faint"*). 1.25 keeps a
+ *  one-in-three cell at under a third of the peak — still plainly the floor —
+ *  while letting everything above it read. The blur radius came down at the same
+ *  time, which is the other half of the same adjustment: a tighter kernel throws
+ *  less of the intensity away, so less has to be added back. */
+const FALLOFF = 1.25;
 
 /** What the blur costs, put back.
  *
- *  A Gaussian at 2.0 spreads one cell over several times its own area, so a cell
- *  drawn at full strength reads at a fraction of it. Normalising BEFORE a blur
+ *  A Gaussian spreads one cell over several times its own area, so a cell drawn
+ *  at full strength reads at a fraction of it. Normalising BEFORE a blur
  *  normalises the wrong quantity; this is the correction, and it is deliberately
- *  small enough that the top two bands stay apart rather than both clipping. */
-const BLUR_GAIN = 1.4;
+ *  small enough that only the very peak clips — a gain big enough to lift the
+ *  floor flattens the top of every map into one shade. */
+const BLUR_GAIN = 1.15;
 
 /** The busiest area's opacity. Short of 1 because the mow bands under it are
  *  what say "pitch" — a solid block of colour reads as a chart that happens to
  *  be pitch-shaped. */
-const HOTTEST = 0.92;
+const HOTTEST = 0.95;
 
 /** A cell's density as the opacity it is drawn at. */
 export function shade(density: number): number {

@@ -157,20 +157,46 @@ holds three and a cell holding ONE is a third of the way up the scale. The first
 cut multiplied by a flat gain to make up what the blur spreads away, which drew
 that single touch at full strength and left every map warm from one goal to the
 other — the rough squares solved and replaced with something worse. `shade()`
-raises density to 1.8 first, which drops a one-in-three cell to about a seventh
-and leaves the peak where it is. It is tested, beside the arithmetic rather than
-in the drawing.
+raises density to a power first, so the floor stays the floor.
+
+The exponent went 1.8 then 1.25: 1.8 killed the fog and took most of the warmth
+with it (*"heat maps are a little faint"*). The blur came down from 2.0 to 1.7 in
+the same adjustment, and the two are the same knob from opposite ends — a tighter
+kernel throws less intensity away, so less has to be added back. `shade` is
+tested against the PEAK rather than against a number, because a brighter map
+raises both and only the ratio is the rule.
 
 **Each map is normalised to its own man's busiest area**, so the two show SHAPE.
 A comparison where one man has 400 touches and the other 40 would otherwise draw
 the second as a blank pitch, which says "no data" when the truth is "less of it".
 Volume is a number and sits in the caption above each pitch.
 
-**The axis is not flipped.** SofaScore already publishes a man's touches running
-from his own goal towards the one he attacks — measured across the whole export
-on 10 Sep 2026: keepers average x=11.0, centre-backs 36.4, full-backs 47.6,
-midfielders 48.8, attacking midfielders 58.4, forwards 61.8. A flip would put
-every striker in his own box.
+**x is not flipped; y is — and SofaScore's two feeds disagree about y.**
+
+x already runs from a man's own goal towards the one he attacks, in both feeds.
+Measured across the whole export on 10 Sep 2026: keepers average x=11.0,
+centre-backs 36.4, full-backs 47.6, midfielders 48.8, attacking midfielders 58.4,
+forwards 61.8. A flip there would put every striker in his own box.
+
+y is the trap. In the HEATMAP feed a right-back averages y=17.9 and a right
+winger 26.0, against a left-back's 79.8 and a left winger's 70.9 — so y=0 is the
+RIGHT touchline. In the SHOT feed it is the other way round: RW 59.6 and RB 59.8
+against LW 43.9 and LB 45.1. **One provider, two conventions, and nothing in the
+payload says so.**
+
+Drawn from above with a man attacking to the right, his right side is the BOTTOM
+of the picture — the larger SVG y. The shot feed already satisfied that; the
+heatmap feed did not, so Arsenal's right winger was drawn out on the left
+touchline (Craig, 10 Sep 2026: *"saka is showing as left wing, hes on the
+right"*). The touch feed's y is flipped in the exporter, which is the contract's
+rule and exactly the case it exists for.
+
+**The check that settles it is the two feeds agreeing with each other**, not
+either one looking plausible. Across the 86 players who have both a touch map and
+four or more shots, mean touch-y against mean shot-y correlates at **r = +0.82**
+after the flip. Before it, the same test would have been strongly negative — and
+a screen drawing two maps that disagree about which side is which is indefensible
+however good each looks alone.
 
 ### The picker, and why it waited
 

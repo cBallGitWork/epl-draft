@@ -50,11 +50,12 @@ const BOX = { width: 100, height: 64 };
 
 /** How far the blur reaches, in pitch units.
  *
- *  A shade over half a cell (`heat.ts` draws them 4.17 x 4.00), so one touch
+ *  A little under half a cell (`heat.ts` draws them 4.17 x 4.00), so one touch
  *  spreads to about the area a player actually controls and two touches a cell
- *  apart merge into one shape. Larger and every map becomes the same fog; smaller
- *  and the cell edges come back, which is the fault being fixed. */
-const BLUR = 2.0;
+ *  apart merge into one shape. Larger and every map becomes the same fog AND
+ *  loses intensity, which is what made the first maps faint; smaller and the
+ *  cell edges come back, which is the fault the blur exists to fix. */
+const BLUR = 1.7;
 
 /** The ramp, coldest first, as it is laid over grass.
  *
