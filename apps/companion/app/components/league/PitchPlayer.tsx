@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import {
   type Club,
   type Opposition,
@@ -10,35 +9,24 @@ import {
 } from "@epl/core";
 import FixtureChip from "../football/FixtureChip";
 import { chipsFor } from "./Chips";
-import PlayerImage from "./PlayerImage";
+import PlayerShirt, { KIT_RATIO } from "./PlayerShirt";
 import { positionLabel } from "../../positions";
 import { unresolvedShort } from "../../unresolved";
 import { NAME_SIZE } from "./PitchRows";
 
-// One player as he stands on the pitch: a cut-out, his name on a dark plate, and
+// One player as he stands on the pitch: his club's kit, his name on a plate, and
 // under it whatever there is to say — his fixture until he kicks off, his
 // minutes and what he has done once he has.
 //
 // It used to be a 1994/95 Merlin sticker: white card, black keyline, the head on
-// a flat studio green. Handsome on its own and wrong at fifteen-up, because
-// every one of those is a border and a background between the reader and the
-// only two things he came for, the face and the fixture. What replaced it is
-// what the cut-outs were always asking for — nothing behind them at all.
-
-/** The shape of the photograph on the grass: the shape of the file it comes
- *  from.
- *
- *  The Premier League ships its cut-outs at 110×140 and FPL its kits at 110×145,
- *  and `PitchRows.MAX_CARD` is 110px — so at its widest this card IS the
- *  photograph at native size, nothing upscaled and nothing cropped. It was
- *  1.32, wider than it stood, which threw away three fifths of every asset and
- *  left a 33px-tall face on a phone while a quarter of the screen below the
- *  pitch went unused. Height was the thing the card was short of, not width.
- *
- *  Set here and not in the token layer, so it reaches this card and not the two
- *  other pitches — the FPL tab's and the paper's team of the week — which carry
- *  different things under the picture and are somebody else's call. */
-const PORTRAIT_RATIO = { "--pitch-figure": "110 / 140" } as CSSProperties;
+// a flat studio green. That gave way to a bare cut-out — nothing behind it at
+// all — and the cut-out gave way to the kit on 10 Sep 2026. `PlayerShirt` carries
+// why, and the short version is that the photograph's fallback ladder guarantees
+// a line of eleven drawn as three different kinds of object.
+//
+// This is the planner's card and the one pitch a manager can still CHANGE, which
+// is why it keeps its plates where `PitchMarker` prints on the grass: a tap
+// target wants an edge.
 
 export default function PitchPlayer({
   rostered,
@@ -68,7 +56,7 @@ export default function PitchPlayer({
       // the same height in the line. It used to be one box of its own
       // proportions, which left a hole in the row wherever the bridge had not
       // settled somebody.
-      <div className="@container flex w-full flex-col" style={PORTRAIT_RATIO}>
+      <div className="@container flex w-full flex-col" style={KIT_RATIO}>
         <div className="pitch-figure grid w-full place-items-center border border-dashed border-white/35 bg-black/25">
           <span className="numeric text-2xs font-bold text-white/70">
             {positionLabel(rostered.slot.position) ?? "?"}
@@ -94,17 +82,20 @@ export default function PitchPlayer({
   const chips = chipsFor(t).slice(0, 2);
 
   return (
-    <div className="@container flex w-full flex-col" style={PORTRAIT_RATIO}>
-      {/* Drawn back until he kicks off, and only the photograph is. It replaced
-          the count of players still to play that used to sit on the
-          head-to-head tabs: the same fact, said where it names the men rather
-          than totting them up. Dimming the whole card said it too, and took the
-          fixture colour and the name with it — the two things a waiting player
-          still needs. */}
-      <PlayerImage
-        player={player}
+    <div className="@container flex w-full flex-col" style={KIT_RATIO}>
+      {/* Drawn back until he kicks off, and only the shirt is. It replaced the
+          count of players still to play that used to sit on the head-to-head
+          tabs: the same fact, said where it names the men rather than totting
+          them up. Dimming the whole card said it too, and took the fixture
+          colour and the name with it — the two things a waiting player still
+          needs.
+
+          **No number**, because a fantasy fifteen is fifteen different kits and
+          is told apart by them. See `PlayerShirt`. */}
+      <PlayerShirt
         club={club}
         keeper={isGoalkeeper(rostered.slot.position)}
+        name={player.name}
         kickedOff={started}
       />
 
@@ -115,11 +106,16 @@ export default function PitchPlayer({
 
           The type does not move, so a crowded line truncates. That was going to
           be his SQUAD NUMBER instead — a number a reader can read beats the
-          front of a name he cannot — and the number does not exist: FPL's
-          `squad_number` is a key that is present on all 622 elements and null on
-          every one of them. So the graceful end of the rule is the ellipsis, and
-          "Dewsbury-H…" at eleven pixels is worth more than "Dewsbury-Hall" at
-          seven. */}
+          front of a name he cannot — and FPL's `squad_number` is a key that is
+          present on all 622 elements and null on every one of them. So the
+          graceful end of the rule is the ellipsis, and "Dewsbury-H…" at eleven
+          pixels is worth more than "Dewsbury-Hall" at seven.
+
+          **And it stays the ellipsis even though two pitches now draw a number**
+          (10 Sep 2026), because those two are about a REAL club: their numbers
+          come from the sister repo's squad list and the Premier League's own
+          team sheet, neither of which knows a Fantrax roster line. Nothing about
+          FPL's dead field has changed. */}
       <span
         className={`flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden bg-cream px-0.5 text-center font-display font-bold uppercase leading-none tracking-[-0.01em] text-bg ${NAME_SIZE}`}
       >
