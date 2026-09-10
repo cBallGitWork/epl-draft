@@ -1,6 +1,15 @@
 import type { Shot } from "@epl/core";
 
-// A man's shots, as marks on the grass.
+// Shots, as marks on the grass.
+//
+// **Moved out of `players/analysis` on 10 Sep 2026, at the second use.** The
+// match screen's own shot map wants exactly these marks and `prem/` reaching
+// into `players/` for them is a layering the app does not otherwise have — so it
+// comes here, to `components/football/`, which CODE_RULES §4 names as the home
+// for anything drawn from the football layer. The two PITCHES stay separate and
+// are meant to: one is a man attacking right across a season, the other is two
+// sides of one match facing each other. What they share is the mark, and the
+// mark is what moved.
 //
 // **Small, and the arithmetic is the point.** The pitch is 358px wide at 390 and
 // about 530px in a half-width column on a desk, so one viewBox unit is 3.58px
@@ -57,7 +66,21 @@ const TIER: Record<Shot["outcome"], "goal" | "target" | "off"> = {
   miss: "off",
 };
 
-export default function Marks({ shots }: { shots: readonly Shot[] }) {
+export default function Marks({
+  shots,
+  ink = "var(--color-cream)",
+}: {
+  shots: readonly Shot[];
+  /** The mark's own colour. Cream by default — DESIGN §3's slot for ink on a
+   *  colour plate, and what a single-player map wants, since its caption already
+   *  names whose shots these are.
+   *
+   *  A MATCH map passes each side its club colour, because there two sets of
+   *  marks share one pitch and nothing else could tell them apart. It changes the
+   *  hue and never the grammar: fill still means scored, an outline still means
+   *  it did not, and weight still separates on target from off. */
+  ink?: string;
+}) {
   return (
     <g>
       {shots.map((shot, n) => {
@@ -72,8 +95,8 @@ export default function Marks({ shots }: { shots: readonly Shot[] }) {
             cx={shot.x}
             cy={(shot.y / 100) * 64}
             r={r}
-            fill={DRAWN[tier].fill}
-            stroke="var(--color-cream)"
+            fill={DRAWN[tier].fill === "none" ? "none" : ink}
+            stroke={ink}
             strokeWidth={DRAWN[tier].width}
             opacity={DRAWN[tier].opacity}
           />

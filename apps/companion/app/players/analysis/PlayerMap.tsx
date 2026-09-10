@@ -1,5 +1,5 @@
 import type { Shot, Touch } from "@epl/core";
-import Marks from "./Marks";
+import Marks from "../../components/football/ShotMarks";
 import type { MapKind } from "./maps";
 import { CELL, heatCells, shade } from "./heat";
 

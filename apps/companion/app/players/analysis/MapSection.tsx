@@ -3,7 +3,7 @@ import type { Shot, TouchPlayer } from "@epl/core";
 import { shotsOf, touchFixtures, touchesOf } from "@epl/core";
 import Section from "../../components/shell/Section";
 import PlayerMap from "./PlayerMap";
-import { MarksKey } from "./Marks";
+import { MarksKey } from "../../components/football/ShotMarks";
 import { MAP_LABEL, chosenKind, kindsPresent } from "./maps";
 import { PLATE } from "../BoardControls";
 

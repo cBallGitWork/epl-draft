@@ -93,7 +93,7 @@ export type { IntelTouches, Touch, TouchPlayer } from "./intel/touches";
 // Every shot, already flipped onto the touch clouds' convention — SofaScore
 // publishes a shot as distance from the attacking goal and a touch the other way
 // round, and `intel/shots.ts` records how that was settled.
-export { shotIntel, shotsOf } from "./intel/shots";
+export { mirrorShot, shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
 export type { IntelShots, Shot } from "./intel/shots";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // The same read at season scale — his career before this one. `seasons.ts` says
