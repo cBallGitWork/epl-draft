@@ -74,6 +74,15 @@ coming back.
 - **The board's picker stays.** It is the way in from a player's own page; this
   is the way to change your mind once you are here. Neither is the other's
   fallback.
+- **`scroll={false}` on the result links**, as on the map picker. It was left on
+  at first, on the reasoning that choosing a MAN changes the whole subject of the
+  screen where choosing a map changes one panel. The reasoning was sound and the
+  answer was still wrong (Craig, 10 Sep 2026: *"its annoying"*): the result list
+  collapses the moment you pick, so the page shortens under the tap and the jump
+  lands somewhere nobody asked for. **Every navigation within this screen now
+  holds its place**; the tab strip out of it does not, which is correct — that
+  one really is a link to somewhere else. Measured after the fix: 0px of drift
+  from a scroll position of 300, with `b` genuinely changing.
 
 ## This season
 

@@ -128,7 +128,21 @@ function Found({
     <ul className="cm-rows flex flex-col">
       {found.map((man) => (
         <li key={man.fantraxId}>
-          <Link href={pickHref(side, man.fantraxId, other)} className={`${ROW_LINK} px-1.5`}>
+          <Link
+            href={pickHref(side, man.fantraxId, other)}
+            // **`scroll={false}`, like the map picker** (Craig, 10 Sep 2026:
+            // *"its annoying"*, of picking a player doing it). It was left on at
+            // first on the reasoning that choosing a man changes the whole
+            // SUBJECT of the screen, where choosing a map changes one panel —
+            // and the reasoning was sound and the answer still wrong. The
+            // result list collapses the moment you pick, so the page shortens
+            // under the tap and the jump lands somewhere the reader did not
+            // ask for. Every navigation on this screen now holds its place;
+            // the tab strip out of it does not, which is correct — that one
+            // really is a link to somewhere else.
+            scroll={false}
+            className={`${ROW_LINK} px-1.5`}
+          >
             <span className={`${ROW_NAME} min-w-0 truncate`}>{man.name}</span>
           </Link>
         </li>
