@@ -161,15 +161,17 @@ no longer describes this one.
   card would upscale the picture it exists to show. It was 4.35rem, which pinned
   every screen from about 768px up at 69.6px and a 9px name — so the desktop
   pitch was cap-starved where the phone is width-starved.
-- **The KIT is drawn at the shape of the CROPPED kit** — 110×129 — **up to the
+- **The KIT is drawn at the shape of the CROPPED kit** — very nearly square — **up to the
   height one row has room for**. Not the file's 110×145, and not the jersey's own
   shape either: counted off the alpha channel on 10 Sep 2026, the shirt inside
   the 220×290 canvas is 193×284 for an outfield kit and 207×283 for a keeper's,
   which is **0.680** wide-to-tall against about 0.88 on the sites Craig put
   beside it. Ours is a photographed full-length jersey and theirs is a stubbier
-  illustration, so the hem is cropped — `KEPT` in `PlayerShirt`, and the card's
-  shape and the numeral's height are both derived from it rather than typed
-  beside it. The box was `1.32`, wider than it
+  illustration, so the hem is cropped — `KEPT` in `PlayerShirt`, with the card's
+  shape computed from it (`CARD = JERSEY / KEPT`) rather than written out
+  anywhere. It was 0.80 for one round and is 0.70 now (Craig, 10 Sep 2026: *"the
+  shirts still seem long, so we could kinda cut them off to make them more
+  square"*). The box was `1.32`, wider than it
   stood, which threw away three fifths of every asset and left a 33px face on a
   phone while a quarter of the screen under the pitch went unused.
 
@@ -181,10 +183,10 @@ no longer describes this one.
   wrong.
 
   The card's height cap and its aspect-ratio can still disagree on a short
-  viewport, so the kit and the number on it share an INNER box that takes the
-  card's height and derives its width from the ratio. That box is the shirt, and
-  a percentage down it is a true fraction of the kit — which is what the chest
-  numeral is positioned against.
+  viewport, so the kit shares an INNER box that takes the
+  card's height and derives its width from the ratio. That box is the shirt, so
+  the crop stays a crop at every viewport instead of quietly becoming a
+  letterbox.
 - **The card is bounded in both directions, and they come from opposite ends of
   the squad.** Width is a share of the fullest LINE, so a crowded line makes a
   narrow card. Height is a share of the screen divided by the number of ROWS,

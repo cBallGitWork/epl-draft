@@ -58,12 +58,13 @@ export interface IntelPlayer {
    *  starters** — Villa two number 2s and two number 4s, Liverpool two 10s, City
    *  two 18s.
    *
-   *  It went unnoticed while the number was a table column, where the name in the
-   *  same row carries the identification. It stopped being harmless the day a
-   *  pitch drew eleven identical kits and asked the number to tell them apart.
-   *  `squadNumbers` in `intel/map.ts` applies this repo's own rule to it — a
-   *  wrong one is worse than none — and carries the counts. Read through that,
-   *  not through this field, wherever the number has to identify somebody. */
+   *  It goes unnoticed because every reader of it is a TABLE, where the name in
+   *  the same row carries the identification and a repeat costs nothing. It
+   *  stopped being harmless for one afternoon, when a pitch drew eleven identical
+   *  kits and asked the number to tell them apart; `squadNumbers` was written to
+   *  drop a collided number from both men, and went again when the number came
+   *  off the shirt. Write it back — the rule is a wrong one is worse than none —
+   *  before putting this field anywhere it has to identify somebody on its own. */
   squadNumber: number | null;
   status: string;
   expectedReturnGw: number | null;

@@ -111,20 +111,11 @@ function Side({
           return (
             <PitchMarker
               player={player ?? null}
-              // **His shirt number, ON the shirt** (Craig, 10 Sep 2026: "its
-              // all the same team, so 11 shirts looks bad. Instead, we put the
-              // shirt number on the design too"). This is CM's own tactics
-              // pitch — `19.jpg`, Everton's markers carrying 1, 9, 8, 34 —
-              // arrived at from the other end: every other pitch in the app is
-              // eleven different kits and needs no number to tell them apart,
-              // and this one is eleven of the same kit and has nothing else.
-              //
-              // `matchShirtNumber` is the number he wore in THIS match and it
-              // is 30/30, so unlike the season squad number there is no gap to
-              // draw around.
-              number={man.shirt}
-              // Only reached for a man with no club either, which a team sheet
-              // never has — the shape came from the club's own grid.
+              // Only reached for a man with neither a club nor a footballer
+              // behind him, which a team sheet never has — the shape came from
+              // the club's own grid. His number is on the board underneath, in
+              // the blue index block CM keeps it in (Craig, 10 Sep 2026: "ditch
+              // the number actually" — it was on the chest for one afternoon).
               label={man.shirt === null ? "?" : String(man.shirt)}
               // A 110px card needs "Gakpo", not "Cody Mathès Gakpo".
               name={sheetName(man, byCode)}

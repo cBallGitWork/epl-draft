@@ -1344,6 +1344,41 @@ Also present and not used: `shirt_0-220.png`, a grey blank with a white cross �
 FPL's own "unknown club". `resources.premierleague.com/…/kits/` is a 403 and
 there is no SVG. The `special/` prefix returns the standard file byte-for-byte.
 
+### The pitch card, settled — kit, CM plate, the opponent's colour (10 Sep 2026)
+
+Six sketches on the desk's own tokens, then three, then Craig's call. What ships:
+
+- **A translucent wash** — 45% of the desk blue-black, **no border, no padding**.
+  This reverses the 31 Aug decision that took the plates OFF the marker ("a row
+  of black bars is what made this read as cards on grass rather than as a team"),
+  because the sites Craig put beside it all box the shirt and DESIGN §2 was
+  always on the box's side — nothing else on the desk prints on bare ground.
+  It went to `raised` and then to a SOLID ground first, on my misreading of "make
+  the background a little more opaque"; he meant more transparent.
+- **The name on `cm-bevel`**, CM's own plate in CM's own face.
+- **The fixture in the OPPONENT's club colour**, ink from `inkOn` — Hull's orange
+  and Spurs' white take dark, Brighton's blue takes white. Only when the line
+  really is one club's fixture: a double gameweek names two opponents and has no
+  single colour, and a caller-supplied band (our league's position, on a club's
+  predicted eleven) is not a fixture at all. Both fall back to a plain plate.
+- **No number.** It rode on the chest for one afternoon. `squadNumbers` — the
+  helper that dropped a collided number from both men — went with it; the
+  collision counts and the reason live on in `IntelPlayer.squadNumber`'s docblock
+  for whoever writes it back.
+
+**What this cost the pitch, and it is worth knowing:** the band used to carry
+FPL's fixture DIFFICULTY. It now says who rather than how hard. On the lineup
+planner — the one screen where a manager is actually picking a side — difficulty
+was arguably the more useful read, and `FixtureChip` still carries it everywhere
+else.
+
+**The chrome budget on a phone is the thing to watch.** A 390 card is 58px on a
+five-man line. The bevel takes 4 of those in border and is the price of the
+idiom; a card border and padding were taking another 6 before a letter was drawn,
+which is `MBEU…` instead of `MBEUMO`. Hence the wash with no border, plates run
+to the card edge, and the shirt inset instead — a kit reads at any width and a
+truncated name does not.
+
 ### The kit is LONG, counted off the alpha channel
 
 Craig, 10 Sep 2026, beside two other sites' pitches: *"our shirts seem a little

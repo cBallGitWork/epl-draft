@@ -96,7 +96,7 @@ No fluid clamps except inside the masthead.
 | `league/SeasonGrid` | Championship Manager's attribute grid — the squad's season as one bevelled panel per scoring group, thirteen keeper columns and eleven outfield, every figure Fantrax's own. The **second panel** on `/squad/[teamId]`, and it costs one cache hit: `squadSeason` already reads this table to price the board. |
 | `league/PlayerImage` | The cut-out photograph, with its fallback ladder. Client-only, and has to be — see below. **Four callers, none of them a pitch**: the player profile, the paper's face and picture, and the live card. |
 | `league/PlayerShirt` | The club's kit, and the only place it is drawn. What every pitch draws now. Server component — it has no ladder to walk. |
-| `league/PitchMarker` | One player on the flat pitch: kit, name on the grass, one line under it. Was `PitchDisc`, and was a cut-out head in a coloured circle until 10 Sep 2026. |
+| `league/PitchMarker` | One player on the flat pitch: a kit on a translucent wash, his name on Championship Manager's bevelled plate, and under it the fixture **in the opponent's own colour**. Was `PitchDisc`, and was a cut-out head in a coloured circle until 10 Sep 2026. |
 | `football/FixtureChip` | Opponent + (H)/(A), coloured by FPL's difficulty. **Never wraps** — the band under a sticker is a fixed 20px with `overflow-hidden`, so a second line is guillotined rather than spilled. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
 | `shell/TabStrip` | The blue tab strip under a title bar. Five strips use it — the League section, the Premiership section, a fantasy team's five views, a club's four, a player's five. (It read "three" until 4 Sep 2026 and had been undercounting `PremNav` since 2 Sep.) `dim` greys a tab that has nothing behind it for THIS subject and keeps it in place, which is CM's answer for an empty view (`cm0102/07.jpg`). |
@@ -322,13 +322,25 @@ answers before asking for an image at all — so no `useState`, no `onError`, no
 - **The card and the kit are ONE rectangle.** `.pitch-figure` carries an
   aspect-ratio *and* a max-height and the two disagree on a short viewport, so an
   inner box takes the card's height and derives its width. Bound the other way
-  round (`max-h-full max-w-full`) the numeral came out below the hem.
+  round (`max-h-full max-w-full`) the crop quietly became a letterbox instead.
 - **The hem is cropped, and the crop is one constant.** The jersey inside the
   file measures 0.680 wide-to-tall where other sites draw about 0.88 — ours is a
   photograph and theirs is an illustration, so it reads long. `KEPT` is the
-  fraction drawn; the card's shape and the numeral's height both derive from it.
-  It crops the FOOT, because the collar, crest, sponsor and number are the top
-  four fifths and the hem identifies nobody.
+  fraction drawn and `CARD = JERSEY / KEPT` is the shape that follows; both the
+  token `.pitch-figure` reads and the inner box round the jersey take that one
+  computed number. At `KEPT = 0.7` the card is very nearly square. It crops the
+  FOOT, because the collar, crest and sponsor are the top two thirds and the hem
+  identifies nobody.
+- **No shirt number, anywhere on a pitch** (Craig, 10 Sep 2026). One rode on the
+  chest for an afternoon, on the reading that eleven identical kits need one. The
+  name plate at full card width does the same job, and the number is still in the
+  blue index block on every board that lists these men — which is where
+  Championship Manager keeps it.
+- **The card is a WASH, not a plate.** 45% of the desk's blue-black, with no
+  border and no padding of its own: those cost 6px of a 58px phone card on top of
+  the bevel's 4, and the wash already separates the card from the field. The
+  plates run to the card's edge and the SHIRT is the thing inset — a kit reads at
+  any width and a truncated name does not.
 - **The number, on the two pitches that have one.** Centred just below the
   sponsor — the only patch of a Premier League kit nobody else has bought — in
   `inkOn(colours)` with a contrast ring under it. The ring is load-bearing:

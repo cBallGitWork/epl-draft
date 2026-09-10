@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import { type Club, clubColours, initials, inkOn, shirtUrl } from "@epl/core";
+import { type Club, initials, shirtUrl } from "@epl/core";
 
 // A player on the grass, as his club's kit.
 //
@@ -35,8 +35,6 @@ import { type Club, clubColours, initials, inkOn, shirtUrl } from "@epl/core";
  *  Still exported, because `PitchPlayer`'s unresolved slot draws a dashed box of
  *  the same shape with no kit in it, and a hole of the wrong shape in a row is
  *  the defect this whole file is bounded by. */
-export const KIT_RATIO = { "--pitch-figure": "110 / 129" } as CSSProperties;
-
 /** How much of the kit is drawn, measured off the files rather than judged.
  *
  *  **The kit is LONG** (Craig, 10 Sep 2026: *"our shirts seem a little long"*),
@@ -48,21 +46,37 @@ export const KIT_RATIO = { "--pitch-figure": "110 / 129" } as CSSProperties;
  *  0.88. Ours is a photographed full-length jersey; theirs is a stubbier
  *  illustration, and no box arithmetic turns one into the other.
  *
- *  So the hem is cropped. `KEPT` is the fraction of the jersey drawn, and every
- *  other number here is derived from it rather than typed beside it:
+ *  So the hem is cropped. `KEPT` is the fraction of the jersey drawn and the
+ *  card's shape is `0.680 / KEPT`, derived rather than typed beside it.
  *
- *  · the card's shape is `0.680 / KEPT` — 110 / 129 at KEPT = 0.80
- *  · the numeral sits at `NUMBER_AT / KEPT` down the visible part
+ *  **0.70, which draws the kit very nearly square** (Craig, 10 Sep 2026: *"the
+ *  shirts still seem long, so we could kinda cut them off to make them more
+ *  square"*). It was 0.80 for one round, which is 110/129 and still visibly
+ *  upright. 0.680 would be exactly square and is not worth the last three
+ *  percent of jersey.
  *
  *  Cropping the FOOT and not the shoulders is the whole point: the collar, the
- *  crest, the sponsor and the number are the top four fifths, and the hem is the
- *  part a reader identifies nothing by. */
-const KEPT = 0.8;
+ *  crest and the sponsor are the top two thirds, and the hem is the part a
+ *  reader identifies nothing by. */
+const KEPT = 0.7;
+
+/** The jersey's own shape, off the alpha channel: 193x284 for an outfield kit
+ *  inside a 220x290 canvas. The keeper's is 207x283 and the difference is two
+ *  hundredths, which is less than the crop moves it. */
+const JERSEY = 193 / 284;
+
+/** What the card is therefore shaped like — and it is COMPUTED, because it has to
+ *  be true in two places at once: the token `.pitch-figure` reads for the card,
+ *  and the inner box that holds the jersey. Written out as `110 / 113` in both,
+ *  they were two literals that had to agree about a third number neither of them
+ *  named. */
+const CARD = JERSEY / KEPT;
+
+export const KIT_RATIO = { "--pitch-figure": String(CARD) } as CSSProperties;
 
 export default function PlayerShirt({
   club,
   keeper,
-  number = null,
   kickedOff,
   name,
   fill = false,
@@ -73,16 +87,6 @@ export default function PlayerShirt({
    *  tint, so a keeper drawn in an outfield shirt is wrong in a way a reader
    *  sees before he can say why. */
   keeper: boolean;
-  /** His shirt number, or null for a pitch that has none to draw.
-   *
-   *  **Null is the normal answer on four of the six pitches**, and that is the
-   *  point rather than a gap: a fantasy eleven wears eleven different kits and
-   *  is told apart by them, so a number would be noise. It is the two screens
-   *  where all eleven men wear the SAME kit that need one — a real club's
-   *  predicted eleven (`IntelPlayer.squadNumber`, 197 of 220 starters on 10 Sep
-   *  2026) and a played match's team sheets (`PlSquadMan.shirt`, 30/30). FPL's
-   *  own `squad_number` is null on every element and is not one of them. */
-  number?: number | null;
   /** Whether his match has kicked off. A man still to play is drawn back — and
    *  it is the shirt that is drawn back, never the card: the name and the
    *  fixture under him are what a waiting player is waiting on. */
@@ -114,29 +118,25 @@ export default function PlayerShirt({
     );
   }
 
-  const colours = clubColours(club.shortName);
-  const ink = inkOn(colours);
-
   return (
     <div
       style={KIT_RATIO}
       className={`flex w-full justify-center overflow-hidden ${fill ? "h-full" : "pitch-figure"}`}
     >
-      {/* **The numeral is positioned against the SHIRT, not against the card.**
-          `.pitch-figure` has an aspect-ratio AND a max-height, and the two can
-          disagree: a short viewport caps the height, the box stops being the
-          kit's shape, and `object-contain` letterboxes the shirt inside it. A
-          numeral pinned to the BOX then slides down the kit as the cap bites —
-          it sat on the hem at one viewport and on the chest at another, which is
-          the kind of wrongness that only a screenshot catches.
+      {/* **An inner box that IS the kit.** `.pitch-figure` carries an
+          aspect-ratio AND a max-height, and on a short viewport the cap wins:
+          the box stops being the kit's shape and the shirt no longer fills it.
+          `h-full` takes whatever height the cap left and the aspect-ratio
+          derives the width, so the box and the jersey inside it are one
+          rectangle at every viewport. Bounding it the other way round
+          (`max-h-full max-w-full`) let the two disagree.
 
-          So the pair share an inner box that IS the kit: `h-full` takes the
-          card's height, whatever the cap left of it, and the aspect-ratio
-          derives the width — so the box and the shirt inside it are one
-          rectangle and a percentage down it is a true fraction of the kit.
-          Bounding it the other way round (`max-h-full max-w-full`) let the two
-          disagree, and the numeral came out below the hem. */}
-      <span className="relative block h-full overflow-hidden aspect-[110/129]">
+          It mattered most while a numeral was pinned to this box: it sat on the
+          chest at one viewport and below the hem at another. The numeral is gone
+          (Craig, 10 Sep 2026: *"ditch the number actually"*) and the box stays,
+          because a jersey that is not the shape of its frame is still wrong —
+          the crop would simply stop being a crop. */}
+      <span style={{ aspectRatio: CARD }} className="relative block h-full overflow-hidden">
         <Image
           src={shirtUrl(club, keeper)}
           alt=""
@@ -156,56 +156,7 @@ export default function PlayerShirt({
             kickedOff ? "" : "opacity-80 grayscale-[35%]"
           }`}
         />
-        {number === null ? null : (
-        /* **Centred on the chest** (Craig, 10 Sep 2026), which is where CM 99/00
-           put the number on its own tactics markers and where a reader looks for
-           one on a shirt.
-
-           **Ink computed, and a ring under it, and the ring is the load-bearing
-           half.** `inkOn` answers for the club's PRIMARY, and `clubColours`
-           documents that field as "shirt base — the colour a fan would name
-           first", which is the OUTFIELD shirt. Arsenal's `#EF0107` therefore
-           returns white, and Arsenal's keeper top is white: seven of the twenty
-           are reds whose keeper kits are not red, and three (FUL, LEE, TOT) are
-           white clubs whose keeper kits are not white. A per-club keeper palette
-           would be a second table to keep true twice a season for one numeral. A
-           contrast ring is one rule that survives both kits, and is how a real
-           shirt prints a number anyway.
-
-           `paint-order` is not available to HTML text, so the ring is four offset
-           shadows — the same trick the name under the card uses, at the opposite
-           polarity. */
-          <span
-            aria-hidden
-            // **Just under the sponsor, which is the only patch of a Premier
-            // League kit nobody else has bought.** All forty files are shot to
-            // one template — collar, crest, sponsor band, hem — so one fraction
-            // serves every club. It was 40% for one screenshot and printed
-            // "FLY BE4ER" across Arsenal's chest: legible, because the ring does
-            // its job, and still two pieces of type fighting over one patch.
-            // 52% down the whole jersey, which is `52 / KEPT` = 65% down the
-            // part of it that survives the crop. Derived rather than retyped, so
-            // moving `KEPT` cannot leave the number behind on the hem.
-            className="numeric absolute inset-x-0 text-center text-sm font-bold leading-none lg:text-base"
-            style={{ top: `${0.52 / KEPT * 100}%`, color: ink, textShadow: ring(ink) }}
-          >
-            {number}
-          </span>
-        )}
       </span>
     </div>
-  );
-}
-
-/** A one-pixel outline in whichever ink the numeral is not.
- *
- *  A function rather than two constants because the pair is decided per club and
- *  the two halves must not be able to drift into the same colour — which is the
- *  failure it exists to prevent. `inkOn` returns one of exactly two strings, so
- *  this is a total function over its real domain rather than a guess. */
-function ring(ink: string): string {
-  const against = ink === "#ffffff" ? "#0b0c10" : "#ffffff";
-  return [`1px 0 0 ${against}`, `-1px 0 0 ${against}`, `0 1px 0 ${against}`, `0 -1px 0 ${against}`].join(
-    ", ",
   );
 }

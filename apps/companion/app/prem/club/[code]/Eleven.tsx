@@ -18,11 +18,11 @@ import PitchRows from "../../../components/league/PitchRows";
 // them in the order it is given, so they are passed straight through — reversing
 // them here would put the forward on the goal line, which is what it did once.
 //
-// **Eleven of the same kit, told apart by the number on it** (Craig, same day:
-// "its all the same team, so 11 shirts looks bad"). This is the screen that rule
-// was written for. `IntelPlayer.squadNumber` covers 197 of 220 predicted starters
-// — counted 10 Sep 2026 — and the other 23 draw a plain kit rather than a guess,
-// on the same rule as the portraits: a wrong number is worse than none.
+// **Eleven of the same kit, told apart by the NAME** (Craig, 10 Sep 2026: "ditch
+// the number actually"). A number rode on the chest here for one afternoon, on
+// the reading that eleven identical shirts need one; the plate under each shirt
+// carries the name at full width instead, which is the thing a reader was going
+// to read anyway.
 //
 // The formation is set above the grass because `cm9900/19.jpg` sets it there —
 // "4-4-2*" in yellow over Everton's pitch. It reads `4-2-3-1` and not
@@ -39,7 +39,6 @@ export default function Eleven({
   against,
   club,
   playerOf,
-  numberOf,
   positionOf,
 }: {
   lines: ElevenLine[];
@@ -50,10 +49,6 @@ export default function Eleven({
   club: Club;
   /** The footballer behind a code, or null when the snapshot has not got him. */
   playerOf: (code: number) => FootballPlayer | null;
-  /** His shirt number, or null — the sister repo's, which is null both for a man
-   *  nobody recorded one for and for one whose number collided inside his club.
-   *  See `IntelPlayer.squadNumber`. */
-  numberOf: (code: number) => number | null;
   /** What OUR league would field him as — `MID`, `M/F`. Null when Fantrax has
    *  no opinion, or would not answer. */
   positionOf: (code: number) => string | null;
@@ -117,7 +112,6 @@ export default function Eleven({
                 // that fired for one man in eight, and the first thing you see
                 // now that it is the whole pitch.
                 keeper={starter.code === keeper}
-                number={numberOf(starter.code)}
                 club={club}
                 // **His Fantrax position** (Craig, 3 Sep 2026: "prediction just
                 // needs the name and their fantrax position"). A probability

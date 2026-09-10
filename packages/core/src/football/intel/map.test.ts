@@ -4,7 +4,6 @@ import {
   predictionAge,
   setPieceOrder,
   squadIntel,
-  squadNumbers,
   xiFault,
   xiRoundFault,
 } from "./map";
@@ -76,52 +75,6 @@ describe("squadIntel", () => {
     expect(got?.position).toBeNull();
     expect(got?.line).toBeNull();
     expect(got?.positionSource).toBe("fpl_element_type");
-  });
-});
-
-describe("squadNumbers", () => {
-  it("keeps a number only one man in the club wears", () => {
-    const numbers = squadNumbers([
-      player(1, { squadNumber: 9 }),
-      player(2, { squadNumber: 10 }),
-    ]);
-    expect(numbers.get(1)).toBe(9);
-    expect(numbers.get(2)).toBe(10);
-  });
-
-  it("drops a collided number from BOTH men, not from the second", () => {
-    // The whole rule. Against the export in the tree on 10 Sep 2026, 13 of 20
-    // predicted elevens name two starters on one number — Liverpool's Mac
-    // Allister and Wirtz both read 10 — and the number's job on a pitch is
-    // telling two identical kits apart. Giving it to whichever the file lists
-    // first prints a confident wrong number on somebody.
-    const numbers = squadNumbers([
-      player(1, { squadNumber: 10 }),
-      player(2, { squadNumber: 10 }),
-      player(3, { squadNumber: 7 }),
-    ]);
-    expect(numbers.has(1)).toBe(false);
-    expect(numbers.has(2)).toBe(false);
-    expect(numbers.get(3)).toBe(7);
-  });
-
-  it("does not treat two men with no number as a collision", () => {
-    const numbers = squadNumbers([
-      player(1, { squadNumber: null }),
-      player(2, { squadNumber: null }),
-      player(3, { squadNumber: 4 }),
-    ]);
-    expect(numbers.size).toBe(1);
-    expect(numbers.get(3)).toBe(4);
-  });
-
-  it("drops a row whose code is not usable, like `squadIntel` does", () => {
-    const numbers = squadNumbers([
-      player(Number.NaN, { squadNumber: 6 }),
-      player(2, { squadNumber: 8 }),
-    ]);
-    expect(numbers.size).toBe(1);
-    expect(numbers.get(2)).toBe(8);
   });
 });
 

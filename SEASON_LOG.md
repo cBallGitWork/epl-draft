@@ -3593,3 +3593,32 @@ shipped importing a `PlayerShirt` that was not in the repo and HEAD did not
 compile for one commit. Nothing had been pushed. The same session had already
 built `Formation.tsx`, the match page's pitch, which is why this one adapted to
 it rather than building the second one the plan called for.
+
+## The pitch card, sketched and settled (10 Sep 2026, evening)
+
+Craig, with two other sites' pitches beside ours: *"we now need the opponent and
+name box. the other sites have a opaque box surrounding the shirt too… then maybe
+a CM style label under the shirt? sketch up some designs."*
+
+Six sketches, built on the desk's real tokens and real kits rather than described
+— then three, then his pick: the bevelled CM plate for the name over a band in
+the opponent's own colour. Published as an artifact in the end, because the
+screenshot cards were not reaching his device.
+
+**Three corrections in the round trip, all mine:**
+
+- *"make the background a little more opaque for the cards"* — I darkened it,
+  twice, and he meant transparent. *"MORE Transparent, you made it darker,
+  christ."* Read the word, not the guess about the word.
+- *"it doesnt scale well to mobile"* — true, and measurable: a 58px card on a
+  five-man line was spending 10px on chrome before a letter, so the card lost its
+  border and padding and the plates went edge-to-edge with the shirt inset
+  instead.
+- *"ditch the number actually"* — which retired `squadNumbers`, the collision
+  helper written four hours earlier. Dead code goes; the counts and the reasoning
+  stayed in `IntelPlayer.squadNumber`'s docblock for whoever needs it back.
+
+**And one thing the sketches earned.** Putting six real options on real grass
+settled in one pass what prose had been circling for three: the CM title bar is
+handsome and the blue is identical on all eleven cards, so its second line
+carries no information. That is not an argument anyone wins in a paragraph.

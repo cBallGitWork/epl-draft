@@ -1,7 +1,9 @@
+import type { CSSProperties } from "react";
 import type { FootballPlayer } from "@epl/core";
-import { type Club, type Opposition, kickedOff } from "@epl/core";
+import { type Club, type Opposition, clubColours, inkOn, kickedOff } from "@epl/core";
 import PlayerShirt from "./PlayerShirt";
 import { fixtureLabel } from "@epl/core";
+import { NAME_SIZE } from "./PitchRows";
 
 // One player on Championship Manager's pitch: a shirt, a name, and what he is
 // worth. The marker half of the `CmGround` pair.
@@ -37,7 +39,6 @@ export default function PitchMarker({
   name,
   keeper,
   club,
-  number = null,
   opposition,
   points,
   show = "points",
@@ -67,9 +68,6 @@ export default function PitchMarker({
    *  rather than a letter to test, so neither layer's spelling reaches here. */
   keeper: boolean;
   club: Club | undefined;
-  /** His shirt number, on the two pitches where all eleven wear one kit. See
-   *  `PlayerShirt`, which owns why it is null everywhere else. */
-  number?: number | null;
   opposition?: Opposition[];
   /** What our league scores him this period. Undefined is no table at all,
    *  null a table that does not name him. */
@@ -90,13 +88,55 @@ export default function PitchMarker({
   // is chosen by club code and needs no footballer, so the only slot this cannot
   // draw is one with neither a man nor a club behind it — a fantasy roster line
   // the bridge never settled. A match's team sheet naming somebody the bootstrap
-  // has not got is the opposite case: we know exactly which shirt he wore, and
-  // drawing a dashed box because his headshot is missing was a habit left over
-  // from a pitch made of photographs.
+  // has not got is the opposite case: we know exactly which shirt he wore.
   const nobody = player === null && club === undefined;
 
+  // What goes under the name, already resolved, so the band can ask whether
+  // there is anything to draw before it takes up a row's worth of height.
+  const line =
+    band ??
+    (show === "fixture"
+      ? (fixtureLabel(opposition) ?? club?.shortName ?? "—")
+      : started
+        ? String(points ?? "—")
+        : (club?.shortName ?? "—"));
+
+  // **The band takes the OPPONENT's colour** (Craig, 10 Sep 2026: "fixture but
+  // its just the team colour"). You read Chelsea's blue before you read the
+  // three letters on it, which is work no other treatment of this line was
+  // doing — it replaced FPL's difficulty colour, so the pitch now says WHO
+  // rather than HOW HARD.
+  //
+  // **Only when the line really is one club's fixture.** A double gameweek names
+  // two opponents and has no single colour to take; a band the caller filled
+  // with something else — our league's position on a club's predicted eleven —
+  // is not a fixture at all. Both fall back to the plain plate rather than
+  // borrowing a colour that would be claiming something untrue.
+  const single = band === undefined && show === "fixture" && opposition?.length === 1
+    ? opposition[0]
+    : undefined;
+  const against = single === undefined ? undefined : clubColours(single.club.shortName);
+
   return (
-    <div className="relative flex w-full flex-col items-center">
+    // **An opaque card, and it is a reversal.** This drew its name and its line
+    // as white type straight on the grass, on the 31 Aug reading that "a row of
+    // black bars is what made this read as cards on grass rather than as a
+    // team". Craig put two other sites beside it on 10 Sep and both box the
+    // shirt; his call, and DESIGN §2 was always on the box's side — nothing else
+    // on the desk prints on the bare ground, and this was the one exception.
+    //
+    // **A WASH and not a plate** (Craig, 10 Sep 2026: "MORE Transparent, you
+    // made it darker"). It went to `raised` and then to the solid desk ground on
+    // my misreading of "more opaque", which is the opposite of what he asked
+    // for. 45% of the blue-black lets the mow bands through, so the card still
+    // reads as something standing ON grass rather than a tile covering it.
+    //
+    // **And no border and no padding of its own.** Those cost 6px of a 58px card
+    // on a phone, on top of the bevel's 4 — a sixth of the card spent on chrome
+    // before a letter is drawn. The wash is what separates the card from the
+    // field; a keyline round it was saying the same thing a second time and
+    // charging the narrowest screen for it.
+    <div className="flex w-full flex-col gap-px bg-bg/45">
       {nobody ? (
         /* Built to the same shape as a man who resolved, so it stands the same
            height in the line — a hole in the row reads as a formation nobody
@@ -105,46 +145,44 @@ export default function PitchMarker({
           <span className="numeric text-2xs font-bold text-white/70">{label}</span>
         </div>
       ) : (
-        <PlayerShirt
-          club={club}
-          keeper={keeper}
-          number={number}
-          name={name}
-          // **`started`, not a bare `kickedOff`.** The attribute was the JSX
-          // boolean shorthand, which reads as `kickedOff={true}` and happens to
-          // share its name with the imported predicate — so every card on every
-          // pitch was drawn at full strength whether or not his club had kicked
-          // off, while the `started` this line wanted sat computed two lines up
-          // and was spent only on the band below.
-          kickedOff={started}
-        />
+        <span className="block px-1 pt-0.5">
+          <PlayerShirt club={club} keeper={keeper} name={name} kickedOff={started} />
+        </span>
       )}
 
-      {/* **White, on the grass, with no plate under it.**
+      {/* **CM's own bevelled plate, in CM's own face.** `cm-bevel` carries the
+          light-and-dark corners, the chrome family and the dark ink that reads
+          on the grey face, so this is the game's plate rather than a rectangle
+          that resembles one.
 
-          **Not yellow, and `19.jpg` is why.** A comment here once claimed CM
-          sets its names in yellow and `register-warden` checked the image: the
-          names on that tactics pitch are WHITE, and the only yellow on the
-          screen is the shape heading, the selection box, the pressed tab and the
-          rail's current entry — every one of them a selection or a state, which
-          is exactly what `--color-accent` means in DESIGN §3. */}
-      <span className="w-full truncate px-0.5 text-center font-display text-2xs font-bold uppercase leading-none text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.95)]">
-        {name}
+          **The plates run to the card's edge and the SHIRT is the thing inset.**
+          The name is the only identifier left on a pitch of eleven identical
+          kits — the match team sheet is exactly that — so every pixel of it is
+          spent on letters. The bevel already takes 4px of a 77px card in border
+          alone; a card padding either side of that was taking another 8, which
+          is `MOSQUE…` instead of `MOSQUERA`. The shirt can afford the inset
+          because a kit reads at any width and a truncated name does not. */}
+      <span
+        className={`cm-bevel flex h-[var(--pitch-band)] items-center justify-center overflow-hidden px-0.5 text-center font-bold uppercase leading-none ${NAME_SIZE}`}
+      >
+        <span className="w-full truncate">{name}</span>
       </span>
 
-      {/* **What he is worth, or who he plays** — and which of the two is the
-          caller's to say. The squad screen wants the FIXTURE (Craig, 2 Sep:
-          "pitch view on squad page does not need points, just the next fixture
-          I guess"), because a squad is about the week ahead; the head-to-head
-          wants the points, because that screen is about a score. */}
-      <span className="numeric w-full truncate px-0.5 text-center text-3xs font-bold leading-none text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.95)]">
-        {band ??
-          (show === "fixture"
-            ? (fixtureLabel(opposition) ?? club?.shortName ?? "—")
-            : started
-              ? (points ?? "—")
-              : (club?.shortName ?? "—"))}
-      </span>
+      {/* Absent rather than empty: a caller with nothing to say here — the match
+          team sheet, whose board underneath says all of it — would otherwise get
+          a coloured strip with no words in it. */}
+      {line === "" ? null : (
+        <span
+          className="numeric flex h-[var(--pitch-band)] items-center justify-center overflow-hidden px-0.5 text-center text-3xs font-bold leading-none"
+          style={
+            against === undefined
+              ? { background: "var(--color-bg)", color: "var(--color-cream)" }
+              : ({ background: against.primary, color: inkOn(against) } as CSSProperties)
+          }
+        >
+          <span className="w-full truncate">{line}</span>
+        </span>
+      )}
     </div>
   );
 }

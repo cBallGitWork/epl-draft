@@ -151,7 +151,6 @@ export {
   predictionAge,
   setPieceOrder,
   squadIntel,
-  squadNumbers,
   xiFault,
   xiRoundFault,
 } from "./intel/map";

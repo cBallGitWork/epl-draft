@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import type { Club, ClubColours, FootballPlayer, IntelPlayer } from "@epl/core";
-import { squadNumbers } from "@epl/core";
 import ViewToggle from "../../../components/league/ViewToggle";
 import { positionsLabel } from "../../../positions";
 import Eleven from "./Eleven";
@@ -54,13 +53,6 @@ export default function Squad({
   const hasEleven = eleven.length > 0 && formation !== null;
 
   const byCode = new Map(players.map((player) => [player.code, player]));
-  // **Numbers that collide inside the club are dropped**, both of them, and
-  // `squadNumbers` carries the count that made it necessary — 13 of 20 predicted
-  // elevens name two starters wearing the same number. Built from THIS club's
-  // rows, which is what `intel` already holds: a collision is a fact about a
-  // squad, and checking it league-wide would clear a number every time two clubs
-  // happened to have a 10.
-  const numbers = squadNumbers(players.map((player) => intel.get(player.code)).filter((p) => p !== undefined));
   const grass = hasEleven ? (
     <Eleven
       lines={eleven}
@@ -68,11 +60,6 @@ export default function Squad({
       against={against}
       club={club}
       playerOf={(code) => byCode.get(code) ?? null}
-      // Cleared of collisions — see `squadNumbers`. The list beside it prints
-      // `intel`'s raw number, which is right there: a table has a name in the
-      // same row, so a repeated number costs nothing, and on the grass it is the
-      // only thing telling two identical kits apart.
-      numberOf={(code) => numbers.get(code) ?? null}
       positionOf={(code) => positionsLabel(league.get(code)?.positions ?? [])}
     />
   ) : null;
