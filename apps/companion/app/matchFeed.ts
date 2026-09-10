@@ -55,26 +55,28 @@ async function ofFixture<T>(
   }
 }
 
-/** Where a match was played, how many watched, and who refereed it — off the
- *  ROUND read, which is already cached for the wire.
+/** Where a match was played, how many watched, and who refereed it.
  *
- *  **Zero new requests for three of the four fields.** Both reads answer with the
- *  same `RawPlFixture`, and the round carries `ground` 10/10 and `attendance`
- *  9/10 (counted 5 Sep 2026); only `referee` is detail-only, so it comes back
- *  null here. A match screen wanting the referee asks for the fixture.
+ *  **Off the DETAIL read, and it moved there on 10 Sep 2026.** It took the round
+ *  read, which carries `ground` 10/10 and `attendance` 9/10 for free — but
+ *  `matchOfficials` is **0/10 on the round and 28/30 on the detail**, so the
+ *  referee came back null on every match ever drawn and the docblock said "a
+ *  match screen wanting the referee asks for the fixture". This IS that screen,
+ *  and it asks.
+ *
+ *  It costs nothing new in practice: the detail is cached on the same thirty
+ *  seconds and three of the five match tabs already fetch it for the team sheet
+ *  and its events. All four fields come off one object.
  *
  *  This is what retires `clubGround` — core's hand-authored table of twenty
  *  stadium names, which is a guess for a neutral venue and wrong for a club that
- *  moves. Null when the round will not answer or does not carry the fixture, and
- *  then the caller falls back to the table it always had. */
+ *  moves. Null when they will not answer, and then the caller falls back to the
+ *  table it always had. */
 export async function matchFacts(
   gameweek: number | null,
   fixtureCode: number,
 ): Promise<PlMatchFacts | null> {
-  if (gameweek === null) return null;
-  const round = await plRound(gameweek).catch(() => null);
-  const fixture = round?.content.find((entry) => plFixtureCode(entry) === fixtureCode);
-  return fixture === undefined ? null : plMatchFacts(fixture);
+  return ofFixture(gameweek, fixtureCode, null, async (id) => plMatchFacts(await plFixture(id)));
 }
 
 /** Both sides' team sheets for one of OUR fixtures, or null.

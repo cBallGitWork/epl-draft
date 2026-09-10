@@ -11,7 +11,7 @@ import type {
 import { IndexCell } from "../../../components/league/TableCells";
 import { chipsFor } from "../../../components/league/Chips";
 import { PLAYER } from "../../PremNav";
-import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE } from "@/app/desk";
+import { BOARD, PANEL_FLUSH, ROW_RULE } from "@/app/desk";
 import { sheetName } from "./match";
 import type { Match } from "./match";
 
@@ -30,6 +30,28 @@ import type { Match } from "./match";
 // Keeper, then each line as the manager drew it. That is better than sorting on
 // a line ordinal in the way a photograph is better than a description: it is the
 // actual shape, and a back three stops being read as a back four.
+
+/** **This board sets its type a step above the desk's row default**, and it is a
+ *  recorded exception to DESIGN §6's density table rather than drift (Craig,
+ *  10 Sep 2026: *"the player text could be much bigger on this screen too like
+ *  CM… data much bigger too"*).
+ *
+ *  The reason it earns one: `cm9900/16.jpg` is a screen whose ONLY content is
+ *  twenty-two names and their figures, so the game gives them the room a
+ *  many-column board cannot. Every other list on the desk shares its width with
+ *  four or more measures and takes `ROW_NAME`'s `sm`/`lg:base`; this one carries
+ *  a name, a mark and one figure, and at `sm` it was setting a whole screen in
+ *  the size other screens use for a column of noughts.
+ *
+ *  It does NOT change `ROW_NAME` itself. Six other boards wear that recipe and
+ *  none of them has the room. */
+const SHEET_NAME = "font-chrome text-base font-bold lg:text-lg";
+
+/** The figure beside him, sized to match. `ROW_FIGURE` is `sm` at both widths —
+ *  which Craig set on 10 Sep after "numbers in rows are good on desktop, still
+ *  small/hard to read to mobile" — and the same argument applies harder here,
+ *  where the figure is the point of the row. */
+const SHEET_FIGURE = "text-base lg:text-lg";
 
 /** How many chips a row shows before it stops. Two, which is `chipsFor`'s own
  *  reasoning read at a narrower column, and this one shares its width with the
@@ -205,7 +227,12 @@ function Row({
   return (
     <tr className={`${ROW_RULE} ${unused ? "cm-out" : ""} ${opensBench ? "border-t-line" : ""}`}>
       {/* CM's blue index block, carrying the number he wore in THIS match. */}
-      <IndexCell>{man.shirt ?? ""}</IndexCell>
+      {/* The shirt block keeps pace with the name beside it — `.cm-index` sets
+          its own size, so the step up is an addition here rather than a
+          reach into the class. */}
+      <IndexCell>
+        <span className="text-sm lg:text-base">{man.shirt ?? ""}</span>
+      </IndexCell>
       {/* **The card, as a card.** `16.jpg` marks a booked man with a small
           coloured block between his number and his name, and every row keeps the
           slot so the names stay in one column. It is a rectangle in an existing
@@ -223,7 +250,7 @@ function Row({
           href={`${PLAYER}/${man.code ?? ""}`}
           className="group flex min-h-11 flex-col justify-center px-1.5 lg:min-h-9"
         >
-          <span className={`min-w-0 truncate group-hover:underline ${ROW_NAME}`}>
+          <span className={`min-w-0 truncate group-hover:underline ${SHEET_NAME}`}>
             {join.name(man)}
             {man.captain ? <span className="ml-1 text-2xs text-faint">(c)</span> : null}
           </span>
@@ -263,7 +290,7 @@ function Row({
       {/* CYAN (Craig, 4 Sep 2026: *"scores need cyan"*): a fantasy score is a
           reading DERIVED from recorded events, which is `--color-info` exactly,
           and `16.jpg` runs its ratings column in the same ink. */}
-      <td className="numeric w-8 px-1.5 text-right text-sm font-bold text-info">
+      <td className={`numeric w-9 px-1.5 text-right font-bold text-info ${SHEET_FIGURE}`}>
         {/* No figure for a man who never played. A nought would be a claim about
             an afternoon he had no part in (DESIGN §7). */}
         {unused ? "—" : join.points(man.code)}

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { clubGround } from "@epl/core";
+import type { PlMatchFacts } from "@epl/core";
 import { matchFacts } from "../../../matchFeed";
 import Caption from "../../../components/shell/Caption";
 import MatchBar from "./MatchBar";
@@ -66,7 +67,8 @@ export default async function MatchShell({
       <MatchTabs id={fixture.id} current={current} />
       <Caption>{ground ?? roundName(match)}</Caption>
       {children}
-      <div className="mt-auto">
+      <div className="mt-auto flex flex-col">
+        <MatchFacts facts={facts} />
         <MatchFoot home={home} away={away} />
       </div>
     </div>
@@ -78,4 +80,43 @@ export default async function MatchShell({
  *  bar above it. */
 function roundName({ fixture }: Match): string {
   return fixture.gameweek === null ? "Gameweek TBC" : `Gameweek ${fixture.gameweek}`;
+}
+
+/** The line CM runs along the foot of a match screen: who refereed it and how
+ *  many watched.
+ *
+ *  Craig, 10 Sep 2026: *"should we put the ref, attendance and weather too at the
+ *  bottom."* Two of the three, and the third is not ours to give.
+ *
+ *  **Both come free.** `PlMatchFacts` has carried them since 5 Sep and `Shell`
+ *  read one of its four fields — the referee is on **28 of 30** completed
+ *  fixtures on the detail read, the attendance on **24 of 30**, published after
+ *  the match rather than during it. The Overview drew a referee from the sister
+ *  repo's match log instead, which has him on **2 of 20**; that version is
+ *  retired.
+ *
+ *  **Weather is not published by anybody we read.** Counted 10 Sep 2026 across
+ *  every key at every depth of the fixture detail: no `weather`, `temperature`,
+ *  `wind`, `rain` or `condition` anywhere, and FPL has none either. It is not a
+ *  gap to fill later without a new provider, so the line does not hold a slot for
+ *  it.
+ *
+ *  On the SHELL rather than the Overview, so it is under every tab — a fact about
+ *  the match is true on the stats board as much as on the scoresheet, and CM's
+ *  own bar sits below the panel on all four of its screens.
+ *
+ *  Absent entirely rather than printing labels over dashes: a match nobody has
+ *  played has neither, which is exactly when both would be a dash. */
+function MatchFacts({ facts }: { facts: PlMatchFacts | null }) {
+  const said = [
+    facts?.referee === null || facts?.referee === undefined ? null : `Referee ${facts.referee}`,
+    facts?.attendance === null || facts?.attendance === undefined
+      ? null
+      : `${facts.attendance.toLocaleString("en-GB")} watching`,
+  ].filter((part) => part !== null);
+
+  if (said.length === 0) return null;
+  return (
+    <p className="cm-panel px-2 py-1 text-center text-2xs text-muted">{said.join(" · ")}</p>
+  );
 }

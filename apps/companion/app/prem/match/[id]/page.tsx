@@ -49,27 +49,9 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           </Suspense>
         )}
 
-        <Facts match={match} />
       </section>
 
     </MatchShell>
-  );
-}
-
-/** CM's foot line: `Referee - David Elleray · Attendance - 49745 · Weather`.
- *
- *  We have the first and neither of the others — FPL publishes no attendance and
- *  no weather anywhere, and the referee is on **2 of the 20** matches the sister
- *  repo has logged (Andy Madley and Samuel Barrott, counted 4 Sep 2026). So the
- *  line draws what it has and disappears entirely rather than printing three
- *  labels over three dashes. */
-function Facts({ match }: { match: Match }) {
-  const referee = match.logged?.referee ?? null;
-  if (referee === null) return null;
-  return (
-    <p className="border-t border-line pt-1 text-2xs text-faint">
-      Referee &mdash; <span className="text-muted">{referee}</span>
-    </p>
   );
 }
 
