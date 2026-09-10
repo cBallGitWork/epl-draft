@@ -14,6 +14,14 @@ import { PLATE } from "../BoardControls";
 // delay: it is built from the kinds actually present, so with one exported it
 // would have been a single plate to choose between — furniture, not a control.
 //
+// **"Action Zones", which is Championship Manager's own name for this.**
+// `cm9900/16.jpg` and `22.jpg` run `Match Overview · Match Stats · Action Zones ·
+// Match Report`, and `docs/ui/match.md` has listed Action Zones for weeks as one
+// of the two tabs the game has and we do not — `intel-export.md` calls it "the
+// Action Zones gap" in as many words. This is that gap closed, under the game's
+// own heading (Craig, 10 Sep 2026: *"replace with something more CM"*). It read
+// "Maps", which was ours and described the picture rather than the reading.
+//
 // **A segmented strip and not chips**, which is a semantic choice rather than a
 // visual one. `docs/ui/players.md` records the ruling: a Championship Manager
 // tab strip picks ONE of a set and marks exactly one plate current, and six blue
@@ -67,7 +75,7 @@ export default function MapSection({
     // Craig struck off the search boxes on the same day — a heading repeating
     // the control beneath it. Where there is no picker (one kind present) the
     // caption at the foot still says which map it is.
-    <Section title="Maps" aside="This season">
+    <Section title="Action Zones" aside="This season">
       {/* One plate is nothing to choose between, so the strip appears with the
           second kind and not before. */}
       {present.length > 1 ? (

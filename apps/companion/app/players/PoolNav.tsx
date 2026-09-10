@@ -13,9 +13,19 @@ import { ANALYSIS, POOL } from "./query";
 // A server component like every other strip: each page knows which view it is
 // and passes it in, which costs a prop and saves shipping a component to the
 // phone to work it out from the URL.
+//
+// **"Overview", not "Board"** (Craig, 10 Sep 2026: *"replace with something more
+// CM"*). Overview is the game's own first-tab word — `cm9900/12.jpg` opens its
+// strip with it and `16.jpg` runs `Match Overview · Match Stats · Action Zones ·
+// Match Report` — and it is what this view is: the whole pool at a glance,
+// against Analysis, which is one man or two looked at closely. "Board" was ours
+// and named the furniture rather than the reading.
+//
+// The KEY stays `pool`, because it is the URL's business and a route that is
+// renamed every time a label is costs a redirect nobody asked for.
 
 const VIEWS = [
-  { href: POOL, label: "Board", key: "pool" },
+  { href: POOL, label: "Overview", key: "pool" },
   { href: ANALYSIS, label: "Analysis", key: "analysis" },
 ] as const;
 

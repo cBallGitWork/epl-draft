@@ -1,4 +1,4 @@
-# `/players` — Scout
+# `/players` — Find
 
 Every player Fantrax knows, what our league has decided about him, and what
 Fantrax scores him. **It is its own section as of 6 Sep 2026** (Craig: *"I think
@@ -10,7 +10,14 @@ route is the same route — only its frame and its place in the app changed.
 
 ## The section
 
-- **"Scout", not "Players"**, on the bar and on the nav plate. It is already this
+- **"Find", which is Championship Manager's own word for this slot** (Craig,
+  10 Sep 2026: *"replace with something more CM"*). Its rail in `cm9900/12.jpg`,
+  `11.jpg` and `25.jpg` reads `Continue Game · <manager> · Competitions ·
+  Nations & Clubs · Find · Game Options`, and Find is the entry for looking a
+  player up. It read **"Scout"** until then, on the argument below — which had
+  cited CM's own `Find` as the reason Scout beat Players, a stand-in for a word
+  the reference already had. The URL stays `/players`.
+- ~~**"Scout", not "Players"**~~, on the bar and on the nav plate. It is already this
   repo's word for the activity — `players/[fantraxId]/scouting.ts`, DESIGN §9's
   "scouting table", ROADMAP §7's "scouting notes, waiver intel" — and
   Championship Manager's own rail carries `Find` in exactly this slot, a verb for
@@ -24,7 +31,7 @@ route is the same route — only its frame and its place in the app changed.
   plates at 320 are 53px each against a widest label of 44 — so the sixth plate
   is a door and everything past the fifth section lives behind it. DESIGN §2
   carries the arithmetic and the rule.
-- **Two views**: Board and Compare, on `players/PoolNav`. The strip arrived with
+- **Two views**: Overview and Analysis, on `players/PoolNav` — "Board" and "Compare" until 10 Sep 2026. Overview is CM's own first-tab word (`cm9900/12.jpg`, and `16.jpg`'s `Match Overview`), and it is what the view is: the whole pool at a glance, against Analysis, which is one man or two looked at closely. The strip arrived with
   the second; `league/SectionNav` records the ruling that one entry is a stray
   button rather than a bar.
 

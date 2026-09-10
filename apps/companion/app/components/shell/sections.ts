@@ -110,13 +110,17 @@ export const SECTIONS: Section[] = [
   // listed Players among the Desk's own all along — it was `sections.ts` that
   // drifted when the bar ran out of room, not the design.
   //
-  // **"Scout", not "Players".** It is this repo's own word for the activity
-  // already — `scouting.ts`, DESIGN §9's "scouting table", ROADMAP §7's
-  // "scouting notes, waiver intel" — and Championship Manager's rail carries
-  // `Find` in exactly this slot, a verb rather than a noun for the same job. The
-  // URL stays `/players`, because a URL is persisted the moment somebody shares
-  // it and the route did not change.
-  { href: "/players", label: "Scout", routes: ["/players"], overflow: true },
+  // **"Find", which is Championship Manager's own word for this slot.** Its
+  // rail in `cm9900/12.jpg`, `11.jpg` and `25.jpg` reads `Continue Game ·
+  // <manager> · Competitions · Nations & Clubs · Find · Game Options`, and Find
+  // is the entry for looking a player up (Craig, 10 Sep 2026: *"replace with
+  // something more CM"*). It read "Scout" until then, on a comment that cited
+  // CM's Find as the reason — a stand-in for a word the reference already had.
+  //
+  // The URL stays `/players`, because a URL is persisted the moment somebody
+  // shares it and the route did not change. `titles.ts` carries the same label
+  // for the bar; the two must not drift.
+  { href: "/players", label: "Find", routes: ["/players"], overflow: true },
   { href: "/fpl", label: "FPL", routes: ["/fpl"], overflow: true },
 ];
 

@@ -230,6 +230,15 @@ after the flip. Before it, the same test would have been strongly negative — a
 a screen drawing two maps that disagree about which side is which is indefensible
 however good each looks alone.
 
+### The head is CM's own words
+
+**"Action Zones"** (Craig, 10 Sep 2026: *"replace with something more CM"*).
+`cm9900/16.jpg` and `22.jpg` run `Match Overview · Match Stats · Action Zones ·
+Match Report`, and `match.md` has listed Action Zones for weeks as one of the two
+tabs the game has and we do not — `intel-export.md` calls it "the Action Zones
+gap" in as many words. This is that gap closed, under the game's own heading. It
+read "Maps", which was ours and named the picture rather than the reading.
+
 ### The picker, and why it waited
 
 Craig, 10 Sep 2026: *"need options for touch map, shot map etc"*. It is built

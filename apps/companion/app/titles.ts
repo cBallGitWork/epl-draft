@@ -58,14 +58,22 @@ export const LEAGUE_CAPTION: Record<LeagueSection, string> = {
  *  **A subject, not a view** — which is why it is a bare name here rather than an
  *  entry in a caption table. `SCOUT_CAPTION` below is the view.
  *
- *  "Scout" and not "Players" for two reasons that agree. It is already this
- *  repo's word for the activity — `players/[fantraxId]/scouting.ts`, DESIGN §9's
- *  "scouting table", ROADMAP §7's "scouting notes, waiver intel" — and
- *  Championship Manager's own rail carries `Find` in exactly this slot, a verb
- *  for the same job rather than a noun for the people it is done to. It also
- *  measures 32px against the 36px a seventh foot-row plate would allow, where
- *  "Players" measures 42 — not the reason, but the reason it costs nothing. */
-export const SCOUT = "Scout";
+ *  **`Find`, which is Championship Manager's own word for this slot** — the rail
+ *  in `cm9900/12.jpg`, `11.jpg` and `25.jpg` reads `Continue Game · <manager> ·
+ *  Competitions · Nations & Clubs · Find · Game Options`, and Find is the entry
+ *  for looking a player up. Craig, 10 Sep 2026: *"replace with something more
+ *  CM"*.
+ *
+ *  It was "Scout" until then, and this docblock already argued the case against
+ *  itself: it cited CM's `Find` as the reason "Scout" was better than "Players",
+ *  which is a verb standing in for a verb the reference already had. Using the
+ *  game's own word is shorter, and the reference library's rule is that a CM
+ *  claim cites a numbered shot rather than a memory of one.
+ *
+ *  The constant keeps its name. `SCOUT` is what the section is called in this
+ *  codebase — `scouting.ts`, DESIGN §9's "scouting table" — and renaming an
+ *  export to match a label is how a label change becomes a hundred-file diff. */
+export const SCOUT = "Find";
 
 /** The scouting section's one view. The pool overrides it with the category the
  *  board is ranked by, exactly as `cm9900/16.jpg` captions its stat list. */
