@@ -46,10 +46,14 @@ export {
   plFixtureCode,
   plCommentary,
   plMatchMetrics,
-  plPlayerCodes,
-  plTeamSheets,
 } from "./premierleague/map";
-export type { PlCommentaryLine, PlSquadMan, PlTeamSheet } from "./premierleague/map";
+export type { PlCommentaryLine } from "./premierleague/map";
+export { plPlayerCodes, plTeamSheets } from "./premierleague/teamSheet";
+export type { PlSquadMan, PlTeamSheet } from "./premierleague/teamSheet";
+export { plManMatches } from "./premierleague/sheetEvents";
+export type { PlManMatch } from "./premierleague/sheetEvents";
+export { plMatchBoard } from "./premierleague/matchStats";
+export type { MatchStatRow } from "./premierleague/matchStats";
 export { mapRoundBreaks } from "./premierleague/breaks";
 export { plMatchFacts } from "./premierleague/matchFacts";
 export { plWireLines, shortProse } from "./premierleague/prose";
@@ -60,12 +64,12 @@ export type {
   RawPlEvent,
   RawPlFixture,
   RawPlFixturePage,
+  RawPlFixtureEvent,
   RawPlGoal,
-  RawPlMatchStats,
-  RawPlMetric,
   RawPlTeamList,
   RawPlTextstream,
 } from "./premierleague/raw";
+export type { RawPlMatchStats, RawPlMetric } from "./premierleague/rawStats";
 // One player's own season, match by match — the only read here keyed by FPL's
 // per-season element id, and the only one with the four measurements a live
 // snapshot cannot give per fixture. `gameLog.ts` says why.
@@ -85,11 +89,11 @@ export { goalMinutes, loggedPlayers, matchIntel, matchLine, subNote } from "./in
 // argument for the raw cloud — smaller than the grid AND smoother, because the
 // busiest player in the league has 414 season touches — is in `intel/touches.ts`.
 export { touchFixtures, touchIntel, touchesOf } from "./intel/touches";
-export type { IntelTouches, Touch, TouchFixture, TouchPlayer } from "./intel/touches";
+export type { IntelTouches, Touch, TouchPlayer } from "./intel/touches";
 // Every shot, already flipped onto the touch clouds' convention — SofaScore
 // publishes a shot as distance from the attacking goal and a touch the other way
 // round, and `intel/shots.ts` records how that was settled.
-export { SHOT_OUTCOMES, shotIntel, shotsOf } from "./intel/shots";
+export { shotIntel, shotsOf } from "./intel/shots";
 export type { IntelShots, Shot } from "./intel/shots";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // The same read at season scale — his career before this one. `seasons.ts` says

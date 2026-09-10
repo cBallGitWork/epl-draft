@@ -3,9 +3,9 @@ import { politeFetch } from "../../http/fetch";
 import type {
   RawPlFixture,
   RawPlFixturePage,
-  RawPlMatchStats,
   RawPlTextstream,
 } from "./raw";
+import type { RawPlMatchStats } from "./rawStats";
 
 // All Premier League API I/O, and nowhere else. The mapping next door stays pure.
 //

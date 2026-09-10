@@ -1,5 +1,6 @@
 import type { MatchEvent, MatchEventKind } from "../types";
-import type { RawPlEvent, RawPlFixture, RawPlMatchStats, RawPlSquadPlayer } from "./raw";
+import type { RawPlEvent, RawPlFixture } from "./raw";
+import type { RawPlMatchStats } from "./rawStats";
 
 // Pure raw → domain. No clock, no network, no environment (CODE_RULES §5).
 //
@@ -35,113 +36,6 @@ export function plFixtureCode(fixture: RawPlFixture): number | null {
   if (opta === undefined || !opta.startsWith("g")) return null;
   const code = Number(opta.slice(1));
   return Number.isInteger(code) ? code : null;
-}
-
-/** Premier League player id → FPL player `code`, for the two squads in a match.
- *
- *  The whole join, in one function. `optaToCode` is FPL's own `opta_code` →
- *  `code`, which a caller builds from a bootstrap it already holds.
- *
- *  **Harvested from the team sheets and not from the `/players` collection.**
- *  That collection is the obvious source and it is incomplete: counted against
- *  every player named in the 2,215 events of gameweeks 1-3, it misses 20 of the
- *  360 who appear, 14 of them in a goal, a card or a substitution — one a
- *  scorer. All twenty are on a team sheet, and not one of the twenty was an id
- *  mismatch; the collection simply lags squad registration. */
-export function plPlayerCodes(
-  fixture: RawPlFixture,
-  optaToCode: Map<string, number>,
-): Map<number, number> {
-  const codes = new Map<number, number>();
-  for (const list of fixture.teamLists ?? []) {
-    // A side nobody has named yet is a null ENTRY in a two-long array, not an
-    // absent array — see `RawPlFixture.teamLists`. This read `list.lineup`
-    // straight and threw on every unstarted fixture, which the app's own
-    // try/catch was quietly absorbing as "no sheets".
-    if (list === null || list === undefined) continue;
-    for (const player of [...list.lineup, ...list.substitutes]) {
-      const opta = player.altIds?.opta;
-      const code = opta === undefined ? undefined : optaToCode.get(opta);
-      if (code !== undefined) codes.set(player.id, code);
-    }
-  }
-  return codes;
-}
-
-/** One man as a team sheet names him, joined to FPL where the bridge can. */
-export interface PlSquadMan {
-  /** FPL's season-stable player `code`, or null when the bridge could not place
-   *  him. Null is a real answer and not a failure to try: the Premier League
-   *  registers a squad before FPL lists everyone in it, which is the same lag
-   *  `scripts/pl-bridge.ts` exists for. He keeps his name either way. */
-  code: number | null;
-  name: string;
-  /** The number on his back in THIS match. Absent for a man the payload gave
-   *  none — counted rather than assumed, and drawn as an empty block. */
-  shirt: number | null;
-  captain: boolean;
-}
-
-/** A side's sheet: who started, who sat, and the shape. */
-export interface PlTeamSheet {
-  /** The Premier League's own team id, which is what `teamLists` is keyed on. */
-  teamId: number;
-  lineup: PlSquadMan[];
-  substitutes: PlSquadMan[];
-  /** `"4-2-3-1"`, or null for a fixture whose sheet carries no formation. */
-  formation: string | null;
-}
-
-/** Both sides' team sheets, home first.
- *
- *  **The only source of an unused substitute anywhere in this app.** FPL's
- *  per-fixture stats carry a row for a man who accrued something and nothing for
- *  a man who sat, so a ratings board built from them is eleven names and a bench
- *  that does not exist. The Premier League's own fixture detail carries both
- *  lists, and this is the read `client.ts` already had and nothing drew.
- *
- *  **Home first, off `teams` rather than off `teamLists`.** The two arrays are
- *  independently ordered and only the first says which side is at home; matching
- *  them on `teamId` is what stops a sheet being drawn under the wrong crest.
- *  A fixture with no sheets at all — one nobody has named a side for yet —
- *  answers null rather than two empty ones, so a caller can tell "not published"
- *  from "eleven men and no bench". */
-export function plTeamSheets(
-  fixture: RawPlFixture,
-  optaToCode: Map<string, number>,
-): { home: PlTeamSheet; away: PlTeamSheet } | null {
-  // **Not `length === 0`.** An unnamed fixture answers `[null, null]`, which is
-  // two entries and no sheets — so the length test passed and `entry.teamId`
-  // threw one line later. Counted 5 Sep 2026: every fixture a week out answers
-  // exactly that. The docblock above has always said null means "not published";
-  // this is the shape that actually says it.
-  const lists = (fixture.teamLists ?? []).filter((entry) => entry !== null && entry !== undefined);
-  if (lists.length === 0) return null;
-
-  const sheetFor = (teamId: number): PlTeamSheet | null => {
-    const list = lists.find((entry) => entry.teamId === teamId);
-    return list === undefined
-      ? null
-      : {
-          teamId,
-          lineup: list.lineup.map((man) => squadMan(man, optaToCode)),
-          substitutes: list.substitutes.map((man) => squadMan(man, optaToCode)),
-          formation: list.formation?.label ?? null,
-        };
-  };
-
-  const [home, away] = (fixture.teams ?? []).map((side) => sheetFor(side.team.id));
-  return home == null || away == null ? null : { home, away };
-}
-
-function squadMan(man: RawPlSquadPlayer, optaToCode: Map<string, number>): PlSquadMan {
-  const opta = man.altIds?.opta;
-  return {
-    code: (opta === undefined ? undefined : optaToCode.get(opta)) ?? null,
-    name: man.name.display,
-    shirt: man.matchShirtNumber ?? null,
-    captain: man.captain === true,
-  };
 }
 
 /** One line of Opta's commentary, as a report prints it. */

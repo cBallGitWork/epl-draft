@@ -134,6 +134,57 @@ export interface RawPlGoal {
   type: string;
 }
 
+/** One event as the fixture DETAIL read publishes it — not the textstream's.
+ *
+ *  **A second, compact events feed that nothing in this repo knew about.** The
+ *  detail read carries its own `events` array beside the team sheets, and it is
+ *  the only place a substitution's minute and a booking's minute are published
+ *  as DATA rather than inside Opta's prose. `docs/providers/premier-league-api.md`
+ *  did not mention it and this type did not exist; both were counted and written
+ *  on 10 Sep 2026.
+ *
+ *  Counted across the 30 completed fixtures of gameweeks 1-3, 862 rows:
+ *  `S` 538 (269 `ON` and 269 `OFF`, paired exactly), `B` 118, `G` 76, `PS` 60,
+ *  `PE` 60, `O` 5, `P` 4, `MP` 1. Present and non-empty on **30/30** completed
+ *  fixtures and absent on all 10 upcoming ones, which makes it an exact tell for
+ *  "has this been played" rather than a clock to interpret.
+ *
+ *  **The goal types are three, not one**, which is the trap that loses a fifth of
+ *  a season's goals: `G` a goal, `O` an own goal, `P` a penalty. 76 + 5 + 4 = 85,
+ *  and the sister repo's independent shot export counts exactly 85 goals over the
+ *  same 30 fixtures. A reader taking only `G` silently drops nine.
+ *
+ *  **`MP` is a missed penalty** and carries a man — one row, Brentford v
+ *  Tottenham, 55'. It is a real type and not a stray.
+ *
+ *  `description` is the discriminator and repeats the type for everything except
+ *  the two that matter: `B` is `Y` on 117 and `R` on **1**, and `S` is `ON` or
+ *  `OFF`. */
+export interface RawPlFixtureEvent {
+  /** Absent on `PS` and `PE` — a period boundary is nobody's event. */
+  id?: number;
+  /** `G` goal · `O` own goal · `P` penalty · `MP` missed penalty · `B` booking ·
+   *  `S` substitution · `PS` period start · `PE` period end. */
+  type: string;
+  /** `Y`/`R` on a booking, `ON`/`OFF` on a substitution, and the type's own
+   *  letter on the rest. Absent on `PS` and `PE`. */
+  description?: string;
+  /** **Absent on a card shown to nobody**, as well as on both period marks.
+   *  Counted: 121 rows of 862 carry no `personId`, and 120 of those are the
+   *  period boundaries — the 121st is a real booking with a `teamId` and no man,
+   *  Newcastle v Bournemouth at 71', which is a bench or staff card. So a reader
+   *  must tolerate a card that belongs to a side rather than to a player. */
+  personId?: number;
+  /** The side the event belongs to. Present on everything but `PS`/`PE`. */
+  teamId?: number;
+  /** Only on a goal, and a real absence rather than a gap: 56 of the 76 `G`
+   *  rows carry one. */
+  assistId?: number;
+  clock?: RawPlClock;
+  /** `"1"` or `"2"` — which half. */
+  phase?: string;
+}
+
 export interface RawPlScore {
   homeScore: number;
   awayScore: number;
@@ -197,6 +248,9 @@ export interface RawPlFixture {
   altIds?: RawPlAltIds;
   /** Every goal in the match, on the round-level read. See `RawPlGoal`. */
   goals?: RawPlGoal[];
+  /** Every goal, card, substitution and period mark, on the DETAIL read only.
+   *  Absent from the round read. See `RawPlFixtureEvent`. */
+  events?: RawPlFixtureEvent[];
 }
 
 /** One line of Opta's commentary.
@@ -237,33 +291,3 @@ export interface RawPlFixturePage {
   pageInfo: RawPlPage;
   content: RawPlFixture[];
 }
-
-/** One Opta metric, as `/stats/match`, `/stats/team` and `/stats/player` all give
- *  it.
- *
- *  **`description` is a placeholder in their own payload** — every one of the 212
- *  reads `"Todo: <name>"` — so it is mirrored here to describe reality and must
- *  never be printed.
- *
- *  **A metric whose value is nought is OMITTED, and that inverts a binding
- *  rule.** Counted over 40 team-sides of two completed rounds: shots, fouls,
- *  possession, passes, tackles and headers 40/40; corners 39; on target 37;
- *  yellow cards 36; offsides 27; **red cards 1** — and there was exactly one red
- *  card in those rounds. `DESIGN.md` §7's "Absence is `—`, never `0`" is about a
- *  figure a provider could not give us; this is a provider saying nought by
- *  saying nothing. A reader defaults a missing metric to 0 and says so. */
-export interface RawPlMetric {
-  name: string;
-  value: number;
-  description?: string;
-}
-
-/** `/stats/match/{id}` — every Opta metric for both sides of one match.
- *
- *  `data` is keyed by TEAM ID as a string, and each side's metrics are under `M`.
- *  Present on 21 of 21 played fixtures, ~170 metrics a side. */
-export interface RawPlMatchStats {
-  entity?: RawPlFixture;
-  data: Record<string, { M: RawPlMetric[] }>;
-}
-

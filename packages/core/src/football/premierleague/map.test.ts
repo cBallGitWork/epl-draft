@@ -9,15 +9,14 @@ import {
   plFixtureCode,
   plCommentary,
   plMatchMetrics,
-  plPlayerCodes,
-  plTeamSheets,
 } from "./map";
+import { plPlayerCodes } from "./teamSheet";
 import type {
   RawPlFixture,
   RawPlFixturePage,
-  RawPlMatchStats,
   RawPlTextstream,
 } from "./raw";
+import type { RawPlMatchStats } from "./rawStats";
 
 // Recorded from the Premier League's own API on 4 Sep 2026, never fetched
 // (CODE_RULES §6). The match is Liverpool 2-2 Nottingham Forest, gameweek 2 —
@@ -56,71 +55,6 @@ describe("plFixtureCode", () => {
   });
 });
 
-describe("plPlayerCodes", () => {
-  it("covers both squads, starters and bench", () => {
-    expect(codes.size).toBe(40);
-  });
-
-  it("keys on the id the event feed speaks in, not on the opta string", () => {
-    // 21737 is Alexander Isak in the provider's own numbering, and it is what
-    // `playerIds` carries. The opta code is the join and never the key.
-    expect(codes.get(21_737)).toBe(21_737 + 1_000_000);
-  });
-
-  it("drops a player FPL has no code for rather than inventing one", () => {
-    expect(plPlayerCodes(DETAIL, new Map()).size).toBe(0);
-  });
-});
-
-describe("plTeamSheets", () => {
-  const sheets = plTeamSheets(DETAIL, optaToCode);
-
-  it("gives both sides their eleven, their bench and their shape", () => {
-    // The whole point: FPL's per-fixture stats carry a row for a man who
-    // accrued something and NOTHING for one who sat, so a ratings board built
-    // from them has no bench at all. This is the only source of an unused
-    // substitute anywhere in the app.
-    expect(sheets?.home.lineup).toHaveLength(11);
-    expect(sheets?.home.substitutes).toHaveLength(9);
-    expect(sheets?.away.lineup).toHaveLength(11);
-    expect(sheets?.away.substitutes).toHaveLength(9);
-    expect(sheets?.home.formation).toBe("4-2-3-1");
-    expect(sheets?.away.formation).toBe("3-4-2-1");
-  });
-
-  it("puts the HOME side first, off `teams` rather than off `teamLists`", () => {
-    // The two arrays are independently ordered and only the first says which
-    // side is at home. Matching them on `teamId` is what stops a sheet being
-    // drawn under the wrong crest — Liverpool are at home in this one.
-    expect(sheets?.home.teamId).toBe(10);
-    expect(sheets?.away.teamId).toBe(15);
-  });
-
-  it("carries the shirt number the payload gave and the captain's armband", () => {
-    const captains = [...(sheets?.home.lineup ?? []), ...(sheets?.away.lineup ?? [])].filter(
-      (man) => man.captain,
-    );
-    expect(captains).toHaveLength(2);
-    expect(sheets?.home.lineup.every((man) => man.shirt !== null)).toBe(true);
-  });
-
-  it("keeps a man FPL has no code for, with his name and a null code", () => {
-    // A doubt about our bridge is not a doubt about whether he sat on the bench.
-    // The Premier League registers a squad before FPL lists everyone in it,
-    // which is the lag `scripts/pl-bridge.ts` exists for.
-    const blind = plTeamSheets(DETAIL, new Map());
-    expect(blind?.home.substitutes).toHaveLength(9);
-    expect(blind?.home.substitutes.every((man) => man.code === null)).toBe(true);
-    expect(blind?.home.substitutes[0].name.length).toBeGreaterThan(0);
-  });
-
-  it("answers null for a fixture nobody has named a side for", () => {
-    // Told apart from "eleven men and no bench", which is a different fact and
-    // one a caller draws differently.
-    expect(plTeamSheets({ ...DETAIL, teamLists: [] }, optaToCode)).toBeNull();
-    expect(plTeamSheets(PLAYED.fixture, optaToCode)).toBeNull();
-  });
-});
 
 describe("mapMatchEvents", () => {
   it("keeps the seven kinds that matter and drops the rest", () => {
@@ -343,34 +277,5 @@ describe("plMatchMetrics", () => {
     // Distinct from the zero above: no stats at all may not become a board of
     // noughts. The caller has to tell the two apart, so the types do.
     expect(plMatchMetrics(STATS, 999)).toBeNull();
-  });
-});
-
-describe("an unnamed fixture", () => {
-  // **`[null, null]`, and it is the shape every match more than an hour or two
-  // out answers with** — counted 5 Sep 2026 across GW4, seven days off: all ten
-  // fixtures. It is two entries and no sheets, so a `length === 0` test passes
-  // it through and the next line reads `.teamId` off null.
-  const unnamed = {
-    ...DETAIL,
-    teamLists: [null, null],
-  } as unknown as RawPlFixture;
-
-  it("has no sheets rather than throwing", () => {
-    expect(plTeamSheets(unnamed, optaToCode)).toBeNull();
-  });
-
-  it("codes nobody rather than throwing", () => {
-    expect(plPlayerCodes(unnamed, optaToCode).size).toBe(0);
-  });
-
-  // A half-published fixture is not a shape the feed has been seen to send, and
-  // the answer for it is the same one: a sheet for one side only is not a sheet.
-  it("refuses a fixture named on one side only", () => {
-    const half = {
-      ...DETAIL,
-      teamLists: [(DETAIL.teamLists ?? [])[0], null],
-    } as unknown as RawPlFixture;
-    expect(plTeamSheets(half, optaToCode)).toBeNull();
   });
 });
