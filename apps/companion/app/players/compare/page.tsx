@@ -7,12 +7,13 @@ import CompareBar from "./CompareBar";
 import Figures from "./Figures";
 import Measures from "./Measures";
 import PickBar from "./PickBar";
-import Pitch from "./Pitch";
+import MapSection from "./MapSection";
 import { StackWaiting } from "../[fantraxId]/Waiting";
-import { playerGrid, realPosition } from "../[fantraxId]/grid";
+import { playerGrid } from "../[fantraxId]/grid";
 import { subject } from "../[fantraxId]/subject";
 import { BUTTON } from "../../components/shell/ButtonLink";
 import { getLeaguePool } from "../pool";
+import { intelTouches } from "../../intel";
 import { COMPARE } from "../query";
 import OutLink from "../../components/shell/OutLink";
 
@@ -188,14 +189,11 @@ async function Grids({
     right.football ? playerGrid(right.football.player) : Promise.resolve([]),
   ]);
 
-  const roleA = left.football ? realPosition(left.football.player.code) : null;
-  const roleB = right.football ? realPosition(right.football.player.code) : null;
-
   return (
     <>
-      <Pitch
-        a={{ name: names.a, club: left.football?.club, position: roleA?.position ?? null }}
-        b={{ name: names.b, club: right.football?.club, position: roleB?.position ?? null }}
+      <MapSection
+        a={{ name: names.a, touches: intelTouches.get(left.football?.player.code ?? -1) }}
+        b={{ name: names.b, touches: intelTouches.get(right.football?.player.code ?? -1) }}
       />
       <Measures a={gridA} b={gridB} names={names} />
     </>

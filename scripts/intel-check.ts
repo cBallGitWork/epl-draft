@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { fetchBootstrap, roundPlayed, squadIntel, xiFault } from "@epl/core";
-import type { IntelSquads, IntelXi } from "@epl/core";
+import { fetchBootstrap, roundPlayed, squadIntel, touchIntel, xiFault } from "@epl/core";
+import type { IntelSquads, IntelTouches, IntelXi } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 
 // How old the intel is, and whether it still says what the app assumes.
@@ -45,6 +45,8 @@ async function main(): Promise<void> {
   for (const source of squads.manifest.sources) {
     console.log(`  built from ${source.path} (${age(source.mtime)})`);
   }
+
+  checkTouches();
 
   // The XI names its own round in its filename, so the directory is read rather
   // than a name guessed: whichever round was exported is the one to judge.
@@ -103,6 +105,34 @@ async function main(): Promise<void> {
     process.exitCode = 1;
   } else {
     console.log(`  gameweek ${round} still has football to come.`);
+  }
+}
+
+/** The touch clouds behind the comparison heat maps.
+ *
+ *  **Absent is a WARNING and not a failure**, unlike the squads. The maps are one
+ *  section of one screen and it says so itself when there is nothing to draw;
+ *  the squad export is the football layer's real position for the whole app.
+ *
+ *  The count worth printing is players rather than points, because that is the
+ *  one a reader can judge: 367 of about 650 is what a bridge covering the men
+ *  who have actually played looks like, and a number that falls is the tell that
+ *  the SofaScore join is rotting. */
+function checkTouches(): void {
+  const path = join(INTEL_ROOT, "touches", "26-27.json");
+  const touches = read<IntelTouches>(path);
+  if (touches === null) {
+    console.log("\ntouches: no export — the comparison heat maps will be empty.");
+    return;
+  }
+  const players = touchIntel(touches);
+  const points = touches.manifest.rows;
+  console.log(
+    `\ntouches: ${players.size} players, ${points} points, ` +
+      `exported ${age(touches.manifest.exportedAt)}`,
+  );
+  for (const source of touches.manifest.sources) {
+    console.log(`  built from ${source.path} (${age(source.mtime)})`);
   }
 }
 

@@ -81,6 +81,11 @@ export { mapMatchSheets, scoresheet, sheetSides } from "./matchSheet";
 // positions and the team figures FPL publishes nowhere. `intel/matches.ts` sets
 // it against the read above and says which one wins where both could answer.
 export { goalMinutes, loggedPlayers, matchIntel, matchLine, subNote } from "./intel/matches";
+// Where a man played, as the points themselves rather than as a grid. The
+// argument for the raw cloud — smaller than the grid AND smoother, because the
+// busiest player in the league has 414 season touches — is in `intel/touches.ts`.
+export { touchFixtures, touchIntel, touchesOf } from "./intel/touches";
+export type { IntelTouches, Touch, TouchFixture, TouchPlayer } from "./intel/touches";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // The same read at season scale — his career before this one. `seasons.ts` says
 // why it is a separate file and why its column set is as short as it is.

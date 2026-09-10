@@ -23,7 +23,7 @@ column on the directory.
    a coincidence (CODE_RULES §1), and the third occurrence is what will say what
    varies.
 3. **This season**, mirrored: what each of them has DONE, per ninety minutes.
-4. **The pitch** — where each of them plays.
+4. **The maps** — where each of them played, as a smoothed heat map.
 5. **The attributes**, mirrored: figure · label · figure.
 6. **Swap sides**, which answers the one thing a mirrored table cannot — which
    side you are reading.
@@ -92,48 +92,91 @@ one tap away on his Data tab.
   and two bonus points as `0` and `2` in a column of `0.82` and `35.33`. Found by
   looking at the screen.
 
-## The pitch
+## The maps
 
-**Points only, colour-coded, with a key** (Craig, 6 Sep 2026: *"points only, no
-names / colour code with a key for the two different players"*). Names rode on
-the turf for one build and collided the moment two roles were close.
+Craig, 10 Sep 2026: *"currently on ours the plots are far too big, heatmaps are
+rough squares. should have a filter for each map we can use"* — and, asked which
+he wanted, **heatmap only, smoothed**.
 
-- **Each man gets his own HALF, attacking his own goal.** The reference's caption
-  is the instruction — "compare two players in opposing directions, with each
-  standalone map normalised from defence on the left to attack on the right" —
-  and its picture puts one man's marks at the left goal and the other's at the
-  right. Overlaying them mirrored was the first build and it was unreadable: a
-  defender mirrored onto the far end lands exactly where the other man's
-  attacking midfielder stands. Halving the axis cannot collide.
-- **His club's colour, and a shape as well.** The bar above is already each man
-  on his club's plate, so the key confirms what the reader has just been told
-  rather than teaching a new code. Two clubs can be near-identical reds, so the
-  first man is a circle and the second a diamond — PRODUCT.md's rule that a
-  colour signal is always paired with a label, shape or position.
-- **Not `.pitch`.** That class is the squad and head-to-head pitch's frame and
-  `pitch.css` gives it a PORTRAIT aspect ratio, so a landscape map inside it sat
-  in a portrait box with 284px of dead grass under it, measured. It was borrowed
-  for colour tokens that turn out to be global.
+**A pitch each, not two halves of one.** The old map put both men on one pitch
+attacking opposite ways, which was right when each had a single dot: two dots
+kept to their own halves cannot collide. It is wrong for a density field —
+halving the axis squeezes a striker's whole map between the halfway line and one
+goal, and what comes out is a smear rather than a shape. Both pitches now run the
+same way, side by side on a desk and stacked under a thumb, which is also the
+reference's own per-player presentation.
 
-### One point each, and why there are not more
+**The smoothing is a kernel, not a resolution.** `heat.ts` bins at 24 x 16 —
+cells of 4.17 x 4.00 on the 100 x 64 pitch, near enough square, because an oblong
+cell blurs into an oblong smudge and reads as a direction the player never had —
+and an SVG `feGaussianBlur` at 2.0 does the rest. A finer grid would have made it
+worse, not smoother: the busiest player in the league has 414 touches all season,
+so a 32 x 20 grid gives him under one touch per cell.
 
-**FPL publishes no location at all**, the Premier League's own feed is per-team,
-and the sister repo's SofaScore events are staged and **not exported**. So the
-pitch plots the one locational fact we hold: the sister repo's weighted role,
-which is already the cyan line on the player screen.
+An SVG filter rather than a canvas, so the map is server-rendered like the rest
+of the desk: no client component, no hydration, and it survives being printed.
+The filter id is per pitch — two `id="heat"` in one document and the second man
+is drawn with the first man's filter, which is a real map of the wrong shape.
 
-A scatter of invented points would look exactly like a real one, which is the
-confident wrong answer PRODUCT.md's fourth principle exists to forbid.
+**A warm ramp, and NOT the club's colour.** The first cut shaded each map in its
+man's club colour, since the bar above already codes them that way. Two things
+were wrong and both were visible on sight. Manchester City's sky blue on green
+turf is very nearly nothing, so the map was legible for Chelsea and blank for
+City — a picture whose readability depends on who is in it. And the colour was
+doing no work: these are SEPARATE pitches with the man's name over each, so
+identity is carried by the caption, and club colour was spending the one visual
+channel a density map has on a fact already stated.
 
-**The map filter Craig asked for is not built YET** — *"filter for the
-different stats (shots/recoveries etc)"* — because a control offering maps with
-nothing behind them is worse than no control. What changed on 10 Sep 2026 is that
-the data was found rather than assumed absent: see "The maps, and what is behind
-them" below. `docs/providers/intel-export.md`
-was widened from `shots` to `events` with a `kind` for exactly this, and the
-picker is to be built from the kinds the file actually carries rather than from a
-list of its own: a kind the exporter stops emitting then removes itself from the
-control, and a new one appears without an app change.
+> **This needs a DESIGN.md ruling and does not have one yet.** §3 makes every
+> colour a slot with one meaning, and `--color-hot`/`--color-cold` are
+> deliberately a THRESHOLD rather than a scale — *"a cell is lit or it is not;
+> there is no second strength"* — confined to a board of many measures. A density
+> ramp is a scale by definition, so it cannot wear them, and this is the app's
+> first sequential ramp. It is kept local to the pitch on purpose: it shades a
+> colour PLATE, which is DESIGN §5's own category and where the pitch and the
+> crest already live, and it never touches ink, a cell or a control.
+
+**A curve, not a gain, and that is the difference between a map and a fog.** Five
+rounds in a man has perhaps 90 touches over 60-odd cells, so his busiest cell
+holds three and a cell holding ONE is a third of the way up the scale. The first
+cut multiplied by a flat gain to make up what the blur spreads away, which drew
+that single touch at full strength and left every map warm from one goal to the
+other — the rough squares solved and replaced with something worse. `shade()`
+raises density to 1.8 first, which drops a one-in-three cell to about a seventh
+and leaves the peak where it is. It is tested, beside the arithmetic rather than
+in the drawing.
+
+**Each map is normalised to its own man's busiest area**, so the two show SHAPE.
+A comparison where one man has 400 touches and the other 40 would otherwise draw
+the second as a blank pitch, which says "no data" when the truth is "less of it".
+Volume is a number and sits in the caption above each pitch.
+
+**The axis is not flipped.** SofaScore already publishes a man's touches running
+from his own goal towards the one he attacks — measured across the whole export
+on 10 Sep 2026: keepers average x=11.0, centre-backs 36.4, full-backs 47.6,
+midfielders 48.8, attacking midfielders 58.4, forwards 61.8. A flip would put
+every striker in his own box.
+
+### No map picker yet, and that is the rule rather than an omission
+
+The picker is built from the kinds the file carries, never from a list of its
+own, because a control offering a map with nothing behind it is worse than no
+control. One kind is exported today, so a picker would be a single plate that
+does nothing. It arrives with the shots.
+
+The same argument holds for the fixture filter. Touches carry `fplFixtureId`, so
+per-match is free whenever it is wanted — but five rounds in, one match is about
+forty-six touches, which is a scattering rather than a shape.
+
+### What replaced the role pitch
+
+`compare/Pitch.tsx` and `app/pitchSpot.ts` are gone. They drew one dot per man at
+his weighted role, which was the only locational fact we held; the heat map
+answers the same question from 45,244 real touches. Keeping both would be two
+pictures under one heading, and a reader could not tell which he was looking at
+without reading the caption. A man with no touches gets "no touches recorded",
+which is honest — a synthetic dot standing in for a real map is the confident
+wrong answer this app refuses.
 
 ## The attributes
 
@@ -155,14 +198,15 @@ A missing rating is quieter still and is **not** a loss: he has not played the
 ninety minutes the rate needs, which is a different statement from being worse
 at it.
 
-## The maps, and what is behind them
+## The data behind the maps
 
-Counted in `~/ai-carling-premiership` on 10 Sep 2026. The map section was written
-off as blocked on an absent export; what was actually absent was the count.
+Counted in `~/ai-carling-premiership` on 10 Sep 2026. The map section had been
+written off as blocked on an absent export; what was actually absent was the
+count. **Touches shipped the same day**; the other two are next.
 
 | Map | Source | 26-27 |
 |---|---|---|
-| **Touches** (heat) | SofaScore `data/raw/sofascore/2026-27/premier-league/<match>/player/<id>-heatmap.json` | 970 player-match files · 45,671 points · 408 players |
+| **Touches** (heat) — SHIPPED | SofaScore per-player heatmaps, via the match logs | 970 player-match files · 45,244 points joined · 367 players |
 | **Shots** | `data/staging/sofascore/shots.parquet` | 1,233 |
 | **Chances created** | Understat `player_career_shots.parquet` `player_assisted` | 402 of 549 (73%) |
 
@@ -187,8 +231,20 @@ Three findings that outrank what was written before:
   96 cells drawn literally *is* the "rough squares" Craig complained of, and
   going finer is worse: the busiest player in the league has **414 season
   touches**, so a 32 × 20 grid gives him under one touch per cell. Shipping the
-  raw cloud is also *cheaper* — 45,671 points is ~350 KB against 0.78 MB for a
-  dense 24 × 16 grid — and makes a per-fixture filter free.
+  raw cloud is also *cheaper* — the written file is **291 KB** against 0.78 MB
+  for a dense 24 × 16 grid — and makes a per-fixture filter free.
+- **The contract's fixture join does not work.** It names
+  `bridges.match_provider_map("sofascore", "fpl_fixture")`, which returns nothing
+  for every season. The route that does is the match logs, which is what
+  `export_matches` already reads — the team log lists each match's per-player
+  heatmap files, the player log carries `fpl_fixture_id` and a
+  `provider_player_ids` pairing SofaScore's id with FPL's element, and bootstrap
+  turns that element into a code. One file, three joins, and it cannot drift from
+  the match export because it is the same file.
+- **Both sides' team rows list every player in the match.** A path therefore
+  arrives twice, and appending twice silently doubles a man's touches — 90,488
+  points against the 45,244 that exist. Caught by counting the output against an
+  independent count of the input.
 
 Deferred rather than missing: `sofascore/goal_chains.parquet` is a real located
 buildup-to-goal map (4,127 rows in 24-25) with **0 rows for 26-27**.
@@ -209,12 +265,18 @@ buildup-to-goal map (4,127 rows in 24-25) with **0 rows for 26-27**.
 
 ## Known gaps
 
-- **The maps themselves** — the data is counted and the shapes are decided; the
-  export is not written. Touches, then shots, then chances created.
-- **The plots are too big**, which is the current one-dot-each pitch and not the
-  maps: `r="2.6"` on a `100x64` viewBox is a 57px blob at 1440. The arithmetic
-  for the replacement is `r ≈ 1.0` — 7px at 390, 11px at 1440, one value and no
-  breakpoint.
+- **Shots and chances created**, and with them the map picker and the fixture
+  filter. The data is counted and the joins are proved; the export is not
+  written. When the shot map lands its markers want `r ≈ 1.0` on the `100x64`
+  viewBox — 7px at 390 and 11px at 1440, one value and no breakpoint — which is
+  what the old role pitch got wrong at `r="2.6"`, a 57px blob.
+- **The ramp has no DESIGN.md ruling.** See "The maps" above; it is the app's
+  first sequential scale and it is confined to a colour plate until it is judged.
 - **Understat's xG family** — npxG, xGChain, xGBuildup, key passes — is a second
   block under "This season" once `eye-test/26-27.json` lands. FPL publishes none
   of it.
+- **The two figures sit far apart at 1440.** The mirrored table puts a name's
+  figures at opposite edges of a 1090px panel, which is a long way for an eye to
+  carry a decimal. `Measures` has always had it and the shape is deliberate; it
+  is recorded here because it is more noticeable with two-place rates than with
+  integers out of twenty.

@@ -4,13 +4,16 @@ import type {
   IntelPlayer,
   IntelSetPieces,
   IntelSquads,
+  IntelTouches,
   IntelXi,
+  TouchPlayer,
 } from "@epl/core";
-import { matchIntel, squadIntel } from "@epl/core";
+import { matchIntel, squadIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/gw3.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
 import matchesFile from "../../../data/intel/matches/26-27.json";
+import touchesFile from "../../../data/intel/touches/26-27.json";
 
 // Where the app supplies the sister repo's export.
 //
@@ -70,6 +73,21 @@ export const intelSetPieces = piecesFile as unknown as IntelSetPieces;
  *  a day behind full time. */
 export const intelMatches: Map<number, IntelMatch> = matchIntel(
   matchesFile as unknown as IntelMatches,
+);
+
+/** Where each man played, by FPL code, as the touches themselves.
+ *
+ *  **The one export that is data rather than description**, and it is why
+ *  `write()` in the sister's exporter grew a `dense` flag: 45,244 bare integers
+ *  at one-per-line is nine times the size, all of it whitespace, in a directory
+ *  every byte of which is baked into this bundle.
+ *
+ *  A miss is the ordinary answer and there are two reasons for one — a man the
+ *  SofaScore bridge has not settled (22 player-matches on 10 Sep 2026), and a
+ *  man who has not played. The screen says the same thing either way, because
+ *  from a reader's side they are the same fact: there is no map to draw. */
+export const intelTouches: Map<number, TouchPlayer> = touchIntel(
+  touchesFile as unknown as IntelTouches,
 );
 
 /** One club's line for a man, for arranging a pitch.

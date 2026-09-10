@@ -22,6 +22,7 @@ Everything below is downstream of one rule:
 | `matches/26-27.json` | 20 fixtures | per `fplFixtureId`: both sides' figures, every player's minutes/position/rating, goals and cards with minutes |
 | `xi/gw3.json` | 20 clubs | the predicted eleven, **per round, round in the filename** |
 | `set-pieces/26-27.json` | 20 clubs | takers and shares, club-scoped |
+| `touches/26-27.json` | 367 players | every touch, per player per fixture, as a raw point cloud |
 
 Types are in `packages/core/src/football/intel/types.ts`; readers in
 `intel/map.ts` and `intel/matches.ts`. Every file carries the same `manifest`:
@@ -100,7 +101,7 @@ what the picker filters on.
   "events": [
     {
       "code": 118748,
-      "fplFixtureId": 21,        // joined via match_provider_map("sofascore","fpl_fixture")
+      "fplFixtureId": 21,        // via the MATCH LOGS — see the note under §3
       "minute": 63,
       "kind": "shot",            // shot | recovery | tackle | interception | clearance
                                  // | key-pass | duel | save
@@ -119,6 +120,19 @@ what the picker filters on.
 uses its own pitch and the app must not learn five of them; 0–100 in both axes
 with the shooter always attacking to the right is the one convention this repo
 will draw against.
+
+> **Counted 10 Sep 2026: only `shot` is buildable, and the rest of this
+> vocabulary was written aspirationally.** Nothing we hold has located defensive
+> actions. `data/derived/defcon/player_match_defcon.parquet` has 1,200 rows for
+> 26-27 but they are per-match COUNTS — tackles, clearances, blocks,
+> interceptions, recoveries — plus a single average position (`pos_x`, present on
+> 660 of the 1,200). The SofaScore raw match directory holds only
+> `average-positions`, `event`, `graph`, `incidents`, `lineups`, `shotmap`,
+> `team-heatmap-*` and `player/<id>-heatmap.json`: **there is no per-action event
+> stream**. The three kinds that can honestly ship this season are `shot`
+> (SofaScore, 1,233 rows), `touch` (shipped, see below) and `chance-created`
+> (Understat's `player_assisted`, 402 of 549 shots). Do not build a picker
+> against the list above.
 
 **`kind` is the picker's vocabulary, so it is the one field that must not
 drift.** The comparison screen builds its map filter from the kinds actually
@@ -159,10 +173,42 @@ Two things in one file because they answer one question and share both joins.
 `grid` is **12 columns × 8 rows = 96 cells, row-major from the defensive-left
 corner**, each the share of that player's touches in that cell, summing to 1.
 
-**The raw point cloud never ships.** It is thousands of coordinates per player
-per match; `data/intel` is inside the Vercel build trigger and every file is
-baked into the bundle. Aggregate upstream. A backfill on 3 Sep added 5,418 raw
-heatmap files in the sister repo and none of them belong here.
+> ## AMENDED 10 Sep 2026 — the grid is not built; the raw cloud ships instead
+>
+> `touches/26-27.json` exists and is the point cloud this section forbade. Two
+> measurements overturned it, and both are about ONE season rather than about the
+> archive:
+>
+> 1. **A finer grid is noisier, not smoother.** Craig's complaint was *"heatmaps
+>    are rough squares"*, and 12 × 8 drawn literally is exactly that — but the
+>    busiest player in the league has **414 touches all season**, so a 32 × 20
+>    grid gives him under one touch per cell. Smoothness has to come from a
+>    KERNEL, and a kernel wants points. The app bins at 24 × 16 and blurs.
+> 2. **The cloud is SMALLER than the grid it replaces.** 45,244 points as flat
+>    alternating integers is a **291 KB** file, against 0.78 MB for a dense
+>    24 × 16 grid and 1.31 MB for 32 × 20. The paragraph above is right that
+>    every byte is baked into the bundle; it was wrong that aggregating saves
+>    any.
+>
+> It also makes a per-fixture filter free, which a season-aggregated grid cannot
+> do at any resolution. **"The raw point cloud never ships" still holds for the
+> ARCHIVE** — the 3 Sep backfill added 5,418 files across all seasons and none of
+> them belong here. It is a rule about the archive, not about one season.
+>
+> **The fixture join in §2 and §3 does not work.** `match_provider_map(
+> "sofascore", "fpl_fixture")` returns nothing for every season. The route that
+> does is `data/match_logs/{player,team}_match_log/season={season}/` — the team
+> log's `player_heatmap_paths` lists each match's per-player files, the player log
+> carries `fpl_fixture_id` and a `provider_player_ids` pairing SofaScore's id with
+> FPL's element, and bootstrap turns that element into the code. `export_matches`
+> already reads the same file, so the two cannot drift.
+>
+> **Both sides' team rows list every player in the match.** A path arrives twice
+> and appending twice doubles a man's touches — 90,488 against the 45,244 that
+> exist. The seen-set in `export_touches` is correctness, not tidiness.
+>
+> `positions[]` — average position per fixture — is still unbuilt and still
+> wanted; `avg_positions.parquet` has 1,370 rows for 26-27.
 
 Sources: `avg_positions.parquet` for the positions,
 `heatmap_match_features.parquet` (or the raw heatmaps) reduced to the grid.
@@ -211,20 +257,26 @@ projection for a round already played is not stale, it is wrong.
 
 ## Not exported, and why
 
-**Pass maps.** The FotMob pass-network builder is dead for 26-27:
-`build_fotmob_pass_network.py` points `_RAW_FOTMOB_ROOT` at
-`data/raw/fotmob/match_details`, which does not exist (the tree is
-`data/raw/fotmob/matches/<season>/<comp>/<match>/`), its glob looks one level too
-shallow, and `_SEASON_FOLDER_MAP` has no 2026-2027 entry. 380 raw match
-directories are sitting there unread. Recorded in the sister repo's own
-`signal_coverage.py`. **Fix the builder before promising a pass map**, and note
-that what `pass_network.parquet` holds even when it works is `layout_x` and
-`is_starter` — a lineup layout, not a network with edges.
+**Pass maps.** *This paragraph said the FotMob pass-network builder was dead for
+26-27 — `_SEASON_FOLDER_MAP` with no 2026-2027 entry, 380 raw match directories
+unread. Counted 10 Sep 2026: `pass_network.parquet` holds **1,497 rows for
+2026-27**, so the builder is running.* The conclusion survives the correction and
+it was always the stronger half of it: what that file holds is `layout_x`,
+`layout_y`, `vertical_x`, `vertical_y` and `is_starter` — **a lineup layout, not
+a network with edges**. There is no pass map in it to export, working builder or
+not.
 
 **`role_cluster_label`.** KMeans on two columns of pitch position. The sister
 repo's own comment says "deep-wide-1" holds Paul Dummett and Marcus Rashford, and
 that the vocabulary regenerated three times in one evening, once by data alone.
 It is a band of pitch, not a role, and this app already has a real position line.
+
+**Goal chains.** `data/staging/sofascore/goal_chains.parquet` is a genuine
+located buildup map — `x`, `y` and `event_type` per node of the move, plus the
+goal's own shot location — and it would answer "how does he contribute to goals"
+better than anything else we hold. It has 4,127 rows for 24-25 and 3,498 for
+25-26 and **0 for 26-27**, so it is stale rather than absent. Worth re-running
+upstream before it is designed on.
 
 **SofaScore ratings** are exported (they are already on `IntelMatchPlayer`) and
 are always labelled as SofaScore's. `types.ts` sets the precedent in as many

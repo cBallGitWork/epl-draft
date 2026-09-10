@@ -2491,6 +2491,77 @@ was running against the same directory. `rm -rf apps/companion/.next` with dev
 stopped, rebuild, and the page appears. Worth an hour to anyone who does not know
 it: **stop `next dev` before trusting a `next start`.**
 
+## The touch cloud ships raw, and the export contract is amended (10 Sep 2026)
+
+**Recorded because it is a deliberate exception to a written contract**
+(CODE_RULES: exceptions go in this file in the same commit).
+`docs/providers/intel-export.md` §3 specified a **12 columns x 8 rows = 96-cell**
+touch grid and said in as many words that *"the raw point cloud never ships"*.
+`data/intel/touches/26-27.json` is the raw cloud. Two measurements overturned the
+section, and both are about ONE season rather than about the archive.
+
+**A finer grid is noisier, not smoother.** Craig's complaint was *"heatmaps are
+rough squares"*, and 12 x 8 drawn literally is exactly that — but the fix is not
+resolution. The busiest player in the league has **414 touches all season**, so a
+32 x 20 grid gives him under one touch per cell and a finer grid is a noisier
+one. Smoothness has to come from a KERNEL, and a kernel wants points. The app
+bins at 24 x 16 and blurs at 2.0.
+
+**The cloud is SMALLER than the grid it replaces.** 45,244 points as flat
+alternating integers is a **291 KB** file, against 0.78 MB for a dense 24 x 16
+grid and 1.31 MB for 32 x 20. The contract is right that every byte in
+`data/intel` is baked into the bundle; it was wrong that aggregating saves any.
+It also makes a per-fixture filter free, which a season-aggregated grid cannot do
+at any resolution.
+
+**The rule still holds for the ARCHIVE.** The 3 Sep backfill added 5,418 raw
+heatmap files across all seasons, and none of them belong here. It is a rule
+about the archive rather than about one season, and the amendment says so.
+
+Three further corrections ride with it, all counted the same day:
+
+- **`match_provider_map("sofascore", "fpl_fixture")` returns nothing for any
+  season**, so the fixture join the contract names does not work. The route that
+  does is `data/match_logs/{player,team}_match_log/` — the team log's
+  `player_heatmap_paths` lists each match's per-player files, the player log
+  carries `fpl_fixture_id` and a `provider_player_ids` pairing SofaScore's id
+  with FPL's element, bootstrap turns that element into the code. `export_matches`
+  already reads the same file, so the two cannot drift.
+- **Both sides' team rows list every player in the match.** A path arrives twice
+  and appending twice doubles a man's touches — 90,488 against the 45,244 that
+  exist. Caught by counting the output against an independent count of the input,
+  not by reading the code.
+- **The `kind` vocabulary in §2 was aspirational.** Only `shot` is buildable:
+  nothing we hold has located defensive actions, `defcon` is per-match counts
+  plus one average position, and SofaScore's raw match directory has no
+  per-action event stream at all.
+
+## A density ramp is the app's first sequential scale, and it wants a ruling (10 Sep 2026)
+
+`compare/PlayerMap.tsx` shades a heat map through a four-stop yellow-to-red ramp.
+**DESIGN.md does not have a slot for this and the question is open.**
+
+§3's rule is that every colour is a slot with one meaning, and `--color-hot` /
+`--color-cold` are deliberately a **threshold rather than a scale** — *"a cell is
+lit or it is not; there is no second strength"* — confined to a board of many
+measures. A density ramp is a scale by definition, so it cannot wear them.
+
+What was tried first and failed: **the club's own colour at varying alpha**, on
+the reasoning that the bar above already codes each man that way, and that
+opacity is not a colour slot so no new token was needed. It was drawn and it did
+not work. Manchester City's sky blue on green turf is very nearly nothing, so the
+map was legible for Chelsea and blank for City — a picture whose readability
+depends on who is in it. And the colour was doing no work anyway: the maps are
+SEPARATE pitches with the man's name over each, so identity is carried by the
+caption, and club colour was spending the one visual channel a density map has on
+a fact already stated.
+
+Held to the narrowest scope until it is judged: it shades a **colour plate**,
+which is DESIGN §5's own category and where the pitch and the crest already live,
+and it never touches ink, a table cell or a control. The ramp is four literal
+values in the component rather than tokens, precisely so that promoting it is a
+deliberate act.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for
