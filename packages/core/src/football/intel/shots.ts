@@ -40,11 +40,6 @@ export interface IntelShots {
   shots: Shot[];
 }
 
-/** The outcomes, in the order a shot map's key reads them — best first. Exported
- *  because the map colours by outcome and its key lists them, and two orders
- *  disagreeing is a key that does not match the picture. */
-export const SHOT_OUTCOMES = ["goal", "post", "save", "block", "miss"] as const;
-
 /** Every man's shots, by code, with the unusable rows left out.
  *
  *  Dropped rather than repaired, on `touchIntel`'s precedent: a shot keyed on

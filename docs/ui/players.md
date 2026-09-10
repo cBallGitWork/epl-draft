@@ -359,7 +359,7 @@ that differed only in having no hover, which was an oversight rather than a
 decision; folded in.
 
 **Declined at two, and the count is the point.** `const DASH = "—"` appears twice
-in this module (`Cell`, `compare/Measures`) against `desk.ts`'s recorded app-wide
+in this module (`Cell`, `analysis/Measures`) against `desk.ts`'s recorded app-wide
 tally of 11 named against 55 unnamed literals. Naming it a twelfth time makes the
 codebase look centralised where it is not. Left, as that file's "Declined"
 section asks.

@@ -51,7 +51,7 @@ nothing.**
 | `/matchday/desk` | [desk.md](desk.md) | Every score in the league and the round, on one screen. |
 | `/gw/[gameweek]` | [gameweek.md](gameweek.md) | Any round of football, addressable. |
 | `/players` | [players.md](players.md) | **Scout** — the whole pool, 24 sortable columns, filterable. |
-| `/players/compare` | [compare.md](compare.md) | Two players side by side: a pitch and a mirrored grid. |
+| `/players/analysis` | [analysis.md](analysis.md) | A player or two: per-90 figures, Action Zones and a mirrored grid. |
 | `/players/[fantraxId]` | [player.md](player.md) | One player's profile. |
 | `/fpl` | [fpl.md](fpl.md) | The other game, kept small on purpose. |
 

@@ -10,7 +10,7 @@ import type { Shot, TouchPlayer } from "@epl/core";
 // choose between is furniture.
 
 /** The kinds, in the order the picker lists them. */
-export const MAP_KINDS = ["touches", "shots"] as const;
+const MAP_KINDS = ["touches", "shots"] as const;
 
 export type MapKind = (typeof MAP_KINDS)[number];
 

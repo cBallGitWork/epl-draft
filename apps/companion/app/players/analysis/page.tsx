@@ -44,7 +44,17 @@ export default async function ComparePage({
 }) {
   const asked = await searchParams;
   const a = one(asked.a);
-  const b = one(asked.b);
+  // **A man is never set against himself.** `pick.ts` already refuses to OFFER
+  // him — "a name you cannot pick should not be in a list of names to pick" —
+  // but the picker is not the only way in: a hand-edited URL or a link somebody
+  // shared reaches `?a=X&b=X`, and that drew the full comparison with a `v` in
+  // the middle, thirty rows all tied, and two identical maps. Found in the
+  // refactor pass by reading the rendered output rather than the source.
+  //
+  // Collapsed to the one-man screen rather than refused, because it is not an
+  // error — he is a player somebody asked to look at, and that screen exists.
+  const wanted = one(asked.b);
+  const b = wanted === a ? undefined : wanted;
   const qa = one(asked.qa) ?? "";
   const qb = one(asked.qb) ?? "";
   const map = one(asked.map);

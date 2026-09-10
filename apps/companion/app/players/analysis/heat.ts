@@ -13,7 +13,7 @@ import type { Touch } from "@epl/core";
 // **24 x 16, and the number is chosen against the blur rather than against the
 // data.** On the 100x64 pitch that is cells of 4.17 x 4.00 — near enough square,
 // which matters because an oblong cell blurs into an oblong smudge and reads as
-// a direction the player never had. The blur's radius is a shade over half a
+// a direction the player never had. The blur's radius is a little under half a
 // cell, so a single touch spreads to about the area one player actually
 // controls and two touches a cell apart merge. Finer and the blur has to grow to
 // match, which costs the structure back; coarser and the squares survive it.
@@ -30,7 +30,7 @@ const ROWS = 16;
 
 /** One shaded cell, in FRACTIONS of the pitch so this file never learns a
  *  viewBox. The component owns the geometry; this owns the arithmetic. */
-export interface HeatCell {
+interface HeatCell {
   /** Left edge, 0–1 from the defensive end. */
   x: number;
   /** Top edge, 0–1. */

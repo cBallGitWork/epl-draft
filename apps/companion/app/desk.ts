@@ -502,7 +502,7 @@ export function standDown(deskOnly: boolean | undefined, sorted: boolean): strin
  *   committed by the section itself.
  *
  *   `Array.isArray(v) ? v[v.length - 1] : v` — the repeated-query-parameter
- *   narrowing, **2 sites** (`players/query.ts`, `players/compare/page.tsx`).
+ *   narrowing, **2 sites** (`players/query.ts`, `players/analysis/page.tsx`).
  *   Two is a coincidence and §1 leaves it alone; the third moves it.
  *
  *   None of these is sediment from this run; they were all there before it, and

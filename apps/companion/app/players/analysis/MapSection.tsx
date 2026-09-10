@@ -9,10 +9,11 @@ import { PLATE } from "../BoardControls";
 
 // The maps, and the control that chooses which one.
 //
-// Craig, 10 Sep 2026: *"need options for touch map, shot map etc"*. The picker
-// waited four days for a second kind, and that was the rule rather than a
-// delay: it is built from the kinds actually present, so with one exported it
-// would have been a single plate to choose between — furniture, not a control.
+// Craig, 10 Sep 2026: *"need options for touch map, shot map etc"*. It shipped
+// with the SECOND kind and not the first, which was the rule rather than a
+// delay: it is built from the kinds actually present, so with only touches
+// exported it would have been a single plate to choose between — furniture, not
+// a control.
 //
 // **"Action Zones", which is Championship Manager's own name for this.**
 // `cm9900/16.jpg` and `22.jpg` run `Match Overview · Match Stats · Action Zones ·

@@ -57,11 +57,17 @@ const ROUTES = [
   "/league/team-stats",
   "/squad",
   "/players",
-  // Scout's second view. Its two ids are in the QUERY rather than the path, so
+  // Find's second view. Its ids are in the QUERY rather than the path, so
   // `discover` cannot reach it by following a link off the board — the board
   // only links here once a first man has been chosen. Two real ids, like every
   // other fixed entry in this list.
-  "/players/compare?a=05gcr&b=03ksl",
+  //
+  // **It read `/players/compare` until the refactor pass of 10 Sep 2026**, four
+  // commits after the route was renamed, and nothing caught it: the dev server
+  // still answered 200 off a stale chunk while the production build carried only
+  // `/players/analysis`. The smoke walk is the thing that is supposed to catch a
+  // dead route, so a dead route inside it is the one entry nobody is watching.
+  "/players/analysis?a=05gcr&b=03ksl",
   "/matchday",
   "/matchday/desk",
   "/paper/columns",

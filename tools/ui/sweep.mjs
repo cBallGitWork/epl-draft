@@ -35,7 +35,7 @@ const ROUTES = [
   // `discover` cannot reach it by following a link off the board — the board
   // only links here once a first man has been chosen. Two real ids, like every
   // other fixed entry in this list.
-  "/players/compare?a=05gcr&b=03ksl",
+  "/players/analysis?a=05gcr&b=03ksl",
   "/matchday",
   "/matchday/desk",
   "/fpl",
@@ -147,11 +147,15 @@ if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => 
 // because the attribute grid is the densest type on the desk — `xs` labels
 // against `--color-muted`, which is the pair a contrast sweep exists for.
 // **`tbody`, and that is not decoration.** The bare selector took the first
-// `/players/` link on the page, which from 6 Sep 2026 is the Compare tab in
-// Scout's own strip — so these instruments walked `/players/compare/data` and
-// friends, which resolve to the PLAYER route with a `fantraxId` of "compare",
+// `/players/` link on the page, which from 6 Sep 2026 is the second tab in
+// Find's own strip — so these instruments walked `/players/analysis/data` and
+// friends, which resolve to the PLAYER route with a `fantraxId` of "analysis",
 // and stopped covering a real player screen at all. A man is a row of the
 // directory, so the directory's body is where to look for one.
+//
+// The tab was called Compare and the route was `/players/compare` when this was
+// first written down; the trap is the same whatever the tab is called, which is
+// why the fix is the selector and not the name.
 const man = await discover(cdp, "/players", 'tbody a[href^="/players/"]');
 if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) => `${man}/${tab}`));
 

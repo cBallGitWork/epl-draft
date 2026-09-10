@@ -40,7 +40,7 @@ const DRAWN = {
 } as const;
 
 /** What each tier is called, in the order the key reads them — best first. */
-export const TIER_LABEL = [
+const TIER_LABEL = [
   ["goal", "Goal"],
   ["target", "On target"],
   ["off", "Off target"],

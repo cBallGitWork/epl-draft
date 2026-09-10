@@ -20,7 +20,7 @@ import type { IntelManifest } from "./types";
  *  the bytes for the same numbers, and this file's whole argument is that the
  *  points are cheaper than the grid. An odd length is a corrupt row and the
  *  parser drops it. */
-export interface TouchFixture {
+interface TouchFixture {
   fplFixtureId: number;
   p: number[];
 }

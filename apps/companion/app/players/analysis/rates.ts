@@ -46,7 +46,7 @@ export interface Rate {
  *
  *  Saves rides along for the keepers and removes itself for everybody else —
  *  see `rateRows`. */
-export const RATES: readonly Rate[] = [
+const RATES: readonly Rate[] = [
   { name: "Min", from: "FPL, season total", perNinety: false, of: (s) => s.minutes },
   { name: "Starts", from: "FPL, season total", perNinety: false, of: (s) => s.starts },
   { name: "xG", from: "FPL's expected goals, per 90", perNinety: true, of: (s) => s.expectedGoals },
