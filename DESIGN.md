@@ -682,6 +682,16 @@ apart silently.
 | A figure in a row | — | — | `sm`, `.numeric` | `ROW_FIGURE`, worn by `FIGURE` (centred) and `BOARD_FIGURE` (right) |
 | A label that is furniture | — | — | `2xs` bold caps | `LABEL` |
 
+**One recorded exception, and what earns one.** `prem/match/[id]/TeamSheet` sets
+its names and figures a step above the row default — `base`/`lg:text-lg` against
+`sm`/`lg:base` — on Craig's call of 10 Sep 2026 (*"the player text could be much
+bigger on this screen too like CM… data much bigger too"*). The argument is that
+`cm9900/16.jpg` is a screen whose ONLY content is twenty-two names and their
+figures, so the game gives them room a many-column board cannot; every other list
+on the desk shares its width with four or more measures. A screen wanting this
+exception has to be able to say the same thing about itself, and `ROW_NAME` stays
+where it is — six boards wear it and none has the room.
+
 **Three of these are rules and the rest are consequences.** 44 is PRODUCT.md's
 tap floor and is not negotiable under a thumb; 36 is a control on the desk; 28 is
 a repeating row on the desk, which is `.cm-row` and is the number that makes a

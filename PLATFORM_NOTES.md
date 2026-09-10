@@ -542,6 +542,42 @@ its subtitle, correctly and verbatim (§3: server-driven, never our copy), so on
 to any test we could write.** It belongs in the ship-day runbook rather than in
 the code.
 
+## Injury is not a per-match fact anywhere we read (10 Sep 2026)
+
+Asked for on the team sheet — `cm9900/16.jpg` marks a man `inj 7`, injured during
+the match at the seventh minute. **Neither feed publishes one.**
+
+- The fixture detail's `events` array carries eight types over 862 rows: `PS`,
+  `PE`, `G`, `O`, `P`, `MP`, `B`, `S`. No injury.
+- Opta's textstream carries **25** types over 1,103 events across ten fixtures —
+  `free kick lost` 241, `free kick won` 234, `miss` 95, down to `own goal` and
+  `red card` at one apiece. No injury.
+- Thirteen of those 1,103 lines mention injury, a stretcher or a knock **in the
+  prose**. Reading it out would be parsing sentences for a fact, which CODE_RULES
+  §3 forbids at runtime, and it would be wrong on every line that phrases it
+  differently.
+- `start delay` / `end delay` appear 8 times each and often bracket an injury.
+  That is an inference and not the fact — a delay is also a floodlight, a crowd
+  incident or a VAR check.
+
+FPL's `status` (`i` injured, `d` doubtful, `s` suspended) is a statement about
+**now**, not about the match. Printing it beside a man on a team sheet for a
+match played a fortnight ago would say he was injured that day, which is not what
+it means.
+
+So the card block on the team sheet carries a booking and a sending off and
+nothing else. **A red card is already drawn** — `--color-bad` against the
+booking's accent — and reads correctly; it looked absent only because there was
+exactly one red card in gameweeks 1-3 (Brighton v Aston Villa, 40', FPL fixture
+7), and the match being looked at had none.
+
+## Weather is not published either (10 Sep 2026)
+
+Counted across every key at every depth of the fixture detail: no `weather`,
+`temperature`, `wind`, `rain`, `condition` or `climate`. FPL publishes none. CM's
+own foot line carries it and ours cannot, so the line draws referee and
+attendance and holds no empty slot — a slot implies a gap that could be filled.
+
 ## The fixture detail's own `events` array, and why it retired a sister-repo read (10 Sep 2026)
 
 `GET /fixtures/{id}` carries an `events` array beside the team sheets. It is not the
