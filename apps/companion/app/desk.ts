@@ -88,25 +88,150 @@ export const LABEL = `${SMALL_CAPS} text-faint`;
  *  ratio between the NAME and the FIGURE, which `--text-2xs` going up a pixel on
  *  the desk already narrowed.
  *
+ *  *This went to `text-base font-extrabold lg:text-lg` for an hour on 7 Sep 2026
+ *  and came straight back.* Craig's "bolder, larger, stronger, with a slight
+ *  shadow" was about the **league PLACING** — the ordinal in the blue box — and
+ *  this file read it as the row. `.cm-index` in `desk.css` is where that work
+ *  belongs and now lives; the row name was never the thing being complained
+ *  about.
+ *
  *  No `truncate` and no `min-w-0`: those are the caller's, because whether a
  *  name may be cut depends on what is beside it, and half these sites sit in a
- *  `<td>` that handles it. */
+ *  `<td>` that handles it.
+ *
+ *  **Three sites were still not asking for any of this**, counted the same day
+ *  and folded in: `components/league/SquadRows` at `text-sm font-medium`,
+ *  `squad/page` at a bare `font-semibold` and `components/football/MatchList` at
+ *  `text-sm font-semibold` — all three in the UI face, which is the exact
+ *  complaint the docblock above records being made in September and half-fixed.
+ *  The squad list was the one Craig named.
+ *
+ *  **And TWELVE more were not, counted 7 Sep 2026** — the sweep Craig asked for
+ *  when the fix above turned out to have been one screen deep (*"i still see
+ *  different font sizes in the app, such as /league/team-stats"*). Every one of
+ *  them drew a name you scan a list FOR, and every one drew it in the UI face:
+ *
+ *    league/team-stats        no size at all — inherited `BOARD`'s `text-sm`
+ *    prem/team-stats          the same, twice, short name and long
+ *    prem/match Squads        text-sm
+ *    prem/match PlayerStats   text-sm
+ *    prem/match Scoresheet    text-sm font-bold
+ *    league/matchups Pairing  text-sm font-semibold
+ *    league/schedule Season   text-sm font-semibold — and its OTHER branch,
+ *                             `text-sm italic text-faint`, which draws the same
+ *                             opponent when there is no team to link to
+ *    football/MatchList       text-sm font-medium  (the scorer — the same file
+ *                             already used ROW_NAME for the club beside it)
+ *    squad transfers Ledger   text-sm font-medium
+ *    prem/club set-pieces     text-sm font-bold
+ *    prem/club Run            text-sm, under a `font-bold` on the LINK
+ *
+ *  The last is the one worth naming: `Run` bolded the anchor rather than the
+ *  name, so the weight could not travel with the recipe and the `font-bold`
+ *  outlived every span it was meant to be about. It came off the link.
+ *
+ *  Four sites are deliberately NOT here, because they are not rows: the two
+ *  `.cm-title` bars, `PlayerCard`/`LivePlayerCard`'s dialog headings, and
+ *  `matchday/desk/Rows`, whose "ARS v CHE" is a fixture line rather than a name
+ *  — a compound of two clubs and a "v", set at the wire's own `text-xs`. */
 export const ROW_NAME = "font-chrome text-sm font-bold lg:text-base";
+
+/** **How big a figure in a row is**, and it is the same figure whether the table
+ *  centres it or flushes it right.
+ *
+ *  Craig, 10 Sep 2026: *"The numbers in the rows for each column are still too
+ *  small on desktop."* **Still** is the word that matters — `tokens.css` already
+ *  answered the first complaint (5 Sep) by taking the three smallest STEPS up a
+ *  pixel above `lg`, which moved `text-2xs` from 11px to 12 and left the ratio
+ *  where it was. The ratio is the actual fault: `.cm-index` sets the placing at
+ *  `text-base` on a desk and `ROW_NAME` sets the name beside it at the same, so
+ *  a row read 16px · 16px · **12px**, and the twelve is the part of the row a
+ *  standings table is FOR.
+ *
+ *  So the figure takes a step of its own above `lg` rather than the scale taking
+ *  another pixel: `--text-2xs` is 141 of the app's type sites and most of them
+ *  are labels, which have no complaint. `sm` is 14px on a laptop and 15 on a
+ *  monitor, against the name's 16 and 15 — a ratio CM's own table would
+ *  recognise, where `24.jpg` runs a club name about half again its figures.
+ *
+ *  Nothing measured moves: `.cm-row` is 28px above `lg` and `text-sm`'s line box
+ *  is 18, so DESIGN §6's density table stands.
+ *
+ *  **And the phone takes the same step, an hour later.** This shipped as
+ *  `text-2xs lg:text-sm` on the reasoning that the phone was never the complaint
+ *  and its 44px row has the room anyway — the first half of which Craig answered
+ *  within the hour: *"numbers in rows are good on desktop, still small/hard to
+ *  read to mobile."* The second half was the argument for fixing it rather than
+ *  against: a 44px row carrying an 11px figure is a row with 33px of nothing in
+ *  it, and 11px of `.numeric` is 11px of a CONDENSED face — Archivo Narrow with
+ *  `tnum`, which is the narrowest thing on the screen at the smallest size on
+ *  the screen. The name beside it was already `text-sm`.
+ *
+ *  So one step for both, and the `lg:` half of the pair is gone: `text-sm` is
+ *  14px under a thumb, 14 on a laptop and 15 on a monitor, because `tokens.css`
+ *  moves `sm` at 96rem and not at 64. The desk lands exactly where Craig has
+ *  just approved it and the phone catches up. It fits: at 390 the widest figure
+ *  on the table is `141` at about 21px inside a `w-11` cell, and the six single
+ *  digits are 7px inside `w-7`. */
+export const ROW_FIGURE = "text-sm";
 
 /** A figure in a repeating row: tabular, centred, and small enough that a column
  *  of them reads as a column. Three files declared it byte-identically under a
  *  private `const FIGURE` — `league/TableRow`, `prem/ClubRow`, and `players/Board`
  *  (deleted 6 Sep 2026, when the pool's leaderboard became a directory).
  *
- *  Two more files declare a `FIGURE` that is this string plus a size:
- *  `lg:text-sm` on the club squad table and `text-base font-bold lg:text-lg` on
- *  Team Stats. They are not folded in here, because "one figure size per
- *  density" is a visible decision and this file is not allowed to make one.
+ *  **Both of the exceptions are gone, and the decision was Craig's** (7 Sep
+ *  2026: *"make sure its not declared in different places"*). Two files carried
+ *  their own: `prem/club/[code]/SquadTable` composed `WIDE_FIGURE = ${FIGURE}
+ *  lg:text-sm`, and `league/team-stats` declared a private `const FIGURE` at
+ *  `text-base font-bold lg:text-lg` — the same NAME as this one, in another
+ *  file, at three times the size on a desk. `prem/team-stats` wrote a fourth
+ *  spelling inline at `text-sm`. The entry this replaces said "one figure size
+ *  per density is a visible decision and this file is not allowed to make one",
+ *  which was right: the file did not make it, and the four spellings sat there
+ *  until somebody looked at two boards side by side. A board that wants a bigger
+ *  figure now asks for it as an ADDITION anybody can grep for, the way
+ *  `.cm-index` does with the placing.
  *
  *  `.numeric` is what makes the digits line up (`font-display` plus `tnum`), and
  *  DESIGN §6 is why nothing here letterspaces: `.numeric` already sets -0.01em
- *  and a `tracking-*` on the same element is the two rules arguing. */
-export const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
+ *  and a `tracking-*` on the same element is the two rules arguing.
+ *
+ *  The size is `ROW_FIGURE`'s, which is one step and not a token — see above. */
+export const FIGURE = `numeric px-1.5 text-center font-bold ${ROW_FIGURE}`;
+
+/** How wide CM's index block is, and it is a WIDTH rather than a padding.
+ *
+ *  Craig, 5 Sep 2026, on the match ratings board: *"blue tab needs to be same
+ *  size as the rest."* A `<td>` sizes to its content, so a shirt number of 7 got
+ *  a narrower block than 77 and a man the identity files carry no number for got
+ *  the narrowest of all — eleven blocks down a column, six different widths.
+ *  What makes a column of them read as one object is that they are the same
+ *  shape. 32px under a thumb and 36 on the desk.
+ *
+ *  **Here rather than in `components/league/TableCells`, where it lived until
+ *  7 Sep 2026**, and the move is a LAYERING fix rather than an extraction at
+ *  two. Its second consumer is `components/shell/ScoreRow`, and `shell/` is the
+ *  cross-register frame that `league/` builds on (CODE_RULES §4) — importing the
+ *  other way was the only `shell/ → league/` import in the app. `desk.ts` is
+ *  layer-neutral and both components already import from it, so the constant
+ *  moves to the one place both may reach without either owning the other.
+ *
+ *  The bar of three governs whether a name is CREATED. This name existed, was
+ *  exported for exactly this caller, and had **no consumer outside its own file**
+ *  while `ScoreRow` wrote `w-8 lg:w-9` out by hand — an unused export beside a
+ *  copy of its value, with two docblocks claiming they could not drift. */
+export const INDEX_WIDTH = "w-8 lg:w-9";
+
+/* `PLACING` was here for an hour on 7 Sep 2026 and is gone. It sized the ordinal
+   in the blue index block at four sites, on the argument that the SIZE of that
+   block's text is a decision about what the block holds — a placing, a shirt
+   number, a date — where the weight and the shadow are not. Craig overruled it
+   the same hour: *"i think we can have the same for now and il find the correct
+   exceptions (such as ones that hold a date for example)."* One size on
+   `.cm-index` is the honest default, and it makes an exception an ADDITION that
+   somebody can grep for rather than a disagreement nobody can distinguish from a
+   decision. `desk.css` carries the argument. */
 
 /** A figure the reader is meant to scan PAST — a subordinate line under a
  *  louder one: a club's three letters beside a name, a record under a heading,
@@ -123,14 +248,38 @@ export const FIGURE = "numeric px-1.5 text-center text-2xs font-bold";
  *  INK, which is the whole of the recipe. */
 export const QUIET_FIGURE = "numeric text-2xs text-faint";
 
-/** The same quiet figure as a table CELL, holding a position, a shirt number or
- *  anything else beside a real figure. `FIGURE`'s geometry with `FIGURE`'s
- *  weight and ink removed — the pair is the point, and they must stay the same
- *  width or the column bends.
+/* `SLOT_FIGURE` was here — `QUIET_FIGURE` in `FIGURE`'s geometry, for a cell
+   holding a shirt number or a position beside a real figure — and it is **gone
+   because it had no caller**. Its one site was `prem/club/[code]/SquadTable`,
+   which moved that column into a `.cm-index` block on 5 Sep 2026 at Craig's
+   asking; the export outlived it, and the only mention left in the tree is the
+   comment there recording the move. Found on 10 Sep while giving every row
+   figure a desk step: it was about to take one, which would have been a size
+   decision made for nobody. An unused export beside a docblock claiming a
+   pairing it no longer has is the `DASH` failure this file opens by naming. */
+
+/** **A figure on a STAT BOARD** — flushed right, in a column of many, with the
+ *  ink and the weight left to the caller.
  *
- *  Composed from `QUIET_FIGURE` rather than spelled out, so the two cannot drift
- *  in ink or size while claiming to be a pair. */
-export const SLOT_FIGURE = `${QUIET_FIGURE} px-1.5 text-center`;
+ *  `FIGURE` is the standings table's: centred, bold, one of eight. A board is
+ *  the other shape CM draws — `cm9900/21.jpg`, thirteen columns of numbers a
+ *  reader compares down rather than across — and it flushes them right so the
+ *  units line up. `numeric px-1.5 text-right text-2xs` was written out at
+ *  **fifteen sites in eight files**, counted 10 Sep 2026, and **thirteen of the
+ *  fifteen are this recipe**. One of the thirteen had already grown a
+ *  `lg:text-sm` on its own (`prem/club/[code]/stats/PlayerBoard`), which is what
+ *  a recipe with no name looks like the day somebody needs to change it.
+ *
+ *  **Counted and refused, both in the other two:** `prem/match/[id]/Squads`
+ *  right-flushes a POSITION and `matchday/desk/Rows` a club's three letters.
+ *  Neither is a figure, and `Rows` does not even carry `.numeric` — a recipe
+ *  that swallows the two members of a grep that are not what the grep was about
+ *  is how a name stops meaning anything.
+ *
+ *  No `py`: two of the six files that call this set `py-1`, because their rows
+ *  have no `.cm-row` on them, and four do not. A padding two thirds of the
+ *  callers would have to undo is not part of the recipe. */
+export const BOARD_FIGURE = `numeric px-1.5 text-right ${ROW_FIGURE}`;
 
 /** Which way a form result leans. Two files declared this byte-identically.
  *
@@ -320,21 +469,37 @@ export function standDown(deskOnly: boolean | undefined, sorted: boolean): strin
  *
  * The section that saves the next session the counting.
  *
- * `const DASH = "—"` — 10 named against 64 unnamed literals in 34 files
- *   (re-counted 7 Sep 2026; it was 9 against 68).
- *   Naming it a tenth time would hide the scatter behind a plausible name. It
- *   is named only if all 68 adopt it, which is a decision about the absence
+ * `const DASH = "—"` — **11 named against 55 unnamed literals in 32 files**,
+ *   re-counted 7 Sep 2026 with the grep written down so the next count is
+ *   reproducible rather than another number:
+ *
+ *     named:   grep -rn --include='*.ts' --include='*.tsx' 'DASH = "—"' app
+ *     unnamed: the same for '"—"', minus those lines
+ *
+ *   The entry above this one said 10 against 64 in 34 files on the same day,
+ *   which is what an unrecorded method buys you: two sessions counting the same
+ *   thing and disagreeing, with no way to tell which was wrong.
+ *
+ *   Naming it a twelfth time would hide the scatter behind a plausible name. It
+ *   is named only if all 55 adopt it, which is a decision about the absence
  *   grammar (DESIGN §7) rather than about class strings.
  *
  * **Above the bar and deliberately left, with the count** — the honest half of
- *   this section, counted on 3 Sep 2026 and belonging to the next pass rather
- *   than to the end of a long one:
+ *   this section. Counted 3 Sep 2026, RE-counted 7 Sep, and left again: none of
+ *   it is sediment from the row-style run, so pulling five untouched files into
+ *   that commit would make it harder to review for no gain.
  *
- *     `text-xl font-bold tracking-tight`   6 files — a section heading, spread
- *                                          across matchday, `/gw` and a player
- *     `numeric text-2xs text-faint`        4 files — a quiet figure
+ *     `text-xl font-bold tracking-tight`   **5 files** (was 6) — a section
+ *                                          heading, across matchday, `/gw` and
+ *                                          `football/GameweekView`
  *     `px-3 text-2xs text-faint`           5 sites
  *     `flex items-baseline justify-between gap-3 pt-1`  5 sites
+ *
+ *   `numeric text-2xs text-faint` was on this list at 4 files and **is gone
+ *   from it**: it was extracted as `QUIET_FIGURE` above, on 4 Sep, and the raw
+ *   string now appears **0 times**. So this file both named a recipe and went on
+ *   listing it as declined — the one failure mode the section exists to prevent,
+ *   committed by the section itself.
  *
  *   `Array.isArray(v) ? v[v.length - 1] : v` — the repeated-query-parameter
  *   narrowing, **2 sites** (`players/query.ts`, `players/compare/page.tsx`).

@@ -3,11 +3,21 @@
 import { SELECT } from "../../../components/shell/ButtonLink";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { PLAYER_CATEGORIES, type PlayerStatLine, type SeasonTotals } from "@epl/core";
-import { UNDERLYING, VIEWS, type ViewKey, figure, totalOf } from "./statViews";
+import { type PlayerStatLine, type SeasonTotals } from "@epl/core";
+import { VIEWS, type ViewKey, measuresFor, readingOf } from "./statViews";
 import SortHead from "./SortHead";
 import { positionsFromList } from "../../../positions";
-import { HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, PANEL_FLUSH, ROW_RULE, SCROLL } from "@/app/desk";
+import {
+  BOARD_FIGURE,
+  HEAD_CELL,
+  HEAD_PLATE,
+  HEAD_PLATE_END,
+  PANEL_FLUSH,
+  ROW_NAME,
+  ROW_RULE,
+  SCROLL,
+} from "@/app/desk";
+import { MUTE } from "../../../components/league/TableHeads";
 
 // One squad's season, in Championship Manager's own stat-screen grammar.
 //
@@ -51,27 +61,20 @@ export default function StatBoard({
   // disagree from the first render.
   const [sort, setSort] = useState<{ key: string; descending: boolean } | null>(null);
 
-  const columns =
-    view === "fantasy"
-      ? PLAYER_CATEGORIES
-      : view === "underlying"
-        ? []
-        : PLAYER_CATEGORIES.filter((category) => category.group === view);
+  // The columns on screen, which the head strip, the rows and the glossary all
+  // read — one list, so a view cannot put a column in the table and leave it out
+  // of the key.
+  const measures = measuresFor(view);
 
   const rows = useMemo(() => {
     if (sort === null) return [...lines];
-    const value = (line: PlayerStatLine) => {
-      if (sort.key === "pts") return totalOf(line);
-      const fpl = UNDERLYING.find((column) => column.key === sort.key);
-      if (fpl) return underlying[line.fantraxId]?.[fpl.key] ?? null;
-      return figure(line, sort.key, PLAYER_CATEGORIES.find((c) => c.key === sort.key)?.also);
-    };
     return [...lines].sort((a, b) => {
       // **Absence sorts last whichever way the column runs.** A man with no
       // figure has not scored nought — he has no reading — and floating him to
       // the top of an ascending sort would answer "who conceded fewest" with
       // eleven players who have not played.
-      const [x, y] = [value(a), value(b)];
+      const x = readingOf(a, underlying[a.fantraxId], sort.key);
+      const y = readingOf(b, underlying[b.fantraxId], sort.key);
       if (x === null) return y === null ? 0 : 1;
       if (y === null) return -1;
       return sort.descending ? y - x : x - y;
@@ -121,10 +124,14 @@ export default function StatBoard({
           <thead>
             <tr className="text-3xs uppercase">
               <th scope="col" className="p-0 font-bold">
-                <span className={HEAD_PLATE_END}>#</span>
+                <span className={HEAD_PLATE_END}>
+                  <span className={MUTE}>Rank</span>
+                </span>
               </th>
               <th scope="col" className={HEAD_CELL}>
-                <span className={HEAD_PLATE}>Player</span>
+                <span className={HEAD_PLATE}>
+                  <span className={MUTE}>Player</span>
+                </span>
               </th>
               {/* Position is a column here for the reason it is one on the squad
                   list: a man eligible at two cannot be filed under one letter. */}
@@ -134,55 +141,38 @@ export default function StatBoard({
               <th scope="col" className={HEAD_CELL}>
                 <span className={HEAD_PLATE}>Club</span>
               </th>
-              {view === "underlying"
-                ? UNDERLYING.map((column) => (
-                    <SortHead
-                      key={column.key}
-                      label={column.head}
-                      title={column.label}
-                      sorted={sort?.key === column.key}
-                      descending={sort?.descending ?? true}
-                      onSort={() => sortBy(column.key)}
-                    />
-                  ))
-                : null}
-              {columns.map((category) => (
+              {measures.map((measure) => (
                 <SortHead
-                  key={category.key}
-                  label={category.key}
-                  title={category.label}
-                  sorted={sort?.key === category.key}
+                  key={measure.key}
+                  label={measure.head}
+                  title={measure.label}
+                  sorted={sort?.key === measure.key}
                   descending={sort?.descending ?? true}
-                  onSort={() => sortBy(category.key)}
+                  onSort={() => sortBy(measure.key)}
                 />
               ))}
-              {view === "fantasy" ? (
-                <SortHead
-                  label="Pts"
-                  title="Our total of his scoring categories"
-                  sorted={sort?.key === "pts"}
-                  descending={sort?.descending ?? true}
-                  onSort={() => sortBy("pts")}
-                />
-              ) : null}
             </tr>
           </thead>
 
           <tbody>
             {rows.map((line, index) => (
               <tr key={line.fantraxId} className={ROW_RULE}>
-                <td className="cm-index numeric px-1.5 py-1 text-right text-3xs font-bold">
+                <td className="cm-index numeric px-1.5 py-1 text-right">
                   {index + 1}
                 </td>
-                {/* Cyan, because the palette spends it on a person and this is
-                    the only column here that is one. */}
-                {/* His name opens his page (Craig, 2 Sep: "tapping a player
+                {/* White, which is what CM sets a name in on every screen it
+                    draws (`12.jpg`, `16.jpg`, `21.jpg`). This comment said cyan
+                    for a week while the code beside it said `text-ink`, off the
+                    same misread reference row `PlayerBoard`'s twin has already
+                    had corrected.
+
+                    His name opens his page (Craig, 2 Sep: "tapping a player
                     brings up card too"). A link and not the squad list's dialog:
                     that card takes a `SquadPlayerDetail` — a roster slot joined
                     to a footballer and a fixture — and this table holds a flat
                     pool line, which is a different shape from a different
                     endpoint. The profile is where the whole of him is anyway. */}
-                <td className="p-0 text-2xs">
+                <td className="p-0">
                   <Link
                     href={`/players/${line.fantraxId}`}
                     // **`min-h-11` on a phone and `.cm-row` above it**, which is
@@ -194,7 +184,7 @@ export default function StatBoard({
                     // (`21.jpg` fits thirteen columns and twelve players on an
                     // 800x600 canvas). The floor is a rule about a THUMB, so it
                     // belongs where there is one.
-                    className="cm-row flex min-h-11 items-center px-1.5 text-ink hover:underline"
+                    className={`cm-row flex min-h-11 items-center px-1.5 ${ROW_NAME} text-ink hover:underline`}
                   >
                     {names[line.fantraxId] ?? line.name}
                   </Link>
@@ -203,57 +193,36 @@ export default function StatBoard({
                   {positionsFromList(line.position) ?? "—"}
                 </td>
                 <td className="px-1.5 py-1 text-2xs text-muted">{line.clubShort ?? "—"}</td>
-                {view === "underlying"
-                  ? UNDERLYING.map((column) => {
-                      const totals = underlying[line.fantraxId];
-                      const value = totals?.[column.key];
-                      return (
-                        <td
-                          key={column.key}
-                          className={`numeric px-1.5 py-1 text-right text-2xs ${
-                            value ? "text-mid" : "text-faint"
-                          }`}
-                        >
-                          {/* A slot the bridge has not settled has no
-                              footballer behind it and so no season — a dash,
-                              which is absence, against the nought that means he
-                              played and did none of it. */}
-                          {value === undefined
-                            ? "—"
-                            : "decimals" in column && column.decimals
-                              ? value.toFixed(2)
-                              : value}
-                        </td>
-                      );
-                    })
-                  : null}
-                {columns.map((category) => {
-                  const value = figure(line, category.key, category.also);
+                {measures.map((measure) => {
+                  const value = measure.read(line, underlying[line.fantraxId]);
                   return (
                     <td
-                      key={category.key}
+                      key={measure.key}
                       // **A nought is a nought** (Craig, 2 Sep: "if zero, just
                       // put zero not a dash"), and `21.jpg` is with him — its
                       // thirteen columns are full of printed `0`s. A striker who
                       // has played and not scored HAS a figure and it is nought;
-                      // the dash is for a column he cannot have one in at all,
-                      // which is what `null` means here.
+                      // the dash is for a column he cannot have one in at all —
+                      // a category he can never register, or a slot the bridge
+                      // has not settled, which has no footballer behind it and
+                      // so no FPL season.
                       //
-                      // Drawn quiet rather than amber so the figures that matter
-                      // still carry the column, which is how CM does it too.
-                      className={`numeric px-1.5 py-1 text-right text-2xs ${
-                        value ? "text-mid" : "text-faint"
+                      // A figure is drawn quiet rather than amber so the ones
+                      // that matter still carry the column, which is how CM does
+                      // it too. The total is the exception and wears the accent,
+                      // because it is what the board adds up to.
+                      className={`${BOARD_FIGURE} py-1 ${
+                        measure.loud
+                          ? "font-bold text-accent"
+                          : value
+                            ? "text-mid"
+                            : "text-faint"
                       }`}
                     >
-                      {value ?? "—"}
+                      {value === null ? "—" : measure.decimals ? value.toFixed(2) : value}
                     </td>
                   );
                 })}
-                {view === "fantasy" ? (
-                  <td className="numeric px-1.5 py-1 text-right text-2xs font-bold text-accent">
-                    {totalOf(line) ?? "—"}
-                  </td>
-                ) : null}
               </tr>
             ))}
           </tbody>
@@ -271,21 +240,14 @@ export default function StatBoard({
           It names only the columns actually on screen, so switching the view
           changes the key with it. */}
       <dl className="flex flex-wrap gap-x-3 gap-y-0.5 border-t border-line px-2 py-1.5 text-3xs">
-        {(view === "underlying"
-          ? UNDERLYING.map((column) => [column.head, column.label] as const)
-          : columns.map((category) => [category.key, category.label] as const)
-        ).map(([head, label]) => (
-          <span key={head} className="flex items-baseline gap-1">
-            <dt className="font-bold text-mid">{head}</dt>
-            <dd className="text-faint">{label}</dd>
+        {measures.map((measure) => (
+          <span key={measure.key} className="flex items-baseline gap-1">
+            <dt className={`font-bold ${measure.loud ? "text-accent" : "text-mid"}`}>
+              {measure.head}
+            </dt>
+            <dd className="text-faint">{measure.label}</dd>
           </span>
         ))}
-        {view === "fantasy" ? (
-          <span className="flex items-baseline gap-1">
-            <dt className="font-bold text-accent">Pts</dt>
-            <dd className="text-faint">Our total of his scoring categories</dd>
-          </span>
-        ) : null}
       </dl>
     </section>
   );

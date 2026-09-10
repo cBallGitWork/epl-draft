@@ -1,6 +1,16 @@
 import { columnLabel } from "@epl/core";
 import type { TeamStats } from "@epl/core";
-import { HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, PANEL_FLUSH, ROW_RULE, SCROLL } from "@/app/desk";
+import {
+  BOARD_FIGURE,
+  HEAD_CELL,
+  HEAD_PLATE,
+  HEAD_PLATE_END,
+  PANEL_FLUSH,
+  ROW_NAME,
+  ROW_RULE,
+  SCROLL,
+} from "@/app/desk";
+import { MUTE } from "./TableHeads";
 
 // Championship Manager's attribute grid, for a squad's season.
 //
@@ -89,10 +99,14 @@ export default function SeasonGrid({
                         the cell: these tables collapse their borders, so a strip
                         of bevelled cells loses its inner edges (desk.css). */}
                     <th scope="col" className="p-0 font-bold">
-                      <span className={HEAD_PLATE_END}>#</span>
+                      <span className={HEAD_PLATE_END}>
+                        <span className={MUTE}>Rank</span>
+                      </span>
                     </th>
                     <th scope="col" className={HEAD_CELL}>
-                      <span className={HEAD_PLATE}>Player</span>
+                      <span className={HEAD_PLATE}>
+                        <span className={MUTE}>Player</span>
+                      </span>
                     </th>
                     {group.columns.map((column) => {
                       const { name, definition } = columnLabel(column);
@@ -127,7 +141,7 @@ export default function SeasonGrid({
                     <tr key={line.fantraxId} className={ROW_RULE}>
                       {/* CM's leading index block, so the eye counts down the
                           blocks rather than the rows. */}
-                      <td className="cm-index numeric px-1.5 py-1 text-right text-3xs font-bold">
+                      <td className="cm-index numeric px-1.5 py-1 text-right">
                         {index + 1}
                       </td>
                       {/* Sized to the longest name rather than truncated. The
@@ -135,21 +149,21 @@ export default function SeasonGrid({
                           seventeen columns are — so squeezing the name buys no
                           screen and loses the one thing on the row a reader
                           cannot infer from the figures. */}
-                      <td className="px-1.5 py-1 text-2xs text-ink">
+                      <td className={`px-1.5 py-1 ${ROW_NAME} text-ink`}>
                         {names.get(line.fantraxId) ?? line.fantraxId}
                       </td>
                       {line.values.map((value, at) => (
                         <td
                           key={group.columns[at]?.code ?? at}
-                          className={`numeric px-1.5 py-1 text-right text-2xs ${tone(value)}`}
+                          className={`${BOARD_FIGURE} py-1 ${tone(value)}`}
                         >
                           {value ?? "—"}
                         </td>
                       ))}
-                      <td className="numeric px-1.5 py-1 text-right text-2xs font-bold text-ink">
+                      <td className={`${BOARD_FIGURE} py-1 font-bold text-ink`}>
                         {line.points ?? "—"}
                       </td>
-                      <td className="numeric px-1.5 py-1 text-right text-2xs text-muted">
+                      <td className={`${BOARD_FIGURE} py-1 text-muted`}>
                         {line.perGame ?? "—"}
                       </td>
                     </tr>

@@ -42,10 +42,17 @@ const archivo = Archivo({
   display: "swap",
 });
 
+// **800 is the blue index block's text and nothing else** (Craig, 7 Sep 2026:
+// *"the text in the blue box"* — bolder, larger, with a slight shadow). 700 was
+// the ceiling here and every one of those twenty sites was already at it, so
+// "bolder" had nowhere to go without another file. One more weight is the cost,
+// and `.cm-index` in `desk.css` is its only consumer: the league placing is the
+// mark a reader counts a table down by, and `cm9900/24.jpg` sets it heavier than
+// the club names beside it. Everything else on the desk stays at 700.
 const oxanium = Oxanium({
   subsets: ["latin"],
   variable: "--font-oxanium",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 

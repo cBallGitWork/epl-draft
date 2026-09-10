@@ -206,23 +206,61 @@
 /* CM's small leading index cell: a filled blue block down the left of a table
    carrying the row's number, so the eye counts down the blocks rather than the
    rows. It is what stops a dense table reading as a wall, and it is deliberately
-   NOT a zebra — the stripe is on the index, not on the row.
+   NOT a zebra — the stripe is on the index, not on the row. The accent edge
+   rides here, so "yours" and the index are one mark.
 
-   `--color-chrome`, not a depth step. `--color-surface` is 1.06:1 off the ground
-   and would be an index cell nobody can see; this is 2.44:1 with its number at
-   7.0:1 on it. The accent edge rides here, so "yours" and the index are one mark. */
-/* CM's index cell — the blue block down the left of every table it draws.
-   Craig, 1 Sep 2026: "the blue that we use in the table should be a blue closer
-   to the nav bar", and the reference agrees. The game runs its title bar and tab
-   strip at `#0030a6` and its index cell at `#1f13a7` (measured, `12.jpg` /
-   `21.jpg` / `23.jpg`) — two blues a step apart, not one blue and a dark one.
-
-   Ours had drifted the other way: `--color-chrome` is the NAV's own token, so
-   the cell and the strip were the same value and the cell read as a lighter
-   patch of the same furniture rather than as its own object. This lifts it to
-   the strip's family while keeping the step CM keeps — the same hue, one rung
+   **`--color-index`, its own slot** — Craig, 1 Sep 2026: "the blue that we use
+   in the table should be a blue closer to the nav bar", and the reference
+   agrees. The game runs its title bar and tab strip at `#0030a6` and its index
+   cell at `#1f13a7` (measured, `12.jpg` / `21.jpg` / `23.jpg`) — two blues a
+   step apart, not one blue and a dark one. Ours had drifted the other way:
+   `--color-chrome` is the NAV's own token, so the cell and the strip were the
+   same value and the cell read as a lighter patch of the same furniture rather
+   than as its own object. This keeps the step CM keeps — the same hue, one rung
    more saturated and slightly deeper, so a row of them reads as a spine and not
-   as a second tab bar. */
+   as a second tab bar.
+
+   *Two comment blocks stood here and the first still argued for `--color-chrome`
+   at 2.44:1 with its number at 7.0:1, which the second one says in as many words
+   was replaced. Merged 7 Sep 2026, and the ratio restated against the gradient
+   below: the ten chips on `/league` run 6.4:1 to 11.2:1 under `--cm-index-ink`,
+   measured, not one figure.* */
+/* **The blue is ONE gradient down the page, not one per chip** (Craig, 7 Sep
+   2026: *"the blue has a gradient down the page"*, and then, against the first
+   attempt: *"the gradient is going down the whole list, not a gradient for each
+   individual piece"*). That correction is the whole design. A per-block ramp
+   gives every chip the same light top and the same dark base, so a column of
+   them is one shape repeated; the reference has the COLUMN going from light at
+   its head to dark at its foot, and each chip is a slice of that.
+
+   **`background-attachment: fixed` is what makes many elements share one
+   gradient**, and it is the only way to do it in CSS without a call site
+   knowing its own row number. Fixing the attachment moves the background
+   POSITIONING AREA from the element to the viewport, so every `.cm-index` in
+   the app paints the slice of one page-tall gradient that falls where it sits.
+   No component learns anything, which is the requirement: the whole point of
+   this living in `desk.css` is that the twelve screens with an index column do
+   not each get a spine of their own to configure.
+
+   Three things follow and are deliberate. The gradient is anchored to the
+   SCREEN rather than to the list, so a chip changes shade as the page scrolls
+   under it — which is what "down the page" means. There is no per-chip highlight
+   or base any more, so **the 1px row rule is the only thing separating two
+   chips**: that is CM's own answer (`cm9900/24.jpg` separates its blocks with a
+   single dark line and nothing else) and it is the "VERY small gap" the question
+   was asking about. And the stops are gentler than the per-block ramp was,
+   because the ink has to clear its floor against EVERY point on the ramp rather
+   than against one flat face — a chip may land anywhere on it.
+
+   `--cm-index-face` is a local alias so the stops cannot drift from each other
+   or from the fill a team's shell re-points. `color-mix` in oklab so a club
+   colour handed in by `PlateShell` mixes the same way the deep blue does,
+   whatever space it was written in.
+
+   **Watch this one on real hardware.** `background-attachment: fixed` is the
+   classic iOS Safari jank case. It is cheap here because each painted area is a
+   32px chip rather than a full-bleed hero, but PLATFORM_NOTES' standing "look at
+   the desk on a real phone" item now has a second thing to look at. */
 .cm-index {
   /* `--cm-index` so a scope can re-point the block without every call site
      learning about it. A TEAM's screens set it to that manager's own colour
@@ -230,9 +268,96 @@
      team dependent to make the page unique") — the index block is the one
      repeating fill down a CM table, so it is what carries a page's identity.
      Everything outside a team scope keeps the deep blue it has always had. */
-  background: var(--cm-index, var(--color-index));
+  --cm-index-face: var(--cm-index, var(--color-index));
+  /* **`background-color` stays declared, and the gradient is `background-image`.**
+     The `background` shorthand would reset the colour to `transparent`, and both
+     audits walk `background-color` up the ancestor chain — `sweep.mjs` to find
+     what a figure is measured against and `groundfit.mjs` to accumulate cover
+     over the photograph. A block that paints solid blue and reports transparent
+     would take every index cell in the app out of both instruments at once. It
+     is also the fallback wherever `fixed` is refused. */
+  background-color: var(--cm-index-face);
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklab, white 22%, var(--cm-index-face)),
+    var(--cm-index-face) 55%,
+    color-mix(in oklab, black 45%, var(--cm-index-face))
+  );
+  background-attachment: fixed;
   color: var(--cm-index-ink, var(--color-ink));
   box-shadow: inset -1px 0 0 var(--color-bg);
+  /* **The block owns its text, the way `.cm-bevel` owns its ink.** Craig, 7 Sep
+     2026: *"i mean the text in the blue box"* — bolder, and with a slight
+     shadow. Counted the same day, the twenty sites that draw one wrote it
+     **four sizes and three weights**: `text-3xs`, `text-2xs`, `text-sm`, one
+     stepping `text-3xs lg:text-2xs`, seventeen `font-bold`, one with no weight
+     at all and one at `opacity-60`. That is the "hardcoding a different style to
+     each page" this week is for.
+
+     **Size as well as weight, and that was Craig's call**: this first shipped
+     with the size left at the call sites and a `PLACING` recipe for the four
+     that draw an ordinal, on the argument that a chip holding a date is not a
+     placing and blanket-sizing it is how a `w-16` box starts wrapping. His
+     answer, the same hour: *"i think we can have the same for now and il find
+     the correct exceptions (such as ones that hold a date for example)."* One
+     size everywhere is the honest default and the exceptions are then a list
+     somebody can read off a screen, rather than twenty sites that never agreed
+     in the first place and cannot be told from deliberate ones.
+
+     So the twenty `text-*` and seventeen `font-bold` those sites carried are
+     gone from them rather than left inert. An overridden utility that still
+     reads as a decision is worse than none — the whole point of this being one
+     class is that the next person can find the exceptions, and they cannot if
+     every site still names a size the cascade is throwing away. **An exception
+     is now an addition** (`text-3xs` after the class, or `--cm-index-size` if
+     one ever needs the pair), which is a thing you can grep for.
+
+     `sm` under a thumb and `base` on the desk, which is `cm9900/24.jpg`'s own
+     proportion — the placing fills most of the chip's height there, and ours ran
+     at `text-2xs` in a 45px row, a caption in a box rather than the thing the
+     column is for. The line box comes from the scale beside it (`tokens.css`
+     declares one per step) rather than being left to Preflight's 1.5, which is
+     the trap DESIGN §6 opens with.
+
+     800 and not 700: `cm9900/24.jpg` enlarged at the `1st` / `2nd` / `3rd`
+     column sets them heavier than the club names beside them, which is the
+     opposite of the ratio in a row and is why this is its own decision.
+     `layout.tsx` loads the weight for exactly this. The shadow is the one
+     `.cm-title` casts, at a third of the offset — CM's own, visible as a dark
+     fringe below and right of every glyph in that crop. */
+  font-weight: 800;
+  text-shadow: 0.04em 0.05em 0.05em rgb(0 0 0 / 0.55);
+}
+
+/* **The SIZE is layered and the weight is not**, and the difference is the whole
+   of what "an exception is an addition" means.
+
+   Tailwind v4 declares `@layer theme, base, components, utilities`, so a rule in
+   `components` loses to any utility whatever its specificity — which is exactly
+   the override a call site expects when it writes `text-3xs`. The rest of this
+   block's type is UNLAYERED and therefore final: a plate owns its ink (DESIGN
+   §2), and the weight and the shadow are what make a column of these one object.
+   Size is the one property a chip has a legitimate reason to differ on, because
+   the chips do not all hold a placing.
+
+   **This was found by the refactor pass and it was a real defect**, not a
+   tidy-up. The first cut put all four properties unlayered, and the promise made
+   at the time — that an exception would be a `text-3xs` written after the class
+   — was simply false: an unlayered declaration cannot be overridden by a
+   utility, so the one chip that needed to be smaller could not say so. The
+   mechanism now works, and `news/page.tsx` is the site that proves it. */
+@layer components {
+  .cm-index {
+    font-size: var(--text-sm);
+    line-height: var(--text-sm--line-height);
+  }
+
+  @media (min-width: 64rem) {
+    .cm-index {
+      font-size: var(--text-base);
+      line-height: var(--text-base--line-height);
+    }
+  }
 }
 
 /* CM's scrollbar: a grey channel down the right of a list, with a raised thumb
@@ -486,9 +611,23 @@
 /* A list of readings, not a stack of objects. The rule between rows is what a
    table has instead of a gap: `gap-1.5` between sixteen bordered boxes is
    sixteen separate things, and what a list of one squad's players says is that
-   these are fifteen readings of one squad. */
+   these are fifteen readings of one squad.
+
+   **`--color-bg` and not `--color-line`, settled 7 Sep 2026.** `desk.ts` has
+   carried this disagreement as "phase 2's to settle" since `ROW_RULE` was named:
+   a table ruled its rows in the dark step and a LIST ruled the same rows in the
+   light one, so the schedule's ties and the table's teams — the same object on
+   two tabs — were separated by two different marks. Craig asked for one row
+   style across tables, fixture lists and squad lists (7 Sep), which is what
+   makes this one edit rather than a preference.
+
+   The dark step is the one that agrees with the reference. `cm9900/24.jpg` and
+   `cm0102/07.jpg` draw NO rule between rows at all — what gives a CM list its
+   rhythm is the gap between the index blocks down its left, which is why the
+   gradient on `.cm-index` above is doing the work this line was overdoing. A
+   light rule under every row is fifteen boxes; a dark one is a list. */
 .cm-rows > * {
-  border-bottom: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-bg);
 }
 
 /* ---- How tall a row is, and how big the mark at the head of it -------------

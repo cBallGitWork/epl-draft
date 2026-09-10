@@ -71,6 +71,34 @@ export function Head({
  *  centred `W` is what made the first strip look mis-set. */
 export const PLATE = "cm-bevel flex h-7 items-center justify-center whitespace-nowrap px-1.5";
 
+/** **A head the column does not need.**
+ *
+ *  Craig, 10 Sep 2026: *"the rank (blue tabs) does not need a column header
+ *  (hashtag) / remove team / repeat this for all tables the same."* A column of
+ *  `1st 2nd 3rd` says what it is, and so does a column of names with a crest on
+ *  each. Those are the two columns in the table that label themselves, and they
+ *  were the two carrying a label — `cm9900/24.jpg` heads neither, and starts its
+ *  strip at the first figure.
+ *
+ *  **The word goes silent rather than away.** A `<th scope="col">` with nothing
+ *  in it is a column whose every cell is announced with no header, and on the
+ *  two sortable placings the same text is the accessible NAME of a link. So it
+ *  stays in the tree and leaves the strip, which is what `sr-only` is for. The
+ *  plate around it does not move: it is sized by the `<th>`, so an empty one
+ *  still holds the strip's height and the column's width.
+ *
+ *  A constant and not a component, on `PLATE`'s precedent. **Ten tables mute a
+ *  head and an eleventh is one of their loading skeletons**, counted 10 Sep
+ *  2026 — `/league`, `/prem`, both Team Stats boards, the club squad list, the
+ *  club and squad stat boards, the season grid, a match's player stats and the
+ *  pool — and between them they wrap the word in **seven** different things:
+ *  `SortHead`'s link, `NameHead`'s bare span, `PLATE`, `HEAD_PLATE`,
+ *  `HEAD_PLATE_END`, the pool's own sticky lead cell and its skeleton's plain
+ *  `<th>`. A component spanning those takes a wrapper, a width and an element,
+ *  which is CODE_RULES §1's "never build a generic mechanism". What they share
+ *  is this one class. */
+export const MUTE = "sr-only";
+
 /** Where a sortable head's label sits inside its plate. The figures are centred
  *  — every one in `cm9900/24.jpg` is, under a centred head — and a name is read
  *  rather than compared, so it stays left. */
@@ -94,6 +122,7 @@ export function SortHead({
   align = "center",
   sorted,
   arrow = true,
+  mute = false,
 }: {
   width: string;
   title?: string | undefined;
@@ -110,6 +139,9 @@ export function SortHead({
    *  arrow there would state a direction the reader cannot change and the
    *  pressed plate has already said everything true. */
   arrow?: boolean;
+  /** On for a column that names itself — see `MUTE` above. The plate, the
+   *  pressed state and the arrow all stay; the word goes silent. */
+  mute?: boolean;
 }) {
   return (
     <Head width={width} title={title} sorted={sorted}>
@@ -119,7 +151,7 @@ export function SortHead({
           sorted === undefined ? "cm-bevel hover:brightness-110" : "cm-bevel-pressed"
         }`}
       >
-        {label}
+        {mute ? <span className={MUTE}>{label}</span> : label}
         {arrow && sorted !== undefined ? <Arrow down={sorted === "descending"} /> : null}
       </Link>
     </Head>
@@ -134,15 +166,18 @@ function Arrow({ down }: { down: boolean }) {
   );
 }
 
-/** The name column's head, which carries no plate.
+/** The name column's head, which carries no plate and now no word either.
  *
  *  CM's head strip starts at the first figure and leaves the name column bare
  *  (`cm9900/24.jpg`) — the strip is a ruler over the numbers, and running it
- *  across the names makes it a header bar instead. */
+ *  across the names makes it a header bar instead. The cell stays, because it
+ *  holds the column open and keeps the strip's height. */
 export function NameHead({ label }: { label: string }) {
   return (
     <Head width="">
-      <span className="flex h-7 items-center px-1.5 text-faint">{label}</span>
+      <span className="flex h-7 items-center px-1.5">
+        <span className={MUTE}>{label}</span>
+      </span>
     </Head>
   );
 }

@@ -5,7 +5,17 @@ import Link from "next/link";
 import type { FootballPlayer } from "@epl/core";
 import { SELECT } from "../../../../components/shell/ButtonLink";
 import { VIEWS, reading } from "./measures";
-import { HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, PANEL_FLUSH, ROW_RULE, SCROLL } from "@/app/desk";
+import {
+  BOARD_FIGURE,
+  HEAD_CELL,
+  HEAD_PLATE,
+  HEAD_PLATE_END,
+  PANEL_FLUSH,
+  ROW_NAME,
+  ROW_RULE,
+  SCROLL,
+} from "@/app/desk";
+import { MUTE } from "../../../../components/league/TableHeads";
 
 // A club's season, player by player, in Championship Manager's stat-screen
 // grammar.
@@ -99,10 +109,14 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                   and `squad/[teamId]/stats` runs a plain count — a board is a
                   ranking once a head is tapped, and the number is what says so. */}
               <th scope="col" className="p-0 font-bold">
-                <span className={HEAD_PLATE_END}>#</span>
+                <span className={HEAD_PLATE_END}>
+                  <span className={MUTE}>Rank</span>
+                </span>
               </th>
               <th scope="col" className={HEAD_CELL}>
-                <span className={HEAD_PLATE}>Player</span>
+                <span className={HEAD_PLATE}>
+                  <span className={MUTE}>Player</span>
+                </span>
               </th>
               {/* Position is a column here for the reason it is one on the squad
                   list: a man eligible at two cannot be filed under one letter. */}
@@ -153,12 +167,12 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
           <tbody>
             {ordered.map(({ player, position }, at) => (
               <tr key={player.id} className={`cm-row ${ROW_RULE} hover:bg-surface`}>
-                <td className="cm-index numeric px-1.5 text-right text-2xs font-bold">{at + 1}</td>
+                <td className="cm-index numeric px-1.5 text-right">{at + 1}</td>
                 {/* White, which is what CM sets a name in on every screen it
                     draws — `12.jpg`, `16.jpg` and `21.jpg`, checked. This said
                     cyan and cited the same shots for it, off a reference row
                     that had read its own images wrong. */}
-                <td className="px-1.5 text-sm font-bold text-ink">
+                <td className={`px-1.5 ${ROW_NAME} text-ink`}>
                   <Link
                     href={`/prem/player/${player.code}`}
                     // The floor, on `StatBoard`'s precedent — the sibling board
@@ -173,7 +187,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                 {measures.map((measure) => (
                   <td
                     key={measure.key}
-                    className="numeric px-1.5 text-right text-2xs font-bold text-mid lg:text-sm"
+                    className={`${BOARD_FIGURE} font-bold text-mid`}
                   >
                     {reading(player.season[measure.key])}
                   </td>

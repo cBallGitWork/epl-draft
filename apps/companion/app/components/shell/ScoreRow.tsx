@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ROW_NAME } from "@/app/desk";
+import { INDEX_WIDTH, ROW_NAME } from "@/app/desk";
 import { ordinal } from "@epl/core";
 
 // Championship Manager's results row, and the app now has one spelling of it.
@@ -222,7 +222,9 @@ function Block({ side }: { side: ScoreSide }) {
     // y=290, six rows with no gap at all. This gives the padding back to the
     // block and to nothing else, so the row keeps the height the density table
     // sets and the blue meets.
-    <span className="cm-index numeric flex w-8 shrink-0 items-center justify-center text-3xs font-bold lg:-my-0.5 lg:w-9">
+    <span
+      className={`cm-index numeric ${INDEX_WIDTH} flex shrink-0 items-center justify-center lg:-my-0.5`}
+    >
       {/* An ORDINAL, which is what `cm9900/24.jpg` prints — `1st`, `2nd` — and
           not a bare number. Empty rather than a dash for a side with no place:
           the block is furniture that holds the column, and a dash inside it

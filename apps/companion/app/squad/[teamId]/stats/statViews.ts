@@ -1,4 +1,4 @@
-import { PLAYER_CATEGORIES, type PlayerStatLine } from "@epl/core";
+import { PLAYER_CATEGORIES, type PlayerStatLine, type SeasonTotals } from "@epl/core";
 
 // What the stats board can show, and the arithmetic behind each column.
 //
@@ -34,7 +34,7 @@ export const VIEWS = [
  *  `xGC` is a defender's and a keeper's column: the goals a side was expected to
  *  concede while he was on the pitch, which is the closest thing FPL publishes
  *  to "was he any good at the back". */
-export const UNDERLYING = [
+const UNDERLYING = [
   { key: "minutes", head: "Min", label: "Minutes played" },
   { key: "starts", head: "St", label: "Starts — not the same as appearances" },
   { key: "expectedGoals", head: "xG", label: "Expected goals", decimals: true },
@@ -53,7 +53,7 @@ export type ViewKey = (typeof VIEWS)[number]["key"];
  *  outfielder, so a category may name a second column to try. Read as a
  *  fallback, never summed: a man is in exactly one half of the read, so at most
  *  one of the two is ever on his row. */
-export function figure(line: PlayerStatLine, key: string, also: string | undefined) {
+function figure(line: PlayerStatLine, key: string, also: string | undefined) {
   return line.stats[key] ?? (also === undefined ? null : line.stats[also] ?? null);
 }
 
@@ -65,9 +65,98 @@ export function figure(line: PlayerStatLine, key: string, also: string | undefin
  *  by the league. A total added from the counts is ours rather than Fantrax's,
  *  so DESIGN §7 requires it be labelled as ours: the column is headed `Pts` and
  *  never `FPts`, which is Fantrax's own name for a different number. */
-export function totalOf(line: PlayerStatLine): number | null {
+function totalOf(line: PlayerStatLine): number | null {
   const figures = PLAYER_CATEGORIES.map((category) =>
     figure(line, category.key, category.also),
   ).filter((value): value is number => value !== null);
   return figures.length === 0 ? null : figures.reduce((sum, value) => sum + value, 0);
+}
+
+/** One column on the board: its head, what it means, and how to read it off a
+ *  row.
+ *
+ *  **The read belongs to the COLUMN, and that is the whole point.** `StatBoard`
+ *  branched on `view === "underlying"` in three places — the head strip, the
+ *  cell row and the glossary — and appended the fantasy total as a fourth
+ *  special case in each of them, so one column's existence was stated six times
+ *  and its arithmetic a seventh in the sort comparator. Six of the seven were
+ *  free to disagree with the other one.
+ *
+ *  `totals` is the FPL season for this row's man, `undefined` for a slot the
+ *  bridge has not settled. A category ignores it; an underlying column is
+ *  nothing else. */
+export type Measure = {
+  key: string;
+  head: string;
+  label: string;
+  read: (line: PlayerStatLine, totals: SeasonTotals | undefined) => number | null;
+  /** FPL publishes the expected family to two places and a count to none. */
+  decimals?: boolean;
+  /** The column the view is FOR, drawn in the accent rather than in the tone
+   *  ladder. Only the total claims it: it is what the board adds up to. */
+  loud?: boolean;
+};
+
+/** Our own total, which is a column and not an epilogue.
+ *
+ *  It rides in the measures list precisely so it stops being a special case at
+ *  every site that draws one. The label is the one the glossary printed. */
+const TOTAL: Measure = {
+  key: "pts",
+  head: "Pts",
+  label: "Our total of his scoring categories",
+  loud: true,
+  read: (line) => totalOf(line),
+};
+
+/** The columns a view puts on screen, in the order it puts them.
+ *
+ *  Fantasy is every category the league scores plus the total; the other two
+ *  category views are that list filtered to one group and carry no total,
+ *  because a total of three of eleven categories is not a total of anything.
+ *  Underlying is FPL's, and shares no column with any of them. */
+export function measuresFor(view: ViewKey): readonly Measure[] {
+  if (view === "underlying")
+    return UNDERLYING.map((column) => ({
+      key: column.key,
+      head: column.head,
+      label: column.label,
+      decimals: "decimals" in column && column.decimals,
+      read: (_line: PlayerStatLine, totals: SeasonTotals | undefined) =>
+        totals?.[column.key] ?? null,
+    }));
+
+  const categories =
+    view === "fantasy"
+      ? PLAYER_CATEGORIES
+      : PLAYER_CATEGORIES.filter((category) => category.group === view);
+  const measures: Measure[] = categories.map((category) => ({
+    key: category.key,
+    head: category.key,
+    label: category.label,
+    read: (line: PlayerStatLine) => figure(line, category.key, category.also),
+  }));
+  return view === "fantasy" ? [...measures, TOTAL] : measures;
+}
+
+/** Every column the board can sort by, keyed. Built from the two views that
+ *  between them name all of them — `fantasy` is every category plus the total,
+ *  and the group views are subsets of it.
+ *
+ *  **Deliberately not the visible list.** Sorting outlives its column: order the
+ *  squad by goals and switch to the defensive group, and the order stands, which
+ *  is what it did before this list existed. A comparator that could only see
+ *  what is on screen would drop silently back to roster order on the switch. */
+const SORTABLE = new Map(
+  [...measuresFor("fantasy"), ...measuresFor("underlying")].map((measure) => [measure.key, measure]),
+);
+
+/** One reading, by column key — the sort comparator's way in, and the same
+ *  function the cell that prints it uses. */
+export function readingOf(
+  line: PlayerStatLine,
+  totals: SeasonTotals | undefined,
+  key: string,
+): number | null {
+  return SORTABLE.get(key)?.read(line, totals) ?? null;
 }
