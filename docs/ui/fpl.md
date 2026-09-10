@@ -71,7 +71,9 @@ by this tab's own wrapper rather than by a prop with one caller.
 **The pitch is bounded by the fold.** `.pitch`'s ratio turns any width into a
 height, and this is a pitch with no second column beside it: full-bleed it came
 out 1,132 wide and 1,192 tall at 1440, **552px past the fold**, 622 of that empty
-grass under the keeper. `--pitch-ratio` on `:root` is the same number the
+grass beyond the far line. (That reading is August's, when the keeper stood at the
+foot; the side kicks the other way since 10 Sep 2026 and the empty end is the one
+it is attacking.) `--pitch-ratio` on `:root` is the same number the
 aspect-ratio uses, so the cap and the shape cannot disagree at a breakpoint, and
 `.pitch-fpl` carries this page's own chrome budget. `tools/ui/pitchfit.mjs` walks
 `/fpl` now — its not doing so is why the overflow shipped unmeasured.

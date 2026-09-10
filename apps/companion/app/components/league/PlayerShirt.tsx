@@ -98,7 +98,7 @@ export default function PlayerShirt({
   return (
     <div
       style={KIT_RATIO}
-      className={`grid w-full overflow-hidden ${fill ? "h-full" : "pitch-figure"}`}
+      className={`flex w-full justify-center overflow-hidden ${fill ? "h-full" : "pitch-figure"}`}
     >
       {/* **The numeral is positioned against the SHIRT, not against the card.**
           `.pitch-figure` has an aspect-ratio AND a max-height, and the two can
@@ -108,10 +108,13 @@ export default function PlayerShirt({
           it sat on the hem at one viewport and on the chest at another, which is
           the kind of wrongness that only a screenshot catches.
 
-          So the pair share an inner box of the kit's own ratio, bounded by the
-          card and centred in it. Whatever the cap does to the card, the shirt
-          and the number on it move together. */}
-      <span className="relative m-auto block aspect-[110/145] max-h-full max-w-full">
+          So the pair share an inner box that IS the kit: `h-full` takes the
+          card's height, whatever the cap left of it, and the aspect-ratio
+          derives the width — so the box and the shirt inside it are one
+          rectangle and a percentage down it is a true fraction of the kit.
+          Bounding it the other way round (`max-h-full max-w-full`) let the two
+          disagree, and the numeral came out below the hem. */}
+      <span className="relative block h-full aspect-[110/145]">
         <Image
           src={shirtUrl(club, keeper)}
           alt=""
@@ -147,15 +150,13 @@ export default function PlayerShirt({
            polarity. */
           <span
             aria-hidden
-            // **58% down the KIT, which is BELOW the sponsor and not across
-            // it.** All forty files are photographed to one template — shoulders
-            // at 15%, crest at 28%, sponsor between 38% and 50%, hem at 95% — so
-            // one fraction serves every club. It was 40% for one screenshot,
-            // which printed "FLY BE4ER" across Arsenal's chest: legible, because
-            // the ring does its job, and still two pieces of type fighting over
-            // one patch of shirt. The plain panel under the sponsor is the only
-            // part of a Premier League kit nobody else has bought.
-            className="numeric absolute inset-x-0 top-[58%] text-center text-sm font-bold leading-none lg:text-base"
+            // **Just under the sponsor, which is the only patch of a Premier
+            // League kit nobody else has bought.** All forty files are shot to
+            // one template — collar, crest, sponsor band, hem — so one fraction
+            // serves every club. It was 40% for one screenshot and printed
+            // "FLY BE4ER" across Arsenal's chest: legible, because the ring does
+            // its job, and still two pieces of type fighting over one patch.
+            className="numeric absolute inset-x-0 top-[52%] text-center text-sm font-bold leading-none lg:text-base"
             style={{ color: ink, textShadow: ring(ink) }}
           >
             {number}

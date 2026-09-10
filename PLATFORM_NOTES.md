@@ -1306,6 +1306,107 @@ in its heading — a zone note over a column with no clock in it is furniture
 explaining something that is no longer there — and, the time gone, the column is
 narrow enough to come back to the phone.
 
+## The pitch draws kits, not photographs (10 Sep 2026)
+
+Craig: *"potraits dont work — lets go back to classic shirts for the pitch view
+that all sites work"*, and two calls with it: reverse the direction of play, and
+put a shirt number on the two screens where all eleven men wear the same kit.
+
+**The photographs were not missing.** Counted the same day across 60 random
+players: the Premier League's `110x140` set answers for **51/60** and `500x500`
+for **49/60**. So this is a look decision and not a bug fix, and the reason is
+the LADDER rather than the assets. `PlayerImage` falls photograph → ours → kit →
+initials, so a line of eleven reliably holds nine faces, a shirt and a set of
+letters. One man in seven is enough to spoil every pitch and nowhere near enough
+to notice on a profile page — which is exactly why the ladder survives for the
+four callers that are about one man, and why no pitch uses it any more.
+
+### The kit source, counted — do not re-derive
+
+`https://fantasy.premierleague.com/dist/img/shirts/standard/shirt_{code}[_1]-{size}.png`,
+all twenty clubs in both kits, 10 Sep 2026:
+
+| | Counted | Real pixels | Bytes |
+|---|---|---|---|
+| `-110` | **40/40** | 110×145 | 7–12 KB |
+| `-220` | **40/40** | 220×290 | 20–42 KB |
+| `-440` | **0/40** — 404 | — | — |
+| `-220.webp` | **40/40** genuine RIFF/WEBP | 220×290 | mean 10 KB |
+
+So **220 is the ceiling this host publishes**, not a number picked for headroom.
+`shirtUrl` asks for it and takes no size parameter: every caller draws a kit at
+or above `PitchRows.MAX_CARD` (110px), so the argument would have one value at
+every call site. The `.webp` is deliberately not asked for — `next/image`
+re-encodes whatever it fetches, so a second URL shape buys one origin fetch per
+club per deploy and costs a second thing to keep in step.
+
+Also present and not used: `shirt_0-220.png`, a grey blank with a white cross —
+FPL's own "unknown club". `resources.premierleague.com/…/kits/` is a 403 and
+there is no SVG. The `special/` prefix returns the standard file byte-for-byte.
+
+### Where a number comes from, and where there is none
+
+| Screen | Source | Counted |
+|---|---|---|
+| `/prem/match/[id]/players` | `PlSquadMan.shirt` (`matchShirtNumber`) | **30/30** |
+| `/prem/club/[code]` predicted XI | `IntelPlayer.squadNumber` | **197/220** starters (527/651 squad-wide) |
+| every fantasy pitch | none | FPL's `squad_number` is null on all |
+
+The split is not an accident and is the whole design: a fantasy eleven wears
+eleven different kits and is told apart by them, so a number would be noise. It
+is the two screens where all eleven wear the SAME kit that have nothing else —
+and they are exactly the two where a real club's own sources publish one.
+
+### The chest numeral needs a ring, and the ring is load-bearing
+
+`inkOn` answers for the club's PRIMARY, and `clubColours` documents that field as
+"shirt base — the colour a fan would name first", which is the **outfield**
+shirt. Arsenal's `#EF0107` therefore returns white and Arsenal's keeper top is
+white. Seven of the twenty are reds whose keeper kits are not red; three (FUL,
+LEE, TOT) are white clubs whose keeper kits are not white. A per-club keeper
+palette would be a second table to keep true twice a season for one numeral, so
+the numeral takes a one-pixel outline in whichever ink it is not — one rule that
+survives both kits, and how a real shirt prints a number anyway.
+
+Positioned just **below** the sponsor: all forty files are shot to one template,
+and 40% put "FLY BE4ER" across Arsenal's chest.
+
+### The card and the kit have to be one rectangle
+
+`.pitch-figure` carries an aspect-ratio AND a max-height, and on a short viewport
+the cap wins — the box stops being the kit's shape and `object-contain`
+letterboxes the shirt inside it. A numeral pinned to the BOX then slides down the
+kit as the cap bites: it sat on the chest at one viewport and below the hem at
+another. So the kit and its number share an inner box that takes the card's
+height and derives its width from the ratio.
+
+`PlayerShirt` also sets `--pitch-figure` on its **own root**, not in each caller:
+`.pitch-figure` falls back to `1.32`, a LANDSCAPE box, so a caller that forgot to
+declare the shape drew 63px of shirt in a 110px card. `PitchMarker` did exactly
+that for one commit.
+
+## Keeper at the top — the direction reversed (10 Sep 2026)
+
+Craig: *"currently we go strikers at top, keeper bottom, lets reverse this."*
+This reverses the 5 Sep decision, which was argued off `cm9900/19.jpg` — Everton's
+number 1 at the FOOT of the tactics pitch. His league, his call, and it puts the
+app level with how FPL, Fantrax and every other fantasy site draw a side.
+
+**One line, in `PitchRows`, and it is a deletion.** Every arrangement in the tree
+already hands its rows over goal-first — `join/lineup.ts`'s `PITCH_ORDER`,
+`intel/map.ts`'s `predictedEleven`, `fpl-entry/lineup.ts`'s sort, and the Premier
+League's own formation grid — because back-to-front is what an arrangement MEANS:
+`lineup()` derives the shape string from its line order, so flipping any of them
+would print a 1-3-4-3 as "3-4-3-1". Which end it is drawn from is a view's
+decision, and there is one view. Six pitches cannot disagree.
+
+**The grounds' padding had to flip with it.** `CmGround` leaves the attacking end
+empty and pins the keeper to his own line with near-zero padding at the end he is
+on — that end is the head now, so the 16% moved to the foot. Left alone it would
+have held the keeper a sixth of a pitch off his line and pushed the forwards
+through the far goal. `PitchFrame` needed nothing: its goal and hoardings are at
+the top, so the keeper now stands in the goal he is defending.
+
 ## `.cm-tab`'s height cannot be overridden by a utility (10 Sep 2026)
 
 `league/GroupNav` has carried `lg:min-h-9` since the day it was written, and it

@@ -161,13 +161,23 @@ no longer describes this one.
   card would upscale the picture it exists to show. It was 4.35rem, which pinned
   every screen from about 768px up at 69.6px and a 9px name — so the desktop
   pitch was cap-starved where the phone is width-starved.
-- **The photograph is drawn at the shape of the file it comes from** — 110×140,
-  and FPL's kit fallback is 110×145 — **up to the height one row has room for**.
-  The box was `1.32`, wider than it stood, which threw away three fifths of every
-  asset and left a 33px face on a phone while a quarter of the screen under the
-  pitch went unused. It is set on the card and not in the token layer, so the FPL
-  tab's pitch and the paper's team of the week keep the head-only crop until
-  somebody with those pages in hand says otherwise.
+- **The KIT is drawn at the shape of the file it comes from** — 110×145 —
+  **up to the height one row has room for**. The box was `1.32`, wider than it
+  stood, which threw away three fifths of every asset and left a 33px face on a
+  phone while a quarter of the screen under the pitch went unused.
+
+  Since 10 Sep 2026 the shape is set by `PlayerShirt` on its own root rather than
+  by each card, because every pitch now draws the same asset and a caller that
+  forgot to declare it letterboxed a portrait kit inside `1.32`'s landscape
+  default — 63px of shirt in a 110px card. The variable is set on the element
+  that reads it, which is the only arrangement in which no caller can get it
+  wrong.
+
+  The card's height cap and its aspect-ratio can still disagree on a short
+  viewport, so the kit and the number on it share an INNER box that takes the
+  card's height and derives its width from the ratio. That box is the shirt, and
+  a percentage down it is a true fraction of the kit — which is what the chest
+  numeral is positioned against.
 - **The card is bounded in both directions, and they come from opposite ends of
   the squad.** Width is a share of the fullest LINE, so a crowded line makes a
   narrow card. Height is a share of the screen divided by the number of ROWS,

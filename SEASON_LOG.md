@@ -3543,3 +3543,53 @@ PLATFORM_NOTES wholesale because a season log's dated entries are supposed to
 describe the past — which also exempted every present-tense probe, decision and
 constraint buried in it. The exemption moved with the diary; what is left is
 checkable, and it was checked in this session for the first time.
+
+## The pitch went back to kits, and the side kicks the other way (10 Sep 2026)
+
+Craig, in one message: *"potraits dont work — lets go back to classic shirts for
+the pitch view that all sites work… currently we go strikers at top, keeper
+bottom, lets reverse this… there is one exception, the REAL squad page (which has
+a list too) and the match line up page, its all the same team, so 11 shirts looks
+bad. Instead, we put the shirt number on the design too."*
+
+Three changes, and the third is the one that makes the first work.
+
+**The portraits were fine and that was the point.** Counted before designing
+anything: 51 of 60 random players have a `110x140` and 49 have a `500x500`. The
+defect is the ladder, not the assets — nine faces, a shirt and a set of initials
+in one line of eleven is three kinds of object pretending to be a team. Recorded
+in PLATFORM_NOTES with the kit counts beside it.
+
+**The number is what makes eleven identical kits legible**, and the two screens
+that need one are exactly the two where a real club publishes one. That symmetry
+was not designed; it fell out of asking where a number could honestly come from.
+
+**Four things this cost that were not in the plan**, each found by looking at a
+screenshot rather than by reading a diff:
+
+- `PitchMarker` never declared `--pitch-figure`, so the kit letterboxed inside
+  `.pitch-figure`'s `1.32` landscape default at 63px in a 110px card. The shape
+  moved onto `PlayerShirt`'s own root, where no caller can forget it.
+- The card's height cap and its aspect-ratio disagree on a short viewport, so a
+  numeral pinned to the card slid down the kit and out below the hem. The kit and
+  its number share an inner box now.
+- 40% down the shirt is the sponsor. "FLY BE4ER" shipped to one screenshot.
+- `Eleven.tsx` had `keeper={false}` hardcoded, so twenty clubs' predicted elevens
+  drew their keeper in an outfield shirt. Invisible while the kit was a fallback
+  that fired for one man in eight; the first thing you see once it is the whole
+  pitch.
+
+**And one thing a screenshot lied about.** The forward line looked clipped, so
+the first read was that the taller kit had broken the fold budget. It had not:
+the shot was taken at a 1900px viewport, which inflates `100svh` and with it
+`.pitch-figure`'s own height cap, so the picture was of a card size no phone will
+ever draw. Measured at real viewports the overflow is 0px on the match page and
+1–6px of rounding on the planner. A tall screenshot is not a long screenshot —
+scroll to the pitch instead.
+
+**A peer session committed mid-flight and swept this work into `e15c8ab`**,
+taking every file but the two that were still untracked — so `PitchMarker`
+shipped importing a `PlayerShirt` that was not in the repo and HEAD did not
+compile for one commit. Nothing had been pushed. The same session had already
+built `Formation.tsx`, the match page's pitch, which is why this one adapted to
+it rather than building the second one the plan called for.

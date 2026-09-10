@@ -148,6 +148,10 @@ Use them for:
   agreement with BPS is not evidence a bonus is final. Nothing reads this; the
   `settled`/`dataChecked` ladder derives the same rungs from reads we already make.
 - Portraits: `…/premierleague25/photos/players/{size}/{code}.png` — **PNG only**
+  (and since 10 Sep 2026 **no pitch reads them**: a pitch draws the club's kit,
+  because the fallback ladder below is what put three kinds of object in one line
+  of eleven. Faces survive where a page is about one man. PLATFORM_NOTES carries
+  the counts, including the 40/40 on `shirt_{code}[_1]-220.png`.)
   (webp/jpg 403), and note there is no `p` before the code and no 250x250 under
   this prefix. **Two sizes worth asking for, not one** — counted across 120 random
   players on 4 Sep 2026: `110x140` **105/120**, and it serves a real 220x280 PNG

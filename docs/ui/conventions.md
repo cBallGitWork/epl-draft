@@ -27,7 +27,7 @@ the token names survived the change of every value.
 | **Figures** | `mid`, `bad` | a figure; a loss, doubt or negative |
 | **Live** | `live` | a match in play, and nothing else |
 | **League** | `league`, `cream` | the league's own mark. Chrome only, never "active" |
-| **Pitch** | `pitch-turf`, `pitch-mow`, `pitch-line` | the grass, darker than the cut-outs so cards lift off it |
+| **Pitch** | `pitch-turf`, `pitch-mow`, `pitch-line` | the grass, darker than the kits so cards lift off it |
 | **FDR** | `fdr-1` … `fdr-5` | FPL's difficulty, rebuilt at our lightness. Data, not dress |
 
 Colour appears almost exclusively as **state**. Surfaces stay neutral.
@@ -91,10 +91,12 @@ No fluid clamps except inside the masthead.
 | `league/LineupPitch` | Your own XI plus the bench, one target per player: tap to pick, tap again for the rest. |
 | `league/MoveDialog` | Everywhere one player can go, over the pitch. |
 | `league/TeamSheet` | A live XI plus bench, or the same squad as rows, every player opening `LivePlayerCard`. Both boards that show a lineup that counts draw it. |
-| `league/PitchPlayer` | One player on the pitch: cut-out, name plate, points band. |
+| `league/PitchPlayer` | One player on the planner's pitch: kit, name plate, points band. |
 | `league/Pending` | Points Fantrax has not credited yet — a clean sheet is settled at the final whistle and FPL has been paying it since the hour mark. Four screens print it; before this they were four spellings of one rule, two of which could reach a `+0`. |
 | `league/SeasonGrid` | Championship Manager's attribute grid — the squad's season as one bevelled panel per scoring group, thirteen keeper columns and eleven outfield, every figure Fantrax's own. The **second panel** on `/squad/[teamId]`, and it costs one cache hit: `squadSeason` already reads this table to price the board. |
-| `league/PlayerImage` | The cut-out itself, with its fallbacks. Client-only, and has to be — see below. |
+| `league/PlayerImage` | The cut-out photograph, with its fallback ladder. Client-only, and has to be — see below. **Four callers, none of them a pitch**: the player profile, the paper's face and picture, and the live card. |
+| `league/PlayerShirt` | The club's kit, and the only place it is drawn. What every pitch draws now. Server component — it has no ladder to walk. |
+| `league/PitchMarker` | One player on the flat pitch: kit, name on the grass, one line under it. Was `PitchDisc`, and was a cut-out head in a coloured circle until 10 Sep 2026. |
 | `football/FixtureChip` | Opponent + (H)/(A), coloured by FPL's difficulty. **Never wraps** — the band under a sticker is a fixed 20px with `overflow-hidden`, so a second line is guillotined rather than spilled. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
 | `shell/TabStrip` | The blue tab strip under a title bar. Five strips use it — the League section, the Premiership section, a fantasy team's five views, a club's four, a player's five. (It read "three" until 4 Sep 2026 and had been undercounting `PremNav` since 2 Sep.) `dim` greys a tab that has nothing behind it for THIS subject and keeps it in place, which is CM's answer for an empty view (`cm0102/07.jpg`). |
@@ -299,30 +301,48 @@ that implements it.
 
 ## Four mechanics worth knowing before you touch them
 
-**Portraits are transparent cut-outs, and nothing is drawn behind them.** That is
-now the whole look: no card, no keyline, no studio backdrop — the pitch is the
-background. It replaced a 1994/95 Merlin sticker, which was handsome on its own
-and wrong at fifteen-up, because every border and backdrop sat between the reader
-and the only two things he came for: the face and the fixture.
+**A pitch draws KITS. A page about one man draws his face.** That is the split as
+of 10 Sep 2026 (Craig: *"portraits dont work — lets go back to classic shirts for
+the pitch view that all sites work"*), and it is worth saying why, because the
+photographs did not stop working.
 
-`PlayerImage` is a client component and has to be. A transparent PNG cannot be
-layered over a fallback and left to cover it, so a fallback can only appear once
-an image has actually failed to load — and only the browser knows that.
+Counted the same day across 60 random players: the Premier League's `110x140` set
+answers for **51** and `500x500` for **49**. What the ladder below cannot do is
+AGREE. It falls photograph → ours → kit → initials, so a line of eleven reliably
+holds nine faces, a shirt and a set of letters — three kinds of object standing in
+one row, which is what reads as broken. One man in seven is enough to spoil every
+pitch in the app and not nearly enough to notice on a profile page.
+
+**`PlayerShirt` is what a pitch draws, and it has no ladder.** A kit is chosen by
+club code, answers **40/40** (`shirtUrl` carries the count), and is right the day
+a man signs. The only absence it can meet is a club we cannot name, which it
+answers before asking for an image at all — so no `useState`, no `onError`, no
+`"use client"`. Keeper kits are the `_1` variant and a genuinely different shirt.
+
+- **The card and the kit are ONE rectangle.** `.pitch-figure` carries an
+  aspect-ratio *and* a max-height and the two disagree on a short viewport, so an
+  inner box takes the card's height and derives its width. Bound the other way
+  round (`max-h-full max-w-full`) the numeral came out below the hem.
+- **The number, on the two pitches that have one.** Centred just below the
+  sponsor — the only patch of a Premier League kit nobody else has bought — in
+  `inkOn(colours)` with a contrast ring under it. The ring is load-bearing:
+  `clubColours` describes the OUTFIELD shirt, so Arsenal's `#EF0107` returns white
+  and Arsenal's keeper top is white.
+
+**`PlayerImage` keeps the four-rung ladder for the four callers that are about one
+man**: the player profile, the paper's face and picture, and the live card. It is
+a client component and has to be — a transparent PNG cannot be layered over a
+fallback and left to cover it, so a fallback can only appear once an image has
+actually failed, and only the browser knows that.
 
 Four rungs: **this season's photograph → one of ours → the club's kit →
 initials.**
 
-- About 17 in 60 players have no photograph in the Premier League's current set.
 - **Ours** live in `apps/companion/public/portraits/{code}.png`, keyed on the FPL
   season-stable player code, dropped in by hand. A missing one costs a local 404.
   **Not `public/players/`** — that path is the player-profile route, so a miss
   there resolves to a page rather than a 404 and asks Fantrax about an id that is
   not a player.
-- **The kit** is the floor and a solid one: `shirtUrl(club, keeper)` picks by club
-  code rather than by a photograph of a man, so it is right the day he signs.
-  Keeper kits are the `_1` variant, chosen by `isGoalkeeper(slot.position)` —
-  which reads the same single declaration the pitch order rests on, so a league
-  that files keepers under "GK" needs one edit and not two.
 - The set *before* the current one still answers and is deliberately never used:
   it would put those players back in the shirts they wore two clubs ago, and a
   wrong photograph is worse than none because only one of the two looks like an
@@ -330,7 +350,8 @@ initials.**
 
 The case that still slips through is a photograph taken *within* the current set
 and overtaken by a January transfer — undetectable from the asset, and nothing
-marks it. A file in `public/portraits/` overrides it.
+marks it. A file in `public/portraits/` overrides it. **A kit never has this
+problem**, which is the second reason a pitch does not want a photograph.
 
 **The points band, and the one rule under it: a card says one thing at a time.**
 The third band of a player on the grass is his fixture until he kicks off and his
@@ -338,9 +359,8 @@ score after it, and the two never share the space. Played, it flips to a dark
 ground with cream numerals so the figure a manager came for is the loudest thing
 on the card; waiting, it is the FDR colour at full strength. Both are the same
 fixed height — a line whose cards stand at different heights stops reading as a
-line — and "he has not played" is said by dimming the **photograph** alone.
-Dimming the whole card said it too, and took the fixture colour and the name with
-it.
+line — and "he has not played" is said by dimming the **kit** alone. Dimming the
+whole card said it too, and took the fixture colour and the name with it.
 
 **Two player cards, and they are not one card with a flag.** `PlayerCard` answers
 *who is this and is he fit* — read midweek, going through somebody's fifteen: the
