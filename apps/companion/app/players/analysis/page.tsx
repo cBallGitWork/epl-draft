@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import Link from "next/link";
 import { FANTRAX_PLAYER_BASE } from "@epl/core";
 import ScoutShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
@@ -11,10 +10,9 @@ import MapSection from "./MapSection";
 import { StackWaiting } from "../[fantraxId]/Waiting";
 import { playerGrid } from "../[fantraxId]/grid";
 import { subject } from "../[fantraxId]/subject";
-import { BUTTON } from "../../components/shell/ButtonLink";
 import { getLeaguePool } from "../pool";
-import { intelTouches } from "../../intel";
-import { COMPARE } from "../query";
+import { ANALYSIS } from "../query";
+import { intelShots, intelTouches } from "../../intel";
 import OutLink from "../../components/shell/OutLink";
 
 // Two players, side by side.
@@ -49,6 +47,7 @@ export default async function ComparePage({
   const b = one(asked.b);
   const qa = one(asked.qa) ?? "";
   const qb = one(asked.qb) ?? "";
+  const map = one(asked.map);
 
   const pool = await getLeaguePool();
   const rows = "unavailable" in pool ? [] : pool.rows;
@@ -89,7 +88,7 @@ export default async function ComparePage({
   const refused = refusal(left) ?? refusal(right);
   if (refused !== null) {
     return (
-      <ScoutShell current="compare" title="Compare" rows={0}>
+      <ScoutShell current="analysis" title="Analysis" rows={0}>
         {picker}
         <Nothing title="Fantrax would not answer for one of them" code={refused}>
           A profile is one live read each and this one refused. Nothing is cached for it, so
@@ -99,57 +98,64 @@ export default async function ComparePage({
     );
   }
 
-  // Nothing chosen, or only one: an ordinary state and not an error. The boxes
-  // above are the way out of it, which is what changed on 10 Sep 2026 — this
-  // used to send the reader to the board and back.
-  if (one_ === null || two === null || names.a === null || names.b === null) {
+  // **Nobody chosen is the only empty state left.** Craig, 10 Sep 2026: *"give
+  // me the option to look at 1 player only"* — so one man is a whole screen with
+  // every panel on it, and the second box above stays open for whenever somebody
+  // is worth setting him against. It used to be a dead end that sent the reader
+  // back to the board.
+  if (one_ === null || names.a === null) {
     return (
-      <ScoutShell current="compare" title="Compare" rows={0}>
+      <ScoutShell current="analysis" title="Analysis" rows={0}>
         {picker}
-        <Nothing title={one_ === null && two === null ? "Two players, side by side" : "One more"}>
-          {one_ === null && two === null
-            ? "Search for a player in either box above. Pick two and they arrive here together, with a link you can send to anybody."
-            : "One is chosen. Search the other box for somebody to set him against."}
+        <Nothing title="A player, or two">
+          Search for anybody in the pool. One man fills the screen on his own; pick a second
+          and they arrive side by side, with a link you can send to anybody.
         </Nothing>
       </ScoutShell>
     );
   }
 
+  // A man on his own, and a man against another, are the same screen with the
+  // right-hand column left out — every panel below takes null for the second.
+  const solo = two === null || names.b === null;
+
   return (
-    <ScoutShell current="compare" title="Compare" rows={0}>
+    <ScoutShell current="analysis" title="Analysis" rows={0}>
       {picker}
 
       <CompareBar
         a={{ name: names.a, club: one_.football?.club, code: one_.football?.player.code ?? null }}
-        b={{ name: names.b, club: two.football?.club, code: two.football?.player.code ?? null }}
+        b={
+          solo || two === null || names.b === null
+            ? null
+            : { name: names.b, club: two.football?.club, code: two.football?.player.code ?? null }
+        }
       />
 
       {/* What they have DONE, which is FPL's alone and needs no second read. */}
       <Figures
         a={one_.football?.player.season ?? null}
-        b={two.football?.player.season ?? null}
-        names={{ a: names.a, b: names.b }}
+        b={solo ? null : (two?.football?.player.season ?? null)}
+        names={{ a: names.a, b: solo ? null : names.b }}
       />
 
       {/* Streamed: each grid is a percentile over every player in the division
           who has passed the minutes floor, so it is real work — and the bar
           above is the half of the screen a reader came to see first. */}
       <Suspense fallback={<StackWaiting />}>
-        <Grids left={one_} right={two} names={{ a: names.a, b: names.b }} />
+        <Grids
+          left={one_}
+          right={solo ? null : two}
+          names={{ a: names.a, b: solo ? null : names.b }}
+          map={map}
+          mapHref={(kind) => mapHref({ a, b: solo ? undefined : b, kind })}
+        />
       </Suspense>
-
-      {/* The swap costs nothing and answers the one thing a mirrored table
-          cannot: which side you are reading. */}
-      <div className="flex flex-wrap gap-1.5">
-        <Link href={`${COMPARE}?a=${b}&b=${a}`} className={BUTTON}>
-          Swap sides
-        </Link>
-      </div>
 
       <div className="flex flex-wrap gap-1.5">
         {[
           { id: a, name: names.a },
-          { id: b, name: names.b },
+          ...(solo || names.b === null ? [] : [{ id: b, name: names.b }]),
         ].map((man) => (
           <OutLink key={man.id} href={`${FANTRAX_PLAYER_BASE}/${man.id}`}>
             {man.name} on Fantrax
@@ -174,26 +180,64 @@ function refusal(side: Awaited<ReturnType<typeof subject>> | null): string | nul
 
 type Found = Extract<Awaited<ReturnType<typeof subject>>, { intel: unknown }>;
 
+/** One man as the maps need him — his marks, looked up by FPL code.
+ *
+ *  `-1` for a man with no football half, which no export carries, so both maps
+ *  come back empty and the section says so rather than the page branching. */
+function man(side: Found, name: string) {
+  const code = side.football?.player.code ?? -1;
+  return { name, touches: intelTouches.get(code), shots: intelShots.get(code) ?? [] };
+}
+
+/** Where a map plate points: the two men as they are, and the kind it offers.
+ *
+ *  The searches are deliberately NOT carried. A reader who has picked his two
+ *  men and is now choosing a map has finished searching, and carrying a spent
+ *  query would reopen both result lists under the boxes on every plate. */
+function mapHref({
+  a,
+  b,
+  kind,
+}: {
+  a: string | undefined;
+  b: string | undefined;
+  kind: string;
+}): string {
+  const next = new URLSearchParams();
+  if (a !== undefined) next.set("a", a);
+  if (b !== undefined) next.set("b", b);
+  next.set("map", kind);
+  return `${ANALYSIS}?${next.toString()}`;
+}
+
 /** The two grids and the pitch, read behind the boundary above. */
 async function Grids({
   left,
   right,
   names,
+  map,
+  mapHref,
 }: {
   left: Found;
-  right: Found;
-  names: { a: string; b: string };
+  /** Null when one man is being looked at on his own. */
+  right: Found | null;
+  names: { a: string; b: string | null };
+  /** The map the URL asked for, and where each plate of the picker points. */
+  map: string | undefined;
+  mapHref: (kind: string) => string;
 }) {
   const [gridA, gridB] = await Promise.all([
     left.football ? playerGrid(left.football.player) : Promise.resolve([]),
-    right.football ? playerGrid(right.football.player) : Promise.resolve([]),
+    right?.football ? playerGrid(right.football.player) : Promise.resolve([]),
   ]);
 
   return (
     <>
       <MapSection
-        a={{ name: names.a, touches: intelTouches.get(left.football?.player.code ?? -1) }}
-        b={{ name: names.b, touches: intelTouches.get(right.football?.player.code ?? -1) }}
+        asked={map}
+        href={mapHref}
+        a={man(left, names.a)}
+        b={right === null || names.b === null ? null : man(right, names.b)}
       />
       <Measures a={gridA} b={gridB} names={names} />
     </>

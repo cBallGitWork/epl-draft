@@ -49,7 +49,7 @@ export interface PlayersSearchParams {
 /** The same query, narrowed. */
 export interface PlayersQuery {
   /** The first man of a comparison, while one is being chosen. The board becomes
-   *  a picker: every row leads to `/players/compare` with him on one side rather
+   *  a picker: every row leads to `/players/analysis` with him on one side rather
    *  than to the player's own screen. URL state, so the half-made comparison
    *  survives a filter, a sort and being shared. */
   compare?: string;
@@ -117,7 +117,7 @@ export const POOL = "/players";
  *  The `?a=&b=` builder around it is deliberately NOT extracted: two sites, and
  *  they differ in what they are doing rather than in how — one completes a pair
  *  being chosen and the other reverses a finished one. §1 leaves two alone. */
-export const COMPARE = "/players/compare";
+export const ANALYSIS = "/players/analysis";
 
 /** How many rows a page carries before it says so and offers the rest.
  *

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Club } from "@epl/core";
 import { clubColours, inkOn } from "@epl/core";
 import PlayerPortrait from "../../components/football/PlayerPortrait";
@@ -16,11 +17,23 @@ import PlayerPortrait from "../../components/football/PlayerPortrait";
 // one thing on this screen that DOES mirror, because a pitch has two ends and a
 // bar does not.
 
-export default function CompareBar({ a, b }: { a: Side; b: Side }) {
+export default function CompareBar({ a, b }: { a: Side; b: Side | null }) {
+  // **One man is a whole bar, not half of one** (Craig, 10 Sep 2026: *"give me
+  // the option to look at 1 player only"*). He takes the full width and there is
+  // no `v`, because a `v` with nothing on the other side of it is a comparison
+  // the screen is not making.
+  if (b === null) {
+    return (
+      <header className="flex items-stretch">
+        <Half side={a} />
+      </header>
+    );
+  }
+
   return (
     <header className="flex items-stretch">
       <Half side={a} />
-      <span className="cm-bevel numeric flex min-h-16 w-8 shrink-0 items-center justify-center text-lg font-bold uppercase lg:min-h-24 lg:w-12 lg:text-3xl">
+      <span className="cm-bevel numeric flex min-h-20 w-8 shrink-0 items-center justify-center text-lg font-bold uppercase lg:min-h-28 lg:w-12 lg:text-3xl">
         v
       </span>
       <Half side={b} />
@@ -45,11 +58,18 @@ function Half({ side }: { side: Side }) {
   const ink = inkOn(colours);
 
   return (
+    // **A bigger face here than anywhere else** (Craig, 10 Sep 2026: *"can make
+    // portraits bigger on this screen if we want"*). `--row-portrait` is what
+    // sizes the disc — `desk.css` shrinks it with the row that carries it and
+    // `PitchDisc` raises it for a marker on the grass — so the bar raises it
+    // rather than the component growing a size of its own. `large` comes with
+    // it: at 64px the 110x140 source is visibly soft, which is the trap
+    // `PlayerPortrait`'s own ceiling docblock names.
     <div
-      className="flex min-h-16 min-w-0 flex-1 items-center gap-2 px-2 lg:min-h-24"
-      style={{ background: colours.primary }}
+      className="flex min-h-20 min-w-0 flex-1 items-center gap-2.5 px-2.5 lg:min-h-28"
+      style={{ background: colours.primary, "--row-portrait": "3.5rem" } as CSSProperties}
     >
-      <PlayerPortrait player={{ code: side.code, name: side.name }} colours={colours} chrome />
+      <PlayerPortrait player={{ code: side.code, name: side.name }} colours={colours} chrome large />
       <span
         className="cm-title min-w-0 flex-1 truncate font-chrome text-sm font-bold uppercase lg:text-2xl"
         style={{ color: ink }}

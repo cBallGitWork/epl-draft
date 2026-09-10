@@ -1,4 +1,4 @@
-# `/players/compare` — two men, side by side
+# `/players/analysis` — a player, or two
 
 Scout's second view. Craig, 6 Sep 2026: *"we need the player comparison tool too
 — I attached the scout page a while back. Would need tables and probably a pitch
@@ -6,6 +6,12 @@ Scout's second view. Craig, 6 Sep 2026: *"we need the player comparison tool too
 references: Fantasy Football Scout's Player Maps, and — added 10 Sep 2026 —
 Understat's player compare, which is where the search boxes and the per-90 table
 come from.
+
+**It was `/players/compare` until 10 Sep 2026**, and the rename is not cosmetic:
+the screen now works for ONE man as well as two (Craig: *"give me the option to
+look at 1 player only"*), and a view called Compare that draws a single player is
+a name making a promise the screen does not keep. "Analysis" covers one or two,
+and covers figures, maps and attributes rather than any one of them.
 
 **Two profile reads and never more.** `subject()` is one live, uncached
 `getPlayerProfile` each, and Fantrax throttles that endpoint at about
@@ -22,11 +28,20 @@ column on the directory.
    pre-refuses a config object for a second. Copied rather than extracted: two is
    a coincidence (CODE_RULES §1), and the third occurrence is what will say what
    varies.
-3. **This season**, mirrored: what each of them has DONE, per ninety minutes.
-4. **The maps** — where each of them played, as a smoothed heat map.
+3. **The figures**, mirrored: what each has DONE, per ninety minutes.
+4. **The maps** — a touch map or a shot map, chosen by a picker above them.
 5. **The attributes**, mirrored: figure · label · figure.
-6. **Swap sides**, which answers the one thing a mirrored table cannot — which
-   side you are reading.
+6. **Him on Fantrax**, and the second man too when there is one.
+
+**Swap sides is gone** (10 Sep 2026, Craig). It answered "which side am I
+reading", and the bar above answers that already — each man on his own club's
+plate with his name on it, which is a stronger answer than a button that makes
+you press it to find out.
+
+**One man is a whole screen.** Every panel takes null for the second: the bar
+drops the `v` and the second half, the two tables lose their right-hand column
+and the label moves left, and the maps draw one pitch at half width rather than
+one stretched across the desk. Nobody chosen is the only empty state left.
 
 ## The picker
 
@@ -157,16 +172,67 @@ on 10 Sep 2026: keepers average x=11.0, centre-backs 36.4, full-backs 47.6,
 midfielders 48.8, attacking midfielders 58.4, forwards 61.8. A flip would put
 every striker in his own box.
 
-### No map picker yet, and that is the rule rather than an omission
+### The picker, and why it waited
 
-The picker is built from the kinds the file carries, never from a list of its
-own, because a control offering a map with nothing behind it is worse than no
-control. One kind is exported today, so a picker would be a single plate that
-does nothing. It arrives with the shots.
+Craig, 10 Sep 2026: *"need options for touch map, shot map etc"*. It is built
+from the kinds actually PRESENT for the two men on screen, never from a list of
+its own — so a kind neither of them has does not appear, and where only one kind
+survives there is no picker at all, because one plate is not a choice. That is
+why it did not ship with the touch map: it would have been a single plate.
 
-The same argument holds for the fixture filter. Touches carry `fplFixtureId`, so
-per-match is free whenever it is wanted — but five rounds in, one match is about
-forty-six touches, which is a scattering rather than a shape.
+**A segmented strip and not chips**, which is semantic rather than visual.
+`players.md` records the ruling: a Championship Manager tab strip picks ONE of a
+set and marks exactly one plate current, so multi-select plates are a strip
+making a claim it cannot keep. A map is one at a time — `cm-tab cm-tab-quiet`
+with `aria-current`, a URL parameter and a `<Link>`, never React state.
+
+**Both men always draw the same map.** Two pitches on two different kinds is not
+a comparison, so the control sits once above both.
+
+**The head does not name the map**, because the picker under it does. Titling the
+section "Shot map" over a plate reading "Shot map" is the duplication Craig
+struck off the search boxes the same day.
+
+The fixture filter is still unbuilt. Touches and shots both carry
+`fplFixtureId`, so per-match is free whenever it is wanted — but five rounds in,
+one match is about forty-six touches or four shots, which is a scattering rather
+than a shape.
+
+### The shot map
+
+**Small, and the arithmetic is the point.** The pitch is 358px wide at 390 and
+about 530px in a half-width desk column, so one viewBox unit is 3.58px and
+5.3px. The role pitch this replaced drew `r="2.6"` — a 19px blob under a thumb
+and 57px across a full-width desk, which is what Craig meant by *"the plots are
+far too big"*. A base radius of **1.0** is 7px and 11px: a mark rather than a
+blot, at both widths, with no breakpoint.
+
+**Radius carries xG by its SQUARE ROOT, so AREA is proportional.** A radius
+proportional to xG makes a 0.4 chance look four times a 0.1 rather than twice
+it. Capped at 0.8 — a penalty is 0.79 — and a shot with no xG at all (five of
+824) takes the plain radius rather than the smallest, because we do not know what
+it was worth and drawing it as worthless would be a confident wrong answer.
+
+**Outcome is fill and weight, never a new hue.** DESIGN §3 gives every colour one
+meaning and none of them means "saved": `--color-bad` is a loss, a doubt, a
+negative, and a blocked effort is none of those. Green turf refuses most of the
+palette anyway. So every mark is cream — ink on a colour plate — separated on
+fill and weight, which is PRODUCT.md's rule that a signal is paired with a shape.
+**Three tiers and not five**: goal (filled), on target (ring), off target or
+blocked (faint ring). A reader can hold three apart on a pitch this size; block
+against miss is a number in a table, not a ring nobody can measure.
+
+**The marks are not interactive**, which settles the tap-target question rather
+than dodging it: a 7px target cannot meet the 44px thumb floor, so the map is a
+picture and the figures live in the table above it.
+
+**The coordinates are flipped IN THE EXPORTER.** SofaScore publishes a shot as
+distance from the attacking goal — x from 0.8 to 52.6, penalties at exactly
+x=11.5 y=50.0 — which is a different convention from the same provider's touch
+clouds, where x already runs from a man's own goal to the one he attacks. The app
+must not learn two conventions from one provider. Verified on the way through:
+penalties land at 88.5, goals average x=89.8 against a miss's 84.7, and mean xG
+falls from 0.20 inside x<10 to 0.03 beyond x>20.
 
 ### What replaced the role pitch
 
@@ -265,11 +331,11 @@ buildup-to-goal map (4,127 rows in 24-25) with **0 rows for 26-27**.
 
 ## Known gaps
 
-- **Shots and chances created**, and with them the map picker and the fixture
-  filter. The data is counted and the joins are proved; the export is not
-  written. When the shot map lands its markers want `r ≈ 1.0` on the `100x64`
-  viewBox — 7px at 390 and 11px at 1440, one value and no breakpoint — which is
-  what the old role pitch got wrong at `r="2.6"`, a 57px blob.
+- **Chances created** — the third map kind, plotting where the shots a man SET UP
+  were taken from. Understat's `player_assisted` carries it on 402 of 549 shots
+  and the assister's name must be resolved once in the exporter, never at
+  runtime.
+- **The fixture filter**, above. Both exports carry `fplFixtureId` already.
 - **The ramp has no DESIGN.md ruling.** See "The maps" above; it is the app's
   first sequential scale and it is confined to a colour plate until it is judged.
 - **Understat's xG family** — npxG, xGChain, xGBuildup, key passes — is a second

@@ -4,16 +4,19 @@ import type {
   IntelPlayer,
   IntelSetPieces,
   IntelSquads,
+  IntelShots,
   IntelTouches,
   IntelXi,
+  Shot,
   TouchPlayer,
 } from "@epl/core";
-import { matchIntel, squadIntel, touchIntel } from "@epl/core";
+import { matchIntel, shotIntel, squadIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/gw3.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
 import matchesFile from "../../../data/intel/matches/26-27.json";
 import touchesFile from "../../../data/intel/touches/26-27.json";
+import shotsFile from "../../../data/intel/shots/26-27.json";
 
 // Where the app supplies the sister repo's export.
 //
@@ -89,6 +92,13 @@ export const intelMatches: Map<number, IntelMatch> = matchIntel(
 export const intelTouches: Map<number, TouchPlayer> = touchIntel(
   touchesFile as unknown as IntelTouches,
 );
+
+/** Every man's shots, by FPL code, already on the touch clouds' convention.
+ *
+ *  SofaScore publishes a shot as distance from the attacking goal and a touch
+ *  the other way round; the exporter flips one so the app learns one convention
+ *  rather than two. 824 shots by 248 players on 10 Sep 2026. */
+export const intelShots: Map<number, Shot[]> = shotIntel(shotsFile as unknown as IntelShots);
 
 /** One club's line for a man, for arranging a pitch.
  *

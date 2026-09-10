@@ -1,10 +1,9 @@
 import Link from "next/link";
-import Section from "../../components/shell/Section";
 import PickField from "./PickField";
 import { candidates } from "./pick";
 import type { Candidate } from "./pick";
 import type { PoolRow } from "../pool";
-import { COMPARE } from "../query";
+import { ANALYSIS } from "../query";
 import { ROW_NAME } from "../../desk";
 import { ROW_LINK } from "../../components/league/TableCells";
 
@@ -54,15 +53,16 @@ export default function PickBar({
   a: Side;
   b: Side;
 }) {
+  // **No section head.** It wore one saying "Choose" over "Either side, any
+  // player in the pool", and Craig took both off (10 Sep 2026). They were
+  // furniture: two labelled fields with a Find button beside each say what they
+  // are, and the heading was a third telling of a thing the screen had already
+  // said twice.
   return (
-    <Section title="Choose" aside="Either side, any player in the pool">
-      {/* Stacked under a thumb and side by side on the desk, which is the app's
-          standing answer to two of anything. */}
-      <div className="grid gap-3 lg:grid-cols-2">
-        <Box side="a" mine={a} other={b} rows={rows} />
-        <Box side="b" mine={b} other={a} rows={rows} />
-      </div>
-    </Section>
+    <div className="grid gap-3 lg:grid-cols-2">
+      <Box side="a" mine={a} other={b} rows={rows} />
+      <Box side="b" mine={b} other={a} rows={rows} />
+    </div>
   );
 }
 
@@ -83,7 +83,7 @@ function Box({
   return (
     <div className="flex min-w-0 flex-col gap-1.5">
       <p className="text-2xs font-bold uppercase text-faint">{mine.label}</p>
-      <PickField side={side} query={mine.typed} action={COMPARE} label={mine.hint}>
+      <PickField side={side} query={mine.typed} action={ANALYSIS} label={mine.hint}>
         {/* Everything the form does not own, so searching for one man cannot
             forget the other. `PickField`'s debounced navigation reads these back
             out of the form, so both ways out preserve the same state. */}
@@ -146,7 +146,7 @@ function pickHref(side: "a" | "b", fantraxId: string, other: Side): string {
   next.set(side, fantraxId);
   if (other.chosen !== undefined) next.set(side === "a" ? "b" : "a", other.chosen);
   if (other.typed.trim() !== "") next.set(side === "a" ? "qb" : "qa", other.typed.trim());
-  return `${COMPARE}?${next.toString()}`;
+  return `${ANALYSIS}?${next.toString()}`;
 }
 
 /** One field of the query the form does not own, or nothing at all.

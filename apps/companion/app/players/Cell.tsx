@@ -6,7 +6,7 @@ import type { PoolColumn, RawStats } from "./columns";
 import { figureOf } from "./figure";
 import { isStandout } from "./standout";
 import { STATUS } from "./status";
-import { COMPARE } from "./query";
+import { ANALYSIS } from "./query";
 import type { PlayersQuery } from "./query";
 import { BOARD_FIGURE, ROW_FIGURE, ROW_NAME } from "@/app/desk";
 
@@ -58,7 +58,7 @@ export default function Cell({
         <Link
           href={
             query.compare && query.compare !== row.entry.player.fantraxId
-              ? `${COMPARE}?a=${query.compare}&b=${row.entry.player.fantraxId}`
+              ? `${ANALYSIS}?a=${query.compare}&b=${row.entry.player.fantraxId}`
               : `/players/${row.entry.player.fantraxId}`
           }
           className="cm-row flex min-h-11 items-center gap-2.5 px-1"

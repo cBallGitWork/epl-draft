@@ -26,7 +26,7 @@ import { SCOUT, SCOUT_CAPTION } from "../titles";
 // **The strip arrived with the second view**, which is how it was meant to: this
 // shipped without one because the section had a single view, on
 // `league/SectionNav`'s recorded ruling that "one entry is a stray button under a
-// panel, not a bar". Compare is the second, so `PoolNav` draws two plates.
+// panel, not a bar". Analysis is the second, so `PoolNav` draws two plates.
 //
 // A copy of `prem/Shell`'s composition rather than a generalisation of it, on
 // that file's own argument: three shells are still four lines of composition
@@ -48,7 +48,7 @@ const PANEL_ROWS = 14;
 
 /* **`sub` is gone** (10 Sep 2026). It drew the line under the title bar — the
    pool's count and which season its figures are — and Craig took the line off
-   the board (*"remove that row"*). `compare` never passed one, and the skeleton
+   the board (*"remove that row"*). `analysis` never passed one, and the skeleton
    held a bar open for something that would never arrive. `PageHeader` still
    takes a `sub` for the five screens that use one; this shell simply has no
    caller for it. The provenance it carried moved into the caption, where it
@@ -68,7 +68,7 @@ export default function ScoutShell({
    *  `prem/Shell`'s `rows` — that one takes the larger of the two because every
    *  Premiership view is a table of at least twenty clubs. Scout has two views
    *  of different kinds: the board IS a directory and wants the fourteen rows,
-   *  and Compare is three stacked panels that fill their own height. Taking the
+   *  and Analysis is a stack of panels that fill their own height. Taking the
    *  max there held fourteen rows of empty ground open under the attributes,
    *  which is the opposite of the fault the floor exists to prevent. */
   rows?: number;

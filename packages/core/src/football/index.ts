@@ -86,6 +86,11 @@ export { goalMinutes, loggedPlayers, matchIntel, matchLine, subNote } from "./in
 // busiest player in the league has 414 season touches — is in `intel/touches.ts`.
 export { touchFixtures, touchIntel, touchesOf } from "./intel/touches";
 export type { IntelTouches, Touch, TouchFixture, TouchPlayer } from "./intel/touches";
+// Every shot, already flipped onto the touch clouds' convention — SofaScore
+// publishes a shot as distance from the attacking goal and a touch the other way
+// round, and `intel/shots.ts` records how that was settled.
+export { SHOT_OUTCOMES, shotIntel, shotsOf } from "./intel/shots";
+export type { IntelShots, Shot } from "./intel/shots";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // The same read at season scale — his career before this one. `seasons.ts` says
 // why it is a separate file and why its column set is as short as it is.

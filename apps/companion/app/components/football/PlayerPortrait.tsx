@@ -17,6 +17,16 @@ import { type ClubColours, initials, inkOn, portraitUrl } from "@epl/core";
  *  blurred face on the one screen built around faces costs the screen. */
 const PORTRAIT_PX = 44;
 
+/** What `large` asks the optimizer for.
+ *
+ *  The source ladder has a 500x500 rung (`portraits.ts`) meant for "a portrait
+ *  given room to be looked at", and the analysis bar is the first disc with that
+ *  much room — 72px on a desk against a row's 22. Drawing the 110x140 source at
+ *  that size is the soft photograph the constant above exists to prevent, in the
+ *  one place a reader is looking hardest. 96 rather than 72 so a 2x screen has
+ *  something to work with. */
+const LARGE_PX = 96;
+
 // A player's headshot on their club's colour.
 //
 // Always sourced at 250x250 and resized by Next's optimizer: the raw PNGs are
@@ -28,6 +38,7 @@ export default function PlayerPortrait({
   player,
   colours,
   chrome = false,
+  large = false,
 }: {
   player: {
     /** FPL's season-stable player code, or **null** for a man FPL has never
@@ -62,6 +73,10 @@ export default function PlayerPortrait({
    *  cell — so a disc cut from it is a marker rather than a claim. Ink on it is
    *  7.0:1, which is what the initials fall back to. */
   chrome?: boolean;
+  /** Ask for the 500x500 source instead of the 110x140 one, for a disc drawn big
+   *  enough that the small file would be visibly soft. The caller still sets the
+   *  BOX, through `--row-portrait`; this only says which asset fills it. */
+  large?: boolean;
 }) {
   const [shown, setShown] = useState<"photo" | "initials">("photo");
 
@@ -90,18 +105,18 @@ export default function PlayerPortrait({
           same rung machine `PlayerImage` runs for the same reason. */}
       {shown === "photo" && player.code !== null ? (
         <Image
-          src={portraitUrl({ code: player.code })}
+          src={portraitUrl({ code: player.code }, large ? "large" : "small")}
           alt=""
-          width={PORTRAIT_PX}
-          height={PORTRAIT_PX}
-          sizes={`${PORTRAIT_PX}px`}
+          width={large ? LARGE_PX : PORTRAIT_PX}
+          height={large ? LARGE_PX : PORTRAIT_PX}
+          sizes={`${large ? LARGE_PX : PORTRAIT_PX}px`}
           onError={() => setShown("initials")}
           className="relative h-full w-full object-cover object-top"
         />
       ) : (
         <span
           aria-hidden
-          className="absolute inset-0 grid place-items-center text-2xs font-semibold opacity-85"
+          className={`absolute inset-0 grid place-items-center font-semibold opacity-85 ${large ? "text-lg" : "text-2xs"}`}
           style={{ color: chrome ? "var(--color-ink)" : inkOn(colours) }}
         >
           {initials(player.name)}

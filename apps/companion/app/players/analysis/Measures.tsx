@@ -3,7 +3,12 @@ import Section from "../../components/shell/Section";
 
 // The two men's ratings against each other, on Championship Manager's own grid.
 //
-// **Figure · label · figure**, mirrored about the name of the measure. CM's
+// **No name row.** Craig, 10 Sep 2026: *"remove Haaland / João Pedro row under
+// the big cm trow"*. The bar above is each man on his club's plate with his name
+// on it, so a header repeating both names under it is the same fact twice — and
+// the columns are identified by the thing they sit under.
+//
+// **Figure · label · figure**, mirrored about the name of the measure — CM's
 // attribute grid is a label and a number; a comparison is that grid read twice
 // with one set of labels, which is the shape every side-by-side in the reference
 // takes and the shape that fits a 390 phone without scrolling — three columns,
@@ -30,35 +35,28 @@ export default function Measures({
   names,
 }: {
   a: readonly Attribute[];
+  /** Empty when only one man is being looked at. */
   b: readonly Attribute[];
-  names: { a: string; b: string };
+  names: { a: string; b: string | null };
 }) {
-  const rows = align(a, b);
+  const alone = names.b === null;
+  const rows = align(a, alone ? [] : b);
   if (rows.length === 0) return null;
 
   return (
     <Section title="Attributes" aside="Ours, 1–20">
       <table className="w-full border-collapse">
         <caption className="sr-only">
-          {names.a} and {names.b} by every attribute either of them has
+          {alone
+            ? `${names.a} by every attribute he has`
+            : `${names.a} and ${names.b} by every attribute either of them has`}
         </caption>
-        <thead>
-          <tr className="border-b border-line text-2xs uppercase text-faint">
-            <th scope="col" className="w-16 py-1 text-right font-bold lg:w-24">
-              {names.a}
-            </th>
-            <th scope="col" className="py-1 text-center font-bold">
-              &nbsp;
-            </th>
-            <th scope="col" className="w-16 py-1 text-left font-bold lg:w-24">
-              {names.b}
-            </th>
-          </tr>
-        </thead>
         <tbody>
           {rows.map((row) => (
             <tr key={row.name} className="border-b border-line/60 last:border-b-0">
-              <td className={`numeric cm-row py-1 text-right text-base ${loudness(row.a, row.b)}`}>
+              <td
+                className={`numeric cm-row w-16 py-1 text-right text-base lg:w-24 ${loudness(row.a, row.b)}`}
+              >
                 {row.a ?? DASH}
               </td>
               {/* The measure's own name, and its derivation in the `title` — the
@@ -68,13 +66,17 @@ export default function Measures({
                   footnotes rather than as Championship Manager. */}
               <td
                 title={row.from}
-                className="px-2 text-center text-2xs uppercase text-muted"
+                className={`px-2 text-2xs uppercase text-muted ${alone ? "text-left" : "text-center"}`}
               >
                 {row.name}
               </td>
-              <td className={`numeric cm-row py-1 text-left text-base ${loudness(row.b, row.a)}`}>
-                {row.b ?? DASH}
-              </td>
+              {alone ? null : (
+                <td
+                  className={`numeric cm-row w-16 py-1 text-left text-base lg:w-24 ${loudness(row.b, row.a)}`}
+                >
+                  {row.b ?? DASH}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

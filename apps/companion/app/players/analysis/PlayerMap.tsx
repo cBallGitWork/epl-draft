@@ -1,4 +1,6 @@
-import type { Touch } from "@epl/core";
+import type { Shot, Touch } from "@epl/core";
+import Marks from "./Marks";
+import type { MapKind } from "./maps";
 import { CELL, heatCells, shade } from "./heat";
 
 // One man's pitch, shaded where he played.
@@ -69,20 +71,28 @@ const RAMP = ["#f2e05a", "#f0a93c", "#e2622c", "#c8281c"] as const;
 
 export default function PlayerMap({
   name,
+  kind,
   touches,
+  shots,
   matches,
   id,
 }: {
   name: string;
+  /** Which map. The picker above chooses it and every pitch on the screen draws
+   *  the same one — two men on two different maps is not a comparison. */
+  kind: MapKind;
   touches: readonly Touch[];
-  /** How many fixtures the points came from, for the caption. */
+  shots: readonly Shot[];
+  /** How many fixtures the marks came from, for the caption. */
   matches: number;
   /** Unique per pitch on the page — two maps share a document and an SVG filter
    *  id is global to it. Two `id="heat"` and the second man is drawn with the
    *  first man's filter, which is a real map of the wrong shape. */
   id: string;
 }) {
-  const cells = heatCells(touches);
+  const cells = kind === "touches" ? heatCells(touches) : [];
+  const count = kind === "touches" ? touches.length : shots.length;
+  const noun = kind === "touches" ? "touches" : "shots";
 
   return (
     <figure className="flex min-w-0 flex-col gap-1">
@@ -92,9 +102,9 @@ export default function PlayerMap({
             it — every map is normalised to its own busiest cell so that a man
             with fewer touches shows a SHAPE rather than a blank. */}
         <span className="shrink-0 text-faint">
-          {touches.length === 0
-            ? "no touches recorded"
-            : `${touches.length} touches · ${matches} ${matches === 1 ? "match" : "matches"}`}
+          {count === 0
+            ? `no ${noun} recorded`
+            : `${count} ${noun} · ${matches} ${matches === 1 ? "match" : "matches"}`}
         </span>
       </figcaption>
 
@@ -103,9 +113,11 @@ export default function PlayerMap({
         className="w-full"
         role="img"
         aria-label={
-          touches.length === 0
-            ? `No touch map recorded for ${name}`
-            : `Where ${name} touched the ball, across ${matches} matches. He attacks to the right.`
+          count === 0
+            ? `No ${kind === "touches" ? "touch map" : "shots"} recorded for ${name}`
+            : kind === "touches"
+              ? `Where ${name} touched the ball, across ${matches} matches. He attacks to the right.`
+              : `Where ${name} shot from, ${count} shots across ${matches} matches. He attacks to the right.`
         }
       >
         <defs>
@@ -152,6 +164,11 @@ export default function PlayerMap({
           <rect x="1" y="16" width="12" height="32" />
           <rect x="87" y="16" width="12" height="32" />
         </g>
+
+        {/* Marks sit OVER the markings and the heat sits under them, which is
+            the right way round for each: a density field is the ground a pitch
+            is read against, and a scatter is a thing standing on it. */}
+        {kind === "shots" ? <Marks shots={shots} /> : null}
       </svg>
     </figure>
   );
