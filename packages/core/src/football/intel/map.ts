@@ -40,6 +40,51 @@ export function squadIntel(squads: IntelSquads | null): Map<number, IntelPlayer>
   return byCode;
 }
 
+/** Shirt numbers by FPL code, with every number that COLLIDES inside its club
+ *  dropped — for one club's players, not the league's.
+ *
+ *  **`IntelPlayer.squadNumber`'s own docblock says the exporter already does
+ *  this, and against the export in the tree on 10 Sep 2026 that is false.**
+ *  Counted that day: **20 of 20 clubs** carry a duplicate number somewhere in
+ *  their squad, and **13 of 20 predicted elevens** carry one among the starters —
+ *  Villa field two number 2s and two number 4s, Liverpool two 10s (Mac Allister
+ *  and Wirtz), City two 18s (Cherki and Semenyo).
+ *
+ *  It matters now in a way it did not before, because the number stopped being a
+ *  column and became the thing that tells eleven IDENTICAL kits apart. Two men in
+ *  the same shirt with the same number on it is precisely the failure the rule
+ *  this repo keeps for portraits and crests describes: a wrong one is worse than
+ *  none, because only one of the two looks like an answer.
+ *
+ *  **Both men lose it, and that is the decision.** We cannot know which has the
+ *  better claim — the export does not say, and giving it to whoever the file
+ *  happens to list first would print a confident wrong number on somebody. A
+ *  plain kit says "we do not know" and is honest at a glance.
+ *
+ *  Repaired here rather than reported like `xiFault`, because there is a correct
+ *  answer available — draw no number — where a formation that does not sum to
+ *  eleven has none. Delete this the day the exporter's own clearing works, and
+ *  count it before you do.
+ */
+export function squadNumbers(players: readonly IntelPlayer[]): Map<number, number> {
+  const seen = new Map<number, number>();
+  for (const player of players) {
+    const number = player?.squadNumber;
+    if (number === null || number === undefined) continue;
+    seen.set(number, (seen.get(number) ?? 0) + 1);
+  }
+
+  const byCode = new Map<number, number>();
+  for (const player of players) {
+    const number = player?.squadNumber;
+    if (number === null || number === undefined) continue;
+    if ((seen.get(number) ?? 0) > 1) continue;
+    if (!Number.isInteger(player.code)) continue;
+    byCode.set(player.code, number);
+  }
+  return byCode;
+}
+
 /** What is wrong with a club's predicted eleven, or null when nothing is.
  *
  *  Reported rather than repaired. The sister asserts its formation table sums to

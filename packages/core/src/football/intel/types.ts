@@ -47,13 +47,23 @@ export interface IntelPlayer {
    *  second, 3 third, 4 fringe, and **0 unavailable** — a loan out of the league
    *  or a contract expired, not a knock. */
   depthTier: number | null;
-  /** His shirt number, or null.
+  /** His shirt number, or null — **and a number here is not proof it is his
+   *  alone.**
    *
-   *  Null in two different situations and the file does not distinguish them:
-   *  nobody recorded one, or **the number collided inside his club** and the
-   *  exporter gave it to whoever had the better claim. It cleared 111 on the
-   *  first export, on this app's own rule for portraits — a wrong one is worse
-   *  than none, because only one of the two looks like an answer. */
+   *  This used to say the exporter cleared a number that collided inside a club,
+   *  giving it to whoever had the better claim, and that it cleared 111 on the
+   *  first export. Whatever that pass did, it does not hold against the export in
+   *  the tree: counted 10 Sep 2026, **20 of 20 clubs carry a duplicate somewhere
+   *  in the squad** and **13 of 20 predicted elevens carry one among the eleven
+   *  starters** — Villa two number 2s and two number 4s, Liverpool two 10s, City
+   *  two 18s.
+   *
+   *  It went unnoticed while the number was a table column, where the name in the
+   *  same row carries the identification. It stopped being harmless the day a
+   *  pitch drew eleven identical kits and asked the number to tell them apart.
+   *  `squadNumbers` in `intel/map.ts` applies this repo's own rule to it — a
+   *  wrong one is worse than none — and carries the counts. Read through that,
+   *  not through this field, wherever the number has to identify somebody. */
   squadNumber: number | null;
   status: string;
   expectedReturnGw: number | null;

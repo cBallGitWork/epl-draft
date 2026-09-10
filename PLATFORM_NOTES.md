@@ -1385,6 +1385,26 @@ height and derives its width from the ratio.
 declare the shape drew 63px of shirt in a 110px card. `PitchMarker` did exactly
 that for one commit.
 
+### The sister repo's squad numbers collide, and the docblock said they did not
+
+`IntelPlayer.squadNumber` claimed the exporter cleared a number that collided
+inside a club. Counted against the export in the tree on 10 Sep 2026:
+
+- **20/20 clubs** carry a duplicate number somewhere in the squad.
+- **13/20 predicted elevens** carry one among the eleven starters — Villa two
+  number 2s *and* two number 4s, Liverpool two 10s (Mac Allister, Wirtz), City
+  two 18s (Cherki, Semenyo).
+
+Harmless while the number was a table column, where the name in the same row does
+the identifying. Not harmless the day a pitch drew eleven identical kits and asked
+the number to tell them apart. `squadNumbers` (`intel/map.ts`) drops a collided
+number from **both** men — we cannot know which has the better claim, and giving
+it to whoever the file lists first prints a confident wrong number on somebody.
+
+**The match page is unaffected.** `PlSquadMan.shirt` is the number he wore in that
+match, off the Premier League's own team sheet, and two men in one lineup cannot
+share one.
+
 ## Keeper at the top — the direction reversed (10 Sep 2026)
 
 Craig: *"currently we go strikers at top, keeper bottom, lets reverse this."*
