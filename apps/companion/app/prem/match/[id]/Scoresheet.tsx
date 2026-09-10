@@ -26,6 +26,7 @@ export default function Scoresheet({
   away,
   minutes,
   owners,
+  assists,
 }: {
   home: readonly SheetRow[];
   away: readonly SheetRow[];
@@ -35,6 +36,9 @@ export default function Scoresheet({
   /** Who holds each man in our league, by FPL code. Empty for a reader with no
    *  league, and the sheet then reads as plain football. */
   owners: Map<number, PlayerOwner>;
+  /** Minutes of the goals each man SET UP, from the Premier League's own events.
+   *  Empty for a man it credits with none. */
+  assists: Map<number, number[]>;
 }) {
   if (home.length === 0 && away.length === 0) {
     return (
@@ -44,8 +48,8 @@ export default function Scoresheet({
 
   return (
     <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-      <Column rows={home} minutes={minutes} owners={owners} />
-      <Column rows={away} minutes={minutes} owners={owners} />
+      <Column rows={home} minutes={minutes} owners={owners} assists={assists} />
+      <Column rows={away} minutes={minutes} owners={owners} assists={assists} />
     </div>
   );
 }
@@ -54,10 +58,14 @@ function Column({
   rows,
   minutes,
   owners,
+  assists,
 }: {
   rows: readonly SheetRow[];
   minutes: Map<number, number[]>;
   owners: Map<number, PlayerOwner>;
+  /** Minutes of the goals each man SET UP, from the Premier League's own events.
+   *  Empty for a man it credits with none. */
+  assists: Map<number, number[]>;
 }) {
   return (
     // **Capped, so the minute sits beside the name rather than at the panel
@@ -67,7 +75,7 @@ function Column({
     // reading as one line.
     <ul className="flex max-w-[26rem] flex-col gap-1">
       {rows.map(({ player, line }) => {
-        const when = minutes.get(player.code) ?? [];
+        const when = shown(player.code, line, minutes, assists);
         const owner = owners.get(player.code);
         return (
           <li key={player.id}>
@@ -101,6 +109,33 @@ function Column({
       })}
     </ul>
   );
+}
+
+/** Which minutes go beside a name, and when none do.
+ *
+ *  Goals first: a man who scored is on the sheet for that, and his goal minutes
+ *  are the fact. Otherwise the goals he SET UP, at the clock they went in.
+ *
+ *  **And only when the two counts agree**, which is the rule that keeps this
+ *  honest. Opta's assist is narrower than the fantasy one — FPL pays for a won
+ *  penalty and a rebound that Opta credits to nobody — so a man with two FPL
+ *  assists can have one placed minute. Printing `24'` against him would say he
+ *  made one assist, which is a confident wrong statement of exactly the kind
+ *  DESIGN §7 refuses. When they disagree the row falls back to `2 assists`,
+ *  which is true and says less.
+ *
+ *  Gakpo against Ipswich is the case where they agree: FPL pays him two and Opta
+ *  places both, at 6' and 9'. */
+function shown(
+  code: number,
+  line: SheetRow["line"],
+  minutes: Map<number, number[]>,
+  assists: Map<number, number[]>,
+): number[] {
+  const scored = minutes.get(code) ?? [];
+  if (scored.length > 0) return scored;
+  const laidOn = assists.get(code) ?? [];
+  return laidOn.length > 0 && laidOn.length === line.assists ? laidOn : [];
 }
 
 /** **The scoresheet sets its type at CM's own size**, which is the same recorded

@@ -2,6 +2,7 @@ import type {
   FootballPlayer,
   MatchStatRow,
   PlCommentaryLine,
+  PlGoal,
   PlManMatch,
   PlMatchFacts,
   PlSubstitution,
@@ -9,6 +10,7 @@ import type {
 import {
   plCommentary,
   plFixtureCode,
+  plGoals,
   plManMatches,
   plMatchBoard,
   plSubstitutions,
@@ -226,5 +228,21 @@ export async function matchSubstitutions(
 ): Promise<PlSubstitution[]> {
   return ofFixture(gameweek, fixtureCode, [] as PlSubstitution[], async (id) =>
     plSubstitutions(await plFixture(id), optaToCode(players)),
+  );
+}
+
+/** Every goal in the match, with the side credited and Opta's assister.
+ *
+ *  What a scoresheet needs that `matchManEvents` cannot give: that one is keyed
+ *  per man and so loses which SIDE a goal belonged to, which is the whole of
+ *  reconciling a fantasy assist against an own goal. Off the same warm detail
+ *  read. */
+export async function matchGoals(
+  gameweek: number | null,
+  fixtureCode: number,
+  players: readonly FootballPlayer[],
+): Promise<PlGoal[]> {
+  return ofFixture(gameweek, fixtureCode, [] as PlGoal[], async (id) =>
+    plGoals(await plFixture(id), optaToCode(players)),
   );
 }

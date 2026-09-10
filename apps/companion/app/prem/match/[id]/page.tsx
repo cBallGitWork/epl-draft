@@ -8,8 +8,9 @@ import MatchShell from "./Shell";
 import Scoresheet from "./Scoresheet";
 import Preview from "./Preview";
 import { matchOwners, readMatch } from "./match";
-import { matchFacts, matchGoalMinutes } from "../../../matchFeed";
-import type { PlMatchFacts } from "@epl/core";
+import { matchFacts, matchGoalMinutes, matchGoals } from "../../../matchFeed";
+import type { PlGoal, PlMatchFacts } from "@epl/core";
+import { assistMinutes } from "@epl/core";
 import type { Match } from "./match";
 
 // One match, on Championship Manager's Match Overview.
@@ -75,7 +76,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
  *  carries a minute for every goal in all ten matches, for one request, and it
  *  is already cached for the Live tab's wire. */
 async function Sheet({ match }: { match: Match }) {
-  const [owners, minutes] = await Promise.all([
+  const [owners, minutes, goals] = await Promise.all([
     matchOwners(match.fixture),
     matchGoalMinutes(
       match.fixture.gameweek,
@@ -83,13 +84,28 @@ async function Sheet({ match }: { match: Match }) {
       match.snapshot.players,
       goalMinutes(match.logged),
     ),
+    // **The goals, with the side credited and Opta's assister**, off the same
+    // cached detail read the team sheet makes (Craig, 10 Sep 2026: *"can we get
+    // the assists timers too?"*). An assist happens when the ball goes in, so
+    // its minute is the goal's own clock.
+    matchGoals(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
   ]);
   const { home, away } = sides(match);
+
+  // **Reconciled per SIDE, because a fantasy assist is only derivable there.**
+  // FPL pays for the pass before an own goal and Opta credits nobody; the gap
+  // closes when one man's shortfall matches his side's unexplained goals exactly.
+  // `assistMinutes` refuses the moment two men could claim the same goal.
+  const assists = new Map([
+    ...sideAssists(goals, home),
+    ...sideAssists(goals, away),
+  ]);
   return (
     <Scoresheet
       home={scoresheet(home)}
       away={scoresheet(away)}
       minutes={minutes}
+      assists={assists}
       owners={owners}
     />
   );
@@ -133,4 +149,23 @@ function state(match: Match, facts: PlMatchFacts | null): string {
   else parts.push("Kick-off TBC");
   if (half !== null) parts.push(half);
   return parts.join(" · ");
+}
+
+/** One side's assist minutes, from that side's goals and FPL's own counts.
+ *
+ *  The side is identified by the goals CREDITED to its club — which for an own
+ *  goal is the beneficiary, and that is precisely the case this exists for.
+ *  `PlGoal.teamId` is the Premier League's club id and `Club.code` is FPL's, so
+ *  the two are matched through the sheet's own rows rather than a third table:
+ *  a goal belongs to this side when its scorer is one of these men, or when it
+ *  is an own goal that none of them scored. */
+function sideAssists(goals: readonly PlGoal[], rows: readonly SheetRow[]): Map<number, number[]> {
+  const mine = new Set(rows.map((row) => row.player.code));
+  const theirs = goals.filter((goal) =>
+    goal.own ? goal.scorer !== null && !mine.has(goal.scorer) : goal.scorer !== null && mine.has(goal.scorer),
+  );
+  const paid = new Map(
+    rows.filter((row) => row.line.assists > 0).map((row) => [row.player.code, row.line.assists]),
+  );
+  return assistMinutes(theirs, paid);
 }

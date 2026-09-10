@@ -50,8 +50,13 @@ export {
 export type { PlCommentaryLine } from "./premierleague/map";
 export { plPlayerCodes, plTeamSheets } from "./premierleague/teamSheet";
 export type { PlSquadMan, PlTeamSheet } from "./premierleague/teamSheet";
-export { plManMatches, plSubstitutions } from "./premierleague/sheetEvents";
-export type { PlManMatch, PlSubstitution } from "./premierleague/sheetEvents";
+export {
+  assistMinutes,
+  plGoals,
+  plManMatches,
+  plSubstitutions,
+} from "./premierleague/sheetEvents";
+export type { PlGoal, PlManMatch, PlSubstitution } from "./premierleague/sheetEvents";
 export { plMatchBoard } from "./premierleague/matchStats";
 export type { MatchStatRow } from "./premierleague/matchStats";
 export { mapRoundBreaks } from "./premierleague/breaks";

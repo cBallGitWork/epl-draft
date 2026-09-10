@@ -183,3 +183,43 @@ describe("plSubstitutions", () => {
     expect(swap[0]).toMatchObject({ on: null, off: null });
   });
 });
+
+describe("plManMatches — assists", () => {
+  it("credits the assister at the goal's own clock", () => {
+    // Ndoye scored at 24' and Gibbs-White laid it on; the assist is the moment
+    // the ball went in, not a moment of its own.
+    expect(of(15259)?.assists).toEqual([24]);
+  });
+
+  it("keeps the scorer and the assister apart on one event", () => {
+    // Only one of the two is `personId`. A reader taking that alone credits the
+    // scorer twice and the assister never.
+    expect(of(50623)?.goals).toEqual([24]);
+    expect(of(50623)?.assists).toEqual([]);
+  });
+
+  it("credits nobody for an own goal or a penalty", () => {
+    // Counted across gameweeks 1-3: `assistId` is on 56 of 76 `G` events and on
+    // none of the 5 own goals or 4 penalties. Nobody assists an own goal, and a
+    // penalty is won rather than laid on.
+    const map = synthetic([
+      { type: "O", description: "O", personId: NDOYE, clock: { secs: 600, label: "10'00" } },
+      { type: "P", description: "P", personId: ARAUJO, clock: { secs: 1200, label: "20'00" } },
+    ]);
+    for (const man of map.values()) expect(man.assists).toEqual([]);
+  });
+
+  it("gives a man both when he scored one and made another", () => {
+    const map = synthetic([
+      { type: "G", description: "G", personId: NDOYE, clock: { secs: 600, label: "10'00" } },
+      {
+        type: "G",
+        description: "G",
+        personId: ARAUJO,
+        assistId: NDOYE,
+        clock: { secs: 3000, label: "50'00" },
+      },
+    ]);
+    expect(map.get(NDOYE + 1_000_000)).toMatchObject({ goals: [10], assists: [50] });
+  });
+});

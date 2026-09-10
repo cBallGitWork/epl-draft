@@ -4,7 +4,6 @@ import type { PlMatchFacts } from "@epl/core";
 import { matchFacts } from "../../../matchFeed";
 import Caption from "../../../components/shell/Caption";
 import MatchBar from "./MatchBar";
-import MatchFoot from "./MatchFoot";
 import MatchTabs from "./MatchTabs";
 import type { MatchTab } from "./MatchTabs";
 import type { Match } from "./match";
@@ -74,10 +73,24 @@ export default async function MatchShell({
       />
       <MatchTabs id={fixture.id} current={current} />
       <Caption>{ground ?? roundName(match)}</Caption>
-      {children}
-      <div className="mt-auto flex flex-col">
+      {/* **The panel fills down to the foot line** (Craig, 10 Sep 2026: *"dont
+          cut off the opaque box, let it fill the page"*). CM's own screens are a
+          single well running from the caption to the status bar, with the
+          photograph only ever seen AROUND it; ours stopped at its content and
+          let the crowd back in halfway down. A page whose content is longer than
+          the screen pushes past, which is the same rule read the other way. */}
+      <div className="flex flex-1 flex-col [&>section]:flex-1">{children}</div>
+      {/* **The related-screens strip is gone for now** (Craig, 10 Sep 2026:
+          *"ips/liverppol stats dont link to anything, rmeove for now"*). Worth
+          recording that they did link — `/prem/club/40` and `/prem/club/14` both
+          answered 200 — so what was wrong with them was that they did not LOOK
+          like doors: two flat plates with no affordance, reading as labels for a
+          section that was not there. CM's foot row earns its place by carrying
+          five or six of them; two is a strip pretending to be one.
+          `docs/ui/reference/README.md` still lists the object, and it comes back
+          when there is a row's worth to put in it. */}
+      <div className="mt-auto">
         <MatchFacts facts={facts} />
-        <MatchFoot home={home} away={away} />
       </div>
     </div>
   );
@@ -135,7 +148,12 @@ function MatchFacts({ facts }: { facts: PlMatchFacts | null }) {
     // The accent, which is the same ink the ground caption above already takes:
     // this line is the other half of that furniture and CM colours the pair
     // alike.
-    <p className="cm-panel flex flex-wrap justify-between gap-x-4 gap-y-0.5 px-2 py-1 text-2xs text-accent">
+    // **The same row every other row on this screen is**: opaque `--color-surface`,
+    // cyan, and set at the size the date strip above it takes. It shipped
+    // translucent and in the accent and read as a dull olive smear over the
+    // photograph — `.cm-panel`'s 88% is for a panel, not for a bar with two facts
+    // on it.
+    <p className="flex flex-wrap justify-between gap-x-4 gap-y-0.5 border-t border-line bg-surface px-3 py-1.5 text-xs font-bold text-info lg:text-sm">
       {said.map((part) => (
         <span key={part}>{part}</span>
       ))}

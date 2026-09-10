@@ -41,6 +41,17 @@ export interface PlManMatch {
   /** Minutes he scored, in the order the feed lists them. A penalty is his goal
    *  and appears here; an own goal is not and does not. */
   goals: number[];
+  /** Minutes of the goals he SET UP, which is the goal's own clock — an assist
+   *  happens when the ball goes in.
+   *
+   *  **Opta's assist, which is narrower than the fantasy one.** Counted 10 Sep
+   *  2026 across gameweeks 1-3: `assistId` is on **56 of the 76** `G` events and
+   *  on none of the 5 own goals or 4 penalties, which is right — nobody assists
+   *  an own goal and a penalty is won rather than laid on. FPL pays an assist
+   *  for things Opta does not credit, so a man's FPL assist count can exceed
+   *  what is placed here. A caller must not print a partial list of minutes as
+   *  though it were the whole of his afternoon; `Scoresheet` carries that rule. */
+  assists: number[];
   /** Minutes he put one in his own net. Separate from `goals` because crediting
    *  a man with an own goal is the one arithmetic error a scoresheet cannot
    *  survive — 5 of the 85 goals in gameweeks 1-3 were own goals. */
@@ -74,7 +85,15 @@ function minuteOf(event: RawPlFixtureEvent): number | null {
 }
 
 function blank(): PlManMatch {
-  return { onAt: null, offAt: null, booked: null, sentOff: null, goals: [], ownGoals: [] };
+  return {
+    onAt: null,
+    offAt: null,
+    booked: null,
+    sentOff: null,
+    goals: [],
+    assists: [],
+    ownGoals: [],
+  };
 }
 
 /** Every man's match, by FPL player `code`.
@@ -112,7 +131,14 @@ export function plManMatches(
   for (const event of fixture.events ?? []) {
     const man = forCode(event.personId);
     const at = minuteOf(event);
-    if (man === null || at === null) continue;
+    if (at === null) continue;
+
+    // The assister is credited at the goal's own clock, and separately from the
+    // scorer — the two are different men and only one of them is `personId`.
+    if (event.type === GOAL && event.assistId !== undefined) {
+      forCode(event.assistId)?.assists.push(at);
+    }
+    if (man === null) continue;
 
     switch (event.type) {
       case GOAL:
@@ -188,4 +214,93 @@ export function plSubstitutions(
   }
 
   return swaps.sort((a, b) => a.minute - b.minute);
+}
+
+/** One goal, as a scoresheet needs it.
+ *
+ *  **`teamId` is the side CREDITED, which for an own goal is the beneficiary.**
+ *  Thiaw is a Newcastle player and his own goal against Bournemouth carries
+ *  `teamId: 127` — Bournemouth's. That is the right answer for "whose goal was
+ *  it" and the wrong one for "whose player was he", and `plManMatches` files the
+ *  man himself under `ownGoals` for exactly that reason. */
+export interface PlGoal {
+  minute: number;
+  teamId: number;
+  /** FPL codes, or null where the bridge could not place him. */
+  scorer: number | null;
+  /** Opta's assister, absent on 20 of 76 goals and on every own goal and
+   *  penalty. */
+  assister: number | null;
+  own: boolean;
+}
+
+/** Every goal in the match, oldest first. */
+export function plGoals(fixture: RawPlFixture, optaToCode: Map<string, number>): PlGoal[] {
+  const codes = plPlayerCodes(fixture, optaToCode);
+  const goals: PlGoal[] = [];
+
+  for (const event of fixture.events ?? []) {
+    if (event.type !== GOAL && event.type !== PENALTY && event.type !== OWN_GOAL) continue;
+    const minute = minuteOf(event);
+    if (minute === null || event.teamId === undefined) continue;
+    goals.push({
+      minute,
+      teamId: event.teamId,
+      scorer: event.personId === undefined ? null : (codes.get(event.personId) ?? null),
+      assister: event.assistId === undefined ? null : (codes.get(event.assistId) ?? null),
+      own: event.type === OWN_GOAL,
+    });
+  }
+
+  return goals.sort((a, b) => a.minute - b.minute);
+}
+
+/** When each man's assists happened, for ONE side, reconciled against FPL's count.
+ *
+ *  **The fantasy assist is broader than Opta's, and the gap is derivable rather
+ *  than guessable.** FPL pays an assist for the pass before an OWN GOAL and for
+ *  the shot that forced it; Opta credits nobody on either. Newcastle 2-2
+ *  Bournemouth is the case: Opta places no assister on either Bournemouth goal,
+ *  and FPL gives Alex Scott two — one on Tavernier's 9th-minute goal, one on
+ *  Thiaw's own goal at 35'. Both of that side's goals are unexplained and one man
+ *  claims both, so the two minutes are his and nothing is being guessed.
+ *
+ *  **It refuses the moment it is ambiguous.** If two men on a side each want one
+ *  more assist and the side has two unexplained goals, no arithmetic says which
+ *  man laid on which — so both fall back to a count in words, which is true and
+ *  says less. A partial or mis-paired list of minutes is the confident wrong
+ *  statement DESIGN §7 exists to refuse.
+ *
+ *  Pure, and takes plain data from both providers rather than reaching for
+ *  either: the caller already holds a side's goals and FPL's per-man counts. */
+export function assistMinutes(
+  goals: readonly PlGoal[],
+  fplAssists: ReadonlyMap<number, number>,
+): Map<number, number[]> {
+  const placed = new Map<number, number[]>();
+  for (const goal of goals) {
+    if (goal.assister === null) continue;
+    placed.set(goal.assister, [...(placed.get(goal.assister) ?? []), goal.minute]);
+  }
+
+  const unexplained = goals
+    .filter((goal) => goal.assister === null)
+    .map((goal) => goal.minute)
+    .sort((a, b) => a - b);
+
+  // Who FPL pays more than Opta placed, and by how much.
+  const short: { code: number; need: number }[] = [];
+  for (const [code, paid] of fplAssists) {
+    const need = paid - (placed.get(code)?.length ?? 0);
+    if (need > 0) short.push({ code, need });
+  }
+
+  // One claimant whose shortfall is exactly the side's unexplained goals is the
+  // only case that resolves. Anything else stays as it is.
+  if (short.length === 1 && short[0].need === unexplained.length && unexplained.length > 0) {
+    const mine = placed.get(short[0].code) ?? [];
+    placed.set(short[0].code, [...mine, ...unexplained].sort((a, b) => a - b));
+  }
+
+  return placed;
 }
