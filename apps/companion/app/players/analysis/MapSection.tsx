@@ -3,6 +3,7 @@ import type { Shot, TouchPlayer } from "@epl/core";
 import { shotsOf, touchFixtures, touchesOf } from "@epl/core";
 import Section from "../../components/shell/Section";
 import PlayerMap from "./PlayerMap";
+import { MarksKey } from "./Marks";
 import { MAP_LABEL, chosenKind, kindsPresent } from "./maps";
 import { PLATE } from "../BoardControls";
 
@@ -111,12 +112,16 @@ export default function MapSection({
         ))}
       </div>
 
-      <p className="mt-1.5 text-3xs text-faint">
-        {b === null ? "He attacks to the right." : "Both attack to the right."}{" "}
-        {kind === "touches"
-          ? "Each map is shaded against that man’s own busiest area, so it shows shape rather than volume — the count above it is the volume."
-          : "A mark’s size is the chance behind it. Filled is a goal, a ring is on target, a faint ring is off it or blocked."}
-      </p>
+      {/* **No prose line under the maps** (Craig, 10 Sep 2026: *"remove this
+          row"*). What it was doing is now done by the things themselves: the
+          direction by a faint arrow ON each pitch, and the shot encoding by a
+          key drawn from the same numbers the marks are. Neither is a sentence
+          about a picture sitting under the picture. */}
+      {kind === "shots" ? (
+        <div className="mt-1.5">
+          <MarksKey />
+        </div>
+      ) : null}
     </Section>
   );
 }

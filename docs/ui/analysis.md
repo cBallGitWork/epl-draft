@@ -180,6 +180,29 @@ A comparison where one man has 400 touches and the other 40 would otherwise draw
 the second as a blank pitch, which says "no data" when the truth is "less of it".
 Volume is a number and sits in the caption above each pitch.
 
+### No prose under the maps
+
+There was a line saying which way they attacked and what a mark meant, and it
+came off on 10 Sep 2026 (Craig: *"remove this row"*). What it was doing is now
+done by the things themselves, which is the better shape for both halves of it:
+
+- **A faint thick arrow ON each pitch** (*"have a very feint thick arrow on the
+  pitch to indicate thats the attack"*). Top centre, which is the one strip of
+  grass no map fills — a shot map lives in the attacking third and a touch map
+  spreads along the middle — so it never sits on a reader's data. Faint because
+  it is the same claim on every pitch on the screen, and furniture must not
+  compete with the one thing that differs.
+- **A key drawn from the marks themselves** (*"maybe add a key for which shot was
+  a goal"*), from the same `DRAWN` table the pitch draws from, so the key and the
+  picture cannot disagree about what a goal looks like. A key written in prose is
+  a second statement of the encoding, and two statements drift. Said ONCE for the
+  section rather than under each pitch — both men are drawn by the same rules —
+  which is the call the retired `Pitch.tsx` made about its own key.
+
+The shot key carries the one thing a ring cannot show, in four words: size is the
+chance behind it. The touch map has no key, because a warmer patch meaning more
+touches is not a code anybody has to be taught.
+
 **x is not flipped; y is — and SofaScore's two feeds disagree about y.**
 
 x already runs from a man's own goal towards the one he attacks, in both feeds.

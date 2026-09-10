@@ -42,6 +42,21 @@ import { CELL, heatCells, shade } from "./heat";
 // it shades a colour PLATE (DESIGN §5's own category, where the pitch and the
 // crest already live) and never ink, never a cell, never a control.
 
+/** The attacking arrow: how far along, how high, and how heavy.
+ *
+ *  Craig, 10 Sep 2026: *"have a very feint thick arrow on the pitch to indicate
+ *  thats the attack"*. It replaces a line of prose under the maps that said the
+ *  same thing in words — a picture of the direction, drawn on the thing it is
+ *  about, beats a sentence two inches below it.
+ *
+ *  **Top centre, which is the one part of the pitch no map fills.** A shot map
+ *  lives in the attacking third and a touch map spreads along the middle; the
+ *  strip above the centre circle is empty for everyone, so the arrow never sits
+ *  on a reader's data. Faint enough to be furniture — it is the same claim for
+ *  every map on the screen, so it must not compete with the one thing that
+ *  differs. */
+const ARROW = { from: 41, to: 59, y: 5.5, head: 2.6, weight: 1.6, ink: 0.22 };
+
 /** The pitch, in the units its markings are drawn in. Landscape, because a map
  *  is read along the direction of play — and deliberately not `.pitch`, which is
  *  the squad pitch's PORTRAIT frame and left 284px of dead grass under a
@@ -164,6 +179,27 @@ export default function PlayerMap({
           <circle cx="50" cy="32" r="8" />
           <rect x="1" y="16" width="12" height="32" />
           <rect x="87" y="16" width="12" height="32" />
+        </g>
+
+        {/* Which way he is playing, said on the pitch rather than under it. */}
+        <g
+          stroke="var(--color-cream)"
+          fill="var(--color-cream)"
+          opacity={ARROW.ink}
+          aria-hidden
+        >
+          <line
+            x1={ARROW.from}
+            y1={ARROW.y}
+            x2={ARROW.to - ARROW.head}
+            y2={ARROW.y}
+            strokeWidth={ARROW.weight}
+            strokeLinecap="butt"
+          />
+          <polygon
+            points={`${ARROW.to},${ARROW.y} ${ARROW.to - ARROW.head},${ARROW.y - ARROW.head * 0.8} ${ARROW.to - ARROW.head},${ARROW.y + ARROW.head * 0.8}`}
+            stroke="none"
+          />
         </g>
 
         {/* Marks sit OVER the markings and the heat sits under them, which is

@@ -30,6 +30,22 @@ import type { Shot } from "@epl/core";
 /** Radius in pitch units. See the header for both arithmetics. */
 const MARK = { base: 0.7, span: 1.1, cap: 0.8, plain: 1.0 };
 
+/** How each tier is drawn, in one place, so the key and the pitch cannot
+ *  disagree about what a goal looks like. A key drawn from a second set of
+ *  numbers is a key that goes quietly wrong the first time either is tuned. */
+const DRAWN = {
+  goal: { fill: "var(--color-cream)", width: 0.45, opacity: 0.95 },
+  target: { fill: "none", width: 0.45, opacity: 0.95 },
+  off: { fill: "none", width: 0.28, opacity: 0.55 },
+} as const;
+
+/** What each tier is called, in the order the key reads them — best first. */
+export const TIER_LABEL = [
+  ["goal", "Goal"],
+  ["target", "On target"],
+  ["off", "Off target"],
+] as const;
+
 /** How a shot is drawn, by what became of it. Written out literally in a
  *  `Record` rather than composed — the Tailwind v4 trap does not reach SVG
  *  attributes, but a lookup a reader can see beats a rule they have to derive. */
@@ -56,10 +72,10 @@ export default function Marks({ shots }: { shots: readonly Shot[] }) {
             cx={shot.x}
             cy={(shot.y / 100) * 64}
             r={r}
-            fill={tier === "goal" ? "var(--color-cream)" : "none"}
+            fill={DRAWN[tier].fill}
             stroke="var(--color-cream)"
-            strokeWidth={tier === "off" ? 0.28 : 0.45}
-            opacity={tier === "off" ? 0.55 : 0.95}
+            strokeWidth={DRAWN[tier].width}
+            opacity={DRAWN[tier].opacity}
           />
         );
       })}
@@ -77,4 +93,38 @@ export default function Marks({ shots }: { shots: readonly Shot[] }) {
 function radius(xg: number | null): number {
   if (xg === null) return MARK.plain;
   return MARK.base + MARK.span * Math.sqrt(Math.min(xg, MARK.cap) / MARK.cap);
+}
+
+/** The key: the marks themselves, at the size a middling chance draws.
+ *
+ *  Craig, 10 Sep 2026: *"maybe add a key for which shot was a goal"*. Drawn from
+ *  `DRAWN` rather than described, so it is the same object as the thing on the
+ *  grass — a key written in prose is a second statement of the encoding, and two
+ *  statements drift.
+ *
+ *  Said ONCE for the section rather than under each pitch: both men are drawn by
+ *  the same rules, so a key per pitch is the same fact twice. `Pitch.tsx` made
+ *  the same call about its own key before it was retired.
+ */
+export function MarksKey() {
+  return (
+    <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-3xs text-faint">
+      {TIER_LABEL.map(([tier, label]) => (
+        <li key={tier} className="flex items-center gap-1">
+          <svg width="11" height="11" viewBox="-1.6 -1.6 3.2 3.2" aria-hidden className="shrink-0">
+            <circle
+              r="1.2"
+              fill={DRAWN[tier].fill}
+              stroke="var(--color-cream)"
+              strokeWidth={DRAWN[tier].width}
+              opacity={DRAWN[tier].opacity}
+            />
+          </svg>
+          {label}
+        </li>
+      ))}
+      {/* The other half of the encoding, and the half a ring cannot show. */}
+      <li className="text-faint">Size is the chance behind it</li>
+    </ul>
+  );
 }
