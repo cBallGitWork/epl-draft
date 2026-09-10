@@ -9,7 +9,7 @@ import { type ClubColours, initials, inkOn, portraitUrl } from "@epl/core";
  *  photograph nobody thinks to blame the CSS for.
  *
  *  How wide he is actually DRAWN is `--row-portrait`, which `desk.css` shrinks
- *  with the row that carries him and `league/PitchDisc` raises to 44px for a
+ *  with the row that carries him and `league/PitchMarker` raises to 44px for a
  *  marker on the grass. That third caller is why this is 44 and not 32: the
  *  ceiling stood at 32 for an afternoon while the pitch drew 44 off it, which is
  *  exactly the failure the paragraph above forbids, in the file that forbids it.

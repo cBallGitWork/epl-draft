@@ -55,21 +55,16 @@ export default async function MatchReportPage({ params }: { params: Promise<{ id
 }
 
 async function Report({ match }: { match: Match }) {
-  const gameweek = match.fixture.gameweek;
-  // All three off caches the page has already warmed — the round for their
-  // fixture id, the detail for the sheets AND the events, the stream for the
-  // prose. The summary costs no request that the report did not already make.
+  // All four off caches the page has already warmed — the round for their
+  // fixture id, the detail for the sheets AND the events AND the changes, the
+  // stream for the prose. The summary costs no request the report did not
+  // already make.
+  const { gameweek, code } = match.fixture;
   const [lines, sheets, events, swaps] = await Promise.all([
-    gameweek === null ? [] : matchReport(gameweek, match.fixture.code),
-    gameweek === null
-      ? null
-      : teamSheets(gameweek, match.fixture.code, match.snapshot.players),
-    gameweek === null
-      ? new Map()
-      : matchManEvents(gameweek, match.fixture.code, match.snapshot.players),
-    gameweek === null
-      ? []
-      : matchSubstitutions(gameweek, match.fixture.code, match.snapshot.players),
+    matchReport(gameweek, code),
+    teamSheets(gameweek, code, match.snapshot.players),
+    matchManEvents(gameweek, code, match.snapshot.players),
+    matchSubstitutions(gameweek, code, match.snapshot.players),
   ]);
 
   if (lines.length === 0) {
@@ -96,7 +91,7 @@ async function Report({ match }: { match: Match }) {
         sheets={sheets}
         events={events}
         swaps={swaps}
-        byCode={new Map(match.snapshot.players.map((player) => [player.code, player]))}
+        byCode={match.byCode}
       />
       <ul className={`${PANEL_FLUSH} cm-rows`}>
         {lines.map((line) => (

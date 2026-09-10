@@ -1,6 +1,8 @@
 import type { Club, FootballPlayer, PlSquadMan, PlTeamSheet } from "@epl/core";
-import PitchDisc from "../../../components/league/PitchDisc";
+import PitchMarker from "../../../components/league/PitchMarker";
+import { PANEL } from "@/app/desk";
 import PitchRows, { widestLine } from "../../../components/league/PitchRows";
+import { sheetName } from "./match";
 
 // The shape both sides were named in, drawn rather than described.
 //
@@ -61,7 +63,13 @@ export default function Formation({
   ));
 
   return (
-    <div className="grid gap-2 lg:grid-cols-2">
+    // **On a panel, because the shape label is text.** DESIGN §2's rule is that
+    // nothing on the desk prints on the bare ground — CM never takes the risk,
+    // every word in the game is on a plate or inside a translucent well. The
+    // formation caption shipped bare over the photograph for one commit and
+    // `groundfit` caught it; `sweep` cannot, because the ground is `fixed` at
+    // `-z-10` and composites straight past it.
+    <div className={`${PANEL} gap-2 lg:grid lg:grid-cols-2`}>
       <Side sheet={sheets.home} club={home} byCode={byCode} widest={widest} />
       <Side sheet={sheets.away} club={away} byCode={byCode} widest={widest} />
     </div>
@@ -101,21 +109,29 @@ function Side({
         {(man) => {
           const player = man.code === null ? undefined : byCode.get(man.code);
           return (
-            <PitchDisc
+            <PitchMarker
               player={player ?? null}
-              // **His shirt number, which is what CM's own tactics pitch draws**
-              // (`19.jpg` — Everton's discs carry 1, 9, 8, 34). Every other
-              // pitch in the app labels by position, because every other pitch
-              // is about a fantasy squad; this one is about eleven men who took
-              // the field, and the number is how a team sheet identifies them.
+              // **His shirt number, ON the shirt** (Craig, 10 Sep 2026: "its
+              // all the same team, so 11 shirts looks bad. Instead, we put the
+              // shirt number on the design too"). This is CM's own tactics
+              // pitch — `19.jpg`, Everton's markers carrying 1, 9, 8, 34 —
+              // arrived at from the other end: every other pitch in the app is
+              // eleven different kits and needs no number to tell them apart,
+              // and this one is eleven of the same kit and has nothing else.
+              //
+              // `matchShirtNumber` is the number he wore in THIS match and it
+              // is 30/30, so unlike the season squad number there is no gap to
+              // draw around.
+              number={man.shirt}
+              // Only reached for a man with no club either, which a team sheet
+              // never has — the shape came from the club's own grid.
               label={man.shirt === null ? "?" : String(man.shirt)}
-              // FPL's short name where the join reaches it — a 46px disc needs
-              // "Gakpo", not "Cody Mathès Gakpo".
-              name={player?.name ?? man.name}
+              // A 110px card needs "Gakpo", not "Cody Mathès Gakpo".
+              name={sheetName(man, byCode)}
               keeper={keepers.has(man)}
               club={club}
-              // **Empty, because the board underneath says all of it.** The disc
-              // can carry one line and `PitchDisc` falls through to the club's
+              // **Empty, because the board underneath says all of it.** The card
+              // can carry one line and `PitchMarker` falls through to the club's
               // short name without one — eleven identical labels saying nothing.
               // The pitch here is the SHAPE; who came off, who was booked and
               // what it was worth are the team sheet's columns, and repeating

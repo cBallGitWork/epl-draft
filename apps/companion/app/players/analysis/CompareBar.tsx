@@ -61,7 +61,7 @@ function Half({ side }: { side: Side }) {
     // **A bigger face here than anywhere else** (Craig, 10 Sep 2026: *"can make
     // portraits bigger on this screen if we want"*). `--row-portrait` is what
     // sizes the disc — `desk.css` shrinks it with the row that carries it and
-    // `PitchDisc` raises it for a marker on the grass — so the bar raises it
+    // `PitchMarker` raises it for a marker on the grass — so the bar raises it
     // rather than the component growing a size of its own. `large` comes with
     // it: at 64px the 110x140 source is visibly soft, which is the trap
     // `PlayerPortrait`'s own ceiling docblock names.

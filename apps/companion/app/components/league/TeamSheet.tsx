@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
 import { isResolved, pitchName, playerName } from "@epl/core";
 import LivePlayerCard from "./LivePlayerCard";
-import PitchDisc from "./PitchDisc";
+import PitchMarker from "./PitchMarker";
 import PitchRows, { GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
 import SquadRows from "./SquadRows";
 import { FAR_INSET } from "./PitchTurf";
@@ -39,9 +39,6 @@ export default function TeamSheet({
   inColumn = false,
   bare = false,
   show,
-  outline,
-  fill,
-  ink,
 }: {
   /** The XI in its positional lines, arranged on the server — `slot.status` is
    *  blanked on the way here, so this is the last shape that knows the split.
@@ -59,13 +56,8 @@ export default function TeamSheet({
   /** The caller has drawn one box round this and whatever is beside it, so the
    *  list must not draw a second inside it. Passed straight to `SquadRows`. */
   bare?: boolean;
-  /** What each disc's plate carries — see `PitchDisc`. */
+  /** What the line under each name carries — see `PitchMarker`. */
   show?: "points" | "fixture";
-  /** The ring round every disc — see `PitchDisc`. */
-  outline?: string;
-  /** The disc fill, and the ink that reads on it. */
-  fill?: string;
-  ink?: string;
   /** Eligible positions by Fantrax id, passed straight to the list. A record
    *  rather than a `Map` because this crosses to the browser — see `SquadRows`. */
   eligibility?: Record<string, string[]>;
@@ -111,14 +103,7 @@ export default function TeamSheet({
             inColumn={inColumn}
           >
             {(player) => (
-              <Cell
-                player={player}
-                onOpen={() => setOpen(player)}
-                show={show}
-                outline={outline}
-                fill={fill}
-                ink={ink}
-              />
+              <Cell player={player} onOpen={() => setOpen(player)} show={show} />
             )}
           </PitchRows>
 
@@ -146,7 +131,7 @@ export default function TeamSheet({
                     <p className="pb-0.5 text-center font-display text-3xs font-bold uppercase text-faint">
                       {positionLabel(player.rostered.slot.position) ?? "—"}
                     </p>
-                    <Cell player={player} onOpen={() => setOpen(player)} outline={outline} fill={fill} ink={ink} />
+                    <Cell player={player} onOpen={() => setOpen(player)} />
                   </li>
                 ))}
               </ul>
@@ -222,16 +207,10 @@ function Cell({
   player,
   onOpen,
   show,
-  outline,
-  fill,
-  ink,
 }: {
   player: SquadPlayerDetail;
   onOpen: () => void;
   show?: "points" | "fixture";
-  outline?: string;
-  fill?: string;
-  ink?: string;
 }) {
   return (
     <button
@@ -242,9 +221,9 @@ function Cell({
       aria-label={playerName(player.rostered)}
       className="block w-full"
     >
-      <PitchDisc
+      <PitchMarker
         // The league layer's own vocabulary, translated here rather than inside
-        // the disc — which is what lets a Premier League eleven use the same
+        // the marker — which is what lets a Premier League eleven use the same
         // grass without a Fantrax id anywhere near it.
         player={isResolved(player.rostered) ? player.rostered.player : null}
         label={player.rostered.slot.position || "?"}
@@ -254,9 +233,6 @@ function Cell({
         opposition={player.opposition}
         points={player.points}
         show={show}
-        outline={outline}
-        fill={fill}
-        ink={ink}
       />
     </button>
   );

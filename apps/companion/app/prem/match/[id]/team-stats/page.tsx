@@ -21,12 +21,7 @@ export const revalidate = 30;
 export default async function MatchTeamStatsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const match = await readMatch(id);
-  // A fixture FPL has not put in a gameweek has no round to resolve their id
-  // from — a postponement loses its `event` — and so no board.
-  const rows =
-    match.fixture.gameweek === null
-      ? null
-      : await matchStatsBoard(match.fixture.gameweek, match.fixture.code);
+  const rows = await matchStatsBoard(match.fixture.gameweek, match.fixture.code);
 
   // **Where the shots came from, under the count of them.** The board says
   // fourteen and ten; the map says which of them were worth anything and from
@@ -36,9 +31,8 @@ export default async function MatchTeamStatsPage({ params }: { params: Promise<{
   // keys on the FPL player code, and which side a man is on is a fact the
   // bootstrap already holds.
   const here = shotsInFixture(intelShots, match.fixture.id);
-  const clubOf = new Map(match.snapshot.players.map((player) => [player.code, player.clubId]));
   const side = (id: number | undefined) =>
-    [...here].flatMap(([code, shots]) => (clubOf.get(code) === id ? shots : []));
+    [...here].flatMap(([code, shots]) => (match.byCode.get(code)?.clubId === id ? shots : []));
 
   return (
     <MatchShell match={match} current="team-stats">

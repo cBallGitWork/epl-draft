@@ -225,11 +225,28 @@ function contrast(a: string, b: string): number {
 
 /** The club's kit, keyed on the same stable club code as the crest.
  *
- *  110x145 and about 10 KB. Forty of these — one outfield and one keeper per
- *  club — cover every player in the league, which is why they cache far better
- *  than a portrait per man and why they are never out of date: the shirt follows
- *  the club a player is at now, not the club he was at when someone last
- *  photographed him. */
+ *  Forty of these — one outfield and one keeper per club — cover every player in
+ *  the league, which is why they cache far better than a portrait per man and why
+ *  they are never out of date: the shirt follows the club a player is at now, not
+ *  the club he was at when someone last photographed him.
+ *
+ *  **220 and not 110**, counted 10 Sep 2026 across all twenty clubs in both kits:
+ *  `-220` answers 40/40 and is a real 220x290 at 20-42 KB, where `-110` is a real
+ *  110x145 at 7-12 KB. `-440` is a 404 on every one of the forty, so 220 is the
+ *  ceiling this host publishes and not a number picked for headroom. The pitch
+ *  draws a card at `PitchRows.MAX_CARD` — 110px — so the small file was exactly
+ *  native on a desk and half of it on any phone made since 2014.
+ *
+ *  There is a `.webp` of each at a third the bytes and it is deliberately not
+ *  asked for: `next/image` re-encodes whatever it fetches, so a second URL shape
+ *  would buy one origin fetch per club per deploy and cost a second thing to keep
+ *  in step.
+ *
+ *  **One size and no parameter.** Every caller draws a kit at or above the card,
+ *  so a `size` argument would have one value at every call site — which is
+ *  CODE_RULES §1's own example of an abstraction that earns nothing. `portraitUrl`
+ *  takes one because the two portrait sets differ by 3x in bytes and one caller
+ *  genuinely wants the big one. */
 export function shirtUrl(club: Club, keeper: boolean): string {
-  return `${FPL_SHIRT_BASE}/shirt_${club.code}${keeper ? "_1" : ""}-110.png`;
+  return `${FPL_SHIRT_BASE}/shirt_${club.code}${keeper ? "_1" : ""}-220.png`;
 }

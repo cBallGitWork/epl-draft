@@ -39,8 +39,7 @@ export default async function MatchShell({
   // already caches — so it costs nothing and it is right for a neutral venue or a
   // club that has moved, which the hand-authored table can never be. It falls
   // back to that table, which is what it is still for.
-  const facts =
-    fixture.gameweek === null ? null : await matchFacts(fixture.gameweek, fixture.code);
+  const facts = await matchFacts(fixture.gameweek, fixture.code);
   const ground =
     facts?.ground ?? (home === undefined ? null : clubGround(home.shortName));
 

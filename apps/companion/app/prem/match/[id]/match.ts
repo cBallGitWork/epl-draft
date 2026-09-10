@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import type {
+import type { FootballPlayer,
   Club,
   Fixture,
   FootballSnapshot,
@@ -45,6 +45,17 @@ export interface Match {
    *  the match is being played. Both come from the same endpoint and mean
    *  entirely different things, and one name for the two read as a bridge. */
   figures: Map<number, PlayerMatchStats>;
+  /** Every footballer in the league, by FPL's season-stable `code`.
+   *
+   *  **Here rather than in each component that wants it.** Counted before
+   *  extracting: three screens built this exact map and a fourth built a `code →
+   *  clubId` slice of it. They all want the same thing and for the same reason —
+   *  the Premier League's own feeds speak `code`, and everything else in the app
+   *  speaks FPL's per-season `id`, so a team sheet or a shot map has to cross
+   *  back. Built once per page here instead of three times per render.
+   *
+   *  `snapshot.players` is the same array; this is the index onto it. */
+  byCode: Map<number, FootballPlayer>;
   /** What the sister repo logged about this match — goal minutes, the positions
    *  men actually played, when they came on and off, SofaScore's rating, and
    *  both sides' figures. Undefined for the 360 of 380 it has not reached. */
@@ -95,6 +106,7 @@ export async function readMatch(id: string): Promise<Match> {
     figures: new Map(
       figures.filter((row) => row.fixtureId === fixture.id).map((row) => [row.playerId, row]),
     ),
+    byCode: new Map(snapshot.players.map((player) => [player.code, player])),
     logged: intelMatches.get(fixture.id),
     live: fixture.status === "live" && speaksForNow(snapshot),
     finished: fixture.status === "finished",
@@ -117,4 +129,22 @@ export async function readMatch(id: string): Promise<Match> {
 export async function matchOwners(fixture: Fixture): Promise<Map<number, PlayerOwner>> {
   const { owners } = await marks([fixture]);
   return owners ?? new Map();
+}
+
+/** What to call a man the Premier League named, given the league's own players.
+ *
+ *  **FPL's short name where the bridge reaches him, the team sheet's where it
+ *  does not.** The two providers disagree about spelling: the Premier League
+ *  writes `Cody Mathès Gakpo` and `Michele Di Gregorio` where FPL writes `Gakpo`
+ *  and `Di Gregorio`, and one column carrying both wraps to two lines beside
+ *  rows that do not. A man the bridge cannot place keeps the long form, which is
+ *  still his name.
+ *
+ *  Counted before extracting: **3** — the team sheet, the formation's discs and
+ *  the report's summary all made the same fallback inline. */
+export function sheetName(
+  man: { code: number | null; name: string },
+  byCode: Map<number, FootballPlayer>,
+): string {
+  return (man.code === null ? undefined : byCode.get(man.code)?.name) ?? man.name;
 }

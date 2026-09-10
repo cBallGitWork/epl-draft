@@ -1,6 +1,6 @@
 import { isFplKeeper } from "@epl/core";
 import type { Club, FootballPlayer, FplLine, FplPick, Opposition } from "@epl/core";
-import PitchDisc from "../components/league/PitchDisc";
+import PitchMarker from "../components/league/PitchMarker";
 import PitchRows from "../components/league/PitchRows";
 
 // Your FPL XI on the grass — the same grass as everywhere else.
@@ -17,7 +17,7 @@ import PitchRows from "../components/league/PitchRows";
 // "takes a `RosteredPlayer`, which is a Fantrax roster slot joined to a
 // footballer, and an FPL pick is neither". That stopped being true on 3 Sep, when
 // the disc was changed to take a plain `FootballPlayer` for exactly this reason
-// (`PitchDisc`'s own docblock records it), and a Premier League club's predicted
+// (`PitchMarker`'s own docblock records it), and a Premier League club's predicted
 // eleven has gone through it since. So the second occurrence is gone rather than
 // kept.
 //
@@ -80,14 +80,14 @@ export default function FplPitch({
 
 /** One pick: the shared disc, with the armband over it.
  *
- *  **The armband is drawn HERE and not by `PitchDisc`.** It is the one fact on
+ *  **The armband is drawn HERE and not by `PitchMarker`.** It is the one fact on
  *  this pitch that no other pitch has — our league has no captain — so a prop for
  *  it would be a mechanism with one caller, which CODE_RULES §1 forbids by name.
  *  The disc's own root is already `relative`, and this wrapper is the caller's,
  *  so the badge sits over the head without either side knowing about the other.
  *
  *  No club colours on the fill. Eleven picks are eleven different clubs, and
- *  `PitchDisc` records eleven palettes on one pitch as already tried and
+ *  `PitchMarker` records eleven palettes on one pitch as already tried and
  *  rejected — the chrome default is what a pitch with no single team gets. */
 function Pick({
   pick,
@@ -102,10 +102,10 @@ function Pick({
 }) {
   return (
     <span className="relative block w-full">
-      <PitchDisc
+      <PitchMarker
         player={player}
         // A pick FPL names and the bootstrap does not — signed since, or an
-        // academy name. The disc says so rather than dropping him.
+        // academy name. He still has a club, so he still gets its kit.
         label="?"
         name={player?.name ?? "—"}
         keeper={isFplKeeper(pick.line)}

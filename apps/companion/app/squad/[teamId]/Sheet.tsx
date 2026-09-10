@@ -1,6 +1,6 @@
 "use client";
 
-import { type BreakdownLine, type SquadDetailLine, type SquadPlayerDetail, inkOn, teamColours } from "@epl/core";
+import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
 import { useState } from "react";
 import TeamSheet from "../../components/league/TeamSheet";
 import ViewToggle, { type View } from "../../components/league/ViewToggle";
@@ -28,7 +28,6 @@ export default function Sheet({
   breakdown,
   pending,
   eligibility,
-  teamId,
 }: {
   rows: SquadDetailLine[];
   bench: SquadPlayerDetail[];
@@ -42,17 +41,11 @@ export default function Sheet({
   pending: number | null;
   /** Eligible positions by Fantrax id, for the list's position column. */
   eligibility?: Record<string, string[]>;
-  /** Whose squad this is — the disc rings take his secondary colour. */
-  teamId: string;
 }) {
   // Opens on the LIST: a squad screen is a list of who you have, and the pitch
   // is the second reading of it. Phone only — above `lg` both are drawn and the
   // control is hidden.
   const [view, setView] = useState<View>("list");
-
-  // Looked up once. It was three calls to `teamColours(teamId)` on one element —
-  // the same table read three times to build one plate.
-  const colours = teamColours(teamId);
 
   return (
     <div className="flex flex-col gap-2">
@@ -139,11 +132,6 @@ export default function Sheet({
             mode="pitch"
             inColumn
             show="fixture"
-            // His own colours: the plate is his primary and the ring his
-            // secondary, which is how a kit is put together.
-            fill={colours.primary}
-            outline={colours.secondary}
-            ink={inkOn(colours)}
           />
         </div>
       </div>

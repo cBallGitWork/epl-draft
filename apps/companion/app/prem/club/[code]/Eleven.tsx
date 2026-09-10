@@ -1,6 +1,5 @@
-import type { Club, ClubColours, FootballPlayer, IntelStarter } from "@epl/core";
-import { inkOn } from "@epl/core";
-import PitchDisc from "../../../components/league/PitchDisc";
+import type { Club, FootballPlayer, IntelStarter } from "@epl/core";
+import PitchMarker from "../../../components/league/PitchMarker";
 import PitchRows from "../../../components/league/PitchRows";
 
 // A club's predicted eleven, on the same grass the fantasy eleven stands on.
@@ -9,15 +8,21 @@ import PitchRows from "../../../components/league/PitchRows";
 // fantasy squad page — this is what i meant by sharing the same pitch"). An
 // earlier cut built its own cut-out cards on `PitchFrame`, which is the FPL
 // tab's photographed pitch, and it looked nothing like the rest of the app.
-// `CmGround` + `PitchRows` + `PitchDisc` is what `squad/[teamId]/Sheet` draws,
-// and `PitchDisc` stopped taking a roster slot on 3 Sep so that a Premier League
+// `CmGround` + `PitchRows` + `PitchMarker` is what `squad/[teamId]/Sheet` draws,
+// and it stopped taking a roster slot on 3 Sep so that a Premier League
 // eleven could use it without a Fantrax id going anywhere near a football page.
 //
-// **The keeper stands at the BOTTOM**, which is this site's own arrangement: the
-// pitch attacks UP the screen, so the goal a squad defends is the near one.
-// `PitchRows` already draws its first row nearest that goal, and `predictedEleven`
-// hands the rows over goal-first — so they are passed straight through. Reversing
-// them here turned the pitch upside down and put the forward on the goal line.
+// **The keeper stands at the TOP** (Craig, 10 Sep 2026), which is this site's
+// arrangement as of that date and the reverse of the one this paragraph used to
+// record. `predictedEleven` hands the rows over goal-first and `PitchRows` draws
+// them in the order it is given, so they are passed straight through — reversing
+// them here would put the forward on the goal line, which is what it did once.
+//
+// **Eleven of the same kit, told apart by the number on it** (Craig, same day:
+// "its all the same team, so 11 shirts looks bad"). This is the screen that rule
+// was written for. `IntelPlayer.squadNumber` covers 197 of 220 predicted starters
+// — counted 10 Sep 2026 — and the other 23 draw a plain kit rather than a guess,
+// on the same rule as the portraits: a wrong number is worse than none.
 //
 // The formation is set above the grass because `cm9900/19.jpg` sets it there —
 // "4-4-2*" in yellow over Everton's pitch. It reads `4-2-3-1` and not
@@ -33,8 +38,8 @@ export default function Eleven({
   formation,
   against,
   club,
-  colours,
   playerOf,
+  numberOf,
   positionOf,
 }: {
   lines: ElevenLine[];
@@ -43,13 +48,23 @@ export default function Eleven({
    *  published no next match, and then the caption says only what it is. */
   against: string | null;
   club: Club;
-  colours: ClubColours;
   /** The footballer behind a code, or null when the snapshot has not got him. */
   playerOf: (code: number) => FootballPlayer | null;
+  /** His shirt number, or null — the sister repo's, which is null both for a man
+   *  nobody recorded one for and for one whose number collided inside his club.
+   *  See `IntelPlayer.squadNumber`. */
+  numberOf: (code: number) => number | null;
   /** What OUR league would field him as — `MID`, `M/F`. Null when Fantrax has
    *  no opinion, or would not answer. */
   positionOf: (code: number) => string | null;
 }) {
+  // **The first line IS the keeper's**, by construction: `predictedEleven` builds
+  // `[{line: "GK", players: [keeper]}, …]` off the shape, so this is the one
+  // ordering fact the arrangement asserts. Read here rather than inside the cell
+  // because `PitchRows` hands its children a player and not the line he stands
+  // in — which is right, and is why `Formation` reads its own the same way.
+  const keeper = lines[0]?.players[0]?.code ?? null;
+
   return (
     <div className="flex flex-col gap-1">
       {/* **What the eleven is and who it is against** (Craig, 3 Sep 2026: "real
@@ -83,20 +98,26 @@ export default function Eleven({
         {(starter) => {
             const player = playerOf(starter.code);
             return (
-              <PitchDisc
+              <PitchMarker
                 player={player}
-                // A man the prediction names and the bootstrap does not — signed
-                // since, or an academy name. The disc says so rather than
-                // dropping him: the prediction is still an eleven.
+                // Only reached for a man with no CLUB either, which cannot
+                // happen here — this whole pitch is one club. A man the
+                // prediction names and the bootstrap does not still gets his
+                // club's kit, because a kit is chosen by club code.
                 label="?"
                 // **FPL's own short name**, which is what `web_name` is for: a
-                // 46px disc needs "Gabriel", not "Gabriel dos Santos
+                // 110px card needs "Gabriel", not "Gabriel dos Santos
                 // Magalhães". The fantasy pitch abbreviates instead
                 // (`pitchName`) because a Fantrax roster line has no short form
                 // to reach for — the same problem answered by the better
                 // source rather than the same rule applied twice.
                 name={player?.name ?? "—"}
-                keeper={false}
+                // Hardcoded `false` until 10 Sep 2026, which drew twenty keepers
+                // in outfield shirts — invisible while the kit was a fallback
+                // that fired for one man in eight, and the first thing you see
+                // now that it is the whole pitch.
+                keeper={starter.code === keeper}
+                number={numberOf(starter.code)}
                 club={club}
                 // **His Fantrax position** (Craig, 3 Sep 2026: "prediction just
                 // needs the name and their fantrax position"). A probability
@@ -105,9 +126,6 @@ export default function Eleven({
                 // he wants to know about a man about to start is what our
                 // league would field him as.
                 band={positionOf(starter.code) ?? "—"}
-                fill={colours.primary}
-                outline={colours.secondary}
-                ink={inkOn(colours)}
               />
             );
           }}

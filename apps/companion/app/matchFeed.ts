@@ -27,6 +27,33 @@ import { optaToCode, plFixture, plRound, plStats, plStream, theirFixtureId } fro
 // ground, a bench, a report, a minute beside a scorer. Their API refusing costs
 // the block and never the page, which is why the tolerance is uniform and stated
 // once rather than argued in four docblocks.
+//
+// **And `gameweek` is nullable here rather than at every call site.** A fixture
+// FPL has not put in a round has no round to resolve their id from, which is a
+// real state — a postponement loses its `event`. Every page guarded that itself,
+// eleven ternaries across five files, each restating the same fact in whichever
+// empty value its own call wanted. It belongs with the other absences.
+
+/** The shape all four reads share: resolve their fixture id, ask for it, map it —
+ *  and answer `absent` at every step that can fail.
+ *
+ *  Counted before extracting: **4**. The failure ladder is identical in all of
+ *  them and only the read and the empty value differ, which is exactly what a
+ *  type parameter is for. */
+async function ofFixture<T>(
+  gameweek: number | null,
+  fixtureCode: number,
+  absent: T,
+  read: (id: number) => Promise<T>,
+): Promise<T> {
+  if (gameweek === null) return absent;
+  try {
+    const id = await theirFixtureId(gameweek, fixtureCode);
+    return id === null ? absent : await read(id);
+  } catch {
+    return absent;
+  }
+}
 
 /** Where a match was played, how many watched, and who refereed it — off the
  *  ROUND read, which is already cached for the wire.
@@ -41,9 +68,10 @@ import { optaToCode, plFixture, plRound, plStats, plStream, theirFixtureId } fro
  *  moves. Null when the round will not answer or does not carry the fixture, and
  *  then the caller falls back to the table it always had. */
 export async function matchFacts(
-  gameweek: number,
+  gameweek: number | null,
   fixtureCode: number,
 ): Promise<PlMatchFacts | null> {
+  if (gameweek === null) return null;
   const round = await plRound(gameweek).catch(() => null);
   const fixture = round?.content.find((entry) => plFixtureCode(entry) === fixtureCode);
   return fixture === undefined ? null : plMatchFacts(fixture);
@@ -54,17 +82,13 @@ export async function matchFacts(
  *  Null at every step that can fail: a round they will not serve, a fixture our
  *  code does not appear in, a match nobody has named a side for. */
 export async function teamSheets(
-  gameweek: number,
+  gameweek: number | null,
   fixtureCode: number,
   players: readonly FootballPlayer[],
 ): Promise<ReturnType<typeof plTeamSheets>> {
-  try {
-    const id = await theirFixtureId(gameweek, fixtureCode);
-    if (id === null) return null;
-    return plTeamSheets(await plFixture(id), optaToCode(players));
-  } catch {
-    return null;
-  }
+  return ofFixture(gameweek, fixtureCode, null, async (id) =>
+    plTeamSheets(await plFixture(id), optaToCode(players)),
+  );
 }
 
 /** Opta's minute-stamped commentary for one of OUR fixtures, newest first.
@@ -75,16 +99,12 @@ export async function teamSheets(
  *  text-commentary matchday". The mapper was written and tested on 4 Sep and
  *  drew nothing until now. */
 export async function matchReport(
-  gameweek: number,
+  gameweek: number | null,
   fixtureCode: number,
 ): Promise<PlCommentaryLine[]> {
-  try {
-    const id = await theirFixtureId(gameweek, fixtureCode);
-    if (id === null) return [];
-    return plCommentary((await plStream(id)).events.content);
-  } catch {
-    return [];
-  }
+  return ofFixture(gameweek, fixtureCode, [] as PlCommentaryLine[], async (id) =>
+    plCommentary((await plStream(id)).events.content),
+  );
 }
 
 /** Every goal's minute in ONE fixture, by FPL player code.
@@ -102,12 +122,13 @@ export async function matchReport(
  *  they never meet — 20 fixtures against 380.
  */
 export async function matchGoalMinutes(
-  gameweek: number,
+  gameweek: number | null,
   fixtureCode: number,
   players: readonly FootballPlayer[],
   logged: Map<number, number[]>,
 ): Promise<Map<number, number[]>> {
   const minutes = new Map(logged);
+  if (gameweek === null) return minutes;
   try {
     for (const goal of await roundGoals(gameweek, players)) {
       if (goal.fixtureCode !== fixtureCode) continue;
@@ -150,17 +171,13 @@ export async function matchGoalMinutes(
  *  fixtures of a round — which is the same answer as their API refusing, and the
  *  caller draws neither differently. */
 export async function matchManEvents(
-  gameweek: number,
+  gameweek: number | null,
   fixtureCode: number,
   players: readonly FootballPlayer[],
 ): Promise<Map<number, PlManMatch>> {
-  try {
-    const id = await theirFixtureId(gameweek, fixtureCode);
-    if (id === null) return new Map();
-    return plManMatches(await plFixture(id), optaToCode(players));
-  } catch {
-    return new Map();
-  }
+  return ofFixture(gameweek, fixtureCode, new Map<number, PlManMatch>(), async (id) =>
+    plManMatches(await plFixture(id), optaToCode(players)),
+  );
 }
 
 /** Championship Manager's thirteen-row Match Stats board for one fixture.
@@ -175,9 +192,10 @@ export async function matchManEvents(
  *  they hold no stats for a side. A board is a comparison and half of one is not
  *  a smaller board. */
 export async function matchStatsBoard(
-  gameweek: number,
+  gameweek: number | null,
   fixtureCode: number,
 ): Promise<MatchStatRow[] | null> {
+  if (gameweek === null) return null;
   try {
     const round = await plRound(gameweek);
     const fixture = round.content.find((entry) => plFixtureCode(entry) === fixtureCode);
@@ -200,15 +218,11 @@ export async function matchStatsBoard(
  *  loses the feed's order, which is the only thing that says who replaced whom
  *  when three changes are made at once — see `plSubstitutions`. */
 export async function matchSubstitutions(
-  gameweek: number,
+  gameweek: number | null,
   fixtureCode: number,
   players: readonly FootballPlayer[],
 ): Promise<PlSubstitution[]> {
-  try {
-    const id = await theirFixtureId(gameweek, fixtureCode);
-    if (id === null) return [];
-    return plSubstitutions(await plFixture(id), optaToCode(players));
-  } catch {
-    return [];
-  }
+  return ofFixture(gameweek, fixtureCode, [] as PlSubstitution[], async (id) =>
+    plSubstitutions(await plFixture(id), optaToCode(players)),
+  );
 }

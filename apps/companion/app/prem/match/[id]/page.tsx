@@ -84,14 +84,12 @@ function Facts({ match }: { match: Match }) {
 async function Sheet({ match }: { match: Match }) {
   const [owners, minutes] = await Promise.all([
     matchOwners(match.fixture),
-    match.fixture.gameweek === null
-      ? Promise.resolve(goalMinutes(match.logged))
-      : matchGoalMinutes(
-          match.fixture.gameweek,
-          match.fixture.code,
-          match.snapshot.players,
-          goalMinutes(match.logged),
-        ),
+    matchGoalMinutes(
+      match.fixture.gameweek,
+      match.fixture.code,
+      match.snapshot.players,
+      goalMinutes(match.logged),
+    ),
   ]);
   const { home, away } = sides(match);
   return (

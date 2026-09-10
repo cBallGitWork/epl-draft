@@ -22,14 +22,17 @@ import { CLUB } from "../../PremNav";
 // wore `cm-tab`, which is the strip UNDER a title bar. The foot row is flat with
 // one light edge along the top and a rule between plates — see `desk.css`.
 //
-// **The middle plate goes nowhere on purpose.** It is the placeholder for the
-// advanced data (Craig: *"Add a placeholder button for section where advanced
-// data goes"*) — possession, shots, corners and the action zones, which arrive
-// with the sister repo's export. A plate that says what it is waiting for is the
-// honest version of a tab we cannot fill; a plate linking to an empty screen is
-// not. Not a `<Link>`, and not `TabStrip`'s `dim` either: that greys a view with
-// nothing behind it FOR THIS SUBJECT, and this one has nothing behind it for any
-// match ever played.
+// **It carried a third, dead plate until 10 Sep 2026, and it was right to.** The
+// middle one read `Match Stats` and went nowhere — the placeholder for the
+// advanced data (Craig, 4 Sep: *"Add a placeholder button for section where
+// advanced data goes"*), on the argument that a plate saying what it is waiting
+// for is the honest version of a tab we cannot fill.
+//
+// It is gone because the wait is over: possession, shots, corners and the rest
+// are a real tab now, off `/stats/match`. A foot plate and a tab to one place is
+// the screen repeating itself, so the placeholder retires rather than becoming a
+// link. Action Zones is the one thing still unsourced and it gets no plate here
+// either — `MatchTabs` carries that ruling.
 
 export default function MatchFoot({
   home,

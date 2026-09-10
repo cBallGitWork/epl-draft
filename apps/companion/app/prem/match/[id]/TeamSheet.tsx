@@ -2,7 +2,6 @@ import Link from "next/link";
 import { clubColours, inkOn } from "@epl/core";
 import type {
   Club,
-  FootballPlayer,
   MatchSheetLine,
   PlManMatch,
   PlSquadMan,
@@ -13,6 +12,7 @@ import { IndexCell } from "../../../components/league/TableCells";
 import { chipsFor } from "../../../components/league/Chips";
 import { PLAYER } from "../../PremNav";
 import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE } from "@/app/desk";
+import { sheetName } from "./match";
 import type { Match } from "./match";
 
 // Championship Manager's team sheet, `cm9900/16.jpg`, both sides at once.
@@ -50,20 +50,20 @@ const CARDED = new Set(["YC", "RC"]);
  *  `Match` on purpose: that interface is the shared assembly four routes read,
  *  and two maps only this board wants do not belong in it. */
 interface Join {
-  player: (code: number | null) => FootballPlayer | undefined;
   /** What FPL's own per-fixture sheet says he did — the chips are drawn from it.
    *  Undefined for a man who accrued nothing, which includes everyone who did
    *  not play. */
   line: (code: number | null) => MatchSheetLine | undefined;
   points: (code: number | null) => number;
+  /** What to call him — FPL's short form where the bridge reaches him. */
+  name: (man: { code: number | null; name: string }) => string;
 }
 
 function joinOf(match: Match): Join {
-  const byCode = new Map(match.snapshot.players.map((player) => [player.code, player]));
   const byId = new Map((match.sheet?.lines ?? []).map((line) => [line.playerId, line]));
-  const player = (code: number | null) => (code === null ? undefined : byCode.get(code));
+  const player = (code: number | null) => (code === null ? undefined : match.byCode.get(code));
   return {
-    player,
+    name: (man) => sheetName(man, match.byCode),
     line: (code) => {
       const id = player(code)?.id;
       return id === undefined ? undefined : byId.get(id);
@@ -200,7 +200,6 @@ function Row({
   opensBench: boolean;
 }) {
   const { man, did, unused } = row;
-  const player = join.player(man.code);
   const line = join.line(man.code);
 
   return (
@@ -225,10 +224,7 @@ function Row({
           className="group flex min-h-11 flex-col justify-center px-1.5 lg:min-h-9"
         >
           <span className={`min-w-0 truncate group-hover:underline ${ROW_NAME}`}>
-            {/* FPL's short name where the join reaches it — the Premier League
-                writes `Michele Di Gregorio` where FPL writes `Di Gregorio`, and
-                one column with two naming conventions wraps to two lines. */}
-            {player?.name ?? man.name}
+            {join.name(man)}
             {man.captain ? <span className="ml-1 text-2xs text-faint">(c)</span> : null}
           </span>
           {/* **The sub note sits UNDER the name, not beside it.** CM puts it in

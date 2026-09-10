@@ -59,8 +59,10 @@ export default function Squad({
       formation={formation}
       against={against}
       club={club}
-      colours={colours}
       playerOf={(code) => byCode.get(code) ?? null}
+      // The same map `SquadTable` already reads, so the number on the grass and
+      // the number in the list beside it cannot disagree.
+      numberOf={(code) => intel.get(code)?.squadNumber ?? null}
       positionOf={(code) => positionsLabel(league.get(code)?.positions ?? [])}
     />
   ) : null;

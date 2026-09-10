@@ -1,6 +1,7 @@
 import type { FootballPlayer, PlManMatch, PlSubstitution, PlTeamSheet } from "@epl/core";
 import EventIcon from "../../../components/football/EventIcon";
 import { LABEL, PANEL, ROW_NAME } from "@/app/desk";
+import { sheetName } from "./match";
 
 // What happened, before the account of how.
 //
@@ -46,10 +47,7 @@ export default function ReportSummary({
     }
   }
 
-  // FPL's short name where the join reaches it, for the reason every other board
-  // here does it: the Premier League writes `Cody Mathès Gakpo`.
-  const shortName = (man: { code: number | null; name: string }) =>
-    (man.code === null ? undefined : byCode.get(man.code)?.name) ?? man.name;
+  const shortName = (man: { code: number | null; name: string }) => sheetName(man, byCode);
   /** A substituted man by his FPL code, which is what `PlSubstitution` carries.
    *  Falls back to the sheet's own spelling and then to a dash — half a change
    *  is still a change worth printing. */

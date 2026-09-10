@@ -65,20 +65,13 @@ async function Board({ match }: { match: Match }) {
   // **The sheet is the board now, not a decoration on it.** Both reads are the
   // SAME cached fixture detail — `teamSheets` for who was named and in what
   // shape, `matchManEvents` for what happened to each of them — so the pair
-  // costs one upstream request, not two.
-  //
-  // A fixture FPL has not put in a gameweek has no round to resolve their id
-  // from, which is a real state — a postponement loses its `event` — and one no
-  // sheet exists for.
-  const gameweek = match.fixture.gameweek;
+  // costs one upstream request, not two. A fixture with no gameweek answers
+  // absent from both without a guard here; `matchFeed` owns that.
+  const { gameweek, code } = match.fixture;
   const [owners, sheets, events] = await Promise.all([
     matchOwners(match.fixture),
-    gameweek === null
-      ? null
-      : teamSheets(gameweek, match.fixture.code, match.snapshot.players),
-    gameweek === null
-      ? new Map()
-      : matchManEvents(gameweek, match.fixture.code, match.snapshot.players),
+    teamSheets(gameweek, code, match.snapshot.players),
+    matchManEvents(gameweek, code, match.snapshot.players),
   ]);
 
   // Their sheet is the only source of a bench, so without it there is no team
@@ -97,11 +90,10 @@ async function Board({ match }: { match: Match }) {
   // No picker over the pitch, because there is one kind of map to draw.
   // `maps.ts` records the rule: a control offering a single choice is furniture.
   // Average position joins it when the sister repo exports one.
-  const byCode = new Map(match.snapshot.players.map((player) => [player.code, player]));
   return (
     <div className="flex flex-col gap-2">
       <TeamSheet match={match} sheets={sheets} events={events} owners={owners} />
-      <Formation sheets={sheets} home={match.home} away={match.away} byCode={byCode} />
+      <Formation sheets={sheets} home={match.home} away={match.away} byCode={match.byCode} />
     </div>
   );
 }

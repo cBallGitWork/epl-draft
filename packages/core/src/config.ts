@@ -285,10 +285,11 @@ export const PL_PHOTO_BASE = "https://resources.premierleague.com/premierleague2
 
 /** Where FPL serves club kits — its own host, not the Premier League's CDN.
  *
- *  Twenty outfield shirts and twenty keeper shirts serve the whole league at
- *  ~10 KB each, and they are selected by club code rather than by a photograph
- *  of a man, so a transfer changes the shirt the same day. That is the whole
- *  reason they are here: a portrait cannot be that current. */
+ *  Twenty outfield shirts and twenty keeper shirts serve the whole league, and
+ *  they are selected by club code rather than by a photograph of a man, so a
+ *  transfer changes the shirt the same day. That is the whole reason they are
+ *  here: a portrait cannot be that current. `shirtUrl` carries the sizes and
+ *  what was counted at each. */
 export const FPL_SHIRT_BASE = "https://fantasy.premierleague.com/dist/img/shirts/standard";
 
 /** Where Fantrax serves the badge a manager picked for his fantasy team.

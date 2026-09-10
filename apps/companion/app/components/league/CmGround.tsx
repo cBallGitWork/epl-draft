@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 // pitch is FPL's: a trapezoid seen from behind the goal, with cut-out stickers
 // standing on it. It is a good drawing of a different game.
 //
-// This is the ground half of the trial. The markers are `PitchDisc`, and they
+// This is the ground half of the trial. The markers are `PitchMarker`, and they
 // are cut-out heads rather than CM's numbers, because we have no shirt numbers
 // to draw — FPL's `squad_number` is a key that is null on every element, which
 // `CLAUDE.md` records — and because a face is the one thing sixteen managers can
@@ -165,25 +165,27 @@ export default function CmGround({
         </g>
       </svg>
 
-      {/* **The keeper stands at the foot, and the reversing is no longer here.**
-          This carried `flex-col-reverse` for the right reason — the lines arrive
-          keeper-first, which is the order the squad is grouped in and the order
-          the list prints, and drawing that top-down puts the goalkeeper in the
-          attacking third. What was wrong was the PLACE: only the flat ground
-          reversed, so the two pitches this app draws disagreed about which way
-          the team was kicking. `PitchRows` does it once for both now (Craig,
-          5 Sep 2026: "forwards at top etc"), and taking it off here is what
-          stopped the flat one double-reversing back to keeper-at-top.
+      {/* **The keeper stands at the head, and no reversing happens here.** This
+          carried `flex-col-reverse` once and it was the wrong PLACE for it: only
+          the flat ground reversed, so the two pitches this app draws disagreed
+          about which way the team was kicking. `PitchRows` owns the direction for
+          all six now, and it draws the lines in the order it is given — which is
+          keeper-first, the order the squad is grouped in and the order the list
+          beside it prints (Craig, 10 Sep 2026: "currently we go strikers at top,
+          keeper bottom, lets reverse this").
 
           **`absolute inset-0`, so the lines live INSIDE the shape** rather than
           setting it: the pitch's `aspect-ratio` is the frame and the rows fill
           it, which is what stops the two fighting over the height.
 
-          The head padding is what positions the side. It leaves the attacking
-          end empty, as `19.jpg` does, and squeezes the block down toward the
-          keeper — who is pinned to his own goal line by the near-zero padding at
-          the foot. `justify-between` shares out what is left. */}
-      <div className="absolute inset-0 z-base flex flex-col justify-between px-2 pb-1 pt-[16%]">
+          **The padding positions the side, and it flipped with the direction.**
+          It leaves the attacking end empty, as `19.jpg` does, and squeezes the
+          block toward the keeper — who is pinned to his own goal line by the
+          near-zero padding at the END HE IS ON. That end is the head now, so the
+          16% is at the foot; left where it was it would have held the keeper a
+          sixth of a pitch off his line and pushed the forwards through the far
+          goal. `justify-between` shares out what is left. */}
+      <div className="absolute inset-0 z-base flex flex-col justify-between px-2 pb-[16%] pt-1">
         {children}
       </div>
     </div>
