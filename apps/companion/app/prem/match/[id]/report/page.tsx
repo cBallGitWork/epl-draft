@@ -5,7 +5,14 @@ import SkeletonRows from "../../../../components/shell/SkeletonRows";
 import MatchShell from "../Shell";
 import { readMatch } from "../match";
 import type { Match } from "../match";
-import { matchReport } from "../../../../matchFeed";
+import {
+  matchManEvents,
+  matchReport,
+  matchSubstitutions,
+  teamSheets,
+} from "../../../../matchFeed";
+import EventIcon, { glyphFor } from "../../../../components/football/EventIcon";
+import ReportSummary from "../ReportSummary";
 import { PANEL_FLUSH, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 
 // The match, minute by minute, in Opta's own words.
@@ -48,10 +55,22 @@ export default async function MatchReportPage({ params }: { params: Promise<{ id
 }
 
 async function Report({ match }: { match: Match }) {
-  const lines =
-    match.fixture.gameweek === null
+  const gameweek = match.fixture.gameweek;
+  // All three off caches the page has already warmed — the round for their
+  // fixture id, the detail for the sheets AND the events, the stream for the
+  // prose. The summary costs no request that the report did not already make.
+  const [lines, sheets, events, swaps] = await Promise.all([
+    gameweek === null ? [] : matchReport(gameweek, match.fixture.code),
+    gameweek === null
+      ? null
+      : teamSheets(gameweek, match.fixture.code, match.snapshot.players),
+    gameweek === null
+      ? new Map()
+      : matchManEvents(gameweek, match.fixture.code, match.snapshot.players),
+    gameweek === null
       ? []
-      : await matchReport(match.fixture.gameweek, match.fixture.code);
+      : matchSubstitutions(gameweek, match.fixture.code, match.snapshot.players),
+  ]);
 
   if (lines.length === 0) {
     return (
@@ -69,11 +88,22 @@ async function Report({ match }: { match: Match }) {
   }
 
   return (
-    <ul className={`${PANEL_FLUSH} cm-rows`}>
-      {lines.map((line) => (
-        <Line key={line.id} line={line} />
-      ))}
-    </ul>
+    <div className="flex flex-col gap-2">
+      {/* What happened, before the account of how. Ninety-nine lines of
+          commentary is a record of a match; a reader arriving after full time
+          wants the four facts first. */}
+      <ReportSummary
+        sheets={sheets}
+        events={events}
+        swaps={swaps}
+        byCode={new Map(match.snapshot.players.map((player) => [player.code, player]))}
+      />
+      <ul className={`${PANEL_FLUSH} cm-rows`}>
+        {lines.map((line) => (
+          <Line key={line.id} line={line} />
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -104,8 +134,18 @@ function Line({ line }: { line: PlCommentaryLine }) {
           type strings are written for a machine ("attempt saved", "free kick
           won"), and the seven that change a match are the seven worth calling
           out. The rest is prose, and prose is what a report is. */}
+      {/* **The glyph stands beside the word, never instead of it.** A reader who
+          does not know the icon has the word to fall back on, and the icon takes
+          `currentColor` so it wears whichever tone the row already had — a red
+          card's glyph is red because the row is. */}
       {word === undefined ? null : (
-        <span className={`flex shrink-0 items-center ${SMALL_CAPS} ${TONE[line.type] ?? "text-ink"}`}>
+        <span
+          className={`flex shrink-0 items-center gap-1 ${SMALL_CAPS} ${TONE[line.type] ?? "text-ink"}`}
+        >
+          {(() => {
+            const glyph = glyphFor(line.type);
+            return glyph === undefined ? null : <EventIcon glyph={glyph} />;
+          })()}
           {word}
         </span>
       )}

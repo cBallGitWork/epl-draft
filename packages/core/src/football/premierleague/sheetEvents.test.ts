@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import recordedFixture from "../__fixtures__/plFixture.json";
 import type { RawPlFixture, RawPlFixtureEvent } from "./raw";
-import { plManMatches } from "./sheetEvents";
+import { plManMatches, plSubstitutions } from "./sheetEvents";
 
 // Liverpool 2-2 Nottingham Forest, gameweek 2, recorded 4 Sep 2026 and never
 // fetched (CODE_RULES §6). The same match `map.test.ts` uses, and it carries the
@@ -135,5 +135,51 @@ describe("plManMatches", () => {
     // `events` is absent on all ten upcoming fixtures of a round, which is the
     // exact tell for "not played" — and must not throw.
     expect(plManMatches({ ...DETAIL, events: undefined }, optaToCode).size).toBe(0);
+  });
+});
+
+describe("plSubstitutions", () => {
+  const swaps = plSubstitutions(DETAIL, optaToCode);
+  const named = (code: number | null) => (code === null ? "?" : String(code - 1_000_000));
+
+  it("pairs each man with the man he actually replaced", () => {
+    // Liverpool made three changes at 71' at once. Pairing on the MINUTE alone
+    // cannot tell them apart and the report drew Flemming coming on for Maeda
+    // when he came on for Emersonn — two true men and one false sentence. The
+    // feed's own order is the join: `ON` then its own `OFF`, 269 of 269.
+    const at71 = swaps.filter((swap) => swap.minute === 71).map((s) => `${named(s.on)}>${named(s.off)}`);
+    expect(at71).toEqual(["134796>32894", "49909>19919", "16006>116665"]);
+  });
+
+  it("finds every change and no more", () => {
+    // Nine `ON` rows and nine `OFF` rows in the recording.
+    expect(swaps).toHaveLength(9);
+  });
+
+  it("reads oldest first", () => {
+    const minutes = swaps.map((swap) => swap.minute);
+    expect([...minutes].sort((a, b) => a - b)).toEqual(minutes);
+    expect(minutes[0]).toBe(66);
+  });
+
+  it("drops a pair that is not an ON followed by its OFF", () => {
+    // Never seen on the wire; the guard is what lets the docblock claim the
+    // ordering rather than hope for it.
+    const scrambled = {
+      ...DETAIL,
+      events: [
+        { type: "S", description: "OFF", personId: NDOYE, clock: { secs: 600, label: "10'00" } },
+        { type: "S", description: "ON", personId: ARAUJO, clock: { secs: 600, label: "10'00" } },
+      ],
+    } as unknown as RawPlFixture;
+    expect(plSubstitutions(scrambled, optaToCode)).toEqual([]);
+  });
+
+  it("keeps a pair whose man the bridge could not place", () => {
+    // Half a known substitution beats none: dropping it would lose the other
+    // man too, and he is somebody we can name.
+    const swap = plSubstitutions(DETAIL, new Map());
+    expect(swap).toHaveLength(9);
+    expect(swap[0]).toMatchObject({ on: null, off: null });
   });
 });

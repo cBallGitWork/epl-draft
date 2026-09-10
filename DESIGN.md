@@ -258,6 +258,37 @@ two or three times over, across the page, its loading skeleton and each
 early-return branch. One of those going stale is a screen that renames itself
 while it loads.
 
+### Icons — inline SVG, beside a word, never instead of one
+
+**The desk had none until 10 Sep 2026, and that was a position rather than an
+omission.** Championship Manager 99/00 draws no icons anywhere: every mark in the
+game is a word, a figure, or a coloured block. `shell/Rail` records the app's own
+version of that — introducing an icon set for two marks is a whole visual
+language for a small gain — and the app answered "what happened to this man" with
+letters instead (`Chips`' `G`, `A`, `YC`).
+
+They arrive for one job: the seven events that change a match, on the Match
+Report (Craig, 10 Sep 2026: *"maybe we add icons too where appropiate"*). The
+rules are what keep them from becoming a set:
+
+- **Inline monochrome SVG, and never emoji.** An emoji carries its own colour and
+  the reader's operating system's house style, which hands a palette where every
+  colour is a slot to Apple and Google. A glyph takes `currentColor`, so it wears
+  whatever tone its row already had and adds no colour of its own.
+- **Beside the word, never instead of it.** A glyph alone is a rebus. The word is
+  also what a screen reader gets: the icon is `aria-hidden`, because the two
+  together would say "goal goal".
+- **Sized in `em`**, so a glyph matches the type it sits in without a second
+  scale to keep in step.
+- **Only where the event IS the fact.** A report is mostly corners and blocked
+  shots; the seven that change a match are the seven that get one, and everything
+  else stays prose. An icon on every row is a wall with pictures in it.
+
+A card is the exception that proves the first rule: `TeamSheet` draws a booking
+as a small filled rectangle rather than as a glyph, because CM draws exactly that
+(`cm9900/16.jpg`) and a coloured block in an existing slot needs no icon set at
+all. Where the reference already has a mark, the reference wins.
+
 ## 3. The Desk's palette
 
 Each colour is a **slot with one meaning**. This is CM's actual grammar and it

@@ -4,12 +4,14 @@ import type {
   PlCommentaryLine,
   PlManMatch,
   PlMatchFacts,
+  PlSubstitution,
 } from "@epl/core";
 import {
   plCommentary,
   plFixtureCode,
   plManMatches,
   plMatchBoard,
+  plSubstitutions,
   plMatchFacts,
   plTeamSheets,
 } from "@epl/core";
@@ -184,5 +186,29 @@ export async function matchStatsBoard(
     return plMatchBoard(await plStats(fixture.id), home.team.id, away.team.id);
   } catch {
     return null;
+  }
+}
+
+/** Every change in the match, paired, oldest first.
+ *
+ *  Its own read rather than a second return from `matchManEvents`, because the
+ *  two answer different questions off one cached response: that one is what
+ *  happened to each MAN, this one is what happened to the SIDE. Both hit the
+ *  same warm `plFixture`, so the second costs nothing.
+ *
+ *  **The pairing cannot be done any further up.** `plManMatches` is per-man and
+ *  loses the feed's order, which is the only thing that says who replaced whom
+ *  when three changes are made at once — see `plSubstitutions`. */
+export async function matchSubstitutions(
+  gameweek: number,
+  fixtureCode: number,
+  players: readonly FootballPlayer[],
+): Promise<PlSubstitution[]> {
+  try {
+    const id = await theirFixtureId(gameweek, fixtureCode);
+    if (id === null) return [];
+    return plSubstitutions(await plFixture(id), optaToCode(players));
+  } catch {
+    return [];
   }
 }

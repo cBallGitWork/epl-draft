@@ -139,3 +139,53 @@ export function plManMatches(
 
   return men;
 }
+
+/** One change: who came on, who came off, and when. */
+export interface PlSubstitution {
+  minute: number;
+  /** FPL codes, or null for a man the bridge could not place. He is still half
+   *  of a real substitution, so the pair is kept and the name is the caller's
+   *  problem — dropping it would lose the other man too. */
+  on: number | null;
+  off: number | null;
+}
+
+/** Every substitution in the match, paired, oldest first.
+ *
+ *  **The pairing is the feed's ORDER and nothing else, which is why this cannot
+ *  be done from `plManMatches`.** That map is per-man and loses the sequence; a
+ *  caller left with it can only pair on the minute, and three changes made at
+ *  once — Liverpool at 71' in the recorded fixture — then pair arbitrarily.
+ *  Drawn that way the report said Flemming came on for Maeda when he came on for
+ *  Emersonn: two true men, one false sentence.
+ *
+ *  The invariant, counted 10 Sep 2026 across the 30 completed fixtures of
+ *  gameweeks 1-3: **269 of 269** adjacent `S` pairs are an `ON` immediately
+ *  followed by its own `OFF`, every pair agrees on both the minute and the
+ *  `teamId`, and no fixture has an odd number of `S` rows. So consecutive pairs
+ *  are partners, and the two guards below are cheap insurance on a shape that
+ *  has never yet broken rather than defensive noise.
+ *
+ *  A pair that disagrees about its minute is dropped rather than guessed at. */
+export function plSubstitutions(
+  fixture: RawPlFixture,
+  optaToCode: Map<string, number>,
+): PlSubstitution[] {
+  const codes = plPlayerCodes(fixture, optaToCode);
+  const rows = (fixture.events ?? []).filter((event) => event.type === SUBSTITUTION);
+  const swaps: PlSubstitution[] = [];
+
+  for (let n = 0; n + 1 < rows.length; n += 2) {
+    const [on, off] = [rows[n], rows[n + 1]];
+    if (on.description !== "ON" || off.description !== "OFF") continue;
+    const minute = minuteOf(on);
+    if (minute === null || minuteOf(off) !== minute) continue;
+    swaps.push({
+      minute,
+      on: on.personId === undefined ? null : (codes.get(on.personId) ?? null),
+      off: off.personId === undefined ? null : (codes.get(off.personId) ?? null),
+    });
+  }
+
+  return swaps.sort((a, b) => a.minute - b.minute);
+}
