@@ -33,6 +33,14 @@ export interface PlMatchFacts {
    *  than a nought. 24 of 30 on played fixtures, counted 5 Sep 2026 — the six
    *  without it were still in play or had just ended. */
   attendance: number | null;
+  /** The interval score, home first. **Detail read only** — 30/30 on completed
+   *  fixtures there, 0/10 on the round, which is what `RawPlFixture` records.
+   *  Null before half time, which is a real state and not an absence.
+   *
+   *  The Overview took this from the sister repo's match log, which has 20 of
+   *  380 fixtures. `cm0102/02.jpg` prints `HT 1-1` beside the competition, so it
+   *  is a fact that screen has always wanted. */
+  halfTime: { home: number; away: number } | null;
   /** The referee's name as the feed prints it. Null on the round read at any
    *  time, and on a fixture nobody has appointed one to. */
   referee: string | null;
@@ -54,6 +62,10 @@ export function plMatchFacts(fixture: RawPlFixture): PlMatchFacts {
     // `?? null` and not `|| null`: a gate of nought is not a fact this feed has
     // ever published, but a falsy guard would turn one into "we do not know".
     attendance: fixture.attendance ?? null,
+    halfTime:
+      fixture.halfTimeScore === undefined
+        ? null
+        : { home: fixture.halfTimeScore.homeScore, away: fixture.halfTimeScore.awayScore },
     referee:
       (fixture.matchOfficials ?? []).find((official) => official.role === REFEREE)?.name.display ??
       null,

@@ -8,7 +8,8 @@ import MatchShell from "./Shell";
 import Scoresheet from "./Scoresheet";
 import Preview from "./Preview";
 import { matchOwners, readMatch } from "./match";
-import { matchGoalMinutes } from "../../../matchFeed";
+import { matchFacts, matchGoalMinutes } from "../../../matchFeed";
+import type { PlMatchFacts } from "@epl/core";
 import type { Match } from "./match";
 
 // One match, on Championship Manager's Match Overview.
@@ -25,6 +26,9 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const { id } = await params;
   const match = await readMatch(id);
   const { fixture } = match;
+  // The same cached detail read `Shell` makes for the foot line — the interval
+  // score rides on it.
+  const facts = await matchFacts(fixture.gameweek, fixture.code);
 
   return (
     <MatchShell match={match} current="overview">
@@ -35,10 +39,17 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
             4 Sep 2026) and the slot agrees — a gameweek number is a reading we
             derived from FPL's calendar, not a fact printed on a ticket. */}
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 border-b border-line pb-1">
-          <span className="numeric text-2xs font-bold uppercase text-ink">
+          {/* **Both ends of this strip take the same ink**, which is what
+              `cm0102/02.jpg` does — `Sunday 19th May 2002` and `Premier
+              Division / HT 1-1` are one colour at the two ends of one bar. The
+              date read as `--color-ink` beside a cyan round, which made a strip
+              of two facts look like a fact and a label. */}
+          <span className="numeric text-xs font-bold uppercase text-info lg:text-sm">
             {fixture.kickoff === null ? "Date TBC" : londonDayAndDate(fixture.kickoff)}
           </span>
-          <span className="numeric text-2xs font-bold text-info">{state(match)}</span>
+          <span className="numeric text-xs font-bold text-info lg:text-sm">
+            {state(match, facts)}
+          </span>
         </div>
 
         {fixture.status === "upcoming" ? (
@@ -107,13 +118,14 @@ function sides(match: Match): { home: SheetRow[]; away: SheetRow[] } {
  *  been added and stopped moving — a one-to-two-hour window after the whistle in
  *  which the figures below are still provisional, and nothing may print a flat
  *  `FT` over numbers about to change. */
-function state(match: Match): string {
-  const { fixture, live, finished, logged } = match;
+function state(match: Match, facts: PlMatchFacts | null): string {
+  const { fixture, live, finished } = match;
   const round = fixture.gameweek === null ? "Gameweek TBC" : `Gameweek ${fixture.gameweek}`;
-  const half =
-    logged?.halfTime.home === null || logged?.halfTime.home === undefined
-      ? null
-      : `HT ${logged.halfTime.home}–${logged.halfTime.away}`;
+  // **The interval score off the Premier League's own detail read**, 30/30 on
+  // completed fixtures. It came from the sister repo's match log, which has 20 of
+  // 380 — so nine of every ten matches showed no half time at all.
+  // `cm0102/02.jpg` prints `HT 1-1` on this line, which is where it belongs.
+  const half = facts?.halfTime == null ? null : `HT ${facts.halfTime.home}–${facts.halfTime.away}`;
   const parts = [round];
   if (live) parts.push(`Live ${fixture.minutes}′`);
   else if (finished) parts.push(fixture.settled ? "FT" : "FT · bonus provisional");

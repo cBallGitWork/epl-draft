@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { PlayerOwner, SheetRow } from "@epl/core";
 import { PLAYER } from "../../PremNav";
-import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
+import { SMALL_CAPS } from "@/app/desk";
 
 // Who scored, when, and who made it.
 //
@@ -65,7 +65,7 @@ function Column({
     // each with the minutes a short way after the names; stretched to half of a
     // 1120px panel, `Cherki` and `54' 59'` ended up 500px apart and stopped
     // reading as one line.
-    <ul className="flex max-w-[22rem] flex-col gap-1">
+    <ul className="flex max-w-[26rem] flex-col gap-1">
       {rows.map(({ player, line }) => {
         const when = minutes.get(player.code) ?? [];
         const owner = owners.get(player.code);
@@ -73,10 +73,10 @@ function Column({
           <li key={player.id}>
             <Link
               href={`${PLAYER}/${player.code}`}
-              className="group flex min-h-11 items-baseline gap-2 lg:min-h-9"
+              className="group flex min-h-11 items-baseline gap-3 lg:min-h-11"
             >
               <span className="min-w-0 flex-1">
-                <span className={`truncate group-hover:underline ${ROW_NAME}`}>
+                <span className={`truncate group-hover:underline ${SHEET_NAME}`}>
                   {player.name}
                 </span>
                 {noted(line) === null ? null : (
@@ -88,10 +88,12 @@ function Column({
               </span>
 
               {/* The minute in the accent, which is CM's own ink for it and the
-                  one place on this panel a figure is the point. A brace reads
-                  `46' 49'`, which is how `cm0102/02.jpg` prints one. */}
-              <span className="numeric shrink-0 text-sm font-bold text-accent">
-                {when.length > 0 ? when.map((m) => `${m}'`).join(" ") : marks(line)}
+                  one place on this panel a figure is the point.
+                  **A brace is comma-separated** (Craig, 10 Sep 2026), because
+                  `6' 9'` reads as one number broken over a space where `6', 9'`
+                  reads as two occasions. */}
+              <span className={`numeric shrink-0 font-bold text-accent ${SHEET_FIGURE}`}>
+                {when.length > 0 ? when.map((m) => `${m}'`).join(", ") : marks(line)}
               </span>
             </Link>
           </li>
@@ -100,6 +102,17 @@ function Column({
     </ul>
   );
 }
+
+/** **The scoresheet sets its type at CM's own size**, which is the same recorded
+ *  exception `TeamSheet` takes and for the same reason: `cm0102/02.jpg` is a
+ *  screen whose entire content is four names and four minutes, and it sets them
+ *  large enough to read across a room. At `sm` this block was a footnote on a
+ *  panel with nothing else in it. DESIGN §6 carries the rule and the test.
+ *
+ *  A scorer's minute matches his name rather than sitting a step under it — on
+ *  this screen the figure IS the fact. */
+const SHEET_NAME = "font-chrome text-lg font-bold lg:text-2xl";
+const SHEET_FIGURE = "text-lg lg:text-2xl";
 
 /** What changes the meaning of the name, said in words rather than in a chip.
  *

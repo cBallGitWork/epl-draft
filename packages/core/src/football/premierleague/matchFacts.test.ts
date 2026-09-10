@@ -19,6 +19,7 @@ const OFFICIALS = [
 const detail = {
   ground: { name: "Portman Road", city: "Ipswich" },
   attendance: 30019,
+  halfTimeScore: { homeScore: 0, awayScore: 2 },
   matchOfficials: OFFICIALS,
 } as unknown as RawPlFixture;
 
@@ -28,19 +29,22 @@ describe("plMatchFacts", () => {
       ground: "Portman Road",
       city: "Ipswich",
       attendance: 30019,
+      halfTime: { home: 0, away: 2 },
       referee: "Darren England",
     });
   });
 
   // The point of taking `RawPlFixture` rather than a detail-only type: the round
-  // read the wire already makes carries the ground and the gate, and only the
-  // referee is missing from it.
-  it("answers three of four off the round read, with no referee", () => {
+  // read the wire already makes carries the ground and the gate, and the referee
+  // and the interval score are the two the DETAIL read alone has —
+  // `matchOfficials` 0/10 on the round and `halfTimeScore` 0/10, counted.
+  it("answers three of five off the round read, with no referee or interval", () => {
     const round = { ground: { name: "Anfield", city: "Liverpool" }, attendance: 60725 } as unknown as RawPlFixture;
     expect(plMatchFacts(round)).toEqual({
       ground: "Anfield",
       city: "Liverpool",
       attendance: 60725,
+      halfTime: null,
       referee: null,
     });
   });
@@ -58,6 +62,7 @@ describe("plMatchFacts", () => {
       ground: null,
       city: null,
       attendance: null,
+      halfTime: null,
       referee: null,
     });
   });
@@ -65,5 +70,12 @@ describe("plMatchFacts", () => {
   it("keeps a gate of nought rather than reading it as an absence", () => {
     const behindClosedDoors = { attendance: 0 } as unknown as RawPlFixture;
     expect(plMatchFacts(behindClosedDoors).attendance).toBe(0);
+  });
+
+  // A goalless first half is a real interval score and not a missing one, which
+  // is the same trap the gate of nought carries.
+  it("keeps a goalless interval rather than reading it as an absence", () => {
+    const nilNil = { halfTimeScore: { homeScore: 0, awayScore: 0 } } as unknown as RawPlFixture;
+    expect(plMatchFacts(nilNil).halfTime).toEqual({ home: 0, away: 0 });
   });
 });

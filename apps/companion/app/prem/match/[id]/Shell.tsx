@@ -41,8 +41,16 @@ export default async function MatchShell({
   // club that has moved, which the hand-authored table can never be. It falls
   // back to that table, which is what it is still for.
   const facts = await matchFacts(fixture.gameweek, fixture.code);
+  // **The ground AND its town**, which is what `cm0102/02.jpg` puts in this slot:
+  // `St.Andrews, Birmingham`, not `St.Andrews`. `city` has been on
+  // `PlMatchFacts` since 5 Sep and nothing read it. The fallback table has no
+  // town to give, so a club we only know from there keeps the bare name.
   const ground =
-    facts?.ground ?? (home === undefined ? null : clubGround(home.shortName));
+    facts?.ground === null || facts?.ground === undefined
+      ? home === undefined
+        ? null
+        : clubGround(home.shortName)
+      : [facts.ground, facts.city].filter((part) => part !== null).join(", ");
 
   return (
     // **Tall enough to hold the screen, so the foot row lands at the foot of
@@ -109,14 +117,28 @@ function roundName({ fixture }: Match): string {
  *  played has neither, which is exactly when both would be a dash. */
 function MatchFacts({ facts }: { facts: PlMatchFacts | null }) {
   const said = [
-    facts?.referee === null || facts?.referee === undefined ? null : `Referee ${facts.referee}`,
-    facts?.attendance === null || facts?.attendance === undefined
+    facts?.referee == null ? null : `Referee - ${facts.referee}`,
+    facts?.attendance == null
       ? null
-      : `${facts.attendance.toLocaleString("en-GB")} watching`,
+      : `Attendance - ${facts.attendance.toLocaleString("en-GB")}`,
   ].filter((part) => part !== null);
 
   if (said.length === 0) return null;
   return (
-    <p className="cm-panel px-2 py-1 text-center text-2xs text-muted">{said.join(" · ")}</p>
+    // **Spread across the foot, in CM's own wording and its own ink.**
+    // `cm0102/02.jpg` runs `Referee - Kevin Barnes`, `Attendance - 26034` and
+    // `Weather - Dry, 28°C` at the left, centre and right of one line, all in the
+    // accent. Ours has two of the three — weather is published by nobody we read
+    // — so `justify-between` puts them at the ends rather than holding a gap
+    // open for a fact that is not coming.
+    //
+    // The accent, which is the same ink the ground caption above already takes:
+    // this line is the other half of that furniture and CM colours the pair
+    // alike.
+    <p className="cm-panel flex flex-wrap justify-between gap-x-4 gap-y-0.5 px-2 py-1 text-2xs text-accent">
+      {said.map((part) => (
+        <span key={part}>{part}</span>
+      ))}
+    </p>
   );
 }
