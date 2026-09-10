@@ -1,46 +1,58 @@
 import Link from "next/link";
-import type { PlayerOwner, SheetRow } from "@epl/core";
+import type { FootballPlayer, PlGoal, PlayerOwner, SheetRow } from "@epl/core";
 import { PLAYER } from "../../PremNav";
 import { SMALL_CAPS } from "@/app/desk";
 
 // Who scored, when, and who made it.
 //
-// **CM's own arrangement, with the assist added** (Craig, 4 Sep 2026: *"the
-// screen that has the goal scorer timer needs assists too"*). `cm0102/02.jpg`
-// prints the home scorers down the left and the away scorers down the right with
-// the minute in yellow beside each — `G.Zola og 5`, `Cort 46, 49`, `Gudjohnsen
-// 41, 81`. That is this, and the minutes come from the sister repo's match log;
-// FPL publishes none on any endpoint it serves.
+// **A list of GOALS, not of men** (Craig, 10 Sep 2026, on seeing assists added:
+// *"so now, goals and assists look the same"*). He was right and it was the
+// arrangement's fault: a man-list gives a scorer and an assister the same white
+// name and the same yellow minute, and nothing but prior knowledge tells them
+// apart. A scoresheet is a list of goals, so this is one — the scorer on the
+// line and the man who made it under him, quieter and without a clock of his own,
+// because they share one.
 //
-// **Neither column is mirrored.** The reference sets both sides name-first with
-// the figure to its right, and the side is carried by WHICH COLUMN a name is in.
-// Reversing the away half put its marks before its names and made one of the two
-// lists read backwards.
+// It fixes a second thing on the way. Alex Scott made both Bournemouth goals
+// against Newcastle, and as a man-row he appeared once reading `9', 35'`; as
+// goals he appears under each, which is what happened.
 //
-// **A man with no minute still appears.** 20 of 380 matches are logged, so most
-// scorers here have a name and no clock — FPL's fixture block knows who scored
-// and never when — and the right-hand column says what he did instead.
+// **CM's own arrangement otherwise.** `cm0102/02.jpg` prints the home scorers
+// down the left and the away down the right with the minute in yellow beside
+// each. Neither column is mirrored: the reference sets both sides name-first
+// with the figure to its right, and the side is carried by WHICH COLUMN a name
+// is in.
+//
+// **The type is set at CM's size**, which is the recorded exception DESIGN §6
+// carries: this is a screen whose entire content is a few names and a few
+// minutes, and the game sets them large enough to read across a room.
+
+const NAME = "font-chrome text-lg font-bold lg:text-2xl";
+const FIGURE = "numeric shrink-0 font-bold text-accent text-lg lg:text-2xl";
 
 export default function Scoresheet({
   home,
   away,
-  minutes,
+  homeElse,
+  awayElse,
   owners,
-  assists,
+  byCode,
 }: {
-  home: readonly SheetRow[];
-  away: readonly SheetRow[];
-  /** Every goal's minute by FPL code, from the match log. Empty for a match the
-   *  sister repo has not reached, which is most of them. */
-  minutes: Map<number, number[]>;
-  /** Who holds each man in our league, by FPL code. Empty for a reader with no
-   *  league, and the sheet then reads as plain football. */
+  /** One side's goals, oldest first, with assisters already reconciled against
+   *  FPL's counts by `creditedGoals`. */
+  home: readonly PlGoal[];
+  away: readonly PlGoal[];
+  /** Men the sheet names for something that is not a goal — a sending off, a
+   *  penalty missed. Kept because a scoresheet carries them and a goal list on
+   *  its own would drop them. */
+  homeElse: readonly SheetRow[];
+  awayElse: readonly SheetRow[];
   owners: Map<number, PlayerOwner>;
-  /** Minutes of the goals each man SET UP, from the Premier League's own events.
-   *  Empty for a man it credits with none. */
-  assists: Map<number, number[]>;
+  byCode: Map<number, FootballPlayer>;
 }) {
-  if (home.length === 0 && away.length === 0) {
+  const empty =
+    home.length === 0 && away.length === 0 && homeElse.length === 0 && awayElse.length === 0;
+  if (empty) {
     return (
       <p className="py-2 text-center text-2xs text-faint">Nobody was named on the scoresheet.</p>
     );
@@ -48,132 +60,125 @@ export default function Scoresheet({
 
   return (
     <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-      <Column rows={home} minutes={minutes} owners={owners} assists={assists} />
-      <Column rows={away} minutes={minutes} owners={owners} assists={assists} />
+      <Column goals={home} rest={homeElse} owners={owners} byCode={byCode} />
+      <Column goals={away} rest={awayElse} owners={owners} byCode={byCode} />
     </div>
   );
 }
 
 function Column({
-  rows,
-  minutes,
+  goals,
+  rest,
   owners,
-  assists,
+  byCode,
 }: {
-  rows: readonly SheetRow[];
-  minutes: Map<number, number[]>;
+  goals: readonly PlGoal[];
+  rest: readonly SheetRow[];
   owners: Map<number, PlayerOwner>;
-  /** Minutes of the goals each man SET UP, from the Premier League's own events.
-   *  Empty for a man it credits with none. */
-  assists: Map<number, number[]>;
+  byCode: Map<number, FootballPlayer>;
 }) {
   return (
-    // **Capped, so the minute sits beside the name rather than at the panel
-    // edge.** `cm0102/02.jpg` sets its two blocks at about a third of the canvas
-    // each with the minutes a short way after the names; stretched to half of a
-    // 1120px panel, `Cherki` and `54' 59'` ended up 500px apart and stopped
-    // reading as one line.
     <ul className="flex max-w-[26rem] flex-col gap-1">
-      {rows.map(({ player, line }) => {
-        const when = shown(player.code, line, minutes, assists);
-        const owner = owners.get(player.code);
-        return (
-          <li key={player.id}>
-            <Link
-              href={`${PLAYER}/${player.code}`}
-              className="group flex min-h-11 items-baseline gap-3 lg:min-h-11"
-            >
-              <span className="min-w-0 flex-1">
-                <span className={`truncate group-hover:underline ${SHEET_NAME}`}>
-                  {player.name}
-                </span>
-                {noted(line) === null ? null : (
-                  <span className={`${SMALL_CAPS} ml-1.5 text-bad`}>{noted(line)}</span>
-                )}
-                {owner === undefined ? null : (
-                  <span className="block truncate text-2xs text-faint">{owner.teamName}</span>
-                )}
-              </span>
-
-              {/* The minute in the accent, which is CM's own ink for it and the
-                  one place on this panel a figure is the point.
-                  **A brace is comma-separated** (Craig, 10 Sep 2026), because
-                  `6' 9'` reads as one number broken over a space where `6', 9'`
-                  reads as two occasions. */}
-              <span className={`numeric shrink-0 font-bold text-accent ${SHEET_FIGURE}`}>
-                {when.length > 0 ? when.map((m) => `${m}'`).join(", ") : marks(line)}
-              </span>
-            </Link>
-          </li>
-        );
-      })}
+      {goals.map((goal) => (
+        <Goal
+          key={`${goal.minute}-${goal.scorer ?? "?"}`}
+          goal={goal}
+          owners={owners}
+          byCode={byCode}
+        />
+      ))}
+      {rest.map(({ player, line }) => (
+        <li key={player.id}>
+          <Man code={player.code} name={player.name} owners={owners} figure={marks(line)} />
+        </li>
+      ))}
     </ul>
   );
 }
 
-/** Which minutes go beside a name, and when none do.
+/** One goal: who scored it and when, and under him the man who made it.
  *
- *  Goals first: a man who scored is on the sheet for that, and his goal minutes
- *  are the fact. Otherwise the goals he SET UP, at the clock they went in.
- *
- *  **And only when the two counts agree**, which is the rule that keeps this
- *  honest. Opta's assist is narrower than the fantasy one — FPL pays for a won
- *  penalty and a rebound that Opta credits to nobody — so a man with two FPL
- *  assists can have one placed minute. Printing `24'` against him would say he
- *  made one assist, which is a confident wrong statement of exactly the kind
- *  DESIGN §7 refuses. When they disagree the row falls back to `2 assists`,
- *  which is true and says less.
- *
- *  Gakpo against Ipswich is the case where they agree: FPL pays him two and Opta
- *  places both, at 6' and 9'. */
-function shown(
-  code: number,
-  line: SheetRow["line"],
-  minutes: Map<number, number[]>,
-  assists: Map<number, number[]>,
-): number[] {
-  const scored = minutes.get(code) ?? [];
-  if (scored.length > 0) return scored;
-  const laidOn = assists.get(code) ?? [];
-  return laidOn.length > 0 && laidOn.length === line.assists ? laidOn : [];
+ *  **The assister carries no minute of his own**, which is the whole point of
+ *  the arrangement — he shares the scorer's, and printing it twice is what made
+ *  a goal and an assist look alike in the first place. */
+function Goal({
+  goal,
+  owners,
+  byCode,
+}: {
+  goal: PlGoal;
+  owners: Map<number, PlayerOwner>;
+  byCode: Map<number, FootballPlayer>;
+}) {
+  const scorer = goal.scorer === null ? undefined : byCode.get(goal.scorer);
+  const assister = goal.assister === null ? undefined : byCode.get(goal.assister);
+
+  return (
+    <li>
+      <Man
+        code={goal.scorer}
+        name={scorer?.name ?? "—"}
+        owners={owners}
+        figure={`${goal.minute}'`}
+        note={goal.own ? "og" : null}
+      />
+      {assister === undefined ? null : (
+        <Link
+          href={`${PLAYER}/${assister.code}`}
+          className="ml-3 flex min-h-9 items-baseline gap-1.5 hover:underline lg:ml-4 lg:min-h-7"
+        >
+          <span className={`${SMALL_CAPS} shrink-0 text-faint`}>A</span>
+          <span className="min-w-0 truncate font-chrome text-sm font-bold text-muted lg:text-base">
+            {assister.name}
+          </span>
+        </Link>
+      )}
+    </li>
+  );
 }
 
-/** **The scoresheet sets its type at CM's own size**, which is the same recorded
- *  exception `TeamSheet` takes and for the same reason: `cm0102/02.jpg` is a
- *  screen whose entire content is four names and four minutes, and it sets them
- *  large enough to read across a room. At `sm` this block was a footnote on a
- *  panel with nothing else in it. DESIGN §6 carries the rule and the test.
- *
- *  A scorer's minute matches his name rather than sitting a step under it — on
- *  this screen the figure IS the fact. */
-const SHEET_NAME = "font-chrome text-lg font-bold lg:text-2xl";
-const SHEET_FIGURE = "text-lg lg:text-2xl";
-
-/** What changes the meaning of the name, said in words rather than in a chip.
- *
- *  An own goal against a scorer's name with no mark on it is the confident wrong
- *  statement DESIGN §7 refuses: FPL files it under the scorer's OWN side, so
- *  without this the away column appears to have scored for the home team. */
-function noted(line: SheetRow["line"]): string | null {
-  const said: string[] = [];
-  if (line.ownGoals > 0) said.push(line.ownGoals > 1 ? `${line.ownGoals} og` : "og");
-  if (line.penaltiesMissed > 0) said.push("pen missed");
-  return said.length === 0 ? null : said.join(" · ");
+/** A name and the figure beside it, which is the shape both a goal and a leftover
+ *  mark take. */
+function Man({
+  code,
+  name,
+  owners,
+  figure,
+  note = null,
+}: {
+  code: number | null;
+  name: string;
+  owners: Map<number, PlayerOwner>;
+  figure: string;
+  note?: string | null;
+}) {
+  const owner = code === null ? undefined : owners.get(code);
+  return (
+    <Link
+      href={code === null ? "#" : `${PLAYER}/${code}`}
+      className="group flex min-h-11 items-baseline gap-3 lg:min-h-11"
+    >
+      <span className="min-w-0 flex-1">
+        <span className={`truncate group-hover:underline ${NAME}`}>{name}</span>
+        {note === null ? null : <span className={`${SMALL_CAPS} ml-1.5 text-bad`}>{note}</span>}
+        {owner === undefined ? null : (
+          <span className="block truncate text-2xs text-faint">{owner.teamName}</span>
+        )}
+      </span>
+      <span className={FIGURE}>{figure}</span>
+    </Link>
+  );
 }
 
-/** The figure when there is no minute to print: what he actually did.
+/** What a man is on the sheet for when it is not a goal.
  *
- *  A name with an empty right-hand column reads as a rendering fault rather than
- *  as an unlogged match — and an assister has no minute even where the log has
- *  one, because the feed records who scored and never who set it up. */
+ *  A sending off and a penalty missed are scoresheet entries and a list of goals
+ *  would drop them. A booking is not — `named` stopped letting one on this sheet
+ *  on 10 Sep 2026. */
 function marks(line: SheetRow["line"]): string {
   const said: string[] = [];
-  if (line.goals > 0) said.push(line.goals > 1 ? `${line.goals} goals` : "goal");
-  if (line.assists > 0) said.push(line.assists > 1 ? `${line.assists} assists` : "assist");
   if (line.penaltiesSaved > 0) said.push("pen saved");
-  // A booking is not a line on this sheet — `named` no longer lets one on it,
-  // and a scorer who was also booked would otherwise be the one man annotated
-  // with a mark the screen has decided not to carry.
+  if (line.penaltiesMissed > 0) said.push("pen missed");
   if (line.redCards > 0) said.push("red");
   return said.join(" · ");
 }

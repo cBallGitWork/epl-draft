@@ -255,7 +255,7 @@ export function plGoals(fixture: RawPlFixture, optaToCode: Map<string, number>):
   return goals.sort((a, b) => a.minute - b.minute);
 }
 
-/** When each man's assists happened, for ONE side, reconciled against FPL's count.
+/** One side's goals with their assisters filled in, reconciled against FPL.
  *
  *  **The fantasy assist is broader than Opta's, and the gap is derivable rather
  *  than guessable.** FPL pays an assist for the pass before an OWN GOAL and for
@@ -263,44 +263,43 @@ export function plGoals(fixture: RawPlFixture, optaToCode: Map<string, number>):
  *  Bournemouth is the case: Opta places no assister on either Bournemouth goal,
  *  and FPL gives Alex Scott two — one on Tavernier's 9th-minute goal, one on
  *  Thiaw's own goal at 35'. Both of that side's goals are unexplained and one man
- *  claims both, so the two minutes are his and nothing is being guessed.
+ *  claims both, so both are his and nothing is being guessed at.
  *
  *  **It refuses the moment it is ambiguous.** If two men on a side each want one
  *  more assist and the side has two unexplained goals, no arithmetic says which
- *  man laid on which — so both fall back to a count in words, which is true and
- *  says less. A partial or mis-paired list of minutes is the confident wrong
- *  statement DESIGN §7 exists to refuse.
+ *  man laid on which — so neither is credited and the caller shows what it knows.
+ *  A mis-paired assist is the confident wrong statement DESIGN §7 refuses.
+ *
+ *  Returns the goals unchanged apart from the assisters it could resolve, so a
+ *  caller renders GOALS and never has to join a man back to one.
  *
  *  Pure, and takes plain data from both providers rather than reaching for
  *  either: the caller already holds a side's goals and FPL's per-man counts. */
-export function assistMinutes(
+export function creditedGoals(
   goals: readonly PlGoal[],
   fplAssists: ReadonlyMap<number, number>,
-): Map<number, number[]> {
-  const placed = new Map<number, number[]>();
+): PlGoal[] {
+  const placed = new Map<number, number>();
   for (const goal of goals) {
     if (goal.assister === null) continue;
-    placed.set(goal.assister, [...(placed.get(goal.assister) ?? []), goal.minute]);
+    placed.set(goal.assister, (placed.get(goal.assister) ?? 0) + 1);
   }
 
-  const unexplained = goals
-    .filter((goal) => goal.assister === null)
-    .map((goal) => goal.minute)
-    .sort((a, b) => a - b);
+  const unexplained = goals.filter((goal) => goal.assister === null);
 
   // Who FPL pays more than Opta placed, and by how much.
   const short: { code: number; need: number }[] = [];
   for (const [code, paid] of fplAssists) {
-    const need = paid - (placed.get(code)?.length ?? 0);
+    const need = paid - (placed.get(code) ?? 0);
     if (need > 0) short.push({ code, need });
   }
 
   // One claimant whose shortfall is exactly the side's unexplained goals is the
-  // only case that resolves. Anything else stays as it is.
-  if (short.length === 1 && short[0].need === unexplained.length && unexplained.length > 0) {
-    const mine = placed.get(short[0].code) ?? [];
-    placed.set(short[0].code, [...mine, ...unexplained].sort((a, b) => a - b));
-  }
+  // only case that resolves. Anything else is left as the feed gave it.
+  const resolves =
+    short.length === 1 && short[0].need === unexplained.length && unexplained.length > 0;
 
-  return placed;
+  return goals.map((goal) =>
+    resolves && goal.assister === null ? { ...goal, assister: short[0].code } : goal,
+  );
 }

@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import recordedFixture from "../__fixtures__/plFixture.json";
 import type { RawPlFixture, RawPlFixtureEvent } from "./raw";
-import { plManMatches, plSubstitutions } from "./sheetEvents";
+import { creditedGoals, plManMatches, plSubstitutions } from "./sheetEvents";
+import type { PlGoal } from "./sheetEvents";
 
 // Liverpool 2-2 Nottingham Forest, gameweek 2, recorded 4 Sep 2026 and never
 // fetched (CODE_RULES §6). The same match `map.test.ts` uses, and it carries the
@@ -221,5 +222,63 @@ describe("plManMatches — assists", () => {
       },
     ]);
     expect(map.get(NDOYE + 1_000_000)).toMatchObject({ goals: [10], assists: [50] });
+  });
+});
+
+describe("creditedGoals", () => {
+  const goal = (over: Partial<PlGoal>): PlGoal => ({
+    minute: 10,
+    teamId: 1,
+    scorer: 100,
+    assister: null,
+    own: false,
+    ...over,
+  });
+
+  it("leaves a goal Opta already credited alone", () => {
+    const goals = [goal({ minute: 37, scorer: 1, assister: 2 })];
+    expect(creditedGoals(goals, new Map([[2, 1]]))).toEqual(goals);
+  });
+
+  it("credits the one man whose shortfall is the side's unexplained goals", () => {
+    // Newcastle 2-2 Bournemouth: Opta assists neither Bournemouth goal and FPL
+    // gives Scott two — the 9th-minute goal and the own goal at 35'.
+    const goals = [
+      goal({ minute: 9, scorer: 50 }),
+      goal({ minute: 35, scorer: 60, own: true }),
+    ];
+    expect(creditedGoals(goals, new Map([[70, 2]])).map((g) => g.assister)).toEqual([70, 70]);
+  });
+
+  it("refuses when two men could each claim a goal", () => {
+    // No arithmetic says which of them laid on which, so neither is credited.
+    const goals = [goal({ minute: 9, scorer: 50 }), goal({ minute: 35, scorer: 60 })];
+    const two = new Map([
+      [70, 1],
+      [80, 1],
+    ]);
+    expect(creditedGoals(goals, two).map((g) => g.assister)).toEqual([null, null]);
+  });
+
+  it("refuses when the shortfall does not match the unexplained goals", () => {
+    // One unexplained goal and a man wanting two of them is a sum that does not
+    // add up; crediting him once would still misreport his afternoon.
+    const goals = [goal({ minute: 9, scorer: 50 })];
+    expect(creditedGoals(goals, new Map([[70, 2]]))[0].assister).toBeNull();
+  });
+
+  it("counts a man's placed assists before deciding he is short", () => {
+    // Two FPL assists, one of them Opta's own, leaves a shortfall of one against
+    // one unexplained goal — which resolves.
+    const goals = [
+      goal({ minute: 20, scorer: 50, assister: 70 }),
+      goal({ minute: 60, scorer: 60, own: true }),
+    ];
+    expect(creditedGoals(goals, new Map([[70, 2]])).map((g) => g.assister)).toEqual([70, 70]);
+  });
+
+  it("does nothing for a side FPL pays no assists to", () => {
+    const goals = [goal({ minute: 9, scorer: 50 })];
+    expect(creditedGoals(goals, new Map())[0].assister).toBeNull();
   });
 });

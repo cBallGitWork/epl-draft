@@ -51,7 +51,7 @@ export type { PlCommentaryLine } from "./premierleague/map";
 export { plPlayerCodes, plTeamSheets } from "./premierleague/teamSheet";
 export type { PlSquadMan, PlTeamSheet } from "./premierleague/teamSheet";
 export {
-  assistMinutes,
+  creditedGoals,
   plGoals,
   plManMatches,
   plSubstitutions,

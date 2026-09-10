@@ -10,7 +10,7 @@ import Preview from "./Preview";
 import { matchOwners, readMatch } from "./match";
 import { matchFacts, matchGoalMinutes, matchGoals } from "../../../matchFeed";
 import type { PlGoal, PlMatchFacts } from "@epl/core";
-import { assistMinutes } from "@epl/core";
+import { creditedGoals } from "@epl/core";
 import type { Match } from "./match";
 
 // One match, on Championship Manager's Match Overview.
@@ -91,22 +91,17 @@ async function Sheet({ match }: { match: Match }) {
     matchGoals(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
   ]);
   const { home, away } = sides(match);
+  const ours = side(goals, home, minutes);
+  const theirs = side(goals, away, minutes);
 
-  // **Reconciled per SIDE, because a fantasy assist is only derivable there.**
-  // FPL pays for the pass before an own goal and Opta credits nobody; the gap
-  // closes when one man's shortfall matches his side's unexplained goals exactly.
-  // `assistMinutes` refuses the moment two men could claim the same goal.
-  const assists = new Map([
-    ...sideAssists(goals, home),
-    ...sideAssists(goals, away),
-  ]);
   return (
     <Scoresheet
-      home={scoresheet(home)}
-      away={scoresheet(away)}
-      minutes={minutes}
-      assists={assists}
+      home={ours.goals}
+      away={theirs.goals}
+      homeElse={ours.rest}
+      awayElse={theirs.rest}
       owners={owners}
+      byCode={match.byCode}
     />
   );
 }
@@ -151,21 +146,66 @@ function state(match: Match, facts: PlMatchFacts | null): string {
   return parts.join(" · ");
 }
 
-/** One side's assist minutes, from that side's goals and FPL's own counts.
+/** One side's goals, credited, and whatever else the sheet names its men for.
  *
- *  The side is identified by the goals CREDITED to its club — which for an own
- *  goal is the beneficiary, and that is precisely the case this exists for.
- *  `PlGoal.teamId` is the Premier League's club id and `Club.code` is FPL's, so
- *  the two are matched through the sheet's own rows rather than a third table:
- *  a goal belongs to this side when its scorer is one of these men, or when it
- *  is an own goal that none of them scored. */
-function sideAssists(goals: readonly PlGoal[], rows: readonly SheetRow[]): Map<number, number[]> {
+ *  **Which goals are this side's is decided by the men, not by a club id.**
+ *  `PlGoal.teamId` is the Premier League's and `Club.code` is FPL's, so rather
+ *  than carry a third table the test is: a goal is ours when its scorer is one
+ *  of our men, and an OWN goal is ours when its scorer is not — which is the
+ *  same fact `PlGoal` documents from the other end, since the feed credits an
+ *  own goal to the side that benefited.
+ *
+ *  **`rest` is what a goal list would otherwise drop.** A sending off and a
+ *  penalty missed are scoresheet entries; a booking is not, and `named` stopped
+ *  letting one on this sheet on 10 Sep 2026.
+ *
+ *  Falls back to FPL's own scorers when the Premier League has no goals for the
+ *  fixture — their feed answers nothing for a match it has not filed, and the
+ *  sheet is still true. */
+function side(
+  goals: readonly PlGoal[],
+  rows: readonly SheetRow[],
+  minutes: Map<number, number[]>,
+): { goals: PlGoal[]; rest: SheetRow[] } {
   const mine = new Set(rows.map((row) => row.player.code));
-  const theirs = goals.filter((goal) =>
-    goal.own ? goal.scorer !== null && !mine.has(goal.scorer) : goal.scorer !== null && mine.has(goal.scorer),
+  const ours = goals.filter((goal) =>
+    goal.scorer === null ? false : goal.own ? !mine.has(goal.scorer) : mine.has(goal.scorer),
   );
   const paid = new Map(
     rows.filter((row) => row.line.assists > 0).map((row) => [row.player.code, row.line.assists]),
   );
-  return assistMinutes(theirs, paid);
+  const credited = ours.length > 0 ? creditedGoals(ours, paid) : fallbackGoals(rows, minutes);
+
+  // Everyone the sheet names who is not already on a goal line.
+  const named = new Set(
+    credited.flatMap((goal) => [goal.scorer, goal.assister].filter((code) => code !== null)),
+  );
+  const rest = scoresheet(rows).filter(
+    (row) => !named.has(row.player.code) && marksAnything(row),
+  );
+  return { goals: credited, rest };
+}
+
+/** FPL's own scorers as goals, for a fixture the Premier League has not filed.
+ *
+ *  Their minutes come from `matchGoalMinutes`, which merges the sister repo's
+ *  log; a scorer with neither reads as minute 0 and is dropped rather than drawn
+ *  at the kick-off. */
+function fallbackGoals(rows: readonly SheetRow[], minutes: Map<number, number[]>): PlGoal[] {
+  return rows
+    .flatMap((row) =>
+      (minutes.get(row.player.code) ?? []).map((minute) => ({
+        minute,
+        teamId: 0,
+        scorer: row.player.code,
+        assister: null,
+        own: row.line.ownGoals > 0 && row.line.goals === 0,
+      })),
+    )
+    .sort((a, b) => a.minute - b.minute);
+}
+
+/** Whether a man belongs on the sheet for something other than a goal. */
+function marksAnything(row: SheetRow): boolean {
+  return row.line.redCards > 0 || row.line.penaltiesMissed > 0 || row.line.penaltiesSaved > 0;
 }
