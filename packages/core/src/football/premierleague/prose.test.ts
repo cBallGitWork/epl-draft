@@ -193,3 +193,29 @@ describe("proseSpans", () => {
     );
   });
 });
+
+describe("shortProse and the ampersand", () => {
+  // The fixture payload writes `Brighton & Hove Albion`; Opta's prose writes
+  // `Brighton and Hove Albion`. One club in twenty carries an ampersand, which
+  // is why this went unseen in the other nineteen.
+  const names = new Map([["Brighton & Hove Albion", "BHA"]]);
+
+  it("shortens the AND spelling from an AMPERSAND key", () => {
+    expect(shortProse("Goal! Brighton and Hove Albion 4, AVL 0.", names)).toBe("Goal! BHA 4, AVL 0.");
+  });
+
+  it("still shortens the spelling it was given", () => {
+    expect(shortProse("Goal! Brighton & Hove Albion 4.", names)).toBe("Goal! BHA 4.");
+  });
+
+  it("strips the club in brackets in either spelling", () => {
+    expect(
+      shortProse("Attempt missed. Kostoulas (Brighton and Hove Albion) header.", names),
+    ).toBe("Attempt missed. Kostoulas header.");
+  });
+
+  it("works from an AND key too, because which one a provider prefers is not ours to assume", () => {
+    const other = new Map([["Brighton and Hove Albion", "BHA"]]);
+    expect(shortProse("Goal! Brighton & Hove Albion 4.", other)).toBe("Goal! BHA 4.");
+  });
+});

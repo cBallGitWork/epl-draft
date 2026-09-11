@@ -3,6 +3,7 @@ import { goalGroups } from "@epl/core";
 import type { FootballPlayer, PlGoal, PlGoalGroup, PlayerOwner, SheetRow } from "@epl/core";
 import { PLAYER } from "../../routes";
 import EventIcon from "../../../components/football/EventIcon";
+import type { EventGlyph } from "../../../components/football/EventIcon";
 import { SMALL_CAPS } from "@/app/desk";
 
 // Who scored, when, and who made it.
@@ -126,7 +127,14 @@ function Column({
       ))}
       {rest.map(({ player, line }) => (
         <li key={player.id}>
-          <Man code={player.code} name={player.name} owners={owners} figure={marks(line)} />
+          <Man
+            code={player.code}
+            name={player.name}
+            owners={owners}
+            figure={marks(line)}
+            glyph={line.redCards > 0 ? "card" : null}
+            glyphTone="text-bad"
+          />
         </li>
       ))}
     </ul>
@@ -159,7 +167,7 @@ function Goal({
         owners={owners}
         figure={minutes(group.minutes)}
         note={group.own ? "og" : null}
-        glyph
+        glyph="ball"
       />
       {group.assisters.map(({ code, minutes: his }) => {
         const assister = byCode.get(code);
@@ -211,18 +219,22 @@ function Man({
   owners,
   figure,
   note = null,
-  glyph = false,
+  glyph = null,
+  glyphTone = "text-accent",
 }: {
   code: number | null;
   name: string;
   owners: Map<number, PlayerOwner>;
   figure: string;
   note?: string | null;
-  /** Whether this line is a GOAL, and so takes the ball. A sending off and a
-   *  penalty missed share this shape and take their word instead — `EventIcon`
-   *  has a card and no glyph for a miss, and a ball on either would be the
-   *  wrong statement rather than a missing one. */
-  glyph?: boolean;
+  /** The mark this line carries. A goal takes the ball and a sending off the
+   *  card (Craig, 11 Sep 2026: *"need a red card icon"*); a penalty missed or
+   *  saved takes none, because `EventIcon` has no glyph that says either and a
+   *  ball or a card on one would be a wrong statement rather than a missing
+   *  mark — its word still does the work. */
+  glyph?: EventGlyph | null;
+  /** Its ink. A card is red because it IS a red card; the ball is the accent. */
+  glyphTone?: string;
 }) {
   const owner = code === null ? undefined : owners.get(code);
   return (
@@ -230,7 +242,7 @@ function Man({
       href={code === null ? "#" : `${PLAYER}/${code}`}
       className="group flex min-h-11 items-baseline gap-1.5 lg:min-h-11 lg:gap-3"
     >
-      {glyph ? (
+      {glyph === null ? null : (
         // **Its own type size, which is what makes it big.** `EventIcon` draws at
         // `1.1em`, so the glyph is only ever as large as the type of the box it
         // sits in — and this box inherited the LIST's size, not the name's, which
@@ -243,10 +255,10 @@ function Man({
         // at a step above, Palace 1-4 City read `Donnarum…`, `Haalan…` and
         // `Cherki (…` with two of the three owner brackets truncated away
         // entirely. The desk has the room and takes the full step.
-        <span className="shrink-0 self-center text-lg text-accent lg:text-4xl">
-          <EventIcon glyph="ball" />
+        <span className={`shrink-0 self-center text-lg lg:text-4xl ${glyphTone}`}>
+          <EventIcon glyph={glyph} />
         </span>
-      ) : null}
+      )}
       <span className="min-w-0 flex-1 truncate">
         <span className={`group-hover:underline ${NAME}`}>{name}</span>
         {note === null ? null : <span className={`${SMALL_CAPS} ml-1.5 text-bad`}>{note}</span>}

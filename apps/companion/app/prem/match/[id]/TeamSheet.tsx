@@ -12,7 +12,8 @@ import { IndexCell } from "../../../components/league/TableCells";
 import { chipsFor } from "../../../components/league/Chips";
 import MatchPlayerCard from "./MatchPlayerCard";
 import type { MatchMan } from "./MatchPlayerCard";
-import { BOARD, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, PANEL_FLUSH, ROW_RULE } from "@/app/desk";
+import { BOARD, PANEL_FLUSH, ROW_RULE } from "@/app/desk";
+import { Head, HeadRow, MUTE, PLATE } from "../../../components/league/TableHeads";
 import type { Match } from "./match";
 
 // Championship Manager's team sheet, `cm9900/16.jpg`, both sides at once.
@@ -184,7 +185,13 @@ export default function TeamSheet({
     // so Liverpool's points column was pushed out of its panel and silently
     // clipped. The document never overflowed and no row reported a scroll
     // width, which is why only the screenshot caught it.
-    <div className="grid gap-2 lg:grid-cols-2">
+    // **`min-w-0` down the whole chain, or none of it works.** A flex item AND a
+    // grid item both default to `min-width: auto`, which means "never shrink
+    // below your content" — so a nowrap head plate deep inside sets a floor that
+    // propagates all the way out, and the panel came out 392 wide in the 366 a
+    // 390 screen leaves it. It is on this wrapper, on each `<section>`, and on
+    // the head cell that had the nowrap.
+    <div className="grid min-w-0 gap-2 lg:grid-cols-2">
       <Side club={match.home} sheet={sheets.home} events={events} owners={owners} join={join} />
       <Side club={match.away} sheet={sheets.away} events={events} owners={owners} join={join} />
     </div>
@@ -267,7 +274,7 @@ function Side({
     // should match teams"*). `inkOn` answers a pale side, which is a case the
     // reference has: `cm9900/16.jpg` is Everton blue against Torquay white.
     <section
-      className={PANEL_FLUSH}
+      className={`${PANEL_FLUSH} min-w-0`}
       style={
         {
           "--cm-index": colours.primary,
@@ -291,7 +298,20 @@ function Side({
           {sheet.formation}
         </p>
       )}
-      <table className={BOARD}>
+      {/* **`table-fixed`, because `truncate` cannot shrink an AUTO table.**
+          `truncate` is `white-space: nowrap`, which makes a cell's min-content
+          its full text width — so auto layout sized the name column to the
+          longest name on the sheet and the table came out 378 inside a 366
+          panel, with the points column over the edge. Every column but the name
+          states a width; the name takes what is left and truncates into it,
+          which is what it was always meant to do.
+
+          **The widths go on the HEAD row**, which is the half of `table-fixed`
+          that bites: a fixed table takes its column widths from the first row
+          and ignores every cell below it. Stating them on the `<td>`s left the
+          head row's six unsized cells to split the table into sixths, and the
+          names came out as `C…`, `A…`, `J…`. Measured at 390 and 1440. */}
+      <table className={`${BOARD} table-fixed`}>
         {/* **Column heads** (Craig, 11 Sep 2026: *"need a FPTS column header,
             position ane name and i guess manager too?"*). The board had none —
             it was CM's own sheet, which labels nothing — and that was fine while
@@ -307,23 +327,65 @@ function Side({
             one afternoon. `players/page.tsx` carries what was measured before
             settling on FPL's: Fantrax answers for 6 of 32 participants and
             answers with a PERIOD total. */}
+        {/* **The shared strip, not a hand-rolled one** (Craig, 11 Sep 2026:
+            *"lets use proper column headers (use shared code)"*). This was three
+            bespoke `<th>`s wrapping `HEAD_PLATE` divs — the fourth spelling of a
+            head row in the app, and `MUTE`'s own docblock counts seven and says
+            what they share. `HeadRow`, `Head` and `PLATE` are what every other
+            board wears, so the bevel, the height and the case now match them
+            without this file knowing any of the three.
+
+            **No head over the sub column** (*"remiove on header"*). `On` labelled
+            a column whose cells read `sub on 61'` — the word twice, and the
+            second one abbreviated. `MUTE` keeps it in the tree for a screen
+            reader, which is the same call the ten other boards make for the
+            columns that name themselves. */}
         <thead>
-          <tr>
-            <th className={HEAD_CELL} colSpan={2}>
-              <div className={HEAD_PLATE}>#</div>
-            </th>
-            <th className={HEAD_CELL}>
-              <div className={`${HEAD_PLATE} justify-center`}>
-                Pos &middot; Player &middot; Manager
-              </div>
-            </th>
-            <th className={HEAD_CELL} colSpan={2}>
-              <div className={HEAD_PLATE_END}>On</div>
-            </th>
-            <th className={HEAD_CELL} title="FPL's own points for this fixture">
-              <div className={HEAD_PLATE_END}>Pts</div>
-            </th>
-          </tr>
+          <HeadRow>
+            {/* **Every cell wears a plate, even the silent ones.** A bare `<th>`
+                is `MUTE`'s own answer for a column that names itself, and it is
+                the right one in a table whose head strip runs edge to edge. This
+                strip does not: the shirt block, the card slot and the marks
+                column sit between plates, so an empty `<th>` was a dark hole
+                punched through the middle of the bevel. The word goes silent,
+                the plate stays — which is what `NameHead` does and is why it
+                exists.
+
+                **`px-0` on the silent ones**, because `PLATE`'s own padding is
+                for a word and these have none: with it, three columns each grew
+                by 12px the row below did not want and the table ran past 390
+                with the points column clipped off the right. */}
+            <Head width="w-8 lg:w-9">
+              <span className={`${PLATE} px-0`}>
+                <span className={MUTE}>Shirt number</span>
+              </span>
+            </Head>
+            <Head width="w-3">
+              <span className={`${PLATE} px-0`}>
+                <span className={MUTE}>Card</span>
+              </span>
+            </Head>
+            {/* **`min-w-0` and a truncating label.** `PLATE` is
+                `whitespace-nowrap`, which is right for `Pld` and `Pts` and wrong
+                for three words: it set a 212px floor under this column, and a
+                grid item will not shrink below its content, so the panel came
+                out 392 wide in the 366 a 390 screen leaves it and the points
+                column was clipped off the right. Measured — the table itself was
+                388 and fitted; it was the BOX that overflowed. */}
+            <Head width="">
+              <span className={`${PLATE} min-w-0 justify-start`}>
+                <span className="min-w-0 truncate">Pos &middot; Player &middot; Manager</span>
+              </span>
+            </Head>
+            <Head width="w-9 lg:w-16">
+              <span className={`${PLATE} px-0`}>
+                <span className={MUTE}>Goals and cards</span>
+              </span>
+            </Head>
+            <Head width="w-10 lg:w-12" title="FPL's own points for this fixture">
+              <span className={PLATE}>Pts</span>
+            </Head>
+          </HeadRow>
         </thead>
         <tbody>
           {rows.map((row, at) => (
@@ -378,7 +440,17 @@ function Row({
   const line = join.line(man.code);
 
   return (
-    <tr className={`${ROW_RULE} ${finished ? "" : "cm-out"} ${opensBench ? "border-t-line" : ""}`}>
+    // **A rule where the bench starts** (Craig, 11 Sep 2026: *"have a row
+    // divider for bench"*). It was `border-t-line`, which only re-states the
+    // colour every row already has — so the one boundary on the board that means
+    // something looked exactly like the sixteen that do not. Two pixels of the
+    // panel's own ground, which is how `cm9900/02.jpg` separates its eleven from
+    // its five: a gap rather than a line.
+    <tr
+      className={`${ROW_RULE} ${finished ? "" : "cm-out"} ${
+        opensBench ? "border-t-4 border-t-bg" : ""
+      }`}
+    >
       {/* CM's blue index block, carrying the number he wore in THIS match. */}
       {/* The shirt block keeps pace with the name beside it — `.cm-index` sets
           its own size, so the step up is an addition here rather than a
@@ -421,9 +493,12 @@ function Row({
             it was wrong for the same reason a centred column of anything is: a
             reader scanning eighteen names has no edge to run his eye down.
 
-            The sub note is NOT in here: it is a fact about the match rather than
-            about the man, and it takes the row's right-hand edge the way the
-            game's `in 77` does.
+            **The sub note shares this cell**, pushed to the right edge by
+            `ml-auto` the way the game's `in 77` sits. It had a column of its own
+            for an hour, and under `table-fixed` a column is reserved on every
+            row: 88px held open down the whole sheet so that five rows could use
+            it, which left `Bernd L…` where `Bernd Leno (test3331)` fits. Sharing
+            the cell means only the rows that carry a note pay for one.
 
             **It opens a card rather than a page** (Craig, same day: *"clicking
             on a player brings up pop up player card"*). The card is told what
@@ -444,10 +519,8 @@ function Row({
           {owner === undefined ? null : (
             <span className={`shrink-0 truncate ${SHEET_OWNER}`}>({owner.teamName})</span>
           )}
+          <SubNote did={did} />
         </MatchPlayerCard>
-      </td>
-      <td className="whitespace-nowrap px-1 text-right align-middle">
-        <SubNote did={did} />
       </td>
       {/* **One chip under a thumb and two on a desk.** CM's own board keeps a
           scorer's goals at this width — `16.jpg` prints a small figure beside
@@ -456,7 +529,7 @@ function Row({
           thing a reader came for. `chipsFor` is ordered most consequential
           first, so the one that survives is the one that decided his
           afternoon. */}
-      <td className="whitespace-nowrap px-1 text-right">
+      <td className="w-9 whitespace-nowrap px-1 text-right lg:w-16">
         <span className="inline-flex items-center gap-0.5">
           {(line === undefined ? [] : chipsFor(line))
             .filter((chip) => !CARDED.has(chip.label))
@@ -507,7 +580,7 @@ function SubNote({ did }: { did: PlManMatch | undefined }) {
     did?.offAt == null ? null : `sub off ${did.offAt}'`,
   ].filter((part) => part !== null);
   return parts.length === 0 ? null : (
-    <span className="numeric whitespace-nowrap text-sm font-bold text-mid lg:text-base">
+    <span className="numeric ml-auto shrink-0 whitespace-nowrap pl-2 text-sm font-bold text-mid lg:text-base">
       {parts.join(" · ")}
     </span>
   );

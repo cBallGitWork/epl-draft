@@ -44,7 +44,14 @@ export default function Line({
   const tone = TONE[line.type] ?? "text-muted";
   const toned = TONE[line.type] !== undefined;
   return (
-    <li className="flex min-h-11 items-stretch gap-2 lg:min-h-9">
+    // **`shrink-0`, and it is a bug fix rather than a tidy.** `PANEL_FLUSH` is a
+    // flex COLUMN, and the Overview caps its copy of this list at `60dvh` — so
+    // sixty-one rows in a box that holds a dozen were each shrunk to their
+    // `min-h-11` and drew their own text over the row below. Measured rather
+    // than eyeballed: every row `height: 44` against a `scrollHeight` of 58 and
+    // 67 on the two that wrap. A `min-height` is not a floor inside a flex
+    // parent that has run out of room; `flex-shrink: 0` is.
+    <li className="flex min-h-11 shrink-0 items-stretch gap-2 lg:min-h-9">
       {/* `w-11`, because stoppage time reads `90+7` and CM's block is a fixed
           chip. The wire's is `w-9` and never has to hold one. */}
       <span className="cm-index numeric flex w-11 shrink-0 items-center justify-center">
@@ -133,16 +140,22 @@ const LOUD: Record<string, string> = {
 /** What each row is set in, and this is the whole of how a reader finds the
  *  match inside the play.
  *
- *  **A goal and a booking take the ACCENT, which reverses a ruling** (Craig,
- *  11 Sep 2026: *"goals/yellows get yellow text… yellow card, goal needs yellow
- *  and a symbol"*). The docblock this replaced refused it: yellow means "yours"
- *  on five other screens and a second meaning would break the one reading aid
- *  they share. That argument was made when this row's own emphasis was SIZE —
- *  loud rows at `ROW_NAME` in ink, quiet ones three steps down in grey — and the
- *  size gap is what has gone, because a report set that small was unreadable.
- *  With every row at one size the ink has to do the work the size was doing, and
- *  on a screen that holds no fantasy team there is no "yours" for the accent to
- *  be confused with. `Wire` is a round of ten matches and keeps the old ruling.
+ *  **The cards own the card colours and a goal takes GREEN** (Craig, 11 Sep
+ *  2026: *"yellow card has red, make goals green or light blue"*). A booking and
+ *  a goal were both the accent for an hour, which put the one mark on this
+ *  screen whose colour is its NAME — a yellow card is yellow — beside something
+ *  that is not a card at all. Yellow is the booking's, red is the sending off's,
+ *  and a goal is `--color-up`: "a gain", which is the slot's own wording and is
+ *  exactly what a goal is. 9.9:1 on this ground.
+ *
+ *  **The accent on a booking still reverses a ruling**, and the reason holds.
+ *  The docblock this replaced refused any accent here: yellow means "yours" on
+ *  five other screens. That argument was made when this row's emphasis was SIZE
+ *  — loud rows at `ROW_NAME` in ink, quiet ones three steps down in grey — and
+ *  the size gap has gone, because a report set that small was unreadable. With
+ *  every row at one size the ink does the work the size was doing, and on a
+ *  screen holding no fantasy team there is no "yours" to confuse it with.
+ *  `Wire` is a round of ten matches and keeps the old ruling.
  *
  *  A red card, an own goal and a cancelled goal stay in the negative slot; they
  *  are the one thing on this screen that is bad news rather than loud news.
@@ -150,8 +163,8 @@ const LOUD: Record<string, string> = {
  *  Everything else is `text-muted` — still fully legible at `ROW_NAME`, and a
  *  step back from the four kinds that decided the match. */
 const TONE: Record<string, string> = {
-  goal: "text-accent",
-  "penalty goal": "text-accent",
+  goal: "text-up",
+  "penalty goal": "text-up",
   "yellow card": "text-accent",
   "red card": "text-bad",
   "own goal": "text-bad",

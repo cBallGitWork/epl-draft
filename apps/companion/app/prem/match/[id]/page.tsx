@@ -92,10 +92,19 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           Behind its own boundary because it is the one read on this page that
           the scoresheet has not already warmed: the stream is a second request
           per fixture, and the scorers must not wait on it. */}
+      {/* **Two rows of air under the goals** (Craig, 11 Sep 2026: *"allow a
+          little room between match report and the goalscorders, (maybe 2 rows
+          or so) as breathing room"*). The shell spaces its children by `gap-2`,
+          which is right between panels that are two halves of one statement and
+          too tight here: the scoresheet ENDS, and the reader should feel it end
+          before the account of how starts. Stated in rows because that is the
+          unit the thing below is made of. */}
       {fixture.status === "upcoming" ? null : (
-        <Suspense fallback={<ReportWaiting />}>
-          <Commentary match={match} />
-        </Suspense>
+        <div className="mt-6 lg:mt-8">
+          <Suspense fallback={<ReportWaiting />}>
+            <Commentary match={match} />
+          </Suspense>
+        </div>
       )}
 
     </MatchShell>
@@ -130,8 +139,8 @@ async function Sheet({ match }: { match: Match }) {
     matchStreamCredits(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
   ]);
   const { home, away } = sides(match);
-  const ours = side(goals, home, minutes, credits);
-  const theirs = side(goals, away, minutes, credits);
+  const ours = side(goals, home, away, minutes, credits);
+  const theirs = side(goals, away, home, minutes, credits);
 
   return (
     <Scoresheet
@@ -235,26 +244,41 @@ function state(match: Match, facts: PlMatchFacts | null): string {
  *  **Which goals are this side's is decided by the men, not by a club id.**
  *  `PlGoal.teamId` is the Premier League's and `Club.code` is FPL's, so rather
  *  than carry a third table the test is: a goal is ours when its scorer is one
- *  of our men, and an OWN goal is ours when its scorer is not — which is the
- *  same fact `PlGoal` documents from the other end, since the feed credits an
- *  own goal to the side that benefited.
+ *  of our men, and an OWN goal is ours when its scorer is one of THEIRS.
+ *
+ *  **That second half used to read "when its scorer is not ours", and it put one
+ *  own goal on both scoresheets.** A man the bridge cannot place is in neither
+ *  side's rows, so "not ours" was true for both sides at once and Brighton 4-0
+ *  Aston Villa printed Lindelöf's own goal twice — a sheet claiming five goals
+ *  in a four-goal match. Naming the opponent's men makes the test exclusive:
+ *  exactly one side can satisfy it, and a scorer neither side knows now appears
+ *  on neither rather than on both. Losing a goal we cannot place is the lesser
+ *  error, and it is the one DESIGN §7 asks for.
  *
  *  **`rest` is what a goal list would otherwise drop.** A sending off and a
  *  penalty missed are scoresheet entries; a booking is not, and `named` stopped
  *  letting one on this sheet on 10 Sep 2026.
  *
  *  Falls back to FPL's own scorers when the Premier League has no goals for the
- *  fixture — their feed answers nothing for a match it has not filed, and the
- *  sheet is still true. */
+ *  FIXTURE — their feed answers nothing for a match it has not filed, and the
+ *  sheet is still true. Asked of the whole feed rather than of this side: a
+ *  goalless side is not an unfiled match, and treating it as one is what put an
+ *  own goal on two scoresheets. */
 function side(
   goals: readonly PlGoal[],
   rows: readonly SheetRow[],
+  opponents: readonly SheetRow[],
   minutes: Map<number, number[]>,
   credits: readonly StreamCredit[],
 ): { goals: PlGoal[]; rest: SheetRow[] } {
   const mine = new Set(rows.map((row) => row.player.code));
+  const theirs = new Set(opponents.map((row) => row.player.code));
   const ours = goals.filter((goal) =>
-    goal.scorer === null ? false : goal.own ? !mine.has(goal.scorer) : mine.has(goal.scorer),
+    goal.scorer === null
+      ? false
+      : goal.own
+        ? !mine.has(goal.scorer) && theirs.has(goal.scorer)
+        : mine.has(goal.scorer),
   );
   const paid = new Map(
     rows.filter((row) => row.line.assists > 0).map((row) => [row.player.code, row.line.assists]),
@@ -266,8 +290,16 @@ function side(
   // credited nobody and the screen dropped three real assists. `streamCredited`
   // proposes all three off the textstream and returns null unless every name
   // agrees with FPL, which is when `creditedGoals` gets its go as before.
+  // **The fallback is asked of the FEED, not of this side.** It was
+  // `ours.length > 0`, which is a per-side test driving a per-match decision: a
+  // side that simply did not score fell through to FPL's own scorers, and
+  // Brighton 4-0 Aston Villa then printed Lindelöf's own goal on BOTH sheets —
+  // once where the Premier League credited it, and once more because Villa's
+  // empty column reached for FPL's list and found their own man's `own_goals`.
+  // The question the fallback answers is "has the Premier League filed this
+  // match at all", and `goals` is the whole match.
   const credited =
-    ours.length > 0
+    goals.length > 0
       ? (streamCredited(ours, credits, paid) ?? creditedGoals(ours, paid))
       : fallbackGoals(rows, minutes);
 

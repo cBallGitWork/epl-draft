@@ -40,7 +40,11 @@
  *  ORIGINAL text, so no replacement is ever a candidate for another. */
 export function shortProse(text: string, names: ReadonlyMap<string, string>): string {
   if (names.size === 0) return text;
-  const longest = [...names.keys()].sort((a, b) => b.length - a.length);
+  const spellings = new Map<string, string>();
+  for (const [long, short] of names) {
+    for (const spelling of ampersandVariants(long)) spellings.set(spelling, short);
+  }
+  const longest = [...spellings.keys()].sort((a, b) => b.length - a.length);
   const alternation = longest.map(escapeForRegExp).join("|");
 
   return (
@@ -48,13 +52,37 @@ export function shortProse(text: string, names: ReadonlyMap<string, string>): st
       // The brackets first, and as their own pass — what is inside them is a long
       // name, so stripping after the replacement would be looking for "(Spurs)".
       .replace(new RegExp(` \\((?:${alternation})\\)`, "g"), "")
-      .replace(new RegExp(alternation, "g"), (found) => names.get(found) ?? found)
+      .replace(new RegExp(alternation, "g"), (found) => spellings.get(found) ?? found)
   );
 }
 
-/** A club name is data from a provider, so it is escaped rather than trusted to
+/** The spellings one club name can arrive in, which is two whenever it holds an
+ *  ampersand.
+ *
+ *  **The fixture payload and the commentary do not agree**, and nothing said so
+ *  until a screenshot did: `teams[].team.name` is `Brighton & Hove Albion` and
+ *  Opta's prose writes `Brighton and Hove Albion`. A map keyed on the payload's
+ *  spelling therefore matched nothing for that club — Brighton's name was
+ *  printed in full down a whole match report while Aston Villa beside it read
+ *  `AVL`, which is the tell. Counted 11 Sep 2026: one club in twenty carries an
+ *  ampersand, so this is one club's bug and it was invisible in the other
+ *  nineteen.
+ *
+ *  Both directions, because which spelling a provider prefers is not ours to
+ *  assume — a payload that starts writing `and` should keep working.
+ *
+ *  A club name is data from a provider, so it is escaped rather than trusted to
  *  contain no metacharacter. `Nott'm Forest` is the one that already carries
  *  punctuation and there is nothing stopping the next one carrying more. */
+function ampersandVariants(name: string): string[] {
+  const swapped = name.includes(" & ")
+    ? name.replaceAll(" & ", " and ")
+    : name.includes(" and ")
+      ? name.replaceAll(" and ", " & ")
+      : null;
+  return swapped === null ? [name] : [name, swapped];
+}
+
 function escapeForRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
