@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { plWireLines, shortProse } from "./prose";
+import { plWireLines, shortProse, proseSpans } from "./prose";
 
 // Every sentence here is Opta's own, taken verbatim off the live textstream on
 // 5 Sep 2026 (`data/probes/2026-09-05/`). Nothing is invented, because the whole
@@ -127,5 +127,69 @@ describe("plWireLines", () => {
   it("shortens every line it keeps", () => {
     const [row] = plWireLines(1, [line({})], NAMES, null);
     expect(row.text).toBe("Goal! Arsenal 1, Coventry 0. Kai Havertz scores.");
+  });
+});
+
+describe("proseSpans", () => {
+  const men = ["Bryan Mbeumo", "Chuba Akpom", "Kjell Scherpen", "Julio Enciso", "Iwobi"];
+
+  it("takes the opening clause as the event", () => {
+    const spans = proseSpans("Attempt blocked. Bryan Mbeumo left footed shot is blocked.", men);
+    expect(spans[0]).toEqual({ text: "Attempt blocked.", kind: "event" });
+  });
+
+  it("closes the event on a bang as well as a full stop", () => {
+    expect(proseSpans("Goal! MUN 5, IPS 2.", men)[0]).toEqual({ text: "Goal!", kind: "event" });
+  });
+
+  it("marks a man both sheets know", () => {
+    const spans = proseSpans("Corner, MUN. Conceded by Kjell Scherpen.", men);
+    expect(spans.filter((s) => s.kind === "name").map((s) => s.text)).toEqual(["Kjell Scherpen"]);
+  });
+
+  it("marks every man in a line, not just the first", () => {
+    const spans = proseSpans(
+      "Attempt saved. Chuba Akpom header is saved. Assisted by Julio Enciso.",
+      men,
+    );
+    expect(spans.filter((s) => s.kind === "name").map((s) => s.text)).toEqual([
+      "Chuba Akpom",
+      "Julio Enciso",
+    ]);
+  });
+
+  it("prefers the longest name, so a surname does not eat a full one", () => {
+    const spans = proseSpans("Sub. Rodrigo Muniz replaces Alex Iwobi.", ["Iwobi", "Alex Iwobi"]);
+    expect(spans.filter((s) => s.kind === "name").map((s) => s.text)).toEqual(["Alex Iwobi"]);
+  });
+
+  it("marks nothing a capital alone would have caught", () => {
+    // `Second Half`, `MUN` and `VAR` are not men, and a pattern over capitals
+    // would have taken all three.
+    const spans = proseSpans("Second Half ends, MUN 5, IPS 2.", men);
+    expect(spans.some((s) => s.kind === "name")).toBe(false);
+  });
+
+  it("paraphrases nothing — the spans rebuild the sentence exactly", () => {
+    const said = "Attempt blocked. Bryan Mbeumo left footed shot is blocked. Assisted by Iwobi.";
+    expect(
+      proseSpans(said, men)
+        .map((s) => s.text)
+        .join(""),
+    ).toBe(said);
+  });
+
+  it("returns one span for a line with no full stop at all", () => {
+    expect(proseSpans("Lineups are announced", men)).toEqual([
+      { text: "Lineups are announced", kind: "event" },
+    ]);
+  });
+
+  it("has nothing to mark when no names are known", () => {
+    const spans = proseSpans("Attempt blocked. Bryan Mbeumo left footed shot.", []);
+    expect(spans.filter((s) => s.kind === "name")).toHaveLength(0);
+    expect(spans.map((s) => s.text).join("")).toBe(
+      "Attempt blocked. Bryan Mbeumo left footed shot.",
+    );
   });
 });

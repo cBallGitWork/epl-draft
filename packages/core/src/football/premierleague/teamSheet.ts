@@ -50,6 +50,19 @@ export interface PlSquadMan {
   /** The number on his back in THIS match. Absent for a man the payload gave
    *  none — counted rather than assumed, and drawn as an empty block. */
   shirt: number | null;
+  /** The position he was NAMED in for this match — `G`, `D`, `M` or `F`, the
+   *  Premier League's own letters. Null for a man the payload gave none.
+   *
+   *  **This is a FOOTBALL fact and not a league one**, which is the distinction
+   *  CLAUDE.md draws when it says position left the football layer. What left
+   *  was FPL's `element_type`: a position in a game whose rules are somebody's
+   *  product, which is why it belongs to the league adapter. This is the
+   *  Premier League saying where a man played on an afternoon, which is as
+   *  much a fact about the match as his shirt number.
+   *
+   *  Counted 11 Sep 2026 on the recorded fixture: **40 of 40** men, starters and
+   *  bench alike, and four distinct values. */
+  position: string | null;
   captain: boolean;
 }
 
@@ -137,6 +150,7 @@ function squadMan(man: RawPlSquadPlayer, optaToCode: Map<string, number>): PlSqu
     code: (opta === undefined ? undefined : optaToCode.get(opta)) ?? null,
     name: man.name.display,
     shirt: man.matchShirtNumber ?? null,
+    position: man.matchPosition ?? null,
     captain: man.captain === true,
   };
 }

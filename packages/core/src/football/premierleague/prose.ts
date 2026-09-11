@@ -135,3 +135,60 @@ export function plWireLines(
   }
   return out;
 }
+
+/** One run of Opta's sentence, and what it is.
+ *
+ *  `event` is the clause the line opens with — `Attempt blocked.`, `Goal!`,
+ *  `Corner, MUN.` — which is Opta's own summary of the row before any detail.
+ *  `name` is a man the two team sheets know. Everything else is `plain`. */
+export interface ProseSpan {
+  text: string;
+  kind: "event" | "name" | "plain";
+}
+
+/** Opta's sentence split so a screen can set the two things a reader scans for
+ *  apart from the rest.
+ *
+ *  Craig, 11 Sep 2026: *"have player names in white on rows, and the event (like
+ *  attempted blocked"*. A commentary row is one grey paragraph; the two things
+ *  an eye actually looks for in it are WHAT happened and WHO it happened to, and
+ *  both are findable without paraphrasing a word.
+ *
+ *  **The event clause is structural, not guessed.** Every line opens with one and
+ *  closes it with `.` or `!` — `Attempt blocked.`, `Goal!`, `Substitution, IPS.`
+ *  — so it is the head of the string up to the first of either. A line with
+ *  neither is one clause and is returned whole.
+ *
+ *  **The names are looked up, never pattern-matched.** A capitalised word is not
+ *  a name (`Second Half`, `VAR`, `MUN`), so the caller passes the men both team
+ *  sheets actually carry and nothing else is marked. Longest first, for the same
+ *  reason `shortProse` sorts that way: `Alex Iwobi` must win against `Iwobi`.
+ *
+ *  Pure, and it paraphrases nothing — every span concatenated is the input
+ *  string, character for character, which is what the round-trip test asserts. */
+export function proseSpans(text: string, names: Iterable<string>): ProseSpan[] {
+  // A line that never closes a clause is one clause, and all of it is the event.
+  const head = text.search(/[.!]/);
+  if (head === -1) return [{ text, kind: "event" }];
+
+  const spans: ProseSpan[] = [{ text: text.slice(0, head + 1), kind: "event" }];
+  const rest = text.slice(head + 1);
+
+  const known = [...names].filter((name) => name.length > 0).sort((a, b) => b.length - a.length);
+  if (known.length === 0) {
+    if (rest.length > 0) spans.push({ text: rest, kind: "plain" });
+    return spans;
+  }
+
+  const finder = new RegExp(known.map(escapeForRegExp).join("|"), "g");
+  let at = 0;
+  for (const found of rest.matchAll(finder)) {
+    const start = found.index;
+    if (start > at) spans.push({ text: rest.slice(at, start), kind: "plain" });
+    spans.push({ text: found[0], kind: "name" });
+    at = start + found[0].length;
+  }
+  if (at < rest.length) spans.push({ text: rest.slice(at), kind: "plain" });
+
+  return spans;
+}

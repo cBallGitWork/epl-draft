@@ -261,6 +261,27 @@ export async function matchStreamCredits(
   });
 }
 
+/** Every man named on either team sheet, by the name Opta's own commentary
+ *  writes — which is `name.display` and not our short form.
+ *
+ *  For `proseSpans`, which marks a man in a sentence by LOOKING HIM UP rather
+ *  than by pattern: a capitalised word is not a name, and `Second Half`, `MUN`
+ *  and `VAR` would all be caught by one that tried. Off the warm detail read.
+ *
+ *  `plTeamSheets` is not used here on purpose — it maps to our own short names,
+ *  and the string that has to match is the one in the prose. */
+export async function matchPlayerNames(
+  gameweek: number | null,
+  fixtureCode: number,
+): Promise<string[]> {
+  return ofFixture(gameweek, fixtureCode, [] as string[], async (id) => {
+    const fixture = await plFixture(id);
+    return (fixture.teamLists ?? []).flatMap((list) =>
+      list === null ? [] : [...list.lineup, ...list.substitutes].map((man) => man.name.display),
+    );
+  });
+}
+
 export async function matchGoals(
   gameweek: number | null,
   fixtureCode: number,

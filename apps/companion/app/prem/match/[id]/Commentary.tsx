@@ -1,3 +1,4 @@
+import { proseSpans } from "@epl/core";
 import type { PlCommentaryLine } from "@epl/core";
 import EventIcon, { glyphFor } from "../../../components/football/EventIcon";
 import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
@@ -29,9 +30,19 @@ import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
  *  that are a foul out of both callers' feeds, which is 42.9% of the rows
  *  counted across a round. The docblock this replaced said "a report is
  *  everything"; that was written before anyone counted. */
-export default function Line({ line }: { line: PlCommentaryLine }) {
+export default function Line({
+  line,
+  names = [],
+}: {
+  line: PlCommentaryLine;
+  /** Every man on either team sheet, as Opta's own prose spells him. Empty is a
+   *  fine answer — the sentence then prints as one run, which is what it did
+   *  before this existed. */
+  names?: readonly string[];
+}) {
   const word = LOUD[line.type];
   const tone = TONE[line.type] ?? "text-muted";
+  const toned = TONE[line.type] !== undefined;
   return (
     <li className="flex min-h-11 items-stretch gap-2 lg:min-h-9">
       {/* `w-11`, because stoppage time reads `90+7` and CM's block is a fixed
@@ -57,8 +68,36 @@ export default function Line({ line }: { line: PlCommentaryLine }) {
         <EventIcon glyph={glyphFor(line.type)} />
         {word}
       </span>
-      <span className={`flex min-w-0 flex-1 items-center py-1 ${ROW_NAME} ${tone}`}>
-        {line.text}
+      {/* **The two things an eye scans a commentary row for**, set apart from the
+          rest of the sentence without a word of it being changed (Craig, 11 Sep
+          2026: *"have player names in white on rows, and the event (like
+          attempted blocked"*). `proseSpans` finds the opening clause
+          structurally and the men by LOOKING THEM UP, which is why `Second
+          Half`, `MUN` and `VAR` are not marked.
+
+          A row that already carries a tone keeps it and takes weight instead:
+          on a goal line everything is the accent, so white would be a third
+          colour on a row that is already saying one thing.
+
+          **`py-2` under a thumb** (Craig: *"more row space when event wraps onto
+          two rows om mobile"*). At 390 a shot with an assist runs to three
+          lines and `py-1` had them touching the rules above and below. The desk
+          keeps its own, where the same sentence is one line. */}
+      <span
+        className={`flex min-w-0 flex-1 items-center py-2 ${ROW_NAME} ${tone} lg:py-1`}
+      >
+        <span>
+          {proseSpans(line.text, names).map((span, at) => (
+            <span
+              key={`${at}-${span.text}`}
+              className={
+                span.kind === "plain" ? undefined : toned ? "font-bold" : "font-bold text-ink"
+              }
+            >
+              {span.text}
+            </span>
+          ))}
+        </span>
       </span>
     </li>
   );

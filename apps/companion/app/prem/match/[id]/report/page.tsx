@@ -5,7 +5,12 @@ import SkeletonRows from "../../../../components/shell/SkeletonRows";
 import MatchShell from "../Shell";
 import { readMatch } from "../match";
 import type { Match } from "../match";
-import { matchManEvents, matchReport, teamSheets } from "../../../../matchFeed";
+import {
+  matchManEvents,
+  matchPlayerNames,
+  matchReport,
+  teamSheets,
+} from "../../../../matchFeed";
 import ReportSummary from "../ReportSummary";
 import Line from "../Commentary";
 import { PANEL_FLUSH } from "@/app/desk";
@@ -55,10 +60,11 @@ async function Report({ match }: { match: Match }) {
   // stream for the prose. The summary costs no request the report did not
   // already make.
   const { gameweek, code } = match.fixture;
-  const [whole, sheets, events] = await Promise.all([
+  const [whole, sheets, events, names] = await Promise.all([
     matchReport(gameweek, code),
     teamSheets(gameweek, code, match.snapshot.players),
     matchManEvents(gameweek, code, match.snapshot.players),
+    matchPlayerNames(gameweek, code),
   ]);
 
   // **The fouls come out here too** (Craig, 11 Sep 2026: *"to remove clutter, we
@@ -93,7 +99,7 @@ async function Report({ match }: { match: Match }) {
       <ReportSummary sheets={sheets} events={events} byCode={match.byCode} />
       <ul className={`${PANEL_FLUSH} cm-rows`}>
         {lines.map((line) => (
-          <Line key={line.id} line={line} />
+          <Line key={line.id} line={line} names={names} />
         ))}
       </ul>
     </div>

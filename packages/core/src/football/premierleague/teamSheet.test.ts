@@ -157,3 +157,33 @@ describe("an unnamed fixture", () => {
     expect(plTeamSheets(half, optaToCode)).toBeNull();
   });
 });
+
+describe("the position a man was named in", () => {
+  it("carries the Premier League's own letter for every man on both sheets", () => {
+    // 40 of 40 on the recorded fixture, starters and bench alike — counted
+    // before anything was built on it.
+    const sheets = plTeamSheets(DETAIL, optaToCode);
+    const men = [
+      ...(sheets?.home.lineup ?? []),
+      ...(sheets?.home.substitutes ?? []),
+      ...(sheets?.away.lineup ?? []),
+      ...(sheets?.away.substitutes ?? []),
+    ];
+    expect(men.every((man) => man.position !== null)).toBe(true);
+    expect(new Set(men.map((man) => man.position))).toEqual(new Set(["G", "D", "M", "F"]));
+  });
+
+  it("gives G to the man the FORMATION names first, who is the keeper", () => {
+    // `lineup` is the payload's own order and its first man is a defender here;
+    // `shape` is the one that starts with the keeper. Asserting against the
+    // wrong one is how this test failed on its first run.
+    expect(plTeamSheets(DETAIL, optaToCode)?.home.shape?.[0][0].position).toBe("G");
+  });
+
+  it("names exactly one keeper in each starting eleven", () => {
+    const sheets = plTeamSheets(DETAIL, optaToCode);
+    for (const side of [sheets?.home, sheets?.away]) {
+      expect(side?.lineup.filter((man) => man.position === "G")).toHaveLength(1);
+    }
+  });
+});
