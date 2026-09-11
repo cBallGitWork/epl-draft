@@ -35,12 +35,19 @@ export default function Section({
   children,
   aside,
 }: {
-  title: string;
+  /** Omitted by a section whose PLATE already names it — the Player Stats tab
+   *  is headed `PLAYER STATS` by the strip above it and said it again here
+   *  (Craig, 11 Sep 2026: *"remove Player stats"*). The rule and the aside stay,
+   *  because whose figures these are is not on that plate. A section with
+   *  neither draws no head row at all. */
+  title?: string;
   children: ReactNode;
   aside?: ReactNode;
 }) {
+  const heads = title !== undefined || aside !== undefined;
   return (
     <section className={PANEL}>
+      {!heads ? null : (
       <div className="flex items-baseline justify-between gap-3 border-b border-line pb-1">
         {/* **The chrome face, not the figure one.** It was `font-display`, which
             `tokens.css` reserves for FIGURES — Archivo Narrow with `tnum` — and
@@ -49,11 +56,14 @@ export default function Section({
             were already in it. Craig, 5 Sep 2026: "for all rows, use the correct
             CM font please", and a heading over the rows is the same argument.
             One heading, and it is on every headed panel in the app. */}
-        <h2 className="font-chrome text-2xs font-bold uppercase text-muted">
-          {title}
-        </h2>
+        {title === undefined ? (
+          <span />
+        ) : (
+          <h2 className="font-chrome text-2xs font-bold uppercase text-muted">{title}</h2>
+        )}
         {aside ? <span className="text-2xs text-faint">{aside}</span> : null}
       </div>
+      )}
       {children}
     </section>
   );

@@ -42,11 +42,13 @@ const TABS = [
   // match — which is what tells `/team-stats` from `/stats`. Thirteen rows of
   // Opta's own metrics, and the tab CM has had since 1999.
   { segment: "/team-stats", label: "Match Stats", key: "team-stats" },
-  // **"Fantasy Scores", not "Players"** (Craig, 4 Sep 2026). The board is not a
-  // list of who turned out — the football layer's own screens do that — it is
-  // what the afternoon was worth, which is the question this app exists to
-  // answer. Two words, so the strip keeps `TabStrip`'s denser label size.
-  { segment: "/players", label: "Fantasy Scores", key: "players" },
+  // **"Line Ups"** (Craig, 11 Sep 2026: *"change title to line ups"*). It was
+  // "Fantasy Scores" from 4 Sep, on the argument that the board is not a list of
+  // who turned out but what the afternoon was worth. Both halves are on the
+  // screen and the tab can only name one, and what a reader opens it FOR is the
+  // two elevens — the score is what he finds when he gets there. Still two
+  // words, so the strip keeps `TabStrip`'s denser label size.
+  { segment: "/players", label: "Line Ups", key: "players" },
   // **The Premier League's own minute-by-minute** (Craig, 5 Sep 2026: "needs a
   // match report section that we take from the premier league site"). CM's own
   // fourth tab on this screen is `Match Report` (`cm0102/02.jpg`), which is the

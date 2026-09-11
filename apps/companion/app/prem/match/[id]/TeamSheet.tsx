@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { clubColours, inkOn } from "@epl/core";
 import type {
   Club,
@@ -11,7 +12,7 @@ import type {
 import { IndexCell } from "../../../components/league/TableCells";
 import { chipsFor } from "../../../components/league/Chips";
 import { PLAYER } from "../../routes";
-import { BOARD, PANEL_FLUSH, ROW_RULE } from "@/app/desk";
+import { BOARD, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, PANEL_FLUSH, ROW_RULE } from "@/app/desk";
 import { sheetName } from "./match";
 import type { Match } from "./match";
 
@@ -47,11 +48,28 @@ import type { Match } from "./match";
  *  none of them has the room. */
 const SHEET_NAME = "font-chrome text-base font-bold lg:text-lg";
 
+/** The position he was NAMED in, in the accent, before his name (Craig, 11 Sep
+ *  2026: *"put the real life position before their name in yellow"*). The
+ *  Premier League's own `G`/`D`/`M`/`F` — a football fact about this afternoon
+ *  and not FPL's `element_type`, which is a league one and lives in the league
+ *  adapter. `PlSquadMan.position` carries the count. */
+const SHEET_POSITION = "numeric shrink-0 text-2xs font-bold text-accent lg:text-xs";
+
+/** The league squad holding him, in brackets after the name — the same move the
+ *  scoresheet made on 11 Sep, for the same reason: a team name is a gloss on the
+ *  name it follows, not a fact with a row of its own. */
+const SHEET_OWNER = "text-2xs font-normal text-faint lg:text-xs";
+
 /** The figure beside him, sized to match. `ROW_FIGURE` is `sm` at both widths —
  *  which Craig set on 10 Sep after "numbers in rows are good on desktop, still
  *  small/hard to read to mobile" — and the same argument applies harder here,
- *  where the figure is the point of the row. */
-const SHEET_FIGURE = "text-base lg:text-lg";
+ *  where the figure is the point of the row.
+ *
+ *  **Two steps up again on 11 Sep 2026** (*"fantasy score bigger"*). This tab is
+ *  named Line Ups and the score is the one thing on the row that is not a fact
+ *  about the man; it is what the afternoon was worth, which is the question the
+ *  app exists to answer. */
+const SHEET_FIGURE = "text-xl lg:text-2xl";
 
 /** How many chips a row shows before it stops. Two, which is `chipsFor`'s own
  *  reasoning read at a narrower column, and this one shares its width with the
@@ -103,9 +121,9 @@ interface Named {
   /** His marks from the Premier League's events. Undefined for a man nothing
    *  happened to, which is most of them. */
   did: PlManMatch | undefined;
-  /** Whether he is on the bench and never got on — CM greys these and prints no
-   *  figure. */
-  unused: boolean;
+  /** Whether he was NAMED on the bench, whether or not he got on. CM greys the
+   *  whole bench and so does this. */
+  bench: boolean;
 }
 
 export default function TeamSheet({
@@ -134,8 +152,17 @@ export default function TeamSheet({
   );
 }
 
-/** The eleven in the shape they were named in, then the men who came on, then
- *  the men who never did.
+/** The eleven in the shape they were named in, then the bench in the order the
+ *  sheet lists it.
+ *
+ *  **A man who came on is still a substitute** (Craig, 11 Sep 2026: *"players
+ *  who started on the bench, stay on the bench in grey text, only first elevel
+ *  in white, and stay in the same line up positions"*). This used to lift the
+ *  men who got on out of the bench, sort them by the minute they arrived, and
+ *  set them at full strength beside the starters — which answered "who played"
+ *  and lost the thing a team sheet is for, which is who was NAMED and where. The
+ *  bench now keeps its own order and its own ink, and what a substitute did is
+ *  on his row: `on 79`, his marks, and his score.
  *
  *  `shape` is used where the feed publishes it and `lineup` where it does not —
  *  both are the same eleven and only the ORDER differs, so a sheet with no
@@ -143,17 +170,30 @@ export default function TeamSheet({
 function ordered(sheet: PlTeamSheet, events: Map<number, PlManMatch>): Named[] {
   const did = (man: PlSquadMan) => (man.code === null ? undefined : events.get(man.code));
   const eleven = (sheet.shape ?? [sheet.lineup]).flat();
-  const cameOn = sheet.substitutes
-    .filter((man) => did(man)?.onAt != null)
-    .sort((a, b) => (did(a)?.onAt ?? 0) - (did(b)?.onAt ?? 0));
-  const unused = sheet.substitutes.filter((man) => did(man)?.onAt == null);
 
   return [
-    ...eleven.map((man) => ({ man, did: did(man), unused: false })),
-    ...cameOn.map((man) => ({ man, did: did(man), unused: false })),
-    ...unused.map((man) => ({ man, did: did(man), unused: true })),
+    ...eleven.map((man) => ({ man, did: did(man), bench: false })),
+    ...[...sheet.substitutes]
+      .sort((a, b) => DOWN_THE_PITCH.indexOf(a.position ?? "") - DOWN_THE_PITCH.indexOf(b.position ?? ""))
+      .map((man) => ({ man, did: did(man), bench: true })),
   ];
 }
+
+/** Keeper to attack, which is the order the eleven above is already in — the
+ *  formation puts the keeper on its first line and the forwards on its last.
+ *
+ *  Craig, 11 Sep 2026: *"bench sorted by position too / use real life positions
+ *  here"*. The bench arrives in the provider's own sequence, which is neither
+ *  the order they came on nor any order a reader can use, and the eleven above
+ *  it reads down the pitch — so the two halves of one list were sorted on
+ *  different principles.
+ *
+ *  A position this does not know sorts to the FRONT, which is `indexOf`'s -1 and
+ *  is deliberate: a man the feed gave no position is one to look at, not one to
+ *  bury at the bottom. It has not happened yet — 40 of 40 on the recorded
+ *  fixture — so this is the behaviour on a case nobody has seen rather than a
+ *  case anybody has. */
+const DOWN_THE_PITCH = ["G", "D", "M", "F"];
 
 function Side({
   club,
@@ -172,25 +212,74 @@ function Side({
   const rows = ordered(sheet, events);
   // Where the eleven stops and the bench starts, so the rule goes in one place
   // rather than every row asking whether it is the first substitute.
-  const bench = rows.findIndex((row) => row.unused);
+  const bench = rows.findIndex((row) => row.bench);
 
   return (
-    <section className={PANEL_FLUSH}>
-      {/* The club's own colour, which is the one place CM spends it —
-          `cm9900/21.jpg` heads each side's stats with that side's colours. */}
-      <h2
-        className="flex min-h-7 items-center gap-1.5 px-1.5 text-2xs font-bold uppercase"
-        style={{ background: colours.primary, color: inkOn(colours) }}
-      >
-        <span className="min-w-0 truncate">{club?.name ?? "—"}</span>
-        {/* The shape, beside the name that was drawn in it. Absent rather than
-            dashed: a sheet with no formation is one the feed did not publish
-            one for, and a dash in a heading reads as a missing club. */}
-        {sheet.formation === null ? null : (
-          <span className="numeric ml-auto font-normal opacity-80">{sheet.formation}</span>
-        )}
-      </h2>
+    // **The club's colour, spent on the index block rather than a heading.**
+    // `.cm-index` takes `--cm-index` from any scope above it — the idiom a
+    // manager's own screens already use — so re-pointing it here colours all
+    // eighteen blocks down the side at once (Craig, 11 Sep 2026: *"number cards
+    // should match teams"*). `inkOn` answers a pale side, which is a case the
+    // reference has: `cm9900/16.jpg` is Everton blue against Torquay white.
+    <section
+      className={PANEL_FLUSH}
+      style={
+        {
+          "--cm-index": colours.primary,
+          "--cm-index-ink": inkOn(colours),
+        } as CSSProperties
+      }
+    >
+      {/* **The shape, and not the club's name** (Craig, 11 Sep 2026: *"remove
+          Fulham / 4-2-3-1 rows, redundant"*, then *"add formation on top row
+          again"* once the pitch came off). The plate above this panel already
+          names both clubs and carries the score, so the name was the fact twice;
+          the shape was on the pitch and now has nowhere else to be.
+
+          Which list is which, when the two stack under a thumb, is answered by
+          the index block — it wears the club's own colour down the whole side. */}
+      {sheet.formation === null ? null : (
+        <p
+          className="numeric flex min-h-7 items-center justify-center text-xs font-bold lg:text-sm"
+          style={{ background: colours.primary, color: inkOn(colours) }}
+        >
+          {sheet.formation}
+        </p>
+      )}
       <table className={BOARD}>
+        {/* **Column heads** (Craig, 11 Sep 2026: *"need a FPTS column header,
+            position ane name and i guess manager too?"*). The board had none —
+            it was CM's own sheet, which labels nothing — and that was fine while
+            a row was a number, a name and a figure. It now carries five things
+            and three of them share one cell, so the head names that cell's
+            contents in the order they appear.
+
+            **The figure is headed `Pts` and cannot be headed `FPts`.** That is
+            CLAUDE.md's provenance rule in as many words: `FPts` is Fantrax's
+            word for Fantrax's scoring of a slot WE chose, and this is FPL's own
+            per-fixture points. The two are different numbers — Fantrax scores
+            the roster slot, so Saka at M and Saka at F are paid differently for
+            one afternoon. `players/page.tsx` carries what was measured before
+            settling on FPL's: Fantrax answers for 6 of 32 participants and
+            answers with a PERIOD total. */}
+        <thead>
+          <tr>
+            <th className={HEAD_CELL} colSpan={2}>
+              <div className={HEAD_PLATE}>#</div>
+            </th>
+            <th className={HEAD_CELL}>
+              <div className={`${HEAD_PLATE} justify-center`}>
+                Pos &middot; Player &middot; Manager
+              </div>
+            </th>
+            <th className={HEAD_CELL} colSpan={2}>
+              <div className={HEAD_PLATE_END}>On</div>
+            </th>
+            <th className={HEAD_CELL} title="FPL's own points for this fixture">
+              <div className={HEAD_PLATE_END}>Pts</div>
+            </th>
+          </tr>
+        </thead>
         <tbody>
           {rows.map((row, at) => (
             <Row
@@ -203,9 +292,13 @@ function Side({
           ))}
         </tbody>
       </table>
-      <p className="mt-auto border-t border-line px-1.5 py-1 text-3xs text-faint">
-        Points · FPL&rsquo;s own
-      </p>
+      {/* **No provenance footer** (Craig, 11 Sep 2026: *"remove Points · FPL's
+          own row"*). It was there because DESIGN's provenance rule says ours are
+          labelled and never sit in a column headed `FPts` — which the column no
+          longer is, and never was: the rule is about not passing our reading off
+          as Fantrax's, and nothing on this board claims to be. The docblock at
+          the head of `players/page.tsx` carries why the figure is FPL's and what
+          was measured before settling on it. */}
     </section>
   );
 }
@@ -221,11 +314,14 @@ function Row({
   join: Join;
   opensBench: boolean;
 }) {
-  const { man, did, unused } = row;
+  const { man, did, bench } = row;
+  // A man who never got on has no afternoon to put a figure against; a dash is
+  // the honest answer and a nought would be a claim (DESIGN §7).
+  const played = !bench || did?.onAt != null;
   const line = join.line(man.code);
 
   return (
-    <tr className={`${ROW_RULE} ${unused ? "cm-out" : ""} ${opensBench ? "border-t-line" : ""}`}>
+    <tr className={`${ROW_RULE} ${bench ? "cm-out" : ""} ${opensBench ? "border-t-line" : ""}`}>
       {/* CM's blue index block, carrying the number he wore in THIS match. */}
       {/* The shirt block keeps pace with the name beside it — `.cm-index` sets
           its own size, so the step up is an addition here rather than a
@@ -238,32 +334,55 @@ function Row({
           slot so the names stay in one column. It is a rectangle in an existing
           palette slot rather than an icon — the accent for a booking, `--color-bad`
           for a sending off — so it needs no icon set and no new rule. */}
-      <td className="w-2 px-0">
+      {/* **Twice the card it was** (Craig, 11 Sep 2026: *"yellow card symbols
+          bigger"*). It was 6x12 and read as a tick of colour rather than as a
+          card; `16.jpg` draws a block you can see from across a room, which is
+          the whole point of a mark that has to be found while scanning
+          eighteen names. */}
+      <td className="w-3 px-0">
         {did?.sentOff != null ? (
-          <span className="block h-3 w-1.5 bg-bad" title={`Sent off ${did.sentOff}'`} />
+          <span className="block h-5 w-2.5 rounded-[1px] bg-bad" title={`Sent off ${did.sentOff}'`} />
         ) : did?.booked != null ? (
-          <span className="block h-3 w-1.5 bg-accent" title={`Booked ${did.booked}'`} />
+          <span className="block h-5 w-2.5 rounded-[1px] bg-accent" title={`Booked ${did.booked}'`} />
         ) : null}
       </td>
       <td className="min-w-0 p-0">
+        {/* **One row, not two** (Craig, 11 Sep 2026: *"sub min should be on same
+            row, see ccm example… owned manager should be on same row too in
+            brackets after player"*, and again: *"sub on and manager should be on
+            same row as player"*).
+
+            The note and the owner were stacked under the name because the board
+            used to run two panels of about 190px at 390 — which stopped being
+            true when the sides were stacked rather than paired below `lg`. A
+            side now has the whole 390 under a thumb and the row fits, which is
+            also what `cm9900/16.jpg` does: number, name, note, figure, all on
+            one line. */}
+        {/* **Centred** (Craig, 11 Sep 2026: *"player names etc should be
+            centrered"*). The group is the man — his position, his name, his
+            captaincy, his owner — and it sits in the middle of what the number
+            block and the figure leave it. The sub note is NOT in here: it is a
+            fact about the match rather than about the man, it takes the row's
+            right-hand edge, and a `ml-auto` inside a centred flex row would be
+            two rules arguing about the same space. */}
         <Link
           href={`${PLAYER}/${man.code ?? ""}`}
-          className="group flex min-h-11 flex-col justify-center px-1.5 lg:min-h-9"
+          className="group flex min-h-11 items-baseline justify-center gap-1.5 px-1.5 lg:min-h-9"
         >
-          <span className={`min-w-0 truncate group-hover:underline ${SHEET_NAME}`}>
+          {man.position === null ? null : (
+            <span className={SHEET_POSITION}>{man.position}</span>
+          )}
+          <span className={`min-w-0 shrink truncate group-hover:underline ${SHEET_NAME}`}>
             {join.name(man)}
-            {man.captain ? <span className="ml-1 text-2xs text-faint">(c)</span> : null}
           </span>
-          {/* **The sub note sits UNDER the name, not beside it.** CM puts it in
-              its own column because `16.jpg` is 800px across two panels of about
-              340; ours is 390 across two of about 190, and beside the name it
-              pushed the figure out of the panel and was silently clipped — the
-              document never overflowed, so nothing but the picture said so. */}
-          <span className="flex min-w-0 gap-1.5 truncate text-3xs">
-            {owner === undefined ? null : <span className="text-faint">{owner.teamName}</span>}
-            <SubNote did={did} />
-          </span>
+          {man.captain ? <span className="shrink-0 text-2xs text-faint">(c)</span> : null}
+          {owner === undefined ? null : (
+            <span className={`shrink-0 truncate ${SHEET_OWNER}`}>({owner.teamName})</span>
+          )}
         </Link>
+      </td>
+      <td className="whitespace-nowrap px-1 text-right align-middle">
+        <SubNote did={did} />
       </td>
       {/* **One chip under a thumb and two on a desk.** CM's own board keeps a
           scorer's goals at this width — `16.jpg` prints a small figure beside
@@ -278,9 +397,13 @@ function Row({
             .filter((chip) => !CARDED.has(chip.label))
             .slice(0, MARKS)
             .map((chip, at) => (
+              // **Bigger, and with room around them** (Craig, 11 Sep 2026:
+              // *"more obvious text for goals/yellows etc"*). A `G` at 9px in a
+              // 1px-padded box was the smallest thing on a row whose whole
+              // purpose is to say what a man did.
               <span
                 key={chip.label}
-                className={`px-1 text-3xs font-bold ${at > 0 ? "hidden lg:inline" : ""} ${chip.className}`}
+                className={`rounded-[1px] px-1.5 py-0.5 text-2xs font-bold lg:text-xs ${at > 0 ? "hidden lg:inline" : ""} ${chip.className}`}
               >
                 {chip.label}
               </span>
@@ -291,9 +414,9 @@ function Row({
           reading DERIVED from recorded events, which is `--color-info` exactly,
           and `16.jpg` runs its ratings column in the same ink. */}
       <td className={`numeric w-9 px-1.5 text-right font-bold text-info ${SHEET_FIGURE}`}>
-        {/* No figure for a man who never played. A nought would be a claim about
-            an afternoon he had no part in (DESIGN §7). */}
-        {unused ? "—" : join.points(man.code)}
+        {/* A substitute who got on keeps his figure even though his row is grey:
+            the ink says he started on the bench, the number says what he did. */}
+        {played ? join.points(man.code) : "—"}
       </td>
     </tr>
   );
@@ -311,6 +434,6 @@ function SubNote({ did }: { did: PlManMatch | undefined }) {
     did?.offAt == null ? null : `sub ${did.offAt}`,
   ].filter((part) => part !== null);
   return parts.length === 0 ? null : (
-    <span className="numeric text-3xs text-mid">{parts.join(" · ")}</span>
+    <span className="numeric text-2xs text-mid lg:text-xs">{parts.join(" · ")}</span>
   );
 }

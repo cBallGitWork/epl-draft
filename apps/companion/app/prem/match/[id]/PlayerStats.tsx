@@ -9,7 +9,6 @@ import {
   BOARD_FIGURE,
   HEAD_CELL,
   HEAD_PLATE,
-  HEAD_PLATE_END,
   ROW_NAME,
   ROW_RULE,
   SCROLL,
@@ -17,7 +16,8 @@ import {
 } from "@/app/desk";
 import { ROW_LINK } from "../../../components/league/TableCells";
 import type { Match } from "./match";
-import { MUTE } from "../../../components/league/TableHeads";
+import { MUTE, SortHead } from "../../../components/league/TableHeads";
+import { statsHref } from "./statsSort";
 
 // Every man in the match, and what he did in it (Craig, 4 Sep 2026: *"Add a
 // players stats section. This can be a table of rows like fantrax/fpl do for a
@@ -49,6 +49,7 @@ import { MUTE } from "../../../components/league/TableHeads";
  *  0 on a double — which is why the section's aside says whose figures these are
  *  and `docs/ui/match.md` carries the bound. */
 const COLUMNS = [
+  { head: "Pts", title: "What the afternoon was worth — FPL's own points", of: (r: Row) => r.points },
   { head: "Min", title: "Minutes played", of: (r: Row) => r.minutes },
   { head: "G", title: "Goals", of: (r: Row) => r.line.goals },
   { head: "A", title: "Assists", of: (r: Row) => r.line.assists },
@@ -62,10 +63,30 @@ const COLUMNS = [
     title: "Defensive contribution — tackles, interceptions, clearances, recoveries",
     of: (r: Row) => r.line.defensiveContribution,
   },
-  { head: "BPS", title: "Bonus points system score for this fixture", of: (r: Row) => r.line.bps },
   { head: "B", title: "FPL bonus", of: (r: Row) => r.line.bonus },
   { head: "YC", title: "Yellow cards", of: (r: Row) => r.line.yellowCards },
+  { head: "Rtg", title: "SofaScore's rating out of ten", of: (r: Row) => r.logged?.rating ?? null, dp: 1 },
 ] as const;
+
+/** Which column the table is ordered by, by its own head — the heads are already
+ *  unique and short, so they are the query value too and there is no second
+ *  vocabulary to keep in step. */
+export type StatSort = (typeof COLUMNS)[number]["head"];
+
+/** The column a reader lands on (Craig, 11 Sep 2026: *"default ordering is
+ *  fantasy points"*).
+ *
+ *  It used to be the team sheet's order — down the pitch, each side in turn —
+ *  which is the right default for a LINE UP and the wrong one for a table of
+ *  measures. That order is still a tab away and is what `/players` is for now.
+ *
+ *  **And `Pts` is a column now because of it.** The board had eleven measures
+ *  and no points, so ordering by them would have been an order with no visible
+ *  author — the thing `prem/Columns.tsx` says in as many words about an
+ *  invisible tiebreak. `BPS` came out to make the room, which is what Craig
+ *  asked for in the same message: it is the input to the bonus, and `B` beside
+ *  it is the output a reader can act on. */
+export const DEFAULT_SORT: StatSort = "Pts";
 
 interface Row {
   player: SheetRow["player"];
@@ -76,22 +97,38 @@ interface Row {
   /** The live endpoint's row for him, which is the only source of the expected
    *  family and of a clean sheet. Undefined for a man it has no row for. */
   stats: PlayerMatchStats | undefined;
+  /** FPL's own points for this fixture — the column the table opens on. */
+  points: number | null;
 }
 
-export default function PlayerStats({ match }: { match: Match }) {
+export default function PlayerStats({
+  match,
+  sort = DEFAULT_SORT,
+  descending = true,
+}: {
+  match: Match;
+  sort?: StatSort;
+  descending?: boolean;
+}) {
+  const id = match.fixture.id;
   // Nothing to count before a ball is kicked. The preview above already says
   // what there is to say, and an empty table under it would be furniture.
   if (match.sheet === null || match.sheet.lines.length === 0) return null;
 
   const { home, away } = sheetSides(match.sheet, match.snapshot);
   const logged = loggedPlayers(match.logged);
-  const rows = [
-    ...ordered(home, match.home, logged, match),
-    ...ordered(away, match.away, logged, match),
-  ];
+  const rows = sorted(
+    [...ordered(home, match.home, logged, match), ...ordered(away, match.away, logged, match)],
+    sort,
+    descending,
+  );
 
   return (
-    <Section title="Player stats" aside="FPL's own · SofaScore's rating">
+    // **No title** (Craig, 11 Sep 2026: *"remove Player stats"*). The tab strip
+    // above already reads PLAYER STATS and the caption under it said it again —
+    // the same fact twice, and one row of a phone's screen to say it. The aside
+    // stays: whose figures these are is not on the plate above.
+    <Section aside="FPL's own · SofaScore's rating">
       {/* **Opaque, and the frozen column is why.** A sticky lead has to hide the
           figures passing under it, so it takes `bg-surface`; against
           `.cm-panel`'s 88% the column then reads as a lighter plate laid on the
@@ -112,14 +149,21 @@ export default function PlayerStats({ match }: { match: Match }) {
                   <span className={MUTE}>Player</span>
                 </div>
               </th>
+              {/* **Every measure is a link** (Craig, 11 Sep 2026: *"let us rank
+                  by columns"*), which is the app's own sorting idiom rather than
+                  a new one: `prem/sort.ts` records why it is a link and not a
+                  click handler — the server does the ordering, a phone gets
+                  HTML, and a sorted table survives being shared. */}
               {COLUMNS.map((column) => (
-                <th key={column.head} className={HEAD_CELL} title={column.title}>
-                  <div className={HEAD_PLATE_END}>{column.head}</div>
-                </th>
+                <SortHead
+                  key={column.head}
+                  width=""
+                  title={column.title}
+                  href={statsHref(id, column.head, sort, descending)}
+                  label={column.head}
+                  sorted={column.head === sort ? (descending ? "descending" : "ascending") : undefined}
+                />
               ))}
-              <th className={HEAD_CELL} title="SofaScore's rating out of ten">
-                <div className={HEAD_PLATE_END}>Rtg</div>
-              </th>
             </tr>
           </thead>
           <tbody>
@@ -141,8 +185,16 @@ export default function PlayerStats({ match }: { match: Match }) {
                 {COLUMNS.map((column) => {
                   const value = column.of(row);
                   const dp = "dp" in column ? column.dp : 0;
+                  // **Cyan for the two figures nobody recorded** — FPL computed
+                  // the points and SofaScore the rating, and `--color-info` is
+                  // exactly "a derived reading". `cm9900/16.jpg` runs its
+                  // ratings column in the same ink.
+                  const derived = column.head === "Rtg" || column.head === "Pts";
                   return (
-                    <td key={column.head} className={BOARD_FIGURE}>
+                    <td
+                      key={column.head}
+                      className={`${BOARD_FIGURE} ${derived ? "font-bold text-info" : ""}`}
+                    >
                       {value === null || value === 0 ? (
                         <span className="text-faint">{DASH}</span>
                       ) : (
@@ -151,13 +203,7 @@ export default function PlayerStats({ match }: { match: Match }) {
                     </td>
                   );
                 })}
-                {/* Cyan, because it is the one figure on this table nobody
-                    recorded — SofaScore computed it. `--color-info` means a
-                    derived reading, and `cm9900/16.jpg` runs its ratings in the
-                    same ink. */}
-                <td className={`${BOARD_FIGURE} font-bold text-info`}>
-                  {row.logged?.rating ?? <span className="font-normal text-faint">{DASH}</span>}
-                </td>
+
               </tr>
             ))}
           </tbody>
@@ -182,12 +228,36 @@ function ordered(
       logged: logged.get(row.player.code),
       minutes: match.figures.get(row.player.id)?.minutes ?? null,
       stats: match.figures.get(row.player.id),
+      points: match.figures.get(row.player.id)?.fplPoints ?? null,
     }))
     .sort(
       (a, b) =>
         matchLine(a.logged?.position ?? null) - matchLine(b.logged?.position ?? null) ||
-        b.line.bps - a.line.bps,
+        (b.points ?? 0) - (a.points ?? 0),
     );
+}
+
+/** Both sides as one board, in the column the reader asked for.
+ *
+ *  **A stable order under the sort**, which `ordered` above supplies: men level
+ *  on the column in force keep the team sheet's own sequence rather than
+ *  whatever `sort` happens to do with equal keys. A table of thirty names where
+ *  half of them are on 1 point would otherwise reshuffle its middle every time
+ *  a different column was picked.
+ *
+ *  Absence sinks in both directions. A man with no figure for this column has
+ *  not scored lowest on it; he has no reading, and floating him to the top of an
+ *  ascending sort would be exactly the claim DESIGN §7 refuses. */
+export function sorted(rows: readonly Row[], sort: StatSort, descending: boolean): Row[] {
+  const column = COLUMNS.find((entry) => entry.head === sort) ?? COLUMNS[0];
+  return [...rows].sort((a, b) => {
+    const left = column.of(a);
+    const right = column.of(b);
+    if (left === null && right === null) return 0;
+    if (left === null) return 1;
+    if (right === null) return -1;
+    return descending ? right - left : left - right;
+  });
 }
 
 /** Absence, never a nought — and here a nought is an absence too: a column of

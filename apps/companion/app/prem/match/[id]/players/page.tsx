@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import Squads from "../Squads";
 import Skeleton from "../../../../components/shell/Skeleton";
-import Formation from "../Formation";
 import MatchShell from "../Shell";
 import TeamSheet from "../TeamSheet";
 import { matchOwners, readMatch } from "../match";
@@ -79,23 +78,16 @@ async function Board({ match }: { match: Match }) {
   // names pretending to be a lineup.
   if (sheets === null) return <BothSquads match={match} />;
 
-  // **The board first and the shape under it**, which is the opposite of how it
-  // was first drawn and the measurement is why: a pitch is 612px tall at 390 and
-  // two of them put the scores this tab exists for two screens down. It clears
-  // the fold on its own — `pitchfit`'s invariant is that the GRASS fits the first
-  // screen, not the page — but clearing the fold and being the first thing a
-  // reader meets are different claims, and only one of them is this tab's
-  // question.
+  // **No pitch** (Craig, 11 Sep 2026: *"remove pitch view here, it doesnt
+  // work"*). It was drawn below the board from 10 Sep, and the shape it was
+  // there to show is back where it started — on the row at the head of each
+  // side, which is what `sheet.formation` says in four characters.
   //
-  // No picker over the pitch, because there is one kind of map to draw.
-  // `maps.ts` records the rule: a control offering a single choice is furniture.
-  // Average position joins it when the sister repo exports one.
-  return (
-    <div className="flex flex-col gap-2">
-      <TeamSheet match={match} sheets={sheets} events={events} owners={owners} />
-      <Formation sheets={sheets} home={match.home} away={match.away} byCode={match.byCode} />
-    </div>
-  );
+  // `Formation.tsx` went with it: this was its only caller, and an export with
+  // no importer is what CODE_RULES §2 deletes. `PitchRows` — the shared
+  // machinery it was built on — has five other callers and is untouched, so the
+  // pitch comes back the day there is a question it answers.
+  return <TeamSheet match={match} sheets={sheets} events={events} owners={owners} />;
 }
 
 function BoardWaiting() {

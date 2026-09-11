@@ -180,7 +180,6 @@ export default function PitchRows<T>({
    *  | Head-to-head | `CmGround` flat | `PitchMarker` | two elevens sized to agree, via `widest` |
    *  | Club (predicted) | `CmGround` flat | `PitchMarker` | who a real club is expected to start — the only one about a club rather than a squad |
    *  | FPL | `CmGround` flat | `PitchMarker` | your own FPL XI, with the armband its wrapper draws |
-   *  | Match (played) | `CmGround` flat | `PitchMarker` | the shape both sides were named in — `prem/match/[id]/Formation` |
    *
    *  The split is the register, not decoration: **flat is the desk's diagram and
    *  the trapezoid is football's photograph.** A screen about ARRANGEMENT — how

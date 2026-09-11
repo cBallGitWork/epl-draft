@@ -1,5 +1,6 @@
 import MatchShell from "../Shell";
-import PlayerStats from "../PlayerStats";
+import PlayerStats, { DEFAULT_SORT } from "../PlayerStats";
+import type { StatSort } from "../PlayerStats";
 import { readMatch } from "../match";
 
 // Every man in the match and what he did in it, on a tab of its own.
@@ -20,13 +21,28 @@ import { readMatch } from "../match";
 
 export const revalidate = 30;
 
-export default async function MatchStatsPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function MatchStatsPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ sort?: string; dir?: string }>;
+}) {
   const { id } = await params;
+  const { sort, dir } = await searchParams;
   const match = await readMatch(id);
 
   return (
     <MatchShell match={match} current="stats">
-      <PlayerStats match={match} />
+      {/* **The query is read here and the board is told**, which is the split
+          `prem/sort.ts` set: the page owns the URL, the board owns the table.
+          An unknown `sort` falls back to the default rather than erroring — a
+          shared link with a typo in it should still draw a board. */}
+      <PlayerStats
+        match={match}
+        sort={(sort as StatSort | undefined) ?? DEFAULT_SORT}
+        descending={dir !== "asc"}
+      />
     </MatchShell>
   );
 }
