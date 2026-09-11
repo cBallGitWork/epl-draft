@@ -48,7 +48,7 @@ export {
   mapRoundGoals,
   plFixtureCode,
   plCommentary,
-  withoutFouls,
+  worthReading,
   plMatchMetrics,
 } from "./premierleague/map";
 export type { PlCommentaryLine } from "./premierleague/map";

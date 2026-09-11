@@ -1,16 +1,11 @@
 import { Suspense } from "react";
-import { withoutFouls } from "@epl/core";
+import { worthReading } from "@epl/core";
 import Nothing from "../../../../components/shell/Nothing";
 import SkeletonRows from "../../../../components/shell/SkeletonRows";
 import MatchShell from "../Shell";
 import { readMatch } from "../match";
 import type { Match } from "../match";
-import {
-  matchManEvents,
-  matchReport,
-  matchSubstitutions,
-  teamSheets,
-} from "../../../../matchFeed";
+import { matchManEvents, matchReport, teamSheets } from "../../../../matchFeed";
 import ReportSummary from "../ReportSummary";
 import Line from "../Commentary";
 import { PANEL_FLUSH } from "@/app/desk";
@@ -60,11 +55,10 @@ async function Report({ match }: { match: Match }) {
   // stream for the prose. The summary costs no request the report did not
   // already make.
   const { gameweek, code } = match.fixture;
-  const [whole, sheets, events, swaps] = await Promise.all([
+  const [whole, sheets, events] = await Promise.all([
     matchReport(gameweek, code),
     teamSheets(gameweek, code, match.snapshot.players),
     matchManEvents(gameweek, code, match.snapshot.players),
-    matchSubstitutions(gameweek, code, match.snapshot.players),
   ]);
 
   // **The fouls come out here too** (Craig, 11 Sep 2026: *"to remove clutter, we
@@ -74,7 +68,7 @@ async function Report({ match }: { match: Match }) {
   // the fouls with a match between them. The emptiness test is asked of the
   // WHOLE feed, because a match with commentary but no incident outside the
   // fouls is still a match with commentary, and "no commentary" would be wrong.
-  const lines = withoutFouls(whole);
+  const lines = worthReading(whole);
 
   if (whole.length === 0) {
     return (
@@ -96,12 +90,7 @@ async function Report({ match }: { match: Match }) {
       {/* What happened, before the account of how. Ninety-nine lines of
           commentary is a record of a match; a reader arriving after full time
           wants the four facts first. */}
-      <ReportSummary
-        sheets={sheets}
-        events={events}
-        swaps={swaps}
-        byCode={match.byCode}
-      />
+      <ReportSummary sheets={sheets} events={events} byCode={match.byCode} />
       <ul className={`${PANEL_FLUSH} cm-rows`}>
         {lines.map((line) => (
           <Line key={line.id} line={line} />

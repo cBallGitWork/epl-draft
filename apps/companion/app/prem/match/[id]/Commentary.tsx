@@ -25,12 +25,13 @@ import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
  *  is the same argument `Wire` makes for filtering rather than printing 1,083
  *  events. The emphasis does that work here.
  *
- *  It is no longer the ONLY thing doing it: `withoutFouls` takes the two types
+ *  It is no longer the ONLY thing doing it: `worthReading` takes the two types
  *  that are a foul out of both callers' feeds, which is 42.9% of the rows
  *  counted across a round. The docblock this replaced said "a report is
  *  everything"; that was written before anyone counted. */
 export default function Line({ line }: { line: PlCommentaryLine }) {
   const word = LOUD[line.type];
+  const tone = TONE[line.type] ?? "text-muted";
   return (
     <li className="flex min-h-11 items-stretch gap-2 lg:min-h-9">
       {/* `w-11`, because stoppage time reads `90+7` and CM's block is a fixed
@@ -49,22 +50,14 @@ export default function Line({ line }: { line: PlCommentaryLine }) {
           does not know the icon has the word to fall back on, and the icon takes
           `currentColor` so it wears whichever tone the row already had — a red
           card's glyph is red because the row is. */}
-      {word === undefined ? null : (
-        <span
-          className={`flex shrink-0 items-center gap-1 ${SMALL_CAPS} ${TONE[line.type] ?? "text-ink"}`}
-        >
-          {(() => {
-            const glyph = glyphFor(line.type);
-            return glyph === undefined ? null : <EventIcon glyph={glyph} />;
-          })()}
-          {word}
-        </span>
-      )}
-      <span
-        className={`flex min-w-0 flex-1 items-center py-1 ${
-          word === undefined ? "text-2xs text-muted" : `${ROW_NAME} text-ink`
-        }`}
-      >
+      {/* **Every row is marked** (Craig, 11 Sep 2026: *"maybe we have symbols for
+          all rows"*), so this column is never empty and the prose beside it
+          always starts at the same place. The word is the extra, not the mark. */}
+      <span className={`flex shrink-0 items-center gap-1 ${SMALL_CAPS} ${tone}`}>
+        <EventIcon glyph={glyphFor(line.type)} />
+        {word}
+      </span>
+      <span className={`flex min-w-0 flex-1 items-center py-1 ${ROW_NAME} ${tone}`}>
         {line.text}
       </span>
     </li>
@@ -78,8 +71,17 @@ export default function Line({ line }: { line: PlCommentaryLine }) {
  *  get the same seven words on both screens, which is the unification this run
  *  has been doing everywhere else.
  *
- *  A type this map does not name still prints; it is simply quiet, and has no
- *  label at all. */
+ *  A type this map does not name still prints, marked by its glyph and carrying
+ *  no word.
+ *
+ *  **`substitution` is deliberately absent** (Craig, 11 Sep 2026: *"just remove
+ *  'Sub', since its always said twice but keep symbol"*). Opta's own sentence
+ *  opens `Substitution, Fulham. Rodrigo Muniz replaces Alex Iwobi`, so the label
+ *  was the first word of the line printed twice. The swap glyph stays and does
+ *  the marking. The same argument is available against `Goal` and `Booked` —
+ *  their sentences open `Goal!` and say `is shown the yellow card` — and they
+ *  keep their words because they were not what was asked for; the tone below is
+ *  what makes them findable. */
 const LOUD: Record<string, string> = {
   goal: "Goal",
   "penalty goal": "Pen",
@@ -87,14 +89,31 @@ const LOUD: Record<string, string> = {
   "VAR cancelled goal": "VAR",
   "yellow card": "Booked",
   "red card": "Sent off",
-  substitution: "Sub",
 };
 
-/** A red card and an own goal are the negative slot; a yellow one is NOT the
- *  accent slot, because yellow means "yours" on five other screens and a second
- *  meaning for it would break the one reading aid they share (`Wire` carries the
- *  same ruling). */
+/** What each row is set in, and this is the whole of how a reader finds the
+ *  match inside the play.
+ *
+ *  **A goal and a booking take the ACCENT, which reverses a ruling** (Craig,
+ *  11 Sep 2026: *"goals/yellows get yellow text… yellow card, goal needs yellow
+ *  and a symbol"*). The docblock this replaced refused it: yellow means "yours"
+ *  on five other screens and a second meaning would break the one reading aid
+ *  they share. That argument was made when this row's own emphasis was SIZE —
+ *  loud rows at `ROW_NAME` in ink, quiet ones three steps down in grey — and the
+ *  size gap is what has gone, because a report set that small was unreadable.
+ *  With every row at one size the ink has to do the work the size was doing, and
+ *  on a screen that holds no fantasy team there is no "yours" for the accent to
+ *  be confused with. `Wire` is a round of ten matches and keeps the old ruling.
+ *
+ *  A red card, an own goal and a cancelled goal stay in the negative slot; they
+ *  are the one thing on this screen that is bad news rather than loud news.
+ *
+ *  Everything else is `text-muted` — still fully legible at `ROW_NAME`, and a
+ *  step back from the four kinds that decided the match. */
 const TONE: Record<string, string> = {
+  goal: "text-accent",
+  "penalty goal": "text-accent",
+  "yellow card": "text-accent",
   "red card": "text-bad",
   "own goal": "text-bad",
   "VAR cancelled goal": "text-bad",

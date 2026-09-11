@@ -1,4 +1,4 @@
-import type { FootballPlayer, PlManMatch, PlSubstitution, PlTeamSheet } from "@epl/core";
+import type { FootballPlayer, PlManMatch, PlTeamSheet } from "@epl/core";
 import EventIcon from "../../../components/football/EventIcon";
 import { LABEL, PANEL, ROW_NAME } from "@/app/desk";
 import { sheetName } from "./match";
@@ -25,16 +25,10 @@ interface Mark {
 export default function ReportSummary({
   sheets,
   events,
-  swaps,
   byCode,
 }: {
   sheets: { home: PlTeamSheet; away: PlTeamSheet } | null;
   events: Map<number, PlManMatch>;
-  /** Paired in CORE, off the feed's own order — the one thing that says who
-   *  replaced whom when three changes are made at once. This component tried it
-   *  on the minute first and drew Flemming coming on for Maeda when he came on
-   *  for Emersonn. */
-  swaps: readonly PlSubstitution[];
   byCode: Map<number, FootballPlayer>;
 }) {
   if (sheets === null || events.size === 0) return null;
@@ -48,11 +42,6 @@ export default function ReportSummary({
   }
 
   const shortName = (man: { code: number | null; name: string }) => sheetName(man, byCode);
-  /** A substituted man by his FPL code, which is what `PlSubstitution` carries.
-   *  Falls back to the sheet's own spelling and then to a dash — half a change
-   *  is still a change worth printing. */
-  const byName = new Map(named.map(({ man }) => [man.code, shortName(man)]));
-  const nameOf = (code: number | null) => (code === null ? "—" : (byName.get(code) ?? "—"));
 
   const goals: Mark[] = [];
   const cards: Mark[] = [];
@@ -66,28 +55,29 @@ export default function ReportSummary({
     if (booked.length > 0) cards.push({ name, minutes: booked.sort((a, b) => a - b) });
   }
 
-  if (goals.length === 0 && cards.length === 0 && swaps.length === 0) return null;
+  if (goals.length === 0 && cards.length === 0) return null;
 
   return (
     <section className={PANEL}>
       <h2 className="sr-only">What happened</h2>
+      {/* **Two groups, where there were three** (Craig, 11 Sep 2026: *"can have a
+          little more room for match report tab"*). The substitutions were the
+          third and they were the whole problem: ten of them, each too long to
+          share a line on a phone, so a SUMMARY was taking 380 of 844 pixels and
+          the report it summarised began below the fold.
+
+          Nothing is lost by taking them out. Every substitution is a row in the
+          feed immediately below this box, carrying Opta's own sentence and the
+          swap glyph — which is more than this said. That was true before today
+          too; what changed is that the feed is now legible enough to be read
+          rather than skipped, so the case for lifting its contents up here has
+          gone with it.
+
+          Goals and cards stay because they are the two a reader arriving after
+          full time came for, and because there are four of each rather than ten. */}
       <dl className="flex flex-col gap-2">
         <Group glyph="ball" label="Goals" marks={goals} />
         <Group glyph="card" label="Cards" marks={cards} />
-        {swaps.length === 0 ? null : (
-          <div className="flex gap-2">
-            <Head glyph="swap" label="Subs" />
-            <dd className="flex min-w-0 flex-1 flex-wrap gap-x-3 gap-y-0.5">
-              {swaps.map((swap) => (
-                <span key={`${swap.minute}-${swap.on ?? swap.off}`} className={`min-w-0 ${ROW_NAME}`}>
-                  <span className="numeric text-mid">{swap.minute}&prime;</span>{" "}
-                  <span className="text-ink">{nameOf(swap.on)}</span>{" "}
-                  <span className="text-faint">for {nameOf(swap.off)}</span>
-                </span>
-              ))}
-            </dd>
-          </div>
-        )}
       </dl>
     </section>
   );
@@ -122,7 +112,7 @@ function Group({
 
 /** The icon and its word, which is the pairing DESIGN's icon rule requires: a
  *  glyph alone is a rebus, and the word is what a screen reader gets. */
-function Head({ glyph, label }: { glyph: "ball" | "card" | "swap"; label: string }) {
+function Head({ glyph, label }: { glyph: "ball" | "card"; label: string }) {
   return (
     <dt className={`flex w-16 shrink-0 items-center gap-1 ${LABEL}`}>
       <EventIcon glyph={glyph} />

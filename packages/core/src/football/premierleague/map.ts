@@ -81,12 +81,26 @@ export interface PlCommentaryLine {
  *  of which `free kick lost` 246 and `free kick won` 243 — **489, or 42.9% of the
  *  whole feed**. Nothing else comes near: the next biggest type is `miss` at 8.9%.
  *  So this is not a tidy-up at the margin; it is nearly half the rows. */
-const FOUL_TYPES: ReadonlySet<string> = new Set(["free kick won", "free kick lost"]);
+const SKIPPED_TYPES: ReadonlySet<string> = new Set([
+  "free kick won",
+  "free kick lost",
+  // **And the offside** (Craig, 11 Sep 2026: *"and no offides either"*). 48 of
+  // the same 1,141, or 4.2% — small beside the fouls and the same kind of row:
+  // a whistle that stopped play and changed nothing about the match. With the
+  // fouls it is 47.1% of the feed.
+  "offside",
+]);
 
-/** The commentary with the fouls taken out.
+/** The commentary with the rows a reader does not want taken out — the fouls
+ *  and the offsides.
  *
  *  Craig, 11 Sep 2026: *"to remove clutter, we could hide all fouls/free kicks
- *  won"*.
+ *  won"*, then *"and no offides either"*.
+ *
+ *  **Named for the judgement rather than the set**, because the set has already
+ *  grown once. `withoutFouls` was the name until the offside joined it, and a
+ *  caller reading `worthReading(whole)` does not have to be updated the next
+ *  time a type earns its way out.
  *
  *  **This reverses a principle, and the principle was written before anyone
  *  counted.** `plCommentary`'s own docblock argues the whole vocabulary belongs
@@ -98,10 +112,8 @@ const FOUL_TYPES: ReadonlySet<string> = new Set(["free kick won", "free kick los
  *  A function rather than a filter inside `plCommentary`, because the mapper's
  *  job is to mirror the payload (CLAUDE.md) and this is a judgement about what a
  *  reader wants. A caller that genuinely wants every line still has one. */
-export function withoutFouls(
-  lines: readonly PlCommentaryLine[],
-): PlCommentaryLine[] {
-  return lines.filter((line) => !FOUL_TYPES.has(line.type));
+export function worthReading(lines: readonly PlCommentaryLine[]): PlCommentaryLine[] {
+  return lines.filter((line) => !SKIPPED_TYPES.has(line.type));
 }
 
 export function plCommentary(events: readonly RawPlEvent[]): PlCommentaryLine[] {

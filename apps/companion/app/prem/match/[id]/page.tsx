@@ -18,7 +18,7 @@ import {
   matchStreamCredits,
 } from "../../../matchFeed";
 import type { PlGoal, PlMatchFacts, StreamCredit } from "@epl/core";
-import { creditedGoals, streamCredited, withoutFouls } from "@epl/core";
+import { creditedGoals, streamCredited, worthReading } from "@epl/core";
 import type { Match } from "./match";
 
 // One match, on Championship Manager's Match Overview.
@@ -152,10 +152,10 @@ async function Sheet({ match }: { match: Match }) {
  *  Match Report tab is where the feed runs full height; this is the overview's
  *  share of it.
  *
- *  `withoutFouls` is 42.9% of the rows on the counts in `map.ts`, which is what
+ *  `worthReading` is 42.9% of the rows on the counts in `map.ts`, which is what
  *  makes this fit under a scoresheet at all. */
 async function Commentary({ match }: { match: Match }) {
-  const lines = withoutFouls(
+  const lines = worthReading(
     await matchReport(match.fixture.gameweek, match.fixture.code),
   );
   if (lines.length === 0) return null;

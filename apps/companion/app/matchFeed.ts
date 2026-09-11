@@ -5,7 +5,6 @@ import type {
   PlGoal,
   PlManMatch,
   PlMatchFacts,
-  PlSubstitution,
   StreamCredit,
 } from "@epl/core";
 import {
@@ -14,10 +13,10 @@ import {
   plGoals,
   plManMatches,
   plMatchBoard,
-  plSubstitutions,
   plMatchFacts,
   plPlayerCodes,
   plTeamSheets,
+  shortProse,
   streamCredits,
 } from "@epl/core";
 import { roundGoals } from "./commentary";
@@ -109,9 +108,32 @@ export async function matchReport(
   gameweek: number | null,
   fixtureCode: number,
 ): Promise<PlCommentaryLine[]> {
-  return ofFixture(gameweek, fixtureCode, [] as PlCommentaryLine[], async (id) =>
-    plCommentary((await plStream(id)).events.content),
-  );
+  if (gameweek === null) return [];
+  try {
+    const round = await plRound(gameweek);
+    const fixture = round.content.find((entry) => plFixtureCode(entry) === fixtureCode);
+    if (fixture === undefined) return [];
+
+    // **The club in brackets after a player comes out** (Craig, 11 Sep 2026:
+    // *"when a goal is scored, we can remove the team name in brackets after a
+    // player name"*). `shortProse` is the wire's own edit and has been since
+    // 5 Sep — the report simply never used it, which is why `Chuba Akpom (Ipswich
+    // Town)` was reaching the screen with the club named twice in one sentence.
+    // The same pass shortens `Manchester United 5, Ipswich Town 2` to the club
+    // abbreviations, which is the other half of that function and the reason a
+    // goal line now fits a phone.
+    const names = new Map<string, string>();
+    for (const side of fixture.teams ?? []) {
+      const long = side.team?.name;
+      const short = side.team?.club?.abbr ?? side.team?.shortName;
+      if (long && short) names.set(long, short);
+    }
+
+    const lines = plCommentary((await plStream(fixture.id)).events.content);
+    return lines.map((line) => ({ ...line, text: shortProse(line.text, names) }));
+  } catch {
+    return [];
+  }
 }
 
 /** Every goal's minute in ONE fixture, by FPL player code.
@@ -214,32 +236,6 @@ export async function matchStatsBoard(
   }
 }
 
-/** Every change in the match, paired, oldest first.
- *
- *  Its own read rather than a second return from `matchManEvents`, because the
- *  two answer different questions off one cached response: that one is what
- *  happened to each MAN, this one is what happened to the SIDE. Both hit the
- *  same warm `plFixture`, so the second costs nothing.
- *
- *  **The pairing cannot be done any further up.** `plManMatches` is per-man and
- *  loses the feed's order, which is the only thing that says who replaced whom
- *  when three changes are made at once — see `plSubstitutions`. */
-export async function matchSubstitutions(
-  gameweek: number | null,
-  fixtureCode: number,
-  players: readonly FootballPlayer[],
-): Promise<PlSubstitution[]> {
-  return ofFixture(gameweek, fixtureCode, [] as PlSubstitution[], async (id) =>
-    plSubstitutions(await plFixture(id), optaToCode(players)),
-  );
-}
-
-/** Every goal in the match, with the side credited and Opta's assister.
- *
- *  What a scoresheet needs that `matchManEvents` cannot give: that one is keyed
- *  per man and so loses which SIDE a goal belonged to, which is the whole of
- *  reconciling a fantasy assist against an own goal. Off the same warm detail
- *  read. */
 /** Every goal in the commentary with the man FPL's own rules would credit.
  *
  *  **The three assists the fixture feed cannot place**, because Opta's
