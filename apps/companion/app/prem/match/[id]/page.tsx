@@ -14,6 +14,7 @@ import {
   matchFacts,
   matchGoalMinutes,
   matchGoals,
+  matchInjuries,
   matchManEvents,
   matchPlayerNames,
   matchReport,
@@ -129,7 +130,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
  *  carries a minute for every goal in all ten matches, for one request, and it
  *  is already cached for the Live tab's wire. */
 async function Sheet({ match }: { match: Match }) {
-  const [owners, minutes, goals, credits, did] = await Promise.all([
+  const [owners, minutes, goals, credits, did, injured] = await Promise.all([
     matchOwners(match.fixture),
     matchGoalMinutes(
       match.fixture.gameweek,
@@ -148,10 +149,12 @@ async function Sheet({ match }: { match: Match }) {
     matchStreamCredits(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
     // For the one figure FPL's per-fixture line has no minute for: a sending off.
     matchManEvents(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
+    // Who was carried off, and when. The scoresheet names them beside the goals.
+    matchInjuries(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
   ]);
   const { home, away } = sides(match);
-  const ours = side(goals, home, away, minutes, credits);
-  const theirs = side(goals, away, home, minutes, credits);
+  const ours = side(goals, home, away, minutes, credits, injured);
+  const theirs = side(goals, away, home, minutes, credits, injured);
 
   return (
     <Scoresheet
@@ -162,6 +165,7 @@ async function Sheet({ match }: { match: Match }) {
       owners={owners}
       byCode={match.byCode}
       did={did}
+      injured={injured}
     />
   );
 }
@@ -282,6 +286,7 @@ function side(
   opponents: readonly SheetRow[],
   minutes: Map<number, number[]>,
   credits: readonly StreamCredit[],
+  injured: ReadonlyMap<number, number>,
 ): { goals: PlGoal[]; rest: SheetRow[] } {
   const mine = new Set(rows.map((row) => row.player.code));
   const theirs = new Set(opponents.map((row) => row.player.code));
@@ -319,8 +324,16 @@ function side(
   const named = new Set(
     credited.flatMap((goal) => [goal.scorer, goal.assister].filter((code) => code !== null)),
   );
+  // **An injury gets a row even for a man already on a goal line**, which is the
+  // one thing here that may name a man twice. Mitchell scored twice for Palace
+  // AND was carried off at 74': the goals are one event and the injury is
+  // another, and suppressing the second because the first exists would drop the
+  // fact a reader came to this box for. Everything else stays as it was — a
+  // penalty missed by a scorer is still folded into his goal row, because it is
+  // the same shot.
   const rest = scoresheet(rows).filter(
-    (row) => !named.has(row.player.code) && marksAnything(row),
+    (row) =>
+      injured.has(row.player.code) || (!named.has(row.player.code) && marksAnything(row)),
   );
   return { goals: credited, rest };
 }

@@ -83,6 +83,7 @@ export default function Scoresheet({
   owners,
   byCode,
   did,
+  injured,
 }: {
   /** One side's goals, oldest first, with assisters already reconciled against
    *  FPL's counts by `creditedGoals`. */
@@ -98,6 +99,9 @@ export default function Scoresheet({
   /** What the Premier League's events say happened to each man, for the one
    *  thing FPL's per-fixture line cannot give: the MINUTE of a sending off. */
   did: Map<number, PlManMatch>;
+  /** Who went off hurt, and when — from the commentary, which is the only place
+   *  that says so (Craig, 11 Sep 2026: *"i want them on the overview"*). */
+  injured: ReadonlyMap<number, number>;
 }) {
   const empty =
     home.length === 0 && away.length === 0 && homeElse.length === 0 && awayElse.length === 0;
@@ -109,8 +113,8 @@ export default function Scoresheet({
 
   return (
     <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-      <Column goals={home} rest={homeElse} owners={owners} byCode={byCode} did={did} />
-      <Column goals={away} rest={awayElse} owners={owners} byCode={byCode} did={did} />
+      <Column goals={home} rest={homeElse} owners={owners} byCode={byCode} did={did} injured={injured} />
+      <Column goals={away} rest={awayElse} owners={owners} byCode={byCode} did={did} injured={injured} />
     </div>
   );
 }
@@ -121,12 +125,14 @@ function Column({
   owners,
   byCode,
   did,
+  injured,
 }: {
   goals: readonly PlGoal[];
   rest: readonly SheetRow[];
   owners: Map<number, PlayerOwner>;
   byCode: Map<number, FootballPlayer>;
   did: Map<number, PlManMatch>;
+  injured: ReadonlyMap<number, number>;
 }) {
   return (
     <ul className="flex max-w-[26rem] flex-col gap-1">
@@ -138,18 +144,34 @@ function Column({
           byCode={byCode}
         />
       ))}
-      {rest.map(({ player, line }) => (
-        <li key={player.id}>
-          <Man
-            code={player.code}
-            name={player.name}
-            owners={owners}
-            figure={marks(line, player.code === null ? undefined : did.get(player.code))}
-            glyph={line.redCards > 0 ? "card" : null}
-            glyphTone="text-bad"
-          />
-        </li>
-      ))}
+      {rest.map(({ player, line }) => {
+        // **An injury outranks a missed penalty for the mark**, because it is the
+        // one of the two a reader is scanning the sheet for. A sending off
+        // outranks both: `chipsFor`'s own ordering principle, read at one row.
+        // **The FIXTURE FEED's minute, and the commentary's only as a fallback.**
+        // The two disagree by one: their `OFF` row puts Nketiah at 45' and the
+        // commentary line at 46'. Neither is wrong — they are two clocks — but
+        // the Line Ups board prints `sub off 45'` for the same man, and one
+        // screen may not contradict another about a fact this simple. The
+        // commentary is what SAYS he was hurt; the feed is what times it.
+        const man = player.code === null ? undefined : did.get(player.code);
+        const hurtAt =
+          player.code === null || !injured.has(player.code)
+            ? undefined
+            : (man?.offAt ?? injured.get(player.code));
+        return (
+          <li key={player.id}>
+            <Man
+              code={player.code}
+              name={player.name}
+              owners={owners}
+              figure={marks(line, man, hurtAt)}
+              glyph={line.redCards > 0 ? "card" : hurtAt === undefined ? null : "cross"}
+              glyphTone="text-bad"
+            />
+          </li>
+        );
+      })}
     </ul>
   );
 }
@@ -298,13 +320,17 @@ function minutes(said: readonly number[]): string {
 
 /** What a man is on the sheet for when it is not a goal.
  *
- *  A sending off and a penalty missed are scoresheet entries and a list of goals
- *  would drop them. A booking is not — `named` stopped letting one on this sheet
- *  on 10 Sep 2026.
+ *  A sending off, a penalty missed and a man carried off are scoresheet entries
+ *  and a list of goals would drop them. A booking is not — `named` stopped
+ *  letting one on this sheet on 10 Sep 2026.
  *
  *  Takes the man's PL events as well as his FPL line, because only one of the
  *  two carries a minute for a sending off. */
-function marks(line: SheetRow["line"], did: PlManMatch | undefined): string {
+function marks(
+  line: SheetRow["line"],
+  did: PlManMatch | undefined,
+  hurtAt: number | undefined,
+): string {
   const said: string[] = [];
   if (line.penaltiesSaved > 0) said.push("pen saved");
   if (line.penaltiesMissed > 0) said.push("pen missed");
@@ -315,5 +341,9 @@ function marks(line: SheetRow["line"], did: PlManMatch | undefined): string {
   // a clock. Falls back to the word where the Premier League filed no minute —
   // a sending off we cannot time is still a sending off.
   if (line.redCards > 0) said.push(did?.sentOff == null ? "red" : `${did.sentOff}'`);
+  // **The minute he went off**, which is the same shape the sending off takes
+  // and the same shape every goal on this sheet takes: the cross beside the name
+  // has already said WHAT, so the figure column says WHEN.
+  if (hurtAt !== undefined) said.push(`${hurtAt}'`);
   return said.join(" · ");
 }

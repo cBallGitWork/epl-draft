@@ -10,7 +10,7 @@ import type {
 } from "@epl/core";
 import {
   highlightFor,
-  injuredOff,
+  injuryMinutes,
   parseHighlightFeed,
   plCommentary,
   plFixtureCode,
@@ -297,7 +297,11 @@ export async function matchPlayerNames(
 /** The men taken off INJURED in this match, by FPL code.
  *
  *  Craig, 11 Sep 2026: *"we can find events of a sub off due to an injury in a
- *  game"*. Off the same warm pair the assists use — the stream for the sentence
+ *  game"*, then *"i want them on the overview"*.
+ *
+ *  **A MAP of minutes, not a set of men**, because the two screens that read it
+ *  want different halves and a `Map` answers `.has()` as well as a `Set` does.
+ *  The Line Ups board asks only whether; the scoresheet prints the clock. Off the same warm pair the assists use — the stream for the sentence
  *  and the detail for the id join — so it costs no request the page has not
  *  already made. `assists.ts` carries the count and why this one read is allowed
  *  to test a sentence. */
@@ -305,10 +309,10 @@ export async function matchInjuries(
   gameweek: number | null,
   fixtureCode: number,
   players: readonly FootballPlayer[],
-): Promise<Set<number>> {
-  return ofFixture(gameweek, fixtureCode, new Set<number>(), async (id) => {
+): Promise<Map<number, number>> {
+  return ofFixture(gameweek, fixtureCode, new Map<number, number>(), async (id) => {
     const [fixture, stream] = await Promise.all([plFixture(id), plStream(id)]);
-    return injuredOff(stream.events.content, plPlayerCodes(fixture, optaToCode(players)));
+    return injuryMinutes(stream.events.content, plPlayerCodes(fixture, optaToCode(players)));
   });
 }
 

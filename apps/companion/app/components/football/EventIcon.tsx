@@ -39,7 +39,11 @@
  *  phone. A drawn glove and a drawn whistle were the first attempt at `save` and
  *  the period marks and both were a smudge on the screen, which is the kind of
  *  thing only a screenshot tells you. A type this map
- *  does not name takes `note`, so no row is ever left without one. */
+ *  does not name takes `note`, so no row is ever left without one.
+ *
+ *  **`cross` is not in this table**, and that is deliberate: an injury is not an
+ *  Opta TYPE, it is a substitution whose sentence says why. `saysInjury` in core
+ *  is the test and the caller picks the glyph — see `Commentary`. */
 export type EventGlyph =
   | "ball"
   | "card"
@@ -51,6 +55,7 @@ export type EventGlyph =
   | "corner"
   | "whistle"
   | "spot"
+  | "cross"
   | "note";
 
 const GLYPHS: Record<string, EventGlyph> = {
@@ -151,6 +156,13 @@ export default function EventIcon({ glyph }: { glyph: EventGlyph }) {
               rather than the kick. */}
           <path d="M2.5 3.5h11v5a5.5 5.5 0 0 1-11 0Z" />
           <circle cx="8" cy="7" r="1.2" fill="currentColor" stroke="none" />
+        </>
+      ) : glyph === "cross" ? (
+        <>
+          {/* A medical cross, for a change forced rather than chosen. Two bars
+              and nothing else — it has to read at the ~14px these render at,
+              which is the lesson `save` and `whistle` taught. */}
+          <path d="M6.2 3h3.6v3.2H13v3.6H9.8V13H6.2V9.8H3V6.2h3.2Z" fill="currentColor" stroke="none" />
         </>
       ) : glyph === "whistle" ? (
         <>

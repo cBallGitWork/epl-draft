@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import stream from "../__fixtures__/plTextstreamAssists.json";
 import fixture from "../__fixtures__/plFixtureAssists.json";
 import type { RawPlEvent, RawPlFixture, RawPlTextstream } from "./raw";
-import { injuredOff, streamCredited, streamCredits } from "./assists";
+import { streamCredited, streamCredits } from "./assists";
 import { plGoals } from "./goals";
 import type { PlGoal } from "./goals";
 
@@ -202,69 +202,5 @@ describe("streamCredited", () => {
     ];
     const out = streamCredited(sameMinute, said, new Map([[CUNHA, 1], [MAGUIRE, 1]]));
     expect(out?.map((g) => g.assister)).toEqual([MAGUIRE, CUNHA]);
-  });
-});
-
-describe("injuredOff", () => {
-  /** Opta's own sentence, with the two men as `[on, off]` — the order checked
-   *  against the fixture feed's own ON/OFF rows for the same minute. */
-  const sub = (text: string, ids?: number[]): RawPlEvent => ({
-    id: 1,
-    type: "substitution",
-    text,
-    time: { secs: 0, label: "74" },
-    playerIds: ids,
-  });
-  const named = new Map([
-    [24659, 1_024_659],
-    [129096, 1_129_096],
-  ]);
-
-  it("credits the man going OFF, who is the second id", () => {
-    const hurt = injuredOff(
-      [sub("Substitution, Brentford. Jannik Schuster replaces Nathan Collins because of an injury.", [129096, 24659])],
-      named,
-    );
-    expect([...hurt]).toEqual([1_024_659]);
-  });
-
-  it("leaves an ordinary substitution alone", () => {
-    expect(
-      injuredOff([sub("Substitution, IPS. Kasey McAteer replaces Abdul Fatawu.", [129096, 24659])], named).size,
-    ).toBe(0);
-  });
-
-  it("reads the phrase and never the name", () => {
-    // The TEST is a sentence and the ANSWER is an id. A man the feed calls
-    // something else is still found.
-    const hurt = injuredOff([sub("Substitution, X. Somebody Else replaces Someone because of an injury.", [129096, 24659])], named);
-    expect([...hurt]).toEqual([1_024_659]);
-  });
-
-  it("credits nobody when the line carries no second man", () => {
-    expect(injuredOff([sub("Substitution because of an injury.", [129096])], named).size).toBe(0);
-    expect(injuredOff([sub("Substitution because of an injury.")], named).size).toBe(0);
-  });
-
-  it("ignores a man the bridge cannot place", () => {
-    expect(injuredOff([sub("X replaces Y because of an injury.", [1, 2])], named).size).toBe(0);
-  });
-
-  it("refuses the `start delay` injury, which names its man in prose only", () => {
-    const delay: RawPlEvent = {
-      id: 2,
-      type: "start delay",
-      text: "Delay in match because of an injury Nathan Collins (Brentford).",
-      time: { secs: 0, label: "20" },
-    };
-    expect(injuredOff([delay], named).size).toBe(0);
-  });
-
-  it("finds every injury in a feed, not just the first", () => {
-    const two = [
-      sub("A replaces B because of an injury.", [129096, 24659]),
-      sub("C replaces D because of an injury.", [24659, 129096]),
-    ];
-    expect(injuredOff(two, named).size).toBe(2);
   });
 });

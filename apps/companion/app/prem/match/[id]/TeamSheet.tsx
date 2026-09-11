@@ -179,10 +179,11 @@ export default function TeamSheet({
   sheets: { home: PlTeamSheet; away: PlTeamSheet };
   events: Map<number, PlManMatch>;
   owners: Map<number, PlayerOwner>;
-  /** Who went off hurt, by FPL code — from the commentary, which is the only
-   *  place that says so. Empty is the ordinary answer: 5 of 87 substitutions in
-   *  a round. */
-  injured: ReadonlySet<number>;
+  /** Who went off hurt and when, by FPL code — from the commentary, which is
+   *  the only place that says so. Empty is the ordinary answer: 5 of 87
+   *  substitutions in a round. This board wants only the `has`; the scoresheet
+   *  on the Overview prints the minute. */
+  injured: ReadonlyMap<number, number>;
 }) {
   const join = joinOf(match);
   return (
@@ -281,7 +282,7 @@ function Side({
   events: Map<number, PlManMatch>;
   owners: Map<number, PlayerOwner>;
   join: Join;
-  injured: ReadonlySet<number>;
+  injured: ReadonlyMap<number, number>;
 }) {
   const colours = clubColours(club?.shortName ?? "");
   const rows = ordered(sheet, events);

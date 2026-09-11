@@ -1,4 +1,4 @@
-import { proseSpans } from "@epl/core";
+import { proseSpans, saysInjury } from "@epl/core";
 import type { PlCommentaryLine } from "@epl/core";
 import EventIcon, { glyphFor } from "../../../components/football/EventIcon";
 import { ROW_NAME, SMALL_CAPS } from "@/app/desk";
@@ -40,9 +40,17 @@ export default function Line({
    *  before this existed. */
   names?: readonly string[];
 }) {
-  const word = LOUD[line.type];
-  const tone = TONE[line.type] ?? "text-muted";
-  const toned = TONE[line.type] !== undefined;
+  // **An injury is not a TYPE, it is a substitution whose sentence says why**
+  // (Craig, 11 Sep 2026: *"i want them ON the commentary"*). Opta files it as an
+  // ordinary `substitution` and ends the line `because of an injury.`, so the
+  // row that draws it asks `saysInjury` rather than looking the type up. It
+  // takes the cross and the negative slot: a change forced is not a change
+  // chosen, and it is the one thing in a commentary feed that is bad news about
+  // a man rather than about a scoreline.
+  const hurt = saysInjury(line);
+  const word = hurt ? "Injury" : LOUD[line.type];
+  const tone = hurt ? "text-bad" : (TONE[line.type] ?? "text-muted");
+  const toned = hurt || TONE[line.type] !== undefined;
   return (
     // **`shrink-0`, and it is a bug fix rather than a tidy.** `PANEL_FLUSH` is a
     // flex COLUMN, and the Overview caps its copy of this list at `60dvh` — so
@@ -72,7 +80,7 @@ export default function Line({
           all rows"*), so this column is never empty and the prose beside it
           always starts at the same place. The word is the extra, not the mark. */}
       <span className={`flex shrink-0 items-center gap-1 ${SMALL_CAPS} ${tone}`}>
-        <EventIcon glyph={glyphFor(line.type)} />
+        <EventIcon glyph={hurt ? "cross" : glyphFor(line.type)} />
         {word}
       </span>
       {/* **The two things an eye scans a commentary row for**, set apart from the
@@ -119,6 +127,13 @@ export default function Line({
  *
  *  A type this map does not name still prints, marked by its glyph and carrying
  *  no word.
+ *
+ *  **An INJURY substitution keeps a word where an ordinary one lost it**, which
+ *  is the one exception to the paragraph below. `Sub` went because Opta's
+ *  sentence opens `Substitution, Fulham.` and the label was that word twice —
+ *  but `Injury` is not in the sentence at all until its last four words, and the
+ *  thing a reader is scanning for is exactly that. The cross and the red say it
+ *  first; the word says it plainly.
  *
  *  **`substitution` and `goal` are deliberately absent**, both for the same
  *  reason and both on Craig's word — *"just remove 'Sub', since its always said
