@@ -54,14 +54,10 @@ export {
 export type { PlCommentaryLine } from "./premierleague/map";
 export { plPlayerCodes, plTeamSheets } from "./premierleague/teamSheet";
 export type { PlSquadMan, PlTeamSheet } from "./premierleague/teamSheet";
-export {
-  creditedGoals,
-  goalGroups,
-  plGoals,
-  plManMatches,
-  plSubstitutions,
-} from "./premierleague/sheetEvents";
-export type { PlGoal, PlGoalGroup, PlManMatch, PlSubstitution } from "./premierleague/sheetEvents";
+export { plManMatches, plSubstitutions } from "./premierleague/sheetEvents";
+export type { PlManMatch, PlSubstitution } from "./premierleague/sheetEvents";
+export { creditedGoals, goalGroups, plGoals } from "./premierleague/goals";
+export type { PlGoal, PlGoalGroup } from "./premierleague/goals";
 export { streamCredited, streamCredits } from "./premierleague/assists";
 export type { StreamCredit } from "./premierleague/assists";
 export { plMatchBoard } from "./premierleague/matchStats";

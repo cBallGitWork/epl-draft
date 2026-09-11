@@ -1,4 +1,4 @@
-import type { PlGoal } from "./sheetEvents";
+import type { PlGoal } from "./goals";
 import type { RawPlEvent } from "./raw";
 
 // The three assists FPL pays and Opta does not place.

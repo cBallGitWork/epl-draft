@@ -155,12 +155,48 @@ Four things about it, all measured, none obvious:
    — Liverpool at 71' in the recorded fixture — and pairing on the clock then
    pairs arbitrarily. `plSubstitutions` is the only thing that may do this join;
    `plManMatches` is per-man and has already lost the order.
-4. **`MP` is a missed penalty and is real**, carrying a man. Read and dropped by
-   `sheetEvents.ts` deliberately — CM's ratings board has no such mark and FPL's
-   own sheet publishes `penaltiesMissed` — and named here so it is not re-found.
+4. **`MP` is a missed penalty and is real**, carrying a man. Read and dropped
+   deliberately — CM's ratings board has no such mark and FPL's own sheet
+   publishes `penaltiesMissed` — and named here so it is not re-found.
+5. **`assistId` is the PASS and nothing else.** It is absent on **0 of 5** own
+   goals and **0 of 4** penalties across gameweeks 1-3, which is not a hole in
+   the feed: FPL pays an assist for three things that are not passes, and none of
+   them is a thing Opta calls an assist. The next section is where those come
+   from.
 
-Typed as `RawPlFixtureEvent`; mapped by `premierleague/sheetEvents.ts` into
-`PlManMatch` (per man) and `PlSubstitution` (per change).
+Typed as `RawPlFixtureEvent`. The vocabulary and the clock reader are in
+`premierleague/fixtureEvents.ts`; `sheetEvents.ts` maps it into `PlManMatch`
+(per man) and `PlSubstitution` (per change), and `goals.ts` into `PlGoal`
+(per goal).
+
+## The three assists FPL pays that `assistId` cannot give you
+
+Counted 11 Sep 2026 on Man Utd 5-2 Ipswich, gameweek 2. FPL pays five assists
+for United's five goals; the fixture detail places two. FPL's own rules pay for
+three things beyond the ball that was played, and each is an event TYPE in the
+**textstream**:
+
+| FPL pays for | textstream type | where the man is |
+|---|---|---|
+| winning a penalty that is converted | **`penalty won`** | `playerIds[0]` |
+| forcing an own goal with a shot or cross | the attempt immediately before the `own goal` | `playerIds[0]` |
+| a shot blocked, saved or off the woodwork, scored from the rebound | the attempt immediately before the `goal` | `playerIds[0]` |
+
+The attempt types are `miss`, `attempt blocked`, `attempt saved` and `post`.
+A textstream entry carries only `id`, `type`, `text`, `time` and `playerIds` —
+checked across all 116 entries of that fixture — and `playerIds` is `[scorer,
+assister]` on an assisted goal and `[scorer]` alone on an own goal, so **the own
+goal's assister is published nowhere structurally**.
+
+**`playerIds` are the PL's own person ids**, the same space as the fixture
+detail's `personId`/`assistId` and NOT FPL's `opta_code` digits — Maguire is
+person `9566` and opta `p95658`. The join therefore needs a team sheet, which
+the textstream does not carry, which is why `matchStreamCredits` reads the
+fixture detail alongside it.
+
+Two of the three legs rest on event ORDER rather than a published field, so
+`assists.ts` treats the whole thing as a proposal and has FPL's per-man counts
+confirm it before any of it reaches a screen.
 
 ## Highlights are not available — do not re-probe this
 

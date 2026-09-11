@@ -7,66 +7,44 @@ import { SMALL_CAPS } from "@/app/desk";
 
 // Who scored, when, and who made it.
 //
-// **A list of GOALS, not of men** (Craig, 10 Sep 2026, on seeing assists added:
-// *"so now, goals and assists look the same"*). He was right and it was the
-// arrangement's fault: a man-list gives a scorer and an assister the same white
-// name and the same yellow minute, and nothing but prior knowledge tells them
-// apart. A scoresheet is a list of goals, so this is one — the scorer on the
-// line and the man who made it under him, quieter and without a clock of his own,
-// because they share one.
+// **A list of GOALS, not of men, folded to one line per SCORER.** A man-list
+// gives a scorer and an assister the same white name and the same yellow minute
+// and nothing but prior knowledge tells them apart (Craig, 10 Sep 2026: *"so
+// now, goals and assists look the same"*); a goal-list repeats a man's own name
+// over his second goal, which says nothing the minute beside it had not (Craig,
+// 11 Sep 2026: *"isak can have one row only for both goals"*). So: the scorer on
+// the line with all his minutes, the men who made them under him, quieter and
+// smaller. `goalGroups` in core does the folding and is tested there.
 //
-// **And one line per SCORER, carrying all his minutes** (Craig, 11 Sep 2026:
-// *"isak can have one row only for both goals… both assists can be one row too
-// if its both. if it was 2 players, just show two assists row."*). That is not a
-// reversal of the move above: the scorer and the assister still sit on different
-// lines in different ink at different sizes, and what folds is only a man's own
-// name repeated over his second goal, which said nothing the minute beside it
-// had not. `goalGroups` in core does the folding and is tested there; Alex
-// Scott's two Bournemouth goals were the case that used to want two rows, and
-// he now reads `9', 35'` with his one assister under him once.
+// **The owner rides in brackets after the name**, scorer and assister alike
+// (*"owner name can go after ISAK (put in brackets), saves a row"*). A league
+// team name is a gloss on the name it follows, not a fact with a row of its own,
+// and this is the screen with the fewest facts in the app.
 //
-// **The owner rides in brackets after the name** (same message: *"owner name can
-// go after ISAK (put in brackets), saves a row"*). It was a second line under
-// every name — two rows of chrome for one man, on the screen with the fewest
-// facts in the app — and a league team name is a gloss on the name it follows,
-// not a fact of its own. The assister gets his the same way, which he did not
-// have at all.
-//
-// **The assister carries a minute only when there is another assister to tell
-// him from**, which is where an afternoon of argument landed. He had none, then
-// he had one always, and then Craig read a real row and split it: *"you dont
-// need the assist number at all… as its under the goal"*, and then, on Haaland
-// scoring twice with Semenyo and Foden under him, *"keep the assist when a
-// player scores twice, and its two different assisters"*.
-//
-// **The rule that satisfies both is that the figure earns its place or is not
-// drawn**, and the test is whether it would only repeat the line above it. An
-// assister who made EVERY one of this scorer's goals adds nothing with a clock —
+// **An assister carries a minute unless it would only repeat the line above
+// him**, which is exactly when he made EVERY one of that scorer's goals —
 // position has already said it, because he sits under the man whose goals they
-// were. An assister who made SOME of them is in the opposite case, and there are
-// two ways to be in it:
+// were. He is in the opposite case two ways, and both are real rows:
 //
 //   - two assisters on a brace, where `A Semenyo 17'` over `A Foden 84'` is the
 //     only thing pairing each man with his goal; and
-//   - one assister on a hat-trick, which is the case a `length > 1` gate got
-//     wrong (Craig, 11 Sep 2026: *"when a player has 3 goals, but only 1 assist,
-//     we need to show the minute number in that case"*). Bruno Fernandes scored
-//     40', 61' and 68' against Ipswich with Cunha on the 40' alone, and a bare
-//     `A Cunha` under `40', 61', 68'` reads as though he made all three.
+//   - one assister on a hat-trick — Bruno Fernandes scored 40', 61' and 68'
+//     against Ipswich with Cunha on the 40' alone, and a bare `A Cunha` under
+//     `40', 61', 68'` reads as though he made all three.
 //
-// So the test is `his.length !== group.minutes.length` — he is silent only when
-// he made the lot.
+// Hence `his.length !== group.minutes.length`, and not a count of assisters.
+// *Three attempts at this rule shipped in one afternoon — no minute, a minute
+// always, a minute only on a second assister — and the two failures are worth a
+// line because each looked right against the fixture in front of it.*
 //
-// What tells a goal from an assist is unaffected either way — the ball, the `A`,
-// the indent, the ink and the size are five marks, and the minute was never one
-// of them.
+// What tells a goal from an assist never rested on the minute: the ball, the
+// `A`, the indent, the ink and the size are five marks without it.
 //
-// **The ball marks the goal line** (Craig, 11 Sep 2026, drawing `(goal icon)`
-// before the scorer). `EventIcon`'s own rule is that a glyph stands beside a
-// word and never instead of one; here the word is the man's name and the minute
-// beside it, which is what CM's own sheet is. It is `aria-hidden` and sized in
-// `em`, so it takes the size of whatever box it is put in — see `Man` for why
-// that box states one.
+// **The ball marks the goal line.** `EventIcon`'s own rule is that a glyph
+// stands beside a word and never instead of one; here the word is the name and
+// the minute, which is what CM's sheet is. `aria-hidden`, sized in `em`, so it
+// takes the size of whatever box holds it — see `Man` for why that box states
+// one.
 //
 // **CM's own arrangement otherwise.** `cm0102/02.jpg` prints the home scorers
 // down the left and the away down the right with the minute in yellow beside

@@ -3,8 +3,8 @@ import stream from "../__fixtures__/plTextstreamAssists.json";
 import fixture from "../__fixtures__/plFixtureAssists.json";
 import type { RawPlEvent, RawPlFixture, RawPlTextstream } from "./raw";
 import { streamCredited, streamCredits } from "./assists";
-import { plGoals } from "./sheetEvents";
-import type { PlGoal } from "./sheetEvents";
+import { plGoals } from "./goals";
+import type { PlGoal } from "./goals";
 
 // Manchester United 5-2 Ipswich Town, gameweek 2, recorded 11 Sep 2026 and never
 // fetched (CODE_RULES §6). It is the fixture Craig found the defect in and it
