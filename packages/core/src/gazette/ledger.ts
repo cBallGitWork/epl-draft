@@ -48,7 +48,7 @@ export type Ledger = Record<string, LedgerBook>;
 export const MAX_COVERED = 400;
 
 /** Threads kept per league, open and retired together. */
-export const MAX_THREADS = 24;
+const MAX_THREADS = 24;
 
 /** Beats before a thread is worn out. Six editions on one joke is already one
  *  more than the World Cup paper's readers wanted. */

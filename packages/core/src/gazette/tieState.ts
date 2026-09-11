@@ -13,12 +13,12 @@ export type TieState = "open" | "probable" | "settled";
  *  is a tie the paper may call "all but done". A quarter is an argued line: at
  *  typical weekly totals it is a two-score lead, and two men rarely make one
  *  score, let alone two. */
-export const PROBABLE_SHARE = 0.25;
+const PROBABLE_SHARE = 0.25;
 
 /** How many men the trailing side may still have coming for the call to be
  *  made at all. Three or more and the paper keeps its mouth shut whatever the
  *  margin — a bench-boost of a Sunday can be worth a score on its own. */
-export const PROBABLE_TO_PLAY = 2;
+const PROBABLE_TO_PLAY = 2;
 
 /** One tie's state. `toPlay` null is "they did not say", which can never
  *  support a call — the rule three screens have already relearned. */

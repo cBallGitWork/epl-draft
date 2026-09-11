@@ -80,7 +80,7 @@ const NEWS_PER_FIRING = 2;
 /** How close a kickoff must be before a preview piece files. Half a day: the
  *  Team Sheet's Friday sweep catches the weekend, and this catches tonight's
  *  game that can swing an open tie. */
-export const PREVIEW_WINDOW_HOURS = 12;
+const PREVIEW_WINDOW_HOURS = 12;
 
 export function newsdesk(
   desk: DeskState,

@@ -1306,6 +1306,41 @@ in its heading — a zone note over a column with no clock in it is furniture
 explaining something that is no longer there — and, the time gone, the column is
 narrow enough to come back to the phone.
 
+## The repo-wide refactor, and the counts it settled (11 Sep 2026)
+
+Counts worth keeping, because each one closes a question that otherwise gets
+answered from taste next time.
+
+**`STICKY_LEAD` reached three and moved**, exactly as `e15c8ab` predicted when it
+declined at two. It had been DECLARED twice — byte-identical strings in
+`players/Cell` and `prem/match/[id]/PlayerStats` — with a third file importing
+one of them. It is `desk.ts`'s now.
+
+**`DASH` was re-counted and both recorded figures were wrong.** `desk.ts` carried
+two: "nine named against 68 unnamed in 34 others" in its header and "11 against
+55 in 32 files" in its declines section, taken the same day, disagreeing with
+each other. The truth on 11 Sep is **10 named against 53 unnamed across 34
+files**, and the older numbers were inflated by counting the em dash in PROSE as
+well as in absence positions. The grep is now written down narrowed to absence
+positions. **No file does both** — each of the 44 either names it or inlines it —
+so the scatter is between files, not inside any.
+
+**Test fixtures look like a problem and are not.** 16 builder names are shared by
+3+ of the 120 test files — `player` in 11, `fixture` in 8, `team` in 6 — which
+reads like a missing shared factory. Comparing BODIES rather than names: only
+**8 are byte-identical, and every one of the 8 is at exactly two files**. The
+shared names are different builders for different domains (a gazette `player` is
+a `StoryFace`, a football one a `FootballPlayer`), so the collision is
+coincidence. `__fixtures__` directories already exist for the cases that were
+real.
+
+**Dead exports went from 8 to 0.** One was a genuine dead pipeline —
+`app/intel.ts`'s `intelLine`, "for arranging a pitch", which nothing has called
+since the pitch began arranging from `predictedEleven` and `PlTeamSheet.shape`.
+Two more were `prem/PremNav`'s `RESULTS` and `FIXTURES`, kept alive by a docblock
+describing a consumer in `MatchFoot` — a file that no longer exists. The other
+five were exports with no consumer outside their own module and are now private.
+
 ## The pitch draws kits, not photographs (10 Sep 2026)
 
 Craig: *"potraits dont work — lets go back to classic shirts for the pitch view

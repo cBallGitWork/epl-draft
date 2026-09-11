@@ -8,7 +8,7 @@ import { isStandout } from "./standout";
 import { STATUS } from "./status";
 import { ANALYSIS } from "./query";
 import type { PlayersQuery } from "./query";
-import { BOARD_FIGURE, ROW_FIGURE, ROW_NAME } from "@/app/desk";
+import { BOARD_FIGURE, ROW_FIGURE, ROW_NAME, STICKY_LEAD } from "@/app/desk";
 
 // One cell of the pool board, which is two shapes rather than twenty: the
 // name is a link with a face on it, and everything else is a figure.
@@ -261,18 +261,6 @@ function Dot() {
 }
 
 const DASH = "—";
-
-/** The name column, frozen against the sideways scroll.
- *
- *  **An opaque ground is the whole trick and it must not be a token that moves.**
- *  A sticky cell is painted over by whatever scrolls under it unless it has a
- *  fill of its own; `bg-surface` is the panel's own well, so the frozen column
- *  reads as part of the table rather than as a plate laid on top of it. The
- *  right rule is what says the scroll passes UNDER it rather than beside it.
- *
- *  The head and the body cell take the same class, because a head that does not
- *  freeze with its column is a label sliding off its own figures. */
-export const STICKY_LEAD = "sticky left-0 z-10 bg-surface border-r border-line";
 
 /** Which way ownership moved, said in the sign as well as the colour — a green
  *  number and a red one are the same number to a reader who cannot tell them

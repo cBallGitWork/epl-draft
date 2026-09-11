@@ -48,7 +48,7 @@ export const yearToDate = leagueCache(
  *  Nothing here needs to tell one refusal from another — an undrafted league
  *  answering `WARNING` and Fantrax being down both mean there are no numbers to
  *  show, and both say so by not appearing. */
-export const readTeamStats = leagueCache("fantrax-team-stats",
+const readTeamStats = leagueCache("fantrax-team-stats",
   async (teamId: string, season: string | undefined): Promise<TeamStats | null> => {
     try {
       return mapTeamStats(await fetchTeamStats(FANTRAX_LEAGUE_ID, teamId, season));

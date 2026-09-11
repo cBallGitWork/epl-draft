@@ -14,7 +14,7 @@ import { liveScores } from "../../scoreboard";
 import { getLeagueSquads, readerTeamId } from "../../squads";
 import { marksFor } from "../../involvement";
 import { yoursFirst } from "../../mine";
-import { LABEL } from "@/app/desk";
+import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL } from "@/app/desk";
 
 // The desk: every score in the league and every score in the round, on one
 // screen, with nothing else on it.
@@ -64,8 +64,8 @@ export default async function DeskPage() {
   return (
     <div className="flex flex-col gap-4">
 
-      <header className="flex items-baseline justify-between gap-3 pt-1">
-        <h1 className="text-xl font-bold tracking-tight">The desk</h1>
+      <header className={GAMEWEEK_HEAD}>
+        <h1 className={GAMEWEEK_TITLE}>The desk</h1>
         <span className={LABEL}>
           <RoundWord state={state} />
         </span>

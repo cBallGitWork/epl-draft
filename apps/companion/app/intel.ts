@@ -99,12 +99,3 @@ export const intelTouches: Map<number, TouchPlayer> = touchIntel(
  *  the other way round; the exporter flips one so the app learns one convention
  *  rather than two. 824 shots by 248 players on 10 Sep 2026. */
 export const intelShots: Map<number, Shot[]> = shotIntel(shotsFile as unknown as IntelShots);
-
-/** One club's line for a man, for arranging a pitch.
- *
- *  Null where the export could not settle a real position — which is 146 of 651
- *  men, and deliberate: those came from FPL's own fantasy classification, and
- *  the football layer refuses it. */
-export function intelLine(code: number): string | null {
-  return intelSquads.get(code)?.line ?? null;
-}

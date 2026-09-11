@@ -24,7 +24,7 @@ import payloads from "./demoPayloads.json";
 // rehearsal league, and the id below is not a Fantrax id — nothing on their
 // side answers to it.
 
-export const DEMO_LEAGUE_ID = "demo";
+const DEMO_LEAGUE_ID = "demo";
 
 export function isDemo(leagueId: string): boolean {
   return leagueId === DEMO_LEAGUE_ID;

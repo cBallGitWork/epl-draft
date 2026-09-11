@@ -13,6 +13,7 @@ import {
   ROW_NAME,
   ROW_RULE,
   SCROLL,
+  STICKY_LEAD,
 } from "@/app/desk";
 import { ROW_LINK } from "../../../components/league/TableCells";
 import type { Match } from "./match";
@@ -223,15 +224,3 @@ const CREST_PX = 20;
  *  measured names fit, and `truncate` covers the two that do not. */
 const NAME_WIDTH = "w-36 lg:w-48";
 
-/** The frozen lead column.
- *
- *  **Written out rather than imported, and counted first.** The identical string
- *  is `players/Cell.tsx`'s `STICKY_LEAD`, which makes this the SECOND occurrence
- *  — and CODE_RULES §1 leaves two alone and §4 moves a shared thing at the
- *  third. Importing it from there would also be `prem/` reaching into `players/`
- *  for a class string, which is a layering the app does not otherwise have. The
- *  third use takes it to `desk.ts`, where the recipes live.
- *
- *  The head and the body cell take the same class: a head that does not freeze
- *  with its column is a label sliding off its own figures. */
-const STICKY_LEAD = "sticky left-0 z-10 bg-surface border-r border-line";

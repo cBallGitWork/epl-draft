@@ -125,12 +125,16 @@ function Goal({
       {assister === undefined ? null : (
         <Link
           href={`${PLAYER}/${assister.code}`}
-          // **`min-h-11` on the phone and the desk step above it**, which is the
-          // pair the other way round from how this shipped. `min-h-9` is the
-          // DESK's control height; on a 390 screen it is 36px against a 44px
-          // thumb floor, and `tapfit` had it as the app's only two failures.
-          // The scorer link three lines down already gets it right.
-          className="ml-3 flex min-h-11 items-baseline gap-1.5 hover:underline lg:ml-4 lg:min-h-7"
+          // **`min-h-11` under a thumb, `lg:min-h-9` on the desk** — the two
+          // floors a LINK has, and this shipped with neither. It was
+          // `min-h-9 lg:min-h-7`: the desk's control height on a phone, where
+          // the floor is 44, and the desk's repeating-ROW height above `lg`,
+          // where a control's floor is 36. So it failed at both widths, and
+          // fixing only the phone on 10 Sep left the 1440 half standing —
+          // `tapfit` walks both and was reporting the desk one while the commit
+          // message said it was clean. The scorer link below it has had
+          // `min-h-11` at both widths all along.
+          className="ml-3 flex min-h-11 items-baseline gap-1.5 hover:underline lg:ml-4 lg:min-h-9"
         >
           <span className={`${SMALL_CAPS} shrink-0 text-faint`}>A</span>
           <span className="min-w-0 truncate font-chrome text-sm font-bold text-muted lg:text-base">

@@ -3,8 +3,8 @@ import { type PoolColumn } from "./columns";
 import { HeadRow, MUTE, SortHead } from "../components/league/TableHeads";
 import { activeSort, sortHref } from "./query";
 import type { PlayersQuery } from "./query";
-import { ROW_RULE, SCROLL } from "@/app/desk";
-import Cell, { STICKY_LEAD } from "./Cell";
+import { ROW_RULE, SCROLL, STICKY_LEAD } from "@/app/desk";
+import Cell from "./Cell";
 
 // The pool as a table — and since 6 Sep 2026 as the WHOLE table (Craig: *"the
 // landing screen for scout should really be showing as many columns as possible

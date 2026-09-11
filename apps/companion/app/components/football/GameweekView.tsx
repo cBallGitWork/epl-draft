@@ -12,6 +12,7 @@ import { londonDayAndTime, londonTime } from "../../londonTime";
 import { speaksForNow } from "../../football";
 import LeagueCrest from "../shell/LeagueCrest";
 import MatchList from "./MatchList";
+import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 
 // One round of football. Shared by /matchday, while there is football on, and
 // the /gw/[gameweek] route, so both stay identical rather than drifting.
@@ -46,11 +47,11 @@ export default function GameweekView({
 
   return (
     <div className="flex flex-col gap-4">
-      <header className="flex items-baseline justify-between gap-3 pt-1">
+      <header className={GAMEWEEK_HEAD}>
         <div className="flex items-center gap-2.5">
           <LeagueCrest height={26} />
           <div>
-            <h1 className="text-xl font-bold tracking-tight">{LEAGUE_NAME}</h1>
+            <h1 className={GAMEWEEK_TITLE}>{LEAGUE_NAME}</h1>
             <p className="text-sm text-muted">Gameweek {snapshot.gameweek}</p>
           </div>
         </div>

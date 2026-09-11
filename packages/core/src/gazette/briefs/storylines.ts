@@ -7,7 +7,7 @@ import { THREAD_MAX_BEATS, type StoryThread } from "../ledger";
 
 /** How the wear rule reads a thread: over the beat cap, or retired, is worn
  *  whatever its status says. */
-export function isWorn(thread: StoryThread): boolean {
+function isWorn(thread: StoryThread): boolean {
   return thread.status === "retired" || thread.beats >= THREAD_MAX_BEATS;
 }
 

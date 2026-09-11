@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
-import { isResolved, pitchName, playerName } from "@epl/core";
+import {
+  isGoalkeeper,
+  isResolved,
+  pitchName,
+  playerName,
+} from "@epl/core";
 import LivePlayerCard from "./LivePlayerCard";
 import PitchMarker from "./PitchMarker";
 import PitchRows, { GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
@@ -228,7 +233,14 @@ function Cell({
         player={isResolved(player.rostered) ? player.rostered.player : null}
         label={player.rostered.slot.position || "?"}
         name={pitchName(player.rostered)}
-        keeper={player.rostered.slot.position === "G"}
+        // **`isGoalkeeper` and not a literal `"G"`.** The position vocabulary is
+        // LEAGUE data — `getLeagueInfo` names it, a commissioner can change it,
+        // and `conventions.md` records the point of the helper in as many words:
+        // "a league that files keepers under 'GK' needs one edit and not two".
+        // This site was the second edit. Five other callers already read the
+        // helper; this one compared the letter and would have drawn twenty
+        // keepers in outfield shirts the day the vocabulary moved.
+        keeper={isGoalkeeper(player.rostered.slot.position)}
         club={player.club}
         opposition={player.opposition}
         points={player.points}

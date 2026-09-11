@@ -3,6 +3,7 @@ import ButtonLink from "../../components/shell/ButtonLink";
 import LeagueCrest from "../../components/shell/LeagueCrest";
 import Skeleton from "../../components/shell/Skeleton";
 import SkeletonRows from "../../components/shell/SkeletonRows";
+import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 
 // A round of football before FPL has answered — `GameweekView`'s own frame.
 //
@@ -14,11 +15,11 @@ import SkeletonRows from "../../components/shell/SkeletonRows";
 export default function Loading() {
   return (
     <div aria-busy className="flex flex-col gap-4">
-      <header className="flex items-baseline justify-between gap-3 pt-1">
+      <header className={GAMEWEEK_HEAD}>
         <div className="flex items-center gap-2.5">
           <LeagueCrest height={26} />
           <div className="flex flex-col gap-1.5">
-            <h1 className="text-xl font-bold tracking-tight">{LEAGUE_NAME}</h1>
+            <h1 className={GAMEWEEK_TITLE}>{LEAGUE_NAME}</h1>
             <Skeleton width="6.5rem" height="0.875rem" />
           </div>
         </div>

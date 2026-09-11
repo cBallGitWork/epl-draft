@@ -47,7 +47,7 @@ import FootballRow from "./FootballRow";
  *
  *  A side nobody has been drawn into yet has no badge, no id and no link; its
  *  label is printed as the name, which is what `TieSide` is for. */
-export function DraftRow({
+function DraftRow({
   tie,
   scores,
   badges,

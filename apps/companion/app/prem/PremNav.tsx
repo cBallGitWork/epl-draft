@@ -73,12 +73,13 @@ export const TABLE = at("table");
  *  renamed in two of them. */
 export const TEAM_STATS = at("teamStats");
 
-/** The two round lists, for `TABLE`'s reason. A match page's way out is
- *  whichever one that match is actually on — a finished fixture is not on the
- *  fixtures page and an upcoming one is not among the results — so both are
- *  spelled here rather than a third and fourth time downstairs. */
-export const RESULTS = at("results");
-export const FIXTURES = at("fixtures");
+/* `RESULTS` and `FIXTURES` were here, named `at("results")` and `at("fixtures")`
+   for a consumer the docblock described as "a match page's way out ... whichever
+   one that match is actually on". That way out lived in `MatchFoot`, which no
+   longer exists, and nothing downstairs ever spelled either route — so they were
+   two exported constants with no importer, kept alive by a comment describing a
+   screen. Removed 11 Sep 2026. `at()` still derives both from `TABS`, so a
+   future way out is one line rather than a new string. */
 
 /** The route the club pages hang off, named once. A route spelled in five files
  *  is a route that can be renamed in four of them — `SectionNav` records the

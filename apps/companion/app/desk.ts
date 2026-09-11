@@ -31,7 +31,7 @@
 //
 // **The bar for entry is three occurrences**, and the count is recorded beside
 // each one so the next session can check it rather than trust it. The trap this
-// file must not become is `DASH`: nine files name `const DASH = "—"` against 68
+// file must not become is `DASH`: TEN files name `const DASH = "—"` against 53
 // unnamed `"—"` literals in 34 others, which makes the codebase LOOK
 // centralised while it is not. That is worse than honest duplication, because
 // the plausible name hides the scatter. See "Declined" at the foot.
@@ -324,6 +324,40 @@ export const ROW_RULE = "border-b border-bg";
  *  names the geometry only, so that settlement is one edit here. */
 export const SCROLL = "overflow-x-auto";
 
+/** The FROZEN first column of a board that scrolls sideways — the name a reader
+ *  needs to still have in front of him when the figures have slid away.
+ *
+ *  **Three sites, and the last refactor pass named this file as the destination
+ *  at the third.** It declined at two — `players/Cell` and
+ *  `prem/match/[id]/PlayerStats` — with the note that "CODE_RULES §1 leaves two
+ *  alone and §4 moves a shared thing at the third; importing it across sections
+ *  would also be `prem/` reaching into `players/` for a class string. The third
+ *  use takes it to `desk.ts`." `players/PlayerTable` is the third, and the two
+ *  files that declared it had drifted to byte-identical copies of one string.
+ *
+ *  `bg-surface` is load-bearing rather than decorative: a transparent frozen
+ *  column lets the scrolled figures pass UNDER the name, which reads as a
+ *  rendering fault rather than as a frozen column. It is the panel's own well
+ *  rather than a plate laid on top of it, and it must not become a token that
+ *  moves. The right border is what says the column is a boundary and not the
+ *  first of the numbers.
+ *
+ *  **The head and the body cell take the same class**, because a head that does
+ *  not freeze with its column is a label sliding off its own figures. */
+export const STICKY_LEAD = "sticky left-0 z-10 bg-surface border-r border-line";
+
+/** The header a GAMEWEEK view opens with — a title on the left, whatever the
+ *  page has to say on the right, sharing one baseline.
+ *
+ *  **Five files, the widest spread of any repeated recipe in the app**, and four
+ *  of them are the loading skeletons that have to match the real thing or the
+ *  page jumps when it arrives: `football/GameweekView`, `matchday/desk/page`,
+ *  and the `loading.tsx` of `gw/[gameweek]`, `matchday` and `matchday/desk`. A
+ *  skeleton that mirrors a recipe by hand is the one kind of duplication that
+ *  fails VISIBLY the moment the two drift, and it drifts silently until then. */
+export const GAMEWEEK_HEAD = "flex items-baseline justify-between gap-3 pt-1";
+export const GAMEWEEK_TITLE = "text-xl font-bold tracking-tight";
+
 /** One plate of a TAB STRIP: the blue plate, filling its share of the row, with
  *  its label centred in the chrome face.
  *
@@ -469,9 +503,12 @@ export function standDown(deskOnly: boolean | undefined, sorted: boolean): strin
  *
  * The section that saves the next session the counting.
  *
- * `const DASH = "—"` — **11 named against 55 unnamed literals in 32 files**,
- *   re-counted 7 Sep 2026 with the grep written down so the next count is
- *   reproducible rather than another number:
+ * `const DASH = "—"` — **10 named against 53 unnamed literals in 34 files**,
+ *   re-counted 11 Sep 2026. The two figures this file carried before that — 9
+ *   against 68 in the header, 11 against 55 in 32 files here — were taken on the
+ *   same day, disagreed with each other, and were both wrong, which is the
+ *   strongest argument this entry makes: a count nobody re-runs decays into a
+ *   number people quote. The greps, so the next one is reproducible:
  *
  *     named:   grep -rn --include='*.ts' --include='*.tsx' 'DASH = "—"' app
  *     unnamed: the same for '"—"', minus those lines
@@ -531,6 +568,35 @@ export function standDown(deskOnly: boolean | undefined, sorted: boolean): strin
  *   a fixed-height band, condensed to fit, and §6 says in as many words that
  *   negative tracking is untouched. The duplication is real and the rule breach
  *   was not.
+ *
+ * Counted 11 Sep 2026 in the repo-wide pass, all at TWO and therefore left:
+ *
+ *   `spelled()` + `WORDS` + `SPELL_FROM` — 2 (`matchday/FootballRow`,
+ *     `matchday/desk/Rows`). The most dangerous of these, because it is a whole
+ *     FUNCTION and a threshold rather than a class string, and only one of the
+ *     two carries the docblock explaining why four is the number. If a third
+ *     screen ever spells a scoreline, it goes to `football.ts`, not here — it is
+ *     a football fact, not a desk recipe.
+ *   `BOX = { width: 100, height: 64 }` — 2 (`players/analysis/PlayerMap`,
+ *     `prem/match/[id]/ShotMap`), the shot/touch pitch in metres. A third map
+ *     takes it to `football.ts`. `CmGround`'s `BOX` is a penalty area and shares
+ *     nothing but the name.
+ *   `WIDTH_M` / `PENALTY_SPOT_M` — 2 (`CmGround`, `PitchTurf`), and only those
+ *     two of the nineteen pitch dimensions between them are shared at all.
+ *   `MONTHS` — 2 (`core/inbox/when`, `core/league/fantrax/transactions`).
+ *   `SETTLE = 250` — 2 (`players/Search`, `players/analysis/PickField`).
+ *   `FORM_GAMES = 5` — 2 (`league/TableRow`, `prem/ClubRow`).
+ *
+ * Seventeen repeated className strings at 3+ files were counted and left, because
+ *   naming seventeen recipes in one pass is how a name gets chosen from
+ *   tiredness. Two were taken — the ones above with the widest spread. The rest,
+ *   loudest first: the gazette's story furniture (kicker chip, display headline,
+ *   standfirst, hairline rule — 3-4 files each, and they belong to the PAPER, so
+ *   they want a `paper.ts` rather than this file), the refusal pair shared by
+ *   `shell/Nothing`, `error` and `not-found` (3 each, and the better fix is that
+ *   two of the three stop hand-rolling the component the third already is), and
+ *   `border-collapse w-full whitespace-nowrap` (3), which is a near-miss of
+ *   `BOARD` and wants reconciling with it rather than a name of its own.
  *
  * The submit-quiet pair above — 2 sites. Under the bar.
  */
