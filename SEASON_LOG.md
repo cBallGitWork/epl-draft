@@ -3659,3 +3659,11 @@ foot and the phone's More drawer both link it.
 Half this session's build failures were another session's in-flight work on
 `league/matchups` — `sides.tsx` landed before its `FootballTab` export. Cleared by
 the time the gates ran green.
+
+**Three re-picked on Craig's read of the first set.** *"everton leeds dont share
+rugby stadiums"* — right, and the reason the rugby shots were wrong is not that
+they are rugby but that they imply a shared ground. Elland Road and Hill Dickinson
+are now football; the Emirates is the mural facade in daylight rather than the
+night exterior, which was the darkest of the twenty. Sunderland stays as it was,
+on his word, empty stand and all. The shortlist was judged at `brightness(0.55)`
+rather than at full strength, which is the only view that answers the question.

@@ -2966,18 +2966,46 @@ and `grounds.test.ts` fails the build if one does not. Attribution is at
 `/credits`, linked from the rail's foot and the phone drawer — a credits page
 nothing links to would satisfy neither licence.
 
-**Two are photographs of rugby at a football ground**, and knowingly: Everton's
-Hill Dickinson Stadium and Leeds' Elland Road both had far better crowd shots from
-rugby league fixtures than from football. They are the right grounds, which is the
-test that matters, but the posts are visible to anyone looking for them.
+**No rugby, and that was a correction.** The first pass filed Everton's Hill
+Dickinson Stadium and Leeds' Elland Road as rugby league fixtures, because
+Commons' best crowd shots of both grounds are exactly that. Craig, same day:
+*"everton leeds dont share rugby stadiums. elland roand and hill dicky"* — the
+point being that these are football grounds that occasionally host rugby, so a
+photograph of rugby on them says the opposite. Both are now football: Elland
+Road's East Stand under its "Marching On Together" banner, and Hill Dickinson
+Stadium from the Mersey with its own name on the facade. Everton is the thin one
+— the ground opened in 2025 and Commons holds almost no football of it, so the
+choice was that exterior or a construction site.
 
-**Sunderland is the one club with no people in its picture.** The only populated
-shot of the Stadium of Light on Commons is a stand full of Newcastle supporters.
+**Three clubs have no people in the picture, and each for its own reason.**
+Sunderland: the only populated shot of the Stadium of Light is a stand full of
+Newcastle supporters, and Craig kept the empty one over that. Everton and Leeds:
+see above — the populated shots are the rugby ones.
 
 **The ground is 7.3 MB of repo, not of page.** Twenty files at 1920px on the long
 edge, quality 75, native aspect kept — `object-cover` across a portrait phone
 crops a 16:9 master to ribbons, where a 4:3 original survives it. `next/image`
 re-encodes for delivery, so the master's weight is a git cost only.
+
+## Replacing a file under `public/` leaves `next dev` serving the old one (11 Sep 2026)
+
+**A screenshot will lie about it, and lie consistently.** Swapping
+`public/ground/clubs/LEE.jpg` for a different photograph at the same path, then
+shooting the page, gave a capture **pixel-identical** to the one before the swap —
+mean absolute difference 0.00/255 — across a fresh browser profile with a cold
+cache. The file on disk was right, and `curl`ing
+`/_next/image?url=%2Fground%2Fclubs%2FLEE.jpg&w=828&q=75` returned the NEW
+picture, so every check short of the page itself said the swap had worked.
+
+What holds the old one is `apps/companion/.next/dev/cache/images`. Deleting that
+directory and re-shooting moved the page by 4.12/255. It is a cache and it
+self-heals, so `rm -rf` on it is the fix; it was 12 MB when this happened.
+
+**The reason it is worth writing down is the failure mode, not the remedy.** The
+URL does not change when the bytes do, so nothing invalidates and nothing errors —
+and `/shoot` is the instrument this repo trusts to settle what a screen looks
+like. An asset swapped in place is the one case where it can be confidently wrong
+twice in a row. Clear the cache before believing a capture of a replaced image.
 
 ## Questions
 

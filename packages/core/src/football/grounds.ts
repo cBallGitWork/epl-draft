@@ -52,12 +52,13 @@ export interface GroundPhoto {
 
 const CLUB_GROUND_PHOTOS: Record<string, Omit<GroundPhoto, "src">> = {
   ARS: {
-    title: "Arsenal v Fenerbahce",
-    author: "Shever",
+    title: "Arsenal Stadium - The Emirates 3",
+    author: "Ronnie Macdonald",
     licence: "CC BY 2.0",
     licenceUrl: "https://creativecommons.org/licenses/by/2.0",
-    source: "https://commons.wikimedia.org/wiki/File:Arsenal_v_Fenerbahce.jpg",
-    blur: "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAALABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgQF/8QAIhAAAQQABQUAAAAAAAAAAAAAAQACAxEEEhMxYSEiQVKh/8QAFAEBAAAAAAAAAAAAAAAAAAAABP/EABcRAAMBAAAAAAAAAAAAAAAAAAARITH/2gAMAwEAAhEDEQA/AMHD4eCzGGxOc5o7pXbHgIxRRkPEwaPXIBX1RxAal+aKIGYPu+gcd+EdXRDjP//Z",
+    source:
+      "https://commons.wikimedia.org/wiki/File:Arsenal_Stadium_-_The_Emirates_3.jpg",
+    blur: "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAALABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAgT/xAAgEAABBAEEAwAAAAAAAAAAAAABAAIDBBESEyExBSOB/8QAFAEBAAAAAAAAAAAAAAAAAAAAA//EABgRAQEAAwAAAAAAAAAAAAAAABEAASEx/9oADAMBAAIRAxEAPwCWezL5EE2LJ29WAxhxwhZp0oa25EMuHYL8khWwwRDqNo+JS14tDvW3kInL2bQF/9k=",
   },
   AVL: {
     title:
@@ -126,14 +127,12 @@ const CLUB_GROUND_PHOTOS: Record<string, Omit<GroundPhoto, "src">> = {
     blur: "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAKABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAID/8QAIhAAAQQABQUAAAAAAAAAAAAAAQACAxEEBRIVISIjMUGR/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAT/xAAXEQEBAQEAAAAAAAAAAAAAAAABABED/9oADAMBAAIRAxEAPwCt2lIHY4925HmzKWQOZJhAIyOo6+a+I7CaWTib8qY6q5Nv/9k=",
   },
   EVE: {
-    title:
-      "England v Australia, Hill Dickinson Stadium, Liverpool (1st November 2025) 004",
-    author: "Mtaylor848",
+    title: "Hilldickinsonstadium",
+    author: "Everton FC",
     licence: "CC BY-SA 4.0",
     licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0",
-    source:
-      "https://commons.wikimedia.org/wiki/File:England_v_Australia,_Hill_Dickinson_Stadium,_Liverpool_(1st_November_2025)_004.jpg",
-    blur: "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAKABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAABQb/xAAgEAACAQQBBQAAAAAAAAAAAAABAgMABBEhBSMxQWGR/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAP/xAAXEQADAQAAAAAAAAAAAAAAAAABAxEA/9oADAMBAAIRAxEAPwAexEjIFQgKdned/KSi44EvJdW4nZjnJcipzipHW+iCswy3g1S2rs0cuWJ6r9z7qDmlcmEzf//Z",
+    source: "https://commons.wikimedia.org/wiki/File:Hilldickinsonstadium.jpg",
+    blur: "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAJABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwIF/8QAIRAAAQQBAwUAAAAAAAAAAAAAEQABAgMEBSFxIjEyM4H/xAAUAQEAAAAAAAAAAAAAAAAAAAAD/8QAGBEAAwEBAAAAAAAAAAAAAAAAAAISMRH/2gAMAwEAAhEDEQA/AAy9Qx4z6GaWxdwEOLqdNl0oWsIAlu54WJf5/FOL7H4T21aBK8w//9k=",
   },
   FUL: {
     title: "Craven Cottage - Apr 2015 - The Cottage with Bees Fans",
@@ -164,13 +163,13 @@ const CLUB_GROUND_PHOTOS: Record<string, Omit<GroundPhoto, "src">> = {
     blur: "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAMABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAABQb/xAAfEAACAQQDAQEAAAAAAAAAAAABAgQAAwUREiExUSL/xAAVAQEBAAAAAAAAAAAAAAAAAAABAv/EABcRAQEBAQAAAAAAAAAAAAAAAAEAAhH/2gAMAwEAAhEDEQA/ADcHKl41WMNFDOf05XZI+eVTw89PbiL0MPs6PHo1CJfuJdZUcqNnw0hHyMgvaUvsMO/tRpQ6S3//2Q==",
   },
   LEE: {
-    title: "East Stand at Elland Road prior to the 2010 World Club Challenge",
-    author: "Mtaylor848",
-    licence: "CC BY-SA 3.0",
-    licenceUrl: "https://creativecommons.org/licenses/by-sa/3.0",
+    title: "East Stand, Elland Road",
+    author: "flickr user: wjarrettc",
+    licence: "CC BY 2.0",
+    licenceUrl: "https://creativecommons.org/licenses/by/2.0",
     source:
-      "https://commons.wikimedia.org/wiki/File:East_Stand_at_Elland_Road_prior_to_the_2010_World_Club_Challenge.jpg",
-    blur: "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAAMABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwEE/8QAIhABAAAFAgcAAAAAAAAAAAAAAQACAwQSBSERMTJBQlGS/8QAFQEBAQAAAAAAAAAAAAAAAAAAAQP/xAAZEQADAAMAAAAAAAAAAAAAAAAAAREDEjH/2gAMAwEAAhEDEQA/AHpatZ0sTGrUe+KBCOv20u0loO22c8YRAEll5p0+nhEqI+MvyQvNekdY4f/Z",
+      "https://commons.wikimedia.org/wiki/File:East_Stand,_Elland_Road.jpg",
+    blur: "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAALABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAMG/8QAIBAAAgEDBAMAAAAAAAAAAAAAAQIDAAQRBQYSMWGR4f/EABUBAQEAAAAAAAAAAAAAAAAAAAAD/8QAGBEBAAMBAAAAAAAAAAAAAAAAAQADEQL/2gAMAwEAAhEDEQA/AHw7g1YrlrOFvYqr7mvIOJn04cWOMiX5WbtrqczLmVumHfmkvPKe3Y1JuBzIs5a3Gf/Z",
   },
   LIV: {
     title: "The kop - panoramio",
