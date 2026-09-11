@@ -2,15 +2,23 @@ import { Suspense } from "react";
 import { goalMinutes, scoresheet, sheetSides } from "@epl/core";
 import type { SheetRow } from "@epl/core";
 import Skeleton from "../../../components/shell/Skeleton";
+import SkeletonRows from "../../../components/shell/SkeletonRows";
 import { londonDayAndDate, londonTime } from "../../../londonTime";
-import { PANEL } from "@/app/desk";
+import { PANEL, PANEL_FLUSH } from "@/app/desk";
 import MatchShell from "./Shell";
 import Scoresheet from "./Scoresheet";
 import Preview from "./Preview";
+import Line from "./Commentary";
 import { matchOwners, readMatch } from "./match";
-import { matchFacts, matchGoalMinutes, matchGoals, matchStreamCredits } from "../../../matchFeed";
+import {
+  matchFacts,
+  matchGoalMinutes,
+  matchGoals,
+  matchReport,
+  matchStreamCredits,
+} from "../../../matchFeed";
 import type { PlGoal, PlMatchFacts, StreamCredit } from "@epl/core";
-import { creditedGoals, streamCredited } from "@epl/core";
+import { creditedGoals, streamCredited, withoutFouls } from "@epl/core";
 import type { Match } from "./match";
 
 // One match, on Championship Manager's Match Overview.
@@ -69,6 +77,26 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
       </section>
 
+      {/* **The match report, under the goals** (Craig, 11 Sep 2026: *"so we
+          could leave a bit of space under the goals, and have the match report
+          underneath?"*). The overview was the scorers and then a screenful of
+          empty ground — the panel is sized to hold a scoresheet and a 2-0 fills
+          a fifth of it — so what was under the goals was the photograph.
+
+          **Its own panel, not more of the one above** (DESIGN §2: a title row is
+          its own box and the thing it heads is another). The scoresheet answers
+          "what was the score"; this answers "what happened", and they are two
+          statements rather than one long one.
+
+          Behind its own boundary because it is the one read on this page that
+          the scoresheet has not already warmed: the stream is a second request
+          per fixture, and the scorers must not wait on it. */}
+      {fixture.status === "upcoming" ? null : (
+        <Suspense fallback={<ReportWaiting />}>
+          <Commentary match={match} />
+        </Suspense>
+      )}
+
     </MatchShell>
   );
 }
@@ -113,6 +141,39 @@ async function Sheet({ match }: { match: Match }) {
       owners={owners}
       byCode={match.byCode}
     />
+  );
+}
+
+/** What happened, in Opta's own sentences, with the fouls taken out.
+ *
+ *  **Capped and scrolling rather than ninety rows long.** `Wire` settled the
+ *  shape for the same problem — a list cut short with no bar looks like a short
+ *  list, so the box is the length and `.cm-scroll-y` says there is more. The
+ *  Match Report tab is where the feed runs full height; this is the overview's
+ *  share of it.
+ *
+ *  `withoutFouls` is 42.9% of the rows on the counts in `map.ts`, which is what
+ *  makes this fit under a scoresheet at all. */
+async function Commentary({ match }: { match: Match }) {
+  const lines = withoutFouls(
+    await matchReport(match.fixture.gameweek, match.fixture.code),
+  );
+  if (lines.length === 0) return null;
+
+  return (
+    <section className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-96 overflow-y-auto`}>
+      {lines.map((line) => (
+        <Line key={line.id} line={line} />
+      ))}
+    </section>
+  );
+}
+
+function ReportWaiting() {
+  return (
+    <div aria-busy>
+      <SkeletonRows count={6} height="2.75rem" />
+    </div>
   );
 }
 

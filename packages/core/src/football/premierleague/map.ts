@@ -70,6 +70,40 @@ export interface PlCommentaryLine {
  *  An event with no time or no text is dropped — one we cannot place in the
  *  match is not one we can put in a timeline, and `end 14` carries a junk label
  *  of `"01"` which is exactly the case that rule catches. */
+/** Opta's two names for a foul.
+ *
+ *  They are the two halves of one event: `free kick lost` is literally *"Foul by
+ *  Florian Wirtz (Liverpool)"* and `free kick won` is *"Julio Enciso (Ipswich
+ *  Town) wins a free kick on the left wing"*. There is no `foul` type at all —
+ *  which is why this is a table and not a guess.
+ *
+ *  **Counted, 11 Sep 2026, across all ten fixtures of gameweek 3**: 1,141 events,
+ *  of which `free kick lost` 246 and `free kick won` 243 — **489, or 42.9% of the
+ *  whole feed**. Nothing else comes near: the next biggest type is `miss` at 8.9%.
+ *  So this is not a tidy-up at the margin; it is nearly half the rows. */
+const FOUL_TYPES: ReadonlySet<string> = new Set(["free kick won", "free kick lost"]);
+
+/** The commentary with the fouls taken out.
+ *
+ *  Craig, 11 Sep 2026: *"to remove clutter, we could hide all fouls/free kicks
+ *  won"*.
+ *
+ *  **This reverses a principle, and the principle was written before anyone
+ *  counted.** `plCommentary`'s own docblock argues the whole vocabulary belongs
+ *  in a report — *"one match, and everything in it"* — against `mapMatchEvents`'
+ *  seven kinds. That holds for everything except this pair, and the reason is
+ *  the denominator above: a feed where two types are 43% of the rows is not a
+ *  record of a match, it is a record of its fouls with a match between them.
+ *
+ *  A function rather than a filter inside `plCommentary`, because the mapper's
+ *  job is to mirror the payload (CLAUDE.md) and this is a judgement about what a
+ *  reader wants. A caller that genuinely wants every line still has one. */
+export function withoutFouls(
+  lines: readonly PlCommentaryLine[],
+): PlCommentaryLine[] {
+  return lines.filter((line) => !FOUL_TYPES.has(line.type));
+}
+
 export function plCommentary(events: readonly RawPlEvent[]): PlCommentaryLine[] {
   const lines: PlCommentaryLine[] = [];
   for (const event of events) {

@@ -396,3 +396,41 @@ lists. Without the reconciliation an own goal reads as a goal for the wrong side
   — the columns are capped at `22rem`, because `cm0102/02.jpg` sets its two
   blocks at about a third of the canvas each and half of a 1120px panel put a
   name and its minute 500px apart.
+
+## The report is on the Overview now, and the fouls are not
+
+Craig, 11 Sep 2026: *"so we could leave a bit of space under the goals, and have
+the match report underneath? to remove clutter, we could hide all fouls/free
+kicks won"*.
+
+**Under the goals, in its own panel.** The overview was the scorers and then a
+screenful of ground — a 2-0 fills a fifth of the panel and the photograph filled
+the rest. The scoresheet answers "what was the score" and the commentary answers
+"what happened", which is two statements rather than one long one, so it is two
+boxes (DESIGN §2). Capped at `max-h-96` with `.cm-scroll-y`, on `Wire`'s rule
+that a list cut short with no bar looks like a short list.
+
+Behind its own Suspense boundary: the stream is the one read on this page the
+scoresheet has not already warmed, and the scorers must not wait on it.
+
+**`withoutFouls`, and the denominator is why.** Opta has no `foul` type. It has
+`free kick lost` — literally *"Foul by Florian Wirtz (Liverpool)"* — and
+`free kick won`, the two halves of one event. Counted across all ten fixtures of
+gameweek 3 on 11 Sep 2026: **1,141 events, of which 489 are those two — 42.9%**.
+The next biggest type is `miss` at 8.9%.
+
+So it is applied on BOTH screens, this one and the Match Report tab. That
+reverses a principle `plCommentary` states in its own docblock — *"a report is
+everything"* — and the principle was written before anyone counted. A feed where
+two types are nearly half the rows is not a record of a match; it is a record of
+its fouls with a match between them.
+
+The emptiness test on the Report tab is asked of the WHOLE feed, not the filtered
+one: a match with commentary but no incident outside the fouls still has
+commentary, and "no commentary" would be the wrong sentence.
+
+`Commentary.tsx` is the row both screens draw. Two callers rather than three, so
+CODE_RULES §1 would leave it duplicated — and would, if what was duplicated were
+small. It is a row, an icon map, a tone map and the argument for all three, and
+two copies seventy lines apart are free to disagree about what a goal looks like.
+Both callers are in this folder, so it is co-located rather than promoted.

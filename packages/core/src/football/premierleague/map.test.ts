@@ -9,6 +9,7 @@ import {
   plFixtureCode,
   plCommentary,
   plMatchMetrics,
+  withoutFouls,
 } from "./map";
 import { plPlayerCodes } from "./teamSheet";
 import type {
@@ -277,5 +278,42 @@ describe("plMatchMetrics", () => {
     // Distinct from the zero above: no stats at all may not become a board of
     // noughts. The caller has to tell the two apart, so the types do.
     expect(plMatchMetrics(STATS, 999)).toBeNull();
+  });
+});
+
+describe("withoutFouls, against the recorded match", () => {
+  const lines = plCommentary(PLAYED.events.content);
+
+  it("keeps not one line of either foul type", () => {
+    const kept = withoutFouls(lines);
+    expect(kept.some((line) => line.type === "free kick won")).toBe(false);
+    expect(kept.some((line) => line.type === "free kick lost")).toBe(false);
+  });
+
+  it("takes out a large share of a real feed, which is the whole point", () => {
+    // Counted across gameweek 3's ten fixtures on 11 Sep 2026: 489 of 1,141
+    // events, 42.9%. One recorded match is a smaller sample and the shape holds —
+    // asserted as a floor rather than a figure, because the exact share is a fact
+    // about one afternoon's refereeing.
+    const dropped = lines.length - withoutFouls(lines).length;
+    expect(dropped / lines.length).toBeGreaterThan(0.2);
+  });
+
+  it("keeps every goal, card and substitution", () => {
+    const kept = withoutFouls(lines);
+    for (const type of ["goal", "yellow card", "substitution"]) {
+      expect(kept.filter((line) => line.type === type)).toEqual(
+        lines.filter((line) => line.type === type),
+      );
+    }
+  });
+
+  it("leaves the order alone", () => {
+    const kept = withoutFouls(lines);
+    expect(kept).toEqual(lines.filter((line) => !line.type.startsWith("free kick")));
+  });
+
+  it("has nothing to do on an empty feed", () => {
+    expect(withoutFouls([])).toEqual([]);
   });
 });
