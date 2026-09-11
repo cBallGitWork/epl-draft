@@ -40,11 +40,22 @@ import { SMALL_CAPS } from "@/app/desk";
 // player scores twice, and its two different assisters"*.
 //
 // **The rule that satisfies both is that the figure earns its place or is not
-// drawn.** One assister and POSITION already says everything — he sits under the
-// scorer whose goals he made, so his clock repeats the line above him. Two, and
-// position says nothing: `A Semenyo 17'` over `A Foden 84'` is the only thing
-// that pairs each man with his goal. So the minute appears exactly when it is
-// the fact being added, and never when it is the fact being repeated.
+// drawn**, and the test is whether it would only repeat the line above it. An
+// assister who made EVERY one of this scorer's goals adds nothing with a clock —
+// position has already said it, because he sits under the man whose goals they
+// were. An assister who made SOME of them is in the opposite case, and there are
+// two ways to be in it:
+//
+//   - two assisters on a brace, where `A Semenyo 17'` over `A Foden 84'` is the
+//     only thing pairing each man with his goal; and
+//   - one assister on a hat-trick, which is the case a `length > 1` gate got
+//     wrong (Craig, 11 Sep 2026: *"when a player has 3 goals, but only 1 assist,
+//     we need to show the minute number in that case"*). Bruno Fernandes scored
+//     40', 61' and 68' against Ipswich with Cunha on the 40' alone, and a bare
+//     `A Cunha` under `40', 61', 68'` reads as though he made all three.
+//
+// So the test is `his.length !== group.minutes.length` — he is silent only when
+// he made the lot.
 //
 // What tells a goal from an assist is unaffected either way — the ball, the `A`,
 // the indent, the ink and the size are five marks, and the minute was never one
@@ -176,9 +187,10 @@ function Goal({
         const assister = byCode.get(code);
         if (assister === undefined) return null;
         const owner = owners.get(code);
-        // See the head of this file: his clock is drawn only when a second
-        // assister makes it the fact that pairs him with his goal.
-        const paired = group.assisters.length > 1;
+        // See the head of this file: his clock is drawn unless it would only
+        // repeat the line above him — which is exactly when he made EVERY one of
+        // this scorer's goals.
+        const paired = his.length !== group.minutes.length;
         return (
           <Link
             key={code}
