@@ -198,7 +198,7 @@ Two of the three legs rest on event ORDER rather than a published field, so
 `assists.ts` treats the whole thing as a proposal and has FPL's per-man counts
 confirm it before any of it reaches a screen.
 
-## Highlights are not available — do not re-probe this
+## Highlights: not from THIS API, but Sky's YouTube is a real answer
 
 Checked 10 Sep 2026. There is **no** `highlights`, `video`, `videos`, `media`,
 `matchReport` or `report` key on the round read, the fixture detail, the
@@ -207,9 +207,40 @@ for, **no longer resolves**. The match page's own HTML names
 `checkout.plplus.premierleague.com` and `ottapp-appgw-client-a.proda.epl.tv3cloud.com`
 — DRM'd subscription OTT behind a paywall.
 
-So there is nothing to embed, and the answer is not "we have not found it yet".
-If we ever want to point at theirs, a title and a link is the surface, never the
-body — the same ruling this file already makes about their written reports.
+Nothing THEY publish is embeddable, and the answer is not "we have not found it
+yet". If we ever want to point at theirs, a title and a link is the surface,
+never the body — the same ruling this file already makes about their written
+reports.
+
+**But YouTube is a different answer, found 11 Sep 2026.** This section used to
+end "there is nothing to embed", full stop, and that was wrong about the whole
+question rather than about this API. Craig supplied the playlist and it settles
+it:
+
+- **Sky Sports Premier League** — channel `UCTU_wC79Dgi9rh4e9-baTqA`, playlist
+  `PLUY_YSABhemI`, "Premier League Highlights 26/27". Sky hold the UK rights, so
+  this is the official source for the audience this app has, and oEmbed answers
+  **200** — it is offered for embedding.
+- **No API key for the current round.** `https://www.youtube.com/feeds/videos.xml?playlist_id=…`
+  is public and returns the latest **15** entries, which is about a round and a
+  half. A season's back catalogue needs the Data API's `playlistItems.list`,
+  which is 1 quota unit per 50 items against 10,000 a day.
+- **The title is a JOIN, not a search**, which is the whole reason this is safe.
+  Every title carries `{home} {h}-{a} {away}` — `Arsenal 2-1 Chelsea`,
+  `N Forest 0-0 Spurs`. **15 of 15 parse**, counted. Requiring BOTH clubs AND the
+  score to match one of our fixtures is a constraint no re-upload or compilation
+  passes by accident, which is what keeps us clear of the rule the portraits
+  decision set: a wrong one is worse than none.
+- **Four aliases, and all four are Sky dropping a suffix**: `Hull`→`Hull City`,
+  `N Forest`→`Nott'm Forest`, `Coventry`→`Coventry City`, `Ipswich`→`Ipswich
+  Town`. The other sixteen are FPL's own `name` verbatim.
+- **Do not order on the feed's dates.** The playlist feed's `published` is the
+  video's own publication and does not sort with the playlist — Arsenal 2-1
+  Chelsea is dated 9 Aug and arrives first. Match on the title.
+
+`next.config.ts` needs nothing for an iframe and the app sets no CSP, so the
+embed is `youtube-nocookie.com/embed/{id}` in a 16:9 box. Never fetch or re-host
+the video: embedding is what YouTube offers, and it is the only thing we take.
 
 ## The traps, all measured
 

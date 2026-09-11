@@ -49,13 +49,13 @@ const TABS = [
   // two elevens — the score is what he finds when he gets there. Still two
   // words, so the strip keeps `TabStrip`'s denser label size.
   { segment: "/players", label: "Line Ups", key: "players" },
-  // **The Premier League's own minute-by-minute** (Craig, 5 Sep 2026: "needs a
-  // match report section that we take from the premier league site"). CM's own
-  // fourth tab on this screen is `Match Report` (`cm0102/02.jpg`), which is the
-  // absence DESIGN §2 has carried by name since the reference was catalogued —
-  // "a text-commentary matchday". The mapper has been written and tested since
-  // 4 Sep and drew nothing.
-  { segment: "/report", label: "Match Report", key: "report" },
+  // **Highlights, where Match Report was** (Craig, 11 Sep 2026: *"in the real
+  // match tab, replace match report tab with highlights"*). CM's own fourth tab
+  // is `Match Report` and we carried it from 5 Sep — but the commentary moved
+  // under the goals on the Overview on 11 Sep, so this had become a second door
+  // to one room. What replaces it is the thing CM could not have: the match
+  // itself, from the rights holder's own playlist.
+  { segment: "/highlights", label: "Highlights", key: "highlights" },
 ] as const;
 
 export type MatchTab = (typeof TABS)[number]["key"];

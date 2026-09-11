@@ -82,6 +82,32 @@ export const PL_COMPETITION = 1;
  *  logic for a resource that is never long enough to need it. */
 export const PL_TEXTSTREAM_PAGE = 300;
 
+/** The rights holder's own highlights playlist, and the public feed that lists
+ *  it.
+ *
+ *  Sky Sports Premier League hold the UK rights and publish official highlights
+ *  on YouTube — channel `UCTU_wC79Dgi9rh4e9-baTqA`, playlist
+ *  `PLUY_YSABhemI` ("Premier League Highlights 26/27"). Craig supplied both on
+ *  11 Sep 2026 and `docs/providers/premier-league-api.md` carries the counts.
+ *
+ *  **`videos.xml` and not the Data API**, which is what makes this free of a
+ *  key: the feed is public, needs no credential, and carries the latest 15
+ *  entries — about a round and a half, which is what a match screen for a
+ *  recent fixture asks for. A season's back catalogue would need
+ *  `playlistItems.list` and a key; nothing wants one yet.
+ *
+ *  **The playlist id changes every summer**, the way `PL_COMP_SEASON` does, and
+ *  for the same reason it sits here rather than anywhere it could be computed. */
+export const HIGHLIGHTS_PLAYLIST = "PLUY_YSABhemI";
+export const YOUTUBE_FEED_BASE = "https://www.youtube.com/feeds/videos.xml";
+
+/** Where an embedded highlights video is played from.
+ *
+ *  The `-nocookie` host is YouTube's own privacy-preserving player and is the
+ *  only surface we take: the video is embedded, never fetched and never
+ *  re-hosted. */
+export const YOUTUBE_EMBED_BASE = "https://www.youtube-nocookie.com/embed";
+
 /** How a provider sees us.
  *
  *  A real browser string rather than a bot's. Both providers front their APIs

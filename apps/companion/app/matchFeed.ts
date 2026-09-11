@@ -1,5 +1,6 @@
 import type {
   FootballPlayer,
+  HighlightVideo,
   MatchStatRow,
   PlCommentaryLine,
   PlGoal,
@@ -8,7 +9,9 @@ import type {
   StreamCredit,
 } from "@epl/core";
 import {
+  highlightFor,
   injuredOff,
+  parseHighlightFeed,
   plCommentary,
   plFixtureCode,
   plGoals,
@@ -21,7 +24,15 @@ import {
   streamCredits,
 } from "@epl/core";
 import { roundGoals } from "./commentary";
-import { optaToCode, plFixture, plRound, plStats, plStream, theirFixtureId } from "./plFeed";
+import {
+  highlightsFeed,
+  optaToCode,
+  plFixture,
+  plRound,
+  plStats,
+  plStream,
+  theirFixtureId,
+} from "./plFeed";
 
 // What ONE match's screen asks the Premier League. The round's own questions are
 // next door in `commentary.ts`; the reads, the caches and the identity join both
@@ -299,6 +310,32 @@ export async function matchInjuries(
     const [fixture, stream] = await Promise.all([plFixture(id), plStream(id)]);
     return injuredOff(stream.events.content, plPlayerCodes(fixture, optaToCode(players)));
   });
+}
+
+/** The highlights video for ONE fixture, or null.
+ *
+ *  Craig, 11 Sep 2026: *"in the real match tab, replace match report tab with
+ *  highlights"*.
+ *
+ *  **A join and not a search.** `highlightFor` accepts a video only when both
+ *  clubs AND the score agree with this fixture, so a re-upload or a compilation
+ *  cannot land on a match page by accident — `highlights.ts` carries the
+ *  argument, which is the one the portraits decision already settled: a wrong
+ *  one is worse than none.
+ *
+ *  Null covers three ordinary cases and no error: a match nobody has played, a
+ *  match the playlist has not reached, and the feed being unavailable. */
+export async function matchHighlight(fixture: {
+  home: string;
+  away: string;
+  homeScore: number | null;
+  awayScore: number | null;
+}): Promise<HighlightVideo | null> {
+  try {
+    return highlightFor(parseHighlightFeed(await highlightsFeed()), fixture);
+  } catch {
+    return null;
+  }
 }
 
 export async function matchGoals(

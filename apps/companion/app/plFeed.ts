@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { PAGE_REVALIDATE, type FootballPlayer } from "@epl/core";
 import {
+  fetchHighlightsFeed,
   fetchPlFixture,
   fetchPlMatchStats,
   fetchPlRound,
@@ -128,3 +129,20 @@ export async function theirFixtureId(
   const round = await plRound(gameweek);
   return round.content.find((fixture) => plFixtureCode(fixture) === fixtureCode)?.id ?? null;
 }
+
+/** The rights holder's highlights playlist, cached for everybody.
+ *
+ *  **One cache key for the whole app**, not one per fixture: the feed is the
+ *  same fifteen entries whichever match page asks for it, so sixteen managers on
+ *  ten different matches cost YouTube one request per window between them.
+ *
+ *  Raw XML rather than parsed, for `plRound`'s reason read the other way — the
+ *  parse is pure and cheap, and caching the text keeps this file's job as I/O.
+ *
+ *  Throws on a bad response, which the caller catches: a match with no video is
+ *  the ordinary case and must not look like an outage. */
+export const highlightsFeed = unstable_cache(
+  async () => fetchHighlightsFeed(),
+  ["youtube-highlights"],
+  { revalidate: PAGE_REVALIDATE },
+);
