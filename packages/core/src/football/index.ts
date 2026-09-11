@@ -58,7 +58,7 @@ export { plManMatches, plSubstitutions } from "./premierleague/sheetEvents";
 export type { PlManMatch, PlSubstitution } from "./premierleague/sheetEvents";
 export { creditedGoals, goalGroups, plGoals } from "./premierleague/goals";
 export type { PlGoal, PlGoalGroup } from "./premierleague/goals";
-export { streamCredited, streamCredits } from "./premierleague/assists";
+export { injuredOff, streamCredited, streamCredits } from "./premierleague/assists";
 export type { StreamCredit } from "./premierleague/assists";
 export { plMatchBoard } from "./premierleague/matchStats";
 export type { MatchStatRow } from "./premierleague/matchStats";

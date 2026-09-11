@@ -120,20 +120,30 @@ export default function Line({
  *  A type this map does not name still prints, marked by its glyph and carrying
  *  no word.
  *
- *  **`substitution` is deliberately absent** (Craig, 11 Sep 2026: *"just remove
- *  'Sub', since its always said twice but keep symbol"*). Opta's own sentence
- *  opens `Substitution, Fulham. Rodrigo Muniz replaces Alex Iwobi`, so the label
- *  was the first word of the line printed twice. The swap glyph stays and does
- *  the marking. The same argument is available against `Goal` and `Booked` —
- *  their sentences open `Goal!` and say `is shown the yellow card` — and they
- *  keep their words because they were not what was asked for; the tone below is
- *  what makes them findable. */
+ *  **`substitution` and `goal` are deliberately absent**, both for the same
+ *  reason and both on Craig's word — *"just remove 'Sub', since its always said
+ *  twice but keep symbol"*, then *"Goal / Goal! ARS 2, - shows in a row, we can
+ *  remove the first goal in that case"*. Opta's sentences open `Substitution,
+ *  Fulham.` and `Goal! ARS 2, AVL 0.`, so in both cases the label was the first
+ *  word of the line printed twice. The glyph and the tone do the marking.
+ *
+ *  **`yellow card` went the same way** (*"Booked / Maxence Lacroix is shown the
+ *  yellow card for a bad foul. same, just remove the BOOKED"*), and this one is
+ *  the interesting case: its sentence does NOT open with the word, so the label
+ *  was not literally printed twice. What it was, was a label on a row that
+ *  already carries a yellow card glyph in yellow ink — three statements of one
+ *  fact, and the only one a reader needs is the one he can see without reading.
+ *
+ *  The three that remain say something no glyph and no tone can: `OG` is the
+ *  difference between a goal and a calamity, `Pen` between a goal and a spot
+ *  kick, and `VAR` between a goal and one taken away. Each opens a sentence that
+ *  starts `Goal!` or `Own Goal by`, so none of them is the first word repeated.
+ *  `Sent off` stays with them because a red card and a yellow are one glyph in
+ *  two colours. */
 const LOUD: Record<string, string> = {
-  goal: "Goal",
   "penalty goal": "Pen",
   "own goal": "OG",
   "VAR cancelled goal": "VAR",
-  "yellow card": "Booked",
   "red card": "Sent off",
 };
 

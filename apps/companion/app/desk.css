@@ -540,6 +540,32 @@
   box-shadow: inset 0 0 0 1px var(--color-bad);
 }
 
+/* The same box on the league-red plate a SELECTED row wears — the News list, the
+   only place the box and that ground meet.
+
+   `--color-bad` is oklch L 0.66 h 25 and `--color-league-deep` is L 0.45 h 22:
+   one hue apart at the same chroma, which is 2.05:1. So on the row a reader has
+   just tapped, the outlined box goes near-invisible and the filled one stops
+   reading as a block — the one mark on the row whose whole job is to say OUT.
+   `--color-faint-plate` is the same mechanism for the same reason on a blue one.
+
+   Ink carries both instead, at the 6.8:1 `--color-league-deep` is chosen for,
+   and the FILL versus OUTLINE pair is what still says certain versus uncertain —
+   DESIGN §2 puts that distinction in the fill rather than in a second hue, which
+   is exactly what makes recolouring the hue here safe.
+
+   Keyed off `aria-current`, which the row already sets to mark what is open, so
+   no component passes a second class to say a thing the DOM says already. */
+.cm-row[aria-current="true"] .cm-state {
+  background: var(--color-ink);
+  color: var(--color-league-deep);
+}
+
+.cm-row[aria-current="true"] .cm-state-doubt {
+  color: var(--color-ink);
+  box-shadow: inset 0 0 0 1px var(--color-ink);
+}
+
 /* A man who cannot be picked. CM greyed him almost out — measured 2.54:1 in the
    game's own screenshots, which is under any modern floor — so this greys to
    `--color-faint` instead: 5.30:1 on the ground and 4.56:1 on a raised row, the
@@ -659,6 +685,35 @@
    light rule under every row is fifteen boxes; a dark one is a list. */
 .cm-rows > * {
   border-bottom: 1px solid var(--color-bg);
+}
+
+/* **The block when a scope re-points it to a CLUB's own colour.** Two
+   departures from `.cm-index` above, and both are contrast rather than taste.
+
+   **Painted flat.** The gradient lightens the top stop by 22% white and `inkOn`
+   chooses its ink against the FLAT colour, so a club whose primary clears 4.5:1
+   can still fail where the block is lightest. Measured 11 Sep 2026 on the Line
+   Ups board: white at 4.7:1 against the base and `sweep` reading 3.63:1 against
+   the top, six shirt numbers at both widths.
+
+   **And it does not GREY.** `.cm-out .cm-index` above hands a dimmed block
+   `--color-faint-plate`, and that value is measured against the app's own deep
+   blue — which is the assumption a club colour breaks. Its own docblock names
+   this case in as many words: "if the palette moves them apart, this is where
+   the second value goes". There is no second value to give, because the ground
+   is a different colour on every screen; so the block keeps its full ink and the
+   row's NAME and FIGURES carry the greying on their own. `cm9900/02.jpg` does
+   the same — Pressman's row is grey and his number block is not.
+
+   A class rather than a Tailwind utility, because `.cm-index` is unlayered and
+   unlayered CSS beats `@layer utilities`. `[&_.cm-index]:bg-none` was written
+   first and lost silently, which is the trap this file already warns about. */
+.cm-index-club .cm-index {
+  background-image: none;
+}
+.cm-index-club .cm-out .cm-index,
+.cm-index-club .cm-out .cm-index * {
+  color: var(--cm-index-ink, var(--color-ink));
 }
 
 /* ---- How tall a row is, and how big the mark at the head of it -------------

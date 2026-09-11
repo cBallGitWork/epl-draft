@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { goalGroups } from "@epl/core";
-import type { FootballPlayer, PlGoal, PlGoalGroup, PlayerOwner, SheetRow } from "@epl/core";
+import type {
+  FootballPlayer,
+  PlGoal,
+  PlGoalGroup,
+  PlManMatch,
+  PlayerOwner,
+  SheetRow,
+} from "@epl/core";
 import { PLAYER } from "../../routes";
 import EventIcon from "../../../components/football/EventIcon";
 import type { EventGlyph } from "../../../components/football/EventIcon";
@@ -75,6 +82,7 @@ export default function Scoresheet({
   awayElse,
   owners,
   byCode,
+  did,
 }: {
   /** One side's goals, oldest first, with assisters already reconciled against
    *  FPL's counts by `creditedGoals`. */
@@ -87,6 +95,9 @@ export default function Scoresheet({
   awayElse: readonly SheetRow[];
   owners: Map<number, PlayerOwner>;
   byCode: Map<number, FootballPlayer>;
+  /** What the Premier League's events say happened to each man, for the one
+   *  thing FPL's per-fixture line cannot give: the MINUTE of a sending off. */
+  did: Map<number, PlManMatch>;
 }) {
   const empty =
     home.length === 0 && away.length === 0 && homeElse.length === 0 && awayElse.length === 0;
@@ -98,8 +109,8 @@ export default function Scoresheet({
 
   return (
     <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-      <Column goals={home} rest={homeElse} owners={owners} byCode={byCode} />
-      <Column goals={away} rest={awayElse} owners={owners} byCode={byCode} />
+      <Column goals={home} rest={homeElse} owners={owners} byCode={byCode} did={did} />
+      <Column goals={away} rest={awayElse} owners={owners} byCode={byCode} did={did} />
     </div>
   );
 }
@@ -109,11 +120,13 @@ function Column({
   rest,
   owners,
   byCode,
+  did,
 }: {
   goals: readonly PlGoal[];
   rest: readonly SheetRow[];
   owners: Map<number, PlayerOwner>;
   byCode: Map<number, FootballPlayer>;
+  did: Map<number, PlManMatch>;
 }) {
   return (
     <ul className="flex max-w-[26rem] flex-col gap-1">
@@ -131,7 +144,7 @@ function Column({
             code={player.code}
             name={player.name}
             owners={owners}
-            figure={marks(line)}
+            figure={marks(line, player.code === null ? undefined : did.get(player.code))}
             glyph={line.redCards > 0 ? "card" : null}
             glyphTone="text-bad"
           />
@@ -190,7 +203,7 @@ function Goal({
             // `tapfit` walks both and was reporting the desk one while the
             // commit message said it was clean. The scorer link below it has had
             // `min-h-11` at both widths all along.
-            className="ml-3 flex min-h-11 items-baseline gap-1.5 hover:underline lg:ml-4 lg:min-h-9"
+            className="ml-3 flex min-h-11 items-center gap-1.5 hover:underline lg:ml-4 lg:min-h-9"
           >
             <span className={`${SMALL_CAPS} shrink-0 text-faint`}>A</span>
             <span className="min-w-0 flex-1 truncate font-chrome text-sm font-bold text-muted lg:text-xl">
@@ -240,7 +253,14 @@ function Man({
   return (
     <Link
       href={code === null ? "#" : `${PLAYER}/${code}`}
-      className="group flex min-h-11 items-baseline gap-1.5 lg:min-h-11 lg:gap-3"
+      // **`items-center`, not `items-baseline`** (Craig, 11 Sep 2026: *"goals,
+      // card icons look off on mobile, they arent aligned"*). A baseline row
+      // with a `self-center` glyph in it is two alignment rules arguing: the
+      // text sat on its baseline and the icon centred itself in a line box
+      // taller than the glyph, which put the ball about four pixels low against
+      // the name. Everything on this row is one line, so one centre line is the
+      // whole answer — and the glyph no longer needs `self-center` to say so.
+      className="group flex min-h-11 items-center gap-1.5 lg:min-h-11 lg:gap-3"
     >
       {glyph === null ? null : (
         // **Its own type size, which is what makes it big.** `EventIcon` draws at
@@ -255,7 +275,7 @@ function Man({
         // at a step above, Palace 1-4 City read `Donnarum…`, `Haalan…` and
         // `Cherki (…` with two of the three owner brackets truncated away
         // entirely. The desk has the room and takes the full step.
-        <span className={`shrink-0 self-center text-lg lg:text-4xl ${glyphTone}`}>
+        <span className={`flex shrink-0 items-center text-lg lg:text-4xl ${glyphTone}`}>
           <EventIcon glyph={glyph} />
         </span>
       )}
@@ -280,11 +300,20 @@ function minutes(said: readonly number[]): string {
  *
  *  A sending off and a penalty missed are scoresheet entries and a list of goals
  *  would drop them. A booking is not — `named` stopped letting one on this sheet
- *  on 10 Sep 2026. */
-function marks(line: SheetRow["line"]): string {
+ *  on 10 Sep 2026.
+ *
+ *  Takes the man's PL events as well as his FPL line, because only one of the
+ *  two carries a minute for a sending off. */
+function marks(line: SheetRow["line"], did: PlManMatch | undefined): string {
   const said: string[] = [];
   if (line.penaltiesSaved > 0) said.push("pen saved");
   if (line.penaltiesMissed > 0) said.push("pen missed");
-  if (line.redCards > 0) said.push("red");
+  // **The MINUTE, not the word** (Craig, 11 Sep 2026: *"red card has a card, we
+  // just need the minute now instead of red text on overview"*). The red block
+  // beside the name already says what happened; `red` in the figure column said
+  // it a second time and put a word where every other row on this sheet carries
+  // a clock. Falls back to the word where the Premier League filed no minute —
+  // a sending off we cannot time is still a sending off.
+  if (line.redCards > 0) said.push(did?.sentOff == null ? "red" : `${did.sentOff}'`);
   return said.join(" · ");
 }

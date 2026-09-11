@@ -92,6 +92,7 @@ function card(
   join: Join,
   owner: PlayerOwner | undefined,
   club: Club | undefined,
+  hurt: boolean,
 ): MatchMan {
   const { man, did, bench } = row;
   const line = join.line(man.code);
@@ -111,6 +112,7 @@ function card(
     offAt: did?.offAt ?? null,
     booked: did?.booked ?? null,
     sentOff: did?.sentOff ?? null,
+    hurt,
     marks: (line === undefined ? [] : chipsFor(line)).map((chip) => ({
       label: chip.label,
       className: chip.className,
@@ -171,11 +173,16 @@ export default function TeamSheet({
   sheets,
   events,
   owners,
+  injured,
 }: {
   match: Match;
   sheets: { home: PlTeamSheet; away: PlTeamSheet };
   events: Map<number, PlManMatch>;
   owners: Map<number, PlayerOwner>;
+  /** Who went off hurt, by FPL code — from the commentary, which is the only
+   *  place that says so. Empty is the ordinary answer: 5 of 87 substitutions in
+   *  a round. */
+  injured: ReadonlySet<number>;
 }) {
   const join = joinOf(match);
   return (
@@ -192,8 +199,22 @@ export default function TeamSheet({
     // 390 screen leaves it. It is on this wrapper, on each `<section>`, and on
     // the head cell that had the nowrap.
     <div className="grid min-w-0 gap-2 lg:grid-cols-2">
-      <Side club={match.home} sheet={sheets.home} events={events} owners={owners} join={join} />
-      <Side club={match.away} sheet={sheets.away} events={events} owners={owners} join={join} />
+      <Side
+        club={match.home}
+        sheet={sheets.home}
+        events={events}
+        owners={owners}
+        join={join}
+        injured={injured}
+      />
+      <Side
+        club={match.away}
+        sheet={sheets.away}
+        events={events}
+        owners={owners}
+        join={join}
+        injured={injured}
+      />
     </div>
   );
 }
@@ -253,12 +274,14 @@ function Side({
   events,
   owners,
   join,
+  injured,
 }: {
   club: Club | undefined;
   sheet: PlTeamSheet;
   events: Map<number, PlManMatch>;
   owners: Map<number, PlayerOwner>;
   join: Join;
+  injured: ReadonlySet<number>;
 }) {
   const colours = clubColours(club?.shortName ?? "");
   const rows = ordered(sheet, events);
@@ -274,7 +297,13 @@ function Side({
     // should match teams"*). `inkOn` answers a pale side, which is a case the
     // reference has: `cm9900/16.jpg` is Everton blue against Torquay white.
     <section
-      className={`${PANEL_FLUSH} min-w-0`}
+      // **`cm-index-club` is a CONTRAST fix, not a look.** Re-pointing the
+      // block to a club's colour broke two things that were measured against the
+      // app's own deep blue: the 22%-white gradient stop, and `.cm-out`'s dimmed
+      // plate ink. `desk.css` carries both and the reasoning; `sweep` found them
+      // at 3.63:1 on six shirt numbers at both widths, which is the whole reason
+      // that file has a rule at all.
+      className={`${PANEL_FLUSH} cm-index-club min-w-0`}
       style={
         {
           "--cm-index": colours.primary,
@@ -395,6 +424,7 @@ function Side({
               owner={row.man.code === null ? undefined : owners.get(row.man.code)}
               join={join}
               club={club}
+              hurt={row.man.code !== null && injured.has(row.man.code)}
               opensBench={at === bench}
             />
           ))}
@@ -416,6 +446,7 @@ function Row({
   owner,
   join,
   club,
+  hurt,
   opensBench,
 }: {
   row: Named;
@@ -423,6 +454,8 @@ function Row({
   join: Join;
   /** For the card, which names the club a row cannot spare the width for. */
   club: Club | undefined;
+  /** Whether he went off injured. */
+  hurt: boolean;
   opensBench: boolean;
 }) {
   const { man, did, bench } = row;
@@ -504,7 +537,7 @@ function Row({
             on a player brings up pop up player card"*). The card is told what
             this row already holds and reads nothing of its own — see
             `MatchPlayerCard`. */}
-        <MatchPlayerCard man={card(row, join, owner, club)} className={NAME_CELL}>
+        <MatchPlayerCard man={card(row, join, owner, club, hurt)} className={NAME_CELL}>
           {man.position === null ? null : (
             <span className={SHEET_POSITION}>{POSITION[man.position] ?? man.position}</span>
           )}
@@ -519,7 +552,7 @@ function Row({
           {owner === undefined ? null : (
             <span className={`shrink-0 truncate ${SHEET_OWNER}`}>({owner.teamName})</span>
           )}
-          <SubNote did={did} />
+          <SubNote did={did} hurt={hurt} />
         </MatchPlayerCard>
       </td>
       {/* **One chip under a thumb and two on a desk.** CM's own board keeps a
@@ -574,10 +607,14 @@ function Row({
  *  Amber is `--color-mid`: "a figure standing alone beside a name", which is
  *  what this is, and `docs/ui/reference/README.md` records it as the game's ink
  *  for an event or a change. */
-function SubNote({ did }: { did: PlManMatch | undefined }) {
+function SubNote({ did, hurt }: { did: PlManMatch | undefined; hurt: boolean }) {
   const parts = [
     did?.onAt == null ? null : `sub on ${did.onAt}'`,
-    did?.offAt == null ? null : `sub off ${did.offAt}'`,
+    // **`inj` where the commentary said so** (Craig, 11 Sep 2026: *"we would
+    // like to include players injured too"*). On the note rather than in a
+    // column of its own, because it is a fact ABOUT the substitution — 5 of 87
+    // in a round, so a column would be empty on the other 82.
+    did?.offAt == null ? null : `sub off ${did.offAt}'${hurt ? " inj" : ""}`,
   ].filter((part) => part !== null);
   return parts.length === 0 ? null : (
     <span className="numeric ml-auto shrink-0 whitespace-nowrap pl-2 text-sm font-bold text-mid lg:text-base">

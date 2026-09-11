@@ -46,6 +46,8 @@ export interface MatchMan {
   offAt: number | null;
   booked: number | null;
   sentOff: number | null;
+  /** Whether he went off injured, which the commentary says and no field does. */
+  hurt: boolean;
   /** Already resolved by the board — label and tone, not a provider row. */
   marks: { label: string; className: string }[];
   bench: boolean;
@@ -127,7 +129,13 @@ function Card({ man, onClose }: { man: MatchMan; onClose: () => void }) {
         <dl className="flex flex-col gap-1 text-sm">
           <Fact label="Named" value={man.bench ? "Substitute" : "Started"} />
           {man.onAt === null ? null : <Fact label="Came on" value={`${man.onAt}'`} />}
-          {man.offAt === null ? null : <Fact label="Came off" value={`${man.offAt}'`} />}
+          {man.offAt === null ? null : (
+            <Fact
+              label={man.hurt ? "Off injured" : "Came off"}
+              value={`${man.offAt}'`}
+              tone={man.hurt ? "text-bad" : "text-ink"}
+            />
+          )}
           {man.booked === null ? null : <Fact label="Booked" value={`${man.booked}'`} />}
           {man.sentOff === null ? null : (
             <Fact label="Sent off" value={`${man.sentOff}'`} tone="text-bad" />

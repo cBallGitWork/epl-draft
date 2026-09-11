@@ -4,7 +4,7 @@ import Skeleton from "../../../../components/shell/Skeleton";
 import MatchShell from "../Shell";
 import TeamSheet from "../TeamSheet";
 import { matchOwners, readMatch } from "../match";
-import { matchManEvents, teamSheets } from "../../../../matchFeed";
+import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchFeed";
 import type { Match } from "../match";
 
 // What the afternoon was worth, both sides at once.
@@ -67,10 +67,11 @@ async function Board({ match }: { match: Match }) {
   // costs one upstream request, not two. A fixture with no gameweek answers
   // absent from both without a guard here; `matchFeed` owns that.
   const { gameweek, code } = match.fixture;
-  const [owners, sheets, events] = await Promise.all([
+  const [owners, sheets, events, injured] = await Promise.all([
     matchOwners(match.fixture),
     teamSheets(gameweek, code, match.snapshot.players),
     matchManEvents(gameweek, code, match.snapshot.players),
+    matchInjuries(gameweek, code, match.snapshot.players),
   ]);
 
   // Their sheet is the only source of a bench, so without it there is no team
@@ -87,7 +88,15 @@ async function Board({ match }: { match: Match }) {
   // no importer is what CODE_RULES §2 deletes. `PitchRows` — the shared
   // machinery it was built on — has five other callers and is untouched, so the
   // pitch comes back the day there is a question it answers.
-  return <TeamSheet match={match} sheets={sheets} events={events} owners={owners} />;
+  return (
+    <TeamSheet
+      match={match}
+      sheets={sheets}
+      events={events}
+      owners={owners}
+      injured={injured}
+    />
+  );
 }
 
 function BoardWaiting() {

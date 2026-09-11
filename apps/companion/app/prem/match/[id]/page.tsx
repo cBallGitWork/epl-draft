@@ -14,6 +14,7 @@ import {
   matchFacts,
   matchGoalMinutes,
   matchGoals,
+  matchManEvents,
   matchPlayerNames,
   matchReport,
   matchStreamCredits,
@@ -120,7 +121,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
  *  carries a minute for every goal in all ten matches, for one request, and it
  *  is already cached for the Live tab's wire. */
 async function Sheet({ match }: { match: Match }) {
-  const [owners, minutes, goals, credits] = await Promise.all([
+  const [owners, minutes, goals, credits, did] = await Promise.all([
     matchOwners(match.fixture),
     matchGoalMinutes(
       match.fixture.gameweek,
@@ -137,6 +138,8 @@ async function Sheet({ match }: { match: Match }) {
     // a penalty won, an own goal forced, a rebound off a blocked shot. A
     // proposal that `side` below only uses if FPL's own counts confirm it.
     matchStreamCredits(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
+    // For the one figure FPL's per-fixture line has no minute for: a sending off.
+    matchManEvents(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
   ]);
   const { home, away } = sides(match);
   const ours = side(goals, home, away, minutes, credits);
@@ -150,6 +153,7 @@ async function Sheet({ match }: { match: Match }) {
       awayElse={theirs.rest}
       owners={owners}
       byCode={match.byCode}
+      did={did}
     />
   );
 }
