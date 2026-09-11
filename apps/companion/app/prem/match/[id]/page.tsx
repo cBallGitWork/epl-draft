@@ -43,7 +43,15 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
   return (
     <MatchShell match={match} current="overview">
-      <section className={PANEL}>
+      {/* **Room under the last scorer** (Craig, 11 Sep 2026: *"have the first box
+          with the goalscoerers etc extend a little bit for breathing room"*).
+          `PANEL`'s own `p-2` is right for a box of rows and too tight for this
+          one: a 0-2 is two lines in a box that used to fill the screen, so the
+          assister's name sat almost on the bottom edge. Padding rather than a
+          `min-h`, because it should breathe the same on a 0-0 and on a 5-2 — a
+          stated height would leave a hole under the first and do nothing for
+          the second. */}
+      <section className={`${PANEL} pb-6 lg:pb-8`}>
         {/* The date in full and the round beside it, which is `02.jpg`'s own
             head: `Saturday 8th September 2007` on a plate at the left and
             `Serie A / HT 2-0` at the right. The round takes the cyan (Craig,
