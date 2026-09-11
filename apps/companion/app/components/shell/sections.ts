@@ -156,3 +156,24 @@ export function owns(routes: readonly string[], pathname: string): boolean {
 export function isPaperRoute(pathname: string): boolean {
   return owns(PAPER_ROUTES, pathname);
 }
+
+/** The routes whose SUBJECT owns the ground: a club, and a match, which takes
+ *  the home club's.
+ *
+ *  A club screen is about somebody rather than about the competition, and
+ *  `PlateShell` already says so in that club's colours; the photograph behind it
+ *  is the same statement one layer further back. A match is played at the home
+ *  club's ground, so it wears the same picture — which is the ONE thing the
+ *  fixture is about that the two crests on the bar do not already say. */
+const SUBJECT_GROUND_ROUTES = ["/prem/club", "/prem/match"];
+
+/** Whether the page under this route draws its own ground, so the shell's
+ *  standing one should stand down rather than load a photograph nobody sees.
+ *
+ *  The shell cannot resolve the club itself — it renders above every route in
+ *  the app and a match id says nothing about who is at home — so the two Shells
+ *  that DO know draw it, and this is how the shell knows to get out of the way.
+ *  Same shape and same reason as `isPaperRoute`. */
+export function drawsOwnGround(pathname: string): boolean {
+  return owns(SUBJECT_GROUND_ROUTES, pathname);
+}

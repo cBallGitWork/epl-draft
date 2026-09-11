@@ -3,8 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { DESK_GROUND } from "@epl/core";
-import { isPaperRoute } from "../shell/sections";
+import { DESK_GROUND, DESK_GROUND_BLUR, clubGroundPhoto } from "@epl/core";
+import { drawsOwnGround, isPaperRoute } from "../shell/sections";
 
 // The players, behind the screen. Championship Manager drew every screen over a
 // darkened match photograph, and dropping it is most of why a retokened desk
@@ -72,10 +72,41 @@ import { isPaperRoute } from "../shell/sections";
 const SCRIM = 1;
 const DARKEN = 0.55;
 
-export default function PhotoGround({ faces }: { faces: readonly string[] }) {
+export default function PhotoGround({
+  faces = [],
+  subject,
+}: {
+  faces?: readonly string[];
+  /** The club this screen is ABOUT, when a subject's own shell is drawing the
+   *  ground — its short name, or null for a subject screen with no club to name
+   *  (a match FPL has filed without a home side).
+   *
+   *  Left off entirely by the shell, which is a different thing from null and
+   *  the distinction the two branches below turn on: the shell does not know the
+   *  club and never will, so on a route whose subject draws its own ground it
+   *  stands down. A shell that guessed would load a second photograph behind the
+   *  first and pay for a picture nobody sees. */
+  subject?: string | null;
+}) {
   const pathname = usePathname();
   if (isPaperRoute(pathname)) return null;
-  if (DESK_GROUND === null && faces.length === 0) return null;
+  // Asked by the shell, on a route where a Shell below draws its own.
+  if (subject === undefined && drawsOwnGround(pathname)) return null;
+
+  // A club with no photograph of its own falls back to the shared ground rather
+  // than to nothing: `clubGroundPhoto` answers null for a promoted club, on
+  // `portraits.ts`' rule that a stand-in must never look like an answer, and the
+  // desk's own picture is not a stand-in for this club — it is the desk's.
+  //
+  // **The picture and its placeholder travel together**, which is why this is one
+  // lookup rather than two: a ground drawn with the wrong club's blur would show
+  // the previous stadium for a frame and then cut, which is the very fault the
+  // placeholder is here to fix.
+  const photo =
+    subject === undefined || subject === null ? null : clubGroundPhoto(subject);
+  const ground = photo?.src ?? DESK_GROUND;
+  const blur = photo === null ? DESK_GROUND_BLUR : photo.blur;
+  if (ground === null && faces.length === 0) return null;
 
   return (
     <div
@@ -84,7 +115,7 @@ export default function PhotoGround({ faces }: { faces: readonly string[] }) {
       // Darkened and not greyed: see the note on the constants above.
       style={{ opacity: SCRIM, filter: `brightness(${DARKEN})` }}
     >
-      {DESK_GROUND === null ? (
+      {ground === null ? (
         // The placeholder, and it is real data rather than an invented stadium:
         // the portraits of men actually in this round, which the app already
         // holds and already optimises for the pitch. A ground nobody in the
@@ -92,12 +123,26 @@ export default function PhotoGround({ faces }: { faces: readonly string[] }) {
         faces.map((src) => <Face key={src} src={src} />)
       ) : (
         <Image
-          src={DESK_GROUND}
+          src={ground}
           alt=""
           fill
           sizes="100vw"
           className="object-cover"
           priority
+          // **Why a placeholder at all** (Craig, 11 Sep 2026: *"the screen go
+          // black when going between images"*). The ground is drawn by the
+          // subject's own Shell, so it unmounts and remounts on every
+          // navigation; between the two there is a frame with no photograph in
+          // it and the near-black `--color-bg` showing through a full-bleed
+          // element. This paints in that frame out of the HTML itself, with no
+          // request to wait on, and Next fades the real picture in over it.
+          //
+          // Conditional because `DESK_GROUND_BLUR` is typed null-able with
+          // `DESK_GROUND` — they are one picture — and `placeholder="blur"`
+          // without a `blurDataURL` throws on a non-static import.
+          {...(blur === null
+            ? {}
+            : { placeholder: "blur" as const, blurDataURL: blur })}
         />
       )}
     </div>

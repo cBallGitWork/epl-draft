@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { clubGround } from "@epl/core";
 import type { PlMatchFacts } from "@epl/core";
 import { matchFacts } from "../../../matchFeed";
+import PhotoGround from "../../../components/football/PhotoGround";
 import Caption from "../../../components/shell/Caption";
 import MatchBar from "./MatchBar";
 import MatchTabs from "./MatchTabs";
@@ -62,6 +63,14 @@ export default async function MatchShell({
     // A long match pushes past and the strip follows the content, which is the
     // same rule read the other way.
     <div className="flex min-h-[calc(100dvh-var(--page-top)-var(--page-foot))] flex-col gap-2">
+      {/* **The HOME club's ground, because that is where the match was played.**
+          The shell's standing photograph stands down on this route
+          (`drawsOwnGround`) — it renders above every route in the app and a
+          fixture id says nothing about who is at home, so the one place that can
+          answer is here. `home` is undefined for a fixture FPL has filed without
+          a side, and null is how this says so: the desk's own ground, never some
+          other club's. */}
+      <PhotoGround subject={home?.shortName ?? null} />
       <MatchBar
         home={home}
         away={away}

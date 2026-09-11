@@ -117,6 +117,19 @@ export default function FootRow({
               );
             })}
           </ul>
+          {/* **Not a section, and it does not pretend to be one.** The photographs
+              behind the desk are under licences that require naming who took
+              them, so the page that does has to be reachable from a phone — and
+              this drawer is the only chrome a phone has that is not the six
+              plates. Quieter than the rows above it because it is the app
+              talking about itself rather than somewhere to go. */}
+          <Link
+            href="/credits"
+            onClick={() => setMore(false)}
+            className="flex min-h-11 items-center border-t border-line px-3 text-sm text-muted hover:bg-raised"
+          >
+            Credits
+          </Link>
         </Modal>
       ) : null}
     </>

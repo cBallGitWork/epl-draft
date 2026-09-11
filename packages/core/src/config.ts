@@ -333,6 +333,13 @@ export const FANTRAX_BADGE_BASE =
  */
 export const DESK_GROUND: string | null = "/ground/crowd.jpg";
 
+/** The same picture at 16px wide, inline, so it paints before any request
+ *  returns. A club's own ground carries one of these on its row in
+ *  `football/grounds.ts` and for the same reason; this is the shared one's.
+ *  Null whenever `DESK_GROUND` is, because the two are one picture. */
+export const DESK_GROUND_BLUR: string | null =
+  "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAALABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgME/8QAIBAAAgICAQUBAAAAAAAAAAAAAQMCEQAEIRITM0GR4f/EABQBAQAAAAAAAAAAAAAAAAAAAAP/xAAaEQACAgMAAAAAAAAAAAAAAAAAAQIRISIx/9oADAMBAAIRAxEAPwAnag2LJLPux1fmWTsJcycmtgLPAMvuHY1EdvxQFkA0KzInURFTiFxuMuL5rCi6yhp7dP/Z";
+
 /** The league's clock. Every date a manager reads is in it, whatever their phone
  *  says, because a deadline is the same instant for all sixteen of them and a
  *  capture is filed under the day it happened here.

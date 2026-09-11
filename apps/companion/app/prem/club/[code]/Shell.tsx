@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Club } from "@epl/core";
 import { clubColours } from "@epl/core";
+import PhotoGround from "../../../components/football/PhotoGround";
 import PlateShell from "../../../components/shell/PlateShell";
 import ClubTabs from "./ClubTabs";
 import type { ClubTab } from "./ClubTabs";
@@ -36,6 +37,12 @@ export default function ClubShell({
   return (
     <PlateShell colours={clubColours(club.shortName)} title={club.name} caption={title}
       tabs={<ClubTabs code={club.code} current={current} empty={empty} />}>
+      {/* **This club's own ground, behind this club's own screen.** The shell's
+          standing photograph stands down here (`drawsOwnGround`) because it
+          renders above every route and cannot know whose screen this is; the one
+          place that does know is this Shell. A club we have no photograph for
+          falls back to the desk's, which is `PhotoGround`'s own decision. */}
+      <PhotoGround subject={club.shortName} />
       {children}
     </PlateShell>
   );

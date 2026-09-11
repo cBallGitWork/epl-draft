@@ -78,6 +78,29 @@ colour. `components/football/PhotoGround` carries both; `DESK_GROUND` in core
 config is where the picture goes, and until one lands the ground is drawn from
 the round's own portraits.
 
+**A club's own screens take a photograph of its own ground** (Craig, 11 Sep
+2026). One shared crowd shot behind every screen in the app is the desk's
+wallpaper; a club screen is about SOMEBODY, and `PlateShell` already says so in
+that club's colours — the ground is the same statement one layer further back. A
+match takes the HOME club's, because that is where it was played, and it is the
+one thing about the fixture the two crests on the bar do not already say.
+`football/grounds.ts` holds the twenty, keyed as the colours are, and a club with
+no picture falls back to `DESK_GROUND` rather than wearing somebody else's.
+
+**The shell cannot pick it, so the subject's own Shell draws it.** `PhotoGround`
+renders above every route and a fixture id says nothing about who is at home, so
+`drawsOwnGround` is how the shell's standing photograph stands down — the same
+shape as `isPaperRoute`, and for the same reason. The cost of that is a ground
+that unmounts on every navigation, which showed as the screen going black between
+two clubs; every row carries a 16px inline placeholder so the gap holds the
+picture rather than `--color-bg`.
+
+**These are other people's photographs and the licence travels with them.** All
+twenty are Creative Commons off Wikimedia Commons, which means naming the
+photographer and linking the terms — so `/credits` prints the table and both
+navigation objects carry a quiet link to it. A ground added without an author is
+a licence breach, not an untidy row, which is why the test asserts it.
+
 **The rule is measured where the bound could only be stated.** `sweep` cannot
 help — the ground is `fixed` at `-z-10`, an ancestor of nothing, so it composites
 straight past and reports every route clean whatever is behind it.

@@ -166,6 +166,16 @@ export default function Rail({
             );
           })}
         </ul>
+        {/* The same link the phone's drawer carries, and here for the same
+            reason: a licence that requires attribution needs the page that gives
+            it to be reachable. `mt-auto` puts it on the floor of the rail, below
+            the sections and clear of them — it is not a seventh place to go. */}
+        <Link
+          href="/credits"
+          className="mt-auto px-1 py-3 text-center font-chrome text-3xs uppercase text-faint hover:text-ink"
+        >
+          Credits
+        </Link>
       </nav>
     </>
   );

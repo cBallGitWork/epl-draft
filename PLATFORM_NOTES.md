@@ -2925,6 +2925,60 @@ and it never touches ink, a table cell or a control. The ramp is four literal
 values in the component rather than tokens, precisely so that promoting it is a
 deliberate act.
 
+## Twenty ground photographs, hunted rather than generated (11 Sep 2026)
+
+**The choice was Craig's and it was the expensive one.** Offered generated crowds
+in club colours, generated stadium scenes, or real photographs hunted off
+Wikimedia Commons, he took the third. It costs twenty manual picks and an
+attribution surface the app did not have; it buys pictures that are actually the
+grounds.
+
+**The hunt is not in the tree and does not need to be.** It ran once out of the
+scratchpad: query Commons for each club's category and a few search terms, filter
+to free licences, landscape, 1400px or wider, build a contact sheet per club, pick
+by eye. What is committed is the RESULT — the files under
+`apps/companion/public/ground/clubs/` and the table in
+`packages/core/src/football/grounds.ts`. Re-running it is a fresh hunt, not a
+build step.
+
+**Three categories are traps and cost a whole first pass.** `Category:Anfield` is
+a DISTRICT of Liverpool (twelve terraced houses, no stadium), `Category:Elland
+Road` is a ROAD (four photographs of the Old Peacock pub), and `Category:City
+Ground` without its town is a disambiguation that lands on Nottingham's Guildhall
+and a Pride parade. The stadiums are `Anfield Stadium`, `Elland Road Stadium` and
+`City Ground, Nottingham`. A fourth, `City of Manchester Stadium`, is real but
+dominated by the 2002 Commonwealth Games — the Etihad came from a free-text
+search instead.
+
+**Commons rate-limits hard and answers a missing `action` with HTML.** 429s
+arrive within seconds of a burst and carry a `Retry-After` of 10-35s; honour it,
+sleep 2s between calls, and persist after every club so a run resumes. Separately:
+omitting `action=query` returns the API help PAGE with status 200, which parses as
+"Unexpected token '<'" and looks like a network fault. And `upload.wikimedia.org`
+throttles full-size originals far harder than the thumbnail service — ask
+`/thumb/<path>/1920px-<name>` for the width you actually want. Note the API's
+`thumburl` comes back at a rounded bucket (500px when you asked for 480), so a
+rewrite must match `\d+px-` rather than the width requested.
+
+**Licences, counted:** 11 CC BY-SA (2.0/3.0/4.0), 7 CC BY (2.0/3.0), 2 CC0. All
+require or tolerate attribution; every one names an author and links its terms,
+and `grounds.test.ts` fails the build if one does not. Attribution is at
+`/credits`, linked from the rail's foot and the phone drawer — a credits page
+nothing links to would satisfy neither licence.
+
+**Two are photographs of rugby at a football ground**, and knowingly: Everton's
+Hill Dickinson Stadium and Leeds' Elland Road both had far better crowd shots from
+rugby league fixtures than from football. They are the right grounds, which is the
+test that matters, but the posts are visible to anyone looking for them.
+
+**Sunderland is the one club with no people in its picture.** The only populated
+shot of the Stadium of Light on Commons is a stand full of Newcastle supporters.
+
+**The ground is 7.3 MB of repo, not of page.** Twenty files at 1920px on the long
+edge, quality 75, native aspect kept — `object-cover` across a portrait phone
+crops a 16:9 master to ribbons, where a 4:3 original survives it. `next/image`
+re-encodes for delivery, so the master's weight is a git cost only.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for

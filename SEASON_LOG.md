@@ -3622,3 +3622,40 @@ screenshot cards were not reaching his device.
 settled in one pass what prose had been circling for three: the CM title bar is
 handsome and the blue is identical on all eleven cards, so its second line
 carries no information. That is not an argument anyone wins in a paragraph.
+
+## A ground per club, and the black frame it introduced (11 Sep 2026)
+
+Craig: *"i like the deafult we have of people outside a stadium. lets get an
+image for each team in the league, that can be used for their club page and a
+prem match for the home team."*
+
+Twenty photographs hunted off Wikimedia Commons, picked from contact sheets, and
+wired so a club screen wears its own ground and a match wears the HOME club's.
+`PLATFORM_NOTES.md` carries what is standing — the three category traps, the rate
+limits, the licence counts, the two rugby fixtures.
+
+The wiring is `drawsOwnGround` in `sections.ts`: the app shell renders above every
+route and a fixture id says nothing about who is at home, so the two Shells that
+DO know draw the ground and the shell's standing one stands down. Cheap, no
+parallel route, no client store — and it moved the ground into the page tree,
+where it unmounts on every navigation.
+
+Which Craig saw within minutes: *"loading between pages looks weird (you can the
+screen go black when going between iamges)"*. Fixed with a 16px inline JPEG per
+row and `placeholder="blur"`. Measured rather than asserted: with the image
+request held open, the bare gutter reads rgb(70, 46, 53) against the loaded
+photograph's rgb(70, 48, 55), where `--color-bg` is a near-black navy.
+
+**Worth recording how the first measurement lied.** Blocking `*/_next/image*`
+looked like the obvious test and is the wrong one — a blocked image ERRORS, and
+Next clears the placeholder on error by design, so the capture showed exactly the
+black it was meant to disprove. Holding the request open with `Fetch.enable` and
+never continuing it is what a slow connection actually does.
+
+`/credits` is new, and it is a licence condition rather than a courtesy: CC BY and
+CC BY-SA both require naming the photographer and linking the terms. The rail's
+foot and the phone's More drawer both link it.
+
+Half this session's build failures were another session's in-flight work on
+`league/matchups` — `sides.tsx` landed before its `FootballTab` export. Cleared by
+the time the gates ran green.
