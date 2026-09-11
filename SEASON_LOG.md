@@ -10,6 +10,55 @@ true on its date and is not a statement about the tree today; that is why
 `docs-drift-auditor` exempts a season log, and why anything still load-bearing
 belongs in `PLATFORM_NOTES.md` instead of here.
 
+## 11 Sep 2026 — the match scoresheet folds, and three furniture rows get their size back
+
+Craig, against the Ipswich 0-2 Liverpool Overview: *"stadium name, data, and
+gameweek, referee row all way to small… owner name can go after ISAK (put in
+brackets), saves a row… assist can then go under goalscorer (and show owner
+name)… isak can have one row only for both goals… both assists can be one row too
+if its both. if it was 2 players, just show two assists row… can make scorer and
+minute font bigger… stadium name and ref row only show on overview page."* Seven
+asks, and they are one argument: the screen with the fewest facts in the app was
+spending the most rows on them.
+
+**One row per SCORER.** `goalGroups` in `packages/core/.../sheetEvents.ts` folds
+a side's goals by the man who got them, keyed on the pair `(scorer, own)` so an
+own goal never joins his real ones — they are credited to different sides — and
+on the minute for a scorer the bridge could not place, because two nulls are two
+men. Six tests. Isak reads `6', 9'` on one line; Alex Scott's two Bournemouth
+goals, which were the case that argued for goal-rows on 10 Sep, read `9', 35'`
+with his one assister under them once.
+
+**It is not a reversal of the 10 Sep move.** That day's change was from a list of
+MEN to a list of GOALS, because a man-row gave a scorer and an assister the same
+ink. They still sit on different lines, in different ink, at different sizes;
+what folded is a man's own name repeated over his second goal.
+
+**The owner moved into brackets after the name** and the assister got one, which
+he never had — a league team name is a gloss on the name it follows, not a fact
+with a row of its own. Two rows of chrome per scorer became none.
+
+**Three sizes, off the reference's own proportions rather than a feeling.**
+`cm0102/02.jpg` sets its scorer at about 2.2% of an 800px canvas, its dated strip
+and its foot line at about 1.4%, and its ground caption at about 1.75%. On a 1440
+desk that is 32, 20 and 25; ours were 24, 14 and 18. Scorer and minute
+`lg:text-2xl → lg:text-3xl`, the date strip and the referee line
+`lg:text-sm → lg:text-xl`, and the shared `Caption` `lg:text-lg → lg:text-2xl`.
+**The phone is unchanged at all three**, because a scoresheet column is half a
+390px screen and the caption's 28px band is already mostly filled — the complaint
+was about a desk and the arithmetic only argues for a desk.
+
+**The ground caption and the referee line are the Overview's alone now.** They
+were under all five tabs on the argument that a fact about the match is true on
+the stats board as much as on the scoresheet — which it is, and is beside the
+point: the other four are TABLES, and a table pushed down by a ground it did not
+ask for has paid two rows of a phone's screen for a fact already read. The
+fixture detail read they come off is only made on that route now. The Player
+Stats table starts two rows higher.
+
+`sweep` clean on all 30 routes at both widths, 1274 tests green.
+
+
 ## A second client component, on purpose
 
 `AutoRefresh` was the app's only `"use client"` file and its comment said so

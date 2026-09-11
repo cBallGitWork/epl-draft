@@ -45,10 +45,16 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               Division / HT 1-1` are one colour at the two ends of one bar. The
               date read as `--color-ink` beside a cyan round, which made a strip
               of two facts look like a fact and a label. */}
-          <span className="numeric text-xs font-bold uppercase text-info lg:text-sm">
+          {/* **A step and a half up since 11 Sep 2026** (Craig: *"stadium name,
+              data, and gameweek, referee row all way to small"*). `02.jpg` sets
+              its own dated strip at about 1.4% of an 800px canvas — 20px on a
+              1440 desk, where ours was 14. The foot line moved with it and the
+              two are still set alike, which is the rule this strip has been
+              under since it took the same ink. */}
+          <span className="numeric text-sm font-bold uppercase text-info lg:text-xl">
             {fixture.kickoff === null ? "Date TBC" : londonDayAndDate(fixture.kickoff)}
           </span>
-          <span className="numeric text-xs font-bold text-info lg:text-sm">
+          <span className="numeric text-sm font-bold text-info lg:text-xl">
             {state(match, facts)}
           </span>
         </div>

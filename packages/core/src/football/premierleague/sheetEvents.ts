@@ -303,3 +303,63 @@ export function creditedGoals(
     resolves && goal.assister === null ? { ...goal, assister: short[0].code } : goal,
   );
 }
+
+/** One SCORER's contribution to a side, with every goal he got folded into it.
+ *
+ *  Craig, 11 Sep 2026, on seeing Isak twice with Gakpo under each: *"isak can
+ *  have one row only for both goals… both assists can be one row too if its
+ *  both. if it was 2 players, just show two assists row."*
+ *
+ *  **This is the inverse of the move made on 10 Sep and it is not a reversal of
+ *  it.** That day's change was from a list of MEN to a list of GOALS, because a
+ *  man-row gave a scorer and an assister the same ink and nothing told them
+ *  apart. The scorer and the assister still live on different lines, in
+ *  different ink, at different sizes — what folds here is only the repetition of
+ *  ONE MAN'S NAME above his own second goal, which said nothing the minute
+ *  beside it had not.
+ *
+ *  **A man's own goal never joins his real ones.** They are credited to
+ *  different sides and `PlGoal.own` is the flag; keying on the pair keeps a
+ *  hypothetical scorer-and-own-goal afternoon as two rows, which is what it was.
+ *
+ *  **An unplaced scorer gets a row to himself.** `scorer` is null for a man the
+ *  bridge could not code, and two nulls are two different men — folding them
+ *  would invent one player who scored both. */
+export interface PlGoalGroup {
+  /** FPL code, or null for a man the bridge could not place. */
+  scorer: number | null;
+  own: boolean;
+  /** His minutes, oldest first. Never empty. */
+  minutes: number[];
+  /** The DISTINCT men who set them up, in the order the goals came. One name
+   *  when the same man laid on both, two when it was two — and empty when Opta
+   *  credited nobody, which is 20 of 76 goals. */
+  assisters: number[];
+}
+
+/** One side's goals folded to one row per scorer, oldest goal first.
+ *
+ *  Pure, order-preserving, and it takes the goals a caller already holds — the
+ *  same shape `creditedGoals` hands back, so the two compose in that order. */
+export function goalGroups(goals: readonly PlGoal[]): PlGoalGroup[] {
+  const groups: PlGoalGroup[] = [];
+  const at = new Map<string, PlGoalGroup>();
+
+  for (const goal of goals) {
+    // A null scorer is keyed by the goal's own minute so two unknowns stay two
+    // rows; a coded one is keyed by the man and whether it went in his own net.
+    const key = goal.scorer === null ? `?${goal.minute}` : `${goal.scorer}:${goal.own}`;
+    let group = at.get(key);
+    if (group === undefined) {
+      group = { scorer: goal.scorer, own: goal.own, minutes: [], assisters: [] };
+      at.set(key, group);
+      groups.push(group);
+    }
+    group.minutes.push(goal.minute);
+    if (goal.assister !== null && !group.assisters.includes(goal.assister)) {
+      group.assisters.push(goal.assister);
+    }
+  }
+
+  return groups;
+}

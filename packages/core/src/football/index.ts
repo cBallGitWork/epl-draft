@@ -55,11 +55,12 @@ export { plPlayerCodes, plTeamSheets } from "./premierleague/teamSheet";
 export type { PlSquadMan, PlTeamSheet } from "./premierleague/teamSheet";
 export {
   creditedGoals,
+  goalGroups,
   plGoals,
   plManMatches,
   plSubstitutions,
 } from "./premierleague/sheetEvents";
-export type { PlGoal, PlManMatch, PlSubstitution } from "./premierleague/sheetEvents";
+export type { PlGoal, PlGoalGroup, PlManMatch, PlSubstitution } from "./premierleague/sheetEvents";
 export { plMatchBoard } from "./premierleague/matchStats";
 export type { MatchStatRow } from "./premierleague/matchStats";
 export { mapRoundBreaks } from "./premierleague/breaks";

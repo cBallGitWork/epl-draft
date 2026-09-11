@@ -25,6 +25,18 @@ import type { Match } from "./match";
 //
 // A ground nobody has written down falls back to the round — `clubGround`
 // returns null for a promoted club rather than inventing a stadium.
+//
+// **Both furniture rows belong to the OVERVIEW alone** (Craig, 11 Sep 2026:
+// *"stadium name and ref row only show on overview page"*). This shell put them
+// under every tab on the argument that a fact about the match is true on the
+// stats board as much as on the scoresheet — which it is, and is beside the
+// point: the other four tabs are TABLES, and a table that has been pushed down
+// by a ground it did not ask for and hemmed in by a referee it cannot use has
+// paid two rows of a phone's screen for a fact the reader has already read. The
+// Overview is the screen CM builds around those two — `cm0102/02.jpg` is a dated
+// head, who scored, and the foot line — and it is the only one of the five that
+// is not a table. So they stay there and nowhere else, and the detail read they
+// come off is only made on that route now.
 
 export default async function MatchShell({
   match,
@@ -36,11 +48,16 @@ export default async function MatchShell({
   children: ReactNode;
 }) {
   const { fixture, home, away } = match;
+  const overview = current === "overview";
   // **The ground the match was actually played on**, off the round read the wire
   // already caches — so it costs nothing and it is right for a neutral venue or a
   // club that has moved, which the hand-authored table can never be. It falls
   // back to that table, which is what it is still for.
-  const facts = await matchFacts(fixture.gameweek, fixture.code);
+  //
+  // Only on the Overview, which is the only tab that draws either of the two
+  // things it answers. The Overview page makes the same call for its half-time
+  // score and they share one cache entry.
+  const facts = overview ? await matchFacts(fixture.gameweek, fixture.code) : null;
   // **The ground AND its town**, which is what `cm0102/02.jpg` puts in this slot:
   // `St.Andrews, Birmingham`, not `St.Andrews`. `city` has been on
   // `PlMatchFacts` since 5 Sep and nothing read it. The fallback table has no
@@ -81,7 +98,7 @@ export default async function MatchShell({
         awayScore={fixture.status === "upcoming" ? null : fixture.awayScore}
       />
       <MatchTabs id={fixture.id} current={current} />
-      <Caption>{ground ?? roundName(match)}</Caption>
+      {overview ? <Caption>{ground ?? roundName(match)}</Caption> : null}
       {/* **The panel fills down to the foot line** (Craig, 10 Sep 2026: *"dont
           cut off the opaque box, let it fill the page"*). CM's own screens are a
           single well running from the caption to the status bar, with the
@@ -98,9 +115,11 @@ export default async function MatchShell({
           five or six of them; two is a strip pretending to be one.
           `docs/ui/reference/README.md` still lists the object, and it comes back
           when there is a row's worth to put in it. */}
-      <div className="mt-auto">
-        <MatchFacts facts={facts} />
-      </div>
+      {overview ? (
+        <div className="mt-auto">
+          <MatchFacts facts={facts} />
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -131,9 +150,10 @@ function roundName({ fixture }: Match): string {
  *  gap to fill later without a new provider, so the line does not hold a slot for
  *  it.
  *
- *  On the SHELL rather than the Overview, so it is under every tab — a fact about
- *  the match is true on the stats board as much as on the scoresheet, and CM's
- *  own bar sits below the panel on all four of its screens.
+ *  **On the Overview alone** since 11 Sep 2026, though it is still drawn by the
+ *  shell because it is chrome around the panel rather than content inside it —
+ *  CM's own bar sits below the panel, not in it. The shell's docblock carries
+ *  why the other four tabs stopped showing it.
  *
  *  Absent entirely rather than printing labels over dashes: a match nobody has
  *  played has neither, which is exactly when both would be a dash. */
@@ -162,7 +182,14 @@ function MatchFacts({ facts }: { facts: PlMatchFacts | null }) {
     // translucent and in the accent and read as a dull olive smear over the
     // photograph — `.cm-panel`'s 88% is for a panel, not for a bar with two facts
     // on it.
-    <p className="flex flex-wrap justify-between gap-x-4 gap-y-0.5 border-t border-line bg-surface px-3 py-1.5 text-xs font-bold text-info lg:text-sm">
+    //
+    // **A step and a half larger since 11 Sep 2026** (Craig: *"stadium name,
+    // data, and gameweek, referee row all way to small"*). `02.jpg` sets this
+    // line at about 1.4% of its 800px canvas, which is 20px on a 1440 desk; ours
+    // was 14. The date strip on the Overview moved with it, and they are still
+    // the same size as each other, which is the rule this line has always been
+    // under.
+    <p className="flex flex-wrap justify-between gap-x-4 gap-y-0.5 border-t border-line bg-surface px-3 py-1.5 text-sm font-bold text-info lg:text-xl">
       {said.map((part) => (
         <span key={part}>{part}</span>
       ))}

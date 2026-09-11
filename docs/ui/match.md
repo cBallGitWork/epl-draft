@@ -49,13 +49,17 @@ for every shape decision below.
    `inkOn` answers it. Before kick-off there is **one `v` between the plates**,
    not one in each box.
 2. **The strip** — `Overview · Fantasy Scores`. Two, and the reason is below.
-3. **The caption — the GROUND.** `cm9900/21.jpg` runs "Goodison Park, Liverpool"
-   along the foot of every match screen and `cm0102/02.jpg` puts "St.James's
-   Park, Newcastle" in the yellow caption at the top. The strip already names the
-   view, so a caption repeating it said nothing.
+3. **The caption — the GROUND, on the Overview only.** `cm9900/21.jpg` runs
+   "Goodison Park, Liverpool" along the foot of every match screen and
+   `cm0102/02.jpg` puts "St.James's Park, Newcastle" in the yellow caption at the
+   top. The strip already names the view, so a caption repeating it said nothing.
+   It was under all five tabs until 11 Sep 2026 (Craig: *"stadium name and ref
+   row only show on overview page"*) — the other four are TABLES, and a table
+   pushed down by a ground it did not ask for has paid a row of a phone's screen
+   for a fact already read. The referee line went with it.
 4. **The panel** — the date in full at the left, the round, the tense and the
    half-time score at the right **in cyan**, then either the scoresheet or the
-   preview, then the referee where we have one.
+   preview, then the referee and the attendance along the foot.
 5. **Player stats** — every man in the match as a row: position, minutes, goals,
    assists, saves, bonus, and SofaScore's rating.
 6. **`MatchFoot`** — CM's second foot row, finally drawn: the two clubs, and a
@@ -160,6 +164,29 @@ fold and being the first thing a reader meets are different claims.
 **CM's arrangement with the assist added** (Craig, 4 Sep 2026: *"the screen that
 has the goal scorer timer needs assists too"*). `cm0102/02.jpg` puts the home
 scorers down the left and the away scorers down the right.
+
+**One row per SCORER, not per goal** (Craig, 11 Sep 2026: *"isak can have one row
+only for both goals… both assists can be one row too if its both. if it was 2
+players, just show two assists row"*). `goalGroups` in core does the folding and
+is tested there. Read next to the 10 Sep move from a list of MEN to a list of
+GOALS, this is not a reversal of it: the scorer and the assister still sit on
+different lines, in different ink, at different sizes. What folds is a man's own
+name repeated over his second goal, which said nothing the minute beside it had
+not. Alex Scott's two Bournemouth goals — the case that argued for goal-rows in
+the first place — now read `9', 35'` with his one assister under them once.
+A man's own goal never joins his real ones: they are credited to different sides.
+
+**The owner rides in brackets after the name** (same message: *"owner name can go
+after ISAK (put in brackets), saves a row"*), and the assister has one now too.
+It was a second line under every name — two rows of chrome for one man, on the
+screen with the fewest facts in the app — and a league team name is a gloss on
+the name it follows rather than a fact of its own.
+
+**The type went up a step on the desk** (same message: *"can make scorer and
+minute font bigger"*, and *"stadium name, data, and gameweek, referee row all way
+to small"*). `02.jpg` sets a scorer at about 2.2% of its 800px canvas and its two
+furniture strips at about 1.4%, which on a 1440 desk is 32 and 20 against the 24
+and 14 we had. The phone is unchanged where a column is only half a screen wide.
 
 **Neither column is mirrored, and the first build got that wrong.** `02.jpg` sets
 both sides name-first with the figure to its right — `L.Clark 29` on the left
@@ -280,7 +307,7 @@ answering honestly. The one slow read is Fantrax, so it streams behind
 |---|---|---|
 | `/prem/match/[id]` | `page.tsx` | the scoresheet or the preview, and the league panel |
 | `…/players` | `players/page.tsx` | both team sheets, by bps |
-| — | `Shell.tsx` | the bar, the strip, the caption, the three ways out |
+| — | `Shell.tsx` | the bar, the strip, and — on the Overview alone — the ground caption and the referee line |
 | — | `MatchBar.tsx` | the two-plate header |
 | — | `MatchTabs.tsx` | the strip |
 | — | `Scoresheet.tsx` | who was named |

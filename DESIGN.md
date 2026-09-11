@@ -693,7 +693,7 @@ apart silently.
 | Role | Phone | Desk | Type step | Recipe |
 |---|---|---|---|---|
 | Plated title bar | 64 | 96 | `xl`–`3xl`, `.cm-title` | `PageHeader` |
-| The caption under it | 28 | 40 | `sm`–`lg`, `.cm-title` | `shell/Caption` |
+| The caption under it | 28 | 40 | `sm`–`2xl`, `.cm-title` | `shell/Caption` |
 | A row that needs two lines | 56 | 28 | `sm` | `.cm-row` + `min-h-14` |
 | **A control** — button, select, input, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
 | **A tab** — one plate of a strip | **44** | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |
@@ -705,7 +705,7 @@ apart silently.
 | A figure in a row | — | — | `sm`, `.numeric` | `ROW_FIGURE`, worn by `FIGURE` (centred) and `BOARD_FIGURE` (right) |
 | A label that is furniture | — | — | `2xs` bold caps | `LABEL` |
 
-**One recorded exception, and what earns one.** `prem/match/[id]/TeamSheet` sets
+**Two recorded exceptions, and what earns one.** `prem/match/[id]/TeamSheet` sets
 its names and figures a step above the row default — `base`/`lg:text-lg` against
 `sm`/`lg:base` — on Craig's call of 10 Sep 2026 (*"the player text could be much
 bigger on this screen too like CM… data much bigger too"*). The argument is that
@@ -714,6 +714,19 @@ figures, so the game gives them room a many-column board cannot; every other lis
 on the desk shares its width with four or more measures. A screen wanting this
 exception has to be able to say the same thing about itself, and `ROW_NAME` stays
 where it is — six boards wear it and none has the room.
+
+`prem/match/[id]/Scoresheet` is the second and says exactly that about itself:
+its entire content is a few names and a few minutes. `lg:text-3xl` on the scorer
+and his minutes, from `lg:text-2xl`, on Craig's call of 11 Sep 2026 (*"can make
+scorer and minute font bigger"*). **The number is read off the reference rather
+than felt**: `cm0102/02.jpg` sets a scorer at about 2.2% of its 800px canvas,
+which is 32px on a 1440 desk. The same arithmetic — 1.4% for a furniture strip,
+1.75% for the ground caption — moved the Overview's dated strip and its referee
+line to `lg:text-xl` and the shared `Caption`'s desk step to `lg:text-2xl`, which
+is why the table above now reads `sm`–`2xl`. **The phone did not move at any of
+the four.** The complaint was about a desk, the arithmetic only argues for a
+desk, and the phone's budget above the first row of data is the thing that band
+is spent out of.
 
 **Three of these are rules and the rest are consequences.** 44 is PRODUCT.md's
 tap floor and is not negotiable under a thumb; 36 is a control on the desk; 28 is

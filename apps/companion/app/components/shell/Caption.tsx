@@ -19,10 +19,20 @@ import type { ReactNode } from "react";
 // for the table), and a caption is a LABEL on a panel rather than a control: it
 // is read, never aimed at, so the 44px tap floor is not its floor. The desk's 40
 // is unchanged.
+//
+// **The DESK's type went up a step and a half on 11 Sep 2026**, and the phone's
+// did not. Craig, on the match screen: *"stadium name, data, and gameweek,
+// referee row all way to small"*. `cm0102/02.jpg` sets its ground caption at
+// about 1.75% of an 800px canvas, which is 25px on a 1440 desk where ours was
+// 18 — the same complaint, and the same arithmetic, as the two strips on that
+// screen. The phone is left alone because 14px in a 28px band is already most of
+// the band, and the budget that band is spent out of has not changed. The height
+// does not move at either width: `lg:min-h-10` is 40 and a 24px caption in a
+// 28px line box still sits inside it.
 export default function Caption({ children }: { children: ReactNode }) {
   return (
     <section className="cm-panel flex min-h-7 items-center justify-center px-2 lg:min-h-10">
-      <p className="cm-title text-center font-chrome text-sm font-bold text-accent lg:text-lg">
+      <p className="cm-title text-center font-chrome text-sm font-bold text-accent lg:text-2xl">
         {children}
       </p>
     </section>

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import recordedFixture from "../__fixtures__/plFixture.json";
 import type { RawPlFixture, RawPlFixtureEvent } from "./raw";
-import { creditedGoals, plManMatches, plSubstitutions } from "./sheetEvents";
+import { creditedGoals, goalGroups, plManMatches, plSubstitutions } from "./sheetEvents";
 import type { PlGoal } from "./sheetEvents";
 
 // Liverpool 2-2 Nottingham Forest, gameweek 2, recorded 4 Sep 2026 and never
@@ -225,16 +225,18 @@ describe("plManMatches — assists", () => {
   });
 });
 
-describe("creditedGoals", () => {
-  const goal = (over: Partial<PlGoal>): PlGoal => ({
-    minute: 10,
-    teamId: 1,
-    scorer: 100,
-    assister: null,
-    own: false,
-    ...over,
-  });
+/** A goal with the fields a case cares about, and defaults for the rest. Shared
+ *  by both goal describes below rather than declared inside one of them. */
+const goal = (over: Partial<PlGoal>): PlGoal => ({
+  minute: 10,
+  teamId: 1,
+  scorer: 100,
+  assister: null,
+  own: false,
+  ...over,
+});
 
+describe("creditedGoals", () => {
   it("leaves a goal Opta already credited alone", () => {
     const goals = [goal({ minute: 37, scorer: 1, assister: 2 })];
     expect(creditedGoals(goals, new Map([[2, 1]]))).toEqual(goals);
@@ -280,5 +282,59 @@ describe("creditedGoals", () => {
   it("does nothing for a side FPL pays no assists to", () => {
     const goals = [goal({ minute: 9, scorer: 50 })];
     expect(creditedGoals(goals, new Map())[0].assister).toBeNull();
+  });
+});
+
+describe("goalGroups", () => {
+  it("folds a man's two goals into one row and keeps both minutes", () => {
+    // Ipswich 0-2 Liverpool, the match Craig was looking at: Isak twice, Gakpo
+    // under each. One row, two minutes, one assister.
+    const groups = goalGroups([
+      goal({ minute: 6, scorer: 50, assister: 70 }),
+      goal({ minute: 9, scorer: 50, assister: 70 }),
+    ]);
+    expect(groups).toEqual([{ scorer: 50, own: false, minutes: [6, 9], assisters: [70] }]);
+  });
+
+  it("keeps two assisters when two different men laid them on", () => {
+    const groups = goalGroups([
+      goal({ minute: 6, scorer: 50, assister: 70 }),
+      goal({ minute: 9, scorer: 50, assister: 80 }),
+    ]);
+    expect(groups[0].assisters).toEqual([70, 80]);
+  });
+
+  it("orders rows by a scorer's FIRST goal, not his last", () => {
+    const groups = goalGroups([
+      goal({ minute: 6, scorer: 50 }),
+      goal({ minute: 20, scorer: 60 }),
+      goal({ minute: 80, scorer: 50 }),
+    ]);
+    expect(groups.map((group) => group.scorer)).toEqual([50, 60]);
+    expect(groups[0].minutes).toEqual([6, 80]);
+  });
+
+  it("never folds a man's own goal into his real ones", () => {
+    // They are credited to different sides; one row would put a goal on the
+    // wrong scoresheet.
+    const groups = goalGroups([
+      goal({ minute: 6, scorer: 50 }),
+      goal({ minute: 70, scorer: 50, own: true }),
+    ]);
+    expect(groups).toHaveLength(2);
+    expect(groups.map((group) => group.own)).toEqual([false, true]);
+  });
+
+  it("gives each unplaced scorer a row of his own", () => {
+    // Two nulls are two men, and folding them would invent one who scored both.
+    const groups = goalGroups([
+      goal({ minute: 6, scorer: null }),
+      goal({ minute: 9, scorer: null }),
+    ]);
+    expect(groups.map((group) => group.minutes)).toEqual([[6], [9]]);
+  });
+
+  it("credits nobody where Opta did not", () => {
+    expect(goalGroups([goal({ minute: 6, scorer: 50 })])[0].assisters).toEqual([]);
   });
 });
