@@ -184,7 +184,21 @@ export default function PitchMarker({
           a coloured strip with no words in it. */}
       {line === "" ? null : (
         <span
-          className={`numeric text-3xs ${PITCH_BAND}`}
+          // **A FIGURE gets a bigger step than a label** (Craig, 11 Sep 2026:
+          // "scores too hard to read"). This band carries two different kinds of
+          // thing and was setting both at `text-3xs` — nine pixels, which
+          // DESIGN §8 records as the FLOOR on a pitch rather than a size to
+          // reach for. A fixture is three letters and a bracket and reads fine
+          // down there; a score is the number a manager opened the screen for
+          // and was the smallest thing on the card.
+          //
+          // `PitchPlayer` had already learned this and its own docblock says so
+          // — "one figure size for both claims, on the scale. They were two
+          // clamps bottoming at 7px and 9px, which made the number a manager
+          // came for the smallest thing on a live pitch" — and it sits at
+          // `text-xs`. This is the same lesson arriving at the other card, which
+          // is what `ROW_FIGURE` went through in tables a week earlier.
+          className={`numeric ${show === "points" && band === undefined ? "text-xs" : "text-3xs"} ${PITCH_BAND}`}
           style={
             plate === undefined
               ? { background: "var(--color-bg)", color: "var(--color-cream)" }

@@ -1306,6 +1306,67 @@ in its heading — a zone note over a column with no clock in it is furniture
 explaining something that is no longer there — and, the time gone, the column is
 narrow enough to come back to the phone.
 
+## The pitch had no ceiling, and that is what "too big on mobile" was (11 Sep 2026)
+
+Craig, with the head-to-head open on a wide phone: *"too big on mobile still /
+scores too hard to read."*
+
+**`.pitch` had an `aspect-ratio` and no `max-height`**, and `--pitch-ratio` is
+0.62 from 0 all the way to `lg`. So the pitch's height was `width / 0.62` with no
+bound, and every width between a phone and a desk drew a taller one. Measured on
+the head-to-head in an 844px viewport:
+
+| width | pitch height | card | figure |
+|---|---|---|---|
+| 390 | 629px | 68px | 53px |
+| 430 | 694px | 76px | 53px |
+| 496 | **800px** | 90px | 53px |
+| 768 | **1,239px** | 110px | 53px |
+
+**The cards did not grow with it — the figure is 53px at all four.** `.pitch-figure`
+caps a card by the room a ROW has, so all the extra height went into the GAPS
+between the lines. That is what "too big" looked like on screen: not big cards,
+but four rows flung to the corners of a pitch two-thirds taller than the screen,
+with the forwards below the fold. The 0.62 comment had always said it was
+measured against a 361px column, and it is right there; what it never had was a
+bound for every width after it.
+
+`.pitch` now carries `max-height: calc(100svh - var(--pitch-page))` — the same
+budget `.pitch-figure` already divides up, so the two cannot disagree. Every
+width above now lands on **420px** (the with-bench budget). Past the cap the
+pitch draws squatter and nothing inside distorts, because the ground is a viewBox
+that stretches.
+
+### `--pitch-frame`, and the 13px the ceiling exposed
+
+Capping the height uncovered a second bug that had been hiding in the slack:
+`PitchFrame`'s trapezoid spends 40px INSIDE the pitch that `CmGround`'s diagram
+does not — `--pitch-boards` (1.75rem) above for the hoardings and goal, `pb-3`
+below — and the row budget knew nothing about it. The lineup planner asked for
+433px of rows inside a 420px pitch and clipped the forwards' fixture band by 13.
+
+`--pitch-frame` is 0 by default and 2.5rem on `.pitch-framed`, subtracted from
+the ROW budget rather than from the pitch's height, because that is where it is
+spent: the box does not grow, the cards shrink. Before the ceiling the pitch
+simply got taller and the overflow had somewhere to go.
+
+### The score was set at the floor
+
+The band carries two different kinds of thing and was setting both at
+`text-3xs` — **9px**, which DESIGN §8 records as the FLOOR on a pitch rather than
+a size to reach for. A fixture is three letters and reads fine there; a score is
+the figure a manager opened the screen for and was the smallest thing on the
+card. It takes `text-xs` now when it is showing points.
+
+`PitchPlayer` had already learned this and says so in its own docblock — "two
+clamps bottoming at 7px and 9px, which made the number a manager came for the
+smallest thing on a live pitch" — and sits at `text-xs`. This is the same lesson
+arriving at the second card, a week after `ROW_FIGURE` went through it in tables.
+
+**`KEPT` is 0.62 now**, down from 0.70 and 0.80 (*"the shirt does not need to be
+that long, we can cut it a lottle"*), which draws the kit slightly wider than
+tall. ~0.55 is the real floor: below it the crop starts eating the sponsor.
+
 ## The repo-wide refactor, and the counts it settled (11 Sep 2026)
 
 Counts worth keeping, because each one closes a question that otherwise gets

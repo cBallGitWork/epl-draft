@@ -49,16 +49,21 @@ import { type Club, initials, shirtUrl } from "@epl/core";
  *  So the hem is cropped. `KEPT` is the fraction of the jersey drawn and the
  *  card's shape is `0.680 / KEPT`, derived rather than typed beside it.
  *
- *  **0.70, which draws the kit very nearly square** (Craig, 10 Sep 2026: *"the
- *  shirts still seem long, so we could kinda cut them off to make them more
- *  square"*). It was 0.80 for one round, which is 110/129 and still visibly
- *  upright. 0.680 would be exactly square and is not worth the last three
- *  percent of jersey.
+ *  **0.62, which draws the kit slightly WIDER than tall** — 0.680/0.62 = 1.10.
+ *  Craig has taken it down twice: 0.80 first (110/129, still visibly upright),
+ *  then 0.70 (*"cut them off to make them more square"*), then 0.62 on 11 Sep
+ *  2026 (*"the shirt does not need to be that long, we can cut it a lottle"*).
+ *
+ *  **0.62 is close to the floor and the floor is the sponsor.** These forty files
+ *  are shot to one template — collar at 5%, crest at 22%, sponsor band 38-50%,
+ *  hem at 97% — so anything above ~0.55 keeps every mark a reader identifies a
+ *  club by. Below that the crop starts eating the sponsor, and a kit with half a
+ *  sponsor on it looks like a rendering fault rather than a crop.
  *
  *  Cropping the FOOT and not the shoulders is the whole point: the collar, the
  *  crest and the sponsor are the top two thirds, and the hem is the part a
  *  reader identifies nothing by. */
-const KEPT = 0.7;
+const KEPT = 0.62;
 
 /** The jersey's own shape, off the alpha channel: 193x284 for an outfield kit
  *  inside a 220x290 canvas. The keeper's is 207x283 and the difference is two

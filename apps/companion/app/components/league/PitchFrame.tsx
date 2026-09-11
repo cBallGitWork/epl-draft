@@ -18,7 +18,7 @@ export default function PitchFrame({ children }: { children: ReactNode }) {
     // touchlines, and both are that one number. Written out in the CSS it was
     // two numbers that had to agree, with a comment where the agreement should
     // have been.
-    <div className="pitch bleed" style={{ "--pitch-inset": `${FAR_INSET}%` } as CSSProperties}>
+    <div className="pitch pitch-framed bleed" style={{ "--pitch-inset": `${FAR_INSET}%` } as CSSProperties}>
       <div className="pitch-boards">
         {/* The league's own boards. A sponsor's would go here, in the same two
             slots, the day the league has one. */}
