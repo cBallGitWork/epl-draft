@@ -238,16 +238,22 @@ function Man({
   return (
     <Link
       href={code === null ? "#" : `${PLAYER}/${code}`}
-      className="group flex min-h-11 items-baseline gap-2 lg:min-h-11 lg:gap-3"
+      className="group flex min-h-11 items-baseline gap-1.5 lg:min-h-11 lg:gap-3"
     >
       {glyph ? (
         // **Its own type size, which is what makes it big.** `EventIcon` draws at
         // `1.1em`, so the glyph is only ever as large as the type of the box it
         // sits in — and this box inherited the LIST's size, not the name's, which
         // is why it shipped at about 15px beside a 30px name and read as a bullet
-        // (Craig: *"make goal icon bigger"*). Stating the size here puts it a
-        // step above the name at both widths.
-        <span className="shrink-0 self-center text-xl text-accent lg:text-4xl">
+        // (Craig: *"make goal icon bigger"*). Stating the size here fixes that.
+        //
+        // **A step above the name on the DESK, level with it on the phone**, and
+        // the phone half is not timidity. A scoresheet column is half a 390px
+        // screen, so every pixel the glyph takes comes off the name beside it:
+        // at a step above, Palace 1-4 City read `Donnarum…`, `Haalan…` and
+        // `Cherki (…` with two of the three owner brackets truncated away
+        // entirely. The desk has the room and takes the full step.
+        <span className="shrink-0 self-center text-lg text-accent lg:text-4xl">
           <EventIcon glyph="ball" />
         </span>
       ) : null}
