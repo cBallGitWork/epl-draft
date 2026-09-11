@@ -15,6 +15,14 @@
 // fold, because then a squad cannot be read at a glance — which is the one thing
 // this screen exists for.
 //
+// **And where there is a BENCH, the bench is part of the grass** (Craig, 11 Sep
+// 2026: *"pitch and sub bench need to fit the whole page"*). It measured the
+// `.pitch` box only, so it reported the head-to-head board 100px clear on a
+// phone where all four reserves were below the fold — the strip is a sibling of
+// the pitch inside `.pitch-with-bench`, and a budget that does not know about it
+// is a budget for half the object. Where a bench is drawn, `ends` is ITS bottom
+// and the pitch's own is printed beside it.
+//
 // Every squad is walked, and most of them report no pitch: the gated board became
 // a table on 31 Aug and only a squad whose lineup is public draws grass at all.
 // That is not a gap in the instrument — "no pitch here" is the right answer for
@@ -34,7 +42,15 @@ const SIZES = [
 ];
 
 const MEASURE = `(function(){
-  var pitch=document.querySelector(".pitch");
+  // **The first VISIBLE pitch, not the first one in the document.** The
+  // head-to-head renders four grass nodes and hides two of them per width — the
+  // phone's single side in an \`lg:hidden\` column, the desk's pair in a
+  // \`hidden lg:grid\` one — so \`querySelector(".pitch")\` picked a
+  // display:none node at 1024 and 1440 and reported a pitch 0px tall clearing
+  // the fold by the whole screen. A hidden box has no geometry to measure and is
+  // not the page's answer.
+  var pitch=Array.prototype.slice.call(document.querySelectorAll(".pitch"))
+    .find(function(p){return p.getBoundingClientRect().height > 0});
   if(!pitch) return JSON.stringify({none:true});
   var box=pitch.getBoundingClientRect();
   var main=document.getElementById("main");
@@ -47,7 +63,15 @@ const MEASURE = `(function(){
     bottom:Math.round(box.bottom),
     page:main?Math.round(main.getBoundingClientRect().height):null,
     budget:read("--pitch-page"),
-    bench:pitch.closest(".pitch-with-bench")!==null
+    // The reserves' strip, when the page draws one. It is the LAST element of
+    // the height-budgeted block rather than the pitch, so it and not the grass
+    // is what has to clear the fold.
+    bench:(function(){
+      var held=pitch.closest(".pitch-with-bench");
+      if(!held) return null;
+      var strip=held.querySelector("section.bleed");
+      return strip?Math.round(strip.getBoundingClientRect().bottom):null;
+    })()
   });
 })()`;
 
@@ -91,6 +115,18 @@ if (club) teams.push(club);
 // a pass.
 teams.push("/fpl");
 
+// **The head-to-head board, which is the pitch this budget was written for.**
+// DESIGN §9 makes it the reference page for the grass, and this walk had never
+// opened it — so the one route whose bench is drawn under a scoreline and a tab
+// strip was the one route nothing measured. Discovered off the matchups board
+// rather than written down, because the ids belong to whichever league
+// `FANTRAX_LEAGUE_ID` is serving.
+await cdp.open("/league/matchups", 2500);
+const tie = await cdp.js(
+  `(function(a){return a?a.getAttribute("href"):""})(document.querySelector('a[href^="/league/matchups/"]'))`,
+);
+if (tie) teams.push(tie);
+
 let failures = 0;
 for (const route of teams) {
   for (const [width, height] of SIZES) {
@@ -101,12 +137,15 @@ for (const route of teams) {
       console.log(`${route} ${width}×${height}  no pitch (withheld, or the list view)`);
       continue;
     }
-    const spare = out.vh - out.bottom;
+    // The bench where there is one, the grass where there is not.
+    const ends = out.bench ?? out.bottom;
+    const spare = out.vh - ends;
     if (spare < 0) failures += 1;
     console.log(
-      `${route} ${width}×${height}  pitch=${out.pitch} ends=${out.bottom} of ${out.vh}` +
+      `${route} ${width}×${height}  pitch=${out.pitch} ends=${ends} of ${out.vh}` +
         `  ${spare < 0 ? `PAST THE FOLD by ${-spare}` : `${spare}px clear`}` +
-        `   budget=${out.budget}${out.bench ? " (bench)" : ""} page=${out.page}`,
+        `   budget=${out.budget}${out.bench === null ? "" : ` (bench, grass ends ${out.bottom})`}` +
+        ` page=${out.page}`,
     );
   }
 }

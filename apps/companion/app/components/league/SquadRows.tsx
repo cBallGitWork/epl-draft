@@ -39,6 +39,7 @@ export default function SquadRows({
   onOpen,
   eligibility,
   bare = false,
+  head = true,
 }: {
   lines: SquadDetailLine[];
   /** Skip the panel, because a caller has already drawn one round this AND
@@ -66,6 +67,15 @@ export default function SquadRows({
    *  JSON, and a `Map` arrives as `{}` with no `.get` — the exact failure
    *  `playerStats.ts` records having hit once already. */
   eligibility?: Record<string, string[]>;
+  /** Whether to draw the column heads.
+   *
+   *  **The bench is the caller that says no** (Craig, 11 Sep 2026: "we probably
+   *  dont need a 2nd Pos / Player / Opponent / FPts for the bench"). A squad in
+   *  list view is two of these — the eleven, then the reserves under a "Bench"
+   *  plate — and each drew its own header, so a phone carried the same four words
+   *  twice inside 400px. The plate between them already names the second group;
+   *  a header under a heading is the heading said again in smaller type. */
+  head?: boolean;
 }) {
   const scored = lines.some((line) =>
     line.players.some((p) => p.points !== undefined),
@@ -93,7 +103,8 @@ export default function SquadRows({
         {/* One bevelled strip over the whole squad, the way a CM table is headed —
           rather than a small-caps label per position group, which made five
           headings and no columns. The group bars below separate; this names. */}
-        <div className="cm-bevel flex min-h-7 items-center gap-1.5 px-1.5 text-3xs font-bold uppercase">
+        {head ? (
+        <div className="cm-bevel flex min-h-7 items-center gap-1.5 px-1.5 text-2xs font-bold uppercase">
           <span className="w-7 shrink-0" />
           {/* **`min-w-0 flex-1` and a basis, not a min-width.** The name column
               is the only elastic one on the row, so it is what gives way when
@@ -108,11 +119,11 @@ export default function SquadRows({
               `AM/F C`, because a man eligible at two cannot live under one
               heading. Grouping him under a single letter is a claim the data
               does not support — Saka is `F,M` and 48 of 607 are like him. */}
-          <span className="w-9 shrink-0">Pos</span>
+          <span className="w-10 shrink-0">Pos</span>
           <span className="min-w-0 flex-[1_1_5rem]">Player</span>
 
           {/* Who his CLUB plays this week — the football fixture, not ours. */}
-          <span className="w-[4.75rem] shrink-0">Opponent</span>
+          <span className="w-[5.5rem] shrink-0">Opponent</span>
           {/* **Points, and only points** (Craig, 2 Sep: "FPts is first row,
               maybe just that stat only", then "FPts at the right hand side").
               The eight per-match stat columns came off with that: they answered
@@ -125,6 +136,7 @@ export default function SquadRows({
             <span className="w-9 shrink-0 text-right">{projected ? "Proj" : "FPts"}</span>
           ) : null}
         </div>
+        ) : null}
 
         {/* **One list, no group bars.** The position now rides each row as a
             column, so the separators had nothing left to separate — and a man
@@ -225,7 +237,7 @@ function Row({
           each name — and because our own palette spends amber on a figure and
           this is closer to one than to prose. Falls back to his slot when the
           league would not say. */}
-      <span className="w-9 shrink-0 truncate text-3xs font-bold text-mid">
+      <span className="w-10 shrink-0 truncate text-2xs font-bold text-mid">
         {(eligible && eligible.length > 0
           ? positionsLabel(eligible)
           : positionsLabel([player.rostered.slot.position ?? ""])) ?? "—"}
@@ -255,12 +267,20 @@ function Row({
       {/* `fixtureLabel` already names the club he plays, so his own club is not
           repeated beside it — "ARS  BRE (H)" reads as two clubs with no
           relation. An unmapped slot has no fixture to show and says so. */}
-      <span className="numeric w-[4.75rem] shrink-0 truncate text-3xs text-muted">
+      <span className="numeric w-[5.5rem] shrink-0 truncate text-xs text-muted">
         {fixture ?? <span className="text-faint">unmapped</span>}
       </span>
 
       {/* Undefined is no table at all and takes the cell with it; null is a
-          table that does not name him, which is a dash. */}
+          table that does not name him, which is a dash.
+
+          `text-sm`, which is §6's figure-in-a-row at both widths. It went to
+          `text-base` on 11 Sep 2026 for "fonts could be bigger on list" and came
+          back: §6 gates that step behind a screen "able to say the same thing
+          about itself" — that its only content is names and their figures — and
+          this list is also the four-column gated board on `/squad/[teamId]`.
+          What DID move is the three cells that were BELOW the recipe: the head
+          strip, the position and the opponent. */}
       {points === undefined ? null : (
         <span className="numeric w-9 shrink-0 text-right text-sm font-bold text-accent">
           {points ?? "—"}

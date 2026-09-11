@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Fixture, FootballSnapshot } from "./types";
-import { duringGameweek, isMatchdayLive, roundFinished, roundState } from "./round";
+import { duringGameweek, isMatchdayLive, roundFinished, roundStarted, roundState } from "./round";
 
 const snap = (over: Partial<FootballSnapshot> = {}): FootballSnapshot => ({
   clubs: [],
@@ -168,5 +168,30 @@ describe("roundState", () => {
 
   it("says nothing about a round nobody has kicked off", () => {
     expect(roundState(snap({ fixtures: [played({ id: 1, status: "upcoming", settled: false })] }))).toBeNull();
+  });
+});
+
+describe("roundStarted", () => {
+  const round = (...over: Partial<Fixture>[]) =>
+    snap({ fixtures: over.map((o, i) => fixture({ id: i + 1, ...o })) });
+
+  it("is false while every fixture is still to come", () => {
+    expect(roundStarted(round({ gameweek: 4 }, { gameweek: 4 }), 4)).toBe(false);
+  });
+
+  it("is true once one has kicked off, and stays true between kickoffs", () => {
+    // The state `roundState` cannot report: Saturday tea-time, nothing in play,
+    // and plenty already happened.
+    const tea = round({ gameweek: 4, status: "finished" }, { gameweek: 4 });
+    expect(roundState(tea)).toBeNull();
+    expect(roundStarted(tea, 4)).toBe(true);
+  });
+
+  it("asks about the round named, not about the snapshot", () => {
+    expect(roundStarted(round({ gameweek: 3, status: "finished" }, { gameweek: 4 }), 4)).toBe(false);
+  });
+
+  it("is false for a round the snapshot has no fixtures for", () => {
+    expect(roundStarted(round({ gameweek: 3, status: "finished" }), 9)).toBe(false);
   });
 });

@@ -15,15 +15,73 @@ is not used for anything: there is no ground.
    side's team below; the open half is raised and carries a foot bar. Your own
    name reads in accent, the standard "this is yours" mark. **One number per
    side and nothing beside it** — see the constraint below.
-2. **Pitch / List**, and nothing beside it. The round word and the open side's
-   formation sat opposite it until 5 Sep 2026 and both said something the screen
-   says better elsewhere — a round in play is a red bar across the top of the app,
-   and a shape is eleven men arranged on grass six pixels below. The two plates
-   fill the row (`ViewToggle`), which is CM's own `Back` · `Next`.
-3. **The open side's team** (`TeamSheet`) — the eleven on the grass and the
-   bench in a strip under it, or the same squad as rows (`SquadRows`, shared
-   with the squad board). Every player is a button.
-4. **A live player card** (`LivePlayerCard`) over the top, when one is tapped.
+2. **A four-plate blue tab strip** — `Scores · Stats · Players · Report`
+   (`ViewToggle`, wearing `.cm-tab` at full height). Craig, 11 Sep 2026: *"and
+   need the blue bars"*. What came off on 5 Sep was the SECTION strip, five
+   plates that all leave the match; this is the object DESIGN §2 actually names,
+   a strip picking one of a subject's views, and by 11 Sep it was picking between
+   four rather than two. Full height and not `.cm-tab-quiet`, because it is the
+   only strip on this screen — the squad and club boards, which carry one above
+   already, pass `quiet`.
+3. **Scores** — the open side's eleven on the grass and its bench in a strip
+   under it (`TeamSheet`, `mode="pitch"`). Both sides at once above `lg`.
+
+   **The list went, and it was a whole tab** (Craig, 11 Sep 2026: *"pitch and
+   list dont need to be two screens, come on, should just be Scores for that
+   view"*, then *"just pitch i think"*). It was a second answer to "who is in
+   it", and everything it had that the grass does not — the opponent, the figure,
+   for all fifteen — the Players board now carries with the scoring behind each
+   of them. `SquadRows` keeps its two remaining callers on the squad and club
+   boards.
+4. **Stats** — `CategoryCompare`, the two squads' scoring category by category,
+   your total on the left and his on the right. Championship Manager's Match
+   Stats board (`cm9900/22.jpg`), and the answer to the question the board could
+   not previously answer at all: the scoreline with the workings.
+
+   Shared rather than per side, because it is the JOIN of the two and a
+   head-to-head has no subject — so it is drawn once at both widths.
+   `compareCategories` in core does the union, and it is the union deliberately:
+   a category only his keeper registered is a row with his figure and your nought
+   rather than a row that does not exist.
+5. **Players** — `SquadStatBoard`, one side's fifteen against the league's own
+   scoring categories. A many-measure board (DESIGN §2), so every column stays
+   and it scrolls sideways.
+
+   **`Pts` freezes with the name**, which is DESIGN §2's other rule about a phone
+   table: which shape it is is decided by its last column, and a table whose last
+   column is what it is FOR shows that column at 390. Left to scroll with the
+   categories it was off the right edge of the screen — the board answering "how
+   many did he get" could be read without ever showing the answer.
+
+   The columns are LEAGUE data, off `getLeagueInfo.scoringCategories` through the
+   same `compareCategories` the board above uses, so both sides of a tie carry the
+   same columns in the same order and a commissioner who adds a category gets one
+   without an edit.
+6. **Report** — the tie's own wire: every goal involving a man in either squad,
+   in minute order, with full time for the fixtures the tie is being played in
+   (`ReportTab` → `matchday/Wire`).
+
+   Craig, 11 Sep 2026: *"do we have a match report blog thing which filters only
+   by starting players for both teams, like we have in prem?"* — the EVENT feed
+   and not the prose. `prem/match/[id]/report` prints Opta's commentary, and
+   `PlCommentaryLine` carries `type`, `minute`, `text` and **no player id at
+   all**, so filtering that to two squads could only be done by matching names
+   inside sentences. `MatchEvent.players` carries FPL's season-stable `code`, so
+   this filter is a join.
+
+   **The filter IS the owners map.** `wireLines` places an owner on a man from
+   whatever map it is handed, so handing it the two teams in this tie leaves
+   every other manager's goal with a null owner — and a row with no owner on
+   either man is a row this tie has no stake in. No second predicate to disagree
+   with the map.
+
+   **One request, already warm**, and behind a Suspense boundary regardless:
+   `roundGoals` and `roundBreaks` both read `plRound(gameweek)`, which the Live
+   tab's wire caches, but a reader who has not opened that tab this window pays
+   for it — and the grass must not wait on an afternoon's commentary. Cards are
+   absent on purpose: they live on the per-fixture read and would cost up to ten
+   more requests for a handful of rows.
+7. **A live player card** (`LivePlayerCard`) over the top, when one is tapped.
 
 ## What the round is doing
 
@@ -74,6 +132,14 @@ scoring, which we never recompute.
 Everything under a player is **two sources joined**: his fantasy points come from
 `getTeamRosterInfo`, and what he *did* — goals, assists, clean sheet, minutes —
 is **FPL's**, joined through the identity bridge.
+
+**The provenance line came off the top of the screen** (Craig, 11 Sep 2026:
+*"remove A round already played… row"*). It was 44px of prose over a scoreline
+nobody was asking it of. The claim is still owed — these are Fantrax's figures,
+and on a round already played the elevens may be the arrangement it stored or may
+be today's squads — so it is the Stats board's `Section` aside, where a reader
+asking where a number came from is standing. `wasFielded` still tells the two
+apart.
 
 **`period` does not price the week, and this paragraph used to say it did.** It
 was probed on 19 Aug and `displayedPeriod` does echo, with `periodOppnentTeamIds`

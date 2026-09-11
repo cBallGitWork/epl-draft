@@ -180,6 +180,11 @@ export default function TeamSheet({
                 // line's own position anyway — a man's position is a column on
                 // his row (Craig, 2 Sep) — so the group needs no name.
                 lines={[{ position: "", players: bench }]}
+                // **No second header** (Craig, 11 Sep 2026: "we probably dont
+                // need a 2nd Pos / Player / Opponent / FPts for the bench"). The
+                // plate above already names this group, and the columns are the
+                // same four the eleven's strip declared six rows up.
+                head={false}
                 projected={false}
                 onOpen={setOpen}
                 eligibility={eligibility}

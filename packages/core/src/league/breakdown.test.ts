@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { breakdownOf, columnLabel, liveBreakdown } from "./breakdown";
+import { breakdownOf, columnLabel, compareCategories, liveBreakdown } from "./breakdown";
 import { mapTeamStats } from "./fantrax/stats";
 import teamStats from "./fantrax/__fixtures__/teamStats.json";
 
@@ -192,5 +192,56 @@ describe("columnLabel, over the same recorded header", () => {
       name: "GAO",
       definition: "only a rule",
     });
+  });
+});
+
+describe("compareCategories", () => {
+  const line = (code: string, points: number) => ({ code, name: code, definition: null, points });
+
+  it("sums a side's category across every man it priced", () => {
+    const rows = compareCategories(
+      { a: [line("G", 6)], b: [line("G", 4), line("A", 3)] },
+      { c: [line("G", 4)] },
+    );
+    expect(rows.find((row) => row.code === "G")).toEqual({ code: "G", name: "G", mine: 10, theirs: 4 });
+  });
+
+  it("keeps a category only one side registered, and the other side is ABSENT", () => {
+    // His keeper made saves and yours did not. The row belongs to the board — a
+    // missing row would read as the category not existing — but your half is
+    // null and prints a dash, because `liveBreakdown` has already dropped a
+    // category a man did not register. A nought here would be a claim the
+    // payload never made (DESIGN §7).
+    const rows = compareCategories({ a: [line("G", 6)] }, { b: [line("Sv", 3)] });
+    expect(rows.map((row) => row.code).sort()).toEqual(["G", "Sv"]);
+    expect(rows.find((row) => row.code === "Sv")).toEqual({
+      code: "Sv",
+      name: "Sv",
+      mine: null,
+      theirs: 3,
+    });
+  });
+
+  it("weighs an absent half as nothing when ordering", () => {
+    // A category one side alone registered still sorts by what it actually moved.
+    const rows = compareCategories({ a: [line("G", 6)] }, { b: [line("Sv", 3)] });
+    expect(rows.map((row) => row.code)).toEqual(["G", "Sv"]);
+  });
+
+  it("orders by what moved the scoreline, deductions last", () => {
+    const rows = compareCategories(
+      { a: [line("YC", -1), line("G", 6), line("A", 3)] },
+      { b: [line("G", 4)] },
+    );
+    expect(rows.map((row) => row.code)).toEqual(["G", "A", "YC"]);
+  });
+
+  it("breaks a tie on the code, so two renders of one payload agree", () => {
+    const rows = compareCategories({ a: [line("Sv", 3), line("A", 3)] }, {});
+    expect(rows.map((row) => row.code)).toEqual(["A", "Sv"]);
+  });
+
+  it("is empty when Fantrax priced nobody, rather than inventing a table", () => {
+    expect(compareCategories({}, {})).toEqual([]);
   });
 });

@@ -10,6 +10,59 @@ true on its date and is not a statement about the tree today; that is why
 `docs-drift-auditor` exempts a season log, and why anything still load-bearing
 belongs in `PLATFORM_NOTES.md` instead of here.
 
+## 11 Sep 2026 — the head-to-head stops being a scoreline with an eleven under it
+
+Craig: *"the actual draft match up section is a little bare… probably need a
+stats page… pitch and sub bench need to fit the whole page… fonts could be
+bigger on list… remove A round already played row… we probably dont need a 2nd
+Pos / Player / Opponent / FPts for the bench"*, then *"and need the blue bars"*,
+then the redirect that settled the shape: *"pitch and list dont need to be two
+screens, come on, should just be Scores for that view"*, *"match stats page
+(combined)"*, *"player stats as another box"*, and *"do we have a match report
+blog thing which filters only by starting players for both teams, like we have in
+prem?"* — and last, *"for a match that has not been played, just show the two
+squad lists, thats it"*.
+
+**Four tabs where there were two plates**: `Scores · Stats · Players · Report`,
+on a full-height `.cm-tab` strip.
+
+- **Scores** is the grass and the bench, and the list is gone from this screen
+  entirely — it was a second answer to "who is in it" costing a whole tab.
+- **Stats** is `CategoryCompare`, the scoreline with the workings.
+- **Players** is `SquadStatBoard`, fifteen men against the league's own scoring
+  categories.
+- **Report** is the tie's own wire, filtered by the owners map.
+
+**And before a ball is kicked there is no board at all** — two captioned squad
+lists and nothing else. Every tab is furniture then: the scoreline is 0–0, Scores
+is a withheld panel because the lineups have not locked, and the other three are
+boards of dashes. `roundStarted` is a new core predicate rather than `!roundState`
+because that one answers null both before the first kickoff AND between two
+Saturday kickoffs, and tea-time is not "not played".
+
+**None of it costs a request.** The per-category breakdown for all thirty players
+was already on the server and reachable one tap at a time, inside
+`LivePlayerCard`. The report's two reads are `plRound(gameweek)`, which the Live
+tab already caches — and are behind a Suspense boundary anyway.
+
+**The prose commentary cannot be filtered and that is a fact about the payload.**
+`PlCommentaryLine` carries `type`, `minute`, `text` and no player id, so a
+tie-filtered match report could only come from the event feed, where
+`MatchEvent.players` carries FPL's season-stable `code`.
+
+Found by looking rather than by reading: the bench was below the fold at 390 and
+`pitchfit` said it was clear (it measured the pitch, and at desk widths it
+measured a hidden one); `Pts` scrolled off the right of the Players board, so the
+board answering "how many did he get" could be read without showing the answer;
+the new blue strip drew two full-height bars on the squad page; and
+`CategoryCompare` shipped with a `text-bad` the cascade had never allowed to
+apply.
+
+`register-warden` caught four more on the diff, all of them size: the strip
+itself had no type step at all and rendered at the browser's 16px default, a
+union row filled a missing side with `0` where the same commit argued for a dash,
+and two figures took a `lg:` step §6 gives neither.
+
 ## 11 Sep 2026 — the match scoresheet folds, and three furniture rows get their size back
 
 Craig, against the Ipswich 0-2 Liverpool Overview: *"stadium name, data, and

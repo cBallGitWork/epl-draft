@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { Club, ClubColours, FootballPlayer, IntelPlayer } from "@epl/core";
-import ViewToggle from "../../../components/league/ViewToggle";
+import ViewToggle, { type View } from "../../../components/league/ViewToggle";
 import { positionsLabel } from "../../../positions";
 import Eleven from "./Eleven";
 import type { ElevenLine } from "./Eleven";
@@ -49,7 +49,7 @@ export default function Squad({
   /** "v Chelsea · Sun 6 Sep", or null when there is no next match. */
   against: string | null;
 }) {
-  const [view, setView] = useState<"pitch" | "list">("list");
+  const [view, setView] = useState<View>("list");
   const hasEleven = eleven.length > 0 && formation !== null;
 
   const byCode = new Map(players.map((player) => [player.code, player]));
@@ -74,7 +74,7 @@ export default function Squad({
           between them would be a control with nothing to decide. */}
       {grass === null ? null : (
         <div className="lg:hidden">
-          <ViewToggle view={view} onPick={setView} />
+          <ViewToggle view={view} onPick={setView} quiet />
         </div>
       )}
 

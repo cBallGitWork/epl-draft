@@ -82,9 +82,14 @@ const MEASURE = `(function(){
     var p=n.closest('p');
     var prose=!!p && p.textContent.replace(n.textContent,"").trim().length>0;
     var head=!!n.closest('th');
-    var toggle=!!n.closest('[role=group]');
+    // No role=group exemption. It excused the Pitch/List toggle's min-h-9, and
+    // on 11 Sep 2026 that control became a .cm-tab strip — 44 under a thumb, 56
+    // above lg — so the exception it was written for stopped existing. Left in,
+    // it would go on excusing a whole role=group structure and would not catch
+    // the next shrink. PRODUCT.md's list is two now.
+    // (No backticks in this block: it lives inside a template literal.)
     return [{t:label.slice(0,24), h:Math.round(r.height),
-             known:prose||head||toggle,
+             known:prose||head,
              // Either side of the element: a schedule tie wraps its row div
              // in the link, and a table row IS the link.
              row:String(n.className||"").indexOf('cm-row')>=0

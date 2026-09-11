@@ -77,11 +77,21 @@ const TONE: Partial<Record<MatchEventKind, string>> = {
   "disallowed-goal": "text-bad",
 };
 
-export default function Wire({ lines }: { lines: readonly WireRow[] }) {
+export default function Wire({
+  lines,
+  title = "The wire",
+}: {
+  lines: readonly WireRow[];
+  /** What this wire is OF. The matchday board's is the whole round and says so
+   *  by saying nothing; the head-to-head's is filtered to the thirty men in one
+   *  tie, and a panel headed "The wire" over eleven rows of a forty-row round
+   *  would be a wire that had quietly lost most of itself. */
+  title?: string;
+}) {
   if (lines.length === 0) return null;
 
   return (
-    <Section title="The wire">
+    <Section title={title}>
       {/* **A box shorter than the list, and a bar that says so** (Craig, 5 Sep
           2026: "needs a down arrow to see other/previous rows"). The list was
           `slice(0, 8)` and nothing else — rows past the eighth were never

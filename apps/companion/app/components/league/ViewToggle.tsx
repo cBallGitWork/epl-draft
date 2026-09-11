@@ -1,42 +1,68 @@
 "use client";
 
-// Pitch or list, for the same eleven.
+import { TAB } from "@/app/desk";
+
+// Which view of a squad you are looking at.
 //
 // **Two screens, not three, and not the squad board.** It served three until 31
 // Aug, when the gated squad board lost its pitch and had nothing left to switch
 // between — fifteen men with no arrangement is not a shape (DESIGN §9). What is
 // left is the head-to-head board and a locked squad, the two screens that still
-// draw an eleven two ways. This docblock said "the squad board's spelling wins"
-// for four hours after the squad board stopped calling it, and six documents
-// were citing that sentence back.
+// draw an eleven two ways.
 //
-// `min-h-9` rather than `min-h-11` is the app's one deliberate touch-target
-// exception, recorded in PRODUCT.md and measured by `tools/ui/tapfit.mjs`, which
-// finds it structurally — whatever sits inside this `role="group"`. It stays an
-// exception rather than becoming a precedent: the control sits directly above
-// the thing it switches, so a mis-tap costs a glance and nothing else.
-
-export type View = "pitch" | "list";
-
-// **`BoardBar` was retired into this file on 5 Sep 2026.** That component existed
-// to fix WHERE the toggle sat — "the toggle is on the left and the aside opposite
-// it, one decision in one place rather than three that agreed twice" — and by the
-// day it went it was doing none of that: its `toggleClass` prop had lost its last
-// caller (its own docblock still said "one caller needs it"), its `children` slot
-// had never had one, and `squad/[teamId]/Sheet` had wrapped it in a second
-// `justify-between` row to put a count beside it, which is the duplication the
-// file was written to prevent. What was left forwarded two arguments, which
-// CODE_RULES §2 names.
+// **It is a TAB STRIP now, and on the head-to-head that is the point** (Craig,
+// 11 Sep 2026: *"and need the blue bars"*). The match screen carries no
+// `LeagueShell`, so it had no blue anywhere — the two grey plates were the only
+// navigation on it, and by 11 Sep they were choosing between four views rather
+// than two. DESIGN §2 names the object: a tab strip picks one of a SUBJECT'S
+// views, which is exactly what this does, and `.cm-tab` is the plate for it.
 //
-// The decision it carried is now geometry rather than a component: the plates
-// FILL their row, so there is no left or right for them to disagree about.
+// **Full height on the match screen and QUIET everywhere else**, which is the
+// distinction `.cm-tab-quiet` was written for (Craig, 10 Sep 2026, on the pool's
+// stat groups: *"these have blue bars, but we already have blue bars on this
+// page, do we need them this big?"*). The head-to-head carries no other strip, so
+// this IS its strip; the squad and club screens already have a five-plate one
+// above, and a second at the same height is two blue bars of one size with
+// neither ranked. Measured the day it shipped: the squad page drew both at 56.
+//
+// `aria-current="page"` rather than `aria-pressed`, because `.cm-tab`'s yellow
+// label-and-border is keyed off it in `desk.css` and a strip that had to be
+// styled twice would be two strips.
+
+export type View = "pitch" | "list" | "scores" | "stats" | "players" | "report";
+
+/** What each view is called on its plate.
+ *
+ *  Here rather than at the call sites: three screens draw this strip and a label
+ *  spelled differently on one of them is a different control. */
+const LABEL: Record<View, string> = {
+  pitch: "Pitch",
+  list: "List",
+  scores: "Scores",
+  stats: "Stats",
+  players: "Players",
+  report: "Report",
+};
+
+/** The pair every screen but the head-to-head draws. A frozen literal rather than
+ *  an inline default, so the two callers that take it share one array instead of
+ *  allocating one each render. */
+const BOTH: readonly View[] = ["pitch", "list"];
 
 export default function ViewToggle({
   view,
   onPick,
+  views = BOTH,
+  quiet = false,
 }: {
   view: View;
   onPick: (view: View) => void;
+  /** Whether this is a SECOND strip on a screen that already has one. Drops the
+   *  plate to the control floor, which is what `.cm-tab-quiet` means. */
+  quiet?: boolean;
+  /** Which plates to draw, in the order they are drawn. Defaults to the pitch
+   *  and the list, which is every caller but the match screen. */
+  views?: readonly View[];
 }) {
   return (
     <div
@@ -52,8 +78,9 @@ export default function ViewToggle({
       // one caller that shares its row with something else.
       className="flex flex-1"
     >
-      <ViewButton current={view} value="pitch" onPick={onPick} />
-      <ViewButton current={view} value="list" onPick={onPick} />
+      {views.map((value) => (
+        <ViewButton key={value} current={view} value={value} onPick={onPick} quiet={quiet} />
+      ))}
     </div>
   );
 }
@@ -62,30 +89,38 @@ function ViewButton({
   current,
   value,
   onPick,
+  quiet,
 }: {
   current: View;
   value: View;
   onPick: (view: View) => void;
+  quiet: boolean;
 }) {
   const here = current === value;
   return (
     <button
       type="button"
       onClick={() => onPick(value)}
-      aria-pressed={here}
-      // Pressed rather than filled. The affordance and the state are one
-      // object, which is how the game said it and how `league/Columns` already
-      // draws a sorted column head — and it keeps the two plates the same
-      // colour, so the strip cannot shift as you move along it. `aria-pressed`
-      // carries the state for a reader who cannot see a bevel.
-      // `min-h-9` and not `min-h-11`: PRODUCT.md's recorded tap exception for a
-      // control that is one of a pair filling the row, where the target is the
-      // whole half of the bar rather than a plate you have to find.
-      className={`min-h-9 flex-1 px-3.5 text-xs font-semibold capitalize ${
-        here ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110"
-      }`}
+      // The tab you are on, in the markup `.cm-tab` reads. `aria-current` is
+      // valid on any element and says the right thing about a strip: this is the
+      // one you are on, not a switch you are holding down.
+      aria-current={here ? "page" : undefined}
+      // The modifier is a CLASS and not a `min-h-*` utility: `desk.css` comes
+      // last in the cascade and both are one class of specificity, so a utility
+      // trying to shrink a `.cm-tab` writes nothing, silently. `GroupNav` carried
+      // a dead `lg:min-h-9` for weeks on exactly that.
+      // **`TAB` carries no size and never has** — its own docblock says "size and
+      // padding stay the caller's", and every other caller supplies one. This did
+      // not, so four labels rendered at the browser's 16px default under a thumb
+      // and DROPPED to 14 above `lg` via `TAB`'s own `lg:text-sm`: a step past the
+      // ladder's ceiling, with the phone/desk relation inverted. Caught by
+      // `register-warden` on 11 Sep 2026.
+      //
+      // `text-2xs` is `TabStrip`'s `phrase` step, which is the one these are:
+      // four one-word plates with room, not five squeezed onto a line.
+      className={`${TAB} px-3 text-2xs${quiet ? " cm-tab-quiet" : ""}`}
     >
-      {value}
+      {LABEL[value]}
     </button>
   );
 }

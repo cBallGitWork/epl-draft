@@ -1,9 +1,12 @@
-import Link from "next/link";
+import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import {
   type LeagueTeam,
-  type RosterDisplay,
   clubById,
+  compareCategories,
+  roundStarted,
+  squadDetail,
+  squadUnarranged,
   headToHead,
   lineupDetail,
   oppositionByClub,
@@ -12,7 +15,10 @@ import {
 } from "@epl/core";
 import MatchupBoard, { type MatchupSide } from "../../../components/league/MatchupBoard";
 import Nothing from "../../../components/shell/Nothing";
+import SkeletonRows from "../../../components/shell/SkeletonRows";
+import SquadStatBoard from "../../../components/league/SquadStatBoard";
 import TeamSheet from "../../../components/league/TeamSheet";
+import { CompareTab, ReportTab, SquadLists, Withheld } from "./sides";
 import { widestLine } from "../../../components/league/PitchRows";
 import LeagueShell from "../../Shell";
 import { HEAD_TO_HEAD } from "../../../titles";
@@ -68,21 +74,30 @@ export default async function HeadToHeadPage({
 
   const state = roundState(squads.snapshot);
 
-  // A round in the past shows the eleven that played it, when Fantrax has
-  // finished with that period and our calendar agrees its lineups locked. When
-  // either is untrue the roster on hand is today's, and the line below says so
-  // rather than assuming it away: a reader knows which of his men he only signed
-  // this morning, and a page that quietly puts him in last week's eleven teaches
-  // him to distrust the weeks it has right.
+  // Whether the round on screen has been played, which decides what the Stats
+  // board says its figures are OF. `wasFielded` below tells the two apart: the
+  // arrangement Fantrax stored for the period, or today's squad standing in for
+  // it — two different claims, so two sentences and not one hedged one.
   //
   // Asked of the round on screen, never of whether the URL carried a gameweek:
   // arriving from the live board leaves `round` null, and a finished round is no
   // less finished for having been reached without a query string.
   // `played`, not `settled`. It is true at all three finished rungs, and only
-  // the top one — `data_checked` — licenses the word "final". `RoundWord` on this
-  // same screen withholds it until then, so a boolean called `settled` printing
-  // "final" beside it was two contradictory promises in one render.
+  // the top one — `data_checked` — licenses the word "final".
   const played = state !== null && state !== "live";
+
+  // **A round nobody has kicked off is two squad lists and nothing else**
+  // (Craig, 11 Sep 2026: *"for a match that has not been played, just show the
+  // two squad lists, thats it"*). Every one of the four tabs is furniture before
+  // the football: the scoreline is 0–0, the grass is a withheld panel because the
+  // lineups have not locked, and Stats, Players and Report are all boards of
+  // dashes. A strip whose every plate leads to an empty box is four controls
+  // saying the same nothing.
+  //
+  // `roundStarted` and not `roundState`, and the distinction is load-bearing:
+  // that one answers null both before the first kickoff AND between two Saturday
+  // kickoffs, and tea-time is not "not played".
+  const started = roundStarted(squads.snapshot, squads.snapshot.gameweek);
 
   const rostered = new Map(squads.period.teams.map((team) => [team.teamId, team]));
   const named = rostered.get(teamId);
@@ -158,6 +173,36 @@ export default async function HeadToHeadPage({
     ...[...arranged.values()].map((sheet) => widestLine([...sheet.rows, { players: sheet.bench }])),
   );
 
+  // The fifteen, unarranged, for a round that has not been played. The
+  // arrangement is exactly what the gate withholds before lineups lock, and
+  // `squadUnarranged` is the shape that cannot leak it — alphabetical within
+  // position, so even the payload order says nothing about who starts. Built
+  // only when it is going to be drawn.
+  const listed = !started
+    ? new Map(
+        [pairing.team, pairing.opponent].flatMap((team) => {
+          const roster = rostered.get(team.teamId);
+          if (roster === undefined) return [];
+          return [
+            [
+              team.teamId,
+              squadDetail(squadUnarranged(roster), clubs, opposition, null),
+            ] as const,
+          ];
+        }),
+      )
+    : null;
+
+  // Every category either squad registered, in one order, computed ONCE.
+  //
+  // It is the compare board's rows and both stat boards' columns, which is the
+  // same list seen twice — so a category his keeper has and yours does not is a
+  // column on both sides rather than a board that reshuffles when you tap the
+  // other half. The union is why this is a join in core and not two independent
+  // reads: a row missing from one side would print as a nought, and a nought is a
+  // claim the payload did not make.
+  const columns = compareCategories(yours?.breakdown ?? {}, theirs?.breakdown ?? {});
+
   const side = (team: LeagueTeam): MatchupSide => {
     const mineHere = team.teamId === mine;
     const roster = rostered.get(team.teamId);
@@ -179,27 +224,37 @@ export default async function HeadToHeadPage({
     // two of them up. What crosses is fifteen players' own detail — and the
     // arrangement is legible in it, which is why this branch only builds it once
     // the gate has already opened his eleven.
-    const sheet = (mode: "pitch" | "list") => {
-      const detail = arranged.get(team.teamId);
-      if (!shown || roster === undefined || detail === undefined) return withheld;
-      return (
-        <TeamSheet
-          rows={detail.rows}
-          bench={detail.bench}
-          widest={widest}
-          breakdown={priced?.breakdown ?? {}}
-          mode={mode}
-        />
-      );
-    };
-
+    const detail = shown && roster !== undefined ? arranged.get(team.teamId) : undefined;
     return {
       team,
       score: scores.get(team.teamId),
       badge: badges.get(team.teamId),
       mine: mineHere,
-      pitch: sheet("pitch"),
-      list: sheet("list"),
+      scores:
+        detail === undefined ? (
+          withheld
+        ) : (
+          <TeamSheet
+            rows={detail.rows}
+            bench={detail.bench}
+            widest={widest}
+            breakdown={priced?.breakdown ?? {}}
+            mode="pitch"
+          />
+        ),
+      // Behind the same gate as the grass: a category figure names a man in the
+      // eleven, which is the exact fact the gate withholds before a deadline.
+      players:
+        detail === undefined ? (
+          withheld
+        ) : (
+          <SquadStatBoard
+            rows={detail.rows}
+            bench={detail.bench}
+            columns={columns}
+            breakdown={priced?.breakdown ?? {}}
+          />
+        ),
     };
   };
 
@@ -216,12 +271,13 @@ export default async function HeadToHeadPage({
     // them, which is the difference between the eleven and the bench being one
     // view and being one and a bit.
     //
-    // **And no tab strip either** (Craig, 5 Sep 2026: "remove blue bar on this
-    // page too for now"). It was kept on the argument that a reader landing from
-    // a bookmark needs a way back into the section — which the app answers a
-    // different way now that the phone's navigation is a foot row: League is one
-    // plate away at every width, and a strip whose five entries all leave the
-    // match is five controls above the score.
+    // **The tab strip is the match's own, and it came back** (Craig, 11 Sep
+    // 2026: "and need the blue bars"). What came off on 5 Sep was the SECTION
+    // strip — five plates that all leave the match, above the score — and that
+    // stays off: League is one plate away at every width now the phone's
+    // navigation is a foot row. What is here instead is the object DESIGN §2
+    // actually names, a strip picking one of a subject's views, and by 11 Sep it
+    // was choosing between four of them rather than two.
     <div className="flex flex-col gap-2">
       {/* Both sibling boards say when the scoreboard is down; this one used to
           render the outage as two silent dashes. */}
@@ -231,65 +287,38 @@ export default async function HeadToHeadPage({
           <span className="numeric">{refused}</span>
         </p>
       )}
-      {/* Provenance, and the honest kind. Which sentence is true depends on
-          whether the roster we hold is the round's own: `frozenPeriod` fetches
-          the stored arrangement once Fantrax has finished with a period and its
-          lock has gone, and answers null the rest of the time. Those are two
-          different claims, so they are two sentences and not one hedged one.
-
-          The scores are deliberately not called final either way: `state` is
-          true here at all three finished rungs and only `data_checked` earns
-          that word, which is the distinction `RoundWord` beside this makes. */}
-      {played ? (
-        <p className="px-3 text-2xs text-faint">
-          A round already played. The scores are Fantrax&apos;s own
-          {wasFielded(squads.period, period)
-            ? ", and so are the elevens — the arrangements it has stored for this period, not today's."
-            : "; the elevens are today's squads rather than the ones that were fielded."}
-        </p>
-      ) : null}
-      <MatchupBoard team={side(pairing.team)} opponent={side(pairing.opponent)} />
-    </div>
-  );
-}
-
-/** Why a side is not on screen.
- *
- *  Three ways to arrive here and they are not one thing to a reader: Fantrax
- *  sent no roster, a rival's period has not opened, or the gate fell back on a
- *  safety because we could not read the calendar. The last is ours failing and
- *  has the least to say here — the squad page is where it is spelled out. */
-function Withheld({
-  team,
-  known,
-  because: display,
-}: {
-  team: LeagueTeam;
-  /** Whether Fantrax gave us a roster for him at all. */
-  known: boolean;
-  because: RosterDisplay;
-}) {
-  // The period comes off the DECISION, never off the round in view. Between
-  // rounds those are different numbers — Fantrax rolls its label the moment a
-  // round's last fixture ends, so for four days in seven this page is drawn
-  // about gameweek N while the arrangement it holds is period N+1's. Handed the
-  // round's number, this sentence explained a withholding by naming a deadline
-  // that had already passed, which is the one thing a reason may not do.
-  const because = !known
-    ? `Fantrax sent no roster for ${team.name}.`
-    : display.show === "squad" && display.because === "not-locked"
-      ? `${team.name}'s eleven is not public until period ${display.period}'s lineups lock.`
-      : `${team.name}'s eleven is not showing.`;
-
-  return (
-    <div className="flex flex-col items-center gap-3 border border-line bg-surface px-4 py-10 text-center">
-      <p className="max-w-xs text-sm text-muted">{because}</p>
-      <Link
-        href={`/squad/${team.teamId}`}
-        className="flex min-h-11 items-center text-2xs font-bold uppercase text-accent"
-      >
-        See the squad
-      </Link>
+      {listed === null ? (
+        <MatchupBoard
+          team={side(pairing.team)}
+          opponent={side(pairing.opponent)}
+          compare={
+            <CompareTab
+              rows={columns}
+              mine={pairing.team.name}
+              theirs={pairing.opponent.name}
+              played={played}
+              fielded={wasFielded(squads.period, period)}
+            />
+          }
+          report={
+            // The one read on this page that is not already warm for every
+            // reader. The scoreline, the grass and both boards arrive without
+            // waiting for it — which is the same boundary `prem/match/[id]/report`
+            // draws round the same feed, for the same reason.
+            <Suspense fallback={<SkeletonRows count={6} height="1.75rem" />}>
+              <ReportTab
+                snapshot={squads.snapshot}
+                teams={squads.period.teams.filter((team) =>
+                  [pairing.team.teamId, pairing.opponent.teamId].includes(team.teamId),
+                )}
+                mine={mine}
+              />
+            </Suspense>
+          }
+        />
+      ) : (
+        <SquadLists team={pairing.team} opponent={pairing.opponent} lists={listed} />
+      )}
     </div>
   );
 }

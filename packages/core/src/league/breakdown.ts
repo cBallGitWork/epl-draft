@@ -103,3 +103,86 @@ export function liveBreakdown(
     })
     .sort((a, b) => b.points - a.points);
 }
+
+/** One scoring category, as the two sides of a head-to-head answered it.
+ *
+ *  A row of the board that explains a scoreline: not who is in the eleven, which
+ *  the pitch and the list already say, but which of the eleven categories the
+ *  margin came out of. */
+export interface CategoryPair {
+  code: string;
+  name: string;
+  /** The side the URL named, then his opponent. Signed, as `BreakdownLine` is —
+   *  cards and goals against arrive negative and stay that way.
+   *
+   *  **Null where that side registered the category at all, which is not nought**
+   *  (DESIGN §7). The row exists because the OTHER side registered it, and
+   *  filling this half with a 0 is a claim the payload never made: `liveBreakdown`
+   *  has already dropped a category a man did not register, so what reaches here
+   *  is silence and not a counted nothing. It shipped as `?? 0` for an hour and
+   *  `register-warden` caught it — the same commit argued the rule at board level
+   *  and broke it per row. */
+  mine: number | null;
+  theirs: number | null;
+}
+
+/** One side's categories, summed across every man Fantrax priced.
+ *
+ *  Absence stays absence: a category nobody registered is not a key here, and so
+ *  is never printed as a nought. What reaches this has already been filtered by
+ *  `liveBreakdown` — a man with no entry, and a category this league did not
+ *  describe, are both gone before the sum. */
+function totals(breakdowns: Record<string, readonly BreakdownLine[]>): Map<string, BreakdownLine> {
+  const summed = new Map<string, BreakdownLine>();
+  for (const lines of Object.values(breakdowns)) {
+    for (const line of lines) {
+      const had = summed.get(line.code);
+      summed.set(line.code, had === undefined ? { ...line } : { ...had, points: had.points + line.points });
+    }
+  }
+  return summed;
+}
+
+/** Both squads' scoring, category by category, in one list of rows.
+ *
+ *  **The union of the two, never one side's list.** A category only his keeper
+ *  registered is a row with a dash on your half — which is the honest shape, and
+ *  the reason this is a join rather than two independent boards: a row missing
+ *  from one side reads as nought when the sides are drawn apart, and a nought is
+ *  a claim the payload did not make.
+ *
+ *  Largest combined magnitude first, so the categories that decided it are at the
+ *  top and the deductions collect at the foot — `liveBreakdown`'s own order, one
+ *  level up. Ties break on the code so the board does not reshuffle between two
+ *  renders of the same numbers.
+ *
+ *  Pure, and it has to be: this is the arithmetic under a number a manager will
+ *  argue about. Fantrax's figures go in and a sum of them comes out — which makes
+ *  the total OURS, and is why no column of it may be headed `FPts`. */
+/** How much a row moved the scoreline, for the ordering. An absence weighs
+ *  nothing, which is the one thing it can honestly be said to do. */
+function size(row: CategoryPair): number {
+  return Math.abs(row.mine ?? 0) + Math.abs(row.theirs ?? 0);
+}
+
+export function compareCategories(
+  mine: Record<string, readonly BreakdownLine[]>,
+  theirs: Record<string, readonly BreakdownLine[]>,
+): CategoryPair[] {
+  const left = totals(mine);
+  const right = totals(theirs);
+  return [...new Set([...left.keys(), ...right.keys()])]
+    .map((code) => {
+      const named = left.get(code) ?? right.get(code);
+      return {
+        code,
+        name: named?.name ?? code,
+        mine: left.get(code)?.points ?? null,
+        theirs: right.get(code)?.points ?? null,
+      };
+    })
+    .sort((a, b) => {
+      const weight = size(b) - size(a);
+      return weight !== 0 ? weight : a.code.localeCompare(b.code);
+    });
+}

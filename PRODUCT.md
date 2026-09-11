@@ -131,15 +131,18 @@ cannot change what a phone sees. What it bought is ten teams on one screen
 where the game showed a division on one — `/league`'s rows are 29px against
 Championship Manager's own 18.
 
-**Three exceptions, all deliberate and all measured.** A **column head** belongs
+**Two exceptions, both deliberate and both measured.** A **column head** belongs
 to the head strip it is cut from and is as wide as its column, so it is a short
 wide target rather than a small one; it has been 28px since the tables were built
-and no document had measured it until now. The **Pitch/List toggle** is `min-h-9` at every
-width — on the head-to-head board and on a locked squad, which are the two
-screens that still draw an eleven two ways. It was the squad board's until 31
-Aug, when that board lost its pitch and had nothing left to toggle; the exception
-outlived the screen it was named after by about four hours. An **inline text link inside a
+and no document had measured it until now. An **inline text link inside a
 sentence** — "or show all 638" — is prose and never was a control.
+
+*It was three until 11 Sep 2026. The third was the **Pitch/List toggle** at
+`min-h-9`, and it is gone because the control is: `ViewToggle` became a blue
+`.cm-tab` strip that day and `.cm-tab` is 44px under a thumb and 56 above `lg`,
+so the one target the app deliberately drew under the floor now clears it
+everywhere. The exception is deleted rather than reworded — the whole point of
+listing them is that the list is short and every entry is live.*
 
 `tools/ui/tapfit.mjs` measures all of this on every route at both widths and
 names the exceptions rather than hiding them. It exists because the four guards

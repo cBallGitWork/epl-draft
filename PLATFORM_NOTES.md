@@ -3007,6 +3007,99 @@ and `/shoot` is the instrument this repo trusts to settle what a screen looks
 like. An asset swapped in place is the one case where it can be confidently wrong
 twice in a row. Clear the cache before believing a capture of a replaced image.
 
+## `MatchStats`' shape has a second wearer, and it stays duplicated (11 Sep 2026)
+
+`league/CategoryCompare` is `prem/match/[id]/MatchStats` again: the same
+`[3.25rem_1fr_3.25rem]` grid, the same `cm-index` figure plates, the same
+`max-w-2xl` cap and the same argument for all three (`cm9900/22.jpg`). It was
+copied rather than extracted, which is CODE_RULES §1 — **two occurrences are a
+coincidence**.
+
+Recorded here so the THIRD one does not copy it a third time. What actually
+differs is what a row IS: one is Opta's counts for a single football match, the
+other is our league's scoring categories summed over fifteen men a side, off a
+different provider with a different absence rule. What is shared is the geometry
+and the two-figures-round-a-label grammar.
+
+## `.cm-index` ink cannot be overridden by a call site, and one already tries (11 Sep 2026)
+
+`desk.css` declares `.cm-index { color: var(--cm-index-ink, var(--color-ink)) }`
+**unlayered**, while Tailwind's utilities are layered — so a `text-*` on a
+`.cm-index` plate does nothing, silently. That is DESIGN §2's "a plate owns its
+ink" enforced by the cascade rather than by discipline, which is the right way
+round.
+
+Found by writing one: `CategoryCompare` shipped for an hour with
+`value < 0 ? "text-bad" : "text-cream"` and measured **8.83:1 cream on all twelve
+figures**, deductions included. Removed, and a deduction is carried by its minus
+sign.
+
+**`prem/match/[id]/MatchStats` has the same dead ternary** — `percent ?
+"text-info" : "text-cream"` on its own `.cm-index` figures, with a docblock
+claiming cyan for a derived reading on DESIGN §3's authority. Left alone rather
+than fixed in an unrelated commit. Note the size utilities are the exception and
+do work: `@layer components` carries `.cm-index`'s `font-size` for exactly that
+reason, and `news/page.tsx` is the site that proves it.
+
+## The lineup gate now covers a per-category board, not just an eleven (11 Sep 2026)
+
+`/league/matchups/[teamId]`'s Stats and Players tabs are built from
+`squadLivePoints`' breakdown, and a category figure **names a man in the
+eleven** — the exact fact the gate withholds before a deadline. Both are built
+behind `teamDisplay(squads, mine).show === "lineup"`, on the same branch as the
+grass, and a withheld side draws the `Withheld` panel on every tab rather than an
+empty board. Said here because "the gate is about the pitch" is the easy reading
+and it is wrong: it is about anything whose existence states who is active.
+
+`SquadLists` — the unplayed-round branch — is the same rule from the other side:
+it draws `squadUnarranged`, which sorts alphabetically within position so even
+the payload order cannot leak who starts.
+
+## `pitchfit` measured half the object (11 Sep 2026)
+
+It read `.pitch`'s own bottom, so it reported the head-to-head board **100px
+clear** on a 390 phone where all four reserves were below the fold. The bench is
+a sibling of the pitch inside `.pitch-with-bench` and is the last element of the
+height-budgeted block, so it and not the grass is what has to clear.
+
+Two corrections in the same commit:
+
+- Where a bench is drawn, `ends` is ITS bottom; the grass's own is printed
+  beside it.
+- `querySelector(".pitch")` took the FIRST pitch in the document, and the
+  head-to-head renders four and hides two per width (`lg:hidden` /
+  `hidden lg:grid`). At 1024 and 1440 it measured a `display: none` node and
+  reported a pitch 0px tall clearing the fold by the whole screen. It takes the
+  first pitch with a height now.
+
+The walk also opens `/league/matchups/[teamId]`, discovered off the matchups
+board — DESIGN §9 makes it the reference page for the grass and this instrument
+had never opened it.
+
+**The budget itself did not move.** `--pitch-page: 26.5rem` was right; what was
+wrong was a 44px provenance banner above the scoreline, and removing it is what
+made the bench fit. Re-measured: 164px clear at 390, 150 at 768, 121 at 1024 and
+1440.
+
+## `.cm-tab` vs `.cm-tab-quiet` is a fact about the SCREEN, not the control (11 Sep 2026)
+
+`ViewToggle` became a blue tab strip on 11 Sep and immediately drew two
+full-height strips on `/squad/[teamId]` — the five-plate team strip above and
+Pitch/List below it, both 56px on a desk, neither ranked. That is precisely the
+thing `.cm-tab-quiet` was added for on 10 Sep.
+
+So the modifier is a prop (`quiet`) rather than a property of the component: the
+head-to-head carries no other strip and its four plates ARE its strip, while the
+squad and club boards already have one. A control cannot know this about itself;
+only the screen can.
+
+**And the app's one recorded tap exception went with it.** The Pitch/List toggle
+was `min-h-9` at every width; `.cm-tab` is 44 under a thumb and 56 above `lg`, so
+the exception stopped existing. `PRODUCT.md`'s list is two now, and
+`tools/ui/tapfit.mjs` lost its `[role=group]` exemption — left in, it would have
+gone on excusing a structure that no longer needs it and would not have caught
+the next shrink.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for

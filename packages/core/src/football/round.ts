@@ -208,3 +208,24 @@ export type RoundState = "live" | FinishedState | null;
 export function roundState(snapshot: FootballSnapshot): RoundState {
   return isMatchdayLive(snapshot) ? "live" : roundFinished(snapshot);
 }
+
+/** Whether a ball has been kicked in the round at all.
+ *
+ *  **Not the inverse of `roundState`, and that is the whole reason it exists.**
+ *  `null` from that function covers two states — a round nobody has kicked off,
+ *  and the gap between two Saturday kickoffs — and a caller that wants to say
+ *  "nothing has happened yet" can only use the first. Saturday tea-time has had
+ *  plenty happen.
+ *
+ *  Asked of the round's own fixtures rather than the whole snapshot, which may
+ *  carry more than one. A round the snapshot has no fixtures for has not started:
+ *  there is nothing to have started.
+ *
+ *  Pure, and asked of `status` rather than of a clock — a fixture that has kicked
+ *  off says so, and injecting `now` here would make this a second opinion about
+ *  something the payload already states. */
+export function roundStarted(snapshot: FootballSnapshot, gameweek: number): boolean {
+  return snapshot.fixtures.some(
+    (fixture) => fixture.gameweek === gameweek && fixture.status !== "upcoming",
+  );
+}
