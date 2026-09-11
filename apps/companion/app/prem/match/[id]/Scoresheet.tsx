@@ -2,6 +2,7 @@ import Link from "next/link";
 import { goalGroups } from "@epl/core";
 import type { FootballPlayer, PlGoal, PlGoalGroup, PlayerOwner, SheetRow } from "@epl/core";
 import { PLAYER } from "../../routes";
+import EventIcon from "../../../components/football/EventIcon";
 import { SMALL_CAPS } from "@/app/desk";
 
 // Who scored, when, and who made it.
@@ -31,6 +32,22 @@ import { SMALL_CAPS } from "@/app/desk";
 // not a fact of its own. The assister gets his the same way, which he did not
 // have at all.
 //
+// **And the assister keeps a clock after all.** The first build of the fold gave
+// him none, on the 10 Sep argument that he shares the scorer's — which was true
+// of a ONE-goal row and stops being true the moment two goals fold into one. Two
+// assisters under one scorer with no figures cannot say which man made which,
+// and Craig drew the answer: `A Gakpo (test211) 6'` over `A Munoz (team) 9'`.
+// When it is the same man twice he carries both, which is the sketch's other
+// half. What tells a goal from an assist is now the ball, the `A`, the indent,
+// the ink and the size — five marks, where the minute was only ever the weakest
+// of them.
+//
+// **The ball marks the goal line** (Craig, 11 Sep 2026, drawing `(goal icon)`
+// before the scorer). `EventIcon`'s own rule is that a glyph stands beside a word
+// and never instead of one; here the word is the man's name and the minute
+// beside it, which is what CM's own sheet is. It is `aria-hidden` and sized in
+// `em`, so it moved with the type when the type went up.
+//
 // **CM's own arrangement otherwise.** `cm0102/02.jpg` prints the home scorers
 // down the left and the away down the right with the minute in yellow beside
 // each. Neither column is mirrored: the reference sets both sides name-first
@@ -49,6 +66,8 @@ const FIGURE = "numeric shrink-0 font-bold text-accent text-lg lg:text-3xl";
  *  name and a step under it at both widths, because it glosses the name rather
  *  than competing with it. */
 const OWNER = "text-2xs font-normal text-faint lg:text-base";
+/** The assister's minutes: the scorer's ink and column, at the assister's size. */
+const ASSIST_FIGURE = "numeric shrink-0 font-bold text-accent text-sm lg:text-xl";
 
 export default function Scoresheet({
   home,
@@ -140,10 +159,11 @@ function Goal({
         code={group.scorer}
         name={scorer?.name ?? "—"}
         owners={owners}
-        figure={group.minutes.map((minute) => `${minute}'`).join(", ")}
+        figure={minutes(group.minutes)}
         note={group.own ? "og" : null}
+        glyph
       />
-      {group.assisters.map((code) => {
+      {group.assisters.map(({ code, minutes: his }) => {
         const assister = byCode.get(code);
         if (assister === undefined) return null;
         const owner = owners.get(code);
@@ -163,12 +183,17 @@ function Goal({
             className="ml-3 flex min-h-11 items-baseline gap-1.5 hover:underline lg:ml-4 lg:min-h-9"
           >
             <span className={`${SMALL_CAPS} shrink-0 text-faint`}>A</span>
-            <span className="min-w-0 truncate font-chrome text-sm font-bold text-muted lg:text-xl">
+            <span className="min-w-0 flex-1 truncate font-chrome text-sm font-bold text-muted lg:text-xl">
               {assister.name}
               {owner === undefined ? null : (
                 <span className={`${OWNER} ml-1`}>({owner.teamName})</span>
               )}
             </span>
+            {/* **His own minutes, in the scorer's figure column and his own
+                size.** The accent, because it is the same column and the same
+                kind of fact; a step down, because his name is — the figure and
+                the name it belongs to stay in proportion at both widths. */}
+            <span className={ASSIST_FIGURE}>{minutes(his)}</span>
           </Link>
         );
       })}
@@ -184,19 +209,30 @@ function Man({
   owners,
   figure,
   note = null,
+  glyph = false,
 }: {
   code: number | null;
   name: string;
   owners: Map<number, PlayerOwner>;
   figure: string;
   note?: string | null;
+  /** Whether this line is a GOAL, and so takes the ball. A sending off and a
+   *  penalty missed share this shape and take their word instead — `EventIcon`
+   *  has a card and no glyph for a miss, and a ball on either would be a wrong
+   *  statement rather than a missing one. */
+  glyph?: boolean;
 }) {
   const owner = code === null ? undefined : owners.get(code);
   return (
     <Link
       href={code === null ? "#" : `${PLAYER}/${code}`}
-      className="group flex min-h-11 items-baseline gap-3 lg:min-h-11"
+      className="group flex min-h-11 items-baseline gap-2 lg:min-h-11 lg:gap-3"
     >
+      {glyph ? (
+        <span className="shrink-0 self-center text-accent">
+          <EventIcon glyph="ball" />
+        </span>
+      ) : null}
       <span className="min-w-0 flex-1 truncate">
         <span className={`group-hover:underline ${NAME}`}>{name}</span>
         {note === null ? null : <span className={`${SMALL_CAPS} ml-1.5 text-bad`}>{note}</span>}
@@ -207,6 +243,11 @@ function Man({
       <span className={FIGURE}>{figure}</span>
     </Link>
   );
+}
+
+/** A run of minutes as a scoresheet prints them. */
+function minutes(said: readonly number[]): string {
+  return said.map((minute) => `${minute}'`).join(", ");
 }
 
 /** What a man is on the sheet for when it is not a goal.

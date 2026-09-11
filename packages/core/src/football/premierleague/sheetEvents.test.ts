@@ -293,15 +293,22 @@ describe("goalGroups", () => {
       goal({ minute: 6, scorer: 50, assister: 70 }),
       goal({ minute: 9, scorer: 50, assister: 70 }),
     ]);
-    expect(groups).toEqual([{ scorer: 50, own: false, minutes: [6, 9], assisters: [70] }]);
+    expect(groups).toEqual([
+      { scorer: 50, own: false, minutes: [6, 9], assisters: [{ code: 70, minutes: [6, 9] }] },
+    ]);
   });
 
-  it("keeps two assisters when two different men laid them on", () => {
+  it("keeps two assisters when two different men laid them on, each with HIS minute", () => {
+    // The whole point of the minute being per-assister: nothing else says which
+    // of the two made which goal.
     const groups = goalGroups([
       goal({ minute: 6, scorer: 50, assister: 70 }),
       goal({ minute: 9, scorer: 50, assister: 80 }),
     ]);
-    expect(groups[0].assisters).toEqual([70, 80]);
+    expect(groups[0].assisters).toEqual([
+      { code: 70, minutes: [6] },
+      { code: 80, minutes: [9] },
+    ]);
   });
 
   it("orders rows by a scorer's FIRST goal, not his last", () => {
@@ -336,5 +343,14 @@ describe("goalGroups", () => {
 
   it("credits nobody where Opta did not", () => {
     expect(goalGroups([goal({ minute: 6, scorer: 50 })])[0].assisters).toEqual([]);
+  });
+
+  it("gives a man who assisted one of two goals only that goal's minute", () => {
+    const groups = goalGroups([
+      goal({ minute: 6, scorer: 50, assister: 70 }),
+      goal({ minute: 9, scorer: 50 }),
+    ]);
+    expect(groups[0].minutes).toEqual([6, 9]);
+    expect(groups[0].assisters).toEqual([{ code: 70, minutes: [6] }]);
   });
 });

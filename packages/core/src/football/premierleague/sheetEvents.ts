@@ -308,7 +308,11 @@ export function creditedGoals(
  *
  *  Craig, 11 Sep 2026, on seeing Isak twice with Gakpo under each: *"isak can
  *  have one row only for both goals… both assists can be one row too if its
- *  both. if it was 2 players, just show two assists row."*
+ *  both. if it was 2 players, just show two assists row."* And then, on the
+ *  build that dropped the assister's clock to make the point: an assister row
+ *  carries the minutes of the goals he made, so two assisters under one scorer
+ *  read `6'` and `9'` rather than sharing a figure that cannot say which was
+ *  whose.
  *
  *  **This is the inverse of the move made on 10 Sep and it is not a reversal of
  *  it.** That day's change was from a list of MEN to a list of GOALS, because a
@@ -331,10 +335,17 @@ export interface PlGoalGroup {
   own: boolean;
   /** His minutes, oldest first. Never empty. */
   minutes: number[];
-  /** The DISTINCT men who set them up, in the order the goals came. One name
-   *  when the same man laid on both, two when it was two — and empty when Opta
-   *  credited nobody, which is 20 of 76 goals. */
-  assisters: number[];
+  /** The DISTINCT men who set them up, in the order the goals came, **each with
+   *  the minutes of the goals HE made**. One entry when the same man laid on
+   *  both, two when it was two — and empty when Opta credited nobody, which is
+   *  20 of 76 goals.
+   *
+   *  **The minutes are his, not the group's** (Craig, 11 Sep 2026, on a first
+   *  build that gave the assister no clock at all: with two assisters on one
+   *  scorer, `6'` against Gakpo and `9'` against Muñoz is the only thing that
+   *  says which man made which). They are a subset of `minutes` above and
+   *  always in the same order. */
+  assisters: { code: number; minutes: number[] }[];
 }
 
 /** One side's goals folded to one row per scorer, oldest goal first.
@@ -356,8 +367,11 @@ export function goalGroups(goals: readonly PlGoal[]): PlGoalGroup[] {
       groups.push(group);
     }
     group.minutes.push(goal.minute);
-    if (goal.assister !== null && !group.assisters.includes(goal.assister)) {
-      group.assisters.push(goal.assister);
+    if (goal.assister !== null) {
+      const already = group.assisters.find((man) => man.code === goal.assister);
+      if (already === undefined) {
+        group.assisters.push({ code: goal.assister, minutes: [goal.minute] });
+      } else already.minutes.push(goal.minute);
     }
   }
 
