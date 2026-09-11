@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { CSSProperties } from "react";
 import { clubColours, inkOn } from "@epl/core";
 import type {
@@ -11,7 +10,8 @@ import type {
 } from "@epl/core";
 import { IndexCell } from "../../../components/league/TableCells";
 import { chipsFor } from "../../../components/league/Chips";
-import { PLAYER } from "../../routes";
+import MatchPlayerCard from "./MatchPlayerCard";
+import type { MatchMan } from "./MatchPlayerCard";
 import { BOARD, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, PANEL_FLUSH, ROW_RULE } from "@/app/desk";
 import { sheetName } from "./match";
 import type { Match } from "./match";
@@ -75,6 +75,47 @@ const SHEET_FIGURE = "text-xl lg:text-2xl";
  *  reasoning read at a narrower column, and this one shares its width with the
  *  sub note. */
 const MARKS = 2;
+
+/** The name group's own box, shared by the row and by the trigger that opens the
+ *  card — one string, so a tap target and the thing it looks like cannot drift.
+ *  `w-full` because it is a `<button>` now and a button does not fill its cell
+ *  the way a block link did. */
+const NAME_CELL =
+  "group flex min-h-11 w-full items-baseline justify-center gap-1.5 px-1.5 text-left lg:min-h-9";
+
+/** Everything the card shows, off the row that opened it — no read, no second
+ *  join. The chips are resolved HERE rather than passed as a provider row,
+ *  because `chipsFor` is the board's own vocabulary and the card should not
+ *  learn it. */
+function card(
+  row: Named,
+  join: Join,
+  owner: PlayerOwner | undefined,
+  club: Club | undefined,
+): MatchMan {
+  const { man, did, bench } = row;
+  const line = join.line(man.code);
+  const played = !bench || did?.onAt != null;
+  return {
+    code: man.code,
+    name: join.name(man),
+    position: man.position,
+    shirt: man.shirt,
+    captain: man.captain,
+    club: club?.name ?? "—",
+    owner: owner?.teamName ?? null,
+    points: played ? join.points(man.code) : null,
+    onAt: did?.onAt ?? null,
+    offAt: did?.offAt ?? null,
+    booked: did?.booked ?? null,
+    sentOff: did?.sentOff ?? null,
+    marks: (line === undefined ? [] : chipsFor(line)).map((chip) => ({
+      label: chip.label,
+      className: chip.className,
+    })),
+    bench,
+  };
+}
 
 /** The two chips the card block already draws.
  *
@@ -287,6 +328,7 @@ function Side({
               row={row}
               owner={row.man.code === null ? undefined : owners.get(row.man.code)}
               join={join}
+              club={club}
               opensBench={at === bench}
             />
           ))}
@@ -307,11 +349,14 @@ function Row({
   row,
   owner,
   join,
+  club,
   opensBench,
 }: {
   row: Named;
   owner: PlayerOwner | undefined;
   join: Join;
+  /** For the card, which names the club a row cannot spare the width for. */
+  club: Club | undefined;
   opensBench: boolean;
 }) {
   const { man, did, bench } = row;
@@ -364,11 +409,13 @@ function Row({
             block and the figure leave it. The sub note is NOT in here: it is a
             fact about the match rather than about the man, it takes the row's
             right-hand edge, and a `ml-auto` inside a centred flex row would be
-            two rules arguing about the same space. */}
-        <Link
-          href={`${PLAYER}/${man.code ?? ""}`}
-          className="group flex min-h-11 items-baseline justify-center gap-1.5 px-1.5 lg:min-h-9"
-        >
+            two rules arguing about the same space.
+
+            **It opens a card rather than a page** (Craig, same day: *"clicking
+            on a player brings up pop up player card"*). The card is told what
+            this row already holds and reads nothing of its own — see
+            `MatchPlayerCard`. */}
+        <MatchPlayerCard man={card(row, join, owner, club)} className={NAME_CELL}>
           {man.position === null ? null : (
             <span className={SHEET_POSITION}>{man.position}</span>
           )}
@@ -379,7 +426,7 @@ function Row({
           {owner === undefined ? null : (
             <span className={`shrink-0 truncate ${SHEET_OWNER}`}>({owner.teamName})</span>
           )}
-        </Link>
+        </MatchPlayerCard>
       </td>
       <td className="whitespace-nowrap px-1 text-right align-middle">
         <SubNote did={did} />

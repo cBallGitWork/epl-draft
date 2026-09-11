@@ -14,6 +14,7 @@ import {
   matchFacts,
   matchGoalMinutes,
   matchGoals,
+  matchPlayerNames,
   matchReport,
   matchStreamCredits,
 } from "../../../matchFeed";
@@ -155,15 +156,27 @@ async function Sheet({ match }: { match: Match }) {
  *  `worthReading` is 42.9% of the rows on the counts in `map.ts`, which is what
  *  makes this fit under a scoresheet at all. */
 async function Commentary({ match }: { match: Match }) {
-  const lines = worthReading(
-    await matchReport(match.fixture.gameweek, match.fixture.code),
-  );
+  const { gameweek, code } = match.fixture;
+  const [whole, names] = await Promise.all([
+    matchReport(gameweek, code),
+    // The same men the Report tab marks, so a name is white on both screens.
+    matchPlayerNames(gameweek, code),
+  ]);
+  const lines = worthReading(whole);
   if (lines.length === 0) return null;
 
   return (
-    <section className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-96 overflow-y-auto`}>
+    // **A share of the SCREEN, not a stated 384 pixels** (Craig, 11 Sep 2026:
+    // *"make the space for the match report more dynamic, we can use more space
+    // i think"*). `max-h-96` was the same box on a 667px phone and a 1440 desk —
+    // most of the first and a quarter of the second. `dvh` spends what the
+    // device actually has, and the scoresheet above it is four or five rows on
+    // every match ever played, so there is no case where this crowds it.
+    <section
+      className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-[60dvh] overflow-y-auto lg:max-h-[70dvh]`}
+    >
       {lines.map((line) => (
-        <Line key={line.id} line={line} />
+        <Line key={line.id} line={line} names={names} />
       ))}
     </section>
   );
