@@ -123,9 +123,10 @@ export {
   fixturesInOrder,
   hasGameweek,
   playerByCode,
+  squadOf,
 } from "./selectors";
 export type { MatchContribution } from "./selectors";
-export { availabilityOf, isDoubtful } from "./playerState";
+export { availabilityOf, isDoubtful, onTheBooks } from "./playerState";
 export type { Availability, PlayerState } from "./playerState";
 export { formByPlayer, playedRounds } from "./form";
 export type { PlayerForm, RoundStats } from "./form";

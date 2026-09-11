@@ -1,4 +1,5 @@
 import { NOTABLE_SAVES } from "../config";
+import { onTheBooks } from "./playerState";
 import type { Club, FootballPlayer, FootballSnapshot, Fixture, PlayerMatchStats } from "./types";
 
 // Pure read-side selectors over a snapshot. Kept here rather than in components
@@ -25,6 +26,20 @@ function playerById(snapshot: FootballSnapshot): Map<number, FootballPlayer> {
  *  footballer through `playerById`. */
 export function playerByCode(snapshot: FootballSnapshot): Map<number, FootballPlayer> {
   return new Map(snapshot.players.map((p) => [p.code, p]));
+}
+
+/** One club's players, as the club actually stands — the departed dropped by
+ *  `onTheBooks`.
+ *
+ *  Three tabs ask the same question and used to answer it with the same two
+ *  filters written out three times: Squad, Stats and Set Pieces. The Squad
+ *  tab's own note said this is where the third one goes.
+ *
+ *  Unsorted on purpose. What varies between the three is the ORDER — a depth
+ *  chart, a stats board, a set-piece rank — and none of them wants another
+ *  page's. */
+export function squadOf(snapshot: FootballSnapshot, clubId: number): FootballPlayer[] {
+  return snapshot.players.filter((player) => player.clubId === clubId && onTheBooks(player));
 }
 
 /** One notable thing a player did in a match. The drop-down under a fixture is

@@ -1,4 +1,4 @@
-import { availabilityOf } from "@epl/core";
+import { squadOf } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
 import ClubShell from "../Shell";
 import { clubOr404, leagueOpinions } from "../club";
@@ -29,11 +29,7 @@ export default async function ClubStatsPage({ params }: { params: Promise<{ code
   const { club, snapshot } = await clubOr404(code);
   const league = await leagueOpinions();
 
-  const rows: Row[] = snapshot.players
-    .filter((player) => player.clubId === club.id)
-    // The unavailable are out of the game, so they are off the board as well as
-    // off the squad list — the Squad tab's own note carries the argument.
-    .filter((player) => availabilityOf(player).state !== "unavailable")
+  const rows: Row[] = squadOf(snapshot, club.id)
     .sort(
       (a, b) =>
         fantasyDepth(league.get(a.code)) - fantasyDepth(league.get(b.code)) ||

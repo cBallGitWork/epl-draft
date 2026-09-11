@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { NO_SEASON } from "./noSeason";
-import { availabilityOf, isDoubtful } from "./playerState";
+import { availabilityOf, isDoubtful, onTheBooks } from "./playerState";
 import type { FootballPlayer } from "./types";
 
 function player(over: Partial<FootballPlayer> = {}): FootballPlayer {
@@ -84,5 +84,19 @@ describe("isDoubtful", () => {
     expect(isDoubtful(player({ news: "Knock" }))).toBe(true);
     expect(isDoubtful(player({ chanceOfPlaying: 50 }))).toBe(true);
     expect(isDoubtful(player({ chanceOfPlaying: 100, news: "Knock" }))).toBe(true);
+  });
+});
+
+describe("onTheBooks", () => {
+  it("drops the departed and only them", () => {
+    // FPL's `u` is a man who has left the division — Woltemade to Juventus on
+    // 11 Sep, with 19 minutes already played. The other four letters are men
+    // still at a Premier League club, however unfit.
+    expect(
+      onTheBooks(player({ status: "u", news: "Has joined Juventus on loan", chanceOfPlaying: 0 })),
+    ).toBe(false);
+    for (const status of ["a", "i", "s", "d"]) {
+      expect(onTheBooks(player({ status, news: "Knee injury", chanceOfPlaying: 0 }))).toBe(true);
+    }
   });
 });

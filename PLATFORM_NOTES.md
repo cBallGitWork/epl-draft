@@ -2300,8 +2300,52 @@ alternative is 697 rows quietly claiming nobody owns anybody.
 
 Filter state lives in the URL, so the page stays a server component, the pool
 never crosses to the phone as data, and a manager can send someone a link to
-exactly what he is looking at. Nothing is truncated: all 697 rows render, ~84 KB
-gzipped, and the header states the count in view against the total.
+exactly what he is looking at. Nothing is truncated: every row Fantrax answers
+with renders, ~84 KB gzipped, and the header states the count in view against the
+total. *"Every row"* is now every row MINUS the departed — see the next section;
+the count it was measured at was 697.
+
+## The site rule: a man who has left the division is off every list (11 Sep 2026)
+
+Craig: *"hide all unavailable players (like Woltemade) they aren't in the
+league."* It generalises what he asked of the club Squad tab on 3 Sep (*"remove
+UNAV players, they are out of the game"*), which by 11 Sep was written out in two
+places and wanted in five.
+
+**What the letter means, counted.** FPL's bootstrap on 11 Sep 2026: 656 elements,
+`a` 476 · `i` 62 · `d` 13 · `s` 1 · **`u` 104**. All 104 carry a `news` line and
+every one of them says where he went — *"Has joined Juventus on loan for the rest
+of the season"*, *"Has joined Al Hilal permanently"*, *"has departed the club as a
+free agent"*. So `u` is not a long injury under another name: it is a man who is
+no longer in the Premier League.
+
+**Fantrax does not know.** Woltemade is `070g7` in `getPlayerIds`, `{"eligiblePos":
+"F", "status": "FA"}` in the real league's `playerInfo`, and the bridge settles him
+on `fplCode` 470313 at confidence 100 — a free agent our pool page was offering to
+ten managers for a man who plays for Juventus. Their `status` is league state (FA,
+WW, T) and has no availability in it at all; only the football layer can answer
+this, and it answers it across the bridge.
+
+**One predicate, one selector.** `football/playerState.ts` — `onTheBooks(player)`,
+which is `availabilityOf(player).state !== "unavailable"`. `football/selectors.ts`
+— `squadOf(snapshot, clubId)`, the third caller arriving as CODE_RULES §1 requires
+(Squad, Stats, Set Pieces), unsorted because the ORDER is what varies between the
+three.
+
+**Where it applies, and where it deliberately does not.** It is a rule about
+LISTS — who is at a club, and who can be picked up:
+
+| Applied | Not applied, and why |
+|---|---|
+| `/prem/club/[code]` Squad, Stats | `/prem/match/[id]/*` — **seven of the 104 played before they left** (Sánchez a full 90, Richarlison 67, Drameh 65, Millar 50, Beto 31, Woltemade 19). A scoresheet that dropped them would say a match was played by ten men |
+| `/prem/club/[code]/set-pieces` — **6 of the 135 ranked takers had gone**, Woltemade first on Newcastle's penalties at a 0.57 share. Filtered before the rank is drawn, so the order still counts 1, 2, 3 | `/squad/[teamId]` and every Fantrax roster — 2 of the dummy league's 150 slots hold one. Hiding a slot a manager is still paying for hides the problem, not the man; he is greyed and boxed `Unav` instead |
+| `/players` and `/players/analysis` — `stillHere` in `players/pool.ts`, outside the league cache so a Fantrax entry cannot keep offering a man who left | `/players/[fantraxId]` and `/prem/player/[code]` — a page ABOUT one man, reachable only by a link nothing now draws or by a typed URL. It says what happened to him |
+| the attribute percentile cohort (`players/[fantraxId]/grid.ts`) — 104 frozen, mostly-nought seasons in the denominator is what makes an ordinary player look good | `clubStats` and `/prem/team-stats` — a SUM, not a list. The goals a departed man scored for that club are still that club's season |
+
+`players/pool.ts` is now the one place a page that is otherwise entirely Fantrax's
+makes a football read, and it is a hard dependency rather than a column that may
+fail. The alternative is a pool that offers men who are not in the division, which
+is wrong in a way a missing photograph is not.
 
 ## What `violations()` deliberately cannot say
 

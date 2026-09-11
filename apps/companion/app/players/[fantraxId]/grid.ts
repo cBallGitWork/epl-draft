@@ -4,6 +4,7 @@ import {
   attributes,
   mapPastSeasons,
   fetchElementSummary,
+  onTheBooks,
 } from "@epl/core";
 import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, Scouted } from "@epl/core";
 import { unstable_cache } from "next/cache";
@@ -37,13 +38,14 @@ export async function playerGrid(player: FootballPlayer): Promise<Attribute[]> {
   // the whole division — a keeper's Handling means "better than most players",
   // which is the only reading a percentile has — and what the position decides
   // is which rows are worth printing, never what they are measured against.
+  //
+  // "The division" is the site rule's reading of it: the 104 who have left carry
+  // a frozen season, most of it nought, and rating a man against them is what
+  // makes an ordinary one look good.
+  const division = snapshot.players.filter(onTheBooks).map(scouted);
   return keeperGrid(player.code)
-    ? attributes(scouted(player), snapshot.players.map(scouted)).filter(
-        (row) => !OUTFIELD_ONLY.includes(row.name),
-      )
-    : attributes(scouted(player), snapshot.players.map(scouted)).filter(
-        (row) => !KEEPER_ONLY.includes(row.name),
-      );
+    ? attributes(scouted(player), division).filter((row) => !OUTFIELD_ONLY.includes(row.name))
+    : attributes(scouted(player), division).filter((row) => !KEEPER_ONLY.includes(row.name));
 }
 
 /** Whether to draw him a keeper's grid.

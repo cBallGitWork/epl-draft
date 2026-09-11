@@ -9,6 +9,7 @@ import {
   fixturesInOrder,
   hasGameweek,
   playerByCode,
+  squadOf,
 } from "./selectors";
 
 const player = (id: number, name: string, clubId = 1) => ({
@@ -152,3 +153,17 @@ describe("hasGameweek", () => {
   });
 });
 
+
+describe("squadOf", () => {
+  const departed = { ...player(4, "Woltemade", 1), status: "u", news: "Has joined Juventus on loan" };
+
+  it("is the club's own, with the departed dropped", () => {
+    const snapshot = snap({ players: [player(1, "Saka"), departed, player(5, "Palmer", 2)] });
+    expect(squadOf(snapshot, 1).map((p) => p.name)).toEqual(["Saka"]);
+  });
+
+  it("keeps the injured, who are still at the club", () => {
+    const hurt = { ...player(6, "Rice"), status: "i", news: "Hamstring", chanceOfPlaying: 0 };
+    expect(squadOf(snap({ players: [hurt, departed] }), 1).map((p) => p.name)).toEqual(["Rice"]);
+  });
+});

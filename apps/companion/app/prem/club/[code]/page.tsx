@@ -1,9 +1,9 @@
 import {
-  availabilityOf,
   clubById,
   clubColours,
   nextFixtures,
   predictedEleven,
+  squadOf,
   xiFault,
   xiRoundFault,
 } from "@epl/core";
@@ -40,21 +40,11 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
 
   const place = standing(fixtures, snapshot.clubs, club);
 
-  // One line rather than a `playersByClub` selector in core. **Two callers now**
-  // — the Stats tab filters the same way for its leaders — and CODE_RULES §1
-  // leaves two duplicated, because two similar things are a coincidence. The
-  // third is what would tell us what varies, and a `football/selectors.ts` entry
-  // is where it goes.
-  const squad = snapshot.players
-    .filter((player) => player.clubId === club.id)
-    // **The unavailable are dropped, and only that one state** (Craig, 3 Sep:
-    // "remove UNAV players, they are out of the game"). FPL's `u` is not a
-    // doubt or a knock — it is a man who is no longer in the competition, a
-    // loan out of the league or a contract expired, and he is not on this
-    // club's squad list in any sense a reader cares about. The injured and the
-    // suspended stay and are greyed, because a squad list that omits them
-    // cannot be checked against a team sheet.
-    .filter((player) => availabilityOf(player).state !== "unavailable")
+  // The third caller arrived — Set Pieces — so the filter pair moved to
+  // `football/selectors.ts` as this note said it would. `squadOf` drops the
+  // departed (`onTheBooks`) and leaves the order to whoever asked, which is what
+  // varies between the three tabs.
+  const squad = squadOf(snapshot, club.id)
     // Our league's position first, then what he has actually done inside it —
     // so each block reads as a depth chart rather than an alphabet.
     .sort(

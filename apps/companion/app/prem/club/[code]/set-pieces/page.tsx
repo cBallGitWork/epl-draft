@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { availabilityOf, clubColours, setPieceOrder } from "@epl/core";
+import { availabilityOf, clubColours, setPieceOrder, squadOf } from "@epl/core";
 import type { IntelClubPieces } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
 import Section from "../../../../components/shell/Section";
@@ -43,12 +43,17 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
   const { club, snapshot } = await clubOr404(code);
   const colours = clubColours(club.shortName);
 
-  const byCode = new Map(
-    snapshot.players.filter((player) => player.clubId === club.id).map((p) => [p.code, p]),
-  );
-  const orders = setPieceOrder(intelSetPieces.clubs[club.shortName], PIECES).filter(
-    (order) => order.takers.length > 0,
-  );
+  const byCode = new Map(squadOf(snapshot, club.id).map((p) => [p.code, p]));
+  // **Takers filtered before they are numbered.** Six of the men the sister repo
+  // ranks have since left the division — Woltemade among them, first choice on
+  // Newcastle's penalties at a 0.57 share on 11 Sep — and the site rule drops
+  // them. They come out before the rank is drawn rather than during the render,
+  // so the order still counts 1, 2, 3: a first-choice taker who has gone makes
+  // the man behind him first choice, and a list that opened on "2" reads as a
+  // bug.
+  const orders = setPieceOrder(intelSetPieces.clubs[club.shortName], PIECES)
+    .map((order) => ({ ...order, takers: order.takers.filter((taker) => byCode.has(taker.code)) }))
+    .filter((order) => order.takers.length > 0);
 
   return (
     <ClubShell

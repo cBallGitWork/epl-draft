@@ -71,3 +71,26 @@ export function availabilityOf(player: FootballPlayer | null): Availability {
 export function isDoubtful(player: FootballPlayer): boolean {
   return availabilityOf(player).state !== "fit";
 }
+
+/** Whether he is still on a Premier League club's books.
+ *
+ *  **The site rule** (Craig, 11 Sep 2026: *"hide all unavailable players, they
+ *  aren't in the league"*, generalising what he asked of the club Squad tab on
+ *  3 Sep). FPL's `u` is not a doubt or a knock: every one of the 104 carrying it
+ *  on 11 Sep also carries a line saying where he went — *"Has joined Juventus on
+ *  loan for the rest of the season"*, *"Has joined Al Hilal permanently"*,
+ *  *"has departed the club as a free agent"*. He is out of the competition, so
+ *  he is off every list of who is at a club and who can be picked up.
+ *
+ *  The other four letters stay. An injured or suspended man is still a Premier
+ *  League player and a squad list that omits him cannot be checked against a
+ *  team sheet.
+ *
+ *  **It is a rule about LISTS, not about the record.** Seven of the 104 played
+ *  before they left — Sánchez a full ninety — and a match page that dropped them
+ *  would be saying a game was played by ten men. The same goes for a roster slot
+ *  a manager is still holding: hiding that would hide the problem, not the man.
+ *  Those surfaces grey him and box the letter instead. */
+export function onTheBooks(player: FootballPlayer): boolean {
+  return availabilityOf(player).state !== "unavailable";
+}

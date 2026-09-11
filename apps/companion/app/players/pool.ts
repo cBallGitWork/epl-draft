@@ -12,9 +12,12 @@ import {
   mapPoolStats,
   mapTeamRosters,
   isUnmapped,
+  onTheBooks,
+  playerByCode,
   positionDepth,
 } from "@epl/core";
 import type { PoolStatRow, PoolPlayer, StatSeason } from "@epl/core";
+import { footballNow } from "../football";
 import { leagueCache } from "../leagueCache";
 import { orRefusal, tell } from "../refusals";
 import type { Unavailable } from "../refusals";
@@ -35,11 +38,15 @@ export interface PoolRow {
   /** FPL's season-stable player code, for his photograph, or null when the
    *  bridge has not settled him.
    *
-   *  Read straight off the bridge rather than through a football snapshot: the
-   *  code is the only thing a portrait needs, and joining the whole football
-   *  layer in here would give a page that is entirely Fantrax's a second
-   *  provider it could fail on. Null is ordinary — 120 of the 688 are academy
-   *  names FPL has never listed — and it costs the photograph, nothing else. */
+   *  Read straight off the bridge rather than resolved through the snapshot: the
+   *  code is the only thing a portrait needs. Null is ordinary — 120 of the 688
+   *  are academy names FPL has never listed — and it costs the photograph,
+   *  nothing else.
+   *
+   *  It is also what `stillHere` filters on, which is the one football read this
+   *  page makes. That read is a hard dependency rather than a column that may
+   *  fail: a pool offering men who have left the division is wrong in a way a
+   *  missing photograph is not. */
   fplCode: number | null;
 }
 
@@ -87,7 +94,32 @@ const readPool = leagueCache("league-pool", readLeaguePool);
 export async function getLeaguePool(): Promise<LeaguePool> {
   const cached = await readPool();
   if ("unavailable" in cached) return cached;
-  return { ...cached, teamNames: new Map(cached.teamNames) };
+  return { ...cached, rows: await stillHere(cached.rows), teamNames: new Map(cached.teamNames) };
+}
+
+/** The site rule applied to the pool, which is the one list on the site that
+ *  says who you could pick up.
+ *
+ *  **Fantrax keeps the departed listed as free agents.** Woltemade was still in
+ *  `getPlayerIds` and still `FA` in `playerInfo` on 11 Sep, after FPL had him at
+ *  Juventus — so their pool offers a manager a man he cannot have, and only the
+ *  football layer knows it.
+ *
+ *  **Outside the cache on purpose.** The pool is cached as Fantrax answered it
+ *  and stays one provider's payload; the two reads have different lifetimes, and
+ *  baking a football fact into a Fantrax cache is how a man who left in October
+ *  goes on being offered until the entry expires. `footballNow` is the layout's
+ *  own cached read, so asking for it here costs nothing.
+ *
+ *  A row with no `fplCode` is kept. That is the bridge saying FPL has never
+ *  listed him — 120 academy names — which is a settled answer about identity and
+ *  says nothing about whether he is at a club. */
+async function stillHere(rows: PoolRow[]): Promise<PoolRow[]> {
+  const football = playerByCode(await footballNow());
+  return rows.filter((row) => {
+    const player = row.fplCode === null ? undefined : football.get(row.fplCode);
+    return player === undefined || onTheBooks(player);
+  });
 }
 
 async function readLeaguePool(): Promise<CachedPool> {
