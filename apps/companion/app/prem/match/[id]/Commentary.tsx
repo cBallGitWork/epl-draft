@@ -118,48 +118,39 @@ export default function Line({
   );
 }
 
-/** The things that change a match, and the word this app calls each one.
+/** The one event whose own sentence does not say what it is, and the word for it.
  *
- *  Keyed on Opta's own type strings, measured across gameweeks 1-3 rather than
- *  guessed. The VALUES are `matchday/Wire`'s vocabulary — the same seven events
- *  get the same seven words on both screens, which is the unification this run
- *  has been doing everywhere else.
+ *  **The rule, and it is measurable rather than a matter of taste: a label
+ *  survives only where Opta's sentence does not already lead with it.** Six
+ *  types carried one on 11 Sep 2026 and five came off, one at a time, as Craig
+ *  read each on the screen. Their wordings, read off gameweeks 1-3 rather than
+ *  remembered:
  *
- *  A type this map does not name still prints, marked by its glyph and carrying
- *  no word.
+ *    - `goal` — `Goal! ARS 2, AVL 0.` The label was the first word.
+ *    - `substitution` — `Substitution, Fulham.` The same.
+ *    - `own goal` — `Own Goal by Victor Lindelöf, Aston Villa.` `OG` is the
+ *      first two words abbreviated, which I twice argued it was not.
+ *    - `VAR cancelled goal` — `GOAL OVERTURNED BY VAR: …`. The label is in the
+ *      opening clause, in capitals.
+ *    - `yellow card` / `red card` — `is shown the yellow card for a bad foul`.
+ *      These two do not open with it, and went anyway: the row already carries a
+ *      card glyph in the card's own colour, so the word was the third statement
+ *      of one fact.
  *
- *  **An INJURY substitution keeps a word where an ordinary one lost it**, which
- *  is the one exception to the paragraph below. `Sub` went because Opta's
- *  sentence opens `Substitution, Fulham.` and the label was that word twice —
- *  but `Injury` is not in the sentence at all until its last four words, and the
- *  thing a reader is scanning for is exactly that. The cross and the red say it
- *  first; the word says it plainly.
+ *  **`penalty goal` is the survivor**, and it is the only one that passes:
+ *  `Goal! Newcastle United 2, Liverpool 2. Szoboszlai converts the penalty…`
+ *  opens like any other goal and says which kind halfway through a long
+ *  sentence. `Pen` is the scan aid that buys.
  *
- *  **`substitution` and `goal` are deliberately absent**, both for the same
- *  reason and both on Craig's word — *"just remove 'Sub', since its always said
- *  twice but keep symbol"*, then *"Goal / Goal! ARS 2, - shows in a row, we can
- *  remove the first goal in that case"*. Opta's sentences open `Substitution,
- *  Fulham.` and `Goal! ARS 2, AVL 0.`, so in both cases the label was the first
- *  word of the line printed twice. The glyph and the tone do the marking.
+ *  **An INJURY substitution keeps a word too**, and is the one entry not in this
+ *  map — `saysInjury` decides it, because an injury is not an Opta type. Its
+ *  sentence does not reach the word until its last four, which is exactly what a
+ *  reader is scanning for.
  *
- *  **`yellow card` went the same way** (*"Booked / Maxence Lacroix is shown the
- *  yellow card for a bad foul. same, just remove the BOOKED"*), and this one is
- *  the interesting case: its sentence does NOT open with the word, so the label
- *  was not literally printed twice. What it was, was a label on a row that
- *  already carries a yellow card glyph in yellow ink — three statements of one
- *  fact, and the only one a reader needs is the one he can see without reading.
- *
- *  The three that remain say something no glyph and no tone can: `OG` is the
- *  difference between a goal and a calamity, `Pen` between a goal and a spot
- *  kick, and `VAR` between a goal and one taken away. Each opens a sentence that
- *  starts `Goal!` or `Own Goal by`, so none of them is the first word repeated.
- *  `Sent off` stays with them because a red card and a yellow are one glyph in
- *  two colours. */
+ *  A type this map does not name still prints, marked by its glyph and its tone.
+ */
 const LOUD: Record<string, string> = {
   "penalty goal": "Pen",
-  "own goal": "OG",
-  "VAR cancelled goal": "VAR",
-  "red card": "Sent off",
 };
 
 /** What each row is set in, and this is the whole of how a reader finds the
