@@ -6,6 +6,7 @@ import type {
   PlManMatch,
   PlMatchFacts,
   PlSubstitution,
+  StreamCredit,
 } from "@epl/core";
 import {
   plCommentary,
@@ -15,7 +16,9 @@ import {
   plMatchBoard,
   plSubstitutions,
   plMatchFacts,
+  plPlayerCodes,
   plTeamSheets,
+  streamCredits,
 } from "@epl/core";
 import { roundGoals } from "./commentary";
 import { optaToCode, plFixture, plRound, plStats, plStream, theirFixtureId } from "./plFeed";
@@ -237,6 +240,31 @@ export async function matchSubstitutions(
  *  per man and so loses which SIDE a goal belonged to, which is the whole of
  *  reconciling a fantasy assist against an own goal. Off the same warm detail
  *  read. */
+/** Every goal in the commentary with the man FPL's own rules would credit.
+ *
+ *  **The three assists the fixture feed cannot place**, because Opta's
+ *  `assistId` is the PASS and FPL also pays for winning a penalty, for forcing
+ *  an own goal and for a blocked shot scored from the rebound. `assists.ts`
+ *  carries the argument and the counts.
+ *
+ *  **Two warm reads and no new request.** The detail is already cached for the
+ *  team sheets and the stream for the Match Report, and the detail is here only
+ *  for the id join — the textstream carries no team list of its own, so nothing
+ *  else in the app can turn its `playerIds` into our codes.
+ *
+ *  A proposal, never an assertion: `streamCredited` throws the whole thing away
+ *  unless FPL's per-man counts agree with it. */
+export async function matchStreamCredits(
+  gameweek: number | null,
+  fixtureCode: number,
+  players: readonly FootballPlayer[],
+): Promise<StreamCredit[]> {
+  return ofFixture(gameweek, fixtureCode, [] as StreamCredit[], async (id) => {
+    const [fixture, stream] = await Promise.all([plFixture(id), plStream(id)]);
+    return streamCredits(stream.events.content, plPlayerCodes(fixture, optaToCode(players)));
+  });
+}
+
 export async function matchGoals(
   gameweek: number | null,
   fixtureCode: number,

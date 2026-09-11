@@ -8,9 +8,9 @@ import MatchShell from "./Shell";
 import Scoresheet from "./Scoresheet";
 import Preview from "./Preview";
 import { matchOwners, readMatch } from "./match";
-import { matchFacts, matchGoalMinutes, matchGoals } from "../../../matchFeed";
-import type { PlGoal, PlMatchFacts } from "@epl/core";
-import { creditedGoals } from "@epl/core";
+import { matchFacts, matchGoalMinutes, matchGoals, matchStreamCredits } from "../../../matchFeed";
+import type { PlGoal, PlMatchFacts, StreamCredit } from "@epl/core";
+import { creditedGoals, streamCredited } from "@epl/core";
 import type { Match } from "./match";
 
 // One match, on Championship Manager's Match Overview.
@@ -82,7 +82,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
  *  carries a minute for every goal in all ten matches, for one request, and it
  *  is already cached for the Live tab's wire. */
 async function Sheet({ match }: { match: Match }) {
-  const [owners, minutes, goals] = await Promise.all([
+  const [owners, minutes, goals, credits] = await Promise.all([
     matchOwners(match.fixture),
     matchGoalMinutes(
       match.fixture.gameweek,
@@ -95,10 +95,14 @@ async function Sheet({ match }: { match: Match }) {
     // the assists timers too?"*). An assist happens when the ball goes in, so
     // its minute is the goal's own clock.
     matchGoals(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
+    // **What the commentary says about the three assists Opta does not place** —
+    // a penalty won, an own goal forced, a rebound off a blocked shot. A
+    // proposal that `side` below only uses if FPL's own counts confirm it.
+    matchStreamCredits(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
   ]);
   const { home, away } = sides(match);
-  const ours = side(goals, home, minutes);
-  const theirs = side(goals, away, minutes);
+  const ours = side(goals, home, minutes, credits);
+  const theirs = side(goals, away, minutes, credits);
 
   return (
     <Scoresheet
@@ -172,6 +176,7 @@ function side(
   goals: readonly PlGoal[],
   rows: readonly SheetRow[],
   minutes: Map<number, number[]>,
+  credits: readonly StreamCredit[],
 ): { goals: PlGoal[]; rest: SheetRow[] } {
   const mine = new Set(rows.map((row) => row.player.code));
   const ours = goals.filter((goal) =>
@@ -180,7 +185,17 @@ function side(
   const paid = new Map(
     rows.filter((row) => row.line.assists > 0).map((row) => [row.player.code, row.line.assists]),
   );
-  const credited = ours.length > 0 ? creditedGoals(ours, paid) : fallbackGoals(rows, minutes);
+  // **The commentary first, and only if FPL's arithmetic confirms the lot.**
+  // `creditedGoals` resolves exactly one case — one man short by exactly the
+  // side's unexplained goals — and Man Utd 5-2 Ipswich is the shape it cannot
+  // touch: three men each short by one against three unexplained goals, so it
+  // credited nobody and the screen dropped three real assists. `streamCredited`
+  // proposes all three off the textstream and returns null unless every name
+  // agrees with FPL, which is when `creditedGoals` gets its go as before.
+  const credited =
+    ours.length > 0
+      ? (streamCredited(ours, credits, paid) ?? creditedGoals(ours, paid))
+      : fallbackGoals(rows, minutes);
 
   // Everyone the sheet names who is not already on a goal line.
   const named = new Set(
