@@ -32,21 +32,30 @@ import { SMALL_CAPS } from "@/app/desk";
 // not a fact of its own. The assister gets his the same way, which he did not
 // have at all.
 //
-// **And the assister keeps a clock after all.** The first build of the fold gave
-// him none, on the 10 Sep argument that he shares the scorer's — which was true
-// of a ONE-goal row and stops being true the moment two goals fold into one. Two
-// assisters under one scorer with no figures cannot say which man made which
-// goal, and Craig drew the answer: `A Gakpo (test211) 6'` over
-// `A Munoz (team) 9'`. When it is the same man twice he carries both, which is
-// the sketch's other half. What tells a goal from an assist is now the ball, the
-// `A`, the indent, the ink and the size — five marks, where the minute was only
-// ever the weakest of them.
+// **The assister carries a minute only when there is another assister to tell
+// him from**, which is where an afternoon of argument landed. He had none, then
+// he had one always, and then Craig read a real row and split it: *"you dont
+// need the assist number at all… as its under the goal"*, and then, on Haaland
+// scoring twice with Semenyo and Foden under him, *"keep the assist when a
+// player scores twice, and its two different assisters"*.
+//
+// **The rule that satisfies both is that the figure earns its place or is not
+// drawn.** One assister and POSITION already says everything — he sits under the
+// scorer whose goals he made, so his clock repeats the line above him. Two, and
+// position says nothing: `A Semenyo 17'` over `A Foden 84'` is the only thing
+// that pairs each man with his goal. So the minute appears exactly when it is
+// the fact being added, and never when it is the fact being repeated.
+//
+// What tells a goal from an assist is unaffected either way — the ball, the `A`,
+// the indent, the ink and the size are five marks, and the minute was never one
+// of them.
 //
 // **The ball marks the goal line** (Craig, 11 Sep 2026, drawing `(goal icon)`
 // before the scorer). `EventIcon`'s own rule is that a glyph stands beside a
 // word and never instead of one; here the word is the man's name and the minute
 // beside it, which is what CM's own sheet is. It is `aria-hidden` and sized in
-// `em`, so it moved with the type when the type went up.
+// `em`, so it takes the size of whatever box it is put in — see `Man` for why
+// that box states one.
 //
 // **CM's own arrangement otherwise.** `cm0102/02.jpg` prints the home scorers
 // down the left and the away down the right with the minute in yellow beside
@@ -167,6 +176,9 @@ function Goal({
         const assister = byCode.get(code);
         if (assister === undefined) return null;
         const owner = owners.get(code);
+        // See the head of this file: his clock is drawn only when a second
+        // assister makes it the fact that pairs him with his goal.
+        const paired = group.assisters.length > 1;
         return (
           <Link
             key={code}
@@ -193,7 +205,7 @@ function Goal({
                 size.** The accent, because it is the same column and the same
                 kind of fact; a step down, because his name is — the figure and
                 the name it belongs to stay in proportion at both widths. */}
-            <span className={`${ASSIST_FIGURE}`}>{minutes(his)}</span>
+            {paired ? <span className={ASSIST_FIGURE}>{minutes(his)}</span> : null}
           </Link>
         );
       })}
@@ -229,7 +241,13 @@ function Man({
       className="group flex min-h-11 items-baseline gap-2 lg:min-h-11 lg:gap-3"
     >
       {glyph ? (
-        <span className="shrink-0 self-center text-accent">
+        // **Its own type size, which is what makes it big.** `EventIcon` draws at
+        // `1.1em`, so the glyph is only ever as large as the type of the box it
+        // sits in — and this box inherited the LIST's size, not the name's, which
+        // is why it shipped at about 15px beside a 30px name and read as a bullet
+        // (Craig: *"make goal icon bigger"*). Stating the size here puts it a
+        // step above the name at both widths.
+        <span className="shrink-0 self-center text-xl text-accent lg:text-4xl">
           <EventIcon glyph="ball" />
         </span>
       ) : null}

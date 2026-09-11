@@ -74,14 +74,26 @@ minute font bigger… stadium name and ref row only show on overview page."* Sev
 asks, and they are one argument: the screen with the fewest facts in the app was
 spending the most rows on them.
 
-**The assister kept a clock after all, on the second pass.** The first build gave
-him none, on the 10 Sep argument that he shares the scorer's — true of a ONE-goal
-row, false the moment two goals fold into one, because two assisters under one
-scorer with no figures cannot say which man made which. Craig drew it:
-`A Gakpo (test211) 6'` over `A Munoz (team) 9'`, and both minutes on one line
-when it is the same man twice. `PlGoalGroup.assisters` is `{ code, minutes }[]`.
-A ball from `EventIcon` marks the goal line, which is the same message's
-`(goal icon)`.
+**The assister's clock went round the houses three times in one afternoon**, and
+the landing place is worth more than the route. He had none; then he had one
+always; then *"now you dont need the assist number at all… as its under the
+goal"*; then, on the Palace 1-4 City row, *"keep the assist when a player scores
+twice, and its two different assisters"*.
+
+**The rule both halves want is that the figure earns its place or is not drawn.**
+One assister and POSITION already answers it — he sits under the scorer whose
+goals he made, so his clock repeats the line above him. Two, and position answers
+nothing: `A Semenyo 17'` over `A Foden 84'` is the only thing pairing each man
+with his goal. `PlGoalGroup.assisters` stays `{ code, minutes }[]` so the
+component can make that call; the gate is `assisters.length > 1`. That one
+fixture shows both branches at once — Haaland and Cherki keep their minutes,
+Donnarumma's own goal drops one.
+
+**A ball from `EventIcon` marks the goal line**, which is the same message's
+`(goal icon)`. It shipped at about 15px beside a 30px name and read as a bullet,
+because the glyph draws at `1.1em` and its box had inherited the LIST's type size
+rather than the name's. The call site states a size now (Craig: *"make goal icon
+bigger"*).
 
 **One row per SCORER.** `goalGroups` in `packages/core/.../sheetEvents.ts` folds
 a side's goals by the man who got them, keyed on the pair `(scorer, own)` so an

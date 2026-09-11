@@ -182,21 +182,29 @@ It was a second line under every name — two rows of chrome for one man, on the
 screen with the fewest facts in the app — and a league team name is a gloss on
 the name it follows rather than a fact of its own.
 
-**The assister carries his OWN minutes**, and the first build of the fold did not
-give him any. The 10 Sep argument was that he shares the scorer's clock, which is
-true of a one-goal row and stops being true the moment two goals fold into one:
-two assisters under one scorer with no figures cannot say which man made which.
-Craig drew the answer — `A Gakpo (test211) 6'` over `A Munoz (team) 9'`, and both
-minutes on one line when it is the same man twice. `PlGoalGroup.assisters` is
-`{ code, minutes }[]` for that reason. What tells a goal from an assist is the
-ball, the `A`, the indent, the ink and the size — five marks, and the minute was
-only ever the weakest of them.
+**The assister carries a minute only when a second assister makes it say
+something.** This went round the houses in one afternoon and the landing place is
+the rule, not the history: one assister and POSITION already answers it — he sits
+under the scorer whose goals he made, so a clock repeats the line above him; two,
+and position answers nothing, so `A Semenyo 17'` over `A Foden 84'` is the only
+thing pairing each man with his goal. Craig settled both halves against real rows
+(*"you dont need the assist number at all… as its under the goal"*, then *"keep
+the assist when a player scores twice, and its two different assisters"*).
+Crystal Palace 1-4 Man City is the fixture that shows both at once: Haaland and
+Cherki keep their minutes, Donnarumma's own goal drops one. `PlGoalGroup.assisters`
+is `{ code, minutes }[]` so the component can make that call.
 
 **The ball marks the goal line** (Craig, 11 Sep 2026, drawing `(goal icon)` before
 the scorer). It is `EventIcon`'s existing glyph, whose own rule is that it stands
 beside a word and never instead of one — here the word is the name and the
 minute, which is what CM's sheet is. Goal lines only: a sending off and a penalty
 missed share the row shape and keep their word.
+
+**Its size is stated at the call site**, because `EventIcon` draws at `1.1em` and
+so is only ever as big as the type of the box holding it. That box inherited the
+LIST's size rather than the name's, which put a 15px ball beside a 30px name and
+made it read as a bullet (Craig: *"make goal icon bigger"*). It is now a step
+above the name at both widths.
 
 **The type went up a step on the desk** (same message: *"can make scorer and
 minute font bigger"*, and *"stadium name, data, and gameweek, referee row all way
