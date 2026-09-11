@@ -15,6 +15,11 @@ import { LABEL, PANEL, ROW_RULE } from "@/app/desk";
 // rather than a screen about somebody, which is the distinction `PageHeader`'s
 // two bars draw — `cm9900/24.jpg` against `25.jpg`.
 
+/** A credit's outbound link. Twice in one row and nowhere else, so it is named
+ *  here rather than in `desk.ts` — CODE_RULES §1 wants three call sites before a
+ *  recipe leaves the file that uses it. */
+const CREDIT_LINK = "flex min-h-11 items-center text-xs underline lg:min-h-9";
+
 export default function CreditsPage() {
   const credits = groundPhotoCredits();
 
@@ -44,26 +49,33 @@ export default function CreditsPage() {
                 {clubGround(shortName) ?? shortName}
               </span>
               <span className={LABEL}>{photo.title}</span>
-              <span className="text-xs text-muted">
-                {photo.author} ·{" "}
+              <span className="text-xs text-muted">{photo.author}</span>
+              {/* **Two links, both required, and both laid out as controls.** CC
+                  BY and CC BY-SA each ask for a link to the material AND a link
+                  to the terms, so neither is decoration. They were inline words
+                  inside the credit line until `tapfit` measured them: forty
+                  `text-xs` anchors on one page, every one under the floor at
+                  both widths, which was the worst tap failure in the app. The
+                  heights are the desk's own — 44 under a thumb, 36 where it
+                  keeps its own proportions. */}
+              <div className="flex flex-wrap items-center gap-x-4">
                 <a
-                  className="underline"
+                  className={CREDIT_LINK}
                   href={photo.licenceUrl}
                   rel="noreferrer"
                   target="_blank"
                 >
                   {photo.licence}
-                </a>{" "}
-                ·{" "}
+                </a>
                 <a
-                  className="underline"
+                  className={CREDIT_LINK}
                   href={photo.source}
                   rel="noreferrer"
                   target="_blank"
                 >
                   Wikimedia Commons
                 </a>
-              </span>
+              </div>
             </li>
           ))}
         </ul>

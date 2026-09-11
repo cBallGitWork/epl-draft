@@ -3,7 +3,7 @@ import Link from "next/link";
 import { crestUrl, loggedPlayers, matchLine, sheetSides } from "@epl/core";
 import type { Club, IntelMatchPlayer, PlayerMatchStats, SheetRow } from "@epl/core";
 import Section from "../../../components/shell/Section";
-import { PLAYER } from "../../PremNav";
+import { PLAYER } from "../../routes";
 import {
   BOARD,
   BOARD_FIGURE,

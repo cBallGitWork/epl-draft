@@ -1,5 +1,5 @@
 import TabStrip from "../../../components/shell/TabStrip";
-import { CLUB } from "../../PremNav";
+import { CLUB } from "../../routes";
 
 // One club's own screens, and how you get between them.
 //

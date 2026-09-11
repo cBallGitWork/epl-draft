@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { type Result, type TableRow, type TableSortKey, crestUrl, ordinal } from "@epl/core";
 import { cellAlign, deskOnly } from "./Columns";
-import { CLUB } from "./PremNav";
+import { CLUB } from "./routes";
 import { ROW_LINK } from "../components/league/TableCells";
 import { FIGURE, ROW_FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 

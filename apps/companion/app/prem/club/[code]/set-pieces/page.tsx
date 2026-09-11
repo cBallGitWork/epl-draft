@@ -6,7 +6,7 @@ import Section from "../../../../components/shell/Section";
 import PlayerPortrait from "../../../../components/football/PlayerPortrait";
 import StateBox from "../../../../components/football/StateBox";
 import { intelSetPieces } from "../../../../intel";
-import { PLAYER } from "../../../PremNav";
+import { PLAYER } from "../../../routes";
 import ClubShell from "../Shell";
 import { clubOr404 } from "../club";
 import { PANEL, ROW_NAME } from "@/app/desk";

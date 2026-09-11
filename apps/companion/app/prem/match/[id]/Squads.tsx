@@ -3,7 +3,7 @@ import type { Club, FootballPlayer, PlayerOwner } from "@epl/core";
 import { clubColours, inkOn } from "@epl/core";
 import { IndexCell } from "../../../components/league/TableCells";
 import { intelSquads } from "../../../intel";
-import { PLAYER } from "../../PremNav";
+import { PLAYER } from "../../routes";
 import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE } from "@/app/desk";
 
 // Both clubs' books, before a ball is kicked (Craig, 4 Sep 2026: *"players tab

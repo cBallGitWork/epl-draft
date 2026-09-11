@@ -10,7 +10,7 @@ import type {
 } from "@epl/core";
 import { IndexCell } from "../../../components/league/TableCells";
 import { chipsFor } from "../../../components/league/Chips";
-import { PLAYER } from "../../PremNav";
+import { PLAYER } from "../../routes";
 import { BOARD, PANEL_FLUSH, ROW_RULE } from "@/app/desk";
 import { sheetName } from "./match";
 import type { Match } from "./match";

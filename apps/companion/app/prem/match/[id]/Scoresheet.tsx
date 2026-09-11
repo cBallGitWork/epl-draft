@@ -35,16 +35,16 @@ import { SMALL_CAPS } from "@/app/desk";
 // **And the assister keeps a clock after all.** The first build of the fold gave
 // him none, on the 10 Sep argument that he shares the scorer's — which was true
 // of a ONE-goal row and stops being true the moment two goals fold into one. Two
-// assisters under one scorer with no figures cannot say which man made which,
-// and Craig drew the answer: `A Gakpo (test211) 6'` over `A Munoz (team) 9'`.
-// When it is the same man twice he carries both, which is the sketch's other
-// half. What tells a goal from an assist is now the ball, the `A`, the indent,
-// the ink and the size — five marks, where the minute was only ever the weakest
-// of them.
+// assisters under one scorer with no figures cannot say which man made which
+// goal, and Craig drew the answer: `A Gakpo (test211) 6'` over
+// `A Munoz (team) 9'`. When it is the same man twice he carries both, which is
+// the sketch's other half. What tells a goal from an assist is now the ball, the
+// `A`, the indent, the ink and the size — five marks, where the minute was only
+// ever the weakest of them.
 //
 // **The ball marks the goal line** (Craig, 11 Sep 2026, drawing `(goal icon)`
-// before the scorer). `EventIcon`'s own rule is that a glyph stands beside a word
-// and never instead of one; here the word is the man's name and the minute
+// before the scorer). `EventIcon`'s own rule is that a glyph stands beside a
+// word and never instead of one; here the word is the man's name and the minute
 // beside it, which is what CM's own sheet is. It is `aria-hidden` and sized in
 // `em`, so it moved with the type when the type went up.
 //
@@ -193,7 +193,7 @@ function Goal({
                 size.** The accent, because it is the same column and the same
                 kind of fact; a step down, because his name is — the figure and
                 the name it belongs to stay in proportion at both widths. */}
-            <span className={ASSIST_FIGURE}>{minutes(his)}</span>
+            <span className={`${ASSIST_FIGURE}`}>{minutes(his)}</span>
           </Link>
         );
       })}
@@ -218,8 +218,8 @@ function Man({
   note?: string | null;
   /** Whether this line is a GOAL, and so takes the ball. A sending off and a
    *  penalty missed share this shape and take their word instead — `EventIcon`
-   *  has a card and no glyph for a miss, and a ball on either would be a wrong
-   *  statement rather than a missing one. */
+   *  has a card and no glyph for a miss, and a ball on either would be the
+   *  wrong statement rather than a missing one. */
   glyph?: boolean;
 }) {
   const owner = code === null ? undefined : owners.get(code);

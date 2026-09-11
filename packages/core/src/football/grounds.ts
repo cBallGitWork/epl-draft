@@ -19,9 +19,12 @@
 //
 // Hunted from Wikimedia Commons on 11 Sep 2026, filtered to free licences,
 // landscape, and 1400px or wider, then picked by eye. The files under
-// `public/ground/clubs/` are resized to 1920px on the long edge at quality 75 —
+// `public/ground/clubs/` are CAPPED at 1920px on the long edge at quality 75 —
 // they are drawn at `brightness(0.55)` behind opaque panels, so that is far more
-// than the screen can show.
+// than the screen can show. Capped and not resized TO it: Elland Road's original
+// is 1760 wide and is shipped at 1760, because an upscale is a bigger file with
+// no more picture in it. 6.8 MB of repo for the twenty, and none of page —
+// `next/image` re-encodes for delivery, so the master's weight is a git cost.
 
 export interface GroundPhoto {
   /** Under `public/`, so `next/image` optimises it like any other asset. */
@@ -252,15 +255,19 @@ export function clubGroundPhoto(shortName: string): GroundPhoto | null {
  *
  *  Keyed rather than listed, because the page heads each credit with the club —
  *  and the club's NAME is `clubGround`'s job, not this table's. Two tables that
- *  each held a stadium name would be two places for it to go stale. */
+ *  each held a stadium name would be two places for it to go stale.
+ *
+ *  Back through `clubGroundPhoto` rather than spreading the row again: `src` has
+ *  to agree with what is on disk under `public/ground/clubs/`, and one function
+ *  building that path is one place for it to be wrong. */
 export function groundPhotoCredits(): readonly {
   shortName: string;
   photo: GroundPhoto;
 }[] {
-  return Object.entries(CLUB_GROUND_PHOTOS)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([shortName, photo]) => ({
-      shortName,
-      photo: { ...photo, src: `/ground/clubs/${shortName}.jpg` },
-    }));
+  return Object.keys(CLUB_GROUND_PHOTOS)
+    .sort()
+    .flatMap((shortName) => {
+      const photo = clubGroundPhoto(shortName);
+      return photo === null ? [] : [{ shortName, photo }];
+    });
 }

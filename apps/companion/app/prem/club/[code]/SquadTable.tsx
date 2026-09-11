@@ -6,7 +6,7 @@ import { IndexCell } from "../../../components/league/TableCells";
 import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
 import { positionsLabel } from "../../../positions";
-import { PLAYER } from "../../PremNav";
+import { PLAYER } from "../../routes";
 import type { LeagueOpinion } from "./club";
 import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 

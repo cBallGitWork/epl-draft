@@ -8,7 +8,10 @@
 //
 // No JSX and no `"use client"`: the rail is a client component and the paper's
 // index is a server one, and a plain table crosses that line without either of
-// them having to care.
+// them having to care. The one module it imports keeps the same discipline, for
+// the same reason — see `prem/routes.ts`.
+
+import { CLUB, MATCH } from "../../prem/routes";
 
 /** The paper's territory: the front page, and the pages behind it.
  *
@@ -165,7 +168,7 @@ export function isPaperRoute(pathname: string): boolean {
  *  is the same statement one layer further back. A match is played at the home
  *  club's ground, so it wears the same picture — which is the ONE thing the
  *  fixture is about that the two crests on the bar do not already say. */
-const SUBJECT_GROUND_ROUTES = ["/prem/club", "/prem/match"];
+const SUBJECT_GROUND_ROUTES = [CLUB, MATCH];
 
 /** Whether the page under this route draws its own ground, so the shell's
  *  standing one should stand down rather than load a photograph nobody sees.

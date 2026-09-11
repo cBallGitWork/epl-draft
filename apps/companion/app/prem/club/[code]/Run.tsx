@@ -3,8 +3,7 @@ import Link from "next/link";
 import type { Club, Fixture } from "@epl/core";
 import { COMPETITION_NAME, crestUrl } from "@epl/core";
 import { londonDayAndDate, londonTime } from "../../../londonTime";
-import { CLUB } from "../../PremNav";
-import { MATCH } from "./match";
+import { CLUB, MATCH } from "../../routes";
 import { BOARD, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 
 

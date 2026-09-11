@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Club } from "@epl/core";
 import { clubColours, crestUrl, inkOn } from "@epl/core";
-import { CLUB } from "../../PremNav";
+import { CLUB } from "../../routes";
 
 // Championship Manager's match header: both sides at once, each on its own
 // colour, with its own score in a plate at its own right-hand edge.

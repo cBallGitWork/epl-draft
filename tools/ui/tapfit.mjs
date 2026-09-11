@@ -16,31 +16,13 @@
 // silent pass.
 
 import { connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
+import { ALL_ROUTES } from "./routes.mjs";
 
-const ROUTES = [
-  "/",
-  "/league",
-  "/league/schedule",
-  "/league/results",
-  "/league/team-stats",
-  "/league/matchups",
-  "/prem",
-  "/squad",
-  "/players",
-  // Scout's second view. Its two ids are in the QUERY rather than the path, so
-  // `discover` cannot reach it by following a link off the board — the board
-  // only links here once a first man has been chosen. Two real ids, like every
-  // other fixed entry in this list.
-  "/players/analysis?a=05gcr&b=03ksl",
-  "/matchday",
-  "/matchday/desk",
-  "/fpl",
-  // The manager's inbox, added with the section on 5 Sep 2026. A route this
-  // list does not name is a route that ships unmeasured.
-  "/news",
-  "/paper/reports",
-  "/paper/columns",
-];
+/** This run's routes: the shared list, plus whatever `discover` finds a real
+ *  id for below. A COPY, because those appends are this process's own —
+ *  `routes.mjs` exports a declaration and must not become a scratchpad.
+ *  All three instruments push onto this at run time. */
+const ROUTES = [...ALL_ROUTES];
 
 /** The floors, by what the thing IS rather than by what it looks like.
  *  `desk` is the relaxation `.cm-row` grants above `lg` and nothing else does. */

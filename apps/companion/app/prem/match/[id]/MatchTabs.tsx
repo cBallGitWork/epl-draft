@@ -1,5 +1,5 @@
 import TabStrip from "../../../components/shell/TabStrip";
-import { MATCH } from "../../club/[code]/match";
+import { MATCH } from "../../routes";
 
 // One match's own screens.
 //

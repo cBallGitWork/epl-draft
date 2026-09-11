@@ -81,16 +81,6 @@ export const TEAM_STATS = at("teamStats");
    screen. Removed 11 Sep 2026. `at()` still derives both from `TABS`, so a
    future way out is one line rather than a new string. */
 
-/** The route the club pages hang off, named once. A route spelled in five files
- *  is a route that can be renamed in four of them — `SectionNav` records the
- *  same decision for `/league`'s two query-string routes. */
-export const CLUB = "/prem/club";
-
-/** The footballer's own page, keyed on FPL's season-stable code. Named here
- *  beside `CLUB` for the same reason: a squad list, a leaders board and the
- *  player page's own way back all spell it. */
-export const PLAYER = "/prem/player";
-
 export default function PremNav({ current }: { current: PremSection }) {
   // `word` and not `phrase`: measured at 390, where a 74px plate sets "Team
   // Stats" on two lines at 11px and on one at 9px. The plates stay level either

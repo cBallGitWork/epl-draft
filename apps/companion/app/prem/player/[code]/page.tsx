@@ -7,7 +7,7 @@ import ButtonLink from "../../../components/shell/ButtonLink";
 import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
 import { footballNow } from "../../../football";
-import { CLUB } from "../../PremNav";
+import { CLUB } from "../../routes";
 import { FACT, FACT_LABEL, PANEL } from "@/app/desk";
 
 // One footballer, and for now only what the bootstrap already knows.

@@ -1,7 +1,7 @@
 import { type Club, type Fixture, crestUrl } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
 import { londonDayAndTime } from "../londonTime";
-import { MATCH } from "./club/[code]/match";
+import { MATCH } from "./routes";
 import { SMALL_CAPS } from "@/app/desk";
 
 // One Premier League match, as Championship Manager's results row.
