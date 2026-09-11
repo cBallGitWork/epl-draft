@@ -63,6 +63,47 @@ itself had no type step at all and rendered at the browser's 16px default, a
 union row filled a missing side with `0` where the same commit argued for a dash,
 and two figures took a `lg:` step §6 gives neither.
 
+## 11 Sep 2026 — the three assists FPL pays that Opta does not place
+
+Craig, on Man Utd 5-2 Ipswich: *"try find brunos assists, mbuemo had 1, why did
+we miss that?… greaves og had a assist, try work that out yourself."*
+
+**The count that framed it.** FPL pays five assists for United's five goals —
+Cunha 2, Maguire 1, Fernandes 1, Mbeumo 1. The fixture detail placed two. The
+three missing were 56' (Greaves own goal, forced by Maguire), 61' (penalty, won
+by Cunha) and 68' (Fernandes, off Mbeumo's blocked shot).
+
+**They are missing by construction, not by accident.** Opta's `assistId` is the
+PASS; FPL also pays for winning a penalty, forcing an own goal and a shot
+blocked, saved or off the woodwork that is scored from the rebound. `assistId`
+is absent on 0 of 5 own goals and 0 of 4 penalties across gameweeks 1-3.
+
+**`creditedGoals` could not reach it** — it resolves only when exactly one man is
+short, and this is three men each short by one against three unexplained goals.
+It correctly credited nobody, and the screen correctly showed nothing, which is
+the behaviour that looked like a bug.
+
+**The commentary has all three as EVENTS**, in the textstream already fetched and
+cached for the Match Report. `penalty won` is its own type with the man in
+`playerIds`; every attempt is in order, so the shot before a goal is the event
+immediately before it. No new request is made. The fixture detail rides along
+only for the id join, because the textstream carries no team list.
+
+**Proposed, never asserted.** Two of the three legs rest on event ORDER rather
+than a published field, so `streamCredited` builds what the proposal would credit
+each man, compares it to what FPL paid each man, and drops the WHOLE assignment
+unless every name agrees. Two sources that define an assist differently and count
+it separately arriving at the same answer is evidence; anything less falls back
+to `creditedGoals` exactly as before.
+
+**A trap worth the line: the textstream's `playerIds` are the PREMIER LEAGUE's
+person ids, not FPL's `opta_code` digits.** Maguire is person `9566` and
+`p95658`. Two tests failed on first run because of it, and they failed loudly
+only because the fixtures code every man as his id plus a million.
+
+`docs/providers/premier-league-api.md` carries the table and the counts.
+
+
 ## 11 Sep 2026 — the match scoresheet folds, and three furniture rows get their size back
 
 Craig, against the Ipswich 0-2 Liverpool Overview: *"stadium name, data, and
