@@ -29,8 +29,14 @@ export type {
 
 export type { PoolStatRow, StatColumn, StatSeason, TeamStats } from "./stats";
 
-export { breakdownOf, columnLabel, compareCategories, liveBreakdown } from "./breakdown";
-export type { BreakdownLine, CategoryPair } from "./breakdown";
+export {
+  bandCategories,
+  breakdownOf,
+  columnLabel,
+  compareCategories,
+  liveBreakdown,
+} from "./breakdown";
+export type { BreakdownLine, CategoryBand, CategoryMan, CategoryPair } from "./breakdown";
 
 export { captureStaleness } from "./staleness";
 

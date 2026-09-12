@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { breakdownOf, columnLabel, compareCategories, liveBreakdown } from "./breakdown";
+import { breakdownOf, columnLabel, compareCategories, liveBreakdown, bandCategories } from "./breakdown";
 import { mapTeamStats } from "./fantrax/stats";
 import teamStats from "./fantrax/__fixtures__/teamStats.json";
 
@@ -243,5 +243,100 @@ describe("compareCategories", () => {
 
   it("is empty when Fantrax priced nobody, rather than inventing a table", () => {
     expect(compareCategories({}, {})).toEqual([]);
+  });
+});
+
+describe("bandCategories", () => {
+  const line = (code: string, points: number) => ({ code, name: code, definition: null, points });
+
+  it("names the men behind a category, largest contribution first", () => {
+    const bands = bandCategories(
+      { saka: [line("G", 6)], isak: [line("G", 12)] },
+      { haaland: [line("G", 6)] },
+    );
+    expect(bands[0].mine).toEqual([
+      { fantraxId: "isak", points: 12 },
+      { fantraxId: "saka", points: 6 },
+    ]);
+    expect(bands[0].theirs).toEqual([{ fantraxId: "haaland", points: 6 }]);
+  });
+
+  it("leaves the other half EMPTY where that side registered nothing", () => {
+    // Empty is the absence, the same fact `CategoryPair` carries as null. A side
+    // of noughts would be a claim the payload never made.
+    const bands = bandCategories({ a: [line("G", 6)] }, { b: [line("Sv", 3)] });
+    expect(bands.find((band) => band.code === "Sv")?.mine).toEqual([]);
+    expect(bands.find((band) => band.code === "G")?.theirs).toEqual([]);
+  });
+
+  it("orders bands by what moved the scoreline, deductions last", () => {
+    const bands = bandCategories(
+      { a: [line("YC", -2), line("Min", 20), line("G", 6)] },
+      {},
+    );
+    expect(bands.map((band) => band.code)).toEqual(["Min", "G", "YC"]);
+  });
+
+  it("breaks a band tie on the code, so two renders of one payload agree", () => {
+    const bands = bandCategories({ a: [line("Sv", 4), line("A", 4)] }, {});
+    expect(bands.map((band) => band.code)).toEqual(["A", "Sv"]);
+  });
+
+  it("breaks a MEN tie on the id, which is the common case", () => {
+    // Every scorer of one goal is on the same figure, so the tiebreak decides
+    // most of a band. It is meaningless to a reader on purpose: it exists so the
+    // order is stable, and a caller with names re-sorts equal points by name.
+    const bands = bandCategories({ zeta: [line("G", 6)], alpha: [line("G", 6)] }, {});
+    expect(bands[0].mine.map((man) => man.fantraxId)).toEqual(["alpha", "zeta"]);
+  });
+
+  it("never puts a man in a band he did not register", () => {
+    const bands = bandCategories({ a: [line("G", 6)], b: [line("A", 3)] }, {});
+    expect(bands.find((band) => band.code === "G")?.mine.map((m) => m.fantraxId)).toEqual(["a"]);
+    expect(bands.find((band) => band.code === "A")?.mine.map((m) => m.fantraxId)).toEqual(["b"]);
+  });
+
+  it("keeps a man on a real NOUGHT, which is not an absence", () => {
+    // `liveBreakdown` drops a category a man never registered, so a line
+    // carrying 0 is Fantrax saying it counted and paid nothing.
+    const bands = bandCategories({ a: [line("GA", 0)] }, {});
+    expect(bands[0].mine).toEqual([{ fantraxId: "a", points: 0 }]);
+    expect(compareCategories({ a: [line("GA", 0)] }, {})[0].mine).toBe(0);
+  });
+
+  it("invents no table for a period nobody has played", () => {
+    expect(bandCategories({}, {})).toEqual([]);
+  });
+
+  it("names a category as the reader's own side spells it, then his opponent's", () => {
+    const mine = { a: [{ code: "G", name: "Goals", definition: null, points: 6 }] };
+    const theirs = { b: [{ code: "G", name: "GOALS", definition: null, points: 6 }] };
+    expect(bandCategories(mine, theirs)[0].name).toBe("Goals");
+    expect(bandCategories({}, theirs)[0].name).toBe("GOALS");
+  });
+
+  it("holds no NAME for a man, only his id — the layer split", () => {
+    // A core that knew names would be a core that could leak one.
+    const man = bandCategories({ saka: [line("G", 6)] }, {})[0].mine[0];
+    expect(Object.keys(man).sort()).toEqual(["fantraxId", "points"]);
+  });
+
+  it("says nothing whatever about a side whose breakdown never arrived", () => {
+    // THE GATE. A withheld side is handed in as `{}`, and the result must carry
+    // no band it alone would have registered and no name from it — the band SET
+    // is itself a statement about which categories an eleven registered.
+    const bands = bandCategories({ a: [line("G", 6)] }, {});
+    expect(bands.every((band) => band.theirs.length === 0)).toBe(true);
+    expect(bands.map((band) => band.code)).toEqual(["G"]);
+  });
+
+  it("is the same union, order and naming compareCategories publishes", () => {
+    // The pair is this band summed, so the two can never disagree about which
+    // categories exist or in what order.
+    const mine = { a: [line("G", 6), line("YC", -2)] };
+    const theirs = { b: [line("Sv", 4)] };
+    expect(compareCategories(mine, theirs).map((row) => row.code)).toEqual(
+      bandCategories(mine, theirs).map((band) => band.code),
+    );
   });
 });

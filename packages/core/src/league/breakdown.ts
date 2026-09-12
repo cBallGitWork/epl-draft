@@ -126,21 +126,64 @@ export interface CategoryPair {
   theirs: number | null;
 }
 
-/** One side's categories, summed across every man Fantrax priced.
+/** One man's part in one category. **No name**: this layer holds Fantrax's
+ *  `fantraxId` and nothing else about a person, and the roster that can put a
+ *  name to him lives in the app. A core that knew names would be a core that
+ *  could leak one. */
+export interface CategoryMan {
+  fantraxId: string;
+  /** Signed, as `BreakdownLine` is. */
+  points: number;
+}
+
+/** One scoring category with the men on each side who registered it.
+ *
+ *  `CategoryPair` is this band SUMMED — the same object read two ways, which is
+ *  why `compareCategories` below is a projection of `bandCategories` rather than
+ *  a second walk of the same data. A board of totals and a board of the men
+ *  behind them can then never disagree about which categories exist or in what
+ *  order. */
+export interface CategoryBand {
+  code: string;
+  name: string;
+  /** The side the URL named, then his opponent.
+   *
+   *  **EMPTY where that side registered nothing, and empty is the absence.** The
+   *  band is on the board because the OTHER side registered it, and a side of
+   *  noughts is a claim the payload never made — the same rule `CategoryPair.mine`
+   *  states one level up, where `[]` becomes `null` rather than `0`. */
+  mine: CategoryMan[];
+  theirs: CategoryMan[];
+}
+
+/** One side's men, by category.
  *
  *  Absence stays absence: a category nobody registered is not a key here, and so
  *  is never printed as a nought. What reaches this has already been filtered by
  *  `liveBreakdown` — a man with no entry, and a category this league did not
  *  describe, are both gone before the sum. */
-function totals(breakdowns: Record<string, readonly BreakdownLine[]>): Map<string, BreakdownLine> {
-  const summed = new Map<string, BreakdownLine>();
-  for (const lines of Object.values(breakdowns)) {
+function menByCategory(
+  breakdowns: Record<string, readonly BreakdownLine[]>,
+): Map<string, { name: string; men: CategoryMan[] }> {
+  const byCode = new Map<string, { name: string; men: CategoryMan[] }>();
+  for (const [fantraxId, lines] of Object.entries(breakdowns)) {
     for (const line of lines) {
-      const had = summed.get(line.code);
-      summed.set(line.code, had === undefined ? { ...line } : { ...had, points: had.points + line.points });
+      const had = byCode.get(line.code);
+      const band = had ?? { name: line.name, men: [] };
+      band.men.push({ fantraxId, points: line.points });
+      if (had === undefined) byCode.set(line.code, band);
     }
   }
-  return summed;
+  return byCode;
+}
+
+/** A side's figure in one band, or null where it registered nothing.
+ *
+ *  `[]` IS the absence (DESIGN §7), which is the whole reason this is a function
+ *  and not a `reduce` at the call site: a sum of no men is 0 in arithmetic and
+ *  silence on a scoresheet, and only one of those is true here. */
+function total(men: readonly CategoryMan[]): number | null {
+  return men.length === 0 ? null : men.reduce((sum, man) => sum + man.points, 0);
 }
 
 /** Both squads' scoring, category by category, in one list of rows.
@@ -159,30 +202,69 @@ function totals(breakdowns: Record<string, readonly BreakdownLine[]>): Map<strin
  *  Pure, and it has to be: this is the arithmetic under a number a manager will
  *  argue about. Fantrax's figures go in and a sum of them comes out — which makes
  *  the total OURS, and is why no column of it may be headed `FPts`. */
-/** How much a row moved the scoreline, for the ordering. An absence weighs
- *  nothing, which is the one thing it can honestly be said to do. */
-function size(row: CategoryPair): number {
-  return Math.abs(row.mine ?? 0) + Math.abs(row.theirs ?? 0);
-}
-
 export function compareCategories(
   mine: Record<string, readonly BreakdownLine[]>,
   theirs: Record<string, readonly BreakdownLine[]>,
 ): CategoryPair[] {
-  const left = totals(mine);
-  const right = totals(theirs);
+  return bandCategories(mine, theirs).map((band) => ({
+    code: band.code,
+    name: band.name,
+    mine: total(band.mine),
+    theirs: total(band.theirs),
+  }));
+}
+
+/** Both squads' scoring, category by category, **with the men behind each**.
+ *
+ *  Everything `compareCategories` says about the union, the order and the
+ *  absence holds here unchanged — it is derived from this, so it could not fail
+ *  to. What this adds is the workings: which of his eleven put the 9 on the
+ *  board, not just that it was 9.
+ *
+ *  **Men in a band are ordered by points, largest first**, which is
+ *  `liveBreakdown`'s own order one level up. Ties break on `fantraxId` — which is
+ *  meaningless to a reader and is meant to be: it exists so two renders of one
+ *  payload agree, and a caller with names should re-sort equal points by the name
+ *  it can see. Ties are the common case here, because every scorer of one goal is
+ *  on the same figure.
+ *
+ *  **THE GATE RUNS THROUGH THIS FUNCTION, and it runs through its ARGUMENTS.**
+ *  A category figure names a man in the eleven, which is the exact fact the
+ *  lineup gate withholds before a deadline (`PLATFORM_NOTES`). Nothing here can
+ *  enforce that; what protects it is that a gated side's breakdown is never
+ *  fetched, so it arrives as `{}` and contributes no band and no name. The union
+ *  is the leak vector: handing this both sides unconditionally would make the
+ *  BAND SET itself a statement about which categories his eleven registered, even
+ *  with every name stripped. A caller that "fixes" the asymmetry breaks the gate.
+ */
+export function bandCategories(
+  mine: Record<string, readonly BreakdownLine[]>,
+  theirs: Record<string, readonly BreakdownLine[]>,
+): CategoryBand[] {
+  const left = menByCategory(mine);
+  const right = menByCategory(theirs);
+  const ranked = (men: readonly CategoryMan[] | undefined): CategoryMan[] =>
+    [...(men ?? [])].sort(
+      (a, b) => b.points - a.points || a.fantraxId.localeCompare(b.fantraxId),
+    );
+
   return [...new Set([...left.keys(), ...right.keys()])]
-    .map((code) => {
-      const named = left.get(code) ?? right.get(code);
-      return {
-        code,
-        name: named?.name ?? code,
-        mine: left.get(code)?.points ?? null,
-        theirs: right.get(code)?.points ?? null,
-      };
-    })
+    .map((code) => ({
+      code,
+      // The name as the reader's own side spells it, then his opponent's, then
+      // the code — which is what the pair above did before it was derived.
+      name: (left.get(code) ?? right.get(code))?.name ?? code,
+      mine: ranked(left.get(code)?.men),
+      theirs: ranked(right.get(code)?.men),
+    }))
     .sort((a, b) => {
-      const weight = size(b) - size(a);
+      const weight = weigh(b) - weigh(a);
       return weight !== 0 ? weight : a.code.localeCompare(b.code);
     });
+}
+
+/** How much a band moved the scoreline, for the ordering. An absence weighs
+ *  nothing, which is the one thing it can honestly be said to do. */
+function weigh(band: CategoryBand): number {
+  return Math.abs(total(band.mine) ?? 0) + Math.abs(total(band.theirs) ?? 0);
 }
