@@ -116,7 +116,7 @@ No fluid clamps except inside the masthead.
 | `league/Chips` | The little state chips on a player — captain, bench, the rest. |
 | `league/ViewToggle` | Pitch or list, as one control, and the plates FILL their row (CM's own `Back` · `Next`). `BoardBar` sat above it until 5 Sep 2026 to fix which side the toggle went; by then both of its props had lost their last caller and one board had wrapped it in a second `justify-between` row to put a count beside it, which is the duplication it was written to prevent. Filling the row retires the question. |
 | `league/SquadRows` · `league/SquadBoard` | A squad as rows, and the gated board around it. |
-| `league/MatchupBoard` | The head-to-head, both XIs and the running totals. |
+| `league/MatchupBoard` | The head-to-head: the scoreline, a five-plate strip, and one of five views. Only `Lineups` belongs to a side; the other four are the join of both squads and are drawn once at both widths. |
 | `league/LineupPlanner` · `league/MoveSheet` | Picking an XI, and everywhere one player can go. |
 | `league/PlayerCard` · `league/LivePlayerCard` | One player, tapped open — settled and live. |
 | `football/StateBox` | The box beside a name saying why he is not playing. Silent for a fit player: a box reading "fit" on every row makes the one worth seeing harder to find. **It must survive a greyed row** — the whole point of it is to say why the row is grey. |

@@ -3053,7 +3053,13 @@ twice in a row. Clear the cache before believing a capture of a replaced image.
 
 ## `MatchStats`' shape has a second wearer, and it stays duplicated (11 Sep 2026)
 
-`league/CategoryCompare` is `prem/match/[id]/MatchStats` again: the same
+*`league/CategoryCompare` was deleted on 12 Sep 2026 — `CategoryBands` absorbed
+it, because that board was the bands' head row and nothing else. The duplication
+below is now between `CategoryBands` and `MatchStats`, and everything the entry
+says still holds: it is still two occurrences, still copied rather than
+extracted, and still waiting on a third to say which half is shared.*
+
+`league/CategoryBands` is `prem/match/[id]/MatchStats` again: the same
 `[3.25rem_1fr_3.25rem]` grid, the same `cm-index` figure plates, the same
 `max-w-2xl` cap and the same argument for all three (`cm9900/22.jpg`). It was
 copied rather than extracted, which is CODE_RULES §1 — **two occurrences are a
@@ -3087,13 +3093,29 @@ reason, and `news/page.tsx` is the site that proves it.
 
 ## The lineup gate now covers a per-category board, not just an eleven (11 Sep 2026)
 
-`/league/matchups/[teamId]`'s Stats and Players tabs are built from
-`squadLivePoints`' breakdown, and a category figure **names a man in the
-eleven** — the exact fact the gate withholds before a deadline. Both are built
-behind `teamDisplay(squads, mine).show === "lineup"`, on the same branch as the
-grass, and a withheld side draws the `Withheld` panel on every tab rather than an
-empty board. Said here because "the gate is about the pitch" is the easy reading
-and it is wrong: it is about anything whose existence states who is active.
+`/league/matchups/[teamId]`'s shared boards are built from `squadLivePoints`'
+breakdown, and a category figure **names a man in the eleven** — the exact fact
+the gate withholds before a deadline. Said here because "the gate is about the
+pitch" is the easy reading and it is wrong: it is about anything whose existence
+states who is active.
+
+**Updated 12 Sep 2026, when four tabs became five and three of them became
+shared.** The gate no longer runs at the tab; it runs at the ARGUMENTS. A side
+that fails `shows()` has its breakdown never fetched, so it reaches
+`bandCategories` as `{}` and contributes no band and no name — and its name map
+is built behind the same test, so the leak is impossible rather than merely
+unexercised.
+
+**The union is the leak vector, and it is worth being explicit about.** Handing
+`bandCategories` both sides unconditionally would make the BAND SET itself a
+statement about which categories his eleven registered, even with every name
+stripped. A future edit that "fixes" the asymmetry breaks the gate; there is a
+test in `breakdown.test.ts` for exactly that case.
+
+**And the withholding is said ONCE, full width**, not per side: with both sides
+in one object there is no per-side slot for it, and a silently empty column
+reads as "he registered nothing", which is false and the opposite of what the
+gate is for.
 
 `SquadLists` — the unplayed-round branch — is the same rule from the other side:
 it draws `squadUnarranged`, which sorts alphabetically within position so even

@@ -63,6 +63,57 @@ itself had no type step at all and rendered at the browser's 16px default, a
 union row filled a missing side with `0` where the same commit argued for a dash,
 and two figures took a `lg:` step §6 gives neither.
 
+## 12 Sep 2026 — the head-to-head gets five tabs that answer something
+
+Craig: *"lets plan match up page, i still need ideas, stats not good, players is
+ust a list, scores have that"*, then the five he wanted.
+
+**The diagnosis came off a screenshot, not off the code.** Stats was six category
+rows with three of six dashes over 700px of bare ground. Players was ONE side's
+flat table, mostly dashes, names truncated to `Caoimhín K…`. Both were honest
+about the data and useless to a reader.
+
+**`Lineups · Stats · Players · Table · Scores`**, and one word per label is a
+measurement: five plates leave about 73px each at 390, so "Match Up Stats" does
+not fit and the fix is a shorter word rather than a smaller one.
+
+**`bandCategories` is the new core function, and `compareCategories` is now a
+PROJECTION of it** rather than a second walk of the same data. Its 21 existing
+tests passed unchanged, which is the derivation proving itself — a board of
+totals and a board of the men behind them can no longer disagree about which
+categories exist or in what order.
+
+**The gate moved from the tab to the arguments.** A side that fails `shows()`
+has its breakdown never fetched, so it reaches `bandCategories` as `{}` and
+contributes no band and no name. The union is the leak vector: handing it both
+sides unconditionally would make the band SET a statement about which categories
+his eleven registered, even with every name stripped. There is a test for it.
+
+**Two bugs a screenshot found, both in the Table tab and both mine.** I wrapped
+`TableRow` in my own `<tr>` to tint it — it renders its own, so that was a nested
+`<tr>`, which Next flagged and which broke the column alignment. Then the tint
+did not paint at all: the edge rides on the INDEX CELL, not the row, because
+`yoursEdge` hands back a *transparent* border on unmarked rows precisely so one
+row's figures do not step 4px out of the column.
+
+**And one `sweep` found that I would not have.** A `G×2` at 2.26:1 on the accent
+and a `3b` at 2.84, against a 4.5 floor. `.cm-out *` is unlayered and reaches
+inside a chip; a Tailwind utility cannot beat it, so a chip's ink was lost the
+moment a row dimmed. It appeared the morning a greyed row started meaning "off
+the pitch at the whistle" rather than "on the bench" — because that is the day a
+man with two goals could be on one. A chip does not dim with its row now, which
+is what the reference does anyway.
+
+Every file under §4's 300: page 282 (from 324), sides 210, tabs 201, wider 200,
+bands 172. `CategoryCompare` deleted; `SquadStatBoard` survives and grows to both
+squads. sweep 78 routes zero failures, tapfit 78 zero failures.
+
+**Left open on purpose**: Minutes Played is the top band and it is a wall of 21
+names above everything that decided the tie. Honest — Minutes really did
+contribute 20 of the 29 — but excluding a code is the hardcoding this design
+forbids, and capping the names per side is not. Craig's call.
+
+
 ## 11 Sep 2026 — the three assists FPL pays that Opta does not place
 
 Craig, on Man Utd 5-2 Ipswich: *"try find brunos assists, mbuemo had 1, why did

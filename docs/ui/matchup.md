@@ -15,73 +15,88 @@ is not used for anything: there is no ground.
    side's team below; the open half is raised and carries a foot bar. Your own
    name reads in accent, the standard "this is yours" mark. **One number per
    side and nothing beside it** — see the constraint below.
-2. **A four-plate blue tab strip** — `Scores · Stats · Players · Report`
+2. **A five-plate blue tab strip** — `Lineups · Stats · Players · Table · Scores`
    (`ViewToggle`, wearing `.cm-tab` at full height). Craig, 11 Sep 2026: *"and
    need the blue bars"*. What came off on 5 Sep was the SECTION strip, five
    plates that all leave the match; this is the object DESIGN §2 actually names,
-   a strip picking one of a subject's views, and by 11 Sep it was picking between
-   four rather than two. Full height and not `.cm-tab-quiet`, because it is the
-   only strip on this screen — the squad and club boards, which carry one above
-   already, pass `quiet`.
-3. **Scores** — the open side's eleven on the grass and its bench in a strip
+   a strip picking one of a subject's views.
+
+   **One word per label, and that is a measurement rather than a preference.**
+   Five plates leave about 73px each at 390 — ten characters at `2xs` and no
+   more. Craig named two of them "Match Up stats" and "Player stats"; neither
+   fits, and the fix is a shorter word rather than a smaller one, because
+   `ViewToggle` has already been caught once dropping off the type ladder.
+3. **Lineups** — the open side's eleven on the grass and its bench in a strip
    under it (`TeamSheet`, `mode="pitch"`). Both sides at once above `lg`.
+   **The one view that belongs to a side**, and the only reason the two halves of
+   the scoreline are a control rather than a caption.
 
    **The list went, and it was a whole tab** (Craig, 11 Sep 2026: *"pitch and
    list dont need to be two screens, come on, should just be Scores for that
-   view"*, then *"just pitch i think"*). It was a second answer to "who is in
-   it", and everything it had that the grass does not — the opponent, the figure,
-   for all fifteen — the Players board now carries with the scoring behind each
-   of them. `SquadRows` keeps its two remaining callers on the squad and club
-   boards.
-4. **Stats** — `CategoryCompare`, the two squads' scoring category by category,
-   your total on the left and his on the right. Championship Manager's Match
-   Stats board (`cm9900/22.jpg`), and the answer to the question the board could
-   not previously answer at all: the scoreline with the workings.
+   view"*, then *"just pitch i think"*). `SquadRows` keeps its two remaining
+   callers on the squad and club boards.
+4. **Stats** — `CategoryBands`: one band per scoring category, the two side
+   totals on their plates with the name between them, and under it the MEN who
+   registered it — yours down the left, his down the right. Championship
+   Manager's Match Stats board (`cm9900/22.jpg`) with its workings.
 
-   Shared rather than per side, because it is the JOIN of the two and a
-   head-to-head has no subject — so it is drawn once at both widths.
-   `compareCategories` in core does the union, and it is the union deliberately:
-   a category only his keeper registered is a row with his figure and your nought
-   rather than a row that does not exist.
-5. **Players** — `SquadStatBoard`, one side's fifteen against the league's own
-   scoring categories. A many-measure board (DESIGN §2), so every column stays
-   and it scrolls sideways.
+   **It absorbed `CategoryCompare`**, which was this board's head row and nothing
+   else. A totals board and a men board as two tabs would be one object printed
+   twice, the second being the first with more rows.
+
+   **The men are two INDEPENDENT columns, not paired rows.** Three of your
+   scorers against one of his is the honest shape; pairing by index would invent
+   an alignment the payload never claimed.
+
+   `bandCategories` in core does the union, and `compareCategories` is now a
+   projection of it — so the totals and the men can never disagree about which
+   categories exist or in what order.
+5. **Players** — `SquadStatBoard`, **both** squads' fifteen against the league's
+   own scoring categories, each under its manager's name. A many-measure board
+   (DESIGN §2), so every column stays and it scrolls sideways.
+
+   **Both sides, where this was one** (Craig, 11 Sep 2026: *"players is ust a
+   list"* — and it was one side's list, which is the half of the complaint that
+   mattered). Comparing two squads is the whole reason to be on this screen.
+   Two boards rather than one table of thirty: each keeps its own frozen lead
+   column, and one table would make a manager scroll past his rival's fifteen to
+   reach his own bench.
 
    **`Pts` freezes with the name**, which is DESIGN §2's other rule about a phone
    table: which shape it is is decided by its last column, and a table whose last
-   column is what it is FOR shows that column at 390. Left to scroll with the
-   categories it was off the right edge of the screen — the board answering "how
-   many did he get" could be read without ever showing the answer.
+   column is what it is FOR shows that column at 390.
 
    The columns are LEAGUE data, off `getLeagueInfo.scoringCategories` through the
-   same `compareCategories` the board above uses, so both sides of a tie carry the
-   same columns in the same order and a commissioner who adds a category gets one
-   without an edit.
-6. **Report** — the tie's own wire: every goal involving a man in either squad,
-   in minute order, with full time for the fixtures the tie is being played in
-   (`ReportTab` → `matchday/Wire`).
+   same union the board above uses, so both sides carry the same columns in the
+   same order and a commissioner who adds a category gets one without an edit.
+6. **Table** — the league standings, with **both sides of the tie edged in their
+   own colours** (`TableTab` → `/league`'s own `Columns` and `TableRow`).
 
-   Craig, 11 Sep 2026: *"do we have a match report blog thing which filters only
-   by starting players for both teams, like we have in prem?"* — the EVENT feed
-   and not the prose. `prem/match/[id]/report` prints Opta's commentary, and
-   `PlCommentaryLine` carries `type`, `minute`, `text` and **no player id at
-   all**, so filtering that to two squads could only be done by matching names
-   inside sentences. `MatchEvent.players` carries FPL's season-stable `code`, so
-   this filter is a join.
+   Craig, 11 Sep 2026: *"goes to a page with just the league table (not the
+   league table page itself)"*. What it answers here that `/league` does not is
+   what THIS result does to both positions, which is why both rows are marked
+   rather than only the reader's.
 
-   **The filter IS the owners map.** `wireLines` places an owner on a man from
-   whatever map it is handed, so handing it the two teams in this tie leaves
-   every other manager's goal with a null owner — and a row with no owner on
-   either man is a row this tie has no stake in. No second predicate to disagree
-   with the map.
+   **The mark could not be `TableRow`'s `mine`** — that paints `bg-raised`, and a
+   tinted band "reads as *these are yours*", which about a rival is a lie. It is
+   a `tint` prop, and it rides on the INDEX CELL rather than the row: `yoursEdge`
+   hands back a *transparent* border on unmarked rows precisely so one row's
+   figures do not step 4px out of the column, and a `<tr>` border does not paint
+   through the index cell's own ground at all. `mine` wins where both apply.
+7. **Scores** — every Premier League fixture this tie is being played out in:
+   kickoff day and time, the score or the state, and under each the men from each
+   side who are in it (`ScoresTab`).
 
-   **One request, already warm**, and behind a Suspense boundary regardless:
-   `roundGoals` and `roundBreaks` both read `plRound(gameweek)`, which the Live
-   tab's wire caches, but a reader who has not opened that tab this window pays
-   for it — and the grass must not wait on an afternoon's commentary. Cards are
-   absent on purpose: they live on the per-fixture read and would cost up to ten
-   more requests for a handful of rows.
-7. **A live player card** (`LivePlayerCard`) over the top, when one is tapped.
+   **Only the fixtures holding a man from either squad.** A round is ten matches
+   and a tie is usually fought out in six of them. `fixtureInvolvement` answers
+   the membership as a JOIN on FPL's own player code, never a name match, so a
+   fixture with nobody's man in it is simply not a key.
+
+   **It replaced the Report tab**, which filtered the same round's GOAL WIRE to
+   the same thirty men. That board answered "what has happened"; this answers
+   "where is it being decided", which is the question a manager has at ten to
+   three rather than at five.
+8. **A live player card** (`LivePlayerCard`) over the top, when one is tapped.
 
 ## What the round is doing
 
