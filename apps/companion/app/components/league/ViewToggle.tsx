@@ -29,19 +29,29 @@ import { TAB } from "@/app/desk";
 // label-and-border is keyed off it in `desk.css` and a strip that had to be
 // styled twice would be two strips.
 
-export type View = "pitch" | "list" | "scores" | "stats" | "players" | "report";
+export type View = "pitch" | "list" | "lineups" | "stats" | "players" | "table" | "scores";
 
 /** What each view is called on its plate.
  *
  *  Here rather than at the call sites: three screens draw this strip and a label
- *  spelled differently on one of them is a different control. */
+ *  spelled differently on one of them is a different control.
+ *
+ *  **One word each, and on the head-to-head that is a MEASUREMENT rather than a
+ *  preference.** That strip carries five plates now, which leaves about 73px
+ *  apiece at 390 — room for ten characters at `2xs` and no more. Craig named two
+ *  of them "Match Up stats" and "Player stats"; neither fits, and the fix is a
+ *  shorter word rather than a smaller one, because this file has already been
+ *  caught once dropping off the type ladder (see `TAB` below). `Stats` is the
+ *  categories and `Players` is the men, which is the distinction the two boards
+ *  make anyway. */
 const LABEL: Record<View, string> = {
   pitch: "Pitch",
   list: "List",
-  scores: "Scores",
+  lineups: "Lineups",
   stats: "Stats",
   players: "Players",
-  report: "Report",
+  table: "Table",
+  scores: "Scores",
 };
 
 /** The pair every screen but the head-to-head draws. A frozen literal rather than

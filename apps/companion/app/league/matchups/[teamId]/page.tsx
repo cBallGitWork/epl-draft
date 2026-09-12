@@ -1,25 +1,21 @@
-import { Suspense } from "react";
 import { notFound, redirect } from "next/navigation";
 import {
   type LeagueTeam,
+  bandCategories,
   clubById,
   compareCategories,
   roundStarted,
-  squadDetail,
-  squadUnarranged,
   headToHead,
-  lineupDetail,
   oppositionByClub,
   roundState,
   wasFielded,
 } from "@epl/core";
 import MatchupBoard, { type MatchupSide } from "../../../components/league/MatchupBoard";
 import Nothing from "../../../components/shell/Nothing";
-import SkeletonRows from "../../../components/shell/SkeletonRows";
-import SquadStatBoard from "../../../components/league/SquadStatBoard";
 import TeamSheet from "../../../components/league/TeamSheet";
-import { CompareTab, ReportTab, SquadLists, Withheld } from "./sides";
-import { widestLine } from "../../../components/league/PitchRows";
+import { SquadLists, Withheld, arrangeBoth, unplayedLists } from "./sides";
+import { PlayersTab, StatsTab, sharedSides, withheldNotice } from "./tabs";
+import { ScoresTab, TableTab } from "./wider";
 import LeagueShell from "../../Shell";
 import { HEAD_TO_HEAD } from "../../../titles";
 import { getLeagueSquads, teamDisplay } from "../../../squads";
@@ -150,48 +146,8 @@ export default async function HeadToHeadPage({
     [pairing.opponent.teamId, theirs],
   ]);
 
-  // Both elevens are arranged before either is drawn, because they have to agree
-  // about the card. `PitchRows` sizes every man from the fullest line it is
-  // given, and the two sides of a head-to-head are one view toggled in place —
-  // so a 3-4-3 against a 3-5-2 redrew every player on the page at a different
-  // size the moment the reader tapped the other half. Taken across both sides,
-  // and across each bench, the pitch holds still.
-  //
-  // Only sides whose eleven is actually going on screen count: a withheld one
-  // draws no cards, and letting its shape decide the width would be a rival's
-  // formation leaking out through the layout.
-  const arranged = new Map(
-    [pairing.team, pairing.opponent].flatMap((team) => {
-      const roster = rostered.get(team.teamId);
-      if (roster === undefined || !shows(team)) return [];
-      const points = scored.get(team.teamId)?.points ?? null;
-      return [[team.teamId, lineupDetail(roster, clubs, opposition, points)] as const];
-    }),
-  );
-  const widest = Math.max(
-    1,
-    ...[...arranged.values()].map((sheet) => widestLine([...sheet.rows, { players: sheet.bench }])),
-  );
-
-  // The fifteen, unarranged, for a round that has not been played. The
-  // arrangement is exactly what the gate withholds before lineups lock, and
-  // `squadUnarranged` is the shape that cannot leak it — alphabetical within
-  // position, so even the payload order says nothing about who starts. Built
-  // only when it is going to be drawn.
-  const listed = !started
-    ? new Map(
-        [pairing.team, pairing.opponent].flatMap((team) => {
-          const roster = rostered.get(team.teamId);
-          if (roster === undefined) return [];
-          return [
-            [
-              team.teamId,
-              squadDetail(squadUnarranged(roster), clubs, opposition, null),
-            ] as const,
-          ];
-        }),
-      )
-    : null;
+  const { arranged, widest } = arrangeBoth({ pairing, rostered, shows, scored, clubs, opposition });
+  const listed = started ? null : unplayedLists({ pairing, rostered, clubs, opposition });
 
   // Every category either squad registered, in one order, computed ONCE.
   //
@@ -202,6 +158,12 @@ export default async function HeadToHeadPage({
   // reads: a row missing from one side would print as a nought, and a nought is a
   // claim the payload did not make.
   const columns = compareCategories(yours?.breakdown ?? {}, theirs?.breakdown ?? {});
+  // The same union with its workings — which of his eleven put the 9 on the
+  // board. Derived from `columns` in core, so the two boards cannot disagree
+  // about which categories exist or in what order. Fed the SAME two
+  // conditionally-fetched breakdowns: a gated side arrives as `{}` and
+  // contributes no band and no name, which is the whole of the gate here.
+  const bands = bandCategories(yours?.breakdown ?? {}, theirs?.breakdown ?? {});
 
   const side = (team: LeagueTeam): MatchupSide => {
     const mineHere = team.teamId === mine;
@@ -230,7 +192,7 @@ export default async function HeadToHeadPage({
       score: scores.get(team.teamId),
       badge: badges.get(team.teamId),
       mine: mineHere,
-      scores:
+      lineup:
         detail === undefined ? (
           withheld
         ) : (
@@ -242,21 +204,11 @@ export default async function HeadToHeadPage({
             mode="pitch"
           />
         ),
-      // Behind the same gate as the grass: a category figure names a man in the
-      // eleven, which is the exact fact the gate withholds before a deadline.
-      players:
-        detail === undefined ? (
-          withheld
-        ) : (
-          <SquadStatBoard
-            rows={detail.rows}
-            bench={detail.bench}
-            columns={columns}
-            breakdown={priced?.breakdown ?? {}}
-          />
-        ),
     };
   };
+
+  const both = sharedSides({ pairing, rostered, shows, arranged, scored, squads, mine });
+  const withheld = withheldNotice(both);
 
   return (
     // **A MATCH screen, not a league section wearing one** (Craig, 5 Sep 2026:
@@ -291,29 +243,35 @@ export default async function HeadToHeadPage({
         <MatchupBoard
           team={side(pairing.team)}
           opponent={side(pairing.opponent)}
-          compare={
-            <CompareTab
-              rows={columns}
-              mine={pairing.team.name}
-              theirs={pairing.opponent.name}
+          stats={
+            <StatsTab
+              bands={bands}
+              managers={{ mine: pairing.team.name, theirs: pairing.opponent.name }}
+              names={both[0]?.names ?? new Map()}
+              theirNames={both[1]?.names ?? new Map()}
+              withheld={withheld}
               played={played}
               fielded={wasFielded(squads.period, period)}
             />
           }
-          report={
-            // The one read on this page that is not already warm for every
-            // reader. The scoreline, the grass and both boards arrive without
-            // waiting for it — which is the same boundary `prem/match/[id]/report`
-            // draws round the same feed, for the same reason.
-            <Suspense fallback={<SkeletonRows count={6} height="1.75rem" />}>
-              <ReportTab
-                snapshot={squads.snapshot}
-                teams={squads.period.teams.filter((team) =>
-                  [pairing.team.teamId, pairing.opponent.teamId].includes(team.teamId),
-                )}
-                mine={mine}
-              />
-            </Suspense>
+          players={
+            <PlayersTab
+              sides={both.map((one: (typeof both)[number]) => ({
+                team: one.team,
+                detail: one.detail,
+                columns,
+                breakdown: one.breakdown,
+                withheld: one.withheld,
+              }))}
+            />
+          }
+          table={<TableTab tie={[pairing.team.teamId, pairing.opponent.teamId]} mine={mine} />}
+          scores={
+            <ScoresTab
+              fixtures={squads.snapshot.fixtures}
+              sides={both}
+              clubName={(id) => clubs.get(id)?.shortName ?? "—"}
+            />
           }
         />
       ) : (

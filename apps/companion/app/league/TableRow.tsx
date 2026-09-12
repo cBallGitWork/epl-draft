@@ -71,10 +71,21 @@ export default function TableRow({
   mine,
   form,
   sort,
+  tint,
 }: {
   row: StandingsRow;
   badge: string | undefined;
   mine: boolean;
+  /** A colour to edge this row in, for a screen that is about two PARTICULAR
+   *  teams — the head-to-head draws the table with both sides of the tie marked
+   *  in their own colours.
+   *
+   *  **It cannot be `mine`.** That paints `bg-raised`, and the playoff line below
+   *  records why a tinted band is spent so carefully here: it "reads as *these
+   *  are yours*", which about a rival is a lie. An edge in the side's OWN colour
+   *  says something else — this is one of the two on the plate above — and leaves
+   *  `mine` its single meaning, which wins on a row that is both. */
+  tint?: string | undefined;
   /** Oldest first, and empty for a side whose run we cannot vouch for. */
   form: readonly FormGame[];
   /** What the table is ordered by, because a column the phone stands down is
@@ -89,7 +100,21 @@ export default function TableRow({
           than the rows, which is what stops a dense table reading as a wall.
           The accent edge rides on it, so "yours" and the index are one mark. */}
       <td
-        className={`cm-index numeric px-1.5 ${cellAlign("rank")} ${yoursEdge(mine)}`}
+        className={`cm-index numeric px-1.5 ${cellAlign("rank")} ${
+          mine || tint === undefined ? yoursEdge(mine) : "border-l-4"
+        }`}
+        // **The edge rides on the INDEX CELL, not the row**, which is
+        // `yoursEdge`'s own arrangement and the reason it hands back a
+        // transparent border rather than none: a table draws its cells against
+        // each other, so an edge on one row alone would step that row's figures
+        // 4px out of the column. A `<tr>` border does not paint through the
+        // index cell's own ground at all — which is how this shipped invisible
+        // for one screenshot.
+        //
+        // **`mine` wins where both apply.** Your own row in your own tie is
+        // marked by the accent already, and a second mark saying "you are in
+        // this match" on the page about that match is the fact twice.
+        style={mine || tint === undefined ? undefined : { borderLeftColor: tint }}
       >
         {ordinal(row.rank)}
       </td>

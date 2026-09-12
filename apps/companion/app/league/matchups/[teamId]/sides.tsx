@@ -1,21 +1,18 @@
 import Link from "next/link";
 import type {
-  CategoryPair,
-  FootballSnapshot,
+  Club,
   LeagueTeam,
-  RosteredTeam,
+  LineupDetail,
+  Opposition,
   RosterDisplay,
+  RosteredTeam,
   SquadDetailLine,
 } from "@epl/core";
-import { isResolved, owners } from "@epl/core";
+import { lineupDetail, squadDetail, squadUnarranged } from "@epl/core";
+import { widestLine } from "../../../components/league/PitchRows";
 import Caption from "../../../components/shell/Caption";
 import Nothing from "../../../components/shell/Nothing";
 import SquadRows from "../../../components/league/SquadRows";
-import Wire from "../../../matchday/Wire";
-import { roundBreaks, roundGoals } from "../../../commentary";
-import { isBreak, wireLines } from "../../../matchday/wireLines";
-import CategoryCompare from "../../../components/league/CategoryCompare";
-import Section from "../../../components/shell/Section";
 
 // What the head-to-head route assembles before it draws anything.
 //
@@ -23,6 +20,11 @@ import Section from "../../../components/shell/Section";
 // CODE_RULES §4's hard 300-line ceiling. The seam is the one `squad/[teamId]/
 // team.ts` already sets: the route file stays about what appears on screen, and
 // the joins that feed it live beside it.
+//
+// **The four SHARED boards moved on to `tabs.tsx` on 12 Sep 2026**, when there
+// were four of them and this file was back at the ceiling. What is left here is
+// the two things that are genuinely per-side: why a side is not on screen, and
+// the two squad lists a round nobody has kicked off is reduced to.
 
 /** Why a side is not on screen.
  *
@@ -62,137 +64,6 @@ export function Withheld({
         See the squad
       </Link>
     </div>
-  );
-}
-
-/** The Stats tab's shared half: where the scoreline came from.
- *
- *  **Provenance here rather than across the top of the screen** (Craig, 11 Sep
- *  2026: *"remove A round already played… row"*). It was 44px of prose over a
- *  scoreline nobody was asking it of. The claim is still owed — these are
- *  Fantrax's figures, and on a round already played the elevens may be the
- *  arrangement it stored or may be today's squads — so it is said where a reader
- *  is actually asking where a number came from, in the slot `Section` already
- *  has for exactly that.
- *
- *  The scores are deliberately not called final either way: `played` is true at
- *  all three finished rungs and only `data_checked` earns that word. */
-export function CompareTab({
-  rows,
-  mine,
-  theirs,
-  played,
-  fielded,
-}: {
-  rows: readonly CategoryPair[];
-  mine: string;
-  theirs: string;
-  played: boolean;
-  /** Whether the roster on hand is the round's own, or today's standing in. Two
-   *  different claims, so two sentences and not one hedged one. */
-  fielded: boolean;
-}) {
-  return (
-    <Section
-      // Short enough to sit on one line beside its aside at 390. It wrapped to
-      // two under "Where the points came from", which put three lines of chrome
-      // over a six-row board.
-      title="By category"
-      aside={
-        !played
-          ? "Fantrax's own"
-          : fielded
-            ? "Fantrax's own · the stored eleven"
-            : "Fantrax's own · today's squads"
-      }
-    >
-      <CategoryCompare rows={rows} mine={mine} theirs={theirs} />
-    </Section>
-  );
-}
-
-/** The Report tab: the afternoon, filtered to the thirty men in this tie.
- *
- *  Craig, 11 Sep 2026: *"do we have a match report blog thing which filters only
- *  by starting players for both teams, like we have in prem?"*
- *
- *  **The event feed, and not the prose.** `prem/match/[id]/report` prints Opta's
- *  minute-stamped commentary, and `PlCommentaryLine` carries `type`, `minute` and
- *  `text` and **no player id at all** — so filtering that to two squads could only
- *  be done by matching names inside sentences, which is the one thing identity
- *  work in this repo never does. `MatchEvent.players` carries FPL's season-stable
- *  `code`, so this filter is a join.
- *
- *  **The filter IS the owners map**, which is the neat part: `wireLines` places an
- *  owner on a man from whatever map it is handed, so handing it the two teams in
- *  this tie rather than the whole league leaves every other manager's goal with a
- *  null owner — and a row with no owner on either man is a row this tie has no
- *  stake in. No second predicate, and nothing that can disagree with the map.
- *
- *  **One request, already warm.** `roundGoals` and `roundBreaks` both read
- *  `plRound(gameweek)`, which the Live tab's own wire has already cached. Cards
- *  are deliberately absent: they live on the per-fixture read and would cost up
- *  to ten more requests for a handful of rows. */
-export async function ReportTab({
-  snapshot,
-  teams,
-  mine,
-}: {
-  snapshot: FootballSnapshot;
-  /** The two squads in this tie, and only those two. */
-  teams: readonly RosteredTeam[];
-  mine: string | null;
-}) {
-  // **Behind a Suspense boundary at the call site**, because it is the one read
-  // on this page that is not already warm for THIS reader: the round is cached,
-  // but a reader who never opened the Live tab this window pays for it, and the
-  // grass must not wait on an afternoon's commentary to be drawn.
-  //
-  // Empty rather than a throw: a wire is something this screen ADDS to a tie it
-  // can already draw.
-  const [goals, breaks] = await Promise.all([
-    roundGoals(snapshot.gameweek, snapshot.players).catch(() => []),
-    roundBreaks(snapshot.gameweek),
-  ]);
-
-  // Which fixtures the tie is actually being played in, so full time is reported
-  // for the matches that decide it rather than for all ten. Filtered before
-  // `wireLines` rather than after, because a `WireBreak` has already spent its
-  // fixture code on a render key and getting it back would mean parsing one.
-  const clubs = new Set<number>();
-  for (const team of teams) {
-    for (const rostered of team.players) {
-      if (isResolved(rostered)) clubs.add(rostered.player.clubId);
-    }
-  }
-  const ours = new Set(
-    snapshot.fixtures
-      .filter((fixture) => clubs.has(fixture.homeClubId) || clubs.has(fixture.awayClubId))
-      .map((fixture) => fixture.code),
-  );
-
-  const wire = wireLines(
-    goals,
-    breaks.filter((brk) => ours.has(brk.fixtureCode)),
-    snapshot,
-    owners(teams),
-    mine,
-  );
-
-  // A goal in a match neither manager has a man in reaches here with a null owner
-  // on both slots, which is exactly "this tie has no stake in it".
-  const lines = wire.lines.filter(
-    (row) => isBreak(row) || row.man?.owner != null || row.second?.owner != null,
-  );
-
-  return lines.length === 0 ? (
-    <Section title="This tie's afternoon">
-      <Nothing title="Nothing yet">
-        No goal in this round has involved a man in either squad.
-      </Nothing>
-    </Section>
-  ) : (
-    <Wire lines={lines} title="This tie's afternoon" />
   );
 }
 
@@ -258,4 +129,82 @@ export function SquadLists({
       {half(opponent)}
     </div>
   );
+}
+
+/** What both sides look like as arrangements, and the card width they agree on.
+ *
+ *  Lifted out of `page.tsx` on 12 Sep 2026 when the route file went past §4's
+ *  hard ceiling for the second time. It is exactly what this file is for: the
+ *  joins that feed the screen, beside the screen.
+ */
+export function arrangeBoth({
+  pairing,
+  rostered,
+  shows,
+  scored,
+  clubs,
+  opposition,
+}: {
+  pairing: { team: LeagueTeam; opponent: LeagueTeam };
+  rostered: Map<string, RosteredTeam>;
+  shows: (team: LeagueTeam) => boolean;
+  scored: Map<string, { points: Map<string, number | null> } | null>;
+  clubs: Map<number, Club>;
+  opposition: Map<number, Opposition[]>;
+}): { arranged: Map<string, LineupDetail>; widest: number } {
+  // Both elevens are arranged before either is drawn, because they have to agree
+  // about the card. `PitchRows` sizes every man from the fullest line it is
+  // given, and the two sides of a head-to-head are one view toggled in place —
+  // so a 3-4-3 against a 3-5-2 redrew every player on the page at a different
+  // size the moment the reader tapped the other half. Taken across both sides,
+  // and across each bench, the pitch holds still.
+  //
+  // Only sides whose eleven is actually going on screen count: a withheld one
+  // draws no cards, and letting its shape decide the width would be a rival's
+  // formation leaking out through the layout.
+  const arranged = new Map(
+    [pairing.team, pairing.opponent].flatMap((team) => {
+      const roster = rostered.get(team.teamId);
+      if (roster === undefined || !shows(team)) return [];
+      const points = scored.get(team.teamId)?.points ?? null;
+      return [[team.teamId, lineupDetail(roster, clubs, opposition, points)] as const];
+    }),
+  );
+  const widest = Math.max(
+    1,
+    ...[...arranged.values()].map((sheet) => widestLine([...sheet.rows, { players: sheet.bench }])),
+  );
+  return { arranged, widest };
+}
+
+/** The fifteen, unarranged, for a round that has not been played. */
+export function unplayedLists({
+  pairing,
+  rostered,
+  clubs,
+  opposition,
+}: {
+  pairing: { team: LeagueTeam; opponent: LeagueTeam };
+  rostered: Map<string, RosteredTeam>;
+  clubs: Map<number, Club>;
+  opposition: Map<number, Opposition[]>;
+}): Map<string, SquadDetailLine[]> {
+  // The fifteen, unarranged, for a round that has not been played. The
+  // arrangement is exactly what the gate withholds before lineups lock, and
+  // `squadUnarranged` is the shape that cannot leak it — alphabetical within
+  // position, so even the payload order says nothing about who starts. Built
+  // only when it is going to be drawn.
+  const listed = new Map(
+        [pairing.team, pairing.opponent].flatMap((team) => {
+          const roster = rostered.get(team.teamId);
+          if (roster === undefined) return [];
+          return [
+            [
+              team.teamId,
+              squadDetail(squadUnarranged(roster), clubs, opposition, null),
+            ] as const,
+          ];
+    }),
+  );
+  return listed;
 }

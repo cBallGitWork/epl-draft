@@ -35,26 +35,23 @@ import ViewToggle, { type View } from "./ViewToggle";
 
 type Which = "team" | "opponent";
 
-/** The four plates, in the order the strip draws them.
+/** The five plates, in the order the strip draws them.
  *
- *  Scores first because it is what the screen is for on a Saturday; Report last
- *  because it is the only one that is not about our own competition. */
-const VIEWS: readonly View[] = ["scores", "stats", "players", "report"];
+ *  Lineups first because it is what the screen is for on a Saturday. Then the two
+ *  boards that explain the scoreline — the categories, then the men. Then the
+ *  table, which is what the result does to the season. Scores last because it is
+ *  the only one that is not about our own competition. */
+const VIEWS: readonly View[] = ["lineups", "stats", "players", "table", "scores"];
 
-/** Which node a side contributes to each view.
+/** **Exactly one view belongs to a side, and it is the grass.**
  *
- *  A lookup rather than a chain of ternaries, and the reason is that the chain
- *  had to be written TWICE — once for the phone's single side and once for the
- *  desk's pair — so every tab added was two places that were free to disagree.
- *
- *  Two of the four are absent because they are not per-side views: `stats` is the
- *  join of both squads and `report` is the round's own football, and a
- *  head-to-head has no subject for either to belong to. The caller draws those
- *  once and this lookup is what says so. */
-const PER_SIDE: Partial<Record<View, (side: MatchupSide) => ReactNode>> = {
-  scores: (side) => side.scores,
-  players: (side) => side.players,
-};
+ *  There was a `PER_SIDE` lookup here while two of the four tabs were per-side —
+ *  a map rather than a ternary, because the phone's single side and the desk's
+ *  pair are two call sites and every tab added was two places free to disagree.
+ *  Four of the five are now the join of both squads, and a head-to-head has no
+ *  subject for any of them to belong to: they are drawn once, at both widths, by
+ *  the caller. That leaves one branch, which is a `<Sides>` below rather than a
+ *  lookup with a single entry. */
 
 export interface MatchupSide {
   team: LeagueTeam;
@@ -65,54 +62,53 @@ export interface MatchupSide {
    *  fourteen badges are not this board's business. */
   badge: string | undefined;
   mine: boolean;
-  /** Both drawn on the server: his eleven and bench on the grass, and the same
-   *  squad as rows. Nodes rather than a roster, so the clubs and fixtures they
-   *  are joined against never cross to the browser. When his lineup is not
-   *  public yet, both are the panel saying so. */
-  /** His eleven on the grass with his reserves under it.
+  /** His eleven on the grass with his reserves under it — **the one view that
+   *  belongs to a side**, and the only reason the two halves above are a control
+   *  rather than a caption.
+   *
+   *  Drawn on the server and handed over as a node, so the clubs and fixtures it
+   *  is joined against never cross to the browser. When his lineup is not public
+   *  yet, this is the panel saying so.
    *
    *  **The list went** (Craig, 11 Sep 2026: *"pitch and list dont need to be two
    *  screens, come on, should just be Scores for that view"*, then *"just pitch
-   *  i think"*). It was a second answer to "who is in it" costing a whole tab,
-   *  and the Players board below now carries what it actually had that the grass
-   *  does not — the opponent and the figure, for all fifteen, with the scoring
-   *  behind each of them. */
-  scores: ReactNode;
-  /** His fifteen against the league's own scoring categories. Per side, so the
-   *  halves above stay meaningful on every tab: one squad under a thumb, both on
-   *  the desk, exactly as the grass already behaves. */
-  players: ReactNode;
+   *  i think"*), and the per-side Players board went with it on 12 Sep: every
+   *  man against every category is a comparison, and drawing it a side at a time
+   *  was asking a reader to hold one half in his head. */
+  lineup: ReactNode;
 }
 
 export default function MatchupBoard({
   team,
   opponent,
-  compare,
-  report,
+  stats,
+  players,
+  table,
+  scores,
 }: {
   /** The side the URL named, and the one the board opens on. */
   team: MatchupSide;
   opponent: MatchupSide;
-  /** Where the scoreline came from, category by category. **Not per side** — it
-   *  is the join of the two, and a head-to-head has no subject — so it stands
-   *  above the per-side boards rather than inside one of them, and it is drawn
-   *  once at both widths. */
-  compare: ReactNode;
-  /** The tie's own wire — every goal involving a man in either squad. Shared for
-   *  the same reason: an afternoon of football belongs to the round rather than
-   *  to a manager. */
-  report: ReactNode;
+  /** **The four shared boards, none of which has a side.** Each is the join of
+   *  both squads or the round's own football, so each is drawn ONCE at both
+   *  widths — putting any of them in the desk's two-column grid would be one
+   *  object printed twice with the halves disagreeing about nothing.
+   *
+   *  `stats` is the categories that decided it and the men behind each;
+   *  `players` every man against every category; `table` what the result does to
+   *  the season; `scores` the real matches this tie is being played out in. */
+  stats: ReactNode;
+  players: ReactNode;
+  table: ReactNode;
+  scores: ReactNode;
 }) {
   const [open, setOpen] = useState<Which>("team");
   // The first plate of `VIEWS`, so the strip and the state cannot disagree about
-  // which tab is open. Spelled `VIEWS[0]` and not `"scores"`: renaming a view in
+  // which tab is open. Spelled `VIEWS[0]` and not `"lineups"`: renaming a view in
   // one place and not the other drew a board with a current tab and nothing
   // under it, which is exactly what happened when the pair became four.
-  const [view, setView] = useState<View>(VIEWS[0] ?? "scores");
-  const side = open === "team" ? team : opponent;
-  // Undefined on the two shared tabs, which is what turns the per-side half of
-  // the board off rather than a second branch on the view name.
-  const per = PER_SIDE[view];
+  const [view, setView] = useState<View>(VIEWS[0] ?? "lineups");
+  const shared: Partial<Record<View, ReactNode>> = { stats, players, table, scores };
 
   return (
     <div className="flex flex-col gap-2">
@@ -143,43 +139,28 @@ export default function MatchupBoard({
           pitch-and-list pairing it was written for. */}
       <ViewToggle view={view} onPick={setView} views={VIEWS} />
 
-      {/* **The desk shows BOTH SIDES, in whichever view the toggle says**
-          (Craig, 5 Sep 2026: "live MATCH view on desktop, show both pitches at
-          same time… make a pitch/list tab to swap between both"). It showed the
-          open side's pitch beside its own list for an hour — his other option
-          the same day — and both teams at once is the better answer for a reason
-          `matchup.md` has had open since it was written: the two elevens could
-          only be compared by switching halves, which is the one thing a
-          head-to-head exists to let you do.
+      {/* **The desk shows BOTH SIDES; the phone shows the open one.** Craig,
+          5 Sep 2026: "live MATCH view on desktop, show both pitches at same
+          time". Thirty players at 390 is fifteen unreadable ones, so the phone
+          keeps one eleven and the halves above are how you change it.
 
-          The phone still shows one side, because thirty players at 390 is
-          fifteen unreadable ones, and the halves above are how you change it.
+          Both nodes are already rendered either way, so this adds no request, no
+          join and no second copy of an eleven.
 
-          **All four nodes are already rendered**, so this adds no request, no
-          join and no second copy of an eleven: the page hands over `pitch` and
-          `list` per side either way, and any two of the four are on screen at
-          once. */}
-      {/* **The two shared tabs come BEFORE the per-side split**, because neither
-          of them has a side. The compare board is the join of both squads and
-          the football list is the round's own fixtures — drawing either of them
-          twice in the desk's two-column grid would be one object printed twice
-          with the halves disagreeing about nothing. */}
-      {view === "stats" ? compare : null}
-      {view === "report" ? report : null}
-      {per === undefined ? null : (
+          Each side keyed by the manager it belongs to: React reads two sibling
+          expressions in one container as a list and asks for keys — rightly,
+          because an unkeyed pair would let it reuse one side's DOM for the
+          other's when the open half changes. */}
+      {view === "lineups" ? (
         <>
-          <div className="lg:hidden">{per(side)}</div>
+          <div className="lg:hidden">{(open === "team" ? team : opponent).lineup}</div>
           <div className="hidden lg:grid lg:grid-cols-2 lg:items-start lg:gap-2">
-        {/* **Each side in its own box, keyed by the manager it belongs to.**
-            React reads two sibling expressions in one container as a list and
-            asks for keys — and it is right to here, because swapping the view
-            swaps both children at once and an unkeyed pair would let it reuse
-            one side's DOM for the other's. The key is the team, so it survives
-            the toggle and does not survive a different manager. */}
-            <div key={team.team.teamId}>{per(team)}</div>
-            <div key={opponent.team.teamId}>{per(opponent)}</div>
+            <div key={team.team.teamId}>{team.lineup}</div>
+            <div key={opponent.team.teamId}>{opponent.lineup}</div>
           </div>
         </>
+      ) : (
+        (shared[view] ?? null)
       )}
     </div>
   );
