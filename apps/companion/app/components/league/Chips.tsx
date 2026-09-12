@@ -21,15 +21,20 @@ import { NOTABLE_SAVES } from "@epl/core";
 // two genuinely differ: only a squad view knows whether a man kept a clean sheet
 // across both his matches, and only a per-match row carries FPL's bonus.
 
+/** **Every tone carries `cm-chip` and its own ink as a variable**, which is what
+ *  keeps a chip legible on a greyed row. `.cm-out *` is unlayered and beats a
+ *  Tailwind utility, so `text-bg` alone loses the moment a row dims — see the
+ *  `.cm-out .cm-chip` rule in `desk.css` for the measurement that found it. The
+ *  variable exists because the four tones do not share one ink. */
 const TONES = {
-  goal: "bg-accent text-bg",
-  assist: "bg-info text-bg",
+  goal: "cm-chip [--cm-chip-ink:var(--color-bg)] bg-accent text-bg",
+  assist: "cm-chip [--cm-chip-ink:var(--color-bg)] bg-info text-bg",
   // Both grounds these land on are dark now — the pitch band under a player who
   // has played, and a row in the list — so the quiet chip can be quiet again.
   // It was solid grey for a while, when the pitch band was cream and 15% white
   // over cream turned a booking into a blank box.
-  note: "bg-cream/20 text-cream",
-  bad: "bg-bad text-bg",
+  note: "cm-chip [--cm-chip-ink:var(--color-cream)] bg-cream/20 text-cream",
+  bad: "cm-chip [--cm-chip-ink:var(--color-bg)] bg-bad text-bg",
 } as const;
 
 /** The countable events, and only what a chip is drawn from. Structural rather

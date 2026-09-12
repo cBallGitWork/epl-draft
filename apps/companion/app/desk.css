@@ -612,6 +612,28 @@
   color: var(--color-faint-plate);
 }
 
+/* **A CHIP is a plate, and a plate owns its ink** — the same rule the index
+   block above gets, for the same reason and found the same way.
+
+   `.cm-out *` reaches inside a chip and hands its label `--color-faint`, which on
+   a chip's own coloured ground is not a dimming but a contrast failure: measured
+   11 Sep 2026 on `/prem/match/21/players`, a `G×2` came out at **2.26:1** on the
+   accent and a `3b` at 2.84 on the quiet ground, against a 4.5 floor. It appeared
+   the day a greyed row started meaning "off the pitch at the whistle" rather than
+   "on the bench", because that is the day a man with two goals could be on one.
+
+   A chip does NOT dim with its row, which is also what the reference does: CM
+   greys a substituted man's name and leaves the marks beside him legible. What he
+   did is not less true for his having come off.
+
+   The ink comes through a variable because the four tones do not share one — the
+   loud three take the page's ground and the quiet one takes cream — and a single
+   value here would have to pick one of them and be wrong about the others. */
+.cm-out .cm-chip,
+.cm-out .cm-chip * {
+  color: var(--cm-chip-ink, var(--color-ink));
+}
+
 /* A CM screen is not one page with headings down it; it is several bevelled
    PANELS, each opening with its own title bar. That is the structural half of
    this conversion and the half a recolour cannot reach.
