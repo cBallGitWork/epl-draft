@@ -133,11 +133,13 @@ business, who is hurt, and when lineups lock.
 
    What changed is that the paper now files columns. On 31 Aug nothing ever
    had, so an inside page was furniture with nothing behind it. The revert's
-   two complaints are answered rather than dropped: the desk's six names still
-   print exactly once, in `Index`, and the paper's own strip (`Pages`) lists
-   only the paper's pages, as numbered ink chips; and an inside page opens on
-   `Folio`, which leads with THE GAZETTA and puts the section and its number
-   under it, so a masthead is never displaced by a word like "Reports".
+   two complaints are answered rather than dropped: the desk's six names print
+   exactly once — on the rail and foot row, since 16 Sep 2026, the app's own
+   navigation rather than a newsprint copy of it — and the paper's own strip
+   (`Pages`) lists only the paper's pages, as numbered ink chips; and an inside
+   page opens on `Folio`, which leads with THE GAZETTA and puts the section and
+   its number under it, so a masthead is never displaced by a word like
+   "Reports".
 6. **Also this week** — the next two DESK stories as headlines: a kicker and a line,
    no picture, no standfirst. The hierarchy *is* the design — a newspaper's
    second story is recognisable as the second story before you have read a word
@@ -501,10 +503,33 @@ declared, not derived**: a folio is a promise that page 2 is where page 2 was
 yesterday, so a section that files nothing keeps its number and prints its own
 empty line rather than renumbering the paper.
 
-**Two strips, and they are not the same list.** `Index` carries the app's six
-sections, which is why the front page is not a dead end; `Pages` carries the
-paper's pages as numbered ink chips. Printing the desk's names twice over in
-newsprint is what got inside pages reverted on 31 Aug.
+**One strip on the sheet, and the app's navigation beside it.** `Pages` carries
+the paper's own pages as numbered ink chips, and nothing else. The app's six
+sections were printed here too — `gazette/Index`, in the paper's register —
+because the rail stood down on `/` and a front page with no way out is a dead
+end. Craig reversed that on 16 Sep 2026 (*"blue bar on side, should show the
+regular menu options like the other pages, dont have it on paper"*): the rail
+and the foot row are on the paper like every other route, so `Index` was the
+same list twice in two registers and is deleted. Printing the desk's names twice
+over in newsprint is what got inside pages reverted on 31 Aug, and it is the
+thing that stopped.
+
+**The dateline is one component across three ranks.** `Splash`, `Teaser` and
+`Written` each set the same letterspaced small capitals, opened with the same
+`{edition} · ` prefix and printed the same `Filed {time}`; counted at three on
+16 Sep 2026, which is the rule-of-2/3 bar met rather than felt, and extracted to
+`gazette/Dateline`. Two things are the caller's: the wrapper element, because a
+splash's dateline is a block and a teaser's is the last line inside a
+`TurnLink`, and a `<p>` inside a `<span>` is markup a browser fixes by
+unnesting; and the turn-line, which `Written` declines because it IS the
+article, so "turn to page 2" there would point at the page you are on.
+
+The class string itself is deliberately NOT extracted with it. It reads
+`font-sans text-3xs uppercase tracking-[0.16em]` at fifteen sites in three
+weights — 8 `font-semibold`, 5 bare, 2 `font-bold` — and the weights are not
+noise: bare is a dateline, bold is a standing head. One constant would be
+followed by eight sites and overridden by seven, which is the DASH failure
+CODE_RULES §4 names. It stays duplicated until the roles it serves are split.
 
 **The page turn** is `document.startViewTransition`, driven by `TurnLink` — the
 paper's only client component. Not React's `<ViewTransition>`, which ships only

@@ -90,11 +90,14 @@ export const viewport: Viewport = {
 /** The round, for the two things the shell decides from it: whether to offer the
  *  Live section, and how often to ask the server for a fresh render.
  *
- *  The first question is `offerLive`'s, in `football.ts`, because the paper asks
- *  it too and a fail-open policy written down twice is a policy that will only
- *  be corrected once. The poll falls back to the idle rate on the same reasoning
- *  the rail is offered on: polling hard against a provider that just failed is
- *  how a wobble becomes an outage. */
+ *  The first question is `offerLive`'s, in `football.ts`, and it stays there
+ *  rather than inlining here: it is a policy about the FOOTBALL — fail open, so
+ *  navigation never lies by omission mid-match — and a policy belongs beside the
+ *  data it is about. The paper's index asked it too until 16 Sep 2026, which is
+ *  why it was extracted; one caller is not a reason to fold it back in. The poll
+ *  falls back to the idle rate on the same reasoning the rail is offered on:
+ *  polling hard against a provider that just failed is how a wobble becomes an
+ *  outage. */
 async function round(): Promise<{ matchday: boolean; seconds: number }> {
   const matchday = await offerLive();
   try {

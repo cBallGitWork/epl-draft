@@ -1,7 +1,6 @@
 import TurnLink from "./TurnLink";
+import Dateline from "./Dateline";
 import type { PublishedStory } from "@epl/core";
-import { londonDayAndTime } from "../../londonTime";
-import { pageOf } from "./paperPages";
 
 // The splash: the top story on the front page, as a front page carries it.
 //
@@ -25,7 +24,6 @@ import { pageOf } from "./paperPages";
 // true of a headline as of a column.
 
 export default function Splash({ story }: { story: PublishedStory }) {
-  const page = pageOf(story.kind);
 
   return (
     <section className="flex flex-col">
@@ -47,13 +45,7 @@ export default function Splash({ story }: { story: PublishedStory }) {
 
         <span className="mt-3 block h-px w-6 bg-ink" />
 
-        <p className="pt-2.5 font-sans text-3xs uppercase tracking-[0.16em] text-faint">
-          {story.edition !== "" ? `${story.edition} · ` : ""}
-          {story.filedAt ? `Filed ${londonDayAndTime(story.filedAt)} · ` : ""}
-          <span className="text-muted">
-            {page === null ? "read on" : `turn to page ${page.number}`}
-          </span>
-        </p>
+        <Dateline story={story} className="pt-2.5" />
       </TurnLink>
     </section>
   );

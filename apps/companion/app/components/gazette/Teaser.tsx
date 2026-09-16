@@ -1,9 +1,8 @@
 import TurnLink from "./TurnLink";
 import Face from "./Face";
+import Dateline from "./Dateline";
 import type { Club, PublishedStory } from "@epl/core";
-import { londonDayAndTime } from "../../londonTime";
 import { KICKER } from "./kickers";
-import { pageOf } from "./paperPages";
 
 // A shoulder: the headline of a story at the second rank, and where to turn for
 // the article.
@@ -53,7 +52,6 @@ export default function Teaser({
   pictured?: boolean;
 }) {
   const kicker = KICKER[story.kind];
-  const page = pageOf(story.kind);
 
   return (
     <article id={story.slug} className="scroll-mt-4 border-t border-line pt-3">
@@ -79,17 +77,7 @@ export default function Teaser({
         {story.deck !== "" ? (
           <p className="text-sm italic leading-snug text-muted">{story.deck}</p>
         ) : null}
-        <span className="font-sans text-3xs uppercase tracking-[0.16em] text-faint">
-          {story.edition !== "" ? `${story.edition} · ` : ""}
-          Filed {londonDayAndTime(story.filedAt)}
-          {/* The affordance, in words rather than a chevron, and now literally
-              true: a paper says "turn to page four" and this one can. A kind
-              with no page of its own still has an article behind it, so it
-              says so without naming a page it does not have. */}
-          <span className="text-muted">
-            {page === null ? " · read on" : ` · turn to page ${page.number}`}
-          </span>
-        </span>
+        <Dateline story={story} as="span" />
       </TurnLink>
     </article>
   );

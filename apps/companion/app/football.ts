@@ -193,9 +193,10 @@ export async function groundFaces(): Promise<string[]> {
  *  could diagnose from a phone. A stated policy rather than a swallowed default,
  *  which is the distinction CODE_RULES §2 draws.
  *
- *  Two registers ask it: the shell's rail, and the paper's index on the one
- *  route the rail stands down on. `footballNow` is cached, so the second is a
- *  cache hit rather than a second megabyte off FPL.
+ *  One caller: the shell, which decides from it whether the rail and the foot
+ *  row carry a Live plate. Two asked until 16 Sep 2026 — the paper's own index
+ *  was the second, on the one route the rail stood down on, and both the index
+ *  and that exemption are gone.
  */
 export async function offerLive(): Promise<boolean> {
   try {

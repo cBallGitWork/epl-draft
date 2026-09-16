@@ -1,7 +1,7 @@
 import type { LeagueTeam, PublishedStory } from "@epl/core";
 import Column from "./Column";
 import Paragraphs from "./Paragraphs";
-import { londonDayAndTime } from "../../londonTime";
+import Dateline from "./Dateline";
 
 // The written lead, as filed.
 //
@@ -59,11 +59,7 @@ export default function Written({
           it went out under. Not decoration: every other figure on this page is
           thirty seconds old and this could be days old and still be the current
           edition. A reader is entitled to know which he is reading. */}
-      {story.filedAt ? (
-        <p className="pt-2.5 font-sans text-3xs uppercase tracking-[0.16em] text-faint">
-          {story.edition !== "" ? `${story.edition} · ` : ""}Filed {londonDayAndTime(story.filedAt)}
-        </p>
-      ) : null}
+      <Dateline story={story} turn={false} className="pt-2.5" />
 
       {/* The one block of prose on the page, so it is the one block set the way
           prose is set: newspaper columns, and a drop cap where they start. */}
