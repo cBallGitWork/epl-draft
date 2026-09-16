@@ -134,10 +134,18 @@
 
    No longer set in capitals. Archivo Narrow shouting a league name was a sports
    app's title bar; a paper sets its title in its display face, mixed case, and
-   lets the letterforms do the work capitals were standing in for. */
+   lets the letterforms do the work capitals were standing in for.
+
+   **The ceiling is sized against the sheet, and until 16 Sep 2026 it was not.**
+   At 4.5rem the middle term won on a phone (12.5vw is 48.8px at 390, a real
+   masthead at 13.6% of the sheet) and the CEILING won from 576px up — so at
+   1440 the nameplate set at 72px inside a 1088px sheet, 6.6% of it, a caption
+   stranded between two full-width rules with a quarter-sheet of bare rosa
+   either side. 7.5rem is 120px from 960px up and the phone does not move by a
+   single pixel, because the middle term already wins everywhere below 576. */
 .paper-masthead {
   font-family: var(--paper-display);
-  font-size: clamp(2.5rem, 12.5vw, 4.5rem);
+  font-size: clamp(2.5rem, 12.5vw, 7.5rem);
   font-weight: 900;
   line-height: 0.86;
   letter-spacing: -0.03em;
