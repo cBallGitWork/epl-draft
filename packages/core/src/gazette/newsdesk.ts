@@ -10,10 +10,24 @@ import type { TieState } from "./tieState";
 // The running order is an editor's argument, in the `stories.ts` tradition:
 // the round's own reporting first (a report per TIE once the football stops,
 // then the preview); then the perishable (a tie newly decided is a call that
-// goes stale the moment the next score moves); then the meat (match reports,
-// biggest stakes first); then the look-ahead (a preview piece can wait an hour,
-// tonight's kickoff notwithstanding). The cap in the orchestrator takes from
-// the top.
+// goes stale the moment the next score moves); then the look-ahead (a preview
+// piece can wait an hour, tonight's kickoff notwithstanding). The cap in the
+// orchestrator takes from the top.
+//
+// **This is a DRAFT paper, so it does not report Premier League matches.**
+// A finished round commissioned four `match-report`s until 16 Sep 2026 — the
+// four biggest fixtures by stake — and Craig's ruling cut them: *"no more PREM
+// match reports, we have that coverage"*. He is right about the coverage:
+// `/prem/match/[id]` carries the scoresheet, the stats, the shot map and the
+// average positions, which is more than a column can say and all of it true
+// without a model. What the paper is about is the ten managers.
+//
+// **The kind itself is deliberately still alive.** `match-report` remains in
+// `StoryKind`, `KIND_WEIGHT` and `paperPages.ts`, and its brief builder and
+// voice are untouched. Nine of them are published in `paper.json` today, and
+// `normalizeStory` refuses any story whose kind it does not know — so deleting
+// the member would silently void filed history with a green typecheck and a
+// green build. The kind stops being COMMISSIONED; it stays READABLE.
 //
 // **A finished round files a report per tie, and never one about the league.**
 // It filed a single `round-report` until 3 Sep 2026 whose prompt said "SPREAD
@@ -59,11 +73,6 @@ export interface DeskState {
    *  Already triaged: an item with no stake in our league never reaches here. */
   news: readonly { key: string; slug: string }[];
 }
-
-/** Fixtures per round that earn their own report. Four of ten: below the
- *  fourth the headcount thins to fixtures nobody in the league had a man in,
- *  and a paper that reports every match is a wire service. */
-export const MATCH_REPORTS_PER_ROUND = 4;
 
 /** The columns a finished round earns, in the order they are worth reading.
  *  The eleven and the rankings are what the league argues about.
@@ -131,19 +140,6 @@ export function newsdesk(
         tie: { homeTeamId: tie.homeTeamId, awayTeamId: tie.awayTeamId },
       });
     }
-  }
-
-  // The stakes arrive ranked, so "the four that earn a report" is a slice —
-  // and it is the ROUND's four, not the firing's: a fixture outside the four
-  // never files however quiet the day, which is what keeps the paper a paper.
-  for (const stake of desk.stakes.slice(0, MATCH_REPORTS_PER_ROUND)) {
-    if (!stake.finished || stake.men === 0) continue;
-    want({
-      kind: "match-report",
-      key: `match:gw${desk.gameweek}:${stake.key}`,
-      slug: `gw${desk.gameweek}-match-${stake.key}`,
-      fixtureId: stake.fixtureId,
-    });
   }
 
   if (desk.started && !desk.finished) {

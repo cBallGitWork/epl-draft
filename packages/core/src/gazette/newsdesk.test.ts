@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MATCH_REPORTS_PER_ROUND, newsdesk, type DeskState } from "./newsdesk";
+import { newsdesk, type DeskState } from "./newsdesk";
 import type { FixtureStake } from "./relevance";
 
 const NOW = "2026-08-31T12:00:00.000Z";
@@ -116,18 +116,17 @@ describe("newsdesk", () => {
     expect(newsdesk(done, none, NOW).map((a) => a.kind)).not.toContain("tie-call");
   });
 
-  it("reports only the round's most consequential fixtures, as they finish", () => {
+  it("never reports a Premier League match, however consequential", () => {
+    // This is a DRAFT paper: `/prem/match/[id]` carries the football's own
+    // coverage, and six finished fixtures full of rostered men earn no column.
     const stakes = Array.from({ length: 6 }, (_, n) =>
       stake({ key: `f${n}`, fixtureId: n, finished: n < 5 }),
     );
-    const filed = newsdesk(desk({ stakes }), none, NOW).filter((a) => a.kind === "match-report");
-    // The slice is the ROUND's four, not the firing's: the fifth-ranked
-    // fixture never files however quiet the day.
-    expect(filed).toHaveLength(MATCH_REPORTS_PER_ROUND);
-    expect(filed.map((a) => a.key)).toEqual(["match:gw3:f0", "match:gw3:f1", "match:gw3:f2", "match:gw3:f3"]);
+    const filed = newsdesk(desk({ stakes }), none, NOW);
+    expect(filed.map((a) => a.kind)).not.toContain("match-report");
   });
 
-  it("skips a finished fixture with no rostered men in it", () => {
+  it("files nothing for a finished fixture nobody in the league had a man in", () => {
     const filed = newsdesk(desk({ stakes: [stake({ men: 0 })] }), none, NOW);
     expect(filed).toEqual([]);
   });
@@ -199,7 +198,7 @@ describe("newsdesk", () => {
     });
     const kinds = newsdesk(state, none, NOW).map((a) => a.kind);
     expect(kinds.indexOf("tie-call")).toBeLessThan(kinds.indexOf("wire"));
-    expect(kinds.indexOf("match-report")).toBeLessThan(kinds.indexOf("news"));
+    expect(kinds.indexOf("tie-call")).toBeLessThan(kinds.indexOf("news"));
   });
 
   it("puts the round's own reporting first and the look-ahead last", () => {
@@ -210,6 +209,7 @@ describe("newsdesk", () => {
     });
     const kinds = newsdesk(state, none, NOW).map((a) => a.kind);
     expect(kinds[0]).toBe("tie-report");
-    expect(kinds).toContain("match-report");
+    // The Monday set follows the round's own reporting.
+    expect(kinds).toContain("eleven");
   });
 });
