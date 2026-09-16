@@ -141,11 +141,19 @@
    masthead at 13.6% of the sheet) and the CEILING won from 576px up — so at
    1440 the nameplate set at 72px inside a 1088px sheet, 6.6% of it, a caption
    stranded between two full-width rules with a quarter-sheet of bare rosa
-   either side. 7.5rem is 120px from 960px up and the phone does not move by a
-   single pixel, because the middle term already wins everywhere below 576. */
+   either side. 7.5rem is 120px from 960px up.
+
+   **The vw term is the phone's half of the same fault.** At 12.5vw the
+   nameplate filled 75% of its measure at 390 and 77% at 320 — a title floating
+   in the middle of the sheet rather than sitting against it. 15vw fills 88% at
+   390 and 91% at 320, one line at every width in the set, with 26px of slack at
+   the narrowest. Capitals were measured as the alternative and refused: they
+   fill 98% at 320, six pixels from wrapping, and Fraunces 900 caps are NARROWER
+   per character than its mixed case, so they buy horizontal fill and lose
+   vertical ink. */
 .paper-masthead {
   font-family: var(--paper-display);
-  font-size: clamp(2.5rem, 12.5vw, 7.5rem);
+  font-size: clamp(2.5rem, 15vw, 7.5rem);
   font-weight: 900;
   line-height: 0.86;
   letter-spacing: -0.03em;
