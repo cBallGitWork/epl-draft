@@ -1,4 +1,4 @@
-import { LEAGUE_NAME, clubById } from "@epl/core";
+import { clubById } from "@epl/core";
 import { named } from "../components/gazette/named";
 import Pages from "../components/gazette/Pages";
 import Teaser from "../components/gazette/Teaser";
@@ -13,18 +13,12 @@ import Lead, { Headline } from "../components/gazette/Stories";
 import Picture from "../components/gazette/Picture";
 import Masthead from "../components/gazette/Masthead";
 import TeamOfTheWeek from "../components/gazette/TeamOfTheWeek";
-import {
-  FANTRAX_SILENT,
-  HEADLINES_SHOWN,
-  SECONDARY_STORIES,
-  SHOULDER_STORIES,
-  servedLeague,
-} from "../config";
+import { HEADLINES_SHOWN, SECONDARY_STORIES, SHOULDER_STORIES } from "../config";
 import Column from "../components/gazette/Column";
-import Nothing from "../components/shell/Nothing";
+import Silence from "../components/gazette/Silence";
 import PaperTable from "../components/gazette/PaperTable";
 import { edition } from "../edition";
-import { londonDate, londonDayAndTime } from "../londonTime";
+import { londonDayAndTime } from "../londonTime";
 import { readerTeamId } from "../squads";
 import { draftRows, footballRows, scorerRows } from "../tables";
 
@@ -40,10 +34,6 @@ import { draftRows, footballRows, scorerRows } from "../tables";
 //
 // The `.paper` register, the serifs, the cream chrome and the poll cadence are
 // the group layout's — `(paper)/layout.tsx` — so this file is only the edition.
-
-/** Draft night for the league we are actually serving — the two draft nine weeks
- *  apart, so this is read from config rather than written down. */
-const DRAFT_DATE = londonDate(servedLeague()?.draftDate ?? "");
 
 export default async function GazettePage() {
   const mine = await readerTeamId();
@@ -202,38 +192,9 @@ export default async function GazettePage() {
             </Column>
           ) : null}
 
-          {/* Nothing to print is a real state, not an empty page — our own league is
-          in it every day until draft night, and this is the first thing sixteen
-          people open. Which nothing it is decides the sentence: only one of the
-          three is about the league not existing yet, and telling a drafted league
-          it has not drafted is the confident wrong statement `squads.ts` keeps
-          these apart to prevent. */}
-          {paper.silence?.kind === "unavailable" ? (
-            <Nothing title={FANTRAX_SILENT} code={paper.silence.code}>
-              The league is there and the football is on the other tabs. We just
-              cannot read Fantrax right now, so rather than guess at the week
-              this says nothing.
-            </Nothing>
-          ) : null}
-
-          {paper.silence?.kind === "undrafted" ? (
-            <Nothing
-              title="No news yet"
-              code={`${LEAGUE_NAME} drafts ${DRAFT_DATE}`}
-            >
-              There is nothing to report until there are squads to report on.
-              The football is on the other tabs in the meantime, and it needs
-              nobody to have drafted.
-            </Nothing>
-          ) : null}
-
-          {paper.silence?.kind === "quiet" ? (
-            <Nothing title="A quiet week" code={`${LEAGUE_NAME}`}>
-              Nobody has signed anybody, nobody is hurt, and no deadline is
-              close enough to worry about. The football is still on the other
-              tabs.
-            </Nothing>
-          ) : null}
+          {/* Which nothing it is decides the sentence, and `Silence` owns all
+              three — see its docblock on why they must not collapse. */}
+          {paper.silence ? <Silence silence={paper.silence} /> : null}
 
         </div>
 
