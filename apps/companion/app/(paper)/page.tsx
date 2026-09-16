@@ -11,7 +11,6 @@ import Deals from "../components/gazette/Deals";
 import Doubts from "../components/gazette/Doubts";
 import Lead, { Headline } from "../components/gazette/Stories";
 import Picture from "../components/gazette/Picture";
-import Index from "../components/gazette/Index";
 import Masthead from "../components/gazette/Masthead";
 import TeamOfTheWeek from "../components/gazette/TeamOfTheWeek";
 import {
@@ -28,7 +27,6 @@ import { edition } from "../edition";
 import { londonDate, londonDayAndTime } from "../londonTime";
 import { readerTeamId } from "../squads";
 import { draftRows, footballRows, scorerRows } from "../tables";
-import { offerLive } from "../football";
 
 // The Gazetta. What the league did this week, on the front page.
 //
@@ -49,11 +47,6 @@ const DRAFT_DATE = londonDate(servedLeague()?.draftDate ?? "");
 
 export default async function GazettePage() {
   const mine = await readerTeamId();
-  // The desk's rail stands down here, so the paper prints the index itself.
-  // `offerLive` and not `paper.live`: `live` is "a ball is in the air" and goes
-  // false in every gap between kickoffs, which would take the Live section out
-  // of the contents at tea-time on a Saturday.
-  const matchday = await offerLive();
   const paper = await edition(mine);
   // The two tables, from reads the page already makes.
   const [draft, football, scorers] = await Promise.all([
@@ -92,12 +85,12 @@ export default async function GazettePage() {
           said. */}
       <Masthead at={paper.snapshot?.fetchedAt ?? null} />
 
-      <Index matchday={matchday} here="/" />
-
-      {/* The paper's own pages, under the app's sections. Two strips and not
-          one: the index says where else in the APP to go and this says which
-          page of the PAPER you are on. Printing the desk's six names twice
-          over in newsprint is what got inside pages reverted on 31 Aug. */}
+      {/* The paper's own pages, and now the only strip on the sheet. The app's
+          six sections printed here too until 16 Sep 2026 (`gazette/Index`),
+          because the rail stood down on the paper and a front page with no way
+          out is a dead end. The rail is back (Craig's ruling, `Rail.tsx`), so
+          the app's navigation is the app's again and this says only which page
+          of the PAPER you are on — which is what it always meant. */}
       <Pages here="/" />
 
       <div className="grid gap-5 @3xl:grid-cols-[1fr_19rem] @3xl:gap-x-10">

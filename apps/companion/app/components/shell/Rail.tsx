@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import FootRow from "./FootRow";
-import { SECTIONS, isPaperRoute, owns } from "./sections";
+import { SECTIONS, owns } from "./sections";
 
 // Championship Manager's navigation, in the two shapes the game itself has: a
 // rail down the side of a desk screen, and a blue plate row across the foot.
@@ -119,13 +119,21 @@ export default function Rail({
   live: ReactNode;
 }) {
   const pathname = usePathname();
-  // The paper is the other register and prints its own index (`gazette/Index`).
-  // A rail beside it would inset a broadsheet by 64px of navy — and shift the
-  // `@container` threshold the front page's two-column layout keys off, so the
-  // paper would go narrow for a reason that has nothing to do with the paper.
-  // `sections.ts` says which routes are the paper, so an inside page added
-  // there stands the rail down without this file hearing about it.
-  if (isPaperRoute(pathname)) return null;
+  // **The paper wears the app's navigation too** (Craig, 16 Sep 2026: *"blue
+  // bar on side, should show the regular menu options like the other pages,
+  // dont have it on paper"*). It stood down here until then, and the paper
+  // printed its own contents strip instead (`gazette/Index`, now deleted) —
+  // which meant the one screen ten people open first was the one screen with no
+  // way back to the app, in a register that had to re-draw the six section
+  // names in newsprint to compensate.
+  //
+  // The recorded objection was that a rail would inset the broadsheet and shift
+  // the `@container` threshold the two-column front page keys off. **Measured
+  // before this line was deleted, and it does not**: `--page-frame` caps
+  // `<main>` at 1152px and `globals.css` records that the rail is NOT inside
+  // the frame, it is beside it. Probed at nine widths, the two-column grid
+  // holds to 820px and the rail only exists from `lg` (1024) — so at the
+  // tightest width where both objects are on screen there is ~200px of slack.
 
   const sections = SECTIONS.filter(
     (section) => matchday || !section.onlyDuringGameweek,
