@@ -13,14 +13,16 @@ Closes #
 - [ ] docs updated in this commit — not a follow-up
 - [ ] staged by named path, never `git add -A`
 
-## Refactor pass
+## Refactor — both passes
 
-Two passes, on this branch, before it opened. Not a follow-up branch.
+On this branch, before it opened. Not a follow-up branch. Nothing found is a fine
+answer; say so rather than leaving a box blank.
 
-- [ ] **Counted**, not judged — extracted at three, or recorded the count declined at:
-- [ ] **Second pass** over what the first left — orphaned imports, stale comments,
-      dead reads behind removed UI
-- [ ] Nothing found is a fine answer. Say so here:
+- [ ] **Pass 1 — counted, not judged.** Extracted at three, or the count declined
+      at two:
+- [ ] **Pass 2 — over what pass 1 left.** Orphaned imports, a binding whose last
+      consumer went, a comment that outlived the thing it described, a read
+      behind removed UI. The first pass cannot see its own leavings:
 
 ---
 
