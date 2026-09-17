@@ -413,6 +413,14 @@ CODE_RULES §6, and this file's own *mark it in the same commit*).
     three times — 24 commits, then 72, then 40 on 17 Sep. It is the repo's
     most-repeated failure and it is an agreement problem, not a tooling one.
 12. **The four gates before anything leaves**, plus the push three when it does.
+13. **Every PR carries its refactor pass** (Craig, 17 Sep 2026). `/refactor`'s two
+    passes run on the branch *before* it opens, not as a follow-up branch that
+    never gets cut: count the duplication and either extract at three or
+    **record the count you declined at**, then run the second pass over what the
+    first one left — extractions orphan imports and the first pass cannot see its
+    own leavings. A pass that finds nothing is the honest answer and the PR says
+    so; CODE_RULES still forbids mixing a refactor and a behaviour change in one
+    COMMIT, so inside the branch they are separate commits.
 
 ### The labels, so they can be rebuilt
 
