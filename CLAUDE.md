@@ -447,6 +447,35 @@ scope split** — the log has both `paper` and `gazetta` for one thing, and
 rather than a task. **There is no `parked` or `deferred` label**, because those
 are the docs' words and an open issue nobody intends to do is a graveyard.
 
+**`@claude` on a pull request** asks for a second opinion —
+`.github/workflows/claude.yml`, mention-only so it costs nothing idle. It
+reviews and never merges. It reads `ANTHROPIC_API_KEY`, the same secret the
+paper's writer uses.
+
+### What CI needs, and what it had
+
+Counted 17 Sep 2026, when the repository had **zero Actions secrets** and one
+variable (`WARM_BASE_URL`). Both Vercel environments were empty, and
+`editions.yml` names no environment, so it could only read repository secrets
+anyway.
+
+- **`ANTHROPIC_API_KEY` — set the same day, and it had never been set before.**
+  `write-edition.ts` throws without it, so until 17 Sep **the paper had never
+  filed from CI at all**: the sixteen stories in `data/editions/paper.json` were
+  written by running `npm run edition` locally on 2 Sep, which this file already
+  records further up without anyone joining the two facts. Fixing the Actions
+  billing that morning did not fix this; it uncovered it.
+- **`vars.FANTRAX_LEAGUE_ID` — still unset**, and deliberately so until swap day.
+  Unset expands to `""` and the writer falls back to the dummy league, whose
+  stories `normalizePaper` then filters out of the served paper — so a firing
+  appears to succeed and prints nothing. `/swap-day` is the runbook that turns
+  it, and it is the half the Vercel dashboard does not set.
+- **`GAZETTA_MODEL` defaults to `claude-opus-4-8`, and that is current** —
+  verified 17 Sep against the model table, $5/$25 per MTok, 1M context. It is
+  deliberately NOT `claude-opus-5` despite the identical price: on 4.8 an absent
+  `thinking` parameter means no thinking, while on Opus 5 thinking is ON by
+  default, so the same request would silently start thinking on every column.
+
 One milestone: **`10 Oct — swap day`**. GitHub's nine stock labels were deleted
 the same day — `bug`, `documentation` and `enhancement` say `fix`, `docs` and
 `feat` in different words, which is the drift these documents exist to stop.

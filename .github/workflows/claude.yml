@@ -1,0 +1,77 @@
+name: Claude
+
+# A second opinion on a pull request, and it only speaks when spoken to.
+#
+# **Mention mode, not every-PR, and the reason is cost and quality in that
+# order.** This repo is past the 2,000-minute free tier and Actions bills a whole
+# minute per run whatever the work, so a reviewer that fires on every push would
+# be the third-largest job in the repo for something nobody asked for. Idle, this
+# costs nothing at all.
+#
+# The quality half matters more. A CI reviewer sees a DIFF. The crew in
+# `.claude/agents/` sees what a diff cannot — `ui-verifier` opens the
+# screenshots, `probe-runner` counts the payload, `register-warden` judges
+# DESIGN.md, `docs-drift-auditor` checks the docs against the tree — and they run
+# in a session BEFORE the PR opens, which is where a review is worth having. This
+# is the backstop for when that did not happen, not a replacement for it.
+#
+# It reviews. It does not merge: there is no branch protection on a private repo
+# on the free plan, the squash rule's failure mode is silent (`vercel.json` reads
+# `HEAD^..HEAD`), and the PR is the one place a human sees what changed.
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+# One per comment. A second mention while the first is still thinking should
+# queue rather than race it onto the same PR.
+concurrency:
+  group: claude-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  claude:
+    # The gate that keeps this free. Both halves are load-bearing: the mention,
+    # and that it is a PR rather than a plain issue — `issue_comment` fires on
+    # both, and a bot answering every issue comment is not what was asked for.
+    if: |
+      contains(github.event.comment.body, '@claude')
+      && github.event.issue.pull_request != null
+    runs-on: ubuntu-latest
+
+    # Least privilege: it reads the tree and writes a comment. It never pushes,
+    # so `contents` stays read — the crons are the only things that commit here.
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The PR's own history, not just the tip: a review that cannot see the
+          # branch's commits cannot tell a refactor commit from a feature one,
+          # which is the distinction CODE_RULES §7 turns on.
+          fetch-depth: 0
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          # CLAUDE.md is picked up from the checkout, so the house rules, the
+          # working agreement and the layer split all arrive without being
+          # restated here. Anything added below would be a second copy.
+          prompt: |
+            Review this pull request against CLAUDE.md, CODE_RULES.md and, if it
+            changes anything visible, DESIGN.md.
+
+            Four things worth more than a general read:
+            - Does the refactor pass show its COUNTS, per rule 13 — extracted at
+              three, or the number it declined at?
+            - Is a doc left lying? The rule is that docs land in the same commit.
+            - Does it cross the football/league layer split?
+            - Is a magic value inlined that CODE_RULES §3 wants in config?
+
+            Be specific and cite files. Say plainly if it is fine.
