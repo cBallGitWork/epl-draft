@@ -365,3 +365,75 @@ DESIGN.md, `docs-drift-auditor` checks the docs against the tree.
 
 `.mcp.json` adds Playwright for interactive exploration. Deterministic audits
 stay in `tools/ui/` — a repeatable number is what a claim needs.
+
+## The working agreement — branches, PRs, issues
+
+Set up 17 Sep 2026, on Craig's ruling: *"time to treat this like a real repo — no
+working off main, branches for each sub task"*, and *"set up rules for repos
+github issues first, want the project clean"*.
+
+**The split that keeps it clean: an ISSUE is a task somebody could pick up; a DOC
+records a decision.** Deferrals, parked ideas and open questions are decisions and
+stay where they already live — `ROADMAP.md`'s *Explicitly parked*, `DESIGN.md`
+§8's *Deferred, deliberately*, `PLATFORM_NOTES.md`'s *Questions*. An issue must
+never become the place a deferral is recorded, because three separate rules here
+say the record lives in the commit and not in a follow-up (`phase-gate` §5,
+CODE_RULES §6, and this file's own *mark it in the same commit*).
+
+### Issues
+
+1. **An issue is for work NOT started, or blocked.** Work in flight is a branch
+   and a PR; an issue opened and closed within the hour is bookkeeping.
+2. **One issue, one branch, one PR.** No epics. If it needs splitting it was two.
+3. **The issue holds STATE; the doc holds REASONING.** `GAZETTA.md` says *why*
+   the publishing week is Sunday-anchored; the issue says *do it* and links.
+   Never copy the argument across — two copies is one that goes stale.
+4. **Issues close by merge, never by hand** — `Closes #N` in the PR body.
+5. **A deferral is not an issue.** Closing one as parked means writing it into
+   `ROADMAP.md` or `DESIGN.md` §8 in the same breath.
+6. **At every `/phase-gate`, reconcile the list.** Close anything nobody can
+   justify out loud. That skill's own standard is that a phase closes when
+   someone could pull the tree tomorrow and find the docs true.
+7. **Titles say what is WRONG, not what to add** — the same style `phase-gate` §6
+   sets for commit subjects. *"the desk does not know what day it is"*, never
+   *"add a publishing schedule"*.
+
+### Branches and PRs
+
+8. **No working off `main`.** Cut from `origin/main` — three crons push to it, so
+   it moves without you. Prefixes are the commit prefixes: `feat/` `fix/`
+   `refactor/` `docs/` `chore/`.
+9. **Squash merge, always.** `apps/companion/vercel.json`'s `ignoreCommand` reads
+   `HEAD^..HEAD`. A rebase merge leaves N commits and Vercel sees only the tip, so
+   a branch ending on a docs or `data/` commit lands correctly and **silently
+   never deploys** — that has happened twice, at nine commits and at seventy-nine.
+10. **Stage named paths.** `git add -A` is hook-denied; a second session may be
+    committing in the same tree.
+11. **Push before the pile grows.** `HANDOVER.md` has opened on unpushed work
+    three times — 24 commits, then 72, then 40 on 17 Sep. It is the repo's
+    most-repeated failure and it is an agreement problem, not a tooling one.
+12. **The four gates before anything leaves**, plus the push three when it does.
+
+### The labels, so they can be rebuilt
+
+They live in GitHub's database and nowhere else. Deliberately not scripted — §1
+refuses a mechanism for one caller; if the set ever drifts from this list, *that*
+is when `scripts/labels.ts` earns its place.
+
+- **Type**, exactly one, mirroring the commit prefix: `feat` `fix` `refactor`
+  `docs` `chore`.
+- **Area**, at most one, and these are the scopes already in the log: `paper`
+  `desk` `league` `football` `ci` `intel`.
+- **State**, only when true: `blocked` (the body names the blocker **and who can
+  clear it**) and `swap-day`.
+
+Three deliberate omissions, so nobody tidies them back in. **`paper` settles the
+scope split** — the log has both `paper` and `gazetta` for one thing, and
+`GAZETTA.md` is a document's name rather than an area's. **`perf`, `test` and
+`probe` are real commit prefixes with no label**, because they describe a commit
+rather than a task. **There is no `parked` or `deferred` label**, because those
+are the docs' words and an open issue nobody intends to do is a graveyard.
+
+One milestone: **`10 Oct — swap day`**. GitHub's nine stock labels were deleted
+the same day — `bug`, `documentation` and `enhancement` say `fix`, `docs` and
+`feat` in different words, which is the drift these documents exist to stop.
