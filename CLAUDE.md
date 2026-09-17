@@ -447,6 +447,27 @@ scope split** — the log has both `paper` and `gazetta` for one thing, and
 rather than a task. **There is no `parked` or `deferred` label**, because those
 are the docs' words and an open issue nobody intends to do is a graveyard.
 
+**`@claude` on a pull request** asks for a second opinion —
+`.github/workflows/claude.yml`, mention-only so it costs nothing idle. It
+reviews and never merges. **It needs `ANTHROPIC_API_KEY`, which as of 17 Sep
+2026 is not set** — see below.
+
+### Two things CI needs and has never had
+
+Counted 17 Sep 2026: **the repository has zero Actions secrets**, and one
+variable (`WARM_BASE_URL`). Both Vercel environments are empty, and
+`editions.yml` names no environment, so it could only read repository secrets
+anyway.
+
+- **`ANTHROPIC_API_KEY`** — `write-edition.ts` throws without it, so **the paper
+  has never filed from CI**. The sixteen stories in `data/editions/paper.json`
+  were written by running `npm run edition` locally on 2 Sep, which this file
+  already records further up. Billing being fixed did not fix this; it is the
+  next thing in the way.
+- **`vars.FANTRAX_LEAGUE_ID`** — unset expands to `""` and the writer falls back
+  to the dummy league, whose stories `normalizePaper` then filters out of the
+  served paper. So a firing would appear to succeed and print nothing.
+
 One milestone: **`10 Oct — swap day`**. GitHub's nine stock labels were deleted
 the same day — `bug`, `documentation` and `enhancement` say `fix`, `docs` and
 `feat` in different words, which is the drift these documents exist to stop.
