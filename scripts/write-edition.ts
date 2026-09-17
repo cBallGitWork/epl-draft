@@ -32,9 +32,9 @@ import {
 import { gatherRoundFacts, withFootball } from "./edition/facts";
 import { file, prepare, type DeskContext } from "./edition/dispatch";
 import { drawSplash } from "./edition/image";
-import { CARGO, prose } from "./edition/checks";
+import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { markLastWeek } from "./edition/marking";
-import { writeColumn } from "./edition/newsroom";
+import { writeSubedited } from "./edition/subedit";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
 // The newsroom's orchestrator, run from CI on a wide cron net.
@@ -195,7 +195,10 @@ async function main(): Promise<void> {
     // brittle payload.
     attempted += 1;
     try {
-      const column = await writeColumn(desk.system, brief);
+      // Written and sub-edited before it is filed: `subedit.ts` reads the
+      // column back against the register and sends it back once if it reached
+      // for a banned phrase.
+      const column = await writeSubedited(desk.system, brief, say, assignment.kind);
       const filed = file(assignment, column, ctx, new Date().toISOString());
       // **Every name in the prose against every name in the brief.** The first
       // real story this paper ever filed put a Newcastle defender who is on
@@ -207,15 +210,16 @@ async function main(): Promise<void> {
       if (unknown.length > 0) {
         say(`  ⚠ ${assignment.kind} names ${unknown.length} not in its brief: ${unknown.join(", ")}`);
       }
-      // **The register, checked rather than asked for.** Same doctrine as
-      // `strangers` above and the same reason: HOUSE generates its banned list
-      // from this one, and a front page still went out with five "bank"
-      // headlines while the rule was in the prompt. Warned, not refused — an
-      // eager check a human reads is useful; one that refuses would throw away
-      // a good story over a surname.
-      const printed = banned(`${filed.story.headline}\n${prose(filed.story)}`);
+      // **The backstop, and it reads MORE than the sub-editor did.** `subedit`
+      // checks the raw column — headline, deck, body — because that is what it
+      // can cheaply send back. This reads the FILED story, which adds the tie
+      // lines and the rank lines, so it is the one that catches a banned phrase
+      // in a column's cargo. It files anyway and says so loudly: a second
+      // failure is the writer's answer rather than a reason to hang the firing,
+      // and a column right about the football is worth printing.
+      const printed = banned(headlineAndProse(filed.story));
       if (printed.length > 0) {
-        say(`  ⚠ ${assignment.kind} prints banned phrasing: ${printed.join(", ")}`);
+        say(`  ⚠ ${assignment.kind} STILL prints banned phrasing after a rewrite: ${printed.join(", ")}`);
       }
       // **A column whose cargo is missing files as prose about nothing.** Every
       // reader of `extras` treats absence as ordinary — correctly, since a

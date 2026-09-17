@@ -50,6 +50,29 @@ HARD RULES, and each of these is a sentence a paper like this gets wrong:
 
 FANTASY VERNACULAR is welcome where it fits and never forced: a haul, blanked, a return, a differential, nailed on.`;
 
+/** What the desk says when it sends a column back over the banned list.
+ *
+ *  **The check was warn-only until 17 Sep 2026 and the argument for that has
+ *  been overtaken.** The comment in `write-edition.ts` said refusing "would
+ *  throw away a good story over a surname" — a real fear when it was written,
+ *  and one `banned.ts` has since answered: the match is whole-word with Unicode
+ *  letter boundaries, so "bank" cannot fire on "Bankole". What was left was a
+ *  warning nobody reads, and two headlines built on "Banks" are published
+ *  because of it.
+ *
+ *  So the desk sends it back ONCE rather than refusing or shrugging, which is
+ *  what a sub-editor does. A retry costs one call when it fires and nothing when
+ *  it does not; a refusal costs the story. If the rewrite offends again it files
+ *  with the warning, because a good column is still worth printing and the
+ *  second failure is the writer's answer rather than a hung firing.
+ *
+ *  The phrases are quoted back rather than described: the writer is given the
+ *  list in HOUSE already, so naming the one it reached for is the only new
+ *  information the second attempt has. */
+export function sendBack(phrases: readonly string[]): string {
+  return `YOUR LAST ATTEMPT PRINTED BANNED PHRASING: ${phrases.map((phrase) => `"${phrase}"`).join(", ")}. Write it again without ${phrases.length === 1 ? "that phrase" : "those phrases"}, in any form — not a synonym of the same tic, and not the same sentence with the word swapped. Keep everything true; only the wording is wrong.`;
+}
+
 /** The headline rule, and the paper's one indulgence.
  *
  *  The register is the Football Italia paper review — James Richardson reading

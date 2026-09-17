@@ -7,9 +7,14 @@ import type { Assignment, PublishedStory } from "@epl/core";
 // answer one question — what does this column claim, and did it bring what it
 // promised — while the file they left orchestrates a firing.
 //
-// Both checks WARN and neither refuses. A story that names somebody odd or
-// files without its cargo is still a story worth printing, and the day the
-// first check ran it accused a real player of not existing.
+// `strangers` and `CARGO` WARN and neither refuses. A story that names somebody
+// odd or files without its cargo is still a story worth printing, and the day
+// the first check ran it accused a real player of not existing.
+//
+// **The banned list is the one that does not just warn** (17 Sep 2026). It sends
+// the column back once and then files whatever comes back — the reasoning is on
+// `sendBack` in `voice/house.ts`, and the short of it is that its warning was
+// being read by nobody while two headlines built on "Banks" went to print.
 
 /** The kinds whose substance lives in `extras` rather than in the body, and
  *  which member carries it. A kind absent from this table legitimately files
@@ -46,6 +51,18 @@ export function prose(story: PublishedStory): string {
   // Each part on its own line, and every line is a sentence for the check's
   // purposes — a rank line opens with a capital the way a sentence does.
   return parts.filter((part): part is string => typeof part === "string").join("\n");
+}
+
+/** The same, plus the headline — what the BANNED list is checked against.
+ *
+ *  `prose()` deliberately leaves the headline out, because it is title-case by
+ *  construction and every ordinary word in it reports as a stranger. The banned
+ *  list has the opposite need: the headline is where "bank" did its damage, five
+ *  times on one front page, and it is the one line every reader sees. Two checks
+ *  reading two different surfaces, which is why this is a second function rather
+ *  than a flag on the first. */
+export function headlineAndProse(story: PublishedStory): string {
+  return `${story.headline}\n${prose(story)}`;
 }
 
 /** The written sentence out of each cargo row, by whichever key holds it.
