@@ -418,14 +418,24 @@ CODE_RULES §6, and this file's own *mark it in the same commit*).
     three times — 24 commits, then 72, then 40 on 17 Sep. It is the repo's
     most-repeated failure and it is an agreement problem, not a tooling one.
 12. **The four gates before anything leaves**, plus the push three when it does.
-13. **Every PR carries its refactor pass** (Craig, 17 Sep 2026). `/refactor`'s two
-    passes run on the branch *before* it opens, not as a follow-up branch that
-    never gets cut: count the duplication and either extract at three or
-    **record the count you declined at**, then run the second pass over what the
-    first one left — extractions orphan imports and the first pass cannot see its
-    own leavings. A pass that finds nothing is the honest answer and the PR says
-    so; CODE_RULES still forbids mixing a refactor and a behaviour change in one
-    COMMIT, so inside the branch they are separate commits.
+13. **Every PR carries a TWO-PASS refactor** (Craig, 17 Sep 2026 — "should be a
+    2 pass refactor as a rule"). Both passes run on the branch *before* it
+    opens, never as a follow-up branch that never gets cut.
+
+    **Pass one counts.** Grep the duplication and write the number down: extract
+    at three, and at two **record the count you declined at** — that half is what
+    stops the next session re-opening the question and answering it from taste.
+
+    **Pass two reads what pass one left**, and it is not optional bookkeeping:
+    an extraction orphans imports, strips a binding's last consumer and dates the
+    comment beside it, and *the first pass cannot see its own leavings*. Both
+    passes of the fix that prompted this rule found something — the first a
+    forced file split at 302 lines, the second a duplication worth declining at
+    two.
+
+    A pass that finds nothing is the honest answer and the PR says so. CODE_RULES
+    still forbids mixing a refactor and a behaviour change in one COMMIT, so
+    inside the branch they stay separate commits.
 
 ### The labels, so they can be rebuilt
 
