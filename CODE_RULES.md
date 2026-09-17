@@ -36,6 +36,14 @@ this exists).
 - Comments state constraints the code cannot ("FPL returns `[]` before first
   kickoff — not an error"). They never narrate the next line, justify the diff,
   or address a reviewer.
+- **One line, not a paragraph** (Craig, 17 Sep 2026). A comment says what a thing
+  does or what would break; it is not an essay about how it came to exist. Three
+  lines is the ceiling and one is the target. Measured the day this was written:
+  comments were **50% of `Rail.tsx`** and 39% of `newsdesk.ts` and `house.ts`.
+  The reasoning that filled them belongs in a commit message, which is where
+  someone goes looking for *why*, or in `PLATFORM_NOTES.md` if it is a standing
+  decision. This is forward-looking: the tree is full of the old kind, and they
+  get shortened when the file is next opened, not in a sweep of their own.
 - No defensive `try/catch` that swallows and returns a default. Either handle the
   failure meaningfully (degrade with a visible staleness label) or let it throw.
 
@@ -59,6 +67,11 @@ this exists).
 ## 4. Small files, not monoliths
 
 - **Soft ceiling 200 lines, hard ceiling 300** per source file. At 300, split.
+  **Eleven files were over it on 17 Sep 2026**, the worst at 625 — so the rule is
+  currently aspirational, and the way back is that a file over the ceiling is
+  split *when it is next touched*, not in a sweep. A PR that adds lines to an
+  over-ceiling file splits it first; that is what happened to `write-edition.ts`
+  at 302.
 - **A `*.test.ts` file's ceiling is 500**, and it is a different rule rather than a
   laxer one. A source file's length measures how much it is doing; a test file's
   measures how many cases it has, and splitting one at a line count means cutting
