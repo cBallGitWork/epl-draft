@@ -85,13 +85,17 @@ test31…` — so the phrase does not pick one, and in practice it does not need
 `/swap-day` is the runbook that turns it, and CLAUDE.md records that this exact
 dummy/rehearsal conflation was written wrongly in three places for a month.
 
-### A live fault, and the first real issue
+### ~~A live fault~~ — fixed, 17 Sep (#7)
 
-`"bank"` is in `BANNED`, and the banned list's own note says a front page once
-went out with five headlines built on it. **Two more are published right now** —
-*"test3 Banks a City Slicker"* and *"123 Banks a Big-Money Backline"*. The check
-runs (`write-edition.ts:216`) but only **warns**: it prints `⚠` and files the
-story anyway. The rule exists, the instrument exists, and nothing refuses.
+`"bank"` was in `BANNED` and two published headlines used it, because the check
+warned and filed anyway. It now sends the column back once — `subedit.ts` — and
+files with a louder warning only if the rewrite offends again. The argument for
+warning ("would throw away a good story over a surname") had been answered by
+`banned.ts` matching whole words; what was left was a warning nobody read.
+
+**The two headlines are still published.** Nothing rewrites a filed story, and
+they leave by the ordinary route — `MAX_PAPER_STORIES` is 24 and they are two of
+sixteen from 2 Sep.
 
 ---
 
@@ -247,36 +251,31 @@ schedule keys on the **day**, which needs no calendar at all.
 
 ## Sequencing — one branch each
 
-**Landed 17 Sep, ahead of this list**, because the working agreement had to
-exist before the list could be worked: `GAZETTA.md` itself (#1), the issue and
-PR conventions with thirteen labels and a milestone (#2), and `@claude` on-demand
-PR review (#4). The next item that is *paper* work is 1 below.
+**Twelve PRs landed 17 Sep**, and steps 1 to 5 of this list are among them.
+The working agreement had to exist before the list could be worked: `GAZETTA.md`
+itself (#1), the conventions with thirteen labels and a milestone (#2),
+`@claude` on-demand review (#4), the state update (#6), the banned fix (#7), the
+two-pass and one-line-comment rules (#8, #9).
 
-**A fix jumps the queue** — `fix/banned-warns-and-files`, from the live fault
-above. It is small, it is a rule the repo already wrote and does not enforce,
-and two published headlines break it.
+- [x] 1. `refactor/edition-clock` (#10)
+- [x] 2. `feat/todays-edition-leads` (#11)
+- [x] 3. `feat/crooks-signoff` (#12)
+- [x] 4. `docs/newsroom-rule` (#13)
+- [x] 5. `docs/intel-contracts` (#14)
 
-1. **`refactor/edition-clock`** — `write-edition.ts` has **five** separate
-   `new Date()` calls; one feeds the newsdesk and another feeds `editionName`,
-   **separated by the model call, 30–90 seconds.** Across midnight the desk
-   already commissions under Sunday while the byline prints Monday. That is a
-   live bug today and the precondition for everything in Phase 7.
-2. **`feat/todays-edition-leads`** — the `composePaper` comparator. Independent,
-   and it improves the paper as it stands.
-3. **`feat/crooks-signoff`** — two prompt edits, both named columns.
-4. **`docs/newsroom-rule`** — Phase 6's rule into PLATFORM_NOTES. Free, and it
-   keeps everything after it honest.
-5. **`docs/intel-contracts`** — the four export contracts. Unblocks the sister
-   repo and needs no CI.
-6. **`feat/publishing-week`** — `schedule.ts`, the newsdesk rewiring, the
+**What is left, in order. Only the first is gated.**
+
+1. **`feat/publishing-week`** — `schedule.ts`, the newsdesk rewiring, the
    `editionName` cases and Thursday's column **as one commit**, per §1.
-   *Gated on Craig's Thursday ruling; 1–5 do not wait.*
-7. **`feat/paper-furniture`** — running head, three rule weights, ruled standing
+   **Gated on Craig's Thursday ruling** — a table whose every row says Monday is
+   a mechanism with one value, which §1 refuses, so the schedule and at least
+   one non-Monday column land together. Nothing below waits for it.
+2. **`feat/paper-furniture`** — running head, three rule weights, ruled standing
    heads, foot folio, and the lead's opening paragraph.
-8. **`feat/paper-classified`** → **`feat/player-stories`** → **`feat/rolling-tie-reports`**.
-9. **Break weeks** — **must land before 9 Nov**, when the league hits its first
+3. **`feat/paper-classified`** → **`feat/player-stories`** → **`feat/rolling-tie-reports`**.
+4. **Break weeks** — **must land before 9 Nov**, when the league hits its first
    empty week.
-10. The export-gated work, as the sister repo delivers.
+5. The export-gated work, as the sister repo delivers.
 
 ---
 
