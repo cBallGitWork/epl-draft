@@ -255,6 +255,117 @@ projection for a round already played is not stale, it is wrong.
 
 ---
 
+## 5. `pressers/26-27.json` — Friday, and only about men somebody owns
+
+Craig's call, 16 Sep 2026: *"press conferences friday article, we have the
+ingestion for it. Only mention the players who are actually drafted/in the
+team."* The ingestion is `src/sweep/agents/press_conference_agent.py`, which
+already emits tagged signals; nothing new has to be learned, only exported.
+
+```jsonc
+{
+  "manifest": { /* … */ },
+  "rows": [
+    {
+      "code": 118748,
+      "club": 3,                    // FPL club code, for a man who moved
+      "tag": "rotation_risk",       // the agent's own vocabulary, verbatim
+      "confidence": 0.65,
+      "said": "2026-09-18T13:00:00Z",   // when the presser was, not when parsed
+      "manager": "Mikel Arteta"
+    }
+  ]
+}
+```
+
+**The agent's tag vocabulary, unchanged and not re-grouped**:
+`rotation_risk` · `managed_load` · `injury_scare`. If it grows a fourth, export
+the fourth — a mapping table here would be a second vocabulary to keep in step,
+which is the failure `situation` already had in §2's corrections.
+
+**No quote, ever, and this is a hard line rather than a size decision.** The
+signal is the export; the sentence that produced it is not. Two reasons, both
+recorded: the paper's two invented-quote sketches were cut on 3 Sep (*"this is
+rubbish, ditch"*), and `voice/house.ts` forbids inventing a quote outright
+because sixteen friends would eventually find their own name over a sentence
+nobody said. A real transcript line is a different thing from an invented one —
+and it is still not exported, because a verbatim quote from a real manager is a
+republishing question this repo has not answered and does not need to.
+
+**The roster filter is OURS, not the exporter's.** Export every signal; the
+Friday column drops the men nobody owns, through `affectedBy` in
+`gazette/newsTriage.ts` which already does exactly this for the news wire. The
+exporter does not know our rosters and must not be taught them.
+
+## 6. `other-comps/26-27.json` — the classified's other half
+
+Craig's call, 16 Sep 2026, on the Prem classified: *"includes the other comps the
+prem teams have so you can quickly see who played/scored etc, stats only maybe,
+no match report."*
+
+**FPL publishes no cup or European fixture at all** — `prem/club/[code]/fixtures`
+says so on the page — so this is the only source for them. The data already
+exists: `data/raw/fotmob/fixtures/2026-2027/` carries `champions_league`,
+`europa_league`, `conference_league` and `efl_cup`, refreshed 11 Sep 2026, with
+rows under `fixtures.allMatches` shaped
+`{home:{id,name}, away:{id,name}, status:{finished, scoreStr, utcTime, reason}, round}`.
+
+```jsonc
+{
+  "manifest": { /* … */ },
+  "rows": [
+    {
+      "competition": "champions_league",   // one of the four below
+      "round": "League phase, MD1",        // FotMob's own string
+      "kickoff": "2026-09-16T19:00:00Z",
+      "homeCode": 3, "awayCode": 14,       // FPL club codes, NOT FotMob ids
+      "homeScore": 2, "awayScore": 1,      // null before it is played
+      "finished": true,
+      "scorers": [{ "code": 118748, "minute": 23 }]
+    }
+  ]
+}
+```
+
+**Competitions in scope, and no others**: `champions_league`, `europa_league`,
+`conference_league`, `efl_cup`. All four have 26/27 files today. The Championship
+and Ligue 2 files sit beside them and are not ours.
+
+**Only matches with a Premier League club in them.** The classified is a Prem
+reader's page; a Champions League tie between two clubs nobody here follows is a
+fixture list, not news.
+
+**Key on FPL club `code`, never FotMob's club id**, the same rule the top of this
+file sets for players. The bridge exists at
+`src/identity/season_file_minting.py:195` (`_fotmob_to_team_id`). A row whose
+club will not bridge is **dropped, not guessed** — a wrong crest beside a
+scoreline is worse than an absent fixture.
+
+**Scorers are optional and the file is useful without them.** If a scorer will
+not bridge to an FPL `code`, drop that scorer and keep the match: the score is
+the fact the classified is for, and Craig's own framing was *"stats only maybe,
+no match report."*
+
+---
+
+## The XI export is still the wrong shape, and it is the oldest item here
+
+`data/intel/xi/gw3.json` is the one file that breaks this document's own shape
+rule, and it has been failing `npm run intel-check` for days: gameweek 3's
+football has been played, so the eleven is not stale, it is **wrong**.
+
+It needs to become **one accumulating `xi/26-27.json`**, keyed by gameweek
+inside the file, exactly as every other kind here is. The reason is in *The shape
+rule* above and it is not theoretical: a static import chooses the round at BUILD
+time while the heading above it is chosen at REQUEST time, so a build made after
+the round turned served last week's eleven under this week's opponent — eleven
+real names, a real formation, and the wrong match.
+
+`apps/companion/app/intel.ts` static-imports `gw3.json` by name and moves with
+it.
+
+---
+
 ## Not exported, and why
 
 **Pass maps.** *This paragraph said the FotMob pass-network builder was dead for
@@ -346,10 +457,21 @@ So the map is not "not built yet", it is unsourced. Revisit only if goal chains
 backfill for this season, and note it would then be a GOAL build-up map rather
 than all key passes.
 
-### Requested: `positions/26-27.json` (§3), which is specified and unbuilt
+### WITHDRAWN for 26-27: `positions/26-27.json` (§3) — the cloud already carries it
 
-The average-position map is blocked on it and nothing else. The upstream table
-needs no work:
+*Asked for on 10 Sep. Measured 11 Sep 2026 and no longer needed this season.*
+`avg_positions.parquet` is the **mean of the same heat map `touches/26-27.json`
+is built from**: identical `points_count` against our cloud length on 30/30 men
+of SofaScore match 16363243, and means agreeing to 0.44 — the half-unit the
+touch export's truncation to integers costs. `averageTouchPosition` in
+`packages/core/src/football/intel/touches.ts` is the whole of the read, and the
+cloud's coverage is the better of the two: **30/30 fixtures and 438/440
+starters** against the table's same 30. Its only two extra columns are the
+cloud's own length (`points_count`) and `PlTeamSheet` (`team_side`).
+
+**The request stands only for seasons we hold no cloud for.** The note below is
+kept because it is what was measured upstream, and because it is the shape to
+build against if an archive season is ever wanted:
 
 - `data/staging/sofascore/avg_positions.parquet` — **925 rows, 30/30 Premier
   League matches, 385 players** for 26-27
