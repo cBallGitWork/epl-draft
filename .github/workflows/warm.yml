@@ -17,14 +17,28 @@ name: Warm
 
 on:
   schedule:
-    # Every five minutes across the kickoff windows, Friday through Monday. It
+    # Every fifteen minutes across the kickoff windows, Friday through Monday. It
     # cannot know when the football is on — that lives in FPL's fixture list, and
     # asking would cost the request this job exists to save — so it covers the
     # windows the Premier League actually uses and accepts the cost of firing
     # into an empty afternoon. A curl at a cached page is cheaper than the miss
     # it prevents.
-    - cron: "*/5 11-22 * * 6,0"
-    - cron: "*/5 17-22 * * 1,5"
+    #
+    # **Fifteen and not five, because five was never buying what it looked like**
+    # (17 Sep 2026, costing the Actions bill). The pages live for
+    # `PAGE_REVALIDATE` — thirty seconds — and GitHub's cron cannot fire more
+    # often than once a minute, so no schedule can hold a page fresh: at five
+    # minutes a curl covered thirty seconds in three hundred, about a tenth of
+    # the window it was paying for, and the other nine tenths were billed for
+    # nothing. What a warm can actually do is stop the cache going COLD, and that
+    # does not need five-minute granularity.
+    #
+    # Actions bills a whole minute per run whatever the work, so this job's cost
+    # is its run COUNT and nothing else: 1,877 runs a month became 626, which was
+    # 47% of the whole bill. The 5xx check below survives at four times an hour
+    # through every window anybody is watching.
+    - cron: "*/15 11-22 * * 6,0"
+    - cron: "*/15 17-22 * * 1,5"
   workflow_dispatch:
 
 # It reads. Nothing here writes anything, so it is granted nothing.
