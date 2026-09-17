@@ -354,6 +354,25 @@ directories, so it cannot tell "the cron stopped" from "this tree never
 pulled") and before a second build or server. A denial is the hook, not a
 judgement about you; do the thing it names instead.
 
+**Three more since 17 Sep 2026, each for a mistake made that day**, because
+branch protection is a paid feature on a private repo and this is the only place
+the working agreement can be machinery rather than manners:
+
+- **A commit or push on `main` is DENIED.** Rule 8 is one branch per piece of
+  work. The crons are the exception and do not run through the hook.
+- **Cutting a branch from another branch ASKS.** A PR stacked on a branch is
+  auto-closed by GitHub when that branch is deleted on merge — it happened to
+  PR #3 and cost a rebuild.
+- **A staged file past the 300-line ceiling ASKS.** `line_ceiling.sh` already
+  reports this, but it matches `Write|Edit`, and a file edited through a bash
+  heredoc never reaches it — which is how `write-edition.ts` reached 302 without
+  the hook that exists for it saying a word.
+
+*They match the command string, so a heredoc that merely QUOTES a guarded
+command trips the guard. That is the right trade — a guard that parses shell
+properly is a guard with bugs — and the way past it is to anchor the edit on
+text that does not contain the phrase.*
+
 **`tools/ui/` is the instrument drawer** — `.mjs` browser instruments, outside
 the tsc and vitest globs on purpose. `shot` `compare` `probe` `sweep` `navfit`
 `tapfit` `pitchfit` `groundfit` `dialog` over one shared `cdp.mjs`. They talk to an already-running headless Chrome on
