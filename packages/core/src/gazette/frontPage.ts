@@ -1,3 +1,4 @@
+import { LEAGUE_TIMEZONE } from "../config";
 import type { PublishedStory, StoryKind } from "./story";
 
 // The running order of the rolling paper, and the three ways a story leaves it.
@@ -63,9 +64,34 @@ export function composePaper(stories: readonly PublishedStory[], now: string): P
   return [...alive].sort(
     (a, b) =>
       b.period - a.period ||
+      // Today's paper first. Kind weight ranks WITHIN a day, which is the only
+      // place it was ever an argument — across days it buried a fresh column
+      // under a three-day-old report.
+      compareDay(b, a) ||
       KIND_WEIGHT[b.kind] - KIND_WEIGHT[a.kind] ||
       compareFiled(b, a),
   );
+}
+
+// `en-CA` is the sortable YYYY-MM-DD; nothing formatted by it reaches a screen.
+const DAY_KEY = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: LEAGUE_TIMEZONE,
+});
+
+/** The London day a story was filed on. Deliberately duplicated from the app's
+ *  `londonTime.londonDayKey` — core cannot import the app, and two occurrences
+ *  is §1's "leave it duplicated". */
+function dayKey(iso: string): string {
+  const at = new Date(iso);
+  return Number.isNaN(at.getTime()) ? "" : DAY_KEY.format(at);
+}
+
+// An unreadable instant sorts oldest, as it does in `compareFiled`.
+function compareDay(a: PublishedStory, b: PublishedStory): number {
+  return dayKey(a.filedAt).localeCompare(dayKey(b.filedAt));
 }
 
 function expired(story: PublishedStory, now: string): boolean {
