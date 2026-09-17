@@ -77,7 +77,7 @@ export default function Teaser({
         {story.deck !== "" ? (
           <p className="text-sm italic leading-snug text-muted">{story.deck}</p>
         ) : null}
-        <Dateline story={story} as="span" />
+        <Dateline story={story} as="span" byline={false} />
       </TurnLink>
     </article>
   );

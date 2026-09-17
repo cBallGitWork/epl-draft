@@ -1,4 +1,4 @@
-import type { PublishedStory } from "@epl/core";
+import { PAPER_CORRESPONDENT, type PublishedStory } from "@epl/core";
 import { londonDayAndTime } from "../../londonTime";
 import { pageOf } from "./paperPages";
 
@@ -9,6 +9,21 @@ import { pageOf } from "./paperPages";
 // same letterspaced small capitals, opened with the same `{edition} · ` prefix
 // and printed the same `Filed {time}`; two of them followed it with the same
 // turn-line. What varied was the wrapper element and nothing else.
+//
+// **The splash is credited and the ranks below it are not**, which is measured
+// rather than felt: with the byline on, every dateline ran to THREE lines of
+// small capitals at 390 — 36px of furniture under a teaser whose deck is two
+// lines, so the credit outweighed the story it belonged to. A front page
+// credits its splash and lets its seconds carry the filing alone; the article
+// page is credited too, being the piece itself.
+//
+// **The reporter's name leads it, because that is a byline and the ink chip
+// above is not.** `story.byline` renders as an inverted standing head — THE
+// BACK PAGE, THE SELECTOR — which is a column's title and not a person. A paper
+// runs both: the standing head over the piece, "by <name>" under it with the
+// filing. The name is a constant rather than a field on the story; `config.ts`
+// in core carries why, and the short version is that one correspondent is a
+// fact about the paper and two would be a fact about a story.
 //
 // **The turn-line is optional and that is a real distinction, not a flag for
 // its own sake.** `Written` IS the article, so a line reading "turn to page 2"
@@ -34,6 +49,7 @@ export default function Dateline({
   story,
   as = "p",
   turn = true,
+  byline = true,
   className = "",
 }: {
   story: PublishedStory;
@@ -41,6 +57,8 @@ export default function Dateline({
   as?: "p" | "span";
   /** Whether to point at the rest of the story. False on the article itself. */
   turn?: boolean;
+  /** Whether to credit the correspondent. False on the ranks below the splash. */
+  byline?: boolean;
   className?: string;
 }) {
   const Tag = as;
@@ -51,6 +69,7 @@ export default function Dateline({
 
   return (
     <Tag className={`font-sans text-3xs uppercase tracking-[0.16em] text-faint${className === "" ? "" : ` ${className}`}`}>
+      {byline ? `by ${PAPER_CORRESPONDENT} · ` : ""}
       {story.edition !== "" ? `${story.edition} · ` : ""}
       Filed {londonDayAndTime(story.filedAt)}
       {/* The affordance, in words rather than a chevron, and literally true: a
