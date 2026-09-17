@@ -1,8 +1,11 @@
 #!/bin/bash
 # PreToolUse guard for Bash.
-# Four named foot-guns, each of which has actually fired in this tree, plus two
-# that cost a session an hour. Nothing else: a guard that stops commands nobody
-# regrets is a guard people learn to click through.
+# Named foot-guns, each of which has actually fired in this tree. Nothing else:
+# a guard that stops commands nobody regrets is a guard people learn to click
+# through. Guards 6 to 8 were added 17 Sep 2026, each for a mistake made that
+# day under the new working agreement — branch protection needs a paid plan on a
+# private repo, so this file is the only place the agreement can be machinery
+# rather than manners.
 set -euo pipefail
 
 input=$(cat)
@@ -60,6 +63,50 @@ if printf '%s' "$cmd" | grep -qE 'npm[[:space:]]+run[[:space:]]+(build|start|dev
     exit 0   # dev server + a build is the normal case at Next 16.
   elif pgrep -f 'next-server' >/dev/null 2>&1; then
     ask "A Next server is already up on this tree (pgrep next-server). A second 'npm run dev/start' takes a different port and every tools/ui BASE_URL then points at the old one. Check http://localhost:3000 first."
+  fi
+fi
+
+# 6) Committing or pushing straight to main. CLAUDE.md rule 8 says cut from
+#    origin/main and work on a branch; GitHub cannot enforce it here (branch
+#    protection is a paid feature on a private repo), so this is the enforcement.
+#    The crons are the exception — they commit to main by design, and they do not
+#    run through this hook.
+if printf '%s' "$cmd" | grep -qE 'git[[:space:]]+(commit|push)([[:space:]]|$)'; then
+  branch=$(git -C "${CLAUDE_PROJECT_DIR:-$PWD}" branch --show-current 2>/dev/null || echo "")
+  if [ "$branch" = "main" ]; then
+    deny "You are on main. The working agreement (CLAUDE.md rule 8) is one branch per piece of work — branch protection is a paid feature on a private repo, so this hook is the only thing enforcing it. Run: git switch -c <type>/<thing> origin/main, then commit there. Prefixes: feat/ fix/ refactor/ docs/ chore/."
+  fi
+fi
+
+# 7) Cutting a branch from another branch. A PR stacked on a branch is CLOSED by
+#    GitHub when that branch is deleted on merge — it happened to PR #3 on 17 Sep
+#    and cost a rebuild. Cut from origin/main and let the second PR rebase.
+if printf '%s' "$cmd" | grep -qE 'git[[:space:]]+(switch[[:space:]]+-c|checkout[[:space:]]+-b)[[:space:]]+[^[:space:]]+[[:space:]]+[^[:space:]]+'; then
+  base=$(printf '%s' "$cmd" | sed -E 's/.*git[[:space:]]+(switch[[:space:]]+-c|checkout[[:space:]]+-b)[[:space:]]+[^[:space:]]+[[:space:]]+([^[:space:];&|]+).*/\2/')
+  case "$base" in
+    origin/main|main) ;;
+    *)
+      ask "Cutting from '$base' rather than origin/main. A PR stacked on another branch is auto-CLOSED when that branch is deleted on merge — that happened to PR #3 and cost a rebuild. Cut from origin/main unless the dependency is real."
+      ;;
+  esac
+fi
+
+# 8) The 300-line ceiling, checked on the STAGED files. `line_ceiling.sh` already
+#    reports this, but it matches Write|Edit and a file edited through a bash
+#    heredoc never reaches it — which is how write-edition.ts got to 302 on
+#    17 Sep without the hook that exists for it saying a word.
+if printf '%s' "$cmd" | grep -qE 'git[[:space:]]+commit([[:space:]]|$)'; then
+  root="${CLAUDE_PROJECT_DIR:-$PWD}"
+  over=$(git -C "$root" diff --cached --name-only --diff-filter=ACM 2>/dev/null \
+    | grep -E '\.(ts|tsx|mjs|js|css)$' \
+    | grep -v '\.test\.' \
+    | while read -r f; do
+        [ -f "$root/$f" ] || continue
+        n=$(wc -l < "$root/$f" | tr -d ' ')
+        [ "$n" -gt 300 ] && printf '%s (%s) ' "$f" "$n"
+      done)
+  if [ -n "$over" ]; then
+    ask "Staged past CODE_RULES §4's hard 300-line ceiling: ${over}. Split before committing, or record the exception in PLATFORM_NOTES.md in the same commit. (line_ceiling.sh misses this when the file was edited through bash rather than Write/Edit.)"
   fi
 fi
 
