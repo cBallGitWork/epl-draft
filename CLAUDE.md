@@ -8,6 +8,11 @@ rule of 2/3, no bloat, no hardcoding, small files, purity at the core — are ha
 rules, not preferences. Exceptions are recorded in `PLATFORM_NOTES.md` in the
 same commit.
 
+**`GAZETTA.md` is the paper's own plan**, and it is the live one: what has
+shipped, what is next, and one branch per item. `ROADMAP.md` is the app's and has
+become a record of what landed rather than a plan for what is next. Both obey the
+same rule — when an item lands, it is marked in the same commit.
+
 **`DESIGN.md` is binding for anything visible.** Two registers — a printed paper
 at `/` and a Championship Manager 99/00 desk on the other five tabs — League,
 Prem, Live, News and FPL — one shared skeleton, and a palette in which every
