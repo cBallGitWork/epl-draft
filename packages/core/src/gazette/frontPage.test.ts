@@ -88,8 +88,39 @@ describe("composePaper", () => {
       NOW,
     );
     // A paper that leads with last week is not a paper, whatever last week's
-    // story weighed; within the round, what happened outranks what we think,
-    // and the fresher report of two equals leads.
-    expect(paper.map((s) => s.slug)).toEqual(["later-match", "match", "column", "old-report"]);
+    // story weighed. Then TODAY'S paper, and within one day what happened
+    // outranks what we think — so the 31st's report leads the 31st's column,
+    // and both lead the 30th's report however heavy its kind.
+    expect(paper.map((s) => s.slug)).toEqual(["later-match", "column", "match", "old-report"]);
+  });
+
+  it("puts a fresh column above a heavier story filed yesterday", () => {
+    // The change of 17 Sep 2026, and the reason a reader noticed nothing when
+    // the schedule landed without it: `eleven` is weight 40 against
+    // `tie-report`'s 90, so Tuesday's column sorted below Sunday's report and
+    // the reader opened Tuesday's paper to Sunday's splash.
+    const paper = composePaper(
+      [
+        story({ slug: "sunday-report", kind: "tie-report", period: 3, filedAt: "2026-08-30T18:00:00.000Z" }),
+        story({ slug: "tuesday-column", kind: "eleven", period: 3, filedAt: "2026-09-01T08:00:00.000Z" }),
+      ],
+      NOW,
+    );
+    expect(paper.map((s) => s.slug)).toEqual(["tuesday-column", "sunday-report"]);
+  });
+
+  it("reads the day in London, not UTC", () => {
+    // 23:30 UTC on a summer Sunday is already Monday in London. A UTC day key
+    // would file both of these on the 30th and fall back to kind weight, which
+    // is the bug this comparator exists to avoid — and the same instant
+    // `bylines.ts` stamps the edition name from.
+    const paper = composePaper(
+      [
+        story({ slug: "sunday-report", kind: "tie-report", period: 3, filedAt: "2026-08-30T18:00:00.000Z" }),
+        story({ slug: "monday-column", kind: "eleven", period: 3, filedAt: "2026-08-30T23:30:00.000Z" }),
+      ],
+      NOW,
+    );
+    expect(paper.map((s) => s.slug)).toEqual(["monday-column", "sunday-report"]);
   });
 });
