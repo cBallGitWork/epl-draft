@@ -452,6 +452,27 @@ export const SEASON_CODE_LIFE = 60 * 60 * 6;
  *  points back here. */
 export const PAGE_REVALIDATE = 30;
 
+/** How stale a printed ARTICLE may be, in seconds.
+ *
+ *  **A story is published by a DEPLOY, not by a revalidation** — `paper.ts`
+ *  static-imports `data/editions/paper.json`, so the prose is baked into the
+ *  bundle and cannot change until the next build, and `vercel.json` deliberately
+ *  does not exclude `data/editions` from the build trigger. The commit that
+ *  files a story is the commit that ships it.
+ *
+ *  So the inside pages spent `PAGE_REVALIDATE` re-rendering prose that was
+ *  compiled in: 2,880 re-renders a day, each one a Fantrax read, to produce
+ *  bytes that could not have moved. What genuinely is live on those pages is the
+ *  furniture — a manager's team name, a crest — and none of it changes within
+ *  five minutes.
+ *
+ *  The FRONT page is the exception and keeps `PAGE_REVALIDATE`: its scoreboard
+ *  strip carries live head-to-head totals while a round is on, which is the one
+ *  thing on the paper that moves in thirty seconds.
+ *
+ *  Same literal-at-every-site rule as its neighbour above. */
+export const ARTICLE_REVALIDATE = 300;
+
 /** How often an open page asks the server for a fresh render, in seconds.
  *
  *  `live` matches the page's own lifetime deliberately — polling faster than the

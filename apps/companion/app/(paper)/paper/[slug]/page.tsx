@@ -28,9 +28,12 @@ import { pageOf } from "../../../components/gazette/paperPages";
 // filesystem reads at all and adding one for a case that has not happened is
 // machinery for nothing.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically,
-// so it cannot be imported.
-export const revalidate = 30;
+// Must match `ARTICLE_REVALIDATE` in core config, NOT `PAGE_REVALIDATE` — an
+// article is published by a deploy rather than by a revalidation, because the
+// prose is static-imported and baked into the bundle. Next analyses this
+// statically, so it cannot be imported. The front page keeps the shorter window;
+// its scoreboard is the one thing here that moves in thirty seconds.
+export const revalidate = 300;
 
 export function generateStaticParams() {
   return filed.map((story) => ({ slug: story.slug }));

@@ -25,7 +25,20 @@ on:
   schedule:
     # Every half hour, off the hour and off the half: everybody schedules on
     # those and GitHub queues the crowd.
-    - cron: "7,37 * * * *"
+    #
+    # **Daytime only, and the reason is the competition** (Craig, 17 Sep 2026:
+    # *"prem is in england, so we can shut off from 11pm to 7am at least"*). A
+    # round settles when English football has been played, and nothing about it
+    # moves overnight: 35 state changes recorded across gameweeks 1 to 4 and
+    # every one of them fell between 08:00 and 21:59 UTC. The night band was 42%
+    # of this job's runs and has never produced a sample.
+    #
+    # `6-22` is the union of his window under both offsets, because cron is UTC
+    # and London is not: 07:00-23:00 London is 06:00-22:00 UTC under BST and
+    # 07:00-23:00 under GMT. Covering both means starting an hour early in
+    # winter, which is two runs a day and the safe direction to be wrong in —
+    # this is the one workflow whose misses cannot be recreated.
+    - cron: "7,37 6-22 * * *"
   workflow_dispatch:
 
 # Least privilege: this job writes commits and nothing else.
