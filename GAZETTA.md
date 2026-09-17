@@ -144,8 +144,8 @@ this and not on a guess about when things happen:
 | **Sun/Mon** | the round ends, either night | The Monday Club | `eleven` (Crooks), `power-ranking`, `dodgers` |
 | **Tue** | **nothing at all** | *(open)* | the evergreen piece — see below |
 | **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
-| **Thu 14:00** | press conferences end | *(open — and it is the presser)* | `presser` |
-| **Fri 14:00** | press conferences end | The Form Guide | `presser`, `predicted-xi`, then `round-preview` + `predictions` on the lock |
+| **Thu 14:00** | press conferences end | The Team Sheet | `presser` — the round-up **publishes 15:00** |
+| **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00**, then `round-preview` + `predictions` on the lock |
 | **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `tie-call`, `fixture-preview`, the Classified |
 | **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
 
@@ -163,21 +163,33 @@ not a problem to be filled; it is the slot a feature has been waiting for.
 
 Measured against the firing bands in `editions.yml`, in London time:
 
-| Event | Happens | First cron look | Gap |
+| Column | Publishes (London) | First cron look | Gap |
 |---|---|---|---|
-| Wed waivers | 17:00 | 18:00 | 1h late |
-| **Thu presser** | **14:00** | **07:00 — morning band only** | **cannot file Thursday at all** |
-| Fri presser | 14:00 | 18:00 | 4h late |
-| Fri predicted XI | ~16:00 | 18:00 | 2h late |
+| Wed — the wire | 17:00 | 18:00 | 1h late |
+| **Thu — presser round-up** | **15:00** | **07:00 — morning band only** | **cannot file Thursday at all** |
+| Fri — presser round-up | 15:00 | 18:00 | 3h late |
+| Fri — predicted elevens | 16:00 | 18:00 | 2h late |
 
 **Thursday is the blocker.** `15 6-9 * * 4` is a morning sweep and there is no
-Thursday afternoon band, so a 2pm presser column would wait until Friday evening
-— a Thursday column that cannot publish on Thursday. The schedule work adds the
+Thursday afternoon band, so a 15:00 column would wait until Friday evening — a
+Thursday column that cannot publish on Thursday. The schedule work adds the
 bands with the columns; neither is any use without the other.
 
 The others are lateness rather than loss: every one of these kinds files on
 detection or on a covered-key, so a late firing still files, it just files late.
-Worth fixing in the same commit while the crons are open.
+
+**The bands, and they must hold under both offsets.** 15:00 London is 14:00 UTC
+in summer and 15:00 in winter; 16:00 London is 15:00 and 16:00. So a band
+covering the Thursday round-up and Friday's pair starts at **14:00 UTC**:
+
+- **Thursday**: add `0,30 14-17 * * 4` beside the morning sweep.
+- **Friday**: widen `0,30 17-23 * * 5` to `0,30 14-23 * * 5`.
+
+**Cost: about 60 extra runs a month, roughly 48p.** Actions bills a whole minute
+per run, so the arithmetic is run count — 34 for the Thursday band and 26 for
+Friday's three extra hours, against the ~2,314 the repo now fires. Worth stating
+because the crons were trimmed the same week and a schedule that quietly undoes
+that trim is the kind of thing nobody notices for a month.
 
 **§1 bites here: a table whose every row says Monday is a mechanism with one
 value.** The table and at least one non-Monday column land in the same commit,
