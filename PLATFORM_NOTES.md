@@ -614,6 +614,43 @@ any endpoint; `content.pulselive.com` no longer resolves; the match page names
 `checkout.plplus.premierleague.com` and `epl.tv3cloud.com`, which is DRM'd subscription OTT.
 There is nothing to embed. Do not re-probe.
 
+## The average touch position is already in the touch cloud (11 Sep 2026)
+
+**Do not re-derive and do not wait for the export.** `docs/providers/intel-export.md` §3
+asks the sister repo for `positions/26-27.json` and both it and `docs/ui/match.md` called the
+average-position map blocked on it. It is not blocked and never was after 10 Sep:
+`averageTouchPosition` in `packages/core/src/football/intel/touches.ts` is the whole of it.
+
+**The measurement.** `data/staging/sofascore/avg_positions.parquet` in the sister repo
+(99,818 rows, **925 of them 26-27 Premier League — 30 matches, 385 players**) is the *mean of
+the same heat map* our touch cloud is built from. Checked man by man for SofaScore match
+16363243: **identical `points_count` against our cloud length on 30/30 men**, and the means
+agree to 0.44 — the half-unit the export's truncation to integers costs. Joined back through
+`data/intel/touches/26-27.json` for FPL fixture 8, 8 of 8 cleanly-matched men agree; the two
+that did not were collisions in the throwaway join-by-touch-count, not disagreements.
+
+**Coverage is better than the table's, not worse.** The cloud has all **30 of 30** fixtures
+and **438 of 440** starters (the two misses are men with no heat map file at all). The table
+covers the same 30. So the export would buy nothing this season, and `points_count` and
+`team_side` — its only two extra columns — are the cloud's own length and `PlTeamSheet`,
+which is an exact eleven at 30/30.
+
+**What the request is still for:** seasons we do not hold a cloud for. Nothing else.
+
+**Both sides are in their OWN attacking frame.** Counted over fixtures 1-3: both keepers
+average x≈9-13 and both centre-forwards x≈53-65. One man on one pitch draws as-is, which is
+what `/players/analysis` does. **Two sides on one pitch means turning the away cloud round —
+`{100 - x, 100 - y}`, both axes**, because turning a pitch about swaps the touchlines as well
+as the goals. `touches.ts`'s docblock used to say the direction was "NOT normalised", which
+reads as though the sides arrive in one shared frame and only need drawing; a map built on
+that sentence puts the away keeper in the opposite goal.
+
+**A side's average is the average of its TOUCHES, never of its men's averages** — a
+substitute's two touches would otherwise weigh what a centre-half's 153 do. Which is why the
+function takes points and not centres. Real answers, starters only, outfield ten: Man City
+**53.3** against Bournemouth **40.4**; Liverpool **55.1** at Newcastle **40.3**; across all 20
+logged fixtures the figure runs **40.3 to 55.4**, mean 47.7.
+
 ## The Premier League's own API — probed live 4 Sep 2026, do not re-derive
 
 **The full endpoint surface is catalogued in `docs/providers/premier-league-api.md`** —
@@ -3053,13 +3090,7 @@ twice in a row. Clear the cache before believing a capture of a replaced image.
 
 ## `MatchStats`' shape has a second wearer, and it stays duplicated (11 Sep 2026)
 
-*`league/CategoryCompare` was deleted on 12 Sep 2026 — `CategoryBands` absorbed
-it, because that board was the bands' head row and nothing else. The duplication
-below is now between `CategoryBands` and `MatchStats`, and everything the entry
-says still holds: it is still two occurrences, still copied rather than
-extracted, and still waiting on a third to say which half is shared.*
-
-`league/CategoryBands` is `prem/match/[id]/MatchStats` again: the same
+`league/CategoryCompare` is `prem/match/[id]/MatchStats` again: the same
 `[3.25rem_1fr_3.25rem]` grid, the same `cm-index` figure plates, the same
 `max-w-2xl` cap and the same argument for all three (`cm9900/22.jpg`). It was
 copied rather than extracted, which is CODE_RULES §1 — **two occurrences are a
@@ -3093,29 +3124,13 @@ reason, and `news/page.tsx` is the site that proves it.
 
 ## The lineup gate now covers a per-category board, not just an eleven (11 Sep 2026)
 
-`/league/matchups/[teamId]`'s shared boards are built from `squadLivePoints`'
-breakdown, and a category figure **names a man in the eleven** — the exact fact
-the gate withholds before a deadline. Said here because "the gate is about the
-pitch" is the easy reading and it is wrong: it is about anything whose existence
-states who is active.
-
-**Updated 12 Sep 2026, when four tabs became five and three of them became
-shared.** The gate no longer runs at the tab; it runs at the ARGUMENTS. A side
-that fails `shows()` has its breakdown never fetched, so it reaches
-`bandCategories` as `{}` and contributes no band and no name — and its name map
-is built behind the same test, so the leak is impossible rather than merely
-unexercised.
-
-**The union is the leak vector, and it is worth being explicit about.** Handing
-`bandCategories` both sides unconditionally would make the BAND SET itself a
-statement about which categories his eleven registered, even with every name
-stripped. A future edit that "fixes" the asymmetry breaks the gate; there is a
-test in `breakdown.test.ts` for exactly that case.
-
-**And the withholding is said ONCE, full width**, not per side: with both sides
-in one object there is no per-side slot for it, and a silently empty column
-reads as "he registered nothing", which is false and the opposite of what the
-gate is for.
+`/league/matchups/[teamId]`'s Stats and Players tabs are built from
+`squadLivePoints`' breakdown, and a category figure **names a man in the
+eleven** — the exact fact the gate withholds before a deadline. Both are built
+behind `teamDisplay(squads, mine).show === "lineup"`, on the same branch as the
+grass, and a withheld side draws the `Withheld` panel on every tab rather than an
+empty board. Said here because "the gate is about the pitch" is the easy reading
+and it is wrong: it is about anything whose existence states who is active.
 
 `SquadLists` — the unplayed-round branch — is the same rule from the other side:
 it draws `squadUnarranged`, which sorts alphabetically within position so even
@@ -3165,6 +3180,35 @@ the exception stopped existing. `PRODUCT.md`'s list is two now, and
 `tools/ui/tapfit.mjs` lost its `[role=group]` exemption — left in, it would have
 gone on excusing a structure that no longer needs it and would not have caught
 the next shrink.
+
+## Where a newsroom persona lives — voice, check, agent or skill (17 Sep 2026)
+
+Written before Phase 6 commissions anything, because the discipline problem is
+§1: twenty columnists is exactly the bloat the rules forbid.
+
+| | Does | Lives in | Costs |
+|---|---|---|---|
+| **Voice** | *writes* | `scripts/edition/voice/` | a model call per firing |
+| **Check** | *refuses or warns* | `packages/core/src/gazette/` | nothing — pure and tested |
+| **Agent** | *judges* | `.claude/agents/` | nothing on the cron; a session dispatches it |
+| **Skill** | *a ritual a human starts* | `.claude/skills/` | nothing until run |
+
+**The corollary is the load-bearing half: a new persona is a VOICE only if it
+FILES.** A "sub-editor" that reads the paper back is an agent. A "fact-checker"
+is a check. Neither earns a `StoryKind`, a byline or a slot in the running order,
+and giving one a voice puts a model call on every firing for something a pure
+function or a read-only agent does for nothing.
+
+The survey behind this: 161 catalogued subagents with zero journalism agents, and
+the largest journalism skill collection (63 skills) has no sports, no page
+layout, no house-style enforcement and no publication prose. Nothing off the
+shelf fits, so everything is commissioned — which is exactly when a rule about
+what may be commissioned is worth having.
+
+Worked example, same day: the banned-list fix. It refuses and retries, so it is a
+CHECK (`banned()` in core, pure, seven tests) plus the copy it sends back
+(`sendBack` in `voice/house.ts`). It is not a "sub-editor persona", it files
+nothing, and it has no byline.
 
 ## Questions
 
