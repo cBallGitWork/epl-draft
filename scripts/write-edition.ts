@@ -67,6 +67,11 @@ const STORY_CAP = Number(process.env.GAZETTA_STORY_CAP ?? 2);
 const DRY_RUN = process.env.DRY_RUN === "1";
 
 async function main(): Promise<void> {
+  // One instant for the whole firing. Read five times, it drifted across the
+  // model call — the desk commissioning under Sunday while the byline printed
+  // Monday.
+  const now = new Date().toISOString();
+
   const snapshot = await getFootballSnapshot();
   // `roundState` and not `roundFinished`, which core deliberately does not
   // export: it cannot say "live", and half an answer is exactly the wrong shape
@@ -128,7 +133,7 @@ async function main(): Promise<void> {
       })),
     },
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
-    new Date().toISOString(),
+    now,
   );
   if (assignments.length === 0) return say("Nothing new to report.");
 
@@ -180,7 +185,7 @@ async function main(): Promise<void> {
     // Wanting" went out on 3 Sep. This is the sub-editor's look at the page,
     // rebuilt each turn so a story filed a moment ago is already on it.
     const standing = standingHeadlines(
-      composePaper([...paper, ...filings.map((each) => each.story)], new Date().toISOString())
+      composePaper([...paper, ...filings.map((each) => each.story)], now)
         .filter((story) => story.leagueId === FANTRAX_LEAGUE_ID)
         .map((story) => story.headline),
     );
@@ -199,7 +204,7 @@ async function main(): Promise<void> {
       // column back against the register and sends it back once if it reached
       // for a banned phrase.
       const column = await writeSubedited(desk.system, brief, say, assignment.kind);
-      const filed = file(assignment, column, ctx, new Date().toISOString());
+      const filed = file(assignment, column, ctx, now);
       // **Every name in the prose against every name in the brief.** The first
       // real story this paper ever filed put a Newcastle defender who is on
       // nobody's roster into the team of the week, twice, and dropped the man
@@ -253,7 +258,7 @@ async function main(): Promise<void> {
   // its chance. Any failure costs the picture and never the paper.
   const lead = composePaper(
     [...readPaperStories().filter((each) => each.leagueId === FANTRAX_LEAGUE_ID), ...filings.map((f) => f.story)],
-    new Date().toISOString(),
+    now,
   )[0];
   const filing = filings.find((each) => each.story.slug === lead?.slug);
   if (filing !== undefined && filing.story.image === null) {
@@ -261,7 +266,7 @@ async function main(): Promise<void> {
     if (image !== null) filing.story = { ...filing.story, image };
   }
 
-  persistFilings(filings, ledger, new Date().toISOString());
+  persistFilings(filings, ledger, now);
 }
 
 
