@@ -571,6 +571,30 @@ booking's accent — and reads correctly; it looked absent only because there wa
 exactly one red card in gameweeks 1-3 (Brighton v Aston Villa, 40', FPL fixture
 7), and the match being looked at had none.
 
+## A doubt DOES carry a date — `news_added`, 198/198 (17 Sep 2026)
+
+**Counted live against `bootstrap-static`, and it overturns something two files
+asserted in writing.** `core/inbox/items.ts` set `at: null` on every injury item
+with a comment saying FPL "publishes no 'as of'" for a doubt, and
+`gazette/types.ts` said the same; the inbox therefore dated every injury to its
+round and the blue block read `GW4` where every other row read a date.
+
+- 659 elements. **198 carry a non-empty `news` string.**
+- **198 of those 198 carry `news_added`** — an ISO instant with microseconds,
+  e.g. `Saliba 2026-07-23T12:01:23.289376Z`, `White 2026-09-15T19:30:09.494382Z`.
+- It is the moment FPL ATTACHED THE LINE, which is exactly the "as of" the
+  comment said did not exist. It moves when they revise the note.
+
+So a doubt is an event with a stamp like any other item on the inbox, it sorts
+into one feed with the transaction business, and nothing has to invent a date.
+The domain type has carried it as `FootballPlayer.newsAdded` since the first
+mapper — nothing had ever read it.
+
+**The lesson is the one this file exists for**: the claim was never probed, it
+was reasoned from what a doubt *is* ("a state that holds now"), and it was
+written down twice at length in the voice of a settled fact. Count it before
+building on it.
+
 ## Weather is not published either (10 Sep 2026)
 
 Counted across every key at every depth of the fixture detail: no `weather`,

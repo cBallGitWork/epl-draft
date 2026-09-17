@@ -16,7 +16,6 @@ import {
 import { readBoard } from "../board";
 import { readDeals } from "../business";
 import { seasonKickoffs } from "../football";
-import { yoursFirst } from "../mine";
 import { readerTeamId, getLeagueSquads } from "../squads";
 
 // What the manager's inbox is made of, kept out of the route for the reason
@@ -46,6 +45,26 @@ export interface Inbox {
   mine: string | null;
 }
 
+/** The two squads whose doubts a manager is entitled to care about.
+ *
+ *  **His own and the one he plays next** (Craig, 17 Sep 2026). The pair is
+ *  resolved against the round the NEXT deadline belongs to rather than the round
+ *  in view: for most of a week those are different, and the opponent worth
+ *  knowing about is the one whose team you have still to pick against.
+ *
+ *  Typed off `headToHead`'s own parameters rather than off `LeagueMatchup`,
+ *  which the barrel does not export — widening it for one private helper is the
+ *  rule of 2/3 answered at one. */
+function nextOpponent(
+  matchups: Parameters<typeof headToHead>[0],
+  teams: Parameters<typeof headToHead>[1],
+  period: number | null,
+  mine: string | null,
+): string | null {
+  if (period === null || mine === null) return null;
+  return headToHead(matchups, teams, period, mine)?.opponent.teamId ?? null;
+}
+
 export async function readInbox(): Promise<Inbox> {
   const [squads, feed, mine, kickoffs] = await Promise.all([
     getLeagueSquads(),
@@ -64,12 +83,27 @@ export async function readInbox(): Promise<Inbox> {
   // A league with no draft, or a Fantrax that would not answer, costs the two
   // tabs that need a roster and nothing else — which is the same failure
   // tolerance the paper has and for the same reason.
-  const doubts = drafted
-    ? yoursFirst(availability(drafted.period.teams), (note) => note.teamId === mine)
-    : [];
+  //
+  // **Unsorted, and that is the change.** This used to run the notes through
+  // `yoursFirst`, on the argument that it kept the reader's own men at the top of
+  // thirty rows. Two things retired it: the list is two squads deep now rather
+  // than ten, and every doubt carries FPL's own `news_added`, so the merge sorts
+  // them into the feed by date like everything else. A hand-ordering that the
+  // sort then undoes is a line that reads as a decision and does nothing.
+  const doubts = drafted ? availability(drafted.period.teams) : [];
 
   const board = drafted === null ? null : await readBoard(drafted);
   const period = drafted?.roundPeriod ?? null;
+
+  // The next lock, which answers two questions at once: when the round closes,
+  // and which round the doubts are about. They were read off `snapshot.gameweek`
+  // before, which is the round whose football has been PLAYED — so an injury
+  // list headed "gameweek 4" was about a round nobody could pick for any more.
+  const next = drafted?.info == null ? null : lock(drafted.info.rosterPeriods, kickoffs);
+  const opponent =
+    drafted?.info == null
+      ? null
+      : nextOpponent(drafted.info.matchups, drafted.info.teams, next?.period ?? null, mine);
 
   // His own tie, and only his own. The game files what the CLUB was told, and a
   // manager was not told the score of a match he was not in — the rest are on
@@ -95,10 +129,13 @@ export async function readInbox(): Promise<Inbox> {
         // different times. It answers the NEXT one rather than this round's,
         // which is the right question for an inbox: a deadline that has passed
         // is not news, it is history.
-        deadline: drafted?.info == null ? null : lock(drafted.info.rosterPeriods, kickoffs),
+        deadline: next,
         yours,
       }),
-      availabilityNews(doubts, gameweek, mine),
+      // The round he can still act on, not the one in view. `nextOpponent` reads
+      // the tie from the same period, so the two halves of "whose doubts matter"
+      // cannot disagree.
+      availabilityNews(doubts, next?.gameweek ?? gameweek, { mine, opponent, name: nameOf }),
     ),
     names,
     mine,
@@ -148,11 +185,16 @@ function finishedTie(
  *  row read "Gameweek 3 lineups lock" over a date that was GW4's.
  *
  *  Null when either half is missing: a lock with no round to name is a date with
- *  no sentence, and this screen would rather say nothing. */
+ *  no sentence, and this screen would rather say nothing.
+ *
+ *  **It hands back the PERIOD as well**, which is not the deadline item's
+ *  business but is every other caller's: the doubts are about this round and the
+ *  opponent is the one this round pairs him with, and both would otherwise be
+ *  resolved a second time and be free to disagree. */
 function lock(
   periods: readonly LeaguePeriod[],
   kickoffs: readonly GameweekKickoff[],
-): { gameweek: number; locksAt: string } | null {
+): { period: number; gameweek: number; locksAt: string } | null {
   const next = nextDeadline(periods, kickoffs, new Date().toISOString());
   if (next === null) return null;
   const rounds = periodGameweeks([...periods], [...kickoffs]).find(
@@ -161,5 +203,7 @@ function lock(
   // The FIRST gameweek of the period, because that is the one the lock lets a
   // manager into — a period spanning two rounds locks before the first of them.
   const gameweek = rounds?.gameweeks[0];
-  return gameweek === undefined ? null : { gameweek, locksAt: next.locksAt };
+  return gameweek === undefined
+    ? null
+    : { period: next.period, gameweek, locksAt: next.locksAt };
 }

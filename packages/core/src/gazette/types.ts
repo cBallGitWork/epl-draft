@@ -1,3 +1,5 @@
+import type { Availability } from "../football/playerState";
+
 // The newspaper's sections, as facts. What they say in words is the app's
 // business; what is true is this file's.
 //
@@ -44,16 +46,40 @@ export interface Deal {
   period: number | null;
 }
 
-/** A footballer somebody is going to have to think about. */
-export interface AvailabilityNote {
+/** A footballer somebody is going to have to think about.
+ *
+ *  **The football layer's own answer, plus whose problem he is.** It carried its
+ *  own `news` and `chance` copied out of `Availability` and dropped the rest, so
+ *  every reader of a note could say a man was a doubt and none of them could say
+ *  he was SUSPENDED — `availability()` computed `state`, `label` and `out`, threw
+ *  them away through `isDoubtful`'s boolean, and the inbox then guessed "out"
+ *  back from a chance of nought. A ban carries no chance at all, so a banned man
+ *  read as merely carrying a note. */
+export interface AvailabilityNote extends Availability {
   playerName: string;
+  /** His first name and surname — `first_name second_name`, not the shirt's
+   *  `web_name`. A squad list wants the short one and a letter about him wants
+   *  the whole thing: "Millar is out" is a row, "Anthony Millar is out" is what
+   *  a person writing to you would call him (Craig, 17 Sep 2026: *"use players
+   *  first name and surname in email fields"*). Both are carried because both
+   *  are wanted, in different places. */
+  fullName: string;
+  /** When FPL attached the line, ISO — `news_added`, and it is the doubt's own
+   *  date rather than one we invented.
+   *
+   *  **This file and `inbox/items.ts` both used to say FPL publishes no "as of"
+   *  for a doubt**, and the inbox dated every injury to its round on the
+   *  strength of it. It is not true and was never probed: `news_added` is
+   *  non-null on **198 of the 198** elements carrying a `news` string, counted
+   *  live on 17 Sep 2026. So a doubt is an event with a timestamp like any
+   *  other item on the screen, and the blue block can print it.
+   *
+   *  Null anyway for a note FPL somehow carries without a stamp — the count says
+   *  that does not happen today, and a field that is always present is still not
+   *  a field to assume. */
+  newsAt: string | null;
   /** Whose problem it is. Null when nobody in the league holds him. */
   teamId: string | null;
-  /** FPL's own words, untruncated — Fantrax's equivalent arrives ellipsised. */
-  news: string;
-  /** 0–100, or null when FPL has no opinion. Null is not zero: "no comment" and
-   *  "will not play" are different things to a manager picking a side. */
-  chance: number | null;
 }
 
 /** When the lineup locks next. The commissioner's deadline, never FPL's. */
