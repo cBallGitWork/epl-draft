@@ -21,7 +21,22 @@ pages at the back.
 was the Actions **spending limit sitting at $0**, not a failed card. 40 commits
 were unpushed and production was serving 12 Sep.
 
-Now: billing raised, main pushed, `Verify` green, captures caught up.
+Now: billing raised, main pushed, `Verify` green, captures caught up — and
+`ANTHROPIC_API_KEY` set, which turned out to be the bigger of the two.
+
+**The paper had never filed from CI at all.** The repository held **zero Actions
+secrets** until 17 Sep, so `write-edition.ts` would have thrown on every firing
+it ever reached. The sixteen stories in `data/editions/paper.json` were written
+by running `npm run edition` locally on 2 Sep. Fixing the billing did not fix
+this; it uncovered it.
+
+**The working agreement is live**, and this document is now worked the way it
+describes: no commits on `main`, one branch per item, squash merges. Proven on
+the first three PRs — `verify` runs on a feature branch, Vercel raises a preview
+per branch, and a squash landing does deploy to production. The one trap found
+by doing it: a PR **stacked** on another branch is auto-closed when that branch
+is deleted on merge, so branches are cut from `origin/main` rather than from
+each other.
 
 **Shipped 16–17 Sep**, all four gates green on each:
 
@@ -45,16 +60,38 @@ DASH failure §4 names. It stays duplicated until the *roles* are split.
 
 ---
 
-## The two things that can still stop the paper
+## What can still stop the paper — one thing, not two
 
-1. **`GAZETTA_MODEL`** — `scripts/edition/newsroom.ts` defaults to
-   `claude-opus-4-8`. If that id is retired the writer throws on its first real
-   firing. Now that billing is clear, this is the next landmine.
-2. **The sister-repo exports.** Three phases are blocked on files that
-   `~/ai-carling-premiership` has the data for and does not yet write:
-   `intel/projections/`, `intel/pressers/`, `intel/other-comps/`, plus the XI
-   export, which is currently the wrong round and has been failing
-   `npm run intel-check` for days.
+**The sister-repo exports.** Three phases are blocked on files that
+`~/ai-carling-premiership` has the data for and does not yet write:
+`intel/projections/`, `intel/pressers/`, `intel/other-comps/`, plus the XI
+export, which is the wrong round and has been failing `npm run intel-check`
+for days.
+
+*`GAZETTA_MODEL` was listed here as the next landmine and is not one.* Checked
+17 Sep against the model table: `claude-opus-4-8` is **current and valid**,
+$5/$25 per MTok, 1M context. It also stays 4.8 rather than moving to
+`claude-opus-5` at the identical price, and the reason is worth keeping: on 4.8
+an absent `thinking` parameter means no thinking, while on Opus 5 thinking is ON
+by default — and `newsroom.ts` sends no `thinking`, so the free-looking upgrade
+would silently think on every column of every firing.
+
+**The league stays as it is until swap day** (Craig, 17 Sep: *"keep the 10 team
+rehearsal league for now"*). `vars.FANTRAX_LEAGUE_ID` is left unset
+deliberately, not forgotten. Worth knowing before anyone reads that sentence
+literally: the **dummy** and **rehearsal** leagues both hold ten teams and, as
+captured on 17 Sep, the *same ten names* — `123, test1, test2, test211, test3,
+test31…` — so the phrase does not pick one, and in practice it does not need to.
+`/swap-day` is the runbook that turns it, and CLAUDE.md records that this exact
+dummy/rehearsal conflation was written wrongly in three places for a month.
+
+### A live fault, and the first real issue
+
+`"bank"` is in `BANNED`, and the banned list's own note says a front page once
+went out with five headlines built on it. **Two more are published right now** —
+*"test3 Banks a City Slicker"* and *"123 Banks a Big-Money Backline"*. The check
+runs (`write-edition.ts:216`) but only **warns**: it prints `⚠` and files the
+story anyway. The rule exists, the instrument exists, and nothing refuses.
 
 ---
 
@@ -209,6 +246,15 @@ schedule keys on the **day**, which needs no calendar at all.
 ---
 
 ## Sequencing — one branch each
+
+**Landed 17 Sep, ahead of this list**, because the working agreement had to
+exist before the list could be worked: `GAZETTA.md` itself (#1), the issue and
+PR conventions with thirteen labels and a milestone (#2), and `@claude` on-demand
+PR review (#4). The next item that is *paper* work is 1 below.
+
+**A fix jumps the queue** — `fix/banned-warns-and-files`, from the live fault
+above. It is small, it is a rule the repo already wrote and does not enforce,
+and two published headlines break it.
 
 1. **`refactor/edition-clock`** — `write-edition.ts` has **five** separate
    `new Date()` calls; one feeds the newsdesk and another feeds `editionName`,
