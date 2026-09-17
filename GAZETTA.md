@@ -136,15 +136,60 @@ Sunday are gated on events that already *are* times — the lock, a kickoff, the
 last whistle — and land on the right day without being told. Bolting a weekday
 onto them would be a second clock arguing with the first.
 
-| Day | Edition | Files | State |
+**The league's actual week** (Craig, 17 Sep 2026) — the schedule is built on
+this and not on a guess about when things happen:
+
+| Day | What the LEAGUE does | Edition | Files |
 |---|---|---|---|
-| **Mon** | The Monday Club | `eleven` (Crooks), `power-ranking`, `dodgers` | exists |
-| **Tue** | *(open)* | the form table, or Phase 3's `player` | free |
-| **Wed** | The Mercato Wire | `wire` — on **detection** of a claim batch, not a calendar | event |
-| **Thu** | *(open)* | **Craig's call, deferred** | open |
-| **Fri** | The Form Guide | `round-preview`, `predictions` (Lawro), later `presser` + `predicted-xi` | event |
-| **Sat** | The Pink 'Un | `tie-call`, `fixture-preview`, the Classified | event |
-| **Sun** | The Sunday Edition | `tie-report` as the football stops | event |
+| **Sun/Mon** | the round ends, either night | The Monday Club | `eleven` (Crooks), `power-ranking`, `dodgers` |
+| **Tue** | **nothing at all** | *(open)* | the evergreen piece — see below |
+| **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
+| **Thu 14:00** | press conferences end | The Team Sheet | `presser` — the round-up **publishes 15:00** |
+| **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00**, then `round-preview` + `predictions` on the lock |
+| **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `tie-call`, `fixture-preview`, the Classified |
+| **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
+
+**Thursday's column is the press conference, and Craig's own week answers the
+question rather than a preference doing it.** He had asked for a Friday presser
+article; the pressers run Thursday *and* Friday this season, both ending at 2pm,
+so Thursday has a real event of its own and does not need one invented for it.
+
+**Tuesday is the only day with no league event, which is what makes it the right
+day for the evergreen piece** — the form table, `player` articles, the
+projections ranking. Nothing competes with it there. A day with nothing on it is
+not a problem to be filled; it is the slot a feature has been waiting for.
+
+### The cron cannot reach two of these days
+
+Measured against the firing bands in `editions.yml`, in London time:
+
+| Column | Publishes (London) | First cron look | Gap |
+|---|---|---|---|
+| Wed — the wire | 17:00 | 18:00 | 1h late |
+| **Thu — presser round-up** | **15:00** | **07:00 — morning band only** | **cannot file Thursday at all** |
+| Fri — presser round-up | 15:00 | 18:00 | 3h late |
+| Fri — predicted elevens | 16:00 | 18:00 | 2h late |
+
+**Thursday is the blocker.** `15 6-9 * * 4` is a morning sweep and there is no
+Thursday afternoon band, so a 15:00 column would wait until Friday evening — a
+Thursday column that cannot publish on Thursday. The schedule work adds the
+bands with the columns; neither is any use without the other.
+
+The others are lateness rather than loss: every one of these kinds files on
+detection or on a covered-key, so a late firing still files, it just files late.
+
+**The bands, and they must hold under both offsets.** 15:00 London is 14:00 UTC
+in summer and 15:00 in winter; 16:00 London is 15:00 and 16:00. So a band
+covering the Thursday round-up and Friday's pair starts at **14:00 UTC**:
+
+- **Thursday**: add `0,30 14-17 * * 4` beside the morning sweep.
+- **Friday**: widen `0,30 17-23 * * 5` to `0,30 14-23 * * 5`.
+
+**Cost: about 60 extra runs a month, roughly 48p.** Actions bills a whole minute
+per run, so the arithmetic is run count — 34 for the Thursday band and 26 for
+Friday's three extra hours, against the ~2,314 the repo now fires. Worth stating
+because the crons were trimmed the same week and a schedule that quietly undoes
+that trim is the kind of thing nobody notices for a month.
 
 **§1 bites here: a table whose every row says Monday is a mechanism with one
 value.** The table and at least one non-Monday column land in the same commit,
@@ -267,9 +312,11 @@ two-pass and one-line-comment rules (#8, #9).
 
 1. **`feat/publishing-week`** — `schedule.ts`, the newsdesk rewiring, the
    `editionName` cases and Thursday's column **as one commit**, per §1.
-   **Gated on Craig's Thursday ruling** — a table whose every row says Monday is
-   a mechanism with one value, which §1 refuses, so the schedule and at least
-   one non-Monday column land together. Nothing below waits for it.
+   **No longer gated** — Craig gave the league's week on 17 Sep and Thursday's
+   column is the press conference, which his own calendar answers rather than a
+   preference. It carries the cron bands with it: there is no Thursday afternoon
+   firing today, so a 2pm presser column could not publish on a Thursday.
+   Blocked instead on `intel/pressers/26-27.json` (§5 of the export contract).
 2. **`feat/paper-furniture`** — running head, three rule weights, ruled standing
    heads, foot folio, and the lead's opening paragraph.
 3. **`feat/paper-classified`** → **`feat/player-stories`** → **`feat/rolling-tie-reports`**.
