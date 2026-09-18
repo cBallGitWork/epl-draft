@@ -35,7 +35,7 @@ import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { markLastWeek } from "./edition/marking";
 import { writeSubedited } from "./edition/subedit";
-import { presserLines } from "./edition/pressers";
+import { presserLines, presserQuotes } from "./edition/pressers";
 import { deskState } from "./edition/desk";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
@@ -139,6 +139,7 @@ async function main(): Promise<void> {
     kickoff,
     marked: await markLastWeek(paper, info, round.period, assignments),
     presserLines: lines,
+    presserQuotes: presserQuotes(byCode),
   };
 
   const filings: Filing[] = [];

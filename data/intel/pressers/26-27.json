@@ -1,0 +1,465 @@
+{
+  "manifest": {
+    "season": "26-27",
+    "gameweek": 4,
+    "exportedAt": "2026-09-18T13:27:59.120Z",
+    "rows": 37,
+    "sources": [
+      {
+        "path": "2026-09-17/fpl-gameweek-5-team-news-thurs-live-injury-updates-pedro-latest.html",
+        "mtime": null
+      }
+    ]
+  },
+  "spoke": [
+    {
+      "club": 8,
+      "manager": "Xabi Alonso",
+      "at": "2026-09-17T13:00:00.000Z"
+    },
+    {
+      "club": 4,
+      "manager": "Matthias Jaissle",
+      "at": "2026-09-17T13:00:00.000Z"
+    },
+    {
+      "club": 17,
+      "manager": "Oliver Glasner",
+      "at": "2026-09-17T13:00:00.000Z"
+    },
+    {
+      "club": 94,
+      "manager": "Keith Andrews",
+      "at": "2026-09-17T13:00:00.000Z"
+    },
+    {
+      "club": 88,
+      "manager": "Sergej Jakirovic",
+      "at": "2026-09-17T13:00:00.000Z"
+    },
+    {
+      "club": 9,
+      "manager": "Frank Lampard",
+      "at": "2026-09-17T13:00:00.000Z"
+    }
+  ],
+  "quotes": [
+    {
+      "club": 8,
+      "text": "In terms of injuries, and in terms of the squad, we are having the last training session tomorrow, so no one is ruled out for us for Friday. So, I prefer to be cautious and we will wait till tomorrow to take the final decision on every player.",
+      "said": "Xabi Alonso",
+      "about": "the Chelsea team news"
+    },
+    {
+      "club": 8,
+      "text": "He is getting closer and tomorrow, we will take a final decision in the team and in the squad that is coming to Brentford.",
+      "said": "Xabi Alonso",
+      "about": "Moises Caicedo"
+    },
+    {
+      "club": 8,
+      "text": "No, it was just a decision for Tuesday and we will see his development. Tomorrow, we will decide.",
+      "said": "Xabi Alonso",
+      "about": "if there were any concerns about Reece James following his no-show in training in midweek"
+    },
+    {
+      "club": 4,
+      "text": "Amar will be also not able to play on Saturday.",
+      "said": "Matthias Jaissle",
+      "about": "Amar Dedic"
+    },
+    {
+      "club": 4,
+      "text": "Still not a real update on Anthony. I have just spoken with him now. I think, in the next 30 minutes, he will have an MRI, so we will get more clarity then. We hope that it is not that serious.",
+      "said": "Matthias Jaissle",
+      "about": "Anthony Elanga"
+    },
+    {
+      "club": 4,
+      "text": "It will be a young midfield. I heard just also from a pundit [asking] why I was playing with such young players – because we have only young players in the squad! JJ [Ramsey] is injured as well.",
+      "said": "Matthias Jaissle"
+    },
+    {
+      "club": 17,
+      "text": "[Other than] Savona and Milenkovic, all other players will be fit.",
+      "said": "Oliver Glasner"
+    },
+    {
+      "club": 17,
+      "text": "But on the other side, we also could see that both were a little bit struggling physically at the end. I think this is what we still need to improve, and that there are no doubts that they can play even 100 minutes or 105 minutes if it’s necessary.",
+      "said": "Oliver Glasner",
+      "about": "having to bring in Ola Aina and Ousmane Diomande at centre-half last weekend"
+    },
+    {
+      "club": 17,
+      "text": "Igor Jesus scored a goal now as well. He was rewarded with the Golden Shoe of the Europa League because he can score goals, but he’s, let’s say, more the ‘playing’ striker, dropping into the pocket, and then we had no striker with power and runs in behind. This is what we were looking for and yeah, I think that’s exactly what Liam [Delap] showed.",
+      "said": "Oliver Glasner"
+    },
+    {
+      "club": 94,
+      "text": "I think it’s more or less the same as the other night, yeah. So, nothing has really changed on that front.",
+      "said": "Keith Andrews",
+      "about": "the latest Brentford team news"
+    },
+    {
+      "club": 88,
+      "text": "He’s in the concussion protocol. So, seven days off, and after this, he will go to the national team. Everything is fine. He’s good. This is the most important [thing], now. He will miss this game.",
+      "said": "Sergej Jakirovic",
+      "about": "Nobel Mendy"
+    },
+    {
+      "club": 88,
+      "text": "Morita is still out. The plan is that he will join us after the first week of the international break.",
+      "said": "Sergej Jakirovic"
+    },
+    {
+      "club": 88,
+      "text": "We will see. We are very cautious with him and unfortunately, he cannot help the team.",
+      "said": "Sergej Jakirovic",
+      "about": "Charlie Hughes"
+    },
+    {
+      "club": 9,
+      "text": "I would expect not available, yeah.",
+      "said": "Frank Lampard",
+      "about": "Aurele Amenda"
+    },
+    {
+      "club": 9,
+      "text": "I thought he was fantastic. He’s a very, very good player. He’s 18 years of age but he’s come in with a real maturity on and off the pitch and it was good to see a player of such ability and composure come in and play the way he played. I thought he was great and it’s just a start.",
+      "said": "Frank Lampard",
+      "about": "Stephen Mfuni"
+    },
+    {
+      "club": 9,
+      "text": "Haji’s on track, but he’s not obviously ready soon.",
+      "said": "Frank Lampard"
+    }
+  ],
+  "rows": [
+    {
+      "code": 486672,
+      "club": 8,
+      "tag": "injury_scare",
+      "condition": "calf",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Xabi Alonso"
+    },
+    {
+      "code": 620109,
+      "club": 8,
+      "tag": "injury_scare",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Xabi Alonso"
+    },
+    {
+      "code": 56979,
+      "club": 8,
+      "tag": "injury_scare",
+      "condition": "wrist",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Xabi Alonso"
+    },
+    {
+      "code": 475168,
+      "club": 8,
+      "tag": "injury_scare",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Xabi Alonso"
+    },
+    {
+      "code": 465694,
+      "club": 4,
+      "tag": "injury_scare",
+      "condition": "head",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Matthias Jaissle"
+    },
+    {
+      "code": 232653,
+      "club": 4,
+      "tag": "injury_scare",
+      "condition": "thigh",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Matthias Jaissle"
+    },
+    {
+      "code": 463726,
+      "club": 4,
+      "tag": "injury_scare",
+      "condition": "hamstring",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Matthias Jaissle"
+    },
+    {
+      "code": 449434,
+      "club": 4,
+      "tag": "injury_scare",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Matthias Jaissle"
+    },
+    {
+      "code": 180974,
+      "club": 4,
+      "tag": "ruled_out",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Matthias Jaissle"
+    },
+    {
+      "code": 78916,
+      "club": 4,
+      "tag": "ruled_out",
+      "condition": "ankle",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Matthias Jaissle"
+    },
+    {
+      "code": 554578,
+      "club": 4,
+      "tag": "ruled_out",
+      "condition": "ankle",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Matthias Jaissle"
+    },
+    {
+      "code": 538207,
+      "club": 4,
+      "tag": "ruled_out",
+      "condition": "foot",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Matthias Jaissle"
+    },
+    {
+      "code": 500151,
+      "club": 17,
+      "tag": "ruled_out",
+      "condition": "knee",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Oliver Glasner"
+    },
+    {
+      "code": 227444,
+      "club": 17,
+      "tag": "ruled_out",
+      "condition": "hamstring",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Oliver Glasner"
+    },
+    {
+      "code": 575458,
+      "club": 17,
+      "tag": "available",
+      "condition": "hamstring",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Oliver Glasner"
+    },
+    {
+      "code": 159506,
+      "club": 17,
+      "tag": "injury_scare",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Oliver Glasner"
+    },
+    {
+      "code": 568420,
+      "club": 17,
+      "tag": "injury_scare",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Oliver Glasner"
+    },
+    {
+      "code": 432830,
+      "club": 94,
+      "tag": "ruled_out",
+      "condition": "calf",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Keith Andrews"
+    },
+    {
+      "code": 207283,
+      "club": 94,
+      "tag": "ruled_out",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Keith Andrews"
+    },
+    {
+      "code": 593174,
+      "club": 94,
+      "tag": "ruled_out",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Keith Andrews"
+    },
+    {
+      "code": 444765,
+      "club": 94,
+      "tag": "ruled_out",
+      "condition": "groin",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Keith Andrews"
+    },
+    {
+      "code": 183656,
+      "club": 94,
+      "tag": "ruled_out",
+      "condition": "hamstring",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Keith Andrews"
+    },
+    {
+      "code": 543295,
+      "club": 94,
+      "tag": "injury_scare",
+      "condition": "knee",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Keith Andrews"
+    },
+    {
+      "code": 606930,
+      "club": 88,
+      "tag": "ruled_out",
+      "condition": "concussion",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Sergej Jakirovic"
+    },
+    {
+      "code": 105666,
+      "club": 88,
+      "tag": "ruled_out",
+      "condition": "shoulder",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Sergej Jakirovic"
+    },
+    {
+      "code": 626751,
+      "club": 88,
+      "tag": "ruled_out",
+      "condition": "back",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Sergej Jakirovic"
+    },
+    {
+      "code": 445028,
+      "club": 88,
+      "tag": "ruled_out",
+      "condition": "adductor",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Sergej Jakirovic"
+    },
+    {
+      "code": 501902,
+      "club": 88,
+      "tag": "ruled_out",
+      "condition": "groin",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Sergej Jakirovic"
+    },
+    {
+      "code": 470294,
+      "club": 88,
+      "tag": "injury_scare",
+      "condition": "thigh",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Sergej Jakirovic"
+    },
+    {
+      "code": 465525,
+      "club": 88,
+      "tag": "injury_scare",
+      "condition": "knee",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Sergej Jakirovic"
+    },
+    {
+      "code": 169359,
+      "club": 88,
+      "tag": "injury_scare",
+      "condition": "ankle",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Sergej Jakirovic"
+    },
+    {
+      "code": 539142,
+      "club": 9,
+      "tag": "ruled_out",
+      "condition": "calf",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Frank Lampard"
+    },
+    {
+      "code": 176412,
+      "club": 9,
+      "tag": "ruled_out",
+      "condition": "quad",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Frank Lampard"
+    },
+    {
+      "code": 220583,
+      "club": 9,
+      "tag": "ruled_out",
+      "condition": "knee",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Frank Lampard"
+    },
+    {
+      "code": 439668,
+      "club": 9,
+      "tag": "ruled_out",
+      "condition": "calf",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Frank Lampard"
+    },
+    {
+      "code": 465390,
+      "club": 9,
+      "tag": "ruled_out",
+      "condition": "hamstring",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Frank Lampard"
+    },
+    {
+      "code": 210156,
+      "club": 9,
+      "tag": "suspended",
+      "confidence": 0.65,
+      "said": "2026-09-17T13:00:00.000Z",
+      "manager": "Frank Lampard"
+    }
+  ]
+}

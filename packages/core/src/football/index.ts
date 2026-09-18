@@ -190,4 +190,4 @@ export type {
 } from "./intel/types";
 export type { Opposition } from "./opposition";
 export { FIRM, pressers } from "./intel/pressers";
-export type { IntelPressers, PresserSignal } from "./intel/pressers";
+export type { IntelPressers, PresserQuote, PresserSignal } from "./intel/pressers";

@@ -1,12 +1,12 @@
 import type { IntelManifest } from "./types";
 
-// What a manager said about availability, as a signal rather than a sentence.
+// What a manager said about availability — as a signal, and now as his own words.
 //
-// **No quote reaches this file, and that is the contract's hard line, not a size
-// decision** (`docs/providers/intel-export.md` §5). The tag is the export; the
-// sentence that produced it is not. A verbatim line from a real manager is a
-// republishing question this repo has not answered, and an invented one is what
-// `voice/house.ts` forbids outright.
+// **The no-quote rule was lifted on 18 Sep 2026** (Craig: "you can use the actual
+// quotes in quotation marks too if needed. like the scout does"; on republishing,
+// "its a 10 man league, its not public"). The half that stands is the half that
+// mattered: a quote may be CARRIED from the source, never COMPOSED. Inventing one
+// is still forbidden outright in `voice/house.ts`.
 
 /** One thing a manager said about one player. The tag vocabulary is the sister
  *  repo's own, verbatim — a mapping table here would be a second vocabulary to
@@ -17,6 +17,10 @@ export interface PresserSignal {
   /** His club's FPL code, for a man who moved. */
   club: number;
   tag: string;
+  /** The complaint in the source's own word — "calf", "concussion". The tag says
+   *  what it MEANS and this says what it IS, which is what a manager reads for.
+   *  Optional: a signal about rotation has no complaint to name. */
+  condition?: string;
   /** The agent's own 0–1. Below `FIRM` a signal is a hint, not a fact. */
   confidence: number;
   /** When the press conference was, not when it was parsed. */
@@ -24,9 +28,22 @@ export interface PresserSignal {
   manager: string;
 }
 
+/** One thing a manager actually said, verbatim, with its attribution. */
+export interface PresserQuote {
+  /** His club's FPL code. */
+  club: number;
+  /** His own words, with no quotation marks — the renderer adds those. */
+  text: string;
+  said: string;
+  /** What he was asked about, when the source says. */
+  about?: string;
+}
+
 export interface IntelPressers {
   manifest: IntelManifest;
   rows: PresserSignal[];
+  /** Absent on an export written before 18 Sep 2026, when quotes were forbidden. */
+  quotes?: PresserQuote[];
 }
 
 /** Below this a signal is a hint and the column may not lead on it. 0.6 is the

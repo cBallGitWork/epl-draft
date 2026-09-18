@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { LEAGUE_TIMEZONE, pressers, type Club, type IntelPressers, type PresserLine } from "@epl/core";
+import { LEAGUE_TIMEZONE, normalizeName, pressers, type Club, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { ResolvedPlayer, RosteredPlayer, RosteredTeam } from "@epl/core";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
@@ -46,6 +46,49 @@ function owners(teams: readonly RosteredTeam[]): Map<number, string> {
   return out;
 }
 
+/** First name and surname, which is how a person is named in print. FPL's web
+ *  name is a squad disambiguator — "N.Gonzalez", "Caicedo", "Van den Berg" — and
+ *  its full name is a birth certificate. This takes one of each.
+ *
+ *  Exported for its test: every rule below is a real player FPL shapes awkwardly,
+ *  and the one-name men are the reason it is not simply the first two tokens. */
+export function display(player: { name: string; fullName?: string }): string {
+  const web = player.name.split(/\s+/).filter((word) => word !== "");
+  const full = (player.fullName ?? "").split(/\s+/).filter((word) => word !== "");
+  if (full.length === 0 || web.length === 0) return player.name;
+
+  const w = web.map(key);
+  const f = full.map(key);
+
+  // "Dan Burn", "Sepp van den Berg" — the web name is already the tail of his
+  // full name, so his first name is the only thing missing.
+  if (w.every((token, i) => token === f[f.length - w.length + i])) {
+    return f.length === w.length ? full.join(" ") : [full[0], ...full.slice(-w.length)].join(" ");
+  }
+
+  // "Joelinton", "Murillo", "Jair Cunha" — men FPL names from the FRONT. Adding
+  // a first name here produces "Joelinton Cássio", which is not what he is called.
+  if (w[0] === f[0]) return player.name;
+
+  // "Caicedo" of "Moisés Caicedo Corozo", "N.Gonzalez" of "Nico González
+  // Iglesias" — find his surname in the full name and pair it with his first.
+  const surname = key(web[web.length - 1].replace(/^[A-Za-zÀ-Ÿ]\./, ""));
+  const at = f.indexOf(surname);
+  if (at > 0) return `${full[0]} ${full[at]}`;
+  // "O.Dango" of "Dango Ouattara" — the match IS his first name, so the surname
+  // is the token after it.
+  if (at === 0 && full.length > 1) return full.slice(0, 2).join(" ");
+
+  return player.name;
+}
+
+/** One token, comparable — the bridge's normaliser with its spaces closed up,
+ *  because a hyphen must NOT split here: "Kesler-Hayden" is one name, and
+ *  splitting it loses the token count the tail match above depends on. */
+function key(token: string): string {
+  return normalizeName(token).replace(/ /g, "");
+}
+
 /** The signals for this week's pressers, as the brief wants them. */
 export function presserLines(
   teams: readonly RosteredTeam[],
@@ -60,7 +103,7 @@ export function presserLines(
    *  `clubId` is why this is the whole snapshot rather than a name lookup: the
    *  CLUB a signal belongs to is read off the PLAYER here, never off the
    *  export's own `club` field. */
-  squad: readonly { code: number; name: string; clubId: number }[],
+  squad: readonly { code: number; name: string; fullName: string; clubId: number }[],
 ): PresserLine[] {
   const intel = read();
   if (intel === null) return [];
@@ -85,12 +128,25 @@ export function presserLines(
 
     return [{
       ...signal,
-      playerName: player.name,
+      playerName: display(player),
       clubName: club.name,
       // Null when nobody in the league holds him, which is no longer a reason
       // to drop him — it is the difference between "start him" and "claim him".
       ownerName: held.get(signal.code) ?? null,
     }];
+  });
+}
+
+/** What each manager actually said, for the clubs in this round.
+ *
+ *  A quote whose club we cannot name is dropped: it would print under no crest
+ *  and beside no row, which is a stray sentence rather than team news. */
+export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote & { clubName: string })[] {
+  const intel = read();
+  if (intel === null) return [];
+  return (intel.quotes ?? []).flatMap((quote) => {
+    const club = clubs.get(quote.club);
+    return club === undefined ? [] : [{ ...quote, clubName: club.name }];
   });
 }
 
