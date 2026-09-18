@@ -45,7 +45,9 @@ async function main(): Promise<void> {
   const said_: unknown[] = [];
   const unmatched: string[] = [];
 
-  for (const section of sections(html)) {
+  const read = sections(html);
+  for (const heading of read.skipped) unmatched.push(`club heading not in the table: ${heading}`);
+  for (const section of read.sections) {
     const club = clubs.get(section.club);
     if (club === undefined) {
       unmatched.push(`club: ${section.club}`);

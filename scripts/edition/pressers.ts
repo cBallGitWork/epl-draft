@@ -184,7 +184,9 @@ export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote &
   if (intel === null) return [];
   return (intel.quotes ?? []).flatMap((quote) => {
     const club = clubs.get(quote.club);
-    return club === undefined ? [] : [{ ...quote, clubName: club.name }];
+    // The same spelling the LINES use, or the brief groups one club under two
+    // headings and then tells the writer to echo "the club name exactly as given".
+    return club === undefined ? [] : [{ ...quote, clubName: fullClubName(club.name) }];
   });
 }
 

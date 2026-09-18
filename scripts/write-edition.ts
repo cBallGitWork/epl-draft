@@ -140,6 +140,7 @@ async function main(): Promise<void> {
     presserLines: lines,
     presserQuotes: presserQuotes(byCode),
     presserTies,
+    presserClubs: byCode,
   };
 
   const filings: Filing[] = [];

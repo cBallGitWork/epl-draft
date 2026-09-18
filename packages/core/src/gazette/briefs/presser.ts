@@ -26,7 +26,7 @@ const MEANS: Record<string, string> = {
   available: "FIT again — back in contention",
   rotation_risk: "may be rotated",
   managed_load: "his minutes are being managed",
-  injury_scare: "carrying a knock",
+  injury_scare: "a doubt",
 };
 
 export function buildPresserBrief(brief: {
@@ -57,7 +57,14 @@ export function buildPresserBrief(brief: {
       // owned by (just put manager name in brackets)".
       const who = line.ownerName === null ? "" : ` (${line.ownerName})`;
       const soft = line.confidence >= FIRM ? "" : " [HINT, not a fact]";
-      const what = line.condition === undefined || line.condition === "" ? "" : ` (${line.condition})`;
+      // **An absent complaint is STATED, never left blank.** A blank read as an
+      // invitation: João Pedro was filed "calf" on 18 Sep, which is Caicedo's
+      // calf three lines above, when the source says Alonso declined to name
+      // the injury at all.
+      const what =
+        line.condition === undefined || line.condition === ""
+          ? " (COMPLAINT NOT STATED — you may not name one)"
+          : ` (${line.condition})`;
       return `${line.playerName}${who} — ${MEANS[line.tag] ?? line.tag}${what}, said by ${line.manager}${soft}`;
     });
     return `- ${club} (code ${row.code}): ${men.join(" · ")}`;
@@ -84,6 +91,7 @@ export function buildPresserBrief(brief: {
       '    "men": [ { "name": his name as given, "owner": our manager who holds him or omit it, "status": one of OUT | Doubt | Suspended | FIT, "note": the complaint and what was said, a few words — and where a ban or an absence has a KNOWN LENGTH, that length is the most useful thing you can put here } ],',
       '    "quote": { "text": his words EXACTLY as given below, "said": who said them } — or omit it when the club has none }',
     ].join("\n"),
+    "NEVER NAME AN INJURY YOU WERE NOT GIVEN. Where a man's line says COMPLAINT NOT STATED, his note says what was said about him and nothing about his body — \"no update given\", \"not cleared\", \"decision Friday\". Borrowing the complaint from the man above him is the worst error this column can make, and it has made it.",
     "NEVER RESTATE THE STATUS IN THE NOTE. \"OUT — not able to play\", \"FIT — back in contention\", \"Suspended — banned, not injured\" are the tag written twice; the second half is deleted by any sub who sees it. The note carries the COMPLAINT and anything the tag cannot say — how long, since when, what happens next. Where there is nothing to add, leave the note empty.",
     "A QUOTE THAT SAYS NOTHING GETS NO SPACE. \"More or less the same as the other night, yeah, nothing has really changed\" is a man declining to give you news, and printing it gives six lines to an absence. Use a quote only where it carries a fact the bullets do not — a timescale, a reason, a decision. Otherwise omit it.",
     "ONE BULLET PER MAN, and every man the brief gives you gets one. The note is a FEW WORDS, not a sentence: \"calf; closer to a return\", \"hamstring; out until after the break\", \"injury unconfirmed, could still feature\". No verb of attribution in a bullet — the club\'s line carries the manager, the bullets carry the facts.",

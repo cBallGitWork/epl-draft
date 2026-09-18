@@ -74,18 +74,30 @@ function text(html: string): string {
     .replace(/\s+/g, " ");
 }
 
-/** The per-club sections, by their <h2> headings. */
-export function sections(html: string): { club: string; body: string }[] {
+/** The per-club sections, by their <h2> headings — and every heading that looked
+ *  like a club and was not recognised.
+ *
+ *  **The skipped list is the point.** `CLUBS` holds the six this article covered
+ *  and the league has twenty; an unknown heading used to be dropped in silence
+ *  while the docblock claimed it was "reported, never guessed". Next week's
+ *  article headed ARSENAL would have produced an empty column and no warning. */
+export function sections(html: string): { sections: { club: string; body: string }[]; skipped: string[] } {
   const out: { club: string; body: string }[] = [];
+  const skipped: string[] = [];
   const parts = html.split(/<h2[^>]*>/i);
   for (const part of parts.slice(1)) {
     const close = part.search(/<\/h2>/i);
     if (close < 0) continue;
-    const heading = text(part.slice(0, close)).trim().toUpperCase().replace(/\s+/g, " ");
-    const club = CLUBS[heading];
+    const printed = text(part.slice(0, close)).trim().replace(/\s+/g, " ");
+    const club = CLUBS[printed.toUpperCase()];
     if (club !== undefined) out.push({ club, body: text(part.slice(close)) });
+    // Tested on the heading AS PRINTED, never on our own upper-casing: FFS sets
+    // a club heading in capitals and the sidebar's in title case ("Watchlists",
+    // "FPL Fixture Ticker"), and folding first made every one of them look like
+    // a club — a warning on six sidebar widgets is a warning nobody reads.
+    else if (/^[A-Z][A-Z' ]{3,30}$/.test(printed)) skipped.push(printed);
   }
-  return out;
+  return { sections: out, skipped };
 }
 
 /** FFS's way of writing "the club has not said". That is the ABSENCE of a
@@ -110,7 +122,7 @@ const SAYS: { tag: string; re: RegExp }[] = [
  *  Neto and Caicedo as OUT on 18 Sep. A negated absence is a doubt, never a fact. */
 const DENIED = /\b(no one|nobody|none of|not) (is |are |been )?(ruled out|out|suspended|missing)\b|\bno (new|fresh|further|known) (concerns|issues|injuries|problems)\b/i;
 
-function classify(sentence: string): string | null {
+export function classify(sentence: string): string | null {
   for (const each of SAYS) {
     if (!each.re.test(sentence)) continue;
     if (each.tag === "ruled_out" && DENIED.test(sentence)) return "injury_scare";
@@ -131,6 +143,29 @@ function condition(sentence: string, name: string): string | undefined {
   // reads as a database field rather than as team news.
   return UNNAMED.test(what) ? undefined : what;
 }
+
+/** A sentence's clauses, because a tag belongs to the CLAUSE a man stands in
+ *  and not to every name in the sentence.
+ *
+ *  **The bug this exists for reached print.** Forest's section reads "Jair's
+ *  possible recovery could mean a headache at centre-half, with Ola Aina and
+ *  Ousmane Diomande performing well there last Saturday" — one sentence, in
+ *  which "possible" belongs to Jair and Aina and Diomande are being PRAISED.
+ *  Both were filed as doubts, in a club row whose own quote says "all other
+ *  players will be fit". The page contradicted itself four lines apart.
+ *
+ *  Split on the joins that change subject, never on a comma: a comma separates
+ *  the names in "Gonzalez, Ramsey and Dedic", which must stay one clause. */
+export function clauses(sentence: string): string[] {
+  return sentence.split(CLAUSE);
+}
+
+/** The joins that change subject. **"along with" and "together with" do not** —
+ *  they continue it, and splitting there stranded four Newcastle men in a clause
+ *  of their own: "All four look set to sit out Gameweek 5, along with Joelinton,
+ *  Dan Burn, Ewen Jaouen and Will Osula" filed the last four as doubts when the
+ *  sentence rules all eight out. */
+const CLAUSE = /,? (?:but|while|whilst|although|though|however|whereas) |(?<!\balong)(?<!\btogether),? with /i;
 
 /** Sentences, so a man is read together with what was said about him. Blocks
  *  first, then punctuation — and a block that is a quote or its "– Xabi Alonso
@@ -170,38 +205,40 @@ export function troubles(
   // Pass two: the prose, which says what the list cannot — who is actually out,
   // who is back, and the man discussed at length with no bracket at all.
   for (const sentence of sentences(body)) {
-    const tag = classify(sentence);
-    if (tag === null) continue;
-    const words = fold(sentence).split(" ");
-    const mentioned = squad
-      .map((player) => ({ player, span: best(words, player) }))
-      .filter((each): each is { player: typeof each.player; span: { at: number; len: number } } => each.span !== null);
+    for (const clause of clauses(sentence)) {
+      const tag = classify(clause);
+      if (tag === null) continue;
+      const words = fold(clause).split(" ");
+      const mentioned = squad
+        .map((player) => ({ player, span: best(words, player) }))
+        .filter((each): each is { player: typeof each.player; span: { at: number; len: number } } => each.span !== null);
 
-    for (const { player, span } of mentioned) {
-      // A match sitting INSIDE a longer one is the wrong man. Pedro Neto answers
-      // to "Pedro", which is the back half of "Joao Pedro" — reading it as a
-      // mention filed Chelsea's news against a player nobody had named.
-      const inside = mentioned.some(
-        (other) =>
-          other.player !== player &&
-          other.span.len > span.len &&
-          span.at >= other.span.at &&
-          span.at + span.len <= other.span.at + other.span.len,
-      );
-      if (inside) continue;
-      const already = found.get(player.name);
-      // The prose outranks the list on WHAT WAS SAID and the list outranks it on
-      // the complaint: "ruled out" is a stronger statement than a bracket, and a
-      // bracket names the injury a sentence often does not.
-      if (already !== undefined && already.tag !== "injury_scare") continue;
-      // WHY=1 prints the sentence behind every tag, which is how a claim in the
-      // paper is traced back to the article that made it.
-      if (process.env.WHY) console.log(`  ${player.name} <- [${tag}] ${sentence.slice(0, 140)}`);
-      found.set(player.name, {
-        player,
-        tag,
-        condition: already?.condition ?? condition(sentence, printed(sentence, player)),
-      });
+      for (const { player, span } of mentioned) {
+        // A match sitting INSIDE a longer one is the wrong man. Pedro Neto answers
+        // to "Pedro", which is the back half of "Joao Pedro" — reading it as a
+        // mention filed Chelsea's news against a player nobody had named.
+        const inside = mentioned.some(
+          (other) =>
+            other.player !== player &&
+            other.span.len > span.len &&
+            span.at >= other.span.at &&
+            span.at + span.len <= other.span.at + other.span.len,
+        );
+        if (inside) continue;
+        const already = found.get(player.name);
+        // The prose outranks the list on WHAT WAS SAID and the list outranks it on
+        // the complaint: "ruled out" is a stronger statement than a bracket, and a
+        // bracket names the injury a sentence often does not.
+        if (already !== undefined && already.tag !== "injury_scare") continue;
+        // WHY=1 prints the sentence behind every tag, which is how a claim in the
+        // paper is traced back to the article that made it.
+          if (process.env.WHY) console.log(`  ${player.name} <- [${tag}] ${clause.slice(0, 130)}`);
+        found.set(player.name, {
+          player,
+          tag,
+          condition: already?.condition ?? condition(sentence, printed(sentence, player)),
+        });
+      }
     }
   }
   return [...found.values()];
