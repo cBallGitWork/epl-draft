@@ -12,9 +12,17 @@
       "news:https://www.bbc.co.uk/sport/football/articles/cvrl64y9rdn9o",
       "news:https://www.bbc.co.uk/sport/football/articles/cmly4gpnwk2go",
       "wire:through-gw4",
-      "wire:through-gw5"
+      "wire:through-gw5",
+      "news:https://www.bbc.co.uk/sport/football/articles/c679052dq30ro"
     ],
     "threads": [
+      {
+        "subject": "Gabriel's future, test31121",
+        "beat": "The 15-year-old in Barcelona amid European interest, still on test31121's rolls",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T18:39:15.585Z"
+      },
       {
         "subject": "The frozen waiver wire",
         "beat": "Two deals this week, one fewer than last, and Raya still on the pile.",

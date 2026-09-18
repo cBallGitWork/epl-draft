@@ -1,6 +1,26 @@
 {
-  "updatedAt": "2026-09-18T18:14:40.437Z",
+  "updatedAt": "2026-09-18T18:39:15.585Z",
   "stories": [
+    {
+      "slug": "news-football-articles-c679052dq30ro",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-18T18:39:15.585Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Gabriel Blows In A Catalan Wind",
+      "deck": "test31121's teenager JJ Gabriel travels to Barcelona as Europe's biggest clubs chase his signature.",
+      "body": "The clubs circling JJ Gabriel are not test31121's problem yet, but they are test31121's asset. The 15-year-old has travelled to Barcelona while the biggest names in Europe queue for a signature, and the manager who holds him on this league's rolls watches the same reports as the rest of us.\n\nNothing has changed on paper. Gabriel is still test31121's, no minutes attach to any of it, and there is nothing to act on. But a squad that has already given its owner a flat midfield and a selection headache now has a name whose next move belongs to somebody else entirely.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/c679052dq30ro"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
     {
       "slug": "gw5-wire",
       "kind": "wire",
