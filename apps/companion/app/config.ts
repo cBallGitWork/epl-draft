@@ -1,4 +1,4 @@
-import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, MAX_PAPER_STORIES } from "@epl/core";
 
 // The app's own constants — the ones that are decisions about this companion
 // rather than about the league or the football.
@@ -82,8 +82,15 @@ export const SHOULDER_STORIES = 2;
  *  reached. The articles are on the pages behind — a headline turns to one.
  *
  *  Eight, against a paper that holds up to `MAX_PAPER_STORIES`: a busy round
- *  fills the sheet without the front page becoming an index of itself. */
-export const HEADLINES_SHOWN = 8;
+ *  fills the sheet without the front page becoming an index of itself.
+ *
+ *  **Every story, while the paper is being verified** (Craig, 18 Sep 2026:
+ *  *"show all articles we create so we can verify"*). Eight of sixteen meant
+ *  four filed stories were off the sheet and, until `paperPages` claimed their
+ *  kinds, off every page — so a story could be written, committed, and seen by
+ *  nobody. Set back to 8 once each kind has been read once; the constant is the
+ *  only thing to change and this paragraph is the reminder. */
+export const HEADLINES_SHOWN = MAX_PAPER_STORIES;
 
 /** The league this deployment actually serves.
  *
