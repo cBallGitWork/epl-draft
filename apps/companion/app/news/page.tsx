@@ -1,13 +1,14 @@
 import Link from "next/link";
 import type { InboxItem } from "@epl/core";
-import { fantraxMoment, fantraxTime } from "@epl/core";
+import { fantraxTime } from "@epl/core";
 import DateChip from "../components/shell/DateChip";
+import Letter from "./Letter";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
 import { londonDayAndDate, londonTime } from "../londonTime";
 import { NEWS } from "../titles";
-import { LABEL, PANEL_FLUSH, ROW_NAME, SMALL_CAPS } from "@/app/desk";
+import { PANEL_FLUSH, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 
 // The manager's news, the way Championship Manager files it.
 //
@@ -136,7 +137,7 @@ export default async function NewsPage({
             ))}
           </ul>
 
-          {open === null ? null : <Read item={open} />}
+          {open === null ? null : <Letter item={open} />}
         </div>
       )}
     </div>
@@ -240,70 +241,6 @@ function Row({
   );
 }
 
-/** The item you are reading: its headline in CM's yellow, and the body under it.
- *
- *  Inside a panel, which is where `cm9900/24.jpg` puts a yellow caption and
- *  where DESIGN §2 requires anything printed at all — the reference's own news
- *  screen sets both straight on the photograph, and that is the one thing in the
- *  shot we do not copy. */
-function Read({ item }: { item: InboxItem }) {
-  const moment = itemMoment(item);
-  return (
-    <article className="cm-panel flex flex-col p-3 lg:min-h-[22rem] lg:p-5">
-      {/* **A letter's own head, and it is three facts rather than a caption**
-          (Craig, 17 Sep 2026: *"lets make this sound like a real email"*, and
-          *"email box can use more space, should look more like an email too?"*).
-
-          What was here was a centred yellow headline, a sentence and a greyed
-          date at the foot — a caption over a paragraph, which is the shape of a
-          news item and not of post. Every mail client ever written opens with
-          the same three lines, in the same order, and they are all facts this
-          item already carried: who it is from, what it is about, when it came.
-          The date moved from the bottom to the top for that reason, and stopped
-          being the thing a reader skips.
-
-          `from` is the field doing the most work: it is where a doubt says whose
-          man he is, and the one place the opponent is named AS the opponent. */}
-      <header className="flex flex-col gap-2 border-b border-line pb-3">
-        <Field label="From">{item.from}</Field>
-        {/* CM's yellow, still — it is the subject line of the letter and the
-            caption of the screen, and `02-news.jpg` sets it in the accent. Left
-            rather than centred now that it is a FIELD with a label beside it. */}
-        <Field label="Subject">
-          <h2 className="cm-title font-chrome text-base font-bold text-accent lg:text-xl">
-            {item.headline}
-          </h2>
-        </Field>
-        {moment === null ? null : <Field label="Date">{moment}</Field>}
-        {/* **Only when the sender does not already say it.** "The FA" and "The
-            transfer desk" belong to no club, so on those two this is the only
-            line that names the squad — and it names the opponent AS the
-            opponent, which is Craig's *"make it clear its their team too"*. */}
-        {item.about === null ? null : <Field label="Squad">{item.about}</Field>}
-      </header>
-      {/* **Room to be a letter.** `leading-relaxed` and a real top margin: the
-          body is one or two sentences and it was set tight under a centred
-          caption, which reads as a caption's second line rather than as the
-          thing you opened. */}
-      <p className="pt-3 text-sm leading-relaxed text-ink lg:pt-4 lg:text-base">{item.body}</p>
-    </article>
-  );
-}
-
-/** One line of the letter's head: a label in the quiet slot, then the fact.
- *
- *  The label column is FIXED so the three values line up — a head whose values
- *  start at three different x-positions is three captions rather than a block,
- *  and the alignment is the whole visual argument that this is post. */
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex items-baseline gap-2">
-      <span className={`${LABEL} w-12 shrink-0 lg:w-16`}>{label}</span>
-      <span className="min-w-0 flex-1 text-sm text-ink lg:text-base">{children}</span>
-    </div>
-  );
-}
-
 /** What the blue block says: the day it happened, or the round it belongs to.
  *
  *  **Two vocabularies, and the tag on `at` is what tells them apart.** Ours is an
@@ -316,11 +253,18 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
  *  **And it carries the CLOCK** (Craig, 5 Sep 2026: "the blue row tab should
  *  include the time too, we have it"). He is right that we have it: every deal
  *  carries Fantrax's hour and minute by construction — `fantraxParts`' regex
- *  requires one — and the deadline is a real instant. What has no clock is a
- *  standing state: the round's own result and every doubt are `at: null` with a
- *  gameweek, because FPL publishes no "as of" for a doubt and dating it to the
- *  moment we read it would invent a fact. Those two still show `GW3`, which is
- *  the honest answer and the reason this function has three branches. */
+ *  requires one — and the deadline is a real instant.
+ *
+ *  **A doubt has one too, and this docblock was the last place saying it did
+ *  not.** It read that "every doubt is `at: null` … because FPL publishes no
+ *  'as of' for a doubt" — the claim `doubts.ts` and PLATFORM_NOTES now record as
+ *  false (`news_added`, 198/198). It was written down in three files and
+ *  corrected in two; this was the third, left standing above code that already
+ *  did the opposite.
+ *
+ *  What is genuinely undated is the round's own RESULT — a standing fact about a
+ *  finished tie — and a doubt FPL published no stamp for. Both fall back to the
+ *  round, which is what the first branch is for. */
 function itemDay(item: InboxItem): { day: string; time: string | null } {
   if (item.at === null) {
     return { day: item.gameweek === null ? "" : `GW${item.gameweek}`, time: null };
@@ -337,12 +281,4 @@ function itemDay(item: InboxItem): { day: string; time: string | null } {
   // one caller is the rule of 2/3 answered at one.
   const at = stamp.lastIndexOf(" ");
   return at === -1 ? { day: stamp, time: null } : { day: stamp.slice(0, at), time: stamp.slice(at + 1) };
-}
-
-/** The same date with its clock, for the item being read. Fantrax's carries the
- *  zone on its face (`Wed 2 Sep, 6:11 AM ET`) because we did not convert it. */
-function itemMoment(item: InboxItem): string | null {
-  if (item.at === null) return null;
-  if ("iso" in item.at) return `${londonDayAndDate(item.at.iso)}, ${londonTime(item.at.iso)}`;
-  return fantraxMoment(item.at.fantrax);
 }
