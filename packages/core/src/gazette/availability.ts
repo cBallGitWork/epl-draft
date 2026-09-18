@@ -1,4 +1,4 @@
-import { isDoubtful } from "../football/playerState";
+import { availabilityOf } from "../football/playerState";
 import { isResolved } from "../join/roster";
 import type { RosteredTeam } from "../join/roster";
 import type { AvailabilityNote } from "./types";
@@ -26,13 +26,22 @@ export function availability(teams: readonly RosteredTeam[]): AvailabilityNote[]
 
       // The rule lives in the football layer: the player card asks the same
       // question of the same fields, and the two must not answer differently.
-      if (!isDoubtful(player)) continue;
+      // `availabilityOf` rather than `isDoubtful`, which is the same question
+      // asked so as to KEEP the answer — the state, the word for the box and
+      // whether he is definitely not playing are all computed here either way,
+      // and a boolean threw three of them away.
+      const state = availabilityOf(player);
+      if (state.state === "fit") continue;
 
       notes.push({
         playerName: player.name,
+        // Both names, because the two readers want different ones — a row wants
+        // the shirt's and a letter wants the man's. See `AvailabilityNote`.
+        fullName: player.fullName,
+        // FPL's own stamp for the line, not the moment we read it.
+        newsAt: player.newsAdded,
         teamId: team.teamId,
-        news: player.news,
-        chance: player.chanceOfPlaying,
+        ...state,
       });
     }
   }

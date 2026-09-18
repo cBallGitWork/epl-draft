@@ -1,12 +1,14 @@
 import Link from "next/link";
 import type { InboxItem } from "@epl/core";
-import { fantraxMoment, fantraxTime } from "@epl/core";
+import { fantraxTime } from "@epl/core";
+import DateChip from "../components/shell/DateChip";
+import Letter from "./Letter";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
 import { londonDayAndDate, londonTime } from "../londonTime";
 import { NEWS } from "../titles";
-import { PANEL_FLUSH, QUIET_FIGURE, ROW_NAME, SMALL_CAPS } from "@/app/desk";
+import { PANEL_FLUSH, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 
 // The manager's news, the way Championship Manager files it.
 //
@@ -90,7 +92,22 @@ export default async function NewsPage({
           </Nothing>
         </section>
       ) : (
-        <>
+        /* **The list beside the letter on a desk, and stacked under a thumb**
+            (Craig, 17 Sep 2026: *"on desktop we barely use the space"*, and he is
+            right — the whole screen was one column of 390px ideas at 1440, eight
+            rows and a three-line letter, with five hundred pixels of the
+            photograph under it).
+
+            The reference stacks them, and that is a reading of `02-news.jpg`
+            rather than of CM: the game ran at 800x600, where a list and a letter
+            side by side would be two narrow columns. Ours has the width the
+            reference never had, and an inbox is the one shape every mail client
+            ever written puts in two columns for the same reason — you pick from
+            the list and read without losing your place in it.
+
+            `items-start` so the letter sits at the top of its column rather than
+            stretching to the list's height, and the list keeps its own scroll. */
+        <div className="flex flex-col gap-2 lg:grid lg:grid-cols-[minmax(0,7fr)_minmax(0,6fr)] lg:items-start lg:gap-3">
           {/* **Inside a panel, and it was not for an hour.** The list wore
               `LeagueShell`'s panel while this was a League tab; a section of its
               own has none, and the rows went straight onto the photograph — the
@@ -100,17 +117,28 @@ export default async function NewsPage({
               The list itself: CM's is about eight rows deep with the reader's
               own scrollbar, and ours takes the same shape and the same bar,
               because a list cut at eight with no bar looks like a list with
-              eight things in it (`desk.css` on `.cm-scroll`). */}
-          <ul className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-72 overflow-y-auto lg:max-h-64`}>
+              eight things in it (`desk.css` on `.cm-scroll`). It is DEEPER on a
+              desk than on a phone now rather than shallower — `lg:max-h-64` was
+              a phone's ceiling applied to a screen with three times the room,
+              and Craig asked for more of it twice (17 Sep 2026: *"left list, use
+              more space, and make that column just a little bigger"*). Hence the
+              7:6 split as well: the list is the screen's subject and the letter
+              is what one row of it says, so the list takes the larger half. */}
+          <ul className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-72 overflow-y-auto lg:max-h-[40rem]`}>
             {inbox.items.map((entry) => (
               <li key={entry.id}>
-                <Row item={entry} open={entry.id === open?.id} names={inbox.names} />
+                <Row
+                  item={entry}
+                  open={entry.id === open?.id}
+                  names={inbox.names}
+                  mine={inbox.mine}
+                />
               </li>
             ))}
           </ul>
 
-          {open === null ? null : <Read item={open} />}
-        </>
+          {open === null ? null : <Letter item={open} />}
+        </div>
       )}
     </div>
   );
@@ -134,33 +162,39 @@ function Row({
   item,
   open,
   names,
+  mine,
 }: {
   item: InboxItem;
   open: boolean;
   names: Map<string, string>;
+  mine: string | null;
 }) {
-  const who = item.teamId === null ? null : names.get(item.teamId);
+  // **"You" rather than your own team's name**, which is the row's half of
+  // Craig's "make it clear its their team too": a column reading `TEST2` on one
+  // row and `TEST3` on the next asks a manager to remember which of the two he
+  // is, and the page title above already says. The opponent keeps his name,
+  // because that is the fact being reported; the letter says why it is on the
+  // screen at all.
+  const who =
+    item.teamId === null ? null : item.teamId === mine ? "You" : names.get(item.teamId);
+  const when = itemDay(item);
   return (
     <Link
       href={`${HERE}?item=${encodeURIComponent(item.id)}`}
       aria-current={open ? "true" : undefined}
-      className={`cm-row flex min-h-11 items-stretch gap-2 ${
+      className={`cm-row flex min-h-11 items-stretch gap-1.5 ${
         open ? "bg-league-deep" : "hover:bg-surface"
       }`}
     >
-      {/* **The one exception to `.cm-index`'s size**, and the mechanism working
-          as designed: this chip holds a DATE — "Sat 12 Sept 14:45" — where every
-          other blue block in the app holds a placing, a score or a shirt number.
-          At the class's own `sm`/`lg:base` it wrapped to three lines at 390 and
-          two at 1440, taking the row to 54px; measured across 29 routes on
-          7 Sep 2026, it is the only chip in the app that does.
-
-          `text-3xs` and `leading-tight` after the class, which is what an
-          exception looks like now that the size sits in `@layer components`. It
-          is greppable, and it says a decision was made here. */}
-      <span className="cm-index numeric flex w-16 shrink-0 items-center justify-center px-1 text-center text-3xs leading-tight lg:w-24">
-        {itemDay(item)}
-      </span>
+      {/* **`DateChip` at its own size, and no size override at all now** — which
+          is the whole of Craig's *"side boxes (blue bar) harder to read"* and
+          *"share the code"* (17 Sep 2026). This chip carried a `text-3xs`
+          exception, documented at length as the mechanism working as designed;
+          what it actually was is this list reading a date three steps smaller
+          than the player inbox reads the same date, because this one had to
+          swallow the day and the clock as one wrapping string in a 64px box.
+          Handing the two lines over separately is what buys the size back. */}
+      <DateChip day={when.day} time={when.time} className="w-[5.5rem] lg:w-28" />
       <span
         className={`flex min-w-0 flex-1 items-center truncate py-1 ${ROW_NAME} ${
           open ? "text-ink" : item.urgent ? "text-bad" : "text-ink"
@@ -168,6 +202,25 @@ function Row({
       >
         {item.headline}
       </span>
+      {/* **The box that says OUT**, and it is `StateBox`'s object rather than a
+          new one — filled for a man who is definitely not playing, outlined for
+          one who might yet, which is DESIGN §2's rule that certain and uncertain
+          are said in FILL rather than in a second hue. The word is the football
+          layer's, so the row says WHY in four characters.
+
+          The class string is duplicated from `StateBox` on CODE_RULES §1: two
+          occurrences are a coincidence, and it is named in `desk.ts` at the
+          third. `StateBox` itself takes a `FootballPlayer` and this row holds an
+          item, so sharing it would mean an options bag with one caller each. */}
+      {item.mark === null ? null : (
+        <span
+          className={`numeric shrink-0 self-center px-1 text-3xs font-bold uppercase leading-[1.5] ${
+            item.mark.out ? "cm-state" : "cm-state-doubt"
+          }`}
+        >
+          {item.mark.label}
+        </span>
+      )}
       {/* **The open row's ground decides this ink**, which the first build let
           the quiet slot decide instead: `--color-muted` is 3.79:1 on
           `--color-league-deep` and `sweep` caught it at both widths. The red
@@ -177,7 +230,7 @@ function Row({
           reading there is nothing to tell it apart from. */}
       {who === null ? null : (
         <span
-          className={`flex shrink-0 items-center pr-2 ${SMALL_CAPS} ${
+          className={`flex shrink-0 items-center pr-1.5 ${SMALL_CAPS} ${
             open ? "text-ink" : "text-muted"
           }`}
         >
@@ -185,31 +238,6 @@ function Row({
         </span>
       )}
     </Link>
-  );
-}
-
-/** The item you are reading: its headline in CM's yellow, and the body under it.
- *
- *  Inside a panel, which is where `cm9900/24.jpg` puts a yellow caption and
- *  where DESIGN §2 requires anything printed at all — the reference's own news
- *  screen sets both straight on the photograph, and that is the one thing in the
- *  shot we do not copy. */
-function Read({ item }: { item: InboxItem }) {
-  return (
-    <article className="cm-panel flex flex-col gap-2 p-3 lg:p-4">
-      <h2 className="cm-title text-center font-chrome text-base font-bold text-accent lg:text-2xl">
-        {item.headline}
-      </h2>
-      <p className="text-sm text-ink lg:text-base">{item.body}</p>
-      {/* **A quiet figure, not a column head.** `HEAD_PLATE` is a bevelled plate
-          for the head of a stats board, and this is a date under a paragraph —
-          the plate said "sort by me" about a line nothing can be sorted by. It is
-          the last thing on the item and the first thing a reader skips, which is
-          what `QUIET_FIGURE` is the recipe for. */}
-      {itemMoment(item) === null ? null : (
-        <p className={`${QUIET_FIGURE} self-start`}>{itemMoment(item)}</p>
-      )}
-    </article>
   );
 }
 
@@ -225,21 +253,32 @@ function Read({ item }: { item: InboxItem }) {
  *  **And it carries the CLOCK** (Craig, 5 Sep 2026: "the blue row tab should
  *  include the time too, we have it"). He is right that we have it: every deal
  *  carries Fantrax's hour and minute by construction — `fantraxParts`' regex
- *  requires one — and the deadline is a real instant. What has no clock is a
- *  standing state: the round's own result and every doubt are `at: null` with a
- *  gameweek, because FPL publishes no "as of" for a doubt and dating it to the
- *  moment we read it would invent a fact. Those two still show `GW3`, which is
- *  the honest answer and the reason this function has three branches. */
-function itemDay(item: InboxItem): string {
-  if (item.at === null) return item.gameweek === null ? "" : `GW${item.gameweek}`;
-  if ("iso" in item.at) return `${londonDayAndDate(item.at.iso)} ${londonTime(item.at.iso)}`;
-  return fantraxTime(item.at.fantrax) ?? "";
-}
-
-/** The same date with its clock, for the item being read. Fantrax's carries the
- *  zone on its face (`Wed 2 Sep, 6:11 AM ET`) because we did not convert it. */
-function itemMoment(item: InboxItem): string | null {
-  if (item.at === null) return null;
-  if ("iso" in item.at) return `${londonDayAndDate(item.at.iso)}, ${londonTime(item.at.iso)}`;
-  return fantraxMoment(item.at.fantrax);
+ *  requires one — and the deadline is a real instant.
+ *
+ *  **A doubt has one too, and this docblock was the last place saying it did
+ *  not.** It read that "every doubt is `at: null` … because FPL publishes no
+ *  'as of' for a doubt" — the claim `doubts.ts` and PLATFORM_NOTES now record as
+ *  false (`news_added`, 198/198). It was written down in three files and
+ *  corrected in two; this was the third, left standing above code that already
+ *  did the opposite.
+ *
+ *  What is genuinely undated is the round's own RESULT — a standing fact about a
+ *  finished tie — and a doubt FPL published no stamp for. Both fall back to the
+ *  round, which is what the first branch is for. */
+function itemDay(item: InboxItem): { day: string; time: string | null } {
+  if (item.at === null) {
+    return { day: item.gameweek === null ? "" : `GW${item.gameweek}`, time: null };
+  }
+  if ("iso" in item.at) {
+    return { day: londonDayAndDate(item.at.iso), time: londonTime(item.at.iso) };
+  }
+  const stamp = fantraxTime(item.at.fantrax);
+  if (stamp === null) return { day: "", time: null };
+  // **Their clock is the last token by construction**, not by luck: `fantraxTime`
+  // builds `"{weekday} {day} {month} {h}:{mm}{am|pm}"` and every part before the
+  // hour carries a space of its own. Split there rather than re-deriving the
+  // parts here — `fantraxParts` is private to `when.ts` and a second parser for
+  // one caller is the rule of 2/3 answered at one.
+  const at = stamp.lastIndexOf(" ");
+  return at === -1 ? { day: stamp, time: null } : { day: stamp.slice(0, at), time: stamp.slice(at + 1) };
 }

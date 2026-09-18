@@ -1,3 +1,4 @@
+import DateChip from "../../components/shell/DateChip";
 import Section from "../../components/shell/Section";
 import { PANEL } from "@/app/desk";
 import { LEAGUE_TIMEZONE } from "@epl/core";
@@ -28,14 +29,23 @@ import type { NewsItem } from "./newsItems";
 // items. The rows are still marked so a reader can see which body they are
 // looking at rather than inferring it from the date.
 
-/** `Wed 19 Aug 14:30` — the date CM's inbox shows, plus the time Craig asked
- *  for (4 Sep 2026: *"include the time"*). Two items filed on one day are
+/** `Wed 19 Aug` over `14:30` — the date CM's inbox shows, plus the time Craig
+ *  asked for (4 Sep 2026: *"include the time"*). Two items filed on one day are
  *  ordinary on a matchday, and a column of identical dates cannot be read as an
- *  order. */
-const WHEN = new Intl.DateTimeFormat("en-GB", {
+ *  order.
+ *
+ *  **Two formatters and not one**, because `DateChip` sets the two lines rather
+ *  than letting a single string wrap where it likes: a chip that breaks after
+ *  "Wed 19" on one row and after "Aug" on the next is a column you cannot read
+ *  down. Same fields as the one string it replaced. */
+const DAY = new Intl.DateTimeFormat("en-GB", {
   weekday: "short",
   day: "numeric",
   month: "short",
+  timeZone: LEAGUE_TIMEZONE,
+});
+
+const CLOCK = new Intl.DateTimeFormat("en-GB", {
   hour: "2-digit",
   minute: "2-digit",
   hourCycle: "h23",
@@ -89,19 +99,21 @@ export default function Inbox({
                   item === open ? "bg-raised" : "text-faint hover:bg-raised/60"
                 }`}
               >
-              {/* CM's index block, in his club's colour like every other one on
-                  his screens — `.cm-index` from `desk.css`, which owns the
-                  `--cm-index` fallback and the inset rule the shell re-points.
-                  This wrote the two custom properties out in Tailwind for one
-                  commit, which is a second copy of a decision that already has a
-                  home.
+              {/* `DateChip` — CM's index block holding a date, shared with the
+                  league inbox since 17 Sep 2026. It takes his club's colour like
+                  every other block on his screens, because `.cm-index` reads
+                  `--cm-index` from whatever scope is above it and `PlayerShell`
+                  has already re-pointed it.
 
                   `w-24` because the widest label this formats is a Wednesday in
-                  September — "Wed 19 Aug" at `2xs` — and a column that resizes
-                  per row stops being a column. */}
-              <span className="cm-index numeric flex w-24 shrink-0 items-center justify-center px-1">
-                {item.at === null ? "—" : WHEN.format(new Date(item.at))}
-              </span>
+                  September, and a column that resizes per row stops being a
+                  column. The two lines are SET here rather than left to wrap —
+                  same width, same fold on every row. */}
+              <DateChip
+                day={item.at === null ? "—" : DAY.format(new Date(item.at))}
+                time={item.at === null ? null : CLOCK.format(new Date(item.at))}
+                className="w-24"
+              />
               <span
                 className={`min-w-0 flex-1 self-center truncate py-1 text-sm ${
                   item === open ? "font-bold text-ink" : ""
