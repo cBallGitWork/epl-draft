@@ -10,9 +10,17 @@
       "power-ranking:gw4",
       "dodgers:gw4",
       "news:https://www.bbc.co.uk/sport/football/articles/cvrl64y9rdn9o",
-      "news:https://www.bbc.co.uk/sport/football/articles/cmly4gpnwk2go"
+      "news:https://www.bbc.co.uk/sport/football/articles/cmly4gpnwk2go",
+      "wire:through-gw4"
     ],
     "threads": [
+      {
+        "subject": "A dead waiver week",
+        "beat": "Three deals across the league, nobody churning, Raya left on the pile.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:13:00.061Z"
+      },
       {
         "subject": "Cunha and Isak, test2's front pair",
         "beat": "Two points between them, the week lost up top",

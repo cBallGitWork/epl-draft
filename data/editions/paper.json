@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T17:10:33.962Z",
+  "updatedAt": "2026-09-18T17:13:00.061Z",
   "stories": [
     {
       "slug": "p4-report-deo9ljvtmtj36y3gvhy0w28p5mtj36y3g",
@@ -284,6 +284,46 @@
       "image": null,
       "face": null,
       "ties": []
+    },
+    {
+      "slug": "gw4-wire",
+      "kind": "wire",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:13:00.061Z",
+      "expiresAt": null,
+      "edition": "The Mercato Wire",
+      "byline": "The Bin",
+      "headline": "Two In, One Out, Nobody Home",
+      "deck": "A quiet window: three deals across the league, David Raya dropped and left unclaimed.",
+      "body": "Three moves, and the window barely creaked. test4 traded a man in for a man out and called it a day. test31 and testf each took one and gave back nothing. That is the week. No churn, no scramble, no queue at the door.\n\nDavid Raya went out and stayed out. Signed in hope, dropped without ceremony, survived by a bench spot nobody has come to claim. He sits on the pile, gloves on, waiting for a phone that will not ring.\n\nThe men who might have moved did not, and the men who moved were few. When three deals is the whole of the league's business, there is no trend to trace, only the quiet of managers holding what they have and daring each other to blink first.",
+      "subjects": [
+        "wire:through-gw4"
+      ],
+      "image": null,
+      "face": null,
+      "ties": [],
+      "extras": {
+        "quiz": [
+          {
+            "q": "How many deals went through the window this week?",
+            "a": "Two"
+          },
+          {
+            "q": "Which manager made a move both in and out?",
+            "a": "test4"
+          },
+          {
+            "q": "Which two managers took one in and dropped nobody?",
+            "a": "test31 and testf"
+          },
+          {
+            "q": "Which dropped goalkeeper sits unclaimed?",
+            "a": "David Raya"
+          }
+        ]
+      }
     }
   ]
 }
