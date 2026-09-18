@@ -124,3 +124,23 @@ describe("composePaper", () => {
     expect(paper.map((s) => s.slug)).toEqual(["monday-column", "sunday-report"]);
   });
 });
+
+describe("composePaper — team news leads", () => {
+  const at = "2026-09-18T14:00:00.000Z";
+  const story = (kind: string, slug: string): PublishedStory =>
+    ({
+      slug, kind, leagueId: "L", period: 4, gameweek: 4,
+      filedAt: at, expiresAt: null, edition: "", byline: "",
+      headline: slug, deck: "", body: "", subjects: [],
+    }) as unknown as PublishedStory;
+
+  it("leads on the presser, above a report filed the same day", () => {
+    const out = composePaper([story("tie-report", "report"), story("presser", "team-news")], at);
+    expect(out[0].slug).toBe("team-news");
+  });
+
+  it("still ranks a report above the columns", () => {
+    const out = composePaper([story("wire", "wire"), story("tie-report", "report")], at);
+    expect(out[0].slug).toBe("report");
+  });
+});
