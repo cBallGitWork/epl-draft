@@ -38,6 +38,8 @@ export function buildPresserBrief(brief: {
   quotes?: readonly (PresserQuote & { clubName: string })[];
   /** The man the desk has chosen to print, so the prose and the picture agree. */
   lead?: string | null;
+  /** Every club that held a conference, including those with nothing to report. */
+  spoke?: readonly { clubName: string; manager: string | null }[];
   threads: readonly StoryThread[];
 }): string {
   // By CLUB, because that is the unit the news arrives in and the unit a reader
@@ -72,6 +74,13 @@ export function buildPresserBrief(brief: {
 
   const owned = brief.lines.filter((line) => line.ownerName !== null).length;
 
+  // A club that spoke and produced no signal. Its row is "no fresh news", which
+  // is what a manager picking from that club wants to read — and its absence
+  // reads as an oversight rather than as calm.
+  const quiet = (brief.spoke ?? [])
+    .filter((each) => !byClub.has(each.clubName))
+    .map((each) => `- ${each.clubName}${each.manager === null ? "" : ` (${each.manager})`}`);
+
   // Grouped by club so the writer sees a club's words beside its players.
   const spoken = new Map<string, string[]>();
   for (const quote of brief.quotes ?? []) {
@@ -84,7 +93,13 @@ export function buildPresserBrief(brief: {
     `TEAM NEWS, gameweek ${brief.gameweek}. What the managers said before the deadline. A draft manager reads this to decide who to start AND who to claim, so it covers every man mentioned, not only the ones somebody owns.`,
     [`WHAT WAS SAID, by club — ${brief.lines.length} men across ${byClub.size} clubs, ${owned} of them owned in this league. The code is the club's and you must echo it back exactly:`, ...clubs].join("\n"),
     [
-      'RETURN A ROW PER CLUB in "teamNews", in this shape:',
+      quiet.length === 0
+      ? null
+      : [
+          "THESE CLUBS SPOKE AND REPORTED NOTHING. Each gets a row with an empty \"men\" list and a line saying so in his manager's own terms — no fresh injuries, everyone available. Do NOT invent a player for them, and do not leave them out:",
+          ...quiet,
+        ].join("\n"),
+    'RETURN A ROW PER CLUB in "teamNews", in this shape:',
       '  { "club": the club name exactly as given,',
       '    "code": the number given on that line,',
       '    "line": ONE sentence of context — what the manager did or would not do, and nothing that repeats a bullet,',

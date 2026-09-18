@@ -144,6 +144,26 @@ export function presserLines(
   });
 }
 
+/** Every club that held a press conference in the window, named.
+ *
+ *  Read so the column can say "no fresh news" for a club rather than omit it —
+ *  the export has carried `spoke` since 18 Sep 2026 and nothing looked at it,
+ *  so the instruction to cover every club was unfollowable. */
+export function presserSpoke(
+  since: string,
+  clubs: ReadonlyMap<number, Club>,
+): { clubName: string; manager: string | null }[] {
+  const intel = read();
+  if (intel === null) return [];
+  const floor = Date.parse(since);
+  return (intel.spoke ?? []).flatMap((each) => {
+    const at = Date.parse(each.at);
+    if (!Number.isNaN(at) && !Number.isNaN(floor) && at < floor) return [];
+    const club = clubs.get(each.club);
+    return club === undefined ? [] : [{ clubName: fullClubName(club.name), manager: each.manager }];
+  });
+}
+
 /** Who each club plays in the round the pressers are about, by FPL club code.
  *
  *  **Not `snapshot.fixtures`, and that is the whole point of this function.**

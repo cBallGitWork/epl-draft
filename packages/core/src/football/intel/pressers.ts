@@ -39,9 +39,23 @@ export interface PresserQuote {
   about?: string;
 }
 
+/** A club that held a press conference, whether or not it produced a signal.
+ *
+ *  **A clean bill of health is news** (Craig, 18 Sep 2026: "mention all teams,
+ *  no news is still news"). A club missing from the thread reads as an
+ *  oversight rather than as calm, and signals alone cannot say "he said
+ *  nothing" — so the export carries who spoke as well as what was said. */
+export interface PresserSpoke {
+  club: number;
+  manager: string | null;
+  at: string;
+}
+
 export interface IntelPressers {
   manifest: IntelManifest;
   rows: PresserSignal[];
+  /** Absent on an export written before this member existed. */
+  spoke?: PresserSpoke[];
   /** Absent on an export written before 18 Sep 2026, when quotes were forbidden. */
   quotes?: PresserQuote[];
 }

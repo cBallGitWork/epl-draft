@@ -23,7 +23,7 @@ const OUT = join(fileURLToPath(new URL("..", import.meta.url)), "data", "intel",
 
 async function main(): Promise<void> {
   const day = process.argv[2];
-  if (day === undefined) throw new Error("usage: npm run pressers -- YYYY-MM-DD");
+  if (day === undefined) throw new Error("usage: npx tsx scripts/ingest-pressers.ts YYYY-MM-DD");
 
   const dir = join(SCRAPE, day);
   if (!existsSync(dir)) throw new Error(`No scrape for ${day}. The sister repo writes ${dir}.`);

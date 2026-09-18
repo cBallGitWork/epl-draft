@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T14:43:34.452Z",
+  "updatedAt": "2026-09-18T15:06:47.717Z",
   "stories": [
     {
       "slug": "gw4-presser-2026-09-17",
@@ -7,13 +7,13 @@
       "leagueId": "w05aib75mtj36y1g",
       "period": 4,
       "gameweek": 4,
-      "filedAt": "2026-09-18T14:43:34.452Z",
+      "filedAt": "2026-09-18T15:06:47.717Z",
       "expiresAt": null,
       "edition": "The Team Sheet",
       "byline": "The Team Sheet",
       "headline": "Thursday Pressers",
-      "deck": "João Pedro a Chelsea doubt, Alonso to decide Friday",
-      "body": "João Pedro is a doubt for Chelsea, one of four Xabi Alonso would not commit to with a final training session still to come. Alonso gave no complaint and no verdict, leaving the call until Friday.\n\nThat leaves test211, who holds him, waiting on a decision the manager has not yet made.",
+      "deck": "João Pedro a Chelsea doubt, Alonso holds the call to Friday",
+      "body": "João Pedro is among the Chelsea doubts Xabi Alonso carried into his press conference, with no complaint stated and no decision reached. Alonso said the final training session comes tomorrow and that nobody is ruled out, leaving test211's man an open question until Friday.",
       "subjects": [
         "presser:gw4:2026-09-17"
       ],
@@ -30,17 +30,17 @@
           {
             "club": "Chelsea",
             "code": 8,
-            "line": "Nobody has been ruled out with the last session still to come, and the squad for Friday will be settled then.",
+            "line": "The final call on every doubt waits on tomorrow's last training session before the trip to Brentford.",
             "men": [
               {
                 "name": "Moisés Caicedo",
                 "status": "Doubt",
-                "note": "calf; getting closer, final call Friday"
+                "note": "calf; getting closer"
               },
               {
                 "name": "Marco Palestra",
                 "status": "Doubt",
-                "note": "no complaint given; decision Friday"
+                "note": "no complaint given; decision tomorrow"
               },
               {
                 "name": "Jordan Henderson",
@@ -51,7 +51,7 @@
                 "name": "João Pedro",
                 "owner": "test211",
                 "status": "Doubt",
-                "note": "no complaint given; decision Friday"
+                "note": "no complaint given; call held to Friday"
               }
             ],
             "quote": {
@@ -67,7 +67,7 @@
           {
             "club": "Newcastle United",
             "code": 4,
-            "line": "Matthias Jaissle points to a young midfield with Ramsey down and Dedic already ruled out for Saturday.",
+            "line": "A young midfield is forced on Matthias Jaissle, who awaits an MRI on Anthony Elanga before he knows more.",
             "men": [
               {
                 "name": "Nico González",
@@ -83,32 +83,32 @@
                 "name": "Amar Dedic",
                 "owner": "test3331",
                 "status": "OUT",
-                "note": "hamstring; ruled out Saturday"
+                "note": "hamstring; out Saturday"
               },
               {
                 "name": "Anthony Elanga",
                 "owner": "test4",
                 "status": "Doubt",
-                "note": "MRI to follow, awaiting clarity"
+                "note": "awaiting MRI results"
               },
               {
                 "name": "Joelinton",
-                "status": "Doubt",
+                "status": "OUT",
                 "note": "no complaint given"
               },
               {
                 "name": "Dan Burn",
-                "status": "Doubt",
+                "status": "OUT",
                 "note": "ankle"
               },
               {
                 "name": "Ewen Jaouen",
-                "status": "Doubt",
+                "status": "OUT",
                 "note": "ankle"
               },
               {
                 "name": "William Osula",
-                "status": "Doubt",
+                "status": "OUT",
                 "note": "foot"
               }
             ],
@@ -125,7 +125,7 @@
           {
             "club": "Nottingham Forest",
             "code": 17,
-            "line": "Oliver Glasner reports everyone available bar the two defenders, with Jair Cunha back among the fit.",
+            "line": "Oliver Glasner declared everyone but two long-term absentees available.",
             "men": [
               {
                 "name": "Nicolò Savona",
@@ -156,7 +156,7 @@
           {
             "club": "Brentford",
             "code": 94,
-            "line": "Keith Andrews reports the picture unchanged from midweek, with five ruled out and Milambo in doubt.",
+            "line": "Keith Andrews reported no change to a treatment room that was already full.",
             "men": [
               {
                 "name": "Nathan Collins",
@@ -200,13 +200,13 @@
           {
             "club": "Hull City",
             "code": 88,
-            "line": "Sergej Jakirovic places Mendy in the concussion protocol and Morita out until after the international break's first week.",
+            "line": "Sergej Jakirovic set out a seven-day protocol for Nobel Mendy and a spread of others sidelined or being assessed.",
             "men": [
               {
                 "name": "Nobel Mendy",
                 "owner": "test31",
                 "status": "OUT",
-                "note": "concussion; seven days out, misses this game"
+                "note": "concussion; seven days off, misses this game"
               },
               {
                 "name": "Jack Butland",
@@ -221,12 +221,12 @@
               {
                 "name": "Hidemasa Morita",
                 "status": "OUT",
-                "note": "adductor; back after first week of break"
+                "note": "adductor; back after break's first week"
               },
               {
                 "name": "Charlie Hughes",
                 "status": "OUT",
-                "note": "groin; being handled cautiously"
+                "note": "groin"
               },
               {
                 "name": "Darko Gyabi",
@@ -245,8 +245,8 @@
               }
             ],
             "quote": {
-              "text": "Morita is still out. The plan is that he will join us after the first week of the international break.",
-              "said": "Sergej Jakirovic"
+              "text": "He’s in the concussion protocol. So, seven days off, and after this, he will go to the national team. Everything is fine. He’s good. This is the most important [thing], now. He will miss this game.",
+              "said": "Sergej Jakirovic on Nobel Mendy"
             },
             "fixture": {
               "opponent": "Newcastle United",
@@ -257,7 +257,7 @@
           {
             "club": "Coventry City",
             "code": 9,
-            "line": "Frank Lampard expects Amenda unavailable and puts Wright some way from ready, with Awoniyi serving a ban.",
+            "line": "Frank Lampard expects Aurèle Amenda unavailable and named a suspension alongside the injuries.",
             "men": [
               {
                 "name": "Aurèle Amenda",
@@ -267,7 +267,7 @@
               {
                 "name": "Haji Wright",
                 "status": "OUT",
-                "note": "quad; on track but not ready soon"
+                "note": "quad; not ready soon"
               },
               {
                 "name": "Luke Woolfenden",
@@ -287,7 +287,7 @@
               {
                 "name": "Taiwo Awoniyi",
                 "status": "Suspended",
-                "note": "serving a ban"
+                "note": "banned"
               }
             ],
             "quote": {
