@@ -13,15 +13,30 @@
       "news:https://www.bbc.co.uk/sport/football/articles/ckvgypz42n36o",
       "wire:through-gw4",
       "news:https://www.bbc.co.uk/sport/football/articles/c69qr50nynqdo",
+      "news:https://www.bbc.co.uk/sport/football/articles/cvrl64y9rdn9o",
       "presser:gw4:2026-09-17"
     ],
     "threads": [
       {
-        "subject": "Hull's mounting absence list",
-        "beat": "Mendy in concussion protocol and out this game; Morita not back until after the first week of the break.",
+        "subject": "Thomas as test3331's asset",
+        "beat": "Recalled by England for the Nations League, told again to perform or lose the place.",
         "status": "open",
-        "beats": 3,
-        "lastUsedAt": "2026-09-18T14:00:28.945Z"
+        "beats": 2,
+        "lastUsedAt": "2026-09-18T14:43:34.452Z"
+      },
+      {
+        "subject": "Hull's mounting absence list",
+        "beat": "Mendy in concussion protocol and out this game; Morita not back until after the break's first week.",
+        "status": "open",
+        "beats": 4,
+        "lastUsedAt": "2026-09-18T14:43:34.452Z"
+      },
+      {
+        "subject": "test211's João Pedro",
+        "beat": "A Chelsea doubt with no complaint stated and the call held to Friday.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T14:43:34.452Z"
       },
       {
         "subject": "test4's squad under review",
@@ -82,13 +97,6 @@
       {
         "subject": "Palmer as test1's asset",
         "beat": "England recall, with a Tuchel warning that minutes are earned.",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T12:39:08.266Z"
-      },
-      {
-        "subject": "Thomas as test3331's asset",
-        "beat": "Also recalled, also told to perform or lose the place.",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T12:39:08.266Z"

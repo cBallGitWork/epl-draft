@@ -2,8 +2,8 @@
   "manifest": {
     "season": "26-27",
     "gameweek": 4,
-    "exportedAt": "2026-09-18T14:28:26.356Z",
-    "rows": 37,
+    "exportedAt": "2026-09-18T14:44:39.647Z",
+    "rows": 35,
     "sources": [
       {
         "path": "2026-09-17/fpl-gameweek-5-team-news-thurs-live-injury-updates-pedro-latest.html",
@@ -264,22 +264,6 @@
       "club": 17,
       "tag": "available",
       "condition": "hamstring",
-      "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
-      "manager": "Oliver Glasner"
-    },
-    {
-      "code": 159506,
-      "club": 17,
-      "tag": "injury_scare",
-      "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
-      "manager": "Oliver Glasner"
-    },
-    {
-      "code": 568420,
-      "club": 17,
-      "tag": "injury_scare",
       "confidence": 0.65,
       "said": "2026-09-17T13:00:00.000Z",
       "manager": "Oliver Glasner"

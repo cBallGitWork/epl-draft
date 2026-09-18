@@ -1,6 +1,308 @@
 {
-  "updatedAt": "2026-09-18T14:00:28.945Z",
+  "updatedAt": "2026-09-18T14:43:34.452Z",
   "stories": [
+    {
+      "slug": "gw4-presser-2026-09-17",
+      "kind": "presser",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T14:43:34.452Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Team Sheet",
+      "headline": "Thursday Pressers",
+      "deck": "João Pedro a Chelsea doubt, Alonso to decide Friday",
+      "body": "João Pedro is a doubt for Chelsea, one of four Xabi Alonso would not commit to with a final training session still to come. Alonso gave no complaint and no verdict, leaving the call until Friday.\n\nThat leaves test211, who holds him, waiting on a decision the manager has not yet made.",
+      "subjects": [
+        "presser:gw4:2026-09-17"
+      ],
+      "image": null,
+      "face": {
+        "code": 475168,
+        "name": "João Pedro",
+        "clubId": 6,
+        "position": null
+      },
+      "ties": [],
+      "extras": {
+        "teamNews": [
+          {
+            "club": "Chelsea",
+            "code": 8,
+            "line": "Nobody has been ruled out with the last session still to come, and the squad for Friday will be settled then.",
+            "men": [
+              {
+                "name": "Moisés Caicedo",
+                "status": "Doubt",
+                "note": "calf; getting closer, final call Friday"
+              },
+              {
+                "name": "Marco Palestra",
+                "status": "Doubt",
+                "note": "no complaint given; decision Friday"
+              },
+              {
+                "name": "Jordan Henderson",
+                "status": "Doubt",
+                "note": "wrist"
+              },
+              {
+                "name": "João Pedro",
+                "owner": "test211",
+                "status": "Doubt",
+                "note": "no complaint given; decision Friday"
+              }
+            ],
+            "quote": {
+              "text": "He is getting closer and tomorrow, we will take a final decision in the team and in the squad that is coming to Brentford.",
+              "said": "Xabi Alonso on Moises Caicedo"
+            },
+            "fixture": {
+              "opponent": "Brentford",
+              "home": false,
+              "kickoff": "2026-09-18T19:00:00Z"
+            }
+          },
+          {
+            "club": "Newcastle United",
+            "code": 4,
+            "line": "Matthias Jaissle points to a young midfield with Ramsey down and Dedic already ruled out for Saturday.",
+            "men": [
+              {
+                "name": "Nico González",
+                "status": "Doubt",
+                "note": "head"
+              },
+              {
+                "name": "Jacob Ramsey",
+                "status": "Doubt",
+                "note": "thigh"
+              },
+              {
+                "name": "Amar Dedic",
+                "owner": "test3331",
+                "status": "OUT",
+                "note": "hamstring; ruled out Saturday"
+              },
+              {
+                "name": "Anthony Elanga",
+                "owner": "test4",
+                "status": "Doubt",
+                "note": "MRI to follow, awaiting clarity"
+              },
+              {
+                "name": "Joelinton",
+                "status": "Doubt",
+                "note": "no complaint given"
+              },
+              {
+                "name": "Dan Burn",
+                "status": "Doubt",
+                "note": "ankle"
+              },
+              {
+                "name": "Ewen Jaouen",
+                "status": "Doubt",
+                "note": "ankle"
+              },
+              {
+                "name": "William Osula",
+                "status": "Doubt",
+                "note": "foot"
+              }
+            ],
+            "quote": {
+              "text": "Still not a real update on Anthony. I have just spoken with him now. I think, in the next 30 minutes, he will have an MRI, so we will get more clarity then. We hope that it is not that serious.",
+              "said": "Matthias Jaissle on Anthony Elanga"
+            },
+            "fixture": {
+              "opponent": "Hull City",
+              "home": true,
+              "kickoff": "2026-09-19T14:00:00Z"
+            }
+          },
+          {
+            "club": "Nottingham Forest",
+            "code": 17,
+            "line": "Oliver Glasner reports everyone available bar the two defenders, with Jair Cunha back among the fit.",
+            "men": [
+              {
+                "name": "Nicolò Savona",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Nikola Milenković",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Jair Cunha",
+                "status": "FIT",
+                "note": "hamstring; back in contention"
+              }
+            ],
+            "quote": {
+              "text": "[Other than] Savona and Milenkovic, all other players will be fit.",
+              "said": "Oliver Glasner"
+            },
+            "fixture": {
+              "opponent": "Coventry City",
+              "home": true,
+              "kickoff": "2026-09-19T16:30:00Z"
+            }
+          },
+          {
+            "club": "Brentford",
+            "code": 94,
+            "line": "Keith Andrews reports the picture unchanged from midweek, with five ruled out and Milambo in doubt.",
+            "men": [
+              {
+                "name": "Nathan Collins",
+                "owner": "test4",
+                "status": "OUT",
+                "note": "calf"
+              },
+              {
+                "name": "Mathias Jensen",
+                "owner": "test3",
+                "status": "OUT",
+                "note": "no complaint given"
+              },
+              {
+                "name": "Kaye Furo",
+                "status": "OUT",
+                "note": "no complaint given"
+              },
+              {
+                "name": "Sepp van den Berg",
+                "status": "OUT",
+                "note": "groin"
+              },
+              {
+                "name": "Josh Dasilva",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Antoni Milambo",
+                "status": "Doubt",
+                "note": "knee"
+              }
+            ],
+            "fixture": {
+              "opponent": "Chelsea",
+              "home": true,
+              "kickoff": "2026-09-18T19:00:00Z"
+            }
+          },
+          {
+            "club": "Hull City",
+            "code": 88,
+            "line": "Sergej Jakirovic places Mendy in the concussion protocol and Morita out until after the international break's first week.",
+            "men": [
+              {
+                "name": "Nobel Mendy",
+                "owner": "test31",
+                "status": "OUT",
+                "note": "concussion; seven days out, misses this game"
+              },
+              {
+                "name": "Jack Butland",
+                "status": "OUT",
+                "note": "shoulder"
+              },
+              {
+                "name": "Ilyas Ansah",
+                "status": "OUT",
+                "note": "back"
+              },
+              {
+                "name": "Hidemasa Morita",
+                "status": "OUT",
+                "note": "adductor; back after first week of break"
+              },
+              {
+                "name": "Charlie Hughes",
+                "status": "OUT",
+                "note": "groin; being handled cautiously"
+              },
+              {
+                "name": "Darko Gyabi",
+                "status": "Doubt",
+                "note": "thigh"
+              },
+              {
+                "name": "Eliot Matazo",
+                "status": "Doubt",
+                "note": "knee"
+              },
+              {
+                "name": "Matt Targett",
+                "status": "Doubt",
+                "note": "ankle"
+              }
+            ],
+            "quote": {
+              "text": "Morita is still out. The plan is that he will join us after the first week of the international break.",
+              "said": "Sergej Jakirovic"
+            },
+            "fixture": {
+              "opponent": "Newcastle United",
+              "home": false,
+              "kickoff": "2026-09-19T14:00:00Z"
+            }
+          },
+          {
+            "club": "Coventry City",
+            "code": 9,
+            "line": "Frank Lampard expects Amenda unavailable and puts Wright some way from ready, with Awoniyi serving a ban.",
+            "men": [
+              {
+                "name": "Aurèle Amenda",
+                "status": "OUT",
+                "note": "calf; not expected available"
+              },
+              {
+                "name": "Haji Wright",
+                "status": "OUT",
+                "note": "quad; on track but not ready soon"
+              },
+              {
+                "name": "Luke Woolfenden",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Josh Eccles",
+                "status": "OUT",
+                "note": "calf"
+              },
+              {
+                "name": "Kaine Kesler-Hayden",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Taiwo Awoniyi",
+                "status": "Suspended",
+                "note": "serving a ban"
+              }
+            ],
+            "quote": {
+              "text": "Haji’s on track, but he’s not obviously ready soon.",
+              "said": "Frank Lampard"
+            },
+            "fixture": {
+              "opponent": "Nottingham Forest",
+              "home": false,
+              "kickoff": "2026-09-19T16:30:00Z"
+            }
+          }
+        ]
+      }
+    },
     {
       "slug": "p4-report-kg18w2cvmtj36y3gvpzmd243ymtj36y3g",
       "kind": "tie-report",
@@ -127,6 +429,26 @@
       "ties": []
     },
     {
+      "slug": "news-cvrl64y9rdn9o",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T14:43:34.452Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Chaos Theory Puts test3331 on Notice",
+      "deck": "Tuchel recalls Thomas for the Nations League but warns his players to perform or lose the place.",
+      "body": "Thomas is back in the England squad for the Nations League, and for test3331 the recall lands with a caveat rather than a lift. Tuchel, having wanted more control after the World Cup, now says he is ready to embrace the chaos, and he has told the players named that a place must be earned.\n\nFor test3331, already watching McBurnie carry the forward line and little else follow, another asset arrives on international duty with performance demanded and nothing guaranteed. What the minutes look like is unknown. The warning is not.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/cvrl64y9rdn9o"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
       "slug": "news-c69qr50nynqdo",
       "kind": "news",
       "leagueId": "w05aib75mtj36y1g",
@@ -185,319 +507,6 @@
       "image": null,
       "face": null,
       "ties": []
-    },
-    {
-      "slug": "gw4-presser-2026-09-17",
-      "kind": "presser",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 4,
-      "gameweek": 4,
-      "filedAt": "2026-09-18T14:00:28.945Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Team Sheet",
-      "headline": "Thursday Pressers",
-      "deck": "João Pedro carrying a calf issue for Chelsea, Alonso to decide Friday",
-      "body": "João Pedro (test211) is among the Chelsea men Xabi Alonso is carrying into a final training session with a calf complaint unresolved. Nothing is ruled out and nothing is confirmed; Alonso says the last call comes Friday.\n\nThat leaves his owner waiting on a decision that will not land until the deadline is close.",
-      "subjects": [
-        "presser:gw4:2026-09-17"
-      ],
-      "image": null,
-      "face": {
-        "code": 475168,
-        "name": "João Pedro",
-        "clubId": 6,
-        "position": null
-      },
-      "ties": [],
-      "extras": {
-        "teamNews": [
-          {
-            "club": "Chelsea",
-            "code": 8,
-            "line": "With a full squad in doubt, Alonso refuses to commit a single name until the last session.",
-            "men": [
-              {
-                "name": "Moisés Caicedo",
-                "status": "Doubt",
-                "note": "calf; getting closer"
-              },
-              {
-                "name": "Marco Palestra",
-                "status": "Doubt",
-                "note": "being assessed"
-              },
-              {
-                "name": "Jordan Henderson",
-                "status": "Doubt",
-                "note": "wrist"
-              },
-              {
-                "name": "João Pedro",
-                "owner": "test211",
-                "status": "Doubt",
-                "note": "calf"
-              }
-            ],
-            "quote": {
-              "text": "He is getting closer and tomorrow, we will take a final decision in the team and in the squad that is coming to Brentford.",
-              "said": "Xabi Alonso"
-            },
-            "fixture": {
-              "opponent": "Brentford",
-              "home": false,
-              "kickoff": "2026-09-18T19:00:00Z"
-            }
-          },
-          {
-            "club": "Newcastle United",
-            "code": 4,
-            "line": "Matthias Jaissle awaits an MRI on Anthony Elanga and warns his midfield will be a young one.",
-            "men": [
-              {
-                "name": "Nico González",
-                "status": "Doubt",
-                "note": "head"
-              },
-              {
-                "name": "Jacob Ramsey",
-                "status": "Doubt",
-                "note": "thigh"
-              },
-              {
-                "name": "Amar Dedic",
-                "owner": "test3331",
-                "status": "OUT",
-                "note": "hamstring"
-              },
-              {
-                "name": "Anthony Elanga",
-                "owner": "test4",
-                "status": "Doubt",
-                "note": "awaiting MRI, injury unconfirmed"
-              },
-              {
-                "name": "Joelinton",
-                "status": "OUT",
-                "note": ""
-              },
-              {
-                "name": "Dan Burn",
-                "status": "OUT",
-                "note": "ankle"
-              },
-              {
-                "name": "Ewen Jaouen",
-                "status": "OUT",
-                "note": "ankle"
-              },
-              {
-                "name": "William Osula",
-                "status": "OUT",
-                "note": "foot"
-              }
-            ],
-            "quote": {
-              "text": "Still not a real update on Anthony. I have just spoken with him now. I think, in the next 30 minutes, he will have an MRI, so we will get more clarity then. We hope that it is not that serious.",
-              "said": "Matthias Jaissle"
-            },
-            "fixture": {
-              "opponent": "Hull City",
-              "home": true,
-              "kickoff": "2026-09-19T14:00:00Z"
-            }
-          },
-          {
-            "club": "Nottingham Forest",
-            "code": 17,
-            "line": "Oliver Glasner reports everyone bar two defenders available, with Jair Cunha back in contention.",
-            "men": [
-              {
-                "name": "Nicolò Savona",
-                "status": "OUT",
-                "note": "knee"
-              },
-              {
-                "name": "Nikola Milenković",
-                "status": "OUT",
-                "note": "hamstring"
-              },
-              {
-                "name": "Jair Cunha",
-                "status": "FIT",
-                "note": "hamstring"
-              },
-              {
-                "name": "Ola Aina",
-                "owner": "test211",
-                "status": "Doubt",
-                "note": "being assessed"
-              },
-              {
-                "name": "Ousmane Diomande",
-                "status": "Doubt",
-                "note": "being assessed"
-              }
-            ],
-            "quote": {
-              "text": "[Other than] Savona and Milenkovic, all other players will be fit.",
-              "said": "Oliver Glasner"
-            },
-            "fixture": {
-              "opponent": "Coventry City",
-              "home": true,
-              "kickoff": "2026-09-19T16:30:00Z"
-            }
-          },
-          {
-            "club": "Brentford",
-            "code": 94,
-            "line": "Keith Andrews reports nothing changed from midweek, leaving his list where it was.",
-            "men": [
-              {
-                "name": "Nathan Collins",
-                "owner": "test4",
-                "status": "OUT",
-                "note": "calf"
-              },
-              {
-                "name": "Mathias Jensen",
-                "owner": "test3",
-                "status": "OUT",
-                "note": ""
-              },
-              {
-                "name": "Kaye Furo",
-                "status": "OUT",
-                "note": ""
-              },
-              {
-                "name": "Sepp van den Berg",
-                "status": "OUT",
-                "note": "groin"
-              },
-              {
-                "name": "Josh Dasilva",
-                "status": "OUT",
-                "note": "hamstring"
-              },
-              {
-                "name": "Antoni Milambo",
-                "status": "Doubt",
-                "note": "knee"
-              }
-            ],
-            "fixture": {
-              "opponent": "Chelsea",
-              "home": true,
-              "kickoff": "2026-09-18T19:00:00Z"
-            }
-          },
-          {
-            "club": "Hull City",
-            "code": 88,
-            "line": "Sergej Jakirovic confirms Nobel Mendy sits out the concussion protocol and Morita stays sidelined into the break.",
-            "men": [
-              {
-                "name": "Nobel Mendy",
-                "owner": "test31",
-                "status": "OUT",
-                "note": "concussion protocol; misses this game"
-              },
-              {
-                "name": "Jack Butland",
-                "status": "OUT",
-                "note": "shoulder"
-              },
-              {
-                "name": "Ilyas Ansah",
-                "status": "OUT",
-                "note": "back"
-              },
-              {
-                "name": "Hidemasa Morita",
-                "status": "OUT",
-                "note": "adductor; back after first week of break"
-              },
-              {
-                "name": "Charlie Hughes",
-                "status": "OUT",
-                "note": "groin"
-              },
-              {
-                "name": "Darko Gyabi",
-                "status": "Doubt",
-                "note": "thigh"
-              },
-              {
-                "name": "Eliot Matazo",
-                "status": "Doubt",
-                "note": "knee"
-              },
-              {
-                "name": "Matt Targett",
-                "status": "Doubt",
-                "note": "ankle"
-              }
-            ],
-            "quote": {
-              "text": "Morita is still out. The plan is that he will join us after the first week of the international break.",
-              "said": "Sergej Jakirovic"
-            },
-            "fixture": {
-              "opponent": "Newcastle United",
-              "home": false,
-              "kickoff": "2026-09-19T14:00:00Z"
-            }
-          },
-          {
-            "club": "Coventry City",
-            "code": 9,
-            "line": "Frank Lampard expects Aurèle Amenda unavailable and confirms Haji Wright is not close.",
-            "men": [
-              {
-                "name": "Aurèle Amenda",
-                "status": "OUT",
-                "note": "calf"
-              },
-              {
-                "name": "Haji Wright",
-                "status": "OUT",
-                "note": "quad; not ready soon"
-              },
-              {
-                "name": "Luke Woolfenden",
-                "status": "OUT",
-                "note": "knee"
-              },
-              {
-                "name": "Josh Eccles",
-                "status": "OUT",
-                "note": "calf"
-              },
-              {
-                "name": "Kaine Kesler-Hayden",
-                "status": "OUT",
-                "note": "hamstring"
-              },
-              {
-                "name": "Taiwo Awoniyi",
-                "status": "Suspended",
-                "note": "banned, not injured"
-              }
-            ],
-            "quote": {
-              "text": "Haji’s on track, but he’s not obviously ready soon.",
-              "said": "Frank Lampard"
-            },
-            "fixture": {
-              "opponent": "Nottingham Forest",
-              "home": false,
-              "kickoff": "2026-09-19T16:30:00Z"
-            }
-          }
-        ]
-      }
     },
     {
       "slug": "gw4-eleven",

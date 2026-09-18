@@ -15,6 +15,7 @@ import {
   normalizePublished,
 } from "@epl/core";
 import { faceOf } from "./faces";
+import { fullClubName } from "@epl/core";
 import {
   fixturePreviewBrief,
   matchReportBrief,
@@ -58,6 +59,9 @@ export interface DeskContext {
   presserQuotes: (PresserQuote & { clubName: string })[];
   /** Who each club plays in the round the pressers preview, by FPL club code. */
   presserTies: Map<number, { opponent: string; home: boolean; kickoff: string }>;
+  /** The round's clubs by FPL CODE, for checking the code a column echoed back
+   *  against the club it named beside it. */
+  presserClubs: ReadonlyMap<number, Club>;
 }
 
 /** The one kind still written in the old sectioned edition shape. The report
@@ -194,7 +198,7 @@ export function file(
           // into `extras` afterwards — so this joins there and not on `extras`,
           // which is undefined at this point and silently kept the fixture off
           // every row.
-          teamNews: withTies(column.teamNews, ctx.presserTies),
+          teamNews: withTies(column.teamNews, ctx.presserTies, ctx.presserClubs),
         }
       : column;
 
@@ -226,16 +230,43 @@ export function file(
   });
 }
 
-/** Each team-news row given the fixture its club plays, by code. A row whose
- *  club has none is left exactly as filed and prints without an opponent. */
+/** Each team-news row given the fixture its club plays — and stripped of
+ *  anything about that fixture the COLUMN wrote.
+ *
+ *  Two things the model may not be trusted with, both of which it can produce
+ *  in a shape `normalizeExtras` accepts:
+ *
+ *  **A fixture.** The row was returned untouched when the desk had no tie for
+ *  it, so a fixture the writer invented survived and printed. That path is
+ *  reachable whenever `fetchFixtures` fails or FPL has not published the round.
+ *
+ *  **A club code that does not belong to the club it named.** The code draws
+ *  the crest and joins the fixture, and `{club: "Chelsea", code: 4}` printed
+ *  Newcastle's crest and Newcastle's opponent under a Chelsea heading. This is
+ *  the check `presserLines` already makes one layer down, where a signal whose
+ *  player-club and export-club disagree is refused. */
 function withTies(
   rows: unknown,
   ties: Map<number, { opponent: string; home: boolean; kickoff: string }>,
+  clubs: ReadonlyMap<number, Club>,
 ): unknown {
   if (!Array.isArray(rows)) return rows;
   return rows.map((row) => {
-    const code = (row as { code?: unknown }).code;
-    const tie = typeof code === "number" ? ties.get(code) : undefined;
-    return tie === undefined ? row : { ...(row as object), fixture: tie };
+    const { fixture: theirs, ...rest } = row as { fixture?: unknown; club?: unknown; code?: unknown };
+    void theirs;
+    const code = typeof rest.code === "number" ? rest.code : null;
+    // The club it NAMED must be the club that code belongs to, or the code is
+    // not usable for a crest or a fixture and the row prints without either.
+    const named = code === null ? undefined : clubs.get(code);
+    const agrees =
+      named !== undefined &&
+      typeof rest.club === "string" &&
+      // `fullClubName`, because that is the spelling the BRIEF gave it — FPL's
+      // own `name` is "Nott'm Forest" and comparing against that would refuse
+      // every Forest row and cost it its crest.
+      fullClubName(named.name) === rest.club;
+    if (!agrees) return { ...rest, code: null };
+    const tie = ties.get(code as number);
+    return tie === undefined ? rest : { ...rest, fixture: tie };
   });
 }

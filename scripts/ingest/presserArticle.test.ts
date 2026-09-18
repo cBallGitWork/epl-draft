@@ -1,0 +1,56 @@
+import { describe, expect, it } from "vitest";
+import { classify, clauses } from "./presserArticle";
+
+// The parser decides whether a real footballer is reported as out. Every case
+// here is a sentence the 17 Sep 2026 article actually contains, or the shape
+// that put a wrong one in print.
+describe("clauses", () => {
+  it("splits where the subject changes, so a tag cannot cross", () => {
+    // This exact sentence filed two fit, praised defenders as doubts, in a club
+    // row whose own quote said "all other players will be fit".
+    const said =
+      "Jair's possible recovery could mean a headache at centre-half, with Ola Aina and Ousmane Diomande performing well there last Saturday.";
+    const parts = clauses(said);
+    expect(parts).toHaveLength(2);
+    expect(classify(parts[0])).toBe("injury_scare");
+    expect(classify(parts[1])).toBeNull();
+  });
+
+  it("separates a return from an absence in one sentence", () => {
+    const parts = clauses("Caicedo returns to the squad but Reece James will miss the trip.");
+    expect(classify(parts[0])).toBe("available");
+    expect(classify(parts[1])).toBe("ruled_out");
+  });
+
+  it("never splits a list of names, which a comma also separates", () => {
+    const said = "Nico Gonzalez, Jacob Ramsey and Amar Dedic are all out.";
+    expect(clauses(said)).toEqual([said]);
+  });
+});
+
+describe("classify", () => {
+  it("reads a negated absence as a doubt, never as a fact", () => {
+    // Alonso's own words. Read straight, this ruled three Chelsea men out.
+    expect(classify("So no one is ruled out for us for Friday.")).toBe("injury_scare");
+  });
+
+  it("says nothing about a sentence that reports no availability", () => {
+    expect(classify("He scored twice at Elland Road on Monday.")).toBeNull();
+  });
+});
+
+describe("clauses — additive joins", () => {
+  it("keeps 'along with' in one clause, because it continues the subject", () => {
+    // The real sentence. Splitting here filed Joelinton, Burn, Jaouen and Osula
+    // as doubts when Jaissle had ruled all eight out.
+    const said =
+      "All four look set to sit out Gameweek 5, along with Joelinton (unspecified), Dan Burn (ankle), Ewen Jaouen (ankle) and Will Osula (foot).";
+    expect(clauses(said)).toHaveLength(1);
+    expect(classify(said)).toBe("ruled_out");
+  });
+
+  it("still splits a plain 'with' that changes subject", () => {
+    const said = "Jair's possible recovery could mean a headache, with Aina performing well there.";
+    expect(clauses(said)).toHaveLength(2);
+  });
+});
