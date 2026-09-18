@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { getFootballSnapshot } from "@epl/core";
+import { FIRM, getFootballSnapshot } from "@epl/core";
 import { manager, quotes, sections, troubles } from "./ingest/presserArticle";
 
 // Thursday's and Friday's press conferences, from Fantasy Football Scout's own
@@ -73,7 +73,9 @@ async function main(): Promise<void> {
         // The article's own word, kept: "hamstring" is the fact, and our tag is
         // the reading of it.
         condition: trouble.condition,
-        confidence: 0.65,
+        // The article states a fact, so it enters at the floor a FACT sits on.
+        // Never a literal: `FIRM` is core's and a second copy would drift from it.
+        confidence: FIRM,
         said: `${day}T13:00:00.000Z`,
         manager: said ?? "",
       });

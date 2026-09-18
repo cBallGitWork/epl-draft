@@ -4,30 +4,20 @@ import {
   clubById,
   composePaper,
   datedKickoffs,
-  decided,
   fetchLeagueInfo,
-  fetchLiveScoring,
   firstKickoff,
-  fixtureStakes,
   gameweekStarted,
   getFootballSnapshot,
   hasRoom,
   isCovered,
   locksAt,
   mapLeagueInfo,
-  mapLiveScores,
-  markCalls,
   newsdesk,
   periodGameweeks,
-  periodPairings,
   banned,
   roundState,
   standingHeadlines,
   strangers,
-  tieState,
-  type Assignment,
-  type LeagueInfo,
-  type PublishedStory,
 } from "@epl/core";
 import { gatherRoundFacts, withFootball } from "./edition/facts";
 import { file, prepare, type DeskContext } from "./edition/dispatch";
@@ -266,24 +256,6 @@ async function main(): Promise<void> {
   persistFilings(filings, ledger, now);
 }
 
-
-/** A wire item's slug: ours, addressable, and safe as a filename and a DOM id.
- *
- *  Not the URL's last segment. `"…/story/".split("/").pop()` is `""` rather
- *  than undefined, so a trailing slash produced the slug `news-` — and two of
- *  those collide, at which point the paper silently drops one. A guid carrying
- *  a query string reached an archive filename and a PNG name the same way. */
-function newsSlug(key: string): string {
-  const cleaned = key
-    .toLowerCase()
-    .replace(/^https?:\/\//, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .split("-")
-    .slice(-3)
-    .join("-");
-  return `news-${cleaned === "" ? Date.now().toString(36) : cleaned}`;
-}
 
 function say(message: string): void {
   console.log(message);

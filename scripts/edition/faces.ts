@@ -1,0 +1,122 @@
+import type {
+  Assignment,
+  Fixture,
+  FootballSnapshot,
+  PresserLine,
+  ResolvedPlayer,
+  StoryFace,
+} from "@epl/core";
+import { fielded, menIn } from "./lineups";
+import type { RoundFacts } from "./facts";
+
+// Who the story prints a picture of.
+//
+// **The desk's choice and never the writer's**, which is why it is computed from
+// facts rather than read out of the prose — a model that named the man would be
+// a model choosing the photograph, and that is the one thing `strangers()`
+// exists to catch it doing.
+
+/** The man a story prints a picture of: the highest-scoring rostered man among
+ *  those given, and null when nobody among them was priced.
+ *
+ *  **The desk's choice and never the writer's.** It comes off the same numbers
+ *  the brief was built out of, so the face and the prose cannot disagree, and a
+ *  model cannot put a footballer in the picture slot by naming him. `code` and
+ *  not `id` (CODE_RULES §3): this is persisted in `paper.json`, and only the
+ *  code is season-stable.
+ *
+ *  Ties on points break on name, so the same round picks the same man twice. */
+function bestOf(men: readonly ResolvedPlayer[], facts: RoundFacts): StoryFace | null {
+  const priced = men.flatMap((man) => {
+    const points = facts.playerPoints.get(man.slot.fantraxId);
+    return points === undefined ? [] : [{ man, points }];
+  });
+  if (priced.length === 0) return null;
+
+  priced.sort((a, b) => b.points - a.points || a.man.player.name.localeCompare(b.man.player.name));
+  const { player, slot } = priced[0].man;
+  return { code: player.code, name: player.name, clubId: player.clubId, position: slot.position };
+}
+
+/** The face for one assignment, or null for a kind with no man in it — a power
+ *  ranking is about ten managers and a wire column about a market. */
+export function faceOf(assignment: Assignment, ctx: FaceContext): StoryFace | null {
+  const { facts } = ctx;
+
+  // The tie-shaped kinds: both squads, and the best man across the two.
+  if (assignment.kind === "tie-report" || assignment.kind === "tie-call") {
+    const both = [assignment.tie?.homeTeamId, assignment.tie?.awayTeamId].flatMap((teamId) =>
+      teamId === undefined ? [] : fielded(facts.teams.find((team) => team.teamId === teamId)),
+    );
+    return bestOf(both, facts);
+  }
+
+  // The fixture-shaped kinds: everyone in the league with a man in that match.
+  if (assignment.kind === "match-report" || assignment.kind === "fixture-preview") {
+    const fixture = ctx.fixtures.find((each) => each.id === assignment.fixtureId);
+    if (fixture === undefined) return null;
+    return bestOf(
+      facts.teams.flatMap((team) => menIn(fixture, team)),
+      facts,
+    );
+  }
+
+  // The eleven's own best man, from the picks the column is written about —
+  // `score` is the eleven's own number and is what put him in the side.
+  if (assignment.kind === "eleven") {
+    const picks = [...(facts.eleven?.picks ?? [])].sort(
+      (a, b) => b.score - a.score || a.playerName.localeCompare(b.playerName),
+    );
+    const best = picks[0];
+    return best === undefined
+      ? null
+      : {
+          code: best.playerCode,
+          name: best.playerName,
+          clubId: best.clubId,
+          position: best.position,
+        };
+  }
+
+  // The Team Sheet's man: the biggest name in the day's news.
+  //
+  // **Importance is FPL's own numbers, because we have no better yet.** Goal
+  // involvements first, then FPL's `influence`, then minutes — the mix Craig
+  // asked for on 18 Sep ("use draft position/fpl scoring mix ... to know which
+  // players are the most important"). Draft position and Fantrax ownership %
+  // would be better signals and neither is exported yet; GAZETTA.md carries it.
+  if (assignment.kind === "presser") {
+    const named = ctx.presserLines ?? [];
+    const best = [...named]
+      .map((line) => ({ line, player: ctx.players?.find((each) => each.code === line.code) }))
+      .sort((a, b) => weight(b) - weight(a) || a.line.playerName.localeCompare(b.line.playerName))[0];
+    if (best === undefined || best.player === undefined) return null;
+    return {
+      code: best.player.code,
+      name: best.line.playerName,
+      clubId: best.player.clubId,
+      // The Team Sheet knows no roster slot: he may be a man nobody holds.
+      position: null,
+    };
+  }
+
+  return null;
+}
+
+/** How much this man's news matters, from what FPL publishes about his season. */
+function weight(each: { player?: { season: { goals: number; assists: number; influence: number; minutes: number } } }): number {
+  const season = each.player?.season;
+  if (season === undefined) return -1;
+  return (season.goals + season.assists) * 1000 + season.influence + season.minutes / 1000;
+}
+
+/** What `faceOf` needs, which is less than a whole `DeskContext`: the round's
+ *  facts and the fixtures a fixture-scoped assignment joins on. */
+export interface FaceContext {
+  facts: RoundFacts;
+  fixtures: readonly Fixture[];
+  /** The Team Sheet's men — empty for every other kind. */
+  presserLines?: readonly PresserLine[];
+  /** The season's numbers, for deciding which of them is the story. */
+  players?: readonly FootballSnapshot["players"][number][];
+}
