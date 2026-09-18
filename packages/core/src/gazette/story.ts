@@ -33,7 +33,10 @@ export type StoryKind =
   | "dodgers"
   | "news";
 
-const STORY_KINDS: readonly StoryKind[] = [
+/** Every kind, as data. `normalizeStory` refuses a story whose kind is not here,
+ *  and the paper's page table is checked against it — a kind missing from either
+ *  fails silently, with a green typecheck and a green build. */
+export const STORY_KINDS: readonly StoryKind[] = [
   "round-preview", "match-report", "fixture-preview",
   "tie-call", "tie-report", "predictions", "eleven", "power-ranking",
   "wire", "dodgers", "news",

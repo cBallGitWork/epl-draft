@@ -27,8 +27,9 @@ export const PAPER_PAGES: readonly PaperPage[] = [
     href: "/paper/reports",
     label: "Reports",
     number: 2,
-    // The match-shaped kinds: what happened, and what is about to.
-    kinds: ["tie-report", "match-report", "tie-call", "fixture-preview", "round-preview"],
+    // What happened, and what is about to. `news` is here because it reports
+    // football that happened elsewhere — it is a wire service item, not opinion.
+    kinds: ["tie-report", "match-report", "tie-call", "fixture-preview", "round-preview", "news"],
   },
   {
     href: "/paper/columns",
@@ -37,7 +38,11 @@ export const PAPER_PAGES: readonly PaperPage[] = [
     // The opinion columns, named for the edition they file under
     // (`voice/bylines.ts`). Not "Columns": a paper's inside page has a name,
     // and this one already had it.
-    kinds: ["eleven", "power-ranking", "dodgers", "predictions"],
+    // `wire` is a column — trends in the waiver market, argued — so it lives
+    // with the opinion even though it files under its own edition name. The
+    // page's name is an homage and the ARTICLE carries its own masthead: the
+    // Bin prints "The Mercato Wire" in its byline while sitting on this page.
+    kinds: ["eleven", "power-ranking", "dodgers", "predictions", "wire"],
   },
 ];
 
