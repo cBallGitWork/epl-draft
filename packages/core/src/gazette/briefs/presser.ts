@@ -10,6 +10,8 @@ import type { StoryThread } from "../ledger";
  *  the player's name, and whose problem he is. */
 export interface PresserLine extends PresserSignal {
   playerName: string;
+  /** His Premier League club, for the row he belongs on and its crest. */
+  clubName: string;
   /** The manager in OUR league who owns him. Never null — an unowned man is
    *  filtered out before he reaches here. */
   ownerName: string;
@@ -30,23 +32,32 @@ export function buildPresserBrief(brief: {
   lines: readonly PresserLine[];
   threads: readonly StoryThread[];
 }): string {
-  const firm = brief.lines.filter((line) => line.confidence >= FIRM);
-  const soft = brief.lines.filter((line) => line.confidence < FIRM);
+  // By CLUB, because that is the unit the news arrives in and the unit a reader
+  // scans. Grouping by OUR managers made it a column about the league's mood
+  // when what a draft manager opens it for is what was said about his players.
+  const byClub = new Map<string, { code: number; lines: PresserLine[] }>();
+  for (const line of brief.lines) {
+    const row = byClub.get(line.clubName) ?? { code: line.club, lines: [] };
+    row.lines.push(line);
+    byClub.set(line.clubName, row);
+  }
 
-  const render = (line: PresserLine) =>
-    `- ${line.playerName} (${line.ownerName}'s): ${line.manager} — ${MEANS[line.tag] ?? line.tag}`;
+  const clubs = [...byClub.entries()].map(([club, row]) => {
+    const men = row.lines.map((line) => {
+      const firm = line.confidence >= FIRM ? "" : " (a hint, not a fact)";
+      return `${line.playerName} — ${MEANS[line.tag] ?? line.tag}${firm}, per ${line.manager}; owned by ${line.ownerName}`;
+    });
+    return `- ${club} (code ${row.code}): ${men.join(" · ")}`;
+  });
 
   return [
-    `THE TEAM SHEET, gameweek ${brief.gameweek}. What the managers said this week about men somebody in this league owns. Lineups are not locked yet, which is the whole point: this is the column a manager reads before he picks.`,
-    firm.length > 0
-      ? ["SAID PLAINLY. These are firm enough to lead on:", ...firm.map(render)].join("\n")
-      : null,
-    soft.length > 0
-      ? ["HINTED. Softer, and you must write them as hints rather than as facts — 'suggested', 'did not rule out', never 'confirmed':", ...soft.map(render)].join("\n")
-      : null,
-    "YOU HAVE NO QUOTES AND MUST NOT WRITE ONE. What you are given is what a manager MEANT, extracted from a press conference; the sentence he actually said is not here. Report the meaning and attribute it — 'Arteta suggested', never 'Arteta said: \"...\"'.",
-    "NO ADVICE. Do not tell anybody to bench a man, start one, or claim one. You report what was said and whose problem it is; the reader is a better judge of his own side than you are.",
-    "Two or three short paragraphs, grouped by what it means for OUR managers rather than by club — a reader wants his own name, not a tour of the Premier League.",
+    `TEAM NEWS, gameweek ${brief.gameweek}. What the managers said about men somebody in this league owns. This is an information thread and not a column: a draft manager opens it to find out about HIS players before he picks, not to read about the league.`,
+    ["WHAT WAS SAID, by club. The code is the club's and you must echo it back exactly:", ...clubs].join("\n"),
+    'RETURN A ROW PER CLUB in "teamNews": { "club": the club name exactly as given, "code": the number given on that line, "line": what was said about its players }. The line names the players and what was said, in that order, plainly. One or two sentences.',
+    "THE BODY IS A SHORT INTRODUCTION AND NOTHING ELSE. Two or three sentences: how many clubs spoke, and the one thing most worth knowing. The rows carry the news; a body that repeats them is the article written twice.",
+    "YOU HAVE NO QUOTES AND MUST NOT WRITE ONE. What you are given is what a manager MEANT. Report the meaning and attribute it — 'per Howe', 'Arteta suggested' — never a sentence in quotation marks.",
+    "A HINT IS NOT A FACT. Where a line is marked as a hint, write it as one: 'suggested', 'did not rule out'. Never promote it.",
+    "NO ADVICE, and no narrative about our managers. You may say who owns a man, because that is why he is in the article. You may not say what his owner should do, how his week is going, or what it means for his season.",
     storylinesBlock(brief.threads),
   ]
     .filter((block) => block !== null)

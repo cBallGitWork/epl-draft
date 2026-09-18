@@ -188,6 +188,7 @@ export function storyOfColumn(
       quotes: column.quotes,
       ranks: column.ranks,
       quiz: column.quiz,
+      teamNews: column.teamNews,
     },
   });
   if (story === null) throw new Error(`The ${meta.kind} did not come back in a printable shape.`);

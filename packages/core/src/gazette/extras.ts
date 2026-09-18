@@ -29,6 +29,20 @@ interface StoryRank {
   line: string;
 }
 
+/** One club's line in a team-news thread. The club is bold, the line follows —
+ *  the shape Fantasy Football Scout's own team-news articles use, because that
+ *  is what a manager reads them for. */
+interface StoryTeamNews {
+  club: string;
+  /** FPL's club code, for the crest. The BRIEF gives it on the same line as the
+   *  club's name and the writer echoes it back — it is never looked up from the
+   *  name, which would be the runtime name-matching CODE_RULES §3 forbids. Null
+   *  when it did not come back as a number, and the row then prints without a
+   *  crest rather than with the wrong one. */
+  code: number | null;
+  line: string;
+}
+
 interface StoryQuizItem {
   q: string;
   a: string;
@@ -39,6 +53,7 @@ interface StoryQuizItem {
 export interface StoryExtras {
   ranks?: StoryRank[];
   quiz?: StoryQuizItem[];
+  teamNews?: StoryTeamNews[];
 }
 
 export function normalizeExtras(raw: unknown): StoryExtras | undefined {
@@ -62,6 +77,20 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
       )
     : [];
   if (quiz.length > 0) out.quiz = quiz;
+
+  const teamNews = Array.isArray(extras.teamNews)
+    ? extras.teamNews.filter(
+        (row): row is StoryTeamNews =>
+          typeof row?.club === "string" && row.club !== "" &&
+          typeof row.line === "string" && row.line !== "",
+      )
+    : [];
+  if (teamNews.length > 0) {
+    out.teamNews = once(teamNews, (row) => row.club).map((row) => ({
+      ...row,
+      code: typeof row.code === "number" ? row.code : null,
+    }));
+  }
 
   return Object.keys(out).length > 0 ? out : undefined;
 }
