@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { readerTeamId } from "../../../squads";
 import { edition } from "../../../edition";
 import { filed } from "../../../paper";
+import { clubById } from "@epl/core";
 import Extras from "../../../components/gazette/Extras";
 import Folio from "../../../components/gazette/Folio";
 import { named } from "../../../components/gazette/named";
@@ -92,7 +93,7 @@ export default async function StoryPage({ params }: { params: Promise<{ slug: st
           have in common is five lines of markup and what differs is whether a
           reader has chosen to read yet. */}
       <article className="pt-4">
-        <Written story={story} teams={paper.teams} />
+        <Written story={story} teams={paper.teams} clubs={paper.snapshot ? clubById(paper.snapshot) : undefined} />
         <Extras story={story} named={who} mine={paper.mine} />
       </article>
     </>

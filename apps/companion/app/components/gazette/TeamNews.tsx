@@ -1,36 +1,81 @@
 import Image from "next/image";
 import { crestUrl, type PublishedStory } from "@epl/core";
 
-// The team-news thread: one line per club, the crest beside it.
+// The team-news thread: a club, its crest, a line of context, then one bullet
+// per man and at most one thing the manager actually said.
 //
 // The shape Fantasy Football Scout's own team-news articles use, because it is
-// what a manager reads them for — a club, then what was said about its players.
-// Not paragraphs: a reader scanning for his own men wants a list he can run an
-// eye down, and prose hides the club he is looking for inside a sentence.
+// what a manager reads them for. Prose per club was tried first and read as one
+// sentence six times over — a bullet has nowhere to put filler, and a name in
+// its own field is a name the page can set in bold without guessing.
+
+/** The four states, and the one colour each is allowed. OUT is the print red
+ *  because it is the answer a reader is scanning for; a doubt is quieter than
+ *  the name beside it. */
+const STATUS: Record<string, string> = {
+  OUT: "text-accent",
+  Suspended: "text-accent",
+  Doubt: "text-muted",
+  FIT: "text-ink",
+};
 
 export default function TeamNews({ story }: { story: PublishedStory }) {
   const rows = story.extras?.teamNews ?? [];
   if (rows.length === 0) return null;
 
   return (
-    <ul className="flex flex-col divide-y pt-3" style={{ borderColor: "var(--paper-rule)" }}>
+    <div className="flex flex-col divide-y pt-4" style={{ borderColor: "var(--paper-rule)" }}>
       {rows.map((row) => (
-        <li key={row.club} className="flex items-baseline gap-2.5 py-2">
-          {/* A crest is a printed mark and the paper's one licensed colour plate
-              (DESIGN §5), so it wears `.crest` to get the desk's tokens back
-              inside it. No code means no crest rather than a wrong one. */}
-          {row.code === null ? null : (
-            <span className="crest relative top-0.5 shrink-0">
-              <Image src={crestUrl({ code: row.code })} alt="" width={16} height={16} />
-            </span>
+        <section key={row.club} className="py-4">
+          <h3 className="flex items-center gap-2.5">
+            {/* A crest is a printed mark and the paper's one licensed colour
+                plate (DESIGN §5), so it wears `.crest` to get the desk's tokens
+                back inside it. No code means no crest, never a wrong one. */}
+            {row.code === null ? null : (
+              <span className="crest shrink-0">
+                <Image src={crestUrl({ code: row.code })} alt="" width={28} height={28} />
+              </span>
+            )}
+            <span className="font-display text-xl leading-none font-semibold text-ink">{row.club}</span>
+          </h3>
+
+          <p className="pt-2 text-base leading-snug text-muted">{row.line}</p>
+
+          {row.men === undefined ? null : (
+            <ul className="flex flex-col gap-1 pt-2.5">
+              {row.men.map((man) => (
+                <li key={man.name} className="flex gap-2 text-base leading-snug">
+                  <span aria-hidden className="text-faint">
+                    ·
+                  </span>
+                  <p className="min-w-0 flex-1 text-ink">
+                    <strong className="font-bold">{man.name}</strong>
+                    {man.owner === undefined ? null : <span className="text-muted"> ({man.owner})</span>}
+                    <span className={`pl-1.5 text-xs tracking-wide uppercase ${STATUS[man.status] ?? "text-muted"}`}>
+                      {man.status}
+                    </span>
+                    {man.note === "" ? null : <span className="text-muted"> — {man.note}</span>}
+                  </p>
+                </li>
+              ))}
+            </ul>
           )}
-          <p className="min-w-0 flex-1 text-sm leading-snug text-ink">
-            <span className="font-semibold">{row.club}</span>
-            <span className="text-muted">: </span>
-            {row.line}
-          </p>
-        </li>
+
+          {/* Carried from the source article and never composed. `house.ts`
+              still forbids inventing one; this prints what the export holds. */}
+          {row.quote === undefined ? null : (
+            <blockquote
+              className="mt-3 border-l-2 pl-3 text-base leading-snug"
+              style={{ borderColor: "var(--paper-rule)" }}
+            >
+              <p className="text-ink italic">&ldquo;{row.quote.text}&rdquo;</p>
+              <cite className="pt-1 block text-xs tracking-wide text-muted uppercase not-italic">
+                {row.quote.said}
+              </cite>
+            </blockquote>
+          )}
+        </section>
       ))}
-    </ul>
+    </div>
   );
 }

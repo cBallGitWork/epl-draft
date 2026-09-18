@@ -33,11 +33,16 @@ import PlayerImage from "../league/PlayerImage";
 // a wrong photograph is worse than none, because only one of the two looks like
 // an answer.
 
-type Rank = "splash" | "shoulder" | "brief";
+type Rank = "splash" | "shoulder" | "brief" | "portrait";
 
 const BAND: Record<Rank, string> = {
   splash: "h-[8.5rem] @xl:h-[12rem]",
   shoulder: "h-[5.5rem]",
+  // Beside a standfirst, where the column has height to spend and the man is
+  // the picture rather than a mark in a band — so he is printed at full height
+  // and fills his frame. A 5.5rem shoulder band cropped him at the chin and a
+  // 7rem cut-out left him adrift in the middle of it.
+  portrait: "h-[20rem]",
   brief: "h-14 w-14 shrink-0 rounded-none",
 };
 
@@ -45,6 +50,7 @@ const BAND: Record<Rank, string> = {
 const MAN: Record<Rank, string> = {
   splash: "w-[11rem]",
   shoulder: "w-[7rem]",
+  portrait: "w-full",
   brief: "w-[3.25rem]",
 };
 
@@ -54,6 +60,7 @@ const MAN: Record<Rank, string> = {
 const CREST: Record<Rank, number | null> = {
   splash: 208,
   shoulder: 128,
+  portrait: 176,
   brief: null,
 };
 
