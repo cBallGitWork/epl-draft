@@ -12,9 +12,9 @@ export interface PresserLine extends PresserSignal {
   playerName: string;
   /** His Premier League club, for the row he belongs on and its crest. */
   clubName: string;
-  /** The manager in OUR league who owns him. Never null — an unowned man is
-   *  filtered out before he reaches here. */
-  ownerName: string;
+  /** The manager in OUR league who owns him, or null when nobody does. Not a
+   *  filter: an unowned man with a fitness note is who you claim. */
+  ownerName: string | null;
 }
 
 /** What each tag actually means, in the words the column may use. The exporter's
@@ -44,20 +44,29 @@ export function buildPresserBrief(brief: {
 
   const clubs = [...byClub.entries()].map(([club, row]) => {
     const men = row.lines.map((line) => {
-      const firm = line.confidence >= FIRM ? "" : " (a hint, not a fact)";
-      return `${line.playerName} — ${MEANS[line.tag] ?? line.tag}${firm}, per ${line.manager}; owned by ${line.ownerName}`;
+      // The owner in brackets after the name, which is how a team-news thread
+      // marks one — not a clause. Craig, 18 Sep: "dont need to keep saying
+      // owned by (just put manager name in brackets)".
+      const who = line.ownerName === null ? "" : ` (${line.ownerName})`;
+      const soft = line.confidence >= FIRM ? "" : " [HINT, not a fact]";
+      return `${line.playerName}${who} — ${MEANS[line.tag] ?? line.tag}, said by ${line.manager}${soft}`;
     });
     return `- ${club} (code ${row.code}): ${men.join(" · ")}`;
   });
 
+  const owned = brief.lines.filter((line) => line.ownerName !== null).length;
+
   return [
-    `TEAM NEWS, gameweek ${brief.gameweek}. What the managers said about men somebody in this league owns. This is an information thread and not a column: a draft manager opens it to find out about HIS players before he picks, not to read about the league.`,
-    ["WHAT WAS SAID, by club. The code is the club's and you must echo it back exactly:", ...clubs].join("\n"),
-    'RETURN A ROW PER CLUB in "teamNews": { "club": the club name exactly as given, "code": the number given on that line, "line": what was said about its players }. The line names the players and what was said, in that order, plainly. One or two sentences.',
-    "THE BODY IS A SHORT INTRODUCTION AND NOTHING ELSE. Two or three sentences: how many clubs spoke, and the one thing most worth knowing. The rows carry the news; a body that repeats them is the article written twice.",
-    "YOU HAVE NO QUOTES AND MUST NOT WRITE ONE. What you are given is what a manager MEANT. Report the meaning and attribute it — 'per Howe', 'Arteta suggested' — never a sentence in quotation marks.",
-    "A HINT IS NOT A FACT. Where a line is marked as a hint, write it as one: 'suggested', 'did not rule out'. Never promote it.",
-    "NO ADVICE, and no narrative about our managers. You may say who owns a man, because that is why he is in the article. You may not say what his owner should do, how his week is going, or what it means for his season.",
+    `TEAM NEWS, gameweek ${brief.gameweek}. What the managers said before the deadline. A draft manager reads this to decide who to start AND who to claim, so it covers every man mentioned, not only the ones somebody owns.`,
+    [`WHAT WAS SAID, by club — ${brief.lines.length} men across ${byClub.size} clubs, ${owned} of them owned in this league. The code is the club's and you must echo it back exactly:`, ...clubs].join("\n"),
+    'RETURN A ROW PER CLUB in "teamNews": { "club": the club name exactly as given, "code": the number given on that line, "line": what was said about its players }.',
+    'THE ROW IS WRITTEN, not a list. Two or three sentences per club that a reader actually reads: what was said, what it leaves open, and what it means for whether the man plays. A row that reads "X may be rotated, per Y" for every club is the same sentence three times and is worth nobody\'s attention.',
+    'MARK THE OWNER IN BRACKETS after the name, once — "Mukiele (123)". Never "owned by", never a clause about his manager. A man with no bracket is unowned, which is information too: he is the one you can claim.',
+    "VARY HOW YOU ATTRIBUTE. Not 'per X' every time — a manager says, reports, confirms, plays down, refuses to be drawn, leaves open. Repeating one construction down the column is the tell that nobody wrote it.",
+    "THE BODY IS A SHORT INTRODUCTION. Two or three sentences: what the day amounted to and the single thing most worth knowing. Never a retelling of the rows.",
+    "YOU HAVE NO QUOTES AND MUST NOT WRITE ONE. You are given what a manager MEANT. Report the meaning; never a sentence in quotation marks.",
+    "A HINT IS A HINT. Where a line is marked HINT, write it as one — 'suggested', 'did not rule out', 'stopped short of'. Never promote it to a fact.",
+    "NO ADVICE, and no narrative about our managers. Name the owner; do not tell him what to do, or discuss his week.",
     storylinesBlock(brief.threads),
   ]
     .filter((block) => block !== null)

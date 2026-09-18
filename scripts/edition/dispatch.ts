@@ -28,7 +28,7 @@ import { STORY_BYLINE, editionName } from "./voice/bylines";
 import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL, TIE_REPORT } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, PREDICTIONS, WIRE } from "./voice/columns";
 import { NEWS } from "./voice/news";
-import { PRESSER, PRESSER_HEADLINE } from "./voice/pressers";
+import { PRESSER, presserHeadline } from "./voice/pressers";
 import { PREVIEW } from "./voice/rounds";
 
 // One assignment in, one prepared desk out: which voice writes it, from which
@@ -161,8 +161,11 @@ export function file(
   // looking for team news should find the words, not a pun he has to decode —
   // and a thread that runs every week under a different name reads as a
   // different article each time. Craig, 18 Sep 2026.
+  // The day is the last segment of the key — `presser:gw4:2026-09-17`.
   const copy =
-    assignment.kind === "presser" ? { ...column, headline: PRESSER_HEADLINE } : column;
+    assignment.kind === "presser"
+      ? { ...column, headline: presserHeadline(assignment.key.split(":").pop() ?? "") }
+      : column;
 
   return storyOfColumn(copy, {
     slug: assignment.slug,

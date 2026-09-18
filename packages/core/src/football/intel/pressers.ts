@@ -34,13 +34,17 @@ export interface IntelPressers {
  *  its explicit ones ("not risked", "managing his minutes") sit at 0.65. */
 export const FIRM = 0.65;
 
-/** The signals for one round's pressers, newest first, only for men the league
- *  holds. The roster filter is OURS: the exporter does not know our rosters and
- *  must not be taught them. */
+/** The signals for one round's pressers, newest first — EVERY man, not only the
+ *  ones this league holds.
+ *
+ *  **It filtered to held players until 18 Sep 2026** and Craig reversed it having
+ *  read one: *"can mention other players too, even non owned, its important
+ *  data."* He is right and the first rule was too tight. A draft manager decides
+ *  who to claim as well as who to start, and a fit-again forward nobody owns is
+ *  the most useful line in the column. Ownership is an ANNOTATION now, not a
+ *  gate — the caller marks the men somebody holds. */
 export function pressers(
   intel: IntelPressers | null,
-  /** Every code somebody in the league owns. */
-  held: ReadonlySet<number>,
   /** Only signals said on or after this instant — Thursday's pressers, not last
    *  week's. The caller owns the window; this file owns no clock. */
   since: string,
@@ -48,7 +52,6 @@ export function pressers(
   if (intel === null) return [];
   const floor = Date.parse(since);
   return intel.rows
-    .filter((row) => held.has(row.code))
     .filter((row) => {
       const at = Date.parse(row.said);
       // An unreadable instant is kept: a signal that cannot say when it was said

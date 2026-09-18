@@ -52,19 +52,28 @@ export function presserLines(
   since: string,
   /** The round's clubs, keyed by FPL code — the crest and the row's heading. */
   clubs: ReadonlyMap<number, Club>,
+  /** EVERY footballer, not only the rostered ones. Names came off the rosters
+   *  until 18 Sep 2026, which was fine while the column only covered men
+   *  somebody held — the moment it covered everyone, an unowned player printed
+   *  as his own code. */
+  squad: readonly { code: number; name: string }[],
 ): PresserLine[] {
   const intel = read();
   if (intel === null) return [];
   const held = owners(teams);
-  const names = new Map<number, string>();
-  for (const team of teams) {
-    for (const player of team.players.filter(resolved)) names.set(player.player.code, player.player.name);
-  }
-  return pressers(intel, new Set(held.keys()), since).map((signal) => ({
+  const names = new Map(squad.map((player) => [player.code, player.name]));
+  return pressers(intel, since)
+    // A man we cannot name is a man the column cannot write about. Printing his
+    // FPL code in an article is worse than omitting him, and a code the snapshot
+    // does not carry is a stale export rather than a new signing.
+    .filter((signal) => names.has(signal.code))
+    .map((signal) => ({
     ...signal,
     playerName: names.get(signal.code) ?? String(signal.code),
     clubName: clubs.get(signal.club)?.name ?? "",
-    ownerName: held.get(signal.code) ?? "",
+    // Null when nobody in the league holds him, which is no longer a reason to
+    // drop him — it is the difference between "start him" and "claim him".
+    ownerName: held.get(signal.code) ?? null,
   }));
 }
 
