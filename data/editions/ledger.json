@@ -1,1 +1,95 @@
-{}
+{
+  "w05aib75mtj36y1g": {
+    "covered": [
+      "tie-report:p4:deo9ljvtmtj36y3gvhy0w28p5mtj36y3g",
+      "tie-report:p4:1b6gp5utmtj36y3gvy6viv6jfmtj36y3g",
+      "tie-report:p4:98yx3o50mtj36y3gvfq5omv5kmtj36y3g",
+      "tie-report:p4:g80h3bf5mtj36y3gvdpdkp2bbmtj36y3g",
+      "tie-report:p4:kg18w2cvmtj36y3gvpzmd243ymtj36y3g",
+      "eleven:gw4",
+      "power-ranking:gw4",
+      "dodgers:gw4",
+      "news:https://www.bbc.co.uk/sport/football/articles/cvrl64y9rdn9o",
+      "news:https://www.bbc.co.uk/sport/football/articles/cmly4gpnwk2go"
+    ],
+    "threads": [
+      {
+        "subject": "Cunha and Isak, test2's front pair",
+        "beat": "Two points between them, the week lost up top",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      },
+      {
+        "subject": "test211's defenders doing the heavy lifting",
+        "beat": "Bogle 12, Castagne 6, Aina 2 and still a one-point defeat",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      },
+      {
+        "subject": "test31121's flat midfield",
+        "beat": "Berge, Ødegaard and Szoboszlai all blanked at three, undone the tie",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      },
+      {
+        "subject": "testf's defenders doing the scoring",
+        "beat": "De Cuyper, Rúben and Tarkowski combined for 21 of the 46",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      },
+      {
+        "subject": "test3331's misfiring outfield",
+        "beat": "five outfield players managed ten between them behind Leno's seven",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      },
+      {
+        "subject": "Managers benching their own hauls",
+        "beat": "Davis, Gvardiol and Yalcouyé all returned from the bench their owners chose",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      },
+      {
+        "subject": "test31121's selection headache",
+        "beat": "Two benched defenders in the team of the week, one forward who started and delivered",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      },
+      {
+        "subject": "testf's points-versus-position gap",
+        "beat": "League-high 186 scored, fifth in the table, six points",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      },
+      {
+        "subject": "The nine-point logjam at the top",
+        "beat": "Four sides level on points but not on quality",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      },
+      {
+        "subject": "Thomas on international duty, test3331",
+        "beat": "Named in Tuchel's Nations League squad; workload unknown.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      },
+      {
+        "subject": "Palmer's standing under Tuchel",
+        "beat": "Recalled by England but told, in public, that he has to perform.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T17:10:33.962Z"
+      }
+    ]
+  }
+}

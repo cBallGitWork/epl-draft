@@ -1,0 +1,25 @@
+{
+  "slug": "p4-report-deo9ljvtmtj36y3gvhy0w28p5mtj36y3g",
+  "kind": "tie-report",
+  "leagueId": "w05aib75mtj36y1g",
+  "period": 4,
+  "gameweek": 4,
+  "filedAt": "2026-09-18T17:10:33.962Z",
+  "expiresAt": null,
+  "edition": "The Monday Club",
+  "byline": "",
+  "headline": "test1 shades it as test4 draws blanks",
+  "deck": "test1 beat test4 38-11, Calvert-Lewin's eight the top score",
+  "body": "Nothing worked for test4 and nothing came close. Eleven points across six men, not one of them past three, and the whole afternoon summed up by Gray's three at the top of the pile. Mbeumo two, Suzuki two, Justin two, N.Williams two, Cherki one. A ceiling that low loses to most totals and lost to this one by 27.\n\ntest1 needed no heroics and got a spread anyway. Calvert-Lewin's eight led it, Guéhi and Saka each returned six from opposite ends of the pitch, and Palmer's five kept the middle ticking over. Kelleher and Wirtz added three apiece and the thing was settled long before the maths got interesting.\n\nWhat will gnaw at test4 is the absence of a single haul to hang the week on. Everyone contributed a little; nobody contributed enough. When your best forward returns two, the arithmetic is unkind before you start.",
+  "subjects": [
+    "tie-report:p4:deo9ljvtmtj36y3gvhy0w28p5mtj36y3g"
+  ],
+  "image": null,
+  "face": {
+    "code": 177815,
+    "name": "Calvert-Lewin",
+    "clubId": 13,
+    "position": "F"
+  },
+  "ties": []
+}

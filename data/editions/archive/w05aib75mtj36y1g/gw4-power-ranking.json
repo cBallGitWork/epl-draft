@@ -1,0 +1,74 @@
+{
+  "slug": "gw4-power-ranking",
+  "kind": "power-ranking",
+  "leagueId": "w05aib75mtj36y1g",
+  "period": 4,
+  "gameweek": 4,
+  "filedAt": "2026-09-18T17:10:33.962Z",
+  "expiresAt": null,
+  "edition": "The Monday Club",
+  "byline": "The Pecking Order",
+  "headline": "Testing Times For The Nine-Point Pretenders",
+  "deck": "Four managers on nine points, but testf's 186 scored says the table is lying near the top",
+  "body": "The table hands nine points to four sides and invites you to believe they are level. They are not. test211 sits top on 174 scored and a one-point squeak past 123, the kind of margin that flatters a decent side into looking like a great one. test2 has scored more than anyone above them and lost to test3 by 25, which tells you the record and the football have parted company.\n\nBelow the line the numbers turn mutinous. testf have posted 186, more than every side in the division, and sit fifth on six points, a haul with nothing to show for it. Meanwhile test31 grind out sixes on 136 scored and nobody is fooled. At the foot, test31121 lose by three and out-score two sides above them; the arithmetic is cruel, the football less so.",
+  "subjects": [
+    "power-ranking:gw4"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [],
+  "extras": {
+    "ranks": [
+      {
+        "teamId": "pzmd243ymtj36y3g",
+        "move": 4,
+        "line": "The best team in the league is fifth, and 186 scored is the only figure on this page that matters."
+      },
+      {
+        "teamId": "1b6gp5utmtj36y3g",
+        "move": 0,
+        "line": "162 scored and a 25-point loss to show for it; the football says top three even if the beating says otherwise."
+      },
+      {
+        "teamId": "y6viv6jfmtj36y3g",
+        "move": 0,
+        "line": "Put 25 on test2 and sit fourth, which is roughly a full division short of where that scoreline belongs."
+      },
+      {
+        "teamId": "fq5omv5kmtj36y3g",
+        "move": -3,
+        "line": "Top of the table on a one-point win over a bottom-half side; flattered, and the 174 does not quite excuse it."
+      },
+      {
+        "teamId": "hy0w28p5mtj36y3g",
+        "move": 0,
+        "line": "27 clear of test4 and nine points, but 164 scored is honest work rather than anything frightening."
+      },
+      {
+        "teamId": "98yx3o50mtj36y3g",
+        "move": 2,
+        "line": "165 scored and three points is a swindle; one point from top and treated like a relegation candidate."
+      },
+      {
+        "teamId": "deo9ljvtmtj36y3g",
+        "move": -1,
+        "line": "145 and beaten by 27; the record is honest and so is the ceiling."
+      },
+      {
+        "teamId": "dpdkp2bbmtj36y3g",
+        "move": -3,
+        "line": "Six points off 136 scored is the lowest total of anyone above the drop; the wins are borrowed."
+      },
+      {
+        "teamId": "g80h3bf5mtj36y3g",
+        "move": 1,
+        "line": "Bottom of the table, out-scoring two sides above them, undone by a three-point margin nobody will remember."
+      },
+      {
+        "teamId": "kg18w2cvmtj36y3g",
+        "move": -1,
+        "line": "134 scored and beaten by 27; the only side down here whose record and football agree."
+      }
+    ]
+  }
+}

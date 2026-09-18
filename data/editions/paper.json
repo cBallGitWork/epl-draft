@@ -1,4 +1,289 @@
 {
-  "updatedAt": "",
-  "stories": []
+  "updatedAt": "2026-09-18T17:10:33.962Z",
+  "stories": [
+    {
+      "slug": "p4-report-deo9ljvtmtj36y3gvhy0w28p5mtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:10:33.962Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "test1 shades it as test4 draws blanks",
+      "deck": "test1 beat test4 38-11, Calvert-Lewin's eight the top score",
+      "body": "Nothing worked for test4 and nothing came close. Eleven points across six men, not one of them past three, and the whole afternoon summed up by Gray's three at the top of the pile. Mbeumo two, Suzuki two, Justin two, N.Williams two, Cherki one. A ceiling that low loses to most totals and lost to this one by 27.\n\ntest1 needed no heroics and got a spread anyway. Calvert-Lewin's eight led it, Guéhi and Saka each returned six from opposite ends of the pitch, and Palmer's five kept the middle ticking over. Kelleher and Wirtz added three apiece and the thing was settled long before the maths got interesting.\n\nWhat will gnaw at test4 is the absence of a single haul to hang the week on. Everyone contributed a little; nobody contributed enough. When your best forward returns two, the arithmetic is unkind before you start.",
+      "subjects": [
+        "tie-report:p4:deo9ljvtmtj36y3gvhy0w28p5mtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 177815,
+        "name": "Calvert-Lewin",
+        "clubId": 13,
+        "position": "F"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p4-report-1b6gp5utmtj36y3gvy6viv6jfmtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:10:33.962Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Dunk done: test3 sinks test2",
+      "deck": "test3 beat test2 46-21, Dunk's twelve from the back the top score",
+      "body": "A defender fronted this one. Dunk's twelve settled it long before the forwards were counted, and Calafiori's six behind him meant test3 took eighteen from two men filed in defence. Emersonn's nine gave the top of the sheet the weight the back of it did not need.\n\nPickford's six for the clean sheet and Gibbs-White's five rounded a total that never looked like slipping. Only Gonzalo, on two, kept quiet.\n\ntest2 had nothing to answer with. Rice's six was the best of it and everything after fell away, Giles on four, Trafford on three from goal, Cunha and Isak on two apiece. Two forwards for four points is the line that will gnaw at him.\n\nTwenty-five is a hammering, and it was built where test2 will least have expected it, in the two defensive slots that carried eighteen on their own.",
+      "subjects": [
+        "tie-report:p4:1b6gp5utmtj36y3gvy6viv6jfmtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 83299,
+        "name": "Dunk",
+        "clubId": 5,
+        "position": "D"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p4-report-98yx3o50mtj36y3gvfq5omv5kmtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:10:33.962Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Groß national product carries 123 39",
+      "deck": "123 39 edge test211 40-39, Groß's 14 the top score",
+      "body": "Fourteen from Groß did the settling. The midfielder was the biggest number on either side, and 123 39 needed every point of him, because behind that the returns thinned fast. Schade added ten up front, Haaland six, and a one-point win was built on the pair at the top and little else.\n\nThe floor is where 123 39 will look with relief. Stach three, B.Fernandes two, Neto two. Slim contributions, but in a margin of one they all counted.\n\ntest211 lost this by a single point and the defence is what will gnaw. Bogle led the side with twelve, Castagne added six, Aina two, three defenders returning and still not enough. João Pedro's nine up front was honest work with nobody alongside him, King and Enciso managing two apiece. One more point anywhere and the tie flips.",
+      "subjects": [
+        "tie-report:p4:98yx3o50mtj36y3gvfq5omv5kmtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 60307,
+        "name": "Groß",
+        "clubId": 5,
+        "position": "M"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p4-report-g80h3bf5mtj36y3gvdpdkp2bbmtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:10:33.962Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Verbruggen's clean sheet keeps test31 dry",
+      "deck": "test31 beats test31121 34-31, Verbruggen's eight and Belloumi's nine decisive",
+      "body": "Two nines split this tie down the middle, and it was the man behind them who tipped it. Verbruggen's clean sheet and eight points gave test31 a base test31121 could not match, and Belloumi's nine up top matched Kostoulas blow for blow. Mykolenko's six from the back did the rest of the settling.\n\ntest31121 will point at the top of the sheet and rightly so: Kostoulas returned nine, the equal of anything test31 had. But behind him the picture thinned fast. Ampadu and Gabriel managed five apiece and the midfield trio of Berge, Ødegaard and Szoboszlai returned three each, and three points from a midfielder is not the return a captaincy expects.\n\nThe margin was three, which is exactly the gap between test31's goalkeeper and test31121's not having one that scored. Belloumi and Kostoulas cancelled; Verbruggen did not. That is the tie.",
+      "subjects": [
+        "tie-report:p4:g80h3bf5mtj36y3gvdpdkp2bbmtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 540324,
+        "name": "Belloumi",
+        "clubId": 11,
+        "position": "F"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p4-report-kg18w2cvmtj36y3gvpzmd243ymtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:10:33.962Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "De Cuyper leads, test3331 left counting",
+      "deck": "testf beat test3331 46-19, De Cuyper's nine the top score of the tie",
+      "body": "testf carried this on defenders. De Cuyper's nine led it, with Rúben and Tarkowski both on six and a clean sheet's worth of coverage across the back. Add Tavernier's six in midfield and Rogers and Evanilson up top, and testf had six men returning and nobody dragging.\n\ntest3331's total tells the other story. Nineteen from six players, and Leno's seven from goal was the only stat line that stood up. Everything in front of him folded.\n\nMcBurnie's four was the best of the outfield returns, and that is the number test3331 will chew on. Barkley and Scott managed two apiece, Ajer and Lewis-Potter one each. Six starters, five of them in single figures, against a testf side that never dropped below five. Twenty-seven is a hole no single haul was ever going to fill.",
+      "subjects": [
+        "tie-report:p4:kg18w2cvmtj36y3gvpzmd243ymtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 465730,
+        "name": "De Cuyper",
+        "clubId": 5,
+        "position": "D"
+      },
+      "ties": []
+    },
+    {
+      "slug": "news-football-articles-cvrl64y9rdn9o",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:10:33.962Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Tuchel's Chaos, test3331's Concern",
+      "deck": "Tuchel embraces chaos in his England squad; test3331 owns Thomas.",
+      "body": "Thomas Tuchel wanted control after the World Cup. Two months on he has named his Nations League squad and settled instead for chaos, a word he now uses without flinching.\n\nFor test3331 the interest is narrower and named Thomas, the one asset on the books with a stake in whatever Tuchel decides to embrace. What the England camp does to his minutes, the wire does not say, and neither do we.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/cvrl64y9rdn9o"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "news-football-articles-cmly4gpnwk2go",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:10:33.962Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Palmer Recalled, test1 On Warning Too",
+      "deck": "Tuchel recalls Palmer, owned by test1, and Alexander-Arnold, with a warning that players must perform.",
+      "body": "Cole Palmer is back in the England fold, and test1 will note the caveat that came with him. Tuchel recalled the midfielder alongside Trent Alexander-Arnold, then made plain that a place in the squad guarantees nothing beyond it. Selection is not the same as trust, and test1 owns a player Tuchel wants to see earn his.\n\nFor test3331 there is nothing here to read. Thomas remains theirs, and the recall list did not trouble him one way or the other. Two owners watched the same announcement; only one of them found their name in it.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/cmly4gpnwk2go"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw4-eleven",
+      "kind": "eleven",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:10:33.962Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "The Selector",
+      "headline": "Benched but not beaten",
+      "deck": "Team of the week 5-3-3, Groß top with 12, three of the eleven left out by their own managers",
+      "body": "Groß is the man of the week and it is not close. A goal, two assists and a clean sheet from midfield is the full ledger, the sort of line that decides a gameweek on its own, and 123 rode it. Everything else here orbits that return.\n\nThe back five is the story a manager would rather forget. Davis went for a goal and two assists and watched from his own bench while it happened, and he was not alone: Gvardiol and Yalcouyé, both of test31121, were sat down by the same hand that owned their points. Three men picked for this eleven were deemed surplus by the men who paid for them. Dunk, Bogle and De Cuyper kept their sheets clean and got on the scoresheet besides, but the column belongs to the ones left out.\n\nThe middle is thin by design at three, and it earns its keep. Rice supplied an assist and a clean sheet from the base of it, tidy rather than spectacular, and Yalcouyé's goal from midfield forces him in even benched. There was room for one more and no clear case to make it.\n\nUp top the front three did the finishing the shape demands. Belloumi took a brace inside an hour, Kostoulas married a goal and an assist to a clean sheet at the other end, and Calvert-Lewin matched him for output in less time still. Three forwards, three goals, and not a wasted body among them.\n\nUnlucky to miss is Calvert-Lewin's near-twin in the pecking order, but the harder omission is anyone who blanked while these three fired. The eleven picks itself once the benched men are counted, which is the whole indignity of the week.\n\nAnd finally, a word about test31121, who managed to leave two of the best defensive returns in the division on his own bench and still find a third in Kostoulas up front. Owning the points is one thing. Playing them is another entirely.",
+      "subjects": [
+        "eleven:gw4"
+      ],
+      "image": null,
+      "face": {
+        "code": 60307,
+        "name": "Groß",
+        "clubId": 5,
+        "position": "M"
+      },
+      "ties": []
+    },
+    {
+      "slug": "gw4-power-ranking",
+      "kind": "power-ranking",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:10:33.962Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "The Pecking Order",
+      "headline": "Testing Times For The Nine-Point Pretenders",
+      "deck": "Four managers on nine points, but testf's 186 scored says the table is lying near the top",
+      "body": "The table hands nine points to four sides and invites you to believe they are level. They are not. test211 sits top on 174 scored and a one-point squeak past 123, the kind of margin that flatters a decent side into looking like a great one. test2 has scored more than anyone above them and lost to test3 by 25, which tells you the record and the football have parted company.\n\nBelow the line the numbers turn mutinous. testf have posted 186, more than every side in the division, and sit fifth on six points, a haul with nothing to show for it. Meanwhile test31 grind out sixes on 136 scored and nobody is fooled. At the foot, test31121 lose by three and out-score two sides above them; the arithmetic is cruel, the football less so.",
+      "subjects": [
+        "power-ranking:gw4"
+      ],
+      "image": null,
+      "face": null,
+      "ties": [],
+      "extras": {
+        "ranks": [
+          {
+            "teamId": "pzmd243ymtj36y3g",
+            "move": 4,
+            "line": "The best team in the league is fifth, and 186 scored is the only figure on this page that matters."
+          },
+          {
+            "teamId": "1b6gp5utmtj36y3g",
+            "move": 0,
+            "line": "162 scored and a 25-point loss to show for it; the football says top three even if the beating says otherwise."
+          },
+          {
+            "teamId": "y6viv6jfmtj36y3g",
+            "move": 0,
+            "line": "Put 25 on test2 and sit fourth, which is roughly a full division short of where that scoreline belongs."
+          },
+          {
+            "teamId": "fq5omv5kmtj36y3g",
+            "move": -3,
+            "line": "Top of the table on a one-point win over a bottom-half side; flattered, and the 174 does not quite excuse it."
+          },
+          {
+            "teamId": "hy0w28p5mtj36y3g",
+            "move": 0,
+            "line": "27 clear of test4 and nine points, but 164 scored is honest work rather than anything frightening."
+          },
+          {
+            "teamId": "98yx3o50mtj36y3g",
+            "move": 2,
+            "line": "165 scored and three points is a swindle; one point from top and treated like a relegation candidate."
+          },
+          {
+            "teamId": "deo9ljvtmtj36y3g",
+            "move": -1,
+            "line": "145 and beaten by 27; the record is honest and so is the ceiling."
+          },
+          {
+            "teamId": "dpdkp2bbmtj36y3g",
+            "move": -3,
+            "line": "Six points off 136 scored is the lowest total of anyone above the drop; the wins are borrowed."
+          },
+          {
+            "teamId": "g80h3bf5mtj36y3g",
+            "move": 1,
+            "line": "Bottom of the table, out-scoring two sides above them, undone by a three-point margin nobody will remember."
+          },
+          {
+            "teamId": "kg18w2cvmtj36y3g",
+            "move": -1,
+            "line": "134 scored and beaten by 27; the only side down here whose record and football agree."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "gw4-dodgers",
+      "kind": "dodgers",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T17:10:33.962Z",
+      "expiresAt": null,
+      "edition": "The Mercato Wire",
+      "byline": "Own Goals & Gaffs",
+      "headline": "Davis Cup Sits Out On test4's Sofa",
+      "deck": "test4 benched Davis, who returned a goal and two assists in 90 minutes",
+      "body": "The cruellest seat in the league belonged to Davis this week, planted on test4's bench while turning in a goal and two assists across the full ninety. A defender doing forward's work, and doing it for nobody who could count it.\n\ntest31121 managed the double insult. Yalcouyé took a goal and a clean sheet in 64 minutes, Gvardiol an assist and a clean sheet across the ninety, and both watched the round from the wrong side of the line. Two defenders working overtime, neither of them permitted to matter.\n\ntest211 left out Muharemović, who supplied an assist and kept his side tidy for ninety minutes. And 123, who saw Groß carry the load elsewhere, sat Donnarumma for a clean sheet and three saves. The goalkeeper did everything asked of him. Nobody asked.",
+      "subjects": [
+        "dodgers:gw4"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    }
+  ]
 }

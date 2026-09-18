@@ -1,0 +1,25 @@
+{
+  "slug": "p4-report-1b6gp5utmtj36y3gvy6viv6jfmtj36y3g",
+  "kind": "tie-report",
+  "leagueId": "w05aib75mtj36y1g",
+  "period": 4,
+  "gameweek": 4,
+  "filedAt": "2026-09-18T17:10:33.962Z",
+  "expiresAt": null,
+  "edition": "The Monday Club",
+  "byline": "",
+  "headline": "Dunk done: test3 sinks test2",
+  "deck": "test3 beat test2 46-21, Dunk's twelve from the back the top score",
+  "body": "A defender fronted this one. Dunk's twelve settled it long before the forwards were counted, and Calafiori's six behind him meant test3 took eighteen from two men filed in defence. Emersonn's nine gave the top of the sheet the weight the back of it did not need.\n\nPickford's six for the clean sheet and Gibbs-White's five rounded a total that never looked like slipping. Only Gonzalo, on two, kept quiet.\n\ntest2 had nothing to answer with. Rice's six was the best of it and everything after fell away, Giles on four, Trafford on three from goal, Cunha and Isak on two apiece. Two forwards for four points is the line that will gnaw at him.\n\nTwenty-five is a hammering, and it was built where test2 will least have expected it, in the two defensive slots that carried eighteen on their own.",
+  "subjects": [
+    "tie-report:p4:1b6gp5utmtj36y3gvy6viv6jfmtj36y3g"
+  ],
+  "image": null,
+  "face": {
+    "code": 83299,
+    "name": "Dunk",
+    "clubId": 5,
+    "position": "D"
+  },
+  "ties": []
+}
