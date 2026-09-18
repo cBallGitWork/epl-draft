@@ -35,6 +35,8 @@ import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { markLastWeek } from "./edition/marking";
 import { writeSubedited } from "./edition/subedit";
+import { presserLines } from "./edition/pressers";
+import { deskState } from "./edition/desk";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
 // The newsroom's orchestrator, run from CI on a wide cron net.
@@ -105,33 +107,13 @@ async function main(): Promise<void> {
   const facts = await gatherRoundFacts(info, snapshot, round.period);
   const clubs = clubById(snapshot);
 
+  // This round's pressers, for men the league holds. The window opens at the
+  // last lock: a signal from before it belongs to a round already played.
+  const presserSince = lock ?? now;
+  const lines = presserLines(facts.teams, presserSince);
+
   const assignments = newsdesk(
-    {
-      gameweek: snapshot.gameweek,
-      period: round.period,
-      finished,
-      locked,
-      started,
-      stakes: fixtureStakes(
-        snapshot.fixtures.filter((fixture) => fixture.gameweek === snapshot.gameweek),
-        facts.teams,
-        facts.pairings,
-        clubs,
-      ),
-      dealsInWindow: facts.business.length,
-      news: facts.news.map((story) => ({
-        key: story.item.key,
-        slug: newsSlug(story.item.key),
-      })),
-      ties: facts.pairings.map((pairing) => ({
-        homeTeamId: pairing.home.teamId,
-        awayTeamId: pairing.away.teamId,
-        state: tieState(
-          facts.scores.get(pairing.home.teamId),
-          facts.scores.get(pairing.away.teamId),
-        ),
-      })),
-    },
+    deskState({ snapshot, facts, clubs, period: round.period, finished, locked, started, lines }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,
   );
@@ -153,6 +135,7 @@ async function main(): Promise<void> {
     period: round.period,
     kickoff,
     marked: await markLastWeek(paper, info, round.period, assignments),
+    presserLines: lines,
   };
 
   const filings: Filing[] = [];

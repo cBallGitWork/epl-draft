@@ -6,9 +6,11 @@ import {
   type LeagueInfo,
   type PublishedStory,
   type StandingsRow,
+  type PresserLine,
   type StoryThread,
   type ThreadUpdate,
   buildBrief,
+  buildPresserBrief,
   normalizePublished,
 } from "@epl/core";
 import {
@@ -26,6 +28,7 @@ import { STORY_BYLINE, editionName } from "./voice/bylines";
 import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL, TIE_REPORT } from "./voice/matches";
 import { DODGERS, ELEVEN, POWER_RANKING, PREDICTIONS, WIRE } from "./voice/columns";
 import { NEWS } from "./voice/news";
+import { PRESSER } from "./voice/pressers";
 import { PREVIEW } from "./voice/rounds";
 
 // One assignment in, one prepared desk out: which voice writes it, from which
@@ -48,6 +51,9 @@ export interface DeskContext {
   kickoff: string | null;
   /** How the last preview's calls went, report-time only. */
   marked: { right: number; called: number } | null;
+  /** This week's press-conference signals, for men the league holds. Empty until
+   *  the intel export lands, which files no Team Sheet and spends nothing. */
+  presserLines: PresserLine[];
 }
 
 /** The one kind still written in the old sectioned edition shape. The report
@@ -90,6 +96,8 @@ export function prepare(assignment: Assignment, ctx: DeskContext): { system: str
             ? tieReportBrief(assignment, ctx.snapshot.gameweek, ctx.facts, ctx.threads)
           : assignment.kind === "news"
             ? newsBrief(assignment, ctx.facts, ctx.threads)
+          : assignment.kind === "presser"
+            ? buildPresserBrief({ gameweek: ctx.snapshot.gameweek, lines: ctx.presserLines, threads: ctx.threads })
           : columnBrief(assignment, {
               gameweek: ctx.snapshot.gameweek,
               facts: ctx.facts,
@@ -120,6 +128,7 @@ const VOICE: Partial<Record<Assignment["kind"], string>> = {
   dodgers: DODGERS,
   wire: WIRE,
   news: NEWS,
+  presser: PRESSER,
 };
 
 export function file(

@@ -16,6 +16,7 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   dodgers: "Own Goals & Gaffs",
   wire: "The Bin",
   news: "The Wire",
+  presser: "The Team Sheet",
 };
 
 /** The edition a filing goes out under — the paper's names for its own
