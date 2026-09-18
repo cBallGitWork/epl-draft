@@ -14,8 +14,8 @@ import {
   buildPresserBrief,
   normalizePublished,
 } from "@epl/core";
+import { faceOf } from "./faces";
 import {
-  faceOf,
   fixturePreviewBrief,
   matchReportBrief,
   tieCallBrief,

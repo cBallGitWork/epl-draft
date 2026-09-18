@@ -88,6 +88,11 @@ export function sections(html: string): { club: string; body: string }[] {
   return out;
 }
 
+/** FFS's way of writing "the club has not said". That is the ABSENCE of a
+ *  complaint, and carrying it printed "Joelinton OUT — unspecified", which reads
+ *  as a database field rather than as team news. */
+const UNNAMED = /^(unknown|unspecified|undisclosed|n\/a)$/;
+
 /** What a sentence says about a man's availability. The article's parentheses
  *  are only the shorthand list — the news a reporter leads on is in the prose,
  *  and João Pedro was missed entirely on 18 Sep because Alonso refused to name
@@ -124,7 +129,7 @@ function condition(sentence: string, name: string): string | undefined {
   // FFS writes "(unknown)" where the club has not said. That is the ABSENCE of a
   // complaint, and carrying it printed "Joelinton OUT — unspecified", which
   // reads as a database field rather than as team news.
-  return /^(unknown|unspecified|undisclosed|n\/a)$/.test(what) ? undefined : what;
+  return UNNAMED.test(what) ? undefined : what;
 }
 
 /** Sentences, so a man is read together with what was said about him. Blocks
@@ -158,7 +163,7 @@ export function troubles(
     if (hits.length === 0) hits.push(...squad.filter((player) => names(player).has(surname)));
     if (hits.length !== 1) continue;
     const what = m[2].trim();
-    const named = /^(unknown|unspecified|undisclosed|n\/a)$/.test(what) ? undefined : what;
+    const named = UNNAMED.test(what) ? undefined : what;
     found.set(hits[0].name, { player: hits[0], tag: "injury_scare", condition: named });
   }
 

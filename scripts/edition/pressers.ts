@@ -29,6 +29,14 @@ function read(): IntelPressers | null {
   return JSON.parse(readFileSync(FILE, "utf8")) as IntelPressers;
 }
 
+/** The same clubs re-keyed by the PER-SEASON id, which is what a player carries.
+ *  The map arrives keyed by the season-stable code, because that is what a
+ *  presser signal and a crest use — the two id spaces are the hazard this
+ *  repo names in writing, so the re-key is one function and not three. */
+function byClubId(clubs: ReadonlyMap<number, Club>): Map<number, Club> {
+  return new Map([...clubs.values()].map((club) => [club.id, club]));
+}
+
 /** Every code somebody in the league holds, and who holds him. */
 // A slot the bridge could not resolve carries no footballer, so it carries no
 // code to match a signal against.
@@ -109,8 +117,7 @@ export function presserLines(
   if (intel === null) return [];
   const held = owners(teams);
   const byPlayer = new Map(squad.map((player) => [player.code, player]));
-  // Clubs keyed by the snapshot's per-season id, which is what a player carries.
-  const byId = new Map([...clubs.values()].map((club) => [club.id, club]));
+  const byId = byClubId(clubs);
   return pressers(intel, since).flatMap((signal) => {
     // A man we cannot name is a man the column cannot write about. Printing his
     // FPL code in an article is worse than omitting him, and a code the snapshot
@@ -153,7 +160,7 @@ export async function presserFixtures(
   clubs: ReadonlyMap<number, Club>,
 ): Promise<Map<number, { opponent: string; home: boolean; kickoff: string }>> {
   const out = new Map<number, { opponent: string; home: boolean; kickoff: string }>();
-  const byId = new Map([...clubs.values()].map((club) => [club.id, club]));
+  const byId = byClubId(clubs);
   const fixtures = await fetchFixtures(gameweek).catch(() => []);
   for (const fixture of fixtures) {
     // `team_h`/`team_a` are FPL's per-season club ids, which is what `Club.id`

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Assignment, Fixture, ResolvedPlayer, RosteredTeam } from "@epl/core";
-import { faceOf } from "./assemble";
+import { faceOf } from "./faces";
 import type { RoundFacts } from "./facts";
 
 // **The picture is the desk's choice and not the writer's.** These assert who
