@@ -81,7 +81,7 @@ export function buildPresserBrief(brief: {
       '  { "club": the club name exactly as given,',
       '    "code": the number given on that line,',
       '    "line": ONE sentence of context — what the manager did or would not do, and nothing that repeats a bullet,',
-      '    "men": [ { "name": his name as given, "owner": our manager who holds him or omit it, "status": one of OUT | Doubt | Suspended | FIT, "note": the complaint and what was said, a few words } ],',
+      '    "men": [ { "name": his name as given, "owner": our manager who holds him or omit it, "status": one of OUT | Doubt | Suspended | FIT, "note": the complaint and what was said, a few words — and where a ban or an absence has a KNOWN LENGTH, that length is the most useful thing you can put here } ],',
       '    "quote": { "text": his words EXACTLY as given below, "said": who said them } — or omit it when the club has none }',
     ].join("\n"),
     "NEVER RESTATE THE STATUS IN THE NOTE. \"OUT — not able to play\", \"FIT — back in contention\", \"Suspended — banned, not injured\" are the tag written twice; the second half is deleted by any sub who sees it. The note carries the COMPLAINT and anything the tag cannot say — how long, since when, what happens next. Where there is nothing to add, leave the note empty.",
@@ -95,7 +95,8 @@ export function buildPresserBrief(brief: {
     brief.lead === undefined || brief.lead === null
       ? null
       : `THE LEAD IS ${brief.lead.toUpperCase()}, and that is the desk's decision rather than yours. His photograph runs beside this column, so the DECK must name him and the opening sentence must be about him and what was said about him. A deck naming four other men under his picture is the page contradicting itself.`,
-    "THE BODY LEADS ON THE BIGGEST NAME, not on a count of clubs. Two or three sentences: the one man whose availability matters most today and what was actually said about him, then the shape of the rest. \"Six clubs held pressers\" is a summary of the page, not the news on it.",
+    "THE BODY IS ABOUT THE LEAD MAN AND NOBODY ELSE. Two sentences: what was actually said about him, and what it leaves open. It must NOT survey the other clubs, count them, or characterise their news — the rows below do all of that, and every attempt to summarise them has produced filler a sub-editor deleted. If you find yourself writing a sentence that mentions three clubs, delete it.",
+    "NO SCENE-SETTING, IN THE BODY OR IN A CLUB'S LINE. \"Elsewhere the picture is harder\", \"long absence lists\", \"reads heaviest\", \"a mixed bag\" describe the SHAPE OF YOUR OWN COLUMN to a reader looking straight at it. Every sentence starts on a footballer or a manager.",
     "NO VERDICT ON THE DAY, AND NO WEATHER REPORT. Never rank clubs by how good or bad their news was. \"Forest bring the day's better news\", \"Newcastle carry the heaviest load\", \"the one clear gain\", \"reads heaviest\" — all of that is you editorialising about a list you were handed, and it is the first thing a reader skips. Say who is out and who is back. The reader decides whether that is good news.",
     "DO NOT NAME THE MANAGER TWICE. If the club's quote carries his name, the club's line must not also open with it — write what was established, not who established it. Name him in the line only where that club has no quote.",
     said.length === 0

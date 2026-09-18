@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { LEAGUE_TIMEZONE, normalizeName, pressers, type Club, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
+import { LEAGUE_TIMEZONE, fetchFixtures, fullClubName, normalizeName, pressers, type Club, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { ResolvedPlayer, RosteredPlayer, RosteredTeam } from "@epl/core";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
@@ -129,12 +129,43 @@ export function presserLines(
     return [{
       ...signal,
       playerName: display(player),
-      clubName: club.name,
+      clubName: fullClubName(club.name),
       // Null when nobody in the league holds him, which is no longer a reason
       // to drop him — it is the difference between "start him" and "claim him".
       ownerName: held.get(signal.code) ?? null,
     }];
   });
+}
+
+/** Who each club plays in the round the pressers are about, by FPL club code.
+ *
+ *  **Not `snapshot.fixtures`, and that is the whole point of this function.**
+ *  `map.ts` records that FPL keeps `is_current` on a round until the next
+ *  DEADLINE, so between rounds the snapshot is focused on football already
+ *  played — and a Thursday column would print last weekend's opponents beside
+ *  this weekend's team news. Craig, 18 Sep 2026: "we arent in a gameweek, we
+ *  are inbetween gameweeks".
+ *
+ *  A round with no fixtures published yet returns an empty map, and every club
+ *  header then prints without an opponent rather than with the wrong one. */
+export async function presserFixtures(
+  gameweek: number,
+  clubs: ReadonlyMap<number, Club>,
+): Promise<Map<number, { opponent: string; home: boolean; kickoff: string }>> {
+  const out = new Map<number, { opponent: string; home: boolean; kickoff: string }>();
+  const byId = new Map([...clubs.values()].map((club) => [club.id, club]));
+  const fixtures = await fetchFixtures(gameweek).catch(() => []);
+  for (const fixture of fixtures) {
+    // `team_h`/`team_a` are FPL's per-season club ids, which is what `Club.id`
+    // carries — never the season-stable code the crest keys off.
+    const home = byId.get(fixture.team_h);
+    const away = byId.get(fixture.team_a);
+    const kickoff = fixture.kickoff_time;
+    if (home === undefined || away === undefined || kickoff === null) continue;
+    out.set(home.code, { opponent: fullClubName(away.name), home: true, kickoff });
+    out.set(away.code, { opponent: fullClubName(home.name), home: false, kickoff });
+  }
+  return out;
 }
 
 /** What each manager actually said, for the clubs in this round.

@@ -104,7 +104,9 @@ export default function Written({
       {portrait && story.face ? (
         <div className="grid gap-4 @3xl:grid-cols-[1fr_16rem] @3xl:gap-6">
           <div className="flex min-w-0 flex-col">{opening}</div>
-          <figure className="order-first @3xl:order-none @3xl:pt-10">
+          {/* Capped, because stacked it has the whole page to fill and a
+              portrait the width of the sheet is a jaw, not a picture. */}
+          <figure className="order-first max-w-[15rem] @3xl:order-none @3xl:max-w-none @3xl:pt-10">
             <Face face={story.face} clubs={clubs} rank="portrait" />
             <figcaption className="pt-1.5 font-sans text-2xs uppercase tracking-widest text-faint">
               {story.face.name}

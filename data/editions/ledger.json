@@ -17,24 +17,38 @@
     ],
     "threads": [
       {
-        "subject": "test4's squad under review",
-        "beat": "Cherki now the outside world's talking point, with Elanga still awaiting an MRI.",
+        "subject": "Hull's mounting absence list",
+        "beat": "Mendy in concussion protocol and out this game; Morita not back until after the first week of the break.",
         "status": "open",
+        "beats": 3,
+        "lastUsedAt": "2026-09-18T14:00:28.945Z"
+      },
+      {
+        "subject": "test4's squad under review",
+        "beat": "Elanga still awaiting MRI results, Jaissle hoping it is not serious; Collins out with a calf.",
+        "status": "open",
+        "beats": 6,
+        "lastUsedAt": "2026-09-18T13:54:34.003Z"
+      },
+      {
+        "subject": "Jair Cunha's fitness",
+        "beat": "Back in contention for Forest after the hamstring, Glasner confirms.",
+        "status": "retired",
         "beats": 1,
-        "lastUsedAt": "2026-09-18T13:27:59.384Z"
+        "lastUsedAt": "2026-09-18T13:45:12.734Z"
+      },
+      {
+        "subject": "Forest's fitness picture",
+        "beat": "Cunha fit again, only Savona and Milenković out, Aina and Diomande managed after a physical weekend.",
+        "status": "open",
+        "beats": 6,
+        "lastUsedAt": "2026-09-18T13:43:38.444Z"
       },
       {
         "subject": "The quiet waiver window",
         "beat": "Mendy stays in concussion protocol, Dedic ruled out, Elanga awaiting an MRI.",
         "status": "open",
         "beats": 6,
-        "lastUsedAt": "2026-09-18T13:27:59.384Z"
-      },
-      {
-        "subject": "Forest's fitness picture",
-        "beat": "Cunha back in contention, only Savona and Milenković out, Aina and Diomande managed.",
-        "status": "open",
-        "beats": 4,
         "lastUsedAt": "2026-09-18T13:27:59.384Z"
       },
       {

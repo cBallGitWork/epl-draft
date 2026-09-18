@@ -35,7 +35,7 @@ import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { markLastWeek } from "./edition/marking";
 import { writeSubedited } from "./edition/subedit";
-import { presserLines, presserQuotes } from "./edition/pressers";
+import { presserFixtures, presserLines, presserQuotes } from "./edition/pressers";
 import { deskState } from "./edition/desk";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
@@ -115,6 +115,15 @@ async function main(): Promise<void> {
   const presserSince = lock ?? now;
   const lines = presserLines(facts.teams, presserSince, byCode, snapshot.players);
 
+  // **The round the pressers PREVIEW, which between gameweeks is not the one the
+  // snapshot is focused on.** `focusGameweek` prefers FPL's `is_current`, and
+  // `map.ts` records that FPL keeps that flag on a round until the next
+  // DEADLINE — so on a Thursday it still names the football already played.
+  // Attaching those fixtures would have printed last weekend's opponents beside
+  // this weekend's team news.
+  const ahead = finished ? snapshot.gameweek + 1 : snapshot.gameweek;
+  const presserTies = lines.length === 0 ? new Map() : await presserFixtures(ahead, byCode);
+
   const assignments = newsdesk(
     deskState({ snapshot, facts, clubs, period: round.period, finished, locked, started, lines }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
@@ -140,6 +149,7 @@ async function main(): Promise<void> {
     marked: await markLastWeek(paper, info, round.period, assignments),
     presserLines: lines,
     presserQuotes: presserQuotes(byCode),
+    presserTies,
   };
 
   const filings: Filing[] = [];

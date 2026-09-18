@@ -21,3 +21,4 @@ import paper from "../../../data/editions/paper.json";
 // pretending — whereas a MISSING file would be a broken build.
 
 export const filed: PublishedStory[] = normalizePaper(paper, FANTRAX_LEAGUE_ID);
+
