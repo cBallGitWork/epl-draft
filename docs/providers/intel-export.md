@@ -292,6 +292,33 @@ nobody said. A real transcript line is a different thing from an invented one �
 and it is still not exported, because a verbatim quote from a real manager is a
 republishing question this repo has not answered and does not need to.
 
+**Carry the clubs that SPOKE, not only the ones with news** (Craig, 18 Sep 2026:
+*"mention all teams, no news is still news"*). A manager who held a conference
+and reported a clean bill of health is telling a reader something, and a club
+missing from the thread reads as an oversight rather than as calm. Signals alone
+cannot express that, so the file needs a second member:
+
+```jsonc
+{
+  "manifest": { /* … */ },
+  "spoke": [
+    { "club": 4, "manager": "Eddie Howe", "at": "2026-09-18T13:00:00Z" }
+  ],
+  "rows": [ /* the signals, as above */ ]
+}
+```
+
+A club in `spoke` with no row in `rows` is a club that said nothing worth
+flagging, and the column prints it as exactly that.
+
+**The club on a row is checked against the PLAYER, not trusted.** The reader
+resolves each signal's club from the footballer's own `clubId` in the FPL
+snapshot and DROPS the row if the export disagrees. This is not defensive
+padding: a hand-made test file on 18 Sep paired a Crystal Palace player with the
+Spurs club code, and the column printed "Spurs — Glasner did not rule out
+rotating Yeremy" — a real manager, a real player, both of them Palace, and only
+the label wrong. A wrong crest beside a real quote is worse than no row.
+
 **The roster filter is OURS, not the exporter's.** Export every signal; the
 Friday column drops the men nobody owns, through `affectedBy` in
 `gazette/newsTriage.ts` which already does exactly this for the news wire. The

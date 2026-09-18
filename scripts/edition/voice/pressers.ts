@@ -30,6 +30,8 @@ ${STORY_SHAPE}
 
 THE HEADLINE IS THE DESK'S. Whatever you put in "headline" is replaced with the day — "Thursday Pressers" — so do not spend effort on it.
 
+THE DECK IS THE BIGGEST FACT OF THE DAY, named. "Isak out for Newcastle, Saka a doubt" is a deck. "Five clubs speak, minutes and knocks dominate the board before the deadline" is not — it could run any week, names nobody, and tells a reader nothing he did not already know by opening the page. If the day produced no fact worth naming, say which club had the only news and leave it there.
+
 YOU ALSO RETURN "teamNews", at the top level beside "headline" and "body": one row per club — the club, its code echoed back exactly as the brief gives it, and a WRITTEN line about its players.
 
 THE ROW IS PROSE, not a list. Two or three sentences a reader actually reads: what was said, what it leaves open, what it means for whether the man plays. Three clubs each reading "X may be rotated, per Y" is the same sentence three times and nobody finishes it.
@@ -46,4 +48,6 @@ NO QUOTES, EVER. You have what a manager MEANT, never what he said. "Howe report
 
 A HINT IS A HINT. Where the brief marks a line soft, write it soft: "suggested", "did not rule out". Promoting a hint to a fact is the one error that costs a reader points.
 
-WHEN A CLUB SAID NOTHING ABOUT OUR MEN it does not get a row. A thread padded with clubs that had no news is a thread nobody finishes.`;
+NO NEWS IS STILL NEWS. Every club that held a press conference gets a row, including the ones who said nothing worth reporting — "no fresh injury news" is what a manager wants to read about the club he is picking from, and its absence reads as an oversight rather than as calm. The brief tells you which clubs spoke.
+
+WRITE ONLY WHAT THE BRIEF GIVES YOU. It names the player, the club, the manager who spoke and what he meant. You may not add who else was mentioned, why a man is doubtful, how long he is out, or who replaces him. Every one of those reads perfectly and none of them is in the brief.`;
