@@ -13,9 +13,24 @@
       "news:https://www.bbc.co.uk/sport/football/articles/cmly4gpnwk2go",
       "wire:through-gw4",
       "wire:through-gw5",
-      "news:https://www.bbc.co.uk/sport/football/articles/c679052dq30ro"
+      "news:https://www.bbc.co.uk/sport/football/articles/c679052dq30ro",
+      "news:https://www.bbc.co.uk/sport/football/articles/cm0qx3yv8z42o"
     ],
     "threads": [
+      {
+        "subject": "test211's defenders doing the heavy lifting",
+        "beat": "Now the back line carries the load with João Pedro sidelined up top",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-18T23:13:57.275Z"
+      },
+      {
+        "subject": "João Pedro's fitness, test211",
+        "beat": "Ruled out injured, no return date given",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T23:13:57.275Z"
+      },
       {
         "subject": "Gabriel's future, test31121",
         "beat": "The 15-year-old in Barcelona amid European interest, still on test31121's rolls",
@@ -47,13 +62,6 @@
       {
         "subject": "Cunha and Isak, test2's front pair",
         "beat": "Two points between them, the week lost up top",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
-      },
-      {
-        "subject": "test211's defenders doing the heavy lifting",
-        "beat": "Bogle 12, Castagne 6, Aina 2 and still a one-point defeat",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T17:10:33.962Z"
