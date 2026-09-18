@@ -59,6 +59,12 @@ interface StoryTeamNews {
   /** One sentence of context. Never a retelling of the bullets. */
   line: string;
   men?: StoryTeamNewsMan[];
+  /** Who they play this round, attached by the DESK from the fixture list and
+   *  never written by the column — both reviewers called its absence the worst
+   *  hole on the page, and one proved it: a manager's quote said the squad was
+   *  "coming to Brentford" while Brentford had its own section four inches
+   *  below, so the fixture was on the page twice and never joined up. */
+  fixture?: { opponent: string; home: boolean; kickoff: string };
   /** Carried from the source article, never composed — see `voice/house.ts`. */
   quote?: { text: string; said: string };
 }
@@ -94,6 +100,14 @@ function men(raw: unknown): StoryTeamNewsMan[] | undefined {
       note: typeof man.note === "string" ? man.note : "",
     }));
   return rows.length > 0 ? once(rows, (man) => man.name) : undefined;
+}
+
+function fixture(raw: unknown): { opponent: string; home: boolean; kickoff: string } | undefined {
+  const tie = raw as Partial<{ opponent: string; home: boolean; kickoff: string }> | null;
+  if (tie === null || typeof tie !== "object") return undefined;
+  if (typeof tie.opponent !== "string" || tie.opponent === "") return undefined;
+  if (typeof tie.home !== "boolean" || typeof tie.kickoff !== "string") return undefined;
+  return { opponent: tie.opponent, home: tie.home, kickoff: tie.kickoff };
 }
 
 function quote(raw: unknown): { text: string; said: string } | undefined {
@@ -139,6 +153,7 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
       code: typeof row.code === "number" ? row.code : null,
       men: men(row.men),
       quote: quote(row.quote),
+      fixture: fixture(row.fixture),
     }));
   }
 

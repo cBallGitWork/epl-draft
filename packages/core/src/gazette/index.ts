@@ -72,3 +72,5 @@ export type {
   StoryResult,
   TeamOfTheWeek,
 } from "./types";
+
+export { fullClubName } from "./clubNames";

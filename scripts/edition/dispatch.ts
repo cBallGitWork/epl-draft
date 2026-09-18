@@ -56,6 +56,8 @@ export interface DeskContext {
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];
   presserQuotes: (PresserQuote & { clubName: string })[];
+  /** Who each club plays in the round the pressers preview, by FPL club code. */
+  presserTies: Map<number, { opponent: string; home: boolean; kickoff: string }>;
 }
 
 /** The one kind still written in the old sectioned edition shape. The report
@@ -181,7 +183,19 @@ export function file(
   // The day is the last segment of the key — `presser:gw4:2026-09-17`.
   const copy =
     assignment.kind === "presser"
-      ? { ...column, headline: presserHeadline(assignment.key.split(":").pop() ?? "") }
+      ? {
+          ...column,
+          headline: presserHeadline(assignment.key.split(":").pop() ?? ""),
+          // The fixture is the DESK's, joined on the club code the writer echoed
+          // back. Asking the column for it would be asking a model to recall a
+          // fixture list, which is the one thing `strangers()` exists to stop.
+          //
+          // `teamNews` sits at the column's TOP LEVEL — `storyOfColumn` folds it
+          // into `extras` afterwards — so this joins there and not on `extras`,
+          // which is undefined at this point and silently kept the fixture off
+          // every row.
+          teamNews: withTies(column.teamNews, ctx.presserTies),
+        }
       : column;
 
   return storyOfColumn(copy, {
@@ -209,5 +223,19 @@ export function file(
       presserLines: ctx.presserLines,
       players: ctx.snapshot.players,
     }),
+  });
+}
+
+/** Each team-news row given the fixture its club plays, by code. A row whose
+ *  club has none is left exactly as filed and prints without an opponent. */
+function withTies(
+  rows: unknown,
+  ties: Map<number, { opponent: string; home: boolean; kickoff: string }>,
+): unknown {
+  if (!Array.isArray(rows)) return rows;
+  return rows.map((row) => {
+    const code = (row as { code?: unknown }).code;
+    const tie = typeof code === "number" ? ties.get(code) : undefined;
+    return tie === undefined ? row : { ...(row as object), fixture: tie };
   });
 }

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { crestUrl, type PublishedStory } from "@epl/core";
+import { LEAGUE_TIMEZONE, crestUrl, type PublishedStory } from "@epl/core";
 
 // The team-news thread: a club, its crest, a line of context, then one bullet
 // per man and at most one thing the manager actually said.
@@ -19,6 +19,23 @@ const STATUS: Record<string, string> = {
   FIT: "text-ink",
 };
 
+/** "Fri 20:00" in the league's own clock, which is the only clock a reader is
+ *  in. An unreadable instant prints nothing rather than "Invalid Date".
+ *
+ *  **"vs", and never "at" for an away tie** — Craig, 18 Sep 2026: "not at,
+ *  thats american crap". Home and away is the (H)/(A) mark, which is how an
+ *  English fixture list has always set it. */
+function when(kickoff: string): string {
+  const at = new Date(kickoff);
+  if (Number.isNaN(at.getTime())) return "";
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: LEAGUE_TIMEZONE,
+  }).format(at);
+}
+
 export default function TeamNews({ story }: { story: PublishedStory }) {
   const rows = story.extras?.teamNews ?? [];
   if (rows.length === 0) return null;
@@ -37,6 +54,13 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
               </span>
             )}
             <span className="font-display text-xl leading-none font-semibold text-ink">{row.club}</span>
+            {/* Who they play, and when. Attached by the desk from the fixture
+                list, so it cannot disagree with the prose. */}
+            {row.fixture === undefined ? null : (
+              <span className="font-sans text-2xs tracking-widest text-muted uppercase">
+                vs {row.fixture.opponent} ({row.fixture.home ? "H" : "A"}) · {when(row.fixture.kickoff)}
+              </span>
+            )}
           </h3>
 
           <p className="pt-2 text-base leading-snug text-muted">{row.line}</p>
@@ -50,7 +74,17 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
                   </span>
                   <p className="min-w-0 flex-1 text-ink">
                     <strong className="font-bold">{man.name}</strong>
-                    {man.owner === undefined ? null : <span className="text-muted"> ({man.owner})</span>}
+                    {/* **Unowned is marked, not left blank.** An absence
+                        cannot be scanned for, and it read identically to a name
+                        the bridge had failed to match. Safe to state:
+                        `bridge:check` resolves all 300 rostered slots. In the
+                        owner's own brackets, and in ink — `--color-info` is not
+                        re-pointed by `.paper`, so cyan landed on cream as a
+                        third colour and an unreadable one. */}
+                    <span className="text-muted">
+                      {" "}
+                      ({man.owner ?? "FA"})
+                    </span>
                     <span className={`pl-1.5 text-xs tracking-wide uppercase ${STATUS[man.status] ?? "text-muted"}`}>
                       {man.status}
                     </span>
