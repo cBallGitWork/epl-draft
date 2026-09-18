@@ -113,7 +113,7 @@ async function main(): Promise<void> {
   // This round's pressers, for men the league holds. The window opens at the
   // last lock: a signal from before it belongs to a round already played.
   const presserSince = lock ?? now;
-  const lines = presserLines(facts.teams, presserSince, byCode);
+  const lines = presserLines(facts.teams, presserSince, byCode, snapshot.players);
 
   const assignments = newsdesk(
     deskState({ snapshot, facts, clubs, period: round.period, finished, locked, started, lines }),

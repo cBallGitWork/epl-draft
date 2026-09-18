@@ -2,11 +2,22 @@ import { HOUSE, STORY_SHAPE } from "./house";
 
 // Team news: an information thread, not a column.
 
-/** The standing headline. Every week the same, because the article is the same
- *  article — a reader looking for team news should find the words "team news",
- *  not a pun he has to decode first. "Gaffers" is the register the rest of the
- *  paper is in; it is one string and Craig's to change. */
-export const PRESSER_HEADLINE = "What The Gaffers Said";
+/** The headline, from the day the press conferences were held: "Thursday
+ *  Pressers", "Friday Pressers". Craig, 18 Sep 2026 — "easy titles".
+ *
+ *  Set by the desk and never asked of the writer. A reader looking for Friday's
+ *  team news should find the word Friday, and a thread that runs twice a week
+ *  under a new pun each time reads as a new article rather than the same one.
+ *
+ *  The day arrives as `YYYY-MM-DD` off the assignment key, which is already a
+ *  LONDON day — `presserDays` formats it in `LEAGUE_TIMEZONE` — so reading the
+ *  weekday back in UTC cannot shift it. */
+export function presserHeadline(day: string): string {
+  const at = new Date(`${day}T12:00:00Z`);
+  if (Number.isNaN(at.getTime())) return "Team News";
+  const weekday = new Intl.DateTimeFormat("en-GB", { weekday: "long", timeZone: "UTC" }).format(at);
+  return `${weekday} Pressers`;
+}
 
 /** Team News: what was said, by club, for men somebody owns. */
 export const PRESSER = `${HOUSE}
@@ -17,13 +28,19 @@ You compile Team News: the press-conference thread. Thursday and Friday, before 
 
 ${STORY_SHAPE}
 
-THE HEADLINE IS FIXED and the desk sets it. Whatever you put in "headline" is replaced, so do not spend effort on it.
+THE HEADLINE IS THE DESK'S. Whatever you put in "headline" is replaced with the day — "Thursday Pressers" — so do not spend effort on it.
 
-YOU ALSO RETURN "teamNews", at the top level beside "headline" and "body": one row per club — the club, its code echoed back exactly as the brief gives it, and a line naming the players and what was said. Plain, factual, scannable. A reader runs his eye down the clubs looking for his own men.
+YOU ALSO RETURN "teamNews", at the top level beside "headline" and "body": one row per club — the club, its code echoed back exactly as the brief gives it, and a WRITTEN line about its players.
+
+THE ROW IS PROSE, not a list. Two or three sentences a reader actually reads: what was said, what it leaves open, what it means for whether the man plays. Three clubs each reading "X may be rotated, per Y" is the same sentence three times and nobody finishes it.
 
 THE BODY IS A SHORT INTRODUCTION. Two or three sentences: how many clubs spoke and the single most useful thing in the thread. Never a retelling of the rows.
 
-NAME THE OWNER, NOT HIS WEEK. "owned by test4" is why the man is in the article and is worth saying. What it means for test4's season, whether he is having a good week, what he should do about it — none of that belongs here.
+THE OWNER GOES IN BRACKETS, once, after the name — "Mukiele (123)". Never "owned by", never a clause about his manager. A man with no bracket is unowned, and that is information too: he is the one a reader can claim.
+
+EVERY MAN MENTIONED, owned or not. A draft manager decides who to claim as well as who to start, and a fit-again forward nobody holds is often the most useful line on the page.
+
+VARY THE ATTRIBUTION. Not "per X" every time — a manager says, reports, confirms, plays down, refuses to be drawn, leaves the door open. One construction repeated down the column is the tell that nobody wrote it.
 
 NO QUOTES, EVER. You have what a manager MEANT, never what he said. "Howe reports", "per Arteta", "Glasner suggested" — never a sentence in quotation marks.
 
