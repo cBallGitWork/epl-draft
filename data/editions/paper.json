@@ -1,4 +1,632 @@
 {
-  "updatedAt": "",
-  "stories": []
+  "updatedAt": "2026-09-18T13:27:59.384Z",
+  "stories": [
+    {
+      "slug": "p4-report-kg18w2cvmtj36y3gvpzmd243ymtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:38:24.660Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "De Cuyper Digs the Foundations for testf",
+      "deck": "testf beat test3331 46-19, De Cuyper's nine at the back the top score",
+      "body": "testf built this from the back and never needed the front. De Cuyper's nine led it, and Rúben, Tarkowski and Tavernier all returned six apiece, with Rogers on six and Evanilson on five. Four defensive names above anything test3331 could muster, and the rout was settled long before anyone counted the forwards.\n\ntest3331 got his week from his goalkeeper and nowhere else. Leno's seven was the one line worth keeping; after that the returns thinned to nothing. McBurnie's four was the pick of the outfield, and that tells its own story.\n\nBarkley and Scott managed two each, Ajer and Lewis-Potter one apiece. A forward line offering a single point between McBurnie's four and Lewis-Potter's one was never going to trouble a 46, and it did not. Twenty-seven the margin, and testf's back four wrote most of it.",
+      "subjects": [
+        "tie-report:p4:kg18w2cvmtj36y3gvpzmd243ymtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 465730,
+        "name": "De Cuyper",
+        "clubId": 5,
+        "position": "D"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p4-report-98yx3o50mtj36y3gvfq5omv5kmtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:37:37.196Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Groß Margins, Fine Line for test211",
+      "deck": "123 39 edge test211 40-39, Groß's 14 the top score",
+      "body": "One point. That was the distance, and Groß filled it. Fourteen from the midfield slot dragged 123 39 home, with Schade adding ten from the front and Haaland six behind him. When your top two return twenty-four, you can afford the rest to go quiet, and much of it did.\n\nQuiet it was. Stach's three, B.Fernandes's two, Neto's two: 123 39 carried three single-figure passengers and still had enough at the top to survive.\n\ntest211 will look at the shape of it and ache. Bogle's twelve from defence was the game's second score and gave him a spine, João Pedro's nine led the line, Castagne's six kept the back line honest. But King, Aina and Enciso mustered seven between them, and against a fourteen he had no answer to, seven short of the top score is where the margin was made.",
+      "subjects": [
+        "tie-report:p4:98yx3o50mtj36y3gvfq5omv5kmtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 60307,
+        "name": "Groß",
+        "clubId": 5,
+        "position": "M"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p4-report-g80h3bf5mtj36y3gvdpdkp2bbmtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:37:37.196Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Verbruggen's Clean Break Keeps test31 Ahead",
+      "deck": "test31 beat test31121 34-31, Verbruggen's eight and a clean sheet the margin",
+      "body": "Three points, and a goalkeeper at the heart of them. Verbruggen returned eight for test31, a clean sheet doing the quiet work behind Belloumi's nine at the top of the sheet. Mykolenko's six from the back stretched the base of it. Between the forward and the keeper, test31 had enough without ever needing his midfield, which offered three, two and two.\n\ntest31121 will look at the defence and the middle third. Kostoulas matched Belloumi with nine up front, but Ampadu and Gabriel returned five apiece and no more, and the three midfielders behind them, Berge, Ødegaard and Szoboszlai, gave three each. Eighteen points from six men who were not the striker.\n\nThat is where the margin sits. test31121 had one player over five and it was his forward; test31 had three, and one of them was the man in gloves. Belloumi and Verbruggen carried seventeen between them, and Kostoulas alone could not answer both.",
+      "subjects": [
+        "tie-report:p4:g80h3bf5mtj36y3gvdpdkp2bbmtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 540324,
+        "name": "Belloumi",
+        "clubId": 11,
+        "position": "F"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p4-report-deo9ljvtmtj36y3gvhy0w28p5mtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:36:00.562Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "test1 grey out a toothless test4",
+      "deck": "test1 beat test4 38-11, Calvert-Lewin's eight leading a spread as test4 blanked across the board.",
+      "body": "Nobody in test1's XI blanked, and that was the width of it. Calvert-Lewin's eight fronted it, Guéhi and Saka six apiece behind, and even the goalkeeper in Kelleher chipped a three onto the pile. Palmer's five and Wirtz's three filled the middle. Six men returning is a wall test4 was never going to climb.\n\nEleven is the number that will sting. Gray's three was test4's high mark, and a high mark of three tells its own story. Justin, Mbeumo, N.Williams and Suzuki all stopped at two, Cherki at one, and not a single man among them found a ceiling above a defender's clean sheet.\n\nA 27-point margin is not a bad afternoon, it is a squad that did not show up. test4 needed a haul from somewhere, from anywhere, and Mbeumo up top managing two is where the annoyance lives.",
+      "subjects": [
+        "tie-report:p4:deo9ljvtmtj36y3gvhy0w28p5mtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 177815,
+        "name": "Calvert-Lewin",
+        "clubId": 13,
+        "position": "F"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p4-report-1b6gp5utmtj36y3gvy6viv6jfmtj36y3g",
+      "kind": "tie-report",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:36:00.562Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "",
+      "headline": "Dunk Shot Sinks test2",
+      "deck": "test3 beat test2 46-21, Dunk's twelve at the back the top score",
+      "body": "test3 won it from the back. Dunk returned twelve from defence, Calafiori six alongside him and Pickford six behind them, and that spine settled the tie before the forwards were counted. Emersonn's nine only widened it, Gibbs-White added five, and 46 was never in doubt.\n\ntest2 had nothing to match it. Rice's six was the ceiling, Giles four the next best, and Trafford three from goal. That is a top scorer beaten by three men on the other side.\n\nThe forwards are what will gnaw. Cunha two, Isak two, both filed at forward and both close to blanks, and Ajayi's one from defence rounded out a return of 21 that a single Dunk-and-Calafiori afternoon buried on its own.",
+      "subjects": [
+        "tie-report:p4:1b6gp5utmtj36y3gvy6viv6jfmtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 83299,
+        "name": "Dunk",
+        "clubId": 5,
+        "position": "D"
+      },
+      "ties": []
+    },
+    {
+      "slug": "news-c69qr50nynqdo",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T13:27:59.384Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "test4 Left to Cherki-pick",
+      "deck": "The BBC's FPL desk debates keeping or selling Cherki, owned in this league by test4.",
+      "body": "The wire has the national FPL desk chewing over the same question test4 has already been sitting with: keep Cherki or move him on. It is a dilemma dressed up as advice, and it lands on test4 whether he wanted the counsel or not.\n\nWhat it does not offer is a verdict, and neither will we. test4 owns the player, test4 makes the call. All that is confirmed is that the wider game has decided Cherki is a name worth arguing about, which is more than can be said for some of the assets this league is sitting on.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/c69qr50nynqdo"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "news-cmly4gpnwk2go",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:39:08.266Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Palmer Recalled, but test1 Wants the Points",
+      "deck": "Tuchel recalls Palmer (test1) and Thomas (test3331), warning both must perform.",
+      "body": "Tuchel names Palmer in his England squad, and with the call comes a caution: the shirt is a loan, not a gift, and only those who perform keep it. For test1 the interest is closer to home. A Palmer humming for country is a Palmer humming, and the returns land in this league whatever the badge on the chest.\n\nThomas, owned by test3331, gets the same recall and the same warning. Nothing here says a minute is promised or a place is safe, and neither manager should read the squad list as anything firmer than that. Two of this league's names are in the frame, and both have been told the frame moves.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/cmly4gpnwk2go"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "news-ckvgypz42n36o",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:39:08.266Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Isak Settled, test2's Front Line Unfixed",
+      "deck": "Isak says Liverpool move was an easy call; he stays a test2 forward.",
+      "body": "The move that dominated the summer is done, and Isak calls it easy. Liverpool's ambition, he says, made the decision for him. None of that changes the one line that matters here: he is still a test2 forward, and test2 owns him.\n\nWhat that ownership is worth remains the open question. The strikers have given test2 nothing to speak of, and a settled Isak at a new club is a promise, not a return. test2 holds the asset. He is still waiting on the points.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/ckvgypz42n36o"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw4-presser-2026-09-17",
+      "kind": "presser",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T13:27:59.384Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Team Sheet",
+      "headline": "Thursday Pressers",
+      "deck": "João Pedro among four Chelsea men carrying knocks, with Alonso keeping every decision to Friday",
+      "body": "João Pedro (test211) is a doubt for Friday, one of four Chelsea men Xabi Alonso is carrying into a final training session before naming his squad. Alonso ruled nobody out, so the forward's status stays open until the last session.\n\nElsewhere the picture is harder. Newcastle lose Joelinton, Dan Burn, Ewen Jaouen and William Osula, with Amar Dedic (test3331) also ruled out and Anthony Elanga (test4) awaiting an MRI. Forest bring Jair Cunha back into contention, with only Savona and Milenković sidelined.",
+      "subjects": [
+        "presser:gw4:2026-09-17"
+      ],
+      "image": null,
+      "face": {
+        "code": 475168,
+        "name": "João Pedro",
+        "clubId": 6,
+        "position": null
+      },
+      "ties": [],
+      "extras": {
+        "teamNews": [
+          {
+            "club": "Chelsea",
+            "code": 8,
+            "line": "Nobody is ruled out, with the final call held over to Friday's session.",
+            "men": [
+              {
+                "name": "Moisés Caicedo",
+                "status": "Doubt",
+                "note": "calf; getting closer, decision Friday"
+              },
+              {
+                "name": "Marco Palestra",
+                "status": "Doubt",
+                "note": "being assessed"
+              },
+              {
+                "name": "Jordan Henderson",
+                "status": "Doubt",
+                "note": "wrist"
+              },
+              {
+                "name": "João Pedro",
+                "owner": "test211",
+                "status": "Doubt",
+                "note": "awaiting Friday's call"
+              }
+            ],
+            "quote": {
+              "text": "He is getting closer and tomorrow, we will take a final decision in the team and in the squad that is coming to Brentford.",
+              "said": "Xabi Alonso on Moises Caicedo"
+            }
+          },
+          {
+            "club": "Newcastle",
+            "code": 4,
+            "line": "Matthias Jaissle faces a young midfield, with Elanga's scan still awaited.",
+            "men": [
+              {
+                "name": "Nico González",
+                "status": "Doubt",
+                "note": "head"
+              },
+              {
+                "name": "Jacob Ramsey",
+                "status": "Doubt",
+                "note": "thigh"
+              },
+              {
+                "name": "Amar Dedic",
+                "owner": "test3331",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Anthony Elanga",
+                "owner": "test4",
+                "status": "Doubt",
+                "note": "awaiting MRI"
+              },
+              {
+                "name": "Joelinton",
+                "status": "OUT",
+                "note": ""
+              },
+              {
+                "name": "Dan Burn",
+                "status": "OUT",
+                "note": "ankle"
+              },
+              {
+                "name": "Ewen Jaouen",
+                "status": "OUT",
+                "note": "ankle"
+              },
+              {
+                "name": "William Osula",
+                "status": "OUT",
+                "note": "foot"
+              }
+            ],
+            "quote": {
+              "text": "Still not a real update on Anthony. I have just spoken with him now. I think, in the next 30 minutes, he will have an MRI, so we will get more clarity then. We hope that it is not that serious.",
+              "said": "Matthias Jaissle on Anthony Elanga"
+            }
+          },
+          {
+            "club": "Nott'm Forest",
+            "code": 17,
+            "line": "Oliver Glasner reports everyone bar two fit, with Cunha back in the frame.",
+            "men": [
+              {
+                "name": "Nicolò Savona",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Nikola Milenković",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Jair Cunha",
+                "status": "FIT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Ola Aina",
+                "owner": "test211",
+                "status": "Doubt",
+                "note": "being managed"
+              },
+              {
+                "name": "Ousmane Diomande",
+                "status": "Doubt",
+                "note": "being managed"
+              }
+            ],
+            "quote": {
+              "text": "[Other than] Savona and Milenkovic, all other players will be fit.",
+              "said": "Oliver Glasner"
+            }
+          },
+          {
+            "club": "Brentford",
+            "code": 94,
+            "line": "Keith Andrews plays down any change, saying the picture is unmoved.",
+            "men": [
+              {
+                "name": "Nathan Collins",
+                "owner": "test4",
+                "status": "OUT",
+                "note": "calf"
+              },
+              {
+                "name": "Mathias Jensen",
+                "owner": "test3",
+                "status": "OUT",
+                "note": ""
+              },
+              {
+                "name": "Kaye Furo",
+                "status": "OUT",
+                "note": ""
+              },
+              {
+                "name": "Sepp van den Berg",
+                "status": "OUT",
+                "note": "groin"
+              },
+              {
+                "name": "Josh Dasilva",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Antoni Milambo",
+                "status": "Doubt",
+                "note": "knee"
+              }
+            ]
+          },
+          {
+            "club": "Hull City",
+            "code": 88,
+            "line": "Sergej Jakirovic runs through a long list, with Morita due back after the break's first week.",
+            "men": [
+              {
+                "name": "Nobel Mendy",
+                "owner": "test31",
+                "status": "OUT",
+                "note": "concussion protocol; misses this game"
+              },
+              {
+                "name": "Jack Butland",
+                "status": "OUT",
+                "note": "shoulder"
+              },
+              {
+                "name": "Ilyas Ansah",
+                "status": "OUT",
+                "note": "back"
+              },
+              {
+                "name": "Hidemasa Morita",
+                "status": "OUT",
+                "note": "adductor; back after first week of the break"
+              },
+              {
+                "name": "Charlie Hughes",
+                "status": "OUT",
+                "note": "groin; handled cautiously"
+              },
+              {
+                "name": "Darko Gyabi",
+                "status": "Doubt",
+                "note": "thigh"
+              },
+              {
+                "name": "Eliot Matazo",
+                "status": "Doubt",
+                "note": "knee"
+              },
+              {
+                "name": "Matt Targett",
+                "status": "Doubt",
+                "note": "ankle"
+              }
+            ],
+            "quote": {
+              "text": "Morita is still out. The plan is that he will join us after the first week of the international break.",
+              "said": "Sergej Jakirovic"
+            }
+          },
+          {
+            "club": "Coventry City",
+            "code": 9,
+            "line": "Frank Lampard expects Amenda unavailable and stops short of a date on Wright.",
+            "men": [
+              {
+                "name": "Aurèle Amenda",
+                "status": "OUT",
+                "note": "calf; not expected available"
+              },
+              {
+                "name": "Haji Wright",
+                "status": "OUT",
+                "note": "quad; on track but not ready soon"
+              },
+              {
+                "name": "Luke Woolfenden",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Josh Eccles",
+                "status": "OUT",
+                "note": "calf"
+              },
+              {
+                "name": "Kaine Kesler-Hayden",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Taiwo Awoniyi",
+                "status": "Suspended",
+                "note": ""
+              }
+            ],
+            "quote": {
+              "text": "Haji's on track, but he's not obviously ready soon.",
+              "said": "Frank Lampard"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "slug": "gw4-eleven",
+      "kind": "eleven",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:38:24.660Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "The Selector",
+      "headline": "Davis Cup Left in the Cupboard",
+      "deck": "Groß leads team of the week with a goal, two assists and a clean sheet; Davis matches him but sits on test4's bench",
+      "body": "Groß is the man of the week and it is not close. A goal, two assists and a clean sheet from midfield is the full set, and he did it across the ninety without a minute wasted. Everything a fantasy midfielder is asked to do, he did, and he anchors this eleven from the middle.\n\nThe cruelty sits in defence. Davis returned a goal and two assists in ninety minutes, the equal of Groß in everything but the clean sheet, and test4 left him out of his own side. Nobody in the league did more from the bench, which is a sentence that should never be true. He is the story of the week whether his manager wanted him to be or not.\n\nThe back line is the spine of the whole thing, five men who all kept it tight and all found something extra going forward. Dunk and Bogle each scored and shut the door, De Cuyper weighed in with the assist, and Gvardiol added his own from a clean sheet only to watch, like Davis, from test31121's bench. When a manager benches two men who make team of the week, the selection deserves harder scrutiny than the results.\n\nUp front test31 carried it. Belloumi took his brace inside fifty-nine minutes and Kostoulas paired a goal with an assist and a clean sheet of his own. Calvert-Lewin gave test1 the same, a goal and an assist without conceding, and there is no argument with a front three that all scored and all kept it clean.\n\nYalcouyé completes the midfield, a goal and a clean sheet, and he too sat benched by test31121, the third man in this side his own manager did not trust. Rice keeps the third midfield berth on the assist and the clean sheet, and he is the one unlucky man's rival: a case exists for a fourth defender ahead of him, but the 5-3-3 already leans heavy at the back and the shape holds as printed.\n\nAnd finally, a word about test31121, who left Kostoulas in the side and benched Yalcouyé and Gvardiol, two men good enough for this eleven. One manager, three players here, and only one of them he actually picked. Draft leagues are won on the calls, and that is a call that cost.",
+      "subjects": [
+        "eleven:gw4"
+      ],
+      "image": null,
+      "face": {
+        "code": 60307,
+        "name": "Groß",
+        "clubId": 5,
+        "position": "M"
+      },
+      "ties": []
+    },
+    {
+      "slug": "gw4-power-ranking",
+      "kind": "power-ranking",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:39:08.266Z",
+      "expiresAt": null,
+      "edition": "The Monday Club",
+      "byline": "The Pecking Order",
+      "headline": "testf's Score Says More Than Their Record",
+      "deck": "test211 top the table on nine points but testf's 186 scored is the league's biggest, and the arithmetic and the football disagree.",
+      "body": "Four sides sit on nine points and three of them share a 3-0-1 record, but the numbers underneath the table tell a different story. testf sit fifth on six points with 186 scored, more than any manager in the league. A record that reads two wins in four is the sort a side lives to regret, and testf are the best team not being paid for it. test2, meanwhile, dropped 162 and still lost to test3 by 25, which is what happens when Cunha and Isak stay stuck on two apiece and the strike pairing offers nothing.\n\nAt the other end, test31 have two wins and 136 points, the second-lowest total in the division, and a three-point squeak past test31121 will not keep the wolves off forever. 123 have scored 165, more than five sides above them, and have one win to show for it. Somebody is going to be found out, and it is not the manager sitting seventh.",
+      "subjects": [
+        "power-ranking:gw4"
+      ],
+      "image": null,
+      "face": null,
+      "ties": [],
+      "extras": {
+        "ranks": [
+          {
+            "teamId": "pzmd243ymtj36y3g",
+            "move": 0,
+            "line": "The league's biggest scorer sitting fifth is an accident the table will not keep making."
+          },
+          {
+            "teamId": "1b6gp5utmtj36y3g",
+            "move": 0,
+            "line": "162 points and a 25-point defeat means the ceiling is high and the strikers are the roof leaking."
+          },
+          {
+            "teamId": "98yx3o50mtj36y3g",
+            "move": 0,
+            "line": "165 scored and three points is theft in plain sight; better than seventh and everybody but the table knows it."
+          },
+          {
+            "teamId": "fq5omv5kmtj36y3g",
+            "move": 0,
+            "line": "Top of the table by the width of a single point against 123, and that margin is the whole argument."
+          },
+          {
+            "teamId": "hy0w28p5mtj36y3g",
+            "move": 0,
+            "line": "A clean 27-point win over test4 is real, but 164 scored is honest work rather than anything frightening."
+          },
+          {
+            "teamId": "y6viv6jfmtj36y3g",
+            "move": 0,
+            "line": "157 is the lowest of the nine-point set and they beat a side that outscored them on the season; flattered."
+          },
+          {
+            "teamId": "dpdkp2bbmtj36y3g",
+            "move": 0,
+            "line": "Two wins on 136 points is the thinnest gruel in the top half and a three-point squeak will not sustain it."
+          },
+          {
+            "teamId": "deo9ljvtmtj36y3g",
+            "move": 0,
+            "line": "145 and beaten by 27; Mbeumo returning two from the forward slot is why the record reads what it reads."
+          },
+          {
+            "teamId": "kg18w2cvmtj36y3g",
+            "move": 0,
+            "line": "McBurnie's four aside, the forward line gave nothing in a 27-point loss and 134 is the second-lowest going."
+          },
+          {
+            "teamId": "g80h3bf5mtj36y3g",
+            "move": 0,
+            "line": "Yalcouyé and Gvardiol in the eleven with the manager's best men on his own bench; losing by three is self-inflicted."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "gw4-dodgers",
+      "kind": "dodgers",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:39:08.266Z",
+      "expiresAt": null,
+      "edition": "The Mercato Wire",
+      "byline": "Own Goals & Gaffs",
+      "headline": "test31121 Sits Out the Gvardiol Wall",
+      "deck": "test31121 benched both Yalcouyé and Gvardiol, who returned goals, assists and clean sheets from the bench.",
+      "body": "test31121 leads the page this week, and he has earned the double billing. Yalcouyé went a goal and a clean sheet in 64 minutes; Gvardiol added an assist and a clean sheet across the full 90. Both did it in the colours of a manager who left them out of his eleven.\n\nHe was not alone in the folly. test4 sat Davis, a defender, who answered with a goal and two assists over 90 minutes. A defender returning three attacking actions and a clean sheet is the kind of line a manager builds a week around, and this one watched it from the touchline.\n\ntest211 left Muharemović to an assist and a full 90, and 123 parked Donnarumma for a clean sheet and three saves. Five men did their jobs. Four managers had already decided none of it counted.",
+      "subjects": [
+        "dodgers:gw4"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw4-wire",
+      "kind": "wire",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 4,
+      "gameweek": 4,
+      "filedAt": "2026-09-18T12:39:08.266Z",
+      "expiresAt": null,
+      "edition": "The Mercato Wire",
+      "byline": "The Bin",
+      "headline": "Raya of Light Snuffed Out",
+      "deck": "A quiet window of two deals; test4, test31 and testf move, David Raya dropped and left unclaimed.",
+      "body": "Two deals. That is the week, and dressing it up as anything busier would insult the men who read this column. test4 alone traded on both sides of the ledger, one in and one out. test31 and testf each added a name and let go of nobody.\n\nNobody churned, nobody circled the same man twice, nobody sat refreshing the wire. Three managers moved once and the rest kept their hands in their pockets. Call it patience or call it a lull, but do not call it activity.\n\nDavid Raya. Signed in hope, dropped without ceremony, survived by a bench spot. The goalkeeper sits on the wire and the wire is not asking after him.",
+      "subjects": [
+        "wire:through-gw4"
+      ],
+      "image": null,
+      "face": null,
+      "ties": [],
+      "extras": {
+        "quiz": [
+          {
+            "q": "How many deals went through the window this week?",
+            "a": "Two"
+          },
+          {
+            "q": "Which manager was the only one to both add and drop a player?",
+            "a": "test4"
+          },
+          {
+            "q": "Which two managers added a name without dropping one?",
+            "a": "test31 and testf"
+          },
+          {
+            "q": "Which goalkeeper was dropped and left unclaimed?",
+            "a": "David Raya"
+          }
+        ]
+      }
+    }
+  ]
 }
