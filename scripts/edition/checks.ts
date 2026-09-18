@@ -19,8 +19,11 @@ import type { Assignment, PublishedStory } from "@epl/core";
 /** The kinds whose substance lives in `extras` rather than in the body, and
  *  which member carries it. A kind absent from this table legitimately files
  *  without extras. */
-export const CARGO: Partial<Record<Assignment["kind"], "ranks" | "quiz">> = {
+export const CARGO: Partial<Record<Assignment["kind"], "ranks" | "quiz" | "teamNews">> = {
   "power-ranking": "ranks",
+  // The Team Sheet IS its rows — the body is an introduction to them. One that
+  // files without them is two sentences about a thread that is not there.
+  presser: "teamNews",
 };
 
 /** Every written surface of a filed story, as one string to check names in.

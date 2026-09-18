@@ -106,11 +106,14 @@ async function main(): Promise<void> {
   const paper = readPaperStories();
   const facts = await gatherRoundFacts(info, snapshot, round.period);
   const clubs = clubById(snapshot);
+  // Clubs by FPL CODE, which is what a presser signal carries and what a crest
+  // keys off — `clubById` keys by the per-season id.
+  const byCode = new Map([...clubs.values()].map((club) => [club.code, club]));
 
   // This round's pressers, for men the league holds. The window opens at the
   // last lock: a signal from before it belongs to a round already played.
   const presserSince = lock ?? now;
-  const lines = presserLines(facts.teams, presserSince);
+  const lines = presserLines(facts.teams, presserSince, byCode);
 
   const assignments = newsdesk(
     deskState({ snapshot, facts, clubs, period: round.period, finished, locked, started, lines }),

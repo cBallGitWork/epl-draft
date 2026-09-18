@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { LEAGUE_TIMEZONE, pressers, type IntelPressers, type PresserLine } from "@epl/core";
+import { LEAGUE_TIMEZONE, pressers, type Club, type IntelPressers, type PresserLine } from "@epl/core";
 import type { ResolvedPlayer, RosteredPlayer, RosteredTeam } from "@epl/core";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
@@ -47,7 +47,12 @@ function owners(teams: readonly RosteredTeam[]): Map<number, string> {
 }
 
 /** The signals for this week's pressers, as the brief wants them. */
-export function presserLines(teams: readonly RosteredTeam[], since: string): PresserLine[] {
+export function presserLines(
+  teams: readonly RosteredTeam[],
+  since: string,
+  /** The round's clubs, keyed by FPL code — the crest and the row's heading. */
+  clubs: ReadonlyMap<number, Club>,
+): PresserLine[] {
   const intel = read();
   if (intel === null) return [];
   const held = owners(teams);
@@ -58,6 +63,7 @@ export function presserLines(teams: readonly RosteredTeam[], since: string): Pre
   return pressers(intel, new Set(held.keys()), since).map((signal) => ({
     ...signal,
     playerName: names.get(signal.code) ?? String(signal.code),
+    clubName: clubs.get(signal.club)?.name ?? "",
     ownerName: held.get(signal.code) ?? "",
   }));
 }
