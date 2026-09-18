@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { LEAGUE_TIMEZONE, crestUrl, type PublishedStory } from "@epl/core";
+import { crestUrl, type PublishedStory } from "@epl/core";
+import { londonDayAndTime } from "../../londonTime";
 
 // The team-news thread: a club, its crest, a line of context, then one bullet
 // per man and at most one thing the manager actually said.
@@ -9,32 +10,26 @@ import { LEAGUE_TIMEZONE, crestUrl, type PublishedStory } from "@epl/core";
 // sentence six times over — a bullet has nowhere to put filler, and a name in
 // its own field is a name the page can set in bold without guessing.
 
-/** The four states, and the one colour each is allowed. OUT is the print red
- *  because it is the answer a reader is scanning for; a doubt is quieter than
- *  the name beside it. */
+/** The four states, ranked in SCALE and never in hue (DESIGN §4).
+ *
+ *  **OUT and Suspended took `--color-accent` until 18 Sep 2026, and that was a
+ *  slot breach.** §3 gives the accent one meaning — "yours · selected · active"
+ *  — and on the paper §4 collapses the whole non-ink budget into that one print
+ *  red, so a second meaning hung on it spends the colour twice. Worse here than
+ *  most: the owner's name sits one span to the left, so the reader met the same
+ *  red meaning "your team" and "this man does not play" within forty pixels.
+ *  `--color-bad` is no escape — `.paper` deliberately does not re-point it,
+ *  because the sheet has no negative colour on purpose.
+ *
+ *  The ladder ran backwards too: FIT, the least newsworthy row, was the loudest
+ *  ink. What a reader scans for is OUT, so OUT is the loud one. */
 const STATUS: Record<string, string> = {
-  OUT: "text-accent",
-  Suspended: "text-accent",
+  OUT: "font-semibold text-ink",
+  Suspended: "font-semibold text-ink",
   Doubt: "text-muted",
-  FIT: "text-ink",
+  FIT: "text-muted",
 };
 
-/** "Fri 20:00" in the league's own clock, which is the only clock a reader is
- *  in. An unreadable instant prints nothing rather than "Invalid Date".
- *
- *  **"vs", and never "at" for an away tie** — Craig, 18 Sep 2026: "not at,
- *  thats american crap". Home and away is the (H)/(A) mark, which is how an
- *  English fixture list has always set it. */
-function when(kickoff: string): string {
-  const at = new Date(kickoff);
-  if (Number.isNaN(at.getTime())) return "";
-  return new Intl.DateTimeFormat("en-GB", {
-    weekday: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: LEAGUE_TIMEZONE,
-  }).format(at);
-}
 
 export default function TeamNews({ story }: { story: PublishedStory }) {
   const rows = story.extras?.teamNews ?? [];
@@ -45,20 +40,27 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
       {rows.map((row) => (
         <section key={row.club} className="py-4">
           <h3 className="flex items-center gap-2.5">
-            {/* A crest is a printed mark and the paper's one licensed colour
-                plate (DESIGN §5), so it wears `.crest` to get the desk's tokens
-                back inside it. No code means no crest, never a wrong one. */}
+            {/* **Not `.crest`, though it is a club badge.** That selector
+                restores the desk's tokens for an object that READS them — an
+                inline SVG filled with `fill-league` — and `paper.css` fences it
+                because it hands back the league's BRAND red inside whatever
+                wears it. A raster badge reads none of those tokens and would
+                only leave the brand red loose in this heading. DESIGN §5.
+                No code means no crest, never a wrong one. */}
             {row.code === null ? null : (
-              <span className="crest shrink-0">
+              <span className="shrink-0">
                 <Image src={crestUrl({ code: row.code })} alt="" width={28} height={28} />
               </span>
             )}
-            <span className="font-display text-xl leading-none font-semibold text-ink">{row.club}</span>
+            {/* `paper-display`, not `font-display`: Archivo Narrow is the FIGURE
+                face in both registers (DESIGN §6), and a club set in it is a
+                name wearing a number's clothes. */}
+            <span className="paper-display text-xl leading-none font-semibold text-ink">{row.club}</span>
             {/* Who they play, and when. Attached by the desk from the fixture
                 list, so it cannot disagree with the prose. */}
             {row.fixture === undefined ? null : (
               <span className="font-sans text-2xs tracking-widest text-muted uppercase">
-                vs {row.fixture.opponent} ({row.fixture.home ? "H" : "A"}) · {when(row.fixture.kickoff)}
+                vs {row.fixture.opponent} ({row.fixture.home ? "H" : "A"}) · {londonDayAndTime(row.fixture.kickoff)}
               </span>
             )}
           </h3>
@@ -85,7 +87,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
                       {" "}
                       ({man.owner ?? "FA"})
                     </span>
-                    <span className={`pl-1.5 text-xs tracking-wide uppercase ${STATUS[man.status] ?? "text-muted"}`}>
+                    <span className={`pl-1.5 font-sans text-2xs tracking-widest uppercase ${STATUS[man.status] ?? "text-muted"}`}>
                       {man.status}
                     </span>
                     {man.note === "" ? null : <span className="text-muted"> — {man.note}</span>}
@@ -103,7 +105,7 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
               style={{ borderColor: "var(--paper-rule)" }}
             >
               <p className="text-ink italic">&ldquo;{row.quote.text}&rdquo;</p>
-              <cite className="pt-1 block text-xs tracking-wide text-muted uppercase not-italic">
+              <cite className="pt-1 block font-sans text-2xs tracking-widest text-muted uppercase not-italic">
                 {row.quote.said}
               </cite>
             </blockquote>
