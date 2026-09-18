@@ -34,13 +34,25 @@ const SUPERSEDES: Partial<Record<StoryKind, readonly StoryKind[]>> = {
  *  stand"). Recency breaks ties within a band; the PERIOD outranks all of it,
  *  because a paper that leads with last week is not a paper. */
 const KIND_WEIGHT: Record<StoryKind, number> = {
+  // **Team news leads, above the reports.** It sat at 68 under a comment saying
+  // it was "the most actionable thing in the paper, a deadline away", which the
+  // number flatly contradicted — every report and every wire item outranked it,
+  // and Craig found it buried: "this should be the top article for today, its
+  // the major piece of the day".
+  //
+  // The argument, and it is the band rule rather than an exception to it: a
+  // report is about football already played and a result nobody can change,
+  // while team news is the only thing on the page a reader can still ACT on. He
+  // reads it to pick a side before the lock. "What happened" outranks "what do
+  // we think", and "what do I do in the next few hours" outranks both.
+  //
+  // Safe across the week without a clock: a presser's signal window closes at
+  // the next lock, so on report day there is no fresh one to lead with.
+  presser: 95,
   "tie-report": 90,
   "match-report": 85,
   "tie-call": 78,
   news: 70,
-  // Team news, ours rather than the wire's — and on a Thursday it is the most
-  // actionable thing in the paper, a deadline away.
-  presser: 68,
   "fixture-preview": 65,
   "round-preview": 60,
   predictions: 55,
