@@ -38,6 +38,9 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   "match-report": 85,
   "tie-call": 78,
   news: 70,
+  // Team news, ours rather than the wire's — and on a Thursday it is the most
+  // actionable thing in the paper, a deadline away.
+  presser: 68,
   "fixture-preview": 65,
   "round-preview": 60,
   predictions: 55,
