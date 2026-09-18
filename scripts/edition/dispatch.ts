@@ -62,6 +62,12 @@ export interface DeskContext {
   /** The round's clubs by FPL CODE, for checking the code a column echoed back
    *  against the club it named beside it. */
   presserClubs: ReadonlyMap<number, Club>;
+  /** The round the pressers PREVIEW, which between gameweeks is not the one the
+   *  snapshot is focused on. The brief printed "TEAM NEWS, gameweek 4" beside
+   *  gameweek 5's fixtures, off an article titled "Gameweek 5 team news". */
+  presserGameweek: number;
+  /** Clubs that held a conference, so one with no news still gets a row. */
+  presserSpoke: { clubName: string; manager: string | null }[];
 }
 
 /** The one kind still written in the old sectioned edition shape. The report
@@ -106,9 +112,10 @@ export function prepare(assignment: Assignment, ctx: DeskContext): { system: str
             ? newsBrief(assignment, ctx.facts, ctx.threads)
           : assignment.kind === "presser"
             ? buildPresserBrief({
-                gameweek: ctx.snapshot.gameweek,
+                gameweek: ctx.presserGameweek,
                 lines: ctx.presserLines,
                 quotes: ctx.presserQuotes,
+                spoke: ctx.presserSpoke,
                 // **The same man the PICTURE is.** `faceOf` picks him off FPL's
                 // own numbers, and the writer was picking a different lead — so
                 // João Pedro was printed beside a deck about four other men.

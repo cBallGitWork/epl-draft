@@ -92,10 +92,10 @@ const STATUS = ["OUT", "Doubt", "Suspended", "FIT"];
 function men(raw: unknown): StoryTeamNewsMan[] | undefined {
   if (!Array.isArray(raw)) return undefined;
   const rows = raw
-    .filter((man): man is StoryTeamNewsMan => typeof man?.name === "string" && man.name !== "")
+    .filter((man): man is StoryTeamNewsMan => typeof man?.name === "string" && man.name.trim() !== "")
     .map((man) => ({
       name: man.name,
-      ...(typeof man.owner === "string" && man.owner !== "" ? { owner: man.owner } : {}),
+      ...(typeof man.owner === "string" && man.owner.trim() !== "" ? { owner: man.owner } : {}),
       status: STATUS.includes(man.status) ? man.status : "Doubt",
       note: typeof man.note === "string" ? man.note : "",
     }));
@@ -143,14 +143,20 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
   const teamNews = Array.isArray(extras.teamNews)
     ? extras.teamNews.filter(
         (row): row is StoryTeamNews =>
-          typeof row?.club === "string" && row.club !== "" &&
-          typeof row.line === "string" && row.line !== "",
+          typeof row?.club === "string" && row.club.trim() !== "" &&
+          typeof row.line === "string" && row.line.trim() !== "",
       )
     : [];
   if (teamNews.length > 0) {
+    // **Built field by field, never spread.** `...row` published whatever the
+    // writer invented alongside the shape — a `manager` and a `verdict` field
+    // reached `paper.json` — and a story is a contract, not a bag.
     out.teamNews = once(teamNews, (row) => row.club).map((row) => ({
-      ...row,
-      code: typeof row.code === "number" ? row.code : null,
+      club: row.club,
+      // A club code must be a real FPL one: it draws the crest and joins the
+      // fixture, and `-1` and `1.5` both reached `crestUrl` unchallenged.
+      code: typeof row.code === "number" && Number.isInteger(row.code) && row.code > 0 ? row.code : null,
+      line: row.line,
       men: men(row.men),
       quote: quote(row.quote),
       fixture: fixture(row.fixture),

@@ -110,17 +110,24 @@ const UNNAMED = /^(unknown|unspecified|undisclosed|n\/a)$/;
  *  and João Pedro was missed entirely on 18 Sep because Alonso refused to name
  *  the injury and so no "(knee)" existed to match. */
 const SAYS: { tag: string; re: RegExp }[] = [
-  { tag: "suspended", re: /\b(suspended|suspension|serves? .{0,20}ban|match ban|red card)\b/i },
-  { tag: "ruled_out", re: /\b(ruled out|will miss|set to miss|miss out(?! on international)|miss the|sit out(?! on)|remain out|are out|is out|sidelined|unavailable|not travel|suspended|ban)\b/i },
+  // A BAN, not any ban: "the club's ticket ban for away fans" ruled a fit man
+  // out. A footballing suspension always names its kind or its cause.
+  { tag: "suspended", re: /\b(suspended|suspension|red card|(?:three|two|four|match|domestic)[- ]match ban|(?:match|domestic)[- ]ban|serves? [^.]{0,40}\bban\b)/i },
+  // "is out OF CONTRACT" is not an absence, and neither is out of favour or
+  // out of sorts. The preposition is the whole difference.
+  { tag: "ruled_out", re: /\b(ruled out|will miss|set to miss|miss out|miss the|sit out(?! on)|remain out|are out|is out)(?! of (?:contract|favour|favor|form|sorts|the running))\b|\b(sidelined|unavailable|not travel)\b/i },
   { tag: "available", re: /\b(returns|is back|back in|available again|has trained|in contention|is fit|cleared)\b/i },
-  { tag: "injury_scare", re: /\b(doubt|assess|scan|wait|cautious|final decision|late|fitness|injur|knock|struggl|closer|not clarify|didn.t clarify|possible|pulled out|managing)\b/i },
-  { tag: "rotation_risk", re: /\b(rotat|rest|minutes|freshen|change the team)\b/i },
+  { tag: "injury_scare", re: /\b(doubt|assess|scan|wait|cautious|final decision|late|fitness|injur|knock|struggl|closer|not clarify|didn.t clarify|possible|pulled out)\b/i },
+  // Managing a man's load, never the word "minutes" alone — "has played the
+  // most minutes of any Chelsea midfielder" is praise, not a rotation warning.
+  { tag: "rotation_risk", re: /\b(rotat|rested?\b|freshen|change the team|managing [^.]{0,20}minutes|minutes (?:are|being) managed|limited minutes)/i },
 ];
 
 /** "No one is ruled out for us for Friday" — Alonso's sentence contains the
  *  phrase and means its opposite, and reading it straight filed João Pedro,
  *  Neto and Caicedo as OUT on 18 Sep. A negated absence is a doubt, never a fact. */
-const DENIED = /\b(no one|nobody|none of|not) (is |are |been )?(ruled out|out|suspended|missing)\b|\bno (new|fresh|further|known) (concerns|issues|injuries|problems)\b/i;
+const DENIED =
+  /\b(no one|nobody|none of|neither)\b[^.]{0,40}\b(ruled out|out|suspended|missing|miss)\b|\bnot (?:been )?(?:ruled out|out|suspended|missing)\b|\b(?:will|would|does|do|did|is|are|wo)n[o']?t? (?:not )?miss\b|\b(?:will|would|does|do|did) not miss\b|\bno (?:new|fresh|further|known) (?:concerns|issues|injuries|problems)\b/i;
 
 export function classify(sentence: string): string | null {
   for (const each of SAYS) {
@@ -131,17 +138,22 @@ export function classify(sentence: string): string | null {
   return null;
 }
 
-/** The complaint named in brackets beside him, when one is. */
+/** The complaint named in brackets beside HIM.
+ *
+ *  **Every occurrence, not the first.** It read `indexOf`, so in "Pedro Neto
+ *  (thigh) is a doubt, and Joao Pedro is being assessed" the second man was
+ *  given the first man's thigh. A bracket counts only where it follows the name
+ *  immediately; anywhere else it belongs to somebody else. */
 function condition(sentence: string, name: string): string | undefined {
-  const at = sentence.indexOf(name);
-  if (at < 0) return undefined;
-  const m = sentence.slice(at + name.length, at + name.length + 40).match(/^[^.]{0,12}\(([a-z][a-z ]{2,20})\)/);
-  if (m === null) return undefined;
-  const what = m[1].trim();
-  // FFS writes "(unknown)" where the club has not said. That is the ABSENCE of a
-  // complaint, and carrying it printed "Joelinton OUT — unspecified", which
-  // reads as a database field rather than as team news.
-  return UNNAMED.test(what) ? undefined : what;
+  if (name === "") return undefined;
+  for (let at = sentence.indexOf(name); at >= 0; at = sentence.indexOf(name, at + 1)) {
+    const after = sentence.slice(at + name.length, at + name.length + 40);
+    const m = after.match(/^[^.]{0,12}\(([a-z][a-z ]{2,20})\)/);
+    if (m === null) continue;
+    const what = m[1].trim();
+    return UNNAMED.test(what) ? undefined : what;
+  }
+  return undefined;
 }
 
 /** A sentence's clauses, because a tag belongs to the CLAUSE a man stands in
@@ -175,7 +187,11 @@ function sentences(body: string): string[] {
     .split("¶")
     .flatMap((block) => block.split(/(?<=[.!?]) +/))
     .map((line) => line.trim())
-    .filter((line) => line.length > 12 && !/[“”"]/.test(line) && !/^[-–—]/.test(line));
+    // Dropped only when the line OPENS on a quotation mark, which is what a
+    // pulled quote and its attribution look like. Testing for a quote mark
+    // anywhere threw away ordinary prose — "Moises Caicedo (calf) is 'closer'
+    // to a return" is a sentence about a footballer, not a quote.
+    .filter((line) => line.length > 12 && !/^[“"'—–-]/.test(line) && !/^[-–—]/.test(line));
 }
 
 /** Every man of this club the section discusses, and what it says about him.
@@ -280,15 +296,21 @@ function printed(sentence: string, player: { name: string; fullName: string }): 
  *  attribution AND the subject in one line. */
 export function quotes(body: string): Quote[] {
   const out: Quote[] = [];
-  for (const m of body.matchAll(/[“"]([^“”"]{20,400})[”"] ?[-–—] ?([^¶]{3,120})/g)) {
+  for (const m of body.matchAll(/[“"]([^“”"]{20,400})[”"] ?[-–—] ?([^¶]{3,200})/g)) {
     const text = m[1].trim();
     const credit = m[2].trim().replace(/[.,;]$/, "");
     const split = credit.match(/^(.+?) on (.+)$/);
-    out.push(
-      split === null
-        ? { text, said: credit }
-        : { text, said: split[1].trim(), about: split[2].trim() },
-    );
+    const said = (split === null ? credit : split[1]).trim();
+    // **The speaker must LOOK like a name.** Any dash after a closing quote was
+    // taken as the credit, so "…' - and that was all he would give on the
+    // subject of his captain" published `said: "and that was all he would give"`
+    // straight into a <cite>. One to three capitalised words, and nothing else.
+    if (!/^[A-ZÀ-Ÿ][\wÀ-ÿ'’-]+(?: [A-ZÀ-Ÿ][\wÀ-ÿ'’-]+){0,2}$/.test(said)) continue;
+    // A subject, not a transcript of the question. The cap used to cut mid-word
+    // and publish "…concerns about Reece James follo" under the quote.
+    const subject = split === null ? "" : split[2].trim();
+    const about = subject === "" || subject.length > 60 ? undefined : subject;
+    out.push(about === undefined ? { text, said } : { text, said, about });
   }
   return out;
 }

@@ -47,3 +47,21 @@ describe("normalizeExtras — teamNews", () => {
     expect(out?.teamNews).toHaveLength(1);
   });
 });
+
+describe("normalizeExtras — what the writer may not smuggle through", () => {
+  const row = { club: "Chelsea", code: 8, line: "Alonso would not commit." };
+
+  it("publishes the contract's fields and nothing else", () => {
+    const out = normalizeExtras({ teamNews: [{ ...row, manager: "Alonso", verdict: "start him" }] });
+    expect(Object.keys(out?.teamNews?.[0] ?? {}).sort()).toEqual(["club", "code", "fixture", "line", "men", "quote"]);
+  });
+
+  it("refuses a club code that is not a real one", () => {
+    expect(normalizeExtras({ teamNews: [{ ...row, code: -1 }] })?.teamNews?.[0].code).toBeNull();
+    expect(normalizeExtras({ teamNews: [{ ...row, code: 1.5 }] })?.teamNews?.[0].code).toBeNull();
+  });
+
+  it("treats whitespace as absent", () => {
+    expect(normalizeExtras({ teamNews: [{ ...row, line: "   " }] })).toBeUndefined();
+  });
+});
