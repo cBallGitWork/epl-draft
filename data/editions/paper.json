@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T23:13:57.275Z",
+  "updatedAt": "2026-09-18T23:36:02.083Z",
   "stories": [
     {
       "slug": "news-football-articles-cm0qx3yv8z42o",
@@ -16,6 +16,26 @@
       "body": "João Pedro is out injured, and test211 lose the forward without a line on how long. The wire has Chelsea unable to score without him, which is the part that matters here: a striker on the treatment table is a striker returning nothing until he is fit.\n\nNo timeframe has been given, so none is offered. test211's defenders have already been doing the heavy lifting week to week, and now they do it a man light at the sharp end.",
       "subjects": [
         "news:https://www.bbc.co.uk/sport/football/articles/cm0qx3yv8z42o"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw5-preview-6v7",
+      "kind": "fixture-preview",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-18T23:36:02.083Z",
+      "expiresAt": "2026-09-19T11:30:00Z",
+      "edition": "The Team Sheet",
+      "byline": "The Form Guide",
+      "headline": "Hemmings Alone Against Suzuki And Gray",
+      "deck": "Spurs v Villa Saturday: test4 trail 123 0-11, with Suzuki and Gray facing George Hemmings across the fixture.",
+      "body": "Saturday's early game is where test4 finally has something to swing. Trailing 123 nought to eleven, the tie has been one-way traffic, but Suzuki and Gray sit on one side of this fixture and George Hemmings on the other. Ninety minutes with the right men active and the deficit stops looking terminal.\n\nElsewhere the fixture matters without a duel to settle. test3331 have Barkley in the middle of it, test31 lean on Buendía, and both watch the same pitch for entirely different reasons. Nobody here needs telling what a 12:30 haul does to a weekend.",
+      "subjects": [
+        "fixture-preview:gw5:6v7"
       ],
       "image": null,
       "face": null,

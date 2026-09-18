@@ -14,9 +14,24 @@
       "wire:through-gw4",
       "wire:through-gw5",
       "news:https://www.bbc.co.uk/sport/football/articles/c679052dq30ro",
-      "news:https://www.bbc.co.uk/sport/football/articles/cm0qx3yv8z42o"
+      "news:https://www.bbc.co.uk/sport/football/articles/cm0qx3yv8z42o",
+      "fixture-preview:gw5:6v7"
     ],
     "threads": [
+      {
+        "subject": "test4 the only trader in the league",
+        "beat": "The lone dealer now needs the men already in to answer against 123",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-18T23:36:02.083Z"
+      },
+      {
+        "subject": "test4 v 123, the lopsided tie",
+        "beat": "Suzuki and Gray meet George Hemmings in Saturday's early game, test4's chance to trim an 0-11 hole",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T23:36:02.083Z"
+      },
       {
         "subject": "test211's defenders doing the heavy lifting",
         "beat": "Now the back line carries the load with João Pedro sidelined up top",
@@ -41,13 +56,6 @@
       {
         "subject": "The frozen waiver wire",
         "beat": "Two deals this week, one fewer than last, and Raya still on the pile.",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T18:14:40.437Z"
-      },
-      {
-        "subject": "test4 the only trader in the league",
-        "beat": "One in, one out again while the rest merely add or sit still.",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T18:14:40.437Z"
