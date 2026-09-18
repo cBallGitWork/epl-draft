@@ -55,26 +55,43 @@ export function presserLines(
   /** EVERY footballer, not only the rostered ones. Names came off the rosters
    *  until 18 Sep 2026, which was fine while the column only covered men
    *  somebody held — the moment it covered everyone, an unowned player printed
-   *  as his own code. */
-  squad: readonly { code: number; name: string }[],
+   *  as his own code.
+   *
+   *  `clubId` is why this is the whole snapshot rather than a name lookup: the
+   *  CLUB a signal belongs to is read off the PLAYER here, never off the
+   *  export's own `club` field. */
+  squad: readonly { code: number; name: string; clubId: number }[],
 ): PresserLine[] {
   const intel = read();
   if (intel === null) return [];
   const held = owners(teams);
-  const names = new Map(squad.map((player) => [player.code, player.name]));
-  return pressers(intel, since)
+  const byPlayer = new Map(squad.map((player) => [player.code, player]));
+  // Clubs keyed by the snapshot's per-season id, which is what a player carries.
+  const byId = new Map([...clubs.values()].map((club) => [club.id, club]));
+  return pressers(intel, since).flatMap((signal) => {
     // A man we cannot name is a man the column cannot write about. Printing his
     // FPL code in an article is worse than omitting him, and a code the snapshot
     // does not carry is a stale export rather than a new signing.
-    .filter((signal) => names.has(signal.code))
-    .map((signal) => ({
-    ...signal,
-    playerName: names.get(signal.code) ?? String(signal.code),
-    clubName: clubs.get(signal.club)?.name ?? "",
-    // Null when nobody in the league holds him, which is no longer a reason to
-    // drop him — it is the difference between "start him" and "claim him".
-    ownerName: held.get(signal.code) ?? null,
-  }));
+    const player = byPlayer.get(signal.code);
+    if (player === undefined) return [];
+
+    // **The club is the PLAYER's, never the export's.** Taking the export's
+    // `club` on faith printed "Spurs — Glasner did not rule out rotating
+    // Yeremy" on 18 Sep: the manager was Palace's, the player was Palace's, and
+    // only the label said Spurs. A row whose two sources disagree is a bad
+    // export, and a wrong crest beside a real quote is worse than no row.
+    const club = byId.get(player.clubId);
+    if (club === undefined || club.code !== signal.club) return [];
+
+    return [{
+      ...signal,
+      playerName: player.name,
+      clubName: club.name,
+      // Null when nobody in the league holds him, which is no longer a reason
+      // to drop him — it is the difference between "start him" and "claim him".
+      ownerName: held.get(signal.code) ?? null,
+    }];
+  });
 }
 
 /** One assignment per press-conference DAY. Craig's week runs pressers Thursday
