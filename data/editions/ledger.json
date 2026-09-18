@@ -11,9 +11,24 @@
       "dodgers:gw4",
       "news:https://www.bbc.co.uk/sport/football/articles/cvrl64y9rdn9o",
       "news:https://www.bbc.co.uk/sport/football/articles/cmly4gpnwk2go",
-      "wire:through-gw4"
+      "wire:through-gw4",
+      "wire:through-gw5"
     ],
     "threads": [
+      {
+        "subject": "The frozen waiver wire",
+        "beat": "Two deals this week, one fewer than last, and Raya still on the pile.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T18:14:40.437Z"
+      },
+      {
+        "subject": "test4 the only trader in the league",
+        "beat": "One in, one out again while the rest merely add or sit still.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T18:14:40.437Z"
+      },
       {
         "subject": "A dead waiver week",
         "beat": "Three deals across the league, nobody churning, Raya left on the pile.",

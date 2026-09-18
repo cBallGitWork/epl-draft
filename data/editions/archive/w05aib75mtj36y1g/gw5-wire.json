@@ -1,0 +1,40 @@
+{
+  "slug": "gw5-wire",
+  "kind": "wire",
+  "leagueId": "w05aib75mtj36y1g",
+  "period": 5,
+  "gameweek": 5,
+  "filedAt": "2026-09-18T18:14:40.437Z",
+  "expiresAt": null,
+  "edition": "The Mercato Wire",
+  "byline": "The Bin",
+  "headline": "Two Deals, No Rush, Same Old Story",
+  "deck": "Only two moves in the window, nobody churning, Raya still unclaimed.",
+  "body": "Two deals in the window. Call it what it is: a quiet week, quieter than the last if that were possible, and the last was already a morgue.\n\ntest4 did their one piece of business the honest way, one in and one out, the only manager in the league to trade rather than merely add. test31 and testf each took a single name and gave up nothing. That is the whole of it. Nobody is churning, nobody is turning over a squad, and the waiver wire has the traffic of a Sunday morning.\n\nDavid Raya remains where he was left. Signed in hope, dropped without ceremony, survived by a bench spot. The league has walked past him five times now and shows no sign of stooping.\n\nWhich is the trend, such as it is: the men the league keeps passing around are the men nobody wants twice. Two deals do not make a market.",
+  "subjects": [
+    "wire:through-gw5"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [],
+  "extras": {
+    "quiz": [
+      {
+        "q": "How many deals went through the window this week?",
+        "a": "Two."
+      },
+      {
+        "q": "Which manager was the only one to move a player out?",
+        "a": "test4."
+      },
+      {
+        "q": "Which two managers added a player without dropping one?",
+        "a": "test31 and testf."
+      },
+      {
+        "q": "Which dropped goalkeeper remains unclaimed?",
+        "a": "David Raya."
+      }
+    ]
+  }
+}
