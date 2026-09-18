@@ -6,6 +6,7 @@ import {
   type FootballSnapshot,
   type LiveTeamScore,
   type PeriodPairing,
+  type PresserLine,
   type ResolvedPlayer,
   type RosteredTeam,
   type StoryFace,
@@ -105,7 +106,36 @@ export function faceOf(assignment: Assignment, ctx: FaceContext): StoryFace | nu
         };
   }
 
+  // The Team Sheet's man: the biggest name in the day's news.
+  //
+  // **Importance is FPL's own numbers, because we have no better yet.** Goal
+  // involvements first, then FPL's `influence`, then minutes — the mix Craig
+  // asked for on 18 Sep ("use draft position/fpl scoring mix ... to know which
+  // players are the most important"). Draft position and Fantrax ownership %
+  // would be better signals and neither is exported yet; GAZETTA.md carries it.
+  if (assignment.kind === "presser") {
+    const named = ctx.presserLines ?? [];
+    const best = [...named]
+      .map((line) => ({ line, player: ctx.players?.find((each) => each.code === line.code) }))
+      .sort((a, b) => weight(b) - weight(a) || a.line.playerName.localeCompare(b.line.playerName))[0];
+    if (best === undefined || best.player === undefined) return null;
+    return {
+      code: best.player.code,
+      name: best.line.playerName,
+      clubId: best.player.clubId,
+      // The Team Sheet knows no roster slot: he may be a man nobody holds.
+      position: null,
+    };
+  }
+
   return null;
+}
+
+/** How much this man's news matters, from what FPL publishes about his season. */
+function weight(each: { player?: { season: { goals: number; assists: number; influence: number; minutes: number } } }): number {
+  const season = each.player?.season;
+  if (season === undefined) return -1;
+  return (season.goals + season.assists) * 1000 + season.influence + season.minutes / 1000;
 }
 
 /** What `faceOf` needs, which is less than a whole `DeskContext`: the round's
@@ -113,6 +143,10 @@ export function faceOf(assignment: Assignment, ctx: FaceContext): StoryFace | nu
 export interface FaceContext {
   facts: RoundFacts;
   fixtures: readonly Fixture[];
+  /** The Team Sheet's men — empty for every other kind. */
+  presserLines?: readonly PresserLine[];
+  /** The season's numbers, for deciding which of them is the story. */
+  players?: readonly FootballSnapshot["players"][number][];
 }
 
 export function matchReportBrief(

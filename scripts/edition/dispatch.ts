@@ -7,6 +7,7 @@ import {
   type PublishedStory,
   type StandingsRow,
   type PresserLine,
+  type PresserQuote,
   type StoryThread,
   type ThreadUpdate,
   buildBrief,
@@ -54,6 +55,7 @@ export interface DeskContext {
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];
+  presserQuotes: (PresserQuote & { clubName: string })[];
 }
 
 /** The one kind still written in the old sectioned edition shape. The report
@@ -97,7 +99,22 @@ export function prepare(assignment: Assignment, ctx: DeskContext): { system: str
           : assignment.kind === "news"
             ? newsBrief(assignment, ctx.facts, ctx.threads)
           : assignment.kind === "presser"
-            ? buildPresserBrief({ gameweek: ctx.snapshot.gameweek, lines: ctx.presserLines, threads: ctx.threads })
+            ? buildPresserBrief({
+                gameweek: ctx.snapshot.gameweek,
+                lines: ctx.presserLines,
+                quotes: ctx.presserQuotes,
+                // **The same man the PICTURE is.** `faceOf` picks him off FPL's
+                // own numbers, and the writer was picking a different lead — so
+                // João Pedro was printed beside a deck about four other men.
+                // The desk decides the lead; the writer writes it.
+                lead: faceOf(assignment, {
+                  facts: ctx.facts,
+                  fixtures: ctx.snapshot.fixtures,
+                  presserLines: ctx.presserLines,
+                  players: ctx.snapshot.players,
+                })?.name ?? null,
+                threads: ctx.threads,
+              })
           : columnBrief(assignment, {
               gameweek: ctx.snapshot.gameweek,
               facts: ctx.facts,
@@ -186,6 +203,11 @@ export function file(
     // The picture, chosen HERE from the facts and not from the prose. A model
     // that named the man would be a model choosing the photograph, which is the
     // one thing `strangers()` exists to catch it doing.
-    face: faceOf(assignment, { facts: ctx.facts, fixtures: ctx.snapshot.fixtures }),
+    face: faceOf(assignment, {
+      facts: ctx.facts,
+      fixtures: ctx.snapshot.fixtures,
+      presserLines: ctx.presserLines,
+      players: ctx.snapshot.players,
+    }),
   });
 }
