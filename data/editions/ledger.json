@@ -19,9 +19,17 @@
       "fixture-preview:gw5:4v88",
       "fixture-preview:gw5:36v3",
       "fixture-preview:gw5:11v40",
-      "fixture-preview:gw5:17v9"
+      "fixture-preview:gw5:17v9",
+      "news:https://www.bbc.co.uk/sport/football/videos/cmwyzg4ep1wlo"
     ],
     "threads": [
+      {
+        "subject": "test4 v 123, the lopsided tie",
+        "beat": "Suzuki keeps goal in a Villa win, test4's chance to trim the hole",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-19T16:09:50.791Z"
+      },
       {
         "subject": "testf's defenders doing the scoring",
         "beat": "Now the attacking men, Willock and Barnes, get their turn to widen the two-goal lead over test31",
@@ -90,13 +98,6 @@
         "beat": "The lone dealer now needs the men already in to answer against 123",
         "status": "open",
         "beats": 2,
-        "lastUsedAt": "2026-09-18T23:36:02.083Z"
-      },
-      {
-        "subject": "test4 v 123, the lopsided tie",
-        "beat": "Suzuki and Gray meet George Hemmings in Saturday's early game, test4's chance to trim an 0-11 hole",
-        "status": "open",
-        "beats": 1,
         "lastUsedAt": "2026-09-18T23:36:02.083Z"
       },
       {
