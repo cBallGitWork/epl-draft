@@ -21,9 +21,17 @@
       "fixture-preview:gw5:11v40",
       "fixture-preview:gw5:17v9",
       "news:https://www.bbc.co.uk/sport/football/videos/cmwyzg4ep1wlo",
-      "news:https://www.bbc.co.uk/sport/football/articles/cmg490nn12pvo"
+      "news:https://www.bbc.co.uk/sport/football/articles/cmg490nn12pvo",
+      "news:https://www.bbc.co.uk/sport/football/videos/cmvgy397e5qzo"
     ],
     "threads": [
+      {
+        "subject": "test31 chasing testf's two-point lead",
+        "beat": "Barry's Everton goal gives test31 a forward return in the fixture.",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-19T19:07:38.059Z"
+      },
       {
         "subject": "test4 v 123, the lopsided tie",
         "beat": "Suzuki's clean sheet gives test4 the goalkeeper return it was chasing.",
@@ -69,13 +77,6 @@
       {
         "subject": "test3 v test31121, deadlocked at nil",
         "beat": "Pickford and Emersonn against Akpom, the tie's first movement due here",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-19T10:05:39.190Z"
-      },
-      {
-        "subject": "test31 chasing testf's two-point lead",
-        "beat": "Three test31 men in the fixture against Tarkowski alone",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-19T10:05:39.190Z"
