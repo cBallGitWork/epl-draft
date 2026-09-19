@@ -22,9 +22,17 @@
       "fixture-preview:gw5:17v9",
       "news:https://www.bbc.co.uk/sport/football/videos/cmwyzg4ep1wlo",
       "news:https://www.bbc.co.uk/sport/football/articles/cmg490nn12pvo",
-      "news:https://www.bbc.co.uk/sport/football/videos/cmvgy397e5qzo"
+      "news:https://www.bbc.co.uk/sport/football/videos/cmvgy397e5qzo",
+      "news:https://www.bbc.co.uk/sport/football/articles/cm0e35jrqyd7o"
     ],
     "threads": [
+      {
+        "subject": "Gvardiol's fitness, test31121",
+        "beat": "Reported back near his best at left-back for City after an injury-hit spell",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-19T22:08:54.643Z"
+      },
       {
         "subject": "test31 chasing testf's two-point lead",
         "beat": "Barry's Everton goal gives test31 a forward return in the fixture.",
