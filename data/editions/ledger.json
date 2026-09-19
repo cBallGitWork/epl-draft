@@ -15,9 +15,76 @@
       "wire:through-gw5",
       "news:https://www.bbc.co.uk/sport/football/articles/c679052dq30ro",
       "news:https://www.bbc.co.uk/sport/football/articles/cm0qx3yv8z42o",
-      "fixture-preview:gw5:6v7"
+      "fixture-preview:gw5:6v7",
+      "fixture-preview:gw5:4v88",
+      "fixture-preview:gw5:36v3",
+      "fixture-preview:gw5:11v40",
+      "fixture-preview:gw5:17v9"
     ],
     "threads": [
+      {
+        "subject": "testf's defenders doing the scoring",
+        "beat": "Now the attacking men, Willock and Barnes, get their turn to widen the two-goal lead over test31",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-19T10:05:39.190Z"
+      },
+      {
+        "subject": "test2's four-man front against Egan's eight",
+        "beat": "Millar, Ajayi, Giles and Hall all in the fixture, all chasing an eight-point hole",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-19T10:05:39.190Z"
+      },
+      {
+        "subject": "Gabriel's future, test31121",
+        "beat": "The 15-year-old named in a tie that could swing on him, still on test31121's rolls.",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-19T10:05:39.190Z"
+      },
+      {
+        "subject": "test1 v test2, the eight-nil tie",
+        "beat": "Saka defends the lead against Rice and Havertz over the same ninety.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-19T10:05:39.190Z"
+      },
+      {
+        "subject": "test3 v test31121, deadlocked at nil",
+        "beat": "Pickford and Emersonn against Akpom, the tie's first movement due here",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-19T10:05:39.190Z"
+      },
+      {
+        "subject": "test31 chasing testf's two-point lead",
+        "beat": "Three test31 men in the fixture against Tarkowski alone",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-19T10:05:39.190Z"
+      },
+      {
+        "subject": "test211's defenders doing the heavy lifting",
+        "beat": "Aina the lone man carrying the tie, João Pedro still sidelined up top",
+        "status": "open",
+        "beats": 3,
+        "lastUsedAt": "2026-09-19T10:05:39.190Z"
+      },
+      {
+        "subject": "Thomas on international duty, test3331",
+        "beat": "Back from Tuchel's squad and into the fixture; the one unknown test211 can lean on",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-19T10:05:39.190Z"
+      },
+      {
+        "subject": "test211 v test3331, the 3-8 tie",
+        "beat": "Aina alone for test211; Ndoye and Thomas both stand for test3331 in the same match",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-19T10:05:39.190Z"
+      },
       {
         "subject": "test4 the only trader in the league",
         "beat": "The lone dealer now needs the men already in to answer against 123",
@@ -33,25 +100,11 @@
         "lastUsedAt": "2026-09-18T23:36:02.083Z"
       },
       {
-        "subject": "test211's defenders doing the heavy lifting",
-        "beat": "Now the back line carries the load with João Pedro sidelined up top",
-        "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-18T23:13:57.275Z"
-      },
-      {
         "subject": "João Pedro's fitness, test211",
         "beat": "Ruled out injured, no return date given",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T23:13:57.275Z"
-      },
-      {
-        "subject": "Gabriel's future, test31121",
-        "beat": "The 15-year-old in Barcelona amid European interest, still on test31121's rolls",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T18:39:15.585Z"
       },
       {
         "subject": "The frozen waiver wire",
@@ -77,13 +130,6 @@
       {
         "subject": "test31121's flat midfield",
         "beat": "Berge, Ødegaard and Szoboszlai all blanked at three, undone the tie",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
-      },
-      {
-        "subject": "testf's defenders doing the scoring",
-        "beat": "De Cuyper, Rúben and Tarkowski combined for 21 of the 46",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T17:10:33.962Z"
@@ -119,13 +165,6 @@
       {
         "subject": "The nine-point logjam at the top",
         "beat": "Four sides level on points but not on quality",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
-      },
-      {
-        "subject": "Thomas on international duty, test3331",
-        "beat": "Named in Tuchel's Nations League squad; workload unknown.",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T17:10:33.962Z"

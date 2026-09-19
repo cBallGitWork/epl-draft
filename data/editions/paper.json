@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T23:36:02.083Z",
+  "updatedAt": "2026-09-19T10:05:39.190Z",
   "stories": [
     {
       "slug": "news-football-articles-cm0qx3yv8z42o",
@@ -16,6 +16,86 @@
       "body": "João Pedro is out injured, and test211 lose the forward without a line on how long. The wire has Chelsea unable to score without him, which is the part that matters here: a striker on the treatment table is a striker returning nothing until he is fit.\n\nNo timeframe has been given, so none is offered. test211's defenders have already been doing the heavy lifting week to week, and now they do it a man light at the sharp end.",
       "subjects": [
         "news:https://www.bbc.co.uk/sport/football/articles/cm0qx3yv8z42o"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw5-preview-4v88",
+      "kind": "fixture-preview",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-19T10:05:39.190Z",
+      "expiresAt": "2026-09-19T14:00:00Z",
+      "edition": "The Team Sheet",
+      "byline": "The Form Guide",
+      "headline": "Willock On Both Sides Of The Tyne",
+      "deck": "Newcastle host Hull with three open ties running through the game, testf leading two of them",
+      "body": "Three duels come to the same pitch on Saturday afternoon, and none of them is settled. test2 arrive four men strong through Millar, Ajayi, Giles and Hall, all of them chasing the eight-goal deficit Egan has built for test1 alone. Ninety minutes will not close that gap, but it can start it.\n\nThe tighter fights sit in the middle of the table. test3 hold only Wissa here against Botman and Slater for test31121, a nil-nil tie waiting for a first return either way. And testf carry the whip hand, two clear over test31, with Willock, Tzolakis and Barnes set against Thiaw and Belloumi. Horníček watches for 123, McBurnie for test3331, neither with a duel to swing, both with points to take from a fixture that owes several managers plenty.",
+      "subjects": [
+        "fixture-preview:gw5:4v88"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw5-preview-36v3",
+      "kind": "fixture-preview",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-19T10:05:39.190Z",
+      "expiresAt": "2026-09-19T14:00:00Z",
+      "edition": "The Team Sheet",
+      "byline": "The Form Guide",
+      "headline": "Seagulls And Gunners Split The House",
+      "deck": "Brighton v Arsenal splits several ties, with test3 and test31121 goalless across the line and test1 eight clear of test2.",
+      "body": "One fixture, half the league invested, and no tie neutral by five o'clock. test3 sends Calafiori and Dunk out against Ødegaard, Georginio, Kostoulas and Gabriel of test31121, a head-to-head still locked at nil and every one of them on the same ninety minutes. Whoever gives least away here decides it.\n\ntest1 carry an eight-nil cushion over test2 with Saka alone against Rice and Havertz, comfortable until it isn't. testf lead test31 two-nil, De Cuyper the man in front of Verbruggen's goal, one clean sheet either way and the tie tilts. Groß, Hinshelwood and White watch on with nothing riding on them and everything to spoil.",
+      "subjects": [
+        "fixture-preview:gw5:36v3"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw5-preview-11v40",
+      "kind": "fixture-preview",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-19T10:05:39.190Z",
+      "expiresAt": "2026-09-19T14:00:00Z",
+      "edition": "The Team Sheet",
+      "byline": "The Form Guide",
+      "headline": "Toffees And Tractor Boys Split The Loyalties",
+      "deck": "Everton v Ipswich splits two live ties: test3's Pickford and Emersonn face test31121's Akpom, and test31's trio meet testf's Tarkowski.",
+      "body": "Two ties come to this fixture level and leave it changed. test3 and test31121 sit locked at nil apiece, and both have skin in it: Pickford and Emersonn stand for test3, Akpom for test31121. A clean sheet one way, a striker's afternoon the other, and a tie that has refused to move all week finally does.\n\nThe second front is heavier one-sided. testf lead test31 by two with only Tarkowski in the fixture, and against him test31 field three: Mykolenko, Dewsbury-Hall and Barry. Numbers on one side, the scoring defender on the other. Lukić, the Clarke-Fatawu-Enciso cluster and Röhl are all in the ninety minutes too, watching a match that owes them nothing but can still take something.",
+      "subjects": [
+        "fixture-preview:gw5:11v40"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw5-preview-17v9",
+      "kind": "fixture-preview",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-19T10:05:39.190Z",
+      "expiresAt": "2026-09-19T16:30:00Z",
+      "edition": "The Team Sheet",
+      "byline": "The Form Guide",
+      "headline": "Ndoye And Thomas Test211's Aina Peace",
+      "deck": "Forest v Coventry splits test211 and test3331's 3-8 tie: Aina one side, Ndoye and Thomas the other.",
+      "body": "One fixture, three men, a tie already leaning. test3331 lead test211 8-3, and both of test3331's stakes wear the same shirt: Ndoye and Thomas, two against one. Aina carries test211 alone, and alone is a hard place from which to close five points.\n\nA clean sheet flatters Aina; goals and assists flatter the pair opposite. Thomas arrives with the Nations League on his legs, workload unknown, which is the one crack test211 can hope widens. Around them Gibbs-White and Grimes answer to test3, McAtee to test2, N.Williams to test4, watching a game that settles someone else's argument.",
+      "subjects": [
+        "fixture-preview:gw5:17v9"
       ],
       "image": null,
       "face": null,
