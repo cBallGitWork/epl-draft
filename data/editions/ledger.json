@@ -20,15 +20,23 @@
       "fixture-preview:gw5:36v3",
       "fixture-preview:gw5:11v40",
       "fixture-preview:gw5:17v9",
-      "news:https://www.bbc.co.uk/sport/football/videos/cmwyzg4ep1wlo"
+      "news:https://www.bbc.co.uk/sport/football/videos/cmwyzg4ep1wlo",
+      "news:https://www.bbc.co.uk/sport/football/articles/cmg490nn12pvo"
     ],
     "threads": [
       {
         "subject": "test4 v 123, the lopsided tie",
-        "beat": "Suzuki keeps goal in a Villa win, test4's chance to trim the hole",
+        "beat": "Suzuki's clean sheet gives test4 the goalkeeper return it was chasing.",
         "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-19T16:09:50.791Z"
+        "beats": 3,
+        "lastUsedAt": "2026-09-19T17:34:20.239Z"
+      },
+      {
+        "subject": "test4 the only trader in the league",
+        "beat": "The lone dealer's new man answers, a clean sheet from the Villa goal.",
+        "status": "open",
+        "beats": 3,
+        "lastUsedAt": "2026-09-19T17:34:20.239Z"
       },
       {
         "subject": "testf's defenders doing the scoring",
@@ -92,13 +100,6 @@
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-19T10:05:39.190Z"
-      },
-      {
-        "subject": "test4 the only trader in the league",
-        "beat": "The lone dealer now needs the men already in to answer against 123",
-        "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-18T23:36:02.083Z"
       },
       {
         "subject": "João Pedro's fitness, test211",
