@@ -1,0 +1,74 @@
+{
+  "slug": "gw5-power-ranking",
+  "kind": "power-ranking",
+  "leagueId": "w05aib75mtj36y1g",
+  "period": 5,
+  "gameweek": 5,
+  "filedAt": "2026-09-20T17:34:26.203Z",
+  "expiresAt": null,
+  "edition": "The Monday Club",
+  "byline": "The Pecking Order",
+  "headline": "test1 Top Of A Crowded Middle",
+  "deck": "test1 alone at the summit on 12; a logjam of five sides on nine and six behind them, test4 propping up the table.",
+  "body": "One side has separated. test1 stand alone on 12 and their 203 is not a fluke of a soft fixture list; the win over test2 was earned by five and the only blemish came against a side few will fancy carrying forward. Behind them the middle is a scrum, four managers on nine points and daylight between what they scored and what the table says they are.\n\nThe pretenders are easy to find. testf sit second and have the ceiling to prove it, 234 the highest in the league. test2 lost yet outscore three of the sides above them in the table, and their 196 says more than nine points does. At the foot, test4 have one win and a season of trading that has not moved them; 123 beat them by eleven and remain the better argument despite matching points. Nobody below sixth is fooling this desk.",
+  "subjects": [
+    "power-ranking:gw5"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [],
+  "extras": {
+    "ranks": [
+      {
+        "teamId": "hy0w28p5mtj36y3g",
+        "move": 0,
+        "line": "Alone at the top and it is no accident; the only side that has strung it together."
+      },
+      {
+        "teamId": "pzmd243ymtj36y3g",
+        "move": 0,
+        "line": "The highest score in the league belongs to test2's chasers, and 234 is not luck; better than second."
+      },
+      {
+        "teamId": "1b6gp5utmtj36y3g",
+        "move": 0,
+        "line": "Lost by five and still outscoring most of the middle; the table flatters everyone but them."
+      },
+      {
+        "teamId": "fq5omv5kmtj36y3g",
+        "move": 0,
+        "line": "Three wins and 190 is honest work, but the loss to test3331 exposed how thin the margins are."
+      },
+      {
+        "teamId": "y6viv6jfmtj36y3g",
+        "move": 0,
+        "line": "Fifth on nine points with the lowest haul of anyone at that mark; running on fumes."
+      },
+      {
+        "teamId": "98yx3o50mtj36y3g",
+        "move": 0,
+        "line": "Six points undersells them; 203 scored is level with test1 and the beating of test4 was comprehensive."
+      },
+      {
+        "teamId": "g80h3bf5mtj36y3g",
+        "move": 0,
+        "line": "Beat test3 to keep the lights on, but a flat midfield keeps costing them and 162 tells the tale."
+      },
+      {
+        "teamId": "dpdkp2bbmtj36y3g",
+        "move": 0,
+        "line": "Chased testf's lead and fell ten short; the returns are not there and 174 confirms it."
+      },
+      {
+        "teamId": "kg18w2cvmtj36y3g",
+        "move": 0,
+        "line": "A win over test211 papers over the lowest score in the league; the outfield is not firing."
+      },
+      {
+        "teamId": "deo9ljvtmtj36y3g",
+        "move": 0,
+        "line": "One win, all the trading in the league, and nothing to show; the dealing has not saved them."
+      }
+    ]
+  }
+}

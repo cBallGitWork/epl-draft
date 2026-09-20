@@ -33,9 +33,115 @@
       "tie-call:p5:deo9ljvtmtj36y3gv98yx3o50mtj36y3g",
       "tie-call:p5:y6viv6jfmtj36y3gvg80h3bf5mtj36y3g",
       "tie-call:p5:fq5omv5kmtj36y3gvkg18w2cvmtj36y3g",
-      "tie-call:p5:dpdkp2bbmtj36y3gvpzmd243ymtj36y3g"
+      "tie-call:p5:dpdkp2bbmtj36y3gvpzmd243ymtj36y3g",
+      "tie-report:p5:hy0w28p5mtj36y3gv1b6gp5utmtj36y3g",
+      "tie-report:p5:deo9ljvtmtj36y3gv98yx3o50mtj36y3g",
+      "tie-report:p5:y6viv6jfmtj36y3gvg80h3bf5mtj36y3g",
+      "tie-report:p5:fq5omv5kmtj36y3gvkg18w2cvmtj36y3g",
+      "tie-report:p5:dpdkp2bbmtj36y3gvpzmd243ymtj36y3g",
+      "eleven:gw5",
+      "power-ranking:gw5",
+      "dodgers:gw5"
     ],
     "threads": [
+      {
+        "subject": "Cunha and Isak, test2's front pair",
+        "beat": "Six and five, two apart once more, the week lost up top",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "Haaland's future, 123",
+        "beat": "Six for the forward as the Barcelona talk rumbles on unresolved",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "test31121's flat midfield",
+        "beat": "Berge, Ødegaard flat again at three and two, but the back line and Kostoulas covered it",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "test211's defenders doing the heavy lifting",
+        "beat": "Rushworth posts a keeper's haul in goal and still finds himself benched by test211.",
+        "status": "open",
+        "beats": 5,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "Managers benching their own hauls",
+        "beat": "The habit spreads: A.Becker, Gvardiol, Gomez, Rushworth and Branthwaite all returned from benches this week.",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "test1 out on their own",
+        "beat": "The win over test2 stretches the gap; 12 points and a league-high haul behind only testf.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "testf's ceiling versus their record",
+        "beat": "League-high 234 scored, second in the table, the numbers say they are the real threat to test1.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "test1 v test2, the eight-nil tie",
+        "beat": "test1 take it 39-34, Semenyo's thirteen the decisive score",
+        "status": "retired",
+        "beats": 4,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "test2's four-man front",
+        "beat": "Cunha, Isak, Havertz and the rest managed nineteen and still came up short",
+        "status": "retired",
+        "beats": 1,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "test3 v test31121, deadlocked at nil",
+        "beat": "Broken at last, test31121 home 30-24 as Kostoulas and the defenders answered",
+        "status": "retired",
+        "beats": 3,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "test211 v test3331, the 3-8 tie",
+        "beat": "Ajer and Thomas six apiece settle it 23-16 for test3331",
+        "status": "retired",
+        "beats": 5,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "Thomas on international duty, test3331",
+        "beat": "Back in the side and top-scoring alongside Ajer on six",
+        "status": "retired",
+        "beats": 4,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "test31 chasing testf's lead",
+        "beat": "testf close it out 48-38, the one live man never enough.",
+        "status": "retired",
+        "beats": 4,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
+      {
+        "subject": "Gvardiol's fitness, test31121",
+        "beat": "Back near his best and it showed, an assist across ninety, all of it from the bench.",
+        "status": "retired",
+        "beats": 2,
+        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+      },
       {
         "subject": "test4 the only trader in the league",
         "beat": "The lone dealer's traffic could not lift 25 within reach of 123's 36",
@@ -44,46 +150,11 @@
         "lastUsedAt": "2026-09-20T15:08:53.672Z"
       },
       {
-        "subject": "test3 v test31121, deadlocked at nil",
-        "beat": "The tie has moved and test31121 lead it 27-20, two of test3's men left to answer",
-        "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-20T15:08:53.672Z"
-      },
-      {
-        "subject": "test211 v test3331, the 3-8 tie",
-        "beat": "Leno's goalkeeping props up a 20-13 lead, test211 down to Castagne, King and Thomas",
-        "status": "open",
-        "beats": 4,
-        "lastUsedAt": "2026-09-20T15:08:53.672Z"
-      },
-      {
-        "subject": "Thomas on international duty, test3331",
-        "beat": "Back into the fixture as test211's one live hope to chase the gap",
-        "status": "open",
-        "beats": 3,
-        "lastUsedAt": "2026-09-20T15:08:53.672Z"
-      },
-      {
-        "subject": "test31 chasing testf's lead",
-        "beat": "testf close on 48, test31 stranded on 35 with one man left to do thirteen alone.",
-        "status": "open",
-        "beats": 3,
-        "lastUsedAt": "2026-09-20T15:08:53.672Z"
-      },
-      {
         "subject": "testf's defenders doing the scoring",
         "beat": "Willock and Barnes take their turn up top, the lead pushed past two goals.",
         "status": "retired",
         "beats": 3,
         "lastUsedAt": "2026-09-20T15:08:53.672Z"
-      },
-      {
-        "subject": "Haaland's future, 123",
-        "beat": "Wire links a heavy Barcelona bid for 123's forward, nothing settled",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-20T08:29:08.597Z"
       },
       {
         "subject": "Wirtz's future, test1",
@@ -100,13 +171,6 @@
         "lastUsedAt": "2026-09-20T06:35:10.670Z"
       },
       {
-        "subject": "test1 v test2, the eight-nil tie",
-        "beat": "Calvert-Lewin and Trafford meet in the same match, five points between the sides",
-        "status": "open",
-        "beats": 3,
-        "lastUsedAt": "2026-09-20T06:35:10.670Z"
-      },
-      {
         "subject": "test1 v test2, the tie split by Dalot and Cunha",
         "beat": "Both men named in the fixture, test2 defending an 11-16 edge over the same ninety",
         "status": "open",
@@ -119,13 +183,6 @@
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-20T06:35:10.670Z"
-      },
-      {
-        "subject": "Gvardiol's fitness, test31121",
-        "beat": "Reported back near his best at left-back for City after an injury-hit spell",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-19T22:08:54.643Z"
       },
       {
         "subject": "test31 chasing testf's two-point lead",
@@ -149,60 +206,11 @@
         "lastUsedAt": "2026-09-19T10:05:39.190Z"
       },
       {
-        "subject": "test211's defenders doing the heavy lifting",
-        "beat": "Aina the lone man carrying the tie, João Pedro still sidelined up top",
-        "status": "open",
-        "beats": 3,
-        "lastUsedAt": "2026-09-19T10:05:39.190Z"
-      },
-      {
         "subject": "João Pedro's fitness, test211",
         "beat": "Ruled out injured, no return date given",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T23:13:57.275Z"
-      },
-      {
-        "subject": "The frozen waiver wire",
-        "beat": "Two deals this week, one fewer than last, and Raya still on the pile.",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T18:14:40.437Z"
-      },
-      {
-        "subject": "A dead waiver week",
-        "beat": "Three deals across the league, nobody churning, Raya left on the pile.",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:13:00.061Z"
-      },
-      {
-        "subject": "Cunha and Isak, test2's front pair",
-        "beat": "Two points between them, the week lost up top",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
-      },
-      {
-        "subject": "test31121's flat midfield",
-        "beat": "Berge, Ødegaard and Szoboszlai all blanked at three, undone the tie",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
-      },
-      {
-        "subject": "test3331's misfiring outfield",
-        "beat": "five outfield players managed ten between them behind Leno's seven",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
-      },
-      {
-        "subject": "Managers benching their own hauls",
-        "beat": "Davis, Gvardiol and Yalcouyé all returned from the bench their owners chose",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
       }
     ]
   }
