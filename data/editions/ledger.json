@@ -28,9 +28,24 @@
       "fixture-preview:gw5:91v14",
       "fixture-preview:gw5:54v1",
       "fixture-preview:gw5:2v31",
-      "news:https://www.bbc.co.uk/sport/football/articles/c607l0xdm8xro"
+      "news:https://www.bbc.co.uk/sport/football/articles/c607l0xdm8xro",
+      "news:https://www.bbc.co.uk/sport/football/articles/cq1j478n0ll7o"
     ],
     "threads": [
+      {
+        "subject": "Haaland's future, 123",
+        "beat": "Wire links a heavy Barcelona bid for 123's forward, nothing settled",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-20T08:29:08.597Z"
+      },
+      {
+        "subject": "Wirtz's future, test1",
+        "beat": "Liverpool said to be holding firm, test1's man stays put for now",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-20T08:29:08.597Z"
+      },
       {
         "subject": "test4 v 123, the lopsided tie",
         "beat": "Rodon and Justin stand against Stach, test4 twenty adrift",
@@ -181,20 +196,6 @@
       {
         "subject": "Managers benching their own hauls",
         "beat": "Davis, Gvardiol and Yalcouyé all returned from the bench their owners chose",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
-      },
-      {
-        "subject": "test31121's selection headache",
-        "beat": "Two benched defenders in the team of the week, one forward who started and delivered",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
-      },
-      {
-        "subject": "testf's points-versus-position gap",
-        "beat": "League-high 186 scored, fifth in the table, six points",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T17:10:33.962Z"

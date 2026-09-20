@@ -1,6 +1,26 @@
 {
-  "updatedAt": "2026-09-20T06:35:10.670Z",
+  "updatedAt": "2026-09-20T08:29:08.597Z",
   "stories": [
+    {
+      "slug": "news-football-articles-cq1j478n0ll7o",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T08:29:08.597Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Barcelona Circle 123's Norwegian Number Nine",
+      "deck": "Wire links Barcelona to Haaland (owned by 123) and holds Wirtz (test1) at Liverpool for now.",
+      "body": "The gossip pages put a large Barcelona offer against Haaland's name, and Haaland is 123's. Nothing is settled and nothing is signed. But a January move for a forward carrying this much of a squad is the kind of line 123 reads twice.\n\nFor test1 the wire runs the other way. Liverpool are said to be holding firm on Wirtz, so test1's man stays where he is with no date on any of it. Known for now, and no more than that.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/cq1j478n0ll7o"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
     {
       "slug": "news-football-articles-c607l0xdm8xro",
       "kind": "news",
