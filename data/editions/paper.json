@@ -1,6 +1,106 @@
 {
-  "updatedAt": "2026-09-19T22:08:54.643Z",
+  "updatedAt": "2026-09-20T06:35:10.670Z",
   "stories": [
+    {
+      "slug": "news-football-articles-c607l0xdm8xro",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T06:35:10.670Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Brown Says A Word, Scott Says Nothing",
+      "deck": "Scott, owned by test3331, gets a mention in a Celtic-Rangers preview that carries no draft weight.",
+      "body": "Scott Brown holds forth on Sunday's derby, and somewhere in the copy sits the name test3331 will care about. Scott is on those rolls, and a big Old Firm afternoon is the sort that reads across to a fantasy owner watching from a distance.\n\nWhat the wire gives is a preview and a former captain's verdict, no more. No line-up, no minutes, no fitness note attached to Scott. test3331 knows the fixture is coming and knows nothing beyond it, and neither do we.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/c607l0xdm8xro"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw5-preview-43v56",
+      "kind": "fixture-preview",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T06:35:10.670Z",
+      "expiresAt": "2026-09-20T13:00:00Z",
+      "edition": "The Team Sheet",
+      "byline": "The Form Guide",
+      "headline": "Haaland Holds The Balance For 123",
+      "deck": "Man City v Sunderland Sunday, test4's front three of Foden, Isidor and Cherki against 123's Haaland with a 6-26 tie already lopsided.",
+      "body": "The 6-26 gap is real, but ninety minutes here can widen it or start the climb back. test4 loads this fixture: Foden, E.Le Fée, Isidor and Cherki all in the same match, four men chasing the twenty-point hole that 123 opened up. Against them 123 leans on Reinildo, Hume and above all Haaland, the one man who can turn a lopsided tie into a rout in a single afternoon.\n\nThe smaller duel carries its own weight. test31, six points back on testf, sends Ballard alone into a fixture where testf answer with Rúben, N.Angulo and Xhaka. One defender against three, the two-point chase now a six-point one, and testf's spread of men leaving Ballard to do the work by himself. Guéhi and Semenyo for test1, Roefs for test211, Ndiaye for test3 all watch on with no tie riding on them here.",
+      "subjects": [
+        "fixture-preview:gw5:43v56"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw5-preview-91v14",
+      "kind": "fixture-preview",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T06:35:10.670Z",
+      "expiresAt": "2026-09-20T13:00:00Z",
+      "edition": "The Team Sheet",
+      "byline": "The Form Guide",
+      "headline": "On The South Coast, Three Ties Hang",
+      "deck": "Bournemouth v Liverpool carries three open duels: test1's Gravenberch and Wirtz meet test2's Isak, test211's Gakpo meets test3331's Cook and Scott, test31's Munoz meets testf's Evanilson and Tavernier.",
+      "body": "Ninety minutes on the south coast, three ties held in the balance, and men on both sides of every one. test1 trail test2 by five and send Gravenberch and Wirtz out against a single visiting name, Isak. One haul either way and the margin reads differently by mid-afternoon.\n\ntest211 sit twelve back on test3331 and lean on Gakpo alone, with Cook and Scott stood the other way. test31 chase testf by four with Munoz to answer Evanilson and Tavernier, testf's attacking pair now asked to do what their defenders have been doing. Szoboszlai and Petrović are in it too, for test31121, with no duel to swing but points to take out of the room.",
+      "subjects": [
+        "fixture-preview:gw5:91v14"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw5-preview-54v1",
+      "kind": "fixture-preview",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T06:35:10.670Z",
+      "expiresAt": "2026-09-20T15:30:00Z",
+      "edition": "The Team Sheet",
+      "byline": "The Form Guide",
+      "headline": "Cottagers Host United, Ties Held Hostage",
+      "deck": "Fulham v Man Utd puts four open head-to-heads on the line, Cunha and B.Fernandes leading the men split across it.",
+      "body": "Four ties come to this fixture unresolved and every one has a man on each side of it. test2 leads test1 16-11, and the split is clean: Dalot for test1, Cunha for test2. The wider gulf is test4's, six against 123's twenty-six, with Mbeumo carrying the deficit and B.Fernandes standing for the side already clear.\n\nElsewhere the margins are tighter. test3, with Maguire and Gonzalo, trails test31121 and Berge by two. test211 hold King and Castagne against Leno for test3331, six adrift of eighteen. Bobb is in it too, no duel to his name, watching for test31 as the league's top scorers chase testf's lead. Ninety minutes, four ledgers, and nobody knows yet which way any of them tips.",
+      "subjects": [
+        "fixture-preview:gw5:54v1"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "gw5-preview-2v31",
+      "kind": "fixture-preview",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T06:35:10.670Z",
+      "expiresAt": "2026-09-20T13:00:00Z",
+      "edition": "The Team Sheet",
+      "byline": "The Form Guide",
+      "headline": "Palace Guard Bogle Eyes The Elland Lot",
+      "deck": "Leeds v Palace sits inside two open ties, with Calvert-Lewin against Trafford and Rodon and Justin against Stach over the same ninety",
+      "body": "Two ties ride on one afternoon. test1 trail test2 by five, and the whole of it narrows to Leeds and Palace: Calvert-Lewin leading the line for test1, Trafford between the sticks for test2. A forward's afternoon against a goalkeeper's clean sheet, and neither can have both.\n\nDeeper in the hole sit test4, twenty short of 123 at six against twenty-six, with Rodon and Justin on one side of this match and Stach on the other. A twenty-point tie does not close on one fixture, but a defensive return here and a midfield blank there is where it starts. Ampadu, Bogle and Aaronson all feature too, men in the ninety minutes with no duel to carry.",
+      "subjects": [
+        "fixture-preview:gw5:2v31"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
     {
       "slug": "news-football-articles-cm0e35jrqyd7o",
       "kind": "news",

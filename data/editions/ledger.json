@@ -23,9 +23,56 @@
       "news:https://www.bbc.co.uk/sport/football/videos/cmwyzg4ep1wlo",
       "news:https://www.bbc.co.uk/sport/football/articles/cmg490nn12pvo",
       "news:https://www.bbc.co.uk/sport/football/videos/cmvgy397e5qzo",
-      "news:https://www.bbc.co.uk/sport/football/articles/cm0e35jrqyd7o"
+      "news:https://www.bbc.co.uk/sport/football/articles/cm0e35jrqyd7o",
+      "fixture-preview:gw5:43v56",
+      "fixture-preview:gw5:91v14",
+      "fixture-preview:gw5:54v1",
+      "fixture-preview:gw5:2v31",
+      "news:https://www.bbc.co.uk/sport/football/articles/c607l0xdm8xro"
     ],
     "threads": [
+      {
+        "subject": "test4 v 123, the lopsided tie",
+        "beat": "Rodon and Justin stand against Stach, test4 twenty adrift",
+        "status": "open",
+        "beats": 6,
+        "lastUsedAt": "2026-09-20T06:35:10.670Z"
+      },
+      {
+        "subject": "test31 chasing testf's lead",
+        "beat": "Munoz stands against Evanilson and Tavernier over the same ninety",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-20T06:35:10.670Z"
+      },
+      {
+        "subject": "test1 v test2, the eight-nil tie",
+        "beat": "Calvert-Lewin and Trafford meet in the same match, five points between the sides",
+        "status": "open",
+        "beats": 3,
+        "lastUsedAt": "2026-09-20T06:35:10.670Z"
+      },
+      {
+        "subject": "test211 v test3331, the 3-8 tie",
+        "beat": "King and Castagne stand for test211, Leno for test3331, in a fixture six points apart",
+        "status": "open",
+        "beats": 3,
+        "lastUsedAt": "2026-09-20T06:35:10.670Z"
+      },
+      {
+        "subject": "test1 v test2, the tie split by Dalot and Cunha",
+        "beat": "Both men named in the fixture, test2 defending an 11-16 edge over the same ninety",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-20T06:35:10.670Z"
+      },
+      {
+        "subject": "Scott's derby weekend, test3331",
+        "beat": "Named in an Old Firm preview, but the wire offers no line-up or minutes for test3331's man.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-20T06:35:10.670Z"
+      },
       {
         "subject": "Gvardiol's fitness, test31121",
         "beat": "Reported back near his best at left-back for City after an injury-hit spell",
@@ -39,13 +86,6 @@
         "status": "open",
         "beats": 2,
         "lastUsedAt": "2026-09-19T19:07:38.059Z"
-      },
-      {
-        "subject": "test4 v 123, the lopsided tie",
-        "beat": "Suzuki's clean sheet gives test4 the goalkeeper return it was chasing.",
-        "status": "open",
-        "beats": 3,
-        "lastUsedAt": "2026-09-19T17:34:20.239Z"
       },
       {
         "subject": "test4 the only trader in the league",
@@ -76,13 +116,6 @@
         "lastUsedAt": "2026-09-19T10:05:39.190Z"
       },
       {
-        "subject": "test1 v test2, the eight-nil tie",
-        "beat": "Saka defends the lead against Rice and Havertz over the same ninety.",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-19T10:05:39.190Z"
-      },
-      {
         "subject": "test3 v test31121, deadlocked at nil",
         "beat": "Pickford and Emersonn against Akpom, the tie's first movement due here",
         "status": "open",
@@ -101,13 +134,6 @@
         "beat": "Back from Tuchel's squad and into the fixture; the one unknown test211 can lean on",
         "status": "open",
         "beats": 2,
-        "lastUsedAt": "2026-09-19T10:05:39.190Z"
-      },
-      {
-        "subject": "test211 v test3331, the 3-8 tie",
-        "beat": "Aina alone for test211; Ndoye and Thomas both stand for test3331 in the same match",
-        "status": "open",
-        "beats": 1,
         "lastUsedAt": "2026-09-19T10:05:39.190Z"
       },
       {
@@ -169,20 +195,6 @@
       {
         "subject": "testf's points-versus-position gap",
         "beat": "League-high 186 scored, fifth in the table, six points",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
-      },
-      {
-        "subject": "The nine-point logjam at the top",
-        "beat": "Four sides level on points but not on quality",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T17:10:33.962Z"
-      },
-      {
-        "subject": "Palmer's standing under Tuchel",
-        "beat": "Recalled by England but told, in public, that he has to perform.",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T17:10:33.962Z"
