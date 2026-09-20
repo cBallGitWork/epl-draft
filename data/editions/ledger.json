@@ -41,15 +41,16 @@
       "tie-report:p5:dpdkp2bbmtj36y3gvpzmd243ymtj36y3g",
       "eleven:gw5",
       "power-ranking:gw5",
-      "dodgers:gw5"
+      "dodgers:gw5",
+      "news:https://www.bbc.co.uk/sport/football/articles/cxddvp49gg1ro"
     ],
     "threads": [
       {
         "subject": "Cunha and Isak, test2's front pair",
-        "beat": "Six and five, two apart once more, the week lost up top",
+        "beat": "Cunha's last-gasp United goal salvages a forward return from a lost week up top",
         "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-20T17:34:26.203Z"
+        "beats": 3,
+        "lastUsedAt": "2026-09-20T18:11:40.233Z"
       },
       {
         "subject": "Haaland's future, 123",

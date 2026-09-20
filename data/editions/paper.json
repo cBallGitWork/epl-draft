@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-20T17:34:26.203Z",
+  "updatedAt": "2026-09-20T18:11:40.233Z",
   "stories": [
     {
       "slug": "p5-report-hy0w28p5mtj36y3gv1b6gp5utmtj36y3g",
@@ -124,6 +124,26 @@
         "clubId": 9,
         "position": "D"
       },
+      "ties": []
+    },
+    {
+      "slug": "news-football-articles-cxddvp49gg1ro",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T18:11:40.233Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Cunha Late, test2 Not Waiting",
+      "deck": "Cunha's last-minute equaliser for Man Utd hands test2 a return, though his week up top stayed thin",
+      "body": "Cunha found it at the death for Manchester United, and test2 take a forward return from a fixture that had given them nothing to hold. It is the sort of point that arrives after the ledger looks closed, when a manager has already made peace with the blank.\n\nThat it lands late is little comfort against the shape of test2's week up front. The return steadies Cunha's line; it does not repair the pairing that has run two apart all week. What is known is the goal and the return. Everything beyond that test2 will wait for.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/cxddvp49gg1ro"
+      ],
+      "image": null,
+      "face": null,
       "ties": []
     },
     {
@@ -585,26 +605,6 @@
       "body": "Thomas Tuchel wanted control after the World Cup. Two months on he has named his Nations League squad and settled instead for chaos, a word he now uses without flinching.\n\nFor test3331 the interest is narrower and named Thomas, the one asset on the books with a stake in whatever Tuchel decides to embrace. What the England camp does to his minutes, the wire does not say, and neither do we.",
       "subjects": [
         "news:https://www.bbc.co.uk/sport/football/articles/cvrl64y9rdn9o"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "news-football-articles-cmly4gpnwk2go",
-      "kind": "news",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 4,
-      "gameweek": 4,
-      "filedAt": "2026-09-18T17:10:33.962Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Palmer Recalled, test1 On Warning Too",
-      "deck": "Tuchel recalls Palmer, owned by test1, and Alexander-Arnold, with a warning that players must perform.",
-      "body": "Cole Palmer is back in the England fold, and test1 will note the caveat that came with him. Tuchel recalled the midfielder alongside Trent Alexander-Arnold, then made plain that a place in the squad guarantees nothing beyond it. Selection is not the same as trust, and test1 owns a player Tuchel wants to see earn his.\n\nFor test3331 there is nothing here to read. Thomas remains theirs, and the recall list did not trouble him one way or the other. Two owners watched the same announcement; only one of them found their name in it.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/cmly4gpnwk2go"
       ],
       "image": null,
       "face": null,
