@@ -1,6 +1,106 @@
 {
-  "updatedAt": "2026-09-20T08:29:08.597Z",
+  "updatedAt": "2026-09-20T15:08:53.672Z",
   "stories": [
+    {
+      "slug": "p5-call-deo9ljvtmtj36y3gv98yx3o50mtj36y3g",
+      "kind": "tie-call",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T15:08:53.672Z",
+      "expiresAt": null,
+      "edition": "The Sunday Edition",
+      "byline": "The Back Page",
+      "headline": "123 Have The Numbers On test4",
+      "deck": "123 lead test4 36-25 with one man each left, the arithmetic all but done",
+      "body": "123 hold 36 to test4's 25, and with a single player outstanding on either side the eleven-point gap is more than the round has left to give. One name apiece cannot close it, barring the absurd, and the absurd does not usually oblige.\n\ntest4 need a haul and a blank to run alongside it, and the odds of both are the odds you do not build a comeback on. Football has embarrassed better pundits than this page, and we file it as a call, not a result: the wire settles nothing until it settles. But the men left do not stretch the sum far enough.",
+      "subjects": [
+        "tie-call:p5:deo9ljvtmtj36y3gv98yx3o50mtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 60307,
+        "name": "Groß",
+        "clubId": 5,
+        "position": "M"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p5-call-y6viv6jfmtj36y3gvg80h3bf5mtj36y3g",
+      "kind": "tie-call",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T15:08:53.672Z",
+      "expiresAt": null,
+      "edition": "The Sunday Edition",
+      "byline": "The Back Page",
+      "headline": "test31121 Hold The Whip Hand",
+      "deck": "test31121 lead test3 27-20 with a man still to play against test3's two; the paper calls it barring the absurd",
+      "body": "Twenty-seven plays twenty on the arithmetic, and test31121 hold the whip hand. Seven up with one still to play against test3's two, the trailing side needs both men to fire and the leader to freeze. That is a lot to ask of ninety minutes.\n\ntest3 keep two on the pitch and the sums keep them alive on paper. But eight-point outings are the exception, not the rule, and test3 need a version of one from a pair who have offered nothing yet. The margin is not colossal. The men to overturn it are.\n\nCall it, then, with the small print stitched in: barring the absurd, test31121 take this one. Football has embarrassed better pundits than this desk, and two live players are two chances to be made to look foolish. The paper still calls it.",
+      "subjects": [
+        "tie-call:p5:y6viv6jfmtj36y3gvg80h3bf5mtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 647850,
+        "name": "Kostoulas",
+        "clubId": 5,
+        "position": "F"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p5-call-fq5omv5kmtj36y3gvkg18w2cvmtj36y3g",
+      "kind": "tie-call",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T15:08:53.672Z",
+      "expiresAt": null,
+      "edition": "The Sunday Edition",
+      "byline": "The Back Page",
+      "headline": "Leno Puts The Numbers On test211",
+      "deck": "test3331 lead test211 20-13 with a game in hand, Leno the difference in goal",
+      "body": "test3331 sit 20-13 up on test211, and with one still to play against test211's two, the arithmetic has all but closed the door. Leno has done the standing work in goal, and the outfield men who blanked around him hardly mattered once the lead was set.\n\ntest211 have Castagne, King and the returning Thomas to run down a seven-point gap, and Thomas is the one unknown they can lean on after international duty. It is a lot to ask of two names, and João Pedro is not among them. Barring the absurd, this is test3331's, though football has embarrassed better pundits than this desk.",
+      "subjects": [
+        "tie-call:p5:fq5omv5kmtj36y3gvkg18w2cvmtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 191866,
+        "name": "Ajer",
+        "clubId": 4,
+        "position": "D"
+      },
+      "ties": []
+    },
+    {
+      "slug": "p5-call-dpdkp2bbmtj36y3gvpzmd243ymtj36y3g",
+      "kind": "tie-call",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T15:08:53.672Z",
+      "expiresAt": null,
+      "edition": "The Sunday Edition",
+      "byline": "The Back Page",
+      "headline": "testf Ahead, One Man From Home",
+      "deck": "testf lead test31 48-35 with all their men done, test31 down to a single player still to play.",
+      "body": "Thirteen points, one man, and the arithmetic that goes with it. testf are done for the round on 48; test31 sit on 35 with a single player still to come. To force it that man must score thirteen unaided, and the game rarely obliges a lone runner asked to carry that much.\n\ntestf did it across the pitch, the defenders leading and then Willock and Barnes taking their turn up top to stretch a lead that had been two goals. Nothing about the shape of it invited a comeback. test31's chase, Barry's forward return among it, never closed the gap to touching distance.\n\nSo the paper calls it, barring the absurd. One line can still be written, but it needs a haul from a single name and no help behind it, and football has embarrassed better pundits than this one on less.",
+      "subjects": [
+        "tie-call:p5:dpdkp2bbmtj36y3gvpzmd243ymtj36y3g"
+      ],
+      "image": null,
+      "face": {
+        "code": 17761,
+        "name": "Tarkowski",
+        "clubId": 9,
+        "position": "D"
+      },
+      "ties": []
+    },
     {
       "slug": "news-football-articles-cq1j478n0ll7o",
       "kind": "news",
@@ -42,46 +142,6 @@
       "ties": []
     },
     {
-      "slug": "gw5-preview-43v56",
-      "kind": "fixture-preview",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-20T06:35:10.670Z",
-      "expiresAt": "2026-09-20T13:00:00Z",
-      "edition": "The Team Sheet",
-      "byline": "The Form Guide",
-      "headline": "Haaland Holds The Balance For 123",
-      "deck": "Man City v Sunderland Sunday, test4's front three of Foden, Isidor and Cherki against 123's Haaland with a 6-26 tie already lopsided.",
-      "body": "The 6-26 gap is real, but ninety minutes here can widen it or start the climb back. test4 loads this fixture: Foden, E.Le Fée, Isidor and Cherki all in the same match, four men chasing the twenty-point hole that 123 opened up. Against them 123 leans on Reinildo, Hume and above all Haaland, the one man who can turn a lopsided tie into a rout in a single afternoon.\n\nThe smaller duel carries its own weight. test31, six points back on testf, sends Ballard alone into a fixture where testf answer with Rúben, N.Angulo and Xhaka. One defender against three, the two-point chase now a six-point one, and testf's spread of men leaving Ballard to do the work by himself. Guéhi and Semenyo for test1, Roefs for test211, Ndiaye for test3 all watch on with no tie riding on them here.",
-      "subjects": [
-        "fixture-preview:gw5:43v56"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "gw5-preview-91v14",
-      "kind": "fixture-preview",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-20T06:35:10.670Z",
-      "expiresAt": "2026-09-20T13:00:00Z",
-      "edition": "The Team Sheet",
-      "byline": "The Form Guide",
-      "headline": "On The South Coast, Three Ties Hang",
-      "deck": "Bournemouth v Liverpool carries three open duels: test1's Gravenberch and Wirtz meet test2's Isak, test211's Gakpo meets test3331's Cook and Scott, test31's Munoz meets testf's Evanilson and Tavernier.",
-      "body": "Ninety minutes on the south coast, three ties held in the balance, and men on both sides of every one. test1 trail test2 by five and send Gravenberch and Wirtz out against a single visiting name, Isak. One haul either way and the margin reads differently by mid-afternoon.\n\ntest211 sit twelve back on test3331 and lean on Gakpo alone, with Cook and Scott stood the other way. test31 chase testf by four with Munoz to answer Evanilson and Tavernier, testf's attacking pair now asked to do what their defenders have been doing. Szoboszlai and Petrović are in it too, for test31121, with no duel to swing but points to take out of the room.",
-      "subjects": [
-        "fixture-preview:gw5:91v14"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
       "slug": "gw5-preview-54v1",
       "kind": "fixture-preview",
       "leagueId": "w05aib75mtj36y1g",
@@ -96,26 +156,6 @@
       "body": "Four ties come to this fixture unresolved and every one has a man on each side of it. test2 leads test1 16-11, and the split is clean: Dalot for test1, Cunha for test2. The wider gulf is test4's, six against 123's twenty-six, with Mbeumo carrying the deficit and B.Fernandes standing for the side already clear.\n\nElsewhere the margins are tighter. test3, with Maguire and Gonzalo, trails test31121 and Berge by two. test211 hold King and Castagne against Leno for test3331, six adrift of eighteen. Bobb is in it too, no duel to his name, watching for test31 as the league's top scorers chase testf's lead. Ninety minutes, four ledgers, and nobody knows yet which way any of them tips.",
       "subjects": [
         "fixture-preview:gw5:54v1"
-      ],
-      "image": null,
-      "face": null,
-      "ties": []
-    },
-    {
-      "slug": "gw5-preview-2v31",
-      "kind": "fixture-preview",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 5,
-      "gameweek": 5,
-      "filedAt": "2026-09-20T06:35:10.670Z",
-      "expiresAt": "2026-09-20T13:00:00Z",
-      "edition": "The Team Sheet",
-      "byline": "The Form Guide",
-      "headline": "Palace Guard Bogle Eyes The Elland Lot",
-      "deck": "Leeds v Palace sits inside two open ties, with Calvert-Lewin against Trafford and Rodon and Justin against Stach over the same ninety",
-      "body": "Two ties ride on one afternoon. test1 trail test2 by five, and the whole of it narrows to Leeds and Palace: Calvert-Lewin leading the line for test1, Trafford between the sticks for test2. A forward's afternoon against a goalkeeper's clean sheet, and neither can have both.\n\nDeeper in the hole sit test4, twenty short of 123 at six against twenty-six, with Rodon and Justin on one side of this match and Stach on the other. A twenty-point tie does not close on one fixture, but a defensive return here and a midfield blank there is where it starts. Ampadu, Bogle and Aaronson all feature too, men in the ninety minutes with no duel to carry.",
-      "subjects": [
-        "fixture-preview:gw5:2v31"
       ],
       "image": null,
       "face": null,
@@ -564,46 +604,6 @@
       "image": null,
       "face": null,
       "ties": []
-    },
-    {
-      "slug": "gw4-wire",
-      "kind": "wire",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 4,
-      "gameweek": 4,
-      "filedAt": "2026-09-18T17:13:00.061Z",
-      "expiresAt": null,
-      "edition": "The Mercato Wire",
-      "byline": "The Bin",
-      "headline": "Two In, One Out, Nobody Home",
-      "deck": "A quiet window: three deals across the league, David Raya dropped and left unclaimed.",
-      "body": "Three moves, and the window barely creaked. test4 traded a man in for a man out and called it a day. test31 and testf each took one and gave back nothing. That is the week. No churn, no scramble, no queue at the door.\n\nDavid Raya went out and stayed out. Signed in hope, dropped without ceremony, survived by a bench spot nobody has come to claim. He sits on the pile, gloves on, waiting for a phone that will not ring.\n\nThe men who might have moved did not, and the men who moved were few. When three deals is the whole of the league's business, there is no trend to trace, only the quiet of managers holding what they have and daring each other to blink first.",
-      "subjects": [
-        "wire:through-gw4"
-      ],
-      "image": null,
-      "face": null,
-      "ties": [],
-      "extras": {
-        "quiz": [
-          {
-            "q": "How many deals went through the window this week?",
-            "a": "Two"
-          },
-          {
-            "q": "Which manager made a move both in and out?",
-            "a": "test4"
-          },
-          {
-            "q": "Which two managers took one in and dropped nobody?",
-            "a": "test31 and testf"
-          },
-          {
-            "q": "Which dropped goalkeeper sits unclaimed?",
-            "a": "David Raya"
-          }
-        ]
-      }
     }
   ]
 }

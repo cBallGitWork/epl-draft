@@ -29,9 +29,55 @@
       "fixture-preview:gw5:54v1",
       "fixture-preview:gw5:2v31",
       "news:https://www.bbc.co.uk/sport/football/articles/c607l0xdm8xro",
-      "news:https://www.bbc.co.uk/sport/football/articles/cq1j478n0ll7o"
+      "news:https://www.bbc.co.uk/sport/football/articles/cq1j478n0ll7o",
+      "tie-call:p5:deo9ljvtmtj36y3gv98yx3o50mtj36y3g",
+      "tie-call:p5:y6viv6jfmtj36y3gvg80h3bf5mtj36y3g",
+      "tie-call:p5:fq5omv5kmtj36y3gvkg18w2cvmtj36y3g",
+      "tie-call:p5:dpdkp2bbmtj36y3gvpzmd243ymtj36y3g"
     ],
     "threads": [
+      {
+        "subject": "test4 the only trader in the league",
+        "beat": "The lone dealer's traffic could not lift 25 within reach of 123's 36",
+        "status": "open",
+        "beats": 4,
+        "lastUsedAt": "2026-09-20T15:08:53.672Z"
+      },
+      {
+        "subject": "test3 v test31121, deadlocked at nil",
+        "beat": "The tie has moved and test31121 lead it 27-20, two of test3's men left to answer",
+        "status": "open",
+        "beats": 2,
+        "lastUsedAt": "2026-09-20T15:08:53.672Z"
+      },
+      {
+        "subject": "test211 v test3331, the 3-8 tie",
+        "beat": "Leno's goalkeeping props up a 20-13 lead, test211 down to Castagne, King and Thomas",
+        "status": "open",
+        "beats": 4,
+        "lastUsedAt": "2026-09-20T15:08:53.672Z"
+      },
+      {
+        "subject": "Thomas on international duty, test3331",
+        "beat": "Back into the fixture as test211's one live hope to chase the gap",
+        "status": "open",
+        "beats": 3,
+        "lastUsedAt": "2026-09-20T15:08:53.672Z"
+      },
+      {
+        "subject": "test31 chasing testf's lead",
+        "beat": "testf close on 48, test31 stranded on 35 with one man left to do thirteen alone.",
+        "status": "open",
+        "beats": 3,
+        "lastUsedAt": "2026-09-20T15:08:53.672Z"
+      },
+      {
+        "subject": "testf's defenders doing the scoring",
+        "beat": "Willock and Barnes take their turn up top, the lead pushed past two goals.",
+        "status": "retired",
+        "beats": 3,
+        "lastUsedAt": "2026-09-20T15:08:53.672Z"
+      },
       {
         "subject": "Haaland's future, 123",
         "beat": "Wire links a heavy Barcelona bid for 123's forward, nothing settled",
@@ -54,22 +100,8 @@
         "lastUsedAt": "2026-09-20T06:35:10.670Z"
       },
       {
-        "subject": "test31 chasing testf's lead",
-        "beat": "Munoz stands against Evanilson and Tavernier over the same ninety",
-        "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-20T06:35:10.670Z"
-      },
-      {
         "subject": "test1 v test2, the eight-nil tie",
         "beat": "Calvert-Lewin and Trafford meet in the same match, five points between the sides",
-        "status": "open",
-        "beats": 3,
-        "lastUsedAt": "2026-09-20T06:35:10.670Z"
-      },
-      {
-        "subject": "test211 v test3331, the 3-8 tie",
-        "beat": "King and Castagne stand for test211, Leno for test3331, in a fixture six points apart",
         "status": "open",
         "beats": 3,
         "lastUsedAt": "2026-09-20T06:35:10.670Z"
@@ -103,20 +135,6 @@
         "lastUsedAt": "2026-09-19T19:07:38.059Z"
       },
       {
-        "subject": "test4 the only trader in the league",
-        "beat": "The lone dealer's new man answers, a clean sheet from the Villa goal.",
-        "status": "open",
-        "beats": 3,
-        "lastUsedAt": "2026-09-19T17:34:20.239Z"
-      },
-      {
-        "subject": "testf's defenders doing the scoring",
-        "beat": "Now the attacking men, Willock and Barnes, get their turn to widen the two-goal lead over test31",
-        "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-19T10:05:39.190Z"
-      },
-      {
         "subject": "test2's four-man front against Egan's eight",
         "beat": "Millar, Ajayi, Giles and Hall all in the fixture, all chasing an eight-point hole",
         "status": "open",
@@ -131,24 +149,10 @@
         "lastUsedAt": "2026-09-19T10:05:39.190Z"
       },
       {
-        "subject": "test3 v test31121, deadlocked at nil",
-        "beat": "Pickford and Emersonn against Akpom, the tie's first movement due here",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-19T10:05:39.190Z"
-      },
-      {
         "subject": "test211's defenders doing the heavy lifting",
         "beat": "Aina the lone man carrying the tie, João Pedro still sidelined up top",
         "status": "open",
         "beats": 3,
-        "lastUsedAt": "2026-09-19T10:05:39.190Z"
-      },
-      {
-        "subject": "Thomas on international duty, test3331",
-        "beat": "Back from Tuchel's squad and into the fixture; the one unknown test211 can lean on",
-        "status": "open",
-        "beats": 2,
         "lastUsedAt": "2026-09-19T10:05:39.190Z"
       },
       {
