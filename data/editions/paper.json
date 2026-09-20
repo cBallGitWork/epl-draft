@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-20T18:11:40.233Z",
+  "updatedAt": "2026-09-20T19:07:42.141Z",
   "stories": [
     {
       "slug": "p5-report-hy0w28p5mtj36y3gv1b6gp5utmtj36y3g",
@@ -124,6 +124,46 @@
         "clubId": 9,
         "position": "D"
       },
+      "ties": []
+    },
+    {
+      "slug": "news-football-videos-cqpve80lwem9o",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T19:07:42.141Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Cunha Deflects Fulham's Best-Laid Plans",
+      "deck": "Cunha's 89th-minute deflected strike earns United a point and hands test2 a late forward return.",
+      "body": "The deflection went in for test2. Cunha's strike deep into stoppage carried United to a point at Fulham, and the fortune it needed off a body in front of goal counts the same on test2's sheet as anything struck sweetly. A late forward return, salvaged from a match that was drifting away from him.\n\nThat it kept Fulham from a first league win of the season is the wire's story, not ours. What matters here is timing: Cunha found his return in the 89th minute or not at all, and for test2 that is the difference between a blank up top and a haul that arrived when there was almost nothing left to arrive.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/videos/cqpve80lwem9o"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
+    {
+      "slug": "news-football-videos-cmp3k277095do",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-20T19:07:42.141Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Isak Repays test2 On Iraola's Homecoming",
+      "deck": "Isak's second-half winner in Liverpool's 1-0 at Bournemouth returns for owner test2.",
+      "body": "One goal settled it and it belonged to test2. Isak's second-half strike carried Liverpool to a narrow win, and the return lands with the manager who already carries Cunha up top.\n\nThe wire gives the goal and little else. A single forward return, no more and no less, and for test2 it is another week where the front pair does the talking.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/videos/cmp3k277095do"
+      ],
+      "image": null,
+      "face": null,
       "ties": []
     },
     {
@@ -563,51 +603,6 @@
         "clubId": 11,
         "position": "F"
       },
-      "ties": []
-    },
-    {
-      "slug": "p4-report-kg18w2cvmtj36y3gvpzmd243ymtj36y3g",
-      "kind": "tie-report",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 4,
-      "gameweek": 4,
-      "filedAt": "2026-09-18T17:10:33.962Z",
-      "expiresAt": null,
-      "edition": "The Monday Club",
-      "byline": "",
-      "headline": "De Cuyper leads, test3331 left counting",
-      "deck": "testf beat test3331 46-19, De Cuyper's nine the top score of the tie",
-      "body": "testf carried this on defenders. De Cuyper's nine led it, with Rúben and Tarkowski both on six and a clean sheet's worth of coverage across the back. Add Tavernier's six in midfield and Rogers and Evanilson up top, and testf had six men returning and nobody dragging.\n\ntest3331's total tells the other story. Nineteen from six players, and Leno's seven from goal was the only stat line that stood up. Everything in front of him folded.\n\nMcBurnie's four was the best of the outfield returns, and that is the number test3331 will chew on. Barkley and Scott managed two apiece, Ajer and Lewis-Potter one each. Six starters, five of them in single figures, against a testf side that never dropped below five. Twenty-seven is a hole no single haul was ever going to fill.",
-      "subjects": [
-        "tie-report:p4:kg18w2cvmtj36y3gvpzmd243ymtj36y3g"
-      ],
-      "image": null,
-      "face": {
-        "code": 465730,
-        "name": "De Cuyper",
-        "clubId": 5,
-        "position": "D"
-      },
-      "ties": []
-    },
-    {
-      "slug": "news-football-articles-cvrl64y9rdn9o",
-      "kind": "news",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 4,
-      "gameweek": 4,
-      "filedAt": "2026-09-18T17:10:33.962Z",
-      "expiresAt": null,
-      "edition": "The Team Sheet",
-      "byline": "The Wire",
-      "headline": "Tuchel's Chaos, test3331's Concern",
-      "deck": "Tuchel embraces chaos in his England squad; test3331 owns Thomas.",
-      "body": "Thomas Tuchel wanted control after the World Cup. Two months on he has named his Nations League squad and settled instead for chaos, a word he now uses without flinching.\n\nFor test3331 the interest is narrower and named Thomas, the one asset on the books with a stake in whatever Tuchel decides to embrace. What the England camp does to his minutes, the wire does not say, and neither do we.",
-      "subjects": [
-        "news:https://www.bbc.co.uk/sport/football/articles/cvrl64y9rdn9o"
-      ],
-      "image": null,
-      "face": null,
       "ties": []
     }
   ]
