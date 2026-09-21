@@ -74,9 +74,13 @@ export default function LineupPitch({
   bench,
   availabilityOf,
   onPick,
+  inColumn = false,
 }: {
   rows: PitchRow<SquadPlayerDetail>[];
   bench: SquadPlayerDetail[];
+  /** Fill a column rather than bleeding through the page's gutters — what the
+   *  desk does, where the list stands beside the grass inside one panel. */
+  inColumn?: boolean;
   availabilityOf: (player: SquadPlayerDetail) => Availability;
   onPick: (player: SquadPlayerDetail) => void;
 }) {
@@ -105,7 +109,7 @@ export default function LineupPitch({
     //
     // Second occurrence of this expression, so it is copied rather than named
     // (CODE_RULES §1). A third pitch with nothing beside it earns a recipe.
-    <div className="pitch-with-bench mx-auto flex w-full max-w-[calc((100svh-var(--pitch-page))*var(--pitch-ratio))] flex-col">
+    <div className="pitch-with-bench flex flex-col">
       {/* **Flat, like every other eleven in the app** (Craig, 21 Sep 2026: "youre
           using an old crap pitch, use the flat 2d we use elsewhere"). He said the
           same of the FPL tab on 5 Sep and `PitchRows` has carried the rule since:
@@ -118,6 +122,7 @@ export default function LineupPitch({
         rows={rows}
         keyOf={(player) => player.rostered.slot.fantraxId}
         widest={widest}
+        inColumn={inColumn}
       >
         {cell}
       </PitchRows>
