@@ -11,13 +11,26 @@ describe("the demo team", () => {
   // is that the field hangs off the league entry rather than off a flag, so the
   // 10 Oct swap removes it without anybody remembering to. If a demo team ever
   // lands on `real`, the swap stops being safe and this fails.
-  it("is on the dummy league and on no other", () => {
-    const withDemo = FANTRAX_LEAGUES.filter((league) => league.demoTeamId !== undefined);
-    expect(withDemo.map((league) => league.key)).toEqual(["dummy"]);
-  });
-
-  it("is never on the league we actually serve from 10 Oct", () => {
+  // **The invariant is "never on `real`", not "only on dummy".** It was the
+  // second of those for half a day, which was a test written against one
+  // league's convenience rather than against the thing that would be a bug: the
+  // rehearsal league is what production serves, so it needs a demo team too, and
+  // a test that forbade it would have been read as a rule rather than as the
+  // accident it was.
+  it("is never on the league ten friends actually play in", () => {
     const real = FANTRAX_LEAGUES.find((league) => league.key === "real");
     expect(real?.demoTeamId).toBeUndefined();
+  });
+
+  it("is on every league that is not real, so it shows wherever we are pointed", () => {
+    const without = FANTRAX_LEAGUES.filter((league) => league.demoTeamId === undefined);
+    expect(without.map((league) => league.key)).toEqual(["real"]);
+  });
+
+  // Two leagues, two ids: a team id is per league and pasting one across is how
+  // a demo team silently names nobody.
+  it("gives each league its own id", () => {
+    const ids = FANTRAX_LEAGUES.map((league) => league.demoTeamId).filter(Boolean);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 });

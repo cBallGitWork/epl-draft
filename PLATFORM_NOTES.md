@@ -44,6 +44,36 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Production serves the REHEARSAL league, not the dummy one — verified 21 Sep 2026
+
+`CLAUDE.md` says `FANTRAX_LEAGUE_ID` "defaults to the **dummy** league", which is
+true of `config.ts` and had been read as a description of what is deployed. It is
+not. Vercel's environment sets it.
+
+**How it was settled, since the dashboard is not readable from here.** The
+deployed app's `/squad` lists ten team ids; so do all three leagues. They match:
+
+| | ids |
+|---|---|
+| deployed | `8enbgqo5msgb375j`, `j9zadacnmshcpazf`, `jtsmt5jxmtj31znh`, `dq2yk3zx…` |
+| rehearsal | **the same ten** |
+| dummy | `1b6gp5ut…`, `hy0w28p5…`, `98yx3o50…` — **no overlap at all** |
+| real | none; the league has no teams until 10 Oct |
+
+So `next dev` opens on dummy and the deployed app serves rehearsal, and the two
+leagues share not one team id despite sharing all ten team NAMES (`123`, `test1`,
+`test2`…). Anything keyed on a team id is therefore per-league, and a fact
+established locally is not a fact about production.
+
+**It cost the demo team its first afternoon.** `demoTeamId` was put on `dummy`
+alone and was invisible on the one surface anybody would look at — the deployed
+app correctly refused an id naming nobody and printed the sign-in instead. Both
+non-real leagues carry one now.
+
+**For swap day:** the Vercel value is already set to something, so the runbook's
+step is a CHANGE and not an addition, and `npm run smoke` against the deployed
+URL is what proves which league answered.
+
 ## `getTeamRosterInfo` answers with no cookie, and it carries the deadline — probed 21 Sep 2026
 
 Asked because the My Team section needs four things Craig named and nobody had
