@@ -131,7 +131,8 @@ export const LABEL = `${SMALL_CAPS} text-faint`;
  *  outlived every span it was meant to be about. It came off the link.
  *
  *  Four sites are deliberately NOT here, because they are not rows: the two
- *  `.cm-title` bars, `PlayerCard`/`LivePlayerCard`'s dialog headings, and
+ *  `.cm-title` bars — three since the live card opened with one — `PlayerCard`'s
+ *  dialog heading, and
  *  `matchday/desk/Rows`, whose "ARS v CHE" is a fixture line rather than a name
  *  — a compound of two clubs and a "v", set at the wire's own `text-xs`. */
 export const ROW_NAME = "font-chrome text-sm font-bold lg:text-base";
@@ -434,8 +435,8 @@ export const FACT =
  *  truncates rather than wrapping.
  *
  *  Five sites wrote it out — `Facts`, `Breakdown` and `Moves` on the player
- *  screen, `LivePlayerCard`, and `prem/player/[code]` — which is the third
- *  occurrence twice over. The truncation is the part worth naming: a Fantrax
+ *  screen, the live card's breakdown, and `prem/player/[code]` — which is the
+ *  third occurrence twice over. The truncation is the part worth naming: a Fantrax
  *  label is a full sentence on some rows, and a row that wraps to three lines
  *  stops being a row. */
 export const FACT_LABEL = "min-w-0 flex-1 truncate text-sm text-muted";
