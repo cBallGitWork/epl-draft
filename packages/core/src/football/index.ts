@@ -69,8 +69,8 @@ export type { MatchStatRow } from "./premierleague/matchStats";
 export { mapRoundBreaks } from "./premierleague/breaks";
 export { plMatchFacts } from "./premierleague/matchFacts";
 export { plWireLines, proseSpans, shortProse } from "./premierleague/prose";
-export type { ProseSpan } from "./premierleague/prose";
 export type { ProseLine } from "./premierleague/prose";
+export type { ProseSpan } from "./premierleague/prose";
 export type { PlMatchFacts } from "./premierleague/matchFacts";
 export type { RoundBreak } from "./premierleague/breaks";
 export type {
@@ -152,6 +152,10 @@ export {
 // is publishing the one that has been asked in the other's place before. It
 // stays exported from its own module, where its tests reach it.
 export type { FinishedState, RoundState } from "./round";
+// A played round rewound to a moment inside it, so the Live tab can be worked
+// on when no football is on. A rehearsal instrument: `app/clock.ts` is the only
+// caller and the app says on screen when it is running on one.
+export { before, rewindRound, roundAt } from "./replay";
 export { fixtureLabel, kickedOff, nextFixtures, oppositionByClub } from "./opposition";
 export { leagueTable } from "./table";
 export type { TableRow } from "./table";

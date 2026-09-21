@@ -8,6 +8,7 @@ import LiveCount from "./components/shell/LiveCount";
 import LiveNow from "./components/shell/LiveNow";
 import PhotoGround from "./components/football/PhotoGround";
 import Rail from "./components/shell/Rail";
+import ReplayStrip from "./components/shell/ReplayStrip";
 import { liveTie } from "./components/shell/liveTie";
 import "./globals.css";
 
@@ -169,6 +170,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               exactly when a score is most likely to have moved since you
               looked. */}
           <AutoRefresh seconds={seconds} />
+          <ReplayStrip />
           {/* Inside the content column, not beside the rail: the strip is the
               shell speaking to the page, and a full-bleed bar that started under
               the rail would be a bar with a navy bite out of its left end.

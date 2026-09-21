@@ -13,6 +13,7 @@ import {
   nextDeadline,
   roundNews,
 } from "@epl/core";
+import { now } from "../clock";
 import { readBoard } from "../board";
 import { readDeals } from "../business";
 import { seasonKickoffs } from "../football";
@@ -201,7 +202,7 @@ function lock(
   periods: readonly LeaguePeriod[],
   kickoffs: readonly GameweekKickoff[],
 ): { period: number; gameweek: number; locksAt: string } | null {
-  const next = nextDeadline(periods, kickoffs, new Date().toISOString());
+  const next = nextDeadline(periods, kickoffs, now().toISOString());
   if (next === null) return null;
   const rounds = periodGameweeks([...periods], [...kickoffs]).find(
     (entry) => entry.period === next.period,

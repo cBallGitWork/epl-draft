@@ -1,3 +1,4 @@
+import { now } from "../../../clock";
 import Inbox from "../Inbox";
 import { inbox } from "../newsItems";
 import { playerStories } from "../dossier";
@@ -49,7 +50,7 @@ export default async function PlayerNews({
           and the newest opened underneath. Every story Fantrax's provider has
           filed about him since 1 July. */}
       <Inbox
-        items={inbox(await playerStories(fantraxId, new Date()))}
+        items={inbox(await playerStories(fantraxId, now()))}
         href={(id) => `${POOL}/${fantraxId}/news?story=${encodeURIComponent(id)}`}
         openId={story}
       />

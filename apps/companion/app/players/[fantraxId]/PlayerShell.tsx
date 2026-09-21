@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { clubColours } from "@epl/core";
+import { now } from "../../clock";
 import PlateShell from "../../components/shell/PlateShell";
 import PlayerTabs from "./PlayerTabs";
 import type { PlayerTab } from "./PlayerTabs";
@@ -65,7 +66,7 @@ export default function PlayerShell({
   // birthplace, height and weight is gone from the profile. One fact, one place.
   const born = bornLine(
     football?.player.birthDate ?? null,
-    new Date(),
+    now(),
     labelled(intel.personal, "Birthplace"),
   );
   return (
