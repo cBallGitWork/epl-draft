@@ -8,7 +8,7 @@
       "period": 5,
       "gameweek": 5,
       "filedAt": "2026-09-18T15:00:00.000Z",
-      "expiresAt": "2026-09-18T19:00:00Z",
+      "expiresAt": null,
       "edition": "The Team Sheet",
       "byline": "The Team Sheet",
       "headline": "Friday Pressers",
@@ -105,7 +105,7 @@
           {
             "club": "Crystal Palace",
             "code": 31,
-            "line": "Three men ruled out at Palace, with Ismaïla Sarr still being assessed.",
+            "line": "Three men ruled out at Palace, with Isma\u00efla Sarr still being assessed.",
             "men": [
               {
                 "name": "Dean Henderson",
@@ -124,7 +124,7 @@
                 "note": "hamstring"
               },
               {
-                "name": "Ismaïla Sarr",
+                "name": "Isma\u00efla Sarr",
                 "status": "Doubt",
                 "note": "groin"
               }
@@ -285,15 +285,15 @@
           {
             "club": "Everton",
             "code": 11,
-            "line": "David Moyes left Christian Nørgaard open and confirmed Röhl unavailable.",
+            "line": "David Moyes left Christian N\u00f8rgaard open and confirmed R\u00f6hl unavailable.",
             "men": [
               {
-                "name": "Christian Nørgaard",
+                "name": "Christian N\u00f8rgaard",
                 "status": "Doubt",
                 "note": "groin"
               },
               {
-                "name": "Merlin Röhl",
+                "name": "Merlin R\u00f6hl",
                 "owner": "test4",
                 "status": "OUT",
                 "note": "no complaint given"
@@ -465,15 +465,15 @@
       "edition": "The Team Sheet",
       "byline": "The Team Sheet",
       "headline": "Thursday Pressers",
-      "deck": "João Pedro a Chelsea doubt, Alonso holds the call to Friday",
-      "body": "João Pedro is among the Chelsea doubts Xabi Alonso carried into his press conference, with no complaint stated and no decision reached. Alonso said the final training session comes tomorrow and that nobody is ruled out, leaving test211's man an open question until Friday.",
+      "deck": "Jo\u00e3o Pedro a Chelsea doubt, Alonso holds the call to Friday",
+      "body": "Jo\u00e3o Pedro is among the Chelsea doubts Xabi Alonso carried into his press conference, with no complaint stated and no decision reached. Alonso said the final training session comes tomorrow and that nobody is ruled out, leaving test211's man an open question until Friday.",
       "subjects": [
         "presser:gw4:2026-09-17"
       ],
       "image": null,
       "face": {
         "code": 475168,
-        "name": "João Pedro",
+        "name": "Jo\u00e3o Pedro",
         "clubId": 6,
         "position": null
       },
@@ -486,7 +486,7 @@
             "line": "The final call on every doubt waits on tomorrow's last training session before the trip to Brentford.",
             "men": [
               {
-                "name": "Moisés Caicedo",
+                "name": "Mois\u00e9s Caicedo",
                 "status": "Doubt",
                 "note": "calf; getting closer"
               },
@@ -501,7 +501,7 @@
                 "note": "wrist"
               },
               {
-                "name": "João Pedro",
+                "name": "Jo\u00e3o Pedro",
                 "owner": "test211",
                 "status": "Doubt",
                 "note": "no complaint given; call held to Friday"
@@ -523,7 +523,7 @@
             "line": "A young midfield is forced on Matthias Jaissle, who awaits an MRI on Anthony Elanga before he knows more.",
             "men": [
               {
-                "name": "Nico González",
+                "name": "Nico Gonz\u00e1lez",
                 "status": "Doubt",
                 "note": "head"
               },
@@ -581,12 +581,12 @@
             "line": "Oliver Glasner declared everyone but two long-term absentees available.",
             "men": [
               {
-                "name": "Nicolò Savona",
+                "name": "Nicol\u00f2 Savona",
                 "status": "OUT",
                 "note": "knee"
               },
               {
-                "name": "Nikola Milenković",
+                "name": "Nikola Milenkovi\u0107",
                 "status": "OUT",
                 "note": "hamstring"
               },
@@ -698,7 +698,7 @@
               }
             ],
             "quote": {
-              "text": "He’s in the concussion protocol. So, seven days off, and after this, he will go to the national team. Everything is fine. He’s good. This is the most important [thing], now. He will miss this game.",
+              "text": "He\u2019s in the concussion protocol. So, seven days off, and after this, he will go to the national team. Everything is fine. He\u2019s good. This is the most important [thing], now. He will miss this game.",
               "said": "Sergej Jakirovic on Nobel Mendy"
             },
             "fixture": {
@@ -710,10 +710,10 @@
           {
             "club": "Coventry City",
             "code": 9,
-            "line": "Frank Lampard expects Aurèle Amenda unavailable and named a suspension alongside the injuries.",
+            "line": "Frank Lampard expects Aur\u00e8le Amenda unavailable and named a suspension alongside the injuries.",
             "men": [
               {
-                "name": "Aurèle Amenda",
+                "name": "Aur\u00e8le Amenda",
                 "status": "OUT",
                 "note": "calf; not expected available"
               },
@@ -744,7 +744,7 @@
               }
             ],
             "quote": {
-              "text": "Haji’s on track, but he’s not obviously ready soon.",
+              "text": "Haji\u2019s on track, but he\u2019s not obviously ready soon.",
               "said": "Frank Lampard"
             },
             "fixture": {
