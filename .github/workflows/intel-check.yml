@@ -1,0 +1,61 @@
+name: Intel staleness
+
+# The watchdog for the football intel the app cannot derive for itself — real
+# positions, squad numbers, and the predicted eleven the paper's Line-Ups and
+# Team Sheet columns are written from.
+#
+# **The failure this exists for is SILENCE, not an error.** `readXi` asks for the
+# round ahead; with a stale export it gets null, the desk offers no assignment
+# and the firing exits quietly. The column looks like it works and prints
+# nothing. Designed behaviour, invisible failure — so the noticing has to happen
+# somewhere a human is told.
+#
+# **`intel-check` has anticipated this workflow since it was written** and nobody
+# wrote it: its own docblock says "the same exit code, so a workflow or a hook
+# can gate on it". It exits non-zero on a missing export, a stale one, and — the
+# one that matters most — an eleven for a round that has already been played,
+# which is not stale so much as wrong. On 21 Sep it had been failing locally for
+# days with `gw3.json` on disk and nothing in CI saying so.
+#
+# **Its own workflow, on `capture-status.yml`'s reasoning.** The job that reports
+# on the export must not be the job that produces it, because the way that job
+# most plausibly dies is by not running at all — which is exactly how it would
+# stop reporting. Nothing here produces the export in any case: it is written by
+# `make export-epl-draft` in the sister repo (issue #34), and the least this side
+# can do is say plainly when what it is serving has gone wrong.
+#
+# **Not on `pull_request`.** A stale export is a fact about the DATA and never
+# about the branch, and gating every PR on it would block work nobody can unblock
+# from here.
+#
+# No issue-filing machinery: a red workflow already notifies, and a mechanism
+# with one caller is a mechanism we do not need.
+
+on:
+  schedule:
+    # 05:25 UTC daily. Ahead of every `editions.yml` cron — the earliest is
+    # 06:15 on a Thursday — so a wrong export is reported before the desk looks
+    # rather than after it has quietly filed nothing.
+    - cron: "25 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  intel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Reads FPL's bootstrap live to learn which round is current, which is what
+      # lets it tell "stale" from "wrong". Public, so no secret.
+      - name: Check the intel export
+        run: npm run intel-check
