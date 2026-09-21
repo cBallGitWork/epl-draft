@@ -51,7 +51,7 @@ export { isCovered, normalizeLedger, recordCoverage } from "./ledger";
 export { newsdesk } from "./newsdesk";
 export { predictedLineups } from "./predictedXi";
 export type { PredictedTie } from "./predictedXi";
-export type { StoryLineup, StoryLineupMan, StoryLineupSide } from "./extras";
+export type { StoryLineupMan, StoryLineupSide } from "./extras";
 export { bothSides, fixtureStakes } from "./relevance";
 export { tieState } from "./tieState";
 export type { Assignment, DeskState, DeskTie } from "./newsdesk";

@@ -105,7 +105,7 @@ function faceCtx(ctx: DeskContext, assignment: Assignment): FaceContext {
 
 /** How a column comes to exist: a voice and a brief for a writer, or a set of
  *  facts the desk prints itself. */
-export type Commission =
+type Commission =
   | { system: string; brief: string }
   | { printed: Record<string, unknown> };
 
