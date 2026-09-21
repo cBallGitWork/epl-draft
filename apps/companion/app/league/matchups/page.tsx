@@ -51,7 +51,7 @@ export default async function MatchupPage() {
     return (
       <LeagueShell current="matchups">
         <Nothing title="No schedule to read">
-        Fantrax answered the rosters but would not say which period it is or who plays whom, and a
+        Fantrax answered the rosters but would not say which gameweek it is or who plays whom, and a
         matchup page that guessed either would be making its fixtures up.
         </Nothing>
       </LeagueShell>
@@ -62,8 +62,8 @@ export default async function MatchupPage() {
   if (pairings.length === 0) {
     return (
       <LeagueShell current="matchups">
-        <Nothing title="No pairings this period" code={`period ${period}`}>
-        The schedule does not cover this period — a bye week, or a season that has not reached its
+        <Nothing title="No pairings this gameweek" code={`gameweek ${period}`}>
+        The schedule does not cover this gameweek — a bye week, or a season that has not reached its
         first head-to-head yet. Nobody is hiding anything; there is nothing to pair.
         </Nothing>
       </LeagueShell>

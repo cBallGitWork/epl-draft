@@ -94,9 +94,9 @@ export default async function SchedulePage() {
       <LeagueShell current="schedule">
         <Nothing
           title="No calendar to read"
-          code={`${info.scoringPeriods.length} periods, 0 gameweeks`}
+          code={`${info.scoringPeriods.length} rounds, 0 gameweeks`}
         >
-          Fantrax describes the league&apos;s periods but none of them holds a gameweek, so there is
+          Fantrax describes the league&apos;s rounds but none of them holds a gameweek, so there is
           no round to show its fixtures against.
         </Nothing>
       </LeagueShell>

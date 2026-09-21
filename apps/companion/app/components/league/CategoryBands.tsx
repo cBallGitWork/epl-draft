@@ -61,7 +61,7 @@ export default function CategoryBands({
       {withheld}
       {bands.length === 0 ? (
         <Nothing title="Nothing scored yet">
-          Fantrax has priced no category for either squad this period.
+          Fantrax has priced no category for either squad this gameweek.
         </Nothing>
       ) : (
         // Capped for `MatchStats`' own reason: the reference board is a

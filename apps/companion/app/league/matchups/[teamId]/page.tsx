@@ -104,8 +104,8 @@ export default async function HeadToHeadPage({
   if (pairing === undefined) {
     return (
       <LeagueShell current="matchups" title={HEAD_TO_HEAD} sub={heading}>
-        <Nothing title="Nobody this period" code={`period ${period}`}>
-          {named.teamName} has no pairing in period {period} — a bye, or a schedule that has not
+        <Nothing title="Nobody this gameweek" code={`gameweek ${period}`}>
+          {named.teamName} has no pairing in gameweek {period} — a bye, or a schedule that has not
           reached its first head-to-head. Nothing is being withheld; there is nothing to pair.
         </Nothing>
       </LeagueShell>

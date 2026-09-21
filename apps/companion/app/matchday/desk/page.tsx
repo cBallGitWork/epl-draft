@@ -73,7 +73,7 @@ export default async function DeskPage() {
 
       <Section title={`Gameweek ${snapshot.gameweek} · head-to-head`}>
         {pairings.length === 0 ? (
-          <Quiet>Fantrax has no pairings for this period, so there is nothing to post.</Quiet>
+          <Quiet>Fantrax has no pairings for this gameweek, so there is nothing to post.</Quiet>
         ) : (
           yoursFirst(pairings, (p) => pairingInvolves(p, mine)).map((pairing) => (
             <Pairing
