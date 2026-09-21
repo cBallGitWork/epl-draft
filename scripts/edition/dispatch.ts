@@ -14,7 +14,7 @@ import {
   buildPresserBrief,
   normalizePublished,
 } from "@epl/core";
-import { presserEdition } from "./pressers";
+import { presserEdition } from "./presserWeek";
 import { faceOf, type FaceContext } from "./faces";
 import { fullClubName } from "@epl/core";
 import {

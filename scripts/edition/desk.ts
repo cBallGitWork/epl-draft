@@ -6,7 +6,7 @@ import {
   type FootballSnapshot,
   type PresserLine,
 } from "@epl/core";
-import { presserDays } from "./pressers";
+import { presserDays } from "./presserWeek";
 import type { DeskFacts } from "./facts";
 
 // What state the desk is in, as one answer.

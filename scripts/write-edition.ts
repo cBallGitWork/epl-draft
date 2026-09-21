@@ -25,7 +25,7 @@ import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { markLastWeek } from "./edition/marking";
 import { writeSubedited } from "./edition/subedit";
-import { presserFixtures, presserGameweek, presserLines, presserQuotes, presserSpoke } from "./edition/pressers";
+import { presserDesk } from "./edition/presserWeek";
 import { deskState } from "./edition/desk";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
@@ -57,10 +57,6 @@ const STORY_CAP = Number(process.env.GAZETTA_STORY_CAP ?? 2);
 
 /** Prints the assignments and their briefs instead of writing anything. */
 const DRY_RUN = process.env.DRY_RUN === "1";
-
-/** No round is longer than one, so a presser older than this is about a round
- *  already played. */
-const WEEK = 7 * 24 * 60 * 60 * 1000;
 
 async function main(): Promise<void> {
   // One instant for the whole firing. Read five times, it drifted across the
@@ -109,50 +105,10 @@ async function main(): Promise<void> {
   // keys off — `clubById` keys by the per-season id.
   const byCode = new Map([...clubs.values()].map((club) => [club.code, club]));
 
-  // The window opens at the last lock that has PASSED: a signal from before it
-  // belongs to a round already played.
-  //
-  // **`lock ?? now` was wrong and would have killed the column on the day it
-  // matters most.** `lock` is the current period's, which before that round
-  // locks is in the FUTURE — so `since` was in the future too and every signal
-  // was filtered. It only fired at all because between gameweeks FPL still
-  // names the played round, whose lock has passed. On a Thursday before GW5
-  // locks, or in the hour between FPL's own deadline and ours for a Friday
-  // night tie, the Team Sheet would simply never have been commissioned and
-  // nothing would have said so.
-  //
-  // A week back when the lock is still ahead: a press conference older than
-  // that is not about the round to come, and no round is longer than a week.
-  const presserSince =
-    locked && lock !== null ? lock : new Date(Date.parse(now) - WEEK).toISOString();
-  // **LOCKED, not finished.** Once a round has locked, every press conference
-  // is about the next one — a Saturday presser during Friday-night football is
-  // previewing the round after. `finished` asks whether the football is over,
-  // which is a later and different moment, and it named the wrong round for
-  // every hour in between.
-  const ahead = locked ? snapshot.gameweek + 1 : snapshot.gameweek;
-  // **The export must be about the round we are previewing.** Scout writes one
-  // team-news article per gameweek and the export records which; a stale file,
-  // or one from a European week, would be read as this round's team news.
-  const covers = presserGameweek();
-  const lines =
-    covers !== null && covers !== ahead
-      ? []
-      : presserLines(facts.teams, presserSince, byCode, snapshot.players);
-  if (covers !== null && covers !== ahead) {
-    say(`Pressers skipped: the export covers gameweek ${covers} and the round ahead is ${ahead}.`);
-  }
-
-  // **The round the pressers PREVIEW, which between gameweeks is not the one the
-  // snapshot is focused on.** `focusGameweek` prefers FPL's `is_current`, and
-  // `map.ts` records that FPL keeps that flag on a round until the next
-  // DEADLINE — so on a Thursday it still names the football already played.
-  // Attaching those fixtures would have printed last weekend's opponents beside
-  // this weekend's team news.
-  const presserTies = lines.length === 0 ? new Map() : await presserFixtures(ahead, byCode);
+  const sheet = await presserDesk({ facts, snapshot, byCode, now, lock, locked, say });
 
   const assignments = newsdesk(
-    deskState({ snapshot, facts, clubs, period: round.period, finished, locked, started, lines }),
+    deskState({ snapshot, facts, clubs, period: round.period, finished, locked, started, lines: sheet.lines }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,
   );
@@ -175,12 +131,12 @@ async function main(): Promise<void> {
     period: round.period,
     kickoff,
     marked: await markLastWeek(paper, info, round.period, assignments),
-    presserLines: lines,
-    presserQuotes: presserQuotes(byCode),
-    presserTies,
+    presserLines: sheet.lines,
+    presserQuotes: sheet.quotes,
+    presserTies: sheet.ties,
     presserClubs: byCode,
-    presserGameweek: ahead,
-    presserSpoke: presserSpoke(presserSince, byCode),
+    presserGameweek: sheet.gameweek,
+    presserSpoke: sheet.spoke,
   };
 
   const filings: Filing[] = [];
