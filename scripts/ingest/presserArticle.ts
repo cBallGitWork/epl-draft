@@ -14,6 +14,22 @@ export interface Quote {
   about?: string;
 }
 
+/** The round the ARTICLE says it is about, from its own title: "FPL Gameweek 5
+ *  team news". Null when it does not say, which is a reason to refuse it. */
+export function articleGameweek(body: string): number | null {
+  const m = body.match(/gameweek\s+(\d{1,2})\b/i);
+  if (m === null) return null;
+  const gw = Number(m[1]);
+  return gw >= 1 && gw <= 38 ? gw : null;
+}
+
+/** Whether this is a PREMIER LEAGUE team-news article rather than a European
+ *  one. Scout says so itself — "Friday's FPL Press Conferences" — and reading
+ *  its own words beats a list of competitions we would have to maintain. */
+export function isLeagueArticle(body: string): boolean {
+  return /FPL (?:Press Conferences|Gameweek)|Gameweek \d+ team news/i.test(body);
+}
+
 /** A club heading, comparable: "&" spelled out and punctuation dropped, so
  *  FFS's "BRIGHTON AND HOVE ALBION" meets FPL's "Brighton & Hove Albion". */
 export function clubKey(name: string): string {

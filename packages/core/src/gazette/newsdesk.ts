@@ -46,6 +46,11 @@ export interface Assignment {
   /** Join handle back to the round's fixtures, this session only. */
   fixtureId?: number;
   tie?: { homeTeamId: string; awayTeamId: string };
+  /** The press-conference DAY, London, for the Team Sheet. A week holds two —
+   *  Thursday's covers the clubs playing first and Friday's the rest — and they
+   *  are one kind with two editions, so the day is the scope handle the way
+   *  `fixtureId` is for a preview. */
+  day?: string;
 }
 
 export interface DeskTie {
@@ -76,7 +81,7 @@ export interface DeskState {
    *  Friday's are two columns rather than one — Craig's week runs pressers on
    *  both. The caller builds the keys; this file owns no clock. Empty when the
    *  export has not landed, which files nothing and spends nothing. */
-  pressers: readonly { key: string; slug: string }[];
+  pressers: readonly { key: string; slug: string; day: string }[];
 }
 
 /** The columns a finished round earns, in the order they are worth reading.
@@ -197,7 +202,7 @@ export function newsdesk(
   // they are about the round to come, and they fall out of the window by
   // themselves once the next lock moves it on.
   for (const day of desk.pressers) {
-    want({ kind: "presser", key: day.key, slug: day.slug });
+    want({ kind: "presser", key: day.key, slug: day.slug, day: day.day });
   }
 
   // The wire is weekly and keys on the WINDOW rather than the round: it reports

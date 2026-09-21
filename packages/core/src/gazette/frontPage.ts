@@ -128,9 +128,12 @@ function expired(story: PublishedStory, now: string): boolean {
  *  standing column, and page 3 printed two Power Rankings, two Points Dodgers
  *  and two Teams of the Week side by side because nothing said so.
  *
- *  The presser is here and still files twice a week: Thursday's and Friday's
- *  share a round and both live, because this retires across ROUNDS only. */
-const EDITIONS: readonly StoryKind[] = ["eleven", "power-ranking", "dodgers", "wire", "presser"];
+ *  **The presser is NOT here**, and was until it ate Thursday's column. A week
+ *  holds two of them and they are not editions of each other — they are keyed by
+ *  DAY. Worse, the two need not share a period: Thursday's is filed before the
+ *  round rolls over and Friday's after, so this retired one by the other. Team
+ *  news expires at the kickoff it previewed instead. */
+const EDITIONS: readonly StoryKind[] = ["eleven", "power-ranking", "dodgers", "wire"];
 
 function editionRetires(newer: PublishedStory, older: PublishedStory): boolean {
   return newer.kind === older.kind && EDITIONS.includes(newer.kind) && newer.period > older.period;

@@ -25,7 +25,7 @@ import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { markLastWeek } from "./edition/marking";
 import { writeSubedited } from "./edition/subedit";
-import { presserFixtures, presserLines, presserQuotes, presserSpoke } from "./edition/pressers";
+import { presserFixtures, presserGameweek, presserLines, presserQuotes, presserSpoke } from "./edition/pressers";
 import { deskState } from "./edition/desk";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
@@ -125,7 +125,23 @@ async function main(): Promise<void> {
   // that is not about the round to come, and no round is longer than a week.
   const presserSince =
     locked && lock !== null ? lock : new Date(Date.parse(now) - WEEK).toISOString();
-  const lines = presserLines(facts.teams, presserSince, byCode, snapshot.players);
+  // **LOCKED, not finished.** Once a round has locked, every press conference
+  // is about the next one — a Saturday presser during Friday-night football is
+  // previewing the round after. `finished` asks whether the football is over,
+  // which is a later and different moment, and it named the wrong round for
+  // every hour in between.
+  const ahead = locked ? snapshot.gameweek + 1 : snapshot.gameweek;
+  // **The export must be about the round we are previewing.** Scout writes one
+  // team-news article per gameweek and the export records which; a stale file,
+  // or one from a European week, would be read as this round's team news.
+  const covers = presserGameweek();
+  const lines =
+    covers !== null && covers !== ahead
+      ? []
+      : presserLines(facts.teams, presserSince, byCode, snapshot.players);
+  if (covers !== null && covers !== ahead) {
+    say(`Pressers skipped: the export covers gameweek ${covers} and the round ahead is ${ahead}.`);
+  }
 
   // **The round the pressers PREVIEW, which between gameweeks is not the one the
   // snapshot is focused on.** `focusGameweek` prefers FPL's `is_current`, and
@@ -133,12 +149,6 @@ async function main(): Promise<void> {
   // DEADLINE — so on a Thursday it still names the football already played.
   // Attaching those fixtures would have printed last weekend's opponents beside
   // this weekend's team news.
-  // **LOCKED, not finished.** Once a round has locked, every press conference
-  // is about the next one — a Saturday presser during Friday-night football is
-  // previewing the round after. `finished` asks whether the football is over,
-  // which is a later and different moment, and it named the wrong round for
-  // every hour in between.
-  const ahead = locked ? snapshot.gameweek + 1 : snapshot.gameweek;
   const presserTies = lines.length === 0 ? new Map() : await presserFixtures(ahead, byCode);
 
   const assignments = newsdesk(
@@ -146,6 +156,7 @@ async function main(): Promise<void> {
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,
   );
+  if (process.env.GAZETTA_QUEUE) return say(assignments.map((a) => a.key).join("\n"));
   if (assignments.length === 0) return say("Nothing new to report.");
 
   const ctx: DeskContext = {
