@@ -88,7 +88,7 @@ export function faceOf(assignment: Assignment, ctx: FaceContext): StoryFace | nu
   if (assignment.kind === "presser") {
     const named = ctx.presserLines ?? [];
     const best = [...named]
-      .map((line) => ({ line, player: ctx.players?.find((each) => each.code === line.code) }))
+      .map((line) => ({ line, fresh: line.fresh, player: ctx.players?.find((each) => each.code === line.code) }))
       .sort((a, b) => weight(b) - weight(a) || a.line.playerName.localeCompare(b.line.playerName))[0];
     if (best === undefined || best.player === undefined) return null;
     return {
@@ -103,11 +103,29 @@ export function faceOf(assignment: Assignment, ctx: FaceContext): StoryFace | nu
   return null;
 }
 
-/** How much this man's news matters, from what FPL publishes about his season. */
-function weight(each: { player?: { season: { goals: number; assists: number; influence: number; minutes: number } } }): number {
+/** How much this man's news matters today.
+ *
+ *  **What CHANGED outranks everything**, which took three goes to learn. The
+ *  first version multiplied goal involvements by a thousand and led on two goals
+ *  scored in a sixty-three-minute season; the second used minutes, which Craig
+ *  rejected outright — low minutes can mean first-choice and injured, and a
+ *  returning first-teamer is the most newsworthy thing on the page. Nor is
+ *  volume news: "more doesnt mean bigger news".
+ *
+ *  So a man whose availability moved around this conference leads, and FPL's own
+ *  `newsAdded` is what says so — the field `types.ts` already calls "what makes
+ *  it an item on a news list rather than a state on a badge". Among those, the
+ *  season's numbers only break the tie. Ownership and draft position would be
+ *  better still; GAZETTA.md carries it. */
+export function weight(each: { fresh?: boolean; player?: { season: { influence: number } } }): number {
   const season = each.player?.season;
   if (season === undefined) return -1;
-  return (season.goals + season.assists) * 1000 + season.influence + season.minutes / 1000;
+  // FPL's own `influence` is the tie-break and the whole of it: it already
+  // aggregates a season's contribution and is minutes-weighted by construction,
+  // so a cameo cannot beat a regular the way a per-90 rate let it.
+  const matters = season.influence;
+  // A standing absence cannot outrank news, whoever he is.
+  return each.fresh === false ? matters : matters + 100_000;
 }
 
 /** What `faceOf` needs, which is less than a whole `DeskContext`: the round's

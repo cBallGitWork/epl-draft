@@ -1,36 +1,35 @@
 {
   "w05aib75mtj36y1g": {
     "covered": [
-      "presser:gw4:2026-09-17",
       "presser:gw5:2026-09-17",
       "presser:gw5:2026-09-18"
     ],
     "threads": [
       {
-        "subject": "Jo\u00e3o Pedro's fitness for Chelsea",
-        "beat": "Still a doubt, the call held to Friday's final squad.",
-        "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-18T15:00:00.000Z"
-      },
-      {
-        "subject": "Elanga awaits scan at Newcastle",
-        "beat": "An MRI due, with Dedic already out for Saturday.",
+        "subject": "Jo\u00e3o Pedro's fitness",
+        "beat": "A doubt for Chelsea with no reason given by Alonso.",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T15:00:00.000Z"
       },
       {
-        "subject": "David Raya unclaimed",
-        "beat": "Dropped and left on the wire, no takers.",
+        "subject": "Dedic's hamstring",
+        "beat": "Added to Newcastle's doubts by Jaissle.",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T15:00:00.000Z"
       },
       {
-        "subject": "Jair Cunha back for Forest",
-        "beat": "Cleared and in contention after a hamstring problem.",
-        "status": "retired",
+        "subject": "Vu\u0161kovi\u0107's return",
+        "beat": "Fit again for Brighton, though Dunk faces rotation for the same berth",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-18T15:00:00.000Z"
+      },
+      {
+        "subject": "Arsenal's defence refilling",
+        "beat": "White and Merino both back in contention",
+        "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T15:00:00.000Z"
       }

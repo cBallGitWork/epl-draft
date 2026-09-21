@@ -97,7 +97,13 @@ export function presserLines(
   /** EVERY footballer, not only the rostered ones — an unowned man printed as
    *  his own code otherwise. The whole snapshot rather than a name lookup
    *  because `clubId` is how the club is read off the PLAYER. */
-  squad: readonly { code: number; name: string; fullName: string; clubId: number }[],
+  squad: readonly {
+    code: number;
+    name: string;
+    fullName: string;
+    clubId: number;
+    newsAdded: string | null;
+  }[],
 ): PresserLine[] {
   const intel = read();
   if (intel === null) return [];
@@ -123,6 +129,7 @@ export function presserLines(
       // Null when nobody in the league holds him, which is no longer a reason
       // to drop him — it is the difference between "start him" and "claim him".
       ownerName: held.get(signal.code) ?? null,
+      fresh: changed(player.newsAdded, signal.said),
     }];
   });
 }
@@ -187,6 +194,21 @@ export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote &
     // headings and then tells the writer to echo "the club name exactly as given".
     return club === undefined ? [] : [{ ...quote, clubName: fullClubName(club.name) }];
   });
+}
+
+/** How recently FPL attached his availability note, against the conference. Two
+ *  days: a note from the day before is the same story, one from last week is the
+ *  standing condition a reader already knows. */
+const FRESH_DAYS = 2;
+
+/** Whether his availability CHANGED around this conference. A man with no note
+ *  at all counts as fresh — he is being discussed and FPL has not caught up. */
+function changed(newsAdded: string | null, said: string): boolean {
+  if (newsAdded === null) return true;
+  const added = Date.parse(newsAdded);
+  const at = Date.parse(said);
+  if (Number.isNaN(added) || Number.isNaN(at)) return true;
+  return (at - added) / 86_400_000 <= FRESH_DAYS;
 }
 
 /** ONE EDITION of the Team Sheet: everything said on one London day.

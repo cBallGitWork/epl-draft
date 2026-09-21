@@ -59,6 +59,10 @@ interface StoryTeamNews {
   /** One sentence of context. Never a retelling of the bullets. */
   line: string;
   men?: StoryTeamNewsMan[];
+  /** Men whose absence is unchanged — out for weeks, nothing said today. A tail
+   *  line rather than bullets: 86% of a day's men are these, and bulleting them
+   *  buried the handful that were news. */
+  alsoOut?: string[];
   /** Who they play this round, attached by the DESK from the fixture list and
    *  never written by the column — both reviewers called its absence the worst
    *  hole on the page, and one proved it: a manager's quote said the squad was
@@ -110,6 +114,12 @@ function fixture(raw: unknown): { opponent: string; home: boolean; kickoff: stri
   return { opponent: tie.opponent, home: tie.home, kickoff: tie.kickoff };
 }
 
+function names(raw: unknown): string[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const kept = raw.filter((name): name is string => typeof name === "string" && name.trim() !== "");
+  return kept.length > 0 ? [...new Set(kept)] : undefined;
+}
+
 function quote(raw: unknown): { text: string; said: string } | undefined {
   const said = raw as Partial<{ text: string; said: string }> | null;
   if (said === null || typeof said !== "object") return undefined;
@@ -158,6 +168,7 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
       code: typeof row.code === "number" && Number.isInteger(row.code) && row.code > 0 ? row.code : null,
       line: row.line,
       men: men(row.men),
+      alsoOut: names(row.alsoOut),
       quote: quote(row.quote),
       fixture: fixture(row.fixture),
     }));
