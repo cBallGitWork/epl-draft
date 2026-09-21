@@ -73,6 +73,35 @@ have offered a manager a move Fantrax rejects — which is the one thing
 reads the page, `data/leagues/roster-limits.json` holds it, and the planner is
 the only screen the number reaches.
 
+**A second pass the same evening, on ten more readings from Craig.** The list
+rows open a player card, because the pitch is the arranging surface and the list
+is the reading one. The Pitch/List toggle spans the page under a thumb — it was
+110px of 390, hard right, sharing a row with a figure that is usually absent, and
+its own `flex-1` was inert because the row was `justify-end`. It stays 44px tall:
+that is PRODUCT.md's tap floor, and this control is the one that used to have an
+exception to it, deleted on 11 Sep. Longer is what makes it read thinner.
+
+**`FPts` was a column of fifteen dashes and that was correct.** The planner opens
+on the week a manager can still change, which by definition has no football in
+it — `?gw=5` shows 6, 1, 4, 2 on the same screen. Correct and useless: a reader
+takes a column of dashes for broken data. It now carries his season instead, in
+Fantrax's own word (`YTD`, which is also the only spelling that fits 36px), and
+turns back to `FPts` the moment the period scores anything.
+
+**An OUT man takes the whole card**, and the fixture band goes plain navy — which
+reverses Craig's own 10 Sep call for club colours on that line, and for the
+reason it held then. You do read Chelsea's blue before the letters on it; by this
+evening the card had two other things to say in colour, so eleven club colours
+underneath were a third scale competing for the same glance.
+
+**And the wash behind every kit in the app stopped being drawn**, on every pitch,
+for about ten minutes. Tailwind v4 extracts class names from source text, and
+`bg-bg/45${…}` is not one it recognises — the class vanished the moment that
+string gained an interpolation. Craig saw it before any instrument did: *"what
+happned to the square? we had a darker bagkround square"*. It is the same trap
+`var(--color-fdr-${n})` records one layer down: there the TOKEN name was
+composed, here the CLASS name was. **The space before `${` is load-bearing.**
+
 **The doubt ramp** is three grounds on FPL's own 0/25/50/75 steps, hue-locked to
 `--color-bad` and `--color-mid` so no new family enters the palette: the name
 plate takes it on a pitch, where there is no room for a box, and a list row takes

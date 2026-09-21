@@ -168,8 +168,20 @@ export default async function TeamPage({
   // the season table and `Sheet` rendered it under a card headed "This period",
   // at a man's default position rather than his roster slot. This is the same
   // condition `board` is built on, so the two cannot disagree.
-  const season = display.show === "squad" ? await squadSeason(teamId) : null;
-  const points = (live?.points ?? season?.points) ?? null;
+  // **The planner needs it too, and for the opposite reason.** The gated branch
+  // reads the season because it may not read the round; this one reads the round
+  // and the round has not been played — the planner opens on the week a manager
+  // can still CHANGE, so before Saturday every live figure is a dash and a column
+  // headed `FPts` reads as broken data rather than as an empty week.
+  const season = display.show === "squad" || planning !== null ? await squadSeason(teamId) : null;
+  // Whether this period has actually scored anything yet, which is not the same
+  // as whether Fantrax answered: it returns a row per player with a null against
+  // each until the first whistle. Asked of the numbers rather than of the clock,
+  // so the column turns over the moment the football starts and needs no second
+  // source of truth about when a round begins.
+  const scored =
+    live !== null && [...live.points.values()].some((figure) => figure !== null);
+  const points = (scored ? live?.points : (season?.points ?? live?.points)) ?? null;
   const board =
     display.show === "squad"
       ? {
@@ -239,6 +251,15 @@ export default async function TeamPage({
           // halves meet on the way into it rather than being threaded through
           // every caller of the mapper.
           limits={{ ...planning.roster, minActiveByPosition: rosterMinimums() }}
+          // What the figure column is a figure OF. `null` on a round that has
+          // scored, where `SquadRows`' own default says `FPts` and is right.
+          //
+          // **Fantrax's own word**, which is also the only one that fits: the
+          // column is 36px and `Season` overran it. Their table labels itself
+          // "2026-27 - YTD" (`league/stats.ts`) and the pool board already says
+          // YTD in a caption, so this is the app's second use rather than a
+          // coinage.
+          figure={scored ? null : "YTD"}
           fantraxUrl={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}`}
           pending={pending}
         />

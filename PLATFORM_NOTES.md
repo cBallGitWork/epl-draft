@@ -1050,11 +1050,14 @@ for Stats and still unmet for Zones.
 `sweep` reports one AA failure on `/prem/match/{id}` whenever Sunderland are on
 it: `SUN` at **4.48:1 against a needed 4.5**, at 18px on the club's own plate.
 
-**A second site from 21 Sep 2026: `/squad/me`.** The lineup planner moved to
-`PitchMarker`, whose fixture band takes the OPPONENT's colour — so any squad
-holding a man whose club plays Sunderland reports the same 4.48, at 9px and 10px.
-Same cause, same two answers, still Craig's to take. The reading below is
-unchanged: a run that reports exactly this and nothing else is a clean run.
+*It had a second site for two hours on 21 Sep 2026 and no longer does.* The
+lineup planner moved to `PitchMarker`, whose fixture band took the OPPONENT's
+colour, so any squad holding a man whose club plays Sunderland reported the same
+4.48 at 9px and 10px. Craig then asked for that band to be the desk's plain navy
+("the fixture row should just be blue like this page"), which removed the club
+colour from every pitch and the failure with it. Recorded because the pair is the
+point: the ratio is a property of the club's own colour, so a site appears
+wherever that colour carries text and disappears when it stops.
 
 **It is not a bug in `inkOn`.** That function picks the BETTER of white and the
 desk's near-black against the plate, and for this red white IS the better one —
