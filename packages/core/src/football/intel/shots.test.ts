@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { IntelShots, Shot } from "./shots";
-import { mirrorShot, shotIntel, shotsInFixture, shotsOf } from "./shots";
+import { shotIntel, shotsInFixture, shotsOf } from "./shots";
 
 const MANIFEST = { season: "26-27", gameweek: null, exportedAt: "", rows: 0, sources: [] };
 
@@ -87,23 +87,5 @@ describe("shotsInFixture", () => {
 
   it("answers an empty map for a fixture nobody shot in", () => {
     expect(shotsInFixture(map, 99).size).toBe(0);
-  });
-});
-
-describe("mirrorShot", () => {
-  it("turns the pitch around rather than flipping one axis", () => {
-    // A rotation swaps left and right as well as ends. Mirroring x alone would
-    // put a right-sided shot on the left touchline.
-    expect(mirrorShot(shot({ x: 90, y: 25 }))).toMatchObject({ x: 10, y: 75 });
-  });
-
-  it("is its own inverse", () => {
-    const taken = shot({ x: 84.3, y: 72.2 });
-    expect(mirrorShot(mirrorShot(taken))).toMatchObject({ x: 84.3, y: 72.2 });
-  });
-
-  it("keeps everything that is not a coordinate", () => {
-    const taken = shot({ xg: 0.42, outcome: "goal" });
-    expect(mirrorShot(taken)).toMatchObject({ xg: 0.42, outcome: "goal" });
   });
 });

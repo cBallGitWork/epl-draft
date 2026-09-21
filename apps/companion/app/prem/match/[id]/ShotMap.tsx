@@ -1,26 +1,28 @@
-import { clubColours, mirrorShot } from "@epl/core";
+import { clubColours, inkOn } from "@epl/core";
 import type { Club, Shot } from "@epl/core";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
 import { LABEL } from "@/app/desk";
 
-// Every shot in the match, on one pitch, the two sides attacking opposite ways.
+// Where a side's shots came from: one pitch per team, each attacking right.
 //
 // Craig, 10 Sep 2026, asking for a shot map among the advanced data. The marks
 // are `ShotMarks`, shared with the analysis screen — radius carries xG by its
 // SQUARE ROOT so that AREA is proportional, and outcome is fill and weight and
 // never a new hue.
 //
+// **Split by team on 11 Sep 2026** (Craig: *"shot and touch maps need to be by
+// team"*). It drew both sides on one pitch facing each other until then, and
+// `mirrorShot` turned the away side round to do it. Splitting deletes that
+// rotation rather than reorganising it: every coordinate the sister repo exports
+// is player-relative — his own goal to the one he attacks — so a side on its own
+// pitch is already facing the right way, and the mirror only ever existed to put
+// two frames on one picture. Its core function went with the last caller,
+// CODE_RULES §2.
+//
 // **A different pitch from the analysis screen's, deliberately.** That one is
 // one man attacking right across a season and is a density field; this is one
-// match with two sides in it, so it runs the full length with a halfway line and
-// somebody has to be turned around. The mark is what the two share and the mark
-// is what moved to `components/football/`.
-//
-// **The away side is mirrored, and that is a data fact rather than a drawing
-// decision.** Every coordinate the sister repo exports is PLAYER-relative — "his
-// own goal to the one he attacks" — so both sides are stored attacking right and
-// drawn straight they pile into the same half. `mirrorShot` rotates rather than
-// flips: turning a pitch around swaps left and right as well as ends.
+// side's afternoon. The mark is what the two share and the mark is what moved to
+// `components/football/`.
 
 /** The pitch, in its own units. 100 long by 64 wide is close enough to a real
  *  one that the penalty area drawn below lands where the eye expects it. */
@@ -41,24 +43,49 @@ export default function ShotMap({
   // sister repo has not reached, is not a goalless one.
   if (homeShots.length === 0 && awayShots.length === 0) return null;
 
-  // The home side keeps the frame it was stored in and attacks right; the away
-  // side is turned around to attack left, which is how a match is drawn.
-  const turned = awayShots.map(mirrorShot);
-
   return (
     <figure className="flex flex-col gap-1">
       <figcaption className="flex items-baseline justify-between gap-2 text-2xs">
         <span className={LABEL}>Shot map</span>
         <span className="shrink-0 text-faint">
-          {homeShots.length + turned.length} shots · area is xG
+          {homeShots.length + awayShots.length} shots · area is xG
         </span>
       </figcaption>
+
+      <div className="grid gap-2 lg:grid-cols-2">
+        <Side club={home} shots={homeShots} />
+        <Side club={away} shots={awayShots} />
+      </div>
+
+      {/* **The shared key, drawn from the same `DRAWN` table as the marks**, so a
+          key that disagrees with the picture is impossible. It shows the OUTCOME
+          grammar, which is the half that is the same for both sides; which
+          colour is which side is said by the plate over each pitch. */}
+      <MarksKey />
+    </figure>
+  );
+}
+
+/** One side's shots on its own pitch, under its own colour. */
+function Side({ club, shots }: { club: Club | undefined; shots: readonly Shot[] }) {
+  const colours = clubColours(club?.shortName ?? "");
+  const ink = inkOn(colours);
+
+  return (
+    <div className="flex flex-col">
+      <div
+        className="flex items-baseline justify-between gap-2 px-2 py-1 text-2xs font-bold uppercase"
+        style={{ background: colours.primary, color: ink }}
+      >
+        <span className="min-w-0 truncate">{club?.shortName ?? "—"}</span>
+        <span className="numeric shrink-0">{shots.length}</span>
+      </div>
 
       <svg
         viewBox={`0 0 ${BOX.width} ${BOX.height}`}
         className="w-full"
         role="img"
-        aria-label={`Where the shots came from. ${home?.shortName ?? "The home side"} attacks to the right with ${homeShots.length}; ${away?.shortName ?? "the away side"} attacks to the left with ${turned.length}.`}
+        aria-label={`Where ${club?.shortName ?? "the side"} shot from: ${shots.length} in all, attacking to the right.`}
       >
         <rect width={BOX.width} height={BOX.height} fill="var(--color-pitch-turf)" />
         {/* The mown bands, which are what make it read as a pitch rather than a
@@ -77,30 +104,18 @@ export default function ShotMap({
           <rect x="0.5" y="0.5" width={BOX.width - 1} height={BOX.height - 1} />
           <line x1="50" y1="0.5" x2="50" y2={BOX.height - 0.5} />
           <circle cx="50" cy={BOX.height / 2} r="9" />
-          {/* Both boxes, because both ends are attacked here. */}
+          {/* Both boxes. A side attacks one of them and defends the other, and a
+              pitch with one end drawn is a half-pitch. */}
           <rect x="0.5" y="13" width="16" height="38" />
           <rect x={BOX.width - 16.5} y="13" width="16" height="38" />
           <rect x="0.5" y="24" width="5.5" height="16" />
           <rect x={BOX.width - 6} y="24" width="5.5" height="16" />
         </g>
 
-        {/* **Each side in its own club colour**, which is the one thing this map
-            needs that the analysis screen's does not: there the caption names the
-            man, and here two sets of marks share one pitch and nothing else could
-            tell them apart. `ShotMarks` takes the colour so the outcome grammar —
-            fill for scored, outline for the rest — is unchanged. */}
         {/* No transform: `ShotMarks` already maps a 0-100 `y` onto a 64-high box,
             which is this pitch's own height. */}
-        <ShotMarks shots={homeShots} ink={clubColours(home?.shortName ?? "").primary} />
-        <ShotMarks shots={turned} ink={clubColours(away?.shortName ?? "").primary} />
+        <ShotMarks shots={shots} ink={colours.primary} />
       </svg>
-
-      {/* **The shared key, drawn from the same `DRAWN` table as the marks**, so a
-          key that disagrees with the picture is impossible. It shows the OUTCOME
-          grammar, which is the half that is the same for both sides; which
-          colour is which side is said by the crest-coloured bar above the pitch
-          and by the two clubs' own plates on this screen. */}
-      <MarksKey />
-    </figure>
+    </div>
   );
 }

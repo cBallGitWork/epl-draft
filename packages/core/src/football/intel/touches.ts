@@ -41,9 +41,18 @@ export interface IntelTouches {
 
 /** One touch, on SofaScore's own axes: 0–100 in both, attacking left to right.
  *
- *  The direction is NOT normalised in the export and that is deliberate — the
- *  consumer draws one man per pitch and is the only thing that knows which way
- *  he was playing. */
+ *  **Every man is in his OWN attacking frame, both sides of the same match.**
+ *  Counted 11 Sep 2026 over fixtures 1–3: both keepers average x≈9–13 and both
+ *  centre-forwards x≈53–65, so the export normalises per PLAYER and not per
+ *  match. One man on one pitch is therefore free, which is what the comparison
+ *  screen draws; but two sides on one pitch means the away cloud is facing the
+ *  wrong way and must be turned round — `{100 - x, 100 - y}`, both axes, because
+ *  turning a pitch about swaps the touchlines as well as the goals.
+ *
+ *  This docblock used to say the direction was "NOT normalised in the export",
+ *  which read as though the two sides arrived in one match frame and only needed
+ *  drawing. They do not, and a map built on that sentence would have put an away
+ *  side's keeper in the opposite goal. */
 export interface Touch {
   x: number;
   y: number;
@@ -95,6 +104,47 @@ export function touchesOf(player: TouchPlayer | undefined, fixture: number | nul
     }
   }
   return points;
+}
+
+/** Where play happened, as one point, with the count it was averaged over.
+ *
+ *  The count travels because it is the only thing that says how much to trust
+ *  the point: a substitute's centroid comes off as few as two touches. */
+export interface TouchCentre {
+  x: number;
+  y: number;
+  touches: number;
+}
+
+/** The average touch position of a cloud — one man's, or a whole side's.
+ *
+ *  **One function for both, because a side's average touch position is the
+ *  average of its TOUCHES and not the average of its men's averages.** The
+ *  caller pools `touchesOf` across the eleven and hands the points over; a mean
+ *  of means would weight a substitute's two touches like a centre-half's 153.
+ *
+ *  **This is SofaScore's own `average_x`/`average_y`, and it needed no export.**
+ *  `docs/providers/intel-export.md` §3 asks the sister repo for
+ *  `positions/26-27.json` and calls the average-position map blocked on it.
+ *  Measured 11 Sep 2026 against `data/staging/sofascore/avg_positions.parquet`:
+ *  that table is the mean of the same heat map this cloud is built from —
+ *  identical point counts per man, and every cleanly-joined man in fixture 8
+ *  agrees to within the half-unit the export's truncation to integers costs. The
+ *  cloud covers 30 of 30 fixtures and 438 of 440 starters, where the table it
+ *  would have been exported from covers the same 30.
+ *
+ *  **Null on an empty cloud rather than a point.** The centroid of nothing is
+ *  (0, 0), which is a corner flag and looks like an answer — the same refusal
+ *  `touchIntel` makes for a man with no usable code. */
+export function averageTouchPosition(points: Touch[]): TouchCentre | null {
+  if (points.length === 0) return null;
+  let x = 0;
+  let y = 0;
+  for (const point of points) {
+    x += point.x;
+    y += point.y;
+  }
+  return { x: x / points.length, y: y / points.length, touches: points.length };
 }
 
 /** Whether a coordinate is on the pitch SofaScore says it is on. */

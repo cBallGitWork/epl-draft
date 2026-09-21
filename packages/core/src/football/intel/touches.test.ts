@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { IntelTouches } from "./touches";
-import { touchFixtures, touchIntel, touchesOf } from "./touches";
+import { averageTouchPosition, touchFixtures, touchIntel, touchesOf } from "./touches";
 
 /** The manifest every intel file carries. Nothing here reads it; it is present
  *  because the parser must survive a real payload rather than a trimmed one. */
@@ -95,5 +95,37 @@ describe("touchesOf", () => {
   it("has nothing to say about a man who is not in the file", () => {
     expect(touchesOf(undefined, null)).toEqual([]);
     expect(touchFixtures(undefined)).toEqual([]);
+  });
+});
+
+describe("averageTouchPosition", () => {
+  it("is the centroid of the points, and says how many it averaged", () => {
+    const centre = averageTouchPosition([
+      { x: 10, y: 20 },
+      { x: 30, y: 60 },
+    ]);
+    expect(centre).toEqual({ x: 20, y: 40, touches: 2 });
+  });
+
+  it("averages a side's touches rather than its men's averages", () => {
+    // A substitute's two touches must not weigh what a centre-half's hundred
+    // do — which is the whole reason this takes points and not centres.
+    const heavy = Array.from({ length: 9 }, () => ({ x: 40, y: 50 }));
+    const light = [{ x: 85, y: 50 }];
+    expect(averageTouchPosition([...heavy, ...light])?.x).toBeCloseTo(44.5, 5);
+  });
+
+  it("answers null for an empty cloud rather than the corner flag", () => {
+    // (0, 0) is a real place on this pitch, so a centre of nothing would draw
+    // a man at the corner and look like an answer.
+    expect(averageTouchPosition([])).toBeNull();
+  });
+
+  it("takes what `touchesOf` gives it, off-pitch points already refused", () => {
+    const map = touchIntel({
+      manifest: MANIFEST,
+      players: [{ code: 1, fixtures: [{ fplFixtureId: 8, p: [10, 20, 300, 40, 30, 60] }] }],
+    });
+    expect(averageTouchPosition(touchesOf(map.get(1), 8))).toEqual({ x: 20, y: 40, touches: 2 });
   });
 });
