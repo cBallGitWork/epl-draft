@@ -66,7 +66,12 @@ async function main(): Promise<void> {
   // One instant for the whole firing. Read five times, it drifted across the
   // model call — the desk commissioning under Sunday while the byline printed
   // Monday.
-  const now = new Date().toISOString();
+  // **`GAZETTA_NOW` rehearses a dated column and nothing else sets it.** The
+  // Team Sheet, the preview and the reports all key off the clock, so the only
+  // way to see Friday's column on a Monday is to tell the desk it is Friday.
+  // CI never sets it; an unreadable value is ignored rather than obeyed.
+  const wanted = process.env.GAZETTA_NOW ?? "";
+  const now = Number.isNaN(Date.parse(wanted)) ? new Date().toISOString() : new Date(wanted).toISOString();
 
   const snapshot = await getFootballSnapshot();
   // `roundState` and not `roundFinished`, which core deliberately does not
@@ -93,7 +98,7 @@ async function main(): Promise<void> {
   const period = info.rosterPeriods.find((each) => each.number === round.period);
   const kickoff = period ? firstKickoff(period, kickoffs) : null;
   const lock = kickoff === null ? null : locksAt(kickoff);
-  const locked = lock !== null && Date.now() >= Date.parse(lock);
+  const locked = lock !== null && Date.parse(now) >= Date.parse(lock);
   const started = gameweekStarted(snapshot.fixtures, snapshot.gameweek);
 
   const ledger = readLedger();
@@ -128,7 +133,12 @@ async function main(): Promise<void> {
   // DEADLINE — so on a Thursday it still names the football already played.
   // Attaching those fixtures would have printed last weekend's opponents beside
   // this weekend's team news.
-  const ahead = finished ? snapshot.gameweek + 1 : snapshot.gameweek;
+  // **LOCKED, not finished.** Once a round has locked, every press conference
+  // is about the next one — a Saturday presser during Friday-night football is
+  // previewing the round after. `finished` asks whether the football is over,
+  // which is a later and different moment, and it named the wrong round for
+  // every hour in between.
+  const ahead = locked ? snapshot.gameweek + 1 : snapshot.gameweek;
   const presserTies = lines.length === 0 ? new Map() : await presserFixtures(ahead, byCode);
 
   const assignments = newsdesk(

@@ -144,3 +144,27 @@ describe("composePaper — team news leads", () => {
     expect(out[0].slug).toBe("report");
   });
 });
+
+describe("composePaper — one edition of a column at a time", () => {
+  const story = (kind: string, slug: string, period: number): PublishedStory =>
+    ({
+      slug, kind, leagueId: "L", period, gameweek: period,
+      filedAt: `2026-09-${10 + period}T12:00:00.000Z`, expiresAt: null,
+      edition: "", byline: "", headline: slug, deck: "", body: "", subjects: [],
+    }) as unknown as PublishedStory;
+
+  it("retires last round's power ranking when this round's files", () => {
+    const out = composePaper([story("power-ranking", "gw4", 4), story("power-ranking", "gw5", 5)], "2026-09-21T12:00:00.000Z");
+    expect(out.map((s) => s.slug)).toEqual(["gw5"]);
+  });
+
+  it("keeps Thursday's and Friday's pressers, which share a round", () => {
+    const out = composePaper([story("presser", "thu", 5), story("presser", "fri", 5)], "2026-09-21T12:00:00.000Z");
+    expect(out).toHaveLength(2);
+  });
+
+  it("leaves the per-subject kinds alone", () => {
+    const out = composePaper([story("tie-report", "a", 4), story("tie-report", "b", 5)], "2026-09-21T12:00:00.000Z");
+    expect(out).toHaveLength(2);
+  });
+});

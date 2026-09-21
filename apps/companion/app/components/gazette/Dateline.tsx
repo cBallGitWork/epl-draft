@@ -30,6 +30,11 @@ import { pageOf } from "./paperPages";
 // there would point the reader at the page he is already on. The two front-page
 // ranks are teasers and do carry it.
 //
+// **`here` is the same rule, one step out**, and it was missing until 21 Sep
+// 2026: a teaser on a SECTION page points at that section, so every line on
+// page 2 read "turn to page 2" and every line on page 3 read "turn to page 3".
+// Given the page a reader is on, those say "read on" instead.
+//
 // **The element is the caller's, because the two ranks nest differently.** A
 // splash's dateline is a block under an ornament rule and a teaser's is the last
 // line inside a `TurnLink`, so a `<p>` inside a `<span>` would be invalid markup
@@ -50,6 +55,7 @@ export default function Dateline({
   as = "p",
   turn = true,
   byline = true,
+  here,
   className = "",
 }: {
   story: PublishedStory;
@@ -59,6 +65,10 @@ export default function Dateline({
   turn?: boolean;
   /** Whether to credit the correspondent. False on the ranks below the splash. */
   byline?: boolean;
+  /** The page the reader is ON, when it is a section page. A teaser sitting on
+   *  the page it points at said "turn to page 2" to somebody already reading
+   *  page 2 — true of every teaser on both section pages. */
+  here?: string;
   className?: string;
 }) {
   const Tag = as;
@@ -78,9 +88,10 @@ export default function Dateline({
           page it does not have. */}
       {turn ? (
         <span className="text-muted">
-          {page === null ? " · read on" : ` · turn to page ${page.number}`}
+          {page === null || page.href === here ? " · read on" : ` · turn to page ${page.number}`}
         </span>
       ) : null}
     </Tag>
   );
 }
+

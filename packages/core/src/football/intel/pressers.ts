@@ -37,6 +37,8 @@ export interface PresserQuote {
   said: string;
   /** What he was asked about, when the source says. */
   about?: string;
+  /** When the conference was — the day this quote belongs to. */
+  at?: string;
 }
 
 /** A club that held a press conference, whether or not it produced a signal.

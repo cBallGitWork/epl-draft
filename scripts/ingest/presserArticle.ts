@@ -29,16 +29,24 @@ export interface Trouble {
   condition?: string;
 }
 
-/** FFS's heading against FPL's club name. Twenty clubs, so a table and not a
- *  matcher — and a heading it does not know is reported, never guessed. */
-const CLUBS: Record<string, string> = {
-  "CHELSEA": "Chelsea",
-  "NEWCASTLE UNITED": "Newcastle",
-  "NOTTINGHAM FOREST": "Nott'm Forest",
-  "BRENTFORD": "Brentford",
-  "HULL CITY": "Hull City",
-  "COVENTRY CITY": "Coventry City",
-};
+/** A club heading, comparable.
+ *
+ *  **This replaced a hardcoded table of six**, which was the six clubs the first
+ *  article happened to cover. Friday's covers the other fourteen, and the six
+ *  parsed to nothing at all — the caller passes the league now, from the
+ *  snapshot, and a heading nobody claims is still reported rather than dropped.
+ *
+ *  FFS sets "BRIGHTON AND HOVE ALBION" where FPL holds "Brighton & Hove
+ *  Albion", so the ampersand is spelled out and punctuation dropped before
+ *  either side is looked at. */
+export function clubKey(name: string): string {
+  return name
+    .toUpperCase()
+    .replace(/&/g, " AND ")
+    .replace(/[^A-Z0-9 ]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 /** Comparable, through the bridge's own normaliser — so "Milenković" meets
  *  "Milenkovic" and, unlike the local fold this replaced, "Groß" meets "Gross"
@@ -77,11 +85,16 @@ function text(html: string): string {
 /** The per-club sections, by their <h2> headings — and every heading that looked
  *  like a club and was not recognised.
  *
- *  **The skipped list is the point.** `CLUBS` holds the six this article covered
- *  and the league has twenty; an unknown heading used to be dropped in silence
+ *  **The skipped list is the point.** The table used to hold six of twenty, so
+ *  the first article covering the whole division parsed to nothing; an unknown
+ *  heading used to be dropped in silence
  *  while the docblock claimed it was "reported, never guessed". Next week's
  *  article headed ARSENAL would have produced an empty column and no warning. */
-export function sections(html: string): { sections: { club: string; body: string }[]; skipped: string[] } {
+export function sections(
+  html: string,
+  /** Every club that could head a section, by `clubKey`. */
+  clubs: ReadonlyMap<string, string>,
+): { sections: { club: string; body: string }[]; skipped: string[] } {
   const out: { club: string; body: string }[] = [];
   const skipped: string[] = [];
   const parts = html.split(/<h2[^>]*>/i);
@@ -89,7 +102,7 @@ export function sections(html: string): { sections: { club: string; body: string
     const close = part.search(/<\/h2>/i);
     if (close < 0) continue;
     const printed = text(part.slice(0, close)).trim().replace(/\s+/g, " ");
-    const club = CLUBS[printed.toUpperCase()];
+    const club = clubs.get(clubKey(printed));
     if (club !== undefined) out.push({ club, body: text(part.slice(close)) });
     // Tested on the heading AS PRINTED, never on our own upper-casing: FFS sets
     // a club heading in capitals and the sidebar's in title case ("Watchlists",
