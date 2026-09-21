@@ -10,9 +10,8 @@ import {
 } from "@epl/core";
 import LivePlayerCard from "./LivePlayerCard";
 import PitchMarker from "./PitchMarker";
-import PitchRows, { GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
+import PitchRows, { FAR_INSET, GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
 import SquadRows from "./SquadRows";
-import { FAR_INSET } from "./PitchTurf";
 import { positionLabel } from "../../positions";
 import { LABEL } from "@/app/desk";
 
@@ -104,7 +103,6 @@ export default function TeamSheet({
             rows={rows.map((line) => ({ label: line.position, players: line.players }))}
             keyOf={(player) => player.rostered.slot.fantraxId}
             widest={widest}
-            flat
             inColumn={inColumn}
           >
             {(player) => (

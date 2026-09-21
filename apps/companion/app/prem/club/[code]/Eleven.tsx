@@ -6,7 +6,7 @@ import PitchRows from "../../../components/league/PitchRows";
 //
 // **Literally the same components** (Craig, 3 Sep 2026: "make it the same as the
 // fantasy squad page — this is what i meant by sharing the same pitch"). An
-// earlier cut built its own cut-out cards on `PitchFrame`, which is the FPL
+// earlier cut built its own cut-out cards on the photographed trapezoid, the
 // tab's photographed pitch, and it looked nothing like the rest of the app.
 // `CmGround` + `PitchRows` + `PitchMarker` is what `squad/[teamId]/Sheet` draws,
 // and it stopped taking a roster slot on 3 Sep so that a Premier League
@@ -74,12 +74,11 @@ export default function Eleven({
       <p className="cm-title text-center font-chrome text-sm font-bold text-accent lg:text-base">
         {formation}
       </p>
-      {/* **`PitchRows` draws its own ground** — `flat` picks CM's diagram and
-          its absence picks `PitchFrame`'s photographed trapezoid, which is the
-          FPL tab's. Wrapping this in a `CmGround` of its own put one pitch
-          inside the other and drew the hoardings and goal of the wrong one over
-          the right one (Craig, 3 Sep 2026: "still showing the fpl pitch on top
-          of the designed pitch"). `TeamSheet` passes the two flags and nothing
+      {/* **`PitchRows` draws its own ground.** Wrapping this in a `CmGround` of
+          its own put one pitch inside the other and drew the furniture of the
+          wrong one over the right one (Craig, 3 Sep 2026: "still showing the fpl
+          pitch on top of the designed pitch"). There is one ground to pick from
+          now. `TeamSheet` passes the flags and nothing
           else, so this does too.
           `inColumn` because it stands beside the squad list: bleeding is right
           for a pitch that is the widest thing on the screen, and full-bleed made
@@ -87,7 +86,6 @@ export default function Eleven({
       <PitchRows
         rows={lines.map((row) => ({ label: row.line, players: row.players }))}
         keyOf={(starter) => String(starter.code)}
-        flat
         inColumn
       >
         {(starter) => {

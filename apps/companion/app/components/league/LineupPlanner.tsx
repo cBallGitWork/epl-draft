@@ -24,7 +24,9 @@ import LineupPitch from "./LineupPitch";
 import type { PitchRow } from "./PitchRows";
 import MoveDialog from "./MoveDialog";
 import Pending from "./Pending";
-import { LABEL } from "@/app/desk";
+import SquadRows from "./SquadRows";
+import ViewToggle, { type View } from "./ViewToggle";
+import { LABEL, PANEL } from "@/app/desk";
 import OutLink from "../shell/OutLink";
 
 // Planning a lineup, not submitting one.
@@ -87,10 +89,19 @@ export default function LineupPlanner({
   // cannot. `opened` is the full list for one player, which is the only place a
   // move with no second player — off to the bench, across to another position —
   // can be offered.
+  // Opens on the PITCH, which is the one thing this screen is for — `Sheet`
+  // opens on the list because a rival's squad is a list of who he has, and this
+  // is the arrangement you came to change.
+  const [view, setView] = useState<View>("pitch");
   const [picked, setPicked] = useState<string | null>(null);
   const [opened, setOpened] = useState<string | null>(null);
 
   const eligibility = useMemo(() => eligibilityOf(players), [players]);
+  // The same fact in the shape the list wants. `SquadRows` takes a record
+  // because its other callers hand it one across the server boundary, where a
+  // `Map` arrives as `{}`; here it is already a map and the conversion is this
+  // one line rather than a second prop threaded through the page.
+  const eligibleBy = useMemo(() => Object.fromEntries(eligibility), [eligibility]);
   const detailOf = useMemo(
     () => new Map(details.map((d) => [d.rostered.slot.fantraxId, d])),
     [details],
@@ -190,12 +201,69 @@ export default function LineupPlanner({
           the eleven does — a 1-3-4-3 becomes a 1-3-5-2 the moment a midfielder
           comes on for a forward, which is the whole point of naming it on the
           screen where the moving happens. */}
-      <div className="flex items-baseline justify-between gap-3 px-1 text-2xs">
+      {/* **A list as well as a pitch** (Craig, 21 Sep 2026), on `Sheet`'s
+          control and `Sheet`'s components — the same `ViewToggle` and the same
+          `SquadRows` a rival's locked squad draws.
+          
+          **At every width, which is where it parts from `Sheet`.** That screen
+          hides the toggle above `lg` and stands the list beside the pitch,
+          because both fit and a control choosing between two things you can
+          already see does nothing. This pitch cannot take that: `LineupPitch`
+          is the one ground with no second column beside it and is capped to the
+          fold on its own width, so halving it for a list would shrink the only
+          interactive surface in the app to make room for a read-only copy of
+          what it already says. */}
+      <div className="flex items-center justify-between gap-3 px-1 text-2xs">
         <span className="numeric font-bold text-faint">{shape}</span>
-        <Pending points={pending} />
+        <div className="flex items-center gap-3">
+          {/* Phone only, on `Sheet`'s reasoning: above `lg` both readings fit
+              side by side, and a control choosing between two things already on
+              screen is a control that does nothing. It also buys the grass back
+              the 44px a tap target costs — `pitchfit` had the pitch clearing the
+              fold by 5px at 1440 with the toggle in the column, and by 26 with
+              it gone. */}
+          <span className="lg:hidden">
+            <ViewToggle view={view} onPick={setView} quiet />
+          </span>
+          <Pending points={pending} />
+        </div>
       </div>
 
+      {/* **One box round both** (Craig, 3 Sep 2026: "i like that the real team
+          squad page has one box to contain the pitch and list. fantasy team
+          pitch does not do this and it looks bad, copy real team"). He said it of
+          this very screen and it was answered on the rival's; this is the same
+          grid, the same breakpoint and the same panel. */}
+      <section className={PANEL}>
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-10">
+        <div className={view === "list" ? "" : "hidden lg:block"}>
+
+          <div className="flex flex-col gap-2">
+          <SquadRows
+            lines={rows.map((line) => ({ position: line.label, players: line.players }))}
+            projected={false}
+            eligibility={eligibleBy}
+          />
+          {bench.length === 0 ? null : (
+            <>
+              {/* The plate, and the same reason `TeamSheet` gives for it:
+                  nothing prints on the bare ground (DESIGN §2), so a heading
+                  between two panels draws its own. */}
+              <p className={`cm-panel px-2 py-1 text-center ${LABEL}`}>Bench</p>
+              <SquadRows
+                lines={[{ position: "", players: bench }]}
+                projected={false}
+                eligibility={eligibleBy}
+                head={false}
+              />
+            </>
+          )}
+          </div>
+        </div>
+
+        <div className={view === "pitch" ? "" : "hidden lg:block"}>
       <LineupPitch
+        inColumn
         rows={rows}
         bench={bench}
         availabilityOf={(player) => {
@@ -216,6 +284,9 @@ export default function LineupPlanner({
           } else if (partners.has(id)) swapWith(id);
         }}
       />
+        </div>
+      </div>
+      </section>
 
       {opened !== null ? (
         <MoveDialog

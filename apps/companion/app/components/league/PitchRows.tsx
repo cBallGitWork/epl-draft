@@ -1,6 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
 import CmGround from "./CmGround";
-import PitchFrame from "./PitchFrame";
 
 // Players in their lines on a pitch, whatever a line is made of.
 //
@@ -64,9 +63,19 @@ export function widestLine(
 
 /** The width every card is drawn at, as a share of the row it stands in.
  *
- *  A share and not a length, so a caller outside `PitchFrame` gets the same
+ *  A share and not a length, so a caller outside the ground gets the same
  *  pixels only inside a row of the same width — which is why the strips take the
  *  pitch's own inset rather than a padding of their own. */
+/** How far a row of cards stands in from the ground's edge, as a percentage.
+ *
+ *  **It was the trapezoid's taper and is now simply the inset**, which is what
+ *  every caller was using it for anyway: the bench strip pads itself by this so
+ *  a reserve stands directly under the man he would replace. It lived in
+ *  `PitchTurf` beside the perspective arithmetic that computed it; that ground
+ *  is gone (21 Sep 2026) and the number outlived it, so it sits with the rest of
+ *  the sizing this module already owns. */
+export const FAR_INSET = 5;
+
 export function cardBasis(widest: number): string {
   return `min(${MAX_CARD}, calc((100% - ${widest - 1} * ${GAP}) / ${widest}))`;
 }
@@ -158,44 +167,11 @@ export default function PitchRows<T>({
   rows,
   keyOf,
   widest: agreed,
-  flat = false,
   inColumn = false,
   children,
 }: {
   rows: PitchRow<T>[];
   keyOf: (player: T) => string;
-  /** Draw the ground as Championship Manager's flat diagram rather than as
-   *  FPL's photographed trapezoid. A trial (Craig, 31 Aug); the sizing below is
-   *  the same either way, which is the whole reason this is a flag here rather
-   *  than a second component with a second copy of the arithmetic.
-   *
-   *  **The four pitches, and what each is FOR** (Craig, 2 Sep: "we need to code
-   *  to make sure the different pitches show different things"). They share this
-   *  sizing and nothing else, and each answers a different question:
-   *
-   *  | Screen | Ground | Marker | What it says |
-   *  |---|---|---|---|
-   *  | Squad (a rival, locked) | `CmGround` flat | `PitchMarker` | how he set up — kit, name on CM's plate, the fixture in the opponent's colour, XI only |
-   *  | Squad (your own) | `PitchFrame` trapezoid | `PitchPlayer` | what you can still CHANGE — draggable, bench, violations |
-   *  | Head-to-head | `CmGround` flat | `PitchMarker` | two elevens sized to agree, via `widest` |
-   *  | Club (predicted) | `CmGround` flat | `PitchMarker` | who a real club is expected to start — the only one about a club rather than a squad |
-   *  | FPL | `CmGround` flat | `PitchMarker` | your own FPL XI, with the armband its wrapper draws |
-   *
-   *  The split is the register, not decoration: **flat is the desk's diagram and
-   *  the trapezoid is football's photograph.** A screen about ARRANGEMENT — how
-   *  a manager lined up, or how you are about to — gets the diagram, because a
-   *  diagram is what a formation is. A screen about the real match gets the
-   *  perspective, because that is a picture of a pitch.
-   *
-   *  **The FPL tab moved to the diagram on 5 Sep 2026** (Craig: "using the wrong
-   *  pitch, we use a different pitch elsewhere"), which leaves the planner as the
-   *  only trapezoid. On the rule above that is the right way round: an FPL side is
-   *  an ARRANGEMENT you are reading, not a match you are watching. The trapezoid's
-   *  remaining claim is the one screen you can still change.
-   *
-   *  Whichever ground loses gets deleted, and neither gets merged into the
-   *  other. */
-  flat?: boolean;
   /** Passed to `CmGround`: fill the column instead of bleeding. */
   inColumn?: boolean;
   /** A fullest-line count to size against instead of this pitch's own.
@@ -232,9 +208,8 @@ export default function PitchRows<T>({
   // what a view decides, and there is exactly one view. One line here covers all
   // six pitches, so they cannot disagree about which way the team is kicking.
   //
-  // The furniture suits it: `PitchFrame` draws its goal and its hoardings at the
-  // top, so the keeper now stands in the goal he is defending rather than a
-  // forward standing in the one he is attacking.
+  // `CmGround` draws its goal at the top, so the keeper stands in the goal he is
+  // defending rather than a forward standing in the one he is attacking.
   const lines = rows.map((row) => (
     <ul
       key={row.label}
@@ -266,5 +241,5 @@ export default function PitchRows<T>({
     </ul>
   ));
 
-  return flat ? <CmGround inColumn={inColumn}>{lines}</CmGround> : <PitchFrame>{lines}</PitchFrame>;
+  return <CmGround inColumn={inColumn}>{lines}</CmGround>;
 }

@@ -581,8 +581,8 @@ export function standDown(deskOnly: boolean | undefined, sorted: boolean): strin
  *     `prem/match/[id]/ShotMap`), the shot/touch pitch in metres. A third map
  *     takes it to `football.ts`. `CmGround`'s `BOX` is a penalty area and shares
  *     nothing but the name.
- *   `WIDTH_M` / `PENALTY_SPOT_M` — 2 (`CmGround`, `PitchTurf`), and only those
- *     two of the nineteen pitch dimensions between them are shared at all.
+ *   `WIDTH_M` / `PENALTY_SPOT_M` — 1 (`CmGround`) since the trapezoid's turf was
+ *     deleted on 21 Sep 2026; they were shared with it and with nothing else.
  *   `MONTHS` — 2 (`core/inbox/when`, `core/league/fantrax/transactions`).
  *   `SETTLE = 250` — 2 (`players/Search`, `players/analysis/PickField`).
  *   `FORM_GAMES = 5` — 2 (`league/TableRow`, `prem/ClubRow`).

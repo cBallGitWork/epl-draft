@@ -213,11 +213,6 @@
   /* Thin, dark and complete, as the shot draws them: the markings are a
      diagram's lines, not floodlit paint. */
   --color-pitch-line: oklch(0.62 0.055 148);
-  /* How deep the hoardings are. Read by the boards themselves, by the turf that
-     starts under them and by the padding that keeps the far row clear of them —
-     three places that must agree, and did not until this was one value. */
-  --pitch-boards: 1.75rem;
-
   /* How tall a band under a player on the grass is — his name plate, and the
      score or fixture below it. Both bands, and they must agree: a line whose
      cards stand at different heights stops reading as a line, which is the whole
