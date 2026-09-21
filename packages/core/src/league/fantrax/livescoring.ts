@@ -254,7 +254,11 @@ function categoryOf(scipId: string | undefined): string | null {
  *
  *  Categories that contributed nothing are dropped, as `breakdownOf` drops them
  *  from the season table: a row reading zero is not a reason he is on his total,
- *  and keeping thirteen of them per player is most of the payload. */
+ *  and keeping thirteen of them per player is most of the payload.
+ *
+ *  **`sv` travels with the points**, which is the one thing a breakdown could
+ *  not say before: "Minutes Played +2" is a price with the thing it priced left
+ *  out, and 90 minutes is what earned it. */
 export function mapLivePlayerPoints(raw: RawLiveScoring): LiveSquadPoints[] {
   const teams = raw.statsPerTeam?.allTeamsStats ?? {};
 
@@ -276,7 +280,9 @@ export function mapLivePlayerPoints(raw: RawLiveScoring): LiveSquadPoints[] {
         categories: (stats.object2 ?? []).flatMap((row) => {
           const category = categoryOf(row.scipId);
           if (category === null || typeof row.fpts !== "number" || row.fpts === 0) return [];
-          return [{ category, points: row.fpts }];
+          // `sv` and not `av`: this is read back to a person, and it is the
+          // string Fantrax already chose to render the count with.
+          return [{ category, points: row.fpts, value: typeof row.sv === "string" ? row.sv : null }];
         }),
       });
     }

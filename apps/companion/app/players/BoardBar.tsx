@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { PoolGroupKey } from "./groups";
-import { POOL, boardHref, chosen, filterHref, isChosen } from "./query";
+import { boardHref, chosen, filterHref, isChosen } from "./query";
+import { POOL } from "./routes";
 import Search from "./Search";
 import type { PlayersQuery } from "./query";
 import { STATUS } from "./status";

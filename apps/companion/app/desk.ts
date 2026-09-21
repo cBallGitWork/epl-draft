@@ -130,10 +130,10 @@ export const LABEL = `${SMALL_CAPS} text-faint`;
  *  name, so the weight could not travel with the recipe and the `font-bold`
  *  outlived every span it was meant to be about. It came off the link.
  *
- *  Four sites are deliberately NOT here, because they are not rows: the two
- *  `.cm-title` bars, `PlayerCard`/`LivePlayerCard`'s dialog headings, and
- *  `matchday/desk/Rows`, whose "ARS v CHE" is a fixture line rather than a name
- *  — a compound of two clubs and a "v", set at the wire's own `text-xs`. */
+ *  Three kinds of site are deliberately NOT here, not being rows: a `.cm-title`
+ *  bar (`PageHeader`'s two, and the live card's since 21 Sep 2026),
+ *  `PlayerCard`'s dialog heading, and `matchday/desk/Rows`, whose "ARS v CHE" is
+ *  a fixture line rather than a name — at the wire's own `text-xs`. */
 export const ROW_NAME = "font-chrome text-sm font-bold lg:text-base";
 
 /** **How big a figure in a row is**, and it is the same figure whether the table
@@ -433,9 +433,9 @@ export const FACT =
 /** The label half of a `FACT` row: takes the room the figure does not, and
  *  truncates rather than wrapping.
  *
- *  Five sites wrote it out — `Facts`, `Breakdown` and `Moves` on the player
- *  screen, `LivePlayerCard`, and `prem/player/[code]` — which is the third
- *  occurrence twice over. The truncation is the part worth naming: a Fantrax
+ *  Extracted at five copies — the third occurrence twice over. Four hold it
+ *  today, counted 21 Sep 2026: `Moves`, `Pedigree`, `league/Breakdown` and
+ *  `prem/player/[code]`. The truncation is the part worth naming: a Fantrax
  *  label is a full sentence on some rows, and a row that wraps to three lines
  *  stops being a row. */
 export const FACT_LABEL = "min-w-0 flex-1 truncate text-sm text-muted";

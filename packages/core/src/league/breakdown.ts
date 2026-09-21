@@ -30,6 +30,14 @@ export interface BreakdownLine {
   definition: string | null;
   /** Points, theirs. Signed: goals against and cards arrive negative. */
   points: number;
+  /** What he DID to earn them, as Fantrax renders it — "90" against Minutes
+   *  Played, "1" against Goals.
+   *
+   *  Null from the season table and never from the live card, and the asymmetry
+   *  is the provider's: `getTeamRosterInfo`'s FPTS view re-renders every stat
+   *  column AS its points, so the count is the one thing that view has spent.
+   *  The live payload carries both side by side. */
+  value: string | null;
 }
 
 /** Where their prose definition starts inside a column's long name.
@@ -67,7 +75,8 @@ export function breakdownOf(columns: readonly StatColumn[], line: StatLine): Bre
     .flatMap((points, index) => {
       const column = columns[index];
       if (points === null || points === 0 || column === undefined) return [];
-      return [{ code: column.code, ...columnLabel(column), points }];
+      // No count here by construction: this view's cells ARE the points.
+      return [{ code: column.code, ...columnLabel(column), points, value: null }];
     })
     .sort((a, b) => b.points - a.points);
 }
@@ -99,7 +108,15 @@ export function liveBreakdown(
     .flatMap((category) => {
       const named = names?.[category.category];
       if (named === undefined) return [];
-      return [{ code: named.code, name: named.name, definition: null, points: category.points }];
+      return [
+        {
+          code: named.code,
+          name: named.name,
+          definition: null,
+          points: category.points,
+          value: category.value,
+        },
+      ];
     })
     .sort((a, b) => b.points - a.points);
 }

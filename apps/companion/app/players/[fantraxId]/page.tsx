@@ -5,7 +5,7 @@ import { footballNow } from "../../football";
 import Nothing from "../../components/shell/Nothing";
 import { PANEL } from "@/app/desk";
 import ButtonLink from "../../components/shell/ButtonLink";
-import { POOL } from "../query";
+import { POOL } from "../routes";
 import AttributeGrid from "./AttributeGrid";
 import FixtureRun from "./FixtureRun";
 import NoProfile from "./NoProfile";

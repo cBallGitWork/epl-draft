@@ -9,11 +9,11 @@ import Face from "../components/gazette/Face";
 import Splash from "../components/gazette/Splash";
 import Deals from "../components/gazette/Deals";
 import Doubts from "../components/gazette/Doubts";
-import Lead, { Headline } from "../components/gazette/Stories";
+import Lead from "../components/gazette/Stories";
 import Picture from "../components/gazette/Picture";
 import Masthead from "../components/gazette/Masthead";
 import TeamOfTheWeek from "../components/gazette/TeamOfTheWeek";
-import { HEADLINES_SHOWN, SECONDARY_STORIES, SHOULDER_STORIES } from "../config";
+import { HEADLINES_SHOWN, SHOULDER_STORIES } from "../config";
 import Column from "../components/gazette/Column";
 import Silence from "../components/gazette/Silence";
 import PaperTable from "../components/gazette/PaperTable";
@@ -182,16 +182,6 @@ export default async function GazettePage() {
             </ul>
           ) : null}
 
-          {paper.stories.length > 1 ? (
-            <Column title="Also this week">
-              <ul>
-                {paper.stories.slice(1, SECONDARY_STORIES + 1).map((story) => (
-                  <Headline key={story.kind} story={story} who={who} />
-                ))}
-              </ul>
-            </Column>
-          ) : null}
-
           {/* Which nothing it is decides the sentence, and `Silence` owns all
               three — see its docblock on why they must not collapse. */}
           {paper.silence ? <Silence silence={paper.silence} /> : null}
@@ -246,7 +236,7 @@ export default async function GazettePage() {
                 <span className="numeric font-semibold text-ink">
                   {londonDayAndTime(paper.deadline.locksAt)}
                 </span>
-                , a quarter of an hour before period {paper.deadline.period}{" "}
+                , a quarter of an hour before gameweek {paper.deadline.period}{" "}
                 kicks off at{" "}
                 <span className="numeric text-ink">
                   {londonDayAndTime(paper.deadline.at)}

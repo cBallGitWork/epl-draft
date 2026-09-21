@@ -176,10 +176,12 @@ because they answer different questions on different days. `PlayerCard` is "who
 is this, and is he fit", read midweek. This one is read at ten past four, and the
 only question is *why* he is on the number he is on.
 
-- **An itemised points table**, one row per scoring category that moved his
-  total, largest contribution first, deductions in red at the bottom, and the
-  total under them. Every figure is **Fantrax's**, under our league's own
-  scoring, read from the same `getTeamRosterInfo` call the pitch already made:
+- **An itemised points table** (`league/Breakdown`), one row per scoring
+  category that moved his total, largest contribution first, each carrying the
+  count Fantrax states beside the points it paid — gains green and deductions
+  red, DESIGN §3's direction pair — and the total under them. Every figure is
+  **Fantrax's**, under our league's own scoring, read from the same
+  `getTeamRosterInfo` call the pitch already made:
   the FPTS view renders each category as the points it contributed and they sum
   to the total exactly. Nothing is computed here — our own engine could only ever
   have approximated the five categories FPL does not publish, and would have had
@@ -189,10 +191,13 @@ only question is *why* he is on the number he is on.
 - The category label carries **Fantrax's own definition** behind it (`title`),
   which is where the league's rules are published — what counts as a clean sheet
   is their sentence, not ours.
-- **A separate line for FPL's record** — his minutes, goals, clean sheet — and it
-  says FPL, because that is a different provider answering a different question.
-- **Before he kicks off** there is no table: the fixture panel says when, and an
-  empty breakdown under a live score would read as a score of nought.
+- **FPL's record under a drop-down** (`league/FplRecords`): shut it is the words
+  "Full match stats" and a chevron, open it is his minutes, what he did, bps,
+  defensive contribution and the expected family. A different provider answering
+  a different question, so it is the panel under ours and never a column in it.
+- **Before he kicks off** there is no table: the fixture line under his name says
+  when, and an empty breakdown under a live score would read as a score of
+  nought.
 - The three states of `points` are three different sentences: no table at all is
   Fantrax refusing and says so, a table that does not name him is a dash, and a
   table that gives him a nought is a real nought.

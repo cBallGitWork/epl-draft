@@ -64,6 +64,9 @@ export interface LivePlayerCategory {
   category: string;
   /** Points, theirs. Signed: cards and goals against arrive negative. */
   points: number;
+  /** What he DID, as Fantrax renders it — "90" minutes, "1" goal. Null for a
+   *  category they priced without stating a count. */
+  value: string | null;
 }
 
 /** One squad's priced players for one period. Entries and not a Map: this

@@ -106,6 +106,9 @@ function card(
     shirt: man.shirt,
     captain: man.captain,
     club: club?.name ?? "—",
+    // The short name too, for his card's title plate — `clubColours` is keyed on
+    // it and the display name will not do.
+    clubShort: club?.shortName ?? null,
     owner: owner?.teamName ?? null,
     points: played ? join.points(man.code) : null,
     onAt: did?.onAt ?? null,

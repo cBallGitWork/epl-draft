@@ -229,6 +229,8 @@
   /* How wide the sticker and the fixture chip are in a player dialog. Two cards
      — `PlayerCard` asks who he is, `LivePlayerCard` asks what he is scoring —
      and in both the chip below has to line up with the photograph above it. */
+  /* 88px, and `PlayerImage`'s `sizes` default is the same number in the one
+     language that cannot read a custom property. Move one, move both. */
   --player-card-figure: 5.5rem;
 
   /* --- The page's own side margin. `<main>` sets it, and the two things that

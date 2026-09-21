@@ -2,6 +2,7 @@ import ScoutShell from "./Shell";
 import Skeleton from "../components/shell/Skeleton";
 import { COLUMNS } from "./columns";
 import { POOL_GROUPS } from "./groups";
+import { POOL } from "./routes";
 import { PLATE, PRESSABLE } from "./BoardControls";
 import { SCROLL } from "@/app/desk";
 import { MUTE } from "../components/league/TableHeads";
@@ -35,7 +36,7 @@ export default function Loading() {
           this same route, so a reader who came to find one player can type his
           name before the other six hundred have arrived. */}
       <div className="flex flex-wrap items-center gap-1.5">
-        <form aria-busy action="/players" className="flex min-w-0 flex-1 gap-1.5 lg:w-44 lg:flex-none xl:w-64">
+        <form aria-busy action={POOL} className="flex min-w-0 flex-1 gap-1.5 lg:w-44 lg:flex-none xl:w-64">
           <input
             name="q"
             placeholder="Find a player"

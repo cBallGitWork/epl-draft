@@ -51,7 +51,7 @@ export function Withheld({
   const because = !known
     ? `Fantrax sent no roster for ${team.name}.`
     : display.show === "squad" && display.because === "not-locked"
-      ? `${team.name}'s eleven is not public until period ${display.period}'s lineups lock.`
+      ? `${team.name}'s eleven is not public until gameweek ${display.period}'s lineups lock.`
       : `${team.name}'s eleven is not showing.`;
 
   return (

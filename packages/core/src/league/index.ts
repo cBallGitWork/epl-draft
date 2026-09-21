@@ -101,8 +101,8 @@ export type { LabelledValue, PlayerIntel, PlayerMatch } from "./fantrax/profile"
 export { mapTransactions, orderKey, transactionDateLabel } from "./fantrax/transactions";
 // Everything written about one player. `playerNews.ts` records the `tab`
 // parameter that reaches it, and the eleven names that did not.
-export { fetchPlayerStories } from "./fantrax/client";
-export { mapPlayerStories } from "./fantrax/playerNews";
+export { fetchPlayerStories, fetchPoolNews } from "./fantrax/client";
+export { mapPlayerStories, mapPoolNews } from "./fantrax/playerNews";
 export type { PlayerStory } from "./fantrax/playerNews";
 // Exported so the app can hold a raw payload across a cache boundary before
 // mapping it — the mapper stays the only place raw meets clean.

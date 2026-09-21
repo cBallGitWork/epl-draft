@@ -3,7 +3,7 @@ import PickField from "./PickField";
 import { candidates } from "./pick";
 import type { Candidate } from "./pick";
 import type { PoolRow } from "../pool";
-import { ANALYSIS } from "../query";
+import { ANALYSIS } from "../routes";
 import { ROW_NAME } from "../../desk";
 import { ROW_LINK } from "../../components/league/TableCells";
 

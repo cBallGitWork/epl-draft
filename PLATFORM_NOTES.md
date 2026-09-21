@@ -2536,6 +2536,42 @@ currently filters — both are now a mapping job rather than a probe.
 Note the `<b>` in those cell values: this section carries markup inside its own
 strings like the rest of the payload, and nothing may render it as markup.
 
+## `getPlayerNews` is a WINDOW, not one story per player (probed live 21 Sep 2026)
+
+Public on fxpa, no cookie — `roles: ["03"]`. The sister read to
+`getPlayerProfile` above, and the two are not interchangeable.
+
+- **`poolType` is REQUIRED.** Without it the call refuses with `MISSING_PARAM`,
+  text `poolType`, extraInfo "Must be 'POOL' or 'ALL' or 'WATCH_LIST'". `POOL`
+  and `ALL` then answered **byte-identical payloads**, 86,292 bytes both times:
+  the parameter has to be sent and does not have to be chosen.
+- **It is about seventeen hours of the pool, not a story per man.** 74 stories,
+  74 distinct players, **0/74 with a second story**; newest `newsDate`
+  2026-09-21 07:39:05Z, oldest 2026-09-20 14:39:31Z, against a pool of some 611
+  players. So a player with no entry is one nothing was filed about **today**,
+  never one with no news — the absence is about the window and not about the man.
+- Newest-first on the wire, verified rather than assumed: the date list equals
+  its own reverse-sort. `mapPoolNews` keeps the first row per player on that.
+- **`maxResults: 500` is ignored** — still 74. There is no page to ask for, and
+  the count is simply what there is. Another published control that describes a
+  UI rather than promising a parameter, like `goBackDays` above.
+- **League-independent.** The real league (`ayyoh3n2mr326v2o`) and `dummy`
+  (`w05aib75mtj36y1g`) returned the same 74 stories, same first player, on the
+  same second. It is pool data wearing a league id, carried because fxpa takes
+  one — not a league read.
+- Field presence, counted across all 74: `scorerFantasy` **74/74**, carrying
+  `scorerId` (which IS our `fantraxId`), `name`, `shortName`, `teamShortName`,
+  `posShortNames`, `statusId`, `headshotUrl`; `playerNews` **74/74**, carrying
+  `id`, `headlineNoBrief`, `content`, `analysis` and `newsDate`, each **74/74**.
+  `scorerFantasy.icons` is **7/74**.
+- **`headlineNoBrief` is `content` truncated with an ellipsis**, not a separate
+  headline. Printing both prints one sentence twice.
+
+**Which of the two to call.** `getPlayerProfile?tab=NEWS_NOTES` is one request
+per player and is the only route to a HISTORY; this is one request for every
+player on a screen and only knows about today.
+`packages/core/src/league/fantrax/playerNews.ts` holds both mappers.
+
 ## The pool page: status is league state, not a player fact
 
 Our real league marks **all 697 players `WW`** while it has no teams; the

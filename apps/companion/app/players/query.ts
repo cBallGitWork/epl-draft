@@ -1,4 +1,5 @@
 import type { PoolRow } from "./pool";
+import { POOL } from "./routes";
 import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
 import { figureOf } from "./figure";
 import { groupFor, type PoolGroupKey } from "./groups";
@@ -99,25 +100,6 @@ export function activeGroup(query: PlayersQuery): PoolGroupKey {
 export function isPer90(query: PlayersQuery): boolean {
   return query.per === "90";
 }
-
-/** Where the pool lives.
- *
- *  It was `PLAYERS` in `league/SectionNav` while the pool was a league view, and
- *  it came here on 6 Sep 2026 with the section (`players/Shell`). This file
- *  already built every other `/players` href, so the literal was here twice
- *  over anyway — the constant is the third spelling collapsing into the two. */
-export const POOL = "/players";
-
-/** And where the comparison lives. **Three sites**, counted 7 Sep 2026 —
- *  `PoolNav`'s strip entry, `PlayerTable`'s row link while the board is a
- *  picker, and the swap link on the comparison itself — which is `POOL`'s own
- *  argument arriving a second time: a route spelled in three files is a route
- *  that can be renamed in two of them.
- *
- *  The `?a=&b=` builder around it is deliberately NOT extracted: two sites, and
- *  they differ in what they are doing rather than in how — one completes a pair
- *  being chosen and the other reverses a finished one. §1 leaves two alone. */
-export const ANALYSIS = "/players/analysis";
 
 /** How many rows a page carries before it says so and offers the rest.
  *

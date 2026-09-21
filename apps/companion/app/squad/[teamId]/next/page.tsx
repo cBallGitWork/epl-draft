@@ -69,10 +69,10 @@ export default async function NextMatchPage({
       {tie === undefined ? (
         <TabEmpty>{/* Two different absences and only one of them is a fault. Fantrax
                 not describing the league at all is an outage; the league simply
-                not pairing this side in this period is an ordinary bye. */}
+                not pairing this side this gameweek is an ordinary bye. */}
             {squads.info === null
               ? "We cannot read the league's own description of itself right now."
-              : `${team.teamName} has no fixture in this period.`}</TabEmpty>
+              : `${team.teamName} has no fixture this gameweek.`}</TabEmpty>
       ) : (
         <Fixture
           gameweek={squads.snapshot.gameweek}
