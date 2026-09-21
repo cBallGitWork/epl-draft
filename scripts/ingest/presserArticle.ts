@@ -68,7 +68,7 @@ function names(player: { name: string; fullName: string }): Set<string> {
   return keys;
 }
 
-function text(html: string): string {
+export function text(html: string): string {
   return html
     .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, "")
     // A paragraph end is a full stop the markup was carrying. Losing it ran
@@ -301,6 +301,36 @@ function printed(sentence: string, player: { name: string; fullName: string }): 
     if (token.length >= 4 && sentence.includes(token)) return token;
   }
   return player.name;
+}
+
+/** When each manager spoke, by surname, from the article's own conference-times
+ *  block: "🩵 8.30am – Lampard 🐯 1pm – Jakirovic 🐝 1.30pm – Andrews".
+ *
+ *  **Every presser was stamped 13:00 UTC until 21 Sep 2026**, which is a figure
+ *  nobody published — the source prints the real time for each one and the
+ *  export invented a single hour for all of them. Craig: "no hardcodong then".
+ *
+ *  FFS's block is a tweet and a long list is truncated ("🔵 3.30pm -…"), so a
+ *  manager may have no time. That is an absence the caller handles, never a
+ *  number made up here. */
+export function conferenceTimes(body: string): Map<string, { hour: number; minute: number }> {
+  const out = new Map<string, { hour: number; minute: number }>();
+  const block = body.match(/PRESS CONFERENCE TIMES([\s\S]{0,600})/i);
+  if (block === null) return out;
+  for (const m of block[1].matchAll(/(\d{1,2})(?:[.:](\d{2}))?\s*(am|pm)\s*[-–—]\s*([A-ZÀ-Ÿ][\wÀ-ÿ'’-]+(?: [A-ZÀ-Ÿ][\wÀ-ÿ'’-]+)?)/gi)) {
+    const raw = Number(m[1]);
+    const minute = m[2] === undefined ? 0 : Number(m[2]);
+    const pm = m[3].toLowerCase() === "pm";
+    // 12am is midnight and 12pm is noon; every other hour shifts by twelve.
+    const hour = raw === 12 ? (pm ? 12 : 0) : pm ? raw + 12 : raw;
+    if (hour > 23 || minute > 59) continue;
+    // Both the whole name and its last word, because the block prints "De
+    // Zerbi" and "Le Bris" and a caller may hold either half.
+    const who = m[4].toLowerCase().trim();
+    out.set(who, { hour, minute });
+    out.set(who.split(" ").pop() ?? who, { hour, minute });
+  }
+  return out;
 }
 
 /** Every quote in a section, with who said it and what about.

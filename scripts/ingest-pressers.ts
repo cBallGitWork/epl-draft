@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { FIRM, getFootballSnapshot } from "@epl/core";
-import { clubKey, manager, quotes, sections, troubles } from "./ingest/presserArticle";
+import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot } from "@epl/core";
+import { clubKey, conferenceTimes, manager, quotes, sections, text, troubles } from "./ingest/presserArticle";
 import { fullClubName } from "@epl/core";
 
 // Thursday's and Friday's press conferences, from Fantasy Football Scout's own
@@ -19,8 +19,38 @@ import { fullClubName } from "@epl/core";
 // for exactly this shape: a script that matches once, reports what it could not,
 // and writes a data file a person can read.
 
-const SCRAPE = "/Users/craigball/ai-carling-premiership/data/raw/fantasy_football_scout/daily";
-const OUT = join(fileURLToPath(new URL("..", import.meta.url)), "data", "intel", "pressers", "26-27.json");
+const ROOT = fileURLToPath(new URL("..", import.meta.url));
+
+/** Where the sister repo keeps its scrape.
+ *
+ *  **`FFS_SCRAPE_DIR` first, and the default is DERIVED** — it was an absolute
+ *  path into one developer's home directory, which is a machine's fact rather
+ *  than the project's and works nowhere else. The fallback assumes the two
+ *  repos are checked out side by side, which is how they are. */
+const SCRAPE =
+  process.env.FFS_SCRAPE_DIR ??
+  join(ROOT, "..", "ai-carling-premiership", "data", "raw", "fantasy_football_scout", "daily");
+const OUT = join(ROOT, "data", "intel", "pressers", "26-27.json");
+
+/** How many of a club's quotes the brief is offered. The column prints ONE, and
+ *  a whole press conference in the brief is the writer's budget spent on
+ *  filler — a choice of three is a choice. */
+const QUOTES_PER_CLUB = 3;
+
+/** The stand-in when a day publishes no conference times at all. The one figure
+ *  in this file nobody printed, and it is named so it reads as the guess it is. */
+const MIDDAY = { hour: 12, minute: 0 };
+
+/** A London wall-clock time as an instant. The article prints "1.30pm", which is
+ *  12:30Z in September and 13:30Z in December — the offset is read rather than
+ *  assumed. */
+function londonInstant(day: string, hour: number, minute: number): string {
+  const pad = (n: number): string => String(n).padStart(2, "0");
+  const asUtc = new Date(`${day}T${pad(hour)}:${pad(minute)}:00Z`);
+  const shown = new Date(asUtc.toLocaleString("en-US", { timeZone: LEAGUE_TIMEZONE }));
+  const utc = new Date(asUtc.toLocaleString("en-US", { timeZone: "UTC" }));
+  return new Date(asUtc.getTime() - (shown.getTime() - utc.getTime())).toISOString();
+}
 
 async function main(): Promise<void> {
   const day = process.argv[2];
@@ -54,6 +84,10 @@ async function main(): Promise<void> {
     headings.set(clubKey(fullClubName(club.name)), club.name);
   }
 
+  // When each manager actually spoke, from the article's own block.
+  const times = conferenceTimes(text(html));
+  const latest = [...times.values()].sort((a, b) => b.hour * 60 + b.minute - (a.hour * 60 + a.minute))[0];
+
   const read = sections(html, headings);
   for (const heading of read.skipped) unmatched.push(`club heading not in the table: ${heading}`);
   for (const section of read.sections) {
@@ -63,11 +97,19 @@ async function main(): Promise<void> {
       continue;
     }
     const said = manager(section.body);
-    spoke.push({ club: club.code, manager: said, at: `${day}T13:00:00.000Z` });
+    // His own conference time where the article published one. Where it did not
+    // — FFS's block is a tweet and a long list is truncated — the LATEST time
+    // published that day, because a presser we cannot time had happened by
+    // then. A day with no block at all falls to midday, which is the only
+    // figure here nobody published and is named as such.
+    const surname = (said ?? "").toLowerCase().split(" ").pop() ?? "";
+    const when = times.get((said ?? "").toLowerCase()) ?? times.get(surname) ?? latest ?? MIDDAY;
+    const at = londonInstant(day, when.hour, when.minute);
+    spoke.push({ club: club.code, manager: said, at });
     // At most three per club: the column prints one and wants a choice, and a
     // whole press conference in the brief is the writer's budget spent on filler.
-    for (const quote of quotes(section.body).slice(0, 3))
-      said_.push({ club: club.code, ...quote, at: `${day}T13:00:00.000Z` });
+    for (const quote of quotes(section.body).slice(0, QUOTES_PER_CLUB))
+      said_.push({ club: club.code, ...quote, at });
 
     // Within this club only, which is what keeps a surname from matching the
     // wrong league. Same constraint `matchPlayers` applies internally.
@@ -88,7 +130,7 @@ async function main(): Promise<void> {
         // The article states a fact, so it enters at the floor a FACT sits on.
         // Never a literal: `FIRM` is core's and a second copy would drift from it.
         confidence: FIRM,
-        said: `${day}T13:00:00.000Z`,
+        said: at,
         manager: said ?? "",
       });
     }
