@@ -2,7 +2,7 @@
   "manifest": {
     "season": "26-27",
     "gameweek": 5,
-    "exportedAt": "2026-09-21T08:58:45.104Z",
+    "exportedAt": "2026-09-21T09:15:05.534Z",
     "rows": 89,
     "sources": [
       {
@@ -15,12 +15,12 @@
     {
       "club": 8,
       "manager": "Xabi Alonso",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T12:30:00.000Z"
     },
     {
       "club": 4,
       "manager": "Matthias Jaissle",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T13:30:00.000Z"
     },
     {
       "club": 17,
@@ -30,37 +30,37 @@
     {
       "club": 94,
       "manager": "Keith Andrews",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T12:30:00.000Z"
     },
     {
       "club": 88,
       "manager": "Sergej Jakirovic",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T12:00:00.000Z"
     },
     {
       "club": 9,
       "manager": "Frank Lampard",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T07:30:00.000Z"
     },
     {
       "club": 3,
       "manager": "Mikel Arteta",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T08:00:00.000Z"
     },
     {
       "club": 14,
       "manager": "Andoni Iraola",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T12:30:00.000Z"
     },
     {
       "club": 1,
       "manager": "Michael Carrick",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T12:30:00.000Z"
     },
     {
       "club": 6,
       "manager": "Roberto De Zerbi",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T11:00:00.000Z"
     },
     {
       "club": 7,
@@ -70,7 +70,7 @@
     {
       "club": 36,
       "manager": "Fabian Hurzeler",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T08:00:00.000Z"
     },
     {
       "club": 2,
@@ -85,12 +85,12 @@
     {
       "club": 56,
       "manager": "Regis Le Bris",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T12:30:00.000Z"
     },
     {
       "club": 11,
       "manager": "David Moyes",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T12:30:00.000Z"
     },
     {
       "club": 54,
@@ -158,40 +158,40 @@
       "text": "In terms of injuries, and in terms of the squad, we are having the last training session tomorrow, so no one is ruled out for us for Friday. So, I prefer to be cautious and we will wait till tomorrow to take the final decision on every player.",
       "said": "Xabi Alonso",
       "about": "the Chelsea team news",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T12:30:00.000Z"
     },
     {
       "club": 8,
       "text": "He is getting closer and tomorrow, we will take a final decision in the team and in the squad that is coming to Brentford.",
       "said": "Xabi Alonso",
       "about": "Moises Caicedo",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T12:30:00.000Z"
     },
     {
       "club": 8,
       "text": "No, it was just a decision for Tuesday and we will see his development. Tomorrow, we will decide.",
       "said": "Xabi Alonso",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T12:30:00.000Z"
     },
     {
       "club": 4,
       "text": "Amar will be also not able to play on Saturday.",
       "said": "Matthias Jaissle",
       "about": "Amar Dedic",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T13:30:00.000Z"
     },
     {
       "club": 4,
       "text": "Still not a real update on Anthony. I have just spoken with him now. I think, in the next 30 minutes, he will have an MRI, so we will get more clarity then. We hope that it is not that serious.",
       "said": "Matthias Jaissle",
       "about": "Anthony Elanga",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T13:30:00.000Z"
     },
     {
       "club": 4,
       "text": "It will be a young midfield. I heard just also from a pundit [asking] why I was playing with such young players – because we have only young players in the squad! JJ [Ramsey] is injured as well.",
       "said": "Matthias Jaissle",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T13:30:00.000Z"
     },
     {
       "club": 17,
@@ -216,72 +216,72 @@
       "text": "I think it’s more or less the same as the other night, yeah. So, nothing has really changed on that front.",
       "said": "Keith Andrews",
       "about": "the latest Brentford team news",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T12:30:00.000Z"
     },
     {
       "club": 88,
       "text": "He’s in the concussion protocol. So, seven days off, and after this, he will go to the national team. Everything is fine. He’s good. This is the most important [thing], now. He will miss this game.",
       "said": "Sergej Jakirovic",
       "about": "Nobel Mendy",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T12:00:00.000Z"
     },
     {
       "club": 88,
       "text": "Morita is still out. The plan is that he will join us after the first week of the international break.",
       "said": "Sergej Jakirovic",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T12:00:00.000Z"
     },
     {
       "club": 88,
       "text": "We will see. We are very cautious with him and unfortunately, he cannot help the team.",
       "said": "Sergej Jakirovic",
       "about": "Charlie Hughes",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T12:00:00.000Z"
     },
     {
       "club": 9,
       "text": "I would expect not available, yeah.",
       "said": "Frank Lampard",
       "about": "Aurele Amenda",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T07:30:00.000Z"
     },
     {
       "club": 9,
       "text": "I thought he was fantastic. He’s a very, very good player. He’s 18 years of age but he’s come in with a real maturity on and off the pitch and it was good to see a player of such ability and composure come in and play the way he played. I thought he was great and it’s just a start.",
       "said": "Frank Lampard",
       "about": "Stephen Mfuni",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T07:30:00.000Z"
     },
     {
       "club": 9,
       "text": "Haji’s on track, but he’s not obviously ready soon.",
       "said": "Frank Lampard",
-      "at": "2026-09-17T13:00:00.000Z"
+      "at": "2026-09-17T07:30:00.000Z"
     },
     {
       "club": 3,
       "text": "In form, in the opponent, in the relationship that we have within that unit, there are a lot of factors [in deciding who starts between Eze and Christos Tzolis on the left].",
       "said": "Mikel Arteta",
       "about": "Eberechi Eze on the left wing",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T08:00:00.000Z"
     },
     {
       "club": 14,
       "text": "Everyone is ready to go. We are in the same place we were, the three long-term injuries plus Federico. The others, nothing. Okay, we still need to train tomorrow and travel, but everyone is fine.",
       "said": "Andoni Iraola",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T12:30:00.000Z"
     },
     {
       "club": 1,
       "text": "It is really short term [with Luke], to be honest, but it’s just working towards the game. So, we’ll see how he is come the weekend.",
       "said": "Michael Carrick",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T12:30:00.000Z"
     },
     {
       "club": 6,
       "text": "Porro, Tonali, Maddison, all are available to play. Normally, we have to understand the situation in terms of physical condition, but all of them are ready.",
       "said": "Roberto De Zerbi",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T11:00:00.000Z"
     },
     {
       "club": 7,
@@ -294,27 +294,27 @@
       "text": "I think that the best thing for Femi is that he uses this [international break] to get back on his highest physical level and then get used to our style of play. Then, we will try to work with him individually and hopefully integrate him back into the team, then definitely after the international break, he will be on a top level and we can use him in games.",
       "said": "Fabian Hurzeler",
       "about": "Femi Azeez",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T08:00:00.000Z"
     },
     {
       "club": 36,
       "text": "He’s young, he will recover fast. He definitely will be an option for tomorrow.",
       "said": "Fabian Hurzeler",
       "about": "Luka Vuskovic",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T08:00:00.000Z"
     },
     {
       "club": 56,
       "text": "We’ll see. We have different options. It’s one of these options.",
       "said": "Regis Le Bris",
       "about": "if Dayann Methalie comes in for Reinildo this weekend",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T12:30:00.000Z"
     },
     {
       "club": 11,
       "text": "Merlin Röhl is not available yet, hopefully he’ll be ready at the end of the international break.",
       "said": "David Moyes",
-      "at": "2026-09-18T13:00:00.000Z"
+      "at": "2026-09-18T12:30:00.000Z"
     }
   ],
   "rows": [
@@ -324,7 +324,7 @@
       "tag": "injury_scare",
       "condition": "calf",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:30:00.000Z",
       "manager": "Xabi Alonso"
     },
     {
@@ -332,7 +332,7 @@
       "club": 8,
       "tag": "injury_scare",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:30:00.000Z",
       "manager": "Xabi Alonso"
     },
     {
@@ -341,7 +341,7 @@
       "tag": "injury_scare",
       "condition": "wrist",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:30:00.000Z",
       "manager": "Xabi Alonso"
     },
     {
@@ -349,7 +349,7 @@
       "club": 8,
       "tag": "injury_scare",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:30:00.000Z",
       "manager": "Xabi Alonso"
     },
     {
@@ -358,7 +358,7 @@
       "tag": "injury_scare",
       "condition": "head",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T13:30:00.000Z",
       "manager": "Matthias Jaissle"
     },
     {
@@ -367,7 +367,7 @@
       "tag": "injury_scare",
       "condition": "thigh",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T13:30:00.000Z",
       "manager": "Matthias Jaissle"
     },
     {
@@ -376,7 +376,7 @@
       "tag": "injury_scare",
       "condition": "hamstring",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T13:30:00.000Z",
       "manager": "Matthias Jaissle"
     },
     {
@@ -384,7 +384,7 @@
       "club": 4,
       "tag": "injury_scare",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T13:30:00.000Z",
       "manager": "Matthias Jaissle"
     },
     {
@@ -392,7 +392,7 @@
       "club": 4,
       "tag": "ruled_out",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T13:30:00.000Z",
       "manager": "Matthias Jaissle"
     },
     {
@@ -401,7 +401,7 @@
       "tag": "ruled_out",
       "condition": "ankle",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T13:30:00.000Z",
       "manager": "Matthias Jaissle"
     },
     {
@@ -410,7 +410,7 @@
       "tag": "ruled_out",
       "condition": "ankle",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T13:30:00.000Z",
       "manager": "Matthias Jaissle"
     },
     {
@@ -419,7 +419,7 @@
       "tag": "ruled_out",
       "condition": "foot",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T13:30:00.000Z",
       "manager": "Matthias Jaissle"
     },
     {
@@ -455,7 +455,7 @@
       "tag": "ruled_out",
       "condition": "calf",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:30:00.000Z",
       "manager": "Keith Andrews"
     },
     {
@@ -463,7 +463,7 @@
       "club": 94,
       "tag": "ruled_out",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:30:00.000Z",
       "manager": "Keith Andrews"
     },
     {
@@ -471,7 +471,7 @@
       "club": 94,
       "tag": "ruled_out",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:30:00.000Z",
       "manager": "Keith Andrews"
     },
     {
@@ -480,7 +480,7 @@
       "tag": "ruled_out",
       "condition": "groin",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:30:00.000Z",
       "manager": "Keith Andrews"
     },
     {
@@ -489,7 +489,7 @@
       "tag": "ruled_out",
       "condition": "hamstring",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:30:00.000Z",
       "manager": "Keith Andrews"
     },
     {
@@ -498,7 +498,7 @@
       "tag": "injury_scare",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:30:00.000Z",
       "manager": "Keith Andrews"
     },
     {
@@ -507,7 +507,7 @@
       "tag": "ruled_out",
       "condition": "concussion",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:00:00.000Z",
       "manager": "Sergej Jakirovic"
     },
     {
@@ -516,7 +516,7 @@
       "tag": "ruled_out",
       "condition": "shoulder",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:00:00.000Z",
       "manager": "Sergej Jakirovic"
     },
     {
@@ -525,7 +525,7 @@
       "tag": "ruled_out",
       "condition": "back",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:00:00.000Z",
       "manager": "Sergej Jakirovic"
     },
     {
@@ -534,7 +534,7 @@
       "tag": "ruled_out",
       "condition": "adductor",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:00:00.000Z",
       "manager": "Sergej Jakirovic"
     },
     {
@@ -543,7 +543,7 @@
       "tag": "ruled_out",
       "condition": "groin",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:00:00.000Z",
       "manager": "Sergej Jakirovic"
     },
     {
@@ -552,7 +552,7 @@
       "tag": "injury_scare",
       "condition": "thigh",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:00:00.000Z",
       "manager": "Sergej Jakirovic"
     },
     {
@@ -561,7 +561,7 @@
       "tag": "injury_scare",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:00:00.000Z",
       "manager": "Sergej Jakirovic"
     },
     {
@@ -570,7 +570,7 @@
       "tag": "injury_scare",
       "condition": "ankle",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T12:00:00.000Z",
       "manager": "Sergej Jakirovic"
     },
     {
@@ -579,7 +579,7 @@
       "tag": "ruled_out",
       "condition": "calf",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T07:30:00.000Z",
       "manager": "Frank Lampard"
     },
     {
@@ -588,7 +588,7 @@
       "tag": "ruled_out",
       "condition": "quad",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T07:30:00.000Z",
       "manager": "Frank Lampard"
     },
     {
@@ -597,7 +597,7 @@
       "tag": "ruled_out",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T07:30:00.000Z",
       "manager": "Frank Lampard"
     },
     {
@@ -606,7 +606,7 @@
       "tag": "ruled_out",
       "condition": "calf",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T07:30:00.000Z",
       "manager": "Frank Lampard"
     },
     {
@@ -615,7 +615,7 @@
       "tag": "ruled_out",
       "condition": "hamstring",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T07:30:00.000Z",
       "manager": "Frank Lampard"
     },
     {
@@ -623,7 +623,7 @@
       "club": 9,
       "tag": "suspended",
       "confidence": 0.65,
-      "said": "2026-09-17T13:00:00.000Z",
+      "said": "2026-09-17T07:30:00.000Z",
       "manager": "Frank Lampard"
     },
     {
@@ -632,7 +632,7 @@
       "tag": "injury_scare",
       "condition": "muscle",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Mikel Arteta"
     },
     {
@@ -641,7 +641,7 @@
       "tag": "injury_scare",
       "condition": "back",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Mikel Arteta"
     },
     {
@@ -649,7 +649,7 @@
       "club": 3,
       "tag": "available",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Mikel Arteta"
     },
     {
@@ -657,7 +657,7 @@
       "club": 3,
       "tag": "available",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Mikel Arteta"
     },
     {
@@ -666,7 +666,7 @@
       "tag": "injury_scare",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Andoni Iraola"
     },
     {
@@ -675,7 +675,7 @@
       "tag": "injury_scare",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Andoni Iraola"
     },
     {
@@ -684,7 +684,7 @@
       "tag": "injury_scare",
       "condition": "muscle",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Andoni Iraola"
     },
     {
@@ -693,7 +693,7 @@
       "tag": "injury_scare",
       "condition": "muscle",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Andoni Iraola"
     },
     {
@@ -701,7 +701,7 @@
       "club": 1,
       "tag": "injury_scare",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Michael Carrick"
     },
     {
@@ -710,7 +710,7 @@
       "tag": "injury_scare",
       "condition": "ankle",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Michael Carrick"
     },
     {
@@ -718,7 +718,7 @@
       "club": 1,
       "tag": "injury_scare",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Michael Carrick"
     },
     {
@@ -727,7 +727,7 @@
       "tag": "injury_scare",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Michael Carrick"
     },
     {
@@ -736,7 +736,7 @@
       "tag": "injury_scare",
       "condition": "back",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Michael Carrick"
     },
     {
@@ -745,7 +745,7 @@
       "tag": "injury_scare",
       "condition": "hamstring",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Michael Carrick"
     },
     {
@@ -754,7 +754,7 @@
       "tag": "injury_scare",
       "condition": "muscle",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T11:00:00.000Z",
       "manager": "Roberto De Zerbi"
     },
     {
@@ -763,7 +763,7 @@
       "tag": "injury_scare",
       "condition": "knock",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T11:00:00.000Z",
       "manager": "Roberto De Zerbi"
     },
     {
@@ -772,7 +772,7 @@
       "tag": "ruled_out",
       "condition": "ankle",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T11:00:00.000Z",
       "manager": "Roberto De Zerbi"
     },
     {
@@ -781,7 +781,7 @@
       "tag": "ruled_out",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T11:00:00.000Z",
       "manager": "Roberto De Zerbi"
     },
     {
@@ -790,7 +790,7 @@
       "tag": "ruled_out",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T11:00:00.000Z",
       "manager": "Roberto De Zerbi"
     },
     {
@@ -799,7 +799,7 @@
       "tag": "ruled_out",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T11:00:00.000Z",
       "manager": "Roberto De Zerbi"
     },
     {
@@ -808,7 +808,7 @@
       "tag": "injury_scare",
       "condition": "muscle",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T11:00:00.000Z",
       "manager": "Roberto De Zerbi"
     },
     {
@@ -879,7 +879,7 @@
       "tag": "injury_scare",
       "condition": "hamstring",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
     },
     {
@@ -888,7 +888,7 @@
       "tag": "ruled_out",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
     },
     {
@@ -896,7 +896,7 @@
       "club": 36,
       "tag": "ruled_out",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
     },
     {
@@ -905,7 +905,7 @@
       "tag": "ruled_out",
       "condition": "leg",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
     },
     {
@@ -914,7 +914,7 @@
       "tag": "ruled_out",
       "condition": "ankle",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
     },
     {
@@ -923,7 +923,7 @@
       "tag": "ruled_out",
       "condition": "hamstring",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
     },
     {
@@ -932,7 +932,7 @@
       "tag": "ruled_out",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
     },
     {
@@ -940,7 +940,7 @@
       "club": 36,
       "tag": "ruled_out",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
     },
     {
@@ -948,7 +948,7 @@
       "club": 36,
       "tag": "injury_scare",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
     },
     {
@@ -956,7 +956,7 @@
       "club": 36,
       "tag": "rotation_risk",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
     },
     {
@@ -1028,7 +1028,7 @@
       "tag": "ruled_out",
       "condition": "knee",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Regis Le Bris"
     },
     {
@@ -1037,7 +1037,7 @@
       "tag": "ruled_out",
       "condition": "hamstring",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Regis Le Bris"
     },
     {
@@ -1045,7 +1045,7 @@
       "club": 56,
       "tag": "suspended",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "Regis Le Bris"
     },
     {
@@ -1054,7 +1054,7 @@
       "tag": "injury_scare",
       "condition": "groin",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "David Moyes"
     },
     {
@@ -1062,7 +1062,7 @@
       "club": 11,
       "tag": "ruled_out",
       "confidence": 0.65,
-      "said": "2026-09-18T13:00:00.000Z",
+      "said": "2026-09-18T12:30:00.000Z",
       "manager": "David Moyes"
     },
     {

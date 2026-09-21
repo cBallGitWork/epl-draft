@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classify, clauses } from "./presserArticle";
+import { classify, clauses, conferenceTimes } from "./presserArticle";
 
 // The parser decides whether a real footballer is reported as out. Every case
 // here is a sentence the 17 Sep 2026 article actually contains, or the shape
@@ -52,5 +52,27 @@ describe("clauses — additive joins", () => {
   it("still splits a plain 'with' that changes subject", () => {
     const said = "Jair's possible recovery could mean a headache, with Aina performing well there.";
     expect(clauses(said)).toHaveLength(2);
+  });
+});
+
+describe("conferenceTimes", () => {
+  const thursday =
+    "THURSDAY'S PRESS CONFERENCE TIMES Thursday's FPL Press Conferences! 8.30am – Lampard 1pm – Jakirovic 1.30pm – Andrews 2pm – Glasner 2.30pm – Jaissle";
+
+  it("reads the hour each manager actually spoke", () => {
+    const times = conferenceTimes(thursday);
+    expect(times.get("lampard")).toEqual({ hour: 8, minute: 30 });
+    expect(times.get("jakirovic")).toEqual({ hour: 13, minute: 0 });
+    expect(times.get("jaissle")).toEqual({ hour: 14, minute: 30 });
+  });
+
+  it("keeps a compound surname whole, and findable by its last word", () => {
+    const times = conferenceTimes("PRESS CONFERENCE TIMES 12pm – De Zerbi 1.30pm – Le Bris");
+    expect(times.get("de zerbi")).toEqual({ hour: 12, minute: 0 });
+    expect(times.get("bris")).toEqual({ hour: 13, minute: 30 });
+  });
+
+  it("returns nothing when the article publishes no block", () => {
+    expect(conferenceTimes("CHELSEA Xabi Alonso was evasive.").size).toBe(0);
   });
 });
