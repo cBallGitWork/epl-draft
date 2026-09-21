@@ -18,6 +18,7 @@ import {
   teamOfTheWeek,
   wasFielded,
 } from "@epl/core";
+import { now } from "./clock";
 import { type Board, readBoard } from "./board";
 import { readDeals } from "./business";
 import { roundUnderway, seasonKickoffs } from "./football";
@@ -142,7 +143,7 @@ export async function edition(mine: string | null): Promise<Edition> {
     seasonKickoffs(),
   ]);
   const drafted = "period" in squads ? squads : null;
-  const now = new Date().toISOString();
+  const at = now().toISOString();
 
   // Any dated fixture still to finish. Undated ones are ignored on the same rule
   // the football layer uses everywhere: a TV pick with no time cannot hold a
@@ -182,7 +183,7 @@ export async function edition(mine: string | null): Promise<Edition> {
     availability: drafted
       ? yoursFirst(availability(drafted.period.teams), (note) => note.teamId === mine)
       : [],
-    deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, kickoffs, now) : null,
+    deadline: drafted?.info ? nextDeadline(drafted.info.rosterPeriods, kickoffs, at) : null,
     teams: drafted?.info?.teams ?? [],
     eleven: picked,
     partial,
@@ -191,7 +192,7 @@ export async function edition(mine: string | null): Promise<Edition> {
     stories: told,
     // The clock is the app edge's to read (`football.ts`'s rule), which is why
     // the compose happens here rather than in `paper.ts`.
-    filed: composePaper(filed, now),
+    filed: composePaper(filed, at),
     board,
     mine,
   };

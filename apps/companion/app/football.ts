@@ -15,7 +15,11 @@ import {
   mapLiveStats,
   mapMatchSheets,
   portraitUrl,
+  rewindRound,
+  roundAt,
 } from "@epl/core";
+import { now, replayAt } from "./clock";
+import { roundGoals } from "./commentary";
 
 // One football snapshot per window, shared by everything that needs it.
 //
@@ -29,11 +33,32 @@ import {
 // Nothing about who is asking may cross into here: the real Premier League is
 // the same for everybody, which is exactly why it is cacheable.
 
-export const footballNow: () => Promise<FootballSnapshot> = unstable_cache(
+const currentRound: () => Promise<FootballSnapshot> = unstable_cache(
   async () => getFootballSnapshot(),
   ["football-snapshot"],
   { revalidate: PAGE_REVALIDATE },
 );
+
+export async function footballNow(): Promise<FootballSnapshot> {
+  const at = replayAt();
+  return at === null ? currentRound() : rewoundRound(at);
+}
+
+/** The round `REPLAY_AT` falls in, as it stood at that instant.
+ *
+ *  Outside the cache above rather than inside it: the rewind needs the Premier
+ *  League's goal feed, which is its own `unstable_cache`, and nesting the two is
+ *  not something Next promises anything about. Both reads underneath are cached,
+ *  so this costs a rewind and no request.
+ *
+ *  Falls through to the live round when the instant is before the season, which
+ *  is the honest answer: there is no played football to rewind to. */
+async function rewoundRound(at: string): Promise<FootballSnapshot> {
+  const gameweek = roundAt(await seasonFixtures(), at);
+  if (gameweek === null) return currentRound();
+  const snapshot = await gameweekSnapshot(gameweek);
+  return rewindRound(snapshot, await roundGoals(gameweek, snapshot.players), at);
+}
 
 /** One named round of football, cached per round.
  *
@@ -150,7 +175,7 @@ export function pollSeconds(snapshot: FootballSnapshot): number {
  *  Wednesday every side has nobody left and none of them needs telling, which is
  *  the case this window excludes and `isMatchdayLive` was being used to. */
 export function roundUnderway(snapshot: FootballSnapshot): boolean {
-  return duringGameweek(snapshot, new Date().toISOString());
+  return duringGameweek(snapshot, now().toISOString());
 }
 
 /** Enough faces to read as a crowd, few enough to stay one request each and to
@@ -231,5 +256,5 @@ const PRESENT_TENSE_WINDOW = 3;
 export function speaksForNow(snapshot: FootballSnapshot): boolean {
   const taken = Date.parse(snapshot.fetchedAt);
   if (Number.isNaN(taken)) return false;
-  return Date.now() - taken <= POLL.live * PRESENT_TENSE_WINDOW * 1000;
+  return now().getTime() - taken <= POLL.live * PRESENT_TENSE_WINDOW * 1000;
 }

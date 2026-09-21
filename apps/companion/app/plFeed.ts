@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { PAGE_REVALIDATE, type FootballPlayer } from "@epl/core";
+import { COMMENTARY_REVALIDATE, PAGE_REVALIDATE, type FootballPlayer } from "@epl/core";
 import {
   fetchHighlightsFeed,
   fetchPlFixture,
@@ -97,7 +97,7 @@ export const plFixture = unstable_cache(
 export const plStream = unstable_cache(
   async (id: number) => fetchPlTextstream(id),
   ["pl-textstream"],
-  { revalidate: PAGE_REVALIDATE },
+  { revalidate: COMMENTARY_REVALIDATE },
 );
 
 /** Every Opta metric for both sides of one match, cached per Premier League id.

@@ -9,11 +9,10 @@ import { SQUAD } from "../squad/routes";
 
 // The live centre, before either provider has answered.
 //
-// The head-to-head card is drawn and "your afternoon" is not, and the difference
-// is how often each is on the page: every signed-in manager has a pairing during
-// a round, while the afternoon panel only exists when he still has players to
-// come, which is a minority of the week. A block that vanishes is worse than one
-// that was never drawn.
+// The head-to-head card is drawn and nothing under it is: every signed-in
+// manager has a pairing during a round, and which of the two plates below it is
+// open is a query this cannot read. A block that vanishes is worse than one that
+// was never drawn.
 //
 // The same card is `YourMatchup`'s Suspense fallback in `page.tsx`. Copied
 // rather than shared: two occurrences (CODE_RULES §1), and they answer different

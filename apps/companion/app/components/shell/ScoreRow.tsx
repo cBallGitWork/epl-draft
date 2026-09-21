@@ -80,13 +80,13 @@ export interface ScoreSide {
 
 /** The badge beside the name: 16px under a thumb, 18 on the desk.
  *
- *  Smaller than `TeamBadge`'s 26/20, and deliberately: this row now carries a
- *  position block AND a badge AND two names AND two totals inside 282px on a
- *  390 phone, so every fixed thing on it is at the smallest size it can be read
- *  at. `_PX` is what `next/image` is told to fetch and is the LARGER of the two,
- *  on `TeamBadge`'s own rule — a source fetched smaller than it is drawn is a
- *  soft badge nobody thinks to blame the CSS for. */
-const BADGE_PX = 18;
+ *  20px under a thumb, 26 on the desk — a step up on both, 21 Sep 2026, on
+ *  Craig's word that the crest and the score are what a live row is read by. It
+ *  costs the two name columns 5px each at 390, which `Name` truncates into.
+ *  `_PX` is what `next/image` is told to fetch and is the LARGER of the two, on
+ *  `TeamBadge`'s own rule — a source fetched smaller than it is drawn is a soft
+ *  badge nobody thinks to blame the CSS for. */
+const BADGE_PX = 26;
 
 export default function ScoreRow({
   home,
@@ -131,9 +131,15 @@ export default function ScoreRow({
           `1:3`, not `1-3`. Cyan, which is DESIGN §3's derived-reading slot and
           exactly what the game spends it on here. `.numeric` is what keeps a
           column of them lined up. */}
-      <span className="numeric flex w-[4.5rem] shrink-0 items-center justify-center gap-1 text-sm font-bold text-info lg:w-28 lg:text-base">
+      {/* A step up at both widths, 21 Sep 2026 (Craig): the score is the thing
+          this row exists to carry and it was set at the size of the names
+          beside it. The column widens with it so a `12:0` still lands on the
+          same vertical as a `4:2`. */}
+      <span className="numeric flex w-[5.5rem] shrink-0 items-center justify-center gap-1 text-lg font-bold text-info lg:w-36 lg:text-2xl">
         {score === null ? (
-          <span className="text-2xs font-normal text-faint">{pending}</span>
+          // A kickoff time stands where a score would, so it is read at the
+          // score's size (Craig, 21 Sep 2026) — a step under it, not two.
+          <span className="text-sm font-normal text-faint lg:text-base">{pending}</span>
         ) : (
           <>
             {score.home}
@@ -260,7 +266,7 @@ function Name({ side, at }: { side: ScoreSide; at: "home" | "away" }) {
           alt=""
           width={BADGE_PX}
           height={BADGE_PX}
-          className="h-3.5 w-3.5 shrink-0 object-contain lg:h-[1.125rem] lg:w-[1.125rem]"
+          className="h-5 w-5 shrink-0 object-contain lg:h-[1.625rem] lg:w-[1.625rem]"
         />
       )}
       <span className="truncate lg:hidden">{side.short ?? side.name}</span>

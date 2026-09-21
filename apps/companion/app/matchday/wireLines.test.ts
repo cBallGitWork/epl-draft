@@ -13,7 +13,7 @@ const AWAY = 2;
 const FIXTURE = 2645221;
 
 function club(id: number, short: string): Club {
-  return { id, code: id, name: short, shortName: short } as Club;
+  return { id, code: id, name: `${short} Town`, shortName: short } as Club;
 }
 
 function player(code: number, clubId: number): FootballPlayer {
@@ -59,12 +59,13 @@ const FULL_TIME: RoundBreak = {
 
 function breakRow(events: MatchEvent[], breaks: RoundBreak[], players: FootballPlayer[]) {
   const rows = wireLines(events, breaks, snapshot(players), undefined, null).lines.filter(isBreak);
-  return rows.map((row) => row.sides.map((side) => `${side.short} ${side.score}`).join(" v "));
+  return rows.map((row) => row.sides.map((side) => `${side.name} ${side.score}`).join(" v "));
 }
 
 describe("wireLines breaks", () => {
   it("takes the full-time score from the fixture, not from the goals", () => {
-    expect(breakRow([], [FULL_TIME], [])).toEqual(["HOM 3 v AWY 1"]);
+    // The club in full, which is what a break line has the width for.
+    expect(breakRow([], [FULL_TIME], [])).toEqual(["HOM Town 3 v AWY Town 1"]);
   });
 
   it("drops a break whose fixture the snapshot does not carry", () => {

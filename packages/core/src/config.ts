@@ -518,6 +518,24 @@ export const SEASON_CODE_LIFE = 60 * 60 * 6;
  *  points back here. */
 export const PAGE_REVALIDATE = 30;
 
+/** How stale Opta's COMMENTARY may be, in seconds.
+ *
+ *  **Its own clock, because it is the round's one expensive read.** Measured
+ *  21 Sep 2026 against gameweek 5: the round read is 16 KB and one request for
+ *  ten matches; the textstream is one request PER FIXTURE at 17-24 KB, so a
+ *  window that asks for both is 11 requests and 217 KB against 1 and 16 — and
+ *  at `PAGE_REVALIDATE` that is 1,320 requests and 25 MB an hour of football.
+ *
+ *  **Nothing a reader watches for comes from it.** The scoreline, the goals and
+ *  the clock are all on the round read and stay on the thirty. What the
+ *  textstream buys is a red card and the assists FPL pays that Opta never
+ *  places — a sending-off two minutes late is still news, and an assist credit
+ *  is a footnote on a goal already printed above it.
+ *
+ *  Five minutes puts the same afternoon at 240 requests and 4.3 MB. The match
+ *  report reads it too and is less time-critical again. */
+export const COMMENTARY_REVALIDATE = 300;
+
 /** How stale a printed ARTICLE may be, in seconds.
  *
  *  **A story is published by a DEPLOY, not by a revalidation** — `paper.ts`

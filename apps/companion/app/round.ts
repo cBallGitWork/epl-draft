@@ -8,6 +8,7 @@ import {
   lastLockedPeriod,
   planningPeriod,
 } from "@epl/core";
+import { now } from "./clock";
 import { leagueCache } from "./leagueCache";
 import { orRefusal } from "./refusals";
 import { seasonKickoffs } from "./football";
@@ -95,7 +96,7 @@ export async function planningRound(): Promise<Round | null> {
   // `rosterPeriods` and not `scoringPeriods`, as everything measuring a lock
   // does: the lineup calendar is the one that says when a week stops taking
   // changes.
-  const period = planningPeriod(info.rosterPeriods, kickoffs, new Date().toISOString());
+  const period = planningPeriod(info.rosterPeriods, kickoffs, now().toISOString());
   if (period === null) return null;
 
   // The first gameweek in it. A double is two gameweeks in one period and the
@@ -123,7 +124,7 @@ export async function lastLockedRound(): Promise<Round | null> {
   ]);
   if (info === null) return null;
 
-  const period = lastLockedPeriod(info.rosterPeriods, kickoffs, new Date().toISOString());
+  const period = lastLockedPeriod(info.rosterPeriods, kickoffs, now().toISOString());
   if (period === null) return planningRound();
 
   const gameweek = calendar.find((entry) => entry.period === period)?.gameweeks[0];

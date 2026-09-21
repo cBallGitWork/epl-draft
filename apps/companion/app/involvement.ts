@@ -1,5 +1,5 @@
 import type { Fixture, FootballPlayer, PlayerOwner } from "@epl/core";
-import { fixtureInvolvement, isActive, owners } from "@epl/core";
+import { fixtureInvolvement, owners } from "@epl/core";
 import { getLeagueSquads } from "./squads";
 import type { ReadableSquads } from "./squads";
 import { myTeamId } from "./session";
@@ -14,12 +14,11 @@ import { myTeamId } from "./session";
 // forgetting that every one of the four ways this can come back empty is
 // ordinary rather than a fault.
 //
-// **Two squads on purpose, and the distinction is the whole file.** `mine` and
-// `owners` key off SQUAD MEMBERSHIP, which is public all week and is the right
-// answer to "is this match mine". `afternoon` keys off his LINEUP, because a
-// reserve does not score — and a lineup is only ever read here for the reader's
-// own team, which is never withheld from him. Nothing in this file can say
-// anything about a rival's arrangement.
+// **Squad membership only, and nothing here reads a LINEUP.** `afternoon` did —
+// his active men per fixture, for the strip the Live tab carried — and it went
+// with that strip on 21 Sep 2026 along with `isActive`. So this file cannot say
+// anything about anybody's arrangement, his own included, which is a stronger
+// statement than the one it used to have to make carefully.
 
 /** Absent means "no answer to give", and the four ways to get there — signed
  *  out, no league, undrafted, Fantrax silent — are all ordinary. Every consumer
@@ -30,8 +29,6 @@ export interface Marks {
   mine?: Map<number, FootballPlayer[]>;
   /** Every rostered footballer against the squad holding him, by FPL code. */
   owners?: Map<number, PlayerOwner>;
-  /** His ACTIVE players only, per fixture — the afternoon still ahead of him. */
-  afternoon?: Map<number, FootballPlayer[]>;
 }
 
 /** For a page that already holds the league. */
@@ -43,14 +40,7 @@ export async function marksFor(
   const team = squads.period.teams.find((t) => t.teamId === teamId);
   if (team === undefined) return { owners: owners(squads.period.teams) };
 
-  return {
-    mine: fixtureInvolvement(team, fixtures),
-    owners: owners(squads.period.teams),
-    afternoon: fixtureInvolvement(
-      { ...team, players: team.players.filter((p) => isActive(p.slot)) },
-      fixtures,
-    ),
-  };
+  return { mine: fixtureInvolvement(team, fixtures), owners: owners(squads.period.teams) };
 }
 
 /** For a page that does not, and would otherwise read the league twice.

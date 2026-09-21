@@ -1,5 +1,7 @@
 import {
+  COMPETITION_NAME,
   LEAGUE_COMPETITION,
+  LEAGUE_NAME,
   type Club,
   type CompetitionTie,
   type Fixture,
@@ -18,9 +20,12 @@ import FootballRow from "./FootballRow";
 // it is shared with the schedule and with Results — the measurements and the one
 // deliberate departure are in its docblock.
 //
-// **The draft above the football, because that is the order a manager cares
-// about them in** — the same argument `matchday.md` already makes for putting
-// his own tie first.
+// **The football above the draft, reversed on Craig's word (21 Sep 2026).** It
+// ran the other way on the argument that a manager cares about his own tie
+// first — and he does, which is what `YourMatchup` at the top of the page is
+// for. By the time a reader is this far down he is asking what the real scores
+// are; the other eight ties in his league are the answer to a different
+// question and can sit under them.
 //
 // Three things changed here beyond the row itself, all asked for in the same
 // message:
@@ -124,16 +129,38 @@ export function Scores({
 }) {
   return (
     <>
+      {/* **Headed, and first** (Craig, 21 Sep 2026). It had no heading at all on
+          the argument that the tab and the caption said which round was on; what
+          neither of them said was which COMPETITION these ten rows belong to,
+          which is the whole question once the draft's panel sits under them
+          wearing a name of its own. `COMPETITION_NAME` is the desk's word for
+          it everywhere else. */}
+      <Section title={COMPETITION_NAME}>
+        <ul className="cm-rows">
+          {fixtures.map((f) => (
+            <li key={f.id}>
+              <FootballRow fixture={f} clubs={clubs} places={clubPlaces} now={now} />
+            </li>
+          ))}
+        </ul>
+      </Section>
       {/* Absent rather than empty for a league with no draft yet, no schedule,
           or a Fantrax that would not answer — the football half needs none of
-          them, which is what keeps "this works with no Fantrax at all" true. */}
+          them, which is what keeps "this works with no Fantrax at all" true.
+
+          **The competition's name in full** (Craig, 21 Sep 2026). `LEAGUE` was
+          `LEAGUE_COMPETITION.name`, which is the word that tells a cup tie from
+          a league one on the schedule — right there, and on a tab carrying the
+          Premier League's own panel it named neither competition. */}
       {groupTies(ties).map((group) => (
         <Section
           key={`${group.competition.id}-${group.round ?? ""}`}
           title={
-            group.round === null
-              ? group.competition.name
-              : `${group.competition.name} · ${group.round}`
+            group.competition.id === LEAGUE_COMPETITION.id
+              ? LEAGUE_NAME
+              : group.round === null
+                ? group.competition.name
+                : `${group.competition.name} · ${group.round}`
           }
         >
           <ul className="cm-rows">
@@ -153,18 +180,6 @@ export function Scores({
         </Section>
       ))}
 
-      {/* No heading. The tab says Live, the caption above says which gameweek and
-          whether it is in play, and "The football / The Premier League" said
-          neither of those things twice. */}
-      <section className="cm-panel flex flex-col p-2">
-        <ul className="cm-rows">
-          {fixtures.map((f) => (
-            <li key={f.id}>
-              <FootballRow fixture={f} clubs={clubs} places={clubPlaces} now={now} />
-            </li>
-          ))}
-        </ul>
-      </section>
     </>
   );
 }

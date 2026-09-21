@@ -16,25 +16,24 @@ import {
   seededTies,
 } from "@epl/core";
 import { leagueTable, teamBadges } from "../standings";
-import { footballNow, seasonFixtures, speaksForNow } from "../football";
+import { footballNow, gameweekLive, seasonFixtures, speaksForNow } from "../football";
 import { Scores } from "./Scores";
 import RoundWord from "../components/league/RoundWord";
 import Link from "next/link";
 import PageHeader from "../components/shell/PageHeader";
-import ProseWire from "./ProseWire";
 import { getLeagueSquads } from "../squads";
 import { liveScores } from "../scoreboard";
-import Afternoon from "./Afternoon";
 import YourMatchup from "./YourMatchup";
 import { marks } from "../involvement";
 
 import { readerTeamId } from "../squads";
-import { roundBreaks, roundCommentary, roundGoals } from "../commentary";
-import { wireLines } from "./wireLines";
-import Wire from "./Wire";
+import { creditAssists, roundBreaks, roundGoals, roundRedCards } from "../commentary";
 import { londonDayKey } from "../londonTime";
-import { BetweenGameweeks, MatchupWaiting } from "./Between";
 import { TAB } from "@/app/desk";
+import Vidiprinter from "./Vidiprinter";
+import { wireLines } from "./wireLines";
+import { now } from "../clock";
+import { BetweenGameweeks, MatchupWaiting } from "./Between";
 
 // The live centre. Your head-to-head first, the real football under it — the
 // order a manager actually cares about them in.
@@ -64,39 +63,36 @@ async function matchday(): Promise<{
   // fixtures, so nothing on it can name the round after it. `seasonFixtures` is
   // the read that sees the rest of the calendar, and it is already warm.
   const [snapshot, season] = await Promise.all([footballNow(), seasonFixtures()]);
-  const at = new Date().toISOString();
+  const at = now().toISOString();
   return { snapshot, season, during: duringGameweek(snapshot, at), up: nextRound(season, at) };
 }
 
 export default async function MatchdayPage({
   searchParams,
 }: {
-  searchParams: Promise<{ wire?: string }>;
+  searchParams: Promise<{ view?: string }>;
 }) {
-  // **Two wires, and which one is a query rather than a route** (Craig, 5 Sep
-  // 2026: "maybe we have different versions of the wire on the home page for now
-  // and decide which is best?"). A second route would be a second page to keep in
-  // step for a comparison that is meant to end in one of them being deleted.
-  //
-  // It also gates the COST. The prose wire is up to ten textstream requests a
-  // window against the row wire's one, and nothing fetches it unless it is the
-  // variant being read.
-  const prose = (await searchParams).wire === PROSE;
+  // Which of the two plates is open. **Scores is the landing view** (Craig,
+  // 21 Sep 2026): the real scores are the question a manager opens this tab
+  // holding, and the vidiprinter is a tap away rather than in front of them.
+  const printing = (await searchParams).view === PRINTER;
   const { snapshot, season, during, up } = await matchday();
   const league = await marks(snapshot.fixtures);
 
-  // The round's goals, joined to the men who own them. One upstream request for
-  // ten matches, and the one question on this page neither Fantrax nor FPL can
-  // answer: not just who scored, but whose he is.
-  // The breaks come off the SAME cached round read as the goals, so half time
-  // and full time cost nothing upstream.
-  const [goals, breaks, mine, squads] = await Promise.all([
+  // The round's goals, joined to the men who own them: one upstream request for
+  // ten matches, and the question neither Fantrax nor FPL can answer — not who
+  // scored, but whose he is. The breaks come off the same cached read.
+  const [goals, reds, breaks, stats, mine, squads] = await Promise.all([
     roundGoals(snapshot.gameweek, snapshot.players),
+    roundRedCards(snapshot.gameweek, snapshot.players),
     roundBreaks(snapshot.gameweek),
+    // FPL's own per-man assist counts, which is what audits the commentary's
+    // proposal in `creditAssists`. One cached read for the round.
+    gameweekLive(snapshot.gameweek),
     readerTeamId(),
     getLeagueSquads(),
   ]);
-  const wire = wireLines(goals, breaks, snapshot, league.owners, mine);
+  const scored = await creditAssists(goals, snapshot, stats);
 
   // **The day being played, not the whole round** — Craig, 5 Sep 2026: *"Maybe
   // the live tab only shows matches from TODAY, to keep the space?"* A gameweek
@@ -123,7 +119,7 @@ export default async function MatchdayPage({
   );
 
   const round = fixturesInOrder(snapshot);
-  const day = londonDayKey(new Date().toISOString());
+  const day = londonDayKey(now().toISOString());
   const onToday = round.filter((f) => f.kickoff !== null && londonDayKey(f.kickoff) === day);
   const today: readonly Fixture[] = onToday.length > 0 ? onToday : round;
 
@@ -198,7 +194,7 @@ export default async function MatchdayPage({
         // Only when there IS a state. Between rounds `roundState` answers null,
         // and a bar reading "Gameweek 4" with nothing after it is the honest
         // shape of a Tuesday.
-        title={`Gameweek ${snapshot.gameweek}${roundState(snapshot) === "live" ? " LIVE" : ""}`}
+        title={`Draft Gameweek ${snapshot.gameweek}${roundState(snapshot) === "live" ? " LIVE" : ""}`}
         sub={
           // `RoundWord` renders nothing between kickoffs, which is right — there
           // is no state to name — and `PageHeader.Sub` renders nothing for a
@@ -237,35 +233,29 @@ export default async function MatchdayPage({
       <Suspense fallback={<MatchupWaiting />}>
         <YourMatchup />
       </Suspense>
-      {/* Under the scoreline, because it is the same question asked forwards:
-          the card says where you are, this says what is left to change it. */}
-      <Afternoon snapshot={snapshot} players={league.afternoon} />
       {/* **No flash** (Craig, 5 Sep 2026: "live tab - remove the ticker row").
           It was a full-width plate saying the newest goal once, loudly, above a
           wire whose first row said the same goal — `cm0102/02.jpg` draws both on
           one screen, and the game's version announces an event the screen has no
           other record of. Ours had one directly underneath. */}
-      <WirePick prose={prose} />
-      {prose ? (
-        <ProseWire lines={await roundCommentary(snapshot.gameweek)} />
-      ) : (
-        <Wire lines={wire.lines} />
-      )}
-      {during ? (
-        <>
-          <Scores
-            ties={ties}
-            scores={scores}
-            badges={badges}
-            places={places}
-            clubPlaces={clubPlaces}
-            mine={mine}
-            fixtures={today}
-            clubs={clubById(snapshot)}
-            now={speaksForNow(snapshot)}
-            gameweek={snapshot.gameweek}
-          />
-        </>
+      <ViewPick printing={printing} />
+      {printing ? (
+        <Vidiprinter
+          lines={wireLines([...scored, ...reds], breaks, snapshot, league.owners, mine).lines}
+        />
+      ) : during ? (
+        <Scores
+          ties={ties}
+          scores={scores}
+          badges={badges}
+          places={places}
+          clubPlaces={clubPlaces}
+          mine={mine}
+          fixtures={today}
+          clubs={clubById(snapshot)}
+          now={speaksForNow(snapshot)}
+          gameweek={snapshot.gameweek}
+        />
       ) : (
         <BetweenGameweeks snapshot={snapshot} up={up} />
       )}
@@ -273,32 +263,29 @@ export default async function MatchdayPage({
   );
 }
 
-/** Which wire the reader is looking at.
+/** Which plate the reader has open.
  *
- *  **A temporary object with a date on it.** Two designs for one panel is
- *  normally the thing this codebase refuses; it exists because Craig asked to see
- *  both on a real Saturday before choosing, and it goes the moment he does. The
- *  loser is deleted rather than kept behind a flag.
- *
- *  `cm-tab`, because picking one of a set is what a tab strip is. */
-const PROSE = "report";
+ *  A query rather than a route: one page, two panels, and a second route would
+ *  be a second page to keep in step. `cm-tab`, because picking one of a set is
+ *  what a tab strip is. */
+const PRINTER = "vidiprinter";
 
-function WirePick({ prose }: { prose: boolean }) {
+function ViewPick({ printing }: { printing: boolean }) {
   return (
-    <nav aria-label="Which wire" className="flex">
+    <nav aria-label="Which view" className="flex">
       <Link
-        href="/matchday"
-        aria-current={prose ? undefined : "page"}
+        href={`/matchday?view=${PRINTER}`}
+        aria-current={printing ? "page" : undefined}
         className={`${TAB} px-2 text-center text-2xs`}
       >
-        Rows
+        Vidiprinter
       </Link>
       <Link
-        href={`/matchday?wire=${PROSE}`}
-        aria-current={prose ? "page" : undefined}
+        href="/matchday"
+        aria-current={printing ? undefined : "page"}
         className={`${TAB} px-2 text-center text-2xs`}
       >
-        Report
+        Scores
       </Link>
     </nav>
   );

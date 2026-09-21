@@ -15,6 +15,7 @@ import {
   rosterDisplay,
 } from "@epl/core";
 import { leagueInfo, roundOf, type Round } from "./round";
+import { now } from "./clock";
 import { leagueCache } from "./leagueCache";
 import { footballNow, gameweekSnapshot, seasonKickoffs } from "./football";
 import { myTeamId } from "./session";
@@ -165,7 +166,7 @@ const readLeague = leagueCache("league-squads",
             open.period ?? null,
             info?.rosterPeriods ?? [],
             kickoffs,
-            new Date().toISOString(),
+            now().toISOString(),
           );
     const rosters =
       asked === null ? open : await orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID, asked));
@@ -227,7 +228,7 @@ export async function getLeagueSquads(round: Round | null = null): Promise<Leagu
       period.period,
       info?.rosterPeriods ?? [],
       kickoffs,
-      new Date().toISOString(),
+      now().toISOString(),
       false,
     ),
   };
@@ -247,7 +248,7 @@ export function teamDisplay(squads: ReadableSquads, yours: boolean): RosterDispl
     squads.period.period,
     squads.info?.rosterPeriods ?? [],
     squads.kickoffs,
-    new Date().toISOString(),
+    now().toISOString(),
     yours,
   );
 }
