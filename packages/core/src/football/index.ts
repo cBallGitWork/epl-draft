@@ -101,12 +101,12 @@ export { goalMinutes, loggedPlayers, matchIntel, matchLine, subNote } from "./in
 // Where a man played, as the points themselves rather than as a grid. The
 // argument for the raw cloud — smaller than the grid AND smoother, because the
 // busiest player in the league has 414 season touches — is in `intel/touches.ts`.
-export { averageTouchPosition, touchFixtures, touchIntel, touchesOf } from "./intel/touches";
-export type { IntelTouches, Touch, TouchCentre, TouchPlayer } from "./intel/touches";
+export { touchFixtures, touchIntel, touchesOf } from "./intel/touches";
+export type { IntelTouches, Touch, TouchPlayer } from "./intel/touches";
 // Every shot, already flipped onto the touch clouds' convention — SofaScore
 // publishes a shot as distance from the attacking goal and a touch the other way
 // round, and `intel/shots.ts` records how that was settled.
-export { shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
+export { mirrorShot, shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
 export type { IntelShots, Shot } from "./intel/shots";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // The same read at season scale — his career before this one. `seasons.ts` says
