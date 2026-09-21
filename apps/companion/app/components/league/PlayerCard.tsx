@@ -1,16 +1,16 @@
 "use client";
 
-import Link from "next/link";
 import { type SquadPlayerDetail, isDoubtful, isResolved, playerName } from "@epl/core";
+import DialogFoot from "../shell/DialogFoot";
 import Modal from "../shell/Modal";
 import FixtureChip from "../football/FixtureChip";
 import PitchPlayer from "./PitchPlayer";
 import Note from "./Note";
+import { POOL } from "../../players/routes";
 import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { unresolvedReason } from "../../unresolved";
-import { BUTTON } from "../shell/ButtonLink";
-import { QUIET_FIGURE } from "@/app/desk";
+import { LABEL, QUIET_FIGURE } from "@/app/desk";
 
 // One player, over the squad rather than instead of it.
 //
@@ -61,7 +61,7 @@ export default function PlayerCard({
         </div>
 
         <div className="flex items-baseline justify-between gap-3 border border-line bg-raised px-3 py-2">
-          <span className="text-2xs uppercase text-faint">This gameweek</span>
+          <span className={LABEL}>This gameweek</span>
           <span className="flex items-baseline gap-2">
             <span className="inline-flex w-[var(--player-card-figure)] overflow-hidden">
               <FixtureChip opposition={opposition} blank="No fixture" />
@@ -77,8 +77,8 @@ export default function PlayerCard({
         {footballer && isDoubtful(footballer) ? (
           <div
             className={`flex flex-col gap-0.5 border px-3 py-2 ${
- footballer.chanceOfPlaying === 0 ?"border-bad":"border-mid"
-}`}
+              footballer.chanceOfPlaying === 0 ? "border-bad" : "border-mid"
+            }`}
           >
             <span className="font-display text-2xs font-bold uppercase text-muted">
               {footballer.chanceOfPlaying === null
@@ -95,21 +95,11 @@ export default function PlayerCard({
           </Note>
         )}
 
-        <div className="flex gap-2">
-          <Link
-            href={`/players/${rostered.slot.fantraxId}`}
-            className={`${BUTTON} flex-1`}
-          >
-            Full profile
-          </Link>
-          <button
-            type="button"
-            onClick={onClose}
-            className={`${BUTTON} flex-1`}
-          >
-            Close
-          </button>
-        </div>
+        <DialogFoot
+          href={`${POOL}/${rostered.slot.fantraxId}`}
+          label="Full profile"
+          onClose={onClose}
+        />
       </div>
     </Modal>
   );

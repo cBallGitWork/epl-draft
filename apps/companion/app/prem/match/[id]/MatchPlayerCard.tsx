@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import DialogFoot from "../../../components/shell/DialogFoot";
 import Modal from "../../../components/shell/Modal";
-import { BUTTON } from "../../../components/shell/ButtonLink";
 import { PLAYER } from "../../routes";
 
 // One man's afternoon, over the team sheet rather than instead of it.
@@ -142,16 +141,11 @@ function Card({ man, onClose }: { man: MatchMan; onClose: () => void }) {
           )}
         </dl>
 
-        <div className="flex gap-2">
-          {man.code === null ? null : (
-            <Link href={`${PLAYER}/${man.code}`} className={`${BUTTON} flex-1 text-center`}>
-              His season
-            </Link>
-          )}
-          <button type="button" onClick={onClose} className={`${BUTTON} flex-1`}>
-            Close
-          </button>
-        </div>
+        <DialogFoot
+          href={man.code === null ? null : `${PLAYER}/${man.code}`}
+          label="His season"
+          onClose={onClose}
+        />
       </div>
     </Modal>
   );

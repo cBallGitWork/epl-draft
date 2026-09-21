@@ -8,6 +8,7 @@ import {
   kickedOff,
   plateOn,
 } from "@epl/core";
+import EmptySlot from "./EmptySlot";
 import PlayerShirt from "./PlayerShirt";
 import { NAME_SIZE, PITCH_BAND } from "./PitchRows";
 
@@ -154,9 +155,7 @@ export default function PitchMarker({
         /* Built to the same shape as a man who resolved, so it stands the same
            height in the line — a hole in the row reads as a formation nobody
            picked. */
-        <div className="pitch-figure grid w-full place-items-center border border-dashed border-white/35 bg-black/25">
-          <span className="numeric text-2xs font-bold text-white/70">{label}</span>
-        </div>
+        <EmptySlot label={label} />
       ) : (
         <span className="block px-1 pt-0.5">
           <PlayerShirt club={club} keeper={keeper} name={name} kickedOff={started} />

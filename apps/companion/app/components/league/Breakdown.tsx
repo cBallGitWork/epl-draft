@@ -17,6 +17,11 @@ import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_END, LABEL } from "@/app/desk";
 //
 // Split out of `LivePlayerCard` when that file crossed CODE_RULES §4's ceiling.
 
+/** The points column's width, named because three cells must agree or the
+ *  column steps: the head plate, each row's figure, and the total. Local to this
+ *  file — it is one table's column, not a recipe anything else wants. */
+const PTS_COLUMN = "w-16";
+
 export default function Breakdown({
   breakdown,
   points,
@@ -49,7 +54,7 @@ export default function Breakdown({
           it is minutes on one row and goals on the next. */}
       <div className="flex items-stretch gap-px">
         <span className={`${HEAD_PLATE} min-w-0 flex-1 ${LABEL}`}>This gameweek</span>
-        <span className={`${HEAD_PLATE_END} w-16 ${LABEL}`}>Pts</span>
+        <span className={`${HEAD_PLATE_END} ${PTS_COLUMN} ${LABEL}`}>Pts</span>
       </div>
 
       <div className="cm-panel flex flex-col">
@@ -84,7 +89,7 @@ export default function Breakdown({
                   {line.value ?? "—"}
                 </span>
                 <span
-                  className={`numeric w-16 shrink-0 pr-1.5 text-right text-sm font-bold ${tone(line.points)}`}
+                  className={`numeric ${PTS_COLUMN} shrink-0 pr-1.5 text-right text-sm font-bold ${tone(line.points)}`}
                 >
                   {signed(line.points)}
                 </span>
@@ -96,7 +101,7 @@ export default function Breakdown({
         <div className="flex items-center gap-2 border-t border-line px-2 py-1.5">
           <span className={`min-w-0 flex-1 ${LABEL}`}>Total</span>
           <span
-            className={`numeric w-16 shrink-0 pr-1.5 text-right text-xl font-bold leading-none ${
+            className={`numeric ${PTS_COLUMN} shrink-0 pr-1.5 text-right text-xl font-bold leading-none ${
               points === null ? "text-faint" : tone(points)
             }`}
           >

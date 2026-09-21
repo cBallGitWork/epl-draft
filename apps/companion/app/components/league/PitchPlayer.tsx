@@ -10,6 +10,7 @@ import {
 import FixtureChip from "../football/FixtureChip";
 import { chipsFor } from "./Chips";
 import PlayerShirt, { KIT_RATIO } from "./PlayerShirt";
+import EmptySlot from "./EmptySlot";
 import { positionLabel } from "../../positions";
 import { unresolvedShort } from "../../unresolved";
 import { NAME_SIZE, PITCH_BAND } from "./PitchRows";
@@ -57,11 +58,7 @@ export default function PitchPlayer({
       // proportions, which left a hole in the row wherever the bridge had not
       // settled somebody.
       <div className="@container flex w-full flex-col" style={KIT_RATIO}>
-        <div className="pitch-figure grid w-full place-items-center border border-dashed border-white/35 bg-black/25">
-          <span className="numeric text-2xs font-bold text-white/70">
-            {positionLabel(rostered.slot.position) ?? "?"}
-          </span>
-        </div>
+        <EmptySlot label={positionLabel(rostered.slot.position) ?? "?"} />
         <span className={`bg-cream font-display text-3xs uppercase text-bg ${PITCH_BAND}`}>
           <span className="w-full truncate">{rostered.slot.fantraxId}</span>
         </span>

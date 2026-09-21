@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
   type BreakdownLine,
   type Club,
@@ -18,15 +17,17 @@ import {
   plateOn,
 } from "@epl/core";
 import { fdrStep } from "../football/FixtureChip";
+import DialogFoot from "../shell/DialogFoot";
 import Modal from "../shell/Modal";
 import Breakdown from "./Breakdown";
+import EmptySlot from "./EmptySlot";
 import FplRecords from "./FplRecords";
 import PlayerImage from "./PlayerImage";
 import Note from "./Note";
+import { POOL } from "../../players/routes";
 import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { unresolvedReason } from "../../unresolved";
-import { BUTTON } from "../shell/ButtonLink";
 import { LABEL, QUIET_FIGURE } from "@/app/desk";
 
 // What a player is scoring, and why.
@@ -106,14 +107,9 @@ export default function LivePlayerCard({
                 club={club}
                 keeper={isGoalkeeper(rostered.slot.position)}
                 kickedOff={started}
-                sizes="88px"
               />
             ) : (
-              <span className="grid aspect-[1.32] w-full place-items-center border border-dashed border-white/35 bg-black/25">
-                <span className="numeric text-2xs font-bold text-white/70">
-                  {positionLabel(rostered.slot.position) ?? "?"}
-                </span>
-              </span>
+              <EmptySlot label={positionLabel(rostered.slot.position) ?? "?"} />
             )}
           </span>
 
@@ -160,14 +156,11 @@ export default function LivePlayerCard({
 
         {story ? <Story story={story} /> : null}
 
-        <div className="flex gap-2">
-          <Link href={`/players/${rostered.slot.fantraxId}`} className={`${BUTTON} flex-1`}>
-            Full profile
-          </Link>
-          <button type="button" onClick={onClose} className={`${BUTTON} flex-1`}>
-            Close
-          </button>
-        </div>
+        <DialogFoot
+          href={`${POOL}/${rostered.slot.fantraxId}`}
+          label="Full profile"
+          onClose={onClose}
+        />
       </div>
     </Modal>
   );
