@@ -1,6 +1,26 @@
 {
-  "updatedAt": "2026-09-21T06:49:30.660Z",
+  "updatedAt": "2026-09-21T08:35:46.744Z",
   "stories": [
+    {
+      "slug": "news-football-articles-c617j2prweejo",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-21T08:35:46.744Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "Palmer Called Up, Then Called Off",
+      "deck": "Cole Palmer, owned by test1, set to withdraw from England's Nations League squad with a minor injury.",
+      "body": "test1 lose a forward to the treatment room before he has kicked a ball for anyone. Cole Palmer, recalled by England, is set to pull out of the Nations League squad with what the wire calls a minor injury. Nothing beyond that is known.\n\nNo timeline, no return date, no word on whether he features for his club in the meantime. test1, out on their own at the top, wait for the same clarity the rest of us do.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/c617j2prweejo"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
     {
       "slug": "news-football-articles-c6y8z29nxn4mo",
       "kind": "news",
@@ -572,31 +592,6 @@
         "name": "Dunk",
         "clubId": 5,
         "position": "D"
-      },
-      "ties": []
-    },
-    {
-      "slug": "p4-report-98yx3o50mtj36y3gvfq5omv5kmtj36y3g",
-      "kind": "tie-report",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 4,
-      "gameweek": 4,
-      "filedAt": "2026-09-18T17:10:33.962Z",
-      "expiresAt": null,
-      "edition": "The Monday Club",
-      "byline": "",
-      "headline": "Groß national product carries 123 39",
-      "deck": "123 39 edge test211 40-39, Groß's 14 the top score",
-      "body": "Fourteen from Groß did the settling. The midfielder was the biggest number on either side, and 123 39 needed every point of him, because behind that the returns thinned fast. Schade added ten up front, Haaland six, and a one-point win was built on the pair at the top and little else.\n\nThe floor is where 123 39 will look with relief. Stach three, B.Fernandes two, Neto two. Slim contributions, but in a margin of one they all counted.\n\ntest211 lost this by a single point and the defence is what will gnaw. Bogle led the side with twelve, Castagne added six, Aina two, three defenders returning and still not enough. João Pedro's nine up front was honest work with nobody alongside him, King and Enciso managing two apiece. One more point anywhere and the tie flips.",
-      "subjects": [
-        "tie-report:p4:98yx3o50mtj36y3gvfq5omv5kmtj36y3g"
-      ],
-      "image": null,
-      "face": {
-        "code": 60307,
-        "name": "Groß",
-        "clubId": 5,
-        "position": "M"
       },
       "ties": []
     }

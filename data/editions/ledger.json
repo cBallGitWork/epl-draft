@@ -45,9 +45,17 @@
       "news:https://www.bbc.co.uk/sport/football/articles/cxddvp49gg1ro",
       "news:https://www.bbc.co.uk/sport/football/videos/cqpve80lwem9o",
       "news:https://www.bbc.co.uk/sport/football/videos/cmp3k277095do",
-      "news:https://www.bbc.co.uk/sport/football/articles/c6y8z29nxn4mo"
+      "news:https://www.bbc.co.uk/sport/football/articles/c6y8z29nxn4mo",
+      "news:https://www.bbc.co.uk/sport/football/articles/c617j2prweejo"
     ],
     "threads": [
+      {
+        "subject": "Palmer's fitness, test1",
+        "beat": "The forward set to withdraw from England with a minor knock, extent unstated.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-21T08:35:46.744Z"
+      },
       {
         "subject": "Gabriel's future, test31121",
         "beat": "Named again in Monday's gossip, next step still unresolved, still test31121's",
@@ -208,13 +216,6 @@
         "status": "open",
         "beats": 2,
         "lastUsedAt": "2026-09-19T19:07:38.059Z"
-      },
-      {
-        "subject": "test2's four-man front against Egan's eight",
-        "beat": "Millar, Ajayi, Giles and Hall all in the fixture, all chasing an eight-point hole",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-19T10:05:39.190Z"
       }
     ]
   }
