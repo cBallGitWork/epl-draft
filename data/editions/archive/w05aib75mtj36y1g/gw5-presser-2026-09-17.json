@@ -1,0 +1,162 @@
+{
+  "slug": "gw5-presser-2026-09-17",
+  "kind": "presser",
+  "leagueId": "w05aib75mtj36y1g",
+  "period": 5,
+  "gameweek": 5,
+  "filedAt": "2026-09-18T15:00:00.000Z",
+  "expiresAt": null,
+  "edition": "The Team Sheet",
+  "byline": "The Team Sheet",
+  "headline": "Thursday Pressers",
+  "deck": "João Pedro a Chelsea doubt for the deadline, no complaint given",
+  "body": "João Pedro sits as a doubt for Chelsea, with Xabi Alonso stopping short of clearing him and giving no update on what keeps him on the edge of it.\n\nWhether test211's man features is a decision left open, and nothing said points to a timescale.",
+  "subjects": [
+    "presser:gw5:2026-09-17"
+  ],
+  "image": null,
+  "face": {
+    "code": 475168,
+    "name": "João Pedro",
+    "clubId": 6,
+    "position": null
+  },
+  "ties": [],
+  "extras": {
+    "teamNews": [
+      {
+        "club": "Chelsea",
+        "code": 8,
+        "line": "Xabi Alonso would not commit either way on João Pedro before the deadline.",
+        "men": [
+          {
+            "name": "João Pedro",
+            "owner": "test211",
+            "status": "Doubt",
+            "note": "no update given"
+          }
+        ],
+        "alsoOut": [
+          "Moisés Caicedo",
+          "Marco Palestra",
+          "Jordan Henderson"
+        ],
+        "fixture": {
+          "opponent": "Brentford",
+          "home": false,
+          "kickoff": "2026-09-18T19:00:00Z"
+        }
+      },
+      {
+        "club": "Newcastle United",
+        "code": 4,
+        "line": "Matthias Jaissle flagged Amar Dedic as a fitness question.",
+        "men": [
+          {
+            "name": "Amar Dedic",
+            "owner": "test3331",
+            "status": "Doubt",
+            "note": "hamstring"
+          }
+        ],
+        "alsoOut": [
+          "Nico González",
+          "Jacob Ramsey",
+          "Anthony Elanga",
+          "Joelinton",
+          "Dan Burn",
+          "Ewen Jaouen",
+          "William Osula"
+        ],
+        "fixture": {
+          "opponent": "Hull City",
+          "home": true,
+          "kickoff": "2026-09-19T14:00:00Z"
+        }
+      },
+      {
+        "club": "Hull City",
+        "code": 88,
+        "line": "Sergej Jakirovic left Matt Targett uncertain for the weekend.",
+        "men": [
+          {
+            "name": "Matt Targett",
+            "status": "Doubt",
+            "note": "ankle"
+          }
+        ],
+        "alsoOut": [
+          "Nobel Mendy",
+          "Jack Butland",
+          "Ilyas Ansah",
+          "Hidemasa Morita",
+          "Charlie Hughes",
+          "Darko Gyabi",
+          "Eliot Matazo"
+        ],
+        "fixture": {
+          "opponent": "Newcastle United",
+          "home": false,
+          "kickoff": "2026-09-19T14:00:00Z"
+        }
+      },
+      {
+        "club": "Coventry City",
+        "code": 9,
+        "line": "Frank Lampard ruled Aurèle Amenda out entirely.",
+        "men": [
+          {
+            "name": "Aurèle Amenda",
+            "status": "OUT",
+            "note": "calf"
+          }
+        ],
+        "alsoOut": [
+          "Haji Wright",
+          "Luke Woolfenden",
+          "Josh Eccles",
+          "Kaine Kesler-Hayden",
+          "Taiwo Awoniyi"
+        ],
+        "fixture": {
+          "opponent": "Nottingham Forest",
+          "home": false,
+          "kickoff": "2026-09-19T16:30:00Z"
+        }
+      },
+      {
+        "club": "Nottingham Forest",
+        "code": 17,
+        "line": "Nothing new came out of Nottingham Forest.",
+        "alsoOut": [
+          "Nicolò Savona",
+          "Nikola Milenković",
+          "Jair Cunha"
+        ],
+        "fixture": {
+          "opponent": "Coventry City",
+          "home": true,
+          "kickoff": "2026-09-19T16:30:00Z"
+        }
+      },
+      {
+        "club": "Brentford",
+        "code": 94,
+        "line": "Brentford added nothing to their list.",
+        "alsoOut": [
+          "Nathan Collins",
+          "Mathias Jensen",
+          "Kaye Furo",
+          "Sepp van den Berg",
+          "Josh Dasilva",
+          "Antoni Milambo"
+        ],
+        "fixture": {
+          "opponent": "Chelsea",
+          "home": true,
+          "kickoff": "2026-09-18T19:00:00Z"
+        }
+      }
+    ]
+  }
+}
