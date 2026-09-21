@@ -1,4 +1,5 @@
 import { type BreakdownLine, signed } from "@epl/core";
+import Note from "./Note";
 import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_END, LABEL } from "@/app/desk";
 
 // The itemised table: one row per category that moved his total, then the total.
@@ -8,15 +9,11 @@ import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_END, LABEL } from "@/app/desk";
 //
 // **Three columns and not two** (Craig, 21 Sep 2026: "points breakdown needs the
 // value and the points"). "Minutes Played +2" is a price with the thing it
-// priced left out; 90 minutes is what earned it. The count arrives on the live
-// payload beside the points and was being dropped in the mapper — see
-// `livescoring.ts`.
+// priced left out; the count comes off the live payload — see `livescoring.ts`.
 //
-// **A gain is green** (same day: "pts should be in green when position"). DESIGN
-// §3 has the pair already: `--color-up` is a gain and `--color-bad` is a loss,
-// and a breakdown is the one table in the app where every row is one or the
-// other. It was `text-ink` for everything that was not negative, which spent the
-// direction pair's red and left its green unused.
+// **A gain is green** (same day: "pts should be in green when position"), which
+// is DESIGN §3's direction pair: a breakdown is the one table in the app where
+// every row is a gain or a loss.
 //
 // Split out of `LivePlayerCard` when that file crossed CODE_RULES §4's ceiling.
 
@@ -38,10 +35,10 @@ export default function Breakdown({
   // gives him a number with no categories behind it is a real nought.
   if (points === undefined) {
     return (
-      <p className="cm-panel px-3 py-2 text-2xs text-mid">
+      <Note>
         Fantrax would not give us this team&apos;s points, so there is nothing to break down. What
         he did is below, from FPL.
-      </p>
+      </Note>
     );
   }
 
@@ -51,25 +48,19 @@ export default function Breakdown({
           The count column carries no head because there is no one word for it —
           it is minutes on one row and goals on the next. */}
       <div className="flex items-stretch gap-px">
-        <span className={`${HEAD_PLATE} min-w-0 flex-1 ${LABEL}`}>This period</span>
+        <span className={`${HEAD_PLATE} min-w-0 flex-1 ${LABEL}`}>This gameweek</span>
         <span className={`${HEAD_PLATE_END} w-16 ${LABEL}`}>Pts</span>
       </div>
 
       <div className="cm-panel flex flex-col">
         {breakdown.length === 0 ? (
           <p className="px-3 py-2 text-2xs text-muted">
-            {/* Four different claims, and they were one sentence.
-                A RESERVE is absent from this table because it names the eleven —
-                nothing to do with whether he played, and the card prints his real
-                minutes below, so "nothing has scored for him" was contradicting
-                itself in a single render.
-                A total with no parts means Fantrax priced him and named a category
-                this league's scoring does not describe; printing the raw
-                identifier would be worse than printing nothing.
-                A nought with minutes is a man who played and earned none.
-                A nought with none is a man who did not play. */}
+            {/* Four claims and not one sentence: a RESERVE is absent because the
+                table names the eleven; a total with no parts is a category this
+                league's scoring does not describe; and a nought with minutes on
+                it is a different man from a nought without. */}
             {reserve
-              ? "On the bench this period, so our league scores him nothing — whatever he did."
+              ? "On the bench this gameweek, so our league scores him nothing — whatever he did."
               : points
                 ? "Fantrax scored him, but did not say what for."
                 : minutes > 0

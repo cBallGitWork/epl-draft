@@ -22,10 +22,11 @@ import type { Opposition } from "@epl/core";
 // halves of a double can be rated differently.
 //
 // It is set at `--text-3xs`, the scale's last step, wherever it lands — the strip
-// under a player on the grass, and the three dialogs and the list row that draw
-// it at a column's width. It was a hard `0.5rem`, which is 8px, is not on the
-// scale, and did not move with the card above it: the one size on a player's
-// card that a wider card would not have fixed.
+// under a player on the grass, and `PlayerCard`'s dialog, which draws it at a
+// column's width. Two consumers, counted 21 Sep 2026: the live card drew it until
+// it took `fdrStep` and a layout of its own. It was a hard `0.5rem`, which is
+// 8px, is not on the scale, and did not move with the card above it: the one
+// size on a player's card that a wider card would not have fixed.
 //
 // **It never wraps.** The band under a sticker is a fixed 20px with
 // `overflow-hidden` on it, so a label that takes a second line does not spill —
@@ -67,10 +68,10 @@ const UNRATED = { ground: "var(--color-raised)", ink: "text-muted" };
  *
  *  Exported rather than copied because a second rendering of these five colours
  *  is how the scale drifts — the same mistake the chip vocabulary in
- *  `league/Chips.tsx` was pulled together to undo. The profile's fixture run
- *  needs the colours at a readable size and this chip is built to fill four
- *  pixels of headroom under a sticker, so they share the scale and nothing
- *  else. */
+ *  `league/Chips.tsx` was pulled together to undo. The profile's fixture run and
+ *  the live card need the colours at a readable size and this chip is built to
+ *  fill four pixels of headroom under a sticker, so they share the scale and
+ *  nothing else. */
 export function fdrStep(difficulty: number | null): { ground: string; ink: string } {
   return (difficulty === null ? undefined : STEPS[difficulty]) ?? UNRATED;
 }

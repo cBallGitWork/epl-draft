@@ -1,15 +1,16 @@
 import type { Contribution } from "@epl/core";
-import { chipsFor } from "./Chips";
 import { LABEL } from "@/app/desk";
 
 // What the football says, under a drop-down (Craig, 21 Sep 2026: "dropdown
 // arrow for the full match stats").
 //
-// **It is the half the breakdown above it cannot say.** That table is our
-// league's scoring categories, so it can only ever name things this league pays
-// for — and bps, expected goals and FPL's defensive contribution are measurements
-// nobody is paid for. Closed, this is the line the card already carried: his
-// minutes and the two chips that decided his afternoon. Open, it is the rest.
+// **It is the half the breakdown above it cannot say.** That table holds our
+// league's scoring categories, and bps, expected goals and FPL's defensive
+// contribution are measurements nobody is paid for.
+//
+// **Shut, it is the heading and the arrow and nothing else** (Craig, same day:
+// "Not fpl records, FULL MATCH STATS (ditch the number and labels)") — a summary
+// that previews the panel under it is the panel twice.
 //
 // The chevron and its `group-open` rotation are `football/MatchList`'s, copied
 // rather than extracted: two occurrences is a coincidence (§1), and the count is
@@ -28,18 +29,7 @@ export default function FplRecords({ done }: { done: Contribution }) {
   return (
     <details className="group cm-panel">
       <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 px-2 [&::-webkit-details-marker]:hidden">
-        <span className={`shrink-0 ${LABEL}`}>FPL records</span>
-        <span className="numeric text-2xs text-muted">{done.minutes}&apos;</span>
-        <span className="flex min-w-0 flex-1 flex-wrap items-center gap-1">
-          {chipsFor(done).map((chip) => (
-            <span
-              key={chip.label}
-              className={`numeric px-1 text-[0.625rem] font-bold leading-[1.4] ${chip.className}`}
-            >
-              {chip.label}
-            </span>
-          ))}
-        </span>
+        <span className={`min-w-0 flex-1 ${LABEL}`}>Full match stats</span>
         <svg
           aria-hidden
           viewBox="0 0 24 24"
@@ -68,13 +58,12 @@ export default function FplRecords({ done }: { done: Contribution }) {
 
 /** His afternoon as stated rows.
  *
- *  **Minutes always, the countables only when they happened.** A list that reads
- *  `Goals 0 · Assists 0 · Saves 0 · Penalties saved 0` down nine rows is nine
- *  rows saying nothing, on a card whose whole argument is that it carries only
- *  what its question needs. The four measured figures stay whatever they read,
- *  because a nought there is a measurement rather than an absence of one — and
- *  they are absent entirely until he has played, which is FPL's own distinction
- *  and the reason `Contribution.measured` is nullable. */
+ *  **Minutes always, the countables only when they happened**: `Goals 0 ·
+ *  Assists 0 · Saves 0` down nine rows is nine rows saying nothing.
+ *
+ *  The four measured figures stay whatever they read — a nought there is a
+ *  measurement and not an absence — and they are absent entirely until he has
+ *  played, which is why `Contribution.measured` is nullable. */
 function recordsOf(done: Contribution): Row[] {
   const rows: Row[] = [{ label: "Minutes", value: String(done.minutes) }];
   const countable: [string, number][] = [

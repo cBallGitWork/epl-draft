@@ -1,22 +1,28 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import {
   type BreakdownLine,
+  type Club,
   type Opposition,
   type PlayerStory,
   type SquadPlayerDetail,
+  clubColours,
   contribution,
+  crestUrl,
+  fullPlayerName,
   isGoalkeeper,
   isResolved,
   kickedOff,
-  playerName,
+  plateOn,
 } from "@epl/core";
 import { fdrStep } from "../football/FixtureChip";
 import Modal from "../shell/Modal";
 import Breakdown from "./Breakdown";
 import FplRecords from "./FplRecords";
 import PlayerImage from "./PlayerImage";
+import Note from "./Note";
 import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { unresolvedReason } from "../../unresolved";
@@ -25,24 +31,17 @@ import { LABEL, QUIET_FIGURE } from "@/app/desk";
 
 // What a player is scoring, and why.
 //
-// A second card rather than a wider `PlayerCard`, because they answer different
-// questions and are opened on different days. `PlayerCard` is "who is this, and
-// is he fit" — read while going through somebody's fifteen midweek. This one is
-// read at ten past four with a score on the screen, and the only question is
-// which categories put him where he is.
+// A second card rather than a wider `PlayerCard`: that one is "who is this, and
+// is he fit", read midweek. This is read at ten past four, and the only question
+// is which categories put him where he is.
 //
 // Every number in the breakdown is Fantrax's, under our league's own scoring,
 // and the parts add up to the whole exactly. What he *did* is FPL's, joined
-// through the identity bridge, and sits under its own heading: one is our
-// competition's arithmetic and the other is the football.
+// through the identity bridge, and sits under its own heading.
 //
-// **It opens with a title bar, because Championship Manager opens every screen
-// with one** (Craig, 21 Sep 2026: "its not very CM like"). The card was a stack
-// of hairline boxes on the page's own ground — a modern web dialog — which is
-// the same failure `ButtonLink` records talking itself out of a 1px border.
-// DESIGN §2's table has the three surfaces and this now uses all three: the
-// blue plate names the subject, the bevelled strip heads the figures, and the
-// wells hold them.
+// The title bar is `PageHeader`'s plated mechanism in his club's colours, and it
+// carries the name and nothing else (Craig, 21 Sep 2026: "prem team colour?").
+// The position sits under it beside the club, where `PlayerCard` has it.
 
 export default function LivePlayerCard({
   player: { rostered, club, opposition, points },
@@ -56,7 +55,7 @@ export default function LivePlayerCard({
    *  names on nought, and for one it does not name at all — the difference is
    *  in `points`, which is the number the table actually gave. */
   breakdown: BreakdownLine[];
-  /** Whether he is on the bench this period. The live table names only the
+  /** Whether he is on the bench this gameweek. The live table names only the
    *  eleven, so a reserve is absent from it for a reason that has nothing to do
    *  with whether he played — and saying "nothing has scored for him" over a
    *  man who played ninety minutes is two contradictions in one card. */
@@ -72,32 +71,34 @@ export default function LivePlayerCard({
   // Only when there is one match to time. A double gameweek has two kickoffs and
   // naming the first beside two chips reads as the time of both.
   const kickoff = opposition?.length === 1 ? (opposition[0]?.fixture.kickoff ?? null) : null;
+  // A slot the bridge could not settle has no club, and so no colour of its own.
+  const plate = club === undefined ? undefined : plateOn(clubColours(club.shortName));
 
   return (
     <Modal onClose={onClose} width="24rem">
-      <div className="cm-titlebar flex items-center gap-2 px-3 py-2">
-        <h2 className="cm-title min-w-0 flex-1 truncate text-xl font-bold tracking-tight">
-          {playerName(rostered)}
+      {/* `minHeight` INLINE, not `lg:min-h-0`: `desk.css` is unlayered and beats
+          `@layer utilities`, so the utility loses silently. `.cm-titlebar`'s 96px
+          above `lg` is a 1440 SCREEN's bar, not a 384px panel's. */}
+      <div
+        className="cm-titlebar flex items-center px-3 py-2"
+        style={{ minHeight: 0, ...(plate ? { background: plate.background } : {}) }}
+      >
+        {/* His name in full rather than the one on his shirt (Craig, 21 Sep
+            2026). A dialog is the one place about ONE man with the width for it. */}
+        <h2
+          className="cm-title min-w-0 flex-1 truncate text-xl font-bold tracking-tight"
+          style={plate ? { color: plate.ink } : undefined}
+        >
+          {fullPlayerName(rostered)}
         </h2>
-        {/* The position his manager has him filling, not the list he is eligible
-            for — a Fantrax player can hold several. In the index block because
-            that is where CM puts the one-token fact beside a name, and because
-            the club line below has no room to carry it at a readable size. */}
-        <span className="cm-index numeric flex h-7 shrink-0 items-center px-2 text-sm font-bold">
-          {positionLabel(rostered.slot.position) ?? "?"}
-        </span>
       </div>
 
       <div className="flex flex-col gap-2 p-3">
         <div className="flex items-center gap-3">
-          {/* The photograph alone. It was a whole `PitchPlayer`, which carries a
-              name plate and a points band — so the card printed his name twice
-              and his total twice.
-
-              A slot with no footballer behind it gets the same dashed box the
-              pitch gives him rather than an empty rectangle: every slot on an
-              open XI is tappable, so this card has to have something to say
-              about all fifteen. */}
+          {/* The photograph alone: a whole `PitchPlayer` carries a name plate
+              and a points band, so the card printed both twice. A slot with no
+              footballer gets the pitch's dashed box — every slot on an open XI
+              is tappable, so the card answers for all fifteen. */}
           <span className="w-[var(--player-card-figure)] shrink-0 overflow-hidden">
             {isResolved(rostered) ? (
               <PlayerImage
@@ -117,24 +118,30 @@ export default function LivePlayerCard({
           </span>
 
           <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-            <p className="truncate text-sm text-muted">{club?.name ?? "—"}</p>
-            <Fixtures opposition={opposition} />
-            <p className={QUIET_FIGURE}>
-              {started
-                ? `${done.minutes}' played`
-                : kickoff
-                  ? `Kicks off ${londonDayAndTime(kickoff)}`
-                  : "Yet to play"}
+            {/* The position his manager has him filling, not the list he is
+                eligible for — a Fantrax player can hold several. */}
+            <p className="truncate text-sm text-muted">
+              {[club?.name, positionLabel(rostered.slot.position)].filter(Boolean).join(" · ") ||
+                "—"}
             </p>
+            <Fixtures club={club} opposition={opposition} />
+            {/* Only before he has been on. "90' played" was the same figure the
+                stats below open with (Craig, 21 Sep 2026); a kickoff time is
+                not, because nothing below renders before one. */}
+            {started ? null : (
+              <p className={QUIET_FIGURE}>
+                {kickoff ? `Kicks off ${londonDayAndTime(kickoff)}` : "Yet to play"}
+              </p>
+            )}
           </div>
         </div>
 
         {/* Why there is nobody behind the slot, in the same words `PlayerCard`
             uses. */}
         {isResolved(rostered) ? null : (
-          <p className="cm-panel px-3 py-2 text-2xs text-mid">
+          <Note>
             {unresolvedReason(rostered.unresolved)}
-          </p>
+          </Note>
         )}
 
         {/* Nothing to explain before he has been on. An empty table under a live
@@ -166,39 +173,52 @@ export default function LivePlayerCard({
   );
 }
 
-/** Who he plays, at a size a dialog has the room for.
+/** His club, then who it plays: a crest, a "v", and the opponent (Craig, 21 Sep
+ *  2026 — "put his team logo in and v opponent").
  *
- *  **Not `FixtureChip`** (Craig, 21 Sep 2026: "the long fixture graphics looks
- *  crap"). That component is built to fill four pixels of headroom under a
- *  sticker — `--text-3xs`, the last step on the scale, stretched edge to edge —
- *  and the card was giving it 88px of width to stretch across, which turns a
- *  three-letter label into a bar with a word at one end of it. Its own docblock
- *  says as much: "Rounding and width are the parent's business."
+ *  **Not `FixtureChip`.** That fills four pixels of headroom under a sticker and
+ *  stretches edge to edge, so 88px turns three letters into a bar with a word at
+ *  one end ("the long fixture graphics looks crap").
  *
- *  So it shares `fdrStep` and nothing else, which is exactly what that export
- *  was split out for. Third consumer of it, and the geometry is different at all
- *  three — a band under a sticker, a 44px block in a run, this — so the colour
- *  stays shared and the layout stays local (§1).
- */
-function Fixtures({ opposition }: { opposition: Opposition[] | undefined }) {
-  if (opposition === undefined || opposition.length === 0) {
-    return <p className={`${LABEL} leading-6`}>No fixture</p>;
-  }
-
-  // One chip per fixture: a blank gameweek has none and a double has two, and
-  // both halves of a double can be rated differently.
+ *  So it shares `fdrStep` and nothing else — third consumer, and the geometry
+ *  differs at all three, so the colour stays shared and the layout stays local
+ *  (§1).
+ *
+ *  **The `@` stays beside the "v".** It is this app's word for away in five
+ *  places and it is Fantrax's own (`IPS 2 @MUN 5 F`); "v" says a fixture is
+ *  being named and `@` says which end of it he is at. */
+function Fixtures({
+  club,
+  opposition,
+}: {
+  club: Club | undefined;
+  opposition: Opposition[] | undefined;
+}) {
   return (
-    <p className="flex flex-wrap items-center gap-1">
-      {opposition.map((against) => (
-        <span
-          key={against.fixture.id}
-          className={`numeric px-1.5 py-0.5 text-sm font-bold leading-snug ${fdrStep(against.difficulty).ink}`}
-          style={{ backgroundColor: fdrStep(against.difficulty).ground }}
-        >
-          {against.home ? "" : "@"}
-          {against.club.shortName}
-        </span>
-      ))}
+    <p className="flex flex-wrap items-center gap-1.5">
+      {club === undefined ? null : (
+        // Decorative: the line above names his club in full.
+        <Image src={crestUrl(club)} alt="" width={18} height={18} className="shrink-0" />
+      )}
+      {opposition === undefined || opposition.length === 0 ? (
+        <span className={LABEL}>No fixture</span>
+      ) : (
+        <>
+          <span className="text-2xs text-faint">v</span>
+          {/* One chip per fixture: a blank gameweek has none and a double has
+              two, and both halves of a double can be rated differently. */}
+          {opposition.map((against) => (
+            <span
+              key={against.fixture.id}
+              className={`numeric px-1.5 py-0.5 text-sm font-bold leading-snug ${fdrStep(against.difficulty).ink}`}
+              style={{ backgroundColor: fdrStep(against.difficulty).ground }}
+            >
+              {against.home ? "" : "@"}
+              {against.club.shortName}
+            </span>
+          ))}
+        </>
+      )}
     </p>
   );
 }
@@ -206,9 +226,8 @@ function Fixtures({ opposition }: { opposition: Opposition[] | undefined }) {
 /** Fantrax's own words about him, when there are any from today.
  *
  *  The body and not the headline: `headlineNoBrief` is the same sentence
- *  truncated with an ellipsis, so printing both is printing one of them twice.
- *  The analysis is a paragraph and stays on the profile — this card is read with
- *  a match on. */
+ *  truncated, so printing both prints one of them twice. The analysis is a
+ *  paragraph and stays on the profile — this card is read with a match on. */
 function Story({ story }: { story: PlayerStory }) {
   return (
     <div className="cm-panel flex flex-col gap-1 px-2 py-1.5">
