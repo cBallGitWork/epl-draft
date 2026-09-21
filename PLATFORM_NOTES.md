@@ -44,6 +44,173 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## `getTeamRosterInfo` answers with no cookie, and it carries the deadline — probed 21 Sep 2026
+
+Asked because the My Team section needs four things Craig named and nobody had
+counted which of them Fantrax will give us. All fxpa, all unauthenticated, all
+three leagues.
+
+**How to read an undocumented method list, which is the reusable half.** The
+refusal tells you whether the method exists:
+
+| Refusal | Means |
+|---|---|
+| `ERROR_INVALID_REQUEST` | **no such method** |
+| `WARNING_NOT_LOGGED_IN` | real method, needs a session |
+| `NOT_MEMBER_OF_LEAGUE` | real method, needs to be in the league |
+
+Twenty-four names tried. **Exists and is gated:** `getPendingTransactions`
+(NOT_MEMBER), `getTradeBlock`, `getTeamInfo`, `getLeagueSettings`,
+`getCommissionerHubInfo` (all NOT_LOGGED_IN), `getLeagueHomeInfo` (NOT_MEMBER).
+**Does not exist:** `getPendingClaims`, `getClaimsAndDrops`, `getTrades`,
+`getPendingTrades`, `getTeamTransactions`, `getWaiverClaims`, `getWaiverWire`,
+`getLeagueActivity`, `getActivityFeed`, `getNotifications`, `getLeagueHome`,
+`getFantasyTeamInfo`, `getScoringPeriods`, `getPowerRankings`, `getSchedule`,
+`getPlayoffs`, `getProjections`, `getWatchList`, `getTeamNotes`, and the five
+message names below.
+
+### ~~There is no league message surface, at all~~ — WRONG, corrected the same day
+
+This section said five message method names were all `ERROR_INVALID_REQUEST`, and
+concluded that a place to talk to the league would have to be ours. **The names
+were wrong, not the surface.** With the commissioner's cookie (below) it turns
+out Fantrax has *three*: a **Chat**, a **Message Forum** and **Commissioner
+Messages**, plus League Polls and a League Article, all of them panes of
+`getLeagueHomeInfo` rather than methods of their own.
+
+The lesson is about the method: guessing names enumerates what you already
+imagined. `ERROR_INVALID_REQUEST` proves `getLeagueChat` does not exist; it
+proves nothing whatever about chat. The payload of a screen that HAS the feature
+is what finds it, and one 318 KB read answered what twenty-four guesses could
+not.
+
+### `getTeamRosterInfo` — OK with no cookie, 43 KB
+
+dummy ✓ · rehearsal ✓ · real **refused**, and honestly: `WARNING`, *"You cannot
+use this screen until there is at least one team in this league."* It will
+answer from 10 Oct.
+
+Sixteen top-level keys. The four worth building on:
+
+- **`leagueNotices` — 2/2 in both drafted leagues, and one of them is THE
+  DEADLINE.** *"Don't forget to set your lineup before **Sat Oct 10, 7:15 AM
+  EDT**"* and *"rank your auto-subs before the first game of the week starts on
+  **Sat Oct 10, 7:30 AM EDT**"*. CLAUDE.md's rule is that our lineup deadline is
+  a commissioner setting and must never be inferred from FPL's — this is that
+  setting, published, with a timestamp, and nothing in the tree reads it. It
+  arrives as prose with `<b>` in it, so it is a string to display and not yet a
+  datetime to compute with.
+- **`miscData.maxActions` = 1** in both drafted leagues, `null` in real. The
+  league's cap on transactions, which no screen shows.
+- **`periodOppnentTeamIds`** — the opponent, keyed by period. A second source for
+  what `headToHead` already answers.
+- **`tables[].rows[]`** — the roster as Fantrax draws it, per player:
+  `cells[0]` is the fixture WITH kickoff (`"@COV<br/>Mon 3:00PM"`) and an
+  `eventId`; `scorer.icons[].tooltip` is a dated news line (*"Sep 20, 4:17 PM:
+  Hornicek registered three saves and…"*); `disableLineupChange` says who may not
+  be moved; `posIds`/`eligibleStatusIds` are the eligibility. `miscData` also
+  carries `realTeamJerseyMap`, Fantrax's own club jersey PNGs.
+
+**The seven roster views are advertised and I could not switch them.** `tabs`
+names `SIMPLE STATS FPTS OVERVIEW SCHEDULE_PERIOD SCHEDULE_FULL GAMES_PER_POS`
+with a `viewType` each, but neither `view` nor `viewType` in the request changed
+a single column across ten attempts — the same sixteen came back every time.
+Recorded as unfound rather than absent: the parameter exists in their client and
+this probe did not find its name.
+
+## The commissioner's cookie opens all of it — probed 21 Sep 2026
+
+Craig supplied his own session and the probe was **read methods only**; nothing
+below changed a league. `adminMode` and every write are still unprobed.
+
+**The cookie is live but `roles` is `"none"`** — and `myTeamIds` comes back as
+**all ten** dummy teams, with a `commissioner` key on every response. So role is
+not the field to gate on; team ownership is.
+
+| Method | Unauthenticated | With the cookie |
+|---|---|---|
+| `getPendingTransactions` | NOT_MEMBER | **OK** 4.4 KB |
+| `getTradeBlock` | NOT_LOGGED_IN | **OK** 62 KB |
+| `getCommissionerHubInfo` | NOT_LOGGED_IN | **OK** 7.3 KB |
+| `getLeagueHomeInfo` | NOT_MEMBER | **OK** 318 KB |
+| `getTeamInfo` | NOT_LOGGED_IN | **OK** 4.4 KB |
+| `getLeagueSettings` | NOT_LOGGED_IN | **OK** 136 B |
+
+**The real league refuses even WITH the cookie** — `NOT_MEMBER_OF_LEAGUE`, where
+unauthenticated it says *"you cannot use this screen until there is at least one
+team in this league"*. A league with no teams has no members, so this is the
+empty state and not a wrong id. **It must be re-probed after the draft**, because
+until then nothing here is known to be true of the league we actually serve.
+
+### Three cookies, and Cloudflare is not one of them
+
+The header Craig pasted carried thirteen cookies including `cf_clearance` and
+`__cf_bm`. Stripped to **`uig`, `ui` and `FX_RM`**, `getPendingTransactions` and
+`getLeagueSettings` both still answer OK. That is the question that decides
+whether any of this can be *deployed*: Cloudflare's clearance is bound to an IP
+and a user-agent and would never survive the trip to Vercel, and the auth does
+not need it.
+
+So the deployable secret is three cookies, not a browser session — and `FX_RM`
+reads like a remember-me token, which is the one of the three most likely to
+outlive a week. **How long it lasts is unprobed** and is the next thing to know,
+because a secret that dies every Sunday is an operational problem and not an
+architecture.
+
+### The league home is a CM league homepage already
+
+`allViewPanes` — thirteen, in the league's own order, `empty` telling you which
+have content:
+
+`COMMISSIONER_MESSAGE` "Commish Memo" · `LEAGUE_POLLS` · `LEAGUE_ARTICLE` ·
+`H2H_SCHEDULE` · `STANDINGS` · **`CHAT`** · `PENDING_TRANSACTIONS` ·
+**`MESSAGE_FORUM`** · `PLAYERS` "Player News" · `TRANSACTION_HISTORY` ·
+`PUBLIC_TRIVIA` · `INJURY_REPORT` · `PUBLIC_POLL`
+
+`messageForum` is `{header, threads:[]}` — empty in dummy, so **the populated
+shape is unknown** and must be read from a league that has posts before anything
+renders it. `LEAGUE_ARTICLE` is worth a second look for its own reason: the paper
+could file into Fantrax rather than only onto our own front page.
+
+### The trade block is real data, not a stub
+
+`scorerListForWanted` **150**, `scorerListForOffered` **15** in dummy. Each entry
+is a full scorer — name, club, `posShortNames`, `scorerId`, `headshotUrl`, and
+`icons[].tooltip` carrying the injury line (*"Calf - Late fitness test
+(Game-time decision)"*). So "who is on offer and who is wanted" needs no
+invention.
+
+### Pending transactions, and the waiver rule
+
+`claimTypes` is `{1: FREE_FOR_ALL, 2: RANKING}` and `selectedTxType` is `CLAIM`.
+`noResults: true` in dummy at the time of probing — the method answers, the
+league simply had nothing pending, so **the populated table shape is also
+unknown**. Read it on a Wednesday.
+
+### Nineteen commissioner actions, in five groups
+
+`{linkKey, id, shortName, description, group, admin}`, and `admin` is `false` on
+all nineteen.
+
+- **Rosters & Players** — Process Waivers · Execute Auto-Subs · Waive All
+  Players · Illegal Roster Override · Min/Max Violation Override · Position
+  Eligibility Override · Player Status Override
+- **Setup & Roles** — League Setup · Team Administration · Team Permissions ·
+  Edit Commissioners · **Commissioner Messages** · Replace Owner
+- **Stats & Scoring** — Scoring/Standings Adjustment · Override Player Stats ·
+  Recalculate Fantasy Points
+- **Draft** — Reset League & Rosters
+- **League Management** — Copy / Renew League · Delete This League
+
+The action-shaped ones (Process Waivers, Execute Auto-Subs) carry a null
+`linkKey`, so they are `executeCommissionerHubAction` calls rather than links.
+**Every one of them is a write and none was called.**
+
+The hub also carries the league's **period calendar with real date ranges** —
+Fri–Thu weeks, `(Fri Aug 21, 2026 - Thu Aug 27, 2026)` through
+`(Fri Apr 30, 2027 - Thu May 6, 2027)`. `periodAlignment.json` is a frozen
+fixture with placeholder kickoffs on 33 of 38 rounds; this is the real thing.
+
 ## `getTeamRosters` honours a period, and the answer differs — probed 2 Sep 2026
 
 `fetchTeamRosters(leagueId, period)` echoes the period asked for, verbatim.
