@@ -27,12 +27,16 @@ numerals for every figure in both registers**. A score is set the same way on
 newsprint as on the desk, because a score is the one thing that is the same
 object in both places.
 
-**The nav bones are literal.** The six sections are one table
-(`shell/sections.ts`) and each register prints it its own way: the Desk draws
-them as Championship Manager's furniture (`shell/Rail` — a 130px rail down the
-side above `lg`, a flat `.cm-foot` strip across the bottom below it; §2's table
-has the three objects), the Paper sets them as a contents strip in letterspaced
-small capitals (`gazette/Index`). Same six, same order, same gate on Live.
+**The nav bones are literal.** The sections are one table (`shell/sections.ts`)
+and `shell/Rail` draws them as Championship Manager's furniture — a 130px rail
+down the side above `lg`, a flat `.cm-foot` strip across the bottom below it;
+§2's table has the three objects. The paper wears the same rail rather than
+printing its own contents strip (Craig, 16 Sep 2026), which is why
+`gazette/Index` is gone: the front page was the one screen with no way back into
+the app.
+
+**The count is deliberately not written down here.** This paragraph said "six"
+through two additions of a seventh, and `sections.ts` is the table to read.
 
 **Neither shape is on `/`.** A navy column beside a broadsheet is a seam, and it
 would narrow the container the front page's two-column layout keys off; a blue
@@ -216,8 +220,8 @@ holds that line.
 **Six plates is the bar's ceiling, and the sixth is now a DOOR.** Craig, 5 Sep
 2026: *"if we tap a section, it could bring up more options."* The ceiling was
 measured and is not negotiable — six plates at 320 are 53px each against a
-widest label of 44 (`Gazetta`, exactly), and a seventh gives 45px against a 36px
-budget, so `Gazetta` and `League` would both clip. That arithmetic is why the
+widest label of 51 (`My Team`; `Gazetta` is 44), and a seventh gives 45px, which
+clips both. That arithmetic is why the
 pool was taken OFF the bar on 5 Sep rather than added to it, and it would have
 demanded a rename of two existing sections every time the app grew.
 
@@ -225,6 +229,14 @@ So the last plate is `More`, and everything past the fifth section lives behind
 it: a full-width drawer on the floor, drawn by `shell/Modal` at
 `anchor="bottom"`. The bar keeps exactly six plates for ever and the ceiling
 stops being a limit on how many sections the app may have.
+
+**And a section may YIELD its plate rather than hold one** (Craig, 21 Sep 2026:
+*"my team behind more during gameweek"*). `My Team` stands on the bar all week
+and steps into the drawer while football is on, because the plate it would take
+is Live's: `overflowDuringGameweek` beside `onlyDuringGameweek`, both applied by
+`sectionsFor()`, which is a pure function and tested against the ceiling above.
+The trade is honest at that hour — the lineup can no longer be changed, and the
+score of the tie it is playing is running on the plate that replaced it.
 
 Three things about it are rules rather than choices. **It is a plate, not a new
 object** — same width, same type, same `.cm-foot` ink, and it takes

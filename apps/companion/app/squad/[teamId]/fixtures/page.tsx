@@ -36,8 +36,10 @@ export default async function FixturesPage({
 }: {
   params: Promise<{ teamId: string }>;
 }) {
-  const { teamId } = await params;
-  const [team, read] = await Promise.all([teamOr404(teamId), getSchedule()]);
+  const { teamId: slug } = await params;
+  const [team, read] = await Promise.all([teamOr404(slug), getSchedule()]);
+  // The id the slug resolved to: `me` is a front door and not a team.
+  const teamId = team.teamId;
 
   if ("unavailable" in read) {
     return (

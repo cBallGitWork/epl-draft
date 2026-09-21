@@ -2,6 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import type { RosteredTeam } from "@epl/core";
 import { getLeagueSquads } from "../../squads";
 import { planningRound } from "../../round";
+import { myTeamId } from "../../session";
+import { OWN, SQUAD } from "../routes";
 
 // Which team a `/squad/[teamId]` screen is about.
 //
@@ -15,15 +17,57 @@ import { planningRound } from "../../round";
 // The three outcomes are the squad tab's, deliberately: `undrafted` is a 404
 // because there is no such screen yet, `unavailable` redirects to the index
 // where the outage is described rather than hidden behind a status code, and an
-// unknown id is an ordinary 404.
+// unknown id is an ordinary 404. A fourth joins them with `me`: a reader who is
+// not signed in has no own team to show, and the index is where the code goes
+// in.
 
 export interface TeamIdentity {
   teamId: string;
   teamName: string;
+  /** What the URL called him, which is his id for nine teams in ten and `me` on
+   *  the reader's own front door.
+   *
+   *  The tab strip builds its five hrefs from this rather than from `teamId`, so
+   *  a manager who came in through My Team stays inside that section as he moves
+   *  across Transfers, Match, Fixtures and Stats. Following the id instead would
+   *  drop him onto the same screens under a pathname the rail no longer
+   *  recognises — navigation going blank one tap in, which is the failure
+   *  `sections.ts` gives its `routes` field to avoid. */
+  slug: string;
 }
 
-export async function teamOr404(teamId: string): Promise<TeamIdentity> {
-  return (await leagueTeams(teamId)).team;
+export async function teamOr404(slug: string): Promise<TeamIdentity> {
+  return (await leagueTeams(slug)).team;
+}
+
+/** A team as its own screens want it: the id for the reads, the name for the
+ *  bar, and the slug the URL used for the tabs.
+ *
+ *  Extracted at three — `leagueTeams` below and the two tabs that keep their own
+ *  roster read build the same three fields off the same rostered team. */
+export function identify(team: { teamId: string; teamName: string }, slug: string): TeamIdentity {
+  return { teamId: team.teamId, teamName: team.teamName, slug };
+}
+
+/** Which team a URL segment means, and whether it is the reader's own.
+ *
+ *  Extracted at three: `leagueTeams` below, the squad tab and the match tab each
+ *  read their own roster and each had to answer this for itself. The two that
+ *  ask for `mine` want it against the same list they resolved from, which is why
+ *  it comes back with the id rather than being asked for again.
+ *
+ *  Resolved against the ROSTERED teams, which is `myTeamId`'s own guarantee: a
+ *  cookie signed for the rehearsal league simply stops naming anybody on swap
+ *  day, and its holder is sent to the index to sign in again rather than 404ing
+ *  on a team that does exist somewhere else. */
+export async function whoseTeam(
+  slug: string,
+  teams: readonly { teamId: string }[],
+): Promise<{ teamId: string; mine: boolean }> {
+  const own = await myTeamId(teams);
+  const teamId = slug === OWN ? own : slug;
+  if (teamId === null) redirect(SQUAD);
+  return { teamId, mine: own === teamId };
 }
 
 /** The same read, plus every OTHER team's name by id.
@@ -32,11 +76,13 @@ export async function teamOr404(teamId: string): Promise<TeamIdentity> {
  *  with. Two calls would be two reads of the same cached payload — and the names
  *  are already sitting in it, so the second one is free. */
 export async function leagueTeams(
-  teamId: string,
+  slug: string,
 ): Promise<{ team: TeamIdentity; names: Record<string, string>; squad: RosteredTeam }> {
   const squads = await getLeagueSquads(await planningRound());
   if ("undrafted" in squads) notFound();
-  if ("unavailable" in squads) redirect("/squad");
+  if ("unavailable" in squads) redirect(SQUAD);
+
+  const { teamId } = await whoseTeam(slug, squads.period.teams);
 
   const team = squads.period.teams.find((t) => t.teamId === teamId);
   if (!team) notFound();
@@ -46,5 +92,5 @@ export async function leagueTeams(
   const names: Record<string, string> = {};
   for (const entry of squads.period.teams) names[entry.teamId] = entry.teamName;
 
-  return { team: { teamId: team.teamId, teamName: team.teamName }, names, squad: team };
+  return { team: identify(team, slug), names, squad: team };
 }

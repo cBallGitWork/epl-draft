@@ -10,7 +10,8 @@ question on 31 Aug 2026, and the foot row turned it back on 5 Sep: **the two
 shapes fail on different axes**, which is why `navfit` reads which one is on
 screen and asks it its own question — a rail runs out of HEIGHT and a foot row
 runs out of WIDTH per plate. On the phone, which is the shape that matters here,
-six plates are 53px at 320 against a 44px label and a seventh would be 45.
+six plates are 53px at 320 against a 51px label (`My Team`) and a seventh would
+be 45.
 
 The answer did not change under either framing: a screen reached from the one
 section it belongs to is where it belongs, and six is the whole app.

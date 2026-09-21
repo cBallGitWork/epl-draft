@@ -255,8 +255,14 @@ Game`, the manager's own name in cyan, `Competitions`, `Nations & Clubs`, `Find`
 Tactics`, `Commentary Speed` (`21.jpg`), or `Everton Tactics`, `Torquay
 Tactics`, `Commentary Speed` (`16.jpg`).
 
-So a rail entry is not always a section. Ours is six sections and nothing else;
+So a rail entry is not always a section. Ours is sections and nothing else;
 CM's is "where you can go from anywhere" over "what this screen can do".
+
+One of theirs we do now keep, and it is the second entry: CM's rail names the
+MANAGER between `Continue Game` and `Competitions`, so the thing you run sits
+above the competitions and every other club is reached through them. `My Team`
+is that slot (21 Sep 2026) — the ten squads reached through the league were the
+redundancy Craig removed on 2 Sep, and your own was never one of the ten.
 
 ## The title bar has two treatments
 

@@ -12,6 +12,7 @@
 // the same reason — see `prem/routes.ts`.
 
 import { CLUB, MATCH } from "../../prem/routes";
+import { MY_TEAM } from "../../squad/routes";
 
 /** The paper's territory: the front page, and the pages behind it.
  *
@@ -55,7 +56,16 @@ const PAPER_ROUTES = ["/", "/paper"];
  *
  *  `/squad` itself still exists and still works — the index is a real page and
  *  the sign-in lives on it. It is simply not a destination the rail offers,
- *  which is the difference between a route and a section. */
+ *  which is the difference between a route and a section.
+ *
+ *  **My Team is, and it is the other half of that ruling rather than a reversal
+ *  of it** (Craig, 21 Sep 2026: "MY TEAM section"). Ten squads reached through
+ *  the competition is what was redundant; YOUR one is not one of the ten, and
+ *  the reference is explicit about it — CM's rail runs `Continue Game · <the
+ *  manager's own name> · Competitions · Nations & Clubs · Find`, so the thing
+ *  you manage sits second, above the competitions, and everybody else's club is
+ *  reached through them. Ours sat nowhere: an app that knows whose team you are
+ *  made you find yourself in a table of ten to get to it. */
 export interface Section {
   href: string;
   label: string;
@@ -73,9 +83,14 @@ export interface Section {
    *
    *  `More` is the way out of that, and it is Craig's (5 Sep 2026: *"if we tap a
    *  section, it could bring up more options"*). The bar keeps its six plates
-   *  for ever — five sections and a door — and every section after the fifth
-   *  lands behind that door instead of costing the bar a rename. The ceiling
-   *  stops being a limit on how many sections the app may have.
+   *  for ever — five sections and a door — and the sections past the fifth land
+   *  behind that door instead of costing the bar a rename. The ceiling stops
+   *  being a limit on how many sections the app may have.
+   *
+   *  **Which five is not fixed for the week**, since 21 Sep 2026: this flag is
+   *  the standing answer and `overflowDuringGameweek` below is the one that
+   *  changes with the round, so a section's place on the bar is read from
+   *  `sectionsFor()` rather than from its position in the table.
    *
    *  **The desk rail does not use it.** It runs down the side of a 1440 screen
    *  with room for a dozen entries, and a disclosure on a surface where
@@ -84,10 +99,28 @@ export interface Section {
    *  the same relationship they already have, the rail being outlined navy and
    *  the foot row a filled strip. */
   overflow?: boolean;
+  /** **Behind `More` only while football is on**, because the plate it would
+   *  take is Live's (Craig, 21 Sep 2026: *"my team behind more during
+   *  gameweek"*).
+   *
+   *  The pair with `onlyDuringGameweek` is the whole rule: Live appears when
+   *  there is football, and this stands back when it does. It is what the
+   *  measurement leaves room for — `navfit` at 320 gives six plates 53px each
+   *  and `My Team` needs 51, but a SEVENTH gives 45 and the label clips. So the
+   *  bar keeps its six for ever, and the section that yields is the one whose
+   *  reason for being open is weakest on a Saturday: a lineup you can no longer
+   *  change, while the score of the tie it is playing runs on the plate beside
+   *  it. */
+  overflowDuringGameweek?: boolean;
 }
 
 export const SECTIONS: Section[] = [
   { href: "/", label: "Gazetta", routes: PAPER_ROUTES },
+  // **One route and not a prefix**, which is what keeps the plate honest: it
+  // owns `/squad/me`, so it lights across all five of the reader's own tabs and
+  // stays dark on a rival's screens. `squad/routes.ts` records why the front
+  // door is a URL rather than a redirect to an id.
+  { href: MY_TEAM, label: "My Team", routes: [MY_TEAM], overflowDuringGameweek: true },
   { href: "/league", label: "League", routes: ["/league"] },
   // **"Prem", and the bar says the rest.** The rail is 64px below `lg` and
   // "Gazetta" already measures 45px of it at 9px bold uppercase, so
@@ -126,6 +159,19 @@ export const SECTIONS: Section[] = [
   { href: "/players", label: "Find", routes: ["/players"], overflow: true },
   { href: "/fpl", label: "FPL", routes: ["/fpl"], overflow: true },
 ];
+
+/** The sections this round has, and which of them are on the bar.
+ *
+ *  Both answers turn on the same fact and are therefore one function: whether
+ *  football is on decides that Live exists at all, and that My Team gives up its
+ *  plate to it. `Rail` used to hold the first half inline — it is a client
+ *  component, so the rule was untestable there, and it is the rule the bar's
+ *  measured ceiling rests on. */
+export function sectionsFor(matchday: boolean): Section[] {
+  return SECTIONS.filter((section) => matchday || !section.onlyDuringGameweek).map((section) =>
+    matchday && section.overflowDuringGameweek ? { ...section, overflow: true } : section,
+  );
+}
 
 /** The plates a phone's foot row draws, in order, before `More` is added. */
 export function barSections(sections: readonly Section[]): Section[] {

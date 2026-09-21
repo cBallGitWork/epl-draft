@@ -34,10 +34,11 @@ export default async function StatsPage({
 }: {
   params: Promise<{ teamId: string }>;
 }) {
-  const { teamId } = await params;
-  const [{ team, squad }, all] = await Promise.all([leagueTeams(teamId), getPlayerStats()]);
+  const { teamId: slug } = await params;
+  const [{ team, squad }, all] = await Promise.all([leagueTeams(slug), getPlayerStats()]);
 
-  const his = all.filter((line) => line.ownerTeamId === teamId);
+  // `team.teamId` and not the slug, which on the front door is the word `me`.
+  const his = all.filter((line) => line.ownerTeamId === team.teamId);
 
   // **What FPL knows and Fantrax does not** (Craig, 2 Sep: "we just use stats
   // not covered by fantasy points, so goals/assists we don't need, but xg/xa

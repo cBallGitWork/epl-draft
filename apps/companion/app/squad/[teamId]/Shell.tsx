@@ -30,10 +30,10 @@ export default function TeamShell({
   empty,
   children,
 }: {
-  /** Whose screens these are. The id builds the tab hrefs and the name goes on
-   *  the bar, so both come from the same object rather than being passed
-   *  separately and drifting. */
-  team: { teamId: string; teamName: string };
+  /** Whose screens these are. The slug builds the tab hrefs, the id looks his
+   *  colour up and the name goes on the bar, so all three come from the same
+   *  object rather than being passed separately and drifting. */
+  team: { teamId: string; teamName: string; slug: string };
   /** What this VIEW is — "Squad", "The Wire". */
   title: string;
   current: TeamTab;
@@ -46,7 +46,7 @@ export default function TeamShell({
   // resolved rather than an id.
   return (
     <PlateShell colours={teamColours(team.teamId)} title={team.teamName} sub={sub} caption={title}
-      tabs={<TeamTabs teamId={team.teamId} current={current} empty={empty} />}>
+      tabs={<TeamTabs slug={team.slug} current={current} empty={empty} />}>
       {children}
     </PlateShell>
   );

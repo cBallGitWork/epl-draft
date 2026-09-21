@@ -27,8 +27,10 @@ export default async function TransfersPage({
 }: {
   params: Promise<{ teamId: string }>;
 }) {
-  const { teamId } = await params;
-  const [{ team, names }, feed] = await Promise.all([leagueTeams(teamId), readDeals()]);
+  const { teamId: slug } = await params;
+  const [{ team, names }, feed] = await Promise.all([leagueTeams(slug), readDeals()]);
+  // The id the slug resolved to: `me` is a front door and not a team.
+  const teamId = team.teamId;
 
   // His side of the league's business. A deal is his if he is on either side of
   // it — the claim he made, and the drop he made to afford it.

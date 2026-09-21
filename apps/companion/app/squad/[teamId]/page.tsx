@@ -20,6 +20,8 @@ import { lastLockedRound, leagueInfo, planningRound, roundOf } from "../../round
 import { pendingByTeam, squadLivePoints } from "../../scoreboard";
 import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
+import { OWN, SQUAD } from "../routes";
+import { identify, whoseTeam } from "./team";
 
 // One manager's squad, laid out on a pitch. The screen the league opens on a
 // Saturday, and the reason the join exists.
@@ -43,7 +45,9 @@ export default async function TeamPage({
    *  about a fixture in March, and was the one thing that row did not do. */
   searchParams: Promise<{ gw?: string }>;
 }) {
-  const [{ teamId }, { gw }] = await Promise.all([params, searchParams]);
+  // `teamId` is what the folder is called; `slug` is what the reader typed, and
+  // on the front door those are not the same thing. See `squad/routes.ts`.
+  const [{ teamId: slug }, { gw }] = await Promise.all([params, searchParams]);
 
   // Through the calendar seam, never by taking one number for the other: the
   // period is what Fantrax is asked for and the gameweek is what FPL is asked
@@ -72,7 +76,10 @@ export default async function TeamPage({
   // list, and the two can only disagree for a team that exists in the league and
   // holds no roster — which has no squad screen to show either way.
   const info = await leagueInfo();
-  const asksOwn = info === null ? false : (await myTeamId(info.teams)) === teamId;
+  // The front door asks for its own team by name, so it needs no id to compare:
+  // `/squad/me` is by definition the week its reader can still change.
+  const asksOwn =
+    slug === OWN || (info !== null && (await myTeamId(info.teams)) === slug);
 
   const round = Number.isInteger(asked)
     ? await roundOf(asked)
@@ -84,15 +91,18 @@ export default async function TeamPage({
   // unreachable is not — that is a state of ours, and it belongs on /team where
   // it is described rather than behind a status code.
   if ("undrafted" in squads) notFound();
-  if ("unavailable" in squads) redirect("/squad");
-
-  const team = squads.period.teams.find((t) => t.teamId === teamId);
-  if (!team) notFound();
+  if ("unavailable" in squads) redirect(SQUAD);
 
   // Whose squad this is. Most visits to this route are to somebody else's — the
   // matchup card and the squad list both lead here — and the two readings want
   // different things said, so the page knows which it is serving.
-  const mine = (await myTeamId(squads.period.teams)) === teamId;
+  //
+  // It is also what the front door resolves to: a reader who is not signed in
+  // has no own team, and the index is where the code goes in.
+  const { teamId, mine } = await whoseTeam(slug, squads.period.teams);
+
+  const team = squads.period.teams.find((t) => t.teamId === teamId);
+  if (!team) notFound();
 
   const clubs = clubById(squads.snapshot);
   const opposition = oppositionByClub(squads.snapshot);
@@ -197,7 +207,7 @@ export default async function TeamPage({
        open on the sofa. Same cadence as the head-to-head board that shows the
        same numbers. */
     <TeamShell
-      team={team}
+      team={identify(team, slug)}
       title={mine ? "Your squad" : "Squad"}
       current="squad"
     >

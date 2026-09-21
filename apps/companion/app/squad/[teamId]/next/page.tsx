@@ -1,6 +1,8 @@
 import TabEmpty from "../../../components/league/TabEmpty";
 import { headToHead, inkOn, ordinal, teamColours } from "@epl/core";
 import TeamShell from "../Shell";
+import { SQUAD } from "../../routes";
+import { identify, whoseTeam } from "../team";
 import { getLeagueSquads } from "../../../squads";
 import { planningRound } from "../../../round";
 import { leagueTable } from "../../../standings";
@@ -31,7 +33,7 @@ export default async function NextMatchPage({
 }: {
   params: Promise<{ teamId: string }>;
 }) {
-  const { teamId } = await params;
+  const { teamId: slug } = await params;
   // The whole read rather than `teamOr404`, because this screen needs the
   // matchups and the period as well as the name — one read either way.
   const [squads, table] = await Promise.all([
@@ -39,8 +41,9 @@ export default async function NextMatchPage({
     leagueTable(),
   ]);
   if ("undrafted" in squads) notFound();
-  if ("unavailable" in squads) redirect("/squad");
+  if ("unavailable" in squads) redirect(SQUAD);
 
+  const { teamId } = await whoseTeam(slug, squads.period.teams);
   const team = squads.period.teams.find((t) => t.teamId === teamId);
   if (!team) notFound();
 
@@ -59,7 +62,7 @@ export default async function NextMatchPage({
 
   return (
     <TeamShell
-      team={team}
+      team={identify(team, slug)}
       title="Next Match"
       current="next"
       empty={tie === undefined ? ["next"] : []}
