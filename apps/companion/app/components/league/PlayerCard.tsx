@@ -5,6 +5,7 @@ import { type SquadPlayerDetail, isDoubtful, isResolved, playerName } from "@epl
 import Modal from "../shell/Modal";
 import FixtureChip from "../football/FixtureChip";
 import PitchPlayer from "./PitchPlayer";
+import Note from "./Note";
 import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { unresolvedReason } from "../../unresolved";
@@ -89,9 +90,9 @@ export default function PlayerCard({
         ) : null}
 
         {isResolved(rostered) ? null : (
-          <p className=" border border-line bg-raised px-3 py-2 text-2xs text-mid">
+          <Note>
             {unresolvedReason(rostered.unresolved)}
-          </p>
+          </Note>
         )}
 
         <div className="flex gap-2">
