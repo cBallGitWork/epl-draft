@@ -45,7 +45,10 @@ export default function Splash({ story }: { story: PublishedStory }) {
 
         <span className="mt-3 block h-px w-6 bg-ink" />
 
-        <Dateline story={story} className="pt-2.5" />
+        {/* No correspondent on the front page: one paper has one, so naming him
+            over the splash says nothing a reader did not know, and it sits
+            between the headline and the story. The article page keeps it. */}
+        <Dateline story={story} byline={false} className="pt-2.5" />
       </TurnLink>
     </section>
   );

@@ -232,13 +232,7 @@ export function file(
     expiresAt:
       assignment.kind === "fixture-preview"
         ? (ctx.snapshot.fixtures.find((each) => each.id === assignment.fixtureId)?.kickoff ?? null)
-        // Team news dies at the first whistle of the round it previewed: past
-        // that it is a record of what was unknown, and the paper is not an
-        // archive. Read off the fixtures already fetched for that round, so a
-        // round FPL has not published yet expires by the cap instead.
-        : assignment.kind === "presser"
-          ? ([...ctx.presserTies.values()].map((tie) => tie.kickoff).sort()[0] ?? null)
-          : null,
+        : null,
     edition: editionName(assignment.kind, filedAt),
     byline: STORY_BYLINE[assignment.kind] ?? "",
     subject: assignment.key,
