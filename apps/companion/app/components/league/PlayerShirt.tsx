@@ -77,7 +77,7 @@ const JERSEY = 193 / 284;
  *  named. */
 const CARD = JERSEY / KEPT;
 
-export const KIT_RATIO = { "--pitch-figure": String(CARD) } as CSSProperties;
+const KIT_RATIO = { "--pitch-figure": String(CARD) } as CSSProperties;
 
 export default function PlayerShirt({
   club,

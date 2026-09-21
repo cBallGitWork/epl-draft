@@ -118,6 +118,30 @@
    was the photographed trapezoid, and it was deleted on 21 Sep 2026 when the
    lineup planner — its last caller — moved to the flat diagram every other
    eleven in the app already stood on. */
+.pitch,
+.pitch-strip {
+  /* **So a card can be bounded by the GRASS as well as by the screen.** The two
+     constraints on this box have now failed to agree twice — once at 390 in
+     Sep 2026, where the ratio was the binding one and the cap could not see it,
+     and again at `lg` beside the list, where the cap is the binding one and is
+     the larger: a 1024 column is 401 wide, so the ratio gives 422px of grass
+     while a 1000px viewport hands four rows 576. The forwards were drawn under
+     the bench.
+
+     `100cqw` on a descendant reads this element's own width, which is the one
+     term the screen budget lacks. **Not `min-height: 122cqw` on this element**,
+     which is the attempt recorded below: that fed the container's own width back
+     into its own height and made a 554px pitch 1,757 tall. A descendant reading
+     its ancestor's width does not compound.
+
+     The bench strip is a container too, and for the same reason it takes the
+     grass's row count: a reserve is the same card as the man he would replace,
+     so the two have to bound themselves against the same number. Each reads its
+     OWN width rather than a shared wrapper's, which is what keeps them equal
+     through `.bleed` — the strip and the grass bleed together or not at all. */
+  container-type: inline-size;
+}
+
 .pitch {
   position: relative;
   overflow: hidden;
@@ -217,11 +241,23 @@
      calc below zero, and a negative `max-height` is clamped to nought — which
      would not shorten the picture, it would delete it, on every page that sets
      no row count and is bounded by this only incidentally. */
+  /* Two ceilings and the tighter one wins, because a card has to fit BOTH the
+     screen and the grass. The first term is what the page has left; the second
+     is the ground's own height, which is its width over the ratio — `.pitch`
+     caps itself at the first, so this is `min` of exactly the pair that decides
+     the box above. Written as one `min` rather than as a second rule, so the two
+     cannot be changed apart. */
   max-height: max(
     calc(2 * var(--pitch-band)),
-    calc(
-      (100svh - var(--pitch-page) - (var(--pitch-rows, 1) - 1) * 1rem) /
-        var(--pitch-rows, 1) - 2 * var(--pitch-band)
+    min(
+      calc(
+        (100svh - var(--pitch-page) - (var(--pitch-rows, 1) - 1) * 1rem) /
+          var(--pitch-rows, 1) - 2 * var(--pitch-band)
+      ),
+      calc(
+        (100cqw / var(--pitch-ratio) - (var(--pitch-rows, 1) - 1) * 1rem) /
+          var(--pitch-rows, 1) - 2 * var(--pitch-band)
+      )
     )
   );
 }

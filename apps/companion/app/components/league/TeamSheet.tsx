@@ -2,17 +2,12 @@
 
 import { useState } from "react";
 import type { BreakdownLine, PlayerStory, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
-import {
-  isGoalkeeper,
-  isResolved,
-  pitchName,
-  playerName,
-} from "@epl/core";
+import { playerName } from "@epl/core";
+import BenchStrip from "./BenchStrip";
 import LivePlayerCard from "./LivePlayerCard";
-import PitchMarker from "./PitchMarker";
-import PitchRows, { FAR_INSET, GAP_CLASS, cardBasis, rowBudget, widestLine } from "./PitchRows";
+import PitchRows, { widestLine } from "./PitchRows";
+import SquadMarker from "./SquadMarker";
 import SquadRows from "./SquadRows";
-import { positionLabel } from "../../positions";
 import { LABEL } from "@/app/desk";
 
 // A team as it lines up on a day that counts: the eleven on the grass, the
@@ -114,36 +109,9 @@ export default function TeamSheet({
             )}
           </PitchRows>
 
-          {bench.length > 0 ? (
-            // Off the pitch, and off the grass. A bench on green of its own put
-            // four cut-outs on the same colour they were standing on ten pixels
-            // above, with nothing but a shade between the two — the players
-            // stopped being on a pitch and the bench stopped being a bench.
-            <section className="bleed border-t border-line bg-surface pb-2 pt-2">
-              {/* The pitch's own inset, not a padding of its own: `cardBasis` is
-                  a share of the row it stands in, so the same share is the same
-                  pixels only in a row the same width as the pitch column. */}
-              <ul
-                className={`flex justify-center ${GAP_CLASS}`}
-                // The grass's own row count, so a reserve stands the same height as the
-                // man he would replace — the strip is one row but it is not sized as one.
-                style={{ paddingInline: `${FAR_INSET}%`, ...rowBudget(rows.length) }}
-              >
-                {bench.map((player) => (
-                  <li
-                    key={player.rostered.slot.fantraxId}
-                    className="min-w-0 shrink-0"
-                    style={{ flexBasis: cardBasis(widest) }}
-                  >
-                    <p className="pb-0.5 text-center font-display text-3xs font-bold uppercase text-faint">
-                      {positionLabel(player.rostered.slot.position) ?? "—"}
-                    </p>
-                    <Cell player={player} onOpen={() => setOpen(player)} />
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
+          <BenchStrip bench={bench} rows={rows.length} widest={widest} inColumn={inColumn}>
+            {(player) => <Cell player={player} onOpen={() => setOpen(player)} />}
+          </BenchStrip>
         </>
       ) : (
         // **The eleven, then the bench** (Craig, 5 Sep 2026: "list view does not
@@ -182,6 +150,7 @@ export default function TeamSheet({
                 // line's own position anyway — a man's position is a column on
                 // his row (Craig, 2 Sep) — so the group needs no name.
                 lines={[{ position: "", players: bench }]}
+                reserve
                 // **No second header** (Craig, 11 Sep 2026: "we probably dont
                 // need a 2nd Pos / Player / Opponent / FPts for the bench"). The
                 // plate above already names this group, and the columns are the
@@ -234,26 +203,7 @@ function Cell({
       aria-label={playerName(player.rostered)}
       className="block w-full"
     >
-      <PitchMarker
-        // The league layer's own vocabulary, translated here rather than inside
-        // the marker — which is what lets a Premier League eleven use the same
-        // grass without a Fantrax id anywhere near it.
-        player={isResolved(player.rostered) ? player.rostered.player : null}
-        label={player.rostered.slot.position || "?"}
-        name={pitchName(player.rostered)}
-        // **`isGoalkeeper` and not a literal `"G"`.** The position vocabulary is
-        // LEAGUE data — `getLeagueInfo` names it, a commissioner can change it,
-        // and `conventions.md` records the point of the helper in as many words:
-        // "a league that files keepers under 'GK' needs one edit and not two".
-        // This site was the second edit. Five other callers already read the
-        // helper; this one compared the letter and would have drawn twenty
-        // keepers in outfield shirts the day the vocabulary moved.
-        keeper={isGoalkeeper(player.rostered.slot.position)}
-        club={player.club}
-        opposition={player.opposition}
-        points={player.points}
-        show={show}
-      />
+      <SquadMarker player={player} show={show} />
     </button>
   );
 }

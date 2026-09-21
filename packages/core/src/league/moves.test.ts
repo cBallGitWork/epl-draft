@@ -198,6 +198,38 @@ describe("legalMoves", () => {
     expect(benched(limits)).toBe(true);
   });
 
+  it("cannot take a line below the floor the caps imply", () => {
+    // Craig, 21 Sep 2026: "if theres 3 at the back, you cant go down to 2
+    // defenders, need to build the logic using the league min/max starter
+    // logic". Fantrax publishes `maxActive` per position and NO minimum — probed
+    // live on all three leagues, 21 Sep — so the floor is the one the caps imply
+    // once the XI is held at eleven: whatever is left when every other line is
+    // as full as it may be. Against G1/D5/M5/F3 and an XI of 11 that is two at
+    // the back, two in midfield and none up front, and no move offered here can
+    // reach below it.
+    const caps = limits.maxActiveByPosition;
+    const floor = (position: string) =>
+      Math.max(
+        0,
+        limits.maxActivePlayers -
+          Object.entries(caps)
+            .filter(([other]) => other !== position)
+            .reduce((total, [, cap]) => total + cap, 0),
+      );
+    expect(floor("D")).toBe(2);
+
+    for (const slot of slots) {
+      for (const move of legalMoves(slots, eligibility, limits, slot.fantraxId)) {
+        const after = applyMove(slots, move);
+        for (const position of Object.keys(caps)) {
+          expect(
+            after.filter((s) => s.status === "ACTIVE" && s.position === position).length,
+          ).toBeGreaterThanOrEqual(floor(position));
+        }
+      }
+    }
+  });
+
   it("offers nothing at all for a player whose eligibility we do not have", () => {
     // Not "anywhere". We do not know, so we do not offer — the alternative is
     // showing a manager a move that Fantrax then rejects.

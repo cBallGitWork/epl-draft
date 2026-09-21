@@ -1,9 +1,12 @@
 import type { CSSProperties } from "react";
 import {
   type Club,
+  type DoubtBand,
   type FootballPlayer,
   type Opposition,
+  availabilityOf,
   clubColours,
+  doubtBand,
   fixtureLabel,
   kickedOff,
   plateOn,
@@ -42,6 +45,19 @@ import { NAME_SIZE, PITCH_BAND } from "./PitchRows";
 // kits need one to tell them apart; the plate below carries the name at the
 // card's full width instead, and every board that LISTS these men still keeps
 // the number in the blue index block, which is where CM keeps it.
+
+/** The three grounds, written out.
+ *
+ *  **A record and not `var(--color-doubt-${band})`**, which is the Tailwind v4
+ *  trap DESIGN.md records: v4 drops a theme variable whose name never appears
+ *  literally in scanned source, and the interpolated form shipped five
+ *  colourless fixture chips once already. A composed token name is a token that
+ *  is not there. */
+const DOUBT_GROUND: Record<DoubtBand, string> = {
+  out: "var(--color-doubt-out)",
+  major: "var(--color-doubt-major)",
+  slight: "var(--color-doubt-slight)",
+};
 
 export default function PitchMarker({
   player,
@@ -103,10 +119,21 @@ export default function PitchMarker({
 
   // What goes under the name, already resolved, so the band can ask whether
   // there is anything to draw before it takes up a row's worth of height.
+  // **`v` in front of it** (Craig, 21 Sep 2026: "pitch view, needs a 'vs' in
+  // front of the team name too"). It does not reverse his 2 Sep site-wide rule —
+  // a fixture is still `BRE (H)` and never `v BRE` or `@BRE` — because the `v`
+  // here is doing different work: under a shirt, three letters on their own read
+  // as the club the man plays FOR, which is the club whose kit he is wearing
+  // twenty pixels above. The `v` says the line is about somebody else. A list
+  // row needs none because its column is headed "Opponent".
+  //
+  // Only on a real fixture. The fallback is his own club and is exactly the case
+  // the `v` would make into a lie.
+  const against = fixtureLabel(opposition);
   const line =
     band ??
     (show === "fixture"
-      ? (fixtureLabel(opposition) ?? club?.shortName ?? "—")
+      ? (against === null ? (club?.shortName ?? "—") : `v ${against}`)
       : started
         ? String(points ?? "—")
         : (club?.shortName ?? "—"));
@@ -125,6 +152,17 @@ export default function PitchMarker({
   const single = band === undefined && show === "fixture" && opposition?.length === 1
     ? opposition[0]
     : undefined;
+  // **How likely he is to miss, on the name plate** (Craig, 21 Sep 2026: "we
+  // need to show that players are a doubt/out better ... red 100% out, orange
+  // for a major doubt, yellow for slight doubt"). FPL colours the same bar on
+  // its own team screen and the reading is instant across eleven cards, where a
+  // letter in a box is not — the box is the LIST's answer and it survives there.
+  //
+  // `--cm-face` rather than a background of its own: the bevel derives its light
+  // and dark corners from that one variable, so the plate stays Championship
+  // Manager's plate and only its colour moves. Its ink is `--color-bg` and all
+  // three grounds carry it — 5.45:1, 7.09:1, 9.50:1.
+  const doubt = doubtBand(availabilityOf(player));
   // **`plateOn` and not a background beside an `inkOn` call**, because its whole
   // reason is that the two are one decision: a ground without the ink that
   // survives it is the half that makes a pale club unreadable. Spurs and Hull
@@ -174,7 +212,14 @@ export default function PitchMarker({
           alone; a card padding either side of that was taking another 8, which
           is `MOSQUE…` instead of `MOSQUERA`. The shirt can afford the inset
           because a kit reads at any width and a truncated name does not. */}
-      <span className={`cm-bevel uppercase ${PITCH_BAND} ${NAME_SIZE}`}>
+      <span
+        className={`cm-bevel uppercase ${PITCH_BAND} ${NAME_SIZE}`}
+        style={
+          doubt === null
+            ? undefined
+            : ({ "--cm-face": DOUBT_GROUND[doubt] } as CSSProperties)
+        }
+      >
         <span className="w-full truncate">{name}</span>
       </span>
 

@@ -256,6 +256,30 @@
   --color-fdr-4: oklch(0.66 0.20 22);
   --color-fdr-5: oklch(0.50 0.18 18);
 
+  /* --- Doubt: how likely he is to miss --------------------------------------
+     Three steps, and a scale rather than three slots, for the reason the block
+     above gives: one ramp saying one thing. `Availability` already answers WHY a
+     man is doubtful and prints the letter in a box; this answers HOW MUCH, which
+     is the part a colour can carry and the part a manager reads across eleven
+     cards without stopping at any of them.
+
+     FPL draws the same three on its own team screen and the cut is theirs rather
+     than ours: `chance_of_playing_next_round` is published as 0, 25, 50, 75 or
+     100 and nothing between, so `doubtBand` has exactly these bands to name.
+
+     Hue-locked to the tokens already in use, the way the fixture scale is: `out`
+     is `--color-bad`'s red at its own chroma, `slight` is `--color-mid`'s amber,
+     and `major` is the step between them in hue and in lightness alike — derived,
+     not chosen. No new colour family enters the app for this.
+
+     These are GROUNDS and they carry the dark ink every bevelled plate carries:
+     5.45:1, 7.09:1 and 9.50:1 against `--color-bg`. The ramp is legible as a ramp
+     too — L 0.66, 0.72, 0.79 — so the three do not have to be told apart by hue
+     by a reader who cannot. --- */
+  --color-doubt-out: oklch(0.66 0.19 25);
+  --color-doubt-major: oklch(0.72 0.17 55);
+  --color-doubt-slight: oklch(0.79 0.14 85);
+
   /* --- Data tints: deliberately duller than --accent so a form indicator never
      competes with a primary action. Hue-paired with icons/labels, never alone.
      The amber and the red were already where CM puts them — a figure in amber, a

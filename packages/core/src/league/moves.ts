@@ -126,8 +126,12 @@ function overCap(
   ) {
     return true;
   }
-  const cap = limits.maxActiveByPosition[slot.position];
-  return cap !== undefined && activeAt(slots, slot.position).length > cap;
+  // A slot with no position at all breaks no published cap — Fantrax accepts one
+  // and `lineup()` gives it a bucket — so there is nothing for him to be over.
+  const position = slot.position;
+  if (!position) return false;
+  const cap = limits.maxActiveByPosition[position];
+  return cap !== undefined && activeAt(slots, position).length > cap;
 }
 
 /** Everything this player could legally do right now — including the moves

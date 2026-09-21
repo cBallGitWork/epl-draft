@@ -114,7 +114,7 @@ export default function LineupPlanner({
   // The pitch renders the EDITED slots, so what is on screen is the thing being
   // planned. Rebuilt from the real team so `lineup()` is reused exactly as it is
   // — the planner changes assignments, not players.
-  const { rows, bench, shape } = useMemo(() => {
+  const { rows, bench } = useMemo(() => {
     const bySlot = new Map(slots.map((slot) => [slot.fantraxId, slot]));
     const arranged = lineup({
       ...team,
@@ -137,11 +137,6 @@ export default function LineupPlanner({
         players: line.players.flatMap((p) => detail(p.slot)),
       })),
       bench: arranged.bench.flatMap((p) => detail(p.slot)),
-      // Free, and it has to come from HERE rather than from the server: this is
-      // the edited arrangement, so the shape changes under the reader's thumb as
-      // he moves a man. A formation named on the server would be the one he
-      // started with.
-      shape: arranged.shape,
     };
   }, [team, slots, detailOf]);
 
@@ -173,10 +168,16 @@ export default function LineupPlanner({
   }
 
   // Everything the picked man may do, and the men he may do it with.
+  //
+  // **The other end of the swap, whichever end it was read from.** `legalMoves`
+  // answers for a reserve with `fantraxId` as the man coming on, and for a man
+  // already in the side with `withId` as himself — so a partner is "the id that
+  // is not his", and reading only `withId` lit nothing at all when a manager
+  // tapped one of his own eleven.
   const pickedMoves = picked === null ? [] : legalMoves(slots, eligibility, limits, picked);
-  const partners = new Set(
-    pickedMoves.flatMap((move) => (move.kind === "swap" ? [move.withId] : [])),
-  );
+  const partnerOf = (move: Move): string | null =>
+    move.kind !== "swap" ? null : move.fantraxId === picked ? move.withId : move.fantraxId;
+  const partners = new Set(pickedMoves.flatMap((move) => partnerOf(move) ?? []));
 
   /** Swapping with a man who occupies a position the picked player is eligible
    *  for means taking that position. Where he is not — a full XI lets him come
@@ -185,10 +186,17 @@ export default function LineupPlanner({
    *  man out. */
   function swapWith(partnerId: string) {
     const candidates = pickedMoves.flatMap((move) =>
-      move.kind === "swap" && move.withId === partnerId ? [move] : [],
+      partnerOf(move) === partnerId ? [move] : [],
     );
-    const theirPosition = slots.find((slot) => slot.fantraxId === partnerId)?.position;
-    const move = candidates.find((swap) => swap.to === theirPosition) ?? candidates[0];
+    // Where the man COMING ON ends up, which is the picked player only when he
+    // is the reserve. Tapping a defender in the side and then a reserve midfield
+    // puts the midfielder in the defender's place, so the position that matters
+    // is the one being vacated.
+    const incoming = candidates[0]?.kind === "swap" ? candidates[0].fantraxId : null;
+    const vacated = slots.find(
+      (slot) => slot.fantraxId === (incoming === partnerId ? picked : partnerId),
+    )?.position;
+    const move = candidates.find((swap) => swap.kind === "swap" && swap.to === vacated) ?? candidates[0];
     // Only offered for a partner the pitch has lit, and it lit him from this
     // same list — so an empty one is unreachable rather than unhandled.
     if (move) play(move);
@@ -196,11 +204,12 @@ export default function LineupPlanner({
 
   return (
     <div className="flex flex-col gap-3">
-      {/* The shape, above the grass, because that is where it is read. It is the
-          first thing Championship Manager says about an eleven, and it moves as
-          the eleven does — a 1-3-4-3 becomes a 1-3-5-2 the moment a midfielder
-          comes on for a forward, which is the whole point of naming it on the
-          screen where the moving happens. */}
+      {/* **The formation line is gone** (Craig, 21 Sep 2026: "remove 1-3-4-3
+          row"). It named the shape above the grass, and the grass draws the
+          shape — four lines of cards is what a 1-3-4-3 looks like, and a reader
+          who wants the string can count them. It cost the pitch 20px of its
+          height budget at every width to say something the picture underneath it
+          was already saying. */}
       {/* **A list as well as a pitch** (Craig, 21 Sep 2026), on `Sheet`'s
           control and `Sheet`'s components — the same `ViewToggle` and the same
           `SquadRows` a rival's locked squad draws.
@@ -213,8 +222,7 @@ export default function LineupPlanner({
           fold on its own width, so halving it for a list would shrink the only
           interactive surface in the app to make room for a read-only copy of
           what it already says. */}
-      <div className="flex items-center justify-between gap-3 px-1 text-2xs">
-        <span className="numeric font-bold text-faint">{shape}</span>
+      <div className="flex items-center justify-end gap-3 px-1 text-2xs">
         <div className="flex items-center gap-3">
           {/* Phone only, on `Sheet`'s reasoning: above `lg` both readings fit
               side by side, and a control choosing between two things already on
@@ -255,6 +263,7 @@ export default function LineupPlanner({
                 projected={false}
                 eligibility={eligibleBy}
                 head={false}
+                reserve
               />
             </>
           )}
@@ -266,7 +275,7 @@ export default function LineupPlanner({
         inColumn
         rows={rows}
         bench={bench}
-        availabilityOf={(player) => {
+        pickStateOf={(player) => {
           const id = player.rostered.slot.fantraxId;
           if (picked === null) return "idle";
           if (picked === id) return "picked";
