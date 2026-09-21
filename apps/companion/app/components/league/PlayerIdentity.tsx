@@ -10,7 +10,7 @@ import {
 } from "@epl/core";
 import EmptySlot from "./EmptySlot";
 import PlayerImage from "./PlayerImage";
-import { fdrStep } from "../football/FixtureChip";
+import { fdrStep } from "../football/fdr";
 import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { LABEL, QUIET_FIGURE } from "@/app/desk";
@@ -28,9 +28,9 @@ import { LABEL, QUIET_FIGURE } from "@/app/desk";
 // arrived at similar shapes independently, and it is the opposite of what it
 // asks for here.
 //
-// **The photograph alone, not a `PitchPlayer`.** The sticker carries a name
-// plate and a points band, so a card that also has a title bar prints his name
-// twice and his total twice. `LivePlayerCard` made that swap when it took a bar;
+// **The photograph alone, not a pitch card.** A marker carries a name plate and
+// a points band, so a card that also has a title bar prints his name twice and
+// his total twice. `LivePlayerCard` made that swap when it took a bar;
 // `PlayerCard` inherits it for the same reason.
 
 export default function PlayerIdentity({
@@ -87,7 +87,7 @@ export default function PlayerIdentity({
 /** His club, then who it plays: a crest, a "v", and the opponent (Craig, 21 Sep
  *  2026 — "put his team logo in and v opponent").
  *
- *  **Not `FixtureChip`.** That fills four pixels of headroom under a sticker at
+ *  **Not the chip that used to draw this.** It filled four pixels of headroom under a sticker at
  *  `--text-3xs`, stretched edge to edge, and a card handing it 88px turns three
  *  letters into a bar with a word at one end ("the long fixture graphics looks
  *  crap"). Its own docblock says "rounding and width are the parent's business".

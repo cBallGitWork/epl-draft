@@ -557,10 +557,10 @@ export function standDown(deskOnly: boolean | undefined, sorted: boolean): strin
  *   filter `CHIP`, which is a chip at `text-sm` and a different object. So the
  *   five are not five spellings of one thing, which is what the count implied.
  *
- * The pitch NAME PLATE — 2 sites, `FplPitch` and `PitchPlayer`, and the whole
- *   long string is byte-identical in both. Below the bar, and `PitchRows`
- *   already owns `NAME_SIZE` and `GAP_CLASS` for the pitches, so that is where
- *   the third one goes rather than here.
+ * The pitch NAME PLATE — **one site now**, and the count is why it never came
+ *   here. It was 2, `FplPitch` and `PitchPlayer`, byte-identical; both have since
+ *   gone to `PitchMarker`, which owns the plate along with `PITCH_BAND` and
+ *   `NAME_SIZE` in `PitchRows`. A recipe for one caller is what §1 forbids.
  *
  *   Its `tracking-[-0.01em]` was reported as duplicating `.numeric`'s own
  *   letter-spacing — "the two rules arguing" that DESIGN §6 forbids. Checked:

@@ -153,7 +153,7 @@ export function ScoresTab({
 
 /** The score, or the state where there is not one yet.
  *
- *  Its own three lines rather than `FixtureChip`, which draws a club's OPPOSITION
+ *  Its own three lines rather than the fixture scale, which colours a club's OPPOSITION
  *  with FPL's difficulty on it — a different question with a different subject.
  *  A dash apiece before kick-off rather than `0-0`: an unplayed match has no
  *  score, and a nought is a claim (DESIGN §7). */

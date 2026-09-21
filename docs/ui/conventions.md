@@ -47,7 +47,7 @@ deliberately ink under `.paper`.
 
 A theme variable is only emitted if its name appears **literally** in scanned
 source. `` `var(--color-fdr-${n})` `` compiles to five variables that are never
-emitted and five chips with no colour. `FixtureChip` writes the five names out in
+emitted and five chips with no colour. `football/fdr` writes the five names out in
 a `Record` for exactly this reason — do not "tidy" it back into interpolation.
 
 ## Type
@@ -98,7 +98,7 @@ No fluid clamps except inside the masthead.
 | `league/PlayerImage` | The cut-out photograph, with its fallback ladder. Client-only, and has to be — see below. **Four callers, none of them a pitch**: the player profile, the paper's face and picture, and the live card. |
 | `league/PlayerShirt` | The club's kit, and the only place it is drawn. What every pitch draws now. Server component — it has no ladder to walk. |
 | `league/PitchMarker` · `league/CmGround` | A marker on the grass, and the ground it stands on. The marker is a kit on a translucent wash, the name on Championship Manager's bevelled plate, and under it the fixture **in the opponent's own colour**. Was `PitchDisc`, a cut-out head in a coloured circle, until 10 Sep 2026. |
-| `football/FixtureChip` | Opponent, `@` for away and nothing for home, coloured by FPL's difficulty. One consumer — `league/PlayerCard`'s dialog, since the planner's band went to `PitchMarker`'s opponent colour on 21 Sep 2026; `fdrStep` is the colour scale on its own, for anything that wants it at another size. **Never wraps** — the band under a sticker is a fixed 20px with `overflow-hidden`, so a second line is guillotined rather than spilled. |
+| `football/fdr` | FPL's five difficulty steps, each with the ink that survives it. **Not a component** — `FixtureChip` drew one and lost its last caller on 21 Sep 2026 when the planner's band went to `PitchMarker`'s opponent colour, so the file is named for the scale that outlived it. Two consumers: the profile's fixture run and the player dialog's fixture line. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
 | `shell/TabStrip` | The blue tab strip under a title bar. Five strips use it — the League section, the Premiership section, a fantasy team's five views, a club's four, a player's five. (It read "three" until 4 Sep 2026 and had been undercounting `PremNav` since 2 Sep.) `dim` greys a tab that has nothing behind it for THIS subject and keeps it in place, which is CM's answer for an empty view (`cm0102/07.jpg`). |
 | `shell/Caption` | The yellow centred caption inside a panel. The bar above names the subject; this names the view. Every screen in the reference carries both. |

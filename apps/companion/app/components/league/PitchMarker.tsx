@@ -236,12 +236,10 @@ export default function PitchMarker({
           // down there; a score is the number a manager opened the screen for
           // and was the smallest thing on the card.
           //
-          // `PitchPlayer` had already learned this and its own docblock says so
-          // — "one figure size for both claims, on the scale. They were two
-          // clamps bottoming at 7px and 9px, which made the number a manager
-          // came for the smallest thing on a live pitch" — and it sits at
-          // `text-xs`. This is the same lesson arriving at the other card, which
-          // is what `ROW_FIGURE` went through in tables a week earlier.
+          // The planner's card had already learned it — "two clamps bottoming at
+          // 7px and 9px, which made the number a manager came for the smallest
+          // thing on a live pitch" — and that card is gone, so this is the only
+          // place the lesson is now written down.
           className={`numeric ${show === "points" && band === undefined ? "text-xs" : "text-3xs"} ${PITCH_BAND}`}
           style={
             plate === undefined

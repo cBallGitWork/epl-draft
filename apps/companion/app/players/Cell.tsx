@@ -179,7 +179,7 @@ export default function Cell({
  *  **A `Record` and not `bg-${column.mark}`**, and the reason is Tailwind v4
  *  rather than style: it drops a theme variable whose name never appears
  *  literally in scanned source, so a composed class name emits NOTHING and ships
- *  a colourless cell with no error anywhere. `FixtureChip` carries the same
+ *  a colourless cell with no error anywhere. `fdr.ts` carries the same
  *  constant for the same reason, and the five colourless difficulty chips that
  *  taught us are recorded in `.claude/rules/register-palette.md`.
  *

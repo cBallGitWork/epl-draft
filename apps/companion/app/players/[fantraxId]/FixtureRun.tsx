@@ -1,6 +1,6 @@
 import type { Opposition } from "@epl/core";
 import Section from "../../components/shell/Section";
-import { fdrStep } from "../../components/football/FixtureChip";
+import { fdrStep } from "../../components/football/fdr";
 
 // What is coming, as a run rather than as a single match.
 //
