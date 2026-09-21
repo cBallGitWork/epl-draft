@@ -58,7 +58,7 @@ export default async function ReportsPage() {
             <Extras story={lead} named={who} mine={paper.mine} />
           </section>
           {rest.map((story) => (
-            <Teaser key={story.slug} story={story} clubs={clubs} />
+            <Teaser key={story.slug} story={story} clubs={clubs} here={PAGE.href} />
           ))}
         </div>
       )}

@@ -1,5 +1,5 @@
 import type { PeriodPairing } from "../league/selectors";
-import type { LiveTeamScore, TeamProjection } from "../league/points";
+import type { TeamProjection } from "../league/points";
 import type { DraftPick } from "../league/fantrax/draft";
 import type { AvailabilityNote, Deal, Pick, TeamOfTheWeek } from "./types";
 

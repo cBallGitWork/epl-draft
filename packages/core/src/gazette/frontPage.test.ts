@@ -124,3 +124,68 @@ describe("composePaper", () => {
     expect(paper.map((s) => s.slug)).toEqual(["monday-column", "sunday-report"]);
   });
 });
+
+describe("composePaper — team news leads", () => {
+  const at = "2026-09-18T14:00:00.000Z";
+  const story = (kind: string, slug: string): PublishedStory =>
+    ({
+      slug, kind, leagueId: "L", period: 4, gameweek: 4,
+      filedAt: at, expiresAt: null, edition: "", byline: "",
+      headline: slug, deck: "", body: "", subjects: [],
+    }) as unknown as PublishedStory;
+
+  it("leads on the presser, above a report filed the same day", () => {
+    const out = composePaper([story("tie-report", "report"), story("presser", "team-news")], at);
+    expect(out[0].slug).toBe("team-news");
+  });
+
+  it("still ranks a report above the columns", () => {
+    const out = composePaper([story("wire", "wire"), story("tie-report", "report")], at);
+    expect(out[0].slug).toBe("report");
+  });
+});
+
+describe("composePaper — one edition of a column at a time", () => {
+  const story = (kind: string, slug: string, period: number): PublishedStory =>
+    ({
+      slug, kind, leagueId: "L", period, gameweek: period,
+      filedAt: `2026-09-${10 + period}T12:00:00.000Z`, expiresAt: null,
+      edition: "", byline: "", headline: slug, deck: "", body: "", subjects: [],
+    }) as unknown as PublishedStory;
+
+  it("retires last round's power ranking when this round's files", () => {
+    const out = composePaper([story("power-ranking", "gw4", 4), story("power-ranking", "gw5", 5)], "2026-09-21T12:00:00.000Z");
+    expect(out.map((s) => s.slug)).toEqual(["gw5"]);
+  });
+
+  it("keeps Thursday's and Friday's pressers, which share a round", () => {
+    const out = composePaper([story("presser", "thu", 5), story("presser", "fri", 5)], "2026-09-21T12:00:00.000Z");
+    expect(out).toHaveLength(2);
+  });
+
+  it("leaves the per-subject kinds alone", () => {
+    const out = composePaper([story("tie-report", "a", 4), story("tie-report", "b", 5)], "2026-09-21T12:00:00.000Z");
+    expect(out).toHaveLength(2);
+  });
+});
+
+describe("composePaper — the most recent leads", () => {
+  const at = "2026-09-18T15:00:00.000Z";
+  const story = (slug: string): PublishedStory =>
+    ({
+      slug, kind: "presser", leagueId: "L", period: 5, gameweek: 5,
+      // One firing, one instant: both Team Sheets are filed the same second.
+      filedAt: at, expiresAt: null, edition: "", byline: "",
+      headline: slug, deck: "", body: "", subjects: [],
+    }) as unknown as PublishedStory;
+
+  it("leads on Friday's Team Sheet, not Thursday's", () => {
+    const out = composePaper([story("gw5-presser-2026-09-17"), story("gw5-presser-2026-09-18")], at);
+    expect(out[0].slug).toBe("gw5-presser-2026-09-18");
+  });
+
+  it("orders the same way whichever way round they arrive", () => {
+    const out = composePaper([story("gw5-presser-2026-09-18"), story("gw5-presser-2026-09-17")], at);
+    expect(out.map((s) => s.slug)).toEqual(["gw5-presser-2026-09-18", "gw5-presser-2026-09-17"]);
+  });
+});

@@ -24,6 +24,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   ties: [],
   dealsInWindow: 0,
   news: [],
+  pressers: [],
   ...over,
 });
 
@@ -124,6 +125,34 @@ describe("newsdesk", () => {
     );
     const filed = newsdesk(desk({ stakes }), none, NOW);
     expect(filed.map((a) => a.kind)).not.toContain("match-report");
+  });
+
+  it("files the team sheet on a day with pressers", () => {
+    const thu = { key: "presser:gw3:2026-09-17", slug: "gw3-presser-2026-09-17", day: "2026-09-17" };
+    const fri = { key: "presser:gw3:2026-09-18", slug: "gw3-presser-2026-09-18", day: "2026-09-18" };
+    // Both days are their own column — Craig's week runs pressers Thursday AND
+    // Friday, and one key for the week would suppress the second.
+    const filed = newsdesk(desk({ pressers: [thu, fri] }), none, NOW);
+    expect(filed.filter((a) => a.kind === "presser").map((a) => a.key)).toEqual([thu.key, fri.key]);
+    // The DAY travels with the assignment: one kind, two editions, and every
+    // consumer narrows to it rather than parsing the key.
+    expect(filed.filter((a) => a.kind === "presser").map((a) => a.day)).toEqual([thu.day, fri.day]);
+  });
+
+  it("files the team sheet even while the last round is still 'finished'", () => {
+    // `desk.finished` stays true for four or five days of seven, so a Thursday
+    // column gated on the round being unfinished would never fire at all.
+    const thu = { key: "presser:gw3:2026-09-17", slug: "gw3-presser-2026-09-17", day: "2026-09-17" };
+    const filed = newsdesk(desk({ finished: true, locked: true, pressers: [thu] }), none, NOW);
+    expect(filed.map((a) => a.kind)).toContain("presser");
+  });
+
+  it("files no team sheet on a day with no pressers", () => {
+    // The WINDOW is the gate, not a flag: the caller offers only days whose
+    // signals were said after the last lock. `desk.locked` is the current
+    // period's lock and has long passed by Thursday — gating on it meant the
+    // column never fired at all.
+    expect(newsdesk(desk({ pressers: [] }), none, NOW).map((a) => a.kind)).not.toContain("presser");
   });
 
   it("files nothing for a finished fixture nobody in the league had a man in", () => {

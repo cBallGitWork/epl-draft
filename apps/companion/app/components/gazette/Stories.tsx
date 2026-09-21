@@ -57,34 +57,3 @@ export default function Lead({
     </section>
   );
 }
-
-/** A story that is not the lead: kicker, one line, and a rule under it.
- *
- *  Same facts, same words, a tenth of the room. The hierarchy IS the design —
- *  a newspaper's second story is recognisable as the second story before you
- *  have read a word of it. */
-export function Headline({
-  story,
-  who,
-}: {
-  story: Story;
-  who: (teamId: string | null) => string;
-}) {
-  const { kicker, headline } = written(story, who);
-
-  return (
-    <li className="border-b border-line py-2.5 last:border-b-0">
-      {/* The same tag as the lead's, a size down. It was `faint` type on no
-          ground, which is the one thing a kicker must not be — a kicker is a
-          label and a label has an edge. */}
-      <p>
-        <span className="inline-block bg-ink px-1.5 py-0.5 font-sans text-3xs font-bold uppercase tracking-[0.15em] text-bg">
-          {kicker}
-        </span>
-      </p>
-      <p className="paper-display text-balance pt-2 text-xl font-bold leading-tight text-ink">
-        {headline}
-      </p>
-    </li>
-  );
-}

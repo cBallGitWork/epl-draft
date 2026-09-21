@@ -2,13 +2,10 @@ import {
   LEAGUE_TIMEZONE,
   type Assignment,
   type Club,
-  type Fixture,
   type FootballSnapshot,
   type LiveTeamScore,
   type PeriodPairing,
-  type ResolvedPlayer,
   type RosteredTeam,
-  type StoryFace,
   type StoryThread,
   type TieState,
   buildFixturePreviewBrief,
@@ -20,100 +17,12 @@ import {
   isResolved,
   tieState,
 } from "@epl/core";
+import { menIn } from "./lineups";
 import type { RoundFacts } from "./facts";
 
 // The wiring between what was gathered and what one scoped brief may know —
 // the "script does the wiring" clause made literal. Everything joined here
 // went through the bridge in `resolveRosters`; nothing matches a name.
-
-/** A rostered man with a club in the given fixture, active slots only — a
- *  reserve cannot score, so he carries no stake. */
-function menIn(fixture: Fixture, team: RosteredTeam) {
-  return team.players
-    .filter(isResolved)
-    .filter((man) => isActive(man.slot))
-    .filter(
-      (man) => man.player.clubId === fixture.homeClubId || man.player.clubId === fixture.awayClubId,
-    );
-}
-
-/** The man a story prints a picture of: the highest-scoring rostered man among
- *  those given, and null when nobody among them was priced.
- *
- *  **The desk's choice and never the writer's.** It comes off the same numbers
- *  the brief was built out of, so the face and the prose cannot disagree, and a
- *  model cannot put a footballer in the picture slot by naming him. `code` and
- *  not `id` (CODE_RULES §3): this is persisted in `paper.json`, and only the
- *  code is season-stable.
- *
- *  Ties on points break on name, so the same round picks the same man twice. */
-function bestOf(men: readonly ResolvedPlayer[], facts: RoundFacts): StoryFace | null {
-  const priced = men.flatMap((man) => {
-    const points = facts.playerPoints.get(man.slot.fantraxId);
-    return points === undefined ? [] : [{ man, points }];
-  });
-  if (priced.length === 0) return null;
-
-  priced.sort((a, b) => b.points - a.points || a.man.player.name.localeCompare(b.man.player.name));
-  const { player, slot } = priced[0].man;
-  return { code: player.code, name: player.name, clubId: player.clubId, position: slot.position };
-}
-
-/** Everyone a manager fielded, resolved. The active filter is the same one every
- *  brief applies: a reserve cannot score, so he is not the face of anything. */
-function fielded(team: RosteredTeam | undefined): ResolvedPlayer[] {
-  return (team?.players ?? []).filter(isResolved).filter((man) => isActive(man.slot));
-}
-
-/** The face for one assignment, or null for a kind with no man in it — a power
- *  ranking is about ten managers and a wire column about a market. */
-export function faceOf(assignment: Assignment, ctx: FaceContext): StoryFace | null {
-  const { facts } = ctx;
-
-  // The tie-shaped kinds: both squads, and the best man across the two.
-  if (assignment.kind === "tie-report" || assignment.kind === "tie-call") {
-    const both = [assignment.tie?.homeTeamId, assignment.tie?.awayTeamId].flatMap((teamId) =>
-      teamId === undefined ? [] : fielded(facts.teams.find((team) => team.teamId === teamId)),
-    );
-    return bestOf(both, facts);
-  }
-
-  // The fixture-shaped kinds: everyone in the league with a man in that match.
-  if (assignment.kind === "match-report" || assignment.kind === "fixture-preview") {
-    const fixture = ctx.fixtures.find((each) => each.id === assignment.fixtureId);
-    if (fixture === undefined) return null;
-    return bestOf(
-      facts.teams.flatMap((team) => menIn(fixture, team)),
-      facts,
-    );
-  }
-
-  // The eleven's own best man, from the picks the column is written about —
-  // `score` is the eleven's own number and is what put him in the side.
-  if (assignment.kind === "eleven") {
-    const picks = [...(facts.eleven?.picks ?? [])].sort(
-      (a, b) => b.score - a.score || a.playerName.localeCompare(b.playerName),
-    );
-    const best = picks[0];
-    return best === undefined
-      ? null
-      : {
-          code: best.playerCode,
-          name: best.playerName,
-          clubId: best.clubId,
-          position: best.position,
-        };
-  }
-
-  return null;
-}
-
-/** What `faceOf` needs, which is less than a whole `DeskContext`: the round's
- *  facts and the fixtures a fixture-scoped assignment joins on. */
-export interface FaceContext {
-  facts: RoundFacts;
-  fixtures: readonly Fixture[];
-}
 
 export function matchReportBrief(
   assignment: Assignment,

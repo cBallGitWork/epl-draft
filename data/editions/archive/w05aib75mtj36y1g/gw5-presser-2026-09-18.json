@@ -1,0 +1,292 @@
+{
+  "slug": "gw5-presser-2026-09-18",
+  "kind": "presser",
+  "leagueId": "w05aib75mtj36y1g",
+  "period": 5,
+  "gameweek": 5,
+  "filedAt": "2026-09-18T15:00:00.000Z",
+  "expiresAt": null,
+  "edition": "The Team Sheet",
+  "byline": "The Team Sheet",
+  "headline": "Friday Pressers",
+  "deck": "Luka Vušković fit again for Brighton, with Hadjam back and Dunk a rotation doubt",
+  "body": "Fabian Hurzeler declared Luka Vušković fit again and back in contention, Brighton's clearest gain before the deadline. He stopped short of naming a line-up, and left Lewis Dunk's involvement open with rotation on the table.\n\nJaouen Hadjam returns alongside Vušković, so Hurzeler has options restored at the back that he did not have a week ago.",
+  "subjects": [
+    "presser:gw5:2026-09-18"
+  ],
+  "image": null,
+  "face": {
+    "code": 610799,
+    "name": "Luka Vušković",
+    "clubId": 5,
+    "position": null
+  },
+  "ties": [],
+  "extras": {
+    "teamNews": [
+      {
+        "club": "Aston Villa",
+        "code": 7,
+        "line": "Unai Emery ruled out Marco Bizot and left a question mark over Joao Gomes.",
+        "men": [
+          {
+            "name": "Joao Gomes",
+            "status": "Doubt",
+            "note": "calf"
+          },
+          {
+            "name": "Marco Bizot",
+            "status": "OUT",
+            "note": "back"
+          }
+        ],
+        "alsoOut": [
+          "Pau",
+          "Ian Maatsen",
+          "Brian Madjo",
+          "Leon Goretzka",
+          "Amadou Onana"
+        ],
+        "fixture": {
+          "opponent": "Tottenham Hotspur",
+          "home": false,
+          "kickoff": "2026-09-19T11:30:00Z"
+        }
+      },
+      {
+        "club": "Leeds United",
+        "code": 2,
+        "line": "Harry Wilson goes into the weekend under a cloud.",
+        "men": [
+          {
+            "name": "Harry Wilson",
+            "status": "Doubt",
+            "note": "quad"
+          }
+        ],
+        "alsoOut": [
+          "Joe Rodon",
+          "Mateo Joseph"
+        ],
+        "fixture": {
+          "opponent": "Crystal Palace",
+          "home": true,
+          "kickoff": "2026-09-20T13:00:00Z"
+        }
+      },
+      {
+        "club": "Crystal Palace",
+        "code": 31,
+        "line": "Nothing new from Crystal Palace ahead of the deadline.",
+        "alsoOut": [
+          "Dean Henderson",
+          "Chadi Riad",
+          "Jean-Philippe Mateta",
+          "Ismaïla Sarr"
+        ],
+        "fixture": {
+          "opponent": "Leeds United",
+          "home": false,
+          "kickoff": "2026-09-20T13:00:00Z"
+        }
+      },
+      {
+        "club": "Fulham",
+        "code": 54,
+        "line": "Kenny Tete will not feature for Fulham.",
+        "men": [
+          {
+            "name": "Kenny Tete",
+            "status": "OUT",
+            "note": "head"
+          }
+        ],
+        "alsoOut": [
+          "Tom Cairney",
+          "Ryan Sessegnon"
+        ],
+        "fixture": {
+          "opponent": "Manchester United",
+          "home": true,
+          "kickoff": "2026-09-20T15:30:00Z"
+        }
+      },
+      {
+        "club": "Ipswich Town",
+        "code": 40,
+        "line": "Nothing new from Ipswich Town.",
+        "alsoOut": [
+          "Jack Taylor",
+          "Emersonn"
+        ],
+        "fixture": {
+          "opponent": "Everton",
+          "home": false,
+          "kickoff": "2026-09-19T14:00:00Z"
+        }
+      },
+      {
+        "club": "Liverpool",
+        "code": 14,
+        "line": "No fresh word from Liverpool.",
+        "alsoOut": [
+          "Conor Bradley",
+          "Giovanni Leoni",
+          "Federico Chiesa",
+          "Joe Gomez"
+        ],
+        "fixture": {
+          "opponent": "AFC Bournemouth",
+          "home": false,
+          "kickoff": "2026-09-20T13:00:00Z"
+        }
+      },
+      {
+        "club": "Manchester United",
+        "code": 1,
+        "line": "Manchester United added nothing to a settled list.",
+        "alsoOut": [
+          "Luke Shaw",
+          "Carlos Baleba",
+          "Amad",
+          "Manuel Ugarte",
+          "Matthijs de Ligt",
+          "Tom Heaton"
+        ],
+        "fixture": {
+          "opponent": "Fulham",
+          "home": false,
+          "kickoff": "2026-09-20T15:30:00Z"
+        }
+      },
+      {
+        "club": "Sunderland",
+        "code": 56,
+        "line": "Nothing new from Sunderland.",
+        "alsoOut": [
+          "Romaine Mundle",
+          "Habib Diarra",
+          "Reinildo"
+        ],
+        "fixture": {
+          "opponent": "Manchester City",
+          "home": false,
+          "kickoff": "2026-09-20T13:00:00Z"
+        }
+      },
+      {
+        "club": "Everton",
+        "code": 11,
+        "line": "David Moyes ruled Merlin Röhl out without detailing the reason.",
+        "men": [
+          {
+            "name": "Merlin Röhl",
+            "owner": "test4",
+            "status": "OUT",
+            "note": "no complaint given"
+          }
+        ],
+        "alsoOut": [
+          "Christian Nørgaard"
+        ],
+        "fixture": {
+          "opponent": "Ipswich Town",
+          "home": true,
+          "kickoff": "2026-09-19T14:00:00Z"
+        }
+      },
+      {
+        "club": "Tottenham Hotspur",
+        "code": 6,
+        "line": "Roberto De Zerbi left Pedro Porro's involvement in doubt.",
+        "men": [
+          {
+            "name": "Pedro Porro",
+            "status": "Doubt",
+            "note": "muscle"
+          }
+        ],
+        "alsoOut": [
+          "Sandro Tonali",
+          "Mykhailo Mudryk",
+          "Xavi",
+          "Wilson Odobert",
+          "Dejan Kulusevski",
+          "Destiny Udogie",
+          "James Maddison"
+        ],
+        "fixture": {
+          "opponent": "Aston Villa",
+          "home": true,
+          "kickoff": "2026-09-19T11:30:00Z"
+        }
+      },
+      {
+        "club": "Arsenal",
+        "code": 3,
+        "line": "Mikel Arteta welcomed two men back into contention.",
+        "men": [
+          {
+            "name": "Benjamin White",
+            "owner": "test3331",
+            "status": "FIT",
+            "note": "back in contention"
+          },
+          {
+            "name": "Mikel Merino",
+            "status": "FIT",
+            "note": "back in contention"
+          }
+        ],
+        "alsoOut": [
+          "Cristhian Mosquera",
+          "William Saliba"
+        ],
+        "fixture": {
+          "opponent": "Brighton & Hove Albion",
+          "home": false,
+          "kickoff": "2026-09-19T14:00:00Z"
+        }
+      },
+      {
+        "club": "Brighton & Hove Albion",
+        "code": 36,
+        "line": "Fabian Hurzeler had two fit again and stopped short of committing to Lewis Dunk.",
+        "men": [
+          {
+            "name": "Jaouen Hadjam",
+            "status": "FIT",
+            "note": "back in contention"
+          },
+          {
+            "name": "Luka Vušković",
+            "owner": "test3",
+            "status": "FIT",
+            "note": "back in contention"
+          },
+          {
+            "name": "Lewis Dunk",
+            "owner": "test3",
+            "status": "Doubt",
+            "note": "rotation possible, no reason given"
+          }
+        ],
+        "alsoOut": [
+          "Femi Azeez",
+          "Mats Wieffer",
+          "Jack Hinshelwood",
+          "Yankuba Minteh",
+          "Evan Ferguson",
+          "Mitoma",
+          "Stefanos Tzimas",
+          "Zadok Yohanna"
+        ],
+        "fixture": {
+          "opponent": "Arsenal",
+          "home": true,
+          "kickoff": "2026-09-19T14:00:00Z"
+        }
+      }
+    ]
+  }
+}

@@ -24,6 +24,8 @@ export {
   buildWireBrief,
 } from "./briefs/columns";
 export { buildNewsBrief } from "./briefs/news";
+export { buildPresserBrief } from "./briefs/presser";
+export type { PresserLine } from "./briefs/presser";
 export { affectedBy } from "./newsTriage";
 export type { NewsAngle } from "./briefs/news";
 export type { Affected } from "./newsTriage";
@@ -70,3 +72,5 @@ export type {
   StoryResult,
   TeamOfTheWeek,
 } from "./types";
+
+export { fullClubName } from "./clubNames";

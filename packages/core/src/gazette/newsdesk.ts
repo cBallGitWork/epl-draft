@@ -46,6 +46,11 @@ export interface Assignment {
   /** Join handle back to the round's fixtures, this session only. */
   fixtureId?: number;
   tie?: { homeTeamId: string; awayTeamId: string };
+  /** The press-conference DAY, London, for the Team Sheet. A week holds two —
+   *  Thursday's covers the clubs playing first and Friday's the rest — and they
+   *  are one kind with two editions, so the day is the scope handle the way
+   *  `fixtureId` is for a preview. */
+  day?: string;
 }
 
 export interface DeskTie {
@@ -72,6 +77,11 @@ export interface DeskState {
   /** Wire items that name a man somebody in the league holds, freshest first.
    *  Already triaged: an item with no stake in our league never reaches here. */
   news: readonly { key: string; slug: string }[];
+  /** A round-up per press-conference DAY, keyed on the day so Thursday's and
+   *  Friday's are two columns rather than one — Craig's week runs pressers on
+   *  both. The caller builds the keys; this file owns no clock. Empty when the
+   *  export has not landed, which files nothing and spends nothing. */
+  pressers: readonly { key: string; slug: string; day: string }[];
 }
 
 /** The columns a finished round earns, in the order they are worth reading.
@@ -178,6 +188,21 @@ export function newsdesk(
   // it moves up the feed is not covered twice.
   for (const story of desk.news.slice(0, NEWS_PER_FIRING)) {
     want({ kind: "news", key: `news:${story.key}`, slug: story.slug });
+  }
+
+  // The Team Sheet, and it is deliberately OUTSIDE the finished/locked branches
+  // above. `desk.finished` stays true for four or five days of seven — FPL keeps
+  // `is_current` on a played round until the next deadline — so a Thursday
+  // column gated on the round being unfinished would never fire at all.
+  //
+  // **No lock gate, and that was a bug before it was a decision.** `desk.locked`
+  // is the CURRENT period's lock, which on a Thursday has long passed — gating
+  // on it meant the column never fired at all. The window does the work instead:
+  // the caller only offers days whose signals were said AFTER the last lock, so
+  // they are about the round to come, and they fall out of the window by
+  // themselves once the next lock moves it on.
+  for (const day of desk.pressers) {
+    want({ kind: "presser", key: day.key, slug: day.slug, day: day.day });
   }
 
   // The wire is weekly and keys on the WINDOW rather than the round: it reports

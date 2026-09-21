@@ -1,4 +1,5 @@
-import type { LeagueTeam, PublishedStory } from "@epl/core";
+import type { Club, LeagueTeam, PublishedStory } from "@epl/core";
+import Face from "./Face";
 import Column from "./Column";
 import Paragraphs from "./Paragraphs";
 import Dateline from "./Dateline";
@@ -25,16 +26,44 @@ import Dateline from "./Dateline";
 export default function Written({
   story,
   teams,
+  clubs,
 }: {
   story: PublishedStory;
   teams: readonly LeagueTeam[];
+  /** The round's clubs, for the picture's kit and crest. Absent prints no
+   *  picture rather than a wrong one. */
+  clubs?: Map<number, Club>;
 }) {
   const named = new Map(teams.map((team) => [team.teamId, team.name]));
   // Only a kind that predicts carries calls; everything else reports.
   const calls = story.kind === "round-preview" || story.kind === "predictions";
 
-  return (
-    <section className="flex flex-col">
+  // **A standfirst is not columnised.** `paper-columns` takes a measure rather
+  // than a count, which is right for a whole article and wrong for an intro:
+  // three sentences split into three 17rem columns is a shape no paper prints,
+  // and it left the width a picture wanted. Craig, 18 Sep 2026 — "on desktop,
+  // two columns seems weird, space for photo".
+  //
+  // Length cannot tell the two apart — a 666-character tie-report is a whole
+  // piece and a 720-character Team Sheet is its standfirst. What tells them
+  // apart is whether the ARTICLE is below: a story carrying team news or a
+  // ranking has its substance in that block, and the prose above it is an
+  // introduction.
+  const intro = story.extras?.teamNews !== undefined || story.extras?.ranks !== undefined;
+
+  // The men named below, so the standfirst sets them in bold too — Craig, 18 Sep
+  // 2026: "bold players in the whole article". They come off the rows rather
+  // than out of the prose, so only a name the desk filed can be emboldened.
+  const footballers = (story.extras?.teamNews ?? []).flatMap((row) => (row.men ?? []).map((man) => man.name));
+  const portrait = intro && story.face !== undefined && story.face !== null && clubs !== undefined;
+
+  // The opening: chip, headline, deck, rule, dateline, prose. When a picture
+  // runs beside it, ALL of that is the left column rather than the prose alone —
+  // a 20rem portrait against three sentences left a hole the height of the
+  // picture between the standfirst and the first club. Craig, 18 Sep 2026:
+  // "remove the big gap between chelsea and the above paragraph".
+  const opening = (
+    <>
       {/* The column runs under its standing title, the way a column does, and
           the title is a tag rather than a line on a rule — the same inverted ink
           chip the lead's kicker wears, because they are the same object. */}
@@ -46,7 +75,7 @@ export default function Written({
         </p>
       ) : null}
 
-      <h2 className="paper-display text-balance pt-2.5 text-4xl font-black leading-[1.02] text-ink @3xl:text-6xl">
+      <h2 className="paper-display text-balance pt-2.5 text-4xl font-black leading-[1.02] text-ink @3xl:text-5xl">
         {story.headline}
       </h2>
       {story.deck ? (
@@ -61,13 +90,32 @@ export default function Written({
           edition. A reader is entitled to know which he is reading. */}
       <Dateline story={story} turn={false} className="pt-2.5" />
 
-      {/* The one block of prose on the page, so it is the one block set the way
-          prose is set: newspaper columns, and a drop cap where they start. */}
       <Paragraphs
         text={story.body}
         dropcap
-        className="paper-columns pt-3 text-sm leading-relaxed text-ink"
+        names={footballers}
+        className={`pt-3 text-base leading-relaxed text-ink ${intro || portrait ? "" : "paper-columns"}`}
       />
+    </>
+  );
+
+  return (
+    <section className="flex flex-col">
+      {portrait && story.face ? (
+        <div className="grid gap-4 @3xl:grid-cols-[1fr_16rem] @3xl:gap-6">
+          <div className="flex min-w-0 flex-col">{opening}</div>
+          {/* Capped, because stacked it has the whole page to fill and a
+              portrait the width of the sheet is a jaw, not a picture. */}
+          <figure className="order-first max-w-[15rem] @3xl:order-none @3xl:max-w-none @3xl:pt-10">
+            <Face face={story.face} clubs={clubs} rank="portrait" />
+            <figcaption className="pt-1.5 font-sans text-2xs uppercase tracking-widest text-faint">
+              {story.face.name}
+            </figcaption>
+          </figure>
+        </div>
+      ) : (
+        opening
+      )}
 
       {story.ties !== undefined && story.ties.length > 0 ? (
         <div className="pt-4">

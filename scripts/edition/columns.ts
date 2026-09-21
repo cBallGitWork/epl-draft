@@ -9,7 +9,6 @@ import {
   buildWireBrief,
   decided,
   dodgers,
-  markCalls,
   powerRows,
   predictionTies,
   wireFacts,

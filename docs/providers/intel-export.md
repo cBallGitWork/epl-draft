@@ -283,14 +283,67 @@ already emits tagged signals; nothing new has to be learned, only exported.
 the fourth — a mapping table here would be a second vocabulary to keep in step,
 which is the failure `situation` already had in §2's corrections.
 
-**No quote, ever, and this is a hard line rather than a size decision.** The
-signal is the export; the sentence that produced it is not. Two reasons, both
-recorded: the paper's two invented-quote sketches were cut on 3 Sep (*"this is
-rubbish, ditch"*), and `voice/house.ts` forbids inventing a quote outright
-because sixteen friends would eventually find their own name over a sentence
-nobody said. A real transcript line is a different thing from an invented one —
-and it is still not exported, because a verbatim quote from a real manager is a
-republishing question this repo has not answered and does not need to.
+**Carry the quotes, verbatim** — reversed 18 Sep 2026. This section said *"no
+quote, ever, and this is a hard line"* on two grounds: the paper's invented-quote
+sketches were cut on 3 Sep, and republishing a real manager's words was *"a
+question this repo has not answered"*. Craig answered both — *"you can use the
+actual quotes in quotation marks too if needed. like the scout does"*, and on
+republishing, *"its a 10 man league, its not public"*.
+
+**The half that stands is the half that mattered: a quote may be CARRIED, never
+COMPOSED.** `voice/house.ts` forbids writing one outright, and that rule is now
+load-bearing rather than belt-and-braces — it is the only thing between the
+column and a sentence nobody said. The export is the sole source: a quote not in
+this file may not appear in the paper.
+
+The reason the old rule was wrong in practice: reducing a press conference to
+`(code, tag, condition)` and asking a model to re-inflate it gave six clubs the
+same sentence shape and the word "knock" eight times. The writer had nothing to
+say because nothing had been carried.
+
+```jsonc
+{
+  "quotes": [
+    {
+      "club": 8,
+      "text": "He is getting closer and tomorrow, we will take a final decision.",
+      "said": "Xabi Alonso",
+      "about": "Moises Caicedo"   // optional; the source's own "… on X"
+    }
+  ]
+}
+```
+
+`text` carries **no quotation marks** — the renderer adds them — and is never
+trimmed, joined or tidied. At most three per club: the column prints one and
+wants a choice.
+
+**Carry the clubs that SPOKE, not only the ones with news** (Craig, 18 Sep 2026:
+*"mention all teams, no news is still news"*). A manager who held a conference
+and reported a clean bill of health is telling a reader something, and a club
+missing from the thread reads as an oversight rather than as calm. Signals alone
+cannot express that, so the file needs a second member:
+
+```jsonc
+{
+  "manifest": { /* … */ },
+  "spoke": [
+    { "club": 4, "manager": "Eddie Howe", "at": "2026-09-18T13:00:00Z" }
+  ],
+  "rows": [ /* the signals, as above */ ]
+}
+```
+
+A club in `spoke` with no row in `rows` is a club that said nothing worth
+flagging, and the column prints it as exactly that.
+
+**The club on a row is checked against the PLAYER, not trusted.** The reader
+resolves each signal's club from the footballer's own `clubId` in the FPL
+snapshot and DROPS the row if the export disagrees. This is not defensive
+padding: a hand-made test file on 18 Sep paired a Crystal Palace player with the
+Spurs club code, and the column printed "Spurs — Glasner did not rule out
+rotating Yeremy" — a real manager, a real player, both of them Palace, and only
+the label wrong. A wrong crest beside a real quote is worse than no row.
 
 **The roster filter is OURS, not the exporter's.** Export every signal; the
 Friday column drops the men nobody owns, through `affectedBy` in

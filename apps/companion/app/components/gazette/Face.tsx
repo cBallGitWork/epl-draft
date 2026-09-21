@@ -33,11 +33,17 @@ import PlayerImage from "../league/PlayerImage";
 // a wrong photograph is worse than none, because only one of the two looks like
 // an answer.
 
-type Rank = "splash" | "shoulder" | "brief";
+type Rank = "splash" | "shoulder" | "brief" | "portrait";
 
 const BAND: Record<Rank, string> = {
   splash: "h-[8.5rem] @xl:h-[12rem]",
   shoulder: "h-[5.5rem]",
+  // Beside a standfirst, and the ONE rank with no fixed height. Every other is
+  // a band the man is cropped into, which is right where he is a mark on a
+  // headline and wrong where he is the picture: a 5.5rem band cut him at the
+  // chin and a 20rem one filled the column with his jaw. Here the frame takes
+  // his own height, so the whole portrait prints.
+  portrait: "h-auto",
   brief: "h-14 w-14 shrink-0 rounded-none",
 };
 
@@ -45,6 +51,7 @@ const BAND: Record<Rank, string> = {
 const MAN: Record<Rank, string> = {
   splash: "w-[11rem]",
   shoulder: "w-[7rem]",
+  portrait: "w-full",
   brief: "w-[3.25rem]",
 };
 
@@ -54,6 +61,7 @@ const MAN: Record<Rank, string> = {
 const CREST: Record<Rank, number | null> = {
   splash: 208,
   shoulder: 128,
+  portrait: 150,
   brief: null,
 };
 
@@ -74,7 +82,7 @@ export default function Face({
 
   return (
     <div
-      className={`paper-face flex items-end justify-center overflow-hidden ${BAND[rank]} ${rank === "splash" ? "bleed" : ""}`}
+      className={`paper-face flex justify-center overflow-hidden ${rank === "portrait" ? "items-stretch" : "items-end"} ${BAND[rank]} ${rank === "splash" ? "bleed" : ""}`}
       style={{
         background: `linear-gradient(150deg, ${colours.primary} 0%, ${colours.secondary} 100%)`,
       }}
@@ -89,7 +97,7 @@ export default function Face({
           style={{ height: crest, width: crest }}
         />
       ) : null}
-      <div className={`relative ${MAN[rank]} shrink-0 pt-2`}>
+      <div className={`relative ${MAN[rank]} shrink-0 ${rank === "portrait" ? "" : "pt-2"}`}>
         <PlayerImage
           player={{ code: face.code, name: face.name }}
           club={club}

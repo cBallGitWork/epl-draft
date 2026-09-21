@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Assignment, Fixture, ResolvedPlayer, RosteredTeam } from "@epl/core";
-import { faceOf } from "./assemble";
+import { faceOf, weight } from "./faces";
 import type { RoundFacts } from "./facts";
 
 // **The picture is the desk's choice and not the writer's.** These assert who
@@ -153,5 +153,31 @@ describe("faceOf", () => {
       slug: "gw1-power-ranking",
     };
     expect(faceOf(ranking, ctx)).toBeNull();
+  });
+});
+
+describe("weight — the day's story is what CHANGED", () => {
+  const man = (fresh: boolean, influence: number) => ({ fresh, player: { season: { influence } } });
+
+  it("puts news above a standing absence, however big the name", () => {
+    // Hinshelwood had been out for weeks; his being ruled out again was not
+    // news, and he led the column over men whose availability moved that day.
+    const standing = man(false, 900);
+    const changed = man(true, 10);
+    expect(weight(changed)).toBeGreaterThan(weight(standing));
+  });
+
+  it("breaks a tie between two changed men on the season", () => {
+    expect(weight(man(true, 200))).toBeGreaterThan(weight(man(true, 20)));
+  });
+
+  it("does not let a cameo outrank a regular", () => {
+    // Hinshelwood's two goals came in a sixty-three-minute season; Dunk played
+    // every round. Influence is minutes-weighted, so it reads that correctly.
+    expect(weight(man(true, 116.2))).toBeGreaterThan(weight(man(true, 72.8)));
+  });
+
+  it("ranks a man nobody can price below everyone", () => {
+    expect(weight({})).toBeLessThan(weight(man(false, 0)));
   });
 });

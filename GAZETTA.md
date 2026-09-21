@@ -324,6 +324,53 @@ two-pass and one-line-comment rules (#8, #9).
    empty week.
 5. The export-gated work, as the sister repo delivers.
 
+### The Team Sheet, after its first review — 18 Sep 2026
+
+Craig had a newspaper production editor and a top-10k draft manager read the
+filed column cold. They found the same three faults independently, and the ones
+below are what survived that did not land in the same session.
+
+- [ ] **`feat/team-sheet-fixtures`** — the column names no opponent, no kickoff
+  and no clock. The editor's proof that this matters: Alonso's quote says the
+  squad is *"coming to Brentford"* and Brentford has its own section four inches
+  below it, so **Chelsea v Brentford is on the page twice and never joined up.**
+
+  **Design it on OUR lock, not FPL's.** Craig, 18 Sep: *"its one deadline for
+  the whle weekend fyi"* — Fantrax locks the lineup once per period, fifteen
+  minutes before the round's FIRST kickoff. So nothing in this column resolves
+  before a reader is committed: every "decision Friday" lands after his lock.
+  The column's job is therefore to flag RISK before the lock, never to tell him
+  when to check back. A per-fixture deadline is classic FPL's shape and would be
+  the wrong model imported wholesale.
+
+- [ ] **`feat/team-sheet-replacements`** — *"Every OUT is a promotion for
+  somebody, and the promoted man is the claim. None are named."* Jaissle says
+  his midfield "will be a young one" and the column does not say whose. This
+  needs a depth chart we do not hold; deriving it from minutes would be a guess
+  printed as a fact, which is the exact failure this column spent a day fixing.
+  Blocked on an export, or on a designed answer.
+
+- [ ] **Mark free agents POSITIVELY.** Unowned is currently the ABSENCE of a
+  bracket, and a name the bridge failed to match renders identically — one of
+  those states means "claim him" and the other means there is a bug. Also carry
+  his POSITION: Fantrax pays the slot, so a free agent is unusable without it.
+
+- [ ] **Importance is FPL's season numbers today, and should not stay that way.**
+  `assemble.faceOf` ranks the day's men on goal involvements, influence and
+  minutes to choose the picture and the lead. Craig's better signal, 18 Sep:
+  *"use draft position/fpl scoring mix ... (or fantrax most owened by %"*. Both
+  need an export we do not have.
+
+- [ ] **Order the clubs by something.** Source order serves nobody — it is the
+  order Fantasy Football Scout happened to publish in. Craig's call on 18 Sep was
+  to keep the club-by-club shape for now.
+
+**Settled in the same session, recorded so they are not re-litigated:** the
+headline stays *"Thursday Pressers"* — the editor called it *"a column slug, not
+a headline"* and wanted the day's news in it, and Craig had already ruled for a
+static day headline a reader recognises every week. `Back` became `FIT` because
+it collided with "back" the injury three lines away.
+
 ---
 
 ## Verification

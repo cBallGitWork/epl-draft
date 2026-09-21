@@ -1,4 +1,4 @@
-import type { RawDraftPick, RawDraftResults } from "./raw";
+import type { RawDraftResults } from "./raw";
 
 // `getDraftResults` → who was taken where.
 //

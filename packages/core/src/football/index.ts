@@ -189,3 +189,5 @@ export type {
   IntelXi,
 } from "./intel/types";
 export type { Opposition } from "./opposition";
+export { FIRM, pressers } from "./intel/pressers";
+export type { IntelPressers, PresserQuote, PresserSignal, PresserSpoke } from "./intel/pressers";

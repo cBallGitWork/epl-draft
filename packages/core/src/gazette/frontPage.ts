@@ -1,5 +1,5 @@
-import { LEAGUE_TIMEZONE } from "../config";
 import type { PublishedStory, StoryKind } from "./story";
+import { londonDay } from "../config";
 
 // The running order of the rolling paper, and the three ways a story leaves it.
 //
@@ -34,6 +34,21 @@ const SUPERSEDES: Partial<Record<StoryKind, readonly StoryKind[]>> = {
  *  stand"). Recency breaks ties within a band; the PERIOD outranks all of it,
  *  because a paper that leads with last week is not a paper. */
 const KIND_WEIGHT: Record<StoryKind, number> = {
+  // **Team news leads, above the reports.** It sat at 68 under a comment saying
+  // it was "the most actionable thing in the paper, a deadline away", which the
+  // number flatly contradicted — every report and every wire item outranked it,
+  // and Craig found it buried: "this should be the top article for today, its
+  // the major piece of the day".
+  //
+  // The argument, and it is the band rule rather than an exception to it: a
+  // report is about football already played and a result nobody can change,
+  // while team news is the only thing on the page a reader can still ACT on. He
+  // reads it to pick a side before the lock. "What happened" outranks "what do
+  // we think", and "what do I do in the next few hours" outranks both.
+  //
+  // Safe across the week without a clock: a presser's signal window closes at
+  // the next lock, so on report day there is no fresh one to lead with.
+  presser: 95,
   "tie-report": 90,
   "match-report": 85,
   "tie-call": 78,
@@ -56,7 +71,7 @@ export function composePaper(stories: readonly PublishedStory[], now: string): P
     const retiredBy = current.some(
       (other) =>
         other !== story &&
-        (kindRetires(other, story) || subjectRetires(other, story)),
+        (kindRetires(other, story) || subjectRetires(other, story) || editionRetires(other, story)),
     );
     return !retiredBy;
   });
@@ -69,24 +84,27 @@ export function composePaper(stories: readonly PublishedStory[], now: string): P
       // under a three-day-old report.
       compareDay(b, a) ||
       KIND_WEIGHT[b.kind] - KIND_WEIGHT[a.kind] ||
-      compareFiled(b, a),
+      compareFiled(b, a) ||
+      // **A firing stamps every story it files with ONE instant**, so `filedAt`
+      // ties far more often than it looks — five tie-reports from one run are
+      // all the same second, and so were Thursday's and Friday's Team Sheets.
+      // The tie used to fall through to whatever was commissioned first, which
+      // put Thursday's ahead of Friday's. Slugs carry the date where a story has
+      // one (`gw5-presser-2026-09-18`), so descending is recency; where they do
+      // not it is at least stable, which arbitrary order was not.
+      b.slug.localeCompare(a.slug),
   );
 }
 
 // `en-CA` is the sortable YYYY-MM-DD; nothing formatted by it reaches a screen.
-const DAY_KEY = new Intl.DateTimeFormat("en-CA", {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  timeZone: LEAGUE_TIMEZONE,
-});
+
 
 /** The London day a story was filed on. Deliberately duplicated from the app's
  *  `londonTime.londonDayKey` — core cannot import the app, and two occurrences
  *  is §1's "leave it duplicated". */
 function dayKey(iso: string): string {
   const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? "" : DAY_KEY.format(at);
+  return Number.isNaN(at.getTime()) ? "" : londonDay(at);
 }
 
 // An unreadable instant sorts oldest, as it does in `compareFiled`.
@@ -102,6 +120,26 @@ function expired(story: PublishedStory, now: string): boolean {
   // story is kept until something shows it should go.
   if (Number.isNaN(at) || Number.isNaN(clock)) return false;
   return at < clock;
+}
+
+/** The columns that run ONE EDITION PER ROUND, so last round's is replaced
+ *  rather than stacked beside this round's.
+ *
+ *  **Not every kind.** A tie-report and a news item are about a SUBJECT — five
+ *  ties and two stories from the wire, each its own piece — and `subjectRetires`
+ *  already keeps those honest within a round. These five are editions of one
+ *  standing column, and page 3 printed two Power Rankings, two Points Dodgers
+ *  and two Teams of the Week side by side because nothing said so.
+ *
+ *  **The presser is NOT here**, and was until it ate Thursday's column. A week
+ *  holds two of them and they are not editions of each other — they are keyed by
+ *  DAY. Worse, the two need not share a period: Thursday's is filed before the
+ *  round rolls over and Friday's after, so this retired one by the other. Team
+ *  news expires at the kickoff it previewed instead. */
+const EDITIONS: readonly StoryKind[] = ["eleven", "power-ranking", "dodgers", "wire"];
+
+function editionRetires(newer: PublishedStory, older: PublishedStory): boolean {
+  return newer.kind === older.kind && EDITIONS.includes(newer.kind) && newer.period > older.period;
 }
 
 function kindRetires(newer: PublishedStory, older: PublishedStory): boolean {

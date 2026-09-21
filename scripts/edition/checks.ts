@@ -19,8 +19,11 @@ import type { Assignment, PublishedStory } from "@epl/core";
 /** The kinds whose substance lives in `extras` rather than in the body, and
  *  which member carries it. A kind absent from this table legitimately files
  *  without extras. */
-export const CARGO: Partial<Record<Assignment["kind"], "ranks" | "quiz">> = {
+export const CARGO: Partial<Record<Assignment["kind"], "ranks" | "quiz" | "teamNews">> = {
   "power-ranking": "ranks",
+  // The Team Sheet IS its rows — the body is an introduction to them. One that
+  // files without them is two sentences about a thread that is not there.
+  presser: "teamNews",
 };
 
 /** Every written surface of a filed story, as one string to check names in.
@@ -47,6 +50,18 @@ export function prose(story: PublishedStory): string {
     // quotes with the sketches), so `ranks` is the whole of it; the lesson is
     // kept here because the next cargo added will be read the same way.
     ...sentences(extras.ranks, "line"),
+    // **The Team Sheet's rows ARE the article**, and they went unchecked from 18
+    // Sep 2026 until the same day: the deck read "João Pedro carrying a calf
+    // issue" and his bullet said `calf`, when the source says Alonso declined to
+    // name the injury and the only calf in that section is Caicedo's. The export
+    // carried no condition for him; the writer invented one and nothing looked.
+    //
+    // This is the paragraph above coming true — "the next cargo added will be
+    // read the same way" — so every written surface of a row is named here: the
+    // club's line, each man's note, and the quote it carries.
+    ...sentences(extras.teamNews, "line"),
+    ...(extras.teamNews ?? []).flatMap((row) => (row.men ?? []).map((man) => man.note)),
+    ...(extras.teamNews ?? []).map((row) => row.quote?.text),
   ];
   // Each part on its own line, and every line is a sentence for the check's
   // purposes — a rank line opens with a capital the way a sentence does.

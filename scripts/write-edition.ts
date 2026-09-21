@@ -4,30 +4,20 @@ import {
   clubById,
   composePaper,
   datedKickoffs,
-  decided,
   fetchLeagueInfo,
-  fetchLiveScoring,
   firstKickoff,
-  fixtureStakes,
   gameweekStarted,
   getFootballSnapshot,
   hasRoom,
   isCovered,
   locksAt,
   mapLeagueInfo,
-  mapLiveScores,
-  markCalls,
   newsdesk,
   periodGameweeks,
-  periodPairings,
   banned,
   roundState,
   standingHeadlines,
   strangers,
-  tieState,
-  type Assignment,
-  type LeagueInfo,
-  type PublishedStory,
 } from "@epl/core";
 import { gatherRoundFacts, withFootball } from "./edition/facts";
 import { file, prepare, type DeskContext } from "./edition/dispatch";
@@ -35,6 +25,8 @@ import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { markLastWeek } from "./edition/marking";
 import { writeSubedited } from "./edition/subedit";
+import { presserDesk } from "./edition/presserWeek";
+import { deskState } from "./edition/desk";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
 // The newsroom's orchestrator, run from CI on a wide cron net.
@@ -70,7 +62,12 @@ async function main(): Promise<void> {
   // One instant for the whole firing. Read five times, it drifted across the
   // model call — the desk commissioning under Sunday while the byline printed
   // Monday.
-  const now = new Date().toISOString();
+  // **`GAZETTA_NOW` rehearses a dated column and nothing else sets it.** The
+  // Team Sheet, the preview and the reports all key off the clock, so the only
+  // way to see Friday's column on a Monday is to tell the desk it is Friday.
+  // CI never sets it; an unreadable value is ignored rather than obeyed.
+  const wanted = process.env.GAZETTA_NOW ?? "";
+  const now = Number.isNaN(Date.parse(wanted)) ? new Date().toISOString() : new Date(wanted).toISOString();
 
   const snapshot = await getFootballSnapshot();
   // `roundState` and not `roundFinished`, which core deliberately does not
@@ -97,44 +94,25 @@ async function main(): Promise<void> {
   const period = info.rosterPeriods.find((each) => each.number === round.period);
   const kickoff = period ? firstKickoff(period, kickoffs) : null;
   const lock = kickoff === null ? null : locksAt(kickoff);
-  const locked = lock !== null && Date.now() >= Date.parse(lock);
+  const locked = lock !== null && Date.parse(now) >= Date.parse(lock);
   const started = gameweekStarted(snapshot.fixtures, snapshot.gameweek);
 
   const ledger = readLedger();
   const paper = readPaperStories();
   const facts = await gatherRoundFacts(info, snapshot, round.period);
   const clubs = clubById(snapshot);
+  // Clubs by FPL CODE, which is what a presser signal carries and what a crest
+  // keys off — `clubById` keys by the per-season id.
+  const byCode = new Map([...clubs.values()].map((club) => [club.code, club]));
+
+  const sheet = await presserDesk({ facts, snapshot, byCode, now, lock, locked, say });
 
   const assignments = newsdesk(
-    {
-      gameweek: snapshot.gameweek,
-      period: round.period,
-      finished,
-      locked,
-      started,
-      stakes: fixtureStakes(
-        snapshot.fixtures.filter((fixture) => fixture.gameweek === snapshot.gameweek),
-        facts.teams,
-        facts.pairings,
-        clubs,
-      ),
-      dealsInWindow: facts.business.length,
-      news: facts.news.map((story) => ({
-        key: story.item.key,
-        slug: newsSlug(story.item.key),
-      })),
-      ties: facts.pairings.map((pairing) => ({
-        homeTeamId: pairing.home.teamId,
-        awayTeamId: pairing.away.teamId,
-        state: tieState(
-          facts.scores.get(pairing.home.teamId),
-          facts.scores.get(pairing.away.teamId),
-        ),
-      })),
-    },
+    deskState({ snapshot, facts, clubs, period: round.period, finished, locked, started, lines: sheet.lines }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,
   );
+  if (process.env.GAZETTA_QUEUE) return say(assignments.map((a) => a.key).join("\n"));
   if (assignments.length === 0) return say("Nothing new to report.");
 
   const ctx: DeskContext = {
@@ -153,6 +131,12 @@ async function main(): Promise<void> {
     period: round.period,
     kickoff,
     marked: await markLastWeek(paper, info, round.period, assignments),
+    presserLines: sheet.lines,
+    presserQuotes: sheet.quotes,
+    presserTies: sheet.ties,
+    presserClubs: byCode,
+    presserGameweek: sheet.gameweek,
+    presserSpoke: sheet.spoke,
   };
 
   const filings: Filing[] = [];
@@ -269,24 +253,6 @@ async function main(): Promise<void> {
   persistFilings(filings, ledger, now);
 }
 
-
-/** A wire item's slug: ours, addressable, and safe as a filename and a DOM id.
- *
- *  Not the URL's last segment. `"…/story/".split("/").pop()` is `""` rather
- *  than undefined, so a trailing slash produced the slug `news-` — and two of
- *  those collide, at which point the paper silently drops one. A guid carrying
- *  a query string reached an archive filename and a PNG name the same way. */
-function newsSlug(key: string): string {
-  const cleaned = key
-    .toLowerCase()
-    .replace(/^https?:\/\//, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .split("-")
-    .slice(-3)
-    .join("-");
-  return `news-${cleaned === "" ? Date.now().toString(36) : cleaned}`;
-}
 
 function say(message: string): void {
   console.log(message);

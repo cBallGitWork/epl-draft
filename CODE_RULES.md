@@ -159,3 +159,10 @@ is half-landed:
 
 Refactors land as their own commits, with tests unchanged and passing before and
 after. Never mix a refactor and a behaviour change in one commit.
+
+**`npm run typecheck` carries `--noUnusedLocals --noUnusedParameters`**, added
+21 Sep 2026 because a plain typecheck is blind to what a refactor leaves behind.
+Two extractions that same day each stranded imports, and a third stranded a dead
+copy of a whole function — all through a green gate. The second pass of rule 13
+is a person looking; this is the machine looking with them.
+
