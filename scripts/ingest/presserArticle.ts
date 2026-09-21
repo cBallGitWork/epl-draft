@@ -17,9 +17,9 @@ export interface Quote {
 /** The round the ARTICLE says it is about, from its own title: "FPL Gameweek 5
  *  team news". Null when it does not say, which is a reason to refuse it. */
 export function articleGameweek(body: string): number | null {
-  const m = body.match(/gameweek\s+(\d{1,2})\b/i);
-  if (m === null) return null;
-  const gw = Number(m[1]);
+  const stated = body.match(/gameweek\s+(\d{1,2})\b/i);
+  if (stated === null) return null;
+  const gw = Number(stated[1]);
   return gw >= 1 && gw <= 38 ? gw : null;
 }
 

@@ -70,7 +70,7 @@ async function main(): Promise<void> {
 
   const rows: unknown[] = [];
   const spoke: unknown[] = [];
-  const said_: unknown[] = [];
+  const spokenQuotes: unknown[] = [];
   const unmatched: string[] = [];
 
   // Every club the league has, under both the name FPL holds and the one a
@@ -93,17 +93,17 @@ async function main(): Promise<void> {
       unmatched.push(`club: ${section.club}`);
       continue;
     }
-    const said = manager(section.body);
+    const whoSpoke = manager(section.body);
     // His own time where the article published one, else the day's latest — a
     // presser we cannot time had happened by then.
-    const surname = (said ?? "").toLowerCase().split(" ").pop() ?? "";
-    const when = times.get((said ?? "").toLowerCase()) ?? times.get(surname) ?? latest ?? MIDDAY;
+    const surname = (whoSpoke ?? "").toLowerCase().split(" ").pop() ?? "";
+    const when = times.get((whoSpoke ?? "").toLowerCase()) ?? times.get(surname) ?? latest ?? MIDDAY;
     const at = londonInstant(day, when.hour, when.minute);
-    spoke.push({ club: club.code, manager: said, at });
+    spoke.push({ club: club.code, manager: whoSpoke, at });
     // At most three per club: the column prints one and wants a choice, and a
     // whole press conference in the brief is the writer's budget spent on filler.
     for (const quote of quotes(section.body).slice(0, QUOTES_PER_CLUB))
-      said_.push({ club: club.code, ...quote, at });
+      spokenQuotes.push({ club: club.code, ...quote, at });
 
     // Within this club only, which is what keeps a surname from matching the
     // wrong league. Same constraint `matchPlayers` applies internally.
@@ -125,7 +125,7 @@ async function main(): Promise<void> {
         // Never a literal: `FIRM` is core's and a second copy would drift from it.
         confidence: FIRM,
         said: at,
-        manager: said ?? "",
+        manager: whoSpoke ?? "",
       });
     }
   }
@@ -145,7 +145,7 @@ async function main(): Promise<void> {
   const otherDay = (at: unknown): boolean => typeof at !== "string" || !at.startsWith(day);
   const allRows = [...(kept.rows ?? []).filter((r) => otherDay(r.said)), ...rows];
   const allSpoke = [...(kept.spoke ?? []).filter((r) => otherDay(r.at)), ...spoke];
-  const allQuotes = [...(kept.quotes ?? []).filter((r) => otherDay(r.at)), ...said_];
+  const allQuotes = [...(kept.quotes ?? []).filter((r) => otherDay(r.at)), ...spokenQuotes];
 
   mkdirSync(join(OUT, ".."), { recursive: true });
   writeFileSync(
@@ -170,7 +170,7 @@ async function main(): Promise<void> {
     )}\n`,
   );
 
-  console.log(`${rows.length} signals, ${said_.length} quotes across ${spoke.length} clubs on ${day} (${allRows.length} in the export → data/intel/pressers/26-27.json)`);
+  console.log(`${rows.length} signals, ${spokenQuotes.length} quotes across ${spoke.length} clubs on ${day} (${allRows.length} in the export → data/intel/pressers/26-27.json)`);
   if (unmatched.length > 0) {
     console.log(`\n${unmatched.length} not matched, and NOT guessed:`);
     for (const miss of unmatched) console.log(`  ${miss}`);

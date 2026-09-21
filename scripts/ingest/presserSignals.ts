@@ -78,9 +78,9 @@ function condition(sentence: string, name: string): string | undefined {
   if (name === "") return undefined;
   for (let at = sentence.indexOf(name); at >= 0; at = sentence.indexOf(name, at + 1)) {
     const after = sentence.slice(at + name.length, at + name.length + 40);
-    const m = after.match(/^[^.]{0,12}\(([a-z][a-z ]{2,20})\)/);
-    if (m === null) continue;
-    const what = m[1].trim();
+    const bracketed = after.match(/^[^.]{0,12}\(([a-z][a-z ]{2,20})\)/);
+    if (bracketed === null) continue;
+    const what = bracketed[1].trim();
     return UNNAMED.test(what) ? undefined : what;
   }
   return undefined;

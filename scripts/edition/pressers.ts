@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { fetchFixtures, fullClubName, normalizeName, pressers, type Club, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
+import { fetchFixtures, fullClubName, instantOf, normalizeName, pressers, type Club, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { ResolvedPlayer, RosteredPlayer, RosteredTeam } from "@epl/core";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
@@ -148,10 +148,10 @@ export function presserSpoke(
 ): { clubName: string; manager: string | null; at: string }[] {
   const intel = read();
   if (intel === null) return [];
-  const floor = Date.parse(since);
+  const floor = instantOf(since);
   return (intel.spoke ?? []).flatMap((each) => {
-    const at = Date.parse(each.at);
-    if (!Number.isNaN(at) && !Number.isNaN(floor) && at < floor) return [];
+    const at = instantOf(each.at);
+    if (at !== null && floor !== null && at < floor) return [];
     const club = clubs.get(each.club);
     return club === undefined ? [] : [{ clubName: fullClubName(club.name), manager: each.manager, at: each.at }];
   });
@@ -198,13 +198,14 @@ export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote &
  *  days: a note from the day before is the same story, one from last week is the
  *  standing condition a reader already knows. */
 const FRESH_DAYS = 2;
+const MS_PER_DAY = 86_400_000;
 
 /** Whether his availability CHANGED around this conference. A man with no note
  *  at all counts as fresh — he is being discussed and FPL has not caught up. */
 function changed(newsAdded: string | null, said: string): boolean {
   if (newsAdded === null) return true;
-  const added = Date.parse(newsAdded);
-  const at = Date.parse(said);
-  if (Number.isNaN(added) || Number.isNaN(at)) return true;
-  return (at - added) / 86_400_000 <= FRESH_DAYS;
+  const added = instantOf(newsAdded);
+  const at = instantOf(said);
+  if (added === null || at === null) return true;
+  return (at - added) / MS_PER_DAY <= FRESH_DAYS;
 }
