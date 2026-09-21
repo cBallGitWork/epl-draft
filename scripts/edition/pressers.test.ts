@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { display, presserEdition } from "./pressers";
+import { display } from "./pressers";
+import { presserEdition } from "./presserWeek";
 
 // Every row is a real 26/27 player, read out of the FPL snapshot on 18 Sep 2026.
 // The column prints these names in prose, so a wrong one is a wrong fact.

@@ -1,5 +1,6 @@
 import { LEAGUE_TIMEZONE } from "../config";
 import type { PublishedStory, StoryKind } from "./story";
+import { londonDay } from "../config";
 
 // The running order of the rolling paper, and the three ways a story leaves it.
 //
@@ -89,19 +90,14 @@ export function composePaper(stories: readonly PublishedStory[], now: string): P
 }
 
 // `en-CA` is the sortable YYYY-MM-DD; nothing formatted by it reaches a screen.
-const DAY_KEY = new Intl.DateTimeFormat("en-CA", {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  timeZone: LEAGUE_TIMEZONE,
-});
+
 
 /** The London day a story was filed on. Deliberately duplicated from the app's
  *  `londonTime.londonDayKey` — core cannot import the app, and two occurrences
  *  is §1's "leave it duplicated". */
 function dayKey(iso: string): string {
   const at = new Date(iso);
-  return Number.isNaN(at.getTime()) ? "" : DAY_KEY.format(at);
+  return Number.isNaN(at.getTime()) ? "" : londonDay(at);
 }
 
 // An unreadable instant sorts oldest, as it does in `compareFiled`.

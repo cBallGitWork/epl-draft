@@ -399,6 +399,24 @@ export const DESK_GROUND_BLUR: string | null =
  *  today: this is our league's, and the two are separate questions. */
 export const LEAGUE_TIMEZONE = "Europe/London";
 
+/** A date as the league's own day, `YYYY-MM-DD`. `en-CA` because it is the
+ *  sortable spelling; nothing formatted by it reaches a screen.
+ *
+ *  One formatter for three callers — the front page's running order, the Team
+ *  Sheet's day key and the capture paths each built their own, and one of them
+ *  rebuilt it on every call. A day key that disagreed between them would file a
+ *  23:30 conference under the wrong date. */
+export function londonDay(at: Date): string {
+  return DAY_KEY.format(at);
+}
+
+const DAY_KEY = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  timeZone: LEAGUE_TIMEZONE,
+});
+
 /** The zone Fantrax stamps its own dates in, which is NOT ours.
  *
  *  `LeagueTransaction.processedAt` is `"Wed Sep 2, 2026, 6:11AM"` with no offset

@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { LEAGUE_TIMEZONE, fetchFixtures, fullClubName, normalizeName, pressers, type Club, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
+import { fetchFixtures, fullClubName, normalizeName, pressers, type Club, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { ResolvedPlayer, RosteredPlayer, RosteredTeam } from "@epl/core";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
@@ -14,12 +14,6 @@ const FILE = join(ROOT, "data", "intel", "pressers", "26-27.json");
 /** A day key in London, which is the league's clock — `bylines.ts` stamps the
  *  edition from the same zone, and a UTC key would put a 23:30 Thursday presser
  *  under Friday's column. */
-const DAY = new Intl.DateTimeFormat("en-CA", {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  timeZone: LEAGUE_TIMEZONE,
-});
 
 function read(): IntelPressers | null {
   if (!existsSync(FILE)) return null;
@@ -30,6 +24,16 @@ function read(): IntelPressers | null {
  *  They arrive keyed by the season-stable code, which is what a crest uses. */
 function byClubId(clubs: ReadonlyMap<number, Club>): Map<number, Club> {
   return new Map([...clubs.values()].map((club) => [club.id, club]));
+}
+
+/** What the Team Sheet needs of a footballer: to name him, to place him at a
+ *  club, and to know when his availability last moved. */
+export interface PresserSquadMan {
+  code: number;
+  name: string;
+  fullName: string;
+  clubId: number;
+  newsAdded: string | null;
 }
 
 /** Every code somebody in the league holds, and who holds him. */
@@ -97,13 +101,7 @@ export function presserLines(
   /** EVERY footballer, not only the rostered ones — an unowned man printed as
    *  his own code otherwise. The whole snapshot rather than a name lookup
    *  because `clubId` is how the club is read off the PLAYER. */
-  squad: readonly {
-    code: number;
-    name: string;
-    fullName: string;
-    clubId: number;
-    newsAdded: string | null;
-  }[],
+  squad: readonly PresserSquadMan[],
 ): PresserLine[] {
   const intel = read();
   if (intel === null) return [];
@@ -209,51 +207,4 @@ function changed(newsAdded: string | null, said: string): boolean {
   const at = Date.parse(said);
   if (Number.isNaN(added) || Number.isNaN(at)) return true;
   return (at - added) / 86_400_000 <= FRESH_DAYS;
-}
-
-/** ONE EDITION of the Team Sheet: everything said on one London day.
- *
- *  The presser is a single kind with two editions a week, and this is where that
- *  is expressed once. The window the desk reads is the ROUND's, so without this
- *  both editions carried the whole week — Friday's column printed all eighteen
- *  clubs and led on a man whose conference was Thursday. */
-export function presserEdition<
-  L extends { said?: string },
-  Q extends { at?: string },
-  S extends { at?: string },
->(day: string, all: { lines: readonly L[]; quotes: readonly Q[]; spoke: readonly S[] }): {
-  lines: L[];
-  quotes: Q[];
-  spoke: S[];
-} {
-  return {
-    lines: onDay(all.lines, day),
-    quotes: onDay(all.quotes, day),
-    spoke: onDay(all.spoke, day),
-  };
-}
-
-/** Only what was said on one London day. */
-function onDay<T extends { said?: string; at?: string }>(rows: readonly T[], day: string): T[] {
-  return rows.filter((row) => {
-    const when = row.said ?? row.at ?? "";
-    const at = new Date(when);
-    return Number.isNaN(at.getTime()) ? false : DAY.format(at) === day;
-  });
-}
-
-/** One assignment per press-conference DAY. Craig's week runs pressers Thursday
- *  and Friday, so a single key for the week would suppress the second column. */
-export function presserDays(
-  lines: readonly PresserLine[],
-  gameweek: number,
-): { key: string; slug: string; day: string }[] {
-  const days = new Set<string>();
-  for (const line of lines) {
-    const at = new Date(line.said);
-    if (!Number.isNaN(at.getTime())) days.add(DAY.format(at));
-  }
-  return [...days]
-    .sort()
-    .map((day) => ({ key: `presser:gw${gameweek}:${day}`, slug: `gw${gameweek}-presser-${day}`, day }));
 }
