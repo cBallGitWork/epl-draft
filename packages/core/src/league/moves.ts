@@ -110,7 +110,29 @@ export function eligibleSlots(
   });
 }
 
-/** Everything this player could legally do right now.
+/** Whether the XI is already breaking a cap this man stands inside.
+ *
+ *  The one state where taking somebody out and putting nobody in is the remedy
+ *  rather than the problem: a commissioner can lower a cap under a side that was
+ *  legal when it was filed, and did across the league on 12 Aug. */
+function overCap(
+  slots: readonly RosterSlot[],
+  limits: RosterLimits,
+  slot: RosterSlot,
+): boolean {
+  if (
+    limits.maxActivePlayers !== null &&
+    slots.filter(isActive).length > limits.maxActivePlayers
+  ) {
+    return true;
+  }
+  const cap = limits.maxActiveByPosition[slot.position];
+  return cap !== undefined && activeAt(slots, slot.position).length > cap;
+}
+
+/** Everything this player could legally do right now — including the moves
+ *  somebody else makes ON him, which is what "his bench" means when he is the one
+ *  in the side.
  *
  *  A player with no recorded eligibility yields nothing at all. That is the honest
  *  answer — we do not know what he may play — and it is why absence is modelled
@@ -158,9 +180,34 @@ export function legalMoves(
     }
   }
 
+  // **A man in the side goes off only when somebody takes his place** (Craig,
+  // 21 Sep 2026: "dont allow to just put a player on the bench"). The swaps are
+  // the same ones the reserves already offer, read from the other end rather
+  // than derived a second time — one rule, so the pitch cannot light a partner
+  // the dialog then refuses. No recursion: the reserve branch above never asks
+  // this question back.
+  //
+  // It is also what makes the position caps a FORMATION rule. With the eleven
+  // held at eleven, `maxActiveByPosition` fixes the fewest a line may hold —
+  // this league's G1/D5/M5/F3 against an XI of 11 puts the floor at two at the
+  // back and two in midfield — and no arrangement outside that is reachable.
+  if (active) {
+    for (const reserve of slots.filter((s) => !isActive(s))) {
+      for (const move of legalMoves(slots, eligibility, limits, reserve.fantraxId)) {
+        if (move.kind === "swap" && move.withId === fantraxId) moves.push(move);
+      }
+    }
+  }
+
   const benched = slots.filter((s) => !isActive(s)).length;
   // A bench with no published cap has room: an unstated limit cannot be full.
-  if (active && (limits.maxReservePlayers === null || benched < limits.maxReservePlayers)) {
+  // Offered only to break a cap the XI is ALREADY over, which is the single case
+  // a bare demotion repairs rather than causes.
+  if (
+    active &&
+    overCap(slots, limits, slot) &&
+    (limits.maxReservePlayers === null || benched < limits.maxReservePlayers)
+  ) {
     moves.push({ kind: "demote", fantraxId });
   }
 

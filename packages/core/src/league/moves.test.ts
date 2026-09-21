@@ -134,19 +134,66 @@ describe("legalMoves", () => {
     }
   });
 
-  it("lets an active player step down while there is bench room", () => {
-    expect(legalMoves(slots, eligibility, limits, DUAL_ACTIVE)).toContainEqual({
+  it("never benches a man without somebody taking his place", () => {
+    // Fielding ten is not a shape. It is also what holds the formation inside
+    // the caps: the XI stays at eleven, so a line cannot be emptied.
+    expect(legalMoves(slots, eligibility, limits, DUAL_ACTIVE)).not.toContainEqual({
       kind: "demote",
       fantraxId: DUAL_ACTIVE,
     });
   });
 
-  it("refuses to bench anyone once the bench is full", () => {
+  it("names the men on the bench who can come on for him", () => {
+    // The question a manager asks by tapping somebody already in the side, and
+    // the answer has to be the same set the reserves themselves offer — a pitch
+    // that lights a partner the dialog then refuses is worse than one that lights
+    // nobody.
+    const moves = legalMoves(slots, eligibility, limits, DUAL_ACTIVE);
+    const swaps = moves.filter((m) => m.kind === "swap");
+    expect(swaps.length).toBeGreaterThan(0);
+    for (const move of swaps) {
+      expect(move.kind === "swap" && move.withId).toBe(DUAL_ACTIVE);
+      const coming = move.kind === "swap" ? move.fantraxId : "";
+      expect(at(coming)?.status).toBe("RESERVE");
+      expect(legalMoves(slots, eligibility, limits, coming)).toContainEqual(move);
+    }
+  });
+
+  it("offers the bare demotion only to break a cap the XI is already over", () => {
+    // A commissioner can lower a cap under a side that was legal when it was
+    // filed, and did across the league on 12 Aug. That is the one state where
+    // taking a man out and putting nobody in is the repair rather than the
+    // damage.
+    const forward = slots.find((s) => s.status === "ACTIVE" && s.position === "F");
+    if (!forward) throw new Error("fixture has no active forward");
+    const tightened: RosterLimits = {
+      ...limits,
+      maxActiveByPosition: { ...limits.maxActiveByPosition, F: 2 },
+    };
+    expect(legalMoves(slots, eligibility, tightened, forward.fantraxId)).toContainEqual({
+      kind: "demote",
+      fantraxId: forward.fantraxId,
+    });
+    expect(legalMoves(slots, eligibility, limits, forward.fantraxId)).not.toContainEqual({
+      kind: "demote",
+      fantraxId: forward.fantraxId,
+    });
+  });
+
+  it("will not repair an over-cap XI onto a bench that is already full", () => {
     // The real league seats three reserves; this team is carrying four, which is
     // legal there and not here. The same roster, two leagues, two answers — and
     // nothing in the module knows which league it is looking at.
+    const forward = slots.find((s) => s.status === "ACTIVE" && s.position === "F");
+    if (!forward) throw new Error("fixture has no active forward");
+    const tighten = (l: RosterLimits): RosterLimits => ({
+      ...l,
+      maxActiveByPosition: { ...l.maxActiveByPosition, F: 2 },
+    });
     const benched = (l: RosterLimits) =>
-      legalMoves(slots, eligibility, l, DUAL_ACTIVE).some((m) => m.kind === "demote");
+      legalMoves(slots, eligibility, tighten(l), forward.fantraxId).some(
+        (m) => m.kind === "demote",
+      );
     expect(benched(realLimits)).toBe(false);
     expect(benched(limits)).toBe(true);
   });
