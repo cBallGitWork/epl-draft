@@ -4,6 +4,7 @@ import LeagueCrest from "../../components/shell/LeagueCrest";
 import Skeleton from "../../components/shell/Skeleton";
 import SkeletonRows from "../../components/shell/SkeletonRows";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
+import { SQUAD } from "../../squad/routes";
 
 // A round of football before FPL has answered — `GameweekView`'s own frame.
 //
@@ -37,7 +38,7 @@ export default function Loading() {
         <Skeleton width="48%" height="2.75rem" />
       </nav>
 
-      <ButtonLink href="/squad">Squads</ButtonLink>
+      <ButtonLink href={SQUAD}>Squads</ButtonLink>
     </div>
   );
 }
