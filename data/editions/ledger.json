@@ -44,9 +44,24 @@
       "dodgers:gw5",
       "news:https://www.bbc.co.uk/sport/football/articles/cxddvp49gg1ro",
       "news:https://www.bbc.co.uk/sport/football/videos/cqpve80lwem9o",
-      "news:https://www.bbc.co.uk/sport/football/videos/cmp3k277095do"
+      "news:https://www.bbc.co.uk/sport/football/videos/cmp3k277095do",
+      "news:https://www.bbc.co.uk/sport/football/articles/c6y8z29nxn4mo"
     ],
     "threads": [
+      {
+        "subject": "Gabriel's future, test31121",
+        "beat": "Named again in Monday's gossip, next step still unresolved, still test31121's",
+        "status": "open",
+        "beats": 3,
+        "lastUsedAt": "2026-09-21T06:49:30.660Z"
+      },
+      {
+        "subject": "Gibbs-White's future, test3",
+        "beat": "Spurs said to be weighing a £125m move for test3's midfielder",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-21T06:49:30.660Z"
+      },
       {
         "subject": "Cunha and Isak, test2's front pair",
         "beat": "Isak strikes the winner, a second forward return to sit beside Cunha's.",
@@ -200,20 +215,6 @@
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-19T10:05:39.190Z"
-      },
-      {
-        "subject": "Gabriel's future, test31121",
-        "beat": "The 15-year-old named in a tie that could swing on him, still on test31121's rolls.",
-        "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-19T10:05:39.190Z"
-      },
-      {
-        "subject": "João Pedro's fitness, test211",
-        "beat": "Ruled out injured, no return date given",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-18T23:13:57.275Z"
       }
     ]
   }

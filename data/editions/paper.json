@@ -1,6 +1,26 @@
 {
-  "updatedAt": "2026-09-20T19:07:42.141Z",
+  "updatedAt": "2026-09-21T06:49:30.660Z",
   "stories": [
+    {
+      "slug": "news-football-articles-c6y8z29nxn4mo",
+      "kind": "news",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-21T06:49:30.660Z",
+      "expiresAt": null,
+      "edition": "The Team Sheet",
+      "byline": "The Wire",
+      "headline": "test3's Gibbs-White Fielding Fresh Interest",
+      "deck": "Spurs gossip circles Gibbs-White, owned by test3, with Gabriel and White also in Monday's talk",
+      "body": "Monday's gossip lands on three names already on rolls in this league. Gibbs-White, test3's man, sits at the centre of a reported Spurs move worth a figure that would make anyone's ownership feel provisional. Nothing is settled, and until it is, test3 keeps him.\n\nAround the same column, test31121's Gabriel has his next step unresolved and test3331 owns White. The wire offers no dates, no fees confirmed, no line-ups. What is known is that three managers here are watching the same speculation the rest of us are, and holding their assets until it hardens into fact.",
+      "subjects": [
+        "news:https://www.bbc.co.uk/sport/football/articles/c6y8z29nxn4mo"
+      ],
+      "image": null,
+      "face": null,
+      "ties": []
+    },
     {
       "slug": "p5-report-hy0w28p5mtj36y3gv1b6gp5utmtj36y3g",
       "kind": "tie-report",
@@ -577,31 +597,6 @@
         "name": "Groß",
         "clubId": 5,
         "position": "M"
-      },
-      "ties": []
-    },
-    {
-      "slug": "p4-report-g80h3bf5mtj36y3gvdpdkp2bbmtj36y3g",
-      "kind": "tie-report",
-      "leagueId": "w05aib75mtj36y1g",
-      "period": 4,
-      "gameweek": 4,
-      "filedAt": "2026-09-18T17:10:33.962Z",
-      "expiresAt": null,
-      "edition": "The Monday Club",
-      "byline": "",
-      "headline": "Verbruggen's clean sheet keeps test31 dry",
-      "deck": "test31 beats test31121 34-31, Verbruggen's eight and Belloumi's nine decisive",
-      "body": "Two nines split this tie down the middle, and it was the man behind them who tipped it. Verbruggen's clean sheet and eight points gave test31 a base test31121 could not match, and Belloumi's nine up top matched Kostoulas blow for blow. Mykolenko's six from the back did the rest of the settling.\n\ntest31121 will point at the top of the sheet and rightly so: Kostoulas returned nine, the equal of anything test31 had. But behind him the picture thinned fast. Ampadu and Gabriel managed five apiece and the midfield trio of Berge, Ødegaard and Szoboszlai returned three each, and three points from a midfielder is not the return a captaincy expects.\n\nThe margin was three, which is exactly the gap between test31's goalkeeper and test31121's not having one that scored. Belloumi and Kostoulas cancelled; Verbruggen did not. That is the tie.",
-      "subjects": [
-        "tie-report:p4:g80h3bf5mtj36y3gvdpdkp2bbmtj36y3g"
-      ],
-      "image": null,
-      "face": {
-        "code": 540324,
-        "name": "Belloumi",
-        "clubId": 11,
-        "position": "F"
       },
       "ties": []
     }
