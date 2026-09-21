@@ -73,6 +73,34 @@ interface StoryTeamNews {
   quote?: { text: string; said: string };
 }
 
+/** One man in a predicted eleven. */
+export interface StoryLineupMan {
+  /** As the paper prints him: first name and surname. */
+  name: string;
+  /** His REAL football position — `RCB`, `AM` — and never FPL's fantasy letter.
+   *  Null where the export had only `element_type` to go on. */
+  position: string | null;
+  /** The Fantrax team that holds him, joined to a name at render the way a rank
+   *  is. Absent is a free agent. */
+  owner?: string;
+}
+
+/** One club's predicted eleven, in the source's own order. */
+export interface StoryLineupSide {
+  club: string;
+  /** FPL's season-stable club code, for the crest. */
+  code: number;
+  formation: string;
+  men: StoryLineupMan[];
+}
+
+/** One fixture and both its predicted elevens. */
+export interface StoryLineup {
+  home: StoryLineupSide;
+  away: StoryLineupSide;
+  kickoff: string;
+}
+
 interface StoryQuizItem {
   q: string;
   a: string;
@@ -84,6 +112,7 @@ export interface StoryExtras {
   ranks?: StoryRank[];
   quiz?: StoryQuizItem[];
   teamNews?: StoryTeamNews[];
+  lineups?: StoryLineup[];
 }
 
 /** A closed set, so the column cannot invent a fifth state. Anything else is a
@@ -126,6 +155,46 @@ function quote(raw: unknown): { text: string; said: string } | undefined {
   if (typeof said.text !== "string" || said.text === "") return undefined;
   if (typeof said.said !== "string" || said.said === "") return undefined;
   return { text: said.text, said: said.said };
+}
+
+/** One starter, or nothing. A man the desk could not name is dropped here and
+ *  his whole side is refused above — ten men under an eleven's formation is the
+ *  failure `xiFault` exists to stop. */
+function lineupMan(raw: unknown): StoryLineupMan[] {
+  const man = raw as Partial<StoryLineupMan> | null;
+  if (man === null || typeof man !== "object") return [];
+  if (typeof man.name !== "string" || man.name.trim() === "") return [];
+  return [
+    {
+      name: man.name,
+      position: typeof man.position === "string" && man.position !== "" ? man.position : null,
+      ...(typeof man.owner === "string" && man.owner !== "" ? { owner: man.owner } : {}),
+    },
+  ];
+}
+
+function lineupSide(raw: unknown): StoryLineupSide | null {
+  const side = raw as Partial<StoryLineupSide> | null;
+  if (side === null || typeof side !== "object") return null;
+  if (typeof side.club !== "string" || side.club.trim() === "") return null;
+  // A code that is not a real FPL one draws the wrong crest or none.
+  if (typeof side.code !== "number" || !Number.isInteger(side.code) || side.code <= 0) return null;
+  if (typeof side.formation !== "string" || side.formation === "") return null;
+  const men = Array.isArray(side.men) ? side.men.flatMap(lineupMan) : [];
+  return men.length === 0
+    ? null
+    : { club: side.club, code: side.code, formation: side.formation, men };
+}
+
+/** A tie prints both elevens or neither: one side under a heading naming two is
+ *  a fixture half-reported. */
+function lineupTie(raw: unknown): StoryLineup[] {
+  const tie = raw as Partial<StoryLineup> | null;
+  if (tie === null || typeof tie !== "object") return [];
+  if (typeof tie.kickoff !== "string" || tie.kickoff === "") return [];
+  const home = lineupSide(tie.home);
+  const away = lineupSide(tie.away);
+  return home === null || away === null ? [] : [{ home, away, kickoff: tie.kickoff }];
 }
 
 export function normalizeExtras(raw: unknown): StoryExtras | undefined {
@@ -173,6 +242,9 @@ export function normalizeExtras(raw: unknown): StoryExtras | undefined {
       fixture: fixture(row.fixture),
     }));
   }
+
+  const lineups = Array.isArray(extras.lineups) ? extras.lineups.flatMap(lineupTie) : [];
+  if (lineups.length > 0) out.lineups = lineups;
 
   return Object.keys(out).length > 0 ? out : undefined;
 }

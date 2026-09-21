@@ -49,6 +49,9 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   // Safe across the week without a clock: a presser's signal window closes at
   // the next lock, so on report day there is no fresh one to lead with.
   presser: 95,
+  // An hour behind the presser and derived from it: the news is what a manager
+  // said, this is what somebody predicts he will do about it.
+  "predicted-xi": 92,
   "tie-report": 90,
   "match-report": 85,
   "tie-call": 78,

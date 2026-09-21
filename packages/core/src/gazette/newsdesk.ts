@@ -82,6 +82,10 @@ export interface DeskState {
    *  both. The caller builds the keys; this file owns no clock. Empty when the
    *  export has not landed, which files nothing and spends nothing. */
   pressers: readonly { key: string; slug: string; day: string }[];
+  /** The predicted elevens, when the export holds the round ahead. The caller
+   *  builds the key — it owns the clock and the file; this file owns neither.
+   *  Null is the ordinary state and files nothing. */
+  lineups: { key: string; slug: string } | null;
 }
 
 /** The columns a finished round earns, in the order they are worth reading.
@@ -203,6 +207,13 @@ export function newsdesk(
   // themselves once the next lock moves it on.
   for (const day of desk.pressers) {
     want({ kind: "presser", key: day.key, slug: day.slug, day: day.day });
+  }
+
+  // The elevens, outside the gates above for the Team Sheet's reason: the round
+  // they predict is the one ahead, which `desk.finished` and `desk.locked` are
+  // both about the wrong side of.
+  if (desk.lineups !== null) {
+    want({ kind: "predicted-xi", key: desk.lineups.key, slug: desk.lineups.slug });
   }
 
   // The wire is weekly and keys on the WINDOW rather than the round: it reports

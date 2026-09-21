@@ -25,6 +25,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   dealsInWindow: 0,
   news: [],
   pressers: [],
+  lineups: null,
   ...over,
 });
 
@@ -240,5 +241,18 @@ describe("newsdesk", () => {
     expect(kinds[0]).toBe("tie-report");
     // The Monday set follows the round's own reporting.
     expect(kinds).toContain("eleven");
+  });
+
+  it("files the elevens when the export holds the round ahead, and never twice", () => {
+    const lineups = { key: "predicted-xi:gw4", slug: "gw4-predicted-xi" };
+    const filed = newsdesk(desk({ lineups }), none, NOW);
+    expect(filed.filter((a) => a.kind === "predicted-xi").map((a) => a.slug)).toEqual([lineups.slug]);
+    expect(newsdesk(desk({ lineups }), (key) => key === lineups.key, NOW).map((a) => a.kind)).not.toContain(
+      "predicted-xi",
+    );
+  });
+
+  it("files no elevens when the export is not the round ahead's", () => {
+    expect(newsdesk(desk({ lineups: null }), none, NOW).map((a) => a.kind)).not.toContain("predicted-xi");
   });
 });
