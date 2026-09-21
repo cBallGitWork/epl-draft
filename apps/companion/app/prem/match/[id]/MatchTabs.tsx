@@ -16,13 +16,22 @@ import { MATCH } from "../../routes";
 // call. Corrected rather than patched, because the reasoning was the stale part
 // and not the count.*
 //
-// **Action Zones stays off, and now it is the only one.** Nothing in any
-// provider publishes a zone. `TabStrip`'s `dim` is not the answer: its docblock
-// says it greys a tab with nothing behind it FOR THIS SUBJECT, and a plate greyed
-// for every match ever played reads as broken rather than honest.
-// `docs/ui/prem.md` ruled on this exact case — *"Tactics is not a tab and will
-// not be one… It arrives there when there is a real XI to draw"*. Zones arrive
-// with their data.
+// **Action Zones is CLOSED rather than absent, and it did not become a sixth
+// plate.** *This comment read "Nothing in any provider publishes a zone" until
+// 11 Sep 2026. The touch cloud falsified it: `averageTouchPosition` over a
+// side's eleven is SofaScore's own average position, measured that day against
+// their `avg_positions` table and matching it to within the export's rounding,
+// at 30/30 fixtures.* What the game files under that name is two pictures, and
+// both are now on **Match Stats** — the shot map and the average-position map —
+// because that tab is the two SIDES against each other and this is what two
+// sides did.
+//
+// **Five plates and not six, and the strip is the reason.** A sixth is 65px wide
+// at 390 against the five's 78, and `TabStrip`'s own docblock records a label of
+// this length needing 58px at `3xs` — so the tab would be bought by wrapping two
+// of the labels already here. `dim` was never the answer either: its docblock
+// says it greys a tab with nothing behind it FOR THIS SUBJECT, and a plate
+// greyed for every match ever played reads as broken rather than honest.
 //
 // **Fantasy Scores, where CM files Player Ratings.** In the game it is a FOOT
 // button (`16.jpg`, `21.jpg`) rather than a tab, and it is a tab here because it

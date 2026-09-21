@@ -148,8 +148,13 @@ nought. One it has not dated reads **TBC** rather than a guessed kickoff.
 
 A leaderboard, not a spreadsheet: one measure at a time, every club in order, the
 figure at the end. Seventeen measures as seventeen columns is what a provider's
-own page does and is unreadable under a thumb — `league/team-stats` records the
-same ruling off the same shot.
+own page does and is unreadable under a thumb.
+
+*`league/team-stats` used to record the same ruling off the same shot and no
+longer does: its foot row had already cut twelve categories to a group of three
+or four, and on 11 Sep 2026 it began drawing the whole group at once. This board
+has no such row — seventeen measures in one list — so the ruling stands here on
+its own arithmetic rather than by agreement with the other board.*
 
 **The category list lives in the app** (`prem/team-stats/categories.ts`), not in
 core. `clubStats` and `leagueTable` are the domain and are tested on what a club

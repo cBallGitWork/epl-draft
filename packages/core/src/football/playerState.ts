@@ -22,7 +22,11 @@ export interface Availability {
    *  row greys — which is a different statement from a doubt, where the row
    *  stays at full strength because he might yet play. */
   out: boolean;
+  /** 0–100, or null when FPL has no opinion. **Null is not zero**: "no comment"
+   *  and "will not play" are different things to a manager picking a side. */
   chance: number | null;
+  /** FPL's own words, untruncated — Fantrax's equivalent arrives ellipsised, and
+   *  we do not paraphrase a medical claim. */
   news: string;
 }
 

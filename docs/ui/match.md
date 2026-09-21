@@ -82,8 +82,12 @@ the whole time: `fetchPlMatchStats` was written on 4 Sep and had no caller in th
 app for six days. `22.jpg`'s board is **thirteen of thirteen rows** from that one
 call.*
 
-**Action Zones stays off, and it is now the only one.** No provider publishes a
-zone. `TabStrip`'s `dim` is not the answer: its docblock says it greys a view
+**Action Zones stays off, and it is now the only one — but no longer for want of
+a source.** *This sentence read "No provider publishes a zone" until 11 Sep
+2026, and that stopped being true when the touch cloud shipped: the average
+position of a man or of a side is the centroid of his cloud, measured that day to
+BE SofaScore's own `average_x`/`average_y`, at 30/30 fixtures. What the tab waits
+on now is a decision about what it draws.* `TabStrip`'s `dim` is not the answer: its docblock says it greys a view
 with nothing behind it *for this subject*, and a plate greyed for all 380 matches
 reads as broken rather than honest. This section has already ruled on the same
 case once — [prem.md](prem.md): *"Tactics is not a tab and will not be one… It
@@ -122,12 +126,65 @@ same three in cyan and the two card LABELS in their own cards' colours.
 includes the keeper's. **A metric worth nought is absent from the payload**,
 which inverts DESIGN §7 — see [premier-league-api.md](../providers/premier-league-api.md).
 
-Under it, the **shot map**: every shot in the match on one pitch, the two sides
-attacking opposite ways. The away side is mirrored because every coordinate the
-sister repo exports is player-relative — both sides are stored attacking right —
-and `mirrorShot` rotates rather than flips, since turning a pitch around swaps
-left and right as well as ends. Radius carries xG by its square root so AREA is
-proportional; outcome is fill and weight, and colour is the club's.
+Under it, **two maps, and each is drawn once per TEAM** (Craig, 11 Sep 2026:
+*"shot and touch maps need to be by team"*). Four pitches, side by side within a
+map on a desk and stacked under a thumb — the whole of what the two sides did, on
+one page, which is the other half of the same instruction (*"Match Stats as one
+page"*). Each pitch wears its club's own plate, with the count on the shot map
+and the formation on the other.
+
+**Splitting deleted the mirror rather than moving it.** Every coordinate the
+sister repo exports is player-relative — his own goal to the one he attacks — so
+a side with a pitch of its own is already facing the right way, and both pitches
+read left to right. `mirrorShot` existed only to put two frames on one picture,
+and it went with its last caller (CODE_RULES §2).
+
+The **shot map**: radius carries xG by its square root so AREA is proportional,
+outcome is fill and weight, and colour is the club's.
+
+The **average position map** (Craig: *"we can create a formation map"*, then
+*"call it average position"* — which is the name on the screen and the name of the
+file). Every STARTER at the centre of his own touches:
+
+- **It is the shape as MEASURED, which is what makes it a different object from
+  the pitch that came off Line Ups** the same day. That one drew the formation's
+  own slots, and four characters of `sheet.formation` already said everything a
+  slot diagram could. A back four camped on the halfway line and one pinned on
+  its own box are the same four characters and not the same match.
+- **The centre needed no export.** `averageTouchPosition` over the touch cloud is
+  SofaScore's own `average_x`/`average_y` to within the export's rounding —
+  measured 11 Sep 2026, counted in [PLATFORM_NOTES](../../PLATFORM_NOTES.md),
+  30/30 fixtures and 438/440 starters.
+- **Starters only, and the eleven comes off the team sheet.** A cloud says a man
+  touched the ball, never that he started; a substitute's centre can come off two
+  touches and would be a noisy point pretending to be a position.
+- **A named man with no cloud is dropped and the plate admits it.** `teamSheet.ts`
+  sets the precedent for the dropping — *"a pitch with a hole in it is a worse
+  answer than a pitch with ten men"* — but a reader counting ten discs and finding
+  no gap has been told a side played a man short, so the plate reads `10 of 11 ·
+  4-2-3-1` when it happens and carries the formation alone when it does not.
+  Ipswich 0-2 Liverpool is a live case: Exequiel Palacios started and the export
+  has no touches for him.
+
+### Bunched players — the mark never moves, the label does
+
+Craig, 11 Sep 2026: *"needs to handle players bunched together"*. Two centre-halves
+splitting a back four average four units apart and their names are set on the same
+line on top of each other, which is what made the first cut unreadable — the discs
+underneath were perfectly clear.
+
+`labels.ts` is the arithmetic and it is unit-tested, because two names that clear
+each other by a pixel at 390 and collide at 1440 look identical in a diff. A name
+takes the slot under its own disc, then the one over it, then a row further out
+each way to three; **the disc itself never moves**, because it is a measurement
+and nudging it draws a picture that lies about where a man played. Past eight
+co-located men the arithmetic gives up NEAR the man rather than flying his name
+across the pitch — an overlap is unreadable, a name closer to somebody else's disc
+is wrong.
+
+*The first cut instead hung the home side's names below its discs and the away
+side's above, which was a two-sided fix for a problem that is also same-sided, and
+it went when the pitches split.*
 
 ## The team sheet
 
@@ -381,10 +438,18 @@ lists. Without the reconciliation an own goal reads as a goal for the wrong side
 
 ## Known gaps
 
-- **Match Stats and Action Zones**, the two tabs the game has and this does not.
-  The team figures for the first are already in the export and unread; the shot
-  x/y and average positions for the second are in SofaScore staging and not yet
-  exported. The waiting plate in the foot row is where they land.
+- ~~**Action Zones**, the one tab the game has and this does not.~~ **Closed
+  11 Sep 2026, as two maps on Match Stats rather than as a sixth tab.** *This
+  entry said the average positions were "in SofaScore staging and not yet
+  exported" and paired the gap with Match Stats, which had been a real tab since
+  10 Sep.* Both halves were in the tree: the shots were already drawn, and the
+  average position turned out to be `averageTouchPosition` over the touch cloud.
+  **Not a tab, and the strip is why**: a sixth plate is 65px wide at 390
+  against the five's 78, and `TabStrip`'s own docblock records "Team Stats" — the
+  same length as two labels in this strip — needing 58px at `3xs` inside a plate
+  that would now have 49px of room. A tab bought by wrapping two of the labels it
+  already has is not a tab. The four pitches belong on the two-SIDES tab in any
+  case, which is where Craig put them (*"Match Stats as one page"*).
 - **A Fantrax figure per man per match.** 6 of 32 from what is wired, 32 of 32
   only through one rate-limited request per player — so it is a paced capture
   rather than a page read, and it is not built.
