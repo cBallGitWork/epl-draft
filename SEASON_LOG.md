@@ -10,6 +10,64 @@ true on its date and is not a statement about the tree today; that is why
 `docs-drift-auditor` exempts a season log, and why anything still load-bearing
 belongs in `PLATFORM_NOTES.md` instead of here.
 
+## 21 Sep 2026 — My Team, and the pitch nobody had been maintaining
+
+Craig, on `/squad/me`: *"remove 1-3-4-3 row"*, *"pitch view using old crap UI"*,
+*"USE THIS code for pitch view ui (and get it shared)"* pointing at
+`/league/matchups/…?gw=5`, *"pitch view doesnt fit either, goes under bench"*,
+*"bench labels are too small, cant see them (number them too, 1st is left)"*,
+*"if you tap on a first choice def, the bench should light up"*, *"use the
+fantrax roster logic, dont allow invlaid formations"*, *"dont allow to just put a
+player on the bench"*, *"we need to show that players are a doubt/out better"*,
+*"for the list view, we should put our position in the blue chip (same code),
+then the team logo, then player name, more CM style"*, *"bench players should be
+greyed out too"* and *"pitch view, needs a 'vs' in fornt of the team name too"*.
+
+**The planner was the last screen with a card of its own.** `PitchPlayer` drew a
+cream plate, FPL's difficulty colours and two contribution chips; every other
+eleven in the app drew `PitchMarker`. `SquadMarker` is the translation both now
+share — three sites, so it is an extraction and not a copy — and `BenchStrip` is
+the same at one level down, two strips that `PitchRows` had already caught
+drifting over card width once.
+
+**The pitch went under the bench for two reasons and both are geometry.** The
+strip carried `bleed` with no `inColumn`, so beside the list it pulled out of its
+own column across the grass. And `.pitch` takes its height from the ratio while
+`.pitch-figure` takes its card from the screen, and the two could not see each
+other: at 1024 the column gives 422px of grass and a 1000px viewport hands four
+rows 576, so the forwards were drawn under the strip. **`pitch.css` records this
+class of bug twice already** — "the two constraints on this box did not agree",
+5 Sep at 390 where the ratio was binding, and 11 Sep where the ratio had no
+ceiling — and this is the third and the mirror of the first. The card is now
+bounded by `min` of both, which is why `.pitch` and `.pitch-strip` are query
+containers: a descendant reading its ancestor's width, never the `min-height:
+122cqw` that once fed a 554px pitch back into its own height. Measured after:
+grass card 54px, bench card 54px, rows ending 28px above the strip at 390, 1024
+and 1440 alike.
+
+**`legalMoves` answered two different questions depending on which end it was
+asked from.** A reserve got swaps; a man already in the XI got shifts and a bare
+demotion and no swaps at all, because the generator skipped them for anyone
+active. So tapping a first-choice defender lit nothing. The swaps are now read
+from the other end — the reserves' own moves, filtered to the ones that take him
+off — so the pitch cannot light a partner the dialog then refuses.
+
+**And a man leaves the XI only when somebody takes his place.** That is Craig's
+"dont allow to just put a player on the bench", and it is also what makes the
+caps a FORMATION rule: hold eleven at eleven and `maxActiveByPosition` fixes the
+floor. Fantrax publishes no minimum anywhere — see PLATFORM_NOTES, probed the
+same day — so against G1/D5/M5/F3 the floor is two at the back, which means a
+back THREE going to a back TWO is legal in this league and Craig's example is not
+the rule he thought it was. The bare demotion survives only for an XI already
+over a cap, which is what a commissioner lowering one under a filed side leaves
+behind.
+
+**The doubt ramp** is three grounds on FPL's own 0/25/50/75 steps, hue-locked to
+`--color-bad` and `--color-mid` so no new family enters the palette: the name
+plate takes it on a pitch, where there is no room for a box, and a list row takes
+it as a 16% wash. The box still says which. `doubtBand` is pure and in the
+football layer, beside `availabilityOf`, which already answered *why*.
+
 ## 11 Sep 2026 — the head-to-head stops being a scoreline with an eleven under it
 
 Craig: *"the actual draft match up section is a little bare… probably need a

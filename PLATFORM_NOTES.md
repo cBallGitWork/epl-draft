@@ -148,6 +148,46 @@ a single column across ten attempts — the same sixteen came back every time.
 Recorded as unfound rather than absent: the parameter exists in their client and
 this probe did not find its name.
 
+## Fantrax publishes no position MINIMUM — probed 21 Sep 2026, all three leagues
+
+Asked because Craig wanted the planner to refuse an illegal formation: *"if
+theres 3 at the back, you cant go down to 2 defenders, need to build the logic
+using the league min/max starter logic"*.
+
+`rosterInfo.positionConstraints` carries **`maxActive` and nothing else**, on all
+three leagues, live and in every snapshot we hold — `grep -c minActive
+data/snapshots/` is **0**. `getTeamRosterInfo.miscData.statusTotals` gives
+`{Active: total 11, max 11}` and `{Reserve: total 4, max 5}`, again a max and no
+min. `getLeagueRules` and `getFantasyTeamInfo` do not exist.
+
+```
+D {maxActive:5}  F {maxActive:3}  G {maxActive:1}  M {maxActive:5}
+real 14/11/3 · rehearsal 15/11/5 · dummy 15/11/5
+```
+
+**So the floor is arithmetic, not a setting.** Hold the XI at eleven and a line's
+minimum is whatever is left when every other line is as full as it may be:
+
+```
+min(p) = maxActivePlayers − Σ maxActive(q≠p)
+D 11−(1+5+3) = 2 · M 2 · F 11−(1+5+5) = 0 · G 0
+```
+
+**Which makes a back TWO legal in this league, not a back three** — 1-2-5-3 is
+inside every published cap and Fantrax has told us nothing that forbids it. The
+planner enforces the floor by construction rather than by checking it: a man
+leaves the XI only when somebody takes his place, so the count never moves and
+the caps do the rest (`moves.ts`, and `moves.test.ts` walks every legal move from
+a real roster asserting no line drops below the number above).
+
+A keeper floor of nought is the uncomfortable one: 5+5+3 = 13 ≥ 11, so the
+published caps permit an XI with no goalkeeper. Fantrax's own UI may refuse it.
+**If it does, that minimum is a setting we cannot read**, and the only honest
+places to get it are the commissioner's `getLeagueSettings` (136 B
+unauthenticated, real content only with the cookie) or `Min/Max Violation
+Override`, which is one of the nineteen hub actions and is named as though a
+minimum exists. Neither is probed.
+
 ## The commissioner's cookie opens all of it — probed 21 Sep 2026
 
 Craig supplied his own session and the probe was **read methods only**; nothing
@@ -973,6 +1013,12 @@ for Stats and still unmet for Zones.
 
 `sweep` reports one AA failure on `/prem/match/{id}` whenever Sunderland are on
 it: `SUN` at **4.48:1 against a needed 4.5**, at 18px on the club's own plate.
+
+**A second site from 21 Sep 2026: `/squad/me`.** The lineup planner moved to
+`PitchMarker`, whose fixture band takes the OPPONENT's colour — so any squad
+holding a man whose club plays Sunderland reports the same 4.48, at 9px and 10px.
+Same cause, same two answers, still Craig's to take. The reading below is
+unchanged: a run that reports exactly this and nothing else is a clean run.
 
 **It is not a bug in `inkOn`.** That function picks the BETTER of white and the
 desk's near-black against the plate, and for this red white IS the better one —
