@@ -168,3 +168,24 @@ describe("composePaper — one edition of a column at a time", () => {
     expect(out).toHaveLength(2);
   });
 });
+
+describe("composePaper — the most recent leads", () => {
+  const at = "2026-09-18T15:00:00.000Z";
+  const story = (slug: string): PublishedStory =>
+    ({
+      slug, kind: "presser", leagueId: "L", period: 5, gameweek: 5,
+      // One firing, one instant: both Team Sheets are filed the same second.
+      filedAt: at, expiresAt: null, edition: "", byline: "",
+      headline: slug, deck: "", body: "", subjects: [],
+    }) as unknown as PublishedStory;
+
+  it("leads on Friday's Team Sheet, not Thursday's", () => {
+    const out = composePaper([story("gw5-presser-2026-09-17"), story("gw5-presser-2026-09-18")], at);
+    expect(out[0].slug).toBe("gw5-presser-2026-09-18");
+  });
+
+  it("orders the same way whichever way round they arrive", () => {
+    const out = composePaper([story("gw5-presser-2026-09-18"), story("gw5-presser-2026-09-17")], at);
+    expect(out.map((s) => s.slug)).toEqual(["gw5-presser-2026-09-18", "gw5-presser-2026-09-17"]);
+  });
+});
