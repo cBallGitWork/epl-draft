@@ -1,7 +1,7 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot } from "@epl/core";
+import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot, type FootballSnapshot } from "@epl/core";
 import { articleGameweek, clubKey, conferenceTimes, isLeagueArticle, manager, quotes, sections, text } from "./ingest/presserArticle";
 import { troubles } from "./ingest/presserSignals";
 import { fullClubName } from "@epl/core";
@@ -41,38 +41,66 @@ function londonInstant(day: string, hour: number, minute: number): string {
   return new Date(asUtc.getTime() - (shown.getTime() - utc.getTime())).toISOString();
 }
 
-async function main(): Promise<void> {
-  const day = process.argv[2];
-  if (day === undefined) throw new Error("usage: npx tsx scripts/ingest-pressers.ts YYYY-MM-DD");
+/** The export, with ONE ROW PER LINE.
+ *
+ *  Pretty-printing every field put 144 objects across 1,129 lines — eight lines
+ *  of braces each — so a single changed signal read as an eight-line diff. The
+ *  sister repo's `shots` and `touches` go the other way and are one line for the
+ *  whole file, which cannot be reviewed at all. This is the middle: the shape is
+ *  readable and each row is one greppable, diffable line. */
+function exportJson(doc: { manifest: unknown; spoke: unknown[]; quotes: unknown[]; rows: unknown[] }): string {
+  const list = (name: string, rows: unknown[]): string =>
+    rows.length === 0
+      ? `  "${name}": []`
+      : `  "${name}": [\n${rows.map((row) => `    ${JSON.stringify(row)}`).join(",\n")}\n  ]`;
+  return [
+    "{",
+    `  "manifest": ${JSON.stringify(doc.manifest, null, 2).split("\n").join("\n  ")},`,
+    `${list("spoke", doc.spoke)},`,
+    `${list("quotes", doc.quotes)},`,
+    list("rows", doc.rows),
+    "}",
+    "",
+  ].join("\n");
+}
 
+/** The day's team-news article, vetted. Throws rather than returning a shape
+ *  the rest of the run would have to keep checking. */
+async function articleFor(day: string): Promise<{ file: string; html: string; prose: string; gameweek: number }> {
   const dir = join(SCRAPE, day);
   if (!existsSync(dir)) throw new Error(`No scrape for ${day}. The sister repo writes ${dir}.`);
 
-  const { readdirSync } = await import("node:fs");
   const file = readdirSync(dir).find((name) => /team-news/.test(name));
   if (file === undefined) throw new Error(`No team-news article in ${dir}.`);
 
-  // Cut the reader comments: the last club's section runs into them, and they
-  // carry hundreds of player names and no news at all. That is how "Egan (new)"
-  // from a comment thread was read as Coventry team news. The split is on
-  // `id="comments"` and not the `hc-comment` class, which the sidebar uses too.
+  // Cut the reader comments: the last club's section runs into them and they
+  // carry hundreds of player names. Not the `hc-comment` class — the sidebar
+  // uses it too.
   const html = readFileSync(join(dir, file), "utf8").split(/id="comments"/)[0];
-
   const prose = text(html);
-  // Scout's own words decide whether this is a Premier League article. A
-  // European night's conferences are a different fixture list and must not be
-  // read as team news for a league round.
+
+  // Scout's own words decide whether this is a Premier League article; a
+  // European night's conferences are a different fixture list.
   if (!isLeagueArticle(prose)) throw new Error(`${file} is not a Premier League team-news article.`);
   const gameweek = articleGameweek(prose);
   if (gameweek === null) throw new Error(`${file} does not say which gameweek it covers.`);
-  const snapshot = await getFootballSnapshot();
-  const clubs = new Map(snapshot.clubs.map((club) => [club.name, club]));
 
+  return { file, html, prose, gameweek };
+}
+
+/** One day's article read into the export's three members, plus everything it
+ *  could not resolve — reported, never guessed (CODE_RULES §3). */
+function harvest(
+  day: string,
+  article: { html: string; prose: string },
+  snapshot: FootballSnapshot,
+): { rows: unknown[]; spoke: unknown[]; quotes: unknown[]; unmatched: string[] } {
   const rows: unknown[] = [];
   const spoke: unknown[] = [];
-  const spokenQuotes: unknown[] = [];
+  const quotesFiled: unknown[] = [];
   const unmatched: string[] = [];
 
+  const byName = new Map(snapshot.clubs.map((club) => [club.name, club]));
   // Every club the league has, under both the name FPL holds and the one a
   // paper prints — FFS heads its sections with the long form.
   const headings = new Map<string, string>();
@@ -81,32 +109,33 @@ async function main(): Promise<void> {
     headings.set(clubKey(fullClubName(club.name)), club.name);
   }
 
-  // When each manager actually spoke, from the article's own block.
-  const times = conferenceTimes(prose);
+  const times = conferenceTimes(article.prose);
   const latest = [...times.values()].sort((a, b) => b.hour * 60 + b.minute - (a.hour * 60 + a.minute))[0];
 
-  const read = sections(html, headings);
+  const read = sections(article.html, headings);
   for (const heading of read.skipped) unmatched.push(`club heading not in the table: ${heading}`);
+
   for (const section of read.sections) {
-    const club = clubs.get(section.club);
+    const club = byName.get(section.club);
     if (club === undefined) {
       unmatched.push(`club: ${section.club}`);
       continue;
     }
+
     const whoSpoke = manager(section.body);
     // His own time where the article published one, else the day's latest — a
     // presser we cannot time had happened by then.
     const surname = (whoSpoke ?? "").toLowerCase().split(" ").pop() ?? "";
     const when = times.get((whoSpoke ?? "").toLowerCase()) ?? times.get(surname) ?? latest ?? MIDDAY;
     const at = londonInstant(day, when.hour, when.minute);
-    spoke.push({ club: club.code, manager: whoSpoke, at });
-    // At most three per club: the column prints one and wants a choice, and a
-    // whole press conference in the brief is the writer's budget spent on filler.
-    for (const quote of quotes(section.body).slice(0, QUOTES_PER_CLUB))
-      spokenQuotes.push({ club: club.code, ...quote, at });
 
-    // Within this club only, which is what keeps a surname from matching the
-    // wrong league. Same constraint `matchPlayers` applies internally.
+    spoke.push({ club: club.code, manager: whoSpoke, at });
+    for (const quote of quotes(section.body).slice(0, QUOTES_PER_CLUB)) {
+      quotesFiled.push({ club: club.code, ...quote, at });
+    }
+
+    // Within this club only, which keeps a surname from matching the wrong
+    // league — the constraint `matchPlayers` applies internally.
     const squad = snapshot.players.filter((player) => player.clubId === club.id);
     for (const trouble of troubles(section.body, squad)) {
       const hit = squad.find((player) => player.name === trouble.player.name);
@@ -118,11 +147,10 @@ async function main(): Promise<void> {
         code: hit.code,
         club: club.code,
         tag: trouble.tag,
-        // The article's own word, kept: "hamstring" is the fact, and our tag is
-        // the reading of it.
+        // The article's own word: "hamstring" is the fact and our tag is the
+        // reading of it.
         condition: trouble.condition,
-        // The article states a fact, so it enters at the floor a FACT sits on.
-        // Never a literal: `FIRM` is core's and a second copy would drift from it.
+        // Never a literal — `FIRM` is core's and a second copy would drift.
         confidence: FIRM,
         said: at,
         manager: whoSpoke ?? "",
@@ -130,11 +158,12 @@ async function main(): Promise<void> {
     }
   }
 
-  // **Merged by DAY, never replaced.** Craig, 21 Sep 2026: "pressers are now
-  // split between thrusday and friday". Thursday's article covers the clubs
-  // playing first and Friday's covers the rest, so a week is TWO articles and
-  // the export must hold both — ingesting Friday used to wipe Thursday, and the
-  // column for the day already filed lost the data behind it.
+  return { rows, spoke, quotes: quotesFiled, unmatched };
+}
+
+/** This day's rows on top of the other days' — a week is TWO articles, so
+ *  ingesting Friday must not wipe Thursday. */
+function mergeDay(day: string, fresh: { rows: unknown[]; spoke: unknown[]; quotes: unknown[] }) {
   const kept = existsSync(OUT)
     ? (JSON.parse(readFileSync(OUT, "utf8")) as {
         spoke?: { at?: string }[];
@@ -142,38 +171,46 @@ async function main(): Promise<void> {
         rows?: { said?: string }[];
       })
     : {};
-  const otherDay = (at: unknown): boolean => typeof at !== "string" || !at.startsWith(day);
-  const allRows = [...(kept.rows ?? []).filter((r) => otherDay(r.said)), ...rows];
-  const allSpoke = [...(kept.spoke ?? []).filter((r) => otherDay(r.at)), ...spoke];
-  const allQuotes = [...(kept.quotes ?? []).filter((r) => otherDay(r.at)), ...spokenQuotes];
+  const elsewhere = (at: unknown): boolean => typeof at !== "string" || !at.startsWith(day);
+  return {
+    rows: [...(kept.rows ?? []).filter((row) => elsewhere(row.said)), ...fresh.rows],
+    spoke: [...(kept.spoke ?? []).filter((row) => elsewhere(row.at)), ...fresh.spoke],
+    quotes: [...(kept.quotes ?? []).filter((row) => elsewhere(row.at)), ...fresh.quotes],
+  };
+}
+
+async function main(): Promise<void> {
+  const day = process.argv[2];
+  if (day === undefined) throw new Error("usage: npx tsx scripts/ingest-pressers.ts YYYY-MM-DD");
+
+  const article = await articleFor(day);
+  const snapshot = await getFootballSnapshot();
+  const fresh = harvest(day, article, snapshot);
+  const all = mergeDay(day, fresh);
 
   mkdirSync(join(OUT, ".."), { recursive: true });
   writeFileSync(
     OUT,
-    `${JSON.stringify(
-      {
-        manifest: {
-          season: "26-27",
-          // The ARTICLE's round, not the snapshot's — they differ between rounds,
-          // and the consumer refuses an export for a round it is not previewing.
-          gameweek,
-          exportedAt: new Date().toISOString(),
-          rows: allRows.length,
-          sources: [{ path: join(day, file), mtime: null }],
-        },
-        spoke: allSpoke,
-        quotes: allQuotes,
-        rows: allRows,
+    exportJson({
+      manifest: {
+        season: "26-27",
+        // The ARTICLE's round, not the snapshot's — they differ between rounds,
+        // and the consumer refuses an export for the wrong one.
+        gameweek: article.gameweek,
+        exportedAt: new Date().toISOString(),
+        rows: all.rows.length,
+        sources: [{ path: join(day, article.file), mtime: null }],
       },
-      null,
-      2,
-    )}\n`,
+      ...all,
+    }),
   );
 
-  console.log(`${rows.length} signals, ${spokenQuotes.length} quotes across ${spoke.length} clubs on ${day} (${allRows.length} in the export → data/intel/pressers/26-27.json)`);
-  if (unmatched.length > 0) {
-    console.log(`\n${unmatched.length} not matched, and NOT guessed:`);
-    for (const miss of unmatched) console.log(`  ${miss}`);
+  console.log(
+    `${fresh.rows.length} signals, ${fresh.quotes.length} quotes across ${fresh.spoke.length} clubs on ${day} (${all.rows.length} in the export → data/intel/pressers/26-27.json)`,
+  );
+  if (fresh.unmatched.length > 0) {
+    console.log(`\n${fresh.unmatched.length} not matched, and NOT guessed:`);
+    for (const miss of fresh.unmatched) console.log(`  ${miss}`);
   }
 }
 
