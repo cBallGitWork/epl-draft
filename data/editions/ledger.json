@@ -46,9 +46,17 @@
       "news:https://www.bbc.co.uk/sport/football/videos/cqpve80lwem9o",
       "news:https://www.bbc.co.uk/sport/football/videos/cmp3k277095do",
       "news:https://www.bbc.co.uk/sport/football/articles/c6y8z29nxn4mo",
-      "news:https://www.bbc.co.uk/sport/football/articles/c617j2prweejo"
+      "news:https://www.bbc.co.uk/sport/football/articles/c617j2prweejo",
+      "news:https://www.bbc.co.uk/sport/football/articles/c3qjkpgengn7o"
     ],
     "threads": [
+      {
+        "subject": "Xhaka's off-field investigation, testf",
+        "beat": "testf's midfielder under investigation over a Covid-19 certificate; no availability line yet.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-21T17:10:18.731Z"
+      },
       {
         "subject": "Palmer's fitness, test1",
         "beat": "The forward set to withdraw from England with a minor knock, extent unstated.",
@@ -209,13 +217,6 @@
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-20T06:35:10.670Z"
-      },
-      {
-        "subject": "test31 chasing testf's two-point lead",
-        "beat": "Barry's Everton goal gives test31 a forward return in the fixture.",
-        "status": "open",
-        "beats": 2,
-        "lastUsedAt": "2026-09-19T19:07:38.059Z"
       }
     ]
   }
