@@ -3467,6 +3467,54 @@ CHECK (`banned()` in core, pure, seven tests) plus the copy it sends back
 (`sendBack` in `voice/house.ts`). It is not a "sub-editor persona", it files
 nothing, and it has no byline.
 
+## Replaying a played round — `REPLAY_AT` (21 Sep 2026)
+
+**The Live tab exists only while a round is running**, so for most of the week
+it is the one screen nobody can open, let alone work on. Set `REPLAY_AT` in
+`apps/companion/.env.local` to an ISO instant inside a round that has been
+played and the app IS that minute — fixtures rewound, the wire filled to that
+second, the LIVE dot burning.
+
+```
+REPLAY_AT=2026-09-19T18:00:00Z   # 7pm Saturday, GW5 nearly done
+```
+
+Restart `next dev` after changing it: Turbopack will not re-read a `.env.local`
+that a long-lived server already loaded.
+
+**Where the parts are.** `packages/core/src/football/replay.ts` is pure and
+holds the two functions — `roundAt` names the gameweek an instant falls in,
+`rewindRound` puts that round back to it. `apps/companion/app/clock.ts` is the
+one door every clock read at the app edge goes through; `footballNow()` in
+`football.ts` is what decides to rewind.
+
+**It cannot leak, and there is no flag to remember to turn off.** Nothing sets
+`REPLAY_AT` in Vercel or in Actions, so a deployed build behaves exactly as it
+did before this existed. A string that is not an instant THROWS rather than
+falling back to today — a replay that silently serves the live app is the one
+failure that makes every screenshot taken of it wrong. The app also wears a
+`REPLAY · <when> · NOT LIVE` strip on every tab whenever it is on.
+
+**Three things it does NOT reproduce, so do not read them as bugs.**
+
+- **Fantrax's side is not rewound.** `getLiveScoringStats` answers the period's
+  totals as they stand today, so the head-to-head shows full-time numbers under
+  a scoreline that is mid-afternoon. Only the FOOTBALL layer has a per-minute
+  record to rewind from; the league layer has none, and inventing one would be
+  a confident wrong number.
+- **A fixture whose scorer the bridge cannot place shows dashes while it is
+  live.** Counted on gameweek 5: 1 goal in 27, which is one fixture of ten. The
+  score is null rather than one goal light (DESIGN §7), and it comes right the
+  moment that fixture passes full time, because a finished fixture keeps the
+  provider's own score.
+- **Bonus and `dataChecked` are today's.** The ladder below full time is read
+  off the snapshot as it stands, not as it stood.
+
+**A match holds the clock for 115 minutes** in the rewind — two halves, a
+fifteen-minute interval the match clock does not count, and enough stoppage that
+nothing is still live at the whistle. Named constants in `replay.ts`; the
+Premier League publishes no interval length and FPL publishes no clock at all.
+
 ## Questions
 
 - **Does `?period=N` serve history once a period has completed?** Answered for
