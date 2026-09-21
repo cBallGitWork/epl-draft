@@ -32,6 +32,11 @@ export default function Lineups({
               nothing else to tell them apart. */}
           <div className="grid grid-cols-1 gap-x-6 gap-y-4 pt-2 sm:grid-cols-2">
             <Side side={tie.home} named={named} mine={mine} />
+            {/* Stacked, the two elevens are a fixture only if something says
+                so. Side by side they read as one already. */}
+            <p className="font-sans text-2xs tracking-widest text-faint uppercase sm:hidden">
+              <span className="pl-9">v</span>
+            </p>
             <Side side={tie.away} named={named} mine={mine} />
           </div>
         </section>
@@ -53,11 +58,17 @@ function Side({
     <div>
       <h3 className="flex items-center gap-2">
         {/* A raster badge reads none of the desk's tokens, so it is not `.crest`
-            — the selector that restores them (DESIGN §5). */}
-        <span className="shrink-0">
-          <Image src={crestUrl({ code: side.code })} alt="" width={24} height={24} />
-        </span>
-        <span className="paper-display min-w-0 flex-1 truncate text-lg leading-none font-semibold text-ink">
+            — the selector that restores them (DESIGN §5). Boxed square because
+            the badges are not: Liverpool's is tall and pushed its eleven a line
+            below Ipswich's beside it. */}
+        <Image
+          src={crestUrl({ code: side.code })}
+          alt=""
+          width={24}
+          height={24}
+          className="h-6 w-6 shrink-0 object-contain"
+        />
+        <span className="paper-display min-w-0 truncate text-lg leading-none font-semibold text-ink">
           {side.club}
         </span>
         <span className="numeric shrink-0 text-2xs text-muted">{side.formation}</span>
