@@ -105,8 +105,8 @@ export interface Section {
    *
    *  The pair with `onlyDuringGameweek` is the whole rule: Live appears when
    *  there is football, and this stands back when it does. It is what the
-   *  measurement leaves room for — `navfit` at 320 gives six plates 53px each
-   *  and `My Team` needs 51, but a SEVENTH gives 45 and the label clips. So the
+   *  measurement leaves room for — at 320 six plates leave a label 49.3px, and a
+   *  SEVENTH leaves 45, which clips `Gazetta` at 44 within a pixel. So the
    *  bar keeps its six for ever, and the section that yields is the one whose
    *  reason for being open is weakest on a Saturday: a lineup you can no longer
    *  change, while the score of the tie it is playing runs on the plate beside
@@ -120,7 +120,17 @@ export const SECTIONS: Section[] = [
   // owns `/squad/me`, so it lights across all five of the reader's own tabs and
   // stays dark on a rival's screens. `squad/routes.ts` records why the front
   // door is a URL rather than a redirect to an id.
-  { href: MY_TEAM, label: "My Team", routes: [MY_TEAM], overflowDuringGameweek: true },
+  // **`Team` and not `My Team`, and it is the ceiling's answer rather than a
+  // preference.** At 320 a plate is 53.3px and keeps 4px around its label, so a
+  // label has 49.3 — and `My Team` renders at 51. It shipped as that for one
+  // afternoon and the screenshot read `My Te…`; `navfit` had called it a fit,
+  // because its clipped test carried a `+1` tolerance that was exactly one pixel
+  // too generous. The instrument is fixed and this is the word that fits.
+  //
+  // The SECTION is still My Team everywhere it is written about. A plate is not
+  // the place a name is stated in full — `Prem` is `FA Barclays Premiership` on
+  // the title bar two lines below it, for the same reason.
+  { href: MY_TEAM, label: "Team", routes: [MY_TEAM], overflowDuringGameweek: true },
   { href: "/league", label: "League", routes: ["/league"] },
   // **"Prem", and the bar says the rest.** The rail is 64px below `lg` and
   // "Gazetta" already measures 45px of it at 9px bold uppercase, so
@@ -184,10 +194,16 @@ export function overflowSections(sections: readonly Section[]): Section[] {
   return sections.filter((section) => section.overflow);
 }
 
-// **The pool is not a section either, and it is the second entry to leave for
-// the squads' reason.** `navfit` measures six plates as the bar's ceiling — a
-// seventh is 45px against a 53px label at 320 — so News arriving meant something
-// going, and the pool is the one with somewhere else to be.
+// **The pool is not a section ON THE BAR, and it is the second entry to leave
+// for the squads' reason.** It is a section in this table and has been since
+// 6 Sep 2026; what it gave up was a plate. `navfit` measures six plates as the
+// bar's ceiling — at 320 a plate is 53.3px and leaves 49 for its label, and a
+// seventh would leave 45 — so News arriving meant something going, and the pool
+// is the one with somewhere else to be.
+//
+// The figures here read 45 against 53 until 21 Sep 2026, which had the plate's
+// width standing in for the label's room and made the ceiling look 4px roomier
+// than it is.
 //
 // Championship Manager's rail is "where you can go from anywhere", and you reach
 // a thing through the competition it belongs to. `/players` is the PREMIER

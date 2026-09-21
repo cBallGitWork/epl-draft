@@ -15,7 +15,9 @@ const myTeam = SECTIONS.find((section) => section.href === MY_TEAM);
 
 describe("the My Team plate", () => {
   it("is a section", () => {
-    expect(myTeam?.label).toBe("My Team");
+    // `Team`, because the plate at 320 has 49.3px of label room and `My Team`
+    // renders at 51. The section's NAME is longer than the word on its plate.
+    expect(myTeam?.label).toBe("Team");
   });
 
   it("lights on every one of the reader's own tabs", () => {
@@ -43,18 +45,18 @@ describe("the bar this round draws", () => {
 
   it("carries My Team midweek, when Live does not exist", () => {
     const sections = sectionsFor(false);
-    expect(labels(barSections(sections))).toEqual(["Gazetta", "My Team", "League", "Prem", "News"]);
+    expect(labels(barSections(sections))).toEqual(["Gazetta", "Team", "League", "Prem", "News"]);
     expect(labels(overflowSections(sections))).toEqual(["Find", "FPL"]);
   });
 
   it("stands My Team down while football is on, and Live takes the plate", () => {
     const sections = sectionsFor(true);
     expect(labels(barSections(sections))).toEqual(["Gazetta", "League", "Prem", "Live", "News"]);
-    expect(labels(overflowSections(sections))).toContain("My Team");
+    expect(labels(overflowSections(sections))).toContain("Team");
   });
 
-  // The measured ceiling, as a test rather than a comment: `navfit` at 320 gives
-  // six plates 53px each and a seventh 45, which clips a 51px label. Five
+  // The measured ceiling, as a test rather than a comment: at 320 six plates are
+  // 53.3px each and leave 49.3 for a label, and a seventh would leave 45. Five
   // sections plus the door is six, and this is what stops the seventh arriving
   // by way of a table nobody re-measured.
   it("never asks a phone for more than six plates", () => {

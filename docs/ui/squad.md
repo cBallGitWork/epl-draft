@@ -11,7 +11,8 @@ the title.
 
 ## The front door — `/squad/me`
 
-**The rail's My Team plate** (Craig, 21 Sep 2026). `me` is a segment this route
+**The My Team section's front door** (Craig, 21 Sep 2026); its plate reads
+`Team`, which is what fits at 320. `me` is a segment this route
 accepts in place of an id and resolves against the rostered teams; a reader who
 is not signed in is sent to `/squad`, where the code goes in. `squad/routes.ts`
 carries the constants and the reason it is a URL rather than a redirect: the
@@ -30,6 +31,13 @@ Two things follow, and both are in `team.ts`:
   therefore stays inside `/squad/me/*` across Transfers, Match, Fixtures and
   Stats, and the plate stays lit. Following the id instead would drop him onto
   the same screens under a pathname the rail no longer recognises.
+
+  **The door is not the only way in, and the other ways do not light it.** The
+  league table, Team Stats, the matchup sides and the schedule all link a team by
+  id, including when that team is yours — so your own squad has two pathnames and
+  only one of them marks the rail. The index's own row goes through the door;
+  the rest are unconverted and it is a deliberate open question rather than an
+  oversight.
 
 The section owns exactly `/squad/me` and not the `/squad` prefix, so a rival's
 squad never lights a plate that says My Team.

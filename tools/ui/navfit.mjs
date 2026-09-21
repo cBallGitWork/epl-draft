@@ -68,7 +68,13 @@ const MEASURE = `(function(){
     probe.textContent=label.textContent.trim();
     return {t:label.textContent.trim(), box:Math.round(r.width), h:Math.round(r.height),
             needs:Math.ceil(probe.getBoundingClientRect().width),
-            clipped:label.scrollWidth>Math.ceil(lr.width)+1};
+            // **No tolerance term.** It was \`+1\` and that is exactly one pixel
+            // too generous: \`My Team\` renders at 51 in 49.3px of room, so
+            // scrollWidth 51 against ceil(49.3)+1 = 51 reported a fit while the
+            // screenshot showed \`My Te…\`. \`ceil\` alone already absorbs the
+            // sub-pixel case a tolerance was there for — a label 43.4 wide
+            // reporting scrollWidth 44 still passes.
+            clipped:label.scrollWidth>Math.ceil(lr.width)};
   });
   probe.remove();
   var rr=rail.getBoundingClientRect();
