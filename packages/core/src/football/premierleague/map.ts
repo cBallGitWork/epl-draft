@@ -23,6 +23,12 @@ const KINDS: Record<string, MatchEventKind> = {
   "VAR cancelled goal": "disallowed-goal",
   "yellow card": "yellow-card",
   "red card": "red-card",
+  // **Opta spells it with no space, and it is a SENDING-OFF.** Counted 21 Sep
+  // 2026 over the 50 fixtures of gameweeks 1-5: `red card` 4 and
+  // `secondyellow card` 2, so a table without this line drops a third of the
+  // men sent off and the wire prints eleven against ten with nothing to say
+  // why. The consequence is one red card, whatever the referee reached for.
+  "secondyellow card": "red-card",
   substitution: "substitution",
 };
 

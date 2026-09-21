@@ -65,6 +65,27 @@ describe("mapMatchEvents", () => {
     expect(events).toHaveLength(20);
   });
 
+  // **A second yellow is a sending-off, and Opta spells its type with no
+  // space.** Counted 21 Sep 2026 across gameweeks 1-5: `red card` 4 and
+  // `secondyellow card` 2, so a vocabulary without it loses a third of the men
+  // sent off — Abdul Fatawu (Ipswich, GW5) among them.
+  it("reads a second yellow as a red card", () => {
+    const sent = mapMatchEvents(
+      [
+        {
+          id: 1,
+          type: "secondyellow card",
+          text: "Second yellow card to Abdul Fatawu (Ipswich Town).",
+          time: { label: "67", secs: 4020 },
+          playerIds: [],
+        },
+      ],
+      1,
+      codes,
+    );
+    expect(sent.map((event) => event.kind)).toEqual(["red-card"]);
+  });
+
   it("reads a fixture nobody has played as empty rather than throwing", () => {
     expect(UNSTARTED.events.content).toHaveLength(0);
     expect(mapMatchEvents(UNSTARTED.events.content, 1, codes)).toEqual([]);
