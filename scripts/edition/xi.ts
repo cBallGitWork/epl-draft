@@ -1,5 +1,3 @@
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 import {
   isResolved,
   predictedLineups,
@@ -10,7 +8,7 @@ import {
   type RosteredTeam,
   type StoryLineupMan,
 } from "@epl/core";
-import { INTEL_ROOT } from "../paths";
+import { readIntel } from "../intel";
 import { roundTies } from "./round";
 import { display } from "./pressers";
 
@@ -22,9 +20,7 @@ import { display } from "./pressers";
 
 /** The export for one round, or null when we do not hold it. */
 export function readXi(gameweek: number): IntelXi | null {
-  const path = join(INTEL_ROOT, "xi", `gw${gameweek}.json`);
-  if (!existsSync(path)) return null;
-  return JSON.parse(readFileSync(path, "utf8")) as IntelXi;
+  return readIntel<IntelXi>("xi", `gw${gameweek}.json`);
 }
 
 /** The whole column, ready to file. Null when the ties or the elevens will not
@@ -93,9 +89,9 @@ function owners(teams: readonly RosteredTeam[]): Map<number, string> {
   return out;
 }
 
+/** The squads for the season the XI itself names, so the two exports cannot be
+ *  read from different years. */
 function readSquads(season: string): IntelSquads | null {
-  const path = join(INTEL_ROOT, "squads", `${season}.json`);
-  if (!existsSync(path)) return null;
-  return JSON.parse(readFileSync(path, "utf8")) as IntelSquads;
+  return readIntel<IntelSquads>("squads", `${season}.json`);
 }
 

@@ -1,23 +1,17 @@
-import { existsSync, readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { join } from "node:path";
 import { fetchFixtures, fullClubName, instantOf, normalizeName, pressers, type Club, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { ResolvedPlayer, RosteredPlayer, RosteredTeam } from "@epl/core";
+import { INTEL_SEASON, readIntel } from "../intel";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
 //
 // Absent is the ordinary state and files nothing.
-
-const ROOT = fileURLToPath(new URL("../..", import.meta.url));
-const FILE = join(ROOT, "data", "intel", "pressers", "26-27.json");
 
 /** A day key in London, which is the league's clock — `bylines.ts` stamps the
  *  edition from the same zone, and a UTC key would put a 23:30 Thursday presser
  *  under Friday's column. */
 
 function read(): IntelPressers | null {
-  if (!existsSync(FILE)) return null;
-  return JSON.parse(readFileSync(FILE, "utf8")) as IntelPressers;
+  return readIntel<IntelPressers>("pressers", `${INTEL_SEASON}.json`);
 }
 
 /** The same clubs re-keyed by the PER-SEASON id, which is what a player carries.
