@@ -4,7 +4,7 @@ import { fetchFixtures, type Club } from "@epl/core";
 // than report one.
 
 /** Two clubs and when they play. */
-export interface RoundTie {
+interface RoundTie {
   home: Club;
   away: Club;
   kickoff: string;

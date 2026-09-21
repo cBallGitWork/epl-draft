@@ -50,7 +50,6 @@ export { MAX_PAPER_STORIES, composePaper } from "./frontPage";
 export { isCovered, normalizeLedger, recordCoverage } from "./ledger";
 export { newsdesk } from "./newsdesk";
 export { predictedLineups } from "./predictedXi";
-export type { PredictedTie } from "./predictedXi";
 export type { StoryLineupMan, StoryLineupSide } from "./extras";
 export { bothSides, fixtureStakes } from "./relevance";
 export { tieState } from "./tieState";
