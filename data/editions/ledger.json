@@ -7,29 +7,29 @@
     "threads": [
       {
         "subject": "Jo\u00e3o Pedro's fitness",
-        "beat": "A doubt for Chelsea with no reason given by Alonso.",
+        "beat": "A Chelsea doubt before the deadline, Alonso giving no update.",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T15:00:00.000Z"
       },
       {
         "subject": "Dedic's hamstring",
-        "beat": "Added to Newcastle's doubts by Jaissle.",
+        "beat": "test3331's Newcastle man carrying a fresh doubt.",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T15:00:00.000Z"
       },
       {
-        "subject": "Vu\u0161kovi\u0107's return",
-        "beat": "Fit again for Brighton, though Dunk faces rotation for the same berth",
+        "subject": "Dunk's place in the Brighton side",
+        "beat": "Hurzeler left rotation open, no reason given",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-18T15:00:00.000Z"
       },
       {
-        "subject": "Arsenal's defence refilling",
-        "beat": "White and Merino both back in contention",
-        "status": "open",
+        "subject": "Vu\u0161kovi\u0107's fitness",
+        "beat": "Back in contention for Brighton, with Hadjam alongside him",
+        "status": "retired",
         "beats": 1,
         "lastUsedAt": "2026-09-18T15:00:00.000Z"
       }
