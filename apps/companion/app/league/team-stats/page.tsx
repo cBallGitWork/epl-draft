@@ -7,6 +7,7 @@ import {
   ordinal,
   rankBy,
   type Measure,
+  type StatCategory,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
@@ -15,39 +16,42 @@ import { IndexCell, ROW_LINK } from "../../components/league/TableCells";
 import GroupNav from "../../components/league/GroupNav";
 import { TEAM_STATS } from "../SectionNav";
 import LeagueShell from "../Shell";
-import Filters from "./Filters";
+import Measures from "./Measures";
 import { getSeasonStats } from "./seasonStats";
 import { getSchedule } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
 import { FANTRAX_SILENT } from "../../config";
-import { BOARD, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, BOARD_FIGURE, INDEX_WIDTH, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 
-// Every team ranked by one category — CM's stat board, on fantasy data.
+// Every team against a whole GROUP of scoring categories — CM's stat board, on
+// fantasy data.
 //
-// **The screen is a leaderboard and not a spreadsheet** (Craig, 1 Sep 2026,
-// against CM's "Average Rating" shot). One category at a time, every side in
-// order, the figure at the end. The alternative — twelve categories as twelve
-// columns — is what Fantrax's own page does, and it is unreadable on a phone and
-// answers no question anybody asks.
+// **One group across the top, one figure in every cell** (Craig, 11 Sep 2026:
+// *"for each section, we can get all the columns in one go, but at the top,
+// allow a toggle between fantasy points and actual raw values, so all attacking
+// columns on one view"*). It showed ONE category for ten days — the CM "Average
+// Rating" shot, a leaderboard rather than a spreadsheet — and the two things
+// that made that right are what changed: the group row at the foot had already
+// cut twelve categories to three or four, and the second measure column had
+// already proved a row can carry more than one number. Four is the ceiling any
+// group reaches, which is a board and still not Fantrax's twenty-two.
 //
-// **Two grey boxes, at the two ends of the strip.** Left picks the category,
-// right picks whether the order is by fantasy points or by the raw figure.
-// Fantasy points is the default because this is a fantasy league: 1,500 minutes
-// is not better than 1,400 unless those minutes were worth more.
+// **The measure is a toggle and no longer a pair of columns.** `Measures.tsx`
+// carries why: two numbers per category is eight columns of alternating meaning,
+// and a reader compares a column against the one beside it.
 //
-// **The categories are ours and the totals are Fantrax's.** Their SEASON_STATS
-// view publishes each category TWICE, split into a goalkeeper block and an
-// outfielder block, and nobody thinks of clean sheets kept by their keeper and
-// clean sheets kept by their defenders as two statistics. `mapSeasonStats` adds
-// them, and carries the two traps that split creates.
+// **The category select went with it.** It picked which single category the
+// board drew, and every category is drawn now; a control that changes nothing
+// you cannot already see is furniture — the same argument that took the first
+// dropdown off this page on 1 Sep. What it chose is now the ORDER, and the
+// column heads say that, which is how `/league` has always sorted: a link, so
+// the server orders, the phone gets HTML, and the ordering survives being shared.
 //
-// **One figure per row, and it is the category's.** High and Low rode along for
-// a day and came off on sight (Craig, 1 Sep: "ditch high low, looks bad") — they
-// answered a different question from the one the board asks, and three number
-// columns on a leaderboard is a spreadsheet again. A best and worst round is
-// still worth having; it belongs to a screen about ROUNDS, which this is not.
+// **The categories are ours and the totals are Fantrax's** — their SEASON_STATS
+// view publishes each one twice, split by position, and `mapSeasonStats` adds
+// the two halves back together along with the two traps that split creates.
 //
 // **No owner column, and not for want of asking.** CM's board names a player and
 // his club, and the fantasy equivalent would be the team and its manager. Fantrax
@@ -67,23 +71,15 @@ type Search = Promise<{ cat?: string; by?: string; group?: string }>;
 
 export default async function TeamStatsPage({ searchParams }: { searchParams: Search }) {
   const query = await searchParams;
-  // An unknown category falls back to the first rather than throwing: the choice
-  // arrives in a URL, and a shared link with a stale name should still show a
-  // board.
-  // The group first, then the category WITHIN it. A category from another group
-  // is not an error — a shared link survives the row being reorganised — it just
-  // falls back to that group's first, which is a board rather than a blank.
+  // The group first, then the category WITHIN it — which is the column the board
+  // is ORDERED by now rather than the only one it draws. A category from another
+  // group is not an error, it just falls back to this group's first: the choice
+  // arrives in a URL, and a shared link should survive the row being reorganised.
   const group = groupFor(query.group);
-  const choices = inGroup(group);
+  const columns = inGroup(group);
   const category =
-    choices.find((entry) => entry.key === query.cat) ?? choices[0] ?? categoryFor(undefined);
+    columns.find((entry) => entry.key === query.cat) ?? columns[0] ?? categoryFor(undefined);
 
-  // Which column the board is ordered by. The dropdown that used to ask this
-  // went when both columns started printing — it was choosing between two things
-  // already on screen — but the CHOICE is still real, and for a beat there was
-  // no way to make it (Craig, 1 Sep: "cant select total as filter"). It is the
-  // column heads now, which is how `/league` has always sorted: a link, so the
-  // server orders, the phone gets HTML, and the ordering survives being shared.
   const measure: Measure = isMeasure(query.by) ? query.by : "points";
 
   const [schedule, mine, badges, categories] = await Promise.all([
@@ -106,67 +102,66 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   const { info, rounds, table } = schedule;
 
   // Finished rounds only, the same test Results uses — see `gameweekStatus` in
-  // core. Kept for the empty state's count and nothing else now: a category with
-  // no readings should say how far into the season that is.
+  // core. Kept for the empty state's count and nothing else now: a group with no
+  // readings should say how far into the season that is.
   const played = new Set(
     rounds
       .filter((round) => round.status === "finished")
       .map((round) => round.period),
   );
 
-  const lines = categories.get(category.key) ?? [];
-  const board = rankBy(lines, category, measure);
-
+  const board = rankBy(columns, categories, category, measure);
   const named = new Map(table.map((row) => [row.teamId, row.teamName]));
+  const groupLabel = columns.map((entry) => entry.label).join(", ");
 
   return (
     <LeagueShell current="teamStats" teams={info.teams.length}>
-      <Filters categories={choices} category={category.key} group={group} />
+      <Measures measure={measure} href={(by) => boardHref(by, group, category.key)} />
 
       {board.length === 0 ? (
         <Nothing title="Nothing recorded yet" code={`${played.size} finished rounds scored`}>
-          {category.label} fills in as {info.name} plays.
+          {groupLabel} fill in as {info.name} plays.
         </Nothing>
       ) : (
         <div className={SCROLL}>
-          {/* `border-collapse`, exactly as `/league` sets it. With
+          {/* `border-collapse`, exactly as `/league` sets it: with
               `border-separate` the `border-b` on each `<tr>` is not drawn at all
               — CSS tables only render row borders when collapsed — and the index
-              column runs together into one unbroken blue bar down the left. */}
-          <table
-            // Full width, and the figures ride the right edge — Craig, 1 Sep:
-            // "it just needs to be at the end of the far right i think". The cap
-            // that pulled them in was the answer to ONE floating column; with
-            // both printing, the pair holds together and the far right is where
-            // a total belongs. CM does the same on its own stat board: the
-            // rating column sits hard right against the scrollbar.
-            className={BOARD}
-          >
+              column runs together into one unbroken blue bar down the left.
+
+              **`table-fixed`, and it is load-bearing rather than tidy.** The
+              name is the column that gives, but only a fixed table makes it
+              give: measured at 390 with a 32-character team name in every row,
+              auto layout sized the name column to the TEXT, squeezed the four
+              figures to 25–36px and scrolled the board 98px sideways, and
+              `truncate` never bit because nothing constrained the cell. Fixed
+              holds each figure at its declared width and hands the name the
+              remainder. `SquadStatBoard` takes `min-w-max` and a frozen lead
+              instead, because eleven measures genuinely cannot fit; four can. */}
+          <table className={`${BOARD} table-fixed`}>
             <caption className="sr-only">
-              Every team ranked by {category.label}, {ORDERED_BY[measure]}
+              Every team across {groupLabel}, ordered by {category.label} in{" "}
+              {ORDERED_BY[measure]}
             </caption>
             <thead>
               <HeadRow>
-                <Head width="w-10 lg:w-16">
+                {/* The first two columns carry no head (DESIGN §2): a column of
+                    `1st 2nd 3rd` in a blue block says what it is, and so does a
+                    column of names with a crest on each. The empty span holds
+                    the strip's height where the plate would have. */}
+                <Head width={INDEX_WIDTH}>
                   <span className="flex h-7 items-center justify-center px-1.5" />
                 </Head>
                 <NameHead label="Team" />
-                {/* Both numbers, always. Craig, 1 Sep: "have fantasy points and
-                    raw value in two columns" — which also answers the floating
-                    figure, because one number on a full-width table flings
-                    itself to the far edge and two hold each other in. The
-                    right-hand select now only REORDERS; it no longer decides
-                    what you can see, and the column it ordered by is drawn
-                    pressed so the board says which one it is sorted on. */}
-                {MEASURES.map((entry) => (
+                {columns.map((entry) => (
                   <SortHead
-                    key={entry.by}
-                    width="w-20 lg:w-32"
-                    title={`${category.key} — order by ${entry.title}`}
-                    href={measureHref(entry.by, group, category.key)}
-                    label={entry.label}
-                    sorted={measure === entry.by ? "descending" : undefined}
-                    arrow={false}
+                    key={entry.key}
+                    width={FIGURE_WIDTH}
+                    title={`${entry.label} — ${entry.key}`}
+                    href={boardHref(measure, group, entry.key)}
+                    label={entry.short}
+                    align="right"
+                    sorted={entry.key === category.key ? direction(entry, measure) : undefined}
                   />
                 ))}
               </HeadRow>
@@ -199,34 +194,19 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                         </span>
                       </Link>
                     </td>
-                    {/* **Both figures at one size.** They were set apart for a
-                        few minutes — the sorted one large, the other small — and
-                        it read as two different kinds of number rather than as
-                        one row (Craig, 1 Sep: "keep same font for fpts and
-                        total, two different looks terrible"). Which column the
-                        board is ordered by is said ONCE, by the pressed plate
-                        above it, and saying it twice made the table look
-                        mis-set. Same size, same weight; the sorted one takes
-                        the accent and the other `--color-mid`, which is the
-                        figure slot either way. */}
-                    <td
-                      className={`${FIGURE} ${measure === "points" ? "text-accent" : "text-ink"}`}
-                    >
-                      {row.points === null ? DASH : row.points.toLocaleString("en-GB")}
-                    </td>
-                    {/* White, not amber. `--color-mid` is "a figure" in the
-                        palette and it is the right slot — but beside
-                        `--color-accent` on the same row the two are a shade
-                        apart, and the board lost the one thing the pair has to
-                        say: which column it is ordered by. The sorted one keeps
-                        the accent; this takes `--color-ink`, which is the same
-                        distance from it that CM puts between its yellow figures
-                        and its white names. */}
-                    <td
-                      className={`${FIGURE} ${measure === "value" ? "text-accent" : "text-ink"}`}
-                    >
-                      {row.value === null ? DASH : row.value.toLocaleString("en-GB")}
-                    </td>
+                    {row.figures.map((figure, at) => (
+                      // **Every figure is ink, including the sorted column's.**
+                      // The single-category board tinted the column it was
+                      // ordered by, which worked when there were two; four
+                      // columns with one of them yellow is a stripe down the
+                      // board, and the accent slot means "yours" — which the row
+                      // beside it is already using it to say. Which column sorts
+                      // is said by the pressed plate above it, exactly as
+                      // `/league` says it across ten columns.
+                      <td key={columns[at]?.key ?? at} className={`${BOARD_FIGURE} text-ink`}>
+                        {figure === null ? DASH : figure.toLocaleString("en-GB")}
+                      </td>
+                    ))}
                   </tr>
                 );
               })}
@@ -245,39 +225,53 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   );
 }
 
-/** Where a measure's head links to.
+/** Where a head or a measure plate leads.
  *
- *  It carries the group and the category through, because a head that sorted and
- *  silently dropped which category you were looking at would be a worse control
- *  than none.
+ *  One function for both, because both links say the same three things and only
+ *  one of the three moves: a head keeps the measure and changes the category, a
+ *  plate keeps the category and changes the measure.
  *
  *  Fantasy points is the default, so it is spelled as no parameter at all — one
  *  URL for the default rather than two, as `/league` does with `rank`. */
-function measureHref(by: Measure, group: string, category: string): string {
+function boardHref(by: Measure, group: string, category: string): string {
   const query = new URLSearchParams({ group, cat: category });
   if (by !== "points") query.set("by", by);
   return `${TEAM_STATS}?${query.toString()}`;
+}
+
+/** Which way the board runs when it is ordered by this column.
+ *
+ *  Fantasy points always run high-to-low; a raw figure runs low-to-high in the
+ *  categories where topping the table is bad news. `rankBy` makes the same call
+ *  in core, and the arrow exists so the reader is not left to infer it from the
+ *  numbers — which is why the sorted head takes one here where the old
+ *  FPts/Total pair did not. */
+function direction(category: StatCategory, measure: Measure): "ascending" | "descending" {
+  return measure === "value" && category.lowIsGood === true ? "ascending" : "descending";
 }
 
 /** Absence, never a nought — a team with no reading has not recorded nought of
  *  it (DESIGN §7). */
 const DASH = "—";
 
-/** How the caption says which way the board is ordered.
+/** How much of the row one category takes.
  *
- *  Named `ORDERED_BY` and not `LABEL`, which is what it was called until 7 Sep
- *  2026: `desk.ts` exports a `LABEL` that is a CLASS STRING, this file now
- *  imports from `desk.ts`, and two things called `LABEL` in one file is the
- *  collision that makes the next reader check which one they have. */
+ *  Measured rather than chosen, and against the SEASON'S widest figure rather
+ *  than today's: `table-fixed` means a cell too narrow clips instead of growing.
+ *  The broadest reading on the board now is 2,747 minutes at 29px, and minutes
+ *  are the category that reaches six characters by May — 48px carries those at
+ *  `BOARD_FIGURE`'s 14px with the plate's 6px either side, and a three-letter
+ *  head (`PKM`) at `text-3xs`.
+ *
+ *  **The trade is against the NAME, and it is why this is 48 and not 56.** Four
+ *  columns — the most any group has — leave a 390 phone 122px for the name at
+ *  this width and 90 at the next one up, and 90 is a badge and six characters.
+ *  The group that actually needs the six-figure cell is Appearances, which has
+ *  ONE column and 258px of name to spare. The desk gets the roomier 80. */
+const FIGURE_WIDTH = "w-12 lg:w-20";
+
+/** How the caption says which way the board is ordered. */
 const ORDERED_BY: Record<Measure, string> = {
-  points: "by fantasy points",
-  value: "by raw total",
+  points: "fantasy points",
+  value: "raw totals",
 };
-
-/** The two heads, which are a pair of MEASURES rather than a row of columns —
- *  both are always descending, which is why they take no arrow. */
-const MEASURES: readonly { by: Measure; label: string; title: string }[] = [
-  { by: "points", label: "FPts", title: "fantasy points" },
-  { by: "value", label: "Total", title: "raw total" },
-];
-

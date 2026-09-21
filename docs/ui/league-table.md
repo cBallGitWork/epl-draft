@@ -74,6 +74,42 @@ past, and this is the row a manager opened the page to find. The `You` chip sits
 on `bg-bg` for the same reason: a chip the colour of its own ground is not a
 chip.
 
+## `/league/team-stats` — the board beside the table
+
+Same shell, different question: not who is winning, but what each side is
+actually DOING. The blue foot row picks the group — Attacking · Defensive ·
+Appearances · Discipline — and **the whole group draws at once**, three or four
+categories across the top with every team down the side (Craig, 11 Sep 2026:
+*"for each section, we can get all the columns in one go"*).
+
+**One grey toggle at the top, `FPts` · `Total`, and it governs every cell.** The
+same category is two numbers — what Fantrax paid for it and the raw figure behind
+it — and the board shows one of them at a time. It showed both, as two columns,
+while it drew one category; at four categories that is eight columns of
+alternating meaning, and a reader compares a column against the one beside it.
+Fantasy points is the default, because 1,500 minutes is not better than 1,400
+unless those minutes were worth more.
+
+**The column heads sort**, as `/league`'s do — a link, so the server orders and
+the ordering survives being shared. The pressed plate is the only mark of the
+sorted column; every figure is ink, because the accent slot means "yours" and the
+reader's own row is already using it.
+
+**The arrow is real here and was not before.** Fantasy points always run
+high-to-low, but a raw figure runs low-to-high in the categories where topping
+the table is bad news — so `Total` on Discipline heads the board with the side on
+one yellow card, under a `▲`. `rankBy` in core makes the same call, and never
+applies the flag to the points, which Fantrax has already signed.
+
+**Four columns is the ceiling** any group reaches, which is why this board keeps
+`w-full` and lets the NAME truncate rather than taking `min-w-max` and a frozen
+lead column the way `SquadStatBoard` must. Measured at 390: four 44px figure
+columns and no sideways scroll.
+
+The categories are ours, not Fantrax's — their `SEASON_STATS` view publishes each
+one twice, split into a goalkeeper block and an outfielder block, and
+`mapSeasonStats` adds them back together.
+
 ## States
 
 - **Unavailable** — Fantrax not answering, with the tell on screen.
