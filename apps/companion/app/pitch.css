@@ -247,7 +247,18 @@
      caps itself at the first, so this is `min` of exactly the pair that decides
      the box above. Written as one `min` rather than as a second rule, so the two
      cannot be changed apart. */
-  max-height: max(
+  /* **`--pitch-card-scale` shrinks the PICTURE and nothing else** (Craig, 21 Sep
+     2026: "bench icons can be smaller"). The bench strip sets it. The name plate
+     and the fixture band are siblings of this box and keep their own fixed
+     height, so a reserve's kit comes down and the two things a manager reads off
+     him do not — and the strip gives the grass above it the difference back.
+
+     A multiplier on the ceiling rather than a second formula: the strip is still
+     bounded by the same screen and the same grass, so the two cannot be changed
+     apart. */
+  max-height: calc(
+    var(--pitch-card-scale, 1) *
+      max(
     calc(2 * var(--pitch-band)),
     min(
       calc(
@@ -259,6 +270,7 @@
           var(--pitch-rows, 1) - 2 * var(--pitch-band)
       )
     )
+      )
   );
 }
 

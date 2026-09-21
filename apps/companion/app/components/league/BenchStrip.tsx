@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { SquadPlayerDetail } from "@epl/core";
-import { FAR_INSET, GAP_CLASS, cardBasis, rowBudget } from "./PitchRows";
+import { BENCH_KIT, FAR_INSET, GAP_CLASS, cardBasis, rowBudget } from "./PitchRows";
 import { positionLabel } from "../../positions";
 
 // The reserves, in a strip under the grass.
@@ -30,9 +30,10 @@ export default function BenchStrip({
   children,
 }: {
   bench: SquadPlayerDetail[];
-  /** The GRASS's row count, not this strip's. A reserve stands the same height
-   *  as the man he would replace, and the strip is one row but is not sized as
-   *  one — see `rowBudget`. */
+  /** The GRASS's row count, not this strip's. The strip is one row but is not
+   *  sized as one, or a reserve would be drawn at four times the height of the
+   *  man he would replace — see `rowBudget`. His KIT then comes down again by
+   *  `BENCH_KIT`, which is the only way the two now differ. */
   rows: number;
   /** The card width the pitch above agreed on. */
   widest: number;
@@ -63,7 +64,7 @@ export default function BenchStrip({
           row the same width as the pitch column. */}
       <ul
         className={`flex justify-center ${GAP_CLASS}`}
-        style={{ paddingInline: `${FAR_INSET}%`, ...rowBudget(rows) }}
+        style={{ paddingInline: `${FAR_INSET}%`, ...rowBudget(rows), ...BENCH_KIT }}
       >
         {bench.map((player, at) => (
           <li

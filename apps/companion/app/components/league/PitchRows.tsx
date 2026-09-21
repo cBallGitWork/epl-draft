@@ -91,12 +91,26 @@ export function cardBasis(widest: number): string {
  *  budget and a slacker line, so it drew the TALLEST card of any squad in the
  *  league and put the lineup planner 199px past a phone screen.
  *
- *  Exported because the two bench strips stand outside this frame and must land
- *  on the same number: a reserve is the same card as the man he would replace,
- *  in height as well as width. */
+ *  Exported because the bench strip stands outside this frame and must land on
+ *  the same number: a reserve is bounded by the same screen and the same grass
+ *  as the man he would replace. */
 export function rowBudget(rows: number): CSSProperties {
   return { "--pitch-rows": rows } as CSSProperties;
 }
+
+/** How big a reserve's KIT is drawn, as a share of a starter's.
+ *
+ *  Craig, 21 Sep 2026: *"bench icons can be smaller"*. It was 1 — the rule was
+ *  that a reserve is the same card as the man he would replace, in height as
+ *  well as width — and that rule was about the CARD, which is still true: the
+ *  name plate and the fixture band are the same width and the same height on
+ *  both, because they are what a manager reads. Only the picture comes down, and
+ *  the strip hands the difference back to the grass above it.
+ *
+ *  Three quarters rather than a half: the kit is how a reserve is recognised at
+ *  a glance, and at 0.5 an Everton shirt and a Brighton one are one blue
+ *  rectangle. */
+export const BENCH_KIT = { "--pitch-card-scale": 0.75 } as CSSProperties;
 
 /** The size a player's name is set at on a pitch. One step on the scale, and the
  *  same step on every line of every squad.
