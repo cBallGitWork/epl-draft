@@ -69,6 +69,9 @@ export interface DeskContext {
   presserGameweek: number;
   /** Clubs that held a conference, so one with no news still gets a row. */
   presserSpoke: { clubName: string; manager: string | null; at: string }[];
+  /** The predicted elevens, composed from facts rather than written — the one
+   *  column with no voice and no brief. Null when it is not this firing's. */
+  elevens: Record<string, unknown> | null;
 }
 
 /** The one kind still written in the old sectioned edition shape. The report
@@ -100,7 +103,19 @@ function faceCtx(ctx: DeskContext, assignment: Assignment): FaceContext {
   };
 }
 
-export function prepare(assignment: Assignment, ctx: DeskContext): { system: string; brief: string } | null {
+/** How a column comes to exist: a voice and a brief for a writer, or a set of
+ *  facts the desk prints itself. */
+type Commission =
+  | { system: string; brief: string }
+  | { printed: Record<string, unknown> };
+
+export function prepare(assignment: Assignment, ctx: DeskContext): Commission | null {
+  // The elevens are a list of two hundred and twenty footballers, so they are
+  // printed from the export and never written from it.
+  if (assignment.kind === "predicted-xi") {
+    return ctx.elevens === null ? null : { printed: ctx.elevens };
+  }
+
   const round = ROUND_OF[assignment.kind];
   if (round !== undefined) {
     return {
@@ -232,7 +247,9 @@ export function file(
     expiresAt:
       assignment.kind === "fixture-preview"
         ? (ctx.snapshot.fixtures.find((each) => each.id === assignment.fixtureId)?.kickoff ?? null)
-        : null,
+        : assignment.kind === "predicted-xi"
+          ? firstKickoff(copy.lineups)
+          : null,
     edition: editionName(assignment.kind, filedAt),
     byline: STORY_BYLINE[assignment.kind] ?? "",
     subject: assignment.key,
@@ -282,4 +299,12 @@ function withTies(
     const tie = ties.get(code as number);
     return tie === undefined ? rest : { ...rest, fixture: tie };
   });
+}
+
+/** When the round the elevens predict begins — the moment a prediction is spent
+ *  and the real sheets exist. The cargo is already in kickoff order. */
+function firstKickoff(lineups: unknown): string | null {
+  if (!Array.isArray(lineups)) return null;
+  const kickoff = (lineups[0] as { kickoff?: unknown } | undefined)?.kickoff;
+  return typeof kickoff === "string" && kickoff !== "" ? kickoff : null;
 }

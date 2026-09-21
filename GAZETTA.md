@@ -64,9 +64,15 @@ DASH failure §4 names. It stays duplicated until the *roles* are split.
 
 **The sister-repo exports.** Three phases are blocked on files that
 `~/ai-carling-premiership` has the data for and does not yet write:
-`intel/projections/`, `intel/pressers/`, `intel/other-comps/`, plus the XI
-export, which is the wrong round and has been failing `npm run intel-check`
-for days.
+`intel/projections/` and `intel/other-comps/`, plus the XI export, which is
+**the one thing now holding the predicted-elevens column**: the code shipped on
+21 Sep 2026 and `data/intel/xi/` holds `gw3.json`, a round already played.
+`readXi` asks for the round the pressers preview and gets nothing, so the column
+files nothing and spends nothing — which is the designed behaviour and also the
+reason nobody will see it until the export moves. `npm run intel-check` has said
+so for days.
+
+*`intel/pressers/` landed 21 Sep with the Team Sheet.*
 
 *`GAZETTA_MODEL` was listed here as the next landmine and is not one.* Checked
 17 Sep against the model table: `claude-opus-4-8` is **current and valid**,
@@ -145,7 +151,7 @@ this and not on a guess about when things happen:
 | **Tue** | **nothing at all** | *(open)* | the evergreen piece — see below |
 | **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
 | **Thu 14:00** | press conferences end | The Team Sheet | `presser` — the round-up **publishes 15:00** |
-| **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00**, then `round-preview` + `predictions` on the lock |
+| **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00** — both SHIPPED — then `round-preview` + `predictions` on the lock |
 | **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `tie-call`, `fixture-preview`, the Classified |
 | **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
 
@@ -281,7 +287,7 @@ product here, so a foreign one is not a starting point.**
 | **2b** | Cups and Europe in the classified | export |
 | **3a** | Player articles, triggered on an availability **transition** | — |
 | **3b** | Projections ranking, labelled `xPts (FPL)` and never beside `FPts` | export |
-| **4** | Friday presser + predicted XI | export |
+| **4** | ~~Friday presser + predicted XI~~ — both landed | — |
 | **5** | The furniture package, the 4:5 picture well, the lead's opening paragraph | — |
 | **6** | The crew, above | — |
 | **7** | The daily paper, above | Thursday is Craig's |
@@ -323,6 +329,30 @@ two-pass and one-line-comment rules (#8, #9).
 4. **Break weeks** — **must land before 9 Nov**, when the league hits its first
    empty week.
 5. The export-gated work, as the sister repo delivers.
+
+### The Line-Ups — 21 Sep 2026
+
+Craig: *"we just take the predicted eleven logic that we use in the repo, and
+publish it… put the teams in a list. Use a team logo, group them by match up,
+use th eplayers real position here, not fpl position for a list"*. Shipped the
+same day, and `docs/ui/gazetta.md` carries what it is.
+
+The one thing it changed about the paper's machinery: **a column can now be
+PRINTED rather than written.** `prepare` returns a voice and a brief or a set of
+facts, and the printed one skips the writer, the sub-editor and the strangers
+check, because there is no prose for any of them to read. That seam is what the
+Premier League classified (2a) will use when it lands.
+
+Two things deliberately left, so they are not re-litigated as oversights:
+
+- **The position is the man's, not the slot's.** Szoboszlai prints as `DM` while
+  Liverpool play him at right-back. The export carries a general position per
+  player and a per-line COUNT per club, and nothing joins a starter to the line
+  he is predicted in without guessing. His own position is true; a guessed one
+  would not be.
+- **The ties are alphabetical by HOME club** (Craig, 21 Sep 2026), which answers
+  §*Order the clubs by something* below for this column, though not for the Team
+  Sheet. Each tie still carries its own kickoff.
 
 ### The Team Sheet, after its first review — 18 Sep 2026
 

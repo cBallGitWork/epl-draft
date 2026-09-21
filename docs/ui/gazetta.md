@@ -440,6 +440,51 @@ and the formation grouped cannot come apart. `picks` stays in score order becaus
 the lead reads the first man his manager left out, and that only means anything
 if the list is ranked.
 
+## The predicted elevens are printed, not written
+
+Added 21 Sep 2026. `predicted-xi` files on a Friday, an hour behind the press
+conferences, and it is the paper's first column with **no voice, no brief and no
+model call**. `dispatch.prepare` returns a commission that is either a voice and
+a brief or a set of facts, and the firing loop takes the printed one straight to
+`file`: there is no prose, so there is nothing to sub-edit and no name to check
+against a brief.
+
+The argument is the one that deleted the eleven's captions on 3 Sep. Every word
+of this column is a name, a position or a count, and a writer handed two hundred
+and twenty footballers can only mis-transcribe them.
+
+**`Lineups` prints a tie at a time**, alphabetically by HOME club, both elevens
+under one ruled section with the kickoff over them. Crest, club, formation, then
+the eleven in the source's own order — keeper first, the shape read out after
+him, never regrouped.
+
+**Side by side at every width, including a phone** (Craig, 21 Sep 2026). They
+stacked below `sm` for one afternoon, and stacked they read as a list of twenty
+clubs rather than ten matches. The position gutter and the type step down at
+phone width instead, which is what buys the second column.
+
+**The position is the FOOTBALLER's, and that is the whole point of the layer
+split.** `RCB`, `DM`, `AM`, off the squads export, and a dash where that export
+had only FPL's `element_type` to go on — a fantasy classification is not a fact
+about a man. It is his general position and not his position in *this* eleven:
+Liverpool play Szoboszlai at right-back and he prints as `DM`, which is true
+about him and not about the team sheet.
+
+**A man somebody holds is marked; a free agent is not.** The reverse of the Team
+Sheet's rule, and for a reason the Team Sheet does not have: a bracket on every
+one of two hundred and twenty names is noise, and the question this list answers
+is which of them are already owned. The mark is `yoursInk`, so the reader's own
+men are in the sheet's one print red.
+
+**A tie prints both elevens or neither.** `predictedLineups` refuses rather than
+repairs: a side `xiFault` rejects, or one naming a man the snapshot cannot, is
+dropped and takes its fixture with it. The body says how many of the round's
+matches survived, so an absence is stated and never silent.
+
+**No byline.** `Dateline` credits the correspondent on every article, and a
+listing the desk printed from an export went out "by Franco Bell" until it was
+shot and read back.
+
 ## The columns
 
 The three columns are `components/gazette/`, under `Column` rather than the
@@ -493,7 +538,7 @@ Added 2 Sep 2026, when the writer filed its first columns.
 | Route | What |
 |---|---|
 | `/` | The front page. Page 1. |
-| `/paper/reports` | Page 2: `tie-report`, `match-report`, `tie-call`, `fixture-preview`, `round-preview`. |
+| `/paper/reports` | Page 2: `tie-report`, `match-report`, `tie-call`, `fixture-preview`, `round-preview`, `news`, `presser`, `predicted-xi`. |
 | `/paper/{slug}` | Any one story, printed whole. |
 | `/paper` | Redirects to `/` — a prefix is not a page. |
 
