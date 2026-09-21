@@ -327,7 +327,13 @@ existed anywhere. Corrected 2 Sep 2026.*
 **dummy** league (`config.ts` — `process.env.FANTRAX_LEAGUE_ID || leagueId("dummy")`).
 This said "rehearsal" in three places until 2 Sep 2026 and was never true: the
 dummy league is the ten-team one `next dev` opens on, and the rehearsal league
-is a separate id you have to ask for. Setting it to `ayyoh3n2mr326v2o` is
+is a separate id you have to ask for. **And the deployed app has it SET, to the rehearsal league** — verified 21 Sep
+2026 by matching production's ten team ids against all three leagues (they are
+the rehearsal league's, and share nothing with dummy's despite sharing all ten
+names). So `next dev` opens on dummy, production answers as rehearsal, and the
+swap's Vercel step is a CHANGE rather than an addition.
+
+Setting it to `ayyoh3n2mr326v2o` is
 **most** of the 10 Oct swap — the other half is `.github/workflows/editions.yml`, whose job has its own
 environment and inherits nothing from Vercel. Miss it and CI keeps filing a
 column about the rehearsal league; the front page will refuse to print it

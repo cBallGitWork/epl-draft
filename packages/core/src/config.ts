@@ -271,7 +271,15 @@ export const FANTRAX_LEAGUES: readonly FantraxLeague[] = [
   // was reading when he asked.
   { key: "dummy", leagueId: "w05aib75mtj36y1g", draftDate: "2026-08-06",
     demoTeamId: "hy0w28p5mtj36y3g" },
-  { key: "rehearsal", leagueId: "zbn1z3ukmsgb36sz", draftDate: "2026-08-06" },
+  // **The rehearsal league needs one too, because it is what production
+  // actually serves.** Verified 21 Sep 2026 by matching the deployed app's ten
+  // team ids against all three leagues: they are the rehearsal league's, so
+  // Vercel's `FANTRAX_LEAGUE_ID` is set, and the dummy default only ever applies
+  // to `next dev`. A demo team on `dummy` alone was therefore invisible on the
+  // one surface anybody would look at. `test1` here as well, same name, its own
+  // id.
+  { key: "rehearsal", leagueId: "zbn1z3ukmsgb36sz", draftDate: "2026-08-06",
+    demoTeamId: "jtsmt5jxmtj31znh" },
 ];
 
 /** The league the app serves, and the league the columnist writes about.
