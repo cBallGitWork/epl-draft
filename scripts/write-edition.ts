@@ -146,15 +146,8 @@ async function main(): Promise<void> {
   // evidence of a broken writer.
   let attempted = 0;
   for (const assignment of assignments) {
-    // **The cap counts STORIES FILED, not assignments considered**, and the
-    // difference is the whole bug it fixes. The order used to be sliced to the
-    // cap before any desk was asked for a brief, so two kinds that refuse —
-    // and a refusal spends no key, so they are still top of the order next
-    // time — wedged the paper permanently: `eleven` and `dodgers` took both of
-    // every firing's two places from 2 Sep, and four working match reports,
-    // the columns behind them were unreachable for the rest of
-    // the period. A refusal now costs nothing and the next assignment gets the
-    // turn.
+    // The cap counts STORIES FILED and not assignments considered: a refusal
+    // spends no key, so slicing to the cap first wedged the paper for a period.
     if (!hasRoom(filings.length, STORY_CAP)) break;
     const desk = prepare(assignment, ctx);
     // A desk that refuses spends nothing: the facts moved between the
@@ -163,11 +156,8 @@ async function main(): Promise<void> {
       say(`No brief for ${assignment.kind} (${assignment.key}); skipped.`);
       continue;
     }
-    // **The page, handed to a writer who cannot see it.** Every story is its own
-    // model call from its own scoped brief, so nothing stops two of them landing
-    // on the same joke — and nothing did: five "bank" headlines and two "Left
-    // Wanting" went out on 3 Sep. This is the sub-editor's look at the page,
-    // rebuilt each turn so a story filed a moment ago is already on it.
+    // Each story is its own model call from its own brief, so nothing stops two
+    // landing on the same joke. This is the page, rebuilt every turn.
     const standing = standingHeadlines(
       composePaper([...paper, ...filings.map((each) => each.story)], now)
         .filter((story) => story.leagueId === FANTRAX_LEAGUE_ID)
@@ -189,34 +179,20 @@ async function main(): Promise<void> {
       // for a banned phrase.
       const column = await writeSubedited(desk.system, brief, say, assignment.kind);
       const filed = file(assignment, column, ctx, now);
-      // **Every name in the prose against every name in the brief.** The first
-      // real story this paper ever filed put a Newcastle defender who is on
-      // nobody's roster into the team of the week, twice, and dropped the man
-      // he replaced — see `gazette/strangers.ts`. It reads perfectly, which is
-      // why it needs a machine rather than a proofreader. A warning and not a
-      // refusal: the check is deliberately eager, so a human reads the list.
+      // Every name in the prose against every name in the brief. Eager, so it
+      // warns rather than refuses — see `gazette/strangers.ts`.
       const unknown = strangers(prose(filed.story), brief);
       if (unknown.length > 0) {
         say(`  ⚠ ${assignment.kind} names ${unknown.length} not in its brief: ${unknown.join(", ")}`);
       }
-      // **The backstop, and it reads MORE than the sub-editor did.** `subedit`
-      // checks the raw column — headline, deck, body — because that is what it
-      // can cheaply send back. This reads the FILED story, which adds the tie
-      // lines and the rank lines, so it is the one that catches a banned phrase
-      // in a column's cargo. It files anyway and says so loudly: a second
-      // failure is the writer's answer rather than a reason to hang the firing,
-      // and a column right about the football is worth printing.
+      // The backstop, and it reads more than the sub-editor did: the FILED
+      // story, cargo included. It files anyway and says so loudly.
       const printed = banned(headlineAndProse(filed.story));
       if (printed.length > 0) {
         say(`  ⚠ ${assignment.kind} STILL prints banned phrasing after a rewrite: ${printed.join(", ")}`);
       }
-      // **A column whose cargo is missing files as prose about nothing.** Every
-      // reader of `extras` treats absence as ordinary — correctly, since a
-      // wire has a quiz and no ranks — so nothing downstream can tell an
-      // empty rankings column from a kind that never carries one. The power
-      // ranking filed without its `ranks` on 2 Sep: two good paragraphs and no
-      // ranked list, which is the column's whole point. Warned, not refused;
-      // the prose is still worth printing.
+      // Every reader of `extras` treats absence as ordinary, so nothing
+      // downstream can tell a column that lost its cargo from one that has none.
       const missing = CARGO[assignment.kind];
       if (missing !== undefined && (filed.story.extras?.[missing] ?? []).length === 0) {
         say(`  ⚠ ${assignment.kind} filed with no "${missing}" — the column's substance is missing.`);
@@ -236,10 +212,8 @@ async function main(): Promise<void> {
     throw new Error(`All ${attempted} attempted stories failed; nothing filed.`);
   }
 
-  // The picture, last and optional. Only the story that will LEAD gets one —
-  // a drawing beside a headline nobody reads first is a drawing nobody sees —
-  // and only when it is one of this firing's, since an older lead already had
-  // its chance. Any failure costs the picture and never the paper.
+  // The picture, last and optional, and only for this firing's lead. Any
+  // failure costs the picture and never the paper.
   const lead = composePaper(
     [...readPaperStories().filter((each) => each.leagueId === FANTRAX_LEAGUE_ID), ...filings.map((f) => f.story)],
     now,
