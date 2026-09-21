@@ -21,6 +21,7 @@ import { newsFor, readPoolNews } from "../../poolNews";
 import { pendingByTeam, squadLivePoints } from "../../scoreboard";
 import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
+import { rosterMinimums } from "../../rosterMinimums";
 import { OWN, SQUAD } from "../routes";
 import { identify, whoseTeam } from "./team";
 
@@ -230,7 +231,14 @@ export default async function TeamPage({
           // Fifteen players' eligibility, not the pool's 697. This crosses to
           // the browser, and the other 682 are not this manager's business.
           players={planning.players.filter((p) => squadIds.has(p.fantraxId))}
-          limits={planning.roster}
+          // **The floor joins the caps here and only here.** Fantrax publishes
+          // `maxActive` per position and no minimum on any JSON endpoint, so
+          // `mapLeagueInfo` returns an empty one; the commissioner's setup page
+          // has the column and `scripts/roster-limits.ts` reads it into a file.
+          // The planner is the one screen that enforces a formation, so the two
+          // halves meet on the way into it rather than being threaded through
+          // every caller of the mapper.
+          limits={{ ...planning.roster, minActiveByPosition: rosterMinimums() }}
           fantraxUrl={`${FANTRAX_APP_BASE}/${FANTRAX_LEAGUE_ID}`}
           pending={pending}
         />

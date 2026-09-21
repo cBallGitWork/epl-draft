@@ -148,45 +148,81 @@ a single column across ten attempts — the same sixteen came back every time.
 Recorded as unfound rather than absent: the parameter exists in their client and
 this probe did not find its name.
 
-## Fantrax publishes no position MINIMUM — probed 21 Sep 2026, all three leagues
+## The position MINIMUM exists, and no JSON endpoint carries it — probed 21 Sep 2026
 
 Asked because Craig wanted the planner to refuse an illegal formation: *"if
 theres 3 at the back, you cant go down to 2 defenders, need to build the logic
 using the league min/max starter logic"*.
 
+**This section said there was no minimum for about an hour, and that was wrong.**
+The probe was right about every endpoint and wrong about the league, which is the
+failure mode worth recording: *absent from the API* had been written down as
+*absent from the rules*, and a derived floor of two at the back was built on it.
+
+### What the endpoints actually carry
+
 `rosterInfo.positionConstraints` carries **`maxActive` and nothing else**, on all
-three leagues, live and in every snapshot we hold — `grep -c minActive
-data/snapshots/` is **0**. `getTeamRosterInfo.miscData.statusTotals` gives
-`{Active: total 11, max 11}` and `{Reserve: total 4, max 5}`, again a max and no
-min. `getLeagueRules` and `getFantasyTeamInfo` do not exist.
+three leagues, live and in every snapshot — `grep -c minActive data/snapshots/`
+is **0**. `getTeamRosterInfo.miscData.statusTotals` gives `{Active: total 11,
+max 11}` and `{Reserve: total 4, max 5}`, again a max and no min.
+`getLeagueSetup` **exists** (`WARNING_NOT_LOGGED_IN` unauthenticated, OK with the
+cookie, 17 KB) and is step ONE of the wizard: league name, password, scoring
+system, premium features. No roster table. Twelve further name guesses —
+`getRosterSettings`, `getLeagueRosterSettings`, `getPositionConstraints`,
+`getRosterLimits` and the rest — all `ERROR_INVALID_REQUEST`.
+
+That is the lesson this file already records about `getLeagueChat`, arriving
+again: **guessing names enumerates what you already imagined.** What found it was
+reading the screen.
+
+### Where it lives: the commissioner's setup page, in the HTML
+
+`newui/fantasy/createLeague.go?goto=3&leagueId=…`, with the cookie. The page
+builds its own table by calling a function with the values as arguments:
 
 ```
-D {maxActive:5}  F {maxActive:3}  G {maxActive:1}  M {maxActive:5}
-real 14/11/3 · rehearsal 15/11/5 · dummy 15/11/5
+addPosition('703','D','Defender','SOCCER_NON_GOALIE','3','5','5', '', '', false)
+addPosition('702','M','Midfielder','SOCCER_NON_GOALIE','2','5','5', '', '', false)
+addPosition('701','F','Forward','SOCCER_NON_GOALIE','1','3','3', '', '', false)
+addPosition('704','G','Goalkeeper','SOCCER_GOALIE','1','1','2', '', '', false)
 ```
 
-**So the floor is arithmetic, not a setting.** Hold the XI at eleven and a line's
-minimum is whatever is left when every other line is as full as it may be:
+— `(positionId, shortName, name, scGroupCode, minActive, maxActive, maxTotal,
+minGp, maxGp, isNew)`. So **D 3 · M 2 · F 1 · G 1**, summing to 7 of the 11
+starters, and `chkMinActivePerPositionUsed` is `checked` — the commissioner
+switched it on. Identical in dummy and rehearsal.
+
+**The real league has no position table on that page**, exactly as it has no
+`getTeamRosterInfo`: settings pages for a league with no members. **Re-run after
+the draft** — `npm run roster-limits` records it as `unreadable` rather than
+guessing, and the planner enforces no floor for a league it could not read.
+
+### How it reaches the app
+
+`npm run roster-limits` → `data/leagues/roster-limits.json`, keyed by league id,
+with `fetchedAt` and `minimumsInForce`. It is the labelled fallback CODE_RULES §3
+allows and it is labelled: `mapLeagueInfo` returns an EMPTY
+`minActiveByPosition` because the endpoint publishes none, and
+`apps/companion/app/rosterMinimums.ts` is the only place a number joins it — on
+the way into the planner, which is the one screen that enforces a formation.
+
+A scrape, and a script rather than an adapter for that reason: a regex over
+somebody's markup is run by a person, audited, and checked in, never executed on
+a request. It reads `FANTRAX_COOKIE` from the environment and logs no part of it.
+
+### What it would have been without this
+
+Hold the XI at eleven and the caps alone imply a floor:
 
 ```
 min(p) = maxActivePlayers − Σ maxActive(q≠p)
 D 11−(1+5+3) = 2 · M 2 · F 11−(1+5+5) = 0 · G 0
 ```
 
-**Which makes a back TWO legal in this league, not a back three** — 1-2-5-3 is
-inside every published cap and Fantrax has told us nothing that forbids it. The
-planner enforces the floor by construction rather than by checking it: a man
-leaves the XI only when somebody takes his place, so the count never moves and
-the caps do the rest (`moves.ts`, and `moves.test.ts` walks every legal move from
-a real roster asserting no line drops below the number above).
-
-A keeper floor of nought is the uncomfortable one: 5+5+3 = 13 ≥ 11, so the
-published caps permit an XI with no goalkeeper. Fantrax's own UI may refuse it.
-**If it does, that minimum is a setting we cannot read**, and the only honest
-places to get it are the commissioner's `getLeagueSettings` (136 B
-unauthenticated, real content only with the cookie) or `Min/Max Violation
-Override`, which is one of the nineteen hub actions and is named as though a
-minimum exists. Neither is probed.
+**Two at the back, and a goalkeeper floor of nought** — 5+5+3 = 13 ≥ 11, so the
+caps permit an XI with no keeper at all. Every one of those is wrong against the
+real settings, which is the measure of how far "the API does not say" is from
+"the league does not care".
 
 ## The commissioner's cookie opens all of it — probed 21 Sep 2026
 

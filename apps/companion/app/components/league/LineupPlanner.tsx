@@ -55,6 +55,8 @@ function sentence(violation: Violation, nameOf: (id: string) => string): string 
       return `${violation.count} on the bench — the league seats ${violation.cap}.`;
     case "position-over-cap":
       return `${violation.count} at ${violation.position} — the cap is ${violation.cap}.`;
+    case "position-under-min":
+      return `${violation.count} at ${violation.position} — the league wants ${violation.min}.`;
     case "not-eligible":
       return `${nameOf(violation.fantraxId)} is not eligible at ${violation.position}.`;
   }

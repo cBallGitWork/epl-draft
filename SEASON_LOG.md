@@ -53,14 +53,25 @@ from the other end — the reserves' own moves, filtered to the ones that take h
 off — so the pitch cannot light a partner the dialog then refuses.
 
 **And a man leaves the XI only when somebody takes his place.** That is Craig's
-"dont allow to just put a player on the bench", and it is also what makes the
-caps a FORMATION rule: hold eleven at eleven and `maxActiveByPosition` fixes the
-floor. Fantrax publishes no minimum anywhere — see PLATFORM_NOTES, probed the
-same day — so against G1/D5/M5/F3 the floor is two at the back, which means a
-back THREE going to a back TWO is legal in this league and Craig's example is not
-the rule he thought it was. The bare demotion survives only for an XI already
-over a cap, which is what a commissioner lowering one under a filed side leaves
-behind.
+"dont allow to just put a player on the bench", and it holds the eleven at
+eleven, which keeps every line inside its CAP. The bare demotion survives only
+for an XI already over a cap, which is what a commissioner lowering one under a
+filed side leaves behind.
+
+**The FLOOR is a separate setting, and I told him it did not exist.** The first
+cut of this said Fantrax publishes no minimum, derived a floor of two at the back
+from the caps, and reported that his example — three defenders cannot become two
+— was not the rule he thought it was. Every endpoint reading behind that was
+correct; the conclusion was not. Craig pasted his own settings screen — D 3 ·
+M 2 · F 1 · G 1, with *Force teams to have a minimum number of Active Players*
+ticked — and then the URL it lives at. The numbers are in the HTML of
+`createLeague.go?goto=3`, as arguments to the function that builds the table, and
+no JSON endpoint has them at all. **"The API does not say" had been written down
+as "the league does not care"**, and a planner had been built on it that would
+have offered a manager a move Fantrax rejects — which is the one thing
+`moves.ts`' own docblock says it exists to prevent. `npm run roster-limits`
+reads the page, `data/leagues/roster-limits.json` holds it, and the planner is
+the only screen the number reaches.
 
 **The doubt ramp** is three grounds on FPL's own 0/25/50/75 steps, hue-locked to
 `--color-bad` and `--color-mid` so no new family enters the palette: the name

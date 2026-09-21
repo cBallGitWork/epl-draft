@@ -12,7 +12,7 @@ const limits = {
   maxTotalPlayers: 15,
   maxActivePlayers: 11,
   maxReservePlayers: 4,
-  maxActiveByPosition: { D: 5, F: 3, G: 1, M: 5 },
+  maxActiveByPosition: { D: 5, F: 3, G: 1, M: 5 }, minActiveByPosition: {},
 };
 
 const performer = (

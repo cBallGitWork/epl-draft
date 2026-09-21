@@ -110,6 +110,31 @@ export function eligibleSlots(
   });
 }
 
+/** Whether a move would push a position further below the fewest the league
+ *  allows to start there.
+ *
+ *  **Further below, not below.** A roster can arrive already short — the
+ *  commissioner can RAISE a minimum under a filed side, which is the mirror of
+ *  the cap case `overCap` exists for — and a planner that refused every move
+ *  from that state would freeze on the one screen that could repair it. So the
+ *  test is whether the move makes a line worse than it found it.
+ *
+ *  A position with no published minimum cannot be broken. Fantrax's public
+ *  `getLeagueInfo` publishes none at all, so this is inert until the checked-in
+ *  file reaches `RosterLimits` — see `minActiveByPosition`. */
+function worsensMinimum(
+  before: readonly RosterSlot[],
+  after: readonly RosterSlot[],
+  limits: RosterLimits,
+): boolean {
+  for (const [position, min] of Object.entries(limits.minActiveByPosition)) {
+    const was = activeAt(before, position).length;
+    const now = activeAt(after, position).length;
+    if (now < min && now < was) return true;
+  }
+  return false;
+}
+
 /** Whether the XI is already breaking a cap this man stands inside.
  *
  *  The one state where taking somebody out and putting nobody in is the remedy
@@ -215,7 +240,14 @@ export function legalMoves(
     moves.push({ kind: "demote", fantraxId });
   }
 
-  return moves;
+  // **The formation rule, and it is the league's rather than arithmetic.**
+  // Holding the eleven at eleven keeps every line inside its CAP; the FLOOR is a
+  // separate setting — D 3, M 2, F 1, G 1 in our league, which Fantrax enforces
+  // and publishes only on the commissioner's own setup page. Applied by playing
+  // each move and counting, rather than by reasoning per move kind: a swap moves
+  // one man in and one man out and the two need not be the same position, and a
+  // shift empties the line it left. One rule, and `applyMove` is pure.
+  return moves.filter((move) => !worsensMinimum(slots, applyMove(slots, move), limits));
 }
 
 /** Apply a move, returning a new roster. Never mutates its input: the planner

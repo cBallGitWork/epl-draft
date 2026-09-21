@@ -198,7 +198,8 @@
       "F": 3,
       "G": 1,
       "M": 5
-    }
+    },
+    "minActiveByPosition": {}
   },
   "realLimits": {
     "maxTotalPlayers": 14,
@@ -209,6 +210,7 @@
       "F": 3,
       "G": 1,
       "M": 5
-    }
+    },
+    "minActiveByPosition": {}
   }
 }

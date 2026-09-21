@@ -198,6 +198,54 @@ describe("legalMoves", () => {
     expect(benched(limits)).toBe(true);
   });
 
+  it("will not take a line below the league's stated minimum", () => {
+    // Craig, 21 Sep 2026: "if theres 3 at the back, you cant go down to 2
+    // defenders". He is right and the number is Fantrax's: the commissioner's
+    // setup page has a Min Active column, switched ON, reading D 3 · M 2 · F 1 ·
+    // G 1 — read by `scripts/roster-limits.ts`, because no JSON endpoint carries
+    // it. `getLeagueInfo` alone would have allowed a back two.
+    const floors: RosterLimits = { ...limits, minActiveByPosition: { D: 3, M: 2, F: 1, G: 1 } };
+    const backThree = slots.filter((s) => s.status === "ACTIVE" && s.position === "D");
+    expect(backThree).toHaveLength(3);
+
+    for (const slot of slots) {
+      for (const move of legalMoves(slots, eligibility, floors, slot.fantraxId)) {
+        const after = applyMove(slots, move);
+        for (const [position, min] of Object.entries(floors.minActiveByPosition)) {
+          expect(
+            after.filter((s) => s.status === "ACTIVE" && s.position === position).length,
+          ).toBeGreaterThanOrEqual(min);
+        }
+      }
+    }
+
+    // And the same move IS offered without the floor, so the test is about the
+    // rule rather than about a roster that happened to have no such move in it.
+    const without = slots.flatMap((slot) =>
+      legalMoves(slots, eligibility, limits, slot.fantraxId).filter((move) => {
+        const after = applyMove(slots, move);
+        return after.filter((s) => s.status === "ACTIVE" && s.position === "D").length < 3;
+      }),
+    );
+    expect(without.length).toBeGreaterThan(0);
+  });
+
+  it("still offers a move from a roster that is ALREADY short", () => {
+    // A commissioner can raise a floor under a filed side, which is the mirror
+    // of the cap case. Refusing every move from that state would freeze the one
+    // screen that could repair it — so the test is whether a move makes a line
+    // WORSE, not whether it is short.
+    const impossible: RosterLimits = { ...limits, minActiveByPosition: { D: 5 } };
+    const moves = slots.flatMap((slot) => legalMoves(slots, eligibility, impossible, slot.fantraxId));
+    expect(moves.length).toBeGreaterThan(0);
+    // ...and none of them takes the back three down to two.
+    for (const move of moves) {
+      const after = applyMove(slots, move);
+      expect(after.filter((s) => s.status === "ACTIVE" && s.position === "D").length)
+        .toBeGreaterThanOrEqual(3);
+    }
+  });
+
   it("cannot take a line below the floor the caps imply", () => {
     // Craig, 21 Sep 2026: "if theres 3 at the back, you cant go down to 2
     // defenders, need to build the logic using the league min/max starter

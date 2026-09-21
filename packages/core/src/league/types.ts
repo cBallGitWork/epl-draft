@@ -60,6 +60,21 @@ export interface RosterLimits {
   maxReservePlayers: number | null;
   /** Position letter to maximum active count, e.g. `{ G: 1, D: 5, M: 5, F: 3 }`. */
   maxActiveByPosition: Record<string, number>;
+  /** Position letter to the FEWEST that may start there, e.g. `{ D: 3, M: 2 }`.
+   *
+   *  **Empty from `getLeagueInfo`, and that is the provider and not a default.**
+   *  `rosterInfo.positionConstraints` carries `maxActive` and nothing else — 0
+   *  matches for `minActive` across all three leagues, live and in every
+   *  snapshot — while Fantrax's commissioner setup page has a Min Active column
+   *  that is switched ON for our league (D 3 · M 2 · F 1 · G 1). So the fact is
+   *  real, is enforced by Fantrax, and reaches us only through a checked-in file
+   *  a script generates. PLATFORM_NOTES carries the probe.
+   *
+   *  A position absent from the map has no published minimum, which is not a
+   *  minimum of nought in any way that matters — nothing can go below nought —
+   *  but the distinction is kept because "we were not told" and "the
+   *  commissioner said none" are different claims. */
+  minActiveByPosition: Record<string, number>;
 }
 
 /** One scoring or roster period. Fantrax numbers these 1–38 in step with FPL

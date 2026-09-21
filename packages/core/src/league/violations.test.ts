@@ -106,6 +106,7 @@ describe("a league that publishes no limits", () => {
     maxActivePlayers: null,
     maxReservePlayers: null,
     maxActiveByPosition: {},
+  minActiveByPosition: {},
   };
 
   it("reports nothing rather than reporting everyone", () => {
