@@ -2,31 +2,20 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot } from "@epl/core";
-import { clubKey, conferenceTimes, manager, quotes, sections, text, troubles } from "./ingest/presserArticle";
+import { clubKey, conferenceTimes, manager, quotes, sections, text } from "./ingest/presserArticle";
+import { troubles } from "./ingest/presserSignals";
 import { fullClubName } from "@epl/core";
 
 // Thursday's and Friday's press conferences, from Fantasy Football Scout's own
 // team-news article into `data/intel/pressers/26-27.json`.
 //
-// **It belongs in the sister repo and lives here for now.** §5 of
-// `docs/providers/intel-export.md` says `~/ai-carling-premiership` writes this
-// file; it has the scrape and not the exporter. This reads that scrape directly
-// so the column has real news rather than a hand-written fixture, which is what
-// it had until 18 Sep 2026 and what made it print a Palace player under a Spurs
-// crest.
-//
-// **Name-matching happens HERE and never at runtime** — CODE_RULES §3's rule
-// for exactly this shape: a script that matches once, reports what it could not,
-// and writes a data file a person can read.
+// Belongs in the sister repo (`intel-export.md` §5) and lives here until that
+// repo grows the exporter. Name-matching happens HERE and never at runtime.
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 
-/** Where the sister repo keeps its scrape.
- *
- *  **`FFS_SCRAPE_DIR` first, and the default is DERIVED** — it was an absolute
- *  path into one developer's home directory, which is a machine's fact rather
- *  than the project's and works nowhere else. The fallback assumes the two
- *  repos are checked out side by side, which is how they are. */
+/** Where the sister repo keeps its scrape. `FFS_SCRAPE_DIR` first; the default
+ *  assumes the two repos are checked out side by side. */
 const SCRAPE =
   process.env.FFS_SCRAPE_DIR ??
   join(ROOT, "..", "ai-carling-premiership", "data", "raw", "fantasy_football_scout", "daily");
@@ -97,11 +86,8 @@ async function main(): Promise<void> {
       continue;
     }
     const said = manager(section.body);
-    // His own conference time where the article published one. Where it did not
-    // — FFS's block is a tweet and a long list is truncated — the LATEST time
-    // published that day, because a presser we cannot time had happened by
-    // then. A day with no block at all falls to midday, which is the only
-    // figure here nobody published and is named as such.
+    // His own time where the article published one, else the day's latest — a
+    // presser we cannot time had happened by then.
     const surname = (said ?? "").toLowerCase().split(" ").pop() ?? "";
     const when = times.get((said ?? "").toLowerCase()) ?? times.get(surname) ?? latest ?? MIDDAY;
     const at = londonInstant(day, when.hour, when.minute);

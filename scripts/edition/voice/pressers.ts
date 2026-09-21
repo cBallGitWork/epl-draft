@@ -2,16 +2,9 @@ import { HOUSE, STORY_SHAPE } from "./house";
 
 // Team news: an information thread, not a column.
 
-/** The headline, from the day the press conferences were held: "Thursday
- *  Pressers", "Friday Pressers". Craig, 18 Sep 2026 — "easy titles".
- *
- *  Set by the desk and never asked of the writer. A reader looking for Friday's
- *  team news should find the word Friday, and a thread that runs twice a week
- *  under a new pun each time reads as a new article rather than the same one.
- *
- *  The day arrives as `YYYY-MM-DD` off the assignment key, which is already a
- *  LONDON day — `presserDays` formats it in `LEAGUE_TIMEZONE` — so reading the
- *  weekday back in UTC cannot shift it. */
+/** The headline, from the day the conferences were held: "Thursday Pressers".
+ *  The desk's, not the writer's — a reader looking for team news should find
+ *  the words, and a weekly thread under a new name reads as a new article. */
 export function presserHeadline(day: string): string {
   const at = new Date(`${day}T12:00:00Z`);
   if (Number.isNaN(at.getTime())) return "Team News";
@@ -19,15 +12,9 @@ export function presserHeadline(day: string): string {
   return `${weekday} Pressers`;
 }
 
-/** Team News: the press-conference thread.
- *
- *  **The voice owns the REGISTER; the brief owns the SHAPE.** This file said
- *  "THE ROW IS PROSE, not a list", "NO QUOTES, EVER" and "the men this league
- *  owns" for a day after the brief had moved to bullets, carried quotes and
- *  every man mentioned — four flat contradictions handed to the writer in one
- *  request, plus one with itself ("EVERY MAN MENTIONED, owned or not"). Two
- *  files stating one shape is one of them going stale, so the shape rules live
- *  in `briefs/presser.ts` alone now and this holds only what does not change. */
+/** Team News: the press-conference thread. The voice owns the REGISTER and
+ *  `briefs/presser.ts` owns the SHAPE — two files stating one shape is one of
+ *  them going stale, which is what happened. */
 export const PRESSER = `${HOUSE}
 
 You compile Team News: the press-conference thread, filed before the deadline.

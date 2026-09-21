@@ -6,10 +6,7 @@ import type { ResolvedPlayer, RosteredPlayer, RosteredTeam } from "@epl/core";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
 //
-// **Absent is the ordinary state and files nothing.** `intel/pressers/26-27.json`
-// is specified in `docs/providers/intel-export.md` §5 and does not exist yet, so
-// every function here returns empty rather than throwing — the column simply is
-// not commissioned until the file lands.
+// Absent is the ordinary state and files nothing.
 
 const ROOT = fileURLToPath(new URL("../..", import.meta.url));
 const FILE = join(ROOT, "data", "intel", "pressers", "26-27.json");
@@ -30,9 +27,7 @@ function read(): IntelPressers | null {
 }
 
 /** The same clubs re-keyed by the PER-SEASON id, which is what a player carries.
- *  The map arrives keyed by the season-stable code, because that is what a
- *  presser signal and a crest use — the two id spaces are the hazard this
- *  repo names in writing, so the re-key is one function and not three. */
+ *  They arrive keyed by the season-stable code, which is what a crest uses. */
 function byClubId(clubs: ReadonlyMap<number, Club>): Map<number, Club> {
   return new Map([...clubs.values()].map((club) => [club.id, club]));
 }
@@ -54,12 +49,8 @@ function owners(teams: readonly RosteredTeam[]): Map<number, string> {
   return out;
 }
 
-/** First name and surname, which is how a person is named in print. FPL's web
- *  name is a squad disambiguator — "N.Gonzalez", "Caicedo", "Van den Berg" — and
- *  its full name is a birth certificate. This takes one of each.
- *
- *  Exported for its test: every rule below is a real player FPL shapes awkwardly,
- *  and the one-name men are the reason it is not simply the first two tokens. */
+/** First name and surname, as print names a person. FPL's web name is a squad
+ *  disambiguator ("N.Gonzalez") and its full name is a birth certificate. */
 export function display(player: { name: string; fullName?: string }): string {
   const web = player.name.split(/\s+/).filter((word) => word !== "");
   const full = (player.fullName ?? "").split(/\s+/).filter((word) => word !== "");
@@ -103,14 +94,9 @@ export function presserLines(
   since: string,
   /** The round's clubs, keyed by FPL code — the crest and the row's heading. */
   clubs: ReadonlyMap<number, Club>,
-  /** EVERY footballer, not only the rostered ones. Names came off the rosters
-   *  until 18 Sep 2026, which was fine while the column only covered men
-   *  somebody held — the moment it covered everyone, an unowned player printed
-   *  as his own code.
-   *
-   *  `clubId` is why this is the whole snapshot rather than a name lookup: the
-   *  CLUB a signal belongs to is read off the PLAYER here, never off the
-   *  export's own `club` field. */
+  /** EVERY footballer, not only the rostered ones — an unowned man printed as
+   *  his own code otherwise. The whole snapshot rather than a name lookup
+   *  because `clubId` is how the club is read off the PLAYER. */
   squad: readonly { code: number; name: string; fullName: string; clubId: number }[],
 ): PresserLine[] {
   const intel = read();
@@ -125,11 +111,8 @@ export function presserLines(
     const player = byPlayer.get(signal.code);
     if (player === undefined) return [];
 
-    // **The club is the PLAYER's, never the export's.** Taking the export's
-    // `club` on faith printed "Spurs — Glasner did not rule out rotating
-    // Yeremy" on 18 Sep: the manager was Palace's, the player was Palace's, and
-    // only the label said Spurs. A row whose two sources disagree is a bad
-    // export, and a wrong crest beside a real quote is worse than no row.
+    // The club is the PLAYER's, never the export's. A row whose two sources
+    // disagree is a bad export, and a wrong crest is worse than no row.
     const club = byId.get(player.clubId);
     if (club === undefined || club.code !== signal.club) return [];
 
@@ -144,11 +127,8 @@ export function presserLines(
   });
 }
 
-/** Every club that held a press conference in the window, named.
- *
- *  Read so the column can say "no fresh news" for a club rather than omit it —
- *  the export has carried `spoke` since 18 Sep 2026 and nothing looked at it,
- *  so the instruction to cover every club was unfollowable. */
+/** Every club that held a press conference in the window, so the column can say
+ *  "no fresh news" for one rather than omit it. */
 export function presserSpoke(
   since: string,
   clubs: ReadonlyMap<number, Club>,
@@ -164,17 +144,10 @@ export function presserSpoke(
   });
 }
 
-/** Who each club plays in the round the pressers are about, by FPL club code.
+/** Who each club plays in the round the pressers PREVIEW, by FPL club code.
  *
- *  **Not `snapshot.fixtures`, and that is the whole point of this function.**
- *  `map.ts` records that FPL keeps `is_current` on a round until the next
- *  DEADLINE, so between rounds the snapshot is focused on football already
- *  played — and a Thursday column would print last weekend's opponents beside
- *  this weekend's team news. Craig, 18 Sep 2026: "we arent in a gameweek, we
- *  are inbetween gameweeks".
- *
- *  A round with no fixtures published yet returns an empty map, and every club
- *  header then prints without an opponent rather than with the wrong one. */
+ *  Not `snapshot.fixtures`: FPL keeps `is_current` on a round until the next
+ *  DEADLINE, so between rounds that is football already played. */
 export async function presserFixtures(
   gameweek: number,
   clubs: ReadonlyMap<number, Club>,
@@ -195,10 +168,8 @@ export async function presserFixtures(
   return out;
 }
 
-/** What each manager actually said, for the clubs in this round.
- *
- *  A quote whose club we cannot name is dropped: it would print under no crest
- *  and beside no row, which is a stray sentence rather than team news. */
+/** What each manager actually said, for the clubs in this round. A quote whose
+ *  club we cannot name is dropped — it would print under no crest. */
 export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote & { clubName: string })[] {
   const intel = read();
   if (intel === null) return [];
