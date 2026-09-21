@@ -15,7 +15,7 @@ The site is two things at once and stopped pretending otherwise on 29 Aug 2026.
 
 | | **The Paper** | **The Desk** |
 |---|---|---|
-| Where | `/` and `/paper/*`, and everything written | League · Prem · Live · Players · FPL |
+| Where | `/` and `/paper/*`, and everything written | My Team · League · Prem · Live · News · Players · FPL |
 | What it is | a newspaper, printed | a management terminal |
 | Ground | warm off-white stock | blue-black |
 | Type | serif display and prose | one bold humanist sans |
@@ -27,17 +27,25 @@ numerals for every figure in both registers**. A score is set the same way on
 newsprint as on the desk, because a score is the one thing that is the same
 object in both places.
 
-**The nav bones are literal.** The six sections are one table
-(`shell/sections.ts`) and each register prints it its own way: the Desk draws
-them as Championship Manager's furniture (`shell/Rail` — a 130px rail down the
-side above `lg`, a flat `.cm-foot` strip across the bottom below it; §2's table
-has the three objects), the Paper sets them as a contents strip in letterspaced
-small capitals (`gazette/Index`). Same six, same order, same gate on Live.
+**The nav bones are literal.** The sections are one table (`shell/sections.ts`)
+and `shell/Rail` draws them as Championship Manager's furniture — a 130px rail
+down the side above `lg`, a flat `.cm-foot` strip across the bottom below it;
+§2's table has the three objects. The paper wears the same rail rather than
+printing its own contents strip (Craig, 16 Sep 2026), which is why
+`gazette/Index` is gone: the front page was the one screen with no way back into
+the app.
 
-**Neither shape is on `/`.** A navy column beside a broadsheet is a seam, and it
-would narrow the container the front page's two-column layout keys off; a blue
-strip across the foot of a newspaper is the desk's furniture on the other
-register's page. That is why the Paper prints its own rather than going without.
+**The count is deliberately not written down here.** This paragraph said "six"
+through two additions of a seventh, and `sections.ts` is the table to read.
+
+~~**Neither shape is on `/`.**~~ **Reversed 16 Sep 2026**, and the paragraph
+above records it. The argument here was that a navy column beside a broadsheet is
+a seam and would narrow the container the front page's two-column layout keys
+off. Measured before it was acted on: `--page-frame` caps `<main>` at 1152px and
+the rail sits BESIDE that frame rather than inside it, and the two-column grid
+holds to 820px while the rail only exists from `lg`. So at the tightest width
+where both are on screen there is ~200px of slack, and the front page had been
+the one screen in the app with no way back into it.
 
 The Paper is the front page's `.paper` scope. The Desk is the root `@theme` —
 it has no class of its own, because it is the default and giving the default a
@@ -215,9 +223,23 @@ holds that line.
 
 **Six plates is the bar's ceiling, and the sixth is now a DOOR.** Craig, 5 Sep
 2026: *"if we tap a section, it could bring up more options."* The ceiling was
-measured and is not negotiable — six plates at 320 are 53px each against a
-widest label of 44 (`Gazetta`, exactly), and a seventh gives 45px against a 36px
-budget, so `Gazetta` and `League` would both clip. That arithmetic is why the
+measured and is not negotiable — **at 320 six plates are 53.3px each and keep
+4px around the label, so a label has 49.3px**, and a seventh would leave 45. The
+widest today is `Gazetta` at 44.
+
+**Quote the LABEL's room, never the plate's width.** Three files carried "53px
+against a widest label of 44", which reads as nine pixels of headroom that do
+not exist, and `sections.ts` had the two numbers the other way round. It cost a
+real clip on 21 Sep 2026: `My Team` renders at 51, shipped onto the bar on the
+strength of 53, and came out as `My Te…`. The plate on the bar reads `Team`; the
+section is still called My Team everywhere it is described, exactly as `Prem`'s
+plate stands for `FA Barclays Premiership` on the title bar below it.
+
+**And `navfit` had called it a fit**, which is the more serious half: its clipped
+test was `scrollWidth > ceil(box) + 1`, and 51 against 49.3 came out as `51 > 51`
+— false. The tolerance is gone; `ceil` alone already absorbs the sub-pixel case
+it was there for. An instrument that holds a line has to fail one pixel early,
+not one pixel late. That arithmetic is why the
 pool was taken OFF the bar on 5 Sep rather than added to it, and it would have
 demanded a rename of two existing sections every time the app grew.
 
@@ -225,6 +247,14 @@ So the last plate is `More`, and everything past the fifth section lives behind
 it: a full-width drawer on the floor, drawn by `shell/Modal` at
 `anchor="bottom"`. The bar keeps exactly six plates for ever and the ceiling
 stops being a limit on how many sections the app may have.
+
+**And a section may YIELD its plate rather than hold one** (Craig, 21 Sep 2026:
+*"my team behind more during gameweek"*). `My Team` stands on the bar all week
+and steps into the drawer while football is on, because the plate it would take
+is Live's: `overflowDuringGameweek` beside `onlyDuringGameweek`, both applied by
+`sectionsFor()`, which is a pure function and tested against the ceiling above.
+The trade is honest at that hour — the lineup can no longer be changed, and the
+score of the tie it is playing is running on the plate that replaced it.
 
 Three things about it are rules rather than choices. **It is a plate, not a new
 object** — same width, same type, same `.cm-foot` ink, and it takes

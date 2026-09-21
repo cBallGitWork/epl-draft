@@ -9,6 +9,39 @@ all lead here. The questions are "who has he got", "who does he play this week",
 and "is that man fit". The page knows whose squad it is (`mine`) and says so in
 the title.
 
+## The front door — `/squad/me`
+
+**The My Team section's front door** (Craig, 21 Sep 2026); its plate reads
+`Team`, which is what fits at 320. `me` is a segment this route
+accepts in place of an id and resolves against the rostered teams; a reader who
+is not signed in is sent to `/squad`, where the code goes in. `squad/routes.ts`
+carries the constants and the reason it is a URL rather than a redirect: the
+rail is a client component and the id is in a signed HTTP-only cookie, so a
+plate pointing at `/squad/<your id>` would mean `cookies()` above every route in
+the app — the paper going dynamic to light a nav plate.
+
+Two things follow, and both are in `team.ts`:
+
+- **`whoseTeam(slug, teams)` is the one resolver**, extracted at three — this
+  page, the Match tab and `leagueTeams` each read their own roster and each had
+  to answer it. It returns the id AND whether it is the reader's, because both
+  callers that want the second want it against the list they resolved from.
+- **`TeamIdentity.slug` is what the URL said**, and the tab strip builds its five
+  hrefs from it rather than from the id. A manager who came in through My Team
+  therefore stays inside `/squad/me/*` across Transfers, Match, Fixtures and
+  Stats, and the plate stays lit. Following the id instead would drop him onto
+  the same screens under a pathname the rail no longer recognises.
+
+  **The door is not the only way in, and the other ways do not light it.** The
+  league table, Team Stats, the matchup sides and the schedule all link a team by
+  id, including when that team is yours — so your own squad has two pathnames and
+  only one of them marks the rail. The index's own row goes through the door;
+  the rest are unconverted and it is a deliberate open question rather than an
+  oversight.
+
+The section owns exactly `/squad/me` and not the `/squad` prefix, so a rival's
+squad never lights a plate that says My Team.
+
 ## Three different pages behind one route
 
 | When | What renders |

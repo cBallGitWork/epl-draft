@@ -220,6 +220,24 @@ export interface FantraxLeague {
   key: string;
   leagueId: string;
   draftDate: string;
+  /** A team to treat as the reader's own when nobody has signed in.
+   *
+   *  **Dummy data, and only the dummy league has one.** Every screen this app
+   *  is proudest of is partisan — the accent edge, yours-first, the planner, the
+   *  My Team plate — and all of it is invisible to a reader without a code. That
+   *  made the whole section untestable by anyone but a signed-in manager, and
+   *  undemonstrable to Craig on a phone.
+   *
+   *  **It cannot leak into the real league, by construction rather than by a
+   *  guard.** The identity hangs off the league entry, so on 10 Oct, when
+   *  `FANTRAX_LEAGUE_ID` moves to the real id, this field is simply not on the
+   *  league being served and the app goes back to demanding a code. There is no
+   *  flag to remember to turn off.
+   *
+   *  It is not a credential and grants nothing: signing in is what a cookie is
+   *  for, and this league's data is public anyway. A real cookie always wins
+   *  over it. */
+  demoTeamId?: string;
 }
 
 /** All three leagues are public — these are the ids in their league URLs, not
@@ -248,7 +266,11 @@ export interface FantraxLeague {
  *  serves. */
 export const FANTRAX_LEAGUES: readonly FantraxLeague[] = [
   { key: "real", leagueId: "ayyoh3n2mr326v2o", draftDate: "2026-10-10" },
-  { key: "dummy", leagueId: "w05aib75mtj36y1g", draftDate: "2026-08-06" },
+  // `test1` (Craig, 21 Sep 2026: "pick one of the league teams as my team for
+  // dummy data"). Ten teams and no reason to prefer one, so it is the team he
+  // was reading when he asked.
+  { key: "dummy", leagueId: "w05aib75mtj36y1g", draftDate: "2026-08-06",
+    demoTeamId: "hy0w28p5mtj36y3g" },
   { key: "rehearsal", leagueId: "zbn1z3ukmsgb36sz", draftDate: "2026-08-06" },
 ];
 

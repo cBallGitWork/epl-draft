@@ -1,4 +1,5 @@
 import TabStrip from "../../components/shell/TabStrip";
+import { SQUAD } from "../routes";
 
 // One team's own screens, and how you get between them.
 //
@@ -16,8 +17,15 @@ import TabStrip from "../../components/shell/TabStrip";
 //
 // **The League strip is not replaced, because it was never here.** `/squad` and
 // `/squad/[teamId]` render no `SectionNav` at all — the rail is the only thing
-// that has ever marked this section, and it goes on doing it: `owns()` prefix-
-// matches `/squad/`, so every tab below still lights Squads in the rail.
+// that marks where these screens sit.
+//
+// **It marks only the reader's own, and that is why the hrefs follow the SLUG.**
+// This note used to say `owns()` prefix-matched `/squad/` so every tab lit
+// Squads in the rail; Squads stopped being a section on 2 Sep 2026 and nothing
+// lit at all, and My Team took its place on 21 Sep owning exactly `/squad/me` —
+// a prefix would light a plate reading My Team over a rival's squad. So a
+// manager who came in through the front door stays inside `/squad/me/*` as he
+// crosses these five, and the plate stays lit.
 
 /** The five, declared once.
  *
@@ -41,7 +49,7 @@ const TABS = [
 export type TeamTab = (typeof TABS)[number]["key"];
 
 export default function TeamTabs({
-  teamId,
+  slug,
   current,
   /** Tabs with nothing behind them for THIS team — a side that has made no
    *  transactions, a period with no pairing. Named by key rather than counted
@@ -49,7 +57,10 @@ export default function TeamTabs({
    *  file has none. `TabStrip` greys them and keeps them in place. */
   empty = [],
 }: {
-  teamId: string;
+  /** What the URL calls this team — his id, or `me` on the reader's own front
+   *  door. `team.ts` explains why the strip follows the URL's word rather than
+   *  the id it resolved to. */
+  slug: string;
   current: TeamTab;
   empty?: readonly TeamTab[];
 }) {
@@ -58,7 +69,7 @@ export default function TeamTabs({
   return (
     <TabStrip
       label="Team views"
-      tabs={TABS.map((tab) => ({ ...tab, href: `/squad/${teamId}${tab.segment}` }))}
+      tabs={TABS.map((tab) => ({ ...tab, href: `${SQUAD}/${slug}${tab.segment}` }))}
       current={current}
       dim={empty}
       labels="word"

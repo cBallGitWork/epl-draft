@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import FootRow from "./FootRow";
-import { SECTIONS, owns } from "./sections";
+import { owns, sectionsFor } from "./sections";
 
 // Championship Manager's navigation, in the two shapes the game itself has: a
 // rail down the side of a desk screen, and a blue plate row across the foot.
@@ -135,9 +135,7 @@ export default function Rail({
   // holds to 820px and the rail only exists from `lg` (1024) — so at the
   // tightest width where both objects are on screen there is ~200px of slack.
 
-  const sections = SECTIONS.filter(
-    (section) => matchday || !section.onlyDuringGameweek,
-  );
+  const sections = sectionsFor(matchday);
 
   return (
     <>

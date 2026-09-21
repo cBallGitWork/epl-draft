@@ -18,7 +18,7 @@ import { PlayersTab, StatsTab, sharedSides, withheldNotice } from "./tabs";
 import { ScoresTab, TableTab } from "./wider";
 import LeagueShell from "../../Shell";
 import { HEAD_TO_HEAD } from "../../../titles";
-import { getLeagueSquads, teamDisplay } from "../../../squads";
+import { getLeagueSquads, readableOr404, teamDisplay } from "../../../squads";
 import { roundOf } from "../../../round";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
 import { teamBadges } from "../../../standings";
@@ -56,14 +56,12 @@ export default async function HeadToHeadPage({
   // nothing here may take one for the other.
   const asked = Number(gw);
   const round = Number.isInteger(asked) ? await roundOf(asked) : null;
-  const squads = await getLeagueSquads(round);
+  const squads = readableOr404(await getLeagueSquads(round), "/league/matchups");
 
   // A league nobody has drafted genuinely has no such matchup. The other two are
   // states of ours rather than 404s, and the list page already describes both —
   // so the reader goes there rather than this route growing a second copy of
   // panels that would then drift from the originals.
-  if ("undrafted" in squads) notFound();
-  if ("unavailable" in squads) redirect("/league/matchups");
 
   const period = squads.roundPeriod;
   if (squads.info === null || period === null) redirect("/league/matchups");

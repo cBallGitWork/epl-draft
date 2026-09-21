@@ -12,6 +12,7 @@
 // the same reason — see `prem/routes.ts`.
 
 import { CLUB, MATCH } from "../../prem/routes";
+import { MY_TEAM } from "../../squad/routes";
 
 /** The paper's territory: the front page, and the pages behind it.
  *
@@ -55,7 +56,16 @@ const PAPER_ROUTES = ["/", "/paper"];
  *
  *  `/squad` itself still exists and still works — the index is a real page and
  *  the sign-in lives on it. It is simply not a destination the rail offers,
- *  which is the difference between a route and a section. */
+ *  which is the difference between a route and a section.
+ *
+ *  **My Team is, and it is the other half of that ruling rather than a reversal
+ *  of it** (Craig, 21 Sep 2026: "MY TEAM section"). Ten squads reached through
+ *  the competition is what was redundant; YOUR one is not one of the ten, and
+ *  the reference is explicit about it — CM's rail runs `Continue Game · <the
+ *  manager's own name> · Competitions · Nations & Clubs · Find`, so the thing
+ *  you manage sits second, above the competitions, and everybody else's club is
+ *  reached through them. Ours sat nowhere: an app that knows whose team you are
+ *  made you find yourself in a table of ten to get to it. */
 export interface Section {
   href: string;
   label: string;
@@ -73,9 +83,14 @@ export interface Section {
    *
    *  `More` is the way out of that, and it is Craig's (5 Sep 2026: *"if we tap a
    *  section, it could bring up more options"*). The bar keeps its six plates
-   *  for ever — five sections and a door — and every section after the fifth
-   *  lands behind that door instead of costing the bar a rename. The ceiling
-   *  stops being a limit on how many sections the app may have.
+   *  for ever — five sections and a door — and the sections past the fifth land
+   *  behind that door instead of costing the bar a rename. The ceiling stops
+   *  being a limit on how many sections the app may have.
+   *
+   *  **Which five is not fixed for the week**, since 21 Sep 2026: this flag is
+   *  the standing answer and `overflowDuringGameweek` below is the one that
+   *  changes with the round, so a section's place on the bar is read from
+   *  `sectionsFor()` rather than from its position in the table.
    *
    *  **The desk rail does not use it.** It runs down the side of a 1440 screen
    *  with room for a dozen entries, and a disclosure on a surface where
@@ -84,10 +99,38 @@ export interface Section {
    *  the same relationship they already have, the rail being outlined navy and
    *  the foot row a filled strip. */
   overflow?: boolean;
+  /** **Behind `More` only while football is on**, because the plate it would
+   *  take is Live's (Craig, 21 Sep 2026: *"my team behind more during
+   *  gameweek"*).
+   *
+   *  The pair with `onlyDuringGameweek` is the whole rule: Live appears when
+   *  there is football, and this stands back when it does. It is what the
+   *  measurement leaves room for — at 320 six plates leave a label 49.3px, and a
+   *  SEVENTH leaves 45, which clips `Gazetta` at 44 within a pixel. So the
+   *  bar keeps its six for ever, and the section that yields is the one whose
+   *  reason for being open is weakest on a Saturday: a lineup you can no longer
+   *  change, while the score of the tie it is playing runs on the plate beside
+   *  it. */
+  overflowDuringGameweek?: boolean;
 }
 
 export const SECTIONS: Section[] = [
   { href: "/", label: "Gazetta", routes: PAPER_ROUTES },
+  // **One route and not a prefix**, which is what keeps the plate honest: it
+  // owns `/squad/me`, so it lights across all five of the reader's own tabs and
+  // stays dark on a rival's screens. `squad/routes.ts` records why the front
+  // door is a URL rather than a redirect to an id.
+  // **`Team` and not `My Team`, and it is the ceiling's answer rather than a
+  // preference.** At 320 a plate is 53.3px and keeps 4px around its label, so a
+  // label has 49.3 — and `My Team` renders at 51. It shipped as that for one
+  // afternoon and the screenshot read `My Te…`; `navfit` had called it a fit,
+  // because its clipped test carried a `+1` tolerance that was exactly one pixel
+  // too generous. The instrument is fixed and this is the word that fits.
+  //
+  // The SECTION is still My Team everywhere it is written about. A plate is not
+  // the place a name is stated in full — `Prem` is `FA Barclays Premiership` on
+  // the title bar two lines below it, for the same reason.
+  { href: MY_TEAM, label: "Team", routes: [MY_TEAM], overflowDuringGameweek: true },
   { href: "/league", label: "League", routes: ["/league"] },
   // **"Prem", and the bar says the rest.** The rail is 64px below `lg` and
   // "Gazetta" already measures 45px of it at 9px bold uppercase, so
@@ -127,6 +170,19 @@ export const SECTIONS: Section[] = [
   { href: "/fpl", label: "FPL", routes: ["/fpl"], overflow: true },
 ];
 
+/** The sections this round has, and which of them are on the bar.
+ *
+ *  Both answers turn on the same fact and are therefore one function: whether
+ *  football is on decides that Live exists at all, and that My Team gives up its
+ *  plate to it. `Rail` used to hold the first half inline — it is a client
+ *  component, so the rule was untestable there, and it is the rule the bar's
+ *  measured ceiling rests on. */
+export function sectionsFor(matchday: boolean): Section[] {
+  return SECTIONS.filter((section) => matchday || !section.onlyDuringGameweek).map((section) =>
+    matchday && section.overflowDuringGameweek ? { ...section, overflow: true } : section,
+  );
+}
+
 /** The plates a phone's foot row draws, in order, before `More` is added. */
 export function barSections(sections: readonly Section[]): Section[] {
   return sections.filter((section) => !section.overflow);
@@ -138,10 +194,16 @@ export function overflowSections(sections: readonly Section[]): Section[] {
   return sections.filter((section) => section.overflow);
 }
 
-// **The pool is not a section either, and it is the second entry to leave for
-// the squads' reason.** `navfit` measures six plates as the bar's ceiling — a
-// seventh is 45px against a 53px label at 320 — so News arriving meant something
-// going, and the pool is the one with somewhere else to be.
+// **The pool is not a section ON THE BAR, and it is the second entry to leave
+// for the squads' reason.** It is a section in this table and has been since
+// 6 Sep 2026; what it gave up was a plate. `navfit` measures six plates as the
+// bar's ceiling — at 320 a plate is 53.3px and leaves 49 for its label, and a
+// seventh would leave 45 — so News arriving meant something going, and the pool
+// is the one with somewhere else to be.
+//
+// The figures here read 45 against 53 until 21 Sep 2026, which had the plate's
+// width standing in for the label's room and made the ceiling look 4px roomier
+// than it is.
 //
 // Championship Manager's rail is "where you can go from anywhere", and you reach
 // a thing through the competition it belongs to. `/players` is the PREMIER

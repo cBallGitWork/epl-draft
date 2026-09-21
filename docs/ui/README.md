@@ -42,6 +42,7 @@ nothing.**
 | `/prem/match/[id]/players` | [match.md](match.md) | Both team sheets, by FPL's bonus-points index. |
 | `/prem/player/[code]` | [prem.md](prem.md) | One footballer. A stub. **Not** the fantasy pool's player page. |
 | `/squad` | [squads.md](squads.md) | Yours, then everyone else's. |
+| `/squad/me` | [squad.md](squad.md) | **The front door.** The My Team section, which is the reader's own team under a URL rather than an id. |
 | `/squad/[teamId]` | [squad.md](squad.md) | **One squad: the list and the pitch. The reference page for the new look.** |
 | `/squad/[teamId]/transfers` | [squad.md](squad.md) | His business, in Championship Manager's ledger. |
 | `/squad/[teamId]/next` | [squad.md](squad.md) | Who he plays, both sides on their own colours. |

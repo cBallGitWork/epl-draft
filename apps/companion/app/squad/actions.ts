@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { SEASON_IN_SECONDS, TEAM_COOKIE, WRONG_CODE_DELAY_MS } from "../config";
 import { sign, teamForCode } from "../session";
+import { SQUAD } from "./routes";
 
 // Signing in and out. The only two writes in the app, and neither of them
 // touches Fantrax.
@@ -34,10 +35,10 @@ export async function claimTeam(_previous: string | null, form: FormData): Promi
     maxAge: SEASON_IN_SECONDS,
   });
 
-  redirect("/squad");
+  redirect(SQUAD);
 }
 
 export async function forgetTeam(): Promise<void> {
   (await cookies()).delete(TEAM_COOKIE);
-  redirect("/squad");
+  redirect(SQUAD);
 }

@@ -13,6 +13,7 @@ import { speaksForNow } from "../../football";
 import LeagueCrest from "../shell/LeagueCrest";
 import MatchList from "./MatchList";
 import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
+import { SQUAD } from "../../squad/routes";
 
 // One round of football. Shared by /matchday, while there is football on, and
 // the /gw/[gameweek] route, so both stay identical rather than drifting.
@@ -86,7 +87,7 @@ export default function GameweekView({
         <GameweekLink gameweek={next} label="Next" align="end" />
       </nav>
 
-      <ButtonLink href="/squad">Squads</ButtonLink>
+      <ButtonLink href={SQUAD}>Squads</ButtonLink>
 
       {/* Honesty about provenance, per PRODUCT.md principle 4. Saying the stats
           are missing matters more than saying when: a scoreline with no scorers
