@@ -142,6 +142,21 @@ team in this league"*. A league with no teams has no members, so this is the
 empty state and not a wrong id. **It must be re-probed after the draft**, because
 until then nothing here is known to be true of the league we actually serve.
 
+### Three cookies, and Cloudflare is not one of them
+
+The header Craig pasted carried thirteen cookies including `cf_clearance` and
+`__cf_bm`. Stripped to **`uig`, `ui` and `FX_RM`**, `getPendingTransactions` and
+`getLeagueSettings` both still answer OK. That is the question that decides
+whether any of this can be *deployed*: Cloudflare's clearance is bound to an IP
+and a user-agent and would never survive the trip to Vercel, and the auth does
+not need it.
+
+So the deployable secret is three cookies, not a browser session — and `FX_RM`
+reads like a remember-me token, which is the one of the three most likely to
+outlive a week. **How long it lasts is unprobed** and is the next thing to know,
+because a secret that dies every Sunday is an operational problem and not an
+architecture.
+
 ### The league home is a CM league homepage already
 
 `allViewPanes` — thirteen, in the league's own order, `empty` telling you which
