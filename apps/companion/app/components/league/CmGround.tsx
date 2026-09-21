@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 // markings and numbered discs on it — no perspective and no photographs. What
 // this replaced was FPL's: a trapezoid seen from behind the goal with cut-out
 // stickers standing on it, which is a good drawing of a different game. The
-// trial won: five of the six pitches are drawn here and `PitchFrame`'s trapezoid
+// trial won: every pitch in the app is drawn here and the trapezoid it beat
 // keeps only the lineup planner.
 //
 // This is the ground half. The markers are `PitchMarker`, and they are the
@@ -24,7 +24,7 @@ import type { ReactNode } from "react";
 // pretending to be a stand.
 //
 // Markings are strokes on a viewBox that stretches, and every one is
-// `non-scaling-stroke` for the reason `PitchTurf` gives: the number of rows is
+// `non-scaling-stroke`, because the number of rows is
 // whatever the commissioner defined, so a tall pitch would otherwise draw
 // hairlines across it and cables down it.
 

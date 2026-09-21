@@ -6,12 +6,12 @@ import PitchRows from "../components/league/PitchRows";
 // Your FPL XI on the grass — the same grass as everywhere else.
 //
 // **It was on the wrong ground and it had its own cell** (Craig, 5 Sep 2026:
-// "using the wrong pitch, we use a different pitch elsewhere"). `PitchRows`
-// draws two: `CmGround`, the flat 68x105m diagram every other pitch in the app
-// asks for with `flat`, and `PitchFrame`, the photographed trapezoid with
-// hoardings and a goal. This file passed neither flag, so it fell through to the
-// trapezoid — the one ground nothing else uses — and drew a `Sticker` of its own
-// beside it.
+// "using the wrong pitch, we use a different pitch elsewhere"). `PitchRows` drew
+// two grounds then: `CmGround`, the flat 68x105m diagram, and a photographed
+// trapezoid with hoardings and a goal. This file passed neither flag, so it fell
+// through to the trapezoid and drew a `Sticker` of its own beside it. The same
+// complaint reached the last trapezoid on 21 Sep 2026 and that ground is gone;
+// `CmGround` is the only one, and there is no flag left to forget.
 //
 // The sticker's own docblock justified the copy on the grounds that `PitchPlayer`
 // "takes a `RosteredPlayer`, which is a Fantrax roster slot joined to a
@@ -61,7 +61,7 @@ export default function FplPitch({
     // A wrapper rather than a fourth flag on `PitchRows`: one caller needs this,
     // and a shared mechanism for one caller is what CODE_RULES §1 forbids.
     <div className="pitch-fpl mx-auto w-full max-w-[calc((100svh-var(--pitch-page))*var(--pitch-ratio))]">
-      <PitchRows rows={rows} keyOf={(pick: FplPick) => String(pick.code)} flat inColumn>
+      <PitchRows rows={rows} keyOf={(pick: FplPick) => String(pick.code)} inColumn>
         {(pick) => {
           const player = players.get(pick.code) ?? null;
           return (
