@@ -161,7 +161,6 @@ async function main(): Promise<void> {
             clubs: byCode,
             teams: facts.teams,
             players: snapshot.players,
-            now,
           }),
   };
 

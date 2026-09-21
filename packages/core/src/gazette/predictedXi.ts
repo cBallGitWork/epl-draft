@@ -28,11 +28,15 @@ export function predictedLineups(
   man: (code: number) => StoryLineupMan | null,
 ): StoryLineup[] {
   if (xi === null) return [];
-  return ties.flatMap((tie) => {
-    const home = side(tie.home, xi, man);
-    const away = side(tie.away, xi, man);
-    return home === null || away === null ? [] : [{ home, away, kickoff: tie.kickoff }];
-  });
+  return ties
+    .flatMap((tie) => {
+      const home = side(tie.home, xi, man);
+      const away = side(tie.away, xi, man);
+      return home === null || away === null ? [] : [{ home, away, kickoff: tie.kickoff }];
+    })
+    // By HOME club, alphabetically (Craig, 21 Sep 2026). On the printed name and
+    // not FPL's: Spurs file under T, Forest under N.
+    .sort((a, b) => a.home.club.localeCompare(b.home.club));
 }
 
 /** The source's own order is the line-up — keeper, then the shape read out —

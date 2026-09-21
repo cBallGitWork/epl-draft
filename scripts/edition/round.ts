@@ -10,9 +10,8 @@ export interface RoundTie {
   kickoff: string;
 }
 
-/** The round's ties, earliest kickoff first — the order a paper prints a
- *  fixture list in. A match whose clubs or kickoff FPL has not published is
- *  dropped; it cannot be printed either way. */
+/** The round's ties, in FPL's own order. A match whose clubs or kickoff FPL has
+ *  not published is dropped; it cannot be printed either way. */
 export async function roundTies(
   gameweek: number,
   clubs: ReadonlyMap<number, Club>,
@@ -20,14 +19,12 @@ export async function roundTies(
   // `team_h`/`team_a` are FPL's per-season ids, which is what `Club.id` carries.
   const byId = new Map([...clubs.values()].map((club) => [club.id, club]));
   const fixtures = await fetchFixtures(gameweek).catch(() => []);
-  return fixtures
-    .flatMap((fixture) => {
-      const home = byId.get(fixture.team_h);
-      const away = byId.get(fixture.team_a);
-      const kickoff = fixture.kickoff_time;
-      return home === undefined || away === undefined || kickoff === null
-        ? []
-        : [{ home, away, kickoff }];
-    })
-    .sort((a, b) => a.kickoff.localeCompare(b.kickoff));
+  return fixtures.flatMap((fixture) => {
+    const home = byId.get(fixture.team_h);
+    const away = byId.get(fixture.team_a);
+    const kickoff = fixture.kickoff_time;
+    return home === undefined || away === undefined || kickoff === null
+      ? []
+      : [{ home, away, kickoff }];
+  });
 }

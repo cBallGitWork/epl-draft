@@ -350,9 +350,9 @@ Two things deliberately left, so they are not re-litigated as oversights:
   player and a per-line COUNT per club, and nothing joins a starter to the line
   he is predicted in without guessing. His own position is true; a guessed one
   would not be.
-- **The clubs are not ordered by anything of ours.** They are in kickoff order,
-  which is a fixture list's order and answers §*Order the clubs by something*
-  below for this column, though not for the Team Sheet.
+- **The ties are alphabetical by HOME club** (Craig, 21 Sep 2026), which answers
+  §*Order the clubs by something* below for this column, though not for the Team
+  Sheet. Each tie still carries its own kickoff.
 
 ### The Team Sheet, after its first review — 18 Sep 2026
 

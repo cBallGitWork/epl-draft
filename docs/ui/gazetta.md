@@ -453,11 +453,15 @@ The argument is the one that deleted the eleven's captions on 3 Sep. Every word
 of this column is a name, a position or a count, and a writer handed two hundred
 and twenty footballers can only mis-transcribe them.
 
-**`Lineups` prints a tie at a time**, in kickoff order, both elevens under one
-ruled section. Crest, club, formation, then the eleven in the source's own
-order — keeper first, the shape read out after him, never regrouped. Stacked on
-a phone with a `v` between the two; side by side once the grid pairs them, where
-they read as a fixture without being told.
+**`Lineups` prints a tie at a time**, alphabetically by HOME club, both elevens
+under one ruled section with the kickoff over them. Crest, club, formation, then
+the eleven in the source's own order — keeper first, the shape read out after
+him, never regrouped.
+
+**Side by side at every width, including a phone** (Craig, 21 Sep 2026). They
+stacked below `sm` for one afternoon, and stacked they read as a list of twenty
+clubs rather than ten matches. The position gutter and the type step down at
+phone width instead, which is what buys the second column.
 
 **The position is the FOOTBALLER's, and that is the whole point of the layer
 split.** `RCB`, `DM`, `AM`, off the squads export, and a dash where that export

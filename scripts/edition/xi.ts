@@ -3,7 +3,6 @@ import { join } from "node:path";
 import {
   isResolved,
   predictedLineups,
-  predictionAge,
   squadIntel,
   type Club,
   type IntelSquads,
@@ -36,15 +35,13 @@ export async function xiColumn(input: {
   clubs: ReadonlyMap<number, Club>;
   teams: readonly RosteredTeam[];
   players: readonly { code: number; name: string; fullName: string }[];
-  now: string;
 }): Promise<Record<string, unknown> | null> {
-  const { xi, gameweek, clubs, teams, players, now } = input;
+  const { xi, gameweek, clubs, teams, players } = input;
 
   const ties = await roundTies(gameweek, clubs);
   const lineups = predictedLineups(ties, xi, man(players, teams, xi));
   if (lineups.length === 0) return null;
 
-  const source = xi.source === "ffscout" ? "Fantasy Football Scout" : (xi.source ?? "our source");
   const printed =
     lineups.length === ties.length
       ? `All ${ties.length} of the round's matches`
@@ -53,7 +50,7 @@ export async function xiColumn(input: {
   return {
     headline: `Predicted Line-Ups: Gameweek ${gameweek}`,
     deck: `Every club's expected starting eleven for the round, match by match.`,
-    body: `${printed}, with both sides named. ${source} last looked ${since(predictionAge(xi, new Date(now)))}.`,
+    body: `${printed}, with both sides named.`,
     lineups,
   };
 }
@@ -102,12 +99,3 @@ function readSquads(season: string): IntelSquads | null {
   return JSON.parse(readFileSync(path, "utf8")) as IntelSquads;
 }
 
-/** How long ago the SOURCE looked, in words. */
-function since(hours: number | null): string {
-  if (hours === null) return "at a time it did not record";
-  if (hours < 1) return "within the hour";
-  if (hours === 1) return "an hour ago";
-  if (hours < 24) return `${hours} hours ago`;
-  const days = Math.floor(hours / 24);
-  return days === 1 ? "yesterday" : `${days} days ago`;
-}

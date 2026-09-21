@@ -27,16 +27,10 @@ export default function Lineups({
           <p className="font-sans text-2xs tracking-widest text-muted uppercase">
             {londonDayAndTime(tie.kickoff)}
           </p>
-          {/* Stacked on a phone, side by side once there is room for two
-              elevens. Each side keeps its own name because a stacked pair has
-              nothing else to tell them apart. */}
-          <div className="grid grid-cols-1 gap-x-6 gap-y-4 pt-2 sm:grid-cols-2">
+          {/* Side by side at every width: a match is two teams facing each
+              other, and stacked they read as a list of twenty clubs. */}
+          <div className="grid grid-cols-2 gap-x-3 pt-2 sm:gap-x-6">
             <Side side={tie.home} named={named} mine={mine} />
-            {/* Stacked, the two elevens are a fixture only if something says
-                so. Side by side they read as one already. */}
-            <p className="font-sans text-2xs tracking-widest text-faint uppercase sm:hidden">
-              <span className="pl-9">v</span>
-            </p>
             <Side side={tie.away} named={named} mine={mine} />
           </div>
         </section>
@@ -66,20 +60,20 @@ function Side({
           alt=""
           width={24}
           height={24}
-          className="h-6 w-6 shrink-0 object-contain"
+          className="h-5 w-5 shrink-0 object-contain sm:h-6 sm:w-6"
         />
-        <span className="paper-display min-w-0 truncate text-lg leading-none font-semibold text-ink">
+        <span className="paper-display min-w-0 truncate text-base leading-none font-semibold text-ink sm:text-lg">
           {side.club}
         </span>
-        <span className="numeric shrink-0 text-2xs text-muted">{side.formation}</span>
+        <span className="numeric shrink-0 text-3xs text-muted sm:text-2xs">{side.formation}</span>
       </h3>
       <ol className="flex flex-col pt-1.5">
         {side.men.map((man) => (
-          <li key={man.name} className="flex gap-2 text-base leading-snug">
+          <li key={man.name} className="flex gap-1.5 text-sm leading-snug sm:gap-2 sm:text-base">
             {/* His REAL position, in a gutter of its own so eleven names line
                 up — the whole of what makes a team sheet scannable. A dash
                 where the export had only FPL's fantasy letter to go on. */}
-            <span className="w-9 shrink-0 pt-1 font-sans text-2xs tracking-widest text-faint uppercase">
+            <span className="w-6 shrink-0 pt-0.5 font-sans text-3xs tracking-wide text-faint uppercase sm:w-9 sm:pt-1 sm:text-2xs sm:tracking-widest">
               {man.position ?? "—"}
             </span>
             <p className="min-w-0 flex-1">
