@@ -73,7 +73,7 @@ export const LABEL = `${SMALL_CAPS} text-faint`;
  *    prem/match players     sans   sm             normal
  *    prem/club SquadTable   sans   inherited      bold
  *    players/PlayerTable    sans   inherited      medium
- *    matchday/Wire          CHROME sm / lg:base   bold
+ *    matchday/Vidiprinter   CHROME sm / lg:base   bold
  *    shell/ScoreRow         CHROME sm / lg:base   bold
  *
  *  **The chrome face wins**, because Craig asked for it by name the same day

@@ -37,7 +37,10 @@ export interface WireBreak {
 }
 
 export interface WireSide {
-  short: string;
+  /** The club in full. A break line is one scoreline across the row where an
+   *  event line is two men, so it has the width the three letters were bought
+   *  with (Craig, 21 Sep 2026). */
+  name: string;
   crest: string;
   /** Null is a score the provider did not give, and prints as a dash. */
   score: number | null;
@@ -183,8 +186,8 @@ export function wireLines(
       key: `${brk.kind}:${brk.fixtureCode}`,
       kind: brk.kind,
       sides: [
-        { short: home.shortName, crest: crestUrl(home), score: score.home },
-        { short: away.shortName, crest: crestUrl(away), score: score.away },
+        { name: home.name, crest: crestUrl(home), score: score.home },
+        { name: away.name, crest: crestUrl(away), score: score.away },
       ],
       at: brk.absolute,
     });

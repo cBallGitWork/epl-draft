@@ -1,7 +1,14 @@
 import { type Club, type Fixture, crestUrl } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
 import { londonTime } from "../londonTime";
-import { SMALL_CAPS } from "@/app/desk";
+
+
+/** The state beside the score. **Bigger inside the cell rather than in a tail
+ *  column of its own**, which is what the measurement bought (21 Sep 2026, at
+ *  390): the score cell is 88px and its ink used 34, while the club label had
+ *  27px of room and needed exactly 27 — so a sixth track would have clipped
+ *  `TOT` to pay for a clock that already had the room. */
+const CLOCK = "text-sm font-bold uppercase lg:text-base";
 
 // One Premier League match as a Championship Manager results row.
 //
@@ -48,10 +55,12 @@ export default function FootballRow({
       // and nothing else (DESIGN §3), so it is the one thing on the row that
       // moves and the only thing wearing that red.
       clock={
+        // A step up with the score it sits beside (Craig, 21 Sep 2026): the
+        // minute is the other half of what a live row says.
         live ? (
-          <span className={`${SMALL_CAPS} numeric text-live`}>{fixture.minutes}&prime;</span>
+          <span className={`${CLOCK} numeric text-live`}>{fixture.minutes}&prime;</span>
         ) : fixture.status === "finished" ? (
-          <span className={`${SMALL_CAPS} text-faint`}>FT</span>
+          <span className={`${CLOCK} text-faint`}>FT</span>
         ) : null
       }
       href={`/prem/match/${fixture.id}`}
