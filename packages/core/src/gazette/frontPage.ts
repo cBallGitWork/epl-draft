@@ -71,7 +71,7 @@ export function composePaper(stories: readonly PublishedStory[], now: string): P
     const retiredBy = current.some(
       (other) =>
         other !== story &&
-        (kindRetires(other, story) || subjectRetires(other, story)),
+        (kindRetires(other, story) || subjectRetires(other, story) || editionRetires(other, story)),
     );
     return !retiredBy;
   });
@@ -117,6 +117,23 @@ function expired(story: PublishedStory, now: string): boolean {
   // story is kept until something shows it should go.
   if (Number.isNaN(at) || Number.isNaN(clock)) return false;
   return at < clock;
+}
+
+/** The columns that run ONE EDITION PER ROUND, so last round's is replaced
+ *  rather than stacked beside this round's.
+ *
+ *  **Not every kind.** A tie-report and a news item are about a SUBJECT — five
+ *  ties and two stories from the wire, each its own piece — and `subjectRetires`
+ *  already keeps those honest within a round. These five are editions of one
+ *  standing column, and page 3 printed two Power Rankings, two Points Dodgers
+ *  and two Teams of the Week side by side because nothing said so.
+ *
+ *  The presser is here and still files twice a week: Thursday's and Friday's
+ *  share a round and both live, because this retires across ROUNDS only. */
+const EDITIONS: readonly StoryKind[] = ["eleven", "power-ranking", "dodgers", "wire", "presser"];
+
+function editionRetires(newer: PublishedStory, older: PublishedStory): boolean {
+  return newer.kind === older.kind && EDITIONS.includes(newer.kind) && newer.period > older.period;
 }
 
 function kindRetires(newer: PublishedStory, older: PublishedStory): boolean {

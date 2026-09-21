@@ -2,7 +2,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { FIRM, getFootballSnapshot } from "@epl/core";
-import { manager, quotes, sections, troubles } from "./ingest/presserArticle";
+import { clubKey, manager, quotes, sections, troubles } from "./ingest/presserArticle";
+import { fullClubName } from "@epl/core";
 
 // Thursday's and Friday's press conferences, from Fantasy Football Scout's own
 // team-news article into `data/intel/pressers/26-27.json`.
@@ -45,7 +46,15 @@ async function main(): Promise<void> {
   const said_: unknown[] = [];
   const unmatched: string[] = [];
 
-  const read = sections(html);
+  // Every club the league has, under both the name FPL holds and the one a
+  // paper prints — FFS heads its sections with the long form.
+  const headings = new Map<string, string>();
+  for (const club of snapshot.clubs) {
+    headings.set(clubKey(club.name), club.name);
+    headings.set(clubKey(fullClubName(club.name)), club.name);
+  }
+
+  const read = sections(html, headings);
   for (const heading of read.skipped) unmatched.push(`club heading not in the table: ${heading}`);
   for (const section of read.sections) {
     const club = clubs.get(section.club);
@@ -57,7 +66,8 @@ async function main(): Promise<void> {
     spoke.push({ club: club.code, manager: said, at: `${day}T13:00:00.000Z` });
     // At most three per club: the column prints one and wants a choice, and a
     // whole press conference in the brief is the writer's budget spent on filler.
-    for (const quote of quotes(section.body).slice(0, 3)) said_.push({ club: club.code, ...quote });
+    for (const quote of quotes(section.body).slice(0, 3))
+      said_.push({ club: club.code, ...quote, at: `${day}T13:00:00.000Z` });
 
     // Within this club only, which is what keeps a surname from matching the
     // wrong league. Same constraint `matchPlayers` applies internally.
@@ -84,6 +94,23 @@ async function main(): Promise<void> {
     }
   }
 
+  // **Merged by DAY, never replaced.** Craig, 21 Sep 2026: "pressers are now
+  // split between thrusday and friday". Thursday's article covers the clubs
+  // playing first and Friday's covers the rest, so a week is TWO articles and
+  // the export must hold both — ingesting Friday used to wipe Thursday, and the
+  // column for the day already filed lost the data behind it.
+  const kept = existsSync(OUT)
+    ? (JSON.parse(readFileSync(OUT, "utf8")) as {
+        spoke?: { at?: string }[];
+        quotes?: { at?: string }[];
+        rows?: { said?: string }[];
+      })
+    : {};
+  const otherDay = (at: unknown): boolean => typeof at !== "string" || !at.startsWith(day);
+  const allRows = [...(kept.rows ?? []).filter((r) => otherDay(r.said)), ...rows];
+  const allSpoke = [...(kept.spoke ?? []).filter((r) => otherDay(r.at)), ...spoke];
+  const allQuotes = [...(kept.quotes ?? []).filter((r) => otherDay(r.at)), ...said_];
+
   mkdirSync(join(OUT, ".."), { recursive: true });
   writeFileSync(
     OUT,
@@ -93,19 +120,19 @@ async function main(): Promise<void> {
           season: "26-27",
           gameweek: snapshot.gameweek,
           exportedAt: new Date().toISOString(),
-          rows: rows.length,
+          rows: allRows.length,
           sources: [{ path: join(day, file), mtime: null }],
         },
-        spoke,
-        quotes: said_,
-        rows,
+        spoke: allSpoke,
+        quotes: allQuotes,
+        rows: allRows,
       },
       null,
       2,
     )}\n`,
   );
 
-  console.log(`${rows.length} signals, ${said_.length} quotes across ${spoke.length} clubs → data/intel/pressers/26-27.json`);
+  console.log(`${rows.length} signals, ${said_.length} quotes across ${spoke.length} clubs on ${day} (${allRows.length} in the export → data/intel/pressers/26-27.json)`);
   if (unmatched.length > 0) {
     console.log(`\n${unmatched.length} not matched, and NOT guessed:`);
     for (const miss of unmatched) console.log(`  ${miss}`);

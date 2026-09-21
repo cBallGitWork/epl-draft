@@ -34,6 +34,7 @@ export default function Teaser({
   story,
   clubs,
   pictured = false,
+  here,
 }: {
   story: PublishedStory;
   /** The round's clubs, for the picture. Empty is ordinary and costs the card
@@ -50,6 +51,9 @@ export default function Teaser({
    *  one's picture down too. The inside pages run a single column and pass
    *  nothing, so a teaser there is text, as it was. */
   pictured?: boolean;
+  /** The section page this teaser is standing on, so its dateline does not tell
+   *  a reader to turn to the page he is reading. */
+  here?: string;
 }) {
   const kicker = KICKER[story.kind];
 
@@ -77,8 +81,9 @@ export default function Teaser({
         {story.deck !== "" ? (
           <p className="text-sm italic leading-snug text-muted">{story.deck}</p>
         ) : null}
-        <Dateline story={story} as="span" byline={false} />
+        <Dateline story={story} as="span" byline={false} here={here} />
       </TurnLink>
     </article>
   );
 }
+
