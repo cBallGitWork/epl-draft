@@ -21,6 +21,7 @@ import { HEAD_TO_HEAD } from "../../../titles";
 import { getLeagueSquads, readableOr404, teamDisplay } from "../../../squads";
 import { roundOf } from "../../../round";
 import { liveScores, squadLivePoints } from "../../../scoreboard";
+import { newsFor, readPoolNews } from "../../../poolNews";
 import { teamBadges } from "../../../standings";
 import { myTeamId } from "../../../session";
 
@@ -111,7 +112,12 @@ export default async function HeadToHeadPage({
     );
   }
 
-  const [mine, badges] = await Promise.all([myTeamId(squads.period.teams), teamBadges()]);
+  // One cached read of the whole pool's news, narrowed per sheet below.
+  const [mine, badges, stories] = await Promise.all([
+    myTeamId(squads.period.teams),
+    teamBadges(),
+    readPoolNews(),
+  ]);
   const { scores, refused } = await liveScores(period);
   // What this league calls each scoring category. Its own vocabulary, off its
   // own payload — the two leagues do not share one.
@@ -199,6 +205,13 @@ export default async function HeadToHeadPage({
             bench={detail.bench}
             widest={widest}
             breakdown={priced?.breakdown ?? {}}
+            // This sheet's men only — a story is keyed by player, and would name a withheld eleven.
+            news={newsFor(
+              stories,
+              [...detail.rows.flatMap((line) => line.players), ...detail.bench].map(
+                (player) => player.rostered.slot.fantraxId,
+              ),
+            )}
             mode="pitch"
           />
         ),

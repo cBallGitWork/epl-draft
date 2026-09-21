@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
+import type { BreakdownLine, PlayerStory, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
 import {
   isGoalkeeper,
   isResolved,
@@ -38,6 +38,7 @@ export default function TeamSheet({
   rows,
   bench,
   breakdown,
+  news,
   mode,
   widest: agreed,
   eligibility,
@@ -55,6 +56,9 @@ export default function TeamSheet({
   /** Each player's points broken into the league's own scoring categories,
    *  keyed by Fantrax id. Empty when Fantrax refused the table. */
   breakdown: Record<string, BreakdownLine[]>;
+  /** Fantrax's latest on the men in this sheet, keyed by Fantrax id. Only
+   *  today's, and only for the few it has any — see `poolNews.ts`. */
+  news?: Record<string, PlayerStory>;
   mode: "pitch" | "list";
   /** The pitch stands beside a list rather than alone — see `CmGround`. */
   inColumn?: boolean;
@@ -202,6 +206,7 @@ export default function TeamSheet({
           key={open.rostered.slot.fantraxId}
           player={open}
           breakdown={breakdown[open.rostered.slot.fantraxId] ?? []}
+          story={news?.[open.rostered.slot.fantraxId] ?? null}
           // The live table names the ACTIVE eleven only, so every reserve looks
           // like a man with no football behind him. One set, built from the prop
           // this component already has, covers both the pitch and the list.

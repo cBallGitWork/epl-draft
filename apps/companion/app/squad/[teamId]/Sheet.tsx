@@ -1,6 +1,6 @@
 "use client";
 
-import type { BreakdownLine, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
+import type { BreakdownLine, PlayerStory, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
 import { useState } from "react";
 import TeamSheet from "../../components/league/TeamSheet";
 import ViewToggle, { type View } from "../../components/league/ViewToggle";
@@ -26,12 +26,15 @@ export default function Sheet({
   rows,
   bench,
   breakdown,
+  news,
   pending,
   eligibility,
 }: {
   rows: SquadDetailLine[];
   bench: SquadPlayerDetail[];
   breakdown: Record<string, BreakdownLine[]>;
+  /** Fantrax's latest on these fifteen, keyed by Fantrax id — today's only. */
+  news?: Record<string, PlayerStory>;
   /** The formation, "1-3-4-3". Taken and not drawn: it arrives on the spread
    *  from `lineupDetail` and the pitch says it better than the string does. */
   shape?: string;
@@ -108,6 +111,7 @@ export default function Sheet({
             rows={rows}
             bench={bench}
             breakdown={breakdown}
+            news={news}
             mode="list"
             eligibility={eligibility}
             bare
@@ -129,6 +133,7 @@ export default function Sheet({
             // four men who are not playing at the same size as the ones who are.
             bench={[]}
             breakdown={breakdown}
+            news={news}
             mode="pitch"
             inColumn
             show="fixture"

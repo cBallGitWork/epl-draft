@@ -81,3 +81,64 @@ function text(value: string | undefined): string | null {
   const stripped = value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
   return stripped === "" ? null : stripped;
 }
+
+// `getPlayerNews?poolType=ALL` → the pool's news, and it is a DIFFERENT object
+// from the history above.
+//
+// **It is a WINDOW, not one story per player.** Probed 21 Sep 2026: 74 stories,
+// 74 distinct players, newest 07:39 that morning and oldest 14:39 the day
+// before — about seventeen hours of the whole pool, newest first, against a pool
+// of some 611 men. So a player with no entry is one nothing was filed about
+// today, never one with no news; `fetchPlayerStories` is the only route to a
+// history.
+//
+// `maxResults` is ignored — 500 answered the same 74 — so there is no page to
+// ask for and the count is simply what there is. Both leagues answered the
+// identical 74 on the same second, so this is pool data wearing a league id:
+// `poolType` is required and refuses the call without it (`MISSING_PARAM`,
+// "Must be 'POOL' or 'ALL' or 'WATCH_LIST'"), and `POOL` and `ALL` returned
+// byte-identical payloads.
+
+/** Only the keys we traverse. Every one optional: scraped payload, `raw.ts`'s
+ *  rule. */
+export interface RawPoolNews {
+  stories?: {
+    /** The player the story is about. `scorerId` is our `fantraxId`. */
+    scorerFantasy?: { scorerId?: string };
+    playerNews?: {
+      id?: string;
+      headlineNoBrief?: string;
+      content?: string;
+      analysis?: string;
+      newsDate?: number;
+    };
+  }[];
+}
+
+/** The latest story about each man, by Fantrax id.
+ *
+ *  A record and not a `Map`, because this crosses a cache boundary and a `Map`
+ *  does not survive serialisation — the same rule `LiveSquadPoints` follows.
+ *
+ *  **First wins, and that is the newest.** The feed arrives newest-first; a
+ *  second story about the same man would be the older one. Nothing in the probe
+ *  had two, so this is the rule rather than a case that has been seen. */
+export function mapPoolNews(raw: RawPoolNews): Record<string, PlayerStory> {
+  const latest: Record<string, PlayerStory> = {};
+  for (const row of raw.stories ?? []) {
+    const fantraxId = row.scorerFantasy?.scorerId;
+    const story = row.playerNews;
+    if (typeof fantraxId !== "string" || fantraxId === "" || story === undefined) continue;
+    if (latest[fantraxId] !== undefined) continue;
+    const content = text(story.content) ?? text(story.headlineNoBrief);
+    if (content === null) continue;
+    latest[fantraxId] = {
+      id: story.id ?? content,
+      headline: text(story.headlineNoBrief) ?? content,
+      content,
+      analysis: text(story.analysis),
+      at: typeof story.newsDate === "number" ? story.newsDate : null,
+    };
+  }
+  return latest;
+}

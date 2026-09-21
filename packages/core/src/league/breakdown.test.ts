@@ -37,28 +37,31 @@ describe("breakdownOf, over a whole recorded team", () => {
     // The keeper: 63 minutes + 28 clean sheets − 11 goals against + 23 saves
     // − 2 bookings + 5 penalty saves + 3 assists = 109.
     expect(breakdown.get("02lz0")).toEqual([
-      { code: "Min", name: "Minutes Played", definition: null, points: 63 },
+      { code: "Min", name: "Minutes Played", definition: null, points: 63, value: null },
       {
         code: "CS",
         name: "Clean Sheets On Field",
         definition: expect.stringContaining("at least 60 minutes"),
         points: 28,
+        value: null,
       },
-      { code: "Sv", name: "Saves", definition: null, points: 23 },
+      { code: "Sv", name: "Saves", definition: null, points: 23, value: null },
       {
         code: "PKS",
         name: "Penalty Kick Saves",
         definition: "Number of penalty kicks saved by the goalkeeper",
         points: 5,
+        value: null,
       },
       {
         code: "A",
         name: "Assists (Official)",
         definition: expect.stringContaining("official assist"),
         points: 3,
+        value: null,
       },
-      { code: "YC", name: "Yellow Cards", definition: null, points: -2 },
-      { code: "GA", name: "Goals Against", definition: expect.any(String), points: -11 },
+      { code: "YC", name: "Yellow Cards", definition: null, points: -2, value: null },
+      { code: "GA", name: "Goals Against", definition: expect.any(String), points: -11, value: null },
     ]);
   });
 
@@ -85,6 +88,16 @@ describe("breakdownOf, over a whole recorded team", () => {
     expect((breakdown.get("05nzu") ?? []).map((line) => line.code)).not.toContain("Sv");
   });
 
+  it("states that it does not know what he DID, rather than inventing a count", () => {
+    // The keeper is on 23 for saves and this view cannot say how many he made:
+    // the FPTS cells ARE the points, so the count is the thing that view spent.
+    // Null and never "23" — a figure repeated out of the points column would
+    // read as a count and be one only where a category pays exactly 1 apiece.
+    const keeper = breakdown.get("02lz0") ?? [];
+    expect(keeper.length).toBeGreaterThan(0);
+    expect(keeper.map((line) => line.value)).toEqual(keeper.map(() => null));
+  });
+
   it("has nothing to say about a player nobody rosters", () => {
     expect(breakdown.get("nobody")).toBeUndefined();
   });
@@ -101,7 +114,7 @@ describe("breakdownOf", () => {
         perGame: null,
         values: [6, 4],
       }),
-    ).toEqual([{ code: "G", name: "Goals", definition: null, points: 6 }]);
+    ).toEqual([{ code: "G", name: "Goals", definition: null, points: 6, value: null }]);
   });
 
   it("falls back on the short code when Fantrax names nothing", () => {
@@ -112,7 +125,7 @@ describe("breakdownOf", () => {
         perGame: null,
         values: [-3],
       }),
-    ).toEqual([{ code: "GAO", name: "GAO", definition: null, points: -3 }]);
+    ).toEqual([{ code: "GAO", name: "GAO", definition: null, points: -3, value: null }]);
   });
 });
 
@@ -127,38 +140,57 @@ describe("liveBreakdown", () => {
     expect(
       liveBreakdown(
         [
-          { category: "5010#6120", points: 2 },
-          { category: "5010#6280", points: -1 },
-          { category: "5010#6090", points: 5 },
+          { category: "5010#6120", points: 2, value: "90" },
+          { category: "5010#6280", points: -1, value: "1" },
+          { category: "5010#6090", points: 5, value: "1" },
         ],
         names,
       ),
     ).toEqual([
-      { code: "G", name: "Goals", definition: null, points: 5 },
-      { code: "Min", name: "Minutes Played", definition: null, points: 2 },
-      { code: "YC", name: "Yellow Cards", definition: null, points: -1 },
+      { code: "G", name: "Goals", definition: null, points: 5, value: "1" },
+      { code: "Min", name: "Minutes Played", definition: null, points: 2, value: "90" },
+      { code: "YC", name: "Yellow Cards", definition: null, points: -1, value: "1" },
     ]);
+  });
+
+  it("carries what he DID, which is the half the season table cannot state", () => {
+    // "Minutes Played +2" is a price with the thing it priced left out. The live
+    // payload carries both side by side, and this is the door they come through.
+    const [line] = liveBreakdown([{ category: "5010#6120", points: 2, value: "90" }], names);
+    expect(line.value).toBe("90");
+  });
+
+  it("keeps the count as the string Fantrax rendered, not a number", () => {
+    // Read back to a person and never computed with — `sv` is the string they
+    // already chose, and `av` is the arithmetic one nothing here wants.
+    const [line] = liveBreakdown([{ category: "5010#6090", points: 5, value: "1" }], names);
+    expect(line.value).toBe("1");
+  });
+
+  it("says nothing where Fantrax priced a category without stating a count", () => {
+    const [line] = liveBreakdown([{ category: "5010#6090", points: 5, value: null }], names);
+    expect(line.value).toBeNull();
   });
 
   it("carries no definition, because the live feed publishes none", () => {
     // Fantrax's prose — "Awarded to a player who played at least 60 minutes…" —
     // is on the stat table's header and not on `getLeagueInfo`. A reader still
     // gets it, on the player's own page. Null rather than an invented sentence.
-    const [line] = liveBreakdown([{ category: "5010#6090", points: 5 }], names);
+    const [line] = liveBreakdown([{ category: "5010#6090", points: 5, value: "1" }], names);
     expect(line.definition).toBeNull();
   });
 
   it("drops a category this league never described, rather than printing its id", () => {
     // The two leagues score different things. An identifier on screen is worse
     // than a line missing from a list that never claimed to be complete.
-    expect(liveBreakdown([{ category: "5010#9999", points: 4 }], names)).toEqual([]);
-    expect(liveBreakdown([{ category: "5010#6090", points: 5 }], {})).toEqual([]);
+    expect(liveBreakdown([{ category: "5010#9999", points: 4, value: "1" }], names)).toEqual([]);
+    expect(liveBreakdown([{ category: "5010#6090", points: 5, value: "1" }], {})).toEqual([]);
   });
 
   it("survives a league info cached before it carried any names", () => {
     // Not hypothetical: this threw on the first render after the field was
     // added, off a cache entry written by the deploy before it.
-    expect(liveBreakdown([{ category: "5010#6090", points: 5 }], undefined)).toEqual([]);
+    expect(liveBreakdown([{ category: "5010#6090", points: 5, value: "1" }], undefined)).toEqual([]);
   });
 });
 
@@ -196,7 +228,8 @@ describe("columnLabel, over the same recorded header", () => {
 });
 
 describe("compareCategories", () => {
-  const line = (code: string, points: number) => ({ code, name: code, definition: null, points });
+  const line = (code: string, points: number) =>
+    ({ code, name: code, definition: null, points, value: null });
 
   it("sums a side's category across every man it priced", () => {
     const rows = compareCategories(
@@ -247,7 +280,8 @@ describe("compareCategories", () => {
 });
 
 describe("bandCategories", () => {
-  const line = (code: string, points: number) => ({ code, name: code, definition: null, points });
+  const line = (code: string, points: number) =>
+    ({ code, name: code, definition: null, points, value: null });
 
   it("names the men behind a category, largest contribution first", () => {
     const bands = bandCategories(
@@ -309,8 +343,8 @@ describe("bandCategories", () => {
   });
 
   it("names a category as the reader's own side spells it, then his opponent's", () => {
-    const mine = { a: [{ code: "G", name: "Goals", definition: null, points: 6 }] };
-    const theirs = { b: [{ code: "G", name: "GOALS", definition: null, points: 6 }] };
+    const mine = { a: [{ code: "G", name: "Goals", definition: null, points: 6, value: "1" }] };
+    const theirs = { b: [{ code: "G", name: "GOALS", definition: null, points: 6, value: "1" }] };
     expect(bandCategories(mine, theirs)[0].name).toBe("Goals");
     expect(bandCategories({}, theirs)[0].name).toBe("GOALS");
   });

@@ -118,6 +118,8 @@ No fluid clamps except inside the masthead.
 | `league/MatchupBoard` | The head-to-head: the scoreline, a five-plate strip, and one of five views. Only `Lineups` belongs to a side; the other four are the join of both squads and are drawn once at both widths. |
 | `league/LineupPlanner` · `league/MoveSheet` | Picking an XI, and everywhere one player can go. |
 | `league/PlayerCard` · `league/LivePlayerCard` | One player, tapped open — settled and live. |
+| `league/Breakdown` | The itemised table on the live card: one row per league scoring category that moved his total, then the total. **Three columns, not two** (Craig, 21 Sep 2026: *"points breakdown needs the value and the points"*) — the label, the count Fantrax states, the points it paid. "Minutes Played +2" is a price with the thing it priced left out. Split out of `LivePlayerCard` when that file crossed CODE_RULES §4's ceiling. |
+| `league/FplRecords` | The football half of the same card, as a native `<details>`. Closed it is the line the card already carried — his minutes and his event chips; open it is the whole FPL record, bps, defensive contribution and the expected family. It is what the breakdown above it CANNOT say: that table holds this league's scoring categories, and nobody is paid for a measurement. |
 | `football/StateBox` | The box beside a name saying why he is not playing. Silent for a fit player: a box reading "fit" on every row makes the one worth seeing harder to find. **It must survive a greyed row** — the whole point of it is to say why the row is grey. |
 | `football/MatchList` · `football/GameweekView` | The round in view, each fixture a native `<details>` that expands into who did what. |
 | `football/PhotoGround` | The darkened match photograph behind the desk. Fixed, `-z-10`. |
@@ -140,6 +142,12 @@ Likewise the sort-href builder: `league/sort.ts` and `prem/sort.ts` are the same
 function and that is TWO, while `players/query.ts` preserves the filter and
 search state through its own `href()` and Team Stats uses different parameter
 names. `SortHead` takes the href as a prop for exactly that reason.
+
+**The chevron in a `<summary>`** — `list-none`,
+`[&::-webkit-details-marker]:hidden`, and an inline SVG taking
+`group-open:rotate-180` — is TWO, counted 21 Sep 2026: `football/MatchList`
+and `league/FplRecords`. Left duplicated under §1, and the count is here so
+the third does not have to re-derive it.
 
 **Rows shrink, they never wrap — and every card is the same size.** A back five
 does not fit five cards at full width on a phone, and wrapping put one defender

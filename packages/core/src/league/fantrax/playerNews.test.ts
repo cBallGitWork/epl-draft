@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapPlayerStories } from "./playerNews";
+import { mapPlayerStories, mapPoolNews } from "./playerNews";
 
 const section = (playerNews: unknown[]) => ({ sectionContent: { NEWS_NOTES: { playerNews } } }) as never;
 
@@ -75,5 +75,91 @@ describe("mapPlayerStories", () => {
     expect(mapPlayerStories({})).toEqual([]);
     expect(mapPlayerStories({ sectionContent: {} })).toEqual([]);
     expect(mapPlayerStories(section([]))).toEqual([]);
+  });
+});
+
+const pool = (stories: unknown[]) => ({ stories }) as never;
+
+describe("mapPoolNews", () => {
+  const story = (scorerId: string, fields: Record<string, unknown>) => ({
+    scorerFantasy: { scorerId },
+    playerNews: fields,
+  });
+
+  const feed = pool([
+    story("05g2o", {
+      id: "179fsi3z",
+      headlineNoBrief: "Isak scored twice in Saturday's 3-1 win over Everton.",
+      content: "Isak scored twice in Saturday's 3-1 win over Everton.",
+      analysis: "He has five in his last four.",
+      newsDate: 1788221819000,
+    }),
+    story("0646f", {
+      id: "j9tiwlos",
+      headlineNoBrief: "Gabriel is a doubt for the weekend with a thigh problem.",
+      content: "Gabriel is a doubt for the weekend with a thigh problem.",
+      newsDate: 1788200000000,
+    }),
+  ]);
+
+  it("files each story under the man it is about", () => {
+    // `scorerId` is our `fantraxId`, which is what lets a roster join against it.
+    expect(Object.keys(mapPoolNews(feed)).sort()).toEqual(["05g2o", "0646f"]);
+    expect(mapPoolNews(feed)["05g2o"].content).toContain("scored twice");
+  });
+
+  it("carries the analysis, and states its absence rather than emptying it", () => {
+    expect(mapPoolNews(feed)["05g2o"].analysis).toBe("He has five in his last four.");
+    expect(mapPoolNews(feed)["0646f"].analysis).toBeNull();
+  });
+
+  it("keeps the FIRST story about a man, which is the newest", () => {
+    // The feed arrives newest-first, so a second story about the same man is the
+    // older one. Last-wins would quietly age every player who had two.
+    const twice = pool([
+      story("05g2o", { id: "today", content: "Back in training.", newsDate: 2 }),
+      story("05g2o", { id: "yesterday", content: "Limped off.", newsDate: 1 }),
+    ]);
+    expect(mapPoolNews(twice)["05g2o"].id).toBe("today");
+  });
+
+  it("drops a story it cannot put a name to", () => {
+    // Nothing can join it, and a story about nobody on a player's card is worse
+    // than the card carrying no story.
+    expect(mapPoolNews(pool([{ playerNews: { content: "Somebody is injured." } }]))).toEqual({});
+    expect(mapPoolNews(pool([story("", { content: "Somebody is injured." })]))).toEqual({});
+  });
+
+  it("drops a row with no story on it", () => {
+    expect(mapPoolNews(pool([{ scorerFantasy: { scorerId: "05g2o" } }]))).toEqual({});
+  });
+
+  it("drops a story with no words in it", () => {
+    expect(mapPoolNews(pool([story("05g2o", { id: "x" })]))).toEqual({});
+    expect(mapPoolNews(pool([story("05g2o", { id: "x", content: "   " })]))).toEqual({});
+  });
+
+  it("falls back to the headline when there is no body", () => {
+    const only = mapPoolNews(pool([story("05g2o", { headlineNoBrief: "Out for a month" })]));
+    expect(only["05g2o"].content).toBe("Out for a month");
+    expect(only["05g2o"].headline).toBe("Out for a month");
+  });
+
+  it("says it does not know when the story was filed", () => {
+    // No date is not "just now". Nothing may print this one as today's news.
+    const undated = mapPoolNews(pool([story("05g2o", { id: "x", content: "Fit again." })]));
+    expect(undated["05g2o"].at).toBeNull();
+    expect(mapPoolNews(feed)["05g2o"].at).toBe(1788221819000);
+  });
+
+  it("strips markup Fantrax puts inside its own strings", () => {
+    const marked = mapPoolNews(pool([story("05g2o", { content: "He <b>scored</b><br/>twice." })]));
+    expect(marked["05g2o"].content).toBe("He scored twice.");
+  });
+
+  it("survives a payload with no stories in it", () => {
+    // A quiet seventeen hours, which is all this window ever covers.
+    expect(mapPoolNews({})).toEqual({});
+    expect(mapPoolNews(pool([]))).toEqual({});
   });
 });

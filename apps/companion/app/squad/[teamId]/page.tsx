@@ -17,6 +17,7 @@ import Sheet from "./Sheet";
 import TeamShell from "./Shell";
 import { getLeagueSquads, readableOr404, teamDisplay } from "../../squads";
 import { lastLockedRound, leagueInfo, planningRound, roundOf } from "../../round";
+import { newsFor, readPoolNews } from "../../poolNews";
 import { pendingByTeam, squadLivePoints } from "../../scoreboard";
 import { squadSeason } from "../../teamStats";
 import { myTeamId } from "../../session";
@@ -150,9 +151,16 @@ export default async function TeamPage({
     display.show === "lineup" && squads.roundPeriod !== null && squads.info !== null
       ? { period: squads.roundPeriod, categories: squads.info.scoringCategories }
       : null;
-  const live = priced === null
-    ? null
-    : await squadLivePoints(priced.period, teamId, priced.categories);
+  // Whether the sheet below is the branch that renders, asked before the fetch
+  // because the answer decides whether the news read is worth making.
+  const sheet = planning === null && display.show === "lineup";
+  // Concurrent, not serial: this screen is read on a matchday.
+  const [live, stories] = await Promise.all([
+    priced === null ? null : squadLivePoints(priced.period, teamId, priced.categories),
+    sheet ? readPoolNews() : null,
+  ]);
+  // Fifteen men's news, not the pool's 74 — this crosses to the browser.
+  const news = stories === null ? undefined : newsFor(stories, [...squadIds]);
   // Tied to the branch that LABELS it a season total, not to the absence of the
   // live one. `priced` also needs `squads.info`, so with `getLeagueInfo` refused
   // — a modelled, separately-cached state — an own-team lineup fell through to
@@ -274,6 +282,7 @@ export default async function TeamPage({
         <Sheet
           {...lineupDetail(team, clubs, opposition, points)}
           breakdown={live?.breakdown ?? {}}
+          news={news}
           pending={pending}
           eligibility={eligibility}
         />

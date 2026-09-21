@@ -11,7 +11,7 @@ import type { RawSeasonStats } from "./seasonStats";
 import type { PositionGroup } from "./playerStats";
 import type { RawPlayerProfile } from "./profile";
 import type { RawPoolStats, RawStatTables } from "./stats";
-import type { RawNewsSection } from "./playerNews";
+import type { RawNewsSection, RawPoolNews } from "./playerNews";
 import type { RawTransactionHistory } from "./transactions";
 import type {
   RawDraftResults,
@@ -153,6 +153,21 @@ export function fetchPlayerStories(leagueId: string, playerId: string): Promise<
     playerId,
     tab: "NEWS_NOTES",
   }) as Promise<RawNewsSection>;
+}
+
+/** The pool's last day of news, in one request.
+ *
+ *  **One read for every player on a screen**, which is the whole reason it is
+ *  worth having beside `fetchPlayerStories`: that one is a request per tap and a
+ *  fifteen-man team sheet cannot make fifteen of them. This answers all of them
+ *  at once, at the cost of only ever knowing about today.
+ *
+ *  `poolType` is REQUIRED — the call refuses with `MISSING_PARAM` without it —
+ *  and `POOL` and `ALL` came back byte-identical, so `ALL` is the honest name for
+ *  what it is. The league id is carried because fxpa takes one, not because the
+ *  answer depends on it; both leagues returned the same 74 stories. */
+export function fetchPoolNews(leagueId: string): Promise<RawPoolNews> {
+  return fxpaRead(leagueId, "getPlayerNews", { poolType: "ALL" }) as Promise<RawPoolNews>;
 }
 
 /** The standings page Fantrax draws for its own site: the table and the badges,

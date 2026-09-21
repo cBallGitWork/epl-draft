@@ -178,7 +178,9 @@ describe("mapLivePlayerPoints", () => {
         },
       },
     });
-    expect(squad.players[0].categories).toEqual([{ category: "5010#6090", points: 5 }]);
+    expect(squad.players[0].categories).toEqual([
+      { category: "5010#6090", points: 5, value: "1" },
+    ]);
   });
 
   it("drops categories that contributed nothing, and keys it cannot read", () => {
@@ -193,7 +195,73 @@ describe("mapLivePlayerPoints", () => {
         },
       },
     });
-    expect(squad.players[0].categories).toEqual([{ category: "5010#6120", points: 2 }]);
+    expect(squad.players[0].categories).toEqual([
+      { category: "5010#6120", points: 2, value: "90" },
+    ]);
+  });
+
+  it("carries what he DID beside what it paid him", () => {
+    // Off the recorded payload: 90 minutes for 2, one goal for 4. "Minutes
+    // Played +2" is a price with the thing it priced left out, and the count is
+    // the half a breakdown could not say before.
+    const scorer = first(played).players.find((p) => p.fantraxId === "05g2o");
+    if (scorer === undefined) throw new Error("fixture lost its scorer");
+    expect(scorer.categories).toEqual(
+      expect.arrayContaining([
+        { category: "5010#6120", points: 2, value: "90" },
+        { category: "5010#6090", points: 4, value: "1" },
+      ]),
+    );
+  });
+
+  it("reads the rendered string and not the number beside it", () => {
+    // `sv` and `av` are the same fact twice, and this one is read back to a
+    // person — so it stays the string Fantrax already chose to render it with.
+    const squad = first({
+      statsPerTeam: {
+        allTeamsStats: {
+          t: { ACTIVE: { statsMap: { a: { object1: 2, object2: [
+            { scipId: "5010#6120#-1", sv: "90", av: 90, fpts: 2 },
+          ] } } } },
+        },
+      },
+    });
+    expect(squad.players[0].categories[0].value).toBe("90");
+  });
+
+  it("says nothing for a category Fantrax priced without a count", () => {
+    // Null and not "0", and not "": a nought is a count Fantrax stated, and an
+    // empty string is a count that fits in the gap where one should be.
+    const squad = first({
+      statsPerTeam: {
+        allTeamsStats: {
+          t: { ACTIVE: { statsMap: { a: { object1: 3, object2: [
+            { scipId: "5010#6000#-1", av: 1, fpts: 3 },
+          ] } } } },
+        },
+      },
+    });
+    expect(squad.players[0].categories).toEqual([
+      { category: "5010#6000", points: 3, value: null },
+    ]);
+  });
+
+  it("keeps a count of nought that Fantrax did state, where the row still paid", () => {
+    // What drops a row is the points, never the count. A category that pays for
+    // what a man did NOT do — none conceded — earns on a stated nought, and
+    // "+4" with the nought thrown away is the price without the reason.
+    const squad = first({
+      statsPerTeam: {
+        allTeamsStats: {
+          t: { ACTIVE: { statsMap: { a: { object1: 4, object2: [
+            { scipId: "5010#6101#-1", sv: "0", av: 0, fpts: 4 },
+          ] } } } },
+        },
+      },
+    });
+    expect(squad.players[0].categories).toEqual([
+      { category: "5010#6101", points: 4, value: "0" },
+    ]);
   });
 
   it("says nothing for a team Fantrax priced nobody in", () => {
