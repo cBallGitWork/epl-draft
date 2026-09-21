@@ -2,27 +2,15 @@ import Image from "next/image";
 import { crestUrl, type PublishedStory } from "@epl/core";
 import { londonDayAndTime } from "../../londonTime";
 
-// The team-news thread: a club, its crest, a line of context, then one bullet
-// per man and at most one thing the manager actually said.
+// The team-news thread: a club, its crest, a line of context, one bullet per
+// man, and at most one thing the manager actually said.
 //
-// The shape Fantasy Football Scout's own team-news articles use, because it is
-// what a manager reads them for. Prose per club was tried first and read as one
-// sentence six times over — a bullet has nowhere to put filler, and a name in
-// its own field is a name the page can set in bold without guessing.
+// Prose per club read as one sentence six times over; a bullet has nowhere to
+// put filler, and a name in its own field can be set in bold without guessing.
 
-/** The four states, ranked in SCALE and never in hue (DESIGN §4).
- *
- *  **OUT and Suspended took `--color-accent` until 18 Sep 2026, and that was a
- *  slot breach.** §3 gives the accent one meaning — "yours · selected · active"
- *  — and on the paper §4 collapses the whole non-ink budget into that one print
- *  red, so a second meaning hung on it spends the colour twice. Worse here than
- *  most: the owner's name sits one span to the left, so the reader met the same
- *  red meaning "your team" and "this man does not play" within forty pixels.
- *  `--color-bad` is no escape — `.paper` deliberately does not re-point it,
- *  because the sheet has no negative colour on purpose.
- *
- *  The ladder ran backwards too: FIT, the least newsworthy row, was the loudest
- *  ink. What a reader scans for is OUT, so OUT is the loud one. */
+/** The four states, ranked in SCALE and never in hue (DESIGN §4). The accent is
+ *  the sheet's one print red and §3 gives it one meaning — "yours". OUT is the
+ *  loud one because it is what a reader scans for. */
 const STATUS: Record<string, string> = {
   OUT: "font-semibold text-ink",
   Suspended: "font-semibold text-ink",

@@ -1,12 +1,8 @@
 import type { IntelManifest } from "./types";
 
-// What a manager said about availability — as a signal, and now as his own words.
+// What a manager said about availability, as a signal and as his own words.
 //
-// **The no-quote rule was lifted on 18 Sep 2026** (Craig: "you can use the actual
-// quotes in quotation marks too if needed. like the scout does"; on republishing,
-// "its a 10 man league, its not public"). The half that stands is the half that
-// mattered: a quote may be CARRIED from the source, never COMPOSED. Inventing one
-// is still forbidden outright in `voice/house.ts`.
+// A quote may be CARRIED from the source, never COMPOSED (`voice/house.ts`).
 
 /** One thing a manager said about one player. The tag vocabulary is the sister
  *  repo's own, verbatim — a mapping table here would be a second vocabulary to
@@ -41,12 +37,8 @@ export interface PresserQuote {
   at?: string;
 }
 
-/** A club that held a press conference, whether or not it produced a signal.
- *
- *  **A clean bill of health is news** (Craig, 18 Sep 2026: "mention all teams,
- *  no news is still news"). A club missing from the thread reads as an
- *  oversight rather than as calm, and signals alone cannot say "he said
- *  nothing" — so the export carries who spoke as well as what was said. */
+/** A club that held a press conference, whether or not it produced a signal —
+ *  a clean bill of health is news, and signals alone cannot say it. */
 export interface PresserSpoke {
   club: number;
   manager: string | null;
@@ -68,14 +60,8 @@ export interface IntelPressers {
 export const FIRM = 0.65;
 
 /** The signals for one round's pressers, newest first — EVERY man, not only the
- *  ones this league holds.
- *
- *  **It filtered to held players until 18 Sep 2026** and Craig reversed it having
- *  read one: *"can mention other players too, even non owned, its important
- *  data."* He is right and the first rule was too tight. A draft manager decides
- *  who to claim as well as who to start, and a fit-again forward nobody owns is
- *  the most useful line in the column. Ownership is an ANNOTATION now, not a
- *  gate — the caller marks the men somebody holds. */
+ *  ones this league holds. Ownership is an annotation, never a gate: an unowned
+ *  fit-again forward is the most useful line on the page. */
 export function pressers(
   intel: IntelPressers | null,
   /** Only signals said on or after this instant — Thursday's pressers, not last

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { classify, clauses, conferenceTimes } from "./presserArticle";
+import { conferenceTimes } from "./presserArticle";
+import { classify, clauses } from "./presserSignals";
 
 // The parser decides whether a real footballer is reported as out. Every case
 // here is a sentence the 17 Sep 2026 article actually contains, or the shape
