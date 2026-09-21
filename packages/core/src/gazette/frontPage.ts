@@ -85,7 +85,15 @@ export function composePaper(stories: readonly PublishedStory[], now: string): P
       // under a three-day-old report.
       compareDay(b, a) ||
       KIND_WEIGHT[b.kind] - KIND_WEIGHT[a.kind] ||
-      compareFiled(b, a),
+      compareFiled(b, a) ||
+      // **A firing stamps every story it files with ONE instant**, so `filedAt`
+      // ties far more often than it looks — five tie-reports from one run are
+      // all the same second, and so were Thursday's and Friday's Team Sheets.
+      // The tie used to fall through to whatever was commissioned first, which
+      // put Thursday's ahead of Friday's. Slugs carry the date where a story has
+      // one (`gw5-presser-2026-09-18`), so descending is recency; where they do
+      // not it is at least stable, which arbitrary order was not.
+      b.slug.localeCompare(a.slug),
   );
 }
 
