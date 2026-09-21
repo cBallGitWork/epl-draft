@@ -7,7 +7,6 @@ import { getPlayerStats } from "./playerStats";
 import { getLeaguePool } from "./pool";
 import {
   PAGE_ROWS,
-  POOL,
   activeGroup,
   activeSort,
   isPer90,
@@ -16,6 +15,7 @@ import {
   shownRows,
 } from "./query";
 import type { PlayersSearchParams } from "./query";
+import { POOL } from "./routes";
 import { POOL_GROUPS, columnsIn } from "./groups";
 import type { PoolGroupKey } from "./groups";
 import { figureOf } from "./figure";

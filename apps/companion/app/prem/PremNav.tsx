@@ -1,4 +1,5 @@
 import TabStrip from "../components/shell/TabStrip";
+import { POOL } from "../players/routes";
 
 // The Premiership section's own views, and how you get between them.
 //
@@ -40,7 +41,7 @@ const TABS = [
   // tab draws as current when you are on it: `PremSection` has no `players` key
   // and a page there is no longer in this section. That is the difference
   // between a tab and a way OUT, and both strips now carry the same one.
-  { href: "/players", label: "Players", key: "players" },
+  { href: POOL, label: "Players", key: "players" },
 ] as const;
 
 /** Which tab a page IS. `players` is deliberately not one: that entry leaves the

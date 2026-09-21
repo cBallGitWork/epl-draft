@@ -7,6 +7,7 @@ import { type PlayerStatLine, type SeasonTotals } from "@epl/core";
 import { VIEWS, type ViewKey, measuresFor, readingOf } from "./statViews";
 import SortHead from "./SortHead";
 import { positionsFromList } from "../../../positions";
+import { POOL } from "../../../players/routes";
 import {
   BOARD_FIGURE,
   HEAD_CELL,
@@ -174,7 +175,7 @@ export default function StatBoard({
                     endpoint. The profile is where the whole of him is anyway. */}
                 <td className="p-0">
                   <Link
-                    href={`/players/${line.fantraxId}`}
+                    href={`${POOL}/${line.fantraxId}`}
                     // **`min-h-11` on a phone and `.cm-row` above it**, which is
                     // the documented pair — but written as a breakpoint rather
                     // than as one class. `.cm-row` alone left the link 14px and

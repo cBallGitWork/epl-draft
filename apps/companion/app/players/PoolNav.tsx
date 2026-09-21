@@ -1,5 +1,5 @@
 import TabStrip from "../components/shell/TabStrip";
-import { ANALYSIS, POOL } from "./query";
+import { ANALYSIS, POOL } from "./routes";
 
 // Scout's own views.
 //

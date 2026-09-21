@@ -8,9 +8,10 @@
 //
 // No JSX and no `"use client"`: the rail is a client component and the paper's
 // index is a server one, and a plain table crosses that line without either of
-// them having to care. The one module it imports keeps the same discipline, for
+// them having to care. Both modules it imports keep the same discipline, for
 // the same reason — see `prem/routes.ts`.
 
+import { POOL } from "../../players/routes";
 import { CLUB, MATCH } from "../../prem/routes";
 import { MY_TEAM } from "../../squad/routes";
 
@@ -166,7 +167,7 @@ export const SECTIONS: Section[] = [
   // The URL stays `/players`, because a URL is persisted the moment somebody
   // shares it and the route did not change. `titles.ts` carries the same label
   // for the bar; the two must not drift.
-  { href: "/players", label: "Find", routes: ["/players"], overflow: true },
+  { href: POOL, label: "Find", routes: [POOL], overflow: true },
   { href: "/fpl", label: "FPL", routes: ["/fpl"], overflow: true },
 ];
 

@@ -11,7 +11,7 @@ import { StackWaiting } from "../[fantraxId]/Waiting";
 import { playerGrid } from "../[fantraxId]/grid";
 import { subject } from "../[fantraxId]/subject";
 import { getLeaguePool } from "../pool";
-import { ANALYSIS } from "../query";
+import { ANALYSIS } from "../routes";
 import { intelShots, intelTouches } from "../../intel";
 import OutLink from "../../components/shell/OutLink";
 
