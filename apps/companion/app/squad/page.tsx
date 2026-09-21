@@ -7,7 +7,7 @@ import SignIn from "./SignIn";
 import { forgetTeam } from "./actions";
 import { getLeagueSquads } from "../squads";
 import { planningRound } from "../round";
-import { myTeamId } from "../session";
+import { myTeamId, signedIn } from "../session";
 import { yoursBorder } from "../mine";
 import { MY_TEAM, SQUAD } from "./routes";
 import { FANTRAX_SILENT, servedLeague } from "../config";
@@ -74,7 +74,7 @@ export default async function SquadsPage() {
     );
   }
 
-  const mine = await myTeamId(squads.period.teams);
+  const [mine, holder] = await Promise.all([myTeamId(squads.period.teams), signedIn()]);
   const others = squads.period.teams.filter((team) => team.teamId !== mine);
   const yours = squads.period.teams.find((team) => team.teamId === mine);
 
@@ -94,21 +94,33 @@ export default async function SquadsPage() {
     <div className="flex flex-col gap-3">
       <PageHeader title={yours ? "Your squad" : "Squads"} />
 
-      {yours ? (
-        <>
-          <Squad team={yours} opponent={opponentOf(yours.teamId)} lead />
-          <form action={forgetTeam} className="px-3">
-            <button type="submit" className="min-h-11 text-2xs text-faint hover:text-muted">
-              Not you? Sign out
-            </button>
-          </form>
-          <h2 className={`px-3 pt-1 ${LABEL}`}>
-            Around the league
-          </h2>
-        </>
+      {yours ? <Squad team={yours} opponent={opponentOf(yours.teamId)} lead /> : null}
+
+      {/* **The sign-in follows the CODE, not the team on screen**, and it sits
+          here rather than under the heading below: a reader being lent a squad is
+          being asked who he is, and that question belongs beside his squad and
+          not in the middle of the league's.
+
+          It used to be the `else` of the branch above, which was the same
+          question while the only way to have a team was to have signed in for
+          one. The demo team broke that — the form left with the empty state, and
+          `/squad` is the ONE place in the app a manager can enter his code, on
+          the league this app serves by default all the way to 10 Oct.
+
+          Signing OUT is the other half: offered only to a real code, because a
+          button that drops you back onto the team the league lent you does
+          nothing a reader can see. */}
+      {holder ? (
+        <form action={forgetTeam} className="px-3">
+          <button type="submit" className="min-h-11 text-2xs text-faint hover:text-muted">
+            Not you? Sign out
+          </button>
+        </form>
       ) : (
         <SignIn />
       )}
+
+      {yours ? <h2 className={`px-3 pt-1 ${LABEL}`}>Around the league</h2> : null}
 
       <ul className="cm-rows flex flex-col">
         {others.map((team) => (

@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { TEAM_COOKIE } from "./config";
+import { TEAM_COOKIE, servedLeague } from "./config";
 
 // Who is holding the phone.
 //
@@ -98,9 +98,23 @@ export async function myTeamId(teams: readonly { teamId: string }[]): Promise<st
   // It went wrong the moment a `SESSION_SECRET` check returned first: CI has no
   // secret, so six routes built static against the default league while
   // `/league/schedule` — which had no session read — stayed dynamic and correct.
-  // Half the app served one league and half the other, and it looked fine.
-  const raw = (await cookies()).get(TEAM_COOKIE)?.value;
+  const signed = await cookieTeam();
+  if (signed !== null && teams.some((team) => team.teamId === signed)) return signed;
 
+  // A cookie for a team this league does not have falls through to the same
+  // answer as no cookie at all — which on swap day is how a rehearsal session
+  // stops working, and on the dummy league is the demo team.
+  return demoTeam(teams);
+}
+
+/** The verified team in this browser's cookie, or null. No league check.
+ *
+ *  Split out because two questions now need it and they are different questions:
+ *  WHICH team to take the side of, which a demo team can answer, and WHETHER
+ *  anybody signed in, which only a cookie can. Folding the second into the first
+ *  is what hid the sign-in form on the league we serve. */
+async function cookieTeam(): Promise<string | null> {
+  const raw = (await cookies()).get(TEAM_COOKIE)?.value;
   const key = secret();
   if (key === null || !raw) return null;
 
@@ -108,8 +122,24 @@ export async function myTeamId(teams: readonly { teamId: string }[]): Promise<st
   if (at <= 0) return null;
 
   const teamId = raw.slice(0, at);
-  if (!sameSecret(raw.slice(at + 1), await hmac(teamId, key))) return null;
-
-  return teams.some((team) => team.teamId === teamId) ? teamId : null;
+  // `sameSecret` and never `===`: it is the constant-time compare this file
+  // already keeps for the code check, and a rewrite of this function is exactly
+  // where it goes missing.
+  return sameSecret(raw.slice(at + 1), await hmac(teamId, key)) ? teamId : null;
 }
 
+/** Whether this browser holds a real code, as opposed to being lent the demo
+ *  team. `/squad` asks it to decide whether to offer the sign-in. */
+export async function signedIn(): Promise<boolean> {
+  return (await cookieTeam()) !== null;
+}
+
+/** The league's standing demo team, if it has one and it is really in it.
+ *
+ *  Checked against the same roster a signed-in team is checked against, for the
+ *  same reason: an id that names nobody is worse than no id, and the dummy
+ *  league is rebuilt often enough that this one will go stale eventually. */
+function demoTeam(teams: readonly { teamId: string }[]): string | null {
+  const demo = servedLeague()?.demoTeamId;
+  return demo !== undefined && teams.some((team) => team.teamId === demo) ? demo : null;
+}
