@@ -6,7 +6,7 @@ import {
   buildPredictionsBrief,
   buildWireBrief,
 } from "./columns";
-import type { Pick, StoryResult } from "../types";
+import type { Pick } from "../types";
 
 const pick = (over: Partial<Pick> = {}): Pick => ({
   fantraxId: "fx1",
@@ -25,12 +25,6 @@ const pick = (over: Partial<Pick> = {}): Pick => ({
   score: 200,
   ...over,
 });
-
-const result: StoryResult = {
-  winner: { teamId: "t1", name: "test2", points: 45 },
-  loser: { teamId: "t2", name: "test3", points: 31.4 },
-  margin: 13.6,
-};
 
 describe("buildPredictionsBrief", () => {
   const brief = buildPredictionsBrief({
