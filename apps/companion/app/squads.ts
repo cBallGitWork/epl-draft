@@ -21,6 +21,7 @@ import { myTeamId } from "./session";
 import { orRefusal, tell } from "./refusals";
 import type { Unavailable } from "./refusals";
 import mapping from "../../../data/mappings/fantrax.json";
+import { notFound, redirect } from "next/navigation";
 
 // Where the app supplies the bridge. It has to happen here rather than in core:
 // `packages/core/tsconfig.json` includes only `src/**/*.ts`, so core physically
@@ -70,6 +71,31 @@ export interface ReadableSquads {
 }
 
 export type LeagueSquads = ReadableSquads | { undrafted: string } | Unavailable;
+
+/** The squads, or the page each refusal belongs on.
+ *
+ *  **Extracted at four** — both squad tabs, the match tab and the head-to-head
+ *  board each wrote the same two lines. They are not boilerplate: they are a
+ *  decision about what the two refusals MEAN, and `squad/[teamId]/team.ts` had
+ *  carried the argument for it in prose while four files made it by hand.
+ *
+ *  `undrafted` is a genuine 404 — there is no such screen yet. `unavailable` is
+ *  not: Fantrax being unreachable is a state of OURS, and it belongs on an index
+ *  where it is described rather than hidden behind a status code.
+ *
+ *  **`home` is the argument because it is what varies**, and finding that out is
+ *  what stopped this being an extraction of three and a near-miss: the squad
+ *  screens send a refusal to `/squad` and the head-to-head board sends it to
+ *  `/league/matchups`, because a reader who cannot be shown a pairing belongs
+ *  back on the board he came from and not in a list of squads.
+ *
+ *  Both `notFound()` and `redirect()` return `never`, so this narrows the union
+ *  for the caller and no site needs its own guard afterwards. */
+export function readableOr404(squads: LeagueSquads, home: string): ReadableSquads {
+  if ("undrafted" in squads) notFound();
+  if ("unavailable" in squads) redirect(home);
+  return squads;
+}
 
 /** What the cache can hold.
  *

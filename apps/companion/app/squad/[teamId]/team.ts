@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import type { RosteredTeam } from "@epl/core";
-import { getLeagueSquads } from "../../squads";
+import { getLeagueSquads, readableOr404 } from "../../squads";
 import { planningRound } from "../../round";
 import { myTeamId } from "../../session";
 import { OWN, SQUAD } from "../routes";
@@ -14,11 +14,10 @@ import { OWN, SQUAD } from "../routes";
 // would only be a second one. The four content tabs need the name and the id
 // and nothing else.
 //
-// The three outcomes are the squad tab's, deliberately: `undrafted` is a 404
-// because there is no such screen yet, `unavailable` redirects to the index
-// where the outage is described rather than hidden behind a status code, and an
-// unknown id is an ordinary 404. A fourth joins them with `me`: a reader who is
-// not signed in has no own team to show, and the index is where the code goes
+// What the two refusals mean is `readableOr404`'s now — this file argued it in
+// prose while four files made the decision by hand. What is left here are the
+// two answers that are this route's own: an unknown id is an ordinary 404, and
+// `me` for a reader who is not signed in goes to the index, where the code goes
 // in.
 
 export interface TeamIdentity {
@@ -78,9 +77,7 @@ export async function whoseTeam(
 export async function leagueTeams(
   slug: string,
 ): Promise<{ team: TeamIdentity; names: Record<string, string>; squad: RosteredTeam }> {
-  const squads = await getLeagueSquads(await planningRound());
-  if ("undrafted" in squads) notFound();
-  if ("unavailable" in squads) redirect(SQUAD);
+  const squads = readableOr404(await getLeagueSquads(await planningRound()), SQUAD);
 
   const { teamId } = await whoseTeam(slug, squads.period.teams);
 

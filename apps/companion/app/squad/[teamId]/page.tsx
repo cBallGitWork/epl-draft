@@ -1,4 +1,4 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
   FANTRAX_APP_BASE,
   FANTRAX_LEAGUE_ID,
@@ -15,7 +15,7 @@ import SeasonGrid from "../../components/league/SeasonGrid";
 import SquadBoard from "../../components/league/SquadBoard";
 import Sheet from "./Sheet";
 import TeamShell from "./Shell";
-import { getLeagueSquads, teamDisplay } from "../../squads";
+import { getLeagueSquads, readableOr404, teamDisplay } from "../../squads";
 import { lastLockedRound, leagueInfo, planningRound, roundOf } from "../../round";
 import { pendingByTeam, squadLivePoints } from "../../scoreboard";
 import { squadSeason } from "../../teamStats";
@@ -86,12 +86,7 @@ export default async function TeamPage({
     : asksOwn
       ? await planningRound()
       : await lastLockedRound();
-  const squads = await getLeagueSquads(round);
-  // No squads exist and no such team: both are genuinely 404. Fantrax being
-  // unreachable is not — that is a state of ours, and it belongs on /team where
-  // it is described rather than behind a status code.
-  if ("undrafted" in squads) notFound();
-  if ("unavailable" in squads) redirect(SQUAD);
+  const squads = readableOr404(await getLeagueSquads(round), SQUAD);
 
   // Whose squad this is. Most visits to this route are to somebody else's — the
   // matchup card and the squad list both lead here — and the two readings want
