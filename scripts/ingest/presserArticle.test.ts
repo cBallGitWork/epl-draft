@@ -77,3 +77,16 @@ describe("conferenceTimes", () => {
     expect(conferenceTimes("CHELSEA Xabi Alonso was evasive.").size).toBe(0);
   });
 });
+
+describe("classify — a man declared fit", () => {
+  it("reads 'able to play' as available, not as the knock it mentions", () => {
+    // Hurzeler on Jaouen Hadjam. Filed as a doubt because the sentence contains
+    // "knock", when it says the opposite.
+    const said = 'Jaouen Hadjam is "able to play" after taking a knock in midweek.';
+    expect(clauses(said).map(classify).find((t) => t !== null)).toBe("available");
+  });
+
+  it("reads 'is fine' the same way", () => {
+    expect(classify("Luka Vuskovic is also fine after suffering merely from cramp.")).toBe("available");
+  });
+});

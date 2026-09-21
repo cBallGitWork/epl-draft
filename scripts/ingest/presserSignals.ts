@@ -50,7 +50,7 @@ const SAYS: { tag: string; re: RegExp }[] = [
   // "is out OF CONTRACT" is not an absence, and neither is out of favour or
   // out of sorts. The preposition is the whole difference.
   { tag: "ruled_out", re: /\b(ruled out|will miss|set to miss|miss out|miss the|sit out(?! on)|remain out|are out|is out)(?! of (?:contract|favour|favor|form|sorts|the running))\b|\b(sidelined|unavailable|not travel)\b/i },
-  { tag: "available", re: /\b(returns|is back|back in|available again|has trained|in contention|is fit|cleared)\b/i },
+  { tag: "available", re: /\b(returns|is back|back in|available again|has trained|in contention|is fit|fit to play|able to play|(?:is|are)(?: also)? fine|no problem|cleared)\b/i },
   { tag: "injury_scare", re: /\b(doubt|assess|scan|wait|cautious|final decision|late|fitness|injur|knock|struggl|closer|not clarify|didn.t clarify|possible|pulled out)\b/i },
   // Managing a man's load, never the word "minutes" alone — "has played the
   // most minutes of any Chelsea midfielder" is praise, not a rotation warning.

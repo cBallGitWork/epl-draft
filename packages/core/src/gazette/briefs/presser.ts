@@ -15,6 +15,10 @@ export interface PresserLine extends PresserSignal {
   /** The manager in OUR league who owns him, or null when nobody does. Not a
    *  filter: an unowned man with a fitness note is who you claim. */
   ownerName: string | null;
+  /** Whether his availability CHANGED around this conference, from FPL's own
+   *  `newsAdded`. False is the ordinary case and the reason this exists: 86% of
+   *  a day's men are standing condition, not news. */
+  fresh: boolean;
 }
 
 /** What each tag actually means, in the words the column may use. The exporter's
@@ -53,7 +57,9 @@ export function buildPresserBrief(brief: {
   }
 
   const clubs = [...byClub.entries()].map(([club, row]) => {
-    const men = row.lines.map((line) => {
+    // The men whose availability CHANGED get bullets; the rest are a tail line.
+    const standing = row.lines.filter((line) => !line.fresh);
+    const men = row.lines.filter((line) => line.fresh).map((line) => {
       // The owner in brackets after the name, which is how a team-news thread
       // marks one — not a clause. Craig, 18 Sep: "dont need to keep saying
       // owned by (just put manager name in brackets)".
@@ -63,13 +69,22 @@ export function buildPresserBrief(brief: {
       // invitation: João Pedro was filed "calf" on 18 Sep, which is Caicedo's
       // calf three lines above, when the source says Alonso declined to name
       // the injury at all.
+      // A man declared FIT has no complaint to state, so the marker that stops
+      // one being invented does not apply to him — it was printing "no
+      // complaint stated" as the note under every returning player.
       const what =
-        line.condition === undefined || line.condition === ""
-          ? " (COMPLAINT NOT STATED — you may not name one)"
-          : ` (${line.condition})`;
+        line.condition !== undefined && line.condition !== ""
+          ? ` (${line.condition})`
+          : line.tag === "available"
+            ? ""
+            : " (COMPLAINT NOT STATED — you may not name one)";
       return `${line.playerName}${who} — ${MEANS[line.tag] ?? line.tag}${what}, said by ${line.manager}${soft}`;
     });
-    return `- ${club} (code ${row.code}): ${men.join(" · ")}`;
+    const also =
+      standing.length === 0
+        ? ""
+        : `\n  STILL OUT, no change: ${standing.map((line) => line.playerName).join(", ")}`;
+    return `- ${club} (code ${row.code}): ${men.join(" · ") || "nothing new"}${also}`;
   });
 
   const owned = brief.lines.filter((line) => line.ownerName !== null).length;
@@ -104,12 +119,15 @@ export function buildPresserBrief(brief: {
       '    "code": the number given on that line,',
       '    "line": ONE sentence of context — what the manager did or would not do, and nothing that repeats a bullet,',
       '    "men": [ { "name": his name as given, "owner": our manager who holds him or omit it, "status": one of OUT | Doubt | Suspended | FIT, "note": the complaint and what was said, a few words — and where a ban or an absence has a KNOWN LENGTH, that length is the most useful thing you can put here } ],',
+      '    "alsoOut": [ the names under STILL OUT, exactly as given, or omit it ],',
       '    "quote": { "text": his words EXACTLY as given below, "said": who said them } — or omit it when the club has none }',
     ].join("\n"),
+    "A FIT MAN'S NOTE SAYS WHAT HE IS BACK FROM, or nothing at all. Never \"no complaint stated\" — that is a note about the brief, not about a footballer.",
     "NEVER NAME AN INJURY YOU WERE NOT GIVEN. Where a man's line says COMPLAINT NOT STATED, his note says what was said about him and nothing about his body — \"no update given\", \"not cleared\", \"decision Friday\". Borrowing the complaint from the man above him is the worst error this column can make, and it has made it.",
     "NEVER RESTATE THE STATUS IN THE NOTE. \"OUT — not able to play\", \"FIT — back in contention\", \"Suspended — banned, not injured\" are the tag written twice; the second half is deleted by any sub who sees it. The note carries the COMPLAINT and anything the tag cannot say — how long, since when, what happens next. Where there is nothing to add, leave the note empty.",
     "A QUOTE THAT SAYS NOTHING GETS NO SPACE. \"More or less the same as the other night, yeah, nothing has really changed\" is a man declining to give you news, and printing it gives six lines to an absence. Use a quote only where it carries a fact the bullets do not — a timescale, a reason, a decision. Otherwise omit it.",
-    "ONE BULLET PER MAN, and every man the brief gives you gets one. The note is a FEW WORDS, not a sentence: \"calf; closer to a return\", \"hamstring; out until after the break\", \"injury unconfirmed, could still feature\". No verb of attribution in a bullet — the club\'s line carries the manager, the bullets carry the facts.",
+    'THE MEN UNDER "STILL OUT" GET NO BULLET. They are a standing condition a reader already knows — out for weeks, nothing said today — and they go in "alsoOut" as a plain list of names, nothing more. 86% of a day\'s men are these; bulleting them buries the seven that are news.',
+    "ONE BULLET PER MAN who changed, and every one of them gets one. The note is a FEW WORDS, not a sentence: \"calf; closer to a return\", \"hamstring; out until after the break\", \"injury unconfirmed, could still feature\". No verb of attribution in a bullet — the club\'s line carries the manager, the bullets carry the facts.",
     "NAME THE COMPLAINT. Where a man's trouble is given in brackets — calf, ankle, concussion — say it. 'Carrying a knock' when the brief told you it is a hamstring is the column throwing away the one fact a reader came for.",
     "BRITISH ENGLISH, AND PLAIN. Write as a UK football reporter writes. No Americanisms and no invented idiom — \"Newcastle read heaviest\" is not a sentence anybody has said, and it went to print. If a phrase would look odd in a newspaper, it is odd.",
     "DO NOT SAY \"KNOCK\". It appeared eight times in one column. Say what it actually is — a calf, a hamstring, an ankle — and where the brief gives you no complaint, say he is a doubt, is being assessed, or was not cleared. Never the same word twice in a row either.",

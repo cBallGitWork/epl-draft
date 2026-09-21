@@ -53,7 +53,7 @@ describe("normalizeExtras — what the writer may not smuggle through", () => {
 
   it("publishes the contract's fields and nothing else", () => {
     const out = normalizeExtras({ teamNews: [{ ...row, manager: "Alonso", verdict: "start him" }] });
-    expect(Object.keys(out?.teamNews?.[0] ?? {}).sort()).toEqual(["club", "code", "fixture", "line", "men", "quote"]);
+    expect(Object.keys(out?.teamNews?.[0] ?? {}).sort()).toEqual(["alsoOut", "club", "code", "fixture", "line", "men", "quote"]);
   });
 
   it("refuses a club code that is not a real one", () => {

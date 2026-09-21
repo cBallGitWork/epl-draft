@@ -2,8 +2,8 @@
   "manifest": {
     "season": "26-27",
     "gameweek": 5,
-    "exportedAt": "2026-09-21T09:49:25.332Z",
-    "rows": 89,
+    "exportedAt": "2026-09-21T10:10:52.394Z",
+    "rows": 92,
     "sources": [
       {
         "path": "2026-09-18/fpl-gameweek-5-team-news-fridays-live-injury-updates-3.html",
@@ -812,6 +812,14 @@
       "manager": "Roberto De Zerbi"
     },
     {
+      "code": 172780,
+      "club": 6,
+      "tag": "available",
+      "confidence": 0.65,
+      "said": "2026-09-18T11:00:00.000Z",
+      "manager": "Roberto De Zerbi"
+    },
+    {
       "code": 448089,
       "club": 7,
       "tag": "injury_scare",
@@ -946,7 +954,15 @@
     {
       "code": 512123,
       "club": 36,
-      "tag": "injury_scare",
+      "tag": "available",
+      "confidence": 0.65,
+      "said": "2026-09-18T08:00:00.000Z",
+      "manager": "Fabian Hurzeler"
+    },
+    {
+      "code": 610799,
+      "club": 36,
+      "tag": "available",
       "confidence": 0.65,
       "said": "2026-09-18T08:00:00.000Z",
       "manager": "Fabian Hurzeler"
@@ -1097,6 +1113,14 @@
       "club": 40,
       "tag": "injury_scare",
       "condition": "knee",
+      "confidence": 0.65,
+      "said": "2026-09-18T13:00:00.000Z",
+      "manager": ""
+    },
+    {
+      "code": 543968,
+      "club": 40,
+      "tag": "available",
       "confidence": 0.65,
       "said": "2026-09-18T13:00:00.000Z",
       "manager": ""

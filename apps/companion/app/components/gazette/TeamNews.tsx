@@ -85,6 +85,15 @@ export default function TeamNews({ story }: { story: PublishedStory }) {
             </ul>
           )}
 
+          {/* The standing absences, as one line. They are what a reader already
+              knows, so they get a line and not a list. */}
+          {row.alsoOut === undefined ? null : (
+            <p className="pt-2 text-base leading-snug text-muted">
+              <span className="font-sans text-2xs tracking-widest uppercase">Still out</span>{" "}
+              {row.alsoOut.join(", ")}
+            </p>
+          )}
+
           {/* Carried from the source article and never composed. `house.ts`
               still forbids inventing one; this prints what the export holds. */}
           {row.quote === undefined ? null : (
