@@ -1,4 +1,4 @@
-import { londonDay, type Club, type PresserLine, type RosteredTeam } from "@epl/core";
+import { londonDayOf, type Club, type PresserLine, type RosteredTeam } from "@epl/core";
 import {
   presserFixtures,
   presserGameweek,
@@ -95,9 +95,7 @@ export function presserEdition<
 /** Only what was said on one London day. */
 function onDay<T extends { said?: string; at?: string }>(rows: readonly T[], day: string): T[] {
   return rows.filter((row) => {
-    const when = row.said ?? row.at ?? "";
-    const at = new Date(when);
-    return Number.isNaN(at.getTime()) ? false : londonDay(at) === day;
+    return londonDayOf(row.said ?? row.at ?? "") === day;
   });
 }
 
@@ -109,8 +107,8 @@ export function presserDays(
 ): { key: string; slug: string; day: string }[] {
   const days = new Set<string>();
   for (const line of lines) {
-    const at = new Date(line.said);
-    if (!Number.isNaN(at.getTime())) days.add(londonDay(at));
+    const on = londonDayOf(line.said);
+    if (on !== null) days.add(on);
   }
   return [...days]
     .sort()

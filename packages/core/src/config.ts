@@ -429,6 +429,24 @@ export const DESK_GROUND_BLUR: string | null =
  *  today: this is our league's, and the two are separate questions. */
 export const LEAGUE_TIMEZONE = "Europe/London";
 
+/** An ISO instant as milliseconds, or null when it cannot be read.
+ *
+ *  **Six sites were writing this guard by hand**, each slightly differently, and
+ *  the difference mattered: one treated an unreadable instant as inside the
+ *  window and another as outside. Provider data is untrusted (CODE_RULES §5),
+ *  so "cannot be read" is an answer the caller has to see rather than a NaN
+ *  that silently compares false against everything. */
+export function instantOf(iso: string): number | null {
+  const at = Date.parse(iso);
+  return Number.isNaN(at) ? null : at;
+}
+
+/** An ISO instant as the league's own day, or null when it cannot be read. */
+export function londonDayOf(iso: string): string | null {
+  const at = instantOf(iso);
+  return at === null ? null : londonDay(new Date(at));
+}
+
 /** A date as the league's own day, `YYYY-MM-DD`. `en-CA` because it is the
  *  sortable spelling; nothing formatted by it reaches a screen.
  *

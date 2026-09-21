@@ -1,3 +1,4 @@
+import { instantOf } from "@epl/core";
 import { HOUSE, STORY_SHAPE } from "./house";
 
 // Team news: an information thread, not a column.
@@ -6,9 +7,9 @@ import { HOUSE, STORY_SHAPE } from "./house";
  *  The desk's, not the writer's — a reader looking for team news should find
  *  the words, and a weekly thread under a new name reads as a new article. */
 export function presserHeadline(day: string): string {
-  const at = new Date(`${day}T12:00:00Z`);
-  if (Number.isNaN(at.getTime())) return "Team News";
-  const weekday = new Intl.DateTimeFormat("en-GB", { weekday: "long", timeZone: "UTC" }).format(at);
+  const at = instantOf(`${day}T12:00:00Z`);
+  if (at === null) return "Team News";
+  const weekday = new Intl.DateTimeFormat("en-GB", { weekday: "long", timeZone: "UTC" }).format(new Date(at));
   return `${weekday} Pressers`;
 }
 

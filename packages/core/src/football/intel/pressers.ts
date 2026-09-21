@@ -1,3 +1,4 @@
+import { instantOf } from "../../config";
 import type { IntelManifest } from "./types";
 
 // What a manager said about availability, as a signal and as his own words.
@@ -69,13 +70,13 @@ export function pressers(
   since: string,
 ): PresserSignal[] {
   if (intel === null) return [];
-  const floor = Date.parse(since);
+  const floor = instantOf(since);
   return intel.rows
     .filter((row) => {
-      const at = Date.parse(row.said);
-      // An unreadable instant is kept: a signal that cannot say when it was said
+      const at = instantOf(row.said);
+      // An unreadable instant is KEPT: a signal that cannot say when it was said
       // is still a signal, and dropping it would hide a real absence.
-      return Number.isNaN(at) || Number.isNaN(floor) || at >= floor;
+      return at === null || floor === null || at >= floor;
     })
     .sort((a, b) => Date.parse(b.said) - Date.parse(a.said));
 }
