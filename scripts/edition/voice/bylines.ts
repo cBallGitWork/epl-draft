@@ -17,6 +17,7 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   wire: "The Bin",
   news: "The Wire",
   presser: "The Team Sheet",
+  "predicted-xi": "The Line-Ups",
 };
 
 /** The edition a filing goes out under — the paper's names for its own
@@ -24,7 +25,7 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
  *  take the day's paper: Saturday's is the Pink 'Un because the stock has
  *  been rosa since 29 Aug and finally earns it. */
 export function editionName(kind: StoryKind, filedAt: string): string {
-  if (kind === "round-preview" || kind === "predictions") return "The Form Guide";
+  if (kind === "round-preview" || kind === "predictions" || kind === "predicted-xi") return "The Form Guide";
   if (kind === "fixture-preview" || kind === "news" || kind === "presser") return "The Team Sheet";
   if (kind === "wire" || kind === "dodgers") return "The Mercato Wire";
   if (kind === "eleven" || kind === "power-ranking") return "The Monday Club";

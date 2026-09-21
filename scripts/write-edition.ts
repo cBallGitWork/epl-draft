@@ -26,6 +26,7 @@ import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { markLastWeek } from "./edition/marking";
 import { writeSubedited } from "./edition/subedit";
 import { presserDesk } from "./edition/presserWeek";
+import { readXi, xiColumn } from "./edition/xi";
 import { deskState } from "./edition/desk";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
@@ -106,9 +107,21 @@ async function main(): Promise<void> {
   const byCode = new Map([...clubs.values()].map((club) => [club.code, club]));
 
   const sheet = await presserDesk({ facts, snapshot, byCode, now, lock, locked, say });
+  // The elevens predict the round the pressers preview, so one clock serves both.
+  const xi = readXi(sheet.gameweek);
 
   const assignments = newsdesk(
-    deskState({ snapshot, facts, clubs, period: round.period, finished, locked, started, lines: sheet.lines }),
+    deskState({
+      snapshot,
+      facts,
+      clubs,
+      period: round.period,
+      finished,
+      locked,
+      started,
+      lines: sheet.lines,
+      xiGameweek: xi === null ? null : sheet.gameweek,
+    }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,
   );
@@ -137,6 +150,19 @@ async function main(): Promise<void> {
     presserClubs: byCode,
     presserGameweek: sheet.gameweek,
     presserSpoke: sheet.spoke,
+    // Composed here rather than in the loop: it is the one column with a
+    // fixture read of its own, and every desk below it is synchronous.
+    elevens:
+      xi === null || !assignments.some((each) => each.kind === "predicted-xi")
+        ? null
+        : await xiColumn({
+            xi,
+            gameweek: sheet.gameweek,
+            clubs: byCode,
+            teams: facts.teams,
+            players: snapshot.players,
+            now,
+          }),
   };
 
   const filings: Filing[] = [];
@@ -156,6 +182,19 @@ async function main(): Promise<void> {
       say(`No brief for ${assignment.kind} (${assignment.key}); skipped.`);
       continue;
     }
+    // Printed from facts: no writer to sub-edit, no brief to check a name
+    // against, and no model call to fail.
+    if ("printed" in desk) {
+      if (DRY_RUN) {
+        console.log(`\n=== ${assignment.kind} · ${assignment.key} ===\n${JSON.stringify(desk.printed, null, 2)}`);
+        continue;
+      }
+      const filed = file(assignment, desk.printed, ctx, now);
+      filings.push({ story: filed.story, spentKeys: [assignment.key], threads: filed.threads });
+      say(`Filed ${assignment.kind}: "${filed.story.headline}"`);
+      continue;
+    }
+
     // Each story is its own model call from its own brief, so nothing stops two
     // landing on the same joke. This is the page, rebuilt every turn.
     const standing = standingHeadlines(

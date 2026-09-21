@@ -31,6 +31,8 @@ export function deskState(input: {
   locked: boolean;
   started: boolean;
   lines: readonly PresserLine[];
+  /** The round the predicted elevens are for, or null when we do not hold it. */
+  xiGameweek: number | null;
 }): DeskState {
   const { snapshot, facts, clubs } = input;
   return {
@@ -46,6 +48,13 @@ export function deskState(input: {
       clubs,
     ),
     pressers: presserDays(input.lines, snapshot.gameweek),
+    lineups:
+      input.xiGameweek === null
+        ? null
+        : {
+            key: `predicted-xi:gw${input.xiGameweek}`,
+            slug: `gw${input.xiGameweek}-predicted-xi`,
+          },
     dealsInWindow: facts.business.length,
     news: facts.news.map((story) => ({ key: story.item.key, slug: newsSlug(story.item.key) })),
     ties: facts.pairings.map((pairing) => ({
