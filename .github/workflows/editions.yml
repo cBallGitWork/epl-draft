@@ -39,7 +39,13 @@ on:
   schedule:
     # The lock window. Locks land Friday evening or Saturday lunchtime depending
     # on the round's first kickoff, so this covers both without knowing which.
-    - cron: "0,30 17-23 * * 5"
+    #
+    # **Friday opens at 14:00 UTC and not 17:00**, because the Line-Ups column is
+    # written for 16:00 London — an hour after the press conferences — and the
+    # first firing that could see it was 18:00 London in summer. Two hours late,
+    # every week (#33). 14:00 UTC is the start that holds under both offsets:
+    # 15:00 London is 14:00 UTC in summer and 15:00 in winter.
+    - cron: "0,30 14-23 * * 5"
     - cron: "0,30 10-16 * * 6"
     # The match windows: Saturday and Sunday afternoons into the evening, and
     # weekday evenings for the Friday/Monday fixtures — match reports and tie
@@ -58,6 +64,10 @@ on:
     # after the last Wednesday firing.
     - cron: "0,30 17-22 * * 3"
     - cron: "15 6-9 * * 4"
+    # **Thursday afternoon, for the Team Sheet.** The morning sweep above is a
+    # waiver net; a 15:00 column cannot publish on a Thursday at all against it
+    # and waited for Friday evening (#33). Same 14:00 UTC start, same reason.
+    - cron: "0,30 14-17 * * 4"
   workflow_dispatch: {}
 
 # Its own group, deliberately NOT shared with the capture or round-state jobs:
