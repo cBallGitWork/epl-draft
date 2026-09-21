@@ -3418,6 +3418,53 @@ characters are skipped, because "Son" hits "season" on most of the feed.
   38 periods and all 380 fixtures, with `npm run periods` re-checking against live
   FPL. The bridge resolved all 60 drafted players with zero misses.
 
+## 11 Sep 2026 — Team Stats draws the whole group, and the measure becomes a toggle
+
+Craig, on `/league/team-stats?group=discipline`: *"for each section, we can get
+all the columns in one go, but at the top, allow a toggle between fantasy points
+and actual raw values, so all attacking columns on one view"*.
+
+**The board was one category and two measures; it is one measure and a whole
+group.** `rankBy` in core takes the group's categories, the `Map` of lines and
+the one category to order by, and returns a row per team carrying a figure per
+category. The old signature is gone rather than kept beside it — it had one
+caller.
+
+**What made it possible was already there.** The blue foot row had cut twelve
+categories to three or four in a group, so "all the columns" is four at the most
+and not Fantrax's twenty-two; the two measure columns had already proved a row
+carries more than one figure. What did NOT survive is drawing both measures:
+four categories × two numbers is eight columns of alternating meaning, and a
+reader compares a column against the one beside it.
+
+**Two controls deleted, one added.** `Filters.tsx` — the category select — went,
+because every category is now on screen and the thing it chose is the ORDER,
+which the column heads say. The `FPts`/`Total` head pair went with it, up to the
+top of the board as `Measures.tsx`: two grey plates, pressed one ticked, links so
+the server does the work.
+
+**Three things the screenshots settled, in this order.**
+
+- **The sorted column lost its accent.** Tinting one of two columns was legible;
+  one of four is a yellow stripe down the board, and the accent slot means
+  "yours", which the reader's own row is already using it to say. Every figure is
+  ink now, exactly as `/league` sets ten sortable columns.
+- **The arrow came back on.** The old pair was two measures, both always
+  descending, so `SortHead` was called with `arrow={false}`. The heads are
+  categories now and the direction is real: `Total` on Discipline runs low-first,
+  so it heads the board with the side on one yellow card under a `▲`.
+- **`table-fixed`, which was a bug and not a preference.** Measured at 390 with
+  "Wolverhampton Wanderers Reserves" in every row: auto layout sized the name
+  column to the text, took the table to 444px, squeezed the four figure columns
+  to 25–36px and scrolled the board 98px sideways — `truncate` on the name never
+  bit, because nothing constrained the cell. Fixed holds each figure at its
+  declared width and hands the name the remainder: 32 + 122 + 4×48 = 346, no
+  scroll. The figure column is 48px and not 56 because the difference comes
+  straight off the name (90px against 122), and the group that needs a
+  six-character cell is Appearances, which has one column and 258px to spare.
+
+Verified: `sweep` and `tapfit` both ok at 390 and 1440, 12 tests on `rankBy`.
+
 ## 2 Sep 2026 — the squad week, and two refactor passes
 
 **A team became five screens.** `/squad/[teamId]` gained `Transfers · Match ·
