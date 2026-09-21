@@ -44,6 +44,74 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## `getTeamRosterInfo` answers with no cookie, and it carries the deadline — probed 21 Sep 2026
+
+Asked because the My Team section needs four things Craig named and nobody had
+counted which of them Fantrax will give us. All fxpa, all unauthenticated, all
+three leagues.
+
+**How to read an undocumented method list, which is the reusable half.** The
+refusal tells you whether the method exists:
+
+| Refusal | Means |
+|---|---|
+| `ERROR_INVALID_REQUEST` | **no such method** |
+| `WARNING_NOT_LOGGED_IN` | real method, needs a session |
+| `NOT_MEMBER_OF_LEAGUE` | real method, needs to be in the league |
+
+Twenty-four names tried. **Exists and is gated:** `getPendingTransactions`
+(NOT_MEMBER), `getTradeBlock`, `getTeamInfo`, `getLeagueSettings`,
+`getCommissionerHubInfo` (all NOT_LOGGED_IN), `getLeagueHomeInfo` (NOT_MEMBER).
+**Does not exist:** `getPendingClaims`, `getClaimsAndDrops`, `getTrades`,
+`getPendingTrades`, `getTeamTransactions`, `getWaiverClaims`, `getWaiverWire`,
+`getLeagueActivity`, `getActivityFeed`, `getNotifications`, `getLeagueHome`,
+`getFantasyTeamInfo`, `getScoringPeriods`, `getPowerRankings`, `getSchedule`,
+`getPlayoffs`, `getProjections`, `getWatchList`, `getTeamNotes`, and the five
+message names below.
+
+### There is no league message surface, at all
+
+`getLeagueMessages`, `getMessageBoard`, `getLeagueChat`, `getMessageCenter` and
+`getPost` are every one of them `ERROR_INVALID_REQUEST`. So **"message the
+league" cannot be a Fantrax read or a Fantrax write** — it would be ours, and
+this app has no store: the only two server actions in the tree are the sign-in
+cookie and one on `/fpl`. `getTradeBlock` exists but is a list of players offered
+behind a session, not a board anybody posts to.
+
+### `getTeamRosterInfo` — OK with no cookie, 43 KB
+
+dummy ✓ · rehearsal ✓ · real **refused**, and honestly: `WARNING`, *"You cannot
+use this screen until there is at least one team in this league."* It will
+answer from 10 Oct.
+
+Sixteen top-level keys. The four worth building on:
+
+- **`leagueNotices` — 2/2 in both drafted leagues, and one of them is THE
+  DEADLINE.** *"Don't forget to set your lineup before **Sat Oct 10, 7:15 AM
+  EDT**"* and *"rank your auto-subs before the first game of the week starts on
+  **Sat Oct 10, 7:30 AM EDT**"*. CLAUDE.md's rule is that our lineup deadline is
+  a commissioner setting and must never be inferred from FPL's — this is that
+  setting, published, with a timestamp, and nothing in the tree reads it. It
+  arrives as prose with `<b>` in it, so it is a string to display and not yet a
+  datetime to compute with.
+- **`miscData.maxActions` = 1** in both drafted leagues, `null` in real. The
+  league's cap on transactions, which no screen shows.
+- **`periodOppnentTeamIds`** — the opponent, keyed by period. A second source for
+  what `headToHead` already answers.
+- **`tables[].rows[]`** — the roster as Fantrax draws it, per player:
+  `cells[0]` is the fixture WITH kickoff (`"@COV<br/>Mon 3:00PM"`) and an
+  `eventId`; `scorer.icons[].tooltip` is a dated news line (*"Sep 20, 4:17 PM:
+  Hornicek registered three saves and…"*); `disableLineupChange` says who may not
+  be moved; `posIds`/`eligibleStatusIds` are the eligibility. `miscData` also
+  carries `realTeamJerseyMap`, Fantrax's own club jersey PNGs.
+
+**The seven roster views are advertised and I could not switch them.** `tabs`
+names `SIMPLE STATS FPTS OVERVIEW SCHEDULE_PERIOD SCHEDULE_FULL GAMES_PER_POS`
+with a `viewType` each, but neither `view` nor `viewType` in the request changed
+a single column across ten attempts — the same sixteen came back every time.
+Recorded as unfound rather than absent: the parameter exists in their client and
+this probe did not find its name.
+
 ## `getTeamRosters` honours a period, and the answer differs — probed 2 Sep 2026
 
 `fetchTeamRosters(leagueId, period)` echoes the period asked for, verbatim.
