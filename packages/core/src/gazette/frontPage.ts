@@ -1,4 +1,3 @@
-import { LEAGUE_TIMEZONE } from "../config";
 import type { PublishedStory, StoryKind } from "./story";
 import { londonDay } from "../config";
 

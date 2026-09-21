@@ -23,7 +23,7 @@ export interface RawFantraxError {
   message?: string;
 }
 
-interface RawErrorBody {
+export interface RawErrorBody {
   error: RawFantraxError;
 }
 

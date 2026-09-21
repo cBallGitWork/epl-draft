@@ -1,6 +1,5 @@
 import {
   type Club,
-  type FootballPlayer,
   type FootballSnapshot,
   type MatchReportEvent,
   type MatchReportSide,
