@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import DialogFoot from "../../../components/shell/DialogFoot";
+import DialogHead from "../../../components/shell/DialogHead";
 import Modal from "../../../components/shell/Modal";
 import { PLAYER } from "../../routes";
 
@@ -36,6 +37,9 @@ export interface MatchMan {
   shirt: number | null;
   captain: boolean;
   club: string;
+  /** His club's short name, which is what `clubColours` is keyed on. Null for a
+   *  man whose club the join could not settle. */
+  clubShort: string | null;
   /** The league squad holding him, or null for a man nobody drafted. */
   owner: string | null;
   /** Null for a man who never got on, where a nought would be a claim about an
@@ -81,26 +85,23 @@ export default function MatchPlayerCard({
 function Card({ man, onClose }: { man: MatchMan; onClose: () => void }) {
   return (
     <Modal onClose={onClose} width="22rem">
+      <DialogHead title={man.name} club={man.clubShort} />
+
       <div className="flex flex-col gap-3 p-4">
-        <div className="flex items-baseline gap-2">
-          {man.position === null ? null : (
-            <span className="numeric shrink-0 text-sm font-bold text-accent">{man.position}</span>
-          )}
-          <h2 className="min-w-0 flex-1 truncate font-chrome text-xl font-bold">
-            {man.name}
-            {man.captain ? <span className="ml-1.5 text-2xs text-faint">(c)</span> : null}
-          </h2>
+        {/* Everything that used to crowd the name — his position, his shirt —
+            comes off the bar and onto the line under it. A title bar carries the
+            subject and nothing else (`cm9900/25.jpg`). */}
+        <div className="flex items-center gap-2">
           {man.shirt === null ? null : (
             <span className="cm-index numeric flex size-8 shrink-0 items-center justify-center text-sm">
               {man.shirt}
             </span>
           )}
+          <p className="min-w-0 flex-1 truncate text-sm text-muted">
+            {[man.position, man.club, man.owner ?? "undrafted"].filter(Boolean).join(" · ")}
+          </p>
+          {man.captain ? <span className="shrink-0 text-2xs text-faint">(c)</span> : null}
         </div>
-
-        <p className="text-2xs text-faint">
-          {man.club}
-          {man.owner === null ? " · undrafted" : ` · ${man.owner}`}
-        </p>
 
         {/* The figure the board is for, at the size a dialog can give it. */}
         <p className="flex items-baseline gap-2 border-y border-line py-2">
