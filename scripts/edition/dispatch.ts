@@ -14,7 +14,8 @@ import {
   buildPresserBrief,
   normalizePublished,
 } from "@epl/core";
-import { faceOf } from "./faces";
+import { presserEdition } from "./pressers";
+import { faceOf, type FaceContext } from "./faces";
 import { fullClubName } from "@epl/core";
 import {
   fixturePreviewBrief,
@@ -67,7 +68,7 @@ export interface DeskContext {
    *  gameweek 5's fixtures, off an article titled "Gameweek 5 team news". */
   presserGameweek: number;
   /** Clubs that held a conference, so one with no news still gets a row. */
-  presserSpoke: { clubName: string; manager: string | null }[];
+  presserSpoke: { clubName: string; manager: string | null; at: string }[];
 }
 
 /** The one kind still written in the old sectioned edition shape. The report
@@ -77,6 +78,27 @@ export interface DeskContext {
 const ROUND_OF: Partial<Record<Assignment["kind"], EditionKind>> = {
   "round-preview": "preview",
 };
+
+/** One edition of the Team Sheet — the day's conferences, and nothing else.
+ *  Every consumer reads the same narrowing: the brief, the picture and the lead. */
+function edition(ctx: DeskContext, assignment: Assignment) {
+  return presserEdition(assignment.day ?? "", {
+    lines: ctx.presserLines,
+    quotes: ctx.presserQuotes,
+    spoke: ctx.presserSpoke,
+  });
+}
+
+/** What `faceOf` reads. The presser's men are narrowed to the assignment's own
+ *  DAY, or the picture and the lead are chosen from the whole week. */
+function faceCtx(ctx: DeskContext, assignment: Assignment): FaceContext {
+  return {
+    facts: ctx.facts,
+    fixtures: ctx.snapshot.fixtures,
+    presserLines: assignment.kind === "presser" ? edition(ctx, assignment).lines : ctx.presserLines,
+    players: ctx.snapshot.players,
+  };
+}
 
 export function prepare(assignment: Assignment, ctx: DeskContext): { system: string; brief: string } | null {
   const round = ROUND_OF[assignment.kind];
@@ -113,19 +135,8 @@ export function prepare(assignment: Assignment, ctx: DeskContext): { system: str
           : assignment.kind === "presser"
             ? buildPresserBrief({
                 gameweek: ctx.presserGameweek,
-                lines: ctx.presserLines,
-                quotes: ctx.presserQuotes,
-                spoke: ctx.presserSpoke,
-                // **The same man the PICTURE is.** `faceOf` picks him off FPL's
-                // own numbers, and the writer was picking a different lead — so
-                // João Pedro was printed beside a deck about four other men.
-                // The desk decides the lead; the writer writes it.
-                lead: faceOf(assignment, {
-                  facts: ctx.facts,
-                  fixtures: ctx.snapshot.fixtures,
-                  presserLines: ctx.presserLines,
-                  players: ctx.snapshot.players,
-                })?.name ?? null,
+                ...edition(ctx, assignment),
+                lead: faceOf(assignment, faceCtx(ctx, assignment))?.name ?? null,
                 threads: ctx.threads,
               })
           : columnBrief(assignment, {
@@ -196,7 +207,7 @@ export function file(
     assignment.kind === "presser"
       ? {
           ...column,
-          headline: presserHeadline(assignment.key.split(":").pop() ?? ""),
+          headline: presserHeadline(assignment.day ?? ""),
           // The fixture is the DESK's, joined on the club code the writer echoed
           // back. Asking the column for it would be asking a model to recall a
           // fixture list, which is the one thing `strangers()` exists to stop.
@@ -221,19 +232,20 @@ export function file(
     expiresAt:
       assignment.kind === "fixture-preview"
         ? (ctx.snapshot.fixtures.find((each) => each.id === assignment.fixtureId)?.kickoff ?? null)
-        : null,
+        // Team news dies at the first whistle of the round it previewed: past
+        // that it is a record of what was unknown, and the paper is not an
+        // archive. Read off the fixtures already fetched for that round, so a
+        // round FPL has not published yet expires by the cap instead.
+        : assignment.kind === "presser"
+          ? ([...ctx.presserTies.values()].map((tie) => tie.kickoff).sort()[0] ?? null)
+          : null,
     edition: editionName(assignment.kind, filedAt),
     byline: STORY_BYLINE[assignment.kind] ?? "",
     subject: assignment.key,
     // The picture, chosen HERE from the facts and not from the prose. A model
     // that named the man would be a model choosing the photograph, which is the
     // one thing `strangers()` exists to catch it doing.
-    face: faceOf(assignment, {
-      facts: ctx.facts,
-      fixtures: ctx.snapshot.fixtures,
-      presserLines: ctx.presserLines,
-      players: ctx.snapshot.players,
-    }),
+    face: faceOf(assignment, faceCtx(ctx, assignment)),
   });
 }
 

@@ -127,12 +127,20 @@ export function presserLines(
   });
 }
 
+/** The round the EXPORT says it covers, from the article's own title. Null when
+ *  the file is absent or says nothing, which reads as "do not use it". */
+export function presserGameweek(): number | null {
+  const intel = read();
+  const gw = intel?.manifest?.gameweek;
+  return typeof gw === "number" ? gw : null;
+}
+
 /** Every club that held a press conference in the window, so the column can say
  *  "no fresh news" for one rather than omit it. */
 export function presserSpoke(
   since: string,
   clubs: ReadonlyMap<number, Club>,
-): { clubName: string; manager: string | null }[] {
+): { clubName: string; manager: string | null; at: string }[] {
   const intel = read();
   if (intel === null) return [];
   const floor = Date.parse(since);
@@ -140,7 +148,7 @@ export function presserSpoke(
     const at = Date.parse(each.at);
     if (!Number.isNaN(at) && !Number.isNaN(floor) && at < floor) return [];
     const club = clubs.get(each.club);
-    return club === undefined ? [] : [{ clubName: fullClubName(club.name), manager: each.manager }];
+    return club === undefined ? [] : [{ clubName: fullClubName(club.name), manager: each.manager, at: each.at }];
   });
 }
 
@@ -181,9 +189,43 @@ export function presserQuotes(clubs: ReadonlyMap<number, Club>): (PresserQuote &
   });
 }
 
+/** ONE EDITION of the Team Sheet: everything said on one London day.
+ *
+ *  The presser is a single kind with two editions a week, and this is where that
+ *  is expressed once. The window the desk reads is the ROUND's, so without this
+ *  both editions carried the whole week — Friday's column printed all eighteen
+ *  clubs and led on a man whose conference was Thursday. */
+export function presserEdition<
+  L extends { said?: string },
+  Q extends { at?: string },
+  S extends { at?: string },
+>(day: string, all: { lines: readonly L[]; quotes: readonly Q[]; spoke: readonly S[] }): {
+  lines: L[];
+  quotes: Q[];
+  spoke: S[];
+} {
+  return {
+    lines: onDay(all.lines, day),
+    quotes: onDay(all.quotes, day),
+    spoke: onDay(all.spoke, day),
+  };
+}
+
+/** Only what was said on one London day. */
+function onDay<T extends { said?: string; at?: string }>(rows: readonly T[], day: string): T[] {
+  return rows.filter((row) => {
+    const when = row.said ?? row.at ?? "";
+    const at = new Date(when);
+    return Number.isNaN(at.getTime()) ? false : DAY.format(at) === day;
+  });
+}
+
 /** One assignment per press-conference DAY. Craig's week runs pressers Thursday
  *  and Friday, so a single key for the week would suppress the second column. */
-export function presserDays(lines: readonly PresserLine[], gameweek: number): { key: string; slug: string }[] {
+export function presserDays(
+  lines: readonly PresserLine[],
+  gameweek: number,
+): { key: string; slug: string; day: string }[] {
   const days = new Set<string>();
   for (const line of lines) {
     const at = new Date(line.said);
@@ -191,5 +233,5 @@ export function presserDays(lines: readonly PresserLine[], gameweek: number): { 
   }
   return [...days]
     .sort()
-    .map((day) => ({ key: `presser:gw${gameweek}:${day}`, slug: `gw${gameweek}-presser-${day}` }));
+    .map((day) => ({ key: `presser:gw${gameweek}:${day}`, slug: `gw${gameweek}-presser-${day}`, day }));
 }

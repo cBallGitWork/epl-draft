@@ -2,6 +2,459 @@
   "updatedAt": "2026-09-18T15:00:00.000Z",
   "stories": [
     {
+      "slug": "gw5-presser-2026-09-18",
+      "kind": "presser",
+      "leagueId": "w05aib75mtj36y1g",
+      "period": 5,
+      "gameweek": 5,
+      "filedAt": "2026-09-18T15:00:00.000Z",
+      "expiresAt": "2026-09-18T19:00:00Z",
+      "edition": "The Team Sheet",
+      "byline": "The Team Sheet",
+      "headline": "Friday Pressers",
+      "deck": "Jack Hinshelwood out for Brighton with no complaint given, joining a long Seagulls absence list",
+      "body": "Fabian Hurzeler ruled Jack Hinshelwood out, offering no update on the complaint that keeps him sidelined.\n\nNo timescale came with it, so when he returns to contention is anyone's guess.",
+      "subjects": [
+        "presser:gw5:2026-09-18"
+      ],
+      "image": null,
+      "face": {
+        "code": 532529,
+        "name": "Jack Hinshelwood",
+        "clubId": 5,
+        "position": null
+      },
+      "ties": [],
+      "extras": {
+        "teamNews": [
+          {
+            "club": "Aston Villa",
+            "code": 7,
+            "line": "Unai Emery would not commit on Joao Gomes or Pau, and confirmed a raft of absentees around them.",
+            "men": [
+              {
+                "name": "Joao Gomes",
+                "status": "Doubt",
+                "note": "calf"
+              },
+              {
+                "name": "Marco Bizot",
+                "status": "OUT",
+                "note": "back"
+              },
+              {
+                "name": "Pau",
+                "status": "Doubt",
+                "note": "hamstring"
+              },
+              {
+                "name": "Ian Maatsen",
+                "status": "OUT",
+                "note": "ankle"
+              },
+              {
+                "name": "Brian Madjo",
+                "status": "OUT",
+                "note": "no complaint given"
+              },
+              {
+                "name": "Leon Goretzka",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Amadou Onana",
+                "status": "OUT",
+                "note": "knee"
+              }
+            ],
+            "fixture": {
+              "opponent": "Tottenham Hotspur",
+              "home": false,
+              "kickoff": "2026-09-19T11:30:00Z"
+            }
+          },
+          {
+            "club": "Leeds United",
+            "code": 2,
+            "line": "Three doubts left hanging at Leeds, all short of the weekend.",
+            "men": [
+              {
+                "name": "Harry Wilson",
+                "status": "Doubt",
+                "note": "quad"
+              },
+              {
+                "name": "Joe Rodon",
+                "owner": "test4",
+                "status": "Doubt",
+                "note": "hamstring"
+              },
+              {
+                "name": "Mateo Joseph",
+                "status": "Doubt",
+                "note": "knee"
+              }
+            ],
+            "fixture": {
+              "opponent": "Crystal Palace",
+              "home": true,
+              "kickoff": "2026-09-20T13:00:00Z"
+            }
+          },
+          {
+            "club": "Crystal Palace",
+            "code": 31,
+            "line": "Three men ruled out at Palace, with Ismaïla Sarr still being assessed.",
+            "men": [
+              {
+                "name": "Dean Henderson",
+                "owner": "test2",
+                "status": "OUT",
+                "note": "ankle"
+              },
+              {
+                "name": "Chadi Riad",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Jean-Philippe Mateta",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Ismaïla Sarr",
+                "status": "Doubt",
+                "note": "groin"
+              }
+            ],
+            "fixture": {
+              "opponent": "Leeds United",
+              "home": false,
+              "kickoff": "2026-09-20T13:00:00Z"
+            }
+          },
+          {
+            "club": "Fulham",
+            "code": 54,
+            "line": "Kenny Tete sidelined at Fulham, with Cairney and Sessegnon both left open.",
+            "men": [
+              {
+                "name": "Kenny Tete",
+                "status": "OUT",
+                "note": "head"
+              },
+              {
+                "name": "Tom Cairney",
+                "status": "Doubt",
+                "note": "knee"
+              },
+              {
+                "name": "Ryan Sessegnon",
+                "status": "Doubt",
+                "note": "groin"
+              }
+            ],
+            "fixture": {
+              "opponent": "Manchester United",
+              "home": true,
+              "kickoff": "2026-09-20T15:30:00Z"
+            }
+          },
+          {
+            "club": "Ipswich Town",
+            "code": 40,
+            "line": "Ipswich left Jack Taylor's involvement in the balance.",
+            "men": [
+              {
+                "name": "Jack Taylor",
+                "status": "Doubt",
+                "note": "knee"
+              }
+            ],
+            "fixture": {
+              "opponent": "Everton",
+              "home": false,
+              "kickoff": "2026-09-19T14:00:00Z"
+            }
+          },
+          {
+            "club": "Liverpool",
+            "code": 14,
+            "line": "Andoni Iraola declined to commit on four, all being assessed.",
+            "men": [
+              {
+                "name": "Conor Bradley",
+                "status": "Doubt",
+                "note": "knee"
+              },
+              {
+                "name": "Giovanni Leoni",
+                "status": "Doubt",
+                "note": "knee"
+              },
+              {
+                "name": "Federico Chiesa",
+                "status": "Doubt",
+                "note": "muscle"
+              },
+              {
+                "name": "Joe Gomez",
+                "status": "Doubt",
+                "note": "muscle"
+              }
+            ],
+            "fixture": {
+              "opponent": "AFC Bournemouth",
+              "home": false,
+              "kickoff": "2026-09-20T13:00:00Z"
+            }
+          },
+          {
+            "club": "Manchester United",
+            "code": 1,
+            "line": "Michael Carrick left six names unresolved before the deadline.",
+            "men": [
+              {
+                "name": "Luke Shaw",
+                "status": "Doubt",
+                "note": "no complaint given"
+              },
+              {
+                "name": "Carlos Baleba",
+                "status": "Doubt",
+                "note": "ankle"
+              },
+              {
+                "name": "Amad",
+                "status": "Doubt",
+                "note": "no complaint given"
+              },
+              {
+                "name": "Manuel Ugarte",
+                "status": "Doubt",
+                "note": "knee"
+              },
+              {
+                "name": "Matthijs de Ligt",
+                "status": "Doubt",
+                "note": "back"
+              },
+              {
+                "name": "Tom Heaton",
+                "status": "Doubt",
+                "note": "hamstring"
+              }
+            ],
+            "fixture": {
+              "opponent": "Fulham",
+              "home": false,
+              "kickoff": "2026-09-20T15:30:00Z"
+            }
+          },
+          {
+            "club": "Sunderland",
+            "code": 56,
+            "line": "Regis Le Bris confirmed two out injured and Reinildo serving a ban.",
+            "men": [
+              {
+                "name": "Romaine Mundle",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Habib Diarra",
+                "owner": "test1",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Reinildo",
+                "owner": "123",
+                "status": "Suspended",
+                "note": "serving a ban"
+              }
+            ],
+            "fixture": {
+              "opponent": "Manchester City",
+              "home": false,
+              "kickoff": "2026-09-20T13:00:00Z"
+            }
+          },
+          {
+            "club": "Everton",
+            "code": 11,
+            "line": "David Moyes left Christian Nørgaard open and confirmed Röhl unavailable.",
+            "men": [
+              {
+                "name": "Christian Nørgaard",
+                "status": "Doubt",
+                "note": "groin"
+              },
+              {
+                "name": "Merlin Röhl",
+                "owner": "test4",
+                "status": "OUT",
+                "note": "no complaint given"
+              }
+            ],
+            "fixture": {
+              "opponent": "Ipswich Town",
+              "home": true,
+              "kickoff": "2026-09-19T14:00:00Z"
+            }
+          },
+          {
+            "club": "Tottenham Hotspur",
+            "code": 6,
+            "line": "Roberto De Zerbi confirmed a clutch of absences and left Porro, Tonali and Udogie in doubt.",
+            "men": [
+              {
+                "name": "Pedro Porro",
+                "status": "Doubt",
+                "note": "muscle"
+              },
+              {
+                "name": "Sandro Tonali",
+                "status": "Doubt",
+                "note": "being assessed"
+              },
+              {
+                "name": "Mykhailo Mudryk",
+                "status": "OUT",
+                "note": "ankle"
+              },
+              {
+                "name": "Xavi",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Wilson Odobert",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Dejan Kulusevski",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Destiny Udogie",
+                "status": "Doubt",
+                "note": "muscle"
+              }
+            ],
+            "fixture": {
+              "opponent": "Aston Villa",
+              "home": true,
+              "kickoff": "2026-09-19T11:30:00Z"
+            }
+          },
+          {
+            "club": "Arsenal",
+            "code": 3,
+            "line": "Mikel Arteta welcomed two back to contention while leaving Mosquera and Saliba unresolved.",
+            "men": [
+              {
+                "name": "Cristhian Mosquera",
+                "owner": "test3",
+                "status": "Doubt",
+                "note": "muscle"
+              },
+              {
+                "name": "William Saliba",
+                "status": "Doubt",
+                "note": "back"
+              },
+              {
+                "name": "Benjamin White",
+                "owner": "test3331",
+                "status": "FIT",
+                "note": "back in contention"
+              },
+              {
+                "name": "Mikel Merino",
+                "status": "FIT",
+                "note": "back in contention"
+              }
+            ],
+            "fixture": {
+              "opponent": "Brighton & Hove Albion",
+              "home": false,
+              "kickoff": "2026-09-19T14:00:00Z"
+            }
+          },
+          {
+            "club": "Brighton & Hove Albion",
+            "code": 36,
+            "line": "Fabian Hurzeler ruled out a long list and stopped short of confirming Lewis Dunk, who may be rotated.",
+            "men": [
+              {
+                "name": "Femi Azeez",
+                "status": "Doubt",
+                "note": "hamstring"
+              },
+              {
+                "name": "Mats Wieffer",
+                "owner": "test1",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Jack Hinshelwood",
+                "owner": "test3331",
+                "status": "OUT",
+                "note": "no complaint given"
+              },
+              {
+                "name": "Yankuba Minteh",
+                "status": "OUT",
+                "note": "leg"
+              },
+              {
+                "name": "Evan Ferguson",
+                "status": "OUT",
+                "note": "ankle"
+              },
+              {
+                "name": "Mitoma",
+                "status": "OUT",
+                "note": "hamstring"
+              },
+              {
+                "name": "Stefanos Tzimas",
+                "status": "OUT",
+                "note": "knee"
+              },
+              {
+                "name": "Zadok Yohanna",
+                "status": "OUT",
+                "note": "no complaint given"
+              },
+              {
+                "name": "Jaouen Hadjam",
+                "status": "Doubt",
+                "note": "no complaint given"
+              },
+              {
+                "name": "Lewis Dunk",
+                "owner": "test3",
+                "status": "Doubt",
+                "note": "may be rotated"
+              }
+            ],
+            "fixture": {
+              "opponent": "Arsenal",
+              "home": true,
+              "kickoff": "2026-09-19T14:00:00Z"
+            }
+          }
+        ]
+      }
+    },
+    {
       "slug": "gw4-presser-2026-09-17",
       "kind": "presser",
       "leagueId": "w05aib75mtj36y1g",
@@ -12,15 +465,15 @@
       "edition": "The Team Sheet",
       "byline": "The Team Sheet",
       "headline": "Thursday Pressers",
-      "deck": "Jo\u00e3o Pedro a Chelsea doubt, Alonso holds the call to Friday",
-      "body": "Jo\u00e3o Pedro is among the Chelsea doubts Xabi Alonso carried into his press conference, with no complaint stated and no decision reached. Alonso said the final training session comes tomorrow and that nobody is ruled out, leaving test211's man an open question until Friday.",
+      "deck": "João Pedro a Chelsea doubt, Alonso holds the call to Friday",
+      "body": "João Pedro is among the Chelsea doubts Xabi Alonso carried into his press conference, with no complaint stated and no decision reached. Alonso said the final training session comes tomorrow and that nobody is ruled out, leaving test211's man an open question until Friday.",
       "subjects": [
         "presser:gw4:2026-09-17"
       ],
       "image": null,
       "face": {
         "code": 475168,
-        "name": "Jo\u00e3o Pedro",
+        "name": "João Pedro",
         "clubId": 6,
         "position": null
       },
@@ -33,7 +486,7 @@
             "line": "The final call on every doubt waits on tomorrow's last training session before the trip to Brentford.",
             "men": [
               {
-                "name": "Mois\u00e9s Caicedo",
+                "name": "Moisés Caicedo",
                 "status": "Doubt",
                 "note": "calf; getting closer"
               },
@@ -48,7 +501,7 @@
                 "note": "wrist"
               },
               {
-                "name": "Jo\u00e3o Pedro",
+                "name": "João Pedro",
                 "owner": "test211",
                 "status": "Doubt",
                 "note": "no complaint given; call held to Friday"
@@ -70,7 +523,7 @@
             "line": "A young midfield is forced on Matthias Jaissle, who awaits an MRI on Anthony Elanga before he knows more.",
             "men": [
               {
-                "name": "Nico Gonz\u00e1lez",
+                "name": "Nico González",
                 "status": "Doubt",
                 "note": "head"
               },
@@ -128,12 +581,12 @@
             "line": "Oliver Glasner declared everyone but two long-term absentees available.",
             "men": [
               {
-                "name": "Nicol\u00f2 Savona",
+                "name": "Nicolò Savona",
                 "status": "OUT",
                 "note": "knee"
               },
               {
-                "name": "Nikola Milenkovi\u0107",
+                "name": "Nikola Milenković",
                 "status": "OUT",
                 "note": "hamstring"
               },
@@ -245,7 +698,7 @@
               }
             ],
             "quote": {
-              "text": "He\u2019s in the concussion protocol. So, seven days off, and after this, he will go to the national team. Everything is fine. He\u2019s good. This is the most important [thing], now. He will miss this game.",
+              "text": "He’s in the concussion protocol. So, seven days off, and after this, he will go to the national team. Everything is fine. He’s good. This is the most important [thing], now. He will miss this game.",
               "said": "Sergej Jakirovic on Nobel Mendy"
             },
             "fixture": {
@@ -257,10 +710,10 @@
           {
             "club": "Coventry City",
             "code": 9,
-            "line": "Frank Lampard expects Aur\u00e8le Amenda unavailable and named a suspension alongside the injuries.",
+            "line": "Frank Lampard expects Aurèle Amenda unavailable and named a suspension alongside the injuries.",
             "men": [
               {
-                "name": "Aur\u00e8le Amenda",
+                "name": "Aurèle Amenda",
                 "status": "OUT",
                 "note": "calf; not expected available"
               },
@@ -291,7 +744,7 @@
               }
             ],
             "quote": {
-              "text": "Haji\u2019s on track, but he\u2019s not obviously ready soon.",
+              "text": "Haji’s on track, but he’s not obviously ready soon.",
               "said": "Frank Lampard"
             },
             "fixture": {

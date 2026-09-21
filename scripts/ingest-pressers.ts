@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import { FIRM, LEAGUE_TIMEZONE, getFootballSnapshot } from "@epl/core";
-import { clubKey, conferenceTimes, manager, quotes, sections, text } from "./ingest/presserArticle";
+import { articleGameweek, clubKey, conferenceTimes, isLeagueArticle, manager, quotes, sections, text } from "./ingest/presserArticle";
 import { troubles } from "./ingest/presserSignals";
 import { fullClubName } from "@epl/core";
 
@@ -57,6 +57,14 @@ async function main(): Promise<void> {
   // from a comment thread was read as Coventry team news. The split is on
   // `id="comments"` and not the `hc-comment` class, which the sidebar uses too.
   const html = readFileSync(join(dir, file), "utf8").split(/id="comments"/)[0];
+
+  const prose = text(html);
+  // Scout's own words decide whether this is a Premier League article. A
+  // European night's conferences are a different fixture list and must not be
+  // read as team news for a league round.
+  if (!isLeagueArticle(prose)) throw new Error(`${file} is not a Premier League team-news article.`);
+  const gameweek = articleGameweek(prose);
+  if (gameweek === null) throw new Error(`${file} does not say which gameweek it covers.`);
   const snapshot = await getFootballSnapshot();
   const clubs = new Map(snapshot.clubs.map((club) => [club.name, club]));
 
@@ -74,7 +82,7 @@ async function main(): Promise<void> {
   }
 
   // When each manager actually spoke, from the article's own block.
-  const times = conferenceTimes(text(html));
+  const times = conferenceTimes(prose);
   const latest = [...times.values()].sort((a, b) => b.hour * 60 + b.minute - (a.hour * 60 + a.minute))[0];
 
   const read = sections(html, headings);
@@ -146,7 +154,9 @@ async function main(): Promise<void> {
       {
         manifest: {
           season: "26-27",
-          gameweek: snapshot.gameweek,
+          // The ARTICLE's round, not the snapshot's — they differ between rounds,
+          // and the consumer refuses an export for a round it is not previewing.
+          gameweek,
           exportedAt: new Date().toISOString(),
           rows: allRows.length,
           sources: [{ path: join(day, file), mtime: null }],
