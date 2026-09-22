@@ -48,9 +48,17 @@
       "news:https://www.bbc.co.uk/sport/football/articles/c6y8z29nxn4mo",
       "news:https://www.bbc.co.uk/sport/football/articles/c617j2prweejo",
       "news:https://www.bbc.co.uk/sport/football/articles/c3qjkpgengn7o",
-      "news:https://www.bbc.co.uk/sport/articles/cgjq1x0wj7qo"
+      "news:https://www.bbc.co.uk/sport/articles/cgjq1x0wj7qo",
+      "news:https://www.bbc.co.uk/sport/football/articles/cmrr48zqz1jno"
     ],
     "threads": [
+      {
+        "subject": "Ballard's international load, test31",
+        "beat": "Four Nations League games in a compressed window for test31's defender",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-22T22:11:13.737Z"
+      },
       {
         "subject": "Egan's return, test1",
         "beat": "test1's centre-back framed as back in the Premier League with Hull, minutes unstated",
@@ -210,13 +218,6 @@
         "beat": "Rodon and Justin stand against Stach, test4 twenty adrift",
         "status": "open",
         "beats": 6,
-        "lastUsedAt": "2026-09-20T06:35:10.670Z"
-      },
-      {
-        "subject": "test1 v test2, the tie split by Dalot and Cunha",
-        "beat": "Both men named in the fixture, test2 defending an 11-16 edge over the same ninety",
-        "status": "open",
-        "beats": 1,
         "lastUsedAt": "2026-09-20T06:35:10.670Z"
       }
     ]
