@@ -47,9 +47,17 @@
       "news:https://www.bbc.co.uk/sport/football/videos/cmp3k277095do",
       "news:https://www.bbc.co.uk/sport/football/articles/c6y8z29nxn4mo",
       "news:https://www.bbc.co.uk/sport/football/articles/c617j2prweejo",
-      "news:https://www.bbc.co.uk/sport/football/articles/c3qjkpgengn7o"
+      "news:https://www.bbc.co.uk/sport/football/articles/c3qjkpgengn7o",
+      "news:https://www.bbc.co.uk/sport/articles/cgjq1x0wj7qo"
     ],
     "threads": [
+      {
+        "subject": "Egan's return, test1",
+        "beat": "test1's centre-back framed as back in the Premier League with Hull, minutes unstated",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-22T08:32:15.993Z"
+      },
       {
         "subject": "Xhaka's off-field investigation, testf",
         "beat": "testf's midfielder under investigation over a Covid-19 certificate; no availability line yet.",
@@ -207,13 +215,6 @@
       {
         "subject": "test1 v test2, the tie split by Dalot and Cunha",
         "beat": "Both men named in the fixture, test2 defending an 11-16 edge over the same ninety",
-        "status": "open",
-        "beats": 1,
-        "lastUsedAt": "2026-09-20T06:35:10.670Z"
-      },
-      {
-        "subject": "Scott's derby weekend, test3331",
-        "beat": "Named in an Old Firm preview, but the wire offers no line-up or minutes for test3331's man.",
         "status": "open",
         "beats": 1,
         "lastUsedAt": "2026-09-20T06:35:10.670Z"
