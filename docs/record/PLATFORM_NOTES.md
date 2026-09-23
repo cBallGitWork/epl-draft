@@ -2089,35 +2089,19 @@ value this app must not repeat".
 Recorded on the commit that added `FANTRAX_TIMEZONE`, which is what CODE_RULES
 asks for and what nobody had done for this file.
 
-### Files over the ceiling with NO entry (counted 6 Sep 2026)
+### Files over the ceiling with NO entry: none (counted 23 Sep 2026)
 
-Neither recorded nor split, so both of §4's ways out are open and this is the
-honest state of it. **Derive it rather than editing it by hand** — the list
-written on 5 Sep named eight and was already wrong by five that evening:
+Derive it rather than editing it by hand:
 
 ```
 git ls-files | grep -E '\.(ts|tsx|mjs|css)$' | xargs wc -l | awk '$1>300 && $2!="total"' | sort -rn
 ```
 
-Seventeen files at HEAD. Three are recorded below (`desk.css`, `tokens.css`,
-`config.ts`) and three are tests, which §4 now gives a ceiling of 500 —
-`premierleague/map.test.ts`, `league/visibility.test.ts`, `fpl/map.test.ts`.
-The eleven left with no entry:
-
-`apps/companion/app/commentary.ts` (388) · `scripts/smoke.ts` (377) ·
-`apps/companion/app/paper.css` (342) · `apps/companion/app/desk.ts` (384) ·
-`packages/core/src/football/premierleague/map.ts` (331) ·
-`scripts/edition/assemble.ts` (324) · `packages/core/src/inbox/items.ts` (320) ·
-`apps/companion/app/prem/match/[id]/players/page.tsx` (318) ·
-`apps/companion/app/(paper)/page.tsx` (308) ·
-`packages/core/src/football/types.ts` (306) ·
-`apps/companion/app/matchday/page.tsx` (305)
-
-Most are splits waiting in the fresh-eyes review's Workstream E rather than
-exceptions. Two grew on 5 Sep and are the clearest candidates:
-**`commentary.ts`** now holds the cached round reads AND the prose wire
-(`roundCommentary`, `WIRE_TYPES`, `ProseLine`), which is a second responsibility;
-**`matchday/page.tsx`** grew the wire picker, which is a component in a page file.
+On 23 Sep that returned the three recorded here (`desk.css`, `config.ts`,
+`tokens.css`) and six tests under §4's 500-line test ceiling, and nothing else.
+The eleven listed on 6 Sep and the thirteen found on 23 Sep were split by
+responsibility (#49, #50) or had their essay comments cut to one line (§2),
+which is the fix for the files that were long only in comments.
 
 ### `desk.css` and `tokens.css` (recorded 3 Sep 2026)
 
