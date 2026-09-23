@@ -47,7 +47,7 @@ All four green before every commit:
 
 ```bash
 npm test          # vitest across packages/*, scripts/ and the app
-npm run typecheck # core and scripts with --noUnusedLocals, then the app
+npm run typecheck # core, scripts and the app, all with --noUnusedLocals
 npm run lint      # ESLint; next build stopped running it at Next 16
 npm run build     # Next production build
 ```
