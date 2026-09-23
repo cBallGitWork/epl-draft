@@ -303,11 +303,23 @@ and the number moved back into `prem/club/[code]/Run.tsx` beside the `next/image
 call that uses it. CODE_RULES §4 asks for the row in the same commit as the
 recipe; it asks the same on the way out.*
 
-**`desk.ts` records what it declined, with the count**, and that section is the
-point of the file rather than an afterthought. `const DASH = "—"` is named in 9
-files against 68 unnamed `"—"` literals in 34 others: a shared constant most call
-sites ignore makes a codebase look centralised while it is not, which is worse
-than honest duplication because the plausible name hides the scatter.
+### Declined, with the count
+
+Counted at the dates shown, so the next session re-counts rather than re-argues.
+A recipe is named at its third occurrence (CODE_RULES §1); these were not.
+
+| What | Count | Where it goes at the third |
+|---|---|---|
+| `const DASH = "—"` | 10 named against 53 unnamed `"—"` in 34 files (11 Sep) | Named only if every literal adopts it: a shared name most sites ignore hides the scatter. A DESIGN §7 decision, not a class string. |
+| `px-3 text-2xs text-faint` | 5 sites (7 Sep) | Left: not sediment from the run that counted it. |
+| `Array.isArray(v) ? v[v.length - 1] : v` | 2 (`players/query`, `players/analysis/page`) | A shared query helper. |
+| Tab label `px-2 text-2xs` | 1 (`league/GroupNav`, since 6 Sep) | Below the bar. |
+| `spelled()` + `WORDS` + `SPELL_FROM` | 2 (`matchday/FootballRow`, `matchday/desk/Rows`) | `football.ts`: a football fact, not a desk recipe. |
+| `BOX = { width: 100, height: 64 }` | 2 (`players/analysis/PlayerMap`, `prem/match/[id]/ShotMap`) | `football.ts`. `CmGround`'s `BOX` is a penalty area and shares only the name. |
+| `MONTHS` · `SETTLE = 250` · `FORM_GAMES = 5` | 2 each (11 Sep) | Left. |
+| The gazette's story furniture (kicker, headline, standfirst, rule) | 3-4 files each | A `paper.ts`: it belongs to the paper, not the desk. |
+| The refusal pair (`shell/Nothing`, `error`, `not-found`) | 3 | Two of them should use `Nothing` itself. |
+| `border-collapse w-full whitespace-nowrap` | 3 | Reconcile with `BOARD` rather than name it. |
 
 DESIGN §6's density table is the other half of this — it says how tall each of
 these is and what size it is set in, and every row of it names the recipe here
