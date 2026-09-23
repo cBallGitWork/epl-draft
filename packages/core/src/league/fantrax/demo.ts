@@ -20,9 +20,8 @@ import payloads from "./demoPayloads.json";
 // system and the 38 periods are its own, and every player is a Fantrax id the
 // bridge actually resolves, so portraits and fixtures land like any other page.
 //
-// **It cannot be reached by accident.** `FANTRAX_LEAGUE_ID` defaults to the
-// rehearsal league, and the id below is not a Fantrax id — nothing on their
-// side answers to it.
+// **It cannot be reached by accident.** `FANTRAX_LEAGUE_ID` has no default, and
+// the id below is not a Fantrax id — nothing on their side answers to it.
 
 const DEMO_LEAGUE_ID = "demo";
 

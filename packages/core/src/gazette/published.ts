@@ -64,8 +64,8 @@ export interface PublishedEdition {
    *
    *  Carried in the edition and not inferred, because the writer and the reader
    *  are different processes with different environments: CI files the column
-   *  with whatever `FANTRAX_LEAGUE_ID` it inherits, and the app serves whatever
-   *  ITS environment names. Both leagues number their periods from the same
+   *  for the league production reports (`/api/league`), and the app serves
+   *  whatever ITS environment names. Both leagues number their periods from the same
    *  Friday, so period and kind alone would match a rehearsal column onto the
    *  real league's front page. */
   leagueId: string;

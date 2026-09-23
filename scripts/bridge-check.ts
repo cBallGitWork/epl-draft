@@ -1,7 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
-  FANTRAX_LEAGUES,
   FantraxError,
   type Bridge,
   fetchPlayerPool,
@@ -11,6 +10,7 @@ import {
   mapPlayerPool,
   mapTeamRosters,
 } from "@epl/core";
+import { RECORDED_LEAGUES } from "./leagues";
 import { MAPPINGS_ROOT } from "./paths";
 
 // Is anybody's actual squad missing a footballer?
@@ -57,7 +57,7 @@ async function main() {
   let rostered = 0;
   let audited = 0;
 
-  for (const league of FANTRAX_LEAGUES) {
+  for (const league of RECORDED_LEAGUES) {
     let teams;
     try {
       teams = mapTeamRosters(await fetchTeamRosters(league.leagueId)).teams;

@@ -39,16 +39,16 @@ function days(from: string, to: string): number {
 
 /** Assess the capture history.
  *
- *  All three dates are plain YYYY-MM-DD. Never having captured is overdue: the
- *  point is to notice absence, and a run that reports "fine" on an empty
- *  directory would be exactly the silent failure this guards against. */
+ *  Dates are plain YYYY-MM-DD. `drafted` is Fantrax's own answer (`draftState`), never a date
+ *  written down here. Never having captured is overdue: the point is to notice absence, and a
+ *  run that reports "fine" on an empty directory would be exactly the silent failure this guards
+ *  against. */
 export function captureStaleness(
   captureDates: string[],
   today: string,
-  draftDate: string,
+  drafted: boolean,
 ): CaptureStaleness {
-  const cadenceDays =
-    days(draftDate, today) >= 0 ? POST_DRAFT_CADENCE_DAYS : PRE_DRAFT_CADENCE_DAYS;
+  const cadenceDays = drafted ? POST_DRAFT_CADENCE_DAYS : PRE_DRAFT_CADENCE_DAYS;
 
   const lastCapture = captureDates.length === 0 ? null : [...captureDates].sort().at(-1) ?? null;
   if (lastCapture === null) {

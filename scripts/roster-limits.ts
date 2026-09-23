@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { FANTRAX_LEAGUES } from "@epl/core";
+import { RECORDED_LEAGUES } from "./leagues";
 import { LEAGUE_LIMITS } from "./paths";
 
 // The one roster rule Fantrax will not answer for in JSON: the FEWEST players a
@@ -87,7 +87,7 @@ async function main(): Promise<void> {
   if (!cookie) throw new Error("FANTRAX_COOKIE is not set — this page needs the commissioner's session");
 
   const byLeague: Record<string, unknown> = {};
-  for (const league of FANTRAX_LEAGUES) {
+  for (const league of RECORDED_LEAGUES) {
     const page = await fetch(`${SETUP_PAGE}?goto=3&leagueId=${league.leagueId}`, {
       headers: { cookie },
     });

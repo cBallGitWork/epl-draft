@@ -63,7 +63,7 @@ export const INTEL_ROOT = join(REPO_ROOT, "data", "intel");
 /** Where the matcher leaves what it would not decide, for a human to settle. */
 export const REVIEW_ROOT = join(MAPPINGS_ROOT, "review");
 
-/** Every capture day for one league. `leagueKey` is `FantraxLeague.key`, which
+/** Every capture day for one league. `leagueKey` is a `RecordedLeague.key` (`data/leagues/recorded.json`), which
  *  is why renaming a key moves data. */
 export function leagueCaptureRoot(leagueKey: string): string {
   return join(LEAGUES_ROOT, leagueKey);

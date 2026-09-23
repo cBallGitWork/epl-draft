@@ -1,4 +1,4 @@
-import { FANTRAX_LEAGUE_ID, FANTRAX_LEAGUES, MAX_PAPER_STORIES } from "@epl/core";
+import { MAX_PAPER_STORIES } from "@epl/core";
 
 // The app's own constants — the ones that are decisions about this companion
 // rather than about the league or the football.
@@ -85,17 +85,9 @@ export const SHOULDER_STORIES = 2;
  *  only thing to change and this paragraph is the reminder. */
 export const HEADLINES_SHOWN = MAX_PAPER_STORIES;
 
-/** The league this deployment actually serves.
- *
- *  `FANTRAX_LEAGUE_ID` is the env var and the whole of the 10 Oct swap; this is
- *  the rest of what we know about whichever league it names — chiefly the draft
- *  date three pages tell an empty league to come back for. Undefined if the id
- *  ever names a league we do not carry, which is a state worth seeing rather
- *  than defaulting past.
- */
-export function servedLeague() {
-  return FANTRAX_LEAGUES.find((league) => league.leagueId === FANTRAX_LEAGUE_ID);
-}
+/** A team to treat as the reader's own when nobody has signed in, for the test leagues, from the
+ *  environment. Lent only when it is one of the served league's teams (`lentTeam`). */
+export const DEMO_TEAM_ID = process.env.FANTRAX_DEMO_TEAM_ID || null;
 
 /** What a page says when the league's own provider will not answer.
  *

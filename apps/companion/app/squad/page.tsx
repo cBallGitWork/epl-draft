@@ -2,7 +2,6 @@ import Link from "next/link";
 import { LEAGUE_NAME, type RosteredTeam, headToHead, isResolved } from "@epl/core";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
-import { londonDate } from "../londonTime";
 import SignIn from "./SignIn";
 import { forgetTeam } from "./actions";
 import { getLeagueSquads } from "../squads";
@@ -10,7 +9,7 @@ import { planningRound } from "../round";
 import { myTeamId, signedIn } from "../session";
 import { yoursBorder } from "../mine";
 import { MY_TEAM, SQUAD } from "./routes";
-import { FANTRAX_SILENT, servedLeague } from "../config";
+import { FANTRAX_SILENT } from "../config";
 import { LABEL, PANEL, ROW_NAME } from "@/app/desk";
 
 // Your squad, and everyone else's. Until the draft this is the empty state,
@@ -25,12 +24,6 @@ import { LABEL, PANEL, ROW_NAME } from "@/app/desk";
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
-
-/** Draft night for the league we are actually serving — §3 keeps season dates in
- *  config, and the two leagues draft nine weeks apart. */
-const DRAFT_DATE = londonDate(
-  servedLeague()?.draftDate ?? "",
-);
 
 export default async function SquadsPage() {
   // The week a manager can still change, which from Friday teatime is next week
@@ -65,7 +58,7 @@ export default async function SquadsPage() {
       <div className="flex flex-col gap-3">
         <section className={PANEL}>
           <Nothing title="Nobody has a squad yet" code={squads.undrafted}>
-            {LEAGUE_NAME} drafts on {DRAFT_DATE}. Until then Fantrax has a competition and no teams
+            {LEAGUE_NAME} has not drafted yet. Until then Fantrax has a competition and no teams
             in it, so there is nothing to line up.
           </Nothing>
         </section>

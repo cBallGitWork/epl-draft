@@ -1,5 +1,6 @@
 import {
   FANTRAX_LEAGUE_ID,
+  requireLeague,
   FantraxError,
   fetchBootstrap,
   fetchFixtures,
@@ -224,6 +225,7 @@ async function footballerAndMatch(): Promise<{ footballer: number | null; match:
 }
 
 async function main() {
+  requireLeague(FANTRAX_LEAGUE_ID);
   const { drafted: hasTeams, teamId: id, teamName, playerId } = await league();
   const club = await clubCode();
   const { footballer, match } = await footballerAndMatch();

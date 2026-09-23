@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
-import { TEAM_COOKIE, servedLeague } from "./config";
+import { DEMO_TEAM_ID, TEAM_COOKIE } from "./config";
+import { lentTeam } from "./demoTeam";
 
 // Who is holding the phone.
 //
@@ -134,12 +135,7 @@ export async function signedIn(): Promise<boolean> {
   return (await cookieTeam()) !== null;
 }
 
-/** The league's standing demo team, if it has one and it is really in it.
- *
- *  Checked against the same roster a signed-in team is checked against, for the
- *  same reason: an id that names nobody is worse than no id, and the dummy
- *  league is rebuilt often enough that this one will go stale eventually. */
+/** The environment's demo team, if it is really in this league (`lentTeam`). */
 function demoTeam(teams: readonly { teamId: string }[]): string | null {
-  const demo = servedLeague()?.demoTeamId;
-  return demo !== undefined && teams.some((team) => team.teamId === demo) ? demo : null;
+  return lentTeam(teams, DEMO_TEAM_ID);
 }

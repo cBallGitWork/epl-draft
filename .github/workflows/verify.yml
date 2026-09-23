@@ -15,14 +15,6 @@ on: [push, pull_request]
 jobs:
   verify:
     runs-on: ubuntu-latest
-    env:
-      # The one league id that has to be named outside `FANTRAX_LEAGUES`, and
-      # named once. CODE_RULES §3 puts an id in "one config module or
-      # environment", and this is the environment half — the same category as
-      # the Vercel dashboard value the swap actually turns. The rehearsal league
-      # needs no name here at all: it is what the config defaults to, so the
-      # second walk below simply does not set this.
-      REAL_LEAGUE: ayyoh3n2mr326v2o
     steps:
       - uses: actions/checkout@v4
 
@@ -48,19 +40,20 @@ jobs:
       # ROADMAP §6. The four gates above never once ask what the app does when
       # Fantrax says `NO_TEAMS` — which is what our real league says to almost
       # everything until 10 Oct, and which those views had been walked by hand
-      # exactly twice. Every route is dynamic, so one build serves either league
-      # and the id is a runtime choice.
+      # exactly twice. Every route is dynamic, so one build serves any league and
+      # the id is a runtime choice. The leagues walked are the ones the archive
+      # records (`data/leagues/recorded.json`); no league is named here.
       #
-      # Both halves run, and the second is the one that has caught a real bug: a
-      # drafted league rendering "nobody has drafted" is what `edition.ts` did in
-      # August, and a check that only asserted the empty states would have passed
-      # it happily.
+      # Drafted and undrafted both run, and a drafted one has caught a real bug:
+      # a drafted league rendering "nobody has drafted" is what `edition.ts` did
+      # in August, and a check that only asserted the empty states would have
+      # passed it happily.
       #
       # `kill "$pid"` and not `kill %1`: job control is off in a non-interactive
       # shell and `%1` would fail the step on a line that is only tidying up.
       #
-      # **Both halves run even when the first fails, and that is the whole point
-      # of there being two.** Under `set -e` a failing `npm run smoke` inside the
+      # **Every walk runs even when one fails, and that is the whole point of
+      # there being several.** Under `set -e` a failing `npm run smoke` inside the
       # function aborted the step, so the second walk never happened — the same
       # shape as the documented `smoke && shape-diff && bridge:check` chain,
       # where a red first gate hides every gate behind it. On this step's first
@@ -70,14 +63,11 @@ jobs:
       # The status has to be captured explicitly. `walk ... || failed=1` does not
       # work: `||` suspends `set -e` inside the function, so `walk` runs on to
       # `sleep 1` and returns ITS status, which is always 0.
-      - name: Every view, against both leagues
+      - name: Every view, against every recorded league
         run: |
           set -euo pipefail
-          # An empty id means "whatever the config defaults to", which is the
-          # rehearsal league — so the default path is exercised as a default
-          # rather than as a value somebody typed.
           walk() {
-            if [ -n "$1" ]; then export FANTRAX_LEAGUE_ID="$1"; else unset FANTRAX_LEAGUE_ID; fi
+            export FANTRAX_LEAGUE_ID="$1"
             npm run start &
             pid=$!
             npm run smoke:wait
@@ -105,8 +95,9 @@ jobs:
             return "$status"
           }
           failed=0
-          walk "$REAL_LEAGUE" || failed=1
-          walk "" || failed=1
+          for league in $(jq -r '.leagues[].leagueId' data/leagues/recorded.json); do
+            walk "$league" || failed=1
+          done
           exit "$failed"
 
       # ROADMAP §6's last one. `npm run bridge` reports totals — 688 players, 120
