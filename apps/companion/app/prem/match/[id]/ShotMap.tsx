@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { CSSProperties } from "react";
 import { DASH, type Shot } from "@epl/core";
 import { PITCH_BOX, toBoxY } from "@/app/components/football/pitchBox";
-import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
+import ShotMarks, { HALO, MarksKey } from "../../../components/football/ShotMarks";
 import { BOARD, ROW_RULE, SECTION_BAR } from "@/app/desk";
 import {
   Head,
@@ -127,17 +127,24 @@ export default function ShotMap({
             {/* Each key pass: a dashed line from where it started to where the shot was struck, in the side's colour. */}
             {shots.map((shot, at) =>
               shot.pass === null ? null : (
-                <g
-                  key={at}
-                  stroke={sideOf(shot).colour}
-                  strokeWidth="0.45"
-                  opacity="0.9"
-                >
+                <g key={at}>
+                  {/* A cream line under the club's dashes, as the marks wear a halo, so the pass reads on the grass. */}
                   <line
                     x1={shot.pass.x}
                     y1={toBoxY(shot.pass.y)}
                     x2={shot.x}
                     y2={toBoxY(shot.y)}
+                    stroke="var(--color-cream)"
+                    strokeWidth={0.45 + 2 * HALO}
+                    opacity="0.6"
+                  />
+                  <line
+                    x1={shot.pass.x}
+                    y1={toBoxY(shot.pass.y)}
+                    x2={shot.x}
+                    y2={toBoxY(shot.y)}
+                    stroke={sideOf(shot).colour}
+                    strokeWidth="0.45"
                     strokeDasharray="1.2 0.8"
                   />
                   {/* A square at the pass's origin, so it never reads as a shot's round mark. */}
@@ -147,6 +154,8 @@ export default function ShotMap({
                     width={PASS_SQUARE}
                     height={PASS_SQUARE}
                     fill={sideOf(shot).colour}
+                    stroke="var(--color-cream)"
+                    strokeWidth={HALO}
                   />
                 </g>
               ),
