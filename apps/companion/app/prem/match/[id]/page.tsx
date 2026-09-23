@@ -200,9 +200,7 @@ async function Commentary({ match }: { match: Match }) {
 
 function ReportWaiting() {
   return (
-    <div aria-busy>
-      <SkeletonRows count={6} height="2.75rem" />
-    </div>
+    <SkeletonRows count={6} height="2.75rem" />
   );
 }
 

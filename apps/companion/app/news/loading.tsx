@@ -20,9 +20,7 @@ export default function Loading() {
   return (
     <div className="flex flex-col gap-2">
       <PageHeader title={NEWS} />
-      <div aria-busy>
-        <SkeletonRows count={5} height="2.75rem" />
-      </div>
+      <SkeletonRows count={5} height="2.75rem" />
     </div>
   );
 }
