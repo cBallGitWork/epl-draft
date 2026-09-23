@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { clubGround } from "@epl/core";
 import type { PlMatchFacts } from "@epl/core";
-import { matchFacts } from "../../../matchFeed";
+import { matchFacts } from "../../../matchDetail";
 import PhotoGround from "../../../components/football/PhotoGround";
 import Caption from "../../../components/shell/Caption";
 import MatchBar from "./MatchBar";

@@ -7,7 +7,8 @@ import AveragePosition from "../AveragePosition";
 import type { Placed } from "../labels";
 import { readMatch, sheetName } from "../match";
 import { intelShots, intelTouches } from "../../../../intel";
-import { matchStatsBoard, teamSheets } from "../../../../matchFeed";
+import { matchStatsBoard } from "../../../../matchFeed";
+import { teamSheets } from "../../../../matchDetail";
 
 // Championship Manager's second tab, filled at last.
 //

@@ -4,7 +4,7 @@ import Skeleton from "../../../../components/shell/Skeleton";
 import MatchShell from "../Shell";
 import TeamSheet from "../TeamSheet";
 import { matchOwners, readMatch } from "../match";
-import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchFeed";
+import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchDetail";
 import type { Match } from "../match";
 
 // What the afternoon was worth, both sides at once.

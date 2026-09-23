@@ -10,16 +10,8 @@ import Scoresheet from "./Scoresheet";
 import Preview from "./Preview";
 import Line from "./Commentary";
 import { matchOwners, readMatch } from "./match";
-import {
-  matchFacts,
-  matchGoalMinutes,
-  matchGoals,
-  matchInjuries,
-  matchManEvents,
-  matchPlayerNames,
-  matchReport,
-  matchStreamCredits,
-} from "../../../matchFeed";
+import { matchGoalMinutes, matchReport } from "../../../matchFeed";
+import { matchFacts, matchGoals, matchInjuries, matchManEvents, matchPlayerNames, matchStreamCredits } from "../../../matchDetail";
 import type { PlMatchFacts } from "@epl/core";
 import { side } from "./scoreLines";
 import type { Match } from "./match";
