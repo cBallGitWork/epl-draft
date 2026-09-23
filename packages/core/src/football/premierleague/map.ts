@@ -35,8 +35,8 @@ const KINDS: Record<string, MatchEventKind> = {
 /** The fixture's FPL code, from the provider's own id for it.
  *
  *  `{opta: "g2645221"}` against FPL's `code: 2645221`. Null when the fixture
- *  carries no `altIds` — which the fixture LIST does not, and the detail read
- *  does — so a caller that has only the list joins by our fixture id instead. */
+ *  carries no `altIds`, which only a read made with `altIds=true` does — the
+ *  round read and the detail read both do (50 of 50, GW1-5, 23 Sep 2026). */
 export function plFixtureCode(fixture: RawPlFixture): number | null {
   const opta = fixture.altIds?.opta;
   if (opta === undefined || !opta.startsWith("g")) return null;

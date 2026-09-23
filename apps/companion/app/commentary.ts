@@ -28,6 +28,15 @@ import { plRound, plStream, playerCodes } from "./plFeed";
 // FPL cannot answer this at any price: it publishes no minute for a goal
 // anywhere, and the sister repo's export runs about a day behind full time.
 
+/** What a replay is allowed to have seen. Live this is every event, because
+ *  nothing in a feed has happened in the future; under `REPLAY_AT` it is the
+ *  wire as it stood at that minute. An undated event cannot be placed in time
+ *  and a replay therefore cannot show it. */
+function asOf<T extends { absolute: number | null }>(events: readonly T[]): T[] {
+  const at = replayAt();
+  return at === null ? [...events] : before(events, at);
+}
+
 /** Every goal in the round, joined to FPL players and ordered as they happened.
  *
  *  Ordered on `absolute` — kick-off plus elapsed — and NOT on the match clock: a
@@ -42,15 +51,6 @@ import { plRound, plStream, playerCodes } from "./plFeed";
  *  swallow §2 forbids: the caller renders the round's football either way, and
  *  an empty wire under a live scoreline is a panel with nothing in it, not a
  *  claim that nothing happened — `Wire` says which it is from `speaksForNow`. */
-/** What a replay is allowed to have seen. Live this is every event, because
- *  nothing in a feed has happened in the future; under `REPLAY_AT` it is the
- *  wire as it stood at that minute. An undated event cannot be placed in time
- *  and a replay therefore cannot show it. */
-function asOf<T extends { absolute: number | null }>(events: readonly T[]): T[] {
-  const at = replayAt();
-  return at === null ? [...events] : before(events, at);
-}
-
 export async function roundGoals(
   gameweek: number,
   players: readonly FootballPlayer[],
