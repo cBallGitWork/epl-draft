@@ -5,7 +5,7 @@ import { playerStories } from "../dossier";
 import NoProfile from "../NoProfile";
 import PlayerShell from "../PlayerShell";
 import { subject } from "../subject";
-import { POOL } from "../../routes";
+import { playerHref } from "../../routes";
 
 // Championship Manager's `Injuries & Bans`, under a name a manager would look
 // for. CM's word is right in a game that suspends you for a fifth booking; ours
@@ -51,7 +51,7 @@ export default async function PlayerNews({
           filed about him since 1 July. */}
       <Inbox
         items={inbox(await playerStories(fantraxId, now()))}
-        href={(id) => `${POOL}/${fantraxId}/news?story=${encodeURIComponent(id)}`}
+        href={(id) => `${playerHref(fantraxId)}/news?story=${encodeURIComponent(id)}`}
         openId={story}
       />
     </PlayerShell>

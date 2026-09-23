@@ -7,7 +7,7 @@ import Modal from "../shell/Modal";
 import Note from "./Note";
 import PlayerIdentity from "./PlayerIdentity";
 import { unresolvedReason } from "../../unresolved";
-import { POOL } from "../../players/routes";
+import { playerHref } from "../../players/routes";
 import { SMALL_CAPS } from "@/app/desk";
 
 // One player, over the squad rather than instead of it.
@@ -65,7 +65,7 @@ export default function PlayerCard({
         {isResolved(rostered) ? null : <Note>{unresolvedReason(rostered.unresolved)}</Note>}
 
         <DialogFoot
-          href={`${POOL}/${rostered.slot.fantraxId}`}
+          href={playerHref(rostered.slot.fantraxId)}
           label="Full profile"
           onClose={onClose}
         />

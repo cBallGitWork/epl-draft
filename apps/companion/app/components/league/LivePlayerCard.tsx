@@ -17,7 +17,7 @@ import Breakdown from "./Breakdown";
 import FplRecords from "./FplRecords";
 import PlayerIdentity from "./PlayerIdentity";
 import Note from "./Note";
-import { POOL } from "../../players/routes";
+import { playerHref } from "../../players/routes";
 import { unresolvedReason } from "../../unresolved";
 import { LABEL, QUIET_FIGURE } from "@/app/desk";
 
@@ -91,7 +91,7 @@ export default function LivePlayerCard({
         {story ? <Story story={story} /> : null}
 
         <DialogFoot
-          href={`${POOL}/${rostered.slot.fantraxId}`}
+          href={playerHref(rostered.slot.fantraxId)}
           label="Full profile"
           onClose={onClose}
         />
