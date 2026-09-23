@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Shot } from "@epl/core";
 import { toBoxY } from "./pitchBox";
 
@@ -144,7 +145,7 @@ function radius(xg: number | null): number {
  *  the same rules, so a key per pitch is the same fact twice. `Pitch.tsx` made
  *  the same call about its own key before it was retired.
  */
-export function MarksKey() {
+export function MarksKey({ children }: { children?: ReactNode }) {
   return (
     <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-3xs text-faint">
       {TIER_LABEL.map(([tier, label]) => (
@@ -161,6 +162,8 @@ export function MarksKey() {
           {label}
         </li>
       ))}
+      {/* A map's own entries, such as the match map's key pass. */}
+      {children}
       {/* The other half of the encoding, and the half a ring cannot show. */}
       <li className="text-faint">Size is the chance behind it</li>
     </ul>

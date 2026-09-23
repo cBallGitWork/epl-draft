@@ -32,6 +32,25 @@ export function KeyPass({ shot, from, colour }: { shot: Shot; from: { x: number;
   );
 }
 
+/** The key's entry for a key pass: its square and a stub of its line, off the same numbers as the pitch. */
+export function KeyPassKey() {
+  return (
+    <li className="flex items-center gap-1">
+      <svg width="16" height="11" viewBox="-1 -1.6 5 3.2" aria-hidden className="shrink-0">
+        <line x1="0" y1="0" x2="3.8" y2="0" stroke="var(--color-cream)" strokeWidth={PASS_LINE} strokeDasharray={PASS_DASH} />
+        <rect
+          x={-PASS_SQUARE / 2}
+          y={-PASS_SQUARE / 2}
+          width={PASS_SQUARE}
+          height={PASS_SQUARE}
+          fill="var(--color-cream)"
+        />
+      </svg>
+      Key pass
+    </li>
+  );
+}
+
 /** Turf, mown bands, and both boxes — a side attacks one end and defends the other. */
 export function Pitch() {
   return (

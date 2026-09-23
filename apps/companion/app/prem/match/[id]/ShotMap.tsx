@@ -5,7 +5,7 @@ import type { CSSProperties } from "react";
 import { DASH, type Shot } from "@epl/core";
 import { PITCH_BOX, toBoxY } from "@/app/components/football/pitchBox";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
-import { KeyPass, Pitch } from "./ShotPitch";
+import { KeyPass, KeyPassKey, Pitch } from "./ShotPitch";
 import { BOARD, ROW_RULE, SECTION_BAR } from "@/app/desk";
 import {
   Head,
@@ -115,6 +115,12 @@ export default function ShotMap({
             aria-label="Where both sides shot from"
           >
             <Pitch />
+            {/* Passes first, so each shot's mark sits on the end of its line. */}
+            {shots.map((shot, at) =>
+              shot.pass === null ? null : (
+                <KeyPass key={at} shot={shot} from={shot.pass} colour={sideOf(shot).colour} />
+              ),
+            )}
             <ShotMarks
               shots={shots.filter((shot) => shot.side === "home")}
               ink={home.colour}
@@ -123,11 +129,6 @@ export default function ShotMap({
               shots={shots.filter((shot) => shot.side === "away")}
               ink={away.colour}
             />
-            {shots.map((shot, at) =>
-              shot.pass === null ? null : (
-                <KeyPass key={at} shot={shot} from={shot.pass} colour={sideOf(shot).colour} />
-              ),
-            )}
             {pickedShot === undefined ? null : (
               <circle
                 cx={pickedShot.x}
@@ -153,7 +154,9 @@ export default function ShotMap({
               </circle>
             ))}
           </svg>
-          <MarksKey />
+          <MarksKey>
+            <KeyPassKey />
+          </MarksKey>
         </div>
 
         {/* The board standard: `BOARD` and `SortHead`, the heads every sortable table wears. */}

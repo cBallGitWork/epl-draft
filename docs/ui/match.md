@@ -120,7 +120,8 @@ tile, shooter, outcome, xG — ranked by minute or by xG. Tapping a row or a mar
 picks the shot and rings it in the accent. **Each shot names who made it** — Understat's
 `player_assisted`, joined onto SofaScore's shot by the sister repo's exporter (938 of 1,363,
 23 Sep 2026) — under the shooter on a phone, beside him on a desk; and every **key pass** is drawn as a
-dashed line from where it started (SofaScore's key-pass actions, 695 of the 938). On a desk
+dashed line from a square where it started (SofaScore's key-pass actions, 695 of the 938), under the
+marks so each shot sits on the end of its line, with the square in the key. On a desk
 the list sits beside the pitch. **Every mark and pass line wears a cream halo**: 14 of the 20
 club colours fall under 3:1 on the darker mow band (Chelsea 1.38, Everton 1.15), cream is 10.5:1
 (measured 23 Sep 2026), so the club colour stays and the edge carries the contrast. `Min` and `xG` are the list's two heads,
