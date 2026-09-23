@@ -136,7 +136,8 @@ safe for exactly as long as that one is the whole of the list.
 
 **A fourth surface, and it is the one a reader counts down: the INDEX BLOCK.**
 `cm-index`, the filled blue chip down the left of every table CM draws, carrying
-the rank or the shirt number. It is not raised, pressed or sunken, and it is not
+the rank, the shirt number, or on a squad list our league's position
+(`PositionTile`). It is not raised, pressed or sunken, and it is not
 a chip with a look of its own: **the whole COLUMN is one gradient, light at its
 head and dark at its foot, and each chip is a slice of it.** Craig, 7 Sep 2026:
 *"the blue has a gradient down the page"*, and against a first attempt that

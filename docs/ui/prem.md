@@ -233,9 +233,11 @@ ordered by fantasy position") — `positionDepth` in the join layer, keeper
 through attack, which is the order `cm9900/25.jpg` runs down its slot strip. A
 man our league has no opinion about sorts last rather than into goal.
 
-`#` is the squad number and prints `—`: FPL publishes `squad_number` as a key on
-every element and null as a value on all 622 of them, counted 29 Aug. It fills
-from the sister repo, which carries it for 527 of 625.
+The index block down the left carries **what our Fantrax league fields each man
+as** (`PositionTile`, shared with `SquadRows`), and there is no separate Pos
+column (Craig, 23 Sep 2026: "Put the Fantrax position into those tiles, and then
+remove the position columns"). It replaced the shirt number, which the match
+squads and team sheet still carry.
 
 `Owner` is who holds him in our league, or Fantrax's own letter instead — `WW`
 on waivers, `FA` a free agent. A NAME and never a figure, which is what keeps it
