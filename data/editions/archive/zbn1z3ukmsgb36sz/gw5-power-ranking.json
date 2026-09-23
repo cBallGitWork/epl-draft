@@ -1,0 +1,74 @@
+{
+  "slug": "gw5-power-ranking",
+  "kind": "power-ranking",
+  "leagueId": "zbn1z3ukmsgb36sz",
+  "period": 5,
+  "gameweek": 5,
+  "filedAt": "2026-09-23T17:18:14.294Z",
+  "expiresAt": null,
+  "edition": "The Monday Club",
+  "byline": "The Pecking Order",
+  "headline": "123 Count On A Slender Margin",
+  "deck": "123 top the rankings on 77 scored despite a split week, beating test2 by four; four sides on 3 points, six yet to register.",
+  "body": "Five weeks in and the table lies to you. Four managers sit level on three points, a single win and a single defeat apiece, and the arithmetic cannot separate them. The football can. 123 put 77 on the board and squeezed test2 out by four; that is a ceiling nobody else has touched, and a 1-0-1 record does it no justice. test2, for their part, lost the game and still outscored two managers above them in points if not in the standings.\n\nBelow the line sit six managers with nothing beside their name. Zeroes across the board, no games logged, no evidence either way. That is not a verdict, it is an absence of one, and until they play they are ranked on faith and little else. test3 top-scored among the beaten and are better than a two-point loss to test4 suggests; test4 won the game and know it was the closer thing than the scoreline reads.",
+  "subjects": [
+    "power-ranking:gw5"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [],
+  "extras": {
+    "ranks": [
+      {
+        "teamId": "8enbgqo5msgb375j",
+        "move": 0,
+        "line": "77 scored is the number that matters, and the four-point win over test2 only confirms the firepower."
+      },
+      {
+        "teamId": "pbxm9fgimshcpazf",
+        "move": 0,
+        "line": "Lost by four and still second in my estimation; 55 in defeat is a total most here would take."
+      },
+      {
+        "teamId": "j9zadacnmshcpazf",
+        "move": 0,
+        "line": "Top-scored among the beaten with 70 and lost by two; the table flatters test4, not test3."
+      },
+      {
+        "teamId": "sezrgvl2mshcpazf",
+        "move": 0,
+        "line": "Won the game on 46, the lowest of the four scorers, and that gap will not stay hidden."
+      },
+      {
+        "teamId": "yf96763gmtj31zni",
+        "move": 0,
+        "line": "A blank sheet and nothing to argue with; ranked highest of the unproven on gut alone."
+      },
+      {
+        "teamId": "dq2yk3zxmtj31znh",
+        "move": 0,
+        "line": "No game, no evidence, no complaint from me until there is something to weigh."
+      },
+      {
+        "teamId": "jtsmt5jxmtj31znh",
+        "move": 0,
+        "line": "Zero played and zero scored; faith holds him here and faith is all it is."
+      },
+      {
+        "teamId": "vzqubu25mtj31zni",
+        "move": 0,
+        "line": "Nothing on the board and nothing to rebut it, so the benefit of the doubt thins."
+      },
+      {
+        "teamId": "v6bxgqm5mtj31znh",
+        "move": 0,
+        "line": "Ninth in the table, ninth here, and the absence of a single point does the arguing for me."
+      },
+      {
+        "teamId": "mxet9tt7mtj31zni",
+        "move": 0,
+        "line": "Bottom by the table and bottom by me until a match tells me otherwise."
+      }
+    ]
+  }
+}

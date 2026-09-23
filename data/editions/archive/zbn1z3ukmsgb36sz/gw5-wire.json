@@ -1,0 +1,40 @@
+{
+  "slug": "gw5-wire",
+  "kind": "wire",
+  "leagueId": "zbn1z3ukmsgb36sz",
+  "period": 5,
+  "gameweek": 5,
+  "filedAt": "2026-09-23T17:18:14.294Z",
+  "expiresAt": null,
+  "edition": "The Mercato Wire",
+  "byline": "The Bin",
+  "headline": "One In, One Out, Nobody Home",
+  "deck": "A dead-quiet window: only test1 moved, one in and one out, with Kjell Scherpen dropped and unclaimed.",
+  "body": "One deal. That is the whole of gameweek 5's business, and it belonged to test1 alone: one in, one out, a straight swap and back to the sofa. The rest of the league sat on its hands and watched.\n\nNo churn to report because there was nothing to churn. When a single manager makes the only move on the page, the trend writes itself, and the trend is silence.\n\nKjell Scherpen departs the wire without a farewell. Signed in hope, dropped without ceremony, survived by a bench spot that will not be kept warm. He waits now among the unclaimed, a goalkeeper nobody is in a hurry to trust.",
+  "subjects": [
+    "wire:through-gw5"
+  ],
+  "image": null,
+  "face": null,
+  "ties": [],
+  "extras": {
+    "quiz": [
+      {
+        "q": "How many deals went through in gameweek 5?",
+        "a": "One"
+      },
+      {
+        "q": "Which manager made the only move?",
+        "a": "test1"
+      },
+      {
+        "q": "What was the shape of test1's business?",
+        "a": "One in, one out"
+      },
+      {
+        "q": "Which goalkeeper was dropped and left unclaimed?",
+        "a": "Kjell Scherpen"
+      }
+    ]
+  }
+}

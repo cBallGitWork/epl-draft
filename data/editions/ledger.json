@@ -221,5 +221,69 @@
         "lastUsedAt": "2026-09-20T06:35:10.670Z"
       }
     ]
+  },
+  "zbn1z3ukmsgb36sz": {
+    "covered": [
+      "tie-report:p5:pbxm9fgimshcpazfv8enbgqo5msgb375j",
+      "tie-report:p5:sezrgvl2mshcpazfvj9zadacnmshcpazf",
+      "eleven:gw5",
+      "power-ranking:gw5",
+      "dodgers:gw5",
+      "news:https://www.bbc.co.uk/sport/football/articles/cvde0jw2l6g4o",
+      "news:https://www.bbc.co.uk/sport/football/articles/c63d7ypd11ydo",
+      "predicted-xi:gw6",
+      "wire:through-gw5"
+    ],
+    "threads": [
+      {
+        "subject": "test2's misfiring forwards",
+        "beat": "Havertz and Lukić both blank at two while Cunha and Isak underwhelm",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-23T17:18:14.294Z"
+      },
+      {
+        "subject": "test3's misfiring forwards",
+        "beat": "Emersonn and Gonzalo blanked in all but two apiece, and it cost him the tie.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-23T17:18:14.294Z"
+      },
+      {
+        "subject": "123's scoring ceiling",
+        "beat": "77 on the board, the highest in the league, and only three points to show for it.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-23T17:18:14.294Z"
+      },
+      {
+        "subject": "Six managers yet to register",
+        "beat": "Half the league on zero, unranked by result and ranked on faith.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-23T17:18:14.294Z"
+      },
+      {
+        "subject": "test1's Saka watch",
+        "beat": "Saka fit and speaking, no injury flagged.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-23T17:18:14.294Z"
+      },
+      {
+        "subject": "test3331's Thomas on Scotland duty",
+        "beat": "Thomas recalled for the Czech Republic play-offs after nearly a year away.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-23T17:18:14.294Z"
+      },
+      {
+        "subject": "A frozen waiver market",
+        "beat": "Gameweek 5 produced a single transaction across the whole league.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-23T17:18:14.294Z"
+      }
+    ]
   }
 }
