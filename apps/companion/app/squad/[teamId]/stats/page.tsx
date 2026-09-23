@@ -68,7 +68,6 @@ export default async function StatsPage({
   return (
     <TeamShell
       team={team}
-      title="Stats"
       current="stats"
       empty={his.length === 0 ? ["stats"] : []}
     >

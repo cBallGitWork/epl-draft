@@ -1,12 +1,12 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { ClubColours } from "@epl/core";
 import { plateOn } from "@epl/core";
-import Caption from "./Caption";
 import PageHeader from "./PageHeader";
 
 // The frame a screen about a SUBJECT wears: his own colour on the bar, his tabs
-// under it, the yellow caption under those, and every table inside drawn in his
-// colours rather than the division's.
+// under it, and every table inside drawn in his colours rather than the
+// division's. No yellow caption: it only repeated the lit tab (Craig, 23 Sep 2026:
+// "Should we really have 'your squad' in yellow? Does it save a row we need?").
 //
 // **Extracted at the third plated subject, which is where the second one said it
 // would be.** `prem/club/[code]/Shell.tsx` declined the abstraction in writing:
@@ -41,7 +41,6 @@ export default function PlateShell({
   colours,
   title,
   sub,
-  caption,
   tabs,
   children,
 }: {
@@ -53,19 +52,6 @@ export default function PlateShell({
   title: string;
   /** The line UNDER the bar, never inside it. One caller uses it. */
   sub?: ReactNode;
-  /** CM's yellow box: the bar above names the screen, this names what is in the
-   *  panel, and every screen in the reference library carries both.
-   *
-   *  **Optional, and the third caller is why.** A club and a fantasy team have
-   *  nothing to put here but the view name, and the accent is right for it —
-   *  yellow means *active* and the view you are on is the active thing. A PLAYER
-   *  has something better: CM gives that box to the man (`Born 2.10.79 (Age 19).
-   *  English.`). But a birth date is not *yours · selected · active · primary*,
-   *  so it cannot take the accent — and with the tab strip already marking the
-   *  current view in accent two rows above, a caption reading "Profile" is the
-   *  slot spent twice on one fact. So that caller draws its own box instead and
-   *  passes nothing. */
-  caption?: string;
   tabs: ReactNode;
   children: ReactNode;
 }) {
@@ -95,9 +81,6 @@ export default function PlateShell({
     >
       <PageHeader title={title} sub={sub} plate={plate} />
       {tabs}
-      {/* The caption's own box, not a heading inside the content's (Craig,
-          1 Sep). Absent for a subject that draws a better box of its own. */}
-      {caption === undefined ? null : <Caption>{caption}</Caption>}
       {children}
     </div>
   );

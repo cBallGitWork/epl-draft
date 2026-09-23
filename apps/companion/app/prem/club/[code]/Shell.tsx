@@ -22,20 +22,17 @@ import type { ClubTab } from "./ClubTabs";
 
 export default function ClubShell({
   club,
-  title,
   current,
   empty,
   children,
 }: {
   club: Club;
-  /** What this VIEW is — "Squad", "Fixtures". */
-  title: string;
   current: ClubTab;
   empty?: readonly ClubTab[];
   children: ReactNode;
 }) {
   return (
-    <PlateShell colours={clubColours(club.shortName)} title={club.name} caption={title}
+    <PlateShell colours={clubColours(club.shortName)} title={club.name}
       tabs={<ClubTabs code={club.code} current={current} empty={empty} />}>
       {/* **This club's own ground, behind this club's own screen.** The shell's
           standing photograph stands down here (`drawsOwnGround`) because it

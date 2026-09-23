@@ -224,7 +224,6 @@ export default async function TeamPage({
        same numbers. */
     <TeamShell
       team={identify(team, slug)}
-      title={mine ? "Your squad" : "Squad"}
       current="squad"
     >
       {planning !== null ? (

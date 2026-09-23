@@ -43,7 +43,7 @@ export default async function FixturesPage({
 
   if ("unavailable" in read) {
     return (
-      <TeamShell team={team} title="Fixtures" current="fixtures" empty={["fixtures"]}>
+      <TeamShell team={team} current="fixtures" empty={["fixtures"]}>
         <TabEmpty>The schedule is part of the league&apos;s own description of itself, and we cannot read
             it right now.</TabEmpty>
       </TeamShell>
@@ -66,7 +66,6 @@ export default async function FixturesPage({
   return (
     <TeamShell
       team={team}
-      title="Fixtures"
       current="fixtures"
       empty={rows.length === 0 ? ["fixtures"] : []}
     >

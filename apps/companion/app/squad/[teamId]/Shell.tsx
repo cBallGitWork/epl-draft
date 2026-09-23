@@ -17,14 +17,13 @@ import type { TeamTab } from "./TeamTabs";
 // in the competition rather than the competition, so it takes the second, in
 // that manager's own colour.
 //
-// The bar, the caption and the `--cm-index` re-point are `PlateShell`'s now —
+// The bar and the `--cm-index` re-point are `PlateShell`'s now —
 // extracted at the third plated subject, exactly where `prem/club/[code]/Shell`
 // predicted. What is left here is what is this subject's own: which colour table
 // he is looked up in, and which tabs he has.
 
 export default function TeamShell({
   team,
-  title,
   current,
   sub,
   empty,
@@ -34,8 +33,6 @@ export default function TeamShell({
    *  colour up and the name goes on the bar, so all three come from the same
    *  object rather than being passed separately and drifting. */
   team: { teamId: string; teamName: string; slug: string };
-  /** What this VIEW is — "Squad", "The Wire". */
-  title: string;
   current: TeamTab;
   sub?: React.ReactNode;
   empty?: readonly TeamTab[];
@@ -45,7 +42,7 @@ export default function TeamShell({
   // `clubColours`. That difference is the reason `PlateShell` takes the colours
   // resolved rather than an id.
   return (
-    <PlateShell colours={teamColours(team.teamId)} title={team.teamName} sub={sub} caption={title}
+    <PlateShell colours={teamColours(team.teamId)} title={team.teamName} sub={sub}
       tabs={<TeamTabs slug={team.slug} current={current} empty={empty} />}>
       {children}
     </PlateShell>

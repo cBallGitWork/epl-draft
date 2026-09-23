@@ -62,7 +62,6 @@ export default async function NextMatchPage({
   return (
     <TeamShell
       team={identify(team, slug)}
-      title="Next Match"
       current="next"
       empty={tie === undefined ? ["next"] : []}
     >
