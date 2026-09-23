@@ -1,91 +1,39 @@
-/* ============================================================================
-   THE PAPER — the Gazetta's own register.
-
-   Split from `tokens.css` when the two registers together crossed CODE_RULES'
-   300-line ceiling, and the seam was already drawn: that file is the desk's
-   `@theme`, this one is the newsprint scope that re-points it. One register per
-   file, and the filename says which.
-
-   Nothing here is a Tailwind theme value. `@theme` generates utilities and must
-   stay in one place; everything below is ordinary CSS that changes what those
-   utilities RESOLVE TO inside `.paper`, plus the four classes the page sets its
-   display type with.
-   ============================================================================ */
+/* THE PAPER: the Gazetta's register. Ordinary CSS that changes what the desk's `@theme` utilities
+   resolve to inside `.paper`, plus the classes the page sets its display type with. */
 
 /* ---- The paper --------------------------------------------------------------
-   The Gazetta is printed, and printing is a different medium from the app around
-   it: ink on stock, not light on glass. Everything under `.paper` derives from
-   these two colours — rules, secondary text and tints are `currentColor` at an
-   opacity — which is what stops a newsprint page from having to fight the dark
-   token set the other five tabs are built on.
-
-   Gazzetta's rosa, and its ink. This file used to argue for a warm off-white on
-   the grounds that the pink was another paper's identity — but that reasoning
-   only holds for a paper with an identity of its own to protect, and the whole
-   brief for this one is *La Gazzetta*. A near-cream that is nearly the rosa
-   reads as neither. Reversed 29 Aug: the stock is the reference's.
-
-   One colour on the sheet besides ink, and it is a print red — the register the
-   masthead's own rules and the LIVE mark share. Every other mark on the page is
-   ink at an opacity, which is the discipline that makes the reference read as
-   newsprint rather than as a themed screen. */
+   Ink on La Gazzetta's rosa, plus one print red shared by the masthead rules and the LIVE mark.
+   Every other mark is ink at an opacity: that discipline is what reads as newsprint. */
 .paper {
   --paper: #f6ddd2;
   --paper-ink: #2a2018;
   --paper-rule: rgb(42 32 24 / 0.18);
-  /* Deeper and browner than the league's own #C8102E, which is a brand red for
-     signage and glowed on this stock. 7.4:1 here, so it carries the small caps
-     of a kicker as well as the dot beside a live score. */
+  /* Deeper than the league's brand red, which glowed on this stock; 7.4:1, so it carries small caps. */
   --paper-red: #8f2318;
 
-  /* The app's semantic tokens, re-pointed at ink on stock.
-   *
-   * Redefined here rather than edited into thirty components, which is the only
-   * version of this that stays true: a component asking for `text-muted` wants
-   * "quieter than the body", and that is a different colour on paper than it is
-   * on glass. The names keep their meaning and the medium supplies the value. */
+  /* The semantic tokens re-pointed at ink on stock rather than edited into thirty components: the
+   * names keep their meaning and the medium supplies the value. */
   --color-bg: var(--paper);
   --color-surface: oklch(0.885 0.026 40);
   --color-raised: oklch(0.845 0.032 40);
   --color-line: rgb(42 32 24 / 0.16);
   --color-ink: var(--paper-ink);
   --color-cream: var(--paper-ink);
-  /* The same three rungs the desk's ink ladder has, measured on this stock
-     rather than assumed from it: 14.2 · 7.9 · 5.4, against the desk's
-     17.1 · 8.7 · 5.3. A component asking for `text-faint` is asking for the
-     quietest step that is still text, and that means the same thing in both
-     registers or the tokens are lying about what they are.
-     `--faint` was 0.48, which is 3.0:1 — under the 4.5:1 docs/rules/DESIGN.md sets as the
-     floor with no exceptions, and it was carrying every timestamp, every
-     percentage and every standing label on the page. Ink on stock has more
-     headroom than ink on glass, so the correction is upward on both. */
+  /* The desk's three ink rungs, measured on this stock (14.2 · 7.9 · 5.4:1). `faint` must clear
+     DESIGN's 4.5:1 floor; it once sat at 3.0 and carried every timestamp. */
   --color-muted: rgb(42 32 24 / 0.8);
   --color-faint: rgb(42 32 24 / 0.68);
 
-  /* The two slots whose desk value is a colour rather than a lightness, and so
-     the two the medium cannot supply by re-pointing ink. "Yours, selected,
-     active" and "in play" both take the sheet's one red, which is what keeps
-     the count at two colours: an accent that is a third hue is the difference
-     between a newspaper and a themed screen. The desk's own yellow is 1.3:1 on
-     this stock and its live red 2.6:1, so neither could have crossed anyway. */
+  /* Accent and live both take the print red, keeping the sheet to two colours. The desk's yellow
+     (1.3:1) and live red (2.6:1) could not cross onto this stock anyway. */
   --color-accent: var(--paper-red);
   --color-live: var(--paper-red);
-  /* The league's red is the crest's, and the crest is a printed mark rather than
-     page furniture — see the `.crest` plate below. Nothing else on the sheet may
-     reach for it. */
+  /* Only the crest may use the league's own red (restored in the `.crest` plate below). */
   --color-league: var(--paper-red);
 
-  /* The paper's own two faces, loaded by `app/paperFonts.ts` and by no other
-     route, so the desk pays nothing for them. Georgia stays named in both
-     stacks: it is a real transitional serif on every device that will open
-     this, which is why it carried the page alone before these arrived.
-     `--font-display` is deliberately NOT re-pointed — Archivo Narrow with
-     `tnum` sets every figure in both registers, and that is the one thing a
-     score keeps when it moves from the desk to newsprint. */
-  /* The paper's small capitals stay Archivo, which is now its face alone — the
-     desk took Oxanium and Jost on 31 Aug and a newspaper has no use for either.
-     `font-sans` is re-pointed here and nowhere else, so a `font-sans` on the
-     sheet still means what §6 says it means. */
+  /* The paper's faces load from `app/paperFonts.ts` only, so the desk pays nothing for them.
+     `--font-display` stays: Archivo Narrow with `tnum` sets every figure in both registers.
+     `font-sans` is re-pointed here and nowhere else, to Archivo for the small capitals. */
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 
   --paper-text: var(--font-newsreader), Georgia, "Times New Roman", "Liberation Serif", serif;
@@ -94,22 +42,12 @@
   background: var(--paper);
   color: var(--paper-ink);
   font-family: var(--paper-text);
-  /* Both faces carry an `opsz` axis, which is the reason they were chosen over a
-     static pair: the masthead and the byline are cut from one family and drawn
-     differently. `auto` spends the axis off the font size, so nothing on the
-     page has to name an optical size by hand. */
+  /* Both faces have an `opsz` axis; `auto` spends it off the font size. */
   font-optical-sizing: auto;
 }
 
-/* A colour plate printed INSIDE the paper — the way a paper prints a colour
-   picture on a cream page. Two things are one: the pitch, which is a photograph
-   rather than prose, and the league's own crest, which is a printed mark whose
-   red and cream are the mark's, not the page's.
-
-   Both need the tokens the paper re-pointed at ink to go back to what they were.
-   A name plate is cream on green here and on every other screen, and re-pointing
-   `--color-cream` at ink turned eleven of them invisible — and the crest's ink
-   with them, which is how a red oval came to be stamped with a red name. */
+/* A colour plate printed on the sheet: the pitch and the league crest keep the desk's tokens.
+   Re-pointing `--color-cream` at ink made eleven name plates invisible. */
 .paper :is(.pitch, .crest) {
   --color-ink: oklch(0.97 0.01 265);
   --color-cream: oklch(0.94 0.02 75);
@@ -118,39 +56,14 @@
   --color-bg: oklch(0.185 0.045 265);
   --color-surface: oklch(0.215 0.046 265);
   --color-line: oklch(0.36 0.045 265);
-  /* The mark's own red, restored. The sheet re-points `--color-league` at the
-     print red so no column head or rule can reach the brand colour; a crest is
-     the one thing on the page entitled to it, and it is the crest's identity
-     rather than the page's palette. */
+  /* The crest's own red, restored: the one thing on the sheet entitled to it. */
   --color-league: oklch(0.530 0.207 22);
   color: var(--color-ink);
   font-family: var(--font-sans);
 }
 
-/* The paper's own name, and the loudest thing it prints.
-   The one clamp in the type system: docs/rules/DESIGN.md fixes the scale in rem and admits
-   fluid type at the masthead alone, because a masthead is sized against the
-   sheet rather than against the paragraph under it.
-
-   No longer set in capitals. Archivo Narrow shouting a league name was a sports
-   app's title bar; a paper sets its title in its display face, mixed case, and
-   lets the letterforms do the work capitals were standing in for.
-
-   **The ceiling is sized against the sheet, and until 16 Sep 2026 it was not.**
-   At 4.5rem the middle term won on a phone (12.5vw is 48.8px at 390, a real
-   masthead at 13.6% of the sheet) and the CEILING won from 576px up — so at
-   1440 the nameplate set at 72px inside a 1088px sheet, 6.6% of it, a caption
-   stranded between two full-width rules with a quarter-sheet of bare rosa
-   either side. 7.5rem is 120px from 960px up.
-
-   **The vw term is the phone's half of the same fault.** At 12.5vw the
-   nameplate filled 75% of its measure at 390 and 77% at 320 — a title floating
-   in the middle of the sheet rather than sitting against it. 15vw fills 88% at
-   390 and 91% at 320, one line at every width in the set, with 26px of slack at
-   the narrowest. Capitals were measured as the alternative and refused: they
-   fill 98% at 320, six pixels from wrapping, and Fraunces 900 caps are NARROWER
-   per character than its mixed case, so they buy horizontal fill and lose
-   vertical ink. */
+/* The masthead: the one fluid size DESIGN allows, sized against the sheet. 15vw fills about 90% of a
+   phone's measure on one line; the 7.5rem ceiling keeps it a nameplate at 1440, not a caption. */
 .paper-masthead {
   font-family: var(--paper-display);
   font-size: clamp(2.5rem, 15vw, 7.5rem);
@@ -159,21 +72,13 @@
   letter-spacing: -0.03em;
 }
 
-/* Everything else the paper sets in its display face: headlines at both sizes,
-   and the standing figures the sidebar prints large. Weight and size come from the
-   utilities at the point of use — this settles only which face and how tight. */
+/* Headlines and the sidebar's big figures: the display face and its tracking; size is the caller's. */
 .paper-display {
   font-family: var(--paper-display);
   letter-spacing: -0.02em;
 }
 
-/* The drop cap on the column's first paragraph. It is the oldest signal in
-   print for "the prose starts here", and this page needs it more than most:
-   everything above the column is computed and everything below it is a list, so
-   without a mark of its own the one part a person wrote begins like a caption.
-
-   Set in the display face at four lines' depth, floated so the text runs round
-   it. Deleted once as dead code — reinstated with the paragraph that wears it. */
+/* The drop cap marking where the written prose starts, four lines deep. */
 .paper-dropcap::first-letter {
   float: left;
   font-family: var(--paper-display);
@@ -183,14 +88,8 @@
   margin: 0.05em 0.1em 0 0;
 }
 
-/* Prose in newspaper columns.
-   `columns` takes a WIDTH rather than a count on purpose: the number of columns
-   is not a decision anybody should be making per breakpoint, it is whatever a
-   readable measure divides the available width into. At a phone's 358px it is
-   one, at the frame's present 640px it is two, and at the 72rem frame the
-   chrome phase is bringing it is three — with no rule here changing. A count
-   would have printed two 150px columns inside the sidebar grid, which is a measure
-   nobody can read. */
+/* Prose columns by WIDTH, not count: a readable measure decides how many (one at 358px, three at
+   72rem). A count once printed two 150px columns in the sidebar. */
 .paper-columns {
   columns: 17rem;
   column-gap: 1.75rem;
@@ -200,17 +99,8 @@
   break-inside: avoid;
 }
 
-/* The splash picture, printed in the sheet's own two colours.
-   The drawing arrives as a colour image and the paper has an ink and a stock —
-   so it is not shown as it came. `grayscale` first, then a hint of `sepia` to
-   pull the greys toward the ink's warmth, then `multiply` against the rosa so
-   the paper shows through the midtones the way it does through printed ink.
-   The result cannot introduce a third colour whatever the drawing did.
-
-   Deliberately NOT a colour plate (DESIGN §5). A plate — the pitch, a crest —
-   restores the desk's tokens because it is a colour object printed ON the
-   sheet. This is the opposite: an image made to print IN the sheet's colours,
-   so it must not join that selector. */
+/* The splash picture, filtered and multiplied into the sheet's ink and stock so it cannot add a
+   colour. Not a colour plate (DESIGN §5): it prints IN the sheet's colours, not on them. */
 .paper-photo {
   position: relative;
   background: var(--paper);
@@ -219,9 +109,7 @@
   filter: grayscale(1) sepia(0.18) contrast(1.08) brightness(1.04);
   mix-blend-mode: multiply;
 }
-/* The halftone screen: a dot grid at the size a coarse newsprint screen
-   prints at. Faint enough to read as texture rather than as pattern, and
-   `pointer-events: none` so it never eats a tap. */
+/* A faint halftone dot screen; `pointer-events: none` so it never eats a tap. */
 .paper-photo::after {
   content: "";
   position: absolute;
@@ -232,19 +120,8 @@
   opacity: 0.35;
 }
 
-/* A player, printed as a paper prints a photograph.
-
-   `.paper-photo` above filters the IMAGE and leaves its ground alone, which is
-   right for a drawing dropped straight onto the stock. A face does not stand on
-   the stock — he stands on his club's colour, with the crest behind him — and a
-   saturated club colour under a headline, once per story, down the whole page,
-   is precisely the "themed screen rather than newsprint" DESIGN §4 spends a
-   paragraph on. That band was justified when there was ONE of it over the
-   splash; there is now one per rank.
-
-   So the filter goes on the BAND and not the image: kit, crest and cut-out all
-   go through the same ink, and the club's colours survive as the value that
-   tells Forest from Chelsea rather than as the colours themselves. */
+/* A player's face band: filtered as a whole (kit, crest and cut-out), so a club's colour survives as a
+   value rather than as a saturated band under every headline. */
 .paper .paper-face {
   position: relative;
   filter: grayscale(1) sepia(0.2) contrast(1.06) brightness(1.03);
@@ -260,41 +137,11 @@
 }
 
 /* --- The page turn ------------------------------------------------------
-   A leaf going over: the sheet you are leaving slides off to the left as the
-   one you are turning to comes in from the right, both under a short fade.
-
-   200ms and `--ease-out-quart`, which is DESIGN §7's motion rule verbatim
-   (150-250ms, ease-out) and adds no token. It is the paper's ONLY animation
-   and `paper.css` had none before it.
-
-   **THE LEAF IS THE SHEET AND NOT THE WINDOW**, and getting that wrong is why
-   Craig's verdict on the first version was that it "sucks on chrome". It
-   animated `::view-transition-old(root)` / `new(root)` — the whole root
-   snapshot — so the navy ground outside the sheet, the section rail and the
-   browser's own chrome all slid across with it. A page turn in which the desk
-   moves is not a page turn; it is the window sliding.
-
-   So `.paper` takes a `view-transition-name` of its own and the leaf is
-   addressed to THAT, while the root group and its two snapshots are pinned
-   still. The named element is the group LAYOUT's div, which Next keeps mounted
-   across every paper route, so the same node is captured either side and the
-   browser has one group rather than two unrelated ones.
-
-   `object-fit: none` with a top anchor on both snapshots, and the group's own
-   animation off: the front page is several times the height of an inside page,
-   and a group animating between those two sizes draws the old sheet squashed
-   into the new one's box. Anchored at natural size it slides instead, which is
-   what a leaf does.
-
-   **The reduced-motion carve-out IS owed, and this file used to argue it was
-   not.** The old comment here said the blanket rule in `globals.css` — which
-   cuts every animation to 0.01ms — was "a complete and honest answer". It is
-   not: that rule selects `*`, `*::before` and `*::after`, and a
-   view-transition pseudo-element is in none of those. Nothing reached these
-   rules. In practice no reduced-motion user has seen the turn, because
-   `TurnLink` declines to start a transition at all under that setting — which
-   is stiller than starting one that animates to nothing — but that is the
-   belt, and this is the braces. */
+   200ms ease-out (DESIGN §7), the paper's only animation. The leaf is the SHEET, not the window:
+   `.paper` gets its own view-transition name and the root is pinned, or the rail and the ground slide
+   too. Both snapshots sit at natural size, anchored top, so sheets of different heights slide
+   rather than squash. The reduced-motion rule at the foot is owed: `globals.css`'s blanket rule does
+   not reach view-transition pseudo-elements. */
 
 .paper {
   view-transition-name: paper-leaf;
@@ -314,11 +161,7 @@
   }
 }
 
-/* Gated on an attribute `TurnLink` sets for the length of the turn. A
-   view-transition pseudo-element is document-level and cannot be nested under
-   `.paper`, so the SCOPE is the flag: nothing else in the app starts a
-   transition, and if anything ever does it animates the browser's default
-   cross-fade rather than borrowing the paper's leaf. */
+/* Scoped by the attribute `TurnLink` sets for the turn: these pseudo-elements are document-level. */
 html[data-turning]::view-transition-old(paper-leaf) {
   animation: paper-leaf-out 200ms var(--ease-out-quart) both;
 }
@@ -327,8 +170,7 @@ html[data-turning]::view-transition-new(paper-leaf) {
   animation: paper-leaf-in 200ms var(--ease-out-quart) both;
 }
 
-/* Natural size, anchored top, so two sheets of very different heights slide
-   past each other rather than one squashing into the other's box. */
+/* Natural size, anchored top. */
 html[data-turning]::view-transition-old(paper-leaf),
 html[data-turning]::view-transition-new(paper-leaf) {
   height: 100%;
@@ -341,9 +183,7 @@ html[data-turning]::view-transition-group(paper-leaf) {
   animation: none;
 }
 
-/* The window holds still. The root snapshot is now everything OUTSIDE the
-   sheet — the navy ground and the app's chrome — and across two paper routes
-   those pixels are identical, so the honest animation for them is none. */
+/* The window holds still: across two paper routes its pixels are identical. */
 html[data-turning]::view-transition-group(root),
 html[data-turning]::view-transition-old(root),
 html[data-turning]::view-transition-new(root) {
