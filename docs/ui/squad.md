@@ -125,6 +125,9 @@ no longer describes this one.
 
 ### The pitch
 
+*Superseded 21 Sep 2026: every pitch now stands on `CmGround`'s flat diagram, and
+`PitchFrame` and `PitchTurf` are gone. Kept as the record of the perspective pitch.*
+
 - Full-bleed: it breaks out of the page gutters, because it is the widest thing
   in the app and the only one that gains from every pixel.
 - Sponsor hoardings the width of the **far touchline** — not the page — carrying

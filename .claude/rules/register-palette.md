@@ -49,7 +49,8 @@ red on red.
 
 ## Type
 
-Archivo for UI, **Archivo Narrow with `tnum` for every figure**, in both
+On the desk, Oxanium for chrome (bars, tabs, the rail, column heads) and Jost for
+text and names; **Archivo Narrow with `tnum` for every figure**, in both
 registers. Fraunces and Newsreader load from `app/paperFonts.ts` and are imported
 **only by paper routes**, so the desk pays nothing for them. Archivo sets the
 letterspaced small capitals on the paper too — the body serif never sets a

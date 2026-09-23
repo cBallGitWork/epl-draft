@@ -35,13 +35,20 @@ printing its own contents strip (Craig, 16 Sep 2026), which is why
 `gazette/Index` is gone: the front page was the one screen with no way back into
 the app.
 
+**Breakpoints: `lg` is the line between a thumb and a desk**: rail or foot row,
+44px taps or CM's proportions. Two more are used, each in one place: `xl` on
+Scout's board, where the search box widens and the tallies change places (six
+sites, counted 23 Sep 2026), and `2xl`, where `--page-frame` widens from 72rem to
+96rem. A new breakpoint is recorded here in the commit that adds it.
+
 **The count is deliberately not written down here.** This paragraph said "six"
 through two additions of a seventh, and `sections.ts` is the table to read.
 
 ~~**Neither shape is on `/`.**~~ **Reversed 16 Sep 2026**, and the paragraph
 above records it. The argument here was that a navy column beside a broadsheet is
 a seam and would narrow the container the front page's two-column layout keys
-off. Measured before it was acted on: `--page-frame` caps `<main>` at 1152px and
+off. Measured before it was acted on: `--page-frame` caps `<main>` at 1152px (1536px
+from `2xl`, 96rem, where `globals.css` widens it) and
 the rail sits BESIDE that frame rather than inside it, and the two-column grid
 holds to 820px while the rail only exists from `lg`. So at the tightest width
 where both are on screen there is ~200px of slack, and the front page had been
@@ -173,9 +180,9 @@ were blue.
 
 | Object | Class | How CM draws it | Ours |
 |---|---|---|---|
-| **Tab strip** — one of a subject's views | `cm-tab` | filled royal-blue plates, bevelled, current one pressed with a yellow label and border | `shell/TabStrip`, `league/GroupNav`, `players/Board` |
+| **Tab strip** — one of a subject's views | `cm-tab` | filled royal-blue plates, bevelled, current one pressed with a yellow label and border | `shell/TabStrip`, `league/GroupNav` |
 | **Rail** — where you can go from anywhere, on a desk | — | the page's own navy, each entry in a thin outlined box | `shell/Rail` above `lg`, accent on the label AND the border |
-| **Foot row** — related screens, across the bottom | `cm-foot` | ONE filled strip, flat, a light edge along the top and a rule between plates, current marked on the label alone | `shell/Rail` below `lg`, `prem/match/[id]/MatchFoot` |
+| **Foot row** — related screens, across the bottom | `cm-foot` | ONE filled strip, flat, a light edge along the top and a rule between plates, current marked on the label alone | `shell/Rail` below `lg` |
 
 `cm9900/12.jpg` and `19.jpg` carry the strip and the rail together; `24.jpg` and
 `cm0102/02.jpg` carry the foot row. **Flat is the foot row's whole distinction**:
@@ -629,7 +636,9 @@ Four faces, four roles.
 |---|---|---|
 | Fraunces | masthead, display, drop caps | Paper |
 | Newsreader | prose, italic decks | Paper |
-| Archivo | UI | Desk |
+| Oxanium | chrome: title bars, tab strips, the rail, column heads | Desk |
+| Jost | text and names | Desk |
+| Archivo | letterspaced small capitals | Paper |
 | Archivo Narrow, `tnum` | **every figure** | both |
 
 Fraunces and Newsreader load from `app/paperFonts.ts`, imported only by paper
@@ -898,7 +907,7 @@ Recorded so the next agent does not read the absence as an oversight.
   down**. The rule that got there is *the card shrinks, the type never does*: a
   crowded line gives up card width and truncates the name rather than shrinking
   it, because there is nothing smaller worth saying — FPL publishes
-  `squad_number` as null on all 622 of its elements. Recorded rather than deleted
+  `squad_number` as null on every element (667 of 667, counted 23 Sep 2026). Recorded rather than deleted
   because the shape of the mistake is worth keeping: a size expressed as a range
   whose ceiling the geometry could never reach is a floor wearing a range's
   clothes.
@@ -955,8 +964,8 @@ preserves `docs/ui/players.md`'s "nothing is hidden on a phone" record, which
 therefore stands rather than being rewritten. A sticky first column is the cost.
 
 *Still the answer for `/players`, and 5 Sep 2026 gave it a general rule that says
-why — see §2's table geometry below. The frozen name column has not been built;
-the sideways scroll has, with CM's own bar on it.*
+why — see §2's table geometry below. Both are built: the name column is frozen
+(`STICKY_LEAD` in `desk.ts`) and the sideways scroll carries CM's own bar.*
 
 **The live desk splits.** Mobile `/matchday` rows expand in place from data
 already on the page; the `≥lg` wall at `/matchday/desk` keeps the no-tap rule
