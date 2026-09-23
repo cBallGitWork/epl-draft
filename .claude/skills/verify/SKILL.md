@@ -34,13 +34,17 @@ Before anything leaves the machine, three more. These are about the world, not
 the code, which is why they are not in the four:
 
 ```bash
-npm run smoke        # the running app answers on its real routes
+FANTRAX_LEAGUE_ID=<id> npm run smoke   # the running app answers on its real routes
 npm run shape-diff   # the provider still returns the shape raw.ts claims
 npm run bridge:check # the Fantrax→FPL mapping still covers the pool
 ```
 
-`smoke` needs the app up (`npm run dev`, or `npm run start` after a build) and
-takes `SMOKE_BASE`. `shape-diff` and `bridge:check` read live public endpoints.
+`smoke` needs the app up (`npm run dev`, or `npm run start` after a build; both read the
+league from `apps/companion/.env.local`) and takes `SMOKE_BASE`. It also needs
+`FANTRAX_LEAGUE_ID` in its OWN shell, set to the league that server serves, and refuses
+without it. Stop the server with `pkill -f next-server`: `next start` renames itself, so
+`pkill -f "next start"` leaves it answering the next smoke. `shape-diff` and
+`bridge:check` read live public endpoints.
 
 Then, and only then:
 

@@ -87,6 +87,29 @@ Read against the installed Next 16.2.7 source. Standing rules for anything that 
 `tools/ui/pollwatch.mjs` measures it: polls per minute, the gaps between them,
 and how many polls changed the screen.
 
+## What CI needs, and what it had — counted 17 Sep 2026
+
+Counted 17 Sep 2026, when the repository had **zero Actions secrets** and one
+variable (`WARM_BASE_URL`). Both Vercel environments were empty, and
+`editions.yml` names no environment, so it could only read repository secrets
+anyway.
+
+- **`ANTHROPIC_API_KEY` — set the same day, and it had never been set before.**
+  `write-edition.ts` throws without it, so until 17 Sep **the paper had never
+  filed from CI at all**: the sixteen stories in `data/editions/paper.json` were
+  written by running `npm run edition` locally on 2 Sep, which this file already
+  records further up without anyone joining the two facts. Fixing the Actions
+  billing that morning did not fix this; it uncovered it.
+- **No league variable, by design.** Until 23 Sep the editions job read an unset
+  `vars.FANTRAX_LEAGUE_ID` and fell back to the dummy league. Production serves
+  rehearsal and `normalizePaper` filters by league, so every CI firing filed
+  stories nobody could see. The job now asks production which league it serves.
+- **`GAZETTA_MODEL` defaults to `claude-opus-4-8`, and that is current** —
+  verified 17 Sep against the model table, $5/$25 per MTok, 1M context. It is
+  deliberately NOT `claude-opus-5` despite the identical price: on 4.8 an absent
+  `thinking` parameter means no thinking, while on Opus 5 thinking is ON by
+  default, so the same request would silently start thinking on every column.
+
 ## How CI pushes, and what it may touch — decided 23 Sep 2026
 
 - **Every writer pushes through `scripts/ci/push.sh`** (capture, editions,

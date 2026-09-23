@@ -72,7 +72,7 @@ it to finish before checking anything.
 ## 4. Smoke the DEPLOYED url, not localhost
 
 ```bash
-SMOKE_BASE=https://<the-deployment> npm run smoke
+SMOKE_BASE=https://<the-deployment> FANTRAX_LEAGUE_ID=ayyoh3n2mr326v2o npm run smoke
 ```
 
 Localhost has its own `.env.local` and will pass while production serves the
