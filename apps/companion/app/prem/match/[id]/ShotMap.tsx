@@ -2,6 +2,7 @@ import { clubColours, inkOn, DASH } from "@epl/core";
 import type { Club, Shot } from "@epl/core";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
 import { LABEL } from "@/app/desk";
+import { PITCH_BOX } from "@/app/components/football/pitchBox";
 
 // Where a side's shots came from: one pitch per team, each attacking right.
 //
@@ -24,9 +25,6 @@ import { LABEL } from "@/app/desk";
 // side's afternoon. The mark is what the two share and the mark is what moved to
 // `components/football/`.
 
-/** The pitch, in its own units. 100 long by 64 wide is close enough to a real
- *  one that the penalty area drawn below lands where the eye expects it. */
-const BOX = { width: 100, height: 64 };
 
 export default function ShotMap({
   home,
@@ -82,12 +80,12 @@ function Side({ club, shots }: { club: Club | undefined; shots: readonly Shot[] 
       </div>
 
       <svg
-        viewBox={`0 0 ${BOX.width} ${BOX.height}`}
+        viewBox={`0 0 ${PITCH_BOX.width} ${PITCH_BOX.height}`}
         className="w-full"
         role="img"
         aria-label={`Where ${club?.shortName ?? "the side"} shot from: ${shots.length} in all, attacking to the right.`}
       >
-        <rect width={BOX.width} height={BOX.height} fill="var(--color-pitch-turf)" />
+        <rect width={PITCH_BOX.width} height={PITCH_BOX.height} fill="var(--color-pitch-turf)" />
         {/* The mown bands, which are what make it read as a pitch rather than a
             green box — `tokens.css` carries the pair and the argument. */}
         {[0, 2, 4, 6, 8].map((band) => (
@@ -95,21 +93,21 @@ function Side({ club, shots }: { club: Club | undefined; shots: readonly Shot[] 
             key={band}
             x={band * 10}
             width="10"
-            height={BOX.height}
+            height={PITCH_BOX.height}
             fill="var(--color-pitch-mow)"
           />
         ))}
 
         <g fill="none" stroke="var(--color-pitch-line)" strokeWidth="0.4" opacity="0.65">
-          <rect x="0.5" y="0.5" width={BOX.width - 1} height={BOX.height - 1} />
-          <line x1="50" y1="0.5" x2="50" y2={BOX.height - 0.5} />
-          <circle cx="50" cy={BOX.height / 2} r="9" />
+          <rect x="0.5" y="0.5" width={PITCH_BOX.width - 1} height={PITCH_BOX.height - 1} />
+          <line x1="50" y1="0.5" x2="50" y2={PITCH_BOX.height - 0.5} />
+          <circle cx="50" cy={PITCH_BOX.height / 2} r="9" />
           {/* Both boxes. A side attacks one of them and defends the other, and a
               pitch with one end drawn is a half-pitch. */}
           <rect x="0.5" y="13" width="16" height="38" />
-          <rect x={BOX.width - 16.5} y="13" width="16" height="38" />
+          <rect x={PITCH_BOX.width - 16.5} y="13" width="16" height="38" />
           <rect x="0.5" y="24" width="5.5" height="16" />
-          <rect x={BOX.width - 6} y="24" width="5.5" height="16" />
+          <rect x={PITCH_BOX.width - 6} y="24" width="5.5" height="16" />
         </g>
 
         {/* No transform: `ShotMarks` already maps a 0-100 `y` onto a 64-high box,

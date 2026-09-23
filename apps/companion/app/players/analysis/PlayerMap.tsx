@@ -2,6 +2,7 @@ import type { Shot, Touch } from "@epl/core";
 import Marks from "../../components/football/ShotMarks";
 import type { MapKind } from "./maps";
 import { CELL, heatCells, shade } from "./heat";
+import { PITCH_BOX } from "@/app/components/football/pitchBox";
 
 // One man's pitch, shaded where he played.
 //
@@ -57,11 +58,7 @@ import { CELL, heatCells, shade } from "./heat";
  *  differs. */
 const ARROW = { from: 41, to: 59, y: 5.5, head: 2.6, weight: 1.6, ink: 0.22 };
 
-/** The pitch, in the units its markings are drawn in. Landscape, because a map
- *  is read along the direction of play — and deliberately not `.pitch`, which is
- *  the squad pitch's PORTRAIT frame and left 284px of dead grass under a
- *  landscape map, measured. */
-const BOX = { width: 100, height: 64 };
+// Landscape, not `.pitch`: that is the squad pitch's portrait frame, 284px of dead grass here.
 
 /** How far the blur reaches, in pitch units.
  *
@@ -125,7 +122,7 @@ export default function PlayerMap({
       </figcaption>
 
       <svg
-        viewBox={`0 0 ${BOX.width} ${BOX.height}`}
+        viewBox={`0 0 ${PITCH_BOX.width} ${PITCH_BOX.height}`}
         className="w-full"
         role="img"
         aria-label={
@@ -144,15 +141,15 @@ export default function PlayerMap({
               wide is shaded outside the pitch, which looks like a rendering
               fault rather than a full-back. */}
           <clipPath id={`inside-${id}`}>
-            <rect width={BOX.width} height={BOX.height} />
+            <rect width={PITCH_BOX.width} height={PITCH_BOX.height} />
           </clipPath>
         </defs>
 
-        <rect width={BOX.width} height={BOX.height} fill="var(--color-pitch-turf)" />
+        <rect width={PITCH_BOX.width} height={PITCH_BOX.height} fill="var(--color-pitch-turf)" />
         {/* The mown bands, which are what make it read as a pitch rather than as
             a green box — `tokens.css` carries the pair and the argument. */}
         {[0, 2, 4, 6, 8].map((band) => (
-          <rect key={band} x={band * 10} width="10" height={BOX.height} fill="var(--color-pitch-mow)" />
+          <rect key={band} x={band * 10} width="10" height={PITCH_BOX.height} fill="var(--color-pitch-mow)" />
         ))}
 
         <g clipPath={`url(#inside-${id})`}>
@@ -160,10 +157,10 @@ export default function PlayerMap({
             {cells.map((cell) => (
               <rect
                 key={`${cell.x}-${cell.y}`}
-                x={cell.x * BOX.width}
-                y={cell.y * BOX.height}
-                width={CELL.width * BOX.width}
-                height={CELL.height * BOX.height}
+                x={cell.x * PITCH_BOX.width}
+                y={cell.y * PITCH_BOX.height}
+                width={CELL.width * PITCH_BOX.width}
+                height={CELL.height * PITCH_BOX.height}
                 fill={RAMP[Math.min(RAMP.length - 1, Math.floor(cell.density * RAMP.length))]}
                 opacity={shade(cell.density)}
               />
