@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import type { Club } from "@epl/core";
-import { clubColours, inkOn } from "@epl/core";
+import { clubColoursOf, inkOn } from "@epl/core";
 import PlayerPortrait from "../../components/football/PlayerPortrait";
 
 // Two men at once, each on his own club's colour.
@@ -54,7 +54,7 @@ interface Side {
  *  and `MatchBar` carries one because a fixture's subject is the clubs
  *  themselves. Here the subject is the footballer. */
 function Half({ side }: { side: Side }) {
-  const colours = clubColours(side.club?.shortName ?? "");
+  const colours = clubColoursOf(side.club);
   const ink = inkOn(colours);
 
   return (

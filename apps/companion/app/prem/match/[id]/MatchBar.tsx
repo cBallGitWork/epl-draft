@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Club } from "@epl/core";
-import { clubColours, crestUrl, inkOn } from "@epl/core";
+import { clubColoursOf, crestUrl, inkOn } from "@epl/core";
 import { CLUB } from "../../routes";
 
 // Championship Manager's match header: both sides at once, each on its own
@@ -61,7 +61,7 @@ export default function MatchBar({
  *  a header that lost a side would put the middle off centre and read as a
  *  different screen. */
 function Side({ club, score }: { club: Club | undefined; score: number | null }) {
-  const colours = clubColours(club?.shortName ?? "");
+  const colours = clubColoursOf(club);
   const ink = inkOn(colours);
 
   return (

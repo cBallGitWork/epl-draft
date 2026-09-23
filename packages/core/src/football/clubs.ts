@@ -98,6 +98,11 @@ export function clubColours(shortName: string): ClubColours {
   return CLUB_COLOURS[shortName] ?? FALLBACK;
 }
 
+/** A club's colours, or the neutral pair for a club the snapshot does not carry. */
+export function clubColoursOf(club: Pick<Club, "shortName"> | undefined): ClubColours {
+  return clubColours(club?.shortName ?? "");
+}
+
 /** Club crest. `code` is FPL's season-stable club code, so these URLs keep working
  *  across seasons. SVG scales to any size for free — prefer it over the PNGs. */
 /** FPL's season-stable club `code`, by the `shortName` the API returns.

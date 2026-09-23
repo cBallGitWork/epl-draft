@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { clubColours, inkOn } from "@epl/core";
+import { clubIndex } from "../../../components/football/clubIndex";
 import type { Club, MatchStatRow } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import { HEAD_PLATE, PANEL } from "@/app/desk";
@@ -51,6 +51,8 @@ export default function MatchStats({
     ],
   })).filter((group) => group.rows.length > 0);
 
+  const homeIndex = clubIndex(home);
+  const awayIndex = clubIndex(away);
   return (
     // `cm-index-scoped`: each side's plates wear its club's colour, run away from their ink.
     <section className={`${PANEL} cm-index-scoped`}>
@@ -62,19 +64,13 @@ export default function MatchStats({
               {group.title}
             </h3>
             {group.rows.map((row) => (
-              <Row key={row.key} row={row} home={plate(home)} away={plate(away)} />
+              <Row key={row.key} row={row} home={homeIndex} away={awayIndex} />
             ))}
           </div>
         ))}
       </div>
     </section>
   );
-}
-
-/** A club's colour on the index plate, and the ink `inkOn` picks to read on it. */
-function plate(club: Club | undefined): CSSProperties {
-  const colours = clubColours(club?.shortName ?? "");
-  return { "--cm-index": colours.primary, "--cm-index-ink": inkOn(colours) } as CSSProperties;
 }
 
 function Row({ row, home, away }: { row: MatchStatRow; home: CSSProperties; away: CSSProperties }) {

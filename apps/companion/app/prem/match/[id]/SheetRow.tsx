@@ -5,7 +5,8 @@ import { chipsFor } from "../../../components/league/Chips";
 import { MaybeCard } from "./PlayerCardButton";
 import SubNote from "./SubNote";
 import { ROW_NAME, ROW_RULE } from "@/app/desk";
-import type { Join, Named } from "./sheetJoin";
+import { appeared, type Join, type Named } from "./sheetJoin";
+import { MATCH_ROW } from "./matchRow";
 
 // One man's row on the team sheet, and the card it opens.
 
@@ -43,9 +44,9 @@ export default function SheetRow({
   hurt: boolean;
   opensBench: boolean;
 }) {
-  const { man, did, bench } = row;
+  const { man, did } = row;
   // A man who never got on has no afternoon to score; a dash, never a nought (DESIGN §7).
-  const played = !bench || did?.onAt != null;
+  const played = appeared(row);
   // Grey is "not on the pitch at the whistle" — CM's `cm9900/02.jpg` rule.
   const finished = played && did?.offAt == null;
   const line = join.line(man.code);
@@ -55,7 +56,7 @@ export default function SheetRow({
       className={`${ROW_RULE} ${finished ? "" : "cm-out"} ${
         opensBench ? "border-t-4 border-t-bg" : ""
       }`}
-      data-tap-exception="match-row"
+      {...MATCH_ROW}
     >
       <PositionTile positions={positions} cell />
       {/* CM's card block between the index and the name. */}

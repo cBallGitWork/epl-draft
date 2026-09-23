@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clubColours, crestForShortName, crestUrl, inkOn, shirtUrl } from "./clubs";
+import { clubColours, clubColoursOf, crestForShortName, crestUrl, inkOn, shirtUrl } from "./clubs";
 
 const DARK_INK = "#0b0c10";
 const WHITE_INK = "#ffffff";
@@ -20,6 +20,13 @@ describe("clubColours", () => {
     // A hole where a crest should be is a worse answer than a grey one.
     expect(clubColours("WBA")).toEqual({ primary: "#4b5563", secondary: "#FFFFFF" });
     expect(ink("WBA")).toBe(WHITE_INK);
+  });
+});
+
+describe("clubColoursOf", () => {
+  it("reads a club's colours off its short name, and the neutral for no club at all", () => {
+    expect(clubColoursOf({ shortName: "NFO" })).toEqual(clubColours("NFO"));
+    expect(clubColoursOf(undefined)).toEqual(clubColours("WBA"));
   });
 });
 

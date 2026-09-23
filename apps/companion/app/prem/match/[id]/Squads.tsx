@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Club, FootballPlayer, PlayerOwner } from "@epl/core";
-import { clubColours, inkOn, DASH } from "@epl/core";
+import { clubColoursOf, inkOn, DASH } from "@epl/core";
 import { IndexCell } from "../../../components/league/TableCells";
 import { intelSquads } from "../../../intel";
 import { PLAYER } from "../../routes";
@@ -59,7 +59,7 @@ function Side({
   players: readonly FootballPlayer[];
   owners: Map<number, PlayerOwner>;
 }) {
-  const colours = clubColours(club?.shortName ?? "");
+  const colours = clubColoursOf(club);
   const squad =
     club === undefined
       ? []

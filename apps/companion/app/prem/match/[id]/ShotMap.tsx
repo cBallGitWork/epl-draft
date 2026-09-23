@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import type { CSSProperties } from "react";
-import Link from "next/link";
 import { DASH, type Shot } from "@epl/core";
 import { PITCH_BOX } from "@/app/components/football/pitchBox";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
-import { SECTION_BAR } from "@/app/desk";
+import { BOARD, ROW_RULE, SECTION_BAR } from "@/app/desk";
+import { Head, HeadRow, MUTE, SortHead } from "../../../components/league/TableHeads";
+import { MATCH_ROW } from "./matchRow";
 
 // Both sides' shots on one pitch, each at its own end, and every shot in one list under it
 // (Craig, 23 Sep 2026: *"one big column for both teams under the shot map"*). Tapping either picks it.
@@ -17,11 +18,12 @@ export interface PlottedShot extends Shot {
   name: string;
 }
 
-/** A club as the board draws it: its short name, and its colour with the ink that reads on it. */
+/** A club as the board draws it: its short name, its colour and the ink that reads on it, and its index block. */
 export interface ShotSide {
   label: string;
   colour: string;
   ink: string;
+  index: CSSProperties;
 }
 
 
@@ -114,66 +116,69 @@ export default function ShotMap({
       </svg>
       <MarksKey />
 
-      {/* Heads over the two columns a reader orders by, the plates every other board wears. */}
-      <div className={`${GRID} text-3xs font-bold uppercase`}>
-        <Head label="Min" href={hrefs.minute} on={order === "minute"} down={false} />
-        <span />
-        <span />
-        <Head label="xG" href={hrefs.xg} on={order === "xg"} down />
-      </div>
-
-      <ol className="cm-rows cm-index-scoped bg-surface" data-tap-exception="match-row">
-        {listed.map(({ shot, at }) => {
-          const side = shot.side === "home" ? home : away;
-          return (
-            <li key={at}>
-              <button
-                type="button"
-                onClick={() => pick(at)}
-                aria-pressed={picked === at}
-                className={`${GRID} min-h-9 w-full pr-1.5 text-left text-sm lg:min-h-7 ${
-                  picked === at ? "bg-raised outline outline-1 -outline-offset-1 outline-accent" : ""
-                }`}
+      {/* The board standard: `BOARD` and `SortHead`, the heads every sortable table wears. */}
+      <table className={`${BOARD} cm-index-scoped bg-surface`} {...MATCH_ROW}>
+        <thead>
+          <HeadRow>
+            <SortHead
+              width="w-10"
+              title="Minute"
+              href={hrefs.minute}
+              label="Min"
+              sorted={order === "minute" ? "ascending" : undefined}
+            />
+            <Head width="">
+              <span className={MUTE}>Shooter</span>
+            </Head>
+            <Head width="w-20">
+              <span className={MUTE}>Outcome</span>
+            </Head>
+            <SortHead
+              width="w-12"
+              title="Expected goals"
+              href={hrefs.xg}
+              label="xG"
+              sorted={order === "xg" ? "descending" : undefined}
+            />
+          </HeadRow>
+        </thead>
+        <tbody>
+          {listed.map(({ shot, at }) => (
+            // The row picks the shot; the name is a button so a keyboard can too, and its click bubbles here.
+            <tr
+              key={at}
+              onClick={() => pick(at)}
+              className={`${ROW_RULE} cursor-pointer ${picked === at ? "bg-raised outline outline-1 -outline-offset-1 outline-accent" : ""}`}
+            >
+              <td
+                className="cm-index numeric text-center"
+                style={(shot.side === "home" ? home : away).index}
               >
-                <span
-                  className="cm-index numeric self-stretch text-center leading-9 lg:leading-7"
-                  style={{ "--cm-index": side.colour, "--cm-index-ink": side.ink } as CSSProperties}
+                {shot.minute === null ? DASH : `${shot.minute}′`}
+              </td>
+              <td className="p-0">
+                <button
+                  type="button"
+                  aria-pressed={picked === at}
+                  className="flex min-h-9 w-full items-center px-2 text-left font-chrome text-sm font-bold lg:min-h-7"
                 >
-                  {shot.minute === null ? DASH : `${shot.minute}′`}
-                </span>
-                <span className="min-w-0 truncate font-chrome font-bold">{shot.name}</span>
-                <span className={`text-2xs uppercase ${shot.outcome === "goal" ? "font-bold text-ink" : "text-muted"}`}>
-                  {OUTCOME[shot.outcome]}
-                </span>
-                {/* xG is a model's reading, so cyan (DESIGN §3). */}
-                <span className="numeric text-right text-info">{shot.xg === null ? DASH : shot.xg.toFixed(2)}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ol>
+                  <span className="min-w-0 truncate">{shot.name}</span>
+                </button>
+              </td>
+              <td
+                className={`pr-2 text-right text-2xs uppercase ${shot.outcome === "goal" ? "font-bold text-ink" : "text-muted"}`}
+              >
+                {OUTCOME[shot.outcome]}
+              </td>
+              {/* xG is a model's reading, so cyan (DESIGN §3). */}
+              <td className="numeric text-center text-sm text-info">
+                {shot.xg === null ? DASH : shot.xg.toFixed(2)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </figure>
-  );
-}
-
-/** The list's columns: minute tile, shooter, outcome, xG — the heads above share them. */
-const GRID = "grid grid-cols-[2.5rem_1fr_auto_2.5rem] items-center gap-2";
-
-/** A column head as a link, drawn pressed with its arrow when the list is ordered by it. */
-function Head({ label, href, on, down }: { label: string; href: string; on: boolean; down: boolean }) {
-  return (
-    <Link
-      href={href}
-      scroll={false}
-      className={`flex h-7 items-center justify-center whitespace-nowrap px-1.5 ${on ? "cm-bevel-pressed" : "cm-bevel hover:brightness-110"}`}
-    >
-      {label}
-      {on ? (
-        <span aria-hidden className="ml-0.5 text-[0.5rem] leading-none">
-          {down ? "▼" : "▲"}
-        </span>
-      ) : null}
-    </Link>
   );
 }
 

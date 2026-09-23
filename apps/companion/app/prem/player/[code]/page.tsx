@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { clubColours, crestUrl, plateOn } from "@epl/core";
+import { clubColoursOf, crestUrl, plateOn } from "@epl/core";
 import Image from "next/image";
 import Caption from "../../../components/shell/Caption";
 import PageHeader from "../../../components/shell/PageHeader";
@@ -40,7 +40,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ code: s
   if (player === undefined) notFound();
 
   const club = snapshot.clubs.find((entry) => entry.id === player.clubId);
-  const colours = clubColours(club?.shortName ?? "");
+  const colours = clubColoursOf(club);
   const plate = plateOn(colours);
 
   return (

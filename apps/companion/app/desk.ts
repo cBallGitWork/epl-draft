@@ -117,3 +117,10 @@ export const DESK_ONLY = "hidden lg:table-cell";
 export function standDown(deskOnly: boolean | undefined, sorted: boolean): string {
   return deskOnly && !sorted ? DESK_ONLY : "";
 }
+
+/* ---- One view at a time under a thumb -------------------------------------- */
+
+/** A block a phone shows only while it is the view picked; a desk shows every one, side by side. */
+export function phoneShows(picked: boolean): string {
+  return picked ? "" : "max-lg:hidden";
+}

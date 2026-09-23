@@ -15,7 +15,7 @@ import PitchRows, {
   rowBudget,
   widestLine,
 } from "../../../components/league/PitchRows";
-import { PANEL_FLUSH } from "@/app/desk";
+import { PANEL_FLUSH, phoneShows } from "@/app/desk";
 import { MaybeCard } from "./PlayerCardButton";
 import { sheetName } from "./match";
 import type { Match } from "./match";
@@ -70,7 +70,7 @@ export default function MatchPitch({
       join={join}
       widest={widest}
       men={men}
-      phoneHidden={key !== phoneSide}
+      phonePicked={key === phoneSide}
     />
   );
 
@@ -91,11 +91,11 @@ function Side({
   join,
   widest,
   men,
-  phoneHidden,
+  phonePicked,
 }: {
   match: Match;
   men: ReadonlyMap<number, SquadPlayerDetail>;
-  phoneHidden: boolean;
+  phonePicked: boolean;
   club: Club | undefined;
   against: Opposition[] | undefined;
   sheet: PlTeamSheet;
@@ -132,7 +132,7 @@ function Side({
   return (
     // `pitch-match` budgets the grass so the used subs clear a phone's fold (Craig, 23 Sep 2026).
     <section
-      className={`${PANEL_FLUSH} pitch-match min-w-0 ${phoneHidden ? "max-lg:hidden" : ""}`}
+      className={`${PANEL_FLUSH} pitch-match min-w-0 ${phoneShows(phonePicked)}`}
     >
       {/* No formation line over the grass: the shape is the picture (Craig, 23 Sep 2026: *"ditch the formation line to save space"*). */}
       <PitchRows

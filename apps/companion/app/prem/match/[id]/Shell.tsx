@@ -6,7 +6,7 @@ import Caption from "../../../components/shell/Caption";
 import BackPlate from "./BackPlate";
 import MatchBar from "./MatchBar";
 import MatchTabs from "./MatchTabs";
-import type { MatchTab } from "./MatchTabs";
+import type { MatchTab } from "./matchRoutes";
 import type { Match } from "./match";
 
 // The frame both match views wear.

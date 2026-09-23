@@ -1,5 +1,5 @@
-import type { CSSProperties } from "react";
-import { clubColours, inkOn, loggedPlayers, DASH } from "@epl/core";
+import { loggedPlayers, DASH } from "@epl/core";
+import { clubIndex } from "../../../components/football/clubIndex";
 import type { Club, PlManMatch, PlTeamSheet, SquadPlayerDetail } from "@epl/core";
 import type { LeagueOpinion } from "../../club/[code]/club";
 import Section from "../../../components/shell/Section";
@@ -11,8 +11,9 @@ import { MaybeCard } from "./PlayerCardButton";
 import SubNote from "./SubNote";
 import { COLUMNS, STANDOUT, sorted, standoutCut, type StatLine, type StatSort } from "./statColumns";
 import { statsHref } from "./statsSort";
-import { ordered, type Named } from "./sheetJoin";
+import { appeared, cameOn, ordered, type Named } from "./sheetJoin";
 import { sheetName, type Match } from "./match";
+import { MATCH_ROW } from "./matchRow";
 
 // One club's men and what each did — CM 01/02's `Roma Stats` foot screen, ranked by fantasy points.
 
@@ -52,7 +53,6 @@ export default function ClubStats({
   const lines = new Map((match.sheet?.lines ?? []).map((line) => [line.playerId, line]));
   // Ties keep the sheet's order, with the bench's men who got on above the ones who sat.
   const sheetOrder = ordered(sheet, events);
-  const cameOn = (row: Named) => row.did?.onAt != null;
   const named = [
     ...sheetOrder.filter((row) => !row.bench),
     ...sheetOrder.filter((row) => row.bench && cameOn(row)),
@@ -67,8 +67,7 @@ export default function ClubStats({
     };
   });
   const rows = sorted(named, sort, descending);
-  const colours = clubColours(club?.shortName ?? "");
-  const played = named.filter((row) => !row.named.bench || cameOn(row.named));
+  const played = named.filter((row) => appeared(row.named));
   const cuts: Cuts = new Map(
     COLUMNS.filter((column) => "rank" in column).map((column) => {
       const values = played.map((row) => column.of(row));
@@ -90,7 +89,7 @@ export default function ClubStats({
       <span aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-surface lg:hidden" />
       <div
         className={`${SCROLL} cm-scroll cm-index-scoped bg-surface`}
-        style={{ "--cm-index": colours.primary, "--cm-index-ink": inkOn(colours) } as CSSProperties}
+        style={clubIndex(club)}
       >
         <table className={BOARD}>
           <thead>
@@ -149,8 +148,8 @@ function StatRow({
   positions: readonly string[];
   hurt: boolean;
 }) {
-  const { man, did, bench } = row.named;
-  const played = !bench || did?.onAt != null;
+  const { man, did } = row.named;
+  const played = appeared(row.named);
   // Grey is "not on the pitch at the whistle", the team sheet's own rule.
   const finished = played && did?.offAt == null;
   const name = (
@@ -165,7 +164,7 @@ function StatRow({
   );
 
   return (
-    <tr className={`${ROW_RULE} ${finished ? "" : "cm-out"}`} data-tap-exception="match-row">
+    <tr className={`${ROW_RULE} ${finished ? "" : "cm-out"}`} {...MATCH_ROW}>
       <PositionTile positions={positions} cell className={PIN_TILE} />
       <td className={`p-0 ${PIN_NAME} ${NAME_WIDTH}`}>
         {/* His card, not his page — every name on a match screen opens the same card (Craig, 23 Sep 2026). */}

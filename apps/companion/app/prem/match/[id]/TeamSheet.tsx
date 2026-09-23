@@ -1,7 +1,6 @@
-import type { CSSProperties } from "react";
-import { clubColours, inkOn } from "@epl/core";
 import type { Club, PlManMatch, PlTeamSheet, PlayerOwner, SquadPlayerDetail } from "@epl/core";
-import { BOARD, PANEL_FLUSH } from "@/app/desk";
+import { clubIndex } from "../../../components/football/clubIndex";
+import { BOARD, PANEL_FLUSH, phoneShows } from "@/app/desk";
 import { Head, HeadRow, MUTE, PLATE } from "../../../components/league/TableHeads";
 import type { Match } from "./match";
 import SheetRow from "./SheetRow";
@@ -30,8 +29,8 @@ export default function TeamSheet({ match, sheets, phoneSide, ...rest }: SheetPr
   // `min-w-0` down the chain, or a nowrap plate sets a floor that overflows 390.
   return (
     <div className="grid min-w-0 gap-2 lg:grid-cols-2">
-      <Side club={match.home} sheet={sheets.home} join={join} phoneHidden={phoneSide !== "home"} {...rest} />
-      <Side club={match.away} sheet={sheets.away} join={join} phoneHidden={phoneSide !== "away"} {...rest} />
+      <Side club={match.home} sheet={sheets.home} join={join} phonePicked={phoneSide === "home"} {...rest} />
+      <Side club={match.away} sheet={sheets.away} join={join} phonePicked={phoneSide === "away"} {...rest} />
     </div>
   );
 }
@@ -45,27 +44,21 @@ function Side({
   injured,
   league,
   men,
-  phoneHidden,
+  phonePicked,
 }: Omit<SheetProps, "match" | "sheets" | "phoneSide"> & {
   club: Club | undefined;
   sheet: PlTeamSheet;
   join: Join;
-  phoneHidden: boolean;
+  phonePicked: boolean;
 }) {
-  const colours = clubColours(club?.shortName ?? "");
   const rows = ordered(sheet, events);
   const bench = rows.findIndex((row) => row.bench);
 
   return (
     // The club's colour on every index block; `cm-index-scoped` keeps the contrast `desk.css` measured.
     <section
-      className={`${PANEL_FLUSH} cm-index-scoped min-w-0 ${phoneHidden ? "max-lg:hidden" : ""}`}
-      style={
-        {
-          "--cm-index": colours.primary,
-          "--cm-index-ink": inkOn(colours),
-        } as CSSProperties
-      }
+      className={`${PANEL_FLUSH} cm-index-scoped min-w-0 ${phoneShows(phonePicked)}`}
+      style={clubIndex(club)}
     >
       {/* `table-fixed` so the name truncates; the widths go on the HEAD row, which is the one a fixed table reads. */}
       <table className={`${BOARD} table-fixed`}>

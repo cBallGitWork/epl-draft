@@ -9,7 +9,7 @@ import { matchOwners, readMatch } from "../match";
 import { leagueOpinions } from "../../../club/[code]/club";
 import { matchMen } from "../matchMen";
 import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchDetail";
-import { MATCH } from "../../../routes";
+import { matchHref } from "../matchRoutes";
 import type { Match } from "../match";
 
 // Both elevens and what the afternoon was worth — CM's team sheet (`cm9900/16.jpg`), or the pitch.
@@ -50,8 +50,10 @@ export default async function MatchPlayersPage({
 }
 
 function lineupsHref(id: number, side: Side, view: View): string {
-  const query = [side === "away" ? "side=away" : null, view === "pitch" ? "view=pitch" : null].filter(Boolean);
-  return `${MATCH}/${id}/players${query.length === 0 ? "" : `?${query.join("&")}`}`;
+  return matchHref(id, "players", {
+    side: side === "away" ? "away" : undefined,
+    view: view === "pitch" ? "pitch" : undefined,
+  });
 }
 
 /** CM's foot row (`cm0102/02.jpg`): the same elevens as a list or on the grass. */

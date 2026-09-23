@@ -42,6 +42,16 @@ export interface Named {
   bench: boolean;
 }
 
+/** Whether he came off the bench. */
+export function cameOn(row: Named): boolean {
+  return row.did?.onAt != null;
+}
+
+/** Whether he was on the pitch at all: named in the eleven, or on from the bench. */
+export function appeared(row: Named): boolean {
+  return !row.bench || cameOn(row);
+}
+
 /** The eleven keeper-to-attack, then the bench keeper-to-attack.
  *
  *  **A man who came on is still a substitute** (Craig, 11 Sep 2026: *"players

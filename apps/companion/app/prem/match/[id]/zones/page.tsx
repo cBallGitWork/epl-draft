@@ -1,8 +1,9 @@
-import { averageTouchPosition, clubColours, inkOn, shotsInFixture, touchesOf, DASH } from "@epl/core";
+import { averageTouchPosition, clubColoursOf, inkOn, shotsInFixture, touchesOf, DASH } from "@epl/core";
+import { clubIndex } from "../../../../components/football/clubIndex";
 import type { Club, PlTeamSheet, Shot } from "@epl/core";
 import Nothing from "../../../../components/shell/Nothing";
 import TabStrip from "../../../../components/shell/TabStrip";
-import { PANEL } from "@/app/desk";
+import { PANEL, phoneShows } from "@/app/desk";
 import MatchShell from "../Shell";
 import ShotMap, { type PlottedShot, type ShotOrder, type ShotSide } from "../ShotMap";
 import AveragePosition from "../AveragePosition";
@@ -10,7 +11,7 @@ import type { Placed } from "../labels";
 import { readMatch, sheetName, type Match } from "../match";
 import { intelShots, intelTouches } from "../../../../intel";
 import { teamSheets } from "../../../../matchDetail";
-import { MATCH } from "../../../routes";
+import { matchHref } from "../matchRoutes";
 
 // CM's Action Zones (`cm9900/22.jpg`): where both sides shot from and who took them, then where the eleven stood.
 
@@ -60,24 +61,24 @@ export default async function MatchZonesPage({
         <TabStrip
           label="Action zones views"
           tabs={[
-            { key: "shots", label: "Shots", href: `${MATCH}/${id}/zones` },
-            { key: "positions", label: "Average Position", href: `${MATCH}/${id}/zones?view=positions` },
+            { key: "shots", label: "Shots", href: matchHref(match.fixture.id, "zones") },
+            { key: "positions", label: "Average Position", href: matchHref(match.fixture.id, "zones", { view: "positions" }) },
           ]}
           current={view}
           labels="word"
         />
       </div>
       <section className={PANEL}>
-        <div className={view === "shots" ? "" : "max-lg:hidden"}>
+        <div className={phoneShows(view === "shots")}>
           <ShotMap
             shots={shots}
             home={sideOf(match.home)}
             away={sideOf(match.away)}
             order={order}
-            hrefs={{ minute: `${MATCH}/${id}/zones`, xg: `${MATCH}/${id}/zones?order=xg` }}
+            hrefs={{ minute: matchHref(match.fixture.id, "zones"), xg: matchHref(match.fixture.id, "zones", { order: "xg" }) }}
           />
         </div>
-        <div className={view === "positions" ? "" : "max-lg:hidden"}>
+        <div className={phoneShows(view === "positions")}>
           <AveragePosition
             home={match.home}
             away={match.away}
@@ -95,8 +96,8 @@ export default async function MatchZonesPage({
 }
 
 function sideOf(club: Club | undefined): ShotSide {
-  const colours = clubColours(club?.shortName ?? "");
-  return { label: club?.shortName ?? DASH, colour: colours.primary, ink: inkOn(colours) };
+  const colours = clubColoursOf(club);
+  return { label: club?.shortName ?? DASH, colour: colours.primary, ink: inkOn(colours), index: clubIndex(club) };
 }
 
 /** Both sides' shots on one pitch: home turned round to attack the left box, away left as exported.

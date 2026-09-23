@@ -1,4 +1,4 @@
-import { clubColours, inkOn, DASH } from "@epl/core";
+import { clubColoursOf, inkOn, DASH } from "@epl/core";
 import { PITCH_BOX } from "@/app/components/football/pitchBox";
 import type { Club } from "@epl/core";
 import { placeLabels } from "./labels";
@@ -101,7 +101,7 @@ function Side({
   shape: string | null;
   named: number;
 }) {
-  const colours = clubColours(club?.shortName ?? "");
+  const colours = clubColoursOf(club);
   const ink = inkOn(colours);
   const labelled = placeLabels(men);
 

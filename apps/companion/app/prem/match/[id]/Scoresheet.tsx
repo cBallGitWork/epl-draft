@@ -1,13 +1,7 @@
 import { goalGroups } from "@epl/core";
-import type {
-  FootballPlayer,
-  PlGoal,
-  PlManMatch,
-  PlayerOwner,
-  SheetRow,
-} from "@epl/core";
+import type { FootballPlayer, PlGoal, PlManMatch, PlayerOwner, SheetRow, SquadPlayerDetail } from "@epl/core";
 import { Goal, Man } from "./ScoreRows";
-import type { SquadPlayerDetail } from "@epl/core";
+import { MATCH_ROW } from "./matchRow";
 
 // Who scored, when, and who made it.
 //
@@ -103,7 +97,7 @@ export default function Scoresheet({
 
   return (
     // `data-tap-exception`: 36px rows under a thumb, PRODUCT's recorded exception, which `tapfit` reads out.
-    <div className="grid grid-cols-2 gap-x-3 gap-y-1" data-tap-exception="match-row">
+    <div className="grid grid-cols-2 gap-x-3 gap-y-1" {...MATCH_ROW}>
       <Column goals={home} rest={homeElse} owners={owners} byCode={byCode} did={did} injured={injured} men={men} />
       <Column goals={away} rest={awayElse} owners={owners} byCode={byCode} did={did} injured={injured} men={men} />
     </div>
