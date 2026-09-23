@@ -1,4 +1,4 @@
-import { clubById, fplLineup, kickedOff, oppositionByClub, playerByCode } from "@epl/core";
+import { FPL_SITE, clubById, fplLineup, kickedOff, oppositionByClub, playerByCode } from "@epl/core";
 import type { FplPick } from "@epl/core";
 import { footballNow } from "../football";
 import Nothing from "../components/shell/Nothing";
@@ -8,7 +8,7 @@ import FplPitch from "./FplPitch";
 import EntryForm from "./EntryForm";
 import { forgetEntry } from "./actions";
 import { myEntryId, mySide } from "./entry";
-import { FPL_SITE, type Played } from "./played";
+import type { Played } from "./played";
 import { LABEL, PANEL, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import OutLink from "../components/shell/OutLink";
 

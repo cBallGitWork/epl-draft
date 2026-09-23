@@ -79,7 +79,8 @@ it is used.
   old shirts. It is deliberately **not** read as a fallback: a player with no
   current photograph gets his club's crest instead, because a wrong photograph is
   worse than none — only one of the two looks like an answer.
-  `next.config.ts` allow-lists image paths, so both prefixes must be named there.
+  `next.config.ts` builds its image allow-list from the config bases, so a new prefix is a new
+  constant in `config.ts`.
 - Crests: `…/premierleague/badges/t{code}.svg` (also `/50/`, `/70/` PNG).
 
 ### Fantrax — two surfaces

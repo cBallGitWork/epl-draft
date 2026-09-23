@@ -12,15 +12,3 @@
  *  that the MAN has appeared. The fixture's own status does answer it, and it is
  *  FPL's own statement about FPL's own calendar. */
 export type Played = (code: number) => boolean;
-
-/** Fantasy Premier League's own site, for the way out this tab needs.
- *
- *  Named here rather than written into the link, because the two places that
- *  reach for it — a manager's entry and, when there is one, a mini-league — must
- *  not disagree about the host. Not in `config.ts`: nothing outside this tab has
- *  any business linking to somebody else's game.
- *
- *  Deliberately NOT the API host. `fantasy.premierleague.com/api` is what
- *  `packages/core/src/football/fpl/client.ts` reads and this is where a person
- *  goes, and conflating the two is how a link ends up pointing at JSON. */
-export const FPL_SITE = "https://fantasy.premierleague.com";

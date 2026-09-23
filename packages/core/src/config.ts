@@ -66,7 +66,9 @@ export const PREMIERSHIP_CUTS = { qualify: 4, relegate: 3 };
 /** Premier League season this build targets, in FPL's own notation. */
 export const SEASON = "2026/27";
 
-export const FPL_API_BASE = "https://fantasy.premierleague.com/api";
+/** FPL's own site, where a reader goes; the API under it is where we read. */
+export const FPL_SITE = "https://fantasy.premierleague.com";
+export const FPL_API_BASE = `${FPL_SITE}/api`;
 
 /** The Premier League's own football API, which is what `premierleague.com`
  *  itself is a shell over. Public and unauthenticated: probed 4 Sep 2026 with
@@ -137,6 +139,13 @@ export const YOUTUBE_EMBED_BASE = "https://www.youtube-nocookie.com/embed";
  *  slash — with one, the site 301s. */
 export const SCOUT_TEAM_NEWS_URL = "https://www.fantasyfootballscout.co.uk/team-news";
 
+/** The BBC's football wire, which the paper's writer reads for angles. */
+export const BBC_FOOTBALL = "https://feeds.bbci.co.uk/sport/football/rss.xml";
+
+/** The paper's writer and its illustrator. Scripts only: the app calls neither. */
+export const ANTHROPIC_MESSAGES_URL = "https://api.anthropic.com/v1/messages";
+export const OPENAI_IMAGES_URL = "https://api.openai.com/v1/images/generations";
+
 /** How a provider sees us.
  *
  *  A real browser string rather than a bot's. Both providers front their APIs
@@ -158,6 +167,9 @@ export const HTTP_BACKOFF_BASE_MS = 500;
 /** Fantrax's public read surface. Unauthenticated, and — unlike FPL — it answers
  *  HTTP 200 even when it is refusing you (see league/fantrax/errors.ts). */
 export const FANTRAX_FXEA_BASE = "https://www.fantrax.com/fxea/general";
+
+/** The commissioner's setup wizard, which `roster-limits` scrapes. Needs the cookie. */
+export const FANTRAX_SETUP_PAGE = "https://www.fantrax.com/newui/fantasy/createLeague.go";
 
 /** Fantrax's own SPA API, the surface their website talks to.
  *
@@ -262,9 +274,7 @@ export const LINEUP_LOCK_LEAD_MINUTES = 15;
 
 /** Where the Premier League serves its crests.
  *
- *  §3 puts a provider's base URL here rather than inline beside the code that
- *  builds a path onto it. `next.config.ts` names the hostname separately and
- *  cannot read this: Next resolves image domains before any of our code runs. */
+ *  `next.config.ts` builds the image allow-list from this and the three below. */
 export const PL_ASSET_BASE = "https://resources.premierleague.com/premierleague";
 
 /** Where the Premier League serves its player portraits, which is NOT where it
@@ -288,7 +298,7 @@ export const PL_PHOTO_BASE = "https://resources.premierleague.com/premierleague2
  *  transfer changes the shirt the same day. That is the whole reason they are
  *  here: a portrait cannot be that current. `shirtUrl` carries the sizes and
  *  what was counted at each. */
-export const FPL_SHIRT_BASE = "https://fantasy.premierleague.com/dist/img/shirts/standard";
+export const FPL_SHIRT_BASE = `${FPL_SITE}/dist/img/shirts/standard`;
 
 /** Where Fantrax serves the badge a manager picked for his fantasy team.
  *
@@ -298,11 +308,7 @@ export const FPL_SHIRT_BASE = "https://fantasy.premierleague.com/dist/img/shirts
  *  whole page rather than losing one 26px icon. `getTeamRosterInfo` carries
  *  `logoUploaded`, so a custom upload served from some other path is a state
  *  this league can reach; `mapTeamBadges` drops any URL that is not under here
- *  and the team shows its initial instead.
- *
- *  As with the Premier League's assets, `next.config.ts` names the same path
- *  separately and cannot read this: Next resolves image domains before any of
- *  our code runs. The two must be changed together. */
+ *  and the team shows its initial instead. */
 export const FANTRAX_BADGE_BASE =
   "https://fantraximg.com/assets/images/icons/fantasyteams";
 
