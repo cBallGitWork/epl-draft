@@ -1,7 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
-  FANTRAX_LEAGUES,
   FantraxError,
   type TransactionView,
   fetchDraftResults,
@@ -11,6 +10,7 @@ import {
   fetchTeamRosters,
   fetchTransactions,
 } from "@epl/core";
+import { RECORDED_LEAGUES } from "./leagues";
 import { SNAPSHOT_ROOT, leagueCaptureDir, poolCaptureDir, todayInLondon } from "./paths";
 
 /** The transaction logs to record. Fantrax publishes the legal set in each
@@ -95,7 +95,7 @@ async function main(): Promise<void> {
   const capturedAt = new Date().toISOString();
   const outcomes: ReadOutcome[] = [];
 
-  for (const league of FANTRAX_LEAGUES) {
+  for (const league of RECORDED_LEAGUES) {
     console.log(`${league.key} (${league.leagueId})`);
     const dir = leagueCaptureDir(league.key, date);
     await mkdir(dir, { recursive: true });
