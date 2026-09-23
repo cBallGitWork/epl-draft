@@ -12,8 +12,8 @@ import {
   HEAD_PLATE_END,
   PANEL_FLUSH,
   ROW_NAME,
-  ROW_RULE,
   SCROLL,
+  ROW_HOVER,
 } from "@/app/desk";
 import { MUTE } from "../../../../components/league/TableHeads";
 import { DASH } from "@epl/core";
@@ -167,7 +167,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
           </thead>
           <tbody>
             {ordered.map(({ player, position }, at) => (
-              <tr key={player.id} className={`cm-row ${ROW_RULE} hover:bg-surface`}>
+              <tr key={player.id} className={`cm-row ${ROW_HOVER}`}>
                 <td className="cm-index numeric px-1.5 text-right">{at + 1}</td>
                 {/* White, which is what CM sets a name in on every screen it
                     draws — `12.jpg`, `16.jpg` and `21.jpg`, checked. This said

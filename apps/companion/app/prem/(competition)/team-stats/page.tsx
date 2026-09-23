@@ -8,7 +8,7 @@ import { CLUB } from "../../routes";
 import Filters from "./Filters";
 import { categoryFor, type Club } from "./categories";
 import { footballNow, seasonFixtures } from "../../../football";
-import { BOARD, FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, FIGURE, SCROLL, ROW_HOVER } from "@/app/desk";
 import ClubLabel from "@/app/components/football/ClubLabel";
 
 // Every club ranked by one measure — CM's stat board, on the real competition.
@@ -98,7 +98,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
           </thead>
           <tbody>
             {board.map(({ club, figure }, at) => (
-              <tr key={club.table.clubId} className={`${ROW_RULE} hover:bg-surface`}>
+              <tr key={club.table.clubId} className={ROW_HOVER}>
                 {/* The ordinal in CM's index block: `24.jpg` runs `1st 2nd 3rd`
                     down the left of every table it draws, and a column of bare
                     numbers is a list where a column of ordinals is a league.

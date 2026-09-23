@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Club, Fixture } from "@epl/core";
 import { COMPETITION_NAME, londonDayAndDate, londonTime, DASH } from "@epl/core";
 import { CLUB, MATCH } from "../../routes";
-import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, SCROLL, ROW_HOVER } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import ClubLabel from "@/app/components/football/ClubLabel";
 
@@ -47,7 +47,7 @@ export default function Run({
             const theirs = home ? fixture.awayScore : fixture.homeScore;
 
             return (
-              <tr key={fixture.id} className={`cm-row ${ROW_RULE} hover:bg-surface`}>
+              <tr key={fixture.id} className={`cm-row ${ROW_HOVER}`}>
                 {/* The date in the club's own colour (Craig, 3 Sep 2026:
                     "fixtures, needs the team colours for the date box").
                     `cm-index` is CM's index block and `ClubShell` has already

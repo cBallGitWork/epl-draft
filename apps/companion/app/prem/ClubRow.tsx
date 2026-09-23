@@ -3,7 +3,7 @@ import { type Result, type TableRow, type TableSortKey, ordinal } from "@epl/cor
 import { cellAlign, deskOnly } from "./Columns";
 import { CLUB } from "./routes";
 import { ROW_LINK } from "../components/league/TableCells";
-import { FIGURE, ROW_FIGURE, ROW_RULE, TONE } from "@/app/desk";
+import { FIGURE, ROW_FIGURE, TONE, ROW_HOVER } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import ClubLabel from "@/app/components/football/ClubLabel";
 
@@ -45,7 +45,7 @@ export default function ClubRow({
   sort: TableSortKey;
 }) {
   return (
-    <tr className={`${ROW_RULE} hover:bg-surface`}>
+    <tr className={ROW_HOVER}>
       {/* CM's small leading index cell: a filled block down the left carrying
           the row's number, so the eye counts down the blocks rather than the
           rows. An ORDINAL, which is what `cm9900/24.jpg` prints — `1st`, `2nd`

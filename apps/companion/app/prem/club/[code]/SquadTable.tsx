@@ -7,7 +7,7 @@ import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
 import { PLAYER } from "../../routes";
 import type { LeagueOpinion } from "./club";
-import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, SCROLL, ROW_HOVER } from "@/app/desk";
 
 // Every man on the club's books, as Championship Manager files a squad.
 //
@@ -85,7 +85,7 @@ export default function SquadTable({
             const opinion = league.get(player.code);
 
             return (
-              <tr key={player.id} className={`${ROW_RULE} hover:bg-surface`}>
+              <tr key={player.id} className={ROW_HOVER}>
                 {/* A plate owns its ink, so an unavailable man's tile keeps it; the rest of the row greys. */}
                 <PositionTile positions={opinion?.positions ?? []} cell />
                 <td className="w-full max-w-0 pl-2">

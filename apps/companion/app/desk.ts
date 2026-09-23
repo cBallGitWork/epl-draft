@@ -51,6 +51,9 @@ export const BOARD = "w-full border-collapse text-sm";
 /** The rule between table rows, in `border-bg`: the darker step reads as one ruled table. */
 export const ROW_RULE = "border-b border-bg";
 
+/** A board row that answers the pointer: the rule, and the surface under a hover. */
+export const ROW_HOVER = `${ROW_RULE} hover:bg-surface`;
+
 /** The wrapper that lets a phone reach a board's far columns. */
 export const SCROLL = "overflow-x-auto";
 
