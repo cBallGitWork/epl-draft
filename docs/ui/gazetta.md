@@ -229,8 +229,8 @@ clause. The promotion is also what keeps `LiveStrip`'s stand-down on `/`
 honest: the front page answers the question in full again while live.
 
 **The page refreshes itself**, from the shell rather than from here — the
-layout mounts the one `AutoRefresh`, on `pollSeconds`: 30s while the round is
-under way, 300s otherwise.
+layout mounts the one `AutoRefresh`, which counts down the layout's `liveIn`:
+30s while the round is under way, 300s otherwise, and a wake-up at kickoff.
 
 **A figure that moved says so.** `Changed` wraps each total and flashes it to the
 accent for 700ms when a refresh brings a different number, settling back to

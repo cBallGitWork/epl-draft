@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Archivo_Narrow, Jost, Oxanium } from "next/font/google";
-import { LEAGUE_NAME, POLL } from "@epl/core";
-import { footballNow, groundFaces, offerLive, pollSeconds } from "./football";
+import { LEAGUE_NAME } from "@epl/core";
+import { footballNow, groundFaces, liveIn, offerLive } from "./football";
 import { Suspense } from "react";
 import AutoRefresh from "./components/shell/AutoRefresh";
 import LiveCount from "./components/shell/LiveCount";
@@ -89,27 +89,26 @@ export const viewport: Viewport = {
 };
 
 /** The round, for the two things the shell decides from it: whether to offer the
- *  Live section, and how often to ask the server for a fresh render.
+ *  Live section, and how far off live football is, which sets the poll rate.
  *
  *  The first question is `offerLive`'s, in `football.ts`, and it stays there
  *  rather than inlining here: it is a policy about the FOOTBALL — fail open, so
  *  navigation never lies by omission mid-match — and a policy belongs beside the
  *  data it is about. The paper's index asked it too until 16 Sep 2026, which is
- *  why it was extracted; one caller is not a reason to fold it back in. The poll
- *  falls back to the idle rate on the same reasoning the rail is offered on:
- *  polling hard against a provider that just failed is how a wobble becomes an
- *  outage. */
-async function round(): Promise<{ matchday: boolean; seconds: number }> {
+ *  why it was extracted; one caller is not a reason to fold it back in. A failed
+ *  read gives null, the idle rate: polling hard against a provider that just
+ *  failed is how a wobble becomes an outage. */
+async function round(): Promise<{ matchday: boolean; live: number | null }> {
   const matchday = await offerLive();
   try {
-    return { matchday, seconds: pollSeconds(await footballNow()) };
+    return { matchday, live: await liveIn(await footballNow()) };
   } catch {
-    return { matchday, seconds: POLL.idle };
+    return { matchday, live: null };
   }
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const { matchday, seconds } = await round();
+  const { matchday, live } = await round();
 
   // **Started, not awaited.** Two pieces of chrome draw the same live tie — the
   // red strip on the desk and the score under the Live plate on the phone — and
@@ -162,14 +161,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               the others used. The shell knows the round; the pages know their
               subject.
 
-              The rate is `pollSeconds`, which asks whether the ROUND is under
-              way and never whether a ball is in the air. That distinction cost
+              The server says how far off live football is; the client counts it
+              down (`cadence.ts`), so a tab opened before kickoff speeds up at
+              kickoff without a re-render. Live means the ROUND is under way,
+              never only that a ball is in the air. That distinction cost
               the Live tab a whole afternoon once: `isMatchdayLive` goes false in
               every gap between kickoffs, so the page dropped to the idle 300s
               while the boards beside it stayed on 30s — and between kickoffs is
               exactly when a score is most likely to have moved since you
               looked. */}
-          <AutoRefresh seconds={seconds} />
+          <AutoRefresh liveIn={live} />
           <ReplayStrip />
           {/* Inside the content column, not beside the rail: the strip is the
               shell speaking to the page, and a full-bleed bar that started under

@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
 import {
+  LIVE_REVALIDATE,
   PAGE_REVALIDATE,
   POLL,
   type Fixture,
@@ -17,6 +18,7 @@ import {
   portraitUrl,
   rewindRound,
   roundAt,
+  secondsToLive,
 } from "@epl/core";
 import { now, replayAt } from "./clock";
 import { roundGoals } from "./commentary";
@@ -36,7 +38,7 @@ import { roundGoals } from "./commentary";
 const currentRound: () => Promise<FootballSnapshot> = unstable_cache(
   async () => getFootballSnapshot(),
   ["football-snapshot"],
-  { revalidate: PAGE_REVALIDATE },
+  { revalidate: LIVE_REVALIDATE },
 );
 
 export async function footballNow(): Promise<FootballSnapshot> {
@@ -148,28 +150,16 @@ export async function seasonKickoffs() {
   return datedKickoffs(await seasonFixtures());
 }
 
-/** How often a page showing this round should ask the server again.
- *
- *  `duringGameweek` and not `isMatchdayLive`: the window from the first kickoff
- *  to the last whistle is the right question for a poll rate, because Saturday
- *  tea-time between two kickoffs is when a score is most likely to have moved
- *  since you looked. It is the wrong question for the LIVE dot, which is a
- *  different call and stays one (`roundState`).
- *
- *  The clock is read here rather than passed in, and that is deliberate: four
- *  pages were each spelling out `new Date().toISOString()` beside the same
- *  ternary, which is four chances to compare a snapshot against a clock that
- *  someone later decides to inject. This is the app edge; the edge is where a
- *  clock belongs. */
-export function pollSeconds(snapshot: FootballSnapshot): number {
-  return roundUnderway(snapshot) ? POLL.live : POLL.idle;
+/** Seconds until football is live as this render sees it, for the shell's poller to count down
+ *  (`components/shell/cadence.ts`). Nought for the whole round, gaps between kickoffs included. */
+export async function liveIn(snapshot: FootballSnapshot): Promise<number | null> {
+  return secondsToLive(snapshot, await seasonFixtures(), now().toISOString());
 }
 
 /** Whether the round in view is under way — first kickoff to last whistle,
  *  including every gap in between.
  *
- *  The clock read that `pollSeconds` already made, given a name because a second
- *  caller wanted the same answer for a different reason: a head-to-head card says
+ *  Asked by the head-to-head card too, for a different reason: it says
  *  "all played" for a side with nobody left, and that is worth saying whenever
  *  the round is running rather than only while a ball is in the air. On a
  *  Wednesday every side has nobody left and none of them needs telling, which is
@@ -252,7 +242,7 @@ const PRESENT_TENSE_WINDOW = 3;
  *
  *  A page may be stale. It may not be stale in the present tense — so when this
  *  is false the scores still render and the tense does not. The clock is read
- *  here at the app edge, beside `pollSeconds`, for the reason that one gives. */
+ *  here at the app edge, like every clock read in this file. */
 export function speaksForNow(snapshot: FootballSnapshot): boolean {
   const taken = Date.parse(snapshot.fetchedAt);
   if (Number.isNaN(taken)) return false;

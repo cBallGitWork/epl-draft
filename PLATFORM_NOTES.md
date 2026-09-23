@@ -44,6 +44,49 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Why an open live page froze, and the cache rules that stop it — 23 Sep 2026
+
+Read against the installed Next 16.2.7 source. Standing rules for anything that polls:
+
+- **`router.refresh()` does not invalidate the server cache.** Every live read
+  is an `unstable_cache` entry, which is stale-while-revalidate: a stale read
+  serves the old value and refreshes in the background, and entries age from
+  when they were written. **A poll only brings new data if `POLL.live` is longer
+  than the read's lifetime plus one fetch.** At 30 = 30, a lone reader saw new
+  scores on every other poll. So `LIVE_REVALIDATE = 20` applies to the two reads
+  a live score is drawn from (`currentRound`, `plRound`), and everything heavier
+  stays at 30.
+- **A nested `unstable_cache` bypasses its own cache**
+  (`unstable-cache.js:144`, "when we are nested inside of other unstable_cache's
+  we should bypass cache"). `readLeague` read `footballNow` inside itself, so
+  each league revalidation refetched the 1.3 MB bootstrap and kept a frozen copy
+  of the round in the league's entry. `liveTie` asked that copy whether a match
+  was on. The snapshot is now read outside, in `getLeagueSquads`. `leagueInfo`
+  and `seasonKickoffs` are still nested there, and moving them is not done yet.
+- **The poll rate is decided on the client.** The server sends `liveIn` (seconds
+  to live, from `secondsToLive`) and `AutoRefresh` counts it down
+  (`cadence.ts`). Before this, a tab opened before kickoff polled every 300s
+  until something re-rendered, and client navigation kept the rate.
+- **No route is prerendered.** The shell reads the session cookie only during a
+  live window, so `/prem/results` and `/prem/fixtures` built as static pages and
+  served build-time chrome. Measured under `REPLAY_AT` at GW5 15:30: 300s polling
+  and no Live tab, against 30s on `/prem`. `await connection()` opens `liveTie`,
+  and the data underneath stays cached.
+- **`'use cache'` + `cacheLife` is the 27/28 answer, not this season's.** It is
+  the only option with a hard age limit. It needs `cacheComponents`, which moves
+  41 `revalidate` exports and 15 `unstable_cache` sites and turns on PPR.
+  Rejected for now: `revalidateTag` (still stale-while-revalidate), `updateTag`
+  (Server Actions only), and fetch `next.revalidate` (same model).
+- **Opta commentary is keyed by FPL fixture CODE, never FPL's id.** Probed
+  23 Sep: requesting the textstream for FPL's fixture id returned a 1992 match
+  for **50 of 50** finished GW1–5 fixtures (Brentford v Chelsea came back as
+  Chelsea v Blackburn, 26 Aug 1992). So the wire's stream-based assist credits
+  never applied, and only the arithmetic fallback ran. `roundStreams` now files
+  each stream under `plFixtureCode`, and `creditRoundAssists` is pure in core.
+
+`tools/ui/pollwatch.mjs` measures it: polls per minute, the gaps between them,
+and how many polls changed the screen.
+
 ## Production serves the REHEARSAL league, not the dummy one — verified 21 Sep 2026
 
 `CLAUDE.md` says `FANTRAX_LEAGUE_ID` "defaults to the **dummy** league", which is

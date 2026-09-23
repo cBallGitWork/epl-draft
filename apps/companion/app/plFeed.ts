@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { COMMENTARY_REVALIDATE, PAGE_REVALIDATE, type FootballPlayer } from "@epl/core";
+import { COMMENTARY_REVALIDATE, LIVE_REVALIDATE, PAGE_REVALIDATE, type FootballPlayer } from "@epl/core";
 import {
   fetchHighlightsFeed,
   fetchPlFixture,
@@ -59,8 +59,8 @@ export function playerCodes(players: readonly FootballPlayer[]): Map<number, num
  *
  *  Cached rather than read per request for the reason every other football read
  *  here is: sixteen managers refreshing all weekend cost them one request per
- *  window between them. Their own `cache-control` is `max-age=30`, which is
- *  already `PAGE_REVALIDATE`, so the two agree.
+ *  window between them. At `LIVE_REVALIDATE`, below the poll, because this is
+ *  where the wire's goals come from; their own `cache-control` is `max-age=30`.
  *
  *  Kept raw rather than mapped because the mapping needs the bootstrap, which is
  *  a different cache with a different lifetime — folding them together would
@@ -68,7 +68,7 @@ export function playerCodes(players: readonly FootballPlayer[]): Map<number, num
 export const plRound = unstable_cache(
   async (gameweek: number) => fetchPlRound(gameweek),
   ["pl-round"],
-  { revalidate: PAGE_REVALIDATE },
+  { revalidate: LIVE_REVALIDATE },
 );
 
 /** One fixture's detail, cached per Premier League id.

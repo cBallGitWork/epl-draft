@@ -24,11 +24,12 @@ add to it instead.
 | What it knows | the whole real competition, and FPL's scoring | the match, minute by minute | **our league**, and only our league |
 | Layer | football | football | league |
 
-**Their thirty seconds is our thirty seconds by accident, and it is now on
-purpose.** `PAGE_REVALIDATE` is 30, `POLL.live` is 30, and the Premier League's
-own CDN TTL is 30 — so polling faster returns the same bytes. `shell/AutoRefresh`
-is the app's single client poller and every page is a server component, which is
-also what makes the CORS lock above cost nothing.
+**The poll is 30 seconds and the two live reads live 20.** `POLL.live` is 30 and
+the Premier League's own CDN TTL is 30. `LIVE_REVALIDATE` is 20, so each poll
+finds the last one's background refresh already stale and gets new data
+(PLATFORM_NOTES, 23 Sep 2026). `shell/AutoRefresh` is the app's single client
+poller and every page is a server component, which is also what makes the CORS
+lock above cost nothing.
 
 ---
 
@@ -209,6 +210,11 @@ gap:
   reading like a ledger.
 - **A per-man Fantrax points figure per MATCH.** A period total is what the wired
   read returns; the real thing costs 32 requests and belongs in a paced capture.
+- **A minute that ticks between polls.** Counting FPL's `minutes` up on the
+  client invents minutes at half-time and in stoppage time, where the real clock
+  stops or runs past 90. The honest route is the Premier League's own
+  `clock.label` and `phase`, off the `plRound` read the page already makes. That
+  is the "real match clock" item above, and it waits on that (23 Sep 2026).
 - **Push notifications when a goal lands.** Nothing exists. The page refreshes
   itself every thirty seconds (`shell/AutoRefresh`), which covers a reader with
   it open; a phone in a pocket gets nothing. Web Push would need a service
