@@ -4,6 +4,7 @@ import {
   FPL_SHIRT_BASE,
   PL_ASSET_BASE,
   PL_PHOTO_BASE,
+  YOUTUBE_EMBED_BASE,
 } from "../../packages/core/src/config";
 
 /** Every image host the app draws from, as core's config names them. */
@@ -13,6 +14,39 @@ function under(base: string) {
   const url = new URL(base);
   return { protocol: "https" as const, hostname: url.hostname, pathname: `${url.pathname}/**` };
 }
+
+const dev = process.env.NODE_ENV === "development";
+
+/** Vercel's preview toolbar, by directive, on preview deployments only. */
+const TOOLBAR: Record<string, string> =
+  process.env.VERCEL_ENV === "preview"
+    ? {
+        script: " https://vercel.live",
+        style: " https://vercel.live",
+        img: " https://vercel.live https://vercel.com",
+        font: " https://vercel.live https://assets.vercel.com",
+        connect: " https://vercel.live wss://ws-us3.pusher.com",
+        frame: " https://vercel.live",
+      }
+    : {};
+
+const IMAGE_ORIGINS = [...new Set(IMAGE_BASES.map((base) => new URL(base).origin))].join(" ");
+
+/** Next inlines its RSC payload as scripts, and a nonce would make every page dynamic,
+ *  so scripts keep 'unsafe-inline'. Every origin comes from core's config. */
+const CSP = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}${TOOLBAR.script ?? ""}`,
+  `style-src 'self' 'unsafe-inline'${TOOLBAR.style ?? ""}`,
+  `img-src 'self' data: blob: ${IMAGE_ORIGINS}${TOOLBAR.img ?? ""}`,
+  `font-src 'self'${TOOLBAR.font ?? ""}`,
+  `connect-src 'self'${dev ? " ws:" : ""}${TOOLBAR.connect ?? ""}`,
+  `frame-src ${new URL(YOUTUBE_EMBED_BASE).origin}${TOOLBAR.frame ?? ""}`,
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
 
 const nextConfig: NextConfig = {
   // `@epl/core` ships raw TypeScript (no build step), so Next has to compile it.
@@ -28,6 +62,22 @@ const nextConfig: NextConfig = {
   // and runtime errors still surface — this is the idle indicator only, and 16.2
   // takes `false | { position }` for it.
   devIndicators: false,
+
+  poweredByHeader: false,
+
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Content-Security-Policy", value: CSP },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          // Not `no-referrer`: YouTube's embed refuses to play without the origin.
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+    ];
+  },
 
   // The old URLs have been shared in a sixteen-person group chat, so they keep
   // working rather than 404ing on someone who scrolled back to find one.
