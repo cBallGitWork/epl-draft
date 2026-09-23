@@ -308,7 +308,7 @@ export const FANTRAX_LEAGUE_ID =
  *  Throws rather than falling back: a name that is not in the list is a typo,
  *  and a typo that quietly serves the wrong league is the failure this is
  *  written to make impossible. */
-function leagueId(key: string): string {
+export function leagueId(key: string): string {
   const league = FANTRAX_LEAGUES.find((entry) => entry.key === key);
   if (league === undefined) throw new Error(`No Fantrax league named "${key}"`);
   return league.leagueId;

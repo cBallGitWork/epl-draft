@@ -15,14 +15,6 @@ on: [push, pull_request]
 jobs:
   verify:
     runs-on: ubuntu-latest
-    env:
-      # The one league id that has to be named outside `FANTRAX_LEAGUES`, and
-      # named once. CODE_RULES §3 puts an id in "one config module or
-      # environment", and this is the environment half — the same category as
-      # the Vercel dashboard value the swap actually turns. The rehearsal league
-      # needs no name here at all: it is what the config defaults to, so the
-      # second walk below simply does not set this.
-      REAL_LEAGUE: ayyoh3n2mr326v2o
     steps:
       - uses: actions/checkout@v4
 
@@ -73,9 +65,9 @@ jobs:
       - name: Every view, against both leagues
         run: |
           set -euo pipefail
-          # An empty id means "whatever the config defaults to", which is the
-          # rehearsal league — so the default path is exercised as a default
-          # rather than as a value somebody typed.
+          # The real league's id from `leagueId("real")`, never a copy here; a missing key fails the step.
+          REAL_LEAGUE=$(npx tsx -e 'import { leagueId } from "@epl/core"; process.stdout.write(leagueId("real"))')
+          # An empty id means whatever the config defaults to, which is the dummy league.
           walk() {
             if [ -n "$1" ]; then export FANTRAX_LEAGUE_ID="$1"; else unset FANTRAX_LEAGUE_ID; fi
             npm run start &
