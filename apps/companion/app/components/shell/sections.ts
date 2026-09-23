@@ -89,20 +89,8 @@ export const MAIL = "/news";
 
 export const SECTIONS: Section[] = [
   { href: "/", label: "Gazetta", glyph: "gazetta", routes: PAPER_ROUTES },
-  // **One route and not a prefix**, which is what keeps the plate honest: it
-  // owns `/squad/me`, so it lights across all five of the reader's own tabs and
-  // stays dark on a rival's screens. `squad/routes.ts` records why the front
-  // door is a URL rather than a redirect to an id.
-  // **`Team` and not `My Team`, and it is the ceiling's answer rather than a
-  // preference.** At 320 a plate is 53.3px and keeps 4px around its label, so a
-  // label has 49.3 — and `My Team` renders at 51. It shipped as that for one
-  // afternoon and the screenshot read `My Te…`; `navfit` had called it a fit,
-  // because its clipped test carried a `+1` tolerance that was exactly one pixel
-  // too generous. The instrument is fixed and this is the word that fits.
-  //
-  // The SECTION is still My Team everywhere it is written about. A plate is not
-  // the place a name is stated in full — `Prem` is `FA Barclays Premiership` on
-  // the title bar two lines below it, for the same reason.
+  // One route, not a prefix, so it lights on the reader's own five tabs and stays dark on a rival's.
+  // `Team` because `My Team` renders at 51px against a tab's 49px at 320; `fullLabel` says it where rows have room.
   {
     href: MY_TEAM,
     label: "Team",
@@ -114,15 +102,7 @@ export const SECTIONS: Section[] = [
   // Live takes Team's slot while football is on, so the second tab is always yours.
   { href: "/matchday", label: "Live", glyph: "live", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },
   { href: "/league", label: "League", glyph: "league", routes: ["/league"] },
-  // **"Prem", and the bar says the rest.** The rail is 64px below `lg` and
-  // "Gazetta" already measures 45px of it at 9px bold uppercase, so
-  // "Premiership" wraps to two lines and a rail plate taller than its
-  // neighbours is not a rail. The title bar carries "FA Barclays Premiership"
-  // in full, which is where a competition's name belongs (`cm9900/24.jpg`).
-  //
-  // Beside League, because the competition sits beside the competition: one is
-  // the fantasy league we play and the other is the football it is played on,
-  // and a reader moving between them is asking the same question twice.
+  // "Prem" on the rail; the title bar says "FA Barclays Premiership" (`cm9900/24.jpg`). Beside League, its competition.
   { href: "/prem", label: "Prem", glyph: "prem", routes: ["/prem"] },
   // **The manager's inbox, and it is a section rather than a tab** (Craig, 5 Sep
   // 2026: "Should [news] be its own section and not the league?"). The game
@@ -150,13 +130,7 @@ export const SECTIONS: Section[] = [
   { href: "/fpl", label: "FPL", routes: ["/fpl"], overflow: true },
 ];
 
-/** The sections this round has, and which of them are on the bar.
- *
- *  Both answers turn on the same fact and are therefore one function: whether
- *  football is on decides that Live exists at all, and that My Team gives up its
- *  plate to it. `Rail` used to hold the first half inline — it is a client
- *  component, so the rule was untestable there, and it is the rule the bar's
- *  measured ceiling rests on. */
+/** The sections this round has: Live only while football is on, when My Team gives it its tab. Pure, so tested. */
 export function sectionsFor(matchday: boolean): Section[] {
   return SECTIONS.filter((section) => matchday || !section.onlyDuringGameweek).map((section) =>
     matchday && section.overflowDuringGameweek ? { ...section, overflow: true } : section,
@@ -168,8 +142,7 @@ export function barSections(sections: readonly Section[]): Section[] {
   return sections.filter((section) => !section.overflow);
 }
 
-/** What is behind `More`. Empty means the door is not drawn at all — a `More`
- *  that opens onto nothing is a control that does nothing. */
+/** What is behind `More`, listed on its page before the squads and the credits. */
 export function overflowSections(sections: readonly Section[]): Section[] {
   return sections.filter((section) => section.overflow);
 }
