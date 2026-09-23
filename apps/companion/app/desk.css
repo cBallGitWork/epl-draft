@@ -836,6 +836,15 @@
    first and lost silently, which is the trap this file already warns about. */
 .cm-index-scoped .cm-index {
   background-image: none;
+  /* The gradient back (Craig, 23 Sep 2026: "it doesn't match the rest of the cm"),
+     run AWAY from the ink so no point on it is less readable than the flat face
+     `inkOn` chose that ink against: white ink darkens, dark ink lightens. The line
+     above stays as the fallback where relative colour is not understood. */
+  background-image: linear-gradient(
+    180deg,
+    var(--cm-index-face),
+    color-mix(in oklab, oklch(from var(--cm-index-ink, var(--color-ink)) calc(1 - l) 0 0) 45%, var(--cm-index-face))
+  );
 }
 .cm-index-scoped .cm-out .cm-index,
 .cm-index-scoped .cm-out .cm-index *,
