@@ -44,3 +44,11 @@ export function unacknowledged(
     settled: acknowledged.filter((path) => !missing.includes(path)).sort(),
   };
 }
+
+/** Entries naming a read the differ no longer makes — a renamed read strands its judgements. */
+export function orphaned(
+  baseline: readonly AcknowledgedDifference[],
+  reads: readonly string[],
+): AcknowledgedDifference[] {
+  return baseline.filter((entry) => !reads.includes(entry.read));
+}

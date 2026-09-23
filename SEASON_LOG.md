@@ -10,6 +10,20 @@ true on its date and is not a statement about the tree today; that is why
 `docs-drift-auditor` exempts a season log, and why anything still load-bearing
 belongs in `PLATFORM_NOTES.md` instead of here.
 
+## 23 Sep 2026 — shape-diff was red for 25 days over a renamed read
+
+`32accf0` (29 Aug) renamed `fxpa getStandings (badges)` to `(page)` in
+`READS`. The two baseline entries audited on 28 Aug kept the old name, so they
+matched nothing, and the gate reddened on paths someone had already judged. The
+3 Sep entry below read this as "the baseline wants the sentence". The sentence
+was already there, filed under the old name. `/verify --push` has been red
+since, including on #38 today.
+
+Fixed by re-keying the two entries. `orphaned()` now makes shape-diff exit 2 on
+any entry whose `read` names nothing in `READS`, the same refusal an entry with
+no reason already gets. The six TRADE entries the run reported as settled were
+pruned.
+
 ## 21 Sep 2026 — My Team, and the pitch nobody had been maintaining
 
 Craig, on `/squad/me`: *"remove 1-3-4-3 row"*, *"pitch view using old crap UI"*,

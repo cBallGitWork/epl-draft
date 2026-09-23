@@ -13,6 +13,7 @@ import {
   fetchStandingsPage,
   fetchTeamRosters,
   fetchTransactions,
+  orphaned,
   shapeOf,
   unacknowledged,
 } from "@epl/core";
@@ -97,6 +98,14 @@ async function main() {
     );
     for (const entry of unexplained) console.error(`    ${entry.read} ${entry.path}`);
     console.error("Every acknowledged difference needs a sentence saying why it is acceptable.");
+    process.exitCode = 2;
+    return;
+  }
+  const stranded = orphaned(baseline, READS.map((entry) => entry.method));
+  if (stranded.length > 0) {
+    console.error(`${stranded.length} baseline entr${stranded.length === 1 ? "y names" : "ies name"} a read this script does not make:`);
+    for (const entry of stranded) console.error(`    ${entry.read} ${entry.path}`);
+    console.error("Rename the entry's `read` to the method label in READS.");
     process.exitCode = 2;
     return;
   }
