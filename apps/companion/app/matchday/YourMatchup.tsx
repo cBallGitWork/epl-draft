@@ -21,7 +21,7 @@ import { yoursBorder } from "../mine";
 //
 // The reason: on a screen carrying a wire, five draft ties and ten fixtures, a
 // scoreline ROW is one row among sixteen and nothing outranks anything.
-// PRODUCT.md's first principle is that the live number is the interface, so the
+// docs/rules/PRODUCT.md's first principle is that the live number is the interface, so the
 // tie takes the two club-coloured plates `cm9900/21.jpg` gives a MATCH and the
 // rest of the screen becomes subordinate to it. The list and the board keep the
 // row, because on those screens it is the thing itself rather than the headline.

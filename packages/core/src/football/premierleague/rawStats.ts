@@ -20,7 +20,7 @@ import type { RawPlFixture } from "./raw";
  *  rule.** Counted over 40 team-sides of two completed rounds: shots, fouls,
  *  possession, passes, tackles and headers 40/40; corners 39; on target 37;
  *  yellow cards 36; offsides 27; **red cards 1** — and there was exactly one red
- *  card in those rounds. `DESIGN.md` §7's "Absence is `—`, never `0`" is about a
+ *  card in those rounds. `docs/rules/DESIGN.md` §7's "Absence is `—`, never `0`" is about a
  *  figure a provider could not give us; this is a provider saying nought by
  *  saying nothing. A reader defaults a missing metric to 0 and says so. */
 export interface RawPlMetric {

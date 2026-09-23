@@ -84,7 +84,7 @@ export function faceOf(assignment: Assignment, ctx: FaceContext): StoryFace | nu
   // involvements first, then FPL's `influence`, then minutes — the mix Craig
   // asked for on 18 Sep ("use draft position/fpl scoring mix ... to know which
   // players are the most important"). Draft position and Fantrax ownership %
-  // would be better signals and neither is exported yet; GAZETTA.md carries it.
+  // would be better signals and neither is exported yet; docs/plans/GAZETTA.md carries it.
   if (assignment.kind === "presser") {
     const named = ctx.presserLines ?? [];
     const best = [...named]
@@ -116,7 +116,7 @@ export function faceOf(assignment: Assignment, ctx: FaceContext): StoryFace | nu
  *  `newsAdded` is what says so — the field `types.ts` already calls "what makes
  *  it an item on a news list rather than a state on a badge". Among those, the
  *  season's numbers only break the tie. Ownership and draft position would be
- *  better still; GAZETTA.md carries it. */
+ *  better still; docs/plans/GAZETTA.md carries it. */
 export function weight(each: { fresh?: boolean; player?: { season: { influence: number } } }): number {
   const season = each.player?.season;
   if (season === undefined) return -1;

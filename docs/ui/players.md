@@ -248,7 +248,7 @@ no call site sets `text-*` on one, because `--color-accent` on the grey plate
 would be illegible. It was set anyway for one build and `probe.mjs` read the same
 dark ink off a pressed chip and an unpressed one — dropped exactly as that
 paragraph says it would be. The pressed bevel carries the state and the tick
-carries it again as a SHAPE, which is PRODUCT.md's accessibility rule.
+carries it again as a SHAPE, which is docs/rules/PRODUCT.md's accessibility rule.
 
 The status codes are Fantrax's (`FA`, `WW`, `T`); anything we have not seen
 renders as the raw code rather than as a guess.

@@ -151,7 +151,7 @@ doing no work: these are SEPARATE pitches with the man's name over each, so
 identity is carried by the caption, and club colour was spending the one visual
 channel a density map has on a fact already stated.
 
-> **This needs a DESIGN.md ruling and does not have one yet.** §3 makes every
+> **This needs a docs/rules/DESIGN.md ruling and does not have one yet.** §3 makes every
 > colour a slot with one meaning, and `--color-hot`/`--color-cold` are
 > deliberately a THRESHOLD rather than a scale — *"a cell is lit or it is not;
 > there is no second strength"* — confined to a board of many measures. A density
@@ -292,7 +292,7 @@ it was worth and drawing it as worthless would be a confident wrong answer.
 meaning and none of them means "saved": `--color-bad` is a loss, a doubt, a
 negative, and a blocked effort is none of those. Green turf refuses most of the
 palette anyway. So every mark is cream — ink on a colour plate — separated on
-fill and weight, which is PRODUCT.md's rule that a signal is paired with a shape.
+fill and weight, which is docs/rules/PRODUCT.md's rule that a signal is paired with a shape.
 **Three tiers and not five**: goal (filled), on target (ring), off target or
 blocked (faint ring). A reader can hold three apart on a pitch this size; block
 against miss is a number in a table, not a ring nobody can measure.
@@ -411,7 +411,7 @@ buildup-to-goal map (4,127 rows in 24-25) with **0 rows for 26-27**.
   and the assister's name must be resolved once in the exporter, never at
   runtime.
 - **The fixture filter**, above. Both exports carry `fplFixtureId` already.
-- **The ramp has no DESIGN.md ruling.** See "The maps" above; it is the app's
+- **The ramp has no docs/rules/DESIGN.md ruling.** See "The maps" above; it is the app's
   first sequential scale and it is confined to a colour plate until it is judged.
 - **Understat's xG family** — npxG, xGChain, xGBuildup, key passes — is a second
   block under "This season" once `eye-test/26-27.json` lands. FPL publishes none

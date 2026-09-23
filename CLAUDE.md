@@ -1,19 +1,19 @@
 # Tim Hortons Pro League — companion + platform monorepo
 
-Read `PRODUCT.md` first for who this is for and why. This file is the technical
+Read `docs/rules/PRODUCT.md` first for who this is for and why. This file is the technical
 contract for architecture, conventions, and what the assistant should keep in mind.
 
-**`CODE_RULES.md` is binding.** Read it before writing any code. Its rules —
+**`docs/rules/CODE_RULES.md` is binding.** Read it before writing any code. Its rules —
 rule of 2/3, no bloat, no hardcoding, small files, purity at the core — are hard
-rules, not preferences. Exceptions are recorded in `PLATFORM_NOTES.md` in the
+rules, not preferences. Exceptions are recorded in `docs/record/PLATFORM_NOTES.md` in the
 same commit.
 
-**`GAZETTA.md` is the paper's own plan**, and it is the live one: what has
-shipped, what is next, and one branch per item. `ROADMAP.md` is the app's and has
+**`docs/plans/GAZETTA.md` is the paper's own plan**, and it is the live one: what has
+shipped, what is next, and one branch per item. `docs/plans/ROADMAP.md` is the app's and has
 become a record of what landed rather than a plan for what is next. Both obey the
 same rule — when an item lands, it is marked in the same commit.
 
-**`DESIGN.md` is binding for anything visible.** Two registers — a printed paper
+**`docs/rules/DESIGN.md` is binding for anything visible.** Two registers — a printed paper
 at `/` and a Championship Manager 99/00 desk on the other five tabs — League,
 Prem, Live, News and FPL — one shared skeleton, and a palette in which every
 colour is a slot with one meaning. It also records what is deliberately
@@ -60,9 +60,9 @@ may never import the league. A script does the wiring.
 
 ## What the assistant should do first
 
-- Read `CODE_RULES.md` before writing code. It overrides habit and convenience.
-- Read `PRODUCT.md` before making product-level decisions.
-- Keep `PLATFORM_NOTES.md` up to date with architecture decisions, season
+- Read `docs/rules/CODE_RULES.md` before writing code. It overrides habit and convenience.
+- Read `docs/rules/PRODUCT.md` before making product-level decisions.
+- Keep `docs/record/PLATFORM_NOTES.md` up to date with architecture decisions, season
   updates, data assumptions, and implementation notes.
 - Prefer small, testable changes. Add or update tests when you change domain
   logic or data mapping.
@@ -86,12 +86,12 @@ apps/lab        the 27/28 platform prototype — empty on purpose
 We keep two files, split on 3 Sep 2026 because one of them had reached 4,784
 lines and the 300 an agent actually needs were buried in the middle of it.
 
-**`PLATFORM_NOTES.md` — the standing half, and it is meant to be READ.** What is
+**`docs/record/PLATFORM_NOTES.md` — the standing half, and it is meant to be READ.** What is
 true now, what was probed and must not be re-derived, what was decided, and
 which rules have recorded exceptions. It is no longer exempt from
 `docs-drift-auditor`, which is the point of splitting it.
 
-**`SEASON_LOG.md` — the dated entries, and they are meant to be SEARCHED.** An
+**`docs/record/SEASON_LOG.md` — the dated entries, and they are meant to be SEARCHED.** An
 account of a day's work. True as a record, never a claim about the tree today.
 
 The rule for which half a new section belongs in: a standing fact, a probe
@@ -257,7 +257,7 @@ Never name-match at runtime.
 
 ## Conventions
 
-The full, binding set is in `CODE_RULES.md`. The ones that bite most often here:
+The full, binding set is in `docs/rules/CODE_RULES.md`. The ones that bite most often here:
 
 - Keep provider I/O in adapters: `packages/core/src/*/[provider]/client.ts`.
 - Keep mapping logic pure: `map.ts` should not access clocks or network.
@@ -397,7 +397,7 @@ the tsc and vitest globs on purpose. `shot` `compare` `probe` `sweep` `navfit`
 
 **Agents are read-only** and see what a diff review cannot: `ui-verifier` opens
 the screenshots, `probe-runner` counts the payload, `register-warden` judges
-DESIGN.md, `docs-drift-auditor` checks the docs against the tree.
+docs/rules/DESIGN.md, `docs-drift-auditor` checks the docs against the tree.
 
 `.mcp.json` adds Playwright for interactive exploration. Deterministic audits
 stay in `tools/ui/` — a repeatable number is what a claim needs.
@@ -410,8 +410,8 @@ github issues first, want the project clean"*.
 
 **The split that keeps it clean: an ISSUE is a task somebody could pick up; a DOC
 records a decision.** Deferrals, parked ideas and open questions are decisions and
-stay where they already live — `ROADMAP.md`'s *Explicitly parked*, `DESIGN.md`
-§8's *Deferred, deliberately*, `PLATFORM_NOTES.md`'s *Questions*. An issue must
+stay where they already live — `docs/plans/ROADMAP.md`'s *Explicitly parked*, `docs/rules/DESIGN.md`
+§8's *Deferred, deliberately*, `docs/record/PLATFORM_NOTES.md`'s *Questions*. An issue must
 never become the place a deferral is recorded, because three separate rules here
 say the record lives in the commit and not in a follow-up (`phase-gate` §5,
 CODE_RULES §6, and this file's own *mark it in the same commit*).
@@ -421,12 +421,12 @@ CODE_RULES §6, and this file's own *mark it in the same commit*).
 1. **An issue is for work NOT started, or blocked.** Work in flight is a branch
    and a PR; an issue opened and closed within the hour is bookkeeping.
 2. **One issue, one branch, one PR.** No epics. If it needs splitting it was two.
-3. **The issue holds STATE; the doc holds REASONING.** `GAZETTA.md` says *why*
+3. **The issue holds STATE; the doc holds REASONING.** `docs/plans/GAZETTA.md` says *why*
    the publishing week is Sunday-anchored; the issue says *do it* and links.
    Never copy the argument across — two copies is one that goes stale.
 4. **Issues close by merge, never by hand** — `Closes #N` in the PR body.
 5. **A deferral is not an issue.** Closing one as parked means writing it into
-   `ROADMAP.md` or `DESIGN.md` §8 in the same breath.
+   `docs/plans/ROADMAP.md` or `docs/rules/DESIGN.md` §8 in the same breath.
 6. **At every `/phase-gate`, reconcile the list.** Close anything nobody can
    justify out loud. That skill's own standard is that a phase closes when
    someone could pull the tree tomorrow and find the docs true.
@@ -445,7 +445,7 @@ CODE_RULES §6, and this file's own *mark it in the same commit*).
    never deploys** — that has happened twice, at nine commits and at seventy-nine.
 10. **Stage named paths.** `git add -A` is hook-denied; a second session may be
     committing in the same tree.
-11. **Push before the pile grows.** `HANDOVER.md` has opened on unpushed work
+11. **Push before the pile grows.** `docs/record/HANDOVER.md` has opened on unpushed work
     three times — 24 commits, then 72, then 40 on 17 Sep. It is the repo's
     most-repeated failure and it is an agreement problem, not a tooling one.
 12. **The four gates before anything leaves**, plus the push three when it does.
@@ -483,7 +483,7 @@ is when `scripts/labels.ts` earns its place.
 
 Three deliberate omissions, so nobody tidies them back in. **`paper` settles the
 scope split** — the log has both `paper` and `gazetta` for one thing, and
-`GAZETTA.md` is a document's name rather than an area's. **`perf`, `test` and
+`docs/plans/GAZETTA.md` is a document's name rather than an area's. **`perf`, `test` and
 `probe` are real commit prefixes with no label**, because they describe a commit
 rather than a task. **There is no `parked` or `deferred` label**, because those
 are the docs' words and an open issue nobody intends to do is a graveyard.

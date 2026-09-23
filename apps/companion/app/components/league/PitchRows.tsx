@@ -121,7 +121,7 @@ export const BENCH_KIT = { "--pitch-card-scale": 0.75 } as CSSProperties;
  *  seven pixels. That is backwards: the card is the thing a crowded line can
  *  afford to give up, and the name is what the reader came for. The ceiling was
  *  unreachable at every width this app is ever drawn at, so the clamp only ever
- *  expressed its floor — which is the exception DESIGN.md §8 recorded, and this
+ *  expressed its floor — which is the exception docs/rules/DESIGN.md §8 recorded, and this
  *  closes it.
  *
  *  A line so full that the plate cannot hold a name does not shrink it either:

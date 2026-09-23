@@ -6,7 +6,7 @@ argument-hint: "[--push]"
 
 # The four gates
 
-`CODE_RULES.md` §7 is not advisory and the list is not four *of* the checks, it is
+`docs/rules/CODE_RULES.md` §7 is not advisory and the list is not four *of* the checks, it is
 the checks. Run them in this order and in full.
 
 ```bash

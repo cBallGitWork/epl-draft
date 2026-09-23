@@ -33,7 +33,7 @@ import { CELL, heatCells, shade } from "./heat";
 // So density gets the channel, through a ramp that reads on grass at every
 // intensity — which is what the reference uses and for the same reason.
 //
-// **This is a new object in the palette and it needs a DESIGN.md ruling.** §3
+// **This is a new object in the palette and it needs a docs/rules/DESIGN.md ruling.** §3
 // makes every colour a slot with one meaning, and `--color-hot`/`--color-cold`
 // are deliberately a THRESHOLD rather than a scale — "a cell is lit or it is
 // not; there is no second strength" — confined to a board of many measures. A

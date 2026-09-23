@@ -4,7 +4,7 @@
 Everything below was probed live on **4 Sep 2026** against the 2026/27 season. Counts are
 counts, not estimates. **Do not re-derive any of it** — add to it.
 
-`PLATFORM_NOTES.md` carries the decisions and the one rule this provider inverts; this
+`docs/record/PLATFORM_NOTES.md` carries the decisions and the one rule this provider inverts; this
 file is the surface. **`live-reporting.md` is the map of all three providers** — what
 answers which question on a Saturday, what it costs, and what is built — and is the
 one to read first if the question is "what can we show at ten to four".
@@ -247,7 +247,7 @@ the video: embedding is what YouTube offers, and it is the only thing we take.
 1. **`/stats/match` omits a metric whose value is zero.** Counted over 40 team-sides:
    shots, fouls, possession, passes, tackles, headers **40/40**; corners 39; on target 37;
    yellow cards 36; offsides 27; **red cards 1** — and there was exactly one red card in
-   those rounds. **So absence there means NOUGHT**, the opposite of `DESIGN.md` §7's
+   those rounds. **So absence there means NOUGHT**, the opposite of `docs/rules/DESIGN.md` §7's
    *"Absence is `—`, never `0`"*. A reader of this endpoint defaults a missing metric to 0
    and says so at the call site.
 2. **`/players` is incomplete.** It misses 20 of the 360 players who appear in a round's

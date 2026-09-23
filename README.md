@@ -33,5 +33,5 @@ even drafts.
 
 ## Reading order
 
-`PRODUCT.md` for who it is for and why · `CLAUDE.md` for the architecture and the
+`docs/rules/PRODUCT.md` for who it is for and why · `CLAUDE.md` for the architecture and the
 verified API contracts.

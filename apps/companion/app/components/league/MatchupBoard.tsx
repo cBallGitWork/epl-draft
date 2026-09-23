@@ -182,7 +182,7 @@ export default function MatchupBoard({
  *
  *  **The open half is marked by a bar and not by a hue.** Colour is spent on
  *  whose side it is, so which one you are reading is carried by a shape — which
- *  is also the rule that keeps it legible without hue (PRODUCT.md).
+ *  is also the rule that keeps it legible without hue (docs/rules/PRODUCT.md).
  *
  *  **`ScoreFigure` may not come inside the bevel**, and that is a contrast fact:
  *  DESIGN §2 puts dark ink on the grey plate at 7.52:1 and `--color-ink` at

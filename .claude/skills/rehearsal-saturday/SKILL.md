@@ -61,7 +61,7 @@ With the round live:
 
 ## 4. Write it down before deciding anything
 
-Append to `PLATFORM_NOTES.md`: every sample with its timestamp, the flip order,
+Append to `docs/record/PLATFORM_NOTES.md`: every sample with its timestamp, the flip order,
 the observed lag, the read count. Then, and only in a later commit, the cadence
 change — `PAGE_REVALIDATE` plus the route literals **in one commit**, kept or
 reverted **as one commit**.
@@ -74,7 +74,7 @@ live feed   empty until <utc> · <n> elements after · <n> on zero minutes
 flip order  <which of event-status / fixtures / data_checked turned first, with times>
 app         score change visible after <n>s · shared reads <n> per window
 matchups    fantrax <x> vs ours <y> · labelled <yes|no>
-recorded    PLATFORM_NOTES.md <section>
+recorded    docs/record/PLATFORM_NOTES.md <section>
 verdict     cadence change: <justified|not justified|still unmeasured> — and why
 ```
 

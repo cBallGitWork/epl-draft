@@ -1,7 +1,7 @@
 #!/bin/bash
 # Fetch the Championship Manager reference library.
 #
-# DESIGN.md §2 and the 29 Aug handover both say the CM reference was "studied
+# docs/rules/DESIGN.md §2 and the 29 Aug handover both say the CM reference was "studied
 # from the game's own screenshots… not from memory of it" — and then nobody
 # committed the screenshots. Every session since has been working from a prose
 # summary of pixels it could not see, which is how a bevel ends up bolted to a

@@ -15,7 +15,7 @@ labels: ""
 **What** — one line.
 
 **Why** — the fault it closes, or what it unblocks. **Link the doc, do not
-restate it**: `GAZETTA.md` and `PLATFORM_NOTES.md` hold the reasoning, and an
+restate it**: `docs/plans/GAZETTA.md` and `docs/record/PLATFORM_NOTES.md` hold the reasoning, and an
 argument copied into an issue is a second copy that goes stale.
 
 **Branch** — `feat/…`, the name it will take.

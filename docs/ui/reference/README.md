@@ -1,6 +1,6 @@
 # Championship Manager — the reference library
 
-**This folder is the work base.** `DESIGN.md` §2 and the 29 Aug handover both say
+**This folder is the work base.** `docs/rules/DESIGN.md` §2 and the 29 Aug handover both say
 the CM reference was "studied from the game's own screenshots… not from memory of
 it" — and then nobody committed the screenshots. Every session since has been
 building from a prose summary of pixels it could not see, which is how a bevel
@@ -37,7 +37,7 @@ judged by eye.
 
 At our 800px-equivalent widths that 18px row is why CM reads as dense and a
 44px row does not. It is also why the desk target is 28px and not 44 — see
-`PRODUCT.md`'s tap floor, which is ours and not CM's.
+`docs/rules/PRODUCT.md`'s tap floor, which is ours and not CM's.
 
 ## Measured palette
 
@@ -75,7 +75,7 @@ a category.
 | `Fut` box | yellow fill, dark text | — | `12.jpg` (Degn, Farrelly) |
 | Money / value column | white on a purple-magenta **ground** | — | `12.jpg` Value, `23.jpg` fee |
 
-## Three corrections to `HANDOVER.md` §3
+## Three corrections to `docs/record/HANDOVER.md` §3
 
 The prose summary was written from these same shots and got three things wrong.
 This is the whole argument for committing the pictures.
@@ -101,7 +101,7 @@ This is the whole argument for committing the pictures.
   `tools/ui/groundfit.mjs` measures ours.
 - **Greying a man out to 2.54:1.** CM put unavailable players below any modern
   floor. Ours grey to `--color-faint`, which is 5.34:1 on our ground — the same
-  signal, above `PRODUCT.md`'s AA floor.
+  signal, above `docs/rules/PRODUCT.md`'s AA floor.
 
 ## What the screenshots settle about structure
 

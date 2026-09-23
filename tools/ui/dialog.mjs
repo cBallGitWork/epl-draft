@@ -9,7 +9,7 @@
 //
 // The width is printed rather than asserted. What counts as too wide is a design
 // judgement per dialog, and a number in the output is what a reader can hold
-// against DESIGN.md; a threshold invented here would only be this file's opinion.
+// against docs/rules/DESIGN.md; a threshold invented here would only be this file's opinion.
 //
 // Exits non-zero when the dialog never opens, or opens and survives Escape.
 

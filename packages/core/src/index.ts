@@ -1,6 +1,6 @@
 // @epl/core — everything that is not a React component and not a Next.js route.
 //
-// Two layers, deliberately separate (see PRODUCT.md):
+// Two layers, deliberately separate (see docs/rules/PRODUCT.md):
 //   football/  the real Premier League, sourced from FPL's public API
 //   league/    our fantasy competition, sourced from Fantrax
 //

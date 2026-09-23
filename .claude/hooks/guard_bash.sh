@@ -106,7 +106,7 @@ if printf '%s' "$cmd" | grep -qE 'git[[:space:]]+commit([[:space:]]|$)'; then
         [ "$n" -gt 300 ] && printf '%s (%s) ' "$f" "$n"
       done)
   if [ -n "$over" ]; then
-    ask "Staged past CODE_RULES §4's hard 300-line ceiling: ${over}. Split before committing, or record the exception in PLATFORM_NOTES.md in the same commit. (line_ceiling.sh misses this when the file was edited through bash rather than Write/Edit.)"
+    ask "Staged past CODE_RULES §4's hard 300-line ceiling: ${over}. Split before committing, or record the exception in docs/record/PLATFORM_NOTES.md in the same commit. (line_ceiling.sh misses this when the file was edited through bash rather than Write/Edit.)"
   fi
 fi
 

@@ -1,6 +1,6 @@
 # Season log — the dated entries
 
-Split out of `PLATFORM_NOTES.md` on 3 Sep 2026, in their original order with
+Split out of `docs/record/PLATFORM_NOTES.md` on 3 Sep 2026, in their original order with
 their headings untouched. Nothing here was rewritten; the file it came from
 keeps the standing half — the probes, the decisions and the recorded rule
 exceptions — and points here.
@@ -8,7 +8,7 @@ exceptions — and points here.
 **These entries describe the past and are supposed to.** A claim in here was
 true on its date and is not a statement about the tree today; that is why
 `docs-drift-auditor` exempts a season log, and why anything still load-bearing
-belongs in `PLATFORM_NOTES.md` instead of here.
+belongs in `docs/record/PLATFORM_NOTES.md` instead of here.
 
 ## 23 Sep 2026 — shape-diff was red for 25 days over a renamed read
 
@@ -92,7 +92,7 @@ rows open a player card, because the pitch is the arranging surface and the list
 is the reading one. The Pitch/List toggle spans the page under a thumb — it was
 110px of 390, hard right, sharing a row with a figure that is usually absent, and
 its own `flex-1` was inert because the row was `justify-end`. It stays 44px tall:
-that is PRODUCT.md's tap floor, and this control is the one that used to have an
+that is docs/rules/PRODUCT.md's tap floor, and this control is the one that used to have an
 exception to it, deleted on 11 Sep. Longer is what makes it read thinner.
 
 **`FPts` was a column of fifteen dashes and that was correct.** The planner opens
@@ -3059,7 +3059,7 @@ characters are skipped, because "Son" hits "season" on most of the feed.
   columns of players side by side (`cm9900/25.jpg`); its rail is a 90px column
   down the left. Neither is a phone layout and no amount of `lg:` makes them one.
   A phone wants one column, a thumb-reachable bar at the foot, and the four
-  figures that matter. They are two designs, and PRODUCT.md already says so in
+  figures that matter. They are two designs, and docs/rules/PRODUCT.md already says so in
   two places without drawing the conclusion — "phone-first, one column,
   thumb-reachable" and "the Desk is Championship Manager 99/00".
   **Two rules, or this becomes two apps that disagree.**
@@ -3218,10 +3218,10 @@ characters are skipped, because "Son" hits "season" on most of the feed.
   the mark's own variable. `matchday/desk/loading` padded `py-1.5` where its row
   pads `py-1` — a desync that predated today.
   Amended in the same commit, because the guards reject the work otherwise:
-  `PRODUCT.md` (the parent, and it now carries the table and the three
-  exceptions), `DESIGN.md` §7, `docs/ui/README.md`, `ROADMAP.md`,
+  `docs/rules/PRODUCT.md` (the parent, and it now carries the table and the three
+  exceptions), `docs/rules/DESIGN.md` §7, `docs/ui/README.md`, `docs/plans/ROADMAP.md`,
   `.claude/rules/register-palette.md`, `register-warden`, `ui-verifier`,
-  `/shoot` and `/audit-ui`. `DESIGN.md` §7 also stopped attributing the tap rule
+  `/shoot` and `/audit-ui`. `docs/rules/DESIGN.md` §7 also stopped attributing the tap rule
   to `docs/ui/conventions.md`, which has never carried one.
 
 - 2026-08-31: **The type scale had no leading of its own, and the plan's account
@@ -3333,8 +3333,8 @@ characters are skipped, because "Son" hits "season" on most of the feed.
   border edge flipped sides between its two shapes.
   **The plates sit at the FOOT of the rail below `lg`.** CM's own rail is
   top-aligned and on an 844px phone that puts the first section 800px from the
-  thumb. PRODUCT.md's one-handed reference condition outranks the look, and
-  DESIGN.md's preamble says so itself.
+  thumb. docs/rules/PRODUCT.md's one-handed reference condition outranks the look, and
+  docs/rules/DESIGN.md's preamble says so itself.
   **The rail is not on `/`, so the paper prints its own index.** A 64px navy
   column beside a broadsheet is a seam, and it would narrow the `@container` the
   front page's two-column layout keys off. `gazette/Index` sets the same six
@@ -3404,7 +3404,7 @@ characters are skipped, because "Son" hits "season" on most of the feed.
   board. Recorded in `matchup.md`, not fixed here.
 - 2026-08-29: The pitch card's type was inverted. It sized the NAME from the card
   (`clamp(7px, 13cqw, 11px)`), so a line of seven took its width out of the type
-  and printed a 7px name — the defect DESIGN.md §8 carried as its one live
+  and printed a 7px name — the defect docs/rules/DESIGN.md §8 carried as its one live
   exception, and Craig's reason for calling the squad view terrible. The card now
   shrinks and the type does not: name `--text-2xs`, figure `--text-xs`, fixture
   and chips `--text-3xs`, all declared steps, so §8's exception is closed and
@@ -3511,7 +3511,7 @@ characters are skipped, because "Son" hits "season" on most of the feed.
   claim, which settled the transactions design: the native feed wins, capture
   diffs corroborate. Lineup visibility gate shipped — squads all week, XI only
   once the period opens.
-- 2026-08-05: Created `PLATFORM_NOTES.md` and improved `CLAUDE.md`.
+- 2026-08-05: Created `docs/record/PLATFORM_NOTES.md` and improved `CLAUDE.md`.
 - 2026-08-05: Probed Fantrax live and recorded the facts above. Added the
   read-only league layer, the dated snapshot capture, and the identity bridge
   (542/699 settled). Config module added; `npm run typecheck` made to pass for
@@ -4005,7 +4005,7 @@ prem match for the home team."*
 
 Twenty photographs hunted off Wikimedia Commons, picked from contact sheets, and
 wired so a club screen wears its own ground and a match wears the HOME club's.
-`PLATFORM_NOTES.md` carries what is standing — the three category traps, the rate
+`docs/record/PLATFORM_NOTES.md` carries what is standing — the three category traps, the rate
 limits, the licence counts, the two rugby fixtures.
 
 The wiring is `drawsOwnGround` in `sections.ts`: the app shell renders above every

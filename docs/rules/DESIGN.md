@@ -1,6 +1,6 @@
 # Design — binding
 
-The visual contract. `CODE_RULES.md` and `PRODUCT.md` still override this file;
+The visual contract. `docs/rules/CODE_RULES.md` and `docs/rules/PRODUCT.md` still override this file;
 `docs/ui/` still describes what each page *is*. This says what the app **looks
 like**, and why, in terms a change can be checked against.
 
@@ -745,7 +745,7 @@ five tab-label recipes where the component's own docblock says there should be
 two. Named against a ladder, those become disagreements. Unnamed, they were just
 what each file happened to say.
 
-The ladder is CM's, taken through PRODUCT.md's tap floor. Every row names the
+The ladder is CM's, taken through docs/rules/PRODUCT.md's tap floor. Every row names the
 recipe in `app/desk.ts` that implements it, so a doc and its code cannot drift
 apart silently.
 
@@ -787,7 +787,7 @@ the four.** The complaint was about a desk, the arithmetic only argues for a
 desk, and the phone's budget above the first row of data is the thing that band
 is spent out of.
 
-**Three of these are rules and the rest are consequences.** 44 is PRODUCT.md's
+**Three of these are rules and the rest are consequences.** 44 is docs/rules/PRODUCT.md's
 tap floor and is not negotiable under a thumb; 36 is a control on the desk; 28 is
 a repeating row on the desk, which is `.cm-row` and is the number that makes a
 division fit on a screen. `desk.css` carries the long argument for the pair and
@@ -837,7 +837,7 @@ single edit rather than fifteen.*
 
 Restated because a redesign is exactly when these get broken. Their parents are
 `docs/ui/conventions.md` and — for the tap rule, which `conventions.md` has never
-carried — `PRODUCT.md`'s accessibility section.
+carried — `docs/rules/PRODUCT.md`'s accessibility section.
 
 - **Absence is `—`, never `0`.** A confident wrong number is worse than a hedged
   right one.
@@ -858,7 +858,7 @@ carried — `PRODUCT.md`'s accessibility section.
 - **Taps are `min-h-11`** — but that is a rule about a THUMB. Above `lg` the
   desk keeps its own proportions: a repeating ROW is 28px (`.cm-row` in
   `desk.css`), a CONTROL 36 (`lg:min-h-9`), a column head 28 with its strip.
-  `PRODUCT.md`'s accessibility section is the parent and carries the three
+  `docs/rules/PRODUCT.md`'s accessibility section is the parent and carries the three
   exceptions; `tools/ui/tapfit.mjs` measures it.
 - The lineup gate, the alphabetical gated order, and "no active/reserve leak"
   are product invariants. They are not visual decisions and a redesign does not

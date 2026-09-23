@@ -89,7 +89,7 @@ export default function GameweekView({
 
       <ButtonLink href={SQUAD}>Squads</ButtonLink>
 
-      {/* Honesty about provenance, per PRODUCT.md principle 4. Saying the stats
+      {/* Honesty about provenance, per docs/rules/PRODUCT.md principle 4. Saying the stats
           are missing matters more than saying when: a scoreline with no scorers
           under it reads as nobody having done anything. */}
       <p className="pt-1 text-center text-2xs text-faint">

@@ -50,7 +50,7 @@ fail differently at the two widths, so one is never enough.
 what sixteen people open, and it has broken twice from changes that touched
 nothing on it.
 
-**4 — Read every PNG.** Then say, per image, what is in it. Against `DESIGN.md`:
+**4 — Read every PNG.** Then say, per image, what is in it. Against `docs/rules/DESIGN.md`:
 
 - Overflow, clipping, a document that scrolls sideways.
 - Colour slots: accent (yellow) only for yours/selected/active · info (cyan) only
@@ -61,7 +61,7 @@ nothing on it.
 - Absence drawn as `—`, never `0`.
 - Figures in Archivo Narrow, tabular.
 - Taps at least 44px **at 390**. At 1440 a repeating row is 28px and a control
-  36 — that is the rule rather than a regression (PRODUCT.md, 31 Aug 2026).
+  36 — that is the rule rather than a regression (docs/rules/PRODUCT.md, 31 Aug 2026).
   Do not eyeball this: `node tools/ui/tapfit.mjs` measures every route at both
   widths and names the three recorded exceptions.
 
@@ -83,10 +83,10 @@ One row per image, then a verdict.
 route | width | what is in the image | verdict
 ------+-------+----------------------+--------
 /     | 390   | masthead, dateline, drop cap, TOTW leads the rail | LOOKS RIGHT
-/league | 390 | cut line drawn solid red under row 8, DESIGN.md §3 says dashed | REGRESSION
+/league | 390 | cut line drawn solid red under row 8, docs/rules/DESIGN.md §3 says dashed | REGRESSION
 ```
 
-- **LOOKS RIGHT** — you opened it and it matches DESIGN.md.
+- **LOOKS RIGHT** — you opened it and it matches docs/rules/DESIGN.md.
 - **REGRESSION** — you opened it and it does not. Name the rule and the row.
 - **UNVERIFIED** — you could not shoot or could not open it. Say why.
 

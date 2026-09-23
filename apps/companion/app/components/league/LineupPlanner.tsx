@@ -246,7 +246,7 @@ export default function LineupPlanner({
           was `justify-end`.
 
           **Longer is what makes it thinner.** The plates are 44px tall and stay
-          there: that is PRODUCT.md's tap floor, and the Pitch/List toggle is the
+          there: that is docs/rules/PRODUCT.md's tap floor, and the Pitch/List toggle is the
           one control that used to have an exception to it — deleted on 11 Sep
           when this became a `.cm-tab` strip, and a deleted exception is not one
           to quietly re-open. At full width the same height reads as a bar rather

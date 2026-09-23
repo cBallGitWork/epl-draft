@@ -55,7 +55,7 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
   // What he has done in the round on screen and what is coming. Both read the
   // snapshot and the calendar every other screen already holds, so they cost FPL
   // nothing and do not go behind a boundary. This is the half of the screen that
-  // answers PRODUCT.md's third-most-frequent job — "should I start this player".
+  // answers docs/rules/PRODUCT.md's third-most-frequent job — "should I start this player".
   const run = football === null ? null : await scouting(football.player);
 
   return (
@@ -66,7 +66,7 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
     >
       {/* Portrait beside the grid on the desk, above it on a phone. The desk
           layout is drawn first and the phone is a second design of the same data
-          (PRODUCT.md, 31 Aug) — at 1440 a single column left 900px of empty row
+          (docs/rules/PRODUCT.md, 31 Aug) — at 1440 a single column left 900px of empty row
           between every label and its value, which is a phone layout stretched. */}
       {/* **`items-stretch`, so the portrait is as tall as the grid beside it**
           (Craig, 4 Sep 2026: *"portarit has awkward sapce under it"*). It was

@@ -17,10 +17,10 @@ sequences it against the dated season work and un-parks two ideas Craig chose:
 
 | Idea | Where recorded | Status |
 |---|---|---|
-| Custom competitions (H2H groups, cups, points leagues over Fantrax points) | PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. The feature is still parked; what is built is the seam. |
+| Custom competitions (H2H groups, cups, points leagues over Fantrax points) | docs/rules/PRODUCT.md | **Shape landed 20 Aug** — a declared cup and playoff, labelled a placeholder, on `/league/schedule`. The feature is still parked; what is built is the seam. |
 | Per-player intelligence store via `setPlayerNote` | CLAUDE.md fxpa methods | **In scope** (this session) |
 | Commissioner cookie + `adminMode` as the only viable write path | PLATFORM_NOTES "extension plan is dead" | **In scope** — probe it |
-| 27/28 draft/FM hybrid, `apps/lab` | PRODUCT.md | Parked, empty on purpose |
+| 27/28 draft/FM hybrid, `apps/lab` | docs/rules/PRODUCT.md | Parked, empty on purpose |
 | FPL as one small tab | memory, 6 Aug | Done — keep it small |
 
 Design calls that bind the refactor (all Craig's, all recorded): stale photo =
@@ -272,7 +272,7 @@ PLATFORM_NOTES, 28 Aug.
 - **It went live.** `/` was the only live-worthy surface in the app that never
   mounted `AutoRefresh`. It now polls like every other screen, leads on an *As
   it stands* splash while the round runs, and flashes any figure that moved
-  (with a reduced-motion crossfade, which PRODUCT.md requires by name).
+  (with a reduced-motion crossfade, which docs/rules/PRODUCT.md requires by name).
 - **It runs more than one story.** `stories()` returns the whole running order;
   the page leads on the first and runs two more as headlines.
 - **It got a voice**, and the voice is not a template. A columnist writes a

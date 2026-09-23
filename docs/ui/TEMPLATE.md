@@ -9,8 +9,8 @@ that governs it, put it here in bold and in one sentence — `league-table.md`
 opens "Fantrax computes the standings. **This page never adds anything up.**"
 and everything below is downstream of that.
 
-`../../DESIGN.md` is binding for colour and type and this file defers to it.
-`../../CODE_RULES.md` says what may be done to the code. **This folder describes
+`../rules/DESIGN.md` is binding for colour and type and this file defers to it.
+`../rules/CODE_RULES.md` says what may be done to the code. **This folder describes
 what exists; those say what may be done to it.**
 
 ## On the page
