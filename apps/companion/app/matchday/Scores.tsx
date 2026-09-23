@@ -66,8 +66,8 @@ function DraftRow({
   scores: Map<string, LiveTeamScore>;
   badges: Map<string, string>;
   /** Where each manager stands in our own table, by team id — CM's blue block
-   *  (`cm9900/24.jpg`, whose index cell is `1st`, `2nd`, `3rd`). Fantrax's own
-   *  rank and never a sort of ours. */
+   *  (`cm9900/24.jpg`, whose index cell is `1st`, `2nd`, `3rd`), placed by the
+   *  league's rule in `placeTable`. */
   places: Map<string, number>;
   mine: string | null;
   gameweek: number;
