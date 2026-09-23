@@ -27,14 +27,14 @@ export default function MatchPitch({
   match,
   sheets,
   events,
-  men,
+  cards,
   phoneSide,
 }: {
   match: Match;
   sheets: { home: PlTeamSheet; away: PlTeamSheet };
   events: Map<number, PlManMatch>;
   /** Each man's card, which his tile opens. */
-  men: ReadonlyMap<number, SquadPlayerDetail>;
+  cards: ReadonlyMap<number, SquadPlayerDetail>;
   /** The one club a phone shows; a desk shows both. */
   phoneSide: "home" | "away";
 }) {
@@ -69,7 +69,7 @@ export default function MatchPitch({
       events={events}
       join={join}
       widest={widest}
-      men={men}
+      cards={cards}
       phonePicked={key === phoneSide}
     />
   );
@@ -90,11 +90,11 @@ function Side({
   events,
   join,
   widest,
-  men,
+  cards,
   phonePicked,
 }: {
   match: Match;
-  men: ReadonlyMap<number, SquadPlayerDetail>;
+  cards: ReadonlyMap<number, SquadPlayerDetail>;
   phonePicked: boolean;
   club: Club | undefined;
   against: Opposition[] | undefined;
@@ -110,7 +110,7 @@ function Side({
   );
   const marker = (man: PlSquadMan) => (
     <MaybeCard
-      player={man.code === null ? undefined : men.get(man.code)}
+      player={man.code === null ? undefined : cards.get(man.code)}
       className="block w-full text-left"
     >
       <PitchMarker

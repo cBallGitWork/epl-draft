@@ -2,11 +2,11 @@ import Link from "next/link";
 import type { ClubColours, FootballPlayer } from "@epl/core";
 import { availabilityOf, positionDepth, DASH } from "@epl/core";
 import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
-import PositionTile from "../../../components/league/PositionTile";
+import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
 import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
 import { PLAYER } from "../../routes";
-import type { LeagueOpinion } from "./club";
+import type { LeagueOpinion } from "../../leagueOpinions";
 import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, SCROLL, ROW_HOVER } from "@/app/desk";
 
 // Every man on the club's books, as Championship Manager files a squad.
@@ -47,7 +47,7 @@ export default function SquadTable({
             {/* What our Fantrax league fields him as, in CM's index block (Craig, 23 Sep
                 2026: "Put the Fantrax position into those tiles, and then remove
                 the position columns"). It replaced the shirt number here. */}
-            <Head width="w-10 lg:w-14" title="What our Fantrax league will field him as — not a fact about the footballer">
+            <Head width={TILE_WIDTH} title="What our Fantrax league will field him as — not a fact about the footballer">
               <span className={PLATE}>Pos</span>
             </Head>
             <NameHead label="Player" />

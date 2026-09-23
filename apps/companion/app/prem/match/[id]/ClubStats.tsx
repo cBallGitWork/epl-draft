@@ -1,9 +1,9 @@
 import { loggedPlayers, DASH } from "@epl/core";
 import { clubIndex } from "../../../components/football/clubIndex";
 import type { Club, PlManMatch, PlTeamSheet, SquadPlayerDetail } from "@epl/core";
-import type { LeagueOpinion } from "../../club/[code]/club";
+import type { LeagueOpinion } from "../../leagueOpinions";
 import Section from "../../../components/shell/Section";
-import PositionTile from "../../../components/league/PositionTile";
+import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
 import { MUTE, SortHead } from "../../../components/league/TableHeads";
 import { BOARD, HEAD_CELL, ROW_FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
@@ -22,7 +22,7 @@ interface Row extends StatLine {
 }
 
 /** Each ranked column's two cuts: yellow from `good`, orange from `best`. */
-type Cuts = ReadonlyMap<string, { good: number | null; best: number | null }>;
+type StandoutCuts = ReadonlyMap<string, { good: number | null; best: number | null }>;
 
 export default function ClubStats({
   match,
@@ -32,7 +32,7 @@ export default function ClubStats({
   events,
   injured,
   league,
-  men,
+  cards,
   sort,
   descending,
 }: {
@@ -45,18 +45,18 @@ export default function ClubStats({
   /** Our league's view of each man, by FPL code: his eligibility and his Fantrax id. */
   league: ReadonlyMap<number, LeagueOpinion>;
   /** Each man's player card, by FPL code. */
-  men: ReadonlyMap<number, SquadPlayerDetail>;
+  cards: ReadonlyMap<number, SquadPlayerDetail>;
   sort: StatSort;
   descending: boolean;
 }) {
   const logged = loggedPlayers(match.logged);
   const lines = new Map((match.sheet?.lines ?? []).map((line) => [line.playerId, line]));
   // Ties keep the sheet's order, with the bench's men who got on above the ones who sat.
-  const sheetOrder = ordered(sheet, events);
-  const named = [
-    ...sheetOrder.filter((row) => !row.bench),
-    ...sheetOrder.filter((row) => row.bench && cameOn(row)),
-    ...sheetOrder.filter((row) => row.bench && !cameOn(row)),
+  const onSheet = ordered(sheet, events);
+  const inSheetOrder = [
+    ...onSheet.filter((row) => !row.bench),
+    ...onSheet.filter((row) => row.bench && cameOn(row)),
+    ...onSheet.filter((row) => row.bench && !cameOn(row)),
   ].map((row): Row => {
     const id = row.man.code === null ? undefined : match.byCode.get(row.man.code)?.id;
     return {
@@ -66,16 +66,16 @@ export default function ClubStats({
       logged: row.man.code === null ? undefined : logged.get(row.man.code),
     };
   });
-  const rows = sorted(named, sort, descending);
-  const played = named.filter((row) => appeared(row.named));
-  const cuts: Cuts = new Map(
+  const rows = sorted(inSheetOrder, sort, descending);
+  const appearances = inSheetOrder.filter((row) => appeared(row.named));
+  const cuts: StandoutCuts = new Map(
     COLUMNS.filter((column) => "rank" in column).map((column) => {
-      const values = played.map((row) => column.of(row));
+      const values = appearances.map((row) => column.of(row));
       return [
         column.head,
         {
-          good: standoutCut(values, played.length, STANDOUT.good),
-          best: standoutCut(values, played.length, STANDOUT.best),
+          good: standoutCut(values, appearances.length, STANDOUT.good),
+          best: standoutCut(values, appearances.length, STANDOUT.best),
         },
       ];
     }),
@@ -95,7 +95,7 @@ export default function ClubStats({
           <thead>
             <tr>
               {/* No plate over the tile and the name — CM's own board heads only its figures. */}
-              <th className={`${HEAD_CELL} ${PIN_TILE} bg-surface`}>
+              <th className={`${HEAD_CELL} ${PIN_TILE} ${TILE_WIDTH} bg-surface`}>
                 <span className={MUTE}>Fantrax position</span>
               </th>
               <th className={`${HEAD_CELL} ${PIN_NAME} ${NAME_WIDTH}`}>
@@ -119,7 +119,7 @@ export default function ClubStats({
                 key={`${row.named.man.code ?? row.named.man.name}-${at}`}
                 row={row}
                 match={match}
-                card={row.named.man.code === null ? undefined : men.get(row.named.man.code)}
+                card={row.named.man.code === null ? undefined : cards.get(row.named.man.code)}
                 cuts={cuts}
                 positions={row.named.man.code === null ? [] : (league.get(row.named.man.code)?.positions ?? [])}
                 hurt={row.named.man.code !== null && injured.has(row.named.man.code)}
@@ -144,7 +144,7 @@ function StatRow({
   row: Row;
   match: Match;
   card: SquadPlayerDetail | undefined;
-  cuts: Cuts;
+  cuts: StandoutCuts;
   positions: readonly string[];
   hurt: boolean;
 }) {
@@ -179,7 +179,7 @@ function StatRow({
           !played || value === null
             ? ""
             : "rank" in column
-              ? lit(value, cuts.get(column.head), column.rank)
+              ? standoutInk(value, cuts.get(column.head), column.rank)
               : "derived" in column
                 ? "font-bold text-info"
                 : "";
@@ -194,7 +194,7 @@ function StatRow({
 }
 
 /** CM's inks for a standout: orange for the column's best, yellow for the rest, red at the bad end (DESIGN §3). */
-function lit(
+function standoutInk(
   value: number,
   cut: { good: number | null; best: number | null } | undefined,
   rank: "high" | "low",
@@ -212,9 +212,8 @@ const FIGURE_CELL = `numeric px-1.5 text-center ${ROW_FIGURE}`;
 /** 36px under a thumb, not 44 — PRODUCT's recorded exception for the match screens. */
 const PHONE_ROW = "max-lg:min-h-9";
 
-/** The tile and the name both stay put while the measures scroll under them at 390. The tile is
- *  held at its full width, or the name's fixed offset leaves a hole between them. */
-const PIN_TILE = "sticky left-0 z-10 w-10 min-w-10 lg:w-14 lg:min-w-14";
+/** The tile and the name stay put while the measures scroll under them; the name starts where `TILE_WIDTH` ends. */
+const PIN_TILE = "sticky left-0 z-10";
 const PIN_NAME = "sticky left-10 z-10 border-r border-line bg-surface lg:left-14";
 
 /** About four measures in view beside the name at 390; the sub note joins it on a desk. */

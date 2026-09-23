@@ -1,15 +1,16 @@
 import type { Club, PlManMatch, PlTeamSheet, PlayerOwner, SquadPlayerDetail } from "@epl/core";
+import { TILE_WIDTH } from "../../../components/league/PositionTile";
 import { clubIndex } from "../../../components/football/clubIndex";
 import { BOARD, PANEL_FLUSH, phoneShows } from "@/app/desk";
 import { Head, HeadRow, MUTE, PLATE } from "../../../components/league/TableHeads";
 import type { Match } from "./match";
 import SheetRow from "./SheetRow";
 import { joinOf, ordered, type Join } from "./sheetJoin";
-import type { LeagueOpinion } from "../../club/[code]/club";
+import type { LeagueOpinion } from "../../leagueOpinions";
 
 // Championship Manager's team sheet, `cm9900/16.jpg`, both sides at once — stacked under a thumb, paired on a desk.
 
-export interface SheetProps {
+interface SheetProps {
   match: Match;
   sheets: { home: PlTeamSheet; away: PlTeamSheet };
   events: Map<number, PlManMatch>;
@@ -19,7 +20,7 @@ export interface SheetProps {
   /** Our league's view of each man, by FPL code: his eligibility and his Fantrax id. */
   league: ReadonlyMap<number, LeagueOpinion>;
   /** Each man's player card, by FPL code. */
-  men: ReadonlyMap<number, SquadPlayerDetail>;
+  cards: ReadonlyMap<number, SquadPlayerDetail>;
   /** The one club a phone shows; a desk shows both. */
   phoneSide: "home" | "away";
 }
@@ -43,7 +44,7 @@ function Side({
   join,
   injured,
   league,
-  men,
+  cards,
   phonePicked,
 }: Omit<SheetProps, "match" | "sheets" | "phoneSide"> & {
   club: Club | undefined;
@@ -65,7 +66,7 @@ function Side({
         <thead>
           <HeadRow>
             {/* Only the figure is headed (Craig, 23 Sep 2026: *"remove them all except for PTS"*). */}
-            <Head width="w-10 lg:w-14">
+            <Head width={TILE_WIDTH}>
               <span className={MUTE}>Fantrax position</span>
             </Head>
             <Head width="w-3">
@@ -91,7 +92,7 @@ function Side({
               owner={row.man.code === null ? undefined : owners.get(row.man.code)}
               positions={row.man.code === null ? [] : (league.get(row.man.code)?.positions ?? [])}
               join={join}
-              card={row.man.code === null ? undefined : men.get(row.man.code)}
+              card={row.man.code === null ? undefined : cards.get(row.man.code)}
               hurt={row.man.code !== null && injured.has(row.man.code)}
               opensBench={at === bench}
             />

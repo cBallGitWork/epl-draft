@@ -12,19 +12,16 @@ import { BUTTON } from "./ButtonLink";
 
 export default function DialogFoot({
   href,
-  label,
   onClose,
 }: {
-  /** Where the dialog's subject is written up in full. */
+  /** Where the player is written up in full. */
   href: string;
-  /** The way out's own words, "Full profile". */
-  label: string;
   onClose: () => void;
 }) {
   return (
     <div className="flex gap-2">
       <Link href={href} className={`${BUTTON} flex-1`}>
-        {label}
+        Full profile
       </Link>
       <button type="button" onClick={onClose} className={`${BUTTON} flex-1`}>
         Close

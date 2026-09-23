@@ -3,7 +3,7 @@ import type { MatchSheetLine } from "@epl/core";
 // The Fantasy panel's categories, keyed by Fantrax's own codes (`getLeagueInfo`'s scoring table names them).
 // A scaffold (Craig, 23 Sep 2026: *"il add the categories later"*): the event counts one match can give.
 
-export interface FantasyCategory {
+interface FantasyCategory {
   /** Fantrax's code for it, so the league's scoring can decide later which of these count. */
   code: string;
   label: string;

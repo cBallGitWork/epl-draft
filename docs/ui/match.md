@@ -83,8 +83,8 @@ order, 23 Sep 2026: the elevens second.
 team sheet, the club boards, the pitch and the scoresheet all open
 `components/league/PlayerCard`, **the same card the squad board and the lineup
 planner open** (Craig, 23 Sep 2026: *"should be the same pop up as elsewhere, that
-needs to be a repo standard"*). `matchMen` builds each man's `SquadPlayerDetail`
-from the match and our league's `leagueOpinions` — his Fantrax id is what the
+needs to be a repo standard"*). `matchCards` builds each man's `SquadPlayerDetail`
+from the match and our league's `prem/leagueOpinions` — his Fantrax id is what the
 card's *Full profile* opens — and a man our league does not list stays plain text.
 The match screens' own card, with its sub minutes and owner, is gone. **A panel ends where its
 content does** rather than filling to the foot of the screen, and a phone gets a

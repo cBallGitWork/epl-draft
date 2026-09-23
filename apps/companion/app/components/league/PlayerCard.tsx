@@ -66,7 +66,6 @@ export default function PlayerCard({
 
         <DialogFoot
           href={playerHref(rostered.slot.fantraxId)}
-          label="Full profile"
           onClose={onClose}
         />
       </div>

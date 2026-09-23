@@ -104,10 +104,10 @@ function sideOf(club: Club | undefined): ShotSide {
  *  The export is player-relative — his own goal to the one he attacks — so a half-turn is all it takes. */
 function plottedShots(match: Match, names: ReadonlyMap<number, string>): PlottedShot[] {
   // The shot export carries no team, so each shot is split by the shooter's club.
-  const here = shotsInFixture(intelShots, match.fixture.id);
+  const byShooter = shotsInFixture(intelShots, match.fixture.id);
   const scoredOwnGoal = ownGoalers(match);
   const kept = (code: number, shot: Shot) => !(shot.outcome === "goal" && shot.xg === null && scoredOwnGoal.has(code));
-  return [...here].flatMap(([code, shots]) => {
+  return [...byShooter].flatMap(([code, shots]) => {
     const clubId = match.byCode.get(code)?.clubId;
     const side = clubId === match.home?.id ? "home" : clubId === match.away?.id ? "away" : null;
     if (side === null) return [];

@@ -46,6 +46,9 @@ export const COLUMNS = [
 /** A column's head doubles as its query value. */
 export type StatSort = (typeof COLUMNS)[number]["head"];
 
+/** A club board opens ranked by fantasy points (Craig, 23 Sep 2026). */
+export const DEFAULT_SORT: StatSort = "Pts";
+
 export function isStatSort(value: string | undefined): value is StatSort {
   return COLUMNS.some((column) => column.head === value);
 }

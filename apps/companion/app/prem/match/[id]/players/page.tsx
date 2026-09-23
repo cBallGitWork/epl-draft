@@ -6,8 +6,8 @@ import MatchShell from "../Shell";
 import MatchPitch from "../MatchPitch";
 import TeamSheet from "../TeamSheet";
 import { matchOwners, readMatch } from "../match";
-import { leagueOpinions } from "../../../club/[code]/club";
-import { matchMen } from "../matchMen";
+import { leagueOpinions } from "../../../leagueOpinions";
+import { matchCards } from "../matchCards";
 import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchDetail";
 import { matchHref } from "../matchRoutes";
 import type { Match } from "../match";
@@ -118,14 +118,14 @@ async function Board({ match, view, side }: { match: Match; view: View; side: Si
 
   // Their sheet is the only source of a bench; without it, both squads is the honest fallback.
   if (sheets === null) return <BothSquads match={match} />;
-  const men = matchMen(match, sheets, league);
+  const cards = matchCards(match, sheets, league);
   if (view === "pitch")
     return (
       <MatchPitch
         match={match}
         sheets={sheets}
         events={events}
-        men={men}
+        cards={cards}
         phoneSide={side}
       />
     );
@@ -137,7 +137,7 @@ async function Board({ match, view, side }: { match: Match; view: View; side: Si
       owners={owners}
       injured={injured}
       league={league}
-      men={men}
+      cards={cards}
       phoneSide={side}
     />
   );

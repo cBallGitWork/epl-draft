@@ -27,6 +27,10 @@ export interface ShotSide {
 }
 
 
+/** The ring round a picked shot, and the tap target over every mark — pitch units, wider than the biggest mark. */
+const RING_RADIUS = 3.2;
+const TAP_RADIUS = 2.4;
+
 /** The key's own words for what became of a shot. */
 const OUTCOME: Record<Shot["outcome"], string> = {
   goal: "Goal",
@@ -65,7 +69,7 @@ export default function ShotMap({
         ? (a.shot.minute ?? Infinity) - (b.shot.minute ?? Infinity)
         : (b.shot.xg ?? -1) - (a.shot.xg ?? -1),
     );
-  const chosen = picked === null ? undefined : shots[picked];
+  const pickedShot = picked === null ? undefined : shots[picked];
 
   return (
     // Capped on a desk, or a full-width pitch is 700px tall and the list starts below the fold.
@@ -89,11 +93,11 @@ export default function ShotMap({
         <Pitch />
         <ShotMarks shots={shots.filter((shot) => shot.side === "home")} ink={home.colour} />
         <ShotMarks shots={shots.filter((shot) => shot.side === "away")} ink={away.colour} />
-        {chosen === undefined ? null : (
+        {pickedShot === undefined ? null : (
           <circle
-            cx={chosen.x}
-            cy={(chosen.y / 100) * PITCH_BOX.height}
-            r="3.2"
+            cx={pickedShot.x}
+            cy={(pickedShot.y / 100) * PITCH_BOX.height}
+            r={RING_RADIUS}
             fill="none"
             stroke="var(--color-accent)"
             strokeWidth="0.6"
@@ -105,7 +109,7 @@ export default function ShotMap({
             key={at}
             cx={shot.x}
             cy={(shot.y / 100) * PITCH_BOX.height}
-            r="2.4"
+            r={TAP_RADIUS}
             fill="transparent"
             className="cursor-pointer"
             onClick={() => pick(at)}

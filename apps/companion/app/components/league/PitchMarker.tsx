@@ -15,44 +15,10 @@ import PlayerImage from "./PlayerImage";
 import PlayerShirt from "./PlayerShirt";
 import { NAME_SIZE, PITCH_BAND } from "./PitchRows";
 
-// One player on Championship Manager's pitch: a shirt, a name, and what he is
-// worth. The marker half of the `CmGround` pair.
-//
-// **A kit where this had a cut-out head in a coloured disc** (Craig, 10 Sep
-// 2026). Two decisions collapsed into one here and it is worth saying which,
-// because both were argued at length in this file and both are now reversed:
-//
-// · The photograph is gone. Not because it 404s — it answers for about six
-//   players in seven — but because the ladder behind it guarantees a line of
-//   eleven contains a face, a shirt and a set of initials at once. `PlayerShirt`
-//   carries the counting. `face` opts back in, for the match line-up alone (23 Sep 2026).
-// · The disc is gone with it, and so are the `fill`, `outline` and `ink` props
-//   that carried the fantasy team's colours onto the grass on 2 Sep. A shirt is
-//   110x145 and cannot live in a circle, and Craig's call on the replacement was
-//   the kit alone: eleven kits already tell a reader who these men are, and the
-//   manager's own colours keep the two places `teamColours.ts` allots them — his
-//   title bar, and each side of a head-to-head.
-//
-// **The name stays, unlike CM's.** The game gets away with bare numbers because
-// its squad list stands beside the pitch carrying the same numbers; ours is a
-// toggle, so a nameless pitch would be eleven strangers. White on the grass with
-// no plate under it: the turf is CM's dark green and white measures 11.58:1 on
-// it, and a row of black bars is what made this read as cards on grass rather
-// than as a team.
-//
-// **And no number anywhere** (Craig, 10 Sep 2026: "ditch the number actually").
-// One rode on the chest for an afternoon, on the reading that eleven identical
-// kits need one to tell them apart; the plate below carries the name at the
-// card's full width instead, and every board that LISTS these men still keeps
-// the number in the blue index block, which is where CM keeps it.
+// One player on CM's pitch: his kit (or, where the caller asks, his face), his name on CM's bevelled plate, and a
+// line under it — his score, his fixture, or the caller's own word. The marker half of the `CmGround` pair.
 
-/** The three grounds, written out.
- *
- *  **A record and not `var(--color-doubt-${band})`**, which is the Tailwind v4
- *  trap docs/rules/DESIGN.md records: v4 drops a theme variable whose name never appears
- *  literally in scanned source, and the interpolated form shipped five
- *  colourless fixture chips once already. A composed token name is a token that
- *  is not there. */
+/** The doubt grounds written out: Tailwind v4 drops a token whose name is composed, as `var(--color-doubt-${band})` would be. */
 const DOUBT_GROUND: Record<DoubtBand, string> = {
   out: "var(--color-doubt-out)",
   major: "var(--color-doubt-major)",
@@ -71,67 +37,30 @@ export default function PitchMarker({
   band,
   face,
 }: {
-  /** The footballer, or null for a slot with nobody behind it.
-   *
-   *  **Read only to tell an empty slot from a filled one**, and never for the
-   *  picture: the kit comes off the CLUB. It stopped being the thing drawn on
-   *  10 Sep 2026, when the cut-out did.
-   *
-   *  **A footballer and not a roster slot.** This took a `RosteredPlayer` until
-   *  3 Sep 2026, which is the league layer's own shape and carries a Fantrax id
-   *  — so the grass was unreachable for anything that is not a fantasy squad,
-   *  and a Premier League club's predicted eleven has no such id and never will.
-   *  The callers translate their own vocabulary on the way in, which is where a
-   *  layer's words belong. */
+  /** The footballer, or null for a slot with nobody behind it — read to tell the two apart and for his doubt. */
   player: FootballPlayer | null;
-  /** What the card says when there is neither a man nor a club behind the slot:
-   *  a position, a "?". The caller's word, already translated. */
+  /** What an empty slot says — a position, a "?" — in the caller's words. */
   label: string;
-  /** His name as it should read on the grass — the caller's spelling, because
-   *  the two layers disagree about it: a fantasy slot the bridge never settled
-   *  still has a name to print, and a footballer has his own. */
+  /** His name as the caller spells it; the two layers disagree. */
   name: string;
-  /** Whether he keeps goal, which picks the kit `PlayerShirt` draws. A boolean
-   *  rather than a letter to test, so neither layer's spelling reaches here. */
+  /** Whether he keeps goal, which picks the kit. */
   keeper: boolean;
   club: Club | undefined;
   opposition?: Opposition[];
-  /** What our league scores him this period. Undefined is no table at all,
-   *  null a table that does not name him. */
+  /** His score: undefined is no table at all, null a table that does not name him. */
   points?: number | null;
   /** What the line under his name carries. */
   show?: "points" | "fixture";
-  /** A line of the caller's own, which wins over `show`.
-   *
-   *  For a plate that is neither a score nor a fixture: a club's predicted
-   *  eleven puts our league's position there, which is what a fantasy manager
-   *  reading a real club's team wants to know. Without it this fell through to
-   *  the club's own short name on every card — eleven identical labels saying
-   *  nothing. */
+  /** A line of the caller's own, which wins over `show` — a club's predicted eleven puts our league's position here. */
   band?: string;
   /** His face instead of the club's kit, falling back to the kit where there is no photograph. */
   face?: { code: number; name: string };
 }) {
   const started = kickedOff(opposition);
-  // **Nobody at all, which is not the same as nobody FPL has heard of.** A kit
-  // is chosen by club code and needs no footballer, so the only slot this cannot
-  // draw is one with neither a man nor a club behind it — a fantasy roster line
-  // the bridge never settled. A match's team sheet naming somebody the bootstrap
-  // has not got is the opposite case: we know exactly which shirt he wore.
+  // Nobody at all: no man AND no club. A named man the bootstrap lacks still has his club's kit.
   const nobody = player === null && club === undefined;
 
-  // What goes under the name, already resolved, so the band can ask whether
-  // there is anything to draw before it takes up a row's worth of height.
-  // **`v` in front of it** (Craig, 21 Sep 2026: "pitch view, needs a 'vs' in
-  // front of the team name too"). It does not reverse his 2 Sep site-wide rule —
-  // a fixture is still `BRE (H)` and never `v BRE` or `@BRE` — because the `v`
-  // here is doing different work: under a shirt, three letters on their own read
-  // as the club the man plays FOR, which is the club whose kit he is wearing
-  // twenty pixels above. The `v` says the line is about somebody else. A list
-  // row needs none because its column is headed "Opponent".
-  //
-  // Only on a real fixture. The fallback is his own club and is exactly the case
-  // the `v` would make into a lie.
+  // `v` before an opponent, or three letters under a shirt read as his own club (Craig, 21 Sep 2026).
   const against = fixtureLabel(opposition);
   const line =
     band ??
@@ -141,64 +70,18 @@ export default function PitchMarker({
         ? String(points ?? DASH)
         : (club?.shortName ?? DASH));
 
-  // **One plate for every card** (Craig, 21 Sep 2026: "the fixture row should
-  // just be blue like this page", pointing at a head-to-head where the band
-  // carries points on the desk's own navy).
-  //
-  // **This reverses his 10 Sep call** — "fixture but its just the team colour" —
-  // and the reason it held then is the reason it stopped: you do read Chelsea's
-  // blue before the three letters on it, and by 21 Sep the card had two other
-  // things to say in colour. The name plate carries how likely he is to miss and
-  // an OUT man takes the whole card in red, so eleven club colours underneath
-  // were a third scale competing for the same glance, in the one place a reader
-  // had no reason to look. The navy is the ground the points band has always
-  // used, so the two states of this line now differ in what they SAY rather than
-  // in what colour they are.
-  // **How likely he is to miss, on the name plate** (Craig, 21 Sep 2026: "we
-  // need to show that players are a doubt/out better ... red 100% out, orange
-  // for a major doubt, yellow for slight doubt"). FPL colours the same bar on
-  // its own team screen and the reading is instant across eleven cards, where a
-  // letter in a box is not — the box is the LIST's answer and it survives there.
-  //
-  // `--cm-face` rather than a background of its own: the bevel derives its light
-  // and dark corners from that one variable, so the plate stays Championship
-  // Manager's plate and only its colour moves. Its ink is `--color-bg` and all
-  // three grounds carry it — 5.45:1, 7.09:1, 9.50:1.
+  // How likely he is to miss, as the name plate's ground (red out, orange major, yellow slight); `--cm-face`
+  // keeps it CM's bevelled plate, and all three carry `--color-bg` ink.
   const doubt = doubtBand(availabilityOf(player));
 
   return (
-    // **An opaque card, and it is a reversal.** This drew its name and its line
-    // as white type straight on the grass, on the 31 Aug reading that "a row of
-    // black bars is what made this read as cards on grass rather than as a
-    // team". Craig put two other sites beside it on 10 Sep and both box the
-    // shirt; his call, and DESIGN §2 was always on the box's side — nothing else
-    // on the desk prints on the bare ground, and this was the one exception.
-    //
-    // **A WASH and not a plate** (Craig, 10 Sep 2026: "MORE Transparent, you
-    // made it darker"). It went to `raised` and then to the solid desk ground on
-    // my misreading of "more opaque", which is the opposite of what he asked
-    // for. 45% of the blue-black lets the mow bands through, so the card still
-    // reads as something standing ON grass rather than a tile covering it.
-    //
-    // **And no border and no padding of its own.** Those cost 6px of a 58px card
-    // on a phone, on top of the bevel's 4 — a sixth of the card spent on chrome
-    // before a letter is drawn. The wash is what separates the card from the
-    // field; a keyline round it was saying the same thing a second time and
-    // charging the narrowest screen for it.
+    // A 45% wash behind the card, no border and no padding: the mow bands show through and the name keeps the width.
     <div
-      // **The space before `${` is load-bearing.** Tailwind v4 extracts class
-      // names from the source text it scans, and `bg-bg/45${…}` is not a class
-      // name it recognises — so the wash behind every kit on every pitch stopped
-      // being emitted the moment this string gained an interpolation, and the
-      // cards were drawn straight on the grass with no square behind them. It is
-      // the same trap the FDR scale hit with `var(--color-fdr-${n})`, one layer
-      // down: there the TOKEN name was composed, here the CLASS name was.
+      // The space before `${` is load-bearing: Tailwind v4 does not see `bg-bg/45${…}` as a class and drops the wash.
       className={`flex w-full flex-col gap-px bg-bg/45 ${doubt === "out" ? "cm-card-out" : ""}`}
     >
       {nobody ? (
-        /* Built to the same shape as a man who resolved, so it stands the same
-           height in the line — a hole in the row reads as a formation nobody
-           picked. */
+        /* The same shape as a filled card, so an empty slot does not read as a hole in the formation. */
         <EmptySlot label={label} />
       ) : (
         <span className="block px-1 pt-0.5">
@@ -210,18 +93,7 @@ export default function PitchMarker({
         </span>
       )}
 
-      {/* **CM's own bevelled plate, in CM's own face.** `cm-bevel` carries the
-          light-and-dark corners, the chrome family and the dark ink that reads
-          on the grey face, so this is the game's plate rather than a rectangle
-          that resembles one.
-
-          **The plates run to the card's edge and the SHIRT is the thing inset.**
-          The name is the only identifier left on a pitch of eleven identical
-          kits — the match team sheet is exactly that — so every pixel of it is
-          spent on letters. The bevel already takes 4px of a 77px card in border
-          alone; a card padding either side of that was taking another 8, which
-          is `MOSQUE…` instead of `MOSQUERA`. The shirt can afford the inset
-          because a kit reads at any width and a truncated name does not. */}
+      {/* CM's bevelled plate, run to the card's edge so every pixel goes to letters; the kit is what is inset. */}
       <span
         className={`cm-bevel uppercase ${PITCH_BAND} ${NAME_SIZE}`}
         style={
@@ -233,23 +105,10 @@ export default function PitchMarker({
         <span className="w-full truncate">{name}</span>
       </span>
 
-      {/* Absent rather than empty: a caller with nothing to say here — the match
-          team sheet, whose board underneath says all of it — would otherwise get
-          a coloured strip with no words in it. */}
+      {/* Absent rather than empty when the caller has nothing to say here. */}
       {line === "" ? null : (
         <span
-          // **A FIGURE gets a bigger step than a label** (Craig, 11 Sep 2026:
-          // "scores too hard to read"). This band carries two different kinds of
-          // thing and was setting both at `text-3xs` — nine pixels, which
-          // DESIGN §8 records as the FLOOR on a pitch rather than a size to
-          // reach for. A fixture is three letters and a bracket and reads fine
-          // down there; a score is the number a manager opened the screen for
-          // and was the smallest thing on the card.
-          //
-          // The planner's card had already learned it — "two clamps bottoming at
-          // 7px and 9px, which made the number a manager came for the smallest
-          // thing on a live pitch" — and that card is gone, so this is the only
-          // place the lesson is now written down.
+          // A score is set a step above a fixture's letters: it is the number the screen was opened for.
           className={`numeric ${show === "points" && band === undefined ? "text-xs" : "text-3xs"} ${PITCH_BAND}`}
           style={{ background: "var(--color-bg)", color: "var(--color-cream)" }}
         >

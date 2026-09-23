@@ -16,7 +16,8 @@ import { fantasyDepth } from "./SquadTable";
 import { TABLE } from "../../PremNav";
 import { intelSquads, intelXi } from "../../../intel";
 import { PANEL } from "@/app/desk";
-import { clubOr404, leagueOpinions, standing } from "./club";
+import { clubOr404, standing } from "./club";
+import { leagueOpinions } from "../../leagueOpinions";
 import { ordinal } from "@epl/core";
 
 // One club's squad — the screen every club name in this section links to.

@@ -1,5 +1,5 @@
 import { matchHref } from "./matchRoutes";
-import type { StatSort } from "./statColumns";
+import { DEFAULT_SORT, type StatSort } from "./statColumns";
 
 // Where the Stats tab's links go — a link rather than a click handler, so the server sorts (`prem/sort.ts`).
 
@@ -14,9 +14,6 @@ export function statsView(value: string | undefined): StatsView {
 export function viewHref(id: number, view: StatsView): string {
   return matchHref(id, "stats", { view: view === "match" ? undefined : view });
 }
-
-/** A club board opens ranked by fantasy points (Craig, 23 Sep 2026). */
-export const DEFAULT_SORT: StatSort = "Pts";
 
 /** A club board's column head: the same column flips, a new one opens descending; the default is the bare board. */
 export function statsHref(

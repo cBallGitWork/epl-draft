@@ -4,11 +4,11 @@ import MatchStats from "../MatchStats";
 import ClubStats from "../ClubStats";
 import Fantasy from "../Fantasy";
 import { readMatch } from "../match";
-import { matchMen } from "../matchMen";
-import { leagueOpinions } from "../../../club/[code]/club";
+import { matchCards } from "../matchCards";
+import { leagueOpinions } from "../../../leagueOpinions";
 import type { Match } from "../match";
-import { isStatSort } from "../statColumns";
-import { DEFAULT_SORT, statsView, viewHref, type StatsView } from "../statsSort";
+import { DEFAULT_SORT, isStatSort } from "../statColumns";
+import { statsView, viewHref, type StatsView } from "../statsSort";
 import { matchStatsBoard } from "../../../../matchFeed";
 import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchDetail";
 
@@ -98,7 +98,7 @@ async function OneClub({
       events={events}
       injured={injured}
       league={league}
-      men={matchMen(match, sheets, league)}
+      cards={matchCards(match, sheets, league)}
       sort={sort}
       descending={descending}
     />
