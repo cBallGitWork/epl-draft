@@ -10,7 +10,7 @@ import SquadRows from "./SquadRows";
 import ViewToggle, { type View } from "./ViewToggle";
 import PlanStatus from "./PlanStatus";
 import { usePlanner } from "./usePlanner";
-import { LABEL, PANEL } from "@/app/desk";
+import { PANEL, HEADING_PLATE } from "@/app/desk";
 import OutLink from "../shell/OutLink";
 import ListAndPitch from "./ListAndPitch";
 
@@ -149,7 +149,7 @@ export default function LineupPlanner({
               {/* The plate, and the same reason `TeamSheet` gives for it:
                   nothing prints on the bare ground (DESIGN §2), so a heading
                   between two panels draws its own. */}
-              <p className={`cm-panel px-2 py-1 text-center ${LABEL}`}>Bench</p>
+              <p className={HEADING_PLATE}>Bench</p>
               <SquadRows
                 lines={[{ position: "", players: bench }]}
                 projected={false}

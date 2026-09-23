@@ -9,7 +9,7 @@ import { planningRound } from "../round";
 import { myTeamId, signedIn } from "../session";
 import { yoursBorder } from "../mine";
 import { MY_TEAM, SQUAD } from "./routes";
-import { LABEL, PANEL, ROW_NAME } from "@/app/desk";
+import { PANEL, ROW_NAME, HEADING_PLATE } from "@/app/desk";
 import FantraxSilent from "../components/shell/FantraxSilent";
 
 // Your squad, and everyone else's. Until the draft this is the empty state,
@@ -114,7 +114,7 @@ export default async function SquadsPage() {
       )}
 
       {/* A plate of its own: nothing prints on the bare ground (DESIGN §2). */}
-      {yours ? <h2 className={`cm-panel px-2 py-1 text-center ${LABEL}`}>Around the league</h2> : null}
+      {yours ? <h2 className={HEADING_PLATE}>Around the league</h2> : null}
 
       <ul className="cm-rows flex flex-col">
         {others.map((team) => (
