@@ -8,6 +8,7 @@ import Eleven from "./Eleven";
 import type { ElevenLine } from "./Eleven";
 import SquadTable from "./SquadTable";
 import type { LeagueOpinion } from "./club";
+import ListAndPitch from "@/app/components/league/ListAndPitch";
 
 // A club's squad, as a list and as the eleven it is predicted to field.
 //
@@ -87,10 +88,7 @@ export default function Squad({
         // three pixels apart read as one wide object split down the middle, and
         // the air is what makes them two readings of the same club standing side
         // by side. Below `lg` the toggle chooses and only one is drawn.
-        <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-10">
-          <div className={view === "list" ? "" : "hidden lg:block"}>{list}</div>
-          <div className={view === "pitch" ? "" : "hidden lg:block"}>{grass}</div>
-        </div>
+        <ListAndPitch view={view} list={list} pitch={grass} />
       )}
     </div>
   );

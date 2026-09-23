@@ -12,6 +12,7 @@ import PlanStatus from "./PlanStatus";
 import { usePlanner } from "./usePlanner";
 import { LABEL, PANEL } from "@/app/desk";
 import OutLink from "../shell/OutLink";
+import ListAndPitch from "./ListAndPitch";
 
 // Planning a lineup, not submitting one.
 //
@@ -132,9 +133,9 @@ export default function LineupPlanner({
           this very screen and it was answered on the rival's; this is the same
           grid, the same breakpoint and the same panel. */}
       <section className={PANEL}>
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-10">
-        <div className={view === "list" ? "" : "hidden lg:block"}>
-
+      <ListAndPitch
+        view={view}
+        list={
           <div className="flex flex-col gap-2">
           <SquadRows
             lines={rows.map((line) => ({ position: line.label, players: line.players }))}
@@ -160,18 +161,17 @@ export default function LineupPlanner({
             </>
           )}
           </div>
-        </div>
-
-        <div className={view === "pitch" ? "" : "hidden lg:block"}>
-      <LineupPitch
-        inColumn
-        rows={rows}
-        bench={bench}
-        pickStateOf={pickStateOf}
-        onPick={pick}
+        }
+        pitch={
+          <LineupPitch
+            inColumn
+            rows={rows}
+            bench={bench}
+            pickStateOf={pickStateOf}
+            onPick={pick}
+          />
+        }
       />
-        </div>
-      </div>
       </section>
 
       {card !== null ? (
