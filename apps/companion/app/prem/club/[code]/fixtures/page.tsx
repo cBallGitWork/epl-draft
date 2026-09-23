@@ -46,7 +46,6 @@ export default async function ClubFixturesPage({ params }: { params: Promise<{ c
   return (
     <ClubShell
       club={club}
-      title="Fixtures"
       current="fixtures"
       empty={run.length === 0 ? ["fixtures"] : []}
     >

@@ -58,7 +58,6 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
   return (
     <ClubShell
       club={club}
-      title="Set Pieces"
       current="setPieces"
       empty={orders.length === 0 ? ["setPieces"] : []}
     >

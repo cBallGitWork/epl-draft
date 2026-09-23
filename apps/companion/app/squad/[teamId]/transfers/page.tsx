@@ -43,7 +43,6 @@ export default async function TransfersPage({
   return (
     <TeamShell
       team={team}
-      title="Transfers"
       current="transfers"
       empty={his.length === 0 ? ["transfers"] : []}
     >

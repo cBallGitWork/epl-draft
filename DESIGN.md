@@ -287,7 +287,11 @@ The yellow caption under the tab strip names which of that subject's views you
 are looking at. `cm9900/24.jpg` heads the bar `English Premier Division` and
 captions the panel `League Table`; `25.jpg` heads it `Everton` and captions the
 panel below it. Every screen in the library carries both, and none of them mixes
-the two.
+the two. **Except a plated subject's (a club, a manager), which draws none**
+(Craig, 23 Sep 2026: "Should we really have 'your squad' in yellow? Does it save a
+row we need?"). Its tab strip already names the view, lit in the accent, so the
+caption repeated it and cost a row on a phone. The competition screens keep
+theirs.
 
 **The one exception is CM's own news screen, and it is granted.** Its bar reads
 `Mike Paul News` — subject and view in one line, with no caption — and it is the

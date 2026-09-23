@@ -84,7 +84,7 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
       : `${londonDayAndDate(intelXi.fetchedAt)}, ${londonTime(intelXi.fetchedAt)}`;
 
   return (
-    <ClubShell club={club} title="Squad" current="squad">
+    <ClubShell club={club} current="squad">
       <section className={PANEL}>
         {squad.length === 0 ? (
           <TabEmpty>FPL names {club.name} but lists nobody on its books.</TabEmpty>

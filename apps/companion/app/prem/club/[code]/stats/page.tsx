@@ -42,7 +42,7 @@ export default async function ClubStatsPage({ params }: { params: Promise<{ code
     }));
 
   return (
-    <ClubShell club={club} title="Stats" current="stats" empty={rows.length === 0 ? ["stats"] : []}>
+    <ClubShell club={club} current="stats" empty={rows.length === 0 ? ["stats"] : []}>
       {rows.length === 0 ? (
         <TabEmpty>FPL names {club.name} but lists nobody on its books.</TabEmpty>
       ) : (
