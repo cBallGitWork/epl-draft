@@ -24,9 +24,9 @@ import { getSchedule } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
-import { FANTRAX_SILENT } from "../../config";
 import { BOARD, BOARD_FIGURE, INDEX_WIDTH, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 import { teamHref } from "@/app/squad/routes";
+import FantraxSilent from "../../components/shell/FantraxSilent";
 
 // Every team against a whole GROUP of scoring categories — CM's stat board, on
 // fantasy data.
@@ -95,9 +95,9 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   if ("unavailable" in schedule) {
     return (
       <LeagueShell current="teamStats">
-        <Nothing title={FANTRAX_SILENT} code={schedule.unavailable}>
+        <FantraxSilent code={schedule.unavailable}>
           The season table is Fantrax&apos;s own, and we cannot read it right now.
-        </Nothing>
+        </FantraxSilent>
       </LeagueShell>
     );
   }
