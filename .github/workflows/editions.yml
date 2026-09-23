@@ -92,6 +92,15 @@ jobs:
           cache: npm
       - run: npm ci
 
+      # Vercel's FANTRAX_LEAGUE_ID is the only place a league is set, so the column
+      # asks production which one it serves and can never file about another.
+      - name: Ask production which league it serves
+        id: league
+        run: |
+          league=$(curl -sf --max-time 30 "${{ vars.WARM_BASE_URL }}/api/league" | jq -r '.leagueId // empty')
+          if [ -z "$league" ]; then echo "::error::production did not say which league it serves"; exit 1; fi
+          echo "id=$league" >> "$GITHUB_OUTPUT"
+
       - name: File the column, if one is due
         env:
           # Stories one firing may file. Ten, because the newsdesk offers a
@@ -107,11 +116,7 @@ jobs:
           # the writer files the paper without a picture rather than failing
           # after the prose has been paid for.
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          # The league the column is about. This job's environment is not the
-          # app's, so it inherits nothing from Vercel: on 10 Oct this has to move
-          # with it. Unset, it expands to "" and `FANTRAX_LEAGUE_ID` falls back
-          # to the rehearsal league rather than to a blank id.
-          FANTRAX_LEAGUE_ID: ${{ vars.FANTRAX_LEAGUE_ID }}
+          FANTRAX_LEAGUE_ID: ${{ steps.league.outputs.id }}
         run: npm run edition
 
       - name: Commit the edition, if one was written

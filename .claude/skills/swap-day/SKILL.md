@@ -1,6 +1,6 @@
 ---
 name: swap-day
-description: The 10 Oct league-id swap runbook — both environments, the shape and bridge checks, the redeploy, and a smoke against the DEPLOYED url rather than localhost. Run on swap eve as --dry-run, and on the day for real.
+description: The 10 Oct league-id swap runbook — the one Vercel value, the shape and bridge checks, the redeploy, and a smoke against the DEPLOYED url rather than localhost. Run on swap eve as --dry-run, and on the day for real.
 argument-hint: "[--dry-run]"
 disable-model-invocation: true
 ---
@@ -13,28 +13,21 @@ The app stops serving the rehearsal league and starts serving the real one.
 **With `--dry-run`, change nothing.** Read every value, print what each step
 would set and what it is now, and report. That is the whole of swap eve.
 
-## 1. Both environments. There are two, and one inherits nothing.
+## 1. One value, in Vercel
 
-**Vercel** — the app's own environment variable. This is the one everybody
-remembers.
+`FANTRAX_LEAGUE_ID` in the Vercel project's environment is the only place a
+league is set. Nothing in the code names one, and CI keeps no copy: the paper's
+job asks production which league it serves (`/api/league`) before every firing,
+so it follows the redeploy by itself.
 
-**`.github/workflows/editions.yml`** — the column-writing job reads
-`vars.FANTRAX_LEAGUE_ID`, a **repository variable**, and its job environment
-inherits nothing from Vercel. Miss it and CI keeps filing a column about the
-rehearsal league.
-
-The failure is not silent but it is indirect: `PublishedEdition.leagueId` makes
-the front page refuse to print a column about the wrong league. So the symptom is
-a paper with no prose, not a paper about the wrong league — still a failure, and
-one that looks like a bug in the paper.
+After the redeploy in step 3, confirm what production says:
 
 ```bash
-gh variable list                       # what the workflow will read
-gh variable set FANTRAX_LEAGUE_ID --body ayyoh3n2mr326v2o
+curl -s https://epl-draft-companion.vercel.app/api/league   # {"leagueId":"ayyoh3n2mr326v2o"}
 ```
 
-Unset, it expands to `""` and falls back to the rehearsal league — not to a blank
-id — so an empty value looks like a working app serving the wrong league.
+`FANTRAX_DEMO_TEAM_ID` may stay set: it lends a team only when that team is in
+the served league, and a rehearsal team id names nobody in the real one.
 
 ## 2. Shape, then bridge
 
@@ -108,7 +101,7 @@ served.
 ```
 mode        --dry-run | LIVE
 vercel      FANTRAX_LEAGUE_ID <was> → <now>
-actions     vars.FANTRAX_LEAGUE_ID <was> → <now>
+api/league  <what production answers after the redeploy>
 shape-diff  <ok|drift: what>
 capture     <n> reads recorded, <n> refused
 bridge      <n> mapped / <n> pool · unmapped <n> <names if few>
