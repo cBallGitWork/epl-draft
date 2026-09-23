@@ -209,7 +209,7 @@ to Sunday's splash.**
 Insert the London day before the kind:
 
 ```
-period DESC → londonDayKey(filedAt) DESC → KIND_WEIGHT DESC → filedAt DESC
+period DESC → londonDayOf(filedAt) DESC → KIND_WEIGHT DESC → filedAt DESC
 ```
 
 That is how a newspaper works — today's paper first, and within it the biggest

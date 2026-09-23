@@ -15,8 +15,8 @@ import { getSchedule, type ScheduleRound } from "./schedule";
 import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
 import { teamBadges } from "../../standings";
-import { FANTRAX_SILENT } from "../../config";
 import { HEAD_PLATE } from "@/app/desk";
+import FantraxSilent from "../../components/shell/FantraxSilent";
 
 // The season ahead: every round the league still has to play, in gameweek order,
 // across every competition being played on it. Fantrax's schedule is the league;
@@ -64,10 +64,10 @@ export default async function SchedulePage() {
   if ("unavailable" in read) {
     return (
       <LeagueShell current="schedule">
-        <Nothing title={FANTRAX_SILENT} code={read.unavailable}>
+        <FantraxSilent code={read.unavailable}>
           The schedule is part of the league&apos;s own description of itself, and we cannot read it
           right now.
-        </Nothing>
+        </FantraxSilent>
       </LeagueShell>
     );
   }

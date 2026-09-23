@@ -1,6 +1,5 @@
 import Link from "next/link";
 import ScoutShell from "./Shell";
-import Nothing from "../components/shell/Nothing";
 import PlayerTable from "./PlayerTable";
 import BoardBar from "./BoardBar";
 import { getPlayerStats } from "./playerStats";
@@ -20,10 +19,10 @@ import { POOL_GROUPS, columnsIn } from "./groups";
 import type { PoolGroupKey } from "./groups";
 import { figureOf } from "./figure";
 import { cutsFor } from "./standout";
-import { FANTRAX_SILENT } from "../config";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH } from "@epl/core";
 import type { StatSeason } from "@epl/core";
 import OutLink from "../components/shell/OutLink";
+import FantraxSilent from "../components/shell/FantraxSilent";
 
 // Every player Fantrax knows, what our league has decided about him, and what
 // Fantrax scores him. The numbers are theirs under our league's scoring, which
@@ -82,10 +81,10 @@ export default async function PlayersPage({
   if ("unavailable" in pool) {
     return (
       <ScoutShell>
-        <Nothing title={FANTRAX_SILENT} code={pool.unavailable}>
+        <FantraxSilent code={pool.unavailable}>
           The player pool is Fantrax&apos;s and we cannot read it right now. Ownership is the part
           that would go stale first, so this shows nothing rather than yesterday&apos;s.
-        </Nothing>
+        </FantraxSilent>
       </ScoutShell>
     );
   }

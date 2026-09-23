@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { ClubColours, FootballPlayer } from "@epl/core";
-import { availabilityOf, positionDepth } from "@epl/core";
+import { availabilityOf, positionDepth, DASH } from "@epl/core";
 import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
 import PositionTile from "../../../components/league/PositionTile";
 import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
 import { PLAYER } from "../../routes";
 import type { LeagueOpinion } from "./club";
-import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, SCROLL, ROW_HOVER } from "@/app/desk";
 
 // Every man on the club's books, as Championship Manager files a squad.
 //
@@ -23,8 +23,6 @@ import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk
 // (`football/types.ts`): FPL's counts may not stand beside a Fantrax figure. The
 // owner column is a NAME, not a number — it says who holds him, which is a fact
 // about our league and not a second count of a Premier League goal.
-
-const DASH = "—";
 
 export default function SquadTable({
   players,
@@ -87,7 +85,7 @@ export default function SquadTable({
             const opinion = league.get(player.code);
 
             return (
-              <tr key={player.id} className={`${ROW_RULE} hover:bg-surface`}>
+              <tr key={player.id} className={ROW_HOVER}>
                 {/* A plate owns its ink, so an unavailable man's tile keeps it; the rest of the row greys. */}
                 <PositionTile positions={opinion?.positions ?? []} cell />
                 <td className="w-full max-w-0 pl-2">

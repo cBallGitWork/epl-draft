@@ -2,6 +2,8 @@ import { LEAGUE_COMPETITION, type CompetitionTie, type TieSide, leads } from "@e
 import type { ScheduleRound } from "./schedule";
 import ScoreRow from "../../components/shell/ScoreRow";
 import { LABEL } from "@/app/desk";
+import Absent from "@/app/components/shell/Absent";
+import { matchupHref } from "../routes";
 
 // One tie, as Championship Manager's results row.
 //
@@ -84,7 +86,7 @@ export default function Tie({
       away={side(tie.away, badges, places, mine, settled && leads(home, away))}
       score={round.started ? { home: figure(home), away: figure(away) } : null}
       pending={<span className={LABEL}>v</span>}
-      href={opens && opensOn !== undefined ? `/league/matchups/${opensOn}?gw=${round.gameweek}` : undefined}
+      href={opens && opensOn !== undefined ? matchupHref(opensOn, round.gameweek) : undefined}
     />
   );
 }
@@ -96,7 +98,7 @@ function scoreOf(side: TieSide, points: Map<string, number | null>): number | nu
 /** A dash, never a nought: a side we have no number for has not scored nothing,
  *  we simply do not have it (DESIGN §7). */
 function figure(value: number | null) {
-  return value === null ? <span className="text-faint">&mdash;</span> : value;
+  return value === null ? <Absent /> : value;
 }
 
 function side(

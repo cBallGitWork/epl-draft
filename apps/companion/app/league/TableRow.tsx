@@ -5,6 +5,8 @@ import { ROW_LINK } from "../components/league/TableCells";
 import { cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
 import { FIGURE, ROW_FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
+import Absent from "@/app/components/shell/Absent";
+import { teamHref } from "@/app/squad/routes";
 
 // One team's line in the table.
 //
@@ -121,7 +123,7 @@ export default function TableRow({
 
       <td className="pl-2">
         <Link
-          href={`/squad/${row.teamId}`}
+          href={teamHref(row.teamId)}
           // White, and yellow for the one you manage — CM's league table
           // (`cm9900/24.jpg`, where Everton is the yellow row). This used to
           // justify itself by saying cyan means "a person" and a team is not
@@ -179,10 +181,6 @@ export default function TableRow({
   );
 }
 
-/** Absence, never a nought — a nought is a claim about a team that has played
- *  nobody (DESIGN §7). */
-const DASH = "—";
-
 /** The last few rounds, newest LAST — left to right is the direction the season
  *  ran, which is how a form guide is read everywhere it appears.
  *
@@ -195,7 +193,7 @@ const DASH = "—";
  *  only thing they are for. Not the accent yellow, which is spoken for on this
  *  very row by the edge and the name. */
 function Form({ run }: { run: readonly FormGame[] }) {
-  if (run.length === 0) return <span className="text-faint">{DASH}</span>;
+  if (run.length === 0) return <Absent />;
 
   return (
     <span className="flex justify-center gap-0.5">
@@ -213,5 +211,4 @@ function Form({ run }: { run: readonly FormGame[] }) {
 }
 
 const FORM_GAMES = 5;
-
 

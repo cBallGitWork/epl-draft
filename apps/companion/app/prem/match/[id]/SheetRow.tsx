@@ -6,6 +6,7 @@ import MatchPlayerCard from "./MatchPlayerCard";
 import type { MatchMan } from "./MatchPlayerCard";
 import { ROW_RULE } from "@/app/desk";
 import type { Join, Named } from "./sheetJoin";
+import { DASH } from "@epl/core";
 
 // One man's row on the team sheet, and the card it opens.
 
@@ -60,7 +61,6 @@ const MARKS = 2;
 const NAME_CELL =
   "group flex min-h-11 w-full items-baseline gap-1.5 px-1.5 text-left lg:min-h-9";
 
-
 /** Everything the card shows, off the row that opened it — no read, no second
  *  join. The chips are resolved HERE rather than passed as a provider row,
  *  because `chipsFor` is the board's own vocabulary and the card should not
@@ -83,7 +83,7 @@ function card(
     position: man.position === null ? null : (POSITION[man.position] ?? man.position),
     shirt: man.shirt,
     captain: man.captain,
-    club: club?.name ?? "—",
+    club: club?.name ?? DASH,
     // The short name too, for his card's title plate — `clubColours` is keyed on
     // it and the display name will not do.
     clubShort: club?.shortName ?? null,
@@ -263,7 +263,7 @@ export default function SheetRow({
       <td className={`numeric w-9 px-1.5 text-right font-bold text-info ${SHEET_FIGURE}`}>
         {/* A substitute who got on keeps his figure even though his row is grey:
             the ink says he started on the bench, the number says what he did. */}
-        {played ? join.points(man.code) : "—"}
+        {played ? join.points(man.code) : DASH}
       </td>
     </tr>
   );

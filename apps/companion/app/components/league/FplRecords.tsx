@@ -1,5 +1,6 @@
 import type { Contribution } from "@epl/core";
 import { LABEL } from "@/app/desk";
+import { DASH } from "@epl/core";
 
 // What the football says, under a drop-down (Craig, 21 Sep 2026: "dropdown
 // arrow for the full match stats").
@@ -48,7 +49,7 @@ export default function FplRecords({ done }: { done: Contribution }) {
             <span className="min-w-0 flex-1 truncate text-sm text-muted">{row.label}</span>
             {/* Absence is a dash and never a nought (DESIGN §7): the expected
                 family is not measured until he has been on a pitch. */}
-            <span className="numeric shrink-0 pr-1.5 text-sm font-bold">{row.value ?? "—"}</span>
+            <span className="numeric shrink-0 pr-1.5 text-sm font-bold">{row.value ?? DASH}</span>
           </li>
         ))}
       </ul>

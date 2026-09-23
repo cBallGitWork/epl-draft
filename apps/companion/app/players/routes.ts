@@ -10,6 +10,11 @@
 /** The board, and the stem a player's own page hangs off — `${POOL}/{fantraxId}`. */
 export const POOL = "/players";
 
+/** One player's own page, the stem his tabs hang off. */
+export function playerHref(fantraxId: string): string {
+  return `${POOL}/${fantraxId}`;
+}
+
 /** Two players side by side. The `?a=&b=` builder around it is deliberately not
  *  extracted: two sites, and one completes a pair being chosen while the other
  *  reverses a finished one. §1 leaves two alone. */

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { LiveTie } from "./liveTie";
 import { usePathname } from "next/navigation";
+import { DASH } from "@epl/core";
 
 // Your tie, in the chrome, while a ball is in the air.
 //
@@ -62,9 +63,9 @@ export default function LiveStrip({ yours, theirs, opponent, href }: LiveTie) {
             in the app shares. It is why this ground is the league's red taken
             down a step: on the brand red at full strength, cream is 4.94:1 and
             a dimmed cream is 2.96:1 — there is no room to dim at all. */}
-        <span className={behind ? "opacity-70" : undefined}>{yours ?? "—"}</span>
+        <span className={behind ? "opacity-70" : undefined}>{yours ?? DASH}</span>
         <span className="text-2xs opacity-60">v</span>
-        <span className={behind ? undefined : "opacity-70"}>{theirs ?? "—"}</span>
+        <span className={behind ? undefined : "opacity-70"}>{theirs ?? DASH}</span>
       </span>
       <span className="min-w-0 truncate text-2xs opacity-80">{opponent}</span>
     </Link>

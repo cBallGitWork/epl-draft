@@ -8,6 +8,7 @@ import { PLAYER } from "../../routes";
 import EventIcon from "../../../components/football/EventIcon";
 import type { EventGlyph } from "../../../components/football/EventIcon";
 import { SMALL_CAPS } from "@/app/desk";
+import { DASH } from "@epl/core";
 
 // One scorer's line and one other man's line on the scoresheet, set at CM's size (see `Scoresheet`).
 
@@ -42,7 +43,7 @@ export function Goal({
     <li>
       <Man
         code={group.scorer}
-        name={scorer?.name ?? "—"}
+        name={scorer?.name ?? DASH}
         owners={owners}
         figure={minutes(group.minutes)}
         note={group.own ? "og" : null}

@@ -6,6 +6,7 @@ import TeamBadge from "../../components/league/TeamBadge";
 import { yoursBorder, yoursInk } from "../../mine";
 import Pending from "../../components/league/Pending";
 import { LABEL, ROW_NAME } from "@/app/desk";
+import { matchupHref } from "../routes";
 
 // One head-to-head on the list of eight.
 //
@@ -120,7 +121,7 @@ function Side({
     // showing whichever name the thumb landed on, which is the whole of what
     // "tap a team" means here. Each squad is one further tap, from there.
     <Link
-      href={`/league/matchups/${team.teamId}`}
+      href={matchupHref(team.teamId)}
       className={`cm-row flex min-h-11 min-w-0 flex-1 items-center gap-2 px-3 py-2 hover:bg-raised ${
         mirrored ? "flex-row-reverse" : ""
       }`}

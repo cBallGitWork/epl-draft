@@ -2,7 +2,7 @@ import TurnLink from "./TurnLink";
 import Face from "./Face";
 import type { Club, PublishedStory } from "@epl/core";
 import { KICKER } from "./kickers";
-import { pageOf } from "./paperPages";
+import { pageOf, storyHref } from "./paperPages";
 
 // A story in the tail: the standing head, the headline, and the page it is on.
 //
@@ -31,7 +31,7 @@ export default function Brief({
       {/* Thumbnail at the left, headline at the right — the shape a paper's
           news-in-brief column has and the shape a news app's list has, for the
           same reason: at this size a picture is an identifier, not a picture. */}
-      <TurnLink href={`/paper/${story.slug}`} className="flex min-h-11 items-center gap-3 py-2">
+      <TurnLink href={storyHref(story.slug)} className="flex min-h-11 items-center gap-3 py-2">
         {story.face ? <Face face={story.face} clubs={clubs} rank="brief" /> : null}
         <span className="flex min-w-0 flex-1 flex-col justify-center gap-0.5">
           <span className="flex items-baseline justify-between gap-3 font-sans text-3xs uppercase tracking-[0.16em]">

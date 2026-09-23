@@ -3,6 +3,7 @@ import Face from "./Face";
 import Dateline from "./Dateline";
 import type { Club, PublishedStory } from "@epl/core";
 import { KICKER } from "./kickers";
+import { storyHref } from "./paperPages";
 
 // A shoulder: the headline of a story at the second rank, and where to turn for
 // the article.
@@ -59,7 +60,7 @@ export default function Teaser({
 
   return (
     <article id={story.slug} className="scroll-mt-4 border-t border-line pt-3">
-      <TurnLink href={`/paper/${story.slug}`} className="flex min-h-11 flex-col justify-center gap-1">
+      <TurnLink href={storyHref(story.slug)} className="flex min-h-11 flex-col justify-center gap-1">
         {pictured && story.face ? (
           <span className="-mt-3 mb-1 block">
             <Face face={story.face} clubs={clubs} rank="shoulder" />

@@ -18,7 +18,7 @@ import {
   optaToCode,
   plFixture,
   plStream,
-  theirFixtureId,
+  theirFixture,
 } from "./plFeed";
 
 
@@ -40,8 +40,8 @@ async function ofFixture<T>(
 ): Promise<T> {
   if (gameweek === null) return absent;
   try {
-    const id = await theirFixtureId(gameweek, fixtureCode);
-    return id === null ? absent : await read(id);
+    const fixture = await theirFixture(gameweek, fixtureCode);
+    return fixture === null ? absent : await read(fixture.id);
   } catch {
     return absent;
   }

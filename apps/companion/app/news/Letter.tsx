@@ -1,7 +1,6 @@
 import type { InboxItem } from "@epl/core";
-import { fantraxMoment } from "@epl/core";
+import { fantraxMoment, londonDayAndDate, londonTime } from "@epl/core";
 import { LABEL } from "@/app/desk";
-import { londonDayAndDate, londonTime } from "../londonTime";
 
 // The item you are reading, as a letter.
 //

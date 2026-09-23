@@ -1,12 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { crestForShortName, signed, toFplClubCode } from "@epl/core";
+import { crestForShortName, signed, toFplClubCode, DASH } from "@epl/core";
 import type { PoolRow } from "./pool";
 import type { PoolColumn, RawStats } from "./columns";
 import { figureOf } from "./figure";
 import { isStandout } from "./standout";
 import { STATUS } from "./status";
-import { ANALYSIS, POOL } from "./routes";
+import { ANALYSIS, playerHref } from "./routes";
 import type { PlayersQuery } from "./query";
 import { BOARD_FIGURE, ROW_FIGURE, ROW_NAME, STICKY_LEAD } from "@/app/desk";
 
@@ -59,7 +59,7 @@ export default function Cell({
           href={
             query.compare && query.compare !== row.entry.player.fantraxId
               ? `${ANALYSIS}?a=${query.compare}&b=${row.entry.player.fantraxId}`
-              : `${POOL}/${row.entry.player.fantraxId}`
+              : playerHref(row.entry.player.fantraxId)
           }
           className="cm-row flex min-h-11 items-center gap-2.5 px-1"
         >
@@ -191,7 +191,6 @@ const MARK = {
   off: "text-muted",
 } as const;
 
-
 /** Who he is, under his name: what our league lets him be filed as, his club,
  *  and what may be done with him.
  *
@@ -259,8 +258,6 @@ function Dot() {
     </span>
   );
 }
-
-const DASH = "—";
 
 /** Which way ownership moved, said in the sign as well as the colour — a green
  *  number and a red one are the same number to a reader who cannot tell them

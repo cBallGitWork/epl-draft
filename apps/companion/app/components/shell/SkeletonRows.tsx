@@ -15,7 +15,7 @@ import Skeleton from "./Skeleton";
 
 export default function SkeletonRows({ count, height }: { count: number; height: string }) {
   return (
-    <ul className="cm-rows flex flex-col">
+    <ul aria-busy className="cm-rows flex flex-col">
       {Array.from({ length: count }, (_, at) => (
         <li
           key={at}

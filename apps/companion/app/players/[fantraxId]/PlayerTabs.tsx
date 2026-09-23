@@ -1,6 +1,6 @@
 import TabStrip from "../../components/shell/TabStrip";
 import type { Tab } from "../../components/shell/TabStrip";
-import { POOL } from "../routes";
+import { playerHref } from "../routes";
 
 // The four views of one player.
 //
@@ -26,11 +26,11 @@ import { POOL } from "../routes";
 export type PlayerTab = "profile" | "data" | "news" | "transfer" | "history";
 
 const TABS = (fantraxId: string): readonly (Tab & { key: PlayerTab })[] => [
-  { key: "profile", href: `${POOL}/${fantraxId}`, label: "Profile" },
-  { key: "data", href: `${POOL}/${fantraxId}/data`, label: "Data" },
-  { key: "news", href: `${POOL}/${fantraxId}/news`, label: "News" },
-  { key: "transfer", href: `${POOL}/${fantraxId}/transfer`, label: "Transfer" },
-  { key: "history", href: `${POOL}/${fantraxId}/history`, label: "History" },
+  { key: "profile", href: playerHref(fantraxId), label: "Profile" },
+  { key: "data", href: `${playerHref(fantraxId)}/data`, label: "Data" },
+  { key: "news", href: `${playerHref(fantraxId)}/news`, label: "News" },
+  { key: "transfer", href: `${playerHref(fantraxId)}/transfer`, label: "Transfer" },
+  { key: "history", href: `${playerHref(fantraxId)}/history`, label: "History" },
 ];
 
 export default function PlayerTabs({

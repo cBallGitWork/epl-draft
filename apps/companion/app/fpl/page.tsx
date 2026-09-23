@@ -1,4 +1,4 @@
-import { FPL_SITE, clubById, fplLineup, kickedOff, oppositionByClub, playerByCode } from "@epl/core";
+import { FPL_SITE, clubById, fplLineup, kickedOff, oppositionByClub, playerByCode, DASH, thousands } from "@epl/core";
 import type { FplPick } from "@epl/core";
 import { footballNow } from "../football";
 import Nothing from "../components/shell/Nothing";
@@ -11,6 +11,7 @@ import { myEntryId, mySide } from "./entry";
 import type { Played } from "./played";
 import { LABEL, PANEL, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import OutLink from "../components/shell/OutLink";
+import Absent from "@/app/components/shell/Absent";
 
 // The other game, kept small on purpose.
 //
@@ -174,7 +175,7 @@ export default async function FplPage() {
                     everybody's totals rather than a fact anybody recorded, which
                     is what `--color-info` means (DESIGN §3). */}
                 <span className="numeric shrink-0 text-sm font-bold text-info">
-                  {league.rank === null ? <span className="text-faint">&mdash;</span> : league.rank.toLocaleString("en-GB")}
+                  {league.rank === null ? <Absent /> : thousands(league.rank)}
                 </span>
               </li>
             ))}
@@ -216,7 +217,7 @@ function Figure({ label, value }: { label: string; value: number | null }) {
   return (
     <div className="cm-panel px-3 py-2">
       <dt className={LABEL}>{label}</dt>
-      <dd className="numeric text-xl font-bold">{value === null ? "—" : value.toLocaleString("en-GB")}</dd>
+      <dd className="numeric text-xl font-bold">{value === null ? DASH : thousands(value)}</dd>
     </div>
   );
 }
@@ -269,13 +270,13 @@ function Bench({
                 {at + 1}
               </span>
               <span className={`flex min-w-0 flex-1 items-center truncate text-ink ${ROW_NAME}`}>
-                {player?.name ?? "—"}
+                {player?.name ?? DASH}
               </span>
               <span className={`flex shrink-0 items-center ${SMALL_CAPS} text-muted`}>
                 {club?.shortName ?? ""}
               </span>
               <span className="numeric flex w-8 shrink-0 items-center justify-end text-sm font-bold text-info">
-                {played(pick.code) ? pick.points : <span className="text-faint">&mdash;</span>}
+                {played(pick.code) ? pick.points : <Absent />}
               </span>
             </li>
           );

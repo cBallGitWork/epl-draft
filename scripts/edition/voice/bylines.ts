@@ -1,4 +1,4 @@
-import { LEAGUE_TIMEZONE, type StoryKind } from "@epl/core";
+import { londonWeekday, type StoryKind } from "@epl/core";
 
 // Who each story runs under, and which named edition it goes out in. COPY,
 // all of it, and Craig's to change: homage names ship as strings precisely so
@@ -30,10 +30,7 @@ export function editionName(kind: StoryKind, filedAt: string): string {
   if (kind === "wire" || kind === "dodgers") return "The Mercato Wire";
   if (kind === "eleven" || kind === "power-ranking") return "The Monday Club";
 
-  const day = new Intl.DateTimeFormat("en-GB", {
-    timeZone: LEAGUE_TIMEZONE,
-    weekday: "short",
-  }).format(new Date(filedAt));
+  const day = londonWeekday(filedAt);
   if (day === "Sat") return "The Pink 'Un";
   if (day === "Sun") return "The Sunday Edition";
   return "The Monday Club";

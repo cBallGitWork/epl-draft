@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { BreakdownLine, CategoryPair, SquadPlayerDetail } from "@epl/core";
-import { crestUrl, fullPlayerName } from "@epl/core";
+import { crestUrl, fullPlayerName, DASH } from "@epl/core";
 import { positionLabel } from "../../positions";
 import {
   BOARD,
@@ -13,6 +13,7 @@ import {
   STICKY_LEAD,
 } from "@/app/desk";
 import { MUTE } from "./TableHeads";
+import Absent from "@/app/components/shell/Absent";
 
 // One squad against the league's own scoring categories — every man, every
 // category, which is what the head-to-head's compare board says about a side and
@@ -44,13 +45,6 @@ import { MUTE } from "./TableHeads";
 // 607 men eligible at two. The `Pts` column is OURS: it is their category lines
 // added up, so DESIGN §7 forbids it the head `FPts`, which is Fantrax's word for
 // a number this is not.
-
-/** A nought Fantrax actually published, against a category he never registered.
- *
- *  Absence is `—` (DESIGN §7) and the two really are different here: `liveBreakdown`
- *  drops a category a man did not register, so a missing line is silence, while a
- *  line carrying 0 is Fantrax saying it counted and paid nothing. */
-const DASH = "—";
 
 /** How much of the row the frozen block takes.
  *
@@ -209,16 +203,17 @@ function PlayerRow({
               reserve ? "" : "text-accent"
             }`}
           >
-            {total === null ? <span className="text-faint">{DASH}</span> : total}
+            {total === null ? <Absent /> : total}
           </span>
         </div>
       </td>
       {columns.map((column) => {
         const points = byCode.get(column.code);
+        // No line is a category he never registered; a 0 is Fantrax counting and paying nothing.
         return (
           <td key={column.code} className={BOARD_FIGURE}>
             {points === undefined ? (
-              <span className="text-faint">{DASH}</span>
+              <Absent />
             ) : (
               <span className={points < 0 ? "text-bad" : ""}>{points}</span>
             )}

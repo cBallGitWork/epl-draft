@@ -1,8 +1,9 @@
-import { clubColours, inkOn } from "@epl/core";
+import { clubColours, inkOn, DASH } from "@epl/core";
 import type { Club } from "@epl/core";
 import { LABEL } from "@/app/desk";
 import { placeLabels } from "./labels";
 import type { Placed } from "./labels";
+import { PITCH_BOX } from "@/app/components/football/pitchBox";
 
 // Where an eleven actually played: every starter at the average of his own
 // touches, one pitch per side.
@@ -41,11 +42,7 @@ import type { Placed } from "./labels";
 // `font-size` in viewBox units stretches with it, which would set these names at
 // 9px on a phone and 28px on a desk.
 
-/** The pitch, in its own units — `ShotMap`'s own box, because the two maps sit on
- *  one page and a reader compares them. **Second copy of these markings and
- *  deliberately not extracted**: CODE_RULES §1 leaves two occurrences duplicated
- *  and earns the abstraction at the third. */
-const BOX = { width: 100, height: 64 };
+// `ShotMap`'s markings, copied: two occurrences, declined until a third (CODE_RULES §1).
 
 export default function AveragePosition({
   home,
@@ -117,7 +114,7 @@ function Side({
         className="flex items-baseline justify-between gap-2 px-2 py-1 text-2xs font-bold uppercase"
         style={{ background: colours.primary, color: ink }}
       >
-        <span className="min-w-0 truncate">{club?.shortName ?? "—"}</span>
+        <span className="min-w-0 truncate">{club?.shortName ?? DASH}</span>
         {/* **A man with no cloud is dropped, and the plate is where that is
             admitted.** `teamSheet.ts` sets the precedent for the dropping — "a
             pitch with a hole in it is a worse answer than a pitch with ten men" —
@@ -134,34 +131,34 @@ function Side({
 
       <div
         className="relative w-full overflow-hidden"
-        style={{ aspectRatio: `${BOX.width} / ${BOX.height}` }}
+        style={{ aspectRatio: `${PITCH_BOX.width} / ${PITCH_BOX.height}` }}
         role="img"
         aria-label={`Where ${club?.shortName ?? "the side"} played: each starter at the average of his own touches, attacking to the right.`}
       >
         <svg
           aria-hidden
-          viewBox={`0 0 ${BOX.width} ${BOX.height}`}
+          viewBox={`0 0 ${PITCH_BOX.width} ${PITCH_BOX.height}`}
           preserveAspectRatio="none"
           className="absolute inset-0 h-full w-full"
         >
-          <rect width={BOX.width} height={BOX.height} fill="var(--color-pitch-turf)" />
+          <rect width={PITCH_BOX.width} height={PITCH_BOX.height} fill="var(--color-pitch-turf)" />
           {[0, 2, 4, 6, 8].map((band) => (
             <rect
               key={band}
               x={band * 10}
               width="10"
-              height={BOX.height}
+              height={PITCH_BOX.height}
               fill="var(--color-pitch-mow)"
             />
           ))}
           <g fill="none" stroke="var(--color-pitch-line)" strokeWidth="0.4" opacity="0.65">
-            <rect x="0.5" y="0.5" width={BOX.width - 1} height={BOX.height - 1} />
-            <line x1="50" y1="0.5" x2="50" y2={BOX.height - 0.5} />
-            <circle cx="50" cy={BOX.height / 2} r="9" />
+            <rect x="0.5" y="0.5" width={PITCH_BOX.width - 1} height={PITCH_BOX.height - 1} />
+            <line x1="50" y1="0.5" x2="50" y2={PITCH_BOX.height - 0.5} />
+            <circle cx="50" cy={PITCH_BOX.height / 2} r="9" />
             <rect x="0.5" y="13" width="16" height="38" />
-            <rect x={BOX.width - 16.5} y="13" width="16" height="38" />
+            <rect x={PITCH_BOX.width - 16.5} y="13" width="16" height="38" />
             <rect x="0.5" y="24" width="5.5" height="16" />
-            <rect x={BOX.width - 6} y="24" width="5.5" height="16" />
+            <rect x={PITCH_BOX.width - 6} y="24" width="5.5" height="16" />
           </g>
         </svg>
 

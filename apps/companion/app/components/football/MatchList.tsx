@@ -10,8 +10,11 @@ import {
   contributions,
   crestUrl,
   fixturesInOrder,
+  londonWeekday,
+  londonDayAndTime,
+  londonTime,
+  DASH,
 } from "@epl/core";
-import { londonDay, londonDayAndTime, londonTime } from "../../londonTime";
 import { chipsFor } from "../league/Chips";
 import { yoursBorder } from "../../mine";
 import { ROW_NAME } from "@/app/desk";
@@ -207,7 +210,7 @@ function ClubSide({ club, align }: { club: Club | undefined; align: "start" | "e
       ) : (
         <span className="h-6 w-6 shrink-0 rounded-full bg-raised" />
       )}
-      <span className={`truncate ${ROW_NAME}`}>{club?.shortName ?? "—"}</span>
+      <span className={`truncate ${ROW_NAME}`}>{club?.shortName ?? DASH}</span>
     </span>
   );
 }
@@ -237,7 +240,7 @@ function ScoreBlock({ fixture, now }: { fixture: Fixture; now: boolean }) {
            goes here rather than into the time above it, because that slot is the
            one the score lands in and "Sun 14:00" at score size is not a score. */
         <span className="text-2xs font-semibold uppercase text-faint">
-          {londonDay(fixture.kickoff)}
+          {londonWeekday(fixture.kickoff)}
         </span>
       ) : null}
     </span>

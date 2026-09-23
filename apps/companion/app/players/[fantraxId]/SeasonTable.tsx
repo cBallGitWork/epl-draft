@@ -3,6 +3,7 @@ import { BOARD, BOARD_FIGURE, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, S
 import type { MatchRow } from "./matchRows";
 import { totalsOf } from "./matchRows";
 import { IndexCell } from "../../components/league/TableCells";
+import { thousands } from "@epl/core";
 
 // What the season adds up to, above the matches that made it.
 //
@@ -91,7 +92,7 @@ interface Column {
 
 const COLUMNS: readonly Column[] = [
   { head: "Apps", title: "Appearances", total: (t) => whole(t.apps) },
-  { head: "Min", title: "Minutes played", total: (t) => t.minutes.toLocaleString("en-GB") },
+  { head: "Min", title: "Minutes played", total: (t) => thousands(t.minutes) },
   { head: "Gls", title: "Goals", total: (t) => whole(t.goals) },
   { head: "Asts", title: "Assists", total: (t) => whole(t.assists) },
   { head: "Con", title: "Goals conceded while he was on", total: (t) => whole(t.conceded) },

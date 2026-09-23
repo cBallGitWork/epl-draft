@@ -3,6 +3,7 @@ import Face from "./Face";
 import Column from "./Column";
 import Paragraphs from "./Paragraphs";
 import Dateline from "./Dateline";
+import { DASH } from "@epl/core";
 
 // The written lead, as filed.
 //
@@ -124,13 +125,13 @@ export default function Written({
               {story.ties.map((tie) => (
                 <li key={`${tie.homeTeamId}-${tie.awayTeamId}`} className="py-2">
                   <p className="font-sans text-2xs uppercase tracking-widest text-faint">
-                    {named.get(tie.homeTeamId) ?? "—"} v {named.get(tie.awayTeamId) ?? "—"}
+                    {named.get(tie.homeTeamId) ?? DASH} v {named.get(tie.awayTeamId) ?? DASH}
                     {/* A call, marked as one. An unmade call prints nothing
                         rather than a hedge. */}
                     {tie.callsTeamId ? (
                       <span className="font-bold text-cream">
                         {" "}
-                        · {named.get(tie.callsTeamId) ?? "—"}
+                        · {named.get(tie.callsTeamId) ?? DASH}
                       </span>
                     ) : null}
                   </p>

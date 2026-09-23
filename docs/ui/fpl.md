@@ -49,8 +49,9 @@ A pitch needs positional lines, and the football layer deliberately carries no
 position: `element_type` is FPL's own fantasy classification, not a fact about a
 footballer, which is precisely why it was taken out (CLAUDE.md). So the FPL pitch
 takes FPL's classification from **this** layer — `fpl-entry`, the FPL league
-layer and the correct home for it — as `FplPick.line`, read by `fetchEntryLines`
-on the same reasoning `fetchEntryPoints` already gave for `total_points`.
+layer and the correct home for it — as `FplPick.line`, which FPL puts on the pick
+itself. The round's points come from the football layer's `gameweekLive`, summed
+per element by `fplPointsByElement` (23 Sep 2026).
 
 `fplLineup` arranges the XI back to front, pure and tested — including three at
 the back with no forwards, and a pick FPL gave no line to, who stands in a row of

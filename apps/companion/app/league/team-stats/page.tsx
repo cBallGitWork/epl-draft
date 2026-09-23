@@ -8,6 +8,8 @@ import {
   rankBy,
   type Measure,
   type StatCategory,
+  DASH,
+  thousands,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
@@ -22,8 +24,9 @@ import { getSchedule } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
-import { FANTRAX_SILENT } from "../../config";
 import { BOARD, BOARD_FIGURE, INDEX_WIDTH, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { teamHref } from "@/app/squad/routes";
+import FantraxSilent from "../../components/shell/FantraxSilent";
 
 // Every team against a whole GROUP of scoring categories — CM's stat board, on
 // fantasy data.
@@ -92,9 +95,9 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
   if ("unavailable" in schedule) {
     return (
       <LeagueShell current="teamStats">
-        <Nothing title={FANTRAX_SILENT} code={schedule.unavailable}>
+        <FantraxSilent code={schedule.unavailable}>
           The season table is Fantrax&apos;s own, and we cannot read it right now.
-        </Nothing>
+        </FantraxSilent>
       </LeagueShell>
     );
   }
@@ -182,7 +185,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     <IndexCell>{ordinal(row.rank)}</IndexCell>
                     <td className="pl-2">
                       <Link
-                        href={`/squad/${row.teamId}`}
+                        href={teamHref(row.teamId)}
                         className={`${ROW_LINK} ${yoursInk(yours)}`}
                       >
                         <TeamBadge
@@ -204,7 +207,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                       // is said by the pressed plate above it, exactly as
                       // `/league` says it across ten columns.
                       <td key={columns[at]?.key ?? at} className={`${BOARD_FIGURE} text-ink`}>
-                        {figure === null ? DASH : figure.toLocaleString("en-GB")}
+                        {figure === null ? DASH : thousands(figure)}
                       </td>
                     ))}
                   </tr>
@@ -249,10 +252,6 @@ function boardHref(by: Measure, group: string, category: string): string {
 function direction(category: StatCategory, measure: Measure): "ascending" | "descending" {
   return measure === "value" && category.lowIsGood === true ? "ascending" : "descending";
 }
-
-/** Absence, never a nought — a team with no reading has not recorded nought of
- *  it (DESIGN §7). */
-const DASH = "—";
 
 /** How much of the row one category takes.
  *

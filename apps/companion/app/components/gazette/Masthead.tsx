@@ -1,6 +1,5 @@
-import { LEAGUE_NAME, SEASON } from "@epl/core";
+import { LEAGUE_NAME, SEASON, londonDate } from "@epl/core";
 import { PAPER_NAME } from "../../config";
-import { londonDate } from "../../londonTime";
 
 // The paper's own name, set the way a paper sets it.
 //

@@ -1,4 +1,4 @@
-import { instantOf } from "../../config";
+import { instantOf } from "../../time";
 import type { IntelManifest } from "./types";
 
 // What a manager said about availability, as a signal and as his own words.

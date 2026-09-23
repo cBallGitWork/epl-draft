@@ -1,4 +1,4 @@
-import { instantOf } from "../config";
+import { instantOf } from "../time";
 import type { Fixture, FootballPlayer, FootballSnapshot, MatchEvent } from "./types";
 
 // Rewinding a played round to a moment inside it, so a Saturday can be looked at

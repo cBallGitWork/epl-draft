@@ -11,6 +11,8 @@ import {
 import ScoreRow from "../components/shell/ScoreRow";
 import Section from "../components/shell/Section";
 import FootballRow from "./FootballRow";
+import Absent from "@/app/components/shell/Absent";
+import { matchupHref } from "@/app/league/routes";
 
 // Both competitions, one screen, in Championship Manager's own results row.
 //
@@ -97,7 +99,7 @@ function DraftRow({
       // "yours is said three ways", the accent edge and the accent name are two
       // of them already, and a third spent 48px of a 390 screen restating what
       // the row's own left edge had said.
-      href={opens ? `/league/matchups/${opensOn}?gw=${gameweek}` : undefined}
+      href={opens ? matchupHref(opensOn, gameweek) : undefined}
     />
   );
 }
@@ -210,5 +212,5 @@ function pointsOf(teamId: string | undefined, scores: Map<string, LiveTeamScore>
 /** Absence, never a nought — a total Fantrax has not given us is not a nil
  *  (DESIGN §7). */
 function figure(points: number | null) {
-  return points === null ? <span className="text-faint">&mdash;</span> : points;
+  return points === null ? <Absent /> : points;
 }

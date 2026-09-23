@@ -3,11 +3,11 @@
 import { SELECT } from "../../../components/shell/ButtonLink";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { type PlayerStatLine, type SeasonTotals } from "@epl/core";
+import { type PlayerStatLine, type SeasonTotals, DASH } from "@epl/core";
 import { VIEWS, type ViewKey, measuresFor, readingOf } from "./statViews";
 import SortHead from "./SortHead";
 import { positionsFromList } from "../../../positions";
-import { POOL } from "../../../players/routes";
+import { playerHref } from "../../../players/routes";
 import {
   BOARD_FIGURE,
   HEAD_CELL,
@@ -175,7 +175,7 @@ export default function StatBoard({
                     endpoint. The profile is where the whole of him is anyway. */}
                 <td className="p-0">
                   <Link
-                    href={`${POOL}/${line.fantraxId}`}
+                    href={playerHref(line.fantraxId)}
                     // **`min-h-11` on a phone and `.cm-row` above it**, which is
                     // the documented pair — but written as a breakpoint rather
                     // than as one class. `.cm-row` alone left the link 14px and
@@ -191,9 +191,9 @@ export default function StatBoard({
                   </Link>
                 </td>
                 <td className="px-1.5 py-1 text-3xs font-bold text-mid">
-                  {positionsFromList(line.position) ?? "—"}
+                  {positionsFromList(line.position) ?? DASH}
                 </td>
-                <td className="px-1.5 py-1 text-2xs text-muted">{line.clubShort ?? "—"}</td>
+                <td className="px-1.5 py-1 text-2xs text-muted">{line.clubShort ?? DASH}</td>
                 {measures.map((measure) => {
                   const value = measure.read(line, underlying[line.fantraxId]);
                   return (
@@ -220,7 +220,7 @@ export default function StatBoard({
                             : "text-faint"
                       }`}
                     >
-                      {value === null ? "—" : measure.decimals ? value.toFixed(2) : value}
+                      {value === null ? DASH : measure.decimals ? value.toFixed(2) : value}
                     </td>
                   );
                 })}

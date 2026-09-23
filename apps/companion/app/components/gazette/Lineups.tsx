@@ -1,6 +1,5 @@
 import Image from "next/image";
-import { crestUrl, type PublishedStory, type StoryLineupSide } from "@epl/core";
-import { londonDayAndTime } from "../../londonTime";
+import { crestUrl, type PublishedStory, type StoryLineupSide, londonDayAndTime, DASH } from "@epl/core";
 import { yoursInk } from "../../mine";
 
 // The round's predicted elevens, grouped by the match they are for.
@@ -74,7 +73,7 @@ function Side({
                 up — the whole of what makes a team sheet scannable. A dash
                 where the export had only FPL's fantasy letter to go on. */}
             <span className="w-6 shrink-0 pt-0.5 font-sans text-3xs tracking-wide text-faint uppercase sm:w-9 sm:pt-1 sm:text-2xs sm:tracking-widest">
-              {man.position ?? "—"}
+              {man.position ?? DASH}
             </span>
             <p className="min-w-0 flex-1">
               <span className={yoursInk(man.owner !== undefined && man.owner === mine)}>

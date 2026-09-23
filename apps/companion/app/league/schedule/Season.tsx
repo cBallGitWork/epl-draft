@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { leads } from "@epl/core";
+import { leads, londonDate, DASH } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
-import { londonDate } from "../../londonTime";
 import { ROW_NAME } from "@/app/desk";
+import { matchupHref } from "../routes";
+import { teamHref } from "@/app/squad/routes";
 
 // One team's season on one screen: every round it is in, who it plays, and what
 // each one finished. The league's fixtures and any knockout it has been drawn
@@ -95,7 +96,7 @@ export default function Season({
                 wants from the row — the name opens the squad, the score opens
                 the match. */}
             <Link
-              href={`/league/matchups/${teamId}?gw=${row.round.gameweek}`}
+              href={matchupHref(teamId, row.round.gameweek)}
               className="cm-row inline-flex min-h-11 shrink-0 items-center hover:underline"
             >
               <Score row={row} />
@@ -142,10 +143,10 @@ function Score({ row }: { row: SeasonRow }) {
           for that manager, so nothing may set a colour on top of it. Underline
           says "this one won" without touching the pair. */}
       <span className={won ? "underline decoration-2 underline-offset-2" : ""}>
-        {row.pointsFor ?? "—"}
+        {row.pointsFor ?? DASH}
       </span>
       <span className="px-0.5 font-normal opacity-70">–</span>
-      <span className="opacity-80">{row.pointsAgainst ?? "—"}</span>
+      <span className="opacity-80">{row.pointsAgainst ?? DASH}</span>
     </span>
   );
 }
@@ -182,7 +183,7 @@ function Opponent({
     <span className={`truncate italic text-faint ${ROW_NAME}`}>{name}</span>
   ) : (
     <Link
-      href={`/squad/${opponent.team.teamId}?gw=${gameweek}`}
+      href={teamHref(opponent.team.teamId, gameweek)}
       // **`min-h-11` and the `.cm-row` pair**, which this link had neither of:
       // it was 18px of text in a 56px row, so the row looked thumbable and only
       // the name actually was. `tapfit` never saw it because its route list

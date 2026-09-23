@@ -1,5 +1,6 @@
 import type { Attribute } from "@epl/core";
 import Section from "../../components/shell/Section";
+import { DASH } from "@epl/core";
 
 // Championship Manager's attribute grid: three columns of `label · rating`,
 // read down each column in turn (`cm9900/11.jpg`).
@@ -79,7 +80,7 @@ export default function AttributeGrid({
               {/* Absence is a dash, never a nought — DESIGN §7. A man under the
                   minutes floor has not been measured, and a 1 would say he was
                   measured and found to be the worst in the division. */}
-              {attribute.rating ?? "—"}
+              {attribute.rating ?? DASH}
             </dd>
           </div>
         ))}

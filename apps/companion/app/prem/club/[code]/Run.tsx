@@ -1,11 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Club, Fixture } from "@epl/core";
-import { COMPETITION_NAME, crestUrl } from "@epl/core";
-import { londonDayAndDate, londonTime } from "../../../londonTime";
+import { COMPETITION_NAME, londonDayAndDate, londonTime, DASH } from "@epl/core";
 import { CLUB, MATCH } from "../../routes";
-import { BOARD, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
-
+import { BOARD, SCROLL, ROW_HOVER } from "@/app/desk";
+import Absent from "@/app/components/shell/Absent";
+import ClubLabel from "@/app/components/football/ClubLabel";
 
 // One club's season, played and to come, in the order it runs.
 //
@@ -48,7 +47,7 @@ export default function Run({
             const theirs = home ? fixture.awayScore : fixture.homeScore;
 
             return (
-              <tr key={fixture.id} className={`cm-row ${ROW_RULE} hover:bg-surface`}>
+              <tr key={fixture.id} className={`cm-row ${ROW_HOVER}`}>
                 {/* The date in the club's own colour (Craig, 3 Sep 2026:
                     "fixtures, needs the team colours for the date box").
                     `cm-index` is CM's index block and `ClubShell` has already
@@ -69,21 +68,10 @@ export default function Run({
                       href={`${CLUB}/${opponent.code}`}
                       className="cm-row flex min-h-11 items-center gap-2 hover:underline"
                     >
-                      <Image
-                        src={crestUrl(opponent)}
-                        alt=""
-                        width={CREST_PX}
-                        height={CREST_PX}
-                        className={`${CREST} object-contain`}
-                        aria-hidden
-                        unoptimized
+                      <ClubLabel
+                        club={opponent}
+                        crest={{ px: CREST_PX, className: `${CREST} object-contain` }}
                       />
-                      <span className={`min-w-0 truncate lg:hidden ${ROW_NAME}`}>
-                        {opponent.shortName}
-                      </span>
-                      <span className={`hidden min-w-0 truncate lg:inline ${ROW_NAME}`}>
-                        {opponent.name}
-                      </span>
                     </Link>
                   )}
                 </td>
@@ -114,7 +102,7 @@ export default function Run({
                     ) : played ? (
                       `${mine}–${theirs}`
                     ) : (
-                      <span className="text-faint">{DASH}</span>
+                      <Absent />
                     )}
                   </Link>
                 </td>
@@ -148,4 +136,3 @@ const COMPETITION = COMPETITION_NAME;
 const CREST = "h-[1.375rem] w-[1.375rem] shrink-0";
 const CREST_PX = 22;
 
-const DASH = "—";

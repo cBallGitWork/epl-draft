@@ -1,6 +1,6 @@
 import TurnLink from "./TurnLink";
 import { PAPER_NAME } from "../../config";
-import { londonDate } from "../../londonTime";
+import { londonDate } from "@epl/core";
 
 // The head of an inside page.
 //

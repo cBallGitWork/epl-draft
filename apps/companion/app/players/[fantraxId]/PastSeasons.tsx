@@ -10,6 +10,7 @@ import {
   TEXT,
 } from "@/app/desk";
 import { IndexCell } from "../../components/league/TableCells";
+import { thousands } from "@epl/core";
 
 // Championship Manager's appearances table, at season scale (`cm9900/11.jpg`
 // draws `Apps Gls Con Pens Asts Yel Red MoM Av R` over six competition rows).
@@ -110,7 +111,7 @@ const COLUMNS: readonly Column[] = [
   {
     head: "Min",
     title: "Minutes played",
-    of: (s) => s.minutes.toLocaleString("en-GB"),
+    of: (s) => thousands(s.minutes),
   },
   { head: "Gls", title: "Goals", of: (s) => s.goals },
   { head: "Ast", title: "Assists", of: (s) => s.assists },

@@ -3,6 +3,7 @@ import { type LiveTeamScore, type PeriodPairing, pairingInvolves } from "@epl/co
 import { yoursFirst, yoursInk } from "../../mine";
 import Changed from "../shell/Changed";
 import ScoreFigure from "../league/ScoreFigure";
+import { matchupHref } from "@/app/league/routes";
 
 // The round, reduced to a band — except for the one number docs/rules/PRODUCT.md will not
 // let shrink.
@@ -96,7 +97,7 @@ function Yours({
   const theirs = scores.get(opponent.teamId);
 
   return (
-    <Link href={`/league/matchups/${team.teamId}`} className="flex flex-col py-2">
+    <Link href={matchupHref(team.teamId)} className="flex flex-col py-2">
       <ScoreLine name={team.name} score={yours} other={theirs} yours />
       <ScoreLine name={opponent.name} score={theirs} other={yours} />
       {/* The line a scoreline cannot carry: who is still to come. Absence here
@@ -183,7 +184,7 @@ function Tie({
 
   return (
     <Link
-      href={involved && mine !== null ? `/league/matchups/${mine}` : "/matchday"}
+      href={involved && mine !== null ? matchupHref(mine) : "/matchday"}
       className="flex min-h-11 shrink-0 snap-start flex-col justify-center gap-0.5 border-l border-line px-3 py-1.5 text-xs"
     >
       <SideLine name={pairing.home.name} yours={pairing.home.teamId === mine} points={home} other={away} />

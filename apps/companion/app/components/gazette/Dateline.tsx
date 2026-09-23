@@ -1,5 +1,4 @@
-import { PAPER_CORRESPONDENT, type PublishedStory } from "@epl/core";
-import { londonDayAndTime } from "../../londonTime";
+import { PAPER_CORRESPONDENT, type PublishedStory, londonDayAndTime } from "@epl/core";
 import { pageOf } from "./paperPages";
 
 // Which edition filed a story, when, and where the rest of it is.

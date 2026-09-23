@@ -9,8 +9,8 @@ import { planningRound } from "../round";
 import { myTeamId, signedIn } from "../session";
 import { yoursBorder } from "../mine";
 import { MY_TEAM, SQUAD } from "./routes";
-import { FANTRAX_SILENT } from "../config";
 import { LABEL, PANEL, ROW_NAME } from "@/app/desk";
+import FantraxSilent from "../components/shell/FantraxSilent";
 
 // Your squad, and everyone else's. Until the draft this is the empty state,
 // which is the state our real league is actually in and therefore the one that
@@ -43,10 +43,10 @@ export default async function SquadsPage() {
     return (
       <div className="flex flex-col gap-3">
         <section className={PANEL}>
-          <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
+          <FantraxSilent code={squads.unavailable}>
             The league is fine. We just cannot read it right now, so rather than guess at your squad
             this says nothing.
-          </Nothing>
+          </FantraxSilent>
         </section>
         <SignIn />
       </div>

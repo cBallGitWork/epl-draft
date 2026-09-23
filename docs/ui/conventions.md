@@ -310,14 +310,18 @@ A recipe is named at its third occurrence (CODE_RULES §1); these were not.
 
 | What | Count | Where it goes at the third |
 |---|---|---|
-| `const DASH = "—"` | 10 named against 53 unnamed `"—"` in 34 files (11 Sep) | Named only if every literal adopts it: a shared name most sites ignore hides the scatter. A DESIGN §7 decision, not a class string. |
 | `px-3 text-2xs text-faint` | 5 sites (7 Sep) | Left: not sediment from the run that counted it. |
 | `Array.isArray(v) ? v[v.length - 1] : v` | 2 (`players/query`, `players/analysis/page`) | A shared query helper. |
 | Tab label `px-2 text-2xs` | 1 (`league/GroupNav`, since 6 Sep) | Below the bar. |
 | `spelled()` + `WORDS` + `SPELL_FROM` | 2 (`matchday/FootballRow`, `matchday/desk/Rows`) | `football.ts`: a football fact, not a desk recipe. |
-| `BOX = { width: 100, height: 64 }` | 2 (`players/analysis/PlayerMap`, `prem/match/[id]/ShotMap`) | `football.ts`. `CmGround`'s `BOX` is a penalty area and shares only the name. |
 | `MONTHS` · `SETTLE = 250` · `FORM_GAMES = 5` | 2 each (11 Sep) | Left. |
 | The gazette's story furniture (kicker, headline, standfirst, rule) | 3-4 files each | A `paper.ts`: it belongs to the paper, not the desk. |
+| Crest `<Image>` outside a row | 14, in 11 sizes and 9 class strings (23 Sep) | Left: a wrapper would rename props. Rows use `ClubLabel`. |
+| Pitch markings | 2 identical (`ShotMap`, `AveragePosition`); `PlayerMap` draws its own (23 Sep) | A shared markings group, at a third map that draws these. |
+| `?gw=` on a route builder | 2 (`matchupHref`, `teamHref`) | A `withRound` helper. |
+| `${ROW_RULE} ${mine ? "bg-raised" : "hover:bg-surface"}` | 2 (`league/TableRow`, league team-stats) | `desk.ts`, beside `ROW_HOVER`. |
+| Panel sized in rows by hand | 2 (`SectionShell`, the club's fixtures tab) | A `Panel` taking `rows`. |
+| `raw instanceof FantraxError ? fallback : map(raw)` | 15 read modules, each with its own fallback (23 Sep) | Left: a helper would rename a one-line ternary. |
 | The refusal pair (`shell/Nothing`, `error`, `not-found`) | 3 | Two of them should use `Nothing` itself. |
 | `border-collapse w-full whitespace-nowrap` | 3 | Reconcile with `BOARD` rather than name it. |
 
@@ -429,7 +433,7 @@ alternative for every animation. One focus treatment everywhere, never removed.
 
 ## Times
 
-Every time in the app is UK time wherever the reader is (`londonTime.ts`), and
+Every time in the app is UK time wherever the reader is (core's `time.ts`), and
 "15:00" has to mean the same thing in Toronto as in Leeds. Fantrax's own
 timestamps carry a US Eastern offset and are shown **verbatim with their zone
 named**, never silently converted.

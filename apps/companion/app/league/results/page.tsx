@@ -6,7 +6,7 @@ import RoundHead from "../../components/shell/RoundHead";
 import { getSchedule, getSeasonResults } from "../schedule/schedule";
 import { readerTeamId } from "../../squads";
 import { teamBadges } from "../../standings";
-import { FANTRAX_SILENT } from "../../config";
+import FantraxSilent from "../../components/shell/FantraxSilent";
 
 // What has already happened: every played round, newest first, each round's
 // head-to-heads as scorelines.
@@ -43,9 +43,9 @@ export default async function ResultsPage() {
   if ("unavailable" in schedule) {
     return (
       <LeagueShell current="results">
-        <Nothing title={FANTRAX_SILENT} code={schedule.unavailable}>
+        <FantraxSilent code={schedule.unavailable}>
           The season is theirs to keep, and we cannot read it right now.
-        </Nothing>
+        </FantraxSilent>
       </LeagueShell>
     );
   }

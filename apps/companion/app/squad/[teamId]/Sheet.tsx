@@ -6,6 +6,7 @@ import TeamSheet from "../../components/league/TeamSheet";
 import ViewToggle, { type View } from "../../components/league/ViewToggle";
 import Pending from "../../components/league/Pending";
 import { PANEL } from "@/app/desk";
+import ListAndPitch from "@/app/components/league/ListAndPitch";
 
 // A rival's eleven once his lineups have locked — with the Pitch/List control the
 // page had been losing at exactly that moment.
@@ -105,8 +106,9 @@ export default function Sheet({
           this now does the same; `bare` is what stops the list drawing a second
           one inside this. */}
       <section className={PANEL}>
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start lg:gap-10">
-        <div className={view === "list" ? "" : "hidden lg:block"}>
+      <ListAndPitch
+        view={view}
+        list={
           <TeamSheet
             rows={rows}
             bench={bench}
@@ -116,30 +118,32 @@ export default function Sheet({
             eligibility={eligibility}
             bare
           />
-        </div>
-        <div className={view === "pitch" ? "" : "hidden lg:block"}>
-          {/* **A heading over the grass** (Craig, 3 Sep 2026: "both the fantasy
-              and real squad pages need a title/caption over the pitch"). Eleven
-              faces on a pitch do not say what eleven they are: this is the side
-              as it stands, and the club page says "Predicted XI" over its own
-              because that one is a guess and this one is not. */}
-          <p className="cm-title pb-1 text-center font-chrome text-2xs font-bold text-accent lg:text-sm">
-            First-choice XI
-          </p>
-          <TeamSheet
-            rows={rows}
-            // **No bench on the grass.** The eleven is the formation; a reserve
-            // has no place in one, and the strip under the pitch was drawing
-            // four men who are not playing at the same size as the ones who are.
-            bench={[]}
-            breakdown={breakdown}
-            news={news}
-            mode="pitch"
-            inColumn
-            show="fixture"
-          />
-        </div>
-      </div>
+        }
+        pitch={
+          <>
+            {/* **A heading over the grass** (Craig, 3 Sep 2026: "both the fantasy
+                and real squad pages need a title/caption over the pitch"). Eleven
+                faces on a pitch do not say what eleven they are: this is the side
+                as it stands, and the club page says "Predicted XI" over its own
+                because that one is a guess and this one is not. */}
+            <p className="cm-title pb-1 text-center font-chrome text-2xs font-bold text-accent lg:text-sm">
+              First-choice XI
+            </p>
+            <TeamSheet
+              rows={rows}
+              // **No bench on the grass.** The eleven is the formation; a reserve
+              // has no place in one, and the strip under the pitch was drawing
+              // four men who are not playing at the same size as the ones who are.
+              bench={[]}
+              breakdown={breakdown}
+              news={news}
+              mode="pitch"
+              inColumn
+              show="fixture"
+            />
+          </>
+        }
+      />
       </section>
     </div>
   );

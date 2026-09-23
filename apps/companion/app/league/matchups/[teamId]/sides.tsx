@@ -13,6 +13,7 @@ import { widestLine } from "../../../components/league/PitchRows";
 import Caption from "../../../components/shell/Caption";
 import Nothing from "../../../components/shell/Nothing";
 import SquadRows from "../../../components/league/SquadRows";
+import { teamHref } from "@/app/squad/routes";
 
 // What the head-to-head route assembles before it draws anything.
 //
@@ -58,7 +59,7 @@ export function Withheld({
     <div className="flex flex-col items-center gap-3 border border-line bg-surface px-4 py-10 text-center">
       <p className="max-w-xs text-sm text-muted">{because}</p>
       <Link
-        href={`/squad/${team.teamId}`}
+        href={teamHref(team.teamId)}
         className="flex min-h-11 items-center text-2xs font-bold uppercase text-accent"
       >
         See the squad

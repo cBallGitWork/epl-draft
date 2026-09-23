@@ -1,9 +1,8 @@
 import { Suspense } from "react";
-import { goalMinutes, sheetSides, worthReading } from "@epl/core";
+import { goalMinutes, sheetSides, worthReading, londonDayAndDate, londonTime } from "@epl/core";
 import type { SheetRow } from "@epl/core";
 import Skeleton from "../../../components/shell/Skeleton";
 import SkeletonRows from "../../../components/shell/SkeletonRows";
-import { londonDayAndDate, londonTime } from "../../../londonTime";
 import { PANEL, PANEL_FLUSH } from "@/app/desk";
 import MatchShell from "./Shell";
 import Scoresheet from "./Scoresheet";
@@ -201,9 +200,7 @@ async function Commentary({ match }: { match: Match }) {
 
 function ReportWaiting() {
   return (
-    <div aria-busy>
-      <SkeletonRows count={6} height="2.75rem" />
-    </div>
+    <SkeletonRows count={6} height="2.75rem" />
   );
 }
 

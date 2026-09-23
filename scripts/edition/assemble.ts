@@ -1,5 +1,4 @@
 import {
-  LEAGUE_TIMEZONE,
   type Assignment,
   type Club,
   type FootballSnapshot,
@@ -15,6 +14,7 @@ import {
   bothSides,
   isActive,
   isResolved,
+  londonDayAndTime,
   tieState,
 } from "@epl/core";
 import { menIn } from "./lineups";
@@ -130,12 +130,7 @@ export function fixturePreviewBrief(
     gameweek: snapshot.gameweek,
     home: clubs.get(fixture.homeClubId)?.name ?? "Home",
     away: clubs.get(fixture.awayClubId)?.name ?? "Away",
-    kickoff: new Intl.DateTimeFormat("en-GB", {
-      timeZone: LEAGUE_TIMEZONE,
-      weekday: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(fixture.kickoff)),
+    kickoff: londonDayAndTime(fixture.kickoff),
     duels: duels.map((duel) => ({
       homeName: duel.pairing.home.name,
       awayName: duel.pairing.away.name,

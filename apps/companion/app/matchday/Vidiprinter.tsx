@@ -3,6 +3,7 @@ import type { MatchEventKind } from "@epl/core";
 import Section from "../components/shell/Section";
 import { SMALL_CAPS } from "@/app/desk";
 import { isBreak, type WireBreak, type WireLine, type WireRow } from "./wireLines";
+import Absent from "@/app/components/shell/Absent";
 
 // The vidiprinter that knows whose everybody is.
 //
@@ -281,7 +282,7 @@ function BreakRow({ row }: { row: WireBreak }) {
               {side.name}
             </span>
             <span className="numeric shrink-0 text-sm font-bold text-ink lg:text-base">
-              {side.score ?? <span className="text-faint">&mdash;</span>}
+              {side.score ?? <Absent />}
             </span>
           </span>
         ))}

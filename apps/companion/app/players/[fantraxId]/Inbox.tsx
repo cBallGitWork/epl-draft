@@ -1,7 +1,7 @@
 import DateChip from "../../components/shell/DateChip";
 import Section from "../../components/shell/Section";
 import { PANEL } from "@/app/desk";
-import { LEAGUE_TIMEZONE } from "@epl/core";
+import { LEAGUE_TIMEZONE, DASH } from "@epl/core";
 import Link from "next/link";
 import type { NewsItem } from "./newsItems";
 
@@ -110,7 +110,7 @@ export default function Inbox({
                   column. The two lines are SET here rather than left to wrap —
                   same width, same fold on every row. */}
               <DateChip
-                day={item.at === null ? "—" : DAY.format(new Date(item.at))}
+                day={item.at === null ? DASH : DAY.format(new Date(item.at))}
                 time={item.at === null ? null : CLOCK.format(new Date(item.at))}
                 className="w-24"
               />

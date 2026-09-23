@@ -4,6 +4,7 @@ import { speaksForNow } from "../../football";
 import { liveScores } from "../../scoreboard";
 import { myTeamId } from "../../session";
 import { getLeagueSquads } from "../../squads";
+import { matchupHref } from "@/app/league/routes";
 
 // Whether there is a live scoreline of the reader's to put in the chrome, and
 // what it says.
@@ -62,6 +63,6 @@ export async function liveTie(): Promise<LiveTie | null> {
     yours,
     theirs,
     opponent: pairing.opponent.name,
-    href: `/league/matchups/${pairing.team.teamId}`,
+    href: matchupHref(pairing.team.teamId),
   };
 }

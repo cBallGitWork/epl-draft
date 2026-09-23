@@ -9,6 +9,7 @@ import { leagueTable } from "../../../standings";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { LABEL, PANEL_FLUSH } from "@/app/desk";
+import { teamHref } from "@/app/squad/routes";
 
 // Who he plays, and the one screen in this app that is about a confrontation.
 //
@@ -165,7 +166,7 @@ function Side({ team, linked = false }: { team: SideTeam; linked?: boolean }) {
   // Only the opponent is a link: a link to the page you are on is a dead control
   // that still looks like a live one.
   return linked ? (
-    <Link href={`/squad/${team.teamId}`} className="flex min-w-0 flex-1">
+    <Link href={teamHref(team.teamId)} className="flex min-w-0 flex-1">
       {label}
     </Link>
   ) : (

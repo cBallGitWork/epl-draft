@@ -1,6 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
-import { clubStats, crestUrl, leagueTable, ordinal } from "@epl/core";
+import { clubStats, leagueTable, ordinal, thousands } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import { Head, HeadRow, NameHead } from "../../../components/league/TableHeads";
 import { IndexCell, ROW_LINK } from "../../../components/league/TableCells";
@@ -9,7 +8,8 @@ import { CLUB } from "../../routes";
 import Filters from "./Filters";
 import { categoryFor, type Club } from "./categories";
 import { footballNow, seasonFixtures } from "../../../football";
-import { BOARD, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, FIGURE, SCROLL, ROW_HOVER } from "@/app/desk";
+import ClubLabel from "@/app/components/football/ClubLabel";
 
 // Every club ranked by one measure — CM's stat board, on the real competition.
 //
@@ -98,7 +98,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
           </thead>
           <tbody>
             {board.map(({ club, figure }, at) => (
-              <tr key={club.table.clubId} className={`${ROW_RULE} hover:bg-surface`}>
+              <tr key={club.table.clubId} className={ROW_HOVER}>
                 {/* The ordinal in CM's index block: `24.jpg` runs `1st 2nd 3rd`
                     down the left of every table it draws, and a column of bare
                     numbers is a list where a column of ordinals is a league.
@@ -110,21 +110,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     href={`${CLUB}/${club.table.code}`}
                     className={ROW_LINK}
                   >
-                    <Image
-                      src={crestUrl({ code: club.table.code })}
-                      alt=""
-                      width={26}
-                      height={26}
-                      className="h-[var(--row-badge)] w-[var(--row-badge)] shrink-0 object-contain"
-                      aria-hidden
-                      unoptimized
-                    />
-                    <span className={`min-w-0 truncate lg:hidden ${ROW_NAME}`}>
-                      {club.table.shortName}
-                    </span>
-                    <span className={`hidden min-w-0 truncate lg:inline ${ROW_NAME}`}>
-                      {club.table.name}
-                    </span>
+                    <ClubLabel club={club.table} />
                   </Link>
                 </td>
                 {/* The accent, because this is the column the board is ordered
@@ -132,7 +118,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     two figures and spends the accent on whichever is sorted;
                     here every figure on screen is that column. */}
                 <td className={`${FIGURE} text-accent`}>
-                  {figure.toLocaleString("en-GB")}
+                  {thousands(figure)}
                 </td>
               </tr>
             ))}

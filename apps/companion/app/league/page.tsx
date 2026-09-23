@@ -9,8 +9,8 @@ import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
 import { readerTeamId } from "../squads";
 import { leagueInfo } from "../round";
-import { FANTRAX_SILENT } from "../config";
 import { BOARD, SCROLL } from "@/app/desk";
+import FantraxSilent from "../components/shell/FantraxSilent";
 
 // The table. Fantrax computes it — the record, the points and the order are
 // theirs, and this page never adds them up itself. Three for a win is a
@@ -71,10 +71,10 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
   if ("unavailable" in rows) {
     return (
       <LeagueShell current="table" teams={info?.teams.length}>
-        <Nothing title={FANTRAX_SILENT} code={rows.unavailable}>
+        <FantraxSilent code={rows.unavailable}>
           The table is theirs to keep, and we cannot read it right now. Nothing here is computed
           from our side, so there is no stale copy to fall back on.
-        </Nothing>
+        </FantraxSilent>
       </LeagueShell>
     );
   }

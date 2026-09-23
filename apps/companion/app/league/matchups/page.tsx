@@ -9,7 +9,7 @@ import { liveScores, pendingByTeam } from "../../scoreboard";
 import { teamBadges } from "../../standings";
 import { roundUnderway } from "../../football";
 import { yoursFirst } from "../../mine";
-import { FANTRAX_SILENT } from "../../config";
+import FantraxSilent from "../../components/shell/FantraxSilent";
 
 // Who each squad plays this period, and what they have scored.
 //
@@ -28,9 +28,9 @@ export default async function MatchupPage() {
   if ("unavailable" in squads) {
     return (
       <LeagueShell current="matchups">
-        <Nothing title={FANTRAX_SILENT} code={squads.unavailable}>
+        <FantraxSilent code={squads.unavailable}>
         Fantrax would not hand back the teams, so there is nobody to pair up.
-        </Nothing>
+        </FantraxSilent>
       </LeagueShell>
     );
   }

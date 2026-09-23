@@ -1,7 +1,7 @@
 import { LEAGUE_NAME } from "@epl/core";
 import Nothing from "../shell/Nothing";
-import { FANTRAX_SILENT } from "../../config";
 import type { Silence as SilenceState } from "../../edition";
+import FantraxSilent from "../shell/FantraxSilent";
 
 // Nothing to print is a real state, not an empty page — our own league is in it
 // every day until draft night, and this is the first thing sixteen people open.
@@ -20,11 +20,11 @@ export default function Silence({ silence }: { silence: SilenceState }) {
   switch (silence.kind) {
     case "unavailable":
       return (
-        <Nothing title={FANTRAX_SILENT} code={silence.code}>
+        <FantraxSilent code={silence.code}>
           The league is there and the football is on the other tabs. We just
           cannot read Fantrax right now, so rather than guess at the week this
           says nothing.
-        </Nothing>
+        </FantraxSilent>
       );
     case "undrafted":
       return (

@@ -1,10 +1,11 @@
-import Image from "next/image";
 import Link from "next/link";
-import { type Result, type TableRow, type TableSortKey, crestUrl, ordinal } from "@epl/core";
+import { type Result, type TableRow, type TableSortKey, ordinal } from "@epl/core";
 import { cellAlign, deskOnly } from "./Columns";
 import { CLUB } from "./routes";
 import { ROW_LINK } from "../components/league/TableCells";
-import { FIGURE, ROW_FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
+import { FIGURE, ROW_FIGURE, TONE, ROW_HOVER } from "@/app/desk";
+import Absent from "@/app/components/shell/Absent";
+import ClubLabel from "@/app/components/football/ClubLabel";
 
 // One club's line in the Premier League table.
 //
@@ -44,7 +45,7 @@ export default function ClubRow({
   sort: TableSortKey;
 }) {
   return (
-    <tr className={`${ROW_RULE} hover:bg-surface`}>
+    <tr className={ROW_HOVER}>
       {/* CM's small leading index cell: a filled block down the left carrying
           the row's number, so the eye counts down the blocks rather than the
           rows. An ORDINAL, which is what `cm9900/24.jpg` prints — `1st`, `2nd`
@@ -65,15 +66,7 @@ export default function ClubRow({
           // the table FOR and the figures are what you then read across.
           className={ROW_LINK}
         >
-          <Crest code={row.code} name={row.name} />
-          {/* The full name on the desk, the three-letter label under a thumb.
-              A twenty-club table has "Nott'm Forest" and "Wolverhampton
-              Wanderers" in it, and neither fits beside nine figure columns at
-              390 — CM itself sets `Middlesbrough` at a width it has and we do
-              not. Both are rendered and CSS picks, so there is no breakpoint
-              guess in the markup. */}
-          <span className={`min-w-0 truncate lg:hidden ${ROW_NAME}`}>{row.shortName}</span>
-          <span className={`hidden min-w-0 truncate lg:inline ${ROW_NAME}`}>{row.name}</span>
+          <ClubLabel club={row} title={row.name} />
         </Link>
       </td>
 
@@ -113,9 +106,6 @@ export default function ClubRow({
   );
 }
 
-/** Absence, never a nought — a nought is a claim (DESIGN §7). */
-const DASH = "—";
-
 function SWING(difference: number): string {
   if (difference > 0) return "text-up";
   if (difference < 0) return "text-bad";
@@ -129,28 +119,6 @@ function signed(difference: number): string {
   return difference > 0 ? `+${difference}` : String(difference);
 }
 
-/** The club's crest, at the size the row's badge slot is drawn to.
- *
- *  No fallback rung and no initial: unlike a fantasy team, every one of the
- *  twenty has a crest at a URL keyed on a season-stable code, and `next/image`
- *  renders nothing rather than something wrong if one 404s. */
-function Crest({ code, name }: { code: number; name: string }) {
-  return (
-    <Image
-      src={crestUrl({ code })}
-      alt=""
-      width={26}
-      height={26}
-      className="h-[var(--row-badge)] w-[var(--row-badge)] shrink-0 object-contain"
-      // Decoration beside a name that is already there: a reader with a screen
-      // reader hears the club once, not twice.
-      aria-hidden
-      title={name}
-      unoptimized
-    />
-  );
-}
-
 /** The last few results, newest LAST — left to right is the direction the season
  *  ran, which is how a form guide is read everywhere it appears.
  *
@@ -158,7 +126,7 @@ function Crest({ code, name }: { code: number; name: string }) {
  *  room for; `clubStats` hands over the whole season and the width is this
  *  file's business. */
 function Form({ run }: { run: readonly Result[] }) {
-  if (run.length === 0) return <span className="text-faint">{DASH}</span>;
+  if (run.length === 0) return <Absent />;
 
   return (
     <span className="flex justify-center gap-0.5">

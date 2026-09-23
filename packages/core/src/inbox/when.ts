@@ -83,7 +83,7 @@ export interface FantraxStamp {
 const MONTHS = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
 
 /** The same twelve months as `en-GB` abbreviates them, which is what every other
- *  date on the desk is set in (`app/londonTime.ts`).
+ *  date on the desk is set in (`time.ts`).
  *
  *  **Only September differs, and it differs on the one column that shows both.**
  *  Fantrax writes `Sep`; British short form is `Sept`, so the inbox drew

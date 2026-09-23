@@ -1,6 +1,5 @@
-import { type Club, type Fixture, crestUrl } from "@epl/core";
+import { type Club, type Fixture, crestUrl, londonDayAndTime, DASH } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
-import { londonDayAndTime } from "../londonTime";
 import { MATCH } from "./routes";
 import { SMALL_CAPS } from "@/app/desk";
 
@@ -64,7 +63,7 @@ export default function Match({
  *  naming one would have taken the whole list down. */
 function side(club: Club | undefined, places: Map<number, number>) {
   return club === undefined
-    ? { name: "—" }
+    ? { name: DASH }
     : {
         name: club.name,
         short: club.shortName,

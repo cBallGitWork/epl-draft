@@ -1,5 +1,6 @@
 import type { Attribute } from "@epl/core";
 import Section from "../../components/shell/Section";
+import { DASH } from "@epl/core";
 
 // The two men's ratings against each other, on Championship Manager's own grid.
 //
@@ -84,8 +85,6 @@ export default function Measures({
     </Section>
   );
 }
-
-const DASH = "—";
 
 /** One measure, as both of them have it. */
 interface Row {

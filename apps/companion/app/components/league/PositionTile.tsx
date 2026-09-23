@@ -1,4 +1,5 @@
 import { positionsLabel } from "../../positions";
+import { DASH } from "@epl/core";
 
 // What our Fantrax league fields a man as — `D`, `M/F` — in the index block down a squad list's
 // left (Craig, 21 Sep and 23 Sep 2026). Fantrax's letters, never his real position. Letters, not
@@ -16,7 +17,7 @@ export default function PositionTile({
   cell?: boolean;
 }) {
   const label = (
-    <span className="block w-full truncate px-0.5 text-center">{positionsLabel(positions) ?? "—"}</span>
+    <span className="block w-full truncate px-0.5 text-center">{positionsLabel(positions) ?? DASH}</span>
   );
   return cell ? (
     <td className="cm-index w-10 text-2xs lg:w-14" title={TITLE}>

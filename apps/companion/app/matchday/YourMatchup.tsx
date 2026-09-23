@@ -4,6 +4,7 @@ import { liveScores } from "../scoreboard";
 import { getLeagueSquads } from "../squads";
 import { myTeamId } from "../session";
 import { yoursBorder } from "../mine";
+import { matchupHref } from "@/app/league/routes";
 
 // Your head-to-head, at the top of the live view.
 //
@@ -94,7 +95,7 @@ function Half({
       style={{ background: colours.primary }}
     >
       <Link
-        href={`/league/matchups/${team.teamId}`}
+        href={matchupHref(team.teamId)}
         className="flex min-w-0 flex-1 items-center self-stretch px-2"
       >
         {/* Accent ink is unavailable on a colour plate, so "yours" is carried by

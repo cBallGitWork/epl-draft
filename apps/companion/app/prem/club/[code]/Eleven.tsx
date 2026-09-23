@@ -1,6 +1,7 @@
 import type { Club, FootballPlayer, IntelStarter } from "@epl/core";
 import PitchMarker from "../../../components/league/PitchMarker";
 import PitchRows from "../../../components/league/PitchRows";
+import { DASH } from "@epl/core";
 
 // A club's predicted eleven, on the same grass the fantasy eleven stands on.
 //
@@ -99,7 +100,7 @@ export default function Eleven({
                 // (`pitchName`) because a Fantrax roster line has no short form
                 // to reach for — the same problem answered by the better
                 // source rather than the same rule applied twice.
-                name={player?.name ?? "—"}
+                name={player?.name ?? DASH}
                 // Hardcoded `false` until 10 Sep 2026, which drew twenty keepers
                 // in outfield shirts — invisible while the kit was a fallback
                 // that fired for one man in eight, and the first thing you see
@@ -112,7 +113,7 @@ export default function Eleven({
                 // looking at a predicted eleven is a fantasy manager, and what
                 // he wants to know about a man about to start is what our
                 // league would field him as.
-                band={positionOf(starter.code) ?? "—"}
+                band={positionOf(starter.code) ?? DASH}
               />
             );
           }}

@@ -1,4 +1,4 @@
-import { clubStats, leagueTable, ordinal } from "@epl/core";
+import { clubStats, leagueTable, ordinal, DASH } from "@epl/core";
 import type { Club, ClubRecord, ClubStats, TableRow } from "@epl/core";
 import { QUIET_FIGURE, TONE } from "@/app/desk";
 import type { Match } from "./match";
@@ -83,7 +83,7 @@ function SideBlock({
           nought: a nought here would say they played and drew a blank. */}
       <span className="numeric text-sm font-bold">
         {record === null || record.played === 0
-          ? "—"
+          ? DASH
           : `${record.won}W ${record.drawn}D ${record.lost}L`}
       </span>
       <span className={QUIET_FIGURE}>
@@ -108,7 +108,7 @@ function SideBlock({
       </span>
 
       <span className={QUIET_FIGURE}>
-        Difficulty {difficulty ?? "—"}
+        Difficulty {difficulty ?? DASH}
         <span className="sr-only"> — FPL&rsquo;s own rating</span>
       </span>
 

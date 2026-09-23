@@ -1,6 +1,7 @@
 import TurnLink from "./TurnLink";
 import Dateline from "./Dateline";
 import type { PublishedStory } from "@epl/core";
+import { storyHref } from "./paperPages";
 
 // The splash: the top story on the front page, as a front page carries it.
 //
@@ -27,7 +28,7 @@ export default function Splash({ story }: { story: PublishedStory }) {
 
   return (
     <section className="flex flex-col">
-      <TurnLink href={`/paper/${story.slug}`} className="flex flex-col">
+      <TurnLink href={storyHref(story.slug)} className="flex flex-col">
         {story.byline !== "" ? (
           <p>
             <span className="inline-block bg-ink px-2 py-1 font-sans text-2xs font-bold uppercase tracking-[0.15em] text-bg">

@@ -18,6 +18,7 @@ import { ROW_LINK } from "../../../components/league/TableCells";
 import type { Match } from "./match";
 import { MUTE, SortHead } from "../../../components/league/TableHeads";
 import { statsHref } from "./statsSort";
+import Absent from "@/app/components/shell/Absent";
 
 // Every man in the match, and what he did in it (Craig, 4 Sep 2026: *"Add a
 // players stats section. This can be a table of rows like fantrax/fpl do for a
@@ -195,8 +196,9 @@ export default function PlayerStats({
                       key={column.head}
                       className={`${BOARD_FIGURE} ${derived ? "font-bold text-info" : ""}`}
                     >
+                      {/* A nought is shown as absence here: thirty rows of 0 bury the figures that are not. */}
                       {value === null || value === 0 ? (
-                        <span className="text-faint">{DASH}</span>
+                        <Absent />
                       ) : (
                         value.toFixed(dp)
                       )}
@@ -259,10 +261,6 @@ export function sorted(rows: readonly Row[], sort: StatSort, descending: boolean
     return descending ? right - left : left - right;
   });
 }
-
-/** Absence, never a nought — and here a nought is an absence too: a column of
- *  noughts against thirty names buries the two figures that are not one. */
-const DASH = "—";
 
 /** The club's badge, at the size a dense row can carry.
  *
