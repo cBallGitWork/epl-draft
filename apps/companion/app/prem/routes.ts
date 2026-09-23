@@ -10,7 +10,7 @@
 // **And the split had a cost beyond tidiness.** `PremNav` is a component module:
 // anything importing a route off it pulls the strip and `TabStrip` into its
 // graph. `components/shell/sections.ts` needs two of these and is imported by
-// `Rail` and `FootRow`, both `"use client"` — so reaching for `CLUB` there would
+// `Rail` and `ThumbRail`, both client-side — so reaching for `CLUB` there would
 // have shipped a tab strip to the browser to spell twelve characters. Hence a
 // module with no JSX in it, which is the same discipline `sections.ts` keeps and
 // for the same reason.

@@ -29,13 +29,13 @@ object in both places.
 
 **The nav bones are literal.** The sections are one table (`shell/sections.ts`)
 and `shell/Rail` draws them as Championship Manager's furniture — a 130px rail
-down the side above `lg`, a flat `.cm-foot` strip across the bottom below it;
+down the side above `lg`, and the same rail laid along the foot below it (`shell/ThumbRail`);
 §2's table has the three objects. The paper wears the same rail rather than
 printing its own contents strip (Craig, 16 Sep 2026), which is why
 `gazette/Index` is gone: the front page was the one screen with no way back into
 the app.
 
-**Breakpoints: `lg` is the line between a thumb and a desk**: rail or foot row,
+**Breakpoints: `lg` is the line between a thumb and a desk**: rail down the side or along the foot,
 44px taps or CM's proportions. Two more are used, each in one place: `xl` on
 Scout's board, where the search box widens and the tallies change places (six
 sites, counted 23 Sep 2026), and `2xl`, where `--page-frame` widens from 72rem to
@@ -181,8 +181,8 @@ were blue.
 | Object | Class | How CM draws it | Ours |
 |---|---|---|---|
 | **Tab strip** — one of a subject's views | `cm-tab` | filled royal-blue plates, bevelled, current one pressed with a yellow label and border | `shell/TabStrip`, `league/GroupNav` |
-| **Rail** — where you can go from anywhere, on a desk | — | the page's own navy, each entry in a thin outlined box | `shell/Rail` above `lg`, accent on the label AND the border |
-| **Foot row** — related screens, across the bottom | `cm-foot` | ONE filled strip, flat, a light edge along the top and a rule between plates, current marked on the label alone | `shell/Rail` below `lg` |
+| **Rail** — where you can go from anywhere | — / `cm-thumbrail` | the page's own navy, each entry in a thin outlined box | `shell/Rail` above `lg`, accent on the label AND the border; `shell/ThumbRail` along the foot below it, a glyph over each word, accent on both and a 32px edge on top |
+| **Foot row** — related screens, across the bottom | — | ONE filled strip, flat, a light edge along the top and a rule between plates, current marked on the label alone | not the phone's nav since 23 Sep 2026: a bottom tab bar goes where you can go from anywhere, which is the rail's job |
 
 `cm9900/12.jpg` and `19.jpg` carry the strip and the rail together; `24.jpg` and
 `cm0102/02.jpg` carry the foot row. **Flat is the foot row's whole distinction**:
@@ -223,64 +223,36 @@ plate drawn empty on a stat board is this decision, not an oversight.
 Settled 5 Sep 2026, and §9's `/players` decision is the same rule read the other
 way — the pool is the board that scrolls.
 
-**And a foot row is set in mixed case at `xs`, not 9px bold capitals.** CM's own
-runs at around 13px mixed case regular. Nothing in the game is set at 9px bold
-caps, and ours put the smallest type in the app on the object a thumb lands on
-most. 13px does not fit six plates at 320 and 12px does; `tools/ui/navfit.mjs`
-holds that line.
+**The phone's nav is the rail laid along the foot** (Craig, 23 Sep 2026: *"Bottom nav bars are bad. Needs
+to be mobile standard. More needs a proper menu. CM inspired still"*). It had been dressed as the foot row,
+but a phone's tab bar answers "where can I go from anywhere", so it takes the rail's navy, white words and
+accent, and a standard tab bar's shape: a 24px glyph over each `xs`/600 word, no dividers, 56px plus the
+safe-area inset. `layout.tsx` sets `viewportFit: "cover"`, without which iOS reports that inset as nought.
 
-**Six plates is the bar's ceiling, and the sixth is now a DOOR.** Craig, 5 Sep
-2026: *"if we tap a section, it could bring up more options."* The ceiling was
-measured and is not negotiable — **at 320 six plates are 53.3px each and keep
-4px around the label, so a label has 49.3px**, and a seventh would leave 45. The
-widest today is `Gazetta` at 44.
+**Six tabs is the ceiling: Gazetta · Team · League · Prem · Mail · More.** At 320 a tab is 53.3px and a label
+has 49px; `Gazetta` needs 44.3, and a seventh tab would leave 45. **Quote the label's room, never the tab's
+width**: "53px against 44" once read as headroom that did not exist, and `My Team` shipped at 51px into
+49.3 and printed `My Te…` (21 Sep 2026). `navfit` fails one pixel early, not one late, and it measures the
+Live score as well as the labels.
 
-**Quote the LABEL's room, never the plate's width.** Three files carried "53px
-against a widest label of 44", which reads as nine pixels of headroom that do
-not exist, and `sections.ts` had the two numbers the other way round. It cost a
-real clip on 21 Sep 2026: `My Team` renders at 51, shipped onto the bar on the
-strength of 53, and came out as `My Te…`. The plate on the bar reads `Team`; the
-section is still called My Team everywhere it is described, exactly as `Prem`'s
-plate stands for `FA Barclays Premiership` on the title bar below it.
+**The second tab is always yours.** Team all week; Live while football is on, when Team yields its slot
+(`overflowDuringGameweek` beside `onlyDuringGameweek`, both applied by `sectionsFor()`). The Live tab puts
+your score where the glyph sits, a rung smaller per extra figure so `112–108` fits (`scoreSize`), and the
+match clock when there is no tie of yours to count.
 
-**And `navfit` had called it a fit**, which is the more serious half: its clipped
-test was `scrollWidth > ceil(box) + 1`, and 51 against 49.3 came out as `51 > 51`
-— false. The tolerance is gone; `ceil` alone already absorbs the sub-pixel case
-it was there for. An instrument that holds a line has to fail one pixel early,
-not one pixel late. That arithmetic is why the
-pool was taken OFF the bar on 5 Sep rather than added to it, and it would have
-demanded a rename of two existing sections every time the app grew.
+**Mail is the News section's label** (Craig, 23 Sep 2026: *"Use mail"*); the route stays `/news`. Its unread
+count is a square cyan plate on the envelope, capped at `9+`: the inbox's ids this device has not seen,
+none before a first visit, and cleared by opening Mail. It pulses three times when mail arrives while the
+app is open and never for a count already there.
 
-So the last plate is `More`, and everything past the fifth section lives behind
-it: a full-width drawer on the floor, drawn by `shell/Modal` at
-`anchor="bottom"`. The bar keeps exactly six plates for ever and the ceiling
-stops being a limit on how many sections the app may have.
-
-**And a section may YIELD its plate rather than hold one** (Craig, 21 Sep 2026:
-*"my team behind more during gameweek"*). `My Team` stands on the bar all week
-and steps into the drawer while football is on, because the plate it would take
-is Live's: `overflowDuringGameweek` beside `onlyDuringGameweek`, both applied by
-`sectionsFor()`, which is a pure function and tested against the ceiling above.
-The trade is honest at that hour — the lineup can no longer be changed, and the
-score of the tie it is playing is running on the plate that replaced it.
-
-Three things about it are rules rather than choices. **It is a plate, not a new
-object** — same width, same type, same `.cm-foot` ink, and it takes
-`aria-current` when you are standing in one of the sections behind it, because a
-bar that marks where you are must not go blank the moment you walk through the
-door. **It opens on the floor**, because it is opened by a thumb from the bar
-and a menu that appears at the far end of the screen from the control that
-opened it makes a reader look twice for what they just asked for. And **the desk
-rail does not use it at all**: it runs down the side of a 1440 screen with room
-for a dozen entries, and a disclosure on a surface where everything already fits
-is chrome hiding things for no reason.
-
-`navfit` was measuring anchors only and reported "5 sections" on a six-plate bar
-— then offered room for a seventh that was already spent. It counts the door now.
+**More opens a page, `/more`, not a drawer.** The sections behind it, the squad index with your team's name
+or `Sign in`, and the credits, as rows in a panel with CM's small filled triangle. The More tab is current
+on that page, the credits, the squad index and any section behind it, so the rail never goes blank when you
+walk through the door. **The desk rail does not use it**: a 1440 screen has room for every section.
 
 **A plate owns its ink.** Dark ink on the grey plate is 7.52:1 and `--color-ink`
 on it is 2.27; on the blue plate ink is 7.0 and `--color-muted` is 3.55 and
-fails. So no call site sets `text-*` on either, and a count inside a tab is the
+fails. So no call site sets `text-*` on either (the thumb rail sits on `--color-bg`, ink 17.0 and accent 13.1), and a count inside a tab is the
 label's own colour — which is how the game printed "Fitness (40)".
 
 **A screen has a SUBJECT and a VIEW, and they are two boxes.** The plated bar
@@ -323,7 +295,7 @@ two or three times over, across the page, its loading skeleton and each
 early-return branch. One of those going stale is a screen that renames itself
 while it loads.
 
-### Icons — inline SVG, beside a word, never instead of one
+### Icons — inline SVG, beside or above a word, never instead of one
 
 **The desk had none until 10 Sep 2026, and that was a position rather than an
 omission.** Championship Manager 99/00 draws no icons anywhere: every mark in the
@@ -332,19 +304,25 @@ version of that — introducing an icon set for two marks is a whole visual
 language for a small gain — and the app answered "what happened to this man" with
 letters instead (`Chips`' `G`, `A`, `YC`).
 
-They arrive for one job: the seven events that change a match, on the Match
-Report (Craig, 10 Sep 2026: *"maybe we add icons too where appropiate"*). The
-rules are what keep them from becoming a set:
+They arrive for two jobs: the seven events that change a match, on the Match
+Report (Craig, 10 Sep 2026: *"maybe we add icons too where appropiate"*), and the
+thumb rail's tabs (Craig, 23 Sep 2026: *"Icons are normally standard"*), because a
+phone is not an 800×600 artefact and its navigation follows the phone's convention.
+The desk rail stays words only. The rules are what keep them from becoming a set:
 
 - **Inline monochrome SVG, and never emoji.** An emoji carries its own colour and
   the reader's operating system's house style, which hands a palette where every
   colour is a slot to Apple and Google. A glyph takes `currentColor`, so it wears
   whatever tone its row already had and adds no colour of its own.
-- **Beside the word, never instead of it.** A glyph alone is a rebus. The word is
+- **Beside or above the word, never instead of it.** A glyph alone is a rebus. The word is
   also what a screen reader gets: the icon is `aria-hidden`, because the two
   together would say "goal goal".
 - **Sized in `em`**, so a glyph matches the type it sits in without a second
-  scale to keep in step.
+  scale to keep in step. A tab's glyph above its word is the exception, 24px: it
+  is the tab's figure, not inline type.
+- **The rail's glyphs are one set** (`shell/glyphs.tsx`): one 24 grid, one 2px
+  stroke, square caps, mitred joins, fills only where CM fills a cell. Prem is the
+  one exception, the Premier League's own lion as FPL serves it, in one colour.
 - **Only where the event IS the fact.** A report is mostly corners and blocked
   shots; the seven that change a match are the seven that get one, and everything
   else stays prose. An icon on every row is a wall with pictures in it.
@@ -352,7 +330,8 @@ rules are what keep them from becoming a set:
 A card is the exception that proves the first rule: `TeamSheet` draws a booking
 as a small filled rectangle rather than as a glyph, because CM draws exactly that
 (`cm9900/16.jpg`) and a coloured block in an existing slot needs no icon set at
-all. Where the reference already has a mark, the reference wins.
+all. Where the reference already has a mark, the reference wins; where a provider
+has one, as the lion is, the provider's wins.
 
 ## 3. The Desk's palette
 
@@ -414,7 +393,9 @@ recorded. That is a distinction this app already has to make and makes in words
 — §7's provenance rule says our figures are labelled and never sit in a column
 headed `FPts` — and it now has a colour for it. Seven sites inked a player's
 name cyan and none do; the slot is deliberately near-empty until a derived
-figure claims it, which is better than it meaning two things.
+figure claims it, which is better than it meaning two things. The Mail tab's unread count
+claims it (23 Sep 2026): no provider tracks reads, so the count is ours, derived from
+this device's last visit.
 
 **Amber narrowed on 5 Sep 2026** (Craig), and the wording is the whole change:
 *a figure standing alone beside a name — a fact, a ledger line, a board's value —
@@ -765,7 +746,7 @@ apart silently.
 | A row that needs two lines | 56 | 28 | `sm` | `.cm-row` + `min-h-14` |
 | **A control** — button, select, input, a dialog's way out | **44** | **36** | `sm` | `BUTTON` `SELECT` `SUBMIT` |
 | **A tab** — one plate of a strip | **44** | **56** | `2xs`–`sm` | `.cm-tab` + `TAB` |
-| A foot-row plate | 44 | 56 | `xs` mixed case | `.cm-foot` |
+| A thumb-rail tab | 56 + inset | — | `xs`/600 under a 24px glyph | `.cm-thumbrail` |
 | **A row of a list** | **44** | **28** | `sm`/`lg:base` name in the CHROME face, `sm` figures at both widths | `.cm-row` + `ROW_LINK` + `ROW_NAME` + `FIGURE` |
 | One stated fact in a stack | 44 | 44 | `2xs` label, `sm` value | `FACT` |
 | A column head over a table | 28 | 28 | `2xs` | `PLATE` (`h-7`) |

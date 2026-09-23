@@ -134,7 +134,7 @@ business, who is hurt, and when lineups lock.
    What changed is that the paper now files columns. On 31 Aug nothing ever
    had, so an inside page was furniture with nothing behind it. The revert's
    two complaints are answered rather than dropped: the desk's six names print
-   exactly once — on the rail and foot row, since 16 Sep 2026, the app's own
+   exactly once — on the rail, down the side or along the foot, since 16 Sep 2026, the app's own
    navigation rather than a newsprint copy of it — and the paper's own strip
    (`Pages`) lists only the paper's pages, as numbered ink chips; and an inside
    page opens on `Folio`, which leads with THE GAZETTA and puts the section and
@@ -553,8 +553,8 @@ the paper's own pages as numbered ink chips, and nothing else. The app's six
 sections were printed here too — `gazette/Index`, in the paper's register —
 because the rail stood down on `/` and a front page with no way out is a dead
 end. Craig reversed that on 16 Sep 2026 (*"blue bar on side, should show the
-regular menu options like the other pages, dont have it on paper"*): the rail
-and the foot row are on the paper like every other route, so `Index` was the
+regular menu options like the other pages, dont have it on paper"*): the rail,
+down the side or along the foot, is on the paper like every other route, so `Index` was the
 same list twice in two registers and is deleted. Printing the desk's names twice
 over in newsprint is what got inside pages reverted on 31 Aug, and it is the
 thing that stopped.
