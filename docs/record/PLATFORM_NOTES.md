@@ -131,6 +131,30 @@ anyway.
 - `editions.yml` refuses to commit a `paper.json` or `ledger.json` that will not
   parse, because the app imports both at build time.
 
+## What the pre-swap cleanup declined, and why — decided 23 Sep 2026
+
+- **Loaders stay where they are.** Regrouping the app's reads into `app/read/*`
+  is about 150 import rewrites while parallel sessions work the tree, 17 days from
+  the swap. Revisit in the 27/28 platform, where the reads are rebuilt anyway.
+- **Display modules stay in the app, with tests beside them.** `positions`,
+  `realPositions`, `unresolved` and `mine` are words for a screen, not domain
+  logic, and the app's tests run in the same vitest as core's. `creditAssists`
+  and the match page's `side`/`fallbackGoals` had already moved behind tested
+  functions (core's `creditRoundAssists`, the app's `scoreLines`).
+- **The app's catches are policies, each stated where it sits.** Read one by one:
+
+  | Where | What failure gives | Why |
+  |---|---|---|
+  | `football.ts` `offerLive` | Live offered | Fail open: navigation must not hide Live mid-match |
+  | `football.ts` `groundFaces` | no faces | Decoration |
+  | `layout.tsx` `round` | idle poll rate | Polling hard at a provider that just failed makes a wobble an outage |
+  | `matchDetail.ts`, `matchFeed.ts` ×4, `commentary.ts` ×2 | that block absent | Optional Premier League detail; the page stands without it |
+  | `session.ts` `codeHashes` | nobody signs in | A half-parsed code map must not let somebody in |
+  | `teamStats.ts`, `refusals.ts` | the refusal, others rethrown | Only Fantrax's refusal is caught |
+
+  None hides data the reader is shown as current. A visible "unavailable" label on
+  the optional blocks is a design question for DESIGN §8, not a cleanup.
+
 ## The predicted XI is fetched from Scout here, every two hours — decided 23 Sep 2026
 
 Craig: *"It should just always be live, and it's updated when scout updates it."*
