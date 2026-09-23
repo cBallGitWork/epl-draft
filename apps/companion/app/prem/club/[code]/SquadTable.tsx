@@ -1,11 +1,10 @@
 import Link from "next/link";
-import type { ClubColours, FootballPlayer, IntelPlayer } from "@epl/core";
+import type { ClubColours, FootballPlayer } from "@epl/core";
 import { availabilityOf, positionDepth } from "@epl/core";
-import { Head, HeadRow, MUTE, NameHead, PLATE } from "../../../components/league/TableHeads";
-import { IndexCell } from "../../../components/league/TableCells";
+import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
+import PositionTile from "../../../components/league/PositionTile";
 import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
-import { positionsLabel } from "../../../positions";
 import { PLAYER } from "../../routes";
 import type { LeagueOpinion } from "./club";
 import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
@@ -31,7 +30,6 @@ export default function SquadTable({
   players,
   colours,
   league,
-  intel,
 }: {
   /** Already ordered by the page. This draws; it does not rank. */
   players: readonly FootballPlayer[];
@@ -39,7 +37,6 @@ export default function SquadTable({
   /** Our league's opinion by FPL code, empty when Fantrax would not say. */
   league: ReadonlyMap<number, LeagueOpinion>;
   /** The sister repo's, by the same key. Empty when it has never exported. */
-  intel: ReadonlyMap<number, IntelPlayer>;
 }) {
   return (
     <div className={SCROLL}>
@@ -49,34 +46,13 @@ export default function SquadTable({
         </caption>
         <thead>
           <HeadRow>
-            {/* Squad number. CM's own left-hand slot (`cm9900/19.jpg` runs the
-                shirt numbers down its tactics list) and empty here: FPL
-                publishes `squad_number` as a key on every element and null as a
-                value on all of them, counted 29 Aug. It fills from the intel
-                feed, which carries it for 527 of 625. */}
-            <Head width="w-8 lg:w-14" title="Squad number">
-              <span className={PLATE}>
-                <span className={MUTE}>Squad number</span>
-              </span>
-            </Head>
-            <NameHead label="Player" />
-            {/* Fantrax's, and headed as Fantrax's. DESIGN's provenance rule is
-                the whole reason this is its own column rather than merged with
-                the real-life position. */}
-            {/* **His real position is NOT a column here** (Craig, 3 Sep 2026:
-                "remove the real life position from this, doesnt work really on
-                this"). It is still exported, still read, and still the thing
-                that arranges the predicted eleven into the shape its club
-                plays — a granular `RCB`/`LWB` earns its place on a pitch and
-                does not earn a column beside a letter our league would field
-                him at. The pipeline is kept for the CM-style draft manager the
-                27/28 platform is for. */}
-            <Head
-              width="w-12 lg:w-20"
-              title="What our Fantrax league will field him as — not a fact about the footballer"
-            >
+            {/* What our Fantrax league fields him as, in CM's index block (Craig, 23 Sep
+                2026: "Put the Fantrax position into those tiles, and then remove
+                the position columns"). It replaced the shirt number here. */}
+            <Head width="w-10 lg:w-14" title="What our Fantrax league will field him as — not a fact about the footballer">
               <span className={PLATE}>Pos</span>
             </Head>
+            <NameHead label="Player" />
             <Head width="w-20 lg:w-32" title="Who holds him in our league">
               <span className={PLATE}>Owner</span>
             </Head>
@@ -109,33 +85,11 @@ export default function SquadTable({
             // the box saying WHY the row is grey.
             const dim = availability.out ? "text-faint" : "";
             const opinion = league.get(player.code);
-            const know = intel.get(player.code);
 
             return (
               <tr key={player.id} className={`${ROW_RULE} hover:bg-surface`}>
-                {/* **CM's blue index block** (Craig, 5 Sep 2026: "squad number
-                    needs the blue box aronund sqyad number"). It was
-                    `SLOT_FIGURE` on two arguments, and both are answered rather
-                    than overruled:
-
-                    · "`ClubShell` scopes `--cm-index` to the club, so a filled
-                      plate would be twenty rows at full saturation" — which is
-                      what a club page is FOR. Craig asked for exactly that
-                      scoping on 2 Sep ("this should be team dependent to make
-                      the page unique"), and the two sibling boards that already
-                      draw this number — the match squads and the player ratings
-                      — both use the block. Three spellings of one cell was the
-                      real defect.
-                    · "about a third of the column is empty" — the block draws
-                      empty rather than a dash there, which is what the sisters
-                      do. A number four men in five have is a column, not a gap.
-
-                    **No `dim`, and that is DESIGN §2 rather than an oversight.**
-                    A plate owns its ink: `--color-faint` is 2.35:1 on a blue
-                    plate, so greying an unavailable man's shirt number here
-                    would put the one cell that says which row is grey under the
-                    floor. The rest of the row still greys. */}
-                <IndexCell>{know?.squadNumber ?? ""}</IndexCell>
+                {/* A plate owns its ink, so an unavailable man's tile keeps it; the rest of the row greys. */}
+                <PositionTile positions={opinion?.positions ?? []} cell />
                 <td className="w-full max-w-0 pl-2">
                   <Link
                     href={`${PLAYER}/${player.code}`}
@@ -153,9 +107,6 @@ export default function SquadTable({
                     <span className={`min-w-0 truncate ${ROW_NAME} ${dim}`}>{player.fullName}</span>
                     <StateBox player={player} />
                   </Link>
-                </td>
-                <td className={`${FIGURE} ${dim || "text-muted"}`}>
-                  {positionsLabel(opinion?.positions ?? []) ?? DASH}
                 </td>
                 {/* The owner's name, or what our league says instead: "WW" on
                     waivers, "FA" a free agent. Fantrax's own letters, carried

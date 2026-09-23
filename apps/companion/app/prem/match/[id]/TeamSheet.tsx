@@ -303,8 +303,8 @@ function Side({
     <section
       // **`cm-index-scoped` is a CONTRAST fix, not a look.** Re-pointing the
       // block to a club's colour broke two things that were measured against the
-      // app's own deep blue: the 22%-white gradient stop, and `.cm-out`'s dimmed
-      // plate ink. `desk.css` carries both and the reasoning; `sweep` found them
+      // app's own deep blue: the 22%-white gradient stop (the scoped ramp now
+      // runs away from the ink instead), and `.cm-out`'s dimmed plate ink. `desk.css` carries both and the reasoning; `sweep` found them
       // at 3.63:1 on six shirt numbers at both widths, which is the whole reason
       // that file has a rule at all.
       className={`${PANEL_FLUSH} cm-index-scoped min-w-0`}
