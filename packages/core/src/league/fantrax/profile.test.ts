@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapPlayerProfile } from "./profile";
+import { isFantraxPlayerId, mapPlayerProfile } from "./profile";
 import type { RawPlayerProfile } from "./profile";
 import fixture from "./__fixtures__/playerProfile.json";
 
@@ -183,5 +183,17 @@ describe("mapPlayerProfile", () => {
     expect(empty).toMatchObject({ name: "", season: null, ownerTeamId: null });
     expect(empty.matches).toEqual([]);
     expect([empty.league, empty.highlights, empty.market, empty.personal]).toEqual([[], [], [], []]);
+  });
+});
+
+describe("isFantraxPlayerId", () => {
+  it("takes a player's id as Fantrax writes it", () => {
+    expect(isFantraxPlayerId("02lk5")).toBe(true);
+  });
+
+  it("refuses what could only be a typo or a probe, before Fantrax is asked", () => {
+    for (const id of ["", "x", "../etc", "02LK5", "110011#5030", "a".repeat(40)]) {
+      expect(isFantraxPlayerId(id)).toBe(false);
+    }
   });
 });
