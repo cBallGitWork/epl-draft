@@ -20,7 +20,7 @@
 // gap. The bucket is a work list — check those by eye — never a pass.
 
 import { BASE_URL, connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
-import { ALL_ROUTES } from "./routes.mjs";
+import { ALL_ROUTES, matchRoutes } from "./routes.mjs";
 
 /** This run's routes: the shared list, plus whatever `discover` finds a real
  *  id for below. A COPY, because those appends are this process's own —
@@ -151,21 +151,8 @@ if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) =
 // (`cm9900/16.jpg` runs Everton against a white Torquay) is a real pairing and
 // not an edge. The Players board carries the same pair over two column heads.
 const match = await discover(cdp, "/prem/results", 'a[href^="/prem/match/"]');
-// All FIVE of the match's tabs. Two arrived on 5 Sep 2026 — Player Stats came
-// off the Overview and the Match Report is the Premier League's own commentary —
-// and Match Stats on 10 Sep, when `/stats/match` finally got a reader. A tab this
-// list does not name is a tab that ships unmeasured, which is not hypothetical:
-// four commits ago three instruments were still walking a route that had been
-// renamed and reporting `ok` on a page production does not serve.
-if (match) {
-  ROUTES.push(
-    match,
-    `${match}/stats`,
-    `${match}/team-stats`,
-    `${match}/players`,
-    `${match}/report`,
-  );
-}
+// Every tab the match has, read off the app's folders (`matchRoutes`), so none ships unmeasured.
+if (match) ROUTES.push(...matchRoutes(match));
 
 // And a match nobody has played, which is a different screen under the same
 // two bars: no scoresheet, a `v` where the score goes, and the Players tab

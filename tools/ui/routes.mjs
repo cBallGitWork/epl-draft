@@ -17,6 +17,8 @@
 // Their own rule, kept: *a route this list does not name is a route that ships
 // unmeasured.*
 
+import { existsSync, readdirSync } from "node:fs";
+
 /** Everything the desk draws, and therefore everything that has a photographic
  *  ground behind it. */
 export const DESK_ROUTES = [
@@ -63,3 +65,16 @@ export const PAPER_ROUTES = ["/", "/paper/reports", "/paper/columns"];
  *  calls, which is a way of making an insertion into `DESK_ROUTES` silently move
  *  `/prem` for no reader-visible gain. */
 export const ALL_ROUTES = [...PAPER_ROUTES, ...DESK_ROUTES, PREM_ROUTE];
+
+/** A match's tabs, read off the app's own `prem/match/[id]/` folders so the list cannot drift:
+ *  a hand-kept one measured a deleted Report tab as `ok` (a 404) and never saw Highlights. */
+const MATCH_DIR = new URL("../../apps/companion/app/prem/match/[id]/", import.meta.url);
+export const MATCH_TABS = readdirSync(MATCH_DIR, { withFileTypes: true })
+  .filter((entry) => entry.isDirectory() && existsSync(new URL(`${entry.name}/page.tsx`, MATCH_DIR)))
+  .map((entry) => entry.name)
+  .sort();
+
+/** One match's overview and every tab under it. */
+export function matchRoutes(match) {
+  return [match, ...MATCH_TABS.map((tab) => `${match}/${tab}`)];
+}
