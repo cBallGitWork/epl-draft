@@ -1,10 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Club, Fixture } from "@epl/core";
-import { COMPETITION_NAME, crestUrl, londonDayAndDate, londonTime, DASH } from "@epl/core";
+import { COMPETITION_NAME, londonDayAndDate, londonTime, DASH } from "@epl/core";
 import { CLUB, MATCH } from "../../routes";
-import { BOARD, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, ROW_RULE, SCROLL } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
+import ClubLabel from "@/app/components/football/ClubLabel";
 
 // One club's season, played and to come, in the order it runs.
 //
@@ -68,21 +68,10 @@ export default function Run({
                       href={`${CLUB}/${opponent.code}`}
                       className="cm-row flex min-h-11 items-center gap-2 hover:underline"
                     >
-                      <Image
-                        src={crestUrl(opponent)}
-                        alt=""
-                        width={CREST_PX}
-                        height={CREST_PX}
-                        className={`${CREST} object-contain`}
-                        aria-hidden
-                        unoptimized
+                      <ClubLabel
+                        club={opponent}
+                        crest={{ px: CREST_PX, className: `${CREST} object-contain` }}
                       />
-                      <span className={`min-w-0 truncate lg:hidden ${ROW_NAME}`}>
-                        {opponent.shortName}
-                      </span>
-                      <span className={`hidden min-w-0 truncate lg:inline ${ROW_NAME}`}>
-                        {opponent.name}
-                      </span>
                     </Link>
                   )}
                 </td>
