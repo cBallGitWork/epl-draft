@@ -29,10 +29,13 @@ concurrency:
 jobs:
   capture:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
@@ -43,20 +46,10 @@ jobs:
         run: npm run capture
 
       - name: Commit the snapshots
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshots
           # Nothing to commit is normal: re-running on the same London day
           # overwrites that day's directory with identical bytes.
-          if git diff --cached --quiet; then
-            echo "No change in today's capture."
-            exit 0
-          fi
-          git commit -m "chore: capture Fantrax $(date -u +%Y-%m-%d)"
-          # Rebase before pushing. Two other jobs now write to this branch — the
-          # round-state sampler every half hour and the edition writer around
-          # every lock and whistle — and this is the one whose history cannot be
-          # recreated, so it must not be the one that loses a race.
-          git pull --rebase --autostash
-          git push
+          git add data/snapshots
+          scripts/ci/push.sh "chore: capture Fantrax $(date -u +%Y-%m-%d)" "No change in today's capture."

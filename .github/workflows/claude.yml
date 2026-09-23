@@ -33,16 +33,19 @@ concurrency:
 
 jobs:
   claude:
-    # The gate that keeps this free. Both halves are load-bearing: the mention,
-    # and that it is a PR rather than a plain issue — `issue_comment` fires on
-    # both, and a bot answering every issue comment is not what was asked for.
+    # The gate that keeps this free: a mention, on a PR (`issue_comment` also fires on plain issues;
+    # a review comment is always on one), from someone with a seat on the repo, because the job
+    # spends the Anthropic key. A review comment has no `github.event.issue`, so the old single
+    # test never let one through.
     if: |
       contains(github.event.comment.body, '@claude')
-      && github.event.issue.pull_request != null
+      && contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
+      && (github.event_name == 'pull_request_review_comment' || github.event.issue.pull_request != null)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
-    # Least privilege: it reads the tree and writes a comment. It never pushes,
-    # so `contents` stays read — the crons are the only things that commit here.
+    # Least privilege: it reads the tree and writes a comment. It CANNOT push: `contents: read`
+    # is enforced by the token, and checkout keeps no credentials.
     permissions:
       contents: read
       pull-requests: write
@@ -50,14 +53,15 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          persist-credentials: false
           # The PR's own history, not just the tip: a review that cannot see the
           # branch's commits cannot tell a refactor commit from a feature one,
           # which is the distinction CODE_RULES §7 turns on.
           fetch-depth: 0
 
-      - uses: anthropics/claude-code-action@v1
+      - uses: anthropics/claude-code-action@cfc3eb22bfed5c26ef66e3223c982af27e4524de # v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           # CLAUDE.md is picked up from the checkout, so the house rules, the

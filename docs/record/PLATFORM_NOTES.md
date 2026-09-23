@@ -87,6 +87,27 @@ Read against the installed Next 16.2.7 source. Standing rules for anything that 
 `tools/ui/pollwatch.mjs` measures it: polls per minute, the gaps between them,
 and how many polls changed the screen.
 
+## How CI pushes, and what it may touch — decided 23 Sep 2026
+
+- **Every writer pushes through `scripts/ci/push.sh`** (capture, editions,
+  round-state, scout-xi): commit what the caller staged, then `pull --rebase` and
+  push, five tries with jitter. Four jobs push to one branch, and each one used
+  to lose its commit on a single rejected push. Tested against a local bare repo
+  with a second clone pushing first: it rebased and landed, with no merge commit.
+- **Checkout keeps no token** (`persist-credentials: false`), so `npm ci` and
+  our own scripts run without a credential that can push. Only the push step
+  gets `GITHUB_TOKEN`.
+- **Actions are pinned to commit SHAs**, with the tag in a trailing comment. To
+  move one, resolve the tag again (`gh api repos/<owner>/<repo>/git/ref/tags/<tag>`,
+  dereferencing an annotated tag) and replace the SHA in every workflow.
+- **Every job has a `timeout-minutes`**, and `verify.yml` is `contents: read`.
+- **`claude.yml` answers only a mention from the repo's owner, members or
+  collaborators**, because it spends the Anthropic key. Review comments now reach
+  it too: they have no `github.event.issue`, so the old single condition never
+  let one through.
+- `editions.yml` refuses to commit a `paper.json` or `ledger.json` that will not
+  parse, because the app imports both at build time.
+
 ## The predicted XI is fetched from Scout here, every two hours — decided 23 Sep 2026
 
 Craig: *"It should just always be live, and it's updated when scout updates it."*

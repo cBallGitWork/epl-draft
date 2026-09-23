@@ -54,10 +54,13 @@ concurrency:
 jobs:
   sample:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
@@ -68,18 +71,9 @@ jobs:
         run: npm run round-state
 
       - name: Commit the transition, if there was one
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Nothing changed since the last sample is the ordinary outcome.
           git add data/probes/round-state
-          # The ordinary outcome. Nothing changed since the last sample, which is
-          # true for most of most weeks and is not worth a commit.
-          if git diff --cached --quiet; then
-            echo "No transition since the last sample."
-            exit 0
-          fi
-          git commit -m "data: round state $(date -u +%Y-%m-%dT%H:%MZ)"
-          # Rebase before pushing: the capture cron pushes to the same branch and
-          # a half-hourly job will eventually land on top of one.
-          git pull --rebase --autostash
-          git push
+          scripts/ci/push.sh "data: round state $(date -u +%Y-%m-%dT%H:%MZ)" "No transition since the last sample."

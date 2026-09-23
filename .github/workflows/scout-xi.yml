@@ -26,8 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
@@ -37,15 +39,8 @@ jobs:
         run: npm run scout-xi
 
       - name: Commit them, if they changed
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/intel/xi
-          if git diff --cached --quiet; then
-            echo "Scout's elevens have not changed."
-            exit 0
-          fi
-          git commit -m "data: Scout's predicted elevens, $(date -u +%Y-%m-%dT%H:%MZ)"
-          # Rebase, never merge: Vercel's ignoreCommand reads `HEAD^..HEAD`.
-          git pull --rebase --autostash
-          git push
+          scripts/ci/push.sh "data: Scout's predicted elevens, $(date -u +%Y-%m-%dT%H:%MZ)" "Scout's elevens have not changed."
