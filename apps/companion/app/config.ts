@@ -1,4 +1,4 @@
-import { MAX_PAPER_STORIES } from "@epl/core";
+import { MAX_PAPER_STORIES, type GroundPhoto } from "@epl/core";
 
 // The app's own constants — the ones that are decisions about this companion
 // rather than about the league or the football.
@@ -126,10 +126,22 @@ export const POLL = {
 /** How long the season's Fantrax code stays good, in seconds: it changes once a year. */
 export const SEASON_CODE_LIFE = 60 * 60 * 6;
 
-/** The photograph behind every desk screen, or null for the round's own portraits. Anfield
- *  before kick-off from Wikimedia Commons, CC BY-SA 4.0: attribute or replace it before this is
- *  public. `components/football/PhotoGround` carries the scrim arithmetic. */
+/** The photograph behind every desk screen, or null for the round's own portraits.
+ *  `components/football/PhotoGround` carries the scrim arithmetic. */
 export const DESK_GROUND: string | null = "/ground/crowd.jpg";
+
+/** Its credit, printed on `/credits`: CC BY-SA 4.0 requires the author, the source and the terms.
+ *  Replace it with the photograph. */
+export const DESK_GROUND_CREDIT: Pick<
+  GroundPhoto,
+  "title" | "author" | "licence" | "licenceUrl" | "source"
+> | null = {
+  title: "Crowd at Anfield before the match 1",
+  author: "Rodhullandemu",
+  licence: "CC BY-SA 4.0",
+  licenceUrl: "https://creativecommons.org/licenses/by-sa/4.0",
+  source: "https://commons.wikimedia.org/wiki/File:Crowd_at_Anfield_before_the_match_1.jpg",
+};
 
 /** The same picture at 16px wide, inline, so it paints before any request returns. Null
  *  whenever `DESK_GROUND` is. */

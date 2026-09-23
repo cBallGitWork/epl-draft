@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { mapStandings } from "./standings";
+import { mapStandings, placeTable } from "./standings";
+import type { StandingsRow } from "../types";
 import type { RawStandingsPage } from "./standingsPage";
 import standingsPage from "./__fixtures__/standingsPage.json";
 
@@ -17,7 +18,7 @@ describe("mapStandings", () => {
     expect(rows.map((row) => row.teamName)).toContain("123");
   });
 
-  it("orders by Fantrax's rank", () => {
+  it("orders the captured table the way Fantrax does", () => {
     expect(rows.map((row) => row.rank)).toEqual([1, 2, 3, 4]);
   });
 
@@ -91,5 +92,25 @@ describe("mapStandings", () => {
     expect(rows.map((row) => row.pointsAgainst)).toEqual([35, 37, 63, 45]);
     expect(rows[2]).toMatchObject({ pointsFor: 47, pointsAgainst: 63, points: 0 });
     expect(rows[1]).toMatchObject({ pointsFor: 49, pointsAgainst: 37, points: 3 });
+  });
+});
+
+describe("placeTable", () => {
+  const row = (teamName: string, points: number, pointsFor: number, rank: number): StandingsRow => ({
+    teamId: teamName, teamName, rank, won: 0, drawn: 0, lost: 0, played: 0,
+    points, pointsFor, pointsAgainst: 0,
+  });
+
+  it("breaks a points tie on fantasy points for", () => {
+    const placed = placeTable([row("a", 3, 50, 1), row("b", 3, 70, 2), row("c", 6, 10, 3)]);
+    expect(placed.map((r) => [r.teamName, r.rank])).toEqual([["c", 1], ["b", 2], ["a", 3]]);
+  });
+
+  it("puts teams level on both in one fixed order, whatever ranks Fantrax dealt them", () => {
+    // Before a ball is kicked every team is 0 and 0, and Fantrax deals those ranks afresh on each read.
+    const first = placeTable([row("test4", 0, 0, 5), row("test1", 0, 0, 6), row("test31", 0, 0, 7)]);
+    const second = placeTable([row("test31", 0, 0, 5), row("test4", 0, 0, 6), row("test1", 0, 0, 7)]);
+    expect(first).toEqual(second);
+    expect(first.map((r) => r.rank)).toEqual([1, 2, 3]);
   });
 });

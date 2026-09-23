@@ -23,9 +23,8 @@ import type { RawStandingsPage, RawStandingsTable, RawTableCell } from "./standi
 // Fantrax scores the competition; we print their number. `played` is the one
 // exception and it is not really one — see the field's own note.
 //
-// The order is theirs too. `rank` comes off the row rather than from sorting on
-// anything of ours: a table whose points tie is broken by fantasy points scored
-// — and then by whatever else they do — is their arrangement to make.
+// The order is the league's rule: points, then fantasy points for (Craig, 23 Sep 2026). Level on
+// both, Fantrax deals ranks afresh on every read, so those teams go by name and stay put.
 
 /** Which columns we read, by Fantrax's own key. Never by position: the header
  *  publishes a key per column, their site lets a manager reorder them, and a
@@ -67,7 +66,21 @@ export function mapStandings(raw: RawStandingsPage): StandingsRow[] {
     });
   }
 
-  return rows.sort((a, b) => a.rank - b.rank);
+  return placeTable(rows);
+}
+
+/** The table in the league's order, placed 1st to last: points, then fantasy points for, then
+ *  name, so teams level on both stop swapping places between reads. */
+export function placeTable(rows: readonly StandingsRow[]): StandingsRow[] {
+  return [...rows]
+    .sort(
+      (a, b) =>
+        b.points - a.points ||
+        b.pointsFor - a.pointsFor ||
+        a.teamName.localeCompare(b.teamName, "en") ||
+        a.teamId.localeCompare(b.teamId),
+    )
+    .map((row, at) => ({ ...row, rank: at + 1 }));
 }
 
 /** The standings table, out of a page that also carries one table per played

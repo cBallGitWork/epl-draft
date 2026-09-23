@@ -182,8 +182,8 @@ export interface LeagueTransaction {
 export interface StandingsRow {
   teamId: string;
   teamName: string;
-  /** Fantrax's own placing, never a sort of ours. Where a points tie is broken
-   *  is a rule of their competition, not an arithmetic we may repeat. */
+  /** The place, by the league's rule: points, then fantasy points for, then name where both are
+   *  level (`placeTable`). Fantrax's own rank shuffles teams level on both between reads. */
   rank: number;
   /** The record, in three columns rather than the one string the fxea read
    *  squashes it into — and in Fantrax's own order, which their header names

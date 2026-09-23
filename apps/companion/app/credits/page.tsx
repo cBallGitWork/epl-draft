@@ -1,6 +1,7 @@
 import { clubGround, groundPhotoCredits } from "@epl/core";
 import PageHeader from "../components/shell/PageHeader";
 import { LABEL, PANEL, ROW_RULE } from "@/app/desk";
+import { DESK_GROUND_CREDIT } from "../config";
 
 // Who took the photographs behind the desk.
 //
@@ -21,7 +22,16 @@ import { LABEL, PANEL, ROW_RULE } from "@/app/desk";
 const CREDIT_LINK = "flex min-h-11 items-center text-xs underline lg:min-h-9";
 
 export default function CreditsPage() {
-  const credits = groundPhotoCredits();
+  // The desk's own ground first, then each club's, under the name of the place it shows.
+  const credits = [
+    ...(DESK_GROUND_CREDIT === null
+      ? []
+      : [{ place: "Anfield, behind every desk screen", photo: DESK_GROUND_CREDIT }]),
+    ...groundPhotoCredits().map(({ shortName, photo }) => ({
+      place: clubGround(shortName) ?? shortName,
+      photo,
+    })),
+  ];
 
   return (
     <>
@@ -32,22 +42,17 @@ export default function CreditsPage() {
       />
       <section className={PANEL}>
         <p className="text-sm text-muted">
-          The photograph behind each club&rsquo;s screens is somebody
-          else&rsquo;s work, used under the licence named beside it. Crests,
+          The photograph behind the desk and behind each club&rsquo;s screens is
+          somebody else&rsquo;s work, used under the licence named beside it. Crests,
           kits and player portraits are the Premier League&rsquo;s own.
         </p>
         <ul className="flex flex-col">
-          {credits.map(({ shortName, photo }) => (
+          {credits.map(({ place, photo }) => (
             <li
-              key={shortName}
+              key={place}
               className={`flex flex-col gap-0.5 py-2 ${ROW_RULE}`}
             >
-              {/* The GROUND rather than the club: this is a page about
-                  photographs of places, and `clubGround` is already the one
-                  table that names them. */}
-              <span className="font-chrome text-sm font-bold text-ink">
-                {clubGround(shortName) ?? shortName}
-              </span>
+              <span className="font-chrome text-sm font-bold text-ink">{place}</span>
               <span className={LABEL}>{photo.title}</span>
               <span className="text-xs text-muted">{photo.author}</span>
               {/* **Two links, both required, and both laid out as controls.** CC
