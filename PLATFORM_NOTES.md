@@ -87,6 +87,33 @@ Read against the installed Next 16.2.7 source. Standing rules for anything that 
 `tools/ui/pollwatch.mjs` measures it: polls per minute, the gaps between them,
 and how many polls changed the screen.
 
+## No league is named in the code — decided 23 Sep 2026
+
+Craig, 23 Sep: *"We shouldn't be hard coding any Fantrax league. Once my real
+league is in, should be a straight swap."* What that settled:
+
+- **One value.** `FANTRAX_LEAGUE_ID` in Vercel's environment names the served
+  league. Core's `FANTRAX_LEAGUES` registry and its `dummy` default are gone. The
+  server refuses to start without the value (`instrumentation.ts`), and so do the
+  writer, smoke and team-codes (`requireLeague`).
+- **CI asks production.** `GET /api/league` answers `{ leagueId }`. `editions.yml`
+  reads it before every firing and fails if there's no answer. There is no GitHub
+  variable, so the paper cannot write about a league the site isn't serving, and
+  the swap needs nothing in CI.
+- **The archive's leagues are data.** `data/leagues/recorded.json` lists the
+  leagues capture records, plus shape-diff's reference and subject. Only scripts
+  and the verify walk read it. Retiring a test league after the swap means
+  deleting its line.
+- **Fantrax answers what was written down.** Capture cadence comes from the
+  newest capture's `draftState`. The registry's draft dates were already wrong:
+  it had dummy and rehearsal drafting 6 Aug, and Fantrax says 1 Sep and 2 Sep.
+  The empty pages no longer print a date, because Fantrax publishes none for the
+  real league before its draft. Craig turns the paper on himself.
+- **The demo team is `FANTRAX_DEMO_TEAM_ID`**, lent only when it's one of the
+  served league's teams (`lentTeam`). That check, not the swap, is what keeps it
+  off the real league. Production needs `jtsmt5jxmtj31znh` (rehearsal's `test1`)
+  in Vercel to keep lending it; `next dev` has dummy's `hy0w28p5mtj36y3g`.
+
 ## Production serves the REHEARSAL league, not the dummy one — verified 21 Sep 2026
 
 `CLAUDE.md` says `FANTRAX_LEAGUE_ID` "defaults to the **dummy** league", which is

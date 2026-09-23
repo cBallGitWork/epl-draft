@@ -47,10 +47,10 @@ their npm script passes `--env-file`,** and exactly one does: `team-codes`, whic
 reads `apps/companion/.env.local` because the secret it mints with must be the
 one the app verifies with.
 
-`FANTRAX_LEAGUE_ID` selects the league the app serves and defaults to the
-**dummy** league — the ten-team one `next dev` opens on. The rehearsal league is
-a separate id you have to ask for; this file said "rehearsal" until 2 Sep 2026
-and was never right.
+**Never name a league in code.** `FANTRAX_LEAGUE_ID` in the environment selects
+the one the app serves, with no default (`requireLeague` refuses a blank). CI
+asks production for it (`/api/league`). The leagues the archive records are data
+in `data/leagues/recorded.json`, for scripts only.
 
 ## Writes are confirm-then-execute, flagged, and audited
 

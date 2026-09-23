@@ -210,108 +210,21 @@ export const FANTRAX_SPORT = "EPL";
  *  replaces ours (see join/cleanSheets.ts). */
 export const CLEAN_SHEET_MINUTES = 60;
 
-/** A Fantrax league we capture.
- *
- *  `key` doubles as a directory segment under `data/snapshots/fantrax/leagues/`,
- *  so renaming one is a data move, not a rename. `draftDate` is per league, not
- *  global: the two draft nine weeks apart and the capture cadence tightens on
- *  each one's own draft day. */
-export interface FantraxLeague {
-  key: string;
-  leagueId: string;
-  draftDate: string;
-  /** A team to treat as the reader's own when nobody has signed in.
-   *
-   *  **Dummy data, and only the dummy league has one.** Every screen this app
-   *  is proudest of is partisan — the accent edge, yours-first, the planner, the
-   *  My Team plate — and all of it is invisible to a reader without a code. That
-   *  made the whole section untestable by anyone but a signed-in manager, and
-   *  undemonstrable to Craig on a phone.
-   *
-   *  **It cannot leak into the real league, by construction rather than by a
-   *  guard.** The identity hangs off the league entry, so on 10 Oct, when
-   *  `FANTRAX_LEAGUE_ID` moves to the real id, this field is simply not on the
-   *  league being served and the app goes back to demanding a code. There is no
-   *  flag to remember to turn off.
-   *
-   *  It is not a credential and grants nothing: signing in is what a cookie is
-   *  for, and this league's data is public anyway. A real cookie always wins
-   *  over it. */
-  demoTeamId?: string;
-}
+/** The league this process serves: the environment's `FANTRAX_LEAGUE_ID`, set in Vercel for the
+ *  app, and nothing in the code names one. The 10 Oct swap is that one value; CI asks production
+ *  for it (`/api/league`) rather than keeping a copy. Empty when unset, and `requireLeague` is
+ *  how an edge refuses to run on nothing. The ids are public: they are in the league URLs. */
+export const FANTRAX_LEAGUE_ID = process.env.FANTRAX_LEAGUE_ID ?? "";
 
-/** All three leagues are public — these are the ids in their league URLs, not
- *  credentials.
- *
- *  `rehearsal` was drafted on 6 Aug with four teams and is what most of this app
- *  was built against. `dummy` was made as its ten-team replacement (Craig, 1 Sep
- *  2026) because ten is the point: the real league is ten, and a screen judged
- *  against four is judged at the wrong height — the Team Stats board had to fake
- *  six rows to be looked at honestly. It answers the same 29-table
- *  `SEASON_STATS` shape with real figures in every category, checked on the day
- *  it was made.
- *
- *  **Both are ten now.** The rehearsal league was expanded on 2 Sep 2026 and
- *  carries the same ten team names as `dummy` — the capture history is the
- *  record: 4 teams every day from 6 Aug to 1 Sep, 10 from 2 Sep. So `dummy` is
- *  no longer a replacement for anything, and the two are near-duplicates that
- *  cost a capture each. Worth collapsing to one, but not before 10 Oct:
- *  `shape-diff` reads `rehearsal` as its reference against `real`, and a league
- *  is a directory of history under `data/snapshots/` that a rename would strand.
- *  This paragraph used to say `rehearsal` *is* the four-team league, which
- *  stopped being true the day before it was read. Corrected 3 Sep 2026.
- *
- *  `real` stays empty until draft night and is the standing test that empty
- *  states degrade honestly. On 10 Oct the only change is which id the app
- *  serves. */
-export const FANTRAX_LEAGUES: readonly FantraxLeague[] = [
-  { key: "real", leagueId: "ayyoh3n2mr326v2o", draftDate: "2026-10-10" },
-  // `test1` (Craig, 21 Sep 2026: "pick one of the league teams as my team for
-  // dummy data"). Ten teams and no reason to prefer one, so it is the team he
-  // was reading when he asked.
-  { key: "dummy", leagueId: "w05aib75mtj36y1g", draftDate: "2026-08-06",
-    demoTeamId: "hy0w28p5mtj36y3g" },
-  // **The rehearsal league needs one too, because it is what production
-  // actually serves.** Verified 21 Sep 2026 by matching the deployed app's ten
-  // team ids against all three leagues: they are the rehearsal league's, so
-  // Vercel's `FANTRAX_LEAGUE_ID` is set, and the dummy default only ever applies
-  // to `next dev`. A demo team on `dummy` alone was therefore invisible on the
-  // one surface anybody would look at. `test1` here as well, same name, its own
-  // id.
-  { key: "rehearsal", leagueId: "zbn1z3ukmsgb36sz", draftDate: "2026-08-06",
-    demoTeamId: "jtsmt5jxmtj31znh" },
-];
-
-/** The league the app serves, and the league the columnist writes about.
- *
- *  **Two environments, not one.** Setting this in Vercel swaps the app; the
- *  edition workflow has its own environment and inherits nothing from it, so
- *  `.github/workflows/editions.yml` sets it too. Miss the second and CI goes on
- *  filing a rehearsal column that the real league's front page would match on
- *  period and kind alone — which is what `PublishedEdition.leagueId` now stops.
- *
- *  `||` and not `??`, deliberately. An unset GitHub Actions variable expands to
- *  the empty string rather than to nothing, so `??` would accept `""` as a
- *  league id and every read would fail on a blank leagueId with no clue why.
- *  The same trap `secret()` was carrying on 27 Aug. */
-export const FANTRAX_LEAGUE_ID =
-  process.env.FANTRAX_LEAGUE_ID || leagueId("dummy");
-
-/** One league's id by name.
- *
- *  By KEY and not by index. The default used to be `FANTRAX_LEAGUES[1]`, and
- *  adding a league to the middle of that list silently repointed the whole app
- *  at a different league — which is exactly what happened when `dummy` was
- *  inserted on 1 Sep 2026. It happened to be the league we wanted; that it was
- *  luck rather than intent is the reason this exists.
- *
- *  Throws rather than falling back: a name that is not in the list is a typo,
- *  and a typo that quietly serves the wrong league is the failure this is
- *  written to make impossible. */
-function leagueId(key: string): string {
-  const league = FANTRAX_LEAGUES.find((entry) => entry.key === key);
-  if (league === undefined) throw new Error(`No Fantrax league named "${key}"`);
-  return league.leagueId;
+/** The league id, or a throw that says where to set it. */
+export function requireLeague(leagueId: string): string {
+  if (leagueId.trim() === "") {
+    throw new Error(
+      "FANTRAX_LEAGUE_ID is not set. It names the league to serve: Vercel's environment for the " +
+        "app, apps/companion/.env.local for `next dev`, the shell for a script.",
+    );
+  }
+  return leagueId;
 }
 
 /** How many players to ask Fantrax's stats read for in one page.

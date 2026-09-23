@@ -1,21 +1,32 @@
-import { FANTRAX_LEAGUES, captureStaleness } from "@epl/core";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { captureStaleness } from "@epl/core";
+import { RECORDED_LEAGUES } from "./leagues";
 import { leagueCaptureDir, leagueCaptureRoot, todayInLondon } from "./paths";
 import { captureDates, captureReads } from "./snapshots";
 
 // Makes capture health something a human sees rather than something we assume.
 // Exits non-zero when overdue so it can gate other work later.
 //
-// Per league, because the two draft nine weeks apart: the rehearsal league is
-// already past its draft and so must be captured daily, while the real league is
-// still on the weekly pre-draft cadence. One combined answer would hide whichever
-// of them stopped.
+// Per league, because each drafts on its own day: a drafted league is captured
+// daily, one still waiting on the weekly cadence. One combined answer would hide
+// whichever of them stopped.
+
+/** Whether Fantrax said this league had drafted, in the newest capture that recorded its draft. */
+async function drafted(key: string, dates: readonly string[]): Promise<boolean> {
+  for (const date of [...dates].sort().reverse()) {
+    const raw = await readFile(join(leagueCaptureDir(key, date), "getDraftResults.json"), "utf8").catch(() => null);
+    if (raw !== null) return (JSON.parse(raw) as { draftState?: string }).draftState === "completed";
+  }
+  return false;
+}
 
 async function main(): Promise<void> {
   const today = todayInLondon();
 
-  for (const league of FANTRAX_LEAGUES) {
+  for (const league of RECORDED_LEAGUES) {
     const dates = await captureDates(leagueCaptureRoot(league.key));
-    const status = captureStaleness(dates, today, league.draftDate);
+    const status = captureStaleness(dates, today, await drafted(league.key, dates));
 
     if (status.lastCapture === null) {
       console.log(`${league.key}: no captures yet. Run \`npm run capture\`.`);

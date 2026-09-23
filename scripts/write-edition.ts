@@ -1,5 +1,6 @@
 import {
   FANTRAX_LEAGUE_ID,
+  requireLeague,
   FantraxError,
   clubById,
   composePaper,
@@ -60,6 +61,8 @@ const STORY_CAP = Number(process.env.GAZETTA_STORY_CAP ?? 2);
 const DRY_RUN = process.env.DRY_RUN === "1";
 
 async function main(): Promise<void> {
+  requireLeague(FANTRAX_LEAGUE_ID);
+
   // One instant for the whole firing. Read five times, it drifted across the
   // model call — the desk commissioning under Sunday while the byline printed
   // Monday.
