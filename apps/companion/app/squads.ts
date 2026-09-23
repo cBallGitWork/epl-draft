@@ -106,7 +106,6 @@ export function readableOr404(squads: LeagueSquads, home: string): ReadableSquad
  *  branch that must tell those apart. The refusal is carried as the two fields
  *  the caller actually reads. */
 interface CachedLeague {
-  snapshot: FootballSnapshot;
   rosters: RawTeamRosters | null;
   refusal: { code: string; tell: string } | null;
   info: LeagueInfo | null;
@@ -127,8 +126,7 @@ interface CachedLeague {
  *  Nothing about *who is asking* may cross into here — no team id, no cookie —
  *  or one manager's view would be served to another. */
 const readLeague = leagueCache("league-squads",
-  async (round: Round | null): Promise<CachedLeague> => {
-    const current = await footballNow();
+  async (round: Round | null, currentGameweek: number): Promise<CachedLeague> => {
 
     // The period the ROUND IN VIEW is scored in. It is what every genuinely
     // per-period read wants — the scores, the pairing, the heading — because the
@@ -139,16 +137,9 @@ const readLeague = leagueCache("league-squads",
     // the week the squad screens are about — and, behind it, only for one
     // Fantrax has finished with that our own calendar says has locked.
     // `periodToRead` holds both halves of that argument and the evidence.
-    const roundPeriod = round?.period ?? (await roundOf(current.gameweek))?.period ?? null;
+    const roundPeriod = round?.period ?? (await roundOf(currentGameweek))?.period ?? null;
 
-    // `footballNow` for the round FPL is pointing at, and only the cold cache
-    // for any other. They are the same read of different rounds, but the warm
-    // one is kept hot by every other page — the cold one served a 68-minute-old
-    // snapshot under a LIVE badge the one afternoon it was reached alone.
-    const [snapshot, open, info, kickoffs] = await Promise.all([
-      round === null || round.gameweek === current.gameweek
-        ? current
-        : gameweekSnapshot(round.gameweek),
+    const [open, info, kickoffs] = await Promise.all([
       orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID)),
       leagueInfo(),
       seasonKickoffs(),
@@ -172,14 +163,8 @@ const readLeague = leagueCache("league-squads",
       asked === null ? open : await orRefusal(fetchTeamRosters(FANTRAX_LEAGUE_ID, asked));
 
     return rosters instanceof FantraxError
-      ? {
-          snapshot,
-          rosters: null,
-          refusal: { code: rosters.code, tell: tell(rosters) },
-          info,
-          roundPeriod,
-        }
-      : { snapshot, rosters, refusal: null, info, roundPeriod };
+      ? { rosters: null, refusal: { code: rosters.code, tell: tell(rosters) }, info, roundPeriod }
+      : { rosters, refusal: null, info, roundPeriod };
   },
 );
 
@@ -188,8 +173,15 @@ export async function getLeagueSquads(round: Round | null = null): Promise<Leagu
   // `readLeague`: `CachedLeague` crosses the cache boundary, and serialising 380
   // kickoff rows into every `league-squads` entry would duplicate a payload that
   // already has a cache with its own lifetime. This is a hit, not a request.
-  const [{ snapshot, rosters, refusal, info, roundPeriod }, kickoffs] = await Promise.all([
-    readLeague(round),
+  //
+  // The football snapshot is read OUT here, never inside `readLeague`: a nested `unstable_cache`
+  // bypasses its own cache (Next's unstable-cache.js), so inside it refetched FPL's 1.3 MB bootstrap
+  // on every league revalidation and froze a live score in the league's entry. `footballNow` for
+  // the round FPL points at, the cold cache for any other — the warm one is kept hot by every page.
+  const current = await footballNow();
+  const [{ rosters, refusal, info, roundPeriod }, snapshot, kickoffs] = await Promise.all([
+    readLeague(round, current.gameweek),
+    round === null || round.gameweek === current.gameweek ? current : gameweekSnapshot(round.gameweek),
     seasonKickoffs(),
   ]);
 
