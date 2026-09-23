@@ -38,6 +38,9 @@ export interface ShotSide {
 const RING_RADIUS = 3.2;
 const TAP_RADIUS = 2.4;
 
+/** The side of the square that marks where a key pass started, in pitch units. */
+const PASS_SQUARE = 1.4;
+
 /** The key's own words for what became of a shot. */
 const OUTCOME: Record<Shot["outcome"], string> = {
   goal: "Goal",
@@ -136,10 +139,12 @@ export default function ShotMap({
                     y2={(shot.y / 100) * PITCH_BOX.height}
                     strokeDasharray="1.2 0.8"
                   />
-                  <circle
-                    cx={shot.pass.x}
-                    cy={(shot.pass.y / 100) * PITCH_BOX.height}
-                    r="0.7"
+                  {/* A square at the pass's origin, so it never reads as a shot's round mark. */}
+                  <rect
+                    x={shot.pass.x - PASS_SQUARE / 2}
+                    y={(shot.pass.y / 100) * PITCH_BOX.height - PASS_SQUARE / 2}
+                    width={PASS_SQUARE}
+                    height={PASS_SQUARE}
                     fill={(shot.side === "home" ? home : away).colour}
                   />
                 </g>
