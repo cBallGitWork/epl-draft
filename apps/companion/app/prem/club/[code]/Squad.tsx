@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Club, ClubColours, FootballPlayer, IntelPlayer } from "@epl/core";
+import type { Club, ClubColours, FootballPlayer } from "@epl/core";
 import ViewToggle, { type View } from "../../../components/league/ViewToggle";
 import { positionsLabel } from "../../../positions";
 import Eleven from "./Eleven";
@@ -31,7 +31,6 @@ export default function Squad({
   players,
   colours,
   league,
-  intel,
   club,
   eleven,
   formation,
@@ -41,7 +40,6 @@ export default function Squad({
   players: readonly FootballPlayer[];
   colours: ClubColours;
   league: ReadonlyMap<number, LeagueOpinion>;
-  intel: ReadonlyMap<number, IntelPlayer>;
   club: Club;
   /** The predicted eleven in its lines, or empty when there is no prediction —
    *  which is an ordinary state, not a fault: the export runs by hand. */
@@ -68,7 +66,7 @@ export default function Squad({
   ) : null;
 
   const list = (
-    <SquadTable players={players} colours={colours} league={league} intel={intel} />
+    <SquadTable players={players} colours={colours} league={league} />
   );
 
   return (

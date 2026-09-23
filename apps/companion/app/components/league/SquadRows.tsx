@@ -11,7 +11,7 @@ import {
   fullPlayerName,
 } from "@epl/core";
 import StateBox from "../football/StateBox";
-import { positionsLabel } from "../../positions";
+import PositionTile from "./PositionTile";
 import { ROW_NAME, SCROLL } from "@/app/desk";
 
 // The same fifteen as a list. Offered beside the pitch rather than instead of
@@ -229,19 +229,10 @@ function Row({
 
           It was amber type on the bare row until now — the one identifying mark
           on the line that was not a plate, in the slot `--color-mid` reserves for
-          a figure standing beside a name.
-
-          `text-2xs` is an exception to `.cm-index`'s own size and it is written
-          as an addition, which is what that class asks for: the chip holds
-          letters rather than an ordinal, and `D/M` at `text-base` does not fit a
-          40px block. */}
-      <span className="cm-index grid h-7 w-10 shrink-0 place-items-center text-2xs">
-        <span className="w-full truncate px-0.5 text-center">
-          {(eligible && eligible.length > 0
-            ? positionsLabel(eligible)
-            : positionsLabel([player.rostered.slot.position ?? ""])) ?? "—"}
-        </span>
-      </span>
+          a figure standing beside a name. */}
+      <PositionTile
+        positions={eligible && eligible.length > 0 ? eligible : [player.rostered.slot.position ?? ""]}
+      />
 
       {/* **The club crest, not his face** (Craig, 2 Sep: "team logo in the squad
           list I think, it's too small for portraits). A portrait went in here

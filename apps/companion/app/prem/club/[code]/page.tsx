@@ -94,7 +94,6 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
               players={squad}
               colours={clubColours(club.shortName)}
               league={league}
-              intel={intelSquads}
               club={club}
               eleven={eleven}
               formation={predicted?.formation ?? null}
