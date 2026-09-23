@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { unacknowledged } from "./baseline";
+import { orphaned, unacknowledged } from "./baseline";
 import type { AcknowledgedDifference } from "./baseline";
 
 const judged: AcknowledgedDifference[] = [
@@ -41,5 +41,16 @@ describe("unacknowledged", () => {
 
   it("has nothing to say about a read with no entries", () => {
     expect(unacknowledged("getStandings", [], judged)).toEqual({ residue: [], settled: [] });
+  });
+});
+
+describe("orphaned", () => {
+  it("names an entry whose read the differ no longer makes", () => {
+    // A renamed read strands its judgements: they match nothing and the gate reddens on audited paths.
+    expect(orphaned(judged, ["getDraftResults"])).toEqual([judged[2]]);
+  });
+
+  it("is empty when every entry names a read that runs", () => {
+    expect(orphaned(judged, ["getDraftResults", "getLeagueInfo"])).toEqual([]);
   });
 });

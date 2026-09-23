@@ -65,43 +65,13 @@
     "why": "The real league's table is `{rows: [], emptyTableMsg}` where the rehearsal league's is `{caption, header, rows}` \u2014 a table with nothing in it is served without its header. `transactionDateLabel` already optional-chains `table.header.cells` and returns null when it is absent, which is absence modelled explicitly. Audited 28 Aug 2026."
   },
   {
-    "read": "getTransactionDetailsHistory-TRADE",
-    "path": "table.caption:string",
-    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
-  },
-  {
-    "read": "getTransactionDetailsHistory-TRADE",
-    "path": "table.header.cells[].align:string",
-    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
-  },
-  {
-    "read": "getTransactionDetailsHistory-TRADE",
-    "path": "table.header.cells[].key:string",
-    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
-  },
-  {
-    "read": "getTransactionDetailsHistory-TRADE",
-    "path": "table.header.cells[].name:string",
-    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
-  },
-  {
-    "read": "getTransactionDetailsHistory-TRADE",
-    "path": "table.header.cells[].shortName:string",
-    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
-  },
-  {
-    "read": "getTransactionDetailsHistory-TRADE",
-    "path": "table.header.cells[].sortDirection:number",
-    "why": "As CLAIM_DROP: an empty table arrives without its header, and the one reader of `table.header.cells` returns null rather than assuming it. Audited 28 Aug 2026."
-  },
-  {
-    "read": "fxpa getStandings (badges)",
+    "read": "fxpa getStandings (page)",
     "path": "tableList[].header.cells[].align:string",
-    "why": "The rehearsal league answers two tables in `tableList` and the real league answers one, so `shapeOf` \u2014 which merges array elements into a single branch \u2014 reports the second element's fields as lost. `mapTeamBadges` reads only `fantasyTeamInfo` and never touches `tableList`. Audited 28 Aug 2026."
+    "why": "The rehearsal league answers two tables in `tableList` and the real league answers one, so `shapeOf` \u2014 which merges array elements into a single branch \u2014 reports the second element's fields as lost. Of this read's two mappers, `mapTeamBadges` reads only `fantasyTeamInfo`, and `mapStandings` reads header cells by `key` and never `align` or `subCaption`. Audited 28 Aug, re-checked 23 Sep 2026 when the read was renamed from `(badges)` to `(page)`."
   },
   {
-    "read": "fxpa getStandings (badges)",
+    "read": "fxpa getStandings (page)",
     "path": "tableList[].subCaption:string",
-    "why": "The rehearsal league answers two tables in `tableList` and the real league answers one, so `shapeOf` \u2014 which merges array elements into a single branch \u2014 reports the second element's fields as lost. `mapTeamBadges` reads only `fantasyTeamInfo` and never touches `tableList`. Audited 28 Aug 2026."
+    "why": "The rehearsal league answers two tables in `tableList` and the real league answers one, so `shapeOf` \u2014 which merges array elements into a single branch \u2014 reports the second element's fields as lost. Of this read's two mappers, `mapTeamBadges` reads only `fantasyTeamInfo`, and `mapStandings` reads header cells by `key` and never `align` or `subCaption`. Audited 28 Aug, re-checked 23 Sep 2026 when the read was renamed from `(badges)` to `(page)`."
   }
 ]
