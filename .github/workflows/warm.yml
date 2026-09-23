@@ -53,6 +53,7 @@ concurrency:
 jobs:
   warm:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Warm the pages a phone lands on
         env:

@@ -84,9 +84,12 @@ permissions:
 jobs:
   write:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: npm
@@ -120,23 +123,15 @@ jobs:
         run: npm run edition
 
       - name: Commit the edition, if one was written
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          # The drawings ride with the edition that references them: a
-          # story pointing at a file the same commit did not carry is a
-          # broken image on the front page.
+          # The drawings ride with the edition that references them: a story
+          # pointing at a file the same commit did not carry is a broken image.
           git add data/editions apps/companion/public/paper
-          # The ordinary outcome: a guard said no column was due, so the run did
-          # its one snapshot read and stopped.
-          if git diff --cached --quiet; then
-            echo "No column due."
-            exit 0
-          fi
-          git commit -m "data: the paper for $(date -u +%Y-%m-%d)"
-          # Rebase, never merge. Vercel's ignoreCommand reads `git diff HEAD^
-          # HEAD`, and a merge commit's first parent is our own tip — so the diff
-          # it evaluated would be the OTHER side's files and the build would be
-          # skipped, leaving a column nobody can read.
-          git pull --rebase --autostash
-          git push
+          # The app imports these at build time, so a file that will not parse
+          # would fail every deploy after it. Refuse to commit one.
+          for f in data/editions/paper.json data/editions/ledger.json; do
+            node -e 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))' "$f"
+          done
+          scripts/ci/push.sh "data: the paper for $(date -u +%Y-%m-%d)" "No column due."

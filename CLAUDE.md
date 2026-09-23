@@ -437,7 +437,8 @@ CODE_RULES §6, and this file's own *mark it in the same commit*).
 
 ### Branches and PRs
 
-8. **No working off `main`.** Cut from `origin/main` — three crons push to it, so
+8. **No working off `main`.** Cut from `origin/main` — four crons push to it (capture,
+   editions, round-state, scout-xi, all through `scripts/ci/push.sh`), so
    it moves without you. Prefixes are the commit prefixes: `feat/` `fix/`
    `refactor/` `docs/` `chore/`.
 9. **Squash merge, always.** `apps/companion/vercel.json`'s `ignoreCommand` reads
