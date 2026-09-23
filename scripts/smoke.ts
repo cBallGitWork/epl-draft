@@ -9,46 +9,18 @@ import {
   mapTeamRosters,
 } from "@epl/core";
 
-// Does every view survive the league it is actually being served?
-//
-// ROADMAP §6: our real league answers `NO_TEAMS`, `[]` and `{}` to almost
-// everything until 10 Oct, and those empty states have been walked by hand
-// exactly twice. This walks them on every push, which is the difference between
-// "it worked in August" and "it works".
-//
-// It asks Fantrax whether the served league has teams and then asserts the
-// matching half, so the same command is useful against both leagues and needs no
-// editing on draft night — it simply starts asserting the other half.
-//
-// **The inverse check is the one worth having.** A drafted league that renders
-// "nobody has drafted" is a bug this repo has already shipped once: `edition.ts`
-// collapsed an outage into an undrafted league, and a drafted league having a
-// quiet week was told it had not drafted. Asserting only the empty states would
-// have passed that happily.
+// Walks every route against the league the server is serving, asserting the empty states for a
+// league with no teams and their absence for one with teams (a drafted league once rendered "has not
+// drafted"). The same command works before and after draft night.
 //
 //   npm run build && npm run start &
 //   npm run smoke
-//
 //   SMOKE_BASE=https://epl-draft-companion.vercel.app npm run smoke
 
 const BASE = process.env.SMOKE_BASE ?? "http://localhost:3000";
 
-/** Every route the app serves that needs no id.
- *
- *  **Kept against `next build`'s own route table, not against memory.** This
- *  list went eight routes stale between 1 and 3 Sep — the whole `/prem` section
- *  shipped to production with no entry here, and so did `/league/results`,
- *  `/league/team-stats` and both `/paper` indexes. `sweep.mjs` and `tapfit.mjs`
- *  carry their own lists and drifted the same way for the same reason. A new
- *  route is unwalked until it is written down, so write it down in the commit
- *  that adds it.
- *
- *  The id-scoped routes are appended in `main` from ids read live, never from
- *  literals. **`/paper/[slug]` is the one route this walk does not reach**, and
- *  deliberately: a slug exists only once the columnist has filed, so deriving
- *  one means either skipping on the empty league — which is most days — or
- *  asserting a story that CI has no key to write. Left to `/paper/columns`,
- *  which is walked and which renders the same stories' titles. */
+/** Every route that needs no id. Keep it against `next build`'s route table: a route missing here is
+ *  never walked. `/paper/[slug]` is left out because a slug exists only once a story is filed. */
 const ROUTES = [
   "/",
   "/league",
@@ -58,16 +30,7 @@ const ROUTES = [
   "/league/team-stats",
   "/squad",
   "/players",
-  // Find's second view. Its ids are in the QUERY rather than the path, so
-  // `discover` cannot reach it by following a link off the board — the board
-  // only links here once a first man has been chosen. Two real ids, like every
-  // other fixed entry in this list.
-  //
-  // **It read `/players/compare` until the refactor pass of 10 Sep 2026**, four
-  // commits after the route was renamed, and nothing caught it: the dev server
-  // still answered 200 off a stale chunk while the production build carried only
-  // `/players/analysis`. The smoke walk is the thing that is supposed to catch a
-  // dead route, so a dead route inside it is the one entry nobody is watching.
+  // Find's second view: its ids are in the query, so no link off the board reaches it.
   "/players/analysis?a=05gcr&b=03ksl",
   "/matchday",
   "/matchday/desk",
@@ -81,15 +44,8 @@ const ROUTES = [
   "/fpl",
 ] as const;
 
-/** What a league-scoped view must say when there is nothing to show.
- *
- *  One fragment per route, and they are deliberately the sentences that name
- *  *which* nothing it is. Three states — Fantrax silent, nobody drafted, a quiet
- *  week — must never collapse into one, and a check that only asserted "200" is
- *  a check that would let them.
- *
- *  These are copy, and copy moves. That is the intended cost: this list is
- *  edited in the same commit as the sentence, exactly as `docs/ui/` is. */
+/** What each league view says with no teams. One sentence per route, naming WHICH nothing it is, so
+ *  silence, undrafted and a quiet week never collapse into one. Edit with the copy. */
 const UNDRAFTED: Record<string, string> = {
   "/": "No news yet",
   "/league": "No table yet",
@@ -98,27 +54,11 @@ const UNDRAFTED: Record<string, string> = {
   "/matchday/desk": "nothing to post",
 };
 
-/** The one sentence every outage panel prints, wherever it is — `FANTRAX_SILENT`
- *  in `apps/companion/app/config.ts`.
- *
- *  Not asserted, only used to EXPLAIN a failure. "Does not say which nothing it
- *  is" was a true report that named the wrong suspect: the three states this
- *  file exists to keep apart look identical through a `body.includes` check, so
- *  a walk that found the wrong one could not say which wrong one it found. On
- *  its first ever run in CI that cost an evening — the empty states were right
- *  and the server had simply not been able to read Fantrax, which is a different
- *  problem with a different fix. */
+/** Every outage panel's sentence (`FANTRAX_SILENT`). Used only to explain a failure: an outage, not
+ *  a broken empty state. */
 const SILENT = "Fantrax is not answering";
 
-/** The first words a failing page actually rendered.
- *
- *  Crude on purpose — tags out, whitespace collapsed, the shell's own chrome
- *  skipped — because its whole job is to end an argument. A gate that says an
- *  assertion failed and cannot say what it saw instead sends somebody to
- *  reproduce it, and this one could not be reproduced anywhere but in CI.
- *
- *  Only ever printed for a league Fantrax says has no teams, so there is no
- *  lineup in it to leak. */
+/** The first words a failing page rendered, past the tab bar, so a CI failure says what it saw. */
 function seen(body: string): string {
   const text = body
     .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " ")
@@ -131,32 +71,16 @@ function seen(body: string): string {
   return text.slice(after < 0 ? 0 : after + 3, (after < 0 ? 0 : after + 3) + 200).trim();
 }
 
-/** Sentences a league WITH teams must never print. The inverse of the above, and
- *  the half that catches the failure that has actually happened here. */
+/** What a league WITH teams must never print. */
 const DRAFTED_MUST_NOT = Object.values(UNDRAFTED);
 
-/** What a route must NOT say whatever the league is doing.
- *
- *  Stated as an absence rather than a presence, and that is not squeamishness:
- *  a positive check on rendered copy has to survive React splitting
- *  `Gameweek {n}` into three text nodes, and an empty state is one fixed string
- *  that is either there or is not. It also asks the better question — "did the
- *  football fail to render", rather than "did one particular word appear".
- *
- *  `/gw/[gameweek]` is the claim `docs/ui/` makes loudest: it works from the
- *  first match of the season with no Fantrax, no draft and no credentials. Our
- *  real league is the only place that claim can actually be tested. */
+/** What a route must never say, whatever the league. An absence, because React splits positive copy
+ *  into text nodes. `/gw/1` must render with no Fantrax at all. */
 const NEVER: Record<string, string> = {
   "/gw/1": "No fixtures scheduled for this gameweek yet.",
 };
 
-/** Whether the league has teams, and the first of them.
- *
- *  **One read answering both.** They used to be two functions issuing the same
- *  request, and the second swallowed its own failure — so a league that answered
- *  the first call and refused the second was "drafted" with no team id, which
- *  silently dropped the two id-scoped routes while the walk still reported the
- *  full count it had shrunk. Asking once means the two answers cannot disagree. */
+/** Whether the league has teams, and the first of them, from ONE read so the answers cannot disagree. */
 async function league(): Promise<{
   drafted: boolean;
   teamId: string | null;
@@ -168,12 +92,9 @@ async function league(): Promise<{
     return {
       drafted: team !== undefined,
       teamId: team?.teamId ?? null,
-      // The string the served-league check looks for. It comes off this read
-      // rather than a second one for the reason the docblock above gives.
+      // What the served-league check looks for.
       teamName: team?.teamName || null,
-      // A player somebody actually holds, taken from the roster this read
-      // already returned. `/players` links to this page for every name on it,
-      // and an id invented here would test a 404 rather than a player.
+      // A player somebody holds: an invented id would test a 404.
       playerId: team?.slots[0]?.fantraxId ?? null,
     };
   } catch (error) {
@@ -184,18 +105,8 @@ async function league(): Promise<{
   }
 }
 
-/** A club code `/prem/club/[code]` will actually resolve, or null if FPL will
- *  not say.
- *
- *  **Read, never written down.** The route takes FPL's `code`, which is
- *  season-stable but is still their number and not ours, and a literal in this
- *  file would be a second place that has to be right. Any club answers the
- *  question being asked — does the page every club name in `/prem` links to
- *  render — so the walk takes the first one FPL lists.
- *
- *  This is the section's only id-scoped route, and it is the one whose failure
- *  is least visible: `/prem`'s table would look perfectly well while every name
- *  in it led nowhere. */
+/** A club code `/prem/club/[code]` resolves, read from FPL rather than written down; null if FPL will
+ *  not say. */
 async function clubCode(): Promise<number | null> {
   try {
     const [club] = (await fetchBootstrap()).teams;
@@ -205,13 +116,7 @@ async function clubCode(): Promise<number | null> {
   }
 }
 
-/** A footballer's season-stable code and a real fixture id, for the two pages
- *  those link to.
- *
- *  Read for `clubCode`'s reason: both are FPL's numbers, and a literal here
- *  would be a second place that has to be right. The fixture comes from the
- *  season list rather than the bootstrap because a fixture id is not in the
- *  bootstrap at all. */
+/** A footballer's code and a real fixture id, read from FPL for `clubCode`'s reason. */
 async function footballerAndMatch(): Promise<{ footballer: number | null; match: number | null }> {
   try {
     const [bootstrap, fixtures] = await Promise.all([fetchBootstrap(), fetchFixtures()]);
@@ -230,10 +135,7 @@ async function main() {
   const club = await clubCode();
   const { footballer, match } = await footballerAndMatch();
   const paths: string[] = [...ROUTES];
-  // The three biggest screens in the app take an id, so a walk that skipped them
-  // would be a walk that missed the squad board and the head-to-head — and the
-  // squad board's four tabs are links off a page this walk already opens, which
-  // is the cheapest kind of route to leave unchecked and the easiest to break.
+  // The id-scoped screens: the squad board and its tabs, and the head-to-head.
   if (id !== null) {
     paths.push(
       `/squad/${id}`,
@@ -254,12 +156,8 @@ async function main() {
     );
   }
   if (footballer !== null) paths.push(`/prem/player/${footballer}`);
-  // Three of a match's views. The Players tab is where an empty sheet lands —
-  // every fixture before its first kickoff has one, and this walk is the only
-  // thing that opens that state on a league whose season has not started. Match
-  // Stats is here for the other half of that: it is the one tab whose whole
-  // content comes from a provider FPL does not mirror, so a 200 from it is the
-  // only proof the Premier League's `/stats/match` still answers.
+  // Players is where an empty sheet lands before kickoff; Team Stats proves the Premier League's
+  // `/stats/match` still answers.
   if (match !== null) {
     paths.push(
       `/prem/match/${match}`,
@@ -272,49 +170,17 @@ async function main() {
     `smoke — ${BASE}, league ${FANTRAX_LEAGUE_ID} (${hasTeams ? "drafted" : "no teams"})\n`,
   );
 
-  // Skipped, and SAID so — the same rule the served-league check follows below.
-  // A club page is the only thing in this walk that needs FPL rather than
-  // Fantrax, so it is the only line that can vanish for a reason unrelated to
-  // the league, and a walk that quietly drops a route still prints a full count.
+  // Skipped, and SAID so: a walk that quietly drops a route still prints a full count.
   if (club === null) {
     console.log("~ /prem/club  FPL would not name a club, so this route was not walked\n");
   }
 
-  // **Is this server even serving the league these expectations came from?**
-  //
-  // Everything below reads `FANTRAX_LEAGUE_ID` out of THIS process and asserts
-  // against a server that read it out of its own. Nothing made those agree, and
-  // when they disagree every assertion below is answering a question nobody
-  // asked: the walk reports that the empty states are broken when what actually
-  // happened is that it was pointed at the wrong app. On this file's first ever
-  // CI run that cost an evening, and the walk could not say so because it had
-  // never been able to see which league the server had.
-  //
-  // Checked, not assumed, and checked against a MANAGER'S OWN TEAM NAME on the
-  // league table.
-  //
-  // **It used to look for the LEAGUE's name on the schedule**, on the strength of
-  // that page printing it verbatim as its subtitle — and the subtitle went on
-  // 5 Sep 2026, when the schedule stopped passing a `sub` at all (`8a46eb1`,
-  // "one row, one name recipe"). So this gate aborted the whole walk on every
-  // run after it, reporting that the server was on the wrong league when the
-  // server was fine and the sentence it was looking for had simply been deleted.
-  // A check whose expectation nothing in the app maintains is worse than no
-  // check: it fails loudly for a reason that has nothing to do with the failure
-  // it was written to catch.
-  //
-  // A team name is a better anchor for the same question. It is unique to the
-  // league, it comes off a read this walk already makes, and `/league` is the
-  // one page that cannot render without it — so a match proves the server is on
-  // this league AND that the table drew.
+  // Is this server serving the league these expectations came from? Checked by a manager's own team
+  // name on `/league`: unique to the league, and `/league` cannot render without it. (It used to look
+  // for a subtitle that was later deleted, and the check failed on every run.)
   const name = teamName;
   if (name === null) {
-    // Skipped, and SAID so. A check that quietly does not run is the shape of
-    // defect this whole gate exists to catch: the walk below would go green
-    // having never established which app it was walking. Not fatal — a league
-    // with no teams is the real league's own state until 10 Oct, and the routes
-    // are still worth walking — but the report must not imply a check that did
-    // not happen.
+    // Skipped, and SAID so: until the draft there is no team to check by.
     console.log("~ served league  no team is named yet, so this walk cannot verify it\n");
   } else {
     const table = await fetch(`${BASE}/league`, { redirect: "follow" });
@@ -341,10 +207,7 @@ async function main() {
       res = await fetch(`${BASE}${path}`, { redirect: "follow" });
       body = await res.text();
     } catch {
-      // Not swallowed into a default: this ends the run and says the one thing
-      // that is actually wrong. A CI reader who gets a raw ECONNREFUSED stack
-      // has to work out that the server never came up, and they will work it
-      // out slowly, at the worst possible moment.
+      // Ends the run with the one thing wrong: the server never came up.
       console.log(`✗ ${path}  could not reach ${BASE}`);
       console.log(`\nNothing is listening on ${BASE}. Start the app first:`);
       console.log("    npm run build && npm run start &");
@@ -394,6 +257,5 @@ async function main() {
   if (failures.length > 0) process.exitCode = 1;
 }
 
-// Not awaited at the top level: these scripts transpile to CJS, and a rejection
-// here should crash the run loudly rather than be caught and softened.
+// Not awaited: these scripts transpile to CJS, and a rejection should crash the run loudly.
 void main();
