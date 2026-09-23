@@ -29,26 +29,3 @@ export async function fetchPicks(entryId: number, gameweek: number): Promise<Raw
   if (!res.ok) throw new Error(`FPL picks ${entryId}/${gameweek} → ${res.status}`);
   return (await res.json()) as RawPicks;
 }
-
-/** Every element's FPL points for a round, keyed by FPL's per-season element id.
- *
- *  Read here rather than through the football layer on purpose. `total_points` is
- *  FPL's own scoring — the rules of the game this tab is about — and the football
- *  layer deliberately carries countable events and never fantasy points, because
- *  a goal is a fact and what a goal is worth is a house rule. This is the house
- *  that owns that rule.
- *
- *  Empty before the first kickoff of the round, which is not an error. */
-export async function fetchEntryPoints(gameweek: number): Promise<Map<number, number>> {
-  const res = await politeFetch(`${FPL_API_BASE}/event/${gameweek}/live/`);
-  if (!res.ok) throw new Error(`FPL live ${gameweek} → ${res.status}`);
-
-  const body = (await res.json()) as { elements?: { id?: number; stats?: Record<string, unknown> }[] };
-  const points = new Map<number, number>();
-
-  for (const element of body.elements ?? []) {
-    const total = element.stats?.total_points;
-    if (element.id !== undefined && typeof total === "number") points.set(element.id, total);
-  }
-  return points;
-}

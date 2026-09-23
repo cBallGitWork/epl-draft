@@ -2,17 +2,16 @@ import { cookies } from "next/headers";
 import { unstable_cache } from "next/cache";
 import {
   PAGE_REVALIDATE,
-  type FootballSnapshot,
   type FplEntry,
   type FplSquad,
   fetchEntry,
-  fetchEntryPoints,
   fetchPicks,
+  fplPointsByElement,
   mapEntry,
   mapSquad,
 } from "@epl/core";
 import { ENTRY_COOKIE } from "../config";
-import { footballNow } from "../football";
+import { footballNow, gameweekLive } from "../football";
 
 // The other game. A manager's FPL side, read from the id in the URL they already
 // share — not a credential, so no sign-in and no secret.
@@ -34,47 +33,38 @@ export interface FplSide {
   squad: FplSquad | null;
 }
 
-/** One manager's side. Cached per entry id, so a phone refreshing does not mean
- *  FPL being asked again. */
-const readSide = unstable_cache(
-  async (entryId: number, snapshot: FootballSnapshot): Promise<FplSide | null> => {
+/** One manager's entry and picks, cached per entry id and the round to fall back on. Nothing
+ *  from the snapshot goes into the key: it carries `fetchedAt`, so every read was a new entry. */
+const readEntry = unstable_cache(
+  async (entryId: number, fallback: number) => {
     const raw = await fetchEntry(entryId);
     if (raw === null) return null;
-
     const entry = mapEntry(raw);
-    // FPL's own idea of which round this entry is in, falling back to the one the
-    // football snapshot is showing — they agree in the ordinary case and FPL is
-    // authoritative about its own game.
-    const gameweek = entry.currentEvent ?? snapshot.gameweek;
-    const picks = await fetchPicks(entryId, gameweek);
-
-    if (picks === null) return { entry, squad: null };
-
-    // Element ids are per-season, so this lookup lives and dies inside one
-    // snapshot and nothing keyed by it is ever persisted (CODE_RULES §3).
-    const byId = new Map(snapshot.players.map((player) => [player.id, player]));
-    // FPL's own scoring, read through this adapter rather than off the snapshot:
-    // `total_points` is the rules of the game this tab is about, and the football
-    // layer carries no fantasy points on purpose. His LINE needs no read at all —
-    // FPL puts it on the pick.
-    const live = await fetchEntryPoints(gameweek);
-
-    return {
-      entry,
-      squad: mapSquad(
-        picks,
-        (element) => byId.get(element)?.code ?? null,
-        (element) => live.get(element) ?? 0,
-      ),
-    };
+    // FPL is authoritative about which round its own game is in.
+    const gameweek = entry.currentEvent ?? fallback;
+    return { entry, gameweek, picks: await fetchPicks(entryId, gameweek) };
   },
-  ["fpl-side"],
+  ["fpl-entry"],
   { revalidate: PAGE_REVALIDATE },
 );
 
 export async function mySide(): Promise<FplSide | null> {
   const entryId = await myEntryId();
   if (entryId === null) return null;
-  return readSide(entryId, await footballNow());
-}
+  const snapshot = await footballNow();
+  const read = await readEntry(entryId, snapshot.gameweek);
+  if (read === null) return null;
+  if (read.picks === null) return { entry: read.entry, squad: null };
 
+  // Element ids are per-season, so this join lives inside one snapshot and is never persisted.
+  const byId = new Map(snapshot.players.map((player) => [player.id, player]));
+  const points = fplPointsByElement(await gameweekLive(read.gameweek));
+  return {
+    entry: read.entry,
+    squad: mapSquad(
+      read.picks,
+      (element) => byId.get(element)?.code ?? null,
+      (element) => points.get(element) ?? 0,
+    ),
+  };
+}

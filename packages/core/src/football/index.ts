@@ -126,6 +126,7 @@ export {
   contributions,
   datedKickoffs,
   fixturesInOrder,
+  fplPointsByElement,
   hasGameweek,
   playerByCode,
   squadOf,
