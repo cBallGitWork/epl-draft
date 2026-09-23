@@ -168,7 +168,6 @@ export {
   setPieceOrder,
   squadIntel,
   xiFault,
-  xiRoundFault,
 } from "./intel/map";
 export {
   defaultDescendingTable,

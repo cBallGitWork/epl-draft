@@ -1,8 +1,9 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fetchBootstrap, roundPlayed, shotIntel, squadIntel, touchIntel, xiFault } from "@epl/core";
 import type { IntelShots, IntelSquads, IntelTouches, IntelXi } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
+import { INTEL_SEASON } from "./intel";
 
 // How old the intel is, and whether it still says what the app assumes.
 //
@@ -18,7 +19,7 @@ import { INTEL_ROOT } from "./paths";
 // is the failure nobody notices.
 
 async function main(): Promise<void> {
-  const squadsPath = join(INTEL_ROOT, "squads", "26-27.json");
+  const squadsPath = join(INTEL_ROOT, "squads", `${INTEL_SEASON}.json`);
   const squads = read<IntelSquads>(squadsPath);
   if (squads === null) {
     console.error("no squads export — run `make export-epl-draft` in the sister repo.");
@@ -49,24 +50,17 @@ async function main(): Promise<void> {
   checkTouches();
   checkShots();
 
-  // The XI names its own round in its filename, so the directory is read rather
-  // than a name guessed: whichever round was exported is the one to judge.
-  const xiDir = join(INTEL_ROOT, "xi");
-  const files = safeList(xiDir).filter((name) => name.startsWith("gw") && name.endsWith(".json"));
-  if (files.length === 0) {
-    console.error("\nno predicted eleven exported.");
+  // One rolling file, the latest Scout has; its round is in the manifest.
+  const xiPath = join(INTEL_ROOT, "xi", `${INTEL_SEASON}.json`);
+  const xi = read<IntelXi>(xiPath);
+  if (xi === null) {
+    console.error(`\nno predicted eleven exported, or xi/${INTEL_SEASON}.json will not parse.`);
     process.exitCode = 1;
     return;
   }
-
-  const rounds = files
-    .map((name) => Number(name.slice(2, -5)))
-    .filter((round) => Number.isInteger(round))
-    .sort((a, b) => b - a);
-  const round = rounds[0];
-  const xi = read<IntelXi>(join(xiDir, `gw${round}.json`));
-  if (xi === null) {
-    console.error(`\ngw${round}.json will not parse.`);
+  const round = xi.manifest?.gameweek;
+  if (typeof round !== "number") {
+    console.error("\nthe predicted eleven names no round.");
     process.exitCode = 1;
     return;
   }
@@ -100,8 +94,8 @@ async function main(): Promise<void> {
     console.log("  FPL would not say whether that round has been played, so the age is unchecked.");
   } else if (played) {
     console.error(
-      `  ✗ this eleven is for gameweek ${round}, whose football has been played — ` +
-        "it is not stale, it is wrong. Re-run the export.",
+      `  ✗ this eleven is for gameweek ${round}, whose football has been played. The club ` +
+        "pages still draw it under its last-updated date, and the paper will not print it. Re-run the export.",
     );
     process.exitCode = 1;
   } else {
@@ -120,7 +114,7 @@ async function main(): Promise<void> {
  *  who have actually played looks like, and a number that falls is the tell that
  *  the SofaScore join is rotting. */
 function checkTouches(): void {
-  const path = join(INTEL_ROOT, "touches", "26-27.json");
+  const path = join(INTEL_ROOT, "touches", `${INTEL_SEASON}.json`);
   const touches = read<IntelTouches>(path);
   if (touches === null) {
     console.log("\ntouches: no export — the comparison heat maps will be empty.");
@@ -149,7 +143,7 @@ function checkTouches(): void {
  *  up, so it cannot tell you the export has stopped, and the round it reaches
  *  can. */
 function checkShots(): void {
-  const path = join(INTEL_ROOT, "shots", "26-27.json");
+  const path = join(INTEL_ROOT, "shots", `${INTEL_SEASON}.json`);
   const shots = read<IntelShots>(path);
   if (shots === null) {
     console.log("\nshots: no export — the shot maps will be empty.");
@@ -185,14 +179,6 @@ function read<T>(path: string): T | null {
     return JSON.parse(readFileSync(path, "utf8")) as T;
   } catch {
     return null;
-  }
-}
-
-function safeList(dir: string): string[] {
-  try {
-    return readdirSync(dir);
-  } catch {
-    return [];
   }
 }
 

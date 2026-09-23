@@ -82,7 +82,7 @@ if [ "$fresh" -eq 0 ]; then
     # start, and `npm run intel-check` is always there to ask directly.
     intel=$(cd "$root" && npm run --silent intel-check 2>&1)
     if printf '%s' "$intel" | grep -q '✗'; then
-      printf 'Intel WRONG:\n%s\n' "$(printf '%s' "$intel" | grep -E '✗|gameweek' | sed 's/^/  /')"
+      printf 'Intel needs attention:\n%s\n' "$(printf '%s' "$intel" | grep -E '✗|gameweek' | sed 's/^/  /')"
     elif printf '%s' "$intel" | grep -q 'no squads export'; then
       printf 'Intel: never exported — real positions, squad numbers and the predicted XI are all absent.\n'
     else

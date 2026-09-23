@@ -20,7 +20,7 @@ Everything below is downstream of one rule:
 |---|---|---|
 | `squads/26-27.json` | 651 players | one per code: real position, line, depth tier, shirt number, status |
 | `matches/26-27.json` | 20 fixtures | per `fplFixtureId`: both sides' figures, every player's minutes/position/rating, goals and cards with minutes |
-| `xi/gw3.json` | 20 clubs | the predicted eleven, **per round, round in the filename** |
+| `xi/26-27.json` | 20 clubs | Scout's latest predicted eleven, **one rolling file**, its round in `manifest.gameweek` |
 | `set-pieces/26-27.json` | 20 clubs | takers and shares, club-scoped |
 | `touches/26-27.json` | 367 players | every touch, per player per fixture, as a raw point cloud |
 
@@ -35,11 +35,14 @@ claims and only the second catches a stalled pipeline.
 
 **One accumulating `26-27.json` per kind. Never `gw{N}.json`.**
 
-The XI is per-round and names its round in its filename, which means a static
-import chooses the round at BUILD time while the heading above it is chosen at
-REQUEST time. With `gw3.json` still on disk, a build made after the round turned
-served last week's eleven under this week's opponent — eleven real names, a real
-formation, and the wrong match. `xiRoundFault` is the check that was missing.
+The XI was per-round (`gw3.json`), and a static import chose its round at BUILD
+time while the heading above it was chosen at REQUEST time, so a build after the
+round turned drew last week's eleven under this week's opponent. Since 23 Sep 2026
+it is one rolling file holding Scout's latest (Craig: *"It should just always be
+live, and it's updated when scout updates it"*; *"Some data better than no
+data"*). The club page always draws it, with a "Last updated" date from
+`fetchedAt`. The paper prints it only when `manifest.gameweek` is the round it
+previews.
 
 None of the four files below is per-round, so none of them may repeat that shape.
 A horizon has no single round to name.
@@ -250,8 +253,8 @@ Source: `data/derived/projections/gw{N}/projections.json`, keyed on
 
 **The horizon needs a staleness check and it is not the same one the XI has.**
 `intel-check` must assert the first `gw` in the horizon is not `finished`
-(`roundFinished`), on `xiRoundFault`'s precedent and for its reason: a
-projection for a round already played is not stale, it is wrong.
+(`roundFinished`): a projection for a round already played is not stale, it is
+wrong.
 
 ---
 
@@ -401,21 +404,13 @@ no match report."*
 
 ---
 
-## The XI export is still the wrong shape, and it is the oldest item here
+## The XI export's filename changes on the sister side
 
-`data/intel/xi/gw3.json` is the one file that breaks this document's own shape
-rule, and it has been failing `npm run intel-check` for days: gameweek 3's
-football has been played, so the eleven is not stale, it is **wrong**.
-
-It needs to become **one accumulating `xi/26-27.json`**, keyed by gameweek
-inside the file, exactly as every other kind here is. The reason is in *The shape
-rule* above and it is not theoretical: a static import chooses the round at BUILD
-time while the heading above it is chosen at REQUEST time, so a build made after
-the round turned served last week's eleven under this week's opponent — eleven
-real names, a real formation, and the wrong match.
-
-`apps/companion/app/intel.ts` static-imports `gw3.json` by name and moves with
-it.
+Since 23 Sep 2026 this repo reads `data/intel/xi/26-27.json` (renamed from
+`gw3.json`) and nothing else. The sister repo's `export-epl-draft`
+(`scripts/export/epl_draft_intel.py`, `export_xi`) still writes `xi/gw{n}.json`,
+so it must write `xi/{season}.json` instead, overwriting it each run. The file's
+shape does not change. Getting it here whenever Scout updates is #34.
 
 ---
 
