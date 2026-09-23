@@ -67,3 +67,8 @@ export function pageAt(href: string): PaperPage {
 export function pageOf(kind: string): PaperPage | null {
   return PAPER_PAGES.find((page) => page.kinds?.includes(kind)) ?? null;
 }
+
+/** One story's own page. */
+export function storyHref(slug: string): string {
+  return `/paper/${slug}`;
+}
