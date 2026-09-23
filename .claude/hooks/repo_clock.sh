@@ -24,7 +24,7 @@ ONE_OFFS="2026-08-31|The flip-order sample, from ~21:00Z. /api/event-status/, /a
 2026-09-10|One look at lineupLockType before period 4 locks. Its TYPE, not its value: if the commissioner's lock is really the period boundary, the whole lineup-window design is wrong.
 2026-09-11|Period 4, the first gate-bite: the first period whose lock does NOT sit safely inside its gameweek. Watch it with /shoot and /probe.
 2026-10-09|Period 6 opens. Swap eve — run /swap-day --dry-run today, not tomorrow.
-2026-10-10|THE SWAP. FANTRAX_LEAGUE_ID in Vercel *and* in .github/workflows/editions.yml, which inherits nothing from it."
+2026-10-10|THE SWAP. FANTRAX_LEAGUE_ID in Vercel, the one place a league is set; CI asks production."
 
 fresh=0
 if [ -f "$cache" ]; then

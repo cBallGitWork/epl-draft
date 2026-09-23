@@ -82,14 +82,15 @@ an absent `thinking` parameter means no thinking, while on Opus 5 thinking is ON
 by default — and `newsroom.ts` sends no `thinking`, so the free-looking upgrade
 would silently think on every column of every firing.
 
-**The league stays as it is until swap day** (Craig, 17 Sep: *"keep the 10 team
-rehearsal league for now"*). `vars.FANTRAX_LEAGUE_ID` is left unset
-deliberately, not forgotten. Worth knowing before anyone reads that sentence
-literally: the **dummy** and **rehearsal** leagues both hold ten teams and, as
-captured on 17 Sep, the *same ten names* — `123, test1, test2, test211, test3,
-test31…` — so the phrase does not pick one, and in practice it does not need to.
-`/swap-day` is the runbook that turns it, and CLAUDE.md records that this exact
-dummy/rehearsal conflation was written wrongly in three places for a month.
+**The column follows whatever league production serves** (Craig, 17 Sep: *"keep
+the 10 team rehearsal league for now"*; 23 Sep: *"We shouldn't be hard coding any
+Fantrax league"*). Until 23 Sep the editions job read an unset
+`vars.FANTRAX_LEAGUE_ID` and wrote about the dummy league, on the belief that
+dummy and rehearsal, which carry the same ten team names, were interchangeable.
+They weren't: production serves rehearsal and `normalizePaper` drops other
+leagues' stories, so every CI firing filed stories nobody could see. The job now
+asks production (`/api/league`), so the column and the site cannot disagree and
+the swap needs nothing from CI.
 
 ### ~~A live fault~~ — fixed, 17 Sep (#7)
 
