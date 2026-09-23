@@ -131,6 +131,13 @@ anyway.
 - `editions.yml` refuses to commit a `paper.json` or `ledger.json` that will not
   parse, because the app imports both at build time.
 
+## The table's tie-break is ours to apply — decided 23 Sep 2026
+
+Points, then fantasy points for (Craig: *"tie breaker is fantasy points FOR"*), then team name.
+`placeTable` applies it and numbers the places, because Fantrax deals fresh ranks on every
+read to teams level on both, and the table reordered itself on refresh. The rule is not in
+`getLeagueInfo`; if the commissioner's setup ever carries one, read it from there instead.
+
 ## What the pre-swap cleanup declined, and why — decided 23 Sep 2026
 
 - **Loaders stay where they are.** Regrouping the app's reads into `app/read/*`
