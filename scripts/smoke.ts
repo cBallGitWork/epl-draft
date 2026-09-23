@@ -42,6 +42,7 @@ const ROUTES = [
   "/prem/team-stats",
   "/gw/1",
   "/fpl",
+  "/more",
 ] as const;
 
 /** What each league view says with no teams. One sentence per route, naming WHICH nothing it is, so
