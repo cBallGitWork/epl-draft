@@ -1,10 +1,9 @@
-import Link from "next/link";
 import { LEAGUE_NAME } from "@epl/core";
 import ButtonLink from "../components/shell/ButtonLink";
 import LeagueCrest from "../components/shell/LeagueCrest";
 import Skeleton from "../components/shell/Skeleton";
 import SkeletonRows from "../components/shell/SkeletonRows";
-import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL } from "@/app/desk";
+import { GAMEWEEK_HEAD, GAMEWEEK_TITLE } from "@/app/desk";
 import { SQUAD } from "../squad/routes";
 
 // The live centre, before either provider has answered.
@@ -22,15 +21,6 @@ import { SQUAD } from "../squad/routes";
 export default function Loading() {
   return (
     <div aria-busy className="flex flex-col gap-4">
-      <div className="flex justify-end pt-1">
-        <Link
-          href="/matchday/desk"
-          className={`${LABEL} hover:text-muted`}
-        >
-          The desk →
-        </Link>
-      </div>
-
       <section className="cm-panel flex flex-col gap-2 p-3">
         <Skeleton width="9rem" height="0.75rem" />
         <Skeleton width="100%" height="2.75rem" />
