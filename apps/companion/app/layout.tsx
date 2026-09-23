@@ -6,11 +6,11 @@ import { Suspense } from "react";
 import AutoRefresh from "./components/shell/AutoRefresh";
 import Glyph from "./components/shell/glyphs";
 import LiveFigure from "./components/shell/LiveFigure";
-import MailCount from "./components/shell/MailCount";
 import LiveNow from "./components/shell/LiveNow";
 import PhotoGround from "./components/football/PhotoGround";
 import Rail from "./components/shell/Rail";
 import ReplayStrip from "./components/shell/ReplayStrip";
+import UnreadBadge from "./components/shell/UnreadBadge";
 import { liveTie } from "./components/shell/liveTie";
 import { readInbox } from "./news/inbox";
 import "./globals.css";
@@ -163,7 +163,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }
           mail={
             <Suspense fallback={null}>
-              <MailCount ids={mail} />
+              <UnreadBadge inbox={mail} />
             </Suspense>
           }
         />

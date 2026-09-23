@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { use, useEffect, useState, useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import { MAIL, owns } from "./sections";
 import { unreadCount, unreadText } from "./unread";
@@ -47,7 +47,9 @@ function writeSeen(ids: readonly string[]): void {
   for (const listener of listeners) listener();
 }
 
-export default function UnreadBadge({ ids }: { ids: readonly string[] }) {
+/** Takes the layout's un-awaited inbox read, so the rail never waits on it. */
+export default function UnreadBadge({ inbox }: { inbox: Promise<readonly string[]> }) {
+  const ids = use(inbox);
   const reading = owns([MAIL], usePathname());
   // Undefined on the server and in hydration, so a count already there never pulses on load.
   const seen = useSyncExternalStore(subscribe, readSeen, () => undefined);

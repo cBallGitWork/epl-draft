@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { SECTIONS, barSections, moreOwns, overflowSections, owns, sectionsFor } from "./sections";
+import {
+  CREDITS,
+  MORE,
+  SECTIONS,
+  barSections,
+  moreOwns,
+  overflowSections,
+  owns,
+  sectionsFor,
+} from "./sections";
 import { MY_TEAM, SQUAD } from "../../squad/routes";
 
 // The section table's one piece of logic is `owns`, and the plate it decides is
@@ -82,7 +91,7 @@ describe("the bar this round draws", () => {
 describe("the More tab", () => {
   it("lights on its own page, the credits, the squad index and the sections behind it", () => {
     const sections = sectionsFor(false);
-    for (const path of ["/more", "/credits", SQUAD, "/players", "/fpl"]) {
+    for (const path of [MORE, CREDITS, SQUAD, "/players", "/fpl"]) {
       expect(moreOwns(sections, path)).toBe(true);
     }
   });
