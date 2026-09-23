@@ -9,8 +9,7 @@ import Nothing from "../components/shell/Nothing";
 import LeagueShell from "./Shell";
 import { readerTeamId } from "../squads";
 import { leagueInfo } from "../round";
-import { londonDate } from "../londonTime";
-import { FANTRAX_SILENT, servedLeague } from "../config";
+import { FANTRAX_SILENT } from "../config";
 import { BOARD, SCROLL } from "@/app/desk";
 
 // The table. Fantrax computes it — the record, the points and the order are
@@ -21,10 +20,6 @@ import { BOARD, SCROLL } from "@/app/desk";
 // Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
-
-const DRAFT_DATE = londonDate(
-  servedLeague()?.draftDate ?? "",
-);
 
 /** Next 16 hands these as a Promise, so it is awaited like `params`. */
 type Search = Promise<{ sort?: string; dir?: string }>;
@@ -88,7 +83,7 @@ export default async function StandingsPage({ searchParams }: { searchParams: Se
     return (
       <LeagueShell current="table" teams={info?.teams.length}>
         <Nothing title="No table yet" code="getStandings → 0 rows">
-          {LEAGUE_NAME} drafts on {DRAFT_DATE}. A table needs teams in it, and Fantrax has none to
+          {LEAGUE_NAME} has not drafted yet. A table needs teams in it, and Fantrax has none to
           rank.
         </Nothing>
       </LeagueShell>

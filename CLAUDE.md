@@ -329,23 +329,24 @@ locally on 2 Sep to file the paper's first stories, which is what exposed that
 `.env.local` was silently ignored, and the command failed as though no key
 existed anywhere. Corrected 2 Sep 2026.*
 
-`FANTRAX_LEAGUE_ID` selects the league the app serves; it defaults to the
-**dummy** league (`config.ts` — `process.env.FANTRAX_LEAGUE_ID || leagueId("dummy")`).
-This said "rehearsal" in three places until 2 Sep 2026 and was never true: the
-dummy league is the ten-team one `next dev` opens on, and the rehearsal league
-is a separate id you have to ask for. **And the deployed app has it SET, to the rehearsal league** — verified 21 Sep
-2026 by matching production's ten team ids against all three leagues (they are
-the rehearsal league's, and share nothing with dummy's despite sharing all ten
-names). So `next dev` opens on dummy, production answers as rehearsal, and the
-swap's Vercel step is a CHANGE rather than an addition.
+**No league is named in the code** (Craig, 23 Sep 2026: *"We shouldn't be hard
+coding any Fantrax league. Once my real league is in, should be a straight
+swap"*).
 
-Setting it to `ayyoh3n2mr326v2o` is
-**most** of the 10 Oct swap — the other half is `.github/workflows/editions.yml`, whose job has its own
-environment and inherits nothing from Vercel. Miss it and CI keeps filing a
-column about the rehearsal league; the front page will refuse to print it
-(`PublishedStory.leagueId`, filtered by `normalizePaper`), so the failure is a
-paper with no prose rather
-than a paper about the wrong league, but it is still a failure.
+- `FANTRAX_LEAGUE_ID` in Vercel's environment is the only place the served
+  league is set. There is no default: the server refuses to start without it
+  (`instrumentation.ts`), and so do the writer, smoke and team-codes
+  (`requireLeague`). `next dev` reads it from `apps/companion/.env.local`.
+- **CI asks production** (`GET /api/league`) and keeps no copy, so the paper can
+  never file about a league the site isn't serving. The 10 Oct swap is changing
+  that one Vercel value to `ayyoh3n2mr326v2o` and redeploying.
+- Production serves the rehearsal league today (verified 21 Sep by matching
+  team ids).
+- The leagues the archive records are data, in `data/leagues/recorded.json`:
+  capture, capture-status, bridge:check, shape-diff, roster-limits and the
+  verify walk read it, and the app never does.
+- `FANTRAX_DEMO_TEAM_ID` lends a test league's team to a reader with no code,
+  and only when that team is in the served league.
 
 Running against the real league now is how the empty states get tested.
 
@@ -506,11 +507,10 @@ anyway.
   written by running `npm run edition` locally on 2 Sep, which this file already
   records further up without anyone joining the two facts. Fixing the Actions
   billing that morning did not fix this; it uncovered it.
-- **`vars.FANTRAX_LEAGUE_ID` — still unset**, and deliberately so until swap day.
-  Unset expands to `""` and the writer falls back to the dummy league, whose
-  stories `normalizePaper` then filters out of the served paper — so a firing
-  appears to succeed and prints nothing. `/swap-day` is the runbook that turns
-  it, and it is the half the Vercel dashboard does not set.
+- **No league variable, by design.** Until 23 Sep the editions job read an unset
+  `vars.FANTRAX_LEAGUE_ID` and fell back to the dummy league. Production serves
+  rehearsal and `normalizePaper` filters by league, so every CI firing filed
+  stories nobody could see. The job now asks production which league it serves.
 - **`GAZETTA_MODEL` defaults to `claude-opus-4-8`, and that is current** —
   verified 17 Sep against the model table, $5/$25 per MTok, 1M context. It is
   deliberately NOT `claude-opus-5` despite the identical price: on 4.8 an absent

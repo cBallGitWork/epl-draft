@@ -1,5 +1,5 @@
 import { createHmac, randomBytes } from "node:crypto";
-import { FANTRAX_LEAGUE_ID, fetchLeagueInfo, mapLeagueInfo } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, fetchLeagueInfo, mapLeagueInfo, requireLeague } from "@epl/core";
 
 // Hands the commissioner one code per team, and the environment variable that
 // lets the app check them.
@@ -28,6 +28,7 @@ function code(): string {
 }
 
 async function main(): Promise<void> {
+  requireLeague(FANTRAX_LEAGUE_ID);
   const secret = process.env.SESSION_SECRET;
   if (!secret) {
     // Names the file, because there are two and only one of them is the one the
