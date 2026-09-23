@@ -5,7 +5,6 @@ import {
   predictedEleven,
   squadOf,
   xiFault,
-  xiRoundFault,
 } from "@epl/core";
 import TabEmpty from "../../../components/league/TabEmpty";
 import ButtonLink from "../../../components/shell/ButtonLink";
@@ -14,8 +13,8 @@ import Squad from "./Squad";
 import { fantasyDepth } from "./SquadTable";
 import { TABLE } from "../../PremNav";
 import { intelSquads, intelXi } from "../../../intel";
-import { PANEL, SMALL_CAPS } from "@/app/desk";
-import { londonDayAndDate } from "../../../londonTime";
+import { PANEL } from "@/app/desk";
+import { londonDayAndDate, londonTime } from "../../../londonTime";
 import { clubOr404, leagueOpinions, standing } from "./club";
 import { ordinal } from "@epl/core";
 
@@ -74,16 +73,15 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
       : `v ${next.club.shortName}` +
         (next.fixture.kickoff === null ? "" : ` · ${londonDayAndDate(next.fixture.kickoff)}`);
 
-  // **Two faults, and only one of them was checked.** `xiFault` asks whether the
-  // export is a good eleven; `xiRoundFault` asks whether it is THIS round's. The
-  // second is the one that fails silently — the round lives in the export's
-  // filename and so in a static import, the heading beside it is `next`, and a
-  // build made after the round turned drew last week's eleven under this week's
-  // opponent with nothing on screen out of place.
+  // The latest eleven Scout has, always drawn, with when Scout last updated it
+  // (Craig, 23 Sep 2026: "Some data better than no data", "Just have a last
+  // updated date"). Only a broken eleven (`xiFault`) is refused.
   const predicted = intelXi.clubs[club.shortName];
-  const stale = xiRoundFault(intelXi, next?.fixture.gameweek ?? null);
-  const eleven =
-    stale === null && xiFault(predicted) === null ? predictedEleven(predicted) : [];
+  const eleven = xiFault(predicted) === null ? predictedEleven(predicted) : [];
+  const updated =
+    intelXi.fetchedAt === null
+      ? null
+      : `${londonDayAndDate(intelXi.fetchedAt)}, ${londonTime(intelXi.fetchedAt)}`;
 
   return (
     <ClubShell club={club} title="Squad" current="squad">
@@ -101,15 +99,8 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
               eleven={eleven}
               formation={predicted?.formation ?? null}
               against={against}
+              updated={updated}
             />
-            {/* A refused eleven is SAID, not merely absent. Withholding it
-                silently is better than drawing the wrong one, but a pitch that
-                is simply gone reads as a club nobody has predicted — which is a
-                different thing and is not true. DESIGN §7's absence grammar
-                applied to a whole board rather than to a cell. */}
-            {stale === null ? null : (
-              <p className={`${SMALL_CAPS} text-bad`}>No predicted eleven — {stale}.</p>
-            )}
             {/* **The paragraph explaining the ordering is gone** (Craig, 5 Sep
                 2026). It was here on the argument that a column of dashes with
                 no explanation reads as broken — true of a column of dashes, and

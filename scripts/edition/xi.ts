@@ -8,7 +8,7 @@ import {
   type RosteredTeam,
   type StoryLineupMan,
 } from "@epl/core";
-import { readIntel } from "../intel";
+import { INTEL_SEASON, readIntel } from "../intel";
 import { roundTies } from "./round";
 import { display } from "./pressers";
 
@@ -18,9 +18,11 @@ import { display } from "./pressers";
 // count, and a writer handed two hundred and twenty footballers can only
 // mis-transcribe them — the same argument that deleted the eleven's captions.
 
-/** The export for one round, or null when we do not hold it. */
+/** Scout's latest elevens when they were made for this round, else null: the column is filed as
+ *  that round's predictions, so an older eleven would print a wrong fact. The app draws it anyway. */
 export function readXi(gameweek: number): IntelXi | null {
-  return readIntel<IntelXi>("xi", `gw${gameweek}.json`);
+  const xi = readIntel<IntelXi>("xi", `${INTEL_SEASON}.json`);
+  return xi?.manifest?.gameweek === gameweek ? xi : null;
 }
 
 /** The whole column, ready to file. Null when the ties or the elevens will not

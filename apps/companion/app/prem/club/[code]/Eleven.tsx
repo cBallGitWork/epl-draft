@@ -23,10 +23,6 @@ import PitchRows from "../../../components/league/PitchRows";
 // the reading that eleven identical shirts need one; the plate under each shirt
 // carries the name at full width instead, which is the thing a reader was going
 // to read anyway.
-//
-// The formation is set above the grass because `cm9900/19.jpg` sets it there —
-// "4-4-2*" in yellow over Everton's pitch. It reads `4-2-3-1` and not
-// `1-4-2-3-1`: the keeper is nobody's four and no formation counts him.
 
 export interface ElevenLine {
   line: string;
@@ -35,17 +31,18 @@ export interface ElevenLine {
 
 export default function Eleven({
   lines,
-  formation,
   against,
+  updated,
   club,
   playerOf,
   positionOf,
 }: {
   lines: ElevenLine[];
-  formation: string;
   /** What the eleven is FOR — "v Chelsea · Sun 6 Sep". Null when FPL has
    *  published no next match, and then the caption says only what it is. */
   against: string | null;
+  /** When Scout last updated the eleven — "Fri 4 Sept, 17:52". */
+  updated: string | null;
   club: Club;
   /** The footballer behind a code, or null when the snapshot has not got him. */
   playerOf: (code: number) => FootballPlayer | null;
@@ -66,13 +63,11 @@ export default function Eleven({
           team needs Predicted XI versus next opponent whoever that is, use
           dates"). A pitch with no heading is eleven faces on grass; the reader
           has to be told this is a PREDICTION and which match it is for, or it
-          reads as a team sheet. The formation goes on the same line because
-          `cm9900/19.jpg` sets its shape over the pitch and this is that line. */}
+          reads as a team sheet. One line (Craig, 23 Sep 2026: "We don't need
+          three rows"), with when Scout last updated it in brackets. */}
       <p className="cm-title text-center font-chrome text-2xs font-bold text-accent lg:text-sm">
         Predicted XI{against === null ? "" : ` ${against}`}
-      </p>
-      <p className="cm-title text-center font-chrome text-sm font-bold text-accent lg:text-base">
-        {formation}
+        {updated === null ? "" : ` (last updated ${updated})`}
       </p>
       {/* **`PitchRows` draws its own ground.** Wrapping this in a `CmGround` of
           its own put one pitch inside the other and drew the furniture of the

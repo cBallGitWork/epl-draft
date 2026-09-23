@@ -10,7 +10,7 @@ import { INTEL_ROOT } from "./paths";
 // pipeline rather than an empty one.
 //
 // `intel-check.ts` deliberately keeps its own reader, which catches instead —
-// saying "gw3.json will not parse" rather than dying is that script's whole job.
+// saying "xi/26-27.json will not parse" rather than dying is that script's whole job.
 
 /** The season as the export's filenames spell it — `26-27`, from `2026/27`. */
 export const INTEL_SEASON = SEASON.slice(2).replace("/", "-");

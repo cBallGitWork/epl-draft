@@ -455,8 +455,8 @@ lists. Without the reconciliation an own goal reads as a goal for the wrong side
   rather than a page read, and it is not built.
 - **Attendance and weather**, which `cm0102/02.jpg` prints beside the referee.
   No provider we hold publishes either.
-- **A predicted eleven on the preview.** `data/intel/xi/` has one per club, filed
-  per round, and `xiRoundFault` is the check that it is the right round.
+- **A predicted eleven on the preview.** `data/intel/xi/26-27.json` has Scout's
+  latest per club, one rolling file with a round in its manifest.
 - ~~The two scorer columns sit a long way apart at 1440.~~ **Closed 4 Sep 2026**
   — the columns are capped at `22rem`, because `cm0102/02.jpg` sets its two
   blocks at about a third of the canvas each and half of a 1120px panel put a

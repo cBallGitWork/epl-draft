@@ -12,7 +12,7 @@ import type {
 } from "@epl/core";
 import { matchIntel, shotIntel, squadIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
-import xiFile from "../../../data/intel/xi/gw3.json";
+import xiFile from "../../../data/intel/xi/26-27.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
 import matchesFile from "../../../data/intel/matches/26-27.json";
 import touchesFile from "../../../data/intel/touches/26-27.json";
@@ -32,23 +32,11 @@ import shotsFile from "../../../data/intel/shots/26-27.json";
 // carrying a new export redeploys and a commit that does not build is data
 // nobody reads (`scripts/paths.ts`, `EDITIONS_ROOT`).
 //
-// **The XI's round is in its filename and therefore in this import**, which is
-// the one awkward part of the arrangement. A static import cannot take a
-// variable, so the round is chosen at build time rather than at request time.
-// That is correct rather than merely convenient: a predicted eleven is for one
-// round, and the export names the round it fetched.
-//
-// **What the round has to be checked AGAINST is the fixture, not the file.**
-// This paragraph used to end by saying a build shipping last week's file "should
-// be visibly wrong rather than silently serving it", and that was a property the
-// code did not have — nothing compared the two numbers, so with `gw3.json` still
-// on disk a build made after the round turned drew last week's eleven under a
-// heading naming this week's opponent, with eleven real names and a real
-// formation and nothing on screen out of place. `xiFault` could not catch it:
-// the file is a perfectly good eleven, it is only the wrong one. `xiRoundFault`
-// is the check that was missing, `/prem/club/[code]` is where it is applied, and
-// the board says which two rounds disagree rather than quietly going away.
-// `npm run intel-check` says the same thing at the command line.
+// **The XI is one rolling file**, like every other export here (Craig, 23 Sep 2026:
+// "This shouldn't be a week doc. It should just always be live, and it's updated
+// when scout updates it"). The app draws whichever eleven it holds and labels its
+// round when it isn't the one on the heading (`xiRoundNote`); the paper only
+// prints one made for the round it previews.
 
 /** Every player the export carries, by FPL's season-stable code.
  *
@@ -61,7 +49,7 @@ export const intelSquads: Map<number, IntelPlayer> = squadIntel(
   squadsFile as unknown as IntelSquads,
 );
 
-/** The predicted elevens, as the export left them. */
+/** The latest predicted elevens Scout has, as the export left them. Its round is `manifest.gameweek`. */
 export const intelXi = xiFile as unknown as IntelXi;
 
 /** Who takes each club's set pieces, by FPL club code. */

@@ -36,6 +36,7 @@ export default function Squad({
   eleven,
   formation,
   against,
+  updated,
 }: {
   players: readonly FootballPlayer[];
   colours: ClubColours;
@@ -48,6 +49,8 @@ export default function Squad({
   formation: string | null;
   /** "v Chelsea · Sun 6 Sep", or null when there is no next match. */
   against: string | null;
+  /** When Scout last updated the eleven — "Fri 4 Sept, 17:52". */
+  updated: string | null;
 }) {
   const [view, setView] = useState<View>("list");
   const hasEleven = eleven.length > 0 && formation !== null;
@@ -56,8 +59,8 @@ export default function Squad({
   const grass = hasEleven ? (
     <Eleven
       lines={eleven}
-      formation={formation}
       against={against}
+      updated={updated}
       club={club}
       playerOf={(code) => byCode.get(code) ?? null}
       positionOf={(code) => positionsLabel(league.get(code)?.positions ?? [])}
