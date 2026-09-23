@@ -358,42 +358,6 @@ export const DESK_GROUND_BLUR: string | null =
  *  today: this is our league's, and the two are separate questions. */
 export const LEAGUE_TIMEZONE = "Europe/London";
 
-/** An ISO instant as milliseconds, or null when it cannot be read.
- *
- *  **Six sites were writing this guard by hand**, each slightly differently, and
- *  the difference mattered: one treated an unreadable instant as inside the
- *  window and another as outside. Provider data is untrusted (CODE_RULES §5),
- *  so "cannot be read" is an answer the caller has to see rather than a NaN
- *  that silently compares false against everything. */
-export function instantOf(iso: string): number | null {
-  const at = Date.parse(iso);
-  return Number.isNaN(at) ? null : at;
-}
-
-/** An ISO instant as the league's own day, or null when it cannot be read. */
-export function londonDayOf(iso: string): string | null {
-  const at = instantOf(iso);
-  return at === null ? null : londonDay(new Date(at));
-}
-
-/** A date as the league's own day, `YYYY-MM-DD`. `en-CA` because it is the
- *  sortable spelling; nothing formatted by it reaches a screen.
- *
- *  One formatter for three callers — the front page's running order, the Team
- *  Sheet's day key and the capture paths each built their own, and one of them
- *  rebuilt it on every call. A day key that disagreed between them would file a
- *  23:30 conference under the wrong date. */
-export function londonDay(at: Date): string {
-  return DAY_KEY.format(at);
-}
-
-const DAY_KEY = new Intl.DateTimeFormat("en-CA", {
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  timeZone: LEAGUE_TIMEZONE,
-});
-
 /** The zone Fantrax stamps its own dates in, which is NOT ours.
  *
  *  `LeagueTransaction.processedAt` is `"Wed Sep 2, 2026, 6:11AM"` with no offset

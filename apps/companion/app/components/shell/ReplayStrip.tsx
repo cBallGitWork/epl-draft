@@ -1,5 +1,5 @@
 import { replayAt } from "../../clock";
-import { londonDayAndDate, londonTime } from "../../londonTime";
+import { londonDayAndDate, londonTime } from "@epl/core";
 
 /** What the app is pretending it is, whenever `REPLAY_AT` is set.
  *

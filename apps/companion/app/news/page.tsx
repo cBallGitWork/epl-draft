@@ -1,12 +1,11 @@
 import Link from "next/link";
 import type { InboxItem } from "@epl/core";
-import { fantraxTime } from "@epl/core";
+import { fantraxTime, londonDayAndDate, londonTime } from "@epl/core";
 import DateChip from "../components/shell/DateChip";
 import Letter from "./Letter";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
-import { londonDayAndDate, londonTime } from "../londonTime";
 import { NEWS } from "../titles";
 import { PANEL_FLUSH, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 

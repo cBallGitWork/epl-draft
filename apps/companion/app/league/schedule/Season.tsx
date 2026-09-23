@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { leads } from "@epl/core";
+import { leads, londonDate } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
-import { londonDate } from "../../londonTime";
 import { ROW_NAME } from "@/app/desk";
 
 // One team's season on one screen: every round it is in, who it plays, and what

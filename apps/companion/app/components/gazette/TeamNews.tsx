@@ -1,6 +1,5 @@
 import Image from "next/image";
-import { crestUrl, type PublishedStory } from "@epl/core";
-import { londonDayAndTime } from "../../londonTime";
+import { crestUrl, type PublishedStory, londonDayAndTime } from "@epl/core";
 
 // The team-news thread: a club, its crest, a line of context, one bullet per
 // man, and at most one thing the manager actually said.

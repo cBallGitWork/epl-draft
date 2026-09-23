@@ -10,8 +10,10 @@ import {
   contributions,
   crestUrl,
   fixturesInOrder,
+  londonWeekday,
+  londonDayAndTime,
+  londonTime,
 } from "@epl/core";
-import { londonDay, londonDayAndTime, londonTime } from "../../londonTime";
 import { chipsFor } from "../league/Chips";
 import { yoursBorder } from "../../mine";
 import { ROW_NAME } from "@/app/desk";
@@ -237,7 +239,7 @@ function ScoreBlock({ fixture, now }: { fixture: Fixture; now: boolean }) {
            goes here rather than into the time above it, because that slot is the
            one the score lands in and "Sun 14:00" at score size is not a score. */
         <span className="text-2xs font-semibold uppercase text-faint">
-          {londonDay(fixture.kickoff)}
+          {londonWeekday(fixture.kickoff)}
         </span>
       ) : null}
     </span>

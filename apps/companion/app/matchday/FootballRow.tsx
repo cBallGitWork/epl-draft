@@ -1,6 +1,5 @@
-import { type Club, type Fixture, crestUrl } from "@epl/core";
+import { type Club, type Fixture, crestUrl, londonTime } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
-import { londonTime } from "../londonTime";
 
 
 /** The state beside the score. **Bigger inside the cell rather than in a tail

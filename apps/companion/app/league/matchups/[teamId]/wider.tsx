@@ -1,4 +1,4 @@
-import { seasonForm, sortRows } from "@epl/core";
+import { seasonForm, sortRows, londonDayAndTime } from "@epl/core";
 import type { Fixture, LeagueTeam, RosteredTeam } from "@epl/core";
 import { fixtureInvolvement, teamColours } from "@epl/core";
 import Columns from "../../Columns";
@@ -7,7 +7,6 @@ import { getSeasonResults } from "../../schedule/schedule";
 import { leagueTable, teamBadges } from "../../../standings";
 import { leagueInfo } from "../../../round";
 import Nothing from "../../../components/shell/Nothing";
-import { londonDayAndTime } from "../../../londonTime";
 import { BOARD, PANEL, SCROLL } from "@/app/desk";
 
 // The two boards that PLACE this tie rather than explain it: the league it sits

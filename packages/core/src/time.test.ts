@@ -1,9 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { londonDate, londonDay, londonDayAndTime, londonDayKey, londonTime } from "./londonTime";
-
-// The first test under `apps/`, written the day the vitest glob widened to
-// reach it. `londonTime.ts` was chosen because it is pure, it is read by nine
-// screens, and its four formatters disagreed with each other about a bad date.
+import { londonDate, londonDayAndTime, londonDayOf, londonTime, londonWeekday } from "./time";
 
 // A real kickoff: 14:00Z in October is 15:00 in London, which is the whole
 // reason this module exists rather than a call to `toLocaleString`.
@@ -17,7 +13,7 @@ describe("London time", () => {
   it("shows a kickoff in British time, not the reader's", () => {
     expect(londonTime(KICKOFF)).toBe("15:00");
     expect(londonDayAndTime(KICKOFF)).toBe("Sat 15:00");
-    expect(londonDay(KICKOFF)).toBe("Sat");
+    expect(londonWeekday(KICKOFF)).toBe("Sat");
     expect(londonDate(KICKOFF)).toBe("Saturday 10 October");
   });
 
@@ -35,8 +31,8 @@ describe("London time", () => {
       expect(londonDate(bad)).toBe(bad);
       expect(londonTime(bad)).toBe(bad);
       expect(londonDayAndTime(bad)).toBe(bad);
-      expect(londonDay(bad)).toBe(bad);
-      expect(londonDayKey(bad)).toBe(bad);
+      expect(londonWeekday(bad)).toBe(bad);
+      expect(londonDayOf(bad)).toBeNull();
     }
   });
 
@@ -44,15 +40,15 @@ describe("London time", () => {
   // "is this match today" is a question about the LEAGUE's calendar day, not
   // about UTC's. These are the two instants where the two disagree.
   it("puts an instant on the London day it is played on", () => {
-    expect(londonDayKey(KICKOFF)).toBe("2026-10-10");
+    expect(londonDayOf(KICKOFF)).toBe("2026-10-10");
 
     // 23:30 UTC on a July Saturday is 00:30 on Sunday in London. A UTC-based
     // comparison files this under Saturday, and a reader watching it at half
     // past midnight is told there is no football on.
-    expect(londonDayKey("2026-07-04T23:30:00Z")).toBe("2026-07-05");
+    expect(londonDayOf("2026-07-04T23:30:00Z")).toBe("2026-07-05");
 
     // And the other way: 00:30 UTC in January is still the small hours of the
     // same day in London, because Britain is on UTC in winter.
-    expect(londonDayKey("2027-01-05T00:30:00Z")).toBe("2027-01-05");
+    expect(londonDayOf("2027-01-05T00:30:00Z")).toBe("2027-01-05");
   });
 });

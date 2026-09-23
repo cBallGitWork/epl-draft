@@ -14,6 +14,7 @@ import {
   periodPairings,
   roundState,
   seededTies,
+  londonDayOf,
 } from "@epl/core";
 import { leagueTable, teamBadges } from "../standings";
 import { footballNow, gameweekLive, seasonFixtures, speaksForNow } from "../football";
@@ -28,7 +29,6 @@ import { marks } from "../involvement";
 
 import { readerTeamId } from "../squads";
 import { creditAssists, roundBreaks, roundGoals, roundRedCards, roundStreams } from "../commentary";
-import { londonDayKey } from "../londonTime";
 import { TAB } from "@/app/desk";
 import Vidiprinter from "./Vidiprinter";
 import { wireLines } from "./wireLines";
@@ -120,8 +120,8 @@ export default async function MatchdayPage({
   );
 
   const round = fixturesInOrder(snapshot);
-  const day = londonDayKey(now().toISOString());
-  const onToday = round.filter((f) => f.kickoff !== null && londonDayKey(f.kickoff) === day);
+  const day = londonDayOf(now().toISOString());
+  const onToday = round.filter((f) => f.kickoff !== null && londonDayOf(f.kickoff) === day);
   const today: readonly Fixture[] = onToday.length > 0 ? onToday : round;
 
   // The draft's eight ties, beside the round's ten matches. A league with no

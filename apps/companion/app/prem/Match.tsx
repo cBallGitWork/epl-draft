@@ -1,6 +1,5 @@
-import { type Club, type Fixture, crestUrl } from "@epl/core";
+import { type Club, type Fixture, crestUrl, londonDayAndTime } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
-import { londonDayAndTime } from "../londonTime";
 import { MATCH } from "./routes";
 import { SMALL_CAPS } from "@/app/desk";
 

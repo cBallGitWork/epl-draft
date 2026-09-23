@@ -7,11 +7,11 @@ import {
   isGoalkeeper,
   isResolved,
   kickedOff,
+  londonDayAndTime,
 } from "@epl/core";
 import EmptySlot from "./EmptySlot";
 import PlayerImage from "./PlayerImage";
 import { fdrStep } from "../football/fdr";
-import { londonDayAndTime } from "../../londonTime";
 import { positionLabel } from "../../positions";
 import { LABEL, QUIET_FIGURE } from "@/app/desk";
 

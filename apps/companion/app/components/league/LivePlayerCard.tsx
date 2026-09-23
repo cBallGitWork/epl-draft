@@ -8,6 +8,7 @@ import {
   fullPlayerName,
   isResolved,
   kickedOff,
+  londonDayAndTime,
 } from "@epl/core";
 import DialogFoot from "../shell/DialogFoot";
 import DialogHead from "../shell/DialogHead";
@@ -17,7 +18,6 @@ import FplRecords from "./FplRecords";
 import PlayerIdentity from "./PlayerIdentity";
 import Note from "./Note";
 import { POOL } from "../../players/routes";
-import { londonDayAndTime } from "../../londonTime";
 import { unresolvedReason } from "../../unresolved";
 import { LABEL, QUIET_FIGURE } from "@/app/desk";
 

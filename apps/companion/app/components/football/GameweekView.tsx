@@ -7,8 +7,9 @@ import {
   type PlayerOwner,
   adjacentGameweeks,
   isMatchdayLive,
+  londonDayAndTime,
+  londonTime,
 } from "@epl/core";
-import { londonDayAndTime, londonTime } from "../../londonTime";
 import { speaksForNow } from "../../football";
 import LeagueCrest from "../shell/LeagueCrest";
 import MatchList from "./MatchList";

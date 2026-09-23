@@ -1,6 +1,6 @@
 import type { ScheduleRound } from "./schedule";
 import RoundHead from "../../components/shell/RoundHead";
-import { londonDayAndDate, londonTime } from "../../londonTime";
+import { londonDayAndDate, londonTime } from "@epl/core";
 
 // A round's own line: WHICH gameweek it is, when lineups lock, and where the
 // football has got to.

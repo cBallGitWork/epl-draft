@@ -2,7 +2,7 @@ import type { FootballSnapshot } from "@epl/core";
 import ButtonLink from "../components/shell/ButtonLink";
 import PageHeader from "../components/shell/PageHeader";
 import Skeleton from "../components/shell/Skeleton";
-import { londonDayAndTime } from "../londonTime";
+import { londonDayAndTime } from "@epl/core";
 
 // The two things the Live tab draws when there is no live football: the card it
 // holds open while Fantrax's scoreboard is being read, and the screen a reader

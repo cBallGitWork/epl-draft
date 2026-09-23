@@ -5,6 +5,8 @@ import {
   predictedEleven,
   squadOf,
   xiFault,
+  londonDayAndDate,
+  londonTime,
 } from "@epl/core";
 import TabEmpty from "../../../components/league/TabEmpty";
 import ButtonLink from "../../../components/shell/ButtonLink";
@@ -14,7 +16,6 @@ import { fantasyDepth } from "./SquadTable";
 import { TABLE } from "../../PremNav";
 import { intelSquads, intelXi } from "../../../intel";
 import { PANEL } from "@/app/desk";
-import { londonDayAndDate, londonTime } from "../../../londonTime";
 import { clubOr404, leagueOpinions, standing } from "./club";
 import { ordinal } from "@epl/core";
 

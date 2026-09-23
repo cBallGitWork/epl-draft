@@ -429,7 +429,7 @@ alternative for every animation. One focus treatment everywhere, never removed.
 
 ## Times
 
-Every time in the app is UK time wherever the reader is (`londonTime.ts`), and
+Every time in the app is UK time wherever the reader is (core's `time.ts`), and
 "15:00" has to mean the same thing in Toronto as in Leeds. Fantrax's own
 timestamps carry a US Eastern offset and are shown **verbatim with their zone
 named**, never silently converted.

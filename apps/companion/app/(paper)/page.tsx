@@ -1,4 +1,4 @@
-import { clubById } from "@epl/core";
+import { clubById, londonDayAndTime } from "@epl/core";
 import { named } from "../components/gazette/named";
 import Pages from "../components/gazette/Pages";
 import Teaser from "../components/gazette/Teaser";
@@ -18,7 +18,6 @@ import Column from "../components/gazette/Column";
 import Silence from "../components/gazette/Silence";
 import PaperTable from "../components/gazette/PaperTable";
 import { edition } from "../edition";
-import { londonDayAndTime } from "../londonTime";
 import { readerTeamId } from "../squads";
 import { draftRows, footballRows, scorerRows } from "../tables";
 

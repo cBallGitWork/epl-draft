@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Club, Fixture } from "@epl/core";
-import { COMPETITION_NAME, crestUrl } from "@epl/core";
-import { londonDayAndDate, londonTime } from "../../../londonTime";
+import { COMPETITION_NAME, crestUrl, londonDayAndDate, londonTime } from "@epl/core";
 import { CLUB, MATCH } from "../../routes";
 import { BOARD, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 

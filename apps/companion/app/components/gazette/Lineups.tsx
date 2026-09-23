@@ -1,6 +1,5 @@
 import Image from "next/image";
-import { crestUrl, type PublishedStory, type StoryLineupSide } from "@epl/core";
-import { londonDayAndTime } from "../../londonTime";
+import { crestUrl, type PublishedStory, type StoryLineupSide, londonDayAndTime } from "@epl/core";
 import { yoursInk } from "../../mine";
 
 // The round's predicted elevens, grouped by the match they are for.

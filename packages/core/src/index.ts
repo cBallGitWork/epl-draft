@@ -16,6 +16,7 @@
 // A script does the wiring. Football never imports league.
 
 export * from "./config";
+export * from "./time";
 export * from "./football";
 export * from "./identity";
 export * from "./join/lineup";
