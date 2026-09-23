@@ -47,7 +47,7 @@ import { NAME_SIZE, PITCH_BAND } from "./PitchRows";
 /** The three grounds, written out.
  *
  *  **A record and not `var(--color-doubt-${band})`**, which is the Tailwind v4
- *  trap DESIGN.md records: v4 drops a theme variable whose name never appears
+ *  trap docs/rules/DESIGN.md records: v4 drops a theme variable whose name never appears
  *  literally in scanned source, and the interpolated form shipped five
  *  colourless fixture chips once already. A composed token name is a token that
  *  is not there. */

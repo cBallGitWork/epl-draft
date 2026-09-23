@@ -6,9 +6,9 @@
 > Nothing was rescued out of it because nothing needed to be. Its sharpest
 > paragraph — *"FPL has hard rules; custom rules are Fantrax's product"* — is
 > already `CLAUDE.md`'s "Why they split, precisely", and its `## Verified live
-> today (6 Aug 2026)` probe is already `PLATFORM_NOTES.md`'s "Verified Fantrax
+> today (6 Aug 2026)` probe is already `docs/record/PLATFORM_NOTES.md`'s "Verified Fantrax
 > facts (probed live 6 Aug 2026, both leagues)". Superseded for planning by
-> `ROADMAP.md`, which covers the same span and is still maintained.
+> `docs/plans/ROADMAP.md`, which covers the same span and is still maintained.
 
 # Four weeks to "change the league id"
 
@@ -18,7 +18,7 @@ The rehearsal league `zbn1z3ukmsgb36sz` was auto-drafted this morning: 4 teams,
 15 rounds, 60 picks. For the first time `getTeamRosters` and `getStandings`
 return populated payloads. Until now they were typed `unknown` in `raw.ts` under
 a comment saying that inventing fields would be "documenting a wish". The wish is
-now data, and the thing it was blocking — every league view in `PRODUCT.md` — is
+now data, and the thing it was blocking — every league view in `docs/rules/PRODUCT.md` — is
 unblocked.
 
 The target is not "model the shapes". It is that **on 10 Oct the only change is
@@ -111,7 +111,7 @@ one cell carrying literal `<br/>`.
 So the decision is not how to model those tables — it is **not to**. Two reasons,
 and they point the same way:
 
-- `PRODUCT.md`'s anti-reference is, verbatim, "Fantrax's own interface. Dense
+- `docs/rules/PRODUCT.md`'s anti-reference is, verbatim, "Fantrax's own interface. Dense
   enterprise tables and dated chrome." Rendering their tables ships the exact
   thing this app exists to be better than.
 - Every number in them is a formatted string. Parsing `"T 1-1"` or `"0.2"` back
@@ -130,7 +130,7 @@ pairs (birthplace, birthdate, age, height, weight).
 That is the whole split: **Fantrax for fantasy-market intelligence, FPL for
 football numbers.** It also means the player card's tap-through is our design
 rather than a re-skin, and it is the first real deposit into the per-player
-intelligence store `PRODUCT.md` wants.
+intelligence store `docs/rules/PRODUCT.md` wants.
 
 Two caveats to carry: the profile defaults to `currentOrRecentSeason` (it served
 2025-26 stats today, because 2026-27 hasn't started), so any season must be read
@@ -158,7 +158,7 @@ does one call per player.
 assume. It is not only Fantrax→football: a member's FPL picks are element ids
 that resolve to `code` and then, through the bridge, to a Fantrax player — so the
 tabs can talk to each other ("your Fantrax rival owns your FPL captain"), which
-is the partisan register `PRODUCT.md` asks for. That needs the **inverted**
+is the partisan register `docs/rules/PRODUCT.md` asks for. That needs the **inverted**
 `Map<fplCode, fantraxId>`, safe only because `matchPlayers` enforces one-to-one
 via `claimedCodes`. Assert that on build; a duplicate is a bridge bug, not a
 display bug.
@@ -193,7 +193,7 @@ Probed against both leagues. Facts, not assumptions.
 
 ### The period↔gameweek alignment, settled
 
-`PLATFORM_NOTES.md` has this as an open question. It is now answered, and the
+`docs/record/PLATFORM_NOTES.md` has this as an open question. It is now answered, and the
 obvious test gives the wrong answer:
 
 - By **FPL deadline**, periods 1–5 look broken — period 3 contains no deadline,
@@ -364,7 +364,7 @@ slot's `id` removed so the skip path is exercised on real-shaped data. Existing
 `standings.json` and `draftResults.json` are not replaced — `errors.test.ts`
 imports both as healthy-body cases.
 
-`PLATFORM_NOTES.md`: the kickoff finding, the `period` parameter,
+`docs/record/PLATFORM_NOTES.md`: the kickoff finding, the `period` parameter,
 `playerInfo.status`, per-league field-presence variance, per-league roster limits,
 the bridge proven on all 60 rostered players, and the now-answered period
 question — plus the new open one about past-period rosters, whose answer decides
@@ -436,7 +436,7 @@ GW1 kicks off 21 Aug, so this lands before it.
 ## Week 3 (21–28 Aug) — GW1 is live, the league tabs land
 
 The first real football the league layer has seen, and the week the app stops
-being a fixture list. Built in `PRODUCT.md`'s job order.
+being a fixture list. Built in `docs/rules/PRODUCT.md`'s job order.
 
 - `/team/[teamId]` — roster with live contributions, active and reserve
   distinguished. The live number is the interface.

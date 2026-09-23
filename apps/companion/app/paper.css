@@ -55,7 +55,7 @@
      17.1 · 8.7 · 5.3. A component asking for `text-faint` is asking for the
      quietest step that is still text, and that means the same thing in both
      registers or the tokens are lying about what they are.
-     `--faint` was 0.48, which is 3.0:1 — under the 4.5:1 DESIGN.md sets as the
+     `--faint` was 0.48, which is 3.0:1 — under the 4.5:1 docs/rules/DESIGN.md sets as the
      floor with no exceptions, and it was carrying every timestamp, every
      percentage and every standing label on the page. Ink on stock has more
      headroom than ink on glass, so the correction is upward on both. */
@@ -128,7 +128,7 @@
 }
 
 /* The paper's own name, and the loudest thing it prints.
-   The one clamp in the type system: DESIGN.md fixes the scale in rem and admits
+   The one clamp in the type system: docs/rules/DESIGN.md fixes the scale in rem and admits
    fluid type at the masthead alone, because a masthead is sized against the
    sheet rather than against the paragraph under it.
 

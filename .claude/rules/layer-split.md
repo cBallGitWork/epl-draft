@@ -5,7 +5,7 @@ paths:
 
 # Core rules (loaded because you are in the domain layer)
 
-Nothing new here — this is `CLAUDE.md` and `CODE_RULES.md` placed where the code
+Nothing new here — this is `CLAUDE.md` and `docs/rules/CODE_RULES.md` placed where the code
 is. If it contradicts either of those, they win and this file is stale.
 
 ## The two layers never import each other

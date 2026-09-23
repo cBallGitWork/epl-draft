@@ -39,7 +39,7 @@ node tools/ui/shot.mjs <route> <out.png> [--width 390] [--height 844]
 ```
 
 390×844 is the phone this product is designed for. 1440 is the desk. Shoot both
-when the change touches a layout; DESIGN.md's two registers fail differently at
+when the change touches a layout; docs/rules/DESIGN.md's two registers fail differently at
 the two widths.
 
 ## 4. `--team <teamId>`
@@ -62,7 +62,7 @@ A team id comes off any squad or matchup link. Delete the file when done.
 
 ## 5. Read the PNG
 
-Open it with the Read tool. Then say what is actually in it, against DESIGN.md:
+Open it with the Read tool. Then say what is actually in it, against docs/rules/DESIGN.md:
 
 - Does anything overflow, clip, or scroll sideways?
 - Is every colour in its slot — accent only for yours/selected/active, league
@@ -70,7 +70,7 @@ Open it with the Read tool. Then say what is actually in it, against DESIGN.md:
 - Is absence an em dash rather than a nought?
 - Are figures in Archivo Narrow, tabular?
 - Are taps `min-h-11` **at phone width**? At desk width a repeating row is 28px
-  and a control 36 (`.cm-row`, PRODUCT.md). For a number rather than an
+  and a control 36 (`.cm-row`, docs/rules/PRODUCT.md). For a number rather than an
   impression, `node tools/ui/tapfit.mjs`.
 
 ## Beside the game

@@ -171,7 +171,7 @@ function Squad({
       {/* **No YOU chip** (Craig, 5 Sep 2026: "Remove 'you' from all rows where it
           appears. Just use yellow text for the team"). It was here because a
           border alone carries nothing to a reader who cannot see it — and the
-          pairing PRODUCT.md asks for is still there without the chip: the accent
+          pairing docs/rules/PRODUCT.md asks for is still there without the chip: the accent
           EDGE is a position, and this row is sorted to the top of the list,
           which is a second one. */}
       <span className="numeric shrink-0 text-sm text-muted">{team.players.length}</span>

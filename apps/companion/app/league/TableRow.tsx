@@ -142,7 +142,7 @@ export default function TableRow({
               on the argument that a label survives a reader who cannot see the
               accent — which is right, and which the ACCENT EDGE on the index
               cell beside it already satisfies: that is a shape and not a hue, it
-              is `mine.ts`'s own mark, and PRODUCT.md asks for colour to be
+              is `mine.ts`'s own mark, and docs/rules/PRODUCT.md asks for colour to be
               paired with "a label, shape or position". So the pairing survives
               and the third statement of it does not. `cm9900/24.jpg` prints
               Everton in yellow and nothing else. */}

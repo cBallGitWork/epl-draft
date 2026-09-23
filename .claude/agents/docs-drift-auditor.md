@@ -1,6 +1,6 @@
 ---
 name: docs-drift-auditor
-description: Checks the docs against the tree. Use before closing a phase, before a handover, and after any change that could falsify a documented claim. Reads docs/ui/*, DESIGN.md and CLAUDE.md for CHECKABLE claims and verifies each against the code. Complements /code-review, which reviews the diff and never opens a doc. Read-only.
+description: Checks the docs against the tree. Use before closing a phase, before a handover, and after any change that could falsify a documented claim. Reads docs/ui/*, docs/rules/DESIGN.md and CLAUDE.md for CHECKABLE claims and verifies each against the code. Complements /code-review, which reviews the diff and never opens a doc. Read-only.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
@@ -22,7 +22,7 @@ scope — auditing it produces noise that buries the real findings.
 
 ## Procedure
 
-**1 — Extract the claims.** Read `CLAUDE.md`, `DESIGN.md`, `docs/ui/*.md` and take
+**1 — Extract the claims.** Read `CLAUDE.md`, `docs/rules/DESIGN.md`, `docs/ui/*.md` and take
 every sentence that names something the tree contains. Quote it with its
 file:line.
 
@@ -48,13 +48,13 @@ wc -l <file>                           # a line-count or ceiling claim
 - **Field claims.** Anything asserting a provider carries a field. Hand these to
   `probe-runner` rather than guessing.
 
-**4 — Do not confuse a record with a claim.** `SEASON_LOG.md` is the season log
+**4 — Do not confuse a record with a claim.** `docs/record/SEASON_LOG.md` is the season log
 and its dated entries are supposed to describe the past. A note saying "on 19 Aug
 this returned X" is TRUE as a record even if the answer has since changed. A
 sentence in `CLAUDE.md` saying "this returns X" is a present-tense claim.
 
-**`PLATFORM_NOTES.md` is no longer exempt**, and that is the point of the 3 Sep
-2026 split: the diary moved to `SEASON_LOG.md` and what is left is the standing
+**`docs/record/PLATFORM_NOTES.md` is no longer exempt**, and that is the point of the 3 Sep
+2026 split: the diary moved to `docs/record/SEASON_LOG.md` and what is left is the standing
 half — the probes marked "do not re-derive", the decisions, the recorded rule
 exceptions, `Current priorities` and `Known constraints`. Those are present-tense
 claims and they are yours to check. A probe section keeps its date and asserts a
@@ -69,7 +69,7 @@ doc:line | the claim | verdict | evidence
 ---------+-----------+---------+---------
 docs/ui/desk.md:7 | "the 320px clip matchdayfit measures" | STALE | no such file; tools/ui/navfit.mjs since <sha>
 CLAUDE.md:120 | "13 loading.tsx" | TRUE | find … | wc -l = 13
-DESIGN.md:44 | "the cut line stays red" | UNCHECKABLE | a decision, not a fact about the tree
+docs/rules/DESIGN.md:44 | "the cut line stays red" | UNCHECKABLE | a decision, not a fact about the tree
 ```
 
 - **STALE** — the tree contradicts it. Name the correct value. These lead.

@@ -5,8 +5,8 @@ paths:
 
 # Visible-surface rules (loaded because you are in the app)
 
-`DESIGN.md` is binding and this is its working summary. Where they differ,
-`DESIGN.md` wins.
+`docs/rules/DESIGN.md` is binding and this is its working summary. Where they differ,
+`docs/rules/DESIGN.md` wins.
 
 ## Every colour is a slot with one meaning
 
@@ -63,7 +63,7 @@ capital.
 - **Taps are `min-h-11`** — but that is a rule about a THUMB. Above `lg` the
   desk keeps its own proportions: a repeating ROW is 28px (`.cm-row` in
   `desk.css`), a CONTROL 36 (`lg:min-h-9`), a column head 28 with its strip.
-  `PRODUCT.md`'s accessibility section is the parent and carries the three
+  `docs/rules/PRODUCT.md`'s accessibility section is the parent and carries the three
   exceptions; `tools/ui/tapfit.mjs` measures it.
 - The lineup gate, the alphabetical gated order and "no active/reserve leak" are
   product invariants, not visual decisions.

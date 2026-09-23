@@ -238,7 +238,7 @@ function Tally({ at, total }: { at: string; total: number }) {
  *  silently land under the floor. An ancestor of this file set `text-accent` on
  *  the pressed plate for one build and `probe.mjs` read the same dark ink off a
  *  pressed chip and an unpressed one. So the pressed bevel carries the state and
- *  a tick carries it again in a SHAPE, which is what PRODUCT.md's accessibility
+ *  a tick carries it again in a SHAPE, which is what docs/rules/PRODUCT.md's accessibility
  *  section asks for.
  *
  *  `min-h-11 lg:min-h-9` is the CONTROL floor and not a row's: a filter is aimed

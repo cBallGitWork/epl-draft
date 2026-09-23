@@ -53,7 +53,7 @@ node tools/ui/tapfit.mjs
 ```
 
 Nine routes × 390 and 1440, against the floor each width actually has: 44px under
-a thumb, and above `lg` 28 for a repeating row, 36 for a control (PRODUCT.md's
+a thumb, and above `lg` 28 for a repeating row, 36 for a control (docs/rules/PRODUCT.md's
 accessibility section). Three exceptions are recorded and read out on every run
 rather than filtered away — a column head, the Pitch/List toggle, and an
 inline text link inside a sentence, the last detected structurally so a rewritten
@@ -114,7 +114,7 @@ node tools/ui/dialog.mjs <route> [--selector '.pitch button'] [--width 390]
 The one piece of furniture a screenshot cannot check: absent from the page until
 something is tapped, and the failure that matters — it opens and will not close —
 leaves no trace in a still image. Prints the width; what counts as too wide is a
-DESIGN.md judgement, not this tool's.
+docs/rules/DESIGN.md judgement, not this tool's.
 
 A route with a pitch is needed: `/league/matchups/<teamId>` works anonymously.
 

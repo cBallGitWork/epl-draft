@@ -39,14 +39,14 @@ One league rendering is not two.
 
 ## 4. Docs drift
 
-Run the `docs-drift-auditor` agent over `docs/ui/*`, `DESIGN.md` and `CLAUDE.md`.
+Run the `docs-drift-auditor` agent over `docs/ui/*`, `docs/rules/DESIGN.md` and `CLAUDE.md`.
 Every claim it returns STALE is either fixed or explicitly accepted with a reason.
 
 ## 5. Docs updated in the SAME commit
 
-Not a follow-up. `PLATFORM_NOTES.md` gets the architecture decisions, the
+Not a follow-up. `docs/record/PLATFORM_NOTES.md` gets the architecture decisions, the
 provider quirks, the numbers this phase measured and the exceptions taken — and
-`CODE_RULES.md` requires any rule exception to be written there in the same
+`docs/rules/CODE_RULES.md` requires any rule exception to be written there in the same
 commit as the code that takes it.
 
 If a doc paragraph is now false, correct it *and say it was corrected*, the way

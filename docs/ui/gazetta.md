@@ -222,7 +222,7 @@ The names are `paper-display` (Fraunces) and never `font-display`: Archivo
 Narrow is the FIGURE face in both registers (DESIGN §6), and a name set in it
 is a name wearing a number's clothes. The first cut
 shrank it to 12px under a 34px headline, and the register warden called it:
-PRODUCT.md's first principle says the live number outranks everything on
+docs/rules/PRODUCT.md's first principle says the live number outranks everything on
 screen while a match runs, and it outranks the look. Between kickoffs the
 row folds back into the strip — that is the principle's own relaxation
 clause. The promotion is also what keeps `LiveStrip`'s stand-down on `/`
@@ -236,7 +236,7 @@ layout mounts the one `AutoRefresh`, which counts down the layout's `liveIn`:
 accent for 700ms when a refresh brings a different number, settling back to
 whatever token the figure already carried so a trailing side stays dimmed. Under
 `prefers-reduced-motion` it becomes a 400ms crossfade rather than nothing —
-PRODUCT.md requires that by name, because this is the one signal whose entire
+docs/rules/PRODUCT.md requires that by name, because this is the one signal whose entire
 content is "it changed". The carve-out needs `!important`: the blanket
 reduced-motion rule is itself `!important` and would otherwise collapse it.
 

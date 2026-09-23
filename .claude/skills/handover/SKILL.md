@@ -7,7 +7,7 @@ disable-model-invocation: true
 
 # Write the handover
 
-`HANDOVER.md` at the repo root is read first by whoever comes next, and it is
+`docs/record/HANDOVER.md` at the repo root is read first by whoever comes next, and it is
 read newest-first, so the top of it carries the load. The root keeps exactly
 one.
 
@@ -20,7 +20,7 @@ first, in the same commit:
 
 ```bash
 mkdir -p docs/archive/handovers
-git mv HANDOVER.md docs/archive/handovers/<date-of-the-one-being-replaced>.md
+git mv docs/record/HANDOVER.md docs/archive/handovers/<date-of-the-one-being-replaced>.md
 ```
 
 ## 1. Gather the facts BEFORE writing prose
@@ -42,7 +42,7 @@ that — the last handover did, and it was the most useful line in it.
 Not with what you built. If something learned late changes how the earlier work
 should be read, it goes at the top and says so. Never silently edit a section a
 later discovery reversed — say it was reversed, and record the reversal, the way
-DESIGN.md does for the paper stock.
+docs/rules/DESIGN.md does for the paper stock.
 
 ## 3. The shape
 
@@ -65,7 +65,7 @@ worse than one with none, because the next session trusts it.
 ## 5. Stage narrowly
 
 ```bash
-git add HANDOVER.md docs/archive/handovers/
+git add docs/record/HANDOVER.md docs/archive/handovers/
 ```
 
 Those paths. Never `-A` — a hook denies it, and another session may be

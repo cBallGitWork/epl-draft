@@ -3,7 +3,7 @@
 The real competition, on the desk. Five routes: the table, the results, the
 fixtures, the team-stats board, and a club page the first two link into.
 
-`../../DESIGN.md` is binding for colour and type and this file defers to it.
+`../rules/DESIGN.md` is binding for colour and type and this file defers to it.
 
 ## Why the section exists at all
 
@@ -113,7 +113,7 @@ the scoresheet and counts the managers with somebody in the match, through
 `marks()` and `getLeagueSquads`. Same shape of cost — one `leagueCache` entry
 shared with `/league` and every squad page, so a reader who has been anywhere
 else pays a cache hit and one reached cold makes a request. What buys it is
-`PRODUCT.md`'s partisan principle: a goal in the Premier League is also
+`docs/rules/PRODUCT.md`'s partisan principle: a goal in the Premier League is also
 somebody's afternoon, and a match is the one screen in this section where that
 is the question. It is streamed behind `<Suspense>` and `marks()` returns an
 empty object on every ordinary failure, so the football renders with no Fantrax

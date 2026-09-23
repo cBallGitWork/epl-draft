@@ -30,7 +30,7 @@ import type { Placed } from "./labels";
 // **The centre is SofaScore's own average position and needed no export.**
 // `averageTouchPosition` over the touch cloud is their `average_x`/`average_y` to
 // within the export's rounding — measured 11 Sep 2026, counted in
-// `PLATFORM_NOTES.md`, 30/30 fixtures and 438/440 starters.
+// `docs/record/PLATFORM_NOTES.md`, 30/30 fixtures and 438/440 starters.
 //
 // **Starters only.** A substitute's centre comes off as few as two touches and
 // would be a noisy point pretending to be a position; `PlTeamSheet.lineup` is an

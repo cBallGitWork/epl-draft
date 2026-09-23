@@ -6,7 +6,7 @@ import { useState, type ReactNode } from "react";
 //
 // The page is server-rendered and `AutoRefresh` asks for a fresh render every
 // thirty seconds, so a score on a phone left open on the sofa simply swaps one
-// digit for another with nothing to catch the eye. PRODUCT.md's accessibility
+// digit for another with nothing to catch the eye. docs/rules/PRODUCT.md's accessibility
 // clause names this as the one place motion carries meaning — something
 // changed — and requires a reduced-motion path that still communicates it.
 //

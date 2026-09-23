@@ -192,7 +192,7 @@ body {
   .live-dot::after {
     display: none;
   }
-  /* A crossfade rather than nothing, which PRODUCT.md requires by name: this is
+  /* A crossfade rather than nothing, which docs/rules/PRODUCT.md requires by name: this is
      the one signal whose whole content is "it changed", so removing the motion
      removes the information. `!important` because the blanket rule above is
      itself `!important` and would otherwise collapse this to nothing — the same

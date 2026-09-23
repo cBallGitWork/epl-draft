@@ -2,9 +2,9 @@
 
 These are **hard rules**. They are not style preferences and they are not
 negotiable per-change. If a rule has to be broken, the exception is written down
-in `PLATFORM_NOTES.md` with the reason, in the same commit.
+in `docs/record/PLATFORM_NOTES.md` with the reason, in the same commit.
 
-Read alongside `CLAUDE.md` (architecture contract) and `PRODUCT.md` (why any of
+Read alongside `CLAUDE.md` (architecture contract) and `docs/rules/PRODUCT.md` (why any of
 this exists).
 
 ---
@@ -27,7 +27,7 @@ this exists).
 
 - Delete rather than comment out. Git remembers.
 - No dependency that a small local function would cover. Every new dependency is
-  a decision recorded in `PLATFORM_NOTES.md`.
+  a decision recorded in `docs/record/PLATFORM_NOTES.md`.
 - No dead code, unused exports, unused CSS utilities, or declared-but-unused
   dependencies left sitting in the tree. If it isn't used this phase, it isn't
   committed this phase.
@@ -41,7 +41,7 @@ this exists).
   lines is the ceiling and one is the target. Measured the day this was written:
   comments were **50% of `Rail.tsx`** and 39% of `newsdesk.ts` and `house.ts`.
   The reasoning that filled them belongs in a commit message, which is where
-  someone goes looking for *why*, or in `PLATFORM_NOTES.md` if it is a standing
+  someone goes looking for *why*, or in `docs/record/PLATFORM_NOTES.md` if it is a standing
   decision. This is forward-looking: the tree is full of the old kind, and they
   get shortened when the file is next opened, not in a sweep of their own.
 - No defensive `try/catch` that swallows and returns a default. Either handle the

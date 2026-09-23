@@ -4,7 +4,7 @@ This file is our living season log and platform journal.
 Update it whenever we make architecture decisions, discover API quirks, or
 capture season-specific tradeoffs.
 
-> **The dated session narrative lives in [`SEASON_LOG.md`](SEASON_LOG.md).**
+> **The dated session narrative lives in [`docs/record/SEASON_LOG.md`](SEASON_LOG.md).**
 > Split out 3 Sep 2026 at 4,784 lines, of which about 3,400 were a diary. This
 > file is the standing half — what is true now, what was probed and must not be
 > re-derived, what was decided, and which rules have recorded exceptions — and it
@@ -14,7 +14,7 @@ capture season-specific tradeoffs.
 > result, a decision or a rule stays here; an account of a day's work moves.**
 > `docs-drift-auditor` exempts a season log from drift-checking because its
 > dated entries are supposed to describe the past — after the split that
-> exemption belongs to `SEASON_LOG.md`, and everything left here is auditable,
+> exemption belongs to `docs/record/SEASON_LOG.md`, and everything left here is auditable,
 > which is the point of doing it.
 
 ## Purpose
@@ -29,7 +29,7 @@ capture season-specific tradeoffs.
 - Start date: 5 Aug 2026.
 - Season target: support the **10-user** Fantrax league from GW6 onwards.
   (Craig, 31 Aug 2026 — it had been 16 since the repo started, and every binding
-  doc said so. Corrected in CLAUDE.md, PRODUCT.md, DESIGN.md, README.md and
+  doc said so. Corrected in CLAUDE.md, docs/rules/PRODUCT.md, docs/rules/DESIGN.md, README.md and
   `docs/ui/`. Entries dated before today in this file still say sixteen and are
   left alone: a log that gets edited to agree with the present is not a log.)
   Nothing in the CODE reads the number — team count is `getLeagueInfo.teamInfo`
@@ -550,7 +550,7 @@ the 29 tables above carries.
   plus 2FA, makes it unviable, and we hold no passwords (CLAUDE.md's auth
   constraint). The write surface is the commissioner's own cookie plus
   `adminMode`. **A browser extension is not an option** and has not been since
-  19 Aug 2026 — see `SEASON_LOG.md`, "The extension plan is dead, and it was
+  19 Aug 2026 — see `docs/record/SEASON_LOG.md`, "The extension plan is dead, and it was
   dead on arrival". *This line read "unless the extension/cookie flow is solved"
   until 3 Sep 2026, which left the extension route sounding open.*
 
@@ -605,7 +605,7 @@ payloads for the first time, so the three reads above stopped being wishes.
 unknown. Shape is `{period, rosters: {teamId: {teamName, salaryCap, rosterItems:
 [{id, position, status}]}}}`, status `ACTIVE`/`RESERVE`. Note the shape was not
 merely unmodelled before — it was typed `Record<string, unknown>`, i.e. guessed
-wrong, which is `CODE_RULES.md`'s "raw.ts no longer mirrors reality" refactor
+wrong, which is `docs/rules/CODE_RULES.md`'s "raw.ts no longer mirrors reality" refactor
 trigger.
 
 **Field presence varies between leagues, not just between states.** On the same
@@ -1088,7 +1088,7 @@ Counted across 40 team-sides of two completed rounds:
 There was exactly **one red card** in those rounds. The metric is absent because the
 value is nought, not because it is unknown.
 
-**So absence here means ZERO, which is the opposite of `DESIGN.md` §7's "Absence is `—`,
+**So absence here means ZERO, which is the opposite of `docs/rules/DESIGN.md` §7's "Absence is `—`,
 never `0`".** That rule is about a figure a provider could not give us; this is a
 provider saying nought by saying nothing. A Match Stats board printing `—` for red cards
 would be hedging a fact we have. **Any reader of this endpoint defaults a missing metric
@@ -2087,7 +2087,7 @@ reason is that neither is doing two jobs:
 - **`tokens.css`** already paid this once: its header records that
   `paper.css` was split out of it *because* the pair crossed 300. What is left
   is the single `@theme` layer — 111 custom properties, one palette. Cutting it
-  again splits a palette in half, and DESIGN.md's whole argument is that the
+  again splits a palette in half, and docs/rules/DESIGN.md's whole argument is that the
   palette is one table in which every colour is a slot.
 
 **The condition for revisiting**: either file gaining a second responsibility —
@@ -2102,7 +2102,7 @@ recorded at 288 while it stood at 342. An exception names the FILE; what the fil
 measures today is `scripts/line_ceiling.sh`'s answer and not a doc's.
 
 
-Each entry is a deliberate departure from `CODE_RULES.md`, recorded in the commit
+Each entry is a deliberate departure from `docs/rules/CODE_RULES.md`, recorded in the commit
 that made it.
 
 ### `revalidate` literal in every route segment (§3, no hardcoding)
@@ -2401,7 +2401,7 @@ four of the six routes. `FixtureRun`'s gameweek labels are still bare, and
 `/players`' sort links went with the board.
 
 **Nothing app-wide is fixed here.** Giving `Section` a plate changes every screen
-in the app and is a DESIGN.md decision rather than a feature commit's. What the
+in the app and is a docs/rules/DESIGN.md decision rather than a feature commit's. What the
 player screen did fix is the two things it introduced: the cyan real-position line
 — the marquee element of the screen, and the loudest thing that was on the
 picture — and the bio line, both of which now sit on `cm-panel`.
@@ -3386,7 +3386,7 @@ Three further corrections ride with it, all counted the same day:
 ## A density ramp is the app's first sequential scale, and it wants a ruling (10 Sep 2026)
 
 `compare/PlayerMap.tsx` shades a heat map through a four-stop yellow-to-red ramp.
-**DESIGN.md does not have a slot for this and the question is open.**
+**docs/rules/DESIGN.md does not have a slot for this and the question is open.**
 
 §3's rule is that every colour is a slot with one meaning, and `--color-hot` /
 `--color-cold` are deliberately a **threshold rather than a scale** — *"a cell is
@@ -3579,7 +3579,7 @@ only the screen can.
 
 **And the app's one recorded tap exception went with it.** The Pitch/List toggle
 was `min-h-9` at every width; `.cm-tab` is 44 under a thumb and 56 above `lg`, so
-the exception stopped existing. `PRODUCT.md`'s list is two now, and
+the exception stopped existing. `docs/rules/PRODUCT.md`'s list is two now, and
 `tools/ui/tapfit.mjs` lost its `[role=group]` exemption — left in, it would have
 gone on excusing a structure that no longer needs it and would not have caught
 the next shrink.

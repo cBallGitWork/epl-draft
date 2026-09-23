@@ -3,7 +3,7 @@
 For the agent doing the visual pass. One file per route: what the page is for,
 what is on it today, every state it can be in, and where it is weak.
 
-**Read `../../CODE_RULES.md` and `../../PRODUCT.md` first.** They are binding and
+**Read `../rules/CODE_RULES.md` and `../rules/PRODUCT.md` first.** They are binding and
 they override anything here. This folder describes *what exists*; those two say
 *what may be done to it*.
 
@@ -66,9 +66,9 @@ the shape every file here already has. It was reverse-engineered from `prem.md`
 and `squad.md` for years before anybody wrote it down.
 
 *This replaced a section headed "Where the new visual direction lives", which
-opened by saying `DESIGN.md` superseded it and then described the app as it
+opened by saying `docs/rules/DESIGN.md` superseded it and then described the app as it
 stood before the overhaul. Twelve lines that told a reader to read something
-else. Deleted 3 Sep 2026; DESIGN.md is binding and is linked at the top.*
+else. Deleted 3 Sep 2026; docs/rules/DESIGN.md is binding and is linked at the top.*
 
 ## Four things that are not style
 
@@ -123,4 +123,4 @@ Break these and the app is wrong, however good it looks.
    squad, the two screens that still draw an eleven two ways. Above `lg` the desk keeps its own
    proportions, because the rule is about a thumb and there is no thumb there:
    a row is 28px (`.cm-row`), a control 36, a column head 28 with its strip.
-   PRODUCT.md carries why and `tools/ui/tapfit.mjs` measures it.
+   docs/rules/PRODUCT.md carries why and `tools/ui/tapfit.mjs` measures it.

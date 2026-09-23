@@ -117,7 +117,7 @@ export async function readMatch(id: string): Promise<Match> {
  *
  *  **The second `/prem` route to cost a Fantrax request**, after the club page's
  *  Elig column — `docs/ui/prem.md` tracks that promise and this breaks it again,
- *  deliberately. What it buys is the line PRODUCT.md asks for: a goal in the
+ *  deliberately. What it buys is the line docs/rules/PRODUCT.md asks for: a goal in the
  *  Premier League is also somebody's afternoon.
  *
  *  Failure-tolerant by construction. `marks` returns an empty object on every

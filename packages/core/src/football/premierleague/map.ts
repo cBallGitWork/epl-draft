@@ -256,7 +256,7 @@ const GOAL_KINDS: Record<string, MatchEventKind> = {
  *  **The defaulting is the whole function.** `/stats/match` leaves out a metric
  *  whose value is nought — red cards appear on 1 of 40 team-sides — so a caller
  *  reading the array directly gets `undefined` for "no red cards" and, following
- *  the app's usual grammar, prints a dash for a fact we hold. `DESIGN.md` §7's
+ *  the app's usual grammar, prints a dash for a fact we hold. `docs/rules/DESIGN.md` §7's
  *  "Absence is `—`, never `0`" is about a figure the provider could not give;
  *  this is a provider saying nought by saying nothing, and it is the one place
  *  in the app where defaulting to zero is the honest answer.

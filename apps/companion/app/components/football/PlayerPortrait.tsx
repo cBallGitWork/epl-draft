@@ -60,7 +60,7 @@ export default function PlayerPortrait({
    *  ROW the club's colour is the identifying mark and there is one of it per
    *  line, on the desk's own ground. On a PITCH there are fifteen at once, on
    *  green, and they are twenty brand palettes let into a register where every
-   *  colour is a slot with one meaning — PRODUCT.md says club colours are brand
+   *  colour is a slot with one meaning — docs/rules/PRODUCT.md says club colours are brand
    *  values and not chosen for contrast, and `PhotoGround` refuses colour
    *  photography for the same reason one step further on.
    *

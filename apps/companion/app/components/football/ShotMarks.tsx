@@ -27,7 +27,7 @@ import type { Shot } from "@epl/core";
 // loss, a doubt, a negative, and a striker's blocked effort is none of those.
 // Green turf also refuses most of the palette. So the marks are all cream — the
 // slot for ink on a colour plate — and separate on fill and weight, which is
-// PRODUCT.md's rule that a signal is paired with a shape rather than left to
+// docs/rules/PRODUCT.md's rule that a signal is paired with a shape rather than left to
 // colour. Three tiers and not five: goal, on target, off target. A reader can
 // hold three apart on a pitch this size; the difference between a block and a
 // miss is a number in a table, not a ring nobody can measure.

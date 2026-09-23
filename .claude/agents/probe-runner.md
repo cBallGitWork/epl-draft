@@ -42,7 +42,7 @@ one league is a fact about that league.
 The real league refuses `getTeamRosters` with `NO_TEAMS` until 10 Oct. That is a
 true answer about the league, not a failed read.
 
-**4 — Check the docs against your count.** `CLAUDE.md` and `PLATFORM_NOTES.md`
+**4 — Check the docs against your count.** `CLAUDE.md` and `docs/record/PLATFORM_NOTES.md`
 quote population figures that were true when written and have moved since — the
 element count tracks the transfer window, the pool was 759 in early August and
 671 three weeks later. A doc your count contradicts is a finding.

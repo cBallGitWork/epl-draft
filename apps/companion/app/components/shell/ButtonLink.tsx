@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 // The app's one way out of a page: a link that looks and behaves like a button.
 //
 // It was the same nine classes written out in six files, which is six places to
-// forget `min-h-11` — the thumb target PRODUCT.md's one-handed condition rests
+// forget `min-h-11` — the thumb target docs/rules/PRODUCT.md's one-handed condition rests
 // on. One file now, so the rule is kept by construction rather than by care.
 //
 // **A `cm-bevel`, which is what Championship Manager's buttons are.** It was a

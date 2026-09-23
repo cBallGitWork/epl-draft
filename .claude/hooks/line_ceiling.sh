@@ -23,7 +23,7 @@ rel="${path#"$root"/}"
 
 note=""
 if [ "$lines" -gt 300 ]; then
-  note="$rel is now ${lines} lines — past the 300-line HARD ceiling in CODE_RULES §4. Split it before committing, or record the exception in PLATFORM_NOTES.md in the same commit. One responsibility per file: client.ts (I/O), map.ts (pure transform), types.ts, selectors.ts."
+  note="$rel is now ${lines} lines — past the 300-line HARD ceiling in CODE_RULES §4. Split it before committing, or record the exception in docs/record/PLATFORM_NOTES.md in the same commit. One responsibility per file: client.ts (I/O), map.ts (pure transform), types.ts, selectors.ts."
 elif [ "$lines" -gt 250 ]; then
   note="$rel is ${lines} lines — past the 200-line soft ceiling and closing on the 300 hard one (CODE_RULES §4). Worth splitting now, while you know what the pieces are."
 fi

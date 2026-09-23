@@ -48,7 +48,7 @@ The real league is pre-draft until 10 Oct and refuses `getTeamRosters` with
 
 ## 4. Count, do not quote
 
-Every population figure in `CLAUDE.md` and `PLATFORM_NOTES.md` was true the day it
+Every population figure in `CLAUDE.md` and `docs/record/PLATFORM_NOTES.md` was true the day it
 was written and has moved since — the element count tracks the transfer window,
 the pool was 759 in early August and 671 three weeks later. **Read the length.**
 If a doc quotes a number your probe contradicts, that is a finding: fix the doc in
@@ -56,7 +56,7 @@ the same commit.
 
 ## 5. Record it
 
-A probe nobody wrote down gets run again. Append to `PLATFORM_NOTES.md` under the
+A probe nobody wrote down gets run again. Append to `docs/record/PLATFORM_NOTES.md` under the
 verified-facts section: the field, the fraction, the range, the date, both
 leagues, and the endpoint. Date it — the number is a measurement, not a constant.
 
@@ -67,7 +67,7 @@ leagues, and the endpoint. Date it — the number is a measurement, not a consta
 range     <min>..<max>   units: <fraction|percent|count>
 real      <n/N>          rehearsal <n/N>
 source    <endpoint or snapshot path>   as of <date>
-recorded  PLATFORM_NOTES.md <section>
+recorded  docs/record/PLATFORM_NOTES.md <section>
 ```
 
 For a field on a rendered page rather than in a payload, measure it in the page:

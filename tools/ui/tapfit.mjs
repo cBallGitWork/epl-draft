@@ -3,7 +3,7 @@
 //   node tools/ui/tapfit.mjs [--team-cookie <file>]
 //
 // Written on 31 Aug 2026, the day the 44px rule stopped being one number. It is
-// a rule about a THUMB (PRODUCT.md): under one, 44px; above `lg`, where the
+// a rule about a THUMB (docs/rules/PRODUCT.md): under one, 44px; above `lg`, where the
 // pointer is a mouse, a repeating ROW relaxes to 28 and a control to 36. The
 // four guards that carried the rule were prose checklists — "Are taps
 // `min-h-11`?" — and a prose checklist cannot measure. The first run of this
@@ -68,7 +68,7 @@ const MEASURE = `(function(){
     // on 11 Sep 2026 that control became a .cm-tab strip — 44 under a thumb, 56
     // above lg — so the exception it was written for stopped existing. Left in,
     // it would go on excusing a whole role=group structure and would not catch
-    // the next shrink. PRODUCT.md's list is two now.
+    // the next shrink. docs/rules/PRODUCT.md's list is two now.
     // (No backticks in this block: it lives inside a template literal.)
     return [{t:label.slice(0,24), h:Math.round(r.height),
              known:prose||head,

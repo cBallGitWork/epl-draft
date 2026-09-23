@@ -11,7 +11,7 @@ name: Claude
 # The quality half matters more. A CI reviewer sees a DIFF. The crew in
 # `.claude/agents/` sees what a diff cannot — `ui-verifier` opens the
 # screenshots, `probe-runner` counts the payload, `register-warden` judges
-# DESIGN.md, `docs-drift-auditor` checks the docs against the tree — and they run
+# docs/rules/DESIGN.md, `docs-drift-auditor` checks the docs against the tree — and they run
 # in a session BEFORE the PR opens, which is where a review is worth having. This
 # is the backstop for when that did not happen, not a replacement for it.
 #
@@ -64,8 +64,8 @@ jobs:
           # working agreement and the layer split all arrive without being
           # restated here. Anything added below would be a second copy.
           prompt: |
-            Review this pull request against CLAUDE.md, CODE_RULES.md and, if it
-            changes anything visible, DESIGN.md.
+            Review this pull request against CLAUDE.md, docs/rules/CODE_RULES.md and, if it
+            changes anything visible, docs/rules/DESIGN.md.
 
             Four things worth more than a general read:
             - Does the refactor pass show its COUNTS, per rule 13 — extracted at

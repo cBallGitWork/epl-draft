@@ -4,7 +4,7 @@ The real Premier League fixture, on Championship Manager's own match screen.
 **Everything on it is a fact the fixture list published; the minute a goal was
 scored is not one of them, and the screen says nothing rather than guessing.**
 
-`../../DESIGN.md` is binding for colour and type and this file defers to it.
+`../rules/DESIGN.md` is binding for colour and type and this file defers to it.
 
 ## Why it stopped being a scaffold
 
@@ -153,7 +153,7 @@ file). Every STARTER at the centre of his own touches:
   its own box are the same four characters and not the same match.
 - **The centre needed no export.** `averageTouchPosition` over the touch cloud is
   SofaScore's own `average_x`/`average_y` to within the export's rounding —
-  measured 11 Sep 2026, counted in [PLATFORM_NOTES](../../PLATFORM_NOTES.md),
+  measured 11 Sep 2026, counted in [PLATFORM_NOTES](../record/PLATFORM_NOTES.md),
   30/30 fixtures and 438/440 starters.
 - **Starters only, and the eleven comes off the team sheet.** A cloud says a man
   touched the ball, never that he started; a substitute's centre can come off two
@@ -377,7 +377,7 @@ whistle in which the `b` chips are still provisional, and nothing may print a
 flat `FT` over figures about to change. The sister repo's day-long lag is a
 different absence and belongs only to the tabs that do not exist yet.
 
-**No `loading.tsx`, deliberately.** `PLATFORM_NOTES.md` records that adding one
+**No `loading.tsx`, deliberately.** `docs/record/PLATFORM_NOTES.md` records that adding one
 converts a true 404 into a soft 200, and this was one of only two routes still
 answering honestly. The one slow read is Fantrax, so it streams behind
 `<Suspense>` instead, as the player screen does.

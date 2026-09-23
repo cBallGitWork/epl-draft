@@ -525,7 +525,7 @@
 
    Certain and uncertain are said in FILL versus OUTLINE rather than in a second
    hue, so the distinction survives a reader who cannot tell two reds apart —
-   PRODUCT.md requires every colour signal to be paired with a label, shape or
+   docs/rules/PRODUCT.md requires every colour signal to be paired with a label, shape or
    position, and this box carries all three. Dark ink on the fill is 5.55:1 and
    the outline's red on the ground is the same 5.55:1; on a raised row the red is
    4.77:1. Measured 30 Aug 2026. */
@@ -858,7 +858,7 @@
 /* ---- How tall a row is, and how big the mark at the head of it -------------
 
    **Two answers, because a row is read by two different instruments.** Under a
-   thumb a row is a 44px tap target — PRODUCT.md's accessibility floor, and the
+   thumb a row is a 44px tap target — docs/rules/PRODUCT.md's accessibility floor, and the
    reference viewing condition is a phone held one-handed, so that number is not
    negotiable there. Under a MOUSE it is a line in a table, and Championship
    Manager drew one at 18px with about thirty to a screen. Holding the desk to

@@ -88,7 +88,7 @@ carries both totals and the eleven behind whichever one you are reading.
 
 **Decided on design argument, to be re-asked with Saturday's answer: the board
 stays one tap behind (Option A).** The argument for putting it here is
-PRODUCT.md's job #1 and one fewer tap; the argument against is that this tab
+docs/rules/PRODUCT.md's job #1 and one fewer tap; the argument against is that this tab
 also carries the round's real football, and a full pitch plus a fixture list is
 a long scroll — while the board's own premise is that it fits a 390×844 phone,
 which it cannot do stacked under anything. So `YourMatchup` speaks the board's

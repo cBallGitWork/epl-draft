@@ -4,7 +4,7 @@ import { yoursFirst, yoursInk } from "../../mine";
 import Changed from "../shell/Changed";
 import ScoreFigure from "../league/ScoreFigure";
 
-// The round, reduced to a band — except for the one number PRODUCT.md will not
+// The round, reduced to a band — except for the one number docs/rules/PRODUCT.md will not
 // let shrink.
 //
 // This used to be `AsItStands`, the splash: yours enormous, everything else at
@@ -16,7 +16,7 @@ import ScoreFigure from "../league/ScoreFigure";
 // **While a ball is in the air, your own tie stays at full size above the
 // strip.** Principle 1 is that the live number outranks everything on screen,
 // including the headline below it, and the first cut of this band set it at
-// 12px under a 34px headline — the register warden's finding, and PRODUCT.md
+// 12px under a 34px headline — the register warden's finding, and docs/rules/PRODUCT.md
 // outranks the look. Between kickoffs the hierarchy is allowed to relax, and
 // the full-size row folds back into the strip.
 //

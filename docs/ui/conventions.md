@@ -1,6 +1,6 @@
 # Conventions — tokens, components, and what must not move
 
-**`../../DESIGN.md` is binding for colour and type and this file defers to it.**
+**`../rules/DESIGN.md` is binding for colour and type and this file defers to it.**
 What is here is the mechanics — which file holds what, and the traps.
 
 Everything visual is in `apps/companion/app/tokens.css` (the desk's tokens),
@@ -14,7 +14,7 @@ after `tokens.css` because it answers it.
 ## Two registers, never muddled
 
 The desk (League · Squads · Live · Players · FPL) is Championship Manager 99/00;
-the paper (`/`) is ink on stock. **DESIGN.md §1–§5 is the contract**; the short
+the paper (`/`) is ink on stock. **docs/rules/DESIGN.md §1–§5 is the contract**; the short
 version is that every colour is a *slot with one meaning*, and the slot is why
 the token names survived the change of every value.
 
@@ -62,7 +62,7 @@ nothing for them.
 
 Fixed rem scale, ratio ~1.15, `--text-3xs` … `--text-6xl`. `--text-3xs` is 9px
 and is now a **real floor on the pitch**: the one thing that used to sit under it
-was the player card's container clamp, and that closed on 29 Aug (DESIGN.md §8).
+was the player card's container clamp, and that closed on 29 Aug (docs/rules/DESIGN.md §8).
 No fluid clamps except inside the masthead.
 
 ## Shared components

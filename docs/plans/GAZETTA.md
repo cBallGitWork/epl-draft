@@ -1,11 +1,11 @@
 # The Gazetta — the plan
 
-The paper's own roadmap. `ROADMAP.md` is the app's, and it has become a record of
+The paper's own roadmap. `docs/plans/ROADMAP.md` is the app's, and it has become a record of
 what landed rather than a plan for what is next; this file is the live one for the
 paper, and it obeys the same rule: **when an item lands, mark it here in the same
 commit.** A plan that moves without its document is a document that lies.
 
-Read `PRODUCT.md` for who this is for, `DESIGN.md` §4 for what a page may look
+Read `docs/rules/PRODUCT.md` for who this is for, `docs/rules/DESIGN.md` §4 for what a page may look
 like, and `docs/ui/gazetta.md` for what every part of the paper already *is*.
 Those three are binding and this file never overrules them.
 
@@ -245,7 +245,7 @@ publication prose. The fantasy packs are all NFL redraft — advice, not narrati
 So commissioning is where the value is, and the discipline problem is §1:
 **twenty columnists is exactly the bloat the rules forbid.**
 
-**The rule that says where a thing lives** — into `PLATFORM_NOTES.md` before
+**The rule that says where a thing lives** — into `docs/record/PLATFORM_NOTES.md` before
 anything is built:
 
 - A **voice** *writes*. `scripts/edition/voice/`, bound to a `StoryKind`.
@@ -257,9 +257,9 @@ anything is built:
 sub-editor that reads the paper back is an agent. A fact-checker is a check.
 
 **Adopt `impeccable`** (Apache 2.0, in `~/worldcup-fantasy`) — 27 reference modes
-whose own setup step reads PRODUCT.md and DESIGN.md, both of which exist here.
+whose own setup step reads docs/rules/PRODUCT.md and docs/rules/DESIGN.md, both of which exist here.
 Vendor it unmodified with its LICENSE and record the exception in
-`PLATFORM_NOTES.md` in the same commit; the justification is `tools/ui/`'s, which
+`docs/record/PLATFORM_NOTES.md` in the same commit; the justification is `tools/ui/`'s, which
 is that it is an instrument rather than shipped code.
 
 **It is a tool, not a substitute for the direction.** An earlier draft had
@@ -300,7 +300,7 @@ schedule keys on the **day**, which needs no calendar at all.
 ## Sequencing — one branch each
 
 **Twelve PRs landed 17 Sep**, and steps 1 to 5 of this list are among them.
-The working agreement had to exist before the list could be worked: `GAZETTA.md`
+The working agreement had to exist before the list could be worked: `docs/plans/GAZETTA.md`
 itself (#1), the conventions with thirteen labels and a milestone (#2),
 `@claude` on-demand review (#4), the state update (#6), the banned fix (#7), the
 two-pass and one-line-comment rules (#8, #9).

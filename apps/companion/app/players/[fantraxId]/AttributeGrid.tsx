@@ -5,7 +5,7 @@ import Section from "../../components/shell/Section";
 // read down each column in turn (`cm9900/11.jpg`).
 //
 // **Three columns on the desk, two on a phone, and never one.** CM draws three
-// across 800px and PRODUCT.md's rule is that the desk decides what is on the
+// across 800px and docs/rules/PRODUCT.md's rule is that the desk decides what is on the
 // screen and the phone decides how much of it a thumb gets — not that the phone
 // gets a stretched column of the same thing. A single column would put fifteen
 // rows down a page that already scrolls; two keeps the shape recognisable at
@@ -18,7 +18,7 @@ import Section from "../../components/shell/Section";
 // figure in a ROW sits beside a name and is read second, while every figure here
 // is what the reader came for — at 11px against CM's own 13 the grid read as a
 // caption under the portrait. If §6 should carry the exception, that is a
-// DESIGN.md edit and Craig's call, not this file's.
+// docs/rules/DESIGN.md edit and Craig's call, not this file's.
 //
 // **The ratings are AMBER, not yellow, and that is the one place this screen
 // deliberately departs from the reference.** CM sets them in its own yellow. In
@@ -38,7 +38,7 @@ import Section from "../../components/shell/Section";
 // **No provenance line and no derivation paragraph** (Craig, same: *"remove this
 // row text"* and *"Ours, derived - and that text"*). Both were here on DESIGN
 // §7's instruction — provenance at the point of use — and their removal is an
-// amendment to that rule rather than an oversight of it; DESIGN.md records it
+// amendment to that rule rather than an oversight of it; docs/rules/DESIGN.md records it
 // with the date. What each rating is made of survives on each row's `title`.
 
 export default function AttributeGrid({

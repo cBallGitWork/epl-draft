@@ -35,7 +35,7 @@ lock above cost nothing.
 
 ## The three questions, and what answers each
 
-`PRODUCT.md` puts them in order of frequency, and the Live tab is judged against
+`docs/rules/PRODUCT.md` puts them in order of frequency, and the Live tab is judged against
 Craig's own 15:50 test: *"it's 3.50, games are on. I can open the site, and
 quickly check real scores, who got goals/assists in games, and check the Fantrax
 matchup."*
@@ -193,7 +193,7 @@ a project:
   CM's 13 Match Stats rows shippable (`cm9900/22.jpg`); the only one missing is
   Action Zones.
 - **Match report.** `fetchPlTextstream` + `mapMatchEvents`, answering 200 on
-  **30 of 30** fixtures across GW1–3, 2,215 events. This is `DESIGN.md` §2's
+  **30 of 30** fixtures across GW1–3, 2,215 events. This is `docs/rules/DESIGN.md` §2's
   named absence — *"a text-commentary matchday"* — and the mapper is done.
 - **Lineups, formation, shirt numbers, captain.** On `/fixtures/{id}`, unread.
 - **The real match clock.** `clock.label` beats FPL's `minutes` and the Live
