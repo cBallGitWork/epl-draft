@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import { headToHead, isMatchdayLive } from "@epl/core";
 import { speaksForNow } from "../../football";
 import { liveScores } from "../../scoreboard";
@@ -34,6 +35,8 @@ export type LiveTie = {
 };
 
 export async function liveTie(): Promise<LiveTie | null> {
+  // Every route is per-request: the cookie below is read only in a live window, which flipped a prerendered page to dynamic at runtime.
+  await connection();
   const squads = await getLeagueSquads();
   if (!("period" in squads) || squads.info === null || squads.roundPeriod === null) return null;
 
