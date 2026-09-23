@@ -1,5 +1,11 @@
 import { unstable_cache } from "next/cache";
-import { COMMENTARY_REVALIDATE, LIVE_REVALIDATE, PAGE_REVALIDATE, type FootballPlayer } from "@epl/core";
+import {
+  COMMENTARY_REVALIDATE,
+  LIVE_REVALIDATE,
+  PAGE_REVALIDATE,
+  type FootballPlayer,
+  type RawPlFixture,
+} from "@epl/core";
 import {
   fetchHighlightsFeed,
   fetchPlFixture,
@@ -111,7 +117,7 @@ export const plStats = unstable_cache(
   { revalidate: PAGE_REVALIDATE },
 );
 
-/** Their id for one of OUR fixtures, or null.
+/** Their round entry for one of OUR fixtures, or null: it carries their id and both teams.
  *
  *  **Two hops, because the two providers number matches differently.** We hold
  *  FPL's season-stable `code`; the Premier League wants its own id. The round
@@ -122,12 +128,12 @@ export const plStats = unstable_cache(
  *  Throws what `plRound` throws: every caller here is already inside a `try` that
  *  turns a refusal into an absent block, and swallowing it twice would leave them
  *  unable to tell "no such fixture" from "their API is down". */
-export async function theirFixtureId(
+export async function theirFixture(
   gameweek: number,
   fixtureCode: number,
-): Promise<number | null> {
+): Promise<RawPlFixture | null> {
   const round = await plRound(gameweek);
-  return round.content.find((fixture) => plFixtureCode(fixture) === fixtureCode)?.id ?? null;
+  return round.content.find((fixture) => plFixtureCode(fixture) === fixtureCode) ?? null;
 }
 
 /** The rights holder's highlights playlist, cached for everybody.

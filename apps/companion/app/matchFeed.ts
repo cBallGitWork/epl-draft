@@ -8,16 +8,15 @@ import {
   highlightFor,
   parseHighlightFeed,
   plCommentary,
-  plFixtureCode,
   plMatchBoard,
   shortProse,
 } from "@epl/core";
 import { roundGoals } from "./commentary";
 import {
   highlightsFeed,
-  plRound,
   plStats,
   plStream,
+  theirFixture,
 } from "./plFeed";
 
 
@@ -50,9 +49,8 @@ export async function matchReport(
 ): Promise<PlCommentaryLine[]> {
   if (gameweek === null) return [];
   try {
-    const round = await plRound(gameweek);
-    const fixture = round.content.find((entry) => plFixtureCode(entry) === fixtureCode);
-    if (fixture === undefined) return [];
+    const fixture = await theirFixture(gameweek, fixtureCode);
+    if (fixture === null) return [];
 
     // **The club in brackets after a player comes out** (Craig, 11 Sep 2026:
     // *"when a goal is scored, we can remove the team name in brackets after a
@@ -146,10 +144,9 @@ export async function matchStatsBoard(
 ): Promise<MatchStatRow[] | null> {
   if (gameweek === null) return null;
   try {
-    const round = await plRound(gameweek);
-    const fixture = round.content.find((entry) => plFixtureCode(entry) === fixtureCode);
+    const fixture = await theirFixture(gameweek, fixtureCode);
     const [home, away] = fixture?.teams ?? [];
-    if (fixture === undefined || home === undefined || away === undefined) return null;
+    if (fixture === null || home === undefined || away === undefined) return null;
     return plMatchBoard(await plStats(fixture.id), home.team.id, away.team.id);
   } catch {
     return null;
