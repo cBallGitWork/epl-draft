@@ -107,10 +107,8 @@ jobs:
           # the writer files the paper without a picture rather than failing
           # after the prose has been paid for.
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          # The league the column is about. This job's environment is not the
-          # app's, so it inherits nothing from Vercel: on 10 Oct this has to move
-          # with it. Unset, it expands to "" and `FANTRAX_LEAGUE_ID` falls back
-          # to the rehearsal league rather than to a blank id.
+          # The league the column is about; set to the one production serves, and moved with Vercel on 10 Oct.
+          # Unset, it expands to "" and the writer refuses to run (`scripts/edition/league.ts`).
           FANTRAX_LEAGUE_ID: ${{ vars.FANTRAX_LEAGUE_ID }}
         run: npm run edition
 

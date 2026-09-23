@@ -504,11 +504,11 @@ anyway.
   written by running `npm run edition` locally on 2 Sep, which this file already
   records further up without anyone joining the two facts. Fixing the Actions
   billing that morning did not fix this; it uncovered it.
-- **`vars.FANTRAX_LEAGUE_ID` — still unset**, and deliberately so until swap day.
-  Unset expands to `""` and the writer falls back to the dummy league, whose
-  stories `normalizePaper` then filters out of the served paper — so a firing
-  appears to succeed and prints nothing. `/swap-day` is the runbook that turns
-  it, and it is the half the Vercel dashboard does not set.
+- **`vars.FANTRAX_LEAGUE_ID` — set to the rehearsal league on 23 Sep 2026**, to
+  match production. Until then it was unset, and every CI firing wrote about the
+  dummy league, whose stories `normalizePaper` filters out, so the paper printed
+  nothing. The writer now refuses to run in CI without it. `/swap-day` changes it
+  to the real league, and it is the half the Vercel dashboard does not set.
 - **`GAZETTA_MODEL` defaults to `claude-opus-4-8`, and that is current** —
   verified 17 Sep against the model table, $5/$25 per MTok, 1M context. It is
   deliberately NOT `claude-opus-5` despite the identical price: on 4.8 an absent

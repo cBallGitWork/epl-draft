@@ -28,13 +28,16 @@ the front page refuse to print a column about the wrong league. So the symptom i
 a paper with no prose, not a paper about the wrong league — still a failure, and
 one that looks like a bug in the paper.
 
+It is already set, to the rehearsal league (23 Sep 2026), so this is a CHANGE:
+
 ```bash
-gh variable list                       # what the workflow will read
+gh variable list                       # expect zbn1z3ukmsgb36sz (rehearsal)
 gh variable set FANTRAX_LEAGUE_ID --body ayyoh3n2mr326v2o
+gh variable list                       # confirm it now reads the real league
 ```
 
-Unset, it expands to `""` and falls back to the rehearsal league — not to a blank
-id — so an empty value looks like a working app serving the wrong league.
+Never delete it. Unset, the writer refuses to run in CI (`scripts/edition/league.ts`),
+so the paper stops filing altogether.
 
 ## 2. Shape, then bridge
 
