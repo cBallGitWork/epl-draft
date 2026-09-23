@@ -3,7 +3,7 @@
 import { SELECT } from "../../../components/shell/ButtonLink";
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { type PlayerStatLine, type SeasonTotals } from "@epl/core";
+import { type PlayerStatLine, type SeasonTotals, DASH } from "@epl/core";
 import { VIEWS, type ViewKey, measuresFor, readingOf } from "./statViews";
 import SortHead from "./SortHead";
 import { positionsFromList } from "../../../positions";
@@ -191,9 +191,9 @@ export default function StatBoard({
                   </Link>
                 </td>
                 <td className="px-1.5 py-1 text-3xs font-bold text-mid">
-                  {positionsFromList(line.position) ?? "—"}
+                  {positionsFromList(line.position) ?? DASH}
                 </td>
-                <td className="px-1.5 py-1 text-2xs text-muted">{line.clubShort ?? "—"}</td>
+                <td className="px-1.5 py-1 text-2xs text-muted">{line.clubShort ?? DASH}</td>
                 {measures.map((measure) => {
                   const value = measure.read(line, underlying[line.fantraxId]);
                   return (
@@ -220,7 +220,7 @@ export default function StatBoard({
                             : "text-faint"
                       }`}
                     >
-                      {value === null ? "—" : measure.decimals ? value.toFixed(2) : value}
+                      {value === null ? DASH : measure.decimals ? value.toFixed(2) : value}
                     </td>
                   );
                 })}

@@ -1,6 +1,5 @@
-import { type Club, type Fixture, crestUrl, londonTime } from "@epl/core";
+import { type Club, type Fixture, crestUrl, londonTime, DASH } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
-
 
 /** The state beside the score. **Bigger inside the cell rather than in a tail
  *  column of its own**, which is what the measurement bought (21 Sep 2026, at
@@ -71,7 +70,7 @@ export default function FootballRow({
  *  crest and no place — a fixture we cannot read one end of is still a fixture. */
 function club(entry: Club | undefined, places: Map<number, number>) {
   return entry === undefined
-    ? { name: "—" }
+    ? { name: DASH }
     : {
         name: entry.name,
         short: entry.shortName,

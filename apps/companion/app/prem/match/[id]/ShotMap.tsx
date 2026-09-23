@@ -1,4 +1,4 @@
-import { clubColours, inkOn } from "@epl/core";
+import { clubColours, inkOn, DASH } from "@epl/core";
 import type { Club, Shot } from "@epl/core";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
 import { LABEL } from "@/app/desk";
@@ -77,7 +77,7 @@ function Side({ club, shots }: { club: Club | undefined; shots: readonly Shot[] 
         className="flex items-baseline justify-between gap-2 px-2 py-1 text-2xs font-bold uppercase"
         style={{ background: colours.primary, color: ink }}
       >
-        <span className="min-w-0 truncate">{club?.shortName ?? "—"}</span>
+        <span className="min-w-0 truncate">{club?.shortName ?? DASH}</span>
         <span className="numeric shrink-0">{shots.length}</span>
       </div>
 

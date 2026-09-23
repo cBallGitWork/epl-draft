@@ -1,4 +1,4 @@
-import { isFplKeeper } from "@epl/core";
+import { isFplKeeper, DASH } from "@epl/core";
 import type { Club, FootballPlayer, FplLine, FplPick, Opposition } from "@epl/core";
 import PitchMarker from "../components/league/PitchMarker";
 import PitchRows from "../components/league/PitchRows";
@@ -106,7 +106,7 @@ function Pick({
         // A pick FPL names and the bootstrap does not — signed since, or an
         // academy name. He still has a club, so he still gets its kit.
         label="?"
-        name={player?.name ?? "—"}
+        name={player?.name ?? DASH}
         keeper={isFplKeeper(pick.line)}
         club={club}
         opposition={opposition}

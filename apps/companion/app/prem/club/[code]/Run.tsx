@@ -1,10 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Club, Fixture } from "@epl/core";
-import { COMPETITION_NAME, crestUrl, londonDayAndDate, londonTime } from "@epl/core";
+import { COMPETITION_NAME, crestUrl, londonDayAndDate, londonTime, DASH } from "@epl/core";
 import { CLUB, MATCH } from "../../routes";
 import { BOARD, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
-
 
 // One club's season, played and to come, in the order it runs.
 //
@@ -147,4 +146,3 @@ const COMPETITION = COMPETITION_NAME;
 const CREST = "h-[1.375rem] w-[1.375rem] shrink-0";
 const CREST_PX = 22;
 
-const DASH = "—";

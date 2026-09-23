@@ -8,6 +8,7 @@ import {
   fixtureLabel,
   isResolved,
   fullPlayerName,
+  DASH,
 } from "@epl/core";
 import StateBox from "../football/StateBox";
 import PositionTile from "./PositionTile";
@@ -119,8 +120,6 @@ export default function SquadRow({
           anything numeric. Silent for a fit man. */}
       <StateBox player={footballer} />
 
-
-
       {/* His club's fixture this week. Craig asked for it and the reference does
           not forbid it: `12.jpg` carries no opponent because it is a TRAINING
           screen, and a fantasy manager's question — is my defender at home to a
@@ -145,7 +144,7 @@ export default function SquadRow({
           strip, the position and the opponent. */}
       {points === undefined ? null : (
         <span className="numeric w-9 shrink-0 text-right text-sm font-bold text-accent">
-          {points ?? "—"}
+          {points ?? DASH}
         </span>
       )}
     </>

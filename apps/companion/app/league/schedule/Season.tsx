@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { leads, londonDate } from "@epl/core";
+import { leads, londonDate, DASH } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
 import { ROW_NAME } from "@/app/desk";
@@ -141,10 +141,10 @@ function Score({ row }: { row: SeasonRow }) {
           for that manager, so nothing may set a colour on top of it. Underline
           says "this one won" without touching the pair. */}
       <span className={won ? "underline decoration-2 underline-offset-2" : ""}>
-        {row.pointsFor ?? "—"}
+        {row.pointsFor ?? DASH}
       </span>
       <span className="px-0.5 font-normal opacity-70">–</span>
-      <span className="opacity-80">{row.pointsAgainst ?? "—"}</span>
+      <span className="opacity-80">{row.pointsAgainst ?? DASH}</span>
     </span>
   );
 }

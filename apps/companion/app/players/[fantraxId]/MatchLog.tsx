@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import Section from "../../components/shell/Section";
 import { ROW_RULE, SCROLL } from "@/app/desk";
 import type { MatchRow } from "./matchRows";
+import { DASH } from "@epl/core";
 
 // His season, match by match, with both accounts of every match on one line and
 // the sum of them at the foot.
@@ -100,7 +101,7 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
                   {fpl.match.gameweek}
                 </td>
                 <td className="whitespace-nowrap py-1 pr-2 font-bold">
-                  {fpl.opponent?.shortName ?? "—"}
+                  {fpl.opponent?.shortName ?? DASH}
                   <span className="pl-1 text-3xs font-normal text-faint">
                     {fpl.match.home ? "H" : "A"}
                   </span>

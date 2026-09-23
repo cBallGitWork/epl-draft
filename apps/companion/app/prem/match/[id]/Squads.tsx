@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Club, FootballPlayer, PlayerOwner } from "@epl/core";
-import { clubColours, inkOn } from "@epl/core";
+import { clubColours, inkOn, DASH } from "@epl/core";
 import { IndexCell } from "../../../components/league/TableCells";
 import { intelSquads } from "../../../intel";
 import { PLAYER } from "../../routes";
@@ -73,7 +73,7 @@ function Side({
         className="flex min-h-7 items-center px-1.5 text-2xs font-bold uppercase"
         style={{ background: colours.primary, color: inkOn(colours) }}
       >
-        {club?.name ?? "—"}
+        {club?.name ?? DASH}
       </h2>
       <table className={BOARD}>
         <tbody>
@@ -102,7 +102,7 @@ function Side({
                     sends as null on purpose — those came from FPL's own fantasy
                     classification, which the football layer refuses by rule. */}
                 <td className="numeric w-10 px-1.5 text-right text-2xs text-faint">
-                  {intel?.position ?? "—"}
+                  {intel?.position ?? DASH}
                 </td>
               </tr>
             );

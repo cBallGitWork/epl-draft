@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { crestForShortName, signed, toFplClubCode } from "@epl/core";
+import { crestForShortName, signed, toFplClubCode, DASH } from "@epl/core";
 import type { PoolRow } from "./pool";
 import type { PoolColumn, RawStats } from "./columns";
 import { figureOf } from "./figure";
@@ -191,7 +191,6 @@ const MARK = {
   off: "text-muted",
 } as const;
 
-
 /** Who he is, under his name: what our league lets him be filed as, his club,
  *  and what may be done with him.
  *
@@ -259,8 +258,6 @@ function Dot() {
     </span>
   );
 }
-
-const DASH = "—";
 
 /** Which way ownership moved, said in the sign as well as the colour — a green
  *  number and a red one are the same number to a reader who cannot tell them

@@ -8,6 +8,7 @@ import {
   isResolved,
   kickedOff,
   londonDayAndTime,
+  DASH,
 } from "@epl/core";
 import EmptySlot from "./EmptySlot";
 import PlayerImage from "./PlayerImage";
@@ -68,7 +69,7 @@ export default function PlayerIdentity({
         {/* The position his manager has him filling, not the list he is
             eligible for — a Fantrax player can hold several. */}
         <p className="truncate text-sm text-muted">
-          {[club?.name, positionLabel(rostered.slot.position)].filter(Boolean).join(" · ") || "—"}
+          {[club?.name, positionLabel(rostered.slot.position)].filter(Boolean).join(" · ") || DASH}
         </p>
         <Fixture club={club} opposition={opposition} />
         {/* Only before he has been on. On the live card "90' played" was the

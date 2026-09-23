@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { BreakdownLine, CategoryPair, SquadPlayerDetail } from "@epl/core";
-import { crestUrl, fullPlayerName } from "@epl/core";
+import { crestUrl, fullPlayerName, DASH } from "@epl/core";
 import { positionLabel } from "../../positions";
 import {
   BOARD,
@@ -44,13 +44,6 @@ import { MUTE } from "./TableHeads";
 // 607 men eligible at two. The `Pts` column is OURS: it is their category lines
 // added up, so DESIGN §7 forbids it the head `FPts`, which is Fantrax's word for
 // a number this is not.
-
-/** A nought Fantrax actually published, against a category he never registered.
- *
- *  Absence is `—` (DESIGN §7) and the two really are different here: `liveBreakdown`
- *  drops a category a man did not register, so a missing line is silence, while a
- *  line carrying 0 is Fantrax saying it counted and paid nothing. */
-const DASH = "—";
 
 /** How much of the row the frozen block takes.
  *
@@ -215,6 +208,7 @@ function PlayerRow({
       </td>
       {columns.map((column) => {
         const points = byCode.get(column.code);
+        // No line is a category he never registered; a 0 is Fantrax counting and paying nothing.
         return (
           <td key={column.code} className={BOARD_FIGURE}>
             {points === undefined ? (

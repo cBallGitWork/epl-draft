@@ -13,6 +13,7 @@ import {
   londonWeekday,
   londonDayAndTime,
   londonTime,
+  DASH,
 } from "@epl/core";
 import { chipsFor } from "../league/Chips";
 import { yoursBorder } from "../../mine";
@@ -209,7 +210,7 @@ function ClubSide({ club, align }: { club: Club | undefined; align: "start" | "e
       ) : (
         <span className="h-6 w-6 shrink-0 rounded-full bg-raised" />
       )}
-      <span className={`truncate ${ROW_NAME}`}>{club?.shortName ?? "—"}</span>
+      <span className={`truncate ${ROW_NAME}`}>{club?.shortName ?? DASH}</span>
     </span>
   );
 }

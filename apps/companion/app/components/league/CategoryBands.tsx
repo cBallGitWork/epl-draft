@@ -1,6 +1,7 @@
 import type { CategoryBand, CategoryMan } from "@epl/core";
 import Nothing from "../shell/Nothing";
 import { PANEL } from "@/app/desk";
+import { DASH } from "@epl/core";
 
 // Where the scoreline came from, and who put it there.
 //
@@ -127,7 +128,7 @@ function Band({
 function Men({ men, names, align }: { men: readonly CategoryMan[]; names: Names; align: string }) {
   if (men.length === 0) return <div />;
   const named = [...men]
-    .map((man) => ({ ...man, name: names.get(man.fantraxId) ?? "—" }))
+    .map((man) => ({ ...man, name: names.get(man.fantraxId) ?? DASH }))
     .sort((a, b) => b.points - a.points || a.name.localeCompare(b.name));
 
   return (
@@ -166,7 +167,7 @@ function Figure({ men }: { men: readonly CategoryMan[] }) {
   const total = men.length === 0 ? null : men.reduce((sum, man) => sum + man.points, 0);
   return (
     <span className="cm-index numeric flex h-6 items-center justify-center font-bold lg:h-7">
-      {total ?? "—"}
+      {total ?? DASH}
     </span>
   );
 }

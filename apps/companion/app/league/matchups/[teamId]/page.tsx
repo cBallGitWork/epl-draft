@@ -9,6 +9,7 @@ import {
   oppositionByClub,
   roundState,
   wasFielded,
+  DASH,
 } from "@epl/core";
 import MatchupBoard, { type MatchupSide } from "../../../components/league/MatchupBoard";
 import Nothing from "../../../components/shell/Nothing";
@@ -281,7 +282,7 @@ export default async function HeadToHeadPage({
             <ScoresTab
               fixtures={squads.snapshot.fixtures}
               sides={both}
-              clubName={(id) => clubs.get(id)?.shortName ?? "—"}
+              clubName={(id) => clubs.get(id)?.shortName ?? DASH}
             />
           }
         />

@@ -8,6 +8,7 @@ import {
   doubtBand,
   fixtureLabel,
   kickedOff,
+  DASH,
 } from "@epl/core";
 import EmptySlot from "./EmptySlot";
 import PlayerShirt from "./PlayerShirt";
@@ -131,10 +132,10 @@ export default function PitchMarker({
   const line =
     band ??
     (show === "fixture"
-      ? (against === null ? (club?.shortName ?? "—") : `v ${against}`)
+      ? (against === null ? (club?.shortName ?? DASH) : `v ${against}`)
       : started
-        ? String(points ?? "—")
-        : (club?.shortName ?? "—"));
+        ? String(points ?? DASH)
+        : (club?.shortName ?? DASH));
 
   // **One plate for every card** (Craig, 21 Sep 2026: "the fixture row should
   // just be blue like this page", pointing at a head-to-head where the band

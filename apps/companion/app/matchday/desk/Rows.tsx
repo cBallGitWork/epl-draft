@@ -1,4 +1,4 @@
-import { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing, londonWeekday, londonTime } from "@epl/core";
+import { Club, Fixture, FootballPlayer, LiveTeamScore, PeriodPairing, londonWeekday, londonTime, DASH } from "@epl/core";
 import ScoreFigure from "../../components/league/ScoreFigure";
 
 // The desk's two kinds of line, at the density the desk is for.
@@ -70,8 +70,8 @@ export function Match({
   clubs: Map<number, Club>;
   yours?: FootballPlayer[];
 }) {
-  const home = clubs.get(fixture.homeClubId)?.shortName ?? "—";
-  const away = clubs.get(fixture.awayClubId)?.shortName ?? "—";
+  const home = clubs.get(fixture.homeClubId)?.shortName ?? DASH;
+  const away = clubs.get(fixture.awayClubId)?.shortName ?? DASH;
   const played = fixture.homeScore !== null && fixture.awayScore !== null;
 
   return (

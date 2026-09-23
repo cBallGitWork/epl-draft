@@ -1,4 +1,4 @@
-import { trails } from "@epl/core";
+import { trails, DASH } from "@epl/core";
 
 // One side's total, read by the scoreline rule.
 //
@@ -33,7 +33,7 @@ export default function ScoreFigure({
 }) {
   return (
     <span className={`${trails(points, other) ? "text-muted" : "text-ink"} ${className}`}>
-      {points ?? "—"}
+      {points ?? DASH}
     </span>
   );
 }

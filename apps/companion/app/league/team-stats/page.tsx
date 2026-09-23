@@ -8,6 +8,7 @@ import {
   rankBy,
   type Measure,
   type StatCategory,
+  DASH,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
@@ -249,10 +250,6 @@ function boardHref(by: Measure, group: string, category: string): string {
 function direction(category: StatCategory, measure: Measure): "ascending" | "descending" {
   return measure === "value" && category.lowIsGood === true ? "ascending" : "descending";
 }
-
-/** Absence, never a nought — a team with no reading has not recorded nought of
- *  it (DESIGN §7). */
-const DASH = "—";
 
 /** How much of the row one category takes.
  *

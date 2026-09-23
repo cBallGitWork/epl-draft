@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { crestUrl, loggedPlayers, matchLine, sheetSides } from "@epl/core";
+import { crestUrl, loggedPlayers, matchLine, sheetSides, DASH } from "@epl/core";
 import type { Club, IntelMatchPlayer, PlayerMatchStats, SheetRow } from "@epl/core";
 import Section from "../../../components/shell/Section";
 import { PLAYER } from "../../routes";
@@ -195,6 +195,7 @@ export default function PlayerStats({
                       key={column.head}
                       className={`${BOARD_FIGURE} ${derived ? "font-bold text-info" : ""}`}
                     >
+                      {/* A nought is shown as absence here: thirty rows of 0 bury the figures that are not. */}
                       {value === null || value === 0 ? (
                         <span className="text-faint">{DASH}</span>
                       ) : (
@@ -259,10 +260,6 @@ export function sorted(rows: readonly Row[], sort: StatSort, descending: boolean
     return descending ? right - left : left - right;
   });
 }
-
-/** Absence, never a nought — and here a nought is an absence too: a column of
- *  noughts against thirty names buries the two figures that are not one. */
-const DASH = "—";
 
 /** The club's badge, at the size a dense row can carry.
  *

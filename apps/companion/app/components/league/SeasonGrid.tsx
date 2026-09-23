@@ -1,4 +1,4 @@
-import { columnLabel } from "@epl/core";
+import { columnLabel, DASH } from "@epl/core";
 import type { TeamStats } from "@epl/core";
 import {
   BOARD_FIGURE,
@@ -157,14 +157,14 @@ export default function SeasonGrid({
                           key={group.columns[at]?.code ?? at}
                           className={`${BOARD_FIGURE} py-1 ${tone(value)}`}
                         >
-                          {value ?? "—"}
+                          {value ?? DASH}
                         </td>
                       ))}
                       <td className={`${BOARD_FIGURE} py-1 font-bold text-ink`}>
-                        {line.points ?? "—"}
+                        {line.points ?? DASH}
                       </td>
                       <td className={`${BOARD_FIGURE} py-1 text-muted`}>
-                        {line.perGame ?? "—"}
+                        {line.perGame ?? DASH}
                       </td>
                     </tr>
                   ))}

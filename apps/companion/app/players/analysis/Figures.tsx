@@ -1,6 +1,7 @@
 import { rateRows } from "./rates";
 import type { RateRow } from "./rates";
 import type { SeasonTotals } from "@epl/core";
+import { DASH } from "@epl/core";
 
 // What the men have done, per ninety minutes.
 //
@@ -80,8 +81,6 @@ export default function Figures({
     </table>
   );
 }
-
-const DASH = "—";
 
 /** The measures where the LOWER figure is the better one.
  *

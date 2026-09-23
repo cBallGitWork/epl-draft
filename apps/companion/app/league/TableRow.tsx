@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ordinal, type FormGame, type SortKey, type StandingsRow } from "@epl/core";
+import { ordinal, type FormGame, type SortKey, type StandingsRow, DASH } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
 import { ROW_LINK } from "../components/league/TableCells";
 import { cellAlign, deskOnly } from "./Columns";
@@ -179,10 +179,6 @@ export default function TableRow({
   );
 }
 
-/** Absence, never a nought — a nought is a claim about a team that has played
- *  nobody (DESIGN §7). */
-const DASH = "—";
-
 /** The last few rounds, newest LAST — left to right is the direction the season
  *  ran, which is how a form guide is read everywhere it appears.
  *
@@ -213,5 +209,4 @@ function Form({ run }: { run: readonly FormGame[] }) {
 }
 
 const FORM_GAMES = 5;
-
 

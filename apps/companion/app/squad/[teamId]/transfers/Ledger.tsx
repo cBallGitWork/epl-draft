@@ -1,5 +1,5 @@
 import type { Deal, DealSide } from "@epl/core";
-import { inkOn, kindOf, movement, teamColours } from "@epl/core";
+import { inkOn, kindOf, movement, teamColours, DASH } from "@epl/core";
 import { PANEL_FLUSH, ROW_NAME, SCROLL } from "@/app/desk";
 
 // One manager's business, drawn as Championship Manager's Transfers screen.
@@ -208,7 +208,7 @@ function Side({
  *  string is "Wed Sep 2, 2026, 6:11AM" and the first two segments are the date.
  *  Never parsed into a `Date` — it carries no offset, so parsing invents one. */
 function shortDate(at: string | null): string {
-  if (at === null) return "—";
+  if (at === null) return DASH;
   const [day, month] = at.split(",");
   return month === undefined ? at : `${day.trim()} ${month.trim()}`;
 }

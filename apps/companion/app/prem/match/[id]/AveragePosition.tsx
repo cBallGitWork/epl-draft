@@ -1,4 +1,4 @@
-import { clubColours, inkOn } from "@epl/core";
+import { clubColours, inkOn, DASH } from "@epl/core";
 import type { Club } from "@epl/core";
 import { LABEL } from "@/app/desk";
 import { placeLabels } from "./labels";
@@ -117,7 +117,7 @@ function Side({
         className="flex items-baseline justify-between gap-2 px-2 py-1 text-2xs font-bold uppercase"
         style={{ background: colours.primary, color: ink }}
       >
-        <span className="min-w-0 truncate">{club?.shortName ?? "—"}</span>
+        <span className="min-w-0 truncate">{club?.shortName ?? DASH}</span>
         {/* **A man with no cloud is dropped, and the plate is where that is
             admitted.** `teamSheet.ts` sets the precedent for the dropping — "a
             pitch with a hole in it is a worse answer than a pitch with ten men" —

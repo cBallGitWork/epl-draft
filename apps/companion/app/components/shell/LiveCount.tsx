@@ -1,4 +1,5 @@
 import type { LiveTie } from "./liveTie";
+import { DASH } from "@epl/core";
 
 // Your tie's score, in the Live plate of the phone's foot row.
 //
@@ -22,7 +23,7 @@ export default async function LiveCount({ tie }: { tie: Promise<LiveTie | null> 
   if (live === null) return null;
   return (
     <span className="numeric text-xs font-bold">
-      {live.yours ?? "—"} v {live.theirs ?? "—"}
+      {live.yours ?? DASH} v {live.theirs ?? DASH}
     </span>
   );
 }

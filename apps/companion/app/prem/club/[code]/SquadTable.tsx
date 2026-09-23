@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ClubColours, FootballPlayer } from "@epl/core";
-import { availabilityOf, positionDepth } from "@epl/core";
+import { availabilityOf, positionDepth, DASH } from "@epl/core";
 import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
 import PositionTile from "../../../components/league/PositionTile";
 import PlayerPortrait from "../../../components/football/PlayerPortrait";
@@ -23,8 +23,6 @@ import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk
 // (`football/types.ts`): FPL's counts may not stand beside a Fantrax figure. The
 // owner column is a NAME, not a number — it says who holds him, which is a fact
 // about our league and not a second count of a Premier League goal.
-
-const DASH = "—";
 
 export default function SquadTable({
   players,

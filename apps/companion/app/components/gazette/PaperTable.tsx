@@ -1,4 +1,5 @@
 import Column from "./Column";
+import { DASH } from "@epl/core";
 
 // A table as newsprint sets one: a ruled head, hairline rows, and figures in
 // the tabular face — the shape a back page has printed since long before any
@@ -57,17 +58,17 @@ export default function PaperTable({
             {row.name}
           </span>
           {played ? (
-            <span className="numeric w-6 shrink-0 text-right text-muted">{row.played ?? "—"}</span>
+            <span className="numeric w-6 shrink-0 text-right text-muted">{row.played ?? DASH}</span>
           ) : null}
           {/* Not `.numeric`: this cell is a record on a table and a manager's
               name on a chart, and letterspacing rules follow the content. */}
           <span
             className={`w-20 shrink-0 truncate text-right text-muted ${played ? "numeric w-12" : ""}`}
           >
-            {row.detail ?? "—"}
+            {row.detail ?? DASH}
           </span>
           <span className="numeric w-7 shrink-0 text-right font-semibold text-ink">
-            {row.points ?? "—"}
+            {row.points ?? DASH}
           </span>
         </div>
       ))}

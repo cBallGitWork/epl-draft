@@ -1,4 +1,4 @@
-import { FPL_SITE, clubById, fplLineup, kickedOff, oppositionByClub, playerByCode } from "@epl/core";
+import { FPL_SITE, clubById, fplLineup, kickedOff, oppositionByClub, playerByCode, DASH } from "@epl/core";
 import type { FplPick } from "@epl/core";
 import { footballNow } from "../football";
 import Nothing from "../components/shell/Nothing";
@@ -216,7 +216,7 @@ function Figure({ label, value }: { label: string; value: number | null }) {
   return (
     <div className="cm-panel px-3 py-2">
       <dt className={LABEL}>{label}</dt>
-      <dd className="numeric text-xl font-bold">{value === null ? "—" : value.toLocaleString("en-GB")}</dd>
+      <dd className="numeric text-xl font-bold">{value === null ? DASH : value.toLocaleString("en-GB")}</dd>
     </div>
   );
 }
@@ -269,7 +269,7 @@ function Bench({
                 {at + 1}
               </span>
               <span className={`flex min-w-0 flex-1 items-center truncate text-ink ${ROW_NAME}`}>
-                {player?.name ?? "—"}
+                {player?.name ?? DASH}
               </span>
               <span className={`flex shrink-0 items-center ${SMALL_CAPS} text-muted`}>
                 {club?.shortName ?? ""}

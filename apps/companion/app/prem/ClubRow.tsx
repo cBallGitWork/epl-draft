@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { type Result, type TableRow, type TableSortKey, crestUrl, ordinal } from "@epl/core";
+import { type Result, type TableRow, type TableSortKey, crestUrl, ordinal, DASH } from "@epl/core";
 import { cellAlign, deskOnly } from "./Columns";
 import { CLUB } from "./routes";
 import { ROW_LINK } from "../components/league/TableCells";
@@ -112,9 +112,6 @@ export default function ClubRow({
     </tr>
   );
 }
-
-/** Absence, never a nought — a nought is a claim (DESIGN §7). */
-const DASH = "—";
 
 function SWING(difference: number): string {
   if (difference > 0) return "text-up";

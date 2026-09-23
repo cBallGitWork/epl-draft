@@ -1,4 +1,4 @@
-import { type BreakdownLine, signed } from "@epl/core";
+import { type BreakdownLine, signed, DASH } from "@epl/core";
 import Note from "./Note";
 import { FACT_LABEL, HEAD_PLATE, HEAD_PLATE_END, LABEL } from "@/app/desk";
 
@@ -86,7 +86,7 @@ export default function Breakdown({
                     on the right. Absent rather than nought where the season
                     table's FPTS view has spent the count (DESIGN §7). */}
                 <span className="numeric w-10 shrink-0 text-right text-sm text-muted">
-                  {line.value ?? "—"}
+                  {line.value ?? DASH}
                 </span>
                 <span
                   className={`numeric ${PTS_COLUMN} shrink-0 pr-1.5 text-right text-sm font-bold ${tone(line.points)}`}
@@ -105,7 +105,7 @@ export default function Breakdown({
               points === null ? "text-faint" : tone(points)
             }`}
           >
-            {points ?? "—"}
+            {points ?? DASH}
           </span>
         </div>
       </div>

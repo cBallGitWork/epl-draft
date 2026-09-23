@@ -16,6 +16,7 @@ import {
   SCROLL,
 } from "@/app/desk";
 import { MUTE } from "../../../../components/league/TableHeads";
+import { DASH } from "@epl/core";
 
 // A club's season, player by player, in Championship Manager's stat-screen
 // grammar.
@@ -201,4 +202,3 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
   );
 }
 
-const DASH = "—";

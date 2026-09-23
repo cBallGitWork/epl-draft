@@ -2,6 +2,7 @@ import type { PeriodPairing } from "../league/selectors";
 import type { TeamProjection } from "../league/points";
 import type { DraftPick } from "../league/fantrax/draft";
 import type { AvailabilityNote, Deal, Pick, TeamOfTheWeek } from "./types";
+import { DASH } from "../format";
 
 // The facts a columnist is given, and the only ones he may use.
 //
@@ -92,7 +93,7 @@ function ties(brief: Brief): string | null {
 }
 
 function points(score: { points: number | null } | undefined): string {
-  return score?.points === null || score?.points === undefined ? "—" : String(score.points);
+  return score?.points === null || score?.points === undefined ? DASH : String(score.points);
 }
 
 /** The eleven, and the bench claim that is only sometimes safe to make. */
@@ -152,7 +153,7 @@ function business(brief: Brief, who: Who): string | null {
   const lines = brief.deals.slice(0, 8).map((deal) => {
     const inbound = deal.inbound.map((player) => `${player.playerName} to ${who(player.teamId)}`).join(", ");
     const outbound = deal.outbound.map((player) => player.playerName).join(", ");
-    return `- ${deal.kind.toUpperCase()}: ${inbound || "—"}${outbound ? ` (out: ${outbound})` : ""}`;
+    return `- ${deal.kind.toUpperCase()}: ${inbound || DASH}${outbound ? ` (out: ${outbound})` : ""}`;
   });
   return [
     "THE WEEK'S BUSINESS. A trade between two managers is the rarest thing in a draft league and is news; a waiver claim usually is not.",

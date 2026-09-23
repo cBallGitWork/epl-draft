@@ -17,6 +17,7 @@
 
 export * from "./config";
 export * from "./time";
+export * from "./format";
 export * from "./football";
 export * from "./identity";
 export * from "./join/lineup";

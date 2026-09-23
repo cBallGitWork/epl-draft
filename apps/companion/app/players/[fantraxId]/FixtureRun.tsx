@@ -1,6 +1,7 @@
 import type { Opposition } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { fdrStep } from "../../components/football/fdr";
+import { DASH } from "@epl/core";
 
 // What is coming, as a run rather than as a single match.
 //
@@ -30,7 +31,7 @@ export default function FixtureRun({ run }: { run: Opposition[] }) {
             <span className="numeric text-center text-2xs text-faint">
               {/* A rearranged match can lose its round. It keeps its place in
                   the run — it is still his next game — and says so. */}
-              {against.fixture.gameweek === null ? "—" : `GW${against.fixture.gameweek}`}
+              {against.fixture.gameweek === null ? DASH : `GW${against.fixture.gameweek}`}
             </span>
             <span
               className={`numeric flex min-h-11 flex-col items-center justify-center px-1 text-xs font-bold leading-tight ${

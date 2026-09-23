@@ -5,6 +5,7 @@ import DialogFoot from "../../../components/shell/DialogFoot";
 import DialogHead from "../../../components/shell/DialogHead";
 import Modal from "../../../components/shell/Modal";
 import { PLAYER } from "../../routes";
+import { DASH } from "@epl/core";
 
 // One man's afternoon, over the team sheet rather than instead of it.
 //
@@ -106,7 +107,7 @@ function Card({ man, onClose }: { man: MatchMan; onClose: () => void }) {
         {/* The figure the board is for, at the size a dialog can give it. */}
         <p className="flex items-baseline gap-2 border-y border-line py-2">
           <span className="numeric text-4xl font-bold text-info">
-            {man.points === null ? "—" : man.points}
+            {man.points === null ? DASH : man.points}
           </span>
           <span className="text-2xs text-faint">
             {man.points === null ? "never got on" : "points · FPL's own"}
