@@ -52,7 +52,9 @@ a `Record` for exactly this reason — do not "tidy" it back into interpolation.
 
 ## Type
 
-Four faces, four roles. Archivo carries the desk's UI; **Archivo Narrow
+One role per face. On the desk, Oxanium sets the chrome (bars, tabs, the rail,
+column heads) and Jost the text and names, since 31 Aug 2026; Archivo sets only
+the paper's letterspaced small capitals. **Archivo Narrow
 (`.numeric`) carries every figure in both registers** and is the shared spine —
 tabular, so digits do not jitter as they tick, which is the single most important
 typographic decision in a live view. Fraunces sets the paper's masthead, display
@@ -85,9 +87,7 @@ No fluid clamps except inside the masthead.
 | `shell/Skeleton` | The loading block. Paints `currentColor` at low alpha, so it self-skins in whichever register it lands in — one primitive, no variants. |
 | `shell/SkeletonRows` | The app's standard card stack at a given height, for a `loading.tsx` that has to draw its route's real frame rather than a spinner. |
 | `league/TableHeads` | Championship Manager's bevelled head strip, and the only place its mechanics live: the row, the cell, the plate, the bare name cell that starts it, `SortHead` — the plate as a LINK, drawn pressed when the table is ordered by it — and `MUTE`, the class a head takes when its column names itself. Three tables sort through it (`/league`, `/prem`, Team Stats); the column LISTS stay with their tables, because different columns mean genuinely different widths. |
-| `league/PitchFrame` | Hoardings + goal + turf. Full-bleed. |
-| `league/PitchRows` | Players in their lines, on whichever ground `flat` picks — `CmGround`'s diagram or `PitchFrame`'s trapezoid. **Owns card width, the name's size, and the shrink-not-wrap policy** — all FIVE go through it — both squad views, the head-to-head, `/fpl` and `/prem/club/[code]`'s predicted eleven, which is the only one about a real club. What it does NOT own is the pitch's width against the fold: `.pitch`'s ratio turns any width into a height, so a pitch with no second column beside it caps its own — `fpl/FplPitch` and `league/LineupPitch`, two occurrences, copied rather than named. |
-| `league/PitchTurf` | The grass in perspective, as an inline SVG. |
+| `league/PitchRows` | Players in their lines, on `CmGround`'s diagram, the only ground since 21 Sep 2026. **Owns card width, the name's size, and the shrink-not-wrap policy** — all FIVE go through it — both squad views, the head-to-head, `/fpl` and `/prem/club/[code]`'s predicted eleven, which is the only one about a real club. What it does NOT own is the pitch's width against the fold: `.pitch`'s ratio turns any width into a height, so a pitch with no second column beside it caps its own — `fpl/FplPitch` and `league/LineupPitch`, two occurrences, copied rather than named. |
 | `league/LineupPitch` | Your own XI plus the bench, one target per player: tap to pick, tap again for the rest. Draws `SquadMarker`, same as the head-to-head — it had a sticker of its own until 21 Sep 2026. |
 | `league/SquadMarker` | A fantasy roster slot as a `PitchMarker`: the league layer's vocabulary translated into football's, in one place. **Three sites** — the planner's pitch, and the head-to-head's grass and bench. The BUTTON round it stays with each caller, because they disagree about what a tap does. |
 | `league/BenchStrip` | The reserves under the grass, numbered from the left and on the pitch's own inset and row budget. Two callers, extracted because the next change was going to be made twice — and because the two had already drifted once over card width (see `PitchRows`). |
@@ -100,7 +100,7 @@ No fluid clamps except inside the masthead.
 | `league/PitchMarker` · `league/CmGround` | A marker on the grass, and the ground it stands on. The marker is a kit on a translucent wash, the name on Championship Manager's bevelled plate, and under it the fixture or the score on the desk's navy. Was `PitchDisc`, a cut-out head in a coloured circle, until 10 Sep 2026; the band carried the opponent's club colour from 10 to 21 Sep, and gave it up when the card gained two other things to say in colour — how likely he is to MISS on the plate, and the whole card red when he is out. |
 | `football/fdr` | FPL's five difficulty steps, each with the ink that survives it. **Not a component** — `FixtureChip` drew one and lost its last caller on 21 Sep 2026 when the planner's band went to `PitchMarker`'s opponent colour, so the file is named for the scale that outlived it. Two consumers: the profile's fixture run and the player dialog's fixture line. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
-| `shell/TabStrip` | The blue tab strip under a title bar. Five strips use it — the League section, the Premiership section, a fantasy team's five views, a club's four, a player's five. (It read "three" until 4 Sep 2026 and had been undercounting `PremNav` since 2 Sep.) `dim` greys a tab that has nothing behind it for THIS subject and keeps it in place, which is CM's answer for an empty view (`cm0102/07.jpg`). |
+| `shell/TabStrip` | The blue tab strip under a title bar. Seven strips use it — the League section, the Premiership section, Scout's pool, a fantasy team's five views, a club's four, a player's five and a match's (counted 23 Sep 2026). (It read "three" until 4 Sep 2026 and had been undercounting `PremNav` since 2 Sep.) `dim` greys a tab that has nothing behind it for THIS subject and keeps it in place, which is CM's answer for an empty view (`cm0102/07.jpg`). |
 | `shell/Caption` | The yellow centred caption inside a panel. The bar above names the subject; this names the view. Not on a plated subject's screens (`PlateShell`), where it only repeated the lit tab. |
 | `shell/Section` | A headed block with a rule under it, **on a plate**. The plate is the section's and not each caller's (Craig, 4 Sep 2026: "use the transparent ish panels in other pages and make sure that's now a universal shared property") — four callers had begun wrapping their own children in `PANEL` and the heading was outside it every time, so every headed block in the app printed its title and its provenance onto the photograph. Invisible until `groundfit.mjs` was repaired the same day. It also makes the desk more like the reference: `desk.css` already says a CM screen is "several bevelled PANELS, each opening with its own title bar". |
 | `shell/PlateShell` | The frame a screen about a SUBJECT wears: his colour on the bar, his tabs, no caption, and `--cm-index` re-pointed so every table inside is drawn in his colours. Extracted at the third plated subject — a fantasy team, a club, a player — which is where `prem/club/[code]/Shell` said in writing it would be. The tab strip is passed as a NODE, not as a list and a base href: a config object would make it a nav framework three callers configure, and each caller's tab file is where its own docblock lives. |
@@ -170,8 +170,8 @@ the type scale — `NAME_SIZE`, `--text-2xs` — and truncates when the card can
 hold it. It was one size in container-query *units*, which sounds like the same
 sentence and is the opposite one: it handed the card's crowding straight to the
 type, and a line of seven printed a 7px name. A card too narrow to say a name has
-nothing smaller to say instead, because FPL's `squad_number` is null on all 622 of
-its elements, so the ellipsis is where the rule ends.
+nothing smaller to say instead, because FPL's `squad_number` is null on every
+element (667 of 667, counted 23 Sep 2026), so the ellipsis is where the rule ends.
 
 **The widest a card may be is 110px**, which is the width of the Premier
 League's portrait file — past that the card upscales its own photograph. The
@@ -194,11 +194,10 @@ replaced the bar the page was measured spending the same 290px on furniture at
 390, 768, 1024 and 1440 alike. **A pitch with a bench under
 it is a different budget** — `.pitch-with-bench`, set by `TeamSheet` and
 `LineupPitch`, the two that know there is one — because one number for both made
-the quiet page pay for the busy one. Row padding is
-the taper's **own** inset — `FAR_INSET`, exported by `PitchTurf` and set on the
-frame as `--pitch-inset`, which the hoardings read too. One number, three
-readers: it used to be written out twice with a comment asking the next person to
-keep the two in step.
+the quiet page pay for the busy one. Row padding is `FAR_INSET`, exported by
+`PitchRows`, and the bench strip pads itself by the same number so a reserve
+stands under the man he would replace. It outlived `PitchTurf`, whose taper it
+was, on 21 Sep 2026.
 
 **A two-line row stacks on a phone and goes inline above `lg`.** Four rows do it
 — the pool's name over his position and club, the schedule's competition under
@@ -270,14 +269,19 @@ with its row here in the same commit.**
 | `ROW_NAME` | **A name in a repeating row** — a club, a manager, a footballer: the chrome face, `sm`/`lg:base`, bold. No `truncate` and no `min-w-0`, because whether a name may be cut depends on what is beside it. **Not** a `.cm-title` bar, a dialog heading, or `matchday/desk/Rows`' "ARS v CHE", which is a fixture line rather than a name. | 7 ways in 2 faces and 4 sizes (5 Sep 2026); 3 sites still outside it earlier on 7 Sep, and **12 more found the same day** when Craig checked a second screen (*"i still see different font sizes in the app, such as /league/team-stats"*) — both team-stats boards, three match screens, `league/matchups`, `league/schedule` (both branches of one opponent), `football/MatchList`'s scorer, the transfer ledger, `prem/club` set-pieces and its fixture run. **Three more on 10 Sep** — the row-name cells of the three dense stat GRIDS, which the earlier sweeps had walked past because none of them writes a name into a `<span>`: `squad/[teamId]/stats/StatBoard` inherited `text-2xs` from its `<td>`, `league/SeasonGrid` set it there, and `prem/club/[code]/stats/PlayerBoard` had the size and the weight but not the face. Measured rather than assumed: the row height does not move at either width, because `.cm-index` beside them already sets `text-sm`/`lg:text-base` and was already the tallest thing in the row |
 | `ROW_RULE` | The rule between two rows of a TABLE. `border-bg`, the darker step, so a table reads as grooved rather than as fifteen boxes. **`.cm-rows` rules a LIST with the same colour since 7 Sep 2026** — it was `--color-line`, so the schedule's ties and the table's teams were separated by two different marks, and the reference rules its rows with nothing at all (`cm9900/24.jpg`, `cm0102/07.jpg`): what gives a CM list its rhythm is the gap between the index blocks down its left. | 14 files |
 | `SCROLL` | What a board is wrapped in so a phone can reach its far columns. | 14 sites |
-| `TAB` | One plate of a tab strip: the blue plate, filling its share of the row, label centred in the chrome face. Size and padding stay the caller's — `TabStrip` takes its own from a prop, `GroupNav` keeps a 44px floor that relaxes to 36, `Board` will not let a category wrap. | 5 spellings, and one had already diverged: the wire picker was written with no `lg:text-sm`, so it sat at 9px on a desk where every other strip steps to 14 |
+| `TAB` | One plate of a tab strip: the blue plate, filling its share of the row, label centred in the chrome face. Size and padding stay the caller's — `TabStrip` takes its own from a prop, `GroupNav` keeps a 44px floor that relaxes to 36. | 5 spellings, and one had already diverged: the wire picker was written with no `lg:text-sm`, so it sat at 9px on a desk where every other strip steps to 14 |
 | `HEAD_PLATE` · `HEAD_PLATE_END` | A column head on a stats board (`h-6`), left over a name and right over a figure. `TableHeads.PLATE` is the `h-7` twin over a table. An empty one is not a mistake — see `MUTE`. | 12 sites, 3 files |
 | `PANEL` | The default panel: a CM well holding a column of things. A caller with a reason keeps its own spacing and states it; a caller without one takes this. | 6 sites agreed already, 4 strays joined |
 | `PANEL_FLUSH` | The same well with no spacing of its own, for a panel whose single child manages it — a board, a ledger, a grid. A different decision from `PANEL`, not `PANEL` minus two utilities. | 6 sites |
+| `HEADING_PLATE` | A heading between two panels, on a plate of its own: DESIGN §2's "nothing prints on the bare ground". | 3 sites: both Bench headings and `/squad`'s "Around the league" (23 Sep 2026) |
 | `HEAD_CELL` | The `<th>` a stats board's head plate sits in: no padding, because the plate carries it. | 3 boards — the same three that share `HEAD_PLATE` |
 | `FACT` | One stated fact in a stack: bordered, at the tap floor at both widths. | 4 files |
 | `FACT_LABEL` | The label half of a `FACT` row — takes the room the figure does not, and truncates rather than wrapping. The truncation is the part worth naming: a Fantrax label is a full sentence on some rows, and a row that wraps to three lines stops being a row. | 5 files |
 | `SUBMIT` | The button that submits a form it sits inside. | 3 sites |
+| `ROW_HOVER` | `ROW_RULE` plus the surface under a pointer: a board row nobody owns. | 5 Prem boards (23 Sep 2026) |
+| `STICKY_LEAD` | A board's frozen first column. `bg-surface` is load-bearing: a transparent one lets the scrolled figures slide under the name. | 4 files |
+| `GAMEWEEK_HEAD` · `GAMEWEEK_TITLE` | A gameweek view's header row and title, shared with its loading skeleton so the page does not jump when it lands. | 5 files |
+| `DESK_ONLY` · `standDown()` | A column shown on the desk only; `standDown` keeps it when the table is sorted by it, or the sort arrow and `aria-sort` would hide with it. | 4 files |
 
 **`.cm-index` owns its text outright** — size, weight and shadow, in `desk.css`,
 the way `.cm-bevel` owns its ink and its face. The twenty sites that draw a blue
@@ -419,10 +423,10 @@ on a line of its own and labelled as FPL's. Same dialog skeleton, different
 questions, opened on different days. A third card is a sign one of these two has
 lost its question.
 
-**The pitch angle is in the ground, never in a transform.** A CSS `perspective`
-on the container would tilt the stickers with it, and a sticker is a flat printed
-object photographed square. The trapezoid, the growing mow bands and the splayed
-markings are drawn in `PitchTurf`.
+**No pitch is drawn in perspective since 21 Sep 2026.** Every one stands on
+`CmGround`'s flat diagram; `PitchTurf`, which drew the trapezoid, is gone. The
+rule it kept still holds for any ground that returns: an angle goes in the ground,
+never in a CSS transform, which would tilt the cards with it.
 
 ## Motion and access
 

@@ -21,7 +21,7 @@
 // `isPaperRoute` is what stands the ground down.
 
 import { connect, discover, parseArgs, teamCookie } from "./cdp.mjs";
-import { DESK_ROUTES } from "./routes.mjs";
+import { DESK_ROUTES, matchRoutes } from "./routes.mjs";
 
 /** This run's routes: the shared list, plus whatever `discover` finds a real
  *  id for below. A COPY, because those appends are this process's own —
@@ -140,10 +140,8 @@ if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) =
 // heads. Four strings on four grounds none of which is a token this instrument
 // has already had checked.
 const match = await discover(cdp, "/prem/results", 'a[href^="/prem/match/"]');
-// All four of the match's tabs. Two arrived on 5 Sep 2026 — Player Stats came
-// off the Overview and the Match Report is the Premier League's own commentary
-// — and a tab this list does not name is a tab that ships unmeasured.
-if (match) ROUTES.push(match, `${match}/stats`, `${match}/players`, `${match}/report`);
+// Every tab the match has, read off the app's folders (`matchRoutes`), so none ships unmeasured.
+if (match) ROUTES.push(...matchRoutes(match));
 
 
 let failures = 0;

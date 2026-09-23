@@ -61,11 +61,6 @@ export function widestLine(
   return Math.max(1, ...rows.map((row) => row.players.length));
 }
 
-/** The width every card is drawn at, as a share of the row it stands in.
- *
- *  A share and not a length, so a caller outside the ground gets the same
- *  pixels only inside a row of the same width — which is why the strips take the
- *  pitch's own inset rather than a padding of their own. */
 /** How far a row of cards stands in from the ground's edge, as a percentage.
  *
  *  **It was the trapezoid's taper and is now simply the inset**, which is what
@@ -76,6 +71,11 @@ export function widestLine(
  *  the sizing this module already owns. */
 export const FAR_INSET = 5;
 
+/** The width every card is drawn at, as a share of the row it stands in.
+ *
+ *  A share and not a length, so a caller outside the ground gets the same
+ *  pixels only inside a row of the same width — which is why the strips take the
+ *  pitch's own inset rather than a padding of their own. */
 export function cardBasis(widest: number): string {
   return `min(${MAX_CARD}, calc((100% - ${widest - 1} * ${GAP}) / ${widest}))`;
 }

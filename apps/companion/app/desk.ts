@@ -83,6 +83,9 @@ export const PANEL = "cm-panel flex flex-col gap-2 p-2";
 /** A panel holding one thing that spaces itself: a board, a ledger, a grid. */
 export const PANEL_FLUSH = "cm-panel flex flex-col";
 
+/** A heading between two panels, on a plate of its own: nothing prints on the bare ground. */
+export const HEADING_PLATE = `cm-panel px-2 py-1 text-center ${LABEL}`;
+
 /** The `<th>` a stats board's head plate sits in; the plate carries padding and alignment. */
 export const HEAD_CELL = "p-0 text-left font-bold";
 

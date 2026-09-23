@@ -8,7 +8,7 @@ import LivePlayerCard from "./LivePlayerCard";
 import PitchRows, { widestLine } from "./PitchRows";
 import SquadMarker from "./SquadMarker";
 import SquadRows from "./SquadRows";
-import { LABEL } from "@/app/desk";
+import { HEADING_PLATE } from "@/app/desk";
 
 // A team as it lines up on a day that counts: the eleven on the grass, the
 // reserves in a strip under them, and every one of them a way into what he is
@@ -144,7 +144,7 @@ export default function TeamSheet({
                   (DESIGN §2) — the two lists draw their own panels and a heading
                   between them would sit on the photograph, which is the one
                   thing `groundfit` measures. */}
-              <p className={`cm-panel px-2 py-1 text-center ${LABEL}`}>Bench</p>
+              <p className={HEADING_PLATE}>Bench</p>
               <SquadRows
                 // The bench as one unlabelled line. `SquadRows` discards a
                 // line's own position anyway — a man's position is a column on

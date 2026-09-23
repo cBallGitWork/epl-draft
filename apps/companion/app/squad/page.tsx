@@ -9,7 +9,7 @@ import { planningRound } from "../round";
 import { myTeamId, signedIn } from "../session";
 import { yoursBorder } from "../mine";
 import { MY_TEAM, SQUAD } from "./routes";
-import { LABEL, PANEL, ROW_NAME } from "@/app/desk";
+import { PANEL, ROW_NAME, HEADING_PLATE } from "@/app/desk";
 import FantraxSilent from "../components/shell/FantraxSilent";
 
 // Your squad, and everyone else's. Until the draft this is the empty state,
@@ -104,7 +104,7 @@ export default async function SquadsPage() {
           button that drops you back onto the team the league lent you does
           nothing a reader can see. */}
       {holder ? (
-        <form action={forgetTeam} className="px-3">
+        <form action={forgetTeam} className="cm-panel px-3">
           <button type="submit" className="min-h-11 text-2xs text-faint hover:text-muted">
             Not you? Sign out
           </button>
@@ -113,7 +113,8 @@ export default async function SquadsPage() {
         <SignIn />
       )}
 
-      {yours ? <h2 className={`px-3 pt-1 ${LABEL}`}>Around the league</h2> : null}
+      {/* A plate of its own: nothing prints on the bare ground (DESIGN §2). */}
+      {yours ? <h2 className={HEADING_PLATE}>Around the league</h2> : null}
 
       <ul className="cm-rows flex flex-col">
         {others.map((team) => (

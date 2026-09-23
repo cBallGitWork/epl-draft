@@ -1,5 +1,5 @@
 import Skeleton from "../../components/shell/Skeleton";
-import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL } from "@/app/desk";
+import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL, PANEL } from "@/app/desk";
 
 // The wall of scores, before any of them have come in.
 //
@@ -9,7 +9,7 @@ import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL } from "@/app/desk";
 
 export default function Loading() {
   return (
-    <div aria-busy className="flex flex-col gap-4">
+    <div aria-busy className={PANEL}>
       <header className={GAMEWEEK_HEAD}>
         <h1 className={GAMEWEEK_TITLE}>The desk</h1>
       </header>
