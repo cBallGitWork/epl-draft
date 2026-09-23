@@ -22,15 +22,23 @@ export function sameSecret(a: string, b: string): boolean {
   return difference === 0;
 }
 
-/** The signed cookie value for a team. */
+/** Bumped to sign everybody out at once. */
+const COOKIE_VERSION = "v1";
+
+/** The cookie's own key, derived from the secret, so a cookie signature and a code hash never
+ *  share one. */
+function cookieKey(secret: string): Promise<string> {
+  return hmac("cookie", secret);
+}
+
+/** The signed cookie value for a team: `v1.<teamId>.<signature>`. */
 export async function cookieValue(teamId: string, secret: string): Promise<string> {
-  return `${teamId}.${await hmac(teamId, secret)}`;
+  return `${COOKIE_VERSION}.${teamId}.${await hmac(teamId, await cookieKey(secret))}`;
 }
 
 /** The team a cookie was signed for, or null. Compared with `sameSecret`, never `===`. */
 export async function cookieTeamOf(raw: string, secret: string): Promise<string | null> {
-  const at = raw.lastIndexOf(".");
-  if (at <= 0) return null;
-  const teamId = raw.slice(0, at);
-  return sameSecret(raw.slice(at + 1), await hmac(teamId, secret)) ? teamId : null;
+  const [version, teamId, signature, ...rest] = raw.split(".");
+  if (version !== COOKIE_VERSION || !teamId || !signature || rest.length > 0) return null;
+  return sameSecret(signature, await hmac(teamId, await cookieKey(secret))) ? teamId : null;
 }
