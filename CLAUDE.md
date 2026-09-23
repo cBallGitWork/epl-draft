@@ -30,7 +30,6 @@ Node 24 locally, 22 in CI · npm workspaces · deployed on Vercel.
 
 ```
 packages/core   domain types, adapters, scoring, competition engines, identity
-packages/ui     empty until a second consumer needs it
 apps/companion  the 26/27 app
 apps/lab        the 27/28 platform prototype, empty on purpose
 scripts/        capture, the bridge, the paper's writer, health checks, scripts/ci/push.sh
