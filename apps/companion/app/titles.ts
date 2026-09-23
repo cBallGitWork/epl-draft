@@ -91,7 +91,7 @@ export const PREM_CAPTION: Record<PremSection, string> = {
   teamStats: "Team Stats",
 };
 
-/** The manager's inbox — the word his own bar ends with (`123 News`), and the
+/** The manager's inbox — the word his own bar ends with (`123 Mail`; CM's reads `Mike Paul News`), and the
  *  whole bar for a reader with no team.
  *
  *  Named here rather than written at its three call sites — the page, its loading
@@ -99,4 +99,7 @@ export const PREM_CAPTION: Record<PremSection, string> = {
  *  is never a literal at a call site, or one of the three renames itself while
  *  the other two do not. It stopped being a CAPTION on 5 Sep 2026; it did not
  *  stop being a name. */
-export const NEWS = "News";
+export const NEWS = "Mail";
+
+/** The page behind the phone's last tab. */
+export const MORE_TITLE = "More";

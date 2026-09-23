@@ -1,0 +1,63 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import type { ReactNode } from "react";
+import PageHeader from "../components/shell/PageHeader";
+import { CREDITS, overflowSections, sectionsFor } from "../components/shell/sections";
+import { LABEL, PANEL_FLUSH, ROW_HOVER } from "@/app/desk";
+import { offerLive } from "../football";
+import { SQUAD } from "../squad/routes";
+import { getLeagueSquads, readerTeamId } from "../squads";
+import { MORE_TITLE } from "../titles";
+
+// The page behind the phone's last tab: the sections with no tab of their own, the squads, and the credits.
+
+export const metadata: Metadata = { title: MORE_TITLE };
+
+export default async function MorePage() {
+  const [matchday, team] = await Promise.all([offerLive(), readerTeamName()]);
+  return (
+    <>
+      <PageHeader title={MORE_TITLE} competition />
+      <nav aria-label={MORE_TITLE} className={PANEL_FLUSH}>
+        {overflowSections(sectionsFor(matchday)).map((section) => (
+          <Row key={section.href} href={section.href}>
+            {section.fullLabel ?? section.label}
+          </Row>
+        ))}
+        <Row href={SQUAD} aside={team ?? "Sign in"}>
+          Squads
+        </Row>
+      </nav>
+      <nav aria-labelledby="more-about" className={PANEL_FLUSH}>
+        <h2 id="more-about" className={`px-3.5 pt-2 ${LABEL}`}>
+          About
+        </h2>
+        <Row href={CREDITS}>Credits</Row>
+      </nav>
+    </>
+  );
+}
+
+/** One row: the place, what it holds for you, and CM's small filled triangle for "this opens something". */
+function Row({ href, aside, children }: { href: string; aside?: string; children: ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className={`flex min-h-13 items-center gap-3 pl-3.5 pr-3 font-chrome last:border-b-0 ${ROW_HOVER}`}
+    >
+      <span className="min-w-0 flex-1 truncate text-lg font-semibold">{children}</span>
+      {aside === undefined ? null : <span className="shrink-0 text-sm text-muted">{aside}</span>}
+      <span
+        aria-hidden
+        className="size-0 shrink-0 border-y-[5px] border-l-[7px] border-y-transparent border-l-muted"
+      />
+    </Link>
+  );
+}
+
+/** The signed-in reader's team name, or null for a reader with no code. */
+async function readerTeamName(): Promise<string | null> {
+  const [squads, mine] = await Promise.all([getLeagueSquads(), readerTeamId()]);
+  if (mine === null || !("period" in squads)) return null;
+  return squads.info?.teams.find((team) => team.teamId === mine)?.name ?? null;
+}

@@ -79,18 +79,9 @@
    out through it, and a page whose ground stops short of the foot of the screen
    has a seam across the bottom of it. */
 :root {
-  /* **Room for the foot row, back again below `lg`** (Craig, 5 Sep 2026: "mobile
-     view needs the blue nav bar at the bottom"). The note above this records the
-     breakpoint going away when the bar became a rail; the bar is back on the
-     phone, so the breakpoint is too, and the note is kept rather than rewritten
-     because the reasoning it carries is still why the DESK has none.
-
-     `2.75rem` is `.cm-tab`'s own height and `1rem` is the air under the last
-     panel — read off the plate rather than guessed, so a taller tab cannot leave
-     the page's last row underneath one. The safe-area inset is the nav's own and
-     is not added here: it is inside the fixed element, so it is already below
-     the plates rather than under the page. */
-  --page-foot: calc(2.75rem + 1rem);
+  /* The thumb rail's 56px tab plus 1rem of air under the last panel, below `lg`. The rail's inset is inside
+     the fixed nav, and `body` pads the page by the same inset, so neither is added here. */
+  --page-foot: calc(3.5rem + 1rem);
 }
 
 @media (min-width: 64rem) {
@@ -109,10 +100,7 @@ body {
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  /* Keeps the foot of the page off the home indicator. It used to be stated as
-     sitting above the bottom tab bar; there is no bottom bar now, and the inset
-     is the phone's rather than the bar's. The rail carries its own, being
-     positioned against the viewport rather than against this. */
+  /* Keeps the foot of the page clear of the thumb rail's inset; the rail carries its own, being fixed. */
   padding-bottom: env(safe-area-inset-bottom);
   -webkit-tap-highlight-color: transparent;
 }

@@ -27,10 +27,9 @@ route is the same route — only its frame and its place in the app changed.
   is a competition, `25.jpg` a club or a person). The cream plate is spoken for
   by `/league` and `/prem`; Scout is not a competition, it is the activity, so it
   takes the bar every other subject-without-a-colour takes.
-- **It reaches the nav through `More`.** The foot row's ceiling is measured — six
-  plates at 320 are 53.3px each and keep 4px around the label, so a label has
-  49px — and the sixth plate is a door, with everything past the fifth section
-  behind it. DESIGN §2
+- **It reaches the nav through `More`.** The thumb rail's ceiling is measured — six
+  tabs at 320 leave a label 49px — and the sixth tab is More, a page listing
+  every section past the fifth. DESIGN §2
   carries the arithmetic and the rule.
 - **Two views**: Overview and Analysis, on `players/PoolNav` — "Board" and "Compare" until 10 Sep 2026. Overview is CM's own first-tab word (`cm9900/12.jpg`, and `16.jpg`'s `Match Overview`), and it is what the view is: the whole pool at a glance, against Analysis, which is one man or two looked at closely. The strip arrived with
   the second; `league/SectionNav` records the ruling that one entry is a stray
