@@ -32,9 +32,11 @@ import { type Club, initials, shirtUrl } from "@epl/core";
  *  for one commit. The variable is set on the same element that reads it, which
  *  is legal and is the only arrangement in which no caller can get it wrong.
  *
- *  Still exported, because `PitchPlayer`'s unresolved slot draws a dashed box of
- *  the same shape with no kit in it, and a hole of the wrong shape in a row is
- *  the defect this whole file is bounded by. */
+ *  **No longer exported.** It was, so that the planner's unresolved slot could
+ *  draw a dashed box of the same shape with no kit in it; that card went on
+ *  21 Sep 2026 and `PitchMarker` draws its own empty slot, so the last reader
+ *  outside this file went with it. A hole of the wrong shape in a row is still
+ *  the defect the whole file is bounded by — it is just bounded here now. */
 /** How much of the kit is drawn, measured off the files rather than judged.
  *
  *  **The kit is LONG** (Craig, 10 Sep 2026: *"our shirts seem a little long"*),
@@ -77,7 +79,7 @@ const JERSEY = 193 / 284;
  *  named. */
 const CARD = JERSEY / KEPT;
 
-export const KIT_RATIO = { "--pitch-figure": String(CARD) } as CSSProperties;
+const KIT_RATIO = { "--pitch-figure": String(CARD) } as CSSProperties;
 
 export default function PlayerShirt({
   club,

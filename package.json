@@ -22,6 +22,7 @@
     "smoke": "tsx scripts/smoke.ts",
     "smoke:wait": "for i in $(seq 1 60); do curl -sf -o /dev/null \"${SMOKE_BASE:-http://localhost:3000}/\" && exit 0; sleep 1; done; echo 'app never came up'; exit 1",
     "bridge": "tsx scripts/build-bridge.ts",
+    "roster-limits": "tsx --env-file=.env.local scripts/roster-limits.ts",
     "bridge:check": "tsx scripts/bridge-check.ts",
     "team-codes": "tsx --env-file=apps/companion/.env.local scripts/team-codes.ts",
     "edition": "tsx --env-file-if-exists=.env.local scripts/write-edition.ts",

@@ -1,0 +1,78 @@
+{
+  "fetchedAt": "2026-09-21T18:49:37.468Z",
+  "source": "https://www.fantrax.com/newui/fantasy/createLeague.go?goto=3 — scraped, because no Fantrax JSON endpoint carries a position minimum",
+  "leagues": {
+    "ayyoh3n2mr326v2o": {
+      "key": "real",
+      "unreadable": "no position table on the page"
+    },
+    "w05aib75mtj36y1g": {
+      "key": "dummy",
+      "minimumsInForce": true,
+      "positions": [
+        {
+          "shortName": "D",
+          "name": "Defender",
+          "minActive": 3,
+          "maxActive": 5,
+          "maxTotal": 5
+        },
+        {
+          "shortName": "M",
+          "name": "Midfielder",
+          "minActive": 2,
+          "maxActive": 5,
+          "maxTotal": 5
+        },
+        {
+          "shortName": "F",
+          "name": "Forward",
+          "minActive": 1,
+          "maxActive": 3,
+          "maxTotal": 3
+        },
+        {
+          "shortName": "G",
+          "name": "Goalkeeper",
+          "minActive": 1,
+          "maxActive": 1,
+          "maxTotal": 2
+        }
+      ]
+    },
+    "zbn1z3ukmsgb36sz": {
+      "key": "rehearsal",
+      "minimumsInForce": true,
+      "positions": [
+        {
+          "shortName": "D",
+          "name": "Defender",
+          "minActive": 3,
+          "maxActive": 5,
+          "maxTotal": 5
+        },
+        {
+          "shortName": "M",
+          "name": "Midfielder",
+          "minActive": 2,
+          "maxActive": 5,
+          "maxTotal": 5
+        },
+        {
+          "shortName": "F",
+          "name": "Forward",
+          "minActive": 1,
+          "maxActive": 3,
+          "maxTotal": 3
+        },
+        {
+          "shortName": "G",
+          "name": "Goalkeeper",
+          "minActive": 1,
+          "maxActive": 1,
+          "maxTotal": 2
+        }
+      ]
+    }
+  }
+}

@@ -91,12 +91,26 @@ export function cardBasis(widest: number): string {
  *  budget and a slacker line, so it drew the TALLEST card of any squad in the
  *  league and put the lineup planner 199px past a phone screen.
  *
- *  Exported because the two bench strips stand outside this frame and must land
- *  on the same number: a reserve is the same card as the man he would replace,
- *  in height as well as width. */
+ *  Exported because the bench strip stands outside this frame and must land on
+ *  the same number: a reserve is bounded by the same screen and the same grass
+ *  as the man he would replace. */
 export function rowBudget(rows: number): CSSProperties {
   return { "--pitch-rows": rows } as CSSProperties;
 }
+
+/** How big a reserve's KIT is drawn, as a share of a starter's.
+ *
+ *  Craig, 21 Sep 2026: *"bench icons can be smaller"*. It was 1 — the rule was
+ *  that a reserve is the same card as the man he would replace, in height as
+ *  well as width — and that rule was about the CARD, which is still true: the
+ *  name plate and the fixture band are the same width and the same height on
+ *  both, because they are what a manager reads. Only the picture comes down, and
+ *  the strip hands the difference back to the grass above it.
+ *
+ *  Three quarters rather than a half: the kit is how a reserve is recognised at
+ *  a glance, and at 0.5 an Everton shirt and a Brighton one are one blue
+ *  rectangle. */
+export const BENCH_KIT = { "--pitch-card-scale": 0.75 } as CSSProperties;
 
 /** The size a player's name is set at on a pitch. One step on the scale, and the
  *  same step on every line of every squad.
@@ -133,13 +147,15 @@ export function rowBudget(rows: number): CSSProperties {
 /** One line of a pitch card: the card's own fixed band height, centred, and it
  *  truncates rather than wraps.
  *
- *  **Five sites, and the last refactor pass named this file as the destination.**
- *  It declined the extraction at two — `FplPitch` and `PitchPlayer`, byte
- *  identical — with the note that "`PitchRows` already owns `NAME_SIZE` and
- *  `GAP_CLASS` for the pitches, so that is where the third one goes rather than
- *  here". `FplPitch` has since lost its own plate to `PitchMarker`, and the two
- *  cards between them now draw five: a name and a line on the marker, and a
- *  name, a fixture and an unresolved reason on the planner.
+ *  **Two sites now, and it was five.** A previous pass declined the extraction
+ *  at two byte-identical plates and named this file as the destination when a
+ *  third arrived; it arrived, and the band moved here. Both of the cards that
+ *  drew the other four have since gone to `PitchMarker` (21 Sep 2026), which
+ *  draws a name and a line — so the recipe now has one caller in the app and its
+ *  own bench strip. Kept rather than inlined, because the HEIGHT is the
+ *  load-bearing part and `.pitch-figure`'s ceiling subtracts exactly
+ *  `2 * --pitch-band` from the room a row has: a card that sized a band by its
+ *  content would be bounded against a number it no longer matched.
  *
  *  **The height is the load-bearing part.** A line whose cards stand at
  *  different heights stops reading as a line, and `.pitch-figure`'s own ceiling
@@ -150,7 +166,7 @@ export function rowBudget(rows: number): CSSProperties {
  *  What each site adds for itself is its GROUND and its INK, which is the part
  *  that genuinely differs: Championship Manager's bevelled plate on the marker,
  *  cream on the planner, and a club's own colour under a fixture. The two bands
- *  that are NOT this — the planner's chip row and its `FixtureChip` holder — lay
+ *  that are NOT this — the planner's chip row and its fixture holder — lay
  *  their children out differently on purpose and are left alone. */
 export const PITCH_BAND =
   "flex h-[var(--pitch-band)] w-full items-center justify-center overflow-hidden px-0.5 text-center font-bold leading-none";

@@ -29,6 +29,7 @@ the token names survived the change of every value.
 | **League** | `league`, `cream` | the league's own mark. Chrome only, never "active" |
 | **Pitch** | `pitch-turf`, `pitch-mow`, `pitch-line` | the grass, darker than the kits so cards lift off it |
 | **FDR** | `fdr-1` … `fdr-5` | FPL's difficulty, rebuilt at our lightness. Data, not dress |
+| **Doubt** | `doubt-out`, `doubt-major`, `doubt-slight` | how likely he is to MISS — `doubtBand`'s three, on FPL's own 0/25/50/75 steps. A ramp and not three slots, hue-locked to `bad` and `mid` so no new family enters. The box beside his name still says WHICH |
 
 Colour appears almost exclusively as **state**. Surfaces stay neutral.
 
@@ -46,7 +47,7 @@ deliberately ink under `.paper`.
 
 A theme variable is only emitted if its name appears **literally** in scanned
 source. `` `var(--color-fdr-${n})` `` compiles to five variables that are never
-emitted and five chips with no colour. `FixtureChip` writes the five names out in
+emitted and five chips with no colour. `football/fdr` writes the five names out in
 a `Record` for exactly this reason — do not "tidy" it back into interpolation.
 
 ## Type
@@ -87,16 +88,17 @@ No fluid clamps except inside the masthead.
 | `league/PitchFrame` | Hoardings + goal + turf. Full-bleed. |
 | `league/PitchRows` | Players in their lines, on whichever ground `flat` picks — `CmGround`'s diagram or `PitchFrame`'s trapezoid. **Owns card width, the name's size, and the shrink-not-wrap policy** — all FIVE go through it — both squad views, the head-to-head, `/fpl` and `/prem/club/[code]`'s predicted eleven, which is the only one about a real club. What it does NOT own is the pitch's width against the fold: `.pitch`'s ratio turns any width into a height, so a pitch with no second column beside it caps its own — `fpl/FplPitch` and `league/LineupPitch`, two occurrences, copied rather than named. |
 | `league/PitchTurf` | The grass in perspective, as an inline SVG. |
-| `league/LineupPitch` | Your own XI plus the bench, one target per player: tap to pick, tap again for the rest. |
+| `league/LineupPitch` | Your own XI plus the bench, one target per player: tap to pick, tap again for the rest. Draws `SquadMarker`, same as the head-to-head — it had a sticker of its own until 21 Sep 2026. |
+| `league/SquadMarker` | A fantasy roster slot as a `PitchMarker`: the league layer's vocabulary translated into football's, in one place. **Three sites** — the planner's pitch, and the head-to-head's grass and bench. The BUTTON round it stays with each caller, because they disagree about what a tap does. |
+| `league/BenchStrip` | The reserves under the grass, numbered from the left and on the pitch's own inset and row budget. Two callers, extracted because the next change was going to be made twice — and because the two had already drifted once over card width (see `PitchRows`). |
 | `league/MoveDialog` | Everywhere one player can go, over the pitch. |
 | `league/TeamSheet` | A live XI plus bench, or the same squad as rows, every player opening `LivePlayerCard`. Both boards that show a lineup that counts draw it. |
-| `league/PitchPlayer` | One player on the planner's pitch: kit, name plate, points band. |
 | `league/Pending` | Points Fantrax has not credited yet — a clean sheet is settled at the final whistle and FPL has been paying it since the hour mark. Four screens print it; before this they were four spellings of one rule, two of which could reach a `+0`. |
 | `league/SeasonGrid` | Championship Manager's attribute grid — the squad's season as one bevelled panel per scoring group, thirteen keeper columns and eleven outfield, every figure Fantrax's own. The **second panel** on `/squad/[teamId]`, and it costs one cache hit: `squadSeason` already reads this table to price the board. |
 | `league/PlayerImage` | The cut-out photograph, with its fallback ladder. Client-only, and has to be — see below. **Four callers, none of them a pitch**: the player profile, the paper's face and picture, and the live card. |
 | `league/PlayerShirt` | The club's kit, and the only place it is drawn. What every pitch draws now. Server component — it has no ladder to walk. |
-| `league/PitchMarker` · `league/CmGround` | A marker on the grass, and the ground it stands on. The marker is a kit on a translucent wash, the name on Championship Manager's bevelled plate, and under it the fixture **in the opponent's own colour**. Was `PitchDisc`, a cut-out head in a coloured circle, until 10 Sep 2026. |
-| `football/FixtureChip` | Opponent, `@` for away and nothing for home, coloured by FPL's difficulty. Two consumers — `league/PitchPlayer`'s band and `league/PlayerCard`'s dialog; `fdrStep` is the colour scale on its own, for anything that wants it at another size. **Never wraps** — the band under a sticker is a fixed 20px with `overflow-hidden`, so a second line is guillotined rather than spilled. |
+| `league/PitchMarker` · `league/CmGround` | A marker on the grass, and the ground it stands on. The marker is a kit on a translucent wash, the name on Championship Manager's bevelled plate, and under it the fixture or the score on the desk's navy. Was `PitchDisc`, a cut-out head in a coloured circle, until 10 Sep 2026; the band carried the opponent's club colour from 10 to 21 Sep, and gave it up when the card gained two other things to say in colour — how likely he is to MISS on the plate, and the whole card red when he is out. |
+| `football/fdr` | FPL's five difficulty steps, each with the ink that survives it. **Not a component** — `FixtureChip` drew one and lost its last caller on 21 Sep 2026 when the planner's band went to `PitchMarker`'s opponent colour, so the file is named for the scale that outlived it. Two consumers: the profile's fixture run and the player dialog's fixture line. |
 | `football/PlayerPortrait` | 32px headshot on club colour, for list rows. |
 | `shell/TabStrip` | The blue tab strip under a title bar. Five strips use it — the League section, the Premiership section, a fantasy team's five views, a club's four, a player's five. (It read "three" until 4 Sep 2026 and had been undercounting `PremNav` since 2 Sep.) `dim` greys a tab that has nothing behind it for THIS subject and keeps it in place, which is CM's answer for an empty view (`cm0102/07.jpg`). |
 | `shell/Caption` | The yellow centred caption inside a panel. The bar above names the subject; this names the view. Every screen in the reference carries both. |

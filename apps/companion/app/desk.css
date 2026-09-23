@@ -566,6 +566,103 @@
   box-shadow: inset 0 0 0 1px var(--color-ink);
 }
 
+/* How likely a man is to miss, washed across his whole row.
+   `packages/core/src/football/playerState.ts` names the three bands and
+   `tokens.css` carries the ramp; this is the only thing that puts one behind a
+   line of text.
+
+   **A wash and not the ground itself.** The rows carry ink from `--ink` down to
+   `--faint`, and `--faint` on `--raised` is already the tightest pair in the set
+   at 4.6:1 — so a solid `--color-doubt-*` under them would be a contrast failure
+   on the one row whose point is that something is wrong with it. At 16% of the
+   colour into the row's own ground the hue is unmistakable across fifteen rows
+   and every ink on the line holds, which is the same trade `.cm-out` makes by
+   being a colour rule rather than an opacity.
+
+   In `desk.css` rather than as a utility because Tailwind v4 only emits a theme
+   variable whose name it reads literally in scanned source — and because a row
+   tint is a desk idiom, like `.cm-row` above it. */
+.cm-doubt-out {
+  background-color: color-mix(in oklab, var(--color-doubt-out) 16%, var(--color-surface));
+}
+
+.cm-doubt-major {
+  background-color: color-mix(in oklab, var(--color-doubt-major) 16%, var(--color-surface));
+}
+
+.cm-doubt-slight {
+  background-color: color-mix(in oklab, var(--color-doubt-slight) 16%, var(--color-surface));
+}
+
+/* **A washed row greys to `--color-muted`, not to `--color-faint`.**
+   `--color-faint` is 5.30:1 on the page ground and 4.56 on a raised row — the
+   tightest pair in the palette — so ANY coloured ground under it fails, and
+   `sweep` read 4.1:1 on three marks of a reserve who is also injured. The
+   direction pair records the same bound on itself: `--color-hot` carries ink and
+   muted and states outright that faint is 3.3 there. One step louder clears it
+   at 5.5:1 on the palest band and still reads as dimmed beside the eleven above.
+
+   Not a lighter wash: the arithmetic says there is no strength that saves faint
+   and still shows a hue — 10% still lands at 4.09 — so the ink moves rather than
+   the ground. */
+.cm-doubt-out.cm-out,
+.cm-doubt-out.cm-out *,
+.cm-doubt-major.cm-out,
+.cm-doubt-major.cm-out *,
+.cm-doubt-slight.cm-out,
+.cm-doubt-slight.cm-out * {
+  color: var(--color-muted);
+}
+
+/* **And the outlined state box takes a ground of its own**, which is the same
+   rule as below one step further: a FILLED box already owns its ink and passed,
+   and the outlined one is `--color-bad` painted straight on the row — 3.6:1 on
+   the amber wash. The page ground under it is 5.6:1 and keeps the outline, so
+   the out/doubt distinction survives where a fill would have flattened it. */
+.cm-doubt-out .cm-state-doubt,
+.cm-doubt-major .cm-state-doubt,
+.cm-doubt-slight .cm-state-doubt {
+  background: var(--color-bg);
+}
+
+/* **A man who is OUT gets the whole card, not just his name plate** (Craig,
+   21 Sep 2026: "if red and out, make the players pitch view card (the
+   background) red as well"). The wash behind the kit is `bg-bg/45` — 45% of the
+   blue-black, so the mow bands read through it and the card sits ON the grass
+   rather than covering it. This is the same wash in the same place at the same
+   job, in the one colour that means he will not play.
+
+   **Only `out`, and that is the hierarchy rather than an omission.** A doubt is
+   a question against a man and gets a plate; a certainty is a different
+   statement and gets the card. Three whole cards in three colours on one pitch
+   would be a formation drawn in traffic lights, and the two doubts would be
+   competing with the eleven fixtures underneath them for the same glance.
+
+   Unlayered, so it beats the `bg-bg/45` utility on the same element — the trap
+   this file warns about twice, used deliberately here. Nothing reads on this
+   wash: the name and the line below it carry their own grounds, so it sits
+   behind a kit and behind nothing else. */
+.cm-card-out {
+  background-color: color-mix(in oklab, var(--color-doubt-out) 55%, transparent);
+}
+
+/* **The state box keeps its own ink on a greyed row**, which is the fourth time
+   this file has had to say that a plate owns its ink (DESIGN §2) — after the
+   tab, the index block and the chip, and found the same way each time.
+
+   `.cm-out *` is unlayered and reaches inside the box, so a filled `Inj` on the
+   bench came out as `--color-faint` on `--color-bad`. The box is the one mark on
+   a dimmed row that is not being dimmed: a reserve is greyed because he is not
+   in the side, and why he is not available is a different statement that the
+   grey has no business softening. */
+.cm-out .cm-state {
+  color: var(--color-bg);
+}
+
+.cm-out .cm-state-doubt {
+  color: var(--color-bad);
+}
+
 /* A man who cannot be picked. CM greyed him almost out — measured 2.54:1 in the
    game's own screenshots, which is under any modern floor — so this greys to
    `--color-faint` instead: 5.30:1 on the ground and 4.56:1 on a raised row, the
@@ -709,8 +806,15 @@
   border-bottom: 1px solid var(--color-bg);
 }
 
-/* **The block when a scope re-points it to a CLUB's own colour.** Two
+/* **The block when a SCOPE re-points it to a colour we did not choose.** Two
    departures from `.cm-index` above, and both are contrast rather than taste.
+
+   **It was `.cm-index-club` until 21 Sep 2026**, and the name had stopped telling
+   the truth: `PlateShell` re-points `--cm-index` to a MANAGER's colour for every
+   tab of his team, which is the same ground on the same block for the same
+   reason. It was the third site and the one that proved it — `sweep` read
+   `--color-faint-plate` at **3.89:1** on TEST1's purple, on the bench rows of his
+   own squad list, the day one of them first grew an index block.
 
    **Painted flat.** The gradient lightens the top stop by 22% white and `inkOn`
    chooses its ink against the FLAT colour, so a club whose primary clears 4.5:1
@@ -730,11 +834,13 @@
    A class rather than a Tailwind utility, because `.cm-index` is unlayered and
    unlayered CSS beats `@layer utilities`. `[&_.cm-index]:bg-none` was written
    first and lost silently, which is the trap this file already warns about. */
-.cm-index-club .cm-index {
+.cm-index-scoped .cm-index {
   background-image: none;
 }
-.cm-index-club .cm-out .cm-index,
-.cm-index-club .cm-out .cm-index * {
+.cm-index-scoped .cm-out .cm-index,
+.cm-index-scoped .cm-out .cm-index *,
+.cm-index-scoped .cm-index.cm-out,
+.cm-index-scoped .cm-index.cm-out * {
   color: var(--cm-index-ink, var(--color-ink));
 }
 

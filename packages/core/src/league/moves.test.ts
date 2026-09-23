@@ -134,21 +134,148 @@ describe("legalMoves", () => {
     }
   });
 
-  it("lets an active player step down while there is bench room", () => {
-    expect(legalMoves(slots, eligibility, limits, DUAL_ACTIVE)).toContainEqual({
+  it("never benches a man without somebody taking his place", () => {
+    // Fielding ten is not a shape. It is also what holds the formation inside
+    // the caps: the XI stays at eleven, so a line cannot be emptied.
+    expect(legalMoves(slots, eligibility, limits, DUAL_ACTIVE)).not.toContainEqual({
       kind: "demote",
       fantraxId: DUAL_ACTIVE,
     });
   });
 
-  it("refuses to bench anyone once the bench is full", () => {
+  it("names the men on the bench who can come on for him", () => {
+    // The question a manager asks by tapping somebody already in the side, and
+    // the answer has to be the same set the reserves themselves offer — a pitch
+    // that lights a partner the dialog then refuses is worse than one that lights
+    // nobody.
+    const moves = legalMoves(slots, eligibility, limits, DUAL_ACTIVE);
+    const swaps = moves.filter((m) => m.kind === "swap");
+    expect(swaps.length).toBeGreaterThan(0);
+    for (const move of swaps) {
+      expect(move.kind === "swap" && move.withId).toBe(DUAL_ACTIVE);
+      const coming = move.kind === "swap" ? move.fantraxId : "";
+      expect(at(coming)?.status).toBe("RESERVE");
+      expect(legalMoves(slots, eligibility, limits, coming)).toContainEqual(move);
+    }
+  });
+
+  it("offers the bare demotion only to break a cap the XI is already over", () => {
+    // A commissioner can lower a cap under a side that was legal when it was
+    // filed, and did across the league on 12 Aug. That is the one state where
+    // taking a man out and putting nobody in is the repair rather than the
+    // damage.
+    const forward = slots.find((s) => s.status === "ACTIVE" && s.position === "F");
+    if (!forward) throw new Error("fixture has no active forward");
+    const tightened: RosterLimits = {
+      ...limits,
+      maxActiveByPosition: { ...limits.maxActiveByPosition, F: 2 },
+    };
+    expect(legalMoves(slots, eligibility, tightened, forward.fantraxId)).toContainEqual({
+      kind: "demote",
+      fantraxId: forward.fantraxId,
+    });
+    expect(legalMoves(slots, eligibility, limits, forward.fantraxId)).not.toContainEqual({
+      kind: "demote",
+      fantraxId: forward.fantraxId,
+    });
+  });
+
+  it("will not repair an over-cap XI onto a bench that is already full", () => {
     // The real league seats three reserves; this team is carrying four, which is
     // legal there and not here. The same roster, two leagues, two answers — and
     // nothing in the module knows which league it is looking at.
+    const forward = slots.find((s) => s.status === "ACTIVE" && s.position === "F");
+    if (!forward) throw new Error("fixture has no active forward");
+    const tighten = (l: RosterLimits): RosterLimits => ({
+      ...l,
+      maxActiveByPosition: { ...l.maxActiveByPosition, F: 2 },
+    });
     const benched = (l: RosterLimits) =>
-      legalMoves(slots, eligibility, l, DUAL_ACTIVE).some((m) => m.kind === "demote");
+      legalMoves(slots, eligibility, tighten(l), forward.fantraxId).some(
+        (m) => m.kind === "demote",
+      );
     expect(benched(realLimits)).toBe(false);
     expect(benched(limits)).toBe(true);
+  });
+
+  it("will not take a line below the league's stated minimum", () => {
+    // Craig, 21 Sep 2026: "if theres 3 at the back, you cant go down to 2
+    // defenders". He is right and the number is Fantrax's: the commissioner's
+    // setup page has a Min Active column, switched ON, reading D 3 · M 2 · F 1 ·
+    // G 1 — read by `scripts/roster-limits.ts`, because no JSON endpoint carries
+    // it. `getLeagueInfo` alone would have allowed a back two.
+    const floors: RosterLimits = { ...limits, minActiveByPosition: { D: 3, M: 2, F: 1, G: 1 } };
+    const backThree = slots.filter((s) => s.status === "ACTIVE" && s.position === "D");
+    expect(backThree).toHaveLength(3);
+
+    for (const slot of slots) {
+      for (const move of legalMoves(slots, eligibility, floors, slot.fantraxId)) {
+        const after = applyMove(slots, move);
+        for (const [position, min] of Object.entries(floors.minActiveByPosition)) {
+          expect(
+            after.filter((s) => s.status === "ACTIVE" && s.position === position).length,
+          ).toBeGreaterThanOrEqual(min);
+        }
+      }
+    }
+
+    // And the same move IS offered without the floor, so the test is about the
+    // rule rather than about a roster that happened to have no such move in it.
+    const without = slots.flatMap((slot) =>
+      legalMoves(slots, eligibility, limits, slot.fantraxId).filter((move) => {
+        const after = applyMove(slots, move);
+        return after.filter((s) => s.status === "ACTIVE" && s.position === "D").length < 3;
+      }),
+    );
+    expect(without.length).toBeGreaterThan(0);
+  });
+
+  it("still offers a move from a roster that is ALREADY short", () => {
+    // A commissioner can raise a floor under a filed side, which is the mirror
+    // of the cap case. Refusing every move from that state would freeze the one
+    // screen that could repair it — so the test is whether a move makes a line
+    // WORSE, not whether it is short.
+    const impossible: RosterLimits = { ...limits, minActiveByPosition: { D: 5 } };
+    const moves = slots.flatMap((slot) => legalMoves(slots, eligibility, impossible, slot.fantraxId));
+    expect(moves.length).toBeGreaterThan(0);
+    // ...and none of them takes the back three down to two.
+    for (const move of moves) {
+      const after = applyMove(slots, move);
+      expect(after.filter((s) => s.status === "ACTIVE" && s.position === "D").length)
+        .toBeGreaterThanOrEqual(3);
+    }
+  });
+
+  it("cannot take a line below the floor the caps imply", () => {
+    // Craig, 21 Sep 2026: "if theres 3 at the back, you cant go down to 2
+    // defenders, need to build the logic using the league min/max starter
+    // logic". Fantrax publishes `maxActive` per position and NO minimum — probed
+    // live on all three leagues, 21 Sep — so the floor is the one the caps imply
+    // once the XI is held at eleven: whatever is left when every other line is
+    // as full as it may be. Against G1/D5/M5/F3 and an XI of 11 that is two at
+    // the back, two in midfield and none up front, and no move offered here can
+    // reach below it.
+    const caps = limits.maxActiveByPosition;
+    const floor = (position: string) =>
+      Math.max(
+        0,
+        limits.maxActivePlayers -
+          Object.entries(caps)
+            .filter(([other]) => other !== position)
+            .reduce((total, [, cap]) => total + cap, 0),
+      );
+    expect(floor("D")).toBe(2);
+
+    for (const slot of slots) {
+      for (const move of legalMoves(slots, eligibility, limits, slot.fantraxId)) {
+        const after = applyMove(slots, move);
+        for (const position of Object.keys(caps)) {
+          expect(
+            after.filter((s) => s.status === "ACTIVE" && s.position === position).length,
+          ).toBeGreaterThanOrEqual(floor(position));
+        }
+      }
+    }
   });
 
   it("offers nothing at all for a player whose eligibility we do not have", () => {

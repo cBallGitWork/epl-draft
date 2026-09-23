@@ -50,6 +50,27 @@ until now — that stops today, and today is the first time much of this code ha
 seen a populated real league. Unmapped players are a gate, not a warning: an
 unmapped man has no portrait, no fixtures and no scouting.
 
+## 2b. The position minimums, which the real league has never answered for
+
+```bash
+npm run roster-limits     # needs FANTRAX_COOKIE; writes data/leagues/roster-limits.json
+```
+
+The fewest players a lineup may start at each position is a real commissioner
+setting that **no Fantrax JSON endpoint carries** — it lives in the HTML of
+`createLeague.go?goto=3`, and PLATFORM_NOTES has the probe. The real league's
+copy of that page has no position table until the league has members, so the file
+records it as `unreadable` and the planner enforces **no floor at all** for it.
+
+That is the state the app ships in until this is run. It is not a broken screen —
+the caps still hold and the XI still stays at eleven — but a manager could file a
+back two on a screen that should have refused it, and Fantrax would reject the
+lineup he thought he had planned.
+
+Commit the regenerated file. If the real league's numbers differ from
+dummy/rehearsal's D 3 · M 2 · F 1 · G 1, that is a finding and belongs in
+PLATFORM_NOTES in the same commit.
+
 ## 3. Redeploy
 
 Setting an environment variable does not rebuild. Trigger a deploy and wait for

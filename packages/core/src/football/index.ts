@@ -129,8 +129,8 @@ export {
   squadOf,
 } from "./selectors";
 export type { MatchContribution } from "./selectors";
-export { availabilityOf, isDoubtful, onTheBooks } from "./playerState";
-export type { Availability, PlayerState } from "./playerState";
+export { availabilityOf, doubtBand, isDoubtful, onTheBooks } from "./playerState";
+export type { Availability, DoubtBand, PlayerState } from "./playerState";
 export { formByPlayer, playedRounds } from "./form";
 export type { PlayerForm, RoundStats } from "./form";
 

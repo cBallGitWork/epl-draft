@@ -1,12 +1,13 @@
 import type { CSSProperties } from "react";
 import {
   type Club,
+  type DoubtBand,
   type FootballPlayer,
   type Opposition,
-  clubColours,
+  availabilityOf,
+  doubtBand,
   fixtureLabel,
   kickedOff,
-  plateOn,
 } from "@epl/core";
 import EmptySlot from "./EmptySlot";
 import PlayerShirt from "./PlayerShirt";
@@ -42,6 +43,19 @@ import { NAME_SIZE, PITCH_BAND } from "./PitchRows";
 // kits need one to tell them apart; the plate below carries the name at the
 // card's full width instead, and every board that LISTS these men still keeps
 // the number in the blue index block, which is where CM keeps it.
+
+/** The three grounds, written out.
+ *
+ *  **A record and not `var(--color-doubt-${band})`**, which is the Tailwind v4
+ *  trap DESIGN.md records: v4 drops a theme variable whose name never appears
+ *  literally in scanned source, and the interpolated form shipped five
+ *  colourless fixture chips once already. A composed token name is a token that
+ *  is not there. */
+const DOUBT_GROUND: Record<DoubtBand, string> = {
+  out: "var(--color-doubt-out)",
+  major: "var(--color-doubt-major)",
+  slight: "var(--color-doubt-slight)",
+};
 
 export default function PitchMarker({
   player,
@@ -103,33 +117,49 @@ export default function PitchMarker({
 
   // What goes under the name, already resolved, so the band can ask whether
   // there is anything to draw before it takes up a row's worth of height.
+  // **`v` in front of it** (Craig, 21 Sep 2026: "pitch view, needs a 'vs' in
+  // front of the team name too"). It does not reverse his 2 Sep site-wide rule —
+  // a fixture is still `BRE (H)` and never `v BRE` or `@BRE` — because the `v`
+  // here is doing different work: under a shirt, three letters on their own read
+  // as the club the man plays FOR, which is the club whose kit he is wearing
+  // twenty pixels above. The `v` says the line is about somebody else. A list
+  // row needs none because its column is headed "Opponent".
+  //
+  // Only on a real fixture. The fallback is his own club and is exactly the case
+  // the `v` would make into a lie.
+  const against = fixtureLabel(opposition);
   const line =
     band ??
     (show === "fixture"
-      ? (fixtureLabel(opposition) ?? club?.shortName ?? "—")
+      ? (against === null ? (club?.shortName ?? "—") : `v ${against}`)
       : started
         ? String(points ?? "—")
         : (club?.shortName ?? "—"));
 
-  // **The band takes the OPPONENT's colour** (Craig, 10 Sep 2026: "fixture but
-  // its just the team colour"). You read Chelsea's blue before you read the
-  // three letters on it, which is work no other treatment of this line was
-  // doing — it replaced FPL's difficulty colour, so the pitch now says WHO
-  // rather than HOW HARD.
+  // **One plate for every card** (Craig, 21 Sep 2026: "the fixture row should
+  // just be blue like this page", pointing at a head-to-head where the band
+  // carries points on the desk's own navy).
   //
-  // **Only when the line really is one club's fixture.** A double gameweek names
-  // two opponents and has no single colour to take; a band the caller filled
-  // with something else — our league's position on a club's predicted eleven —
-  // is not a fixture at all. Both fall back to the plain plate rather than
-  // borrowing a colour that would be claiming something untrue.
-  const single = band === undefined && show === "fixture" && opposition?.length === 1
-    ? opposition[0]
-    : undefined;
-  // **`plateOn` and not a background beside an `inkOn` call**, because its whole
-  // reason is that the two are one decision: a ground without the ink that
-  // survives it is the half that makes a pale club unreadable. Spurs and Hull
-  // are exactly that case here.
-  const plate = single === undefined ? undefined : plateOn(clubColours(single.club.shortName));
+  // **This reverses his 10 Sep call** — "fixture but its just the team colour" —
+  // and the reason it held then is the reason it stopped: you do read Chelsea's
+  // blue before the three letters on it, and by 21 Sep the card had two other
+  // things to say in colour. The name plate carries how likely he is to miss and
+  // an OUT man takes the whole card in red, so eleven club colours underneath
+  // were a third scale competing for the same glance, in the one place a reader
+  // had no reason to look. The navy is the ground the points band has always
+  // used, so the two states of this line now differ in what they SAY rather than
+  // in what colour they are.
+  // **How likely he is to miss, on the name plate** (Craig, 21 Sep 2026: "we
+  // need to show that players are a doubt/out better ... red 100% out, orange
+  // for a major doubt, yellow for slight doubt"). FPL colours the same bar on
+  // its own team screen and the reading is instant across eleven cards, where a
+  // letter in a box is not — the box is the LIST's answer and it survives there.
+  //
+  // `--cm-face` rather than a background of its own: the bevel derives its light
+  // and dark corners from that one variable, so the plate stays Championship
+  // Manager's plate and only its colour moves. Its ink is `--color-bg` and all
+  // three grounds carry it — 5.45:1, 7.09:1, 9.50:1.
+  const doubt = doubtBand(availabilityOf(player));
 
   return (
     // **An opaque card, and it is a reversal.** This drew its name and its line
@@ -150,7 +180,16 @@ export default function PitchMarker({
     // before a letter is drawn. The wash is what separates the card from the
     // field; a keyline round it was saying the same thing a second time and
     // charging the narrowest screen for it.
-    <div className="flex w-full flex-col gap-px bg-bg/45">
+    <div
+      // **The space before `${` is load-bearing.** Tailwind v4 extracts class
+      // names from the source text it scans, and `bg-bg/45${…}` is not a class
+      // name it recognises — so the wash behind every kit on every pitch stopped
+      // being emitted the moment this string gained an interpolation, and the
+      // cards were drawn straight on the grass with no square behind them. It is
+      // the same trap the FDR scale hit with `var(--color-fdr-${n})`, one layer
+      // down: there the TOKEN name was composed, here the CLASS name was.
+      className={`flex w-full flex-col gap-px bg-bg/45 ${doubt === "out" ? "cm-card-out" : ""}`}
+    >
       {nobody ? (
         /* Built to the same shape as a man who resolved, so it stands the same
            height in the line — a hole in the row reads as a formation nobody
@@ -174,7 +213,14 @@ export default function PitchMarker({
           alone; a card padding either side of that was taking another 8, which
           is `MOSQUE…` instead of `MOSQUERA`. The shirt can afford the inset
           because a kit reads at any width and a truncated name does not. */}
-      <span className={`cm-bevel uppercase ${PITCH_BAND} ${NAME_SIZE}`}>
+      <span
+        className={`cm-bevel uppercase ${PITCH_BAND} ${NAME_SIZE}`}
+        style={
+          doubt === null
+            ? undefined
+            : ({ "--cm-face": DOUBT_GROUND[doubt] } as CSSProperties)
+        }
+      >
         <span className="w-full truncate">{name}</span>
       </span>
 
@@ -191,18 +237,12 @@ export default function PitchMarker({
           // down there; a score is the number a manager opened the screen for
           // and was the smallest thing on the card.
           //
-          // `PitchPlayer` had already learned this and its own docblock says so
-          // — "one figure size for both claims, on the scale. They were two
-          // clamps bottoming at 7px and 9px, which made the number a manager
-          // came for the smallest thing on a live pitch" — and it sits at
-          // `text-xs`. This is the same lesson arriving at the other card, which
-          // is what `ROW_FIGURE` went through in tables a week earlier.
+          // The planner's card had already learned it — "two clamps bottoming at
+          // 7px and 9px, which made the number a manager came for the smallest
+          // thing on a live pitch" — and that card is gone, so this is the only
+          // place the lesson is now written down.
           className={`numeric ${show === "points" && band === undefined ? "text-xs" : "text-3xs"} ${PITCH_BAND}`}
-          style={
-            plate === undefined
-              ? { background: "var(--color-bg)", color: "var(--color-cream)" }
-              : ({ background: plate.background, color: plate.ink } as CSSProperties)
-          }
+          style={{ background: "var(--color-bg)", color: "var(--color-cream)" }}
         >
           <span className="w-full truncate">{line}</span>
         </span>

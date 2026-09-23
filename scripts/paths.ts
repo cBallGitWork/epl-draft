@@ -22,6 +22,12 @@ const LEAGUES_ROOT = join(SNAPSHOT_ROOT, "leagues");
 
 export const MAPPINGS_ROOT = join(REPO_ROOT, "data", "mappings");
 
+/** League rules Fantrax enforces and will not serve as JSON. One file today —
+ *  the per-position minimums, which live only on the commissioner's setup page —
+ *  and it is `data/` rather than `snapshots/` because a snapshot is a dated copy
+ *  of what an endpoint said and this is a setting we read and keep. */
+export const LEAGUE_LIMITS = join(REPO_ROOT, "data", "leagues");
+
 /** One file per gameweek, one line per change, recording how a round settles.
  *  Under `probes/` and not `snapshots/`: a snapshot is league state we would
  *  otherwise lose, and this is an experiment answering a question. */

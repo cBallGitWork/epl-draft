@@ -13,13 +13,12 @@ import PitchRows from "../components/league/PitchRows";
 // complaint reached the last trapezoid on 21 Sep 2026 and that ground is gone;
 // `CmGround` is the only one, and there is no flag left to forget.
 //
-// The sticker's own docblock justified the copy on the grounds that `PitchPlayer`
-// "takes a `RosteredPlayer`, which is a Fantrax roster slot joined to a
-// footballer, and an FPL pick is neither". That stopped being true on 3 Sep, when
-// the disc was changed to take a plain `FootballPlayer` for exactly this reason
-// (`PitchMarker`'s own docblock records it), and a Premier League club's predicted
-// eleven has gone through it since. So the second occurrence is gone rather than
-// kept.
+// The planner's own sticker justified the copy on the grounds that it "takes a
+// `RosteredPlayer`, which is a Fantrax roster slot joined to a footballer, and an
+// FPL pick is neither". That stopped being true on 3 Sep, when the disc was
+// changed to take a plain `FootballPlayer` for exactly this reason
+// (`PitchMarker`'s own docblock records it); the sticker itself went on 21 Sep
+// and every eleven in the app is one card.
 //
 // **`inColumn` as well as `flat`**, which `prem/club/[code]/Eleven` records the
 // cost of: bleeding is right for a pitch that is the widest thing on a screen,

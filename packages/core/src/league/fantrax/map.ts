@@ -98,6 +98,12 @@ function mapRosterLimits(info: RawRosterInfo | undefined): RosterLimits {
     maxActivePlayers: info?.maxTotalActivePlayers ?? null,
     maxReservePlayers: info?.maxTotalReservePlayers ?? null,
     maxActiveByPosition,
+    // **Always empty here, because this endpoint does not carry it.** The
+    // minimum is a real commissioner setting that Fantrax enforces and publishes
+    // only on its own setup page; `scripts/roster-limits.ts` reads it and the
+    // planner merges it in. Mapping it to `{}` rather than omitting the field
+    // means no caller can forget the question exists.
+    minActiveByPosition: {},
   };
 }
 

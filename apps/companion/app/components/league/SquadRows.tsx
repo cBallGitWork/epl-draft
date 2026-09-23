@@ -1,8 +1,11 @@
 import Image from "next/image";
 import {
+  type DoubtBand,
   type SquadDetailLine,
   type SquadPlayerDetail,
+  availabilityOf,
   crestUrl,
+  doubtBand,
   fixtureLabel,
   isResolved,
   fullPlayerName,
@@ -40,6 +43,8 @@ export default function SquadRows({
   eligibility,
   bare = false,
   head = true,
+  reserve = false,
+  figure,
 }: {
   lines: SquadDetailLine[];
   /** Skip the panel, because a caller has already drawn one round this AND
@@ -54,6 +59,15 @@ export default function SquadRows({
   /** Whether the points are Fantrax's projection rather than a season played.
    *  The heading says which, because the numbers cannot. */
   projected: boolean;
+  /** What the figure column is a figure OF, when it is neither of the two above.
+   *
+   *  **Provenance at the point of use** (DESIGN §7). The planner opens on the
+   *  round a manager can still change, which by definition has no football in
+   *  it — so a column headed `FPts` was fifteen dashes, and a reader takes that
+   *  for broken data rather than for an empty week. It shows his season instead
+   *  and says so; the moment the round starts scoring the caller hands back the
+   *  live numbers and the heading with them. */
+  figure?: string;
   /** Absent on the head-to-head board, which has no player card to open. A row
    *  that looked like a button and did nothing is worse than a row. */
   onOpen?: (player: SquadPlayerDetail) => void;
@@ -76,6 +90,10 @@ export default function SquadRows({
    *  twice inside 400px. The plate between them already names the second group;
    *  a header under a heading is the heading said again in smaller type. */
   head?: boolean;
+  /** These rows are the BENCH (Craig, 21 Sep 2026: "bench players should be
+   *  greyed out too). Championship Manager greys everyone not in the side, and
+   *  the eleven above is the statement the grey is measured against. */
+  reserve?: boolean;
 }) {
   const scored = lines.some((line) =>
     line.players.some((p) => p.points !== undefined),
@@ -105,6 +123,7 @@ export default function SquadRows({
           headings and no columns. The group bars below separate; this names. */}
         {head ? (
         <div className="cm-bevel flex min-h-7 items-center gap-1.5 px-1.5 text-2xs font-bold uppercase">
+          <span className="w-10 shrink-0">Pos</span>
           <span className="w-7 shrink-0" />
           {/* **`min-w-0 flex-1` and a basis, not a min-width.** The name column
               is the only elastic one on the row, so it is what gives way when
@@ -119,7 +138,6 @@ export default function SquadRows({
               `AM/F C`, because a man eligible at two cannot live under one
               heading. Grouping him under a single letter is a claim the data
               does not support — Saka is `F,M` and 48 of 607 are like him. */}
-          <span className="w-10 shrink-0">Pos</span>
           <span className="min-w-0 flex-[1_1_5rem]">Player</span>
 
           {/* Who his CLUB plays this week — the football fixture, not ours. */}
@@ -133,7 +151,9 @@ export default function SquadRows({
               is where `cm9900/12.jpg` puts its own, Value hard against the right
               edge with the readings before it. */}
           {scored ? (
-            <span className="w-9 shrink-0 text-right">{projected ? "Proj" : "FPts"}</span>
+            <span className="w-9 shrink-0 text-right">
+              {figure ?? (projected ? "Proj" : "FPts")}
+            </span>
           ) : null}
         </div>
         ) : null}
@@ -154,6 +174,7 @@ export default function SquadRows({
                   player={player}
                   eligible={eligibility?.[player.rostered.slot.fantraxId]}
                   onOpen={onOpen && (() => onOpen(player))}
+                  reserve={reserve}
                 />
               </li>
             )),
@@ -164,14 +185,24 @@ export default function SquadRows({
   );
 }
 
+/** The wash each band puts across a row. Written out, never composed — see
+ *  `PitchMarker`. */
+const DOUBT_ROW: Record<DoubtBand, string> = {
+  out: "cm-doubt-out",
+  major: "cm-doubt-major",
+  slight: "cm-doubt-slight",
+};
+
 function Row({
   player,
   eligible,
   onOpen,
+  reserve,
 }: {
   player: SquadPlayerDetail;
   eligible: string[] | undefined;
   onOpen?: () => void;
+  reserve: boolean;
 }) {
   const { club, points } = player;
   const resolved = isResolved(player.rostered) ? player.rostered : null;
@@ -187,6 +218,31 @@ function Row({
   // other.
   const inside = (
     <>
+      {/* **Position, then the crest, then the name** (Craig, 21 Sep 2026: "for
+          the list view, we should put our position in the blue chip (same code),
+          then the team logo, then player name, more CM style"). `cm9900/24.jpg`
+          opens every row with the blue index block and the reference he sent
+          opens each of its own with the squad number in one; ours holds the
+          position because FPL's `squad_number` is a key present on all 622
+          elements and null on every one of them, so there is no number to put
+          there and the position is the fact a manager scans this column for.
+
+          It was amber type on the bare row until now — the one identifying mark
+          on the line that was not a plate, in the slot `--color-mid` reserves for
+          a figure standing beside a name.
+
+          `text-2xs` is an exception to `.cm-index`'s own size and it is written
+          as an addition, which is what that class asks for: the chip holds
+          letters rather than an ordinal, and `D/M` at `text-base` does not fit a
+          40px block. */}
+      <span className="cm-index grid h-7 w-10 shrink-0 place-items-center text-2xs">
+        <span className="w-full truncate px-0.5 text-center">
+          {(eligible && eligible.length > 0
+            ? positionsLabel(eligible)
+            : positionsLabel([player.rostered.slot.position ?? ""])) ?? "—"}
+        </span>
+      </span>
+
       {/* **The club crest, not his face** (Craig, 2 Sep: "team logo in the squad
           list I think, it's too small for portraits). A portrait went in here
           first and he is right about why it had to come out: `.cm-row` is 28px
@@ -226,21 +282,6 @@ function Row({
             ?
           </span>
         )}
-      </span>
-
-      {/* `lg:min-w-32` is load-bearing: `flex-1 min-w-0` gives way first when the
-          fixed columns outgrow the row, and what gave way was the one thing on
-          the line a reader cannot infer. Measured at 1440 in a 554px column on
-          31 Aug: every name was **0px wide**. */}
-      {/* What he is ELIGIBLE at, which is not the slot he is filling. Yellow
-          because `cm9900/25.jpg` sets the eligibility strings in yellow beside
-          each name — and because our own palette spends amber on a figure and
-          this is closer to one than to prose. Falls back to his slot when the
-          league would not say. */}
-      <span className="w-10 shrink-0 truncate text-2xs font-bold text-mid">
-        {(eligible && eligible.length > 0
-          ? positionsLabel(eligible)
-          : positionsLabel([player.rostered.slot.position ?? ""])) ?? "—"}
       </span>
 
       {/* `ROW_NAME` and not a size of its own (Craig, 7 Sep 2026). This was
@@ -289,13 +330,34 @@ function Row({
     </>
   );
 
+  // How likely he is to miss, as a wash across the whole row (Craig, 21 Sep
+  // 2026: "we can fill out the player row with a yellow/red/ornage tint to match
+  // their status (currently we just have a red label)"). The box beside his name
+  // still says WHICH — injured, suspended, a doubt — and stays where CM put it;
+  // the tint is the part a reader takes in without stopping at the row, which is
+  // what fifteen of them at a time need.
+  //
+  // A class per band rather than an interpolated token: Tailwind v4 drops a
+  // theme variable whose name never appears literally in scanned source, and
+  // `desk.css` is not scanned for utilities at all.
+  const doubt = doubtBand(availabilityOf(footballer));
+
   // `min-h-11` and not the `min-h-9` this carried until 31 Aug 2026: fifteen of
   // these are buttons, and a list of fifteen tappable rows on a phone is exactly
   // the case the 44px floor exists for. It was a second undocumented exception
   // beside the view toggle's, found by `tools/ui/tapfit.mjs`. `.cm-row` takes it
   // back to 28 above `lg`, where there is no thumb.
-  const shell =
-    "cm-row flex min-h-11 w-full items-center gap-1.5 px-1.5 text-left";
+  //
+  // `cm-out` is the grey CM puts on everyone not in the side. It is a colour
+  // rule and the wash is a ground, so a greyed reserve who is also injured keeps
+  // both statements.
+  const shell = [
+    "cm-row flex min-h-11 w-full items-center gap-1.5 px-1.5 text-left",
+    reserve ? "cm-out" : "",
+    doubt === null ? "" : DOUBT_ROW[doubt],
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return onOpen ? (
     <button

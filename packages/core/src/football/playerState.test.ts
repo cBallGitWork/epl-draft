@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { NO_SEASON } from "./noSeason";
-import { availabilityOf, isDoubtful, onTheBooks } from "./playerState";
+import { availabilityOf, doubtBand, isDoubtful, onTheBooks } from "./playerState";
 import type { FootballPlayer } from "./types";
 
 function player(over: Partial<FootballPlayer> = {}): FootballPlayer {
@@ -98,5 +98,31 @@ describe("onTheBooks", () => {
     for (const status of ["a", "i", "s", "d"]) {
       expect(onTheBooks(player({ status, news: "Knee injury", chanceOfPlaying: 0 }))).toBe(true);
     }
+  });
+});
+
+describe("doubtBand", () => {
+  const bandOf = (over: Partial<FootballPlayer>) => doubtBand(availabilityOf(player(over)));
+
+  it("says nothing about a fit man", () => {
+    expect(bandOf({})).toBeNull();
+    expect(doubtBand(availabilityOf(null))).toBeNull();
+  });
+
+  it("reads every way of being out as out", () => {
+    for (const status of ["i", "s", "u"]) expect(bandOf({ status })).toBe("out");
+    // A stated nought under an available letter is still FPL saying he will not play.
+    expect(bandOf({ status: "a", chanceOfPlaying: 0, news: "Knee injury" })).toBe("out");
+  });
+
+  it("separates the major doubt from the slight one on FPL's own steps", () => {
+    expect(bandOf({ status: "d", chanceOfPlaying: 25 })).toBe("major");
+    expect(bandOf({ status: "d", chanceOfPlaying: 50 })).toBe("slight");
+    expect(bandOf({ status: "d", chanceOfPlaying: 75 })).toBe("slight");
+  });
+
+  it("calls a doubt FPL put no number against the slight one", () => {
+    // The commonest doubt there is: a knock that never became a status letter.
+    expect(bandOf({ status: "a", news: "Knock - 75% chance of playing" })).toBe("slight");
   });
 });

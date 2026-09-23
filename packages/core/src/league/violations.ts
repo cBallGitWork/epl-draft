@@ -12,14 +12,22 @@ import type { RosterLimits, RosterSlot } from "./types";
 
 /** A rule this lineup is currently breaking.
  *
- *  A SHORTFALL is deliberately not one. Fantrax publishes `maxActive` per
- *  position and no minimum, so "only two defenders" breaks no rule anyone set —
- *  ten men in an eleven-man XI is legal and merely wasteful, and saying so is the
- *  UI's job, not this type's. */
+ *  A SHORTFALL in the XI's SIZE is deliberately not one. Ten men in an
+ *  eleven-man XI breaks no rule anyone set — it is legal and merely wasteful,
+ *  and saying so is the UI's job, not this type's.
+ *
+ *  A shortfall at a POSITION is a different thing and was added on 21 Sep 2026.
+ *  This type's docblock used to say Fantrax "publishes `maxActive` per position
+ *  and no minimum", which was true of `getLeagueInfo` and false of the league:
+ *  the commissioner's setup page has a Min Active column, switched on, reading
+ *  D 3 · M 2 · F 1 · G 1. Nothing the planner offers can create one, so like
+ *  every other kind here it arrives from Fantrax — a commissioner raising a
+ *  floor under a filed side. */
 export type Violation =
   | { kind: "too-many-active"; count: number; cap: number }
   | { kind: "too-many-reserve"; count: number; cap: number }
   | { kind: "position-over-cap"; position: string; count: number; cap: number }
+  | { kind: "position-under-min"; position: string; count: number; min: number }
   | { kind: "not-eligible"; fantraxId: string; position: string };
 
 /** Everything wrong with a lineup as it stands, or an empty list.
@@ -53,6 +61,14 @@ export function violations(
   for (const [position, cap] of Object.entries(limits.maxActiveByPosition)) {
     const count = activeAt(slots, position).length;
     if (count > cap) found.push({ kind: "position-over-cap", position, count, cap });
+  }
+
+  // Empty wherever Fantrax was not asked its setup page, which is every caller
+  // but the planner — so this loop reports nothing rather than accusing a squad
+  // of breaking a floor nobody read.
+  for (const [position, min] of Object.entries(limits.minActiveByPosition)) {
+    const count = activeAt(slots, position).length;
+    if (count < min) found.push({ kind: "position-under-min", position, count, min });
   }
 
   for (const slot of active) {

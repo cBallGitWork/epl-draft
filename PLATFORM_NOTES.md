@@ -148,6 +148,82 @@ a single column across ten attempts — the same sixteen came back every time.
 Recorded as unfound rather than absent: the parameter exists in their client and
 this probe did not find its name.
 
+## The position MINIMUM exists, and no JSON endpoint carries it — probed 21 Sep 2026
+
+Asked because Craig wanted the planner to refuse an illegal formation: *"if
+theres 3 at the back, you cant go down to 2 defenders, need to build the logic
+using the league min/max starter logic"*.
+
+**This section said there was no minimum for about an hour, and that was wrong.**
+The probe was right about every endpoint and wrong about the league, which is the
+failure mode worth recording: *absent from the API* had been written down as
+*absent from the rules*, and a derived floor of two at the back was built on it.
+
+### What the endpoints actually carry
+
+`rosterInfo.positionConstraints` carries **`maxActive` and nothing else**, on all
+three leagues, live and in every snapshot — `grep -c minActive data/snapshots/`
+is **0**. `getTeamRosterInfo.miscData.statusTotals` gives `{Active: total 11,
+max 11}` and `{Reserve: total 4, max 5}`, again a max and no min.
+`getLeagueSetup` **exists** (`WARNING_NOT_LOGGED_IN` unauthenticated, OK with the
+cookie, 17 KB) and is step ONE of the wizard: league name, password, scoring
+system, premium features. No roster table. Twelve further name guesses —
+`getRosterSettings`, `getLeagueRosterSettings`, `getPositionConstraints`,
+`getRosterLimits` and the rest — all `ERROR_INVALID_REQUEST`.
+
+That is the lesson this file already records about `getLeagueChat`, arriving
+again: **guessing names enumerates what you already imagined.** What found it was
+reading the screen.
+
+### Where it lives: the commissioner's setup page, in the HTML
+
+`newui/fantasy/createLeague.go?goto=3&leagueId=…`, with the cookie. The page
+builds its own table by calling a function with the values as arguments:
+
+```
+addPosition('703','D','Defender','SOCCER_NON_GOALIE','3','5','5', '', '', false)
+addPosition('702','M','Midfielder','SOCCER_NON_GOALIE','2','5','5', '', '', false)
+addPosition('701','F','Forward','SOCCER_NON_GOALIE','1','3','3', '', '', false)
+addPosition('704','G','Goalkeeper','SOCCER_GOALIE','1','1','2', '', '', false)
+```
+
+— `(positionId, shortName, name, scGroupCode, minActive, maxActive, maxTotal,
+minGp, maxGp, isNew)`. So **D 3 · M 2 · F 1 · G 1**, summing to 7 of the 11
+starters, and `chkMinActivePerPositionUsed` is `checked` — the commissioner
+switched it on. Identical in dummy and rehearsal.
+
+**The real league has no position table on that page**, exactly as it has no
+`getTeamRosterInfo`: settings pages for a league with no members. **Re-run after
+the draft** — `npm run roster-limits` records it as `unreadable` rather than
+guessing, and the planner enforces no floor for a league it could not read.
+
+### How it reaches the app
+
+`npm run roster-limits` → `data/leagues/roster-limits.json`, keyed by league id,
+with `fetchedAt` and `minimumsInForce`. It is the labelled fallback CODE_RULES §3
+allows and it is labelled: `mapLeagueInfo` returns an EMPTY
+`minActiveByPosition` because the endpoint publishes none, and
+`apps/companion/app/rosterMinimums.ts` is the only place a number joins it — on
+the way into the planner, which is the one screen that enforces a formation.
+
+A scrape, and a script rather than an adapter for that reason: a regex over
+somebody's markup is run by a person, audited, and checked in, never executed on
+a request. It reads `FANTRAX_COOKIE` from the environment and logs no part of it.
+
+### What it would have been without this
+
+Hold the XI at eleven and the caps alone imply a floor:
+
+```
+min(p) = maxActivePlayers − Σ maxActive(q≠p)
+D 11−(1+5+3) = 2 · M 2 · F 11−(1+5+5) = 0 · G 0
+```
+
+**Two at the back, and a goalkeeper floor of nought** — 5+5+3 = 13 ≥ 11, so the
+caps permit an XI with no keeper at all. Every one of those is wrong against the
+real settings, which is the measure of how far "the API does not say" is from
+"the league does not care".
+
 ## The commissioner's cookie opens all of it — probed 21 Sep 2026
 
 Craig supplied his own session and the probe was **read methods only**; nothing
@@ -973,6 +1049,15 @@ for Stats and still unmet for Zones.
 
 `sweep` reports one AA failure on `/prem/match/{id}` whenever Sunderland are on
 it: `SUN` at **4.48:1 against a needed 4.5**, at 18px on the club's own plate.
+
+*It had a second site for two hours on 21 Sep 2026 and no longer does.* The
+lineup planner moved to `PitchMarker`, whose fixture band took the OPPONENT's
+colour, so any squad holding a man whose club plays Sunderland reported the same
+4.48 at 9px and 10px. Craig then asked for that band to be the desk's plain navy
+("the fixture row should just be blue like this page"), which removed the club
+colour from every pitch and the failure with it. Recorded because the pair is the
+point: the ratio is a property of the club's own colour, so a site appears
+wherever that colour carries text and disappears when it stops.
 
 **It is not a bug in `inkOn`.** That function picks the BETTER of white and the
 desk's near-black against the plate, and for this red white IS the better one —

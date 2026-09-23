@@ -81,8 +81,11 @@ export default function PlateShell({
     // rather than the league's deep blue (Craig, 2 Sep). Scoped here rather than
     // passed to each table: it is a property of whose screen this is, and every
     // table inside inherits it without knowing.
+    // `cm-index-scoped`: the block's ground is this subject's colour rather than
+    // the app's deep blue, so it must not gradient and must not grey — see
+    // `desk.css`. Without it a greyed bench row read 3.89:1 on a purple chip.
     <div
-      className="flex flex-col gap-2"
+      className="cm-index-scoped flex flex-col gap-2"
       style={
         {
           "--cm-index": plate.background,

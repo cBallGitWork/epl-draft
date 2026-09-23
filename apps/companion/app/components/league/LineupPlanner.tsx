@@ -21,6 +21,7 @@ import {
   violations,
 } from "@epl/core";
 import LineupPitch from "./LineupPitch";
+import PlayerCard from "./PlayerCard";
 import type { PitchRow } from "./PitchRows";
 import MoveDialog from "./MoveDialog";
 import Pending from "./Pending";
@@ -55,6 +56,8 @@ function sentence(violation: Violation, nameOf: (id: string) => string): string 
       return `${violation.count} on the bench — the league seats ${violation.cap}.`;
     case "position-over-cap":
       return `${violation.count} at ${violation.position} — the cap is ${violation.cap}.`;
+    case "position-under-min":
+      return `${violation.count} at ${violation.position} — the league wants ${violation.min}.`;
     case "not-eligible":
       return `${nameOf(violation.fantraxId)} is not eligible at ${violation.position}.`;
   }
@@ -66,6 +69,7 @@ export default function LineupPlanner({
   players,
   limits,
   fantraxUrl,
+  figure,
   pending,
 }: {
   team: RosteredTeam;
@@ -77,6 +81,9 @@ export default function LineupPlanner({
   players: LeaguePlayerState[];
   limits: RosterLimits;
   fantraxUrl: string;
+  /** What the list's figure column is a figure OF, when it is not this round's
+   *  points — see `SquadRows`. Null on a round that has scored. */
+  figure: string | null;
   /** Points Fantrax has not credited yet — a clean sheet is settled at the final
    *  whistle and FPL has been paying it since the hour mark. Null when there are
    *  none to preview, and never a nought. */
@@ -95,6 +102,14 @@ export default function LineupPlanner({
   const [view, setView] = useState<View>("pitch");
   const [picked, setPicked] = useState<string | null>(null);
   const [opened, setOpened] = useState<string | null>(null);
+  // **A tap on the LIST opens the man** (Craig, 21 Sep 2026: "list view, tap a
+  // player - brings up player card"). The two views ask different questions and
+  // the tap follows: the pitch is the arranging surface, where a tap picks him
+  // and a second tap offers everywhere he can go; the list is the reading one,
+  // where the question is "who is this, and is he fit". A rival's locked squad
+  // already opens a card from both, and this was the one list in the app whose
+  // rows looked like buttons and were not.
+  const [card, setCard] = useState<SquadPlayerDetail | null>(null);
 
   const eligibility = useMemo(() => eligibilityOf(players), [players]);
   // The same fact in the shape the list wants. `SquadRows` takes a record
@@ -114,7 +129,7 @@ export default function LineupPlanner({
   // The pitch renders the EDITED slots, so what is on screen is the thing being
   // planned. Rebuilt from the real team so `lineup()` is reused exactly as it is
   // — the planner changes assignments, not players.
-  const { rows, bench, shape } = useMemo(() => {
+  const { rows, bench } = useMemo(() => {
     const bySlot = new Map(slots.map((slot) => [slot.fantraxId, slot]));
     const arranged = lineup({
       ...team,
@@ -137,11 +152,6 @@ export default function LineupPlanner({
         players: line.players.flatMap((p) => detail(p.slot)),
       })),
       bench: arranged.bench.flatMap((p) => detail(p.slot)),
-      // Free, and it has to come from HERE rather than from the server: this is
-      // the edited arrangement, so the shape changes under the reader's thumb as
-      // he moves a man. A formation named on the server would be the one he
-      // started with.
-      shape: arranged.shape,
     };
   }, [team, slots, detailOf]);
 
@@ -173,10 +183,16 @@ export default function LineupPlanner({
   }
 
   // Everything the picked man may do, and the men he may do it with.
+  //
+  // **The other end of the swap, whichever end it was read from.** `legalMoves`
+  // answers for a reserve with `fantraxId` as the man coming on, and for a man
+  // already in the side with `withId` as himself — so a partner is "the id that
+  // is not his", and reading only `withId` lit nothing at all when a manager
+  // tapped one of his own eleven.
   const pickedMoves = picked === null ? [] : legalMoves(slots, eligibility, limits, picked);
-  const partners = new Set(
-    pickedMoves.flatMap((move) => (move.kind === "swap" ? [move.withId] : [])),
-  );
+  const partnerOf = (move: Move): string | null =>
+    move.kind !== "swap" ? null : move.fantraxId === picked ? move.withId : move.fantraxId;
+  const partners = new Set(pickedMoves.flatMap((move) => partnerOf(move) ?? []));
 
   /** Swapping with a man who occupies a position the picked player is eligible
    *  for means taking that position. Where he is not — a full XI lets him come
@@ -185,10 +201,17 @@ export default function LineupPlanner({
    *  man out. */
   function swapWith(partnerId: string) {
     const candidates = pickedMoves.flatMap((move) =>
-      move.kind === "swap" && move.withId === partnerId ? [move] : [],
+      partnerOf(move) === partnerId ? [move] : [],
     );
-    const theirPosition = slots.find((slot) => slot.fantraxId === partnerId)?.position;
-    const move = candidates.find((swap) => swap.to === theirPosition) ?? candidates[0];
+    // Where the man COMING ON ends up, which is the picked player only when he
+    // is the reserve. Tapping a defender in the side and then a reserve midfield
+    // puts the midfielder in the defender's place, so the position that matters
+    // is the one being vacated.
+    const incoming = candidates[0]?.kind === "swap" ? candidates[0].fantraxId : null;
+    const vacated = slots.find(
+      (slot) => slot.fantraxId === (incoming === partnerId ? picked : partnerId),
+    )?.position;
+    const move = candidates.find((swap) => swap.kind === "swap" && swap.to === vacated) ?? candidates[0];
     // Only offered for a partner the pitch has lit, and it lit him from this
     // same list — so an empty one is unreachable rather than unhandled.
     if (move) play(move);
@@ -196,11 +219,12 @@ export default function LineupPlanner({
 
   return (
     <div className="flex flex-col gap-3">
-      {/* The shape, above the grass, because that is where it is read. It is the
-          first thing Championship Manager says about an eleven, and it moves as
-          the eleven does — a 1-3-4-3 becomes a 1-3-5-2 the moment a midfielder
-          comes on for a forward, which is the whole point of naming it on the
-          screen where the moving happens. */}
+      {/* **The formation line is gone** (Craig, 21 Sep 2026: "remove 1-3-4-3
+          row"). It named the shape above the grass, and the grass draws the
+          shape — four lines of cards is what a 1-3-4-3 looks like, and a reader
+          who wants the string can count them. It cost the pitch 20px of its
+          height budget at every width to say something the picture underneath it
+          was already saying. */}
       {/* **A list as well as a pitch** (Craig, 21 Sep 2026), on `Sheet`'s
           control and `Sheet`'s components — the same `ViewToggle` and the same
           `SquadRows` a rival's locked squad draws.
@@ -213,19 +237,35 @@ export default function LineupPlanner({
           fold on its own width, so halving it for a list would shrink the only
           interactive surface in the app to make room for a read-only copy of
           what it already says. */}
-      <div className="flex items-center justify-between gap-3 px-1 text-2xs">
-        <span className="numeric font-bold text-faint">{shape}</span>
-        <div className="flex items-center gap-3">
-          {/* Phone only, on `Sheet`'s reasoning: above `lg` both readings fit
-              side by side, and a control choosing between two things already on
-              screen is a control that does nothing. It also buys the grass back
-              the 44px a tap target costs — `pitchfit` had the pitch clearing the
-              fold by 5px at 1440 with the toggle in the column, and by 26 with
-              it gone. */}
-          <span className="lg:hidden">
-            <ViewToggle view={view} onPick={setView} quiet />
-          </span>
+      {/* **Across the page under a thumb** (Craig, 21 Sep 2026: "pitch/list, use
+          thinner buttons, put in the middle of the page, longer and thinner").
+          It was 110px of a 390 screen, hard against the right edge, sharing a
+          row with a figure that is usually absent — two small plates floating in
+          an empty bar, which `ViewToggle`'s own docblock already calls out as
+          reading like leftovers. Its `flex-1` was doing nothing because the row
+          was `justify-end`.
+
+          **Longer is what makes it thinner.** The plates are 44px tall and stay
+          there: that is PRODUCT.md's tap floor, and the Pitch/List toggle is the
+          one control that used to have an exception to it — deleted on 11 Sep
+          when this became a `.cm-tab` strip, and a deleted exception is not one
+          to quietly re-open. At full width the same height reads as a bar rather
+          than as two buttons, which is the proportion CM's own `Back · Next`
+          pair has at the foot of a screen. */}
+      <div className="flex flex-col gap-2 px-1 text-2xs lg:flex-row lg:items-center lg:justify-end lg:gap-3">
+        {/* Above the strip on a phone and beside it on the desk, so a pending
+            figure never pushes the control off the fold. */}
+        <div className="flex justify-end lg:order-2">
           <Pending points={pending} />
+        </div>
+        {/* Phone only, on `Sheet`'s reasoning: above `lg` both readings fit
+            side by side, and a control choosing between two things already on
+            screen is a control that does nothing. It also buys the grass back
+            the 44px a tap target costs — `pitchfit` had the pitch clearing the
+            fold by 5px at 1440 with the toggle in the column, and by 26 with
+            it gone. */}
+        <div className="lg:hidden">
+          <ViewToggle view={view} onPick={setView} quiet />
         </div>
       </div>
 
@@ -243,6 +283,8 @@ export default function LineupPlanner({
             lines={rows.map((line) => ({ position: line.label, players: line.players }))}
             projected={false}
             eligibility={eligibleBy}
+            figure={figure ?? undefined}
+            onOpen={setCard}
           />
           {bench.length === 0 ? null : (
             <>
@@ -255,6 +297,8 @@ export default function LineupPlanner({
                 projected={false}
                 eligibility={eligibleBy}
                 head={false}
+                reserve
+                onOpen={setCard}
               />
             </>
           )}
@@ -266,7 +310,7 @@ export default function LineupPlanner({
         inColumn
         rows={rows}
         bench={bench}
-        availabilityOf={(player) => {
+        pickStateOf={(player) => {
           const id = player.rostered.slot.fantraxId;
           if (picked === null) return "idle";
           if (picked === id) return "picked";
@@ -287,6 +331,14 @@ export default function LineupPlanner({
         </div>
       </div>
       </section>
+
+      {card !== null ? (
+        <PlayerCard
+          key={card.rostered.slot.fantraxId}
+          player={card}
+          onClose={() => setCard(null)}
+        />
+      ) : null}
 
       {opened !== null ? (
         <MoveDialog

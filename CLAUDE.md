@@ -286,6 +286,10 @@ npm run capture         # both leagues + the pool, into data/snapshots/
 npm run capture:status  # per-league staleness; non-zero when overdue
 npm run periods         # re-check period↔gameweek alignment against live FPL
 npm run bridge          # regenerate the Fantrax→FPL player mapping
+npm run roster-limits   # re-read the position MIN/MAX off the commissioner's
+                        # setup page — the one roster rule no JSON endpoint has.
+                        # Needs FANTRAX_COOKIE. The real league has no table
+                        # until it has members, so re-run it after the draft.
 npm run team-codes      # issue one sign-in code per team; prints them once
 ```
 

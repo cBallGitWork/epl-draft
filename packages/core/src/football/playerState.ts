@@ -98,3 +98,25 @@ export function isDoubtful(player: FootballPlayer): boolean {
 export function onTheBooks(player: FootballPlayer): boolean {
   return availabilityOf(player).state !== "unavailable";
 }
+
+/** How badly a doubt reads on a pitch: three bands, and null for a fit man.
+ *
+ *  FPL draws the same three on its own team screen and the reading is the one a
+ *  manager wants at a glance — is he out, is he nearly out, or is there a
+ *  question against him. `Availability` already answers *why* he is doubtful;
+ *  this answers *how much*, which is the part a colour can carry.
+ *
+ *  The cut is FPL's own scale rather than a judgement: they publish
+ *  `chance_of_playing_next_round` as 0, 25, 50, 75 or 100 and nothing between.
+ *  A stated nought is already `out`, 25 is the one remaining band that is more
+ *  miss than play, and everything else — including a doubt FPL put no number
+ *  against — is the slight one. */
+export type DoubtBand = "out" | "major" | "slight";
+
+const MAJOR = 25;
+
+export function doubtBand(availability: Availability): DoubtBand | null {
+  if (availability.state === "fit") return null;
+  if (availability.out) return "out";
+  return availability.chance !== null && availability.chance <= MAJOR ? "major" : "slight";
+}

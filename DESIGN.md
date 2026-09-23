@@ -364,6 +364,30 @@ is more specific than a palette; it is the reason the token names in
 | Cold | `--color-cold` | the same at the WRONG end of a column, where high is the bad end — the same pair's red | ink 11.3 |
 | Cream | `--color-cream` | ink on a colour plate | — |
 | Quiet on a plate | `--color-faint-plate` | the same **quiet** as `--color-faint`, on the blue plate that will not carry it | — |
+| Doubt | `--color-doubt-out` `-major` `-slight` | **how likely he is to MISS**, as a ramp of three. A ground, never ink | ink 5.5 · 7.1 · 9.5 |
+
+**The doubt ramp is three steps and one meaning** (Craig, 21 Sep 2026: *"we need
+to show that players are a doubt/out better ... red 100% out, orange for a major
+doubt, yellow for slight doubt"*). It is the second scale in the file after the
+fixture-difficulty one, and it earns the same exception the FDR block earns: one
+ramp saying one thing beats three slots that each have to be learned. Red already
+means *a loss, a doubt, a negative* and goes on meaning it — what the ramp adds
+is HOW MUCH, which is the part a reader takes in across eleven cards without
+stopping at any of them.
+
+The cut is FPL's, not ours: `chance_of_playing_next_round` is published as 0, 25,
+50, 75 or 100 and nothing between, so `doubtBand` has exactly these bands to
+name. Hue-locked like the FDR scale — `out` is `--color-bad`'s red, `slight` is
+`--color-mid`'s amber, `major` is the step between them in hue and lightness
+alike — so no new colour family enters the app. The lightnesses run 0.66 · 0.72 ·
+0.79, which is a ramp a reader who cannot separate the hues can still separate.
+
+**It never replaces the word.** `StateBox` still prints `Inj` · `Sus` · `Unav` ·
+`Dbt` beside the name in a list, because the colour says how likely and only the
+box says why. On the pitch there is no room for a box and the plate takes the
+colour instead; the list carries both, and a wash rather than a fill — 16% of the
+colour into the row's own ground — because the row's own ink runs down to
+`--color-faint`, which is already 4.6:1 on `--raised`.
 
 **Cyan said "a person" until 3 Sep 2026, and that was a misread of the
 reference.** `docs/ui/reference/README.md` recorded a "person link" in cyan and

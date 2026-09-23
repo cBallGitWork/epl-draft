@@ -110,7 +110,58 @@ export function eligibleSlots(
   });
 }
 
-/** Everything this player could legally do right now.
+/** Whether a move would push a position further below the fewest the league
+ *  allows to start there.
+ *
+ *  **Further below, not below.** A roster can arrive already short — the
+ *  commissioner can RAISE a minimum under a filed side, which is the mirror of
+ *  the cap case `overCap` exists for — and a planner that refused every move
+ *  from that state would freeze on the one screen that could repair it. So the
+ *  test is whether the move makes a line worse than it found it.
+ *
+ *  A position with no published minimum cannot be broken. Fantrax's public
+ *  `getLeagueInfo` publishes none at all, so this is inert until the checked-in
+ *  file reaches `RosterLimits` — see `minActiveByPosition`. */
+function worsensMinimum(
+  before: readonly RosterSlot[],
+  after: readonly RosterSlot[],
+  limits: RosterLimits,
+): boolean {
+  for (const [position, min] of Object.entries(limits.minActiveByPosition)) {
+    const was = activeAt(before, position).length;
+    const now = activeAt(after, position).length;
+    if (now < min && now < was) return true;
+  }
+  return false;
+}
+
+/** Whether the XI is already breaking a cap this man stands inside.
+ *
+ *  The one state where taking somebody out and putting nobody in is the remedy
+ *  rather than the problem: a commissioner can lower a cap under a side that was
+ *  legal when it was filed, and did across the league on 12 Aug. */
+function overCap(
+  slots: readonly RosterSlot[],
+  limits: RosterLimits,
+  slot: RosterSlot,
+): boolean {
+  if (
+    limits.maxActivePlayers !== null &&
+    slots.filter(isActive).length > limits.maxActivePlayers
+  ) {
+    return true;
+  }
+  // A slot with no position at all breaks no published cap — Fantrax accepts one
+  // and `lineup()` gives it a bucket — so there is nothing for him to be over.
+  const position = slot.position;
+  if (!position) return false;
+  const cap = limits.maxActiveByPosition[position];
+  return cap !== undefined && activeAt(slots, position).length > cap;
+}
+
+/** Everything this player could legally do right now — including the moves
+ *  somebody else makes ON him, which is what "his bench" means when he is the one
+ *  in the side.
  *
  *  A player with no recorded eligibility yields nothing at all. That is the honest
  *  answer — we do not know what he may play — and it is why absence is modelled
@@ -158,13 +209,45 @@ export function legalMoves(
     }
   }
 
+  // **A man in the side goes off only when somebody takes his place** (Craig,
+  // 21 Sep 2026: "dont allow to just put a player on the bench"). The swaps are
+  // the same ones the reserves already offer, read from the other end rather
+  // than derived a second time — one rule, so the pitch cannot light a partner
+  // the dialog then refuses. No recursion: the reserve branch above never asks
+  // this question back.
+  //
+  // It is also what makes the position caps a FORMATION rule. With the eleven
+  // held at eleven, `maxActiveByPosition` fixes the fewest a line may hold —
+  // this league's G1/D5/M5/F3 against an XI of 11 puts the floor at two at the
+  // back and two in midfield — and no arrangement outside that is reachable.
+  if (active) {
+    for (const reserve of slots.filter((s) => !isActive(s))) {
+      for (const move of legalMoves(slots, eligibility, limits, reserve.fantraxId)) {
+        if (move.kind === "swap" && move.withId === fantraxId) moves.push(move);
+      }
+    }
+  }
+
   const benched = slots.filter((s) => !isActive(s)).length;
   // A bench with no published cap has room: an unstated limit cannot be full.
-  if (active && (limits.maxReservePlayers === null || benched < limits.maxReservePlayers)) {
+  // Offered only to break a cap the XI is ALREADY over, which is the single case
+  // a bare demotion repairs rather than causes.
+  if (
+    active &&
+    overCap(slots, limits, slot) &&
+    (limits.maxReservePlayers === null || benched < limits.maxReservePlayers)
+  ) {
     moves.push({ kind: "demote", fantraxId });
   }
 
-  return moves;
+  // **The formation rule, and it is the league's rather than arithmetic.**
+  // Holding the eleven at eleven keeps every line inside its CAP; the FLOOR is a
+  // separate setting — D 3, M 2, F 1, G 1 in our league, which Fantrax enforces
+  // and publishes only on the commissioner's own setup page. Applied by playing
+  // each move and counting, rather than by reasoning per move kind: a swap moves
+  // one man in and one man out and the two need not be the same position, and a
+  // shift empties the line it left. One rule, and `applyMove` is pure.
+  return moves.filter((move) => !worsensMinimum(slots, applyMove(slots, move), limits));
 }
 
 /** Apply a move, returning a new roster. Never mutates its input: the planner
