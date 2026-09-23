@@ -88,6 +88,18 @@
   --pitch-page: 26.5rem;
 }
 
+/* The match line-up: the bar, the tabs and the shape above the grass, the used subs and the phone's nav below.
+   A phone also spends a row on picking the club and the view. */
+.pitch-match {
+  --pitch-page: 23rem;
+}
+
+@media (min-width: 64rem) {
+  .pitch-match {
+    --pitch-page: 19.5rem;
+  }
+}
+
 /* Everything a pitch's page spends on what is not grass: the header and the
    toggle above it, `--page-foot` and the bench strip and the planner's way out
    below it, and the frame's own hoardings and bottom padding. `.pitch-figure`

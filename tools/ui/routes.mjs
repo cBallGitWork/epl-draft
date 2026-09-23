@@ -74,7 +74,10 @@ export const MATCH_TABS = readdirSync(MATCH_DIR, { withFileTypes: true })
   .map((entry) => entry.name)
   .sort();
 
-/** One match's overview and every tab under it. */
+/** The views a tab switches with a query, which no folder shows: each club's board, the Fantasy Report, the pitch. */
+const MATCH_VIEWS = ["stats?view=home", "stats?view=fantasy", "players?view=pitch"];
+
+/** One match's overview, every tab under it, and the views its foot rows switch to. */
 export function matchRoutes(match) {
-  return [match, ...MATCH_TABS.map((tab) => `${match}/${tab}`)];
+  return [match, ...[...MATCH_TABS, ...MATCH_VIEWS].map((tab) => `${match}/${tab}`)];
 }

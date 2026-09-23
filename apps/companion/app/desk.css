@@ -677,6 +677,19 @@
   color: var(--color-faint);
 }
 
+/* A match board's standouts keep their ink in a greyed row (DESIGN §3, "Peak"). */
+.cm-out .cm-lit-best {
+  color: var(--color-peak);
+}
+
+.cm-out .cm-lit-good {
+  color: var(--color-accent);
+}
+
+.cm-out .cm-lit-bad {
+  color: var(--color-bad);
+}
+
 /* The same greying on a blue plate, which the rule above cannot reach.
    **A plate owns its ink** (DESIGN §2), and this is the greyed half of that:
    `--color-faint` is 5.30:1 on the page ground and 2.35:1 on `--color-chrome`,

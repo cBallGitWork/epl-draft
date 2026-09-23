@@ -12,15 +12,18 @@ const TITLE = "What our Fantrax league will field him as";
 export default function PositionTile({
   positions,
   cell = false,
+  className = "",
 }: {
   positions: readonly string[];
   cell?: boolean;
+  /** Extra classes on the cell — a board that scrolls sideways pins it with `sticky`. */
+  className?: string;
 }) {
   const label = (
     <span className="block w-full truncate px-0.5 text-center">{positionsLabel(positions) ?? DASH}</span>
   );
   return cell ? (
-    <td className="cm-index w-10 text-2xs lg:w-14" title={TITLE}>
+    <td className={`cm-index w-10 text-2xs lg:w-14 ${className}`} title={TITLE}>
       {label}
     </td>
   ) : (

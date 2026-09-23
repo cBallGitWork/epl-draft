@@ -131,11 +131,15 @@ cannot change what a phone sees. What it bought is ten teams on one screen
 where the game showed a division on one — `/league`'s rows are 29px against
 Championship Manager's own 18.
 
-**Two exceptions, both deliberate and both measured.** A **column head** belongs
+**Three exceptions, all deliberate and all measured.** A **column head** belongs
 to the head strip it is cut from and is as wide as its column, so it is a short
 wide target rather than a small one; it has been 28px since the tables were built
 and no document had measured it until now. An **inline text link inside a
-sentence** — "or show all 638" — is prose and never was a control.
+sentence** — "or show all 638" — is prose and never was a control. And **the match
+screens' rows are 36px under a thumb** (Craig, 23 Sep 2026: *"the mobile rows are
+too big"*, *"too big of a gap between a goal scorer and assister"*): the team
+sheet, a club's stats board, Action Zones' shot list and the Overview's scorer and
+assister lines on `/prem/match/[id]`.
 
 *It was three until 11 Sep 2026. The third was the **Pitch/List toggle** at
 `min-h-9`, and it is gone because the control is: `ViewToggle` became a blue

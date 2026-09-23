@@ -48,7 +48,7 @@ for every shape decision below.
    so a pale side is a case the reference has rather than an edge we invented;
    `inkOn` answers it. Before kick-off there is **one `v` between the plates**,
    not one in each box.
-2. **The strip** — `Overview · Fantasy Scores`. Two, and the reason is below.
+2. **The strip** — `Overview · Stats · Line Ups · Highlights`. Four, and the reason is below.
 3. **The caption — the GROUND, on the Overview only.** `cm9900/21.jpg` runs
    "Goodison Park, Liverpool" along the foot of every match screen and
    `cm0102/02.jpg` puts "St.James's Park, Newcastle" in the yellow caption at the
@@ -56,14 +56,16 @@ for every shape decision below.
    It was under all five tabs until 11 Sep 2026 (Craig: *"stadium name and ref
    row only show on overview page"*) — the other four are TABLES, and a table
    pushed down by a ground it did not ask for has paid a row of a phone's screen
-   for a fact already read. The referee line went with it.
+   for a fact already read. **The referee and attendance line under the panel is
+   gone altogether** (Craig, 23 Sep 2026: *"remove that ref row and attendance"*).
 4. **The panel** — the date in full at the left, the round, the tense and the
    half-time score at the right **in cyan**, then either the scoresheet or the
-   preview, then the referee and the attendance along the foot.
-5. **Player stats** — every man in the match as a row: position, minutes, goals,
-   assists, saves, bonus, and SofaScore's rating.
-6. **`MatchFoot`** — CM's second foot row, finally drawn: the two clubs, and a
-   **waiting plate** for the advanced data.
+   preview. Under it, the **Match Report** — the commentary under a blue bar, run
+   the page's full length rather than in a box of its own (Craig, 23 Sep 2026: *"we
+   have a browser scroll AND a match report scroll"*).
+5. **The foot row** — CM's related-screens strip (`cm0102/02.jpg`), under the
+   panel on Stats (`Brentford · Match · Chelsea`) and Line Ups (`Team Sheet ·
+   Pitch`). The shell's `foot` slot draws it with `TabStrip`.
 
 *Corrected 4 Sep 2026 after Craig read the first build.* The scores were centred
 between the plates rather than at each side's own edge; an unplayed match drew
@@ -73,8 +75,35 @@ men under the scoresheet. All four are gone.
 ## Five tabs, where the game runs four
 
 `cm9900/22.jpg` runs `Match Overview · Match Stats · Action Zones · Match
-Report`. We carry three of those four, plus Player Stats and Fantasy Scores —
-`Overview · Player Stats · Match Stats · Fantasy Scores · Match Report`.
+Report`. We run `Overview · Line Ups · Stats · Action Zones · Highlights` — Craig's
+order, 23 Sep 2026: the elevens second.
+
+**Every name on a match screen opens the player's card, never his page** (Craig,
+23 Sep 2026: *"tapping a player brings up their player pop up, not a link"*) — the
+team sheet, the club boards, the pitch and the scoresheet all open
+`components/league/PlayerCard`, **the same card the squad board and the lineup
+planner open** (Craig, 23 Sep 2026: *"should be the same pop up as elsewhere, that
+needs to be a repo standard"*). `matchMen` builds each man's `SquadPlayerDetail`
+from the match and our league's `leagueOpinions` — his Fantrax id is what the
+card's *Full profile* opens — and a man our league does not list stays plain text.
+The match screens' own card, with its sub minutes and owner, is gone. **A panel ends where its
+content does** rather than filling to the foot of the screen, and a phone gets a
+`←` plate at the left of the score bar, because the rail's arrows are a desk's.
+
+**The Fantasy Report is a Stats view of its own** (Craig, 23 Sep 2026: *"fantasy
+report needs a full page, put it in stats"*, `/stats?view=fantasy`, the fourth plate
+on the foot row) — FPL's own match details (`Goals scored ·
+Assists · …`) for our league: each category's men, home left and away right,
+`Name (n)`, one category after another at every width, plain text set close
+rather than a column of doors. **A scaffold** (*"il add the categories later"*): `fantasyCategories.ts`
+holds the event counts one match can give, keyed by Fantrax's own codes (`G`, `A`,
+`Sv`, `YC`…), so the league's scoring can decide which count once it is wired.
+
+**Stats is Player Stats and Match Stats merged** (Craig, 23 Sep 2026: *"player
+stats and match stats can be merged to stats"*). `/stats` opens on the two sides
+against each other; the foot row's club plates (`?view=home|away`) open that
+club's men — CM 01/02's `Roma Stats` screen. `/team-stats` is gone, and so is the
+one table of every man in the match.
 
 *This section said "two tabs, where the game runs four" until 10 Sep 2026, and
 both halves were stale. The strip had grown to four, and Match Stats had a source
@@ -82,33 +111,51 @@ the whole time: `fetchPlMatchStats` was written on 4 Sep and had no caller in th
 app for six days. `22.jpg`'s board is **thirteen of thirteen rows** from that one
 call.*
 
-**Action Zones stays off, and it is now the only one — but no longer for want of
-a source.** *This sentence read "No provider publishes a zone" until 11 Sep
-2026, and that stopped being true when the touch cloud shipped: the average
-position of a man or of a side is the centroid of his cloud, measured that day to
-BE SofaScore's own `average_x`/`average_y`, at 30/30 fixtures. What the tab waits
-on now is a decision about what it draws.* `TabStrip`'s `dim` is not the answer: its docblock says it greys a view
-with nothing behind it *for this subject*, and a plate greyed for all 380 matches
-reads as broken rather than honest. This section has already ruled on the same
-case once — [prem.md](prem.md): *"Tactics is not a tab and will not be one… It
-arrives there when there is a real XI to draw."*
+**Action Zones is a tab again, in CM's own place** (Craig, 23 Sep 2026: *"shots
+need to show who made the shot, so we probably need to separate shots/average
+positions into its own section"*). `/zones`: both sides' shots on ONE pitch, home
+attacking the left box and away the right (the export is player-relative, so home
+takes a half-turn), with every shot in one list under it — minute on the club's
+tile, shooter, outcome, xG — ranked by minute or by xG. Tapping a row or a mark
+picks the shot and rings it in the accent. `Min` and `xG` are the list's two heads,
+links like every other board's sort (`?order=xg`), and the shooter is named in full. Then the average positions, under a
+blue bar of their own; a phone shows one section at a time. An
+own goal is left off the side that scored it: the export flags none, so a shot is
+dropped only where its unpriced goal and FPL's `ownGoals` for that man agree. **It
+is only as current as the sister repo's shot and touch export** — fixtures 1-30 as
+last run on 10 Sep — and a match past it says so rather than drawing two empty
+pitches.
 
-**`/team-stats` and not `/stats`**, which Player Stats already holds. The two are
-a real pair and the names say which is which: Match Stats is the two SIDES
-against each other, Player Stats is every man in the match.
+**Line Ups is where the game files Player Ratings**, which is a FOOT button in
+`16.jpg` and `21.jpg` rather than a tab. It is a tab here because it is the view
+this app exists for.
 
-**Fantasy Scores is where the game files Player Ratings**, which is a FOOT button
-in `16.jpg` and `21.jpg` rather than a tab. It is a tab here because it is the
-view this app exists for. The foot row is drawn as well and carries the two clubs
-— the third plate on it was a dead `<span>` reading "Match Stats" until that
-became a real tab, and a foot plate and a tab to one place is the screen
-repeating itself.
+## A club's men
+
+One club's squad **ranked by fantasy points** (Craig, 23 Sep 2026), ties in the
+team sheet's order: the Fantrax position tile in the club's colour, the name with
+its sub note on a desk, then the measures, centred under their heads as CM sets them — `Pts Min G A xG xA CS GC Sv DC B YC Rtg`, each head a sort
+link that keeps the club (`statsSort.ts`). A man who played prints every figure
+**including 0**; one who never got on prints `—` (Craig, 23 Sep 2026: *"zero is a
+stat"*). The tile and the name are pinned so the measures scroll under them at
+390, and neither wears a head plate — CM heads only its figures. A fade at the
+right edge says the measures go on before CM's bar at the foot is in view.
+
+Among the ties the bench's men who got on sit above the ones who sat. **A column's
+standouts are lit in CM's inks** (Craig, 23 Sep 2026: *"yellow font colour, and
+orange for even better"*): yellow for the top values inside a fifth of the men who
+played, orange for the one best inside a tenth, red on `GC` and `YC` where high is
+bad — `standoutCut`, and DESIGN §3's "Peak" row. `Pts` and `Rtg` stay cyan and
+unlit.
 
 ## Match Stats
 
-`cm9900/22.jpg`, thirteen rows in its order: Shots On Goal, On Target, Off
-Target, Corners, Free Kicks, Throw-Ins, Fouls, Offsides, Passes Completed,
-Tackles Won, Headers Won, Yellow Cards, Red Cards.
+`cm9900/22.jpg`'s thirteen rows in its order, plus five simple ones (Craig,
+23 Sep 2026: *"possession etc… simple stats fine"*): Possession, Shots On Goal,
+On Target, Off Target, Blocked, Corners, Free Kicks, Throw-Ins, Fouls, Offsides,
+Passes Completed, Tackles Won, Headers Won, Interceptions, Clearances, Saves,
+Yellow Cards, Red Cards. All eighteen are one `/stats/match` call; Opta publishes
+no xG there (0 of 187 metric names, probed 23 Sep on Brentford 3-0 Chelsea).
 
 A figure plate each side with the label between them, which is why it is a
 three-column grid and not a table: the label is the axis and the figures are its
@@ -117,21 +164,20 @@ Capped at `max-w-2xl` on a desk, because the reference is a PROPORTION — `22.j
 is ~690px on an 800px canvas, and stretched to 1440 the same markup put a
 thousand pixels of turf between `14` and `10`.
 
-Cyan on the three percentages, which is `--color-info` doing its job: a
-proportion is a reading we derived and a count is Opta's. `22.jpg` prints the
-same three in cyan and the two card LABELS in their own cards' colours.
+**Under four plates — Attack, Possession, Defence, Discipline** (Craig, 23 Sep
+2026: *"group it behind tiles better"*), two by two on a desk and stacked under a
+thumb. Each side's figures sit on its club's colour with `inkOn`'s ink, so the
+percentages are no longer cyan; the two card LABELS keep their cards' colours.
 
 **Opta's metric names are not English** and `matchStats.ts` carries the table:
 `fk_foul_lost` is fouls COMMITTED and `fk_foul_won` fouls WON, `total_throws`
 includes the keeper's. **A metric worth nought is absent from the payload**,
 which inverts DESIGN §7 — see [premier-league-api.md](../providers/premier-league-api.md).
 
-Under it, **two maps, and each is drawn once per TEAM** (Craig, 11 Sep 2026:
-*"shot and touch maps need to be by team"*). Four pitches, side by side within a
-map on a desk and stacked under a thumb — the whole of what the two sides did, on
-one page, which is the other half of the same instruction (*"Match Stats as one
-page"*). Each pitch wears its club's own plate, with the count on the shot map
-and the formation on the other.
+**The two maps are on Action Zones since 23 Sep 2026**, each drawn once per TEAM
+(Craig, 11 Sep 2026: *"shot and touch maps need to be by team"*): four pitches,
+side by side within a map on a desk and stacked under a thumb. Each pitch wears its
+club's own plate, with the count on the shot map and the formation on the other.
 
 **Splitting deleted the mirror rather than moving it.** Every coordinate the
 sister repo exports is player-relative — his own goal to the one he attacks — so
@@ -189,10 +235,10 @@ it went when the pitches split.*
 ## The team sheet
 
 `cm9900/16.jpg`, both sides, and every column on it has a 30/30 source since
-10 Sep 2026. The shirt number is the Premier League's `matchShirtNumber` — the
-number he wore in THIS match — the sub note and the card are its `events` array,
-and the order is the FORMATION rather than a position string, so a back three
-stops being read as a back four.
+10 Sep 2026. The index block carries **our Fantrax league's position** for him
+(`PositionTile`, Craig, 23 Sep 2026: *"the squad number tile, replace with the
+fantrax position"*), and it is the row's only position — the real one is on the
+card. The sub note and the card are the Premier League's `events` array.
 
 *Three of those columns read the sister repo's match log until 10 Sep, which
 covers fixtures 1-20 of a season whose other exports reach 30. Ipswich 0-2
@@ -208,13 +254,24 @@ gave each side 175 against a row measuring 199, so the away side's points column
 was pushed out of its panel and clipped. The document never overflowed and no
 element reported a right edge past the viewport — only the screenshot caught it.
 
-Under the board, the **formation**, drawn with the flat CM diagram rather than the
-photographed trapezoid, which is `PitchRows`' own rule: a screen about
-ARRANGEMENT gets the diagram. One `widest` across both pitches, so the two halves
-of one match are drawn to one scale. It is UNDER the board and not over it: a
-pitch is 612px tall at 390 and two of them put the scores this tab exists for two
-screens down. It clears the fold on its own (780 against 844) — but clearing the
-fold and being the first thing a reader meets are different claims.
+**Only `Pts` is headed on the sheet, centred under it; no formation line over it** (Craig, 23 Sep 2026: *"column headers look
+crap, remove them all except for PTS"*); the pitch carries no formation line.
+
+**Under a thumb it is one club at a time** (Craig, 23 Sep 2026: *"a button for
+each team, THEN for list/pitch, rather than a big scroll"*): a row of `BRE · CHE`
+and `Team Sheet · Pitch` above the board (`?side=away`), and a desk shows both.
+
+**The Pitch** is the foot row's other plate (`?view=pitch`): each eleven in
+`sheet.shape`, the shape its manager drew, with **faces rather than kits**
+(Craig, 23 Sep 2026: *"player portraits instead of shirts"*), the score under
+each name, and an amber `▼ 69′` on a man taken off. The men who came on stand in
+a strip under the grass with `▲ 69′`. A man with no photograph falls back to his
+kit through `PlayerImage`'s ladder, so a line can mix the two — the trade the
+kit-only rule of 10 Sep existed to avoid, taken on purpose here. `pitch-match`
+budgets the grass so the strip clears the nav at 390×844 (767 against 798 with the
+phone's control row, measured 23 Sep). One `widest` across both pitches, so the halves are drawn to
+one scale. No doubt colour on the plates: today's injury flag has no business on
+a match already played.
 
 ## The scoresheet
 
@@ -321,11 +378,11 @@ slot we chose.
 *A Fantrax figure for every man in a match is therefore a paced CAPTURE, not a
 page read — 32 requests a match against 380 matches. It is not built.*
 
-**The shirt number is in CM's blue index block**, from the squads export: FPL
-publishes `squad_number` as a key and null as a value on every element. A man
-nobody has a number for gets the block and no figure.
+**The index block is the Fantrax position** since 23 Sep 2026, in the club's
+colour; a man our league does not list gets `—`.
 
-**The sub note is `on 62` / `sub 74`**, from the match log, in the figure slot.
+**The sub note is `sub on 64'` / `sub off 71'`**, from the Premier League's
+`events`, beside the name (`SubNote`, shared with the club boards).
 `cm9900/16.jpg` writes it in ORANGE, which the reference records as its ink for
 an event rather than a figure — we have no orange slot, and the closest true one
 is `--color-mid`, because the thing being printed is a minute.
@@ -388,7 +445,7 @@ answering honestly. The one slow read is Fantrax, so it streams behind
 |---|---|---|
 | `/prem/match/[id]` | `page.tsx` | the scoresheet or the preview, and the league panel |
 | `…/players` | `players/page.tsx` | both team sheets, by bps |
-| — | `Shell.tsx` | the bar, the strip, and — on the Overview alone — the ground caption and the referee line |
+| — | `Shell.tsx` | the back plate, the bar, the strip, the foot row slot, and — on the Overview alone — the ground caption |
 | — | `MatchBar.tsx` | the two-plate header |
 | — | `MatchTabs.tsx` | the strip |
 | — | `Scoresheet.tsx` | who was named |
@@ -438,7 +495,8 @@ lists. Without the reconciliation an own goal reads as a goal for the wrong side
 
 ## Known gaps
 
-- ~~**Action Zones**, the one tab the game has and this does not.~~ **Closed
+- ~~**Action Zones**, the one tab the game has and this does not.~~ **A tab since
+  23 Sep 2026**, when Stats merged and freed the plate. **Before that, closed
   11 Sep 2026, as two maps on Match Stats rather than as a sixth tab.** *This
   entry said the average positions were "in SofaScore staging and not yet
   exported" and paired the gap with Match Stats, which had been a real tab since
@@ -453,8 +511,9 @@ lists. Without the reconciliation an own goal reads as a goal for the wrong side
 - **A Fantrax figure per man per match.** 6 of 32 from what is wired, 32 of 32
   only through one rate-limited request per player — so it is a paced capture
   rather than a page read, and it is not built.
-- **Attendance and weather**, which `cm0102/02.jpg` prints beside the referee.
-  No provider we hold publishes either.
+- **Referee, attendance and weather**, which `cm0102/02.jpg` prints along its
+  foot. We drew the first two until 23 Sep 2026 and Craig took them off; nobody we
+  read publishes weather.
 - **A predicted eleven on the preview.** `data/intel/xi/26-27.json` has Scout's
   latest per club, one rolling file with a round in its manifest.
 - ~~The two scorer columns sit a long way apart at 1440.~~ **Closed 4 Sep 2026**

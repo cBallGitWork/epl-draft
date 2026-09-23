@@ -1,9 +1,9 @@
 import { clubColours, inkOn, DASH } from "@epl/core";
+import { PITCH_BOX } from "@/app/components/football/pitchBox";
 import type { Club } from "@epl/core";
-import { LABEL } from "@/app/desk";
 import { placeLabels } from "./labels";
 import type { Placed } from "./labels";
-import { PITCH_BOX } from "@/app/components/football/pitchBox";
+import { SECTION_BAR } from "@/app/desk";
 
 // Where an eleven actually played: every starter at the average of his own
 // touches, one pitch per side.
@@ -73,9 +73,9 @@ export default function AveragePosition({
 
   return (
     <figure className="flex flex-col gap-1">
-      <figcaption className="flex items-baseline justify-between gap-2 text-2xs">
-        <span className={LABEL}>Average position</span>
-        <span className="shrink-0 text-faint">the centre of his own touches</span>
+      {/* CM's blue title row, the same as the one over the shots. */}
+      <figcaption className={`${SECTION_BAR} max-lg:hidden`}>
+        Average position
       </figcaption>
 
       {/* Side by side on a desk and stacked under a thumb. Two pitches sharing
@@ -176,12 +176,12 @@ function Side({
         {/* White on the grass with no plate under it, which is `PitchMarker`'s
             own reading: cream measures better than 11:1 on CM's dark green, and
             a row of black bars is what made an earlier pitch read as cards on
-            grass rather than as a team. `text-3xs` is DESIGN §6's floor on a
-            pitch and this is what it was written for. */}
+            grass rather than as a team. One step over DESIGN §6's pitch floor
+            (Craig, 23 Sep 2026: *"just a little bigger, but not much"*). */}
         {labelled.map((man) => (
           <span
             key={man.code}
-            className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-3xs font-bold leading-none text-cream lg:text-2xs"
+            className="absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap text-2xs font-bold leading-none text-cream lg:text-xs"
             style={{ left: `${man.labelX}%`, top: `${man.labelY}%` }}
           >
             {man.name}

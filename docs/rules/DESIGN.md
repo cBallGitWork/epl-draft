@@ -374,6 +374,7 @@ is more specific than a palette; it is the reason the token names in
 | Deep league red | `--color-league-deep` | the same red as a **ground with text on it** | — |
 | Hot | `--color-hot` | **a figure at the top of its column** — the GREEN of the direction pair, as a ground, and only on a board of many measures | ink 10.3 |
 | Cold | `--color-cold` | the same at the WRONG end of a column, where high is the bad end — the same pair's red | ink 11.3 |
+| Peak | `--color-peak` | **the best figure in its column on a match board**, as ink — CM's orange, over the accent's yellow for the rest of the column's standouts | — |
 | Cream | `--color-cream` | ink on a colour plate | — |
 | Quiet on a plate | `--color-faint-plate` | the same **quiet** as `--color-faint`, on the blue plate that will not carry it | — |
 | Doubt | `--color-doubt-out` `-major` `-slight` | **how likely he is to MISS**, as a ramp of three. A ground, never ink | ink 5.5 · 7.1 · 9.5 |
@@ -494,6 +495,13 @@ table yellow is already spoken for twice on the row a reader is looking for: the
 "yours" border and the YOURS chip. A yellow rule across that same table would
 be the accent making a second, unrelated claim in the one place it must not.
 Dashing it is free and carries the distinction without colour; the colour stays.
+
+**A match board lights its standouts in INK, not on a ground** (Craig, 23 Sep
+2026: *"CM uses yellow font colour, and orange for even better… rather than square
+tiles, looks better"*). A club's stats board on `/prem/match/[id]` sets the
+column's best in `--color-peak` and its other standouts in `--color-accent` — the
+accent's one borrowed use outside *yours · selected*, taken from the game's own
+screen — and the wrong end in `--color-bad`. The pool board keeps the grounds below.
 
 **Hot and cold are the first GROUNDS that carry meaning, and the clause above
 them still stands.** "Depth, never meaning" is a rule about the `bg → surface →

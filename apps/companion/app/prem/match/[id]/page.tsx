@@ -1,16 +1,17 @@
 import { Suspense } from "react";
-import { goalMinutes, sheetSides, worthReading, londonDayAndDate, londonTime } from "@epl/core";
+import { goalMinutes, sheetSides, londonDayAndDate, londonTime } from "@epl/core";
 import type { SheetRow } from "@epl/core";
 import Skeleton from "../../../components/shell/Skeleton";
-import SkeletonRows from "../../../components/shell/SkeletonRows";
-import { PANEL, PANEL_FLUSH } from "@/app/desk";
+import { PANEL } from "@/app/desk";
 import MatchShell from "./Shell";
 import Scoresheet from "./Scoresheet";
 import Preview from "./Preview";
-import Line from "./Commentary";
+import MatchReport from "./MatchReport";
 import { matchOwners, readMatch } from "./match";
-import { matchGoalMinutes, matchReport } from "../../../matchFeed";
-import { matchFacts, matchGoals, matchInjuries, matchManEvents, matchPlayerNames, matchStreamCredits } from "../../../matchDetail";
+import { matchGoalMinutes } from "../../../matchFeed";
+import { matchFacts, matchGoals, matchInjuries, matchManEvents, matchStreamCredits, teamSheets } from "../../../matchDetail";
+import { matchMen } from "./matchMen";
+import { leagueOpinions } from "../../club/[code]/club";
 import type { PlMatchFacts } from "@epl/core";
 import { side } from "./scoreLines";
 import type { Match } from "./match";
@@ -79,35 +80,12 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
       </section>
 
-      {/* **The match report, under the goals** (Craig, 11 Sep 2026: *"so we
-          could leave a bit of space under the goals, and have the match report
-          underneath?"*). The overview was the scorers and then a screenful of
-          empty ground — the panel is sized to hold a scoresheet and a 2-0 fills
-          a fifth of it — so what was under the goals was the photograph.
-
-          **Its own panel, not more of the one above** (DESIGN §2: a title row is
-          its own box and the thing it heads is another). The scoresheet answers
-          "what was the score"; this answers "what happened", and they are two
-          statements rather than one long one.
-
-          Behind its own boundary because it is the one read on this page that
-          the scoresheet has not already warmed: the stream is a second request
-          per fixture, and the scorers must not wait on it. */}
-      {/* **Two rows of air under the goals** (Craig, 11 Sep 2026: *"allow a
-          little room between match report and the goalscorders, (maybe 2 rows
-          or so) as breathing room"*). The shell spaces its children by `gap-2`,
-          which is right between panels that are two halves of one statement and
-          too tight here: the scoresheet ENDS, and the reader should feel it end
-          before the account of how starts. Stated in rows because that is the
-          unit the thing below is made of. */}
+      {/* Two rows of air, then the report: the scoresheet ends before the account of how starts. */}
       {fixture.status === "upcoming" ? null : (
         <div className="mt-6 lg:mt-8">
-          <Suspense fallback={<ReportWaiting />}>
-            <Commentary match={match} />
-          </Suspense>
+          <MatchReport match={match} />
         </div>
       )}
-
     </MatchShell>
   );
 }
@@ -121,7 +99,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
  *  carries a minute for every goal in all ten matches, for one request, and it
  *  is already cached for the Live tab's wire. */
 async function Sheet({ match }: { match: Match }) {
-  const [owners, minutes, goals, credits, did, injured] = await Promise.all([
+  const [owners, minutes, goals, credits, did, injured, sheets, league] = await Promise.all([
     matchOwners(match.fixture),
     matchGoalMinutes(
       match.fixture.gameweek,
@@ -142,6 +120,10 @@ async function Sheet({ match }: { match: Match }) {
     matchManEvents(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
     // Who was carried off, and when. The scoresheet names them beside the goals.
     matchInjuries(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
+    // The named men, so each name opens his card — the same cached detail read.
+    teamSheets(match.fixture.gameweek, match.fixture.code, match.snapshot.players),
+    // Each named man's Fantrax id, for the player card.
+    leagueOpinions(),
   ]);
   const { home, away } = sides(match);
   const ours = side(goals, home, away, minutes, credits, injured);
@@ -157,50 +139,8 @@ async function Sheet({ match }: { match: Match }) {
       byCode={match.byCode}
       did={did}
       injured={injured}
+      men={sheets === null ? new Map() : matchMen(match, sheets, league)}
     />
-  );
-}
-
-/** What happened, in Opta's own sentences, with the fouls taken out.
- *
- *  **Capped and scrolling rather than ninety rows long.** `Wire` settled the
- *  shape for the same problem — a list cut short with no bar looks like a short
- *  list, so the box is the length and `.cm-scroll-y` says there is more. The
- *  Match Report tab is where the feed runs full height; this is the overview's
- *  share of it.
- *
- *  `worthReading` is 42.9% of the rows on the counts in `map.ts`, which is what
- *  makes this fit under a scoresheet at all. */
-async function Commentary({ match }: { match: Match }) {
-  const { gameweek, code } = match.fixture;
-  const [whole, names] = await Promise.all([
-    matchReport(gameweek, code),
-    // The same men the Report tab marks, so a name is white on both screens.
-    matchPlayerNames(gameweek, code),
-  ]);
-  const lines = worthReading(whole);
-  if (lines.length === 0) return null;
-
-  return (
-    // **A share of the SCREEN, not a stated 384 pixels** (Craig, 11 Sep 2026:
-    // *"make the space for the match report more dynamic, we can use more space
-    // i think"*). `max-h-96` was the same box on a 667px phone and a 1440 desk —
-    // most of the first and a quarter of the second. `dvh` spends what the
-    // device actually has, and the scoresheet above it is four or five rows on
-    // every match ever played, so there is no case where this crowds it.
-    <section
-      className={`${PANEL_FLUSH} cm-rows cm-scroll cm-scroll-y max-h-[60dvh] overflow-y-auto lg:max-h-[70dvh]`}
-    >
-      {lines.map((line) => (
-        <Line key={line.id} line={line} names={names} />
-      ))}
-    </section>
-  );
-}
-
-function ReportWaiting() {
-  return (
-    <SkeletonRows count={6} height="2.75rem" />
   );
 }
 

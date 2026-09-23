@@ -7,6 +7,7 @@ import type {
   SheetRow,
 } from "@epl/core";
 import { Goal, Man } from "./ScoreRows";
+import type { SquadPlayerDetail } from "@epl/core";
 
 // Who scored, when, and who made it.
 //
@@ -70,6 +71,7 @@ export default function Scoresheet({
   byCode,
   did,
   injured,
+  men,
 }: {
   /** One side's goals, oldest first, with assisters already reconciled against
    *  FPL's counts by `creditedGoals`. */
@@ -88,6 +90,8 @@ export default function Scoresheet({
   /** Who went off hurt, and when — from the commentary, which is the only place
    *  that says so (Craig, 11 Sep 2026: *"i want them on the overview"*). */
   injured: ReadonlyMap<number, number>;
+  /** Each named man's card, by code — a name opens his card, not his page. */
+  men: ReadonlyMap<number, SquadPlayerDetail>;
 }) {
   const empty =
     home.length === 0 && away.length === 0 && homeElse.length === 0 && awayElse.length === 0;
@@ -98,9 +102,10 @@ export default function Scoresheet({
   }
 
   return (
-    <div className="grid grid-cols-2 gap-x-3 gap-y-1">
-      <Column goals={home} rest={homeElse} owners={owners} byCode={byCode} did={did} injured={injured} />
-      <Column goals={away} rest={awayElse} owners={owners} byCode={byCode} did={did} injured={injured} />
+    // `data-tap-exception`: 36px rows under a thumb, PRODUCT's recorded exception, which `tapfit` reads out.
+    <div className="grid grid-cols-2 gap-x-3 gap-y-1" data-tap-exception="match-row">
+      <Column goals={home} rest={homeElse} owners={owners} byCode={byCode} did={did} injured={injured} men={men} />
+      <Column goals={away} rest={awayElse} owners={owners} byCode={byCode} did={did} injured={injured} men={men} />
     </div>
   );
 }
@@ -112,6 +117,7 @@ function Column({
   byCode,
   did,
   injured,
+  men,
 }: {
   goals: readonly PlGoal[];
   rest: readonly SheetRow[];
@@ -119,6 +125,7 @@ function Column({
   byCode: Map<number, FootballPlayer>;
   did: Map<number, PlManMatch>;
   injured: ReadonlyMap<number, number>;
+  men: ReadonlyMap<number, SquadPlayerDetail>;
 }) {
   return (
     <ul className="flex max-w-[26rem] flex-col gap-1">
@@ -128,6 +135,7 @@ function Column({
           group={group}
           owners={owners}
           byCode={byCode}
+          men={men}
         />
       ))}
       {rest.map(({ player, line }) => {
@@ -149,6 +157,7 @@ function Column({
           <li key={player.id}>
             <Man
               code={player.code}
+              card={player.code === null ? undefined : men.get(player.code)}
               name={player.name}
               owners={owners}
               figure={marks(line, man, hurtAt)}

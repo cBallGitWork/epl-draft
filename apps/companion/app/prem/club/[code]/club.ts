@@ -80,6 +80,8 @@ export function standing(
  *  is inverted here. Built once by `npm run bridge` and audited; never
  *  name-matched at runtime. */
 export interface LeagueOpinion {
+  /** Fantrax's own id for him — what the player card's "Full profile" links to. */
+  fantraxId: string;
   /** What this league deems him eligible to play as. */
   positions: string[];
   /** Fantrax's own code, raw: "T" taken, "WW" waivers, "FA" free agent. Their
@@ -126,6 +128,7 @@ export async function leagueOpinions(): Promise<Map<number, LeagueOpinion>> {
     const code = fplCodeOf.get(player.fantraxId);
     if (code === undefined) continue;
     opinions.set(code, {
+      fantraxId: player.fantraxId,
       positions: player.eligiblePositions,
       status: player.status,
       owner: owners.get(code) ?? null,

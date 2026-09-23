@@ -1,36 +1,33 @@
 import { MATCH } from "../../routes";
-import { DEFAULT_SORT } from "./PlayerStats";
-import type { StatSort } from "./PlayerStats";
+import type { StatSort } from "./statColumns";
 
-// Where a sortable column head on the Player Stats board links to.
-//
-// **The app's own sorting idiom, second use on a match screen.** `prem/sort.ts`
-// records the argument in full and it is worth the one line here: sorting is a
-// LINK rather than a click handler, so the server does the ordering, a phone
-// gets HTML, and a sorted table survives being shared or reloaded.
-//
-// Its own file rather than a helper inside `PlayerStats`, because the page reads
-// the query and the board renders it — two callers, and a function that both
-// import from the component would drag the whole board into the page's own
-// module graph for a string.
+// Where the Stats tab's links go — a link rather than a click handler, so the server sorts (`prem/sort.ts`).
 
-/** The same column flips direction; a new column opens descending.
- *
- *  **Descending is the natural direction for every column here**, unlike the
- *  league table where `place` ascends. These are all "how much did he do",
- *  including goals conceded — a keeper who let in four is the notable one, and a
- *  reader who wants the other end has one tap.
- *
- *  The default is spelled as no query at all rather than `?sort=Pts`, so the
- *  tab has one URL rather than two. `prem/sort.ts` made the same call. */
+/** Which board the foot row has open: both sides, one club's men, or the Fantasy Report. */
+export type StatsView = "match" | "home" | "away" | "fantasy";
+
+export function statsView(value: string | undefined): StatsView {
+  return value === "home" || value === "away" || value === "fantasy" ? value : "match";
+}
+
+/** The board itself; the match board is the bare tab, so it has one URL. */
+export function viewHref(id: number, view: StatsView): string {
+  const stats = `${MATCH}/${id}/stats`;
+  return view === "match" ? stats : `${stats}?view=${view}`;
+}
+
+/** A club board opens ranked by fantasy points (Craig, 23 Sep 2026). */
+export const DEFAULT_SORT: StatSort = "Pts";
+
+/** A club board's column head: the same column flips, a new one opens descending; the default is the bare board. */
 export function statsHref(
   id: number,
+  side: "home" | "away",
   key: StatSort,
   current: StatSort,
   descending: boolean,
 ): string {
   const next = key === current ? !descending : true;
-  const stats = `${MATCH}/${id}/stats`;
-  if (key === DEFAULT_SORT && next) return stats;
-  return `${stats}?sort=${encodeURIComponent(key)}${next ? "" : "&dir=asc"}`;
+  if (key === DEFAULT_SORT && next) return viewHref(id, side);
+  return `${viewHref(id, side)}&sort=${encodeURIComponent(key)}${next ? "" : "&dir=asc"}`;
 }

@@ -19,6 +19,9 @@
 // each: a route spelled in five files is a route that can be renamed in four of
 // them.
 
+/** The competition itself — the table. */
+export const PREM = "/prem";
+
 /** The route the club pages hang off. */
 export const CLUB = "/prem/club";
 

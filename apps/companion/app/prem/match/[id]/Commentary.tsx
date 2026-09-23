@@ -59,7 +59,7 @@ export default function Line({
     // than eyeballed: every row `height: 44` against a `scrollHeight` of 58 and
     // 67 on the two that wrap. A `min-height` is not a floor inside a flex
     // parent that has run out of room; `flex-shrink: 0` is.
-    <li className="flex min-h-11 shrink-0 items-stretch gap-2 lg:min-h-9">
+    <li className="flex min-h-9 shrink-0 items-stretch gap-2 lg:min-h-8">
       {/* `w-11`, because stoppage time reads `90+7` and CM's block is a fixed
           chip. The wire's is `w-9` and never has to hold one. */}
       <span className="cm-index numeric flex w-11 shrink-0 items-center justify-center">
@@ -99,7 +99,7 @@ export default function Line({
           lines and `py-1` had them touching the rules above and below. The desk
           keeps its own, where the same sentence is one line. */}
       <span
-        className={`flex min-w-0 flex-1 items-center py-2 ${ROW_NAME} ${tone} lg:py-1`}
+        className={`flex min-w-0 flex-1 items-center py-1 ${ROW_NAME} ${tone} lg:py-0.5`}
       >
         <span>
           {proseSpans(line.text, names).map((span, at) => (

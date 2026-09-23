@@ -11,6 +11,7 @@ import {
   DASH,
 } from "@epl/core";
 import EmptySlot from "./EmptySlot";
+import PlayerImage from "./PlayerImage";
 import PlayerShirt from "./PlayerShirt";
 import { NAME_SIZE, PITCH_BAND } from "./PitchRows";
 
@@ -24,7 +25,7 @@ import { NAME_SIZE, PITCH_BAND } from "./PitchRows";
 // · The photograph is gone. Not because it 404s — it answers for about six
 //   players in seven — but because the ladder behind it guarantees a line of
 //   eleven contains a face, a shirt and a set of initials at once. `PlayerShirt`
-//   carries the counting.
+//   carries the counting. `face` opts back in, for the match line-up alone (23 Sep 2026).
 // · The disc is gone with it, and so are the `fill`, `outline` and `ink` props
 //   that carried the fantasy team's colours onto the grass on 2 Sep. A shirt is
 //   110x145 and cannot live in a circle, and Craig's call on the replacement was
@@ -68,6 +69,7 @@ export default function PitchMarker({
   points,
   show = "points",
   band,
+  face,
 }: {
   /** The footballer, or null for a slot with nobody behind it.
    *
@@ -107,6 +109,8 @@ export default function PitchMarker({
    *  the club's own short name on every card — eleven identical labels saying
    *  nothing. */
   band?: string;
+  /** His face instead of the club's kit, falling back to the kit where there is no photograph. */
+  face?: { code: number; name: string };
 }) {
   const started = kickedOff(opposition);
   // **Nobody at all, which is not the same as nobody FPL has heard of.** A kit
@@ -198,7 +202,11 @@ export default function PitchMarker({
         <EmptySlot label={label} />
       ) : (
         <span className="block px-1 pt-0.5">
-          <PlayerShirt club={club} keeper={keeper} name={name} kickedOff={started} />
+          {face === undefined ? (
+            <PlayerShirt club={club} keeper={keeper} name={name} kickedOff={started} />
+          ) : (
+            <PlayerImage player={face} club={club} keeper={keeper} kickedOff={started} sizes="110px" />
+          )}
         </span>
       )}
 

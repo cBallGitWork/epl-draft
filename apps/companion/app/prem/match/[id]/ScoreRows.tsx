@@ -1,14 +1,9 @@
-import Link from "next/link";
-import type {
-  FootballPlayer,
-  PlGoalGroup,
-  PlayerOwner,
-} from "@epl/core";
-import { PLAYER } from "../../routes";
+import { DASH } from "@epl/core";
+import type { FootballPlayer, PlGoalGroup, PlayerOwner, SquadPlayerDetail } from "@epl/core";
+import { MaybeCard } from "./PlayerCardButton";
 import EventIcon from "../../../components/football/EventIcon";
 import type { EventGlyph } from "../../../components/football/EventIcon";
 import { SMALL_CAPS } from "@/app/desk";
-import { DASH } from "@epl/core";
 
 // One scorer's line and one other man's line on the scoresheet, set at CM's size (see `Scoresheet`).
 
@@ -32,10 +27,12 @@ export function Goal({
   group,
   owners,
   byCode,
+  men,
 }: {
   group: PlGoalGroup;
   owners: Map<number, PlayerOwner>;
   byCode: Map<number, FootballPlayer>;
+  men: ReadonlyMap<number, SquadPlayerDetail>;
 }) {
   const scorer = group.scorer === null ? undefined : byCode.get(group.scorer);
 
@@ -43,6 +40,7 @@ export function Goal({
     <li>
       <Man
         code={group.scorer}
+        card={group.scorer === null ? undefined : men.get(group.scorer)}
         name={scorer?.name ?? DASH}
         owners={owners}
         figure={minutes(group.minutes)}
@@ -58,19 +56,11 @@ export function Goal({
         // this scorer's goals.
         const paired = his.length !== group.minutes.length;
         return (
-          <Link
+          <MaybeCard
             key={code}
-            href={`${PLAYER}/${assister.code}`}
-            // **`min-h-11` under a thumb, `lg:min-h-9` on the desk** — the two
-            // floors a LINK has, and this shipped with neither. It was
-            // `min-h-9 lg:min-h-7`: the desk's control height on a phone, where
-            // the floor is 44, and the desk's repeating-ROW height above `lg`,
-            // where a control's floor is 36. So it failed at both widths, and
-            // fixing only the phone on 10 Sep left the 1440 half standing —
-            // `tapfit` walks both and was reporting the desk one while the
-            // commit message said it was clean. The scorer link below it has had
-            // `min-h-11` at both widths all along.
-            className="ml-3 flex min-h-11 items-center gap-1.5 hover:underline lg:ml-4 lg:min-h-9"
+            player={men.get(code)}
+            // 36px at both widths: PRODUCT's recorded exception under a thumb, a control's floor on a desk.
+            className="ml-3 flex min-h-9 w-full items-center gap-1.5 text-left hover:underline lg:ml-4"
           >
             <span className={`${SMALL_CAPS} shrink-0 text-faint`}>A</span>
             <span className="min-w-0 flex-1 truncate font-chrome text-sm font-bold text-muted lg:text-xl">
@@ -84,7 +74,7 @@ export function Goal({
                 kind of fact; a step down, because his name is — the figure and
                 the name it belongs to stay in proportion at both widths. */}
             {paired ? <span className={ASSIST_FIGURE}>{minutes(his)}</span> : null}
-          </Link>
+          </MaybeCard>
         );
       })}
     </li>
@@ -95,6 +85,7 @@ export function Goal({
  *  mark take. */
 export function Man({
   code,
+  card,
   name,
   owners,
   figure,
@@ -103,6 +94,8 @@ export function Man({
   glyphTone = "text-accent",
 }: {
   code: number | null;
+  /** His card; a man with none reads as a plain line. */
+  card: SquadPlayerDetail | undefined;
   name: string;
   owners: Map<number, PlayerOwner>;
   figure: string;
@@ -118,8 +111,8 @@ export function Man({
 }) {
   const owner = code === null ? undefined : owners.get(code);
   return (
-    <Link
-      href={code === null ? "#" : `${PLAYER}/${code}`}
+    <MaybeCard
+      player={card}
       // **`items-center`, not `items-baseline`** (Craig, 11 Sep 2026: *"goals,
       // card icons look off on mobile, they arent aligned"*). A baseline row
       // with a `self-center` glyph in it is two alignment rules arguing: the
@@ -127,7 +120,7 @@ export function Man({
       // taller than the glyph, which put the ball about four pixels low against
       // the name. Everything on this row is one line, so one centre line is the
       // whole answer — and the glyph no longer needs `self-center` to say so.
-      className="group flex min-h-11 items-center gap-1.5 lg:min-h-11 lg:gap-3"
+      className="group flex min-h-9 w-full items-center gap-1.5 text-left lg:min-h-11 lg:gap-3"
     >
       {glyph === null ? null : (
         // **Its own type size, which is what makes it big.** `EventIcon` draws at
@@ -154,7 +147,7 @@ export function Man({
         )}
       </span>
       <span className={FIGURE}>{figure}</span>
-    </Link>
+    </MaybeCard>
   );
 }
 
