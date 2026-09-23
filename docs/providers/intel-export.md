@@ -404,13 +404,18 @@ no match report."*
 
 ---
 
-## The XI export's filename changes on the sister side
+## The XI is fetched here, not exported
 
-Since 23 Sep 2026 this repo reads `data/intel/xi/26-27.json` (renamed from
-`gw3.json`) and nothing else. The sister repo's `export-epl-draft`
-(`scripts/export/epl_draft_intel.py`, `export_xi`) still writes `xi/gw{n}.json`,
-so it must write `xi/{season}.json` instead, overwriting it each run. The file's
-shape does not change. Getting it here whenever Scout updates is #34.
+Since 23 Sep 2026 this repo reads Scout's page itself. `npm run scout-xi` (every
+two hours in `scout-xi.yml`) parses https://www.fantasyfootballscout.co.uk/team-news
+with `parseScoutXi`, a port of the sister's `parse_ffscout`, and rewrites
+`data/intel/xi/26-27.json` only when an eleven changed. `fetchedAt` is the run that
+first saw the change, because the page has no time of its own for the elevens. It
+refuses to write unless every club parses into a full eleven.
+
+The sister's `export-epl-draft` still has an `export_xi` step that writes
+`xi/gw{n}.json` when run. Nothing here reads that file, so the step can be deleted
+there.
 
 ---
 

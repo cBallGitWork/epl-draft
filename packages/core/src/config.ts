@@ -133,6 +133,10 @@ export const YOUTUBE_FEED_BASE = "https://www.youtube.com/feeds/videos.xml";
  *  re-hosted. */
 export const YOUTUBE_EMBED_BASE = "https://www.youtube-nocookie.com/embed";
 
+/** Scout's free team-news page: every club's predicted eleven on one page. No trailing
+ *  slash — with one, the site 301s. */
+export const SCOUT_TEAM_NEWS_URL = "https://www.fantasyfootballscout.co.uk/team-news";
+
 /** How a provider sees us.
  *
  *  A real browser string rather than a bot's. Both providers front their APIs

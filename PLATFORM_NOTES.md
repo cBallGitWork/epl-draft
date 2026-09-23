@@ -87,6 +87,24 @@ Read against the installed Next 16.2.7 source. Standing rules for anything that 
 `tools/ui/pollwatch.mjs` measures it: polls per minute, the gaps between them,
 and how many polls changed the screen.
 
+## The predicted XI is fetched from Scout here, every two hours — decided 23 Sep 2026
+
+Craig: *"It should just always be live, and it's updated when scout updates it."*
+The sister repo's sweep runs on Craig's machine and its export reached this repo
+only when committed by hand (#34). So this repo reads Scout's free team-news page
+itself: `scout-xi.yml` → `npm run scout-xi` → `parseScoutXi` (core, tested on a
+recorded two-club page).
+
+- **Probed 23 Sep:** a plain fetch with the shared browser user agent answers 200
+  with all 20 clubs. Scout's club codes upper-cased are FPL's short names, 20 of 20.
+  Each player's photo filename is his FPL `code`.
+- **The file changes only when an eleven does**, so an unchanged run commits
+  nothing and triggers no deploy. `fetchedAt` is the run that first saw the
+  change: `FFS.currentDate` is the page's render time, and the "Last updated"
+  strings on the page belong to other tables.
+- **It refuses to write** unless every Premier League club parses into a full
+  eleven, so a challenge page or a markup change cannot replace a good file.
+
 ## Production serves the REHEARSAL league, not the dummy one — verified 21 Sep 2026
 
 `CLAUDE.md` says `FANTRAX_LEAGUE_ID` "defaults to the **dummy** league", which is

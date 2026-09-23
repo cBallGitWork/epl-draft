@@ -64,13 +64,10 @@ DASH failure §4 names. It stays duplicated until the *roles* are split.
 
 **The sister-repo exports.** Three phases are blocked on files that
 `~/ai-carling-premiership` has the data for and does not yet write:
-`intel/projections/` and `intel/other-comps/`, plus the XI export, which is
-**the one thing now holding the predicted-elevens column**: the code shipped on
-21 Sep 2026 and `data/intel/xi/26-27.json` (renamed from `gw3.json` on 23 Sep) holds a round already played.
-`readXi` asks for the round the pressers preview and gets nothing, so the column
-files nothing and spends nothing — which is the designed behaviour and also the
-reason nobody will see it until the export moves. `npm run intel-check` has said
-so for days.
+`intel/projections/` and `intel/other-comps/`. **The XI is no longer one of
+them**: since 23 Sep `scout-xi.yml` fetches Scout's elevens here every two hours,
+so `readXi` finds the round the pressers preview and the predicted-elevens column
+can file.
 
 *`intel/pressers/` landed 21 Sep with the Team Sheet.*
 

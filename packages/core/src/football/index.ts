@@ -169,6 +169,7 @@ export {
   squadIntel,
   xiFault,
 } from "./intel/map";
+export { parseScoutXi, sameElevens } from "./intel/scout";
 export {
   defaultDescendingTable,
   isTableSortKey,

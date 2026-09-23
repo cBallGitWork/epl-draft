@@ -92,20 +92,19 @@ export interface IntelStarter {
 export interface IntelClubXi {
   /** `4-2-3-1`, `3-4-3`, `3-4-2-1`, `4-3-3`. */
   formation: string;
-  /** How many men the formation puts in each line, keyed as `line` is. Summing
-   *  to eleven is the sister's own assertion; `map.ts` checks it again, because
-   *  we take this over a wire. */
+  /** How many men Scout draws in each pitch row, keyed by row (`"1"` is the keeper).
+   *  `xiFault` checks they sum to eleven, which catches a row drawn short. */
   slots: Record<string, number> | null;
   starters: IntelStarter[];
 }
 
 export interface IntelXi {
   manifest: IntelManifest;
-  /** When the SOURCE fetched its prediction — not when we exported it. A
-   *  prediction is stale when the source is stale, whatever we did afterwards. */
+  /** When `scout-xi` first saw this prediction on Scout's page, which is within one run
+   *  (two hours) of Scout changing it. The page carries no time of its own for the elevens. */
   fetchedAt: string | null;
   source: string | null;
-  /** By FPL club code as a string, because a JSON object's keys are strings. */
+  /** By FPL club short name — `ARS` — which is Scout's own club code upper-cased. */
   clubs: Record<string, IntelClubXi>;
 }
 
