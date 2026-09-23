@@ -64,7 +64,7 @@ export default function Rail({
   matchday: boolean;
   /** Your live score or the match clock, for the Live tab: a server node, since the number comes off Fantrax. */
   live: ReactNode;
-  /** The unread badge for the Mail tab, likewise a server node. */
+  /** The unread badge for the Mail tab, which the layout hands its inbox read. */
   mail: ReactNode;
 }) {
   const pathname = usePathname();

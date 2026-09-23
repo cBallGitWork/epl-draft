@@ -52,8 +52,8 @@ export default function UnreadBadge({ inbox }: { inbox: Promise<readonly string[
   const ids = use(inbox);
   const reading = owns([MAIL], usePathname());
   // Undefined on the server and in hydration, so a count already there never pulses on load.
-  const seen = useSyncExternalStore(subscribe, readSeen, () => undefined);
-  const seenIds = seen === undefined ? undefined : parseSeen(seen);
+  const stored = useSyncExternalStore(subscribe, readSeen, () => undefined);
+  const seenIds = stored === undefined ? undefined : parseSeen(stored);
   const firstVisit = seenIds === null;
   const count = reading || !seenIds ? 0 : unreadCount(ids, seenIds);
 
@@ -61,11 +61,11 @@ export default function UnreadBadge({ inbox }: { inbox: Promise<readonly string[
     if (reading || firstVisit) writeSeen(ids);
   }, [ids, reading, firstVisit]);
 
-  const [last, setLast] = useState<number | null>(null);
+  const [lastCount, setLastCount] = useState<number | null>(null);
   const [arriving, setArriving] = useState(false);
-  if (seen !== undefined && count !== last) {
-    setLast(count);
-    if (last !== null && count > last) setArriving(true);
+  if (stored !== undefined && count !== lastCount) {
+    setLastCount(count);
+    if (lastCount !== null && count > lastCount) setArriving(true);
   }
 
   if (count === 0) return null;
