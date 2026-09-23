@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { SHAPE_BASELINE_PATH } from "./paths";
+import { RECORDED_LEAGUES, SHAPE_DIFF } from "./leagues";
 import {
-  FANTRAX_LEAGUES,
   FantraxError,
   type AcknowledgedDifference,
   diffShapes,
@@ -41,8 +41,8 @@ import {
 // until draft night, and reporting that as "every field has vanished" would be
 // the loudest possible way to say nothing.
 
-const REFERENCE = FANTRAX_LEAGUES.find((league) => league.key === "rehearsal");
-const SUBJECT = FANTRAX_LEAGUES.find((league) => league.key === "real");
+const REFERENCE = RECORDED_LEAGUES.find((league) => league.key === SHAPE_DIFF.reference);
+const SUBJECT = RECORDED_LEAGUES.find((league) => league.key === SHAPE_DIFF.subject);
 
 /** The period to ask period-scoped reads for. Period 1 rather than "now": this
  *  script compares shapes, and the shape of a period Fantrax has data for is the
@@ -76,7 +76,7 @@ async function read(run: (leagueId: string) => Promise<unknown>, leagueId: strin
 
 async function main() {
   if (!REFERENCE || !SUBJECT) {
-    console.error("shape-diff: both leagues must be declared in FANTRAX_LEAGUES");
+    console.error("shape-diff: both leagues named in data/leagues/recorded.json must be listed there");
     process.exitCode = 2;
     return;
   }

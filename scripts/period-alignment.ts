@@ -1,7 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import {
-  FANTRAX_LEAGUES,
   type GameweekKickoff,
   datedKickoffs,
   fetchFixtures,
@@ -9,6 +8,7 @@ import {
   mapLeagueInfo,
   periodGameweeks,
 } from "@epl/core";
+import { RECORDED_LEAGUES } from "./leagues";
 import { leagueCaptureDir, leagueCaptureRoot } from "./paths";
 import { newestCapture } from "./snapshots";
 
@@ -47,7 +47,7 @@ async function main(): Promise<void> {
 
   let mismatched = 0;
 
-  for (const league of FANTRAX_LEAGUES) {
+  for (const league of RECORDED_LEAGUES) {
     const info = mapLeagueInfo(await newestLeagueInfo(league.key));
     const aligned = periodGameweeks(info.scoringPeriods, kickoffs);
 
