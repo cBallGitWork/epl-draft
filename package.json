@@ -27,6 +27,7 @@
     "team-codes": "tsx --env-file=apps/companion/.env.local scripts/team-codes.ts",
     "edition": "tsx --env-file-if-exists=.env.local scripts/write-edition.ts",
     "intel-check": "tsx scripts/intel-check.ts",
+    "scout-xi": "tsx scripts/scout-xi.ts",
     "pl-bridge": "tsx scripts/pl-bridge.ts"
   },
   "devDependencies": {

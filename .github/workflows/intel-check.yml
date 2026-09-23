@@ -20,9 +20,8 @@ name: Intel staleness
 # **Its own workflow, on `capture-status.yml`'s reasoning.** The job that reports
 # on the export must not be the job that produces it, because the way that job
 # most plausibly dies is by not running at all — which is exactly how it would
-# stop reporting. Nothing here produces the export in any case: it is written by
-# `make export-epl-draft` in the sister repo (issue #34), and the least this side
-# can do is say plainly when what it is serving has gone wrong.
+# stop reporting. The XI is produced by `scout-xi.yml` and the other exports by
+# `make export-epl-draft` in the sister repo, and neither is this job.
 #
 # **Not on `pull_request`.** A stale export is a fact about the DATA and never
 # about the branch, and gating every PR on it would block work nobody can unblock

@@ -1,0 +1,51 @@
+name: Scout XI
+
+# Scout's predicted elevens into `data/intel/xi/26-27.json`, so the club pages show the
+# latest one without anybody exporting it by hand (Craig, 23 Sep 2026: "It should just
+# always be live, and it's updated when scout updates it"). `npm run scout-xi` writes only
+# when an eleven changed, so most runs commit nothing; a commit that does land redeploys,
+# because `vercel.json` does not exclude `data/intel`.
+
+on:
+  schedule:
+    # Every two hours, off the hour so it does not queue behind the other crons.
+    - cron: "40 */2 * * *"
+  workflow_dispatch: {}
+
+# Its own group, on `editions.yml`'s reasoning: a shared group lets one workflow cancel
+# another's queued run. Rebasing before the push keeps them apart.
+concurrency:
+  group: scout-xi
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Read Scout's elevens
+        run: npm run scout-xi
+
+      - name: Commit them, if they changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/intel/xi
+          if git diff --cached --quiet; then
+            echo "Scout's elevens have not changed."
+            exit 0
+          fi
+          git commit -m "data: Scout's predicted elevens, $(date -u +%Y-%m-%dT%H:%MZ)"
+          # Rebase, never merge: Vercel's ignoreCommand reads `HEAD^..HEAD`.
+          git pull --rebase --autostash
+          git push

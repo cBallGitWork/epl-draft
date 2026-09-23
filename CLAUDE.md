@@ -291,6 +291,8 @@ npm run roster-limits   # re-read the position MIN/MAX off the commissioner's
                         # Needs FANTRAX_COOKIE. The real league has no table
                         # until it has members, so re-run it after the draft.
 npm run team-codes      # issue one sign-in code per team; prints them once
+npm run scout-xi        # Scout's predicted elevens into data/intel/xi/; writes only on
+                        # a change. CI runs it every two hours (scout-xi.yml).
 ```
 
 **Two `.env.local` files, and they are not interchangeable.** `next dev` roots at
