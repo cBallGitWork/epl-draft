@@ -1,6 +1,7 @@
 import { leads, type PeriodPairing, type LeagueTeam } from "@epl/core";
 import ScoreRow from "../../components/shell/ScoreRow";
 import Absent from "@/app/components/shell/Absent";
+import { matchupHref } from "../routes";
 
 // One finished head-to-head, as Championship Manager's results row.
 //
@@ -56,7 +57,7 @@ export default function Result({
       home={side(pairing.home, badges, places, mine, leads(away, home))}
       away={side(pairing.away, badges, places, mine, leads(home, away))}
       score={{ home: figure(home), away: figure(away) }}
-      href={`/league/matchups/${opensOn}?gw=${gameweek}`}
+      href={matchupHref(opensOn, gameweek)}
     />
   );
 }

@@ -25,6 +25,7 @@ import { liveScores, squadLivePoints } from "../../../scoreboard";
 import { newsFor, readPoolNews } from "../../../poolNews";
 import { teamBadges } from "../../../standings";
 import { myTeamId } from "../../../session";
+import { MATCHUPS } from "../../routes";
 
 // One head-to-head, at the size it deserves on a Saturday.
 //
@@ -58,7 +59,7 @@ export default async function HeadToHeadPage({
   // nothing here may take one for the other.
   const asked = Number(gw);
   const round = Number.isInteger(asked) ? await roundOf(asked) : null;
-  const squads = readableOr404(await getLeagueSquads(round), "/league/matchups");
+  const squads = readableOr404(await getLeagueSquads(round), MATCHUPS);
 
   // A league nobody has drafted genuinely has no such matchup. The other two are
   // states of ours rather than 404s, and the list page already describes both —
@@ -66,7 +67,7 @@ export default async function HeadToHeadPage({
   // panels that would then drift from the originals.
 
   const period = squads.roundPeriod;
-  if (squads.info === null || period === null) redirect("/league/matchups");
+  if (squads.info === null || period === null) redirect(MATCHUPS);
 
   const state = roundState(squads.snapshot);
 

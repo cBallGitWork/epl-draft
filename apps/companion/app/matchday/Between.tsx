@@ -3,6 +3,7 @@ import ButtonLink from "../components/shell/ButtonLink";
 import PageHeader from "../components/shell/PageHeader";
 import Skeleton from "../components/shell/Skeleton";
 import { londonDayAndTime } from "@epl/core";
+import { MATCHUPS } from "@/app/league/routes";
 
 // The two things the Live tab draws when there is no live football: the card it
 // holds open while Fantrax's scoreboard is being read, and the screen a reader
@@ -94,7 +95,7 @@ export function BetweenGameweeks({
             {`GW${up.gameweek} fixtures`}
           </ButtonLink>
         ) : (
-          <ButtonLink href="/league/matchups" fill>
+          <ButtonLink href={MATCHUPS} fill>
             Who plays whom
           </ButtonLink>
         )}

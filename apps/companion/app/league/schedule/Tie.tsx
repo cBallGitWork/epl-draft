@@ -3,6 +3,7 @@ import type { ScheduleRound } from "./schedule";
 import ScoreRow from "../../components/shell/ScoreRow";
 import { LABEL } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
+import { matchupHref } from "../routes";
 
 // One tie, as Championship Manager's results row.
 //
@@ -85,7 +86,7 @@ export default function Tie({
       away={side(tie.away, badges, places, mine, settled && leads(home, away))}
       score={round.started ? { home: figure(home), away: figure(away) } : null}
       pending={<span className={LABEL}>v</span>}
-      href={opens && opensOn !== undefined ? `/league/matchups/${opensOn}?gw=${round.gameweek}` : undefined}
+      href={opens && opensOn !== undefined ? matchupHref(opensOn, round.gameweek) : undefined}
     />
   );
 }

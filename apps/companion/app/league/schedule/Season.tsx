@@ -3,6 +3,7 @@ import { leads, londonDate, DASH } from "@epl/core";
 import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
 import { ROW_NAME } from "@/app/desk";
+import { matchupHref } from "../routes";
 
 // One team's season on one screen: every round it is in, who it plays, and what
 // each one finished. The league's fixtures and any knockout it has been drawn
@@ -94,7 +95,7 @@ export default function Season({
                 wants from the row — the name opens the squad, the score opens
                 the match. */}
             <Link
-              href={`/league/matchups/${teamId}?gw=${row.round.gameweek}`}
+              href={matchupHref(teamId, row.round.gameweek)}
               className="cm-row inline-flex min-h-11 shrink-0 items-center hover:underline"
             >
               <Score row={row} />
