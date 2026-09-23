@@ -359,11 +359,8 @@ link and an unpressed `Chip`. `ClubPicker`'s `<noscript>` button was a fourth
 that differed only in having no hover, which was an oversight rather than a
 decision; folded in.
 
-**Declined at two, and the count is the point.** `const DASH = "—"` appears twice
-in this module (`Cell`, `analysis/Measures`) against `desk.ts`'s recorded app-wide
-tally of 11 named against 55 unnamed literals. Naming it a twelfth time makes the
-codebase look centralised where it is not. Left, as that file's "Declined"
-section asks.
+`DASH` is one export in core's `format.ts` since 23 Sep 2026, adopted by every
+literal in the same commit.
 
 **A bug the extraction found.** The search form and the club picker each rendered
 the rest of the query as hidden inputs by hand, and **both omitted `compare`**.
