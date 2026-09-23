@@ -1,232 +1,115 @@
-# What's needed — 2/3 Sep 2026, the Premiership day
+# Handover — 23 Sep 2026, the pre-swap series
 
-Replaces the 29 Aug handover, which is now `docs/archive/handovers/`.
+Replaces the 3 Sep handover, now `docs/archive/handovers/2026-09-03.md`.
 
-> **The state line below is spent.** Those 72 commits were pushed on 3 Sep 2026
-> along with a rebase onto the CI capture that had landed meanwhile;
-> `origin/main` has them and everything since. The rest of this file is still
-> the standing record of what was built on the Premiership day — §2's two live
-> bugs, §3's section, §4's deliberate absences and §5's hazards all read true —
-> so it is corrected in place rather than reopened on a claim that has been
-> answered.
+**State.** `origin/main` at `9e9cfec` (#58). This handover is on `docs/handover-23-sep`, 0 ahead
+and 0 behind before this commit; the tree was clean. **The gates were run on this tree:** 149
+test files, **1560 tests passed**, typecheck clean (core, scripts and the app, all with
+`--noUnusedLocals`), lint clean, build ok. Production smoke **34/34** after #58's deploy.
+17 days to the swap. Captures are all 0 days old; intel XI is gameweek 6, 20 clubs.
 
-State as written on 2/3 Sep: `main`, 72 commits ahead of `origin/main`, not
-pushed, nothing behind. Working tree clean. `npm test` (880 across 89 files) ·
-`typecheck` · `lint` · `build` (27 routes) all run on that tree.
+**First thing: nothing is in flight.** Every branch is merged, and no PR is open. Start from
+`CLAUDE.md`, which is now a 219-line briefing; the provider facts load from
+`.claude/rules/providers.md` when you touch provider code.
 
-Seventy-three commits since 2 Sep, from two sessions in one tree. One built the
-paper out into a real newspaper with pages; the other built `/prem`, the section
-for the actual Premier League. Neither has left the machine.
+## The finding that reorders the rest
 
----
+**The UI instruments had been measuring a page that was gone.** `sweep`, `tapfit` and
+`groundfit` each listed a match's tabs by hand, still walked `/prem/match/<id>/report`, deleted
+when Highlights took its place, and reported `ok` on the 404. None of them ever measured
+Highlights. So any audit before #57 that called the match tabs clean was one tab short and one
+404 long. `tools/ui/routes.mjs` now reads the tabs off `prem/match/[id]/`'s folders.
 
-## 1. Push. This is now the third handover opening on it.
+The same run found `/matchday/desk` and two `/squad` lines printed straight on the photograph
+(groundfit 42 elements → 0), so "the desk passes its audit" was not true before today either.
 
-The 27 Aug handover opened on unpushed work. The 29 Aug one opened on it again,
-at **24 commits**. It is **72** now, and `origin/main` has none of the paper's
-pages, none of the Premiership section, and none of four bug fixes — two of which
-are live faults on routes that already shipped.
+**Screenshots cannot prove a refactor here.** Two identical screenshot runs of `main` disagreed on
+17 of 70 shots (the photo ground, image loading). The hydrated DOM agreed on 64 of 70, and the
+other 6 were the clock and the tie order below. PR 8 was proven by the DOM
+(memory: *prove a refactor by the DOM*).
 
-Production is serving code from before 29 Aug while five days of work looks done.
+## What was built — #38 to #58, 21 PRs
 
-**Rebase, never merge** — `apps/companion/vercel.json` reads `git diff HEAD^ HEAD`, so a merge
-commit shows it an empty diff and it skips the build.
+**Live and the league**
+- An open live page kept polling but stopped updating (#41): the poll is timed on the client, the
+  live reads live 20 s against a 30 s poll, and no `/prem` route is static.
+- No league is named in code (#48): `FANTRAX_LEAGUE_ID` or nothing, and the server refuses to
+  start without it. CI asks production (`GET /api/league`). **The swap is one Vercel change.**
+- Teams tied on points swapped places on every read (#58): `placeTable` orders by points, then
+  fantasy points for (Craig's rule), then name. Recorded in PLATFORM_NOTES because it is not in
+  `getLeagueInfo`.
 
----
+**Intel**
+- Scout's predicted XI is fetched by CI every two hours (`scout-xi.yml`, #46). It is one file per
+  season, and club pages show the latest eleven with its date (#43).
 
-## 2. The finding that reorders the rest: two live bugs were on shipped routes
+**CI**
+- Actions are SHA-pinned, checkouts keep no credentials, and every job has a timeout (#51).
+- The four writers push through `scripts/ci/push.sh`, which rebases and retries.
+  - **Its push path is now proven in CI**: the 17:19Z editions run committed the paper through it.
 
-Neither was looked for. Both were found by writing new code beside old code, and
-both are in `origin/main` right now:
+**Security and correctness (#54)**
+- A 15 s deadline on every provider fetch, and 5 min on the two model calls.
+- A CSP and the other security headers. 33 routes at both widths, 0 violations.
+- A malformed player id never reaches Fantrax, and the four player tabs share one profile read.
+- The FPL tab reuses `gameweekLive` (1936/1936 points equal to FPL's).
+- **The session cookie is now `v1.<team>.<sig>` under a derived key.** Everyone signed in to
+  the rehearsal league signs in once more, with the same code.
 
-- **`/league?sort=toString` was a 500 anybody could type.** `isSortKey` guarded
-  with `value in COLUMN`, and `in` walks the prototype chain — `toString`,
-  `constructor`, `valueOf` and `__proto__` all passed it, and `COLUMN[key].of`
-  was then `undefined` when `sortRows` called it. `Object.hasOwn` now, both order
-  modules, with the four names in the test (`f706189`).
-- **Typecheck was red on `main` for part of the day.** `f62a1f3` correctly made
-  `RosterLimits.maxActivePlayers` nullable and left two callers without the
-  decision the type's own docblock demands. `teamOfTheWeek` now names nobody
-  without a stated XI size — the position caps sum to fourteen, so both eleven
-  and fourteen are inventions — and `LineupPlanner`'s empty-places notice does
-  not appear (`f7c9dea`).
+**Refactor**
+- 17 extractions in #55, each counted: core `time.ts` and `format.ts` (`DASH`, `thousands`),
+  `<Absent/>`, `ClubLabel`, `SectionShell`, `ListAndPitch`, `ROW_HOVER`, `FantraxSilent`, four
+  route builders and `theirFixture`.
+- Dead code out in #56: `ReportSummary` and `packages/ui`. Eight app-only settings moved to
+  `app/config.ts`, and the app's typecheck gained `--noUnusedLocals`.
+- Files over 300 lines were split in #49, #50 and #52.
 
-**What this says about the tree**: a guard copied between two modules carried its
-bug with it, and a nullability change landed without its callers. Both are the
-kind of thing only a second reader finds. The `/prem` review that would have
-looked for more of them **did not finish** — see §7.
+**Docs**
+- CLAUDE.md went from 523 lines to 219 (#53).
+- DESIGN.md and conventions.md: nine false claims fixed (#57).
+  - The desk is set in **Oxanium and Jost**, not Archivo.
+  - The frozen name column is built.
+  - The breakpoints are declared.
+  - Four deleted components are no longer named.
+- The desk's Anfield photo is credited on `/credits` (#58).
 
----
+## What was NOT built, and why
 
-## 3. What was built — `/prem`, the FA Barclays Premiership
+Each of these is in PLATFORM_NOTES, "What the pre-swap cleanup declined".
 
-Five routes, from `docs/ui/reference/cm9900/24.jpg`, which is itself a Premier
-League table screen. `docs/ui/prem.md` is the page-level doc.
+- **Loaders regrouped into `app/read/*`:** about 150 import rewrites, 17 days from the swap.
+- **Display modules moved to core:** they are words for a screen. They are tested in place.
+- **The app's 12 catches turned into throws:** each is a stated policy (fail open on Live, decoration,
+  optional Premier League detail). An on-screen "unavailable" for the optional blocks is a
+  DESIGN §8 question.
+- **`error`/`not-found` folded into `Nothing`:** it would change both screens.
+- **A true 404 status on a malformed player URL:** `/players/loading.tsx` streams first, so it is
+  Next's 200 plus the not-found page and `noindex`. A real status needs `proxy.ts`.
+- **The declined-with-count table** in `docs/ui/conventions.md` carries today's counts at 2
+  (markings, `?gw=`, the lit row, a hand-sized panel) and the 15 refusal ternaries.
 
-| Route | What it is |
-|---|---|
-| `/prem` | The table, sortable, with both cut lines |
-| `/prem/results` | Finished rounds, newest first |
-| `/prem/fixtures` | Rounds to come, soonest first |
-| `/prem/team-stats` | The twenty ranked by one of seventeen measures |
-| `/prem/club/[code]` | A club stub, so the table's names are real links |
+## Hazards
 
-**It is the inverse of `/league`, and that is the point.** `/league` quotes
-Fantrax's arithmetic and may never compute a table, because three-for-a-win is a
-commissioner setting. `/prem` must compute one, because three-for-a-win is a rule
-of the competition — and because FPL publishes `played`/`win`/`draw`/`loss`/
-`points` on every club as nought with two rounds signed off.
+- **Two `.env.local` files.** `next start` reads `apps/companion/.env.local`; scripts read the
+  root's only when their npm script says so. `npm run start` and `npm run smoke` both need
+  `FANTRAX_LEAGUE_ID` in their own shell.
+- **`next start` becomes `next-server`.** Stop it with `pkill -f next-server`, or the next smoke tests
+  the old build.
+- **`next build` fetches Google Fonts.** It failed once today on a network blip (`fetch failed`
+  on `archivo_narrow`); a retry passed. It is not a code error.
+- **Parallel sessions.** Another session added a memory today (*separate content on mobile*).
+  Stage named paths; cut from `origin/main`.
+- **Instruments need a private browser.** Headless Chrome on its own `CDP_PORT`, with the team
+  cookie minted in the **v1** format (the `/shoot` skill has the new recipe; the old one is
+  refused).
 
-**Rail label is `Prem`, route `/prem`.** "Premiership" wraps in a 64px rail;
-`navfit` confirms `Prem` fits at 320 and that a sixth section still fits the
-frame. The bar carries the full name.
+## Still Craig's
 
-Measured, not judged: `sweep` clears AA at 390 and 1440 with no sideways page
-scroll; `tapfit` passes with nine recorded exceptions — the sortable column
-heads, the class `/league` records eight of. **Both instruments carry their own
-route lists**, so a new section is invisible to them until added; `/prem` is in
-both now.
-
-### The shared half, which is the half easy to redo by accident
-
-- **`components/shell/TabStrip`** came out at the third copy — `SectionNav`,
-  `TeamTabs`, `PremNav`. `GroupNav` deliberately did NOT join: it wraps, it is
-  drawn shorter, and it lists stat groups rather than routes, so folding it in
-  costs two props for a second shape. Do not "finish the job" by absorbing it.
-- The two strips **disagree about label type** — 11px on the section, 9px on the
-  team — and that disagreement is carried across as a named `labels` prop rather
-  than reconciled, because a refactor and a visual change may not land in one
-  commit. It still wants settling.
-- `PageHeader`, `Caption`, `TableHeads`, `Nothing` and both cached football reads
-  were reused unchanged. The section costs **no provider request**.
-
-### `.cm-title` — the shadow, repo-wide
-
-`cm9900/24.jpg` sets its title in a soft shadow offset down-right. Worn by
-exactly three things: the `h1` in both of `PageHeader`'s bars, and the panel
-caption. **Not** the tab labels, column heads or rail — flat in every reference
-shot. Set in `em` so it scales between 20px and 30px. DESIGN §6 records it.
-
-### The football layer gained three counts, with a bound
-
-`SeasonTotals` now carries `goals`, `assists`, `cleanSheets` (651/651 on FPL's
-bootstrap, probed 2 Sep). The rule that kept them out is unchanged — it forbids
-the two providers' counts of one fact **side by side**, and `/prem` carries no
-Fantrax number at all.
-
-**The bound is in the docblock and a reviewer must enforce it: these may not
-appear on a fantasy screen beside a Fantrax figure.** Verified by grep on 2 Sep
-that nothing reads them outside core; `StatBoard`'s "Underlying (FPL)" view
-enumerates an explicit ten-key list that excludes all three. A `season.goals` in
-the league register is a defect.
-
----
-
-## 4. What was NOT built, so it is not rebuilt by accident
-
-- **`/prem/player-stats`.** Craig, 2 Sep: *"leave the player stats bit for now,
-  that's a full section on its own."* The football layer already carries what it
-  needs. **There is no foot row** because of it — Player Stats belongs there
-  beside Team Stats, and a foot row of one is the stray button Craig rejected on
-  1 Sep. The row comes back with the second entry.
-- **The club page is a stub on purpose** and says so on screen. Identity, place,
-  record. The squad, fixture run and season are named as still to come — a screen
-  that simply stops is one a reader assumes is broken.
-- **No position column anywhere in `/prem`.** FPL's `element_type` is FPL's own
-  fantasy classification and is why position left the football layer.
-- **FPL's `teams[].position` is not carried into the domain.** It is the one team
-  field that is *not* nought — distinct on all twenty — but it sits beside a
-  `played` of nought on every club, so it orders nothing anybody has played.
-  `football/table.ts` used to claim it was nought; corrected, both there and in
-  PLATFORM_NOTES.
-
----
-
-## 5. Hazards
-
-1. **Two sessions share this tree, and one hard-reset it mid-run.** A `git reset
-   --hard` plus a stash swept a finished, verified commit out from under the
-   other session; it was recovered by blob hash from `stash@{0}` and re-committed.
-   Nothing was lost, but it cost an hour. **Commit scoped and early**, stage named
-   paths, and never `git add -A` (a hook denies it anyway).
-2. **A dev server is running on :3000** (pid was 71317) and a headless Chrome on
-   **CDP 9261** belongs to the *other* session. Do not assume either is yours.
-3. **`shot.mjs` cannot capture against Chrome 152 headless** when a second client
-   drives the same browser: it sets the viewport *before* navigating and
-   `Page.captureScreenshot` then never returns. Enabling `Page`, navigating,
-   settling, and overriding metrics **last** works. The instrument was left
-   unchanged — the failure was not reproduced on a single-client browser — but it
-   is recorded in PLATFORM_NOTES.
-4. **`notFound()` answers HTTP 200 app-wide.** `/gw/999` and
-   `/players/nosuchplayer` do it too, so it predates `/prem`. A genuinely unknown
-   route (`/nosuchroute`) correctly 404s. **Worth settling before 10 Oct** — a
-   soft 404 is a page link checkers and crawlers believe.
-5. **Capture is OVERDUE on `dummy` and `rehearsal`** as of 3 Sep. League state is
-   not being recorded and **this history cannot be backfilled**. `npm run
-   capture:status` is the check; pull before running `capture`, because it counts
-   directories and cannot tell "the cron stopped" from "this tree never pulled".
-6. Two `.env.local` files and they are not interchangeable —
-   `apps/companion/.env.local` for the app, the repo-root one for `edition`.
-
----
-
-## 6. The one thing to do first
-
-**Push.** Then set a capture running before more history is lost.
-
----
-
-## 7. Left running, and resumable
-
-The adversarial review of `/prem` — five dimensions (correctness, layer split,
-DESIGN register, CODE_RULES, docs-truth) each fanning out to independent
-refuters — **was stopped before it finished** when the session was called. Two
-findings it was written to look for were fixed by hand first (`next/image` handed
-an empty `src`; a `Record` interface shadowing TypeScript's own), but its verdict
-is unknown.
-
-Resume it:
-
-```
-# the script lives under the session that wrote it, so find it rather than retype it:
-find ~/.claude/projects/-Users-craigball-epl-draft-1 -name 'prem-section-review-*.js'
-
-# then:
-Workflow({ scriptPath: "<that path>", resumeFromRunId: "wf_67b70438-6d9" })
-```
-
-Completed agents replay from cache. If the run has aged out, the script is still
-a good starting point — it names the specific traps worth re-checking.
-
----
-
-## 8. Still Craig's
-
-1. **Create a second Fantrax account owning one rehearsal team.** Unchanged, and
-   still the critical path for the lineup write: without it every `adminMode`
-   probe is a self-write and proves nothing. **This gates the entire write
-   track.**
-2. **Choose a masthead photograph.** The crest-in-a-box ships until then and is
-   not a placeholder.
-3. **The 10 Oct league swap — 37 days out.** `FANTRAX_LEAGUE_ID` to
-   `ayyoh3n2mr326v2o`, *and* the separate environment in
-   `.github/workflows/editions.yml`, which inherits nothing from Vercel. Miss the
-   second and CI keeps filing a column about the rehearsal league.
-4. **Whether `/prem/player-stats` is the next section**, and whether Team Stats
-   then moves down into the foot row where the game files it.
-
----
-
-## 9. Before every commit, still
-
-```bash
-npm test          # 880 across 89 files, all green on this tree
-npm run typecheck
-npm run lint
-npm run build
-```
-
-Plus an eyeball at 390×844 and at ≥lg. `node tools/ui/navfit.mjs` after any
-chrome change, `sweep` and `tapfit` after any visible one — and remember both
-carry their own route lists, so a new route is unmeasured until it is added to
-them.
+1. **Swap day, 10 Oct.** Set `FANTRAX_LEAGUE_ID=ayyoh3n2mr326v2o` in Vercel and redeploy
+   (`/swap-day`). This gates the whole real season; nothing else needs to change.
+2. **Tell the rehearsal league to sign in once more** with their existing codes. The cookie
+   changed in #54, and no code is reissued.
+3. **A second Fantrax account holding one rehearsal team.** Unchanged, and it gates the entire
+   write track (lineup writes through the commissioner's session). ROADMAP names it.
+4. **`/squad`'s "Not you? Sign out"** now sits in a full-width panel for one small link. It is
+   legible, but you may want it elsewhere.
