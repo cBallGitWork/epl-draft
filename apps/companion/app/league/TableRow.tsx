@@ -6,6 +6,7 @@ import { cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
 import { FIGURE, ROW_FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
+import { teamHref } from "@/app/squad/routes";
 
 // One team's line in the table.
 //
@@ -122,7 +123,7 @@ export default function TableRow({
 
       <td className="pl-2">
         <Link
-          href={`/squad/${row.teamId}`}
+          href={teamHref(row.teamId)}
           // White, and yellow for the one you manage — CM's league table
           // (`cm9900/24.jpg`, where Everton is the yellow row). This used to
           // justify itself by saying cyan means "a person" and a team is not

@@ -26,6 +26,7 @@ import { yoursInk } from "../../mine";
 import { teamBadges } from "../../standings";
 import { FANTRAX_SILENT } from "../../config";
 import { BOARD, BOARD_FIGURE, INDEX_WIDTH, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { teamHref } from "@/app/squad/routes";
 
 // Every team against a whole GROUP of scoring categories — CM's stat board, on
 // fantasy data.
@@ -184,7 +185,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     <IndexCell>{ordinal(row.rank)}</IndexCell>
                     <td className="pl-2">
                       <Link
-                        href={`/squad/${row.teamId}`}
+                        href={teamHref(row.teamId)}
                         className={`${ROW_LINK} ${yoursInk(yours)}`}
                       >
                         <TeamBadge

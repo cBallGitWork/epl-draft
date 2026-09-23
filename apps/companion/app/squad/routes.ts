@@ -9,6 +9,11 @@
 /** The route a team's five screens hang off. */
 export const SQUAD = "/squad";
 
+/** One team's squad, at a named round when there is one. */
+export function teamHref(teamId: string, gameweek?: number): string {
+  return gameweek === undefined ? `${SQUAD}/${teamId}` : `${SQUAD}/${teamId}?gw=${gameweek}`;
+}
+
 /** The segment that means "whoever is holding the phone".
  *
  *  A URL rather than a redirect, and that is the whole of the front door: the

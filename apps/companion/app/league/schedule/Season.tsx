@@ -4,6 +4,7 @@ import TeamBadge from "../../components/league/TeamBadge";
 import type { SeasonRow } from "./teamSeason";
 import { ROW_NAME } from "@/app/desk";
 import { matchupHref } from "../routes";
+import { teamHref } from "@/app/squad/routes";
 
 // One team's season on one screen: every round it is in, who it plays, and what
 // each one finished. The league's fixtures and any knockout it has been drawn
@@ -182,7 +183,7 @@ function Opponent({
     <span className={`truncate italic text-faint ${ROW_NAME}`}>{name}</span>
   ) : (
     <Link
-      href={`/squad/${opponent.team.teamId}?gw=${gameweek}`}
+      href={teamHref(opponent.team.teamId, gameweek)}
       // **`min-h-11` and the `.cm-row` pair**, which this link had neither of:
       // it was 18px of text in a 56px row, so the row looked thumbable and only
       // the name actually was. `tapfit` never saw it because its route list
