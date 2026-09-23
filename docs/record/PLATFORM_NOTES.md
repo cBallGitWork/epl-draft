@@ -2163,11 +2163,13 @@ that made it.
 ### `revalidate` literal in every route segment (§3, no hardcoding)
 
 Next requires a route segment's `export const revalidate` to be a statically
-analysable literal, so it cannot be imported from `packages/core/src/config.ts`.
+analysable literal, so it cannot be imported from `apps/companion/app/config.ts`.
 Every route segment therefore repeats `PAGE_REVALIDATE` as a literal, and every
 route added later will too — a standing exception, not a per-file one. The
-`PAGE_REVALIDATE` docblock in core config is the canonical statement; a comment
-at each site points back to it. They all change together.
+`PAGE_REVALIDATE` docblock in the app's config is the canonical statement; a
+comment at each site points back to it, and `scripts/revalidate.test.ts` fails
+when they disagree. (Moved from core's config 23 Sep 2026: a cache window is the
+app's concern, not the domain's.)
 
 (This entry used to name one file and one export that no longer exists. An
 explicit list of route files is the thing that rotted, which is why there is no

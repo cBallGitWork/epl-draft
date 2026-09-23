@@ -25,7 +25,7 @@ import FantraxSilent from "../../components/shell/FantraxSilent";
 // shape: no round picker, no cup, newest first, and nothing on it that has not
 // been played. Both are the same two payloads and neither is the other's filter.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { ARTICLE_REVALIDATE, PAGE_REVALIDATE } from "@epl/core";
+import { ARTICLE_REVALIDATE, PAGE_REVALIDATE } from "../apps/companion/app/config";
 
 // The one rule in this repo that a compiler cannot hold.
 //

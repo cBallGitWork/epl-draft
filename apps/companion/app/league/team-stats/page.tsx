@@ -65,7 +65,7 @@ import FantraxSilent from "../../components/shell/FantraxSilent";
 // (Craig, 1 Sep: "ok ditch the manager name then"). If owners ever want naming,
 // they are ours to collect and not Fantrax's to supply.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

@@ -25,7 +25,7 @@ import { teamHref } from "@/app/squad/routes";
 // every squad screen reads, and `headToHead` is the same selector the squad tab
 // uses for the "v opponent" line in its subheading.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 

@@ -54,7 +54,7 @@ import FantraxSilent from "../../components/shell/FantraxSilent";
 // same number all season, and printing one number under two names asks a reader
 // to work out whether they are the same thing.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

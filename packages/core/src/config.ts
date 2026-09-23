@@ -85,7 +85,7 @@ export const FPL_API_BASE = `${FPL_SITE}/api`;
  *  **Server-side only.** It answers
  *  `access-control-allow-origin: https://www.premierleague.com`, so a browser
  *  may not read it; nothing here may move into a `"use client"` component.
- *  Its own `cache-control` is `max-age=30`, which is `PAGE_REVALIDATE` — asking
+ *  Its own `cache-control` is `max-age=30`, which is the app's `PAGE_REVALIDATE` — asking
  *  faster than that returns the same bytes from their CDN. */
 export const PL_FOOTBALL_API_BASE = "https://footballapi.pulselive.com/football";
 
@@ -318,38 +318,6 @@ export const FPL_SHIRT_BASE = `${FPL_SITE}/dist/img/shirts/standard`;
 export const FANTRAX_BADGE_BASE =
   "https://fantraximg.com/assets/images/icons/fantasyteams";
 
-/** The photograph behind every desk screen, or null while there is none.
- *
- *  Championship Manager drew every screen over a darkened match photograph and
- *  dropping it is most of why a retokened desk still read as a website. DESIGN
- *  §2 recorded dropping it because "it fails AA outright and no amount of scrim
- *  fixes a ground that changes under the text" — and the second half of that is
- *  wrong. A scrim at opacity a over the ground can never composite lighter than
- *  `a x brightest + (1 - a) x bg`, whatever the photograph holds; that is a
- *  BOUND, so it can be solved rather than feared. Darken the picture first and
- *  the same bound buys far more of it. `components/football/PhotoGround` carries
- *  the arithmetic and the two numbers it solves for.
- *
- *  **A path under `public/`.** Craig, 31 Aug: "the background IS the image. Just
- *  use a crowd shot from a premier league game." What is there is Anfield before
- *  kick-off, from Wikimedia Commons — `Crowd_at_Anfield_before_the_match_1.jpg`,
- *  **CC BY-SA 4.0**, which needs attributing or replacing before this is public.
- *  Craig pointed at champman0102.net's background packages, which 403 anything
- *  that is not a browser, so this is a licence-clean stand-in for one of those.
- *
- *  Set it to null and the ground falls back to the round's own portraits.
- *  The scrim and the darkening do not move with either, because their product is
- *  what keeps every screen above the floor.
- */
-export const DESK_GROUND: string | null = "/ground/crowd.jpg";
-
-/** The same picture at 16px wide, inline, so it paints before any request
- *  returns. A club's own ground carries one of these on its row in
- *  `football/grounds.ts` and for the same reason; this is the shared one's.
- *  Null whenever `DESK_GROUND` is, because the two are one picture. */
-export const DESK_GROUND_BLUR: string | null =
-  "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAALABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgME/8QAIBAAAgICAQUBAAAAAAAAAAAAAQMCEQAEIRITM0GR4f/EABQBAQAAAAAAAAAAAAAAAAAAAAP/xAAaEQACAgMAAAAAAAAAAAAAAAAAAQIRISIx/9oADAMBAAIRAxEAPwAnag2LJLPux1fmWTsJcycmtgLPAMvuHY1EdvxQFkA0KzInURFTiFxuMuL5rCi6yhp7dP/Z";
-
 /** The league's clock. Every date a manager reads is in it, whatever their phone
  *  says, because a deadline is the same instant for all sixteen of them and a
  *  capture is filed under the day it happened here.
@@ -395,74 +363,3 @@ export const FIXTURE_RUN = 5;
  *  the first hundred as if they were all of it. Sixteen teams will not reach it
  *  in a season. */
 export const TRANSACTION_PAGE_SIZE = 100;
-
-/** How long the current season's Fantrax code stays good, in seconds.
- *
- *  Six hours rather than thirty, because the answer changes once a year. It is
- *  looked up rather than written down — a literal season code would need editing
- *  every August — and looking it up costs a request, so it is worth not
- *  repeating on every tap of a player's name. */
-export const SEASON_CODE_LIFE = 60 * 60 * 6;
-
-/** How stale a rendered page may be, in seconds.
- *
- *  Every route segment must repeat this as a literal, because Next analyses
- *  `revalidate` statically and will not read an import. The comment at each site
- *  points back here. */
-export const PAGE_REVALIDATE = 30;
-
-/** How stale Opta's COMMENTARY may be, in seconds.
- *
- *  **Its own clock, because it is the round's one expensive read.** Measured
- *  21 Sep 2026 against gameweek 5: the round read is 16 KB and one request for
- *  ten matches; the textstream is one request PER FIXTURE at 17-24 KB, so a
- *  window that asks for both is 11 requests and 217 KB against 1 and 16 — and
- *  at `PAGE_REVALIDATE` that is 1,320 requests and 25 MB an hour of football.
- *
- *  **Nothing a reader watches for comes from it.** The scoreline, the goals and
- *  the clock are all on the round read and stay on the thirty. What the
- *  textstream buys is a red card and the assists FPL pays that Opta never
- *  places — a sending-off two minutes late is still news, and an assist credit
- *  is a footnote on a goal already printed above it.
- *
- *  Five minutes puts the same afternoon at 240 requests and 4.3 MB. The match
- *  report reads it too and is less time-critical again. */
-export const COMMENTARY_REVALIDATE = 300;
-
-/** How stale a printed ARTICLE may be, in seconds.
- *
- *  **A story is published by a DEPLOY, not by a revalidation** — `paper.ts`
- *  static-imports `data/editions/paper.json`, so the prose is baked into the
- *  bundle and cannot change until the next build, and `vercel.json` deliberately
- *  does not exclude `data/editions` from the build trigger. The commit that
- *  files a story is the commit that ships it.
- *
- *  So the inside pages spent `PAGE_REVALIDATE` re-rendering prose that was
- *  compiled in: 2,880 re-renders a day, each one a Fantrax read, to produce
- *  bytes that could not have moved. What genuinely is live on those pages is the
- *  furniture — a manager's team name, a crest — and none of it changes within
- *  five minutes.
- *
- *  The FRONT page is the exception and keeps `PAGE_REVALIDATE`: its scoreboard
- *  strip carries live head-to-head totals while a round is on, which is the one
- *  thing on the paper that moves in thirty seconds.
- *
- *  Same literal-at-every-site rule as its neighbour above. */
-export const ARTICLE_REVALIDATE = 300;
-
-/** How often an open page asks the server for a fresh render, in seconds. Between
- *  matches nothing moves quickly enough to justify the wake-ups. */
-export const POLL = {
-  live: 30,
-  idle: 300,
-} as const;
-
-/** Lifetime of the two reads a live score is drawn from — the round snapshot and
- *  the Premier League's own round — in seconds.
- *
- *  **Below `POLL.live`, and it must stay below it plus a fetch.** `unstable_cache`
- *  serves a stale entry and refreshes it in the background, and ages an entry
- *  from when it was written. At an equal lifetime the next poll finds that
- *  background refresh still fresh, triggers nothing, and a lone reader sees new
- *  scores only every other poll. */
-export const LIVE_REVALIDATE = 20;

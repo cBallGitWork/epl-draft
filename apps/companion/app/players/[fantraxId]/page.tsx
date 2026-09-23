@@ -35,7 +35,7 @@ import { subject } from "./subject";
 // Reached by tapping a name in the pool, and that is the whole politeness
 // policy: one profile per tap, never a sweep of the 697.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

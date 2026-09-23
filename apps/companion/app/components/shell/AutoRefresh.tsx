@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { POLL } from "@epl/core";
 import { nextPoll } from "./cadence";
+import { POLL } from "../../config";
 
 // The page is server-rendered and `revalidate` only bounds how stale the cache
 // may get — it does not push anything to a phone already showing the score. Left

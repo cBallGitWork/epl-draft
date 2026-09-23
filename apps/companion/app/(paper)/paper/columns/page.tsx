@@ -17,7 +17,7 @@ import { pageAt } from "../../../components/gazette/paperPages";
 // from `paperPages.ts` rather than written here, so the page and the folio and
 // the teaser's "turn to page 3" can never disagree about what lives on it.
 
-// Must match `ARTICLE_REVALIDATE` in core config, NOT `PAGE_REVALIDATE` — an
+// Must match `ARTICLE_REVALIDATE` in the app's config, NOT `PAGE_REVALIDATE` — an
 // article is published by a deploy rather than by a revalidation, because the
 // prose is static-imported and baked into the bundle. Next analyses this
 // statically, so it cannot be imported. The front page keeps the shorter window;

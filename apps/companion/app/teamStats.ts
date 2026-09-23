@@ -1,7 +1,6 @@
 import {
   FANTRAX_LEAGUE_ID,
   FantraxError,
-  SEASON_CODE_LIFE,
   fetchPoolStats,
   fetchTeamStats,
   mapPoolStats,
@@ -10,6 +9,7 @@ import {
 import type { TeamStats } from "@epl/core";
 import { leagueCache } from "./leagueCache";
 import { orRefusal } from "./refusals";
+import { SEASON_CODE_LIFE } from "./config";
 
 // One team's season table, read once and shared.
 //

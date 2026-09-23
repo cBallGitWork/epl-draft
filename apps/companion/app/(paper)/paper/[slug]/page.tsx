@@ -29,7 +29,7 @@ import { pageOf } from "../../../components/gazette/paperPages";
 // filesystem reads at all and adding one for a case that has not happened is
 // machinery for nothing.
 
-// Must match `ARTICLE_REVALIDATE` in core config, NOT `PAGE_REVALIDATE` — an
+// Must match `ARTICLE_REVALIDATE` in the app's config, NOT `PAGE_REVALIDATE` — an
 // article is published by a deploy rather than by a revalidation, because the
 // prose is static-imported and baked into the bundle. Next analyses this
 // statically, so it cannot be imported. The front page keeps the shorter window;

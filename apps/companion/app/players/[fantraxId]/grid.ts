@@ -8,9 +8,9 @@ import {
 } from "@epl/core";
 import type { Attribute, FootballPlayer, IntelPlayer, PastSeason, Scouted } from "@epl/core";
 import { unstable_cache } from "next/cache";
-import { PAGE_REVALIDATE } from "@epl/core";
 import { footballNow } from "../../football";
 import { intelSetPieces, intelSquads } from "../../intel";
+import { PAGE_REVALIDATE } from "../../config";
 
 // The Championship Manager half of the player screen: the attribute grid, the
 // real position under it, and the seasons behind it.

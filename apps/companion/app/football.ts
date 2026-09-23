@@ -1,8 +1,5 @@
 import { unstable_cache } from "next/cache";
 import {
-  LIVE_REVALIDATE,
-  PAGE_REVALIDATE,
-  POLL,
   type Fixture,
   type FootballSnapshot,
   datedKickoffs,
@@ -22,6 +19,7 @@ import {
 } from "@epl/core";
 import { now, replayAt } from "./clock";
 import { roundGoals } from "./commentary";
+import { LIVE_REVALIDATE, PAGE_REVALIDATE, POLL } from "./config";
 
 // One football snapshot per window, shared by everything that needs it.
 //
@@ -175,7 +173,7 @@ const GROUND_FACES = 6;
 /** A few real faces for the desk's ground, as portrait URLs.
  *
  *  The placeholder behind every desk screen until a match photograph is
- *  configured — `DESK_GROUND` in core config. Real players rather than stock
+ *  configured — `DESK_GROUND` in the app's config. Real players rather than stock
  *  photography, because these are the men actually in the round and a stadium
  *  nobody in the league plays in would be set dressing.
  *

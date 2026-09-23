@@ -34,7 +34,7 @@ import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL } from "@/app/desk";
 // No seventh tab. Six already brushes the 320px clip `tools/ui/navfit.mjs`
 // measures, so this is reached from the Live tab and nowhere else.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

@@ -26,7 +26,7 @@ import { FACT, FACT_LABEL, PANEL } from "@/app/desk";
 // season-stable `code`, because a URL is persisted the moment somebody shares it
 // and `id` is recycled between seasons (CODE_RULES §3).
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 

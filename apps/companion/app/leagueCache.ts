@@ -1,5 +1,6 @@
 import { unstable_cache } from "next/cache";
-import { FANTRAX_LEAGUE_ID, PAGE_REVALIDATE } from "@epl/core";
+import { FANTRAX_LEAGUE_ID } from "@epl/core";
+import { PAGE_REVALIDATE } from "./config";
 
 // One league read, cached for everybody.
 //

@@ -99,3 +99,39 @@ export const DEMO_TEAM_ID = process.env.FANTRAX_DEMO_TEAM_ID || null;
  *  wrapper that forwards its arguments.
  */
 export const FANTRAX_SILENT = "Fantrax is not answering";
+
+/** How stale a rendered page may be, in seconds. Next reads `revalidate` statically, so every
+ *  route segment repeats it as a literal; `scripts/revalidate.test.ts` holds them together. */
+export const PAGE_REVALIDATE = 30;
+
+/** How stale a printed article may be, in seconds. A story ships with the deploy that files it,
+ *  so the inside pages need not re-render compiled-in prose every thirty. The front page keeps
+ *  `PAGE_REVALIDATE` for its live scoreboard. */
+export const ARTICLE_REVALIDATE = 300;
+
+/** How stale Opta's commentary may be, in seconds: the round's one expensive read (one request
+ *  per fixture), and nothing a reader watches for comes from it. Counted 21 Sep 2026. */
+export const COMMENTARY_REVALIDATE = 300;
+
+/** Lifetime of the two reads a live score is drawn from, in seconds. Below `POLL.live` plus a
+ *  fetch, or a stale-while-revalidate entry makes a lone reader see new scores every other poll. */
+export const LIVE_REVALIDATE = 20;
+
+/** How often an open page asks for a fresh render, in seconds. */
+export const POLL = {
+  live: 30,
+  idle: 300,
+} as const;
+
+/** How long the season's Fantrax code stays good, in seconds: it changes once a year. */
+export const SEASON_CODE_LIFE = 60 * 60 * 6;
+
+/** The photograph behind every desk screen, or null for the round's own portraits. Anfield
+ *  before kick-off from Wikimedia Commons, CC BY-SA 4.0: attribute or replace it before this is
+ *  public. `components/football/PhotoGround` carries the scrim arithmetic. */
+export const DESK_GROUND: string | null = "/ground/crowd.jpg";
+
+/** The same picture at 16px wide, inline, so it paints before any request returns. Null
+ *  whenever `DESK_GROUND` is. */
+export const DESK_GROUND_BLUR: string | null =
+  "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAALABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgME/8QAIBAAAgICAQUBAAAAAAAAAAAAAQMCEQAEIRITM0GR4f/EABQBAQAAAAAAAAAAAAAAAAAAAAP/xAAaEQACAgMAAAAAAAAAAAAAAAAAAQIRISIx/9oADAMBAAIRAxEAPwAnag2LJLPux1fmWTsJcycmtgLPAMvuHY1EdvxQFkA0KzInURFTiFxuMuL5rCi6yhp7dP/Z";

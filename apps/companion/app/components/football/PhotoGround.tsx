@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { DESK_GROUND, DESK_GROUND_BLUR, clubGroundPhoto } from "@epl/core";
+import { clubGroundPhoto } from "@epl/core";
 import { drawsOwnGround, isPaperRoute } from "../shell/sections";
+import { DESK_GROUND, DESK_GROUND_BLUR } from "../../config";
 
 // The players, behind the screen. Championship Manager drew every screen over a
 // darkened match photograph, and dropping it is most of why a retokened desk

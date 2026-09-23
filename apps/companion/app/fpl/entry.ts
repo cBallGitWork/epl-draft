@@ -1,7 +1,6 @@
 import { cookies } from "next/headers";
 import { unstable_cache } from "next/cache";
 import {
-  PAGE_REVALIDATE,
   type FplEntry,
   type FplSquad,
   fetchEntry,
@@ -10,7 +9,7 @@ import {
   mapEntry,
   mapSquad,
 } from "@epl/core";
-import { ENTRY_COOKIE } from "../config";
+import { ENTRY_COOKIE, PAGE_REVALIDATE } from "../config";
 import { footballNow, gameweekLive } from "../football";
 
 // The other game. A manager's FPL side, read from the id in the URL they already
