@@ -8,7 +8,7 @@ import Scoresheet from "./Scoresheet";
 import Preview from "./Preview";
 import MatchReport from "./MatchReport";
 import { matchOwners, readMatch } from "./match";
-import { matchCards } from "./matchCards";
+import { matchCards, namedOn } from "./matchCards";
 import { side } from "./scoreLines";
 import type { Match } from "./match";
 import { leagueOpinions } from "../../leagueOpinions";
@@ -88,7 +88,7 @@ async function Sheet({ match }: { match: Match }) {
       byCode={match.byCode}
       did={did}
       injured={injured}
-      cards={sheets === null ? new Map() : matchCards(match, sheets, league)}
+      cards={sheets === null ? new Map() : matchCards(match, namedOn(sheets), league)}
     />
   );
 }

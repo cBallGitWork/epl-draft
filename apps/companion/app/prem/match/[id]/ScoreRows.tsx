@@ -49,7 +49,7 @@ export function Goal({
           <MaybeCard
             key={code}
             player={cards.get(code)}
-            className="ml-3 flex min-h-9 w-full items-center gap-1.5 text-left hover:underline lg:ml-4"
+            className="flex min-h-9 w-full items-center gap-1.5 pl-3 text-left hover:underline lg:pl-4"
           >
             <span className={`${SMALL_CAPS} shrink-0 text-faint`}>A</span>
             <span className="min-w-0 flex-1 truncate font-chrome text-sm font-bold text-muted lg:text-xl">

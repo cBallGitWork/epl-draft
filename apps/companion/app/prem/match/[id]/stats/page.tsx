@@ -1,10 +1,11 @@
+import Nothing from "../../../../components/shell/Nothing";
 import TabStrip from "../../../../components/shell/TabStrip";
 import MatchShell from "../Shell";
 import MatchStats from "../MatchStats";
 import ClubStats from "../ClubStats";
 import Fantasy from "../Fantasy";
 import { readMatch } from "../match";
-import { matchCards } from "../matchCards";
+import { matchCards, namedOn } from "../matchCards";
 import { leagueOpinions } from "../../../leagueOpinions";
 import type { Match } from "../match";
 import { DEFAULT_SORT, isStatSort } from "../statColumns";
@@ -66,7 +67,7 @@ function Foot({ match, view }: { match: Match; view: StatsView }) {
 /** What the match meant in our league's categories, a page of its own (Craig, 23 Sep 2026). */
 async function FantasyReport({ match }: { match: Match }) {
   const sheets = await teamSheets(match.fixture.gameweek, match.fixture.code, match.snapshot.players);
-  return sheets === null ? null : <Fantasy match={match} sheets={sheets} />;
+  return sheets === null ? <NoSheet /> : <Fantasy match={match} sheets={sheets} />;
 }
 
 async function OneClub({
@@ -88,7 +89,7 @@ async function OneClub({
     matchInjuries(gameweek, code, match.snapshot.players),
     leagueOpinions(),
   ]);
-  if (sheets === null) return null;
+  if (sheets === null) return <NoSheet />;
   return (
     <ClubStats
       match={match}
@@ -98,7 +99,7 @@ async function OneClub({
       events={events}
       injured={injured}
       league={league}
-      cards={matchCards(match, sheets, league)}
+      cards={matchCards(match, namedOn(sheets), league)}
       sort={sort}
       descending={descending}
     />
@@ -109,4 +110,9 @@ async function OneClub({
 async function BothSides({ match }: { match: Match }) {
   const rows = await matchStatsBoard(match.fixture.gameweek, match.fixture.code);
   return <MatchStats rows={rows} home={match.home} away={match.away} />;
+}
+
+/** A club's board and the Fantasy Report both read the team sheet, which a match has only once its sides are named. */
+function NoSheet() {
+  return <Nothing title="No team sheet yet">Each side is named an hour before kick-off.</Nothing>;
 }

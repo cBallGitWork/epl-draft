@@ -420,7 +420,7 @@ that is about a player rather than about a tally.
 
 | State | Test | Overview | Players |
 |---|---|---|---|
-| Upcoming | `status === "upcoming"` | `Preview` — each side's **home record against the other's away**, its place, its last five, FPL's own difficulty | **both clubs' squads**, keeper to attack, with shirt numbers and owners |
+| Upcoming | `status === "upcoming"` | `Preview` — each side's **home record against the other's away**, its place, its last five, FPL's own difficulty | **both clubs' squads**, keeper to attack, to the team sheet's standards — the Fantrax tile, the name opening his card, the owner; one club at a time on a phone |
 | Live | `status === "live"` **and** `speaksForNow` | the scoresheet so far, `Live 45′` | who has appeared so far |
 | Finished, bonus settling | `finished && !settled` | `FT · bonus provisional` | as below |
 | Finished, settled | `settled` | `FT` | the appearance list, by bps |

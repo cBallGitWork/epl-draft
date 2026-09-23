@@ -49,7 +49,11 @@ export default async function MatchZonesPage({
   if (shots.length === 0 && homeMen.length === 0 && awayMen.length === 0) {
     return (
       <MatchShell match={match} current="zones">
-        <Nothing title="No shot data yet">The shot and touch export has not reached this match.</Nothing>
+        {match.fixture.status === "upcoming" ? (
+          <Nothing title="Not played yet">Where each side shot from arrives once the match has been played.</Nothing>
+        ) : (
+          <Nothing title="No shot data yet">The shot and touch export has not reached this match.</Nothing>
+        )}
       </MatchShell>
     );
   }

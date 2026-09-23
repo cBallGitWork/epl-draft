@@ -7,7 +7,7 @@ import MatchPitch from "../MatchPitch";
 import TeamSheet from "../TeamSheet";
 import { matchOwners, readMatch } from "../match";
 import { leagueOpinions } from "../../../leagueOpinions";
-import { matchCards } from "../matchCards";
+import { matchCards, namedOn, squadsOf } from "../matchCards";
 import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchDetail";
 import { matchHref } from "../matchRoutes";
 import type { Match } from "../match";
@@ -41,9 +41,9 @@ export default async function MatchPlayersPage({
       current="players"
       foot={played ? <Views id={match.fixture.id} side={side} view={view} className="max-lg:hidden" /> : undefined}
     >
-      {played ? <PhoneControls match={match} side={side} view={view} /> : null}
+      <PhoneControls match={match} side={side} view={played ? view : null} />
       <Suspense fallback={<BoardWaiting />}>
-        {played ? <Board match={match} view={view} side={side} /> : <BothSquads match={match} />}
+        {played ? <Board match={match} view={view} side={side} /> : <BothSquads match={match} side={side} />}
       </Suspense>
     </MatchShell>
   );
@@ -73,34 +73,37 @@ function Views({ id, side, view, className = "" }: { id: number; side: Side; vie
   );
 }
 
-/** Under a thumb, one club at a time: pick the club, then the list or the pitch (Craig, 23 Sep 2026). */
-function PhoneControls({ match, side, view }: { match: Match; side: Side; view: View }) {
+/** Under a thumb, one club at a time: pick the club, then — once there are elevens — the list or the pitch. */
+function PhoneControls({ match, side, view }: { match: Match; side: Side; view: View | null }) {
   const id = match.fixture.id;
   return (
-    <div className="grid grid-cols-2 gap-2 lg:hidden">
+    <div className={`grid gap-2 lg:hidden ${view === null ? "" : "grid-cols-2"}`}>
       <TabStrip
         label="Club"
         tabs={[
-          { key: "home", label: match.home?.shortName ?? "Home", href: lineupsHref(id, "home", view) },
-          { key: "away", label: match.away?.shortName ?? "Away", href: lineupsHref(id, "away", view) },
+          { key: "home", label: match.home?.shortName ?? "Home", href: lineupsHref(id, "home", view ?? "sheet") },
+          { key: "away", label: match.away?.shortName ?? "Away", href: lineupsHref(id, "away", view ?? "sheet") },
         ]}
         current={side}
         labels="word"
       />
-      <Views id={id} side={side} view={view} className="flex [&>nav]:flex-1" />
+      {view === null ? null : <Views id={id} side={side} view={view} className="flex [&>nav]:flex-1" />}
     </div>
   );
 }
 
-/** Both clubs' books, for a match nobody has played. */
-async function BothSquads({ match }: { match: Match }) {
-  const owners = await matchOwners(match.fixture);
+/** Both clubs' books, for a match nobody has named a side for. */
+async function BothSquads({ match, side }: { match: Match; side: Side }) {
+  const [owners, league] = await Promise.all([matchOwners(match.fixture), leagueOpinions()]);
   return (
     <Squads
       home={match.home}
       away={match.away}
       players={match.snapshot.players}
       owners={owners}
+      league={league}
+      cards={matchCards(match, squadsOf(match), league)}
+      phoneSide={side}
     />
   );
 }
@@ -117,8 +120,8 @@ async function Board({ match, view, side }: { match: Match; view: View; side: Si
   ]);
 
   // Their sheet is the only source of a bench; without it, both squads is the honest fallback.
-  if (sheets === null) return <BothSquads match={match} />;
-  const cards = matchCards(match, sheets, league);
+  if (sheets === null) return <BothSquads match={match} side={side} />;
+  const cards = matchCards(match, namedOn(sheets), league);
   if (view === "pitch")
     return (
       <MatchPitch

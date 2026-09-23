@@ -32,11 +32,11 @@ async function Report({ match }: { match: Match }) {
   return (
     <section className={PANEL_FLUSH}>
       <h2 className={SECTION_BAR}>Match Report</h2>
-      <div className="cm-rows">
+      <ol className="cm-rows">
         {lines.map((line) => (
           <Line key={line.id} line={line} names={names} />
         ))}
-      </div>
+      </ol>
     </section>
   );
 }
