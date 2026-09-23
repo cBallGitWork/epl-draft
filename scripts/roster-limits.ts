@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { FANTRAX_SETUP_PAGE } from "@epl/core";
+import { FANTRAX_SETUP_PAGE, politeFetch } from "@epl/core";
 import { RECORDED_LEAGUES } from "./leagues";
 import { LEAGUE_LIMITS } from "./paths";
 
@@ -85,7 +85,7 @@ async function main(): Promise<void> {
 
   const byLeague: Record<string, unknown> = {};
   for (const league of RECORDED_LEAGUES) {
-    const page = await fetch(`${FANTRAX_SETUP_PAGE}?goto=3&leagueId=${league.leagueId}`, {
+    const page = await politeFetch(`${FANTRAX_SETUP_PAGE}?goto=3&leagueId=${league.leagueId}`, {
       headers: { cookie },
     });
     if (!page.ok) throw new Error(`${league.key}: setup page answered ${page.status}`);

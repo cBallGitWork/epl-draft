@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import { OPENAI_IMAGES_URL, type PublishedStory } from "@epl/core";
+import { MODEL_TIMEOUT_MS, OPENAI_IMAGES_URL, type PublishedStory } from "@epl/core";
 
 // The splash picture: one image for the paper's lead, drawn in CI.
 //
@@ -57,6 +57,7 @@ export async function drawSplash(story: PublishedStory): Promise<Splash | null> 
         size: "1024x1024",
         n: 1,
       }),
+      signal: AbortSignal.timeout(MODEL_TIMEOUT_MS),
     });
     if (!response.ok) {
       say(`Image API answered ${response.status}; filing without a picture.`);

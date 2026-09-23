@@ -1,6 +1,6 @@
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { FPL_API_BASE, HTTP_USER_AGENT, getFootballSnapshot } from "@epl/core";
+import { FPL_API_BASE, getFootballSnapshot, politeFetch } from "@epl/core";
 import { ROUND_STATE_ROOT } from "./paths";
 
 // A timeline of how a round settles, written down while it happens.
@@ -35,9 +35,7 @@ interface RoundState {
  *  needs it — the `settled`/`dataChecked` ladder derives the same rungs from
  *  reads it already makes. It is read HERE precisely to check that claim. */
 async function eventStatus(): Promise<Record<string, boolean>> {
-  const response = await fetch(`${FPL_API_BASE}/event-status/`, {
-    headers: { "user-agent": HTTP_USER_AGENT },
-  });
+  const response = await politeFetch(`${FPL_API_BASE}/event-status/`);
   if (!response.ok) throw new Error(`event-status → ${response.status}`);
   const body = (await response.json()) as {
     status?: { date?: string; event?: number; bonus_added?: boolean }[];

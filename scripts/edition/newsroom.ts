@@ -6,7 +6,7 @@ import type {
   StoryKind,
   ThreadUpdate,
 } from "@epl/core";
-import { ANTHROPIC_MESSAGES_URL, normalizeStory } from "@epl/core";
+import { ANTHROPIC_MESSAGES_URL, MODEL_TIMEOUT_MS, normalizeStory } from "@epl/core";
 
 // The one API call, and the shape a filed column takes in the rolling paper.
 
@@ -32,6 +32,7 @@ export async function writeColumn(system: string, brief: string): Promise<Record
       system,
       messages: [{ role: "user", content: brief }],
     }),
+    signal: AbortSignal.timeout(MODEL_TIMEOUT_MS),
   });
   if (!response.ok) throw new Error(`Anthropic ${response.status}: ${await response.text()}`);
 
