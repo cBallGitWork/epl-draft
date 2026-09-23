@@ -20,7 +20,8 @@ import {
   strangers,
 } from "@epl/core";
 import { gatherRoundFacts, withFootball } from "./edition/facts";
-import { file, prepare, type DeskContext } from "./edition/dispatch";
+import { file, type DeskContext } from "./edition/dispatch";
+import { prepare } from "./edition/commission";
 import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { markLastWeek } from "./edition/marking";
