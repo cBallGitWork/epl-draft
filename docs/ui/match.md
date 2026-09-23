@@ -117,7 +117,11 @@ positions into its own section"*). `/zones`: both sides' shots on ONE pitch, hom
 attacking the left box and away the right (the export is player-relative, so home
 takes a half-turn), with every shot in one list under it — minute on the club's
 tile, shooter, outcome, xG — ranked by minute or by xG. Tapping a row or a mark
-picks the shot and rings it in the accent. `Min` and `xG` are the list's two heads,
+picks the shot and rings it in the accent. **Each shot names who made it** — Understat's
+`player_assisted`, joined onto SofaScore's shot by the sister repo's exporter (938 of 1,363,
+23 Sep 2026) — under the shooter on a phone, beside him on a desk; and every **key pass** is drawn as a
+dashed line from where it started (SofaScore's key-pass actions, 695 of the 938). On a desk
+the list sits beside the pitch. `Min` and `xG` are the list's two heads,
 links like every other board's sort (`?order=xg`), and the shooter is named in full. Then the average positions, under a
 blue bar of their own; a phone shows one section at a time. An
 own goal is left off the side that scored it: the export flags none, so a shot is

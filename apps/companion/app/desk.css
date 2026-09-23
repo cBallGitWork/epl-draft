@@ -157,6 +157,11 @@
   min-height: 2.75rem;
 }
 
+/* A view switch on the match screens: 36px at every width (PRODUCT's third tap exception). */
+.cm-tab-compact {
+  min-height: 2.25rem;
+}
+
 @media (min-width: 64rem) {
   .cm-tab-quiet {
     min-height: 2.25rem;

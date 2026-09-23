@@ -33,6 +33,10 @@ export interface Shot {
   outcome: "goal" | "save" | "miss" | "block" | "post";
   situation: string | null;
   bodyPart: string | null;
+  /** Who made it — Understat's last touch before the shot, as an FPL code. Null when unassisted or unplaced. */
+  assistCode: number | null;
+  /** Where his key pass started, in the shot's own frame; null when none landed near the shot. */
+  pass: { x: number; y: number } | null;
 }
 
 export interface IntelShots {
@@ -52,9 +56,15 @@ export function shotIntel(shots: IntelShots | null): Map<number, Shot[]> {
     if (!Number.isInteger(shot?.code)) continue;
     if (!Number.isInteger(shot.fplFixtureId)) continue;
     if (!inside(shot.x) || !inside(shot.y)) continue;
+    // An older export has neither field; a pass off the pitch is a mark that looks real, so it goes.
+    const read: Shot = {
+      ...shot,
+      assistCode: Number.isInteger(shot.assistCode) ? shot.assistCode : null,
+      pass: shot.pass != null && inside(shot.pass.x) && inside(shot.pass.y) ? shot.pass : null,
+    };
     const mine = byCode.get(shot.code);
-    if (mine === undefined) byCode.set(shot.code, [shot]);
-    else mine.push(shot);
+    if (mine === undefined) byCode.set(shot.code, [read]);
+    else mine.push(read);
   }
   return byCode;
 }

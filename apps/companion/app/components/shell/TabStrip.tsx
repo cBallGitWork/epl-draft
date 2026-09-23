@@ -36,6 +36,7 @@ export default function TabStrip<K extends string>({
   current,
   dim = [],
   labels = "phrase",
+  compact = false,
 }: {
   /** What the strip is a strip OF — "League views", "Team views". */
   label: string;
@@ -77,6 +78,9 @@ export default function TabStrip<K extends string>({
    *  refactor's. `phrase` keeps 11px because a section strip's entries are
    *  phrases and it has fewer of them. */
   labels?: "phrase" | "word";
+  /** 36px under a thumb rather than 44 — a view switch on the match screens, under PRODUCT's
+   *  recorded 36px exception (Craig, 23 Sep 2026). */
+  compact?: boolean;
 }) {
   // The strip fills the row. CM's tabs run edge to edge across the whole content
   // width (`cm9900/24.jpg`, `25.jpg`) — a tab strip is a bar, and plates hugging
@@ -93,7 +97,7 @@ export default function TabStrip<K extends string>({
             // The accent carries "the one you are on", from `desk.css` rather
             // than from here: red is the brand and the live signal and never a
             // statement about where you are.
-            className={`${TAB} ${LABELS[labels]} ${
+            className={`${TAB} ${LABELS[labels]} ${compact ? "cm-tab-compact" : ""} ${
               // Never on the tab you are on: the accent already says "selected",
               // and greying the current plate would have the strip make two
               // claims about one object.

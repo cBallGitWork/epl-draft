@@ -10,6 +10,7 @@ import { leagueOpinions } from "../../../leagueOpinions";
 import { matchCards, namedOn, squadsOf } from "../matchCards";
 import { matchInjuries, matchManEvents, teamSheets } from "../../../../matchDetail";
 import { matchHref } from "../matchRoutes";
+import { MATCH_ROW } from "../matchRow";
 import type { Match } from "../match";
 
 // Both elevens and what the afternoon was worth — CM's team sheet (`cm9900/16.jpg`), or the pitch.
@@ -57,7 +58,19 @@ function lineupsHref(id: number, side: Side, view: View): string {
 }
 
 /** CM's foot row (`cm0102/02.jpg`): the same elevens as a list or on the grass. */
-function Views({ id, side, view, className = "" }: { id: number; side: Side; view: View; className?: string }) {
+function Views({
+  id,
+  side,
+  view,
+  className = "",
+  compact = false,
+}: {
+  id: number;
+  side: Side;
+  view: View;
+  className?: string;
+  compact?: boolean;
+}) {
   return (
     <div className={className}>
       <TabStrip
@@ -68,6 +81,7 @@ function Views({ id, side, view, className = "" }: { id: number; side: Side; vie
         ]}
         current={view}
         labels="word"
+        compact={compact}
       />
     </div>
   );
@@ -77,7 +91,7 @@ function Views({ id, side, view, className = "" }: { id: number; side: Side; vie
 function PhoneControls({ match, side, view }: { match: Match; side: Side; view: View | null }) {
   const id = match.fixture.id;
   return (
-    <div className={`grid gap-2 lg:hidden ${view === null ? "" : "grid-cols-2"}`}>
+    <div className={`grid gap-2 lg:hidden ${view === null ? "" : "grid-cols-2"}`} {...MATCH_ROW}>
       <TabStrip
         label="Club"
         tabs={[
@@ -86,8 +100,9 @@ function PhoneControls({ match, side, view }: { match: Match; side: Side; view: 
         ]}
         current={side}
         labels="word"
+        compact
       />
-      {view === null ? null : <Views id={id} side={side} view={view} className="flex [&>nav]:flex-1" />}
+      {view === null ? null : <Views id={id} side={side} view={view} className="flex [&>nav]:flex-1" compact />}
     </div>
   );
 }

@@ -12,6 +12,7 @@ import { readMatch, sheetName, type Match } from "../match";
 import { intelShots, intelTouches } from "../../../../intel";
 import { teamSheets } from "../../../../matchDetail";
 import { matchHref } from "../matchRoutes";
+import { MATCH_ROW } from "../matchRow";
 
 // CM's Action Zones (`cm9900/22.jpg`): where both sides shot from and who took them, then where the eleven stood.
 
@@ -61,7 +62,7 @@ export default async function MatchZonesPage({
   return (
     <MatchShell match={match} current="zones">
       {/* One section at a time under a thumb; a desk shows both (Craig, 23 Sep 2026). */}
-      <div className="lg:hidden">
+      <div className="lg:hidden" {...MATCH_ROW}>
         <TabStrip
           label="Action zones views"
           tabs={[
@@ -70,6 +71,7 @@ export default async function MatchZonesPage({
           ]}
           current={view}
           labels="word"
+          compact
         />
       </div>
       <section className={PANEL}>
@@ -116,10 +118,22 @@ function plottedShots(match: Match, names: ReadonlyMap<number, string>): Plotted
     const side = clubId === match.home?.id ? "home" : clubId === match.away?.id ? "away" : null;
     if (side === null) return [];
     const name = names.get(code) ?? match.byCode.get(code)?.name ?? DASH;
+    const nameOf = (other: number) => names.get(other) ?? match.byCode.get(other)?.name ?? DASH;
+    // Home attacks the left box, so its shots and their key passes take a half-turn together.
+    const turn = (point: { x: number; y: number }) => ({ x: 100 - point.x, y: 100 - point.y });
     return shots
       .filter((shot) => kept(code, shot))
-      .map((shot) => (side === "home" ? { ...shot, x: 100 - shot.x, y: 100 - shot.y } : shot))
-      .map((shot) => ({ ...shot, side, name }));
+      .map((shot) =>
+        side === "home"
+          ? { ...shot, ...turn(shot), pass: shot.pass === null ? null : turn(shot.pass) }
+          : shot,
+      )
+      .map((shot) => ({
+        ...shot,
+        side,
+        name,
+        assister: shot.assistCode === null ? null : nameOf(shot.assistCode),
+      }));
   });
 }
 

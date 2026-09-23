@@ -16,6 +16,8 @@ function shot(over: Partial<Shot> = {}): Shot {
     outcome: "goal",
     situation: "penalty",
     bodyPart: "right-foot",
+    assistCode: null,
+    pass: null,
     ...over,
   };
 }
@@ -87,5 +89,28 @@ describe("shotsInFixture", () => {
 
   it("answers an empty map for a fixture nobody shot in", () => {
     expect(shotsInFixture(map, 99).size).toBe(0);
+  });
+});
+
+describe("the assister and his key pass", () => {
+  it("carries both through when the export has them", () => {
+    const read = shotIntel(file([shot({ assistCode: 42, pass: { x: 70, y: 30 } })])).get(1)?.[0];
+    expect(read?.assistCode).toBe(42);
+    expect(read?.pass).toEqual({ x: 70, y: 30 });
+  });
+
+  it("reads an older export, which has neither, as no assister and no pass", () => {
+    const old = { ...shot() } as Partial<Shot>;
+    delete old.assistCode;
+    delete old.pass;
+    const read = shotIntel(file([old as Shot])).get(1)?.[0];
+    expect(read?.assistCode).toBeNull();
+    expect(read?.pass).toBeNull();
+  });
+
+  it("drops a key pass drawn off the pitch but keeps the shot", () => {
+    const read = shotIntel(file([shot({ assistCode: 42, pass: { x: 140, y: 30 } })])).get(1)?.[0];
+    expect(read?.pass).toBeNull();
+    expect(read?.assistCode).toBe(42);
   });
 });

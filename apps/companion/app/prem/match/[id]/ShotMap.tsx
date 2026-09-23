@@ -6,16 +6,24 @@ import { DASH, type Shot } from "@epl/core";
 import { PITCH_BOX } from "@/app/components/football/pitchBox";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
 import { BOARD, ROW_RULE, SECTION_BAR } from "@/app/desk";
-import { Head, HeadRow, MUTE, SortHead } from "../../../components/league/TableHeads";
+import {
+  Head,
+  HeadRow,
+  MUTE,
+  SortHead,
+} from "../../../components/league/TableHeads";
 import { MATCH_ROW } from "./matchRow";
 
 // Both sides' shots on one pitch, each at its own end, and every shot in one list under it
-// (Craig, 23 Sep 2026: *"one big column for both teams under the shot map"*). Tapping either picks it.
+// (Craig, 23 Sep 2026: *"one big column for both teams under the shot map"*), beside the pitch on a desk.
+// Tapping either picks a shot; every key pass is drawn from where it started.
 
 /** A shot placed on the shared pitch: home attacks the left box, away the right. */
 export interface PlottedShot extends Shot {
   side: "home" | "away";
   name: string;
+  /** Who made it, by name, or null for an unassisted shot. */
+  assister: string | null;
 }
 
 /** A club as the board draws it: its short name, its colour and the ink that reads on it, and its index block. */
@@ -25,7 +33,6 @@ export interface ShotSide {
   ink: string;
   index: CSSProperties;
 }
-
 
 /** The ring round a picked shot, and the tap target over every mark — pitch units, wider than the biggest mark. */
 const RING_RADIUS = 3.2;
@@ -61,7 +68,8 @@ export default function ShotMap({
   if (shots.length === 0) return null;
 
   const pick = (at: number) => setPicked((now) => (now === at ? null : at));
-  const count = (side: PlottedShot["side"]) => shots.filter((shot) => shot.side === side).length;
+  const count = (side: PlottedShot["side"]) =>
+    shots.filter((shot) => shot.side === side).length;
   const listed = shots
     .map((shot, at) => ({ shot, at }))
     .sort((a, b) =>
@@ -73,115 +81,174 @@ export default function ShotMap({
 
   return (
     // Capped on a desk, or a full-width pitch is 700px tall and the list starts below the fold.
-    <figure className="mx-auto flex w-full max-w-3xl flex-col gap-1">
-      {/* A phone's control row already names the section in view. */}
+    // The pitch and its key at the left on a desk, the list beside it; stacked under a thumb.
+    <figure className="flex w-full flex-col gap-1">
       {/* A phone's control row already names the section in view. */}
       <figcaption className={`${SECTION_BAR} max-lg:hidden`}>Shots</figcaption>
-      {/* Each club's plate over the end it attacked. */}
-      <div className="grid grid-cols-2 text-2xs font-bold uppercase">
-        <span className="flex justify-between px-2 py-1" style={{ background: home.colour, color: home.ink }}>
-          <span>{home.label}</span>
-          <span className="numeric">{count("home")}</span>
-        </span>
-        <span className="flex justify-between px-2 py-1" style={{ background: away.colour, color: away.ink }}>
-          <span className="numeric">{count("away")}</span>
-          <span>{away.label}</span>
-        </span>
-      </div>
-
-      <svg viewBox={`0 0 ${PITCH_BOX.width} ${PITCH_BOX.height}`} className="w-full" role="img" aria-label="Where both sides shot from">
-        <Pitch />
-        <ShotMarks shots={shots.filter((shot) => shot.side === "home")} ink={home.colour} />
-        <ShotMarks shots={shots.filter((shot) => shot.side === "away")} ink={away.colour} />
-        {pickedShot === undefined ? null : (
-          <circle
-            cx={pickedShot.x}
-            cy={(pickedShot.y / 100) * PITCH_BOX.height}
-            r={RING_RADIUS}
-            fill="none"
-            stroke="var(--color-accent)"
-            strokeWidth="0.6"
-          />
-        )}
-        {/* A tap target on every mark, laid over the drawing so the drawing stays `ShotMarks`' own. */}
-        {shots.map((shot, at) => (
-          <circle
-            key={at}
-            cx={shot.x}
-            cy={(shot.y / 100) * PITCH_BOX.height}
-            r={TAP_RADIUS}
-            fill="transparent"
-            className="cursor-pointer"
-            onClick={() => pick(at)}
-          >
-            <title>{`${shot.minute ?? DASH}′ ${shot.name} · ${OUTCOME[shot.outcome]}`}</title>
-          </circle>
-        ))}
-      </svg>
-      <MarksKey />
-
-      {/* The board standard: `BOARD` and `SortHead`, the heads every sortable table wears. */}
-      <table className={`${BOARD} cm-index-scoped bg-surface`} {...MATCH_ROW}>
-        <thead>
-          <HeadRow>
-            <SortHead
-              width="w-10"
-              title="Minute"
-              href={hrefs.minute}
-              label="Min"
-              sorted={order === "minute" ? "ascending" : undefined}
-            />
-            <Head width="">
-              <span className={MUTE}>Shooter</span>
-            </Head>
-            <Head width="w-20">
-              <span className={MUTE}>Outcome</span>
-            </Head>
-            <SortHead
-              width="w-12"
-              title="Expected goals"
-              href={hrefs.xg}
-              label="xG"
-              sorted={order === "xg" ? "descending" : undefined}
-            />
-          </HeadRow>
-        </thead>
-        <tbody>
-          {listed.map(({ shot, at }) => (
-            // The row picks the shot; the name is a button so a keyboard can too, and its click bubbles here.
-            <tr
-              key={at}
-              onClick={() => pick(at)}
-              className={`${ROW_RULE} cursor-pointer ${picked === at ? "bg-raised outline outline-1 -outline-offset-1 outline-accent" : ""}`}
+      <div className="grid gap-2 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
+        <div className="flex min-w-0 flex-col gap-1">
+          {/* Each club's plate over the end it attacked. */}
+          <div className="grid grid-cols-2 text-2xs font-bold uppercase">
+            <span
+              className="flex justify-between px-2 py-1"
+              style={{ background: home.colour, color: home.ink }}
             >
-              <td
-                className="cm-index numeric text-center"
-                style={(shot.side === "home" ? home : away).index}
-              >
-                {shot.minute === null ? DASH : `${shot.minute}′`}
-              </td>
-              <td className="p-0">
-                <button
-                  type="button"
-                  aria-pressed={picked === at}
-                  className="flex min-h-9 w-full items-center px-2 text-left font-chrome text-sm font-bold lg:min-h-7"
+              <span>{home.label}</span>
+              <span className="numeric">{count("home")}</span>
+            </span>
+            <span
+              className="flex justify-between px-2 py-1"
+              style={{ background: away.colour, color: away.ink }}
+            >
+              <span className="numeric">{count("away")}</span>
+              <span>{away.label}</span>
+            </span>
+          </div>
+
+          <svg
+            viewBox={`0 0 ${PITCH_BOX.width} ${PITCH_BOX.height}`}
+            className="w-full"
+            role="img"
+            aria-label="Where both sides shot from"
+          >
+            <Pitch />
+            <ShotMarks
+              shots={shots.filter((shot) => shot.side === "home")}
+              ink={home.colour}
+            />
+            <ShotMarks
+              shots={shots.filter((shot) => shot.side === "away")}
+              ink={away.colour}
+            />
+            {/* Each key pass: a dashed line from where it started to where the shot was struck, in the side's colour. */}
+            {shots.map((shot, at) =>
+              shot.pass === null ? null : (
+                <g
+                  key={at}
+                  stroke={(shot.side === "home" ? home : away).colour}
+                  strokeWidth="0.45"
+                  opacity="0.9"
                 >
-                  <span className="min-w-0 truncate">{shot.name}</span>
-                </button>
-              </td>
-              <td
-                className={`pr-2 text-right text-2xs uppercase ${shot.outcome === "goal" ? "font-bold text-ink" : "text-muted"}`}
+                  <line
+                    x1={shot.pass.x}
+                    y1={(shot.pass.y / 100) * PITCH_BOX.height}
+                    x2={shot.x}
+                    y2={(shot.y / 100) * PITCH_BOX.height}
+                    strokeDasharray="1.2 0.8"
+                  />
+                  <circle
+                    cx={shot.pass.x}
+                    cy={(shot.pass.y / 100) * PITCH_BOX.height}
+                    r="0.7"
+                    fill={(shot.side === "home" ? home : away).colour}
+                  />
+                </g>
+              ),
+            )}
+            {pickedShot === undefined ? null : (
+              <circle
+                cx={pickedShot.x}
+                cy={(pickedShot.y / 100) * PITCH_BOX.height}
+                r={RING_RADIUS}
+                fill="none"
+                stroke="var(--color-accent)"
+                strokeWidth="0.6"
+              />
+            )}
+            {/* A tap target on every mark, laid over the drawing so the drawing stays `ShotMarks`' own. */}
+            {shots.map((shot, at) => (
+              <circle
+                key={at}
+                cx={shot.x}
+                cy={(shot.y / 100) * PITCH_BOX.height}
+                r={TAP_RADIUS}
+                fill="transparent"
+                className="cursor-pointer"
+                onClick={() => pick(at)}
               >
-                {OUTCOME[shot.outcome]}
-              </td>
-              {/* xG is a model's reading, so cyan (DESIGN §3). */}
-              <td className="numeric text-center text-sm text-info">
-                {shot.xg === null ? DASH : shot.xg.toFixed(2)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                <title>{`${shot.minute ?? DASH}′ ${shot.name}${shot.assister === null ? "" : ` (A ${shot.assister})`} · ${OUTCOME[shot.outcome]}`}</title>
+              </circle>
+            ))}
+          </svg>
+          <MarksKey />
+        </div>
+
+        {/* The board standard: `BOARD` and `SortHead`, the heads every sortable table wears. */}
+        <table
+          className={`${BOARD} table-fixed cm-index-scoped bg-surface`}
+          {...MATCH_ROW}
+        >
+          <thead>
+            <HeadRow>
+              <SortHead
+                width="w-8"
+                title="Minute"
+                href={hrefs.minute}
+                label="Min"
+                sorted={order === "minute" ? "ascending" : undefined}
+              />
+              <Head width="">
+                <span className={MUTE}>Shooter</span>
+              </Head>
+              <Head width="w-20">
+                <span className={MUTE}>Outcome</span>
+              </Head>
+              <SortHead
+                width="w-12"
+                title="Expected goals"
+                href={hrefs.xg}
+                label="xG"
+                sorted={order === "xg" ? "descending" : undefined}
+              />
+            </HeadRow>
+          </thead>
+          <tbody>
+            {listed.map(({ shot, at }) => (
+              // The row picks the shot; the name is a button so a keyboard can too, and its click bubbles here.
+              <tr
+                key={at}
+                onClick={() => pick(at)}
+                className={`${ROW_RULE} cursor-pointer ${picked === at ? "bg-raised outline outline-1 -outline-offset-1 outline-accent" : ""}`}
+              >
+                <td
+                  className="cm-index numeric px-0 text-center text-2xs lg:text-xs"
+                  style={(shot.side === "home" ? home : away).index}
+                >
+                  {shot.minute === null ? DASH : `${shot.minute}′`}
+                </td>
+                <td className="min-w-0 p-0">
+                  <button
+                    type="button"
+                    aria-pressed={picked === at}
+                    // The assister under the shooter on a phone, beside him on a desk, so neither name is cut to three letters.
+                    className="flex min-h-9 w-full min-w-0 flex-col px-2 py-1 text-left lg:min-h-7 lg:flex-row lg:items-baseline lg:gap-1.5"
+                  >
+                    <span className="min-w-0 truncate font-chrome text-sm font-bold">
+                      {shot.name}
+                    </span>
+                    {/* The assister in the scoresheet's own spelling: a quiet `A` and his name. */}
+                    {shot.assister === null ? null : (
+                      <span className="min-w-0 shrink truncate text-2xs text-muted">
+                        <span className="font-bold text-faint">A</span>{" "}
+                        {shot.assister}
+                      </span>
+                    )}
+                  </button>
+                </td>
+                <td
+                  className={`pr-2 text-right text-2xs uppercase ${shot.outcome === "goal" ? "font-bold text-ink" : "text-muted"}`}
+                >
+                  {OUTCOME[shot.outcome]}
+                </td>
+                {/* xG is a model's reading, so cyan (DESIGN §3). */}
+                <td className="numeric text-center text-sm text-info">
+                  {shot.xg === null ? DASH : shot.xg.toFixed(2)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </figure>
   );
 }
@@ -190,12 +257,32 @@ export default function ShotMap({
 function Pitch() {
   return (
     <>
-      <rect width={PITCH_BOX.width} height={PITCH_BOX.height} fill="var(--color-pitch-turf)" />
+      <rect
+        width={PITCH_BOX.width}
+        height={PITCH_BOX.height}
+        fill="var(--color-pitch-turf)"
+      />
       {[0, 2, 4, 6, 8].map((band) => (
-        <rect key={band} x={band * 10} width="10" height={PITCH_BOX.height} fill="var(--color-pitch-mow)" />
+        <rect
+          key={band}
+          x={band * 10}
+          width="10"
+          height={PITCH_BOX.height}
+          fill="var(--color-pitch-mow)"
+        />
       ))}
-      <g fill="none" stroke="var(--color-pitch-line)" strokeWidth="0.4" opacity="0.65">
-        <rect x="0.5" y="0.5" width={PITCH_BOX.width - 1} height={PITCH_BOX.height - 1} />
+      <g
+        fill="none"
+        stroke="var(--color-pitch-line)"
+        strokeWidth="0.4"
+        opacity="0.65"
+      >
+        <rect
+          x="0.5"
+          y="0.5"
+          width={PITCH_BOX.width - 1}
+          height={PITCH_BOX.height - 1}
+        />
         <line x1="50" y1="0.5" x2="50" y2={PITCH_BOX.height - 0.5} />
         <circle cx="50" cy={PITCH_BOX.height / 2} r="9" />
         <rect x="0.5" y="13" width="16" height="38" />
