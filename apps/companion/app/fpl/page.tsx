@@ -1,4 +1,4 @@
-import { FPL_SITE, clubById, fplLineup, kickedOff, oppositionByClub, playerByCode, DASH } from "@epl/core";
+import { FPL_SITE, clubById, fplLineup, kickedOff, oppositionByClub, playerByCode, DASH, thousands } from "@epl/core";
 import type { FplPick } from "@epl/core";
 import { footballNow } from "../football";
 import Nothing from "../components/shell/Nothing";
@@ -175,7 +175,7 @@ export default async function FplPage() {
                     everybody's totals rather than a fact anybody recorded, which
                     is what `--color-info` means (DESIGN §3). */}
                 <span className="numeric shrink-0 text-sm font-bold text-info">
-                  {league.rank === null ? <Absent /> : league.rank.toLocaleString("en-GB")}
+                  {league.rank === null ? <Absent /> : thousands(league.rank)}
                 </span>
               </li>
             ))}
@@ -217,7 +217,7 @@ function Figure({ label, value }: { label: string; value: number | null }) {
   return (
     <div className="cm-panel px-3 py-2">
       <dt className={LABEL}>{label}</dt>
-      <dd className="numeric text-xl font-bold">{value === null ? DASH : value.toLocaleString("en-GB")}</dd>
+      <dd className="numeric text-xl font-bold">{value === null ? DASH : thousands(value)}</dd>
     </div>
   );
 }

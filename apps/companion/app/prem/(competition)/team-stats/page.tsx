@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { clubStats, crestUrl, leagueTable, ordinal } from "@epl/core";
+import { clubStats, crestUrl, leagueTable, ordinal, thousands } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import { Head, HeadRow, NameHead } from "../../../components/league/TableHeads";
 import { IndexCell, ROW_LINK } from "../../../components/league/TableCells";
@@ -132,7 +132,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                     two figures and spends the accent on whichever is sorted;
                     here every figure on screen is that column. */}
                 <td className={`${FIGURE} text-accent`}>
-                  {figure.toLocaleString("en-GB")}
+                  {thousands(figure)}
                 </td>
               </tr>
             ))}

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { clubGround } from "@epl/core";
+import { clubGround, thousands } from "@epl/core";
 import type { PlMatchFacts } from "@epl/core";
 import { matchFacts } from "../../../matchDetail";
 import PhotoGround from "../../../components/football/PhotoGround";
@@ -162,7 +162,7 @@ function MatchFacts({ facts }: { facts: PlMatchFacts | null }) {
     facts?.referee == null ? null : `Referee - ${facts.referee}`,
     facts?.attendance == null
       ? null
-      : `Attendance - ${facts.attendance.toLocaleString("en-GB")}`,
+      : `Attendance - ${thousands(facts.attendance)}`,
   ].filter((part) => part !== null);
 
   if (said.length === 0) return null;

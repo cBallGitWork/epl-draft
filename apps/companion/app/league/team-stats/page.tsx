@@ -9,6 +9,7 @@ import {
   type Measure,
   type StatCategory,
   DASH,
+  thousands,
 } from "@epl/core";
 import Nothing from "../../components/shell/Nothing";
 import TeamBadge from "../../components/league/TeamBadge";
@@ -205,7 +206,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
                       // is said by the pressed plate above it, exactly as
                       // `/league` says it across ten columns.
                       <td key={columns[at]?.key ?? at} className={`${BOARD_FIGURE} text-ink`}>
-                        {figure === null ? DASH : figure.toLocaleString("en-GB")}
+                        {figure === null ? DASH : thousands(figure)}
                       </td>
                     ))}
                   </tr>
