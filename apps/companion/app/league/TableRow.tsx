@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { ordinal, type FormGame, type SortKey, type StandingsRow, DASH } from "@epl/core";
+import { ordinal, type FormGame, type SortKey, type StandingsRow } from "@epl/core";
 import TeamBadge from "../components/league/TeamBadge";
 import { ROW_LINK } from "../components/league/TableCells";
 import { cellAlign, deskOnly } from "./Columns";
 import { yoursEdge, yoursInk } from "../mine";
 import { FIGURE, ROW_FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
+import Absent from "@/app/components/shell/Absent";
 
 // One team's line in the table.
 //
@@ -191,7 +192,7 @@ export default function TableRow({
  *  only thing they are for. Not the accent yellow, which is spoken for on this
  *  very row by the edge and the name. */
 function Form({ run }: { run: readonly FormGame[] }) {
-  if (run.length === 0) return <span className="text-faint">{DASH}</span>;
+  if (run.length === 0) return <Absent />;
 
   return (
     <span className="flex justify-center gap-0.5">

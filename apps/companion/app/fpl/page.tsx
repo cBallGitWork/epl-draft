@@ -11,6 +11,7 @@ import { myEntryId, mySide } from "./entry";
 import type { Played } from "./played";
 import { LABEL, PANEL, ROW_NAME, SMALL_CAPS } from "@/app/desk";
 import OutLink from "../components/shell/OutLink";
+import Absent from "@/app/components/shell/Absent";
 
 // The other game, kept small on purpose.
 //
@@ -174,7 +175,7 @@ export default async function FplPage() {
                     everybody's totals rather than a fact anybody recorded, which
                     is what `--color-info` means (DESIGN §3). */}
                 <span className="numeric shrink-0 text-sm font-bold text-info">
-                  {league.rank === null ? <span className="text-faint">&mdash;</span> : league.rank.toLocaleString("en-GB")}
+                  {league.rank === null ? <Absent /> : league.rank.toLocaleString("en-GB")}
                 </span>
               </li>
             ))}
@@ -275,7 +276,7 @@ function Bench({
                 {club?.shortName ?? ""}
               </span>
               <span className="numeric flex w-8 shrink-0 items-center justify-end text-sm font-bold text-info">
-                {played(pick.code) ? pick.points : <span className="text-faint">&mdash;</span>}
+                {played(pick.code) ? pick.points : <Absent />}
               </span>
             </li>
           );

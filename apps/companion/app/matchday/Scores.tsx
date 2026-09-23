@@ -11,6 +11,7 @@ import {
 import ScoreRow from "../components/shell/ScoreRow";
 import Section from "../components/shell/Section";
 import FootballRow from "./FootballRow";
+import Absent from "@/app/components/shell/Absent";
 
 // Both competitions, one screen, in Championship Manager's own results row.
 //
@@ -210,5 +211,5 @@ function pointsOf(teamId: string | undefined, scores: Map<string, LiveTeamScore>
 /** Absence, never a nought — a total Fantrax has not given us is not a nil
  *  (DESIGN §7). */
 function figure(points: number | null) {
-  return points === null ? <span className="text-faint">&mdash;</span> : points;
+  return points === null ? <Absent /> : points;
 }

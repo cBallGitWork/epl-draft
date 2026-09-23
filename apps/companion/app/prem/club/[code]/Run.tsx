@@ -4,6 +4,7 @@ import type { Club, Fixture } from "@epl/core";
 import { COMPETITION_NAME, crestUrl, londonDayAndDate, londonTime, DASH } from "@epl/core";
 import { CLUB, MATCH } from "../../routes";
 import { BOARD, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import Absent from "@/app/components/shell/Absent";
 
 // One club's season, played and to come, in the order it runs.
 //
@@ -112,7 +113,7 @@ export default function Run({
                     ) : played ? (
                       `${mine}–${theirs}`
                     ) : (
-                      <span className="text-faint">{DASH}</span>
+                      <Absent />
                     )}
                   </Link>
                 </td>

@@ -2,6 +2,7 @@ import { LEAGUE_COMPETITION, type CompetitionTie, type TieSide, leads } from "@e
 import type { ScheduleRound } from "./schedule";
 import ScoreRow from "../../components/shell/ScoreRow";
 import { LABEL } from "@/app/desk";
+import Absent from "@/app/components/shell/Absent";
 
 // One tie, as Championship Manager's results row.
 //
@@ -96,7 +97,7 @@ function scoreOf(side: TieSide, points: Map<string, number | null>): number | nu
 /** A dash, never a nought: a side we have no number for has not scored nothing,
  *  we simply do not have it (DESIGN §7). */
 function figure(value: number | null) {
-  return value === null ? <span className="text-faint">&mdash;</span> : value;
+  return value === null ? <Absent /> : value;
 }
 
 function side(

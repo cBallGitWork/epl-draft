@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { crestUrl, loggedPlayers, matchLine, sheetSides, DASH } from "@epl/core";
+import { crestUrl, loggedPlayers, matchLine, sheetSides } from "@epl/core";
 import type { Club, IntelMatchPlayer, PlayerMatchStats, SheetRow } from "@epl/core";
 import Section from "../../../components/shell/Section";
 import { PLAYER } from "../../routes";
@@ -18,6 +18,7 @@ import { ROW_LINK } from "../../../components/league/TableCells";
 import type { Match } from "./match";
 import { MUTE, SortHead } from "../../../components/league/TableHeads";
 import { statsHref } from "./statsSort";
+import Absent from "@/app/components/shell/Absent";
 
 // Every man in the match, and what he did in it (Craig, 4 Sep 2026: *"Add a
 // players stats section. This can be a table of rows like fantrax/fpl do for a
@@ -197,7 +198,7 @@ export default function PlayerStats({
                     >
                       {/* A nought is shown as absence here: thirty rows of 0 bury the figures that are not. */}
                       {value === null || value === 0 ? (
-                        <span className="text-faint">{DASH}</span>
+                        <Absent />
                       ) : (
                         value.toFixed(dp)
                       )}

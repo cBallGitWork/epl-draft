@@ -1,5 +1,6 @@
 import { leads, type PeriodPairing, type LeagueTeam } from "@epl/core";
 import ScoreRow from "../../components/shell/ScoreRow";
+import Absent from "@/app/components/shell/Absent";
 
 // One finished head-to-head, as Championship Manager's results row.
 //
@@ -63,7 +64,7 @@ export default function Result({
 /** Absence, never a nought. A period Fantrax has not scored was not drawn 0-0,
  *  and `PeriodResult.points` is null exactly when it could not be read. */
 function figure(value: number | null) {
-  return value === null ? <span className="text-faint">&mdash;</span> : value;
+  return value === null ? <Absent /> : value;
 }
 
 function side(

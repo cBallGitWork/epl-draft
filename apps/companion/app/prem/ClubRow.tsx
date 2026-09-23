@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { type Result, type TableRow, type TableSortKey, crestUrl, ordinal, DASH } from "@epl/core";
+import { type Result, type TableRow, type TableSortKey, crestUrl, ordinal } from "@epl/core";
 import { cellAlign, deskOnly } from "./Columns";
 import { CLUB } from "./routes";
 import { ROW_LINK } from "../components/league/TableCells";
 import { FIGURE, ROW_FIGURE, ROW_NAME, ROW_RULE, TONE } from "@/app/desk";
+import Absent from "@/app/components/shell/Absent";
 
 // One club's line in the Premier League table.
 //
@@ -155,7 +156,7 @@ function Crest({ code, name }: { code: number; name: string }) {
  *  room for; `clubStats` hands over the whole season and the width is this
  *  file's business. */
 function Form({ run }: { run: readonly Result[] }) {
-  if (run.length === 0) return <span className="text-faint">{DASH}</span>;
+  if (run.length === 0) return <Absent />;
 
   return (
     <span className="flex justify-center gap-0.5">

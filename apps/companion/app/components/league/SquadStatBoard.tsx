@@ -13,6 +13,7 @@ import {
   STICKY_LEAD,
 } from "@/app/desk";
 import { MUTE } from "./TableHeads";
+import Absent from "@/app/components/shell/Absent";
 
 // One squad against the league's own scoring categories — every man, every
 // category, which is what the head-to-head's compare board says about a side and
@@ -202,7 +203,7 @@ function PlayerRow({
               reserve ? "" : "text-accent"
             }`}
           >
-            {total === null ? <span className="text-faint">{DASH}</span> : total}
+            {total === null ? <Absent /> : total}
           </span>
         </div>
       </td>
@@ -212,7 +213,7 @@ function PlayerRow({
         return (
           <td key={column.code} className={BOARD_FIGURE}>
             {points === undefined ? (
-              <span className="text-faint">{DASH}</span>
+              <Absent />
             ) : (
               <span className={points < 0 ? "text-bad" : ""}>{points}</span>
             )}
