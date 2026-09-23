@@ -25,7 +25,7 @@ import StatBoard from "./StatBoard";
 // goals, assists, clean sheets — which are facts about the footballer, and
 // leaves points to the squad tab, which reads them off the slot.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 

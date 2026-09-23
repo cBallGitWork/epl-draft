@@ -32,7 +32,7 @@ import { BOARD, SCROLL } from "@/app/desk";
 // other. The real Premier League is the same for everybody, which is exactly why
 // it is cacheable.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

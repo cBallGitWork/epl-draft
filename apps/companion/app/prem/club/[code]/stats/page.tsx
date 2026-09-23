@@ -20,7 +20,7 @@ import type { Row } from "./PlayerBoard";
 // the same promise `squad/[teamId]/stats` makes: two tabs about one squad should
 // not disagree about who is first.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 

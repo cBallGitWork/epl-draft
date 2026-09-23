@@ -25,7 +25,7 @@ import { PANEL, ROW_NAME } from "@/app/desk";
 // which reads it off the season, and it covers about one man in five — so a
 // club with nobody ranked says so rather than drawing an empty board.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 

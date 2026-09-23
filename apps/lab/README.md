@@ -14,7 +14,8 @@ is not `apps/companion`. The companion has a date; the lab does not.
 
 `@epl/core`'s **football layer** transfers unchanged — the real Premier League does
 not care who is scoring it. So do the competition engines (h2h, brackets,
-schedules) and, once promoted, `@epl/ui`.
+schedules), and any component a second consumer earns, promoted into a shared package
+the day it does.
 
 ## What it must build that the companion never needs
 

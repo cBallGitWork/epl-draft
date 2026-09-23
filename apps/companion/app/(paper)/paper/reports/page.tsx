@@ -18,7 +18,7 @@ import { pageAt } from "../../../components/gazette/paperPages";
 // What differs from page 3 is the shelf: this page prints only the kinds that
 // are about football that has been played or is about to be.
 
-// Must match `ARTICLE_REVALIDATE` in core config, NOT `PAGE_REVALIDATE` — an
+// Must match `ARTICLE_REVALIDATE` in the app's config, NOT `PAGE_REVALIDATE` — an
 // article is published by a deploy rather than by a revalidation, because the
 // prose is static-imported and baked into the bundle. Next analyses this
 // statically, so it cannot be imported. The front page keeps the shorter window;

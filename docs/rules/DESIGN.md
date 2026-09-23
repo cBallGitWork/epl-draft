@@ -82,8 +82,8 @@ never do.
 
 So the desk keeps the rule instead of the bound: **nothing prints text on the
 bare ground.** The photograph runs at full strength, darkened to 0.55 and in
-colour. `components/football/PhotoGround` carries both; `DESK_GROUND` in core
-config is where the picture goes, and until one lands the ground is drawn from
+colour. `components/football/PhotoGround` carries both; `DESK_GROUND` in the
+app's config is where the picture goes, and until one lands the ground is drawn from
 the round's own portraits.
 
 **A club's own screens take a photograph of its own ground** (Craig, 11 Sep

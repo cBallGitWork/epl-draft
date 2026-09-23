@@ -18,7 +18,7 @@ import { whoseTeam } from "./team";
 // One manager's squad, laid out on a pitch. The screen the league opens on a
 // Saturday, and the reason the join exists.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 
 // Everything a team's squad page shows, read and joined: which round, whose team, what the reader

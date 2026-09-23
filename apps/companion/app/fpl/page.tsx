@@ -48,7 +48,7 @@ import Absent from "@/app/components/shell/Absent";
 // **A way out to FPL's own page**, which a tab about somebody else's game should
 // always have had: this shows a side and cannot change one.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

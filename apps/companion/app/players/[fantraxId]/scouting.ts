@@ -1,7 +1,6 @@
 import { unstable_cache } from "next/cache";
 import {
   FIXTURE_RUN,
-  PAGE_REVALIDATE,
   clubById,
   fetchElementSummary,
   mapGameLog,
@@ -9,6 +8,7 @@ import {
 } from "@epl/core";
 import type { Club, FootballPlayer, GameLogEntry, Opposition } from "@epl/core";
 import { footballNow, seasonFixtures } from "../../football";
+import { PAGE_REVALIDATE } from "../../config";
 
 // The football layer's answer about one footballer: what is coming, and what he
 // has done. Beside `season.ts` rather than inside it because the two are

@@ -28,7 +28,7 @@ import { ordinal } from "@epl/core";
 // withholds an arrangement somebody actually picked, and there is nothing to
 // withhold about a real club.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (`scripts/revalidate.test.ts`
 // holds the two together.)
 export const revalidate = 30;

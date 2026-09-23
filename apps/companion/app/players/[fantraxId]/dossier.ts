@@ -1,10 +1,11 @@
-import { FANTRAX_LEAGUE_ID, FantraxError, PAGE_REVALIDATE, fetchPlayerStories, mapPlayerStories } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, FantraxError, fetchPlayerStories, mapPlayerStories } from "@epl/core";
 import { orderKey } from "@epl/core";
 import type { LeagueTransaction, PlayerStory } from "@epl/core";
 import { unstable_cache } from "next/cache";
 import { orRefusal } from "../../refusals";
 import { readDeals } from "../../business";
 import { getLeagueSquads } from "../../squads";
+import { PAGE_REVALIDATE } from "../../config";
 
 // The two league-wide reads a player screen needs a slice of.
 //

@@ -7,7 +7,7 @@ import { fraunces, newsreader } from "../paperFonts";
 // `.paper` scope, the two serifs, the cream browser chrome and the poll cadence
 // are declared once, not re-remembered per page.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

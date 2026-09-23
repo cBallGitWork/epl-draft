@@ -50,7 +50,7 @@ const CSP = [
 
 const nextConfig: NextConfig = {
   // `@epl/core` ships raw TypeScript (no build step), so Next has to compile it.
-  transpilePackages: ["@epl/core", "@epl/ui"],
+  transpilePackages: ["@epl/core"],
 
   // The dev overlay's own badge, off. It is a fixed circle in the bottom-left
   // corner of every dev render, which is where the foot row's first plate is —

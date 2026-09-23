@@ -17,7 +17,7 @@ import FantraxSilent from "../components/shell/FantraxSilent";
 // commissioner setting, so a table that worked it out here would be right until
 // somebody's league paid two.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

@@ -25,7 +25,7 @@ import ClubLabel from "@/app/components/football/ClubLabel";
 // the same footballers under different rules, and DESIGN §7 wants provenance at
 // the point of use.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

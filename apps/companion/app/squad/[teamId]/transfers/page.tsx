@@ -18,7 +18,7 @@ import Ledger from "./Ledger";
 // that paid for it are one piece of business. Read apart they become a manager
 // signing somebody and, separately and mysteriously, losing somebody else.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 

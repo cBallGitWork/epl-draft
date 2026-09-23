@@ -23,7 +23,7 @@ import { PANEL } from "@/app/desk";
 // on screen is the difference between a list that is incomplete and a list that
 // is wrong.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (`scripts/revalidate.test.ts`
 // holds the two together.)
 export const revalidate = 30;

@@ -1,8 +1,5 @@
 import { unstable_cache } from "next/cache";
 import {
-  COMMENTARY_REVALIDATE,
-  LIVE_REVALIDATE,
-  PAGE_REVALIDATE,
   type FootballPlayer,
   type RawPlFixture,
 } from "@epl/core";
@@ -15,6 +12,7 @@ import {
   plFixtureCode,
 } from "@epl/core";
 import bridge from "../../../data/mappings/premierleague.json";
+import { COMMENTARY_REVALIDATE, LIVE_REVALIDATE, PAGE_REVALIDATE } from "./config";
 
 // The Premier League feed's spine: the identity join, the four cached reads, and
 // the id hop between their match numbers and ours. Nothing here answers a

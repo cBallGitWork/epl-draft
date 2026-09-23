@@ -14,7 +14,7 @@ import { footballNow, seasonFixtures } from "../../../football";
 // A fixture FPL has not dated shows TBC rather than a guess — the television
 // has not picked it, and inventing a kickoff is the confident wrong answer.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

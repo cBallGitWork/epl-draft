@@ -38,7 +38,7 @@ import { MATCHUPS } from "../../routes";
 // anywhere in the app arrives on that name's eleven. Which side Fantrax calls
 // home is not used for anything: there is no ground.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

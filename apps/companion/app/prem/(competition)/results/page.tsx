@@ -14,7 +14,7 @@ import { footballNow, seasonFixtures } from "../../../football";
 // No provider call of its own: `seasonFixtures` is the whole season in one read
 // and is already cached for the league schedule and the table.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

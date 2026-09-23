@@ -14,7 +14,7 @@
 // why a row with no `author` is a bug rather than a tidy-up.
 //
 // **Twenty rows, one per club in `CLUB_COLOURS`, keyed the same way.** A promoted
-// club we have not photographed gets null and falls back to `DESK_GROUND`, on
+// club we have not photographed gets null and falls back to the app's `DESK_GROUND`, on
 // `portraits.ts`' rule: never a stand-in that looks like an answer.
 //
 // Hunted from Wikimedia Commons on 11 Sep 2026, filtered to free licences,

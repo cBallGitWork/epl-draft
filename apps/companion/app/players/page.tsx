@@ -49,7 +49,7 @@ import FantraxSilent from "../components/shell/FantraxSilent";
 // board is ranked by. That is why `Board` draws no `Caption` of its own — two
 // captions stacked is the screen saying its own name twice.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
 

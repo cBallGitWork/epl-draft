@@ -27,7 +27,7 @@ import { PANEL } from "@/app/desk";
 // seeded off a table that has barely any season in it yet. A team's own fixture
 // tab shows the fixtures the league actually publishes.
 
-// Must match `PAGE_REVALIDATE` in core config. Next analyses this statically, so
+// Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — `scripts/revalidate.test.ts` holds the two together.
 export const revalidate = 30;
 
