@@ -6,11 +6,10 @@ import type {
   StoryKind,
   ThreadUpdate,
 } from "@epl/core";
-import { normalizeStory } from "@epl/core";
+import { ANTHROPIC_MESSAGES_URL, MODEL_TIMEOUT_MS, normalizeStory } from "@epl/core";
 
 // The one API call, and the shape a filed column takes in the rolling paper.
 
-const API = "https://api.anthropic.com/v1/messages";
 const MODEL = process.env.GAZETTA_MODEL ?? "claude-opus-4-8";
 const MAX_TOKENS = 8000;
 
@@ -20,7 +19,7 @@ export async function writeColumn(system: string, brief: string): Promise<Record
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new Error("ANTHROPIC_API_KEY is not set. The column is written in CI, never on Vercel.");
 
-  const response = await fetch(API, {
+  const response = await fetch(ANTHROPIC_MESSAGES_URL, {
     method: "POST",
     headers: {
       "x-api-key": key,
@@ -33,6 +32,7 @@ export async function writeColumn(system: string, brief: string): Promise<Record
       system,
       messages: [{ role: "user", content: brief }],
     }),
+    signal: AbortSignal.timeout(MODEL_TIMEOUT_MS),
   });
   if (!response.ok) throw new Error(`Anthropic ${response.status}: ${await response.text()}`);
 

@@ -3118,12 +3118,15 @@ team is his. Not a dropdown, because that identity is what will authorize
 *editing* a lineup once the write surface exists.
 
 - `npm run team-codes` issues one code per team and prints them once. **Only the
-  HMACs go into the deployment**, as `TEAM_CODES`, so a leaked environment hands
-  nobody a sign-in and a lost code is reissued rather than recovered.
-- `SESSION_SECRET` does double duty: it keys those HMACs and signs the session
-  cookie. Rotating it invalidates every code and every session at once, which is
-  the correct blast radius and worth knowing before rotating it casually.
-- The session cookie is `teamId.HMAC(teamId)`, httpOnly. Verified server-side,
+  HMACs go into the deployment**, as `TEAM_CODES`, so a leaked `TEAM_CODES` hands
+  nobody a code and a lost code is reissued rather than recovered. A leaked
+  `SESSION_SECRET` does hand over a sign-in: it signs a cookie for any team.
+- `SESSION_SECRET` keys those HMACs and, through a key derived from it
+  (`HMAC(secret, "cookie")`, since 23 Sep 2026), signs the session cookie.
+  Rotating it invalidates every code and every session at once, which is the
+  correct blast radius and worth knowing before rotating it casually.
+- The session cookie is `v1.<teamId>.<signature>`, httpOnly. Bumping
+  `COOKIE_VERSION` in `sessionCookie.ts` signs everybody out. Verified server-side,
   then checked against the league we currently serve — so a rehearsal session
   stops working the moment `FANTRAX_LEAGUE_ID` changes on 10 Oct, with no
   migration and no stale highlight. Forged signatures, unsigned values and signed

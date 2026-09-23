@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
-import type { PublishedStory } from "@epl/core";
+import { MODEL_TIMEOUT_MS, OPENAI_IMAGES_URL, type PublishedStory } from "@epl/core";
 
 // The splash picture: one image for the paper's lead, drawn in CI.
 //
@@ -17,7 +17,6 @@ import type { PublishedStory } from "@epl/core";
 // throw away a column that cost a model call. So this returns null on anything
 // going wrong — no key, a refusal, a bad payload — and the caller carries on.
 
-const API = "https://api.openai.com/v1/images/generations";
 const MODEL = process.env.GAZETTA_IMAGE_MODEL ?? "gpt-image-1";
 
 /** Where the app serves it from. `public/` and not `data/`: Next serves this
@@ -49,7 +48,7 @@ export async function drawSplash(story: PublishedStory): Promise<Splash | null> 
     // The DECK and not the headline: the headline is wordplay, and a pun
     // handed to an illustrator produces a picture of the pun.
     const subject = story.deck === "" ? story.headline : story.deck;
-    const response = await fetch(API, {
+    const response = await fetch(OPENAI_IMAGES_URL, {
       method: "POST",
       headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
       body: JSON.stringify({
@@ -58,6 +57,7 @@ export async function drawSplash(story: PublishedStory): Promise<Splash | null> 
         size: "1024x1024",
         n: 1,
       }),
+      signal: AbortSignal.timeout(MODEL_TIMEOUT_MS),
     });
     if (!response.ok) {
       say(`Image API answered ${response.status}; filing without a picture.`);

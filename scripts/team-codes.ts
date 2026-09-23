@@ -5,9 +5,9 @@ import { FANTRAX_LEAGUE_ID, fetchLeagueInfo, mapLeagueInfo, requireLeague } from
 // lets the app check them.
 //
 // Run it once per league, print the codes, distribute them, then throw this
-// output away. The codes are not stored anywhere: what goes into the deployment
-// is an HMAC of each one, so a leaked environment does not hand anybody a
-// sign-in, and losing a code means issuing a new one rather than recovering it.
+// output away. The codes are not stored anywhere: the deployment holds an HMAC of
+// each, so a leaked TEAM_CODES gives nobody a code. A leaked SESSION_SECRET does
+// sign in as anyone: rotate it and reissue every code. A lost code is reissued.
 //
 // Deliberately not automated into capture or CI. It writes a secret to a
 // terminal, which is a thing a person should be present for.

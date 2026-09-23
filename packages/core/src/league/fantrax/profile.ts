@@ -202,6 +202,12 @@ function seasonName(raw: RawPlayerProfile): string | null {
   return null;
 }
 
+/** A player id in Fantrax's shape: 687 of `getPlayerIds`' 747 are five base-36 characters
+ *  (23 Sep 2026); the other 60 are club entities, which have no profile. Room left to grow. */
+export function isFantraxPlayerId(id: string): boolean {
+  return /^[0-9a-z]{4,8}$/.test(id);
+}
+
 export function mapPlayerProfile(raw: RawPlayerProfile): PlayerIntel {
   const misc = raw.miscData ?? {};
 

@@ -1,4 +1,12 @@
-import { FANTRAX_LEAGUE_ID, FantraxError, fetchPlayerProfile, mapPlayerProfile } from "@epl/core";
+import { notFound } from "next/navigation";
+import {
+  FANTRAX_LEAGUE_ID,
+  FantraxError,
+  fetchPlayerProfile,
+  isFantraxPlayerId,
+  mapPlayerProfile,
+} from "@epl/core";
+import { leagueCache } from "../../leagueCache";
 import type { Club, FootballPlayer, PlayerIntel } from "@epl/core";
 import { orRefusal, tell } from "../../refusals";
 import type { Unavailable } from "../../refusals";
@@ -29,13 +37,20 @@ export interface Subject {
   ownerName: string | null;
 }
 
-/** A player id that is not a player and a Fantrax that is not answering arrive as
- *  the same refusal, so this does not pretend to tell them apart with a 404. The
- *  tell goes on screen instead, which is what makes a mistyped URL diagnosable
- *  rather than mysterious. */
-export async function subject(fantraxId: string): Promise<Subject | Unavailable> {
+/** One profile per player for everybody: four tabs and sixteen phones ask Fantrax once. The
+ *  refusal is caught inside, because a `FantraxError` thrown through the cache need not arrive as one. */
+const readProfile = leagueCache("player-profile", async (fantraxId: string) => {
   const raw = await orRefusal(fetchPlayerProfile(FANTRAX_LEAGUE_ID, fantraxId));
-  if (raw instanceof FantraxError) return { unavailable: tell(raw) };
+  return raw instanceof FantraxError ? { unavailable: tell(raw) } : raw;
+});
+
+/** An id not in Fantrax's shape is a 404. A well-formed id Fantrax does not know and a Fantrax
+ *  that is not answering arrive as the same refusal, with the tell on screen. */
+export async function subject(fantraxId: string): Promise<Subject | Unavailable> {
+  // An id that is not in Fantrax's shape is a 404, and Fantrax is never asked.
+  if (!isFantraxPlayerId(fantraxId)) notFound();
+  const raw = await readProfile(fantraxId);
+  if ("unavailable" in raw) return raw;
   const intel = mapPlayerProfile(raw);
   // Both after the profile has succeeded, so neither can fail it. The football
   // half reads the snapshot every other screen keeps warm; the owner's name

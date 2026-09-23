@@ -96,7 +96,7 @@ export {
   mapProjectedTotals,
 } from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";
-export { mapPlayerProfile } from "./fantrax/profile";
+export { isFantraxPlayerId, mapPlayerProfile } from "./fantrax/profile";
 export type { LabelledValue, PlayerIntel, PlayerMatch } from "./fantrax/profile";
 export { mapTransactions, orderKey, transactionDateLabel } from "./fantrax/transactions";
 // Everything written about one player. `playerNews.ts` records the `tab`

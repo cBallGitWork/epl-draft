@@ -1,4 +1,52 @@
 import type { NextConfig } from "next";
+import {
+  FANTRAX_BADGE_BASE,
+  FPL_SHIRT_BASE,
+  PL_ASSET_BASE,
+  PL_PHOTO_BASE,
+  YOUTUBE_EMBED_BASE,
+} from "../../packages/core/src/config";
+
+/** Every image host the app draws from, as core's config names them. */
+const IMAGE_BASES = [PL_ASSET_BASE, PL_PHOTO_BASE, FPL_SHIRT_BASE, FANTRAX_BADGE_BASE];
+
+function under(base: string) {
+  const url = new URL(base);
+  return { protocol: "https" as const, hostname: url.hostname, pathname: `${url.pathname}/**` };
+}
+
+const dev = process.env.NODE_ENV === "development";
+
+/** Vercel's preview toolbar, by directive, on preview deployments only. */
+const TOOLBAR: Record<string, string> =
+  process.env.VERCEL_ENV === "preview"
+    ? {
+        script: " https://vercel.live",
+        style: " https://vercel.live",
+        img: " https://vercel.live https://vercel.com",
+        font: " https://vercel.live https://assets.vercel.com",
+        connect: " https://vercel.live wss://ws-us3.pusher.com",
+        frame: " https://vercel.live",
+      }
+    : {};
+
+const IMAGE_ORIGINS = [...new Set(IMAGE_BASES.map((base) => new URL(base).origin))].join(" ");
+
+/** Next inlines its RSC payload as scripts, and a nonce would make every page dynamic,
+ *  so scripts keep 'unsafe-inline'. Every origin comes from core's config. */
+const CSP = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}${TOOLBAR.script ?? ""}`,
+  `style-src 'self' 'unsafe-inline'${TOOLBAR.style ?? ""}`,
+  `img-src 'self' data: blob: ${IMAGE_ORIGINS}${TOOLBAR.img ?? ""}`,
+  `font-src 'self'${TOOLBAR.font ?? ""}`,
+  `connect-src 'self'${dev ? " ws:" : ""}${TOOLBAR.connect ?? ""}`,
+  `frame-src ${new URL(YOUTUBE_EMBED_BASE).origin}${TOOLBAR.frame ?? ""}`,
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
 
 const nextConfig: NextConfig = {
   // `@epl/core` ships raw TypeScript (no build step), so Next has to compile it.
@@ -15,6 +63,22 @@ const nextConfig: NextConfig = {
   // takes `false | { position }` for it.
   devIndicators: false,
 
+  poweredByHeader: false,
+
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Content-Security-Policy", value: CSP },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          // Not `no-referrer`: YouTube's embed refuses to play without the origin.
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+    ];
+  },
+
   // The old URLs have been shared in a sixteen-person group chat, so they keep
   // working rather than 404ing on someone who scrolled back to find one.
   async redirects() {
@@ -30,34 +94,9 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    // Player portraits and club crests come from the Premier League's CDN. Routing
-    // them through the optimizer is not cosmetic: fifteen source headshots on a
-    // pitch is 1.5 MB on a phone, and optimized they land around 15 KB each.
-    // Never set `unoptimized` on these.
-    //
-    // Two paths, because the Premier League moved its portraits and left its
-    // crests where they were. The allow-list is path-scoped, so the day the
-    // portraits moved this file had to move with them — a pattern that only
-    // named `/premierleague/**` fails every portrait at the optimizer, which is
-    // a 400 from our own server and not a CDN problem to go looking for.
-    remotePatterns: [
-      { protocol: "https", hostname: "resources.premierleague.com", pathname: "/premierleague/**" },
-      { protocol: "https", hostname: "resources.premierleague.com", pathname: "/premierleague25/**" },
-      // Kits are FPL's own host, not the Premier League's CDN.
-      { protocol: "https", hostname: "fantasy.premierleague.com", pathname: "/dist/img/shirts/**" },
-      // The badge each manager picked for his fantasy team, off Fantrax's own
-      // image host. Path-scoped like the rest: this prefix is the fantasy-team
-      // icon set and nothing else on that host is ours to serve.
-      //
-      // Must stay in step with `FANTRAX_BADGE_BASE` in core's config, which the
-      // mapper filters on so that a badge from anywhere else becomes no badge
-      // rather than a 500 from our own optimizer.
-      {
-        protocol: "https",
-        hostname: "fantraximg.com",
-        pathname: "/assets/images/icons/fantasyteams/**",
-      },
-    ],
+    // Portraits are ~330 KB at source and ~15 KB optimized, so never set `unoptimized` on them.
+    // Path-scoped: a prefix not in the config is a 400 from our own optimizer.
+    remotePatterns: IMAGE_BASES.map(under),
   },
 };
 

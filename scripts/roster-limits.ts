@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
+import { FANTRAX_SETUP_PAGE, politeFetch } from "@epl/core";
 import { RECORDED_LEAGUES } from "./leagues";
 import { LEAGUE_LIMITS } from "./paths";
 
@@ -25,10 +26,6 @@ import { LEAGUE_LIMITS } from "./paths";
 //
 // It needs `FANTRAX_COOKIE`, which is the commissioner's own session. Nothing
 // the app serves reads that cookie; the app reads the file this writes.
-
-/** Where the wizard's roster step lives. `goto=3` is the step, and the league id
- *  selects whose settings are shown — both are the page's own query string. */
-const SETUP_PAGE = "https://www.fantrax.com/newui/fantasy/createLeague.go";
 
 const OUT = join(LEAGUE_LIMITS, "roster-limits.json");
 
@@ -88,7 +85,7 @@ async function main(): Promise<void> {
 
   const byLeague: Record<string, unknown> = {};
   for (const league of RECORDED_LEAGUES) {
-    const page = await fetch(`${SETUP_PAGE}?goto=3&leagueId=${league.leagueId}`, {
+    const page = await politeFetch(`${FANTRAX_SETUP_PAGE}?goto=3&leagueId=${league.leagueId}`, {
       headers: { cookie },
     });
     if (!page.ok) throw new Error(`${league.key}: setup page answered ${page.status}`);
@@ -127,7 +124,7 @@ async function main(): Promise<void> {
     // This IS the edge, so a clock is allowed here; the file's whole value is
     // knowing how old it is, because nothing re-reads the page on a request.
     fetchedAt: new Date().toISOString(),
-    source: `${SETUP_PAGE}?goto=3 — scraped, because no Fantrax JSON endpoint carries a position minimum`,
+    source: `${FANTRAX_SETUP_PAGE}?goto=3 — scraped, because no Fantrax JSON endpoint carries a position minimum`,
     leagues: byLeague,
   };
   await mkdir(dirname(OUT), { recursive: true });

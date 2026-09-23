@@ -1,4 +1,4 @@
-import { HTTP_BACKOFF_BASE_MS, HTTP_RETRIES, HTTP_USER_AGENT } from "../config";
+import { FETCH_TIMEOUT_MS, HTTP_BACKOFF_BASE_MS, HTTP_RETRIES, HTTP_USER_AGENT } from "../config";
 import { retryDelay, worthRetrying } from "./backoff";
 
 // One request, asked politely. The third caller is what earned this file: FPL's
@@ -20,6 +20,8 @@ export async function politeFetch(url: string, init: RequestInit = {}): Promise<
     const res = await fetch(url, {
       ...init,
       headers: { "User-Agent": HTTP_USER_AGENT, ...init.headers },
+      // A deadline per attempt: a provider that never answers would otherwise hold the render.
+      signal: init.signal ?? AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
     if (res.ok || attempt > HTTP_RETRIES || !worthRetrying(res.status)) return res;
 

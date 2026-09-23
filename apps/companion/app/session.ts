@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { DEMO_TEAM_ID, TEAM_COOKIE } from "./config";
 import { lentTeam } from "./demoTeam";
+import { cookieTeamOf, cookieValue, hmac, sameSecret } from "./sessionCookie";
 
 // Who is holding the phone.
 //
@@ -39,28 +40,6 @@ function codeHashes(): Record<string, string> {
   }
 }
 
-async function hmac(value: string, key: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const imported = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(key),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const signature = await crypto.subtle.sign("HMAC", imported, encoder.encode(value));
-  return [...new Uint8Array(signature)].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-/** Length-independent comparison. Both sides here are hex of a fixed width, so
- *  this is belt and braces rather than the only thing standing up. */
-function sameSecret(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let difference = 0;
-  for (let i = 0; i < a.length; i++) difference |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return difference === 0;
-}
-
 /** The team whose code this is, or null.
  *
  *  Deliberately keyed by the code rather than by a team the manager picks: one
@@ -79,7 +58,7 @@ export async function teamForCode(code: string): Promise<string | null> {
  *  cookie is the dropdown we just refused, with an extra step. */
 export async function sign(teamId: string): Promise<string | null> {
   const key = secret();
-  return key === null ? null : `${teamId}.${await hmac(teamId, key)}`;
+  return key === null ? null : cookieValue(teamId, key);
 }
 
 /** Whose team this browser is, or null for a reader who has not signed in.
@@ -118,15 +97,7 @@ async function cookieTeam(): Promise<string | null> {
   const raw = (await cookies()).get(TEAM_COOKIE)?.value;
   const key = secret();
   if (key === null || !raw) return null;
-
-  const at = raw.lastIndexOf(".");
-  if (at <= 0) return null;
-
-  const teamId = raw.slice(0, at);
-  // `sameSecret` and never `===`: it is the constant-time compare this file
-  // already keeps for the code check, and a rewrite of this function is exactly
-  // where it goes missing.
-  return sameSecret(raw.slice(at + 1), await hmac(teamId, key)) ? teamId : null;
+  return cookieTeamOf(raw, key);
 }
 
 /** Whether this browser holds a real code, as opposed to being lent the demo

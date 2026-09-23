@@ -52,7 +52,8 @@ history is a session:
 node --env-file=apps/companion/.env.local -e '
   const {createHmac}=require("node:crypto");
   const id=process.argv[1];
-  process.stdout.write(id+"."+createHmac("sha256",process.env.SESSION_SECRET).update(id).digest("hex"));
+  const key=createHmac("sha256",process.env.SESSION_SECRET).update("cookie").digest("hex");
+  process.stdout.write("v1."+id+"."+createHmac("sha256",key).update(id).digest("hex"));
 ' <teamId> > "$TMPDIR/team.cookie"
 
 node tools/ui/shot.mjs /squad/<teamId> out.png --team-cookie "$TMPDIR/team.cookie"
