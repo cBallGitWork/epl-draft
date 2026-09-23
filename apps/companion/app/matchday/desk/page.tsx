@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   type LiveTeamScore,
   clubById,
+  londonTime,
   fixturesInOrder,
   pairingInvolves,
   periodPairings,
@@ -14,7 +15,7 @@ import { liveScores } from "../../scoreboard";
 import { getLeagueSquads, readerTeamId } from "../../squads";
 import { marksFor } from "../../involvement";
 import { yoursFirst } from "../../mine";
-import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL } from "@/app/desk";
+import { GAMEWEEK_HEAD, GAMEWEEK_TITLE, LABEL, PANEL } from "@/app/desk";
 
 // The desk: every score in the league and every score in the round, on one
 // screen, with nothing else on it.
@@ -57,13 +58,16 @@ export default async function DeskPage() {
       : [];
 
   const mine = await readerTeamId();
-  const { scores } = period === null ? { scores: new Map<string, LiveTeamScore>() } : await liveScores(period);
+  const { scores, refused } =
+    period === null
+      ? { scores: new Map<string, LiveTeamScore>(), refused: null }
+      : await liveScores(period);
 
   const involved = league === null ? undefined : (await marksFor(league, fixtures)).mine;
 
+  // One panel round all of it: nothing prints on the bare ground (DESIGN §2).
   return (
-    <div className="flex flex-col gap-4">
-
+    <div className={PANEL}>
       <header className={GAMEWEEK_HEAD}>
         <h1 className={GAMEWEEK_TITLE}>The desk</h1>
         <span className={LABEL}>
@@ -72,6 +76,12 @@ export default async function DeskPage() {
       </header>
 
       <Section title={`Gameweek ${snapshot.gameweek} · head-to-head`}>
+        {refused === null ? null : (
+          <Quiet>
+            Fantrax&apos;s scoreboard is not answering, so there are no points to show. The
+            pairings are still right. <span className="numeric">{refused}</span>
+          </Quiet>
+        )}
         {pairings.length === 0 ? (
           <Quiet>Fantrax has no pairings for this gameweek, so there is nothing to post.</Quiet>
         ) : (
@@ -102,7 +112,8 @@ export default async function DeskPage() {
       </Section>
 
       <p className="pt-1 text-center text-2xs text-faint">
-        Fantrax&apos;s points above, the Premier League&apos;s scores below. Tap through from{" "}
+        Fantrax&apos;s points above, the Premier League&apos;s scores below, updated{" "}
+        {londonTime(snapshot.fetchedAt)}. Tap through from{" "}
         <Link href="/matchday" className="underline">
           Live
         </Link>{" "}

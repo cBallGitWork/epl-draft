@@ -104,7 +104,7 @@ export default async function SquadsPage() {
           button that drops you back onto the team the league lent you does
           nothing a reader can see. */}
       {holder ? (
-        <form action={forgetTeam} className="px-3">
+        <form action={forgetTeam} className="cm-panel px-3">
           <button type="submit" className="min-h-11 text-2xs text-faint hover:text-muted">
             Not you? Sign out
           </button>
@@ -113,7 +113,8 @@ export default async function SquadsPage() {
         <SignIn />
       )}
 
-      {yours ? <h2 className={`px-3 pt-1 ${LABEL}`}>Around the league</h2> : null}
+      {/* A plate of its own: nothing prints on the bare ground (DESIGN §2). */}
+      {yours ? <h2 className={`cm-panel px-2 py-1 text-center ${LABEL}`}>Around the league</h2> : null}
 
       <ul className="cm-rows flex flex-col">
         {others.map((team) => (
