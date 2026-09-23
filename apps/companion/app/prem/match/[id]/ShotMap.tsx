@@ -4,7 +4,8 @@ import { useState } from "react";
 import type { CSSProperties } from "react";
 import { DASH, type Shot } from "@epl/core";
 import { PITCH_BOX, toBoxY } from "@/app/components/football/pitchBox";
-import ShotMarks, { HALO, MarksKey } from "../../../components/football/ShotMarks";
+import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
+import { KeyPass, Pitch } from "./ShotPitch";
 import { BOARD, ROW_RULE, SECTION_BAR } from "@/app/desk";
 import {
   Head,
@@ -36,11 +37,8 @@ export interface ShotSide {
 
 /** The ring round a picked shot, and the tap target over every mark — pitch units, wider than the biggest mark. */
 const RING_RADIUS = 3.2;
+const RING_WIDTH = 0.6;
 const TAP_RADIUS = 2.4;
-
-/** A key pass line's width, and the side of the square at its start, in pitch units. */
-const PASS_LINE = 0.3;
-const PASS_SQUARE = 1.4;
 
 /** The key's own words for what became of a shot. */
 const OUTCOME: Record<Shot["outcome"], string> = {
@@ -125,40 +123,9 @@ export default function ShotMap({
               shots={shots.filter((shot) => shot.side === "away")}
               ink={away.colour}
             />
-            {/* Each key pass: a dashed line from where it started to where the shot was struck, in the side's colour. */}
             {shots.map((shot, at) =>
               shot.pass === null ? null : (
-                <g key={at}>
-                  {/* A cream line under the club's dashes, as the marks wear a halo, so the pass reads on the grass. */}
-                  <line
-                    x1={shot.pass.x}
-                    y1={toBoxY(shot.pass.y)}
-                    x2={shot.x}
-                    y2={toBoxY(shot.y)}
-                    stroke="var(--color-cream)"
-                    strokeWidth={PASS_LINE + 2 * HALO}
-                    opacity="0.6"
-                  />
-                  <line
-                    x1={shot.pass.x}
-                    y1={toBoxY(shot.pass.y)}
-                    x2={shot.x}
-                    y2={toBoxY(shot.y)}
-                    stroke={sideOf(shot).colour}
-                    strokeWidth={PASS_LINE}
-                    strokeDasharray="1.2 0.8"
-                  />
-                  {/* A square at the pass's origin, so it never reads as a shot's round mark. */}
-                  <rect
-                    x={shot.pass.x - PASS_SQUARE / 2}
-                    y={toBoxY(shot.pass.y) - PASS_SQUARE / 2}
-                    width={PASS_SQUARE}
-                    height={PASS_SQUARE}
-                    fill={sideOf(shot).colour}
-                    stroke="var(--color-cream)"
-                    strokeWidth={HALO}
-                  />
-                </g>
+                <KeyPass key={at} shot={shot} from={shot.pass} colour={sideOf(shot).colour} />
               ),
             )}
             {pickedShot === undefined ? null : (
@@ -168,7 +135,7 @@ export default function ShotMap({
                 r={RING_RADIUS}
                 fill="none"
                 stroke="var(--color-accent)"
-                strokeWidth="0.6"
+                strokeWidth={RING_WIDTH}
               />
             )}
             {/* A tap target on every mark, laid over the drawing so the drawing stays `ShotMarks`' own. */}
@@ -266,46 +233,5 @@ export default function ShotMap({
         </table>
       </div>
     </figure>
-  );
-}
-
-/** Turf, mown bands, and both boxes — a side attacks one end and defends the other. */
-function Pitch() {
-  return (
-    <>
-      <rect
-        width={PITCH_BOX.width}
-        height={PITCH_BOX.height}
-        fill="var(--color-pitch-turf)"
-      />
-      {[0, 2, 4, 6, 8].map((band) => (
-        <rect
-          key={band}
-          x={band * 10}
-          width="10"
-          height={PITCH_BOX.height}
-          fill="var(--color-pitch-mow)"
-        />
-      ))}
-      <g
-        fill="none"
-        stroke="var(--color-pitch-line)"
-        strokeWidth="0.4"
-        opacity="0.65"
-      >
-        <rect
-          x="0.5"
-          y="0.5"
-          width={PITCH_BOX.width - 1}
-          height={PITCH_BOX.height - 1}
-        />
-        <line x1="50" y1="0.5" x2="50" y2={PITCH_BOX.height - 0.5} />
-        <circle cx="50" cy={PITCH_BOX.height / 2} r="9" />
-        <rect x="0.5" y="13" width="16" height="38" />
-        <rect x={PITCH_BOX.width - 16.5} y="13" width="16" height="38" />
-        <rect x="0.5" y="24" width="5.5" height="16" />
-        <rect x={PITCH_BOX.width - 6} y="24" width="5.5" height="16" />
-      </g>
-    </>
   );
 }

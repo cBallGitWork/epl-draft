@@ -40,6 +40,7 @@ import { toBoxY } from "./pitchBox";
 /** Radius in pitch units. See the header for both arithmetics. */
 /** The cream edge every mark wears, in pitch units, so a club colour close to the grass still reads. */
 export const HALO = 0.15;
+const HALO_OPACITY = 0.75;
 
 const MARK = { base: 0.7, span: 1.1, cap: 0.8, plain: 1.0 };
 
@@ -102,7 +103,7 @@ export default function Marks({
               fill="none"
               stroke="var(--color-cream)"
               strokeWidth={HALO}
-              opacity={0.75}
+              opacity={HALO_OPACITY}
             />
             <circle
               cx={shot.x}
