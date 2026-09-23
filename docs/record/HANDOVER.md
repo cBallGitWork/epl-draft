@@ -111,5 +111,3 @@ Each of these is in PLATFORM_NOTES, "What the pre-swap cleanup declined".
    changed in #54, and no code is reissued.
 3. **A second Fantrax account holding one rehearsal team.** Unchanged, and it gates the entire
    write track (lineup writes through the commissioner's session). ROADMAP names it.
-4. **`/squad`'s "Not you? Sign out"** now sits in a full-width panel for one small link. It is
-   legible, but you may want it elsewhere.
