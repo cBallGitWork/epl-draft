@@ -1,4 +1,5 @@
 import type { Shot } from "@epl/core";
+import { toBoxY } from "./pitchBox";
 
 // Shots, as marks on the grass.
 //
@@ -93,7 +94,7 @@ export default function Marks({
             // that is unique by construction.
             key={n}
             cx={shot.x}
-            cy={(shot.y / 100) * 64}
+            cy={toBoxY(shot.y)}
             r={r}
             fill={DRAWN[tier].fill === "none" ? "none" : ink}
             stroke={ink}

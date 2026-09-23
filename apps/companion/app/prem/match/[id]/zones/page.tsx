@@ -117,8 +117,8 @@ function plottedShots(match: Match, names: ReadonlyMap<number, string>): Plotted
     const clubId = match.byCode.get(code)?.clubId;
     const side = clubId === match.home?.id ? "home" : clubId === match.away?.id ? "away" : null;
     if (side === null) return [];
-    const name = names.get(code) ?? match.byCode.get(code)?.name ?? DASH;
-    const nameOf = (other: number) => names.get(other) ?? match.byCode.get(other)?.name ?? DASH;
+    const nameOf = (man: number) => names.get(man) ?? match.byCode.get(man)?.name ?? DASH;
+    const name = nameOf(code);
     // Home attacks the left box, so its shots and their key passes take a half-turn together.
     const turn = (point: { x: number; y: number }) => ({ x: 100 - point.x, y: 100 - point.y });
     return shots

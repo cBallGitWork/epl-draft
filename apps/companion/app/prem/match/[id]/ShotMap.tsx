@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { CSSProperties } from "react";
 import { DASH, type Shot } from "@epl/core";
-import { PITCH_BOX } from "@/app/components/football/pitchBox";
+import { PITCH_BOX, toBoxY } from "@/app/components/football/pitchBox";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
 import { BOARD, ROW_RULE, SECTION_BAR } from "@/app/desk";
 import {
@@ -81,6 +81,7 @@ export default function ShotMap({
         : (b.shot.xg ?? -1) - (a.shot.xg ?? -1),
     );
   const pickedShot = picked === null ? undefined : shots[picked];
+  const sideOf = (shot: PlottedShot) => (shot.side === "home" ? home : away);
 
   return (
     // Capped on a desk, or a full-width pitch is 700px tall and the list starts below the fold.
@@ -128,24 +129,24 @@ export default function ShotMap({
               shot.pass === null ? null : (
                 <g
                   key={at}
-                  stroke={(shot.side === "home" ? home : away).colour}
+                  stroke={sideOf(shot).colour}
                   strokeWidth="0.45"
                   opacity="0.9"
                 >
                   <line
                     x1={shot.pass.x}
-                    y1={(shot.pass.y / 100) * PITCH_BOX.height}
+                    y1={toBoxY(shot.pass.y)}
                     x2={shot.x}
-                    y2={(shot.y / 100) * PITCH_BOX.height}
+                    y2={toBoxY(shot.y)}
                     strokeDasharray="1.2 0.8"
                   />
                   {/* A square at the pass's origin, so it never reads as a shot's round mark. */}
                   <rect
                     x={shot.pass.x - PASS_SQUARE / 2}
-                    y={(shot.pass.y / 100) * PITCH_BOX.height - PASS_SQUARE / 2}
+                    y={toBoxY(shot.pass.y) - PASS_SQUARE / 2}
                     width={PASS_SQUARE}
                     height={PASS_SQUARE}
-                    fill={(shot.side === "home" ? home : away).colour}
+                    fill={sideOf(shot).colour}
                   />
                 </g>
               ),
@@ -153,7 +154,7 @@ export default function ShotMap({
             {pickedShot === undefined ? null : (
               <circle
                 cx={pickedShot.x}
-                cy={(pickedShot.y / 100) * PITCH_BOX.height}
+                cy={toBoxY(pickedShot.y)}
                 r={RING_RADIUS}
                 fill="none"
                 stroke="var(--color-accent)"
@@ -165,7 +166,7 @@ export default function ShotMap({
               <circle
                 key={at}
                 cx={shot.x}
-                cy={(shot.y / 100) * PITCH_BOX.height}
+                cy={toBoxY(shot.y)}
                 r={TAP_RADIUS}
                 fill="transparent"
                 className="cursor-pointer"
@@ -217,7 +218,7 @@ export default function ShotMap({
               >
                 <td
                   className="cm-index numeric px-0 text-center text-2xs lg:text-xs"
-                  style={(shot.side === "home" ? home : away).index}
+                  style={sideOf(shot).index}
                 >
                   {shot.minute === null ? DASH : `${shot.minute}′`}
                 </td>
