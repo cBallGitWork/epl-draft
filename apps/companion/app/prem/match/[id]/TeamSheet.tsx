@@ -6,7 +6,7 @@ import { Head, HeadRow, MUTE, PLATE } from "../../../components/league/TableHead
 import type { Match } from "./match";
 import SheetRow from "./SheetRow";
 import { joinOf, ordered, type Join } from "./sheetJoin";
-import type { LeagueOpinion } from "../../leagueOpinions";
+import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
 
 // Championship Manager's team sheet, `cm9900/16.jpg`, both sides at once — stacked under a thumb, paired on a desk.
 
@@ -90,7 +90,7 @@ function Side({
               key={`${row.man.code ?? row.man.name}-${row.man.shirt ?? at}`}
               row={row}
               owner={row.man.code === null ? undefined : owners.get(row.man.code)}
-              positions={row.man.code === null ? [] : (league.get(row.man.code)?.positions ?? [])}
+              positions={fantraxPositions(league, row.man.code)}
               join={join}
               card={row.man.code === null ? undefined : cards.get(row.man.code)}
               hurt={row.man.code !== null && injured.has(row.man.code)}

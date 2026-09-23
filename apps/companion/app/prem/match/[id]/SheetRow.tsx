@@ -3,15 +3,13 @@ import { DASH } from "@epl/core";
 import PositionTile from "../../../components/league/PositionTile";
 import { chipsFor } from "../../../components/league/Chips";
 import { MaybeCard } from "./PlayerCardButton";
+import OwnedBy from "./OwnedBy";
 import SubNote from "./SubNote";
 import { ROW_NAME, ROW_RULE } from "@/app/desk";
 import { appeared, type Join, type Named } from "./sheetJoin";
 import { MATCH_ROW } from "./matchRow";
 
 // One man's row on the team sheet, and the card it opens.
-
-/** The league squad holding him, in brackets after the name. */
-const SHEET_OWNER = "text-2xs font-normal text-faint lg:text-xs";
 
 /** The fantasy score, the biggest thing on the row (Craig, 11 Sep 2026: *"fantasy score bigger"*). */
 const SHEET_FIGURE = "text-xl lg:text-2xl";
@@ -76,9 +74,7 @@ export default function SheetRow({
               {man.name}
             </span>
             {man.captain ? <span className="shrink-0 text-2xs text-faint">(c)</span> : null}
-            {owner === undefined ? null : (
-              <span className={`shrink-0 truncate ${SHEET_OWNER}`}>({owner.teamName})</span>
-            )}
+            <OwnedBy owner={owner} className="shrink-0 truncate" />
             <SubNote did={did} hurt={hurt} />
           </span>
         </MaybeCard>

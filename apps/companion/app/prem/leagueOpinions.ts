@@ -17,6 +17,11 @@ export interface LeagueOpinion {
   owner: string | null;
 }
 
+/** What our league lets a man play as, or none for a man it does not list or FPL never coded. */
+export function fantraxPositions(league: ReadonlyMap<number, LeagueOpinion>, code: number | null): readonly string[] {
+  return code === null ? [] : (league.get(code)?.positions ?? []);
+}
+
 export async function leagueOpinions(): Promise<Map<number, LeagueOpinion>> {
   const [info, squads] = await Promise.all([leagueInfo(), getLeagueSquads()]);
   if (info === null) return new Map();

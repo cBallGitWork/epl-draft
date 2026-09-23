@@ -4,8 +4,9 @@ import PositionTile from "../../../components/league/PositionTile";
 import { clubIndex } from "../../../components/football/clubIndex";
 import { intelSquads } from "../../../intel";
 import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE, phoneShows } from "@/app/desk";
-import type { LeagueOpinion } from "../../leagueOpinions";
+import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
 import { MaybeCard } from "./PlayerCardButton";
+import OwnedBy from "./OwnedBy";
 import { MATCH_ROW } from "./matchRow";
 
 // Both clubs' books before a ball is kicked, to the team sheet's standards: the Fantrax tile in the club's colour,
@@ -82,7 +83,7 @@ function Side({
             const owner = owners.get(player.code);
             return (
               <tr key={player.id} className={ROW_RULE} {...MATCH_ROW}>
-                <PositionTile positions={league.get(player.code)?.positions ?? []} cell />
+                <PositionTile positions={fantraxPositions(league, player.code)} cell />
                 <td className="min-w-0 p-0">
                   {/* Centred in the row, the name and its owner on one baseline — the team sheet's own cell. */}
                   <MaybeCard
@@ -91,9 +92,7 @@ function Side({
                   >
                     <span className="flex min-w-0 flex-1 items-baseline gap-1.5">
                       <span className={`min-w-0 truncate group-hover:underline ${ROW_NAME}`}>{player.name}</span>
-                      {owner === undefined ? null : (
-                        <span className="shrink-0 truncate text-2xs text-faint lg:text-xs">({owner.teamName})</span>
-                      )}
+                      <OwnedBy owner={owner} className="shrink-0 truncate" />
                     </span>
                   </MaybeCard>
                 </td>

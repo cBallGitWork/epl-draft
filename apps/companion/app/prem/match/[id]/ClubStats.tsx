@@ -1,7 +1,7 @@
 import { loggedPlayers, DASH } from "@epl/core";
 import { clubIndex } from "../../../components/football/clubIndex";
 import type { Club, PlManMatch, PlTeamSheet, SquadPlayerDetail } from "@epl/core";
-import type { LeagueOpinion } from "../../leagueOpinions";
+import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
 import Section from "../../../components/shell/Section";
 import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
@@ -121,7 +121,7 @@ export default function ClubStats({
                 match={match}
                 card={row.named.man.code === null ? undefined : cards.get(row.named.man.code)}
                 cuts={cuts}
-                positions={row.named.man.code === null ? [] : (league.get(row.named.man.code)?.positions ?? [])}
+                positions={fantraxPositions(league, row.named.man.code)}
                 hurt={row.named.man.code !== null && injured.has(row.named.man.code)}
               />
             ))}

@@ -1,6 +1,7 @@
 import { DASH } from "@epl/core";
 import type { FootballPlayer, PlGoalGroup, PlayerOwner, SquadPlayerDetail } from "@epl/core";
 import { MaybeCard } from "./PlayerCardButton";
+import OwnedBy from "./OwnedBy";
 import EventIcon from "../../../components/football/EventIcon";
 import type { EventGlyph } from "../../../components/football/EventIcon";
 import { SMALL_CAPS } from "@/app/desk";
@@ -9,8 +10,6 @@ import { SMALL_CAPS } from "@/app/desk";
 
 const NAME = "font-chrome text-lg font-bold lg:text-3xl";
 const FIGURE = "numeric shrink-0 font-bold text-accent text-lg lg:text-3xl";
-/** The league team that owns him, in brackets after his name — a gloss, so quieter and a step under it. */
-const OWNER = "text-2xs font-normal text-faint lg:text-base";
 /** The assister's minutes: the scorer's ink and column, at the assister's size. */
 const ASSIST_FIGURE = "numeric shrink-0 font-bold text-accent text-sm lg:text-xl";
 
@@ -54,9 +53,7 @@ export function Goal({
             <span className={`${SMALL_CAPS} shrink-0 text-faint`}>A</span>
             <span className="min-w-0 flex-1 truncate font-chrome text-sm font-bold text-muted lg:text-xl">
               {assister.name}
-              {owner === undefined ? null : (
-                <span className={`${OWNER} ml-1`}>({owner.teamName})</span>
-              )}
+              <OwnedBy owner={owner} size="scoresheet" className="ml-1" />
             </span>
             {paired ? <span className={ASSIST_FIGURE}>{minutes(his)}</span> : null}
           </MaybeCard>
@@ -105,9 +102,7 @@ export function Man({
       <span className="min-w-0 flex-1 truncate">
         <span className={`group-hover:underline ${NAME}`}>{name}</span>
         {note === null ? null : <span className={`${SMALL_CAPS} ml-1.5 text-bad`}>{note}</span>}
-        {owner === undefined ? null : (
-          <span className={`${OWNER} ml-1.5`}>({owner.teamName})</span>
-        )}
+        <OwnedBy owner={owner} size="scoresheet" className="ml-1.5" />
       </span>
       <span className={FIGURE}>{figure}</span>
     </MaybeCard>
