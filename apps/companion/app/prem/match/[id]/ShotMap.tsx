@@ -38,7 +38,8 @@ export interface ShotSide {
 const RING_RADIUS = 3.2;
 const TAP_RADIUS = 2.4;
 
-/** The side of the square that marks where a key pass started, in pitch units. */
+/** A key pass line's width, and the side of the square at its start, in pitch units. */
+const PASS_LINE = 0.3;
 const PASS_SQUARE = 1.4;
 
 /** The key's own words for what became of a shot. */
@@ -135,7 +136,7 @@ export default function ShotMap({
                     x2={shot.x}
                     y2={toBoxY(shot.y)}
                     stroke="var(--color-cream)"
-                    strokeWidth={0.45 + 2 * HALO}
+                    strokeWidth={PASS_LINE + 2 * HALO}
                     opacity="0.6"
                   />
                   <line
@@ -144,7 +145,7 @@ export default function ShotMap({
                     x2={shot.x}
                     y2={toBoxY(shot.y)}
                     stroke={sideOf(shot).colour}
-                    strokeWidth="0.45"
+                    strokeWidth={PASS_LINE}
                     strokeDasharray="1.2 0.8"
                   />
                   {/* A square at the pass's origin, so it never reads as a shot's round mark. */}

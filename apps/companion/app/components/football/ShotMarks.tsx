@@ -39,7 +39,7 @@ import { toBoxY } from "./pitchBox";
 
 /** Radius in pitch units. See the header for both arithmetics. */
 /** The cream edge every mark wears, in pitch units, so a club colour close to the grass still reads. */
-export const HALO = 0.3;
+export const HALO = 0.15;
 
 const MARK = { base: 0.7, span: 1.1, cap: 0.8, plain: 1.0 };
 
