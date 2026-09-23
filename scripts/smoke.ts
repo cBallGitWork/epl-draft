@@ -156,13 +156,14 @@ async function main() {
     );
   }
   if (footballer !== null) paths.push(`/prem/player/${footballer}`);
-  // Players is where an empty sheet lands before kickoff; Team Stats proves the Premier League's
-  // `/stats/match` still answers.
+  // Line Ups is where an empty sheet lands before kickoff; Stats proves the Premier League's `/stats/match`
+  // still answers, and its Fantasy view that our league's read does.
   if (match !== null) {
     paths.push(
       `/prem/match/${match}`,
       `/prem/match/${match}/players`,
-      `/prem/match/${match}/team-stats`,
+      `/prem/match/${match}/stats`,
+      `/prem/match/${match}/stats?view=fantasy`,
     );
   }
 
