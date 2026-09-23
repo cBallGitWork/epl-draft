@@ -557,12 +557,19 @@ export const COMMENTARY_REVALIDATE = 300;
  *  Same literal-at-every-site rule as its neighbour above. */
 export const ARTICLE_REVALIDATE = 300;
 
-/** How often an open page asks the server for a fresh render, in seconds.
- *
- *  `live` matches the page's own lifetime deliberately — polling faster than the
- *  page can change is work that returns the same bytes. Between matches nothing
- *  moves quickly enough to justify the wake-ups. */
+/** How often an open page asks the server for a fresh render, in seconds. Between
+ *  matches nothing moves quickly enough to justify the wake-ups. */
 export const POLL = {
-  live: PAGE_REVALIDATE,
+  live: 30,
   idle: 300,
 } as const;
+
+/** Lifetime of the two reads a live score is drawn from — the round snapshot and
+ *  the Premier League's own round — in seconds.
+ *
+ *  **Below `POLL.live`, and it must stay below it plus a fetch.** `unstable_cache`
+ *  serves a stale entry and refreshes it in the background, and ages an entry
+ *  from when it was written. At an equal lifetime the next poll finds that
+ *  background refresh still fresh, triggers nothing, and a lone reader sees new
+ *  scores only every other poll. */
+export const LIVE_REVALIDATE = 20;

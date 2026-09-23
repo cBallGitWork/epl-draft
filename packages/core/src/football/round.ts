@@ -18,8 +18,7 @@ import type { Fixture, FixtureStatus, FootballSnapshot } from "./types";
  *  Not the poll rate, which this docblock used to claim as well and which cost
  *  the Live tab an afternoon at the idle interval: between two kickoffs nothing
  *  is in play and a score is at its most likely to have moved since you looked.
- *  `duringGameweek` is that question, and `pollSeconds` at the app edge is the
- *  one place it is asked. */
+ *  `duringGameweek` is that question, asked through `secondsToLive`. */
 export function isMatchdayLive(snapshot: FootballSnapshot): boolean {
   return snapshot.fixtures.some((f) => f.status === "live");
 }
@@ -147,6 +146,15 @@ export function nextRound(
   }
 
   return soonest === null ? null : { gameweek: soonest.gameweek, kickoff: soonest.kickoff };
+}
+
+/** Seconds until football is live: nought during the round, the wait to the next kickoff otherwise,
+ *  null with nothing ahead. Relative, so a client can count it down without trusting its own clock. */
+export function secondsToLive(snapshot: FootballSnapshot, fixtures: readonly Fixture[], at: string): number | null {
+  if (duringGameweek(snapshot, at)) return 0;
+  const next = nextRound(fixtures, at);
+  if (next === null) return null;
+  return Math.max(0, Math.ceil((Date.parse(next.kickoff) - Date.parse(at)) / 1000));
 }
 
 /** How settled a finished round is. Three rungs, because "over" is three

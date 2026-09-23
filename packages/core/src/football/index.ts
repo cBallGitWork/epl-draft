@@ -143,6 +143,7 @@ export {
   gameweekStatus,
   isMatchdayLive,
   nextRound,
+  secondsToLive,
   roundStarted,
   roundState,
 } from "./round";

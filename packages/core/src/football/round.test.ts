@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Fixture, FootballSnapshot } from "./types";
-import { duringGameweek, isMatchdayLive, roundFinished, roundStarted, roundState } from "./round";
+import { duringGameweek, isMatchdayLive, roundFinished, roundStarted, roundState, secondsToLive } from "./round";
 
 const snap = (over: Partial<FootballSnapshot> = {}): FootballSnapshot => ({
   clubs: [],
@@ -193,5 +193,35 @@ describe("roundStarted", () => {
 
   it("is false for a round the snapshot has no fixtures for", () => {
     expect(roundStarted(round({ gameweek: 3, status: "finished" }), 9)).toBe(false);
+  });
+});
+
+describe("secondsToLive", () => {
+  const nextWeek = [fixture({ id: 11, gameweek: 2, kickoff: "2026-08-28T19:00:00Z" })];
+
+  it("is nought while the round is under way", () => {
+    const s = snap({ fixtures: [fixture({ id: 1, status: "live" })] });
+    expect(secondsToLive(s, nextWeek, "2026-08-21T19:30:00Z")).toBe(0);
+  });
+
+  it("counts to the next kickoff when the snapshot still holds the finished round", () => {
+    const s = snap({ fixtures: [played({ id: 1 })] });
+    expect(secondsToLive(s, nextWeek, "2026-08-28T18:59:15Z")).toBe(45);
+  });
+
+  it("is nought at the kickoff instant itself", () => {
+    const s = snap({ fixtures: [played({ id: 1 })] });
+    expect(secondsToLive(s, nextWeek, "2026-08-28T19:00:00Z")).toBe(0);
+  });
+
+  it("is null with no football ahead", () => {
+    const s = snap({ fixtures: [played({ id: 1 })] });
+    expect(secondsToLive(s, nextWeek, "2026-09-01T00:00:00Z")).toBeNull();
+  });
+
+  it("ignores undated fixtures", () => {
+    const s = snap({ fixtures: [played({ id: 1 })] });
+    const undated = [fixture({ id: 12, gameweek: 2, kickoff: null })];
+    expect(secondsToLive(s, undated, "2026-08-28T18:00:00Z")).toBeNull();
   });
 });
