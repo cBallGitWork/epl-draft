@@ -26,9 +26,9 @@ import { DASH } from "@epl/core";
 // **And below `lg` it stands down everywhere** (Craig, 5 Sep 2026). The strip
 // was 44px across the top of a 390px screen, the first of five bands of chrome
 // above the first row of data, and the phone has somewhere better to put the
-// same number: the Live plate of the foot row carries it under its own label
-// (`shell/LiveCount`), in room the nav already occupies. The desk keeps the
-// strip — it has the width, and no foot row to put a score in.
+// same number: the thumb rail's Live tab carries it in its glyph's slot
+// (`shell/LiveFigure`), in room the nav already occupies. The desk keeps the
+// strip — it has the width, and no tab to put a score in.
 
 const ANSWERED_IN_FULL = ["/", "/matchday"];
 

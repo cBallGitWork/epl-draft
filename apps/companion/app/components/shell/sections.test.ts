@@ -1,6 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { SECTIONS, barSections, overflowSections, owns, sectionsFor } from "./sections";
-import { MY_TEAM } from "../../squad/routes";
+import {
+  CREDITS,
+  MORE,
+  SECTIONS,
+  barSections,
+  moreOwns,
+  overflowSections,
+  owns,
+  sectionsFor,
+} from "./sections";
+import { MY_TEAM, SQUAD } from "../../squad/routes";
 
 // The section table's one piece of logic is `owns`, and the plate it decides is
 // the only thing on the rail a reader can be standing in without the pathname
@@ -45,23 +54,26 @@ describe("the bar this round draws", () => {
 
   it("carries My Team midweek, when Live does not exist", () => {
     const sections = sectionsFor(false);
-    expect(labels(barSections(sections))).toEqual(["Gazetta", "Team", "League", "Prem", "News"]);
+    expect(labels(barSections(sections))).toEqual(["Gazetta", "Team", "League", "Prem", "Mail"]);
     expect(labels(overflowSections(sections))).toEqual(["Find", "FPL"]);
   });
 
-  it("stands My Team down while football is on, and Live takes the plate", () => {
+  it("gives Live My Team's slot while football is on", () => {
     const sections = sectionsFor(true);
-    expect(labels(barSections(sections))).toEqual(["Gazetta", "League", "Prem", "Live", "News"]);
-    expect(labels(overflowSections(sections))).toContain("Team");
+    expect(labels(barSections(sections))).toEqual(["Gazetta", "Live", "League", "Prem", "Mail"]);
+    expect(labels(overflowSections(sections))).toEqual(["Team", "Find", "FPL"]);
   });
 
-  // The measured ceiling, as a test rather than a comment: at 320 six plates are
-  // 53.3px each and leave 49.3 for a label, and a seventh would leave 45. Five
-  // sections plus the door is six, and this is what stops the seventh arriving
-  // by way of a table nobody re-measured.
-  it("never asks a phone for more than six plates", () => {
+  // Six tabs at 320 leave 49px for a label: five sections and More.
+  it("never asks a phone for more than six tabs", () => {
     for (const matchday of [false, true]) {
       expect(barSections(sectionsFor(matchday)).length).toBeLessThanOrEqual(5);
+    }
+  });
+
+  it("gives every tab a glyph, in both states", () => {
+    for (const matchday of [false, true]) {
+      for (const section of barSections(sectionsFor(matchday))) expect(section.glyph).toBeDefined();
     }
   });
 
@@ -73,5 +85,25 @@ describe("the bar this round draws", () => {
       );
       expect(sections.length).toBe(matchday ? SECTIONS.length : SECTIONS.length - 1);
     }
+  });
+});
+
+describe("the More tab", () => {
+  it("lights on its own page, the credits, the squad index and the sections behind it", () => {
+    const sections = sectionsFor(false);
+    for (const path of [MORE, CREDITS, SQUAD, "/players", "/fpl"]) {
+      expect(moreOwns(sections, path)).toBe(true);
+    }
+  });
+
+  it("stays dark on a rival's squad and on a section with its own tab", () => {
+    const sections = sectionsFor(false);
+    for (const path of [`${SQUAD}/${RIVAL}`, MY_TEAM, "/league", "/news"]) {
+      expect(moreOwns(sections, path)).toBe(false);
+    }
+  });
+
+  it("takes My Team while football is on, since Team has no tab then", () => {
+    expect(moreOwns(sectionsFor(true), MY_TEAM)).toBe(true);
   });
 });

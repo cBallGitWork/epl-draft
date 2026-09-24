@@ -27,11 +27,8 @@
 // its own list of the six and the list went stale the day "Matchday" was renamed
 // "Live" to buy the room.
 //
-// **A plate's label is its first `<span>`, not everything it says.** The Live
-// plate carries your score under its label (`shell/LiveCount`), so the anchor's
-// own `textContent` reads "Live18 v 4" — a label 44px wide measured as one 78px
-// wide, and a fit report that fails on a plate that fits. The rail's entries have
-// no span and fall back to the anchor, which is the same string they always were.
+// **A tab's label is its LAST `<span>`**: the first is its figure, a glyph or the Live tab's score, which is
+// measured on its own. The desk rail's entries have no span and fall back to the anchor.
 
 import { connect, parseArgs, teamCookie } from "./cdp.mjs";
 
@@ -39,34 +36,32 @@ const { flags, positional } = parseArgs(process.argv.slice(2));
 const widths = positional.length ? positional.map(Number) : [320, 360, 390, 430];
 
 const MEASURE = `(function(){
-  var rail=document.querySelector('nav[aria-label=Sections]');
+  // The visible one: both navs are in the DOM at every width and the other is display:none.
+  var rail=Array.prototype.slice.call(document.querySelectorAll('nav[aria-label=Sections]'))
+    .filter(function(n){return n.offsetWidth>0})[0];
   if(!rail) throw new Error("no section rail found — is this the app?");
-  // **A plate is not always a link.** The foot row's last plate is \`More\`, a
-  // BUTTON that opens the overflow sheet rather than going anywhere, and it
-  // takes a sixth of the row exactly as its neighbours do. Counting anchors
-  // alone reported "5 sections" on a six-plate bar and then offered room for a
-  // seventh that was already spent — the instrument guarding the ceiling would
-  // have waved through the very overflow it exists to prevent.
-  //
-  // \`:scope > button\` and not any button: the desk rail's back/forward steppers
-  // are buttons too, nested a div deep, and they are chrome above the plates
-  // rather than sections.
-  var links=Array.prototype.slice.call(rail.querySelectorAll('a[href], :scope > button'));
+  var links=Array.prototype.slice.call(rail.querySelectorAll('a[href]'));
   var items=links.filter(function(a){return a.textContent.trim()});
   // Only the plates, and only the ones with a label: the Live plate's figure
   // lives inside the same anchor, so counting spans would double that section.
   if(!items.length) throw new Error("rail has no labelled sections");
-  var cs=getComputedStyle(items[0].querySelector("span")||items[0]);
+  var labelOf=function(a){return a.querySelector(":scope > span:last-child")||a};
+  var cs=getComputedStyle(labelOf(items[0]));
   var probe=document.createElement("span");
   probe.style.cssText="position:absolute;visibility:hidden;white-space:nowrap;font:"+cs.font
     +";letter-spacing:"+cs.letterSpacing+";text-transform:"+cs.textTransform;
   document.body.appendChild(probe);
   var rows=items.map(function(a){
     var r=a.getBoundingClientRect();
-    var label=a.querySelector("span")||a;
+    var label=labelOf(a);
+    // The Live tab's score, when it has one: text in the figure slot, which must fit the tab as the label does.
+    var figure=a.querySelector(":scope > span:first-child");
+    var score=figure&&figure!==label&&figure.textContent.trim()?figure:null;
     var lr=label.getBoundingClientRect();
     probe.textContent=label.textContent.trim();
+    var ps=getComputedStyle(a);
     return {t:label.textContent.trim(), box:Math.round(r.width), h:Math.round(r.height),
+            pad:Math.ceil(parseFloat(ps.paddingLeft)+parseFloat(ps.paddingRight)),
             needs:Math.ceil(probe.getBoundingClientRect().width),
             // **No tolerance term.** It was \`+1\` and that is exactly one pixel
             // too generous: \`My Team\` renders at 51 in 49.3px of room, so
@@ -74,15 +69,16 @@ const MEASURE = `(function(){
             // screenshot showed \`My Te…\`. \`ceil\` alone already absorbs the
             // sub-pixel case a tolerance was there for — a label 43.4 wide
             // reporting scrollWidth 44 still passes.
-            clipped:label.scrollWidth>Math.ceil(lr.width)};
+            clipped:label.scrollWidth>Math.ceil(lr.width)
+              ||(score!==null&&score.getBoundingClientRect().width>r.width-4)};
   });
   probe.remove();
   var rr=rail.getBoundingClientRect();
   // Which way the navigation runs, read off the plates rather than assumed.
   // The app draws two shapes of it — a rail down the side of a desk screen and a
-  // blue foot row across the bottom of a phone (shell/Rail) — and they fail on
-  // different axes: a rail runs out of HEIGHT and a foot row runs out of WIDTH
-  // per plate. Two plates on the same y is a row.
+  // thumb rail across the foot of a phone (shell/ThumbRail) — and they fail on
+  // different axes: down the side runs out of HEIGHT, across the foot runs out of WIDTH
+  // per tab. Two tabs on the same y is a row.
   var across = items.length > 1
     && Math.abs(items[0].getBoundingClientRect().top - items[1].getBoundingClientRect().top) < 2;
   // The plates' own run, not the rail's scrollHeight: the rail is a full-height
@@ -114,10 +110,8 @@ for (const width of widths) {
   // the same question, asked of a different measurement, and asking the rail's
   // question of a row answered "WOULD SCROLL" on a bar that cannot scroll.
   const widest = Math.max(...out.rows.map((row) => row.needs));
-  // The padding a plate keeps around its own label, taken from the tightest one
-  // on screen rather than from a constant — it is `px-1` today and a change to
-  // it must move this number without anybody editing the instrument.
-  const padding = Math.min(...out.rows.map((row) => row.box - row.needs));
+  // A tab's own padding, read off its computed style: the room it keeps around a label however wide it is.
+  const padding = Math.max(...out.rows.map((row) => row.pad));
   const next = out.across
     ? { room: Math.floor(out.rail / (out.rows.length + 1)), needs: widest + Math.max(0, padding) }
     : null;
@@ -130,7 +124,7 @@ for (const width of widths) {
 
   console.log(
     `${width}px  viewport=${out.vw}×${out.vh} doc=${out.doc}${out.doc > out.vw ? "  H-SCROLL" : ""}` +
-      `  nav=${out.across ? "foot row" : "rail"} ${out.rail}×${out.frame} page=${out.page}` +
+      `  nav=${out.across ? "thumb rail" : "rail"} ${out.rail}×${out.frame} page=${out.page}` +
       `  ${out.rows.length} sections`,
   );
   console.log(`   labels:  ${clipped.length ? `CLIPS ${clipped.join(" ")}` : "all fit"}`);

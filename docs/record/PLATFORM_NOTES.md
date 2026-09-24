@@ -44,6 +44,26 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The phone's nav is the rail along the foot, with glyphs — decided 23 Sep 2026
+
+Craig: *"Bottom nav bars are bad. Needs to be mobile standard. More needs a proper menu. CM inspired
+still"*, then *"Icons are normally standard"*, *"Use mail"* and *"Just copy fpl"*. DESIGN §2 carries
+the design; these are the facts it rests on.
+
+- **Six tabs**: Gazetta · Team/Live · League · Prem · Mail · More. At 320 a label has 49px and
+  `Gazetta` needs 44.3; `navfit` holds it.
+- **Icons are allowed on the thumb rail**, above the word and never instead of it. The desk rail stays
+  words only. This extends DESIGN §2's icon rule from one job to two.
+- **The Prem glyph is the Premier League's lion**, unchanged paths from FPL's Safari mask icon,
+  `https://fantasy.premierleague.com/img/favicons/safari-pinned-tab.svg` (potrace, 400×400, fetched
+  23 Sep 2026), filled with the text colour. It is copied into `shell/plLion.ts`, not fetched, so the
+  rail never waits on FPL.
+- **Unread mail is counted by inbox id, per device**, in `localStorage` under `mail-seen`. No provider
+  tracks reads, and Fantrax's timestamps carry no offset, so "newer than my last visit" by time would
+  inherit `core/inbox/when`'s two vocabularies. A device with no record starts at nought.
+- **`viewportFit: "cover"` was missing.** Without it iOS reports every safe-area inset as nought, so
+  the old bar's `pb-[env(safe-area-inset-bottom)]` never did anything on an iPhone.
+
 ## Why an open live page froze, and the cache rules that stop it — 23 Sep 2026
 
 Read against the installed Next 16.2.7 source. Standing rules for anything that polls:
@@ -2165,7 +2185,7 @@ touched either, and nobody wrote it. Recorded now rather than split now, and the
 reason is that neither is doing two jobs:
 
 - **`desk.css`** is one job — the Championship Manager desk. `.cm-panel`,
-  `.cm-bevel`, `.cm-row`, `.cm-rows`, `.cm-index`, `.cm-tab`, `.cm-foot`,
+  `.cm-bevel`, `.cm-row`, `.cm-rows`, `.cm-index`, `.cm-tab`, `.cm-thumbrail`,
   `.cm-out`, `.cm-scroll`. Splitting it by count rather than by responsibility means
   choosing an arbitrary line, and §4's own rule is one responsibility per file
   with the filename saying it. A second file would have to be called something

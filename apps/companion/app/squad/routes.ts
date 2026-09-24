@@ -3,7 +3,7 @@
 // `prem/routes.ts`'s reason applies here unchanged, and the second half of it is
 // why this is a module rather than a constant on `team.ts`: that file imports
 // `next/navigation` and the Fantrax read, and `components/shell/sections.ts` is
-// imported by `Rail` and `FootRow`, both `"use client"`. Reaching for the
+// imported by `Rail` and `ThumbRail`, both client-side. Reaching for the
 // segment there would ship a league read to the browser to spell two characters.
 
 /** The route a team's five screens hang off. */

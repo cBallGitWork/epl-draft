@@ -13,7 +13,8 @@
 
 import { POOL } from "../../players/routes";
 import { CLUB, MATCH } from "../../prem/routes";
-import { MY_TEAM } from "../../squad/routes";
+import { MY_TEAM, SQUAD } from "../../squad/routes";
+import type { GlyphName } from "./glyphs";
 
 /** The paper's territory: the front page, and the pages behind it.
  *
@@ -73,85 +74,43 @@ export interface Section {
   routes: string[];
   /** Only while football is on. The Live section and nothing else. */
   onlyDuringGameweek?: boolean;
-  /** **Behind `More` on a phone, flat on the desk rail.**
-   *
-   *  The foot row has a hard ceiling and it is measured, not felt: six plates at
-   *  320 are 53px each and a label may be 44 wide, which `Gazetta` exactly is. A
-   *  seventh plate gives 45px against a 36px budget, so `Gazetta` and `League`
-   *  would both clip — a seventh section was therefore impossible without
-   *  renaming two existing ones, and that is why the pool was taken OFF the bar
-   *  on 5 Sep 2026 rather than added to it.
-   *
-   *  `More` is the way out of that, and it is Craig's (5 Sep 2026: *"if we tap a
-   *  section, it could bring up more options"*). The bar keeps its six plates
-   *  for ever — five sections and a door — and the sections past the fifth land
-   *  behind that door instead of costing the bar a rename. The ceiling stops
-   *  being a limit on how many sections the app may have.
-   *
-   *  **Which five is not fixed for the week**, since 21 Sep 2026: this flag is
-   *  the standing answer and `overflowDuringGameweek` below is the one that
-   *  changes with the round, so a section's place on the bar is read from
-   *  `sectionsFor()` rather than from its position in the table.
-   *
-   *  **The desk rail does not use it.** It runs down the side of a 1440 screen
-   *  with room for a dozen entries, and a disclosure on a surface where
-   *  everything already fits is chrome hiding things for no reason. So the two
-   *  shapes list the same sections and only the phone groups the tail — which is
-   *  the same relationship they already have, the rail being outlined navy and
-   *  the foot row a filled strip. */
+  /** The glyph over its word on the phone's rail; a section that is always behind More has none. */
+  glyph?: GlyphName;
+  /** Its full name where a row has room for it, as More's page does. */
+  fullLabel?: string;
+  /** Behind `More` on a phone, flat on the desk rail: six tabs at 320 leave a label 49px (DESIGN §2). */
   overflow?: boolean;
-  /** **Behind `More` only while football is on**, because the plate it would
-   *  take is Live's (Craig, 21 Sep 2026: *"my team behind more during
-   *  gameweek"*).
-   *
-   *  The pair with `onlyDuringGameweek` is the whole rule: Live appears when
-   *  there is football, and this stands back when it does. It is what the
-   *  measurement leaves room for — at 320 six plates leave a label 49.3px, and a
-   *  SEVENTH leaves 45, which clips `Gazetta` at 44 within a pixel. So the
-   *  bar keeps its six for ever, and the section that yields is the one whose
-   *  reason for being open is weakest on a Saturday: a lineup you can no longer
-   *  change, while the score of the tie it is playing runs on the plate beside
-   *  it. */
+  /** Behind `More` only while football is on, because Live takes its slot (Craig, 21 Sep 2026). */
   overflowDuringGameweek?: boolean;
 }
 
+/** The manager's inbox, labelled Mail. */
+export const MAIL = "/news";
+
 export const SECTIONS: Section[] = [
-  { href: "/", label: "Gazetta", routes: PAPER_ROUTES },
-  // **One route and not a prefix**, which is what keeps the plate honest: it
-  // owns `/squad/me`, so it lights across all five of the reader's own tabs and
-  // stays dark on a rival's screens. `squad/routes.ts` records why the front
-  // door is a URL rather than a redirect to an id.
-  // **`Team` and not `My Team`, and it is the ceiling's answer rather than a
-  // preference.** At 320 a plate is 53.3px and keeps 4px around its label, so a
-  // label has 49.3 — and `My Team` renders at 51. It shipped as that for one
-  // afternoon and the screenshot read `My Te…`; `navfit` had called it a fit,
-  // because its clipped test carried a `+1` tolerance that was exactly one pixel
-  // too generous. The instrument is fixed and this is the word that fits.
-  //
-  // The SECTION is still My Team everywhere it is written about. A plate is not
-  // the place a name is stated in full — `Prem` is `FA Barclays Premiership` on
-  // the title bar two lines below it, for the same reason.
-  { href: MY_TEAM, label: "Team", routes: [MY_TEAM], overflowDuringGameweek: true },
-  { href: "/league", label: "League", routes: ["/league"] },
-  // **"Prem", and the bar says the rest.** The rail is 64px below `lg` and
-  // "Gazetta" already measures 45px of it at 9px bold uppercase, so
-  // "Premiership" wraps to two lines and a rail plate taller than its
-  // neighbours is not a rail. The title bar carries "FA Barclays Premiership"
-  // in full, which is where a competition's name belongs (`cm9900/24.jpg`).
-  //
-  // Beside League, because the competition sits beside the competition: one is
-  // the fantasy league we play and the other is the football it is played on,
-  // and a reader moving between them is asking the same question twice.
-  { href: "/prem", label: "Prem", routes: ["/prem"] },
-  // "Live" rather than "Matchday": the section only exists while football is on,
-  // so that is what it means.
-  { href: "/matchday", label: "Live", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },
+  { href: "/", label: "Gazetta", glyph: "gazetta", routes: PAPER_ROUTES },
+  // One route, not a prefix, so it lights on the reader's own five tabs and stays dark on a rival's.
+  // `Team` because `My Team` renders at 51px against a tab's 49px at 320; `fullLabel` says it where rows have room.
+  {
+    href: MY_TEAM,
+    label: "Team",
+    fullLabel: "My Team",
+    glyph: "team",
+    routes: [MY_TEAM],
+    overflowDuringGameweek: true,
+  },
+  // Live takes Team's slot while football is on, so the second tab is always yours.
+  { href: "/matchday", label: "Live", glyph: "live", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },
+  { href: "/league", label: "League", glyph: "league", routes: ["/league"] },
+  // "Prem" on the rail; the title bar says "FA Barclays Premiership" (`cm9900/24.jpg`). Beside League, its competition.
+  { href: "/prem", label: "Prem", glyph: "prem", routes: ["/prem"] },
   // **The manager's inbox, and it is a section rather than a tab** (Craig, 5 Sep
   // 2026: "Should [news] be its own section and not the league?"). The game
   // agrees and says why: CM's rail entry for this screen is the MANAGER'S NAME
   // and its title bar reads `Mike Paul News` — the news belongs to the man, not
   // to the competition he plays in.
-  { href: "/news", label: "News", routes: ["/news"] },
+  // "Mail" since 23 Sep 2026 (Craig: "Use mail"); the route stays `/news`.
+  { href: MAIL, label: "Mail", glyph: "mail", routes: [MAIL] },
   // **Scout is a section again** (Craig, 5 Sep 2026: *"I think this function
   // will be its own section away from the league etc"*), and DESIGN §1 has
   // listed Players among the Desk's own all along — it was `sections.ts` that
@@ -171,46 +130,35 @@ export const SECTIONS: Section[] = [
   { href: "/fpl", label: "FPL", routes: ["/fpl"], overflow: true },
 ];
 
-/** The sections this round has, and which of them are on the bar.
- *
- *  Both answers turn on the same fact and are therefore one function: whether
- *  football is on decides that Live exists at all, and that My Team gives up its
- *  plate to it. `Rail` used to hold the first half inline — it is a client
- *  component, so the rule was untestable there, and it is the rule the bar's
- *  measured ceiling rests on. */
+/** The sections this round has: Live only while football is on, when My Team gives it its tab. Pure, so tested. */
 export function sectionsFor(matchday: boolean): Section[] {
   return SECTIONS.filter((section) => matchday || !section.onlyDuringGameweek).map((section) =>
     matchday && section.overflowDuringGameweek ? { ...section, overflow: true } : section,
   );
 }
 
-/** The plates a phone's foot row draws, in order, before `More` is added. */
+/** The tabs a phone's rail draws, in order, before `More` is added. */
 export function barSections(sections: readonly Section[]): Section[] {
   return sections.filter((section) => !section.overflow);
 }
 
-/** What is behind `More`. Empty means the door is not drawn at all — a `More`
- *  that opens onto nothing is a control that does nothing. */
+/** What is behind `More`, listed on its page before the squads and the credits. */
 export function overflowSections(sections: readonly Section[]): Section[] {
   return sections.filter((section) => section.overflow);
 }
 
-// **The pool is not a section ON THE BAR, and it is the second entry to leave
-// for the squads' reason.** It is a section in this table and has been since
-// 6 Sep 2026; what it gave up was a plate. `navfit` measures six plates as the
-// bar's ceiling — at 320 a plate is 53.3px and leaves 49 for its label, and a
-// seventh would leave 45 — so News arriving meant something going, and the pool
-// is the one with somewhere else to be.
-//
-// The figures here read 45 against 53 until 21 Sep 2026, which had the plate's
-// width standing in for the label's room and made the ceiling look 4px roomier
-// than it is.
-//
-// Championship Manager's rail is "where you can go from anywhere", and you reach
-// a thing through the competition it belongs to. `/players` is the PREMIER
-// LEAGUE's players, priced by our league's scoring — so it sits on both
-// competitions' strips now, the League's `Player Stats` where it always was and
-// the Prem's beside it. One entry off the bar, two ways in rather than one.
+/** The page behind the phone's last tab, and the credits it carries. */
+export const MORE = "/more";
+export const CREDITS = "/credits";
+
+/** Whether the More tab is where you are: its page, the credits, the squad index, or a section behind it. */
+export function moreOwns(sections: readonly Section[], pathname: string): boolean {
+  return (
+    pathname === SQUAD ||
+    owns([MORE, CREDITS], pathname) ||
+    overflowSections(sections).some((section) => owns(section.routes, pathname))
+  );
+}
 
 export function owns(routes: readonly string[], pathname: string): boolean {
   return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));

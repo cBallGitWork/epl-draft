@@ -4,12 +4,15 @@ import { LEAGUE_NAME } from "@epl/core";
 import { footballNow, groundFaces, liveIn, offerLive } from "./football";
 import { Suspense } from "react";
 import AutoRefresh from "./components/shell/AutoRefresh";
-import LiveCount from "./components/shell/LiveCount";
+import Glyph from "./components/shell/glyphs";
+import LiveFigure from "./components/shell/LiveFigure";
 import LiveNow from "./components/shell/LiveNow";
 import PhotoGround from "./components/football/PhotoGround";
 import Rail from "./components/shell/Rail";
 import ReplayStrip from "./components/shell/ReplayStrip";
+import UnreadBadge from "./components/shell/UnreadBadge";
 import { liveTie } from "./components/shell/liveTie";
+import { readInbox } from "./news/inbox";
 import "./globals.css";
 
 // **Championship Manager had two faces and so does the desk now** (Craig, 31
@@ -86,6 +89,8 @@ export const viewport: Viewport = {
   // double-tap zoom without disabling deliberate pinch-zoom.
   width: "device-width",
   initialScale: 1,
+  // Without it iOS reports every safe-area inset as 0, and the rail sits on the home indicator.
+  viewportFit: "cover",
 };
 
 /** The round, for the two things the shell decides from it: whether to offer the
@@ -117,6 +122,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // consumers, each behind its own boundary: one read rather than two, and
   // neither of them blocking.
   const tie = liveTie();
+  // The inbox's ids for the Mail tab's badge, started like the tie; a failed read is no badge.
+  const mail = readInbox()
+    .then((inbox) => inbox.items.map((item) => item.id))
+    .catch(() => []);
 
   return (
     <html lang="en-GB" className={`${archivo.variable} ${archivoNarrow.variable} ${oxanium.variable} ${jost.variable}`}>
@@ -148,8 +157,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <Rail
           matchday={matchday}
           live={
+            <Suspense fallback={<Glyph name="live" />}>
+              <LiveFigure tie={tie} />
+            </Suspense>
+          }
+          mail={
             <Suspense fallback={null}>
-              <LiveCount tie={tie} />
+              <UnreadBadge inbox={mail} />
             </Suspense>
           }
         />

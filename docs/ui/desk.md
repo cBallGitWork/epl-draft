@@ -6,12 +6,11 @@ nothing else on it. Jeff's wall of monitors.
 Reached from the **Live** section and nowhere else. The argument was width — six
 tabs already brushed the 320px clip `tools/ui/navfit.mjs` measured, and a seventh
 would have cost every other tab its label. The rail turned that into a height
-question on 31 Aug 2026, and the foot row turned it back on 5 Sep: **the two
-shapes fail on different axes**, which is why `navfit` reads which one is on
-screen and asks it its own question — a rail runs out of HEIGHT and a foot row
-runs out of WIDTH per plate. On the phone, which is the shape that matters here,
-six plates at 320 are 53.3px each and leave 49.3 for a label, and a seventh
-would leave 45.
+question on 31 Aug 2026, and laying it along the foot of a phone turned it back: **the
+two shapes fail on different axes**, which is why `navfit` reads which one is on
+screen and asks it its own question — down the side runs out of HEIGHT and along
+the foot runs out of WIDTH per tab. On the phone, six tabs at 320 leave 49px for a
+label, and a seventh would leave 45.
 
 The answer did not change under either framing: a screen reached from the one
 section it belongs to is where it belongs. The count is `sections.ts` and is

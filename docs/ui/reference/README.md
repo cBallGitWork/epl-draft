@@ -189,7 +189,7 @@ foot row is `Contracts and Media · Transfers · Jobs · Records`.
 | The tabs are the game's own four words | `TABS` in that page — business is a MESSAGE, a round is a COMPETITION |
 | The blue block here carries a DATE | which is the third thing that block carries, after a league position and a minute |
 | **The selected row is filled red** — and a second row is important without being selected | two marks, not one: a fill for "you are reading this", red INK for "this is bad news about you" |
-| **The foot row is filled royal blue** | the phone's navigation (`shell/Rail`), which was a dark outlined rail at every width |
+| **The foot row is filled royal blue** | the phone's navigation from 5 to 23 Sep 2026; since then the phone wears the rail along its foot (`shell/ThumbRail`), because a tab bar goes where you can go from anywhere |
 
 **The one thing in the shot we do not copy**: it sets the open headline and its
 body straight onto the photograph. DESIGN §2 forbids that and `groundfit`
