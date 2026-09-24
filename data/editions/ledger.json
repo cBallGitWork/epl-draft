@@ -233,9 +233,18 @@
       "news:https://www.bbc.co.uk/sport/football/articles/c63d7ypd11ydo",
       "predicted-xi:gw6",
       "wire:through-gw5",
-      "news:https://www.bbc.co.uk/sport/football/articles/crq5x1n12xexo"
+      "news:https://www.bbc.co.uk/sport/football/articles/crq5x1n12xexo",
+      "news:https://www.bbc.co.uk/sport/football/articles/c6qjk1122e9jo",
+      "news:https://www.bbc.co.uk/sport/football/articles/cmwyzjedq51lo"
     ],
     "threads": [
+      {
+        "subject": "test3331's Scotland assets",
+        "beat": "McBurnie recalled, joining Thomas in the international picture for test3331's squad.",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-24T07:30:21.865Z"
+      },
       {
         "subject": "test1's Wirtz asset",
         "beat": "Liverpool block a departure; the player stays put for test1.",
