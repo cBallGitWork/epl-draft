@@ -44,6 +44,15 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## A screen's sub-views switch from its foot, not a second top strip — decided 24 Sep 2026
+
+- **`components/shell/FootSwitcher.tsx`**: `FootFrame` is a viewport-tall column whose foot sits at the bottom
+  of the screen when the body is short (lifted from `MatchShell`); `FootSwitcher` is the linked plate row that
+  goes in it. Craig: *"footswitcher as shared code to be used on other pages… it stops rows of blue buttons"*.
+- The top of a screen keeps one strip of blue plates: its own views. Anything that picks a sub-view of one of
+  those (a club's stats, a manager's board, Fantasy) goes in the foot. First users: the Prem match (byte-identical
+  DOM on 14 route×width pairs) and the head-to-head's Stats.
+
 ## Safari drew every pitch differently from Chrome, and nothing we run is Safari — measured 24 Sep 2026
 
 - **`.pitch` had a ratio and a height ceiling but no width.** Where the ceiling binds, Chrome keeps the width
