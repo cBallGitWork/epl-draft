@@ -1,6 +1,4 @@
 import type {
-  EditionKind,
-  PublishedEdition,
   PublishedStory,
   StoryFace,
   StoryKind,
@@ -86,51 +84,6 @@ export function __escapeControlsInStrings(json: string): string {
     out += inString && ESCAPES[character] !== undefined ? ESCAPES[character] : character;
   }
   return out;
-}
-
-const ROUND_KIND: Record<EditionKind, StoryKind> = {
-  preview: "round-preview",
-};
-
-/** A round column, re-expressed as one story in the rolling paper.
- *
- *  The section headings are furniture the round prompts still write for the
- *  old shape; the story keeps every paragraph and lets them go. When the round
- *  kinds get their own prompts the model will write the story shape directly
- *  and this fold disappears with `latest.json`. */
-export function storyOfEdition(
-  edition: PublishedEdition,
-  /** The covered-key this filing spends — also its one subject. */
-  subject: string,
-  /** When a preview stops being printable: the round's first kickoff. A report
-   *  never expires on a clock. */
-  expiresAt: string | null,
-  /** The named edition it goes out under — display copy, stamped by the desk. */
-  editionName: string,
-): PublishedStory {
-  const story = normalizeStory({
-    slug: `gw${edition.gameweek}-${ROUND_KIND[edition.kind]}`,
-    kind: ROUND_KIND[edition.kind],
-    leagueId: edition.leagueId,
-    period: edition.period,
-    gameweek: edition.gameweek,
-    filedAt: edition.filedAt,
-    expiresAt: edition.kind === "preview" ? expiresAt : null,
-    edition: editionName,
-    byline: edition.byline,
-    headline: edition.headline,
-    deck: edition.deck,
-    body: [edition.intro, ...edition.sections.map((section) => section.body)]
-      .filter((paragraphs) => paragraphs !== "")
-      .join("\n\n"),
-    subjects: [subject],
-    image: null,
-    ties: edition.ties,
-  });
-  // The edition was already normalized, so a story built from it can only fail
-  // normalization if this conversion is wrong — a bug, not bad model output.
-  if (story === null) throw new Error("A normalized edition produced an unprintable story.");
-  return story;
 }
 
 /** Everything ours about a filing; the model's part is only the words. */

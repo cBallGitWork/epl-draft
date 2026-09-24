@@ -342,10 +342,9 @@ into the build.
 A column that regenerated every thirty seconds would not be a column, and a
 sentence about a score that has since moved is worse than no sentence.
 
-A **preview** files once lineups lock and before a ball is kicked; it calls each
-tie, and `markPreview` counts those calls against the results so the next edition
-can tell him what he got. A pundit nobody marks is a pundit who never has to be
-right.
+The **predictions** column calls each tie before a ball is kicked, and
+`markCalls` counts those calls against the results so the next edition can tell
+him what he got. A pundit nobody marks is a pundit who never has to be right.
 
 **The round-report was deleted on 3 Sep 2026.** It was the preview's twin — one
 article filed once the football stopped, about the whole round — and Craig's
@@ -374,10 +373,8 @@ one HOUSE already states without an asterisk. Gone with them:
 `StoryExtras.quotes`, `Quotes.tsx`, both briefs, both voices, the personas
 table and the two studio names.
 
-The preview is the same whole-league shape and the same objection applies to it.
-It is left standing because Craig named the report, and because nothing yet
-replaces what a preview does — `predictions` calls the ties, but the build-up
-piece has no per-tie twin. Recorded so the absence reads as a decision.
+The whole-league `round-preview` went on 24 Sep 2026, having never filed: the
+same objection applied to it, and `predictions` already calls every tie.
 
 **It leads whenever it exists, and then the desk's headline is dropped.** Both
 would be about the same match — a fact-headline and a written one, stacked,
@@ -538,7 +535,7 @@ Added 2 Sep 2026, when the writer filed its first columns.
 | Route | What |
 |---|---|
 | `/` | The front page. Page 1. |
-| `/paper/reports` | Page 2: `tie-report`, `match-report`, `tie-call`, `fixture-preview`, `round-preview`, `news`, `presser`, `predicted-xi`. |
+| `/paper/reports` | Page 2: `tie-report`, `match-report`, `tie-call`, `fixture-preview`, `news`, `presser`, `predicted-xi`. |
 | `/paper/{slug}` | Any one story, printed whole. |
 | `/paper` | Redirects to `/` — a prefix is not a page. |
 

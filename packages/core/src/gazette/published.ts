@@ -1,42 +1,5 @@
-import type { StoryResult } from "./types";
-
-// The written paper: what a columnist filed, and whether it is about the round
-// on screen.
-//
-// **The paper's facts are live and its prose is published, and the split is the
-// whole design.** Everything countable on the front page updates on the app's
-// thirty-second poll through the pure builders beside this file. Prose cannot
-// work that way — a column rewritten every thirty seconds is not a column, and a
-// sentence about a score that has since moved is worse than no sentence. So the
-// writing happens in CI, off the app entirely, and arrives as data.
-//
-// Nothing here reaches the network or a clock. This is the contract the round
-// prompts still write against — the writer validates their output here before
-// converting it to a rolling `PublishedStory` (`story.ts`), which is the shape
-// the page reads. When the round kinds get their own story-shaped prompts,
-// this file goes with them; `markPreview` is the part that outlives it.
-
-/** The round column that still uses the old sectioned edition shape.
- *
- *  A one-member union, and deliberately still a union: "report" was the other
- *  member until 3 Sep 2026, when the single article about the whole league was
- *  replaced by one `tie-report` per tie. Collapsing this to a bare string is a
- *  refactor of the edition shape and not part of that behaviour change — it
- *  lands on its own, with `buildBrief`'s `kind` and `ROUND_KIND` beside it. */
-export type EditionKind = "preview";
-
-/** One paragraph-shaped piece of the column, keyed so a section that arrives
- *  empty simply does not print. */
-interface EditionSection {
-  /** Stable and ours, not the writer's: `verdict`, `ties`, `eleven`. The page
-   *  decides where each goes, so a writer inventing a key gets a section nobody
-   *  renders rather than a page laid out by the model. */
-  key: string;
-  /** The newspaper heading over it, in the writer's words. */
-  heading: string;
-  /** Paragraphs, split on blank lines by whatever prints it. */
-  body: string;
-}
+// The tie a columnist files, called in a preview or reported in a line, and the edge that refuses
+// a malformed or repeated one before the page reads it.
 
 /** One tie, called or reported in a line. Shared with `story.ts`, whose ties
  *  are the same object filed under a rolling story. */
@@ -53,85 +16,6 @@ export interface EditionTie {
   callsTeamId?: string | null;
 }
 
-/** A written edition, as committed.
- *
- *  Every field is optional-shaped at the edge (`normalizePublished`) because
- *  this arrives as JSON from a model: the schema is a request, not a guarantee,
- *  and the page must render whatever survives rather than throw. */
-export interface PublishedEdition {
-  kind: EditionKind;
-  /** The league the column is about.
-   *
-   *  Carried in the edition and not inferred, because the writer and the reader
-   *  are different processes with different environments: CI files the column
-   *  for the league production reports (`/api/league`), and the app serves
-   *  whatever ITS environment names. Both leagues number their periods from the same
-   *  Friday, so period and kind alone would match a rehearsal column onto the
-   *  real league's front page. */
-  leagueId: string;
-  /** The Fantrax period the column is about. Carried through to the story it
-   *  becomes, where `composePaper` orders and retires on it. */
-  period: number;
-  /** The gameweek, for the dateline. */
-  gameweek: number;
-  /** ISO instant the column was filed. Shown, because a reader is entitled to
-   *  know how old an opinion is. */
-  filedAt: string;
-  /** The byline the column runs under. Copy, so it lives in the data rather than
-   *  in a component. */
-  byline: string;
-  /** The wordplay headline. */
-  headline: string;
-  /** The same story in plain words, printed as the deck under the headline so
-   *  the wordplay is never the only thing telling you what happened. */
-  deck: string;
-  /** The splash, in paragraphs. */
-  intro: string;
-  sections: EditionSection[];
-  ties: EditionTie[];
-}
-
-/** Coerce whatever was on disk into something a page can render.
- *
- *  Used by the writer before it commits and by the app when it reads, so a
- *  payload that would break the page cannot reach it from either direction.
- *  Absence is preserved as empty rather than invented: a column with no ties is
- *  a column with no ties, and the section for them does not print. */
-export function normalizePublished(parsed: unknown): PublishedEdition | null {
-  if (parsed === null || typeof parsed !== "object") return null;
-  const raw = parsed as Partial<PublishedEdition>;
-
-  // The four that decide whether this is an edition at all. A column with no
-  // period cannot be matched to a round, and one with no headline has nothing to
-  // print — both are "there is no edition", which is an ordinary state.
-  if (raw.kind !== "preview" && raw.kind !== "report") return null;
-  if (typeof raw.period !== "number" || typeof raw.gameweek !== "number") return null;
-  // An edition filed before the league was recorded cannot be shown to be about
-  // this league, and "cannot be shown" has to read as "is not" on a check whose
-  // whole job is to keep one league's paper off another league's front page.
-  if (typeof raw.leagueId !== "string" || raw.leagueId === "") return null;
-  if (typeof raw.headline !== "string" || raw.headline === "") return null;
-
-  return {
-    kind: raw.kind,
-    leagueId: raw.leagueId,
-    period: raw.period,
-    gameweek: raw.gameweek,
-    filedAt: typeof raw.filedAt === "string" ? raw.filedAt : "",
-    byline: typeof raw.byline === "string" ? raw.byline : "",
-    headline: raw.headline,
-    deck: typeof raw.deck === "string" ? raw.deck : "",
-    intro: typeof raw.intro === "string" ? raw.intro : "",
-    // Deduped, not just filtered. The keys are ours and the writer is told to
-    // use them, but he is a model: two sections keyed `verdict` or one tie
-    // written up twice are a React key collision on the page, and the edge that
-    // already refuses a malformed row is where to refuse a repeated one. First
-    // wins — a second attempt at the same section is a retry, not a sequel.
-    sections: once(Array.isArray(raw.sections) ? raw.sections.filter(isSection) : [], (s) => s.key),
-    ties: once(Array.isArray(raw.ties) ? raw.ties.filter(isTie) : [], (t) => `${t.homeTeamId}-${t.awayTeamId}`),
-  };
-}
-
 /** First wins — a second attempt at the same key is a retry, not a sequel.
  *  Exported for `story.ts`, which refuses repeats at the same edge. */
 export function once<T>(items: T[], keyOf: (item: T) => string): T[] {
@@ -144,16 +28,6 @@ export function once<T>(items: T[], keyOf: (item: T) => string): T[] {
   });
 }
 
-function isSection(value: unknown): value is EditionSection {
-  const section = value as Partial<EditionSection>;
-  return (
-    typeof section?.key === "string" &&
-    typeof section.heading === "string" &&
-    typeof section.body === "string" &&
-    section.body !== ""
-  );
-}
-
 export function isTie(value: unknown): value is EditionTie {
   const tie = value as Partial<EditionTie>;
   return (
@@ -162,48 +36,4 @@ export function isTie(value: unknown): value is EditionTie {
     typeof tie.line === "string" &&
     tie.line !== ""
   );
-}
-
-/** How the preview's calls turned out.
- *
- *  The whole reason a predictions column is worth printing: a pundit nobody
- *  marks is a pundit who never has to be right. Pure comparison, no writer
- *  involved — the previous week's calls against the results that came in, so the
- *  score is a fact about the football rather than a claim the column makes about
- *  itself.
- *
- *  Only ties he actually called are counted. Declining to call one is not a
- *  wrong answer, and folding it in as one would make silence the cheapest way to
- *  look right. */
-interface Marked {
-  right: number;
-  called: number;
-}
-
-export function markPreview(
-  edition: PublishedEdition | null,
-  results: readonly StoryResult[],
-): Marked | null {
-  if (edition === null || edition.kind !== "preview") return null;
-
-  let right = 0;
-  let called = 0;
-  for (const tie of edition.ties) {
-    const call = tie.callsTeamId;
-    if (typeof call !== "string" || call === "") continue;
-
-    // Only a tie that actually produced a result marks anything. A match still
-    // being played is not a call he got wrong.
-    const result = results.find(
-      (played) =>
-        (played.winner.teamId === tie.homeTeamId && played.loser.teamId === tie.awayTeamId) ||
-        (played.winner.teamId === tie.awayTeamId && played.loser.teamId === tie.homeTeamId),
-    );
-    if (result === undefined) continue;
-
-    called += 1;
-    if (result.winner.teamId === call) right += 1;
-  }
-
-  return called === 0 ? null : { right, called };
 }

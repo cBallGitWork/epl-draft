@@ -47,20 +47,19 @@ describe("composePaper", () => {
     expect(paper).toHaveLength(1);
   });
 
-  it("lets a tie report retire its period's preview, calls and predictions", () => {
+  it("lets a tie report retire its period's calls and predictions", () => {
     const paper = composePaper(
       [
-        story({ slug: "preview", kind: "round-preview", filedAt: "2026-08-28T18:00:00.000Z" }),
         story({ slug: "call", kind: "tie-call", filedAt: "2026-08-30T16:00:00.000Z" }),
         story({ slug: "lawro", kind: "predictions", filedAt: "2026-08-29T10:00:00.000Z" }),
         story({ slug: "report", kind: "tie-report", filedAt: "2026-08-31T09:00:00.000Z" }),
-        story({ slug: "next-preview", kind: "round-preview", period: 4, gameweek: 4 }),
+        story({ slug: "next-lawro", kind: "predictions", period: 4, gameweek: 4 }),
       ],
       NOW,
     );
     // The report is the round's last word — but only ITS round's: next week's
-    // preview stands, or the paper would eat its own future.
-    expect(paper.map((s) => s.slug)).toEqual(["next-preview", "report"]);
+    // predictions stand, or the paper would eat its own future.
+    expect(paper.map((s) => s.slug)).toEqual(["next-lawro", "report"]);
   });
 
   it("lets a fresher telling of the same subject replace the earlier one", () => {

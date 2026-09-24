@@ -151,7 +151,6 @@ async function main(): Promise<void> {
     info,
     table: facts.table,
     period: round.period,
-    kickoff,
     marked: await markLastWeek(paper, info, round.period, assignments),
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,

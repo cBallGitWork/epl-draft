@@ -8,8 +8,8 @@ import type { TieState } from "./tieState";
 // catches up on the next look.
 //
 // The running order is an editor's argument, in the `stories.ts` tradition:
-// the round's own reporting first (a report per TIE once the football stops,
-// then the preview); then the perishable (a tie newly decided is a call that
+// the round's own reporting first (a report per TIE once the football stops);
+// then the perishable (a tie newly decided is a call that
 // goes stale the moment the next score moves); then the look-ahead (a preview
 // piece can wait an hour, tonight's kickoff notwithstanding). The cap in the
 // orchestrator takes from the top.
@@ -141,9 +141,7 @@ export function newsdesk(
       want({ kind, key: `${kind}:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-${kind}` });
     }
   } else if (desk.locked && !desk.started) {
-    want(roundPreview(desk.gameweek));
-    // The predictions column files in the same window as the preview and is
-    // marked against the results a week later.
+    // The predictions column is marked against the results a week later.
     want({ kind: "predictions", key: `predictions:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-predictions` });
   }
 
@@ -230,14 +228,6 @@ export function newsdesk(
   }
 
   return out;
-}
-
-function roundPreview(gameweek: number): Assignment {
-  return {
-    kind: "round-preview",
-    key: `round-preview:gw${gameweek}`,
-    slug: `gw${gameweek}-round-preview`,
-  };
 }
 
 function upcoming(kickoff: string | null, now: string): boolean {

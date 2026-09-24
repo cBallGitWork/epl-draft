@@ -1,7 +1,6 @@
 import {
   type Assignment,
   type Club,
-  type EditionKind,
   type FootballSnapshot,
   type LeagueInfo,
   type PublishedStory,
@@ -10,13 +9,12 @@ import {
   type PresserQuote,
   type StoryThread,
   type ThreadUpdate,
-  normalizePublished,
 } from "@epl/core";
 import { presserEdition } from "./presserWeek";
 import { faceOf, type FaceContext } from "./faces";
 import { fullClubName } from "@epl/core";
 import type { RoundFacts } from "./facts";
-import { storyOfColumn, storyOfEdition } from "./newsroom";
+import { storyOfColumn } from "./newsroom";
 import { STORY_BYLINE, editionName } from "./voice/bylines";
 import { presserHeadline } from "./voice/pressers";
 
@@ -36,8 +34,6 @@ export interface DeskContext {
   /** Fantrax's table, for the rankings to argue with. */
   table: readonly StandingsRow[];
   period: number;
-  /** The round's first kickoff — a preview's expiry. */
-  kickoff: string | null;
   /** How the last preview's calls went, report-time only. */
   marked: { right: number; called: number } | null;
   /** This week's press-conference signals, for men the league holds. Empty until
@@ -59,14 +55,6 @@ export interface DeskContext {
    *  column with no voice and no brief. Null when it is not this firing's. */
   elevens: Record<string, unknown> | null;
 }
-
-/** The one kind still written in the old sectioned edition shape. The report
- *  was the other until 3 Sep 2026; a round's football is now covered by a
- *  `tie-report` per tie, which is written in the story shape like everything
- *  else. When the preview follows, this table and `EditionKind` go with it. */
-export const ROUND_OF: Partial<Record<Assignment["kind"], EditionKind>> = {
-  "round-preview": "preview",
-};
 
 /** One edition of the Team Sheet — the day's conferences, and nothing else.
  *  Every consumer reads the same narrowing: the brief, the picture and the lead. */
@@ -95,26 +83,6 @@ export function file(
   ctx: DeskContext,
   filedAt: string,
 ): { story: PublishedStory; threads: ThreadUpdate[] } {
-  const round = ROUND_OF[assignment.kind];
-  if (round !== undefined) {
-    const published = normalizePublished({
-      ...column,
-      kind: round,
-      leagueId: ctx.leagueId,
-      period: ctx.period,
-      gameweek: ctx.snapshot.gameweek,
-      filedAt,
-      byline: STORY_BYLINE[assignment.kind] ?? "",
-    });
-    if (published === null) throw new Error("The column did not come back in a shape the page can print.");
-    // The round shape carries no threads; its sagas arrive when its prompts
-    // move to the story shape.
-    return {
-      story: storyOfEdition(published, assignment.key, ctx.kickoff, editionName(assignment.kind, filedAt)),
-      threads: [],
-    };
-  }
-
   // **The Team Sheet's headline is the desk's, not the writer's.** A reader
   // looking for team news should find the words, not a pun he has to decode —
   // and a thread that runs every week under a different name reads as a

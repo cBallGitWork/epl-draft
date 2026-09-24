@@ -1,8 +1,4 @@
-import {
-  type Assignment,
-  buildBrief,
-  buildPresserBrief,
-} from "@epl/core";
+import { type Assignment, buildPresserBrief } from "@epl/core";
 import { faceOf } from "./faces";
 import {
   fixturePreviewBrief,
@@ -16,8 +12,7 @@ import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL, TIE_REPORT } from "./voice/mat
 import { DODGERS, ELEVEN, POWER_RANKING, PREDICTIONS, WIRE } from "./voice/columns";
 import { NEWS } from "./voice/news";
 import { PRESSER } from "./voice/pressers";
-import { PREVIEW } from "./voice/rounds";
-import { ROUND_OF, edition, faceCtx, type DeskContext } from "./dispatch";
+import { edition, faceCtx, type DeskContext } from "./dispatch";
 
 // What a firing commissions: each assignment turned into the voice and brief a writer is handed.
 
@@ -32,26 +27,6 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
   // printed from the export and never written from it.
   if (assignment.kind === "predicted-xi") {
     return ctx.elevens === null ? null : { printed: ctx.elevens };
-  }
-
-  const round = ROUND_OF[assignment.kind];
-  if (round !== undefined) {
-    return {
-      system: PREVIEW,
-      brief: buildBrief({
-        kind: round,
-        gameweek: ctx.snapshot.gameweek,
-        period: ctx.period,
-        teams: ctx.info.teams.map((team) => ({ teamId: team.teamId, name: team.name })),
-        pairings: ctx.facts.pairings,
-        projected: ctx.facts.projected,
-        eleven: ctx.facts.eleven,
-        fielded: ctx.facts.fielded,
-        deals: ctx.facts.business,
-        doubts: ctx.facts.doubts,
-        pedigree: ctx.facts.pedigree,
-      }),
-    };
   }
 
   const scoped =
