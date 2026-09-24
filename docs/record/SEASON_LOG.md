@@ -4129,3 +4129,20 @@ sent back as a league side playing at home; only a league side's name before
 "host" is refused now. And "My career..." at a capital had never been caught,
 because the career pattern was case-sensitive.
 
+## Lawro turned up (24 Sep 2026)
+
+The live column read as a list. Craig pasted two ties back, *"ai shite. what happeneded to the doir"*,
+and asked for the profile to be checked against the man. The research said what the prompt had missed:
+his BBC columns lead with an opinion about a side ("I just cannot see Wolves being a threat") and use a
+fact only to back it, and his commentary moans at the good news as readily as the bad, with no
+bitterness. The brief was the bigger culprit: ten facts a tie, and he recited them.
+
+Five runs on the mock league turned it. The brief now leads each tie with one story and allows three men,
+two checks send back a roll call and a tie with no verdict, and the voice asks for the moan in every tie.
+Two checks were refusing exactly his habits: "Lovely." and "Close." as one-word sentences read as unknown
+names, and "Hall" was found inside "Dewsbury-Hall". Craig added the Liverpool bias, then corrected it: he
+never admitted it, he just never had them losing. So it went into the calls, which Liverpool men now
+overturn up to a 15% gap, and the 159-game line left the brief. The run that landed: *"testf are second
+and won their last three. Due a fall. Rogers is home to AFC Bournemouth for them, a kind one. He will find
+a way to waste it."*
+

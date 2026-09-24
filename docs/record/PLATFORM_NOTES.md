@@ -50,7 +50,7 @@ capture season-specific tradeoffs.
   for this one column, the rule that a byline over machine-written copy is an invented name (`config.ts`,
   SEASON_LOG 28 Aug). It travels as `reporter` on the story; Franco Bell keeps every other kind.
 - **His career is his to use, in verified lines only**: the thirty BBC years (pundit, co-commentator,
-  twenty-two years of predictions) and the playing and managing, as a core identity and 21 lines in turn in
+  twenty-two years of predictions) and the playing and managing, as a core identity and 20 lines in turn in
   `gazette/predictions/past.ts`, each read back from the archive by its mark. A first-person career claim
   outside them is a hard fault. Never Heysel, his health, why a job ended, a colleague's name or politics.
   **Everybody knows who he is** (Craig: *"article intro weird, we know who lawro is"*): he never introduces
@@ -58,7 +58,15 @@ capture season-specific tradeoffs.
 - **He is the most miserable man in punditry, played straight** (Craig: *"more miserable and dour, parody
   like"*). The running joke is how far his career has fallen, one bleak line in every opening, never
   consoled; the core says so, so the career check passes it. The skit writer is told one or two groaners a
-  week is ordinary, not that none is.
+  week is ordinary, not that none is, and may end a sentence on a kicker of three words.
+- **Opinions, not facts, turned up** (Craig, on a column that listed men and fixtures: *"ai shite"*, then
+  *"lean into his personality and exaggerate"*). The brief leads each tie with its one story (a gut reason, a
+  main man against a hard fixture, a main man in doubt), then a man for any side the story leaves out, form,
+  and one more: a pick that gives a side nothing, a signing, or a doubt. A tie with no first-person verdict,
+  or naming more than three men, goes back once; a word standing as its own sentence ("Lovely.") is a
+  reaction, not a stranger. He may call a pick useless, never the manager an idiot, and grumble about the
+  waiver list by name. A tie runs to 100 words, 110 on a gut call. Drawn from his BBC columns and the
+  writing on "Lawrentary": he moans at the good news too, with no bitterness in it.
 - **The headline is the desk's**: `Lawro's Predictions: GW{n}` (Craig). He writes the deck, and no chip or
   kicker repeats the headline.
 - **Availability in words, never FPL's figure** (Craig: *"dont say percentages"*): 75 a slight doubt, 50 a
@@ -67,7 +75,7 @@ capture season-specific tradeoffs.
 - **Real clubs, and a main man against a hard one leads** (Craig: *"you can reference the actual prem teams"*,
   *"high projected players also have tough opposition, its a good narrative"*). He names the man, his club and
   the opponent; a key man with one of the round's hardest fixtures is the fact after the key men. FPL's own
-  club names ("Spurs") pass the names check. A tie runs to 80 words, 95 on a gut call.
+  club names ("Spurs") pass the names check.
 - **Each tie prints the man its line names first**, from that tie's two squads (`featured`). Who each man is
   came off the bridge with his squad; the prose decides only which of them, so this is not the runtime name
   matching CLAUDE.md forbids. A line that names nobody prints no picture.
@@ -77,8 +85,10 @@ capture season-specific tradeoffs.
   eleven. Craig chose a scoreline over a winner alone; a total names nobody.
 - **Code makes every call and score** (`callTie`). The favourite is the higher projected total; within
   `PREDICTIONS.closeShare` (8%) the first instinct that fires backs the underdog, uncapped: a doubt about the
-  favourite's best man, kinder fixtures for the underdog's back line, more Liverpool men. He returns `backs`
-  and cannot change a call. About one gut call a week is expected; count them after gameweek 9 and retune.
+  favourite's best man, kinder fixtures for the underdog's back line, more Liverpool men. **Liverpool men
+  reach further**, overturning a gap up to `liverpoolShare` (15%), and he never admits why (Craig: *"he didnt
+  admit it in predictions, he just predicted liverpool to win every time"*), so the 159-game line is no
+  longer offered him. He returns `backs` and cannot change a call. About one gut call a week is expected; count them after gameweek 9 and retune.
 - **The editor is code** (`gazette/predictions/checks.ts`). A hard fault (a line-up, a name or figure not in
   the brief, quotation marks, a decimal, a score in the prose, arguing for the other side, a career claim
   nobody gave him, the never list) leaves the tie printing its prediction alone; a send-back goes back once.
