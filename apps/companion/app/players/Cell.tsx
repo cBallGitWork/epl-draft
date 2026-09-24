@@ -106,8 +106,6 @@ export default function Cell({
   );
 }
 
-/** Centred under its head the way CM sets a column, a little tighter under a thumb. */
-
 /** Which way ownership moved, said in the sign as well as the colour. Nought is drawn quiet. */
 function Trend({ value }: { value: number }) {
   if (value === 0) return <span className="text-faint">0%</span>;

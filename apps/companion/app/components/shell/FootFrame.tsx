@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
-import TabStrip, { type Tab } from "./TabStrip";
 
-// CM's foot row (`cm0102/02.jpg`): a screen's own sub-views switched from the bottom, so the top keeps one
-// row of blue plates.
+// CM's foot row (`cm0102/02.jpg`): a screen's own sub-views switched from the bottom (a `TabStrip` in `foot`), so
+// the top keeps one row of blue plates.
 
 /** A screen at least the viewport tall, its foot at the bottom when the body is short and, on a desk, in view when it is long. */
 export function FootFrame({ foot, children }: { foot?: ReactNode; children: ReactNode }) {
@@ -15,15 +14,3 @@ export function FootFrame({ foot, children }: { foot?: ReactNode; children: Reac
   );
 }
 
-/** The plates in a `FootFrame`'s foot, one per sub-view, linked so each view has a URL. */
-export default function FootSwitcher<K extends string>({
-  label,
-  tabs,
-  current,
-}: {
-  label: string;
-  tabs: readonly (Tab & { key: K })[];
-  current: K;
-}) {
-  return <TabStrip label={label} tabs={tabs} current={current} />;
-}

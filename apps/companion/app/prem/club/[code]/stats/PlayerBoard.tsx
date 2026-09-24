@@ -15,7 +15,7 @@ import {
   SCROLL,
   ROW_HOVER,
 } from "@/app/desk";
-import { MUTE } from "../../../../components/league/TableHeads";
+import { MUTE, SortArrow } from "../../../../components/league/TableHeads";
 import { DASH } from "@epl/core";
 
 // A club's season, player by player, in Championship Manager's stat-screen
@@ -156,9 +156,7 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
                   >
                     {measure.head}
                     {sort?.key === measure.key ? (
-                      <span aria-hidden className="pl-0.5 text-[0.5rem] leading-none">
-                        {sort.descending ? "▼" : "▲"}
-                      </span>
+                      <SortArrow down={sort.descending} className="pl-0.5" />
                     ) : null}
                   </button>
                 </th>

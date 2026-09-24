@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ScoutShell from "./Shell";
+import ScoutShell, { POOL_ROWS } from "./Shell";
 import PlayerTable from "./PlayerTable";
 import BoardBar from "./BoardBar";
 import { getPlayerStats } from "./playerStats";
@@ -7,56 +7,27 @@ import { getLeaguePool } from "./pool";
 import { readerTeamId } from "../squads";
 import {
   PAGE_ROWS,
-  activeGroup,
   activeSort,
+  boardHref,
   isPer90,
   playersQuery,
-  showAllHref,
   shownRows,
+  type PlayersSearchParams,
 } from "./query";
-import type { PlayersSearchParams } from "./query";
 import { POOL } from "./routes";
-import { columnsIn } from "./groups";
+import { columnsIn, groupFor } from "./groups";
 import { figureOf } from "./figure";
 import { cutsFor } from "./standout";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH } from "@epl/core";
 import OutLink from "../components/shell/OutLink";
 import FantraxSilent from "../components/shell/FantraxSilent";
 
-// Every player Fantrax knows, what our league has decided about him, and what
-// Fantrax scores him. The numbers are theirs under our league's scoring, which
-// is why the heading says which season they are and whether they were played or
-// predicted — a column headed FPts that silently switched between the two would
-// be the confident wrong answer. (That read defaulted to a PROJECTION until
-// 5 Sep 2026 and now defaults to year-to-date; the heading followed the payload
-// without anyone touching it, which is the whole reason it is read off the
-// answer. PLATFORM_NOTES carries the re-probe.)
-//
-// **It is its own section as of 6 Sep 2026** (Craig: *"I think this function
-// will be its own section away from the league etc"*), so it wears `ScoutShell`
-// rather than `LeagueShell`. It wore the league's frame for a day, which fixed
-// the real fault of the day before — a bar of a third shape, no panel, and the
-// directory printed straight onto the match photograph, which is the one thing
-// DESIGN §2 forbids and was 40 of `groundfit`'s findings — but it did it by
-// putting a screen about six hundred Premier League footballers under a bar
-// naming our ten-team fantasy competition. True about who PRICES them and wrong
-// about who they are.
-//
-// **The caption is the CATEGORY, not the view.** `cm9900/16.jpg` captions its
-// stat list `Average Rating` and lets the frame say where you are, which is the
-// arrangement here: the bar names the section, and the caption names what the
-// board is ranked by. That is why `Board` draws no `Caption` of its own — two
-// captions stacked is the screen saying its own name twice.
+// Every player Fantrax knows, what our league has decided about him, and what Fantrax scores him under our
+// scoring; the heading says which season and whether played or projected, as the payload says.
 
 // Must match `PAGE_REVALIDATE` in the app's config. Next analyses this statically, so
 // it cannot be imported — change both together. (PLATFORM_NOTES records why.)
 export const revalidate = 30;
-
-/* The filter chips and the stat-group strip moved to `BoardBar.tsx` on 10 Sep
-   2026, with the docblock recording why they are bevels rather than tabs. This
-   page had reached 256 lines and most of them were a control field it was
-   drawing by hand; what is left here is the page's own job — read, filter, count
-   and say what could not be read. */
 
 export default async function PlayersPage({
   searchParams,
@@ -80,7 +51,7 @@ export default async function PlayersPage({
 
   if ("unavailable" in pool) {
     return (
-      <ScoutShell>
+      <ScoutShell rows={POOL_ROWS}>
         <FantraxSilent code={pool.unavailable}>
           The player pool is Fantrax&apos;s and we cannot read it right now. Ownership is the part
           that would go stale first, so this shows nothing rather than yesterday&apos;s.
@@ -92,7 +63,7 @@ export default async function PlayersPage({
   const shown = shownRows(pool.rows, query, raw);
   const capped = query.all ? shown : shown.slice(0, PAGE_ROWS);
 
-  const group = activeGroup(query);
+  const group = groupFor(query.group);
   const rated = isPer90(query);
   const columns = columnsIn(group, activeSort(query).key);
 
@@ -130,7 +101,7 @@ export default async function PlayersPage({
   }
 
   return (
-    <ScoutShell>
+    <ScoutShell rows={POOL_ROWS}>
       {/* Said out loud while the board is a picker, because a table whose rows
           have quietly changed destination is a screen that lies about what a tap
           does. It carries its own way out. */}
@@ -178,7 +149,7 @@ export default async function PlayersPage({
       {capped.length < shown.length ? (
         <p className="text-2xs text-faint">
           Showing the first {capped.length}. Search or filter to narrow it, or{" "}
-          <Link href={showAllHref(query)} className="font-bold text-accent underline">
+          <Link href={boardHref(query, { all: "1" })} className="font-bold text-accent underline">
             show all {shown.length}
           </Link>
           .

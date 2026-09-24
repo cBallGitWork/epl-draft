@@ -1,10 +1,8 @@
 import { INSTINCTS, type Instinct } from "./predictions/pick";
 
-// The tie a columnist files, called in a preview or reported in a line, and the edge that refuses
-// a malformed or repeated one before the page reads it.
+// The tie a columnist files, and the edge that refuses a malformed or repeated one before the page reads it.
 
-/** One tie, called or reported in a line. Shared with `story.ts`, whose ties
- *  are the same object filed under a rolling story. */
+/** One tie and the columnist's line on it, filed under a story (`story.ts`). */
 export interface EditionTie {
   /** Both team ids, so the page joins to its own names rather than printing the
    *  writer's copy of them — a name typed by a model is a name that goes stale
@@ -13,8 +11,7 @@ export interface EditionTie {
   awayTeamId: string;
   /** The columnist's line about it. */
   line: string;
-  /** For a preview only: who he says wins. Null when he would not call it, which
-   *  is a real answer and not a missing one. Never set on a report. */
+  /** Who he says wins; null when he would not call it, which is a real answer and not a missing one. */
   callsTeamId?: string | null;
   /** Why he went against the favourite; absent when he backed it. */
   instinct?: Instinct;
@@ -22,8 +19,7 @@ export interface EditionTie {
   score?: { home: number; away: number };
 }
 
-/** First wins — a second attempt at the same key is a retry, not a sequel.
- *  Exported for `story.ts`, which refuses repeats at the same edge. */
+/** First wins: a second attempt at the same key is a retry, not a sequel. */
 export function once<T>(items: T[], keyOf: (item: T) => string): T[] {
   const seen = new Set<string>();
   return items.filter((item) => {

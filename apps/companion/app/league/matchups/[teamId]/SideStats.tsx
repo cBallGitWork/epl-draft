@@ -3,10 +3,12 @@ import Image from "next/image";
 import { type LeagueTeam, type LineupDetail, type ScoringCategory, type SquadPlayerDetail, crestUrl, inkOn, playerName, teamColours, DASH } from "@epl/core";
 import type { SubMark } from "../../../components/football/SubMarker";
 import Section from "../../../components/shell/Section";
-import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
+import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
-import { MUTE, SortHead } from "../../../components/league/TableHeads";
-import { BOARD, EDGE_FADE, HEAD_CELL, ROW_FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
+import { BOARD, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_NAME, ROW_RULE } from "@/app/desk";
+import SubNote from "../../../prem/match/[id]/SubNote";
+import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "../../../prem/match/[id]/PlayerCardButton";
 import { MATCH_ROW } from "../../../prem/match/[id]/matchRow";
 import { figureOf, sideRows, type Counts } from "./sideRows";
@@ -48,50 +50,41 @@ export default function SideStats({
 
   return (
     <Section>
-      <div className="relative">
-        <span aria-hidden className={EDGE_FADE} />
-        <div className={`${SCROLL} cm-scroll cm-index-scoped bg-surface`} style={managerIndex(team)}>
-          <table className={BOARD}>
-            <thead>
-              <tr>
-                <th className={`${HEAD_CELL} ${PIN_TILE} ${TILE_WIDTH} bg-surface`}>
-                  <span className={MUTE}>Fantrax position</span>
-                </th>
-                <th className={`${HEAD_CELL} ${PIN_NAME} ${NAME_WIDTH}`}>
-                  <span className={MUTE}>Player</span>
-                </th>
-                {heads.map((head) => (
-                  <SortHead
-                    key={head.code}
-                    width=""
-                    title={head.name}
-                    href={hrefFor(head.code)}
-                    label={head.code}
-                    sorted={head.code === sort.head ? (sort.descending ? "descending" : "ascending") : undefined}
-                  />
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {eleven.map((player) => row(player, false))}
-              {bench.length === 0 ? null : (
-                <>
-                  <tr>
-                    <th
-                      scope="rowgroup"
-                      colSpan={heads.length + 2}
-                      className="cm-bevel h-6 px-1.5 text-left text-2xs font-bold uppercase"
-                    >
-                      Bench · not counted
-                    </th>
-                  </tr>
-                  {bench.map((player) => row(player, true))}
-                </>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <ScrollBoard className="cm-index-scoped" style={managerIndex(team)}>
+        <table className={BOARD}>
+          <thead>
+            <tr>
+              <LeadHeads tile={PINNED_TILE} name={`${PIN_NAME} ${NAME_WIDTH}`} />
+              {heads.map((head) => (
+                <SortHead
+                  key={head.code}
+                  title={head.name}
+                  href={hrefFor(head.code)}
+                  label={head.code}
+                  sorted={sortedAs(head.code === sort.head, sort.descending)}
+                />
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {eleven.map((player) => row(player, false))}
+            {bench.length === 0 ? null : (
+              <>
+                <tr>
+                  <th
+                    scope="rowgroup"
+                    colSpan={heads.length + 2}
+                    className="cm-bevel h-6 px-1.5 text-left text-2xs font-bold uppercase"
+                  >
+                    Bench · not counted
+                  </th>
+                </tr>
+                {bench.map((player) => row(player, true))}
+              </>
+            )}
+          </tbody>
+        </table>
+      </ScrollBoard>
     </Section>
   );
 }
@@ -112,7 +105,7 @@ function SideRow({
   const { rostered, club } = player;
   return (
     <tr className={`${ROW_RULE} ${reserve ? "cm-out" : ""}`} {...MATCH_ROW}>
-      <PositionTile positions={rostered.slot.position ? [rostered.slot.position] : []} cell className={PIN_TILE} />
+      <PositionTile positions={rostered.slot.position ? [rostered.slot.position] : []} cell className={PINNED_TILE} />
       <td className={`p-0 ${PIN_NAME} ${NAME_WIDTH}`}>
         <MaybeCard player={player} className={`${ROW_LINK} ${PHONE_ROW} w-full gap-1.5 px-1.5 text-left`}>
           <span className="grid size-5 shrink-0 place-items-center">
@@ -120,9 +113,7 @@ function SideRow({
           </span>
           <span className={`min-w-0 truncate ${ROW_NAME}`}>{playerName(rostered)}</span>
           {sub === undefined ? null : (
-            <span className="numeric ml-auto hidden shrink-0 whitespace-nowrap pl-2 text-xs font-bold text-mid lg:inline lg:text-sm">
-              {sub.off ? `sub off ${sub.minute}'` : `sub on ${sub.minute}'`}
-            </span>
+            <SubNote onAt={sub.off ? null : sub.minute} offAt={sub.off ? sub.minute : null} className="hidden lg:inline" />
           )}
         </MaybeCard>
       </td>
@@ -148,6 +139,5 @@ function managerIndex(team: LeagueTeam): CSSProperties {
 // The match page's club board's cells, copied rather than shared: two boards so far (`ClubStats` is the other).
 const FIGURE_CELL = `numeric px-1.5 text-center ${ROW_FIGURE}`;
 const PHONE_ROW = "max-lg:min-h-9";
-const PIN_TILE = "sticky left-0 z-10";
-const PIN_NAME = "sticky left-10 z-10 border-r border-line bg-surface lg:left-14";
+const PIN_NAME = `${PINNED_NAME} left-10 lg:left-14`;
 const NAME_WIDTH = "w-32 lg:w-72";

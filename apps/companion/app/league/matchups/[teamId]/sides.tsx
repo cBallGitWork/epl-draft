@@ -73,11 +73,7 @@ export function Withheld({
  *  Craig, 11 Sep 2026: *"for a match that has not been played, just show the two
  *  squad lists, thats it"*.
  *
- *  **The whole board comes off, not just its content.** Every one of the four
- *  tabs is furniture before the football — the scoreline is 0–0, Scores is a
- *  withheld panel because the lineups have not locked, and Stats, Players and
- *  Report are boards of dashes. A strip whose every plate leads to an empty box
- *  is four controls saying the same nothing.
+ *  **The whole board comes off, not just its content**: before the football every tab is an empty box.
  *
  *  **And the scoreline goes with them**, which is the part "thats it" is doing
  *  the work in. Two dashes on two colour plates is a scoreline that has nothing

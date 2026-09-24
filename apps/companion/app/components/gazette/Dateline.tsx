@@ -1,59 +1,15 @@
 import { PAPER_CORRESPONDENT, type PublishedStory, londonDayAndTime } from "@epl/core";
-import { columnistOf } from "@/app/config";
 import { pageOf } from "./paperPages";
 
-// Which edition filed a story, when, and where the rest of it is.
-//
-// Three occurrences counted on 16 Sep 2026 — `Splash`, `Teaser` and `Written` —
-// which is the rule-of-2/3 bar met exactly rather than felt. All three set the
-// same letterspaced small capitals, opened with the same `{edition} · ` prefix
-// and printed the same `Filed {time}`; two of them followed it with the same
-// turn-line. What varied was the wrapper element and nothing else.
-//
-// **The splash is credited and the ranks below it are not**, which is measured
-// rather than felt: with the byline on, every dateline ran to THREE lines of
-// small capitals at 390 — 36px of furniture under a teaser whose deck is two
-// lines, so the credit outweighed the story it belonged to. A front page
-// credits its splash and lets its seconds carry the filing alone; the article
-// page is credited too, being the piece itself.
-//
-// **The reporter's name leads it, because that is a byline and the ink chip
-// above is not.** `story.byline` renders as an inverted standing head — THE
-// BACK PAGE, THE SELECTOR — which is a column's title and not a person. A paper
-// runs both: the standing head over the piece, "by <name>" under it with the
-// filing. The name is the story's `reporter` where it has one (Lawro's is Mark
-// Lawrenson's), and the house correspondent's otherwise.
-//
-// **The turn-line is optional and that is a real distinction, not a flag for
-// its own sake.** `Written` IS the article, so a line reading "turn to page 2"
-// there would point the reader at the page he is already on. The two front-page
-// ranks are teasers and do carry it.
-//
-// **`here` is the same rule, one step out**, and it was missing until 21 Sep
-// 2026: a teaser on a SECTION page points at that section, so every line on
-// page 2 read "turn to page 2" and every line on page 3 read "turn to page 3".
-// Given the page a reader is on, those say "read on" instead.
-//
-// **The element is the caller's, because the two ranks nest differently.** A
-// splash's dateline is a block under an ornament rule and a teaser's is the last
-// line inside a `TurnLink`, so a `<p>` inside a `<span>` would be invalid markup
-// the browser resolves by unnesting it. `as` takes the tag rather than a variant
-// name: there are exactly two and the caller already knows which it is.
-//
-// Deliberately NOT extracted with it: the class string itself. It reads
-// `font-sans text-3xs uppercase tracking-[0.16em]` at sixteen sites across the
-// paper, but in three weights — 8 `font-semibold`, 6 bare, 2 `font-bold` — and
-// the weights are not noise: bare is a dateline, bold is a standing head. A
-// single constant would be followed by eight sites and overridden by eight,
-// which is the DASH failure CODE_RULES §4 names. The dateline is extracted here
-// as a COMPONENT because it is one meaning; the class string stays duplicated
-// until the roles it serves are separated.
+// Which edition filed a story, when, and where the rest of it is: "by <name>" (a person, never the standing head),
+// the edition, the filing time, and a turn-line unless the reader is already on that page (`turn`, `here`). The
+// small-caps class stays written out: sixteen sites in three weights that mean three different things.
 
 export default function Dateline({
   story,
   as = "p",
   turn = true,
-  byline = true,
+  byline,
   here,
   className = "",
 }: {
@@ -62,8 +18,8 @@ export default function Dateline({
   as?: "p" | "span";
   /** Whether to point at the rest of the story. False on the article itself. */
   turn?: boolean;
-  /** Whether to credit the correspondent. False on the ranks below the splash. */
-  byline?: boolean;
+  /** Whether to credit the house correspondent. False on the front's ranks and over a columnist's own byline. */
+  byline: boolean;
   /** The page the reader is ON, when it is a section page. A teaser sitting on
    *  the page it points at said "turn to page 2" to somebody already reading
    *  page 2 — true of every teaser on both section pages. */
@@ -96,8 +52,7 @@ export default function Dateline({
 }
 
 
-/** Whose name leads the byline: a columnist's own, billed, or the house correspondent's. */
+/** Whose name leads the byline: the reporter's, or the house correspondent's. */
 function credit(story: PublishedStory): string {
-  const columnist = columnistOf(story);
-  return columnist === null ? (story.reporter ?? PAPER_CORRESPONDENT) : `${story.reporter}, ${columnist.billing}`;
+  return story.reporter ?? PAPER_CORRESPONDENT;
 }

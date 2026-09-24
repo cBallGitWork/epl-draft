@@ -76,7 +76,7 @@ export default function Squad({
           between them would be a control with nothing to decide. */}
       {grass === null ? null : (
         <div className="lg:hidden">
-          <ViewToggle view={view} onPick={setView} quiet />
+          <ViewToggle view={view} onPick={setView} />
         </div>
       )}
 

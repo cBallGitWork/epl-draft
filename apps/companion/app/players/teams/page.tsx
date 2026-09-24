@@ -56,7 +56,7 @@ export default async function TeamsPage({
   );
 
   return (
-    <ScoutShell current="teams" rows={0}>
+    <ScoutShell current="teams">
       {"unavailable" in pool ? (
         <FantraxSilent code={pool.unavailable}>
           Fantrax&apos;s points are missing because the pool would not answer; the run and FPL&apos;s figures are

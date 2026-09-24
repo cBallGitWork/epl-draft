@@ -35,15 +35,7 @@ import TabStrip, { type Tab } from "../shell/TabStrip";
 
 type Which = "team" | "opponent";
 
-/** **Exactly one view belongs to a side, and it is the grass.**
- *
- *  There was a `PER_SIDE` lookup here while two of the four tabs were per-side —
- *  a map rather than a ternary, because the phone's single side and the desk's
- *  pair are two call sites and every tab added was two places free to disagree.
- *  Four of the five are now the join of both squads, and a head-to-head has no
- *  subject for any of them to belong to: they are drawn once, at both widths, by
- *  the caller. That leaves one branch, which is a `<Sides>` below rather than a
- *  lookup with a single entry. */
+/** Exactly one view belongs to a side, the grass; every other tab is both squads, drawn once by the caller. */
 
 export interface MatchupSide {
   team: LeagueTeam;
@@ -62,11 +54,7 @@ export interface MatchupSide {
    *  is joined against never cross to the browser. When his lineup is not public
    *  yet, this is the panel saying so.
    *
-   *  **The list went** (Craig, 11 Sep 2026: *"pitch and list dont need to be two
-   *  screens, come on, should just be Scores for that view"*, then *"just pitch
-   *  i think"*), and the per-side Players board went with it on 12 Sep: every
-   *  man against every category is a comparison, and drawing it a side at a time
-   *  was asking a reader to hold one half in his head. */
+   *  The list went (Craig, 11 Sep 2026: *"just pitch i think"*). */
   lineup: ReactNode;
 }
 

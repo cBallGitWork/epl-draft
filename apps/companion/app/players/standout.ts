@@ -17,34 +17,11 @@ export function cutsFor<Column extends { key: string }>(
   return new Map(columns.map((column) => [column.key, standoutCuts([...values(column)], SHARES, { floor: FLOOR })]));
 }
 
-/** The least football a man must have played before a rate is drawn for him.
- *
- *  **One match, and it is a fact about football rather than about the season** —
- *  which is what separates it from the minutes FLOORS in `minutes.ts`, every one
- *  of which is derived because it encodes how far through a campaign we are.
- *  Ninety minutes is ninety minutes in August and in May.
- *
- *  It exists because the first cut of the per-90 toggle had no floor and the
- *  board showed it immediately: sorted by points per 90, the top of the table
- *  was a wall of men on **90.00** — one minute on the pitch, one point, rated as
- *  though they had played the whole match every week. Arithmetically true and a
- *  lie about football, which is exactly what the docblock below already said and
- *  had not been made to do. Found by looking at the screen. */
+/** The least football a man must have played before a rate is drawn for him: one match, in August as in May. */
 const RATE_FLOOR = 90;
 
-/** A count expressed per ninety minutes played, or nothing when there is not
- *  enough football behind it to divide by.
- *
- *  **A dash and not a nought**, which is the app's absence grammar (DESIGN §7)
- *  doing real work: a man who has played four minutes has no rate, and saying so
- *  is different from saying his rate is zero. It also puts him where he belongs
- *  in the order — `shownRows` sorts absent figures last whichever way a column
- *  runs — so turning the toggle on no longer floats the least-played men in the
- *  pool to the top of it.
- *
- *  Not rounded here. A rate that is rounded before it is compared sorts wrong —
- *  two men at 0.514 and 0.508 both print 0.51 and must still order — so the
- *  rounding is the cell's and the number stays full-precision until then. */
+/** A count per ninety minutes played, or nothing (a dash, sorted last) when there is too little football behind it.
+ *  Not rounded here: two men at 0.514 and 0.508 print alike and must still order. */
 export function per90(value: number | null, minutes: number | null): number | null {
   if (value === null || minutes === null || minutes < RATE_FLOOR) return null;
   return (value * 90) / minutes;

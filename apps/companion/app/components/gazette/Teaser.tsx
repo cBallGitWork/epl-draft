@@ -1,7 +1,5 @@
 import TurnLink from "./TurnLink";
-import Face from "./Face";
-import ColumnistPhoto from "./ColumnistPhoto";
-import { columnistOf } from "@/app/config";
+import StoryFace, { hasPicture } from "./StoryFace";
 import Dateline from "./Dateline";
 import type { Club, PublishedStory } from "@epl/core";
 import { KICKER } from "./kickers";
@@ -59,18 +57,13 @@ export default function Teaser({
   here?: string;
 }) {
   const kicker = KICKER[story.kind];
-  const columnist = columnistOf(story);
 
   return (
     <article id={story.slug} className="scroll-mt-4 border-t border-line pt-3">
       <TurnLink href={storyHref(story.slug)} className="flex min-h-11 flex-col justify-center gap-1">
-        {pictured && (story.face || columnist) ? (
+        {pictured && hasPicture(story) ? (
           <span className="-mt-3 mb-1 block">
-            {story.face ? (
-              <Face face={story.face} clubs={clubs} rank="shoulder" />
-            ) : columnist ? (
-              <ColumnistPhoto photo={columnist.photo} rank="shoulder" />
-            ) : null}
+            <StoryFace story={story} clubs={clubs} rank="shoulder" />
           </span>
         ) : null}
         {/* Ink, not the accent. The sheet's one red is spent on what is live

@@ -2,9 +2,10 @@ import Link from "next/link";
 import { DASH, toFantraxClubCode } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { ROW_LINK } from "../../components/league/TableCells";
-import { MUTE, SortHead } from "../../components/league/TableHeads";
+import { MUTE, SortHead, sortedAs } from "../../components/league/TableHeads";
 import { standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
-import { BOARD, EDGE_FADE, GROUP_PLATE, HEAD_CELL, INDEX_WIDTH, ROW_FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, GROUP_PLATE, HEAD_CELL, INDEX_WIDTH, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_RULE } from "@/app/desk";
+import ScrollBoard from "../../components/league/ScrollBoard";
 import { POOL, TEAMS } from "../routes";
 import { TEAM_COLUMNS, columnGroups, type TeamColumn } from "./columns";
 import type { TeamRow } from "./teamRows";
@@ -34,60 +35,57 @@ export default function TeamBoard({
 
   return (
     // Opaque, so the pinned club hides the figures scrolling under it; a fade says there is more to the right.
-    <div className="relative">
-      <span aria-hidden className={EDGE_FADE} />
-      <div className={`${SCROLL} cm-scroll bg-surface`}>
-        <table className={`${BOARD} min-w-max`}>
-          <caption className="sr-only">The twenty clubs, ordered by {sort.title.toLowerCase()}</caption>
-          <thead>
-            <tr>
-              <th colSpan={2} className={`${HEAD_CELL} ${PIN_INDEX} bg-surface`}>
-                <span className={MUTE}>Club</span>
+    <ScrollBoard>
+      <table className={`${BOARD} min-w-max`}>
+        <caption className="sr-only">The clubs, ordered by {sort.title.toLowerCase()}</caption>
+        <thead>
+          <tr>
+            <th colSpan={2} className={`${HEAD_CELL} ${PIN_INDEX} bg-surface`}>
+              <span className={MUTE}>Club</span>
+            </th>
+            {columnGroups(TEAM_COLUMNS).map((entry) => (
+              <th key={entry.group} colSpan={entry.span} scope="colgroup" className={`${HEAD_CELL} border-l border-line/60`}>
+                <span className={GROUP_PLATE}>{entry.group}</span>
               </th>
-              {columnGroups(TEAM_COLUMNS).map((entry) => (
-                <th key={entry.group} colSpan={entry.span} scope="colgroup" className={`${HEAD_CELL} border-l border-line/60`}>
-                  <span className={GROUP_PLATE}>{entry.group}</span>
-                </th>
-              ))}
-            </tr>
-            <tr className="text-2xs">
-              <th scope="col" className={`${HEAD_CELL} ${PIN_INDEX} bg-surface`}>
-                <span className={MUTE}>Place</span>
-              </th>
-              <th scope="col" className={`${HEAD_CELL} ${PIN_NAME}`}>
-                <span className={MUTE}>Club</span>
+            ))}
+          </tr>
+          <tr className="text-2xs">
+            <th scope="col" className={`${HEAD_CELL} ${PIN_INDEX} bg-surface`}>
+              <span className={MUTE}>Place</span>
+            </th>
+            <th scope="col" className={`${HEAD_CELL} ${PIN_NAME}`}>
+              <span className={MUTE}>Club</span>
+            </th>
+            {TEAM_COLUMNS.map((column) => (
+              <SortHead
+                key={column.key}
+                width={firsts.has(column.key) ? "border-l border-line/60" : ""}
+                title={column.title}
+                href={teamsHref(column, sort, descending)}
+                label={column.head}
+                sorted={sortedAs(column.key === sort.key, descending)}
+              />
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, at) => (
+            <tr key={row.club.code} className={ROW_RULE}>
+              {/* `IndexCell`'s block, pinned: it takes no class, and this board scrolls sideways. */}
+              <td className={`cm-index numeric px-1.5 text-center ${PIN_INDEX}`}>{at + 1}</td>
+              <th scope="row" className={`p-0 text-left font-normal ${PIN_NAME}`}>
+                <Link href={`${POOL}?club=${toFantraxClubCode(row.club.shortName)}`} className={`${ROW_LINK} gap-1.5 px-1.5`}>
+                  <ClubLabel club={row.club} />
+                </Link>
               </th>
               {TEAM_COLUMNS.map((column) => (
-                <SortHead
-                  key={column.key}
-                  width={firsts.has(column.key) ? "border-l border-line/60" : ""}
-                  title={column.title}
-                  href={teamsHref(column, sort, descending)}
-                  label={column.head}
-                  sorted={column.key === sort.key ? (descending ? "descending" : "ascending") : undefined}
-                />
+                <Figure key={column.key} column={column} row={row} cut={cuts.get(column.key)} first={firsts.has(column.key)} />
               ))}
             </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, at) => (
-              <tr key={row.club.code} className={ROW_RULE}>
-                {/* `IndexCell`'s block, pinned: it takes no class, and this board scrolls sideways. */}
-                <td className={`cm-index numeric px-1.5 text-center ${PIN_INDEX}`}>{at + 1}</td>
-                <th scope="row" className={`p-0 text-left font-normal ${PIN_NAME}`}>
-                  <Link href={`${POOL}?club=${toFantraxClubCode(row.club.shortName)}`} className={`${ROW_LINK} gap-1.5 px-1.5`}>
-                    <ClubLabel club={row.club} />
-                  </Link>
-                </th>
-                {TEAM_COLUMNS.map((column) => (
-                  <Figure key={column.key} column={column} row={row} cut={cuts.get(column.key)} first={firsts.has(column.key)} />
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          ))}
+        </tbody>
+      </table>
+    </ScrollBoard>
   );
 }
 
@@ -109,8 +107,8 @@ function Figure({ column, row, cut, first }: { column: TeamColumn; row: TeamRow;
 const FIGURE = `numeric w-12 px-1.5 text-center lg:w-16 ${ROW_FIGURE}`;
 
 /** The place and the club stay put while the measures scroll under them. */
-const PIN_INDEX = `sticky left-0 z-10 ${INDEX_WIDTH}`;
-const PIN_NAME = "sticky left-8 z-10 border-r border-line bg-surface lg:left-9";
+const PIN_INDEX = `${PINNED_TILE} ${INDEX_WIDTH}`;
+const PIN_NAME = `${PINNED_NAME} left-8 lg:left-9`;
 
 /** A head's link: a column not sorted starts in its own direction; the sorted one reverses. */
 function teamsHref(column: TeamColumn, sort: TeamColumn, descending: boolean): string {

@@ -53,7 +53,7 @@ import { seasonFixtures } from "../../football";
 
 export const revalidate = 30;
 
-/** One block at a time under a thumb; the desk shows every one (Craig, 24 Sep 2026). */
+/** One block at a time, at every width (Craig, 24 Sep 2026). */
 const VIEWS = [
   { key: "figures", label: "Figures" },
   { key: "shots", label: "Shots" },
@@ -113,7 +113,7 @@ export default async function ComparePage({
   const refused = refusal(left) ?? refusal(right);
   if (refused !== null) {
     return (
-      <ScoutShell current="analysis" rows={0}>
+      <ScoutShell current="analysis">
         {picker}
         <Nothing title="Fantrax would not answer for one of them" code={refused}>
           A profile is one live read each and this one refused. Nothing is cached for it, so
@@ -125,7 +125,7 @@ export default async function ComparePage({
 
   if (one_ === null || names.a === null) {
     return (
-      <ScoutShell current="analysis" rows={0}>
+      <ScoutShell current="analysis">
         {picker}
         <Nothing title="A player, or two">
           Search for anybody in the pool. One man fills the screen on his own; pick a second
@@ -169,7 +169,7 @@ export default async function ComparePage({
   const dim = VIEWS.filter((entry) => entry.key in has && !has[entry.key as keyof typeof has]).map((entry) => entry.key);
 
   return (
-    <ScoutShell current="analysis" rows={0}>
+    <ScoutShell current="analysis">
       {picker}
 
       <CompareBar

@@ -3,7 +3,7 @@ import { clubGround } from "@epl/core";
 import { matchFacts } from "../../../matchDetail";
 import PhotoGround from "../../../components/football/PhotoGround";
 import Caption from "../../../components/shell/Caption";
-import { FootFrame } from "../../../components/shell/FootSwitcher";
+import { FootFrame } from "../../../components/shell/FootFrame";
 import BackPlate from "./BackPlate";
 import MatchBar from "./MatchBar";
 import MatchTabs from "./MatchTabs";

@@ -37,6 +37,11 @@ export interface PeriodGameweeks {
   gameweeks: number[];
 }
 
+/** A period's first gameweek, the one that opens a double; undefined for a period the calendar lacks or a blank. */
+export function openingGameweek(calendar: readonly PeriodGameweeks[], period: number | undefined): number | undefined {
+  return calendar.find((entry) => entry.period === period)?.gameweeks[0];
+}
+
 export function periodGameweeks(
   periods: LeaguePeriod[],
   kickoffs: GameweekKickoff[],

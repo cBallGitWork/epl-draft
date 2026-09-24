@@ -5,7 +5,6 @@ import { fixtureInvolvement, leagueTable as realTable, teamColours } from "@epl/
 import { seasonFixtures } from "../../../football";
 import ScoreRow from "../../../components/shell/ScoreRow";
 import { scoreSide } from "../../../components/football/scoreSide";
-import { MATCH } from "../../../prem/routes";
 import { byKickoff, fixtureMen, type FixtureMan } from "./fixtureMen";
 import Columns from "../../Columns";
 import TableRow from "../../TableRow";
@@ -14,6 +13,7 @@ import { leagueTable, teamBadges } from "../../../standings";
 import { leagueInfo } from "../../../round";
 import Nothing from "../../../components/shell/Nothing";
 import { BOARD, PANEL, SCROLL } from "@/app/desk";
+import { matchHref } from "../../../prem/match/[id]/matchRoutes";
 
 // The two boards that place this tie rather than explain it: the league it sits in, and the football it is
 // being played out in.
@@ -129,7 +129,7 @@ export async function FixturesTab({
                   <span className={`${CLOCK} text-faint`}>FT</span>
                 ) : null
               }
-              href={`${MATCH}/${fixture.id}`}
+              href={matchHref(fixture.id, "overview")}
             />
             <div className="grid grid-cols-2 divide-x divide-line bg-surface">
               {sides.map((side, at) => (

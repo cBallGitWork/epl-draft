@@ -12,8 +12,8 @@ import {
 import MatchupBoard, { type MatchupSide } from "../../../components/league/MatchupBoard";
 import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
-import { SquadLists, Withheld, arrangeBoth, unplayedLists } from "./sides";
-import { SideTab, StatsTab, sharedSides, withheldNotice } from "./tabs";
+import { SquadLists, arrangeBoth, unplayedLists } from "./sides";
+import { SideTab, StatsTab, sharedSides, withheldNotice, type SharedSide } from "./tabs";
 import { FixturesTab, TableTab } from "./wider";
 import LeagueShell from "../../Shell";
 import { HEAD_TO_HEAD } from "../../../titles";
@@ -27,7 +27,8 @@ import { MATCHUPS } from "../../routes";
 import { sheetEvents } from "./events";
 import { STATS_OF, DEFAULT_SIDE_SORT, matchupTabs, matchupView, statsHref, statsOf } from "./views";
 import { boardColumns } from "./sideRows";
-import FootSwitcher, { FootFrame } from "../../../components/shell/FootSwitcher";
+import { FootFrame } from "../../../components/shell/FootFrame";
+import TabStrip from "../../../components/shell/TabStrip";
 import { everyone, subMarks } from "./subs";
 
 // One head-to-head, at the size it deserves on a Saturday.
@@ -90,13 +91,7 @@ export default async function HeadToHeadPage({
   // the top one — `data_checked` — licenses the word "final".
   const played = state !== null && state !== "live";
 
-  // **A round nobody has kicked off is two squad lists and nothing else**
-  // (Craig, 11 Sep 2026: *"for a match that has not been played, just show the
-  // two squad lists, thats it"*). Every one of the four tabs is furniture before
-  // the football: the scoreline is 0–0, the grass is a withheld panel because the
-  // lineups have not locked, and Stats, Players and Report are all boards of
-  // dashes. A strip whose every plate leads to an empty box is four controls
-  // saying the same nothing.
+  // A round nobody has kicked off is two squad lists and nothing else (Craig, 11 Sep 2026): every tab is empty.
   //
   // `roundStarted` and not `roundState`, and the distinction is load-bearing:
   // that one answers null both before the first kickoff AND between two Saturday
@@ -170,33 +165,14 @@ export default async function HeadToHeadPage({
   // Which of each eleven put the points on the board; a gated side arrives as `{}` and names nobody.
   const bands = bandCategories(yours?.counted ?? {}, theirs?.counted ?? {});
 
-  const side = (team: LeagueTeam): MatchupSide => {
-    const mineHere = team.teamId === mine;
-    const roster = rostered.get(team.teamId);
-    // Per side, not per page: your own eleven is yours all week and a rival's
-    // waits for his period. During football both are open — but this is also the
-    // screen for "who am I playing this week", read on a Tuesday, when exactly
-    // one of the two is.
-    const display = teamDisplay(squads, mineHere);
-    const shown = roster !== undefined && display.show === "lineup";
+  // Joined on the server, and only once the gate has opened his eleven: what crosses is his men's own detail.
+  const side = ({ team, detail, withheld }: SharedSide): MatchupSide => {
     const priced = scored.get(team.teamId) ?? null;
-
-    const withheld = (
-      <Withheld team={team} known={roster !== undefined} because={display} />
-    );
-
-    // Both arrangements are joined here, on the server: the join is pure and
-    // tested in core, and doing it in the browser would mean shipping every club
-    // in the league and every fixture in the round so fifteen players could look
-    // two of them up. What crosses is fifteen players' own detail — and the
-    // arrangement is legible in it, which is why this branch only builds it once
-    // the gate has already opened his eleven.
-    const detail = shown && roster !== undefined ? arranged.get(team.teamId) : undefined;
     return {
       team,
       score: scores.get(team.teamId),
       badge: badges.get(team.teamId),
-      mine: mineHere,
+      mine: team.teamId === mine,
       lineup:
         detail === undefined ? (
           withheld
@@ -210,9 +186,7 @@ export default async function HeadToHeadPage({
             // This sheet's men only — a story is keyed by player, and would name a withheld eleven.
             news={newsFor(
               stories,
-              [...detail.rows.flatMap((line) => line.players), ...detail.bench].map(
-                (player) => player.rostered.slot.fantraxId,
-              ),
+              everyone(detail).map((player) => player.rostered.slot.fantraxId),
             )}
             mode="pitch"
           />
@@ -230,12 +204,12 @@ export default async function HeadToHeadPage({
     <FootFrame
       foot={
         view === "stats" && listed === null ? (
-          <FootSwitcher
+          <TabStrip
             label="Stats views"
             current={of}
             tabs={STATS_OF.map((key) => ({
               key,
-              label: key === "fantasy" ? "Fantasy" : (both[key === "team" ? 0 : 1]?.team.name ?? key),
+              label: key === "fantasy" ? "Fantasy" : both[key === "team" ? 0 : 1].team.name,
               href: statsHref(teamId, gameweek, key),
             }))}
           />
@@ -252,8 +226,8 @@ export default async function HeadToHeadPage({
       )}
       {listed === null ? (
         <MatchupBoard
-          team={side(pairing.team)}
-          opponent={side(pairing.opponent)}
+          team={side(both[0])}
+          opponent={side(both[1])}
           view={view}
           tabs={matchupTabs(teamId, gameweek)}
           body={
@@ -271,8 +245,8 @@ export default async function HeadToHeadPage({
             ) : view === "stats" ? (
               <StatsTab
                 bands={bands}
-                names={both[0]?.names ?? new Map()}
-                theirNames={both[1]?.names ?? new Map()}
+                names={both[0].names}
+                theirNames={both[1].names}
                 withheld={withheld}
                 played={played}
                 fielded={wasFielded(squads.period, period)}

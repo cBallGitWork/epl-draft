@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { breakdownOf, columnLabel, compareCategories, liveBreakdown, bandCategories } from "./breakdown";
+import { breakdownOf, columnLabel, liveBreakdown, bandCategories } from "./breakdown";
 import { mapTeamStats } from "./fantrax/stats";
 import teamStats from "./fantrax/__fixtures__/teamStats.json";
 
@@ -227,58 +227,6 @@ describe("columnLabel, over the same recorded header", () => {
   });
 });
 
-describe("compareCategories", () => {
-  const line = (code: string, points: number) =>
-    ({ code, name: code, definition: null, points, value: null });
-
-  it("sums a side's category across every man it priced", () => {
-    const rows = compareCategories(
-      { a: [line("G", 6)], b: [line("G", 4), line("A", 3)] },
-      { c: [line("G", 4)] },
-    );
-    expect(rows.find((row) => row.code === "G")).toEqual({ code: "G", name: "G", mine: 10, theirs: 4 });
-  });
-
-  it("keeps a category only one side registered, and the other side is ABSENT", () => {
-    // His keeper made saves and yours did not. The row belongs to the board — a
-    // missing row would read as the category not existing — but your half is
-    // null and prints a dash, because `liveBreakdown` has already dropped a
-    // category a man did not register. A nought here would be a claim the
-    // payload never made (DESIGN §7).
-    const rows = compareCategories({ a: [line("G", 6)] }, { b: [line("Sv", 3)] });
-    expect(rows.map((row) => row.code).sort()).toEqual(["G", "Sv"]);
-    expect(rows.find((row) => row.code === "Sv")).toEqual({
-      code: "Sv",
-      name: "Sv",
-      mine: null,
-      theirs: 3,
-    });
-  });
-
-  it("weighs an absent half as nothing when ordering", () => {
-    // A category one side alone registered still sorts by what it actually moved.
-    const rows = compareCategories({ a: [line("G", 6)] }, { b: [line("Sv", 3)] });
-    expect(rows.map((row) => row.code)).toEqual(["G", "Sv"]);
-  });
-
-  it("orders by what moved the scoreline, deductions last", () => {
-    const rows = compareCategories(
-      { a: [line("YC", -1), line("G", 6), line("A", 3)] },
-      { b: [line("G", 4)] },
-    );
-    expect(rows.map((row) => row.code)).toEqual(["G", "A", "YC"]);
-  });
-
-  it("breaks a tie on the code, so two renders of one payload agree", () => {
-    const rows = compareCategories({ a: [line("Sv", 3), line("A", 3)] }, {});
-    expect(rows.map((row) => row.code)).toEqual(["A", "Sv"]);
-  });
-
-  it("is empty when Fantrax priced nobody, rather than inventing a table", () => {
-    expect(compareCategories({}, {})).toEqual([]);
-  });
-});
-
 describe("bandCategories", () => {
   const line = (code: string, points: number) =>
     ({ code, name: code, definition: null, points, value: null });
@@ -296,8 +244,7 @@ describe("bandCategories", () => {
   });
 
   it("leaves the other half EMPTY where that side registered nothing", () => {
-    // Empty is the absence, the same fact `CategoryPair` carries as null. A side
-    // of noughts would be a claim the payload never made.
+    // Empty is the absence: a side of noughts would be a claim the payload never made.
     const bands = bandCategories({ a: [line("G", 6)] }, { b: [line("Sv", 3)] });
     expect(bands.find((band) => band.code === "Sv")?.mine).toEqual([]);
     expect(bands.find((band) => band.code === "G")?.theirs).toEqual([]);
@@ -335,7 +282,6 @@ describe("bandCategories", () => {
     // carrying 0 is Fantrax saying it counted and paid nothing.
     const bands = bandCategories({ a: [line("GA", 0)] }, {});
     expect(bands[0].mine).toEqual([{ fantraxId: "a", points: 0 }]);
-    expect(compareCategories({ a: [line("GA", 0)] }, {})[0].mine).toBe(0);
   });
 
   it("invents no table for a period nobody has played", () => {
@@ -362,15 +308,5 @@ describe("bandCategories", () => {
     const bands = bandCategories({ a: [line("G", 6)] }, {});
     expect(bands.every((band) => band.theirs.length === 0)).toBe(true);
     expect(bands.map((band) => band.code)).toEqual(["G"]);
-  });
-
-  it("is the same union, order and naming compareCategories publishes", () => {
-    // The pair is this band summed, so the two can never disagree about which
-    // categories exist or in what order.
-    const mine = { a: [line("G", 6), line("YC", -2)] };
-    const theirs = { b: [line("Sv", 4)] };
-    expect(compareCategories(mine, theirs).map((row) => row.code)).toEqual(
-      bandCategories(mine, theirs).map((band) => band.code),
-    );
   });
 });

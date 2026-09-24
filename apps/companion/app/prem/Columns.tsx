@@ -1,6 +1,6 @@
 import type { TableSortKey } from "@epl/core";
 import { tableHref } from "./sort";
-import { Head, HeadRow, NameHead, PLATE, SortHead } from "../components/league/TableHeads";
+import { Head, HeadRow, NameHead, PLATE, SortHead, sortedAs } from "../components/league/TableHeads";
 import { TEXT, standDown } from "@/app/desk";
 
 // The table's column heads, in one place because two files print them: the page
@@ -106,7 +106,7 @@ export default function Columns({
               href={tableHref(column.key, sort, descending)}
               label={column.label}
               mute={column.mute}
-              sorted={here ? (descending ? "descending" : "ascending") : undefined}
+              sorted={sortedAs(here, descending)}
             />
           );
         })}

@@ -106,6 +106,11 @@ const MONDAY_SET: StoryKind[] = ["eleven", "power-ranking", "dodgers"];
  *  paper with other people's news. */
 const NEWS_PER_FIRING = 2;
 
+/** A once-a-round story's covered-key and slug: filed once per gameweek, and its URL says which. */
+export function roundSlot(kind: string, gameweek: number): { key: string; slug: string } {
+  return { key: `${kind}:gw${gameweek}`, slug: `gw${gameweek}-${kind}` };
+}
+
 /** How close a kickoff must be before a preview piece files. Half a day: the
  *  Team Sheet's Friday sweep catches the weekend, and this catches tonight's
  *  game that can swing an open tie. */
@@ -139,7 +144,7 @@ export function newsdesk(
     // lets the writer file the whole set in one firing when it has room, and
     // pick up whatever is left in the next one when it has not.
     for (const kind of MONDAY_SET) {
-      want({ kind, key: `${kind}:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-${kind}` });
+      want({ kind, ...roundSlot(kind, desk.gameweek) });
     }
   }
 
@@ -221,7 +226,7 @@ export function newsdesk(
   // lock, and only once the last round is done, so there is a record to own.
   if (desk.next !== null && desk.finished && predictionsDue(desk.next.locksAt, now)) {
     const { period, gameweek } = desk.next;
-    want({ kind: "predictions", key: `predictions:gw${gameweek}`, slug: `gw${gameweek}-predictions`, round: { period, gameweek } });
+    want({ kind: "predictions", ...roundSlot("predictions", gameweek), round: { period, gameweek } });
   }
 
   // The wire is weekly and keys on the WINDOW rather than the round: it reports

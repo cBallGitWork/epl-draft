@@ -70,9 +70,16 @@ interface StoryTeamNews {
    *  hole on the page, and one proved it: a manager's quote said the squad was
    *  "coming to Brentford" while Brentford had its own section four inches
    *  below, so the fixture was on the page twice and never joined up. */
-  fixture?: { opponent: string; home: boolean; kickoff: string };
+  fixture?: StoryFixture;
   /** Carried from the source article, never composed — see `voice/house.ts`. */
   quote?: { text: string; said: string };
+}
+
+/** Who a club plays this round, attached by the desk from the fixture list. */
+export interface StoryFixture {
+  opponent: string;
+  home: boolean;
+  kickoff: string;
 }
 
 /** One man in a predicted eleven. */
@@ -140,8 +147,8 @@ function men(raw: unknown): StoryTeamNewsMan[] | undefined {
   return rows.length > 0 ? once(rows, (man) => man.name) : undefined;
 }
 
-function fixture(raw: unknown): { opponent: string; home: boolean; kickoff: string } | undefined {
-  const tie = raw as Partial<{ opponent: string; home: boolean; kickoff: string }> | null;
+function fixture(raw: unknown): StoryFixture | undefined {
+  const tie = raw as Partial<StoryFixture> | null;
   if (tie === null || typeof tie !== "object") return undefined;
   if (typeof tie.opponent !== "string" || tie.opponent === "") return undefined;
   if (typeof tie.home !== "boolean" || typeof tie.kickoff !== "string") return undefined;

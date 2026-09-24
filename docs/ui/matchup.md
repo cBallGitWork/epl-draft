@@ -27,7 +27,7 @@ is not used for anything: there is no ground.
    list dont need to be two screens, come on, should just be Scores for that
    view"*, then *"just pitch i think"*). `SquadRows` keeps its two remaining
    callers on the squad and club boards.
-4. **Stats** — three sub-views switched from the **foot row** (`FootSwitcher`,
+4. **Stats** — three sub-views switched from the **foot row** (`FootFrame` with a `TabStrip`,
    `?of=`): *side A · side B · Fantasy*, opening on Fantasy (Craig, 24 Sep 2026).
    - **Fantasy** — `CategoryBands` in the match page's Fantasy layout: a grey plate
      per category with each side's total at its end, then each side's men meeting at

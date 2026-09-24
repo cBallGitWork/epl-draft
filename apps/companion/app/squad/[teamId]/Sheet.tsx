@@ -68,7 +68,7 @@ export default function Sheet({
           goes: a toggle between two things you can already see is a control that
           does nothing. */}
       <div className="flex items-center justify-between gap-2 px-1 lg:hidden">
-        <ViewToggle view={view} onPick={setView} quiet />
+        <ViewToggle view={view} onPick={setView} />
         <Pending points={pending} />
       </div>
       {pending === null ? null : (

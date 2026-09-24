@@ -17,6 +17,7 @@ import {
   mapLeagueInfo,
   newsdesk,
   nextDeadline,
+  openingGameweek,
   periodGameweeks,
   banned,
   roundState,
@@ -71,10 +72,7 @@ async function main(): Promise<void> {
   // One instant for the whole firing. Read five times, it drifted across the
   // model call — the desk commissioning under Sunday while the byline printed
   // Monday.
-  // **`GAZETTA_NOW` rehearses a dated column and nothing else sets it.** The
-  // Team Sheet, the preview and the reports all key off the clock, so the only
-  // way to see Friday's column on a Monday is to tell the desk it is Friday.
-  // CI never sets it; an unreadable value is ignored rather than obeyed.
+  // `GAZETTA_NOW` rehearses a dated column (Friday's, on a Monday); CI never sets it, and an unreadable value is ignored.
   const wanted = process.env.GAZETTA_NOW ?? "";
   const now = Number.isNaN(Date.parse(wanted)) ? new Date().toISOString() : new Date(wanted).toISOString();
 
@@ -96,13 +94,10 @@ async function main(): Promise<void> {
   const calendar = periodGameweeks(info.scoringPeriods, kickoffs);
   const round = calendar.find((period) => period.gameweeks.includes(snapshot.gameweek));
   const deadline = nextDeadline(info.rosterPeriods, kickoffs, now);
-  const nextRound = calendar.find((each) => each.period === deadline?.period)?.gameweeks[0];
+  const nextRound = openingGameweek(calendar, deadline?.period);
   if (round === undefined) return say(`No Fantrax period covers gameweek ${snapshot.gameweek}.`);
 
-  // The preview's window is lock-to-first-whistle, and it is a window rather
-  // than an instant because a cron cannot hit an instant — GitHub's jitter
-  // routinely exceeds the fifteen minutes between our lock and the kickoff. A
-  // missed preview is simply not written: no column beats a false premise.
+  // When this round locks, and whether it has: the pressers' desk reads both.
   const period = info.rosterPeriods.find((each) => each.number === round.period);
   const kickoff = period ? firstKickoff(period, kickoffs) : null;
   const lock = kickoff === null ? null : locksAt(kickoff);

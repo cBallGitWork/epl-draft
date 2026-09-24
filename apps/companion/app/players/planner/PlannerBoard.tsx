@@ -2,8 +2,11 @@ import Link from "next/link";
 import { DASH, toFantraxClubCode, type PlannerCell, type PlannerRow, type PlannerView } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
-import { MUTE } from "../../components/league/TableHeads";
-import { HEAD_CELL, HEAD_PLATE_CENTRE, ROW_RULE, SCROLL, STICKY_LEAD } from "@/app/desk";
+import { MUTE, SortArrow } from "../../components/league/TableHeads";
+import { HEAD_CELL, HEAD_PLATE_CENTRE, PINNED_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+
+/** The club column, frozen at the left edge. */
+const PIN_CLUB = `${PINNED_NAME} left-0`;
 import { POOL } from "../routes";
 
 // Every club's next six opponents, a cell each on the ease ramp, easiest run first. One line to a fixture
@@ -36,7 +39,7 @@ export default function PlannerBoard({
         </colgroup>
         <thead>
           <tr className="text-2xs">
-            <th scope="col" className={`${HEAD_CELL} ${STICKY_LEAD}`}>
+            <th scope="col" className={`${HEAD_CELL} ${PIN_CLUB}`}>
               <span className={MUTE}>Club</span>
             </th>
             {gameweeks.map((gameweek) => (
@@ -46,8 +49,8 @@ export default function PlannerBoard({
             ))}
             {/* The column the board is ordered by, drawn pressed, as a sorted head is. */}
             <th scope="col" aria-sort="ascending" className={HEAD_CELL}>
-              <span className="cm-bevel-pressed flex h-6 items-center justify-center gap-0.5" title="The mean rank of the six, 1 the easiest">
-                Avg<span aria-hidden className="text-[0.5rem]">▲</span>
+              <span className="cm-bevel-pressed flex h-6 items-center justify-center gap-0.5" title={`The mean rank of the ${gameweeks.length}, 1 the easiest`}>
+                Avg<SortArrow down={false} />
               </span>
             </th>
           </tr>
@@ -55,7 +58,7 @@ export default function PlannerBoard({
         <tbody>
           {rows.map((row) => (
             <tr key={row.club.code} className={ROW_RULE}>
-              <th scope="row" className={`p-0 text-left font-normal ${STICKY_LEAD}`}>
+              <th scope="row" className={`p-0 text-left font-normal ${PIN_CLUB}`}>
                 <Link
                   href={`${POOL}?club=${toFantraxClubCode(row.club.shortName)}&pos=${POSITIONS[view]}`}
                   title={`${row.club.name}: its ${view === "attack" ? "forwards and midfielders" : "defenders and keepers"} on the board`}
@@ -93,7 +96,7 @@ function Fixture({ view, cell }: { view: PlannerView; cell: PlannerCell | null }
     <div
       className={`numeric flex min-h-11 items-center justify-center gap-1 whitespace-nowrap px-0.5 text-2xs leading-none lg:min-h-7 lg:justify-between lg:px-1.5 lg:text-xs ${ink}`}
       style={{ background: ground }}
-      title={`${cell.opponent.name} ${cell.home ? "at home" : "away"}: their ${THEIR[view]} ranks ${cell.rank ?? DASH} of 20, 1 the weakest (ours: Dixon-Coles strength)`}
+      title={`${cell.opponent.name} ${cell.home ? "at home" : "away"}: their ${THEIR[view]} ranks ${cell.rank ?? DASH}, 1 the weakest (ours: Dixon-Coles strength)`}
     >
       <span className="lg:hidden">{cell.home ? code : code.toLowerCase()}</span>
       <span className="hidden lg:inline">

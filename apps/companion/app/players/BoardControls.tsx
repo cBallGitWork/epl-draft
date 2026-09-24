@@ -15,46 +15,8 @@ import type { PlayersQuery } from "./query";
 // the row and the drawer render the same element, and a copy in each would be
 // two controls that can disagree.
 
-/** Which columns are on the board.
- *
- *  The one strip that stays blue. It picks ONE of a set and marks exactly one
- *  plate current, which is what a Championship Manager tab strip means — and is
- *  why these were never the half of the stack that misread, even sitting in it.
- *
- *  **It does not use `TAB`.** That recipe carries `flex-1` for a strip that
- *  fills its own row, and this one shares a line with a search box and three
- *  other controls — six plates growing into whatever is left would push the
- *  search box to its minimum. It also carries `lg:text-sm`, which is the second
- *  type size this row was trying not to have. What is left of `TAB` once both
- *  are removed is `cm-tab` plus centring, which `PLATE` already does.
- *
- *  **`cm-tab-quiet` and not a `min-h-*`**, which is the fix to Craig's *"we
- *  already have blue bars on this page, do we need them this big?"*. It is a
- *  CLASS because a utility cannot win: `.cm-tab`'s own media rule is 56px above
- *  `lg` and both are one class of specificity, so source order decides and
- *  `desk.css` comes last. `GroupNav` has carried a `lg:min-h-9` that does
- *  nothing since the day it was written — measured on the shipped Team Stats
- *  board, where the plate computes 56px. */
-/** Every field the board's URL can carry.
- *
- *  **One list, because two hand-written ones had already drifted into a bug.**
- *  The search form and the club picker are GET forms, and a GET form posts only
- *  its own fields — so each has to render every OTHER field as a hidden input or
- *  using it silently clears the rest of the board. Both listed the fields by
- *  hand, both got the eight obvious ones right, and **both omitted `compare`**.
- *
- *  That is a real bug and not a tidiness point. Every LINK on this board goes
- *  through `href()`, which spreads the whole query and therefore carries
- *  `compare` for free — so tapping a filter chip while picking the second man of
- *  a comparison keeps the first, exactly as `query.ts` promises ("a half-made
- *  comparison survives a filter, a sort and being shared"). Typing in the search
- *  box did not: it dropped him, and the board silently stopped being a picker.
- *
- *  Declared here rather than derived from `PlayersQuery`'s keys, because a type
- *  has no values at runtime and a `Record<keyof PlayersQuery, true>` to stand in
- *  for one is a second list wearing a costume. This one at least fails loudly:
- *  add a field to the query and TypeScript says nothing, but the ONE place to
- *  update is named in the type's docblock. */
+/** Every field the board's URL can carry: a GET form posts only its own fields, so each renders the rest hidden
+ *  (`Carried`) or using it clears the board. One list, because two had drifted and dropped `compare`. */
 const FIELDS = [
   "compare",
   "q",
@@ -135,6 +97,7 @@ export const PLATE =
  *  plate with no hover, because a thing already held down does not lift. */
 export const PRESSABLE = `cm-bevel hover:brightness-110 ${PLATE}`;
 
+/** Which columns are on the board: the one strip that stays blue, at the control floor (`cm-tab-quiet`). */
 export function Plates({
   query,
   group,
