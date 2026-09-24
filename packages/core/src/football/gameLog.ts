@@ -1,4 +1,5 @@
 import type { RawElementSummary, RawHistoryEntry } from "./fpl/raw";
+import type { SeasonTotals } from "./types";
 
 // What one footballer has actually done, match by match.
 //
@@ -42,6 +43,11 @@ export interface GameLogEntry {
   defensiveContribution: number | null;
   expectedGoals: number | null;
   expectedAssists: number | null;
+  starts: number | null;
+  tackles: number | null;
+  clearancesBlocksInterceptions: number | null;
+  recoveries: number | null;
+  expectedGoalsConceded: number | null;
 }
 
 /** His season so far, most recent first — the order a log is read in.
@@ -89,7 +95,50 @@ function entry(h: RawHistoryEntry): GameLogEntry {
     defensiveContribution: h.defensive_contribution ?? null,
     expectedGoals: decimal(h.expected_goals),
     expectedAssists: decimal(h.expected_assists),
+    starts: h.starts ?? null,
+    tackles: h.tackles ?? null,
+    clearancesBlocksInterceptions: h.clearances_blocks_interceptions ?? null,
+    recoveries: h.recoveries ?? null,
+    expectedGoalsConceded: decimal(h.expected_goals_conceded),
   };
+}
+
+/** The figures a player's rates are read from, which a window of matches can answer as well as a season. */
+export type RateTotals = Pick<
+  SeasonTotals,
+  | "minutes"
+  | "starts"
+  | "expectedGoals"
+  | "expectedAssists"
+  | "tackles"
+  | "clearancesBlocksInterceptions"
+  | "recoveries"
+  | "saves"
+  | "expectedGoalsConceded"
+  | "bps"
+  | "bonus"
+>;
+
+/** His matches in the given gameweeks, added up. A measurement FPL did not publish adds nothing. */
+export function totalsOver(log: readonly GameLogEntry[], gameweeks: ReadonlySet<number>): RateTotals {
+  const totals: RateTotals = {
+    minutes: 0,
+    starts: 0,
+    expectedGoals: 0,
+    expectedAssists: 0,
+    tackles: 0,
+    clearancesBlocksInterceptions: 0,
+    recoveries: 0,
+    saves: 0,
+    expectedGoalsConceded: 0,
+    bps: 0,
+    bonus: 0,
+  };
+  for (const match of log) {
+    if (!gameweeks.has(match.gameweek)) continue;
+    for (const key of Object.keys(totals) as (keyof RateTotals)[]) totals[key] += match[key] ?? 0;
+  }
+  return totals;
 }
 
 /** FPL sends the expected-goals family as decimal strings. An absent field is

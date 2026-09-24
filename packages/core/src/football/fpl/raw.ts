@@ -229,6 +229,12 @@ export interface RawHistoryEntry {
   defensive_contribution?: number;
   expected_goals?: string;
   expected_assists?: string;
+  /** Carried on this season's rows (probed 24 Sep 2026); absent on an older export, which reads as null. */
+  starts?: number;
+  tackles?: number;
+  clearances_blocks_interceptions?: number;
+  recoveries?: number;
+  expected_goals_conceded?: string;
 }
 
 /** One completed season, from `element-summary`'s `history_past`.

@@ -1,4 +1,4 @@
-import type { SeasonTotals } from "@epl/core";
+import type { RateTotals } from "@epl/core";
 import { per90 } from "../standout";
 
 // What the two men have DONE, as rates — the other half of the attribute grid.
@@ -25,6 +25,10 @@ import { per90 } from "../standout";
 // answer is a dash rather than a nought: he has not played enough football to
 // have a rate, which is a different statement from being bad at it.
 
+/** What a ledger reads for one man over the window: FPL's totals, and the export's counts, which are null for a
+ *  man the export never bridged (a dash) and nought for one it covers who did nothing. */
+export type Played = RateTotals & { touches: number | null; shots: number | null; keyPasses: number | null };
+
 /** One measure, and how to read it off a season. Not a component's business —
  *  this file is pure so the set can be tested without rendering anything. */
 export interface Rate {
@@ -38,7 +42,7 @@ export interface Rate {
    *  are the denominators themselves; the board learned that the hard way when
    *  `Min` read 90.00 down the whole column. */
   perNinety: boolean;
-  of: (season: SeasonTotals) => number;
+  of: (played: Played) => number | null;
 }
 
 /** The measures, in the order a scout reads them: how much football, then what
@@ -49,6 +53,9 @@ export interface Rate {
 const RATES: readonly Rate[] = [
   { name: "Min", from: "FPL, season total", perNinety: false, of: (s) => s.minutes },
   { name: "Starts", from: "FPL, season total", perNinety: false, of: (s) => s.starts },
+  { name: "Touches", from: "SofaScore's touches, per 90", perNinety: true, of: (s) => s.touches },
+  { name: "Shots", from: "SofaScore's shots, per 90", perNinety: true, of: (s) => s.shots },
+  { name: "Key passes", from: "Understat's passes before a shot, per 90", perNinety: true, of: (s) => s.keyPasses },
   { name: "xG", from: "FPL's expected goals, per 90", perNinety: true, of: (s) => s.expectedGoals },
   { name: "xA", from: "FPL's expected assists, per 90", perNinety: true, of: (s) => s.expectedAssists },
   { name: "Tackles", from: "FPL, per 90", perNinety: true, of: (s) => s.tackles },
@@ -98,7 +105,7 @@ export interface RateRow {
  *
  *  A man with no football half (the 88 in the pool the bridge has never settled)
  *  arrives as `null` and every figure on his side is a dash. */
-export function rateRows(a: SeasonTotals | null, b: SeasonTotals | null): RateRow[] {
+export function rateRows(a: Played | null, b: Played | null): RateRow[] {
   const rows: RateRow[] = [];
   for (const rate of RATES) {
     const left = read(rate, a);
@@ -112,10 +119,11 @@ export function rateRows(a: SeasonTotals | null, b: SeasonTotals | null): RateRo
 /** One side of one row. Null both for a man we have no season for and for a
  *  rate with too little football under it — the screen says both with a dash,
  *  because in both cases the honest answer is that we cannot state one. */
-function read(rate: Rate, season: SeasonTotals | null): number | null {
-  if (season === null) return null;
-  const total = rate.of(season);
-  return rate.perNinety ? per90(total, season.minutes) : total;
+function read(rate: Rate, played: Played | null): number | null {
+  if (played === null) return null;
+  const total = rate.of(played);
+  if (total === null) return null;
+  return rate.perNinety ? per90(total, played.minutes) : total;
 }
 
 /** Whether a figure has nothing to say — absent, or a nought that is true and

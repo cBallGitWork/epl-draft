@@ -5,7 +5,7 @@ import type { CSSProperties } from "react";
 import { DASH, type Shot } from "@epl/core";
 import { PITCH_BOX, toBoxY } from "@/app/components/football/pitchBox";
 import ShotMarks, { MarksKey } from "../../../components/football/ShotMarks";
-import { KeyPass, KeyPassKey, Pitch } from "./ShotPitch";
+import { KeyPass, KeyPassKey, Pitch } from "../../../components/football/ShotPitch";
 import { BOARD, ROW_RULE, SECTION_BAR } from "@/app/desk";
 import {
   Head,

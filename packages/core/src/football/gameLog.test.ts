@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapGameLog } from "./gameLog";
+import { mapGameLog, totalsOver } from "./gameLog";
 import type { RawElementSummary } from "./fpl/raw";
 import saka from "./__fixtures__/elementSummary.json";
 import unusedSub from "./__fixtures__/elementSummaryUnused.json";
@@ -86,5 +86,32 @@ describe("mapGameLog", () => {
 
   it("has nothing to say before a ball is kicked", () => {
     expect(mapGameLog({ history: [], history_past: [] })).toEqual([]);
+  });
+});
+
+describe("the defending the ledger rates", () => {
+  it("reads starts, tackles, CBI, recoveries and xGC per match", () => {
+    expect(mapGameLog(played)[0]).toMatchObject({
+      starts: 1,
+      tackles: 1,
+      clearancesBlocksInterceptions: 2,
+      recoveries: 4,
+      expectedGoalsConceded: 0.06,
+    });
+  });
+});
+
+describe("totalsOver", () => {
+  const log = mapGameLog(played);
+  const second = { ...log[0], gameweek: 3, fixtureId: 99, minutes: 90, tackles: 3, expectedGoals: null };
+
+  it("adds up the matches in the window and nothing outside it", () => {
+    const totals = totalsOver([log[0], second], new Set([1, 3]));
+    expect(totals).toMatchObject({ minutes: 157, starts: 2, tackles: 4, expectedGoals: 0.64 });
+    expect(totalsOver([log[0], second], new Set([3])).minutes).toBe(90);
+  });
+
+  it("is a season of nought over a window he did not play in", () => {
+    expect(totalsOver(log, new Set([7])).minutes).toBe(0);
   });
 });

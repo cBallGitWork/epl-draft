@@ -257,6 +257,8 @@ export function Chip({ on, href, children }: { on: boolean; href: string; childr
   return (
     <Link
       href={href}
+      // A chip changes the view in place; the page must not jump to the top under the thumb.
+      scroll={false}
       aria-pressed={on}
       className={on ? `cm-bevel-pressed ${PLATE}` : PRESSABLE}
     >

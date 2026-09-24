@@ -23,6 +23,31 @@ a sweep of the 697". Two per view is inside it; a board of them never would be,
 which is why comparison is a ROUTE you arrive at with two ids rather than a
 column on the directory.
 
+## Compare as redesigned, 24 Sep 2026
+
+Craig: *"numbers for stats should be centralised … use updated shot map like in prem page … have a key pass
+page too … filter by last 6 gameweeks"*. Designed first (option A, "Action Zones"), picked by Craig with a 44px
+phone strip and no tie band. Where the sections below disagree with this one, this one is current.
+
+- **The pickers** share one row at every width, each box over the half of the bar it would change; the labels
+  above them went (the bar names both men). Each box's accessible name says whom it would swap.
+- **One block at a time under a thumb**: a 44px strip, Figures · Shots · Key passes · Touches · Attributes
+  (`?view=`); the desk shows every block, maps on the left and numbers on the right. A view neither man has
+  is dimmed.
+- **Season or Last 6** (`?range=6`), with the window beside it as `GW1–5`. It governs the figures and every map;
+  never the attributes, which are percentiles over the whole division. Last 6 is the last six gameweeks with a
+  match finished, so until GW7 it is the season, and the readout says so. The figures over a window are his
+  FPL game log added up (`totalsOver`), so the log now carries starts, tackles, CBI, recoveries and xGC.
+- **The ledger** is centred, each pair of figures either side of its label, and gains Touches/90, Shots/90 and
+  Key passes/90 from the exports. The better figure is amber; the higher lights however small the lead.
+- **Shots and key passes share one pitch**, each man at his own end as the bar reads them (the left man turned,
+  as the match map turns the home side), in club colours with a plate over each end. A key pass is a
+  teammate's shot from his pass (`assistsOf`): a dashed line from where the pass began to the shot. The pitch
+  and the key-pass mark are the match page's, lifted to `components/football/ShotPitch`.
+- **Touches** keep a pitch each, now on the shared pitch with a club strip over it, and the heat is stronger
+  (Craig: *"Heat can be less subtle"*): each map is scaled to his 90th-percentile cell, so one crowded cell no
+  longer washes the rest out.
+
 ## On the page
 
 1. **The picker** — two search boxes, one per side. See below.
@@ -403,18 +428,12 @@ buildup-to-goal map (4,127 rows in 24-25) with **0 rows for 26-27**.
 
 ## Known gaps
 
-- **Chances created** — the third map kind, plotting where the shots a man SET UP
-  were taken from. Understat's `player_assisted` carries it on 402 of 549 shots
-  and the assister's name must be resolved once in the exporter, never at
-  runtime.
-- **The fixture filter**, above. Both exports carry `fplFixtureId` already.
+- ~~**Chances created**~~: the Key passes view (24 Sep 2026).
+- ~~**The fixture filter**~~: Season / Last 6 (24 Sep 2026).
 - **The ramp has no docs/rules/DESIGN.md ruling.** See "The maps" above; it is the app's
   first sequential scale and it is confined to a colour plate until it is judged.
 - **Understat's xG family** — npxG, xGChain, xGBuildup, key passes — is a second
   block under "This season" once `eye-test/26-27.json` lands. FPL publishes none
   of it.
-- **The two figures sit far apart at 1440.** The mirrored table puts a name's
-  figures at opposite edges of a 1090px panel, which is a long way for an eye to
-  carry a decimal. `Measures` has always had it and the shape is deliberate; it
-  is recorded here because it is more noticeable with two-place rates than with
-  integers out of twenty.
+- ~~**The two figures sit far apart at 1440.**~~ The ledger is centred and narrow (24 Sep 2026); the attribute
+  grid still spans its column.

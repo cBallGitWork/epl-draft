@@ -1,6 +1,5 @@
 import { rateRows } from "./rates";
-import type { RateRow } from "./rates";
-import type { SeasonTotals } from "@epl/core";
+import type { Played, RateRow } from "./rates";
 import { DASH } from "@epl/core";
 
 // What the men have done, per ninety minutes.
@@ -33,47 +32,41 @@ export default function Figures({
   a,
   b,
   names,
+  window,
 }: {
-  a: SeasonTotals | null;
+  a: Played | null;
   /** Null when only one man is being looked at, which is a first-class state
    *  here rather than half of a broken comparison. */
-  b: SeasonTotals | null;
+  b: Played | null;
   names: { a: string; b: string | null };
+  /** What the figures cover, for a screen reader: "this season" or "gameweeks 1 to 5". */
+  window: string;
 }) {
   const alone = names.b === null;
   const rows = rateRows(a, alone ? null : b);
   if (rows.length === 0) return null;
 
   return (
-    <table className="w-full border-collapse">
+    // Centred and narrow, so each pair of figures sits either side of its label (Craig, 24 Sep 2026).
+    <table className="mx-auto w-full max-w-sm border-collapse">
       <caption className="sr-only">
         {alone
-          ? `${names.a} by what he has done this season, per ninety minutes`
-          : `${names.a} and ${names.b} by what each has done this season, per ninety minutes`}
+          ? `${names.a} by what he has done, ${window}, per ninety minutes`
+          : `${names.a} and ${names.b} by what each has done, ${window}, per ninety minutes`}
       </caption>
       <tbody>
         {rows.map((row) => (
           <tr key={row.name} className="border-b border-line/60 last:border-b-0">
-            <td
-              className={`numeric cm-row w-16 py-1 text-right text-base lg:w-24 ${loudness(row.a, row.b, row.name)}`}
-            >
-              {show(row)}
-            </td>
-            {/* The measure's own name, its derivation in the `title` — DESIGN
-                §7's provenance rule as a tooltip rather than a printed byline.
-                `Measures` makes the same call and records why. */}
+            <td className={`${FIGURE} pr-3 text-right ${loudness(row.a, row.b, row.name)}`}>{show(row)}</td>
+            {/* The measure's name, its derivation in the `title` (DESIGN §7's provenance as a tooltip). */}
             <td
               title={row.from}
-              className={`px-2 text-2xs uppercase text-muted ${alone ? "text-left" : "text-center"}`}
+              className={`w-px whitespace-nowrap px-1 text-2xs uppercase text-muted ${alone ? "text-left" : "text-center"}`}
             >
               {label(row)}
             </td>
             {alone ? null : (
-              <td
-                className={`numeric cm-row w-16 py-1 text-left text-base lg:w-24 ${loudness(row.b, row.a, row.name)}`}
-              >
-                {show(row, "b")}
-              </td>
+              <td className={`${FIGURE} pl-3 text-left ${loudness(row.b, row.a, row.name)}`}>{show(row, "b")}</td>
             )}
           </tr>
         ))}
@@ -81,6 +74,8 @@ export default function Figures({
     </table>
   );
 }
+
+const FIGURE = "numeric cm-row py-1 text-base lg:text-lg";
 
 /** The measures where the LOWER figure is the better one.
  *

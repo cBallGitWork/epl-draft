@@ -24,6 +24,18 @@ describe("heatCells", () => {
     expect(Math.min(...cells.map((c) => c.density))).toBeCloseTo(0.5);
   });
 
+  it("does not let one crowded cell wash the rest of his map out", () => {
+    // Craig, 24 Sep 2026: "Heat can be less subtle". Ten ordinary cells of two touches and one of twenty: scaled to
+    // the busiest, the ten drew at a tenth; scaled to his 90th percentile they draw full, and the spike is clamped.
+    const ordinary = Array.from({ length: 10 }, (_, n) => [
+      { x: 5 + n * 9, y: 20 },
+      { x: 5 + n * 9, y: 20 },
+    ]).flat();
+    const spike = Array.from({ length: 20 }, () => ({ x: 50, y: 80 }));
+    const cells = heatCells([...ordinary, ...spike]);
+    expect(Math.min(...cells.map((c) => c.density))).toBe(1);
+  });
+
   it("puts a touch on the far goal line in the last column, not off the grid", () => {
     // The clamp is load-bearing: the goal line is exactly where a striker's map
     // is most crowded, and without it those touches land in a 25th column that

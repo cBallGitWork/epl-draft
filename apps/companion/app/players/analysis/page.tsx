@@ -1,19 +1,35 @@
 import { Suspense } from "react";
-import { FANTRAX_PLAYER_BASE } from "@epl/core";
+import {
+  FANTRAX_PLAYER_BASE,
+  assistsOf,
+  fixtureGameweeks,
+  inGameweeks,
+  lastPlayed,
+  totalsOver,
+  touchFixtures,
+  touchesOf,
+} from "@epl/core";
 import ScoutShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
+import TabStrip from "../../components/shell/TabStrip";
+import OutLink from "../../components/shell/OutLink";
 import CompareBar from "./CompareBar";
+import CompareMap from "./CompareMap";
 import Figures from "./Figures";
 import Measures from "./Measures";
 import PickBar from "./PickBar";
-import MapSection from "./MapSection";
+import PlayerMap from "./PlayerMap";
+import type { Played } from "./rates";
+import { Chip } from "../BoardControls";
 import { StackWaiting } from "../[fantraxId]/Waiting";
 import { playerGrid } from "../[fantraxId]/grid";
 import { subject } from "../[fantraxId]/subject";
+import { gameLog } from "../[fantraxId]/scouting";
 import { getLeaguePool } from "../pool";
 import { ANALYSIS } from "../routes";
 import { intelShots, intelTouches } from "../../intel";
-import OutLink from "../../components/shell/OutLink";
+import { seasonFixtures } from "../../football";
+import { SECTION_BAR, phoneShows } from "@/app/desk";
 
 // Two players, side by side.
 //
@@ -37,6 +53,19 @@ import OutLink from "../../components/shell/OutLink";
 
 export const revalidate = 30;
 
+/** One block at a time under a thumb; the desk shows every one (Craig, 24 Sep 2026). */
+const VIEWS = [
+  { key: "figures", label: "Figures" },
+  { key: "shots", label: "Shots" },
+  { key: "passes", label: "Key passes" },
+  { key: "touches", label: "Touches" },
+  { key: "attributes", label: "Attributes" },
+] as const;
+type View = (typeof VIEWS)[number]["key"];
+
+/** "Last 6" is the last six gameweeks with a match played (Craig, 24 Sep 2026). */
+const RECENT = 6;
+
 export default async function ComparePage({
   searchParams,
 }: {
@@ -44,27 +73,18 @@ export default async function ComparePage({
 }) {
   const asked = await searchParams;
   const a = one(asked.a);
-  // **A man is never set against himself.** `pick.ts` already refuses to OFFER
-  // him — "a name you cannot pick should not be in a list of names to pick" —
-  // but the picker is not the only way in: a hand-edited URL or a link somebody
-  // shared reaches `?a=X&b=X`, and that drew the full comparison with a `v` in
-  // the middle, thirty rows all tied, and two identical maps. Found in the
-  // refactor pass by reading the rendered output rather than the source.
-  //
-  // Collapsed to the one-man screen rather than refused, because it is not an
-  // error — he is a player somebody asked to look at, and that screen exists.
+  // A man is never set against himself: `?a=X&b=X` collapses to the one-man screen.
   const wanted = one(asked.b);
   const b = wanted === a ? undefined : wanted;
   const qa = one(asked.qa) ?? "";
   const qb = one(asked.qb) ?? "";
-  const map = one(asked.map);
+  const view: View = VIEWS.find((entry) => entry.key === one(asked.view))?.key ?? "figures";
+  const recent = one(asked.range) === String(RECENT);
 
-  const pool = await getLeaguePool();
+  const [pool, fixtures] = await Promise.all([getLeaguePool(), seasonFixtures()]);
   const rows = "unavailable" in pool ? [] : pool.rows;
 
-  // Both men are read before anything draws, because the boxes above them print
-  // the name of whoever is currently chosen and a box labelled with an id would
-  // be worse than a box labelled with nothing.
+  // Both men are read before anything draws: the boxes are named after whoever is chosen.
   const [left, right] = await Promise.all([
     a === undefined ? null : subject(a),
     b === undefined ? null : subject(b),
@@ -75,10 +95,7 @@ export default async function ComparePage({
   const one_ = found(left);
   const two = found(right);
 
-  // **FPL's web name where we have it.** `intel.name` is Fantrax's full
-  // registration — "Bruno Miguel Borges Fernandes" — which the bar truncates and
-  // the pitch printed whole, straight across the other man's marker. FPL's
-  // `name` is the short form a broadcaster would use.
+  // FPL's web name where we have it; Fantrax's full registration is too long for the bar.
   const names = {
     a: one_ ? (one_.football?.player.name ?? one_.intel.name) : null,
     b: two ? (two.football?.player.name ?? two.intel.name) : null,
@@ -87,14 +104,12 @@ export default async function ComparePage({
   const picker = (
     <PickBar
       rows={rows}
-      a={{ chosen: a, typed: qa, label: names.a ?? "First player", hint: "Search a name…" }}
-      b={{ chosen: b, typed: qb, label: names.b ?? "Compare with", hint: "Search an opponent…" }}
+      a={{ chosen: a, typed: qa, name: names.a }}
+      b={{ chosen: b, typed: qb, name: names.b }}
     />
   );
 
-  // A profile that refused is not the same as a man not yet chosen, and the
-  // screen says which. The picker stays either way — a refusal a reader can do
-  // nothing about is still a screen he can pick a different man on.
+  // A profile that refused is not a man not yet chosen, and the screen says which.
   const refused = refusal(left) ?? refusal(right);
   if (refused !== null) {
     return (
@@ -108,11 +123,6 @@ export default async function ComparePage({
     );
   }
 
-  // **Nobody chosen is the only empty state left.** Craig, 10 Sep 2026: *"give
-  // me the option to look at 1 player only"* — so one man is a whole screen with
-  // every panel on it, and the second box above stays open for whenever somebody
-  // is worth setting him against. It used to be a dead end that sent the reader
-  // back to the board.
   if (one_ === null || names.a === null) {
     return (
       <ScoutShell current="analysis" title="Compare" rows={0}>
@@ -125,9 +135,38 @@ export default async function ComparePage({
     );
   }
 
-  // A man on his own, and a man against another, are the same screen with the
-  // right-hand column left out — every panel below takes null for the second.
   const solo = two === null || names.b === null;
+  const played = lastPlayed(fixtures, Number.POSITIVE_INFINITY);
+  const window = recent ? lastPlayed(fixtures, RECENT) : played;
+  const span = window.length === 0 ? "no gameweeks yet" : `GW${window[0]}–${window[window.length - 1]}`;
+  const told = recent ? `gameweeks ${window[0]} to ${window[window.length - 1]}` : "this season";
+  const gameweekOf = fixtureGameweeks(fixtures);
+  const inWindow = new Set(window);
+
+  const men = await Promise.all(
+    [
+      { side: one_, name: names.a },
+      ...(solo || two === null || names.b === null ? [] : [{ side: two, name: names.b }]),
+    ].map(({ side, name }) => man(side, name, { recent, inWindow, gameweekOf })),
+  );
+  const [first, second] = [men[0], men[1] ?? null];
+
+  const href = (changes: { view?: View; range?: string }) => {
+    const next = new URLSearchParams();
+    if (a !== undefined) next.set("a", a);
+    if (!solo && b !== undefined) next.set("b", b);
+    const nextView = changes.view ?? view;
+    if (nextView !== "figures") next.set("view", nextView);
+    const nextRange = "range" in changes ? changes.range : recent ? String(RECENT) : undefined;
+    if (nextRange !== undefined) next.set("range", nextRange);
+    return `${ANALYSIS}?${next.toString()}`;
+  };
+  const has = {
+    shots: men.some((each) => each.shots.length > 0),
+    passes: men.some((each) => each.keyPasses.length > 0),
+    touches: men.some((each) => each.touches !== undefined),
+  };
+  const dim = VIEWS.filter((entry) => entry.key in has && !has[entry.key as keyof typeof has]).map((entry) => entry.key);
 
   return (
     <ScoutShell current="analysis" title="Compare" rows={0}>
@@ -136,39 +175,91 @@ export default async function ComparePage({
       <CompareBar
         a={{ name: names.a, club: one_.football?.club, code: one_.football?.player.code ?? null }}
         b={
-          solo || two === null || names.b === null
+          second === null || two === null || names.b === null
             ? null
             : { name: names.b, club: two.football?.club, code: two.football?.player.code ?? null }
         }
       />
 
-      {/* What they have DONE, which is FPL's alone and needs no second read. */}
-      <Figures
-        a={one_.football?.player.season ?? null}
-        b={solo ? null : (two?.football?.player.season ?? null)}
-        names={{ a: names.a, b: solo ? null : names.b }}
-      />
-
-      {/* Streamed: each grid is a percentile over every player in the division
-          who has passed the minutes floor, so it is real work — and the bar
-          above is the half of the screen a reader came to see first. */}
-      <Suspense fallback={<StackWaiting />}>
-        <Grids
-          left={one_}
-          right={solo ? null : two}
-          names={{ a: names.a, b: solo ? null : names.b }}
-          map={map}
-          mapHref={(kind) => mapHref({ a, b: solo ? undefined : b, kind })}
+      <div className="lg:hidden">
+        <TabStrip
+          label="Compare views"
+          tabs={VIEWS.map((entry) => ({ ...entry, href: href({ view: entry.key }) }))}
+          current={view}
+          dim={dim}
+          labels="word"
         />
-      </Suspense>
+      </div>
+
+      {/* The range governs the figures and every map; the attributes are a season's percentiles. */}
+      <div className={`flex items-center gap-1.5 ${view === "attributes" ? "max-lg:hidden" : ""}`}>
+        <Chip on={!recent} href={href({ range: undefined })}>
+          Season
+        </Chip>
+        <Chip on={recent} href={href({ range: String(RECENT) })}>
+          Last {RECENT}
+        </Chip>
+        <span className="numeric px-1.5 text-sm text-muted">{span}</span>
+      </div>
+
+      <div className="grid gap-3 lg:grid-cols-2 lg:items-start">
+        <div className="flex min-w-0 flex-col gap-3">
+          <CompareMap
+            title="Shots"
+            men={men.map((each) => ({ name: each.name, club: each.club, shots: each.shots }))}
+            passes={false}
+            window={told}
+            className={phoneShows(view === "shots")}
+          />
+          <CompareMap
+            title="Key passes"
+            men={men.map((each) => ({ name: each.name, club: each.club, shots: each.keyPasses }))}
+            passes
+            window={told}
+            className={phoneShows(view === "passes")}
+          />
+        </div>
+        <div className="flex min-w-0 flex-col gap-3">
+          <div className={phoneShows(view === "figures")}>
+            <Figures
+              a={first.played}
+              b={second?.played ?? null}
+              names={{ a: names.a, b: second === null ? null : names.b }}
+              window={told}
+            />
+          </div>
+          {/* Streamed: each grid is a percentile over the whole division, real work behind the rest. */}
+          <div className={phoneShows(view === "attributes")}>
+            <Suspense fallback={<StackWaiting />}>
+              <Grids left={one_} right={second === null ? null : two} names={{ a: names.a, b: second === null ? null : names.b }} />
+            </Suspense>
+          </div>
+        </div>
+      </div>
+
+      <section className={`flex flex-col gap-1 ${phoneShows(view === "touches")}`}>
+        <p className={`${SECTION_BAR} max-lg:hidden`}>Touches</p>
+        <div className="grid gap-2 lg:grid-cols-2">
+          {men.map((each, index) => (
+            <PlayerMap
+              key={index}
+              id={index === 0 ? "a" : "b"}
+              name={each.name}
+              club={each.club}
+              touches={touchesOf(each.touches, null)}
+              matches={touchFixtures(each.touches).length}
+            />
+          ))}
+        </div>
+      </section>
 
       <div className="flex flex-wrap gap-1.5">
         {[
           { id: a, name: names.a },
-          ...(solo || names.b === null ? [] : [{ id: b, name: names.b }]),
-        ].map((man) => (
-          <OutLink key={man.id} href={`${FANTRAX_PLAYER_BASE}/${man.id}`}>
-            {man.name} on Fantrax
+          ...(second === null || names.b === null ? [] : [{ id: b, name: names.b }]),
+        ].map((each) => (
+          <OutLink key={each.id} href={`${FANTRAX_PLAYER_BASE}/${each.id}`}>
+            {each.name} on Fantrax
           </OutLink>
         ))}
       </div>
@@ -176,9 +267,7 @@ export default async function ComparePage({
   );
 }
 
-/** Next hands a repeated query parameter as an array; the last one wins, which
- *  is what a browser does with a repeated field and what a reader editing the
- *  URL by hand means. `players/query.ts` narrows the board's own the same way. */
+/** Next hands a repeated query parameter as an array; the last one wins, as a browser's does. */
 function one(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[value.length - 1] : value;
 }
@@ -190,66 +279,44 @@ function refusal(side: Awaited<ReturnType<typeof subject>> | null): string | nul
 
 type Found = Extract<Awaited<ReturnType<typeof subject>>, { intel: unknown }>;
 
-/** One man as the maps need him — his marks, looked up by FPL code.
- *
- *  `-1` for a man with no football half, which no export carries, so both maps
- *  come back empty and the section says so rather than the page branching. */
-function man(side: Found, name: string) {
-  const code = side.football?.player.code ?? -1;
-  return { name, touches: intelTouches.get(code), shots: intelShots.get(code) ?? [] };
+/** One man over the window: FPL's totals (the season's, or his game log's added up), and the export's marks.
+ *  A man the export never bridged has no touches, and his three export counts are a dash rather than nought. */
+async function man(
+  side: Found,
+  name: string,
+  { recent, inWindow, gameweekOf }: { recent: boolean; inWindow: ReadonlySet<number>; gameweekOf: ReadonlyMap<number, number> },
+) {
+  const player = side.football?.player;
+  const code = player?.code ?? -1;
+  const keep = <Row extends { fplFixtureId: number }>(rows: readonly Row[]) =>
+    recent ? inGameweeks(rows, gameweekOf, inWindow) : [...rows];
+  const all = intelTouches.get(code);
+  const touches = all === undefined ? undefined : { ...all, fixtures: keep(all.fixtures) };
+  const shots = keep(intelShots.get(code) ?? []);
+  const keyPasses = keep(assistsOf(intelShots, code));
+  const totals =
+    player === undefined
+      ? null
+      : recent
+        ? totalsOver((await gameLog(player)).map((row) => row.match), inWindow)
+        : player.season;
+  const played: Played | null =
+    totals === null
+      ? null
+      : {
+          ...totals,
+          touches: touches === undefined ? null : touchesOf(touches, null).length,
+          shots: touches === undefined ? null : shots.length,
+          keyPasses: touches === undefined ? null : keyPasses.length,
+        };
+  return { name, club: side.football?.club, touches, shots, keyPasses, played };
 }
 
-/** Where a map plate points: the two men as they are, and the kind it offers.
- *
- *  The searches are deliberately NOT carried. A reader who has picked his two
- *  men and is now choosing a map has finished searching, and carrying a spent
- *  query would reopen both result lists under the boxes on every plate. */
-function mapHref({
-  a,
-  b,
-  kind,
-}: {
-  a: string | undefined;
-  b: string | undefined;
-  kind: string;
-}): string {
-  const next = new URLSearchParams();
-  if (a !== undefined) next.set("a", a);
-  if (b !== undefined) next.set("b", b);
-  next.set("map", kind);
-  return `${ANALYSIS}?${next.toString()}`;
-}
-
-/** The two grids and the pitch, read behind the boundary above. */
-async function Grids({
-  left,
-  right,
-  names,
-  map,
-  mapHref,
-}: {
-  left: Found;
-  /** Null when one man is being looked at on his own. */
-  right: Found | null;
-  names: { a: string; b: string | null };
-  /** The map the URL asked for, and where each plate of the picker points. */
-  map: string | undefined;
-  mapHref: (kind: string) => string;
-}) {
+/** The two attribute grids, read behind the boundary above. */
+async function Grids({ left, right, names }: { left: Found; right: Found | null; names: { a: string; b: string | null } }) {
   const [gridA, gridB] = await Promise.all([
     left.football ? playerGrid(left.football.player) : Promise.resolve([]),
     right?.football ? playerGrid(right.football.player) : Promise.resolve([]),
   ]);
-
-  return (
-    <>
-      <MapSection
-        asked={map}
-        href={mapHref}
-        a={man(left, names.a)}
-        b={right === null || names.b === null ? null : man(right, names.b)}
-      />
-      <Measures a={gridA} b={gridB} names={names} />
-    </>
-  );
+  return <Measures a={gridA} b={gridB} names={names} />;
 }

@@ -1,8 +1,9 @@
 import type { Shot } from "@epl/core";
-import { PITCH_BOX, toBoxY } from "@/app/components/football/pitchBox";
-import { HALO } from "../../../components/football/ShotMarks";
+import type { ReactNode } from "react";
+import { PITCH_BOX, toBoxY } from "./pitchBox";
+import { HALO } from "./ShotMarks";
 
-// The match shot map's ground and its key passes, drawn in pitch units.
+// A landscape pitch and a key pass, in pitch units: the match page's shot map and Compare's maps.
 
 /** A key pass line's width, and the side of the square at its start, in pitch units. */
 const PASS_LINE = 0.3;
@@ -51,8 +52,8 @@ export function KeyPassKey() {
   );
 }
 
-/** Turf, mown bands, and both boxes — a side attacks one end and defends the other. */
-export function Pitch() {
+/** Turf, mown bands, and both boxes. `under` draws between the grass and the lines, as a heat map does. */
+export function Pitch({ under = null }: { under?: ReactNode }) {
   return (
     <>
       <rect
@@ -69,6 +70,7 @@ export function Pitch() {
           fill="var(--color-pitch-mow)"
         />
       ))}
+      {under}
       <g
         fill="none"
         stroke="var(--color-pitch-line)"

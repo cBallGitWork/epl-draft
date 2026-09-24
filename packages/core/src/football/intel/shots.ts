@@ -69,6 +69,15 @@ export function shotIntel(shots: IntelShots | null): Map<number, Shot[]> {
   return byCode;
 }
 
+/** The shots a man set up, whoever struck them: his key passes, each carrying where it started. */
+export function assistsOf(shots: ReadonlyMap<number, readonly Shot[]>, code: number): Shot[] {
+  const made: Shot[] = [];
+  for (const struck of shots.values()) {
+    for (const shot of struck) if (shot.assistCode === code) made.push(shot);
+  }
+  return made;
+}
+
 /** One man's shots, across every fixture or just one. */
 export function shotsOf(shots: Shot[] | undefined, fixture: number | null): Shot[] {
   if (shots === undefined) return [];
