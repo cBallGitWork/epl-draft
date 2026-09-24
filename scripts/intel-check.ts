@@ -43,9 +43,7 @@ async function main(): Promise<void> {
     `  ${numbers} squad numbers` +
       (cleared > 0 ? `, ${cleared} of them shared with a club-mate` : ""),
   );
-  for (const source of squads.manifest.sources) {
-    console.log(`  built from ${source.path} (${age(source.mtime)})`);
-  }
+  builtFrom(squads.manifest);
 
   checkTouches();
   checkShots();
@@ -127,9 +125,7 @@ function checkTouches(): void {
     `\ntouches: ${players.size} players, ${points} points, ` +
       `exported ${age(touches.manifest.exportedAt)}`,
   );
-  for (const source of touches.manifest.sources) {
-    console.log(`  built from ${source.path} (${age(source.mtime)})`);
-  }
+  builtFrom(touches.manifest);
 }
 
 /** The shots behind the analysis screen's map and the match screen's.
@@ -157,9 +153,7 @@ function checkShots(): void {
     `\nshots: ${taken.length} shots, ${byCode.size} players, ${fixtures} fixtures, ` +
       `exported ${age(shots.manifest.exportedAt)}`,
   );
-  for (const source of shots.manifest.sources) {
-    console.log(`  built from ${source.path} (${age(source.mtime)})`);
-  }
+  builtFrom(shots.manifest);
 }
 
 /** The club ratings behind the fixture planner: a warning, like the maps, because the planner draws blank without them. */
@@ -171,9 +165,7 @@ function checkStrength(): void {
   }
   const clubs = strengthIntel(strength);
   console.log(`\nstrength: ${clubs.size} clubs rated, exported ${age(strength.manifest.exportedAt)}`);
-  for (const source of strength.manifest.sources) {
-    console.log(`  built from ${source.path} (${age(source.mtime)})`);
-  }
+  builtFrom(strength.manifest);
 }
 
 /** Whether FPL has finished the round this export predicts, or null when it will
@@ -185,6 +177,11 @@ async function askFpl(round: number): Promise<boolean | null> {
   } catch {
     return null;
   }
+}
+
+/** Each file an export was built from, and how old it is: "the export is fresh" is not "its sources are". */
+function builtFrom(manifest: { sources: { path: string; mtime: string | null }[] }): void {
+  for (const source of manifest.sources) console.log(`  built from ${source.path} (${age(source.mtime)})`);
 }
 
 /** A committed JSON file, or null when it is absent or will not parse. Both are
