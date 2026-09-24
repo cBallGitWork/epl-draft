@@ -1,21 +1,15 @@
 import type { ReactNode } from "react";
 import { Withheld } from "./sides";
 import { teamDisplay } from "../../../squads";
-import type { BreakdownLine, CategoryBand, CategoryPair, LeagueTeam, RosteredTeam } from "@epl/core";
+import type { CategoryBand, LeagueTeam, RosteredTeam } from "@epl/core";
 import { isResolved, playerName } from "@epl/core";
 import type { LineupDetail } from "@epl/core";
 import Section from "../../../components/shell/Section";
 import CategoryBands from "../../../components/league/CategoryBands";
-import SquadStatBoard from "../../../components/league/SquadStatBoard";
-import { PANEL } from "@/app/desk";
+import SideStats from "./SideStats";
 
-// The two boards that EXPLAIN this scoreline: the categories it came out of, and
-// every man against every one of them.
-//
-// Split from `sides.tsx`, which holds the per-side assembly. The seam is the one
-// the board itself draws: one view belongs to a manager — his eleven on the
-// grass — and everything else is the join of two squads. `wider.tsx` holds the
-// other two shared boards, the ones that place the tie rather than explain it.
+// Stats' boards: the fantasy report (where the scoreline came from) and one manager's board. `wider.tsx`
+// holds the boards that place the tie rather than explain it.
 
 /** What every shared board needs of one side, once the gate has had its say. */
 export interface SharedSide {
@@ -23,15 +17,8 @@ export interface SharedSide {
   roster: RosteredTeam | undefined;
   shown: boolean;
   detail: LineupDetail | undefined;
-  breakdown: Record<string, readonly BreakdownLine[]>;
   names: Map<string, string>;
   withheld: ReactNode;
-}
-
-/** The two managers' names, for a board that sets them at opposite ends. */
-interface Managers {
-  mine: string;
-  theirs: string;
 }
 
 /** Where the scoreline came from, and who put it there.
@@ -47,7 +34,6 @@ interface Managers {
  *  all three finished rungs and only `data_checked` earns that word. */
 export function StatsTab({
   bands,
-  managers,
   names,
   theirNames,
   withheld,
@@ -55,7 +41,6 @@ export function StatsTab({
   fielded,
 }: {
   bands: readonly CategoryBand[];
-  managers: Managers;
   names: ReadonlyMap<string, string>;
   theirNames: ReadonlyMap<string, string>;
   withheld: ReactNode;
@@ -69,8 +54,6 @@ export function StatsTab({
     >
       <CategoryBands
         bands={bands}
-        mine={managers.mine}
-        theirs={managers.theirs}
         names={names}
         theirNames={theirNames}
         withheld={withheld}
@@ -79,48 +62,15 @@ export function StatsTab({
   );
 }
 
-/** Every man on both sides against every category this league scores.
- *
- *  **Both squads, where this was one** (Craig, 11 Sep 2026: *"players is ust a
- *  list"* — and it was one side's list, which is the half of the complaint that
- *  mattered). Comparing two squads is the whole reason to be on this screen, and
- *  a board that shows one of them at a time asks a reader to hold the other in
- *  his head.
- *
- *  Two boards rather than one table of thirty: each keeps its own frozen lead
- *  column and its own sideways scroll, which is DESIGN §2's many-measure board,
- *  and one table would make a manager scroll past his rival's fifteen to reach
- *  his own bench. They share the one `columns` union, so the halves can be read
- *  against each other. */
-export function PlayersTab({
-  sides,
-}: {
-  sides: readonly {
-    team: LeagueTeam;
-    detail: LineupDetail | undefined;
-    columns: readonly CategoryPair[];
-    breakdown: Record<string, readonly BreakdownLine[]>;
-    withheld: ReactNode;
-  }[];
-}) {
-  return (
-    <div className="flex flex-col gap-2 lg:grid lg:grid-cols-2 lg:items-start">
-      {sides.map(({ team, detail, columns, breakdown, withheld }) => (
-        <section key={team.teamId} className={PANEL}>
-          <h3 className="truncate text-3xs font-bold uppercase text-faint">{team.name}</h3>
-          {detail === undefined ? (
-            withheld
-          ) : (
-            <SquadStatBoard
-              rows={detail.rows}
-              bench={detail.bench}
-              columns={columns}
-              breakdown={breakdown}
-            />
-          )}
-        </section>
-      ))}
-    </div>
+/** One manager's board, or the panel saying his eleven is not public yet. */
+export function SideTab({
+  side,
+  ...board
+}: { side: SharedSide } & Omit<Parameters<typeof SideStats>[0], "team" | "sheet">) {
+  return side.detail === undefined ? (
+    <>{side.withheld}</>
+  ) : (
+    <SideStats team={side.team} sheet={side.detail} {...board} />
   );
 }
 
@@ -152,7 +102,6 @@ export function sharedSides({
   rostered,
   shows,
   arranged,
-  scored,
   squads,
   mine,
 }: {
@@ -160,7 +109,6 @@ export function sharedSides({
   rostered: Map<string, RosteredTeam>;
   shows: (team: LeagueTeam) => boolean;
   arranged: Map<string, LineupDetail>;
-  scored: Map<string, { breakdown: Record<string, readonly BreakdownLine[]> } | null>;
   squads: Parameters<typeof teamDisplay>[0];
   mine: string | null;
 }): SharedSide[] {
@@ -172,7 +120,6 @@ export function sharedSides({
       roster,
       shown,
       detail: shown ? arranged.get(team.teamId) : undefined,
-      breakdown: shown ? (scored.get(team.teamId)?.breakdown ?? {}) : {},
       names: shown ? namesOf(roster) : new Map<string, string>(),
       withheld: (
         <Withheld
