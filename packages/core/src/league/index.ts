@@ -90,6 +90,7 @@ export type { ScoringCategory, ScoringRules } from "./scoring";
 export { orphaned, unacknowledged } from "./fantrax/baseline";
 export type { AcknowledgedDifference } from "./fantrax/baseline";
 export {
+  mapBenchPlayerPoints,
   mapLivePlayerPoints,
   mapLiveScores,
   mapProjectedPlayerPoints,

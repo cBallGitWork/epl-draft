@@ -44,6 +44,19 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The bench is priced in public, behind `playerViewType: "2"` — probed 24 Sep 2026
+
+- **`getLiveScoringStats` with `playerViewType: "2"` answers a `BENCH` section with no cookie**: each
+  reserve who played, with `object1` (total) and `object2` (per-category `sv`/`fpts`), the same shape as
+  `ACTIVE`, `_5010`/`_5020` subtotals included. It is Fantrax's own "Show bench" toggle, read off Craig's URL
+  and the requests their page makes. `newView`, `matchupId`, `mainView` and `layout` change nothing.
+- **Counted**: dummy period 5, 10 of 10 teams; rehearsal period 5, 10 of 10 teams and 26 reserves priced
+  (TEST2: Hackney 1, Meunier 3). ACTIVE totals are byte-identical with and without the parameter. A reserve
+  who did not play is absent, on ACTIVE's rule.
+- **Read into a list of its own** (`mapBenchPlayerPoints`), so nothing that means "the eleven" can count a
+  reserve; `squadLivePoints` returns `counted`, the eleven alone, for anything that sums to the scoreline.
+- **Supersedes** the 22 Aug line below that called BENCH cookie-only.
+
 ## Projections is a scaffold over the sister model's run — decided 24 Sep 2026
 
 - **The export is the newest projection run's horizon** (GW6–17 today, 666 of 666 players bridged by
@@ -3079,8 +3092,9 @@ numbers. Per fantasy team, keyed by team id, for all teams at once:
 
 `period` is honoured. `matchupId` is **not** — passing the one from their own URL
 returns a byte-identical body, so their matchup view filters client-side and the
-payload always carries the whole league. The **`BENCH` block is cookie-only**;
-anonymous callers get `ACTIVE`, which is what scores anyway. Per-player *points*
+payload always carries the whole league. ~~The **`BENCH` block is cookie-only**~~ — wrong: it
+arrives anonymously with `playerViewType: "2"` (24 Sep, above). Anonymous callers
+without it get `ACTIVE`, which is what scores anyway. Per-player *points*
 (`statsMap`, `statsMap2`) are `{}` in every section, so what they will hold is
 unknown.
 

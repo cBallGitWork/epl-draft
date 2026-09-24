@@ -32,8 +32,8 @@ export interface RawLiveScoring {
   };
 }
 
-/** `BENCH` is only ever present for an authenticated caller, and only `ACTIVE`
- *  scores, so the public view is the whole answer for a scoreboard. */
+/** Only `ACTIVE` scores. `BENCH` arrives only when asked with `playerViewType: "2"`,
+ *  priced the same way and counted in no team's total. */
 export interface RawTeamSections {
   ACTIVE?: RawTeamSection;
   BENCH?: RawTeamSection;
@@ -242,10 +242,9 @@ function categoryOf(scipId: string | undefined): string | null {
 
 /** Every player Fantrax has priced this period, by team, at his roster slot.
  *
- *  ACTIVE only, on the same rule as `mapLiveScores`: `BENCH` arrives for an
- *  authenticated caller and we are never that one, and only active players
- *  score. A man with no entry is left out rather than zeroed, and a nought would
- *  be a claim about a man who may not have kicked a ball.
+ *  ACTIVE only, on the same rule as `mapLiveScores`: only active players score.
+ *  A man with no entry is left out rather than zeroed, and a nought would be a
+ *  claim about a man who may not have kicked a ball.
  *
  *  **Absence has two causes and a caller must not collapse them.** He is in the
  *  eleven and has not played, or he is a reserve and this table never names him.
@@ -260,14 +259,23 @@ function categoryOf(scipId: string | undefined): string | null {
  *  not say before: "Minutes Played +2" is a price with the thing it priced left
  *  out, and 90 minutes is what earned it. */
 export function mapLivePlayerPoints(raw: RawLiveScoring): LiveSquadPoints[] {
+  return sectionPoints(raw, "ACTIVE");
+}
+
+/** The reserves Fantrax priced this period, which count in nobody's total. */
+export function mapBenchPlayerPoints(raw: RawLiveScoring): LiveSquadPoints[] {
+  return sectionPoints(raw, "BENCH");
+}
+
+function sectionPoints(raw: RawLiveScoring, which: keyof RawTeamSections): LiveSquadPoints[] {
   const teams = raw.statsPerTeam?.allTeamsStats ?? {};
 
   return Object.entries(teams).flatMap(([teamId, sections]) => {
-    const active = sections?.ACTIVE;
-    if (!active) return [];
+    const section = sections?.[which];
+    if (!section) return [];
 
     const players: LivePlayerPoints[] = [];
-    for (const [fantraxId, stats] of Object.entries(active.statsMap ?? {})) {
+    for (const [fantraxId, stats] of Object.entries(section.statsMap ?? {})) {
       // `_{groupId}` is a group subtotal and not a man. Verified across four
       // sections: the real players sum to `totalFpts`, and so do these two, so
       // keeping them would count every team twice.
