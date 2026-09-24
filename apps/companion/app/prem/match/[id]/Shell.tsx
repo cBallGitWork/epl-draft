@@ -3,6 +3,7 @@ import { clubGround } from "@epl/core";
 import { matchFacts } from "../../../matchDetail";
 import PhotoGround from "../../../components/football/PhotoGround";
 import Caption from "../../../components/shell/Caption";
+import { FootFrame } from "../../../components/shell/FootSwitcher";
 import BackPlate from "./BackPlate";
 import MatchBar from "./MatchBar";
 import MatchTabs from "./MatchTabs";
@@ -38,7 +39,7 @@ export default async function MatchShell({
 
   return (
     // A screen tall, so the foot row sits at the foot of a short match and follows a long one.
-    <div className="flex min-h-[calc(100dvh-var(--page-top)-var(--page-foot))] flex-col gap-2">
+    <FootFrame foot={foot}>
       {/* The HOME club's ground: a fixture id says nothing about who is at home, so this is where it is known. */}
       <PhotoGround subject={home?.shortName ?? null} />
       <div className="flex items-stretch">
@@ -57,8 +58,7 @@ export default async function MatchShell({
       {overview ? <Caption>{ground ?? roundName(match)}</Caption> : null}
       {/* A panel ends where its content does, and blocks keep a gap between them. */}
       <div className="flex flex-col gap-2">{children}</div>
-      {foot === undefined ? null : <div className="mt-auto">{foot}</div>}
-    </div>
+    </FootFrame>
   );
 }
 
