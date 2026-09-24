@@ -15,17 +15,9 @@ is not used for anything: there is no ground.
    side's team below; the open half is raised and carries a foot bar. Your own
    name reads in accent, the standard "this is yours" mark. **One number per
    side and nothing beside it** — see the constraint below.
-2. **A five-plate blue tab strip** — `Lineups · Stats · Players · Table · Scores`
-   (`ViewToggle`, wearing `.cm-tab` at full height). Craig, 11 Sep 2026: *"and
-   need the blue bars"*. What came off on 5 Sep was the SECTION strip, five
-   plates that all leave the match; this is the object DESIGN §2 actually names,
-   a strip picking one of a subject's views.
-
-   **One word per label, and that is a measurement rather than a preference.**
-   Five plates leave about 73px each at 390 — ten characters at `2xs` and no
-   more. Craig named two of them "Match Up stats" and "Player stats"; neither
-   fits, and the fix is a shorter word rather than a smaller one, because
-   `ViewToggle` has already been caught once dropping off the type ladder.
+2. **A four-plate blue tab strip** — `Lineups · Stats · Table · Scores`, each a link
+   (`?view=`, Lineups the default; `views.ts`), so a refresh or a shared link keeps
+   the tab. One word per label: the strip has to fit 390.
 3. **Lineups** — the open side's eleven on the grass and its bench in a strip
    under it (`TeamSheet`, `mode="pitch"`). Both sides at once above `lg`.
    **The one view that belongs to a side**, and the only reason the two halves of
@@ -35,41 +27,18 @@ is not used for anything: there is no ground.
    list dont need to be two screens, come on, should just be Scores for that
    view"*, then *"just pitch i think"*). `SquadRows` keeps its two remaining
    callers on the squad and club boards.
-4. **Stats** — `CategoryBands`: one band per scoring category, the two side
-   totals on their plates with the name between them, and under it the MEN who
-   registered it — yours down the left, his down the right. Championship
-   Manager's Match Stats board (`cm9900/22.jpg`) with its workings.
-
-   **It absorbed `CategoryCompare`**, which was this board's head row and nothing
-   else. A totals board and a men board as two tabs would be one object printed
-   twice, the second being the first with more rows.
-
-   **The men are two INDEPENDENT columns, not paired rows.** Three of your
-   scorers against one of his is the honest shape; pairing by index would invent
-   an alignment the payload never claimed.
-
-   `bandCategories` in core does the union, and `compareCategories` is now a
-   projection of it — so the totals and the men can never disagree about which
-   categories exist or in what order.
-5. **Players** — `SquadStatBoard`, **both** squads' fifteen against the league's
-   own scoring categories, each under its manager's name. A many-measure board
-   (DESIGN §2), so every column stays and it scrolls sideways.
-
-   **Both sides, where this was one** (Craig, 11 Sep 2026: *"players is ust a
-   list"* — and it was one side's list, which is the half of the complaint that
-   mattered). Comparing two squads is the whole reason to be on this screen.
-   Two boards rather than one table of thirty: each keeps its own frozen lead
-   column, and one table would make a manager scroll past his rival's fifteen to
-   reach his own bench.
-
-   **`Pts` freezes with the name**, which is DESIGN §2's other rule about a phone
-   table: which shape it is is decided by its last column, and a table whose last
-   column is what it is FOR shows that column at 390.
-
-   The columns are LEAGUE data, off `getLeagueInfo.scoringCategories` through the
-   same union the board above uses, so both sides carry the same columns in the
-   same order and a commissioner who adds a category gets one without an edit.
-6. **Table** — the league standings, with **both sides of the tie edged in their
+4. **Stats** — three sub-views switched from the **foot row** (`FootSwitcher`,
+   `?of=`): *side A · side B · Fantasy*, opening on Fantasy (Craig, 24 Sep 2026).
+   - **Fantasy** — `CategoryBands` in the match page's Fantasy layout: a grey plate
+     per category with each side's total at its end, then each side's men meeting at
+     a centre rule, "Name (pts)". The eleven only, so it sums to the scoreline.
+   - **A side** — `SideStats`, the match page's club board for one manager: his
+     colours on the position tiles, each man's club crest, "sub off 81′" on a desk,
+     Fantrax's points, then what he did in each league category (counts, noughts
+     included), in Fantrax's own row order. Sortable (`?sort=`, `?dir=asc`); the
+     bench below the eleven, dimmed and "not counted".
+   The Players tab went into this on 24 Sep.
+5. **Table** — the league standings, with **both sides of the tie edged in their
    own colours** (`TableTab` → `/league`'s own `Columns` and `TableRow`).
 
    Craig, 11 Sep 2026: *"goes to a page with just the league table (not the
@@ -83,7 +52,7 @@ is not used for anything: there is no ground.
    hands back a *transparent* border on unmarked rows precisely so one row's
    figures do not step 4px out of the column, and a `<tr>` border does not paint
    through the index cell's own ground at all. `mine` wins where both apply.
-7. **Scores** — every Premier League fixture this tie is being played out in:
+6. **Scores** — every Premier League fixture this tie is being played out in:
    kickoff day and time, the score or the state, and under each the men from each
    side who are in it (`ScoresTab`).
 
@@ -96,7 +65,7 @@ is not used for anything: there is no ground.
    the same thirty men. That board answered "what has happened"; this answers
    "where is it being decided", which is the question a manager has at ten to
    three rather than at five.
-8. **A live player card** (`LivePlayerCard`) over the top, when one is tapped.
+7. **A live player card** (`LivePlayerCard`) over the top, when one is tapped.
 
 ## What the round is doing
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { matchupTabs, matchupView } from "./views";
+import { matchupTabs, matchupView, statsHref, statsOf } from "./views";
 
 describe("matchupView", () => {
   it("reads a named view and opens on lineups for anything else", () => {
@@ -17,6 +17,16 @@ describe("matchupTabs", () => {
   });
 
   it("names no round when the URL named none", () => {
-    expect(matchupTabs("abc", undefined)[2]?.href).toBe("/league/matchups/abc?view=players");
+    expect(matchupTabs("abc", undefined)[2]?.href).toBe("/league/matchups/abc?view=table");
+  });
+});
+
+describe("statsHref", () => {
+  it("opens on the fantasy report and names a side board and a sort only when they differ", () => {
+    expect(statsOf(undefined)).toBe("fantasy");
+    expect(statsHref("abc", 5, "fantasy")).toBe("/league/matchups/abc?gw=5&view=stats");
+    expect(statsHref("abc", 5, "team", { head: "G", descending: false })).toBe(
+      "/league/matchups/abc?gw=5&view=stats&of=team&sort=G&dir=asc",
+    );
   });
 });

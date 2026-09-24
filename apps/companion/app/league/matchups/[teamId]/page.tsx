@@ -3,7 +3,6 @@ import {
   type LeagueTeam,
   bandCategories,
   clubById,
-  compareCategories,
   roundStarted,
   headToHead,
   oppositionByClub,
@@ -15,7 +14,7 @@ import MatchupBoard, { type MatchupSide } from "../../../components/league/Match
 import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
 import { SquadLists, Withheld, arrangeBoth, unplayedLists } from "./sides";
-import { PlayersTab, StatsTab, sharedSides, withheldNotice } from "./tabs";
+import { SideTab, StatsTab, sharedSides, withheldNotice } from "./tabs";
 import { ScoresTab, TableTab } from "./wider";
 import LeagueShell from "../../Shell";
 import { HEAD_TO_HEAD } from "../../../titles";
@@ -27,7 +26,9 @@ import { teamBadges } from "../../../standings";
 import { myTeamId } from "../../../session";
 import { MATCHUPS } from "../../routes";
 import { sheetEvents } from "./events";
-import { matchupTabs, matchupView } from "./views";
+import { STATS_OF, DEFAULT_SIDE_SORT, matchupTabs, matchupView, statsHref, statsOf } from "./views";
+import { boardColumns } from "./sideRows";
+import FootSwitcher, { FootFrame } from "../../../components/shell/FootSwitcher";
 import { everyone, subMarks } from "./subs";
 
 // One head-to-head, at the size it deserves on a Saturday.
@@ -53,10 +54,13 @@ export default async function HeadToHeadPage({
   /** Which round. Absent means the one Fantrax is currently pointing at, which
    *  is every arrival from the live board; the schedule sends a gameweek so a
    *  round that has been played opens on its own week rather than on this one. */
-  searchParams: Promise<{ gw?: string; view?: string }>;
+  searchParams: Promise<{ gw?: string; view?: string; of?: string; sort?: string; dir?: string }>;
 }) {
-  const [{ teamId }, { gw, view: askedView }] = await Promise.all([params, searchParams]);
-  const view = matchupView(askedView);
+  const [{ teamId }, query] = await Promise.all([params, searchParams]);
+  const { gw } = query;
+  const view = matchupView(query.view);
+  const of = statsOf(query.of);
+  const sort = { head: query.sort ?? DEFAULT_SIDE_SORT, descending: query.dir !== "asc" };
 
   // Resolved through the calendar seam rather than assumed equal: the period is
   // what Fantrax is asked for and the gameweek is what FPL is asked for, and
@@ -159,22 +163,12 @@ export default async function HeadToHeadPage({
   const { arranged, widest } = arrangeBoth({ pairing, rostered, shows, scored, clubs, opposition });
   const listed = started ? null : unplayedLists({ pairing, rostered, clubs, opposition });
 
-  const events = view === "lineups" ? await sheetEvents(arranged.values(), squads.snapshot) : new Map();
+  const boards = view === "lineups" || (view === "stats" && of !== "fantasy");
+  const events = boards ? await sheetEvents(arranged.values(), squads.snapshot) : new Map();
 
-  // Every category either squad registered, in one order, computed ONCE.
-  //
-  // It is the compare board's rows and both stat boards' columns, which is the
-  // same list seen twice — so a category his keeper has and yours does not is a
-  // column on both sides rather than a board that reshuffles when you tap the
-  // other half. The union is why this is a join in core and not two independent
-  // reads: a row missing from one side would print as a nought, and a nought is a
-  // claim the payload did not make.
-  const columns = compareCategories(yours?.counted ?? {}, theirs?.counted ?? {});
-  // The same union with its workings — which of his eleven put the 9 on the
-  // board. Derived from `columns` in core, so the two boards cannot disagree
-  // about which categories exist or in what order. Fed the SAME two
-  // conditionally-fetched breakdowns: a gated side arrives as `{}` and
-  // contributes no band and no name, which is the whole of the gate here.
+  // The league's categories either side has a count in, so both boards carry the same columns.
+  const columns = boardColumns(categories, arranged.values(), { ...yours?.counts, ...theirs?.counts });
+  // Which of each eleven put the points on the board; a gated side arrives as `{}` and names nobody.
   const bands = bandCategories(yours?.counted ?? {}, theirs?.counted ?? {});
 
   const side = (team: LeagueTeam): MatchupSide => {
@@ -227,12 +221,28 @@ export default async function HeadToHeadPage({
     };
   };
 
-  const both = sharedSides({ pairing, rostered, shows, arranged, scored, squads, mine });
+  const both = sharedSides({ pairing, rostered, shows, arranged, squads, mine });
   const withheld = withheldNotice(both);
+  const gameweek = Number.isInteger(asked) ? asked : undefined;
+  const stat = both[of === "opponent" ? 1 : 0];
 
   return (
     // A match screen: the scoreline is its header, and its strip picks one of its own views.
-    <div className="flex flex-col gap-2">
+    <FootFrame
+      foot={
+        view === "stats" && listed === null ? (
+          <FootSwitcher
+            label="Stats views"
+            current={of}
+            tabs={STATS_OF.map((key) => ({
+              key,
+              label: key === "fantasy" ? "Fantasy" : (both[key === "team" ? 0 : 1]?.team.name ?? key),
+              href: statsHref(teamId, gameweek, key),
+            }))}
+          />
+        ) : undefined
+      }
+    >
       {/* Both sibling boards say when the scoreboard is down; this one used to
           render the outage as two silent dashes. */}
       {refused === null ? null : (
@@ -246,27 +256,27 @@ export default async function HeadToHeadPage({
           team={side(pairing.team)}
           opponent={side(pairing.opponent)}
           view={view}
-          tabs={matchupTabs(teamId, Number.isInteger(asked) ? asked : undefined)}
+          tabs={matchupTabs(teamId, gameweek)}
           body={
-            view === "stats" ? (
+            view === "stats" && of !== "fantasy" && stat !== undefined ? (
+              <SideTab
+                side={stat}
+                columns={columns}
+                counts={(of === "team" ? yours : theirs)?.counts ?? {}}
+                subs={stat.detail === undefined ? {} : subMarks(everyone(stat.detail), events)}
+                sort={sort}
+                hrefFor={(head: string) =>
+                  statsHref(teamId, gameweek, of, { head, descending: head === sort.head ? !sort.descending : true })
+                }
+              />
+            ) : view === "stats" ? (
               <StatsTab
                 bands={bands}
-                managers={{ mine: pairing.team.name, theirs: pairing.opponent.name }}
                 names={both[0]?.names ?? new Map()}
                 theirNames={both[1]?.names ?? new Map()}
                 withheld={withheld}
                 played={played}
                 fielded={wasFielded(squads.period, period)}
-              />
-            ) : view === "players" ? (
-              <PlayersTab
-                sides={both.map((one: (typeof both)[number]) => ({
-                  team: one.team,
-                  detail: one.detail,
-                  columns,
-                  breakdown: one.breakdown,
-                  withheld: one.withheld,
-                }))}
               />
             ) : view === "table" ? (
               <TableTab tie={[pairing.team.teamId, pairing.opponent.teamId]} mine={mine} />
@@ -282,6 +292,6 @@ export default async function HeadToHeadPage({
       ) : (
         <SquadLists team={pairing.team} opponent={pairing.opponent} lists={listed} />
       )}
-    </div>
+    </FootFrame>
   );
 }

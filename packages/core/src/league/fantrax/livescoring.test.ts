@@ -130,7 +130,7 @@ describe("mapLivePlayerPoints", () => {
     const squad = first({
       statsPerTeam: { allTeamsStats: { t: { ACTIVE: { statsMap: { a: { object1: 0 } } } } } },
     });
-    expect(squad.players).toEqual([{ fantraxId: "a", points: 0, categories: [] }]);
+    expect(squad.players).toEqual([{ fantraxId: "a", points: 0, categories: [], counts: [] }]);
   });
 
   it("says nothing about a man with categories but no total", () => {
@@ -199,6 +199,24 @@ describe("mapLivePlayerPoints", () => {
     });
     expect(squad.players[0].categories).toEqual([
       { category: "5010#6120", points: 2, value: "90" },
+    ]);
+  });
+
+  it("keeps every count Fantrax stated for a stat board, the noughts included", () => {
+    const squad = first({
+      statsPerTeam: {
+        allTeamsStats: {
+          t: { ACTIVE: { statsMap: { a: { object1: 2, object2: [
+            { scipId: "5010#6120#-1", sv: "90", av: 90, fpts: 2 },
+            { scipId: "5010#6280#-1", sv: "0", av: 0, fpts: 0 },
+            { scipId: "nonsense", fpts: 3 },
+          ] } } } },
+        },
+      },
+    });
+    expect(squad.players[0].counts).toEqual([
+      { category: "5010#6120", points: 2, value: "90" },
+      { category: "5010#6280", points: 0, value: "0" },
     ]);
   });
 

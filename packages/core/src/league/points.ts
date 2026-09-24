@@ -50,7 +50,10 @@ export interface LivePlayerPoints {
   /** His total. Nought is a real nought; a man with no football behind him is
    *  absent from the list instead. */
   points: number;
+  /** The categories that moved his total, for a breakdown. */
   categories: LivePlayerCategory[];
+  /** Every category Fantrax stated a count for, noughts included, for a stat board. */
+  counts: LivePlayerCategory[];
 }
 
 /** One category's contribution, in Fantrax's own identifiers.

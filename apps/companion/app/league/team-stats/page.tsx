@@ -139,8 +139,7 @@ export default async function TeamStatsPage({ searchParams }: { searchParams: Se
               figures to 25–36px and scrolled the board 98px sideways, and
               `truncate` never bit because nothing constrained the cell. Fixed
               holds each figure at its declared width and hands the name the
-              remainder. `SquadStatBoard` takes `min-w-max` and a frozen lead
-              instead, because eleven measures genuinely cannot fit; four can. */}
+              remainder; a board of eleven measures scrolls instead, and four fit. */}
           <table className={`${BOARD} table-fixed`}>
             <caption className="sr-only">
               Every team across {groupLabel}, ordered by {category.label} in{" "}

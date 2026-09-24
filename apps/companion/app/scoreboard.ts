@@ -127,6 +127,8 @@ export async function squadLivePoints(
   points: Map<string, number | null>;
   breakdown: Record<string, BreakdownLine[]>;
   counted: Record<string, BreakdownLine[]>;
+  /** Every count Fantrax stated for each man, noughts included, by the league's category code. */
+  counts: Record<string, Record<string, string>>;
 } | null> {
   const { players, bench, refused } = await readScores(period);
   if (refused !== null) return null;
@@ -144,6 +146,17 @@ export async function squadLivePoints(
     ),
     breakdown: { ...counted, ...lines(reserves) },
     counted,
+    counts: Object.fromEntries(
+      [...eleven, ...reserves].map((player) => [
+        player.fantraxId,
+        Object.fromEntries(
+          player.counts.flatMap(({ category, value }) => {
+            const code = categories[category]?.code;
+            return code === undefined || value === null ? [] : [[code, value]];
+          }),
+        ),
+      ]),
+    ),
   };
 }
 
