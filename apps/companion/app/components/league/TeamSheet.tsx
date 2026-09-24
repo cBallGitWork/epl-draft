@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { BreakdownLine, PlayerStory, SquadDetailLine, SquadPlayerDetail } from "@epl/core";
 import { playerName } from "@epl/core";
 import BenchStrip from "./BenchStrip";
@@ -8,6 +8,7 @@ import LivePlayerCard from "./LivePlayerCard";
 import PitchRows, { widestLine } from "./PitchRows";
 import SquadMarker from "./SquadMarker";
 import SquadRows from "./SquadRows";
+import SubMarker, { type SubMark } from "../football/SubMarker";
 import { HEADING_PLATE } from "@/app/desk";
 
 // A team as it lines up on a day that counts: the eleven on the grass, the
@@ -39,6 +40,7 @@ export default function TeamSheet({
   inColumn = false,
   bare = false,
   show,
+  subs = {},
 }: {
   /** The XI in its positional lines, arranged on the server — `slot.status` is
    *  blanked on the way here, so this is the last shape that knows the split.
@@ -68,6 +70,8 @@ export default function TeamSheet({
    *  See `PitchRows`. The bench takes it too, or the strip would go on sizing
    *  itself while the grass above it held still. */
   widest?: number;
+  /** Who came on or went off in his real match, by `fantraxId`. */
+  subs?: Record<string, SubMark>;
 }) {
   const [open, setOpen] = useState<SquadPlayerDetail | null>(null);
 
@@ -105,12 +109,18 @@ export default function TeamSheet({
             inColumn={inColumn}
           >
             {(player) => (
-              <Cell player={player} onOpen={() => setOpen(player)} show={show} />
+              <Marked mark={subs[player.rostered.slot.fantraxId]}>
+                <Cell player={player} onOpen={() => setOpen(player)} show={show} />
+              </Marked>
             )}
           </PitchRows>
 
           <BenchStrip bench={bench} rows={rows.length} widest={widest} inColumn={inColumn}>
-            {(player) => <Cell player={player} onOpen={() => setOpen(player)} />}
+            {(player) => (
+              <Marked mark={subs[player.rostered.slot.fantraxId]}>
+                <Cell player={player} onOpen={() => setOpen(player)} />
+              </Marked>
+            )}
           </BenchStrip>
         </>
       ) : (
@@ -205,5 +215,14 @@ function Cell({
     >
       <SquadMarker player={player} show={show} />
     </button>
+  );
+}
+
+/** His card, with the minute he came on or went off if he did. */
+function Marked({ mark, children }: { mark: SubMark | undefined; children: ReactNode }) {
+  return (
+    <SubMarker minute={mark?.minute ?? null} off={mark?.off ?? false}>
+      {children}
+    </SubMarker>
   );
 }
