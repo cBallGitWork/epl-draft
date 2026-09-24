@@ -1,5 +1,5 @@
 import type { Club, Touch } from "@epl/core";
-import { clubColoursOf, inkOn } from "@epl/core";
+import { clubColoursOf, plateOn } from "@epl/core";
 import { Pitch } from "../../components/football/ShotPitch";
 import { CELL, heatCells, shade } from "./heat";
 import { PITCH_BOX } from "@/app/components/football/pitchBox";
@@ -95,13 +95,13 @@ export default function PlayerMap({
   id: string;
 }) {
   const cells = heatCells(touches);
-  const colours = clubColoursOf(club);
+  const plate = plateOn(clubColoursOf(club));
 
   return (
     <figure className="flex min-w-0 flex-col gap-1">
       <figcaption
         className="flex items-baseline justify-between gap-2 px-2 py-1 text-2xs font-bold uppercase"
-        style={{ background: colours.primary, color: inkOn(colours) }}
+        style={{ background: plate.background, color: plate.ink }}
       >
         <span className="min-w-0 truncate">{name}</span>
         {/* Volume in words: every map is normalised to its own busiest cell, so the pitch does not carry it. */}

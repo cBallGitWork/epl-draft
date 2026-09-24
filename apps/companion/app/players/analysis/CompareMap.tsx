@@ -1,5 +1,5 @@
 import type { Club, Shot } from "@epl/core";
-import { clubColoursOf, inkOn } from "@epl/core";
+import { clubColoursOf, plateOn } from "@epl/core";
 import { PITCH_BOX } from "../../components/football/pitchBox";
 import Marks, { MarksKey } from "../../components/football/ShotMarks";
 import { KeyPass, KeyPassKey, Pitch } from "../../components/football/ShotPitch";
@@ -32,9 +32,9 @@ export default function CompareMap({
   className?: string;
 }) {
   const sides = men.map((man, index) => {
-    const colours = clubColoursOf(man.club);
+    const plate = plateOn(clubColoursOf(man.club));
     const turned = men.length === 2 && index === 0;
-    return { ...man, colour: colours.primary, ink: inkOn(colours), shots: turned ? man.shots.map(turn) : man.shots };
+    return { ...man, colour: plate.background, ink: plate.ink, shots: turned ? man.shots.map(turn) : man.shots };
   });
   const noun = passes ? "key passes" : "shots";
 
