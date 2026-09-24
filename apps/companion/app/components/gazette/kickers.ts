@@ -8,7 +8,6 @@ import type { StoryKind } from "@epl/core";
 // fourteen-entry table is the drift `shell/sections.ts` exists to prevent.
 
 export const KICKER: Partial<Record<StoryKind, string>> = {
-  "round-preview": "The preview",
   "match-report": "Match report",
   "fixture-preview": "Tonight",
   "tie-call": "The call",

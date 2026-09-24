@@ -149,7 +149,7 @@ this and not on a guess about when things happen:
 | **Tue** | **nothing at all** | *(open)* | the evergreen piece — see below |
 | **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
 | **Thu 14:00** | press conferences end | The Team Sheet | `presser` — the round-up **publishes 15:00** |
-| **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00** — both SHIPPED — then `round-preview` + `predictions` on the lock |
+| **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00** — both SHIPPED — then `predictions` on the lock |
 | **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `tie-call`, `fixture-preview`, the Classified |
 | **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
 
@@ -290,9 +290,8 @@ product here, so a foreign one is not a starting point.**
 | **6** | The crew, above | — |
 | **7** | The daily paper, above | Thursday is Craig's |
 
-**Deliberately not planned**: `round-preview`'s legacy `EditionKind` shape (a real
-cleanup, but §7 forbids mixing a refactor with a behaviour change — its own
-commit); and a captured football calendar, because `periodAlignment.json` is a
+**Deliberately not planned**: ~~`round-preview`'s legacy `EditionKind` shape~~
+(done 24 Sep 2026: the kind went whole, having never filed); and a captured football calendar, because `periodAlignment.json` is a
 frozen test fixture with placeholder kickoffs on 33 of 38 rounds, and the
 schedule keys on the **day**, which needs no calendar at all.
 

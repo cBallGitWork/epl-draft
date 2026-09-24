@@ -17,14 +17,10 @@ export const MAX_PAPER_STORIES = 24;
 /** What a newly filed story retires, by kind, within its own period. A tie
  *  report is the round's last word: it confirms or corrects the mid-round call
  *  on its own tie, and its existence proves the football has stopped — which
- *  makes the whole-round preview and the predictions column it marks history
- *  too, whichever tie files first. A table row, not code branches, so the next
- *  supersession is one line.
- *
- *  These three sat on `round-report` until 3 Sep 2026, when the single article
- *  about the whole league was replaced by one report per tie. */
+ *  makes the predictions column it marks history too, whichever tie files
+ *  first. A table row, not code branches, so the next supersession is one line. */
 const SUPERSEDES: Partial<Record<StoryKind, readonly StoryKind[]>> = {
-  "tie-report": ["tie-call", "round-preview", "predictions"],
+  "tie-report": ["tie-call", "predictions"],
 };
 
 /** The kind's standing in the running order — higher leads. Scale, not hue:
@@ -57,7 +53,6 @@ const KIND_WEIGHT: Record<StoryKind, number> = {
   "tie-call": 78,
   news: 70,
   "fixture-preview": 65,
-  "round-preview": 60,
   predictions: 55,
   eleven: 40,
   "power-ranking": 35,

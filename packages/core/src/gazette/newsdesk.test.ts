@@ -33,7 +33,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
 const none = () => false;
 
 describe("newsdesk", () => {
-  it("files a report per tie once the round finishes, and the preview only in the lock window", () => {
+  it("files a report per tie once the round finishes, and predictions only in the lock window", () => {
     const ties = [
       { homeTeamId: "a", awayTeamId: "b", state: "settled" as const },
       { homeTeamId: "c", awayTeamId: "d", state: "settled" as const },
@@ -45,11 +45,11 @@ describe("newsdesk", () => {
       "tie-report:p3:avb",
       "tie-report:p3:cvd",
     ]);
-    expect(newsdesk(desk({ started: false }), none, NOW)[0]?.kind).toBe("round-preview");
+    expect(newsdesk(desk({ started: false }), none, NOW)[0]?.kind).toBe("predictions");
     // Mid-round is neither: a preview is too late and a report is too early —
     // the writer's own window rule, kept.
     const midRound = newsdesk(desk({ ties }), none, NOW);
-    expect(midRound.find((a) => a.kind === "round-preview" || a.kind === "tie-report")).toBeUndefined();
+    expect(midRound.find((a) => a.kind === "predictions" || a.kind === "tie-report")).toBeUndefined();
   });
 
   it("reports a tie whatever state it was left in, unlike a mid-round call", () => {
@@ -203,9 +203,9 @@ describe("newsdesk", () => {
     expect(after.map((a) => a.kind)).toEqual(["power-ranking", "dodgers"]);
   });
 
-  it("files the predictions column in the lock window, beside the preview", () => {
+  it("files the predictions column in the lock window", () => {
     const kinds = newsdesk(desk({ started: false }), none, NOW).map((a) => a.kind);
-    expect(kinds).toEqual(["round-preview", "predictions"]);
+    expect(kinds).toEqual(["predictions"]);
   });
 
   it("files the wire only when there has been business, and once a window", () => {

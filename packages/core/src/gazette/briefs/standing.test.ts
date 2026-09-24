@@ -11,7 +11,7 @@ describe("standingHeadlines", () => {
 
   it("prints nothing on an empty page rather than an empty heading", () => {
     // A brief padded with a heading it has nothing for is a brief inviting the
-    // model to fill it — the rule the whole `buildBrief` block list follows.
+    // model to fill it — the rule every brief's block list follows.
     expect(standingHeadlines([])).toBeNull();
     expect(standingHeadlines(["", ""])).toBeNull();
   });

@@ -21,7 +21,6 @@ import { type EditionTie, isTie, once } from "./published";
  *  phase). The charts print as facts and need no prose to stand up. The idea
  *  is kept in the plan, not in the type. */
 export type StoryKind =
-  | "round-preview"
   | "match-report"
   | "fixture-preview"
   | "tie-call"
@@ -39,7 +38,7 @@ export type StoryKind =
  *  and the paper's page table is checked against it — a kind missing from either
  *  fails silently, with a green typecheck and a green build. */
 export const STORY_KINDS: readonly StoryKind[] = [
-  "round-preview", "match-report", "fixture-preview",
+  "match-report", "fixture-preview",
   "tie-call", "tie-report", "predictions", "eleven", "power-ranking",
   "wire", "dodgers", "presser", "predicted-xi", "news",
 ];
@@ -73,9 +72,8 @@ export interface PublishedStory {
    *  the archive filename and the anchor the front page links to. */
   slug: string;
   kind: StoryKind;
-  /** Same reason `PublishedEdition` carries it: CI files with its environment's
-   *  league and the app serves its own, and both number periods from the same
-   *  Friday — this is the whole rehearsal gate. */
+  /** CI files with its environment's league and the app serves its own, and
+   *  both number periods from the same Friday — this is the whole rehearsal gate. */
   leagueId: string;
   period: number;
   gameweek: number;

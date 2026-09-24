@@ -37,7 +37,7 @@ export default function Written({
 }) {
   const named = new Map(teams.map((team) => [team.teamId, team.name]));
   // Only a kind that predicts carries calls; everything else reports.
-  const calls = story.kind === "round-preview" || story.kind === "predictions";
+  const calls = story.kind === "predictions";
 
   // **A standfirst is not columnised.** `paper-columns` takes a measure rather
   // than a count, which is right for a whole article and wrong for an intro:

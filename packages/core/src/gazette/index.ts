@@ -9,7 +9,6 @@
 // might is the speculation §1 forbids. Later can add them.
 
 export { availability } from "./availability";
-export { buildBrief } from "./brief";
 export { nextDeadline } from "./deadline";
 export { deals } from "./deals";
 export { kindOf, movement } from "./dealSides";
@@ -56,12 +55,10 @@ export { tieState } from "./tieState";
 export type { Assignment, DeskState, DeskTie } from "./newsdesk";
 export type { FixtureStake, TieStake } from "./relevance";
 export type { TieState } from "./tieState";
-export { markPreview, normalizePublished } from "./published";
 export { normalizePaper, normalizeStory } from "./story";
 export { decided, stories } from "./stories";
 export { teamOfTheWeek } from "./teamOfTheWeek";
 export type { Ledger, StoryThread, ThreadUpdate } from "./ledger";
-export type { EditionKind, PublishedEdition } from "./published";
 export { STORY_KINDS } from "./story";
 export type { PublishedPaper, PublishedStory, StoryFace, StoryKind } from "./story";
 export type {

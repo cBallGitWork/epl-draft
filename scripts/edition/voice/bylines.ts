@@ -6,7 +6,6 @@ import { londonWeekday, type StoryKind } from "@epl/core";
 // empty, which the page renders as nothing.
 
 export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
-  "round-preview": "The Form Guide",
   "match-report": "The Back Page",
   "fixture-preview": "The Form Guide",
   "tie-call": "The Back Page",
@@ -25,7 +24,7 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
  *  take the day's paper: Saturday's is the Pink 'Un because the stock has
  *  been rosa since 29 Aug and finally earns it. */
 export function editionName(kind: StoryKind, filedAt: string): string {
-  if (kind === "round-preview" || kind === "predictions" || kind === "predicted-xi") return "The Form Guide";
+  if (kind === "predictions" || kind === "predicted-xi") return "The Form Guide";
   if (kind === "fixture-preview" || kind === "news" || kind === "presser") return "The Team Sheet";
   if (kind === "wire" || kind === "dodgers") return "The Mercato Wire";
   if (kind === "eleven" || kind === "power-ranking") return "The Monday Club";
