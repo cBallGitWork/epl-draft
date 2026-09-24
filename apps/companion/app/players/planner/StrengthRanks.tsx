@@ -2,7 +2,7 @@ import type { Club, StrengthRank } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
 import { MUTE } from "../../components/league/TableHeads";
-import { HEAD_CELL, HEAD_PLATE, ROW_RULE } from "@/app/desk";
+import { HEAD_CELL, HEAD_PLATE_CENTRE, ROW_RULE } from "@/app/desk";
 
 // The ranking behind the planner's colours (Craig, 24 Sep 2026: "a ranking section too"): every club as an
 // opponent, at home and away, easiest first, on the same ramp as the cells above it.
@@ -32,10 +32,10 @@ export default function StrengthRanks({
             <span className={MUTE}>Club</span>
           </th>
           <th scope="col" className={HEAD_CELL}>
-            <span className={`${HEAD_PLATE} justify-center`}>Home</span>
+            <span className={`${HEAD_PLATE_CENTRE}`}>Home</span>
           </th>
           <th scope="col" className={HEAD_CELL}>
-            <span className={`${HEAD_PLATE} justify-center`}>Away</span>
+            <span className={`${HEAD_PLATE_CENTRE}`}>Away</span>
           </th>
         </tr>
       </thead>

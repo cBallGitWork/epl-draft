@@ -3,6 +3,7 @@ import { POOL, lastValue } from "./routes";
 import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
 import { figureOf } from "./figure";
 import { groupFor, type PoolGroupKey } from "./groups";
+import { byFigure } from "../components/league/order";
 
 // What the URL says the table should show. State lives in the address bar rather
 // than in browser state: a server component stays a server component, the whole
@@ -173,10 +174,7 @@ export function shownRows(
     // already records this page making once.
     const a = figureOf(read, left, raw.get(left.entry.player.fantraxId), rated);
     const b = figureOf(read, right, raw.get(right.entry.player.fantraxId), rated);
-    if (a === null) return b === null ? 0 : 1;
-    if (b === null) return -1;
-    const order = typeof a === "string" && typeof b === "string" ? a.localeCompare(b) : Number(a) - Number(b);
-    return descending ? -order : order;
+    return byFigure(a, b, descending);
   });
 }
 

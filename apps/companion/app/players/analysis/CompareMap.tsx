@@ -9,7 +9,7 @@ import { SECTION_BAR } from "@/app/desk";
 // map turns the home side. Shots are his own; key passes are his teammates' shots, drawn from where his pass began.
 
 /** One man as the map needs him. */
-export interface MapMan {
+interface MapMan {
   name: string;
   club: Club | undefined;
   /** His shots, or the shots he set up. */

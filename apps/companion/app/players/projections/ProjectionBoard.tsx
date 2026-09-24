@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { DASH, crestForShortName } from "@epl/core";
+import { DASH, crestForShortName, gameweekSpan } from "@epl/core";
 import PositionTile, { TILE_WIDTH } from "../../components/league/PositionTile";
 import { MUTE, SortHead } from "../../components/league/TableHeads";
 import { ROW_LINK } from "../../components/league/TableCells";
@@ -28,7 +28,7 @@ export default function ProjectionBoard({
 }) {
   const heads: { key: ProjectionSort; label: string; title: string; desk?: true }[] = [
     ...gameweeks.map((gw) => ({ key: `gw${gw}`, label: String(gw), title: `Gameweek ${gw}: projected FPL points` })),
-    { key: "tot", label: "Tot", title: `GW${gameweeks[0]}–${gameweeks.at(-1)} added up: FPL scoring, never Fantrax's` },
+    { key: "tot", label: "Tot", title: `${gameweekSpan(gameweeks)} added up: FPL scoring, never Fantrax's` },
     { key: "xmins", label: "xMins", title: "The minutes the model expects him to play, a week", desk: true },
   ];
 

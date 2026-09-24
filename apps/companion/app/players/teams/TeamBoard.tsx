@@ -4,7 +4,7 @@ import ClubLabel from "../../components/football/ClubLabel";
 import { ROW_LINK } from "../../components/league/TableCells";
 import { MUTE, SortHead } from "../../components/league/TableHeads";
 import { standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
-import { BOARD, EDGE_FADE, HEAD_CELL, HEAD_PLATE, INDEX_WIDTH, ROW_FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, EDGE_FADE, GROUP_PLATE, HEAD_CELL, INDEX_WIDTH, ROW_FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
 import { POOL, TEAMS } from "../routes";
 import { TEAM_COLUMNS, columnGroups, type TeamColumn } from "./columns";
 import type { TeamRow } from "./teamRows";
@@ -46,7 +46,7 @@ export default function TeamBoard({
               </th>
               {columnGroups(TEAM_COLUMNS).map((entry) => (
                 <th key={entry.group} colSpan={entry.span} scope="colgroup" className={`${HEAD_CELL} border-l border-line/60`}>
-                  <span className={`${HEAD_PLATE} justify-center text-2xs font-bold uppercase`}>{entry.group}</span>
+                  <span className={GROUP_PLATE}>{entry.group}</span>
                 </th>
               ))}
             </tr>

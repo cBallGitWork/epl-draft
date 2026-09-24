@@ -3,7 +3,7 @@ import { DASH, toFantraxClubCode, type PlannerCell, type PlannerRow, type Planne
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
 import { MUTE } from "../../components/league/TableHeads";
-import { HEAD_CELL, HEAD_PLATE, ROW_RULE, SCROLL, STICKY_LEAD } from "@/app/desk";
+import { HEAD_CELL, HEAD_PLATE_CENTRE, ROW_RULE, SCROLL, STICKY_LEAD } from "@/app/desk";
 import { POOL } from "../routes";
 
 // Every club's next six opponents, a cell each on the ease ramp, easiest run first. One line to a fixture
@@ -41,7 +41,7 @@ export default function PlannerBoard({
             </th>
             {gameweeks.map((gameweek) => (
               <th key={gameweek} scope="col" className={HEAD_CELL}>
-                <span className={`${HEAD_PLATE} justify-center px-0`}>GW{gameweek}</span>
+                <span className={`${HEAD_PLATE_CENTRE}`}>GW{gameweek}</span>
               </th>
             ))}
             {/* The column the board is ordered by, drawn pressed, as a sorted head is. */}

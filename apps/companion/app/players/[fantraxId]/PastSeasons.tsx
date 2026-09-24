@@ -1,14 +1,6 @@
 import type { PastSeason } from "@epl/core";
 import Section from "../../components/shell/Section";
-import {
-  BOARD,
-  FIGURE,
-  HEAD_PLATE,
-  HEAD_CELL,
-  ROW_RULE,
-  SCROLL,
-  TEXT,
-} from "@/app/desk";
+import { BOARD, FIGURE, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_CENTRE, ROW_RULE, SCROLL, TEXT } from "@/app/desk";
 import { IndexCell } from "../../components/league/TableCells";
 import { thousands } from "@epl/core";
 
@@ -67,7 +59,7 @@ export default function PastSeasons({
                   className={HEAD_CELL}
                   title={column.title}
                 >
-                  <div className={`${HEAD_PLATE} justify-center`}>
+                  <div className={`${HEAD_PLATE_CENTRE}`}>
                     {column.head}
                   </div>
                 </th>

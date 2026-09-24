@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Fixture } from "../types";
-import { fixtureGameweeks, inGameweeks, lastPlayed } from "./window";
+import { fixtureGameweeks, gameweekSpan, inGameweeks, lastPlayed } from "./window";
 
 function fixture(id: number, gameweek: number | null, status: Fixture["status"]): Fixture {
   return {
@@ -51,5 +51,16 @@ describe("inGameweeks", () => {
   it("keeps the rows from fixtures in the window", () => {
     const rows = [{ fplFixtureId: 1 }, { fplFixtureId: 3 }, { fplFixtureId: 99 }];
     expect(inGameweeks(rows, fixtureGameweeks(FIXTURES), new Set([3]))).toEqual([{ fplFixtureId: 3 }]);
+  });
+});
+
+describe("gameweekSpan", () => {
+  it("names a window by its ends, and a one-week window by its week", () => {
+    expect(gameweekSpan([6, 7, 8, 9, 10, 11])).toBe("GW6–11");
+    expect(gameweekSpan([6])).toBe("GW6");
+  });
+
+  it("is empty for no gameweeks at all", () => {
+    expect(gameweekSpan([])).toBe("");
   });
 });

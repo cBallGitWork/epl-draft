@@ -1,3 +1,4 @@
+import { byFigure } from "../../../components/league/order";
 import type { IntelMatchPlayer, MatchSheetLine, PlayerMatchStats } from "@epl/core";
 
 // A club board's measures, declared as data so the head and the body cannot disagree.
@@ -56,14 +57,7 @@ export function isStatSort(value: string | undefined): value is StatSort {
 /** Ordered by one column; ties keep the team sheet's order, and a man with no figure sinks either way. */
 export function sorted<T extends StatLine>(rows: readonly T[], sort: StatSort, descending: boolean): T[] {
   const column = COLUMNS.find((entry) => entry.head === sort) ?? COLUMNS[0];
-  return [...rows].sort((a, b) => {
-    const left = column.of(a);
-    const right = column.of(b);
-    if (left === null && right === null) return 0;
-    if (left === null) return 1;
-    if (right === null) return -1;
-    return descending ? right - left : left - right;
-  });
+  return [...rows].sort((a, b) => byFigure(column.of(a), column.of(b), descending));
 }
 
 /** How much of a side a column may light: a fifth in yellow, so three scorers of sixteen stand out,

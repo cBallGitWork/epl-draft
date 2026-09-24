@@ -109,7 +109,7 @@ export type { IntelTouches, Touch, TouchCentre, TouchPlayer } from "./intel/touc
 // round, and `intel/shots.ts` records how that was settled.
 export { assistsOf, shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
 // A window of recent gameweeks, for narrowing the intel to recent form.
-export { fixtureGameweeks, inGameweeks, lastPlayed } from "./intel/window";
+export { fixtureGameweeks, gameweekSpan, inGameweeks, lastPlayed } from "./intel/window";
 export type { IntelShots, Shot } from "./intel/shots";
 // Each club's Dixon-Coles strength from the sister repo, ranked 1–20 as an opponent for the fixture planner.
 export { easeRanks, easeStep, plannerGameweeks, plannerRows, strengthIntel, strengthTable } from "./intel/strength";

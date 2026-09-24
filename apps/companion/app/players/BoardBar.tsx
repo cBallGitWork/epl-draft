@@ -11,48 +11,9 @@ import { Carried, Chip, Count, Figures, PRESSABLE, Plates } from "./BoardControl
 import ClubPicker from "./ClubPicker";
 import SortPicker from "./SortPicker";
 
-// Every control on the board: **one row on the desk, one row and a drawer under
-// a thumb.**
-//
-// Two complaints got it here, and they are different complaints.
-//
-// **First, Craig, 10 Sep 2026: *"when i said messy, i meant essentially three
-// rows of column headers"*.** The board had a blue stat-group strip, a grey
-// field of eleven filter chips, and then the table's own grey head strip — and
-// the middle two wear THE SAME BEVEL. `cm-bevel` means "something you press",
-// which a chip and a column head both are, so three consecutive full-width rows
-// of small bold capitals read as three header rows stacked and a reader cannot
-// tell which of them belongs to the table. It was never the NUMBER of controls;
-// it was that a control and a column head are the same object in this
-// vocabulary. Worth remembering before adding a fourth bevelled row anywhere on
-// the desk.
-//
-// **Second, and it corrected the fix: *"i think we can get most things onto one
-// row though"*, against Opta's desktop shot.** The first answer put everything
-// behind the `Filter` plate, which cured the stacking and threw away the desk's
-// width with it — their grid runs search, stat-group tabs, `PER 90` and
-// `MIN MINUTES` across a single line and keeps only the position and team
-// pickers in the drawer. A desk is wide. Using it is free, and it makes the most
-// frequent action — changing the stat group — one tap rather than two.
-//
-// So the row holds what a reader changes often and the drawer holds the long
-// tail. Nothing above the head strip is a full-width bar of bevelled capitals
-// any more, which is what the first complaint was actually about.
-//
-// **The strip and the figures are written once and rendered twice**, inline
-// above `lg` and inside the drawer below it. Only ever one of the two is in the
-// tree — `hidden` removes an element from the accessibility tree as well as from
-// the page — which is the same rule `desk.ts`'s `DESK_ONLY` already applies to a
-// column that stands down. The alternative is a phone whose first control row
-// scrolls sideways past six plates before reaching the search box.
-//
-// **The drawer opens through the URL rather than through React state.** Every
-// other control on this page is a link, and that is what lets a filtered board
-// be shared, bookmarked and read with no JavaScript at all — `query.ts` records
-// the same reasoning for choosing chips over the reference's slider. A
-// `useState` drawer would make the one control that reveals the others the only
-// one needing a script. `?panel=1` costs a round trip Next prefetches, and it
-// means "the board with the filters open" is a thing you can send somebody.
+// Every control on the board: one row on the desk (search, the stat groups from `lg`, Per 90 from `xl`, Filter),
+// and under a thumb the row plus a sheet docked over the thumb rail. The sheet is URL state (`?panel=1`), so a
+// filtered board can be shared, and the stat groups render in both places with only one ever shown.
 
 export default function BoardBar({
   query,
