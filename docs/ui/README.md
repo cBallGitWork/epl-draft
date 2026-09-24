@@ -53,6 +53,7 @@ nothing.**
 | `/gw/[gameweek]` | [gameweek.md](gameweek.md) | Any round of football, addressable. |
 | `/players` | [players.md](players.md) | **Data** — the whole pool, sortable, filterable, lit in ink. |
 | `/players/analysis` | [analysis.md](analysis.md) | Compare: two players' figures, shots, key passes, touches and attributes, season or last 6. |
+| `/players/teams` | [teams.md](teams.md) | Team Stats: the twenty clubs as a fantasy manager reads them, 13 measures in five groups. |
 | `/players/planner` | [planner.md](planner.md) | The fixture planner: every club's next six opponents, ranked by our strength model. |
 | `/players/[fantraxId]` | [player.md](player.md) | One player's profile. |
 | `/fpl` | [fpl.md](fpl.md) | The other game, kept small on purpose. |

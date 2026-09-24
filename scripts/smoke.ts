@@ -32,6 +32,7 @@ const ROUTES = [
   "/players",
   // Data's Compare: its ids are in the query, so no link off the board reaches it.
   "/players/analysis?a=05gcr&b=03ksl",
+  "/players/teams",
   "/players/planner",
   "/players/planner?view=defence",
   "/matchday",

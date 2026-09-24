@@ -35,6 +35,7 @@ export const DESK_ROUTES = [
   // other fixed entry in this list.
   "/players/analysis?a=05gcr&b=03ksl",
   // Data's fixture planner (24 Sep 2026); its phone view is a query, so the defence board is named too.
+  "/players/teams",
   "/players/planner",
   "/players/planner?view=defence",
   "/matchday",

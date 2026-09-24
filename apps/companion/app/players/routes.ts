@@ -20,5 +20,8 @@ export function playerHref(fantraxId: string): string {
  *  reverses a finished one. §1 leaves two alone. */
 export const ANALYSIS = "/players/analysis";
 
+/** Data's club board: every real club as a fantasy manager reads it. */
+export const TEAMS = "/players/teams";
+
 /** The fixture planner: every club's next six opponents, ranked by our strength model. */
 export const PLANNER = "/players/planner";
