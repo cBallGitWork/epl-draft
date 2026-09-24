@@ -4,8 +4,8 @@ import { easeGround } from "../../components/football/ease";
 import { MUTE } from "../../components/league/TableHeads";
 import { HEAD_CELL, HEAD_PLATE_CENTRE, ROW_RULE } from "@/app/desk";
 
-// The ranking behind the planner's colours (Craig, 24 Sep 2026: "a ranking section too"): every club as an
-// opponent, at home and away, easiest first, on the same ramp as the cells above it.
+// The planner's rankings (Craig, 24 Sep 2026: "a ranking section too", "best at top"): every club's own attack or
+// defence at home and away, the strongest first, on the ease ramp read the other way: green is the best.
 
 export default function StrengthRanks({
   table,

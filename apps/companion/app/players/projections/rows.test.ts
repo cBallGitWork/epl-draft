@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { ProjectedPlayer } from "@epl/core";
-import { projectionRows, projectionSort, sortedProjections, type Known } from "./rows";
+import { projectionCategory, projectionRows, projectionSort, sortedProjections, type Known } from "./rows";
 
 function week(gw: number, points: number, minutes = 80) {
-  return { gw, points, low: null, high: null, minutes, start: 0.9, fixtures: 1 };
+  const parts = { goals: points / 2, assists: 1, cleanSheets: 0, bonus: 0, saves: 0, defcon: 0, appearance: 2 };
+  return { gw, points, low: null, high: null, minutes, start: 0.9, fixtures: 1, parts };
 }
 
 const HAALAND: ProjectedPlayer = { code: 1, club: "MCI", role: "ST", gameweeks: [week(6, 6), week(7, 7.5, 90), week(9, 5)] };
@@ -46,5 +47,18 @@ describe("sorting", () => {
   it("orders by a week, sinking a man with no reading for it", () => {
     expect(sortedProjections(rows, "gw8", [6, 7, 8], true).map((r) => r.name)).toEqual(["Saka", "Haaland"]);
     expect(sortedProjections(rows, "tot", [6, 7, 8], true).map((r) => r.name)).toEqual(["Saka", "Haaland"]);
+  });
+});
+
+describe("a category", () => {
+  it("shows one category's points in the weeks and the total", () => {
+    const [haaland] = projectionRows(PLAYERS, [6, 7, 8], KNOWN, "goals");
+    expect(haaland.weeks).toEqual([3, 3.75, null]);
+    expect(haaland.total).toBe(6.75);
+  });
+
+  it("reads an unknown category as every point", () => {
+    expect(projectionCategory("nope")).toBe("points");
+    expect(projectionCategory("bonus")).toBe("bonus");
   });
 });

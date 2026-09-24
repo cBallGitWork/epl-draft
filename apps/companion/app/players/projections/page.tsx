@@ -2,23 +2,28 @@ import Link from "next/link";
 import { PLANNER_RUN, gameweekSpan, londonDayAndDate, plannerGameweeks } from "@epl/core";
 import ScoutShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
-import ClubPicker from "../ClubPicker";
+import QuerySelect from "../QuerySelect";
 import ProjectionBoard from "./ProjectionBoard";
-import { Carried, Chip } from "../BoardControls";
+import { Carried, Chip, clubOptions } from "../BoardControls";
 import { PAGE_ROWS, boardHref, chosen, filterHref, isChosen, playersQuery, type PlayersSearchParams } from "../query";
 import { getLeaguePool } from "../pool";
 import { positionLabel } from "../../positions";
 import { footballNow, seasonFixtures } from "../../football";
 import { intelProjections, intelProjectionsManifest } from "../../intel";
 import { PROJECTIONS } from "../routes";
-import { projectionRows, projectionSort, sortedProjections, type Known } from "./rows";
-import { BOARD_KEY } from "@/app/desk";
+import {
+  PROJECTION_CATEGORIES,
+  projectionCategory,
+  projectionRows,
+  projectionSort,
+  sortedProjections,
+  type Known,
+} from "./rows";
 
 // Data › Projections, a scaffold (Craig, 24 Sep 2026: "just scaffold this … next 6 gameweeks … could import the
 // current projections"): who the sister model tips over the next six, FPL-scoring, never Fantrax's.
 
 export const revalidate = 30;
-
 
 export default async function ProjectionsPage({ searchParams }: { searchParams: Promise<PlayersSearchParams> }) {
   const query = playersQuery(await searchParams);
@@ -27,7 +32,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
 
   if (intelProjections.size === 0 || gameweeks.length === 0) {
     return (
-      <ScoutShell current="projections" title="Projected Points" rows={0}>
+      <ScoutShell current="projections" rows={0}>
         <Nothing title="No projections yet">The sister model&apos;s projections have not been exported.</Nothing>
       </ScoutShell>
     );
@@ -51,8 +56,10 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
   const descending = (query.dir ?? "desc") === "desc";
   const positions = chosen(query.pos);
   const club = (query.club ?? "").trim();
+  const category = projectionCategory(query.cat);
+  const categoryLabel = PROJECTION_CATEGORIES.find((entry) => entry.value === category)?.label ?? category;
   const shown = sortedProjections(
-    projectionRows(intelProjections, gameweeks, known).filter(
+    projectionRows(intelProjections, gameweeks, known, category).filter(
       (row) =>
         (club === "" || row.club === club) &&
         (positions.length === 0 || positions.some((position) => row.positions.includes(position))),
@@ -67,9 +74,9 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
   const window = gameweekSpan(gameweeks);
 
   return (
-    <ScoutShell current="projections" title="Projected Points" rows={0}>
+    <ScoutShell current="projections" rows={0}>
       {/* Provenance at the point of use (DESIGN §7): these are the sister model's FPL points, not Fantrax's. */}
-      <p className={BOARD_KEY}>
+      <p className="text-3xs text-faint">
         FPL-scoring projections by the sister model, {window}, exported{" "}
         {londonDayAndDate(intelProjectionsManifest.exportedAt)} · <span className="text-info">ours</span>
       </p>
@@ -83,9 +90,26 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
             {positionLabel(position) ?? position}
           </Chip>
         ))}
-        <ClubPicker clubs={clubs} club={club} action={PROJECTIONS}>
+      </div>
+      <div className="grid grid-cols-2 gap-1.5 lg:max-w-md">
+        <QuerySelect
+          name="cat"
+          label="Category"
+          value={category === "points" ? "" : category}
+          options={PROJECTION_CATEGORIES.map((entry) => ({ ...entry, value: entry.value === "points" ? "" : entry.value }))}
+          action={PROJECTIONS}
+        >
+          <Carried query={query} except={["cat"]} />
+        </QuerySelect>
+        <QuerySelect
+          name="club"
+          label="Club"
+          value={club}
+          options={clubOptions(clubs)}
+          action={PROJECTIONS}
+        >
           <Carried query={query} except={["club"]} />
-        </ClubPicker>
+        </QuerySelect>
       </div>
 
       {shown.length === 0 ? (
@@ -96,6 +120,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
         <ProjectionBoard
           rows={capped}
           gameweeks={gameweeks}
+          category={categoryLabel}
           sort={sort}
           descending={descending}
           href={(key, down) => boardHref(query, { sort: key, dir: down ? "desc" : "asc" }, PROJECTIONS)}

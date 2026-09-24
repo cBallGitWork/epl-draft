@@ -108,10 +108,15 @@ describe("easeStep", () => {
 });
 
 describe("strengthTable", () => {
-  it("ranks every club as an opponent at both venues, easiest first", () => {
+  it("ranks every club's own attack at both venues, the strongest first (Craig, 24 Sep 2026: best at top)", () => {
     const table = strengthTable(STRENGTHS, "attack");
-    expect(table.map((row) => row.club)).toEqual(["HUL", "BUR", "CHE", "ARS"]);
-    expect(table[0]).toMatchObject({ club: "HUL", code: HUL.code, home: 1, away: 1 });
+    expect(table.map((row) => row.club)).toEqual(["ARS", "CHE", "BUR", "HUL"]);
+    expect(table[0]).toMatchObject({ club: "ARS", code: ARS.code, home: 1, away: 1 });
+  });
+
+  it("ranks defences the same way, a tie sharing its rank and falling to the name", () => {
+    const table = strengthTable(STRENGTHS, "defence");
+    expect(table.map((row) => [row.club, row.home])).toEqual([["ARS", 1], ["BUR", 2], ["CHE", 2], ["HUL", 4]]);
   });
 });
 

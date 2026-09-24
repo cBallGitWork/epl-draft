@@ -34,23 +34,26 @@ headers too?"*. Where the sections below disagree with this one, this one is cur
 - **Phone-first order**: `FPts FP/G Min GP G A AF CS GAO GA Sv PKS YC RC PKM OG Ros +/-`. Seven figures sit
   beside a name at 390 (FPts to AF), six at 360. **Opp is gone** at both widths; the next fixture is the
   planner's question.
-- **The lead** is pinned: crest, then the name, then a second line. On a phone the name is CM's list form
-  (`Gross, P`, `listName` in core) and line two leads with the position (`MID`, in `LABEL` ink, a fixed
-  slot so the holders line up). On a desk the name is whole and CM's position tile runs down the left.
-- **Who holds him**: `Yours` in the accent (the page reads the reader's team), a rival's team name quiet, and
-  `Free agent` / `Waivers` loud, because that is the man a reader can act on. This reverses 10 Sep's "owner
-  loud, status quiet".
+- **The lead** is pinned (`players/BoardRow`, shared with Projections): crest, then the name with **who holds
+  him in brackets straight after it** (Craig, 24 Sep 2026: *"put the manager in brackets right after the
+  player to allow more room for columns"*). On a phone the name is CM's list form (`Gross, P`, `listName` in
+  core) and line two is the position (`MID`, in `LABEL` ink). On a desk the name is whole, CM's position tile
+  runs down the left, and the lead is 256px.
+- **Who holds him**: `(Yours)` in the accent (the page reads the reader's team), `(a rival's team)` quiet, and
+  Fantrax's own `(FA)` / `(WW)` loud, because that is the man a reader can act on; the word is its title. This
+  reverses 10 Sep's "owner loud, status quiet".
 - **Heads** are 24px with 2px padding under a thumb (`SortHead compact`), so a narrow column is as wide as its
   figures; the desk keeps 28px.
 - **Figures** are centred, in ink. Standouts are lit in ink, never on a ground: orange for a column's best
   (a twentieth of the scored figures), yellow for the rest of its top sixth, red at the bad end
   (`components/league/standout.ts`, shared with the match board). A nought prints, quietly; an absence is `—`.
   Per-90 figures stay white (Craig).
-- **No yellow caption on a phone** in Data (the tab strip names the view). When `FPts` is Fantrax's
-  projection, the phone prints that warning above the board instead.
+- **No yellow caption** in Data at any width (the tab strip names the view). When `FPts` is Fantrax's
+  projection, a warning prints above the board instead.
 - **The filters are a sheet** docked over the thumb rail below `lg` (inline from `lg`), headed "Filter
   players": Position as CM's index tiles (chosen: an accent edge and a tick, the word stays white), Status
-  chips with counts, Club and **Sort by** selects side by side, the stat groups (which a phone could not reach
+  chips with counts, Club and **Sort by** selects side by side (`QuerySelect`, one component for every Data
+  select), the stat groups (which a phone could not reach
   before: the old drawer never drew them), Per 90, then Reset and `Show N`. A tap outside closes it.
 
 ## On the page — the Board

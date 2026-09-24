@@ -13,7 +13,13 @@ export interface ProjectedGameweek {
   /** Chance he starts, 0–1. */
   start: number | null;
   fixtures: number;
+  /** The week's points by what earns them; null on an export that predates the split. */
+  parts: Record<ProjectionPart, number | null> | null;
 }
+
+/** The categories a week's points split into, in the order a reader picks them. */
+export const PROJECTION_PARTS = ["goals", "assists", "cleanSheets", "bonus", "saves", "defcon", "appearance"] as const;
+export type ProjectionPart = (typeof PROJECTION_PARTS)[number];
 
 export interface ProjectedPlayer {
   /** FPL's season-stable player code. */
@@ -44,6 +50,7 @@ export function projectionIntel(file: IntelProjections | null): Map<number, Proj
         high: reading(week.high),
         minutes: reading(week.minutes),
         start: reading(week.start),
+        parts: week.parts == null ? null : parts(week.parts),
       }));
     byCode.set(player.code, { ...player, gameweeks });
   }
@@ -59,6 +66,10 @@ export function nextGameweeks(player: ProjectedPlayer, gameweeks: readonly numbe
 export function projectedTotal(player: ProjectedPlayer, gameweeks: readonly number[]): number | null {
   const points = nextGameweeks(player, gameweeks).flatMap((week) => (week?.points == null ? [] : [week.points]));
   return points.length === 0 ? null : points.reduce((sum, value) => sum + value, 0);
+}
+
+function parts(raw: Record<string, unknown>): Record<ProjectionPart, number | null> {
+  return Object.fromEntries(PROJECTION_PARTS.map((part) => [part, reading(raw[part])])) as Record<ProjectionPart, number | null>;
 }
 
 function reading(value: unknown): number | null {

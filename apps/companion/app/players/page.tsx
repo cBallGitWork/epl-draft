@@ -16,12 +16,10 @@ import {
 } from "./query";
 import type { PlayersSearchParams } from "./query";
 import { POOL } from "./routes";
-import { POOL_GROUPS, columnsIn } from "./groups";
-import type { PoolGroupKey } from "./groups";
+import { columnsIn } from "./groups";
 import { figureOf } from "./figure";
 import { cutsFor } from "./standout";
 import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH } from "@epl/core";
-import type { StatSeason } from "@epl/core";
 import OutLink from "../components/shell/OutLink";
 import FantraxSilent from "../components/shell/FantraxSilent";
 
@@ -132,9 +130,7 @@ export default async function PlayersPage({
   }
 
   return (
-    <ScoutShell
-      title={caption(group, pool.season)}
-    >
+    <ScoutShell>
       {/* Said out loud while the board is a picker, because a table whose rows
           have quietly changed destination is a screen that lies about what a tap
           does. It carries its own way out. */}
@@ -157,9 +153,9 @@ export default async function PlayersPage({
         shown={shown.length}
       />
 
-      {/* The caption carries this on a desk; a phone has no caption, and a projection must still say so. */}
+      {/* A column headed FPts that silently became Fantrax's projection would be the confident wrong answer (DESIGN §7). */}
       {pool.season?.projected ? (
-        <p className="text-2xs font-bold text-accent lg:hidden">{pool.season.name || "This season"} — Fantrax projection</p>
+        <p className="text-2xs font-bold text-accent">{pool.season.name || "This season"} — Fantrax projection</p>
       ) : null}
 
       {shown.length === 0 ? (
@@ -216,31 +212,4 @@ export default async function PlayersPage({
       </OutLink>
     </ScoutShell>
   );
-}
-
-/** What the caption says.
- *
- *  **It names the plate on a desk.** DESIGN §2's reading of `cm9900/16.jpg` is that
- *  the bar says where you are and the caption says what the board IS. A phone has
- *  no caption in Data (24 Sep 2026); its column heads say which columns are on
- *  screen. `all` falls through to the section's own caption rather than "All".
- *
- *  **And it carries the provenance, but only when the provenance bites.** The
- *  count-and-season line under the title bar came off on 10 Sep 2026 (Craig:
- *  *"remove that row"*), and it was doing one job worth keeping: saying whether
- *  the `FPts` column holds what a man SCORED or what Fantrax PREDICTS he will.
- *  That read defaulted to a projection until 5 Sep and now defaults to
- *  year-to-date, and it can change again without anybody touching this app — a
- *  column headed `FPts` that silently switched between the two is the confident
- *  wrong answer DESIGN §7 exists to prevent.
- *
- *  So the label appears exactly when it changes the meaning of the board. Actual
- *  season-to-date figures are what a reader already assumes and get no words; a
- *  projection says so, in the caption, every time. A permanent bar saying "YTD"
- *  is furniture, and furniture is what gets stopped being read. */
-function caption(group: PoolGroupKey, season: StatSeason | null): string | undefined {
-  const name = group === "all" ? undefined : POOL_GROUPS.find((e) => e.key === group)?.label;
-  if (!season?.projected) return name;
-  const warning = `${season.name || "This season"} — Fantrax projection`;
-  return name ? `${name} · ${warning}` : warning;
 }

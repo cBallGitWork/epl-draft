@@ -57,10 +57,6 @@ export const LEAGUE_CAPTION: Record<LeagueSection, string> = {
  *  The constant keeps its name, so a label change stays a one-line diff; the rail says the same word. */
 export const SCOUT = "Data";
 
-/** The scouting section's one view. The pool overrides it with the category the
- *  board is ranked by, exactly as `cm9900/16.jpg` captions its stat list. */
-export const SCOUT_CAPTION = "Player Stats";
-
 /** The head-to-head, which is a route under Matchups rather than a section of
  *  its own — so it needs a caption the section's own name would get wrong. */
 export const HEAD_TO_HEAD = "Head-to-head";

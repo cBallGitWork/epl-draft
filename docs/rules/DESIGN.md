@@ -279,8 +279,9 @@ panel below it. Every screen in the library carries both, and none of them mixes
 the two. **Except a plated subject's (a club, a manager), which draws none**
 (Craig, 23 Sep 2026: "Should we really have 'your squad' in yellow? Does it save a
 row we need?"). Its tab strip already names the view, lit in the accent, so the
-caption repeated it and cost a row on a phone. The competition screens keep
-theirs.
+caption repeated it and cost a row on a phone. **Data draws none either** (Craig,
+24 Sep 2026: *"remove the yellow title for space"*): its strip names the view.
+The competition screens keep theirs.
 
 **The one exception is CM's own news screen, and it is granted.** Its bar reads
 `Mike Paul News` — subject and view in one line, with no caption — and it is the

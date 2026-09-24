@@ -65,7 +65,9 @@ for every shape decision below.
    have a browser scroll AND a match report scroll"*).
 5. **The foot row** — CM's related-screens strip (`cm0102/02.jpg`), under the
    panel on Stats (`Brentford · Match · Chelsea`) and Line Ups (`Team Sheet ·
-   Pitch`). The shell's `foot` slot draws it with `TabStrip`.
+   Pitch`). The shell's `foot` slot draws it with `TabStrip`. **On a desk it is pinned to the window's foot**
+   (`lg:sticky`), so a long page keeps it in view (Craig, 24 Sep 2026: *"i need to be able to see the footer
+   row"*); a phone's already sits above the thumb rail.
 
 *Corrected 4 Sep 2026 after Craig read the first build.* The scores were centred
 between the plates rather than at each side's own edge; an unplayed match drew

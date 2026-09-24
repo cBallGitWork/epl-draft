@@ -57,8 +57,6 @@ export const ROW_HOVER = `${ROW_RULE} hover:bg-surface`;
 /** The wrapper that lets a phone reach a board's far columns. */
 export const SCROLL = "overflow-x-auto";
 
-/** A board's key: one quiet line under the switch saying what its figures are and whose. */
-export const BOARD_KEY = "text-3xs text-faint";
 
 /** A board that scrolls sideways says so under a thumb: a fade at its right edge, over the figures. */
 export const EDGE_FADE = "pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-surface lg:hidden";
@@ -78,7 +76,7 @@ export const TAB =
 
 /** CM's blue title row across a panel, naming the section under it. */
 export const SECTION_BAR =
-  "flex min-h-8 items-center justify-center bg-chrome px-3 text-2xs font-bold uppercase text-ink lg:text-xs";
+  "flex min-h-8 items-center justify-center bg-chrome px-3 font-chrome text-2xs font-bold uppercase text-ink lg:text-xs";
 
 /** A stats board's column head: left over a name; `_END` right over a figure. */
 export const HEAD_PLATE = "cm-bevel flex h-6 items-center px-1.5";

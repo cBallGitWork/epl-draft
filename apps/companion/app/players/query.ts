@@ -46,6 +46,8 @@ export interface PlayersSearchParams {
   sort?: string | string[];
   dir?: string | string[];
   all?: string | string[];
+  /** Projections' category: which of a week's points the columns show. */
+  cat?: string | string[];
 }
 
 /** The same query, narrowed. */
@@ -65,6 +67,7 @@ export interface PlayersQuery {
   per?: string;
   club?: string;
   panel?: string;
+  cat?: string;
 }
 
 /** The last value wins, which is what a browser does with a repeated field and
@@ -82,6 +85,7 @@ export function playersQuery(raw: PlayersSearchParams): PlayersQuery {
     per: lastValue(raw.per),
     club: lastValue(raw.club),
     panel: lastValue(raw.panel),
+    cat: lastValue(raw.cat),
   };
 }
 
@@ -148,7 +152,7 @@ export function shownRows(
       // **One club or all of them**, unlike the two filters below it. Those are
       // unions within themselves because a reader wants defenders OR
       // midfielders; nobody asks for "Arsenal or Chelsea", and twenty chips is
-      // the wall `ClubPicker` exists to avoid. A single value also means the
+      // the wall the club `QuerySelect` exists to avoid. A single value also means the
       // control can be a `<select>`, which is the right object for a set of
       // twenty.
       (club === "" || row.entry.player.clubCode === club) &&

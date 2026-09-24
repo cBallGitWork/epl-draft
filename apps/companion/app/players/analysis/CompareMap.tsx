@@ -3,7 +3,6 @@ import { clubColoursOf, plateOn } from "@epl/core";
 import { PITCH_BOX } from "../../components/football/pitchBox";
 import Marks, { MarksKey } from "../../components/football/ShotMarks";
 import { KeyPass, KeyPassKey, Pitch } from "../../components/football/ShotPitch";
-import { SECTION_BAR } from "@/app/desk";
 
 // Both men on one pitch, each at his own end as the bar reads them: the left man is turned round, as the match
 // map turns the home side. Shots are his own; key passes are his teammates' shots, drawn from where his pass began.
@@ -17,13 +16,11 @@ interface MapMan {
 }
 
 export default function CompareMap({
-  title,
   men,
   passes,
   window,
   className = "",
 }: {
-  title: string;
   men: readonly MapMan[];
   /** Key passes: a dashed line from each pass to the shot it made. */
   passes: boolean;
@@ -40,8 +37,6 @@ export default function CompareMap({
 
   return (
     <figure className={`flex min-w-0 flex-col gap-1 ${className}`}>
-      {/* A phone's strip already names the view in sight. */}
-      <figcaption className={`${SECTION_BAR} max-lg:hidden`}>{title}</figcaption>
       <div className={`grid text-2xs font-bold uppercase ${sides.length === 2 ? "grid-cols-2" : "grid-cols-1"}`}>
         {sides.map((side, index) => (
           <span
