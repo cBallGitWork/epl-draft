@@ -40,7 +40,7 @@ describe("applySkit", () => {
 
   it("keeps a gut call's reason, an injury and his career out of the jokes", () => {
     const reason = { where: "im-bt", shape: "picture", target: null, before: "On paper it's Inter Mittent.", after: "On paper it's Inter Mittent, like a bus timetable." };
-    const injury = { where: "im-bt", shape: "shrug", target: null, before: "Their best man, Callum Reid, is down as 50-50 with a hamstring.", after: "Their best man, Callum Reid, is down as 50-50, and so is his hamstring." };
+    const injury = { where: "im-bt", shape: "shrug", target: null, before: "Their best man, Callum Reid, is a doubt with a hamstring.", after: "Their best man, Callum Reid, is a doubt, and so is his hamstring." };
     const career = { where: "nf-sc", shape: "own-record", target: null, before: "I once went 159 games without having Liverpool down to lose.", after: "I once went 159 games without having Liverpool down to lose, and I was right." };
     for (const edit of [reason, injury, career]) expect(applySkit({ edits: [edit] }, draft(PLAIN), skitCtx()).refused).toHaveLength(1);
   });

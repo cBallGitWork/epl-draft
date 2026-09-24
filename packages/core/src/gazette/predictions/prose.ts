@@ -44,6 +44,15 @@ export function numbersIn(text: string): number[] {
 
 /** The text with every given name blanked, longest first, so "Hammer Time" is not a hype word
  *  and a long team name is not a repeated phrase. */
+/** Where a name first stands whole in the text, never inside a longer word; -1 when it does not. */
+export function mentionAt(text: string, name: string): number {
+  if (name === "") return -1;
+  for (let at = text.indexOf(name); at !== -1; at = text.indexOf(name, at + 1)) {
+    if (!/\p{L}/u.test(text[at - 1] ?? "") && !/\p{L}/u.test(text[at + name.length] ?? "")) return at;
+  }
+  return -1;
+}
+
 export function masked(text: string, names: readonly string[]): string {
   return [...names]
     .filter((name) => name.trim() !== "")

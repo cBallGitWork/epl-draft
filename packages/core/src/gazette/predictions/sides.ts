@@ -1,4 +1,5 @@
 import { PREDICTIONS } from "../../config";
+import type { StoryFace } from "../face";
 import type { Availability } from "../../football/playerState";
 import type { PickSide } from "./pick";
 
@@ -20,6 +21,8 @@ export interface SquadMan {
   /** Mean ease rank of those opponents in his line's view, 1 the kindest; null when unrated. */
   ease: number | null;
   liverpool: boolean;
+  /** His picture. "G" comes off his eligibility, never the private slot: a keeper is eligible nowhere else. */
+  face: StoryFace;
 }
 
 /** Where a side stands and how it got there, from Fantrax's table and settled results. */
@@ -36,6 +39,8 @@ export interface SideForm {
 
 export interface PredictionSide extends PickSide {
   name: string;
+  /** Every man he holds, best first: the men a line about this tie can name. */
+  squad: SquadMan[];
   keyMen: SquadMan[];
   best: SquadMan | null;
   /** Not fit, among the men who matter most, best first. */
@@ -70,6 +75,7 @@ export function predictionSide(input: {
   return {
     teamId: input.teamId,
     name: input.name,
+    squad: ranked,
     projected: input.projected,
     bestManDoubt: best !== null && isDoubt(best.availability),
     liverpool: liverpoolMen.length,

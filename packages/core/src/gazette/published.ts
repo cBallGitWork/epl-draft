@@ -1,3 +1,4 @@
+import { type StoryFace, normalizeFace } from "./face";
 import { INSTINCTS, type Instinct } from "./predictions/pick";
 
 // The tie a columnist files, and the edge that refuses a malformed or repeated one before the page reads it.
@@ -17,6 +18,8 @@ export interface EditionTie {
   instinct?: Instinct;
   /** The score he predicts, stamped by the desk and never by the writer. */
   score?: { home: number; away: number };
+  /** The man his line names first, for the picture beside it; stamped by the desk. */
+  face?: StoryFace;
 }
 
 /** First wins: a second attempt at the same key is a retry, not a sequel. */
@@ -42,6 +45,7 @@ export function normalizeTie(value: unknown): EditionTie[] {
       : undefined;
   if (line === "" && typeof callsTeamId !== "string") return [];
   const score = tie.score;
+  const face = normalizeFace(tie.face);
   return [
     {
       homeTeamId: tie.homeTeamId,
@@ -52,6 +56,7 @@ export function normalizeTie(value: unknown): EditionTie[] {
       ...(Number.isFinite(score?.home) && Number.isFinite(score?.away)
         ? { score: { home: score?.home as number, away: score?.away as number } }
         : {}),
+      ...(face === null ? {} : { face }),
     },
   ];
 }

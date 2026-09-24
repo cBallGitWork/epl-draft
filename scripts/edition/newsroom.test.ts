@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { __escapeControlsInStrings as escape } from "./newsroom";
+import { __escapeControlsInStrings as escape, __objectIn as objectIn } from "./newsroom";
+
+describe("finding the JSON in a reply", () => {
+  it("drops a sentence and a fence around it, and leaves a reply with no object to fail", () => {
+    expect(JSON.parse(objectIn('Looking for groaners.\n```json\n{"edits":[]}\n```'))).toEqual({ edits: [] });
+    expect(objectIn('{"a":{"b":1}}')).toBe('{"a":{"b":1}}');
+    expect(() => JSON.parse(objectIn("No edits this week."))).toThrow();
+  });
+});
 
 describe("repairing a column's JSON", () => {
   it("rescues a body whose paragraphs are real newlines", () => {

@@ -24,7 +24,7 @@ export const CALLS = [
 
 export const BRIEF = `LAWRO'S PREDICTIONS, gameweek 11. Your record: 2 right from 5. Your gut calls: 0 from 2.
 Real Sociable are 1st: won 3, drawn 0, lost 0. Oduya (M, Arsenal, home to Leeds United). Bayer Neverlusen signed Pym (D, Ipswich) and Kettle (F, Coventry).
-Inter Mittent's best man, Callum Reid (F, Newcastle, home to Brighton), is a doubt, and FPL gives him 50 per cent. Borussia Teeth.
+Inter Mittent's best man, Callum Reid (F, Newcastle, home to Brighton), is a doubt. FPL's note: Hamstring. Borussia Teeth.
 Liverpool men in the squad: Sporting Chance 3, Nottingham Florist 1. Agyeman (M, Liverpool, home to Hull). Aston Vanilla lost 2. Plymouth Argos.
 Crabtree (F, Leeds, away at Arsenal). Sheffield Thursday: Mullan (D, Crystal Palace) is suspended. Pickering (G, Hull, away at Liverpool).
 Rovers Return: Sousa (M, Manchester United, away at Aston Villa). Lawro.`;
@@ -41,14 +41,13 @@ export const ctx = (over: Partial<CheckContext> = {}): CheckContext => ({
 
 export const SAMPLE: [string, string][] = [
   ["rs-bn", "Real Sociable have won all three and Oduya has Leeds. Bayer Neverlusen signed Pym and Kettle on Wednesday. They'll need more than two."],
-  ["im-bt", "On paper it's Inter Mittent. Their best man, Callum Reid, is down as 50-50 with a hamstring. I'd want to see him warm up. Borussia Teeth, by the skin of them."],
+  ["im-bt", "On paper it's Inter Mittent. Their best man, Callum Reid, is a doubt with a hamstring. I'd want to see him warm up. Borussia Teeth, by the skin of them."],
   ["nf-sc", "Nottingham Florist are favourites, just. Sporting Chance have three Liverpool men to their one. I once went 159 games without having Liverpool down to lose. I'm not starting on a Thursday."],
   ["av-pa", "Agyeman gets Hull at home. Aston Vanilla have lost two on the bounce, and Crabtree goes to Arsenal. Plymouth Argos win this."],
   ["st-rr", "Sheffield Thursday are without Mullan, who is suspended, and Pickering has Liverpool away. Rovers Return's Sousa has a hard one at Villa. It won't matter."],
 ];
 
 export const draft = (ties: [string, string][] = SAMPLE, over: Partial<LawroDraft> = {}): LawroDraft => ({
-  headline: "Reid Between The Lines",
   deck: "Lawro goes against the favourites twice, backing Borussia Teeth and Sporting Chance.",
   intro: "Two from five, and the gut calls went nought from two. I did this for the BBC for twenty-two years. It shows. I've two more this week.",
   ties: new Map(ties.map(([key, line]) => [key, { line, backs: CALLS.find((each) => tieKey(each.homeTeamId, each.awayTeamId) === key)?.callsTeamId ?? null }])),

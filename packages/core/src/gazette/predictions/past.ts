@@ -5,10 +5,10 @@ import { INSTINCTS, type Instinct } from "./pick";
 
 /** Who he is, opening his voice; the checks read it as part of every brief. */
 export const LAWRO_CORE =
-  "You are Mark Lawrenson. You played centre-half for Liverpool in the 1980s. Then you spent thirty years at the BBC: a pundit on Match of the Day and Football Focus, a co-commentator on BBC television and Radio 5 Live through six World Cups, and for twenty-two years the man who predicted every Premier League score for the BBC, against a guest every week, marked in public.";
+  "You are Mark Lawrenson. You played centre-half for Liverpool in the 1980s. Then you spent thirty years at the BBC: a pundit on Match of the Day and Football Focus, a co-commentator on BBC television and Radio 5 Live through six World Cups, and for twenty-two years the man who predicted every Premier League score for the BBC, against a guest every week, marked in public. Now you do it for a fantasy draft league's paper, and you know exactly how far down that is.";
 
 /** What the core lets him claim in any column. */
-export const CORE_MARK = /centre-half|liverpool|\bbbc\b|match of the day|football focus|5 live|world cups?|twenty-two years|thirty years|predict/i;
+export const CORE_MARK = /centre-half|liverpool|\bbbc\b|match of the day|football focus|5 live|world cups?|twenty-two years|thirty years|predict|\bdraft\b|come to this|come down|ended up|fallen|fell off/i;
 
 /** One true line about him, and the mark that finds it in a column he filed. */
 export interface PastLine {
@@ -43,11 +43,14 @@ export const PAST: readonly PastLine[] = [
   { id: "newcastle", line: "You were a defensive coach at Newcastle, and you have always said you did nothing there.", mark: /defensive coach|did nothing/i },
 ];
 
-/** How many of his last columns rest an instinct's line, and a rotation line. */
+/** How many of his last columns rest an instinct's line, and a rotation line; and how often a
+ *  rotation line is offered at all, because everybody reading knows who he is. */
 const INSTINCT_REST = 4;
 const ROTATION_REST = 12;
+const ROTATION_EVERY = 4;
 
-/** This week's lines: the first instinct's own, then the rotation line least recently used.
+/** This week's lines: the first instinct's own, and every fourth column the rotation line least
+ *  recently used.
  *  `past` is the prose of his earlier columns, newest first. */
 export function pastOffered(instincts: readonly Instinct[], past: readonly string[]): PastLine[] {
   const lastUse = (line: PastLine) => {
@@ -57,7 +60,8 @@ export function pastOffered(instincts: readonly Instinct[], past: readonly strin
   const fired = INSTINCTS.find((each) => instincts.includes(each));
   const own = PAST.find((line) => line.instinct !== undefined && line.instinct === fired && lastUse(line) >= INSTINCT_REST);
   // Oldest use first; never used is oldest of all, and ties keep the pool's order.
-  const turn = PAST.filter((line) => line.instinct === undefined && lastUse(line) >= ROTATION_REST).sort((a, b) =>
+  const due = (past.length + 1) % ROTATION_EVERY === 0;
+  const turn = PAST.filter((line) => due && line.instinct === undefined && lastUse(line) >= ROTATION_REST).sort((a, b) =>
     lastUse(a) === lastUse(b) ? 0 : lastUse(a) < lastUse(b) ? 1 : -1,
   )[0];
   return [own, turn].filter((line): line is PastLine => line !== undefined);
