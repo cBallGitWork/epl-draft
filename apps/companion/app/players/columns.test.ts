@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fixtureOnly, COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
+import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
 
 describe("COLUMNS", () => {
   it("gives every column a unique key", () => {
@@ -15,6 +15,18 @@ describe("COLUMNS", () => {
     for (const key of COLUMNS.map((column) => column.key)) {
       expect(key, key).toMatch(/^[a-z0-9]+$/);
     }
+  });
+
+  it("runs phone-first, so the figures a thumb sees first are the ones worth seeing", () => {
+    // Craig, 24 Sep 2026: seven figures fit beside a name at 390, and these are the seven.
+    expect(COLUMNS.map((column) => column.label)).toEqual([
+      "Player", "FPts", "FP/G", "Min", "GP", "G", "A", "AF", "CS", "GAO", "GA", "Sv", "PKS", "YC", "RC", "PKM", "OG", "Ros", "+/-",
+    ]);
+  });
+
+  it("has no opponent column", () => {
+    // Craig, 24 Sep 2026: "Remove opponent as well". The next fixture is the planner's question.
+    expect(columnFor("opp")).toBeUndefined();
   });
 
   it("resolves the default sort to a real column", () => {
@@ -39,25 +51,5 @@ describe("COLUMNS", () => {
     // than nought, and the cell must get null rather than 0.
     expect(goals!.value({} as never, {})).toBeNull();
     expect(goals!.value({} as never, undefined)).toBeNull();
-  });
-});
-
-describe("fixtureOnly", () => {
-  it("keeps the club and drops Fantrax's kickoff", () => {
-    expect(fixtureOnly("MCI Sun 11:30AM")).toBe("MCI");
-  });
-
-  it("keeps the away marker, which belongs to the fixture and not the clock", () => {
-    expect(fixtureOnly("@CHE Sat 10:00AM")).toBe("@CHE");
-  });
-
-  it("passes a cell that is only a fixture through whole", () => {
-    // A blank gameweek and a bye both arrive with no time on them.
-    expect(fixtureOnly("BYE")).toBe("BYE");
-  });
-
-  it("reads an empty cell as an absence rather than an empty fixture", () => {
-    expect(fixtureOnly("   ")).toBeNull();
-    expect(fixtureOnly(null)).toBeNull();
   });
 });

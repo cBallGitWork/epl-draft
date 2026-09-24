@@ -1,14 +1,15 @@
 import Link from "next/link";
 import type { PoolGroupKey } from "./groups";
-import { boardHref, chosen, filterHref, isChosen } from "./query";
+import { activeSort, boardHref, filterHref, isChosen } from "./query";
 import { POOL } from "./routes";
 import Search from "./Search";
 import type { PlayersQuery } from "./query";
 import { STATUS } from "./status";
 import { positionLabel } from "../positions";
-import { PANEL_FLUSH } from "@/app/desk";
+import { LABEL, PANEL, SECTION_BAR } from "@/app/desk";
 import { Carried, Chip, Count, Figures, PRESSABLE, Plates } from "./BoardControls";
 import ClubPicker from "./ClubPicker";
+import SortPicker from "./SortPicker";
 
 // Every control on the board: **one row on the desk, one row and a drawer under
 // a thumb.**
@@ -60,6 +61,7 @@ export default function BoardBar({
   clubs,
   counted,
   rated,
+  shown,
 }: {
   query: PlayersQuery;
   group: PoolGroupKey;
@@ -70,6 +72,8 @@ export default function BoardBar({
   /** How many of the pool are in each Fantrax status, for the chip's figure. */
   counted: Map<string, number>;
   rated: boolean;
+  /** How many rows the filters leave, for the sheet's way back to the board. */
+  shown: number;
 }) {
   const open = query.panel === "1";
   const plates = <Plates query={query} group={group} />;
@@ -113,7 +117,7 @@ export default function BoardBar({
             the client box as children — `panel` among them, so finding a player
             does not slam a drawer the reader deliberately left open. */}
         <Search query={(query.q ?? "").trim()} action={POOL}>
-          <Carried query={query} except="q" />
+          <Carried query={query} except={["q"]} />
         </Search>
 
         <div className="hidden flex-1 lg:block">{plates}</div>
@@ -121,6 +125,7 @@ export default function BoardBar({
 
         <Link
           href={boardHref(query, { panel: open ? undefined : "1" })}
+          scroll={false}
           aria-expanded={open}
           className={PRESSABLE}
         >
@@ -138,78 +143,101 @@ export default function BoardBar({
       </div>
 
       {open ? (
-        // **One row, and no headings on it** (Craig, 10 Sep 2026: *"get this
-        // onto one row… remove figures/who"*). The drawer shipped that morning
-        // as three labelled bands, which was the right cure for a field of
-        // eleven chips doing three unrelated jobs — and then two of the three
-        // jobs left it. The stat groups went up to the row above at `lg`, the
-        // minutes floors were deleted outright, and what remains is one toggle
-        // and a set of filters that name themselves: `Per 90`, `Free agent`,
-        // `GK`. A heading over a chip that already says what it is is furniture,
-        // and three headings over nine chips was most of the drawer's height.
-        //
-        // `PANEL_FLUSH` rather than `PANEL`: a well holding ONE thing that
-        // manages its own spacing, which is exactly what this is now — `PANEL`'s
-        // column gap has nothing left to sit between.
-        <div className={`${PANEL_FLUSH} p-2`}>
-          <div className="flex flex-wrap gap-1.5">
-            {/* Below `xl` only: above it the toggle is on the row above, and a
-                control in two visible places is a control that can disagree with
-                itself. */}
-            <span className="contents xl:hidden">{figures}</span>
+        <>
+          {/* A phone's sheet sits over the page, and a tap outside it closes it. */}
+          <Link
+            href={boardHref(query, { panel: undefined })}
+            scroll={false}
+            aria-label="Close the filters"
+            className="fixed inset-0 z-40 bg-bg/70 lg:hidden"
+          />
+          <div role="dialog" aria-label="Filter players" className={`${PANEL} cm-sheet`}>
+            <p className={SECTION_BAR}>Filter players</p>
 
-            {/* **`All` is pressed by default** (Craig: *"WHO needs an ALL option
-                thats selected by default"*). Without it the band had no lit
-                plate in its resting state, so the row of controls that is
-                usually off looked unset rather than deliberate — and clearing
-                several filters meant tapping each one off in turn and
-                remembering which.
+            <Block label="Position">
+              <div className="grid grid-cols-4 gap-1.5">
+                {positions.map((position) => (
+                  <PositionChoice key={position} query={query} position={position} />
+                ))}
+              </div>
+            </Block>
 
-                It is the only chip here that is not a toggle: it drops both
-                lists at once and cannot be turned off, because turning "all of
-                them" off is not a state. Pressed exactly when nothing else is,
-                so the row always has precisely one answer showing. */}
-            <Chip
-              on={chosen(query.status).length === 0 && chosen(query.pos).length === 0}
-              href={boardHref(query, { status: undefined, pos: undefined })}
-            >
-              All
-            </Chip>
+            <Block label="Status">
+              <div className="flex flex-wrap gap-1.5">
+                {[...counted.entries()]
+                  .sort(([a], [b]) => a.localeCompare(b))
+                  .map(([code, tally]) => (
+                    <Chip key={code} on={isChosen(query, "status", code)} href={filterHref(query, "status", code)}>
+                      {STATUS[code] ?? code}
+                      <span className="numeric font-normal">{tally}</span>
+                    </Chip>
+                  ))}
+              </div>
+            </Block>
 
-            {[...counted.entries()]
-              .sort(([a], [b]) => a.localeCompare(b))
-              .map(([code, tally]) => (
-                <Chip
-                  key={code}
-                  on={isChosen(query, "status", code)}
-                  href={filterHref(query, "status", code)}
-                >
-                  {STATUS[code] ?? code}
-                  <span className="numeric font-normal">{tally}</span>
-                </Chip>
-              ))}
+            <div className="grid grid-cols-2 gap-1.5">
+              <Block label="Club">
+                <ClubPicker clubs={clubs} club={query.club ?? ""} action={POOL}>
+                  <Carried query={query} except={["club"]} />
+                </ClubPicker>
+              </Block>
+              <Block label="Sort by">
+                <SortPicker sort={activeSort(query).key} action={POOL}>
+                  <Carried query={query} except={["sort", "dir"]} />
+                </SortPicker>
+              </Block>
+            </div>
 
-            {positions.map((position) => (
-              <Chip
-                key={position}
-                on={isChosen(query, "pos", position)}
-                href={filterHref(query, "pos", position)}
+            {/* The row above carries these on a desk; below it they are only here. */}
+            <Block label="Columns" className="lg:hidden">
+              <Plates query={query} group={group} className="grid grid-cols-3 gap-1.5" />
+            </Block>
+            <div className="flex xl:hidden">{figures}</div>
+
+            <div className="grid grid-cols-[1fr_2fr] gap-1.5 border-t border-line pt-2">
+              <Link
+                href={boardHref(query, { pos: undefined, status: undefined, club: undefined, group: undefined, per: undefined })}
+                scroll={false}
+                className={PRESSABLE}
               >
-                {positionLabel(position) ?? position}
-              </Chip>
-            ))}
-
-            {/* **Last on the row, and a `<select>` rather than chips.** Twenty
-                clubs is a wall of plates that would take this drawer straight
-                back to the wrapped rows it was collapsed out of, and it would
-                give the least-used filter the most space. Its hidden fields are
-                rendered here on the server for the reason `Search`'s are. */}
-            <ClubPicker clubs={clubs} club={query.club ?? ""} action={POOL}>
-              <Carried query={query} except="club" />
-            </ClubPicker>
+                Reset
+              </Link>
+              <Link href={boardHref(query, { panel: undefined })} scroll={false} className={PRESSABLE}>
+                Show {shown} <span aria-hidden>▸</span>
+              </Link>
+            </div>
           </div>
-        </div>
+        </>
       ) : null}
     </>
+  );
+}
+
+/** A labelled block in the sheet: CM's settings form, a word over each kind of control (`cm9900/03.jpg`). */
+function Block({ label, className = "", children }: { label: string; className?: string; children: React.ReactNode }) {
+  return (
+    <div className={`flex flex-col gap-1 ${className}`}>
+      <p className={LABEL}>{label}</p>
+      {children}
+    </div>
+  );
+}
+
+/** A position as CM's index tile. Chosen, it keeps its white word and gains an accent edge and a tick,
+ *  because the accent on the tile's ramp is 3.7:1 at its light top. */
+function PositionChoice({ query, position }: { query: PlayersQuery; position: string }) {
+  const on = isChosen(query, "pos", position);
+  return (
+    <Link
+      href={filterHref(query, "pos", position)}
+      scroll={false}
+      aria-pressed={on}
+      className="cm-index grid min-h-11 place-items-center px-1 text-2xs font-bold uppercase lg:min-h-9"
+    >
+      <span>
+        {on ? <span aria-hidden>✓ </span> : null}
+        {positionLabel(position) ?? position}
+      </span>
+    </Link>
   );
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { PlayerMatchStats } from "@epl/core";
-import { STANDOUT, isStatSort, sorted, standoutCut, type StatLine } from "./statColumns";
+import { isStatSort, sorted, type StatLine } from "./statColumns";
 import { statsHref, statsView, viewHref } from "./statsSort";
 
 const man = (name: string, points: number | null): StatLine & { name: string } => ({
@@ -53,25 +53,5 @@ describe("sorted", () => {
 
   it("sinks a man with no figure in both directions", () => {
     expect(sorted(rows, "Pts", false).map((row) => row.name)).toEqual(["a", "c", "b", "sat"]);
-  });
-});
-
-describe("standoutCut", () => {
-  it("lights three one-goal scorers among the sixteen who played, but crowns none of them", () => {
-    const goals = [1, 1, 1, ...Array(13).fill(0)];
-    expect(standoutCut(goals, 16, STANDOUT.good)).toBe(1);
-    expect(standoutCut(goals, 16, STANDOUT.best)).toBeNull();
-  });
-
-  it("takes whole values at a time and stops before the share is spent", () => {
-    // 16 men: room for three in yellow, one in orange. The three 9s would make six.
-    const dc = [16, 10, 10, 9, 9, 9, 7, 3];
-    expect(standoutCut(dc, 16, STANDOUT.good)).toBe(10);
-    expect(standoutCut(dc, 16, STANDOUT.best)).toBe(16);
-  });
-
-  it("lights nothing where the top value is common, and never a nought", () => {
-    expect(standoutCut(Array(11).fill(1), 16, STANDOUT.good)).toBeNull();
-    expect(standoutCut([0, 0, null], 16, STANDOUT.good)).toBeNull();
   });
 });

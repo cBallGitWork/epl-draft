@@ -1,7 +1,7 @@
 import type { PoolRow } from "./pool";
 import type { PoolGroup } from "./groups";
 
-// Every column the directory draws, in Fantrax's own order.
+// Every column the directory draws, phone-first: the figures a thumb sees beside a name come first.
 //
 // **The landing screen is the board** (Craig, 6 Sep 2026: *"I think the landing
 // screen for scout should really be showing as many columns as possible like
@@ -42,21 +42,6 @@ type ColumnKind = "text" | "number" | "percent" | "signed";
  *  default state of a footballer rather than an achievement. A `low` column
  *  marks its offenders and never its saints. */
 type Mark = "high" | "low";
-
-/* **`deskOnly` was here and is gone** (10 Sep 2026). It marked a column that
-   stands down under a thumb, and `rank` was its last user — deleted the same day
-   at Craig's asking. `Sta` and `Opp` had carried it for part of that morning and
-   both gave it up: the first stopped being a column, and the second is four
-   characters wide once Fantrax's clock comes off it.
-
-   The whole pipeline went with it — `PlayerTable`'s `phone()`, the `hide` prop
-   threaded into five of `Cell`'s `<td>`s, and the skeleton's two copies. A field
-   nothing sets, plumbed through three files, is the dead pipeline CODE_RULES §2
-   names: it reads as a capability the board has and does not.
-
-   `desk.ts`'s `standDown` keeps its other two callers, `league/Columns` and
-   `prem/Columns`, so the shared rule is untouched. Restoring this is one line in
-   the type and one at the call site, on the day a column earns it. */
 
 export interface PoolColumn {
   /** Short, because it ends up in the address bar. */
@@ -128,31 +113,6 @@ function denominator(key: string, label: string, title: string): PoolColumn {
   return { ...count(key, label, title, "scoring"), rate: undefined };
 }
 
-/** Fantrax's fixture cell with the kickoff taken off it.
- *
- *  Craig, 10 Sep 2026: *"remove the date/time from the opp, just the fixture
- *  please"*. Their cell reads `MCI Sun 11:30AM` or `@CHE Sat 10:00AM`, and the
- *  time was the most argued-about four characters on the board — every other
- *  clock in this app is London and Fantrax's is US Eastern, so the column had to
- *  carry `(ET)` in its own heading or lie by twenty-nine hours a week. Dropping
- *  the time drops the whole problem: an opponent has no timezone.
- *
- *  **The label loses `(ET)` with it**, which is the point rather than a
- *  side-effect. A zone note over a column with no time in it is furniture
- *  explaining something that is no longer there.
- *
- *  Split on the first run of whitespace, so the venue marker survives: `@` is
- *  Fantrax's away sign and belongs to the fixture, not to the clock. A cell that
- *  is only a club code comes back whole, which is what a blank gameweek and a
- *  bye both look like. */
-export function fixtureOnly(cell: string | null): string | null {
-  if (cell === null) return null;
-  const fixture = cell.trim().split(/\s+/)[0];
-  return fixture === "" ? null : fixture;
-}
-
-
-
 /** **Position, club and status are not columns any more** (Craig, 10 Sep 2026:
  *  *"position and club are constants, they should be next to the player in the
  *  same column… probably status too"*).
@@ -181,15 +141,6 @@ export const COLUMNS: PoolColumn[] = [
     value: (row) => row.entry.player.displayName,
   },
   {
-    key: "opp",
-    label: "Opp",
-    title: "Who he plays next, in Fantrax's words",
-    kind: "text",
-    group: "market",
-    ascending: true,
-    value: (row) => fixtureOnly(row.stats?.opponent ?? null),
-  },
-  {
     key: "fpts",
     label: "FPts",
     title: "Fantasy points, under this league's scoring",
@@ -210,6 +161,20 @@ export const COLUMNS: PoolColumn[] = [
     ascending: false,
     value: (row) => row.stats?.perGame ?? null,
   },
+  denominator("Min", "Min", "Minutes played"),
+  denominator("GP", "GP", "Games played"),
+  count("G", "G", "Goals", "attacking"),
+  count("A", "A", "Assists, as the Premier League records them", "attacking"),
+  count("AF", "AF", "Assists as Fantrax scores them, which is the wider count", "attacking"),
+  count("CS", "CS", "Clean sheets, on 60 minutes on the field — Fantrax's own rule", "defensive"),
+  count("GAO", "GAO", "Goals conceded while he was on the field. Outfielders only", "defensive", "low"),
+  count("GA", "GA", "Goals conceded. Keepers only", "defensive", "low"),
+  count("Sv", "Sv", "Saves. Keepers only", "defensive"),
+  count("PKS", "PKS", "Penalties saved. Keepers only", "defensive"),
+  count("YC", "YC", "Yellow cards", "discipline", "low"),
+  count("RC", "RC", "Red cards", "discipline", "low"),
+  count("PKM", "PKM", "Penalties missed", "attacking", "low"),
+  count("OG", "OG", "Own goals", "defensive", "low"),
   {
     key: "ros",
     label: "Ros",
@@ -229,20 +194,6 @@ export const COLUMNS: PoolColumn[] = [
     ascending: false,
     value: (row) => row.stats?.trend ?? null,
   },
-  denominator("GP", "GP", "Games played"),
-  denominator("Min", "Min", "Minutes played"),
-  count("G", "G", "Goals", "attacking"),
-  count("A", "A", "Assists, as the Premier League records them", "attacking"),
-  count("AF", "AF", "Assists as Fantrax scores them, which is the wider count", "attacking"),
-  count("CS", "CS", "Clean sheets, on 60 minutes on the field — Fantrax's own rule", "defensive"),
-  count("GAO", "GAO", "Goals conceded while he was on the field. Outfielders only", "defensive", "low"),
-  count("GA", "GA", "Goals conceded. Keepers only", "defensive", "low"),
-  count("Sv", "Sv", "Saves. Keepers only", "defensive"),
-  count("PKS", "PKS", "Penalties saved. Keepers only", "defensive"),
-  count("YC", "YC", "Yellow cards", "discipline", "low"),
-  count("RC", "RC", "Red cards", "discipline", "low"),
-  count("PKM", "PKM", "Penalties missed", "attacking", "low"),
-  count("OG", "OG", "Own goals", "defensive", "low"),
 ];
 
 /** What the board is ordered by when the URL says nothing.

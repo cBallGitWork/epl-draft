@@ -77,11 +77,11 @@ export function Carried({
   except,
 }: {
   query: PlayersQuery;
-  except: (typeof FIELDS)[number];
+  except: readonly (typeof FIELDS)[number][];
 }) {
   return (
     <>
-      {FIELDS.filter((field) => field !== except).map((field) =>
+      {FIELDS.filter((field) => !except.includes(field)).map((field) =>
         query[field] ? <input key={field} type="hidden" name={field} value={query[field]} /> : null,
       )}
     </>
@@ -133,7 +133,16 @@ export const PLATE =
  *  plate with no hover, because a thing already held down does not lift. */
 export const PRESSABLE = `cm-bevel hover:brightness-110 ${PLATE}`;
 
-export function Plates({ query, group }: { query: PlayersQuery; group: PoolGroupKey }) {
+export function Plates({
+  query,
+  group,
+  className = "flex flex-1 flex-wrap gap-1.5",
+}: {
+  query: PlayersQuery;
+  group: PoolGroupKey;
+  /** The strip's layout: a row inline, a grid in the sheet. */
+  className?: string;
+}) {
   return (
     // **The `<nav>` is the point of the wrapper, not the flex.** It was lost for
     // one build when this became a component and the layout container stayed
@@ -141,7 +150,7 @@ export function Plates({ query, group }: { query: PlayersQuery; group: PoolGroup
     // "All" and "Scoring" say nothing on their own out of context. It travels
     // with the strip now, so a future move cannot leave it behind again. Found by
     // an instrument looking for the element and getting null.
-    <nav aria-label="Stat groups" className="flex flex-1 flex-wrap gap-1.5">
+    <nav aria-label="Stat groups" className={className}>
       {POOL_GROUPS.map((entry) => (
         <Link
           key={entry.key}

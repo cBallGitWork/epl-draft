@@ -93,7 +93,7 @@ export default function Loading() {
                   key={column.key}
                   scope="col"
                   className={`whitespace-nowrap px-1.5 py-1.5 font-bold ${
-                    column.kind === "text" ? "text-left" : "text-right"
+                    column.kind === "text" ? "text-left" : "text-center"
                   }`}
                 >
                   {/* The name column's head prints nothing on the real table

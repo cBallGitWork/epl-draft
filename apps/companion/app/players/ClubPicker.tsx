@@ -82,7 +82,7 @@ export default function ClubPicker({
         // at 7.52:1. Only the CLOSED control is ours — the option list is the
         // platform's popup and cannot be styled, which is the known cost of a
         // `<select>` and, at twenty options, still cheaper than the alternative.
-        className={`cm-bevel ${PLATE_TYPE}`}
+        className={`cm-bevel w-full ${PLATE_TYPE}`}
       >
         <option value={ANY}>All clubs</option>
         {clubs.map((code) => (

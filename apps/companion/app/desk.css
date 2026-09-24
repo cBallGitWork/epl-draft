@@ -264,6 +264,23 @@
   border-color: var(--color-accent);
 }
 
+/* A sheet docked over the thumb rail below `lg`, the filters' phone shape; from `lg` it is an inline panel. */
+@media (width < 64rem) {
+  .cm-sheet {
+    position: fixed;
+    inset-inline: var(--page-gutter);
+    bottom: calc(3.5rem + env(safe-area-inset-bottom) + 0.5rem);
+    z-index: 50;
+    max-height: calc(100dvh - 3.5rem - env(safe-area-inset-bottom) - 1.5rem);
+    overflow-y: auto;
+  }
+}
+
+/* A chosen index tile keeps its white word (the accent is 3.7:1 on the ramp's top) and gains an accent edge. */
+.cm-index[aria-pressed="true"] {
+  box-shadow: inset 0 0 0 2px var(--color-accent);
+}
+
 /* Unread mail: a square cyan plate (the derived-reading slot) knocked out of the envelope's corner. */
 .cm-unread {
   position: absolute;
@@ -659,10 +676,9 @@
 /* **A washed row greys to `--color-muted`, not to `--color-faint`.**
    `--color-faint` is 5.30:1 on the page ground and 4.56 on a raised row — the
    tightest pair in the palette — so ANY coloured ground under it fails, and
-   `sweep` read 4.1:1 on three marks of a reserve who is also injured. The
-   direction pair records the same bound on itself: `--color-hot` carries ink and
-   muted and states outright that faint is 3.3 there. One step louder clears it
-   at 5.5:1 on the palest band and still reads as dimmed beside the eleven above.
+   `sweep` read 4.1:1 on three marks of a reserve who is also injured. One step
+   louder clears it at 5.5:1 on the palest band and still reads as dimmed beside
+   the eleven above.
 
    Not a lighter wash: the arithmetic says there is no strength that saves faint
    and still shows a hue — 10% still lands at 4.09 — so the ink moves rather than

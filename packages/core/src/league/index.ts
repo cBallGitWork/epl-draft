@@ -114,7 +114,7 @@ export {
   fetchTeamStats,
   fetchTransactions,
 } from "./fantrax/client";
-export { mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
+export { listName, mapLeagueInfo, mapPlayerPool } from "./fantrax/map";
 export { mapTeamRosters } from "./fantrax/rosters";
 export { mapDraftPicks } from "./fantrax/draft";
 export type { DraftPick } from "./fantrax/draft";

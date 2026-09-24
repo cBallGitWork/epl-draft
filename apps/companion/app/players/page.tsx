@@ -4,6 +4,7 @@ import PlayerTable from "./PlayerTable";
 import BoardBar from "./BoardBar";
 import { getPlayerStats } from "./playerStats";
 import { getLeaguePool } from "./pool";
+import { readerTeamId } from "../squads";
 import {
   PAGE_ROWS,
   activeGroup,
@@ -64,10 +65,11 @@ export default async function PlayersPage({
 }: {
   searchParams: Promise<PlayersSearchParams>;
 }) {
-  const [pool, asked, lines] = await Promise.all([
+  const [pool, asked, lines, reader] = await Promise.all([
     getLeaguePool(),
     searchParams,
     getPlayerStats(),
+    readerTeamId(),
   ]);
   const query = playersQuery(asked);
 
@@ -152,7 +154,13 @@ export default async function PlayersPage({
         clubs={clubs}
         counted={counted}
         rated={rated}
+        shown={shown.length}
       />
+
+      {/* The caption carries this on a desk; a phone has no caption, and a projection must still say so. */}
+      {pool.season?.projected ? (
+        <p className="text-2xs font-bold text-accent lg:hidden">{pool.season.name || "This season"} — Fantrax projection</p>
+      ) : null}
 
       {shown.length === 0 ? (
         <p className=" border border-line bg-surface px-3 py-2.5 text-sm text-muted">
@@ -164,6 +172,7 @@ export default async function PlayersPage({
           columns={columns}
           query={query}
           teamNames={pool.teamNames}
+          reader={reader}
           raw={raw}
           rated={rated}
           cuts={cuts}
@@ -211,13 +220,10 @@ export default async function PlayersPage({
 
 /** What the caption says.
  *
- *  **It names the plate, because the drawer can hide it.** DESIGN §2's reading of
- *  `cm9900/16.jpg` is that the bar says where you are and the caption says what
- *  the board IS — that shot captions its stat list `Average Rating`. Below `lg`
- *  the stat groups live behind the Filter plate, so the caption is the only
- *  thing left saying which columns are on screen. `all` falls through to the
- *  section's own caption rather than printing "All", which is a word about a control and
- *  not a name for a board.
+ *  **It names the plate on a desk.** DESIGN §2's reading of `cm9900/16.jpg` is that
+ *  the bar says where you are and the caption says what the board IS. A phone has
+ *  no caption in Data (24 Sep 2026); its column heads say which columns are on
+ *  screen. `all` falls through to the section's own caption rather than "All".
  *
  *  **And it carries the provenance, but only when the provenance bites.** The
  *  count-and-season line under the title bar came off on 10 Sep 2026 (Craig:

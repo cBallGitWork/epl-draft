@@ -363,9 +363,7 @@ is more specific than a palette; it is the reason the token names in
 | Live red | `--color-live` | **a match in play**, and nothing else | 5.4 |
 | League red | `--color-league` | the league's own mark. Chrome only | 3.2 |
 | Deep league red | `--color-league-deep` | the same red as a **ground with text on it** | — |
-| Hot | `--color-hot` | **a figure at the top of its column** — the GREEN of the direction pair, as a ground, and only on a board of many measures | ink 10.3 |
-| Cold | `--color-cold` | the same at the WRONG end of a column, where high is the bad end — the same pair's red | ink 11.3 |
-| Peak | `--color-peak` | **the best figure in its column on a match board**, as ink — CM's orange, over the accent's yellow for the rest of the column's standouts | — |
+| Peak | `--color-peak` | **the best figure in its column on a board** (a match's, the pool's), as ink — CM's orange, over the accent's yellow for the rest of the column's standouts | — |
 | Cream | `--color-cream` | ink on a colour plate | — |
 | Quiet on a plate | `--color-faint-plate` | the same **quiet** as `--color-faint`, on the blue plate that will not carry it | — |
 | Doubt | `--color-doubt-out` `-major` `-slight` | **how likely he is to MISS**, as a ramp of three. A ground, never ink | ink 5.5 · 7.1 · 9.5 |
@@ -494,54 +492,16 @@ Dashing it is free and carries the distinction without colour; the colour stays.
 tiles, looks better"*). A club's stats board on `/prem/match/[id]` sets the
 column's best in `--color-peak` and its other standouts in `--color-accent` — the
 accent's one borrowed use outside *yours · selected*, taken from the game's own
-screen — and the wrong end in `--color-bad`. The pool board keeps the grounds below.
+screen — and the wrong end in `--color-bad`. The pool board takes the same inks since 24 Sep 2026 (Craig: *"highlight
+numbers in yellow/orange like in the prem page, not squares with background colours"*).
 
-**Hot and cold are the first GROUNDS that carry meaning, and the clause above
-them still stands.** "Depth, never meaning" is a rule about the `bg → surface →
-raised → line` ladder — one hue at chroma 0.012, the whole of it inside 1.71:1,
-and its job is to say how deep a thing is cut into the page. These are not rungs
-on it, any more than `--color-face` or `--color-chrome` are.
+**The hot and cold grounds are retired (24 Sep 2026).** From 10 Sep the pool board lit its standouts on
+`--color-hot` / `--color-cold` squares, a threshold drawn as a ground; both tokens went with their last user.
+The threshold itself is unchanged and shared, in `components/league/standout.ts`: a column's top values, whole
+values at a time, while they stay rare. Each board sets its own shares (the pool: a sixth in yellow, a
+twentieth in orange, and nothing under ten scored figures; a match: a fifth and a tenth of the men who played).
 
-**They are the DIRECTION PAIR at a ground lightness**, which is what makes them
-cost no new hue. `--color-up` is a gain and `--color-bad` is a loss, as ink;
-these are those two, filled. So the mark needs no learning — nobody has ever
-misread green — and the slot is an extension of a pair the app already has
-rather than a sixth colour family.
-
-*They shipped brown for an hour*, taken from the reference's own hue, and Craig
-threw it out the moment he saw it: *"can we use more fun CM colours than brown
-though?"*. He was right twice — brown is nobody's slot in this file, and the
-answer was already in the table above it.
-
-They exist because of Opta's season-stats grid, which Craig put beside our pool
-board on 10 Sep 2026 (*"it organises the data much better than us"*). That grid
-shades **every** numeric cell on a continuous brown-to-purple ramp, and a
-continuous ramp is the one thing this section cannot have: a hue sliding through
-a range is a colour saying twenty things where every other colour here says one.
-Craig's ruling kept the idea and dropped the ramp — *"magnitude ramp, but maybe
-just highlight the really good values? we also can use better colours for us
-too"* — so what shipped is a **threshold and not a scale**. A cell is lit or it
-is not; there is no second strength, so there is nothing to misread.
-
-**What earns a mark is arithmetic and lives in `players/standout.ts`**, not here:
-the highest figures in a column, taken whole values at a time, for as long as
-that stays inside a sixth of the men who have a figure at all. A column whose top
-value is common — `GP` three rounds in, `Min` in August, `YC` at any time — lights
-nothing, which is the true answer rather than a guarded one. That is also why the
-slot is confined to **a board of many measures** and is not available to a
-standings table: §3's amber clause already settles that a standings column is ink
-throughout, and a threshold that lit two of ten league rows would be the accent's
-"yours" claim with a second author.
-
-**A lit cell takes the loud ink, and that is a derived rule rather than a
-taste.** `--color-faint` is 3.3:1 on `--color-hot`, so a marked figure keeping
-the quiet ink of an ordinary one would be the least legible thing on the board in
-the one place the board is pointing at. `--color-ink` is 10.27:1 there and 11.34
-on `--color-cold`. Against `--color-surface` the two grounds sit at 1.45:1 and
-1.31:1 — a real step, and inside the range the depth ramp already occupies, so a
-lit cell reads as part of the table rather than as a sticker laid on it.
-
-**And the board carrying them is OPAQUE, which no other table is** (Craig, same
+**And the pool board is OPAQUE, which no other table is** (Craig, same
 day: *"also it needs to be opaque too"*). `.cm-panel` is deliberately 88% and its
 own docblock defends it well — CM's panels let the match photograph read faintly
 through, and at 88% the picture contributes about four parts in 255. That holds

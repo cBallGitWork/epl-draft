@@ -26,6 +26,7 @@ export default function ScoutShell({
       header={<PageHeader title={SCOUT} />}
       nav={<PoolNav current={current} />}
       caption={title ?? SCOUT_CAPTION}
+      captionOnPhone={false}
       rows={rows}
     >
       {children}

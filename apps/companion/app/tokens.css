@@ -295,49 +295,10 @@
      two below it: 1.6:1 on stock, and nothing on the paper prints a direction.
      The day something does, it gets one, the way `--accent` did. --- */
   --color-mid: oklch(0.79 0.14 85);
-  /* The best figure in its column on a match board, as ink: CM's orange over the yellow of the other standouts. */
+  /* The best figure in its column on a board, as ink: CM's orange over the yellow of the other standouts. */
   --color-peak: oklch(0.74 0.17 55);
   --color-bad: oklch(0.66 0.17 25);
   --color-up: oklch(0.78 0.17 148);
-
-  /* --- The top of a column, and the wrong end of one ------------------------
-     A GROUND under a figure, and the only pair in this file that is. Added
-     10 Sep 2026 for the pool board, against Opta's season-stats grid.
-
-     **Their ramp is continuous and ours is a threshold, and that is the whole
-     difference.** Opta shades every numeric cell on a brown-to-purple scale,
-     which is what makes six hundred players scannable and is also the one thing
-     the block above forbids: a hue that slides through a range is a colour
-     saying twenty things, and every other colour here says one. Craig's ruling
-     (10 Sep) keeps the idea and drops the ramp — *"magnitude ramp, but maybe
-     just highlight the really good values? we also can use better colours for us
-     too"* — so a lit cell means exactly one thing and there is no second
-     strength to misread. `players/standout.ts` is where "really good" is
-     defined, and it is a top band that must stay inside a sixth of the column.
-
-     **The direction pair, as a GROUND.** These shipped brown for an hour, taken
-     from the reference's own hue, and Craig threw it out — *"can we use more fun
-     CM colours than brown though?"*. He is right twice over: brown is nobody's
-     slot in this file, and the app already owns the pair this wants. `--color-up`
-     is a gain and `--color-bad` is a loss, as INK; these are the same two hues at
-     a ground lightness. So the mark needs no learning — nobody has ever
-     misread green — and it costs no new hue, which is the whole reason the
-     block above survives having grounds with meaning added to it at all.
-
-     **Not rungs on the depth ladder**, for the same reason `--color-face` is
-     not: `bg → surface → raised → line` is one hue at chroma 0.012 and the whole
-     of it sits inside 1.71:1, so a mark cut from it would be invisible.
-
-     Derived, not chosen, as this file's opening asks. On `--color-hot`:
-     `--color-ink` 10.27:1, `--color-muted` 5.21 — and `--color-faint` 3.3, which
-     is why a lit cell always takes the loud ink and is a rule `Cell` enforces
-     rather than a hope. On `--color-cold`: ink 11.34, muted 5.75. Against
-     `--color-surface` the two grounds are 1.45:1 and 1.31:1 — a real step, and
-     inside the range the depth ramp already occupies, so a lit cell reads as
-     part of the table rather than as a sticker on it. Re-derived with python3 on
-     10 Sep 2026; move one and re-check both. */
-  --color-hot: oklch(0.34 0.10 150);
-  --color-cold: oklch(0.34 0.11 25);
 
   /* --- Type. Three faces, three jobs on the desk (31 Aug 2026): Oxanium for
      chrome, Jost for text and names, Archivo Narrow for every figure. The first

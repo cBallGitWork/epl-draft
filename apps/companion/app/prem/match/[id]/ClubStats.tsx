@@ -9,7 +9,8 @@ import { MUTE, SortHead } from "../../../components/league/TableHeads";
 import { BOARD, HEAD_CELL, ROW_FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 import { MaybeCard } from "./PlayerCardButton";
 import SubNote from "./SubNote";
-import { COLUMNS, STANDOUT, sorted, standoutCut, type StatLine, type StatSort } from "./statColumns";
+import { COLUMNS, STANDOUT, sorted, type StatLine, type StatSort } from "./statColumns";
+import { standoutCuts, standoutInk, type StandoutCut } from "../../../components/league/standout";
 import { statsHref } from "./statsSort";
 import { appeared, cameOn, ordered, type Named } from "./sheetJoin";
 import { sheetName, type Match } from "./match";
@@ -21,8 +22,8 @@ interface Row extends StatLine {
   named: Named;
 }
 
-/** Each ranked column's two cuts: yellow from `good`, orange from `best`. */
-type StandoutCuts = ReadonlyMap<string, { good: number | null; best: number | null }>;
+/** Each ranked column's two cuts, by head. */
+type StandoutCuts = ReadonlyMap<string, StandoutCut>;
 
 export default function ClubStats({
   match,
@@ -71,13 +72,7 @@ export default function ClubStats({
   const cuts: StandoutCuts = new Map(
     COLUMNS.filter((column) => "rank" in column).map((column) => {
       const values = appearances.map((row) => column.of(row));
-      return [
-        column.head,
-        {
-          good: standoutCut(values, appearances.length, STANDOUT.good),
-          best: standoutCut(values, appearances.length, STANDOUT.best),
-        },
-      ];
+      return [column.head, standoutCuts(values, STANDOUT, { of: appearances.length })];
     }),
   );
 
@@ -191,19 +186,6 @@ function StatRow({
       })}
     </tr>
   );
-}
-
-/** CM's inks for a standout: orange for the column's best, yellow for the rest, red at the bad end (DESIGN §3). */
-function standoutInk(
-  value: number,
-  cut: { good: number | null; best: number | null } | undefined,
-  rank: "high" | "low",
-): string {
-  if (cut?.good == null || value < cut.good) return "";
-  if (rank === "low") return "cm-lit-bad font-bold text-bad";
-  return cut.best !== null && value >= cut.best
-    ? "cm-lit-best font-bold text-peak"
-    : "cm-lit-good font-bold text-accent";
 }
 
 /** Centred under its head, the way CM sets a column. */
