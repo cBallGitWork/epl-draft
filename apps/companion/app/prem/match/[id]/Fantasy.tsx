@@ -1,5 +1,5 @@
 import type { PlTeamSheet } from "@epl/core";
-import { HEAD_PLATE, PANEL } from "@/app/desk";
+import { GROUP_PLATE, PANEL } from "@/app/desk";
 import { FANTASY_CATEGORIES } from "./fantasyCategories";
 import { joinOf } from "./sheetJoin";
 import { sheetName, type Match } from "./match";
@@ -49,7 +49,7 @@ export default function Fantasy({
       <div className="flex flex-col gap-2">
         {boxes.map((box) => (
           <div key={box.category.code} className="flex flex-col">
-            <h3 className={`${HEAD_PLATE} justify-center text-2xs font-bold uppercase lg:text-xs`}>
+            <h3 className={`${GROUP_PLATE} lg:text-xs`}>
               {box.category.label}
             </h3>
             <div className="grid grid-cols-2 divide-x divide-line bg-surface">

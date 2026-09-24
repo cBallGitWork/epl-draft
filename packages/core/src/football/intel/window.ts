@@ -32,3 +32,11 @@ export function inGameweeks<Row extends { fplFixtureId: number }>(
     return gameweek !== undefined && gameweeks.has(gameweek);
   });
 }
+
+/** A window as the desk writes it: "GW6–11", "GW6" for one week, and nothing for none. */
+export function gameweekSpan(gameweeks: readonly number[]): string {
+  if (gameweeks.length === 0) return "";
+  const first = gameweeks[0];
+  const last = gameweeks[gameweeks.length - 1];
+  return first === last ? `GW${first}` : `GW${first}–${last}`;
+}

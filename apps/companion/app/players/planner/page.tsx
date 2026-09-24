@@ -1,4 +1,4 @@
-import { londonDayAndDate, plannerGameweeks, plannerRows, strengthTable, type PlannerView } from "@epl/core";
+import { PLANNER_RUN, londonDayAndDate, plannerGameweeks, plannerRows, strengthTable, type PlannerView } from "@epl/core";
 import ScoutShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
 import TabStrip from "../../components/shell/TabStrip";
@@ -7,15 +7,12 @@ import StrengthRanks from "./StrengthRanks";
 import { footballNow, seasonFixtures } from "../../football";
 import { intelStrength, intelStrengthManifest } from "../../intel";
 import { PLANNER } from "../routes";
-import { SECTION_BAR, phoneShows } from "@/app/desk";
+import { BOARD_KEY, SECTION_BAR, phoneShows } from "@/app/desk";
 
 // The fixture planner: whose next six are kind, for a club's attackers (their opponents' defences) and for its
 // defenders (their opponents' attacks). Craig, 24 Sep 2026. The desk shows both views; a phone picks one.
 
 export const revalidate = 30;
-
-/** Six weeks ahead, the planner's own horizon (a player's profile runs five: `FIXTURE_RUN`). */
-const PLANNER_RUN = 6;
 
 const VIEWS: readonly { key: PlannerView; label: string; board: string; ranks: string }[] = [
   { key: "attack", label: "Attack", board: "Attack · their defence", ranks: "Defences, weakest first" },
@@ -58,7 +55,7 @@ export default async function PlannerPage({
       </div>
 
       {/* Provenance at the point of use: the ranks are ours, not FPL's difficulty (DESIGN §7). */}
-      <p className="text-3xs text-faint">
+      <p className={BOARD_KEY}>
         <span className="lg:hidden">Home in capitals, away in lower case · </span>
         Each figure ranks the opponent 1 (weakest) to 20 · <span className="text-info">ours</span>: Dixon-Coles
         team strength, exported {exported}

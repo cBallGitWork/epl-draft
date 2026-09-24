@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { londonDayAndDate, plannerGameweeks } from "@epl/core";
+import { PLANNER_RUN, gameweekSpan, londonDayAndDate, plannerGameweeks } from "@epl/core";
 import ScoutShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
 import ClubPicker from "../ClubPicker";
@@ -12,19 +12,18 @@ import { footballNow, seasonFixtures } from "../../football";
 import { intelProjections, intelProjectionsManifest } from "../../intel";
 import { PROJECTIONS } from "../routes";
 import { projectionRows, projectionSort, sortedProjections, type Known } from "./rows";
+import { BOARD_KEY } from "@/app/desk";
 
 // Data › Projections, a scaffold (Craig, 24 Sep 2026: "just scaffold this … next 6 gameweeks … could import the
 // current projections"): who the sister model tips over the next six, FPL-scoring, never Fantrax's.
 
 export const revalidate = 30;
 
-/** The window, the planner's own horizon. */
-const RUN = 6;
 
 export default async function ProjectionsPage({ searchParams }: { searchParams: Promise<PlayersSearchParams> }) {
   const query = playersQuery(await searchParams);
   const [pool, fixtures, snapshot] = await Promise.all([getLeaguePool(), seasonFixtures(), footballNow()]);
-  const gameweeks = plannerGameweeks(fixtures, RUN);
+  const gameweeks = plannerGameweeks(fixtures, PLANNER_RUN);
 
   if (intelProjections.size === 0 || gameweeks.length === 0) {
     return (
@@ -65,12 +64,12 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
   const capped = query.all ? shown : shown.slice(0, PAGE_ROWS);
   const clubs = [...new Set([...intelProjections.values()].map((player) => player.club))].sort();
   const leaguePositions = "unavailable" in pool ? [] : pool.positions;
-  const window = `GW${gameweeks[0]}–${gameweeks[gameweeks.length - 1]}`;
+  const window = gameweekSpan(gameweeks);
 
   return (
     <ScoutShell current="projections" title="Projected Points" rows={0}>
       {/* Provenance at the point of use (DESIGN §7): these are the sister model's FPL points, not Fantrax's. */}
-      <p className="text-3xs text-faint">
+      <p className={BOARD_KEY}>
         FPL-scoring projections by the sister model, {window}, exported{" "}
         {londonDayAndDate(intelProjectionsManifest.exportedAt)} · <span className="text-info">ours</span>
       </p>

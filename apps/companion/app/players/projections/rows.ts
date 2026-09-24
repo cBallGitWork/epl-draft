@@ -1,4 +1,5 @@
 import { nextGameweeks, projectedTotal, type ProjectedPlayer } from "@epl/core";
+import { byFigure } from "../../components/league/order";
 
 // The Projections board's rows: the sister model's FPL-scoring points for each gameweek in the window, a total and
 // the minutes it expects, joined to our league's view of the man. A week the model has no reading for is a dash.
@@ -46,7 +47,7 @@ export function projectionRows(
 /** A sort key: `tot`, `xmins`, or `gw` and a gameweek in the window. */
 export type ProjectionSort = string;
 
-export const DEFAULT_PROJECTION_SORT = "tot";
+const DEFAULT_PROJECTION_SORT = "tot";
 
 /** The figure a key reads off a row; a gameweek the window no longer holds falls back to the total. */
 export function projectionFigure(row: ProjectionRow, key: ProjectionSort, gameweeks: readonly number[]): number | null {
@@ -69,14 +70,10 @@ export function sortedProjections(
   gameweeks: readonly number[],
   descending: boolean,
 ): ProjectionRow[] {
-  return [...rows].sort((a, b) => {
-    const left = projectionFigure(a, key, gameweeks);
-    const right = projectionFigure(b, key, gameweeks);
-    if (left === null || right === null) {
-      if (left !== right) return left === null ? 1 : -1;
-    } else if (left !== right) {
-      return descending ? right - left : left - right;
-    }
-    return (b.total ?? -Infinity) - (a.total ?? -Infinity) || a.name.localeCompare(b.name);
-  });
+  return [...rows].sort(
+    (a, b) =>
+      byFigure(projectionFigure(a, key, gameweeks), projectionFigure(b, key, gameweeks), descending) ||
+      (b.total ?? -Infinity) - (a.total ?? -Infinity) ||
+      a.name.localeCompare(b.name),
+  );
 }

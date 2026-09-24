@@ -3,12 +3,12 @@ import Skeleton from "../../components/shell/Skeleton";
 import { PRESSABLE } from "../BoardControls";
 import { StackWaiting } from "../[fantraxId]/Waiting";
 
-// Analysis, waiting on two live Fantrax profiles.
+// Compare, waiting on two live Fantrax profiles.
 //
 // **Without this file the route wore the BOARD's skeleton**, because
 // `players/loading.tsx` is the parent segment's and Next hands a child segment
 // its parent's loading UI. So every load of this screen opened on a frame that
-// said Overview was the current tab, captioned itself "Player Stats", and drew
+// said the Players tab was current, captioned itself "Player Stats", and drew
 // twenty columns of a directory — a skeleton describing a different screen,
 // which is the one failure a skeleton exists to prevent. Caught by looking at a
 // screenshot taken while the server was still compiling.

@@ -1,4 +1,4 @@
-import { clubStats, plannerGameweeks, plannerRows, type PlannerView } from "@epl/core";
+import { PLANNER_RUN, clubStats, plannerGameweeks, plannerRows, type PlannerView } from "@epl/core";
 import ScoutShell from "../Shell";
 import FantraxSilent from "../../components/shell/FantraxSilent";
 import TeamBoard from "./TeamBoard";
@@ -9,14 +9,13 @@ import { getPlayerStats } from "../playerStats";
 import { footballNow, seasonFixtures } from "../../football";
 import { intelStrength } from "../../intel";
 import { lastValue } from "../routes";
+import { BOARD_KEY } from "@/app/desk";
 
 // Data › Teams: which clubs to buy into. Fantrax's points by club and position, its keepers' figures, our run of
 // the next six, and FPL's expected numbers (Craig, 24 Sep 2026: "a team stats section … cm-ify it").
 
 export const revalidate = 30;
 
-/** The run's horizon, the planner's own. */
-const RUN = 6;
 
 export default async function TeamsPage({
   searchParams,
@@ -46,7 +45,7 @@ export default async function TeamsPage({
           goalsAgainst: raw.get(row.entry.player.fantraxId)?.GA ?? null,
         }));
 
-  const gameweeks = plannerGameweeks(fixtures, RUN);
+  const gameweeks = plannerGameweeks(fixtures, PLANNER_RUN);
   const run = (view: PlannerView) =>
     new Map(plannerRows(fixtures, snapshot.clubs, intelStrength, view, gameweeks).map((row) => [row.club.code, row.mean]));
   const season = new Map(clubStats(fixtures, snapshot.clubs, snapshot.players).map((club) => [club.clubId, club.squad]));
@@ -65,7 +64,7 @@ export default async function TeamsPage({
           current.
         </FantraxSilent>
       ) : null}
-      <p className="text-3xs text-faint">
+      <p className={BOARD_KEY}>
         Run: the next {gameweeks.length} opponents&apos; mean rank, 1 the kindest · <span className="text-info">ours</span>
       </p>
       <TeamBoard rows={sortedTeams(rows, sort, descending)} sort={sort} descending={descending} />

@@ -57,6 +57,9 @@ export const ROW_HOVER = `${ROW_RULE} hover:bg-surface`;
 /** The wrapper that lets a phone reach a board's far columns. */
 export const SCROLL = "overflow-x-auto";
 
+/** A board's key: one quiet line under the switch saying what its figures are and whose. */
+export const BOARD_KEY = "text-3xs text-faint";
+
 /** A board that scrolls sideways says so under a thumb: a fade at its right edge, over the figures. */
 export const EDGE_FADE = "pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-surface lg:hidden";
 
@@ -81,6 +84,11 @@ export const SECTION_BAR =
 export const HEAD_PLATE = "cm-bevel flex h-6 items-center px-1.5";
 export const HEAD_PLATE_END =
   "cm-bevel flex h-6 items-center justify-end px-1.5";
+/** The same plate over a centred figure column or a group of them. */
+export const HEAD_PLATE_CENTRE = `${HEAD_PLATE} justify-center`;
+
+/** A plate naming a group of columns or a section of a match board. */
+export const GROUP_PLATE = `${HEAD_PLATE_CENTRE} text-2xs font-bold uppercase`;
 
 /* ---- Panels and controls -------------------------------------------------- */
 

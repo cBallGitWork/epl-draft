@@ -2,7 +2,7 @@ import type { CSSProperties } from "react";
 import { clubIndex } from "../../../components/football/clubIndex";
 import type { Club, MatchStatRow } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
-import { HEAD_PLATE, PANEL } from "@/app/desk";
+import { GROUP_PLATE, PANEL } from "@/app/desk";
 
 // Championship Manager's Match Stats board (`cm9900/22.jpg`): each side's figure on its own plate, the label between.
 // A three-column grid rather than a table, because the label is the axis and the figures are its ends.
@@ -60,7 +60,7 @@ export default function MatchStats({
       <div className="grid gap-3 lg:grid-cols-2 lg:gap-x-6">
         {groups.map((group) => (
           <div key={group.title} className="flex flex-col gap-1">
-            <h3 className={`${HEAD_PLATE} justify-center text-2xs font-bold uppercase lg:text-xs`}>
+            <h3 className={`${GROUP_PLATE} lg:text-xs`}>
               {group.title}
             </h3>
             {group.rows.map((row) => (

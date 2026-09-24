@@ -3,6 +3,7 @@ import {
   FANTRAX_PLAYER_BASE,
   assistsOf,
   fixtureGameweeks,
+  gameweekSpan,
   inGameweeks,
   lastPlayed,
   totalsOver,
@@ -138,7 +139,7 @@ export default async function ComparePage({
   const solo = two === null || names.b === null;
   const played = lastPlayed(fixtures, Number.POSITIVE_INFINITY);
   const window = recent ? lastPlayed(fixtures, RECENT) : played;
-  const span = window.length === 0 ? "no gameweeks yet" : `GW${window[0]}–${window[window.length - 1]}`;
+  const span = gameweekSpan(window) || "no gameweeks yet";
   const told = recent ? `gameweeks ${window[0]} to ${window[window.length - 1]}` : "this season";
   const gameweekOf = fixtureGameweeks(fixtures);
   const inWindow = new Set(window);

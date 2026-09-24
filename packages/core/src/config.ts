@@ -356,6 +356,10 @@ export const NOTABLE_SAVES = 4;
  *  about the game, not a measurement of the space on screen. */
 export const FIXTURE_RUN = 5;
 
+/** How many gameweeks Data's planner, club board and projections look ahead (Craig, 24 Sep 2026: "next 6
+ *  gameweeks"): a little past a player's own run, because a manager plans a squad further out than one man. */
+export const PLANNER_RUN = 6;
+
 /** How many transaction rows to ask for in one page.
  *
  *  Their own client sends 100 and the response reports `totalNumPages` back, so

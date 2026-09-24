@@ -1,3 +1,4 @@
+import { byFigure } from "../../components/league/order";
 import type { TeamRow } from "./teamRows";
 
 // The board's measures as data, so the heads, the cells, the sort and the standouts cannot disagree.
@@ -34,26 +35,18 @@ export const TEAM_COLUMNS: readonly TeamColumn[] = [
   { key: "xgc", group: "FPL expected", head: "xGC", title: "FPL's expected goals conceded, per team rather than per man", of: (r) => r.xgc, dp: 1, rank: "low", ascending: true },
 ];
 
-export type TeamSort = TeamColumn["key"];
-
-export const DEFAULT_TEAM_SORT: TeamSort = "fpts";
-
 export function teamColumn(key: string | undefined): TeamColumn {
   return TEAM_COLUMNS.find((column) => column.key === key) ?? TEAM_COLUMNS[0];
 }
 
 /** Ordered by one column; an absent figure sinks either way, and a tie falls to points, then the name. */
 export function sortedTeams(rows: readonly TeamRow[], column: TeamColumn, descending: boolean): TeamRow[] {
-  return [...rows].sort((a, b) => {
-    const left = column.of(a);
-    const right = column.of(b);
-    if (left === null || right === null) {
-      if (left !== right) return left === null ? 1 : -1;
-    } else if (left !== right) {
-      return descending ? right - left : left - right;
-    }
-    return (b.fpts ?? -Infinity) - (a.fpts ?? -Infinity) || a.club.shortName.localeCompare(b.club.shortName);
-  });
+  return [...rows].sort(
+    (a, b) =>
+      byFigure(column.of(a), column.of(b), descending) ||
+      (b.fpts ?? -Infinity) - (a.fpts ?? -Infinity) ||
+      a.club.shortName.localeCompare(b.club.shortName),
+  );
 }
 
 /** The groups in order with how many columns each spans, for the plate row over the heads. */
