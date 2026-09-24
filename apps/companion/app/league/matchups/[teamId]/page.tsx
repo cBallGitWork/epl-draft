@@ -26,6 +26,8 @@ import { newsFor, readPoolNews } from "../../../poolNews";
 import { teamBadges } from "../../../standings";
 import { myTeamId } from "../../../session";
 import { MATCHUPS } from "../../routes";
+import { sheetEvents } from "./events";
+import { everyone, subMarks } from "./subs";
 
 // One head-to-head, at the size it deserves on a Saturday.
 //
@@ -155,6 +157,8 @@ export default async function HeadToHeadPage({
   const { arranged, widest } = arrangeBoth({ pairing, rostered, shows, scored, clubs, opposition });
   const listed = started ? null : unplayedLists({ pairing, rostered, clubs, opposition });
 
+  const events = await sheetEvents(arranged.values(), squads.snapshot);
+
   // Every category either squad registered, in one order, computed ONCE.
   //
   // It is the compare board's rows and both stat boards' columns, which is the
@@ -206,6 +210,7 @@ export default async function HeadToHeadPage({
             rows={detail.rows}
             bench={detail.bench}
             widest={widest}
+            subs={subMarks(everyone(detail), events)}
             breakdown={priced?.breakdown ?? {}}
             // This sheet's men only — a story is keyed by player, and would name a withheld eleven.
             news={newsFor(
