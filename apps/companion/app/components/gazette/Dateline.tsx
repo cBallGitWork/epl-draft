@@ -79,7 +79,7 @@ export default function Dateline({
   return (
     <Tag className={`font-sans text-3xs uppercase tracking-[0.16em] text-faint${className === "" ? "" : ` ${className}`}`}>
       {/* A column the desk printed from facts has no correspondent to credit. */}
-      {byline && story.kind !== "predicted-xi" ? `by ${PAPER_CORRESPONDENT} · ` : ""}
+      {byline && story.kind !== "predicted-xi" ? `by ${story.reporter ?? PAPER_CORRESPONDENT} · ` : ""}
       {story.edition !== "" ? `${story.edition} · ` : ""}
       Filed {londonDayAndTime(story.filedAt)}
       {/* The affordance, in words rather than a chevron, and literally true: a
