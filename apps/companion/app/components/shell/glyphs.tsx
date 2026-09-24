@@ -38,6 +38,24 @@ const GLYPHS = {
       <path d="M10 6H21M10 12H21M10 18H21" />
     </>
   ),
+  // A straight-walled cup on a filled plinth: the two competitions under one tab.
+  comps: (
+    <>
+      <path d="M6 3H18V9L14 13H10L6 9Z" />
+      <path d="M6 5H3V8L6 11M18 5H21V8L18 11" />
+      <path d="M12 13V17" />
+      <Cell x={7} y={17} width={10} height={4} />
+    </>
+  ),
+  // Bars on a baseline, upright where League's index cells lie flat.
+  data: (
+    <>
+      <path d="M3 21H21" />
+      <Cell x={4} y={11} height={8} />
+      <Cell x={10} y={5} height={14} />
+      <Cell x={16} y={9} height={10} />
+    </>
+  ),
   // The potrace box is 400 units, scaled to 20 tall and centred on the grid.
   prem: (
     <g transform="translate(0.013 -0.375) scale(0.0625)" fill="currentColor" stroke="none">

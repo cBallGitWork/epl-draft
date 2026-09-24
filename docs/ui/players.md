@@ -1,4 +1,4 @@
-# `/players` — Find
+# `/players` — Data
 
 Every player Fantrax knows, what our league has decided about him, and what
 Fantrax scores him. **It is its own section as of 6 Sep 2026** (Craig: *"I think
@@ -10,30 +10,19 @@ route is the same route — only its frame and its place in the app changed.
 
 ## The section
 
-- **"Find", which is Championship Manager's own word for this slot** (Craig,
-  10 Sep 2026: *"replace with something more CM"*). Its rail in `cm9900/12.jpg`,
-  `11.jpg` and `25.jpg` reads `Continue Game · <manager> · Competitions ·
-  Nations & Clubs · Find · Game Options`, and Find is the entry for looking a
-  player up. It read **"Scout"** until then, on the argument below — which had
-  cited CM's own `Find` as the reason Scout beat Players, a stand-in for a word
-  the reference already had. The URL stays `/players`.
-- ~~**"Scout", not "Players"**~~, on the bar and on the nav plate. It is already this
-  repo's word for the activity — `players/[fantraxId]/scouting.ts`, DESIGN §9's
-  "scouting table", ROADMAP §7's "scouting notes, waiver intel" — and
-  Championship Manager's own rail carries `Find` in exactly this slot, a verb for
-  the same job rather than a noun for the people it is done to.
+- **"Data", the fantasy deep dive, since 24 Sep 2026** (Craig: *"FIND is now DATA"*). It was CM's
+  **"Find"** from 10 Sep (the rail in `cm9900/12.jpg` reads `… Competitions · Nations & Clubs · Find`), and
+  **"Scout"** before that. The URL stays `/players`, and `titles.ts` keeps the constant's name `SCOUT`.
 - **The royal-blue bar, not the cream competition plate.** `PageHeader` draws two
   and which one a screen gets says what KIND of thing it is about (`cm9900/24.jpg`
   is a competition, `25.jpg` a club or a person). The cream plate is spoken for
-  by `/league` and `/prem`; Scout is not a competition, it is the activity, so it
+  by `/league` and `/prem`; Data is not a competition, it is the activity, so it
   takes the bar every other subject-without-a-colour takes.
-- **It reaches the nav through `More`.** The thumb rail's ceiling is measured — six
-  tabs at 320 leave a label 49px — and the sixth tab is More, a page listing
-  every section past the fifth. DESIGN §2
-  carries the arithmetic and the rule.
-- **Two views**: Overview and Analysis, on `players/PoolNav` — "Board" and "Compare" until 10 Sep 2026. Overview is CM's own first-tab word (`cm9900/12.jpg`, and `16.jpg`'s `Match Overview`), and it is what the view is: the whole pool at a glance, against Analysis, which is one man or two looked at closely. The strip arrived with
-  the second; `league/SectionNav` records the ruling that one entry is a stray
-  button rather than a bar.
+- **On the phone's bar, fourth** (Craig, 24 Sep 2026: *"data needs to be at the bottom"*), after Comps.
+  It sat behind `More` until then. DESIGN §2 carries the bar and its ceiling of six.
+- **Two views**: Players and Compare, on `players/PoolNav` (Overview and Analysis until 24 Sep; the keys
+  `pool` and `analysis` did not change). Team Stats, the Fixture Planner and Projections join the strip as
+  they land.
 
 ## On the page — the Board
 

@@ -30,7 +30,7 @@ const ROUTES = [
   "/league/team-stats",
   "/squad",
   "/players",
-  // Find's second view: its ids are in the query, so no link off the board reaches it.
+  // Data's Compare: its ids are in the query, so no link off the board reaches it.
   "/players/analysis?a=05gcr&b=03ksl",
   "/matchday",
   "/matchday/desk",

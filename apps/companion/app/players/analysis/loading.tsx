@@ -23,7 +23,7 @@ import { StackWaiting } from "../[fantraxId]/Waiting";
 
 export default function Loading() {
   return (
-    <ScoutShell current="analysis" title="Analysis" rows={0}>
+    <ScoutShell current="analysis" title="Compare" rows={0}>
       {/* The two search boxes, at the real sizes and in the real order, because
           a frame whose controls move when the answer lands is a layout that
           jumps. They are not real forms here — a skeleton that submits would

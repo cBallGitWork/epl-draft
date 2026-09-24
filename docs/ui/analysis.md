@@ -1,6 +1,6 @@
 # `/players/analysis` — a player, or two
 
-Scout's second view. Craig, 6 Sep 2026: *"we need the player comparison tool too
+Data's second view. Craig, 6 Sep 2026: *"we need the player comparison tool too
 — I attached the scout page a while back. Would need tables and probably a pitch
 (which would plot the end points such as heat map/shot map etc)"*. Two
 references: Fantasy Football Scout's Player Maps, and — added 10 Sep 2026 —
@@ -12,6 +12,9 @@ the screen now works for ONE man as well as two (Craig: *"give me the option to
 look at 1 player only"*), and a view called Compare that draws a single player is
 a name making a promise the screen does not keep. "Analysis" covers one or two,
 and covers figures, maps and attributes rather than any one of them.
+
+**The tab and caption read "Compare" again since 24 Sep 2026** (Craig's Data strip: Players · Compare · Team
+Stats · Fixture Planner · Projections). The route stays `/players/analysis`, and one man still works.
 
 **Two profile reads and never more.** `subject()` is one live, uncached
 `getPlayerProfile` each, and Fantrax throttles that endpoint at about
