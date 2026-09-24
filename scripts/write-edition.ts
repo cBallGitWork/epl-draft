@@ -22,16 +22,16 @@ import {
   standingHeadlines,
   strangers,
 } from "@epl/core";
-import { gatherRoundFacts, withFootball } from "./edition/facts";
-import { file, type DeskContext } from "./edition/dispatch";
+import { gatherRoundFacts } from "./edition/facts";
+import { file } from "./edition/dispatch";
 import { prepare } from "./edition/commission";
 import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
-import { markLastWeek } from "./edition/marking";
 import { writeSubedited } from "./edition/subedit";
 import { presserDesk } from "./edition/presserWeek";
-import { readXi, xiColumn } from "./edition/xi";
+import { readXi } from "./edition/xi";
 import { deskState } from "./edition/desk";
+import { deskContext } from "./edition/context";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
 // The newsroom's orchestrator, run from CI on a wide cron net.
@@ -137,40 +137,7 @@ async function main(): Promise<void> {
   if (process.env.GAZETTA_QUEUE) return say(assignments.map((a) => a.key).join("\n"));
   if (assignments.length === 0) return say("Nothing new to report.");
 
-  const ctx: DeskContext = {
-    leagueId: FANTRAX_LEAGUE_ID,
-    snapshot,
-    // **The Premier League's feed is fetched HERE and not with the other reads**
-    // — after the desk has said there is a column to write. It is 31 requests
-    // against 11 for everything else together, the desk reads none of it, and
-    // about a hundred and ten firings a week end at the line above. See
-    // `withFootball`.
-    facts: await withFootball(facts, snapshot, assignments),
-    clubs,
-    threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [],
-    info,
-    table: facts.table,
-    period: round.period,
-    marked: await markLastWeek(paper, info, round.period, assignments),
-    presserLines: sheet.lines,
-    presserQuotes: sheet.quotes,
-    presserTies: sheet.ties,
-    presserClubs: byCode,
-    presserGameweek: sheet.gameweek,
-    presserSpoke: sheet.spoke,
-    // Composed here, once, rather than per assignment in the loop.
-    elevens:
-      xi === null || !assignments.some((each) => each.kind === "predicted-xi")
-        ? null
-        : xiColumn({
-            xi,
-            gameweek: sheet.gameweek,
-            clubs: byCode,
-            teams: facts.teams,
-            players: snapshot.players,
-            season,
-          }),
-  };
+  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, paper, ledger, sheet, xi, season, assignments });
 
   const filings: Filing[] = [];
   // Attempts, not assignments: a desk that refuses spends nothing and is an
