@@ -19,7 +19,8 @@ import PlayerImage from "../league/PlayerImage";
 // **He is chosen by the desk, never by the writer** — `assemble.faceOf` takes
 // the highest-scoring man off the same numbers the brief was built from. So the
 // picture cannot contradict the prose, and a model cannot name its way into the
-// photograph.
+// photograph. A tie in Lawro's column is the one variation: the desk offers that
+// tie's bridged men, and his line picks among them by naming one first.
 //
 // **It prints through the ink** (`.paper-face` in `paper.css`), band and all —
 // the club's colour survives as the value that tells Forest from Chelsea rather
