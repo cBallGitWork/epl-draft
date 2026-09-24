@@ -1,9 +1,11 @@
-import type { PublishedStory } from "@epl/core";
+import type { Club, PublishedStory } from "@epl/core";
 import { DASH } from "@epl/core";
 import Column from "./Column";
+import Face from "./Face";
 
-// Lawro's calls as the page prints them: each tie, his words, and under them the desk's prediction.
-// Figures sit in their own span because a figure is never letterspaced (DESIGN §6).
+// Lawro's calls as the page prints them, the way the BBC ran them: each tie, the man his line names
+// first beside his words, and under them the desk's prediction. Figures sit in their own span
+// because a figure is never letterspaced (DESIGN §6).
 
 type Tie = NonNullable<PublishedStory["ties"]>[number];
 
@@ -11,11 +13,14 @@ export default function Calls({
   ties,
   record,
   named,
+  clubs,
 }: {
   ties: readonly Tie[];
   /** His season so far; absent before his first round is settled. */
   record: { right: number; called: number } | undefined;
   named: (teamId: string) => string;
+  /** The round's clubs, for each picture's kit; absent prints the ties without pictures. */
+  clubs?: Map<number, Club>;
 }) {
   return (
     <Column
@@ -31,12 +36,17 @@ export default function Calls({
       {/* The paper's own measure: one column on a phone, newspaper columns on a desk. */}
       <ul className="paper-columns">
         {ties.map((tie) => (
-          <li key={`${tie.homeTeamId}-${tie.awayTeamId}`} className="break-inside-avoid py-3">
-            <p className="font-sans text-2xs uppercase tracking-widest text-faint">
+          <li key={`${tie.homeTeamId}-${tie.awayTeamId}`} className="flow-root break-inside-avoid py-3">
+            <p className="font-sans text-xs font-bold uppercase tracking-widest text-ink">
               {named(tie.homeTeamId)} v {named(tie.awayTeamId)}
             </p>
+            {tie.face !== undefined && clubs !== undefined ? (
+              <div className="float-left mr-3 mt-2">
+                <Face face={tie.face} clubs={clubs} rank="brief" />
+              </div>
+            ) : null}
             {tie.line !== "" ? <p className="pt-1 text-base leading-relaxed text-ink">{tie.line}</p> : null}
-            <p className="pt-1.5 font-sans text-2xs uppercase tracking-widest text-muted">
+            <p className="clear-left pt-1.5 font-sans text-2xs uppercase tracking-widest text-muted">
               Lawro&apos;s prediction: <span className="font-bold text-ink">{prediction(tie, named)}</span>
             </p>
           </li>
