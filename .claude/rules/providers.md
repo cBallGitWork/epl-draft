@@ -148,6 +148,9 @@ global pool's default, never the league's answer. Saka is `F,M`, filed at M:
 6 at forward rates. So the pool table's `FPts` is not what a player scored for his
 owner. **Read the roster slot, never a position off the player.**
 
+`getLiveScoringStats` names only `ACTIVE` unless asked with `playerViewType: "2"`,
+which adds a public `BENCH` section priced the same way. It counts in no total.
+
 ### Identity
 
 Fantrax exposes `rotowireId` on about four players in five — 544 of 699 on 3 Aug,

@@ -73,5 +73,115 @@
     "read": "fxpa getStandings (page)",
     "path": "tableList[].subCaption:string",
     "why": "The rehearsal league answers two tables in `tableList` and the real league answers one, so `shapeOf` \u2014 which merges array elements into a single branch \u2014 reports the second element's fields as lost. Of this read's two mappers, `mapTeamBadges` reads only `fantasyTeamInfo`, and `mapStandings` reads header cells by `key` and never `align` or `subCaption`. Audited 28 Aug, re-checked 23 Sep 2026 when the read was renamed from `(badges)` to `(page)`."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.calculatedProjectedTotalsMap{}:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.gameStatusMap{}:string",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.projectedTotalsMap{}:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.remainingEventPercent{}:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.statsMap{}.object1:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.statsMap{}.object2[].av:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.statsMap{}.object2[].fpts:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.statsMap{}.object2[].scipId:string",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.statsMap{}.object2[].sv:string",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.totalFpts2:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.allTeamsStats{}.BENCH.totalFpts:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.calculatedProjectedTotalsMap{}:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.gameStatusMap{}:string",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.projectedTotalsMap{}:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.remainingEventPercent{}:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.statsMap{}.object1:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.statsMap{}.object2[].av:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.statsMap{}.object2[].fpts:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.statsMap{}.object2[].scipId:string",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.statsMap{}.object2[].sv:string",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.totalFpts2:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
+  },
+  {
+    "read": "getLiveScoringStats",
+    "path": "statsPerTeam.statsMap{}.BENCH.totalFpts:number",
+    "why": "The real league has not drafted: `getLiveScoringStats` answers one team, the league average `-3`, and nobody's reserves. The rehearsal league answers `BENCH` for every team since the read sends `playerViewType: \"2\"` (PLATFORM_NOTES, 24 Sep 2026), and `mapBenchPlayerPoints` reads it exactly as it reads ACTIVE. Re-check after the 10 Oct draft. Audited 24 Sep 2026."
   }
 ]

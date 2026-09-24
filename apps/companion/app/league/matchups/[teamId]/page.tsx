@@ -142,7 +142,7 @@ export default async function HeadToHeadPage({
   // Costs no request at all now — one `getLiveScoringStats` already fetched for
   // the scoreboard, mapped a second time — where this used to be one
   // `getTeamRosterInfo` per side. Only asked for a side whose eleven is on
-  // screen, because these keys are the eleven.
+  // screen, because which section a man is priced in says who is in the eleven.
   const [yours, theirs] = await Promise.all([
     shows(pairing.team) ? squadLivePoints(period, pairing.team.teamId, categories) : null,
     shows(pairing.opponent) ? squadLivePoints(period, pairing.opponent.teamId, categories) : null,
@@ -163,13 +163,13 @@ export default async function HeadToHeadPage({
   // other half. The union is why this is a join in core and not two independent
   // reads: a row missing from one side would print as a nought, and a nought is a
   // claim the payload did not make.
-  const columns = compareCategories(yours?.breakdown ?? {}, theirs?.breakdown ?? {});
+  const columns = compareCategories(yours?.counted ?? {}, theirs?.counted ?? {});
   // The same union with its workings — which of his eleven put the 9 on the
   // board. Derived from `columns` in core, so the two boards cannot disagree
   // about which categories exist or in what order. Fed the SAME two
   // conditionally-fetched breakdowns: a gated side arrives as `{}` and
   // contributes no band and no name, which is the whole of the gate here.
-  const bands = bandCategories(yours?.breakdown ?? {}, theirs?.breakdown ?? {});
+  const bands = bandCategories(yours?.counted ?? {}, theirs?.counted ?? {});
 
   const side = (team: LeagueTeam): MatchupSide => {
     const mineHere = team.teamId === mine;

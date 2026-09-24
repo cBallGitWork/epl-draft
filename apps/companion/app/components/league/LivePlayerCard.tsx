@@ -47,10 +47,7 @@ export default function LivePlayerCard({
    *  names on nought, and for one it does not name at all — the difference is
    *  in `points`, which is the number the table actually gave. */
   breakdown: BreakdownLine[];
-  /** Whether he is on the bench this gameweek. The live table names only the
-   *  eleven, so a reserve is absent from it for a reason that has nothing to do
-   *  with whether he played — and saying "nothing has scored for him" over a
-   *  man who played ninety minutes is two contradictions in one card. */
+  /** Whether he is on the bench this gameweek: priced, but not counted. */
   reserve: boolean;
   /** Fantrax's latest on him, or null for the great majority. The pool feed is
    *  a day wide (`poolNews.ts`), so an absent story means nothing was filed

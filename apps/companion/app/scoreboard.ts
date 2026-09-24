@@ -13,6 +13,7 @@ import {
   type ScoringRules,
   fetchLiveScoring,
   liveBreakdown,
+  mapBenchPlayerPoints,
   mapLivePlayerPoints,
   mapLiveScores,
   mapProjectedPlayerPoints,
@@ -43,6 +44,8 @@ const readScores = leagueCache("live-scores",
     /** Per team, the men Fantrax has priced this period. From the same payload
      *  as the totals above, mapped a second time rather than fetched again. */
     players: [string, LivePlayerPoints[]][];
+    /** Per team, the reserves Fantrax priced, which count in no total. */
+    bench: [string, LivePlayerPoints[]][];
     /** Per team, what Fantrax GUESSES those men will do. A third read of the same
      *  payload, and a different claim from the one above it: that one is what has
      *  happened, this one is what they think will. */
@@ -51,11 +54,12 @@ const readScores = leagueCache("live-scores",
   }> => {
     const raw = await orRefusal(fetchLiveScoring(FANTRAX_LEAGUE_ID, period));
     if (raw instanceof FantraxError) {
-      return { scores: [], players: [], projected: [], refused: tell(raw) };
+      return { scores: [], players: [], bench: [], projected: [], refused: tell(raw) };
     }
     return {
       scores: mapLiveScores(raw).map((score) => [score.teamId, score]),
       players: mapLivePlayerPoints(raw).map((squad) => [squad.teamId, squad.players]),
+      bench: mapBenchPlayerPoints(raw).map((squad) => [squad.teamId, squad.players]),
       projected: mapProjectedPlayerPoints(raw).map((squad) => [squad.teamId, squad.players]),
       refused: null,
     };
@@ -109,33 +113,37 @@ export async function liveScores(
  *  is asking may cross into it, which is the rule `leagueCache` exists to keep.
  *
  *  **And it is only ever called for a side whose eleven is already on screen.**
- *  These keys are the eleven: a man priced here is a man in the lineup, which is
- *  the exact fact the gate withholds before a deadline. So this is asked behind
- *  the gate and never in front of it, on the same reasoning as `pendingByTeam`
- *  below.
+ *  Which section a man is priced in says whether he is in the eleven, the exact
+ *  fact the gate withholds before a deadline, so this is asked behind the gate.
  *
- *  Three answers, kept apart: null when Fantrax refused, so the column vanishes
- *  and the page's own outage line explains it; an empty read for a team it has
- *  priced nobody in, which is every dash; and the numbers otherwise.
- *
- *  A man with no entry is absent rather than nought, and absence has two causes:
- *  he is in the eleven and has not played, or he is a reserve and this table
- *  names only the eleven. The caller holding the roster is the one that can
- *  tell them apart. */
+ *  `points` and `breakdown` hold every man Fantrax priced, reserves included, for
+ *  drawing; `counted` is the eleven alone, and is what adds up to the scoreline.
+ *  Null when Fantrax refused; a man with no entry has not played. */
 export async function squadLivePoints(
   period: number,
   teamId: string,
   categories: Record<string, ScoringCategory>,
-): Promise<{ points: Map<string, number | null>; breakdown: Record<string, BreakdownLine[]> } | null> {
-  const { players, refused } = await readScores(period);
+): Promise<{
+  points: Map<string, number | null>;
+  breakdown: Record<string, BreakdownLine[]>;
+  counted: Record<string, BreakdownLine[]>;
+} | null> {
+  const { players, bench, refused } = await readScores(period);
   if (refused !== null) return null;
 
-  const squad = players.find(([id]) => id === teamId)?.[1] ?? [];
-  return {
-    points: new Map<string, number | null>(squad.map((player) => [player.fantraxId, player.points])),
-    breakdown: Object.fromEntries(
+  const eleven = players.find(([id]) => id === teamId)?.[1] ?? [];
+  const reserves = bench.find(([id]) => id === teamId)?.[1] ?? [];
+  const lines = (squad: LivePlayerPoints[]) =>
+    Object.fromEntries(
       squad.map((player) => [player.fantraxId, liveBreakdown(player.categories, categories)]),
+    );
+  const counted = lines(eleven);
+  return {
+    points: new Map<string, number | null>(
+      [...eleven, ...reserves].map((player) => [player.fantraxId, player.points]),
     ),
+    breakdown: { ...counted, ...lines(reserves) },
+    counted,
   };
 }
 

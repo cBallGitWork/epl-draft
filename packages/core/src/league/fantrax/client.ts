@@ -213,10 +213,12 @@ export function fetchSeasonStats(leagueId: string): Promise<RawSeasonStats> {
  *  not, so one call answers for the whole league and filtering is ours to do.
  *
  *  The period is sent as a string, as their own client sends it, and is not
- *  echoed back: what period this describes is known only because we asked. */
+ *  echoed back: what period this describes is known only because we asked.
+ *  `playerViewType: "2"` is their "Show bench", and adds the priced reserves. */
 export function fetchLiveScoring(leagueId: string, period: number): Promise<RawLiveScoring> {
   return fxpaRead(leagueId, "getLiveScoringStats", {
     period: String(period),
+    playerViewType: "2",
   }) as Promise<RawLiveScoring>;
 }
 

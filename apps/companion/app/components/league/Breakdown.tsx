@@ -53,24 +53,23 @@ export default function Breakdown({
           The count column carries no head because there is no one word for it —
           it is minutes on one row and goals on the next. */}
       <div className="flex items-stretch gap-px">
-        <span className={`${HEAD_PLATE} min-w-0 flex-1 ${LABEL}`}>This gameweek</span>
+        {/* Fantrax prices a reserve like anyone else; only his manager's total leaves him out. */}
+        <span className={`${HEAD_PLATE} min-w-0 flex-1 ${LABEL}`}>
+          {reserve ? "On the bench · not counted" : "This gameweek"}
+        </span>
         <span className={`${HEAD_PLATE_END} ${PTS_COLUMN} ${LABEL}`}>Pts</span>
       </div>
 
       <div className="cm-panel flex flex-col">
         {breakdown.length === 0 ? (
           <p className="px-3 py-2 text-2xs text-muted">
-            {/* Four claims and not one sentence: a RESERVE is absent because the
-                table names the eleven; a total with no parts is a category this
-                league's scoring does not describe; and a nought with minutes on
-                it is a different man from a nought without. */}
-            {reserve
-              ? "On the bench this gameweek, so our league scores him nothing — whatever he did."
-              : points
-                ? "Fantrax scored him, but did not say what for."
-                : minutes > 0
-                  ? "Nothing has scored for him yet."
-                  : "Nothing has scored for him yet — his minutes have not registered either."}
+            {/* A total with no parts is a category this league does not describe;
+                a nought with minutes on it is a different man from one without. */}
+            {points
+              ? "Fantrax scored him, but did not say what for."
+              : minutes > 0
+                ? "Nothing has scored for him yet."
+                : "Nothing has scored for him yet — his minutes have not registered either."}
           </p>
         ) : (
           <ul className="cm-rows flex flex-col">

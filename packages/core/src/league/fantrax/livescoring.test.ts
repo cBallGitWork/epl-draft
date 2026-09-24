@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import recorded from "./__fixtures__/liveScoring.json";
 import played from "./__fixtures__/liveScoringPlayed.json";
 import unplayed from "./__fixtures__/liveScoringUnplayed.json";
+import bench from "./__fixtures__/liveScoringBench.json";
 import {
+  mapBenchPlayerPoints,
   mapLivePlayerPoints,
   mapLiveScores,
   mapProjectedPlayerPoints,
@@ -347,5 +349,35 @@ describe("mapProjectedPlayerPoints", () => {
       },
     };
     expect(mapProjectedPlayerPoints(both)[0]?.players).toEqual([{ fantraxId: "a", points: 5 }]);
+  });
+});
+
+describe("mapBenchPlayerPoints", () => {
+  // Rehearsal period 5, read 24 Sep 2026 with `playerViewType: "2"`: TEST2's
+  // eleven made 34 and two of his four reserves were priced, at 1 and 3.
+  const squad = () => mapBenchPlayerPoints(bench as RawLiveScoring)[0];
+
+  it("prices the reserves who played, and only them", () => {
+    expect(squad().teamId).toBe("pbxm9fgimshcpazf");
+    expect(squad().players.map((p) => [p.fantraxId, p.points])).toEqual([
+      ["0784p", 1],
+      ["0785j", 3],
+    ]);
+  });
+
+  it("carries what each reserve did alongside what it earned", () => {
+    const hackney = squad().players.find((p) => p.fantraxId === "0784p");
+    expect(hackney?.categories.length).toBeGreaterThan(0);
+    expect(hackney?.categories.every((c) => c.points !== 0)).toBe(true);
+  });
+
+  it("never adds a reserve to the team's total", () => {
+    expect(mapLiveScores(bench as RawLiveScoring)[0]?.points).toBe(34);
+    const eleven = mapLivePlayerPoints(bench as RawLiveScoring)[0]?.players ?? [];
+    expect(eleven.reduce((total, p) => total + p.points, 0)).toBe(34);
+  });
+
+  it("says nothing for a team whose bench Fantrax did not send", () => {
+    expect(mapBenchPlayerPoints(played as RawLiveScoring)).toEqual([]);
   });
 });

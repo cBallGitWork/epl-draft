@@ -145,8 +145,9 @@ The scoreline is `getLiveScoringStats` — Fantrax's own totals under Fantrax's 
 scoring, which we never recompute.
 
 Everything under a player is **two sources joined**: his fantasy points come from
-`getTeamRosterInfo`, and what he *did* — goals, assists, clean sheet, minutes —
-is **FPL's**, joined through the identity bridge.
+the same `getLiveScoringStats` payload, priced at his slot — reserves included
+since 24 Sep, uncounted — and what he *did* — goals, assists, clean sheet,
+minutes — is **FPL's**, joined through the identity bridge.
 
 **The provenance line came off the top of the screen** (Craig, 11 Sep 2026:
 *"remove A round already played… row"*). It was 44px of prose over a scoreline
@@ -156,6 +157,7 @@ be today's squads — so it is the Stats board's `Section` aside, where a reader
 asking where a number came from is standing. `wasFielded` still tells the two
 apart.
 
+*Closed: the points now come from `getLiveScoringStats`, which honours the period.*
 **`period` does not price the week, and this paragraph used to say it did.** It
 was probed on 19 Aug and `displayedPeriod` does echo, with `periodOppnentTeamIds`
 changing to match — so the opponent column moves. Re-probed on 22 Aug with real
@@ -180,10 +182,9 @@ only question is *why* he is on the number he is on.
   category that moved his total, largest contribution first, each carrying the
   count Fantrax states beside the points it paid — gains green and deductions
   red, DESIGN §3's direction pair — and the total under them. Every figure is
-  **Fantrax's**, under our league's own scoring, read from the same
-  `getTeamRosterInfo` call the pitch already made:
-  the FPTS view renders each category as the points it contributed and they sum
-  to the total exactly. Nothing is computed here — our own engine could only ever
+  **Fantrax's**, under our league's own scoring, read from the scoreboard's
+  own `getLiveScoringStats` payload, and they sum to the total exactly. A
+  reserve's card says he is on the bench and not counted. Nothing is computed here — our own engine could only ever
   have approximated the five categories FPL does not publish, and would have had
   to caveat every line.
 - Categories that scored him nothing are dropped, and so is games played, which
