@@ -1,5 +1,6 @@
 import { fullClubName, instantOf, normalizeName, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
-import type { ResolvedPlayer, RosteredPlayer, RosteredTeam } from "@epl/core";
+import type { ResolvedPlayer, RosteredPlayer, RosteredTeam, StoryFixture } from "@epl/core";
+import { roundTies } from "./round";
 import { INTEL_SEASON, readIntel } from "../intel";
 
 // The Team Sheet's facts, read off the intel export the sister repo writes.
@@ -151,25 +152,15 @@ export function presserSpoke(
   });
 }
 
-/** Who each club plays in the round the pressers PREVIEW, by FPL club code.
- *
- *  Not `snapshot.fixtures`: FPL keeps `is_current` on a round until the next
- *  DEADLINE, so between rounds that is football already played. */
+/** Who each club plays in the round the pressers preview, by FPL club code. Not `snapshot.fixtures`: FPL keeps
+ *  `is_current` on a round until the next deadline, so between rounds that is football already played. */
 export function presserFixtures(
   gameweek: number,
   clubs: ReadonlyMap<number, Club>,
   season: readonly Fixture[],
-): Map<number, { opponent: string; home: boolean; kickoff: string }> {
-  const out = new Map<number, { opponent: string; home: boolean; kickoff: string }>();
-  const byId = byClubId(clubs);
-  for (const fixture of season) {
-    if (fixture.gameweek !== gameweek) continue;
-    // Club ids are FPL's per-season ids, which is what `Club.id` carries —
-    // never the season-stable code the crest keys off.
-    const home = byId.get(fixture.homeClubId);
-    const away = byId.get(fixture.awayClubId);
-    const kickoff = fixture.kickoff;
-    if (home === undefined || away === undefined || kickoff === null) continue;
+): Map<number, StoryFixture> {
+  const out = new Map<number, StoryFixture>();
+  for (const { home, away, kickoff } of roundTies(gameweek, clubs, season)) {
     out.set(home.code, { opponent: fullClubName(away.name), home: true, kickoff });
     out.set(away.code, { opponent: fullClubName(home.name), home: false, kickoff });
   }

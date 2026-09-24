@@ -81,7 +81,7 @@ export function SideTab({
  *  man in an eleven that is not public yet; this is the other half of that, and
  *  building the map behind the gate makes the leak impossible rather than merely
  *  unexercised. */
-export function namesOf(roster: RosteredTeam | undefined): Map<string, string> {
+function namesOf(roster: RosteredTeam | undefined): Map<string, string> {
   const names = new Map<string, string>();
   for (const rostered of roster?.players ?? []) {
     names.set(rostered.slot.fantraxId, isResolved(rostered) ? playerName(rostered) : rostered.slot.fantraxId);
@@ -89,7 +89,7 @@ export function namesOf(roster: RosteredTeam | undefined): Map<string, string> {
   return names;
 }
 
-  /** What the four shared boards need of each side, in the URL's order.
+  /** What the shared boards need of each side, in the URL's order.
    *
    *  **Everything here is behind the gate that `shows` already applied.** A side
    *  whose eleven is not public has no `detail`, no priced breakdown and — the
@@ -111,8 +111,8 @@ export function sharedSides({
   arranged: Map<string, LineupDetail>;
   squads: Parameters<typeof teamDisplay>[0];
   mine: string | null;
-}): SharedSide[] {
-  const both = [pairing.team, pairing.opponent].map((team) => {
+}): [SharedSide, SharedSide] {
+  const one = (team: LeagueTeam): SharedSide => {
     const roster = rostered.get(team.teamId);
     const shown = roster !== undefined && shows(team);
     return {
@@ -129,8 +129,8 @@ export function sharedSides({
         />
       ),
     };
-  });
-  return both;
+  };
+  return [one(pairing.team), one(pairing.opponent)];
 }
 
 /** The withholding said ONCE and full width, because with both sides in one

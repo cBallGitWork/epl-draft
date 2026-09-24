@@ -1,8 +1,8 @@
 import { type Club, type Fixture, londonDayAndTime } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
 import { scoreSide } from "../components/football/scoreSide";
-import { MATCH } from "./routes";
 import { SMALL_CAPS } from "@/app/desk";
+import { matchHref } from "./match/[id]/matchRoutes";
 
 // One Premier League match, as Championship Manager's results row.
 //
@@ -54,7 +54,7 @@ export default function Match({
           <span className={`${SMALL_CAPS} text-faint`}>FT</span>
         ) : null
       }
-      href={`${MATCH}/${fixture.id}`}
+      href={matchHref(fixture.id, "overview")}
     />
   );
 }

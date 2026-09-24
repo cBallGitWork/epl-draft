@@ -1,5 +1,6 @@
 import {
   fixtureStakes,
+  roundSlot,
   tieState,
   type Club,
   type DeskState,
@@ -51,10 +52,7 @@ export function deskState(input: {
     lineups:
       input.xiGameweek === null
         ? null
-        : {
-            key: `predicted-xi:gw${input.xiGameweek}`,
-            slug: `gw${input.xiGameweek}-predicted-xi`,
-          },
+        : roundSlot("predicted-xi", input.xiGameweek),
     ahead: input.ahead,
     next: input.next,
     dealsInWindow: facts.business.length,

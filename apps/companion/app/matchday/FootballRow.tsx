@@ -1,6 +1,7 @@
 import { type Club, type Fixture, londonTime } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
 import { scoreSide } from "../components/football/scoreSide";
+import { matchHref } from "../prem/match/[id]/matchRoutes";
 
 /** The state beside the score. **Bigger inside the cell rather than in a tail
  *  column of its own**, which is what the measurement bought (21 Sep 2026, at
@@ -62,7 +63,7 @@ export default function FootballRow({
           <span className={`${CLOCK} text-faint`}>FT</span>
         ) : null
       }
-      href={`/prem/match/${fixture.id}`}
+      href={matchHref(fixture.id, "overview")}
     />
   );
 }

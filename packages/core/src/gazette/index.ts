@@ -2,11 +2,7 @@
 // and nothing when it can say nothing — CODE_RULES §5 names gazette section
 // builders as a place purity is not negotiable.
 //
-// The types NESTED inside these — a story's two sides, a column's sections and
-// ties, an eleven's lines, the brief's shape, a marked scorecard — are
-// deliberately not here. Nothing outside core names them: a caller reaches them
-// through the type that holds them, and exporting each one for the day somebody
-// might is the speculation §1 forbids. Later can add them.
+// A type nested inside these is exported only once something outside core names it.
 
 export { availability } from "./availability";
 export { nextDeadline } from "./deadline";
@@ -44,9 +40,9 @@ export { standingHeadlines } from "./briefs/standing";
 export { BANNED, banned } from "./banned";
 export { MAX_PAPER_STORIES, composePaper } from "./frontPage";
 export { isCovered, normalizeLedger, recordCoverage } from "./ledger";
-export { newsdesk } from "./newsdesk";
+export { newsdesk, roundSlot } from "./newsdesk";
 export { predictedLineups } from "./predictedXi";
-export type { StoryLineupMan, StoryLineupSide } from "./extras";
+export type { StoryFixture, StoryLineupMan, StoryLineupSide } from "./extras";
 export { bothSides, fixtureStakes } from "./relevance";
 export { tieState } from "./tieState";
 export type { Assignment, DeskState, DeskTie } from "./newsdesk";

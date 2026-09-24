@@ -2,7 +2,6 @@ import type { PoolRow } from "./pool";
 import { POOL, lastValue } from "./routes";
 import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
 import { figureOf } from "./figure";
-import { groupFor, type PoolGroupKey } from "./groups";
 import { byFigure } from "../components/league/order";
 
 // What the URL says the table should show. State lives in the address bar rather
@@ -23,20 +22,12 @@ import { byFigure } from "../components/league/order";
  *  where the two meet. */
 export interface PlayersSearchParams {
   compare?: string | string[];
-  /** Which plate of columns the board is on. **It used to mean something else
-   *  entirely** — this page was a CM leaderboard of one measure until 6 Sep
-   *  2026, and `group`/`cat` chose WHICH measure it ranked. That board is gone
-   *  and `cat` went with it (it had no reader left; found 10 Sep). The name is
-   *  reused rather than retired because a group of columns is what a reader
-   *  means by it, and an old shared link now lands on the whole board rather
-   *  than on an error. */
+  /** Which plate of columns the board is on. */
   group?: string | string[];
   q?: string | string[];
   pos?: string | string[];
   status?: string | string[];
-  /** How the board is expressed rather than what it lists — which columns are
-   *  on it, whether they are rated, and how much football a man must have
-   *  played to appear. */
+  /** Whether the figures are per 90 minutes. */
   per?: string | string[];
   club?: string | string[];
   /** Whether the filter drawer is open. URL state and not React state, so the
@@ -89,10 +80,6 @@ export function playersQuery(raw: PlayersSearchParams): PlayersQuery {
   };
 }
 
-/** Which plate the board is on. */
-export function activeGroup(query: PlayersQuery): PoolGroupKey {
-  return groupFor(query.group);
-}
 
 /** Whether the counts are drawn per ninety minutes.
  *
@@ -182,40 +169,15 @@ export function shownRows(
   });
 }
 
-/** This page again with part of the query changed. An undefined value drops the
- *  key, which is what makes every control below able to undo itself.
- *
- *  Every link on the table goes through here so that none of them can lose the
- *  others' state: a sort that forgot the filter, or a filter that forgot the
- *  search, would be a control that quietly does two things. */
-function href(query: PlayersQuery, changes: Partial<PlayersQuery>, route: string = POOL): string {
+/** A Data board again with part of the query changed; an undefined value drops the key, so every control can undo
+ *  itself. Every link goes through here so none loses the others' state. */
+export function boardHref(query: PlayersQuery, changes: Partial<PlayersQuery>, route: string = POOL): string {
   const next = new URLSearchParams();
   for (const [name, value] of Object.entries({ ...query, ...changes })) {
     if (value) next.set(name, value);
   }
   const search = next.toString();
   return search ? `${route}?${search}` : route;
-}
-
-/** The same board with one setting changed — the plate, the rate, the minutes
- *  floor.
- *
- *  **One exported builder rather than three**, because the three would differ
- *  only in which key they set and each would need its own "and undefined turns
- *  it off" sentence. `filterHref` below stays its own function for the opposite
- *  reason: it does not set a value, it toggles one INSIDE a comma list, which is
- *  a different operation that happens to produce a link.
- *
- *  Passing `undefined` drops the key, which is what lets every control here undo
- *  itself: `{ per: undefined }` is the per-90 toggle turning off and
- *  `{ mins: undefined }` is the minutes floor going back to the whole pool. */
-export function boardHref(query: PlayersQuery, changes: Partial<PlayersQuery>, route?: string): string {
-  return href(query, changes, route);
-}
-
-/** The same list, showing every row. */
-export function showAllHref(query: PlayersQuery): string {
-  return href(query, { all: "1" });
 }
 
 /** The link that sorts by a column, or reverses it if it is already the one.
@@ -226,7 +188,7 @@ export function sortHref(query: PlayersQuery, key: string): string {
   const current = activeSort(query);
   const descending =
     current.key === key ? !current.descending : !(columnFor(key)?.ascending ?? true);
-  return href(query, { sort: key, dir: descending ? "desc" : "asc" });
+  return boardHref(query, { sort: key, dir: descending ? "desc" : "asc" });
 }
 
 /** The values chosen for one filter, in the order they were chosen.
@@ -255,5 +217,5 @@ export function isChosen(query: PlayersQuery, key: "status" | "pos", value: stri
 export function filterHref(query: PlayersQuery, key: "status" | "pos", value: string, route?: string): string {
   const on = chosen(query[key]);
   const next = on.includes(value) ? on.filter((entry) => entry !== value) : [...on, value];
-  return href(query, { [key]: next.length > 0 ? next.join(",") : undefined }, route);
+  return boardHref(query, { [key]: next.length > 0 ? next.join(",") : undefined }, route);
 }

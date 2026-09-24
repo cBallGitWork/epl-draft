@@ -33,10 +33,9 @@ export {
   bandCategories,
   breakdownOf,
   columnLabel,
-  compareCategories,
   liveBreakdown,
 } from "./breakdown";
-export type { BreakdownLine, CategoryBand, CategoryMan, CategoryPair } from "./breakdown";
+export type { BreakdownLine, CategoryBand, CategoryMan } from "./breakdown";
 
 export { captureStaleness } from "./staleness";
 
@@ -48,7 +47,7 @@ export type { SortKey } from "./standingsOrder";
 export { pedigreeOf } from "./pedigree";
 export type { Pedigree } from "./pedigree";
 
-export { firstKickoff, locksAt, periodGameweeks } from "./calendar";
+export { firstKickoff, locksAt, openingGameweek, periodGameweeks } from "./calendar";
 export type { GameweekKickoff } from "./calendar";
 
 export { lastLockedPeriod, periodToRead, planningPeriod, rosterDisplay } from "./visibility";

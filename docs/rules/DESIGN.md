@@ -942,7 +942,7 @@ therefore stands rather than being rewritten. A sticky first column is the cost.
 
 *Still the answer for `/players`, and 5 Sep 2026 gave it a general rule that says
 why — see §2's table geometry below. Both are built: the name column is frozen
-(`STICKY_LEAD` in `desk.ts`) and the sideways scroll carries CM's own bar.*
+(`PINNED_NAME` in `desk.ts`) and the sideways scroll carries CM's own bar.*
 
 **The live desk splits.** Mobile `/matchday` rows expand in place from data
 already on the page; the `≥lg` wall at `/matchday/desk` keeps the no-tap rule

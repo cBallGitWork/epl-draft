@@ -34,7 +34,7 @@ export default async function PlannerPage({
 
   if (intelStrength.size === 0 || gameweeks.length === 0) {
     return (
-      <ScoutShell current="planner" rows={0}>
+      <ScoutShell current="planner">
         <Nothing title={gameweeks.length === 0 ? "No fixtures left" : "No strength ratings yet"}>
           {gameweeks.length === 0
             ? "The season has no matches left to plan for."
@@ -47,7 +47,7 @@ export default async function PlannerPage({
   const clubs = new Map(snapshot.clubs.map((club) => [club.code, club]));
 
   return (
-    <ScoutShell current="planner" rows={0}>
+    <ScoutShell current="planner">
       <TabStrip
         label="Planner views"
         tabs={VIEWS.map((entry) => ({ ...entry, href: `${PLANNER}?view=${entry.key}` }))}

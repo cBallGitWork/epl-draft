@@ -1,5 +1,5 @@
 import Nothing from "../../../../components/shell/Nothing";
-import FootSwitcher from "../../../../components/shell/FootSwitcher";
+import TabStrip from "../../../../components/shell/TabStrip";
 import MatchShell from "../Shell";
 import MatchStats from "../MatchStats";
 import ClubStats from "../ClubStats";
@@ -51,7 +51,7 @@ export default async function MatchStatsPage({
 function Foot({ match, view }: { match: Match; view: StatsView }) {
   const id = match.fixture.id;
   return (
-    <FootSwitcher
+    <TabStrip
       label="Stats views"
       tabs={[
         { key: "home", label: match.home?.name ?? "Home", href: viewHref(id, "home") },

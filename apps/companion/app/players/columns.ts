@@ -128,9 +128,7 @@ function denominator(key: string, label: string, title: string): PoolColumn {
  *  **What went with them: three sorts.** `Pos`, `Club` and `Sta` were sortable
  *  and are not now. Position and status are both filters in the drawer, which is
  *  the better control for them anyway — you want defenders, not a table
- *  beginning at D. Club has no filter yet, and grouping the board by club is the
- *  one thing this removes and nothing replaces. Recorded rather than assumed
- *  harmless. */
+ *  beginning at D. Club is a filter too. */
 export const COLUMNS: PoolColumn[] = [
   {
     key: "name",

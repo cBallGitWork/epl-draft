@@ -4,6 +4,7 @@ import Section from "../../components/shell/Section";
 import { ROW_RULE, SCROLL } from "@/app/desk";
 import type { MatchRow } from "./matchRows";
 import { DASH } from "@epl/core";
+import { matchHref } from "../../prem/match/[id]/matchRoutes";
 
 // His season, match by match, with both accounts of every match on one line and
 // the sum of them at the foot.
@@ -224,7 +225,7 @@ function Score({ row }: { row: MatchRow["fpl"] }) {
           clickable. Justified right so the figure keeps its column while the
           target grows around it. */}
       <Link
-        href={`/prem/match/${match.fixtureId}`}
+        href={matchHref(match.fixtureId, "overview")}
         className="flex min-h-11 items-center justify-end hover:underline lg:min-h-9"
       >
         <span className="sr-only">{`${result} `}</span>

@@ -121,28 +121,6 @@ export function liveBreakdown(
     .sort((a, b) => b.points - a.points);
 }
 
-/** One scoring category, as the two sides of a head-to-head answered it.
- *
- *  A row of the board that explains a scoreline: not who is in the eleven, which
- *  the pitch and the list already say, but which of the eleven categories the
- *  margin came out of. */
-export interface CategoryPair {
-  code: string;
-  name: string;
-  /** The side the URL named, then his opponent. Signed, as `BreakdownLine` is —
-   *  cards and goals against arrive negative and stay that way.
-   *
-   *  **Null where that side registered the category at all, which is not nought**
-   *  (DESIGN §7). The row exists because the OTHER side registered it, and
-   *  filling this half with a 0 is a claim the payload never made: `liveBreakdown`
-   *  has already dropped a category a man did not register, so what reaches here
-   *  is silence and not a counted nothing. It shipped as `?? 0` for an hour and
-   *  `register-warden` caught it — the same commit argued the rule at board level
-   *  and broke it per row. */
-  mine: number | null;
-  theirs: number | null;
-}
-
 /** One man's part in one category. **No name**: this layer holds Fantrax's
  *  `fantraxId` and nothing else about a person, and the roster that can put a
  *  name to him lives in the app. A core that knew names would be a core that
@@ -153,13 +131,7 @@ export interface CategoryMan {
   points: number;
 }
 
-/** One scoring category with the men on each side who registered it.
- *
- *  `CategoryPair` is this band SUMMED — the same object read two ways, which is
- *  why `compareCategories` below is a projection of `bandCategories` rather than
- *  a second walk of the same data. A board of totals and a board of the men
- *  behind them can then never disagree about which categories exist or in what
- *  order. */
+/** One scoring category with the men on each side who registered it. */
 export interface CategoryBand {
   code: string;
   name: string;
@@ -167,8 +139,7 @@ export interface CategoryBand {
    *
    *  **EMPTY where that side registered nothing, and empty is the absence.** The
    *  band is on the board because the OTHER side registered it, and a side of
-   *  noughts is a claim the payload never made — the same rule `CategoryPair.mine`
-   *  states one level up, where `[]` becomes `null` rather than `0`. */
+   *  noughts is a claim the payload never made. */
   mine: CategoryMan[];
   theirs: CategoryMan[];
 }
@@ -203,40 +174,10 @@ function total(men: readonly CategoryMan[]): number | null {
   return men.length === 0 ? null : men.reduce((sum, man) => sum + man.points, 0);
 }
 
-/** Both squads' scoring, category by category, in one list of rows.
- *
- *  **The union of the two, never one side's list.** A category only his keeper
- *  registered is a row with a dash on your half — which is the honest shape, and
- *  the reason this is a join rather than two independent boards: a row missing
- *  from one side reads as nought when the sides are drawn apart, and a nought is
- *  a claim the payload did not make.
- *
- *  Largest combined magnitude first, so the categories that decided it are at the
- *  top and the deductions collect at the foot — `liveBreakdown`'s own order, one
- *  level up. Ties break on the code so the board does not reshuffle between two
- *  renders of the same numbers.
- *
- *  Pure, and it has to be: this is the arithmetic under a number a manager will
- *  argue about. Fantrax's figures go in and a sum of them comes out — which makes
- *  the total OURS, and is why no column of it may be headed `FPts`. */
-export function compareCategories(
-  mine: Record<string, readonly BreakdownLine[]>,
-  theirs: Record<string, readonly BreakdownLine[]>,
-): CategoryPair[] {
-  return bandCategories(mine, theirs).map((band) => ({
-    code: band.code,
-    name: band.name,
-    mine: total(band.mine),
-    theirs: total(band.theirs),
-  }));
-}
-
 /** Both squads' scoring, category by category, **with the men behind each**.
  *
- *  Everything `compareCategories` says about the union, the order and the
- *  absence holds here unchanged — it is derived from this, so it could not fail
- *  to. What this adds is the workings: which of his eleven put the 9 on the
- *  board, not just that it was 9.
+ *  **The union of the two, never one side's list**: a category only his keeper registered is a band with an empty
+ *  half, which is the honest shape. Largest combined magnitude first, deductions at the foot; ties on the code.
  *
  *  **Men in a band are ordered by points, largest first**, which is
  *  `liveBreakdown`'s own order one level up. Ties break on `fantraxId` — which is

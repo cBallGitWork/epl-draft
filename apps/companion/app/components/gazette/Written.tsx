@@ -86,17 +86,12 @@ export default function Written({
 
       <span className="mt-3 block h-px w-6 bg-ink" />
 
-      {/* When it was filed — and, once the editions carry names, which edition
-          it went out under. Not decoration: every other figure on this page is
-          thirty seconds old and this could be days old and still be the current
-          edition. A reader is entitled to know which he is reading. */}
-      {/* A columnist's own card, as the BBC ran his: the photograph, the name, the billing. It
-          carries the credit, so the dateline under it does not repeat it. */}
+      {/* When and under which edition it was filed; a columnist's own card carries his credit instead. */}
       <Dateline story={story} turn={false} byline={columnist === null} className="pt-2.5" />
       {columnist !== null ? (
         <div className="flex items-center gap-3 pt-3">
           <ColumnistPhoto photo={columnist.photo} rank="card" />
-          <p className="flex flex-col gap-0.5 font-sans uppercase tracking-[0.12em]">
+          <p className="flex flex-col gap-0.5 font-sans uppercase tracking-[0.16em]">
             <span className="text-sm font-black text-ink">{story.reporter}</span>
             <span className="text-2xs text-muted">{columnist.billing}</span>
           </p>

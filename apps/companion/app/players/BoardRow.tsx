@@ -2,15 +2,15 @@ import Image from "next/image";
 import type { ReactNode } from "react";
 import { DASH, crestForShortName } from "@epl/core";
 import { positionsLabel } from "../positions";
-import { LABEL, ROW_FIGURE, ROW_NAME } from "@/app/desk";
+import { LABEL, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_NAME } from "@/app/desk";
 
 // What every Data board's row shares: the pinned lead (tile, crest, name, position) and a figure's cell.
 
 /** The tile is the desk's; the phone carries position on the name's second line. */
-export const PIN_TILE = "hidden lg:table-cell sticky left-0 z-10";
+export const PIN_TILE = `hidden lg:table-cell ${PINNED_TILE}`;
 
 /** The lead stays put while the figures scroll under it, starting where the desk's tile ends. */
-export const PIN_NAME = "sticky left-0 z-10 border-r border-line bg-surface p-0 lg:left-14";
+export const PIN_NAME = `${PINNED_NAME} left-0 p-0 lg:left-14`;
 
 /** The lead's width, for its link. */
 export const LEAD_WIDTH = "w-34 px-1.5 lg:w-64";

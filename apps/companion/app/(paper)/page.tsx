@@ -5,14 +5,12 @@ import Teaser from "../components/gazette/Teaser";
 import Brief from "../components/gazette/Brief";
 import Scoreboard from "../components/gazette/Scoreboard";
 import Drawing from "../components/gazette/Drawing";
-import Face from "../components/gazette/Face";
 import Splash from "../components/gazette/Splash";
 import Deals from "../components/gazette/Deals";
 import Doubts from "../components/gazette/Doubts";
 import Lead from "../components/gazette/Stories";
 import Picture from "../components/gazette/Picture";
-import ColumnistPhoto from "../components/gazette/ColumnistPhoto";
-import { columnistOf, type Columnist } from "../config";
+import StoryFace, { hasPicture } from "../components/gazette/StoryFace";
 import Masthead from "../components/gazette/Masthead";
 import TeamOfTheWeek from "../components/gazette/TeamOfTheWeek";
 import { HEADLINES_SHOWN, SHOULDER_STORIES } from "../config";
@@ -61,7 +59,7 @@ export default async function GazettePage() {
   // Pictures on the shoulders only when every shoulder has one. See `Teaser`:
   // twin seconds that start their headlines at different heights read as a
   // fault, not as a rank.
-  const shouldersPictured = shoulders.every((story) => story.face !== null || columnistOf(story) !== null);
+  const shouldersPictured = shoulders.every(hasPicture);
   const briefs = paper.filed.slice(SHOULDER_STORIES + 1, HEADLINES_SHOWN + 1);
 
   return (
@@ -128,20 +126,12 @@ export default async function GazettePage() {
           is where an article goes. */}
           {paper.filed[0] ? (
             <>
-              {/* The drawing when the lead has one, and the desk's own
-                  typographic band when it does not. Never both: a paper runs
-                  one picture over one splash. */}
-              {/* Three pictures in order of how much we know: CI's drawing when
-                  it made one, then the splash's own man, then the desk's
-                  typographic band. Never two — a paper runs one picture over
-                  one splash. The face outranks the band because a scorer is a
-                  photograph and a scoreline set large is a stand-in for one. */}
+              {/* One picture over the splash, in order of how much we know: the drawing, the story's own
+                  picture, then the desk's typographic band. */}
               {paper.filed[0].image !== null ? (
                 <Drawing story={paper.filed[0]} />
-              ) : paper.filed[0].face ? (
-                <Face face={paper.filed[0].face} clubs={clubs} rank="splash" />
-              ) : columnistOf(paper.filed[0]) !== null ? (
-                <ColumnistPhoto photo={(columnistOf(paper.filed[0]) as Columnist).photo} rank="splash" />
+              ) : hasPicture(paper.filed[0]) ? (
+                <StoryFace story={paper.filed[0]} clubs={clubs} rank="splash" />
               ) : paper.stories[0] ? (
                 <Picture lead={paper.stories[0]} who={who} clubs={clubs} />
               ) : null}

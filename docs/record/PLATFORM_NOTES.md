@@ -85,9 +85,9 @@ capture season-specific tradeoffs.
 
 ## A screen's sub-views switch from its foot, not a second top strip — decided 24 Sep 2026
 
-- **`components/shell/FootSwitcher.tsx`**: `FootFrame` is a viewport-tall column whose foot sits at the bottom
-  of the screen when the body is short (lifted from `MatchShell`); `FootSwitcher` is the linked plate row that
-  goes in it. Craig: *"footswitcher as shared code to be used on other pages… it stops rows of blue buttons"*.
+- **`components/shell/FootFrame.tsx`**: a viewport-tall column whose foot sits at the bottom of the screen when
+  the body is short (lifted from `MatchShell`), and in view on a desk when it is long; the foot is a `TabStrip`.
+  (`FootSwitcher`, a wrapper that only forwarded to `TabStrip`, went in the day's refactor.) Craig: *"footswitcher as shared code to be used on other pages… it stops rows of blue buttons"*.
 - The top of a screen keeps one strip of blue plates: its own views. Anything that picks a sub-view of one of
   those (a club's stats, a manager's board, Fantasy) goes in the foot. First users: the Prem match (byte-identical
   DOM on 14 route×width pairs) and the head-to-head's Stats.

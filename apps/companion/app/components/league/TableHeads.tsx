@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { HEAD_CELL } from "@/app/desk";
+import { TILE_WIDTH } from "./PositionTile";
 
 // The bevelled head strip both league tables print.
 //
@@ -41,12 +43,12 @@ export function HeadRow({ children }: { children: ReactNode }) {
  *  bevelled button inset by cell padding is a button with a gap around it, and
  *  the strip stops reading as one object. */
 export function Head({
-  width,
+  width = "",
   title,
   sorted,
   children,
 }: {
-  width: string;
+  width?: string;
   title?: string | undefined;
   /** Set only by a sortable table, and only on the column in force. */
   sorted?: "ascending" | "descending" | undefined;
@@ -115,7 +117,7 @@ const JUSTIFY = { left: "justify-start", center: "justify-center", right: "justi
  *  `gap-0.5` is unconditional and costs a head with no arrow nothing — a gap
  *  needs two children to appear. */
 export function SortHead({
-  width,
+  width = "",
   title,
   href,
   label,
@@ -125,7 +127,7 @@ export function SortHead({
   mute = false,
   compact = false,
 }: {
-  width: string;
+  width?: string;
   title?: string | undefined;
   href: string;
   label: string;
@@ -155,7 +157,7 @@ export function SortHead({
         }`}
       >
         {mute ? <span className={MUTE}>{label}</span> : label}
-        {arrow && sorted !== undefined ? <Arrow down={sorted === "descending"} /> : null}
+        {arrow && sorted !== undefined ? <SortArrow down={sorted === "descending"} /> : null}
       </Link>
     </Head>
   );
@@ -163,11 +165,31 @@ export function SortHead({
 
 const COMPACT = "h-6 min-w-6 px-0.5 lg:h-7 lg:px-1.5";
 
-function Arrow({ down }: { down: boolean }) {
+/** A `SortHead`'s `sorted`: which way the table runs by this column, or undefined when another is in force. */
+export function sortedAs(here: boolean, descending: boolean): "ascending" | "descending" | undefined {
+  return here ? (descending ? "descending" : "ascending") : undefined;
+}
+
+/** The order's direction beside a head's word. */
+export function SortArrow({ down, className = "" }: { down: boolean; className?: string }) {
   return (
-    <span aria-hidden className="text-[0.5rem] leading-none">
+    <span aria-hidden className={`text-[0.5rem] leading-none ${className}`}>
       {down ? "▼" : "▲"}
     </span>
+  );
+}
+
+/** A pinned lead's two heads, the Fantrax position tile's and the player's: bare, as CM heads only its figures. */
+export function LeadHeads({ tile, name }: { tile: string; name: string }) {
+  return (
+    <>
+      <th scope="col" className={`${HEAD_CELL} ${tile} ${TILE_WIDTH} bg-surface`}>
+        <span className={MUTE}>Fantrax position</span>
+      </th>
+      <th scope="col" className={`${HEAD_CELL} ${name}`}>
+        <span className={MUTE}>Player</span>
+      </th>
+    </>
   );
 }
 
@@ -179,7 +201,7 @@ function Arrow({ down }: { down: boolean }) {
  *  holds the column open and keeps the strip's height. */
 export function NameHead({ label }: { label: string }) {
   return (
-    <Head width="">
+    <Head>
       <span className="flex h-7 items-center px-1.5">
         <span className={MUTE}>{label}</span>
       </span>

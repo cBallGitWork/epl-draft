@@ -3,10 +3,11 @@ import { clubIndex } from "../../../components/football/clubIndex";
 import type { Club, PlManMatch, PlTeamSheet, SquadPlayerDetail } from "@epl/core";
 import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
 import Section from "../../../components/shell/Section";
-import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
+import PositionTile from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
-import { MUTE, SortHead } from "../../../components/league/TableHeads";
-import { BOARD, EDGE_FADE, HEAD_CELL, ROW_FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { LeadHeads, sortedAs, SortHead } from "../../../components/league/TableHeads";
+import { BOARD, PINNED_NAME, PINNED_TILE, ROW_FIGURE, ROW_NAME, ROW_RULE } from "@/app/desk";
+import ScrollBoard from "../../../components/league/ScrollBoard";
 import { MaybeCard } from "./PlayerCardButton";
 import SubNote from "./SubNote";
 import { COLUMNS, STANDOUT, sorted, type StatLine, type StatSort } from "./statColumns";
@@ -78,32 +79,18 @@ export default function ClubStats({
 
   return (
     <Section>
-      {/* Opaque, so the pinned name hides the figures scrolling under it; CM's bar says there is more to the right,
-          and on a phone a fade at the right edge says so before the bar is in view (Craig, 23 Sep 2026). */}
-      <div className="relative">
-      <span aria-hidden className={EDGE_FADE} />
-      <div
-        className={`${SCROLL} cm-scroll cm-index-scoped bg-surface`}
-        style={clubIndex(club)}
-      >
+      <ScrollBoard className="cm-index-scoped" style={clubIndex(club)}>
         <table className={BOARD}>
           <thead>
             <tr>
-              {/* No plate over the tile and the name — CM's own board heads only its figures. */}
-              <th className={`${HEAD_CELL} ${PIN_TILE} ${TILE_WIDTH} bg-surface`}>
-                <span className={MUTE}>Fantrax position</span>
-              </th>
-              <th className={`${HEAD_CELL} ${PIN_NAME} ${NAME_WIDTH}`}>
-                <span className={MUTE}>Player</span>
-              </th>
+              <LeadHeads tile={PINNED_TILE} name={`${PIN_NAME} ${NAME_WIDTH}`} />
               {COLUMNS.map((column) => (
                 <SortHead
                   key={column.head}
-                  width=""
                   title={column.title}
                   href={statsHref(match.fixture.id, side, column.head, sort, descending)}
                   label={column.head}
-                  sorted={column.head === sort ? (descending ? "descending" : "ascending") : undefined}
+                  sorted={sortedAs(column.head === sort, descending)}
                 />
               ))}
             </tr>
@@ -122,8 +109,7 @@ export default function ClubStats({
             ))}
           </tbody>
         </table>
-      </div>
-      </div>
+      </ScrollBoard>
     </Section>
   );
 }
@@ -154,13 +140,13 @@ function StatRow({
         <span className="hidden lg:inline">{man.name}</span>
       </span>
       {man.captain ? <span className="shrink-0 text-2xs text-faint">(c)</span> : null}
-      <SubNote did={did} hurt={hurt} className="hidden lg:inline" />
+      <SubNote onAt={did?.onAt} offAt={did?.offAt} hurt={hurt} className="hidden lg:inline" />
     </>
   );
 
   return (
     <tr className={`${ROW_RULE} ${finished ? "" : "cm-out"}`} {...MATCH_ROW}>
-      <PositionTile positions={positions} cell className={PIN_TILE} />
+      <PositionTile positions={positions} cell className={PINNED_TILE} />
       <td className={`p-0 ${PIN_NAME} ${NAME_WIDTH}`}>
         {/* His card, not his page — every name on a match screen opens the same card (Craig, 23 Sep 2026). */}
         <MaybeCard player={card} className={`${ROW_LINK} ${PHONE_ROW} w-full gap-1.5 px-1.5 text-left`}>
@@ -195,8 +181,7 @@ const FIGURE_CELL = `numeric px-1.5 text-center ${ROW_FIGURE}`;
 const PHONE_ROW = "max-lg:min-h-9";
 
 /** The tile and the name stay put while the measures scroll under them; the name starts where `TILE_WIDTH` ends. */
-const PIN_TILE = "sticky left-0 z-10";
-const PIN_NAME = "sticky left-10 z-10 border-r border-line bg-surface lg:left-14";
+const PIN_NAME = `${PINNED_NAME} left-10 lg:left-14`;
 
 /** About four measures in view beside the name at 390; the sub note joins it on a desk. */
 const NAME_WIDTH = "w-32 lg:w-72";

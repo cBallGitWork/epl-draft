@@ -1,11 +1,12 @@
 import type { PoolRow } from "./pool";
 import { type PoolColumn } from "./columns";
-import { MUTE, SortHead } from "../components/league/TableHeads";
-import PositionTile, { TILE_WIDTH } from "../components/league/PositionTile";
+import { LeadHeads, sortedAs, SortHead } from "../components/league/TableHeads";
+import PositionTile from "../components/league/PositionTile";
 import type { StandoutCut } from "../components/league/standout";
 import { activeSort, sortHref } from "./query";
 import type { PlayersQuery } from "./query";
-import { BOARD, EDGE_FADE, HEAD_CELL, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, ROW_RULE } from "@/app/desk";
+import ScrollBoard from "../components/league/ScrollBoard";
 import Cell, { Lead } from "./Cell";
 import { PIN_NAME, PIN_TILE } from "./BoardRow";
 
@@ -39,53 +40,42 @@ export default function PlayerTable({
   const current = activeSort(query);
   const figures = columns.filter((column) => column.key !== "name");
   return (
-    // Opaque, so the pinned lead hides the figures under it; a fade says there is more to the right.
-    <div className="relative">
-      <span aria-hidden className={EDGE_FADE} />
-      <div className={`cm-scroll bg-surface ${SCROLL}`}>
-        <table className={BOARD}>
-          <thead>
-            <tr className="text-2xs">
-              {/* CM heads its figures only: the tile and the name carry no plate. */}
-              <th scope="col" className={`${HEAD_CELL} ${PIN_TILE} ${TILE_WIDTH} bg-surface`}>
-                <span className={MUTE}>Fantrax position</span>
-              </th>
-              <th scope="col" className={`${HEAD_CELL} ${PIN_NAME}`}>
-                <span className={MUTE}>Player</span>
-              </th>
+    <ScrollBoard>
+      <table className={BOARD}>
+        <thead>
+          <tr className="text-2xs">
+            <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
+            {figures.map((column) => (
+              <SortHead
+                key={column.key}
+                compact
+                title={column.title}
+                href={sortHref(query, column.key)}
+                label={column.label}
+                sorted={sortedAs(current.key === column.key, current.descending)}
+              />
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.entry.player.fantraxId} className={`${ROW_RULE} hover:bg-raised`}>
+              <PositionTile positions={row.entry.eligiblePositions} cell className={PIN_TILE} />
+              <Lead row={row} query={query} teamNames={teamNames} reader={reader} className={PIN_NAME} />
               {figures.map((column) => (
-                <SortHead
+                <Cell
                   key={column.key}
-                  width=""
-                  compact
-                  title={column.title}
-                  href={sortHref(query, column.key)}
-                  label={column.label}
-                  sorted={current.key === column.key ? (current.descending ? "descending" : "ascending") : undefined}
+                  column={column}
+                  row={row}
+                  stats={raw.get(row.entry.player.fantraxId)}
+                  rated={rated}
+                  cut={cuts.get(column.key)}
                 />
               ))}
             </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.entry.player.fantraxId} className={`${ROW_RULE} hover:bg-raised`}>
-                <PositionTile positions={row.entry.eligiblePositions} cell className={PIN_TILE} />
-                <Lead row={row} query={query} teamNames={teamNames} reader={reader} className={PIN_NAME} />
-                {figures.map((column) => (
-                  <Cell
-                    key={column.key}
-                    column={column}
-                    row={row}
-                    stats={raw.get(row.entry.player.fantraxId)}
-                    rated={rated}
-                    cut={cuts.get(column.key)}
-                  />
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          ))}
+        </tbody>
+      </table>
+    </ScrollBoard>
   );
 }

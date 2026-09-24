@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { DASH, gameweekSpan } from "@epl/core";
-import PositionTile, { TILE_WIDTH } from "../../components/league/PositionTile";
-import { MUTE, SortHead } from "../../components/league/TableHeads";
+import PositionTile from "../../components/league/PositionTile";
+import { LeadHeads, sortedAs, SortHead } from "../../components/league/TableHeads";
 import { ROW_LINK } from "../../components/league/TableCells";
-import { BOARD, EDGE_FADE, HEAD_CELL, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, ROW_RULE } from "@/app/desk";
+import ScrollBoard from "../../components/league/ScrollBoard";
 import { FIGURE, LEAD_WIDTH, LeadFace, PIN_NAME, PIN_TILE } from "../BoardRow";
 import { standoutInk } from "../../components/league/standout";
 import { cutsFor } from "../standout";
@@ -43,58 +44,49 @@ export default function ProjectionBoard({
   );
 
   return (
-    <div className="relative">
-      <span aria-hidden className={EDGE_FADE} />
-      <div className={`cm-scroll bg-surface ${SCROLL}`}>
-        <table className={BOARD}>
-          <thead>
-            <tr className="text-2xs">
-              <th scope="col" className={`${HEAD_CELL} ${PIN_TILE} ${TILE_WIDTH} bg-surface`}>
-                <span className={MUTE}>Fantrax position</span>
-              </th>
-              <th scope="col" className={`${HEAD_CELL} ${PIN_NAME}`}>
-                <span className={MUTE}>Player</span>
-              </th>
-              {heads.map((head) => (
-                <SortHead
-                  key={head.key}
-                  width=""
-                  compact
-                  title={head.title}
-                  href={href(head.key, head.key === sort ? !descending : true)}
-                  label={head.label}
-                  sorted={head.key === sort ? (descending ? "descending" : "ascending") : undefined}
-                />
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row) => (
-              <tr key={row.code} className={`${ROW_RULE} hover:bg-raised`}>
-                <PositionTile positions={row.positions} cell className={PIN_TILE} />
-                <td className={PIN_NAME}>
-                  <Lead row={row} />
-                </td>
-                {heads.map((head) => {
-                  const figure = projectionFigure(row, head.key, gameweeks);
-                  const ink =
-                    figure === null || figure === 0
-                      ? "text-faint"
-                      : head.key === "xmins"
-                        ? ""
-                        : standoutInk(figure, cuts.get(head.key), "high");
-                  return (
-                    <td key={head.key} className={`${FIGURE} ${head.key === "tot" ? "font-bold" : ""} ${ink}`}>
-                      {figure === null ? DASH : head.key === "xmins" ? figure : figure.toFixed(1)}
-                    </td>
-                  );
-                })}
-              </tr>
+    <ScrollBoard>
+      <table className={BOARD}>
+        <thead>
+          <tr className="text-2xs">
+            <LeadHeads tile={PIN_TILE} name={PIN_NAME} />
+            {heads.map((head) => (
+              <SortHead
+                key={head.key}
+                compact
+                title={head.title}
+                href={href(head.key, head.key === sort ? !descending : true)}
+                label={head.label}
+                sorted={sortedAs(head.key === sort, descending)}
+              />
             ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={row.code} className={`${ROW_RULE} hover:bg-raised`}>
+              <PositionTile positions={row.positions} cell className={PIN_TILE} />
+              <td className={PIN_NAME}>
+                <Lead row={row} />
+              </td>
+              {heads.map((head) => {
+                const figure = projectionFigure(row, head.key, gameweeks);
+                const ink =
+                  figure === null || figure === 0
+                    ? "text-faint"
+                    : head.key === "xmins"
+                      ? ""
+                      : standoutInk(figure, cuts.get(head.key), "high");
+                return (
+                  <td key={head.key} className={`${FIGURE} ${head.key === "tot" ? "font-bold" : ""} ${ink}`}>
+                    {figure === null ? DASH : head.key === "xmins" ? figure : figure.toFixed(1)}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </ScrollBoard>
   );
 }
 

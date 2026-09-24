@@ -1,4 +1,4 @@
-import ScoutShell from "./Shell";
+import ScoutShell, { POOL_ROWS } from "./Shell";
 import Skeleton from "../components/shell/Skeleton";
 import { COLUMNS } from "./columns";
 import { POOL_GROUPS } from "./groups";
@@ -7,34 +7,12 @@ import { PLATE, PRESSABLE } from "./BoardControls";
 import { SCROLL } from "@/app/desk";
 import { MUTE } from "../components/league/TableHeads";
 
-// The pool, waiting on Fantrax's 533 KB of stats.
-//
-// `ScoutShell` is the real one, so the bar, the caption and the panel are on
-// screen and working before a row exists — the same rule `league/loading` sets,
-// and the reason this route stopped drawing a header of its own.
-//
-// The search box is real and works from the first frame: it is a GET form to
-// this same route, so a reader who came here to find one player can type his
-// name before the other six hundred have arrived. The status and position chips
-// are the league's own vocabulary, read off the pool, so those are blocks.
+// The pool, waiting on Fantrax's stats: the real shell and the real control row, so nothing jumps when it lands.
 
 export default function Loading() {
   return (
-    // **No `sub`.** The count-and-season line came off the real header on
-    // 10 Sep 2026, and a skeleton holding a bar open for something that will
-    // never arrive is a layout that jumps when the answer lands — which is the
-    // one failure a skeleton exists to prevent.
-    <ScoutShell>
-      {/* **The real control row, at the real sizes.** This drew its own form
-          with `BUTTON` on the submit and three bevels of arbitrary width where
-          the stat plates go, so the frame that loaded described a different
-          screen from the one that arrived: a taller `Find`, three plates instead
-          of six, and no `Filter` at all. Every measurement here now comes from
-          the same recipes the board uses, so the two cannot drift again.
-
-          The search box is real and works from the first frame — a GET form to
-          this same route, so a reader who came to find one player can type his
-          name before the other six hundred have arrived. */}
+    <ScoutShell rows={POOL_ROWS}>
+      {/* The real control row at the real sizes; the search box works from the first frame. */}
       <div className="flex flex-wrap items-center gap-1.5">
         <form aria-busy action={POOL} className="flex min-w-0 flex-1 gap-1.5 lg:w-44 lg:flex-none xl:w-64">
           <input

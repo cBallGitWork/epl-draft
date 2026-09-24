@@ -1,10 +1,11 @@
 import Link from "next/link";
 import type { Club, Fixture } from "@epl/core";
 import { COMPETITION_NAME, londonDayAndDate, londonTime, DASH } from "@epl/core";
-import { CLUB, MATCH } from "../../routes";
+import { CLUB } from "../../routes";
 import { BOARD, SCROLL, ROW_HOVER } from "@/app/desk";
 import Absent from "@/app/components/shell/Absent";
 import ClubLabel from "@/app/components/football/ClubLabel";
+import { matchHref } from "../../match/[id]/matchRoutes";
 
 // One club's season, played and to come, in the order it runs.
 //
@@ -94,7 +95,7 @@ export default function Run({
                     a running score reads as a final one without it. */}
                 <td className="numeric w-14 whitespace-nowrap px-1.5 text-center text-sm font-bold">
                   <Link
-                    href={`${MATCH}/${fixture.id}`}
+                    href={matchHref(fixture.id, "overview")}
                     className="cm-row flex min-h-11 items-center justify-center hover:underline"
                   >
                     {fixture.status === "live" ? (

@@ -72,7 +72,7 @@ function Side({
             <Head width="w-3">
               <span className={MUTE}>Card</span>
             </Head>
-            <Head width="">
+            <Head>
               <span className={MUTE}>Player and manager</span>
             </Head>
             <Head width="w-9 lg:w-16">

@@ -123,7 +123,7 @@ export default function LineupPlanner({
             fold by 5px at 1440 with the toggle in the column, and by 26 with
             it gone. */}
         <div className="lg:hidden">
-          <ViewToggle view={view} onPick={setView} quiet />
+          <ViewToggle view={view} onPick={setView} />
         </div>
       </div>
 

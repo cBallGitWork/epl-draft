@@ -173,7 +173,7 @@ export default function ShotMap({
                 label="Min"
                 sorted={order === "minute" ? "ascending" : undefined}
               />
-              <Head width="">
+              <Head>
                 <span className={MUTE}>Shooter</span>
               </Head>
               <Head width="w-20">

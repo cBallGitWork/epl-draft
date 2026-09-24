@@ -94,9 +94,7 @@ A pun that does not land cleanly is worse than none, so if none lands, a sharp t
 
 The banned phrases above are banned in the headline too, and "bank" hardest of all. A front page went out with five of them.`;
 
-/** The JSON contract for the rolling prose kinds — one story, one body. The
- *  round columns keep their older sectioned shape in `rounds.ts`; everything
- *  new writes this. */
+/** The JSON contract for the prose kinds: one story, one body. */
 export const STORY_SHAPE = `Return JSON only, matching this shape exactly:
 {
   "headline": "wordplay, 8 words or fewer",

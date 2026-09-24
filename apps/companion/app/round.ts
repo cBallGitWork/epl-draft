@@ -4,6 +4,7 @@ import {
   type LeagueInfo,
   fetchLeagueInfo,
   mapLeagueInfo,
+  openingGameweek,
   periodGameweeks,
   lastLockedPeriod,
   planningPeriod,
@@ -99,10 +100,7 @@ export async function planningRound(): Promise<Round | null> {
   const period = planningPeriod(info.rosterPeriods, kickoffs, now().toISOString());
   if (period === null) return null;
 
-  // The first gameweek in it. A double is two gameweeks in one period and the
-  // earlier one is the week that opens; a blank period has none, and
-  // `planningPeriod` has already stepped over those.
-  const gameweek = calendar.find((entry) => entry.period === period)?.gameweeks[0];
+  const gameweek = openingGameweek(calendar, period);
   return gameweek === undefined ? null : { gameweek, period };
 }
 
@@ -127,7 +125,7 @@ export async function lastLockedRound(): Promise<Round | null> {
   const period = lastLockedPeriod(info.rosterPeriods, kickoffs, now().toISOString());
   if (period === null) return planningRound();
 
-  const gameweek = calendar.find((entry) => entry.period === period)?.gameweeks[0];
+  const gameweek = openingGameweek(calendar, period);
   return gameweek === undefined ? planningRound() : { gameweek, period };
 }
 

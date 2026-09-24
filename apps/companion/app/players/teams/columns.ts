@@ -1,3 +1,4 @@
+import { PLANNER_RUN } from "@epl/core";
 import { byFigure } from "../../components/league/order";
 import type { TeamRow } from "./teamRows";
 
@@ -22,8 +23,8 @@ export interface TeamColumn {
 export const TEAM_COLUMNS: readonly TeamColumn[] = [
   { key: "fpts", group: "Points", head: "FPts", title: "Fantrax points, every man at the club", of: (r) => r.fpts, rank: "high" },
   { key: "fa", group: "Points", head: "FA", title: "Fantrax points held by men nobody in the league owns", of: (r) => r.fa, rank: "high" },
-  { key: "attack", group: "Run", head: "Attack", title: "Ours: the next six opponents' defences, mean rank, 1 the weakest", of: (r) => r.attack, dp: 1, derived: true, ascending: true },
-  { key: "defence", group: "Run", head: "Defence", title: "Ours: the next six opponents' attacks, mean rank, 1 the weakest", of: (r) => r.defence, dp: 1, derived: true, ascending: true },
+  { key: "attack", group: "Run", head: "Attack", title: `Ours: the next ${PLANNER_RUN} opponents' defences, mean rank, 1 the weakest`, of: (r) => r.attack, dp: 1, derived: true, ascending: true },
+  { key: "defence", group: "Run", head: "Defence", title: `Ours: the next ${PLANNER_RUN} opponents' attacks, mean rank, 1 the weakest`, of: (r) => r.defence, dp: 1, derived: true, ascending: true },
   { key: "gk", group: "Points by position", head: "GK", title: "Fantrax points, keepers", of: (r) => r.gk, rank: "high" },
   { key: "def", group: "Points by position", head: "DEF", title: "Fantrax points, defenders", of: (r) => r.def, rank: "high" },
   { key: "mid", group: "Points by position", head: "MID", title: "Fantrax points, midfielders", of: (r) => r.mid, rank: "high" },

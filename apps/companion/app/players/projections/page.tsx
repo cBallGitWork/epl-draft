@@ -32,7 +32,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
 
   if (intelProjections.size === 0 || gameweeks.length === 0) {
     return (
-      <ScoutShell current="projections" rows={0}>
+      <ScoutShell current="projections">
         <Nothing title="No projections yet">The sister model&apos;s projections have not been exported.</Nothing>
       </ScoutShell>
     );
@@ -74,7 +74,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
   const window = gameweekSpan(gameweeks);
 
   return (
-    <ScoutShell current="projections" rows={0}>
+    <ScoutShell current="projections">
       {/* Provenance at the point of use (DESIGN §7): these are the sister model's FPL points, not Fantrax's. */}
       <p className="text-3xs text-faint">
         FPL-scoring projections by the sister model, {window}, exported{" "}

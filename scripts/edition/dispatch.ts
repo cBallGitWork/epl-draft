@@ -1,10 +1,12 @@
 import {
+  fullClubName,
   type Assignment,
   type Club,
   type FootballSnapshot,
   type LeagueInfo,
   type PublishedStory,
   type StandingsRow,
+  type StoryFixture,
   type PresserLine,
   type PresserQuote,
   type StoryThread,
@@ -12,7 +14,6 @@ import {
 } from "@epl/core";
 import { presserEdition } from "./presserWeek";
 import { faceOf, type FaceContext } from "./faces";
-import { fullClubName } from "@epl/core";
 import type { RoundFacts } from "./facts";
 import type { PredictionsDesk } from "./predictions";
 import { storyOfColumn } from "./newsroom";
@@ -42,7 +43,7 @@ export interface DeskContext {
   presserLines: PresserLine[];
   presserQuotes: (PresserQuote & { clubName: string })[];
   /** Who each club plays in the round the pressers preview, by FPL club code. */
-  presserTies: Map<number, { opponent: string; home: boolean; kickoff: string }>;
+  presserTies: Map<number, StoryFixture>;
   /** The round's clubs by FPL CODE, for checking the code a column echoed back
    *  against the club it named beside it. */
   presserClubs: ReadonlyMap<number, Club>;
@@ -150,7 +151,7 @@ export function file(
  *  player-club and export-club disagree is refused. */
 function withTies(
   rows: unknown,
-  ties: Map<number, { opponent: string; home: boolean; kickoff: string }>,
+  ties: Map<number, StoryFixture>,
   clubs: ReadonlyMap<number, Club>,
 ): unknown {
   if (!Array.isArray(rows)) return rows;
