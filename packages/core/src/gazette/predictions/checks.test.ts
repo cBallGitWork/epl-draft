@@ -62,6 +62,11 @@ describe("checkLawro", () => {
     expect(faults.map((each) => each.section)).toEqual(["im-bt"]);
   });
 
+  it("sends back Liverpool given as the reason on a Liverpool call", () => {
+    const faults = checkLawro(draft([["nf-sc", "Nottingham Florist are favourites, just. A Liverpool man always turns up. I'm taking Sporting Chance."], ...SAMPLE.filter(([key]) => key !== "nf-sc")]), ctx());
+    expect(faults.filter((each) => each.check === "gives Liverpool as the reason").map((each) => each.evidence)).toEqual(["Liverpool man"]);
+  });
+
   it("sends back a possessive before a man's name", () => {
     const faults = checkLawro(draft([["rs-bn", "Their Oduya has Leeds. I'll go with Real Sociable."], ...SAMPLE.slice(1)]), ctx({ names: [...Object.values(TEAMS), "Oduya"] }));
     expect(faults.filter((each) => each.check === "a possessive before a name").map((each) => each.evidence)).toEqual(["Their Oduya"]);

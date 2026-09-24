@@ -3,12 +3,14 @@ import {
   PLANNER_RUN,
   PREDICTIONS,
   callTie,
+  fetchLive,
   fetchLiveScoring,
   fetchSeasonResults,
   fetchTeamRosters,
   firstKickoff,
   fullClubName,
   locksAt,
+  mapLiveStats,
   mapProjectedTotals,
   mapSeasonResults,
   mapTeamRosters,
@@ -28,6 +30,7 @@ import {
   type Bridge,
   type Club,
   type Deal,
+  type DealSide,
   type Fixture,
   type FootballSnapshot,
   type GameweekKickoff,
@@ -35,7 +38,9 @@ import {
   type IntelStrength,
   type LeagueInfo,
   type PredictionsTie,
+  type PlayerMatchStats,
   type PublishedStory,
+  type RecentGame,
   type SideForm,
   type StandingsRow,
 } from "@epl/core";
@@ -80,10 +85,12 @@ export async function predictionsDesk(input: {
   const lock = kickoff === null ? null : locksAt(kickoff);
   if (pairings.length === 0 || lock === null) return null;
 
-  const [live, rosters, results] = await Promise.all([
+  const played = Array.from({ length: PREDICTIONS.recentGames }, (_, at) => round.gameweek - PREDICTIONS.recentGames + at).filter((gw) => gw >= 1);
+  const [live, rosters, results, ...lives] = await Promise.all([
     fetchLiveScoring(FANTRAX_LEAGUE_ID, round.period).catch(() => null),
     fetchTeamRosters(FANTRAX_LEAGUE_ID, round.period).catch(() => null),
     fetchSeasonResults(FANTRAX_LEAGUE_ID).catch(() => null),
+    ...played.map((gw) => fetchLive(gw).catch(() => null)),
   ]);
   if (live === null || rosters === null) {
     input.say(`Predictions: Fantrax would not give period ${round.period}'s ${live === null ? "projections" : "rosters"}.`);
@@ -108,6 +115,7 @@ export async function predictionsDesk(input: {
     clubs: new Map(clubs.map((club) => [club.id, club])),
     clubName: (club: Club) => fullClubName(club.name),
     standing: { attack: places(strengths, "attack"), defence: places(strengths, "defence") },
+    recent: recentGames(played, lives.map((each) => (each === null ? [] : mapLiveStats(each)))),
   };
   const squads = resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge).teams;
   const projected = new Map(mapProjectedTotals(live).map((guess) => [guess.teamId, guess.points]));
@@ -131,7 +139,7 @@ export async function predictionsDesk(input: {
         return squad === undefined ? [] : squadMen(squad, join);
       })(),
       hardest: strengths.size,
-      arrivals: arrivals(input.business, teamId, round.period, byShort),
+      arrivals: arrivals(input.business, teamId, round.period, byShort, named),
       form: sideForm(teamId, input.table, form, info, named),
       worn,
     });
@@ -159,20 +167,48 @@ export async function predictionsDesk(input: {
   };
 }
 
+/** Each man's last gameweeks, oldest first, a double summed; a man missing from a read did not play. */
+function recentGames(gameweeks: readonly number[], reads: readonly (readonly PlayerMatchStats[])[]): Map<number, RecentGame[]> {
+  const out = new Map<number, RecentGame[]>();
+  gameweeks.forEach((gameweek, at) => {
+    const rows = new Map<number, RecentGame>();
+    for (const row of reads[at] ?? []) {
+      const game = rows.get(row.playerId) ?? { gameweek, minutes: 0, goals: 0, assists: 0, cleanSheets: 0, points: 0 };
+      rows.set(row.playerId, {
+        gameweek,
+        minutes: game.minutes + row.minutes,
+        goals: game.goals + row.goals,
+        assists: game.assists + row.assists,
+        cleanSheets: game.cleanSheets + (row.cleanSheet ? 1 : 0),
+        points: game.points + row.fplPoints,
+      });
+    }
+    for (const [playerId, game] of rows) out.set(playerId, [...(out.get(playerId) ?? []), game]);
+  });
+  return out;
+}
+
 /** Each club's place by the sister repo's ratings, strongest first, by FPL club code. */
 function places(strengths: ReturnType<typeof strengthIntel>, measure: "attack" | "defence"): Map<number, number> {
   return new Map(strengthTable(strengths, measure).map((row, at) => [row.code, at + 1]));
 }
 
-/** Men arriving for this round, as the brief names them. */
-function arrivals(deals: readonly Deal[], teamId: string, period: number, clubs: ReadonlyMap<string, Club>): string[] {
+/** Men arriving for this round, as the brief names them: off the waiver list, or in a trade and what it cost. */
+function arrivals(deals: readonly Deal[], teamId: string, period: number, clubs: ReadonlyMap<string, Club>, named: ReadonlyMap<string, string>): string[] {
+  const man = (side: DealSide) => {
+    const club = side.club == null ? undefined : clubs.get(side.club);
+    const detail = [side.position, club === undefined ? side.club : fullClubName(club.name)].filter(Boolean).join(", ");
+    return detail === "" ? side.playerName : `${side.playerName} (${detail})`;
+  };
   return deals
     .filter((deal) => deal.period === period)
-    .flatMap((deal) => movement(deal, teamId).in)
-    .map((side) => {
-      const club = side.club == null ? undefined : clubs.get(side.club);
-      const detail = [side.position, club === undefined ? side.club : fullClubName(club.name)].filter(Boolean).join(", ");
-      return detail === "" ? side.playerName : `${side.playerName} (${detail})`;
+    .flatMap((deal) => {
+      const moved = movement(deal, teamId);
+      if (moved.in.length === 0) return [];
+      if (deal.kind !== "trade") return moved.in.map((side) => `${man(side)} off the waiver list`);
+      const partners = moved.partners.map((id) => named.get(id) ?? id).join(" and ");
+      const cost = moved.out.length === 0 ? "" : `, giving up ${moved.out.map((side) => side.playerName).join(" and ")}`;
+      return [`${moved.in.map(man).join(" and ")} in a trade with ${partners}${cost}`];
     });
 }
 

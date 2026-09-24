@@ -45,6 +45,7 @@ const JOIN: SquadJoin = {
   clubName: (each) => each.name,
   // Hull's defence and attack are the worst of twenty; Arsenal's attack the best.
   standing: { attack: new Map([[3, 1], [14, 5], [99, 20]]), defence: new Map([[3, 2], [14, 8], [99, 20]]) },
+  recent: new Map([[2, [{ gameweek: 5, minutes: 90, goals: 1, assists: 0, cleanSheets: 0, points: 8 }]]]),
 };
 
 describe("squadMen", () => {
@@ -59,11 +60,11 @@ describe("squadMen", () => {
     const [saka, salah, gabriel, nobody] = squadMen(team(["ACTIVE", "ACTIVE", "ACTIVE", "RESERVE"], ["F", "M", "D", "G"]), JOIN);
     // Hull's is one of the softest defences, which is what a forward faces.
     expect(saka).toMatchObject({ club: "Arsenal", positions: ["F", "M"], horizon: 12, ease: 2, liverpool: false });
-    expect(saka.fixtures).toEqual([{ opponent: "Hull", home: true, standing: "one of the three softest defences in the league" }]);
-    expect(salah).toMatchObject({ liverpool: true, availability: { state: "doubt", chance: 50 } });
+    expect(saka.fixtures).toEqual([{ opponent: "Hull", home: true, standing: "a soft defence" }]);
+    expect(salah).toMatchObject({ liverpool: true, availability: { state: "doubt", chance: 50 }, recent: [{ gameweek: 5, goals: 1 }] });
     // A defender is read in the defence view, and faces Hull's attack, the weakest of all.
     expect(gabriel.ease).toBe(1);
-    expect(gabriel.fixtures[0].standing).toBe("one of the three weakest attacks in the league");
+    expect(gabriel.fixtures[0].standing).toBe("a weak attack");
     // No projection is no reading, which is not nought.
     expect(nobody).toMatchObject({ horizon: null, ease: 18 });
   });
@@ -78,6 +79,7 @@ describe("predictionSide", () => {
     expect(side.best?.name).toBe("Salah");
     expect(side.bestManDoubt).toBe(true);
     expect(side.doubts.map((man) => man.name)).toEqual(["Salah"]);
+    expect(side.kind?.name).toBe("Salah");
   });
 
   it("counts Liverpool men across the squad and reads the back line by eligibility", () => {

@@ -79,6 +79,6 @@ export { checkLawro, tieKey } from "./predictions/checks";
 export { SHAPES, applySkit } from "./predictions/skit";
 export { assembleLawro, mergeAttempts, readDraft } from "./predictions/column";
 export type { PredictionsTie } from "./briefs/predictions";
-export type { SideForm } from "./predictions/sides";
+export type { RecentGame, SideForm } from "./predictions/sides";
 export type { Marked } from "./predictions/record";
 export type { CheckContext, Fault, LawroDraft } from "./predictions/checks";

@@ -73,14 +73,17 @@ const AMERICAN = ["lean on", "leans on", "leaning on", "rely on", "relies on", "
 /** Not an old man's football: a defence is tough or soft, an attack is hard to keep out or weak. */
 const ADJECTIVES = ["mean", "meaner", "meanest", "leakier", "leakiest", "lively", "sharpest attack", "sharpest attacks"];
 
-/** A man out is replaced from the bench (Craig): a side is never short-handed. */
-const TEN_MEN = ["shorn", "a man short", "a man light", "a man down", "men short", "men light", "down to ten", "short-handed", "short of a man"];
+/** A man out is replaced from the bench (Craig): a side is never short-handed, and nobody says who plays instead. */
+const TEN_MEN = ["shorn", "a man short", "a man light", "a man down", "men short", "men light", "down to ten", "short-handed", "short of a man", "worse man", "lesser man", "lesser name", "takes his place", "take his place", "in his place", "in his stead", "deputises", "deputy", "steps in", "step in", "fills in", "fill in", "stands in", "stand in", "plays instead", "play instead", "in for him", "in his absence", "without him"];
+
+/** Somebody plays Liverpool every week (Craig): a difficult game is difficult, never measured against the round. */
+const MEASURED = ["one of the hardest", "hardest this round", "hardest of the round", "hardest fixture", "toughest fixture", "as hard as it gets", "as unkind a trip"];
 
 /** Dialect is caricature. */
 const DIALECT = ["nowt", "owt", "summat", "reet", "ey up", "our kid", "Scouse", "Scouser"];
 
 /** Everything he may not write, checked after he files and sent back once. */
-export const LAWRO_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER, ...JARGON, ...CHANCES, ...MANAGERS, ...LEAKS, ...AMERICAN, ...ADJECTIVES, ...TEN_MEN, ...DIALECT];
+export const LAWRO_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER, ...JARGON, ...CHANCES, ...MANAGERS, ...LEAKS, ...AMERICAN, ...ADJECTIVES, ...TEN_MEN, ...MEASURED, ...DIALECT];
 
 /** The deck is the sub-editor's, so it skips the label words and may say "Lawro". */
 export const DESK_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER];
