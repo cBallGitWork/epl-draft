@@ -44,6 +44,21 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The Players board lights figures in ink, and reads who is looking — decided 24 Sep 2026
+
+Craig: *"highlight numbers in yellow/orange like in the prem page, not squares with background colours"*,
+then on the phone: *"remove the yellow title for space"*, *"Put position elsewhere"*, *"Remove opponent as
+well"*, *"Tighten the column headers too?"*. `docs/ui/players.md` carries the board; these are the facts.
+
+- **One standout rule, two boards** (`components/league/standout.ts`): top values, whole values at a time,
+  while rare. The pool board takes a sixth / a twentieth of the scored figures with a floor of ten; a match
+  board a fifth / a tenth of the men who played. `--color-hot` / `--color-cold` are deleted.
+- **`/players` reads the reader's session** (`readerTeamId`) so his men read "Yours". The pool read stays
+  team-agnostic and cached; only the render is per reader.
+- **Opp is gone** from the board, and `fixtureOnly` with it.
+- **The Data section drops its caption below `lg`** (`SectionShell captionOnPhone`); a Fantrax projection
+  still says so on a phone, above the board.
+
 ## Draft and Prem share the Comps tab, and Data is on the bar — decided 24 Sep 2026
 
 Craig: *"data needs to be at the bottom"*, *"when tapping on an option bring two squares up (except more

@@ -34,14 +34,8 @@ import { PITCH_BOX } from "@/app/components/football/pitchBox";
 // So density gets the channel, through a ramp that reads on grass at every
 // intensity — which is what the reference uses and for the same reason.
 //
-// **This is a new object in the palette and it needs a docs/rules/DESIGN.md ruling.** §3
-// makes every colour a slot with one meaning, and `--color-hot`/`--color-cold`
-// are deliberately a THRESHOLD rather than a scale — "a cell is lit or it is
-// not; there is no second strength" — confined to a board of many measures. A
-// density ramp is by definition a scale, so it cannot wear them, and it is the
-// first sequential ramp in the app. It is kept local to the pitch on purpose:
-// it shades a colour PLATE (DESIGN §5's own category, where the pitch and the
-// crest already live) and never ink, never a cell, never a control.
+// It is a scale where every other colour in §3 is a slot, so it stays local to the pitch: it shades a colour
+// PLATE (DESIGN §5, beside the pitch and the crest) and never ink, a cell or a control.
 
 /** The attacking arrow: how far along, how high, and how heavy.
  *

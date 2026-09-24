@@ -9,19 +9,28 @@ export default function SectionShell({
   nav,
   caption,
   rows,
+  captionOnPhone = true,
   children,
 }: {
   header: React.ReactNode;
   nav: React.ReactNode;
   caption: React.ReactNode;
   rows: number;
+  /** False where a phone needs the room more than the caption (Data, Craig 24 Sep 2026); the tab strip names the view. */
+  captionOnPhone?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col gap-2">
       {header}
       {nav}
-      <Caption>{caption}</Caption>
+      {captionOnPhone ? (
+        <Caption>{caption}</Caption>
+      ) : (
+        <div className="max-lg:hidden">
+          <Caption>{caption}</Caption>
+        </div>
+      )}
       <section
         className={PANEL}
         style={{ minHeight: `calc(${rows} * var(--table-row) + var(--table-chrome))` }}

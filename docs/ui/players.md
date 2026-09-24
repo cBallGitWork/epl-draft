@@ -24,6 +24,35 @@ route is the same route — only its frame and its place in the app changed.
   `pool` and `analysis` did not change). Team Stats, the Fixture Planner and Projections join the strip as
   they land.
 
+## The board as redesigned, 24 Sep 2026
+
+Designed first (a design round, then a fresh mobile review), picked by Craig: option B, revised as R. His notes
+on the phone: *"remove the yellow title for space"*, *"Mobile needs more room for columns"*, *"remove the
+position title on the left here. Put position elsewhere"*, *"Remove opponent as well"*, *"Tighten the column
+headers too?"*. Where the sections below disagree with this one, this one is current.
+
+- **Phone-first order**: `FPts FP/G Min GP G A AF CS GAO GA Sv PKS YC RC PKM OG Ros +/-`. Seven figures sit
+  beside a name at 390 (FPts to AF), six at 360. **Opp is gone** at both widths; the next fixture is the
+  planner's question.
+- **The lead** is pinned: crest, then the name, then a second line. On a phone the name is CM's list form
+  (`Gross, P`, `listName` in core) and line two leads with the position (`MID`, in `LABEL` ink, a fixed
+  slot so the holders line up). On a desk the name is whole and CM's position tile runs down the left.
+- **Who holds him**: `Yours` in the accent (the page reads the reader's team), a rival's team name quiet, and
+  `Free agent` / `Waivers` loud, because that is the man a reader can act on. This reverses 10 Sep's "owner
+  loud, status quiet".
+- **Heads** are 24px with 2px padding under a thumb (`SortHead compact`), so a narrow column is as wide as its
+  figures; the desk keeps 28px.
+- **Figures** are centred, in ink. Standouts are lit in ink, never on a ground: orange for a column's best
+  (a twentieth of the scored figures), yellow for the rest of its top sixth, red at the bad end
+  (`components/league/standout.ts`, shared with the match board). A nought prints, quietly; an absence is `—`.
+  Per-90 figures stay white (Craig).
+- **No yellow caption on a phone** in Data (the tab strip names the view). When `FPts` is Fantrax's
+  projection, the phone prints that warning above the board instead.
+- **The filters are a sheet** docked over the thumb rail below `lg` (inline from `lg`), headed "Filter
+  players": Position as CM's index tiles (chosen: an accent edge and a tick, the word stays white), Status
+  chips with counts, Club and **Sort by** selects side by side, the stat groups (which a phone could not reach
+  before: the old drawer never drew them), Per 90, then Reset and `Show N`. A tap outside closes it.
+
 ## On the page — the Board
 
 **As many columns as Fantrax shows** (Craig, 6 Sep 2026), and the same shape
@@ -143,17 +172,12 @@ cannot have one, and Craig's ruling was to keep the idea and drop the ramp —
 *"magnitude ramp, but maybe just highlight the really good values? we also can
 use better colours for us too"*. So a cell is lit or it is not.
 
-- `--color-hot` is a figure at the top of its column, `--color-cold` the same at
-  the wrong end of one. Both are grounds, and both are the DIRECTION PAIR filled
-  — `--up` and `--bad` at a ground lightness — so the mark costs no new hue and
-  needs no learning. They were brown for an hour, taken from the reference; Craig
-  threw it out (*"can we use more fun CM colours than brown though?"*).
+- ~~`--color-hot` / `--color-cold` grounds~~: retired 24 Sep 2026 for ink (above).
 - **The rule**: the highest figures, taken whole values at a time, for as long as
   that stays inside a sixth of the men who have a figure at all. A column whose
   top value is common lights nothing — `GP`, `Min` in August, `YC`.
 - **The population is the rows drawn**, so a mark means "the top of this column,
   among what is in front of you" and re-reads on every filter.
-- A lit cell takes the loud ink. `--color-faint` is 3.42:1 on the hot ground.
 
 **The board is opaque**, and it is the only table in the app that is (Craig:
 *"also it needs to be opaque too"*). `.cm-panel` is deliberately 88%, which is

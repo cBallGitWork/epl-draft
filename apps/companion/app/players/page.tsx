@@ -4,6 +4,7 @@ import PlayerTable from "./PlayerTable";
 import BoardBar from "./BoardBar";
 import { getPlayerStats } from "./playerStats";
 import { getLeaguePool } from "./pool";
+import { readerTeamId } from "../squads";
 import {
   PAGE_ROWS,
   activeGroup,
@@ -64,10 +65,11 @@ export default async function PlayersPage({
 }: {
   searchParams: Promise<PlayersSearchParams>;
 }) {
-  const [pool, asked, lines] = await Promise.all([
+  const [pool, asked, lines, reader] = await Promise.all([
     getLeaguePool(),
     searchParams,
     getPlayerStats(),
+    readerTeamId(),
   ]);
   const query = playersQuery(asked);
 
@@ -152,7 +154,13 @@ export default async function PlayersPage({
         clubs={clubs}
         counted={counted}
         rated={rated}
+        shown={shown.length}
       />
+
+      {/* The caption carries this on a desk; a phone has no caption, and a projection must still say so. */}
+      {pool.season?.projected ? (
+        <p className="text-2xs font-bold text-accent lg:hidden">{pool.season.name || "This season"} — Fantrax projection</p>
+      ) : null}
 
       {shown.length === 0 ? (
         <p className=" border border-line bg-surface px-3 py-2.5 text-sm text-muted">
@@ -164,6 +172,7 @@ export default async function PlayersPage({
           columns={columns}
           query={query}
           teamNames={pool.teamNames}
+          reader={reader}
           raw={raw}
           rated={rated}
           cuts={cuts}

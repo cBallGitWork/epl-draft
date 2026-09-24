@@ -154,14 +154,8 @@ doing no work: these are SEPARATE pitches with the man's name over each, so
 identity is carried by the caption, and club colour was spending the one visual
 channel a density map has on a fact already stated.
 
-> **This needs a docs/rules/DESIGN.md ruling and does not have one yet.** §3 makes every
-> colour a slot with one meaning, and `--color-hot`/`--color-cold` are
-> deliberately a THRESHOLD rather than a scale — *"a cell is lit or it is not;
-> there is no second strength"* — confined to a board of many measures. A density
-> ramp is a scale by definition, so it cannot wear them, and this is the app's
-> first sequential ramp. It is kept local to the pitch on purpose: it shades a
-> colour PLATE, which is DESIGN §5's own category and where the pitch and the
-> crest already live, and it never touches ink, a cell or a control.
+> The ramp is a scale where every other colour in DESIGN §3 is a slot, so it stays local to the pitch: it
+> shades a colour PLATE (§5, beside the pitch and the crest) and never ink, a cell or a control.
 
 **A curve, not a gain, and that is the difference between a map and a fog.** Five
 rounds in a man has perhaps 90 touches over 60-odd cells, so his busiest cell

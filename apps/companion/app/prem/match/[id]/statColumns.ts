@@ -69,17 +69,3 @@ export function sorted<T extends StatLine>(rows: readonly T[], sort: StatSort, d
 /** How much of a side a column may light: a fifth in yellow, so three scorers of sixteen stand out,
  *  and a tenth in orange, which is its one best man. */
 export const STANDOUT = { good: 1 / 5, best: 1 / 10 } as const;
-
-/** The figure a column's standouts reach: its top values, whole values at a time, while they fit inside `share`.
- *  `players/standout.ts`'s rule without its pool-sized floor — declined as a shared helper at two. */
-export function standoutCut(values: readonly (number | null)[], played: number, share: number): number | null {
-  const scored = values.filter((value): value is number => value !== null && value > 0).sort((a, b) => b - a);
-  const room = played * share;
-  let cut: number | null = null;
-  for (let at = 0; at < scored.length; at += 1) {
-    if (at < scored.length - 1 && scored[at + 1] === scored[at]) continue;
-    if (at + 1 > room) break;
-    cut = scored[at];
-  }
-  return cut;
-}
