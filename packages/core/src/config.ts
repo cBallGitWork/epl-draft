@@ -370,5 +370,5 @@ export const PREDICTIONS = {
   wornColumns: 2,
   doubtDepth: 6,
   hardFixtures: 5,
-  factsPerTie: 9,
+  factsPerTie: 10,
 } as const;

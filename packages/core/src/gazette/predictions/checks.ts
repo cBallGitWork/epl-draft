@@ -58,7 +58,7 @@ const WIN = /\b(?:will|'ll|to|should|can|could|might|going to) (?:win|beat|edge|
 const BACKING = /\b(?:I fancy|I'm backing|I'll go with|I'm going with|I'll have|backing)\b/iu;
 const NEGATION = /\b(?:not|never|no)\b|n't/iu;
 const SCORELINE = /\b(?!50-50\b)\d{1,3}\s*[-–]\s*\d{1,3}\b/u;
-const LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 7, 100], gut: [2, 8, 110], column: 560, repeat: 5, men: 3, questions: 2 } as const;
+const LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 8, 120], gut: [2, 9, 130], column: 680, repeat: 5, men: 4, questions: 2 } as const;
 /** His verdict is his: a tie with no "I", "me" or "my" in it is a list of facts, not an opinion. */
 const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
 
@@ -126,7 +126,7 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   if (!VERDICT.test(line)) fault(key, "no verdict of his own", "send-back", line.slice(0, 60));
   const sides = new Set(ctx.calls.flatMap((each) => [ctx.name(each.homeTeamId), ctx.name(each.awayTeamId)]));
   const men = ctx.names.filter((name) => !sides.has(name) && mentionAt(line, name) !== -1);
-  if (men.length > LIMITS.men) fault(key, "a roll call, more than three men", "send-back", men.join(", "));
+  if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
   if (call.close) for (const word of banned(line, COMFORTABLE)) fault(key, "an easy win on a close tie", "send-back", word);
   if (call.callsTeamId === null) return;
   const other = ctx.name(call.callsTeamId === call.homeTeamId ? call.awayTeamId : call.homeTeamId);

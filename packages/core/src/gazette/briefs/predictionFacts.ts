@@ -5,8 +5,8 @@ import type { PredictionSide, SquadMan } from "../predictions/sides";
 // One tie's facts for Lawro, worded and ranked. Squad-level only, and no figure of ours: the
 // order of a side's men is our model's reading and is never printed.
 
-/** The tie's one story first, then a man for each side the story leaves out, their form, and one
- *  more: a pick that gives a side nothing, a signing, or a doubt. Three men, never a roll call. */
+/** The tie's one story first, then a man for each side the story leaves out, their form, the men
+ *  who share a club or meet on the pitch, and one more: a signing or a doubt. Never a roll call. */
 export function tieFacts(index: number, home: PredictionSide, away: PredictionSide, call: PredictionCall): string[] {
   const favourite = call.callsTeamId === home.teamId ? (call.instinct === null ? home : away) : call.instinct === null ? away : home;
   const underdog = favourite === home ? away : home;
@@ -32,6 +32,7 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
       return man === null ? null : `- ${tag}-man: ${described(man)}, for ${side.name}.`;
     }),
     ...sides.map(({ tag, side }) => (side.form === null ? null : `- ${tag}-form: ${form(side)}`)),
+    ...together(index, home, away),
     // Liverpool men are the whole story of a Liverpool call: nobody else gets a line.
     call.instinct === "liverpool" ? null : extra(sides, fresh),
   ];
@@ -52,26 +53,31 @@ function storyOf(sides: readonly PredictionSide[]): { side: PredictionSide; man:
   return null;
 }
 
-/** The one line beyond the story and the men: a bad pick first, then a signing, then a doubt. */
+/** The one line beyond the story and the men: a signing off the waiver list, else a doubt. */
 function extra(sides: readonly { tag: string; side: PredictionSide }[], fresh: (men: readonly (SquadMan | null)[]) => SquadMan | null): string | null {
   for (const { tag, side } of sides) {
-    const man = fresh([...side.doubts.filter((each) => each.availability.out), side.hard?.fixtures.length === 0 ? side.hard : null]);
-    if (man !== null) return `- ${tag}-dud: ${dud(man, side.name)}`;
+    if (side.arrivals.length > 0) return `- ${tag}-in: ${side.name} signed ${side.arrivals.join(", ")} off the waiver list, arriving for this round.`;
   }
   for (const { tag, side } of sides) {
-    if (side.arrivals.length > 0) return `- ${tag}-in: ${side.name} signed ${side.arrivals.join(", ")} off the waiver list, arriving for this round. A signing is fair game.`;
-  }
-  for (const { tag, side } of sides) {
-    const man = fresh(side.doubts.filter((each) => !each.availability.out));
+    const man = fresh(side.doubts);
     if (man !== null) return `- ${tag}-doubt: ${doubt(man, side.name)}`;
   }
   return null;
 }
 
-/** A man a side holds who gives them nothing this round: a pick to be scathing about. */
-function dud(man: SquadMan, side: string): string {
-  const why = man.fixtures.length === 0 ? "has no game this round" : state(man);
-  return `${side}'s ${man.name} (${man.club}) ${why}. A pick that gives them nothing this round: be as rude about the pick as you like, never about the manager.`;
+/** Men who share a club on one side, and a man on each side whose clubs meet this round: the two
+ *  coincidences worth a line (Craig). Only among the men who matter most, so it is never a roll call. */
+function together(index: number, home: PredictionSide, away: PredictionSide): (string | null)[] {
+  const clubmates = [home, away].map((side) => {
+    const byClub = new Map<string, string[]>();
+    for (const man of side.keyMen) if (man.club !== "") byClub.set(man.club, [...(byClub.get(man.club) ?? []), man.name]);
+    const shared = [...byClub].find(([, names]) => names.length > 1);
+    return shared === undefined ? null : `- T${index}-club: ${side.name}'s ${shared[1].join(" and ")} both play for ${shared[0]}.`;
+  });
+  const meeting = home.keyMen.flatMap((ours) =>
+    away.keyMen.flatMap((theirs) => (ours.fixtures.some((each) => each.opponent === theirs.club) ? [`${ours.name} (${home.name}, ${ours.club}) and ${theirs.name} (${away.name}, ${theirs.club})`] : [])),
+  );
+  return [...clubmates, meeting.length === 0 ? null : `- T${index}-meet: ${meeting[0]} play against each other this round.`];
 }
 
 /** The reason he goes against the favourite, in the brief's facts and nothing else. */

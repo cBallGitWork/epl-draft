@@ -67,11 +67,14 @@ const LEAKS = [
   "sub-editor", "the page",
 ];
 
+/** American, and the chatbot's own football: not a dour Lancastrian's. */
+const AMERICAN = ["lean on", "leans on", "leaning on", "rely on", "relies on", "carry the load", "step up", "steps up", "stepped up", "show up", "shows up", "showed up", "gives them nothing", "give them nothing", "big fat", "in for a long one", "in for a long afternoon"];
+
 /** Dialect is caricature. */
 const DIALECT = ["nowt", "owt", "summat", "reet", "ey up", "our kid", "Scouse", "Scouser"];
 
 /** Everything he may not write, checked after he files and sent back once. */
-export const LAWRO_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER, ...JARGON, ...CHANCES, ...MANAGERS, ...LEAKS, ...DIALECT];
+export const LAWRO_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER, ...JARGON, ...CHANCES, ...MANAGERS, ...LEAKS, ...AMERICAN, ...DIALECT];
 
 /** The deck is the sub-editor's, so it skips the label words and may say "Lawro". */
 export const DESK_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER];

@@ -57,7 +57,7 @@ function tieBlock(index: number, count: number, tie: PredictionsTie, name: (team
       : call.close
         ? "It is close."
         : `${backing} are clear favourites.`;
-  const order = `Your verdict on a side first, then ${call.instinct === null ? `T${index}-story if there is one` : `T${index}-gut`}, then the moan and the call. Three men at most.`;
+  const order = `Your verdict on a side first, then ${call.instinct === null ? `T${index}-story if there is one` : `T${index}-gut`}, then the moan and the call. Four men at most.`;
   return [heading, `YOUR CALL: ${backing}. ${why} ${order}`, ...tieFacts(index, home, away, call), `${shape}, and "backs" "${call.callsTeamId}". The page prints your prediction and the score under your words, so write neither.`].join("\n");
 }
 

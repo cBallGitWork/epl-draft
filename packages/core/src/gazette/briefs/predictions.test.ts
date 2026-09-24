@@ -89,6 +89,18 @@ describe("buildLawroBrief", () => {
     expect(text).toContain("Haaland Globetrotters's Haaland, one of their main men, is away at Liverpool, one of the three meanest defences in the league, one of the hardest");
   });
 
+  it("names two men from one club, and two men whose clubs meet this round", () => {
+    const leeds = { opponent: "Arsenal", home: false, standing: null };
+    const pair = tie(
+      side("cp", "Cold Palmer", 52.1, [man("Saka", 20), man("Rice", 19)]),
+      side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25, { club: "Manchester City", fixtures: [{ opponent: "Leeds United", home: true, standing: null }] }), man("Ampadu", 8, { club: "Leeds United", fixtures: [leeds] })]),
+    );
+    const text = brief([pair]) ?? "";
+    expect(text).toContain("T1-club: Cold Palmer's Saka and Rice both play for Arsenal.");
+    expect(text).toContain("T1-meet: Saka (Cold Palmer, Arsenal) and Ampadu (Haaland Globetrotters, Leeds United) play against each other this round.");
+    expect(brief([clear])).not.toMatch(/-club:|-meet:/u);
+  });
+
   it("says how likely a man is to play in words, by FPL's chance or its status", () => {
     const at = (chance: number | null, state: Availability["state"] = "doubt"): Availability => ({ state, label: "", out: state !== "doubt" || chance === 0, chance, news: "" });
     const alone = (name: string, availability: Availability) =>
