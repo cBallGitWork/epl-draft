@@ -14,7 +14,8 @@ const match = (over: Partial<GameLogEntry> = {}): GameLogEntry => ({
   gameweek: 1, fixtureId: 1, opponentClubId: 1, home: true, scored: 1, conceded: 0,
   minutes: 90, goals: 0, assists: 0, cleanSheet: true, yellowCards: 0, redCards: 0,
   saves: 0, bonus: 0, bps: 20, fplPoints: 6, defensiveContribution: null,
-  expectedGoals: 0.1, expectedAssists: 0.2, ...over,
+  expectedGoals: 0.1, expectedAssists: 0.2, starts: 1, tackles: null, clearancesBlocksInterceptions: null,
+  recoveries: null, expectedGoalsConceded: null, ...over,
 });
 
 const paid = (over: Partial<PlayerMatch> = {}): PlayerMatch => ({

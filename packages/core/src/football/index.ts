@@ -88,8 +88,8 @@ export type { RawPlMatchStats, RawPlMetric } from "./premierleague/rawStats";
 // per-season element id, and the only one with the four measurements a live
 // snapshot cannot give per fixture. `gameLog.ts` says why.
 export { fetchElementSummary } from "./fpl/client";
-export { mapGameLog } from "./gameLog";
-export type { GameLogEntry } from "./gameLog";
+export { mapGameLog, totalsOver } from "./gameLog";
+export type { GameLogEntry, RateTotals } from "./gameLog";
 // What happened in ONE MATCH, for every player in it, off the season fixture
 // list's own `stats` block — the read the app already makes and used to throw
 // away. `matchSheet.ts` sets it against the two neighbours above and says what
@@ -107,7 +107,9 @@ export type { IntelTouches, Touch, TouchCentre, TouchPlayer } from "./intel/touc
 // Every shot, already flipped onto the touch clouds' convention — SofaScore
 // publishes a shot as distance from the attacking goal and a touch the other way
 // round, and `intel/shots.ts` records how that was settled.
-export { shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
+export { assistsOf, shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
+// A window of recent gameweeks, for narrowing the intel to recent form.
+export { fixtureGameweeks, inGameweeks, lastPlayed } from "./intel/window";
 export type { IntelShots, Shot } from "./intel/shots";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // The same read at season scale — his career before this one. `seasons.ts` says

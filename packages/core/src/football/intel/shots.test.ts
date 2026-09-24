@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { IntelShots, Shot } from "./shots";
-import { shotIntel, shotsInFixture, shotsOf } from "./shots";
+import { assistsOf, shotIntel, shotsInFixture, shotsOf } from "./shots";
 
 const MANIFEST = { season: "26-27", gameweek: null, exportedAt: "", rows: 0, sources: [] };
 
@@ -112,5 +112,20 @@ describe("the assister and his key pass", () => {
     const read = shotIntel(file([shot({ assistCode: 42, pass: { x: 140, y: 30 } })])).get(1)?.[0];
     expect(read?.pass).toBeNull();
     expect(read?.assistCode).toBe(42);
+  });
+});
+
+describe("assistsOf", () => {
+  it("finds every shot a man set up, whoever struck it", () => {
+    const byCode = shotIntel(
+      file([
+        shot({ code: 10, assistCode: 7, minute: 5 }),
+        shot({ code: 11, assistCode: 7, minute: 40 }),
+        shot({ code: 7, assistCode: 10, minute: 60 }),
+        shot({ code: 12, assistCode: null, minute: 70 }),
+      ]),
+    );
+    expect(assistsOf(byCode, 7).map((each) => each.minute)).toEqual([5, 40]);
+    expect(assistsOf(byCode, 99)).toEqual([]);
   });
 });

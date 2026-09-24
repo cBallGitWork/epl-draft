@@ -44,6 +44,18 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Compare narrows to recent form from FPL's own game log — decided 24 Sep 2026
+
+- **Last 6 is the last six gameweeks with a match finished** (`lastPlayed`), and the figures over it are the
+  player's `element-summary` history added up (`totalsOver`). `RawHistoryEntry` gains `starts`, `tackles`,
+  `clearances_blocks_interceptions`, `recoveries` and `expected_goals_conceded`, all present on this season's
+  rows (probed 24 Sep); absent reads as null and adds nothing.
+- **The export rows are windowed by fixture** (`inGameweeks` against `fixtureGameweeks`); no export changed.
+- **A key pass is a shot whose `assistCode` is his** (`assistsOf`), across every shooter; the counts are the
+  shots, and a pass with no located origin draws its shot and no line, so a count and its marks agree.
+- **The touch heat is scaled to the 90th-percentile cell**, not the busiest (Craig: *"Heat can be less
+  subtle"*). Measured on the busiest man: mean opacity 0.26 to 0.44, and cells at half strength or more 23 to 68.
+
 ## The Players board lights figures in ink, and reads who is looking — decided 24 Sep 2026
 
 Craig: *"highlight numbers in yellow/orange like in the prem page, not squares with background colours"*,

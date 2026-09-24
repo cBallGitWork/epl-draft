@@ -1,12 +1,15 @@
 import { describe, expect, it } from "vitest";
 import type { SeasonTotals } from "@epl/core";
-import { rateRows } from "./rates";
+import { rateRows, type Played } from "./rates";
 
 /** A season with everything at nought, so each case sets only what it is about.
  *  Every field on `SeasonTotals` is present on all 651 elements, so a plain
  *  object is a truthful stand-in rather than a convenience. */
-function season(over: Partial<SeasonTotals> = {}): SeasonTotals {
+function season(over: Partial<Played & SeasonTotals> = {}): Played & SeasonTotals {
   return {
+    touches: null,
+    shots: null,
+    keyPasses: null,
     goals: 0,
     assists: 0,
     cleanSheets: 0,
@@ -106,6 +109,27 @@ describe("rateRows", () => {
     expect(names).not.toContain("Goals");
     expect(names).not.toContain("Assists");
     expect(names).not.toContain("Clean sheets");
+  });
+});
+
+describe("the export's three counts", () => {
+  it("rates touches, shots and key passes per ninety, in the ledger's order", () => {
+    const rows = rateRows(season({ minutes: 900, starts: 10, touches: 500, shots: 20, keyPasses: 10 }), null);
+    expect(rows.map((each) => each.name).slice(0, 5)).toEqual(["Min", "Starts", "Touches", "Shots", "Key passes"]);
+    expect(row(rows, "Touches")?.a).toBeCloseTo(50);
+    expect(row(rows, "Shots")?.a).toBeCloseTo(2);
+    expect(row(rows, "Key passes")?.a).toBeCloseTo(1);
+  });
+
+  it("dashes a man the export never bridged", () => {
+    const rows = rateRows(season({ minutes: 900 }), season({ minutes: 900, touches: 400, keyPasses: 3 }));
+    expect(row(rows, "Key passes")?.a).toBeNull();
+    expect(row(rows, "Key passes")?.b).toBeCloseTo(0.3);
+  });
+
+  it("keeps a covered man's nought beside a man who has some", () => {
+    const rows = rateRows(season({ minutes: 900, touches: 300, shots: 0 }), season({ minutes: 900, touches: 400, shots: 20 }));
+    expect(row(rows, "Shots")?.a).toBe(0);
   });
 });
 

@@ -33,13 +33,8 @@ interface Side {
   chosen: string | undefined;
   /** What is in this side's box. */
   typed: string;
-  /** What this side IS — printed above the box, and still true once a man is
-   *  chosen. Distinct from `hint`, which says what to DO: a label repeating its
-   *  own placeholder is one fact stated twice, and the first cut shipped
-   *  "FIRST PLAYER" over a box reading "First player". */
-  label: string;
-  /** What the empty box invites. */
-  hint: string;
+  /** Who this side is now, for the box's accessible name; the bar under the boxes prints it. */
+  name: string | null;
 }
 
 export default function PickBar({
@@ -59,7 +54,8 @@ export default function PickBar({
   // are, and the heading was a third telling of a thing the screen had already
   // said twice.
   return (
-    <div className="grid gap-3 lg:grid-cols-2">
+    // One row at every width, each box over the half of the bar it would change (Craig, 24 Sep 2026).
+    <div className="grid grid-cols-2 gap-1.5 lg:gap-3">
       <Box side="a" mine={a} other={b} rows={rows} />
       <Box side="b" mine={b} other={a} rows={rows} />
     </div>
@@ -82,8 +78,13 @@ function Box({
 
   return (
     <div className="flex min-w-0 flex-col gap-1.5">
-      <p className="text-2xs font-bold uppercase text-faint">{mine.label}</p>
-      <PickField side={side} query={mine.typed} action={ANALYSIS} label={mine.hint}>
+      <PickField
+        side={side}
+        query={mine.typed}
+        action={ANALYSIS}
+        placeholder="Name…"
+        label={mine.name ? `Swap ${mine.name} for another player` : side === "a" ? "Find a player" : "Find a player to compare"}
+      >
         {/* Everything the form does not own, so searching for one man cannot
             forget the other. `PickField`'s debounced navigation reads these back
             out of the form, so both ways out preserve the same state. */}

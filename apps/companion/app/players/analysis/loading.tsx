@@ -28,14 +28,11 @@ export default function Loading() {
           a frame whose controls move when the answer lands is a layout that
           jumps. They are not real forms here — a skeleton that submits would
           navigate to a page that is already loading. */}
-      <div className="grid gap-3 lg:grid-cols-2" aria-busy>
-        {["First player", "Compare with"].map((label) => (
-          <div key={label} className="flex min-w-0 flex-col gap-1.5">
-            <p className="text-2xs font-bold uppercase text-faint">{label}</p>
-            <div className="flex min-w-0 gap-1.5">
-              <div className="cm-panel min-h-11 min-w-0 flex-1 lg:min-h-9" />
-              <span className={PRESSABLE}>Find</span>
-            </div>
+      <div className="grid grid-cols-2 gap-1.5 lg:gap-3" aria-busy>
+        {["a", "b"].map((side) => (
+          <div key={side} className="flex min-w-0 gap-1.5">
+            <div className="cm-panel min-h-11 min-w-0 flex-1 lg:min-h-9" />
+            <span className={PRESSABLE}>Find</span>
           </div>
         ))}
       </div>
@@ -48,11 +45,9 @@ export default function Loading() {
         <Skeleton width="45%" height="1.25rem" />
       </div>
 
-      {/* The figures, then the maps. Eleven rows is what the table draws for two
-          outfielders — see `rates.ts`, which drops a measure neither of them has
-          anything to say about. */}
-      <div className="flex flex-col" aria-busy>
-        {Array.from({ length: 11 }, (_, at) => (
+      {/* The figures: fourteen rows is what the ledger draws for two outfielders (`rates.ts`). */}
+      <div className="mx-auto flex w-full max-w-sm flex-col" aria-busy>
+        {Array.from({ length: 14 }, (_, at) => (
           <div key={at} className="cm-row flex min-h-8 items-center justify-between gap-3 border-b border-line/60 px-1">
             <Skeleton width="2.5rem" height="0.875rem" />
             <Skeleton width="4rem" height="0.75rem" />

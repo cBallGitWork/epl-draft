@@ -33,6 +33,7 @@ export default function PickField({
   query,
   action,
   label,
+  placeholder,
   children,
 }: {
   /** Which man this box picks. The only thing that differs between the two, and
@@ -41,7 +42,9 @@ export default function PickField({
   /** What the page was rendered with, which is the authority this box follows. */
   query: string;
   action: string;
+  /** What the box and its button do, for a screen reader: "Swap B.Fernandes for another player". */
   label: string;
+  placeholder: string;
   /** The rest of the query as hidden inputs, rendered on the SERVER. A GET form
    *  posts only its own fields, so without them searching for one man would
    *  forget the other. They arrive as children rather than being rebuilt here so
@@ -91,7 +94,7 @@ export default function PickField({
         name={`q${side}`}
         value={text}
         onChange={(event) => setText(event.target.value)}
-        placeholder={label}
+        placeholder={placeholder}
         aria-label={label}
         type="search"
         // `text-base` STAYS: below 16px an iPhone zooms the page on focus, which
@@ -103,7 +106,7 @@ export default function PickField({
       {/* Still here with a script running, and deliberately: the way out for
           somebody who does not want to wait 250ms, and the only control here at
           all for a reader with no JavaScript. */}
-      <button type="submit" className={PRESSABLE}>
+      <button type="submit" aria-label={label} className={PRESSABLE}>
         Find
       </button>
     </form>

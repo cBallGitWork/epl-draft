@@ -45,8 +45,9 @@ export default function Measures({
   if (rows.length === 0) return null;
 
   return (
-    <Section title="Attributes" aside="Ours, 1–20">
-      <table className="w-full border-collapse">
+    <Section title="Attributes" aside="Season · ours, 1–20">
+      {/* The ledger's shape: centred and narrow, each pair either side of its label (Craig, 24 Sep 2026). */}
+      <table className="mx-auto w-full max-w-sm border-collapse">
         <caption className="sr-only">
           {alone
             ? `${names.a} by every attribute he has`
@@ -55,11 +56,7 @@ export default function Measures({
         <tbody>
           {rows.map((row) => (
             <tr key={row.name} className="border-b border-line/60 last:border-b-0">
-              <td
-                className={`numeric cm-row w-16 py-1 text-right text-base lg:w-24 ${loudness(row.a, row.b)}`}
-              >
-                {row.a ?? DASH}
-              </td>
+              <td className={`${FIGURE} pr-3 text-right ${loudness(row.a, row.b)}`}>{row.a ?? DASH}</td>
               {/* The measure's own name, and its derivation in the `title` — the
                   single grid does the same, and DESIGN §7's amendment is why it
                   is a tooltip rather than a printed byline: a screen whose every
@@ -67,16 +64,12 @@ export default function Measures({
                   footnotes rather than as Championship Manager. */}
               <td
                 title={row.from}
-                className={`px-2 text-2xs uppercase text-muted ${alone ? "text-left" : "text-center"}`}
+                className={`w-px whitespace-nowrap px-1 text-2xs uppercase text-muted ${alone ? "text-left" : "text-center"}`}
               >
                 {row.name}
               </td>
               {alone ? null : (
-                <td
-                  className={`numeric cm-row w-16 py-1 text-left text-base lg:w-24 ${loudness(row.b, row.a)}`}
-                >
-                  {row.b ?? DASH}
-                </td>
+                <td className={`${FIGURE} pl-3 text-left ${loudness(row.b, row.a)}`}>{row.b ?? DASH}</td>
               )}
             </tr>
           ))}
@@ -85,6 +78,8 @@ export default function Measures({
     </Section>
   );
 }
+
+const FIGURE = "numeric cm-row py-1 text-base lg:text-lg";
 
 /** One measure, as both of them have it. */
 interface Row {

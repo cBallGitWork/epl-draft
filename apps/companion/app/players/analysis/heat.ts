@@ -18,7 +18,7 @@ import type { Touch } from "@epl/core";
 // controls and two touches a cell apart merge. Finer and the blur has to grow to
 // match, which costs the structure back; coarser and the squares survive it.
 //
-// **Normalised to the man's own busiest cell, so the map shows SHAPE.** A
+// **Normalised to the man's own crowded cells, so the map shows SHAPE.** A
 // comparison where one man has 400 touches and the other 40 would otherwise
 // draw the second as a blank pitch, which says "no data" when the truth is "less
 // of it". Volume is a number and belongs in a caption; the pitch is for where.
@@ -35,7 +35,7 @@ interface HeatCell {
   x: number;
   /** Top edge, 0–1. */
   y: number;
-  /** How hot, 0–1, against this man's own busiest cell. */
+  /** How hot, 0–1, against this man's own 90th-percentile cell. */
   density: number;
 }
 
@@ -44,7 +44,7 @@ interface HeatCell {
  *  of them disagreeing. */
 export const CELL = { width: 1 / COLS, height: 1 / ROWS };
 
-/** A man's touches as shaded cells, busiest at 1, empty cells left out.
+/** A man's touches as shaded cells, his crowded ones at 1, empty cells left out.
  *
  *  **Sparse on purpose.** A full grid is 384 rectangles per pitch and two
  *  pitches on a screen; five rounds in, a typical man fills perhaps sixty of
@@ -60,7 +60,6 @@ export function heatCells(points: readonly Touch[]): HeatCell[] {
   if (points.length === 0) return [];
 
   const counts = new Map<number, number>();
-  let busiest = 0;
   for (const point of points) {
     // `Math.min` and not a modulo: a touch on the line x=100 belongs in the last
     // column, and without the clamp it lands in a twenty-fifth that is never
@@ -68,17 +67,18 @@ export function heatCells(points: readonly Touch[]): HeatCell[] {
     const col = Math.min(COLS - 1, Math.floor((point.x / 100) * COLS));
     const row = Math.min(ROWS - 1, Math.floor((point.y / 100) * ROWS));
     const key = row * COLS + col;
-    const next = (counts.get(key) ?? 0) + 1;
-    counts.set(key, next);
-    if (next > busiest) busiest = next;
+    counts.set(key, (counts.get(key) ?? 0) + 1);
   }
+  // Scaled to his crowded cells rather than his one busiest, so a lone spike cannot wash the map out.
+  const ranked = [...counts.values()].sort((a, b) => a - b);
+  const full = ranked[Math.min(ranked.length - 1, Math.floor(ranked.length * SATURATE))];
 
   const cells: HeatCell[] = [];
   for (const [key, count] of counts) {
     cells.push({
       x: (key % COLS) / COLS,
       y: Math.floor(key / COLS) / ROWS,
-      density: count / busiest,
+      density: Math.min(1, count / full),
     });
   }
   return cells;
@@ -99,6 +99,9 @@ export function heatCells(points: readonly Touch[]): HeatCell[] {
  *  while letting everything above it read. The blur radius came down at the same
  *  time, which is the other half of the same adjustment: a tighter kernel throws
  *  less of the intensity away, so less has to be added back. */
+/** The share of his touched cells drawn below full strength (Craig, 24 Sep 2026: "Heat can be less subtle"). */
+const SATURATE = 0.9;
+
 const FALLOFF = 1.25;
 
 /** What the blur costs, put back.
