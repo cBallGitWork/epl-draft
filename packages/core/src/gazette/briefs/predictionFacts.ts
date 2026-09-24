@@ -16,9 +16,8 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
     { tag: `T${index}A`, side: away },
   ];
   const story = call.instinct === null ? storyOf([favourite, underdog]) : null;
-  const covered = new Set<PredictionSide>(
-    story !== null ? [story.side] : call.instinct === "doubt" ? [favourite] : call.instinct === "liverpool" ? [home, away] : call.instinct === "defence" ? [home, away] : [],
-  );
+  // The sides the story or the gut reason already speaks for: a doubt is the favourite's alone.
+  const covered = new Set<PredictionSide>(story !== null ? [story.side] : call.instinct === "doubt" ? [favourite] : call.instinct === null ? [] : [home, away]);
   const used = new Set(story === null ? [] : [story.man.name]);
   const fresh = (men: readonly (SquadMan | null)[]) => men.find((man): man is SquadMan => man !== null && !used.has(man.name)) ?? null;
   const take = (man: SquadMan | null) => {
@@ -54,21 +53,18 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
  *  a difficult game, else one in doubt; null when none. */
 function storyOf(sides: readonly PredictionSide[]): { side: PredictionSide; man: SquadMan; text: string } | null {
   const main = (side: PredictionSide, man: SquadMan | null | undefined) => (man != null && side.keyMen.some((each) => each.name === man.name) ? man : null);
-  for (const side of sides) {
-    const man = main(side, side.kind);
-    if (man !== null) return { side, man, text: `${side.name}'s ${man.name}, one of their main men, has an easy one: ${fixture(man)}.` };
-  }
-  for (const side of sides) {
-    const man = side.keyMen.find((each) => streak(each) !== null);
-    if (man !== undefined) return { side, man, text: `${side.name}'s ${man.name} (${man.club}), one of their main men, ${streak(man)}.` };
-  }
-  for (const side of sides) {
-    const man = main(side, side.hard?.fixtures.length === 0 ? null : side.hard);
-    if (man !== null) return { side, man, text: `${side.name}'s ${man.name}, one of their main men, has a difficult one: ${fixture(man)}.` };
-  }
-  for (const side of sides) {
-    const man = main(side, side.doubts[0]);
-    if (man !== null) return { side, man, text: `${doubt(man, side.name)} One of their main men.` };
+  const lead = (side: PredictionSide, who: string) => `${side.name}'s ${who}, one of their main men`;
+  const stories: [pick: (side: PredictionSide) => SquadMan | null, text: (side: PredictionSide, man: SquadMan) => string][] = [
+    [(side) => main(side, side.kind), (side, man) => `${lead(side, man.name)}, has an easy one: ${fixture(man)}.`],
+    [(side) => side.keyMen.find((each) => streak(each) !== null) ?? null, (side, man) => `${lead(side, `${man.name} (${man.club})`)}, ${streak(man)}.`],
+    [(side) => main(side, side.hard?.fixtures.length === 0 ? null : side.hard), (side, man) => `${lead(side, man.name)}, has a difficult one: ${fixture(man)}.`],
+    [(side) => main(side, side.doubts[0]), (side, man) => `${doubt(man, side.name)} One of their main men.`],
+  ];
+  for (const [pick, text] of stories) {
+    for (const side of sides) {
+      const man = pick(side);
+      if (man !== null) return { side, man, text: text(side, man) };
+    }
   }
   return null;
 }
