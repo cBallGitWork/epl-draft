@@ -7,7 +7,7 @@ import type { PlayersQuery } from "./query";
 import { STATUS } from "./status";
 import { positionLabel } from "../positions";
 import { LABEL, PANEL, SECTION_BAR } from "@/app/desk";
-import { Carried, Chip, Count, Figures, PRESSABLE, Plates } from "./BoardControls";
+import { Carried, clubOptions, Chip, Count, Figures, PRESSABLE, Plates } from "./BoardControls";
 import QuerySelect from "./QuerySelect";
 import { COLUMNS } from "./columns";
 
@@ -142,7 +142,7 @@ export default function BoardBar({
                   name="club"
                   label="Club"
                   value={query.club ?? ""}
-                  options={[{ value: "", label: "All clubs" }, ...clubs.map((code) => ({ value: code, label: code }))]}
+                  options={clubOptions(clubs)}
                   action={POOL}
                 >
                   <Carried query={query} except={["club"]} />

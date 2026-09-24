@@ -1,11 +1,10 @@
 import Link from "next/link";
-import Image from "next/image";
-import { DASH, crestForShortName, gameweekSpan } from "@epl/core";
+import { DASH, gameweekSpan } from "@epl/core";
 import PositionTile, { TILE_WIDTH } from "../../components/league/PositionTile";
 import { MUTE, SortHead } from "../../components/league/TableHeads";
 import { ROW_LINK } from "../../components/league/TableCells";
-import { positionsLabel } from "../../positions";
-import { BOARD, EDGE_FADE, HEAD_CELL, LABEL, ROW_FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, EDGE_FADE, HEAD_CELL, ROW_RULE, SCROLL } from "@/app/desk";
+import { FIGURE, LEAD_WIDTH, LeadFace, PIN_NAME, PIN_TILE } from "../BoardRow";
 import { standoutInk } from "../../components/league/standout";
 import { cutsFor } from "../standout";
 import { playerHref } from "../routes";
@@ -99,35 +98,14 @@ export default function ProjectionBoard({
   );
 }
 
-/** His crest and name, and under it (on a phone) his Fantrax position; a link when the pool holds him. */
+/** His crest, name and position; a link when the pool holds him. */
 function Lead({ row }: { row: ProjectionRow }) {
-  const crest = crestForShortName(row.club);
-  const face = (
-    <>
-      <span className="grid size-6 shrink-0 place-items-center">
-        {crest ? <Image src={crest} alt="" width={20} height={20} className="size-5 object-contain" /> : null}
-      </span>
-      <span className="flex min-w-0 flex-1 flex-col">
-        <span className={`min-w-0 truncate ${ROW_NAME}`}>
-          <span className="lg:hidden">{row.name}</span>
-          <span className="hidden lg:inline">{row.fullName}</span>
-        </span>
-        <span className={`${LABEL} text-2xs leading-tight lg:hidden`}>{positionsLabel(row.positions) ?? DASH}</span>
-      </span>
-    </>
-  );
+  const face = <LeadFace club={row.club} name={row.name} fullName={row.fullName} positions={row.positions} />;
   return row.fantraxId === null ? (
-    <span className={`${ROW_LINK} w-34 px-1.5 hover:no-underline lg:w-64`}>{face}</span>
+    <span className={`${ROW_LINK} ${LEAD_WIDTH} hover:no-underline`}>{face}</span>
   ) : (
-    <Link href={playerHref(row.fantraxId)} className={`${ROW_LINK} w-34 px-1.5 lg:w-64`}>
+    <Link href={playerHref(row.fantraxId)} className={`${ROW_LINK} ${LEAD_WIDTH}`}>
       {face}
     </Link>
   );
 }
-
-/** Centred under its head, a little tighter under a thumb. */
-const FIGURE = `numeric px-1 text-center lg:px-1.5 ${ROW_FIGURE}`;
-
-/** The tile is the desk's; the lead is pinned while the weeks scroll under it. */
-const PIN_TILE = "hidden lg:table-cell sticky left-0 z-10";
-const PIN_NAME = "sticky left-0 z-10 border-r border-line bg-surface p-0 lg:left-14";

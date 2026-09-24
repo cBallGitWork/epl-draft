@@ -59,15 +59,7 @@ export function easeRanks(
   view: PlannerView,
   venue: Venue,
 ): Map<number, number> {
-  const rating = (club: ClubStrength) => (view === "attack" ? club.defence : club.attack)[venue];
-  const ordered = [...strengths.values()].sort((a, b) => rating(a) - rating(b));
-  const ranks = new Map<number, number>();
-  ordered.forEach((club, index) => {
-    const previous = ordered[index - 1];
-    const tied = previous !== undefined && rating(previous) === rating(club);
-    ranks.set(club.code, tied ? (ranks.get(previous.code) ?? index + 1) : index + 1);
-  });
-  return ranks;
+  return competitionRanks(strengths, (club) => (view === "attack" ? club.defence : club.attack)[venue], "ascending");
 }
 
 /** Two ranks to a step, onto the planner's ten-step ease ramp. */
@@ -85,22 +77,29 @@ export interface StrengthRank {
 
 /** Every rated club by its own attack or defence at both venues, the strongest first; ties share a rank. */
 export function strengthTable(strengths: Map<number, ClubStrength>, measure: "attack" | "defence"): StrengthRank[] {
-  const rank = (venue: Venue) => {
-    const rating = (club: ClubStrength) => club[measure][venue];
-    const ordered = [...strengths.values()].sort((a, b) => rating(b) - rating(a));
-    const ranks = new Map<number, number>();
-    ordered.forEach((club, index) => {
-      const previous = ordered[index - 1];
-      const tied = previous !== undefined && rating(previous) === rating(club);
-      ranks.set(club.code, tied ? (ranks.get(previous.code) ?? index + 1) : index + 1);
-    });
-    return ranks;
-  };
+  const rank = (venue: Venue) => competitionRanks(strengths, (club) => club[measure][venue], "descending");
   const home = rank("home");
   const away = rank("away");
   return [...strengths.values()]
     .map((club) => ({ code: club.code, club: club.shortName, home: home.get(club.code) ?? 0, away: away.get(club.code) ?? 0 }))
     .sort((a, b) => a.home + a.away - (b.home + b.away) || a.club.localeCompare(b.club));
+}
+
+/** Each club's place by `rating`, 1 first in the given direction; a tie shares the higher place (1, 2, 2, 4). */
+function competitionRanks(
+  strengths: Map<number, ClubStrength>,
+  rating: (club: ClubStrength) => number,
+  direction: "ascending" | "descending",
+): Map<number, number> {
+  const sign = direction === "ascending" ? 1 : -1;
+  const ordered = [...strengths.values()].sort((a, b) => sign * (rating(a) - rating(b)));
+  const ranks = new Map<number, number>();
+  ordered.forEach((club, index) => {
+    const previous = ordered[index - 1];
+    const tied = previous !== undefined && rating(previous) === rating(club);
+    ranks.set(club.code, tied ? (ranks.get(previous.code) ?? index + 1) : index + 1);
+  });
+  return ranks;
 }
 
 /** `count` gameweeks from the first with a match still to finish, stopping at the season's last. */

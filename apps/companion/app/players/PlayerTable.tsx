@@ -7,6 +7,7 @@ import { activeSort, sortHref } from "./query";
 import type { PlayersQuery } from "./query";
 import { BOARD, EDGE_FADE, HEAD_CELL, ROW_RULE, SCROLL } from "@/app/desk";
 import Cell, { Lead } from "./Cell";
+import { PIN_NAME, PIN_TILE } from "./BoardRow";
 
 // The pool as one sortable board: every column, phone-first, each sort a link so the server orders and the URL keeps it.
 // The lead is pinned while the figures scroll (DESIGN §9); the desk adds CM's position tile down the left.
@@ -88,9 +89,3 @@ export default function PlayerTable({
     </div>
   );
 }
-
-/** The tile is the desk's; the phone carries position on the name's second line. */
-const PIN_TILE = "hidden lg:table-cell sticky left-0 z-10";
-
-/** The lead stays put while the figures scroll under it, starting where the desk's tile ends. */
-const PIN_NAME = "sticky left-0 z-10 border-r border-line bg-surface p-0 lg:left-14";

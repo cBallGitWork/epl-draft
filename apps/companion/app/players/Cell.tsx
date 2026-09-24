@@ -1,6 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
-import { crestForShortName, listName, signed, toFplClubCode, DASH } from "@epl/core";
+import { listName, signed, toFplClubCode, DASH } from "@epl/core";
 import type { PoolRow } from "./pool";
 import type { PoolColumn, RawStats } from "./columns";
 import { figureOf } from "./figure";
@@ -9,8 +8,7 @@ import { STATUS } from "./status";
 import { ANALYSIS, playerHref } from "./routes";
 import type { PlayersQuery } from "./query";
 import { ROW_LINK } from "../components/league/TableCells";
-import { positionsLabel } from "../positions";
-import { LABEL, ROW_FIGURE, ROW_NAME } from "@/app/desk";
+import { FIGURE, LEAD_WIDTH, LeadFace } from "./BoardRow";
 
 // One row of the pool board: the lead (crest, name, and who holds him) and the figures beside it.
 // Figures are centred and lit in ink (DESIGN §3), never on a ground; a nought is quiet, an absence a dash.
@@ -32,8 +30,6 @@ export function Lead({
   className: string;
 }) {
   const { player } = row.entry;
-  // Fantrax spells two clubs its own way (`NOT` for Forest); the crest is looked up by FPL's.
-  const crest = crestForShortName(toFplClubCode(player.clubCode ?? ""));
   // With a first man chosen (`?compare=`) the board is the picker, and a row completes the pair.
   const href =
     query.compare && query.compare !== player.fantraxId
@@ -42,22 +38,15 @@ export function Lead({
 
   return (
     <td className={className}>
-      <Link href={href} className={`${ROW_LINK} w-34 px-1.5 lg:w-64`}>
-        <span className="grid size-6 shrink-0 place-items-center">
-          {crest ? <Image src={crest} alt="" width={20} height={20} className="size-5 object-contain" /> : null}
-        </span>
-        <span className="flex min-w-0 flex-1 flex-col">
-          {/* The holder in brackets straight after the name (Craig, 24 Sep 2026), so the lead needs no room of its own. */}
-          <span className="flex min-w-0 items-baseline gap-1">
-            {/* The name keeps its room; the holder truncates first. */}
-            <span className={`max-w-full shrink-0 truncate ${ROW_NAME}`}>
-              <span className="lg:hidden">{listName(player.rawName) || player.displayName}</span>
-              <span className="hidden lg:inline">{player.displayName}</span>
-            </span>
-            <Holder row={row} teamNames={teamNames} reader={reader} />
-          </span>
-          <span className={`${LABEL} text-2xs leading-tight lg:hidden`}>{positionsLabel(row.entry.eligiblePositions) ?? DASH}</span>
-        </span>
+      <Link href={href} className={`${ROW_LINK} ${LEAD_WIDTH}`}>
+        {/* The holder in brackets straight after the name (Craig, 24 Sep 2026), so the lead needs no room of its own. */}
+        <LeadFace
+          club={toFplClubCode(player.clubCode ?? "")}
+          name={listName(player.rawName) || player.displayName}
+          fullName={player.displayName}
+          positions={row.entry.eligiblePositions}
+          after={<Holder row={row} teamNames={teamNames} reader={reader} />}
+        />
       </Link>
     </td>
   );
@@ -124,5 +113,3 @@ function Trend({ value }: { value: number }) {
   if (value === 0) return <span className="text-faint">0%</span>;
   return <span className={value > 0 ? "text-up" : "text-bad"}>{signed(value)}%</span>;
 }
-
-const FIGURE = `numeric px-1 text-center lg:px-1.5 ${ROW_FIGURE}`;

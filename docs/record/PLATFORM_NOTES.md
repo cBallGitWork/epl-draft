@@ -138,6 +138,10 @@ well"*, *"Tighten the column headers too?"*. `docs/ui/players.md` carries the bo
 - **Opp is gone** from the board, and `fixtureOnly` with it.
 - **The Data section draws no caption at any width** (since the second look, 24 Sep 2026; `SectionShell`'s
   `caption` is optional); a Fantrax projection says so above the board.
+- **Extracted at two, by Craig's asking** (*"make sure we are using shared code"*, 24 Sep 2026), a recorded
+  exception to CODE_RULES §1: `players/BoardRow` (the Players and Projections boards' lead, pins and figure
+  cell), `clubOptions` (two club selects) and `competitionRanks` in `football/intel/strength` (the planner's
+  ease ranks and the rankings view). Each pair must agree for the screens to; a third caller changes nothing.
 
 ## Draft and Prem share the Comps tab, and Data is on the bar — decided 24 Sep 2026
 

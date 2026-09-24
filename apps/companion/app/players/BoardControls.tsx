@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { POOL_GROUPS, type PoolGroupKey } from "./groups";
 import { boardHref, chosen } from "./query";
+import type { QueryOption } from "./QuerySelect";
 import type { PlayersQuery } from "./query";
 
 // The pieces `BoardBar` arranges: the stat-group strip, the figure chips, the
@@ -273,4 +274,9 @@ export function Chip({ on, href, children }: { on: boolean; href: string; childr
       {children}
     </Link>
   );
+}
+
+/** The club select's options: every club, then each by its code. */
+export function clubOptions(codes: readonly string[]): QueryOption[] {
+  return [{ value: "", label: "All clubs" }, ...codes.map((code) => ({ value: code, label: code }))];
 }

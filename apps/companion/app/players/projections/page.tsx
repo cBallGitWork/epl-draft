@@ -4,7 +4,7 @@ import ScoutShell from "../Shell";
 import Nothing from "../../components/shell/Nothing";
 import QuerySelect from "../QuerySelect";
 import ProjectionBoard from "./ProjectionBoard";
-import { Carried, Chip } from "../BoardControls";
+import { Carried, Chip, clubOptions } from "../BoardControls";
 import { PAGE_ROWS, boardHref, chosen, filterHref, isChosen, playersQuery, type PlayersSearchParams } from "../query";
 import { getLeaguePool } from "../pool";
 import { positionLabel } from "../../positions";
@@ -105,7 +105,7 @@ export default async function ProjectionsPage({ searchParams }: { searchParams: 
           name="club"
           label="Club"
           value={club}
-          options={[{ value: "", label: "All clubs" }, ...clubs.map((code) => ({ value: code, label: code }))]}
+          options={clubOptions(clubs)}
           action={PROJECTIONS}
         >
           <Carried query={query} except={["club"]} />
