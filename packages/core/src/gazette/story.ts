@@ -1,4 +1,5 @@
 import { type StoryExtras, normalizeExtras } from "./extras";
+import { type StoryFace, normalizeFace } from "./face";
 import { type EditionTie, normalizeTie, once } from "./published";
 
 // The rolling paper: prose as a stack of stories rather than one column a round.
@@ -44,23 +45,8 @@ export const STORY_KINDS: readonly StoryKind[] = [
 ];
 
 export type { StoryExtras } from "./extras";
+export type { StoryFace } from "./face";
 
-/** A player the page can print a picture of.
- *
- *  The FPL `code` and not the id: a portrait path keys off the season-stable
- *  code, and this is written to disk in `paper.json` — CODE_RULES §3 forbids
- *  persisting the per-season id. `clubId` is this season's, and is only ever
- *  used to reach a crest at render, never persisted as identity. */
-export interface StoryFace {
-  code: number;
-  name: string;
-  clubId: number;
-  /** The roster slot he was filed in, for the one thing the picture needs it
-   *  for: a goalkeeper's kit is a different shirt, and the shirt is the rung
-   *  `PlayerImage` falls to when he has no photograph. Fantrax's own letter —
-   *  the SLOT and never a position off the player. */
-  position: string | null;
-}
 
 /** One filed story, as committed.
  *
@@ -149,23 +135,7 @@ export function normalizeStory(parsed: unknown): PublishedStory | null {
       ? { src: raw.image.src, alt: raw.image.alt }
       : null;
 
-  // Every field or none. A face with no code is a portrait we cannot fetch and
-  // a face with no name is a caption we cannot write, so a partial one is not a
-  // face — it prints as no picture rather than as a broken one.
-  const face =
-    raw.face !== null &&
-    typeof raw.face === "object" &&
-    typeof raw.face.code === "number" &&
-    typeof raw.face.name === "string" &&
-    raw.face.name !== "" &&
-    typeof raw.face.clubId === "number"
-      ? {
-          code: raw.face.code,
-          name: raw.face.name,
-          clubId: raw.face.clubId,
-          position: typeof raw.face.position === "string" ? raw.face.position : null,
-        }
-      : null;
+  const face = normalizeFace(raw.face);
 
   return {
     slug: raw.slug,
