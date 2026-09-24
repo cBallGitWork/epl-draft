@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { fetchBootstrap, roundPlayed, shotIntel, squadIntel, touchIntel, xiFault } from "@epl/core";
-import type { IntelShots, IntelSquads, IntelTouches, IntelXi } from "@epl/core";
+import { fetchBootstrap, roundPlayed, shotIntel, squadIntel, strengthIntel, touchIntel, xiFault } from "@epl/core";
+import type { IntelShots, IntelSquads, IntelStrength, IntelTouches, IntelXi } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 import { INTEL_SEASON } from "./intel";
 
@@ -49,6 +49,7 @@ async function main(): Promise<void> {
 
   checkTouches();
   checkShots();
+  checkStrength();
 
   // One rolling file, the latest Scout has; its round is in the manifest.
   const xiPath = join(INTEL_ROOT, "xi", `${INTEL_SEASON}.json`);
@@ -157,6 +158,20 @@ function checkShots(): void {
       `exported ${age(shots.manifest.exportedAt)}`,
   );
   for (const source of shots.manifest.sources) {
+    console.log(`  built from ${source.path} (${age(source.mtime)})`);
+  }
+}
+
+/** The club ratings behind the fixture planner: a warning, like the maps, because the planner draws blank without them. */
+function checkStrength(): void {
+  const strength = read<IntelStrength>(join(INTEL_ROOT, "strength", `${INTEL_SEASON}.json`));
+  if (strength === null) {
+    console.log("\nstrength: no export — the fixture planner will be empty.");
+    return;
+  }
+  const clubs = strengthIntel(strength);
+  console.log(`\nstrength: ${clubs.size} clubs rated, exported ${age(strength.manifest.exportedAt)}`);
+  for (const source of strength.manifest.sources) {
     console.log(`  built from ${source.path} (${age(source.mtime)})`);
   }
 }

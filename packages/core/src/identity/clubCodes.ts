@@ -16,3 +16,10 @@ const FANTRAX_TO_FPL: Record<string, string> = {
 export function toFplClubCode(fantraxCode: string): string {
   return FANTRAX_TO_FPL[fantraxCode] ?? fantraxCode;
 }
+
+const FPL_TO_FANTRAX = Object.fromEntries(Object.entries(FANTRAX_TO_FPL).map(([fantrax, fpl]) => [fpl, fantrax]));
+
+/** The same respelling the other way, for a link from a football screen into the Fantrax-keyed board. */
+export function toFantraxClubCode(fplCode: string): string {
+  return FPL_TO_FANTRAX[fplCode] ?? fplCode;
+}
