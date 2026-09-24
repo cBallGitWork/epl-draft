@@ -53,27 +53,9 @@ export const LEAGUE_CAPTION: Record<LeagueSection, string> = {
   matchups: "Matchups",
 };
 
-/** The scouting section's own bar.
- *
- *  **A subject, not a view** — which is why it is a bare name here rather than an
- *  entry in a caption table. `SCOUT_CAPTION` below is the view.
- *
- *  **`Find`, which is Championship Manager's own word for this slot** — the rail
- *  in `cm9900/12.jpg`, `11.jpg` and `25.jpg` reads `Continue Game · <manager> ·
- *  Competitions · Nations & Clubs · Find · Game Options`, and Find is the entry
- *  for looking a player up. Craig, 10 Sep 2026: *"replace with something more
- *  CM"*.
- *
- *  It was "Scout" until then, and this docblock already argued the case against
- *  itself: it cited CM's `Find` as the reason "Scout" was better than "Players",
- *  which is a verb standing in for a verb the reference already had. Using the
- *  game's own word is shorter, and the reference library's rule is that a CM
- *  claim cites a numbered shot rather than a memory of one.
- *
- *  The constant keeps its name. `SCOUT` is what the section is called in this
- *  codebase — `scouting.ts`, DESIGN §9's "scouting table" — and renaming an
- *  export to match a label is how a label change becomes a hundred-file diff. */
-export const SCOUT = "Find";
+/** The fantasy deep dive's bar: "Data" since 24 Sep 2026 (Craig: "FIND is now DATA"), CM's "Find" before.
+ *  The constant keeps its name, so a label change stays a one-line diff; the rail says the same word. */
+export const SCOUT = "Data";
 
 /** The scouting section's one view. The pool overrides it with the category the
  *  board is ranked by, exactly as `cm9900/16.jpg` captions its stat list. */

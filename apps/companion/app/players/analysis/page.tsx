@@ -98,7 +98,7 @@ export default async function ComparePage({
   const refused = refusal(left) ?? refusal(right);
   if (refused !== null) {
     return (
-      <ScoutShell current="analysis" title="Analysis" rows={0}>
+      <ScoutShell current="analysis" title="Compare" rows={0}>
         {picker}
         <Nothing title="Fantrax would not answer for one of them" code={refused}>
           A profile is one live read each and this one refused. Nothing is cached for it, so
@@ -115,7 +115,7 @@ export default async function ComparePage({
   // back to the board.
   if (one_ === null || names.a === null) {
     return (
-      <ScoutShell current="analysis" title="Analysis" rows={0}>
+      <ScoutShell current="analysis" title="Compare" rows={0}>
         {picker}
         <Nothing title="A player, or two">
           Search for anybody in the pool. One man fills the screen on his own; pick a second
@@ -130,7 +130,7 @@ export default async function ComparePage({
   const solo = two === null || names.b === null;
 
   return (
-    <ScoutShell current="analysis" title="Analysis" rows={0}>
+    <ScoutShell current="analysis" title="Compare" rows={0}>
       {picker}
 
       <CompareBar

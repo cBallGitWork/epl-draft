@@ -30,18 +30,8 @@ const TABS = [
   { href: "/prem/results", label: "Results", key: "results" },
   { href: "/prem/fixtures", label: "Fixtures", key: "fixtures" },
   { href: "/prem/team-stats", label: "Team Stats", key: "teamStats" },
-  // **The pool, which came off the navigation bar on 5 Sep 2026 and had to land
-  // somewhere.** `/players` is the PREMIER LEAGUE's players priced by our
-  // league's scoring, and you reach a thing through the competition it belongs
-  // to — `shell/sections.ts` makes that argument about squads and clubs and it
-  // holds here. It is the League strip's `Player Stats` too, so the pool has two
-  // ways in rather than the one plate it lost.
-  //
-  // **It leaves the section, exactly as it does on the League's strip**, so no
-  // tab draws as current when you are on it: `PremSection` has no `players` key
-  // and a page there is no longer in this section. That is the difference
-  // between a tab and a way OUT, and both strips now carry the same one.
-  { href: POOL, label: "Players", key: "players" },
+  // A way OUT to Data, not a view of this section, so no tab draws current on it (`PremSection` omits the key).
+  { href: POOL, label: "Data", key: "players" },
 ] as const;
 
 /** Which tab a page IS. `players` is deliberately not one: that entry leaves the

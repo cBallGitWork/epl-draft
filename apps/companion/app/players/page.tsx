@@ -215,8 +215,8 @@ export default async function PlayersPage({
  *  `cm9900/16.jpg` is that the bar says where you are and the caption says what
  *  the board IS — that shot captions its stat list `Average Rating`. Below `lg`
  *  the stat groups live behind the Filter plate, so the caption is the only
- *  thing left saying which columns are on screen. `all` falls through to Scout's
- *  own caption rather than printing "All", which is a word about a control and
+ *  thing left saying which columns are on screen. `all` falls through to the
+ *  section's own caption rather than printing "All", which is a word about a control and
  *  not a name for a board.
  *
  *  **And it carries the provenance, but only when the provenance bites.** The

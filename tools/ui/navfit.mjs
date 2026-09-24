@@ -40,7 +40,8 @@ const MEASURE = `(function(){
   var rail=Array.prototype.slice.call(document.querySelectorAll('nav[aria-label=Sections]'))
     .filter(function(n){return n.offsetWidth>0})[0];
   if(!rail) throw new Error("no section rail found — is this the app?");
-  var links=Array.prototype.slice.call(rail.querySelectorAll('a[href]'));
+  // A group tab (Comps) is a button that opens its fly-out; the desk rail's steppers are buttons with no aria-expanded.
+  var links=Array.prototype.slice.call(rail.querySelectorAll('a[href], button[aria-expanded]'));
   var items=links.filter(function(a){return a.textContent.trim()});
   // Only the plates, and only the ones with a label: the Live plate's figure
   // lives inside the same anchor, so counting spans would double that section.

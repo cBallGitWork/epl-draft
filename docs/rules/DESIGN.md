@@ -229,7 +229,7 @@ but a phone's tab bar answers "where can I go from anywhere", so it takes the ra
 accent, and a standard tab bar's shape: a 24px glyph over each `xs`/600 word, no dividers, 56px plus the
 safe-area inset. `layout.tsx` sets `viewportFit: "cover"`, without which iOS reports that inset as nought.
 
-**Six tabs is the ceiling: Gazetta · Team · League · Prem · Mail · More.** At 320 a tab is 53.3px and a label
+**Six tabs is the ceiling: Gazetta · Team · Comps · Data · Mail · More.** At 320 a tab is 53.3px and a label
 has 49px; `Gazetta` needs 44.3, and a seventh tab would leave 45. **Quote the label's room, never the tab's
 width**: "53px against 44" once read as headroom that did not exist, and `My Team` shipped at 51px into
 49.3 and printed `My Te…` (21 Sep 2026). `navfit` fails one pixel early, not one late, and it measures the
@@ -239,6 +239,16 @@ Live score as well as the labels.
 (`overflowDuringGameweek` beside `onlyDuringGameweek`, both applied by `sectionsFor()`). The Live tab puts
 your score where the glyph sits, a rung smaller per extra figure so `112–108` fits (`scoreSize`), and the
 match clock when there is no tie of yours to count.
+
+**Comps is a group tab, not a section** (Craig, 24 Sep 2026: *"when tapping on an option bring two squares
+up"*). CM files its competitions under one rail entry (`cm9900/12.jpg`, Competitions), so **Draft**, our league
+at `/league`, and **Prem** share the third tab (*"Prem is real life, draft is draft"*). Tapping it flies two
+64px squares out above it, stacked with Draft nearest the thumb and the current one in the accent. The open tab
+joins the well (its ground and side edges, no accent edge), and a square, the tab again, a tap anywhere else or
+Escape closes it. It is a fixed panel rather than the top layer, so `tools/ui` can measure it, and it sits
+outside the tab `nav`, which `navfit` counts. The desk rail lists Draft and Prem flat. **Data**, the fantasy
+deep dive at `/players` (CM's Find until 24 Sep: *"data needs to be at the bottom"*), takes the fourth tab;
+FPL stays behind More.
 
 **Mail is the News section's label** (Craig, 23 Sep 2026: *"Use mail"*); the route stays `/news`. Its unread
 count is a square cyan plate on the envelope, capped at `9+`: the inbox's ids this device has not seen,
@@ -323,6 +333,8 @@ The desk rail stays words only. The rules are what keep them from becoming a set
 - **The rail's glyphs are one set** (`shell/glyphs.tsx`): one 24 grid, one 2px
   stroke, square caps, mitred joins, fills only where CM fills a cell. Prem is the
   one exception, the Premier League's own lion as FPL serves it, in one colour.
+  Comps is a straight-walled cup on a filled plinth; Data is filled bars on a
+  baseline, upright where Draft's index cells lie flat, so the two never read alike.
 - **Only where the event IS the fact.** A report is mostly corners and blocked
   shots; the seven that change a match are the seven that get one, and everything
   else stays prose. An icon on every row is a wall with pictures in it.

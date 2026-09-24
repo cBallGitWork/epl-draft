@@ -44,13 +44,28 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Draft and Prem share the Comps tab, and Data is on the bar — decided 24 Sep 2026
+
+Craig: *"data needs to be at the bottom"*, *"when tapping on an option bring two squares up (except more
+which is a big list)"*, *"FIND is now DATA"*, and of the popup's League square, *"Prem is real life, draft is
+draft"*, then *"Fly out but vertical and smaller"*. DESIGN §2 carries the design; these are the facts.
+
+- **The bar**: Gazetta · Team/Live · Comps · Data · Mail · More. `sections.ts` folds consecutive members of a
+  `group` into one tab (`barTabs`); the desk rail still lists sections flat, now in the bar's order, so Data
+  sits after Prem there too.
+- **The League section is labelled Draft** everywhere a section is named. The URL stays `/league` and the
+  title bar still names the league.
+- **Find is Data.** The URL stays `/players`, and `SCOUT` keeps its name, so the label is a one-line change.
+- **`navfit` counts `button[aria-expanded]` as a tab**, not bare `button`, which would count the desk rail's
+  steppers.
+
 ## The phone's nav is the rail along the foot, with glyphs — decided 23 Sep 2026
 
 Craig: *"Bottom nav bars are bad. Needs to be mobile standard. More needs a proper menu. CM inspired
 still"*, then *"Icons are normally standard"*, *"Use mail"* and *"Just copy fpl"*. DESIGN §2 carries
 the design; these are the facts it rests on.
 
-- **Six tabs**: Gazetta · Team/Live · League · Prem · Mail · More. At 320 a label has 49px and
+- **Six tabs**: Gazetta · Team/Live · League · Prem · Mail · More (Comps and Data since 24 Sep, above). At 320 a label has 49px and
   `Gazetta` needs 44.3; `navfit` holds it.
 - **Icons are allowed on the thumb rail**, above the word and never instead of it. The desk rail stays
   words only. This extends DESIGN §2's icon rule from one job to two.

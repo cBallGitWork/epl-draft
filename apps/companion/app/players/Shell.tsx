@@ -4,8 +4,8 @@ import PoolNav from "./PoolNav";
 import type { ScoutView } from "./PoolNav";
 import { SCOUT, SCOUT_CAPTION } from "../titles";
 
-// The frame the scouting screens wear: its own section since 6 Sep 2026, on the royal-blue bar,
-// because Scout is an activity and not a competition, and the cream plate is spoken for twice.
+// The frame Data's screens wear: its own section since 6 Sep 2026, on the royal-blue bar,
+// because Data is an activity and not a competition, and the cream plate is spoken for twice.
 
 /** The panel's height in rows when a screen does not say. */
 const PANEL_ROWS = 14;

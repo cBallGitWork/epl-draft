@@ -82,7 +82,16 @@ export interface Section {
   overflow?: boolean;
   /** Behind `More` only while football is on, because Live takes its slot (Craig, 21 Sep 2026). */
   overflowDuringGameweek?: boolean;
+  /** Folded with its fellow members into one phone tab that pops a square for each (Craig, 24 Sep 2026). */
+  group?: GroupKey;
 }
+
+export type GroupKey = "comps";
+
+/** A phone tab that stands for several sections: CM's Competitions (`cm9900/12.jpg`). */
+export const GROUPS: Record<GroupKey, { label: string; fullLabel: string; glyph: GlyphName }> = {
+  comps: { label: "Comps", fullLabel: "Competitions", glyph: "comps" },
+};
 
 /** The manager's inbox, labelled Mail. */
 export const MAIL = "/news";
@@ -101,9 +110,13 @@ export const SECTIONS: Section[] = [
   },
   // Live takes Team's slot while football is on, so the second tab is always yours.
   { href: "/matchday", label: "Live", glyph: "live", routes: ["/matchday", "/gw"], onlyDuringGameweek: true },
-  { href: "/league", label: "League", glyph: "league", routes: ["/league"] },
-  // "Prem" on the rail; the title bar says "FA Barclays Premiership" (`cm9900/24.jpg`). Beside League, its competition.
-  { href: "/prem", label: "Prem", glyph: "prem", routes: ["/prem"] },
+  // "Draft", not League (Craig, 24 Sep 2026: "Prem is real life, draft is draft"); the URL stays `/league`.
+  { href: "/league", label: "Draft", glyph: "league", routes: ["/league"], group: "comps" },
+  // "Prem" on the rail; the title bar says "FA Barclays Premiership" (`cm9900/24.jpg`). Beside Draft, the real one.
+  { href: "/prem", label: "Prem", glyph: "prem", routes: ["/prem"], group: "comps" },
+  // The fantasy deep dive, on the bar since 24 Sep 2026 (Craig: "data needs to be at the bottom"). It was CM's
+  // "Find"; the URL stays `/players`, because a shared URL outlives a label. `titles.ts` carries the same word.
+  { href: POOL, label: "Data", glyph: "data", routes: [POOL] },
   // **The manager's inbox, and it is a section rather than a tab** (Craig, 5 Sep
   // 2026: "Should [news] be its own section and not the league?"). The game
   // agrees and says why: CM's rail entry for this screen is the MANAGER'S NAME
@@ -111,22 +124,6 @@ export const SECTIONS: Section[] = [
   // to the competition he plays in.
   // "Mail" since 23 Sep 2026 (Craig: "Use mail"); the route stays `/news`.
   { href: MAIL, label: "Mail", glyph: "mail", routes: [MAIL] },
-  // **Scout is a section again** (Craig, 5 Sep 2026: *"I think this function
-  // will be its own section away from the league etc"*), and DESIGN §1 has
-  // listed Players among the Desk's own all along — it was `sections.ts` that
-  // drifted when the bar ran out of room, not the design.
-  //
-  // **"Find", which is Championship Manager's own word for this slot.** Its
-  // rail in `cm9900/12.jpg`, `11.jpg` and `25.jpg` reads `Continue Game ·
-  // <manager> · Competitions · Nations & Clubs · Find · Game Options`, and Find
-  // is the entry for looking a player up (Craig, 10 Sep 2026: *"replace with
-  // something more CM"*). It read "Scout" until then, on a comment that cited
-  // CM's Find as the reason — a stand-in for a word the reference already had.
-  //
-  // The URL stays `/players`, because a URL is persisted the moment somebody
-  // shares it and the route did not change. `titles.ts` carries the same label
-  // for the bar; the two must not drift.
-  { href: POOL, label: "Find", routes: [POOL], overflow: true },
   { href: "/fpl", label: "FPL", routes: ["/fpl"], overflow: true },
 ];
 
@@ -140,6 +137,28 @@ export function sectionsFor(matchday: boolean): Section[] {
 /** The tabs a phone's rail draws, in order, before `More` is added. */
 export function barSections(sections: readonly Section[]): Section[] {
   return sections.filter((section) => !section.overflow);
+}
+
+export type BarTab =
+  | { kind: "section"; section: Section }
+  | ({ kind: "group"; key: GroupKey; members: Section[] } & (typeof GROUPS)[GroupKey]);
+
+/** The phone's tabs before `More`: a group's consecutive members fold into one tab at the first one's place. */
+export function barTabs(sections: readonly Section[]): BarTab[] {
+  const tabs: BarTab[] = [];
+  for (const section of barSections(sections)) {
+    const last = tabs.at(-1);
+    if (section.group && last?.kind === "group" && last.key === section.group) last.members.push(section);
+    else if (section.group) tabs.push({ kind: "group", key: section.group, ...GROUPS[section.group], members: [section] });
+    else tabs.push({ kind: "section", section });
+  }
+  return tabs;
+}
+
+/** Whether a tab is where you are: a group is when any of its members is. */
+export function tabOwns(tab: BarTab, pathname: string): boolean {
+  const members = tab.kind === "group" ? tab.members : [tab.section];
+  return members.some((section) => owns(section.routes, pathname));
 }
 
 /** What is behind `More`, listed on its page before the squads and the credits. */
