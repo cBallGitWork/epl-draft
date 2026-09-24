@@ -6,7 +6,7 @@ import {
   type FootballSnapshot,
   type PlayerOwner,
   clubById,
-  clubColours,
+  clubColoursOf,
   contributions,
   crestUrl,
   fixturesInOrder,
@@ -161,7 +161,7 @@ function MatchRow({
               const owner = owners?.get(c.player.code);
               return (
                 <li key={c.player.id} className="flex items-center gap-2.5">
-                  <PlayerPortrait player={c.player} colours={clubColours(club?.shortName ?? "")} />
+                  <PlayerPortrait player={c.player} colours={clubColoursOf(club)} />
                   <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
                     <span className={`min-w-0 truncate ${ROW_NAME}`}>{c.player.name}</span>
                     {/* Whose player that was. The one line of Soccer Saturday

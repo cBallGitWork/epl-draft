@@ -1,32 +1,18 @@
-import Link from "next/link";
-import type { Club, FootballPlayer, PlayerOwner } from "@epl/core";
-import { clubColours, inkOn, DASH } from "@epl/core";
-import { IndexCell } from "../../../components/league/TableCells";
+import type { Club, FootballPlayer, PlayerOwner, SquadPlayerDetail } from "@epl/core";
+import { clubColoursOf, inkOn, DASH } from "@epl/core";
+import PositionTile from "../../../components/league/PositionTile";
+import { clubIndex } from "../../../components/football/clubIndex";
 import { intelSquads } from "../../../intel";
-import { PLAYER } from "../../routes";
-import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE } from "@/app/desk";
+import { BOARD, PANEL_FLUSH, ROW_NAME, ROW_RULE, phoneShows } from "@/app/desk";
+import { fantraxPositions, type LeagueOpinion } from "../../leagueOpinions";
+import { MaybeCard } from "./PlayerCardButton";
+import OwnedBy from "./OwnedBy";
+import { MATCH_ROW } from "./matchRow";
 
-// Both clubs' books, before a ball is kicked (Craig, 4 Sep 2026: *"players tab
-// can just be the two squad lists (like we do on the actual team page, but just
-// a list, no team page)"*).
-//
-// **The same shape the played board has, with the two columns that need a match
-// taken out.** No points, because nobody has scored any; no sub note, because
-// nobody has come off. What is left is the shirt number, the man, the line he
-// plays on and who holds him — which is the whole of what a manager wants from a
-// fixture on a Thursday.
-//
-// `/prem/club/[code]` draws the same men with more about each; this is
-// deliberately not that page, because the question here is who is in THIS match.
+// Both clubs' books before a ball is kicked, to the team sheet's standards: the Fantrax tile in the club's colour,
+// the name opening his card, who holds him, and his real position.
 
-/** The order a squad is read in, keeper to attack. The sister repo's own
- *  bucketing (`IntelPlayer.line`), not a second taxonomy of ours — it owns the
- *  football vocabulary and a copy here would be a second thing to be wrong.
- *
- *  Note it is NOT the match log's vocabulary, which `matchLine` orders: that one
- *  is SofaScore's per-match line codes (`DC`, `AMC`, `FWL`) and this is the
- *  squad export's (`CB`, `FB`, `WF`). Two files, two providers, two taxonomies,
- *  and `realPositions.ts` records the same split. */
+/** Keeper to attack, in the squad export's own lines (`CB`, `FB`, `WF`) — not the match log's, which `matchLine` orders. */
 const LINES = ["GK", "CB", "FB", "DM", "CM", "AM", "WF", "CF"] as const;
 
 export default function Squads({
@@ -34,18 +20,27 @@ export default function Squads({
   away,
   players,
   owners,
+  league,
+  cards,
+  phoneSide,
 }: {
   home: Club | undefined;
   away: Club | undefined;
-  /** Every footballer in the snapshot; each side is filtered out of it here so
-   *  the caller does not do the same filter twice. */
+  /** Every footballer in the snapshot; each side is filtered here. */
   players: readonly FootballPlayer[];
   owners: Map<number, PlayerOwner>;
+  league: ReadonlyMap<number, LeagueOpinion>;
+  cards: ReadonlyMap<number, SquadPlayerDetail>;
+  /** The one club a phone shows; a desk shows both. */
+  phoneSide: "home" | "away";
 }) {
+  const side = (club: Club | undefined, picked: boolean) => (
+    <Side club={club} players={players} owners={owners} league={league} cards={cards} phonePicked={picked} />
+  );
   return (
-    <div className="grid grid-cols-2 gap-2">
-      <Side club={home} players={players} owners={owners} />
-      <Side club={away} players={players} owners={owners} />
+    <div className="grid min-w-0 gap-2 lg:grid-cols-2">
+      {side(home, phoneSide === "home")}
+      {side(away, phoneSide === "away")}
     </div>
   );
 }
@@ -54,12 +49,18 @@ function Side({
   club,
   players,
   owners,
+  league,
+  cards,
+  phonePicked,
 }: {
   club: Club | undefined;
   players: readonly FootballPlayer[];
   owners: Map<number, PlayerOwner>;
+  league: ReadonlyMap<number, LeagueOpinion>;
+  cards: ReadonlyMap<number, SquadPlayerDetail>;
+  phonePicked: boolean;
 }) {
-  const colours = clubColours(club?.shortName ?? "");
+  const colours = clubColoursOf(club);
   const squad =
     club === undefined
       ? []
@@ -68,42 +69,35 @@ function Side({
           .sort((a, b) => depth(a) - depth(b) || a.name.localeCompare(b.name));
 
   return (
-    <section className={PANEL_FLUSH}>
+    <section className={`${PANEL_FLUSH} cm-index-scoped min-w-0 ${phoneShows(phonePicked)}`} style={clubIndex(club)}>
       <h2
         className="flex min-h-7 items-center px-1.5 text-2xs font-bold uppercase"
         style={{ background: colours.primary, color: inkOn(colours) }}
       >
         {club?.name ?? DASH}
       </h2>
-      <table className={BOARD}>
+      <table className={`${BOARD} table-fixed`}>
         <tbody>
           {squad.map((player) => {
             const intel = intelSquads.get(player.code);
             const owner = owners.get(player.code);
             return (
-              <tr key={player.id} className={ROW_RULE}>
-                <IndexCell>{intel?.squadNumber ?? ""}</IndexCell>
-                <td className="p-0">
-                  <Link
-                    href={`${PLAYER}/${player.code}`}
-                    className="group flex min-h-11 flex-col justify-center px-1.5 lg:min-h-9"
+              <tr key={player.id} className={ROW_RULE} {...MATCH_ROW}>
+                <PositionTile positions={fantraxPositions(league, player.code)} cell />
+                <td className="min-w-0 p-0">
+                  {/* Centred in the row, the name and its owner on one baseline — the team sheet's own cell. */}
+                  <MaybeCard
+                    player={cards.get(player.code)}
+                    className="group flex min-h-9 w-full items-center px-1.5 text-left"
                   >
-                    <span className={`min-w-0 truncate group-hover:underline ${ROW_NAME}`}>
-                      {player.name}
+                    <span className="flex min-w-0 flex-1 items-baseline gap-1.5">
+                      <span className={`min-w-0 truncate group-hover:underline ${ROW_NAME}`}>{player.name}</span>
+                      <OwnedBy owner={owner} className="shrink-0 truncate" />
                     </span>
-                    {owner === undefined ? null : (
-                      <span className="min-w-0 truncate text-3xs text-faint">
-                        {owner.teamName}
-                      </span>
-                    )}
-                  </Link>
+                  </MaybeCard>
                 </td>
-                {/* His real position, and a dash for the 146 of 651 the exporter
-                    sends as null on purpose — those came from FPL's own fantasy
-                    classification, which the football layer refuses by rule. */}
-                <td className="numeric w-10 px-1.5 text-right text-2xs text-faint">
-                  {intel?.position ?? DASH}
-                </td>
+                {/* His real position; a dash for the men the exporter sends as null rather than take FPL's. */}
+                <td className="numeric w-10 px-1.5 text-right text-2xs text-faint">{intel?.position ?? DASH}</td>
               </tr>
             );
           })}
@@ -113,9 +107,7 @@ function Side({
   );
 }
 
-/** Where a man sits in the reading order. A line nobody has settled sorts last,
- *  for `matchLine`'s reason: a man our sources have no opinion about belongs
- *  under the ones they do, not in goal. */
+/** Where a man sits in the reading order; a line nobody has settled sorts last. */
 function depth(player: FootballPlayer): number {
   const line = intelSquads.get(player.code)?.line ?? null;
   const at = line === null ? -1 : LINES.indexOf(line as (typeof LINES)[number]);

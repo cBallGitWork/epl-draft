@@ -295,6 +295,8 @@
      two below it: 1.6:1 on stock, and nothing on the paper prints a direction.
      The day something does, it gets one, the way `--accent` did. --- */
   --color-mid: oklch(0.79 0.14 85);
+  /* The best figure in its column on a match board, as ink: CM's orange over the yellow of the other standouts. */
+  --color-peak: oklch(0.74 0.17 55);
   --color-bad: oklch(0.66 0.17 25);
   --color-up: oklch(0.78 0.17 148);
 

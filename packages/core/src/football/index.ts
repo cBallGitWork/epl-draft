@@ -15,7 +15,7 @@ export type {
   MatchEventKind,
 } from "./types";
 
-export { clubColours, clubGround, crestForShortName, crestUrl, inkOn, plateOn, shirtUrl } from "./clubs";
+export { clubColours, clubColoursOf, clubGround, crestForShortName, crestUrl, inkOn, plateOn, shirtUrl } from "./clubs";
 export type { ClubColours } from "./clubs";
 // The photograph behind a club's own screens, and the credit it must carry.
 export { clubGroundPhoto, groundPhotoCredits } from "./grounds";

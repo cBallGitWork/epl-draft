@@ -1,4 +1,6 @@
+import type { ReactNode } from "react";
 import type { Shot } from "@epl/core";
+import { toBoxY } from "./pitchBox";
 
 // Shots, as marks on the grass.
 //
@@ -37,6 +39,10 @@ import type { Shot } from "@epl/core";
 // map is a picture and the figures live in the table above it.
 
 /** Radius in pitch units. See the header for both arithmetics. */
+/** The cream edge every mark wears, in pitch units, so a club colour close to the grass still reads. */
+export const HALO = 0.15;
+const HALO_OPACITY = 0.75;
+
 const MARK = { base: 0.7, span: 1.1, cap: 0.8, plain: 1.0 };
 
 /** How each tier is drawn, in one place, so the key and the pitch cannot
@@ -86,20 +92,30 @@ export default function Marks({
       {shots.map((shot, n) => {
         const tier = TIER[shot.outcome];
         const r = radius(shot.xg);
+        // The index is the key: a rebound can share a man, a minute and a spot.
         return (
-          <circle
-            // Two shots can share a minute and a spot — a rebound is the same
-            // man, the same second, a foot away — so the index is the only key
-            // that is unique by construction.
-            key={n}
-            cx={shot.x}
-            cy={(shot.y / 100) * 64}
-            r={r}
-            fill={DRAWN[tier].fill === "none" ? "none" : ink}
-            stroke={ink}
-            strokeWidth={DRAWN[tier].width}
-            opacity={DRAWN[tier].opacity}
-          />
+          <g key={n}>
+            {/* A cream halo under every mark: 14 of 20 club colours are under 3:1 on the
+                darker mow band, cream is 10.5:1 (measured 23 Sep 2026). */}
+            <circle
+              cx={shot.x}
+              cy={toBoxY(shot.y)}
+              r={r + DRAWN[tier].width / 2 + HALO / 2}
+              fill="none"
+              stroke="var(--color-cream)"
+              strokeWidth={HALO}
+              opacity={HALO_OPACITY}
+            />
+            <circle
+              cx={shot.x}
+              cy={toBoxY(shot.y)}
+              r={r}
+              fill={DRAWN[tier].fill === "none" ? "none" : ink}
+              stroke={ink}
+              strokeWidth={DRAWN[tier].width}
+              opacity={DRAWN[tier].opacity}
+            />
+          </g>
         );
       })}
     </g>
@@ -129,7 +145,7 @@ function radius(xg: number | null): number {
  *  the same rules, so a key per pitch is the same fact twice. `Pitch.tsx` made
  *  the same call about its own key before it was retired.
  */
-export function MarksKey() {
+export function MarksKey({ children }: { children?: ReactNode }) {
   return (
     <ul className="flex flex-wrap items-center gap-x-3 gap-y-1 text-3xs text-faint">
       {TIER_LABEL.map(([tier, label]) => (
@@ -146,6 +162,8 @@ export function MarksKey() {
           {label}
         </li>
       ))}
+      {/* A map's own entries, such as the match map's key pass. */}
+      {children}
       {/* The other half of the encoding, and the half a ring cannot show. */}
       <li className="text-faint">Size is the chance behind it</li>
     </ul>

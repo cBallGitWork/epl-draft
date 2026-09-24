@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { FootballPlayer, MatchSheetLine, PlManMatch, PlSquadMan, PlayerMatchStats } from "@epl/core";
-import { joinOf, ordered } from "./sheetJoin";
+import { appeared, cameOn, joinOf, ordered } from "./sheetJoin";
 
 const man = (code: number, position: string | null): PlSquadMan => ({
   code,
@@ -53,5 +53,20 @@ describe("joinOf", () => {
     const join = joinOf(match);
     expect(join.line(8)).toBeUndefined();
     expect(join.points(null)).toBe(0);
+  });
+});
+
+describe("appeared", () => {
+  const on = { onAt: 64 } as PlManMatch;
+
+  it("counts the eleven and the men who came on, and not the men who sat", () => {
+    expect(appeared({ man: man(1, "G"), did: undefined, bench: false })).toBe(true);
+    expect(appeared({ man: man(19, "M"), did: on, bench: true })).toBe(true);
+    expect(appeared({ man: man(13, "G"), did: undefined, bench: true })).toBe(false);
+  });
+
+  it("reads coming on off the minute, not off the bench flag", () => {
+    expect(cameOn({ man: man(19, "M"), did: on, bench: true })).toBe(true);
+    expect(cameOn({ man: man(9, "F"), did: { offAt: 70 } as PlManMatch, bench: false })).toBe(false);
   });
 });

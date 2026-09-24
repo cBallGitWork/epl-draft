@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { type Club, type FootballPlayer, clubColours, crestUrl, isGoalkeeper } from "@epl/core";
+import { type Club, type FootballPlayer, clubColoursOf, crestUrl, isGoalkeeper } from "@epl/core";
 import PlayerImage from "../../components/league/PlayerImage";
 
 // The masthead of a page about one footballer.
@@ -45,7 +45,7 @@ export default function Portrait({
    *  wrongness that survives review. */
   position: string | null;
 }) {
-  const colours = clubColours(club?.shortName ?? "");
+  const colours = clubColoursOf(club);
 
   return (
     <div

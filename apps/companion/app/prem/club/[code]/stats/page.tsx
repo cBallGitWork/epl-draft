@@ -1,7 +1,8 @@
 import { squadOf } from "@epl/core";
 import TabEmpty from "../../../../components/league/TabEmpty";
 import ClubShell from "../Shell";
-import { clubOr404, leagueOpinions } from "../club";
+import { clubOr404 } from "../club";
+import { leagueOpinions } from "../../../leagueOpinions";
 import { fantasyDepth } from "../SquadTable";
 import { positionsLabel } from "../../../../positions";
 import PlayerBoard from "./PlayerBoard";

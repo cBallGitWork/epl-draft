@@ -56,9 +56,10 @@ it is used.
   agreement with BPS is not evidence a bonus is final. Nothing reads this; the
   `settled`/`dataChecked` ladder derives the same rungs from reads we already make.
 - Portraits: `…/premierleague25/photos/players/{size}/{code}.png` — **PNG only**
-  (and since 10 Sep 2026 **no pitch reads them**: a pitch draws the club's kit,
+  (and since 10 Sep 2026 **only one pitch reads them**: a pitch draws the club's kit,
   because the fallback ladder below is what put three kinds of object in one line
-  of eleven. Faces survive where a page is about one man. PLATFORM_NOTES carries
+  of eleven. Faces survive where a page is about one man, and on the match Line
+  Ups pitch, by Craig's call on 23 Sep 2026, falling back to the kit. PLATFORM_NOTES carries
   the counts, including the 40/40 on `shirt_{code}[_1]-220.png`.)
   (webp/jpg 403), and note there is no `p` before the code and no 250x250 under
   this prefix. **Two sizes worth asking for, not one** — counted across 120 random

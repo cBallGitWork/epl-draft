@@ -3,13 +3,12 @@ import type { RawPlMatchStats } from "./rawStats";
 
 // Championship Manager's Match Stats board, against Opta's own metric names.
 //
-// **The board is `cm9900/22.jpg` and the rows are its rows** — Shots On Goal,
-// On Target, Off Target, Corners, Free Kicks, Throw-Ins, Fouls, Offsides, Passes
-// Completed, Tackles Won, Headers Won, Yellow Cards, Red Cards. Thirteen, in that
-// order, and all thirteen are answerable from one `/stats/match` call: counted
-// 10 Sep 2026 against the recorded fixture and a live round.
-// `docs/ui/reference/README.md` binds the citation — a CM claim names a numbered
-// shot and never a memory.
+// **`cm9900/22.jpg`'s thirteen rows, plus five simple ones** (Craig, 23 Sep 2026:
+// *"use more stats… possession etc"*, *"simple stats fine"*): possession, blocked
+// shots, interceptions, clearances and saves. All eighteen come off one
+// `/stats/match` call — 187 metrics a side, probed that day on Brentford 3-0
+// Chelsea. `docs/ui/reference/README.md` binds the citation — a CM claim names a
+// numbered shot and never a memory.
 //
 // **Opta's names are not English and the table is the only honest place to say
 // so.** `fk_foul_lost` is fouls COMMITTED and `fk_foul_won` is fouls WON, which
@@ -42,10 +41,14 @@ export interface MatchStatRow {
  *  won and lost with no total — use the same shape as passes. */
 type Source = string | { of: string; over: string[] };
 
-const ROWS: { key: string; label: string; source: Source }[] = [
+const ROWS: { key: string; label: string; source: Source; percent?: true }[] = [
+  // Opta's own share to one decimal, so a percentage without being a ratio of ours.
+  { key: "possession", label: "Possession", source: "possession_percentage", percent: true },
   { key: "shots", label: "Shots On Goal", source: "total_scoring_att" },
   { key: "onTarget", label: "On Target", source: "ontarget_scoring_att" },
   { key: "offTarget", label: "Off Target", source: "shot_off_target" },
+  // The third kind of shot, so the three rows under Shots add up to it.
+  { key: "blocked", label: "Blocked", source: "blocked_scoring_att" },
   { key: "corners", label: "Corners", source: "won_corners" },
   // Free kicks AWARDED to this side, which is the count CM shows beside fouls.
   { key: "freeKicks", label: "Free Kicks", source: "fk_foul_won" },
@@ -62,6 +65,9 @@ const ROWS: { key: string; label: string; source: Source }[] = [
   // Opta publishes aerials won and lost rather than a total, so the denominator
   // is their sum. There is no `total_aerial`.
   { key: "headers", label: "Headers Won", source: { of: "aerial_won", over: ["aerial_won", "aerial_lost"] } },
+  { key: "interceptions", label: "Interceptions", source: "interception" },
+  { key: "clearances", label: "Clearances", source: "total_clearance" },
+  { key: "saves", label: "Saves", source: "saves" },
   { key: "yellowCards", label: "Yellow Cards", source: "total_yel_card" },
   { key: "redCards", label: "Red Cards", source: "total_red_card" },
 ];
@@ -77,7 +83,7 @@ function share(of: number, over: number): number {
 }
 
 function figure(metric: (name: string) => number, source: Source): number {
-  if (typeof source === "string") return metric(source);
+  if (typeof source === "string") return Math.round(metric(source));
   const over = source.over.reduce((sum, name) => sum + metric(name), 0);
   return share(metric(source.of), over);
 }
@@ -101,11 +107,11 @@ export function plMatchBoard(
   const away = plMatchMetrics(stats, awayTeamId);
   if (home === null || away === null) return null;
 
-  return ROWS.map(({ key, label, source }) => ({
+  return ROWS.map(({ key, label, source, percent }) => ({
     key,
     label,
     home: figure(home, source),
     away: figure(away, source),
-    percent: typeof source !== "string",
+    percent: percent ?? typeof source !== "string",
   }));
 }

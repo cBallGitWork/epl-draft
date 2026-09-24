@@ -13,12 +13,14 @@ const board = plMatchBoard(STATS, LIVERPOOL, FOREST);
 const row = (key: string) => board?.find((r) => r.key === key);
 
 describe("plMatchBoard", () => {
-  it("draws Championship Manager's thirteen rows in its order", () => {
+  it("draws Championship Manager's thirteen rows in its order, and the five simple ones among them", () => {
     // `cm9900/22.jpg`. The order is the reference's and a caller may not sort it.
     expect(board?.map((r) => r.label)).toEqual([
+      "Possession",
       "Shots On Goal",
       "On Target",
       "Off Target",
+      "Blocked",
       "Corners",
       "Free Kicks",
       "Throw-Ins",
@@ -27,6 +29,9 @@ describe("plMatchBoard", () => {
       "Passes Completed",
       "Tackles Won",
       "Headers Won",
+      "Interceptions",
+      "Clearances",
+      "Saves",
       "Yellow Cards",
       "Red Cards",
     ]);
@@ -35,6 +40,20 @@ describe("plMatchBoard", () => {
   it("reads a plain count off both sides", () => {
     expect(row("shots")).toMatchObject({ home: 13, away: 12, percent: false });
     expect(row("onTarget")).toMatchObject({ home: 4, away: 3 });
+  });
+
+  it("splits the shots three ways, so the rows under Shots add up to it", () => {
+    // 13 = 4 + 5 + 4 and 12 = 3 + 3 + 6.
+    expect(row("blocked")).toMatchObject({ home: 4, away: 6 });
+    for (const side of ["home", "away"] as const) {
+      const parts = ["onTarget", "offTarget", "blocked"].map((key) => row(key)?.[side] ?? 0);
+      expect(parts.reduce((a, b) => a + b, 0)).toBe(row("shots")?.[side]);
+    }
+  });
+
+  it("rounds Opta's possession to a whole share that still sums to a hundred", () => {
+    // 69.1 and 30.9.
+    expect(row("possession")).toMatchObject({ home: 69, away: 31, percent: true });
   });
 
   it("does not confuse fouls won with fouls conceded", () => {
@@ -66,10 +85,10 @@ describe("plMatchBoard", () => {
     expect(row("redCards")).toMatchObject({ home: 0, away: 0 });
   });
 
-  it("marks the three derived rows and only those", () => {
-    // DESIGN §3's cyan is "a reading we derived", and CM's own board prints
-    // exactly these three in cyan.
+  it("marks the four percentage rows and only those", () => {
+    // CM's own board prints its percentages in cyan; possession is Opta's share.
     expect(board?.filter((r) => r.percent).map((r) => r.key)).toEqual([
+      "possession",
       "passes",
       "tackles",
       "headers",

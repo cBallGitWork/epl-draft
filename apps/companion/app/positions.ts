@@ -65,10 +65,13 @@ export function positionsFromList(positions: string | null | undefined): string 
  *  `positionLabel`'s rule: an unknown position is still a position. */
 const DEPTH: Record<string, number> = { G: 0, D: 1, M: 2, F: 3 };
 
+/** Fantrax's letters back to front, blanks dropped — the order the tile and the card both print. */
+export function backToFront(positions: readonly string[]): string[] {
+  return [...positions].filter((p) => p).sort((a, b) => (DEPTH[a] ?? 99) - (DEPTH[b] ?? 99));
+}
+
 export function positionsLabel(positions: readonly string[]): string | null {
-  const kept = [...positions]
-    .filter((p) => p)
-    .sort((a, b) => (DEPTH[a] ?? 99) - (DEPTH[b] ?? 99));
+  const kept = backToFront(positions);
   if (kept.length === 0) return null;
   if (kept.length === 1) return positionLabel(kept[0]) ?? null;
   // Fantrax's own letters, joined — which is what the short form IS.

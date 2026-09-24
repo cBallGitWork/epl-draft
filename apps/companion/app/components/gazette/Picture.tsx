@@ -4,7 +4,7 @@ import {
   type Club,
   type Story,
   type StoryResult,
-  clubColours,
+  clubColoursOf,
   crestUrl,
   isGoalkeeper,
 } from "@epl/core";
@@ -37,7 +37,7 @@ export default function Picture({
 }) {
   if (lead.kind === "bench") {
     const club = clubs.get(lead.pick.clubId);
-    const colours = clubColours(club?.shortName ?? "");
+    const colours = clubColoursOf(club);
     return (
       <Band style={{ background: `linear-gradient(150deg, ${colours.primary} 0%, ${colours.secondary} 100%)` }}>
         {club ? (

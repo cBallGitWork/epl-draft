@@ -157,6 +157,11 @@
   min-height: 2.75rem;
 }
 
+/* A view switch on the match screens: 36px at every width (PRODUCT's third tap exception). */
+.cm-tab-compact {
+  min-height: 2.25rem;
+}
+
 @media (min-width: 64rem) {
   .cm-tab-quiet {
     min-height: 2.25rem;
@@ -675,6 +680,19 @@
 .cm-out,
 .cm-out * {
   color: var(--color-faint);
+}
+
+/* A match board's standouts keep their ink in a greyed row (DESIGN §3, "Peak"). */
+.cm-out .cm-lit-best {
+  color: var(--color-peak);
+}
+
+.cm-out .cm-lit-good {
+  color: var(--color-accent);
+}
+
+.cm-out .cm-lit-bad {
+  color: var(--color-bad);
 }
 
 /* The same greying on a blue plate, which the rule above cannot reach.

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { type Club, type StoryFace, clubColours, crestUrl, isGoalkeeper } from "@epl/core";
+import { type Club, type StoryFace, clubColoursOf, crestUrl, isGoalkeeper } from "@epl/core";
 import PlayerImage from "../league/PlayerImage";
 
 // The man a story is about, printed at the rank the story runs at.
@@ -77,7 +77,7 @@ export default function Face({
   rank: Rank;
 }) {
   const club = clubs.get(face.clubId);
-  const colours = clubColours(club?.shortName ?? "");
+  const colours = clubColoursOf(club);
   const crest = CREST[rank];
 
   return (

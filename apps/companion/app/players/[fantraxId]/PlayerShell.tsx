@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { clubColours } from "@epl/core";
+import { clubColoursOf } from "@epl/core";
 import { now } from "../../clock";
 import PlateShell from "../../components/shell/PlateShell";
 import PlayerTabs from "./PlayerTabs";
@@ -73,7 +73,7 @@ export default function PlayerShell({
     // `clubColours` answers its own grey fallback for an empty short name, which
     // is what the 88 unbridged men in the pool get.
     <PlateShell
-      colours={clubColours(club?.shortName ?? "")}
+      colours={clubColoursOf(club)}
       title={heading(intel.name || fantraxId, ownerName)}
       tabs={<PlayerTabs fantraxId={fantraxId} current={current} empty={hollow(subject)} />}
     >

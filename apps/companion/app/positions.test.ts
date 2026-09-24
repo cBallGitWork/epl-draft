@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { positionLabel, positionsFromList, positionsLabel } from "./positions";
+import { backToFront, positionLabel, positionsFromList, positionsLabel } from "./positions";
 
 describe("position labels", () => {
   it("spells one position the way a manager says it", () => {
@@ -23,5 +23,12 @@ describe("position labels", () => {
   it("keeps a letter it has never seen, last", () => {
     expect(positionLabel("X")).toBe("X");
     expect(positionsLabel(["X", "M"])).toBe("M/X");
+  });
+});
+
+describe("backToFront", () => {
+  it("puts Fantrax's letters in pitch order, whatever order Fantrax sent them in", () => {
+    expect(backToFront(["F", "M"])).toEqual(["M", "F"]);
+    expect(backToFront(["M", "", "D"])).toEqual(["D", "M"]);
   });
 });

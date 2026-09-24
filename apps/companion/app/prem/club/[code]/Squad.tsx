@@ -7,7 +7,7 @@ import { positionsLabel } from "../../../positions";
 import Eleven from "./Eleven";
 import type { ElevenLine } from "./Eleven";
 import SquadTable from "./SquadTable";
-import type { LeagueOpinion } from "./club";
+import type { LeagueOpinion } from "../../leagueOpinions";
 import ListAndPitch from "@/app/components/league/ListAndPitch";
 
 // A club's squad, as a list and as the eleven it is predicted to field.
