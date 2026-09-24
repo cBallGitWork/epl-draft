@@ -48,6 +48,7 @@ export function squadMen(team: RosteredTeam, join: SquadJoin): SquadMan[] {
       })),
       ease: row?.mean ?? null,
       liverpool: club?.code === PREDICTIONS.liverpoolCode,
+      face: { code: player.code, name: player.name, clubId: player.clubId, position: positions.includes("G") ? "G" : null },
     };
   });
 }

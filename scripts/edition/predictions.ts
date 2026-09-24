@@ -56,6 +56,8 @@ export interface PredictionsDesk {
   archive: { prose: string[]; lastLines: string[]; shapes: string[]; targets: string[] };
   /** Names to blank before the word lists run, and the men whose sentences are never a joke. */
   names: string[];
+  /** Every club by FPL's own name, "Spurs" among them, which he may write as the BBC did. */
+  clubs: string[];
   doubts: string[];
 }
 
@@ -152,6 +154,7 @@ export async function predictionsDesk(input: {
       targets: columns.slice(0, 10).flatMap((story) => (story.extras?.skit ?? []).flatMap((edit) => (edit.target === null ? [] : [edit.target]))),
     },
     names: [...new Set([...named.values(), ...squads.flatMap((team) => team.players.flatMap((man) => ("player" in man ? [man.player.name] : [])))])],
+    clubs: clubs.map((club) => club.name),
     doubts: [...new Set(men.filter((man) => man.availability.state !== "fit").map((man) => man.name))],
   };
 }

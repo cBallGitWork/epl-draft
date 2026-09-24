@@ -11,7 +11,7 @@ import { COMFORTABLE, DESK_BANNED, LAWRO_BANNED, LAWRO_CAPPED, LAWRO_FAMOUS, LAW
 export type Severity = "hard" | "send-back" | "warn";
 
 export interface Fault {
-  /** "intro", "headline", "deck", "column", or a tie's key. */
+  /** "intro", "deck", "column", or a tie's key. */
   section: string;
   check: string;
   severity: Severity;
@@ -20,7 +20,6 @@ export interface Fault {
 
 /** What the model filed, keyed as the desk keys ties. */
 export interface LawroDraft {
-  headline: string;
   deck: string;
   intro: string;
   ties: ReadonlyMap<string, { line: string; backs: string | null }>;
@@ -40,24 +39,26 @@ export interface CheckContext {
   past: readonly string[];
 }
 
-const CAREER_CLAIM = /\bI (?:played|scored|managed|won(?!['’]t)|signed|coached|captained|commentated|covered)\b|\bwhen I was at\b|\bin my day\b|\bmy (?:playing days|career|debut|caps|medals)\b/u;
+const CAREER_CLAIM = /\bI (?:played|scored|managed|won(?!['’]t)|signed|coached|captained|commentated|covered)\b|\bwhen I was at\b|\bin my day\b|\bmy (?:playing days|career|debut|caps|medals)\b/iu;
 const TICS: readonly (readonly [check: string, pattern: RegExp])[] = [
   ["semicolon", /;/u],
   ["colon", /:/u],
   ["brackets", /[()[\]]/u],
   ["trailing dots", /\.{2,}|…/u],
   ["we, us, our", /\b(?:we|us|our|ours)\b/iu],
-  ["a league side at home", /\b(?:hosts?|hosted|hosting|welcomes?|welcomed|visitors|travels|travelling|home advantage)\b/iu],
+  ["a league side at home", /\b(?:welcomes?|welcomed|visitors|home advantage)\b/iu],
   ["a sentence opening on So", /(?:^|[.?]\s+)So\b/u],
   ["not just X but Y", /(?:\bnot|n't) (?:just|only|merely|simply)\b|\b(?:it|that|this)(?:'s| is| was)(?: not|n't)\b[^.?]{1,50},\s*(?:it|that|this)(?:'s| is| was)\b/iu],
   ["no X, no Y, no Z", /\b[Nn]o \p{L}+, no \p{L}+,? (?:and )?no \p{L}+/u],
 ];
+/** What only a real club does: "Liverpool host City" is his to write, a league side hosting nobody's. */
+const AT_HOME = String.raw`\s+(?:hosts?|hosted|hosting|visits?|visited|visiting|travels?|travelled|travelling)\b`;
 const QUOTES = /["“”«»]|‘[^’]*’/u;
 const WIN = /\b(?:will|'ll|to|should|can|could|might|going to) (?:win|beat|edge|nick|take it|do it)\b/iu;
 const BACKING = /\b(?:I fancy|I'm backing|I'll go with|I'm going with|I'll have|backing)\b/iu;
 const NEGATION = /\b(?:not|never|no)\b|n't/iu;
 const SCORELINE = /\b(?!50-50\b)\d{1,3}\s*[-–]\s*\d{1,3}\b/u;
-const LIMITS = { sentence: 20, intro: [1, 4, 35], tie: [2, 5, 45], gut: [2, 5, 60], column: 300, repeat: 5 } as const;
+const LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 7, 80], gut: [2, 8, 95], column: 460, repeat: 5 } as const;
 
 export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   const faults: Fault[] = [];
@@ -72,17 +73,13 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
     if (QUOTES.test(text)) fault(section, "quotation marks", "hard", text.match(QUOTES)?.[0] ?? "");
     if (/\d\.\d/u.test(text)) fault(section, "a decimal", "hard", text.match(/\d+\.\d+/u)?.[0] ?? "");
     for (const word of banned(text, never)) fault(section, "never", "hard", word);
-    // A headline is title case and a pun, so every capital would read as a stranger.
-    if (section !== "headline") {
-      // He writes in the first person, and "I'll" is a capital that is nobody.
-      for (const name of strangers(text, ctx.facts).filter((word) => !/^I['’]/u.test(word))) fault(section, "a name not in the brief", "hard", name);
-      for (const figure of numbersIn(text)) if (!known.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
-    }
+    // He writes in the first person, and "I'll" is a capital that is nobody.
+    for (const name of strangers(text, ctx.facts).filter((word) => !/^I['’]/u.test(word))) fault(section, "a name not in the brief", "hard", name);
+    for (const figure of numbersIn(text)) if (!known.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
     const plain = masked(text, ctx.names);
     for (const word of [...banned(plain, BANNED), ...banned(plain, words)]) fault(section, "banned", "send-back", word);
   };
 
-  everywhere("headline", draft.headline, DESK_BANNED);
   everywhere("deck", draft.deck, DESK_BANNED);
   const prose: [section: string, text: string][] = [["intro", draft.intro]];
   for (const call of ctx.calls) {
@@ -97,9 +94,14 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
     tieRules(key, entry.line, call, ctx, fault);
   }
 
+  const sides = ctx.calls.flatMap((call) => [ctx.name(call.homeTeamId), ctx.name(call.awayTeamId)]);
   for (const [section, text] of prose) {
     everywhere(section, text, exempt([...LAWRO_BANNED, ...LAWRO_FAMOUS]));
     for (const [check, pattern] of TICS) if (pattern.test(text)) fault(section, check, "send-back", text.match(pattern)?.[0] ?? "");
+    for (const side of sides) {
+      const hosting = text.match(new RegExp(`${escape(side)}${AT_HOME}`, "iu"));
+      if (hosting !== null) fault(section, "a league side at home", "send-back", hosting[0]);
+    }
     for (const sentence of sentences(text)) {
       if (wordCount(sentence) > LIMITS.sentence) fault(section, "a sentence over 20 words", "send-back", sentence);
       if (CAREER_CLAIM.test(sentence) && !CORE_MARK.test(sentence) && !ctx.offered.some((line) => line.mark.test(sentence))) {

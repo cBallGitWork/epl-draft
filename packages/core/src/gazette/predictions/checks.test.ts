@@ -37,6 +37,25 @@ describe("checkLawro", () => {
     expect(found).toEqual(expect.arrayContaining(["missing", "a score in the prose", "a career claim nobody gave him"]));
   });
 
+  it("lets him say how far he has come down, and still refuses a career nobody gave him", () => {
+    const hardIn = (line: string) =>
+      checkLawro(draft([["rs-bn", line], ...SAMPLE.slice(1)]), ctx()).filter((each) => each.section === "rs-bn" && each.severity === "hard").map((each) => each.check);
+    expect(hardIn("My career has come to this. Real Sociable have won all three. They'll need more than two.")).toEqual([]);
+    expect(hardIn("My career was full of goals. Real Sociable have won all three.")).toContain("a career claim nobody gave him");
+  });
+
+  it("lets a real club host, and sends back a league side that does", () => {
+    const home = (line: string) =>
+      checkLawro(draft([["rs-bn", line], ...SAMPLE.slice(1)]), ctx()).filter((each) => each.check === "a league side at home").map((each) => each.evidence);
+    expect(home("Oduya has Leeds, and Arsenal host them. Real Sociable win it.")).toEqual([]);
+    expect(home("Real Sociable host Bayer Neverlusen. Real Sociable win it.")).toEqual(["Real Sociable host"]);
+  });
+
+  it("sends back a chance in figures, which he says in words", () => {
+    const faults = checkLawro(draft([["rs-bn", "Oduya is a 50-50, and Pym is 75 per cent. Real Sociable win it."], ...SAMPLE.slice(1)]), ctx());
+    expect(faults.filter((each) => each.check === "banned").map((each) => each.evidence)).toEqual(expect.arrayContaining(["50-50", "per cent"]));
+  });
+
   it("sends back a phrase he used in a recent column, and a habit used twice", () => {
     const past = ["Real Sociable, and I'd want to see him warm up first."];
     expect(checkLawro(draft(), ctx({ past })).some((each) => each.check === "a phrase from a recent column")).toBe(true);

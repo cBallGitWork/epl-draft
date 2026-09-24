@@ -48,6 +48,9 @@ const JARGON = [
   "philosophy", "process", "vibes", "energy",
 ];
 
+/** A chance in figures: he says out, injured or a doubt, never FPL's percentage. */
+const CHANCES = ["per cent", "percent", "%", "50-50", "fifty-fifty", "chance of playing"];
+
 /** The managers are ten friends: no cruelty, no feelings, no excuses, no gloating. */
 const MANAGERS = [
   "clueless", "hopeless", "useless", "pathetic", "embarrassing", "shambles", "disgrace", "laughing stock", "idiot",
@@ -68,9 +71,9 @@ const LEAKS = [
 const DIALECT = ["nowt", "owt", "summat", "reet", "ey up", "our kid", "Scouse", "Scouser"];
 
 /** Everything he may not write, checked after he files and sent back once. */
-export const LAWRO_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER, ...JARGON, ...MANAGERS, ...LEAKS, ...DIALECT];
+export const LAWRO_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER, ...JARGON, ...CHANCES, ...MANAGERS, ...LEAKS, ...DIALECT];
 
-/** The headline and deck are the sub-editor's, so they skip the label words and may say "Lawro". */
+/** The deck is the sub-editor's, so it skips the label words and may say "Lawro". */
 export const DESK_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER];
 
 /** His habits, allowed and counted so they stay habits and never become tics. */
