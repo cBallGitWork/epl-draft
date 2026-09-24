@@ -282,16 +282,18 @@ function sectionPoints(raw: RawLiveScoring, which: keyof RawTeamSections): LiveS
       if (fantraxId.startsWith(GROUP_TOTAL)) continue;
       // A nought Fantrax stated is a nought; a total it withheld is not one.
       if (typeof stats?.object1 !== "number") continue;
+      // `sv` and not `av`: this is read back to a person, and it is the string
+      // Fantrax already chose to render the count with.
+      const counts = (stats.object2 ?? []).flatMap((row) => {
+        const category = categoryOf(row.scipId);
+        if (category === null || typeof row.fpts !== "number") return [];
+        return [{ category, points: row.fpts, value: typeof row.sv === "string" ? row.sv : null }];
+      });
       players.push({
         fantraxId,
         points: stats.object1,
-        categories: (stats.object2 ?? []).flatMap((row) => {
-          const category = categoryOf(row.scipId);
-          if (category === null || typeof row.fpts !== "number" || row.fpts === 0) return [];
-          // `sv` and not `av`: this is read back to a person, and it is the
-          // string Fantrax already chose to render the count with.
-          return [{ category, points: row.fpts, value: typeof row.sv === "string" ? row.sv : null }];
-        }),
+        categories: counts.filter((row) => row.points !== 0),
+        counts,
       });
     }
     return [{ teamId, players }];
