@@ -43,21 +43,6 @@ type ColumnKind = "text" | "number" | "percent" | "signed";
  *  marks its offenders and never its saints. */
 type Mark = "high" | "low";
 
-/* **`deskOnly` was here and is gone** (10 Sep 2026). It marked a column that
-   stands down under a thumb, and `rank` was its last user — deleted the same day
-   at Craig's asking. `Sta` and `Opp` had carried it for part of that morning and
-   both gave it up: the first stopped being a column, and the second is four
-   characters wide once Fantrax's clock comes off it.
-
-   The whole pipeline went with it — `PlayerTable`'s `phone()`, the `hide` prop
-   threaded into five of `Cell`'s `<td>`s, and the skeleton's two copies. A field
-   nothing sets, plumbed through three files, is the dead pipeline CODE_RULES §2
-   names: it reads as a capability the board has and does not.
-
-   `desk.ts`'s `standDown` keeps its other two callers, `league/Columns` and
-   `prem/Columns`, so the shared rule is untouched. Restoring this is one line in
-   the type and one at the call site, on the day a column earns it. */
-
 export interface PoolColumn {
   /** Short, because it ends up in the address bar. */
   key: string;

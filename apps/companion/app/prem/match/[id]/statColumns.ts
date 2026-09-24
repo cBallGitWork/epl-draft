@@ -18,7 +18,7 @@ interface Column {
   dp?: number;
   /** A reading we or SofaScore derived, in cyan (DESIGN §3) and never lit. */
   derived?: boolean;
-  /** Which end of the column is good: its standouts are lit hot, or cold where high is bad. */
+  /** Which end of the column is good: its standouts are lit yellow and orange, or red where high is bad. */
   rank?: "high" | "low";
 }
 

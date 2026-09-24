@@ -220,13 +220,10 @@ export default async function PlayersPage({
 
 /** What the caption says.
  *
- *  **It names the plate, because the drawer can hide it.** DESIGN §2's reading of
- *  `cm9900/16.jpg` is that the bar says where you are and the caption says what
- *  the board IS — that shot captions its stat list `Average Rating`. Below `lg`
- *  the stat groups live behind the Filter plate, so the caption is the only
- *  thing left saying which columns are on screen. `all` falls through to the
- *  section's own caption rather than printing "All", which is a word about a control and
- *  not a name for a board.
+ *  **It names the plate on a desk.** DESIGN §2's reading of `cm9900/16.jpg` is that
+ *  the bar says where you are and the caption says what the board IS. A phone has
+ *  no caption in Data (24 Sep 2026); its column heads say which columns are on
+ *  screen. `all` falls through to the section's own caption rather than "All".
  *
  *  **And it carries the provenance, but only when the provenance bites.** The
  *  count-and-season line under the title bar came off on 10 Sep 2026 (Craig:
