@@ -239,7 +239,8 @@ async function main(): Promise<void> {
     now,
   )[0];
   const filing = filings.find((each) => each.story.slug === lead?.slug);
-  if (filing !== undefined && filing.story.image === null) {
+  // A columnist's own column runs his photograph, never a drawing over it.
+  if (filing !== undefined && filing.story.image === null && filing.story.reporter === undefined) {
     const image = await drawSplash(filing.story);
     if (image !== null) filing.story = { ...filing.story, image };
   }

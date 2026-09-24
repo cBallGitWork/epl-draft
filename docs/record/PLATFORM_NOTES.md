@@ -74,6 +74,11 @@ capture season-specific tradeoffs.
   a blank, a double, an opponent at an extreme). Withheld means absent from the brief, so naming him anyway is a
   hard fault. **Fixtures carry the sister repo's team strength** in words, at the extremes only: "one of the three
   leakiest defences in the league" for a forward, the attack for a defender; never a rank.
+- **His picture and billing**: "Draft Expert" (Craig), and the one freely licensed photograph of him, CC0 from
+  the Nationaal Archief: his tackle on Hugo Hovenkamp, AZ '67 v Liverpool, 21 Oct 1981. It is the app's
+  `COLUMNISTS` table keyed by `reporter`, printed through `.paper-photo` at every rank and as the card on his
+  article, credited on `/credits`. The writer never draws a cartoon over a columnist's column. The BBC's headshot
+  is AFP's and not ours to print.
 - **A local build without `FANTRAX_LEAGUE_ID` 500s every `/paper/[slug]`** under `next start`
   (`DYNAMIC_SERVER_USAGE`). Production names the league when it builds; build with it set before shooting an
   article locally.

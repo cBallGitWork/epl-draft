@@ -1,6 +1,8 @@
 import type { Club, LeagueTeam, PublishedStory } from "@epl/core";
 import Face from "./Face";
 import Calls from "./Calls";
+import ColumnistPhoto from "./ColumnistPhoto";
+import { columnistOf } from "@/app/config";
 import Paragraphs from "./Paragraphs";
 import Dateline from "./Dateline";
 import { DASH } from "@epl/core";
@@ -36,6 +38,7 @@ export default function Written({
   clubs?: Map<number, Club>;
 }) {
   const named = new Map(teams.map((team) => [team.teamId, team.name]));
+  const columnist = columnistOf(story);
 
   // **A standfirst is not columnised.** `paper-columns` takes a measure rather
   // than a count, which is right for a whole article and wrong for an intro:
@@ -87,7 +90,18 @@ export default function Written({
           it went out under. Not decoration: every other figure on this page is
           thirty seconds old and this could be days old and still be the current
           edition. A reader is entitled to know which he is reading. */}
-      <Dateline story={story} turn={false} className="pt-2.5" />
+      {/* A columnist's own card, as the BBC ran his: the photograph, the name, the billing. It
+          carries the credit, so the dateline under it does not repeat it. */}
+      <Dateline story={story} turn={false} byline={columnist === null} className="pt-2.5" />
+      {columnist !== null ? (
+        <div className="flex items-center gap-3 pt-3">
+          <ColumnistPhoto photo={columnist.photo} rank="card" />
+          <p className="flex flex-col gap-0.5 font-sans uppercase tracking-[0.12em]">
+            <span className="text-sm font-black text-ink">{story.reporter}</span>
+            <span className="text-2xs text-muted">{columnist.billing}</span>
+          </p>
+        </div>
+      ) : null}
 
       <Paragraphs
         text={story.body}

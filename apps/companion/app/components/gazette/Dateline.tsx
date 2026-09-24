@@ -1,4 +1,5 @@
 import { PAPER_CORRESPONDENT, type PublishedStory, londonDayAndTime } from "@epl/core";
+import { columnistOf } from "@/app/config";
 import { pageOf } from "./paperPages";
 
 // Which edition filed a story, when, and where the rest of it is.
@@ -78,7 +79,7 @@ export default function Dateline({
   return (
     <Tag className={`font-sans text-3xs uppercase tracking-[0.16em] text-faint${className === "" ? "" : ` ${className}`}`}>
       {/* A column the desk printed from facts has no correspondent to credit. */}
-      {byline && story.kind !== "predicted-xi" ? `by ${story.reporter ?? PAPER_CORRESPONDENT} · ` : ""}
+      {byline && story.kind !== "predicted-xi" ? `by ${credit(story)} · ` : ""}
       {story.edition !== "" ? `${story.edition} · ` : ""}
       Filed {londonDayAndTime(story.filedAt)}
       {/* The affordance, in words rather than a chevron, and literally true: a
@@ -94,3 +95,9 @@ export default function Dateline({
   );
 }
 
+
+/** Whose name leads the byline: a columnist's own, billed, or the house correspondent's. */
+function credit(story: PublishedStory): string {
+  const columnist = columnistOf(story);
+  return columnist === null ? (story.reporter ?? PAPER_CORRESPONDENT) : `${story.reporter}, ${columnist.billing}`;
+}
