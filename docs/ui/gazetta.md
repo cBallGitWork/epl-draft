@@ -352,7 +352,7 @@ The page is laid out the way the BBC ran him. The headline is the desk's,
 "Lawro's Predictions: GW6", with no chip or kicker saying it again. Under the
 dateline sits his banner: name, billing, and a square crop of his photograph on
 the right. Each tie is a bold heading, then his words with the first man they
-name pictured beside them (`Face`, brief rank, floated so the prose wraps), then
+name pictured beside them (`Face` at its `tie` rank, a 6rem square floated so the prose wraps), then
 "Lawro's prediction".
 
 **The round-report was deleted on 3 Sep 2026.** It was the preview's twin — one

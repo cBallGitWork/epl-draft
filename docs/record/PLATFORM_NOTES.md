@@ -62,11 +62,16 @@ capture season-specific tradeoffs.
 - **Opinions, not facts, turned up** (Craig, on a column that listed men and fixtures: *"ai shite"*, then
   *"lean into his personality and exaggerate"*). The brief leads each tie with its one story (a gut reason, a
   main man against a hard fixture, a main man in doubt), then a man for any side the story leaves out, form,
-  and one more: a pick that gives a side nothing, a signing, or a doubt. A tie with no first-person verdict,
-  or naming more than three men, goes back once; a word standing as its own sentence ("Lovely.") is a
-  reaction, not a stranger. He may call a pick useless, never the manager an idiot, and grumble about the
-  waiver list by name. A tie runs to 100 words, 110 on a gut call. Drawn from his BBC columns and the
-  writing on "Lawrentary": he moans at the good news too, with no bitterness in it.
+  two men who share a club or meet on the pitch this round (Craig), and one more: a signing or a doubt. A
+  tie with no first-person verdict, or naming more than four men, goes back once; a word standing as its own
+  sentence ("Lovely.") is a reaction, not a stranger. He may call a pick useless, never the manager an idiot,
+  and grumble about the waiver list by name. A tie runs to 120 words, 130 on a gut call. Drawn from his BBC
+  columns and the writing on "Lawrentary": he moans at the good news too, with no bitterness in it.
+- **A suspension is stated and left, and he is from Preston** (Craig: *"we know what suspended means"*;
+  *"'Lean on' stop saying that. American ai shite"*). The brief once called a suspended man "a pick that
+  gives them nothing" and the column printed "Signing a suspended player" about a man drafted weeks before;
+  the line is gone. "lean on", "step up", "show up", "in for a long one" and their kin are on his banned
+  list, and the voice says plain northern English.
 - **The headline is the desk's**: `Lawro's Predictions: GW{n}` (Craig). He writes the deck, and no chip or
   kicker repeats the headline.
 - **Availability in words, never FPL's figure** (Craig: *"dont say percentages"*): 75 a slight doubt, 50 a
@@ -107,7 +112,8 @@ capture season-specific tradeoffs.
   `COLUMNISTS` table keyed by `reporter`, printed through `.paper-photo` at every rank, and on his article as
   the BBC ran him: a banner with his name, his billing and a square crop of the same photograph. Credited on
   `/credits`. The writer never draws a cartoon over a columnist's column. The BBC's headshot
-  is AFP's and not ours to print.
+  is AFP's and not ours to print. Beside each tie the man prints at `Face`'s `tie` rank, a 6rem square his
+  prose wraps round (Craig: *"thumbnails can be bigger"*).
 - **A reply's JSON is read from its first brace to its last** (`newsroom.__objectIn`). The skit writer once
   reasoned aloud before its JSON, the parse threw, and the catch swallowed it without a word in the log. A
   failed skit call now says so.
