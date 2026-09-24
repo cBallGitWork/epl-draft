@@ -1,5 +1,6 @@
-import { type Club, type Fixture, crestUrl, londonTime, DASH } from "@epl/core";
+import { type Club, type Fixture, londonTime } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
+import { scoreSide } from "../components/football/scoreSide";
 
 /** The state beside the score. **Bigger inside the cell rather than in a tail
  *  column of its own**, which is what the measurement bought (21 Sep 2026, at
@@ -44,8 +45,8 @@ export default function FootballRow({
 
   return (
     <ScoreRow
-      home={club(home, places)}
-      away={club(away, places)}
+      home={scoreSide(home, places)}
+      away={scoreSide(away, places)}
       score={played ? { home: spelled(fixture.homeScore), away: spelled(fixture.awayScore) } : null}
       pending={fixture.kickoff === null ? "TBC" : londonTime(fixture.kickoff)}
       // The state, in the vidiprinter's own place — inside the score cell, right
@@ -68,16 +69,6 @@ export default function FootballRow({
 
 /** One side of a football match. A club FPL has not named is the em dash, no
  *  crest and no place — a fixture we cannot read one end of is still a fixture. */
-function club(entry: Club | undefined, places: Map<number, number>) {
-  return entry === undefined
-    ? { name: DASH }
-    : {
-        name: entry.name,
-        short: entry.shortName,
-        badge: crestUrl(entry),
-        place: places.get(entry.id) ?? null,
-      };
-}
 
 /** How many a side has to put past you before the vidiprinter says it twice.
  *
