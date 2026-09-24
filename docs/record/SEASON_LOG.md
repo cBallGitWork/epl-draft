@@ -4041,3 +4041,55 @@ are now football; the Emirates is the mural facade in daylight rather than the
 night exterior, which was the darkest of the twenty. Sunderland stays as it was,
 on his word, empty stand and all. The shortlist was judged at `brightness(0.55)`
 rather than at full strength, which is the only view that answers the question.
+
+## Lawro got his column, under his own name (24 Sep 2026)
+
+Craig asked for a Thursday-evening preview of every tie by Mark Lawrenson, built
+the way a newsroom builds a column: a journalist for the facts, a skit writer for
+the groaners, an editor for the rest. *"no claude ai shite over optimismis or ai
+bot language."* The paper already had a Lawro-shaped predictions column. It had
+never filed: it fired only in the fifteen minutes between the lock and the first
+kickoff, and its brief held two numbers a tie.
+
+**Four rulings shaped it.** His real name with no impression marking, reversing
+the invented-byline rule for this column. A score on every tie. His picks only: no
+Computer beside him, though the University of Reading's model beat him on
+Football Focus in 2019, which is why it was offered. And he overrules the
+favourite on every close tie where one of his instincts fires, uncapped. On
+reading the plan Craig added a fifth: his whole BBC career is his to use.
+
+**The design came from three agents working as that newsroom**, and each caught
+something the others missed. The journalist found the writer could not see the
+next lock at all, because the snapshot's fixtures hold one gameweek. The editor
+found that marking read `paper.json`, where last week's column is already
+retired, and moved every call out of the model's hands. The skit writer found
+the paper already printing its own tells: "firepower", "the week's real story",
+two tie reports in one firing both opening "X settled it", which is the prompt's
+own word coming back.
+
+**The league rule decided more than the voice did.** Before the lock no rival's
+line-up may show, so Lawro is told squads and never who starts; the squad join
+reads no roster slot, and a test shuffles every slot to prove it. The printed
+total is the one aggregate of a line-up the column prints, by Craig's choice of
+a scoreline.
+
+**Probed before it was trusted.** Fantrax projected GW6 and GW7 sixteen days out
+(10 of 10 dummy teams); the rehearsal table counted period 5 before the period
+closed, so Thursday's column can mark last week.
+
+**Three real columns tuned it**, each written against the dummy league and
+thrown away. The first was accurate and flat, and the log showed why: the names
+check read "I'll" as a stranger, the sentence limit was tighter than his rhythm,
+and the brief's "On paper" on every tie came straight back as "Close on paper."
+The second used his BBC line and landed a groan of a headline ("test4 in the
+Mbeumo of Their Bad Run"), and wrote a sentence that reads perfectly and is
+false: Foden, suspended, filed against the wrong side, because the doubt line
+never said whose he was. Every doubt now names its side. The third came through
+the editor clean on the first attempt, opening *"First column here, so no record
+to own yet. I made more than 8,000 of these for the BBC. Now I do it for you
+lot."*
+
+**What went with it.** The lock-time `round-preview` (#93), which also called
+every tie and never filed. Team Sheet and Line-Ups now carry the round they
+preview (#91). The first real Lawro column is the rehearsal league's GW6 on
+8 Oct; the real league's first is GW7 on 15 Oct.

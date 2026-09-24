@@ -44,6 +44,35 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
+
+- **The byline is "by Mark Lawrenson", with no impression marking** (Craig, 24 Sep 2026). It reverses,
+  for this one column, the rule that a byline over machine-written copy is an invented name (`config.ts`,
+  SEASON_LOG 28 Aug). It travels as `reporter` on the story; Franco Bell keeps every other kind.
+- **His career is his to use, in verified lines only**: the thirty BBC years (pundit, co-commentator,
+  twenty-two years of predictions) and the playing and managing, as a core identity and 21 lines in turn in
+  `gazette/predictions/past.ts`, each read back from the archive by its mark. A first-person career claim
+  outside them is a hard fault. Never Heysel, his health, why a job ended, a colleague's name or politics.
+- **Squads, never line-ups, before the lock.** The brief reads no roster slot (`squadMen`; a test shuffles
+  every slot and position and the squad must come out identical), and the prose may not say who starts.
+  **The one exception**: the printed score is Fantrax's projected total, summed over each side's current
+  eleven. Craig chose a scoreline over a winner alone; a total names nobody.
+- **Code makes every call and score** (`callTie`). The favourite is the higher projected total; within
+  `PREDICTIONS.closeShare` (8%) the first instinct that fires backs the underdog, uncapped: a doubt about the
+  favourite's best man, kinder fixtures for the underdog's back line, more Liverpool men. He returns `backs`
+  and cannot change a call. About one gut call a week is expected; count them after gameweek 9 and retune.
+- **The editor is code** (`gazette/predictions/checks.ts`). A hard fault (a line-up, a name or figure not in
+  the brief, quotation marks, a decimal, a score in the prose, arguing for the other side, a career claim
+  nobody gave him, the never list) leaves the tie printing its prediction alone; a send-back goes back once.
+  **Names are a hard fault for this kind only**; the house `strangers` check stays a warning.
+- **Due** Thursday from 18:00 London for a lock Friday to Monday, the evening before an earlier lock, once
+  the last round is finished, once a round. The cron's Thursday band runs to 20:30 UTC.
+- **His record is recomputed every firing** from the archive and Fantrax's settled results; nothing is stored
+  but the calls and each tie's instinct. `round-preview` went on the same day, never having filed (#93).
+- **A local build without `FANTRAX_LEAGUE_ID` 500s every `/paper/[slug]`** under `next start`
+  (`DYNAMIC_SERVER_USAGE`). Production names the league when it builds; build with it set before shooting an
+  article locally.
+
 ## A screen's sub-views switch from its foot, not a second top strip — decided 24 Sep 2026
 
 - **`components/shell/FootSwitcher.tsx`**: `FootFrame` is a viewport-tall column whose foot sits at the bottom

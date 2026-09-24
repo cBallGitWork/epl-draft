@@ -18,29 +18,9 @@ declare const process: { env: Record<string, string | undefined> };
 /** The competition, as our members know it. */
 export const LEAGUE_NAME = "Tim Hortons Pro League";
 
-/** The paper's football correspondent, whose name goes on every story.
- *
- *  **One, and it is a constant rather than a field on a story** (Craig, 17 Sep
- *  2026: *"start with 1, establish then expand"*). A paper with one reporter is
- *  a fact about the PAPER; it becomes a fact about a STORY on the day there are
- *  two of them, and that is the point to add `reporter` to `PublishedStory` and
- *  let the writer choose. Until then a field would be the same string written
- *  into committed JSON once per filing, and renaming him would be a migration
- *  rather than an edit.
- *
- *  **Invented, and deliberately not a real broadcaster.** The register is the
- *  Football Italia paper review and `voice/house.ts` says so in as many words,
- *  but a byline over machine-written copy has to be a name that belongs to
- *  nobody — even in a league of ten friends. It is also the better joke: an
- *  invented correspondent can become the league's own character, and a borrowed
- *  name can only ever be a borrowed name.
- *
- *  **In core rather than the app's config because it has two readers on
- *  opposite sides of the boundary**: the app prints it under a headline and the
- *  writer is TOLD it, so the voice knows whose byline it is writing under. The
- *  same string in two files is the drift CODE_RULES §3 is about.
- *
- *  COPY, and Craig's to change: nothing derives from it. */
+/** The paper's house correspondent, whose name goes on every story without a `reporter` of its own.
+ *  Invented, and deliberately not a real broadcaster; the one column under a real name is Lawro's,
+ *  by Craig's decision of 24 Sep 2026 (PLATFORM_NOTES). COPY, and Craig's to change. */
 export const PAPER_CORRESPONDENT = "Franco Bell";
 
 /** The competition the football layer describes, as it is headed on the desk.
