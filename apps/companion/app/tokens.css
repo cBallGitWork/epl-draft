@@ -255,6 +255,19 @@
   --color-fdr-3: oklch(0.80 0.02 265);
   --color-fdr-4: oklch(0.66 0.20 22);
   --color-fdr-5: oklch(0.50 0.18 18);
+  /* The planner's ease ramp, OURS (Craig, 24 Sep 2026: "Use a bigger range of colours"): two opponent ranks a
+     step, green easiest to dark red hardest, evenly spaced (OKLab 7 apart) with lightness falling so it reads
+     without hue. Black ink on 1-7 (at least 4.8:1), cream on 8-10 (at least 4.9:1). FPL's difficulty keeps fdr. */
+  --color-ease-1: oklch(0.87 0.19 150);
+  --color-ease-2: oklch(0.833 0.165 132.4);
+  --color-ease-3: oklch(0.796 0.159 111.4);
+  --color-ease-4: oklch(0.751 0.148 92);
+  --color-ease-5: oklch(0.705 0.151 71.9);
+  --color-ease-6: oklch(0.653 0.16 55.7);
+  --color-ease-7: oklch(0.593 0.167 42.5);
+  --color-ease-8: oklch(0.534 0.178 31.6);
+  --color-ease-9: oklch(0.467 0.161 27.3);
+  --color-ease-10: oklch(0.4 0.145 22);
 
   /* --- Doubt: how likely he is to miss --------------------------------------
      Three steps, and a scale rather than three slots, for the reason the block

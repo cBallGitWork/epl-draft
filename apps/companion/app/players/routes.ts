@@ -19,3 +19,6 @@ export function playerHref(fantraxId: string): string {
  *  extracted: two sites, and one completes a pair being chosen while the other
  *  reverses a finished one. §1 leaves two alone. */
 export const ANALYSIS = "/players/analysis";
+
+/** The fixture planner: every club's next six opponents, ranked by our strength model. */
+export const PLANNER = "/players/planner";

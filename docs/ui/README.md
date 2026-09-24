@@ -51,8 +51,9 @@ nothing.**
 | `/matchday` | [matchday.md](matchday.md) | Live: your head-to-head, then the real football. |
 | `/matchday/desk` | [desk.md](desk.md) | Every score in the league and the round, on one screen. |
 | `/gw/[gameweek]` | [gameweek.md](gameweek.md) | Any round of football, addressable. |
-| `/players` | [players.md](players.md) | **Scout** — the whole pool, 24 sortable columns, filterable. |
-| `/players/analysis` | [analysis.md](analysis.md) | A player or two: per-90 figures, Action Zones and a mirrored grid. |
+| `/players` | [players.md](players.md) | **Data** — the whole pool, sortable, filterable, lit in ink. |
+| `/players/analysis` | [analysis.md](analysis.md) | Compare: two players' figures, shots, key passes, touches and attributes, season or last 6. |
+| `/players/planner` | [planner.md](planner.md) | The fixture planner: every club's next six opponents, ranked by our strength model. |
 | `/players/[fantraxId]` | [player.md](player.md) | One player's profile. |
 | `/fpl` | [fpl.md](fpl.md) | The other game, kept small on purpose. |
 

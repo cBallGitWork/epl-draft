@@ -367,6 +367,15 @@ is more specific than a palette; it is the reason the token names in
 | Cream | `--color-cream` | ink on a colour plate | — |
 | Quiet on a plate | `--color-faint-plate` | the same **quiet** as `--color-faint`, on the blue plate that will not carry it | — |
 | Doubt | `--color-doubt-out` `-major` `-slight` | **how likely he is to MISS**, as a ramp of three. A ground, never ink | ink 5.5 · 7.1 · 9.5 |
+| Ease | `--color-ease-1` … `-10` | **how kind an opponent is, by OUR strength model**: the planner's 1–20 rank, two a step, green easiest to dark red hardest. A ground, never ink; FPL's difficulty keeps the FDR steps | black 4.8–11.7 · cream 4.9–8.6 |
+
+**The ease ramp is ten steps and one meaning** (Craig, 24 Sep 2026: *"Use a bigger range of colours too"*, of
+the fixture planner). The five FDR steps are FPL's and carry FPL's difficulty; the planner's cells carry OUR
+rank, so they take their own ramp and never borrow the FDR one, and each cell prints its rank so the two cannot
+be mistaken. Ten steps rather than five because a run of six cells has to show a shape, and five steps lumped
+ranks 1 and 4 together. They are spaced evenly in OKLab (7 apart) along green, yellow, orange, red, with
+lightness falling 0.87 to 0.40, so a reader who cannot split the hues still reads the order; black ink on 1–7
+and cream on 8–10 clear 4.5:1 at every step.
 
 **The doubt ramp is three steps and one meaning** (Craig, 21 Sep 2026: *"we need
 to show that players are a doubt/out better ... red 100% out, orange for a major

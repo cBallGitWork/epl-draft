@@ -44,6 +44,18 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The fixture planner ranks opponents by our strength model — decided 24 Sep 2026
+
+- **The ranks are ours**: the sister repo's Dixon-Coles strength (`strength/{season}.json`, bridged to FPL club
+  codes through `team_provider_map` and the live bootstrap; 20 of 20). An opponent is rated at the venue he
+  plays, which is how the sister's own fixture model reads it.
+- **Ten ease steps, not the five FDR ones** (Craig: *"Use a bigger range of colours too"*). FPL's difficulty
+  keeps `--color-fdr-*`; the planner's rank takes `--color-ease-*`, so `fdr.ts`'s "always FPL's" stays true.
+- **A blank counts as the hardest; a double averages its two; a tie goes to the nearer gameweek.** A double
+  that averages rather than adds is a choice for "how kind", not "how many points"; revisit when a double
+  gameweek lands.
+- **`PLANNER_RUN` is 6**, the planner's own horizon; a player's profile keeps `FIXTURE_RUN` 5.
+
 ## Compare narrows to recent form from FPL's own game log — decided 24 Sep 2026
 
 - **Last 6 is the last six gameweeks with a match finished** (`lastPlayed`), and the figures over it are the
