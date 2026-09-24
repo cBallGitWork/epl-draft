@@ -1041,3 +1041,26 @@
     --row-portrait: 1.375rem;
   }
 }
+
+/* Under a thumb a grey control paints a 32px plate inside its 44px target (Craig, 24 Sep 2026: "these grey
+   buttons are way too thick"). The transparent band above and below is still the control, so `tapfit`
+   measures 44; the bevel is redrawn inset, and a field beside a plate slims with it. The desk is untouched. */
+@media (width < 64rem) {
+  :is(.cm-bevel, .cm-bevel-pressed).min-h-11,
+  .cm-panel.min-h-11:has(+ :is(.cm-bevel, .cm-bevel-pressed)) {
+    border-width: 0.375rem 0;
+    border-color: transparent;
+    background-clip: padding-box;
+    padding-block: 0.25rem;
+    align-content: center;
+  }
+  .cm-bevel.min-h-11 {
+    box-shadow: inset 2px 2px 0 var(--cm-light), inset -2px -2px 0 var(--cm-dark);
+  }
+  .cm-bevel-pressed.min-h-11 {
+    box-shadow: inset 2px 2px 0 var(--cm-dark), inset -2px -2px 0 var(--cm-light);
+  }
+  .cm-panel.min-h-11:has(+ :is(.cm-bevel, .cm-bevel-pressed)) {
+    box-shadow: inset 0 0 0 2px var(--cm-dark);
+  }
+}

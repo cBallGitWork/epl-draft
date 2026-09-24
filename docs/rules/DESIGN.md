@@ -763,6 +763,12 @@ a repeating row on the desk, which is `.cm-row` and is the number that makes a
 division fit on a screen. `desk.css` carries the long argument for the pair and
 `tools/ui/tapfit.mjs` measures it.
 
+**Under a thumb a grey control PAINTS 32px of its 44** (Craig, 24 Sep 2026: *"these grey buttons are way too
+thick"*). The target is unchanged: a transparent 6px band above and below is still the control, and the bevel
+is redrawn inset. One rule at the end of `desk.css`, keyed on a bevelled plate carrying `min-h-11`, so every
+control on the floor slims with no call site edited, and a field beside a plate slims with it. It is CM's own
+proportion: its in-panel controls are 21px of a 600px screen, about 30 of an 844px phone.
+
 **A row relaxes and a control never does — and a TAB is the exception to both.**
 A button and a select stay at their floor at every width — they are aimed at rather than read, and a mouse
 misses them as easily as a thumb does. That distinction is the whole reason this
