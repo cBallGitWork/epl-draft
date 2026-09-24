@@ -56,10 +56,12 @@ describe("callTie", () => {
     expect(later.instinct).toBe("defence");
   });
 
-  it("never overrules a tie that is not close", () => {
-    // 45 against 41 is an 8.9% gap.
-    const call = callTie(side("h", 45, { bestManDoubt: true, backLineEase: 20 }), side("a", 41, { liverpool: 5 }));
-    expect(call).toMatchObject({ callsTeamId: "h", instinct: null, close: false });
+  it("overrules a tie that is not close for Liverpool men alone, and only so far", () => {
+    // 45 against 41 is an 8.9% gap: the football cannot overturn it, Liverpool can.
+    expect(callTie(side("h", 45, { bestManDoubt: true, backLineEase: 20 }), side("a", 41))).toMatchObject({ callsTeamId: "h", instinct: null, close: false });
+    expect(callTie(side("h", 45), side("a", 41, { liverpool: 1 }))).toMatchObject({ callsTeamId: "a", instinct: "liverpool", close: false });
+    // 45 against 38 is 15.6%: not even for Liverpool.
+    expect(callTie(side("h", 45), side("a", 38, { liverpool: 5 })).instinct).toBeNull();
   });
 
   it("only reads the favourite's doubt, never the underdog's", () => {

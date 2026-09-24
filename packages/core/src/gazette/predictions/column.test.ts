@@ -75,6 +75,7 @@ describe("featured", () => {
   it("takes the first man named whole, never a name inside a longer word", () => {
     expect(featured("Pymble scored. Kettle and Pym both start.", [man("Pym"), man("Kettle")])?.name).toBe("Kettle");
     expect(featured("B.Fernandes has Leeds.", [man("Fernandes"), man("B.Fernandes")])?.name).toBe("B.Fernandes");
+    expect(featured("Dewsbury-Hall has Hull.", [man("Hall")])).toBeNull();
     expect(featured("Nobody named.", [man("Pym")])).toBeNull();
   });
 });

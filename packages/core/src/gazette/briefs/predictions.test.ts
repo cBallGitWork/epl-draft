@@ -78,24 +78,22 @@ describe("buildLawroBrief", () => {
     expect(text).not.toMatch(/per cent|%|\b50\b/u);
   });
 
-  it("puts a main man's hard fixture beside the main men, as the story it is", () => {
+  it("leads the tie with a main man's hard fixture, as the story it is", () => {
     const liverpool = { opponent: "Liverpool", home: false, standing: "one of the three meanest defences in the league" };
     const haaland = man("Haaland", 30, { club: "Manchester City", positions: ["F"], ease: 19, fixtures: [liverpool] });
     const text = brief([tie(side("cp", "Cold Palmer", 52.1, [man("Saka", 20)]), side("hg", "Haaland Globetrotters", 41.6, [haaland, man("Isak", 10)]))]) ?? "";
     const facts = text.split("\n").filter((line) => line.startsWith("- T1"));
-    expect(facts.findIndex((line) => line.startsWith("- T1A-hard:"))).toBe(facts.findIndex((line) => line.startsWith("- T1A-key:")) + 1);
+    expect(facts[0]).toMatch(/^- T1-story: Haaland Globetrotters's Haaland, one of their main men/u);
+    // Then one man for the side the story leaves out, never a roll call of every man and fixture.
+    expect(facts.filter((line) => line.includes("-man:"))).toEqual([expect.stringContaining("T1H-man: Saka (M, Arsenal, home to Leeds United), for Cold Palmer")]);
     expect(text).toContain("Haaland Globetrotters's Haaland, one of their main men, is away at Liverpool, one of the three meanest defences in the league, one of the hardest");
   });
 
   it("says how likely a man is to play in words, by FPL's chance or its status", () => {
     const at = (chance: number | null, state: Availability["state"] = "doubt"): Availability => ({ state, label: "", out: state !== "doubt" || chance === 0, chance, news: "" });
-    const men = [
-      man("Rice", 30, { availability: at(75) }),
-      man("Odegaard", 29, { availability: at(25) }),
-      man("Gabriel", 28, { availability: at(null, "injured") }),
-      man("Timber", 27, { availability: at(0) }),
-    ];
-    const text = brief([tie(side("cp", "Cold Palmer", 52.1, men), side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25)]))]) ?? "";
+    const alone = (name: string, availability: Availability) =>
+      tie(side("cp", "Cold Palmer", 52.1, [man(name, 30, { availability })]), side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25)]));
+    const text = brief([alone("Rice", at(75)), alone("Odegaard", at(25)), alone("Gabriel", at(null, "injured")), alone("Timber", at(0))]) ?? "";
     for (const said of ["Rice (Arsenal) is a slight doubt.", "Odegaard (Arsenal) is a big doubt.", "Gabriel (Arsenal) is injured.", "Timber (Arsenal) is out."]) {
       expect(text).toContain(said);
     }
@@ -144,8 +142,7 @@ describe("buildLawroBrief", () => {
     const text = brief([again]) ?? "";
     // Saka is the same story as last week; Palmer is a doubt, which is new.
     expect(text).not.toContain("Saka");
-    expect(text).toContain("Cold Palmer's main men, best first: Palmer");
-    expect(text).toContain("Rice (M, Arsenal, home to Leeds United, one of the three leakiest defences in the league)");
+    expect(text).toContain("Cold Palmer's Palmer (Chelsea) is a doubt");
   });
 
   it("invents no record for a first column", () => {

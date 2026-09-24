@@ -15,7 +15,7 @@ describe("checkLawro", () => {
     const hard = faults.filter((each) => each.severity === "hard").map((each) => `${each.check}: ${each.evidence}`);
     expect(hard).toEqual(expect.arrayContaining(["line-up: benched", "line-up: starting against", "a decimal: 9.2", "a name not in the brief: Goliath", "a name not in the brief: Castell"]));
     const sent = faults.filter((each) => each.severity === "send-back").map((each) => each.evidence);
-    for (const tell of ["table-toppers", "shaping up", "clash", "boast", "firepower", "leaky", "belief", "delved", "waiver", "in a bid to", "turn the tide", "only time will tell", "all eyes", "projected", "welcome", ";", "...", "n't just"]) {
+    for (const tell of ["table-toppers", "shaping up", "clash", "boast", "firepower", "leaky", "belief", "delved", "in a bid to", "turn the tide", "only time will tell", "all eyes", "projected", "welcome", ";", "...", "n't just"]) {
       expect(sent).toContain(tell);
     }
   });
@@ -42,6 +42,11 @@ describe("checkLawro", () => {
       checkLawro(draft([["rs-bn", line], ...SAMPLE.slice(1)]), ctx()).filter((each) => each.section === "rs-bn" && each.severity === "hard").map((each) => each.check);
     expect(hardIn("My career has come to this. Real Sociable have won all three. They'll need more than two.")).toEqual([]);
     expect(hardIn("My career was full of goals. Real Sociable have won all three.")).toContain("a career claim nobody gave him");
+  });
+
+  it("reads a word standing as its own sentence as a reaction, not a stranger", () => {
+    const hard = checkLawro(draft([["rs-bn", "I've no argument with Real Sociable. Lovely. Oduya has Leeds."], ...SAMPLE.slice(1)]), ctx());
+    expect(hard.filter((each) => each.check === "a name not in the brief")).toEqual([]);
   });
 
   it("lets a real club host, and sends back a league side that does", () => {

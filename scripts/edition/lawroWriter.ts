@@ -28,7 +28,8 @@ export async function writeLawro(desk: PredictionsDesk, brief: string, facts: st
   const ctx: CheckContext = {
     calls,
     name,
-    facts: [facts, LAWRO_CORE, ...desk.past.map((line) => line.line), ...desk.clubs, "Lawro"].join("\n"),
+    // His ground and his paper are his to name: the voice sends Liverpool's visitors to Anfield.
+    facts: [facts, LAWRO_CORE, ...desk.past.map((line) => line.line), ...desk.clubs, "Lawro", "Anfield", "Gazetta"].join("\n"),
     offered: desk.past,
     names: desk.names,
     past: desk.archive.prose,

@@ -5,7 +5,8 @@ import type { PredictionSide, SquadMan } from "../predictions/sides";
 // One tie's facts for Lawro, worded and ranked. Squad-level only, and no figure of ours: the
 // order of a side's men is our model's reading and is never printed.
 
-/** The facts that matter most first, each with an id, capped for the tie. */
+/** The tie's one story first, then a man for each side the story leaves out, their form, and one
+ *  more: a pick that gives a side nothing, a signing, or a doubt. Three men, never a roll call. */
 export function tieFacts(index: number, home: PredictionSide, away: PredictionSide, call: PredictionCall): string[] {
   const favourite = call.callsTeamId === home.teamId ? (call.instinct === null ? home : away) : call.instinct === null ? away : home;
   const underdog = favourite === home ? away : home;
@@ -13,20 +14,64 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
     { tag: `T${index}H`, side: home },
     { tag: `T${index}A`, side: away },
   ];
-  const keyNames = (side: PredictionSide) => new Set(side.keyMen.map((man) => man.name));
-  // One of the men who matter most against one of the round's hardest: Craig's "good narrative".
-  const star = (side: PredictionSide) => side.hard !== null && keyNames(side).has(side.hard.name);
+  const story = call.instinct === null ? storyOf([favourite, underdog]) : null;
+  const covered = new Set<PredictionSide>(
+    story !== null ? [story.side] : call.instinct === "doubt" ? [favourite] : call.instinct === "liverpool" ? [home, away] : call.instinct === "defence" ? [home, away] : [],
+  );
+  const used = new Set(story === null ? [] : [story.man.name]);
+  const fresh = (men: readonly (SquadMan | null)[]) => men.find((man): man is SquadMan => man !== null && !used.has(man.name)) ?? null;
+  const take = (man: SquadMan | null) => {
+    if (man !== null) used.add(man.name);
+    return man;
+  };
   const facts = [
     call.instinct === null ? null : `- T${index}-gut: ${gutFact(call.instinct, favourite, underdog)}`,
-    ...sides.map(({ tag, side }) => (side.keyMen.length === 0 ? null : `- ${tag}-key: ${side.name}'s main men, best first: ${side.keyMen.map(described).join("; ")}.`)),
-    ...sides.map(({ tag, side }) => (side.hard !== null && star(side) ? `- ${tag}-hard: ${hard(side.hard, side.name, true)}` : null)),
-    ...sides.flatMap(({ tag, side }) => side.doubts.filter((man) => keyNames(side).has(man.name)).map((man) => `- ${tag}-doubt: ${doubt(man, side.name)}`)),
+    story === null ? null : `- T${index}-story: ${story.text}`,
+    ...sides.map(({ tag, side }) => {
+      const man = covered.has(side) ? null : take(fresh(side.keyMen));
+      return man === null ? null : `- ${tag}-man: ${described(man)}, for ${side.name}.`;
+    }),
     ...sides.map(({ tag, side }) => (side.form === null ? null : `- ${tag}-form: ${form(side)}`)),
-    ...sides.map(({ tag, side }) => (side.arrivals.length === 0 ? null : `- ${tag}-in: ${side.name} signed ${side.arrivals.join(", ")}, arriving for this round.`)),
-    ...sides.flatMap(({ tag, side }) => side.doubts.filter((man) => !keyNames(side).has(man.name)).map((man) => `- ${tag}-doubt: ${doubt(man, side.name)}`)),
-    ...sides.map(({ tag, side }) => (side.hard === null || star(side) ? null : `- ${tag}-hard: ${hard(side.hard, side.name, false)}`)),
+    // Liverpool men are the whole story of a Liverpool call: nobody else gets a line.
+    call.instinct === "liverpool" ? null : extra(sides, fresh),
   ];
   return facts.filter((fact): fact is string => fact !== null).slice(0, PREDICTIONS.factsPerTie);
+}
+
+/** What the tie is about, favourite first: one of a side's main men against one of the round's
+ *  hardest (Craig's "good narrative"), else a main man in doubt; null when neither. */
+function storyOf(sides: readonly PredictionSide[]): { side: PredictionSide; man: SquadMan; text: string } | null {
+  for (const side of sides) {
+    const star = side.hard !== null && side.hard.fixtures.length > 0 && side.keyMen.some((man) => man.name === side.hard?.name) ? side.hard : null;
+    if (star !== null) return { side, man: star, text: hard(star, side.name, true) };
+  }
+  for (const side of sides) {
+    const doubtful = side.doubts.find((man) => side.keyMen.some((key) => key.name === man.name));
+    if (doubtful !== undefined) return { side, man: doubtful, text: `${doubt(doubtful, side.name)} One of their main men, and the story of this tie.` };
+  }
+  return null;
+}
+
+/** The one line beyond the story and the men: a bad pick first, then a signing, then a doubt. */
+function extra(sides: readonly { tag: string; side: PredictionSide }[], fresh: (men: readonly (SquadMan | null)[]) => SquadMan | null): string | null {
+  for (const { tag, side } of sides) {
+    const man = fresh([...side.doubts.filter((each) => each.availability.out), side.hard?.fixtures.length === 0 ? side.hard : null]);
+    if (man !== null) return `- ${tag}-dud: ${dud(man, side.name)}`;
+  }
+  for (const { tag, side } of sides) {
+    if (side.arrivals.length > 0) return `- ${tag}-in: ${side.name} signed ${side.arrivals.join(", ")} off the waiver list, arriving for this round. A signing is fair game.`;
+  }
+  for (const { tag, side } of sides) {
+    const man = fresh(side.doubts.filter((each) => !each.availability.out));
+    if (man !== null) return `- ${tag}-doubt: ${doubt(man, side.name)}`;
+  }
+  return null;
+}
+
+/** A man a side holds who gives them nothing this round: a pick to be scathing about. */
+function dud(man: SquadMan, side: string): string {
+  const why = man.fixtures.length === 0 ? "has no game this round" : state(man);
+  return `${side}'s ${man.name} (${man.club}) ${why}. A pick that gives them nothing this round: be as rude about the pick as you like, never about the manager.`;
 }
 
 /** The reason he goes against the favourite, in the brief's facts and nothing else. */
@@ -34,9 +79,9 @@ function gutFact(instinct: NonNullable<PredictionCall["instinct"]>, favourite: P
   if (instinct === "doubt" && favourite.best !== null) return `${favourite.name}'s best man, ${described(favourite.best)}, ${state(favourite.best)}.`;
   if (instinct === "liverpool") {
     const men = (side: PredictionSide) => `${side.liverpool}${side.liverpool === 0 ? "" : ` (${side.liverpoolMen.join(", ")})`}`;
-    return `Liverpool men in the squad: ${underdog.name} ${men(underdog)}, ${favourite.name} ${men(favourite)}. You played for Liverpool, and you may admit the bias.`;
+    return `Liverpool men in the squad: ${underdog.name} ${men(underdog)}, ${favourite.name} ${men(favourite)}. You back the side with more of them. Never admit a bias and never say that is why: talk those men up as if it were obvious.`;
   }
-  const line = (side: PredictionSide) => [...side.backLine].sort((a, b) => (a.ease ?? 99) - (b.ease ?? 99)).slice(0, 4).map((man) => `${man.name} ${fixture(man)}`).join(", ");
+  const line = (side: PredictionSide) => [...side.backLine].sort((a, b) => (a.ease ?? 99) - (b.ease ?? 99)).slice(0, 2).map((man) => `${man.name} ${fixture(man)}`).join(", ");
   return `${underdog.name}'s back line has the kinder round: ${line(underdog)}. ${favourite.name}'s: ${line(favourite)}.`;
 }
 

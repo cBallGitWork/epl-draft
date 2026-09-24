@@ -22,7 +22,6 @@ export interface PastLine {
 export const PAST: readonly PastLine[] = [
   { id: "achilles", instinct: "doubt", line: "An Achilles injury finished your playing career in 1988.", mark: /achilles/i },
   { id: "back-line", instinct: "defence", line: "You played centre-half. The back line was your job.", mark: /back line was (?:your|my) job/i },
-  { id: "159", instinct: "liverpool", line: "For 159 games in a row, between May 2016 and November 2020, you never had Liverpool down to lose.", mark: /\b159\b/ },
   { id: "8000", line: "You made more than 8,000 predictions for the BBC between 2000 and 2022.", mark: /8,000|eight thousand/i },
   { id: "points", line: "The BBC gave you 10 points for a right result and 40 for an exact score.", mark: /exact score/i },
   { id: "guests", line: "Your guests were musicians, actors and television people, a new one every week.", mark: /\bguests?\b/i },

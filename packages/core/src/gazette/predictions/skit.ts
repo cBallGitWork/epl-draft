@@ -73,7 +73,8 @@ function refusal(edit: SkitEdit, draft: LawroDraft, ctx: SkitContext): string | 
   if (CORE_MARK.test(edit.before) || PAST.some((line) => line.mark.test(edit.before))) return "his career is not a joke";
   const words = wordCount(edit.after);
   const said = sentences(edit.after);
-  const oneLine = said.length === 1 || (said.length === 2 && said[0].endsWith("?") && wordCount(said[1]) === 1);
+  // One sentence, a question and its one-word answer, or a sentence and a kicker: "Old habits."
+  const oneLine = said.length === 1 || (said.length === 2 && wordCount(said[1]) <= (said[0].endsWith("?") ? 1 : 3));
   if (!oneLine || words > 20 || words > wordCount(edit.before) + 6) return "not one short sentence";
   if (strangers(edit.after, edit.before).length > 0 || strangers(edit.before, edit.after).length > 0) return "the names changed";
   if (!sameFigures(edit.before, edit.after)) return "the figures changed";

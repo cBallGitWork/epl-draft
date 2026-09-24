@@ -12,7 +12,7 @@ const CHATBOT = [
   "who knows", "anything can happen", "all eyes", "in the spotlight", "a tale of two", "clash of the titans",
   "the real story", "the bigger picture", "writes itself", "and then some", "sheer", "no stranger to",
   "force to be reckoned with", "under the radar", "dark horse", "one to watch", "keep an eye on", "let's", "here's",
-  "buckle up", "strap in", "without further ado", "next up", "stay tuned", "watch this space", "good luck",
+  "buckle up", "strap in", "without further ado", "next up", "stay tuned", "watch this space",
   "fingers crossed", "folks", "honestly", "frankly", "truth be told", "I have to say", "in my opinion", "personally",
   "I believe", "I feel", "literally", "truly", "genuinely", "incredibly", "hugely", "massively", "narrative",
   "momentum", "belief", "mentality", "statement", "send a message", "lay down a marker", "in a bid to",
@@ -41,7 +41,7 @@ const TIPSTER = [
 
 /** Jargon, and the machine this column does not have. */
 const JARGON = [
-  "the numbers", "projection", "projected", "Fantrax", "waiver", "waivers", "the wire", "free agent", "differential",
+  "the numbers", "projection", "projected", "Fantrax", "the wire", "differential",
   "template", "xG", "xA", "expected goals", "underlying", "metrics", "data", "analytics", "stats", "algorithm", "model",
   "AI", "computer", "spreadsheet", "low block", "high press", "gegenpress", "gegenpressing", "half-space", "inverted",
   "overload", "transition", "false nine", "double pivot", "progressive", "tactical", "tactically", "system",
@@ -51,9 +51,9 @@ const JARGON = [
 /** A chance in figures: he says out, injured or a doubt, never FPL's percentage. */
 const CHANCES = ["per cent", "percent", "%", "50-50", "fifty-fifty", "chance of playing"];
 
-/** The managers are ten friends: no cruelty, no feelings, no excuses, no gloating. */
+/** The managers are friends: a bad pick may be useless, the man who made it is never an idiot. */
 const MANAGERS = [
-  "clueless", "hopeless", "useless", "pathetic", "embarrassing", "shambles", "disgrace", "laughing stock", "idiot",
+  "clueless", "pathetic", "disgrace", "laughing stock", "idiot",
   "muppet", "clown", "donkey", "numpty", "plonker", "stupid", "incompetent", "bottled", "bottler", "choked", "sacked",
   "the sack", "gutted", "fuming", "furious", "devastated", "heartbroken", "over the moon", "sick as a parrot", "panic",
   "under pressure", "unlucky", "cruel", "bad luck", "fine margins", "robbed", "told you so", "called it", "nailed it",

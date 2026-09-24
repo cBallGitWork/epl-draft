@@ -1,7 +1,8 @@
 import { PREDICTIONS } from "../../config";
 
 // Who Lawro backs in each tie, decided here and never by the writer. The favourite is Fantrax's
-// higher projected total; on a close tie the first of his instincts that fires backs the other side.
+// higher projected total; on a close tie the first of his instincts that fires backs the other side,
+// and Liverpool men overturn a gap twice as wide.
 
 /** Why he went against the favourite, tried in this order: the football first, the loyalty last. */
 export type Instinct = "doubt" | "defence" | "liverpool";
@@ -42,8 +43,10 @@ export function callTie(home: PickSide, away: PickSide): PredictionCall {
   const top = favourite.projected as number;
   if (top <= 0) return { ...tie, callsTeamId: null, instinct: null, score: null, close: false };
 
-  const close = (top - (underdog.projected as number)) / top <= PREDICTIONS.closeShare;
-  const instinct = close ? (INSTINCTS.find((each) => fires(each, favourite, underdog)) ?? null) : null;
+  const gap = (top - (underdog.projected as number)) / top;
+  const close = gap <= PREDICTIONS.closeShare;
+  const reach = (each: Instinct) => (each === "liverpool" ? PREDICTIONS.liverpoolShare : PREDICTIONS.closeShare);
+  const instinct = INSTINCTS.find((each) => gap <= reach(each) && fires(each, favourite, underdog)) ?? null;
   const winner = instinct === null ? favourite : underdog;
   const favouriteScore = Math.round(top);
   // A gut call wins by the one point the numbers would not give him.
