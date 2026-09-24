@@ -20,9 +20,8 @@ import { pageOf } from "./paperPages";
 // above is not.** `story.byline` renders as an inverted standing head — THE
 // BACK PAGE, THE SELECTOR — which is a column's title and not a person. A paper
 // runs both: the standing head over the piece, "by <name>" under it with the
-// filing. The name is a constant rather than a field on the story; `config.ts`
-// in core carries why, and the short version is that one correspondent is a
-// fact about the paper and two would be a fact about a story.
+// filing. The name is the story's `reporter` where it has one (Lawro's is Mark
+// Lawrenson's), and the house correspondent's otherwise.
 //
 // **The turn-line is optional and that is a real distinction, not a flag for
 // its own sake.** `Written` IS the article, so a line reading "turn to page 2"

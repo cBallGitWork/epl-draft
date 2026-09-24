@@ -20,7 +20,13 @@ export default function Calls({
   return (
     <Column
       title="The ties"
-      aside={record === undefined ? null : <span className="numeric">Season {record.right} from {record.called}</span>}
+      aside={
+        record === undefined ? null : (
+          <>
+            Season <span className="numeric">{record.right}</span> from <span className="numeric">{record.called}</span>
+          </>
+        )
+      }
     >
       {/* The paper's own measure: one column on a phone, newspaper columns on a desk. */}
       <ul className="paper-columns">
@@ -49,7 +55,7 @@ function prediction(tie: Tie, named: (teamId: string) => string) {
   return (
     <>
       {named(tie.callsTeamId)}
-      {mine === null ? null : <span className="numeric tracking-normal"> {mine}-{theirs}</span>}
+      {mine === null ? null : <span className="numeric"> {mine}–{theirs}</span>}
     </>
   );
 }
