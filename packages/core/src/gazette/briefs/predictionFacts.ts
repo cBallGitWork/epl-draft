@@ -85,8 +85,9 @@ function together(index: number, home: PredictionSide, away: PredictionSide): (s
 function gutFact(instinct: NonNullable<PredictionCall["instinct"]>, favourite: PredictionSide, underdog: PredictionSide): string {
   if (instinct === "doubt" && favourite.best !== null) return `${favourite.name}'s best man, ${described(favourite.best)}, ${state(favourite.best)}.`;
   if (instinct === "liverpool") {
-    const men = (side: PredictionSide) => `${side.liverpool}${side.liverpool === 0 ? "" : ` (${side.liverpoolMen.join(", ")})`}`;
-    return `Liverpool men in the squad: ${underdog.name} ${men(underdog)}, ${favourite.name} ${men(favourite)}. You back the side with more of them. Never admit a bias and never say that is why: talk those men up as if it were obvious.`;
+    // With their fixtures, so he praises their football: given names alone, he gave their club as the reason.
+    const theirs = underdog.squad.filter((man) => man.liverpool).slice(0, 2).map(described).join("; ");
+    return `Liverpool men in the squad: ${underdog.name} ${underdog.liverpool}, ${favourite.name} ${favourite.liverpool}. ${underdog.name}'s: ${theirs}. You back the side with more of them. Never admit a bias and never give their club as the reason: praise their football, as if it were obvious.`;
   }
   const line = (side: PredictionSide) => [...side.backLine].sort((a, b) => (a.ease ?? 99) - (b.ease ?? 99)).slice(0, 2).map((man) => `${man.name} ${fixture(man)}`).join(", ");
   return `${underdog.name}'s back line has the kinder round: ${line(underdog)}. ${favourite.name}'s: ${line(favourite)}.`;

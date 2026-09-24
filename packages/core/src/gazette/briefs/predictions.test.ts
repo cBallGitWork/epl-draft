@@ -123,7 +123,8 @@ describe("buildLawroBrief", () => {
       side("hg", "Haaland Globetrotters", 43, [man("Haaland", 25), reds("Salah"), reds("Gakpo")]),
     );
     expect(loyal.call.instinct).toBe("liverpool");
-    expect(brief([loyal])).toContain("Liverpool men in the squad: Haaland Globetrotters 2 (Gakpo, Salah), Cold Palmer 0");
+    expect(brief([loyal])).toContain("Liverpool men in the squad: Haaland Globetrotters 2, Cold Palmer 0. Haaland Globetrotters's: Gakpo (M, Liverpool, home to Leeds United); Salah (M, Liverpool, home to Leeds United).");
+    expect(brief([loyal])).toContain("never give their club as the reason");
     expect(brief([clear])).not.toContain("Liverpool men");
   });
 
