@@ -4,14 +4,14 @@
   "leagueId": "zbn1z3ukmsgb36sz",
   "period": 6,
   "gameweek": 6,
-  "filedAt": "2026-09-24T19:45:34.000Z",
+  "filedAt": "2026-09-24T20:16:49.000Z",
   "expiresAt": null,
   "edition": "The Form Guide",
   "byline": "",
   "reporter": "Mark Lawrenson",
   "headline": "Lawro's Predictions: GW6",
-  "deck": "Lawro goes against test3 and backs test2, the closer of the two ties this week.",
-  "body": "First column here, so nothing to own yet. Twenty-two years of scores on the BBC, and now here I am. The weather's grey and so am I.",
+  "deck": "Lawro goes against the favourites in test3 v test2, and leaves test4 v 123 to the front-runners.",
+  "body": "First column here, and no record to answer for yet. That comes soon enough. Twenty-two years of Saturday scores on the BBC, and now this. Preston weather, then.",
   "subjects": [
     "predictions:gw6"
   ],
@@ -21,7 +21,7 @@
     {
       "homeTeamId": "j9zadacnmshcpazf",
       "awayTeamId": "pbxm9fgimshcpazf",
-      "line": "These two are cut from the same cloth. Both won one, lost one, and neither has settled into anything. This is a close one, and test3 are the favourites. I'm going against them. Why? test2 play the better football, plain and simple. Isak up top faces Manchester City, one of the three toughest defences going, so no picnic for him. He'll manage. Good forwards always do.",
+      "line": "test3 are the favourites, and I fancy test2 anyway. Why? Isak. He is up against Manchester City, a tough defence, and none of that bothers a Liverpool man one bit. Gonzalo of Fulham has gone quiet for test3, no goal and no assist in his last two. Havertz of Arsenal has done the same for test2, so that pair cancel out. Both lost last week. Sitting through this one will feel like waiting for a bus that never turns up. I'll go with test2.",
       "callsTeamId": "pbxm9fgimshcpazf",
       "instinct": "liverpool",
       "score": {
@@ -38,7 +38,7 @@
     {
       "homeTeamId": "sezrgvl2mshcpazf",
       "awayTeamId": "8enbgqo5msgb375j",
-      "line": "123 sit top, and they look the part. Haaland's away at Liverpool, one of the hardest this round for a forward, so don't expect him to enjoy it. Nobody does. Mbeumo's home to Tottenham for test4, and he'll fancy it. But Foden's suspended, and a worse man takes his place. That's how it goes. 123 have too much, though a quiet Haaland still beats most on a bad day.",
+      "line": "123 top the table and look the part. Haaland of Manchester City has scored in each of his last two. Good news? Not for test4. Mbeumo of Manchester United has gone dry for test4, no goal and no assist in two. Fernandes of Manchester United, same story for 123, so it's not all one way. Foden is suspended for test4, and that's that. Both sides came off a win last week. I'd be surprised if the front-runners slipped here. 123 for me.",
       "callsTeamId": "8enbgqo5msgb375j",
       "score": {
         "home": 20,
@@ -51,13 +51,5 @@
         "position": null
       }
     }
-  ],
-  "extras": {
-    "skit": [
-      {
-        "shape": "consolation",
-        "target": null
-      }
-    ]
-  }
+  ]
 }
