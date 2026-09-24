@@ -137,7 +137,7 @@ async function main(): Promise<void> {
   if (process.env.GAZETTA_QUEUE) return say(assignments.map((a) => a.key).join("\n"));
   if (assignments.length === 0) return say("Nothing new to report.");
 
-  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, paper, ledger, sheet, xi, season, assignments });
+  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, ledger, sheet, xi, season, assignments });
 
   const filings: Filing[] = [];
   // Attempts, not assignments: a desk that refuses spends nothing and is an

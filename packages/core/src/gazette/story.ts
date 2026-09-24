@@ -1,5 +1,5 @@
 import { type StoryExtras, normalizeExtras } from "./extras";
-import { type EditionTie, isTie, once } from "./published";
+import { type EditionTie, normalizeTie, once } from "./published";
 
 // The rolling paper: prose as a stack of stories rather than one column a round.
 //
@@ -87,6 +87,8 @@ export interface PublishedStory {
   /** Which named edition it went out under — "The Pink 'Un" — display copy. */
   edition: string;
   byline: string;
+  /** The columnist's own name, where it is not the house correspondent's. */
+  reporter?: string;
   /** The wordplay headline. */
   headline: string;
   /** The same story in plain words, so the pun is never the only telling. */
@@ -175,6 +177,7 @@ export function normalizeStory(parsed: unknown): PublishedStory | null {
     expiresAt: typeof raw.expiresAt === "string" && raw.expiresAt !== "" ? raw.expiresAt : null,
     edition: typeof raw.edition === "string" ? raw.edition : "",
     byline: typeof raw.byline === "string" ? raw.byline : "",
+    ...(typeof raw.reporter === "string" && raw.reporter !== "" ? { reporter: raw.reporter } : {}),
     headline: raw.headline,
     deck: typeof raw.deck === "string" ? raw.deck : "",
     body: typeof raw.body === "string" ? raw.body : "",
@@ -183,7 +186,7 @@ export function normalizeStory(parsed: unknown): PublishedStory | null {
       : [],
     image,
     face,
-    ties: once(Array.isArray(raw.ties) ? raw.ties.filter(isTie) : [], (t) => `${t.homeTeamId}-${t.awayTeamId}`),
+    ties: once(Array.isArray(raw.ties) ? raw.ties.flatMap(normalizeTie) : [], (t) => `${t.homeTeamId}-${t.awayTeamId}`),
     extras: normalizeExtras(raw.extras),
   };
 }

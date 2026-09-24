@@ -367,3 +367,24 @@ export const PLANNER_RUN = 6;
  *  the first hundred as if they were all of it. Sixteen teams will not reach it
  *  in a season. */
 export const TRANSACTION_PAGE_SIZE = 100;
+
+/** Lawro's predictions: when the column files and how a tie is called. Tuned against a league
+ *  nobody has drafted yet, so retune after gameweek 9 by counting the gut calls in the archive. */
+export const PREDICTIONS = {
+  /** Thursday from 18:00 London; a lock earlier in the week files the evening before (Sunday = 0). */
+  filing: { weekday: 4, hour: 18, maxLeadDays: 4 },
+  /** A tie is close when the gap is at most this share of the favourite's total: 3 points on 40. */
+  closeShare: 0.08,
+  /** FPL publishes 0/25/50/75/100; at or below this the favourite's best man is a doubt. */
+  doubtChance: 50,
+  /** Ranks of defensive ease by which the underdog's back line must have the kinder round. */
+  defenceEdge: 3,
+  /** How many more Liverpool men the underdog must hold, and whose they are (FPL's club code). */
+  liverpoolLead: 1,
+  liverpoolCode: 14,
+  /** The brief's caps: key men a side, how deep it looks for doubts, what counts as a hard fixture. */
+  keyMen: 3,
+  doubtDepth: 6,
+  hardFixtures: 5,
+  factsPerTie: 10,
+} as const;

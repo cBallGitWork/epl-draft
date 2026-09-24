@@ -52,7 +52,6 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
               facts: ctx.facts,
               table: ctx.table,
               threads: ctx.threads,
-              marked: ctx.marked,
               named: (teamId) =>
                 ctx.info.teams.find((team) => team.teamId === teamId)?.name ?? teamId,
             });

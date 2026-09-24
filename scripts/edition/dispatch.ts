@@ -34,8 +34,6 @@ export interface DeskContext {
   /** Fantrax's table, for the rankings to argue with. */
   table: readonly StandingsRow[];
   period: number;
-  /** How the last preview's calls went, report-time only. */
-  marked: { right: number; called: number } | null;
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];

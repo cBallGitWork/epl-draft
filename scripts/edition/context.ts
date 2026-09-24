@@ -1,7 +1,6 @@
-import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type LeagueInfo, type PublishedStory } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type LeagueInfo } from "@epl/core";
 import type { DeskContext } from "./dispatch";
 import { withFootball, type DeskFacts } from "./facts";
-import { markLastWeek } from "./marking";
 import type { readLedger } from "./persist";
 import type { presserDesk } from "./presserWeek";
 import { xiColumn, type readXi } from "./xi";
@@ -16,14 +15,13 @@ export async function deskContext(input: {
   byCode: Map<number, Club>;
   info: LeagueInfo;
   period: number;
-  paper: PublishedStory[];
   ledger: ReturnType<typeof readLedger>;
   sheet: ReturnType<typeof presserDesk>;
   xi: ReturnType<typeof readXi>;
   season: readonly Fixture[];
   assignments: readonly Assignment[];
 }): Promise<DeskContext> {
-  const { snapshot, facts, clubs, byCode, info, period, paper, ledger, sheet, xi, season, assignments } = input;
+  const { snapshot, facts, clubs, byCode, info, period, ledger, sheet, xi, season, assignments } = input;
   return {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
@@ -38,7 +36,6 @@ export async function deskContext(input: {
     info,
     table: facts.table,
     period,
-    marked: await markLastWeek(paper, info, period, assignments),
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,
     presserTies: sheet.ties,

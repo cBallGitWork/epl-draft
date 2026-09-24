@@ -5,12 +5,10 @@ import {
   buildDodgersBrief,
   buildElevenBrief,
   buildPowerBrief,
-  buildPredictionsBrief,
   buildWireBrief,
   decided,
   dodgers,
   powerRows,
-  predictionTies,
   wireFacts,
 } from "@epl/core";
 import type { RoundFacts } from "./facts";
@@ -26,8 +24,6 @@ export interface ColumnContext {
    *  read refused, which costs that column and no other. */
   table: readonly StandingsRow[];
   threads: readonly StoryThread[];
-  /** How the last predictions column's calls turned out. */
-  marked: { right: number; called: number } | null;
   named: (teamId: string) => string;
 }
 
@@ -36,14 +32,6 @@ export interface ColumnContext {
  *  firing can try again. */
 export function columnBrief(assignment: Assignment, ctx: ColumnContext): string | null {
   const results = decided(ctx.facts.pairings, ctx.facts.scores);
-
-  if (assignment.kind === "predictions") {
-    const ties = predictionTies(ctx.facts.pairings, ctx.facts.projected);
-    // A column with no projections to call from is not a column: Fantrax
-    // withheld the one number a prediction can stand on.
-    if (ties.every((tie) => tie.homeProjected === null && tie.awayProjected === null)) return null;
-    return buildPredictionsBrief({ gameweek: ctx.gameweek, ties, marked: ctx.marked, threads: ctx.threads });
-  }
 
   if (assignment.kind === "power-ranking") {
     if (ctx.table.length === 0) return null;
