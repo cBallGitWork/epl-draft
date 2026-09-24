@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-24T07:30:21.865Z",
+  "updatedAt": "2026-09-24T17:07:02.312Z",
   "stories": [
     {
       "slug": "news-cmrr48zqz1jno",
@@ -514,6 +514,48 @@
           }
         ]
       }
+    },
+    {
+      "slug": "gw6-predictions",
+      "kind": "predictions",
+      "leagueId": "zbn1z3ukmsgb36sz",
+      "period": 6,
+      "gameweek": 6,
+      "filedAt": "2026-09-24T17:04:58.000Z",
+      "expiresAt": null,
+      "edition": "The Form Guide",
+      "byline": "Lawro's Predictions",
+      "reporter": "Mark Lawrenson",
+      "headline": "Gonzalo Feasts As test3 Take Charge",
+      "deck": "Lawro backs test3 past test2 and 123 past test4, both clear favourites.",
+      "body": "First column here, so no record to own yet. In two decades of guessing scores for the BBC I filed more than 8,000 of these. Some even landed.",
+      "subjects": [
+        "predictions:gw6"
+      ],
+      "image": null,
+      "face": null,
+      "ties": [
+        {
+          "homeTeamId": "j9zadacnmshcpazf",
+          "awayTeamId": "pbxm9fgimshcpazf",
+          "line": "test3 are the clear favourites. Gibbs-White and Calafiori lead a strong squad, and Gonzalo has one of the leakiest defences to feed off. test2 lean on Havertz, with Rice a doubt at 75 per cent. Isak has a mean lot in front of him.",
+          "callsTeamId": "j9zadacnmshcpazf",
+          "score": {
+            "home": 32,
+            "away": 28
+          }
+        },
+        {
+          "homeTeamId": "sezrgvl2mshcpazf",
+          "awayTeamId": "8enbgqo5msgb375j",
+          "line": "123 sit top and have Haaland, though his is a hard one this round. B.Fernandes and Schade back him up. test4 have Mbeumo and Raya, but Foden is suspended and does nothing for anyone. I'll go with 123.",
+          "callsTeamId": "8enbgqo5msgb375j",
+          "score": {
+            "home": 20,
+            "away": 27
+          }
+        }
+      ]
     },
     {
       "slug": "news-cmwyzjedq51lo",
