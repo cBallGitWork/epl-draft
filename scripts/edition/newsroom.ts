@@ -97,6 +97,8 @@ export interface ColumnMeta {
   expiresAt: string | null;
   edition: string;
   byline: string;
+  /** The columnist's own name, where it is not the house correspondent's. */
+  reporter?: string;
   /** The covered-key this filing spends — also its one subject. */
   subject: string;
   /** The man the page prints a picture of, picked by the desk from the facts
@@ -122,6 +124,7 @@ export function storyOfColumn(
     expiresAt: meta.expiresAt,
     edition: meta.edition,
     byline: meta.byline,
+    reporter: meta.reporter,
     headline: column.headline,
     deck: column.deck,
     body: column.body,
@@ -143,6 +146,8 @@ export function storyOfColumn(
       quiz: column.quiz,
       teamNews: column.teamNews,
       lineups: column.lineups,
+      record: column.record,
+      skit: column.skit,
     },
   });
   if (story === null) throw new Error(`The ${meta.kind} did not come back in a printable shape.`);

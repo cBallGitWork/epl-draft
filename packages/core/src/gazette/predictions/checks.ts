@@ -57,7 +57,7 @@ const WIN = /\b(?:will|'ll|to|should|can|could|might|going to) (?:win|beat|edge|
 const BACKING = /\b(?:I fancy|I'm backing|I'll go with|I'm going with|I'll have|backing)\b/iu;
 const NEGATION = /\b(?:not|never|no)\b|n't/iu;
 const SCORELINE = /\b(?!50-50\b)\d{1,3}\s*[-–]\s*\d{1,3}\b/u;
-const LIMITS = { sentence: 20, intro: [1, 4, 35], tie: [2, 4, 45], gut: [2, 5, 60], column: 300, repeat: 5 } as const;
+const LIMITS = { sentence: 20, intro: [1, 4, 35], tie: [2, 5, 45], gut: [2, 5, 60], column: 300, repeat: 5 } as const;
 
 export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   const faults: Fault[] = [];
@@ -74,7 +74,8 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
     for (const word of banned(text, never)) fault(section, "never", "hard", word);
     // A headline is title case and a pun, so every capital would read as a stranger.
     if (section !== "headline") {
-      for (const name of strangers(text, ctx.facts)) fault(section, "a name not in the brief", "hard", name);
+      // He writes in the first person, and "I'll" is a capital that is nobody.
+      for (const name of strangers(text, ctx.facts).filter((word) => !/^I['’]/u.test(word))) fault(section, "a name not in the brief", "hard", name);
       for (const figure of numbersIn(text)) if (!known.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
     }
     const plain = masked(text, ctx.names);

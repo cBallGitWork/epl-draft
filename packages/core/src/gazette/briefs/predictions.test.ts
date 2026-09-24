@@ -50,7 +50,6 @@ const brief = (ties: PredictionsTie[], record: PredictionRecord = FIRST) =>
     ties,
     record,
     past: [],
-    threads: [],
   });
 
 const doubtful: Availability = { state: "doubt", label: "50%", out: false, chance: 50, news: "Groin injury - 50% chance of playing" };
@@ -112,11 +111,11 @@ describe("buildLawroBrief", () => {
   });
 
   it("invents no record for a first column", () => {
-    expect(brief([clear])).toContain("there is no record yet");
+    expect(brief([clear])).toContain("there is no record to own yet");
   });
 
   it("offers his past only as given, and files nothing it cannot call", () => {
-    const withPast = buildLawroBrief({ gameweek: 7, locksAt: "2026-10-17T11:15:00.000Z", teams: [], ties: [clear], record: FIRST, past: [PAST[3]], threads: [] });
+    const withPast = buildLawroBrief({ gameweek: 7, locksAt: "2026-10-17T11:15:00.000Z", teams: [], ties: [clear], record: FIRST, past: [PAST[3]] });
     expect(withPast).toContain(`- ${PAST[3].line}`);
     const uncalled = tie(side("cp", "Cold Palmer", null, []), side("hg", "Haaland Globetrotters", 40, []));
     expect(brief([uncalled])).toBeNull();

@@ -16,6 +16,7 @@ import {
   mapFixtures,
   mapLeagueInfo,
   newsdesk,
+  nextDeadline,
   periodGameweeks,
   banned,
   roundState,
@@ -28,6 +29,7 @@ import { prepare } from "./edition/commission";
 import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
 import { writeSubedited } from "./edition/subedit";
+import { writeLawro } from "./edition/lawroWriter";
 import { presserDesk } from "./edition/presserWeek";
 import { readXi } from "./edition/xi";
 import { deskState } from "./edition/desk";
@@ -93,6 +95,8 @@ async function main(): Promise<void> {
   const kickoffs = datedKickoffs(season);
   const calendar = periodGameweeks(info.scoringPeriods, kickoffs);
   const round = calendar.find((period) => period.gameweeks.includes(snapshot.gameweek));
+  const deadline = nextDeadline(info.rosterPeriods, kickoffs, now);
+  const nextRound = calendar.find((each) => each.period === deadline?.period)?.gameweeks[0];
   if (round === undefined) return say(`No Fantrax period covers gameweek ${snapshot.gameweek}.`);
 
   // The preview's window is lock-to-first-whistle, and it is a window rather
@@ -125,11 +129,11 @@ async function main(): Promise<void> {
       clubs,
       period: round.period,
       finished,
-      locked,
       started,
       lines: sheet.lines,
       xiGameweek: xi === null ? null : sheet.gameweek,
       ahead: ahead === undefined ? null : { period: ahead.period, gameweek: sheet.gameweek },
+      next: deadline === null || nextRound === undefined ? null : { period: deadline.period, gameweek: nextRound, locksAt: deadline.locksAt },
     }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,
@@ -137,7 +141,7 @@ async function main(): Promise<void> {
   if (process.env.GAZETTA_QUEUE) return say(assignments.map((a) => a.key).join("\n"));
   if (assignments.length === 0) return say("Nothing new to report.");
 
-  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, ledger, sheet, xi, season, assignments });
+  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, ledger, sheet, xi, season, kickoffs, assignments, say });
 
   const filings: Filing[] = [];
   // Attempts, not assignments: a desk that refuses spends nothing and is an
@@ -190,7 +194,10 @@ async function main(): Promise<void> {
       // Written and sub-edited before it is filed: `subedit.ts` reads the
       // column back against the register and sends it back once if it reached
       // for a banned phrase.
-      const column = await writeSubedited(desk.system, brief, say, assignment.kind);
+      const column =
+        desk.lawro === undefined
+          ? await writeSubedited(desk.system, brief, say, assignment.kind)
+          : await writeLawro(desk.lawro, brief, desk.brief, say);
       const filed = file(assignment, column, ctx, now);
       // Every name in the prose against every name in the brief. Eager, so it
       // warns rather than refuses — see `gazette/strangers.ts`.

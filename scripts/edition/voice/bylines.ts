@@ -9,7 +9,7 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   "match-report": "The Back Page",
   "fixture-preview": "The Form Guide",
   "tie-call": "The Back Page",
-  predictions: "The Form Guide",
+  predictions: "Lawro's Predictions",
   eleven: "The Selector",
   "power-ranking": "The Pecking Order",
   dodgers: "Own Goals & Gaffs",
@@ -17,6 +17,12 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   news: "The Wire",
   presser: "The Team Sheet",
   "predicted-xi": "The Line-Ups",
+};
+
+/** The columnists who write under their own name rather than the house correspondent's. Lawro's
+ *  is Mark Lawrenson's, by Craig's decision of 24 Sep 2026 (PLATFORM_NOTES). */
+export const COLUMNIST: Partial<Record<StoryKind, string>> = {
+  predictions: "Mark Lawrenson",
 };
 
 /** The edition a filing goes out under — the paper's names for its own

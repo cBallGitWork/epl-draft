@@ -78,7 +78,7 @@ export const LAWRO_CAPPED: readonly (readonly [phrase: string, most: number])[] 
   ["mind you", 1], ["to be fair", 1], ["to be honest", 1], ["most definitely", 1], ["did he not", 1],
   ["have they not", 1], ["absolutely", 1], ["I fancy", 1], ["I'm backing", 1], ["I'll go with", 1],
   ["come out on top", 1], ["on the bounce", 1], ["on paper", 1], ["go against", 1], ["going against", 1],
-  ["gone against", 1], ["gut", 1], ["favourite", 1], ["favourites", 1], ["underdog", 1], ["underdogs", 1],
+  ["gone against", 1], ["gut", 1], ["favourite", 2], ["favourites", 2], ["underdog", 1], ["underdogs", 1],
   ["upset", 1], ["haul", 1], ["blank", 1], ["home and hosed", 1], ["I'd be surprised", 1], ["that's about it", 1],
   ["put a shift in", 1], ["quality", 1], ["best man", 2], ["Liverpool men", 2], ["I think", 2], ["very", 2],
 ];

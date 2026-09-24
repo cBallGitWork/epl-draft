@@ -17,10 +17,10 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
   const facts = [
     call.instinct === null ? null : `- T${index}-gut: ${gutFact(call.instinct, favourite, underdog)}`,
     ...sides.map(({ tag, side }) => (side.keyMen.length === 0 ? null : `- ${tag}-key: ${side.name}'s main men, best first: ${side.keyMen.map(described).join("; ")}.`)),
-    ...sides.flatMap(({ tag, side }) => side.doubts.filter((man) => keyNames(side).has(man.name)).map((man) => `- ${tag}-doubt: ${doubt(man)}`)),
+    ...sides.flatMap(({ tag, side }) => side.doubts.filter((man) => keyNames(side).has(man.name)).map((man) => `- ${tag}-doubt: ${doubt(man, side.name)}`)),
     ...sides.map(({ tag, side }) => (side.form === null ? null : `- ${tag}-form: ${form(side)}`)),
     ...sides.map(({ tag, side }) => (side.arrivals.length === 0 ? null : `- ${tag}-in: ${side.name} signed ${side.arrivals.join(", ")}, arriving for this round.`)),
-    ...sides.flatMap(({ tag, side }) => side.doubts.filter((man) => !keyNames(side).has(man.name)).map((man) => `- ${tag}-doubt: ${doubt(man)}`)),
+    ...sides.flatMap(({ tag, side }) => side.doubts.filter((man) => !keyNames(side).has(man.name)).map((man) => `- ${tag}-doubt: ${doubt(man, side.name)}`)),
     ...sides.map(({ tag, side }) => (side.hard === null ? null : `- ${tag}-hard: ${hard(side.hard, side.name)}`)),
   ];
   return facts.filter((fact): fact is string => fact !== null).slice(0, PREDICTIONS.factsPerTie);
@@ -55,8 +55,9 @@ function hard(man: SquadMan, side: string): string {
   return `${man.name} of ${side}: ${fixture(man)}, one of the hardest this round for his line. Say a hard one, never a rank.`;
 }
 
-function doubt(man: SquadMan): string {
-  return `${man.name} (${man.club}) ${state(man)}.`;
+/** Whose man he is, every time: a doubt read without its owner was once printed against the wrong side. */
+function doubt(man: SquadMan, side: string): string {
+  return `${side}'s ${man.name} (${man.club}) ${state(man)}.`;
 }
 
 /** FPL's own state and figure, with its note; no figure is FPL giving none, not a nought. */

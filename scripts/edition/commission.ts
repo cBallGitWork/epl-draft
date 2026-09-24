@@ -1,4 +1,4 @@
-import { type Assignment, buildPresserBrief } from "@epl/core";
+import { type Assignment, buildLawroBrief, buildPresserBrief } from "@epl/core";
 import { faceOf } from "./faces";
 import {
   fixturePreviewBrief,
@@ -9,7 +9,9 @@ import {
 import { columnBrief } from "./columns";
 import { newsBrief } from "./news";
 import { FIXTURE_PREVIEW, MATCH_REPORT, TIE_CALL, TIE_REPORT } from "./voice/matches";
-import { DODGERS, ELEVEN, POWER_RANKING, PREDICTIONS, WIRE } from "./voice/columns";
+import { DODGERS, ELEVEN, POWER_RANKING, WIRE } from "./voice/columns";
+import { LAWRO } from "./voice/lawro";
+import type { PredictionsDesk } from "./predictions";
 import { NEWS } from "./voice/news";
 import { PRESSER } from "./voice/pressers";
 import { edition, faceCtx, type DeskContext } from "./dispatch";
@@ -19,7 +21,7 @@ import { edition, faceCtx, type DeskContext } from "./dispatch";
 /** How a column comes to exist: a voice and a brief for a writer, or a set of
  *  facts the desk prints itself. */
 type Commission =
-  | { system: string; brief: string }
+  | { system: string; brief: string; lawro?: PredictionsDesk }
   | { printed: Record<string, unknown> };
 
 export function prepare(assignment: Assignment, ctx: DeskContext): Commission | null {
@@ -27,6 +29,14 @@ export function prepare(assignment: Assignment, ctx: DeskContext): Commission | 
   // printed from the export and never written from it.
   if (assignment.kind === "predicted-xi") {
     return ctx.elevens === null ? null : { printed: ctx.elevens };
+  }
+
+  // Lawro's column goes through his own newsroom, with every call already made.
+  if (assignment.kind === "predictions") {
+    const desk = ctx.predictions;
+    if (desk === null) return null;
+    const brief = buildLawroBrief({ ...desk, teams: ctx.info.teams.map(({ teamId, name }) => ({ teamId, name })) });
+    return brief === null ? null : { system: LAWRO, brief, lawro: desk };
   }
 
   const scoped =
@@ -70,7 +80,6 @@ const VOICE: Partial<Record<Assignment["kind"], string>> = {
   "fixture-preview": FIXTURE_PREVIEW,
   "tie-call": TIE_CALL,
   "tie-report": TIE_REPORT,
-  predictions: PREDICTIONS,
   eleven: ELEVEN,
   "power-ranking": POWER_RANKING,
   dodgers: DODGERS,

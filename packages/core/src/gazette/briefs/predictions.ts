@@ -1,14 +1,13 @@
 import { londonDate, londonTime } from "../../time";
-import type { StoryThread } from "../ledger";
 import type { PastLine } from "../predictions/past";
 import type { PredictionCall } from "../predictions/pick";
 import type { PredictionRecord } from "../predictions/record";
 import type { PredictionSide } from "../predictions/sides";
 import { tieFacts } from "./predictionFacts";
-import { storylinesBlock } from "./storylines";
 
 // Lawro's brief: the round ahead, tie by tie, with every call already made. Withheld: the totals,
-// the scores, any man's figure and anybody's line-up. Each rule sits beside what it governs.
+// the scores, any man's figure, anybody's line-up, and the paper's storylines, which carry last
+// round's benchings and "the numbers" into a column that may print neither.
 
 export interface PredictionsTie {
   home: PredictionSide;
@@ -24,7 +23,6 @@ export function buildLawroBrief(brief: {
   ties: readonly PredictionsTie[];
   record: PredictionRecord;
   past: readonly PastLine[];
-  threads: readonly StoryThread[];
 }): string | null {
   if (!brief.ties.some((tie) => tie.call.callsTeamId !== null)) return null;
   const named = new Map(brief.teams.map((team) => [team.teamId, team.name]));
@@ -38,8 +36,7 @@ export function buildLawroBrief(brief: {
     ...brief.ties.map((tie, at) => tieBlock(at + 1, brief.ties.length, tie, name)),
     brief.past.length === 0
       ? null
-      : ["WHO YOU ARE, beyond the opening of your instructions. Every line is true. Use one at most, in your own words, or none:", ...brief.past.map((line) => `- ${line.line}`)].join("\n"),
-    storylinesBlock(brief.threads),
+      : ["WHO YOU ARE, beyond the opening of your instructions. Every line is true. Use one at most, in your own words, and your opening is the natural place for it:", ...brief.past.map((line) => `- ${line.line}`)].join("\n"),
   ]
     .filter((block): block is string => block !== null)
     .join("\n\n");
@@ -58,13 +55,13 @@ function tieBlock(index: number, count: number, tie: PredictionsTie, name: (team
     call.instinct !== null
       ? `A GUT CALL: on paper this is close and ${favourite} are the favourites. You are going against them because of T${index}-gut. Give that reason in your own words, and no other, in two to five sentences.`
       : call.close
-        ? "On paper it is close. Two to four sentences."
-        : `On paper ${backing} are clear favourites. Two to four sentences.`;
+        ? "It is close. Two to five sentences."
+        : `${backing} are clear favourites. Two to five sentences.`;
   return [heading, `YOUR CALL: ${backing}. ${why}`, ...tieFacts(index, home, away, call), `${shape}, and "backs" "${call.callsTeamId}". The page prints your prediction and the score under your words, so write neither.`].join("\n");
 }
 
 function recordBlock(record: PredictionRecord, name: (teamId: string) => string): string {
-  if (record.last === null) return "YOUR RECORD: this is your first column in this league, so there is no record yet. Do not invent one, and do not open on it.";
+  if (record.last === null) return "YOUR RECORD: this is your first column in this league, so there is no record to own yet. Do not invent one.";
   const { gameweek, marks } = record.last;
   if (marks === null) return `YOUR RECORD: gameweek ${gameweek} is not settled, so there is nothing to own this week. Say nothing about your record.`;
   const gut = marks.gut === null ? "You made no gut calls." : `Your gut calls: ${marks.gut.right} from ${marks.gut.called}.`;

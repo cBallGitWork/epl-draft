@@ -75,6 +75,7 @@ export { fullClubName } from "./clubNames";
 export { buildLawroBrief } from "./briefs/predictions";
 export { callTie } from "./predictions/pick";
 export { predictionSide } from "./predictions/sides";
+export { squadMen } from "./predictions/squad";
 export { predictionRecord } from "./predictions/record";
 export { LAWRO_CORE, pastOffered } from "./predictions/past";
 export { LAWRO_BANNED, LAWRO_CAPPED, NEVER_CATEGORIES } from "./predictions/words";

@@ -1,6 +1,7 @@
-import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type LeagueInfo } from "@epl/core";
+import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type GameweekKickoff, type LeagueInfo } from "@epl/core";
 import type { DeskContext } from "./dispatch";
 import { withFootball, type DeskFacts } from "./facts";
+import { predictionsDesk } from "./predictions";
 import type { readLedger } from "./persist";
 import type { presserDesk } from "./presserWeek";
 import { xiColumn, type readXi } from "./xi";
@@ -19,9 +20,11 @@ export async function deskContext(input: {
   sheet: ReturnType<typeof presserDesk>;
   xi: ReturnType<typeof readXi>;
   season: readonly Fixture[];
+  kickoffs: readonly GameweekKickoff[];
   assignments: readonly Assignment[];
+  say: (message: string) => void;
 }): Promise<DeskContext> {
-  const { snapshot, facts, clubs, byCode, info, period, ledger, sheet, xi, season, assignments } = input;
+  const { snapshot, facts, clubs, byCode, info, period, ledger, sheet, xi, season, kickoffs, assignments, say } = input;
   return {
     leagueId: FANTRAX_LEAGUE_ID,
     snapshot,
@@ -36,6 +39,8 @@ export async function deskContext(input: {
     info,
     table: facts.table,
     period,
+    // Lawro's reads are his own and made only when his column is due.
+    predictions: await predictionsDesk({ assignments, info, snapshot, season, kickoffs, table: facts.table, business: facts.business, say }),
     presserLines: sheet.lines,
     presserQuotes: sheet.quotes,
     presserTies: sheet.ties,
