@@ -38,6 +38,7 @@ export const DESK_ROUTES = [
   "/players/teams",
   "/players/planner",
   "/players/planner?view=defence",
+  "/players/projections",
   "/matchday",
   "/matchday/desk",
   "/fpl",

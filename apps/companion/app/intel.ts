@@ -2,6 +2,7 @@ import type {
   IntelMatch,
   IntelMatches,
   IntelPlayer,
+  IntelProjections,
   IntelSetPieces,
   IntelSquads,
   IntelShots,
@@ -9,10 +10,11 @@ import type {
   IntelTouches,
   IntelXi,
   ClubStrength,
+  ProjectedPlayer,
   Shot,
   TouchPlayer,
 } from "@epl/core";
-import { matchIntel, shotIntel, squadIntel, strengthIntel, touchIntel } from "@epl/core";
+import { matchIntel, projectionIntel, shotIntel, squadIntel, strengthIntel, touchIntel } from "@epl/core";
 import squadsFile from "../../../data/intel/squads/26-27.json";
 import xiFile from "../../../data/intel/xi/26-27.json";
 import piecesFile from "../../../data/intel/set-pieces/26-27.json";
@@ -20,6 +22,7 @@ import matchesFile from "../../../data/intel/matches/26-27.json";
 import touchesFile from "../../../data/intel/touches/26-27.json";
 import shotsFile from "../../../data/intel/shots/26-27.json";
 import strengthFile from "../../../data/intel/strength/26-27.json";
+import projectionsFile from "../../../data/intel/projections/26-27.json";
 
 // Where the app supplies the sister repo's export.
 //
@@ -94,3 +97,9 @@ export const intelShots: Map<number, Shot[]> = shotIntel(shotsFile as unknown as
 /** Each club's Dixon-Coles attack and defence by FPL club code, and the export's manifest for its provenance line. */
 export const intelStrength: Map<number, ClubStrength> = strengthIntel(strengthFile as unknown as IntelStrength);
 export const intelStrengthManifest = (strengthFile as unknown as IntelStrength).manifest;
+
+/** The sister model's projected FPL points by player code, and the export's manifest for its provenance line. */
+export const intelProjections: Map<number, ProjectedPlayer> = projectionIntel(
+  projectionsFile as unknown as IntelProjections,
+);
+export const intelProjectionsManifest = (projectionsFile as unknown as IntelProjections).manifest;

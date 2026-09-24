@@ -44,6 +44,16 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Projections is a scaffold over the sister model's run — decided 24 Sep 2026
+
+- **The export is the newest projection run's horizon** (GW6–17 today, 666 of 666 players bridged by
+  `person_to_element` and the bootstrap); the page shows the planner's window, the next six gameweeks with a
+  match left, and a week the model has no reading for is a dash.
+- **FPL scoring, never Fantrax's**, said on the page and never under a column headed `FPts`. Left out on
+  purpose: a Fantrax-scoring conversion, the per-fixture split, ownership, search and the low/high band.
+- **`query.ts`'s `boardHref` and `filterHref` take a route**, so a second Data board filters with the Players
+  board's own parsers; the Players board passes none and is unchanged.
+
 ## Data's Team Stats keeps FPL's counts off a Fantrax board — decided 24 Sep 2026
 
 - **Fantrax's figures only, where Fantrax has one**: points by club and by the position Fantrax lists, the

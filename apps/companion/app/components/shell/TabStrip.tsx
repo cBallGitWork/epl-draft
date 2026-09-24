@@ -114,5 +114,6 @@ export default function TabStrip<K extends string>({
 
 const LABELS = {
   phrase: "px-3 text-2xs",
-  word: "px-2 text-3xs",
+  // Tighter on the smallest phones, where Data's five one-word tabs would otherwise overflow 320 by 18px.
+  word: "px-2 text-3xs max-[359px]:px-1",
 } as const;
