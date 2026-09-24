@@ -3,6 +3,7 @@ import {
   predictedLineups,
   squadIntel,
   type Club,
+  type Fixture,
   type IntelSquads,
   type IntelXi,
   type RosteredTeam,
@@ -27,16 +28,17 @@ export function readXi(gameweek: number): IntelXi | null {
 
 /** The whole column, ready to file. Null when the ties or the elevens will not
  *  come, which files nothing and spends nothing. */
-export async function xiColumn(input: {
+export function xiColumn(input: {
   xi: IntelXi;
   gameweek: number;
   clubs: ReadonlyMap<number, Club>;
   teams: readonly RosteredTeam[];
   players: readonly { code: number; name: string; fullName: string }[];
-}): Promise<Record<string, unknown> | null> {
-  const { xi, gameweek, clubs, teams, players } = input;
+  season: readonly Fixture[];
+}): Record<string, unknown> | null {
+  const { xi, gameweek, clubs, teams, players, season } = input;
 
-  const ties = await roundTies(gameweek, clubs);
+  const ties = roundTies(gameweek, clubs, season);
   const lineups = predictedLineups(ties, xi, man(players, teams, xi));
   if (lineups.length === 0) return null;
 

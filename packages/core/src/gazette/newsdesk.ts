@@ -51,6 +51,9 @@ export interface Assignment {
    *  are one kind with two editions, so the day is the scope handle the way
    *  `fixtureId` is for a preview. */
   day?: string;
+  /** The round a look-ahead story is ABOUT, which between rounds is not FPL's
+   *  current one: that is the round just played. */
+  round?: { period: number; gameweek: number };
 }
 
 export interface DeskTie {
@@ -86,6 +89,8 @@ export interface DeskState {
    *  builds the key — it owns the clock and the file; this file owns neither.
    *  Null is the ordinary state and files nothing. */
   lineups: { key: string; slug: string } | null;
+  /** The round the Team Sheet and the elevens preview, when the calendar places it. */
+  ahead: { period: number; gameweek: number } | null;
 }
 
 /** The columns a finished round earns, in the order they are worth reading.
@@ -205,15 +210,16 @@ export function newsdesk(
   // the caller only offers days whose signals were said AFTER the last lock, so
   // they are about the round to come, and they fall out of the window by
   // themselves once the next lock moves it on.
+  const about = desk.ahead === null ? {} : { round: desk.ahead };
   for (const day of desk.pressers) {
-    want({ kind: "presser", key: day.key, slug: day.slug, day: day.day });
+    want({ kind: "presser", key: day.key, slug: day.slug, day: day.day, ...about });
   }
 
   // The elevens, outside the gates above for the Team Sheet's reason: the round
   // they predict is the one ahead, which `desk.finished` and `desk.locked` are
   // both about the wrong side of.
   if (desk.lineups !== null) {
-    want({ kind: "predicted-xi", key: desk.lineups.key, slug: desk.lineups.slug });
+    want({ kind: "predicted-xi", key: desk.lineups.key, slug: desk.lineups.slug, ...about });
   }
 
   // The wire is weekly and keys on the WINDOW rather than the round: it reports

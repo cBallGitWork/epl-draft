@@ -1,4 +1,4 @@
-import { londonDayOf, type Club, type PresserLine, type RosteredTeam } from "@epl/core";
+import { londonDayOf, type Club, type Fixture, type PresserLine, type RosteredTeam } from "@epl/core";
 import {
   presserFixtures,
   presserGameweek,
@@ -24,21 +24,23 @@ const WEEK = 7 * 24 * 60 * 60 * 1000;
  *  the guard that the export is about that round, and the three files keyed on
  *  it. The same seam `deskState` was extracted along, for the same reason: the
  *  caller had passed the ceiling. */
-export async function presserDesk(input: {
+export function presserDesk(input: {
   facts: { teams: readonly RosteredTeam[] };
   snapshot: { gameweek: number; players: readonly PresserSquadMan[] };
   byCode: ReadonlyMap<number, Club>;
   now: string;
   lock: string | null;
   locked: boolean;
+  /** The season's fixtures, which the writer already holds. */
+  season: readonly Fixture[];
   say: (message: string) => void;
-}): Promise<{
+}): {
   lines: PresserLine[];
   quotes: ReturnType<typeof presserQuotes>;
   spoke: ReturnType<typeof presserSpoke>;
-  ties: Awaited<ReturnType<typeof presserFixtures>>;
+  ties: ReturnType<typeof presserFixtures>;
   gameweek: number;
-}> {
+} {
   const { facts, snapshot, byCode, now, lock, locked, say } = input;
 
   // The window opens at the last lock that has PASSED. `lock ?? now` was wrong:
@@ -63,7 +65,7 @@ export async function presserDesk(input: {
     lines,
     quotes: presserQuotes(byCode),
     spoke: presserSpoke(since, byCode),
-    ties: lines.length === 0 ? new Map() : await presserFixtures(gameweek, byCode),
+    ties: lines.length === 0 ? new Map() : presserFixtures(gameweek, byCode, input.season),
     gameweek,
   };
 }
