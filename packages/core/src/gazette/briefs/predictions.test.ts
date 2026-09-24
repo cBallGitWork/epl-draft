@@ -15,8 +15,9 @@ const man = (name: string, horizon: number, over: Partial<SquadMan> = {}): Squad
   horizon,
   availability: FIT,
   fixtures: [{ opponent: "Leeds United", home: true, standing: null }],
-  ease: 5,
+  ease: 10,
   liverpool: false,
+  recent: [],
   face: { code: horizon, name, clubId: 1, position: null },
   ...over,
 });
@@ -78,15 +79,33 @@ describe("buildLawroBrief", () => {
     expect(text).not.toMatch(/per cent|%|\b50\b/u);
   });
 
-  it("leads the tie with a main man's hard fixture, as the story it is", () => {
-    const liverpool = { opponent: "Liverpool", home: false, standing: "one of the three toughest defences in the league" };
+  it("leads the tie with a main man's difficult game, said plainly, then one man for the other side", () => {
+    const liverpool = { opponent: "Liverpool", home: false, standing: "a tough defence to score against" };
     const haaland = man("Haaland", 30, { club: "Manchester City", positions: ["F"], ease: 19, fixtures: [liverpool] });
     const text = brief([tie(side("cp", "Cold Palmer", 52.1, [man("Saka", 20)]), side("hg", "Haaland Globetrotters", 41.6, [haaland, man("Isak", 10)]))]) ?? "";
     const facts = text.split("\n").filter((line) => line.startsWith("- T1"));
-    expect(facts[0]).toMatch(/^- T1-story: Haaland Globetrotters's Haaland, one of their main men/u);
+    expect(facts[0]).toBe("- T1-story: Haaland Globetrotters's Haaland, one of their main men, has a difficult one: away at Liverpool, a tough defence to score against.");
+    expect(text).not.toMatch(/hardest/u);
     // Then one man for the side the story leaves out, never a roll call of every man and fixture.
-    expect(facts.filter((line) => line.includes("-man:"))).toEqual([expect.stringContaining("T1H-man: Saka (M, Arsenal, home to Leeds United), for Cold Palmer")]);
-    expect(text).toContain("Haaland Globetrotters's Haaland, one of their main men, is away at Liverpool, one of the three toughest defences in the league, one of the hardest");
+    expect(facts.filter((line) => line.includes("-man:"))).toEqual([expect.stringContaining("T1H-man: Saka (M, Arsenal, home to Leeds United), for Cold Palmer.")]);
+  });
+
+  it("puts a main man's easy game before a difficult one, and marks the other side's easy man", () => {
+    const hull = { opponent: "Hull City", home: true, standing: "a soft defence" };
+    const haaland = man("Haaland", 30, { club: "Manchester City", positions: ["F"], ease: 19, fixtures: [{ opponent: "Liverpool", home: false, standing: null }] });
+    const text = brief([tie(side("cp", "Cold Palmer", 52.1, [man("Saka", 20, { ease: 2, fixtures: [hull] }), man("Rice", 19)]), side("hg", "Haaland Globetrotters", 41.6, [haaland, man("Isak", 10, { ease: 3, fixtures: [hull] })]))]) ?? "";
+    expect(text).toContain("- T1-story: Cold Palmer's Saka, one of their main men, has an easy one: home to Hull City, a soft defence.");
+    expect(text).toContain("- T1A-man: Isak (M, Arsenal, home to Hull City, a soft defence), for Haaland Globetrotters, an easy one.");
+  });
+
+  it("reads a man's last two games: form, a quiet spell, a return, and a back line's clean sheets", () => {
+    const game = (goals: number, assists = 0, minutes = 90, cleanSheets = 0) => ({ gameweek: 5, minutes, goals, assists, cleanSheets, points: 2 });
+    const hot = man("Saka", 20, { recent: [game(1), game(2)] });
+    const text = brief([tie(side("cp", "Cold Palmer", 52.1, [hot, man("Rice", 19, { recent: [game(0), game(0)] })]), side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25, { recent: [game(0, 0, 0), game(0, 0, 0)] }), man("Gabriel", 9, { positions: ["D"], recent: [game(0, 0, 90, 1), game(0, 0, 90, 1)] })]))]) ?? "";
+    expect(text).toContain("- T1-story: Cold Palmer's Saka (Arsenal), one of their main men, scored in each of his last two games.");
+    expect(text).toContain("T1H-run: Cold Palmer's Rice (Arsenal) has gone quiet, no goal and no assist in his last two games.");
+    expect(text).toContain("T1A-man: Haaland (M, Arsenal, home to Leeds United), for Haaland Globetrotters. He is fit again after missing his last two games.");
+    expect(text).toContain("T1A-run: Haaland Globetrotters's Gabriel (Arsenal) kept a clean sheet in each of his last two games.");
   });
 
   it("names two men from one club, and two men whose clubs meet this round", () => {
@@ -149,7 +168,7 @@ describe("buildLawroBrief", () => {
   it("leaves out a man he has already written about, unless something is new for him", () => {
     const worn = new Set(["Saka", "Palmer"]);
     const again = tie(
-      side("cp", "Cold Palmer", 52.1, [man("Saka", 20), palmer, man("Rice", 9, { fixtures: [{ opponent: "Leeds United", home: true, standing: "one of the three softest defences in the league" }] })], worn),
+      side("cp", "Cold Palmer", 52.1, [man("Saka", 20), palmer, man("Rice", 9, { fixtures: [{ opponent: "Leeds United", home: true, standing: "a soft defence" }] })], worn),
       side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25)]),
     );
     const text = brief([again]) ?? "";

@@ -5,8 +5,9 @@ import type { PredictionSide, SquadMan } from "../predictions/sides";
 // One tie's facts for Lawro, worded and ranked. Squad-level only, and no figure of ours: the
 // order of a side's men is our model's reading and is never printed.
 
-/** The tie's one story first, then a man for each side the story leaves out, their form, the men
- *  who share a club or meet on the pitch, and one more: a signing or a doubt. Never a roll call. */
+/** The tie's one story first, then a man for each side the story leaves out (the one with the easy
+ *  game when there is one), their form on the pitch and in the table, the men who share a club or
+ *  meet on the pitch, and one more: a signing or a doubt. Never a roll call. */
 export function tieFacts(index: number, home: PredictionSide, away: PredictionSide, call: PredictionCall): string[] {
   const favourite = call.callsTeamId === home.teamId ? (call.instinct === null ? home : away) : call.instinct === null ? away : home;
   const underdog = favourite === home ? away : home;
@@ -28,8 +29,16 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
     call.instinct === null ? null : `- T${index}-gut: ${gutFact(call.instinct, favourite, underdog)}`,
     story === null ? null : `- T${index}-story: ${story.text}`,
     ...sides.map(({ tag, side }) => {
-      const man = covered.has(side) ? null : take(fresh(side.keyMen));
-      return man === null ? null : `- ${tag}-man: ${described(man)}, for ${side.name}.`;
+      if (covered.has(side)) return null;
+      const easy = side.kind !== null && side.keyMen.some((man) => man.name === side.kind?.name) && !used.has(side.kind.name);
+      const man = take(easy ? side.kind : fresh(side.keyMen));
+      if (man === null) return null;
+      const run = streak(man);
+      return `- ${tag}-man: ${described(man)}, for ${side.name}${easy ? ", an easy one" : ""}.${run === null ? "" : ` He ${run}.`}`;
+    }),
+    ...sides.map(({ tag, side }) => {
+      const man = take(fresh(side.keyMen.filter((each) => streak(each) !== null)));
+      return man === null ? null : `- ${tag}-run: ${side.name}'s ${man.name} (${man.club}) ${streak(man)}.`;
     }),
     ...sides.map(({ tag, side }) => (side.form === null ? null : `- ${tag}-form: ${form(side)}`)),
     // On a gut call the reason is the story: only the men who meet on the pitch get another line.
@@ -40,24 +49,55 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
   return facts.filter((fact): fact is string => fact !== null).slice(0, PREDICTIONS.factsPerTie);
 }
 
-/** What the tie is about, favourite first: one of a side's main men against one of the round's
- *  hardest (Craig's "good narrative"), else a main man in doubt; null when neither. */
+/** What the tie is about, favourite first: a main man with an easy game (Craig: "focus on who has a
+ *  very easy match up"), else one in form, else one gone quiet or back from a lay-off, else one with
+ *  a difficult game, else one in doubt; null when none. */
 function storyOf(sides: readonly PredictionSide[]): { side: PredictionSide; man: SquadMan; text: string } | null {
+  const main = (side: PredictionSide, man: SquadMan | null | undefined) => (man != null && side.keyMen.some((each) => each.name === man.name) ? man : null);
   for (const side of sides) {
-    const star = side.hard !== null && side.hard.fixtures.length > 0 && side.keyMen.some((man) => man.name === side.hard?.name) ? side.hard : null;
-    if (star !== null) return { side, man: star, text: hard(star, side.name) };
+    const man = main(side, side.kind);
+    if (man !== null) return { side, man, text: `${side.name}'s ${man.name}, one of their main men, has an easy one: ${fixture(man)}.` };
   }
   for (const side of sides) {
-    const doubtful = side.doubts.find((man) => side.keyMen.some((key) => key.name === man.name));
-    if (doubtful !== undefined) return { side, man: doubtful, text: `${doubt(doubtful, side.name)} One of their main men, and the story of this tie.` };
+    const man = side.keyMen.find((each) => streak(each) !== null);
+    if (man !== undefined) return { side, man, text: `${side.name}'s ${man.name} (${man.club}), one of their main men, ${streak(man)}.` };
+  }
+  for (const side of sides) {
+    const man = main(side, side.hard?.fixtures.length === 0 ? null : side.hard);
+    if (man !== null) return { side, man, text: `${side.name}'s ${man.name}, one of their main men, has a difficult one: ${fixture(man)}.` };
+  }
+  for (const side of sides) {
+    const man = main(side, side.doubts[0]);
+    if (man !== null) return { side, man, text: `${doubt(man, side.name)} One of their main men.` };
   }
   return null;
 }
 
-/** The one line beyond the story and the men: a signing off the waiver list, else a doubt. */
+/** A man's last games in a sentence, when they say something: form, a quiet spell, or a return. */
+export function streak(man: SquadMan): string | null {
+  const games = man.recent;
+  if (games.length < PREDICTIONS.recentGames) return null;
+  const last = games[games.length - 1];
+  const sum = (key: "goals" | "assists" | "cleanSheets" | "minutes") => games.reduce((total, game) => total + game[key], 0);
+  const played = games.every((game) => game.minutes >= 60);
+  if (games.every((game) => game.minutes === 0)) return man.availability.state === "fit" ? "is fit again after missing his last two games" : null;
+  if (last.minutes === 0 && man.availability.state === "fit") return "missed last week and is fit again";
+  if (games.every((game) => game.goals > 0)) return "scored in each of his last two games";
+  const back = man.positions.some((position) => position === "G" || position === "D");
+  if (back && games.every((game) => game.cleanSheets > 0)) return "kept a clean sheet in each of his last two games";
+  if (sum("goals") + sum("assists") >= 2) return `has ${count(sum("goals"), "goal")} and ${count(sum("assists"), "assist")} in his last two games`;
+  if (played && !back && sum("goals") + sum("assists") === 0) return "has gone quiet, no goal and no assist in his last two games";
+  return null;
+}
+
+function count(figure: number, noun: string): string {
+  return figure === 0 ? `no ${noun}` : figure === 1 ? `one ${noun}` : `${figure} ${noun}s`;
+}
+
+/** The one line beyond the story and the men: a man brought in, else a doubt. */
 function extra(sides: readonly { tag: string; side: PredictionSide }[], fresh: (men: readonly (SquadMan | null)[]) => SquadMan | null): string | null {
   for (const { tag, side } of sides) {
-    if (side.arrivals.length > 0) return `- ${tag}-in: ${side.name} signed ${side.arrivals.join(", ")} off the waiver list, arriving for this round.`;
+    if (side.arrivals.length > 0) return `- ${tag}-in: ${side.name} brought in ${side.arrivals.join("; ")}, for this round.`;
   }
   for (const { tag, side } of sides) {
     const man = fresh(side.doubts);
@@ -75,10 +115,16 @@ function together(index: number, home: PredictionSide, away: PredictionSide): (s
     const shared = [...byClub].find(([, names]) => names.length > 1);
     return shared === undefined ? null : `- T${index}-club: ${side.name}'s ${shared[1].join(" and ")} both play for ${shared[0]}.`;
   });
+  // A big game when each man's club is at an extreme in the other's view (Craig: "big match ups").
   const meeting = home.keyMen.flatMap((ours) =>
-    away.keyMen.flatMap((theirs) => (ours.fixtures.some((each) => each.opponent === theirs.club) ? [`${ours.name} (${home.name}, ${ours.club}) and ${theirs.name} (${away.name}, ${theirs.club})`] : [])),
+    away.keyMen.flatMap((theirs) => {
+      const there = ours.fixtures.find((each) => each.opponent === theirs.club);
+      if (there === undefined) return [];
+      const big = there.standing !== null && theirs.fixtures.some((each) => each.opponent === ours.club && each.standing !== null);
+      return [`${ours.name} (${home.name}, ${ours.club}) and ${theirs.name} (${away.name}, ${theirs.club}) play against each other this round${big ? ", in one of the big games of the weekend" : ""}.`];
+    }),
   );
-  return [...clubmates, meeting.length === 0 ? null : `- T${index}-meet: ${meeting[0]} play against each other this round.`];
+  return [...clubmates, meeting.length === 0 ? null : `- T${index}-meet: ${meeting[0]}`];
 }
 
 /** The reason he goes against the favourite, in the brief's facts and nothing else. */
@@ -104,11 +150,6 @@ function fixture(man: SquadMan): string {
   if (man.fixtures.length === 0) return "no game this round";
   if (man.fixtures.length === 1) return one(man.fixtures[0]);
   return `two games, ${man.fixtures.map(one).join(" and ")}`;
-}
-
-/** One of a side's main men against one of the round's hardest for his line: the story of a tie. */
-function hard(man: SquadMan, side: string): string {
-  return `${side}'s ${man.name}, one of their main men, is ${fixture(man)}, one of the hardest this round for his line. Never a rank.`;
 }
 
 /** Whose man he is, every time: a doubt read without its owner was once printed against the wrong side. */

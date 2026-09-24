@@ -82,5 +82,5 @@ describe("featured", () => {
 
 function man(name: string): SquadMan {
   const fit = { state: "fit", label: "", out: false, chance: null, news: "" } as const;
-  return { name, club: "", positions: ["M"], horizon: null, availability: fit, fixtures: [], ease: null, liverpool: false, face: { code: name.length, name, clubId: 1, position: null } };
+  return { name, club: "", positions: ["M"], horizon: null, availability: fit, fixtures: [], ease: null, liverpool: false, recent: [], face: { code: name.length, name, clubId: 1, position: null } };
 }

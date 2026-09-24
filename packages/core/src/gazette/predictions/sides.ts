@@ -6,6 +6,16 @@ import type { PickSide } from "./pick";
 // One side of a tie as Lawro may know it: the squad, never the line-up. Nothing here reads a
 // roster slot, so the brief says the same whatever the manager has arranged before the lock.
 
+/** One finished gameweek of a man's, summed over a double. */
+export interface RecentGame {
+  gameweek: number;
+  minutes: number;
+  goals: number;
+  assists: number;
+  cleanSheets: number;
+  points: number;
+}
+
 /** One man in the squad, as the script joined him. No figure of his is ever printed. */
 export interface SquadMan {
   name: string;
@@ -21,6 +31,8 @@ export interface SquadMan {
   /** Mean ease rank of those opponents in his line's view, 1 the kindest; null when unrated. */
   ease: number | null;
   liverpool: boolean;
+  /** His last games, oldest first, from FPL's live reads; empty when they are not held. */
+  recent: readonly RecentGame[];
   /** His picture. "G" comes off his eligibility, never the private slot: a keeper is eligible nowhere else. */
   face: StoryFace;
 }
@@ -45,8 +57,9 @@ export interface PredictionSide extends PickSide {
   best: SquadMan | null;
   /** Not fit, among the men who matter most, best first. */
   doubts: SquadMan[];
-  /** The best man with one of the round's hardest fixtures for his line. */
+  /** The best man with one of the round's hardest fixtures for his line, and with one of the kindest. */
   hard: SquadMan | null;
+  kind: SquadMan | null;
   backLine: SquadMan[];
   /** Men signed who arrive for this round, as the brief names them. */
   arrivals: readonly string[];
@@ -82,6 +95,7 @@ export function predictionSide(input: {
     best,
     doubts: ranked.slice(0, PREDICTIONS.doubtDepth).filter((man) => man.availability.state !== "fit"),
     hard: ranked.find((man) => man.ease !== null && man.ease > input.hardest - PREDICTIONS.hardFixtures) ?? null,
+    kind: ranked.find((man) => man.ease !== null && man.fixtures.length > 0 && man.ease <= PREDICTIONS.kindFixtures) ?? null,
     backLine,
     arrivals: input.arrivals,
     form: input.form,

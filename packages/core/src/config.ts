@@ -370,5 +370,8 @@ export const PREDICTIONS = {
   wornColumns: 2,
   doubtDepth: 6,
   hardFixtures: 5,
-  factsPerTie: 10,
+  /** A fixture among the kindest this many is an easy one; the last games a man's form is read from. */
+  kindFixtures: 5,
+  recentGames: 2,
+  factsPerTie: 11,
 } as const;
