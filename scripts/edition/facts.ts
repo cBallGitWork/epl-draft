@@ -13,7 +13,6 @@ import {
   type RosteredTeam,
   type StandingsRow,
   type TeamOfTheWeek,
-  type TeamProjection,
   availability,
   deals,
   fetchDraftResults,
@@ -24,7 +23,6 @@ import {
   mapDraftPicks,
   mapLivePlayerPoints,
   mapLiveScores,
-  mapProjectedTotals,
   mapStandings,
   mapTeamRosters,
   mapTransactions,
@@ -53,7 +51,6 @@ import { type MatchFootball, roundFootball } from "./football";
 export interface DeskFacts {
   pairings: PeriodPairing[];
   scores: Map<string, LiveTeamScore>;
-  projected: Map<string, TeamProjection>;
   /** The resolved squads, for the joins only a bridge can make — who owns the
    *  men in a fixture. Empty when the rosters read refused. */
   teams: RosteredTeam[];
@@ -182,7 +179,6 @@ export async function gatherRoundFacts(
   return {
     pairings: periodPairings(info.matchups, info.teams, period),
     scores: new Map(mapLiveScores(live).map((score) => [score.teamId, score])),
-    projected: new Map(mapProjectedTotals(live).map((guess) => [guess.teamId, guess])),
     teams: squads?.teams ?? [],
     playerPoints: new Map(
       mapLivePlayerPoints(live).flatMap((squad) =>

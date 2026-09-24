@@ -82,7 +82,7 @@ export function predictionSide(input: {
 }
 
 /** Out, or no better than an even chance by FPL's own figure. */
-export function isDoubt(availability: Availability): boolean {
+function isDoubt(availability: Availability): boolean {
   return availability.out || (availability.chance !== null && availability.chance <= PREDICTIONS.doubtChance);
 }
 

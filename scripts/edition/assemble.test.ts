@@ -36,7 +36,6 @@ const facts = (over: Partial<RoundFacts> = {}): RoundFacts =>
   ({
     pairings: [],
     scores: new Map(),
-    projected: new Map(),
     teams: [],
     playerPoints: new Map(),
     eleven: null,

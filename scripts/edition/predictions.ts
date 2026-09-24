@@ -190,6 +190,6 @@ function sideForm(
 }
 
 /** A column's own words: the opening and every tie's line. */
-export function proseOf(story: PublishedStory): string {
+function proseOf(story: PublishedStory): string {
   return [story.body, ...(story.ties ?? []).map((tie) => tie.line)].filter((text) => text !== "").join("\n");
 }

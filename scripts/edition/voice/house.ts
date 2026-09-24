@@ -1,6 +1,6 @@
 import { BANNED, PAPER_CORRESPONDENT } from "@epl/core";
 
-// The paper's editorial voice, and its two columnists.
+// The paper's editorial voice: the league it covers, its house correspondent, and the rules every byline obeys.
 //
 // This file is COPY, which is why it is here and not in core: nothing reads it
 // but the writer, it changes when Craig wants a different paper rather than when

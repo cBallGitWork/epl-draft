@@ -87,7 +87,7 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   const prose: [section: string, text: string][] = [["intro", draft.intro]];
   for (const call of ctx.calls) {
     const key = tieKey(call.homeTeamId, call.awayTeamId);
-    const entry = draft.ties.get(key) ?? draft.ties.get(tieKey(call.awayTeamId, call.homeTeamId));
+    const entry = draft.ties.get(key);
     if (entry === undefined || entry.line.trim() === "") {
       fault(key, "missing", "hard", "no line for this tie");
       continue;
