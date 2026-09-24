@@ -8,7 +8,7 @@ import {
   teamColours,
 } from "@epl/core";
 import TeamBadge from "./TeamBadge";
-import ViewToggle, { type View } from "./ViewToggle";
+import TabStrip, { type Tab } from "../shell/TabStrip";
 
 // The head-to-head at full size: both totals side by side, and one manager's
 // team underneath them.
@@ -34,14 +34,6 @@ import ViewToggle, { type View } from "./ViewToggle";
 // instead of counting them.
 
 type Which = "team" | "opponent";
-
-/** The five plates, in the order the strip draws them.
- *
- *  Lineups first because it is what the screen is for on a Saturday. Then the two
- *  boards that explain the scoreline — the categories, then the men. Then the
- *  table, which is what the result does to the season. Scores last because it is
- *  the only one that is not about our own competition. */
-const VIEWS: readonly View[] = ["lineups", "stats", "players", "table", "scores"];
 
 /** **Exactly one view belongs to a side, and it is the grass.**
  *
@@ -78,37 +70,24 @@ export interface MatchupSide {
   lineup: ReactNode;
 }
 
-export default function MatchupBoard({
+export default function MatchupBoard<K extends string>({
   team,
   opponent,
-  stats,
-  players,
-  table,
-  scores,
+  view,
+  tabs,
+  body,
 }: {
   /** The side the URL named, and the one the board opens on. */
   team: MatchupSide;
   opponent: MatchupSide;
-  /** **The four shared boards, none of which has a side.** Each is the join of
-   *  both squads or the round's own football, so each is drawn ONCE at both
-   *  widths — putting any of them in the desk's two-column grid would be one
-   *  object printed twice with the halves disagreeing about nothing.
-   *
-   *  `stats` is the categories that decided it and the men behind each;
-   *  `players` every man against every category; `table` what the result does to
-   *  the season; `scores` the real matches this tie is being played out in. */
-  stats: ReactNode;
-  players: ReactNode;
-  table: ReactNode;
-  scores: ReactNode;
+  /** The plate the URL is on; the first of `tabs` is the lineups, which belongs to a side. */
+  view: K;
+  tabs: readonly (Tab & { key: K })[];
+  /** Any other view, drawn once at both widths because it is the join of both squads. */
+  body: ReactNode;
 }) {
   const [open, setOpen] = useState<Which>("team");
-  // The first plate of `VIEWS`, so the strip and the state cannot disagree about
-  // which tab is open. Spelled `VIEWS[0]` and not `"lineups"`: renaming a view in
-  // one place and not the other drew a board with a current tab and nothing
-  // under it, which is exactly what happened when the pair became four.
-  const [view, setView] = useState<View>(VIEWS[0] ?? "lineups");
-  const shared: Partial<Record<View, ReactNode>> = { stats, players, table, scores };
+  const lineups = view === tabs[0]?.key;
 
   return (
     <div className="flex flex-col gap-2">
@@ -137,7 +116,7 @@ export default function MatchupBoard({
           It switches BOTH sides now rather than one, so it is live at every
           width — the `toggleClass` that used to hide it above `lg` went with the
           pitch-and-list pairing it was written for. */}
-      <ViewToggle view={view} onPick={setView} views={VIEWS} />
+      <TabStrip label="Match views" tabs={tabs} current={view} />
 
       {/* **The desk shows BOTH SIDES; the phone shows the open one.** Craig,
           5 Sep 2026: "live MATCH view on desktop, show both pitches at same
@@ -151,7 +130,7 @@ export default function MatchupBoard({
           expressions in one container as a list and asks for keys — rightly,
           because an unkeyed pair would let it reuse one side's DOM for the
           other's when the open half changes. */}
-      {view === "lineups" ? (
+      {lineups ? (
         <>
           <div className="lg:hidden">{(open === "team" ? team : opponent).lineup}</div>
           <div className="pitch-pair hidden lg:grid lg:grid-cols-2 lg:items-start lg:gap-2">
@@ -160,7 +139,7 @@ export default function MatchupBoard({
           </div>
         </>
       ) : (
-        (shared[view] ?? null)
+        body
       )}
     </div>
   );

@@ -27,6 +27,7 @@ import { teamBadges } from "../../../standings";
 import { myTeamId } from "../../../session";
 import { MATCHUPS } from "../../routes";
 import { sheetEvents } from "./events";
+import { matchupTabs, matchupView } from "./views";
 import { everyone, subMarks } from "./subs";
 
 // One head-to-head, at the size it deserves on a Saturday.
@@ -52,9 +53,10 @@ export default async function HeadToHeadPage({
   /** Which round. Absent means the one Fantrax is currently pointing at, which
    *  is every arrival from the live board; the schedule sends a gameweek so a
    *  round that has been played opens on its own week rather than on this one. */
-  searchParams: Promise<{ gw?: string }>;
+  searchParams: Promise<{ gw?: string; view?: string }>;
 }) {
-  const [{ teamId }, { gw }] = await Promise.all([params, searchParams]);
+  const [{ teamId }, { gw, view: askedView }] = await Promise.all([params, searchParams]);
+  const view = matchupView(askedView);
 
   // Resolved through the calendar seam rather than assumed equal: the period is
   // what Fantrax is asked for and the gameweek is what FPL is asked for, and
@@ -157,7 +159,7 @@ export default async function HeadToHeadPage({
   const { arranged, widest } = arrangeBoth({ pairing, rostered, shows, scored, clubs, opposition });
   const listed = started ? null : unplayedLists({ pairing, rostered, clubs, opposition });
 
-  const events = await sheetEvents(arranged.values(), squads.snapshot);
+  const events = view === "lineups" ? await sheetEvents(arranged.values(), squads.snapshot) : new Map();
 
   // Every category either squad registered, in one order, computed ONCE.
   //
@@ -229,25 +231,7 @@ export default async function HeadToHeadPage({
   const withheld = withheldNotice(both);
 
   return (
-    // **A MATCH screen, not a league section wearing one** (Craig, 5 Sep 2026:
-    // "remove Tim Hortons Pro League here… remove Head-to-head row… match score
-    // row should be at top").
-    //
-    // `LeagueShell` gives every League view a competition title bar, a tab strip
-    // and a yellow caption, which is right for a table and wrong here: a match
-    // belongs to neither side and to no section, and `prem/match/[id]` already
-    // makes that argument for the real thing — its `MatchBar` IS its header. Two
-    // objects came off the top of this page and 114px of a 844px phone came with
-    // them, which is the difference between the eleven and the bench being one
-    // view and being one and a bit.
-    //
-    // **The tab strip is the match's own, and it came back** (Craig, 11 Sep
-    // 2026: "and need the blue bars"). What came off on 5 Sep was the SECTION
-    // strip — five plates that all leave the match, above the score — and that
-    // stays off: League is one plate away at every width now the phone's
-    // navigation is a foot row. What is here instead is the object DESIGN §2
-    // actually names, a strip picking one of a subject's views, and by 11 Sep it
-    // was choosing between four of them rather than two.
+    // A match screen: the scoreline is its header, and its strip picks one of its own views.
     <div className="flex flex-col gap-2">
       {/* Both sibling boards say when the scoreboard is down; this one used to
           render the outage as two silent dashes. */}
@@ -261,35 +245,38 @@ export default async function HeadToHeadPage({
         <MatchupBoard
           team={side(pairing.team)}
           opponent={side(pairing.opponent)}
-          stats={
-            <StatsTab
-              bands={bands}
-              managers={{ mine: pairing.team.name, theirs: pairing.opponent.name }}
-              names={both[0]?.names ?? new Map()}
-              theirNames={both[1]?.names ?? new Map()}
-              withheld={withheld}
-              played={played}
-              fielded={wasFielded(squads.period, period)}
-            />
-          }
-          players={
-            <PlayersTab
-              sides={both.map((one: (typeof both)[number]) => ({
-                team: one.team,
-                detail: one.detail,
-                columns,
-                breakdown: one.breakdown,
-                withheld: one.withheld,
-              }))}
-            />
-          }
-          table={<TableTab tie={[pairing.team.teamId, pairing.opponent.teamId]} mine={mine} />}
-          scores={
-            <ScoresTab
-              fixtures={squads.snapshot.fixtures}
-              sides={both}
-              clubName={(id) => clubs.get(id)?.shortName ?? DASH}
-            />
+          view={view}
+          tabs={matchupTabs(teamId, Number.isInteger(asked) ? asked : undefined)}
+          body={
+            view === "stats" ? (
+              <StatsTab
+                bands={bands}
+                managers={{ mine: pairing.team.name, theirs: pairing.opponent.name }}
+                names={both[0]?.names ?? new Map()}
+                theirNames={both[1]?.names ?? new Map()}
+                withheld={withheld}
+                played={played}
+                fielded={wasFielded(squads.period, period)}
+              />
+            ) : view === "players" ? (
+              <PlayersTab
+                sides={both.map((one: (typeof both)[number]) => ({
+                  team: one.team,
+                  detail: one.detail,
+                  columns,
+                  breakdown: one.breakdown,
+                  withheld: one.withheld,
+                }))}
+              />
+            ) : view === "table" ? (
+              <TableTab tie={[pairing.team.teamId, pairing.opponent.teamId]} mine={mine} />
+            ) : view === "scores" ? (
+              <ScoresTab
+                fixtures={squads.snapshot.fixtures}
+                sides={both}
+                clubName={(id) => clubs.get(id)?.shortName ?? DASH}
+              />
+            ) : null
           }
         />
       ) : (

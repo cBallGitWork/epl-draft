@@ -2,67 +2,27 @@
 
 import { TAB } from "@/app/desk";
 
-// Which view of a squad you are looking at.
-//
-// **Two screens, not three, and not the squad board.** It served three until 31
-// Aug, when the gated squad board lost its pitch and had nothing left to switch
-// between — fifteen men with no arrangement is not a shape (DESIGN §9). What is
-// left is the head-to-head board and a locked squad, the two screens that still
-// draw an eleven two ways.
-//
-// **It is a TAB STRIP now, and on the head-to-head that is the point** (Craig,
-// 11 Sep 2026: *"and need the blue bars"*). The match screen carries no
-// `LeagueShell`, so it had no blue anywhere — the two grey plates were the only
-// navigation on it, and by 11 Sep they were choosing between four views rather
-// than two. DESIGN §2 names the object: a tab strip picks one of a SUBJECT'S
-// views, which is exactly what this does, and `.cm-tab` is the plate for it.
-//
-// **Full height on the match screen and QUIET everywhere else**, which is the
-// distinction `.cm-tab-quiet` was written for (Craig, 10 Sep 2026, on the pool's
-// stat groups: *"these have blue bars, but we already have blue bars on this
-// page, do we need them this big?"*). The head-to-head carries no other strip, so
-// this IS its strip; the squad and club screens already have a five-plate one
-// above, and a second at the same height is two blue bars of one size with
-// neither ranked. Measured the day it shipped: the squad page drew both at 56.
+// Which view of a squad you are looking at: the pitch or the list, as a quiet second strip on the squad, club
+// and Team screens, which already carry a full-height one. The head-to-head's views are links (`views.ts`).
 //
 // `aria-current="page"` rather than `aria-pressed`, because `.cm-tab`'s yellow
 // label-and-border is keyed off it in `desk.css` and a strip that had to be
 // styled twice would be two strips.
 
-export type View = "pitch" | "list" | "lineups" | "stats" | "players" | "table" | "scores";
+export type View = "pitch" | "list";
 
-/** What each view is called on its plate.
- *
- *  Here rather than at the call sites: three screens draw this strip and a label
- *  spelled differently on one of them is a different control.
- *
- *  **One word each, and on the head-to-head that is a MEASUREMENT rather than a
- *  preference.** That strip carries five plates now, which leaves about 73px
- *  apiece at 390 — room for ten characters at `2xs` and no more. Craig named two
- *  of them "Match Up stats" and "Player stats"; neither fits, and the fix is a
- *  shorter word rather than a smaller one, because this file has already been
- *  caught once dropping off the type ladder (see `TAB` below). `Stats` is the
- *  categories and `Players` is the men, which is the distinction the two boards
- *  make anyway. */
+/** What each view is called on its plate. */
 const LABEL: Record<View, string> = {
   pitch: "Pitch",
   list: "List",
-  lineups: "Lineups",
-  stats: "Stats",
-  players: "Players",
-  table: "Table",
-  scores: "Scores",
 };
 
-/** The pair every screen but the head-to-head draws. A frozen literal rather than
- *  an inline default, so the two callers that take it share one array instead of
- *  allocating one each render. */
+/** The plates, in the order the strip draws them. */
 const BOTH: readonly View[] = ["pitch", "list"];
 
 export default function ViewToggle({
   view,
   onPick,
-  views = BOTH,
   quiet = false,
 }: {
   view: View;
@@ -70,9 +30,6 @@ export default function ViewToggle({
   /** Whether this is a SECOND strip on a screen that already has one. Drops the
    *  plate to the control floor, which is what `.cm-tab-quiet` means. */
   quiet?: boolean;
-  /** Which plates to draw, in the order they are drawn. Defaults to the pitch
-   *  and the list, which is every caller but the match screen. */
-  views?: readonly View[];
 }) {
   return (
     <div
@@ -88,7 +45,7 @@ export default function ViewToggle({
       // one caller that shares its row with something else.
       className="flex flex-1"
     >
-      {views.map((value) => (
+      {BOTH.map((value) => (
         <ViewButton key={value} current={view} value={value} onPick={onPick} quiet={quiet} />
       ))}
     </div>

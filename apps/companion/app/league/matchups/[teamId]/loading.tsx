@@ -1,4 +1,5 @@
 import Skeleton from "../../../components/shell/Skeleton";
+import { MATCHUP_VIEWS } from "./views";
 
 // One head-to-head, waiting on both elevens.
 //
@@ -9,7 +10,7 @@ import Skeleton from "../../../components/shell/Skeleton";
 // moment the real board arrived. A skeleton that does not match its page is a
 // layout shift with extra steps.
 //
-// The shapes are the board's own: the scoreline, the four-plate tab strip, and
+// The shapes are the board's own: the scoreline, one plate per view, and
 // the grass — which is the tall thing, drawn at roughly the height the eleven and
 // the bench take on a phone so the strip above does not travel when they arrive.
 
@@ -27,7 +28,7 @@ export default function Loading() {
           here gave the desk 12px of shift when the strip landed, in the file
           whose whole point is not doing that. */}
       <div className="flex gap-px">
-        {["scores", "stats", "players", "report"].map((view) => (
+        {MATCHUP_VIEWS.map((view) => (
           <span key={view} aria-hidden className="cm-tab flex-1 animate-pulse bg-current/15" />
         ))}
       </div>
