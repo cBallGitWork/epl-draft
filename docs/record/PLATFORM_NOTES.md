@@ -53,6 +53,24 @@ capture season-specific tradeoffs.
   twenty-two years of predictions) and the playing and managing, as a core identity and 21 lines in turn in
   `gazette/predictions/past.ts`, each read back from the archive by its mark. A first-person career claim
   outside them is a hard fault. Never Heysel, his health, why a job ended, a colleague's name or politics.
+  **Everybody knows who he is** (Craig: *"article intro weird, we know who lawro is"*): he never introduces
+  himself, and a line in turn is offered every fourth column (`ROTATION_EVERY`), not every one.
+- **He is the most miserable man in punditry, played straight** (Craig: *"more miserable and dour, parody
+  like"*). The running joke is how far his career has fallen, one bleak line in every opening, never
+  consoled; the core says so, so the career check passes it. The skit writer is told one or two groaners a
+  week is ordinary, not that none is.
+- **The headline is the desk's**: `Lawro's Predictions: GW{n}` (Craig). He writes the deck, and no chip or
+  kicker repeats the headline.
+- **Availability in words, never FPL's figure** (Craig: *"dont say percentages"*): 75 a slight doubt, 50 a
+  doubt, 25 a big doubt, 0 out, and FPL's own status for injured, suspended and unavailable. "per cent", "%"
+  and "50-50" are banned outright.
+- **Real clubs, and a main man against a hard one leads** (Craig: *"you can reference the actual prem teams"*,
+  *"high projected players also have tough opposition, its a good narrative"*). He names the man, his club and
+  the opponent; a key man with one of the round's hardest fixtures is the fact after the key men. FPL's own
+  club names ("Spurs") pass the names check. A tie runs to 80 words, 95 on a gut call.
+- **Each tie prints the man its line names first**, from that tie's two squads (`featured`). Who each man is
+  came off the bridge with his squad; the prose decides only which of them, so this is not the runtime name
+  matching CLAUDE.md forbids. A line that names nobody prints no picture.
 - **Squads, never line-ups, before the lock.** The brief reads no roster slot (`squadMen`; a test shuffles
   every slot and position and the squad must come out identical), and the prose may not say who starts.
   **The one exception**: the printed score is Fantrax's projected total, summed over each side's current
@@ -76,9 +94,13 @@ capture season-specific tradeoffs.
   leakiest defences in the league" for a forward, the attack for a defender; never a rank.
 - **His picture and billing**: "Draft Expert" (Craig), and the one freely licensed photograph of him, CC0 from
   the Nationaal Archief: his tackle on Hugo Hovenkamp, AZ '67 v Liverpool, 21 Oct 1981. It is the app's
-  `COLUMNISTS` table keyed by `reporter`, printed through `.paper-photo` at every rank and as the card on his
-  article, credited on `/credits`. The writer never draws a cartoon over a columnist's column. The BBC's headshot
+  `COLUMNISTS` table keyed by `reporter`, printed through `.paper-photo` at every rank, and on his article as
+  the BBC ran him: a banner with his name, his billing and a square crop of the same photograph. Credited on
+  `/credits`. The writer never draws a cartoon over a columnist's column. The BBC's headshot
   is AFP's and not ours to print.
+- **A reply's JSON is read from its first brace to its last** (`newsroom.__objectIn`). The skit writer once
+  reasoned aloud before its JSON, the parse threw, and the catch swallowed it without a word in the log. A
+  failed skit call now says so.
 - **A local build without `FANTRAX_LEAGUE_ID` 500s every `/paper/[slug]`** under `next start`
   (`DYNAMIC_SERVER_USAGE`). Production names the league when it builds; build with it set before shooting an
   article locally.

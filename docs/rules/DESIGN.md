@@ -996,6 +996,6 @@ drawing.** Lawro is the one (Craig, 24 Sep 2026): a freely licensed photograph,
 credited on `/credits`, carried by the app's `COLUMNISTS` table and never by the
 story, so a drawing is never made over it. It prints through `.paper-photo` like
 the drawing, at every rank a picture prints (the splash band, a shoulder, a
-brief's thumbnail) and beside his name and billing on his article, the way a
-paper runs a columnist's picture byline. It is a real photograph of a real man,
+brief's thumbnail) and, on his article, as a banner the way the BBC ran his: his
+name and billing on a raised band, a square crop of the same photograph on the right. It is a real photograph of a real man,
 so it is only ever the one we hold a licence for.
