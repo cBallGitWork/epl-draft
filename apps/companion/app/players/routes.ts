@@ -28,5 +28,8 @@ export const ANALYSIS = "/players/analysis";
 /** Data's club board: every real club as a fantasy manager reads it. */
 export const TEAMS = "/players/teams";
 
+/** The sister model's projected points for the next six gameweeks. */
+export const PROJECTIONS = "/players/projections";
+
 /** The fixture planner: every club's next six opponents, ranked by our strength model. */
 export const PLANNER = "/players/planner";

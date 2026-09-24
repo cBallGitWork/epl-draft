@@ -1,0 +1,82 @@
+import { nextGameweeks, projectedTotal, type ProjectedPlayer } from "@epl/core";
+
+// The Projections board's rows: the sister model's FPL-scoring points for each gameweek in the window, a total and
+// the minutes it expects, joined to our league's view of the man. A week the model has no reading for is a dash.
+
+/** Who a projected man is on our side: his names, his Fantrax page and eligibility when the pool holds him. */
+export interface Known {
+  name: string;
+  fullName: string;
+  fantraxId: string | null;
+  positions: readonly string[];
+}
+
+export interface ProjectionRow extends Known {
+  code: number;
+  club: string;
+  weeks: (number | null)[];
+  total: number | null;
+  minutes: number | null;
+}
+
+/** Every projected man we can name, over the window. A man neither FPL nor the pool names is left out. */
+export function projectionRows(
+  players: ReadonlyMap<number, ProjectedPlayer>,
+  gameweeks: readonly number[],
+  known: ReadonlyMap<number, Known>,
+): ProjectionRow[] {
+  const rows: ProjectionRow[] = [];
+  for (const player of players.values()) {
+    const who = known.get(player.code);
+    if (who === undefined) continue;
+    const weeks = nextGameweeks(player, gameweeks);
+    const minutes = weeks.flatMap((week) => (week?.minutes == null ? [] : [week.minutes]));
+    rows.push({
+      ...who,
+      code: player.code,
+      club: player.club,
+      weeks: weeks.map((week) => week?.points ?? null),
+      total: projectedTotal(player, gameweeks),
+      minutes: minutes.length === 0 ? null : Math.round(minutes.reduce((a, b) => a + b, 0) / minutes.length),
+    });
+  }
+  return rows;
+}
+
+/** A sort key: `tot`, `xmins`, or `gw` and a gameweek in the window. */
+export type ProjectionSort = string;
+
+export const DEFAULT_PROJECTION_SORT = "tot";
+
+/** The figure a key reads off a row; a gameweek the window no longer holds falls back to the total. */
+export function projectionFigure(row: ProjectionRow, key: ProjectionSort, gameweeks: readonly number[]): number | null {
+  if (key === "xmins") return row.minutes;
+  const at = key.startsWith("gw") ? gameweeks.indexOf(Number(key.slice(2))) : -1;
+  return at === -1 ? row.total : row.weeks[at];
+}
+
+/** The key a URL asked for, or the total when the window has no such column. */
+export function projectionSort(asked: string | undefined, gameweeks: readonly number[]): ProjectionSort {
+  if (asked === "xmins" || asked === "tot") return asked;
+  if (asked?.startsWith("gw") && gameweeks.includes(Number(asked.slice(2)))) return asked;
+  return DEFAULT_PROJECTION_SORT;
+}
+
+/** Ordered by one figure; an absent one sinks either way, and a tie falls to the total, then the name. */
+export function sortedProjections(
+  rows: readonly ProjectionRow[],
+  key: ProjectionSort,
+  gameweeks: readonly number[],
+  descending: boolean,
+): ProjectionRow[] {
+  return [...rows].sort((a, b) => {
+    const left = projectionFigure(a, key, gameweeks);
+    const right = projectionFigure(b, key, gameweeks);
+    if (left === null || right === null) {
+      if (left !== right) return left === null ? 1 : -1;
+    } else if (left !== right) {
+      return descending ? right - left : left - right;
+    }
+    return (b.total ?? -Infinity) - (a.total ?? -Infinity) || a.name.localeCompare(b.name);
+  });
+}

@@ -186,13 +186,13 @@ export function shownRows(
  *  Every link on the table goes through here so that none of them can lose the
  *  others' state: a sort that forgot the filter, or a filter that forgot the
  *  search, would be a control that quietly does two things. */
-function href(query: PlayersQuery, changes: Partial<PlayersQuery>): string {
+function href(query: PlayersQuery, changes: Partial<PlayersQuery>, route: string = POOL): string {
   const next = new URLSearchParams();
   for (const [name, value] of Object.entries({ ...query, ...changes })) {
     if (value) next.set(name, value);
   }
   const search = next.toString();
-  return search ? `${POOL}?${search}` : POOL;
+  return search ? `${route}?${search}` : route;
 }
 
 /** The same board with one setting changed — the plate, the rate, the minutes
@@ -207,8 +207,8 @@ function href(query: PlayersQuery, changes: Partial<PlayersQuery>): string {
  *  Passing `undefined` drops the key, which is what lets every control here undo
  *  itself: `{ per: undefined }` is the per-90 toggle turning off and
  *  `{ mins: undefined }` is the minutes floor going back to the whole pool. */
-export function boardHref(query: PlayersQuery, changes: Partial<PlayersQuery>): string {
-  return href(query, changes);
+export function boardHref(query: PlayersQuery, changes: Partial<PlayersQuery>, route?: string): string {
+  return href(query, changes, route);
 }
 
 /** The same list, showing every row. */
@@ -250,8 +250,8 @@ export function isChosen(query: PlayersQuery, key: "status" | "pos", value: stri
  *  behaved like a tab strip — which is what they are drawn as, and was the tell.
  *  Every chip is still its own way back, and turning the last one off drops the
  *  parameter rather than leaving an empty one in the URL. */
-export function filterHref(query: PlayersQuery, key: "status" | "pos", value: string): string {
+export function filterHref(query: PlayersQuery, key: "status" | "pos", value: string, route?: string): string {
   const on = chosen(query[key]);
   const next = on.includes(value) ? on.filter((entry) => entry !== value) : [...on, value];
-  return href(query, { [key]: next.length > 0 ? next.join(",") : undefined });
+  return href(query, { [key]: next.length > 0 ? next.join(",") : undefined }, route);
 }

@@ -35,6 +35,7 @@ const ROUTES = [
   "/players/teams",
   "/players/planner",
   "/players/planner?view=defence",
+  "/players/projections",
   "/matchday",
   "/matchday/desk",
   "/paper/columns",
