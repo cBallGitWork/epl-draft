@@ -96,7 +96,7 @@ export default function Written({
       {columnist !== null ? (
         <div className="mt-3 flex items-center justify-between gap-3 bg-raised pl-3 @xl:pl-4">
           <p className="flex flex-col gap-0.5 font-sans uppercase">
-            <span className="text-lg font-black leading-tight tracking-[0.04em] text-ink @xl:text-2xl">{story.reporter}</span>
+            <span className="text-lg font-bold leading-tight tracking-[0.04em] text-ink @xl:text-2xl">{story.reporter}</span>
             <span className="text-xs tracking-[0.12em] text-muted @xl:text-sm">{columnist.billing}</span>
           </p>
           <ColumnistPhoto photo={{ ...columnist.photo, ...columnist.portrait }} rank="banner" />
