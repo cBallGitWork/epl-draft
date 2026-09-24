@@ -4093,3 +4093,39 @@ lot."*
 every tie and never filed. Team Sheet and Line-Ups now carry the round they
 preview (#91). The first real Lawro column is the rehearsal league's GW6 on
 8 Oct; the real league's first is GW7 on 15 Oct.
+
+## Lawro's first read (24 Sep 2026)
+
+The first column went live on the rehearsal league the evening it was built, and
+Craig read it on his phone. Three notes: *"you can reference the actual prem
+teams"*, *"dont say percentages, just say doubt/injured"*, and *"article intro
+weird, we know who lawro is"*. The intro had opened on his CV: 8,000 BBC
+predictions, recited to people who know. Then five more while the fix was being
+written: the title is just "Lawro's Predictions: GW6"; the article should look
+like the BBC's banner, name and billing with him on the right; he should be
+*"more miserable and dour, parody like"*; each tie wants a photograph of a man it
+names; and a high projected man against tough opposition *"is a good narrative"*.
+He pasted the BBC's final column, 20 May 2022, as the model: fixture heading,
+first person, the real clubs, "Lawro's prediction" under it.
+
+**Seven real runs tuned it**, six on the rehearsal league and one on the ten-team
+mock league, with two direct calls to the skit writer. The first was accurate and flat,
+and its one career line was wistful: "Still football, still a score to call."
+The second and third found nothing better, because "never introduce yourself"
+read to the model as "never mention the career". Moving the line into the
+opening, as its own step, landed it: *"Once it was six World Cups. Now it's two
+ties in a draft league."*
+
+**The skit writer was declining, then failing.** Four columns came back without
+a joke. A direct call returned an honest empty list: its prompt called no edits
+the ordinary answer. Told that one or two groaners a week is ordinary, it began
+to write "Looking for..." before its JSON, the parse threw, and a bare `catch`
+returned null without a word in the log. The newsroom now reads from the first
+brace to the last, and a failed call is logged. Its first edit after the fix: *"A big man having a bad night is a big
+man in trouble."*
+
+**Two checks were wrong for the new voice.** "Liverpool host Manchester City" was
+sent back as a league side playing at home; only a league side's name before
+"host" is refused now. And "My career..." at a capital had never been caught,
+because the career pattern was case-sensitive.
+

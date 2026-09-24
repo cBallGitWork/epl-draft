@@ -348,6 +348,13 @@ ahead, under Mark Lawrenson's name. Code makes each call and score;
 results, the next one opens by owning last week, and his season heads his ties.
 A pundit nobody marks is a pundit who never has to be right.
 
+The page is laid out the way the BBC ran him. The headline is the desk's,
+"Lawro's Predictions: GW6", with no chip or kicker saying it again. Under the
+dateline sits his banner: name, billing, and a square crop of his photograph on
+the right. Each tie is a bold heading, then his words with the first man they
+name pictured beside them (`Face`, brief rank, floated so the prose wraps), then
+"Lawro's prediction".
+
 **The round-report was deleted on 3 Sep 2026.** It was the preview's twin — one
 article filed once the football stopped, about the whole round — and Craig's
 ruling killed it: *"the back page is a league summary, dont do that, not the
