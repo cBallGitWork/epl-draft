@@ -153,6 +153,8 @@ export const DESK_GROUND_BLUR: string | null =
 export interface Columnist {
   billing: string;
   photo: Pick<GroundPhoto, "title" | "author" | "licence" | "licenceUrl" | "source"> & { src: string; alt: string; blur: string };
+  /** A square crop of the same photograph on him alone, for the banner over his column. */
+  portrait: { src: string; blur: string };
 }
 
 /** Lawro's is the one freely licensed photograph of him on Commons (CC0): the tackle, 1981. */
@@ -168,6 +170,10 @@ export const COLUMNISTS: Readonly<Record<string, Columnist>> = {
       licence: "CC0 1.0",
       licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
       source: "https://commons.wikimedia.org/wiki/File:Hovenkamp_in_aktie,_Bestanddeelnr_931-7563.jpg",
+    },
+    portrait: {
+      src: "/columnist/lawrenson-banner.jpg",
+      blur: "data:image/jpeg;base64,/9j/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAAKAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAID/8QAHxABAAEEAQUAAAAAAAAAAAAAAQIAAwQRUQUiMYHR/8QAFAEBAAAAAAAAAAAAAAAAAAAAAP/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AM+s49qdqE7UhveUgdqPyhktAONt9UticFRo4KD/2Q==",
     },
   },
 };

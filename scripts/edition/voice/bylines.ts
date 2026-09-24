@@ -9,7 +9,6 @@ export const STORY_BYLINE: Partial<Record<StoryKind, string>> = {
   "match-report": "The Back Page",
   "fixture-preview": "The Form Guide",
   "tie-call": "The Back Page",
-  predictions: "Lawro's Predictions",
   eleven: "The Selector",
   "power-ranking": "The Pecking Order",
   dodgers: "Own Goals & Gaffs",

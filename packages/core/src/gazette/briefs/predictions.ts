@@ -36,7 +36,7 @@ export function buildLawroBrief(brief: {
     ...brief.ties.map((tie, at) => tieBlock(at + 1, brief.ties.length, tie, name)),
     brief.past.length === 0
       ? null
-      : ["WHO YOU ARE, beyond the opening of your instructions. Every line is true. Use one at most, in your own words, and your opening is the natural place for it:", ...brief.past.map((line) => `- ${line.line}`)].join("\n"),
+      : ["WHO YOU ARE, beyond the opening of your instructions. Every line is true. Use one at most, in your own words, only inside a tie it bears on, and never to introduce yourself:", ...brief.past.map((line) => `- ${line.line}`)].join("\n"),
   ]
     .filter((block): block is string => block !== null)
     .join("\n\n");
@@ -61,7 +61,7 @@ function tieBlock(index: number, count: number, tie: PredictionsTie, name: (team
 }
 
 function recordBlock(record: PredictionRecord, name: (teamId: string) => string): string {
-  if (record.last === null) return "YOUR RECORD: this is your first column in this league, so there is no record to own yet. Do not invent one.";
+  if (record.last === null) return "YOUR RECORD: this is your first column in this league, so there is no record to own yet. Do not invent one, and do not introduce yourself: everybody reading knows who you are. Open on the round itself, in a line, before your fall.";
   const { gameweek, marks } = record.last;
   if (marks === null) return `YOUR RECORD: gameweek ${gameweek} is not settled, so there is nothing to own this week. Say nothing about your record.`;
   const gut = marks.gut === null ? "You made no gut calls." : `Your gut calls: ${marks.gut.right} from ${marks.gut.called}.`;

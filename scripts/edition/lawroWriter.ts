@@ -17,7 +17,7 @@ import { LAWRO, SKIT, lawroSendBack } from "./voice/lawro";
 // The newsroom behind Lawro's column: he writes, the editor reads him, he writes again once if he
 // has to, the skit writer looks for a groaner, and the desk files his words beside its own calls.
 
-const EMPTY: LawroDraft = { headline: "", deck: "", intro: "", ties: new Map() };
+const EMPTY: LawroDraft = { deck: "", intro: "", ties: new Map() };
 
 /** The column ready to file. Throws only when the first call cannot be made at all, which leaves
  *  the key unspent for the next firing; every later failure files what was checked. */
@@ -28,7 +28,7 @@ export async function writeLawro(desk: PredictionsDesk, brief: string, facts: st
   const ctx: CheckContext = {
     calls,
     name,
-    facts: [facts, LAWRO_CORE, ...desk.past.map((line) => line.line), "Lawro"].join("\n"),
+    facts: [facts, LAWRO_CORE, ...desk.past.map((line) => line.line), ...desk.clubs, "Lawro"].join("\n"),
     offered: desk.past,
     names: desk.names,
     past: desk.archive.prose,
@@ -52,7 +52,10 @@ export async function writeLawro(desk: PredictionsDesk, brief: string, facts: st
   const empty = calls.filter((call) => draft.ties.get(tieKey(call.homeTeamId, call.awayTeamId))?.line === "");
   if (empty.length > 0) say(`  ⚠ lawro: ${empty.length} ties print their call alone; their prose failed twice.`);
 
-  const skit = await writeColumn(SKIT, skitBrief(draft, desk, name)).catch(() => null);
+  const skit = await writeColumn(SKIT, skitBrief(draft, desk, name)).catch((error: unknown) => {
+    say(`  ⚠ skit: no edits, the call failed: ${String(error).slice(0, 160)}`);
+    return null;
+  });
   const edited = applySkit(skit, draft, { check: ctx, doubts: desk.doubts, wornShapes: desk.archive.shapes, wornTargets: desk.archive.targets, lastLines: desk.archive.lastLines });
   draft = edited.draft;
   if (edited.applied.length > 0 || edited.refused.length > 0) {
@@ -62,7 +65,8 @@ export async function writeLawro(desk: PredictionsDesk, brief: string, facts: st
   return assembleLawro({
     draft,
     calls,
-    standingHeadline: `Lawro's predictions: gameweek ${desk.gameweek}`,
+    headline: `Lawro's Predictions: GW${desk.gameweek}`,
+    men: new Map(desk.ties.map((tie) => [tieKey(tie.call.homeTeamId, tie.call.awayTeamId), [...tie.home.squad, ...tie.away.squad]])),
     record: desk.record.season.all,
     skit: edited.applied.map((edit) => ({ shape: edit.shape, target: edit.target })),
     threads: attempts.at(-1)?.raw.threads,

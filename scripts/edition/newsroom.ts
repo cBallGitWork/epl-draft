@@ -43,7 +43,7 @@ export async function writeColumn(system: string, brief: string): Promise<Record
   if (body.stop_reason !== "end_turn") throw new Error(`Stopped on ${body.stop_reason}, not a finished column.`);
 
   const text = body.content?.find((block) => block.type === "text")?.text ?? "";
-  const fenced = text.trim().replace(/^```(?:json)?\n?|```$/g, "");
+  const fenced = __objectIn(text);
   try {
     return JSON.parse(fenced) as Record<string, unknown>;
   } catch {
@@ -59,6 +59,14 @@ export async function writeColumn(system: string, brief: string): Promise<Record
     // a second exception here is the honest outcome.
     return JSON.parse(__escapeControlsInStrings(fenced)) as Record<string, unknown>;
   }
+}
+
+/** The reply from its first brace to its last: a sentence or a fence around the JSON is chatter,
+ *  not a broken column. */
+export function __objectIn(text: string): string {
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  return start === -1 || end < start ? text.trim() : text.slice(start, end + 1);
 }
 
 /** Escape raw newlines, tabs and carriage returns that sit inside a JSON string

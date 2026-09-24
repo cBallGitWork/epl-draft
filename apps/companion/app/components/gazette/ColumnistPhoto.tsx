@@ -4,13 +4,13 @@ import type { Columnist } from "@/app/config";
 // A columnist's photograph at each rank the paper prints a picture, through the sheet's ink the
 // way the drawing is (`.paper-photo`): a photograph, never a colour plate.
 
-type Rank = "splash" | "shoulder" | "brief" | "card";
+type Rank = "splash" | "shoulder" | "brief" | "banner";
 
 const FRAME: Record<Rank, string> = {
   splash: "bleed aspect-[16/9]",
   shoulder: "h-[5.5rem] w-full",
   brief: "h-14 w-14 shrink-0",
-  card: "h-16 w-24 shrink-0",
+  banner: "h-20 w-20 shrink-0 @xl:h-24 @xl:w-24",
 };
 
 export default function ColumnistPhoto({ photo, rank }: { photo: Columnist["photo"]; rank: Rank }) {
