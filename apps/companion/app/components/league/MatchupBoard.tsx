@@ -154,7 +154,7 @@ export default function MatchupBoard({
       {view === "lineups" ? (
         <>
           <div className="lg:hidden">{(open === "team" ? team : opponent).lineup}</div>
-          <div className="hidden lg:grid lg:grid-cols-2 lg:items-start lg:gap-2">
+          <div className="pitch-pair hidden lg:grid lg:grid-cols-2 lg:items-start lg:gap-2">
             <div key={team.team.teamId}>{team.lineup}</div>
             <div key={opponent.team.teamId}>{opponent.lineup}</div>
           </div>
