@@ -4158,4 +4158,11 @@ so they changed there; the other two are a banned list and a send-back; and the 
 each phrase that had come round in every run, plus a check that no four-word run appears in two ties
 of one column. The run after that read "a hard place to defend", "four on the spin", "in this parish",
 "nick it", and named nobody as anybody's.
+The live column brought five more: "a lesser man takes his place" is padding, "one of the hardest this
+round" will repeat every week because somebody always plays Liverpool, lead with who has the easy game,
+use a man's form, and find more narratives. So the brief learned a man's last two games from FPL's
+live reads (form, a quiet spell, a return from injury or a ban), a trade reads as a trade with what it
+cost, a head-to-head is a big game when both clubs are at an extreme, the easy game leads, "difficult"
+is the whole measure, and every way of saying who plays instead went on the banned list after the
+model swapped "a worse man plays" for "a lesser man deputises" past the send-back.
 

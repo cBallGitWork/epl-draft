@@ -76,6 +76,16 @@ capture season-specific tradeoffs.
   stahhhp"*), with "mean", "leaky" and "lively" banned. A man out is replaced from the bench, so "a man
   short", "down to ten" and "shorn" are banned (*"managers have subs"*), and a possessive before a surname
   ("their Ballard") is sent back (*"sounds off"*).
+- **The narratives, and the order the brief leads with them** (Craig: *"Focus on who has a very easy match
+  up top"*, *"reference players form"*, *"think of more narratives"*): a main man with an easy game
+  (`PredictionSide.kind`, ease within `kindFixtures`), a main man in form or gone quiet or back from a
+  lay-off (`streak`, off each man's last `recentGames` gameweeks, two public FPL live reads joined by
+  per-season id and never persisted), a main man with a difficult game, a doubt; then a man for the other
+  side (the easy one when there is one), form on the pitch and in the table, clubmates, a head-to-head
+  ("one of the big games of the weekend" when both clubs are at an extreme), a trade and what it cost, a
+  waiver signing. A difficult game is "difficult", never "one of the hardest this round" (*"somebody will
+  play Liverpool"*), and a suspension is stated and left: every way of saying who plays instead is banned
+  (*"you don't need to elaborate"*).
 - **Five ties, one vocabulary** (Craig: *"Same terms over and over. Stands out when it's 5 previews in one
   article"*). Two checks: the turns of phrase that came round in every run ("hard one", "no picnic", "blow
   hot and cold", "find a way to waste", "ugly", "carries") are capped per column in `LAWRO_CAPPED`, and any
@@ -88,7 +98,7 @@ capture season-specific tradeoffs.
   and "50-50" are banned outright.
 - **Real clubs, and a main man against a hard one leads** (Craig: *"you can reference the actual prem teams"*,
   *"high projected players also have tough opposition, its a good narrative"*). He names the man, his club and
-  the opponent; a key man with one of the round's hardest fixtures is the tie's story, its first fact.
+  the opponent; a key man with a difficult game is one of the tie's stories, after an easy one.
   FPL's own club names ("Spurs") pass the names check.
 - **Each tie prints the man its line names first**, from that tie's two squads (`featured`). Who each man is
   came off the bridge with his squad; the prose decides only which of them, so this is not the runtime name
