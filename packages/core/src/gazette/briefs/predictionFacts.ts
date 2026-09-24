@@ -43,7 +43,7 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
 function storyOf(sides: readonly PredictionSide[]): { side: PredictionSide; man: SquadMan; text: string } | null {
   for (const side of sides) {
     const star = side.hard !== null && side.hard.fixtures.length > 0 && side.keyMen.some((man) => man.name === side.hard?.name) ? side.hard : null;
-    if (star !== null) return { side, man: star, text: hard(star, side.name, true) };
+    if (star !== null) return { side, man: star, text: hard(star, side.name) };
   }
   for (const side of sides) {
     const doubtful = side.doubts.find((man) => side.keyMen.some((key) => key.name === man.name));
@@ -98,12 +98,9 @@ function fixture(man: SquadMan): string {
   return `two games, ${man.fixtures.map(one).join(" and ")}`;
 }
 
-/** A blank is its own fact; anything else is one of the round's hardest for his line, and the
- *  story of the tie when he is one of the side's main men. */
-function hard(man: SquadMan, side: string, star: boolean): string {
-  if (man.fixtures.length === 0) return `${man.name} of ${side} has no game this round.`;
-  const hardest = `${fixture(man)}, one of the hardest this round for his line. Say a hard one, never a rank.`;
-  return star ? `${side}'s ${man.name}, one of their main men, is ${hardest} A big man against a hard one is often the story of a tie.` : `${man.name} of ${side}: ${hardest}`;
+/** One of a side's main men against one of the round's hardest for his line: the story of a tie. */
+function hard(man: SquadMan, side: string): string {
+  return `${side}'s ${man.name}, one of their main men, is ${fixture(man)}, one of the hardest this round for his line. Say a hard one, never a rank. A big man against a hard one is often the story of a tie.`;
 }
 
 /** Whose man he is, every time: a doubt read without its owner was once printed against the wrong side. */
