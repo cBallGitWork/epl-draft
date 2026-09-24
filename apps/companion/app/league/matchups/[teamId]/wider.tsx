@@ -1,6 +1,12 @@
-import { seasonForm, sortRows, londonDayAndTime } from "@epl/core";
-import type { Fixture, LeagueTeam, RosteredTeam } from "@epl/core";
-import { fixtureInvolvement, teamColours } from "@epl/core";
+import type { ReactNode } from "react";
+import { seasonForm, sortRows, londonDayAndTime, playerName, DASH } from "@epl/core";
+import type { Club, Fixture, LineupDetail, RosteredTeam } from "@epl/core";
+import { fixtureInvolvement, leagueTable as realTable, teamColours } from "@epl/core";
+import { seasonFixtures } from "../../../football";
+import ScoreRow from "../../../components/shell/ScoreRow";
+import { scoreSide } from "../../../components/football/scoreSide";
+import { MATCH } from "../../../prem/routes";
+import { byKickoff, fixtureMen, type FixtureMan } from "./fixtureMen";
 import Columns from "../../Columns";
 import TableRow from "../../TableRow";
 import { getSeasonResults } from "../../schedule/schedule";
@@ -9,13 +15,8 @@ import { leagueInfo } from "../../../round";
 import Nothing from "../../../components/shell/Nothing";
 import { BOARD, PANEL, SCROLL } from "@/app/desk";
 
-// The two boards that PLACE this tie rather than explain it: the league it sits
-// in, and the football it is being played out in.
-//
-// Split from `tabs.tsx` when the four shared boards together went past
-// CODE_RULES §4's hard ceiling. The seam is the subject: those two are our
-// competition's scoring joined across the two squads, and these two are
-// everything around it.
+// The two boards that place this tie rather than explain it: the league it sits in, and the football it is
+// being played out in.
 
 /** The league table, with the two sides of this tie marked.
  *
@@ -76,71 +77,63 @@ export async function TableTab({ tie, mine }: { tie: readonly string[]; mine: st
   );
 }
 
-/** The real matches this tie is being played out in.
- *
- *  Craig, 11 Sep 2026: *"Scores should show the prem matches that effected the
- *  match up for the weekend, date time/etc"*.
- *
- *  **Only the fixtures holding a man from either squad**, which is the whole
- *  point: a round is ten matches and a tie is usually fought out in six of them.
- *  `fixtureInvolvement` answers the membership as a JOIN on FPL's own player
- *  code — never a name match — so a fixture with nobody's man in it is simply
- *  not a key.
- *
- *  It replaces the Report tab, which filtered the same round's GOAL WIRE to the
- *  same thirty men. That board answered "what has happened"; this answers "where
- *  is it being decided", which is the question a manager has at ten to three
- *  rather than at five. */
-export function ScoresTab({
+/** Every real match either squad has a man in, as the Live tab draws a fixture (`ScoreRow`), each manager's
+ *  men and their Fantrax points under it: the URL's side from the left, the other from the right. A side
+ *  whose eleven is not public names nobody. */
+export async function FixturesTab({
   fixtures,
   sides,
-  clubName,
+  snapshotClubs,
+  withheld,
 }: {
   fixtures: readonly Fixture[];
-  sides: readonly { team: LeagueTeam; roster: RosteredTeam | undefined; shown: boolean }[];
-  clubName: (id: number) => string;
+  sides: readonly { roster: RosteredTeam | undefined; detail: LineupDetail | undefined }[];
+  snapshotClubs: readonly Club[];
+  withheld: ReactNode;
 }) {
-  const involved = sides.map(({ team, roster, shown }) => ({
-    team,
-    shown,
-    byFixture: roster === undefined ? new Map() : fixtureInvolvement(roster, fixtures),
-  }));
-  const ours = fixtures.filter((fixture) =>
-    involved.some(({ byFixture }) => (byFixture.get(fixture.id) ?? []).length > 0),
+  const clubs = new Map(snapshotClubs.map((club) => [club.id, club]));
+  // A club's place in the real table, for each row's blue blocks, as the Live tab sets them.
+  const places = new Map(
+    realTable(await seasonFixtures(), snapshotClubs).map((row, at) => [row.clubId, at + 1]),
   );
+  const involved = sides.map(({ roster }) => (roster === undefined ? new Map() : fixtureInvolvement(roster, fixtures)));
+  const ours = byKickoff(fixtures.filter((f) => involved.some((byFixture) => (byFixture.get(f.id) ?? []).length > 0)));
 
   if (ours.length === 0) {
     return (
       <section className={PANEL}>
-        <Nothing title="No matches yet">
-          Neither squad holds a player in this round&rsquo;s fixtures.
-        </Nothing>
+        <Nothing title="No matches yet">Neither squad holds a player in this round&rsquo;s fixtures.</Nothing>
       </section>
     );
   }
 
   return (
     <section className={PANEL}>
-      <ul className="flex flex-col gap-2">
+      {withheld}
+      <ul className="cm-rows flex flex-col">
         {ours.map((fixture) => (
-          <li key={fixture.id} className="flex flex-col gap-1 border-b border-line pb-2 last:border-0">
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="min-w-0 truncate font-chrome text-sm font-bold lg:text-base">
-                {clubName(fixture.homeClubId)} v {clubName(fixture.awayClubId)}
-              </span>
-              <Score fixture={fixture} />
-            </div>
-            {/* The clock, which is what this tab is for before kick-off. */}
-            <span className="numeric text-2xs text-faint">
-              {fixture.kickoff === null ? "Kick-off TBC" : londonDayAndTime(fixture.kickoff)}
-            </span>
-            <div className="grid grid-cols-2 gap-2">
-              {involved.map(({ team, shown, byFixture }) => (
-                <Held
-                  key={team.teamId}
-                  men={shown ? (byFixture.get(fixture.id) ?? []) : []}
-                  align={team.teamId === sides[0]?.team.teamId ? "text-left" : "text-right"}
-                />
+          <li key={fixture.id} className="flex flex-col">
+            <ScoreRow
+              home={scoreSide(clubs.get(fixture.homeClubId), places)}
+              away={scoreSide(clubs.get(fixture.awayClubId), places)}
+              score={
+                fixture.homeScore === null || fixture.awayScore === null
+                  ? null
+                  : { home: fixture.homeScore, away: fixture.awayScore }
+              }
+              pending={fixture.kickoff === null ? "TBC" : londonDayAndTime(fixture.kickoff)}
+              clock={
+                fixture.status === "live" ? (
+                  <span className={`${CLOCK} numeric text-live`}>{fixture.minutes}&prime;</span>
+                ) : fixture.status === "finished" ? (
+                  <span className={`${CLOCK} text-faint`}>FT</span>
+                ) : null
+              }
+              href={`${MATCH}/${fixture.id}`}
+            />
+            <div className="grid grid-cols-2 divide-x divide-line bg-surface">
+              {sides.map((side, at) => (
+                <Men key={at} men={fixtureMen(side.detail, fixture.id)} end={at === 0} />
               ))}
             </div>
           </li>
@@ -150,38 +143,23 @@ export function ScoresTab({
   );
 }
 
-/** The score, or the state where there is not one yet.
- *
- *  Its own three lines rather than the fixture scale, which colours a club's OPPOSITION
- *  with FPL's difficulty on it — a different question with a different subject.
- *  A dash apiece before kick-off rather than `0-0`: an unplayed match has no
- *  score, and a nought is a claim (DESIGN §7). */
-function Score({ fixture }: { fixture: Fixture }) {
-  return (
-    <span className="numeric shrink-0 text-sm font-bold text-info lg:text-base">
-      {fixture.status === "upcoming"
-        ? "v"
-        : `${fixture.homeScore ?? "\u2014"}\u2013${fixture.awayScore ?? "\u2014"}`}
-    </span>
-  );
-}
+/** The state of a match beside its score, as the Live tab sets it. */
+const CLOCK = "text-sm font-bold uppercase lg:text-base";
 
-/** One side's men in one fixture. Empty where the side holds nobody in it — and
- *  empty too where his eleven is not public, because naming the men he has in a
- *  match is naming men in his squad. */
-function Held({
-  men,
-  align,
-}: {
-  men: readonly { code: number; name: string }[];
-  align: string;
-}) {
-  if (men.length === 0) return <div />;
+/** One manager's men in one match, set against the centre rule; a reserve is dimmed, his figure uncounted. */
+function Men({ men, end }: { men: readonly FixtureMan[]; end: boolean }) {
   return (
-    <ul className={`flex min-w-0 flex-col ${align}`}>
-      {men.map((man) => (
-        <li key={man.code} className="min-w-0 truncate text-2xs text-muted lg:text-xs">
-          {man.name}
+    <ul className="flex min-w-0 flex-col py-1">
+      {men.map(({ player, reserve, scored }) => (
+        <li
+          key={player.rostered.slot.fantraxId}
+          className={`flex min-w-0 items-baseline gap-1.5 px-2 py-0.5 text-sm ${end ? "flex-row-reverse text-right" : ""} ${reserve ? "text-muted" : ""}`}
+          title={reserve ? "On the bench: not counted" : undefined}
+        >
+          <span className="min-w-0 truncate font-chrome font-bold">{playerName(player.rostered)}</span>
+          <span className={`numeric shrink-0 ${reserve ? "" : "text-info"}`}>
+            {scored && player.points != null ? player.points : DASH}
+          </span>
         </li>
       ))}
     </ul>
