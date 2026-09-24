@@ -57,12 +57,8 @@ const pct = (m: number, of: number) => (m / of) * 100;
 
 export default function CmGround({
   children,
-  /** Fill the column rather than bleeding through the page's gutters.
-   *
-   *  **For a pitch standing BESIDE something.** Bleeding is right when the pitch
-   *  is the widest thing on the screen and gains from every pixel; it is wrong
-   *  in a two-column layout, where the pitch would run out under the list. The
-   *  squad screen sets this and the head-to-head does not. */
+  /** Fill the column rather than bleeding through the page's gutters: for a pitch
+   *  beside something. The head-to-head's desk pair gets the same from `.pitch-pair`. */
   inColumn = false,
 }: {
   children: ReactNode;

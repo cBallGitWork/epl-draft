@@ -44,6 +44,19 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Safari drew every pitch differently from Chrome, and nothing we run is Safari — measured 24 Sep 2026
+
+- **`.pitch` had a ratio and a height ceiling but no width.** Where the ceiling binds, Chrome keeps the width
+  and draws the grass flatter; WebKit keeps the ratio and narrows the box. On a 390×844 iPhone the head-to-head
+  pitch was 260px wide with names cut; Chrome drew 390. Every `tools/ui/` instrument drives Chrome, so it never
+  showed. `.pitch` now has `width: 100%` (the gutters too when it bleeds), and both engines measure identically
+  on the head-to-head, the squad sheet and the Prem match pitch at 390, 768, 1024, 1280 and 1440.
+- **The head-to-head's desk pair** (`.pitch-pair`, from `lg`) budgets 20rem, not the phone's 26.5, and bounds
+  each sheet's width by the height it has, so its grass keeps the 0.95 ratio. Before: 588×366 at 1440×790
+  (markings 1.7× too wide), 132–152px empty under the bench, and the two pitches overlapping by 24px.
+- **To look at WebKit**: Playwright 1.62.1's `playwright-core` in the npx cache has WebKit 26.5 installed
+  (`~/Library/Caches/ms-playwright/webkit-2336`); launch Chromium with `channel: "chrome"`.
+
 ## Projections is a scaffold over the sister model's run — decided 24 Sep 2026
 
 - **The export is the newest projection run's horizon** (GW6–17 today, 666 of 666 players bridged by

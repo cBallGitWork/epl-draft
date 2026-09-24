@@ -100,6 +100,26 @@
   }
 }
 
+/* The head-to-head's two sheets side by side from `lg`. Score row, tabs, bench and foot come to 19rem, plus a
+   breath, and each sheet is only as wide as that height allows, so the grass keeps its shape. */
+@media (min-width: 64rem) {
+  .pitch-pair .pitch-with-bench {
+    --pitch-page: 20rem;
+    width: 100%;
+    max-width: calc((100svh - var(--pitch-page)) * var(--pitch-ratio));
+    margin-inline: auto;
+  }
+
+  /* Two sheets in one row stay inside their columns; bleeding out, they overlapped by 24px. */
+  .pitch-pair .bleed {
+    margin-inline: 0;
+  }
+
+  .pitch-pair .pitch.bleed {
+    width: 100%;
+  }
+}
+
 /* Everything a pitch's page spends on what is not grass: the header and the
    toggle above it, `--page-foot` and the bench strip and the planner's way out
    below it, and the frame's own hoardings and bottom padding. `.pitch-figure`
@@ -218,12 +238,18 @@
      simply draws squatter: the ground is a viewBox that stretches, which is
      `CmGround`'s own note, so nothing inside it distorts. */
   max-height: calc(100svh - var(--pitch-page));
+  /* A width of its own, or WebKit keeps the ratio under that ceiling by narrowing the pitch (260px of a 390
+     iPhone) where Chrome squats it. With one, every engine draws what Chrome does. */
+  width: 100%;
   /* No ground of its own. What lies outside the taper is the page, the way it is
      on FPL's: a second green out there reads as a second surface, and the pitch
      stops being a thing sitting on the page and becomes a panel with a border. */
 }
 
-
+/* Bleeding, its width is the gutters' too. */
+.pitch.bleed {
+  width: calc(100% + 2 * var(--page-gutter));
+}
 
 /* The photograph on a player card, and the only thing on it with two bounds.
 
