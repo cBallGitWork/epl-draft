@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { checkLawro, pencil } from "./checks";
-import { SAMPLE, ctx, draft } from "./__fixtures__/column";
+import { SAMPLE, TEAMS, ctx, draft } from "./__fixtures__/column";
 
 const serious = (faults: ReturnType<typeof checkLawro>) => faults.filter((each) => each.severity !== "warn");
 
@@ -54,6 +54,17 @@ describe("checkLawro", () => {
       checkLawro(draft([["rs-bn", line], ...SAMPLE.slice(1)]), ctx()).filter((each) => each.check === "a league side at home").map((each) => each.evidence);
     expect(home("Oduya has Leeds, and Arsenal host them. Real Sociable win it.")).toEqual([]);
     expect(home("Real Sociable host Bayer Neverlusen. Real Sociable win it.")).toEqual(["Real Sociable host"]);
+  });
+
+  it("sends back a phrase said in two ties of the same column", () => {
+    const twice = draft([["rs-bn", "I'd want to see him warm up first. Real Sociable win it."], ["im-bt", "I'd want to see him warm up first. Borussia Teeth."], ...SAMPLE.slice(2)]);
+    const faults = checkLawro(twice, ctx()).filter((each) => each.check === "the same phrase as another tie");
+    expect(faults.map((each) => each.section)).toEqual(["im-bt"]);
+  });
+
+  it("sends back a possessive before a man's name", () => {
+    const faults = checkLawro(draft([["rs-bn", "Their Oduya has Leeds. I'll go with Real Sociable."], ...SAMPLE.slice(1)]), ctx({ names: [...Object.values(TEAMS), "Oduya"] }));
+    expect(faults.filter((each) => each.check === "a possessive before a name").map((each) => each.evidence)).toEqual(["Their Oduya"]);
   });
 
   it("sends back a chance in figures, which he says in words", () => {

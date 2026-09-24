@@ -58,7 +58,7 @@ const WIN = /\b(?:will|'ll|to|should|can|could|might|going to) (?:win|beat|edge|
 const BACKING = /\b(?:I fancy|I'm backing|I'll go with|I'm going with|I'll have|backing)\b/iu;
 const NEGATION = /\b(?:not|never|no)\b|n't/iu;
 const SCORELINE = /\b(?!50-50\b)\d{1,3}\s*[-–]\s*\d{1,3}\b/u;
-const LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 8, 120], gut: [2, 9, 130], column: 680, repeat: 5, men: 4, questions: 2 } as const;
+const LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 8, 120], gut: [2, 9, 130], column: 680, repeat: 5, echo: 4, men: 4, questions: 2 } as const;
 /** His verdict is his: a tie with no "I", "me" or "my" in it is a list of facts, not an opinion. */
 const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
 
@@ -127,6 +127,11 @@ function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckCon
   const sides = new Set(ctx.calls.flatMap((each) => [ctx.name(each.homeTeamId), ctx.name(each.awayTeamId)]));
   const men = ctx.names.filter((name) => !sides.has(name) && mentionAt(line, name) !== -1);
   if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
+  // "Their Ballard" is not how anybody talks (Craig): Ballard, or test31's Ballard.
+  for (const name of men) {
+    const owned = line.match(new RegExp(`\\b(?:their|his|our) ${escape(name)}\\b`, "iu"));
+    if (owned !== null) fault(key, "a possessive before a name", "send-back", owned[0]);
+  }
   if (call.close) for (const word of banned(line, COMFORTABLE)) fault(key, "an easy win on a close tie", "send-back", word);
   if (call.callsTeamId === null) return;
   const other = ctx.name(call.callsTeamId === call.homeTeamId ? call.awayTeamId : call.homeTeamId);
@@ -148,6 +153,13 @@ function columnRules(intro: string, prose: readonly [string, string][], ctx: Che
   for (const [phrase, cap] of LAWRO_CAPPED) {
     const used = (all.match(new RegExp(`(?<![\\p{L}])${escape(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
     if (used > cap) fault("column", "a habit used too often", "send-back", `${phrase} ×${used}`);
+  }
+  // Five ties in one column, and a reader hears the same words coming round (Craig).
+  const said = new Map<string, string>();
+  for (const [section, text] of prose) {
+    const echo = [...ngrams(text, LIMITS.echo, ctx.names)].find((gram) => said.has(gram) && said.get(gram) !== section);
+    if (echo !== undefined) fault(section, "the same phrase as another tie", "send-back", echo);
+    for (const gram of ngrams(text, LIMITS.echo, ctx.names)) if (!said.has(gram)) said.set(gram, section);
   }
   const before = new Set(ctx.past.slice(0, 6).flatMap((text) => [...ngrams(text, LIMITS.repeat, ctx.names)]));
   for (const [section, text] of prose) {

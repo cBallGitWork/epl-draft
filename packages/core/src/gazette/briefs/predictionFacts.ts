@@ -32,7 +32,8 @@ export function tieFacts(index: number, home: PredictionSide, away: PredictionSi
       return man === null ? null : `- ${tag}-man: ${described(man)}, for ${side.name}.`;
     }),
     ...sides.map(({ tag, side }) => (side.form === null ? null : `- ${tag}-form: ${form(side)}`)),
-    ...together(index, home, away),
+    // On a gut call the reason is the story: only the men who meet on the pitch get another line.
+    ...(call.instinct === null ? together(index, home, away) : together(index, home, away).slice(-1)),
     // Liverpool men are the whole story of a Liverpool call: nobody else gets a line.
     call.instinct === "liverpool" ? null : extra(sides, fresh),
   ];

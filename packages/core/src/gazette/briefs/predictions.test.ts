@@ -79,14 +79,14 @@ describe("buildLawroBrief", () => {
   });
 
   it("leads the tie with a main man's hard fixture, as the story it is", () => {
-    const liverpool = { opponent: "Liverpool", home: false, standing: "one of the three meanest defences in the league" };
+    const liverpool = { opponent: "Liverpool", home: false, standing: "one of the three toughest defences in the league" };
     const haaland = man("Haaland", 30, { club: "Manchester City", positions: ["F"], ease: 19, fixtures: [liverpool] });
     const text = brief([tie(side("cp", "Cold Palmer", 52.1, [man("Saka", 20)]), side("hg", "Haaland Globetrotters", 41.6, [haaland, man("Isak", 10)]))]) ?? "";
     const facts = text.split("\n").filter((line) => line.startsWith("- T1"));
     expect(facts[0]).toMatch(/^- T1-story: Haaland Globetrotters's Haaland, one of their main men/u);
     // Then one man for the side the story leaves out, never a roll call of every man and fixture.
     expect(facts.filter((line) => line.includes("-man:"))).toEqual([expect.stringContaining("T1H-man: Saka (M, Arsenal, home to Leeds United), for Cold Palmer")]);
-    expect(text).toContain("Haaland Globetrotters's Haaland, one of their main men, is away at Liverpool, one of the three meanest defences in the league, one of the hardest");
+    expect(text).toContain("Haaland Globetrotters's Haaland, one of their main men, is away at Liverpool, one of the three toughest defences in the league, one of the hardest");
   });
 
   it("names two men from one club, and two men whose clubs meet this round", () => {
@@ -148,7 +148,7 @@ describe("buildLawroBrief", () => {
   it("leaves out a man he has already written about, unless something is new for him", () => {
     const worn = new Set(["Saka", "Palmer"]);
     const again = tie(
-      side("cp", "Cold Palmer", 52.1, [man("Saka", 20), palmer, man("Rice", 9, { fixtures: [{ opponent: "Leeds United", home: true, standing: "one of the three leakiest defences in the league" }] })], worn),
+      side("cp", "Cold Palmer", 52.1, [man("Saka", 20), palmer, man("Rice", 9, { fixtures: [{ opponent: "Leeds United", home: true, standing: "one of the three softest defences in the league" }] })], worn),
       side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25)]),
     );
     const text = brief([again]) ?? "";
