@@ -71,7 +71,16 @@ capture season-specific tradeoffs.
   *"'Lean on' stop saying that. American ai shite"*). The brief once called a suspended man "a pick that
   gives them nothing" and the column printed "Signing a suspended player" about a man drafted weeks before;
   the line is gone. "lean on", "step up", "show up", "in for a long one" and their kin are on his banned
-  list, and the voice says plain northern English.
+  list, and the voice says plain northern English. The strength ratings read as an old man's words too,
+  toughest and softest defences, hardest-to-keep-out and weakest attacks (Craig: *"'One of the meanest'
+  stahhhp"*), with "mean", "leaky" and "lively" banned. A man out is replaced from the bench, so "a man
+  short", "down to ten" and "shorn" are banned (*"managers have subs"*), and a possessive before a surname
+  ("their Ballard") is sent back (*"sounds off"*).
+- **Five ties, one vocabulary** (Craig: *"Same terms over and over. Stands out when it's 5 previews in one
+  article"*). Two checks: the turns of phrase that came round in every run ("hard one", "no picnic", "blow
+  hot and cold", "find a way to waste", "ugly", "carries") are capped per column in `LAWRO_CAPPED`, and any
+  four-word run that appears in two ties of one column is sent back (`LIMITS.echo`). The cross-column
+  five-word check stays for week to week.
 - **The headline is the desk's**: `Lawro's Predictions: GW{n}` (Craig). He writes the deck, and no chip or
   kicker repeats the headline.
 - **Availability in words, never FPL's figure** (Craig: *"dont say percentages"*): 75 a slight doubt, 50 a

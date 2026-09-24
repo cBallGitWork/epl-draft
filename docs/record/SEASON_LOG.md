@@ -4151,4 +4151,11 @@ suspended player" about a man drafted weeks before), suspended and injured need 
 men from one club or two men meeting on the pitch are worth a line. The brief now says which men share
 a club and which face each other, plainly, after a phrasing of its own came back word for word. The
 cap went to four men, the tie to 120 words, and the pictures to a 6rem square.
+Then three more on the next shot: "one of the meanest" ("talk like an old man"), "shorn of one man"
+("managers have subs"), and "their Ballard". And a fourth on the whole: the same terms over and over,
+which stands out across five previews. The strength words in the brief were the source of the first,
+so they changed there; the other two are a banned list and a send-back; and the vocabulary got a cap on
+each phrase that had come round in every run, plus a check that no four-word run appears in two ties
+of one column. The run after that read "a hard place to defend", "four on the spin", "in this parish",
+"nick it", and named nobody as anybody's.
 
