@@ -88,8 +88,8 @@ capture season-specific tradeoffs.
   and "50-50" are banned outright.
 - **Real clubs, and a main man against a hard one leads** (Craig: *"you can reference the actual prem teams"*,
   *"high projected players also have tough opposition, its a good narrative"*). He names the man, his club and
-  the opponent; a key man with one of the round's hardest fixtures is the fact after the key men. FPL's own
-  club names ("Spurs") pass the names check.
+  the opponent; a key man with one of the round's hardest fixtures is the tie's story, its first fact.
+  FPL's own club names ("Spurs") pass the names check.
 - **Each tie prints the man its line names first**, from that tie's two squads (`featured`). Who each man is
   came off the bridge with his squad; the prose decides only which of them, so this is not the runtime name
   matching CLAUDE.md forbids. A line that names nobody prints no picture.
