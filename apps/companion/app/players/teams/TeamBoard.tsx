@@ -4,7 +4,7 @@ import ClubLabel from "../../components/football/ClubLabel";
 import { ROW_LINK } from "../../components/league/TableCells";
 import { MUTE, SortHead } from "../../components/league/TableHeads";
 import { standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
-import { BOARD, HEAD_CELL, HEAD_PLATE, INDEX_WIDTH, ROW_FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, EDGE_FADE, HEAD_CELL, HEAD_PLATE, INDEX_WIDTH, ROW_FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
 import { POOL, TEAMS } from "../routes";
 import { TEAM_COLUMNS, columnGroups, type TeamColumn } from "./columns";
 import type { TeamRow } from "./teamRows";
@@ -35,7 +35,7 @@ export default function TeamBoard({
   return (
     // Opaque, so the pinned club hides the figures scrolling under it; a fade says there is more to the right.
     <div className="relative">
-      <span aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-surface lg:hidden" />
+      <span aria-hidden className={EDGE_FADE} />
       <div className={`${SCROLL} cm-scroll bg-surface`}>
         <table className={`${BOARD} min-w-max`}>
           <caption className="sr-only">The twenty clubs, ordered by {sort.title.toLowerCase()}</caption>

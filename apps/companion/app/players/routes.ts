@@ -7,6 +7,11 @@
 // imports in it, on the rule `prem/routes.ts` keeps: a route spelled in eight
 // files is a route that can be renamed in seven of them.
 
+/** One value of a query parameter Next may hand as an array: the last wins, as a browser's does. */
+export function lastValue(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[value.length - 1] : value;
+}
+
 /** The board, and the stem a player's own page hangs off — `${POOL}/{fantraxId}`. */
 export const POOL = "/players";
 

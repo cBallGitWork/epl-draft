@@ -1,5 +1,5 @@
 import type { PoolRow } from "./pool";
-import { POOL } from "./routes";
+import { POOL, lastValue } from "./routes";
 import { COLUMNS, DEFAULT_SORT, columnFor } from "./columns";
 import { figureOf } from "./figure";
 import { groupFor, type PoolGroupKey } from "./groups";
@@ -69,20 +69,18 @@ export interface PlayersQuery {
 /** The last value wins, which is what a browser does with a repeated field and
  *  what a reader editing a URL by hand means. */
 export function playersQuery(raw: PlayersSearchParams): PlayersQuery {
-  const one = (value: string | string[] | undefined): string | undefined =>
-    Array.isArray(value) ? value[value.length - 1] : value;
   return {
-    compare: one(raw.compare),
-    q: one(raw.q),
-    pos: one(raw.pos),
-    status: one(raw.status),
-    sort: one(raw.sort),
-    dir: one(raw.dir),
-    all: one(raw.all),
-    group: one(raw.group),
-    per: one(raw.per),
-    club: one(raw.club),
-    panel: one(raw.panel),
+    compare: lastValue(raw.compare),
+    q: lastValue(raw.q),
+    pos: lastValue(raw.pos),
+    status: lastValue(raw.status),
+    sort: lastValue(raw.sort),
+    dir: lastValue(raw.dir),
+    all: lastValue(raw.all),
+    group: lastValue(raw.group),
+    per: lastValue(raw.per),
+    club: lastValue(raw.club),
+    panel: lastValue(raw.panel),
   };
 }
 

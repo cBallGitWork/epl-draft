@@ -8,6 +8,7 @@ import { getLeaguePool } from "../pool";
 import { getPlayerStats } from "../playerStats";
 import { footballNow, seasonFixtures } from "../../football";
 import { intelStrength } from "../../intel";
+import { lastValue } from "../routes";
 
 // Data › Teams: which clubs to buy into. Fantrax's points by club and position, its keepers' figures, our run of
 // the next six, and FPL's expected numbers (Craig, 24 Sep 2026: "a team stats section … cm-ify it").
@@ -23,8 +24,8 @@ export default async function TeamsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const asked = await searchParams;
-  const sort = teamColumn(one(asked.sort));
-  const descending = (one(asked.dir) ?? (sort.ascending ? "asc" : "desc")) === "desc";
+  const sort = teamColumn(lastValue(asked.sort));
+  const descending = (lastValue(asked.dir) ?? (sort.ascending ? "asc" : "desc")) === "desc";
 
   const [pool, lines, fixtures, snapshot] = await Promise.all([
     getLeaguePool(),
@@ -70,9 +71,4 @@ export default async function TeamsPage({
       <TeamBoard rows={sortedTeams(rows, sort, descending)} sort={sort} descending={descending} />
     </ScoutShell>
   );
-}
-
-/** Next hands a repeated query parameter as an array; the last one wins, as a browser's does. */
-function one(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[value.length - 1] : value;
 }
