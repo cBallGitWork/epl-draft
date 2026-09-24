@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { checkLawro, pencil } from "./checks";
-import { SAMPLE, ctx, draft } from "./__fixtures__/column";
+import { SAMPLE, TEAMS, ctx, draft } from "./__fixtures__/column";
 
 const serious = (faults: ReturnType<typeof checkLawro>) => faults.filter((each) => each.severity !== "warn");
 
@@ -15,7 +15,7 @@ describe("checkLawro", () => {
     const hard = faults.filter((each) => each.severity === "hard").map((each) => `${each.check}: ${each.evidence}`);
     expect(hard).toEqual(expect.arrayContaining(["line-up: benched", "line-up: starting against", "a decimal: 9.2", "a name not in the brief: Goliath", "a name not in the brief: Castell"]));
     const sent = faults.filter((each) => each.severity === "send-back").map((each) => each.evidence);
-    for (const tell of ["table-toppers", "shaping up", "clash", "boast", "firepower", "leaky", "belief", "delved", "waiver", "in a bid to", "turn the tide", "only time will tell", "all eyes", "projected", "welcome", ";", "...", "n't just"]) {
+    for (const tell of ["table-toppers", "shaping up", "clash", "boast", "firepower", "leaky", "belief", "delved", "in a bid to", "turn the tide", "only time will tell", "all eyes", "projected", "welcome", ";", "...", "n't just"]) {
       expect(sent).toContain(tell);
     }
   });
@@ -44,11 +44,27 @@ describe("checkLawro", () => {
     expect(hardIn("My career was full of goals. Real Sociable have won all three.")).toContain("a career claim nobody gave him");
   });
 
+  it("reads a word standing as its own sentence as a reaction, not a stranger", () => {
+    const hard = checkLawro(draft([["rs-bn", "I've no argument with Real Sociable. Lovely. Oduya has Leeds."], ...SAMPLE.slice(1)]), ctx());
+    expect(hard.filter((each) => each.check === "a name not in the brief")).toEqual([]);
+  });
+
   it("lets a real club host, and sends back a league side that does", () => {
     const home = (line: string) =>
       checkLawro(draft([["rs-bn", line], ...SAMPLE.slice(1)]), ctx()).filter((each) => each.check === "a league side at home").map((each) => each.evidence);
     expect(home("Oduya has Leeds, and Arsenal host them. Real Sociable win it.")).toEqual([]);
     expect(home("Real Sociable host Bayer Neverlusen. Real Sociable win it.")).toEqual(["Real Sociable host"]);
+  });
+
+  it("sends back a phrase said in two ties of the same column", () => {
+    const twice = draft([["rs-bn", "I'd want to see him warm up first. Real Sociable win it."], ["im-bt", "I'd want to see him warm up first. Borussia Teeth."], ...SAMPLE.slice(2)]);
+    const faults = checkLawro(twice, ctx()).filter((each) => each.check === "the same phrase as another tie");
+    expect(faults.map((each) => each.section)).toEqual(["im-bt"]);
+  });
+
+  it("sends back a possessive before a man's name", () => {
+    const faults = checkLawro(draft([["rs-bn", "Their Oduya has Leeds. I'll go with Real Sociable."], ...SAMPLE.slice(1)]), ctx({ names: [...Object.values(TEAMS), "Oduya"] }));
+    expect(faults.filter((each) => each.check === "a possessive before a name").map((each) => each.evidence)).toEqual(["Their Oduya"]);
   });
 
   it("sends back a chance in figures, which he says in words", () => {

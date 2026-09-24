@@ -2,7 +2,7 @@ import { BANNED, banned } from "../banned";
 import { strangers } from "../strangers";
 import { CORE_MARK, type PastLine } from "./past";
 import type { PredictionCall } from "./pick";
-import { masked, ngrams, numbersIn, sentences, wordCount } from "./prose";
+import { masked, mentionAt, ngrams, numbersIn, sentences, wordCount } from "./prose";
 import { COMFORTABLE, DESK_BANNED, LAWRO_BANNED, LAWRO_CAPPED, LAWRO_FAMOUS, LAWRO_NEVER, LINEUP_CLAIMS } from "./words";
 
 // The editor: every rule Lawro is given, checked after he files. A hard fault never prints; a
@@ -58,7 +58,9 @@ const WIN = /\b(?:will|'ll|to|should|can|could|might|going to) (?:win|beat|edge|
 const BACKING = /\b(?:I fancy|I'm backing|I'll go with|I'm going with|I'll have|backing)\b/iu;
 const NEGATION = /\b(?:not|never|no)\b|n't/iu;
 const SCORELINE = /\b(?!50-50\b)\d{1,3}\s*[-–]\s*\d{1,3}\b/u;
-const LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 7, 80], gut: [2, 8, 95], column: 460, repeat: 5 } as const;
+const LIMITS = { sentence: 20, intro: [1, 4, 40], tie: [2, 8, 120], gut: [2, 9, 130], column: 680, repeat: 5, echo: 4, men: 4, questions: 2 } as const;
+/** His verdict is his: a tie with no "I", "me" or "my" in it is a list of facts, not an opinion. */
+const VERDICT = /\b(?:I|me|my)\b|\bI['’]/u;
 
 export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   const faults: Fault[] = [];
@@ -67,14 +69,16 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   const exempt = (list: readonly string[]) => list.filter((phrase) => !offered.includes(phrase.toLowerCase()));
   const never = LAWRO_NEVER.filter((word) => !ctx.facts.toLowerCase().includes(word.toLowerCase()));
   const known = new Set(numbersIn(ctx.facts));
+  const sides = new Set(ctx.calls.flatMap((call) => [ctx.name(call.homeTeamId), ctx.name(call.awayTeamId)]));
 
   const everywhere = (section: string, text: string, words: readonly string[]) => {
     for (const pattern of LINEUP_CLAIMS) if (pattern.test(text)) fault(section, "line-up", "hard", text.match(pattern)?.[0] ?? "");
     if (QUOTES.test(text)) fault(section, "quotation marks", "hard", text.match(QUOTES)?.[0] ?? "");
     if (/\d\.\d/u.test(text)) fault(section, "a decimal", "hard", text.match(/\d+\.\d+/u)?.[0] ?? "");
     for (const word of banned(text, never)) fault(section, "never", "hard", word);
-    // He writes in the first person, and "I'll" is a capital that is nobody.
-    for (const name of strangers(text, ctx.facts).filter((word) => !/^I['’]/u.test(word))) fault(section, "a name not in the brief", "hard", name);
+    // "I'll" is a capital that is nobody, and so is a word standing as its own sentence: "Lovely."
+    const alone = new Set(sentences(text).map((sentence) => sentence.replace(/[.?!]+$/u, "")));
+    for (const name of strangers(text, ctx.facts).filter((word) => !/^I['’]/u.test(word) && !alone.has(word))) fault(section, "a name not in the brief", "hard", name);
     for (const figure of numbersIn(text)) if (!known.has(figure)) fault(section, "a figure not in the brief", "hard", String(figure));
     const plain = masked(text, ctx.names);
     for (const word of [...banned(plain, BANNED), ...banned(plain, words)]) fault(section, "banned", "send-back", word);
@@ -91,10 +95,9 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
     }
     if (entry.backs !== call.callsTeamId) fault(key, "backs another side", "hard", String(entry.backs));
     prose.push([key, entry.line]);
-    tieRules(key, entry.line, call, ctx, fault);
+    tieRules(key, entry.line, call, ctx, sides, fault);
   }
 
-  const sides = ctx.calls.flatMap((call) => [ctx.name(call.homeTeamId), ctx.name(call.awayTeamId)]);
   for (const [section, text] of prose) {
     everywhere(section, text, exempt([...LAWRO_BANNED, ...LAWRO_FAMOUS]));
     for (const [check, pattern] of TICS) if (pattern.test(text)) fault(section, check, "send-back", text.match(pattern)?.[0] ?? "");
@@ -115,11 +118,19 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
 
 type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
 
-function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckContext, fault: Report): void {
+function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckContext, sides: ReadonlySet<string>, fault: Report): void {
   const [least, most, words] = call.instinct === null ? LIMITS.tie : LIMITS.gut;
   const count = sentences(line).length;
   if (count < least || count > most || wordCount(line) > words) fault(key, "length", "send-back", `${count} sentences, ${wordCount(line)} words`);
   if (SCORELINE.test(line)) fault(key, "a score in the prose", "hard", line.match(SCORELINE)?.[0] ?? "");
+  if (!VERDICT.test(line)) fault(key, "no verdict of his own", "send-back", line.slice(0, 60));
+  const men = ctx.names.filter((name) => !sides.has(name) && mentionAt(line, name) !== -1);
+  if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
+  // "Their Ballard" is not how anybody talks (Craig): Ballard, or test31's Ballard.
+  for (const name of men) {
+    const owned = line.match(new RegExp(`\\b(?:their|his|our) ${escape(name)}\\b`, "iu"));
+    if (owned !== null) fault(key, "a possessive before a name", "send-back", owned[0]);
+  }
   if (call.close) for (const word of banned(line, COMFORTABLE)) fault(key, "an easy win on a close tie", "send-back", word);
   if (call.callsTeamId === null) return;
   const other = ctx.name(call.callsTeamId === call.homeTeamId ? call.awayTeamId : call.homeTeamId);
@@ -137,10 +148,17 @@ function columnRules(intro: string, prose: readonly [string, string][], ctx: Che
   if (count < least || count > most || wordCount(intro) > words) fault("intro", "length", "send-back", `${count} sentences, ${wordCount(intro)} words`);
   const all = prose.map(([, text]) => text).join(" ");
   if (wordCount(all) > LIMITS.column) fault("column", "length", "send-back", `${wordCount(all)} words`);
-  if ((all.match(/\?/gu) ?? []).length > 1) fault("column", "more than one question", "send-back", "?");
+  if ((all.match(/\?/gu) ?? []).length > LIMITS.questions) fault("column", "more than two questions", "send-back", "?");
   for (const [phrase, cap] of LAWRO_CAPPED) {
     const used = (all.match(new RegExp(`(?<![\\p{L}])${escape(phrase)}(?![\\p{L}])`, "giu")) ?? []).length;
     if (used > cap) fault("column", "a habit used too often", "send-back", `${phrase} ×${used}`);
+  }
+  // Five ties in one column, and a reader hears the same words coming round (Craig).
+  const said = new Map<string, string>();
+  for (const [section, text] of prose) {
+    const echo = [...ngrams(text, LIMITS.echo, ctx.names)].find((gram) => said.has(gram) && said.get(gram) !== section);
+    if (echo !== undefined) fault(section, "the same phrase as another tie", "send-back", echo);
+    for (const gram of ngrams(text, LIMITS.echo, ctx.names)) if (!said.has(gram)) said.set(gram, section);
   }
   const before = new Set(ctx.past.slice(0, 6).flatMap((text) => [...ngrams(text, LIMITS.repeat, ctx.names)]));
   for (const [section, text] of prose) {

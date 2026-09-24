@@ -12,7 +12,7 @@ const CHATBOT = [
   "who knows", "anything can happen", "all eyes", "in the spotlight", "a tale of two", "clash of the titans",
   "the real story", "the bigger picture", "writes itself", "and then some", "sheer", "no stranger to",
   "force to be reckoned with", "under the radar", "dark horse", "one to watch", "keep an eye on", "let's", "here's",
-  "buckle up", "strap in", "without further ado", "next up", "stay tuned", "watch this space", "good luck",
+  "buckle up", "strap in", "without further ado", "next up", "stay tuned", "watch this space",
   "fingers crossed", "folks", "honestly", "frankly", "truth be told", "I have to say", "in my opinion", "personally",
   "I believe", "I feel", "literally", "truly", "genuinely", "incredibly", "hugely", "massively", "narrative",
   "momentum", "belief", "mentality", "statement", "send a message", "lay down a marker", "in a bid to",
@@ -41,7 +41,7 @@ const TIPSTER = [
 
 /** Jargon, and the machine this column does not have. */
 const JARGON = [
-  "the numbers", "projection", "projected", "Fantrax", "waiver", "waivers", "the wire", "free agent", "differential",
+  "the numbers", "projection", "projected", "Fantrax", "the wire", "differential",
   "template", "xG", "xA", "expected goals", "underlying", "metrics", "data", "analytics", "stats", "algorithm", "model",
   "AI", "computer", "spreadsheet", "low block", "high press", "gegenpress", "gegenpressing", "half-space", "inverted",
   "overload", "transition", "false nine", "double pivot", "progressive", "tactical", "tactically", "system",
@@ -51,9 +51,9 @@ const JARGON = [
 /** A chance in figures: he says out, injured or a doubt, never FPL's percentage. */
 const CHANCES = ["per cent", "percent", "%", "50-50", "fifty-fifty", "chance of playing"];
 
-/** The managers are ten friends: no cruelty, no feelings, no excuses, no gloating. */
+/** The managers are friends: a bad pick may be useless, the man who made it is never an idiot. */
 const MANAGERS = [
-  "clueless", "hopeless", "useless", "pathetic", "embarrassing", "shambles", "disgrace", "laughing stock", "idiot",
+  "clueless", "pathetic", "disgrace", "laughing stock", "idiot",
   "muppet", "clown", "donkey", "numpty", "plonker", "stupid", "incompetent", "bottled", "bottler", "choked", "sacked",
   "the sack", "gutted", "fuming", "furious", "devastated", "heartbroken", "over the moon", "sick as a parrot", "panic",
   "under pressure", "unlucky", "cruel", "bad luck", "fine margins", "robbed", "told you so", "called it", "nailed it",
@@ -67,11 +67,20 @@ const LEAKS = [
   "sub-editor", "the page",
 ];
 
+/** American, and the chatbot's own football: not a dour Lancastrian's. */
+const AMERICAN = ["lean on", "leans on", "leaning on", "rely on", "relies on", "carry the load", "step up", "steps up", "stepped up", "show up", "shows up", "showed up", "gives them nothing", "give them nothing", "big fat", "in for a long one", "in for a long afternoon"];
+
+/** Not an old man's football: a defence is tough or soft, an attack is hard to keep out or weak. */
+const ADJECTIVES = ["mean", "meaner", "meanest", "leakier", "leakiest", "lively", "sharpest attack", "sharpest attacks"];
+
+/** A man out is replaced from the bench (Craig): a side is never short-handed. */
+const TEN_MEN = ["shorn", "a man short", "a man light", "a man down", "men short", "men light", "down to ten", "short-handed", "short of a man"];
+
 /** Dialect is caricature. */
 const DIALECT = ["nowt", "owt", "summat", "reet", "ey up", "our kid", "Scouse", "Scouser"];
 
 /** Everything he may not write, checked after he files and sent back once. */
-export const LAWRO_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER, ...JARGON, ...CHANCES, ...MANAGERS, ...LEAKS, ...DIALECT];
+export const LAWRO_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER, ...JARGON, ...CHANCES, ...MANAGERS, ...LEAKS, ...AMERICAN, ...ADJECTIVES, ...TEN_MEN, ...DIALECT];
 
 /** The deck is the sub-editor's, so it skips the label words and may say "Lawro". */
 export const DESK_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER];
@@ -80,7 +89,9 @@ export const DESK_BANNED: readonly string[] = [...CHATBOT, ...HYPE, ...TIPSTER];
 export const LAWRO_CAPPED: readonly (readonly [phrase: string, most: number])[] = [
   ["mind you", 1], ["to be fair", 1], ["to be honest", 1], ["most definitely", 1], ["did he not", 1],
   ["have they not", 1], ["absolutely", 1], ["I fancy", 1], ["I'm backing", 1], ["I'll go with", 1],
-  ["come out on top", 1], ["on the bounce", 1], ["on paper", 1], ["go against", 1], ["going against", 1],
+  ["come out on top", 1], ["on the bounce", 1], ["afternoon", 2], ["hard one", 2], ["kind one", 1], ["no picnic", 1],
+  ["blow hot and cold", 1], ["due a fall", 1], ["find a way to waste", 1], ["ugly", 1], ["the sort", 1], ["the type", 1],
+  ["that lot", 2], ["settle", 1], ["settles", 1], ["being kind", 1], ["carries", 1], ["carry", 1], ["on paper", 1], ["go against", 1], ["going against", 1],
   ["gone against", 1], ["gut", 1], ["favourite", 2], ["favourites", 2], ["underdog", 1], ["underdogs", 1],
   ["upset", 1], ["haul", 1], ["blank", 1], ["home and hosed", 1], ["I'd be surprised", 1], ["that's about it", 1],
   ["put a shift in", 1], ["quality", 1], ["best man", 2], ["Liverpool men", 2], ["I think", 2], ["very", 2],

@@ -40,11 +40,11 @@ export const ctx = (over: Partial<CheckContext> = {}): CheckContext => ({
 });
 
 export const SAMPLE: [string, string][] = [
-  ["rs-bn", "Real Sociable have won all three and Oduya has Leeds. Bayer Neverlusen signed Pym and Kettle on Wednesday. They'll need more than two."],
+  ["rs-bn", "I've no argument with Real Sociable. They have won all three and Oduya has Leeds. Bayer Neverlusen signed Pym and Kettle on Wednesday. They'll need more than two."],
   ["im-bt", "On paper it's Inter Mittent. Their best man, Callum Reid, is a doubt with a hamstring. I'd want to see him warm up. Borussia Teeth, by the skin of them."],
-  ["nf-sc", "Nottingham Florist are favourites, just. Sporting Chance have three Liverpool men to their one. I once went 159 games without having Liverpool down to lose. I'm not starting on a Thursday."],
-  ["av-pa", "Agyeman gets Hull at home. Aston Vanilla have lost two on the bounce, and Crabtree goes to Arsenal. Plymouth Argos win this."],
-  ["st-rr", "Sheffield Thursday are without Mullan, who is suspended, and Pickering has Liverpool away. Rovers Return's Sousa has a hard one at Villa. It won't matter."],
+  ["nf-sc", "Nottingham Florist are favourites, just. Sporting Chance have three Liverpool men to their one. Three is more than one. I'm not starting on a Thursday."],
+  ["av-pa", "Agyeman gets Hull at home. I can't see Aston Vanilla stopping him. Aston Vanilla have lost two on the bounce, and Crabtree goes to Arsenal. Plymouth Argos win this."],
+  ["st-rr", "I've seen nothing from Sheffield Thursday. They are without Mullan, who is suspended, and Pickering has Liverpool away. Rovers Return's Sousa has a hard one at Villa. It won't matter."],
 ];
 
 export const draft = (ties: [string, string][] = SAMPLE, over: Partial<LawroDraft> = {}): LawroDraft => ({

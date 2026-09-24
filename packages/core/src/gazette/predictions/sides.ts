@@ -47,7 +47,6 @@ export interface PredictionSide extends PickSide {
   doubts: SquadMan[];
   /** The best man with one of the round's hardest fixtures for his line. */
   hard: SquadMan | null;
-  liverpoolMen: string[];
   backLine: SquadMan[];
   /** Men signed who arrive for this round, as the brief names them. */
   arrivals: readonly string[];
@@ -69,7 +68,6 @@ export function predictionSide(input: {
   const ranked = [...input.men].sort(byMatter);
   const fresh = ranked.filter((man) => !input.worn.has(man.name) || news(man));
   const best = ranked[0]?.horizon == null ? null : ranked[0];
-  const liverpoolMen = ranked.filter((man) => man.liverpool).map((man) => man.name);
   const backLine = ranked.filter((man) => man.positions.some((position) => position === "G" || position === "D"));
   const rated = backLine.flatMap((man) => (man.ease === null ? [] : [man.ease]));
   return {
@@ -78,13 +76,12 @@ export function predictionSide(input: {
     squad: ranked,
     projected: input.projected,
     bestManDoubt: best !== null && isDoubt(best.availability),
-    liverpool: liverpoolMen.length,
+    liverpool: ranked.filter((man) => man.liverpool).length,
     backLineEase: rated.length === 0 ? null : rated.reduce((sum, ease) => sum + ease, 0) / rated.length,
     keyMen: fresh.slice(0, PREDICTIONS.keyMen),
     best,
     doubts: ranked.slice(0, PREDICTIONS.doubtDepth).filter((man) => man.availability.state !== "fit"),
     hard: ranked.find((man) => man.ease !== null && man.ease > input.hardest - PREDICTIONS.hardFixtures) ?? null,
-    liverpoolMen,
     backLine,
     arrivals: input.arrivals,
     form: input.form,

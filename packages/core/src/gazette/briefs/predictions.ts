@@ -47,17 +47,18 @@ function tieBlock(index: number, count: number, tie: PredictionsTie, name: (team
   const heading = `TIE ${index} of ${count}: ${home.name} [${home.teamId}] v ${away.name} [${away.teamId}]`;
   const shape = `Write it in "ties" with homeTeamId "${home.teamId}" and awayTeamId "${away.teamId}"`;
   if (call.callsTeamId === null) {
-    return [heading, "NO CALL: the desk cannot call this tie. Write two or three sentences on the men who matter and back nobody.", ...tieFacts(index, home, away, call), `${shape}, and "backs" null.`].join("\n");
+    return [heading, "NO CALL: the desk cannot call this tie. Write two or three sentences and back nobody.", ...tieFacts(index, home, away, call), `${shape}, and "backs" null.`].join("\n");
   }
   const backing = name(call.callsTeamId);
   const favourite = call.instinct === null ? backing : name(call.callsTeamId === home.teamId ? away.teamId : home.teamId);
   const why =
     call.instinct !== null
-      ? `A GUT CALL: on paper this is close and ${favourite} are the favourites. You are going against them because of T${index}-gut. Give that reason in your own words, and no other, in two to five sentences.`
+      ? `A GUT CALL: on paper this is close and ${favourite} are the favourites. You are going against them because of T${index}-gut. Give that reason in your own words, and no other.`
       : call.close
-        ? "It is close. Two to five sentences."
-        : `${backing} are clear favourites. Two to five sentences.`;
-  return [heading, `YOUR CALL: ${backing}. ${why}`, ...tieFacts(index, home, away, call), `${shape}, and "backs" "${call.callsTeamId}". The page prints your prediction and the score under your words, so write neither.`].join("\n");
+        ? "It is close."
+        : `${backing} are clear favourites.`;
+  const order = `Your verdict on a side first, then ${call.instinct === null ? `T${index}-story if there is one` : `T${index}-gut`}, then the moan and the call. Four men at most.`;
+  return [heading, `YOUR CALL: ${backing}. ${why} ${order}`, ...tieFacts(index, home, away, call), `${shape}, and "backs" "${call.callsTeamId}". The page prints your prediction and the score under your words, so write neither.`].join("\n");
 }
 
 function recordBlock(record: PredictionRecord, name: (teamId: string) => string): string {

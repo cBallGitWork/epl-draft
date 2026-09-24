@@ -362,6 +362,8 @@ export const PREDICTIONS = {
   /** How many more Liverpool men the underdog must hold, and whose they are (FPL's club code). */
   liverpoolLead: 1,
   liverpoolCode: 14,
+  /** Liverpool reaches further than the football does: 159 BBC games without having them lose. */
+  liverpoolShare: 0.15,
   /** The brief's caps: key men a side, how deep it looks for doubts, what counts as a hard fixture. */
   keyMen: 3,
   /** How many of his last columns make a man old news, unless something is new for him. */

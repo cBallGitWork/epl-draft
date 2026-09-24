@@ -34,7 +34,7 @@ import PlayerImage from "../league/PlayerImage";
 // a wrong photograph is worse than none, because only one of the two looks like
 // an answer.
 
-type Rank = "splash" | "shoulder" | "brief" | "portrait";
+type Rank = "splash" | "shoulder" | "brief" | "portrait" | "tie";
 
 const BAND: Record<Rank, string> = {
   splash: "h-[8.5rem] @xl:h-[12rem]",
@@ -46,6 +46,8 @@ const BAND: Record<Rank, string> = {
   // his own height, so the whole portrait prints.
   portrait: "h-auto",
   brief: "h-14 w-14 shrink-0 rounded-none",
+  // Beside a tie in Lawro's column: a square his prose wraps round (Craig: "thumbnails can be bigger").
+  tie: "h-24 w-24 shrink-0 rounded-none",
 };
 
 /** How wide the cut-out stands in its band. */
@@ -54,6 +56,7 @@ const MAN: Record<Rank, string> = {
   shoulder: "w-[7rem]",
   portrait: "w-full",
   brief: "w-[3.25rem]",
+  tie: "w-[5.5rem]",
 };
 
 /** The crest watermark, oversized and half out of frame — a watermark and not a
@@ -64,6 +67,7 @@ const CREST: Record<Rank, number | null> = {
   shoulder: 128,
   portrait: 150,
   brief: null,
+  tie: null,
 };
 
 export default function Face({

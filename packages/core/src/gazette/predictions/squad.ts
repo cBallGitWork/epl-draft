@@ -58,7 +58,7 @@ function standing(code: number, measure: "attack" | "defence", table: SquadJoin[
   const place = table[measure].get(code);
   const size = table[measure].size;
   if (place === undefined) return null;
-  const words = measure === "attack" ? ["most dangerous attacks", "bluntest attacks"] : ["meanest defences", "leakiest defences"];
+  const words = measure === "attack" ? ["hardest attacks to keep out", "weakest attacks"] : ["toughest defences", "softest defences"];
   if (place <= EXTREME) return `one of the three ${words[0]} in the league`;
   if (place > size - EXTREME) return `one of the three ${words[1]} in the league`;
   return null;

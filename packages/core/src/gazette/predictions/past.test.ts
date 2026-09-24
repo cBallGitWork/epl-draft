@@ -5,7 +5,9 @@ describe("pastOffered", () => {
   const quiet = (length: number) => Array.from({ length }, () => "Nothing about himself.");
 
   it("offers the fired instinct's own line, and his first column nothing more", () => {
-    expect(pastOffered(["liverpool"], []).map((line) => line.id)).toEqual(["159"]);
+    expect(pastOffered(["doubt"], []).map((line) => line.id)).toEqual(["achilles"]);
+    // His Liverpool bias shows in his calls and never in a line about it.
+    expect(pastOffered(["liverpool"], [])).toEqual([]);
   });
 
   it("offers a line in turn only every fourth column, because everybody knows who he is", () => {
