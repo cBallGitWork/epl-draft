@@ -26,6 +26,7 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   news: [],
   pressers: [],
   lineups: null,
+  ahead: null,
   ...over,
 });
 
@@ -254,5 +255,21 @@ describe("newsdesk", () => {
 
   it("files no elevens when the export is not the round ahead's", () => {
     expect(newsdesk(desk({ lineups: null }), none, NOW).map((a) => a.kind)).not.toContain("predicted-xi");
+  });
+
+  it("stamps the Team Sheet and the elevens with the round they preview", () => {
+    // Between rounds FPL's current gameweek is the one just played: gw6's
+    // elevens filed as period 5 and sorted under last week's reports.
+    const thu = { key: "presser:gw5:2026-10-08", slug: "gw5-presser-2026-10-08", day: "2026-10-08" };
+    const lineups = { key: "predicted-xi:gw6", slug: "gw6-predicted-xi" };
+    const ahead = { period: 6, gameweek: 6 };
+    const filed = newsdesk(desk({ gameweek: 5, period: 5, pressers: [thu], lineups, ahead }), none, NOW);
+    expect(filed.filter((a) => a.kind === "presser" || a.kind === "predicted-xi").map((a) => a.round)).toEqual([
+      ahead,
+      ahead,
+    ]);
+    // A round the calendar cannot place stamps nothing, and the story keeps today's.
+    const unplaced = newsdesk(desk({ pressers: [thu], lineups }), none, NOW);
+    expect(unplaced.some((a) => a.round !== undefined)).toBe(false);
   });
 });

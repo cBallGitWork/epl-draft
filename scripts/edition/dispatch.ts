@@ -141,8 +141,9 @@ export function file(
     slug: assignment.slug,
     kind: assignment.kind,
     leagueId: ctx.leagueId,
-    period: ctx.period,
-    gameweek: ctx.snapshot.gameweek,
+    // A look-ahead story carries the round it previews, or it sorts with last week's.
+    period: assignment.round?.period ?? ctx.period,
+    gameweek: assignment.round?.gameweek ?? ctx.snapshot.gameweek,
     filedAt,
     // A preview piece dies at its kickoff; everything else leaves by
     // supersession or the cap.

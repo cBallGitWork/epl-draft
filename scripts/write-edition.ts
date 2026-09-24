@@ -5,6 +5,7 @@ import {
   clubById,
   composePaper,
   datedKickoffs,
+  fetchFixtures,
   fetchLeagueInfo,
   firstKickoff,
   gameweekStarted,
@@ -12,6 +13,7 @@ import {
   hasRoom,
   isCovered,
   locksAt,
+  mapFixtures,
   mapLeagueInfo,
   newsdesk,
   periodGameweeks,
@@ -86,10 +88,11 @@ async function main(): Promise<void> {
   const info = mapLeagueInfo(raw);
   if (info.teams.length === 0) return say("No teams yet. A paper needs a league.");
 
-  const kickoffs = datedKickoffs(snapshot.fixtures);
-  const round = periodGameweeks(info.scoringPeriods, kickoffs).find((period) =>
-    period.gameweeks.includes(snapshot.gameweek),
-  );
+  // The whole season's kickoffs: the snapshot holds one round, so it cannot place the next.
+  const season = await fetchFixtures().then(mapFixtures).catch(() => snapshot.fixtures);
+  const kickoffs = datedKickoffs(season);
+  const calendar = periodGameweeks(info.scoringPeriods, kickoffs);
+  const round = calendar.find((period) => period.gameweeks.includes(snapshot.gameweek));
   if (round === undefined) return say(`No Fantrax period covers gameweek ${snapshot.gameweek}.`);
 
   // The preview's window is lock-to-first-whistle, and it is a window rather
@@ -113,6 +116,7 @@ async function main(): Promise<void> {
   const sheet = await presserDesk({ facts, snapshot, byCode, now, lock, locked, say });
   // The elevens predict the round the pressers preview, so one clock serves both.
   const xi = readXi(sheet.gameweek);
+  const ahead = calendar.find((each) => each.gameweeks.includes(sheet.gameweek));
 
   const assignments = newsdesk(
     deskState({
@@ -125,6 +129,7 @@ async function main(): Promise<void> {
       started,
       lines: sheet.lines,
       xiGameweek: xi === null ? null : sheet.gameweek,
+      ahead: ahead === undefined ? null : { period: ahead.period, gameweek: sheet.gameweek },
     }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,

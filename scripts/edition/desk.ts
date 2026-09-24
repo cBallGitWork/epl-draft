@@ -33,6 +33,7 @@ export function deskState(input: {
   lines: readonly PresserLine[];
   /** The round the predicted elevens are for, or null when we do not hold it. */
   xiGameweek: number | null;
+  ahead: DeskState["ahead"];
 }): DeskState {
   const { snapshot, facts, clubs } = input;
   return {
@@ -55,6 +56,7 @@ export function deskState(input: {
             key: `predicted-xi:gw${input.xiGameweek}`,
             slug: `gw${input.xiGameweek}-predicted-xi`,
           },
+    ahead: input.ahead,
     dealsInWindow: facts.business.length,
     news: facts.news.map((story) => ({ key: story.item.key, slug: newsSlug(story.item.key) })),
     ties: facts.pairings.map((pairing) => ({
