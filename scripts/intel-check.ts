@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { fetchBootstrap, roundPlayed, shotIntel, squadIntel, touchIntel, xiFault } from "@epl/core";
-import type { IntelShots, IntelSquads, IntelTouches, IntelXi } from "@epl/core";
+import { fetchBootstrap, roundPlayed, shotIntel, squadIntel, strengthIntel, touchIntel, xiFault } from "@epl/core";
+import type { IntelShots, IntelSquads, IntelStrength, IntelTouches, IntelXi } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 import { INTEL_SEASON } from "./intel";
 
@@ -43,12 +43,11 @@ async function main(): Promise<void> {
     `  ${numbers} squad numbers` +
       (cleared > 0 ? `, ${cleared} of them shared with a club-mate` : ""),
   );
-  for (const source of squads.manifest.sources) {
-    console.log(`  built from ${source.path} (${age(source.mtime)})`);
-  }
+  builtFrom(squads.manifest);
 
   checkTouches();
   checkShots();
+  checkStrength();
 
   // One rolling file, the latest Scout has; its round is in the manifest.
   const xiPath = join(INTEL_ROOT, "xi", `${INTEL_SEASON}.json`);
@@ -126,9 +125,7 @@ function checkTouches(): void {
     `\ntouches: ${players.size} players, ${points} points, ` +
       `exported ${age(touches.manifest.exportedAt)}`,
   );
-  for (const source of touches.manifest.sources) {
-    console.log(`  built from ${source.path} (${age(source.mtime)})`);
-  }
+  builtFrom(touches.manifest);
 }
 
 /** The shots behind the analysis screen's map and the match screen's.
@@ -156,9 +153,19 @@ function checkShots(): void {
     `\nshots: ${taken.length} shots, ${byCode.size} players, ${fixtures} fixtures, ` +
       `exported ${age(shots.manifest.exportedAt)}`,
   );
-  for (const source of shots.manifest.sources) {
-    console.log(`  built from ${source.path} (${age(source.mtime)})`);
+  builtFrom(shots.manifest);
+}
+
+/** The club ratings behind the fixture planner: a warning, like the maps, because the planner draws blank without them. */
+function checkStrength(): void {
+  const strength = read<IntelStrength>(join(INTEL_ROOT, "strength", `${INTEL_SEASON}.json`));
+  if (strength === null) {
+    console.log("\nstrength: no export — the fixture planner will be empty.");
+    return;
   }
+  const clubs = strengthIntel(strength);
+  console.log(`\nstrength: ${clubs.size} clubs rated, exported ${age(strength.manifest.exportedAt)}`);
+  builtFrom(strength.manifest);
 }
 
 /** Whether FPL has finished the round this export predicts, or null when it will
@@ -170,6 +177,11 @@ async function askFpl(round: number): Promise<boolean | null> {
   } catch {
     return null;
   }
+}
+
+/** Each file an export was built from, and how old it is: "the export is fresh" is not "its sources are". */
+function builtFrom(manifest: { sources: { path: string; mtime: string | null }[] }): void {
+  for (const source of manifest.sources) console.log(`  built from ${source.path} (${age(source.mtime)})`);
 }
 
 /** A committed JSON file, or null when it is absent or will not parse. Both are

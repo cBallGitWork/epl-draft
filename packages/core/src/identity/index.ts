@@ -23,7 +23,7 @@ export type { Bridge, BridgeEntry, MappedEntry } from "./bridge";
 // keying a club asset or a palette off a Fantrax code has to translate first or
 // silently mis-colour every Brentford and Forest player. A lookup of two, not a
 // name-matcher — the boundary this barrel guards stays where it was.
-export { toFplClubCode } from "./clubCodes";
+export { toFantraxClubCode, toFplClubCode } from "./clubCodes";
 // The normaliser alone, and deliberately not the matcher's internals. A SCRIPT
 // that matches names once and writes a checked-in data file is what CODE_RULES
 // §3 allows, and it should fold "Groß" and "Ødegaard" the way the bridge does
