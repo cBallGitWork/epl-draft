@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { fetchBootstrap, roundPlayed, shotIntel, squadIntel, strengthIntel, touchIntel, xiFault } from "@epl/core";
-import type { IntelShots, IntelSquads, IntelStrength, IntelTouches, IntelXi } from "@epl/core";
+import { fetchBootstrap, projectionIntel, roundPlayed, shotIntel, squadIntel, strengthIntel, touchIntel, xiFault } from "@epl/core";
+import type { IntelProjections, IntelShots, IntelSquads, IntelStrength, IntelTouches, IntelXi } from "@epl/core";
 import { INTEL_ROOT } from "./paths";
 import { INTEL_SEASON } from "./intel";
 
@@ -48,6 +48,7 @@ async function main(): Promise<void> {
   checkTouches();
   checkShots();
   checkStrength();
+  checkProjections();
 
   // One rolling file, the latest Scout has; its round is in the manifest.
   const xiPath = join(INTEL_ROOT, "xi", `${INTEL_SEASON}.json`);
@@ -166,6 +167,19 @@ function checkStrength(): void {
   const clubs = strengthIntel(strength);
   console.log(`\nstrength: ${clubs.size} clubs rated, exported ${age(strength.manifest.exportedAt)}`);
   builtFrom(strength.manifest);
+}
+
+/** The projections behind the Projections tab: a warning, because the tab draws blank without them. */
+function checkProjections(): void {
+  const projections = read<IntelProjections>(join(INTEL_ROOT, "projections", `${INTEL_SEASON}.json`));
+  if (projections === null) {
+    console.log("\nprojections: no export — the Projections tab will be empty.");
+    return;
+  }
+  const players = projectionIntel(projections);
+  const run = projections.manifest.gameweek;
+  console.log(`\nprojections: ${players.size} players from GW${run}, exported ${age(projections.manifest.exportedAt)}`);
+  builtFrom(projections.manifest);
 }
 
 /** Whether FPL has finished the round this export predicts, or null when it will

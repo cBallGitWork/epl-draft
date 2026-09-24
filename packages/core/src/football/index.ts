@@ -114,6 +114,9 @@ export type { IntelShots, Shot } from "./intel/shots";
 // Each club's Dixon-Coles strength from the sister repo, ranked 1–20 as an opponent for the fixture planner.
 export { easeRanks, easeStep, plannerGameweeks, plannerRows, strengthIntel, strengthTable } from "./intel/strength";
 export type { ClubStrength, IntelStrength, PlannerCell, PlannerRow, PlannerView, StrengthRank } from "./intel/strength";
+// The sister model's projected FPL points per player per gameweek, for the Projections tab.
+export { nextGameweeks, projectedTotal, projectionIntel } from "./intel/projections";
+export type { IntelProjections, ProjectedPlayer, ProjectedGameweek } from "./intel/projections";
 export type { MatchSheet, MatchSheetLine, SheetRow } from "./matchSheet";
 // The same read at season scale — his career before this one. `seasons.ts` says
 // why it is a separate file and why its column set is as short as it is.
