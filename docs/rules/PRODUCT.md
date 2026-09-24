@@ -125,7 +125,8 @@ its own proportions instead:
 | A **control** — button, input, tab, way out | 36px | `lg:min-h-9` |
 | A **column head** | 28px, with its strip | see the exception below |
 
-Craig's call, and the phone keeps 44 at every size. One rule rather than a
+Craig's call, and the phone keeps 44 at every size. The target is 44 and a grey plate paints 32 of it
+(DESIGN §6): what a thumb can hit and what the eye sees are two measurements, and only the first is the floor. One rule rather than a
 judgement per component: `.cm-row` says nothing below `lg`, so adding it to a row
 cannot change what a phone sees. What it bought is ten teams on one screen
 where the game showed a division on one — `/league`'s rows are 29px against
