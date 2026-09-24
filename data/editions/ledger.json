@@ -235,9 +235,17 @@
       "wire:through-gw5",
       "news:https://www.bbc.co.uk/sport/football/articles/crq5x1n12xexo",
       "news:https://www.bbc.co.uk/sport/football/articles/c6qjk1122e9jo",
-      "news:https://www.bbc.co.uk/sport/football/articles/cmwyzjedq51lo"
+      "news:https://www.bbc.co.uk/sport/football/articles/cmwyzjedq51lo",
+      "news:https://www.bbc.co.uk/sport/football/articles/c6eq8eygy4e5o"
     ],
     "threads": [
+      {
+        "subject": "test3331's Scott under transfer interest",
+        "beat": "Chelsea reported to lead the race for the Bournemouth midfielder",
+        "status": "open",
+        "beats": 1,
+        "lastUsedAt": "2026-09-24T20:38:51.610Z"
+      },
       {
         "subject": "test3331's Scotland assets",
         "beat": "McBurnie recalled, joining Thomas in the international picture for test3331's squad.",
