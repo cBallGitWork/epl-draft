@@ -26,7 +26,7 @@ import { playerGrid } from "../[fantraxId]/grid";
 import { subject } from "../[fantraxId]/subject";
 import { gameLog } from "../[fantraxId]/scouting";
 import { getLeaguePool } from "../pool";
-import { ANALYSIS } from "../routes";
+import { ANALYSIS, lastValue } from "../routes";
 import { intelShots, intelTouches } from "../../intel";
 import { seasonFixtures } from "../../football";
 import { SECTION_BAR, phoneShows } from "@/app/desk";
@@ -72,14 +72,14 @@ export default async function ComparePage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const asked = await searchParams;
-  const a = one(asked.a);
+  const a = lastValue(asked.a);
   // A man is never set against himself: `?a=X&b=X` collapses to the one-man screen.
-  const wanted = one(asked.b);
+  const wanted = lastValue(asked.b);
   const b = wanted === a ? undefined : wanted;
-  const qa = one(asked.qa) ?? "";
-  const qb = one(asked.qb) ?? "";
-  const view: View = VIEWS.find((entry) => entry.key === one(asked.view))?.key ?? "figures";
-  const recent = one(asked.range) === String(RECENT);
+  const qa = lastValue(asked.qa) ?? "";
+  const qb = lastValue(asked.qb) ?? "";
+  const view: View = VIEWS.find((entry) => entry.key === lastValue(asked.view))?.key ?? "figures";
+  const recent = lastValue(asked.range) === String(RECENT);
 
   const [pool, fixtures] = await Promise.all([getLeaguePool(), seasonFixtures()]);
   const rows = "unavailable" in pool ? [] : pool.rows;
@@ -267,10 +267,6 @@ export default async function ComparePage({
   );
 }
 
-/** Next hands a repeated query parameter as an array; the last one wins, as a browser's does. */
-function one(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[value.length - 1] : value;
-}
 
 /** The tell from a side that refused, or null. */
 function refusal(side: Awaited<ReturnType<typeof subject>> | null): string | null {

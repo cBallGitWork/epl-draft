@@ -44,6 +44,18 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## Data's Team Stats keeps FPL's counts off a Fantrax board — decided 24 Sep 2026
+
+- **Fantrax's figures only, where Fantrax has one**: points by club and by the position Fantrax lists, the
+  points nobody owns, and clean sheets and goals against off Fantrax's keeper lines (they match FPL's club
+  figures for 19 of 20 clubs; Chelsea's second keeper is missing from the pool read, so its GA reads 10
+  against FPL's 12). FPL contributes only what Fantrax does not publish: xG, xA and xGC.
+- **FPL's squad xGC is divided by eleven.** `clubStats` adds every man's expected goals conceded, so each
+  chance against is counted once per man on the pitch; eleven share one (exact except after a red card).
+  Prem's own "Expected conceded" category still prints the undivided sum (Arsenal 44.4, having conceded 4).
+- **Grouped by Fantrax's club code**, respelled with `toFplClubCode`, never through the bridge, which would
+  drop the 115 men it has not settled.
+
 ## The fixture planner ranks opponents by our strength model — decided 24 Sep 2026
 
 - **The ranks are ours**: the sister repo's Dixon-Coles strength (`strength/{season}.json`, bridged to FPL club

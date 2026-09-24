@@ -20,9 +20,9 @@ route is the same route — only its frame and its place in the app changed.
   takes the bar every other subject-without-a-colour takes.
 - **On the phone's bar, fourth** (Craig, 24 Sep 2026: *"data needs to be at the bottom"*), after Comps.
   It sat behind `More` until then. DESIGN §2 carries the bar and its ceiling of six.
-- **Its views**: Players, Compare and Planner, on `players/PoolNav` (Overview and Analysis until 24 Sep; the
-  keys `pool` and `analysis` did not change). Teams and Projections join the strip as they land (Craig's
-  labels: Players · Compare · Teams · Planner · Projections).
+- **Its views**: Players, Compare, Teams and Planner, on `players/PoolNav` (Overview and Analysis until 24 Sep;
+  the keys `pool` and `analysis` did not change). Projections joins the strip when it lands (Craig's labels:
+  Players · Compare · Teams · Planner · Projections).
 
 ## The board as redesigned, 24 Sep 2026
 

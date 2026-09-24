@@ -7,6 +7,11 @@
 // imports in it, on the rule `prem/routes.ts` keeps: a route spelled in eight
 // files is a route that can be renamed in seven of them.
 
+/** One value of a query parameter Next may hand as an array: the last wins, as a browser's does. */
+export function lastValue(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[value.length - 1] : value;
+}
+
 /** The board, and the stem a player's own page hangs off — `${POOL}/{fantraxId}`. */
 export const POOL = "/players";
 
@@ -19,6 +24,9 @@ export function playerHref(fantraxId: string): string {
  *  extracted: two sites, and one completes a pair being chosen while the other
  *  reverses a finished one. §1 leaves two alone. */
 export const ANALYSIS = "/players/analysis";
+
+/** Data's club board: every real club as a fantasy manager reads it. */
+export const TEAMS = "/players/teams";
 
 /** The fixture planner: every club's next six opponents, ranked by our strength model. */
 export const PLANNER = "/players/planner";

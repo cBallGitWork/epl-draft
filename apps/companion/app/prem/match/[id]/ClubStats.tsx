@@ -6,7 +6,7 @@ import Section from "../../../components/shell/Section";
 import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
 import { ROW_LINK } from "../../../components/league/TableCells";
 import { MUTE, SortHead } from "../../../components/league/TableHeads";
-import { BOARD, HEAD_CELL, ROW_FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, EDGE_FADE, HEAD_CELL, ROW_FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 import { MaybeCard } from "./PlayerCardButton";
 import SubNote from "./SubNote";
 import { COLUMNS, STANDOUT, sorted, type StatLine, type StatSort } from "./statColumns";
@@ -81,7 +81,7 @@ export default function ClubStats({
       {/* Opaque, so the pinned name hides the figures scrolling under it; CM's bar says there is more to the right,
           and on a phone a fade at the right edge says so before the bar is in view (Craig, 23 Sep 2026). */}
       <div className="relative">
-      <span aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-surface lg:hidden" />
+      <span aria-hidden className={EDGE_FADE} />
       <div
         className={`${SCROLL} cm-scroll cm-index-scoped bg-surface`}
         style={clubIndex(club)}

@@ -5,7 +5,7 @@ import PositionTile, { TILE_WIDTH } from "../components/league/PositionTile";
 import type { StandoutCut } from "../components/league/standout";
 import { activeSort, sortHref } from "./query";
 import type { PlayersQuery } from "./query";
-import { BOARD, HEAD_CELL, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, EDGE_FADE, HEAD_CELL, ROW_RULE, SCROLL } from "@/app/desk";
 import Cell, { Lead } from "./Cell";
 
 // The pool as one sortable board: every column, phone-first, each sort a link so the server orders and the URL keeps it.
@@ -40,7 +40,7 @@ export default function PlayerTable({
   return (
     // Opaque, so the pinned lead hides the figures under it; a fade says there is more to the right.
     <div className="relative">
-      <span aria-hidden className="pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-surface lg:hidden" />
+      <span aria-hidden className={EDGE_FADE} />
       <div className={`cm-scroll bg-surface ${SCROLL}`}>
         <table className={BOARD}>
           <thead>

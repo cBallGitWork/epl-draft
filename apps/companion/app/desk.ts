@@ -57,6 +57,9 @@ export const ROW_HOVER = `${ROW_RULE} hover:bg-surface`;
 /** The wrapper that lets a phone reach a board's far columns. */
 export const SCROLL = "overflow-x-auto";
 
+/** A board that scrolls sideways says so under a thumb: a fade at its right edge, over the figures. */
+export const EDGE_FADE = "pointer-events-none absolute inset-y-0 right-0 z-20 w-8 bg-gradient-to-l from-surface lg:hidden";
+
 /** A board's frozen first column, head and cells alike. `bg-surface` is load-bearing: a
  *  transparent one lets the scrolled figures slide under the name. */
 export const STICKY_LEAD = "sticky left-0 z-10 bg-surface border-r border-line";
