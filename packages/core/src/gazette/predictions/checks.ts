@@ -69,6 +69,7 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
   const exempt = (list: readonly string[]) => list.filter((phrase) => !offered.includes(phrase.toLowerCase()));
   const never = LAWRO_NEVER.filter((word) => !ctx.facts.toLowerCase().includes(word.toLowerCase()));
   const known = new Set(numbersIn(ctx.facts));
+  const sides = new Set(ctx.calls.flatMap((call) => [ctx.name(call.homeTeamId), ctx.name(call.awayTeamId)]));
 
   const everywhere = (section: string, text: string, words: readonly string[]) => {
     for (const pattern of LINEUP_CLAIMS) if (pattern.test(text)) fault(section, "line-up", "hard", text.match(pattern)?.[0] ?? "");
@@ -94,10 +95,9 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
     }
     if (entry.backs !== call.callsTeamId) fault(key, "backs another side", "hard", String(entry.backs));
     prose.push([key, entry.line]);
-    tieRules(key, entry.line, call, ctx, fault);
+    tieRules(key, entry.line, call, ctx, sides, fault);
   }
 
-  const sides = ctx.calls.flatMap((call) => [ctx.name(call.homeTeamId), ctx.name(call.awayTeamId)]);
   for (const [section, text] of prose) {
     everywhere(section, text, exempt([...LAWRO_BANNED, ...LAWRO_FAMOUS]));
     for (const [check, pattern] of TICS) if (pattern.test(text)) fault(section, check, "send-back", text.match(pattern)?.[0] ?? "");
@@ -118,13 +118,12 @@ export function checkLawro(draft: LawroDraft, ctx: CheckContext): Fault[] {
 
 type Report = (section: string, check: string, severity: Severity, evidence: string) => void;
 
-function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckContext, fault: Report): void {
+function tieRules(key: string, line: string, call: PredictionCall, ctx: CheckContext, sides: ReadonlySet<string>, fault: Report): void {
   const [least, most, words] = call.instinct === null ? LIMITS.tie : LIMITS.gut;
   const count = sentences(line).length;
   if (count < least || count > most || wordCount(line) > words) fault(key, "length", "send-back", `${count} sentences, ${wordCount(line)} words`);
   if (SCORELINE.test(line)) fault(key, "a score in the prose", "hard", line.match(SCORELINE)?.[0] ?? "");
   if (!VERDICT.test(line)) fault(key, "no verdict of his own", "send-back", line.slice(0, 60));
-  const sides = new Set(ctx.calls.flatMap((each) => [ctx.name(each.homeTeamId), ctx.name(each.awayTeamId)]));
   const men = ctx.names.filter((name) => !sides.has(name) && mentionAt(line, name) !== -1);
   if (men.length > LIMITS.men) fault(key, "a roll call, more than four men", "send-back", men.join(", "));
   // "Their Ballard" is not how anybody talks (Craig): Ballard, or test31's Ballard.
