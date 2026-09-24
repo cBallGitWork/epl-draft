@@ -90,16 +90,16 @@ export default function Written({
           it went out under. Not decoration: every other figure on this page is
           thirty seconds old and this could be days old and still be the current
           edition. A reader is entitled to know which he is reading. */}
-      {/* A columnist's own card, as the BBC ran his: the photograph, the name, the billing. It
-          carries the credit, so the dateline under it does not repeat it. */}
+      {/* A columnist's banner, as the BBC ran his: the name, the billing, and him on the right. It
+          carries the credit, so the dateline over it does not repeat it. */}
       <Dateline story={story} turn={false} byline={columnist === null} className="pt-2.5" />
       {columnist !== null ? (
-        <div className="flex items-center gap-3 pt-3">
-          <ColumnistPhoto photo={columnist.photo} rank="card" />
-          <p className="flex flex-col gap-0.5 font-sans uppercase tracking-[0.12em]">
-            <span className="text-sm font-black text-ink">{story.reporter}</span>
-            <span className="text-2xs text-muted">{columnist.billing}</span>
+        <div className="mt-3 flex items-center justify-between gap-3 bg-raised pl-3 @xl:pl-4">
+          <p className="flex flex-col gap-0.5 font-sans uppercase">
+            <span className="text-lg font-black leading-tight tracking-[0.04em] text-ink @xl:text-2xl">{story.reporter}</span>
+            <span className="text-xs tracking-[0.12em] text-muted @xl:text-sm">{columnist.billing}</span>
           </p>
+          <ColumnistPhoto photo={{ ...columnist.photo, ...columnist.portrait }} rank="banner" />
         </div>
       ) : null}
 
@@ -132,7 +132,7 @@ export default function Written({
 
       {story.kind === "predictions" && story.ties !== undefined && story.ties.length > 0 ? (
         <div className="pt-4">
-          <Calls ties={story.ties} record={story.extras?.record} named={(teamId) => named.get(teamId) ?? DASH} />
+          <Calls ties={story.ties} record={story.extras?.record} named={(teamId) => named.get(teamId) ?? DASH} clubs={clubs} />
         </div>
       ) : null}
     </section>
