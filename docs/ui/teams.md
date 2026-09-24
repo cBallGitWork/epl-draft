@@ -18,7 +18,7 @@ and the club are pinned while the figures scroll on a phone; the desk shows ever
 | Keepers | CS, GA | Fantrax's keeper lines, summed |
 | FPL expected | xG, xA, xGC | FPL's squad figures; xGC divided by eleven, per team rather than per man |
 
-Standouts are lit in ink over the twenty (a fifth yellow, a tenth orange, red at the bad end: GA and xGC).
+No key line explains the run (Craig had it removed, 24 Sep 2026); the head's title does. Standouts are lit in ink over the twenty (a fifth yellow, a tenth orange, red at the bad end: GA and xGC).
 Sort is a link (`?sort=&dir=`); FPts descending by default, the run, GA and xGC open ascending, ties fall to
 points then name. A club opens the Players board at that club.
 

@@ -1,4 +1,4 @@
-import { nextGameweeks, projectedTotal, type ProjectedPlayer } from "@epl/core";
+import { PROJECTION_PARTS, nextGameweeks, type ProjectedPlayer, type ProjectionPart } from "@epl/core";
 import { byFigure } from "../../components/league/order";
 
 // The Projections board's rows: the sister model's FPL-scoring points for each gameweek in the window, a total and
@@ -20,24 +20,47 @@ export interface ProjectionRow extends Known {
   minutes: number | null;
 }
 
-/** Every projected man we can name, over the window. A man neither FPL nor the pool names is left out. */
+/** What the week columns show: every point, or the points one category earns. */
+export type ProjectionCategory = "points" | ProjectionPart;
+
+export const PROJECTION_CATEGORIES: readonly { value: ProjectionCategory; label: string }[] = [
+  { value: "points", label: "All points" },
+  { value: "goals", label: "Goals" },
+  { value: "assists", label: "Assists" },
+  { value: "cleanSheets", label: "Clean sheets" },
+  { value: "bonus", label: "Bonus" },
+  { value: "saves", label: "Saves" },
+  { value: "defcon", label: "Def. contributions" },
+  { value: "appearance", label: "Appearance" },
+];
+
+/** The category a URL asked for, or every point. */
+export function projectionCategory(asked: string | undefined): ProjectionCategory {
+  return (PROJECTION_PARTS as readonly string[]).includes(asked ?? "") ? (asked as ProjectionPart) : "points";
+}
+
+/** Every projected man we can name, over the window, in one category. A man neither FPL nor the pool names is left
+ *  out; a week the model has no reading for is a dash. */
 export function projectionRows(
   players: ReadonlyMap<number, ProjectedPlayer>,
   gameweeks: readonly number[],
   known: ReadonlyMap<number, Known>,
+  category: ProjectionCategory = "points",
 ): ProjectionRow[] {
   const rows: ProjectionRow[] = [];
   for (const player of players.values()) {
     const who = known.get(player.code);
     if (who === undefined) continue;
     const weeks = nextGameweeks(player, gameweeks);
+    const figures = weeks.map((week) => (week === null ? null : category === "points" ? week.points : (week.parts?.[category] ?? null)));
+    const read = figures.filter((figure): figure is number => figure !== null);
     const minutes = weeks.flatMap((week) => (week?.minutes == null ? [] : [week.minutes]));
     rows.push({
       ...who,
       code: player.code,
       club: player.club,
-      weeks: weeks.map((week) => week?.points ?? null),
-      total: projectedTotal(player, gameweeks),
+      weeks: figures,
+      total: read.length === 0 ? null : read.reduce((a, b) => a + b, 0),
       minutes: minutes.length === 0 ? null : Math.round(minutes.reduce((a, b) => a + b, 0) / minutes.length),
     });
   }

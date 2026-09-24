@@ -270,8 +270,8 @@ with its row here in the same commit.**
 | `SCROLL` | What a board is wrapped in so a phone can reach its far columns. | 14 sites |
 | `TAB` | One plate of a tab strip: the blue plate, filling its share of the row, label centred in the chrome face. Size and padding stay the caller's — `TabStrip` takes its own from a prop, `GroupNav` keeps a 44px floor that relaxes to 36. | 5 spellings, and one had already diverged: the wire picker was written with no `lg:text-sm`, so it sat at 9px on a desk where every other strip steps to 14 |
 | `HEAD_PLATE` · `HEAD_PLATE_END` | A column head on a stats board (`h-6`), left over a name and right over a figure. `TableHeads.PLATE` is the `h-7` twin over a table. An empty one is not a mistake — see `MUTE`. | 12 sites, 3 files |
-| `phoneShows(picked)` | A block a phone shows only while it is the view picked, a desk showing every one — the match screens' club and view switches (`?side=`, `?view=`). | 4 sites, 3 files |
-| `SECTION_BAR` | CM's blue title row across a panel, naming the section under it — the Overview's `Match Report`, and Action Zones' `Shots` and `Average Position`. A phone drops it with `max-lg:hidden` where a control row above already names the section in view. | 3 sites, 3 files |
+| `phoneShows(picked)` | A block a phone shows only while it is the view picked, a desk showing every one — the match screens' club and view switches (`?side=`, `?view=`). Compare stopped using it on 24 Sep 2026: one view at every width. | 5 sites, 4 files |
+| `SECTION_BAR` | CM's blue title row across a panel, naming the section under it — the Overview's `Match Report`, and Action Zones' `Shots` and `Average Position`. A phone drops it with `max-lg:hidden` where a control row above already names the section in view. Set in the chrome face (`font-chrome`) since 24 Sep 2026; it had inherited the text face. | 6 sites, 5 files |
 | `PANEL` | The default panel: a CM well holding a column of things. A caller with a reason keeps its own spacing and states it; a caller without one takes this. | 6 sites agreed already, 4 strays joined |
 | `PANEL_FLUSH` | The same well with no spacing of its own, for a panel whose single child manages it — a board, a ledger, a grid. A different decision from `PANEL`, not `PANEL` minus two utilities. | 6 sites |
 | `HEADING_PLATE` | A heading between two panels, on a plate of its own: DESIGN §2's "nothing prints on the bare ground". | 3 sites: both Bench headings and `/squad`'s "Around the league" (23 Sep 2026) |
@@ -283,6 +283,7 @@ with its row here in the same commit.**
 | `STICKY_LEAD` | A board's frozen first column. `bg-surface` is load-bearing: a transparent one lets the scrolled figures slide under the name. | 4 files |
 | `GAMEWEEK_HEAD` · `GAMEWEEK_TITLE` | A gameweek view's header row and title, shared with its loading skeleton so the page does not jump when it lands. | 5 files |
 | `DESK_ONLY` · `standDown()` | A column shown on the desk only; `standDown` keeps it when the table is sorted by it, or the sort arrow and `aria-sort` would hide with it. | 4 files |
+| `players/QuerySelect` · `clubOptions` | One URL parameter from a list: a GET form that navigates on change. Every Data select. | 3 selects in 2 files |
 
 **`.cm-index` owns its text outright** — size, weight and shadow, in `desk.css`,
 the way `.cm-bevel` owns its ink and its face. The twenty sites that draw a blue

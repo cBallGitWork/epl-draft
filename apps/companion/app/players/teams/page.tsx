@@ -9,7 +9,6 @@ import { getPlayerStats } from "../playerStats";
 import { footballNow, seasonFixtures } from "../../football";
 import { intelStrength } from "../../intel";
 import { lastValue } from "../routes";
-import { BOARD_KEY } from "@/app/desk";
 
 // Data › Teams: which clubs to buy into. Fantrax's points by club and position, its keepers' figures, our run of
 // the next six, and FPL's expected numbers (Craig, 24 Sep 2026: "a team stats section … cm-ify it").
@@ -57,16 +56,13 @@ export default async function TeamsPage({
   );
 
   return (
-    <ScoutShell current="teams" title="Team Stats" rows={0}>
+    <ScoutShell current="teams" rows={0}>
       {"unavailable" in pool ? (
         <FantraxSilent code={pool.unavailable}>
           Fantrax&apos;s points are missing because the pool would not answer; the run and FPL&apos;s figures are
           current.
         </FantraxSilent>
       ) : null}
-      <p className={BOARD_KEY}>
-        Run: the next {gameweeks.length} opponents&apos; mean rank, 1 the kindest · <span className="text-info">ours</span>
-      </p>
       <TeamBoard rows={sortedTeams(rows, sort, descending)} sort={sort} descending={descending} />
     </ScoutShell>
   );

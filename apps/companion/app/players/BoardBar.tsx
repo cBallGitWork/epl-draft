@@ -8,8 +8,8 @@ import { STATUS } from "./status";
 import { positionLabel } from "../positions";
 import { LABEL, PANEL, SECTION_BAR } from "@/app/desk";
 import { Carried, Chip, Count, Figures, PRESSABLE, Plates } from "./BoardControls";
-import ClubPicker from "./ClubPicker";
-import SortPicker from "./SortPicker";
+import QuerySelect from "./QuerySelect";
+import { COLUMNS } from "./columns";
 
 // Every control on the board: one row on the desk (search, the stat groups from `lg`, Per 90 from `xl`, Filter),
 // and under a thumb the row plus a sheet docked over the thumb rail. The sheet is URL state (`?panel=1`), so a
@@ -138,14 +138,26 @@ export default function BoardBar({
 
             <div className="grid grid-cols-2 gap-1.5">
               <Block label="Club">
-                <ClubPicker clubs={clubs} club={query.club ?? ""} action={POOL}>
+                <QuerySelect
+                  name="club"
+                  label="Club"
+                  value={query.club ?? ""}
+                  options={[{ value: "", label: "All clubs" }, ...clubs.map((code) => ({ value: code, label: code }))]}
+                  action={POOL}
+                >
                   <Carried query={query} except={["club"]} />
-                </ClubPicker>
+                </QuerySelect>
               </Block>
               <Block label="Sort by">
-                <SortPicker sort={activeSort(query).key} action={POOL}>
+                <QuerySelect
+                  name="sort"
+                  label="Sort by"
+                  value={activeSort(query).key}
+                  options={COLUMNS.filter((column) => column.key !== "name").map((c) => ({ value: c.key, label: c.label }))}
+                  action={POOL}
+                >
                   <Carried query={query} except={["sort", "dir"]} />
-                </SortPicker>
+                </QuerySelect>
               </Block>
             </div>
 

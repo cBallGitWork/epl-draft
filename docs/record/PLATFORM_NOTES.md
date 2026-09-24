@@ -136,8 +136,8 @@ well"*, *"Tighten the column headers too?"*. `docs/ui/players.md` carries the bo
 - **`/players` reads the reader's session** (`readerTeamId`) so his men read "Yours". The pool read stays
   team-agnostic and cached; only the render is per reader.
 - **Opp is gone** from the board, and `fixtureOnly` with it.
-- **The Data section drops its caption below `lg`** (`SectionShell captionOnPhone`); a Fantrax projection
-  still says so on a phone, above the board.
+- **The Data section draws no caption at any width** (since the second look, 24 Sep 2026; `SectionShell`'s
+  `caption` is optional); a Fantrax projection says so above the board.
 
 ## Draft and Prem share the Comps tab, and Data is on the bar — decided 24 Sep 2026
 

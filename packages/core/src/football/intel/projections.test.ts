@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  PROJECTION_PARTS,
   type IntelProjections,
   type ProjectedPlayer,
   nextGameweeks,
@@ -8,7 +9,7 @@ import {
 } from "./projections";
 
 function week(gw: number, points: number | null) {
-  return { gw, points, low: null, high: null, minutes: 80, start: 0.9, fixtures: 1 };
+  return { gw, points, low: null, high: null, minutes: 80, start: 0.9, fixtures: 1, parts: null };
 }
 
 const HAALAND: ProjectedPlayer = {
@@ -57,5 +58,20 @@ describe("projectedTotal", () => {
 
   it("is absent when no round in the window has one", () => {
     expect(projectedTotal(HAALAND, [10, 11])).toBeNull();
+  });
+});
+
+describe("a week's parts", () => {
+  it("keeps the categories it knows as readings and drops a figure that is not a number", () => {
+    const parted = { ...HAALAND, gameweeks: [{ ...week(6, 5), parts: { goals: 2.5, assists: "x", bonus: 0.5 } }] };
+    const read = projectionIntel(file([parted])).get(223094)?.gameweeks[0].parts;
+    expect(read?.goals).toBe(2.5);
+    expect(read?.assists).toBeNull();
+    expect(read?.saves).toBeNull();
+    expect(Object.keys(read ?? {})).toEqual([...PROJECTION_PARTS]);
+  });
+
+  it("is absent on an export that carries none", () => {
+    expect(projectionIntel(file([HAALAND])).get(223094)?.gameweeks[0].parts).toBeNull();
   });
 });

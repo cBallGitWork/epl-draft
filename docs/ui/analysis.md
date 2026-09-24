@@ -13,7 +13,7 @@ look at 1 player only"*), and a view called Compare that draws a single player i
 a name making a promise the screen does not keep. "Analysis" covers one or two,
 and covers figures, maps and attributes rather than any one of them.
 
-**The tab and caption read "Compare" again since 24 Sep 2026** (Craig's Data strip: Players · Compare · Team
+**The tab reads "Compare" again since 24 Sep 2026** (Craig's Data strip: Players · Compare · Team
 Stats · Fixture Planner · Projections). The route stays `/players/analysis`, and one man still works.
 
 **Two profile reads and never more.** `subject()` is one live, uncached
@@ -31,9 +31,10 @@ phone strip and no tie band. Where the sections below disagree with this one, th
 
 - **The pickers** share one row at every width, each box over the half of the bar it would change; the labels
   above them went (the bar names both men). Each box's accessible name says whom it would swap.
-- **One block at a time under a thumb**: a 44px strip, Figures · Shots · Key passes · Touches · Attributes
-  (`?view=`); the desk shows every block, maps on the left and numbers on the right. A view neither man has
-  is dimmed.
+- **One block at a time at every width**: a 44px strip, Figures · Shots · Key passes · Touches · Attributes
+  (`?view=`). The desk showed every block until Craig's *"just have the categories in sections like mobile"*
+  (24 Sep 2026); a map is centred at 768px at most. A view neither man has is dimmed. Season/Last 6 is hidden
+  on Attributes, which it never governed.
 - **Season or Last 6** (`?range=6`), with the window beside it as `GW1–5`. It governs the figures and every map;
   never the attributes, which are percentiles over the whole division. Last 6 is the last six gameweeks with a
   match finished, so until GW7 it is the season, and the readout says so. The figures over a window are his

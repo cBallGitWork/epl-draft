@@ -5,36 +5,47 @@ import PositionTile, { TILE_WIDTH } from "../../components/league/PositionTile";
 import { MUTE, SortHead } from "../../components/league/TableHeads";
 import { ROW_LINK } from "../../components/league/TableCells";
 import { positionsLabel } from "../../positions";
-import { BOARD, HEAD_CELL, LABEL, ROW_FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, EDGE_FADE, HEAD_CELL, LABEL, ROW_FIGURE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { standoutInk } from "../../components/league/standout";
+import { cutsFor } from "../standout";
 import { playerHref } from "../routes";
 import { projectionFigure, type ProjectionRow, type ProjectionSort } from "./rows";
 
-// The model's table: each man's projected FPL points for the window, the total last and bold, all in cyan (ours).
-// The phone carries position on the name's second line; the desk adds CM's tile and the minutes the model expects.
+// The model's table: minutes, the total and each week of the window, lit in ink like every Data board. The phone
+// carries position on the name's second line; the desk adds CM's tile.
 
 export default function ProjectionBoard({
   rows,
   gameweeks,
+  category,
   sort,
   descending,
   href,
 }: {
   rows: readonly ProjectionRow[];
   gameweeks: readonly number[];
+  /** What the week columns hold, for the heads' titles. */
+  category: string;
   sort: ProjectionSort;
   descending: boolean;
   /** Where a head's sort link points, given its key and the direction it would set. */
   href: (key: ProjectionSort, descending: boolean) => string;
 }) {
-  const heads: { key: ProjectionSort; label: string; title: string; desk?: true }[] = [
-    ...gameweeks.map((gw) => ({ key: `gw${gw}`, label: String(gw), title: `Gameweek ${gw}: projected FPL points` })),
-    { key: "tot", label: "Tot", title: `${gameweekSpan(gameweeks)} added up: FPL scoring, never Fantrax's` },
-    { key: "xmins", label: "xMins", title: "The minutes the model expects him to play, a week", desk: true },
+  // Minutes first, then the total, then the weeks (Craig, 24 Sep 2026).
+  const heads: { key: ProjectionSort; label: string; title: string }[] = [
+    { key: "xmins", label: "xMins", title: "The minutes the model expects him to play, a week" },
+    { key: "tot", label: "Tot", title: `${category}, ${gameweekSpan(gameweeks)} added up: FPL scoring, never Fantrax's` },
+    ...gameweeks.map((gw) => ({ key: `gw${gw}`, label: String(gw), title: `Gameweek ${gw}: ${category}, projected` })),
   ];
+  // Lit as the Players board lights a column: its best in orange, the rest of its top sixth in yellow.
+  const cuts = cutsFor(
+    heads.filter((head) => head.key !== "xmins"),
+    (head) => rows.map((row) => projectionFigure(row, head.key, gameweeks)),
+  );
 
   return (
-    // No edge fade: at 390 the board fits and its last column is the answer; at 320 the scroll bar says there is more.
     <div className="relative">
+      <span aria-hidden className={EDGE_FADE} />
       <div className={`cm-scroll bg-surface ${SCROLL}`}>
         <table className={BOARD}>
           <thead>
@@ -48,7 +59,7 @@ export default function ProjectionBoard({
               {heads.map((head) => (
                 <SortHead
                   key={head.key}
-                  width={head.desk ? "max-lg:hidden" : ""}
+                  width=""
                   compact
                   title={head.title}
                   href={href(head.key, head.key === sort ? !descending : true)}
@@ -65,15 +76,20 @@ export default function ProjectionBoard({
                 <td className={PIN_NAME}>
                   <Lead row={row} />
                 </td>
-                {row.weeks.map((points, at) => (
-                  <td key={gameweeks[at]} className={`${FIGURE} ${points === 0 ? "text-faint" : "text-info"}`}>
-                    {points === null ? DASH : points.toFixed(1)}
-                  </td>
-                ))}
-                <td className={`${FIGURE} font-bold text-info`}>{row.total === null ? DASH : row.total.toFixed(1)}</td>
-                <td className={`${FIGURE} text-info max-lg:hidden`}>
-                  {projectionFigure(row, "xmins", gameweeks) ?? DASH}
-                </td>
+                {heads.map((head) => {
+                  const figure = projectionFigure(row, head.key, gameweeks);
+                  const ink =
+                    figure === null || figure === 0
+                      ? "text-faint"
+                      : head.key === "xmins"
+                        ? ""
+                        : standoutInk(figure, cuts.get(head.key), "high");
+                  return (
+                    <td key={head.key} className={`${FIGURE} ${head.key === "tot" ? "font-bold" : ""} ${ink}`}>
+                      {figure === null ? DASH : head.key === "xmins" ? figure : figure.toFixed(1)}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
@@ -83,7 +99,7 @@ export default function ProjectionBoard({
   );
 }
 
-/** His crest and name, and under it (on a phone) his Fantrax position and club; a link when the pool holds him. */
+/** His crest and name, and under it (on a phone) his Fantrax position; a link when the pool holds him. */
 function Lead({ row }: { row: ProjectionRow }) {
   const crest = crestForShortName(row.club);
   const face = (
@@ -91,22 +107,19 @@ function Lead({ row }: { row: ProjectionRow }) {
       <span className="grid size-6 shrink-0 place-items-center">
         {crest ? <Image src={crest} alt="" width={20} height={20} className="size-5 object-contain" /> : null}
       </span>
-      <span className="flex min-w-0 flex-1 flex-col lg:flex-row lg:items-baseline lg:gap-2">
+      <span className="flex min-w-0 flex-1 flex-col">
         <span className={`min-w-0 truncate ${ROW_NAME}`}>
           <span className="lg:hidden">{row.name}</span>
           <span className="hidden lg:inline">{row.fullName}</span>
         </span>
-        <span className="flex min-w-0 items-baseline gap-1 text-2xs leading-tight lg:ml-auto lg:shrink-0">
-          <span className={`${LABEL} w-7 shrink-0 lg:hidden`}>{positionsLabel(row.positions) ?? DASH}</span>
-          <span className="text-muted">{row.club}</span>
-        </span>
+        <span className={`${LABEL} text-2xs leading-tight lg:hidden`}>{positionsLabel(row.positions) ?? DASH}</span>
       </span>
     </>
   );
   return row.fantraxId === null ? (
-    <span className={`${ROW_LINK} w-34 px-1.5 hover:no-underline lg:w-80`}>{face}</span>
+    <span className={`${ROW_LINK} w-34 px-1.5 hover:no-underline lg:w-64`}>{face}</span>
   ) : (
-    <Link href={playerHref(row.fantraxId)} className={`${ROW_LINK} w-34 px-1.5 lg:w-80`}>
+    <Link href={playerHref(row.fantraxId)} className={`${ROW_LINK} w-34 px-1.5 lg:w-64`}>
       {face}
     </Link>
   );

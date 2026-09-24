@@ -66,6 +66,7 @@ const FIELDS = [
   "per",
   "club",
   "panel",
+  "cat",
 ] as const;
 
 /** The rest of the query, as hidden inputs, for a GET form to carry.
@@ -124,7 +125,7 @@ export const PLATE =
 /** A plate you press, in its resting state — the grey bevel plus the geometry.
  *
  *  **Three sites, counted 10 Sep 2026**: the `Find` button, the `Filter` link
- *  and an unpressed `Chip`. `ClubPicker`'s `<noscript>` button is a fourth and
+ *  and an unpressed `Chip`. `QuerySelect`'s `<noscript>` button is a fourth and
  *  differs only in having no hover, which is an oversight rather than a
  *  decision — a plate you can press should light under the pointer whether or
  *  not a script is running. Folded in.

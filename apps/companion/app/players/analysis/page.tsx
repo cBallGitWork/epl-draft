@@ -30,7 +30,6 @@ import { getLeaguePool } from "../pool";
 import { ANALYSIS, lastValue } from "../routes";
 import { intelShots, intelTouches } from "../../intel";
 import { seasonFixtures } from "../../football";
-import { SECTION_BAR, phoneShows } from "@/app/desk";
 
 // Two players, side by side.
 //
@@ -114,7 +113,7 @@ export default async function ComparePage({
   const refused = refusal(left) ?? refusal(right);
   if (refused !== null) {
     return (
-      <ScoutShell current="analysis" title="Compare" rows={0}>
+      <ScoutShell current="analysis" rows={0}>
         {picker}
         <Nothing title="Fantrax would not answer for one of them" code={refused}>
           A profile is one live read each and this one refused. Nothing is cached for it, so
@@ -126,7 +125,7 @@ export default async function ComparePage({
 
   if (one_ === null || names.a === null) {
     return (
-      <ScoutShell current="analysis" title="Compare" rows={0}>
+      <ScoutShell current="analysis" rows={0}>
         {picker}
         <Nothing title="A player, or two">
           Search for anybody in the pool. One man fills the screen on his own; pick a second
@@ -170,7 +169,7 @@ export default async function ComparePage({
   const dim = VIEWS.filter((entry) => entry.key in has && !has[entry.key as keyof typeof has]).map((entry) => entry.key);
 
   return (
-    <ScoutShell current="analysis" title="Compare" rows={0}>
+    <ScoutShell current="analysis" rows={0}>
       {picker}
 
       <CompareBar
@@ -182,64 +181,51 @@ export default async function ComparePage({
         }
       />
 
-      <div className="lg:hidden">
-        <TabStrip
-          label="Compare views"
-          tabs={VIEWS.map((entry) => ({ ...entry, href: href({ view: entry.key }) }))}
-          current={view}
-          dim={dim}
-          labels="word"
-        />
-      </div>
+      {/* One category at a time at every width (Craig, 24 Sep 2026: "desktop like mobile"). */}
+      <TabStrip
+        label="Compare views"
+        tabs={VIEWS.map((entry) => ({ ...entry, href: href({ view: entry.key }) }))}
+        current={view}
+        dim={dim}
+        labels="word"
+      />
 
       {/* The range governs the figures and every map; the attributes are a season's percentiles. */}
-      <div className={`flex items-center gap-1.5 ${view === "attributes" ? "max-lg:hidden" : ""}`}>
-        <Chip on={!recent} href={href({ range: undefined })}>
-          Season
-        </Chip>
-        <Chip on={recent} href={href({ range: String(RECENT) })}>
-          Last {RECENT}
-        </Chip>
-        <span className="numeric px-1.5 text-sm text-muted">{span}</span>
-      </div>
-
-      <div className="grid gap-3 lg:grid-cols-2 lg:items-start">
-        <div className="flex min-w-0 flex-col gap-3">
-          <CompareMap
-            title="Shots"
-            men={men.map((each) => ({ name: each.name, club: each.club, shots: each.shots }))}
-            passes={false}
-            window={told}
-            className={phoneShows(view === "shots")}
-          />
-          <CompareMap
-            title="Key passes"
-            men={men.map((each) => ({ name: each.name, club: each.club, shots: each.keyPasses }))}
-            passes
-            window={told}
-            className={phoneShows(view === "passes")}
-          />
+      {view === "attributes" ? null : (
+        <div className="flex items-center gap-1.5">
+          <Chip on={!recent} href={href({ range: undefined })}>
+            Season
+          </Chip>
+          <Chip on={recent} href={href({ range: String(RECENT) })}>
+            Last {RECENT}
+          </Chip>
+          <span className="numeric px-1.5 text-sm text-muted">{span}</span>
         </div>
-        <div className="flex min-w-0 flex-col gap-3">
-          <div className={phoneShows(view === "figures")}>
-            <Figures
-              a={first.played}
-              b={second?.played ?? null}
-              names={{ a: names.a, b: second === null ? null : names.b }}
-              window={told}
-            />
-          </div>
-          {/* Streamed: each grid is a percentile over the whole division, real work behind the rest. */}
-          <div className={phoneShows(view === "attributes")}>
-            <Suspense fallback={<StackWaiting />}>
-              <Grids left={one_} right={second === null ? null : two} names={{ a: names.a, b: second === null ? null : names.b }} />
-            </Suspense>
-          </div>
-        </div>
-      </div>
+      )}
 
-      <section className={`flex flex-col gap-1 ${phoneShows(view === "touches")}`}>
-        <p className={`${SECTION_BAR} max-lg:hidden`}>Touches</p>
+      {view === "figures" ? (
+        <Figures
+          a={first.played}
+          b={second?.played ?? null}
+          names={{ a: names.a, b: second === null ? null : names.b }}
+          window={told}
+        />
+      ) : null}
+
+      {view === "shots" || view === "passes" ? (
+        <CompareMap
+          men={men.map((each) => ({
+            name: each.name,
+            club: each.club,
+            shots: view === "shots" ? each.shots : each.keyPasses,
+          }))}
+          passes={view === "passes"}
+          window={told}
+          className="mx-auto w-full lg:max-w-3xl"
+        />
+      ) : null}
+
+      {view === "touches" ? (
         <div className="grid gap-2 lg:grid-cols-2">
           {men.map((each, index) => (
             <PlayerMap
@@ -252,7 +238,14 @@ export default async function ComparePage({
             />
           ))}
         </div>
-      </section>
+      ) : null}
+
+      {/* Streamed: each grid is a percentile over the whole division. */}
+      {view === "attributes" ? (
+        <Suspense fallback={<StackWaiting />}>
+          <Grids left={one_} right={second === null ? null : two} names={{ a: names.a, b: second === null ? null : names.b }} />
+        </Suspense>
+      ) : null}
 
       <div className="flex flex-wrap gap-1.5">
         {[

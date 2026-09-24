@@ -75,7 +75,7 @@ export function easeStep(rank: number): number {
   return Math.min(10, Math.max(1, Math.ceil(rank / 2)));
 }
 
-/** One club as an opponent: its rank at each venue, 1 the easiest. */
+/** One club's own strength: its rank at each venue, 1 the best. */
 export interface StrengthRank {
   code: number;
   club: string;
@@ -83,10 +83,21 @@ export interface StrengthRank {
   away: number;
 }
 
-/** Every rated club's ranks as an opponent in one view, easiest first on the mean of its two venues. */
-export function strengthTable(strengths: Map<number, ClubStrength>, view: PlannerView): StrengthRank[] {
-  const home = easeRanks(strengths, view, "home");
-  const away = easeRanks(strengths, view, "away");
+/** Every rated club by its own attack or defence at both venues, the strongest first; ties share a rank. */
+export function strengthTable(strengths: Map<number, ClubStrength>, measure: "attack" | "defence"): StrengthRank[] {
+  const rank = (venue: Venue) => {
+    const rating = (club: ClubStrength) => club[measure][venue];
+    const ordered = [...strengths.values()].sort((a, b) => rating(b) - rating(a));
+    const ranks = new Map<number, number>();
+    ordered.forEach((club, index) => {
+      const previous = ordered[index - 1];
+      const tied = previous !== undefined && rating(previous) === rating(club);
+      ranks.set(club.code, tied ? (ranks.get(previous.code) ?? index + 1) : index + 1);
+    });
+    return ranks;
+  };
+  const home = rank("home");
+  const away = rank("away");
   return [...strengths.values()]
     .map((club) => ({ code: club.code, club: club.shortName, home: home.get(club.code) ?? 0, away: away.get(club.code) ?? 0 }))
     .sort((a, b) => a.home + a.away - (b.home + b.away) || a.club.localeCompare(b.club));
