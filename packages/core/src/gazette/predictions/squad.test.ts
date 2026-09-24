@@ -43,6 +43,8 @@ const JOIN: SquadJoin = {
   defence: new Map([[1, row(ARSENAL, HULL, 1)], [20, row(HULL, ARSENAL, 18)]]),
   clubs: new Map([[1, ARSENAL], [12, LIVERPOOL], [20, HULL]]),
   clubName: (each) => each.name,
+  // Hull's defence and attack are the worst of twenty; Arsenal's attack the best.
+  standing: { attack: new Map([[3, 1], [14, 5], [99, 20]]), defence: new Map([[3, 2], [14, 8], [99, 20]]) },
 };
 
 describe("squadMen", () => {
@@ -55,10 +57,13 @@ describe("squadMen", () => {
 
   it("joins each man's club, fixture, ease in his line's view, doubt and Liverpool", () => {
     const [saka, salah, gabriel, nobody] = squadMen(team(["ACTIVE", "ACTIVE", "ACTIVE", "RESERVE"], ["F", "M", "D", "G"]), JOIN);
-    expect(saka).toMatchObject({ club: "Arsenal", positions: ["F", "M"], horizon: 12, ease: 2, fixtures: [{ opponent: "Hull", home: true }], liverpool: false });
+    // Hull's is one of the leakiest defences, which is what a forward faces.
+    expect(saka).toMatchObject({ club: "Arsenal", positions: ["F", "M"], horizon: 12, ease: 2, liverpool: false });
+    expect(saka.fixtures).toEqual([{ opponent: "Hull", home: true, standing: "one of the three leakiest defences in the league" }]);
     expect(salah).toMatchObject({ liverpool: true, availability: { state: "doubt", chance: 50 } });
-    // A defender is read in the defence view.
+    // A defender is read in the defence view, and faces Hull's attack, the bluntest of all.
     expect(gabriel.ease).toBe(1);
+    expect(gabriel.fixtures[0].standing).toBe("one of the three bluntest attacks in the league");
     // No projection is no reading, which is not nought.
     expect(nobody).toMatchObject({ horizon: null, ease: 18 });
   });
@@ -66,7 +71,7 @@ describe("squadMen", () => {
 
 describe("predictionSide", () => {
   const men = squadMen(team(["ACTIVE", "ACTIVE", "ACTIVE", "RESERVE"], ["F", "M", "D", "G"]), JOIN);
-  const side = predictionSide({ teamId: "cp", name: "Cold Palmer", projected: 44, men, hardest: 20, arrivals: [], form: null });
+  const side = predictionSide({ teamId: "cp", name: "Cold Palmer", projected: 44, men, hardest: 20, arrivals: [], form: null, worn: new Set() });
 
   it("ranks the men who matter, and knows when the best of them is a doubt", () => {
     expect(side.keyMen.map((man) => man.name)).toEqual(["Salah", "Saka", "Gabriel"]);

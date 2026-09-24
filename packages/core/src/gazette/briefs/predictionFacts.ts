@@ -43,7 +43,8 @@ function described(man: SquadMan): string {
 }
 
 function fixture(man: SquadMan): string {
-  const one = (each: SquadMan["fixtures"][number]) => (each.home ? `home to ${each.opponent}` : `away at ${each.opponent}`);
+  const one = (each: SquadMan["fixtures"][number]) =>
+    `${each.home ? `home to ${each.opponent}` : `away at ${each.opponent}`}${each.standing === null ? "" : `, ${each.standing}`}`;
   if (man.fixtures.length === 0) return "no game this round";
   if (man.fixtures.length === 1) return one(man.fixtures[0]);
   return `two games, ${man.fixtures.map(one).join(" and ")}`;

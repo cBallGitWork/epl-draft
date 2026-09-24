@@ -14,13 +14,13 @@ const man = (name: string, horizon: number, over: Partial<SquadMan> = {}): Squad
   positions: ["M"],
   horizon,
   availability: FIT,
-  fixtures: [{ opponent: "Leeds United", home: true }],
+  fixtures: [{ opponent: "Leeds United", home: true, standing: null }],
   ease: 5,
   liverpool: false,
   ...over,
 });
 
-const side = (teamId: string, name: string, projected: number | null, men: SquadMan[]) =>
+const side = (teamId: string, name: string, projected: number | null, men: SquadMan[], worn: ReadonlySet<string> = new Set()) =>
   predictionSide({
     teamId,
     name,
@@ -29,6 +29,7 @@ const side = (teamId: string, name: string, projected: number | null, men: Squad
     hardest: 20,
     arrivals: [],
     form: { rank: 2, won: 2, drawn: 0, lost: 0, points: 6, last: null, run: "WW" },
+    worn,
   });
 
 const tie = (home: ReturnType<typeof side>, away: ReturnType<typeof side>): PredictionsTie => ({
@@ -108,6 +109,19 @@ describe("buildLawroBrief", () => {
     expect(text).toContain("Gameweek 6: 3 right from 5. Your gut calls: 0 from 1.");
     expect(text).toContain("You had Cold Palmer on a gut call. Haaland Globetrotters beat Cold Palmer 49-41.");
     expect(text).toContain("never recite it");
+  });
+
+  it("leaves out a man he has already written about, unless something is new for him", () => {
+    const worn = new Set(["Saka", "Palmer"]);
+    const again = tie(
+      side("cp", "Cold Palmer", 52.1, [man("Saka", 20), palmer, man("Rice", 9, { fixtures: [{ opponent: "Leeds United", home: true, standing: "one of the three leakiest defences in the league" }] })], worn),
+      side("hg", "Haaland Globetrotters", 41.6, [man("Haaland", 25)]),
+    );
+    const text = brief([again]) ?? "";
+    // Saka is the same story as last week; Palmer is a doubt, which is new.
+    expect(text).not.toContain("Saka");
+    expect(text).toContain("Cold Palmer's main men, best first: Palmer");
+    expect(text).toContain("Rice (M, Arsenal, home to Leeds United, one of the three leakiest defences in the league)");
   });
 
   it("invents no record for a first column", () => {

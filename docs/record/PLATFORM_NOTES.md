@@ -69,6 +69,11 @@ capture season-specific tradeoffs.
   the last round is finished, once a round. The cron's Thursday band runs to 20:30 UTC.
 - **His record is recomputed every firing** from the archive and Fantrax's settled results; nothing is stored
   but the calls and each tie's instinct. `round-preview` went on the same day, never having filed (#93).
+- **No narrative twice** (Craig: *"try avoid repeated narratives… draft is 15 man squads"*). A man named in his
+  last `PREDICTIONS.wornColumns` (2) columns is withheld from the key men unless something is new for him (a doubt,
+  a blank, a double, an opponent at an extreme). Withheld means absent from the brief, so naming him anyway is a
+  hard fault. **Fixtures carry the sister repo's team strength** in words, at the extremes only: "one of the three
+  leakiest defences in the league" for a forward, the attack for a defender; never a rank.
 - **A local build without `FANTRAX_LEAGUE_ID` 500s every `/paper/[slug]`** under `next start`
   (`DYNAMIC_SERVER_USAGE`). Production names the league when it builds; build with it set before shooting an
   article locally.

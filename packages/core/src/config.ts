@@ -364,6 +364,8 @@ export const PREDICTIONS = {
   liverpoolCode: 14,
   /** The brief's caps: key men a side, how deep it looks for doubts, what counts as a hard fixture. */
   keyMen: 3,
+  /** How many of his last columns make a man old news, unless something is new for him. */
+  wornColumns: 2,
   doubtDepth: 6,
   hardFixtures: 5,
   factsPerTie: 10,

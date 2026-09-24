@@ -1,6 +1,7 @@
 import {
   FANTRAX_LEAGUE_ID,
   PLANNER_RUN,
+  PREDICTIONS,
   callTie,
   fetchLiveScoring,
   fetchSeasonResults,
@@ -22,6 +23,7 @@ import {
   seasonForm,
   squadMen,
   strengthIntel,
+  strengthTable,
   type Assignment,
   type Bridge,
   type Club,
@@ -103,11 +105,19 @@ export async function predictionsDesk(input: {
     defence: rows("defence"),
     clubs: new Map(clubs.map((club) => [club.id, club])),
     clubName: (club: Club) => fullClubName(club.name),
+    standing: { attack: places(strengths, "attack"), defence: places(strengths, "defence") },
   };
   const squads = resolveRosters(snapshot, mapTeamRosters(rosters), mapping as Bridge).teams;
   const projected = new Map(mapProjectedTotals(live).map((guess) => [guess.teamId, guess.points]));
   const form = seasonForm(input.table, info.matchups, results === null ? [] : mapSeasonResults(results));
   const named = new Map(info.teams.map((team) => [team.teamId, team.name]));
+  const columns = readArchive(FANTRAX_LEAGUE_ID, "predictions")
+    .filter((story) => story.period < round.period)
+    .sort((a, b) => b.period - a.period);
+  const prose = columns.map(proseOf);
+  // A man he wrote about lately is old news, unless the week gives him something new.
+  const recent = prose.slice(0, PREDICTIONS.wornColumns).join("\n");
+  const worn = new Set(squads.flatMap((team) => team.players.flatMap((man) => ("player" in man && recent.includes(man.player.name) ? [man.player.name] : []))));
 
   const side = (teamId: string, name: string) =>
     predictionSide({
@@ -121,16 +131,13 @@ export async function predictionsDesk(input: {
       hardest: strengths.size,
       arrivals: arrivals(input.business, teamId, round.period, byShort),
       form: sideForm(teamId, input.table, form, info, named),
+      worn,
     });
   const ties = pairings.map(({ home, away }) => {
     const [h, a] = [side(home.teamId, home.name), side(away.teamId, away.name)];
     return { home: h, away: a, call: callTie(h, a) };
   });
 
-  const columns = readArchive(FANTRAX_LEAGUE_ID, "predictions")
-    .filter((story) => story.period < round.period)
-    .sort((a, b) => b.period - a.period);
-  const prose = columns.map(proseOf);
   const men = ties.flatMap((tie) => [...tie.home.keyMen, ...tie.away.keyMen, ...tie.home.doubts, ...tie.away.doubts]);
   return {
     gameweek: round.gameweek,
@@ -147,6 +154,11 @@ export async function predictionsDesk(input: {
     names: [...new Set([...named.values(), ...squads.flatMap((team) => team.players.flatMap((man) => ("player" in man ? [man.player.name] : [])))])],
     doubts: [...new Set(men.filter((man) => man.availability.state !== "fit").map((man) => man.name))],
   };
+}
+
+/** Each club's place by the sister repo's ratings, strongest first, by FPL club code. */
+function places(strengths: ReturnType<typeof strengthIntel>, measure: "attack" | "defence"): Map<number, number> {
+  return new Map(strengthTable(strengths, measure).map((row, at) => [row.code, at + 1]));
 }
 
 /** Men arriving for this round, as the brief names them. */

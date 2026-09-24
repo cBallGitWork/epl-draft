@@ -14,8 +14,9 @@ export interface SquadMan {
   /** Sister-model points over the next few rounds: orders the men, never printed. */
   horizon: number | null;
   availability: Availability;
-  /** This round's opponents: none is a blank, two a double. */
-  fixtures: readonly { opponent: string; home: boolean }[];
+  /** This round's opponents, none a blank and two a double, each with its standing on the sister
+   *  repo's ratings where it is among the three best or worst at what this man faces. */
+  fixtures: readonly { opponent: string; home: boolean; standing: string | null }[];
   /** Mean ease rank of those opponents in his line's view, 1 the kindest; null when unrated. */
   ease: number | null;
   liverpool: boolean;
@@ -57,8 +58,11 @@ export function predictionSide(input: {
   hardest: number;
   arrivals: readonly string[];
   form: SideForm | null;
+  /** Men he wrote about in his last columns: no key man again unless something is new for him. */
+  worn: ReadonlySet<string>;
 }): PredictionSide {
   const ranked = [...input.men].sort(byMatter);
+  const fresh = ranked.filter((man) => !input.worn.has(man.name) || news(man));
   const best = ranked[0]?.horizon == null ? null : ranked[0];
   const liverpoolMen = ranked.filter((man) => man.liverpool).map((man) => man.name);
   const backLine = ranked.filter((man) => man.positions.some((position) => position === "G" || position === "D"));
@@ -70,7 +74,7 @@ export function predictionSide(input: {
     bestManDoubt: best !== null && isDoubt(best.availability),
     liverpool: liverpoolMen.length,
     backLineEase: rated.length === 0 ? null : rated.reduce((sum, ease) => sum + ease, 0) / rated.length,
-    keyMen: ranked.slice(0, PREDICTIONS.keyMen),
+    keyMen: fresh.slice(0, PREDICTIONS.keyMen),
     best,
     doubts: ranked.slice(0, PREDICTIONS.doubtDepth).filter((man) => man.availability.state !== "fit"),
     hard: ranked.find((man) => man.ease !== null && man.ease > input.hardest - PREDICTIONS.hardFixtures) ?? null,
@@ -84,6 +88,11 @@ export function predictionSide(input: {
 /** Out, or no better than an even chance by FPL's own figure. */
 function isDoubt(availability: Availability): boolean {
   return availability.out || (availability.chance !== null && availability.chance <= PREDICTIONS.doubtChance);
+}
+
+/** Something new for him this week: a doubt, a blank, a double, or an opponent at an extreme. */
+function news(man: SquadMan): boolean {
+  return man.availability.state !== "fit" || man.fixtures.length !== 1 || man.fixtures.some((each) => each.standing !== null);
 }
 
 /** The men who matter most first; a man the model has no reading for last; then by name. */
