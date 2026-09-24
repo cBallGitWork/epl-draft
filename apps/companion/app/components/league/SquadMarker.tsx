@@ -26,9 +26,10 @@ export default function SquadMarker({
   show?: "points" | "fixture";
 }) {
   const { rostered } = player;
+  const footballer = isResolved(rostered) ? rostered.player : null;
   return (
     <PitchMarker
-      player={isResolved(rostered) ? rostered.player : null}
+      player={footballer}
       label={rostered.slot.position || "?"}
       name={pitchName(rostered)}
       // **`isGoalkeeper` and not a literal `"G"`.** The position vocabulary is
@@ -39,6 +40,8 @@ export default function SquadMarker({
       opposition={player.opposition}
       points={player.points}
       show={show}
+      // His face, as the match pitch draws him; the kit stands in where there is no photograph.
+      face={footballer ?? undefined}
     />
   );
 }
