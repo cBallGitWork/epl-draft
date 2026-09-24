@@ -42,7 +42,7 @@ export default function Calls({
             </p>
             {tie.face !== undefined && clubs !== undefined ? (
               <div className="float-left mr-3 mt-2">
-                <Face face={tie.face} clubs={clubs} rank="brief" />
+                <Face face={tie.face} clubs={clubs} rank="tie" />
               </div>
             ) : null}
             {tie.line !== "" ? <p className="pt-1 text-base leading-relaxed text-ink">{tie.line}</p> : null}
