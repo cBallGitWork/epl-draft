@@ -17,7 +17,7 @@ describe("matchupTabs", () => {
   });
 
   it("names no round when the URL named none", () => {
-    expect(matchupTabs("abc", undefined)[2]?.href).toBe("/league/matchups/abc?view=table");
+    expect(matchupTabs("abc", undefined)[2]?.href).toBe("/league/matchups/abc?view=fixtures");
   });
 });
 

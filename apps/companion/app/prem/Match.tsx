@@ -1,5 +1,6 @@
-import { type Club, type Fixture, crestUrl, londonDayAndTime, DASH } from "@epl/core";
+import { type Club, type Fixture, londonDayAndTime } from "@epl/core";
 import ScoreRow from "../components/shell/ScoreRow";
+import { scoreSide } from "../components/football/scoreSide";
 import { MATCH } from "./routes";
 import { SMALL_CAPS } from "@/app/desk";
 
@@ -41,8 +42,8 @@ export default function Match({
 
   return (
     <ScoreRow
-      home={side(home, places)}
-      away={side(away, places)}
+      home={scoreSide(home, places)}
+      away={scoreSide(away, places)}
       score={played ? { home: fixture.homeScore, away: fixture.awayScore } : null}
       // `TBC` rather than a guessed date: FPL leaves `kickoff_time` null on a
       // match the television has not picked yet, and inventing one is the
@@ -61,13 +62,3 @@ export default function Match({
 /** One club's half of the row. A club this snapshot does not carry is the em
  *  dash and no crest — `next/image` throws on an empty `src`, so a fixture
  *  naming one would have taken the whole list down. */
-function side(club: Club | undefined, places: Map<number, number>) {
-  return club === undefined
-    ? { name: DASH }
-    : {
-        name: club.name,
-        short: club.shortName,
-        badge: crestUrl(club),
-        place: places.get(club.id) ?? null,
-      };
-}

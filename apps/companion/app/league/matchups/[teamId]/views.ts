@@ -1,15 +1,15 @@
 import { MATCHUPS, matchupHref } from "../../routes";
 
 /** The head-to-head's plates, in the order the strip draws them; the first is where it opens. */
-export const MATCHUP_VIEWS = ["lineups", "stats", "table", "scores"] as const;
+export const MATCHUP_VIEWS = ["lineups", "stats", "fixtures", "table"] as const;
 
 export type MatchupView = (typeof MATCHUP_VIEWS)[number];
 
 const LABEL: Record<MatchupView, string> = {
   lineups: "Lineups",
   stats: "Stats",
+  fixtures: "Fixtures",
   table: "Table",
-  scores: "Scores",
 };
 
 /** The view a URL asks for, or the first for anything it does not name. */

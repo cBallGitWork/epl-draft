@@ -15,7 +15,7 @@ is not used for anything: there is no ground.
    side's team below; the open half is raised and carries a foot bar. Your own
    name reads in accent, the standard "this is yours" mark. **One number per
    side and nothing beside it** — see the constraint below.
-2. **A four-plate blue tab strip** — `Lineups · Stats · Table · Scores`, each a link
+2. **A four-plate blue tab strip** — `Lineups · Stats · Fixtures · Table`, each a link
    (`?view=`, Lineups the default; `views.ts`), so a refresh or a shared link keeps
    the tab. One word per label: the strip has to fit 390.
 3. **Lineups** — the open side's eleven on the grass and its bench in a strip
@@ -52,19 +52,13 @@ is not used for anything: there is no ground.
    hands back a *transparent* border on unmarked rows precisely so one row's
    figures do not step 4px out of the column, and a `<tr>` border does not paint
    through the index cell's own ground at all. `mine` wins where both apply.
-6. **Scores** — every Premier League fixture this tie is being played out in:
-   kickoff day and time, the score or the state, and under each the men from each
-   side who are in it (`ScoresTab`).
-
-   **Only the fixtures holding a man from either squad.** A round is ten matches
-   and a tie is usually fought out in six of them. `fixtureInvolvement` answers
-   the membership as a JOIN on FPL's own player code, never a name match, so a
-   fixture with nobody's man in it is simply not a key.
-
-   **It replaced the Report tab**, which filtered the same round's GOAL WIRE to
-   the same thirty men. That board answered "what has happened"; this answers
-   "where is it being decided", which is the question a manager has at ten to
-   three rather than at five.
+6. **Fixtures** — every Premier League match either squad has a man in, in kick-off
+   order, each drawn as the Live tab draws a fixture (`ScoreRow`: table places,
+   crests, score, live minute or FT, a link to the match). Under each row, the URL's
+   side's men from the left and the other side's from the right, with Fantrax's
+   points; a reserve is dimmed and uncounted, and a double's period figure prints
+   under the later match only (`fixtureMen.ts`). A side whose eleven is not public
+   names nobody. It replaced Scores on 24 Sep (Craig: *"scores is pointless"*).
 7. **A live player card** (`LivePlayerCard`) over the top, when one is tapped.
 
 ## What the round is doing

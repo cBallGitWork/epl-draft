@@ -8,14 +8,13 @@ import {
   oppositionByClub,
   roundState,
   wasFielded,
-  DASH,
 } from "@epl/core";
 import MatchupBoard, { type MatchupSide } from "../../../components/league/MatchupBoard";
 import Nothing from "../../../components/shell/Nothing";
 import TeamSheet from "../../../components/league/TeamSheet";
 import { SquadLists, Withheld, arrangeBoth, unplayedLists } from "./sides";
 import { SideTab, StatsTab, sharedSides, withheldNotice } from "./tabs";
-import { ScoresTab, TableTab } from "./wider";
+import { FixturesTab, TableTab } from "./wider";
 import LeagueShell from "../../Shell";
 import { HEAD_TO_HEAD } from "../../../titles";
 import { getLeagueSquads, readableOr404, teamDisplay } from "../../../squads";
@@ -280,11 +279,12 @@ export default async function HeadToHeadPage({
               />
             ) : view === "table" ? (
               <TableTab tie={[pairing.team.teamId, pairing.opponent.teamId]} mine={mine} />
-            ) : view === "scores" ? (
-              <ScoresTab
+            ) : view === "fixtures" ? (
+              <FixturesTab
                 fixtures={squads.snapshot.fixtures}
                 sides={both}
-                clubName={(id) => clubs.get(id)?.shortName ?? DASH}
+                snapshotClubs={squads.snapshot.clubs}
+                withheld={withheld}
               />
             ) : null
           }
