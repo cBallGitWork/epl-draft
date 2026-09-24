@@ -1,0 +1,63 @@
+import { FANTRAX_LEAGUE_ID, type Assignment, type Club, type Fixture, type FootballSnapshot, type GameweekKickoff, type LeagueInfo } from "@epl/core";
+import type { DeskContext } from "./dispatch";
+import { withFootball, type DeskFacts } from "./facts";
+import { predictionsDesk } from "./predictions";
+import type { readLedger } from "./persist";
+import type { presserDesk } from "./presserWeek";
+import { xiColumn, type readXi } from "./xi";
+
+// Everything a desk may read this firing, built once the newsdesk has said there is work to do.
+
+export async function deskContext(input: {
+  snapshot: FootballSnapshot;
+  facts: DeskFacts;
+  clubs: Map<number, Club>;
+  /** Clubs by FPL code, which is what a presser signal carries and what a crest keys off. */
+  byCode: Map<number, Club>;
+  info: LeagueInfo;
+  period: number;
+  ledger: ReturnType<typeof readLedger>;
+  sheet: ReturnType<typeof presserDesk>;
+  xi: ReturnType<typeof readXi>;
+  season: readonly Fixture[];
+  kickoffs: readonly GameweekKickoff[];
+  assignments: readonly Assignment[];
+  say: (message: string) => void;
+}): Promise<DeskContext> {
+  const { snapshot, facts, clubs, byCode, info, period, ledger, sheet, xi, season, kickoffs, assignments, say } = input;
+  return {
+    leagueId: FANTRAX_LEAGUE_ID,
+    snapshot,
+    // **The Premier League's feed is fetched HERE and not with the other reads**
+    // — after the desk has said there is a column to write. It is 31 requests
+    // against 11 for everything else together, the desk reads none of it, and
+    // about a hundred and ten firings a week end before this is ever built.
+    // See `withFootball`.
+    facts: await withFootball(facts, snapshot, assignments),
+    clubs,
+    threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [],
+    info,
+    table: facts.table,
+    period,
+    // Lawro's reads are his own and made only when his column is due.
+    predictions: await predictionsDesk({ assignments, info, snapshot, season, kickoffs, table: facts.table, business: facts.business, say }),
+    presserLines: sheet.lines,
+    presserQuotes: sheet.quotes,
+    presserTies: sheet.ties,
+    presserClubs: byCode,
+    presserGameweek: sheet.gameweek,
+    presserSpoke: sheet.spoke,
+    // Composed here, once, rather than per assignment in the loop.
+    elevens:
+      xi === null || !assignments.some((each) => each.kind === "predicted-xi")
+        ? null
+        : xiColumn({
+            xi,
+            gameweek: sheet.gameweek,
+            clubs: byCode,
+            teams: facts.teams,
+            players: snapshot.players,
+            season,
+          }),
+  };
+}

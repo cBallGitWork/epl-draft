@@ -16,22 +16,24 @@ import {
   mapFixtures,
   mapLeagueInfo,
   newsdesk,
+  nextDeadline,
   periodGameweeks,
   banned,
   roundState,
   standingHeadlines,
   strangers,
 } from "@epl/core";
-import { gatherRoundFacts, withFootball } from "./edition/facts";
-import { file, type DeskContext } from "./edition/dispatch";
+import { gatherRoundFacts } from "./edition/facts";
+import { file } from "./edition/dispatch";
 import { prepare } from "./edition/commission";
 import { drawSplash } from "./edition/image";
 import { CARGO, headlineAndProse, prose } from "./edition/checks";
-import { markLastWeek } from "./edition/marking";
 import { writeSubedited } from "./edition/subedit";
+import { writeLawro } from "./edition/lawroWriter";
 import { presserDesk } from "./edition/presserWeek";
-import { readXi, xiColumn } from "./edition/xi";
+import { readXi } from "./edition/xi";
 import { deskState } from "./edition/desk";
+import { deskContext } from "./edition/context";
 import { persistFilings, readLedger, readPaperStories, type Filing } from "./edition/persist";
 
 // The newsroom's orchestrator, run from CI on a wide cron net.
@@ -93,6 +95,8 @@ async function main(): Promise<void> {
   const kickoffs = datedKickoffs(season);
   const calendar = periodGameweeks(info.scoringPeriods, kickoffs);
   const round = calendar.find((period) => period.gameweeks.includes(snapshot.gameweek));
+  const deadline = nextDeadline(info.rosterPeriods, kickoffs, now);
+  const nextRound = calendar.find((each) => each.period === deadline?.period)?.gameweeks[0];
   if (round === undefined) return say(`No Fantrax period covers gameweek ${snapshot.gameweek}.`);
 
   // The preview's window is lock-to-first-whistle, and it is a window rather
@@ -125,11 +129,11 @@ async function main(): Promise<void> {
       clubs,
       period: round.period,
       finished,
-      locked,
       started,
       lines: sheet.lines,
       xiGameweek: xi === null ? null : sheet.gameweek,
       ahead: ahead === undefined ? null : { period: ahead.period, gameweek: sheet.gameweek },
+      next: deadline === null || nextRound === undefined ? null : { period: deadline.period, gameweek: nextRound, locksAt: deadline.locksAt },
     }),
     (key) => isCovered(ledger, FANTRAX_LEAGUE_ID, key),
     now,
@@ -137,40 +141,7 @@ async function main(): Promise<void> {
   if (process.env.GAZETTA_QUEUE) return say(assignments.map((a) => a.key).join("\n"));
   if (assignments.length === 0) return say("Nothing new to report.");
 
-  const ctx: DeskContext = {
-    leagueId: FANTRAX_LEAGUE_ID,
-    snapshot,
-    // **The Premier League's feed is fetched HERE and not with the other reads**
-    // — after the desk has said there is a column to write. It is 31 requests
-    // against 11 for everything else together, the desk reads none of it, and
-    // about a hundred and ten firings a week end at the line above. See
-    // `withFootball`.
-    facts: await withFootball(facts, snapshot, assignments),
-    clubs,
-    threads: ledger[FANTRAX_LEAGUE_ID]?.threads ?? [],
-    info,
-    table: facts.table,
-    period: round.period,
-    marked: await markLastWeek(paper, info, round.period, assignments),
-    presserLines: sheet.lines,
-    presserQuotes: sheet.quotes,
-    presserTies: sheet.ties,
-    presserClubs: byCode,
-    presserGameweek: sheet.gameweek,
-    presserSpoke: sheet.spoke,
-    // Composed here, once, rather than per assignment in the loop.
-    elevens:
-      xi === null || !assignments.some((each) => each.kind === "predicted-xi")
-        ? null
-        : xiColumn({
-            xi,
-            gameweek: sheet.gameweek,
-            clubs: byCode,
-            teams: facts.teams,
-            players: snapshot.players,
-            season,
-          }),
-  };
+  const ctx = await deskContext({ snapshot, facts, clubs, byCode, info, period: round.period, ledger, sheet, xi, season, kickoffs, assignments, say });
 
   const filings: Filing[] = [];
   // Attempts, not assignments: a desk that refuses spends nothing and is an
@@ -223,7 +194,10 @@ async function main(): Promise<void> {
       // Written and sub-edited before it is filed: `subedit.ts` reads the
       // column back against the register and sends it back once if it reached
       // for a banned phrase.
-      const column = await writeSubedited(desk.system, brief, say, assignment.kind);
+      const column =
+        desk.lawro === undefined
+          ? await writeSubedited(desk.system, brief, say, assignment.kind)
+          : await writeLawro(desk.lawro, brief, desk.brief, say);
       const filed = file(assignment, column, ctx, now);
       // Every name in the prose against every name in the brief. Eager, so it
       // warns rather than refuses — see `gazette/strangers.ts`.
@@ -265,7 +239,8 @@ async function main(): Promise<void> {
     now,
   )[0];
   const filing = filings.find((each) => each.story.slug === lead?.slug);
-  if (filing !== undefined && filing.story.image === null) {
+  // A columnist's own column runs his photograph, never a drawing over it.
+  if (filing !== undefined && filing.story.image === null && filing.story.reporter === undefined) {
     const image = await drawSplash(filing.story);
     if (image !== null) filing.story = { ...filing.story, image };
   }

@@ -990,3 +990,12 @@ must never join that selector.
 **And the paper goes out without one whenever anything at all goes wrong.** No
 key, a refused call, a bad payload: the prose is already written and validated by
 then, and a paper with a headline and no drawing is a paper.
+
+**A columnist under his own name runs one photograph of himself, and it is not the
+drawing.** Lawro is the one (Craig, 24 Sep 2026): a freely licensed photograph,
+credited on `/credits`, carried by the app's `COLUMNISTS` table and never by the
+story, so a drawing is never made over it. It prints through `.paper-photo` like
+the drawing, at every rank a picture prints (the splash band, a shoulder, a
+brief's thumbnail) and beside his name and billing on his article, the way a
+paper runs a columnist's picture byline. It is a real photograph of a real man,
+so it is only ever the one we hold a licence for.

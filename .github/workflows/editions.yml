@@ -64,10 +64,12 @@ on:
     # after the last Wednesday firing.
     - cron: "0,30 17-22 * * 3"
     - cron: "15 6-9 * * 4"
-    # **Thursday afternoon, for the Team Sheet.** The morning sweep above is a
-    # waiver net; a 15:00 column cannot publish on a Thursday at all against it
-    # and waited for Friday evening (#33). Same 14:00 UTC start, same reason.
-    - cron: "0,30 14-17 * * 4"
+    # **Thursday afternoon and evening, for the Team Sheet and Lawro.** The morning
+    # sweep above is a waiver net; a 15:00 column cannot publish on a Thursday at
+    # all against it and waited for Friday evening (#33). Same 14:00 UTC start.
+    # Lawro is due from 18:00 London: 17:00 UTC in summer, 18:00 in winter, so
+    # the band runs to 20:30 UTC and Friday's band catches a skipped evening.
+    - cron: "0,30 14-20 * * 4"
   workflow_dispatch: {}
 
 # Its own group, deliberately NOT shared with the capture or round-state jobs:

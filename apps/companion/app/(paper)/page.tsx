@@ -11,6 +11,8 @@ import Deals from "../components/gazette/Deals";
 import Doubts from "../components/gazette/Doubts";
 import Lead from "../components/gazette/Stories";
 import Picture from "../components/gazette/Picture";
+import ColumnistPhoto from "../components/gazette/ColumnistPhoto";
+import { columnistOf, type Columnist } from "../config";
 import Masthead from "../components/gazette/Masthead";
 import TeamOfTheWeek from "../components/gazette/TeamOfTheWeek";
 import { HEADLINES_SHOWN, SHOULDER_STORIES } from "../config";
@@ -59,7 +61,7 @@ export default async function GazettePage() {
   // Pictures on the shoulders only when every shoulder has one. See `Teaser`:
   // twin seconds that start their headlines at different heights read as a
   // fault, not as a rank.
-  const shouldersPictured = shoulders.every((story) => story.face !== null);
+  const shouldersPictured = shoulders.every((story) => story.face !== null || columnistOf(story) !== null);
   const briefs = paper.filed.slice(SHOULDER_STORIES + 1, HEADLINES_SHOWN + 1);
 
   return (
@@ -138,6 +140,8 @@ export default async function GazettePage() {
                 <Drawing story={paper.filed[0]} />
               ) : paper.filed[0].face ? (
                 <Face face={paper.filed[0].face} clubs={clubs} rank="splash" />
+              ) : columnistOf(paper.filed[0]) !== null ? (
+                <ColumnistPhoto photo={(columnistOf(paper.filed[0]) as Columnist).photo} rank="splash" />
               ) : paper.stories[0] ? (
                 <Picture lead={paper.stories[0]} who={who} clubs={clubs} />
               ) : null}

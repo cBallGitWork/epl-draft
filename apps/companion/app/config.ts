@@ -147,3 +147,32 @@ export const DESK_GROUND_CREDIT: Pick<
  *  whenever `DESK_GROUND` is. */
 export const DESK_GROUND_BLUR: string | null =
   "data:image/jpeg;base64,/9j/2wBDABIMDRANCxIQDhAUExIVGywdGxgYGzYnKSAsQDlEQz85Pj1HUGZXR0thTT0+WXlaYWltcnNyRVV9hnxvhWZwcm7/2wBDARMUFBsXGzQdHTRuST5Jbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm7/wAARCAALABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAgME/8QAIBAAAgICAQUBAAAAAAAAAAAAAQMCEQAEIRITM0GR4f/EABQBAQAAAAAAAAAAAAAAAAAAAAP/xAAaEQACAgMAAAAAAAAAAAAAAAAAAQIRISIx/9oADAMBAAIRAxEAPwAnag2LJLPux1fmWTsJcycmtgLPAMvuHY1EdvxQFkA0KzInURFTiFxuMuL5rCi6yhp7dP/Z";
+
+/** A columnist who writes under his own name: how the paper bills him, and the photograph it runs
+ *  beside him through the sheet's ink. Keyed by the story's `reporter`. */
+export interface Columnist {
+  billing: string;
+  photo: Pick<GroundPhoto, "title" | "author" | "licence" | "licenceUrl" | "source"> & { src: string; alt: string; blur: string };
+}
+
+/** Lawro's is the one freely licensed photograph of him on Commons (CC0): the tackle, 1981. */
+export const COLUMNISTS: Readonly<Record<string, Columnist>> = {
+  "Mark Lawrenson": {
+    billing: "Draft Expert",
+    photo: {
+      src: "/columnist/lawrenson.jpg",
+      alt: "Mark Lawrenson slides in on Hugo Hovenkamp, AZ '67 v Liverpool, Amsterdam, 21 October 1981",
+      blur: "data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAALABADASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAAAwIF/8QAIRAAAQMDBAMAAAAAAAAAAAAAAQIDEQAEQQUSIWETMVH/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AzRot6tKkLeZSZ7x3FRqNi9aOtBRSW3RCXBME55pSAhQKff0857pXnV3CEeY79ogTiOKD/9k=",
+      title: "Hovenkamp in aktie, Bestanddeelnr 931-7563",
+      author: "Hans van Dijk for Anefo, Nationaal Archief",
+      licence: "CC0 1.0",
+      licenceUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
+      source: "https://commons.wikimedia.org/wiki/File:Hovenkamp_in_aktie,_Bestanddeelnr_931-7563.jpg",
+    },
+  },
+};
+
+/** The columnist a story is by, or null for the house correspondent. */
+export function columnistOf(story: { reporter?: string }): Columnist | null {
+  return story.reporter === undefined ? null : (COLUMNISTS[story.reporter] ?? null);
+}

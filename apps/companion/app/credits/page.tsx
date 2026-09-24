@@ -1,7 +1,7 @@
 import { clubGround, groundPhotoCredits } from "@epl/core";
 import PageHeader from "../components/shell/PageHeader";
 import { LABEL, PANEL, ROW_RULE } from "@/app/desk";
-import { DESK_GROUND_CREDIT } from "../config";
+import { COLUMNISTS, DESK_GROUND_CREDIT } from "../config";
 
 // Who took the photographs behind the desk.
 //
@@ -31,6 +31,7 @@ export default function CreditsPage() {
       place: clubGround(shortName) ?? shortName,
       photo,
     })),
+    ...Object.entries(COLUMNISTS).map(([name, columnist]) => ({ place: `${name}, beside his column`, photo: columnist.photo })),
   ];
 
   return (
@@ -38,13 +39,13 @@ export default function CreditsPage() {
       <PageHeader
         title="Credits"
         competition
-        sub={`${credits.length} ground photographs`}
+        sub={`${credits.length} photographs`}
       />
       <section className={PANEL}>
         <p className="text-sm text-muted">
-          The photograph behind the desk and behind each club&rsquo;s screens is
-          somebody else&rsquo;s work, used under the licence named beside it. Crests,
-          kits and player portraits are the Premier League&rsquo;s own.
+          The photographs behind the desk, behind each club&rsquo;s screens and beside
+          Lawro&rsquo;s column are somebody else&rsquo;s work, used under the licence named
+          beside each. Crests, kits and player portraits are the Premier League&rsquo;s own.
         </p>
         <ul className="flex flex-col">
           {credits.map(({ place, photo }) => (

@@ -19,7 +19,6 @@ export {
   buildDodgersBrief,
   buildElevenBrief,
   buildPowerBrief,
-  buildPredictionsBrief,
   buildWireBrief,
 } from "./briefs/columns";
 export { buildNewsBrief } from "./briefs/news";
@@ -29,10 +28,8 @@ export { affectedBy } from "./newsTriage";
 export type { NewsAngle } from "./briefs/news";
 export type { Affected } from "./newsTriage";
 export { dodgers } from "./dodgers";
-export { markCalls, predictionTies } from "./predictions";
 export { powerRows } from "./powerRanking";
 export { wireFacts } from "./wire";
-export type { Marked, PredictionTie } from "./predictions";
 export type { PowerRow } from "./powerRanking";
 export type { WireFacts } from "./wire";
 export { buildMatchReportBrief } from "./briefs/matchReport";
@@ -73,3 +70,19 @@ export type {
 } from "./types";
 
 export { fullClubName } from "./clubNames";
+
+// Lawro's predictions: the calls, the record, his past, the brief, and the editor that reads him.
+export { buildLawroBrief } from "./briefs/predictions";
+export { callTie } from "./predictions/pick";
+export { predictionSide } from "./predictions/sides";
+export { squadMen } from "./predictions/squad";
+export { predictionRecord } from "./predictions/record";
+export { LAWRO_CORE, pastOffered } from "./predictions/past";
+export { LAWRO_BANNED, LAWRO_CAPPED, NEVER_CATEGORIES } from "./predictions/words";
+export { checkLawro, tieKey } from "./predictions/checks";
+export { SHAPES, applySkit } from "./predictions/skit";
+export { assembleLawro, mergeAttempts, readDraft } from "./predictions/column";
+export type { PredictionsTie } from "./briefs/predictions";
+export type { SideForm } from "./predictions/sides";
+export type { Marked } from "./predictions/record";
+export type { CheckContext, Fault, LawroDraft } from "./predictions/checks";

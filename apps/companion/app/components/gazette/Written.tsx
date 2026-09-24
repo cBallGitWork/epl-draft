@@ -1,6 +1,8 @@
 import type { Club, LeagueTeam, PublishedStory } from "@epl/core";
 import Face from "./Face";
-import Column from "./Column";
+import Calls from "./Calls";
+import ColumnistPhoto from "./ColumnistPhoto";
+import { columnistOf } from "@/app/config";
 import Paragraphs from "./Paragraphs";
 import Dateline from "./Dateline";
 import { DASH } from "@epl/core";
@@ -36,8 +38,7 @@ export default function Written({
   clubs?: Map<number, Club>;
 }) {
   const named = new Map(teams.map((team) => [team.teamId, team.name]));
-  // Only a kind that predicts carries calls; everything else reports.
-  const calls = story.kind === "predictions";
+  const columnist = columnistOf(story);
 
   // **A standfirst is not columnised.** `paper-columns` takes a measure rather
   // than a count, which is right for a whole article and wrong for an intro:
@@ -89,7 +90,18 @@ export default function Written({
           it went out under. Not decoration: every other figure on this page is
           thirty seconds old and this could be days old and still be the current
           edition. A reader is entitled to know which he is reading. */}
-      <Dateline story={story} turn={false} className="pt-2.5" />
+      {/* A columnist's own card, as the BBC ran his: the photograph, the name, the billing. It
+          carries the credit, so the dateline under it does not repeat it. */}
+      <Dateline story={story} turn={false} byline={columnist === null} className="pt-2.5" />
+      {columnist !== null ? (
+        <div className="flex items-center gap-3 pt-3">
+          <ColumnistPhoto photo={columnist.photo} rank="card" />
+          <p className="flex flex-col gap-0.5 font-sans uppercase tracking-[0.12em]">
+            <span className="text-sm font-black text-ink">{story.reporter}</span>
+            <span className="text-2xs text-muted">{columnist.billing}</span>
+          </p>
+        </div>
+      ) : null}
 
       <Paragraphs
         text={story.body}
@@ -118,28 +130,9 @@ export default function Written({
         opening
       )}
 
-      {story.ties !== undefined && story.ties.length > 0 ? (
+      {story.kind === "predictions" && story.ties !== undefined && story.ties.length > 0 ? (
         <div className="pt-4">
-          <Column title={calls ? "He calls it" : "Tie by tie"}>
-            <ul>
-              {story.ties.map((tie) => (
-                <li key={`${tie.homeTeamId}-${tie.awayTeamId}`} className="py-2">
-                  <p className="font-sans text-2xs uppercase tracking-widest text-faint">
-                    {named.get(tie.homeTeamId) ?? DASH} v {named.get(tie.awayTeamId) ?? DASH}
-                    {/* A call, marked as one. An unmade call prints nothing
-                        rather than a hedge. */}
-                    {tie.callsTeamId ? (
-                      <span className="font-bold text-cream">
-                        {" "}
-                        · {named.get(tie.callsTeamId) ?? DASH}
-                      </span>
-                    ) : null}
-                  </p>
-                  <p className="pt-0.5 text-sm leading-snug text-muted">{tie.line}</p>
-                </li>
-              ))}
-            </ul>
-          </Column>
+          <Calls ties={story.ties} record={story.extras?.record} named={(teamId) => named.get(teamId) ?? DASH} />
         </div>
       ) : null}
     </section>

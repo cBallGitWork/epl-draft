@@ -1,3 +1,4 @@
+import { predictionsDue } from "./predictions/due";
 import { type FixtureStake, bothSides } from "./relevance";
 import type { StoryKind } from "./story";
 import type { TieState } from "./tieState";
@@ -65,11 +66,9 @@ export interface DeskTie {
 export interface DeskState {
   gameweek: number;
   period: number;
-  /** The round's three questions, answered at the edge as the writer already
-   *  answers them: finished is the last whistle gone, locked is lineups
-   *  locked, started is a first ball kicked. */
+  /** The round's two questions, answered at the edge as the writer already
+   *  answers them: finished is the last whistle gone, started is a first ball kicked. */
   finished: boolean;
-  locked: boolean;
   started: boolean;
   /** Every fixture of the round, most-consequential first (`fixtureStakes`). */
   stakes: readonly FixtureStake[];
@@ -91,6 +90,8 @@ export interface DeskState {
   lineups: { key: string; slug: string } | null;
   /** The round the Team Sheet and the elevens preview, when the calendar places it. */
   ahead: { period: number; gameweek: number } | null;
+  /** The next round to lock, and when, which is when Lawro's column is due. */
+  next: { period: number; gameweek: number; locksAt: string } | null;
 }
 
 /** The columns a finished round earns, in the order they are worth reading.
@@ -140,9 +141,6 @@ export function newsdesk(
     for (const kind of MONDAY_SET) {
       want({ kind, key: `${kind}:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-${kind}` });
     }
-  } else if (desk.locked && !desk.started) {
-    // The predictions column is marked against the results a week later.
-    want({ kind: "predictions", key: `predictions:gw${desk.gameweek}`, slug: `gw${desk.gameweek}-predictions` });
   }
 
   // Calls only while the round is being played: after the last whistle the
@@ -197,14 +195,14 @@ export function newsdesk(
     want({ kind: "news", key: `news:${story.key}`, slug: story.slug });
   }
 
-  // The Team Sheet, and it is deliberately OUTSIDE the finished/locked branches
+  // The Team Sheet, and it is deliberately OUTSIDE the finished branch
   // above. `desk.finished` stays true for four or five days of seven — FPL keeps
   // `is_current` on a played round until the next deadline — so a Thursday
   // column gated on the round being unfinished would never fire at all.
   //
-  // **No lock gate, and that was a bug before it was a decision.** `desk.locked`
-  // is the CURRENT period's lock, which on a Thursday has long passed — gating
-  // on it meant the column never fired at all. The window does the work instead:
+  // **No lock gate, and that was a bug before it was a decision.** The CURRENT
+  // period's lock has long passed on a Thursday — gating on it meant the column
+  // never fired at all. The window does the work instead:
   // the caller only offers days whose signals were said AFTER the last lock, so
   // they are about the round to come, and they fall out of the window by
   // themselves once the next lock moves it on.
@@ -214,10 +212,16 @@ export function newsdesk(
   }
 
   // The elevens, outside the gates above for the Team Sheet's reason: the round
-  // they predict is the one ahead, which `desk.finished` and `desk.locked` are
-  // both about the wrong side of.
+  // they predict is the one ahead, which `desk.finished` is about the wrong side of.
   if (desk.lineups !== null) {
     want({ kind: "predicted-xi", key: desk.lineups.key, slug: desk.lineups.slug, ...about });
+  }
+
+  // Lawro's predictions: Thursday evening before the round, or the evening before an earlier
+  // lock, and only once the last round is done, so there is a record to own.
+  if (desk.next !== null && desk.finished && predictionsDue(desk.next.locksAt, now)) {
+    const { period, gameweek } = desk.next;
+    want({ kind: "predictions", key: `predictions:gw${gameweek}`, slug: `gw${gameweek}-predictions`, round: { period, gameweek } });
   }
 
   // The wire is weekly and keys on the WINDOW rather than the round: it reports

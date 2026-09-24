@@ -342,9 +342,11 @@ into the build.
 A column that regenerated every thirty seconds would not be a column, and a
 sentence about a score that has since moved is worse than no sentence.
 
-The **predictions** column calls each tie before a ball is kicked, and
-`markCalls` counts those calls against the results so the next edition can tell
-him what he got. A pundit nobody marks is a pundit who never has to be right.
+**Lawro's predictions** file on Thursday evening and call every tie of the round
+ahead, under Mark Lawrenson's name. Code makes each call and score;
+`predictionRecord` marks every column he has filed against Fantrax's settled
+results, the next one opens by owning last week, and his season heads his ties.
+A pundit nobody marks is a pundit who never has to be right.
 
 **The round-report was deleted on 3 Sep 2026.** It was the preview's twin — one
 article filed once the football stopped, about the whole round — and Craig's

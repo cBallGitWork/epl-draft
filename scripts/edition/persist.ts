@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   MAX_PAPER_STORIES,
@@ -8,6 +8,7 @@ import {
   recordCoverage,
   type Ledger,
   type PublishedStory,
+  type StoryKind,
   type ThreadUpdate,
 } from "@epl/core";
 import { EDITIONS_ROOT } from "../paths";
@@ -39,6 +40,19 @@ export function readPaperStories(): PublishedStory[] {
   const stories = (parsed as { stories?: unknown }).stories;
   if (!Array.isArray(stories)) return [];
   return stories.map(normalizeStory).filter((story): story is PublishedStory => story !== null);
+}
+
+/** Every archived story of one kind in one league. The paper keeps 24 and retires a column once
+ *  its round is reported; the archive keeps them all, which is what a record is marked from. */
+export function readArchive(leagueId: string, kind: StoryKind): PublishedStory[] {
+  const dir = join(EDITIONS_ROOT, "archive", leagueId);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((name) => name.endsWith(".json"))
+    .flatMap((name) => {
+      const story = normalizeStory(readJson(join(dir, name)));
+      return story !== null && story.kind === kind && story.leagueId === leagueId ? [story] : [];
+    });
 }
 
 export function readLedger(): Ledger {

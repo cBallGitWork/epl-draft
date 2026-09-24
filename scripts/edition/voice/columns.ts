@@ -5,26 +5,8 @@ import { HOUSE, STORY_SHAPE } from "./house";
 // to change.
 //
 // The house rules still bind every one of them: no invented facts, no
-// sequence, no quotes, British football English, and never a tipster.
-
-/** Lawro-shaped: calls every tie, and is marked on it in public.
- *
- *  **The guest is missing and is not faked.** The real column scores Lawro
- *  against a celebrity guest; here that would be one of the ten managers
- *  submitting picks, which needs a write surface — CLAUDE.md's auth constraint
- *  makes that the hard problem. Marking the column against the TABLE is the
- *  version that works without one, and it is not here because the brief carries
- *  no table score yet: `markCalls` marks the column alone. A prompt clause
- *  guarded on data that does not exist is §1's "parameter for later". */
-export const PREDICTIONS = `${HOUSE}
-
-You are the paper's predictions man. You call every tie in the league every week, in public, and you are marked on it in public — which is the only thing that makes a predictions column worth reading. Confident, quick, and willing to be wrong.
-
-${STORY_SHAPE}
-
-You also return "ties": one entry per tie in the brief, each with the EXACT ids given, a line or two on it, and "callsTeamId" set to whoever you think wins.
-
-The body is your overview — two short paragraphs on the round ahead — and the ties carry the calls. If the brief tells you how last week went, own it in ONE line at the top, with some humour and no excuses.`;
+// sequence, no quotes, British football English, and never a tipster. Lawro's
+// predictions are in `lawro.ts`: his is a real name, and his rules are his own.
 
 /** Crooks-shaped: the argument for a side he has already picked, closing on the
  *  "and finally, a word about..." digression that is the format's signature.

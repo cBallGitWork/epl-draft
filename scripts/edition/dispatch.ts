@@ -14,8 +14,9 @@ import { presserEdition } from "./presserWeek";
 import { faceOf, type FaceContext } from "./faces";
 import { fullClubName } from "@epl/core";
 import type { RoundFacts } from "./facts";
+import type { PredictionsDesk } from "./predictions";
 import { storyOfColumn } from "./newsroom";
-import { STORY_BYLINE, editionName } from "./voice/bylines";
+import { COLUMNIST, STORY_BYLINE, editionName } from "./voice/bylines";
 import { presserHeadline } from "./voice/pressers";
 
 // One assignment in, one prepared desk out: which voice writes it, from which
@@ -34,8 +35,8 @@ export interface DeskContext {
   /** Fantrax's table, for the rankings to argue with. */
   table: readonly StandingsRow[];
   period: number;
-  /** How the last preview's calls went, report-time only. */
-  marked: { right: number; called: number } | null;
+  /** The round ahead as Lawro may know it; null unless his column is due this firing. */
+  predictions: PredictionsDesk | null;
   /** This week's press-conference signals, for men the league holds. Empty until
    *  the intel export lands, which files no Team Sheet and spends nothing. */
   presserLines: PresserLine[];
@@ -123,6 +124,7 @@ export function file(
           : null,
     edition: editionName(assignment.kind, filedAt),
     byline: STORY_BYLINE[assignment.kind] ?? "",
+    reporter: COLUMNIST[assignment.kind],
     subject: assignment.key,
     // The picture, chosen HERE from the facts and not from the prose. A model
     // that named the man would be a model choosing the photograph, which is the

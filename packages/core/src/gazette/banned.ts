@@ -78,8 +78,8 @@ export const BANNED: readonly string[] = [
  *
  *  Whole words only: "bank" must not fire on "Bankole", and a check that cries
  *  wolf on a surname is a check a human stops reading. */
-export function banned(prose: string): string[] {
-  return BANNED.filter((phrase) =>
+export function banned(prose: string, list: readonly string[] = BANNED): string[] {
+  return list.filter((phrase) =>
     new RegExp(`(?<![\\p{L}])${escape(phrase)}(?![\\p{L}])`, "iu").test(prose),
   );
 }

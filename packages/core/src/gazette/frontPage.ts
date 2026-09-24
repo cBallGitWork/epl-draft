@@ -128,7 +128,7 @@ function expired(story: PublishedStory, now: string): boolean {
  *  DAY. Worse, the two need not share a period: Thursday's is filed before the
  *  round rolls over and Friday's after, so this retired one by the other. Team
  *  news expires at the kickoff it previewed instead. */
-const EDITIONS: readonly StoryKind[] = ["eleven", "power-ranking", "dodgers", "wire"];
+const EDITIONS: readonly StoryKind[] = ["eleven", "power-ranking", "dodgers", "wire", "predictions"];
 
 function editionRetires(newer: PublishedStory, older: PublishedStory): boolean {
   return newer.kind === older.kind && EDITIONS.includes(newer.kind) && newer.period > older.period;

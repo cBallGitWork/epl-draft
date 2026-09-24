@@ -18,7 +18,6 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   gameweek: 3,
   period: 3,
   finished: false,
-  locked: true,
   started: true,
   stakes: [],
   ties: [],
@@ -27,13 +26,14 @@ const desk = (over: Partial<DeskState> = {}): DeskState => ({
   pressers: [],
   lineups: null,
   ahead: null,
+  next: null,
   ...over,
 });
 
 const none = () => false;
 
 describe("newsdesk", () => {
-  it("files a report per tie once the round finishes, and predictions only in the lock window", () => {
+  it("files a report per tie once the round finishes, and never mid-round", () => {
     const ties = [
       { homeTeamId: "a", awayTeamId: "b", state: "settled" as const },
       { homeTeamId: "c", awayTeamId: "d", state: "settled" as const },
@@ -45,11 +45,9 @@ describe("newsdesk", () => {
       "tie-report:p3:avb",
       "tie-report:p3:cvd",
     ]);
-    expect(newsdesk(desk({ started: false }), none, NOW)[0]?.kind).toBe("predictions");
-    // Mid-round is neither: a preview is too late and a report is too early —
-    // the writer's own window rule, kept.
+    // Mid-round a report is too early — the writer's own window rule, kept.
     const midRound = newsdesk(desk({ ties }), none, NOW);
-    expect(midRound.find((a) => a.kind === "predictions" || a.kind === "tie-report")).toBeUndefined();
+    expect(midRound.find((a) => a.kind === "tie-report")).toBeUndefined();
   });
 
   it("reports a tie whatever state it was left in, unlike a mid-round call", () => {
@@ -145,15 +143,14 @@ describe("newsdesk", () => {
     // `desk.finished` stays true for four or five days of seven, so a Thursday
     // column gated on the round being unfinished would never fire at all.
     const thu = { key: "presser:gw3:2026-09-17", slug: "gw3-presser-2026-09-17", day: "2026-09-17" };
-    const filed = newsdesk(desk({ finished: true, locked: true, pressers: [thu] }), none, NOW);
+    const filed = newsdesk(desk({ finished: true, pressers: [thu] }), none, NOW);
     expect(filed.map((a) => a.kind)).toContain("presser");
   });
 
   it("files no team sheet on a day with no pressers", () => {
     // The WINDOW is the gate, not a flag: the caller offers only days whose
-    // signals were said after the last lock. `desk.locked` is the current
-    // period's lock and has long passed by Thursday — gating on it meant the
-    // column never fired at all.
+    // signals were said after the last lock. The current period's lock has long
+    // passed by Thursday — gating on it meant the column never fired at all.
     expect(newsdesk(desk({ pressers: [] }), none, NOW).map((a) => a.kind)).not.toContain("presser");
   });
 
@@ -203,9 +200,23 @@ describe("newsdesk", () => {
     expect(after.map((a) => a.kind)).toEqual(["power-ranking", "dodgers"]);
   });
 
-  it("files the predictions column in the lock window", () => {
-    const kinds = newsdesk(desk({ started: false }), none, NOW).map((a) => a.kind);
-    expect(kinds).toEqual(["predictions"]);
+  it("files Lawro on the Thursday evening before the round, about the round ahead", () => {
+    // GW6 locks Sat 10 Oct at 12:15 London; the column is due from Thu 8 Oct, 18:00 London.
+    const next = { period: 6, gameweek: 6, locksAt: "2026-10-10T11:15:00.000Z" };
+    const lawro = newsdesk(desk({ gameweek: 5, period: 5, finished: true, next }), none, "2026-10-08T17:00:00.000Z");
+    expect(lawro.find((a) => a.kind === "predictions")).toEqual({
+      kind: "predictions",
+      key: "predictions:gw6",
+      slug: "gw6-predictions",
+      round: { period: 6, gameweek: 6 },
+    });
+    // Not before six, not while the last round is still being played, not twice.
+    expect(newsdesk(desk({ finished: true, next }), none, "2026-10-08T16:30:00.000Z").map((a) => a.kind)).not.toContain("predictions");
+    expect(newsdesk(desk({ finished: false, next }), none, "2026-10-08T17:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
+    expect(newsdesk(desk({ finished: true, next }), (key) => key === "predictions:gw6", "2026-10-08T17:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
+    // Nothing in a break week, and nothing without a next round.
+    expect(newsdesk(desk({ finished: true, next }), none, "2026-10-01T17:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
+    expect(newsdesk(desk({ finished: true, next: null }), none, "2026-10-08T17:00:00.000Z").map((a) => a.kind)).not.toContain("predictions");
   });
 
   it("files the wire only when there has been business, and once a window", () => {

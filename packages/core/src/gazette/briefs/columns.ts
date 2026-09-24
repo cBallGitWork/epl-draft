@@ -1,47 +1,18 @@
 import type { StoryThread } from "../ledger";
-import type { Marked, PredictionTie } from "../predictions";
 import type { PowerRow } from "../powerRanking";
 import type { Pick } from "../types";
 import type { WireFacts } from "../wire";
-import { figure } from "./figure";
 import { storylinesBlock } from "./storylines";
 
 // The opinion columns' briefs. One file because they share a shape — a facts
 // pack, one instruction about what the opinion may be about, and the memory
-// block — and splitting five twenty-line builders across five files would be
+// block — and splitting four twenty-line builders across four files would be
 // filing for its own sake.
 //
 // The rule they all obey: **the facts are ours and the opinion is the
 // model's.** Each of these columns exists to be argued with in the group chat,
 // so the writer is given room to be wrong about football and none at all to be
 // wrong about what happened.
-
-/** The predictions column: every tie called, and last week's score owned. */
-export function buildPredictionsBrief(brief: {
-  gameweek: number;
-  ties: readonly PredictionTie[];
-  marked: Marked | null;
-  threads: readonly StoryThread[];
-}): string {
-  const ties = brief.ties.map(
-    (tie) =>
-      `- ${tie.homeName} (id ${tie.homeTeamId}) v ${tie.awayName} (id ${tie.awayTeamId}): Fantrax projects ${figure(tie.homeProjected)} to ${figure(tie.awayProjected)}`,
-  );
-
-  return [
-    `THE PREDICTIONS, gameweek ${brief.gameweek}. Lineups are locked and nobody has kicked a ball. The only numbers you have are Fantrax's own projections — a projection is not a score, and you must never write about one as though the football has happened.`,
-    [
-      "THE TIES. Call every one of them: one entry per tie in `ties`, using the EXACT ids given, and set `callsTeamId` to whoever you think wins. You may set it to null where a tie is genuinely too close, but do it rarely — a pundit who calls nothing cannot be wrong and is not worth reading. You will be marked on these next week.",
-      ...ties,
-    ].join("\n"),
-    brief.marked === null
-      ? null
-      : `YOUR LAST COLUMN: you called ${brief.marked.right} of ${brief.marked.called}. Own it in ONE line — briefly, with some humour, and without a paragraph of excuses.`,
-    storylinesBlock(brief.threads),
-  ]
-    .filter((block) => block !== null)
-    .join("\n\n");
-}
 
 /** The power rankings: every manager ranked by opinion, expressly not by table. */
 export function buildPowerBrief(brief: {

@@ -149,7 +149,8 @@ this and not on a guess about when things happen:
 | **Tue** | **nothing at all** | *(open)* | the evergreen piece — see below |
 | **Wed 17:00** | waivers process, free agency opens | The Mercato Wire | `wire`, on **detection** of a claim batch |
 | **Thu 14:00** | press conferences end | The Team Sheet | `presser` — the round-up **publishes 15:00** |
-| **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00** — both SHIPPED — then `predictions` on the lock |
+| **Thu 18:00** | the evening before the round | The Form Guide | `predictions`, Lawro's calls on every tie — SHIPPED 24 Sep (the evening before an earlier lock) |
+| **Fri 14:00 / 16:00** | pressers end; predicted elevens out | The Form Guide | `presser` **15:00**, `predicted-xi` **16:00** — both SHIPPED |
 | **Fri night / Sat noon** | deadline closes, gameweek begins | The Pink 'Un | `tie-call`, `fixture-preview`, the Classified |
 | **Sat/Sun** | matches | The Sunday Edition | `tie-report` as the football stops |
 
@@ -219,9 +220,11 @@ the schedule and improves the paper as it stands today.**
 
 ### Crooks and Lawro already exist
 
-Both columns Craig named are already in the tree and already those men:
-`ELEVEN` is *"Crooks-shaped"* and `PREDICTIONS` is *"Lawro-shaped"*
-(`voice/columns.ts`), and `marking.ts` already scores the previous column's calls.
+Both columns Craig named are already in the tree. `ELEVEN` is *"Crooks-shaped"*
+(`voice/columns.ts`). **Lawro is Lawro** — SHIPPED 24 Sep 2026: the predictions
+column files on Thursday evening under Mark Lawrenson's own name, in his voice
+(`voice/lawro.ts`), with every call and score made by code and his record marked
+from the archive. PLATFORM_NOTES carries the decisions.
 
 Between them they cost **one prompt paragraph**: Crooks's *"and finally, a word
 about…"* sign-off — a digression about a manager, a referee, a crowd, something
@@ -231,8 +234,8 @@ was a diagnosis of the input, not of the format.
 **Lawro's guest is blocked** and should not be faked: the real column scores him
 against a celebrity guest, which here would mean a manager submitting picks — a
 write surface, and `CLAUDE.md`'s auth constraint says that is the hard problem.
-What works today is marking Franco Bell against the table, or against the
-projections once they land.
+Craig also ruled out the Computer as a guest on 24 Sep: his picks only, and the
+numbers stay off the page.
 
 ---
 

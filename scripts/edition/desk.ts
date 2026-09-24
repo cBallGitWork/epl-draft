@@ -28,19 +28,18 @@ export function deskState(input: {
   clubs: Map<number, Club>;
   period: number;
   finished: boolean;
-  locked: boolean;
   started: boolean;
   lines: readonly PresserLine[];
   /** The round the predicted elevens are for, or null when we do not hold it. */
   xiGameweek: number | null;
   ahead: DeskState["ahead"];
+  next: DeskState["next"];
 }): DeskState {
   const { snapshot, facts, clubs } = input;
   return {
     gameweek: snapshot.gameweek,
     period: input.period,
     finished: input.finished,
-    locked: input.locked,
     started: input.started,
     stakes: fixtureStakes(
       snapshot.fixtures.filter((fixture) => fixture.gameweek === snapshot.gameweek),
@@ -57,6 +56,7 @@ export function deskState(input: {
             slug: `gw${input.xiGameweek}-predicted-xi`,
           },
     ahead: input.ahead,
+    next: input.next,
     dealsInWindow: facts.business.length,
     news: facts.news.map((story) => ({ key: story.item.key, slug: newsSlug(story.item.key) })),
     ties: facts.pairings.map((pairing) => ({

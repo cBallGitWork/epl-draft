@@ -1,4 +1,5 @@
 import { PAPER_CORRESPONDENT, type PublishedStory, londonDayAndTime } from "@epl/core";
+import { columnistOf } from "@/app/config";
 import { pageOf } from "./paperPages";
 
 // Which edition filed a story, when, and where the rest of it is.
@@ -20,9 +21,8 @@ import { pageOf } from "./paperPages";
 // above is not.** `story.byline` renders as an inverted standing head — THE
 // BACK PAGE, THE SELECTOR — which is a column's title and not a person. A paper
 // runs both: the standing head over the piece, "by <name>" under it with the
-// filing. The name is a constant rather than a field on the story; `config.ts`
-// in core carries why, and the short version is that one correspondent is a
-// fact about the paper and two would be a fact about a story.
+// filing. The name is the story's `reporter` where it has one (Lawro's is Mark
+// Lawrenson's), and the house correspondent's otherwise.
 //
 // **The turn-line is optional and that is a real distinction, not a flag for
 // its own sake.** `Written` IS the article, so a line reading "turn to page 2"
@@ -79,7 +79,7 @@ export default function Dateline({
   return (
     <Tag className={`font-sans text-3xs uppercase tracking-[0.16em] text-faint${className === "" ? "" : ` ${className}`}`}>
       {/* A column the desk printed from facts has no correspondent to credit. */}
-      {byline && story.kind !== "predicted-xi" ? `by ${PAPER_CORRESPONDENT} · ` : ""}
+      {byline && story.kind !== "predicted-xi" ? `by ${credit(story)} · ` : ""}
       {story.edition !== "" ? `${story.edition} · ` : ""}
       Filed {londonDayAndTime(story.filedAt)}
       {/* The affordance, in words rather than a chevron, and literally true: a
@@ -95,3 +95,9 @@ export default function Dateline({
   );
 }
 
+
+/** Whose name leads the byline: a columnist's own, billed, or the house correspondent's. */
+function credit(story: PublishedStory): string {
+  const columnist = columnistOf(story);
+  return columnist === null ? (story.reporter ?? PAPER_CORRESPONDENT) : `${story.reporter}, ${columnist.billing}`;
+}

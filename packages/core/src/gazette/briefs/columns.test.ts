@@ -3,7 +3,6 @@ import {
   buildDodgersBrief,
   buildElevenBrief,
   buildPowerBrief,
-  buildPredictionsBrief,
   buildWireBrief,
 } from "./columns";
 import type { Pick } from "../types";
@@ -24,31 +23,6 @@ const pick = (over: Partial<Pick> = {}): Pick => ({
   saves: 0,
   score: 200,
   ...over,
-});
-
-describe("buildPredictionsBrief", () => {
-  const brief = buildPredictionsBrief({
-    gameweek: 3,
-    ties: [
-      { homeTeamId: "a", homeName: "test2", awayTeamId: "b", awayName: "test3", homeProjected: 41.5, awayProjected: null },
-    ],
-    marked: { right: 5, called: 8 },
-    threads: [],
-  });
-
-  it("hands over the projections with their ids, and absence as a dash", () => {
-    expect(brief).toContain("test2 (id a) v test3 (id b): Fantrax projects 41.5 to —");
-  });
-
-  it("insists a projection is not a score, and makes him own last week", () => {
-    expect(brief).toContain("a projection is not a score");
-    expect(brief).toContain("you called 5 of 8");
-  });
-
-  it("says nothing about a record it does not have", () => {
-    const first = buildPredictionsBrief({ gameweek: 1, ties: [], marked: null, threads: [] });
-    expect(first).not.toContain("YOUR LAST COLUMN");
-  });
 });
 
 describe("buildPowerBrief", () => {
