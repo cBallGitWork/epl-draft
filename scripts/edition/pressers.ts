@@ -1,4 +1,4 @@
-import { fetchFixtures, fullClubName, instantOf, normalizeName, pressers, type Club, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
+import { fullClubName, instantOf, normalizeName, pressers, type Club, type Fixture, type IntelPressers, type PresserLine, type PresserQuote } from "@epl/core";
 import type { ResolvedPlayer, RosteredPlayer, RosteredTeam } from "@epl/core";
 import { INTEL_SEASON, readIntel } from "../intel";
 
@@ -155,19 +155,20 @@ export function presserSpoke(
  *
  *  Not `snapshot.fixtures`: FPL keeps `is_current` on a round until the next
  *  DEADLINE, so between rounds that is football already played. */
-export async function presserFixtures(
+export function presserFixtures(
   gameweek: number,
   clubs: ReadonlyMap<number, Club>,
-): Promise<Map<number, { opponent: string; home: boolean; kickoff: string }>> {
+  season: readonly Fixture[],
+): Map<number, { opponent: string; home: boolean; kickoff: string }> {
   const out = new Map<number, { opponent: string; home: boolean; kickoff: string }>();
   const byId = byClubId(clubs);
-  const fixtures = await fetchFixtures(gameweek).catch(() => []);
-  for (const fixture of fixtures) {
-    // `team_h`/`team_a` are FPL's per-season club ids, which is what `Club.id`
-    // carries — never the season-stable code the crest keys off.
-    const home = byId.get(fixture.team_h);
-    const away = byId.get(fixture.team_a);
-    const kickoff = fixture.kickoff_time;
+  for (const fixture of season) {
+    if (fixture.gameweek !== gameweek) continue;
+    // Club ids are FPL's per-season ids, which is what `Club.id` carries —
+    // never the season-stable code the crest keys off.
+    const home = byId.get(fixture.homeClubId);
+    const away = byId.get(fixture.awayClubId);
+    const kickoff = fixture.kickoff;
     if (home === undefined || away === undefined || kickoff === null) continue;
     out.set(home.code, { opponent: fullClubName(away.name), home: true, kickoff });
     out.set(away.code, { opponent: fullClubName(home.name), home: false, kickoff });

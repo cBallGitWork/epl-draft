@@ -113,7 +113,7 @@ async function main(): Promise<void> {
   // keys off — `clubById` keys by the per-season id.
   const byCode = new Map([...clubs.values()].map((club) => [club.code, club]));
 
-  const sheet = await presserDesk({ facts, snapshot, byCode, now, lock, locked, say });
+  const sheet = presserDesk({ facts, snapshot, byCode, now, lock, locked, season, say });
   // The elevens predict the round the pressers preview, so one clock serves both.
   const xi = readXi(sheet.gameweek);
   const ahead = calendar.find((each) => each.gameweeks.includes(sheet.gameweek));
@@ -159,17 +159,17 @@ async function main(): Promise<void> {
     presserClubs: byCode,
     presserGameweek: sheet.gameweek,
     presserSpoke: sheet.spoke,
-    // Composed here rather than in the loop: it is the one column with a
-    // fixture read of its own, and every desk below it is synchronous.
+    // Composed here, once, rather than per assignment in the loop.
     elevens:
       xi === null || !assignments.some((each) => each.kind === "predicted-xi")
         ? null
-        : await xiColumn({
+        : xiColumn({
             xi,
             gameweek: sheet.gameweek,
             clubs: byCode,
             teams: facts.teams,
             players: snapshot.players,
+            season,
           }),
   };
 
