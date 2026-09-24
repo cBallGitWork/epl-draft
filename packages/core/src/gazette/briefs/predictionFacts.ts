@@ -107,7 +107,7 @@ function fixture(man: SquadMan): string {
 
 /** One of a side's main men against one of the round's hardest for his line: the story of a tie. */
 function hard(man: SquadMan, side: string): string {
-  return `${side}'s ${man.name}, one of their main men, is ${fixture(man)}, one of the hardest this round for his line. Say a hard one, never a rank. A big man against a hard one is often the story of a tie.`;
+  return `${side}'s ${man.name}, one of their main men, is ${fixture(man)}, one of the hardest this round for his line. Never a rank. A big man against a hard fixture is often the story of a tie.`;
 }
 
 /** Whose man he is, every time: a doubt read without its owner was once printed against the wrong side. */

@@ -47,7 +47,7 @@ function tieBlock(index: number, count: number, tie: PredictionsTie, name: (team
   const heading = `TIE ${index} of ${count}: ${home.name} [${home.teamId}] v ${away.name} [${away.teamId}]`;
   const shape = `Write it in "ties" with homeTeamId "${home.teamId}" and awayTeamId "${away.teamId}"`;
   if (call.callsTeamId === null) {
-    return [heading, "NO CALL: the desk cannot call this tie. Write two or three sentences on the men who matter and back nobody.", ...tieFacts(index, home, away, call), `${shape}, and "backs" null.`].join("\n");
+    return [heading, "NO CALL: the desk cannot call this tie. Write two or three sentences and back nobody.", ...tieFacts(index, home, away, call), `${shape}, and "backs" null.`].join("\n");
   }
   const backing = name(call.callsTeamId);
   const favourite = call.instinct === null ? backing : name(call.callsTeamId === home.teamId ? away.teamId : home.teamId);
