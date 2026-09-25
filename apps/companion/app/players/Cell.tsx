@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listName, signed, toFplClubCode, DASH } from "@epl/core";
+import type { FootballPlayer } from "@epl/core";
 import type { PoolRow } from "./pool";
 import type { PoolColumn, RawStats } from "./columns";
 import { figureOf } from "./figure";
@@ -9,6 +10,7 @@ import { ANALYSIS, playerHref } from "./routes";
 import type { PlayersQuery } from "./query";
 import { ROW_LINK } from "../components/league/TableCells";
 import { FIGURE, LEAD_WIDTH, LeadFace } from "./BoardRow";
+import StateBox from "../components/football/StateBox";
 
 // One row of the pool board: the lead (crest, name, and who holds him) and the figures beside it.
 // Figures are centred and lit in ink (DESIGN §3), never on a ground; a nought is quiet, an absence a dash.
@@ -21,12 +23,15 @@ export function Lead({
   query,
   teamNames,
   reader,
+  footballer,
   className,
 }: {
   row: PoolRow;
   query: PlayersQuery;
   teamNames: Map<string, string>;
   reader: string | null;
+  /** The footballer behind him, for his status tile; null where the bridge has not settled him. */
+  footballer: FootballPlayer | null;
   className: string;
 }) {
   const { player } = row.entry;
@@ -45,7 +50,12 @@ export function Lead({
           name={listName(player.rawName) || player.displayName}
           fullName={player.displayName}
           positions={row.entry.eligiblePositions}
-          after={<Holder row={row} teamNames={teamNames} reader={reader} />}
+          after={
+            <>
+              <Holder row={row} teamNames={teamNames} reader={reader} />
+              <StateBox player={footballer} />
+            </>
+          }
         />
       </Link>
     </td>

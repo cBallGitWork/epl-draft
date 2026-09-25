@@ -1,3 +1,4 @@
+import type { FootballPlayer } from "@epl/core";
 import type { PoolRow } from "./pool";
 import { type PoolColumn } from "./columns";
 import { LeadHeads, sortedAs, SortHead } from "../components/league/TableHeads";
@@ -8,6 +9,7 @@ import type { PlayersQuery } from "./query";
 import { BOARD, ROW_RULE } from "@/app/desk";
 import ScrollBoard from "../components/league/ScrollBoard";
 import Cell, { Lead } from "./Cell";
+import { doubtRow } from "../components/football/doubtRow";
 import { PIN_NAME, PIN_TILE } from "./BoardRow";
 
 // The pool as one sortable board: every column, phone-first, each sort a link so the server orders and the URL keeps it.
@@ -22,6 +24,7 @@ export default function PlayerTable({
   raw,
   rated,
   cuts,
+  footballers,
 }: {
   rows: readonly PoolRow[];
   /** The columns this plate shows, worked out by the page so the cuts are taken over exactly these. */
@@ -36,6 +39,8 @@ export default function PlayerTable({
   rated: boolean;
   /** Each lit column's cuts, by key. */
   cuts: Map<string, StandoutCut>;
+  /** FPL's players by code, for whether each man can play. */
+  footballers: ReadonlyMap<number, FootballPlayer>;
 }) {
   const current = activeSort(query);
   const figures = columns.filter((column) => column.key !== "name");
@@ -58,10 +63,13 @@ export default function PlayerTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={row.entry.player.fantraxId} className={`${ROW_RULE} hover:bg-raised`}>
+          {rows.map((row) => {
+            const footballer = row.fplCode === null ? null : (footballers.get(row.fplCode) ?? null);
+            const wash = doubtRow(footballer);
+            return (
+            <tr key={row.entry.player.fantraxId} className={`${ROW_RULE} hover:bg-raised ${wash}`}>
               <PositionTile positions={row.entry.eligiblePositions} cell className={PIN_TILE} />
-              <Lead row={row} query={query} teamNames={teamNames} reader={reader} className={PIN_NAME} />
+              <Lead row={row} query={query} teamNames={teamNames} reader={reader} footballer={footballer} className={`${PIN_NAME} ${wash}`} />
               {figures.map((column) => (
                 <Cell
                   key={column.key}
@@ -73,7 +81,8 @@ export default function PlayerTable({
                 />
               ))}
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </ScrollBoard>
