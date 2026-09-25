@@ -164,6 +164,10 @@ export interface LeagueTransaction {
    *  opinion of it, like the position beside it, and display only. Null when the
    *  row carried none. */
   club: string | null;
+  /** His club in full, "Sunderland"; null when the row carried none. */
+  clubName: string | null;
+  /** How a claim was made; null on a drop, a trade, or a claim Fantrax did not type. */
+  via: "waivers" | "free agency" | null;
   /** Null where there is no team on that side: nobody owns a free agent, and a
    *  dropped player goes to the pool rather than to another manager. */
   fromTeamId: string | null;

@@ -70,7 +70,10 @@ export function deals(transactions: readonly LeagueTransaction[]): Deal[] {
     // A drop and a claim are the two sides of one piece of business, which is
     // why `drop` is not a kind of its own up here.
     if (row.kind === "drop") deal.outbound.push(side(row, row.fromTeamId));
-    else if (row.toTeamId !== null) deal.inbound.push(side(row, row.toTeamId));
+    else if (row.toTeamId !== null) {
+      deal.inbound.push(side(row, row.toTeamId));
+      deal.via ??= row.via;
+    }
     else deal.outbound.push(side(row, row.fromTeamId));
 
     // A trade names both sides explicitly, so it wins over a claim's shape if
@@ -83,5 +86,5 @@ export function deals(transactions: readonly LeagueTransaction[]): Deal[] {
 }
 
 function side(row: LeagueTransaction, teamId: string | null) {
-  return { playerName: row.playerName, position: row.position, club: row.club, teamId };
+  return { playerName: row.playerName, position: row.position, club: row.club, clubName: row.clubName, teamId };
 }

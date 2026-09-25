@@ -19,6 +19,12 @@ describe("mapTransactions, on a claim and the drop that paid for it", () => {
     expect(rows.map((r) => r.playerName)).toEqual(["Kevin Schade", "Morgan Gibbs-White"]);
   });
 
+  it("says how he was signed, and names his club in full", () => {
+    // `claimType` is FA on 44 captured claims and WW on 3; a drop carries "".
+    expect(rows.map((r) => r.via)).toEqual(["free agency", null]);
+    expect(rows.map((r) => r.clubName)).toEqual(["Brentford", "Nottingham Forest"]);
+  });
+
   it("ties them together with the set id Fantrax groups them by", () => {
     expect(rows[0]?.setId).toBe(rows[1]?.setId);
     expect(rows[0]?.setId).toBeTruthy();
@@ -187,5 +193,14 @@ describe("transactionDateLabel", () => {
   it("says null rather than guessing when they stop publishing it", () => {
     expect(transactionDateLabel({ table: { rows: [] } })).toBe(null);
     expect(transactionDateLabel(lineupChange as RawTransactionHistory)).toBe(null);
+  });
+});
+
+describe("mapTransactions, on a waiver claim", () => {
+  it("reads WW as a claim off waivers", () => {
+    const raw: RawTransactionHistory = {
+      table: { rows: [{ scorer: { scorerId: "070hc", name: "Brian Brobbey" }, transactionCode: "CLAIM", claimType: "WW", executed: true }] },
+    };
+    expect(mapTransactions(raw, "CLAIM_DROP")[0]?.via).toBe("waivers");
   });
 });
