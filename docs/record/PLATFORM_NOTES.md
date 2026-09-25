@@ -345,8 +345,11 @@ anyway.
 - **Every writer pushes through `scripts/ci/push.sh`** (capture, editions,
   round-state, scout-xi): commit what the caller staged, then `pull --rebase` and
   push, five tries with jitter. Four jobs push to one branch, and each one used
-  to lose its commit on a single rejected push. Tested against a local bare repo
-  with a second clone pushing first: it rebased and landed, with no merge commit.
+  to lose its commit on a single rejected push. A rebase that conflicts is
+  aborted and fails the job at once with an `::error::` naming the files, because
+  an open rebase failed all five retries. `scripts/ci/push.test.ts` holds all
+  three paths against a bare repo on disk: a clean rebase lands with no merge
+  commit, a conflict aborts, and a failure without one still retries.
 - **Checkout keeps no token** (`persist-credentials: false`), so `npm ci` and
   our own scripts run without a credential that can push. Only the push step
   gets `GITHUB_TOKEN`.
