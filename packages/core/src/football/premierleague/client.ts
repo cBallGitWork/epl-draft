@@ -1,5 +1,7 @@
 import { PL_COMPETITION, PL_COMP_SEASON, PL_FOOTBALL_API_BASE, PL_TEXTSTREAM_PAGE } from "../../config";
+import { statusError } from "../../http/errors";
 import { politeFetch } from "../../http/fetch";
+import { readJson } from "../../http/json";
 import type {
   RawPlFixture,
   RawPlFixturePage,
@@ -24,8 +26,8 @@ async function get<T>(path: string): Promise<T> {
   const res = await politeFetch(`${PL_FOOTBALL_API_BASE}${path}`);
   // Loudly, like FPL's. A caller that catches an error can say the commentary is
   // unavailable; one handed a default would print silence as "nothing happened".
-  if (!res.ok) throw new Error(`Premier League ${path} → ${res.status}`);
-  return (await res.json()) as T;
+  if (!res.ok) throw statusError("Premier League", path, res.status);
+  return (await readJson(res, "Premier League", path)) as T;
 }
 
 /** One round's fixtures — and every goal in it.

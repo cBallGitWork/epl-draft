@@ -9,12 +9,8 @@ import { retryDelay, worthRetrying } from "./backoff";
 // The clock and the randomness are here rather than in `backoff.ts` because they
 // are I/O, and this is the edge. `backoff.ts` stays pure and testable.
 
-/** Fetch, retrying only what the provider says is worth retrying.
- *
- *  Returns the last response whether or not it is ok. The caller owns the error
- *  type — FPL throws a plain `Error`, Fantrax throws a `FantraxError` carrying
- *  the method name — and a shared transport has no business choosing between
- *  them. */
+/** Fetch, retrying only what the provider says is worth retrying. Returns the last response
+ *  whether or not it is ok: what a status means is the caller's to say. */
 export async function politeFetch(url: string, init: RequestInit = {}): Promise<Response> {
   for (let attempt = 1; ; attempt++) {
     const res = await fetch(url, {

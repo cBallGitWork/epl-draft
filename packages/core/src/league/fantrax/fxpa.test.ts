@@ -1,7 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { ProviderError } from "../../http/errors";
+import { htmlPage, serve, statusOnly } from "../../http/fakeFetch";
 import { FantraxError, errorEnvelope, pageErrorEnvelope, responseErrorEnvelope } from "./errors";
-import { unwrapFxpa } from "./fxpa";
+import { fxpaRead, unwrapFxpa } from "./fxpa";
 import pageError from "./__fixtures__/fxpaPageError.json";
+
+afterEach(() => vi.unstubAllGlobals());
 
 // The fxpa envelope, recorded 12 Aug 2026 by asking the real league for its
 // commissioner hub without a session.
@@ -83,7 +87,30 @@ describe("unwrapFxpa", () => {
     expect(() => unwrapFxpa("x", { responses: [] })).toThrow(/NO_RESPONSES/);
   });
 
+  it("calls a refusal refused and a body with no responses malformed", () => {
+    expect(() => unwrapFxpa("x", pageError)).toThrow(expect.objectContaining({ kind: "refused" }));
+    expect(() => unwrapFxpa("x", {})).toThrow(expect.objectContaining({ kind: "malformed" }));
+  });
+
   it("maps a response with neither data nor errors to null", () => {
     expect(unwrapFxpa("x", { responses: [{}] })).toBeNull();
+  });
+});
+
+describe("fxpaRead", () => {
+  const LEAGUE = "league-under-test";
+
+  it("reads a web page in place of JSON as malformed, not as a SyntaxError", async () => {
+    serve(htmlPage);
+    const error = await fxpaRead(LEAGUE, "getStandings").catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(ProviderError);
+    expect(error).toMatchObject({ provider: "Fantrax", what: "getStandings", kind: "malformed" });
+  });
+
+  it("reads a 404 as a Fantrax refusal", async () => {
+    serve(statusOnly(404));
+    const error = await fxpaRead(LEAGUE, "getStandings").catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(FantraxError);
+    expect(error).toMatchObject({ code: "404", kind: "refused" });
   });
 });

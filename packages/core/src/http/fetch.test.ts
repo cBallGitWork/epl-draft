@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { serve } from "./fakeFetch";
 import { politeFetch } from "./fetch";
 
 afterEach(() => {
@@ -13,17 +14,6 @@ function capture(): RequestInit[] {
     return new Response("{}", { status: 200 });
   });
   return seen;
-}
-
-/** Stubs fetch to give each answer in turn, repeating the last; returns the call count. */
-function serve(...answers: (() => Response)[]): { calls: number } {
-  const count = { calls: 0 };
-  vi.stubGlobal("fetch", async () => {
-    const answer = answers[Math.min(count.calls, answers.length - 1)];
-    count.calls++;
-    return answer();
-  });
-  return count;
 }
 
 const busy = (retryAfter: string) => () =>

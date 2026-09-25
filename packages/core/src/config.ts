@@ -147,6 +147,9 @@ export const HTTP_BACKOFF_BASE_MS = 500;
 /** Longest Retry-After worth waiting out; a longer one goes back at once rather than stall a render. */
 export const HTTP_RETRY_AFTER_MAX_MS = 5_000;
 
+/** How much of a body that was not JSON an error quotes: enough to tell a WAF page from a cut-off. */
+export const HTTP_BODY_SAMPLE_CHARS = 120;
+
 /** How long one provider request may take before it is abandoned; the 1.3 MB bootstrap fits. */
 export const FETCH_TIMEOUT_MS = 15_000;
 
