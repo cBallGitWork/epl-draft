@@ -95,8 +95,17 @@ describe("unwrapFxpa", () => {
     expect(() => unwrapFxpa("x", {})).toThrow(expect.objectContaining({ kind: "malformed" }));
   });
 
-  it("maps a response with neither data nor errors to null", () => {
-    expect(unwrapFxpa("x", { responses: [{}] })).toBeNull();
+  // Handing back null here let a mapper find out, as a TypeError on its first field.
+  it("refuses a response with neither data nor errors as malformed", () => {
+    for (const response of [{}, { data: null }, null]) {
+      const read = () => unwrapFxpa("getStandings", { responses: [response] });
+      expect(read).toThrow(FantraxError);
+      expect(read).toThrow(expect.objectContaining({ code: "NO_DATA", kind: "malformed" }));
+    }
+  });
+
+  it("returns a payload that is present but empty", () => {
+    expect(unwrapFxpa("x", { responses: [{ data: {} }] })).toEqual({});
   });
 });
 
