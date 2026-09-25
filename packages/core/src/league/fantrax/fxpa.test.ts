@@ -5,7 +5,10 @@ import { FantraxError, errorEnvelope, pageErrorEnvelope, responseErrorEnvelope }
 import { fxpaRead, unwrapFxpa } from "./fxpa";
 import pageError from "./__fixtures__/fxpaPageError.json";
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.useRealTimers();
+  vi.unstubAllGlobals();
+});
 
 // The fxpa envelope, recorded 12 Aug 2026 by asking the real league for its
 // commissioner hub without a session.
@@ -105,6 +108,15 @@ describe("fxpaRead", () => {
     const error = await fxpaRead(LEAGUE, "getStandings").catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ProviderError);
     expect(error).toMatchObject({ provider: "Fantrax", what: "getStandings", kind: "malformed" });
+  });
+
+  it("asks again when Fantrax is busy, since a read is safe to repeat", async () => {
+    vi.useFakeTimers();
+    const count = serve(statusOnly(503), () => Response.json({ responses: [{ data: { a: 1 } }] }));
+    const pending = fxpaRead(LEAGUE, "getStandings");
+    await vi.runAllTimersAsync();
+    expect(await pending).toEqual({ a: 1 });
+    expect(count.calls).toBe(2);
   });
 
   it("reads a 404 as a Fantrax refusal", async () => {

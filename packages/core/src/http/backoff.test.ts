@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { retryDelay, worthRetrying } from "./backoff";
+import { droppedConnection, retryDelay, worthRetrying } from "./backoff";
 
 const NOW = Date.parse("2026-08-21T19:00:00Z");
 
@@ -11,6 +11,19 @@ describe("worthRetrying", () => {
     // 404 for a gameweek that does not exist, which is an answer.
     expect(worthRetrying(404)).toBe(false);
     expect(worthRetrying(400)).toBe(false);
+  });
+});
+
+describe("droppedConnection", () => {
+  it("retries a reset, a refusal, a failed lookup and undici's socket failures", () => {
+    for (const code of ["ECONNRESET", "ECONNREFUSED", "ENOTFOUND", "EAI_AGAIN", "UND_ERR_SOCKET"]) {
+      expect(droppedConnection(code)).toBe(true);
+    }
+  });
+
+  it("does not retry a failure that would fail the same way again", () => {
+    expect(droppedConnection("CERT_HAS_EXPIRED")).toBe(false);
+    expect(droppedConnection("ERR_INVALID_URL")).toBe(false);
   });
 });
 

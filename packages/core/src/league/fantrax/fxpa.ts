@@ -62,11 +62,16 @@ export async function fxpaRead(
     if (canned !== null) return canned;
   }
 
-  const res = await politeFetch(`${FANTRAX_FXPA_BASE}?leagueId=${encodeURIComponent(leagueId)}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ msgs: [{ method, data: { leagueId, ...data } }] }),
-  });
+  // A POST that only reads, so safe to resend; a write must never pass `idempotent`.
+  const res = await politeFetch(
+    `${FANTRAX_FXPA_BASE}?leagueId=${encodeURIComponent(leagueId)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ msgs: [{ method, data: { leagueId, ...data } }] }),
+    },
+    { idempotent: true },
+  );
 
   // As on fxea, a backstop only: fxpa reports its own refusals with a 200.
   if (!res.ok) throw new FantraxError(method, String(res.status), res.statusText, kindOfStatus(res.status));

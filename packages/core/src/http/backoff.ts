@@ -20,6 +20,13 @@ export function worthRetrying(status: number): boolean {
   return status === 429 || (status >= 500 && status < 600);
 }
 
+/** A connection reset, refused or unresolved, and undici's own socket failures: a blip, like a 5xx. */
+export function droppedConnection(code: string): boolean {
+  return DROPPED_CONNECTION.has(code) || code.startsWith("UND_ERR_");
+}
+
+const DROPPED_CONNECTION = new Set(["ECONNRESET", "ENOTFOUND", "EAI_AGAIN", "ECONNREFUSED"]);
+
 /** Milliseconds before attempt `attempt` (1-based): never less than a stated `Retry-After`, and
  *  null when that asks for more than `HTTP_RETRY_AFTER_MAX_MS`; otherwise exponential from `base`
  *  with the caller's jitter in [0,1), so simultaneous callers do not retry as one burst. */
