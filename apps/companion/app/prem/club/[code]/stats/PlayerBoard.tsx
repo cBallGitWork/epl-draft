@@ -21,21 +21,9 @@ import { standoutCuts, standoutInk } from "../../../../components/league/standou
 import StateBox from "../../../../components/football/StateBox";
 import { doubtRow } from "../../../../components/football/doubtRow";
 
-// A club's season, player by player, in Championship Manager's stat-screen
-// grammar.
-//
-// **The same shape as `squad/[teamId]/stats`** (Craig, 3 Sep 2026: "stats is
-// nothing like other sections, revamp, is for the players"). That screen is the
-// section's idiom and this one was a club summary instead: a real `<table>` in
-// `cm-scroll overflow-x-auto` inside a `cm-panel`, `cm-index` down the left, the
-// bevel on a block INSIDE each `<th>` rather than on the cell — these tables
-// collapse their borders and a strip of bevelled cells loses its inner edges
-// (desk.css).
-//
-// **It replaced a leaders board**, which named the top man in six measures. The
-// board answers the same question better: sorted by goals, the first row IS the
-// top scorer, and it says what the rest of the squad did as well. Two answers to
-// one question is what CODE_RULES §2 calls bloat, so the leaders went.
+// A club's season, player by player, on the house board: our position in the index tile, the
+// name pinned beside it, standouts lit, doubts washed. It replaced a leaders board: sorted by
+// goals, the first row IS the top scorer.
 //
 // Client only because sorting is a tap here rather than a link. That is the
 // difference from `/league` and `/prem`, whose sort survives being shared
