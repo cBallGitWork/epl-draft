@@ -105,13 +105,17 @@ Each of these is in PLATFORM_NOTES, "What the pre-swap cleanup declined".
 
 ## Where the stats are (added 25 Sep 2026)
 
-**`docs/providers/stats.md` lists every stat we hold or can fetch**: FPL, Fantrax (the served league
-and the stats league), the Premier League API and the sister repo's intel. Each row gives the
-provider field, the domain field, how complete it was when counted, and who reads it. It also lists
-what is fetched and read by nobody, and what was counted and refused. `scripts/stats-reference.test.ts`
+**`docs/providers/stats.md` is the reference for the stats we hold or can fetch**: FPL, Fantrax (the served league
+and the stats league), the Premier League API and the sister repo's intel. It has a row per measurement,
+not per field: keys, ids, names, labels and prose are left out on purpose. Each row gives the provider
+field, the domain field, how complete it was when counted, and the files that read it. It also lists
+what is fetched and read by nobody and what was counted and refused. It says which stats we keep a
+dated history of, and which are live reads we could never backfill. `scripts/stats-reference.test.ts`
 fails when a cited line stops being where the fields it names are declared, when a stat type gains a
-count, flag or keyed bag of figures with no row, or when the stats league's columns leave the
-probe's order. It cannot check a completeness fraction or a reader list; re-count those by hand.
+count, flag or keyed bag of figures with no row, when a field or function on its `NAMED` list loses
+its row, or when the stats league's columns leave the probe's order. It cannot check a completeness
+fraction or a reader list, and it cannot see a text or list field that has no row; re-count those by
+hand.
 Read it before adding a figure to a screen.
 
 ## Still Craig's
