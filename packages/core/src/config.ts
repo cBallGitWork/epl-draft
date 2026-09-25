@@ -327,14 +327,8 @@ export const FANTRAX_TIMEZONE = "America/New_York";
  *  `contributions` — and until now the sticker disagreed with the other three. */
 export const NOTABLE_SAVES = 4;
 
-/** How many matches ahead a fixture run reads.
- *
- *  Five, because that is roughly the horizon anyone holding a player is deciding
- *  over — long enough that one hard week does not decide it, short enough that
- *  FPL's difficulty ratings have not been overtaken by a January transfer
- *  window. Named here rather than at the one call site because it is a judgement
- *  about the game, not a measurement of the space on screen. */
-export const FIXTURE_RUN = 5;
+/** How many matches ahead a player's fixture run reads: eight fills a phone's row and a desk's. */
+export const FIXTURE_RUN = 8;
 
 /** How many gameweeks Data's planner, club board and projections look ahead (Craig, 24 Sep 2026: "next 6
  *  gameweeks"): a little past a player's own run, because a manager plans a squad further out than one man. */

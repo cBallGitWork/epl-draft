@@ -22,10 +22,7 @@ export default function FixtureRun({ run }: { run: Opposition[] }) {
 
   return (
     <Section title="Next up" aside="FPL's difficulty">
-      {/* Capped rather than filling the page. Five blocks stretched across a
-          desktop column are billboards, and the run is meant to be read in one
-          glance as a shape — five reds in a row — not one block at a time. */}
-      <ol className="flex max-w-[30rem] items-stretch gap-1">
+      <ol className="flex items-stretch gap-1">
         {run.map((against) => (
           <li key={against.fixture.id} className="flex min-w-0 flex-1 flex-col gap-1">
             <span className="numeric text-center text-2xs text-faint">

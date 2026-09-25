@@ -47,7 +47,7 @@ derived the same four from the same object.
    phone. Every rating is OURS, derived, and says what from on hover.
 3. **The real position**, in cyan — the first thing in the app entitled to that
    slot (see below).
-4. **The run to come**, FPL's difficulty. *Fantrax's projection for the round was
+4. **The run to come**, the next eight across the row, in FPL's difficulty. *Fantrax's projection for the round was
    here and is gone* (Craig, 25 Sep 2026: "remove row"), with the mapper that read
    it; the round just gone went on 4 Sep ("Remove gameweek so far").
 5. **Season** — the same Total and Per 90 rows Data opens with. CM puts the
