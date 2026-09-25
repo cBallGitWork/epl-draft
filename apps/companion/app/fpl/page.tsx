@@ -39,11 +39,8 @@ import Absent from "@/app/components/shell/Absent";
 // club's fixture has started. The round total takes the same rule for the same
 // reason — "Round 0" on a Friday is a claim about a round nobody has played.
 //
-// **The bench was there and was not a bench.** Four bordered cards on their own
-// grounds, in a register whose rows sit straight on the ground with a rule
-// between them. It is `.cm-rows` now, with CM's blue index block carrying the
-// order they come on in — which is the one thing that ordering means, and
-// exactly what an index block is for.
+// **The bench is kits under the grass** (25 Sep 2026), numbered in the order they come on;
+// it was four `.cm-rows` rows under the pitch.
 //
 // **A way out to FPL's own page**, which a tab about somebody else's game should
 // always have had: this shows a side and cannot change one.
@@ -132,19 +129,8 @@ export default async function FplPage() {
           title={`Gameweek ${squad.gameweek}`}
           aside={<>{squad.hit ? `${squad.hit} pt hit · ` : null}FPL&apos;s scoring</>}
         >
-          {/* The XI on the grass, the bench as rows under it — the same shape a
-              rival's team sheet takes, so the two games read alike even though
-              none of their numbers may be compared.
-
-              The pitch waited on this adapter carrying `element_type`: a pitch
-              needs lines, and the football layer refuses to know what line a man
-              is in because Fantrax files several of them differently. FPL's own
-              classification belongs to FPL's own layer, which is where it now
-              lives. The arrangement is `fplLineup`, pure and tested in core.
-
-              The bench stays a list. It is four men in the order they would come
-              on, which is an ordering rather than a shape, and standing them on
-              grass would claim a formation nobody picked. */}
+          {/* The XI on the grass and the bench as kits under it. The lines are FPL's own `element_type`,
+              which lives in FPL's layer; `fplLineup` arranges them, pure and tested in core. */}
           <FplPitch
             rows={arrangement.rows}
             bench={arrangement.bench}
