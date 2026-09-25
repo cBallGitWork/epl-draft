@@ -109,8 +109,10 @@ Each of these is in PLATFORM_NOTES, "What the pre-swap cleanup declined".
 and the stats league), the Premier League API and the sister repo's intel. Each row gives the
 provider field, the domain field, how complete it was when counted, and who reads it. It also lists
 what is fetched and read by nobody, and what was counted and refused. `scripts/stats-reference.test.ts`
-fails when a domain field it names moves, or when a stat type gains a number with no row. Read it
-before adding a figure to a screen.
+fails when a cited line stops being where the fields it names are declared, when a stat type gains a
+count, flag or keyed bag of figures with no row, or when the stats league's columns leave the
+probe's order. It cannot check a completeness fraction or a reader list; re-count those by hand.
+Read it before adding a figure to a screen.
 
 ## Still Craig's
 

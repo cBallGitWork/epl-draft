@@ -3,13 +3,13 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 // Holds `docs/providers/stats.md` to the tree, the way `revalidate.test.ts` holds the route literals.
-// (a) every `Type.field` in a Domain field cell is declared in that type, in a file the cell names;
-// (b) every number a stat type carries has a row, so a new figure cannot arrive undocumented.
+// (a) every `Type.field` in a Domain field cell is declared in that type, at the line the cell cites;
+// (b) every measurement a stat type carries has a row, so a new figure cannot arrive undocumented.
 
 const ROOT = join(import.meta.dirname, "..");
 const DOC = readFileSync(join(ROOT, "docs", "providers", "stats.md"), "utf8");
 
-/** The types whose numbers are stats, by the file that declares them. */
+/** The types whose measurements are stats, by the file that declares them. */
 const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   {
     file: "packages/core/src/football/types.ts",
@@ -32,7 +32,7 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/football/premierleague/assists.ts", types: ["StreamCredit"] },
   {
     file: "packages/core/src/football/intel/types.ts",
-    types: ["IntelPlayer", "IntelStarter", "IntelTaker", "IntelMatchPlayer", "IntelMatchEvent"],
+    types: ["IntelPlayer", "IntelStarter", "IntelTaker", "IntelMatchPlayer", "IntelMatchEvent", "IntelMatchSide"],
   },
   { file: "packages/core/src/football/intel/shots.ts", types: ["Shot"] },
   { file: "packages/core/src/football/intel/touches.ts", types: ["TouchCentre"] },
@@ -42,6 +42,7 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/football/intel/pressers.ts", types: ["PresserSignal"] },
   { file: "packages/core/src/league/types.ts", types: ["StandingsRow", "RosterLimits", "LeaguePlayer"] },
   { file: "packages/core/src/league/stats.ts", types: ["PoolStatRow", "StatLine"] },
+  { file: "packages/core/src/league/fantrax/playerStats.ts", types: ["PlayerStatLine"] },
   {
     file: "packages/core/src/league/points.ts",
     types: ["LiveTeamScore", "TeamProjection", "LivePlayerPoints", "LivePlayerCategory"],
@@ -52,11 +53,31 @@ const STAT_TYPES: readonly { file: string; types: readonly string[] }[] = [
   { file: "packages/core/src/league/form.ts", types: ["FormGame"] },
   { file: "packages/core/src/league/fantrax/profileTables.ts", types: ["PlayerMatch"] },
   { file: "packages/core/src/league/fantrax/playerNews.ts", types: ["PlayerStory"] },
+  { file: "packages/core/src/join/cleanSheets.ts", types: ["PendingCleanSheets"] },
   { file: "apps/companion/app/players/teams/teamRows.ts", types: ["PoolMan", "TeamRow"] },
 ];
 
-/** Numbers that hold a key (a code, an id, a round), not a measurement. */
-const KEYS = new Set([
+/** Stats written as text, a list or a table of tables, which no written-type rule can pick out. */
+const NAMED = [
+  "FootballPlayer.status",
+  "FootballPlayer.news",
+  "FootballPlayer.newsAdded",
+  "PlMatchFacts.halfTime",
+  "PlMatchFacts.referee",
+  "IntelMatch.halfTime",
+  "IntelMatch.referee",
+  "IntelMatchSide.formation",
+  "IntelMatchPlayer.position",
+  "RosterSlot.status",
+  "RosterSlot.position",
+  "LeaguePlayerState.status",
+  "LeaguePlayerState.eligiblePositions",
+  "ScoringRules.goalie",
+  "ScoringRules.outfield",
+];
+
+/** Fields that hold a key, a venue or a state flag, not a measurement. */
+const NOT_MEASURES = new Set([
   "id",
   "code",
   "playerId",
@@ -76,16 +97,40 @@ const KEYS = new Set([
   "assister",
   "on",
   "off",
+  "home",
+  "settled",
+  "percent",
+  "owned",
 ]);
+
+/** A count, a flag or a keyed bag of figures: what a stat type's measurements are written as. */
+const MEASURE = /^(number|number \| null|boolean)$|^Record<.*\bnumber\b/;
+
+/** The stats league's columns in the order the 25 Sep 2026 probe read them. */
+const STATS_LEAGUE = {
+  outfield: [
+    "Rk", "Sta", "Opp", "Sal", "FPts", "FP/G", "Ros", "+/-", "GP", "GS", "Min", "G", "GIB", "GOB", "A", "A2",
+    "KP", "ABS", "AFKG", "AHW", "AOG", "APL", "APKG", "AR", "ASOP", "AF", "AT", "S", "S/G", "S/90", "SOT", "SOP",
+    "SB", "Tk", "TkW", "Tu", "DIS", "FC", "FS", "ErS", "ErG", "YC", "RC", "Pen", "Off", "Off/G", "AP", "SFTP",
+    "C", "AC", "CF", "CK", "CF", "CE", "DFP", "DFP3", "CC", "FKS", "Int", "IntB", "CLRA", "CLO", "CLR", "CoA",
+    "DW", "DL", "AER", "BCC", "BCM", "BCS", "BR", "FKG", "LB", "LBA", "SBON", "SBOF", "PKG", "PKA", "PKM", "PKD",
+    "OG", "GAO", "CS", "CS", "OUTP",
+  ],
+  keepers: [
+    "Rk", "Sta", "Opp", "Sal", "FPts", "FP/G", "Ros", "+/-", "GP", "Min", "CS", "GA", "Sv", "YC", "RC", "ErS",
+    "ErG", "PKS", "PKM", "DIS", "G", "A", "KP", "AF", "AP", "OG", "CE",
+  ],
+};
 
 const DOMAIN_HEADER = "Domain field (path:line)";
 const TOKEN = /`([A-Z][A-Za-z]*)\.([a-z][A-Za-z]*)`/g;
 const PATH = /((?:packages|apps|scripts)\/[^`\s|]+?\.tsx?):(\d+)/g;
+/** A named field or a cited path, in the order the cell writes them. */
+const CITATION = /`([A-Z][A-Za-z]*)\.([a-z][A-Za-z]*)`|((?:packages|apps|scripts)\/[^`\s|]+?\.tsx?):(\d+)/g;
 
-interface Declared {
-  start: number;
-  end: number;
-  fields: Map<string, string>;
+interface Field {
+  written: string;
+  line: number;
 }
 
 const files = new Map<string, string[]>();
@@ -98,44 +143,58 @@ function linesOf(file: string): string[] | null {
   return lines.length === 0 ? null : lines;
 }
 
-/** A top-level interface or object type, its 1-based line span and its fields' written types. */
-function declared(file: string, type: string): Declared | null {
+/** A top-level interface or object type's fields: each one's written type and 1-based line. */
+function declared(file: string, type: string): Map<string, Field> | null {
   const lines = linesOf(file);
   if (lines === null) return null;
   const head = new RegExp(`^(export )?(interface ${type}\\b|type ${type} =)`);
   const start = lines.findIndex((line) => head.test(line));
   if (start < 0) return null;
-  const fields = new Map<string, string>();
-  let end = start;
-  while (end + 1 < lines.length && !/^}/.test(lines[end + 1] ?? "")) {
-    end += 1;
-    const field = /^ {2}(\w+)\??: (.+?);?$/.exec(lines[end] ?? "");
-    if (field) fields.set(field[1] ?? "", field[2] ?? "");
+  const fields = new Map<string, Field>();
+  for (let at = start + 1; at < lines.length && !/^}/.test(lines[at] ?? ""); at += 1) {
+    const field = /^ {2}(\w+)\??: (.+?);?$/.exec(lines[at] ?? "");
+    if (field) fields.set(field[1] ?? "", { written: field[2] ?? "", line: at + 1 });
   }
-  return { start: start + 1, end: end + 2, fields };
+  return fields;
 }
 
-/** Every table row that carries a Domain field column, with the heading it sits under. */
-function domainCells(): { cell: string; section: string }[] {
-  const out: { cell: string; section: string }[] = [];
+interface Row {
+  cells: string[];
+  domain: string;
+  section: string;
+  /** Which table of its section the row sits in, from 0. */
+  table: number;
+}
+
+/** Every table row that carries a Domain field column, with the heading and table it sits under. */
+function domainRows(): Row[] {
+  const out: Row[] = [];
   let column = -1;
   let section = "";
+  let table = -1;
   for (const line of DOC.split("\n")) {
-    if (line.startsWith("## ")) section = line.slice(3);
+    if (line.startsWith("## ")) {
+      section = line.slice(3);
+      table = -1;
+    }
     if (!line.startsWith("|")) {
       column = -1;
       continue;
     }
     const cells = line.split(/(?<!\\)\|/).slice(1, -1).map((cell) => cell.trim());
-    if (cells.includes(DOMAIN_HEADER)) column = cells.indexOf(DOMAIN_HEADER);
-    else if (column >= 0 && !/^-+$/.test(cells[0] ?? "")) out.push({ cell: cells[column] ?? "", section });
+    if (cells.includes(DOMAIN_HEADER)) {
+      column = cells.indexOf(DOMAIN_HEADER);
+      table += 1;
+    } else if (column >= 0 && !/^-+$/.test(cells[0] ?? "")) {
+      out.push({ cells, domain: cells[column] ?? "", section, table });
+    }
   }
   return out;
 }
 
-const rows = domainCells();
-const tokens = rows.flatMap(({ cell }) =>
-  [...cell.matchAll(TOKEN)].map((m) => ({ type: m[1] ?? "", field: m[2] ?? "", cell })),
+const rows = domainRows();
+const tokens = rows.flatMap(({ domain }) =>
+  [...domain.matchAll(TOKEN)].map((m) => ({ type: m[1] ?? "", field: m[2] ?? "", cell: domain })),
 );
 const documented = new Set(tokens.map((t) => `${t.type}.${t.field}`));
 
@@ -148,38 +207,47 @@ describe("docs/providers/stats.md", () => {
   it("names, for every Type.field, a file that declares the field inside that type", () => {
     const wrong = tokens.flatMap(({ type, field, cell }) => {
       const paths = [...cell.matchAll(PATH)].map((m) => m[1] ?? "");
-      const found = paths.some((file) => declared(file, type)?.fields.has(field));
+      const found = paths.some((file) => declared(file, type)?.has(field));
       return found ? [] : [`${type}.${field} (cell names ${paths.join(", ") || "no file"})`];
     });
     expect(wrong).toEqual([]);
   });
 
-  it("cites lines that fall inside a type the cell names, or inside the file when it names none", () => {
-    const wrong = rows.flatMap(({ cell }) => {
-      const types = [...cell.matchAll(TOKEN)].map((m) => m[1] ?? "");
-      return [...cell.matchAll(PATH)].flatMap((m) => {
-        const file = m[1] ?? "";
-        const at = Number(m[2]);
+  it("cites the first line of the fields named before the path", () => {
+    const wrong = rows.flatMap(({ domain }) => {
+      const out: string[] = [];
+      let named: string[] = [];
+      for (const m of domain.matchAll(CITATION)) {
+        if (m[1] !== undefined) {
+          named.push(`${m[1]}.${m[2] ?? ""}`);
+          continue;
+        }
+        const file = m[3] ?? "";
+        const at = Number(m[4]);
         const lines = linesOf(file);
-        if (lines === null) return [`${file} does not exist`];
-        if (types.length === 0) return at <= lines.length ? [] : [`${file}:${at} is past the end`];
-        const inside = types.some((type) => {
-          const span = declared(file, type);
-          return span !== null && at > span.start && at < span.end;
+        const found = named.map((name) => {
+          const [type = "", field = ""] = name.split(".");
+          return declared(file, type)?.get(field)?.line ?? Infinity;
         });
-        return inside ? [] : [`${file}:${at} is not inside ${[...new Set(types)].join(" or ")}`];
-      });
+        const first = Math.min(...found);
+        if (lines === null) out.push(`${file} does not exist`);
+        else if (named.length === 0 ? at > lines.length : at !== first) {
+          out.push(`${file}:${at} should be :${first} (${named.join(", ") || "past the end"})`);
+        }
+        named = [];
+      }
+      return out;
     });
     expect(wrong).toEqual([]);
   });
 
-  it("has a row for every number a stat type carries", () => {
+  it("has a row for every measurement a stat type carries", () => {
     const missing = STAT_TYPES.flatMap(({ file, types }) =>
       types.flatMap((type) => {
-        const span = declared(file, type);
-        if (span === null) return [`${type} is not declared in ${file}`];
-        return [...span.fields]
-          .filter(([name, written]) => /^number( \| null)?$/.test(written) && !KEYS.has(name))
+        const fields = declared(file, type);
+        if (fields === null) return [`${type} is not declared in ${file}`];
+        return [...fields]
+          .filter(([name, { written }]) => MEASURE.test(written) && !NOT_MEASURES.has(name))
           .map(([name]) => `${type}.${name}`)
           .filter((key) => !documented.has(key));
       }),
@@ -187,19 +255,33 @@ describe("docs/providers/stats.md", () => {
     expect(missing).toEqual([]);
   });
 
-  it("gives every stat type at least one number, so no entry in the list is vacuous", () => {
+  it("has a row for every stat written as text, a list or a table", () => {
+    expect(NAMED.filter((key) => !documented.has(key))).toEqual([]);
+  });
+
+  it("gives every stat type at least one measurement, so no entry in the list is vacuous", () => {
     const empty = STAT_TYPES.flatMap(({ file, types }) =>
-      types.filter((type) => {
-        const fields = declared(file, type)?.fields ?? new Map<string, string>();
-        return ![...fields.values()].some((written) => /^number( \| null)?$/.test(written));
-      }),
+      types.filter((type) => ![...(declared(file, type)?.values() ?? [])].some(({ written }) => MEASURE.test(written))),
     );
     expect(empty).toEqual([]);
   });
 
+  it("lists the stats league's columns in the probe's order, each at its own index", () => {
+    const league = rows.filter((row) => row.section === "Fantrax, the stats league");
+    const read = (table: number) =>
+      league
+        .filter((row) => row.table === table)
+        .map((row) => ({ name: (row.cells[1] ?? "").replaceAll("`", ""), index: /cells\[(\d+)\]/.exec(row.cells[2] ?? "")?.[1] }));
+    for (const [table, expected] of [STATS_LEAGUE.outfield, STATS_LEAGUE.keepers].entries()) {
+      const columns = read(table);
+      expect(columns.map((column) => column.name)).toEqual(expected);
+      expect(columns.map((column) => Number(column.index))).toEqual(expected.map((_, at) => at));
+    }
+  });
+
   it("marks every stats-league column available, not captured, until a capture exists", () => {
     const league = rows.filter((row) => row.section === "Fantrax, the stats league");
-    expect(league.length).toBeGreaterThan(100);
-    expect(league.filter((row) => row.cell !== "available, not captured")).toEqual([]);
+    expect(league).toHaveLength(STATS_LEAGUE.outfield.length + STATS_LEAGUE.keepers.length);
+    expect(league.filter((row) => row.domain !== "available, not captured")).toEqual([]);
   });
 });
