@@ -4,7 +4,6 @@ import ClubShell from "../Shell";
 import { clubOr404 } from "../club";
 import { leagueOpinions } from "../../../leagueOpinions";
 import { fantasyDepth } from "../SquadTable";
-import { positionsLabel } from "../../../../positions";
 import PlayerBoard from "./PlayerBoard";
 import type { Row } from "./PlayerBoard";
 
@@ -39,7 +38,7 @@ export default async function ClubStatsPage({ params }: { params: Promise<{ code
     )
     .map((player) => ({
       player,
-      position: positionsLabel(league.get(player.code)?.positions ?? []),
+      positions: league.get(player.code)?.positions ?? [],
     }));
 
   return (

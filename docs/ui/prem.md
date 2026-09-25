@@ -177,10 +177,10 @@ the reference for both, and it is a strip over a panel rather than one page.
 
 | Tab | Route | What | Source |
 |---|---|---|---|
-| Squad | `/prem/club/[code]` | Every man on the books, ordered by minutes | FPL bootstrap; Fantrax for eligibility |
+| Squad | `/prem/club/[code]` | Every man on the books, ordered by our position; no faces, a doubt washes his row (25 Sep 2026) | FPL bootstrap; Fantrax for eligibility |
 | Pieces | `…/set-pieces` | Who takes the penalties, free kicks and corners | FFScout, via the sister repo |
 | Fixtures | `…/fixtures` | The club's season, oldest first | FPL fixtures |
-| Stats | `…/stats` | Every player, by one group of measures, sortable | FPL |
+| Stats | `…/stats` | Every player, by one group of measures, sortable: our position in the index tile, no Pos column, each column's standouts in orange and yellow (red for goals conceded), a doubt's row washed (25 Sep 2026) | FPL |
 
 **Match puts the home side first, and the fantasy screen does not.** A fantasy
 fixture has no ground, so `squad/[teamId]/next` leads with whoever's page you
