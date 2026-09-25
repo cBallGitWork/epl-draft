@@ -5,6 +5,7 @@ import TabEmpty from "../../../../components/league/TabEmpty";
 import Section from "../../../../components/shell/Section";
 import PlayerPortrait from "../../../../components/football/PlayerPortrait";
 import StateBox from "../../../../components/football/StateBox";
+import { doubtRow } from "../../../../components/football/doubtRow";
 import { intelSetPieces } from "../../../../intel";
 import { PLAYER } from "../../../routes";
 import ClubShell from "../Shell";
@@ -76,7 +77,7 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
                   if (player === undefined) return null;
                   const out = availabilityOf(player).out;
                   return (
-                    <li key={taker.code} className="flex min-h-11 items-center gap-2 px-2 lg:min-h-9">
+                    <li key={taker.code} className={`flex min-h-11 items-center gap-2 px-2 lg:min-h-9 ${out ? "cm-out" : ""} ${doubtRow(player)}`}>
                       {/* The rank in CM's index block, in the club's own colour —
                           `ClubShell` has scoped it. First choice is the point of
                           the screen, so it is the first thing on the row. */}
@@ -95,9 +96,7 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
                         // first and lands on 43 against a 44 floor — the row's
                         // min-height is not its content box — so the number is
                         // written out and matches the `<li>` above it exactly.
-                        className={`flex min-h-11 min-w-0 flex-1 items-center truncate hover:underline lg:min-h-9 ${ROW_NAME} ${
-                          out ? "text-faint" : "text-ink"
-                        }`}
+                        className={`flex min-h-11 min-w-0 flex-1 items-center truncate text-ink hover:underline lg:min-h-9 ${ROW_NAME}`}
                       >
                         {player.fullName}
                       </Link>
@@ -108,15 +107,6 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
               </ul>
             </Section>
           ))}
-          {/* **Fantasy Football Scout's own per-club page**, and the share is
-              theirs: 0.53 of the penalties, not "first choice". Club-scoped on
-              purpose — an earlier cut read a rank off each PLAYER, which travels
-              with him, and Manchester City's penalty order came out led by a man
-              who earned it at Everton. */}
-          <p className="text-2xs text-faint">
-            Fantasy Football Scout&apos;s reading of who steps up, as a share of the club&apos;s
-            own set pieces. Not published by FPL.
-          </p>
         </section>
       )}
     </ClubShell>

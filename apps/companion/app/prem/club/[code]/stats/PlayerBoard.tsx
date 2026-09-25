@@ -8,31 +8,22 @@ import { VIEWS, reading } from "./measures";
 import {
   BOARD_FIGURE,
   HEAD_CELL,
-  HEAD_PLATE,
-  HEAD_PLATE_END,
   PANEL_FLUSH,
+  PINNED_NAME,
+  PINNED_TILE,
   ROW_NAME,
-  SCROLL,
   ROW_HOVER,
 } from "@/app/desk";
 import { MUTE, SortArrow } from "../../../../components/league/TableHeads";
-import { DASH } from "@epl/core";
+import PositionTile, { TILE_WIDTH } from "../../../../components/league/PositionTile";
+import ScrollBoard from "../../../../components/league/ScrollBoard";
+import { standoutCuts, standoutInk } from "../../../../components/league/standout";
+import StateBox from "../../../../components/football/StateBox";
+import { doubtRow } from "../../../../components/football/doubtRow";
 
-// A club's season, player by player, in Championship Manager's stat-screen
-// grammar.
-//
-// **The same shape as `squad/[teamId]/stats`** (Craig, 3 Sep 2026: "stats is
-// nothing like other sections, revamp, is for the players"). That screen is the
-// section's idiom and this one was a club summary instead: a real `<table>` in
-// `cm-scroll overflow-x-auto` inside a `cm-panel`, `cm-index` down the left, the
-// bevel on a block INSIDE each `<th>` rather than on the cell — these tables
-// collapse their borders and a strip of bevelled cells loses its inner edges
-// (desk.css).
-//
-// **It replaced a leaders board**, which named the top man in six measures. The
-// board answers the same question better: sorted by goals, the first row IS the
-// top scorer, and it says what the rest of the squad did as well. Two answers to
-// one question is what CODE_RULES §2 calls bloat, so the leaders went.
+// A club's season, player by player, on the house board: our position in the index tile, the
+// name pinned beside it, standouts lit, doubts washed. It replaced a leaders board: sorted by
+// goals, the first row IS the top scorer.
 //
 // Client only because sorting is a tap here rather than a link. That is the
 // difference from `/league` and `/prem`, whose sort survives being shared
@@ -41,9 +32,8 @@ import { DASH } from "@epl/core";
 
 export interface Row {
   player: FootballPlayer;
-  /** What our league files him at, already labelled. Null when Fantrax has no
-   *  opinion or would not answer. */
-  position: string | null;
+  /** What our league files him at; empty when Fantrax has no opinion or would not answer. */
+  positions: readonly string[];
 }
 
 export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
@@ -56,6 +46,14 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
   );
 
   const measures = VIEWS.find((entry) => entry.key === view)?.measures ?? [];
+  // Each column's standouts among the men who have played, as a match board lights them.
+  const played = rows.filter((row) => row.player.season.minutes > 0).length;
+  const cuts = new Map(
+    measures.map((measure) => [
+      measure.key,
+      standoutCuts(rows.map((row) => row.player.season[measure.key]), SHARES, { of: played }),
+    ]),
+  );
 
   const ordered = useMemo(() => {
     if (sort === null) return [...rows];
@@ -98,31 +96,16 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
         </select>
       </div>
 
-      {/* `cm-scroll` is CM's own bevelled bar, and it is here to be SEEN: a
-          table wider than its panel that hides its own scrollbar is a table
-          whose remaining columns do not exist as far as a reader knows. */}
-      <div className={`cm-scroll ${SCROLL}`}>
+      <ScrollBoard>
         <table className="w-full border-collapse whitespace-nowrap">
           <caption className="sr-only">Every player, by {view}</caption>
           <thead>
             <tr className="text-3xs uppercase">
-              {/* CM runs `1st 2nd 3rd` down the left of every table it draws,
-                  and `squad/[teamId]/stats` runs a plain count — a board is a
-                  ranking once a head is tapped, and the number is what says so. */}
-              <th scope="col" className="p-0 font-bold">
-                <span className={HEAD_PLATE_END}>
-                  <span className={MUTE}>Rank</span>
-                </span>
+              <th scope="col" className={`${HEAD_CELL} ${PINNED_TILE} ${TILE_WIDTH} bg-surface`}>
+                <span className={MUTE}>Fantrax position</span>
               </th>
-              <th scope="col" className={HEAD_CELL}>
-                <span className={HEAD_PLATE}>
-                  <span className={MUTE}>Player</span>
-                </span>
-              </th>
-              {/* Position is a column here for the reason it is one on the squad
-                  list: a man eligible at two cannot be filed under one letter. */}
-              <th scope="col" className={HEAD_CELL}>
-                <span className={HEAD_PLATE}>Pos</span>
+              <th scope="col" className={`${HEAD_CELL} ${PINNED_NAME} left-10 lg:left-14`}>
+                <span className={MUTE}>Player</span>
               </th>
               {measures.map((measure) => (
                 <th
@@ -164,39 +147,32 @@ export default function PlayerBoard({ rows }: { rows: readonly Row[] }) {
             </tr>
           </thead>
           <tbody>
-            {ordered.map(({ player, position }, at) => (
-              <tr key={player.id} className={`cm-row ${ROW_HOVER}`}>
-                <td className="cm-index numeric px-1.5 text-right">{at + 1}</td>
-                {/* White, which is what CM sets a name in on every screen it
-                    draws — `12.jpg`, `16.jpg` and `21.jpg`, checked. This said
-                    cyan and cited the same shots for it, off a reference row
-                    that had read its own images wrong. */}
-                <td className={`px-1.5 ${ROW_NAME} text-ink`}>
-                  <Link
-                    href={`/prem/player/${player.code}`}
-                    // The floor, on `StatBoard`'s precedent — the sibling board
-                    // this one is otherwise a copy of. A `<td>` cannot stretch
-                    // its child, so the link carries it.
-                    className="cm-row flex min-h-11 items-center hover:underline"
-                  >
-                    {player.fullName}
+            {ordered.map(({ player, positions }) => (
+              <tr key={player.id} className={`cm-row ${ROW_HOVER} ${doubtRow(player)}`}>
+                <PositionTile positions={positions} cell className={PINNED_TILE} />
+                <td className={`px-1.5 ${ROW_NAME} ${PINNED_NAME} left-10 text-ink lg:left-14 ${doubtRow(player)}`}>
+                  <Link href={`/prem/player/${player.code}`} className="cm-row flex min-h-11 w-36 items-center gap-2 hover:underline lg:w-auto">
+                    <span className="truncate">{player.fullName}</span>
+                    <StateBox player={player} />
                   </Link>
                 </td>
-                <td className="px-1.5 text-2xs text-muted">{position ?? DASH}</td>
-                {measures.map((measure) => (
-                  <td
-                    key={measure.key}
-                    className={`${BOARD_FIGURE} font-bold text-mid`}
-                  >
-                    {reading(player.season[measure.key])}
-                  </td>
-                ))}
+                {measures.map((measure) => {
+                  const value = player.season[measure.key];
+                  const ink = standoutInk(value, cuts.get(measure.key), measure.worse ? "low" : "high");
+                  return (
+                    <td key={measure.key} className={`${BOARD_FIGURE} ${ink || (value === 0 ? "text-muted" : "text-ink")}`}>
+                      {reading(value)}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollBoard>
     </section>
   );
 }
 
+/** A column's orange for its best tenth and yellow for its top fifth, as a match board lights them. */
+const SHARES = { good: 0.2, best: 0.1 };

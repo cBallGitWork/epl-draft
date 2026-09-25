@@ -3,6 +3,7 @@ import type { InboxItem } from "@epl/core";
 import { fantraxTime, londonDayAndDate, londonTime } from "@epl/core";
 import DateChip from "../components/shell/DateChip";
 import Letter from "./Letter";
+import { doubtWash } from "../components/football/doubtRow";
 import Nothing from "../components/shell/Nothing";
 import PageHeader from "../components/shell/PageHeader";
 import { readInbox } from "./inbox";
@@ -157,9 +158,6 @@ export default async function NewsPage({
  *  that is merely important. Ours are two marks — a fill for "you are reading
  *  this", an ink for "this is bad news about you" — so an item can be both
  *  without either disappearing. */
-/** A doubt's row washed as every other list washes it: red out, orange a major doubt, yellow a slight one. */
-const WASH = { out: "cm-doubt-out", major: "cm-doubt-major", slight: "cm-doubt-slight" } as const;
-
 function Row({
   item,
   open,
@@ -185,7 +183,7 @@ function Row({
       href={`${HERE}?item=${encodeURIComponent(item.id)}`}
       aria-current={open ? "true" : undefined}
       className={`cm-row flex min-h-11 items-stretch gap-1.5 ${
-        open ? "bg-league-deep" : `hover:bg-surface ${item.mark?.band ? WASH[item.mark.band] : ""}`
+        open ? "bg-league-deep" : `hover:bg-surface ${doubtWash(item.mark?.band ?? null)}`
       }`}
     >
       {/* **`DateChip` at its own size, and no size override at all now** — which

@@ -19,6 +19,8 @@ export interface Measure {
   head: string;
   /** What the head means, for the `title`. */
   label: string;
+  /** A column whose top is the bad end, lit red: goals conceded. */
+  worse?: boolean;
 }
 
 export interface View {
@@ -45,8 +47,8 @@ export const VIEWS: readonly View[] = [
     label: "Defensive",
     measures: [
       { key: "cleanSheets", head: "CS", label: "Clean sheets" },
-      { key: "goalsConceded", head: "GC", label: "Goals conceded" },
-      { key: "expectedGoalsConceded", head: "xGC", label: "Expected goals conceded" },
+      { key: "goalsConceded", head: "GC", label: "Goals conceded", worse: true },
+      { key: "expectedGoalsConceded", head: "xGC", label: "Expected goals conceded", worse: true },
       { key: "tackles", head: "Tck", label: "Tackles" },
       { key: "clearancesBlocksInterceptions", head: "CBI", label: "Clearances, blocks and interceptions" },
       { key: "recoveries", head: "Rec", label: "Recoveries" },

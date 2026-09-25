@@ -103,7 +103,7 @@ if (team) ROUTES.push(team, ...["transfers", "next", "fixtures", "stats"].map((t
 // token the palette has already had checked, and `inkOn` picking the ink for
 // each. Point it at a pale side (Fulham, Leeds, Spurs) by hand at least once.
 const club = await discover(cdp, "/prem", 'a[href^="/prem/club/"]');
-if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
+if (club) ROUTES.push(club, ...["depth", "set-pieces", "fixtures", "stats"].map((tab) => `${club}/${tab}`));
 
 // One match's two screens, discovered off the results list — where the score
 // became a link on 4 Sep 2026 and had never been one before. A written-down

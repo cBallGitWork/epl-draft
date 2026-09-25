@@ -25,6 +25,7 @@ import { CLUB } from "../../routes";
  *  same reason. */
 const TABS = [
   { segment: "", label: "Squad", key: "squad" },
+  { segment: "/depth", label: "Depth", key: "depth" },
   // **Set Pieces, where Match used to be** (Craig, 3 Sep 2026: "we can replace
   // match (fixtures have it) with set piece takers"). The Match tab was a
   // duplicate — the fixture run opens on the next game and says who, when and
