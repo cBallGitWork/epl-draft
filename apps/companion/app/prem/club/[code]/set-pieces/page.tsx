@@ -108,15 +108,6 @@ export default async function SetPiecesPage({ params }: { params: Promise<{ code
               </ul>
             </Section>
           ))}
-          {/* **Fantasy Football Scout's own per-club page**, and the share is
-              theirs: 0.53 of the penalties, not "first choice". Club-scoped on
-              purpose — an earlier cut read a rank off each PLAYER, which travels
-              with him, and Manchester City's penalty order came out led by a man
-              who earned it at Everton. */}
-          <p className="text-2xs text-faint">
-            Fantasy Football Scout&apos;s reading of who steps up, as a share of the club&apos;s
-            own set pieces. Not published by FPL.
-          </p>
         </section>
       )}
     </ClubShell>
