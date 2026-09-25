@@ -1,3 +1,4 @@
+import type { DoubtBand } from "../football/playerState";
 import type { InboxWhen } from "./when";
 
 // The manager's inbox: what the club has been told, newest first.
@@ -104,7 +105,7 @@ export interface InboxItem {
    *  apart. `label` is the football layer's word (`Inj`, `Sus`, `Unav`,
    *  `Dbt`), so a reader learns WHY at a glance and not merely that something is
    *  wrong. */
-  mark: { label: string; out: boolean } | null;
+  mark: { label: string; out: boolean; band: DoubtBand | null } | null;
   /** Drawn on the red ground CM gives the item that matters — and it means
    *  "this one is about you AND it is bad news", never merely "this one is
    *  yours". The game reserves it: in the shot, `Board expecting difficult

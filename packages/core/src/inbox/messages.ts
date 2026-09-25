@@ -10,9 +10,10 @@ import type { InboxItem } from "./types";
 // Pure, and separately callable: a Fantrax outage that costs the transaction
 // feed costs this tab and no other. The app edge assembles.
 //
-// **Every headline is a fact in the fewest words that carry it**, which is the
-// game's own register (`Rushden appoint Mike Paul as manager`) and the Gazetta's
-// house voice. No adjective, no advice, and no verb tense games.
+// **Every headline is a fact in the fewest words that carry it**, the game's own
+// register (`Rushden appoint Mike Paul as manager`). The body is a letter from a
+// person (Craig, 25 Sep 2026: "same for a waiver or free agent"): your assistant
+// about your business, the commissioner about everybody else's. Still no advice.
 
 /** How many names a headline will carry before it counts instead.
  *
@@ -29,10 +30,14 @@ function listed(names: readonly string[]): string {
   return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }
 
-/** A side's names, with his club where the feed gave one — the transaction feed
- *  is the only source that carries it, so most callers print nothing. */
+/** A side's name for a headline: `Brian Brobbey (SUN)`, where the feed gave a club. */
 function named(side: DealSide): string {
   return side.club ? `${side.playerName} (${side.club})` : side.playerName;
+}
+
+/** The same man in a letter: `Sunderland's Brian Brobbey`. */
+function spoken(side: DealSide): string {
+  return side.clubName ? `${side.clubName}'s ${side.playerName}` : named(side);
 }
 
 /** The league's business, as messages.
@@ -52,6 +57,8 @@ export function dealNews(
    *  rather than looked up, because the deal carries an id and this module may
    *  not hold the league. */
   teamName: (teamId: string) => string | null,
+  /** The reader's own team, whose business is written to him as his; null when signed out. */
+  mine: string | null,
 ): InboxItem[] {
   return deals.flatMap((deal) => {
     const gained = deal.inbound.map(named);
@@ -65,7 +72,8 @@ export function dealNews(
       [...deal.inbound, ...deal.outbound].map((side) => side.teamId).filter((id) => id !== null),
     );
     const teamId = sides.size === 1 ? [...sides][0] : null;
-    const who = teamId === null ? null : teamName(teamId);
+    const yours = teamId !== null && teamId === mine;
+    const who = yours ? "You" : teamId === null ? null : teamName(teamId);
 
     const headline =
       deal.kind === "trade"
@@ -74,7 +82,8 @@ export function dealNews(
           ? `${who ?? "A manager"} sign ${listed(gained.slice(0, NAMES_IN_HEADLINE))}`
           : `${who ?? "A manager"} release ${listed(lost.slice(0, NAMES_IN_HEADLINE))}`;
 
-    const body = dealBody(deal, gained, lost, who, teamName);
+    const party = deal.kind === "trade" && [...deal.inbound, ...deal.outbound].some((side) => side.teamId === mine);
+    const body = dealBody(deal, yours ? null : (who ?? "A manager"), teamName, mine);
 
     return [
       {
@@ -86,10 +95,7 @@ export function dealNews(
         gameweek: null,
         headline,
         body,
-        // **The manager who did it**, and "The league" for a trade — which has
-        // two and belongs to neither, the same argument that decides `teamId`
-        // just above and keeps a trade off both managers' red ground.
-        from: who ?? "The league",
+        from: yours || party ? "Your assistant" : "The commissioner",
         about: null,
         teamId,
         // No box: business is about a transaction, not about whether a man is
@@ -103,56 +109,45 @@ export function dealNews(
   });
 }
 
-/** What the message says under the headline.
- *
- *  **A sentence, not a ledger** (Craig, 5 Sep 2026, quoting the worst of it back:
- *  *"test4 sign Zion Suzuki (AVL) / In: Zion Suzuki (AVL). Out: David Raya
- *  (ARS)."* — "not good"). It was `In: …` and `Out: …`, which is the shape of the
- *  transaction row it was built from and reads as a receipt. Worse, it restated
- *  the headline's own nouns: a reader who has just read "test4 sign Zion Suzuki"
- *  is told again, in a colon list, that Zion Suzuki is in.
- *
- *  What a message adds to a subject line is the OTHER half — a claim's cost, a
- *  release's destination, a trade's return. So the body says what the headline
- *  did not, in the fewest words that carry it, and says nothing at all when
- *  there is nothing to add.
- *
- *  Still no adjective and no advice: this is the same house voice as the paper. */
+/** The letter under the headline: what the headline did not say, as a person would say it.
+ *  `who` is the rival who did it, or null when the business is the reader's own. */
 function dealBody(
   deal: Deal,
-  gained: readonly string[],
-  lost: readonly string[],
   who: string | null,
   teamName: (teamId: string) => string | null,
+  mine: string | null,
 ): string {
-  const manager = who ?? "A manager";
+  const gained = deal.inbound.map(spoken);
+  const lost = deal.outbound.map(spoken);
+  const one = (names: readonly string[], single: string, plural: string) => (names.length === 1 ? single : plural);
 
   if (deal.kind === "trade") {
-    // **Each man with the manager he joins**, which is the one thing a trade's
-    // headline cannot carry: it names the two managers and not who went where.
-    // Reading the direction off each side's own `teamId` also survives however
-    // Fantrax happens to split the rows — a 1-for-1 came through as two INBOUND
-    // sides and no outbound, so a body built from `gained` and `lost` said
-    // "A and B changes hands" and named neither destination.
     const moves = deal.inbound.map((side) => {
-      // A side Fantrax filed against no team — rare, and the name still moved.
-      const to = side.teamId === null ? null : teamName(side.teamId);
-      return `${named(side)} joins ${to ?? "a manager"}`;
+      const to = side.teamId === mine ? "you" : side.teamId === null ? null : teamName(side.teamId);
+      return `${spoken(side)} joins ${to ?? "a manager"}`;
     });
-    return moves.length > 0 ? `${listed(moves)}.` : "";
+    if (moves.length === 0) return "";
+    const party = [...deal.inbound, ...deal.outbound].some((side) => side.teamId === mine);
+    return `${party ? "Your trade has gone through" : "The trade has gone through"}: ${listed(moves)}.`;
   }
 
-  if (gained.length > 0) {
-    const cost =
-      lost.length > 0
-        ? ` ${listed(lost)} ${lost.length === 1 ? "makes" : "make"} way.`
-        : "";
-    return `${listed(gained)} ${gained.length === 1 ? "joins" : "join"} ${manager} off the waiver wire.${cost}`;
+  if (gained.length === 0) {
+    if (lost.length === 0) return "";
+    return who === null
+      ? `${listed(lost)} ${one(lost, "has", "have")} been released and ${one(lost, "goes", "go")} back into the pool.`
+      : `${who} have released ${listed(lost)}. ${one(lost, "He's", "They're")} back in the pool.`;
   }
 
-  return lost.length > 0
-    ? `${listed(lost)} ${lost.length === 1 ? "leaves" : "leave"} ${manager} and ${lost.length === 1 ? "is" : "are"} back in the pool.`
-    : "";
+  if (who === null) {
+    const room = lost.length === 0 ? "" : `, and ${listed(lost)} ${one(lost, "goes", "go")} back into the pool to make room`;
+    if (deal.via === "waivers") return `Your waiver claim for ${listed(gained)} went through${room}.`;
+    if (deal.via === "free agency") return `We've signed ${listed(gained)} as a free agent${room}.`;
+    return `${listed(gained)} ${one(gained, "has", "have")} joined the squad${room}.`;
+  }
+  const room = lost.length === 0 ? "" : `, releasing ${listed(lost)} to make room`;
+  if (deal.via === "waivers") return `${who} have claimed ${listed(gained)} off waivers${room}.`;
+  if (deal.via === "free agency") return `${who} have signed ${listed(gained)} as a free agent${room}.`;
+  return `${who} have signed ${listed(gained)}${room}.`;
 }
 
 /** Both managers, when a trade has two. Reads as the game would say it. */

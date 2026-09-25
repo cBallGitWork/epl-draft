@@ -121,7 +121,7 @@ export async function readInbox(): Promise<Inbox> {
       // pairs a claim with the drop that paid for it and both halves of a trade
       // on their shared `setId`. Reading the rows straight would file a manager
       // signing a player and, separately and mysteriously, losing one.
-      dealNews(deals(feed.rows), nameOf),
+      dealNews(deals(feed.rows), nameOf, mine),
       roundNews({
         gameweek,
         // **`nextDeadline`, which is the paper's own builder** — the
@@ -140,7 +140,7 @@ export async function readInbox(): Promise<Inbox> {
       // here is the exact bug the comment above says this removes: that is the
       // round whose football has been PLAYED, so a league with no next lock would
       // go straight back to heading the list "is out for GW4" about a round
-      // nobody can pick for. `headlineState` and `doubtBody` both drop the round
+      // nobody can pick for. `headlineState` and `doubtLetter` both drop the round
       // cleanly on null, which is the one answer that says nothing false.
       availabilityNews(doubts, next?.gameweek ?? null, { mine, opponent, name: nameOf }),
     ),

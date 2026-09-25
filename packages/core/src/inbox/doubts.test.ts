@@ -39,7 +39,7 @@ describe("availabilityNews", () => {
     const notes = [note(), note({ teamId: "t2" }), note({ teamId: "t3" })];
     const items = availabilityNews(notes, 5, { ...squads, mine: null, opponent: null });
     expect(items).toHaveLength(3);
-    expect(items[0].from).toBe("Mine");
+    expect(items[0].from).toBe("Mine's physio");
     expect(items[0].about).toBeNull();
     expect(items[0].urgent).toBe(false);
   });
@@ -57,19 +57,19 @@ describe("availabilityNews", () => {
   });
 
   it("says whose man he is, and says it on the line the sender cannot carry", () => {
-    // The half of the instruction a filter alone would miss: "test3" is a team
-    // name a reader has to place, and he should not have to. A physio belongs to
-    // a club and can say it himself; the FA cannot, so `about` does.
+    // "test3" is a team name a reader has to place, and he should not have to: `about` says it.
     const [mine, theirs] = availabilityNews([note(), note({ teamId: "t2" })], 5, squads);
     expect(mine.from).toBe("Your physio");
     expect(mine.about).toBeNull();
-    // "Theirs" already ends in an s, so the apostrophe stands alone.
-    expect(theirs.from).toBe("Theirs' physio");
+    // The opponent's man is your scout's report, whatever the reason.
+    expect(theirs.from).toBe("Your scout");
     expect(theirs.about).toBe("Theirs, your gameweek 5 opponent");
-    // And a ban in the other squad, where the sender is nobody's.
     const [ban] = availabilityNews([banned({ teamId: "t2" })], 5, squads);
-    expect(ban.from).toBe("The FA");
+    expect(ban.from).toBe("Your scout");
     expect(ban.about).toBe("Theirs, your gameweek 5 opponent");
+    // Signed out, the man's own club desk signs it; "Theirs" ends in s, so the apostrophe stands alone.
+    const [league] = availabilityNews([note({ teamId: "t2" })], 5, { ...squads, mine: null, opponent: null });
+    expect(league.from).toBe("Theirs' physio");
   });
 
   it("names him in full and says which round, in the subject line", () => {
@@ -98,35 +98,46 @@ describe("availabilityNews", () => {
     );
   });
 
-  it("reads like a letter, and still ends in FPL's own words", () => {
-    // Craig, 17 Sep 2026: "lets make this sound like a real email". The body was
-    // FPL's note alone, which is a medical string with no subject — "Suspended
-    // until 10 Oct." is a fragment, and the screen had to supply the man, the
-    // round and the squad around it.
-    expect(availabilityNews([banned({ news: "Suspended until 10 Oct" })], 5, squads)[0].body).toBe(
-      "You lose Alexander Isak for gameweek 5. Suspended until 10 Oct.",
+  it("reads like a letter from a person, built only from FPL's facts", () => {
+    // Craig, 25 Sep 2026: "write like a person". FPL's "Knee injury - Unknown return date"
+    // becomes a sentence, and nothing in it is ours but the grammar.
+    const body = (over: Partial<AvailabilityNote>, teamId = "t1") =>
+      availabilityNews([note({ teamId, ...over })], 6, squads)[0].body;
+    const out = { state: "injured", label: "Inj", out: true, chance: 0 } as const;
+
+    const knee = body({ ...out, news: "Knee injury - Unknown return date", chance: null });
+    expect(knee).toContain("Alexander Isak has a knee injury");
+    expect(knee).toMatch(/won't be fit for gameweek 6|misses gameweek 6/);
+    expect(knee).not.toContain(" - ");
+
+    expect(body({ ...out, news: "Hamstring injury - Expected back 11 Oct" })).toMatch(/back around 11 Oct\.$/);
+    expect(body({})).toMatch(/has a knock.*75% to play in gameweek 6/);
+    expect(body({ news: "Unspecified injury - 75% chance of playing" })).toContain("has an injury");
+  });
+
+  it("writes a ban as the FA would, and a move as the transfer desk would", () => {
+    const [ban] = availabilityNews([banned({ news: "Suspended until 10 Oct" })], 5, squads);
+    expect(ban.body).toBe("This is to confirm that Alexander Isak is suspended and misses gameweek 5. The ban runs until 10 Oct.");
+    const [moved] = availabilityNews(
+      [banned({ state: "unavailable", label: "Unav", news: "Has joined Birmingham on loan for the rest of the season" })],
+      5,
+      squads,
     );
-    expect(availabilityNews([note()], 5, squads)[0].body).toBe(
-      "Alexander Isak is a doubt for gameweek 5. Knock - 75% chance of playing.",
+    expect(moved.body).toBe(
+      "Alexander Isak has joined Birmingham on loan for the rest of the season, so he's no longer available to you.",
     );
   });
 
   it("puts the opponent's loss in his name, not in yours", () => {
-    const [item] = availabilityNews([banned({ teamId: "t2" })], 5, squads);
-    expect(item.body).toBe("Theirs lose Alexander Isak for gameweek 5. Suspended.");
-    expect(availabilityNews([note({ teamId: "t2" })], 5, squads)[0].body).toBe(
-      "Theirs have a doubt over Alexander Isak for gameweek 5. Knock - 75% chance of playing.",
-    );
+    const [item] = availabilityNews([banned({ teamId: "t2", news: "Suspended until 10 Oct" })], 5, squads);
+    expect(item.body).toBe("Theirs will be without Alexander Isak for gameweek 5. He's suspended until 10 Oct.");
+    expect(availabilityNews([note({ teamId: "t2" })], 5, squads)[0].body).toMatch(/Theirs/);
   });
 
-  it("puts a full stop on FPL's note when it has none, and never a second", () => {
-    const run = (news: string) => availabilityNews([banned({ news })], 5, squads)[0].body;
-    expect(run("Has joined Birmingham on loan for the rest of the season")).toBe(
-      "You lose Alexander Isak for gameweek 5. Has joined Birmingham on loan for the rest of the season.",
+  it("keeps FPL's words whole when it cannot read them", () => {
+    expect(availabilityNews([note({ news: "Knock - Game-time decision" })], 5, squads)[0].body).toBe(
+      "Alexander Isak is a doubt for gameweek 5: Knock - Game-time decision.",
     );
-    expect(run("Suspended.")).toBe("You lose Alexander Isak for gameweek 5. Suspended.");
-    // A note FPL left empty leaves our sentence alone rather than a trailing space.
-    expect(run("")).toBe("You lose Alexander Isak for gameweek 5.");
   });
 
   it("carries FPL's own stamp rather than the round it was read in", () => {
@@ -142,8 +153,9 @@ describe("availabilityNews", () => {
   });
 
   it("carries the football layer's own box, filled only for an absence", () => {
-    expect(availabilityNews([banned()], 5, squads)[0].mark).toEqual({ label: "Sus", out: true });
-    expect(availabilityNews([note()], 5, squads)[0].mark).toEqual({ label: "Dbt", out: false });
+    expect(availabilityNews([banned()], 5, squads)[0].mark).toEqual({ label: "Sus", out: true, band: "out" });
+    expect(availabilityNews([note()], 5, squads)[0].mark).toEqual({ label: "Dbt", out: false, band: "slight" });
+    expect(availabilityNews([note({ chance: 25 })], 5, squads)[0].mark?.band).toBe("major");
   });
 
   it("goes red only for the reader's OWN man, and only when he is out", () => {

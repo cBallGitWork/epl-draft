@@ -157,6 +157,9 @@ export default async function NewsPage({
  *  that is merely important. Ours are two marks — a fill for "you are reading
  *  this", an ink for "this is bad news about you" — so an item can be both
  *  without either disappearing. */
+/** A doubt's row washed as every other list washes it: red out, orange a major doubt, yellow a slight one. */
+const WASH = { out: "cm-doubt-out", major: "cm-doubt-major", slight: "cm-doubt-slight" } as const;
+
 function Row({
   item,
   open,
@@ -182,7 +185,7 @@ function Row({
       href={`${HERE}?item=${encodeURIComponent(item.id)}`}
       aria-current={open ? "true" : undefined}
       className={`cm-row flex min-h-11 items-stretch gap-1.5 ${
-        open ? "bg-league-deep" : "hover:bg-surface"
+        open ? "bg-league-deep" : `hover:bg-surface ${item.mark?.band ? WASH[item.mark.band] : ""}`
       }`}
     >
       {/* **`DateChip` at its own size, and no size override at all now** — which
@@ -196,7 +199,7 @@ function Row({
       <DateChip day={when.day} time={when.time} className="w-[5.5rem] lg:w-28" />
       <span
         className={`flex min-w-0 flex-1 items-center truncate py-1 ${ROW_NAME} ${
-          open ? "text-ink" : item.urgent ? "text-bad" : "text-ink"
+          open || item.mark?.band ? "text-ink" : item.urgent ? "text-bad" : "text-ink"
         }`}
       >
         {item.headline}

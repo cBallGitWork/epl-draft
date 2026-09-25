@@ -31,6 +31,8 @@ export interface DealSide {
   position?: string | null;
   /** His real club, "ARS". Optional for the same reason as the position. */
   club?: string | null;
+  /** The same club in full, "Arsenal", for a letter. Optional for the same reason. */
+  clubName?: string | null;
 }
 
 export interface Deal {
@@ -44,6 +46,8 @@ export interface Deal {
    *  they wrote it rather than reinterpreted into a timezone we guessed. */
   processedAt: string | null;
   period: number | null;
+  /** How a claim was made, off the claim itself; null for a trade or a bare drop. */
+  via?: "waivers" | "free agency" | null;
 }
 
 /** A footballer somebody is going to have to think about.

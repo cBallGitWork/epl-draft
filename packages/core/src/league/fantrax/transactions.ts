@@ -40,6 +40,8 @@ interface RawTxScorer {
   name?: string;
   posShortNames?: string;
   teamShortName?: string;
+  /** His club in full, "Sunderland". */
+  teamName?: string;
 }
 
 interface RawTxRow {
@@ -50,6 +52,8 @@ interface RawTxRow {
   transactionCode?: string;
   /** Groups both halves of a trade, or a claim with the drop that paid for it. */
   txSetId?: string;
+  /** How a claim was made: `WW` off waivers, `FA` a free agent, "" on a drop. */
+  claimType?: string;
   executed?: boolean;
 }
 
@@ -147,6 +151,9 @@ function periodOf(cells: Map<string, RawTxCell>): number | null {
   return Number.isNaN(parsed) ? null : parsed;
 }
 
+/** Fantrax's claim types, in words. */
+const VIA: Readonly<Record<string, "waivers" | "free agency">> = { WW: "waivers", FA: "free agency" };
+
 /** One row per player per transaction, in the order Fantrax returned them.
  *
  *  `view` is required because it is genuinely part of the answer: trade rows
@@ -183,6 +190,8 @@ export function mapTransactions(
       // Their spelling, untouched: "D", or "F,M" for a man eligible at two.
       position: row.scorer?.posShortNames ?? null,
       club: row.scorer?.teamShortName ?? null,
+      clubName: row.scorer?.teamName ?? null,
+      via: VIA[row.claimType ?? ""] ?? null,
       ...movement(kind, cells),
       // Verbatim, e.g. "Wed Aug 12, 2026, 9:14AM". Left unparsed for the same
       // reason the standings record is: the string carries no offset, the header
