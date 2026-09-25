@@ -11,10 +11,8 @@ import FixtureRun from "./FixtureRun";
 import NoProfile from "./NoProfile";
 import PlayerShell from "./PlayerShell";
 import Portrait from "./Portrait";
-import Projection from "./Projection";
 import RealPosition from "./RealPosition";
 import SeasonTable from "./SeasonTable";
-import { fantraxProjection } from "./draft";
 import { playerGrid, realPosition } from "./grid";
 import { joinMatches } from "./matchRows";
 import { gameLog } from "./scouting";
@@ -121,15 +119,6 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
           there if Data ever wants a round view. */}
       {run === null ? null : <FixtureRun run={run} />}
 
-      {/* Fantrax's own guess at his round — a different claim from every FPL
-          measurement above it, and it says so in its own heading. Streamed
-          because it reads the league's rosters and the live payload, and gated
-          inside that read: their projection covers the fielded eleven only, so
-          the number appearing at all would state a lineup. */}
-      <Suspense fallback={null}>
-        <Projected fantraxId={fantraxId} ownerTeamId={intel.ownerTeamId} />
-      </Suspense>
-
       {/* **What he actually is, last and loudest** (Craig, 4 Sep 2026), which is
           where `cm9900/11.jpg` puts it: `Defender/Defensive Midfielder
           (Left/Centre)` in cyan across the foot of the panel, under the
@@ -153,17 +142,6 @@ export default async function PlayerProfile({ params }: { params: Promise<{ fant
       <ButtonLink href={`${POOL}?compare=${fantraxId}`}>Compare with…</ButtonLink>
     </PlayerShell>
   );
-}
-
-/** Fantrax's guess at his round, read behind the boundary above. */
-async function Projected({
-  fantraxId,
-  ownerTeamId,
-}: {
-  fantraxId: string;
-  ownerTeamId: string | null;
-}) {
-  return <Projection projection={await fantraxProjection(fantraxId, ownerTeamId)} />;
 }
 
 /** His season's two rows, read behind the boundary above. `element-summary` is

@@ -22,8 +22,6 @@ export type {
   LivePlayerPoints,
   LiveSquadPoints,
   LiveTeamScore,
-  PlayerProjection,
-  SquadProjection,
   TeamProjection,
 } from "./points";
 
@@ -92,7 +90,6 @@ export {
   mapBenchPlayerPoints,
   mapLivePlayerPoints,
   mapLiveScores,
-  mapProjectedPlayerPoints,
   mapProjectedTotals,
 } from "./fantrax/livescoring";
 export { mapPoolStats, mapTeamStats } from "./fantrax/stats";

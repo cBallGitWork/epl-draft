@@ -7,7 +7,6 @@ import {
   mapBenchPlayerPoints,
   mapLivePlayerPoints,
   mapLiveScores,
-  mapProjectedPlayerPoints,
   mapProjectedTotals,
 } from "./livescoring";
 import type { RawLiveScoring } from "./livescoring";
@@ -316,57 +315,6 @@ describe("mapProjectedTotals", () => {
 
   it("keeps the sum a number a person would write down", () => {
     expect(mapProjectedTotals(projected({ a: 0.1, b: 0.2 }))).toEqual([{ teamId: "t1", points: 0.3 }]);
-  });
-});
-
-describe("mapProjectedPlayerPoints", () => {
-  const projected = (map: Record<string, number>) => ({
-    statsPerTeam: { allTeamsStats: { t1: { ACTIVE: { totalFpts: 0, projectedTotalsMap: map } } } },
-  });
-
-  it("names the men the team's projection is made of", () => {
-    expect(mapProjectedPlayerPoints(projected({ a: 5.5, b: 4.5 }))).toEqual([
-      { teamId: "t1", players: [{ fantraxId: "a", points: 5.5 }, { fantraxId: "b", points: 4.5 }] },
-    ]);
-  });
-
-  it("skips the group subtotals, which are not men", () => {
-    expect(
-      mapProjectedPlayerPoints(projected({ a: 5.5, _5010: 5.5, _5020: 0 })).flatMap(
-        (squad) => squad.players,
-      ),
-    ).toEqual([{ fantraxId: "a", points: 5.5 }]);
-  });
-
-  // Nought is a real guess of nought — a fifth-choice keeper on the bench of the
-  // team he plays for. A man they have not guessed about is a different claim and
-  // is simply not in the list.
-  it("keeps a projected nought and leaves out a man with no projection", () => {
-    expect(mapProjectedPlayerPoints(projected({ a: 0 }))[0]?.players).toEqual([
-      { fantraxId: "a", points: 0 },
-    ]);
-  });
-
-  it("says nothing at all for a squad Fantrax has not projected", () => {
-    const none = { statsPerTeam: { allTeamsStats: { t1: { ACTIVE: { totalFpts: 0 } } } } };
-    expect(mapProjectedPlayerPoints(none)).toEqual([]);
-    expect(mapProjectedPlayerPoints(projected({}))).toEqual([{ teamId: "t1", players: [] }]);
-  });
-
-  // The reserves are not in it, and that is the whole reason a caller has to
-  // treat the list as a lineup: Fantrax projects the ACTIVE section only.
-  it("reads only the active section, which is what makes this list an eleven", () => {
-    const both = {
-      statsPerTeam: {
-        allTeamsStats: {
-          t1: {
-            ACTIVE: { projectedTotalsMap: { a: 5 } },
-            BENCH: { projectedTotalsMap: { b: 9 } },
-          },
-        },
-      },
-    };
-    expect(mapProjectedPlayerPoints(both)[0]?.players).toEqual([{ fantraxId: "a", points: 5 }]);
   });
 });
 
