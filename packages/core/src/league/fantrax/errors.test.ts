@@ -49,13 +49,9 @@ describe("FantraxError", () => {
     expect(error).toBeInstanceOf(Error);
   });
 
-  it("is a provider error, a refusal unless told otherwise", () => {
+  it("is a provider error, with the message it has always had", () => {
     const error = new FantraxError("getTeamRosters", "NO_TEAMS", "There are currently no teams");
     expect(error).toBeInstanceOf(ProviderError);
-    expect(error).toMatchObject({ provider: "Fantrax", what: "getTeamRosters", kind: "refused" });
     expect(error.message).toBe("Fantrax getTeamRosters: NO_TEAMS — There are currently no teams");
-    expect(new FantraxError("getStandings", "503", "Service Unavailable", "unreachable").kind).toBe(
-      "unreachable",
-    );
   });
 });

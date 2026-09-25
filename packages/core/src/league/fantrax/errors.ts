@@ -1,4 +1,4 @@
-import { ProviderError, type ProviderErrorKind } from "../../http/errors";
+import { ProviderError } from "../../http/errors";
 import type { RawFantraxError } from "./raw";
 
 // Fantrax answers HTTP 200 whether or not it did what you asked. A missing
@@ -12,16 +12,10 @@ import type { RawFantraxError } from "./raw";
 // day fxea grows a `pageError` for some unrelated reason the confusion would
 // already be built in. The cross-detector tests exist to keep them apart.
 
-/** `code` is Fantrax's own ("NO_TEAMS", "INVALID_LEAGUE_ID") or the HTTP status of a backstop;
- *  `kind` is a refusal unless the caller knows better. */
+/** `code` is Fantrax's own ("NO_TEAMS", "INVALID_LEAGUE_ID") or the HTTP status of a backstop. */
 export class FantraxError extends ProviderError {
-  constructor(
-    readonly method: string,
-    code: string,
-    message: string,
-    kind: ProviderErrorKind = "refused",
-  ) {
-    super("Fantrax", method, code, kind, `Fantrax ${method}: ${code} — ${message}`);
+  constructor(readonly method: string, code: string, message: string) {
+    super(code, `Fantrax ${method}: ${code} — ${message}`);
     this.name = "FantraxError";
   }
 }

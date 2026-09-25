@@ -9,16 +9,19 @@ describe("fetchEntry", () => {
     expect(await fetchEntry(1)).toBeNull();
   });
 
-  it("reads a web page in place of JSON as malformed", async () => {
+  it("reads a web page in place of JSON as NOT_JSON", async () => {
     serve(htmlPage);
-    await expect(fetchEntry(1)).rejects.toMatchObject({ provider: "FPL", what: "entry 1", kind: "malformed" });
+    await expect(fetchEntry(1)).rejects.toMatchObject({
+      code: "NOT_JSON",
+      message: expect.stringContaining("FPL entry 1"),
+    });
   });
 
   it("throws any other status with the message it has always had", async () => {
     serve(statusOnly(403));
     const error = await fetchEntry(1).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ProviderError);
-    expect(error).toMatchObject({ kind: "unreachable", message: "FPL entry 1 → 403" });
+    expect(error).toMatchObject({ code: "403", message: "FPL entry 1 → 403" });
   });
 });
 
@@ -28,15 +31,18 @@ describe("fetchPicks", () => {
     expect(await fetchPicks(1, 6)).toBeNull();
   });
 
-  it("reads a web page in place of JSON as malformed", async () => {
+  it("reads a web page in place of JSON as NOT_JSON", async () => {
     serve(htmlPage);
-    await expect(fetchPicks(1, 6)).rejects.toMatchObject({ what: "picks 1/6", kind: "malformed" });
+    await expect(fetchPicks(1, 6)).rejects.toMatchObject({
+      code: "NOT_JSON",
+      message: expect.stringContaining("FPL picks 1/6"),
+    });
   });
 
   it("throws any other status with the message it has always had", async () => {
     serve(statusOnly(400));
     const error = await fetchPicks(1, 6).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ProviderError);
-    expect(error).toMatchObject({ kind: "refused", message: "FPL picks 1/6 → 400" });
+    expect(error).toMatchObject({ code: "400", message: "FPL picks 1/6 → 400" });
   });
 });

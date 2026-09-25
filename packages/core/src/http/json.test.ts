@@ -8,10 +8,13 @@ describe("readJson", () => {
     expect(await readJson(new Response('{"a":1}'), "FPL", "/x/")).toEqual({ a: 1 });
   });
 
-  it("rejects a 200 web page as malformed, not as a SyntaxError", async () => {
+  it("rejects a 200 web page as NOT_JSON, not as a SyntaxError", async () => {
     const error = await readJson(htmlPage(), "FPL", "/bootstrap-static/").catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ProviderError);
-    expect(error).toMatchObject({ provider: "FPL", what: "/bootstrap-static/", kind: "malformed" });
+    expect(error).toMatchObject({
+      code: "NOT_JSON",
+      message: expect.stringContaining("FPL /bootstrap-static/ → 200"),
+    });
   });
 
   it("says what came instead: the content type and the start of the body", async () => {
@@ -27,8 +30,8 @@ describe("readJson", () => {
     expect(error.message).not.toContain("x".repeat(121));
   });
 
-  it("treats an empty 200 as malformed", async () => {
+  it("treats an empty 200 as NOT_JSON", async () => {
     const error = await readJson(new Response(""), "FPL", "/x/").catch((e: unknown) => e);
-    expect(error).toMatchObject({ kind: "malformed" });
+    expect(error).toMatchObject({ code: "NOT_JSON" });
   });
 });

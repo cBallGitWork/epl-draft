@@ -90,12 +90,7 @@ describe("politeFetch on a failed connection", () => {
     const count = serve(dropped("ECONNRESET"));
     const error = await settle(politeFetch("https://example.test/api/x/?q=1"));
     expect(error).toBeInstanceOf(ProviderError);
-    expect(error).toMatchObject({
-      provider: "example.test",
-      what: "/api/x/",
-      code: "ECONNRESET",
-      kind: "unreachable",
-    });
+    expect(error).toMatchObject({ code: "ECONNRESET", message: "example.test /api/x/ → ECONNRESET" });
     expect(count.calls).toBe(3);
   });
 
@@ -103,7 +98,7 @@ describe("politeFetch on a failed connection", () => {
     vi.useFakeTimers();
     const count = serve(timedOut, fine);
     const error = await settle(politeFetch("https://example.test/"));
-    expect(error).toMatchObject({ name: "ProviderError", code: "TIMEOUT", kind: "unreachable" });
+    expect(error).toMatchObject({ name: "ProviderError", code: "TIMEOUT" });
     expect(count.calls).toBe(1);
   });
 
@@ -129,7 +124,7 @@ describe("politeFetch and a request that is not safe to send twice", () => {
     vi.useFakeTimers();
     const count = serve(dropped("ECONNRESET"), fine);
     const error = await settle(politeFetch("https://example.test/", { method: "POST" }));
-    expect(error).toMatchObject({ code: "ECONNRESET", kind: "unreachable" });
+    expect(error).toMatchObject({ name: "ProviderError", code: "ECONNRESET" });
     expect(count.calls).toBe(1);
   });
 

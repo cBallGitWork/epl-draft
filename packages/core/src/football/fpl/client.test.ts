@@ -4,25 +4,19 @@ import { htmlPage, serve, statusOnly } from "../../http/fakeFetch";
 import { fetchBootstrap } from "./client";
 
 describe("FPL client", () => {
-  it("reads a web page in place of JSON as malformed", async () => {
+  it("reads a web page in place of JSON as NOT_JSON", async () => {
     serve(htmlPage);
     await expect(fetchBootstrap()).rejects.toMatchObject({
       name: "ProviderError",
-      provider: "FPL",
-      what: "/bootstrap-static/",
-      kind: "malformed",
+      code: "NOT_JSON",
+      message: expect.stringContaining("FPL /bootstrap-static/"),
     });
   });
 
-  it("throws a refusal with the message it has always had", async () => {
+  it("throws a failing status with the message it has always had", async () => {
     serve(statusOnly(404));
     const error = await fetchBootstrap().catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ProviderError);
-    expect(error).toMatchObject({ kind: "refused", code: "404", message: "FPL /bootstrap-static/ → 404" });
-  });
-
-  it("reads a WAF block as unreachable", async () => {
-    serve(statusOnly(403));
-    await expect(fetchBootstrap()).rejects.toMatchObject({ kind: "unreachable" });
+    expect(error).toMatchObject({ code: "404", message: "FPL /bootstrap-static/ → 404" });
   });
 });

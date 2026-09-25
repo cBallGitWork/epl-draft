@@ -87,17 +87,12 @@ describe("unwrapFxpa", () => {
     expect(() => unwrapFxpa("x", { responses: [] })).toThrow(/NO_RESPONSES/);
   });
 
-  it("calls a refusal refused and a body with no responses malformed", () => {
-    expect(() => unwrapFxpa("x", pageError)).toThrow(expect.objectContaining({ kind: "refused" }));
-    expect(() => unwrapFxpa("x", {})).toThrow(expect.objectContaining({ kind: "malformed" }));
-  });
-
   // Handing back null here let a mapper find out, as a TypeError on its first field.
-  it("refuses a response with neither data nor errors as malformed", () => {
+  it("refuses a response with neither data nor errors", () => {
     for (const response of [{}, { data: null }, null]) {
       const read = () => unwrapFxpa("getStandings", { responses: [response] });
       expect(read).toThrow(FantraxError);
-      expect(read).toThrow(expect.objectContaining({ code: "NO_DATA", kind: "malformed" }));
+      expect(read).toThrow(expect.objectContaining({ code: "NO_DATA" }));
     }
   });
 
@@ -109,11 +104,14 @@ describe("unwrapFxpa", () => {
 describe("fxpaRead", () => {
   const LEAGUE = "league-under-test";
 
-  it("reads a web page in place of JSON as malformed, not as a SyntaxError", async () => {
+  it("reads a web page in place of JSON as NOT_JSON, not as a SyntaxError", async () => {
     serve(htmlPage);
     const error = await fxpaRead(LEAGUE, "getStandings").catch((e: unknown) => e);
     expect(error).toBeInstanceOf(ProviderError);
-    expect(error).toMatchObject({ provider: "Fantrax", what: "getStandings", kind: "malformed" });
+    expect(error).toMatchObject({
+      code: "NOT_JSON",
+      message: expect.stringContaining("Fantrax getStandings"),
+    });
   });
 
   it("asks again when Fantrax is busy, since a read is safe to repeat", async () => {
@@ -129,6 +127,6 @@ describe("fxpaRead", () => {
     serve(statusOnly(404));
     const error = await fxpaRead(LEAGUE, "getStandings").catch((e: unknown) => e);
     expect(error).toBeInstanceOf(FantraxError);
-    expect(error).toMatchObject({ code: "404", kind: "refused" });
+    expect(error).toMatchObject({ code: "404" });
   });
 });

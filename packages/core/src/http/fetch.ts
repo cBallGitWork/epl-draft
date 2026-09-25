@@ -55,7 +55,7 @@ function failureCode(error: unknown): string | null {
 /** No answer at all, named by host and path because no provider client is in the loop. */
 function unreachable(url: string, code: string): ProviderError {
   const { host, pathname } = new URL(url);
-  return new ProviderError(host, pathname, code, "unreachable", `${host} ${pathname} → ${code}`);
+  return new ProviderError(code, `${host} ${pathname} → ${code}`);
 }
 
 /** Sleeps out the backoff before the next attempt; false when asked to wait longer than is worth it. */

@@ -1,6 +1,5 @@
 import { FANTRAX_FXPA_BASE } from "../../config";
 import { demoFxpa, isDemo } from "./demo";
-import { kindOfStatus } from "../../http/errors";
 import { politeFetch } from "../../http/fetch";
 import { readJson } from "../../http/json";
 import { FantraxError, pageErrorEnvelope, responseErrorEnvelope } from "./errors";
@@ -20,9 +19,9 @@ import { FantraxError, pageErrorEnvelope, responseErrorEnvelope } from "./errors
 // and a credential parameter nothing passes is a parameter written for a
 // future we have not designed.
 
-/** The one message's payload, or a `FantraxError`: refused for a `pageError` (the whole request) or
- *  `responses[0].errors[]` (the message), malformed for an answer with no payload in it. Pure, so
- *  every shape is testable without a server. */
+/** The one message's payload, or a `FantraxError`: for a `pageError` (the whole request), for
+ *  `responses[0].errors[]` (the message), or for an answer with no payload in it. Pure, so every
+ *  shape is testable without a server. */
 export function unwrapFxpa(method: string, body: unknown): unknown {
   const page = pageErrorEnvelope(body);
   if (page) {
@@ -31,7 +30,7 @@ export function unwrapFxpa(method: string, body: unknown): unknown {
 
   const responses = (body as { responses?: unknown[] } | null)?.responses;
   if (!Array.isArray(responses) || responses.length === 0) {
-    throw new FantraxError(method, "NO_RESPONSES", "fxpa returned no responses", "malformed");
+    throw new FantraxError(method, "NO_RESPONSES", "fxpa returned no responses");
   }
 
   const [response] = responses;
@@ -42,7 +41,7 @@ export function unwrapFxpa(method: string, body: unknown): unknown {
 
   const data = (response as { data?: unknown } | null)?.data;
   if (data === undefined || data === null) {
-    throw new FantraxError(method, "NO_DATA", "fxpa answered with neither data nor errors", "malformed");
+    throw new FantraxError(method, "NO_DATA", "fxpa answered with neither data nor errors");
   }
   return data;
 }
@@ -70,7 +69,7 @@ export async function fxpaRead(
   );
 
   // As on fxea, a backstop only: fxpa reports its own refusals with a 200.
-  if (!res.ok) throw new FantraxError(method, String(res.status), res.statusText, kindOfStatus(res.status));
+  if (!res.ok) throw new FantraxError(method, String(res.status), res.statusText);
 
   return unwrapFxpa(method, await readJson(res, "Fantrax", method));
 }
