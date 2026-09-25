@@ -18,7 +18,8 @@ import { POOL } from "./routes";
 import { columnsIn, groupFor } from "./groups";
 import { figureOf } from "./figure";
 import { cutsFor } from "./standout";
-import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH } from "@epl/core";
+import { FANTRAX_APP_BASE, FANTRAX_LEAGUE_ID, FANTRAX_PLAYERS_PATH, playerByCode } from "@epl/core";
+import { footballNow } from "../football";
 import OutLink from "../components/shell/OutLink";
 import FantraxSilent from "../components/shell/FantraxSilent";
 
@@ -143,6 +144,7 @@ export default async function PlayersPage({
           raw={raw}
           rated={rated}
           cuts={cuts}
+          footballers={playerByCode(await footballNow())}
         />
       )}
 
