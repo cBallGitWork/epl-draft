@@ -1,21 +1,10 @@
-// When to try again, and when to stop. Pure on purpose: the interesting part of
-// a retry policy is the arithmetic, and arithmetic should not need a server to
-// test. The sleeping and the randomness live in `fetch.ts`, at the edge.
-//
-// Outside both layers, because it belongs to neither. Both providers front their
-// APIs with the same kind of WAF and answer 429 the same way, but `league/` may
-// never import `football/` — so a shared policy has to sit somewhere that is not
-// either of them. This is transport, not domain: it knows about status codes and
-// headers, and nothing about football or fantasy.
+// When to try again, and when to stop: statuses, socket codes and Retry-After, and nothing about
+// football or fantasy. Pure, so the policy is testable; the sleeping and the randomness live in
+// `fetch.ts`. Outside both layers because both share it and neither may import the other.
 
 import { HTTP_RETRY_AFTER_MAX_MS } from "../config";
 
-/** Only these deserve a second attempt.
- *
- *  429 is the provider asking us to slow down and 5xx is the provider having a
- *  bad moment; both pass. A 404 does not — retrying it means asking the same
- *  wrong question three times, and FPL answers 404 for a gameweek that does not
- *  exist, which is an answer rather than a fault. */
+/** A busy (429) or failing (5xx) provider; never a 404, which is an answer and fails the same again. */
 export function worthRetrying(status: number): boolean {
   return status === 429 || (status >= 500 && status < 600);
 }
