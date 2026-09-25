@@ -19,16 +19,19 @@ and this is not a second attempt at it.
   `summary_event_points`, the same read the rank comes from; the season total goes
   because this tab answers "how did I do this week" and the pitch under it is a
   week.
-- **Gameweek squad** — the **XI, then the bench under a rule of its own**, with
-  captain and vice marked,
-  and a points-hit note when there is one. The bench heading totals what was
-  left on it: "did my bench outscore my side" is the question a benched
-  hat-trick provokes, and a flat fifteen made a reader count.
+- **Gameweek squad** — the **XI on the grass and the bench as kits in a strip under
+  it**, numbered in the order FPL would bring them on (Craig, 25 Sep 2026: "pitch view
+  still too big on desktop and mobile, make much smaller and show bench"), captain and
+  vice marked, and a points-hit note when there is one. `.pitch-fpl` keeps 28rem of the
+  screen off the grass, so the XI and the bench share one screen: about 430px wide on a
+  1440 desk, beside the mini-leagues, and full width but 392px tall at 390x844. A line
+  under the strip totals what the bench left: "did my bench outscore my side" is the
+  question a benched hat-trick provokes.
 
   The split rests on `FplPick.slot` — FPL's own 1–15 ordering, named `slot` and
   not `position` because `position` in this codebase means the letter a league
   files a player under, and this is neither that nor a place on a pitch.
-- **Mini-leagues** with your rank in each.
+- **Mini-leagues** with your rank in each, beside the round on a desk.
 - "Not your side? Forget it."
 
 Before an entry id is set, the page is just the entry form. A bad id gets a
