@@ -35,13 +35,10 @@ interface RawElement {
   news_added?: string | null;
   opta_code: string | null;
   /** `1995-09-15`. Present on 633 of 652, probed 4 Sep 2026 — so it is optional
-   *  here and nullable in the domain, unlike the season block beside it.
-   *
-   *  The nineteen without one are not a class: they are men FPL has listed and
-   *  not finished filling in. `region` sits at the same 633 and is deliberately
-   *  NOT mirrored — it is an opaque integer over 67 values with no lookup table
-   *  published anywhere, and Fantrax gives the birthplace as plain text. */
+   *  here and nullable in the domain, unlike the season block beside it. */
   birth_date?: string | null;
+  /** The country he is filed under, an id into `/regions/`. 651 of 667, all matched, 25 Sep 2026. */
+  region?: number | null;
   /** `2024-07-04` — when he signed for the club he is at. Present on the same
    *  633 of 652 as `birth_date`, probed 4 Sep 2026.
    *
@@ -104,6 +101,12 @@ interface RawEvent {
   is_current: boolean;
   is_next: boolean;
   is_previous: boolean;
+}
+
+/** One of `/regions/`' 255 countries; `id` equals `code` on all of them. */
+export interface RawRegion {
+  id: number;
+  name: string;
 }
 
 export interface RawBootstrap {

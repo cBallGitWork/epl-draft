@@ -21,9 +21,8 @@ derived the same four from the same object.
   truncating is shared behaviour rather than this screen's decision.
 - **The caption** — `Born 5.3.93 (Age 33).`, from FPL's `birth_date`, in CM's own
   unpadded `d.m.yy`. Null for 19 of 652, and then the box carries the view's name
-  instead. It stops after the age: CM's nationality has no source we hold — FPL's
-  `region` is an opaque integer over 67 values with no lookup published, and
-  Fantrax's birthplace is a label inside a list of English strings.
+  instead. Then his country: FPL's `region`, named by `/api/regions/`. Never
+  Fantrax's birthplace, which put Haaland (born in Leeds) down as England.
 - **The tabs** — Profile · Data · News · Transfer · History. **Five, which is
   Championship Manager's own count.** Fitness folded into News on 4 Sep 2026
   (Craig: "Fitness could be doubled in with news") — they were two tabs asking

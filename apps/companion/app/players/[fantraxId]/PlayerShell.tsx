@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import { clubColoursOf } from "@epl/core";
+import { clubColoursOf, countryOf } from "@epl/core";
 import { now } from "../../clock";
+import { regions } from "../../football";
 import PlateShell from "../../components/shell/PlateShell";
 import PlayerTabs from "./PlayerTabs";
 import type { PlayerTab } from "./PlayerTabs";
@@ -29,7 +30,7 @@ import type { Subject } from "./subject";
 // `clubColours` answers its own grey fallback and the bar is drawn in it. That
 // is the same degrading this screen already does for the portrait.
 
-export default function PlayerShell({
+export default async function PlayerShell({
   subject,
   fantraxId,
   current,
@@ -67,7 +68,7 @@ export default function PlayerShell({
   const born = bornLine(
     football?.player.birthDate ?? null,
     now(),
-    labelled(intel.personal, "Birthplace"),
+    football ? countryOf(football.player.region, await regions()) : null,
   );
   return (
     // `clubColours` answers its own grey fallback for an empty short name, which
@@ -89,14 +90,6 @@ export default function PlayerShell({
       {children}
     </PlateShell>
   );
-}
-
-/** One labelled row's value out of a Fantrax block, or null.
- *
- *  Fantrax pads these blocks with empty rows — `profile.ts` records it — so a
- *  present label with an empty value is as absent as a missing one. */
-function labelled(rows: readonly { label: string; value: string }[], label: string): string | null {
-  return rows.find((row) => row.label === label)?.value?.trim() || null;
 }
 
 /** `Bruno Fernandes (test4)`, which is CM's construction with our subject in it.

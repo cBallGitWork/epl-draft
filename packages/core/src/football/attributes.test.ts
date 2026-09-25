@@ -15,7 +15,7 @@ const man = (name: string, season: Partial<SeasonTotals>, setPieceShare: number 
     news: "",
     chanceOfPlaying: null,
     optaCode: null,
-    birthDate: null, newsAdded: null,
+    birthDate: null, region: null, newsAdded: null,
     season: { ...NO_SEASON, ...season },
   } satisfies FootballPlayer,
   setPieceShare,

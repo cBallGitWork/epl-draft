@@ -13,7 +13,7 @@ const LIVERPOOL = club(12, 14, "Liverpool");
 const HULL = club(20, 99, "Hull");
 
 const footballer = (code: number, name: string, clubId: number, over: Partial<FootballPlayer> = {}): FootballPlayer => ({
-  id: code, code, name, fullName: name, clubId, status: "a", news: "", chanceOfPlaying: null, optaCode: null, birthDate: null, newsAdded: null, season: NO_SEASON, ...over,
+  id: code, code, name, fullName: name, clubId, status: "a", news: "", chanceOfPlaying: null, optaCode: null, birthDate: null, region: null, newsAdded: null, season: NO_SEASON, ...over,
 });
 
 const MEN = [

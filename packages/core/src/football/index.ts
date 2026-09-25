@@ -25,7 +25,7 @@ export { getFootballSnapshot } from "./snapshot";
 // The two reads `getFootballSnapshot` does not serve, both wanted by scripts:
 // the whole-season fixture list (it fetches one gameweek) and the raw bootstrap
 // (it returns a mapped snapshot, and the bridge needs FPL's own field names).
-export { fetchBootstrap, fetchFixtures } from "./fpl/client";
+export { fetchBootstrap, fetchFixtures, fetchRegions } from "./fpl/client";
 // One round's live feed, and the mapper that turns it into per-FIXTURE figures.
 // `getFootballSnapshot` reads both for the round it is building; a match screen
 // wants an OLDER round, which is the whole reason these are reachable on their
@@ -127,7 +127,7 @@ export type { PastSeason } from "./seasons";
 export { attributes } from "./attributes";
 export type { Attribute, Scouted } from "./attributes";
 export { KEEPER_ONLY, OUTFIELD_ONLY } from "./attributes";
-export { mapFixtures } from "./fpl/map";
+export { countryOf, mapFixtures } from "./fpl/map";
 export {
   adjacentGameweeks,
   clubById,

@@ -27,8 +27,9 @@ it is used.
   Counted and **refused**: the three `*_text` companions to the set-piece orders
   are **0/652** — the order is the data, the prose is not; `scout_risks` is a key
   on all 652 and a non-empty array on **7**, every entry `loan_ineligible`, which
-  is a footnote and never a tab; `region` is 633 but 67 opaque integers with no
-  lookup published, retired by Fantrax's plain-text birthplace;
+  is a footnote and never a tab; `region` (651/667 on 25 Sep 2026) is his COUNTRY,
+  an id into `/api/regions/` (255 rows, `id` = `code`), which names every one —
+  Haaland 161 Norway where Fantrax's birthplace says Leeds, England;
   `teams[].strength_attack_*`/`strength_defence_*` are **0/20 non-zero**.
   `squad_number` is present as a **key and never as a value** — null on all 622
   elements, checked 29 Aug 2026. This entry used to list it among the fields

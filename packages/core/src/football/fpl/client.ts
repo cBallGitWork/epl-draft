@@ -1,6 +1,6 @@
 import { FPL_API_BASE } from "../../config";
 import { politeFetch } from "../../http/fetch";
-import type { RawBootstrap, RawElementSummary, RawFixture, RawLive } from "./raw";
+import type { RawBootstrap, RawElementSummary, RawFixture, RawLive, RawRegion } from "./raw";
 
 // All FPL network I/O lives here and nowhere else, so the mapping stays pure and
 // unit-testable. FPL's API is public and unauthenticated — no cookies, no secrets,
@@ -27,6 +27,11 @@ async function get<T>(path: string): Promise<T> {
  *  price changes and news. */
 export function fetchBootstrap(): Promise<RawBootstrap> {
   return get<RawBootstrap>("/bootstrap-static/");
+}
+
+/** The countries an element's `region` points into. Static; the whole list is ~20 KB. */
+export function fetchRegions(): Promise<RawRegion[]> {
+  return get<RawRegion[]>("/regions/");
 }
 
 /** Fixtures for one gameweek, or the whole season when `gameweek` is omitted. */

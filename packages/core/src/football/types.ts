@@ -31,6 +31,8 @@ export interface FootballPlayer {
   optaCode: string | null;
   /** ISO date, or null where FPL has not filled it in. */
   birthDate: string | null;
+  /** FPL's country id for him; `countryOf` names it. Null where FPL has filed none. */
+  region: number | null;
   season: SeasonTotals;
 }
 
