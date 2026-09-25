@@ -233,31 +233,30 @@ home for our per-player metadata (CLAUDE.md).
 
 ## 8. Before 10 Oct — launch checklist
 
-- **Commissioner renames the league in Fantrax** — it is "Tim Hortons Pro
-  League 24/25" and the schedule page prints it verbatim. Setting, not code.
+- ~~**Commissioner renames the league in Fantrax**~~ — settled 25 Sep: the real
+  league is `mqsjd23smsgbiqzr`, already "Tim Hortons Pro League 26/27" (#110).
 - The 3 review rows (`Fred Heath`, `Enzo Kana Biyik`, `Lucas Pitt`) — Craig's
   call; only a person writes `unmappedBy: "manual"`.
 - Issue team codes to the sixteen (`npm run team-codes`).
-- Ship-day runbook: set `FANTRAX_LEAGUE_ID=ayyoh3n2mr326v2o` **in the Vercel
+- Ship-day runbook: set `FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr` **in the Vercel
   dashboard** → capture → shape-diff → bridge → unmapped gate → redeploy →
   verify the deployed URL, not the commit.
 - **And "verify the deployed URL" is now one command**, which it was not before
   27 Aug:
 
   ```bash
-  SMOKE_BASE=https://epl-draft-companion.vercel.app   FANTRAX_LEAGUE_ID=ayyoh3n2mr326v2o npm run smoke
+  SMOKE_BASE=https://epl-draft-companion.vercel.app   FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr npm run smoke
   ```
 
-  It prints `✓ served league  <name>` off `getLeagueInfo`, so it fails loudly if
+  It prints `✓ served league  <name>`, a manager's team name found on `/league`, so it fails loudly if
   the dashboard value did not take — which is the single step of the swap with
   nothing else standing behind it. Until 27 Aug nothing checked that the server
   served the league the walk was asserting about, and the failure it hid was a
   real one: six routes built **static** against the default league and served
   that way whatever the runtime setting said. See HANDOVER §6.
 
-  Run it **after** the redeploy and expect `Tim Hortons Pro League 24/25` — or
-  whatever the commissioner has renamed it to by then, which is the item three
-  lines above this one.
+  Run it **after** the redeploy. Before the draft the real league has teams and empty squads,
+  a state smoke must not call drafted.
 
 ## 9. 28 Aug — the Gazetta became a newspaper
 

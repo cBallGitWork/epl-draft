@@ -44,6 +44,25 @@ capture season-specific tradeoffs.
 - We are building the platform layer separately so the UI and football data can
   survive provider changes.
 
+## The real league is `mqsjd23smsgbiqzr`, not `ayyoh3n2mr326v2o` — settled 25 Sep 2026
+
+Craig, 25 Sep: *"mqsjd23smsgbiqzr - real league, just setting it up"* (#110). The league every
+doc called real, `ayyoh3n2mr326v2o`, is named "Tim Hortons Pro League 24/25" and never had a
+team. `mqsjd23smsgbiqzr` is "Tim Hortons Pro League 26/27" with 6 managers on 25 Sep, a snake
+draft, and 15/11/5.
+
+- **An entry dated before 25 Sep that says "the real league" means ayyoh.** Those probes are
+  true of the league they read and are left as they are.
+- **ayyoh's captures moved to `data/snapshots/fantrax/leagues/ayyoh-abandoned/`**, 5 Aug to
+  25 Sep. That is not a recorded key, so nothing reads it except `tools/demo/build-demo-league.mjs`,
+  whose 14/11/3 limits and scoring come from its 29 Aug capture. `real/` holds mqsjd only, from
+  its first capture on.
+- **The name warning is settled.** The real league already says 26/27.
+- **The real league's position table is readable**, where ayyoh's was not. Squad totals are
+  D 6 · M 6 · F 4 · G 3 against rehearsal's 5/5/3/2, with the same minimums (3/2/1/1). So the two
+  still differ in a number a hardcoded limit would get wrong, and the demo league's 14/11/3
+  differs in the starting size as well.
+
 ## Lawro writes the predictions, under his own name, on Thursday evening — decided 24 Sep 2026
 
 - **The byline is "by Mark Lawrenson", with no impression marking** (Craig, 24 Sep 2026). It reverses,
@@ -1207,6 +1226,8 @@ its subtitle, correctly and verbatim (§3: server-driven, never our copy), so on
 **This is a commissioner setting, fixable in Fantrax in a minute, and invisible
 to any test we could write.** It belongs in the ship-day runbook rather than in
 the code.
+
+*Settled 25 Sep 2026: ayyoh was never the real league. See that day's entry.*
 
 ## Injury is not a per-match fact anywhere we read (10 Sep 2026)
 

@@ -105,7 +105,7 @@ Each of these is in PLATFORM_NOTES, "What the pre-swap cleanup declined".
 
 ## Still Craig's
 
-1. **Swap day, 10 Oct.** Set `FANTRAX_LEAGUE_ID=ayyoh3n2mr326v2o` in Vercel and redeploy
+1. **Swap day, 10 Oct.** Set `FANTRAX_LEAGUE_ID=mqsjd23smsgbiqzr` in Vercel and redeploy
    (`/swap-day`). This gates the whole real season; nothing else needs to change.
 2. **Tell the rehearsal league to sign in once more** with their existing codes. The cookie
    changed in #54, and no code is reissued.

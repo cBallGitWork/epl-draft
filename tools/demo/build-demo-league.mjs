@@ -6,7 +6,7 @@
 // packages/core/src/league/fantrax/demoPayloads.json.
 //
 // Everything here is derived rather than invented: the roster limits, scoring
-// system and 38 periods are the REAL league's own getLeagueInfo; the players are
+// system and 38 periods are a captured league's own getLeagueInfo (ayyoh, 14/11/3); the players are
 // Fantrax ids the bridge actually resolves, so portraits and fixtures land; and
 // the standings page is the shape of a real captured payload with its rows
 // replaced. That is the point — a fixture whose shape drifts from the provider
@@ -21,7 +21,7 @@ const read = (p) => JSON.parse(readFileSync(`${R}/${p}`, "utf8"));
 
 const pool   = read(`data/snapshots/fantrax/pool/${D}/getPlayerIds.json`);
 const bridge = read("data/mappings/fantrax.json");
-const realInfo = read(`data/snapshots/fantrax/leagues/real/${D}/getLeagueInfo.json`);
+const realInfo = read(`data/snapshots/fantrax/leagues/ayyoh-abandoned/${D}/getLeagueInfo.json`);
 const pageTpl  = read("packages/core/src/league/fantrax/__fixtures__/standingsPage.json");
 
 // Only players the bridge resolves: an unmapped man has no portrait and no
