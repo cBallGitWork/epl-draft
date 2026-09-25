@@ -108,6 +108,8 @@ export type { IntelTouches, Touch, TouchCentre, TouchPlayer } from "./intel/touc
 // publishes a shot as distance from the attacking goal and a touch the other way
 // round, and `intel/shots.ts` records how that was settled.
 export { assistsOf, shotIntel, shotsInFixture, shotsOf } from "./intel/shots";
+export { depthIntel, depthLines, spotsOf } from "./intel/depth";
+export type { ClubDepth, DepthHolder, DepthSlot, DepthSpot, IntelDepth } from "./intel/depth";
 // A window of recent gameweeks, for narrowing the intel to recent form.
 export { fixtureGameweeks, gameweekSpan, inGameweeks, lastPlayed } from "./intel/window";
 export type { IntelShots, Shot } from "./intel/shots";
