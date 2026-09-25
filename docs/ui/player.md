@@ -1,8 +1,8 @@
 # `/players/[fantraxId]` — one player
 
 Championship Manager's player profile (`reference/cm9900/11.jpg`), for a Fantrax
-draft league. A plated bar in his club's colour, five tabs, his birth date in a
-box under them, and one cyan line saying what he actually is.
+draft league. A plated bar in his club's colour, five tabs, and one cyan line saying
+what he actually is.
 
 One profile per tap, never a sweep of the 697 — that is the whole politeness
 policy toward Fantrax, and it is why nothing here may loop over `getPlayerProfile`.
@@ -19,10 +19,11 @@ derived the same four from the same object.
   306px into the 282 a 390 phone gives the bar, so it shipped truncated.
   Only the pool's longest names (~24 characters) truncate now, and `PageHeader`
   truncating is shared behaviour rather than this screen's decision.
-- **The caption** — `Born 5.3.93 (Age 33).`, from FPL's `birth_date`, in CM's own
-  unpadded `d.m.yy`. Null for 19 of 652, and then the box carries the view's name
-  instead. Then his country: FPL's `region`, named by `/api/regions/`. Never
-  Fantrax's birthplace, which put Haaland (born in Leeds) down as England.
+- **The born line** — `Born 21.7.00 (Age 26). Norway.`, from FPL's `birth_date` in CM's own
+  unpadded `d.m.yy`, then his country: FPL's `region`, named by `/api/regions/`, never
+  Fantrax's birthplace (which put Haaland, born in Leeds, down as England). **On Data
+  only** (Craig, 25 Sep 2026: "only have this on the data section, remove elsewhere");
+  it had been in every tab's shell.
 - **The tabs** — Profile · Data · News · Transfer · History. **Five, which is
   Championship Manager's own count.** Fitness folded into News on 4 Sep 2026
   (Craig: "Fitness could be doubled in with news") — they were two tabs asking

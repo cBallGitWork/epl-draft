@@ -4,6 +4,7 @@ import type { FootballPlayer, PlayerMatch } from "@epl/core";
 import Nothing from "../../../components/shell/Nothing";
 import { PANEL } from "@/app/desk";
 import { footballNow } from "../../../football";
+import BornLine from "../BornLine";
 import MatchLog from "../MatchLog";
 import SeasonTable from "../SeasonTable";
 import NoProfile from "../NoProfile";
@@ -40,6 +41,7 @@ export default async function PlayerData({ params }: { params: Promise<{ fantrax
 
   return (
     <PlayerShell subject={found} fantraxId={fantraxId} current="data">
+      {football === null ? null : <BornLine player={football.player} />}
       {football === null ? (
         <section className={PANEL}>
           <Nothing title="No match log for this man">
