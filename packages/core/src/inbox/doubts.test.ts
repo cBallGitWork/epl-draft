@@ -57,9 +57,7 @@ describe("availabilityNews", () => {
   });
 
   it("says whose man he is, and says it on the line the sender cannot carry", () => {
-    // The half of the instruction a filter alone would miss: "test3" is a team
-    // name a reader has to place, and he should not have to. A physio belongs to
-    // a club and can say it himself; the FA cannot, so `about` does.
+    // "test3" is a team name a reader has to place, and he should not have to: `about` says it.
     const [mine, theirs] = availabilityNews([note(), note({ teamId: "t2" })], 5, squads);
     expect(mine.from).toBe("Your physio");
     expect(mine.about).toBeNull();

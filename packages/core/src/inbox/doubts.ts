@@ -3,27 +3,10 @@ import { doubtFrom, doubtLetter } from "./doubtLetter";
 import type { Side } from "./doubtLetter";
 import type { InboxItem } from "./types";
 
-// Who a manager loses, as CM's Injuries and Bans — his own men and the men he
-// is about to play against.
-//
-// Its own file for the reason `messages.ts` is one: `items.ts` was at
-// CODE_RULES §4's ceiling and this is a whole responsibility that comes off
-// cleanly. It shares nothing with a round but the type they both return.
-//
-// **Two squads, not ten** (Craig, 17 Sep 2026: *"only show MY teams player news
-// for injuries, and my next opponent (and make it clear its their team too)"*).
-// The screen filed the whole league's from 11 Sep, on his instruction that day,
-// and the reversal is not a reversal of the argument — it is a better answer to
-// it. A hundred and fifty men across ten squads is a feed; his own is an inbox
-// but a blind one, because the doubt that decides a tie is as likely to be in
-// the other side's eleven as in his. The two squads in the tie are the list that
-// is both short and complete.
-//
-// **And it says WHOSE**, which is the other half of his sentence and the half a
-// filter alone would miss: a list of two squads' injuries that does not say
-// which man is whose is a list you have to remember your opponent's name to
-// read. It is said twice on purpose — in the `from` line, which is the letter's
-// own answer, and in the prose, which is what a person writing to you would say.
+// Who a manager loses, as CM's Injuries and Bans: his own men and his next opponent's (Craig,
+// 17 Sep 2026: "only show MY teams player news for injuries, and my next opponent (and make it
+// clear its their team too)"). Whose man he is is said by the sender, the `about` line and the
+// letter itself (`doubtLetter.ts`).
 
 /** What the headline says about him, after his name.
  *
