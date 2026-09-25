@@ -59,14 +59,11 @@
   }
 }
 
-/* What the FPL tab spends above its grass, measured rather than inherited.
-   `tools/ui/pitchfit.mjs` read the base 16rem as 4px short at 1024 and 1440 — a
-   title bar, a sub line, two figures and a section head come to 260, not 256 —
-   and 4px past the fold is still past it. Its own entry rather than a nudge to
-   the base, because the base is the number every OTHER pitch's cap is measured
-   against and this page's chrome is not theirs. */
+/* What the FPL tab keeps off its grass: the chrome above (260px, `pitchfit`) and the bench strip
+   under it, plus room, so the pitch is small enough to read in one look (Craig, 25 Sep 2026: "pitch
+   view still too big on desktop and mobile, make much smaller and show bench"). */
 .pitch-fpl {
-  --pitch-page: 16.5rem;
+  --pitch-page: 28rem;
 }
 
 /* A pitch with a bench under it is a different budget, and one number for both

@@ -1,7 +1,7 @@
 import { isFplKeeper, DASH } from "@epl/core";
 import type { Club, FootballPlayer, FplLine, FplPick, Opposition } from "@epl/core";
 import PitchMarker from "../components/league/PitchMarker";
-import PitchRows from "../components/league/PitchRows";
+import PitchRows, { BENCH_KIT, FAR_INSET, GAP_CLASS, cardBasis, rowBudget, widestLine } from "../components/league/PitchRows";
 
 // Your FPL XI on the grass — the same grass as everywhere else.
 //
@@ -31,11 +31,14 @@ import PitchRows from "../components/league/PitchRows";
 
 export default function FplPitch({
   rows,
+  bench,
   players,
   clubs,
   opposition,
 }: {
   rows: FplLine[];
+  /** The four who did not start, in the order FPL would bring them on. */
+  bench: FplPick[];
   players: Map<number, FootballPlayer>;
   clubs: Map<number, Club>;
   /** Each club's fixtures this round, so the disc can tell for itself whether a
@@ -44,35 +47,40 @@ export default function FplPitch({
    *  total and the bench need, but the grass no longer asks it. */
   opposition: Map<number, Opposition[]>;
 }) {
+  const marker = (pick: FplPick) => {
+    const player = players.get(pick.code) ?? null;
+    return (
+      <Pick
+        pick={pick}
+        player={player}
+        club={player === null ? undefined : clubs.get(player.clubId)}
+        opposition={player === null ? undefined : opposition.get(player.clubId)}
+      />
+    );
+  };
   return (
-    // **Bounded by the FOLD, because nothing else bounds it.** `.pitch`'s ratio
-    // turns whatever width it is given into a height, and this is the one pitch
-    // in the app with no second column beside it — `/squad` and the head-to-head
-    // are narrow because a fifteen-row list is next to them, which is why they
-    // fit and this did not. `inColumn` only takes back the two gutters.
-    //
-    // So the caller caps its own width at the height it has: `--pitch-page` is
-    // already "what the page spends on everything that is not grass", and
-    // `--pitch-ratio` is the same number the aspect-ratio uses, so the two cannot
-    // disagree at a breakpoint. Under a thumb the cap lands wider than the screen
-    // and does nothing, which is right — the phone already fit.
-    //
-    // A wrapper rather than a fourth flag on `PitchRows`: one caller needs this,
-    // and a shared mechanism for one caller is what CODE_RULES §1 forbids.
-    <div className="pitch-fpl mx-auto w-full max-w-[calc((100svh-var(--pitch-page))*var(--pitch-ratio))]">
+    // Bounded by the fold: `.pitch-fpl`'s `--pitch-page` is what the page keeps for everything not grass,
+    // and the width is capped at the height that leaves, so the XI and the bench fit one screen.
+    <div className="pitch-fpl mx-auto w-full lg:max-w-[calc((100svh-var(--pitch-page))*var(--pitch-ratio))]">
       <PitchRows rows={rows} keyOf={(pick: FplPick) => String(pick.code)} inColumn>
-        {(pick) => {
-          const player = players.get(pick.code) ?? null;
-          return (
-            <Pick
-              pick={pick}
-              player={player}
-              club={player === null ? undefined : clubs.get(player.clubId)}
-              opposition={player === null ? undefined : opposition.get(player.clubId)}
-            />
-          );
-        }}
+        {(pick) => marker(pick)}
       </PitchRows>
+      {/* The bench as kits under the grass, first on at the left (Craig, 25 Sep 2026: "show bench"). */}
+      {bench.length === 0 ? null : (
+        <ul
+          className={`pitch-strip flex justify-center border-t border-line bg-surface pb-2 pt-1.5 ${GAP_CLASS}`}
+          style={{ paddingInline: `${FAR_INSET}%`, ...rowBudget(rows.length), ...BENCH_KIT }}
+        >
+          {bench.map((pick, at) => (
+            <li key={pick.code} className="min-w-0 shrink-0" style={{ flexBasis: cardBasis(widestLine(rows)) }}>
+              <p className="flex items-center justify-center pb-0.5 leading-none">
+                <span className="cm-index numeric px-1 text-3xs">{at + 1}</span>
+              </p>
+              {marker(pick)}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

@@ -125,6 +125,8 @@ export default async function FplPage() {
         <Figure label="Rank" value={entry.overallRank} />
       </dl>
 
+      {/* The round beside the mini-leagues on a desk, so the pitch can be small and nothing is lost. */}
+      <div className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:items-start">
       {squad && arrangement ? (
         <Section
           title={`Gameweek ${squad.gameweek}`}
@@ -145,11 +147,12 @@ export default async function FplPage() {
               grass would claim a formation nobody picked. */}
           <FplPitch
             rows={arrangement.rows}
+            bench={arrangement.bench}
             players={players}
             clubs={clubs}
             opposition={opposition}
           />
-          <Bench picks={arrangement.bench} players={players} clubs={clubs} played={played} />
+          <BenchTotal picks={arrangement.bench} played={played} />
         </Section>
       ) : (
         // Keeps the section rather than dropping to a bare sentence between the
@@ -182,6 +185,8 @@ export default async function FplPage() {
           </ul>
         </Section>
       ) : null}
+
+      </div>
 
       {/* **Their game, their page.** This tab shows a side and can never change
           one: transfers, captaincy and chips are all on FPL's own site, and a
@@ -222,66 +227,16 @@ function Figure({ label, value }: { label: string; value: number | null }) {
   );
 }
 
-type Players = ReturnType<typeof playerByCode>;
-type Clubs = ReturnType<typeof clubById>;
 
-/** The four who did not start, under a heading that totals them. "Did my bench
- *  outscore my side" is the question a benched hat-trick provokes, and it is the
- *  one sum on this page worth doing for a reader — it is about picks he made,
- *  not about what FPL scored him, which stays FPL's.
- *
- *  CM's rows, not four bordered cards: the reference puts a list straight on the
- *  ground with a rule between the rows and one repeating fill, the blue index
- *  block down the left. Here the block carries the order they would come on in,
- *  which is the one thing FPL's bench ordering means and exactly the kind of
- *  fact an index block is for. */
-function Bench({
-  picks,
-  players,
-  clubs,
-  played,
-}: {
-  picks: FplPick[];
-  players: Players;
-  clubs: Clubs;
-  played: Played;
-}) {
+/** What the bench left unused, the question a benched hat-trick provokes: only what has been scored. */
+function BenchTotal({ picks, played }: { picks: FplPick[]; played: Played }) {
   if (picks.length === 0) return null;
-  // Only what has actually been scored. A bench of four idle men "left nought
-  // on it", which is a sentence about a round nobody has played.
   const counted = picks.filter((pick) => played(pick.code));
   const total = counted.reduce((sum, pick) => sum + pick.points, 0);
-
   return (
-    <div className="flex flex-col gap-1 pt-2">
-      <h3 className={`flex items-baseline justify-between gap-3 border-t border-line pt-2 ${LABEL}`}>
-        Bench
-        <span className="numeric font-normal">
-          {counted.length === 0 ? "nothing played yet" : `${total} left on it`}
-        </span>
-      </h3>
-      <ul className="cm-rows">
-        {picks.map((pick, at) => {
-          const player = players.get(pick.code);
-          const club = player ? clubs.get(player.clubId) : undefined;
-          return (
-            <li key={pick.code} className="cm-row flex min-h-11 items-stretch gap-2">
-              <span className="cm-index numeric flex w-7 shrink-0 items-center justify-center">
-                {at + 1}
-              </span>
-              <span className={`flex min-w-0 flex-1 items-center truncate text-ink ${ROW_NAME}`}>
-                {player?.name ?? DASH}
-              </span>
-              <span className={`flex shrink-0 items-center ${SMALL_CAPS} text-muted`}>
-                {club?.shortName ?? ""}
-              </span>
-              <span className="numeric flex w-8 shrink-0 items-center justify-end text-sm font-bold text-info">
-                {played(pick.code) ? pick.points : <Absent />}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <p className={`flex items-baseline justify-between gap-3 pt-1 ${LABEL}`}>
+      Bench
+      <span className="numeric font-normal">{counted.length === 0 ? "nothing played yet" : `${total} left on it`}</span>
+    </p>
   );
 }
