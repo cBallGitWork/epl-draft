@@ -2,99 +2,72 @@
   "matchups": [
     {
       "period": 1,
-      "matchupList": []
+      "matchupList": [
+        {
+          "away": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "CB_fantr"
+          },
+          "home": {
+            "bye": true
+          }
+        }
+      ]
     },
     {
       "period": 2,
-      "matchupList": []
+      "matchupList": [
+        {
+          "away": {
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "bye": true
+          }
+        }
+      ]
     },
     {
       "period": 3,
-      "matchupList": []
+      "matchupList": [
+        {
+          "away": {
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
+          },
+          "home": {
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
+            "shortName": "CB_fantr"
+          }
+        }
+      ]
     },
     {
       "period": 4,
-      "matchupList": [
-        {
-          "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
-          }
-        }
-      ]
+      "matchupList": []
     },
     {
       "period": 5,
-      "matchupList": [
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
-          },
-          "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          }
-        }
-      ]
+      "matchupList": []
     },
     {
       "period": 6,
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           }
         }
       ]
@@ -104,26 +77,14 @@
       "matchupList": [
         {
           "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           }
         }
       ]
@@ -133,26 +94,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -162,25 +109,13 @@
       "matchupList": [
         {
           "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           }
         }
@@ -191,26 +126,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
+          },
+          "home": {
+            "bye": true
           }
         }
       ]
@@ -220,26 +141,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "bye": true
           }
         }
       ]
@@ -249,26 +156,14 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           }
         }
       ]
@@ -278,26 +173,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -307,26 +188,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -336,25 +203,13 @@
       "matchupList": [
         {
           "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           }
         }
@@ -365,26 +220,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
+          },
+          "home": {
+            "bye": true
           }
         }
       ]
@@ -394,26 +235,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "bye": true
           }
         }
       ]
@@ -423,26 +250,14 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           }
         }
       ]
@@ -452,26 +267,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -481,26 +282,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -510,25 +297,13 @@
       "matchupList": [
         {
           "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           }
         }
@@ -539,26 +314,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
+          },
+          "home": {
+            "bye": true
           }
         }
       ]
@@ -568,26 +329,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "bye": true
           }
         }
       ]
@@ -597,26 +344,14 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           }
         }
       ]
@@ -626,26 +361,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -655,26 +376,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -684,25 +391,13 @@
       "matchupList": [
         {
           "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           }
         }
@@ -713,26 +408,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
+          },
+          "home": {
+            "bye": true
           }
         }
       ]
@@ -742,26 +423,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "bye": true
           }
         }
       ]
@@ -771,26 +438,14 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           }
         }
       ]
@@ -800,26 +455,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -829,26 +470,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -858,25 +485,13 @@
       "matchupList": [
         {
           "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           }
         }
@@ -887,26 +502,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
+          },
+          "home": {
+            "bye": true
           }
         }
       ]
@@ -916,26 +517,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          },
-          "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "bye": true
           }
         }
       ]
@@ -945,26 +532,14 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           }
         }
       ]
@@ -974,26 +549,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
-          }
-        },
-        {
-          "away": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
+            "name": "The Raccoons",
+            "id": "l5kunst8msgbirdf",
             "shortName": "CB_fantr"
           },
           "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -1003,26 +564,12 @@
       "matchupList": [
         {
           "away": {
-            "name": "test2",
-            "id": "pbxm9fgimshcpazf",
-            "shortName": "test2"
+            "name": "Mcdegle86",
+            "id": "aekx2715mtzgcl3f",
+            "shortName": "Mcdegle8"
           },
           "home": {
-            "name": "123",
-            "id": "8enbgqo5msgb375j",
-            "shortName": "CB_fantr"
-          }
-        },
-        {
-          "away": {
-            "name": "test4",
-            "id": "sezrgvl2mshcpazf",
-            "shortName": "test4"
-          },
-          "home": {
-            "name": "test3",
-            "id": "j9zadacnmshcpazf",
-            "shortName": "test3"
+            "bye": true
           }
         }
       ]
@@ -1045,7 +592,7 @@
     },
     "maxTotalPlayers": 15,
     "maxTotalActivePlayers": 11,
-    "maxTotalReservePlayers": 5
+    "maxTotalReservePlayers": 4
   },
   "endDate": "2027-05-30",
   "playerInfo": {
@@ -1059,7 +606,7 @@
     },
     "06onv": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06uzy": {
       "eligiblePos": "M",
@@ -1105,11 +652,11 @@
       "eligiblePos": "G",
       "status": "FA"
     },
-    "045c8": {
+    "06uzo": {
       "eligiblePos": "F",
       "status": "FA"
     },
-    "06uzo": {
+    "045c8": {
       "eligiblePos": "F",
       "status": "FA"
     },
@@ -1123,7 +670,7 @@
     },
     "04ge6": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "04ge9": {
       "eligiblePos": "F",
@@ -1139,19 +686,19 @@
     },
     "05nns": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06zbz": {
       "eligiblePos": "F",
       "status": "FA"
     },
-    "06yb9": {
-      "eligiblePos": "D",
-      "status": "T"
-    },
     "06zbx": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
+    },
+    "06yb9": {
+      "eligiblePos": "D",
+      "status": "FA"
     },
     "063y7": {
       "eligiblePos": "D",
@@ -1167,7 +714,7 @@
     },
     "05ye7": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "05opl": {
       "eligiblePos": "D",
@@ -1193,21 +740,21 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "05r4h": {
-      "eligiblePos": "M",
-      "status": "FA"
-    },
     "0635j": {
       "eligiblePos": "D",
       "status": "FA"
     },
+    "05r4h": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
     "06r5b": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "05gcs": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06mn7": {
       "eligiblePos": "M",
@@ -1219,7 +766,7 @@
     },
     "05gcr": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "03p9y": {
       "eligiblePos": "G",
@@ -1227,7 +774,7 @@
     },
     "06jh3": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06prt": {
       "eligiblePos": "D",
@@ -1255,11 +802,11 @@
     },
     "05a6e": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "05r94": {
       "eligiblePos": "F,M",
-      "status": "T"
+      "status": "FA"
     },
     "06mn0": {
       "eligiblePos": "F",
@@ -1267,7 +814,7 @@
     },
     "061vp": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "0626q": {
       "eligiblePos": "F",
@@ -1275,11 +822,11 @@
     },
     "061vq": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "05gcc": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "061vk": {
       "eligiblePos": "F,M",
@@ -1305,24 +852,24 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "06zef": {
-      "eligiblePos": "D",
-      "status": "FA"
-    },
     "061va": {
       "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06zef": {
+      "eligiblePos": "D",
       "status": "FA"
     },
     "05n09": {
       "eligiblePos": "G",
       "status": "FA"
     },
-    "05n07": {
-      "eligiblePos": "D",
-      "status": "FA"
-    },
     "06r3w": {
       "eligiblePos": "F",
+      "status": "FA"
+    },
+    "05n07": {
+      "eligiblePos": "D",
       "status": "FA"
     },
     "06c6g": {
@@ -1333,17 +880,17 @@
       "eligiblePos": "F",
       "status": "FA"
     },
-    "06ybq": {
-      "eligiblePos": "F",
-      "status": "FA"
-    },
     "057cr": {
       "eligiblePos": "D",
       "status": "FA"
     },
+    "06ybq": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
     "02m5l": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "056as": {
       "eligiblePos": "G",
@@ -1351,7 +898,7 @@
     },
     "06ybp": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "072pc": {
       "eligiblePos": "M",
@@ -1367,7 +914,7 @@
     },
     "0427d": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06ewn": {
       "eligiblePos": "D",
@@ -1379,7 +926,7 @@
     },
     "05omu": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "05r34": {
       "eligiblePos": "F,M",
@@ -1399,7 +946,7 @@
     },
     "02lpf": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "04p0d": {
       "eligiblePos": "F,M",
@@ -1415,7 +962,7 @@
     },
     "06ex4": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06crm": {
       "eligiblePos": "D",
@@ -1435,7 +982,7 @@
     },
     "05244": {
       "eligiblePos": "F,M",
-      "status": "T"
+      "status": "FA"
     },
     "0558w": {
       "eligiblePos": "D",
@@ -1443,7 +990,7 @@
     },
     "06fxe": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "0328q": {
       "eligiblePos": "M",
@@ -1459,7 +1006,7 @@
     },
     "0788g": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "0522h": {
       "eligiblePos": "M",
@@ -1467,7 +1014,7 @@
     },
     "06zbm": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "02lsa": {
       "eligiblePos": "D",
@@ -1491,19 +1038,19 @@
     },
     "05ybq": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
+    },
+    "06f8y": {
+      "eligiblePos": "M",
+      "status": "FA"
     },
     "068a1": {
       "eligiblePos": "M",
       "status": "FA"
     },
-    "06f8y": {
-      "eligiblePos": "M",
-      "status": "T"
-    },
     "0646f": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "072py": {
       "eligiblePos": "D",
@@ -1547,7 +1094,7 @@
     },
     "06mgd": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "078i7": {
       "eligiblePos": "D",
@@ -1555,7 +1102,7 @@
     },
     "06msb": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06msc": {
       "eligiblePos": "D",
@@ -1563,7 +1110,7 @@
     },
     "05uel": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "078gh": {
       "eligiblePos": "G",
@@ -1639,14 +1186,10 @@
     },
     "06p6j": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "076d3": {
       "eligiblePos": "M",
-      "status": "FA"
-    },
-    "05uds": {
-      "eligiblePos": "G",
       "status": "FA"
     },
     "05ylw": {
@@ -1655,6 +1198,10 @@
     },
     "076d4": {
       "eligiblePos": "M",
+      "status": "FA"
+    },
+    "05uds": {
+      "eligiblePos": "G",
       "status": "FA"
     },
     "076d1": {
@@ -1677,25 +1224,25 @@
       "eligiblePos": "F",
       "status": "FA"
     },
+    "05l27": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
     "04fk8": {
       "eligiblePos": "D",
       "status": "FA"
     },
-    "05l27": {
+    "06nu7": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06r9w": {
       "eligiblePos": "D",
-      "status": "T"
-    },
-    "06nu7": {
-      "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "04fk1": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06r9x": {
       "eligiblePos": "D",
@@ -1703,7 +1250,7 @@
     },
     "072zs": {
       "eligiblePos": "F,M",
-      "status": "T"
+      "status": "FA"
     },
     "05ue7": {
       "eligiblePos": "M",
@@ -1715,7 +1262,7 @@
     },
     "05oz3": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "072zp": {
       "eligiblePos": "G",
@@ -1739,7 +1286,7 @@
     },
     "049tq": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "052cb": {
       "eligiblePos": "D",
@@ -1754,24 +1301,24 @@
       "status": "FA"
     },
     "04abn": {
-      "eligiblePos": "M",
-      "status": "T"
+      "eligiblePos": "F,M",
+      "status": "FA"
+    },
+    "06znb": {
+      "eligiblePos": "G",
+      "status": "FA"
     },
     "052ca": {
       "eligiblePos": "D",
       "status": "FA"
     },
-    "06znb": {
-      "eligiblePos": "G",
-      "status": "T"
-    },
     "062a9": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06zna": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "076dw": {
       "eligiblePos": "M",
@@ -1795,7 +1342,7 @@
     },
     "04abb": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "033l8": {
       "eligiblePos": "G",
@@ -1807,7 +1354,7 @@
     },
     "076dq": {
       "eligiblePos": "F,M",
-      "status": "T"
+      "status": "FA"
     },
     "076dr": {
       "eligiblePos": "F,M",
@@ -1831,7 +1378,7 @@
     },
     "076dg": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "078hi": {
       "eligiblePos": "M",
@@ -1855,7 +1402,7 @@
     },
     "05l2z": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "076da": {
       "eligiblePos": "F",
@@ -1878,8 +1425,8 @@
       "status": "FA"
     },
     "056iy": {
-      "eligiblePos": "F",
-      "status": "T"
+      "eligiblePos": "F,M",
+      "status": "FA"
     },
     "076cw": {
       "eligiblePos": "G",
@@ -1887,7 +1434,7 @@
     },
     "05o8o": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "04xjr": {
       "eligiblePos": "M",
@@ -1905,12 +1452,12 @@
       "eligiblePos": "G",
       "status": "FA"
     },
-    "060wh": {
-      "eligiblePos": "F,M",
-      "status": "FA"
-    },
     "05o4b": {
       "eligiblePos": "D",
+      "status": "FA"
+    },
+    "060wh": {
+      "eligiblePos": "F,M",
       "status": "FA"
     },
     "037mt": {
@@ -1919,7 +1466,7 @@
     },
     "05o4c": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "061ya": {
       "eligiblePos": "F",
@@ -1931,7 +1478,7 @@
     },
     "06r6s": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "04o82": {
       "eligiblePos": "M",
@@ -1953,25 +1500,25 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "072wq": {
-      "eligiblePos": "F",
-      "status": "FA"
-    },
     "061z5": {
       "eligiblePos": "D",
       "status": "FA"
     },
+    "072wq": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
     "061xs": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "02lz0": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "03ksl": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "03m5h": {
       "eligiblePos": "M",
@@ -1985,17 +1532,17 @@
       "eligiblePos": "G",
       "status": "FA"
     },
-    "03m5i": {
-      "eligiblePos": "G",
-      "status": "FA"
-    },
     "06mnd": {
       "eligiblePos": "F",
       "status": "FA"
     },
+    "03m5i": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
     "05r9b": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06avm": {
       "eligiblePos": "G",
@@ -2015,7 +1562,7 @@
     },
     "0639x": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "0700t": {
       "eligiblePos": "D",
@@ -2023,7 +1570,7 @@
     },
     "078az": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "072x7": {
       "eligiblePos": "M",
@@ -2039,7 +1586,7 @@
     },
     "05o2p": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06s7r": {
       "eligiblePos": "D",
@@ -2047,7 +1594,7 @@
     },
     "0700p": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06r5r": {
       "eligiblePos": "D",
@@ -2077,13 +1624,13 @@
       "eligiblePos": "F",
       "status": "FA"
     },
-    "05o6h": {
-      "eligiblePos": "F",
-      "status": "T"
-    },
     "03yqz": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
+    },
+    "05o6h": {
+      "eligiblePos": "F",
+      "status": "FA"
     },
     "078g0": {
       "eligiblePos": "D",
@@ -2119,7 +1666,7 @@
     },
     "06mpp": {
       "eligiblePos": "M,D",
-      "status": "T"
+      "status": "FA"
     },
     "05ubv": {
       "eligiblePos": "F",
@@ -2131,7 +1678,7 @@
     },
     "032f9": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "06p4j": {
       "eligiblePos": "D",
@@ -2149,16 +1696,16 @@
       "eligiblePos": "F",
       "status": "FA"
     },
-    "0703h": {
-      "eligiblePos": "F",
+    "04yo7": {
+      "eligiblePos": "M",
       "status": "FA"
     },
     "065ao": {
       "eligiblePos": "M",
       "status": "FA"
     },
-    "04yo7": {
-      "eligiblePos": "M",
+    "0703h": {
+      "eligiblePos": "F",
       "status": "FA"
     },
     "079h0": {
@@ -2167,7 +1714,7 @@
     },
     "0703c": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06ygm": {
       "eligiblePos": "D",
@@ -2177,11 +1724,11 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "05ubh": {
+    "044ei": {
       "eligiblePos": "G",
       "status": "FA"
     },
-    "044ei": {
+    "05ubh": {
       "eligiblePos": "G",
       "status": "FA"
     },
@@ -2191,7 +1738,7 @@
     },
     "04yme": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "06mow": {
       "eligiblePos": "F",
@@ -2223,18 +1770,18 @@
     },
     "06y29": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "052k6": {
       "eligiblePos": "D",
       "status": "FA"
     },
-    "06y27": {
-      "eligiblePos": "F,M",
-      "status": "FA"
-    },
     "062h7": {
       "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06y27": {
+      "eligiblePos": "F,M",
       "status": "FA"
     },
     "063hu": {
@@ -2247,7 +1794,7 @@
     },
     "06y26": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "05y55": {
       "eligiblePos": "M",
@@ -2277,24 +1824,24 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "076kg": {
-      "eligiblePos": "F",
-      "status": "FA"
-    },
     "03am7": {
       "eligiblePos": "M",
+      "status": "FA"
+    },
+    "076kg": {
+      "eligiblePos": "F",
       "status": "FA"
     },
     "076kd": {
       "eligiblePos": "D",
       "status": "FA"
     },
-    "076ke": {
-      "eligiblePos": "F",
-      "status": "FA"
-    },
     "03pif": {
       "eligiblePos": "G",
+      "status": "FA"
+    },
+    "076ke": {
+      "eligiblePos": "F",
       "status": "FA"
     },
     "076kc": {
@@ -2315,7 +1862,7 @@
     },
     "04agz": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "05rff": {
       "eligiblePos": "F,M",
@@ -2325,17 +1872,17 @@
       "eligiblePos": "G",
       "status": "FA"
     },
-    "04qfz": {
-      "eligiblePos": "D",
-      "status": "T"
-    },
     "038ze": {
       "eligiblePos": "F,M",
       "status": "FA"
     },
+    "04qfz": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
     "05l8q": {
-      "eligiblePos": "M",
-      "status": "T"
+      "eligiblePos": "F,M",
+      "status": "FA"
     },
     "05rey": {
       "eligiblePos": "D",
@@ -2343,11 +1890,11 @@
     },
     "05g2o": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "0477b": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "051k8": {
       "eligiblePos": "M",
@@ -2367,7 +1914,7 @@
     },
     "04e1e": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "051k3": {
       "eligiblePos": "M",
@@ -2385,11 +1932,11 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "05uor": {
-      "eligiblePos": "F",
-      "status": "T"
-    },
     "05ocl": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "05uor": {
       "eligiblePos": "F",
       "status": "FA"
     },
@@ -2399,7 +1946,7 @@
     },
     "04e1c": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "0791o": {
       "eligiblePos": "M",
@@ -2427,7 +1974,7 @@
     },
     "06zvn": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "078qj": {
       "eligiblePos": "F",
@@ -2451,7 +1998,7 @@
     },
     "05unu": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "05uns": {
       "eligiblePos": "F,M",
@@ -2467,7 +2014,7 @@
     },
     "04y92": {
       "eligiblePos": "F,M",
-      "status": "T"
+      "status": "FA"
     },
     "0790i": {
       "eligiblePos": "M",
@@ -2479,7 +2026,7 @@
     },
     "03yww": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "06fhy": {
       "eligiblePos": "F",
@@ -2511,7 +2058,7 @@
     },
     "03gu4": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06mx0": {
       "eligiblePos": "D",
@@ -2523,7 +2070,7 @@
     },
     "05uht": {
       "eligiblePos": "F,M",
-      "status": "T"
+      "status": "FA"
     },
     "06ymt": {
       "eligiblePos": "G",
@@ -2531,7 +2078,7 @@
     },
     "05uhs": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06ymu": {
       "eligiblePos": "D",
@@ -2557,17 +2104,17 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "06kqy": {
+    "04tig": {
       "eligiblePos": "D",
       "status": "FA"
     },
-    "04tig": {
+    "06kqy": {
       "eligiblePos": "D",
       "status": "FA"
     },
     "05nzu": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06mw0": {
       "eligiblePos": "D",
@@ -2583,7 +2130,7 @@
     },
     "04sjt": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "04qfq": {
       "eligiblePos": "M",
@@ -2591,7 +2138,7 @@
     },
     "04sjv": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "04qfm": {
       "eligiblePos": "M,D",
@@ -2611,7 +2158,7 @@
     },
     "078mm": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06ab3": {
       "eligiblePos": "M",
@@ -2631,7 +2178,7 @@
     },
     "062ct": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "06l4i": {
       "eligiblePos": "F",
@@ -2647,11 +2194,11 @@
     },
     "06zqq": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "052h1": {
       "eligiblePos": "F,M",
-      "status": "T"
+      "status": "FA"
     },
     "062ci": {
       "eligiblePos": "M",
@@ -2667,7 +2214,7 @@
     },
     "03frx": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "078le": {
       "eligiblePos": "D",
@@ -2687,7 +2234,7 @@
     },
     "045ob": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "05mzt": {
       "eligiblePos": "G",
@@ -2711,7 +2258,7 @@
     },
     "04qr9": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06phr": {
       "eligiblePos": "F",
@@ -2723,7 +2270,7 @@
     },
     "07877": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "062p1": {
       "eligiblePos": "D",
@@ -2739,10 +2286,10 @@
     },
     "062p3": {
       "eligiblePos": "F,M",
-      "status": "T"
+      "status": "FA"
     },
     "06rlj": {
-      "eligiblePos": "D",
+      "eligiblePos": "M,D",
       "status": "FA"
     },
     "05oig": {
@@ -2761,11 +2308,11 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "0785j": {
-      "eligiblePos": "D",
-      "status": "T"
-    },
     "06rlf": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0785j": {
       "eligiblePos": "D",
       "status": "FA"
     },
@@ -2833,10 +2380,6 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "0784y": {
-      "eligiblePos": "D",
-      "status": "T"
-    },
     "02lm7": {
       "eligiblePos": "M",
       "status": "FA"
@@ -2849,25 +2392,29 @@
       "eligiblePos": "M",
       "status": "FA"
     },
+    "0784y": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
     "04mi4": {
       "eligiblePos": "F",
       "status": "FA"
     },
     "063q8": {
       "eligiblePos": "M",
-      "status": "T"
-    },
-    "0784z": {
-      "eligiblePos": "D",
       "status": "FA"
     },
     "06rm8": {
       "eligiblePos": "F",
       "status": "FA"
     },
+    "0784z": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
     "0784w": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "0784x": {
       "eligiblePos": "F",
@@ -2879,7 +2426,7 @@
     },
     "04qor": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "0784v": {
       "eligiblePos": "G",
@@ -2899,51 +2446,51 @@
     },
     "068yt": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "0784r": {
       "eligiblePos": "M",
-      "status": "FA"
-    },
-    "0784o": {
-      "eligiblePos": "D",
       "status": "FA"
     },
     "05u40": {
       "eligiblePos": "G",
       "status": "FA"
     },
+    "0784o": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
     "0784p": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "0784l": {
       "eligiblePos": "G",
-      "status": "FA"
-    },
-    "0784i": {
-      "eligiblePos": "D",
       "status": "FA"
     },
     "0554i": {
       "eligiblePos": "M",
       "status": "FA"
     },
-    "0784j": {
-      "eligiblePos": "F",
+    "0784i": {
+      "eligiblePos": "D",
       "status": "FA"
     },
-    "06cmt": {
-      "eligiblePos": "G",
+    "0784j": {
+      "eligiblePos": "F",
       "status": "FA"
     },
     "070fa": {
       "eligiblePos": "M",
       "status": "FA"
     },
+    "06cmt": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
     "06cmu": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "068ym": {
       "eligiblePos": "M",
@@ -2951,13 +2498,9 @@
     },
     "05tre": {
       "eligiblePos": "M",
-      "status": "T"
-    },
-    "0784e": {
-      "eligiblePos": "M",
       "status": "FA"
     },
-    "0784f": {
+    "0784e": {
       "eligiblePos": "M",
       "status": "FA"
     },
@@ -2965,11 +2508,15 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "0784c": {
-      "eligiblePos": "D",
+    "0784f": {
+      "eligiblePos": "M",
       "status": "FA"
     },
     "0554g": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
+    "0784c": {
       "eligiblePos": "D",
       "status": "FA"
     },
@@ -3003,7 +2550,7 @@
     },
     "0521z": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "072o9": {
       "eligiblePos": "F,M",
@@ -3017,40 +2564,40 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "07898": {
-      "eligiblePos": "F",
-      "status": "T"
-    },
     "05nip": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "07898": {
       "eligiblePos": "F",
       "status": "FA"
     },
     "067zv": {
       "eligiblePos": "F,M",
-      "status": "T"
+      "status": "FA"
     },
     "072mp": {
       "eligiblePos": "F",
-      "status": "FA"
-    },
-    "07897": {
-      "eligiblePos": "M",
       "status": "FA"
     },
     "06442": {
       "eligiblePos": "D",
       "status": "FA"
     },
+    "07897": {
+      "eligiblePos": "M",
+      "status": "FA"
+    },
     "072mq": {
+      "eligiblePos": "F",
+      "status": "FA"
+    },
+    "06rnn": {
       "eligiblePos": "F",
       "status": "FA"
     },
     "05nil": {
       "eligiblePos": "D",
-      "status": "T"
-    },
-    "06rnn": {
-      "eligiblePos": "F",
       "status": "FA"
     },
     "02lp5": {
@@ -3065,12 +2612,12 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "06xzp": {
-      "eligiblePos": "F",
-      "status": "FA"
-    },
     "0327r": {
       "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06xzp": {
+      "eligiblePos": "F",
       "status": "FA"
     },
     "0666p": {
@@ -3111,7 +2658,7 @@
     },
     "06xzd": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "06xze": {
       "eligiblePos": "G",
@@ -3126,20 +2673,20 @@
       "status": "FA"
     },
     "06xza": {
-      "eligiblePos": "F",
+      "eligiblePos": "F,M",
       "status": "FA"
     },
     "062ow": {
       "eligiblePos": "M",
       "status": "FA"
     },
+    "070hs": {
+      "eligiblePos": "G",
+      "status": "FA"
+    },
     "06y9z": {
       "eligiblePos": "M",
       "status": "FA"
-    },
-    "070hs": {
-      "eligiblePos": "G",
-      "status": "T"
     },
     "06rmv": {
       "eligiblePos": "F,M",
@@ -3157,13 +2704,13 @@
       "eligiblePos": "F",
       "status": "FA"
     },
-    "0326x": {
-      "eligiblePos": "F",
-      "status": "T"
-    },
     "0689w": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
+    },
+    "0326x": {
+      "eligiblePos": "F",
+      "status": "FA"
     },
     "02lo6": {
       "eligiblePos": "G",
@@ -3171,7 +2718,7 @@
     },
     "067yz": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "062op": {
       "eligiblePos": "D",
@@ -3187,11 +2734,11 @@
     },
     "06v51": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "067yv": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "06hze": {
       "eligiblePos": "M",
@@ -3199,11 +2746,11 @@
     },
     "070hl": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "070hi": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "070hj": {
       "eligiblePos": "F",
@@ -3215,7 +2762,7 @@
     },
     "067ys": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06y9n": {
       "eligiblePos": "F",
@@ -3239,7 +2786,7 @@
     },
     "06y9m": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "062og": {
       "eligiblePos": "D",
@@ -3247,30 +2794,30 @@
     },
     "070hc": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "0435m": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06fuw": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "06pia": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "070ha": {
       "eligiblePos": "M",
       "status": "FA"
     },
-    "06pib": {
-      "eligiblePos": "M",
-      "status": "FA"
-    },
     "070hb": {
       "eligiblePos": "D",
+      "status": "FA"
+    },
+    "06pib": {
+      "eligiblePos": "M",
       "status": "FA"
     },
     "0794a": {
@@ -3299,18 +2846,18 @@
     },
     "06v07": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "0793x": {
       "eligiblePos": "F",
       "status": "FA"
     },
-    "06v05": {
-      "eligiblePos": "D",
-      "status": "FA"
-    },
     "04spw": {
       "eligiblePos": "M",
+      "status": "FA"
+    },
+    "06v05": {
+      "eligiblePos": "D",
       "status": "FA"
     },
     "06zxy": {
@@ -3333,12 +2880,12 @@
       "eligiblePos": "M",
       "status": "FA"
     },
-    "051kl": {
-      "eligiblePos": "M",
-      "status": "T"
-    },
     "04u40": {
       "eligiblePos": "G",
+      "status": "FA"
+    },
+    "051kl": {
+      "eligiblePos": "M",
       "status": "FA"
     },
     "0793o": {
@@ -3387,11 +2934,11 @@
     },
     "05y7c": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "04lav": {
       "eligiblePos": "M,D",
-      "status": "T"
+      "status": "FA"
     },
     "0792z": {
       "eligiblePos": "M",
@@ -3411,7 +2958,7 @@
     },
     "06y59": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "07949": {
       "eligiblePos": "M",
@@ -3419,7 +2966,7 @@
     },
     "043qy": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "078t8": {
       "eligiblePos": "D",
@@ -3451,7 +2998,7 @@
     },
     "06rgg": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "02oo1": {
       "eligiblePos": "D",
@@ -3459,7 +3006,7 @@
     },
     "03mfe": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06zwj": {
       "eligiblePos": "F",
@@ -3473,24 +3020,24 @@
       "eligiblePos": "D",
       "status": "FA"
     },
-    "0784a": {
-      "eligiblePos": "D",
-      "status": "FA"
-    },
     "068yd": {
       "eligiblePos": "M",
       "status": "FA"
     },
+    "0784a": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
     "05trb": {
       "eligiblePos": "F",
-      "status": "T"
-    },
-    "0784b": {
-      "eligiblePos": "D",
       "status": "FA"
     },
     "068yc": {
       "eligiblePos": "M",
+      "status": "FA"
+    },
+    "0784b": {
+      "eligiblePos": "D",
       "status": "FA"
     },
     "06fso": {
@@ -3499,7 +3046,7 @@
     },
     "06cmm": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "0687c": {
       "eligiblePos": "M",
@@ -3521,17 +3068,17 @@
       "eligiblePos": "F",
       "status": "FA"
     },
-    "06v0y": {
-      "eligiblePos": "D",
-      "status": "T"
-    },
     "070g7": {
       "eligiblePos": "F",
       "status": "FA"
     },
+    "06v0y": {
+      "eligiblePos": "D",
+      "status": "FA"
+    },
     "05tqx": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "072iu": {
       "eligiblePos": "F",
@@ -3539,7 +3086,7 @@
     },
     "06v0t": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "07858": {
       "eligiblePos": "D",
@@ -3555,7 +3102,7 @@
     },
     "067x8": {
       "eligiblePos": "M,D",
-      "status": "T"
+      "status": "FA"
     },
     "070eo": {
       "eligiblePos": "M,D",
@@ -3563,19 +3110,19 @@
     },
     "06v0p": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "06v21": {
-      "eligiblePos": "M",
-      "status": "T"
-    },
-    "06v0l": {
       "eligiblePos": "M",
       "status": "FA"
     },
     "05u1m": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
+    },
+    "06v0l": {
+      "eligiblePos": "M",
+      "status": "FA"
     },
     "07850": {
       "eligiblePos": "D",
@@ -3599,35 +3146,35 @@
     },
     "05y9n": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06v0f": {
       "eligiblePos": "D",
       "status": "FA"
     },
-    "06v0g": {
-      "eligiblePos": "D",
-      "status": "T"
-    },
     "03dwz": {
       "eligiblePos": "G",
+      "status": "FA"
+    },
+    "06v0g": {
+      "eligiblePos": "D",
       "status": "FA"
     },
     "05akv": {
       "eligiblePos": "D",
       "status": "FA"
     },
-    "076qg": {
-      "eligiblePos": "F",
-      "status": "T"
+    "05ogb": {
+      "eligiblePos": "F,M",
+      "status": "FA"
     },
     "06clt": {
       "eligiblePos": "F,M",
       "status": "FA"
     },
-    "05ogb": {
+    "076qg": {
       "eligiblePos": "F",
-      "status": "T"
+      "status": "FA"
     },
     "06v0c": {
       "eligiblePos": "F",
@@ -3639,7 +3186,7 @@
     },
     "078ud": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "06v0a": {
       "eligiblePos": "M",
@@ -3659,7 +3206,7 @@
     },
     "070f9": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "04f6o": {
       "eligiblePos": "M",
@@ -3667,7 +3214,7 @@
     },
     "05tr9": {
       "eligiblePos": "M",
-      "status": "T"
+      "status": "FA"
     },
     "07849": {
       "eligiblePos": "F",
@@ -3679,7 +3226,7 @@
     },
     "04f6h": {
       "eligiblePos": "G",
-      "status": "T"
+      "status": "FA"
     },
     "072j3": {
       "eligiblePos": "F",
@@ -3707,7 +3254,7 @@
     },
     "050jq": {
       "eligiblePos": "D",
-      "status": "T"
+      "status": "FA"
     },
     "05tr1": {
       "eligiblePos": "D",
@@ -3727,7 +3274,7 @@
     },
     "068y0": {
       "eligiblePos": "F,M",
-      "status": "T"
+      "status": "FA"
     },
     "0794m": {
       "eligiblePos": "M",
@@ -3771,7 +3318,7 @@
     },
     "066sd": {
       "eligiblePos": "M,D",
-      "status": "T"
+      "status": "FA"
     },
     "0794d": {
       "eligiblePos": "M",
@@ -4187,56 +3734,47 @@
     }
   ],
   "teamInfo": {
-    "yf96763gmtj31zni": {
-      "name": "test31121",
-      "id": "yf96763gmtj31zni"
+    "qgucu9dgmufwva1x": {
+      "name": "its_ohi",
+      "id": "qgucu9dgmufwva1x"
     },
-    "8enbgqo5msgb375j": {
-      "name": "123",
-      "id": "8enbgqo5msgb375j"
+    "aekx2715mtzgcl3f": {
+      "name": "Mcdegle86",
+      "id": "aekx2715mtzgcl3f"
     },
-    "sezrgvl2mshcpazf": {
-      "name": "test4",
-      "id": "sezrgvl2mshcpazf"
+    "ipnp5y4mmu9j7kop": {
+      "name": "RichyN",
+      "id": "ipnp5y4mmu9j7kop"
     },
-    "pbxm9fgimshcpazf": {
-      "name": "test2",
-      "id": "pbxm9fgimshcpazf"
+    "uexqrijomu8l5asi": {
+      "name": "AtleticoTimHortons",
+      "id": "uexqrijomu8l5asi"
     },
-    "j9zadacnmshcpazf": {
-      "name": "test3",
-      "id": "j9zadacnmshcpazf"
+    "l5kunst8msgbirdf": {
+      "name": "The Raccoons",
+      "id": "l5kunst8msgbirdf"
     },
-    "v6bxgqm5mtj31znh": {
-      "name": "Notemail",
-      "id": "v6bxgqm5mtj31znh"
+    "kpj0z744muh1qwtd": {
+      "name": "nickbtts",
+      "id": "kpj0z744muh1qwtd"
     },
-    "mxet9tt7mtj31zni": {
-      "name": "testf",
-      "id": "mxet9tt7mtj31zni"
-    },
-    "vzqubu25mtj31zni": {
-      "name": "test3331",
-      "id": "vzqubu25mtj31zni"
-    },
-    "jtsmt5jxmtj31znh": {
-      "name": "test1",
-      "id": "jtsmt5jxmtj31znh"
-    },
-    "dq2yk3zxmtj31znh": {
-      "name": "test211",
-      "id": "dq2yk3zxmtj31znh"
+    "7to6xosimu8hyyw5": {
+      "name": "traffordstephen",
+      "id": "7to6xosimu8hyyw5"
     }
   },
-  "draftSettings": {},
-  "leagueName": "test1dsfds",
+  "draftType": "snake",
+  "draftSettings": {
+    "draftType": "snake"
+  },
+  "leagueName": "Tim Hortons Pro League 26/27",
   "scoringSystem": {
     "scoringCategories": {
       "NON_GOALIE": {
         "A": {
           "Default": "points3"
         },
-        "MP": {
+        "KP": {
           "D": "points0",
           "F": "points0",
           "G": "points0",
@@ -4245,13 +3783,6 @@
         },
         "AF": {
           "Default": "points3"
-        },
-        "CBIT2": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
         },
         "G": {
           "D": "points6",
@@ -4262,7 +3793,21 @@
         "YC": {
           "Default": "points-1"
         },
-        "DFP": {
+        "ASOP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "Off": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "AP": {
           "D": "points0",
           "F": "points0",
           "G": "points0",
@@ -4270,9 +3815,18 @@
           "M": "points0"
         },
         "CS": {
-          "D": "points4",
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
           "Default": "points0",
-          "M": "points1"
+          "M": "points0"
+        },
+        "PA": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
         },
         "RC": {
           "Default": "points-3"
@@ -4283,35 +3837,28 @@
         "PKM": {
           "Default": "points-2"
         },
+        "AT": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
         "GAO": {
           "D": "range1|99|-1|2.0",
           "Default": "points0"
         },
-        "CBIT": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
-        },
         "OG": {
           "Default": "points-2"
         },
-        "DFP3": {
+        "Pen": {
           "D": "points0",
           "F": "points0",
           "G": "points0",
           "Default": "points0",
           "M": "points0"
         },
-        "DFP2": {
-          "D": "points0",
-          "F": "points0",
-          "G": "points0",
-          "Default": "points0",
-          "M": "points0"
-        },
-        "CBIRT2": {
+        "GOF": {
           "D": "points0",
           "F": "points0",
           "G": "points0",
@@ -4320,11 +3867,44 @@
         }
       },
       "GOALIE": {
-        "CS": {
-          "Default": "points4"
-        },
         "A": {
           "Default": "points3"
+        },
+        "Sv": {
+          "Default": "range1|99|1|3.0"
+        },
+        "AF": {
+          "Default": "points3"
+        },
+        "G": {
+          "Default": "points6"
+        },
+        "SFTP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "PKF": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "YC": {
+          "Default": "points-1"
+        },
+        "AP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "CS": {
+          "Default": "points4"
         },
         "RC": {
           "Default": "points-3"
@@ -4332,17 +3912,8 @@
         "Min": {
           "Default": "range1|59|1|NULL$60|90|1|NULL"
         },
-        "Sv": {
-          "Default": "range1|99|1|3.0"
-        },
         "PKM": {
           "Default": "points-2"
-        },
-        "AF": {
-          "Default": "points3"
-        },
-        "G": {
-          "Default": "points6"
         },
         "OG": {
           "Default": "points-2"
@@ -4352,9 +3923,6 @@
         },
         "GA": {
           "Default": "range1|99|-1|2.0"
-        },
-        "YC": {
-          "Default": "points-1"
         }
       }
     },

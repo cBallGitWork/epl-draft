@@ -5672,20 +5672,224 @@
     }
   },
   "draftSettings": {},
-  "leagueName": "test1dsfds (2)",
+  "leagueName": "ALLPOINTS",
   "scoringSystem": {
     "scoringCategories": {
       "NON_GOALIE": {
-        "CS": {
-          "D": "points4",
+        "CLO": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
           "Default": "points0",
-          "M": "points1"
+          "M": "points0"
         },
-        "A": {
+        "CLR": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "DL": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "LBA": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "YC": {
+          "Default": "points-1"
+        },
+        "S/G": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "ASOP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "Off/G": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "DFP": {
+          "Default": "points0"
+        },
+        "AHW": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "A2": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "DW": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "Tk": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "ErG": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "Tu": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "GIB": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "TkW": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "AC": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "BCC": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "FKG": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "AF": {
           "Default": "points3"
+        },
+        "ErS": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "PKA": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "PKD": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "SFTP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "BCM": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "PKG": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "AER": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "FKS": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "AP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "AR": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
         },
         "RC": {
           "Default": "points-3"
+        },
+        "BCS": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
         },
         "Min": {
           "Default": "range1|59|1|NULL$60|90|1|NULL"
@@ -5693,12 +5897,61 @@
         "PKM": {
           "Default": "points-2"
         },
+        "AT": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "CoA": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
         "GAO": {
           "D": "range1|99|-1|2.0",
           "Default": "points0"
         },
-        "AF": {
+        "FC": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "SBOF": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "A": {
           "Default": "points3"
+        },
+        "C": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "OUTP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "CLRA": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
         },
         "G": {
           "D": "points6",
@@ -5706,19 +5959,262 @@
           "Default": "points0",
           "M": "points5"
         },
+        "SBON": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "FS": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "Int": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "Off": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "SB": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "BR": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "ABS": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "S": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "APKG": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
         "OG": {
           "Default": "points-2"
         },
-        "YC": {
-          "Default": "points-1"
+        "AOG": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "GOB": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "AFKG": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "CC": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "CE": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "CF": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "KP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "CK": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "GP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "GS": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "DIS": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "CS": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "IntB": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "SOP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "S/90": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "LB": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "Pen": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "SOT": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "DFP3": {
+          "Default": "points0"
+        },
+        "APL": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
         }
       },
       "GOALIE": {
-        "CS": {
-          "Default": "points4"
-        },
         "A": {
           "Default": "points3"
+        },
+        "CE": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "Sv": {
+          "Default": "range1|99|1|3.0"
+        },
+        "KP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "AF": {
+          "Default": "points3"
+        },
+        "ErS": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "G": {
+          "Default": "points6"
+        },
+        "YC": {
+          "Default": "points-1"
+        },
+        "DIS": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "AP": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
+        },
+        "CS": {
+          "Default": "points4"
         },
         "RC": {
           "Default": "points-3"
@@ -5726,17 +6222,8 @@
         "Min": {
           "Default": "range1|59|1|NULL$60|90|1|NULL"
         },
-        "Sv": {
-          "Default": "range1|99|1|3.0"
-        },
         "PKM": {
           "Default": "points-2"
-        },
-        "AF": {
-          "Default": "points3"
-        },
-        "G": {
-          "Default": "points6"
         },
         "OG": {
           "Default": "points-2"
@@ -5747,8 +6234,12 @@
         "GA": {
           "Default": "range1|99|-1|2.0"
         },
-        "YC": {
-          "Default": "points-1"
+        "ErG": {
+          "D": "points0",
+          "F": "points0",
+          "G": "points0",
+          "Default": "points0",
+          "M": "points0"
         }
       }
     },

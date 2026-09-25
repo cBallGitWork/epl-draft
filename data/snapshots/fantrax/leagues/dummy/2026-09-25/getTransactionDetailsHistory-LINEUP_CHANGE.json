@@ -50,7 +50,7 @@
       ],
       "text": "Are you sure you want to permanently delete this?"
     },
-    "heading": "2026 test1dsfds (2)",
+    "heading": "2026 ALLPOINTS",
     "undoTransactionDialog": {
       "alwaysShowOpener": false,
       "options": [
@@ -268,7 +268,7 @@
             },
             {
               "tooltip": "Sep 18, 8:47 AM: Rohl (undisclosed) remains out and will...",
-              "typeId": "9"
+              "typeId": "8"
             }
           ],
           "rookie": false,
