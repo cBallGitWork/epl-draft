@@ -1,6 +1,5 @@
 import {
   clubById,
-  clubColours,
   nextFixtures,
   predictedEleven,
   squadOf,
@@ -94,7 +93,6 @@ export default async function ClubSquadPage({ params }: { params: Promise<{ code
           <>
             <Squad
               players={squad}
-              colours={clubColours(club.shortName)}
               league={league}
               club={club}
               eleven={eleven}

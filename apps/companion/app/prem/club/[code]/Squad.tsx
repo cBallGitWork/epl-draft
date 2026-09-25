@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Club, ClubColours, FootballPlayer } from "@epl/core";
+import type { Club, FootballPlayer } from "@epl/core";
 import ViewToggle, { type View } from "../../../components/league/ViewToggle";
 import { positionsLabel } from "../../../positions";
 import Eleven from "./Eleven";
@@ -30,7 +30,6 @@ import ListAndPitch from "@/app/components/league/ListAndPitch";
 
 export default function Squad({
   players,
-  colours,
   league,
   club,
   eleven,
@@ -39,7 +38,6 @@ export default function Squad({
   updated,
 }: {
   players: readonly FootballPlayer[];
-  colours: ClubColours;
   league: ReadonlyMap<number, LeagueOpinion>;
   club: Club;
   /** The predicted eleven in its lines, or empty when there is no prediction —
@@ -67,7 +65,7 @@ export default function Squad({
   ) : null;
 
   const list = (
-    <SquadTable players={players} colours={colours} league={league} />
+    <SquadTable players={players} league={league} />
   );
 
   return (
