@@ -64,7 +64,7 @@ export interface Filing {
 }
 
 /** The newest of `filings` saved: the paper, its archive file, then the ledger LAST. The ledger is
- *  the commit point, so a firing killed before it files that story again rather than losing it. */
+ *  the commit point: a story whose save died before it is filed again next firing, never lost. */
 export function saveFiling(
   found: readonly PublishedStory[],
   filings: readonly Filing[],
