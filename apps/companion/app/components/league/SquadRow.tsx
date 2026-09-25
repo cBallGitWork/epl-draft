@@ -1,28 +1,18 @@
 import Image from "next/image";
 import {
-  type DoubtBand,
   type SquadPlayerDetail,
-  availabilityOf,
   crestUrl,
-  doubtBand,
   fixtureLabel,
   isResolved,
   fullPlayerName,
   DASH,
 } from "@epl/core";
 import StateBox from "../football/StateBox";
+import { doubtRow } from "../football/doubtRow";
 import PositionTile from "./PositionTile";
 import { ROW_NAME } from "@/app/desk";
 
 // One man's row in a squad list: our position, his club's crest, his name, his fixture and his figure.
-
-/** The wash each band puts across a row. Written out, never composed — see
- *  `PitchMarker`. */
-const DOUBT_ROW: Record<DoubtBand, string> = {
-  out: "cm-doubt-out",
-  major: "cm-doubt-major",
-  slight: "cm-doubt-slight",
-};
 
 export default function SquadRow({
   player,
@@ -150,17 +140,6 @@ export default function SquadRow({
     </>
   );
 
-  // How likely he is to miss, as a wash across the whole row (Craig, 21 Sep
-  // 2026: "we can fill out the player row with a yellow/red/ornage tint to match
-  // their status (currently we just have a red label)"). The box beside his name
-  // still says WHICH — injured, suspended, a doubt — and stays where CM put it;
-  // the tint is the part a reader takes in without stopping at the row, which is
-  // what fifteen of them at a time need.
-  //
-  // A class per band rather than an interpolated token: Tailwind v4 drops a
-  // theme variable whose name never appears literally in scanned source, and
-  // `desk.css` is not scanned for utilities at all.
-  const doubt = doubtBand(availabilityOf(footballer));
 
   // `min-h-11` and not the `min-h-9` this carried until 31 Aug 2026: fifteen of
   // these are buttons, and a list of fifteen tappable rows on a phone is exactly
@@ -174,7 +153,7 @@ export default function SquadRow({
   const shell = [
     "cm-row flex min-h-11 w-full items-center gap-1.5 px-1.5 text-left",
     reserve ? "cm-out" : "",
-    doubt === null ? "" : DOUBT_ROW[doubt],
+    doubtRow(footballer),
   ]
     .filter(Boolean)
     .join(" ");
