@@ -1,10 +1,10 @@
 import Link from "next/link";
-import type { ClubColours, FootballPlayer } from "@epl/core";
+import type { FootballPlayer } from "@epl/core";
 import { availabilityOf, positionDepth, DASH } from "@epl/core";
 import { Head, HeadRow, NameHead, PLATE } from "../../../components/league/TableHeads";
 import PositionTile, { TILE_WIDTH } from "../../../components/league/PositionTile";
-import PlayerPortrait from "../../../components/football/PlayerPortrait";
 import StateBox from "../../../components/football/StateBox";
+import { doubtRow } from "../../../components/football/doubtRow";
 import { PLAYER } from "../../routes";
 import type { LeagueOpinion } from "../../leagueOpinions";
 import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, SCROLL, ROW_HOVER } from "@/app/desk";
@@ -26,12 +26,10 @@ import { BOARD, DESK_ONLY, FIGURE, ROW_NAME, SCROLL, ROW_HOVER } from "@/app/des
 
 export default function SquadTable({
   players,
-  colours,
   league,
 }: {
   /** Already ordered by the page. This draws; it does not rank. */
   players: readonly FootballPlayer[];
-  colours: ClubColours;
   /** Our league's opinion by FPL code, empty when Fantrax would not say. */
   league: ReadonlyMap<number, LeagueOpinion>;
   /** The sister repo's, by the same key. Empty when it has never exported. */
@@ -70,22 +68,12 @@ export default function SquadTable({
         </thead>
         <tbody>
           {players.map((player) => {
-            const availability = availabilityOf(player);
-            // Greyed rather than hidden, which is CM's answer for a man who
-            // cannot play (`cm9900/25.jpg`): a squad list that omits the injured
-            // cannot be checked against a team sheet.
-            //
-            // **Cell by cell, and NOT `.cm-out` on the row.** That class is
-            // `.cm-out, .cm-out *`, so it repaints the state badge too — and the
-            // badge is `--color-bad` behind `--color-bg`, so forcing its ink to
-            // `--color-faint` put "Inj" at 1.04:1, which `sweep` caught six
-            // times on Man City. The one thing that must survive the greying is
-            // the box saying WHY the row is grey.
-            const dim = availability.out ? "text-faint" : "";
+            // `cm-out` greys the row as a colour rule, which `desk.css` pairs with the doubt wash.
+            const dim = availabilityOf(player).out ? "cm-out" : "";
             const opinion = league.get(player.code);
 
             return (
-              <tr key={player.id} className={ROW_HOVER}>
+              <tr key={player.id} className={`${ROW_HOVER} ${dim} ${doubtRow(player)}`}>
                 {/* A plate owns its ink, so an unavailable man's tile keeps it; the rest of the row greys. */}
                 <PositionTile positions={opinion?.positions ?? []} cell />
                 <td className="w-full max-w-0 pl-2">
@@ -93,16 +81,12 @@ export default function SquadTable({
                     href={`${PLAYER}/${player.code}`}
                     className="cm-row flex min-h-11 items-center gap-2 font-bold hover:underline"
                   >
-                    <PlayerPortrait
-                      player={{ code: player.code, name: player.fullName }}
-                      colours={colours}
-                    />
                     {/* First name and surname (Craig, 3 Sep 2026). FPL's `name` is
                         its own web short form — "Raya", "J.Timber" — which is
                         right on a pitch card 46px wide and wrong in a column
                         with room for a person. `fullName` is `first_name
                         second_name` from the bootstrap. */}
-                    <span className={`min-w-0 truncate ${ROW_NAME} ${dim}`}>{player.fullName}</span>
+                    <span className={`min-w-0 truncate ${ROW_NAME}`}>{player.fullName}</span>
                     <StateBox player={player} />
                   </Link>
                 </td>
@@ -110,17 +94,17 @@ export default function SquadTable({
                     waivers, "FA" a free agent. Fantrax's own letters, carried
                     rather than translated — the vocabulary is theirs, and an
                     undrafted league marks everybody WW. */}
-                <td className={`px-1.5 text-center text-2xs ${dim || "text-ink"}`}>
+                <td className="px-1.5 text-center text-2xs text-ink">
                   <span className="block truncate">{owner(opinion) ?? DASH}</span>
                 </td>
-                <td className={`${FIGURE} ${dim || "text-ink"}`}>{player.season.minutes}</td>
-                <td className={`${FIGURE} ${DESK_ONLY} ${dim || "text-ink"}`}>
+                <td className={`${FIGURE} text-ink`}>{player.season.minutes}</td>
+                <td className={`${FIGURE} ${DESK_ONLY} text-ink`}>
                   {player.season.starts}
                 </td>
-                <td className={`${FIGURE} ${DESK_ONLY} ${dim || "text-mid"}`}>
+                <td className={`${FIGURE} ${DESK_ONLY} text-mid`}>
                   {player.season.goals}
                 </td>
-                <td className={`${FIGURE} ${DESK_ONLY} ${dim || "text-mid"}`}>
+                <td className={`${FIGURE} ${DESK_ONLY} text-mid`}>
                   {player.season.assists}
                 </td>
               </tr>
