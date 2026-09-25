@@ -1,7 +1,7 @@
 # `/players/[fantraxId]` — one player
 
 Championship Manager's player profile (`reference/cm9900/11.jpg`), for a Fantrax
-draft league. A plated bar in his club's colour, five tabs, and one cyan line saying
+draft league. A plated bar in his club's colour, four tabs, and one cyan line saying
 what he actually is.
 
 One profile per tap, never a sweep of the 697 — that is the whole politeness
@@ -24,8 +24,8 @@ derived the same four from the same object.
   Fantrax's birthplace (which put Haaland, born in Leeds, down as England). **On Data
   only** (Craig, 25 Sep 2026: "only have this on the data section, remove elsewhere");
   it had been in every tab's shell.
-- **The tabs** — Profile · Data · News · Transfer · History. **Five, which is
-  Championship Manager's own count.** Fitness folded into News on 4 Sep 2026
+- **The tabs** — Profile · Data · News · Transfer. **Five until 25 Sep 2026**, CM's own
+  count, when History folded into Data. Fitness folded into News on 4 Sep 2026
   (Craig: "Fitness could be doubled in with news") — they were two tabs asking
   one question with half an answer each. Which of them is hollow is decided from
   the SUBJECT, not from the page you are on; each route used to pass its own

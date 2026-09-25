@@ -139,7 +139,7 @@ if (club) ROUTES.push(club, ...["set-pieces", "fixtures", "stats"].map((tab) => 
 // first written down; the trap is the same whatever the tab is called, which is
 // why the fix is the selector and not the name.
 const man = await discover(cdp, "/players", 'tbody a[href^="/players/"]');
-if (man) ROUTES.push(man, ...["data", "news", "transfer", "history"].map((tab) => `${man}/${tab}`));
+if (man) ROUTES.push(man, ...["data", "news", "transfer", "data?season=all"].map((tab) => `${man}/${tab}`));
 
 // One match's two screens, discovered off the results list — where the score
 // became a link on 4 Sep 2026 and had never been one before. A written-down
