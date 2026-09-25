@@ -5,11 +5,13 @@ import ts from "typescript";
 import { describe, expect, it } from "vitest";
 
 // football/** and league/** never import each other; a script does the wiring (CLAUDE.md).
-// Source files only: a test may cross to prove the two shapes still fit (league/teamColours.test.ts).
+// Every file is walked, tests included; the one crossing allowed is named below.
 
 const SRC = dirname(fileURLToPath(import.meta.url));
 /** The package root and `src/index.ts` re-export both layers, so importing either crosses. */
 const BARREL = [SRC, join(SRC, "index"), join(SRC, "index.ts")];
+/** Recorded in PLATFORM_NOTES' Decisions; a new crossing, or this one gone, fails. */
+const ALLOWED = ["league/teamColours.test.ts → ../football/clubs"];
 
 type Layer = "football" | "league";
 
@@ -17,7 +19,7 @@ function sources(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) return sources(path);
-    return /\.tsx?$/.test(entry.name) && !/\.test\.tsx?$/.test(entry.name) ? [path] : [];
+    return /\.tsx?$/.test(entry.name) ? [path] : [];
   });
 }
 
@@ -48,9 +50,9 @@ describe("the layer split", () => {
     expect(crossings("football", "league")).toEqual([]);
   });
 
-  it("league never imports football", () => {
+  it("league never imports football, but for the one recorded test", () => {
     expect(sources(join(SRC, "league")).length).toBeGreaterThan(0);
-    expect(crossings("league", "football")).toEqual([]);
+    expect(crossings("league", "football")).toEqual(ALLOWED);
   });
 
   it("would see a crossing, directly or through the barrel", () => {

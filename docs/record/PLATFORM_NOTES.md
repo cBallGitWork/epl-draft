@@ -1016,6 +1016,14 @@ a correct and permanent state for some players rather than a matching failure.
   the league. `league/calendar.ts` declares its own `GameweekKickoff` rather than
   importing `Fixture`, the same move `identity/candidates.ts` makes with
   `FplCandidate`. A script does the wiring.
+- **One test crosses the layers, and it is the only exception.** A recorded
+  exception to the split CODE_RULES §1 grants: `league/teamColours.test.ts`
+  imports `inkOn` from `../football/clubs` to prove every team colour reads under
+  football's own ink (since 8186f4bb). `packages/core/src/layers.test.ts` walks
+  every file under `football/` and `league/`, tests included, and allows exactly
+  this one crossing by path; any other fails, and so does this one disappearing.
+  Craig decides whether it stays; dropping it means one entry out of `ALLOWED`
+  and that check moved into a script or the app.
 - **Snapshots are filed per league, and the pool is filed outside them.**
   `getPlayerIds` takes no leagueId and returns byte-identical answers for every
   league, so filing it under one would force `build-bridge.ts` to choose
