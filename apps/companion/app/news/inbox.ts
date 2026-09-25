@@ -121,7 +121,7 @@ export async function readInbox(): Promise<Inbox> {
       // pairs a claim with the drop that paid for it and both halves of a trade
       // on their shared `setId`. Reading the rows straight would file a manager
       // signing a player and, separately and mysteriously, losing one.
-      dealNews(deals(feed.rows), nameOf),
+      dealNews(deals(feed.rows), nameOf, mine),
       roundNews({
         gameweek,
         // **`nextDeadline`, which is the paper's own builder** — the
