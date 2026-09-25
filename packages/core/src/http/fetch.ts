@@ -11,9 +11,9 @@ const IDEMPOTENT_METHODS = new Set(["GET", "HEAD"]);
 
 const TIMEOUT = "TIMEOUT";
 
-/** Fetch, retrying a busy provider or a dropped connection, but only a request safe to send twice:
- *  a GET, a HEAD, or one the caller marks `idempotent`. Returns the last response whether or not it
- *  is ok; throws an `unreachable` ProviderError when no response came at all. */
+/** Fetch, retrying a busy provider or a dropped connection when safe to send twice (GET, HEAD, or
+ *  marked `idempotent`). Returns the last response, ok or not; a dropped connection or a timeout
+ *  throws an `unreachable` ProviderError, and any other failure is rethrown untouched. */
 export async function politeFetch(
   url: string,
   init: RequestInit = {},
