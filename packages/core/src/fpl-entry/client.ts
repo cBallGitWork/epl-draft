@@ -1,5 +1,5 @@
 import { FPL_API_BASE } from "../config";
-import { statusError } from "../http/errors";
+import { notJson, statusError } from "../http/errors";
 import { politeFetch } from "../http/fetch";
 import { readJson } from "../http/json";
 import type { RawEntry, RawPicks } from "./raw";
@@ -19,7 +19,7 @@ export async function fetchEntry(entryId: number): Promise<RawEntry | null> {
   const res = await politeFetch(`${FPL_API_BASE}/entry/${entryId}/`);
   if (res.status === 404) return null;
   if (!res.ok) throw statusError("FPL", what, res.status);
-  return (await readJson(res, "FPL", what)) as RawEntry;
+  return (await readJson(res, notJson("FPL", what))) as RawEntry;
 }
 
 /** One round's picks, or null before that round has been played.
@@ -31,5 +31,5 @@ export async function fetchPicks(entryId: number, gameweek: number): Promise<Raw
   const res = await politeFetch(`${FPL_API_BASE}/entry/${entryId}/event/${gameweek}/picks/`);
   if (res.status === 404) return null;
   if (!res.ok) throw statusError("FPL", what, res.status);
-  return (await readJson(res, "FPL", what)) as RawPicks;
+  return (await readJson(res, notJson("FPL", what))) as RawPicks;
 }

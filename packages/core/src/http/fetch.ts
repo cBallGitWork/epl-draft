@@ -1,6 +1,6 @@
 import { FETCH_TIMEOUT_MS, HTTP_BACKOFF_BASE_MS, HTTP_RETRIES, HTTP_USER_AGENT } from "../config";
 import { droppedConnection, retryDelay, worthRetrying } from "./backoff";
-import { ProviderError } from "./errors";
+import { unreachable } from "./errors";
 
 // One request, asked politely: the browser User-Agent, a deadline, and backing off when told to.
 // Shared by both provider layers, which may not import each other; the clock and the randomness
@@ -50,12 +50,6 @@ function failureCode(error: unknown): string | null {
   const cause = error instanceof TypeError ? error.cause : undefined;
   const code = typeof cause === "object" && cause !== null && "code" in cause ? cause.code : null;
   return typeof code === "string" && droppedConnection(code) ? code : null;
-}
-
-/** No answer at all, named by host and path because no provider client is in the loop. */
-function unreachable(url: string, code: string): ProviderError {
-  const { host, pathname } = new URL(url);
-  return new ProviderError(code, `${host} ${pathname} → ${code}`);
 }
 
 /** Sleeps out the backoff before the next attempt; false when asked to wait longer than is worth it. */

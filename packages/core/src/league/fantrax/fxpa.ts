@@ -1,5 +1,6 @@
 import { FANTRAX_FXPA_BASE } from "../../config";
 import { demoFxpa, isDemo } from "./demo";
+import { notJson } from "../../http/errors";
 import { politeFetch } from "../../http/fetch";
 import { readJson } from "../../http/json";
 import { FantraxError, pageErrorEnvelope, responseErrorEnvelope } from "./errors";
@@ -71,5 +72,5 @@ export async function fxpaRead(
   // As on fxea, a backstop only: fxpa reports its own refusals with a 200.
   if (!res.ok) throw new FantraxError(method, String(res.status), res.statusText);
 
-  return unwrapFxpa(method, await readJson(res, "Fantrax", method));
+  return unwrapFxpa(method, await readJson(res, notJson("Fantrax", method)));
 }
