@@ -1,5 +1,4 @@
 import { FANTRAX_FXEA_BASE, FANTRAX_SPORT, TRANSACTION_PAGE_SIZE } from "../../config";
-import { notJson } from "../../http/errors";
 import { politeFetch } from "../../http/fetch";
 import { readJson } from "../../http/json";
 import type { TransactionView } from "../types";
@@ -50,7 +49,7 @@ async function fxeaGet<T>(method: string, params: Record<string, string>): Promi
   // body, so this fires for transport failures, not for anything it means.
   if (!res.ok) throw new FantraxError(method, String(res.status), res.statusText);
 
-  const body = await readJson(res, notJson("Fantrax", method));
+  const body = await readJson(res, (arrived) => new FantraxError(method, "NOT_JSON", arrived));
   const error = errorEnvelope(body);
   if (error) {
     throw new FantraxError(method, error.code ?? "UNKNOWN", error.message ?? "no message");

@@ -1,5 +1,4 @@
 import { describe, expect, it } from "vitest";
-import { ProviderError } from "../../http/errors";
 import { htmlPage, serve, statusOnly } from "../../http/fakeFetch";
 import { fetchLeagueInfo } from "./client";
 import { FantraxError } from "./errors";
@@ -7,13 +6,15 @@ import { FantraxError } from "./errors";
 const LEAGUE = "league-under-test";
 
 describe("fxea reads", () => {
-  it("read a web page in place of JSON as NOT_JSON, not as a SyntaxError", async () => {
+  // A WAF page served with a 200 is Fantrax failing, exactly as the same wall's 403 is.
+  it("read a web page in place of JSON as a FantraxError, not as a SyntaxError", async () => {
     serve(htmlPage);
     const error = await fetchLeagueInfo(LEAGUE).catch((e: unknown) => e);
-    expect(error).toBeInstanceOf(ProviderError);
+    expect(error).toBeInstanceOf(FantraxError);
     expect(error).toMatchObject({
+      method: "getLeagueInfo",
       code: "NOT_JSON",
-      message: expect.stringContaining("Fantrax getLeagueInfo"),
+      message: expect.stringContaining("Fantrax getLeagueInfo: NOT_JSON — 200 text/html"),
     });
   });
 
