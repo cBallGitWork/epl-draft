@@ -2,8 +2,8 @@ import type { Ranked } from "@epl/core";
 import { DASH, ordinal } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
-import { MUTE } from "../../components/league/TableHeads";
-import { BOARD, BOARD_FIGURE, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
+import { MUTE, PlateHead } from "../../components/league/TableHeads";
+import { BOARD, BOARD_FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
 
 // Where his season totals rank among the men he is rated against (Craig, 25 Sep 2026:
 // "rankings for data such as xg"): the totals on one row, his place on the next.
@@ -18,15 +18,13 @@ export default function Rankings({ ranked, group }: { ranked: readonly Ranked[];
         <table className={BOARD}>
           <thead>
             <tr>
-              <th scope="col" className={HEAD_CELL}>
-                <div className={HEAD_PLATE}>
-                  <span className={MUTE}>Row</span>
-                </div>
-              </th>
+              <PlateHead>
+                <span className={MUTE}>Row</span>
+              </PlateHead>
               {ranked.map((r) => (
-                <th key={r.head} scope="col" className={HEAD_CELL} title={r.title}>
-                  <div className={HEAD_PLATE_END}>{r.head}</div>
-                </th>
+                <PlateHead key={r.head} at="end" title={r.title}>
+                  {r.head}
+                </PlateHead>
               ))}
             </tr>
           </thead>

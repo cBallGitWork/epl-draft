@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { HEAD_CELL } from "@/app/desk";
+import { HEAD_CELL, HEAD_PLATE, HEAD_PLATE_CENTRE, HEAD_PLATE_END } from "@/app/desk";
 import { TILE_WIDTH } from "./PositionTile";
 
 // The bevelled head strip both league tables print.
@@ -206,5 +206,28 @@ export function NameHead({ label }: { label: string }) {
         <span className={MUTE}>{label}</span>
       </span>
     </Head>
+  );
+}
+
+/** Where a stats board's head sits in its plate: a name's at the start, a figure's at the end or centred. */
+const PLATE_AT = { start: HEAD_PLATE, end: HEAD_PLATE_END, centre: HEAD_PLATE_CENTRE } as const;
+
+/** A stats board's head that does not sort: the cell and the 24px bevelled plate inside it. */
+export function PlateHead({
+  at = "start",
+  title,
+  className = "",
+  children,
+}: {
+  at?: keyof typeof PLATE_AT;
+  title?: string;
+  /** Extra classes on the cell: a width, a pin, a rule down its left. */
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <th scope="col" title={title} className={`${HEAD_CELL} ${className}`}>
+      <div className={PLATE_AT[at]}>{children}</div>
+    </th>
   );
 }

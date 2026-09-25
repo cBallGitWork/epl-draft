@@ -1,6 +1,7 @@
 import type { PastSeason } from "@epl/core";
 import Section from "../../components/shell/Section";
-import { BOARD, FIGURE, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_CENTRE, ROW_NAME, ROW_RULE, SCROLL, TEXT } from "@/app/desk";
+import { BOARD, FIGURE, ROW_NAME, ROW_RULE, SCROLL, TEXT } from "@/app/desk";
+import { PlateHead } from "../../components/league/TableHeads";
 import { IndexCell } from "../../components/league/TableCells";
 import { seasonKey, thousands } from "@epl/core";
 
@@ -53,22 +54,12 @@ export default function PastSeasons({
         <table className={BOARD}>
           <thead>
             <tr>
-              <th className={HEAD_CELL}>
-                <div className={HEAD_PLATE}>Season</div>
-              </th>
-              <th className={HEAD_CELL}>
-                <div className={HEAD_PLATE}>Club</div>
-              </th>
+              <PlateHead>Season</PlateHead>
+              <PlateHead>Club</PlateHead>
               {COLUMNS.map((column) => (
-                <th
-                  key={column.head}
-                  className={HEAD_CELL}
-                  title={column.title}
-                >
-                  <div className={`${HEAD_PLATE_CENTRE}`}>
-                    {column.head}
-                  </div>
-                </th>
+                <PlateHead key={column.head} at="centre" title={column.title}>
+                  {column.head}
+                </PlateHead>
               ))}
             </tr>
           </thead>

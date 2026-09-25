@@ -1,5 +1,6 @@
 import Section from "../../components/shell/Section";
-import { BOARD, BOARD_FIGURE, HEAD_CELL, HEAD_PLATE, HEAD_PLATE_END, ROW_RULE, SCROLL } from "@/app/desk";
+import { BOARD, BOARD_FIGURE, ROW_RULE, SCROLL } from "@/app/desk";
+import { PlateHead } from "../../components/league/TableHeads";
 import type { MatchRow } from "./matchRows";
 import { totalsOf } from "./matchRows";
 import { IndexCell } from "../../components/league/TableCells";
@@ -55,13 +56,11 @@ export default function SeasonTable({
         <table className={BOARD}>
           <thead>
             <tr>
-              <th className={HEAD_CELL}>
-                <div className={HEAD_PLATE}>Competition</div>
-              </th>
+              <PlateHead>Competition</PlateHead>
               {COLUMNS.map((column) => (
-                <th key={column.head} className={HEAD_CELL} title={column.title}>
-                  <div className={HEAD_PLATE_END}>{column.head}</div>
-                </th>
+                <PlateHead key={column.head} at="end" title={column.title}>
+                  {column.head}
+                </PlateHead>
               ))}
             </tr>
           </thead>

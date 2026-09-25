@@ -1,13 +1,12 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
 import { DASH } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import ScrollBoard from "../../components/league/ScrollBoard";
 import { IndexCell } from "../../components/league/TableCells";
-import { MUTE } from "../../components/league/TableHeads";
+import { MUTE, PlateHead } from "../../components/league/TableHeads";
 import { standoutCuts, standoutInk, type StandoutCut } from "../../components/league/standout";
 import Section from "../../components/shell/Section";
-import { BOARD, FIGURE, HEAD_CELL, HEAD_PLATE_CENTRE, PINNED_NAME, PINNED_TILE, ROW_RULE } from "@/app/desk";
+import { BOARD, FIGURE, HEAD_CELL, PINNED_NAME, PINNED_TILE, ROW_RULE } from "@/app/desk";
 import { matchHref } from "../../prem/match/[id]/matchRoutes";
 import type { MatchRow } from "./matchRows";
 
@@ -79,11 +78,13 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
               <th scope="col" className={`${HEAD_CELL} ${PINNED_NAME} left-8 lg:left-9`}>
                 <span className={MUTE}>Opponent</span>
               </th>
-              <Plate title="The score, from his club's point of view — tap it for the match">Res</Plate>
+              <PlateHead at="centre" title="The score, from his club's point of view — tap it for the match" className="whitespace-nowrap">
+                Res
+              </PlateHead>
               {COLUMNS.map((column) => (
-                <Plate key={column.head} title={column.title} rule={column.rule}>
+                <PlateHead key={column.head} at="centre" title={column.title} className={`whitespace-nowrap ${column.rule ? RULE : ""}`}>
                   {column.head}
-                </Plate>
+                </PlateHead>
               ))}
             </tr>
           </thead>
@@ -112,15 +113,6 @@ export default function MatchLog({ rows }: { rows: readonly MatchRow[] }) {
         </p>
       ) : null}
     </Section>
-  );
-}
-
-/** A bevelled head plate over a figure. */
-function Plate({ title, rule = false, children }: { title: string; rule?: boolean; children: ReactNode }) {
-  return (
-    <th scope="col" title={title} className={`${HEAD_CELL} ${rule ? RULE : ""}`}>
-      <div className={`${HEAD_PLATE_CENTRE} whitespace-nowrap`}>{children}</div>
-    </th>
   );
 }
 

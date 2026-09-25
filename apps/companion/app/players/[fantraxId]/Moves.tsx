@@ -1,8 +1,8 @@
 import { DASH, fantraxTime } from "@epl/core";
 import Section from "../../components/shell/Section";
 import { IndexCell } from "../../components/league/TableCells";
-import { MUTE } from "../../components/league/TableHeads";
-import { BOARD, HEAD_CELL, HEAD_PLATE, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { MUTE, PlateHead } from "../../components/league/TableHeads";
+import { BOARD, HEAD_CELL, ROW_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 import type { PlayerMove } from "./dossier";
 
 // Every claim, drop and trade this league has made with him, newest first, on the house table:
@@ -25,9 +25,7 @@ export default function Moves({ moves }: { moves: readonly PlayerMove[] }) {
                   <span className={MUTE}>Date</span>
                 </th>
                 {["Move", "From", "To"].map((head) => (
-                  <th key={head} scope="col" className={HEAD_CELL}>
-                    <div className={HEAD_PLATE}>{head}</div>
-                  </th>
+                  <PlateHead key={head}>{head}</PlateHead>
                 ))}
               </tr>
             </thead>

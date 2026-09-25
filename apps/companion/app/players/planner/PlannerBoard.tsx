@@ -2,8 +2,8 @@ import Link from "next/link";
 import { DASH, toFantraxClubCode, type PlannerCell, type PlannerRow, type PlannerView } from "@epl/core";
 import ClubLabel from "../../components/football/ClubLabel";
 import { easeGround } from "../../components/football/ease";
-import { MUTE, SortArrow } from "../../components/league/TableHeads";
-import { HEAD_CELL, HEAD_PLATE_CENTRE, PINNED_NAME, ROW_RULE, SCROLL } from "@/app/desk";
+import { MUTE, PlateHead, SortArrow } from "../../components/league/TableHeads";
+import { HEAD_CELL, PINNED_NAME, ROW_RULE, SCROLL } from "@/app/desk";
 
 /** The club column, frozen at the left edge. */
 const PIN_CLUB = `${PINNED_NAME} left-0`;
@@ -43,9 +43,9 @@ export default function PlannerBoard({
               <span className={MUTE}>Club</span>
             </th>
             {gameweeks.map((gameweek) => (
-              <th key={gameweek} scope="col" className={HEAD_CELL}>
-                <span className={`${HEAD_PLATE_CENTRE}`}>GW{gameweek}</span>
-              </th>
+              <PlateHead key={gameweek} at="centre">
+                GW{gameweek}
+              </PlateHead>
             ))}
             {/* The column the board is ordered by, drawn pressed, as a sorted head is. */}
             <th scope="col" aria-sort="ascending" className={HEAD_CELL}>
