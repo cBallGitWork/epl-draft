@@ -26,8 +26,8 @@ import { INDEX_WIDTH } from "@/app/desk";
  *  league. The block takes the subject's colour where one is scoped —
  *  `--cm-index` is re-pointed by a team's or a club's shell — so the same cell
  *  is the division's blue on a competition screen and the club's own on its. */
-export function IndexCell({ children }: { children: ReactNode }) {
-  return <td className={`cm-index ${INDEX_WIDTH} numeric px-1.5 text-center`}>{children}</td>;
+export function IndexCell({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <td className={`cm-index ${INDEX_WIDTH} numeric px-1.5 text-center ${className}`}>{children}</td>;
 }
 
 /* `INDEX_WIDTH` lived here and is in `app/desk.ts` now — its second consumer is
